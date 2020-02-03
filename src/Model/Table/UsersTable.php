@@ -78,6 +78,11 @@ class UsersTable extends Table
             ->boolean('staged')
             ->notEmptyString('staged');
 
+        $validator
+            ->scalar('password')
+            ->maxLength('password', 255)
+            ->allowEmptyString('password');
+
         return $validator;
     }
 

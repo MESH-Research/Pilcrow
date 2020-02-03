@@ -25,6 +25,7 @@ class UsersFixture extends TestFixture
         'staged' => ['type' => 'boolean', 'length' => null, 'null' => false, 'default' => '0', 'comment' => '', 'precision' => null],
         'created' => ['type' => 'datetime', 'length' => null, 'precision' => null, 'null' => false, 'default' => null, 'comment' => ''],
         'modified' => ['type' => 'datetime', 'length' => null, 'precision' => null, 'null' => false, 'default' => null, 'comment' => ''],
+        'password' => ['type' => 'string', 'length' => 255, 'null' => true, 'default' => null, 'collate' => 'latin1_swedish_ci', 'comment' => '', 'precision' => null],
         '_constraints' => [
             'primary' => ['type' => 'primary', 'columns' => ['id'], 'length' => []],
         ],
@@ -49,8 +50,9 @@ class UsersFixture extends TestFixture
                 'first_name' => 'Lorem ipsum dolor sit amet',
                 'last_name' => 'Lorem ipsum dolor sit amet',
                 'staged' => 1,
-                'created' => '2020-02-03 21:43:30',
-                'modified' => '2020-02-03 21:43:30',
+                'created' => '2020-02-03 21:58:11',
+                'modified' => '2020-02-03 21:58:11',
+                'password' => 'Lorem ipsum dolor sit amet',
             ],
         ];
         parent::init();
