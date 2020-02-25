@@ -82,8 +82,7 @@ class Application extends BaseApplication
             // creating the middleware instance specify the cache config name by
             // using it's second constructor argument:
             // `new RoutingMiddleware($this, '_cake_routes_')`
-	    ->add(new RoutingMiddleware($this)),
-	    ->add(new AuthenticationMiddleware($this));
+	    ->add(new RoutingMiddleware($this));
 
         return $middlewareQueue;
     }
