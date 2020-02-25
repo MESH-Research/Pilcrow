@@ -55,7 +55,9 @@ class Application extends BaseApplication
             $this->addPlugin('DebugKit');
         }
 
-        // Load more plugins here
+	// Load more plugins here
+	$this->addPlugin('Authentication'); // loads the authentication plugin
+
     }
 
     /**
@@ -83,6 +85,8 @@ class Application extends BaseApplication
             // using it's second constructor argument:
             // `new RoutingMiddleware($this, '_cake_routes_')`
 	    ->add(new RoutingMiddleware($this));
+	$authentication = new AuthenticationMiddleware($this);
+	$middlewareQueue->add($authentication);
 
         return $middlewareQueue;
     }
