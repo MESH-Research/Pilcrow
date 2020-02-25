@@ -50,15 +50,15 @@ bin/cake server -p 8765
 Then visit `http://localhost:8765` to see the welcome page.
 
 
-CCR front-end application
+## CCR front-end application
 
-## Install system dependencies
+### Install system dependencies
 
 1.  Yarn
 2.  Node
 3.  Quasar-Cli
 
-## Install the dependencies
+### Install the dependencies
 
 ```bash
 yarn
