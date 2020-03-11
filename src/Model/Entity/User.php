@@ -48,4 +48,17 @@ class User extends Entity
     protected $_hidden = [
         'password',
     ];
+
+    /**
+     * Set function for the passwords
+     * 
+     * @param string $password: Password entered by the user 
+     */
+    protected function _setPassword($password) {
+        if (strlen($password) > 0) {
+	    $pass = new DefaultPasswordHasher();
+        $hash_pass = $pass->hash($password);
+            return $hash_pass;
+	}
+    }
 }
