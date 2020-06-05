@@ -16,17 +16,18 @@ declare(strict_types=1);
  */
 namespace App;
 
-use Cake\Core\Configure;
-use Cake\Core\Exception\MissingPluginException;
-use Cake\Error\Middleware\ErrorHandlerMiddleware;
-use Cake\Http\BaseApplication;
-use Cake\Http\MiddlewareQueue;
-use Cake\Routing\Middleware\AssetMiddleware;
-use Cake\Routing\Middleware\RoutingMiddleware;
 use Authentication\AuthenticationService;
 use Authentication\AuthenticationServiceInterface;
 use Authentication\AuthenticationServiceProviderInterface;
 use Authentication\Middleware\AuthenticationMiddleware;
+use Cake\Core\Configure;
+use Cake\Core\Exception\MissingPluginException;
+use Cake\Error\Middleware\ErrorHandlerMiddleware;
+use Cake\Http\BaseApplication;
+use Cake\Http\Middleware\BodyParserMiddleware;
+use Cake\Http\MiddlewareQueue;
+use Cake\Routing\Middleware\AssetMiddleware;
+use Cake\Routing\Middleware\RoutingMiddleware;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
@@ -59,9 +60,8 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
             $this->addPlugin('DebugKit');
         }
 
-	// Load more plugins here
-	$this->addPlugin('Authentication'); // loads the authentication plugin
-
+    // Load more plugins here
+        $this->addPlugin('Authentication'); // loads the authentication plugin
     }
 
     /**
@@ -88,8 +88,10 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
             // creating the middleware instance specify the cache config name by
             // using it's second constructor argument:
             // `new RoutingMiddleware($this, '_cake_routes_')`
-	    ->add(new RoutingMiddleware($this))
-        ->add(new AuthenticationMiddleware($this));
+        ->add(new RoutingMiddleware($this))
+        ->add(new AuthenticationMiddleware($this))
+        ->add(new BodyParserMiddleware());
+
         return $middlewareQueue;
     }
 
@@ -113,29 +115,42 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
         // Load more plugins here
     }
 
-    public function getAuthenticationService(ServerRequestInterface $request): AuthenticationServiceInterface {
+    /**
+     * Setup authentication parameters
+     *
+     * @param \Psr\Http\Message\ServerRequestInterface $request CakeAPI
+     * @return \Authentication\AuthenticationServiceInterface
+     */
+    public function getAuthenticationService(ServerRequestInterface $request): AuthenticationServiceInterface
+    {
         $authenticationService = new AuthenticationService([
-            'unauthenticatedRedirect' => '/users/login',
-            'queryParam' => 'redirect',
+
         ]);
 
         // Load identifiers, ensure we check email and password fields
         $authenticationService->loadIdentifier('Authentication.Password', [
             'fields' => [
-                'username' => 'email',
+                'username' => ['username', 'email'],
                 'password' => 'password',
-            ]
+            ],
         ]);
+
+        $authenticationService->loadAuthenticator('Authentication.Jwt', [
+            'returnPayload' => false,
+            'queryParam' => 'token',
+        ]);
+
+        $authenticationService->loadIdentifier('Authentication.JwtSubject');
 
         // Load the authenticators, you want session first
         $authenticationService->loadAuthenticator('Authentication.Session');
         // Configure form data check to pick email and password
         $authenticationService->loadAuthenticator('Authentication.Form', [
             'fields' => [
-                'username' => 'email',
+                'username' => 'username',
                 'password' => 'password',
             ],
-            'loginUrl' => '/users/login',
+            'loginUrl' => '/api/login',
         ]);
 
         return $authenticationService;

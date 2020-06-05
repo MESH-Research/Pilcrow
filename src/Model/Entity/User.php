@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Model\Entity;
 
+use Cake\Auth\DefaultPasswordHasher;
 use Cake\ORM\Entity;
 
 /**
@@ -51,14 +52,17 @@ class User extends Entity
 
     /**
      * Set function for the passwords
-     * 
-     * @param string $password: Password entered by the user 
+     *
+     * @param string $password Password entered by the user
+     * @return string|void Hashed Password
      */
-    protected function _setPassword($password) {
+    protected function _setPassword($password)
+    {
         if (strlen($password) > 0) {
-	    $pass = new DefaultPasswordHasher();
-        $hash_pass = $pass->hash($password);
+            $pass = new DefaultPasswordHasher();
+            $hash_pass = $pass->hash($password);
+
             return $hash_pass;
-	}
+        }
     }
 }
