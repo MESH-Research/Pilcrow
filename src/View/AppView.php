@@ -15,7 +15,7 @@ declare(strict_types=1);
  */
 namespace App\View;
 
-use Cake\View\View;
+use Cake\View\JsonView;
 
 /**
  * Application View
@@ -24,7 +24,7 @@ use Cake\View\View;
  *
  * @link https://book.cakephp.org/4/en/views.html#the-app-view
  */
-class AppView extends View
+class AppView extends JsonView
 {
     /**
      * Initialization hook method.

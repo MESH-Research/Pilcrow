@@ -7,11 +7,11 @@ use Cake\TestSuite\IntegrationTestTrait;
 use Cake\TestSuite\TestCase;
 
 /**
- * App\Controller\UsersController Test Case
+ * App\Controller\NotificationsController Test Case
  *
- * @uses \App\Controller\UsersController
+ * @uses \App\Controller\NotificationsController
  */
-class UsersControllerTest extends TestCase
+class NotificationsControllerTest extends TestCase
 {
     use IntegrationTestTrait;
 
@@ -21,7 +21,7 @@ class UsersControllerTest extends TestCase
      * @var array
      */
     protected $fixtures = [
-        'app.Users',
+        'app.Notifications',
     ];
 
     /**

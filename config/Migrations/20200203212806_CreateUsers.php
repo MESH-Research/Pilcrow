@@ -38,7 +38,7 @@ class CreateUsers extends AbstractMigration
             'default' => false,
         ]);
         $table->addColumn('created', 'datetime');
-        $table->addColumn('modified', 'datetime');
+	$table->addColumn('modified', 'datetime');
 
 
         $table->create();

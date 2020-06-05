@@ -1,30 +1,45 @@
-# CakePHP Application Skeleton
+# Collaborative Community Review
 
-[![Build Status](https://img.shields.io/travis/cakephp/app/master.svg?style=flat-square)](https://travis-ci.org/cakephp/app)
-[![Total Downloads](https://img.shields.io/packagist/dt/cakephp/app.svg?style=flat-square)](https://packagist.org/packages/cakephp/app)
-[![PHPStan](https://img.shields.io/badge/PHPStan-level%207-brightgreen.svg?style=flat-square)](https://github.com/phpstan/phpstan)
+## Ubuntu 18.04 Installation steps
 
-A skeleton for creating applications with [CakePHP](https://cakephp.org) 4.x.
+### Run the following commands to install the necessary apt packages
 
-The framework source code can be found here: [cakephp/cakephp](https://github.com/cakephp/cakephp).
+* Install php and supporting packages 
+```
+sudo apat-get install php
+sudo apt-get install php-intl
+sudo apt install  php-sqlite3
+```
+* Insatll composer [https://getcomposer.org/download/]
 
-## Installation
-
-1. Download [Composer](https://getcomposer.org/doc/00-intro.md) or update `composer self-update`.
-2. Run `php composer.phar create-project --prefer-dist cakephp/app [app_name]`.
-
-If Composer is installed globally, run
-
-```bash
-composer create-project --prefer-dist cakephp/app
+### Install the CCR app from git
+* Checkout the project from git using the following command at `/var/www/`
+```
+git clone https://github.com/MESH-Research/CCR.git
+``` 
+* Run composer update to install all the dependencies 
+```
+composer install
 ```
 
-In case you want to use a custom app dir name (e.g. `/myapp/`):
-
-```bash
-composer create-project --prefer-dist cakephp/app myapp
+### Install the database for the app
+* Use the following commands to install MySQL 
+```
+sudo apt update
+sudo apt install mysql-server
+sudo mysql_secure_installation
 ```
 
+* Connect to the MyQL db as the root user 
+```
+sudo mysql
+```
+* Create a db , dbuser and password for the app
+```
+CREATE USER 'db_user'@'localhost' IDENTIFIED BY 'db_pass';
+CREATE DATABASE db_name ;
+GRANT ALL PRIVILEGES ON *.* TO 'db_name'@'localhost';
+```
 You can now either use your machine's webserver to view the default home page, or start
 up the built-in webserver with:
 
@@ -34,20 +49,47 @@ bin/cake server -p 8765
 
 Then visit `http://localhost:8765` to see the welcome page.
 
-## Update
 
-Since this skeleton is a starting point for your application and various files
-would have been modified as per your needs, there isn't a way to provide
-automated upgrades, so you have to do any updates manually.
+## CCR front-end application
 
-## Configuration
+### Install system dependencies
 
-Read and edit the environment specific `config/app_local.php` and setup the 
-`'Datasources'` and any other configuration relevant for your application.
-Other environment agnostic settings can be changed in `config/app.php`.
+1.  Yarn
+2.  Node
+3.  Quasar-Cli
 
-## Layout
+### Install the dependencies
 
-The app skeleton uses [Milligram](https://milligram.io/) (v1.3) minimalist CSS
-framework by default. You can, however, replace it with any other library or
-custom styles.
+```bash
+yarn
+```
+
+### Start the app in development mode (hot-code reloading, error reporting, etc.)
+
+```bash
+quasar dev
+```
+
+### Lint the files
+
+```bash
+yarn run lint
+```
+
+### Build the app for production
+
+```bash
+quasar build
+```
+
+### Customize the configuration
+
+See [Configuring quasar.conf.js](https://quasar.dev/quasar-cli/quasar-conf-js).
+
+
+
+
+
+
+
+

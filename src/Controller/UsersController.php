@@ -3,6 +3,9 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use Cake\Utility\Security;
+use Firebase\JWT\JWT;
+
 /**
  * Users Controller
  *
@@ -10,97 +13,68 @@ namespace App\Controller;
  *
  * @method \App\Model\Entity\User[]|\Cake\Datasource\ResultSetInterface paginate($object = null, array $settings = [])
  */
+
 class UsersController extends AppController
 {
     /**
-     * Index method
+     * Allow unauthenticated users to reach register and login endpoints.
      *
-     * @return \Cake\Http\Response|null
+     * @param \Cake\Event\EventInterface $event Event
+     * @return void
      */
-    public function index()
+    public function beforeFilter(\Cake\Event\EventInterface $event)
     {
-        $users = $this->paginate($this->Users);
+        parent::beforeFilter($event);
 
-        $this->set(compact('users'));
+        $this->Authentication->allowUnauthenticated(['login', 'register']);
     }
 
     /**
-     * View method
+     * Login returning a valid JWT token for upcoming requests.
      *
-     * @param string|null $id User id.
-     * @return \Cake\Http\Response|null
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     * @return void
      */
-    public function view($id = null)
+    public function login()
     {
-        $user = $this->Users->get($id, [
-            'contain' => [],
-        ]);
+        $this->request->allowMethod(['get', 'post']);
+        $result = $this->Authentication->getResult();
 
-        $this->set('user', $user);
-    }
-
-    /**
-     * Add method
-     *
-     * @return \Cake\Http\Response|null Redirects on successful add, renders view otherwise.
-     */
-    public function add()
-    {
-        $user = $this->Users->newEmptyEntity();
-        if ($this->request->is('post')) {
-            $user = $this->Users->patchEntity($user, $this->request->getData());
-            if ($this->Users->save($user)) {
-                $this->Flash->success(__('The user has been saved.'));
-
-                return $this->redirect(['action' => 'index']);
-            }
-            $this->Flash->error(__('The user could not be saved. Please, try again.'));
-        }
-        $this->set(compact('user'));
-    }
-
-    /**
-     * Edit method
-     *
-     * @param string|null $id User id.
-     * @return \Cake\Http\Response|null Redirects on successful edit, renders view otherwise.
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
-     */
-    public function edit($id = null)
-    {
-        $user = $this->Users->get($id, [
-            'contain' => [],
-        ]);
-        if ($this->request->is(['patch', 'post', 'put'])) {
-            $user = $this->Users->patchEntity($user, $this->request->getData());
-            if ($this->Users->save($user)) {
-                $this->Flash->success(__('The user has been saved.'));
-
-                return $this->redirect(['action' => 'index']);
-            }
-            $this->Flash->error(__('The user could not be saved. Please, try again.'));
-        }
-        $this->set(compact('user'));
-    }
-
-    /**
-     * Delete method
-     *
-     * @param string|null $id User id.
-     * @return \Cake\Http\Response|null Redirects to index.
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
-     */
-    public function delete($id = null)
-    {
-        $this->request->allowMethod(['post', 'delete']);
-        $user = $this->Users->get($id);
-        if ($this->Users->delete($user)) {
-            $this->Flash->success(__('The user has been deleted.'));
+        // regardless of POST or GET, redirect if user is logged in
+        if ($result->isValid()) {
+            $user = $this->Authentication->getIdentity()->getOriginalData();
+            $token = JWT::encode(
+                [
+                    'sub' => $user->id,
+                    'exp' => time() + 604800,
+                ],
+                Security::getSalt()
+            );
+            $this->response = $this->response->withAddedHeader('Authorization', "Bearer ${token}");
+            $this->set([
+                'result' => 'success',
+                'token' => $token,
+                'user' => $user,
+            ]);
         } else {
-            $this->Flash->error(__('The user could not be deleted. Please, try again.'));
+            $this->response = $this->response->withStatus(403, 'Not Authenticated');
         }
+    }
 
-        return $this->redirect(['action' => 'index']);
+    /**
+     * Register a user.
+     *
+     * @return void
+     */
+    public function register()
+    {
+        $this->request->allowMethod(['post']);
+
+        $user = $this->Users->newEmptyEntity();
+
+        $user = $this->Users->patchEntity($user, $this->request->getData());
+        if (!$this->Users->save($user)) {
+            $this->response = $this->response->withStatus(400, 'Error saving');
+        }
+        $this->set(compact('user'));
     }
 }
