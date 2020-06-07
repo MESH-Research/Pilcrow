@@ -59,8 +59,8 @@ class AppController extends Controller
      */
     public function beforeRender(\Cake\Event\EventInterface $event)
     {
-        if (!$this->viewBuilder()->hasVar('_serialize')) {
-            $this->set('_serialize', true);
+        if ($this->viewBuilder()->getOption('serialize') === null) {
+            $this->viewBuilder()->setOption('serialize', true);
         }
     }
 }

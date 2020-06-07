@@ -52,24 +52,24 @@ class NotificationsTable extends Table
             ->allowEmptyString('id', null, 'create');
 
         $validator
-            ->integer('fromuser')
-            ->allowEmptyString('fromuser');
+            ->integer('from_user')
+            ->allowEmptyString('from_user');
 
         $validator
-            ->integer('touser')
-            ->allowEmptyString('touser');
+            ->integer('to_user')
+            ->allowEmptyString('to_user');
 
         $validator
             ->scalar('content')
             ->allowEmptyString('content');
 
         $validator
-            ->integer('read')
-            ->notEmptyString('read');
+            ->boolean('is_read')
+            ->notEmptyString('is_read');
 
         $validator
-            ->integer('archived')
-            ->notEmptyString('archived');
+            ->boolean('is_archived')
+            ->notEmptyString('is_archived');
 
         return $validator;
     }

@@ -5,7 +5,7 @@
 /logs/*
 /tmp/*
 /vendor/*
-
+/config/Migrations/*.lock
 # OS generated files #
 ######################
 .DS_Store

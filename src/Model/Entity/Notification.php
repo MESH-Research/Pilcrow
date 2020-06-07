@@ -9,13 +9,13 @@ use Cake\ORM\Entity;
  * Notification Entity
  *
  * @property int $id
- * @property int|null $fromuser
- * @property int|null $touser
+ * @property int|null $fromUser
+ * @property int|null $toUser
  * @property string|null $content
  * @property \Cake\I18n\FrozenTime $created
  * @property \Cake\I18n\FrozenTime $modified
- * @property int $read
- * @property int $archived
+ * @property int $isRead
+ * @property int $isArchived
  */
 class Notification extends Entity
 {
@@ -29,12 +29,12 @@ class Notification extends Entity
      * @var array
      */
     protected $_accessible = [
-        'fromuser' => true,
-        'touser' => true,
+        'from_user' => true,
+        'to_user' => true,
         'content' => true,
         'created' => true,
         'modified' => true,
-        'read' => true,
-        'archived' => true,
+        'is_read' => true,
+        'is_archived' => true,
     ];
 }
