@@ -9,7 +9,7 @@
           v-on:submit.prevent="onSubmit()"
           class="q-px-sm q-pt-xl q-pb-lg"
         >
-          <q-input square v-model="form.username" label="Username or Password">
+          <q-input square v-model="form.username" label="Username or Email">
             <template v-slot:prepend>
               <q-icon name="email" />
             </template>
