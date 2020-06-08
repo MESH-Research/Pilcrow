@@ -20,7 +20,7 @@
               <q-item-label header>User Account</q-item-label>
               <q-item clickable @click="logout()">
                 <q-item-section avatar>
-                  <q-icon icon="mdi-log-out" />
+                  <q-icon name="mdi-logout" />
                 </q-item-section>
                 <q-item-section>
                   Logout
