@@ -59,7 +59,7 @@ class UsersController extends AppController
                 'error' => $result->getStatus(),
                 'details' => $result->getErrors(),
             ]);
-            $this->response = $this->response->withStatus(403, 'Not Authenticated');
+            $this->response = $this->response->withStatus(401, 'Not Authenticated');
         }
     }
 
