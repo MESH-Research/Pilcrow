@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "06f1dc184f7834bf3bd82caaf59ffbb4",
+    "content-hash": "c83dddfd3574d62d90e89386f307d0c8",
     "packages": [
         {
             "name": "aura/intl",
@@ -3223,6 +3223,48 @@
             ],
             "description": "PHPDoc parser with support for nullable, intersection and generic types",
             "time": "2020-04-13T16:28:46+00:00"
+        },
+        {
+            "name": "phpstan/phpstan",
+            "version": "0.12.27",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/phpstan/phpstan.git",
+                "reference": "2abbd3253e38a258137f647f4e5fdbcb13142c3e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/2abbd3253e38a258137f647f4e5fdbcb13142c3e",
+                "reference": "2abbd3253e38a258137f647f4e5fdbcb13142c3e",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.1"
+            },
+            "conflict": {
+                "phpstan/phpstan-shim": "*"
+            },
+            "bin": [
+                "phpstan",
+                "phpstan.phar"
+            ],
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "0.12-dev"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "bootstrap.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "PHPStan - PHP Static Analysis Tool",
+            "time": "2020-06-08T21:28:12+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",

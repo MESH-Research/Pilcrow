@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\Test\TestCase\Controller;
 
+use App\Test\Helper\IntegrationHelperTrait;
+use Cake\ORM\TableRegistry;
 use Cake\TestSuite\IntegrationTestTrait;
 use Cake\TestSuite\TestCase;
 
@@ -14,6 +16,7 @@ use Cake\TestSuite\TestCase;
 class UsersControllerTest extends TestCase
 {
     use IntegrationTestTrait;
+    use IntegrationHelperTrait;
 
     /**
      * Fixtures
@@ -24,53 +27,61 @@ class UsersControllerTest extends TestCase
         'app.Users',
     ];
 
-    /**
-     * Test index method
-     *
-     * @return void
-     */
-    public function testIndex(): void
+    public function testLogin()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $loginUrl = '/auth/login';
+
+        $this->get($loginUrl);
+
+        $this->assertResponseCode(405, 'GET Method on login should be 405 Bad Method');
+
+        $users = TableRegistry::getTableLocator()->get('Users');
+        $user = $users->get(1);
+        $user->set('password', 'test');
+
+        $this->assertNotFalse($users->save($user), 'Unable to set user password');
+
+        $data = [
+            'username' => 'test',
+            'password' => 'test_wrong',
+        ];
+
+        $this->post($loginUrl, $data);
+        $this->assertResponseCode(401, 'Incorrect password should generate a 401 Not Authenticated');
+        $result = $this->getJsonBody();
+        $this->assertArrayHasKey('result', $result);
+        $this->assertEquals('FAILURE', $result['result']);
+
+        $data['password'] = 'test';
+
+        $this->post($loginUrl, $data);
+        $this->assertResponseOk();
+        $result = $this->getJsonBody();
+        $this->assertArrayHasKey('result', $result);
+        $this->assertEquals('SUCCESS', $result['result']);
     }
 
-    /**
-     * Test view method
-     *
-     * @return void
-     */
-    public function testView(): void
+    public function testUser()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $url = '/auth/user';
+
+        $this->get($url);
+        $this->assertResponseCode(401, 'Should return 401 if not authenticated');
+
+        $this->_simulateLogin();
+
+        $this->get($url);
+        $this->assertResponseOk();
+        $body = $this->getJsonBody();
+
+        $this->assertArrayHasKey('user', $body);
+        $this->assertEquals('1', $body['user']['id']);
     }
 
-    /**
-     * Test add method
-     *
-     * @return void
-     */
-    public function testAdd(): void
+    protected function _simulateLogin($userId = 1)
     {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
-     * Test edit method
-     *
-     * @return void
-     */
-    public function testEdit(): void
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
-     * Test delete method
-     *
-     * @return void
-     */
-    public function testDelete(): void
-    {
-        $this->markTestIncomplete('Not implemented yet.');
+        $users = TableRegistry::get('Users');
+        $user = $users->get($userId);
+        $this->session(['Auth' => $user]);
     }
 }

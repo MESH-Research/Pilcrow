@@ -55,7 +55,7 @@ class UsersController extends AppController
             ]);
         } else {
             $this->set([
-                'result' => 'failure',
+                'result' => 'FAILURE',
                 'error' => $result->getStatus(),
                 'details' => $result->getErrors(),
             ]);
