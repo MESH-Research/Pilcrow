@@ -1,4 +1,7 @@
-export const LOGIN_OK = (state, { user }) => {
-  state.User = user;
-  state.isLoggedIn = true;
+export const LOGIN_OK = (state, user) => {
+  state.user = Object.assign({}, user);
+};
+
+export const LOGOUT = state => {
+  state.user = {};
 };
