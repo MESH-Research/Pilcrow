@@ -22,6 +22,7 @@ Thumbs.db
 #######################
 # PHPUnit
 .phpunit.result.cache
+clover.xml
 # vim
 *~
 *.swp
