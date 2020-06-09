@@ -1,0 +1,50 @@
+name: Backend Testing
+
+on:
+  push:
+    branches: [ cisetup ]
+  pull_request:
+    branches: [ master, development ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Validate composer.json and composer.lock
+      run: composer validate
+      
+    - name: Cache Composer packages
+      id: composer-cache
+      uses: actions/cache@v2
+      with:
+        path: vendor
+        key: ${{ runner.os }}-node-${{ hashFiles('**/composer.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
+    - name: Setup Mysql
+      run: |
+        sudo systemctl start mysql.service
+        mysql -uroot -proot -e 'CREATE schema cake;'
+        mysql -uroot -proot -e 'CREATE schema cake_test;'
+        cp .github/testing.app_local.php config/app_local.php
+      
+    - name: Install dependencies
+      if: steps.composer-cache.outputs.cache-hit != 'true'
+      run: composer install --prefer-dist --no-progress --no-suggest
+
+    - name: Migrate Database
+      run: composer run migrate
+    
+    - name: Unit Tests
+      run: composer run test
+    
+    - name: Code Coverage
+      uses: codecov/codecov-action@v1.0.7
+      with:
+        file: clover.xml
+        flags: backend
+    
