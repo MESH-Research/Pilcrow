@@ -23,4 +23,4 @@ jobs:
       run: yarn install
 
     - name: Build quasar SPA
-      run: quasar build -m spa    
+      run: $(yarn global bin)/quasar build -m spa    
