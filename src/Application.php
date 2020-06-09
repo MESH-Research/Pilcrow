@@ -135,13 +135,6 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
             ],
         ]);
 
-        $authenticationService->loadAuthenticator('Authentication.Jwt', [
-            'returnPayload' => false,
-            'queryParam' => 'token',
-        ]);
-
-        $authenticationService->loadIdentifier('Authentication.JwtSubject');
-
         // Load the authenticators, you want session first
         $authenticationService->loadAuthenticator('Authentication.Session');
         // Configure form data check to pick email and password
@@ -150,7 +143,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
                 'username' => 'username',
                 'password' => 'password',
             ],
-            'loginUrl' => '/api/login',
+            'loginUrl' => '/auth/login',
         ]);
 
         return $authenticationService;

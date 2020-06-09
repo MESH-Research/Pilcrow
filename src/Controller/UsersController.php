@@ -3,17 +3,13 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use Cake\Utility\Security;
-use Firebase\JWT\JWT;
-
 /**
- * Users Controller
+ * Users Controller.
  *
  * @property \App\Model\Table\UsersTable $Users
  *
  * @method \App\Model\Entity\User[]|\Cake\Datasource\ResultSetInterface paginate($object = null, array $settings = [])
  */
-
 class UsersController extends AppController
 {
     /**
@@ -30,33 +26,61 @@ class UsersController extends AppController
     }
 
     /**
+     * Return the currently logged in user.
+     *
+     * @return void
+     */
+    public function user()
+    {
+        $this->request->allowMethod(['get']);
+        $this->set([
+            'user' => $this->Authentication->getIdentity()->getOriginalData(),
+        ]);
+    }
+
+    /**
      * Login returning a valid JWT token for upcoming requests.
      *
      * @return void
      */
     public function login()
     {
-        $this->request->allowMethod(['get', 'post']);
+        $this->request->allowMethod(['post']);
         $result = $this->Authentication->getResult();
-
         // regardless of POST or GET, redirect if user is logged in
         if ($result->isValid()) {
-            $user = $this->Authentication->getIdentity()->getOriginalData();
-            $token = JWT::encode(
-                [
-                    'sub' => $user->id,
-                    'exp' => time() + 604800,
-                ],
-                Security::getSalt()
-            );
-            $this->response = $this->response->withAddedHeader('Authorization', "Bearer ${token}");
             $this->set([
-                'result' => 'success',
-                'token' => $token,
-                'user' => $user,
+                'result' => 'SUCCESS',
+                'user' => $this->Authentication->getIdentity()->getOriginalData(),
             ]);
         } else {
-            $this->response = $this->response->withStatus(403, 'Not Authenticated');
+            $this->set([
+                'result' => 'FAILURE',
+                'error' => $result->getStatus(),
+                'details' => $result->getErrors(),
+            ]);
+            $this->response = $this->response->withStatus(401, 'Not Authenticated');
+        }
+    }
+
+    /**
+     * Logout the current session
+     *
+     * @return void
+     */
+    public function logout()
+    {
+        $result = $this->Authentication->getResult();
+        // regardless of POST or GET, redirect if user is logged in
+        if ($result->isValid()) {
+            $this->Authentication->logout();
+            $this->set([
+                'result' => 'logout',
+            ]);
+        } else {
+            $this->set([
+                'result' => 'no-session',
+            ]);
         }
     }
 

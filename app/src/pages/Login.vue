@@ -33,6 +33,9 @@
             </template>
           </q-input>
         </q-form>
+        <q-banner class="text-white bg-red text-center" v-if="error">
+          {{ error }}
+        </q-banner>
       </q-card-section>
       <q-card-actions class="q-px-lg">
         <q-btn
@@ -42,6 +45,7 @@
           color="purple-4"
           class="full-width text-white"
           label="Login"
+          :loading="loading"
         />
       </q-card-actions>
       <q-card-section class="text-center q-pa-sm">
@@ -63,14 +67,28 @@ export default {
       form: {
         username: "",
         password: ""
-      }
+      },
+      error: "",
+      loading: false
     };
   },
   methods: {
     onSubmit() {
-      this.$store.dispatch("auth/login", {
-        credentials: this.form
-      });
+      this.error = "";
+      this.loading = true;
+      this.$store
+        .dispatch("auth/login", {
+          credentials: this.form
+        })
+        .then(data => {
+          this.$router.push("/");
+        })
+        .catch(data => {
+          this.error = this.$t("auth.failures." + data.error);
+        })
+        .finally(() => {
+          this.loading = false;
+        });
     }
   }
 };
