@@ -2,12 +2,12 @@ name: Backend Testing
 
 on:
   push:
-    branches: [ cisetup ]
+    branches: [ master, development ]
   pull_request:
     branches: [ master, development ]
 
 jobs:
-  build:
+  test:
 
     runs-on: ubuntu-latest
 
