@@ -20,19 +20,19 @@
               <q-item-label header>User Account</q-item-label>
               <q-item clickable @click="logout()">
                 <q-item-section avatar>
-                  <q-icon icon="mdi-log-out" />
+                  <q-icon name="mdi-logout" />
                 </q-item-section>
                 <q-item-section>
-                  Logout
+                  {{ $t("auth.logout") }}
                 </q-item-section>
               </q-item>
             </q-list>
           </q-btn-dropdown>
         </template>
         <template v-else>
-          <q-btn label="Register" to="/register" stretch flat />
+          <q-btn :label="$t('auth.register')" to="/register" stretch flat />
           <q-separator vertical dark />
-          <q-btn label="Login" to="/login" stretch flat />
+          <q-btn :label="$t('auth.login')" to="/login" stretch flat />
         </template>
       </q-toolbar>
     </q-header>
@@ -59,6 +59,15 @@ export default {
     };
   },
   computed: mapGetters("auth/", ["isLoggedIn", "user"]),
-  methods: mapActions("auth/", ["logout"])
+  methods: {
+    logout() {
+      this.$store.dispatch("auth/logout").then(() => {
+        this.$router.push("/");
+      });
+    }
+  },
+  mounted() {
+    this.$store.dispatch("auth/fetch");
+  }
 };
 </script>

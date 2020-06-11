@@ -52,33 +52,15 @@ class UsersTableTest extends TestCase
         parent::tearDown();
     }
 
-    /**
-     * Test initialize method
-     *
-     * @return void
-     */
-    public function testInitialize(): void
+    public function testPasswordsAreHashed(): void
     {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
+        $password = 'test';
 
-    /**
-     * Test validationDefault method
-     *
-     * @return void
-     */
-    public function testValidationDefault(): void
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
+        $user = $this->Users->newEmptyEntity();
 
-    /**
-     * Test buildRules method
-     *
-     * @return void
-     */
-    public function testBuildRules(): void
-    {
-        $this->markTestIncomplete('Not implemented yet.');
+        $user->set('password', 'test');
+
+        $this->assertNotEquals('test', $user->password);
+        $this->assertNotEmpty($user->password);
     }
 }

@@ -50,10 +50,13 @@ $routes->scope('/', function (RouteBuilder $builder) {
     $builder->registerMiddleware('csrf', new CsrfProtectionMiddleware([
         'httpOnly' => true,
     ]));
-
-    $builder->scope('/api', function(RouteBuilder $builder) {
+    $builder->scope('/auth', function(RouteBuilder $builder) {
         $builder->connect('/login', ['controller' => 'Users', 'action' => 'login']);
+        $builder->connect('/logout', ['controller' => 'Users', 'action' => 'logout']);
+        $builder->connect('/user', ['controller' => 'Users', 'action' => 'user']);
         $builder->connect('/register', ['controller' => 'Users', 'action' => 'register']);
+    });
+    $builder->scope('/api', function(RouteBuilder $builder) {
         
         $builder->prefix('admin', function(RouteBuilder $builder) {
             $builder->get('/users', ['controller' => 'Users', 'action' => 'index']);

@@ -1,71 +1,45 @@
-import Vue from "vue";
+import axios from "axios";
 
-export function fetch(data) {
-  return Vue.auth.fetch(data);
+export function fetch({ commit }) {
+  return new Promise((resolve, reject) => {
+    axios.get("/auth/user").then(res => {
+      commit("LOGIN_OK", res.data.user);
+    }, reject);
+  });
 }
 
-export function refresh(data) {
-  return Vue.auth.refresh(data);
+export function logout({ commit }) {
+  return new Promise((resolve, reject) => {
+    axios.get("/auth/logout").then(
+      res => {
+        commit("LOGOUT");
+      },
+      error => reject(error.response)
+    );
+  });
 }
-
-export function login(ctx, data) {
-  data = data || {};
+export function login({ commit }, { credentials }) {
+  var formData = new FormData();
+  formData.set("username", credentials.username);
+  formData.set("password", credentials.password);
 
   return new Promise((resolve, reject) => {
-    Vue.auth
-      .login({
-        data: data.credentials
-      })
+    axios
+      .post("/auth/login", formData)
       .then(res => {
-        /*if (data.remember) {
-              Vue.auth.remember(JSON.stringify({
-                  name: ctx.getters.user.first_name
-              }));
-          }
+        var user = res.data.user;
 
-          Vue.router.push({
-              name: ctx.getters.user.type + '-landing'
-          }); */
-
-        resolve(res);
-      }, reject);
+        commit("LOGIN_OK", user);
+        resolve(res.data);
+      })
+      .catch(error => {
+        reject(error.response.data);
+      });
   });
 }
 
 export function register({ dispatch }, data) {
   data = data || {};
 
-  return new Promise((resolve, reject) => {
-    Vue.auth
-      .register({
-        url: "auth/register",
-        body: this.form.body, // VueResource
-        data: this.form.body, // Axios
-        autoLogin: false
-      })
-      .then(res => {
-        if (data.autoLogin) {
-          dispatch("login", data).then(resolve, reject);
-        }
-      }, reject);
-  });
-}
-
-export function impersonate(ctx, data) {
-  var props = this.getters["properties/data"];
-
-  Vue.auth.impersonate({
-    url: "auth/" + data.user.id + "/impersonate",
-    redirect: "user-account"
-  });
-}
-
-export function unimpersonate(ctx) {
-  Vue.auth.unimpersonate({
-    redirect: "admin-users"
-  });
-}
-
-export function logout(ctx) {
-  return Vue.auth.logout();
+  return new Promise((resolve, reject) => {});
 }
