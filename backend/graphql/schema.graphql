@@ -1,0 +1,42 @@
+"A date string with format `Y-m-d`, e.g. `2011-05-23`."
+scalar Date @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Date")
+
+"A datetime string with format `Y-m-d H:i:s`, e.g. `2018-05-23 13:43:32`."
+scalar DateTime
+    @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTime")
+
+"A datetime and timezone string in ISO 8601 format `Y-m-dTH:i:sO`, e.g. `2020-04-20T13:53:12+02:00`."
+scalar DateTimeTz
+    @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTimeTz")
+
+type Query {
+    users: [User!]! @paginate(defaultCount: 10)
+    user(id: ID @eq): User @find
+    me: User! @auth @guard
+}
+
+type Mutation {
+    register(input: CreateUserInput @spread): User @field(resolver: "AuthMutator@create") @createUserValidation
+
+    login(email: String!, password: String!): String
+        @field(resolver: "AuthMutator@login")
+
+    logout: String! @guard @field(resolver: "AuthMutator@logout")
+}
+input CreateUserInput {
+    first_name: String!
+    last_name: String!
+    email: String!
+    username: String!
+    password: String!
+}
+
+type User {
+    id: ID!
+    first_name: String!
+    last_name: String!
+    email: String!
+    username: String!
+    created_at: DateTime!
+    updated_at: DateTime!
+}

@@ -1,6 +1,7 @@
 import axios from "axios";
 
 export function fetch({ commit }) {
+  return;
   return new Promise((resolve, reject) => {
     axios.get("/auth/user").then(
       res => {

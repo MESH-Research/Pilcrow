@@ -88,10 +88,9 @@ To run linter/style checker:
 
 ## Reporting a Security Issue
 
-If you've found a security related issue in CakePHP, please don't open an issue in github. Instead contact us at security@cakephp.org. For more information on how we handle security issues, [see the CakePHP Security Issue Process](https://book.cakephp.org/4/en/contributing/tickets.html#reporting-security-issues).
+If you've found a security related issue in CCR, please don't open an issue in github. Instead contact us at adamsb@msu.edu. 
 
 # Additional Resources
 
-* [CakePHP coding standards](https://book.cakephp.org/4/en/contributing/cakephp-coding-conventions.html)
 * [Existing issues](https://github.com/MESH-Research/ccr/issues)
 * [GitHub pull request documentation](https://help.github.com/articles/creating-a-pull-request/)
