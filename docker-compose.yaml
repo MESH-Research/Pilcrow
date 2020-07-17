@@ -14,7 +14,6 @@ services:
         DHPARAM_SIZE: 1024
         SSL: SNAKEOIL
       ports:
-          - "80:80"
           - "443:443"
       volumes:
           - ./backend:/var/www/html

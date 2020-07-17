@@ -15,3 +15,5 @@ RUN mkdir -p /etc/nginx/ssl
 COPY default.conf.template /etc/nginx/templates/default.conf.template
 
 COPY 10-ssl.sh /docker-entrypoint.d/10-ssl.sh
+# Change the permissions on the script so it is executable
+RUN chmod +x /docker-entrypoint.d/10-ssl.sh

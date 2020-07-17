@@ -1,3 +1,4 @@
+#!/bin/bash
 if [ ! -f "./.env" ]; then
     echo "No ./.env file found, preparing initial setup."
     cat <<EOE >> ./.env
