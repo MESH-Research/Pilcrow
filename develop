@@ -1,0 +1,421 @@
+#!/bin/bash
+CO() {
+    local COLOR=$1
+    shift
+    tput setaf $COLOR; echo "$@"; tput setaf 7
+}
+R() {
+    CO 1 "$@"
+}
+
+G() {
+    CO 2 "$@"
+}
+
+usage () {
+  if [ ! -z "${1}" ]; then
+    echo $(R "${1}")
+    echo
+  fi
+  echo "Usage: develop [options] COMMAND"
+  echo "Commands:"
+  echo "    start:       Start/initialize development environment"
+  echo "    stop:        Stop development environment"
+  echo "    restart:     Restart a development environment (skips preparation tasks)"
+  echo "    destroy:     Stop and remove development containers (volumes are preserved)"
+  echo "    run:         Run a command inside a development container" 
+  echo "    enter:       Open a shell to run commands inside the container"
+  echo "    composer:    Run the following composer command"
+  echo "    artisan:     Run the following artisan command"
+  echo "    yarn:        Run the following yarn command"
+  echo "    quasar:      Run the following quasar-cli command"
+  echo "    logs:        View the Docker logs for a service"
+  echo "    rebuild:     Rebuild a container (destroy old, start new)"
+  echo
+  echo "Options:"
+  echo "    --skip-prereqs                    Don't check prerequisites"
+  echo "    --debug                           Output debug information while running"
+  echo "    --service-timeout <seconds=30>    Number of seconds to wait for mysql and nginx to be ready"
+  echo "    --compile-timeout <seconds=300>   Number of seconds to wait for node to be ready"
+  exit 1
+}
+
+is_number() {
+    if [[ ! "${1}" =~ ^[0-9]+$ ]]; then
+        echo $(R "${2}")
+        echo
+        usage
+    fi
+}
+
+SERVICE_TIMEOUT=30
+COMPILE_TIMEOUT=300
+D=$(which docker)
+DC=$(which docker-compose)
+min_docker_version="19.03.0"
+min_docker_compose_version="1.25.0"
+
+#Process all options
+while [ ${#} -gt 0 ]; do
+    case "${1}" in
+        --debug)
+            DEBUG="1"
+        ;;
+        --skip-prereqs)
+            SKIP_PREREQS="1"
+        ;;
+        --service-timeout)
+            is_number ${2} "Invalid number for timeout"
+            SERVICE_TIMEOUT=${2}
+            shift
+        ;;
+        --compile-timeout)
+            is_number ${2} "Invalid number for timeout"
+            COMPILE_TIMEOUT="${2}"
+            shift
+        ;;
+        *)
+            if [[ "${1}" =~ ^--.*  ]]; then
+                echo $(R "Invalid option provided.")
+                echo 
+                usage
+            fi
+            break   
+        ;;
+    esac
+    shift
+done
+
+command=${1}
+shift
+
+case "${command}" in
+    run)
+        if [ -z ${1} ]; then
+            usage "Container name is required."
+        fi
+        container=${1}
+        shift
+        run_command=${@}
+        if [ -z "${run_command}" ]; then
+            usage "Command to run is required."
+        fi
+    ;;
+    enter)
+        if [ -z ${1} ]; then
+            usage "Container name is required."
+        fi
+        container=${1}
+    ;;
+    composer) 
+        container="phpfpm"
+        run_command="composer ${@}"
+    ;;
+    artisan)
+        container="phpfpm"
+        run_command="php artisan ${@}"
+    ;;
+    yarn)
+        container="node"
+        run_command="yarn ${@}"
+    ;;
+    quasar)
+        container="node"
+        run_command="quasar ${@}"
+    ;;
+esac
+
+configure() {
+    if [ ! -f "./.env" ]; then
+        echo "No ./.env file found, preparing initial setup."
+        cat <<EOE >> ./.env
+APP_NAME=CCR Local Development
+APP_ENV=local
+APP_DEBUG=true
+APP_HOSTNAME=ccr.local
+APP_URL=https://ccr.local
+
+LOG_CHANNEL=stack
+
+DB_CONNECTION=mysql
+DB_HOST=mysql
+DB_PORT=3306
+DB_DATABASE=homestead
+DB_USERNAME=homestead
+DB_PASSWORD=secret
+EOE
+    fi
+}
+
+function version { echo "$@" | awk -F. '{ printf("%d%03d%03d%03d\n", $1,$2,$3,$4); }'; }
+
+checkPortOpen() {
+    echo -n "Checking port 443 is available ... "
+    nc -z 127.0.0.1 443
+    if [ $? -eq 0 ]; then
+        echo $(R "fail")
+        echo $(R "-----")
+        echo $(R "Port 443 appears to be in use.  Close any programs / containers that may be using this port and try again.")
+        exit 1
+    fi
+    echo $(G "OK")
+}
+
+checkRequirements() {
+
+    echo -n "Checking docker version ... "
+    if [ -z $D ]; then
+        echo $(R "FAIL")
+        echo $(R "----")
+        echo $(R "Docker does not appear to be installed.")
+        exit 1
+    fi
+    
+    DVER=$($D version --format '{{.Server.Version}}')
+    if [ $(version $DVER) -lt $(version $min_docker_version) ]; then
+        echo $(R "FAIL")
+        echo $(R "----")
+        echo $(R "Docker version greater than $min_docker_version is required.")
+        exit 1
+    fi
+    echo $(G "OK")
+    echo -n "Checking $DC version ... "    
+    if [ -z $DC ]; then
+        echo $(R "FAIL")
+        echo $(R "----")
+        echo $(R "$DC does not appear to be installed")
+        exit 1
+    fi
+    DCVER=$($DC -v | cut -d ' ' -f 3 | tr -d ',')
+    if [ $(version $DCVER) -lt $(version $min_docker_compose_version) ]; then
+        echo $(R "FAIL")
+        echo $(R "----")
+        echo $(R "$DC version $min_docker_compose_version or greater is required")
+        exit 1
+    fi
+    echo $(G "OK")
+    echo -n "Checking for moreutils ... "
+    if [ -z $(which ts) ]; then
+        echo $(R "FAIL")
+        echo $(R "----")
+        echo $(R "The ts command from the moreutils package is not installed.")
+        echo 
+        echo $(R "Ubuntu: sudo apt-get install moreutils")
+        echo $(R "MacOS: brew install moreutils")
+        exit 1
+    fi
+    echo $(G "OK")
+    $DC stop
+    
+}
+
+startMysqlandWait() {
+    $DC start mysql
+    echo -n "Waiting for mysql container to be ready ..."
+    MYSQL_WAITING=1
+    TIMEOUT=$(($(date +%s) + $SERVICE_TIMEOUT))
+    while [ "$MYSQL_WAITING" -ne "0" ] && [ "$(date +%s)" -lt "$TIMEOUT" ]; do
+        $DC exec mysql mysql -u${DB_USERNAME} -p${DB_PASSWORD} ${DB_DATABASE} -e "select 1;" 2>&1 > /dev/null
+        MYSQL_WAITING=$?
+        sleep 1
+        echo -n "."
+    done
+    if [ "$MYSQL_WAITING" -ne "0" ]; then
+        echo $(R " TIMEOUT")
+        echo $(R "----")
+        echo $(R "MySQL container did not start within ${SERVICE_TIMEOUT} seconds, aborting")
+        exit 1
+    fi
+    echo $(G " ready!")
+}
+
+checkDbEmpty() {
+    local NUMTABLES=$($DC exec mysql mysql -u${DB_USERNAME} -p${DB_PASSWORD} ${DB_DATABASE} -s -N -e "SELECT COUNT(DISTINCT 'table_name') FROM information_schema.columns WHERE table_schema = 'homestead'" | grep -v "Warning")
+    if [ "${NUMTABLES:0:1}" -eq "0" ]; then
+        return 1
+    else
+        return 0
+    fi
+}
+nginxWait() {
+    $DC start nginx
+    NGINX_WAITING=1
+    TIMEOUT=$(($(date +%s) + $SERVICE_TIMEOUT))
+    echo -n "Waiting for nginx to be ready ..."
+    
+    while [ "$NGINX_WAITING" -ne "0" ] && [ "$(date +%s)" -lt "$TIMEOUT" ]; do
+        if [ "$(isServiceUp nginx)" -eq "0" ]; then
+            echo $(R " fail")
+            echo $(R "-----")
+            echo $(R "Nginx service failed to start (check container logs for details)")
+            exit 1
+        fi
+        echo -n "."  
+        $DC exec nginx /bin/bash -c "(echo >/dev/tcp/localhost/443) &>/dev/null"; NGINX_WAITING=$?
+        sleep 1
+    done
+    if [ "$NGINX_WAITING" -ne "0" ]; then
+        echo $(R " TIMEOUT")
+        echo $(R "-----")
+        echo $(R "Nginx service failed to start within $SERVICE_TIMEOUT seconds (check the container logs for details)")
+    fi
+    echo $(G " ready!")
+
+}
+
+isServiceUp() {
+    if [ -z `$DC ps -q ${1}` ] || [ -z `$D ps -q --no-trunc | grep $($DC ps -q ${1})` ]; then
+        echo "0"
+    else
+        echo "1"
+    fi
+}
+startNodeandWait() {
+    $DC start node
+    NODE_WAITING=1
+    TIMEOUT=$(($(date +%s) + $COMPILE_TIMEOUT))
+    echo -n "Waiting for node dev server to be ready (this could take a minute or two) ..."
+    while [ "$NODE_WAITING" -ne "0" ] && [ "$(date +%s)" -lt "$TIMEOUT" ]; do
+        sleep 5
+        if [ "$(isServiceUp node)" -eq "0" ]; then
+            echo $(R " fail")
+            echo $(R "-----")
+            echo $(R "Node service failed to start (check the node container logs for details)")
+            exit 1
+        fi
+        echo -n "."  
+        $DC exec node /bin/bash -c "(echo >/dev/tcp/localhost/8080) &>/dev/null"; NODE_WAITING=$?
+    done
+    if [ "$NODE_WAITING" -ne "0" ]; then
+        echo $(R " TIMEOUT")
+        echo $(R "-----")
+        echo $(R "Node service failed to start within $COMPILE_TIMEOUT seconds (check the container logs for details)")
+        exit 1
+    fi
+    echo $(G " ready!")
+}
+
+down() {
+    $DC down
+}
+
+build() {
+    #Build and create containers
+    $DC build --pull --parallel -q
+    if [ "$?" -ne "0" ]; then
+        echo $(R "Build failed")
+        exit 1
+    fi
+    $DC up --no-start
+}
+
+prepare() {
+    startMysqlandWait
+
+    $DC start phpfpm
+    echo "Loading PHP/Node dependencies."
+    echo ""
+    $DC exec -T phpfpm composer install 2>&1 | ts "$(tput cuu1; tput el)   $(CO 4 -n '[php] ')" &
+    $DC run -T --rm node yarn install 2>&1 | ts "$(tput cuu1; tput el)   $(CO 5 -n '[node] ')" &
+    wait
+
+    checkDbEmpty; DBEMPTY=$?
+
+    if [ "$DBEMPTY" -eq "1" ]; then
+        echo -n "Empty database, migrating ... "
+        $DC exec phpfpm php artisan migrate > /dev/null
+        if [ "$?" -ne "0" ]; then
+            echo $(R " FAIL")
+            echo $(R "-----")
+            echo $(R "Error while migrating initial database.")
+            exit 1
+        fi
+        echo $(G "done")
+    fi    
+
+    if [ -z "$APP_KEY" ]; then
+        echo -n "Generating new app key ... "
+        APP_KEY=$($DC exec phpfpm php artisan key:generate --show --no-ansi)
+        echo "APP_KEY=${APP_KEY}" >> ./.env
+        echo $(G "done")
+    fi
+}
+
+start() {
+    $DC up -d
+    startMysqlandWait
+    startNodeandWait
+    nginxWait
+    echo 
+    echo
+    echo $(G "Development environment started!")
+    echo 
+    echo $(CO 3 "IMPORTANT:") $(G "You will need to add") $(CO 3 "$APP_HOSTNAME") $(G "to your hosts file")
+    echo $(G "pointing to your docker host IP address (usually 127.0.0.1 for local development).")
+    echo 
+    echo $(G "Then, goto") $(CO 3 "$APP_URL") $(G "in your browser")
+    echo $(G "------")
+    echo $(G "To stop the development environment run: $DC stop")
+    echo 
+}
+
+run_in_container() {
+    $DC run ${container} $run_command
+}
+
+enter() {
+    if [ "$(isServiceUp $container)" -eq "0" ]; then
+        echo $(R "${container} does not appear to be running.")
+        exit 1
+    fi
+    $DC exec ${container} /bin/bash
+}
+
+configure
+
+export $(egrep -v '^#' .env | xargs)
+if [ ! -z $SKIP_PREREQS ]; then
+    checkRequirements
+fi
+
+case "${command}" in 
+    run | artisan | yarn | quasar | composer)
+        run_in_container
+        exit $?
+    ;;
+    start)
+        build
+        prepare
+        start
+        exit $?
+    ;;
+    stop)
+        $DC stop
+        exit $?
+    ;;
+    restart)
+        start
+        exit $?
+    ;;
+    destroy)
+        down
+        exit $?
+    ;;
+    enter)
+        enter
+        exit $?
+    ;;
+    logs)
+        $DC logs $@
+        exit $?
+    ;;
+    rebuild)
+        down
+        build
+        prepare
+        start
+        exit $?
+    ;;
+esac
+
+usage
