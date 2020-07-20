@@ -301,7 +301,7 @@ down() {
 
 build() {
     #Build and create containers
-    $DC build --pull --parallel -q
+    $DC build --pull --parallel --force-rm -q
     if [ "$?" -ne "0" ]; then
         echo $(R "Build failed")
         exit 1
