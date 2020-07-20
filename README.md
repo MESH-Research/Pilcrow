@@ -1,95 +1,22 @@
 # Collaborative Community Review
 
-## Ubuntu 18.04 Installation steps
+## Development
 
-### Run the following commands to install the necessary apt packages
+### Getting Started
+CCR uses docker-compose to manage our development environment.  
 
-* Install php and supporting packages 
-```
-sudo apat-get install php
-sudo apt-get install php-intl
-sudo apt install  php-sqlite3
-```
-* Insatll composer [https://getcomposer.org/download/]
+1. Make sure you have docker installed on your development machine.
+1. Clone this repository to your local machine: `git clone https://github.com/MESH-Research/CCR`
+1. Head into the CCR directory and run: `./develop start`
+1. Open your hosts file and map `ccr.local` to your docker host's IP address (usually 127.0.0.1 for local development)
+1. Once the bootstraping process is finished, open a browser to https://ccr.local/
 
-### Install the CCR app from git
-* Checkout the project from git using the following command at `/var/www/`
-```
-git clone https://github.com/MESH-Research/CCR.git
-``` 
-* Run composer update to install all the dependencies 
-```
-composer install
-```
+The stack is running `quasar dev` in the node container so editing source files should result in HMR / recompiling as needed.  PHP files are served with phpfpm and should not require restarting the container to load changes.
 
-### Install the database for the app
-* Use the following commands to install MySQL 
-```
-sudo apt update
-sudo apt install mysql-server
-sudo mysql_secure_installation
-```
+### Tips / Troubleshooting
 
-* Connect to the MyQL db as the root user 
-```
-sudo mysql
-```
-* Create a db , dbuser and password for the app
-```
-CREATE USER 'db_user'@'localhost' IDENTIFIED BY 'db_pass';
-CREATE DATABASE db_name ;
-GRANT ALL PRIVILEGES ON *.* TO 'db_name'@'localhost';
-```
-You can now either use your machine's webserver to view the default home page, or start
-up the built-in webserver with:
-
-```bash
-bin/cake server -p 8765
-```
-
-Then visit `http://localhost:8765` to see the welcome page.
-
-
-## CCR front-end application
-
-### Install system dependencies
-
-1.  Yarn
-2.  Node
-3.  Quasar-Cli
-
-### Install the dependencies
-
-```bash
-yarn
-```
-
-### Start the app in development mode (hot-code reloading, error reporting, etc.)
-
-```bash
-quasar dev
-```
-
-### Lint the files
-
-```bash
-yarn run lint
-```
-
-### Build the app for production
-
-```bash
-quasar build
-```
-
-### Customize the configuration
-
-See [Configuring quasar.conf.js](https://quasar.dev/quasar-cli/quasar-conf-js).
-
-
-
-
-
-
-
-
+* The develop script is a bash script so you'll need bash installed.  On Windows, installing [WSL](https://docs.microsoft.com/en-us/windows/wsl/about) is highly recommended.  
+* The nginx container expects port 443 to be open.  Be sure to stop other daemons or containers that are running on port 443.
+* The nginx container generates a snakeoil certificate.  Add that certificate to your browser's trusted certificates to avoid content and clickthrough warnings.
+* Run `./develop` alone to view the usage list.  There are commands to run `quasar`, `yarn`, `composer`, and `artisan` inside a container in case those commands aren't available on the host system.
+* Under the hood, this is all docker-compose so feel free to use docker-compose commands directly to manipulate or stop/start containers as needed.
