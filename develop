@@ -374,7 +374,7 @@ enter() {
 configure
 
 export $(egrep -v '^#' .env | xargs)
-if [ ! -z $SKIP_PREREQS ]; then
+if [ -z $SKIP_PREREQS ]; then
     checkRequirements
 fi
 
