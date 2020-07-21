@@ -31,6 +31,7 @@ usage () {
   echo "    quasar:      Run the following quasar-cli command"
   echo "    logs:        View the Docker logs for a service"
   echo "    rebuild:     Rebuild a container (destroy old, start new)"
+  echo "    nuke:        Nuke all containers, images, vendor/deps and data (including mysql)"
   echo
   echo "Options:"
   echo "    --skip-prereqs                    Don't check prerequisites"
@@ -205,8 +206,6 @@ checkRequirements() {
         exit 1
     fi
     echo $(G "OK")
-    $DC stop
-    
 }
 
 startMysqlandWait() {
@@ -371,9 +370,28 @@ enter() {
     $DC exec ${container} /bin/bash
 }
 
-configure
+nuke() {
+    read -p "$(CO 3 -n "This will nuke a lot of data. Are you sure? [y/N] ")" -r
+    if [[ ! $REPLY =~ ^[Yy]$ ]]
+    then
+        echo "Aborted."
+        exit 1
+    fi
+    $DC down
+    echo -n "Nuke vendor/dependencies ... "
+    rm -rf backend/vendor && mkdir backend/vendor &
+    rm -rf client/node_modules && mkdir client/node_modules &
+    wait
+    echo $(G "done")
+    echo -n "Remove mysql volume ... "
+    docker volume rm -f ccr_mysql > /dev/null
+    echo $(G "done")
+    docker image prune -a
+}
 
+configure
 export $(egrep -v '^#' .env | xargs)
+
 if [ -z $SKIP_PREREQS ]; then
     checkRequirements
 fi
@@ -428,6 +446,10 @@ case "${command}" in
         build
         prepare
         start
+        exit $?
+    ;;
+    nuke)
+        nuke
         exit $?
     ;;
 esac
