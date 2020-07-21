@@ -299,6 +299,14 @@ down() {
 }
 
 build() {
+    echo "$(CO 3 -n "We're going to start downloading docker images.")"
+    echo "$(CO 3 -n "This could take a while depending on your network connection.")"
+    read -p "$(CO 3 -n "Should we continue? [y/N] ")" -r
+    if [[ ! $REPLY =~ ^[Yy]$ ]]
+    then
+        echo "Aborted."
+        exit 1
+    fi
     #Build and create containers
     $DC build --pull --parallel --force-rm -q
     if [ "$?" -ne "0" ]; then
