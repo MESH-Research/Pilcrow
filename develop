@@ -4,6 +4,7 @@ CO() {
     shift
     tput setaf $COLOR; echo "$@"; tput setaf 7
 }
+
 R() {
     CO 1 "$@"
 }
@@ -160,7 +161,6 @@ prefixOutput() {
     "$@" > >(sed "s/^/$prefix: /") 2>&1 
 }
 
-
 checkPortOpen() {
     echo -n "Checking port 443 is available ... "
     nc -z 127.0.0.1 443
@@ -174,7 +174,6 @@ checkPortOpen() {
 }
 
 checkRequirements() {
-
     echo -n "Checking docker version ... "
     if [ -z $D ]; then
         echo $(R "FAIL")
@@ -182,7 +181,6 @@ checkRequirements() {
         echo $(R "Docker does not appear to be installed.")
         exit 1
     fi
-    
     DVER=$($D version --format '{{.Server.Version}}')
     if [ $(version $DVER) -lt $(version $min_docker_version) ]; then
         echo $(R "FAIL")
@@ -191,6 +189,7 @@ checkRequirements() {
         exit 1
     fi
     echo $(G "OK")
+
     echo -n "Checking $DC version ... "    
     if [ -z $DC ]; then
         echo $(R "FAIL")
@@ -236,6 +235,7 @@ checkDbEmpty() {
         return 0
     fi
 }
+
 nginxWait() {
     $DC start nginx
     NGINX_WAITING=1
@@ -269,6 +269,7 @@ isServiceUp() {
         echo "1"
     fi
 }
+
 startNodeandWait() {
     $DC start node
     NODE_WAITING=1
