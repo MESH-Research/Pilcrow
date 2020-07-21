@@ -378,6 +378,20 @@ if [ -z $SKIP_PREREQS ]; then
     checkRequirements
 fi
 
+#Set PWD to script directory if needed
+if [ -L $0 ] ; then
+    DIR=$(dirname $(readlink $0))
+else
+    DIR=$(dirname $0)
+fi
+if [ "$DIR" != "$PWD" ]; then
+    pushd $DIR > /dev/null
+    function finish {
+    popd > /dev/null
+    }
+    trap finish EXIT
+fi
+
 case "${command}" in 
     run | artisan | yarn | quasar | composer)
         run_in_container
