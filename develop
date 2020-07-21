@@ -152,7 +152,14 @@ EOE
     fi
 }
 
-function version { echo "$@" | awk -F. '{ printf("%d%03d%03d%03d\n", $1,$2,$3,$4); }'; }
+version() { echo "$@" | awk -F. '{ printf("%d%03d%03d%03d\n", $1,$2,$3,$4); }'; }
+
+prefixOutput() {
+    local prefix="$1"
+    shift
+    "$@" > >(sed "s/^/$prefix: /") 2>&1 
+}
+
 
 checkPortOpen() {
     echo -n "Checking port 443 is available ... "
@@ -196,17 +203,6 @@ checkRequirements() {
         echo $(R "FAIL")
         echo $(R "----")
         echo $(R "$DC version $min_docker_compose_version or greater is required")
-        exit 1
-    fi
-    echo $(G "OK")
-    echo -n "Checking for moreutils ... "
-    if [ -z $(which ts) ]; then
-        echo $(R "FAIL")
-        echo $(R "----")
-        echo $(R "The ts command from the moreutils package is not installed.")
-        echo 
-        echo $(R "Ubuntu: sudo apt-get install moreutils")
-        echo $(R "MacOS: brew install moreutils")
         exit 1
     fi
     echo $(G "OK")
@@ -328,8 +324,8 @@ prepare() {
     $DC start phpfpm
     echo "Loading PHP/Node dependencies."
     echo ""
-    $DC exec -T phpfpm composer install 2>&1 | ts "$(tput cuu1; tput el)   $(CO 4 -n '[php] ')" &
-    $DC run -T --rm node yarn install 2>&1 | ts "$(tput cuu1; tput el)   $(CO 5 -n '[node] ')" &
+    prefixOutput "$(tput cuu1; tput el)   $(CO 4 -n '[php] ')" $DC run -T phpfpm composer install &
+    prefixOutput "$(tput cuu1; tput el)   $(CO 5 -n '[node] ')" $DC run -T --rm node yarn install &
     wait
 
     checkDbEmpty; DBEMPTY=$?
