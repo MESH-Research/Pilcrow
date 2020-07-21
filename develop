@@ -35,6 +35,7 @@ usage () {
   echo
   echo "Options:"
   echo "    --skip-prereqs                    Don't check prerequisites"
+  echo "    --yes                             Answer yes to any question prompts"
   echo "    --debug                           Output debug information while running"
   echo "    --service-timeout <seconds=30>    Number of seconds to wait for mysql and nginx to be ready"
   echo "    --compile-timeout <seconds=300>   Number of seconds to wait for node to be ready"
@@ -74,6 +75,9 @@ while [ ${#} -gt 0 ]; do
             is_number ${2} "Invalid number for timeout"
             COMPILE_TIMEOUT="${2}"
             shift
+        ;;
+        --yes) 
+            ALWAYS_YES="1"
         ;;
         *)
             if [[ "${1}" =~ ^--.*  ]]; then
@@ -301,11 +305,13 @@ down() {
 build() {
     echo "$(CO 3 -n "We're going to start downloading docker images.")"
     echo "$(CO 3 -n "This could take a while depending on your network connection.")"
-    read -p "$(CO 3 -n "Should we continue? [y/N] ")" -r
-    if [[ ! $REPLY =~ ^[Yy]$ ]]
-    then
-        echo "Aborted."
-        exit 1
+    if [ -z "$ALWAYS_YES" ]; then
+        read -p "$(CO 3 -n "Should we continue? [y/N] ")" -r
+        if [[ ! $REPLY =~ ^[Yy]$ ]]
+        then
+            echo "Aborted."
+            exit 1
+        fi
     fi
     #Build and create containers
     $DC build --pull --parallel --force-rm -q
@@ -379,11 +385,13 @@ enter() {
 }
 
 nuke() {
-    read -p "$(CO 3 -n "This will nuke a lot of data. Are you sure? [y/N] ")" -r
-    if [[ ! $REPLY =~ ^[Yy]$ ]]
-    then
-        echo "Aborted."
-        exit 1
+    if [ -z "$ALWAYS_YES" ]; then
+        read -p "$(CO 3 -n "This will nuke a lot of data. Are you sure? [y/N] ")" -r
+        if [[ ! $REPLY =~ ^[Yy]$ ]]
+        then
+            echo "Aborted."
+            exit 1
+        fi
     fi
     $DC down
     echo -n "Nuke vendor/dependencies ... "
