@@ -57,6 +57,7 @@ D=$(which docker)
 DC=$(which docker-compose)
 min_docker_version="19.03.0"
 min_docker_compose_version="1.25.0"
+SUPRV="$0"
 
 #Process all options
 while [ ${#} -gt 0 ]; do
@@ -365,7 +366,7 @@ start() {
     echo 
     echo $(G "Then, goto") $(CO 3 "$APP_URL") $(G "in your browser")
     echo $(G "------")
-    echo $(G "To stop the development environment run: $DC stop")
+    echo $(G "To stop the development environment run: $SUPRV stop")
     echo 
 }
 
