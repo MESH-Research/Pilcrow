@@ -1,0 +1,36 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Dev Environment",
+            "type": "shell",
+            "command": "./develop",
+            "args": [
+                "--yes",
+                "${input:pickCommand}"
+            ],
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        }
+    ],
+    "inputs": [
+        {
+            "id": "pickCommand",
+            "description": "Dev environment commands",
+            "type": "pickString",
+            "options": [
+                "start",
+                "stop",
+                "restart",
+                "destroy",
+                "rebuild",
+                "nuke"
+            ]
+        }
+    ]
+}
