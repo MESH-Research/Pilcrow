@@ -213,9 +213,12 @@ startMysqlandWait() {
     echo -n "Waiting for mysql container to be ready ..."
     MYSQL_WAITING=1
     TIMEOUT=$(($(date +%s) + $SERVICE_TIMEOUT))
-    while [ "$MYSQL_WAITING" -ne "0" ] && [ "$(date +%s)" -lt "$TIMEOUT" ]; do
+    while [ "$(date +%s)" -lt "$TIMEOUT" ]; do
         $DC exec mysql mysql -u${DB_USERNAME} -p${DB_PASSWORD} ${DB_DATABASE} -e "select 1;" 2>&1 > /dev/null
         MYSQL_WAITING=$?
+        if [ "$MYSQL_WAITING" -eq "0" ]; then
+            break
+        fi
         sleep 1
         echo -n "."
     done
@@ -243,7 +246,7 @@ nginxWait() {
     TIMEOUT=$(($(date +%s) + $SERVICE_TIMEOUT))
     echo -n "Waiting for nginx to be ready ..."
     
-    while [ "$NGINX_WAITING" -ne "0" ] && [ "$(date +%s)" -lt "$TIMEOUT" ]; do
+    while [ "$(date +%s)" -lt "$TIMEOUT" ]; do
         if [ "$(isServiceUp nginx)" -eq "0" ]; then
             echo $(R " fail")
             echo $(R "-----")
@@ -252,6 +255,9 @@ nginxWait() {
         fi
         echo -n "."  
         $DC exec nginx /bin/bash -c "(echo >/dev/tcp/localhost/443) &>/dev/null"; NGINX_WAITING=$?
+        if [ "$NGINX_WAITING" -eq "0" ]; then
+            break
+        fi
         sleep 1
     done
     if [ "$NGINX_WAITING" -ne "0" ]; then
@@ -276,8 +282,7 @@ startNodeandWait() {
     NODE_WAITING=1
     TIMEOUT=$(($(date +%s) + $COMPILE_TIMEOUT))
     echo -n "Waiting for node dev server to be ready (this could take a minute or two) ..."
-    while [ "$NODE_WAITING" -ne "0" ] && [ "$(date +%s)" -lt "$TIMEOUT" ]; do
-        sleep 5
+    while [ "$(date +%s)" -lt "$TIMEOUT" ]; do
         if [ "$(isServiceUp node)" -eq "0" ]; then
             echo $(R " fail")
             echo $(R "-----")
@@ -286,6 +291,10 @@ startNodeandWait() {
         fi
         echo -n "."  
         $DC exec node /bin/bash -c "(echo >/dev/tcp/localhost/8080) &>/dev/null"; NODE_WAITING=$?
+        if [ "$NODE_WAITING" -eq "0" ]; then
+            break
+        fi
+        sleep 2
     done
     if [ "$NODE_WAITING" -ne "0" ]; then
         echo $(R " TIMEOUT")
