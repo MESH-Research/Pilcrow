@@ -326,7 +326,7 @@ prepare() {
     $DC start phpfpm
     echo "Loading PHP/Node dependencies."
     echo ""
-    prefixOutput "$(tput cuu1; tput el)   $(CO 4 -n '[php] ')" $DC run -T phpfpm composer install &
+    prefixOutput "$(tput cuu1; tput el)   $(CO 4 -n '[php] ')" $DC run -T --rm phpfpm composer install &
     prefixOutput "$(tput cuu1; tput el)   $(CO 5 -n '[node] ')" $DC run -T --rm node yarn install &
     wait
 
