@@ -6,10 +6,11 @@
 CCR uses docker-compose to manage our development environment.  
 
 1. Make sure you have docker installed on your development machine.
-1. Clone this repository to your local machine: `git clone https://github.com/MESH-Research/CCR`
-1. Head into the CCR directory and run: `./develop start`
-1. Open your hosts file and map `ccr.local` to your docker host's IP address (usually 127.0.0.1 for local development)
-1. Once the bootstraping process is finished, open a browser to https://ccr.local/
+2. Clone this repository to your local machine: `git clone https://github.com/MESH-Research/CCR`
+3. Head into the CCR directory and run: `./develop start`
+4. Open your hosts file and map `ccr.local` to your docker host's IP address (usually 127.0.0.1 for local development)
+    * Your computer may need to be restarted after modifying the hosts file 
+5. Once the bootstraping process is finished, open a browser to https://ccr.local/
 
 The stack is running `quasar dev` in the node container so editing source files should result in HMR / recompiling as needed.  PHP files are served with phpfpm and should not require restarting the container to load changes.
 
