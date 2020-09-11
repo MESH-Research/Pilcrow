@@ -48,6 +48,5 @@ jobs:
       run: php artisan migrate
     
     - name: Unit Tests
-      run: composer run test
       run: php artisan test
     
