@@ -39,7 +39,7 @@ jobs:
     - name: Setup Mysql
       run: |
         sudo systemctl start mysql.service
-        mysql -uroot -proot -e 'CREATE schema $DB_DATABASE;'
+        mysql -uroot -proot -e "CREATE schema $DB_DATABASE;"
 
       
     - name: Install dependencies
