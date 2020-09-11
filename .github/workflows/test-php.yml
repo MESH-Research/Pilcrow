@@ -5,12 +5,21 @@ on:
     branches: [ master, development ]
   pull_request:
     branches: [ master, development ]
-
+env:
+  DB_CONNECTION: mysql
+  DB_HOST: localhost
+  DB_PORT: 3306
+  DB_DATABASE: homestead
+  DB_USERNAME: root
+  DB_PASSWORD: root
 jobs:
   test:
 
     runs-on: ubuntu-latest
-
+    defaults:
+      run:
+        shell: bash
+        working-directory: backend
     steps:
     - uses: actions/checkout@v2
 
@@ -28,23 +37,17 @@ jobs:
     - name: Setup Mysql
       run: |
         sudo systemctl start mysql.service
-        mysql -uroot -proot -e 'CREATE schema cake;'
-        mysql -uroot -proot -e 'CREATE schema cake_test;'
-        cp .github/testing.app_local.php config/app_local.php
+        mysql -uroot -proot -e 'CREATE schema $DB_DATABASE;'
+
       
     - name: Install dependencies
       if: steps.composer-cache.outputs.cache-hit != 'true'
       run: composer install --prefer-dist --no-progress --no-suggest
 
     - name: Migrate Database
-      run: composer run migrate
+      run: php artisan migrate
     
     - name: Unit Tests
       run: composer run test
-    
-    - name: Code Coverage
-      uses: codecov/codecov-action@v1.0.7
-      with:
-        file: clover.xml
-        flags: backend
+      run: php artisan test
     
