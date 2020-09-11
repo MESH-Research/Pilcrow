@@ -12,6 +12,8 @@ env:
   DB_DATABASE: homestead
   DB_USERNAME: root
   DB_PASSWORD: root
+  APP_ENV: testing
+  APP_DEBUG: true
 jobs:
   test:
 
@@ -50,3 +52,4 @@ jobs:
     - name: Unit Tests
       run: php artisan test
     
+~
