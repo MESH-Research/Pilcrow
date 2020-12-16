@@ -22,8 +22,8 @@ jobs:
       run:
         shell: bash
         working-directory: backend
-        with:
-          php_version: 7.4
+      with:
+        php_version: 7.4
 
     steps:
     - uses: actions/checkout@v2
