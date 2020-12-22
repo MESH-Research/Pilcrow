@@ -6,8 +6,8 @@ if [ -f "/app/backend/.env" ]; then
 fi
 
 echo "No backend .env file found. Copying defaults."
-cd /app/backend
-cp env.lando.default .env
+
+cp /app/.lando/backend.default.env /app/backend/.env
 
 
 
