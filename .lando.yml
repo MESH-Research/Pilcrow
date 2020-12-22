@@ -1,0 +1,30 @@
+name: ccr
+recipe: laravel
+config:
+  php: '7.4'
+  composer_version: 2
+  composer: []
+  webroot: backend/public
+  via: nginx
+  config:
+    vhosts: .lando/default.conf.tpl
+services:
+  client:
+    type: node
+    build:
+      - cd /app/client && yarn install
+    command: cd /app/client && yarn dev
+    port: false
+  appserver:
+    build:
+      - cd /app/backend && composer install
+tooling:
+  yarn:
+    service: client
+    cmd: yarn
+    dir: /app/client
+  artisan:
+    dir: /app/backend
+  composer:
+    dir: /app/backend
+
