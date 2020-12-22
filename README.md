@@ -3,16 +3,15 @@
 ## Development
 
 ### Getting Started
+
 CCR uses [Lando](https://lando.dev) to manage its development environment.
 
 1. [Install Lando](https://docs.lando.dev/basics/installation.html)
 2. Clone this repository to your local machine: `git clone https://github.com/MESH-Research/CCR`
 3. Head into the CCR directory and run: `lando start`
 4. Coffee. Downloading. Building. Patience.
-6. Migrate database: `lando artisan migrate`
-5. Once the bootstraping process is finished, open a browser to https://ccr.lndo.site/
-
-
+5. Migrate database: `lando artisan migrate`
+6. Once the bootstraping process is finished, open a browser to https://ccr.lndo.site/
 
 The stack is running `yarn dev` in the node container so editing source files should result in HMR / recompiling as needed.  PHP files are served with phpfpm and should not require restarting the container to load changes.
 
