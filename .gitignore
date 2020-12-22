@@ -35,3 +35,5 @@ nbproject/*
 # Docker
 data/
 .env
+#Lando Local Override
+.lando.local.yml
