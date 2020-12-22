@@ -18,6 +18,7 @@ services:
   appserver:
     build:
       - cd /app/backend && composer install
+      - /app/.lando/no_env_setup.sh
 tooling:
   yarn:
     service: client
