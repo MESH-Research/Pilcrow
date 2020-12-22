@@ -14,7 +14,6 @@ services:
     build:
       - cd /app/client && yarn install
     command: cd /app/client && yarn dev
-    port: false
   appserver:
     build:
       - cd /app/backend && composer install
