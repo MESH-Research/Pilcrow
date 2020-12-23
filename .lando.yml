@@ -1,7 +1,7 @@
 name: ccr
 recipe: laravel
 config:
-  php: '7.4'
+  php: '8.0'
   composer_version: 2
   composer: []
   webroot: backend/public
@@ -19,5 +19,12 @@ services:
     build:
       - cd /app/backend && composer install
       - bash /app/.lando/no_env_setup.sh
-
+tooling:
+  yarn:
+    service: client
+    cmd: yarn
+  quasar:
+    service: client
+    cmd: npx quasar
+    dir: /app/client
 

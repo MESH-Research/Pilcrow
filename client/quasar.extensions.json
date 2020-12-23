@@ -1,5 +1,5 @@
 {
   "@quasar/apollo": {
-    "graphql_uri": "http://localhost:3001/graphql"
+    "graphql_uri": "https://ccr.lndo.site/graphql"
   }
 }

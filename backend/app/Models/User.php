@@ -1,16 +1,16 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use App\Rules\Username;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Passport\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use Notifiable, HasApiTokens;
+    use HasFactory, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -18,7 +18,10 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'first_name', 'last_name', 'email', 'password', 'username',
+        'name',
+        'username',
+        'email',
+        'password',
     ];
 
     /**
@@ -27,7 +30,8 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password',
+        'remember_token',
     ];
 
     /**
@@ -39,6 +43,11 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    /**
+     * Rules for creation of a user
+     *
+     * @return array
+     */
     public static function createRules() {
         return [
         'first_name' => 'required|max:55',
@@ -49,6 +58,11 @@ class User extends Authenticatable
         ];
     }
 
+    /**
+     * Rules for update of a user
+     *
+     * @return array
+     */
     public static function updateRules() {
         return [
             'first_name' => 'sometimes|required|max:55',
@@ -60,10 +74,13 @@ class User extends Authenticatable
         ];
     }
 
-
+    /**
+     * Lowercase email before saving to persistance.
+     *
+     * @param string $value
+     * @return void
+     */
     public function setEmailAttribute($value) {
         $this->attributes['email'] = strtolower($value);
     }
-
-
 }

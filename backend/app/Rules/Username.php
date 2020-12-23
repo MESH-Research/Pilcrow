@@ -25,6 +25,10 @@ class Username implements Rule
      */
     public function passes($attribute, $value)
     {
+        // Username must:
+        // Start with a letter.
+        // Contain only letters, numbers or underscores.
+        // Be between 3-15 characters in length.
         return preg_match('/^[a-z][a-z0-9_]{2}[a-z0-9_]{0,12}$/i', $value) === 1;
     }
 
@@ -35,6 +39,6 @@ class Username implements Rule
      */
     public function message()
     {
-        return 'The supplied username is invalid.';
+        return 'Username is invalid.';
     }
 }
