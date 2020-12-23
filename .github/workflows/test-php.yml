@@ -14,6 +14,7 @@ env:
   DB_PASSWORD: root
   APP_ENV: testing
   APP_DEBUG: true
+  APP_KEY: base64:J6SHqWBtKA18a8eCxIWziMSPuJqJRPuqy0GdX75P+rM=
 jobs:
   test:
 
