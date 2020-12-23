@@ -79,17 +79,7 @@ module.exports = function(ctx) {
       https: false,
       port: 8080,
       open: true,
-      proxy: {
-        // proxy all requests starting with /api to jsonplaceholder
-        "/api": {
-          target: "http://localhost:3001",
-          changeOrigin: true
-        },
-        "/auth": {
-          target: "http://localhost:3001",
-          changeOrigin: true
-        }
-      }
+      public: 'ccr.lndo.site'
     },
 
     // animations: 'all', // --- includes all animations
