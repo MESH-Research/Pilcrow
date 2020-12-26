@@ -11,7 +11,7 @@ chance of keeping on top of things.
 
 ## Code of Conduct
 
-Help us keep CakePHP open and inclusive. Please read and follow our [Code of Conduct](https://github.com/MESH-Research/CCR/blob/master/CODE_OF_CONDUCT.md).
+Help us keep CCR development open and inclusive. Please read and follow our [Code of Conduct](https://github.com/MESH-Research/CCR/blob/master/CODE_OF_CONDUCT.md).
 
 ## Getting Started
 
@@ -20,6 +20,17 @@ Help us keep CakePHP open and inclusive. Please read and follow our [Code of Con
   * Clearly describe the issue including steps to reproduce when it is a bug.
   * Make sure you fill in the earliest version that you know has the issue.
 * Fork the repository on GitHub.
+* Follow the steps in [README.md](https://github.com/MESH-Research/CCR/blob/master/README.md) to setup a development environment with [Lando](https://lando.dev).
+
+
+## Branches and Release Flow
+* The `development` branch is our bleeding edge. 
+  * All commits on this branch will follow [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/#summary) (CC)
+  * Pull requests into this branch will be squashed into a CC or rebased if all commits are CC and the detail is needed for CHANGELOG genereation or release versioning.
+* The `master` branch is our production release branch.
+  * All commits on this branch will follow [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/#summary) (CC)
+
+
 
 ## Making Changes
 
@@ -39,7 +50,7 @@ Help us keep CakePHP open and inclusive. Please read and follow our [Code of Con
 
 ## Commit Messages
 
-Commit messages on `develop` and `master` branches should follow [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/#summary). Contributors are encouraged to use them as well, but maintainers will happily fix things up when merging pull requests if needed.
+Commit messages on `development` and `master` branches must follow [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/#summary). Contributors are encouraged to use them as well, but maintainers will happily fix things up when merging pull requests if needed.
 
 The Conventional Commits specification is a lightweight convention on top of commit messages. It provides an easy set of rules for creating an explicit commit history; which makes it easier to write automated tools on top of. This convention dovetails with SemVer, by describing the features, fixes, and breaking changes made in commit messages.
 
@@ -57,7 +68,7 @@ Making use of [tooling which supports Conventional Commits](https://www.conventi
 
 * Push your changes to a topic branch in your fork of the repository.
 * Squash extraneous commits to the appropriate logical portions.
-* Submit a pull request to the repository in the CakePHP organization, with the
+* Submit a pull request to the repository, with the
   correct target branch.
 
 ## Test cases and linting / styles
@@ -88,7 +99,7 @@ To run linter/style checker:
 
 ## Reporting a Security Issue
 
-If you've found a security related issue in CCR, please don't open an issue in github. Instead contact us at adamsb@msu.edu. 
+If you've found a security related issue in CCR, please don't open an issue in github. Instead contact us at mesh@msu.edu. 
 
 # Additional Resources
 
