@@ -66,8 +66,7 @@ Making use of [tooling which supports Conventional Commits](https://www.conventi
 
 * Push your changes to a topic branch in your fork of the repository.
 * Squash extraneous commits to the appropriate logical portions.
-* Submit a pull request to the repository, with the
-  correct target branch.
+* Submit a pull request to the repository, with the correct target branch.
 
 ## Test cases and linting / styles
 
