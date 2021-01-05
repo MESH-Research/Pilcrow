@@ -1,0 +1,8 @@
+{
+  "devDependencies": {
+    "markdownlint-cli": "^0.26.0"
+  },
+  "scripts": {
+    "lint:md": "markdownlint '**/*.md' -p .gitignore"
+  }
+}
