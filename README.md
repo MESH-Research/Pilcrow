@@ -11,7 +11,7 @@ CCR uses [Lando](https://lando.dev) to manage its development environment.
 3. Head into the CCR directory and run: `lando start`
 4. Coffee. Downloading. Building. Patience.
 5. Migrate database: `lando artisan migrate`
-6. Once the bootstraping process is finished, open a browser to https://ccr.lndo.site/
+6. Once the bootstraping process is finished, open a browser to <https://ccr.lndo.site/>
 
 The stack is running `yarn dev` in the node container so editing source files should result in HMR / recompiling as needed.  PHP files are served with phpfpm and should not require restarting the container to load changes.
 
