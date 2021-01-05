@@ -17,6 +17,6 @@ The stack is running `yarn dev` in the node container so editing source files sh
 
 ### Tips / Troubleshooting
 
-* Lando generates it's own CA cert which [you can add to your OS certificate store](https://docs.lando.dev/config/security.html#trusting-the-ca) (optional, but super nice).
-* Node and composer packages are updated on *rebuild* only.  To update dependencies without rebuilding use `lando composer install` and/or `lando yarn install`. You may have to run `lando restart` if node dependencies have changed.
+* Lando generates its own CA cert which [you can add to your OS certificate store](https://docs.lando.dev/config/security.html#trusting-the-ca) (optional, but super nice).
+* Node and composer packages are updated on *rebuild* only.  To update dependencies without rebuilding, use `lando composer install` and/or `lando yarn install`. You may have to run `lando restart` if node dependencies have changed.
 * Database migrations are *not* automatically applied, so you'll need to run `lando artisan migrate` to apply them as needed.
