@@ -9,7 +9,7 @@ CCR uses [Lando](https://lando.dev) to manage its development environment.
 1. [Install Lando](https://docs.lando.dev/basics/installation.html)
 2. Clone this repository to your local machine: `git clone https://github.com/MESH-Research/CCR`
 3. Head into the CCR directory and run: `lando start`
-4. Coffee. Downloading. Building. Patience.
+4. Coffee. Downloading. Building. Patience. Step 3 may take approximately three to fifteen minutes to complete.
 5. Migrate database: `lando artisan migrate`
 6. Once the bootstraping process is finished, open a browser to <https://ccr.lndo.site/>
 
