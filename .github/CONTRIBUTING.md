@@ -26,7 +26,9 @@ Help us keep CCR development open and inclusive. Please read and follow our [Cod
 
 * The `development` branch is our bleeding edge.
   * All commits on this branch will follow [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/#summary) (CC)
-  * Pull requests into this branch will be squashed into a CC or rebased if all commits are CC and the detail is needed for CHANGELOG genereation or release versioning.
+  * Pull requests:
+    * If all PR commits are CC and the detail is needed for CHANGELOG generation or release versioning the PR may be rebased.
+    * If PR commits can be distilled into a single CC, the PR should be squashed and merged.
 * The `master` branch is our production release branch.
   * All commits on this branch will follow [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/#summary) (CC)
 
