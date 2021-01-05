@@ -22,15 +22,13 @@ Help us keep CCR development open and inclusive. Please read and follow our [Cod
 * Fork the repository on GitHub.
 * Follow the steps in [README.md](https://github.com/MESH-Research/CCR/blob/master/README.md) to setup a development environment with [Lando](https://lando.dev).
 
-
 ## Branches and Release Flow
-* The `development` branch is our bleeding edge. 
+
+* The `development` branch is our bleeding edge.
   * All commits on this branch will follow [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/#summary) (CC)
   * Pull requests into this branch will be squashed into a CC or rebased if all commits are CC and the detail is needed for CHANGELOG genereation or release versioning.
 * The `master` branch is our production release branch.
   * All commits on this branch will follow [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/#summary) (CC)
-
-
 
 ## Making Changes
 
@@ -78,7 +76,7 @@ Making use of [tooling which supports Conventional Commits](https://www.conventi
 To run tests:
 
     composer run-script test
-    
+
 To run the sniffs for CakePHP coding standards:
 
     composer run-script cs-check
@@ -99,9 +97,9 @@ To run linter/style checker:
 
 ## Reporting a Security Issue
 
-If you've found a security related issue in CCR, please don't open an issue in github. Instead contact us at mesh@msu.edu. 
+If you've found a security related issue in CCR, please don't open an issue in github. Instead contact us at mesh@msu.edu.
 
-# Additional Resources
+## Additional Resources
 
 * [Existing issues](https://github.com/MESH-Research/ccr/issues)
 * [GitHub pull request documentation](https://help.github.com/articles/creating-a-pull-request/)
