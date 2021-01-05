@@ -96,7 +96,7 @@ To run linter/style checker:
 
 ## Reporting a Security Issue
 
-If you've found a security related issue in CCR, please don't open an issue in github. Instead contact us at mesh@msu.edu.
+If you've found a security related issue in CCR, please don't open an issue in github. Instead contact MESH Research at mesh@msu.edu.
 
 ## Additional Resources
 
