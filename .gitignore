@@ -37,3 +37,6 @@ data/
 .env
 #Lando Local Override
 .lando.local.yml
+#Vendor Files
+node_modules/
+vendor/
