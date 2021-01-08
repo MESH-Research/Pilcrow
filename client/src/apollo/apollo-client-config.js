@@ -4,7 +4,7 @@ export default function ({ssrContext}) {
       // 'apollo-link-http' config
       // https://www.apollographql.com/docs/link/links/http/#options
       httpLinkConfig: {
-        //If running under SSR, use the internal container address otherwise, use relative url at same host.
+        //If running under SSR, use the internal container address. Otherwise, make URI relative to current host.
         uri: process.env.GRAPHQL_URI || (ssrContext ? 'http://appserver_nginx/graphql' : '/graphql')
       },
 
