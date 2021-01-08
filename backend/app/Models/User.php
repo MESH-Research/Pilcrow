@@ -7,10 +7,11 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, HasApiTokens;
 
     /**
      * The attributes that are mass assignable.
@@ -54,7 +55,7 @@ class User extends Authenticatable
         'last_name' => 'required|max:55',
         'username' => ['required', new Username, 'max:15', 'unique:users'],
         'email' => 'email|required|unique:users',
-        'password' => 'required|zxcvbn_min:4|max:255',        
+        'password' => 'required|zxcvbn_min:4|max:255',
         ];
     }
 
