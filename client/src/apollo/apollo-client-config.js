@@ -1,14 +1,11 @@
-export default function (/* { app, router, store, ssrContext, urlPath, redirect } */) {
+export default function ({ssrContext}) {
   return {
     default: {
       // 'apollo-link-http' config
       // https://www.apollographql.com/docs/link/links/http/#options
       httpLinkConfig: {
-        // you can define the 'uri' here or using an env variable when
-        // running quasar commands, for example:
-        // `GRAPHQL_URI=https://prod.example.com/graphql quasar build`
-        // `GRAPHQL_URI=https://dev.example.com/graphql quasar dev`
-        uri: process.env.GRAPHQL_URI || 'https://ccr.lndo.site/graphql'
+        //If running under SSR, use the internal container address otherwise, use relative url at same host.
+        uri: process.env.GRAPHQL_URI || (ssrContext ? 'http://appserver_nginx/graphql' : '/graphql')
       },
 
       // 'apollo-cache-inmemory' config
