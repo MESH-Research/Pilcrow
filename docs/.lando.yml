@@ -1,0 +1,15 @@
+name: docs
+services:
+  dev:
+    type: node
+    build:
+      - yarn 
+    port: 8080
+    command: yarn dev
+tooling:
+  yarn:
+    service: dev
+    cmd: yarn
+proxy:
+  dev:
+    - docs_dev.lndo.site:8080

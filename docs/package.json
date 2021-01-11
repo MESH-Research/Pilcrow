@@ -1,0 +1,16 @@
+{
+  "main": "index.js",
+  "authors": {
+    "name": "MESH-Research",
+    "email": "mesh@msu.edu"
+  },
+  "repository": "https://github.com/MESH-Research/CCR",
+  "scripts": {
+    "dev": "vuepress dev .",
+    "build": "vuepress build ."
+  },
+  "devDependencies": {
+    "vuepress": "^1.5.3",
+    "vuepress-plugin-robots": "^1.0.1"
+  }
+}
