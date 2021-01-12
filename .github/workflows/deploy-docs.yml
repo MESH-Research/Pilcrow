@@ -8,13 +8,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@master
 
     - name: Build and Deploy
-      uses: testthedocs/github-pages-deploy-action@master
+      uses: jenkey2011/vuepress-deploy@dev
       env:
         ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-        BUILD_DIR: .vuepress/dist/
+        TARGET_REPO: mesh-research/ccr
+        TARGET_BRANCH: gh_pages
         BUILD_SCRIPT: cd docs && yarn && yarn build
-        CURRENT_BRANCH: development
-        BASE_URL: /ccr/
+        BUILD_DIR: .vuepress/dist/
