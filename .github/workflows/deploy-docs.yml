@@ -10,6 +10,9 @@ jobs:
       - name: Checkout 🛎️
         uses: actions/checkout@master
       - name: Install and Build 🔧
+        with:
+          CURRENT_BRANCH: development
+          BASE_URL: /CCR/
         run: |
           yarn
           yarn build
@@ -21,5 +24,4 @@ jobs:
           BRANCH: gh-pages # The branch the action should deploy to.
           FOLDER: docs/.vuepress/dist # The folder the action should deploy.
           CLEAN: true # Automatically remove deleted files from the deploy branch
-          CURRENT_BRANCH: development
-          BASE_URL: /CCR/
+          
