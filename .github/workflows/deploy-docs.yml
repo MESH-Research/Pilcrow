@@ -14,7 +14,7 @@ jobs:
       uses: testthedocs/github-pages-deploy-action@master
       env:
         ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-        BUILD_DIR: docs/.vuepress/dist/
+        BUILD_DIR: .vuepress/dist/
         BUILD_SCRIPT: cd docs && yarn && yarn build
         CURRENT_BRANCH: development
         BASE_URL: /ccr/
