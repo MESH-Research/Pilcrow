@@ -54,5 +54,21 @@ class AuthController extends Controller
         }
 
         $user = User::where('email', $request->email)->first();
+
+        $tokenResult = $user->createToken('authToken')->plainTextToken;
+
+        return response()->json([
+            'status_code' => 200,
+            'token' => $tokenResult
+        ]);
+    }
+
+    public function logout(Request $request)
+    {
+        $request->user()->currentAccessToken()->delete();
+        return response()->json([
+            'status_code' => 200,
+            'message' => 'Token Successfully Deleted'
+        ]);
     }
 }
