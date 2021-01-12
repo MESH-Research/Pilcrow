@@ -22,4 +22,4 @@ jobs:
           FOLDER: docs/.vuepress/dist # The folder the action should deploy.
           CLEAN: true # Automatically remove deleted files from the deploy branch
           CURRENT_BRANCH: development
-          BASE_URL: /ccr/
+          BASE_URL: /CCR/
