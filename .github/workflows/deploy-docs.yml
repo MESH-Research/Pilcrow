@@ -10,7 +10,7 @@ jobs:
       - name: Checkout 🛎️
         uses: actions/checkout@master
       - name: Install and Build 🔧
-        with:
+        env:
           CURRENT_BRANCH: development
           BASE_URL: /CCR/
         run: |
