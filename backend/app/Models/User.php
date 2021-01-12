@@ -51,9 +51,7 @@ class User extends Authenticatable
      */
     public static function createRules() {
         return [
-        'first_name' => 'required|max:55',
-        'last_name' => 'required|max:55',
-        'username' => ['required', new Username, 'max:15', 'unique:users'],
+        'username' => ['required', new Username, 'max:55', 'unique:users'],
         'email' => 'email|required|unique:users',
         'password' => 'required|zxcvbn_min:4|max:255',
         ];
@@ -66,9 +64,7 @@ class User extends Authenticatable
      */
     public static function updateRules() {
         return [
-            'first_name' => 'sometimes|required|max:55',
-            'last_name' => 'sometimes|required|max:55',
-            'username' => ['sometimes', 'required', new Username, 'max:15', 'unique:users'],
+            'username' => ['sometimes', 'required', new Username, 'max:55', 'unique:users'],
             'email' => 'sometimes|email|required|unique:users',
             'password' => 'somtimes|required|zxcvbn_min:4|max:255',
             'current_password' => 'required_with:password'
