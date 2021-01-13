@@ -1,4 +1,4 @@
-"A date string with format `Y-m-d`, e.g. `2011-05-23`."
+"A date string wit`h format `Y-m-d`, e.g. `2011-05-23`."
 scalar Date @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Date")
 
 "A datetime string with format `Y-m-d H:i:s`, e.g. `2018-05-23 13:43:32`."
@@ -9,10 +9,39 @@ type Query {
     user(id: ID @eq): User @find
 }
 
+"""
+User input fields with rules associated.
+"""
+input CreateUserInput {
+    name: String
+    """
+    username is a unique field. Returns a validation error if a non unique value is provided 
+    """
+    username: String! @rules(apply: ["unique:users,username"],  messages: { unique: "Username is already in use"})
+    """
+    email is a unique field. Returns a validation error if a non unique value is provided
+    """
+    email: String! @rules(apply: ["unique:users,email"], messages: { unique: "Email address is already in use"})
+    """
+    password is hased using Laravel hashing to transform the value
+    """
+    password: String! @hash
+
+}
+
 type User {
     id: ID!
-    name: String!
+    name: String
+    username: String!
     email: String!
     created_at: DateTime!
-    updated_at: DateTime!
+    updated_at: DateTime
 }
+
+"""
+Creates new users 
+"""
+type Mutation {
+    createUser(user: CreateUserInput! @spread): User! @create
+}
+
