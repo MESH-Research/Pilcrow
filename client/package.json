@@ -1,11 +1,11 @@
 {
-  "name": "app",
+  "name": "CCR-Client",
   "version": "0.0.1",
   "description": "CCR front-end application",
   "productName": "CCR",
   "cordovaId": "org.cordova.quasar.app",
   "capacitorId": "",
-  "author": "Brian Adams <wreality@gmail.com>",
+  "author": "MESH-Research <mesh@msu.edu>",
   "private": true,
   "scripts": {
     "lint": "eslint --ext .js,.vue src",
