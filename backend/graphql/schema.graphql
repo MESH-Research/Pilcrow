@@ -5,30 +5,33 @@ scalar Date @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Date")
 scalar DateTime @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTime")
 
 type Query {
+    "Return user accounts in the application."
     users: [User!]! @paginate(defaultCount: 10)
+
+    "Return details about a specific user in the application"
     user(id: ID @eq): User @find
 }
 
 """
-User input fields with rules associated.
+Input type for userCreate mutation
 """
 input CreateUserInput {
+    "Display name. (optional)"
     name: String
-    """
-    username is a unique field. Returns a validation error if a non unique value is provided 
-    """
+    
+    "Username. Must be unique. (required)"
     username: String! @rules(apply: ["unique:users,username"],  messages: { unique: "Username is already in use"})
-    """
-    email is a unique field. Returns a validation error if a non unique value is provided
-    """
+    
+    "Email address. Must be unique. (required)"
     email: String! @rules(apply: ["unique:users,email"], messages: { unique: "Email address is already in use"})
-    """
-    password is hased using Laravel hashing to transform the value
-    """
+    
+    "Password used to login to the application. (required)"
     password: String! @hash
-
 }
 
+"""
+A user account.
+"""
 type User {
     id: ID!
     name: String
@@ -39,7 +42,7 @@ type User {
 }
 
 """
-Creates new users 
+Create a new user.
 """
 type Mutation {
     createUser(user: CreateUserInput! @spread): User! @create
