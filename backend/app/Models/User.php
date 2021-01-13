@@ -49,11 +49,12 @@ class User extends Authenticatable
      *
      * @return array
      */
-    public static function createRules() {
+    public static function createRules()
+    {
         return [
-        'username' => ['required', new Username, 'max:55', 'unique:users'],
-        'email' => 'email|required|unique:users',
-        'password' => 'required|zxcvbn_min:4|max:255',
+            'username' => ['required', new Username, 'max:55', 'unique:users'],
+            'email' => 'email|required|unique:users',
+            'password' => 'required|zxcvbn_min:4|max:255',
         ];
     }
 
@@ -62,7 +63,8 @@ class User extends Authenticatable
      *
      * @return array
      */
-    public static function updateRules() {
+    public static function updateRules()
+    {
         return [
             'username' => ['sometimes', 'required', new Username, 'max:55', 'unique:users'],
             'email' => 'sometimes|email|required|unique:users',
@@ -77,7 +79,8 @@ class User extends Authenticatable
      * @param string $value
      * @return void
      */
-    public function setEmailAttribute($value) {
+    public function setEmailAttribute($value)
+    {
         $this->attributes['email'] = strtolower($value);
     }
 }
