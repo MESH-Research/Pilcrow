@@ -54,7 +54,7 @@
         <q-btn
           unelevated
           size="lg"
-          color="purple-4"
+          color="deep-purple-7"
           class="full-width text-white"
           label="Get Started"
         />
