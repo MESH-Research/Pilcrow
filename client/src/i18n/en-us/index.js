@@ -7,7 +7,7 @@ export default {
     logout: "Logout",
     register: "Register",
     login_fields: {
-      username: "Username or Email",
+      email: "Email",
       password: "Password"
     },
     failure: {

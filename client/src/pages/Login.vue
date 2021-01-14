@@ -6,14 +6,14 @@
       </q-card-section>
       <q-card-section class="q-pa-lg">
         <q-form
-          v-on:submit.prevent="onSubmit()"
+          v-on:submit.prevent="login()"
           class="q-px-sm q-pt-md q-pb-lg"
         >
           <q-input
             square
-            ref="username"
-            v-model="form.username"
-            :label="$t('auth.login_fields.username')"
+            ref="email"
+            v-model="form.email"
+            :label="$t('auth.login_fields.email')"
             @keypress.enter="$refs.password.focus()"
             autofocus
           >
@@ -80,13 +80,15 @@
 </template>
 
 <script>
+import gql from 'graphql-tag'
+
 export default {
   name: "PageLogin",
   data() {
     return {
       isPwd: true,
       form: {
-        username: "",
+        email: "",
         password: ""
       },
       error: "",
@@ -94,6 +96,25 @@ export default {
     };
   },
   methods: {
+    async login() {
+      const loginResult = await this.$apollo.mutate({
+        mutation: gql`mutation ($email: String!, password: String!) {
+          login(email: $email, password: $password) {
+            id
+            name
+            username
+          }
+        }`,
+        variables: {
+          email: this.form.email,
+          password: this.form.password
+        }
+      }).then((data) => {
+        console.log(data)
+      }).catch((error) => {
+        console.error(error)
+      })
+    },
     onSubmit() {
       this.error = "";
       this.loading = true;
