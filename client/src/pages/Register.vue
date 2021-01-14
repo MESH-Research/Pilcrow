@@ -29,20 +29,23 @@
             v-model="password"
             type="password"
             label="Password"
+            :type="isPwd ? 'password' : 'text'"
           >
             <template v-slot:prepend>
               <q-icon name="lock" />
             </template>
-          </q-input>
-          <q-input
-            square
-            clearable
-            v-model="confirm_password"
-            type="password"
-            label="Confirm Password"
-          >
-            <template v-slot:prepend>
-              <q-icon name="lock" />
+            <template v-slot:append>
+              <q-icon
+                :name="isPwd ? 'visibility_off' : 'visibility'"
+                class="cursor-pointer"
+                aria-hidden="false"
+                role="button"
+                tabindex="0"
+                :aria-pressed="!!isPwd"
+                @click="isPwd = !isPwd"
+                @keydown.enter.space="isPwd = !isPwd"
+                aria-label="Show Password"
+              />
             </template>
           </q-input>
         </q-form>
@@ -67,6 +70,15 @@
 
 <script>
 export default {
-  name: "PageIndex"
+  name: "PageRegister",
+  data: () => {
+    return {
+      isPwd: true,
+      email: "",
+      password: "",
+      name: "",
+      username: ""
+    };
+  }
 };
 </script>
