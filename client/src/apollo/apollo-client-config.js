@@ -1,5 +1,3 @@
-import { typeDefs, resolvers } from 'src/graphql';
-
 export default function ({ ssrContext }) {
   return {
     default: {
@@ -16,7 +14,7 @@ export default function ({ ssrContext }) {
 
       // additional config for apollo client
       // https://github.com/apollographql/apollo-client/blob/version-2.6/docs/source/api/apollo-client.mdx#optional-fields
-      additionalConfig: { typeDefs, resolvers }
+      additionalConfig: { }
     },
 
     // you can add more options or override the default config for a specific
