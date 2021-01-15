@@ -28,7 +28,7 @@
             v-model="form.password"
             :type="isPwd ? 'password' : 'text'"
             :label="$t('auth.login_fields.password')"
-            @keypress.enter="onSubmit"
+            @keypress.enter="login"
           >
             <template v-slot:prepend>
               <q-icon name="lock" />
@@ -60,7 +60,7 @@
       </q-card-section>
       <q-card-actions class="q-px-lg">
         <q-btn
-          @click.prevent="onSubmit()"
+          @click.prevent="login()"
           unelevated
           size="lg"
           color="purple-4"
