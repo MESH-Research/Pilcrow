@@ -97,23 +97,27 @@ export default {
   },
   methods: {
     async login() {
-      const loginResult = await this.$apollo.mutate({
-        mutation: gql`mutation ($email: String!, $password: String!) {
-          login(email: $email, password: $password) {
-            id
-            name
-            username
+      const response = await fetch('/sanctum/csrf-cookie', {
+        credentials: 'same-origin',
+      }).then(() => {
+        const loginResult = this.$apollo.mutate({
+          mutation: gql`mutation ($email: String!, $password: String!) {
+            login(email: $email, password: $password) {
+              id
+              name
+              username
+            }
+          }`,
+          variables: {
+            email: this.form.email,
+            password: this.form.password
           }
-        }`,
-        variables: {
-          email: this.form.email,
-          password: this.form.password
-        }
-      }).then((data) => {
-        console.log(data)
-      }).catch((error) => {
-        console.error(error)
-      })
+        }).then((data) => {
+          console.log(data)
+        }).catch((error) => {
+          console.error(error)
+        })
+      });
     },
     onSubmit() {
       this.error = "";
