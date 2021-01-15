@@ -1,11 +1,21 @@
-export default function ({ssrContext}) {
+import { Cookies } from "quasar";
+
+var xsrfToken = Cookies.get("XSRF_TOKEN");
+
+export default function({ ssrContext }) {
   return {
     default: {
       // 'apollo-link-http' config
       // https://www.apollographql.com/docs/link/links/http/#options
       httpLinkConfig: {
         //If running under SSR, use the internal container address. Otherwise, make URI relative to current host.
-        uri: process.env.GRAPHQL_URI || (ssrContext ? 'http://appserver_nginx/graphql' : '/graphql')
+        uri:
+          process.env.GRAPHQL_URI ||
+          (ssrContext ? "http://appserver_nginx/graphql" : "/graphql"),
+        credentials: "include",
+        headers: {
+          "X-XSRF-TOKEN": xsrfToken
+        }
       },
 
       // 'apollo-cache-inmemory' config
@@ -49,5 +59,5 @@ export default function ({ssrContext}) {
         ssrForceFetchDelay: 100
       }
     }
-  }
+  };
 }
