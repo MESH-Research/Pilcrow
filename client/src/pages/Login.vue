@@ -98,7 +98,7 @@ export default {
   methods: {
     async login() {
       const loginResult = await this.$apollo.mutate({
-        mutation: gql`mutation ($email: String!, password: String!) {
+        mutation: gql`mutation ($email: String!, $password: String!) {
           login(email: $email, password: $password) {
             id
             name
