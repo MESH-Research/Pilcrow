@@ -1,53 +1,40 @@
 <template>
   <q-page class="flex-center flex">
-    <q-card square style="width:400px">
+    <q-card style="width: 400px">
       <q-card-section class="bg-deep-purple-7">
-        <h4 class="text-h5 text-white q-my-md">Registration</h4>
-        <p class="text-white">Create an account on CCR.</p>
+        <h4 class="text-h5 text-white q-my-xs">Register</h4>
       </q-card-section>
       <q-card-section>
-        <q-form class="q-px-sm q-pt-xl q-pb-lg">
-          <q-input square clearable v-model="email" type="email" label="Email">
-            <template v-slot:prepend>
-              <q-icon name="email" />
-            </template>
+        <p>
+          It only takes a minute to create an account and join our community of
+          scholars.
+        </p>
+        <q-form class="q-px-sm q-pb-lg q-gutter-y-md column">
+          <q-input
+            outlined
+            v-model="email"
+            type="email"
+            label="Email"
+            autocomplete="email"
+          >
           </q-input>
           <q-input
-            square
-            clearable
+            outlined
+            v-model="name"
+            type="input"
+            label="Name"
+            autocomplete="name"
+          >
+          </q-input>
+          <q-input
+            outlined
             v-model="username"
-            type="name"
-            label="Full Name"
+            type="input"
+            label="Username"
+            autocomplete="username"
           >
-            <template v-slot:prepend>
-              <q-icon name="person" />
-            </template>
           </q-input>
-          <q-input
-            square
-            clearable
-            v-model="password"
-            type="password"
-            label="Password"
-            :type="isPwd ? 'password' : 'text'"
-          >
-            <template v-slot:prepend>
-              <q-icon name="lock" />
-            </template>
-            <template v-slot:append>
-              <q-icon
-                :name="isPwd ? 'visibility_off' : 'visibility'"
-                class="cursor-pointer"
-                aria-hidden="false"
-                role="button"
-                tabindex="0"
-                :aria-pressed="!!isPwd"
-                @click="isPwd = !isPwd"
-                @keydown.enter.space="isPwd = !isPwd"
-                aria-label="Show Password"
-              />
-            </template>
-          </q-input>
+          <password-field outlined label="Password" v-model="password" />
         </q-form>
       </q-card-section>
       <q-card-actions class="q-px-lg">
@@ -56,7 +43,7 @@
           size="lg"
           color="deep-purple-7"
           class="full-width text-white"
-          label="Get Started"
+          label="Create Account"
         />
       </q-card-actions>
       <q-card-section class="text-center q-pa-sm">
@@ -69,8 +56,12 @@
 </template>
 
 <script>
+import PasswordField from "../components/users/PasswordField.vue";
+
 export default {
   name: "PageRegister",
+
+  components: { PasswordField },
   data: () => {
     return {
       isPwd: true,
@@ -79,6 +70,11 @@ export default {
       name: "",
       username: ""
     };
+  },
+  methods: {
+    submit() {
+      const { email, name, username, password } = this;
+    }
   }
 };
 </script>
