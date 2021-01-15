@@ -1,6 +1,6 @@
 import { Cookies } from "quasar";
 
-var xsrfToken = Cookies.get("XSRF_TOKEN");
+var xsrfToken = Cookies.get("XSRF-TOKEN");
 
 export default function({ ssrContext }) {
   return {
