@@ -5,10 +5,7 @@
         <div class="text-h5 text-white">Login</div>
       </q-card-section>
       <q-card-section class="q-pa-lg">
-        <q-form
-          v-on:submit.prevent="login()"
-          class="q-px-sm q-pt-md q-pb-lg"
-        >
+        <q-form v-on:submit.prevent="login()" class="q-px-sm q-pt-md q-pb-lg">
           <q-input
             square
             ref="email"
@@ -80,7 +77,7 @@
 </template>
 
 <script>
-import gql from 'graphql-tag'
+import gql from "graphql-tag";
 
 export default {
   name: "PageLogin",
@@ -97,27 +94,28 @@ export default {
   },
   methods: {
     async login() {
-      const response = await fetch('/sanctum/csrf-cookie', {
-        credentials: 'same-origin',
-      }).then(() => {
-        const loginResult = this.$apollo.mutate({
-          mutation: gql`mutation ($email: String!, $password: String!) {
-            login(email: $email, password: $password) {
-              id
-              name
-              username
+      const loginResult = await this.$apollo
+        .mutate({
+          mutation: gql`
+            mutation($email: String!, $password: String!) {
+              login(email: $email, password: $password) {
+                id
+                name
+                username
+              }
             }
-          }`,
+          `,
           variables: {
             email: this.form.email,
             password: this.form.password
           }
-        }).then((data) => {
-          console.log(data)
-        }).catch((error) => {
-          console.error(error)
         })
-      });
+        .then(data => {
+          console.log(data);
+        })
+        .catch(error => {
+          console.error(error);
+        });
     },
     onSubmit() {
       this.error = "";
