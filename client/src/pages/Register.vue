@@ -2,7 +2,7 @@
   <q-page class="flex-center flex">
     <q-card style="width: 400px">
       <q-card-section class="bg-deep-purple-7">
-        <h4 class="text-h5 text-white q-my-xs">Register</h4>
+        <h4 class="text-h5 text-white q-my-xs">{{ $t("auth.register") }}</h4>
       </q-card-section>
       <q-card-section>
         <p>
@@ -14,7 +14,7 @@
             outlined
             v-model="email"
             type="email"
-            label="Email"
+            :label="$t('auth.fields.email')"
             autocomplete="email"
           >
           </q-input>
@@ -22,7 +22,7 @@
             outlined
             v-model="name"
             type="input"
-            label="Name"
+            :label="$t('auth.fields.name')"
             autocomplete="name"
           >
           </q-input>
@@ -30,11 +30,15 @@
             outlined
             v-model="username"
             type="input"
-            label="Username"
+            :label="$t('auth.fields.username')"
             autocomplete="username"
           >
           </q-input>
-          <password-field outlined label="Password" v-model="password" />
+          <password-field
+            outlined
+            :label="$t('auth.fields.password')"
+            v-model="password"
+          />
         </q-form>
       </q-card-section>
       <q-card-actions class="q-px-lg">
@@ -43,12 +47,14 @@
           size="lg"
           color="deep-purple-7"
           class="full-width text-white"
-          label="Create Account"
+          :label="$t('auth.register_action')"
         />
       </q-card-actions>
       <q-card-section class="text-center q-pa-sm">
         <p class="text-grey-6">
-          <router-link to="/login">Return to login </router-link>
+          <router-link to="/login"
+            >{{ $t("auth.register_login") }}
+          </router-link>
         </p>
       </q-card-section>
     </q-card>

@@ -22,7 +22,7 @@
           :aria-pressed="isPwd.toString()"
           @click="isPwd = !isPwd"
           @keydown.enter.space="isPwd = !isPwd"
-          aria-label="Show Password"
+          :aria-label="$t('auth.aria.show_password')"
         />
       </template>
       <template v-slot:counter>
@@ -31,14 +31,14 @@
           dense
           size="sm"
           clickable
-          aria-label="Show password complexity details"
+          :aria-label="$t('auth.aria.more_info_password')"
           aria-controls="password-field-analysis"
           :aria-expanded="showDetails.toString()"
           tabindex="0"
           role="button"
           @click="showDetails = !showDetails"
           @keydown.enter.space="showDetails = !showDetails"
-          >More Info</q-chip
+          >{{ $t("buttons.more_info") }}</q-chip
         >
       </template>
       <template v-slot:hint>
@@ -48,15 +48,15 @@
           :threshold="3"
         />
         <div v-if="value.length > 0" class="password-summary">
-          <span v-if="complexity.score >= 3"
-            >Your password is sufficiently complex.</span
-          >
-          <span v-else>Your password needs to be more complex.</span>
+          <span v-if="complexity.score >= 3">{{
+            $t("auth.validation.password.COMPLEX")
+          }}</span>
+          <span v-else>{{ $t("auth.validation.password.NOT_COMPLEX") }}</span>
         </div>
       </template>
     </password-field-input>
     <div v-if="showDetails" class="password-details alert alert-tip">
-      <div class="alert-title">Password Analysis</div>
+      <div class="alert-title">{{ $t("auth.password_meter.header") }}</div>
       <password-field-analysis
         id="password-field-analysis"
         :complexity="complexity"

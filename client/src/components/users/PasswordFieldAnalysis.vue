@@ -1,10 +1,6 @@
 <template>
   <div>
-    <p>
-      Your password scores {{ score }} out of 4. It would likely take
-      <strong>{{ crack_time }}</strong>
-      for a bot to guess your password.
-    </p>
+    <p v-html="$t('auth.password_meter.summary', { score, crack_time })" />
     <div class="password-suggestions" v-if="suggestions.length">
       <q-list dense>
         <q-item v-if="warning.length">
