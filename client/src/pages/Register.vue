@@ -129,6 +129,15 @@ import { required, email } from "vuelidate/lib/validators";
 import zxcvbn from "zxcvbn";
 import gql from "graphql-tag";
 
+const importValidationErrors = (error, v) => {
+  const errors = error?.gqlError?.extensions?.validation ?? false;
+  if (typeof errors == "object") {
+    for (const [fieldName, fieldErrors] of Object.entries(errors)) {
+      v.serverValidationErrors[fieldName] = fieldErrors;
+    }
+  }
+};
+
 export default {
   name: "PageRegister",
   mixins: [validationMixin],
@@ -147,11 +156,7 @@ export default {
         };
       },
       loadingKey: "usernameLoading",
-      error(error) {
-        const errors =
-          error?.gqlError?.extensions?.validation?.["user.username"] ?? false;
-        this.usernameErrors = errors;
-      }
+      error: importValidationErrors
     },
     emailErrors: {
       query: gql`
@@ -173,11 +178,7 @@ export default {
         }
         return false;
       },
-      error(error) {
-        const errors =
-          error?.gqlError?.extensions?.validation?.["user.email"] ?? false;
-        this.emailErrors = errors;
-      }
+      error: importValidationErrors
     }
   },
   data: () => {
@@ -186,15 +187,38 @@ export default {
       password: "",
       name: "",
       username: "",
-      usernameErrors: false,
+      serverValidationErrors: { "user.username": false, "user.email": false },
       usernameLoading: 0,
-      emailErrors: false,
       emailLoading: 0
     };
   },
   computed: {
     complexity() {
       return zxcvbn(this.password);
+    },
+    usernameErrors: {
+      get: function() {
+        return this.serverValidationErrors["user.username"];
+      },
+      set: function(newValue) {
+        this.serverValidationErrors["user.username"] = newValue;
+      }
+    },
+    emailErrors: {
+      get: function() {
+        return this.serverValidationErrors["user.email"];
+      },
+      set: function(newValue) {
+        this.serverValidationErrors["user.email"] = newValue;
+      }
+    },
+    isServerError() {
+      return (field, errorToken) => {
+        if (this.serverValidationErrors[field] === false) {
+          return false;
+        }
+        return this.serverValidationErrors[field].includes(errorToken);
+      };
     }
   },
   validations: {
@@ -205,13 +229,13 @@ export default {
         if (value === "") {
           return true;
         }
-        return !this.emailErrors.includes?.("EMAIL_IN_USE") ?? true;
+        return !this.isServerError("user.email", "EMAIL_IN_USE");
       },
       serverValid(value) {
         if (value === "") {
           return true;
         }
-        return !this.emailErrors.includes?.("EMAIL_NOT_VALID") ?? true;
+        return !this.isServerError("user.email", "EMAIL_NOT_VALID");
       }
     },
     username: {
@@ -220,7 +244,7 @@ export default {
         if (value === "") {
           return true;
         }
-        return !this.usernameErrors.includes?.("USERNAME_IN_USE") ?? true;
+        return !this.isServerError("user.username", "USERNAME_IN_USE");
       }
     },
     password: {
