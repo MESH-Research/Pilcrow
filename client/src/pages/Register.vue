@@ -9,34 +9,58 @@
           It only takes a minute to create an account and join our community of
           scholars.
         </p>
-        <q-form class="q-px-sm q-pb-lg q-gutter-y-md column">
+        <q-form class="q-px-sm q-pb-lg q-gutter-y-lg column">
           <q-input
             outlined
-            v-model="email"
+            v-model.trim="name"
+            type="input"
+            :label="$t('helpers.OPTIONAL_FIELD', [$t('auth.fields.name')])"
+            autocomplete="name"
+            bottom-slots
+          >
+          </q-input>
+          <q-input
+            outlined
+            v-model.trim="$v.email.$model"
             type="email"
             :label="$t('auth.fields.email')"
             autocomplete="email"
+            :error="$v.email.$error"
+            bottom-slots
           >
+            <template #error>
+              <div
+                v-if="!$v.email.required"
+                v-html="$t('helpers.REQUIRED_FIELD', [$t('auth.fields.email')])"
+              />
+              <div
+                v-if="!$v.email.email"
+                v-text="$t('auth.validation.EMAIL')"
+              />
+            </template>
           </q-input>
           <q-input
             outlined
-            v-model="name"
-            type="input"
-            :label="$t('auth.fields.name')"
-            autocomplete="name"
-          >
-          </q-input>
-          <q-input
-            outlined
-            v-model="username"
+            v-model.trim="$v.username.$model"
             type="input"
             :label="$t('auth.fields.username')"
-            autocomplete="username"
+            :error="$v.username.$error"
+            bottom-slots
           >
+            <template #error>
+              <div
+                v-if="!$v.username.required"
+                v-text="
+                  $t('helpers.REQUIRED_FIELD', [$t('auth.fields.username')])
+                "
+              />
+            </template>
           </q-input>
           <password-field
             outlined
             :label="$t('auth.fields.password')"
+            v-model="$v.password.$model"
+            :error="$v.password.$error"
             :complexity="complexity"
           />
         </q-form>
@@ -63,11 +87,13 @@
 
 <script>
 import PasswordField from "../components/users/PasswordField.vue";
+import { validationMixin } from "vuelidate";
+import { required, email } from "vuelidate/lib/validators";
 import zxcvbn from "zxcvbn";
 
 export default {
   name: "PageRegister",
-
+  mixins: [validationMixin],
   components: { PasswordField },
   data: () => {
     return {
@@ -81,6 +107,21 @@ export default {
   computed: {
     complexity() {
       return zxcvbn(this.password);
+    }
+  },
+  validations: {
+    email: {
+      required,
+      email,
+    },
+    username: {
+      required,
+    },
+    password: {
+      required,
+      complexity() {
+        return this.complexity.score >= 3;
+      }
     }
   },
   methods: {
