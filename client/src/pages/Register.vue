@@ -4,7 +4,15 @@
       <q-card-section class="bg-deep-purple-7">
         <h4 class="text-h5 text-white q-my-xs">{{ $t("auth.register") }}</h4>
       </q-card-section>
-      <q-card-section>
+      <q-card-section v-if="formSuccess">
+        <div class="alert alert-success">
+          Woo hoo, you have an account now. Ideally you would have been logged
+          in and directed to your dashboard to learn about all the amazing
+          things that are CCR. But for now, this exciting, stylish box is what
+          you're going to have to live with.
+        </div>
+      </q-card-section>
+      <q-card-section v-else>
         <p>
           It only takes a minute to create an account and join our community of
           scholars.
@@ -106,13 +114,13 @@
           />
         </q-form>
         <q-banner
-          v-if="$v.$error"
+          v-if="formErrorMsg"
           dense
           class="text-white bg-red text-center"
-          v-text="$t('auth.validation.FORM_ERROR')"
+          v-text="$t(`auth.failures.${formErrorMsg}`)"
         />
       </q-card-section>
-      <q-card-actions class="q-px-lg">
+      <q-card-actions v-if="!formSuccess" class="q-px-lg">
         <q-btn
           unelevated
           size="lg"
@@ -144,13 +152,23 @@ const processValidationResult = function({ data, error }, key) {
   if (typeof error == "undefined") {
     this.serverValidationErrors[key] = false;
   } else {
-    const errors = error?.gqlError?.extensions?.validation ?? false;
-    if (errors !== false) {
-      for (const [fieldName, fieldErrors] of Object.entries(errors)) {
-        this.serverValidationErrors[fieldName] = fieldErrors;
-      }
-    }
+    importValidationErrors(error, this);
   }
+};
+
+const importValidationErrors = function(error, vm) {
+  const gqlErrors = error?.graphQLErrors ?? [];
+  var hasVErrors = false;
+  gqlErrors.forEach(item => {
+    const vErrors = item?.extensions?.validation ?? false;
+    if (vErrors !== false) {
+      for (const [fieldName, fieldErrors] of Object.entries(vErrors)) {
+        vm.serverValidationErrors[fieldName] = fieldErrors;
+      }
+      hasVErrors = true;
+    }
+  });
+  return hasVErrors;
 };
 
 export default {
@@ -166,6 +184,7 @@ export default {
       `,
       manual: true,
       result: processValidationResult,
+      fetchPolicy: "cache-and-network",
       variables() {
         return {
           username: this.username
@@ -175,6 +194,7 @@ export default {
         if (!this.$v.username.required || this.username === "") {
           return true;
         }
+        return false;
       },
       loadingKey: "usernameLoading"
     },
@@ -186,6 +206,7 @@ export default {
       `,
       manual: true,
       result: processValidationResult,
+      fetchPolicy: "cache-and-network",
       variables() {
         return {
           email: this.email
@@ -194,7 +215,6 @@ export default {
       loadingKey: "emailLoading",
       skip() {
         if (!this.$v.email.required || !this.$v.email.email) {
-          this.emailErrors = false;
           return true;
         }
         return false;
@@ -210,7 +230,9 @@ export default {
       serverValidationErrors: { "user.username": false, "user.email": false },
       usernameLoading: 0,
       emailLoading: 0,
-      formLoading: 0
+      formLoading: 0,
+      formErrorMsg: "",
+      formSuccess: false
     };
   },
   computed: {
@@ -263,8 +285,53 @@ export default {
     submit() {
       const { email, name, username, password } = this;
       this.$v.$touch();
-      if (!this.$v.$error) {
+      this.formErrorMsg = "";
+      if (this.$v.$invalid) {
+        this.formErrorMsg = "CREATE_FORM_VALIDATION";
+        return;
       }
+
+      this.$apollo
+        .mutate({
+          mutation: gql`
+            mutation(
+              $email: String!
+              $name: String
+              $username: String!
+              $password: String!
+            ) {
+              createUser(
+                user: {
+                  name: $name
+                  email: $email
+                  username: $username
+                  password: $password
+                }
+              ) {
+                username
+                id
+                created_at
+              }
+            }
+          `,
+          variables: {
+            email,
+            name,
+            username,
+            password
+          }
+        })
+        .then(data => {
+          this.formSuccess = true;
+        })
+        .catch(error => {
+          if (importValidationErrors(error, this)) {
+            this.formErrorMsg = "CREATE_FORM_VALIDATION";
+          } else {
+            this.formErrorMsg = "CREATE_FORM_INTERNAL";
+          }
+          this.$v.$touch();
+        });
     }
   }
 };
