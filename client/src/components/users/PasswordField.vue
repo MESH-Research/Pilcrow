@@ -12,7 +12,7 @@
       @blur="handleBlur"
       @focus="error = false"
     >
-      <template v-slot:append>
+      <template #append>
         <q-icon
           :name="isPwd ? 'visibility_off' : 'visibility'"
           class="cursor-pointer"
@@ -25,7 +25,7 @@
           :aria-label="$t('auth.aria.show_password')"
         />
       </template>
-      <template v-slot:counter>
+      <template #counter>
         <q-chip
           icon="help"
           dense
@@ -41,12 +41,7 @@
           >{{ $t("buttons.more_info") }}</q-chip
         >
       </template>
-      <template v-slot:hint>
-        <password-field-meter
-          :max="4"
-          :score="complexity.score"
-          :threshold="3"
-        />
+      <template #hint>
         <div v-if="value.length > 0" class="password-summary">
           <span v-if="complexity.score >= 3">{{
             $t("auth.validation.password.COMPLEX")
