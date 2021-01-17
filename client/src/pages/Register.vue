@@ -26,6 +26,8 @@
             :label="$t('auth.fields.email')"
             autocomplete="email"
             :error="$v.email.$error"
+            :loading="emailLoading > 0"
+            debounce="500"
             bottom-slots
           >
             <template #error>
@@ -34,9 +36,27 @@
                 v-html="$t('helpers.REQUIRED_FIELD', [$t('auth.fields.email')])"
               />
               <div
-                v-if="!$v.email.email"
+                v-if="!$v.email.email || !$v.email.serverValid"
                 v-text="$t('auth.validation.EMAIL')"
               />
+              <i18n
+                v-if="!$v.email.available"
+                path="auth.validation.EMAIL_IN_USE"
+                tag="div"
+                style="line-height: 1.3"
+              >
+                <template #loginAction>
+                  <router-link to="/login">{{
+                    $t("auth.login_help")
+                  }}</router-link>
+                </template>
+                <template #passwordAction>
+                  <router-link to="/reset-password">{{
+                    $t("auth.password_help")
+                  }}</router-link>
+                </template>
+                <template #break><br /></template>
+              </i18n>
             </template>
           </q-input>
           <q-input
@@ -45,6 +65,8 @@
             type="input"
             :label="$t('auth.fields.username')"
             :error="$v.username.$error"
+            :loading="usernameLoading > 0"
+            debounce="500"
             bottom-slots
           >
             <template #error>
@@ -54,7 +76,22 @@
                   $t('helpers.REQUIRED_FIELD', [$t('auth.fields.username')])
                 "
               />
+              <div
+                v-if="!$v.username.available"
+                v-text="$t('auth.validation.USERNAME_IN_USE')"
+              />
             </template>
+            <template
+              #append
+              v-if="!$v.username.$error && !usernameLoading && username.length"
+            >
+              <q-icon name="done" color="green-6" />
+            </template>
+            <template
+              #hint
+              v-if="!$v.username.$error && !usernameLoading && username.length"
+              >{{ $t("auth.validation.USERNAME_AVAILABLE") }}</template
+            >
           </q-input>
           <password-field
             outlined
@@ -90,18 +127,69 @@ import PasswordField from "../components/users/PasswordField.vue";
 import { validationMixin } from "vuelidate";
 import { required, email } from "vuelidate/lib/validators";
 import zxcvbn from "zxcvbn";
+import gql from "graphql-tag";
 
 export default {
   name: "PageRegister",
   mixins: [validationMixin],
   components: { PasswordField },
+  apollo: {
+    usernameErrors: {
+      query: gql`
+        query usernameAvailable($username: String) {
+          validateNewUser(user: { username: $username })
+        }
+      `,
+      update: data => !data.validateNewUser,
+      variables() {
+        return {
+          username: this.username
+        };
+      },
+      loadingKey: "usernameLoading",
+      error(error) {
+        const errors =
+          error?.gqlError?.extensions?.validation?.["user.username"] ?? false;
+        this.usernameErrors = errors;
+      }
+    },
+    emailErrors: {
+      query: gql`
+        query emailAvailable($email: String) {
+          validateNewUser(user: { email: $email })
+        }
+      `,
+      update: data => !data.validateNewUser,
+      variables() {
+        return {
+          email: this.email
+        };
+      },
+      loadingKey: "emailLoading",
+      skip() {
+        if (!this.$v.email.required || !this.$v.email.email) {
+          this.emailErrors = false;
+          return true;
+        }
+        return false;
+      },
+      error(error) {
+        const errors =
+          error?.gqlError?.extensions?.validation?.["user.email"] ?? false;
+        this.emailErrors = errors;
+      }
+    }
+  },
   data: () => {
     return {
-      isPwd: true,
       email: "",
       password: "",
       name: "",
-      username: ""
+      username: "",
+      usernameErrors: false,
+      usernameLoading: 0,
+      emailErrors: false,
+      emailLoading: 0
     };
   },
   computed: {
@@ -113,9 +201,27 @@ export default {
     email: {
       required,
       email,
+      available(value) {
+        if (value === "") {
+          return true;
+        }
+        return !this.emailErrors.includes?.("EMAIL_IN_USE") ?? true;
+      },
+      serverValid(value) {
+        if (value === "") {
+          return true;
+        }
+        return !this.emailErrors.includes?.("EMAIL_NOT_VALID") ?? true;
+      }
     },
     username: {
       required,
+      available(value) {
+        if (value === "") {
+          return true;
+        }
+        return !this.usernameErrors.includes?.("USERNAME_IN_USE") ?? true;
+      }
     },
     password: {
       required,
