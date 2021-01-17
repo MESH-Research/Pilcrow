@@ -11,6 +11,8 @@ export default {
     register: "Register",
     register_action: "Create Account",
     register_login: "Return to Login",
+    login_help: "login",
+    password_help: "reset your password",
     fields: {
       email: "Email",
       name: "Name",
@@ -27,10 +29,13 @@ export default {
       show_password: "Show Password"
     },
     validation: {
-      password: {
-        NOT_COMPLEX: "Your password needs to be more complex.",
-        COMPLEX: "Your password is sufficiently complex."
-      }
+      PASSWORD_NOT_COMPLEX: "Your password needs to be more complex.",
+      PASSWORD_COMPLEX: "Your password is sufficiently complex.",
+      EMAIL: "Please enter a valid email address.",
+      USERNAME_IN_USE: "Sorry, that username is not available",
+      USERNAME_AVAILABLE: "This username is available",
+      EMAIL_IN_USE:
+        "This email is already registed. {break} You might want to {loginAction} or {passwordAction}."
     },
     failure: {
       FAILURE_IDENTITY_NOT_FOUND: "Username and/or password is incorrect.",
@@ -40,6 +45,10 @@ export default {
       FAILURE_OTHER: "Unknown error while logging in.",
       UNKNOWN: "An unexpected error occurred."
     }
+  },
+  helpers: {
+    OPTIONAL_FIELD: "{0} (optional)",
+    REQUIRED_FIELD: "{0} is required."
   },
   header: {
     account_link: "My Account"

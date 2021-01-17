@@ -13,11 +13,11 @@
             square
             ref="username"
             v-model="form.username"
-            :label="$t('auth.login_fields.username')"
+            :label="$t('auth.fields.username')"
             @keypress.enter="$refs.password.focus()"
             autofocus
           >
-            <template v-slot:prepend>
+            <template #prepend>
               <q-icon name="person" />
             </template>
           </q-input>
@@ -27,7 +27,7 @@
             ref="password"
             v-model="form.password"
             :type="isPwd ? 'password' : 'text'"
-            :label="$t('auth.login_fields.password')"
+            :label="$t('auth.fields.password')"
             @keypress.enter="onSubmit"
           >
             <template v-slot:prepend>
