@@ -31,7 +31,7 @@ export default {
     validation: {
       PASSWORD_NOT_COMPLEX: "Your password needs to be more complex.",
       PASSWORD_COMPLEX: "Your password is sufficiently complex.",
-      EMAIL: "Please enter a valid email address.",
+      EMAIL_INVALID: "Please enter a valid email address.",
       USERNAME_IN_USE: "Sorry, that username is not available",
       USERNAME_AVAILABLE: "This username is available",
       EMAIL_IN_USE:

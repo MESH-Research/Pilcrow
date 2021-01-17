@@ -37,7 +37,7 @@
               />
               <div
                 v-if="!$v.email.email || !$v.email.serverValid"
-                v-text="$t('auth.validation.EMAIL')"
+                v-text="$t('auth.validation.EMAIL_INVALID')"
               />
               <i18n
                 v-if="!$v.email.available"
