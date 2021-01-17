@@ -19,6 +19,7 @@
     "lodash": "^4.17.15",
     "quasar": "^1.0.0",
     "vue-i18n": "^8.0.0",
+    "vuelidate": "^0.7.6",
     "zxcvbn": "^4.4.2"
   },
   "devDependencies": {
