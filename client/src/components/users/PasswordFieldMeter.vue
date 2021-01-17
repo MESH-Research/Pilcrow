@@ -1,7 +1,7 @@
 <template>
   <div
     class="row password-meter"
-    :class="score >= threshold ? 'password-success' : 'password-error'"
+    :class="valid ? 'password-success' : 'password-error'"
   >
     <div
       :key="index"
@@ -24,9 +24,8 @@ export default {
       type: Number,
       default: 4
     },
-    threshold: {
-      type: Number,
-      default: 3
+    valid: {
+      type: Boolean
     }
   }
 };

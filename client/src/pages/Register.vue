@@ -37,7 +37,7 @@
           <password-field
             outlined
             :label="$t('auth.fields.password')"
-            v-model="password"
+            :complexity="complexity"
           />
         </q-form>
       </q-card-section>
@@ -63,6 +63,7 @@
 
 <script>
 import PasswordField from "../components/users/PasswordField.vue";
+import zxcvbn from "zxcvbn";
 
 export default {
   name: "PageRegister",
@@ -76,6 +77,11 @@ export default {
       name: "",
       username: ""
     };
+  },
+  computed: {
+    complexity() {
+      return zxcvbn(this.password);
+    }
   },
   methods: {
     submit() {

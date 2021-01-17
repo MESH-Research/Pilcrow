@@ -9,8 +9,6 @@
       autocomplete="new-password"
       bottom-slots
       :error="error"
-      @blur="handleBlur"
-      @focus="error = false"
     >
       <template #append>
         <q-icon
@@ -42,12 +40,17 @@
         >
       </template>
       <template #hint>
+        <password-field-meter :max="4" :score="score" :valid="!error" />
         <div v-if="value.length > 0" class="password-summary">
-          <span v-if="complexity.score >= 3">{{
-            $t("auth.validation.password.COMPLEX")
+          <span v-if="!error">{{
+            $t("auth.validation.PASSWORD_COMPLEX")
           }}</span>
-          <span v-else>{{ $t("auth.validation.password.NOT_COMPLEX") }}</span>
+          <span v-else>{{ $t("auth.validation.PASSWORD_NOT_COMPLEX") }}</span>
         </div>
+        <div
+          v-else-if="value.length == 0 && error"
+          v-text="$t('helpers.REQUIRED_FIELD', ['Password'])"
+        />
       </template>
     </password-field-input>
     <div v-if="showDetails" class="password-details alert alert-tip">
@@ -62,7 +65,6 @@
 </template>
 
 <script>
-import zxcvbn from "zxcvbn";
 import PasswordFieldAnalysis from "./PasswordFieldAnalysis.vue";
 import PasswordFieldInput from "./PasswordFieldInput.vue";
 import PasswordFieldMeter from "./PasswordFieldMeter.vue";
@@ -74,8 +76,7 @@ export default {
   data() {
     return {
       isPwd: true,
-      showDetails: false,
-      error: false
+      showDetails: false
     };
   },
   props: {
@@ -86,19 +87,26 @@ export default {
     value: {
       type: String,
       default: ""
+    },
+    threshold: {
+      type: Number,
+      default: 3
+    },
+    complexity: {
+      type: Object
+    },
+    error: {
+      type: Boolean
     }
   },
   computed: {
-    complexity() {
-      return zxcvbn(this.value);
+    score() {
+      return this.complexity.score;
     }
   },
   methods: {
     handleInput(event) {
       this.$emit("input", event);
-    },
-    handleBlur() {
-      this.error = this.complexity.score < 3;
     }
   }
 };
