@@ -9,7 +9,11 @@
           It only takes a minute to create an account and join our community of
           scholars.
         </p>
-        <q-form class="q-px-sm q-pb-lg q-gutter-y-lg column">
+        <q-form
+          class="q-px-sm q-pb-lg q-gutter-y-lg column"
+          @submit="submit"
+          autofocus
+        >
           <q-input
             outlined
             v-model.trim="name"
@@ -101,6 +105,12 @@
             :complexity="complexity"
           />
         </q-form>
+        <q-banner
+          v-if="$v.$error"
+          dense
+          class="text-white bg-red text-center"
+          v-text="$t('auth.validation.FORM_ERROR')"
+        />
       </q-card-section>
       <q-card-actions class="q-px-lg">
         <q-btn
@@ -109,6 +119,7 @@
           color="deep-purple-7"
           class="full-width text-white"
           :label="$t('auth.register_action')"
+          @click="submit"
         />
       </q-card-actions>
       <q-card-section class="text-center q-pa-sm">
@@ -129,11 +140,15 @@ import { required, email } from "vuelidate/lib/validators";
 import zxcvbn from "zxcvbn";
 import gql from "graphql-tag";
 
-const importValidationErrors = (error, v) => {
-  const errors = error?.gqlError?.extensions?.validation ?? false;
-  if (typeof errors == "object") {
-    for (const [fieldName, fieldErrors] of Object.entries(errors)) {
-      v.serverValidationErrors[fieldName] = fieldErrors;
+const processValidationResult = function({ data, error }, key) {
+  if (typeof error == "undefined") {
+    this.serverValidationErrors[key] = false;
+  } else {
+    const errors = error?.gqlError?.extensions?.validation ?? false;
+    if (errors !== false) {
+      for (const [fieldName, fieldErrors] of Object.entries(errors)) {
+        this.serverValidationErrors[fieldName] = fieldErrors;
+      }
     }
   }
 };
@@ -143,28 +158,34 @@ export default {
   mixins: [validationMixin],
   components: { PasswordField },
   apollo: {
-    usernameErrors: {
+    "user.username": {
       query: gql`
         query usernameAvailable($username: String) {
           validateNewUser(user: { username: $username })
         }
       `,
-      update: data => !data.validateNewUser,
+      manual: true,
+      result: processValidationResult,
       variables() {
         return {
           username: this.username
         };
       },
-      loadingKey: "usernameLoading",
-      error: importValidationErrors
+      skip() {
+        if (!this.$v.username.required || this.username === "") {
+          return true;
+        }
+      },
+      loadingKey: "usernameLoading"
     },
-    emailErrors: {
+    "user.email": {
       query: gql`
         query emailAvailable($email: String) {
           validateNewUser(user: { email: $email })
         }
       `,
-      update: data => !data.validateNewUser,
+      manual: true,
+      result: processValidationResult,
       variables() {
         return {
           email: this.email
@@ -177,8 +198,7 @@ export default {
           return true;
         }
         return false;
-      },
-      error: importValidationErrors
+      }
     }
   },
   data: () => {
@@ -189,28 +209,13 @@ export default {
       username: "",
       serverValidationErrors: { "user.username": false, "user.email": false },
       usernameLoading: 0,
-      emailLoading: 0
+      emailLoading: 0,
+      formLoading: 0
     };
   },
   computed: {
     complexity() {
       return zxcvbn(this.password);
-    },
-    usernameErrors: {
-      get: function() {
-        return this.serverValidationErrors["user.username"];
-      },
-      set: function(newValue) {
-        this.serverValidationErrors["user.username"] = newValue;
-      }
-    },
-    emailErrors: {
-      get: function() {
-        return this.serverValidationErrors["user.email"];
-      },
-      set: function(newValue) {
-        this.serverValidationErrors["user.email"] = newValue;
-      }
     },
     isServerError() {
       return (field, errorToken) => {
@@ -257,6 +262,9 @@ export default {
   methods: {
     submit() {
       const { email, name, username, password } = this;
+      this.$v.$touch();
+      if (!this.$v.$error) {
+      }
     }
   }
 };

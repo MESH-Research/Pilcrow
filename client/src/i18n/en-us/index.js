@@ -35,7 +35,8 @@ export default {
       USERNAME_IN_USE: "Sorry, that username is not available",
       USERNAME_AVAILABLE: "This username is available",
       EMAIL_IN_USE:
-        "This email is already registed. {break} You might want to {loginAction} or {passwordAction}."
+        "This email is already registed. {break} You might want to {loginAction} or {passwordAction}.",
+      FORM_ERROR: "Oops, please correct the errors above and try again."
     },
     failure: {
       FAILURE_IDENTITY_NOT_FOUND: "Username and/or password is incorrect.",
