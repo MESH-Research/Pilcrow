@@ -294,7 +294,7 @@ export default {
       this.$apollo
         .mutate({
           mutation: gql`
-            mutation(
+            mutation CreateUser(
               $email: String!
               $name: String
               $username: String!
