@@ -19,14 +19,14 @@ Input type for userCreate mutation
 input CreateUserInput {
     "Display name. (optional)"
     name: String
-    
+
     "Username. Must be unique. (required)"
     username: String!
         @rules(
             apply: ["unique:users,username", "filled"]
             messages: { unique: "USERNAME_IN_USE", filled: "USERNAME_EMPTY" }
         )
-    
+
     "Email address. Must be unique. (required)"
     email: String!
         @rules(
@@ -37,9 +37,14 @@ input CreateUserInput {
                 filled: "EMAIL_EMPTY"
             }
         )
-    
+
     "Password used to login to the application. (required)"
-    password: String! @hash
+    password: String!
+        @rules(
+            apply: ["zxcvbn_min:3"]
+            messages: { zxcvbn_min: "PASSWORD_NOT_COMPLEX" }
+        )
+        @hash
 }
 
 """
