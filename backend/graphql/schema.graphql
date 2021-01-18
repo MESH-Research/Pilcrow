@@ -2,7 +2,8 @@
 scalar Date @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Date")
 
 "A datetime string with format `Y-m-d H:i:s`, e.g. `2018-05-23 13:43:32`."
-scalar DateTime @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTime")
+scalar DateTime
+    @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTime")
 
 type Query {
     "Return user accounts in the application."
@@ -20,10 +21,22 @@ input CreateUserInput {
     name: String
     
     "Username. Must be unique. (required)"
-    username: String! @rules(apply: ["unique:users,username"],  messages: { unique: "Username is already in use"})
+    username: String!
+        @rules(
+            apply: ["unique:users,username", "filled"]
+            messages: { unique: "USERNAME_IN_USE", filled: "USERNAME_EMPTY" }
+        )
     
     "Email address. Must be unique. (required)"
-    email: String! @rules(apply: ["unique:users,email"], messages: { unique: "Email address is already in use"})
+    email: String!
+        @rules(
+            apply: ["unique:users,email", "email:rfc,dns", "filled"]
+            messages: {
+                unique: "EMAIL_IN_USE"
+                email: "EMAIL_NOT_VALID"
+                filled: "EMAIL_EMPTY"
+            }
+        )
     
     "Password used to login to the application. (required)"
     password: String! @hash
