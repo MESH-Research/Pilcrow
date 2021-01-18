@@ -3,13 +3,17 @@
     <p v-html="$t('auth.password_meter.summary', { score, crack_time })" />
     <div class="password-suggestions" v-if="suggestions.length">
       <q-list dense>
-        <q-item v-if="warning.length">
+        <q-item class="warning" v-if="warning.length">
           <q-item-section avatar>
             <q-icon class="text-red" name="warning" />
           </q-item-section>
           {{ warning }}
         </q-item>
-        <q-item :key="index" v-for="(message, index) in suggestions">
+        <q-item
+          class="suggestion"
+          :key="index"
+          v-for="(message, index) in suggestions"
+        >
           <q-item-section avatar>
             <q-icon color="primary" name="close" />
           </q-item-section>
