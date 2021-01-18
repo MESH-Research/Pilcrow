@@ -114,14 +114,14 @@ export default {
 
 <style lang="sass" scoped>
 .q-field--with-bottom
-  padding-bottom: 40px;
+  padding-bottom: 40px
 
 .password-details
-  font-size: 12px;
+  font-size: 12px
 
 .q-chip
-  margin: 0;
+  margin: 0
 
 .password-warning
-  font-weight: bold;
+  font-weight: bold
 </style>

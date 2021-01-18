@@ -46,5 +46,5 @@ export default {
 </script>
 <style lang="sass" scoped>
 p:last-child
-    margin: 0;
+    margin: 0
 </style>

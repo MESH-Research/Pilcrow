@@ -34,11 +34,11 @@ export default {
 <style lang="sass" scoped>
 .password-meter
   .col
-    height: 3px;
-    background: #8f8f8f;
-    margin: 3px;
+    height: 3px
+    background: #8f8f8f
+    margin: 3px
   &.password-success .active
-    background: $positive;
+    background: $positive
   &.password-error .active
-    background: $negative;
+    background: $negative
 </style>
