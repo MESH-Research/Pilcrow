@@ -105,7 +105,7 @@
               >{{ $t("auth.validation.USERNAME_AVAILABLE") }}</template
             >
           </q-input>
-          <password-field
+          <new-password-input
             outlined
             :label="$t('auth.fields.password')"
             v-model="$v.password.$model"
@@ -142,7 +142,7 @@
 </template>
 
 <script>
-import PasswordField from "../components/users/PasswordField.vue";
+import NewPasswordInput from "../components/forms/NewPasswordInput.vue";
 import { validationMixin } from "vuelidate";
 import { required, email } from "vuelidate/lib/validators";
 import zxcvbn from "zxcvbn";
@@ -174,7 +174,7 @@ const importValidationErrors = function(error, vm) {
 export default {
   name: "PageRegister",
   mixins: [validationMixin],
-  components: { PasswordField },
+  components: { NewPasswordInput },
   apollo: {
     "user.username": {
       query: gql`

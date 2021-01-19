@@ -1,8 +1,8 @@
 import { mount } from "@vue/test-utils";
-import PasswordFieldMeter from "./PasswordFieldMeter.vue";
+import NewPasswordInputMeter from "./NewPasswordInputMeter.vue";
 
-describe("PasswordFieldMeterComponent", () => {
-  const wrapper = mount(PasswordFieldMeter, {
+describe("NewPasswordInputMeter", () => {
+  const wrapper = mount(NewPasswordInputMeter, {
     propsData: {
       max: 4,
       valid: false

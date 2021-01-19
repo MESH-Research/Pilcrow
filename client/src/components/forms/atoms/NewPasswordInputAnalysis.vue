@@ -25,7 +25,7 @@
 </template>
 <script>
 export default {
-  name: "PasswordFieldAnalysis",
+  name: "NewPasswordInputAnalysis",
   props: {
     complexity: {
       type: Object

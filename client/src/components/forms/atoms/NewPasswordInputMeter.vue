@@ -14,7 +14,7 @@
 
 <script>
 export default {
-  name: "PasswordFieldMeter",
+  name: "NewPasswordInputMeter",
   props: {
     score: {
       type: Number,

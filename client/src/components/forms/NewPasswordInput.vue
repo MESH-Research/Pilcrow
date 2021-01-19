@@ -1,28 +1,14 @@
 <template>
   <div>
-    <password-field-input
-      v-bind="$attrs"
+    <password-input
+      v-bind="{ ...$props, ...$attrs }"
       :value="value"
-      @input="handleInput"
+      @input="$emit('input', $event)"
       :label="label"
-      :type="isPwd ? 'password' : 'text'"
       autocomplete="new-password"
       bottom-slots
       :error="error"
     >
-      <template #append>
-        <q-icon
-          :name="isPwd ? 'visibility_off' : 'visibility'"
-          class="cursor-pointer"
-          aria-hidden="false"
-          role="button"
-          tabindex="0"
-          :aria-pressed="isPwd.toString()"
-          @click="isPwd = !isPwd"
-          @keydown.enter.space="isPwd = !isPwd"
-          :aria-label="$t('auth.aria.show_password')"
-        />
-      </template>
       <template #counter>
         <q-chip
           icon="help"
@@ -40,7 +26,7 @@
         >
       </template>
       <template #hint>
-        <password-field-meter :max="4" :score="score" :valid="!error" />
+        <new-password-input-meter :max="4" :score="score" :valid="!error" />
         <div v-if="value.length > 0" class="password-summary">
           <span v-if="!error">{{
             $t("auth.validation.PASSWORD_COMPLEX")
@@ -52,11 +38,14 @@
           v-text="$t('helpers.REQUIRED_FIELD', ['Password'])"
         />
       </template>
-    </password-field-input>
-    <div v-if="showDetails" class="password-details alert alert-tip">
+    </password-input>
+    <div
+      v-if="showDetails"
+      id="password-field-analysis"
+      class="password-details alert alert-tip"
+    >
       <div class="alert-title">{{ $t("auth.password_meter.header") }}</div>
-      <password-field-analysis
-        id="password-field-analysis"
+      <new-password-input-analysis
         :complexity="complexity"
         class="alert-body"
       />
@@ -65,13 +54,17 @@
 </template>
 
 <script>
-import PasswordFieldAnalysis from "./PasswordFieldAnalysis.vue";
-import PasswordFieldInput from "./PasswordFieldInput.vue";
-import PasswordFieldMeter from "./PasswordFieldMeter.vue";
+import NewPasswordInputAnalysis from "./atoms/NewPasswordInputAnalysis.vue";
+import PasswordInput from "./PasswordInput.vue";
+import NewPasswordInputMeter from "./atoms/NewPasswordInputMeter.vue";
 
 export default {
-  components: { PasswordFieldMeter, PasswordFieldAnalysis, PasswordFieldInput },
-  name: "PasswordField",
+  components: {
+    NewPasswordInputAnalysis,
+    PasswordInput,
+    NewPasswordInputMeter
+  },
+  name: "NewPasswordInput",
   inheritAttrs: false,
   data() {
     return {

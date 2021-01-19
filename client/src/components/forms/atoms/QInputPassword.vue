@@ -3,7 +3,7 @@ import { QInput } from "quasar";
 import { slot } from "quasar/src/utils/slot.js";
 
 export default {
-  name: "PasswordFieldInput",
+  name: "QInputPassword",
   extends: QInput,
   methods: {
     __getBottom(h) {

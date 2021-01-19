@@ -1,8 +1,8 @@
 import { shallowMount } from "@vue/test-utils";
-import PasswordFieldAnalysis from "./PasswordFieldAnalysis.vue";
+import PasswordFieldAnalysis from "./NewPasswordInputAnalysis.vue";
 import { merge } from "lodash";
 import { QIcon, QList, QItem, QItemSection } from "quasar";
-describe("PasswordFieldMeterComponent", () => {
+describe("NewPasswordInputAnalysis", () => {
   const mergeProps = (props = {}) => {
     return merge(
       {
