@@ -1,0 +1,50 @@
+#
+# The MySQL database server configuration file for Lando
+#
+
+[mysqld]
+default-storage-engine = innodb
+key_buffer_size    = 384M
+max_allowed_packet  = 32M
+thread_stack    = 400K
+thread_cache_size       = 8
+read_rnd_buffer_size = 8M
+myisam_sort_buffer_size = 64M
+table_open_cache = 512
+sort_buffer_size = 2M
+read_buffer_size = 2M
+query_cache_limit = 1M
+query_cache_size = 64M
+expire_logs_days = 10
+max_binlog_size = 100M
+innodb_log_file_size = 100M
+#innodb_log_buffer_size = 8M
+innodb_flush_log_at_trx_commit = 0
+#innodb_lock_wait_timeout = 50
+innodb_buffer_pool_size = 384M
+innodb_log_buffer_size  = 4M
+innodb_file_per_table   = 1
+innodb_open_files       = 256
+innodb_io_capacity      = 512
+innodb_flush_method     = O_DIRECT
+innodb_thread_concurrency = 8
+innodb_lock_wait_timeout = 120
+character-set-server = utf8mb4
+collation-server = utf8mb4_unicode_ci
+
+[mysqldump]
+quick
+quote-names
+max_allowed_packet  = 32M
+
+[client]
+default-character-set=utf8mb4
+
+[mysql]
+default-character-set=utf8mb4
+
+[isamchk]
+key_buffer_size = 384M
+sort_buffer_size = 256M
+read_buffer = 2M
+write_buffer = 2M
