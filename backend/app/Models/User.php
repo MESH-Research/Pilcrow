@@ -45,35 +45,6 @@ class User extends Authenticatable
     ];
 
     /**
-     * Rules for creation of a user
-     *
-     * @return array
-     */
-    public static function createRules()
-    {
-        return [
-            'username' => ['required', new Username, 'max:55', 'unique:users'],
-            'email' => 'email|required|unique:users',
-            'password' => 'required|zxcvbn_min:4|max:255',
-        ];
-    }
-
-    /**
-     * Rules for update of a user
-     *
-     * @return array
-     */
-    public static function updateRules()
-    {
-        return [
-            'username' => ['sometimes', 'required', new Username, 'max:55', 'unique:users'],
-            'email' => 'sometimes|email|required|unique:users',
-            'password' => 'somtimes|required|zxcvbn_min:4|max:255',
-            'current_password' => 'required_with:password'
-        ];
-    }
-
-    /**
      * Lowercase email before saving to persistance.
      *
      * @param string $value

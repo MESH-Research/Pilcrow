@@ -1,7 +1,7 @@
 name: ccr
 recipe: laravel
 config:
-  php: '8.0'
+  php: "8.0"
   composer_version: 2
   composer: []
   webroot: backend/public
@@ -9,6 +9,9 @@ config:
   config:
     vhosts: .lando/default.conf.tpl
 services:
+  database:
+    config:
+      database: .lando/mysql.cnf
   client:
     type: node
     build:
@@ -27,4 +30,3 @@ tooling:
     service: client
     cmd: npx quasar
     dir: /app/client
-
