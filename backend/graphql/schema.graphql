@@ -1,4 +1,4 @@
-"A date string wit`h format `Y-m-d`, e.g. `2011-05-23`."
+"A date string with format `Y-m-d`, e.g. `2011-05-23`."
 scalar Date @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Date")
 
 "A datetime string with format `Y-m-d H:i:s`, e.g. `2018-05-23 13:43:32`."
@@ -14,31 +14,6 @@ type Query {
 
     "Validate details of a new user.  Returns true if supplied user fields would be valid."
     validateNewUser(user: ValidateNewUserInput): Boolean @returnTrue
-}
-
-"""
-Input type for userCreate mutation
-"""
-input CreateUserInput {
-    "Display name. (optional)"
-    name: String
-
-    "Username. Must be unique. (required)"
-    username: String!
-        @rules(
-            apply: ["unique:users,username"]
-            messages: { unique: "Username is already in use" }
-        )
-
-    "Email address. Must be unique. (required)"
-    email: String!
-        @rules(
-            apply: ["unique:users,email"]
-            messages: { unique: "Email address is already in use" }
-        )
-
-    "Password used to login to the application. (required)"
-    password: String! @hash
 }
 
 "Validate the availability of username and email via the validateNewUser query"
@@ -106,13 +81,6 @@ type User {
     email: String!
     created_at: DateTime!
     updated_at: DateTime
-}
-
-"""
-Create a new user.
-"""
-type Mutation {
-    createUser(user: CreateUserInput! @spread): User! @create
 }
 
 """
