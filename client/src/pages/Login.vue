@@ -13,6 +13,7 @@
             :label="$t('auth.login_fields.email')"
             @keypress.enter="$refs.password.focus()"
             autofocus
+            autocomplete="username"
           >
             <template v-slot:prepend>
               <q-icon name="person" />
@@ -26,6 +27,7 @@
             :type="isPwd ? 'password' : 'text'"
             :label="$t('auth.login_fields.password')"
             @keypress.enter="login"
+            autocomplete="current-password"
           >
             <template v-slot:prepend>
               <q-icon name="lock" />
