@@ -25,7 +25,6 @@
           <q-input
             outlined
             v-model.trim="name"
-            type="input"
             :label="$t('helpers.OPTIONAL_FIELD', [$t('auth.fields.name')])"
             autocomplete="name"
             bottom-slots
@@ -36,7 +35,7 @@
             v-model.trim="$v.email.$model"
             type="email"
             :label="$t('auth.fields.email')"
-            autocomplete="email"
+            autocomplete="username"
             :error="$v.email.$error"
             :loading="emailLoading > 0"
             debounce="500"
@@ -74,10 +73,10 @@
           <q-input
             outlined
             v-model.trim="$v.username.$model"
-            type="input"
             :label="$t('auth.fields.username')"
             :error="$v.username.$error"
             :loading="usernameLoading > 0"
+            autocomplete="nickname"
             debounce="500"
             bottom-slots
           >
