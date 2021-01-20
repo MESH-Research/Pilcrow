@@ -117,33 +117,6 @@ export default {
           console.error(error);
         });
     },
-    onSubmit() {
-      this.error = "";
-      this.loading = true;
-      this.$store
-        .dispatch("auth/login", {
-          credentials: this.form
-        })
-        .then(data => {
-          let url = this.$router.currentRoute.query["redirect"] || "/";
-          this.$router.push(decodeURIComponent(url));
-        })
-        .catch(data => {
-          this.error = data.error
-            ? this.$t("auth.failure." + data.error)
-            : this.$t("auth.failure.UNKNOWN");
-          this.form.password = "";
-          this.$refs.password.$el.focus();
-        })
-        .finally(() => {
-          this.loading = false;
-        });
-    }
   },
-  preFetch({ store }) {
-    if (store.getters["auth/isLoggedIn"]) {
-      return store.dispatch("auth/logout");
-    }
-  }
 };
 </script>
