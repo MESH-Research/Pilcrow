@@ -55,6 +55,7 @@ type User {
     name: String
     username: String!
     email: String!
+    username: String!
     created_at: DateTime!
     updated_at: DateTime
 }
@@ -64,4 +65,12 @@ Create a new user.
 """
 type Mutation {
     createUser(user: CreateUserInput! @spread): User! @create
+}
+
+type Mutation {
+  "Log in to a new session and get the user."
+  login(email: String!, password: String!): User!
+
+  "Log out from the current session, showing the user one last time."
+  logout: User @guard
 }

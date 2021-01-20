@@ -44,6 +44,11 @@ server {
         log_not_found off;
     }
 
+    location /sanctum/csrf-cookie {
+        error_page 404 = @backend;
+        log_not_found off;
+    }
+
     location @backend {
         try_files $uri /index.php =404;
         fastcgi_pass fpm:9000;

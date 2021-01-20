@@ -1,11 +1,12 @@
-export default function ({ssrContext}) {
+export default function({ ssrContext }) {
   return {
     default: {
       // 'apollo-link-http' config
       // https://www.apollographql.com/docs/link/links/http/#options
       httpLinkConfig: {
         //If running under SSR, use the internal container address. Otherwise, make URI relative to current host.
-        uri: process.env.GRAPHQL_URI || (ssrContext ? 'http://appserver_nginx/graphql' : '/graphql')
+        uri: process.env.GRAPHQL_URI || "/graphql",
+        credentials: "include"
       },
 
       // 'apollo-cache-inmemory' config
@@ -36,6 +37,9 @@ export default function ({ssrContext}) {
 
     // the following gets merged to the config only when using ssr and on server
     ssrOnServer: {
+      httpLinkConfig: {
+        uri: process.env.GRAPHQL_URI || "http://appserver_nginx/graphql"
+      },
       additionalConfig: {
         // https://apollo.vuejs.org/guide/ssr.html#create-apollo-client
         ssrMode: true
@@ -49,5 +53,5 @@ export default function ({ssrContext}) {
         ssrForceFetchDelay: 100
       }
     }
-  }
+  };
 }

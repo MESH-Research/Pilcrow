@@ -60,6 +60,20 @@ module.exports = function(ctx) {
       // preloadChunks: false,
       // extractCSS: false,
 
+      chainWebpack (chain, { isServer, isClient }) {
+        chain.module.rule('vue')
+          .use('vue-loader')
+          .loader('vue-loader')
+          .tap(options => {
+            options.transpileOptions = {
+              transforms: {
+                dangerousTaggedTemplateString: true
+              }
+            }
+            return options
+          })
+      },
+
       // https://quasar.dev/quasar-cli/cli-documentation/handling-webpack
       extendWebpack(cfg) {
         cfg.module.rules.push({

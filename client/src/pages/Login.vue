@@ -5,17 +5,15 @@
         <div class="text-h5 text-white">Login</div>
       </q-card-section>
       <q-card-section class="q-pa-lg">
-        <q-form
-          v-on:submit.prevent="onSubmit()"
-          class="q-px-sm q-pt-md q-pb-lg"
-        >
+        <q-form v-on:submit.prevent="login()" class="q-px-sm q-pt-md q-pb-lg">
           <q-input
             square
-            ref="username"
-            v-model="form.username"
-            :label="$t('auth.login_fields.username')"
+            ref="email"
+            v-model="form.email"
+            :label="$t('auth.login_fields.email')"
             @keypress.enter="$refs.password.focus()"
             autofocus
+            autocomplete="username"
           >
             <template v-slot:prepend>
               <q-icon name="person" />
@@ -28,7 +26,8 @@
             v-model="form.password"
             :type="isPwd ? 'password' : 'text'"
             :label="$t('auth.login_fields.password')"
-            @keypress.enter="onSubmit"
+            @keypress.enter="login"
+            autocomplete="current-password"
           >
             <template v-slot:prepend>
               <q-icon name="lock" />
@@ -60,7 +59,7 @@
       </q-card-section>
       <q-card-actions class="q-px-lg">
         <q-btn
-          @click.prevent="onSubmit()"
+          @click.prevent="login()"
           unelevated
           size="lg"
           color="purple-4"
@@ -80,13 +79,15 @@
 </template>
 
 <script>
+import gql from "graphql-tag";
+
 export default {
   name: "PageLogin",
   data() {
     return {
       isPwd: true,
       form: {
-        username: "",
+        email: "",
         password: ""
       },
       error: "",
@@ -94,33 +95,30 @@ export default {
     };
   },
   methods: {
-    onSubmit() {
-      this.error = "";
-      this.loading = true;
-      this.$store
-        .dispatch("auth/login", {
-          credentials: this.form
+    async login() {
+      const loginResult = await this.$apollo
+        .mutate({
+          mutation: gql`
+            mutation($email: String!, $password: String!) {
+              login(email: $email, password: $password) {
+                id
+                name
+                username
+              }
+            }
+          `,
+          variables: {
+            email: this.form.email,
+            password: this.form.password
+          }
         })
         .then(data => {
-          let url = this.$router.currentRoute.query["redirect"] || "/";
-          this.$router.push(decodeURIComponent(url));
+          console.log(data);
         })
-        .catch(data => {
-          this.error = data.error
-            ? this.$t("auth.failure." + data.error)
-            : this.$t("auth.failure.UNKNOWN");
-          this.form.password = "";
-          this.$refs.password.$el.focus();
-        })
-        .finally(() => {
-          this.loading = false;
+        .catch(error => {
+          console.error(error);
         });
-    }
+    },
   },
-  preFetch({ store }) {
-    if (store.getters["auth/isLoggedIn"]) {
-      return store.dispatch("auth/logout");
-    }
-  }
 };
 </script>
