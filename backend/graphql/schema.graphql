@@ -64,13 +64,12 @@ type User {
 Create a new user.
 """
 type Mutation {
+    "Create a new user"
     createUser(user: CreateUserInput! @spread): User! @create
-}
 
-type Mutation {
-  "Log in to a new session and get the user."
-  login(email: String!, password: String!): User!
+    "Log in to a new session and get the user."
+    login(email: String!, password: String!): User!
 
-  "Log out from the current session, showing the user one last time."
-  logout: User @guard
+    "Log out from the current session, showing the user one last time."
+    logout: User @guard
 }
