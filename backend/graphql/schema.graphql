@@ -60,9 +60,6 @@ type User {
     updated_at: DateTime
 }
 
-"""
-Create a new user.
-"""
 type Mutation {
     "Create a new user"
     createUser(user: CreateUserInput! @spread): User! @create
