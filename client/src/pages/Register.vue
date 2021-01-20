@@ -276,7 +276,10 @@ export default {
     password: {
       required,
       complexity() {
-        return this.complexity.score >= 3;
+        return (
+          this.complexity.score >= 3 &&
+          !this.isServerError("user.password", "PASSWORD_NOT_COMPLEX")
+        );
       }
     }
   },
