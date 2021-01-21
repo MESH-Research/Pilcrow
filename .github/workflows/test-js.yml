@@ -2,25 +2,27 @@ name: Frontend Testing
 
 on:
   push:
-    branches: [ master, development ]
+    branches: [master, development]
   pull_request:
-    branches: [ master, development ]
+    branches: [master, development]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: client
     steps:
-    - uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
-    - name: Install quasar CLI
-      run: yarn global add @quasar/cli
-      
-    - name: Install dependencies
-      run: yarn install
+      - name: Install quasar CLI
+        run: yarn global add @quasar/cli
 
-    - name: Build quasar SPA
-      run: $(yarn global bin)/quasar build -m spa    
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Build quasar SPA
+        run: $(yarn global bin)/quasar build -m spa
+
+      - name: Jest Unit Tests
+        run: yarn test:unit:ci

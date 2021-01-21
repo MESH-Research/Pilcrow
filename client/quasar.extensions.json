@@ -1,5 +1,17 @@
 {
   "@quasar/apollo": {
     "graphql_uri": "https://ccr.lndo.site/graphql"
+  },
+  "@quasar/testing": {
+    "harnesses": [
+      "unit-jest"
+    ]
+  },
+  "@quasar/testing-unit-jest": {
+    "babel": "babelrc",
+    "options": [
+      "scripts",
+      "majestic"
+    ]
   }
 }

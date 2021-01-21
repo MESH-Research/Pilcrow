@@ -8,14 +8,14 @@
         <q-form v-on:submit.prevent="login()" class="q-px-sm q-pt-md q-pb-lg">
           <q-input
             square
-            ref="email"
-            v-model="form.email"
-            :label="$t('auth.login_fields.email')"
+            ref="username"
+            v-model="form.username"
+            :label="$t('auth.fields.username')"
             @keypress.enter="$refs.password.focus()"
             autofocus
             autocomplete="username"
           >
-            <template v-slot:prepend>
+            <template #prepend>
               <q-icon name="person" />
             </template>
           </q-input>
@@ -25,7 +25,7 @@
             ref="password"
             v-model="form.password"
             :type="isPwd ? 'password' : 'text'"
-            :label="$t('auth.login_fields.password')"
+            :label="$t('auth.fields.password')"
             @keypress.enter="login"
             autocomplete="current-password"
           >

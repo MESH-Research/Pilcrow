@@ -11,6 +11,30 @@ type Query {
 
     "Return details about a specific user in the application"
     user(id: ID @eq): User @find
+
+    "Validate details of a new user.  Returns true if supplied user fields would be valid."
+    validateNewUser(user: ValidateNewUserInput): Boolean @returnTrue
+}
+
+"Validate the availability of username and email via the validateNewUser query"
+input ValidateNewUserInput {
+    "Username.  Validation error if not unique"
+    username: String
+        @rules(
+            apply: ["unique:users,username", "filled"]
+            messages: { unique: "USERNAME_IN_USE", filled: "USERNAME_EMPTY" }
+        )
+
+    "Email. Validation error if not unique"
+    email: String
+        @rules(
+            apply: ["unique:users,email", "email:rfc,dns", "filled"]
+            messages: {
+                unique: "EMAIL_IN_USE"
+                email: "EMAIL_NOT_VALID"
+                filled: "EMAIL_EMPTY"
+            }
+        )
 }
 
 """
