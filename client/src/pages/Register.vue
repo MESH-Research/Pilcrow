@@ -115,7 +115,7 @@
         <q-banner
           v-if="formErrorMsg"
           dense
-          class="text-white bg-red text-center"
+          class="form-error text-white bg-red text-center"
           v-text="$t(`auth.failures.${formErrorMsg}`)"
         />
       </q-card-section>
@@ -181,6 +181,8 @@ export default {
           validateNewUser(user: { username: $username })
         }
       `,
+      //We have to tell vue-apollo that we're dealing with errors to stop it from outputting to the console.  Lame.
+      error: () => true,
       manual: true,
       result: processValidationResult,
       fetchPolicy: "cache-and-network",
@@ -203,6 +205,8 @@ export default {
           validateNewUser(user: { email: $email })
         }
       `,
+      //We have to tell vue-apollo that we're dealing with errors to stop it from outputting to the console.  Lame.
+      error: () => true,
       manual: true,
       result: processValidationResult,
       fetchPolicy: "cache-and-network",
@@ -240,10 +244,12 @@ export default {
     },
     isServerError() {
       return (field, errorToken) => {
-        if (this.serverValidationErrors[field] === false) {
-          return false;
+        if (!errorToken) {
+          return (this.serverValidationErrors[field] ?? false) !== false;
         }
-        return this.serverValidationErrors[field].includes(errorToken);
+        return (
+          this.serverValidationErrors[field]?.includes?.(errorToken) ?? false
+        );
       };
     }
   },
@@ -284,7 +290,12 @@ export default {
     }
   },
   methods: {
-    submit() {
+    resetServerValidation() {
+      Object.entries(this.serverValidationErrors).forEach(
+        ([_, value]) => (value = false)
+      );
+    },
+    async submit() {
       const { email, name, username, password } = this;
       this.$v.$touch();
       this.formErrorMsg = "";
@@ -292,9 +303,9 @@ export default {
         this.formErrorMsg = "CREATE_FORM_VALIDATION";
         return;
       }
-
-      this.$apollo
-        .mutate({
+      this.resetServerValidation();
+      try {
+        const result = await this.$apollo.mutate({
           mutation: gql`
             mutation CreateUser(
               $email: String!
@@ -322,18 +333,17 @@ export default {
             username,
             password
           }
-        })
-        .then(data => {
-          this.formSuccess = true;
-        })
-        .catch(error => {
-          if (importValidationErrors(error, this)) {
-            this.formErrorMsg = "CREATE_FORM_VALIDATION";
-          } else {
-            this.formErrorMsg = "CREATE_FORM_INTERNAL";
-          }
-          this.$v.$touch();
         });
+      } catch (error) {
+        if (importValidationErrors(error, this)) {
+          this.formErrorMsg = "CREATE_FORM_VALIDATION";
+        } else {
+          this.formErrorMsg = "CREATE_FORM_INTERNAL";
+        }
+        this.$v.$touch();
+        return;
+      }
+      this.formSuccess = true;
     }
   }
 };
