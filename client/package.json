@@ -23,6 +23,8 @@
   },
   "dependencies": {
     "@quasar/extras": "^1.0.0",
+    "apollo-link-context": "^1.0.20",
+    "apollo-link-error": "^1.1.13",
     "axios": "^0.21.1",
     "lodash": "^4.17.20",
     "quasar": "^1.0.0",

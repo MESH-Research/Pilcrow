@@ -1,5 +1,5 @@
 name: Deploy Docs
-on: 
+on:
   push:
     branches:
       - development
@@ -11,7 +11,7 @@ jobs:
         uses: actions/checkout@master
       - name: Install and Build 🔧
         env:
-          CURRENT_BRANCH: development
+          BRANCH: development
           BASE_URL: /CCR/
         run: |
           yarn
@@ -24,4 +24,3 @@ jobs:
           BRANCH: gh-pages # The branch the action should deploy to.
           FOLDER: docs/.vuepress/dist # The folder the action should deploy.
           CLEAN: true # Automatically remove deleted files from the deploy branch
-          
