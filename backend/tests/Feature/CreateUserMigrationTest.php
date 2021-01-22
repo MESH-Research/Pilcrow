@@ -6,7 +6,7 @@ use Nuwave\Lighthouse\Testing\MakesGraphQLRequests;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class CreateUserEndpointTest extends TestCase
+class CreateUserMigrationTest extends TestCase
 {
     use MakesGraphQLRequests;
     use RefreshDatabase;
