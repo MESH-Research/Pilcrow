@@ -8,8 +8,8 @@ use Tests\TestCase;
 
 class CreateUserMigrationTest extends TestCase
 {
-    use MakesGraphQLRequests;
-    use RefreshDatabase;
+    use MakesGraphQLRequests, RefreshDatabase;
+
     /**
      * Test that the name supplied to the createUser migration can be empty.
      *
@@ -17,14 +17,19 @@ class CreateUserMigrationTest extends TestCase
      */
     public function testEmptyName()
     {
-        $response = $this->graphQL('
-            mutation {
-                createUser(user: {name: "", email: "brandnew@gmail.com", password: "KajSu8viptUrz&", username: "testusername"}) {
+        $response = $this->graphQL(
+            'mutation {
+                createUser(user: {
+                    name: "", 
+                    email: "brandnew@gmail.com", 
+                    password: "KajSu8viptUrz&", 
+                    username: "testusername"
+                }) {
                     name
                     username
                 }
-            }
-        ');
+            }'
+        );
 
         $response->assertJsonPath("data.createUser.username", "testusername");
         $response->assertJsonPath("data.createUser.name", "");
@@ -37,14 +42,18 @@ class CreateUserMigrationTest extends TestCase
      */
     public function testMissingName()
     {
-        $response = $this->graphQL('
-            mutation {
-                createUser(user: {email: "brandnew@gmail.com", password: "KajSu8viptUrz&", username: "testusername"}) {
+        $response = $this->graphQL(
+            'mutation {
+                createUser(user: {
+                    email: "brandnew@gmail.com", 
+                    password: "KajSu8viptUrz&", 
+                    username: "testusername"
+                }) {
                     name
                     username
                 }
-            }
-        ');
+            }'
+        );
 
         $response->assertJsonPath("data.createUser.username", "testusername");
         $response->assertJsonPath("data.createUser.name", null);
