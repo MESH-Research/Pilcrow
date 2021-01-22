@@ -11,7 +11,7 @@ class CreateUserEndpointTest extends TestCase
     use MakesGraphQLRequests;
     use RefreshDatabase;
     /**
-     * A basic feature test example.
+     * Test that the name supplied to the createUser migration can be empty.
      *
      * @return void
      */
@@ -30,6 +30,11 @@ class CreateUserEndpointTest extends TestCase
         $response->assertJsonPath("data.createUser.name", "");
     }
 
+    /**
+     * Test that the name supplied to the createUser migration can be null.
+     *
+     * @return void
+     */
     public function testMissingName()
     {
         $response = $this->graphQL('
