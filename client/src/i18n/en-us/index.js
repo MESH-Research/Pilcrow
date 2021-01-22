@@ -41,9 +41,9 @@ export default {
       CREATE_FORM_VALIDATION:
         "Oops, please correct the errors above and try again.",
       CREATE_FORM_INTERNAL: "Error processing result, please try again later.",
+      LOGIN_FORM_VALIDATION: "Please correct the errors above and try again.",
       FAILURE_IDENTITY_NOT_FOUND: "Username and/or password is incorrect.",
-      FAILURE_CREDENTIALS_INVALID:
-        "Username and password combination is incorrect.",
+      CREDENTIALS_INVALID: "Username and password combination is incorrect.",
       FAILURE_CREDENTIALS_MISSING: "No credentials supplied.",
       FAILURE_OTHER: "Unknown error while logging in.",
       UNKNOWN: "An unexpected error occurred."
