@@ -18,32 +18,30 @@ class CreateUserEndpointTest extends TestCase
     public function testEmptyName()
     {
         $response = $this->graphQL('
-        
             mutation {
                 createUser(user: {name: "", email: "brandnew@gmail.com", password: "KajSu8viptUrz&", username: "testusername"}) {
+                    name
                     username
                 }
             }
         ');
 
         $response->assertJsonPath("data.createUser.username", "testusername");
-
-
+        $response->assertJsonPath("data.createUser.name", "");
     }
 
     public function testMissingName()
     {
         $response = $this->graphQL('
-        
             mutation {
                 createUser(user: {email: "brandnew@gmail.com", password: "KajSu8viptUrz&", username: "testusername"}) {
+                    name
                     username
                 }
             }
         ');
 
         $response->assertJsonPath("data.createUser.username", "testusername");
-
-
+        $response->assertJsonPath("data.createUser.name", null);
     }
 }
