@@ -39,3 +39,4 @@ data/
 .lando.local.yml
 #Vendor Files
 node_modules/
+backend/vendor/**/*
