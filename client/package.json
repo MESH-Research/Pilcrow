@@ -19,7 +19,9 @@
     "test:unit:watchAll": "jest --watchAll",
     "serve:test:coverage": "quasar serve test/jest/coverage/lcov-report/ --port 8788",
     "concurrently:dev:jest": "concurrently \"quasar dev\" \"jest --watch\"",
-    "test:unit:ui": "majestic"
+    "test:unit:ui": "majestic",
+    "test:e2e": "cross-env E2E_TEST=true start-test \"quasar dev\" http-get://localhost:8080 \"cypress open\"",
+    "test:e2e:ci": "cross-env E2E_TEST=true start-test \"quasar dev\" http-get://localhost:8080 \"cypress run\""
   },
   "dependencies": {
     "@quasar/extras": "^1.0.0",
@@ -36,6 +38,7 @@
     "@quasar/app": "^1.0.0",
     "@quasar/quasar-app-extension-apollo": "^1.0.0-beta.6",
     "@quasar/quasar-app-extension-testing": "^1.0.3",
+    "@quasar/quasar-app-extension-testing-e2e-cypress": "^3.0.1",
     "@quasar/quasar-app-extension-testing-unit-jest": "^2.2.1",
     "babel-eslint": "^10.0.1",
     "eslint": "^6.8.0",
@@ -43,7 +46,8 @@
     "eslint-loader": "^3.0.3",
     "eslint-plugin-jest": "^24.1.0",
     "eslint-plugin-vue": "^6.1.2",
-    "majestic": "^1.2.24"
+    "majestic": "^1.2.24",
+    "eslint-plugin-cypress": "^2.11.1"
   },
   "engines": {
     "node": ">= 10.18.1",
