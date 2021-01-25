@@ -7,8 +7,8 @@ module.exports = {
         ["meta", { name: "apple-mobile-web-app-capable", content: "yes" }],
         [
             "meta",
-            { name: "apple-mobile-web-app-status-bar-style", content: "black" },
-        ],
+            { name: "apple-mobile-web-app-status-bar-style", content: "black" }
+        ]
     ],
     base: process.env.BASE_URL || "/",
     themeConfig: {
@@ -16,43 +16,44 @@ module.exports = {
         branch: process.env.BRANCH,
         editLinks: true,
         docsDir: "docs",
-        docsBranch: "development",
+        docsBranch: process.env.BRANCH || "master",
         editLinkText: "",
         lastUpdated: true,
         nav: [
             {
                 text: "Guide",
-                link: "/guide/",
+                link: "/guide/"
             },
             {
                 text: "Installation",
-                link: "/install/",
+                link: "/install/"
             },
             {
                 text: "Contributing",
-                link: "/contributing/",
-            },
+                link: "/contributing/"
+            }
         ],
         sidebar: {
             "/guide/": [
                 {
                     title: "Guide",
-                    collapsable: false,
-                },
+                    collapsable: false
+                }
             ],
             "/install/": [
                 {
-                    title: "Installation",
-                    collapsable: false,
-                },
+                    title: "Boo",
+                    collapsable: false
+                }
             ],
             "/contributing/": [
                 {
                     title: "Contributing",
-                    collapsable: false,
-                },
-            ],
-        },
+                    sidebarDepth: 1,
+                    children: ["", "architechture", "testing", "documentation"]
+                }
+            ]
+        }
     },
 
     /**
@@ -64,9 +65,9 @@ module.exports = {
         [
             "robots",
             {
-                host: "https://mesh-research.github.io/CCR",
-                disallowAll: true,
-            },
-        ],
-    ],
+                host: "https://docs.ccrproject.dev/CCR",
+                disallowAll: true
+            }
+        ]
+    ]
 };
