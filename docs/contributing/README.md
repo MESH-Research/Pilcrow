@@ -39,7 +39,7 @@ Lando has a number of built-in tooling commands that allow a developer to easily
 There are other useful tooling commands available. To view a list of all commands available run `lando` at your command prompt with no arguments.
 
 ::: tip
-Lando tooling commands will run inside the container in your current working directory. This means you should be careful to run composer, yarn, etc inside the appropriate directories of the project or you may end up inadvertently creating a new composer.json or package.json in a different part of the project than you intended. The only expection to this is the `lando quasar` command which always runs in the `/client` directory.
+Lando tooling commands will run inside the container in your current working directory. This means you should be careful to run composer, yarn, etc inside the appropriate directories of the project or you may end up inadvertently creating a new composer.json or package.json in a different part of the project than you intended. The only exception to this is the `lando quasar` command which always runs in the `/client` directory.
 :::
 
 ### Additional Local Configuration

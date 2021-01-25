@@ -1,5 +1,12 @@
 const { description } = require("../package");
 
+var docsBranch;
+if (process && process.env && process.env.HEAD) {
+    let matches = process.env.HEAD.match(/^refs\/heads\/([^"]+)$/);
+    if (matches[1]) {
+        docsBranch = matches[1];
+    }
+}
 module.exports = {
     title: "Collaborative Community Review",
     head: [
@@ -16,7 +23,7 @@ module.exports = {
         branch: process.env.BRANCH,
         editLinks: true,
         docsDir: "docs",
-        docsBranch: process.env.BRANCH || "master",
+        docsBranch: docsBranch || "master",
         editLinkText: "",
         lastUpdated: true,
         nav: [
