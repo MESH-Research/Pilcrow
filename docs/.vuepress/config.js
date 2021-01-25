@@ -2,6 +2,7 @@ const { description } = require("../package");
 
 var docsBranch;
 if (process && process.env && process.env.HEAD) {
+    console.log(process.env.HEAD);
     let matches = process.env.HEAD.match(/^refs\/heads\/([^"]+)$/);
     if (matches[1]) {
         docsBranch = matches[1];
