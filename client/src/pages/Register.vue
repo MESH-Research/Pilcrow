@@ -4,15 +4,8 @@
       <q-card-section class="bg-deep-purple-7">
         <h4 class="text-h5 text-white q-my-xs">{{ $t("auth.register") }}</h4>
       </q-card-section>
-      <q-card-section v-if="formSuccess">
-        <div class="alert alert-success">
-          Woo hoo, you have an account now. Ideally you would have been logged
-          in and directed to your dashboard to learn about all the amazing
-          things that are CCR. But for now, this exciting, stylish box is what
-          you're going to have to live with.
-        </div>
-      </q-card-section>
-      <q-card-section v-else>
+
+      <q-card-section>
         <p>
           It only takes a minute to create an account and join our community of
           scholars.
@@ -127,7 +120,7 @@
           v-text="$t(`auth.failures.${formErrorMsg}`)"
         />
       </q-card-section>
-      <q-card-actions v-if="!formSuccess" class="q-px-lg">
+      <q-card-actions class="q-px-lg">
         <q-btn
           unelevated
           size="lg"
@@ -246,8 +239,7 @@ export default {
       usernameLoading: 0,
       emailLoading: 0,
       formLoading: 0,
-      formErrorMsg: "",
-      formSuccess: false
+      formErrorMsg: ""
     };
   },
   computed: {
@@ -318,10 +310,12 @@ export default {
       }
       this.resetServerValidation();
       try {
-        const result = await this.$apollo.mutate({
+        await this.$apollo.mutate({
           mutation: CREATE_USER,
           variables: this.form
         });
+        await this.$login(this.form);
+        this.$router.push("/dashboard");
       } catch (error) {
         if (importValidationErrors(error, this)) {
           this.formErrorMsg = "CREATE_FORM_VALIDATION";
@@ -329,9 +323,7 @@ export default {
           this.formErrorMsg = "CREATE_FORM_INTERNAL";
         }
         this.$v.$touch();
-        return;
       }
-      this.formSuccess = true;
     }
   }
 };
