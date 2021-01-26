@@ -60,4 +60,16 @@ class UserPermissionsTest extends TestCase
         $this->assertNotEmpty($permission->name);
         $this->assertIsString($permission->name);
     }
+
+    /**
+     * @return void
+     */
+    public function testCreationOfPermissionToCreatePublications()
+    {
+        $name = 'create publications';
+        $permission = Permission::factory()->create([
+            'name' => $name
+        ]);
+        $this->assertEquals($permission->name, $name);
+    }
 }
