@@ -16,7 +16,7 @@
         "laravel/framework": "^8.12",
         "laravel/sanctum": "^2.8",
         "laravel/tinker": "^2.5",
-        "nuwave/lighthouse": "^4.18",
+        "nuwave/lighthouse": "^5.1",
         "olssonm/l5-zxcvbn": "^4.4",
         "spatie/laravel-permission": "^3.18"
     },
