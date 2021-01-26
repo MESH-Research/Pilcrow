@@ -72,4 +72,20 @@ class UserPermissionsTest extends TestCase
         ]);
         $this->assertEquals($permission->name, $name);
     }
+
+    /**
+     * @return void
+     */
+    public function testAssignmentOfPermissionToCreatePublicationsToRole()
+    {
+        $name = 'create publications';
+        $permission = Permission::factory()->create([
+            'name' => $name
+        ]);
+        $role = Role::factory()->create([
+            'name' => 'Application Administrator'
+        ]);
+        $role->givePermissionTo($name);
+        $this->assertTrue($role->hasPermissionTo($name));
+    }
 }
