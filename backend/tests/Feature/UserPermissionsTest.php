@@ -15,10 +15,12 @@ class UserPermissionsTest extends TestCase
     /**
      * @return void
      */
-    public function testCreationOfRoles()
+    public function testCreationOfRandomRole()
     {
-        $data = Role::factory()->make();
-        $this->assertNotNull($data);
+        $role = Role::factory()->create();
+        $this->assertNotNull($role->name);
+        $this->assertNotEmpty($role->name);
+        $this->assertIsString($role->name);
     }
 
     /**
