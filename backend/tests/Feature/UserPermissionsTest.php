@@ -7,6 +7,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\Models\User;
 use App\Models\Role;
+use App\Models\Permission;
 
 class UserPermissionsTest extends TestCase
 {
@@ -47,5 +48,16 @@ class UserPermissionsTest extends TestCase
         ]);
         $user->assignRole($name);
         $this->assertTrue($user->hasRole($name));
+    }
+
+    /**
+     * @return void
+     */
+    public function testCreationOfRandomPermission()
+    {
+        $permission = Permission::factory()->create();
+        $this->assertNotNull($permission->name);
+        $this->assertNotEmpty($permission->name);
+        $this->assertIsString($permission->name);
     }
 }
