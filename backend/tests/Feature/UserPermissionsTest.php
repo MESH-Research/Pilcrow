@@ -88,4 +88,22 @@ class UserPermissionsTest extends TestCase
         $role->givePermissionTo($name);
         $this->assertTrue($role->hasPermissionTo($name));
     }
+
+    /**
+     * @return void
+     */
+    public function testUserHasPermissionToCreatePublicationsByAssignedRole()
+    {
+        $name = 'create publications';
+        $user = User::factory()->create();
+        $permission = Permission::factory()->create([
+            'name' => $name
+        ]);
+        $role = Role::factory()->create([
+            'name' => 'Application Administrator'
+        ]);
+        $role->givePermissionTo($name);
+        $user->assignRole('Application Administrator');
+        $this->assertTrue($user->can($name));
+    }
 }
