@@ -17,3 +17,25 @@ export const LOGOUT = gql`
     }
   }
 `;
+
+export const CREATE_USER = gql`
+  mutation CreateUser(
+    $email: String!
+    $name: String
+    $username: String!
+    $password: String!
+  ) {
+    createUser(
+      user: {
+        name: $name
+        email: $email
+        username: $username
+        password: $password
+      }
+    ) {
+      username
+      id
+      created_at
+    }
+  }
+`;
