@@ -38,11 +38,11 @@
         </div>
         <div class="text-subtitle">Submission & Review System</div>
       </div>
-      <q-img src="statics/header-back.jpg" class="header-image absolute-top" />
+      <q-img src="header-back.jpg" class="header-image absolute-top" />
     </q-header>
 
-    <app-footer/>
-    
+    <app-footer />
+
     <q-page-container>
       <router-view />
     </q-page-container>
@@ -55,7 +55,7 @@ import AppFooter from "../components/AppFooter.vue";
 export default {
   name: "MainLayout",
 
-  components: {AppFooter},
+  components: { AppFooter },
 
   data() {
     return {
