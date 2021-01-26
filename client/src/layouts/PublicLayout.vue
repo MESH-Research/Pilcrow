@@ -23,7 +23,6 @@ export default {
       leftDrawerOpen: false
     };
   },
-  methods: {}
 };
 </script>
 

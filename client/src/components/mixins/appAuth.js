@@ -1,5 +1,4 @@
 import gql from "graphql-tag";
-import { get } from "lodash";
 export default {
   methods: {
     async $login(credentials) {
@@ -44,7 +43,7 @@ export default {
         }
         return {
           success: false,
-          errors: errors ?? [FAILURE_OTHER]
+          errors: errors ?? ["FAILURE_OTHER"]
         };
       }
     },
