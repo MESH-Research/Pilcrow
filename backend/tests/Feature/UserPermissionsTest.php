@@ -26,9 +26,16 @@ class UserPermissionsTest extends TestCase
     /**
      * @return void
      */
-    public function testCreationOfUsers()
+    public function testCreationOfApplicationAdministratorRole()
     {
-        $data = User::factory()->make();
-        $this->assertNotNull($data);
+        $name = 'Application Administrator';
+        $role = Role::factory()->create([
+            'name' => $name
+        ]);
+        $this->assertNotNull($role->name);
+        $this->assertNotEmpty($role->name);
+        $this->assertIsString($role->name);
+        $this->assertEquals($role->name, $name);
+    }
     }
 }
