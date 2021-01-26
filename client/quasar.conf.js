@@ -43,7 +43,7 @@ module.exports = function(ctx) {
       directives: [],
 
       // Quasar plugins
-      plugins: ["Cookies", "Dialog"]
+      plugins: ["Cookies", "Dialog", "SessionStorage"]
     },
 
     // https://quasar.dev/quasar-cli/cli-documentation/supporting-ie
@@ -60,18 +60,19 @@ module.exports = function(ctx) {
       // preloadChunks: false,
       // extractCSS: false,
 
-      chainWebpack (chain, { isServer, isClient }) {
-        chain.module.rule('vue')
-          .use('vue-loader')
-          .loader('vue-loader')
+      chainWebpack(chain, { isServer, isClient }) {
+        chain.module
+          .rule("vue")
+          .use("vue-loader")
+          .loader("vue-loader")
           .tap(options => {
             options.transpileOptions = {
               transforms: {
                 dangerousTaggedTemplateString: true
               }
-            }
-            return options
-          })
+            };
+            return options;
+          });
       },
 
       // https://quasar.dev/quasar-cli/cli-documentation/handling-webpack
@@ -93,7 +94,7 @@ module.exports = function(ctx) {
       https: false,
       port: 8080,
       open: true,
-      public: 'ccr.lndo.site'
+      public: "ccr.lndo.site"
     },
 
     // animations: 'all', // --- includes all animations

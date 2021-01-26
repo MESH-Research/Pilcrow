@@ -14,7 +14,7 @@
 <script>
 import gql from "graphql-tag";
 import appAuth from "src/components/mixins/appAuth";
-
+import { CURRENT_USER } from "src/graphql/queries";
 export default {
   name: "DashboardPage",
   mixins: [appAuth],
@@ -25,16 +25,7 @@ export default {
   },
   apollo: {
     currentUser: {
-      query: gql`
-        query currentUser {
-          me {
-            username
-            id
-            name
-          }
-        }
-      `,
-      update: data => data.me
+      query: CURRENT_USER
     }
   },
   methods: {

@@ -18,11 +18,13 @@ const routes = [
         children: [
           {
             path: "dashboard/",
-            component: () => import("pages/Dashboard.vue")
+            component: () => import("pages/Dashboard.vue"),
+            meta: { requiresAuth: true }
           },
           {
             path: "account/",
             component: () => import("pages/Account/AccountLayout.vue"),
+            meta: { requiresAuth: true },
             children: [
               {
                 path: "profile",

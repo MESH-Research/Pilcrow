@@ -1,31 +1,17 @@
 import gql from "graphql-tag";
+import { CURRENT_USER } from "src/graphql/queries";
+import { LOGIN, LOGOUT } from "src/graphql/mutations";
 export default {
   methods: {
     async $login(credentials) {
       try {
         const result = await this.$apollo.mutate({
-          mutation: gql`
-            mutation Login($email: String!, $password: String!) {
-              login(email: $email, password: $password) {
-                id
-                name
-                username
-              }
-            }
-          `,
+          mutation: LOGIN,
           variables: credentials,
           update: (store, { data: { login } }) => {
             store.writeQuery({
-              query: gql`
-                query currentUser {
-                  me {
-                    id
-                    name
-                    username
-                  }
-                }
-              `,
-              data: { me: login }
+              query: CURRENT_USER,
+              data: { currentUser: login }
             });
           }
         });
@@ -50,22 +36,11 @@ export default {
     async $logout() {
       try {
         const result = this.$apollo.mutate({
-          mutation: gql`
-            mutation Logout {
-              logout {
-                username
-                id
-              }
-            }
-          `,
+          mutation: LOGOUT,
           update: store => {
             store.writeQuery({
-              query: gql`
-                query currentUser {
-                  me
-                }
-              `,
-              data: { me: null }
+              query: CURRENT_USER,
+              data: { currentUser: null }
             });
           }
         });

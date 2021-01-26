@@ -5,6 +5,13 @@
         <div class="text-h5 text-white">Login</div>
       </q-card-section>
       <q-card-section class="q-pa-lg">
+        <q-banner
+          class="text-white bg-red text-center"
+          dense
+          rounded
+          v-if="redirectUrl"
+          v-text="$t(`auth.loginRequired`)"
+        />
         <q-form
           v-on:submit.prevent="login()"
           class="q-px-sm q-pt-md  q-gutter-y-lg q-pb-lg"
@@ -97,7 +104,8 @@ export default {
         password: ""
       },
       error: "",
-      loading: false
+      loading: false,
+      redirectUrl: null
     };
   },
   validations: {
@@ -111,6 +119,10 @@ export default {
       }
     }
   },
+  mounted() {
+    this.redirectUrl = this.$q.sessionStorage.getItem("loginRedirect");
+    this.$q.sessionStorage.remove("loginRedirect");
+  },
   methods: {
     async login() {
       this.error = "";
@@ -122,7 +134,7 @@ export default {
       const { success, errors } = await this.$login(this.form);
 
       if (success) {
-        this.$router.push("/dashboard");
+        this.$router.push(this.redirectUrl ?? "/dashboard");
       } else {
         this.error = errors.pop();
       }

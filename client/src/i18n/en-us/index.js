@@ -6,6 +6,7 @@ export default {
     more_info: "More Info"
   },
   auth: {
+    loginRequired: "You need to login to access that page.",
     login: "Login",
     logout: "Logout",
     register: "Register",
