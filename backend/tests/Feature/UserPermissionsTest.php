@@ -32,9 +32,6 @@ class UserPermissionsTest extends TestCase
         $role = Role::factory()->create([
             'name' => $name
         ]);
-        $this->assertNotNull($role->name);
-        $this->assertNotEmpty($role->name);
-        $this->assertIsString($role->name);
         $this->assertEquals($role->name, $name);
     }
 
