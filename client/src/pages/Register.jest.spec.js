@@ -9,7 +9,8 @@ import {
   QCardActions,
   QBtn,
   QForm,
-  QPage
+  QPage,
+  QBanner
 } from "quasar";
 describe("RegisterPage", () => {
   const mutate = jest.fn();
@@ -24,7 +25,8 @@ describe("RegisterPage", () => {
         QCardActions,
         QBtn,
         QForm,
-        QPage
+        QPage,
+        QBanner
       }
     },
     mount: {
@@ -64,10 +66,12 @@ describe("RegisterPage", () => {
   test("form submits on valid data", async () => {
     await wrapper.setData({
       serverValidationErrors: {},
-      username: "user",
-      password: "albancub4Grac&",
-      name: "Joe Doe",
-      email: "test@example.com"
+      form: {
+        username: "user",
+        password: "albancub4Grac&",
+        name: "Joe Doe",
+        email: "test@example.com"
+      }
     });
 
     mutate.mockClear().mockResolvedValue({});
@@ -78,28 +82,30 @@ describe("RegisterPage", () => {
   });
 
   test("password is correctly validated", async () => {
-    await wrapper.setData({ password: "" });
-    expect(wrapper.vm.$v.password.$invalid).toBeTruthy();
+    await wrapper.setData({ form: { password: "" } });
+    expect(wrapper.vm.$v.form.password.$invalid).toBeTruthy();
 
-    await wrapper.setData({ password: "password" });
-    expect(wrapper.vm.$v.password.$invalid).toBeTruthy();
+    await wrapper.setData({ form: { password: "password" } });
+    expect(wrapper.vm.$v.form.password.$invalid).toBeTruthy();
 
-    await wrapper.setData({ password: "albancub4Grac&" });
-    expect(wrapper.vm.$v.password.$invalid).toBeFalsy();
+    await wrapper.setData({ form: { password: "albancub4Grac&" } });
+    expect(wrapper.vm.$v.form.password.$invalid).toBeFalsy();
   });
 
   test("username is correctly validated", async () => {
-    await wrapper.setData({ username: "" });
-    expect(wrapper.vm.$v.username.$invalid).toBeTruthy();
+    await wrapper.setData({ form: { username: "" } });
+    expect(wrapper.vm.$v.form.username.$invalid).toBeTruthy();
 
-    await wrapper.setData({ username: "test" });
-    expect(wrapper.vm.$v.username.$invalid).toBeFalsy();
+    await wrapper.setData({ form: { username: "test" } });
+    expect(wrapper.vm.$v.form.username.$invalid).toBeFalsy();
 
     await wrapper.setData({
-      username: "user",
-      password: "albancub4Grac&",
-      name: "Joe Doe",
-      email: "test@example.com"
+      form: {
+        username: "user",
+        password: "albancub4Grac&",
+        name: "Joe Doe",
+        email: "test@example.com"
+      }
     });
 
     const error = {
@@ -122,13 +128,13 @@ describe("RegisterPage", () => {
   });
 
   test("email is correctly validated", async () => {
-    await wrapper.setData({ email: "" });
-    expect(wrapper.vm.$v.email.$invalid).toBe(true);
+    await wrapper.setData({ form: { email: "" } });
+    expect(wrapper.vm.$v.form.email.$invalid).toBe(true);
 
-    await wrapper.setData({ email: "Notanemail" });
-    expect(wrapper.vm.$v.email.$invalid).toBe(true);
+    await wrapper.setData({ form: { email: "Notanemail" } });
+    expect(wrapper.vm.$v.form.email.$invalid).toBe(true);
 
-    await wrapper.setData({ email: "test@example.com" });
-    expect(wrapper.vm.$v.email.$invalid).toBe(false);
+    await wrapper.setData({ form: { email: "test@example.com" } });
+    expect(wrapper.vm.$v.form.email.$invalid).toBe(false);
   });
 });

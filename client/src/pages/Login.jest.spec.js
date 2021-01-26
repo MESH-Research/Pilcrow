@@ -14,7 +14,7 @@ import {
 } from "quasar";
 describe("LoginPage", () => {
   const mutate = jest.fn();
-
+  const sessionStorage = jest.fn();
   const wrapper = mountQuasar(LoginPage, {
     quasar: {
       components: {
@@ -35,6 +35,12 @@ describe("LoginPage", () => {
         $t: token => token,
         $apollo: {
           mutate
+        },
+        $q: {
+          sessionStorage: {
+            remove: sessionStorage,
+            getItem: sessionStorage
+          }
         }
       },
       stubs: ["router-link"]
