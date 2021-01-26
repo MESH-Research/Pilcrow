@@ -81,14 +81,14 @@
 </template>
 
 <script>
-import gql from "graphql-tag";
 import PasswordInput from "src/components/forms/PasswordInput.vue";
 import { validationMixin } from "vuelidate";
 import { required, email } from "vuelidate/lib/validators";
+import appAuth from "src/components/mixins/appAuth";
 
 export default {
   components: { PasswordInput },
-  mixins: [validationMixin],
+  mixins: [validationMixin, appAuth],
   name: "PageLogin",
   data() {
     return {
@@ -119,31 +119,12 @@ export default {
         this.error = "LOGIN_FORM_VALIDATION";
         return false;
       }
-      try {
-        const loginResult = await this.$apollo.mutate({
-          mutation: gql`
-            mutation($email: String!, $password: String!) {
-              login(email: $email, password: $password) {
-                id
-                name
-                username
-              }
-            }
-          `,
-          variables: { ...this.form }
-        });
-      } catch (error) {
-        if (error.graphQLErrors) {
-          error.graphQLErrors.forEach(error => {
-            if (error.extensions?.code) {
-              this.error = error.extensions.code;
-            }
-          });
-        }
-        if (!this.error) {
-          this.error = "FAILURE_OTHER";
-        }
-        return;
+      const { success, errors } = await this.$login(this.form);
+
+      if (success) {
+        this.$router.push("/dashboard");
+      } else {
+        this.error = errors.pop();
       }
     }
   }

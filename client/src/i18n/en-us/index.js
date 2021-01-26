@@ -54,7 +54,8 @@ export default {
     REQUIRED_FIELD: "{0} is required."
   },
   header: {
-    account_link: "My Account"
+    account_link: "My Account",
+    dashboard: "My Dashboard"
   },
   account: {
     header: "My Account",

@@ -14,6 +14,9 @@ type Query {
 
     "Validate details of a new user.  Returns true if supplied user fields would be valid."
     validateNewUser(user: ValidateNewUserInput): Boolean @returnTrue
+
+    "Return information about the currently logged in user"
+    me: User @auth
 }
 
 "Validate the availability of username and email via the validateNewUser query"
