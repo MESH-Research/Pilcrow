@@ -4,7 +4,7 @@
 
 ## Containers
 
-CCR is designed around a multi-container docker architecure. There are three primary containers that serve the application:
+CCR is designed around a multi-container docker architecture. There are three primary containers that serve the application:
 
 - **[Proxy:](#proxy-nginx)** An NGiNX container that proxies outside requests into the application.
 - **Application:** A PHPFPM container that serves the backend GraphQL API
