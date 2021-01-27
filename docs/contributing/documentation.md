@@ -14,7 +14,7 @@ At the bottom of each page you should find a link to "Edit this Page".  Follow t
 The docuentation sites are automatically built by Github Actions powered by [Netlify](https://netlify.com).  There are a number of automatic builds configured.
 
 - **<https://docs.ccrproject.dev>**: Automatically built from the `master` branch.
-- **<https://development.ccrproject.dev>**: Automatially built from the `development` branch.
+- **<https://development.docs.ccrproject.dev>**: Automatially built from the `development` branch.
 
 ### Deploy Previews
 
