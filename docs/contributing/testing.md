@@ -4,7 +4,7 @@
 
 ### Running Jest Tests
 
-### Resources for writing tests
+### Resources for writing Jest tests
 
 ### Lando config for Majestic UI
 
@@ -12,7 +12,7 @@
 
 ### Running PHPUnit Tests
 
-### Resources for writing tests
+### Resources for writing PHPUnit tests
 
 ## Integration Tests (E2E)
 
