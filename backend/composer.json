@@ -17,7 +17,8 @@
         "laravel/sanctum": "^2.8",
         "laravel/tinker": "^2.5",
         "nuwave/lighthouse": "^5.1",
-        "olssonm/l5-zxcvbn": "^4.4"
+        "olssonm/l5-zxcvbn": "^4.4",
+        "spatie/laravel-permission": "^3.18"
     },
     "require-dev": {
         "mll-lab/laravel-graphql-playground": "^2.4",
