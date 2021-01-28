@@ -41,14 +41,7 @@ class UserPermissionsTest extends TestCase
      */
     public function testThatUserRoleRecordsExist()
     {
-        $roles = [
-            Role::APPLICATION_ADMINISTRATOR,
-            Role::PUBLICATION_ADMINISTRATOR,
-            Role::EDITOR,
-            Role::REVIEW_COORDINATOR,
-            Role::REVIEWER,
-            Role::SUBMITTER,
-        ];
+        $roles = Role::getArrayOfAllRoleNames();
         foreach($roles as $role) {
             $record = Role::where('name', $role)->get();
             $this->assertTrue($record->count() > 0);

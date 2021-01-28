@@ -12,15 +12,7 @@ class InsertUserRoles extends Migration
      */
     public function up()
     {
-        $roles = [
-            Role::APPLICATION_ADMINISTRATOR,
-            Role::PUBLICATION_ADMINISTRATOR,
-            Role::EDITOR,
-            Role::REVIEW_COORDINATOR,
-            Role::REVIEWER,
-            Role::SUBMITTER,
-        ];
-
+        $roles = Role::getArrayOfAllRoleNames();
         foreach ($roles as $role) {
             Role::create([
                 'name' => $role

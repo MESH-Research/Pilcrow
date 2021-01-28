@@ -16,4 +16,18 @@ class Role extends ParentModel
     const REVIEWER = 'Reviewer';
     const SUBMITTER = 'Submitter';
 
+    /**
+     * @return array
+     */
+    public static function getArrayOfAllRoleNames()
+    {
+        return [
+            Role::APPLICATION_ADMINISTRATOR,
+            Role::PUBLICATION_ADMINISTRATOR,
+            Role::EDITOR,
+            Role::REVIEW_COORDINATOR,
+            Role::REVIEWER,
+            Role::SUBMITTER,
+        ];
+    }
 }
