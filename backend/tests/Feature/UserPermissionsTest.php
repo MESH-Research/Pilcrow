@@ -108,7 +108,7 @@ class UserPermissionsTest extends TestCase
         $role = Role::findByName(Role::APPLICATION_ADMINISTRATOR);
         $permission->assignRole($role->name);
         $user->assignRole($role->name);
-        $this->assertTrue($user->hasPermissionTo($name, 'web'));
+        $this->assertTrue($user->can($name));
     }
 
     /**
