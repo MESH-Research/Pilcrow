@@ -10,6 +10,12 @@ Most of the work of the project is handled on our [GitHub repo](https://github.c
 
 ![zenhub screenshot](./images/zenhub_screenshot.jpg)
 
+### Team Members
+#### Core Developers
+
+<TeamList filter="core"/>
+
+
 ## Code of Conduct
 
 ## Development Environments

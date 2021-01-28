@@ -2,12 +2,16 @@
     <a v-if="href" :href="href">
         <figure>
             <img :src="src" />
-            <figcaption v-text="caption" />
+            <figcaption>
+                <slot name="caption">{{ caption }}</slot>
+            </figcaption>
         </figure>
     </a>
     <figure v-else>
         <img :src="src" />
-        <figcaption v-text="caption" />
+        <figcaption>
+            <slot name="caption">{{ caption }}</slot>
+        </figcaption>
     </figure>
 </template>
 
@@ -23,7 +27,8 @@ export default {
             type: String
         },
         caption: {
-            type: String
+            type: String,
+            default: ""
         }
     }
 };
