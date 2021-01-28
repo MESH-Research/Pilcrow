@@ -2,8 +2,6 @@
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 use App\Models\Role;
 
 class InsertUserRoles extends Migration
@@ -15,24 +13,32 @@ class InsertUserRoles extends Migration
      */
     public function up()
     {
+        $guard_name = config('auth.defaults.guard');
+
         DB::table('roles')->insert(
             [
-                'name' => Role::APPLICATION_ADMINISTRATOR
+                'name' => Role::APPLICATION_ADMINISTRATOR,
+                'guard_name' => $guard_name
             ],
             [
-                'name' => Role::PUBLICATION_ADMINISTRATOR
+                'name' => Role::PUBLICATION_ADMINISTRATOR,
+                'guard_name' => $guard_name
             ],
             [
-                'name' => Role::EDITOR
+                'name' => Role::EDITOR,
+                'guard_name' => $guard_name
             ],
             [
-                'name' => Role::REVIEW_COORDINATOR
+                'name' => Role::REVIEW_COORDINATOR,
+                'guard_name' => $guard_name
             ],
             [
-                'name' => Role::REVIEWER
+                'name' => Role::REVIEWER,
+                'guard_name' => $guard_name
             ],
             [
-                'name' => Role::SUBMITTER
+                'name' => Role::SUBMITTER,
+                'guard_name' => $guard_name
             ],
         );
     }
@@ -44,6 +50,7 @@ class InsertUserRoles extends Migration
      */
     public function down()
     {
-        // These records will get removed when the 'roles' table is dropped
+        // These records will get removed when the 'roles' table
+        // is dropped in the previous migration file
     }
 }
