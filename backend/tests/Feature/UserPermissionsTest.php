@@ -127,4 +127,23 @@ class UserPermissionsTest extends TestCase
         $user->assignRole('Publication Administrator');
         $this->assertFalse($user->can($name));
     }
+
+    /**
+     * @return void
+     */
+    public function testThatUserRoleRecordsExist()
+    {
+        $roles = [
+            Role::APPLICATION_ADMINISTRATOR,
+            Role::PUBLICATION_ADMINISTRATOR,
+            Role::EDITOR,
+            Role::REVIEW_COORDINATOR,
+            Role::REVIEWER,
+            Role::SUBMITTER,
+        ];
+        foreach($roles as $role) {
+            $record = Role::where('name', $role);
+            $this->assertTrue($record->count() > 0);
+        }
+    }
 }
