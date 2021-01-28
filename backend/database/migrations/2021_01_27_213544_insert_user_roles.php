@@ -13,34 +13,30 @@ class InsertUserRoles extends Migration
      */
     public function up()
     {
-        $guard_name = config('auth.defaults.guard');
-
-        DB::table('roles')->insert(
+        $roles = [
             [
                 'name' => Role::APPLICATION_ADMINISTRATOR,
-                'guard_name' => $guard_name
             ],
             [
                 'name' => Role::PUBLICATION_ADMINISTRATOR,
-                'guard_name' => $guard_name
             ],
             [
                 'name' => Role::EDITOR,
-                'guard_name' => $guard_name
             ],
             [
                 'name' => Role::REVIEW_COORDINATOR,
-                'guard_name' => $guard_name
             ],
             [
                 'name' => Role::REVIEWER,
-                'guard_name' => $guard_name
             ],
             [
                 'name' => Role::SUBMITTER,
-                'guard_name' => $guard_name
             ],
-        );
+        ];
+
+        foreach ($roles as $role) {
+            Role::create($role);
+        }
     }
 
     /**
