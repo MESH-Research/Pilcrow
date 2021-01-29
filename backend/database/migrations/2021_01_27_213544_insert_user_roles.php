@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 use App\Models\Role;
 
 class InsertUserRoles extends Migration
@@ -27,7 +29,8 @@ class InsertUserRoles extends Migration
      */
     public function down()
     {
-        // These records will get removed when the 'roles' table
-        // is dropped in the previous migration file
+        Schema::disableForeignKeyConstraints();
+        DB::table('roles')->truncate();
+        Schema::enableForeignKeyConstraints();
     }
 }
