@@ -55,7 +55,8 @@ You can create local containers or additional tooling commands by creating a `.l
 
 ### Lando Tips and Tricks
 
-1. SSL Certificates
+- [Trusting the Lando CA Certificate](https://docs.lando.dev/config/security.html#trusting-the-ca)
+- [ZSH Plugin](https://github.com/JoshuaBedford/lando-zsh)
 
 ## Contributor Workflow
 
