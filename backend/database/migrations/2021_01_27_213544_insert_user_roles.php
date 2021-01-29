@@ -3,7 +3,6 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
-use App\Models\Role;
 
 class InsertUserRoles extends Migration
 {
@@ -14,8 +13,15 @@ class InsertUserRoles extends Migration
      */
     public function up()
     {
-        $roles = Role::getArrayOfAllRoleNames();
         $guard_name = config('auth.defaults.guard');
+        $roles = [
+            'Application Administrator',
+            'Publication Administrator',
+            'Editor',
+            'Review Coordinator',
+            'Reviewer',
+            'Submitter'
+        ];
 
         foreach ($roles as $role) {
             DB::table('roles')->insert([
