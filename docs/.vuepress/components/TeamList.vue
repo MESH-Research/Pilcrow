@@ -110,4 +110,6 @@ export default {
 @media (max-width: $MQMobileNarrow)
     .team .member
         width 49%
+        figure
+            padding: 0
 </style>
