@@ -15,9 +15,14 @@ class InsertUserRoles extends Migration
     public function up()
     {
         $roles = Role::getArrayOfAllRoleNames();
+        $guard_name = config('auth.defaults.guard');
+
         foreach ($roles as $role) {
-            Role::create([
-                'name' => $role
+            DB::table('roles')->insert([
+                'name' => $role,
+                'guard_name' => $guard_name,
+                'created_at' => null,
+                'updated_at' => null
             ]);
         }
     }
