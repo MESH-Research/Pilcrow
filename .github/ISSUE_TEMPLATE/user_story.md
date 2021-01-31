@@ -26,12 +26,12 @@ assignees: ""
 
 ### To Do / Acceptance Criteria
 
--   [ ]
+- [ ]
 
 ### Review Checklist
 
--   [ ]
+- [ ]
 
 ### Accessibility Checklist
 
--   [ ]
+- [ ]
