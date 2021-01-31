@@ -27,7 +27,7 @@ jobs:
       - name: Enable Cypress config
         run: cp .lando/cypress.lando.local.yml ./.lando.local.yml
       - name: Start Lando
-        run: lando rebuild -y || true
+        run: lando rebuild -y 
       - name: Migrate Database
         run: lando artisan migrate
       - name: Execute Cypress Tests
