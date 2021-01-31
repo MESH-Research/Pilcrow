@@ -1,0 +1,13 @@
+services:
+  cypress:
+    type: node
+    overrides:
+      image: "cypress/included:6.3.0"
+tooling:
+  cypress:
+    service: cypress
+    env:
+      DISPLAY: "172.27.80.1:0.0"
+      ELECTRON_ENABLE_LOGGING: "false"
+    dir: /app/client
+    cmd: cypress
