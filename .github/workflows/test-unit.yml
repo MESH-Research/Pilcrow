@@ -38,7 +38,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: backend/vendor
-          key: ${{ runner.os }}-node-${{ hashFiles('**/composer.lock') }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
           restore-keys: |
             ${{ runner.os }}-node-
       - name: Setup Mysql
@@ -70,7 +70,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: client/node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-node-
       - name: Install dependencies
