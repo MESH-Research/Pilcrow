@@ -26,8 +26,6 @@ jobs:
             ${{ runner.os }}-node-
       - name: Enable Cypress config
         run: cp .lando/cypress.lando.local.yml ./.lando.local.yml
-      - uses: satackey/action-docker-layer-caching@v0.0.11
-        continue-on-error: true
       - name: Start Lando
         run: lando start
       - name: Migrate Database
