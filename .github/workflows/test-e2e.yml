@@ -1,4 +1,4 @@
-name: E2E Testing
+name: "Test: E2E"
 
 on:
   push:
@@ -11,7 +11,7 @@ jobs:
     defaults:
       run:
         shell: bash
-
+    name: "Cypress.io"
     steps:
       - name: Install Lando
         run: wget -nv https://files.devwithlando.io/lando-stable.deb && sudo dpkg -i --ignore-depends=docker-ce lando-stable.deb

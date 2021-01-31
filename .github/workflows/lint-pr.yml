@@ -1,4 +1,4 @@
-name: "Lint PR"
+name: "Meta"
 
 on:
   pull_request:
@@ -10,6 +10,7 @@ on:
 jobs:
   main:
     runs-on: ubuntu-20.04
+    name: Semantic PR Message
     steps:
       - uses: amannn/action-semantic-pull-request@v2.1.0
         env:
