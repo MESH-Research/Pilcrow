@@ -40,5 +40,15 @@ jobs:
         run: lando artisan migrate
       - name: Execute Cypress Tests
         run: lando cypress run
+      - uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          name: cypress-screenshots
+          path: client/test/cypress/screenshots
+      - uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: cypress-videos
+          path: client/test/cypress/videos
       - name: Destroy lando containers
         run: lando destroy -y
