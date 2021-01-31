@@ -65,7 +65,14 @@ jobs:
 
       - name: Install quasar CLI
         run: yarn global add @quasar/cli
-
+      - name: Cache Node packages
+        id: yarn-cache
+        uses: actions/cache@v2
+        with:
+          path: client/node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
       - name: Install dependencies
         run: yarn install
 

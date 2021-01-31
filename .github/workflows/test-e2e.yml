@@ -24,6 +24,14 @@ jobs:
           key: ${{ runner.os }}-node-${{ hashFiles('**/composer.lock') }}
           restore-keys: |
             ${{ runner.os }}-node-
+      - name: Cache Node packages
+        id: yarn-cache
+        uses: actions/cache@v2
+        with:
+          path: client/node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
       - name: Enable Cypress config
         run: cp .lando/cypress.lando.local.yml ./.lando.local.yml
       - name: Start Lando
