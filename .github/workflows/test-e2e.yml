@@ -26,9 +26,13 @@ jobs:
             ${{ runner.os }}-node-
       - name: Enable Cypress config
         run: cp .lando/cypress.lando.local.yml ./.lando.local.yml
+      - uses: satackey/action-docker-layer-caching@v0.0.11
+        continue-on-error: true
       - name: Start Lando
-        run: lando rebuild -y 
+        run: lando start
       - name: Migrate Database
         run: lando artisan migrate
       - name: Execute Cypress Tests
         run: lando cypress run
+      - name: Destroy lando containers
+        run: lando destroy -y
