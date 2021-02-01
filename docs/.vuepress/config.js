@@ -61,7 +61,12 @@ module.exports = {
      */
     plugins: [
         "@vuepress/plugin-back-to-top",
-        "@vuepress/plugin-medium-zoom",
+        [
+            "vuepress-plugin-zooming",
+            {
+                selector: ".theme-default-content :not(a):not(figure) img"
+            }
+        ],
         [
             "robots",
             {
