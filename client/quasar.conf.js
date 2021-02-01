@@ -37,7 +37,7 @@ module.exports = function(ctx) {
       //            (fastest compile time; minimum bundle size; most tedious)
       // * true   - Import everything from Quasar
       //            (not treeshaking Quasar; biggest bundle size; convenient)
-      all: "auto",
+      importStrategy: "auto",
 
       components: [],
       directives: [],
@@ -46,9 +46,6 @@ module.exports = function(ctx) {
       plugins: ["Cookies", "Dialog"]
     },
 
-    // https://quasar.dev/quasar-cli/cli-documentation/supporting-ie
-    supportIE: false,
-
     // Full list of options: https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-build
     build: {
       scopeHoisting: true,
@@ -56,22 +53,19 @@ module.exports = function(ctx) {
       showProgress: true,
       gzip: false,
       analyze: false,
-      // Options below are automatically set depending on the env, set them if you want to override
-      // preloadChunks: false,
-      // extractCSS: false,
-
-      chainWebpack (chain, { isServer, isClient }) {
-        chain.module.rule('vue')
-          .use('vue-loader')
-          .loader('vue-loader')
+      chainWebpack(chain, { isServer, isClient }) {
+        chain.module
+          .rule("vue")
+          .use("vue-loader")
+          .loader("vue-loader")
           .tap(options => {
             options.transpileOptions = {
               transforms: {
                 dangerousTaggedTemplateString: true
               }
-            }
-            return options
-          })
+            };
+            return options;
+          });
       },
 
       // https://quasar.dev/quasar-cli/cli-documentation/handling-webpack
@@ -93,7 +87,7 @@ module.exports = function(ctx) {
       https: false,
       port: 8080,
       open: true,
-      public: 'ccr.lndo.site'
+      public: "ccr.lndo.site"
     },
 
     // animations: 'all', // --- includes all animations
@@ -104,60 +98,6 @@ module.exports = function(ctx) {
     ssr: {
       pwa: false
     },
-
-    // https://quasar.dev/quasar-cli/developing-pwa/configuring-pwa
-    pwa: {
-      workboxPluginMode: "GenerateSW", // 'GenerateSW' or 'InjectManifest'
-      workboxOptions: {}, // only for GenerateSW
-      manifest: {
-        name: "CCR",
-        short_name: "CCR",
-        description: "CCR front-end application",
-        display: "standalone",
-        orientation: "portrait",
-        background_color: "#ffffff",
-        theme_color: "#027be3",
-        icons: [
-          {
-            src: "statics/icons/icon-128x128.png",
-            sizes: "128x128",
-            type: "image/png"
-          },
-          {
-            src: "statics/icons/icon-192x192.png",
-            sizes: "192x192",
-            type: "image/png"
-          },
-          {
-            src: "statics/icons/icon-256x256.png",
-            sizes: "256x256",
-            type: "image/png"
-          },
-          {
-            src: "statics/icons/icon-384x384.png",
-            sizes: "384x384",
-            type: "image/png"
-          },
-          {
-            src: "statics/icons/icon-512x512.png",
-            sizes: "512x512",
-            type: "image/png"
-          }
-        ]
-      }
-    },
-
-    // Full list of options: https://quasar.dev/quasar-cli/developing-cordova-apps/configuring-cordova
-    cordova: {
-      // noIosLegacyBuildFlag: true, // uncomment only if you know what you are doing
-      id: "org.cordova.quasar.app"
-    },
-
-    // Full list of options: https://quasar.dev/quasar-cli/developing-capacitor-apps/configuring-capacitor
-    capacitor: {
-      hideSplashscreen: true
-    },
-
     // Full list of options: https://quasar.dev/quasar-cli/developing-electron-apps/configuring-electron
     electron: {
       bundler: "packager", // 'packager' or 'builder'

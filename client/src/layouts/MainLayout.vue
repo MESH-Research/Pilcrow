@@ -48,7 +48,7 @@
         </div>
         <div class="text-subtitle">Submission & Review System</div>
       </div>
-      <q-img src="statics/header-back.jpg" class="header-image absolute-top" />
+      <q-img src="header-back.jpg" class="header-image absolute-top" />
     </q-header>
 
     <q-drawer v-model="leftDrawerOpen" show-if-above content-class="bg-grey-1">
