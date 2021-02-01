@@ -13,6 +13,9 @@ class UserPermissionsTest extends TestCase
 {
     use RefreshDatabase;
 
+    private $test_permission = 'test permission';
+    private $test_user_role = 'Test User Role';
+
     /**
      * @return void
      */
@@ -27,27 +30,34 @@ class UserPermissionsTest extends TestCase
     /**
      * @return void
      */
-    public function testCreationOfApplicationAdministratorRole()
+    public function testCreationOfExplicitlyNamedTestUserRole()
     {
-        $name = 'Application Administrator';
         $role = Role::factory()->create([
-            'name' => $name
+            'name' => $this->test_permission
         ]);
-        $this->assertEquals($role->name, $name);
+        $this->assertEquals($role->name, $this->test_permission);
     }
 
     /**
      * @return void
      */
-    public function testAssignmentOfApplicationAdministratorRole()
+    public function testThatUserRoleRecordsExist()
     {
-        $name = 'Application Administrator';
+        $roles = Role::getArrayOfAllRoleNames();
+        foreach($roles as $role) {
+            $record = Role::where('name', $role)->get();
+            $this->assertTrue($record->count() > 0);
+        }
+    }
+
+    /**
+     * @return void
+     */
+    public function testAssignmentOfApplicationAdministratorRoleToUser()
+    {
         $user = User::factory()->create();
-        $role = Role::factory()->create([
-            'name' => $name
-        ]);
-        $user->assignRole($name);
-        $this->assertTrue($user->hasRole($name));
+        $user->assignRole(Role::APPLICATION_ADMINISTRATOR);
+        $this->assertTrue($user->hasRole(Role::APPLICATION_ADMINISTRATOR));
     }
 
     /**
@@ -64,67 +74,56 @@ class UserPermissionsTest extends TestCase
     /**
      * @return void
      */
-    public function testCreationOfPermissionToCreatePublications()
+    public function testCreationOfTestPermission()
     {
-        $name = 'create publications';
         $permission = Permission::factory()->create([
-            'name' => $name
+            'name' => $this->test_permission
         ]);
-        $this->assertEquals($permission->name, $name);
+        $this->assertEquals($permission->name, $this->test_permission);
     }
 
     /**
      * @return void
      */
-    public function testAssignmentOfPermissionToCreatePublicationsToRole()
+    public function testAssignmentOfTestPermissionToApplicationAdministratorRole()
     {
-        $name = 'create publications';
         $permission = Permission::factory()->create([
-            'name' => $name
+            'name' => $this->test_permission
         ]);
-        $role = Role::factory()->create([
-            'name' => 'Application Administrator'
-        ]);
-        $role->givePermissionTo($name);
-        $this->assertTrue($role->hasPermissionTo($name));
+        $role = Role::findByName(Role::APPLICATION_ADMINISTRATOR);
+        $permission->assignRole($role->name);
+        $this->assertTrue($role->hasPermissionTo($this->test_permission));
     }
 
     /**
      * @return void
      */
-    public function testUserHasPermissionToCreatePublicationsByAssignedRole()
+    public function testUserHasTestPermissionByAssignedRole()
     {
-        $name = 'create publications';
         $user = User::factory()->create();
         $permission = Permission::factory()->create([
-            'name' => $name
+            'name' => $this->test_permission
         ]);
-        $role = Role::factory()->create([
-            'name' => 'Application Administrator'
-        ]);
-        $role->givePermissionTo($name);
-        $user->assignRole('Application Administrator');
-        $this->assertTrue($user->can($name));
+        $role = Role::findByName(Role::APPLICATION_ADMINISTRATOR);
+        $permission->assignRole($role->name);
+        $user->assignRole($role->name);
+        $this->assertTrue($user->can($this->test_permission));
     }
 
     /**
      * @return void
      */
-    public function testUserDoesNotHavePermissionToCreatePublicationsByAssignedRole()
+    public function testUserDoesNotHaveTestPermissionByAssignedRole()
     {
-        $name = 'create publications';
         $user = User::factory()->create();
         $permission = Permission::factory()->create([
-            'name' => $name
+            'name' => $this->test_permission
         ]);
-        $role_1 = Role::factory()->create([
-            'name' => 'Application Administrator'
+        $test_role = Role::factory()->create([
+            'name' => $this->test_user_role
         ]);
-        $role_2 = Role::factory()->create([
-            'name' => 'Publication Administrator'
-        ]);
-        $role_1->givePermissionTo($name);
-        $user->assignRole('Publication Administrator');
-        $this->assertFalse($user->can($name));
+        $test_role->givePermissionTo($this->test_permission);
+        $user->assignRole(Role::PUBLICATION_ADMINISTRATOR);
+        $this->assertFalse($user->can($this->test_permission));
     }
 }
