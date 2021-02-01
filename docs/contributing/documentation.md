@@ -13,8 +13,8 @@ At the bottom of each page, you should find a link to "Edit this Page."  Follow 
 
 Github Actions powered by [Netlify](https://netlify.com) automatically build and deploy the documentation sites.  There are two automatic builds configured:
 
-- **<https://docs.ccrproject.dev>**: Automatically built from the `master` branch.
-- **<https://development.docs.ccrproject.dev>**: Automatically built from the `development` branch.
+- **<https://ccr.meshresearch.dev>**: Automatically built from the `master` branch.
+- **<https://development.ccr.meshresearch.dev>**: Automatically built from the `development` branch.
 
 ### Deploy Previews
 
