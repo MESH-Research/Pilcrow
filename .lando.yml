@@ -13,7 +13,7 @@ services:
     config:
       database: .lando/mysql.cnf
   client:
-    type: node
+    type: node:14
     build:
       - cd /app/client && yarn install
     command: cd /app/client && yarn dev
