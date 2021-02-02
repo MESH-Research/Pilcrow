@@ -41,7 +41,7 @@
         <span class="text-weight-medium">Public</span> Philosophy Journal
         <strong>Quarterly</strong>
       </div>
-      <div class="text-subtitle">Submission & Review System</div>
+      <div class="text-subtitle">Submission Review System</div>
     </div>
     <q-img src="statics/header-back.jpg" class="header-image absolute-top" />
   </q-header>
