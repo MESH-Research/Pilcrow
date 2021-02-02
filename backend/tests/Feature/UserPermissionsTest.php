@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use Nuwave\Lighthouse\Testing\MakesGraphQLRequests;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -11,7 +12,7 @@ use App\Models\Permission;
 
 class UserPermissionsTest extends TestCase
 {
-    use RefreshDatabase;
+    use MakesGraphQLRequests, RefreshDatabase;
 
     private $test_permission = 'test permission';
     private $test_user_role = 'Test User Role';
@@ -125,5 +126,83 @@ class UserPermissionsTest extends TestCase
         $test_role->givePermissionTo($this->test_permission);
         $user->assignRole(Role::PUBLICATION_ADMINISTRATOR);
         $this->assertFalse($user->can($this->test_permission));
+    }
+
+    /**
+     * @return void
+     */
+    public function testRoleIsQueryableFromUserCreatedViaLighthouse()
+    {
+        $createUserResponse = $this->graphQL(
+            'mutation {
+                createUser(user: {
+                    email: "brandnew@gmail.com",
+                    password: "KajSu8viptUrz&",
+                    username: "testusername",
+                    name: "Test Name"
+                }) {
+                    id
+                    name
+                    username
+                }
+            }'
+        );
+        $test_role = Role::factory()->create([
+            'name' => $this->test_user_role
+        ]);
+        $user = User::where('username','testusername')->first();
+        $user->assignRole($this->test_user_role);
+        $getUserResponse = $this->graphQL(
+            'query getUser($id: ID) {
+                user(id: $id) {
+                    id
+                    name
+                    roles {
+                        id
+                        name
+                    }
+                }
+            }', ['id' => $createUserResponse["data"]["createUser"]["id"]]
+        );
+        $test_role_id = (string) $test_role->id;
+        $expected_array = [
+            0 => [
+                'id' => $test_role_id,
+                'name' => 'Test User Role'
+            ]
+        ];
+        $getUserResponse->assertJsonPath("data.user.roles", $expected_array);
+    }
+
+    /**
+     * @return void
+     */
+    public function testRoleIsQueryableFromUserCreatedViaFactory()
+    {
+        $test_role = Role::factory()->create([
+            'name' => $this->test_user_role
+        ]);
+        $user = User::factory()->create();
+        $user->assignRole($this->test_user_role);
+        $response = $this->graphQL(
+            'query getUser($id: ID) {
+                user(id: $id) {
+                    id
+                    name
+                    roles {
+                        id
+                        name
+                    }
+                }
+            }', ['id' => $user->id]
+        );
+        $test_role_id = (string) $test_role->id;
+        $expected_array = [
+            0 => [
+                'id' => $test_role_id,
+                'name' => 'Test User Role'
+            ]
+        ];
+        $response->assertJsonPath("data.user.roles", $expected_array);
     }
 }
