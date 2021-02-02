@@ -14,6 +14,8 @@ type Query {
 
     "Validate details of a new user.  Returns true if supplied user fields would be valid."
     validateNewUser(user: ValidateNewUserInput): Boolean @returnTrue
+
+    role(id: ID @eq): Role @find
 }
 
 "Validate the availability of username and email via the validateNewUser query"
@@ -71,6 +73,14 @@ input CreateUserInput {
         @hash
 }
 
+type Role {
+    id: ID!
+    name: String!
+    guard_name: String!
+    created_at: DateTime
+    updated_at: DateTime
+}
+
 """
 A user account.
 """
@@ -81,6 +91,7 @@ type User {
     username: String!
     created_at: DateTime!
     updated_at: DateTime
+    roles: [Role]
 }
 
 type Mutation {
