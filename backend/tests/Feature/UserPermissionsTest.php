@@ -131,7 +131,7 @@ class UserPermissionsTest extends TestCase
     /**
      * @return void
      */
-    public function testRoleIsQueryableFromUserCreatedViaLighthouse()
+    public function testRoleForUserCreatedViaLighthouseIsQueryableFromGraphqlEndpoint()
     {
         $createUserResponse = $this->graphQL(
             'mutation {
@@ -177,7 +177,7 @@ class UserPermissionsTest extends TestCase
     /**
      * @return void
      */
-    public function testRoleIsQueryableFromUserCreatedViaFactory()
+    public function testRoleForUserCreatedViaFactoryIsQueryableFromGraphqlEndpoint()
     {
         $test_role = Role::factory()->create([
             'name' => $this->test_user_role
