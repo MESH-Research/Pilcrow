@@ -205,4 +205,61 @@ class UserPermissionsTest extends TestCase
         ];
         $response->assertJsonPath("data.user.roles", $expected_array);
     }
+
+    /**
+     * @return void
+     */
+    public function testUserCreatedViaFactoryWithNoRoleReturnsAnEmptyArrayWhenQueriedFromGraphqlEndpoint()
+    {
+        $user = User::factory()->create();
+        $response = $this->graphQL(
+            'query getUser($id: ID) {
+                user(id: $id) {
+                    id
+                    name
+                    roles {
+                        id
+                        name
+                    }
+                }
+            }', ['id' => $user->id]
+        );
+        $expected_array = [];
+        $response->assertJsonPath("data.user.roles", $expected_array);
+    }
+
+    /**
+     * @return void
+     */
+    public function testUserCreatedViaLighthouseWithNoRoleReturnsAnEmptyArrayWhenQueriedFromGraphqlEndpoint()
+    {
+        $createUserResponse = $this->graphQL(
+            'mutation {
+                createUser(user: {
+                    email: "brandnew@gmail.com",
+                    password: "KajSu8viptUrz&",
+                    username: "testusername",
+                    name: "Test Name"
+                }) {
+                    id
+                    name
+                    username
+                }
+            }'
+        );
+        $getUserResponse = $this->graphQL(
+            'query getUser($id: ID) {
+                user(id: $id) {
+                    id
+                    name
+                    roles {
+                        id
+                        name
+                    }
+                }
+            }', ['id' => $createUserResponse["data"]["createUser"]["id"]]
+        );
+        $expected_array = [];
+        $getUserResponse->assertJsonPath("data.user.roles", $expected_array);
+    }
 }
