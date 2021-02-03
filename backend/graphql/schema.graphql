@@ -15,6 +15,7 @@ type Query {
     "Validate details of a new user.  Returns true if supplied user fields would be valid."
     validateNewUser(user: ValidateNewUserInput): Boolean @returnTrue
 
+    "Return pre-defined user roles in the application"
     role(id: ID @eq): Role @find
 }
 
