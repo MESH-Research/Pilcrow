@@ -95,7 +95,7 @@ type User {
     username: String!
     created_at: DateTime!
     updated_at: DateTime
-    roles: [Role]
+    roles: [Role!]!
 }
 
 type Mutation {
