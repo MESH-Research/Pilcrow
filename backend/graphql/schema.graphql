@@ -73,6 +73,9 @@ input CreateUserInput {
         @hash
 }
 
+"""
+A user role for permissions
+"""
 type Role {
     id: ID!
     name: String!
