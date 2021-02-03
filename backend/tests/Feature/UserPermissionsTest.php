@@ -131,52 +131,7 @@ class UserPermissionsTest extends TestCase
     /**
      * @return void
      */
-    public function testRoleForUserCreatedViaLighthouseIsQueryableFromGraphqlEndpoint()
-    {
-        $createUserResponse = $this->graphQL(
-            'mutation {
-                createUser(user: {
-                    email: "brandnew@gmail.com",
-                    password: "KajSu8viptUrz&",
-                    username: "testusername",
-                    name: "Test Name"
-                }) {
-                    id
-                    name
-                    username
-                }
-            }'
-        );
-        $test_role = Role::factory()->create([
-            'name' => $this->test_user_role
-        ]);
-        $user = User::where('username','testusername')->first();
-        $user->assignRole($this->test_user_role);
-        $getUserResponse = $this->graphQL(
-            'query getUser($id: ID) {
-                user(id: $id) {
-                    id
-                    name
-                    roles {
-                        id
-                        name
-                    }
-                }
-            }', ['id' => $createUserResponse["data"]["createUser"]["id"]]
-        );
-        $expected_array = [
-            0 => [
-                'id' => (string) $test_role->id,
-                'name' => 'Test User Role'
-            ]
-        ];
-        $getUserResponse->assertJsonPath("data.user.roles", $expected_array);
-    }
-
-    /**
-     * @return void
-     */
-    public function testRoleForUserCreatedViaFactoryIsQueryableFromGraphqlEndpoint()
+    public function testRoleForUserIsQueryableFromGraphqlEndpoint()
     {
         $test_role = Role::factory()->create([
             'name' => $this->test_user_role
@@ -207,7 +162,7 @@ class UserPermissionsTest extends TestCase
     /**
      * @return void
      */
-    public function testUserCreatedViaFactoryWithNoRoleReturnsAnEmptyArrayWhenQueriedFromGraphqlEndpoint()
+    public function testUserWithNoRoleReturnsAnEmptyArrayWhenQueriedFromGraphqlEndpoint()
     {
         $user = User::factory()->create();
         $response = $this->graphQL(
@@ -223,39 +178,5 @@ class UserPermissionsTest extends TestCase
             }', ['id' => $user->id]
         );
         $response->assertJsonPath("data.user.roles", []);
-    }
-
-    /**
-     * @return void
-     */
-    public function testUserCreatedViaLighthouseWithNoRoleReturnsAnEmptyArrayWhenQueriedFromGraphqlEndpoint()
-    {
-        $createUserResponse = $this->graphQL(
-            'mutation {
-                createUser(user: {
-                    email: "brandnew@gmail.com",
-                    password: "KajSu8viptUrz&",
-                    username: "testusername",
-                    name: "Test Name"
-                }) {
-                    id
-                    name
-                    username
-                }
-            }'
-        );
-        $getUserResponse = $this->graphQL(
-            'query getUser($id: ID) {
-                user(id: $id) {
-                    id
-                    name
-                    roles {
-                        id
-                        name
-                    }
-                }
-            }', ['id' => $createUserResponse["data"]["createUser"]["id"]]
-        );
-        $getUserResponse->assertJsonPath("data.user.roles", []);
     }
 }
