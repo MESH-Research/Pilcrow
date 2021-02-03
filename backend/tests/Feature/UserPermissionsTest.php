@@ -164,10 +164,9 @@ class UserPermissionsTest extends TestCase
                 }
             }', ['id' => $createUserResponse["data"]["createUser"]["id"]]
         );
-        $test_role_id = (string) $test_role->id;
         $expected_array = [
             0 => [
-                'id' => $test_role_id,
+                'id' => (string) $test_role->id,
                 'name' => 'Test User Role'
             ]
         ];
@@ -196,10 +195,9 @@ class UserPermissionsTest extends TestCase
                 }
             }', ['id' => $user->id]
         );
-        $test_role_id = (string) $test_role->id;
         $expected_array = [
             0 => [
-                'id' => $test_role_id,
+                'id' => (string) $test_role->id,
                 'name' => 'Test User Role'
             ]
         ];
@@ -224,8 +222,7 @@ class UserPermissionsTest extends TestCase
                 }
             }', ['id' => $user->id]
         );
-        $expected_array = [];
-        $response->assertJsonPath("data.user.roles", $expected_array);
+        $response->assertJsonPath("data.user.roles", []);
     }
 
     /**
@@ -259,7 +256,6 @@ class UserPermissionsTest extends TestCase
                 }
             }', ['id' => $createUserResponse["data"]["createUser"]["id"]]
         );
-        $expected_array = [];
-        $getUserResponse->assertJsonPath("data.user.roles", $expected_array);
+        $getUserResponse->assertJsonPath("data.user.roles", []);
     }
 }
