@@ -6,6 +6,7 @@ export default {
     more_info: "More Info"
   },
   auth: {
+    loginRequired: "You need to login to access that page.",
     login: "Login",
     logout: "Logout",
     register: "Register",
@@ -41,9 +42,9 @@ export default {
       CREATE_FORM_VALIDATION:
         "Oops, please correct the errors above and try again.",
       CREATE_FORM_INTERNAL: "Error processing result, please try again later.",
+      LOGIN_FORM_VALIDATION: "Please correct the errors above and try again.",
       FAILURE_IDENTITY_NOT_FOUND: "Username and/or password is incorrect.",
-      FAILURE_CREDENTIALS_INVALID:
-        "Username and password combination is incorrect.",
+      CREDENTIALS_INVALID: "Username and password combination is incorrect.",
       FAILURE_CREDENTIALS_MISSING: "No credentials supplied.",
       FAILURE_OTHER: "Unknown error while logging in.",
       UNKNOWN: "An unexpected error occurred."
@@ -54,7 +55,9 @@ export default {
     REQUIRED_FIELD: "{0} is required."
   },
   header: {
-    account_link: "My Account"
+    account_link: "My Account",
+    dashboard: "My Dashboard",
+    menu_button_aria: "Show/hide navigation sidebar"
   },
   account: {
     header: "My Account",

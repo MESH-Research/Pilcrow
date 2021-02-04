@@ -1,61 +1,75 @@
 <template>
   <q-page class="flex-center flex">
-    <q-card square>
+    <q-card style="width: 400px" square>
       <q-card-section class="bg-deep-purple-7 q-pa-sm">
         <div class="text-h5 text-white">Login</div>
       </q-card-section>
       <q-card-section class="q-pa-lg">
-        <q-form v-on:submit.prevent="login()" class="q-px-sm q-pt-md q-pb-lg">
+        <q-banner
+          class="text-white bg-red text-center"
+          dense
+          rounded
+          v-if="redirectUrl"
+          v-text="$t(`auth.loginRequired`)"
+        />
+        <q-form
+          v-on:submit.prevent="login()"
+          class="q-px-sm q-pt-md  q-gutter-y-lg q-pb-lg"
+        >
           <q-input
-            square
+            outlined
             ref="username"
-            v-model="form.username"
-            :label="$t('auth.fields.username')"
+            :value="$v.form.email.$model"
+            @change="
+              e => {
+                $v.form.email.$model = e.target.value.trim();
+              }
+            "
+            :error="$v.form.email.$error"
+            :label="$t('auth.fields.email')"
             @keypress.enter="$refs.password.focus()"
             autofocus
             autocomplete="username"
           >
-            <template #prepend>
-              <q-icon name="person" />
+            <template #error>
+              <div
+                v-if="!$v.form.email.required"
+                v-text="$t('helpers.REQUIRED_FIELD', [$t('auth.fields.email')])"
+              />
+              <div
+                v-if="!$v.form.email.email"
+                v-text="$t('auth.validation.EMAIL_INVALID')"
+              />
             </template>
           </q-input>
 
-          <q-input
-            square
+          <password-input
+            outlined
             ref="password"
-            v-model="form.password"
-            :type="isPwd ? 'password' : 'text'"
+            v-model="$v.form.password.$model"
+            :error="$v.form.password.$error"
             :label="$t('auth.fields.password')"
             @keypress.enter="login"
             autocomplete="current-password"
           >
-            <template v-slot:prepend>
-              <q-icon name="lock" />
-            </template>
-            <template v-slot:append>
-              <q-icon
-                :name="isPwd ? 'visibility_off' : 'visibility'"
-                class="cursor-pointer"
-                @click="isPwd = !isPwd"
+            <template #error>
+              <div
+                v-if="!$v.form.password.required"
+                v-text="
+                  $t('helpers.REQUIRED_FIELD', [$t('auth.fields.password')])
+                "
               />
             </template>
-          </q-input>
+          </password-input>
         </q-form>
 
-        <transition
-          appear
-          enter-active-class="animated bounceIn"
-          leave-active-class="animated fadeOut"
-        >
-          <q-banner
-            class="text-white bg-red text-center"
-            dense
-            rounded
-            v-if="error"
-          >
-            {{ error }}
-          </q-banner>
-        </transition>
+        <q-banner
+          class="text-white bg-red text-center"
+          dense
+          rounded
+          v-if="error"
+          v-text="$t(`auth.failures.${error}`)"
+        />
       </q-card-section>
       <q-card-actions class="q-px-lg">
         <q-btn
@@ -79,46 +93,57 @@
 </template>
 
 <script>
-import gql from "graphql-tag";
+import PasswordInput from "src/components/forms/PasswordInput.vue";
+import { validationMixin } from "vuelidate";
+import { required, email } from "vuelidate/lib/validators";
+import appAuth from "src/components/mixins/appAuth";
 
 export default {
+  components: { PasswordInput },
+  mixins: [validationMixin, appAuth],
   name: "PageLogin",
   data() {
     return {
-      isPwd: true,
       form: {
         email: "",
         password: ""
       },
       error: "",
-      loading: false
+      loading: false,
+      redirectUrl: null
     };
+  },
+  validations: {
+    form: {
+      email: {
+        email,
+        required
+      },
+      password: {
+        required
+      }
+    }
+  },
+  mounted() {
+    this.redirectUrl = this.$q.sessionStorage.getItem("loginRedirect");
+    this.$q.sessionStorage.remove("loginRedirect");
   },
   methods: {
     async login() {
-      const loginResult = await this.$apollo
-        .mutate({
-          mutation: gql`
-            mutation($email: String!, $password: String!) {
-              login(email: $email, password: $password) {
-                id
-                name
-                username
-              }
-            }
-          `,
-          variables: {
-            email: this.form.email,
-            password: this.form.password
-          }
-        })
-        .then(data => {
-          console.log(data);
-        })
-        .catch(error => {
-          console.error(error);
-        });
-    },
-  },
+      this.error = "";
+      this.$v.$touch();
+      if (this.$v.$invalid) {
+        this.error = "LOGIN_FORM_VALIDATION";
+        return false;
+      }
+      const { success, errors } = await this.$login(this.form);
+
+      if (success) {
+        this.$router.push(this.redirectUrl ?? "/dashboard");
+      } else {
+        this.error = errors.pop();
+      }
+    }
+  }
 };
 </script>

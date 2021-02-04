@@ -4,15 +4,8 @@
       <q-card-section class="bg-deep-purple-7">
         <h4 class="text-h5 text-white q-my-xs">{{ $t("auth.register") }}</h4>
       </q-card-section>
-      <q-card-section v-if="formSuccess">
-        <div class="alert alert-success">
-          Woo hoo, you have an account now. Ideally you would have been logged
-          in and directed to your dashboard to learn about all the amazing
-          things that are CCR. But for now, this exciting, stylish box is what
-          you're going to have to live with.
-        </div>
-      </q-card-section>
-      <q-card-section v-else>
+
+      <q-card-section>
         <p>
           It only takes a minute to create an account and join our community of
           scholars.
@@ -24,7 +17,7 @@
         >
           <q-input
             outlined
-            v-model.trim="name"
+            v-model.trim="form.name"
             :label="$t('helpers.OPTIONAL_FIELD', [$t('auth.fields.name')])"
             autocomplete="name"
             bottom-slots
@@ -32,26 +25,31 @@
           </q-input>
           <q-input
             outlined
-            v-model.trim="$v.email.$model"
+            @change="
+              e => {
+                $v.form.email.$model = e.target.value.trim();
+              }
+            "
+            :value="$v.form.email.$model"
             type="email"
             :label="$t('auth.fields.email')"
             autocomplete="username"
-            :error="$v.email.$error"
+            :error="$v.form.email.$error"
             :loading="emailLoading > 0"
             debounce="500"
             bottom-slots
           >
             <template #error>
               <div
-                v-if="!$v.email.required"
+                v-if="!$v.form.email.required"
                 v-html="$t('helpers.REQUIRED_FIELD', [$t('auth.fields.email')])"
               />
               <div
-                v-if="!$v.email.email || !$v.email.serverValid"
+                v-if="!$v.form.email.email || !$v.form.email.serverValid"
                 v-text="$t('auth.validation.EMAIL_INVALID')"
               />
               <i18n
-                v-if="!$v.email.available"
+                v-if="!$v.form.email.available"
                 path="auth.validation.EMAIL_IN_USE"
                 tag="div"
                 style="line-height: 1.3"
@@ -72,9 +70,9 @@
           </q-input>
           <q-input
             outlined
-            v-model.trim="$v.username.$model"
+            v-model.trim="$v.form.username.$model"
             :label="$t('auth.fields.username')"
-            :error="$v.username.$error"
+            :error="$v.form.username.$error"
             :loading="usernameLoading > 0"
             autocomplete="nickname"
             debounce="500"
@@ -82,33 +80,41 @@
           >
             <template #error>
               <div
-                v-if="!$v.username.required"
+                v-if="!$v.form.username.required"
                 v-text="
                   $t('helpers.REQUIRED_FIELD', [$t('auth.fields.username')])
                 "
               />
               <div
-                v-if="!$v.username.available"
+                v-if="!$v.form.username.available"
                 v-text="$t('auth.validation.USERNAME_IN_USE')"
               />
             </template>
             <template
               #append
-              v-if="!$v.username.$error && !usernameLoading && username.length"
+              v-if="
+                !$v.form.username.$error &&
+                  !usernameLoading &&
+                  form.username.length
+              "
             >
               <q-icon name="done" color="green-6" />
             </template>
             <template
               #hint
-              v-if="!$v.username.$error && !usernameLoading && username.length"
+              v-if="
+                !$v.form.username.$error &&
+                  !usernameLoading &&
+                  form.username.length
+              "
               >{{ $t("auth.validation.USERNAME_AVAILABLE") }}</template
             >
           </q-input>
           <new-password-input
             outlined
             :label="$t('auth.fields.password')"
-            v-model="$v.password.$model"
-            :error="$v.password.$error"
+            v-model="$v.form.password.$model"
+            :error="$v.form.password.$error"
             :complexity="complexity"
           />
         </q-form>
@@ -119,7 +125,7 @@
           v-text="$t(`auth.failures.${formErrorMsg}`)"
         />
       </q-card-section>
-      <q-card-actions v-if="!formSuccess" class="q-px-lg">
+      <q-card-actions class="q-px-lg">
         <q-btn
           unelevated
           size="lg"
@@ -144,6 +150,8 @@
 import NewPasswordInput from "../components/forms/NewPasswordInput.vue";
 import { validationMixin } from "vuelidate";
 import { required, email } from "vuelidate/lib/validators";
+import { CREATE_USER } from "src/graphql/mutations";
+import appAuth from "src/components/mixins/appAuth";
 import zxcvbn from "zxcvbn";
 import gql from "graphql-tag";
 
@@ -172,7 +180,7 @@ const importValidationErrors = function(error, vm) {
 
 export default {
   name: "PageRegister",
-  mixins: [validationMixin],
+  mixins: [validationMixin, appAuth],
   components: { NewPasswordInput },
   apollo: {
     "user.username": {
@@ -188,11 +196,11 @@ export default {
       fetchPolicy: "cache-and-network",
       variables() {
         return {
-          username: this.username
+          username: this.form.username
         };
       },
       skip() {
-        if (!this.$v.username.required || this.username === "") {
+        if (!this.$v.form.username.required || this.username === "") {
           return true;
         }
         return false;
@@ -212,12 +220,12 @@ export default {
       fetchPolicy: "cache-and-network",
       variables() {
         return {
-          email: this.email
+          email: this.form.email
         };
       },
       loadingKey: "emailLoading",
       skip() {
-        if (!this.$v.email.required || !this.$v.email.email) {
+        if (!this.$v.form.email.required || !this.$v.form.email.email) {
           return true;
         }
         return false;
@@ -226,21 +234,22 @@ export default {
   },
   data: () => {
     return {
-      email: "",
-      password: "",
-      name: "",
-      username: "",
+      form: {
+        email: "",
+        password: "",
+        name: "",
+        username: ""
+      },
       serverValidationErrors: { "user.username": false, "user.email": false },
       usernameLoading: 0,
       emailLoading: 0,
       formLoading: 0,
-      formErrorMsg: "",
-      formSuccess: false
+      formErrorMsg: ""
     };
   },
   computed: {
     complexity() {
-      return zxcvbn(this.password);
+      return zxcvbn(this.form.password);
     },
     isServerError() {
       return (field, errorToken) => {
@@ -254,38 +263,40 @@ export default {
     }
   },
   validations: {
-    email: {
-      required,
-      email,
-      available(value) {
-        if (value === "") {
-          return true;
+    form: {
+      email: {
+        required,
+        email,
+        available(value) {
+          if (value === "") {
+            return true;
+          }
+          return !this.isServerError("user.email", "EMAIL_IN_USE");
+        },
+        serverValid(value) {
+          if (value === "") {
+            return true;
+          }
+          return !this.isServerError("user.email", "EMAIL_NOT_VALID");
         }
-        return !this.isServerError("user.email", "EMAIL_IN_USE");
       },
-      serverValid(value) {
-        if (value === "") {
-          return true;
+      username: {
+        required,
+        available(value) {
+          if (value === "") {
+            return true;
+          }
+          return !this.isServerError("user.username", "USERNAME_IN_USE");
         }
-        return !this.isServerError("user.email", "EMAIL_NOT_VALID");
-      }
-    },
-    username: {
-      required,
-      available(value) {
-        if (value === "") {
-          return true;
+      },
+      password: {
+        required,
+        complexity() {
+          return (
+            this.complexity.score >= 3 &&
+            !this.isServerError("user.password", "PASSWORD_NOT_COMPLEX")
+          );
         }
-        return !this.isServerError("user.username", "USERNAME_IN_USE");
-      }
-    },
-    password: {
-      required,
-      complexity() {
-        return (
-          this.complexity.score >= 3 &&
-          !this.isServerError("user.password", "PASSWORD_NOT_COMPLEX")
-        );
       }
     }
   },
@@ -296,7 +307,6 @@ export default {
       );
     },
     async submit() {
-      const { email, name, username, password } = this;
       this.$v.$touch();
       this.formErrorMsg = "";
       if (this.$v.$invalid) {
@@ -305,35 +315,12 @@ export default {
       }
       this.resetServerValidation();
       try {
-        const result = await this.$apollo.mutate({
-          mutation: gql`
-            mutation CreateUser(
-              $email: String!
-              $name: String
-              $username: String!
-              $password: String!
-            ) {
-              createUser(
-                user: {
-                  name: $name
-                  email: $email
-                  username: $username
-                  password: $password
-                }
-              ) {
-                username
-                id
-                created_at
-              }
-            }
-          `,
-          variables: {
-            email,
-            name,
-            username,
-            password
-          }
+        await this.$apollo.mutate({
+          mutation: CREATE_USER,
+          variables: this.form
         });
+        await this.$login(this.form);
+        this.$router.push("/dashboard");
       } catch (error) {
         if (importValidationErrors(error, this)) {
           this.formErrorMsg = "CREATE_FORM_VALIDATION";
@@ -341,9 +328,7 @@ export default {
           this.formErrorMsg = "CREATE_FORM_INTERNAL";
         }
         this.$v.$touch();
-        return;
       }
-      this.formSuccess = true;
     }
   }
 };
