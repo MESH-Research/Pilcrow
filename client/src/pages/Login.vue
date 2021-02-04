@@ -19,7 +19,12 @@
           <q-input
             outlined
             ref="username"
-            v-model="$v.form.email.$model"
+            :value="$v.form.email.$model"
+            @change="
+              e => {
+                $v.form.email.$model = e.target.value.trim();
+              }
+            "
             :error="$v.form.email.$error"
             :label="$t('auth.fields.email')"
             @keypress.enter="$refs.password.focus()"
