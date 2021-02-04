@@ -4,6 +4,7 @@ namespace App\GraphQL\Mutations;
 
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use App\Exceptions\InvalidCredentials;
 
 class Login
 {
@@ -18,7 +19,7 @@ class Login
         $guard = Auth::guard(config('sanctum.guard', 'web'));
 
         if ( ! $guard->attempt($args)) {
-            throw new \Error('Invalid credentials.');
+            throw new InvalidCredentials('Invalid credentials supplied');
         }
 
         /**
