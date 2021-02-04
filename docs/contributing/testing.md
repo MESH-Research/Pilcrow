@@ -77,9 +77,10 @@ NOTE: If you already have configuration in `.lando.local.yml`, be sure to merge 
 ```yaml
 #FILE: .lando.local.yml
 services:
-  type: node
-  overrides:
-    image: "cypress/included:6.3.0"
+  cypress:
+    type: node
+    overrides:
+      image: "cypress/included:6.3.0"
 tooling:
   cypress:
     service: cypress
