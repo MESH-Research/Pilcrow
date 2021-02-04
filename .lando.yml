@@ -1,7 +1,7 @@
 name: ccr
 recipe: laravel
 config:
-  php: "7.4"
+  php: "8.0"
   composer_version: 2
   composer: []
   webroot: backend/public
