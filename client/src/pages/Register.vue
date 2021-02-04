@@ -25,7 +25,12 @@
           </q-input>
           <q-input
             outlined
-            v-model.trim="$v.form.email.$model"
+            @change="
+              e => {
+                $v.form.email.$model = e.target.value.trim();
+              }
+            "
+            :value="$v.form.email.$model"
             type="email"
             :label="$t('auth.fields.email')"
             autocomplete="username"
