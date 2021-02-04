@@ -1,8 +1,37 @@
 <template>
   <q-layout view="lhh lpr lFf">
-    <app-header />
-    <q-drawer v-model="leftDrawerOpen" show-if-above content-class="bg-grey-1">
-      <div class="drawer-header">Stuff To Do</div>
+    <app-header drawer v-model="leftDrawerOpen" />
+    <q-drawer
+      id="#sidebar"
+      v-model="leftDrawerOpen"
+      show-if-above
+      content-class="sidebar bg-grey-1"
+    >
+      <q-scroll-area class="sidebar-nav">
+        <q-list>
+          <q-item to="/dashboard" v-ripple>
+            <q-item-section avatar>
+              <q-icon name="dashboard" />
+            </q-item-section>
+            <q-item-section>
+              {{ $t("header.dashboard") }}
+            </q-item-section>
+          </q-item>
+        </q-list>
+      </q-scroll-area>
+
+      <q-img
+        class="sidebar-avatar absolute-top"
+        src="https://cdn.quasar.dev/img/material.png"
+      >
+        <div class="absolute-bottom bg-transparent">
+          <q-avatar size="56px" class="q-mb-sm">
+            <q-img src="https://cdn.quasar.dev/img/boy-avatar.png" />
+          </q-avatar>
+          <div class="text-weight-bold">{{ currentUser.name }}</div>
+          <div>@{{ currentUser.username }}</div>
+        </div>
+      </q-img>
     </q-drawer>
 
     <q-page-container>
@@ -17,22 +46,30 @@
 <script>
 import AppFooter from "../components/AppFooter.vue";
 import AppHeader from "src/components/AppHeader.vue";
+import { CURRENT_USER } from "src/graphql/queries";
 export default {
   name: "MainLayout",
-
   components: { AppFooter, AppHeader },
-
   data: () => {
     return {
       leftDrawerOpen: false
     };
   },
+  apollo: {
+    currentUser: {
+      query: CURRENT_USER
+    }
+  }
 };
 </script>
 
-<style lang="scss">
-.drawer-header {
-  height: 143px;
-  background: $primary;
-}
+<style lang="sass">
+.sidebar
+  $avatar-height: 150px
+  .sidebar-avatar
+    height: $avatar-height
+  .sidebar-nav
+    height: calc(100% - #{$avatar-height})
+    margin-top: $avatar-height
+    border-right: 1px solid #ddd
 </style>

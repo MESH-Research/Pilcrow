@@ -1,6 +1,17 @@
 <template>
-  <q-header>
+  <q-header class="header">
     <q-toolbar>
+      <q-btn
+        v-if="value !== null"
+        flat
+        @click="$emit('input', !value)"
+        round
+        dense
+        icon="menu"
+        :aria-label="$t('header.menu_button_aria')"
+        aria-controls="sidebar"
+        :aria-expanded="value.toString()"
+      />
       <q-space />
 
       <template v-if="currentUser">
@@ -36,19 +47,18 @@
         <q-btn :label="$t('auth.login')" to="/login" stretch flat />
       </template>
     </q-toolbar>
-    <div class="q-px-xl q-pt-lg q-pb-sm">
+    <div class="title">
       <div class="text-h4 text-weight-regular">
         <span class="text-weight-medium">Public</span> Philosophy Journal
         <strong>Quarterly</strong>
       </div>
       <div class="text-subtitle">Submission Review System</div>
     </div>
-    <q-img src="statics/header-back.jpg" class="header-image absolute-top" />
+    <q-img src="header-back.jpg" class="header-image absolute-top" />
   </q-header>
 </template>
 
 <script>
-import gql from "graphql-tag";
 import appAuth from "src/components/mixins/appAuth";
 import { CURRENT_USER } from "src/graphql/queries";
 
@@ -57,8 +67,16 @@ export default {
   mixins: [appAuth],
   data() {
     return {
-      currentUser: null
+      currentUser: null,
+      drawerShowing: false
     };
+  },
+  props: {
+    //Drawer status
+    value: {
+      type: Boolean,
+      default: null
+    }
   },
   apollo: {
     currentUser: {
@@ -80,9 +98,23 @@ export default {
 .site-title a
   text-decoration: none
   color: white
-.header-image
-  height: 100%
-  z-index: -1
-  opacity: 0.2
-  filter: grayscale(2%)
+.header
+  height: 150px
+  overflow: hidden
+  .title
+    padding: 24px 48px 8px 48px
+  .header-image
+    height: 100%
+    z-index: -1
+    opacity: 0.2
+    filter: grayscale(2%)
+
+@media (max-width: $breakpoint-xs)
+  .header
+    height: auto
+    padding-bottom: 10px
+    .title
+      padding: 0px 15px 5px 15px
+      .text-h4
+        font-size: 1.3rem
 </style>

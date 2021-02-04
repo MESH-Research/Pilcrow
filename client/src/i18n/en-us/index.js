@@ -56,7 +56,8 @@ export default {
   },
   header: {
     account_link: "My Account",
-    dashboard: "My Dashboard"
+    dashboard: "My Dashboard",
+    menu_button_aria: "Show/hide navigation sidebar"
   },
   account: {
     header: "My Account",
