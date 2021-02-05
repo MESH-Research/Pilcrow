@@ -2,7 +2,7 @@
 
 ## Code Reviews
 
-The CCR project enforces a mandatory code review for every pull request on the project, including from core developers and maintainers.  When you create a pull request, be sure to document:
+The CCR project enforces a mandatory code review for every pull request on the project, including those from core developers and maintainers.  When you create a pull request, be sure to document in the pull request description:
 
 - What features/fixes the PR addresses
 - How to test the implementation
@@ -27,7 +27,7 @@ lando yarn test:unit
 Each package's documentation is an excellent source of information on testing best practices and examples.  The [Vue Testing Handbook](https://lmiller1990.github.io/vue-testing-handbook/) is also an excellent resource for unit testing a Vue application.
 ### Lando config for Majestic UI
 
-The [Majestic](https://github.com/Raathigesh/majestic) GUI for jest is a useful tool for running unit tests in a browser and watching code and tests for changes.  You can add the following config to your `.lando.local.yml` file to enable a container for Majestic.
+The [Majestic](https://github.com/Raathigesh/majestic) GUI for Jest is a useful tool for running unit tests in a browser and watching code and tests for changes.  You can add the following config to your `.lando.local.yml` file to enable a container for Majestic.
 
 ::: warning Heads Up
  If you already have configuration `.lando.local.yml`, be sure to merge the services and proxy keys, or Lando will fail to rebuild/start.

@@ -42,7 +42,7 @@ module.exports = {
             ],
             "/install/": [
                 {
-                    title: "Boo",
+                    title: "Installation",
                     collapsable: false
                 }
             ],

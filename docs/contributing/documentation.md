@@ -1,11 +1,11 @@
 # Documentation
 
-CCR's documentation (the site you're currently reading) is a [VuePress](https://vuepress.vuejs.org) site located in the `/docs` directory of the repo.  Our goal is to iterate the documentation as features are added to the application.  All of the documentation files are [Markdown](https://www.markdownguide.org/getting-started/) with some minor Vue additions sprinkled in here and there.
+CCR's documentation (the site you're currently reading) is a [VuePress](https://vuepress.vuejs.org) site located in the `/docs` directory of the repo.  Our goal is to iterate the documentation as features that are added to the application.  All of the documentation files are [Markdown](https://www.markdownguide.org/getting-started/) with some minor Vue additions sprinkled in here and there.
 
 ::: tip Help CCR Grow
 ![edit this page screenshot](./images/edit_this_page.jpg)
 
-Helping improve documentation is a great way to help CCR that doesn't require programming experience.
+Improving documentation is a great way to help CCR that doesn't require programming experience.
 
 At the bottom of each page, you should find a link to "Edit this Page."  Follow this link straight to the GitHub editing interface!
 :::
@@ -24,7 +24,7 @@ Look in the automated checks section of the pull request for the action with the
 
 ![deploy previews screenshot](./images/deploy_previews.jpg)
 
-## Serving test Docs using Lando
+## Serving Test Docs Using Lando
 
 It can be helpful to have a locally rendered version to see the results of your changes while editing documentation.  The `/docs` directory has its own [Lando](https://lando.dev) configuration file just for starting up a documentation development environment.
 

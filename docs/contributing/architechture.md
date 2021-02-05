@@ -8,16 +8,15 @@ CCR uses a multi-container docker architecture. Three primary containers serve t
 
 - Proxy: An NGiNX container that proxies outside requests into the application.
 - Application: A PHP-FPM container that provides the backend GraphQL API
-- Database: A Mysql container that provides the relational DB
+- Database: A MySQL container that provides the relational DB
 
 There are also a few other containers that only exist in the development environment.
 
 - Client: A node container that builds the application and provides Hot-Module-Replacement (HMR)
 - Docs: A development container for the documentation system.
-- Test: A container to serve the Majestic interface for running jest unit tests.
+- Test: A container to serve the Majestic interface for running Jest unit tests.
 
-In a production environment, the application is compiled and served by the proxy container directly. The proxy container is the only public container in the stack. Requests for the `/graphql` or `/graphql-playground` (development mode only)
-are proxied to the [application server](#application-server). All other requests not for a static asset will return the compiled client's `index.html`.
+In a production environment, the application is compiled and served by the proxy container directly. The proxy container is the only public container in the stack. Requests for the `/graphql` or `/graphql-playground` (development mode only) are proxied to the [application server](#application-server). All other requests that are not for a static asset will return the compiled client's `index.html`.
 
 Note: Our Lando development environment proxies client requests to a client container running `quasar dev` to allow for hot module replacement (HMR).
 
