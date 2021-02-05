@@ -35,11 +35,13 @@
     "@quasar/app": "^2.0.0",
     "@quasar/quasar-app-extension-apollo": "^1.0.0-beta.7",
     "@quasar/quasar-app-extension-testing": "^1.0.3",
+    "@quasar/quasar-app-extension-testing-e2e-cypress": "^3.0.1",
     "@quasar/quasar-app-extension-testing-unit-jest": "^2.2.1",
     "babel-eslint": "^10.0.1",
     "eslint": "^6.8.0",
     "eslint-config-prettier": "^4.0.0",
     "eslint-loader": "^3.0.3",
+    "eslint-plugin-cypress": "^2.11.1",
     "eslint-plugin-jest": "^24.1.0",
     "eslint-plugin-vue": "^6.1.2",
     "majestic": "^1.2.24"

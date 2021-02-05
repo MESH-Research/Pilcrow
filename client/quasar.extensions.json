@@ -4,7 +4,8 @@
   },
   "@quasar/testing": {
     "harnesses": [
-      "unit-jest"
+      "unit-jest",
+      "e2e-cypress"
     ]
   },
   "@quasar/testing-unit-jest": {
@@ -12,6 +13,10 @@
     "options": [
       "scripts",
       "majestic"
+    ]
+  },
+  "@quasar/testing-e2e-cypress": {
+    "options": [
     ]
   }
 }
