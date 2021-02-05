@@ -70,8 +70,8 @@ You can create local containers or additional tooling commands by creating a `.l
 
 ## Contributor Workflow
 
-1. Branch from Development
+1. Create a new branch based on the `development` branch
 2. Work on your feature/fix
-3. Pull request to `development` branch
-4. Respond to code review
-5. PR merged by reviewer or maintainer
+3. Open a pull request on GitHub to merge your branch into the `development` branch
+4. Respond to feedback from the subsequent code review(s)
+5. The pull request can be merged by a reviewer or a maintainer
