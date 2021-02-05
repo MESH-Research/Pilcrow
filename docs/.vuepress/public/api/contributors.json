@@ -1,0 +1,42 @@
+[
+    {
+        "name": "Kelly Sattler",
+        "roles": ["Organizing", "Reviewing"],
+        "github": "sattler9",
+        "title": "Team Lead & Scrum Master",
+        "pic": "https://avatars.githubusercontent.com/u/16806319?s=460&v=4",
+        "group": "core"
+    },
+    {
+        "name": "Brian Adams",
+        "roles": ["API", "Client", "DevOps"],
+        "github": "wreality",
+        "title": "Tech Lead & Core Developer",
+        "pic": "https://avatars.githubusercontent.com/u/463159?s=460&v=4",
+        "group": "core"
+    },
+    {
+        "name": "Grant Eben",
+        "roles": ["Everything"],
+        "github": "gmeben",
+        "title": "Core Developer",
+        "pic": "https://avatars.githubusercontent.com/u/2668987?s=460&v=4",
+        "group": "core"
+    },
+    {
+        "name": "Sruthin Gaddam",
+        "roles": ["Everything"],
+        "github": "Sruthin86",
+        "title": "Core Developer",
+        "pic": "https://avatars.githubusercontent.com/u/14964937?s=460&v=4",
+        "group": "core"
+    },
+    {
+        "name": "Amaresh Joshi",
+        "roles": ["Everything"],
+        "github": "amareshjoshi",
+        "title": "Core Developer",
+        "pic": "https://avatars.githubusercontent.com/u/12821935?s=460&v=4",
+        "group": "core"
+    }
+]
