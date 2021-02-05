@@ -43,3 +43,4 @@ jobs:
           FILTER_REGEX_EXCLUDE: .*(node_modules|vendor).*
           VALIDATE_MARKDOWN: true
           LINTER_RULES_PATH: /
+          MARKDOWN_CONFIG_FILE: .markdownlint.yaml
