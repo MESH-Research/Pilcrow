@@ -1,0 +1,83 @@
+name: "Test: Unit"
+
+on:
+  push:
+    branches: [master, development]
+  pull_request:
+    branches: [master, development]
+env:
+  DB_CONNECTION: mysql
+  DB_HOST: localhost
+  DB_PORT: 3306
+  DB_DATABASE: homestead
+  DB_USERNAME: root
+  DB_PASSWORD: root
+  APP_ENV: testing
+  APP_DEBUG: true
+  APP_KEY: base64:J6SHqWBtKA18a8eCxIWziMSPuJqJRPuqy0GdX75P+rM=
+
+jobs:
+  phpunit:
+    runs-on: ubuntu-20.04
+    defaults:
+      run:
+        shell: bash
+        working-directory: backend
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.0"
+      - name: Validate composer.json and composer.lock
+        run: composer validate
+
+      - name: Cache Composer packages
+        id: composer-cache
+        uses: actions/cache@v2
+        with:
+          path: backend/vendor
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      - name: Setup Mysql
+        run: |
+          sudo systemctl start mysql.service
+          mysql -uroot -proot -e "CREATE schema $DB_DATABASE;"
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress --no-suggest
+
+      - name: Migrate Database
+        run: php artisan migrate
+
+      - name: Unit Tests
+        run: php artisan test
+
+  jest:
+    runs-on: ubuntu-20.04
+    defaults:
+      run:
+        working-directory: client
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install quasar CLI
+        run: yarn global add @quasar/cli
+      - name: Cache Node packages
+        id: yarn-cache
+        uses: actions/cache@v2
+        with:
+          path: client/node_modules
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Build quasar SPA
+        run: $(yarn global bin)/quasar build -m spa
+
+      - name: Jest Unit Tests
+        run: yarn test:unit:ci
