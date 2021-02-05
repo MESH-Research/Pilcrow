@@ -22,26 +22,10 @@ Most of the work of the project is handled on our [GitHub repo](https://github.c
 All contributors to the project must agree to adhere to our project's [Code of Conduct](https://github.com/MESH-Research/CCR/blob/master/CODE_OF_CONDUCT.md)
 
 ::: tip In summary
-
-In the interest of fostering an open and welcoming environment, we as contributors and maintainers pledge to making participation in our project and our community a harassment-free experience for everyone, regardless of:
-
-* age
-* body size
-* disability
-* education
-* ethnicity
-* gender identity and expression
-* level of experience
-* nationality
-* personal appearance
-* race
-* religion
-* sex characteristics
-* sexual identity and orientation
-* socio-economic status
+In the interest of fostering an open and welcoming environment, we as contributors and maintainers pledge to making participation in our project and our community a harassment-free experience for everyone, regardless of age, body size, disability, ethnicity, sex characteristics, gender identity and expression, level of experience, education, socio-economic status, nationality, personal appearance, race, religion, or sexual identity and orientation.
 :::
 
-The full text of out Code of Conduct is available in our repository: <https://github.com/MESH-Research/CCR/blob/master/CODE_OF_CONDUCT.md>
+The full text of our Code of Conduct is available in our repository: <https://github.com/MESH-Research/CCR/blob/master/CODE_OF_CONDUCT.md>
 
 ## Development Environments
 
