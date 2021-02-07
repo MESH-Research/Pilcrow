@@ -13,9 +13,11 @@ services:
     config:
       database: .lando/mysql.cnf
   client:
+    port: false
     type: node:14
     build:
-      - cd /app/client && yarn install
+      - yarn
+      - cd /app/client && yarn
     command: cd /app/client && yarn dev
     scanner: false
   appserver:
@@ -30,3 +32,7 @@ tooling:
     service: client
     cmd: npx quasar
     dir: /app/client
+  extras:
+    service: client
+    cmd: node scripts/lando-extras.js
+    dir: /app
