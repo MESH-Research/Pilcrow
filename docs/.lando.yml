@@ -1,9 +1,9 @@
 name: docs
 services:
   dev:
-    type: node
+    type: node:14
     build:
-      - yarn 
+      - yarn
     port: 8080
     command: yarn dev
 tooling:
@@ -12,4 +12,4 @@ tooling:
     cmd: yarn
 proxy:
   dev:
-    - docs_dev.lndo.site:8080
+    - docs.ccr.lndo.site:8080

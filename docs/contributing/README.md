@@ -30,6 +30,9 @@ The full text of our Code of Conduct is available in our repository: <https://gi
 ## Development Environments
 
 We use a Docker-based container management system called [Lando](https://lando.dev/) to manage reusable development environments to ensure everyone is working with the same dependencies. To get started spinning up a development environment, you'll roughly need to follow these steps:
+:::warning Minimum Version
+CCR requires a Lando version &ge; 3.0.25
+:::
 
 1. [Download and Install Lando and its dependencies.](https://docs.lando.dev/basics/installation.html)
 2. Checkout the CCR repository on your local machine.
@@ -50,6 +53,7 @@ Lando has built-in tooling commands that allow a developer to run commands insid
 - `lando yarn`: Run yarn in the client container
 - `lando mysql`: Start a MySQL client session (TIP: use `lando mysql laravel` to start with the CCR database selected)
 - `lando quasar`: Run the quasar cli inside the client container
+- `lando extras`: Manage and install tools into `.lando.local.yml`
 
 There are other useful tooling commands available. To view a list of all commands available, run `lando` at your command prompt with no arguments.
 
@@ -60,7 +64,7 @@ The only exception to this is the `lando quasar` command which always runs in th
 
 ### Additional Local Configuration
 
-You can create local containers or additional tooling commands by creating a `.lando.local.yml` file. These can be particularly helpful for creating containers that serve tooling like [Majestic UI](https://github.com/Raathigesh/majestic).
+You can create local containers or additional tooling commands by creating a `.lando.local.yml` file.  Check out the `lando extras` tooling command for pre-configured local containers for testing and mail tools.
 
 ### Lando Tips and Tricks
 
