@@ -41,8 +41,8 @@ class LandoExtras {
                 this.localConfig[tKey],
                 this.extras[extra].template[tKey]
             );
-            this.extras[extra].enabled = true;
         });
+        this.extras[extra].enabled = true;
     }
 
     /**
