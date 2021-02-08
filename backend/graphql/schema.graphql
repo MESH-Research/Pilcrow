@@ -49,6 +49,10 @@ Input type for userCreate mutation
 input CreateUserInput {
     "Display name. (optional)"
     name: String
+        @rules(
+            apply: ["max:256"],
+            message: { max: "NAME_LENGTH_EXCEEDED" }
+        )
 
     "Username. Must be unique. (required)"
     username: String!
@@ -77,6 +81,40 @@ input CreateUserInput {
         @hash
 }
 
+"""
+Update user information
+"""
+input UpdateUserInput {
+    "Display name"
+    name: String
+        @rules(
+            apply: ["max:255"],
+            message: { max: "NAME_LENGTH_EXCEEDED" }
+        )
+    "Username of the user. Must be unique."
+    username: String
+        @rules(
+            apply: ["unique:users,username", "filled"]
+            messages: { unique: "USERNAME_IN_USE", filled: "USERNAME_EMPTY" }
+        )
+    "Email address of the user. Must be unique."
+    email: String
+        @rules(
+            apply: ["unique:users,email", "email:rfc,dns", "filled"]
+            messages: {
+                unique: "EMAIL_IN_USE"
+                email: "EMAIL_NOT_VALID"
+                filled: "EMAIL_EMPTY"
+            }
+        )
+    "Password used to login to the application."
+    password: String
+        @rules(
+            apply: ["zxcvbn_min:3"]
+            messages: { zxcvbn_min: "PASSWORD_NOT_COMPLEX" }
+        )
+        @hash
+}
 """
 A user role for permissions
 """
@@ -110,4 +148,7 @@ type Mutation {
 
     "Log out from the current session, showing the user one last time."
     logout: User @guard
+
+    "Update the user information"
+    updateUser(id:ID!, user: UpdateUserInput! @spread): User! @update
 }
