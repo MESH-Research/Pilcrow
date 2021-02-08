@@ -62,6 +62,15 @@ class LandoExtras {
     }
 
     /**
+     * Return an extra by name
+     *
+     * @param String extra
+     */
+    getExtra(extra) {
+        return this.extras[extra];
+    }
+
+    /**
      * Parse local config yaml file.
      */
     parseLocalYml() {
