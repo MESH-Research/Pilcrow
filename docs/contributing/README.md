@@ -31,7 +31,7 @@ The full text of our Code of Conduct is available in our repository: <https://gi
 
 We use a Docker-based container management system called [Lando](https://lando.dev/) to manage reusable development environments to ensure everyone is working with the same dependencies. To get started spinning up a development environment, you'll roughly need to follow these steps:
 :::warning Minimum Version
-CCR requires a Lando version &ge; 3.0.25
+CCR requires Lando version &ge; 3.0.25
 :::
 
 1. [Download and Install Lando and its dependencies.](https://docs.lando.dev/basics/installation.html)
