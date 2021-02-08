@@ -51,7 +51,7 @@ proxy:
     - majestic.ccr.lndo.site:4000
 ```
 
-Then, once you run `lando rebuild` the majestic interface will be available at <https://ccr_test.lndo.site>
+Then, once you run `lando rebuild` the majestic interface will be available at <https://majestic.ccr.lndo.site>
 
 ## Server Unit Tests
 
