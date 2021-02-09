@@ -14,7 +14,7 @@ const success = chalk.green;
 /**
  * Display overwrite confirmation prompt.
  *
- * @returns Boolean true on confirmation
+ * @returns {boolean} true on confirmation
  */
 async function confirmOverwrite() {
     return await yesno({
