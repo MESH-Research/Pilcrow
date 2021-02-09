@@ -7,11 +7,11 @@ const yesno = require("yesno");
 const dedent = require("dedent-js");
 
 class LandoExtras {
-    ymlPath;
-    localConfigFile;
-    extrasConfigFile;
-    extras = {};
-    localConfig = {};
+    #ymlPath;
+    #localConfigFile;
+    #extrasConfigFile;
+    #extrasConfig = [];
+    #localConfig = {};
 
     /**
      * Setup LandoExtras.
@@ -20,96 +20,38 @@ class LandoExtras {
      * @param Object options
      */
     constructor(ymlPath, { localConfigFile, extrasConfigFile } = {}) {
-        this.ymlPath = ymlPath ?? "./";
-        this.localConfigFile = localConfigFile ?? ".lando.local.yml";
-        this.extrasConfigFile = extrasConfigFile ?? ".lando.extras.yml";
-        this.parseLocalYml();
-        this.parseExtrasYml();
-    }
-
-    /**
-     * Enable an extra by name.
-     *
-     * @param String extra
-     */
-    enableExtra(extra) {
-        Object.keys(this.extras[extra].template).forEach((tKey) => {
-            if (!this.localConfig[tKey]) {
-                this.localConfig[tKey] = {};
-            }
-            Object.assign(
-                this.localConfig[tKey],
-                this.extras[extra].template[tKey]
-            );
-        });
-        this.extras[extra].enabled = true;
-    }
-
-    /**
-     * Enable an extra by name.
-     *
-     * @param String extra
-     */
-    disableExtra(extra) {
-        Object.entries(this.extras[extra].template).forEach(
-            ([tKey, tContent]) => {
-                Object.keys(tContent).forEach((key) => {
-                    delete this.localConfig[tKey][key];
-                });
-            }
-        );
-        this.extras[extra].enabled = false;
-    }
-
-    /**
-     * Return an extra by name
-     *
-     * @param String extra
-     */
-    getExtra(extra) {
-        return this.extras[extra];
+        this.#ymlPath = ymlPath ?? "./";
+        this.#localConfigFile = localConfigFile ?? ".lando.local.yml";
+        this.#extrasConfigFile = extrasConfigFile ?? ".lando.extras.yml";
+        this.#parseLocalYml();
+        this.#parseExtrasYml();
     }
 
     /**
      * Parse local config yaml file.
      */
-    parseLocalYml() {
+    #parseLocalYml() {
         try {
-            this.localConfig = yaml.load(
-                fs.readFileSync(this.getFullPath(this.localConfigFile))
-            );
+            this.#localConfig = yaml.load(fs.readFileSync(this.fullConfigPath));
         } catch (e) {
-            this.localConfig = {};
-        }
-    }
-
-    /**
-     * Save local config yaml file.
-     */
-    writeLocalYml() {
-        try {
-            fs.writeFileSync(
-                this.getFullPath(this.localConfigFile),
-                yaml.dump(this.localConfig)
-            );
-        } catch (e) {
-            throw `Unable to write: ${this.getFullPath(this.localConfigFile)}`;
+            this.#localConfig = {};
         }
     }
 
     /**
      * Read extras config file.
      */
-    parseExtrasYml() {
+    #parseExtrasYml() {
+        const extrasFile = this.fullExtrasPath;
         try {
-            this.extras = yaml.load(
-                fs.readFileSync(this.getFullPath(this.extrasConfigFile))
-            );
-            Object.entries(this.extras).forEach(([name, config]) => {
-                config.enabled = this.isExtraEnabled(name);
+            const extrasYaml = yaml.load(fs.readFileSync(extrasFile));
+
+            Object.entries(extrasYaml).forEach(([name, config]) => {
+                const enabled = this.#enabled(config.template);
+                this.#extrasConfig.push({ name, enabled, ...config });
             });
         } catch (e) {
-            throw `Unable to parse: ${this.getFullPath(this.extrasConfigFile)}`;
+            throw `Unable to parse: ${extrasFile}`;
         }
     }
 
@@ -118,27 +60,52 @@ class LandoExtras {
      *
      * @param String file
      */
-    getFullPath(file) {
-        return `${this.ymlPath}${file}`;
+    #getFullPath(file) {
+        return `${this.#ymlPath}${file}`;
     }
 
     /**
-     * Return true if an extra is enabled currently.
+     * Copy configuration template into local config.
      *
-     * @param String extra
+     * @param Object template
      */
-    isExtraEnabled(extra) {
+    #enableTemplate(template) {
+        Object.keys(template).forEach((tKey) => {
+            if (!this.#localConfig[tKey]) {
+                this.#localConfig[tKey] = {};
+            }
+            Object.assign(this.#localConfig[tKey], template[tKey]);
+        });
+    }
+
+    /**
+     * Remove template configration keys from localConfig
+     *
+     * @param Object template
+     */
+    #disableTemplate(template) {
+        Object.entries(template).forEach(([tKey, tContent]) => {
+            Object.keys(tContent).forEach((key) => {
+                delete this.#localConfig[tKey][key];
+            });
+        });
+    }
+
+    /**
+     * Return true if a config template is enabled currently.
+     *
+     * @param Object config
+     */
+    #enabled(template) {
         const NotEnabledException = {};
         try {
-            Object.entries(this.extras[extra].template).forEach(
-                ([tKey, tKeyContent]) => {
-                    Object.keys(tKeyContent).forEach((item) => {
-                        if (!this.localConfig?.[tKey]?.[item]) {
-                            throw NotEnabledException;
-                        }
-                    });
-                }
-            );
+            Object.entries(template).forEach(([tKey, tKeyContent]) => {
+                Object.keys(tKeyContent).forEach((item) => {
+                    if (!this.#localConfig?.[tKey]?.[item]) {
+                        throw NotEnabledException;
+                    }
+                });
+            });
         } catch (e) {
             if (e === NotEnabledException) {
                 return false;
@@ -146,6 +113,101 @@ class LandoExtras {
             throw e;
         }
         return true;
+    }
+
+    /**
+     * Return an extra by name
+     *
+     * @param String name
+     */
+    #get(extra) {
+        return this.#extrasConfig.find((e) => e.name == extra);
+    }
+
+    /**
+     * Enable all extras
+     */
+    enableAll() {
+        this.#extrasConfig.forEach((extra) => {
+            this.#enableTemplate(extra.template);
+            extra.enabled = true;
+        });
+    }
+
+    /**
+     * Disable All Extras
+     */
+    disableAll() {
+        this.#extrasConfig.forEach((extra) => {
+            this.#disableTemplate(extra.template);
+            extra.enabled = false;
+        });
+    }
+
+    /**
+     * Enable an extra by name.
+     *
+     * @param String name
+     */
+    disable(name) {
+        const extra = this.#get(name);
+        this.#disableTemplate(extra.template);
+        extra.enabled = false;
+    }
+
+    /**
+     * Enable an extra by name.
+     *
+     * @param String name
+     */
+    enable(name) {
+        const extra = this.#get(name);
+        this.#enableTemplate(extra.template);
+        extra.enabled = true;
+    }
+
+    /**
+     * Map extra configs.
+     *
+     * @param Callable callback
+     */
+    map(callback) {
+        return this.#extrasConfig.map(callback);
+    }
+
+    /**
+     * Return true if the provided extra exists
+     *
+     * @param String name
+     */
+    exists(name) {
+        return this.#extrasConfig.some((e) => e.name === name);
+    }
+
+    /**
+     * Save local config yaml file.
+     */
+    write() {
+        const fullPath = this.fullConfigPath;
+        try {
+            fs.writeFileSync(fullPath, yaml.dump(this.#localConfig));
+        } catch (e) {
+            throw `Unable to write: ${fullPath}`;
+        }
+    }
+
+    /**
+     * Get full local config path
+     */
+    get fullConfigPath() {
+        return this.#getFullPath(this.#localConfigFile);
+    }
+
+    /**
+     * Get full extras config path
+     */
+    get fullExtrasPath() {
+        return this.#getFullPath(this.#extrasConfigFile);
     }
 }
 
@@ -169,7 +231,7 @@ async function confirmOverwrite() {
  * @param LandoExtras
  * @param Boolean write set to true to pre-confirm overwrite.
  */
-async function saveConfig(config, write) {
+async function saveConfig(extras, write) {
     var overwrite = write;
     if (!overwrite) {
         console.log();
@@ -177,12 +239,12 @@ async function saveConfig(config, write) {
     }
 
     if (overwrite) {
-        config.writeLocalYml();
+        extras.write();
         console.log(dedent`
 
-        ${chalk.green(`Updated: ${config.getFullPath(config.localConfigFile)}`)}
+        ${chalk.green(`Updated: ${extras.fullConfigPath}`)}
 
-        ${getActionsList(config)}
+        ${getActionsList(extras)}
 
         ${chalk.yellow("Don't forget to run lando rebuild!")}
         `);
@@ -205,36 +267,34 @@ function unknownExtraError(service) {
  *
  * @param LandoExtras config
  */
-function getActionsList(config) {
-    var list = [];
-    Object.entries(config.extras).forEach(
-        ([extra, { description, enabled }]) => {
-            list.push({
-                extra,
-                description,
-                icon: enabled ? `[${chalk.green("✔")}]` : "[ ]",
-                status: enabled ? chalk.green("enabled") : "disabled",
-            });
-        }
-    );
+function getActionsList(extras) {
+    const list = extras.map((e) => {
+        const { name, description, enabled } = e;
+        return {
+            name,
+            description,
+            icon: enabled ? `[${chalk.green("✔")}]` : "[ ]",
+            status: enabled ? chalk.green("enabled") : "disabled",
+        };
+    });
+
     return columnify(list, {
         minWidth: 15,
         config: {
             icon: { showHeaders: false, minWidth: 2 },
         },
-        columns: ["icon", "extra", "description", "status"],
+        columns: ["icon", "name", "description", "status"],
     });
 }
 
 /** CLI Logic */
 async function main() {
-    const config = new LandoExtras("./");
+    const extras = new LandoExtras("./");
     console.log(dedent`
     Manage 'extras' templates for local lando config.
     
-    Loaded templates from: ${chalk.yellow(
-        config.getFullPath(config.extrasConfigFile)
-    )}`);
+    Loaded templates from: ${chalk.yellow(extras.fullExtrasPath)}
+    `);
     program
         .name("lando extras")
         .addHelpCommand(false)
@@ -246,7 +306,7 @@ async function main() {
         .action(() => {
             console.log(dedent`
             
-            ${getActionsList(config)}
+            ${getActionsList(extras)}
             
             `);
             program.help();
@@ -261,17 +321,14 @@ async function main() {
                 console.log(chalk.red("Invalid option.  all <on|off>"));
                 return;
             }
-            const enable = onoff == "on" ? true : false;
 
-            Object.keys(config.extras).forEach((extra) => {
-                if (enable) {
-                    config.enableExtra(extra);
-                } else {
-                    config.disableExtra(extra);
-                }
-            });
+            if (onoff == "on") {
+                extras.enableAll();
+            } else {
+                extras.disableAll();
+            }
 
-            await saveConfig(config, program.opts().yes);
+            await saveConfig(extras, program.opts().yes);
         });
 
     program
@@ -279,9 +336,8 @@ async function main() {
         .alias("e")
         .description("enable an extras service")
         .action(async (service) => {
-            if (!config.getExtra(service)) {
+            if (!extras.exists(service)) {
                 unknownExtraError(service);
-
                 return;
             } else {
                 console.log(dedent`
@@ -289,8 +345,8 @@ async function main() {
                     service
                 )}.
                 `);
-                config.enableExtra(service);
-                await saveConfig(config, program.opts().yes);
+                extras.enable(service);
+                await saveConfig(extras, program.opts().yes);
             }
         });
 
@@ -299,7 +355,7 @@ async function main() {
         .alias("d")
         .description("disable an extras service")
         .action(async (service) => {
-            if (!config.getExtra(service)) {
+            if (!extras.exists(service)) {
                 unknownExtraError(service);
             } else {
                 console.log(dedent`
@@ -307,8 +363,8 @@ async function main() {
                     service
                 )}.
                 `);
-                config.disableExtra(service);
-                await saveConfig(config, program.opts().yes);
+                extras.disable(service);
+                await saveConfig(extras, program.opts().yes);
             }
         });
 
