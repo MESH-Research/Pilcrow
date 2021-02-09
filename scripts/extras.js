@@ -135,7 +135,7 @@ async function main() {
     program
         .command("enable <name>")
         .alias("e")
-        .description("enable an extras service")
+        .description("enable an extra")
         .action(async (name) => {
             if (!extras.exists(name)) {
                 unknownExtraError(name);
@@ -152,7 +152,7 @@ async function main() {
     program
         .command("disable <name>")
         .alias("d")
-        .description("disable an extras service")
+        .description("disable an extra")
         .action(async (name) => {
             if (!extras.exists(name)) {
                 unknownExtraError(name);
