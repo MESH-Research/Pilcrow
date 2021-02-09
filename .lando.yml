@@ -34,5 +34,5 @@ tooling:
     dir: /app/client
   extras:
     service: client
-    cmd: node scripts/lando-extras.js
+    cmd: node scripts/extras.js
     dir: /app
