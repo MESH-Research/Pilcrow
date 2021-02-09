@@ -16,8 +16,10 @@ class LandoExtras {
     /**
      * Setup LandoExtras.
      *
-     * @param String ymlPath
-     * @param Object options
+     * @param {string} [ymlPath] Path for yaml config files.
+     * @param {Object} [options] Options object
+     * @param {string} [options.localConfigFile] Name of local config file
+     * @param {string} [options.extraConfigFile] Name of the extras config file
      */
     constructor(ymlPath, { localConfigFile, extrasConfigFile } = {}) {
         this.#ymlPath = ymlPath ?? "./";
@@ -42,23 +44,23 @@ class LandoExtras {
      * Read extras config file.
      */
     #parseExtrasYml() {
-        const extrasFile = this.fullExtrasPath;
         try {
-            const extrasYaml = yaml.load(fs.readFileSync(extrasFile));
+            const extrasYaml = yaml.load(fs.readFileSync(this.fullExtrasPath));
 
             Object.entries(extrasYaml).forEach(([name, config]) => {
                 const enabled = this.#enabled(config.template);
                 this.#extrasConfig.push({ name, enabled, ...config });
             });
         } catch (e) {
-            throw `Unable to parse: ${extrasFile}`;
+            throw `Unable to parse: ${this.fullExtrasPath}`;
         }
     }
 
     /**
      * Prefix with file path.
      *
-     * @param String file
+     * @param {string} file File name to prefix with yaml path.
+     * @returns {string} Prefixed path.
      */
     #getFullPath(file) {
         return `${this.#ymlPath}${file}`;
@@ -67,7 +69,7 @@ class LandoExtras {
     /**
      * Copy configuration template into local config.
      *
-     * @param Object template
+     * @param {Object} template Config template to enable
      */
     #enableTemplate(template) {
         Object.keys(template).forEach((tKey) => {
@@ -81,7 +83,7 @@ class LandoExtras {
     /**
      * Remove template configration keys from localConfig
      *
-     * @param Object template
+     * @param {Object} template Config template to remove
      */
     #disableTemplate(template) {
         Object.entries(template).forEach(([tKey, tContent]) => {
@@ -92,9 +94,10 @@ class LandoExtras {
     }
 
     /**
-     * Return true if a config template is enabled currently.
+     * Return true if a config template is enabled in localConfig
      *
-     * @param Object config
+     * @param {Object} config Configuration template to check.
+     * @returns {boolean}
      */
     #enabled(template) {
         const NotEnabledException = {};
@@ -118,7 +121,8 @@ class LandoExtras {
     /**
      * Return an extra by name
      *
-     * @param String name
+     * @param {string} name Name of extra to locate
+     * @returns {Object}
      */
     #get(extra) {
         return this.#extrasConfig.find((e) => e.name == extra);
@@ -147,7 +151,7 @@ class LandoExtras {
     /**
      * Enable an extra by name.
      *
-     * @param String name
+     * @param {string} name Name of extra to enable
      */
     disable(name) {
         const extra = this.#get(name);
@@ -158,7 +162,7 @@ class LandoExtras {
     /**
      * Enable an extra by name.
      *
-     * @param String name
+     * @param {string} name Name of extra to disable
      */
     enable(name) {
         const extra = this.#get(name);
@@ -170,6 +174,7 @@ class LandoExtras {
      * Map extra configs.
      *
      * @param Callable callback
+     * @returns {any} Results of map call.
      */
     map(callback) {
         return this.#extrasConfig.map(callback);
@@ -178,7 +183,8 @@ class LandoExtras {
     /**
      * Return true if the provided extra exists
      *
-     * @param String name
+     * @param {string} name
+     * @returns {boolean}
      */
     exists(name) {
         return this.#extrasConfig.some((e) => e.name === name);
@@ -198,6 +204,8 @@ class LandoExtras {
 
     /**
      * Get full local config path
+     *
+     * @returns {string}
      */
     get fullConfigPath() {
         return this.#getFullPath(this.#localConfigFile);
@@ -205,6 +213,8 @@ class LandoExtras {
 
     /**
      * Get full extras config path
+     *
+     * @returns {string}
      */
     get fullExtrasPath() {
         return this.#getFullPath(this.#extrasConfigFile);
@@ -228,17 +238,17 @@ async function confirmOverwrite() {
 /**
  * Save configuration, checking for confirmation if needed.
  *
- * @param LandoExtras
- * @param Boolean write set to true to pre-confirm overwrite.
+ * @param {LandoExtras}
+ * @param {boolean} overwrite set to true to pre-confirm overwrite.
  */
-async function saveConfig(extras, write) {
-    var overwrite = write;
-    if (!overwrite) {
+async function saveConfig(extras, overwrite) {
+    var write = overwrite;
+    if (!write) {
         console.log();
-        overwrite = await confirmOverwrite();
+        write = await confirmOverwrite();
     }
 
-    if (overwrite) {
+    if (write) {
         extras.write();
         console.log(dedent`
 
@@ -255,17 +265,19 @@ async function saveConfig(extras, write) {
 
 /**
  * Display an error message for an unknown service
+ *
+ * @param {string} name Name of extra that was not found.
  */
-function unknownExtraError(service) {
+function unknownExtraError(name) {
     console.error(dedent`
-    ${chalk.red("Unknown extra:")} ${chalk.redBright(service)}
+        ${chalk.red("Unknown extra:")} ${chalk.redBright(name)}
     `);
 }
 
 /**
  * Return a table of available extras and their enabled status
  *
- * @param LandoExtras config
+ * @param {LandoExtras} extras
  */
 function getActionsList(extras) {
     const list = extras.map((e) => {
@@ -291,9 +303,9 @@ function getActionsList(extras) {
 async function main() {
     const extras = new LandoExtras("./");
     console.log(dedent`
-    Manage 'extras' templates for local lando config.
-    
-    Loaded templates from: ${chalk.yellow(extras.fullExtrasPath)}
+        Manage 'extras' templates for local lando config.
+        
+        Loaded templates from: ${chalk.yellow(extras.fullExtrasPath)}
     `);
     program
         .name("lando extras")
@@ -332,38 +344,38 @@ async function main() {
         });
 
     program
-        .command("enable <extra>")
+        .command("enable <name>")
         .alias("e")
         .description("enable an extras service")
-        .action(async (service) => {
-            if (!extras.exists(service)) {
-                unknownExtraError(service);
+        .action(async (name) => {
+            if (!extras.exists(name)) {
+                unknownExtraError(name);
                 return;
             } else {
                 console.log(dedent`
-                Copying configuration template for ${chalk.whiteBright.bold(
-                    service
-                )}.
+                    Copying configuration template for ${chalk.whiteBright.bold(
+                        name
+                    )}.
                 `);
-                extras.enable(service);
+                extras.enable(name);
                 await saveConfig(extras, program.opts().yes);
             }
         });
 
     program
-        .command("disable <extra>")
+        .command("disable <name>")
         .alias("d")
         .description("disable an extras service")
-        .action(async (service) => {
-            if (!extras.exists(service)) {
-                unknownExtraError(service);
+        .action(async (name) => {
+            if (!extras.exists(name)) {
+                unknownExtraError(name);
             } else {
                 console.log(dedent`
-                Removing configuration template for ${chalk.whiteBright.bold(
-                    service
-                )}.
+                    Removing configuration template for ${chalk.whiteBright.bold(
+                        name
+                    )}.
                 `);
-                extras.disable(service);
+                extras.disable(name);
                 await saveConfig(extras, program.opts().yes);
             }
         });
