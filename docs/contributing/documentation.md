@@ -20,7 +20,7 @@ Github Actions powered by [Netlify](https://netlify.com) automatically build and
 
 Any pull request that contains changes to documentation will have a preview build deployed.  These previews are a great way to share proposed documentation changes for feedback and review.  
 
-Whenever a deploy preview build is triggered, the Netlify bot will comment on the pull request with a link.  Follow this link to view the deployed documentation preview.
+Whenever a deploy preview build is triggered, the Netlify bot will comment on the pull request with a link to view the deployed documentation preview.
 
 ![deploy previews screenshot](./images/deploy_previews.jpg)
 

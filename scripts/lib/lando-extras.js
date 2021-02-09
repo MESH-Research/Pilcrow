@@ -9,7 +9,7 @@ class LandoExtras {
     #localConfig = {};
 
     /**
-     * Setup LandoExtras.
+     * Set Up LandoExtras.
      *
      * @param {string} [ymlPath] Path for yaml config files.
      * @param {Object} [options] Options object
@@ -91,7 +91,7 @@ class LandoExtras {
     /**
      * Return true if a config template is enabled in localConfig
      *
-     * @param {Object} config Configuration template to check.
+     * @param {Object} template Configuration template to check.
      * @returns {boolean}
      */
     #enabled(template) {
@@ -144,9 +144,9 @@ class LandoExtras {
     }
 
     /**
-     * Enable an extra by name.
+     * Disable an extra by name.
      *
-     * @param {string} name Name of extra to enable
+     * @param {string} name Name of extra to disable
      */
     disable(name) {
         const extra = this.#get(name);
@@ -157,7 +157,7 @@ class LandoExtras {
     /**
      * Enable an extra by name.
      *
-     * @param {string} name Name of extra to disable
+     * @param {string} name Name of extra to enable
      */
     enable(name) {
         const extra = this.#get(name);
@@ -168,7 +168,7 @@ class LandoExtras {
     /**
      * Map extra configs.
      *
-     * @param Callable callback
+     * @param {Function} callback
      * @returns {any} Results of map call.
      */
     map(callback) {

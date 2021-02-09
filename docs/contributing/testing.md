@@ -34,7 +34,7 @@ If you already have configuration `.lando.local.yml`, be sure to merge the servi
 :::
 
 ::: tip
-The lando extras tooling command can setup Majestic for you.  Run: `lando extras enable majestic`
+The lando extras tooling command can set up Majestic for you.  Run: `lando extras enable majestic`
 :::
 ```yaml
 #FILE: .lando.local.yml
@@ -71,7 +71,7 @@ We use [Cypress](https://www.cypress.io/) for our integration testing.  Cypress 
 ::: tip
 These instructions focus on installing Cypress under Lando.  Cypress can bit a bit of a resource hog and, as such, might be better run directly in your host environment.
 
-Also you can use Lando Extras to setup this configuration for you.  Run: `lando extras enable cypress`
+Also you can use Lando Extras to set up this configuration for you.  Run: `lando extras enable cypress`
 :::
 
 Add the following configuration to your `.lando.local.yml`.  
