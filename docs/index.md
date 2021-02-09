@@ -14,8 +14,8 @@ In here should go a nice description about CCR and what it's intended to do.
 ::: slot home-banner
 
 ::: danger HEADS UP
-  CCR is currently in the initial stages of development and isn't ready for deployment or testing just yet.  
-  Check out our  [contribution guidelines](https://github.com/MESH-Research/CCR/blob/master/.github/CONTRIBUTING.md) to help make CCR a reality.
+  CCR is currently in the initial development stage and isn't ready for deployment or testing just yet.  
+  Check out our  [contributor documentation](./contributing/README.md) to help make CCR a reality.
 :::
 
 

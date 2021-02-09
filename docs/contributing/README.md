@@ -30,7 +30,7 @@ The full text of our Code of Conduct is available in our repository: <https://gi
 ## Development Environments
 
 We use a Docker-based container management system called [Lando](https://lando.dev/) to manage reusable development environments to ensure everyone is working with the same dependencies. To get started spinning up a development environment, you'll roughly need to follow these steps:
-:::warning Minimum Version
+::: warning Minimum Version
 CCR requires Lando version &ge; 3.0.25
 :::
 
@@ -50,21 +50,36 @@ Lando has built-in tooling commands that allow a developer to run commands insid
 
 - `lando artisan`: Run Laravel's artisan command in the appserver container.
 - `lando composer`: Run composer in the appserver container.
-- `lando yarn`: Run yarn in the client container
-- `lando mysql`: Start a MySQL client session (TIP: use `lando mysql laravel` to start with the CCR database selected)
-- `lando quasar`: Run the quasar cli inside the client container
-- `lando extras`: Manage and install tools into `.lando.local.yml`
+- `lando yarn`: Run yarn in the client container.
+- `lando mysql`: Start a MySQL client session (TIP: use `lando mysql laravel` to start with the CCR database selected).
+- `lando quasar`: Run the quasar cli inside the client container.
+- `lando extras`: Manage and install tools into `.lando.local.yml`.
 
 There are other useful tooling commands available. To view a list of all commands available, run `lando` at your command prompt with no arguments.
 
 ::: tip
-Lando tooling commands will run inside the container in your current working directory. This means you should be careful to run composer, yarn, etc., inside the appropriate directories of the project, or you may end up inadvertently creating a new composer.json or package.json in a different part of the project than you intended.
-The only exception to this is the `lando quasar` command which always runs in the `/client` directory.
+Lando tooling commands will run inside the container in your current working directory. Therefore, you should be careful to run tools (composer, yarn, etc.) inside the appropriate directory, or you may end up inadvertently creating a new composer.json or package.json in a different part of the project.
+The only exception to this is the `lando quasar` command, which always runs in the `/client` directory.
 :::
 
 ### Additional Local Configuration
 
-You can create local containers or additional tooling commands by creating a `.lando.local.yml` file.  Check out the `lando extras` tooling command for pre-configured local containers for testing and mail tools.
+You can create local containers or additional tooling commands by creating a `.lando.local.yml` file.  
+
+Some containers are useful for specific development tasks but would unnecessarily bloat the development stack for day-to-day usage.  Our `lando extras` tooling command eases the friction associated with managing your `.lando.local.yml` file.  Run `lando extras` for a list of templates and instructions to enable and disable extras.
+
+#### Testing Mail
+
+[MailHog](https://github.com/mailhog/MailHog) can capture mail to aid debugging of email messages. MailHog is integrated as an extra in our Lando config.  To enable MailHog:
+
+```sh
+lando extras enable mailhog
+
+lando rebuild
+```
+
+The MailHog interface will be available at <http://mailhog.ccr.lndo.site/> once the rebuild has finished.  CCR's development environment will automatically route outgoing mail to MailHog's SMTP interface.
+
 
 ### Lando Tips and Tricks
 
