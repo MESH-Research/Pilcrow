@@ -10,7 +10,7 @@ class LandoExtras {
     #ymlPath;
     #localConfigFile;
     #extrasConfigFile;
-    #extrasConfig = [];
+    #extras = [];
     #localConfig = {};
 
     /**
@@ -49,7 +49,7 @@ class LandoExtras {
 
             Object.entries(extrasYaml).forEach(([name, config]) => {
                 const enabled = this.#enabled(config.template);
-                this.#extrasConfig.push({ name, enabled, ...config });
+                this.#extras.push({ name, enabled, ...config });
             });
         } catch (e) {
             throw `Unable to parse: ${this.fullExtrasPath}`;
@@ -125,14 +125,14 @@ class LandoExtras {
      * @returns {Object}
      */
     #get(extra) {
-        return this.#extrasConfig.find((e) => e.name == extra);
+        return this.#extras.find((e) => e.name == extra);
     }
 
     /**
      * Enable all extras
      */
     enableAll() {
-        this.#extrasConfig.forEach((extra) => {
+        this.#extras.forEach((extra) => {
             this.#enableTemplate(extra.template);
             extra.enabled = true;
         });
@@ -142,7 +142,7 @@ class LandoExtras {
      * Disable All Extras
      */
     disableAll() {
-        this.#extrasConfig.forEach((extra) => {
+        this.#extras.forEach((extra) => {
             this.#disableTemplate(extra.template);
             extra.enabled = false;
         });
@@ -177,7 +177,7 @@ class LandoExtras {
      * @returns {any} Results of map call.
      */
     map(callback) {
-        return this.#extrasConfig.map(callback);
+        return this.#extras.map(callback);
     }
 
     /**
@@ -187,7 +187,7 @@ class LandoExtras {
      * @returns {boolean}
      */
     exists(name) {
-        return this.#extrasConfig.some((e) => e.name === name);
+        return this.#extras.some((e) => e.name === name);
     }
 
     /**
