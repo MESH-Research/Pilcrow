@@ -179,4 +179,38 @@ class UserPermissionsTest extends TestCase
         );
         $response->assertJsonPath("data.user.roles", []);
     }
+
+    /**
+     * @return void
+     */
+    public function testPermissionToResetPasswordsOfOtherUsersExists()
+    {
+        $permission = Permission::where('name', Permission::RESET_PASSWORDS_OF_OTHER_USERS)->first();
+        $this->assertNotNull($permission);
+        $this->assertEquals($permission->name, Permission::RESET_PASSWORDS_OF_OTHER_USERS);
+        $this->assertEquals(1, $permission->count());
+    }
+
+    /**
+     * @return void
+     */
+    public function testUserCanResetPasswordsOfOtherUsersAsAnApplicationAdministrator()
+    {
+        $user = User::factory()->create();
+        $user->assignRole(Role::APPLICATION_ADMINISTRATOR);
+        $permission = Permission::where('name', Permission::RESET_PASSWORDS_OF_OTHER_USERS)->first();
+        $permission->assignRole(Role::APPLICATION_ADMINISTRATOR);
+        $this->assertTrue($user->can(Permission::RESET_PASSWORDS_OF_OTHER_USERS));
+    }
+
+    /**
+     * @return void
+     */
+    public function testUserCannotResetPasswordsOfOtherUsersAsASubmitter()
+    {
+        $user = User::factory()->create();
+        $user->assignRole(Role::SUBMITTER);
+        $permission = Permission::where('name', Permission::RESET_PASSWORDS_OF_OTHER_USERS)->first();
+        $this->assertFalse($user->can(Permission::RESET_PASSWORDS_OF_OTHER_USERS));
+    }
 }
