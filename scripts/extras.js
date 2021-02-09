@@ -5,6 +5,12 @@ const yesno = require("yesno");
 const dedent = require("dedent-js");
 const LandoExtras = require("./lib/lando-extras");
 
+const error = chalk.red;
+const errorBold = chalk.redBright.bold;
+const info = chalk.yellow;
+const aside = chalk.gray;
+const success = chalk.green;
+
 /**
  * Display overwrite confirmation prompt.
  *
@@ -12,9 +18,9 @@ const LandoExtras = require("./lib/lando-extras");
  */
 async function confirmOverwrite() {
     return await yesno({
-        question: `${chalk.yellow(
-            "❔"
-        )} Write config to .lando.local.yml? ${chalk.gray("(y/N)")}`,
+        question: `${info("❔")} Write config to .lando.local.yml? ${aside(
+            "(y/N)"
+        )}`,
         defaultValue: false,
     });
 }
@@ -36,14 +42,14 @@ async function saveConfig(extras, overwrite) {
         extras.write();
         console.log(dedent`
 
-        ${chalk.green(`Updated: ${extras.fullConfigPath}`)}
+        ${success(`Updated: ${extras.fullConfigPath}`)}
 
         ${getActionsList(extras)}
 
-        ${chalk.yellow("Don't forget to run lando rebuild!")}
+        ${info("Don't forget to run lando rebuild!")}
         `);
     } else {
-        console.log("\n", chalk.yellow("Nothing written"));
+        console.log("\n", info("Nothing written"));
     }
 }
 
@@ -54,7 +60,7 @@ async function saveConfig(extras, overwrite) {
  */
 function unknownExtraError(name) {
     console.error(dedent`
-        ${chalk.red("Unknown extra:")} ${chalk.redBright(name)}
+        ${error("Unknown extra:")} ${errorBold(name)}
     `);
 }
 
@@ -69,8 +75,8 @@ function getActionsList(extras) {
         return {
             name,
             description,
-            icon: enabled ? `[${chalk.green("✔")}]` : "[ ]",
-            status: enabled ? chalk.green("enabled") : "disabled",
+            icon: enabled ? `[${success("✔")}]` : "[ ]",
+            status: enabled ? success("enabled") : aside("disabled"),
         };
     });
 
@@ -89,7 +95,7 @@ async function main() {
     console.log(dedent`
         Manage 'extras' templates for local lando config.
         
-        Loaded templates from: ${chalk.yellow(extras.fullExtrasPath)}
+        ${info(`Loaded templates from: ${extras.fullExtrasPath}`)}
     `);
     program
         .name("lando extras")
@@ -114,7 +120,7 @@ async function main() {
         .alias("a")
         .action(async (onoff) => {
             if (!["on", "off"].includes(onoff)) {
-                console.log(chalk.red("Invalid option.  all <on|off>"));
+                console.log(error("Invalid option.  all <on|off>"));
                 return;
             }
 
@@ -136,11 +142,9 @@ async function main() {
                 unknownExtraError(name);
                 return;
             } else {
-                console.log(dedent`
-                    Copying configuration template for ${chalk.whiteBright.bold(
-                        name
-                    )}.
-                `);
+                console.log(
+                    info(`Copying configuration template for ${name}.`)
+                );
                 extras.enable(name);
                 await saveConfig(extras, program.opts().yes);
             }
@@ -154,11 +158,9 @@ async function main() {
             if (!extras.exists(name)) {
                 unknownExtraError(name);
             } else {
-                console.log(dedent`
-                    Removing configuration template for ${chalk.whiteBright.bold(
-                        name
-                    )}.
-                `);
+                console.log(
+                    info(`Removing configuration template for ${name}.`)
+                );
                 extras.disable(name);
                 await saveConfig(extras, program.opts().yes);
             }
