@@ -94,7 +94,6 @@ async function main() {
     const extras = new LandoExtras("./");
     console.log(dedent`
         Manage 'extras' templates for local lando config.
-        
         ${info(`Loaded templates from: ${extras.fullExtrasPath}`)}
     `);
     program
