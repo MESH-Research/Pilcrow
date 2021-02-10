@@ -23,100 +23,46 @@ type Query {
 }
 
 "Validate the availability of username and email via the validateNewUser query"
-input ValidateNewUserInput {
+input ValidateNewUserInput @validator(class: "UserInputValidator") {
     "Username.  Validation error if not unique"
     username: String
-        @rules(
-            apply: ["unique:users,username", "filled"]
-            messages: { unique: "USERNAME_IN_USE", filled: "USERNAME_EMPTY" }
-        )
 
     "Email. Validation error if not unique"
     email: String
-        @rules(
-            apply: ["unique:users,email", "email:rfc,dns", "filled"]
-            messages: {
-                unique: "EMAIL_IN_USE"
-                email: "EMAIL_NOT_VALID"
-                filled: "EMAIL_EMPTY"
-            }
-        )
 }
 
 """
 Input type for userCreate mutation
 """
-input CreateUserInput {
+input CreateUserInput @validator(class: "UserInputValidator") {
     "Display name. (optional)"
     name: String
-        @rules(
-            apply: ["max:256"],
-            message: { max: "NAME_LENGTH_EXCEEDED" }
-        )
 
     "Username. Must be unique. (required)"
     username: String!
-        @rules(
-            apply: ["unique:users,username", "filled"]
-            messages: { unique: "USERNAME_IN_USE", filled: "USERNAME_EMPTY" }
-        )
 
     "Email address. Must be unique. (required)"
     email: String!
-        @rules(
-            apply: ["unique:users,email", "email:rfc,dns", "filled"]
-            messages: {
-                unique: "EMAIL_IN_USE"
-                email: "EMAIL_NOT_VALID"
-                filled: "EMAIL_EMPTY"
-            }
-        )
 
     "Password used to login to the application. (required)"
-    password: String!
-        @rules(
-            apply: ["zxcvbn_min:3", "filled"]
-            messages: {
-                zxcvbn_min: "PASSWORD_NOT_COMPLEX"
-                filled: "PASSWORD_EMPTY"
-            }
-        )
-        @hash
+    password: String! @hash
 }
 
 """
 Update user information
 """
-input UpdateUserInput {
+input UpdateUserInput @validator(class: "UserInputValidator") {
     "Display name"
     name: String
-        @rules(
-            apply: ["max:255"],
-            message: { max: "NAME_LENGTH_EXCEEDED" }
-        )
+
     "Username of the user. Must be unique."
     username: String
-        @rules(
-            apply: ["unique:users,username", "filled"]
-            messages: { unique: "USERNAME_IN_USE", filled: "USERNAME_EMPTY" }
-        )
+
     "Email address of the user. Must be unique."
     email: String
-        @rules(
-            apply: ["unique:users,email", "email:rfc,dns", "filled"]
-            messages: {
-                unique: "EMAIL_IN_USE"
-                email: "EMAIL_NOT_VALID"
-                filled: "EMAIL_EMPTY"
-            }
-        )
+
     "Password used to login to the application."
-    password: String
-        @rules(
-            apply: ["zxcvbn_min:3"]
-            messages: { zxcvbn_min: "PASSWORD_NOT_COMPLEX" }
-        )
-        @hash
+    password: String @hash
 }
 """
 A user role for permissions
