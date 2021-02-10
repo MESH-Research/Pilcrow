@@ -31,4 +31,12 @@ class UserFactory extends Factory
             'remember_token' => Str::random(10),
         ];
     }
+
+    public function realEmailDomain() {
+        return $this->state(function () {
+            return [
+                'email' => $this->faker->unique()->userName . "@ccrproject.dev"
+            ];
+        });
+    }
 }

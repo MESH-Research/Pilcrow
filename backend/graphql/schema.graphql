@@ -17,7 +17,7 @@ type Query {
 
     "Return information about the currently logged in user"
     currentUser: User @auth
-    
+
     "Return pre-defined user roles in the application"
     role(id: ID @eq): Role @find
 }
@@ -75,8 +75,11 @@ input CreateUserInput {
     "Password used to login to the application. (required)"
     password: String!
         @rules(
-            apply: ["zxcvbn_min:3"]
-            messages: { zxcvbn_min: "PASSWORD_NOT_COMPLEX" }
+            apply: ["zxcvbn_min:3", "filled"]
+            messages: {
+                zxcvbn_min: "PASSWORD_NOT_COMPLEX"
+                filled: "PASSWORD_EMPTY"
+            }
         )
         @hash
 }
@@ -150,5 +153,5 @@ type Mutation {
     logout: User @guard
 
     "Update the user information"
-    updateUser(id:ID!, user: UpdateUserInput! @spread): User! @update
+    updateUser(id: ID!, user: UpdateUserInput! @spread): User! @update
 }
