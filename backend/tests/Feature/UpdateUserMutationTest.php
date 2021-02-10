@@ -39,7 +39,7 @@ class UpdateUserTest extends TestCase
         $response->assertJsonPath("data.updateUser.username", "testbrandnewusername");
     }
 
-    public function testUserUpdateOthers() {
+    public function testUserCannotUpdateOthers() {
         $loggedInUser = User::factory()->create([
             'email' => 'loggedin@gmail.com',
             'username' => 'loggedinuser',

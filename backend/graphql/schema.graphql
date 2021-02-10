@@ -99,5 +99,5 @@ type Mutation {
     logout: User @guard
 
     "Update the user information"
-    updateUser(id: ID!, user: UpdateUserInput! @spread): User! @update
+    updateUser(id: ID!, user: UpdateUserInput! @spread): User! @update @can(ability: "update", find: "id")
 }
