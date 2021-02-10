@@ -16,7 +16,7 @@ class AddFirstPermission extends Migration
         $guard_name = config('auth.defaults.guard');
 
         DB::table('permissions')->insert([
-            'name' => 'reset passwords of other users',
+            'name' => 'update user for others',
             'guard_name' => $guard_name,
             'created_at' => date('Y-m-d H:i:s'),
             'updated_at' => date('Y-m-d H:i:s')

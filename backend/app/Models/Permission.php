@@ -9,5 +9,5 @@ class Permission extends ParentModel
 {
     use HasFactory;
 
-    const RESET_PASSWORDS_OF_OTHER_USERS = 'reset passwords of other users';
+    const UPDATE_USER_FOR_OTHERS = 'update user for others';
 }

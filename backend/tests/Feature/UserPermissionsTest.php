@@ -185,9 +185,9 @@ class UserPermissionsTest extends TestCase
      */
     public function testPermissionToResetPasswordsOfOtherUsersExists()
     {
-        $permission = Permission::where('name', Permission::RESET_PASSWORDS_OF_OTHER_USERS)->first();
+        $permission = Permission::where('name', Permission::UPDATE_USER_FOR_OTHERS)->first();
         $this->assertNotNull($permission);
-        $this->assertEquals($permission->name, Permission::RESET_PASSWORDS_OF_OTHER_USERS);
+        $this->assertEquals($permission->name, Permission::UPDATE_USER_FOR_OTHERS);
         $this->assertEquals(1, $permission->count());
     }
 
@@ -198,9 +198,9 @@ class UserPermissionsTest extends TestCase
     {
         $user = User::factory()->create();
         $user->assignRole(Role::APPLICATION_ADMINISTRATOR);
-        $permission = Permission::where('name', Permission::RESET_PASSWORDS_OF_OTHER_USERS)->first();
+        $permission = Permission::where('name', Permission::UPDATE_USER_FOR_OTHERS)->first();
         $permission->assignRole(Role::APPLICATION_ADMINISTRATOR);
-        $this->assertTrue($user->can(Permission::RESET_PASSWORDS_OF_OTHER_USERS));
+        $this->assertTrue($user->can(Permission::UPDATE_USER_FOR_OTHERS));
     }
 
     /**
@@ -210,14 +210,17 @@ class UserPermissionsTest extends TestCase
     {
         $user = User::factory()->create();
         $user->assignRole(Role::SUBMITTER);
-        $this->assertFalse($user->can(Permission::RESET_PASSWORDS_OF_OTHER_USERS));
+        $this->assertFalse($user->can(Permission::UPDATE_USER_FOR_OTHERS));
     }
 
+    /**
+     * @return void
+     */
     public function testPermissionToResetPasswordsOfOtherUsersIsQueryableFromGraphqlEndpointForApplicationAdministrator()
     {
         $user = User::factory()->create();
         $user->assignRole(Role::APPLICATION_ADMINISTRATOR);
-        $permission = Permission::where('name', Permission::RESET_PASSWORDS_OF_OTHER_USERS)->first();
+        $permission = Permission::where('name', Permission::UPDATE_USER_FOR_OTHERS)->first();
         $permission->assignRole(Role::APPLICATION_ADMINISTRATOR);
         $response = $this->graphQL(
             'query getUser($id: ID) {
@@ -245,7 +248,7 @@ class UserPermissionsTest extends TestCase
                     'permissions' => [
                         0 => [
                             'id' => (string) 1,
-                            'name' => Permission::RESET_PASSWORDS_OF_OTHER_USERS
+                            'name' => Permission::UPDATE_USER_FOR_OTHERS
                         ]
                     ]
                 ]
@@ -254,6 +257,9 @@ class UserPermissionsTest extends TestCase
         $response->assertJsonPath("data.user", $expected_array);
     }
 
+    /**
+     * @return void
+     */
     public function testPermissionToResetPasswordsOfOtherUsersIsNotQueryableFromGraphqlEndpointForReviewer()
     {
         $user = User::factory()->create();
