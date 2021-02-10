@@ -210,7 +210,81 @@ class UserPermissionsTest extends TestCase
     {
         $user = User::factory()->create();
         $user->assignRole(Role::SUBMITTER);
-        $permission = Permission::where('name', Permission::RESET_PASSWORDS_OF_OTHER_USERS)->first();
         $this->assertFalse($user->can(Permission::RESET_PASSWORDS_OF_OTHER_USERS));
+    }
+
+    public function testPermissionToResetPasswordsOfOtherUsersIsQueryableFromGraphqlEndpointForApplicationAdministrator()
+    {
+        $user = User::factory()->create();
+        $user->assignRole(Role::APPLICATION_ADMINISTRATOR);
+        $permission = Permission::where('name', Permission::RESET_PASSWORDS_OF_OTHER_USERS)->first();
+        $permission->assignRole(Role::APPLICATION_ADMINISTRATOR);
+        $response = $this->graphQL(
+            'query getUser($id: ID) {
+                user(id: $id) {
+                    id
+                    name
+                    roles {
+                        id
+                        name
+                        permissions {
+                            id
+                            name
+                        }
+                    }
+                }
+            }', ['id' => $user->id]
+        );
+        $expected_array = [
+            'id' => (string) $user->id,
+            'name' => $user->name,
+            'roles' => [
+                0 => [
+                    'id' => (string) 1,
+                    'name' => Role::APPLICATION_ADMINISTRATOR,
+                    'permissions' => [
+                        0 => [
+                            'id' => (string) 1,
+                            'name' => Permission::RESET_PASSWORDS_OF_OTHER_USERS
+                        ]
+                    ]
+                ]
+            ]
+        ];
+        $response->assertJsonPath("data.user", $expected_array);
+    }
+
+    public function testPermissionToResetPasswordsOfOtherUsersIsNotQueryableFromGraphqlEndpointForReviewer()
+    {
+        $user = User::factory()->create();
+        $user->assignRole(Role::REVIEWER);
+        $response = $this->graphQL(
+            'query getUser($id: ID) {
+                user(id: $id) {
+                    id
+                    name
+                    roles {
+                        id
+                        name
+                        permissions {
+                            id
+                            name
+                        }
+                    }
+                }
+            }', ['id' => $user->id]
+        );
+        $expected_array = [
+            'id' => (string) $user->id,
+            'name' => $user->name,
+            'roles' => [
+                0 => [
+                    'id' => (string) 5,
+                    'name' => Role::REVIEWER,
+                    'permissions' => [ ]
+                ]
+            ]
+        ];
+        $response->assertJsonPath("data.user", $expected_array);
     }
 }
