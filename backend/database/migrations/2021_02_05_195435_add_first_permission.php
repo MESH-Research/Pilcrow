@@ -1,8 +1,8 @@
 <?php
 
+use App\Models\Permission;
+use App\Models\Role;
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Facades\DB;
 
 class AddFirstPermission extends Migration
 {
@@ -13,14 +13,9 @@ class AddFirstPermission extends Migration
      */
     public function up()
     {
-        $guard_name = config('auth.defaults.guard');
-
-        DB::table('permissions')->insert([
-            'name' => 'update user for others',
-            'guard_name' => $guard_name,
-            'created_at' => date('Y-m-d H:i:s'),
-            'updated_at' => date('Y-m-d H:i:s')
-        ]);
+        $permission = Permission::create(['name' => Permission::UPDATE_USER_FOR_OTHERS]);
+        $permission->assignRole(Role::APPLICATION_ADMINISTRATOR);
+        $permission->assignRole(Role::PUBLICATION_ADMINISTRATOR);
     }
 
     /**
@@ -30,8 +25,10 @@ class AddFirstPermission extends Migration
      */
     public function down()
     {
-        Schema::disableForeignKeyConstraints();
-        DB::table('permissions')->truncate();
-        Schema::enableForeignKeyConstraints();
+        /** @var $permission Permission */
+        $permission = Permission::findByName(Permission::UPDATE_USER_FOR_OTHERS);
+        $permission->removeRole(Role::APPLICATION_ADMINISTRATOR);
+        $permission->removeRole(Role::PUBLICATION_ADMINISTRATOR);
+        $permission->delete();
     }
 }
