@@ -206,7 +206,7 @@ class UserPermissionsTest extends TestCase
     /**
      * @return void
      */
-    public function testUserCannotResetPasswordsOfOtherUsersAsASubmitter()
+    public function testUserCannotUpdateUserForOthersAsASubmitter()
     {
         $user = User::factory()->create();
         $user->assignRole(Role::SUBMITTER);
@@ -216,7 +216,7 @@ class UserPermissionsTest extends TestCase
     /**
      * @return void
      */
-    public function testPermissionToResetPasswordsOfOtherUsersIsQueryableFromGraphqlEndpointForApplicationAdministrator()
+    public function testPermissionToUpdateUserForOthersIsQueryableFromGraphqlEndpointForApplicationAdministrator()
     {
         $user = User::factory()->create();
         $user->assignRole(Role::APPLICATION_ADMINISTRATOR);
@@ -260,7 +260,7 @@ class UserPermissionsTest extends TestCase
     /**
      * @return void
      */
-    public function testPermissionToResetPasswordsOfOtherUsersIsNotQueryableFromGraphqlEndpointForReviewer()
+    public function testPermissionToUpdateUserForOthersIsNotQueryableFromGraphqlEndpointForReviewer()
     {
         $user = User::factory()->create();
         $user->assignRole(Role::REVIEWER);
