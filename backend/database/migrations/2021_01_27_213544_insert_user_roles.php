@@ -13,8 +13,10 @@ class InsertUserRoles extends Migration
     public function up()
     {
         $roles = Role::getArrayOfAllRoleNames();
-        foreach ($roles as $role) {
-            Role::create(['name' => $role]);
+        foreach ($roles as $key => $role) {
+            $role = Role::create(['name' => $role]);
+            $role->id = $key + 1;
+            $role->save();
         }
     }
 
