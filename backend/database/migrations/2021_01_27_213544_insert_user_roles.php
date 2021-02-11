@@ -1,8 +1,7 @@
 <?php
 
+use App\Models\Role;
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Facades\DB;
 
 class InsertUserRoles extends Migration
 {
@@ -13,23 +12,9 @@ class InsertUserRoles extends Migration
      */
     public function up()
     {
-        $guard_name = config('auth.defaults.guard');
-        $roles = [
-            'Application Administrator',
-            'Publication Administrator',
-            'Editor',
-            'Review Coordinator',
-            'Reviewer',
-            'Submitter'
-        ];
-
+        $roles = Role::getArrayOfAllRoleNames();
         foreach ($roles as $role) {
-            DB::table('roles')->insert([
-                'name' => $role,
-                'guard_name' => $guard_name,
-                'created_at' => date('Y-m-d H:i:s'),
-                'updated_at' => date('Y-m-d H:i:s')
-            ]);
+            Role::create(['name' => $role]);
         }
     }
 
@@ -40,8 +25,11 @@ class InsertUserRoles extends Migration
      */
     public function down()
     {
-        Schema::disableForeignKeyConstraints();
-        DB::table('roles')->truncate();
-        Schema::enableForeignKeyConstraints();
+        $roles = Role::getArrayOfAllRoleNames();
+        foreach ($roles as $role) {
+            /** @var $role Role */
+            $role = Role::findByName($role);
+            $role->delete();
+        }
     }
 }
