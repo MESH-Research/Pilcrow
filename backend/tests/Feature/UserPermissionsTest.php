@@ -33,9 +33,7 @@ class UserPermissionsTest extends TestCase
      */
     public function testCreationOfExplicitlyNamedTestUserRole()
     {
-        $role = Role::factory()->create([
-            'name' => $this->test_permission
-        ]);
+        $role = Role::factory()->create(['name' => $this->test_permission]);
         $this->assertEquals($role->name, $this->test_permission);
     }
 
@@ -77,9 +75,7 @@ class UserPermissionsTest extends TestCase
      */
     public function testCreationOfTestPermission()
     {
-        $permission = Permission::factory()->create([
-            'name' => $this->test_permission
-        ]);
+        $permission = Permission::factory()->create(['name' => $this->test_permission]);
         $this->assertEquals($permission->name, $this->test_permission);
     }
 
@@ -88,9 +84,7 @@ class UserPermissionsTest extends TestCase
      */
     public function testAssignmentOfTestPermissionToApplicationAdministratorRole()
     {
-        $permission = Permission::factory()->create([
-            'name' => $this->test_permission
-        ]);
+        $permission = Permission::factory()->create(['name' => $this->test_permission]);
         $role = Role::findByName(Role::APPLICATION_ADMINISTRATOR);
         $permission->assignRole($role->name);
         $this->assertTrue($role->hasPermissionTo($this->test_permission));
@@ -102,9 +96,7 @@ class UserPermissionsTest extends TestCase
     public function testUserHasTestPermissionByAssignedRole()
     {
         $user = User::factory()->create();
-        $permission = Permission::factory()->create([
-            'name' => $this->test_permission
-        ]);
+        $permission = Permission::factory()->create(['name' => $this->test_permission]);
         $role = Role::findByName(Role::APPLICATION_ADMINISTRATOR);
         $permission->assignRole($role->name);
         $user->assignRole($role->name);
@@ -117,12 +109,8 @@ class UserPermissionsTest extends TestCase
     public function testUserDoesNotHaveTestPermissionByAssignedRole()
     {
         $user = User::factory()->create();
-        $permission = Permission::factory()->create([
-            'name' => $this->test_permission
-        ]);
-        $test_role = Role::factory()->create([
-            'name' => $this->test_user_role
-        ]);
+        $permission = Permission::factory()->create(['name' => $this->test_permission]);
+        $test_role = Role::factory()->create(['name' => $this->test_user_role]);
         $test_role->givePermissionTo($this->test_permission);
         $user->assignRole(Role::PUBLICATION_ADMINISTRATOR);
         $this->assertFalse($user->can($this->test_permission));
@@ -133,9 +121,7 @@ class UserPermissionsTest extends TestCase
      */
     public function testRoleForUserIsQueryableFromGraphqlEndpoint()
     {
-        $test_role = Role::factory()->create([
-            'name' => $this->test_user_role
-        ]);
+        $test_role = Role::factory()->create(['name' => $this->test_user_role]);
         $user = User::factory()->create();
         $user->assignRole($this->test_user_role);
         $response = $this->graphQL(
@@ -183,9 +169,10 @@ class UserPermissionsTest extends TestCase
     /**
      * @return void
      */
-    public function testPermissionToResetPasswordsOfOtherUsersExists()
+    public function testPermissionToUpdateUserForOthersExists()
     {
-        $permission = Permission::where('name', Permission::UPDATE_USER_FOR_OTHERS)->first();
+        /** @var $permission Permission */
+        $permission = Permission::findByname(Permission::UPDATE_USER_FOR_OTHERS);
         $this->assertNotNull($permission);
         $this->assertEquals($permission->name, Permission::UPDATE_USER_FOR_OTHERS);
         $this->assertEquals(1, $permission->count());
@@ -194,12 +181,10 @@ class UserPermissionsTest extends TestCase
     /**
      * @return void
      */
-    public function testUserCanResetPasswordsOfOtherUsersAsAnApplicationAdministrator()
+    public function testUserCanUpdateUserForOthersAsAnApplicationAdministrator()
     {
         $user = User::factory()->create();
         $user->assignRole(Role::APPLICATION_ADMINISTRATOR);
-        $permission = Permission::where('name', Permission::UPDATE_USER_FOR_OTHERS)->first();
-        $permission->assignRole(Role::APPLICATION_ADMINISTRATOR);
         $this->assertTrue($user->can(Permission::UPDATE_USER_FOR_OTHERS));
     }
 
@@ -220,8 +205,6 @@ class UserPermissionsTest extends TestCase
     {
         $user = User::factory()->create();
         $user->assignRole(Role::APPLICATION_ADMINISTRATOR);
-        $permission = Permission::where('name', Permission::UPDATE_USER_FOR_OTHERS)->first();
-        $permission->assignRole(Role::APPLICATION_ADMINISTRATOR);
         $response = $this->graphQL(
             'query getUser($id: ID) {
                 user(id: $id) {
