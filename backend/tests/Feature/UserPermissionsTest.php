@@ -172,16 +172,26 @@ class UserPermissionsTest extends TestCase
     public function testPermissionToUpdateUsersExists()
     {
         /** @var $permission Permission */
-        $permission = Permission::findByname(Permission::UPDATE_USERS);
-        $this->assertNotNull($permission);
-        $this->assertEquals($permission->name, Permission::UPDATE_USERS);
-        $this->assertEquals(1, $permission->count());
+        $permissions = Permission::where('name', Permission::UPDATE_USERS)->get();
+        $this->assertNotNull($permissions);
+        $this->assertEquals(1, $permissions->count());
+        $this->assertEquals($permissions->first()->name, Permission::UPDATE_USERS);
     }
 
     /**
      * @return void
      */
     public function testUserCanUpdateUsersAsAnApplicationAdministrator()
+    {
+        $user = User::factory()->create();
+        $user->assignRole(Role::APPLICATION_ADMINISTRATOR);
+        $this->assertTrue($user->can(Permission::UPDATE_USERS));
+    }
+
+    /**
+     * @return void
+     */
+    public function testUserCanUpdateUsersInOwnPublicationAsAPublicationAdministrator()
     {
         $user = User::factory()->create();
         $user->assignRole(Role::APPLICATION_ADMINISTRATOR);
@@ -198,60 +208,81 @@ class UserPermissionsTest extends TestCase
         $this->assertFalse($user->can(Permission::UPDATE_USERS));
     }
 
-    /**
-     * @return void
-     */
-    public function testPermissionToUpdateUsersIsQueryableFromGraphqlEndpointForApplicationAdministrator()
+    public function updateUsersProvider()
     {
-        $user = User::factory()->create();
-        $user->assignRole(Role::APPLICATION_ADMINISTRATOR);
-        $response = $this->graphQL(
-            'query getUser($id: ID) {
-                user(id: $id) {
-                    id
-                    name
-                    roles {
-                        id
-                        name
-                        permissions {
-                            id
-                            name
-                        }
-                    }
-                }
-            }', ['id' => $user->id]
-        );
-        $expected_array = [
-            'id' => (string) $user->id,
-            'name' => $user->name,
-            'roles' => [
-                0 => [
-                    'id' => (string) 1,
-                    'name' => Role::APPLICATION_ADMINISTRATOR,
-                    'permissions' => [
+        return [
+            [
+                Role::APPLICATION_ADMINISTRATOR,
+                [
+                    'roles' => [
                         0 => [
                             'id' => (string) 1,
-                            'name' => Permission::UPDATE_USERS
+                            'name' => Role::APPLICATION_ADMINISTRATOR,
+                            'permissions' => [
+                                0 => [
+                                    'id' => (string) 1,
+                                    'name' => Permission::UPDATE_USERS
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ],
+            [
+                Role::PUBLICATION_ADMINISTRATOR,
+                [
+                    'roles' => [
+                        0 => [
+                            'id' => (string) 2,
+                            'name' => Role::PUBLICATION_ADMINISTRATOR,
+                            'permissions' => [
+                                0 => [
+                                    'id' => (string) 2,
+                                    'name' => Permission::UPDATE_USERS_IN_OWN_PUBLICATION
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ],
+            [
+                Role::REVIEWER,
+                [
+                    'roles' => [
+                        0 => [
+                            'id' => (string) 5,
+                            'name' => Role::REVIEWER,
+                            'permissions' => [ ]
+                        ]
+                    ]
+                ]
+            ],
+            [
+                Role::SUBMITTER,
+                [
+                    'roles' => [
+                        0 => [
+                            'id' => (string) 6,
+                            'name' => Role::SUBMITTER,
+                            'permissions' => [ ]
                         ]
                     ]
                 ]
             ]
         ];
-        $response->assertJsonPath("data.user", $expected_array);
     }
 
     /**
+     * @dataProvider updateUsersProvider
      * @return void
      */
-    public function testPermissionToUpdateUsersIsNotQueryableFromGraphqlEndpointForReviewer()
+    public function testPermissionToUpdateUsersIsQueryableFromGraphqlEndpoint($role, $expected_array)
     {
         $user = User::factory()->create();
-        $user->assignRole(Role::REVIEWER);
+        $user->assignRole($role);
         $response = $this->graphQL(
             'query getUser($id: ID) {
                 user(id: $id) {
-                    id
-                    name
                     roles {
                         id
                         name
@@ -263,17 +294,7 @@ class UserPermissionsTest extends TestCase
                 }
             }', ['id' => $user->id]
         );
-        $expected_array = [
-            'id' => (string) $user->id,
-            'name' => $user->name,
-            'roles' => [
-                0 => [
-                    'id' => (string) 5,
-                    'name' => Role::REVIEWER,
-                    'permissions' => [ ]
-                ]
-            ]
-        ];
         $response->assertJsonPath("data.user", $expected_array);
     }
+
 }

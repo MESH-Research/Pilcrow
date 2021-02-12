@@ -15,6 +15,7 @@ class AddFirstPermissions extends Migration
     {
         $permission_1 = Permission::create(['name' => Permission::UPDATE_USERS]);
         $permission_1->assignRole(Role::APPLICATION_ADMINISTRATOR);
+
         $permission_2 = Permission::create(['name' => Permission::UPDATE_USERS_IN_OWN_PUBLICATION]);
         $permission_2->assignRole(Role::PUBLICATION_ADMINISTRATOR);
     }
