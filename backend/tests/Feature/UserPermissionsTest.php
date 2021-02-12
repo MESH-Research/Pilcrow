@@ -109,7 +109,7 @@ class UserPermissionsTest extends TestCase
     public function testUserDoesNotHaveTestPermissionByAssignedRole()
     {
         $user = User::factory()->create();
-        $permission = Permission::factory()->create(['name' => $this->test_permission]);
+        Permission::factory()->create(['name' => $this->test_permission]);
         $test_role = Role::factory()->create(['name' => $this->test_user_role]);
         $test_role->givePermissionTo($this->test_permission);
         $user->assignRole(Role::PUBLICATION_ADMINISTRATOR);
@@ -169,39 +169,39 @@ class UserPermissionsTest extends TestCase
     /**
      * @return void
      */
-    public function testPermissionToUpdateUserForOthersExists()
+    public function testPermissionToUpdateUsersExists()
     {
         /** @var $permission Permission */
-        $permission = Permission::findByname(Permission::UPDATE_USER_FOR_OTHERS);
+        $permission = Permission::findByname(Permission::UPDATE_USERS);
         $this->assertNotNull($permission);
-        $this->assertEquals($permission->name, Permission::UPDATE_USER_FOR_OTHERS);
+        $this->assertEquals($permission->name, Permission::UPDATE_USERS);
         $this->assertEquals(1, $permission->count());
     }
 
     /**
      * @return void
      */
-    public function testUserCanUpdateUserForOthersAsAnApplicationAdministrator()
+    public function testUserCanUpdateUsersAsAnApplicationAdministrator()
     {
         $user = User::factory()->create();
         $user->assignRole(Role::APPLICATION_ADMINISTRATOR);
-        $this->assertTrue($user->can(Permission::UPDATE_USER_FOR_OTHERS));
+        $this->assertTrue($user->can(Permission::UPDATE_USERS));
     }
 
     /**
      * @return void
      */
-    public function testUserCannotUpdateUserForOthersAsASubmitter()
+    public function testUserCannotUpdateUsersAsASubmitter()
     {
         $user = User::factory()->create();
         $user->assignRole(Role::SUBMITTER);
-        $this->assertFalse($user->can(Permission::UPDATE_USER_FOR_OTHERS));
+        $this->assertFalse($user->can(Permission::UPDATE_USERS));
     }
 
     /**
      * @return void
      */
-    public function testPermissionToUpdateUserForOthersIsQueryableFromGraphqlEndpointForApplicationAdministrator()
+    public function testPermissionToUpdateUsersIsQueryableFromGraphqlEndpointForApplicationAdministrator()
     {
         $user = User::factory()->create();
         $user->assignRole(Role::APPLICATION_ADMINISTRATOR);
@@ -231,7 +231,7 @@ class UserPermissionsTest extends TestCase
                     'permissions' => [
                         0 => [
                             'id' => (string) 1,
-                            'name' => Permission::UPDATE_USER_FOR_OTHERS
+                            'name' => Permission::UPDATE_USERS
                         ]
                     ]
                 ]
@@ -243,7 +243,7 @@ class UserPermissionsTest extends TestCase
     /**
      * @return void
      */
-    public function testPermissionToUpdateUserForOthersIsNotQueryableFromGraphqlEndpointForReviewer()
+    public function testPermissionToUpdateUsersIsNotQueryableFromGraphqlEndpointForReviewer()
     {
         $user = User::factory()->create();
         $user->assignRole(Role::REVIEWER);
