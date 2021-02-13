@@ -108,7 +108,21 @@ type Mutation {
         @create
         @event(dispatch: "Illuminate\\Auth\\Events\\Registered")
 
-    verifyEmail(token: String!, expires: String!): User! @guard
+    "Verify the currently logged in user's email address"
+    verifyEmail(
+        "Token supplied to the user via email"
+        token: String!
+
+        "Token expiration as a UNIX epoch timestamp"
+        expires: String!
+    ): User!
+        @guard
+        @field(resolver: "App\\GraphQL\\Mutations\\VerifyEmail@verify")
+
+    "(Re)send a verification email to a user."
+    sendEmailVerification(id: ID!): User!
+        @guard
+        @field(resolver: "App\\GraphQL\\Mutations\\VerifyEmail@send")
 
     "Log in to a new session and get the user."
     login(email: String!, password: String!): User!
