@@ -119,8 +119,11 @@ type Mutation {
         @guard
         @field(resolver: "App\\GraphQL\\Mutations\\VerifyEmail@verify")
 
-    "(Re)send a verification email to a user."
-    sendEmailVerification(id: ID!): User!
+    "(Re)send a verification email to a user.  "
+    sendEmailVerification(
+        "User to resend verification for. If not supplied, defaults to the current user."
+        id: ID
+    ): User!
         @guard
         @field(resolver: "App\\GraphQL\\Mutations\\VerifyEmail@send")
 

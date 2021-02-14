@@ -40,8 +40,16 @@ class VerifyEmail
      */
     public function send($_, array $args)
     {
-        $user = User::find($args['id']);
+        $user = Auth::user();
+        
+        if (!empty($args['id'])) {
+            //TODO: Add permissions check to allow admin users to send email based on UPDATE_USERS permission.
+            if ($args['id'] != $user->id ) {
+                throw new ClientException('Sending verification for another user is not implemented.', 'emailVerification', 'NOT_IMPLEMENTED');
+            }
 
+        }
+        
         if (!$user) {
             throw new ClientException('Not Found', 'emailVerification', 'NOT_FOUND');
         }

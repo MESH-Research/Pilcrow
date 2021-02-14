@@ -59,7 +59,7 @@ class VerifyEmailTest extends TestCase
      */
     public function callSendVerifyEmailEndpoint(array $variables): \Illuminate\Testing\TestResponse {
         return $this->graphQL('
-            mutation SendEmail($id: ID!) {
+            mutation SendEmail($id: ID) {
                 sendEmailVerification(id: $id) {
                     id
                 }
@@ -116,19 +116,50 @@ class VerifyEmailTest extends TestCase
     }
 
     /**
+     * @return array
+     */
+    public function dataResendVerificationToSelf(): array {
+        return [
+            ['1'],
+            [null]
+        ];
+    }
+
+    /**
+     * @dataProvider dataResendVerificationToSelf
+     * @param string $id Data provided
      * @return void
      */
-    public function testCanResendVerificationEmail(): void 
+    public function testCanResendVerificationEmailToSelf(?string $id): void 
     {
         Notification::fake();
-        $testUser = User::factory()->create(['email' => 'mesh@msu.edu', 'email_verified_at' => null]);
+        $testUser = User::factory()->create(['id' => 1, 'email' => 'mesh@msu.edu', 'email_verified_at' => null]);
         
         $this->actingAs($testUser);
-        $response = $this->callSendVerifyEmailEndpoint(['id' => $testUser->id]);
+        $response = $this->callSendVerifyEmailEndpoint(['id' => $id]);
         
         Notification::assertSentTo( [$testUser], VerifyEmail::class);
         $response->assertJsonPath('errors', null);
     }
+
+    /**
+     * @return void
+     */
+    public function testResendVerificationEmailToAnother(): void {
+        $this->markTestIncomplete();
+        $this->markTestSkipped();
+
+        Notification::fake();
+        $testUser = User::factory()->create(['email' => 'mesh@msu.edu', 'email_verified_at' => null]);
+        $adminUser = User::factory()->create(['email' => 'mesh2@msu.edu']);
+
+        $this->actingAs($testUser);
+        $response = $this->callSendVerifyEmailEndpoint(['id' => $testUser->id]);
+
+        Notification::assertSentTo( [$testUser], VerifyEmail::class);
+        $response->assertJsonPath('errors', null);
+
+    } 
 
     /**
      * @return void
