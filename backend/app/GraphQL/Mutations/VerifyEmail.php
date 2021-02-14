@@ -20,11 +20,11 @@ class VerifyEmail
         $user = Auth::user();
         $now = Carbon::now()->timestamp;
         if ($now > $args['expires']) {
-            throw new ClientException('Token Expired', 'emailVerification', 'TOKEN_EXPIRED');
+            throw new ClientException('Token Expired', 'emailVerification', 'VERIFY_TOKEN_EXPIRED');
         }
 
         if (!$user->verifyEmailToken($args['token'], $args['expires'])) {
-            throw new ClientException('Invalid token', 'emailVerification', 'TOKEN_INVALID');
+            throw new ClientException('Invalid token', 'emailVerification', 'VERIFY_TOKEN_INVALID');
         }
 
         $user->markEmailAsVerified();
@@ -51,11 +51,11 @@ class VerifyEmail
         }
         
         if (!$user) {
-            throw new ClientException('Not Found', 'emailVerification', 'NOT_FOUND');
+            throw new ClientException('Not Found', 'emailVerification', 'VERIFY_USER_NOT_FOUND');
         }
 
         if ($user->hasVerifiedEmail()) {
-            throw new ClientException('Already verified', 'emailVerification', 'EMAIL_VERIFIED');
+            throw new ClientException('Already verified', 'emailVerification', 'VERIFY_EMAIL_VERIFIED');
         }
 
         $user->sendEmailVerificationNotification();

@@ -3,7 +3,8 @@
 
 export default {
   buttons: {
-    more_info: "More Info"
+    more_info: "More Info",
+    dashboard: "Dashboard"
   },
   auth: {
     loginRequired: "You need to login to access that page.",
@@ -60,6 +61,25 @@ export default {
     menu_button_aria: "Show/hide navigation sidebar"
   },
   account: {
+    failures: {
+      VERIFY_TOKEN_INVALID:
+        "This verification link is not valid for your account.",
+      VERIFY_EMAIL_VERIFIED: "Email address has already been verified.",
+      VERIFY_TOKEN_EXPIRED: "This verification link has expired."
+    },
+    email_verify: {
+      send_failure_notify: "Email verification could not be sent: {errors}",
+      send_success_notify:
+        "Verification email has been resent to <strong>{email}</strong>",
+      resend_button: "Resend Email",
+      resend_button_loading: "Loading...",
+      resend_button_success: "Email Sent",
+      unverified_email_banner:
+        "Your email is unverified.  Check your email and click the link to verify your account.",
+      verification_success:
+        "Congrats! You have successfully verified your email."
+    },
+
     header: "My Account",
     preview_link: "Preview Public Profile",
     sections: {
@@ -68,5 +88,9 @@ export default {
       affiliations: "Affiliations",
       privacy: "Privacy"
     }
-  }
+  },
+  failures: {
+    UNKNOWN_ERROR: "An unknown error has occurred."
+  },
+  general_failure: "Oops, there was an error."
 };

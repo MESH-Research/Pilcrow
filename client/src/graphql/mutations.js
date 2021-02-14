@@ -6,6 +6,7 @@ export const LOGIN = gql`
       id
       name
       username
+      email_verified_at
     }
   }
 `;
@@ -36,6 +37,22 @@ export const CREATE_USER = gql`
       username
       id
       created_at
+    }
+  }
+`;
+
+export const VERIFY_EMAIL = gql`
+  mutation VerifyEmail($token: String!, $expires: String!) {
+    verifyEmail(token: $token, expires: $expires) {
+      email_verified_at
+    }
+  }
+`;
+
+export const SEND_VERIFY_EMAIL = gql`
+  mutation SendVerificationEmail($id: ID) {
+    sendEmailVerification(id: $id) {
+      email
     }
   }
 `;

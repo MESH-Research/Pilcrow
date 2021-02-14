@@ -43,7 +43,8 @@ module.exports = function(ctx) {
       directives: [],
 
       // Quasar plugins
-      plugins: ["Cookies", "Dialog", "SessionStorage"]
+      plugins: ["Cookies", "Dialog", "SessionStorage", "Notify"],
+      config: { notify: { position: "top" } }
     },
 
     // Full list of options: https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-build
