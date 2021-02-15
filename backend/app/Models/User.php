@@ -2,15 +2,16 @@
 
 namespace App\Models;
 
-use App\Rules\Username;
+use Carbon\Carbon;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Config;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     use HasFactory, Notifiable, HasApiTokens, HasRoles;
 
@@ -46,13 +47,67 @@ class User extends Authenticatable
     ];
 
     /**
+     * Model booted
+     * 
+     * Clear email_verified_at and trigger a new verification notification if email field is updated.
+     *
+     * @return void
+     */
+    public static function booted(): void {
+        static::updated(function ($model) {
+            if ($model->isDirty('email')) {
+                $model->sendEmailVerificationNotification();
+            }
+        });
+
+        static::updating(function ($model) {
+            if ($model->isDirty('email')) {
+                $model->email_verified_at = null;
+            }
+        });
+    }
+
+    /**
      * Lowercase email before saving to persistance.
      *
      * @param string $value
      * @return void
      */
-    public function setEmailAttribute($value)
+    public function setEmailAttribute(string $value): void
     {
         $this->attributes['email'] = strtolower($value);
+    }
+
+    /**
+     * Returns a hash to use for email verification
+     *
+     * @param string $expires Timestamp
+     * @return string
+     */
+    public function makeEmailVerificationHash(string $expires): string {
+        return hash_hmac('sha256', "{$this->getKey()}#{$this->getEmailForVerification()}#{$expires}", Config::get('app.key'));
+    }
+
+    /**
+     * Return URL for email verification
+     *
+     * @return string
+     */
+    public function getEmailVerificationUrl(): string {
+        $expires = Carbon::now()->addMinutes(Config::get('auth.verification.expire', 60))->timestamp;
+        $hash = $this->makeEmailVerificationHash($expires);
+
+        return url("verify-email/{$expires}/{$hash}");
+    }
+
+    /**
+     * Verify an email verification token.
+     *
+     * @param string $token Token to validate
+     * @param string $expires Supplied expiration for token
+     * @return boolean
+     */
+    public function verifyEmailToken(string $token, string $expires): bool {
+        return hash_equals($this->makeEmailVerificationHash($expires), $token);
     }
 }
