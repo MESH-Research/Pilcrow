@@ -20,7 +20,7 @@ Github Actions powered by [Netlify](https://netlify.com) automatically build and
 
 Any pull request that contains changes to documentation will have a preview build deployed.  These previews are a great way to share proposed documentation changes for feedback and review.  
 
-Look in the automated checks section of the pull request for the action with the text "Deploy Preview Ready!".  Clicking the "Details" link will open a new tab for the deploy preview website.
+Whenever a deploy preview build is triggered, the Netlify bot will comment on the pull request with a link to view the deployed documentation preview.
 
 ![deploy previews screenshot](./images/deploy_previews.jpg)
 
@@ -28,4 +28,4 @@ Look in the automated checks section of the pull request for the action with the
 
 It can be helpful to have a locally rendered version to see the results of your changes while editing documentation.  The `/docs` directory has its own [Lando](https://lando.dev) configuration file just for starting up a documentation development environment.
 
-Inside the `/docs` directory, run `lando start` to start the container and proxy.  Once everything is up and running, visit <https://docs_dev.lndo.site> to view your documentation build.  The container uses a development server, so updates should happen automatically in the browser without requiring a refresh.
+Inside the `/docs` directory, run `lando start` to start the container and proxy.  Once everything is up and running, visit <https://docs.ccr.lndo.site> to view your documentation build.  The container uses a development server, so updates should happen automatically in the browser without requiring a refresh.

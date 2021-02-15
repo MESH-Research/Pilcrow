@@ -20,6 +20,8 @@ type Query {
 
     "Return pre-defined user roles in the application"
     role(id: ID @eq): Role @find
+
+    permission(id: ID @eq): Permission @find
 }
 
 "Validate the availability of username and email via the validateNewUser query"
@@ -64,6 +66,18 @@ input UpdateUserInput @validator(class: "UserInputValidator") {
     "Password used to login to the application."
     password: String @hash
 }
+
+"""
+A permission for roles and users
+"""
+type Permission {
+    id: ID!
+    name: String!
+    guard_name: String!
+    created_at: DateTime
+    updated_at: DateTime
+}
+
 """
 A user role for permissions
 """
@@ -73,6 +87,7 @@ type Role {
     guard_name: String!
     created_at: DateTime
     updated_at: DateTime
+    permissions: [Permission!] @belongsToMany
 }
 
 """
@@ -85,7 +100,8 @@ type User {
     username: String!
     created_at: DateTime!
     updated_at: DateTime
-    roles: [Role!]!
+    roles: [Role!]! @belongsToMany
+    permissions: [Permission!] @belongsToMany
 }
 
 type Mutation {
