@@ -53,6 +53,13 @@ return [
             'transport' => 'smtp',
             'host' => explode(':', env('MH_SENDMAIL_SMTP_ADDR', 'sendmailhog:1025'))[0],
             'port' => explode(':', env('MH_SENDMAIL_SMTP_ADDR', 'sendmailhog:1025'))[1],
+        ],
+        'log' => [
+            'transport' => 'log',
+            'channel' => 'stack'
+        ],
+        'array' => [
+            'transport' => 'array'
         ]
     ],
 
