@@ -3,7 +3,6 @@
 namespace App\GraphQL\Mutations;
 
 use App\Exceptions\ClientException;
-use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
