@@ -10,6 +10,13 @@ class ClientException extends Exception implements RendersErrorsExtensions
     public $clientCode;
     public $category;
 
+    /**
+     * Construct a client safe exception.
+     *
+     * @param string $message Human readable error message.
+     * @param string $category Application category.
+     * @param string $clientCode Token for client code to match on for error message generation.
+     */
     public function __construct(string $message, string $category = null, string $clientCode)
     {
         $this->category = $category ?? 'unknown';
