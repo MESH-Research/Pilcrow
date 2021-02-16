@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\User;
+use App\Models\Role;
 use Nuwave\Lighthouse\Testing\MakesGraphQLRequests;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -64,5 +65,28 @@ class UpdateUserTest extends TestCase
         );
 
         $response->assertJsonPath("data", null);
+    }
+
+    public function testApplicationAdministratorCanUpdateOthers()
+    {
+        $loggedInUser = User::factory()->create();
+        $loggedInUser->assignRole(Role::APPLICATION_ADMINISTRATOR);
+        $userToUpdate = User::factory()->create([
+            'email' => 'usertoupdate@gmail.com',
+            'username' => 'usertoupdate'
+        ]);
+        $this->actingAs($loggedInUser);
+        $response = $this->graphQL(
+            'mutation updateUser ($id: ID!){
+                updateUser(id: $id,
+                    user: {
+                        username: "testbrandnewusername"
+                    }
+                ) {
+                    username
+                }
+            }', ['id' => $userToUpdate->id]
+        );
+        $response->assertJsonPath("data.updateUser.username", "testbrandnewusername");
     }
 }
