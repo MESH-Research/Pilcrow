@@ -34,7 +34,7 @@ input ValidateNewUserInput @validator(class: "UserInputValidator") {
 }
 
 """
-Input type for userCreate mutation
+Input type for creating a new user via the userCreate mutation
 """
 input CreateUserInput @validator(class: "UserInputValidator") {
     "Display name. (optional)"
@@ -51,7 +51,7 @@ input CreateUserInput @validator(class: "UserInputValidator") {
 }
 
 """
-Update user information
+Input type for updating user information via the updateUser mutation
 """
 input UpdateUserInput @validator(class: "UserInputValidator") {
     "Display name"
@@ -91,7 +91,7 @@ type Role {
 }
 
 """
-A user account.
+A user account
 """
 type User {
     id: ID!
@@ -136,6 +136,8 @@ type Mutation {
     "Log out from the current session, showing the user one last time."
     logout: User @guard
 
-    "Update the user information"
-    updateUser(id: ID!, user: UpdateUserInput! @spread): User! @update
+    "Update user information"
+    updateUser(id: ID!, user: UpdateUserInput! @spread): User!
+        @update
+        @can(ability: "update", find: "id")
 }

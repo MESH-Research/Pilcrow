@@ -12,7 +12,11 @@ class CreateUserMigrationTest extends TestCase
 {
     use MakesGraphQLRequests, RefreshDatabase;
 
-
+    /**
+    * Call GraphQL endpoint to create a user
+    * @param $variables (array): Contains user details to save to DB for testing.
+    * @return  array
+    */
     public function callEndpoint($variables) {
         return $this->graphQL(
             'mutation CreateUser($username: String! $email: String! $name: String $password: String!) {
@@ -25,7 +29,10 @@ class CreateUserMigrationTest extends TestCase
             }', $variables);
 
     }
-   
+    /**
+    *
+    *
+    */
     public function nameValidationProvider() {
         return [
             ['', false],

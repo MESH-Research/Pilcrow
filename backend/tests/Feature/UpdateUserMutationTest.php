@@ -30,8 +30,7 @@ class UpdateUserTest extends TestCase
                     user: {
                         username: "testbrandnewusername"
                     }
-                ) 
-                {
+                ) {
                     username
                 }
             }', ['id' => $user->id]
@@ -39,18 +38,17 @@ class UpdateUserTest extends TestCase
         $response->assertJsonPath("data.updateUser.username", "testbrandnewusername");
     }
 
-    public function testUserUpdateOthers() {
+    public function testUserCannotUpdateOthers() {
         $loggedInUser = User::factory()->create([
             'email' => 'loggedin@gmail.com',
             'username' => 'loggedinuser',
         ]);
 
-        
         $userToUpdate = User::factory()->create([
             'email' => 'usertoupdate@gmail.com',
             'username' => 'usertoupdate'
-            ]);
-            
+        ]);
+
         $this->actingAs($loggedInUser);
 
         $response = $this->graphQL(
@@ -59,14 +57,12 @@ class UpdateUserTest extends TestCase
                     user: {
                         username: "testbrandnewusername"
                     }
-                ) 
-                {
+                ) {
                     username
                 }
             }', ['id' => $userToUpdate->id]
         );
 
-        
         $response->assertJsonPath("data", null);
     }
 }
