@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Models\Permission;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
@@ -48,11 +49,22 @@ class UserPolicy
      *
      * @param  \App\Models\User  $user
      * @param  \App\Models\User  $model
-     * @return mixed
+     * @return boolean
      */
     public function update(User $user, User $model)
     {
-        //
+        $is_updating_own_user = $user->id === $model->id;
+
+        if (!$is_updating_own_user
+            && $user->can(Permission::UPDATE_USERS)
+        ) {
+            return true;
+        }
+
+        // TODO: Check if user can update user within own publication
+
+        return $is_updating_own_user;
+
     }
 
     /**
