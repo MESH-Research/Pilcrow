@@ -15,16 +15,19 @@ const routes = [
       {
         path: "/",
         component: () => import("layouts/MainLayout.vue"),
+        meta: { requiresAuth: true },
         children: [
           {
+            path: "verify-email/:expires/:token",
+            component: () => import("pages/VerifyEmail.vue")
+          },
+          {
             path: "dashboard/",
-            component: () => import("pages/Dashboard.vue"),
-            meta: { requiresAuth: true }
+            component: () => import("pages/Dashboard.vue")
           },
           {
             path: "account/",
             component: () => import("pages/Account/AccountLayout.vue"),
-            meta: { requiresAuth: true },
             children: [
               {
                 path: "profile",
