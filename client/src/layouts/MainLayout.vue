@@ -36,6 +36,7 @@
 
     <q-page-container>
       <q-page>
+        <email-verification-banner v-if="!currentUser.email_verified_at" />
         <router-view />
       </q-page>
     </q-page-container>
@@ -47,9 +48,10 @@
 import AppFooter from "../components/AppFooter.vue";
 import AppHeader from "src/components/AppHeader.vue";
 import { CURRENT_USER } from "src/graphql/queries";
+import EmailVerificationBanner from "src/components/molecules/EmailVerificationBanner.vue";
 export default {
   name: "MainLayout",
-  components: { AppFooter, AppHeader },
+  components: { AppFooter, AppHeader, EmailVerificationBanner },
   data: () => {
     return {
       leftDrawerOpen: false

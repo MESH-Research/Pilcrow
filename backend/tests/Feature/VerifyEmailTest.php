@@ -173,7 +173,7 @@ class VerifyEmailTest extends TestCase
         $response = $this->callSendVerifyEmailEndpoint(['id' => $testUser->id]);
 
         Notification::assertNotSentTo([$testUser], VerifyEmail::class);
-        $response->assertJsonPath('errors.0.extensions.code', 'EMAIL_VERIFIED');
+        $response->assertJsonPath('errors.0.extensions.code', 'VERIFY_EMAIL_VERIFIED');
     }
 
     /**
@@ -202,7 +202,7 @@ class VerifyEmailTest extends TestCase
         $this->actingAs($testUser);
         $response = $this->callVerifyEmailEndpoint(['token' => $hash, 'expires' => $expires]);
 
-        $response->assertJsonPath('errors.0.extensions.code', 'TOKEN_EXPIRED');
+        $response->assertJsonPath('errors.0.extensions.code', 'VERIFY_TOKEN_EXPIRED');
     }
 
     /**
@@ -216,7 +216,7 @@ class VerifyEmailTest extends TestCase
         $this->actingAs($testUser);
         $response = $this->callVerifyEmailEndpoint(['token' => $hash, 'expires' => $expires]);
 
-        $response->assertJsonPath('errors.0.extensions.code', 'TOKEN_INVALID');
+        $response->assertJsonPath('errors.0.extensions.code', 'VERIFY_TOKEN_INVALID');
     }
 
     /**
@@ -231,6 +231,6 @@ class VerifyEmailTest extends TestCase
         $this->actingAs($testUser);
         $response = $this->callVerifyEmailEndpoint(['token' => $hash, 'expires' => $invalidExpires]);
 
-        $response->assertJsonPath('errors.0.extensions.code', 'TOKEN_INVALID');
+        $response->assertJsonPath('errors.0.extensions.code', 'VERIFY_TOKEN_INVALID');
     }
 }
