@@ -81,7 +81,7 @@ export default {
           message: this.$t("account.email_verify.send_failure_notify", {
             errors: errorMessages.join(", ")
           }),
-          icon: "bomb"
+          icon: "error"
         });
         this.status = null;
       }
