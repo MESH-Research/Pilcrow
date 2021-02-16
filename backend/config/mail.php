@@ -1,5 +1,10 @@
 <?php
 
+$default_mailer = 'log';
+if (env('APP_ENV') === 'local'  && env('MH_SENDMAIL_SMTP_ADDR', false)) {
+    $default_mailer = 'mailhog';
+}   
+
 return [
 
     /*
@@ -13,7 +18,7 @@ return [
     |
     */
 
-    'default' => env('MAIL_MAILER', 'smtp'),
+    'default' => env('MAIL_MAILER', $default_mailer),
 
     /*
     |--------------------------------------------------------------------------
@@ -44,32 +49,18 @@ return [
             'timeout' => null,
             'auth_mode' => null,
         ],
-
-        'ses' => [
-            'transport' => 'ses',
+        'mailhog' => [
+            'transport' => 'smtp',
+            'host' => explode(':', env('MH_SENDMAIL_SMTP_ADDR', 'sendmailhog:1025'))[0],
+            'port' => explode(':', env('MH_SENDMAIL_SMTP_ADDR', 'sendmailhog:1025'))[1],
         ],
-
-        'mailgun' => [
-            'transport' => 'mailgun',
-        ],
-
-        'postmark' => [
-            'transport' => 'postmark',
-        ],
-
-        'sendmail' => [
-            'transport' => 'sendmail',
-            'path' => '/usr/sbin/sendmail -bs',
-        ],
-
         'log' => [
             'transport' => 'log',
-            'channel' => env('MAIL_LOG_CHANNEL'),
+            'channel' => 'stack'
         ],
-
         'array' => [
-            'transport' => 'array',
-        ],
+            'transport' => 'array'
+        ]
     ],
 
     /*

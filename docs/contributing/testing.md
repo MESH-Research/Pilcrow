@@ -30,7 +30,11 @@ Each package's documentation is an excellent source of information on testing be
 The [Majestic](https://github.com/Raathigesh/majestic) GUI for Jest is a useful tool for running unit tests in a browser and watching code and tests for changes.  You can add the following config to your `.lando.local.yml` file to enable a container for Majestic.
 
 ::: warning Heads Up
- If you already have configuration `.lando.local.yml`, be sure to merge the services and proxy keys, or Lando will fail to rebuild/start.
+If you already have configuration `.lando.local.yml`, be sure to merge the services and proxy keys, or Lando will fail to rebuild/start.
+:::
+
+::: tip
+The lando extras tooling command can set up Majestic for you.  Run: `lando extras enable majestic`
 :::
 ```yaml
 #FILE: .lando.local.yml
@@ -44,10 +48,10 @@ services:
     scanner: false
 proxy:
   test:
-    - ccr_test.lndo.site:4000
+    - majestic.ccr.lndo.site:4000
 ```
 
-Then, once you run `lando rebuild` the majestic interface will be available at <https://ccr_test.lndo.site>
+Then, once you run `lando rebuild` the majestic interface will be available at <https://majestic.ccr.lndo.site>
 
 ## Server Unit Tests
 
@@ -66,6 +70,8 @@ We use [Cypress](https://www.cypress.io/) for our integration testing.  Cypress 
 
 ::: tip
 These instructions focus on installing Cypress under Lando.  Cypress can bit a bit of a resource hog and, as such, might be better run directly in your host environment.
+
+Also you can use Lando Extras to set up this configuration for you.  Run: `lando extras enable cypress`
 :::
 
 Add the following configuration to your `.lando.local.yml`.  
