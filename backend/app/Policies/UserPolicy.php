@@ -49,7 +49,7 @@ class UserPolicy
      *
      * @param  \App\Models\User  $user
      * @param  \App\Models\User  $model
-     * @return boolean
+     * @return Boolean
      */
     public function update(User $user, User $model)
     {
