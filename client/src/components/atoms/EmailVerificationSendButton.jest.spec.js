@@ -12,7 +12,7 @@ describe("EmailVerificationSendButton", () => {
     mount: {
       type: "full",
       mocks: {
-        $t: (token, _) => token,
+        $t: token => token,
         $apollo: {
           mutate
         }
