@@ -1,7 +1,7 @@
 <template>
   <q-btn
     :loading="status == 'loading'"
-    :color="noColor ? null : status == 'success' ? 'positive' : null"
+    :color="btnColor"
     v-bind="{ ...$props, ...$attrs }"
     @click="send"
   >
@@ -35,6 +35,17 @@ export default {
     noColor: {
       type: Boolean,
       default: false
+    }
+  },
+  computed: {
+    btnColor() {
+      if (this.noColor) {
+        return null;
+      }
+      if (this.status == "success") {
+        return "positive";
+      }
+      return null;
     }
   },
   methods: {
