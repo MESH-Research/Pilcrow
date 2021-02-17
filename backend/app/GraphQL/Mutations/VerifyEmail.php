@@ -3,6 +3,7 @@
 namespace App\GraphQL\Mutations;
 
 use App\Exceptions\ClientException;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
@@ -39,19 +40,20 @@ class VerifyEmail
      */
     public function send($_, array $args)
     {
-        $user = Auth::user();
+        $currentUser = Auth::user();
+        $userId = $args['id'] ?? Auth::user()->id;
         
-        if (!empty($args['id'])) {
-            //TODO: Add permissions check to allow admin users to send email based on UPDATE_USERS permission.
-            if ($args['id'] != $user->id ) {
-                throw new ClientException('Sending verification for another user is not implemented.', 'emailVerification', 'NOT_IMPLEMENTED');
-            }
-
-        }
+        $user = User::find($userId);
         
         if (!$user) {
             throw new ClientException('Not Found', 'emailVerification', 'VERIFY_USER_NOT_FOUND');
         }
+
+        if ($currentUser->cannot('update', $user)) {
+            throw new ClientException('Not authorized.', 'authentication', 'NOT_AUTHORIZED');
+        }
+        
+        
 
         if ($user->hasVerifiedEmail()) {
             throw new ClientException('Already verified', 'emailVerification', 'VERIFY_EMAIL_VERIFIED');

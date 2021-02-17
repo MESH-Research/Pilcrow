@@ -12,11 +12,9 @@ class UpdateUserTest extends TestCase
 {
     use MakesGraphQLRequests, RefreshDatabase;
     /**
-     * A basic feature test example.
-     *
      * @return void
      */
-    public function testUserUpdateOwn()
+    public function testUserUpdateOwn(): void
     {
         $user = User::factory()->create([
             'email' => 'brandnew@gmail.com',
@@ -39,7 +37,10 @@ class UpdateUserTest extends TestCase
         $response->assertJsonPath("data.updateUser.username", "testbrandnewusername");
     }
 
-    public function testUserCannotUpdateOthers() {
+    /**
+     * @return void
+     */
+    public function testUserCannotUpdateOthers(): void {
         $loggedInUser = User::factory()->create([
             'email' => 'loggedin@gmail.com',
             'username' => 'loggedinuser',
@@ -67,7 +68,10 @@ class UpdateUserTest extends TestCase
         $response->assertJsonPath("data", null);
     }
 
-    public function testApplicationAdministratorCanUpdateOthers()
+    /**
+     * @return void
+     */
+    public function testApplicationAdministratorCanUpdateOthers(): void
     {
         $loggedInUser = User::factory()->create();
         $loggedInUser->assignRole(Role::APPLICATION_ADMINISTRATOR);

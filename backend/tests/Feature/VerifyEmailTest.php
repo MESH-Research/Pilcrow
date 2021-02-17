@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Role;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Auth\Notifications\VerifyEmail;
@@ -145,19 +146,32 @@ class VerifyEmailTest extends TestCase
     /**
      * @return void
      */
-    public function testResendVerificationEmailToAnother(): void {
-        $this->markTestIncomplete();
-        $this->markTestSkipped();
-
+    public function testAdminCanResendVerificationEmailToAnother(): void {
         Notification::fake();
         $testUser = User::factory()->create(['email' => 'mesh@msu.edu', 'email_verified_at' => null]);
-        $adminUser = User::factory()->create(['email' => 'mesh2@msu.edu']);
+        $adminUser = User::factory()->create(['email' => 'mesh2@msu.edu'])->assignRole(Role::APPLICATION_ADMINISTRATOR);
 
-        $this->actingAs($testUser);
+        $this->actingAs($adminUser);
         $response = $this->callSendVerifyEmailEndpoint(['id' => $testUser->id]);
 
         Notification::assertSentTo( [$testUser], VerifyEmail::class);
         $response->assertJsonPath('errors', null);
+
+    } 
+
+    /**
+     * @return void
+     */
+    public function testCannotResendVerificationEmailToAnother(): void {
+        Notification::fake();
+        $testUser = User::factory()->create(['email' => 'mesh@msu.edu', 'email_verified_at' => null]);
+        $otherUser = User::factory()->create(['email' => 'mesh2@msu.edu']);
+
+        $this->actingAs($otherUser);
+        $response = $this->callSendVerifyEmailEndpoint(['id' => $testUser->id]);
+
+        Notification::assertNotSentTo( [$testUser], VerifyEmail::class);
+        $response->assertGraphQLErrorCategory('authentication');
 
     } 
 
