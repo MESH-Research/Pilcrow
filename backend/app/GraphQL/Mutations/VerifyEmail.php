@@ -53,8 +53,6 @@ class VerifyEmail
             throw new ClientException('Not authorized.', 'authentication', 'NOT_AUTHORIZED');
         }
         
-        
-
         if ($user->hasVerifiedEmail()) {
             throw new ClientException('Already verified', 'emailVerification', 'VERIFY_EMAIL_VERIFIED');
         }
