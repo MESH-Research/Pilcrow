@@ -3,21 +3,21 @@
 namespace Tests\Feature;
 
 use App\Models\User;
-use Database\Factories\UserFactory;
 use Nuwave\Lighthouse\Testing\MakesGraphQLRequests;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class CreateUserMigrationTest extends TestCase
+class CreateUserMutationTest extends TestCase
 {
     use MakesGraphQLRequests, RefreshDatabase;
 
     /**
     * Call GraphQL endpoint to create a user
-    * @param $variables (array): Contains user details to save to DB for testing.
-    * @return  array
+    * 
+    * @param array $variables Contains user details to save to DB for testing.
+    * @return \Illuminate\Testing\TestResponse
     */
-    public function callEndpoint($variables) {
+    public function callEndpoint(array $variables): \Illuminate\Testing\TestResponse {
         return $this->graphQL(
             'mutation CreateUser($username: String! $email: String! $name: String $password: String!) {
                 createUser(user: { username: $username email: $email name: $name password: $password}) {
@@ -30,10 +30,9 @@ class CreateUserMigrationTest extends TestCase
 
     }
     /**
-    *
-    *
+    * @return array
     */
-    public function nameValidationProvider() {
+    public function nameValidationProvider(): array {
         return [
             ['', false],
             [null, false],
@@ -43,8 +42,10 @@ class CreateUserMigrationTest extends TestCase
 
     /**
      * @dataProvider nameValidationProvider
+     * @param string $name Name value to test
+     * @param mixed $failure Expected failure category or false if no failure expected
      */
-    public function nameValidation($name, $failure)
+    public function nameValidation(?string $name, $failure): void
     {
         
         $testUser = User::factory()->realEmailDomain()->make(['username' => $username]);
@@ -57,7 +58,10 @@ class CreateUserMigrationTest extends TestCase
         }
     }
 
-    public function usernameValidationProvider() {
+    /**
+     * @return array
+     */
+    public function usernameValidationProvider(): array {
         return [
             ['', 'validation'],
             [null, 'graphql'],
@@ -68,8 +72,11 @@ class CreateUserMigrationTest extends TestCase
 
     /**
      * @dataProvider usernameValidationProvider
+     * @param string $username Username value to test
+     * @param mixed $failure Expected failure category or false if no failure expected
+     * @return void
      */
-    public function testUsernameValidation($username, $failure)
+    public function testUsernameValidation(?string $username, $failure): void
     {
         User::factory()->create(['username' => 'duplicateUser']);
         
@@ -83,7 +90,10 @@ class CreateUserMigrationTest extends TestCase
         }
     }
 
-    public function emailValidationProvider() {
+    /**
+     * @return array
+     */
+    public function emailValidationProvider(): array {
         return [
             ['adamsb@msu.edu', false], 
             ['notanemail', 'validation'],
@@ -96,8 +106,11 @@ class CreateUserMigrationTest extends TestCase
 
     /**
      * @dataProvider emailValidationProvider
+     * @param string $email Email value to test
+     * @param mixed $failure Expected failure category or false if no failure expected
+     * @return void
      */
-    public function testEmailValidation($email, $failure)
+    public function testEmailValidation(?string $email, $failure): void
     {
         User::factory()->create(['email' => 'dupeemail@ccrproject.dev']);
         
@@ -111,7 +124,10 @@ class CreateUserMigrationTest extends TestCase
         }
     }
 
-    public function passwordValidationProvider() {
+    /**
+     * @return array
+     */
+    public function passwordValidationProvider(): array {
         return [
             ['password', 'validation'],
             ['', 'validation'], 
@@ -123,8 +139,11 @@ class CreateUserMigrationTest extends TestCase
     
     /**
      * @dataProvider passwordValidationProvider
+     * @param string $password Password value to test
+     * @param mixed $failure Expected failure category or false if no failure expected
+     * @return void
      */
-    public function testPasswordValidation($password, $failure) {
+    public function testPasswordValidation(?string $password, $failure): void {
         
         $testUser = User::factory()->realEmailDomain()->make(['password' => $password]);
         $response = $this->callEndpoint($testUser->makeVisible('password')->attributesToArray());
@@ -134,6 +153,5 @@ class CreateUserMigrationTest extends TestCase
         } else {
             $response->assertGraphQLValidationPasses();
         }
-        
     }
 }
