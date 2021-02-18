@@ -1,6 +1,10 @@
 <template>
   <q-card-section class="q-pa-none">
-    <q-card-section style="min-height: 300px;"> </q-card-section>
+    <q-card-section class="q-gutter-md">
+      <q-input outlined v-model="form.name" label="Display Name" />
+      <q-input outlined v-model="form.email" label="Email" />
+      <q-input outlined v-model="form.username" label="Username" />
+    </q-card-section>
     <q-card-section class="bg-grey-2 row justify-end">
       <div class="q-gutter-md">
         <q-btn :disabled="!dirty" class="bg-primary text-white">Save</q-btn>
@@ -21,10 +25,9 @@ export default {
   data() {
     return {
       form: {
-        first_name: "",
-        last_name: "",
+        name: "",
         email: "",
-        username: "abc123"
+        username: "",
       }
     };
   },
