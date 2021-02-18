@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\GraphQL\Mutations;
 
@@ -11,9 +12,10 @@ class VerifyEmail
 {
     /**
      * Verify the current user's email.
-     * 
+     *
      * @param  null  $_
      * @param  array<string, mixed>  $args
+     * @return \App\Model\User
      */
     public function verify($_, array $args)
     {
@@ -34,17 +36,18 @@ class VerifyEmail
 
     /**
      * Resend verification email to a user.
-     * 
+     *
      * @param  null  $_
      * @param  array<string, mixed>  $args
+     * @return \App\Model\User
      */
     public function send($_, array $args)
     {
         $currentUser = Auth::user();
         $userId = $args['id'] ?? Auth::user()->id;
-        
+
         $user = User::find($userId);
-        
+
         if (!$user) {
             throw new ClientException('Not Found', 'emailVerification', 'VERIFY_USER_NOT_FOUND');
         }
@@ -52,12 +55,13 @@ class VerifyEmail
         if ($currentUser->cannot('update', $user)) {
             throw new ClientException('Not authorized.', 'authentication', 'NOT_AUTHORIZED');
         }
-        
+
         if ($user->hasVerifiedEmail()) {
             throw new ClientException('Already verified', 'emailVerification', 'VERIFY_EMAIL_VERIFIED');
         }
 
         $user->sendEmailVerificationNotification();
+
         return $user;
     }
 }

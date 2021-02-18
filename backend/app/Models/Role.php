@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Models;
 
@@ -9,12 +10,12 @@ class Role extends ParentModel
 {
     use HasFactory;
 
-    const APPLICATION_ADMINISTRATOR = 'Application Administrator';
-    const PUBLICATION_ADMINISTRATOR = 'Publication Administrator';
-    const EDITOR = 'Editor';
-    const REVIEW_COORDINATOR = 'Review Coordinator';
-    const REVIEWER = 'Reviewer';
-    const SUBMITTER = 'Submitter';
+    public const APPLICATION_ADMINISTRATOR = 'Application Administrator';
+    public const PUBLICATION_ADMINISTRATOR = 'Publication Administrator';
+    public const EDITOR = 'Editor';
+    public const REVIEW_COORDINATOR = 'Review Coordinator';
+    public const REVIEWER = 'Reviewer';
+    public const SUBMITTER = 'Submitter';
 
     /**
      * @return array

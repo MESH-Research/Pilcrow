@@ -1,16 +1,19 @@
 <?php
+declare(strict_types=1);
 
 namespace Tests\Feature;
 
-use App\Models\User;
 use App\Models\Role;
-use Nuwave\Lighthouse\Testing\MakesGraphQLRequests;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Nuwave\Lighthouse\Testing\MakesGraphQLRequests;
 use Tests\TestCase;
 
-class UpdateUserTest extends TestCase
+class UpdateUserMutationTest extends TestCase
 {
-    use MakesGraphQLRequests, RefreshDatabase;
+    use MakesGraphQLRequests;
+    use RefreshDatabase;
+
     /**
      * @return void
      */
@@ -32,15 +35,17 @@ class UpdateUserTest extends TestCase
                 ) {
                     username
                 }
-            }', ['id' => $user->id]
+            }',
+            ['id' => $user->id]
         );
-        $response->assertJsonPath("data.updateUser.username", "testbrandnewusername");
+        $response->assertJsonPath('data.updateUser.username', 'testbrandnewusername');
     }
 
     /**
      * @return void
      */
-    public function testUserCannotUpdateOthers(): void {
+    public function testUserCannotUpdateOthers(): void
+    {
         $loggedInUser = User::factory()->create([
             'email' => 'loggedin@gmail.com',
             'username' => 'loggedinuser',
@@ -48,7 +53,7 @@ class UpdateUserTest extends TestCase
 
         $userToUpdate = User::factory()->create([
             'email' => 'usertoupdate@gmail.com',
-            'username' => 'usertoupdate'
+            'username' => 'usertoupdate',
         ]);
 
         $this->actingAs($loggedInUser);
@@ -62,10 +67,11 @@ class UpdateUserTest extends TestCase
                 ) {
                     username
                 }
-            }', ['id' => $userToUpdate->id]
+            }',
+            ['id' => $userToUpdate->id]
         );
 
-        $response->assertJsonPath("data", null);
+        $response->assertJsonPath('data', null);
     }
 
     /**
@@ -77,7 +83,7 @@ class UpdateUserTest extends TestCase
         $loggedInUser->assignRole(Role::APPLICATION_ADMINISTRATOR);
         $userToUpdate = User::factory()->create([
             'email' => 'usertoupdate@gmail.com',
-            'username' => 'usertoupdate'
+            'username' => 'usertoupdate',
         ]);
         $this->actingAs($loggedInUser);
         $response = $this->graphQL(
@@ -89,8 +95,9 @@ class UpdateUserTest extends TestCase
                 ) {
                     username
                 }
-            }', ['id' => $userToUpdate->id]
+            }',
+            ['id' => $userToUpdate->id]
         );
-        $response->assertJsonPath("data.updateUser.username", "testbrandnewusername");
+        $response->assertJsonPath('data.updateUser.username', 'testbrandnewusername');
     }
 }

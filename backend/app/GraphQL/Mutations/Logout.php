@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Graphql\mutations;
 
@@ -9,9 +10,10 @@ class Logout
 {
     /**
      * @param  null  $_
-     * @param  array<string, mixed>  $args
+     * @param  array<string, mixed>  $_args
+     * @return \App\Models\User
      */
-    public function __invoke($_, array $args): ?User
+    public function __invoke($_, array $_args): ?User
     {
         // Plain Laravel: Auth::guard()
         // Laravel Sanctum: Auth::guard(config('sanctum.guard', 'web'))

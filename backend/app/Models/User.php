@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Models;
 
@@ -13,7 +14,10 @@ use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use HasFactory, Notifiable, HasApiTokens, HasRoles;
+    use HasFactory;
+    use Notifiable;
+    use HasApiTokens;
+    use HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -48,12 +52,13 @@ class User extends Authenticatable implements MustVerifyEmail
 
     /**
      * Model booted
-     * 
+     *
      * Clear email_verified_at and trigger a new verification notification if email field is updated.
      *
      * @return void
      */
-    public static function booted(): void {
+    public static function booted(): void
+    {
         static::updated(function ($model) {
             if ($model->isDirty('email')) {
                 $model->sendEmailVerificationNotification();
@@ -84,8 +89,13 @@ class User extends Authenticatable implements MustVerifyEmail
      * @param string $expires Timestamp
      * @return string
      */
-    public function makeEmailVerificationHash(string $expires): string {
-        return hash_hmac('sha256', "{$this->getKey()}#{$this->getEmailForVerification()}#{$expires}", Config::get('app.key'));
+    public function makeEmailVerificationHash(string $expires): string
+    {
+        return hash_hmac(
+            'sha256',
+            "{$this->getKey()}#{$this->getEmailForVerification()}#{$expires}",
+            Config::get('app.key')
+        );
     }
 
     /**
@@ -93,7 +103,8 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * @return string
      */
-    public function getEmailVerificationUrl(): string {
+    public function getEmailVerificationUrl(): string
+    {
         $expires = Carbon::now()->addMinutes(Config::get('auth.verification.expire', 60))->timestamp;
         $hash = $this->makeEmailVerificationHash($expires);
 
@@ -105,9 +116,10 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * @param string $token Token to validate
      * @param string $expires Supplied expiration for token
-     * @return boolean
+     * @return bool
      */
-    public function verifyEmailToken(string $token, string $expires): bool {
+    public function verifyEmailToken(string $token, string $expires): bool
+    {
         return hash_equals($this->makeEmailVerificationHash($expires), $token);
     }
 }
