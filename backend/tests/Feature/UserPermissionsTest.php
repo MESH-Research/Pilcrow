@@ -194,8 +194,8 @@ class UserPermissionsTest extends TestCase
     public function testUserCanUpdateUsersInOwnPublicationAsAPublicationAdministrator()
     {
         $user = User::factory()->create();
-        $user->assignRole(Role::APPLICATION_ADMINISTRATOR);
-        $this->assertTrue($user->can(Permission::UPDATE_USERS));
+        $user->assignRole(Role::PUBLICATION_ADMINISTRATOR);
+        $this->assertTrue($user->can(Permission::UPDATE_USERS_IN_OWN_PUBLICATION));
     }
 
     /**
@@ -296,5 +296,4 @@ class UserPermissionsTest extends TestCase
         );
         $response->assertJsonPath("data.user", $expected_array);
     }
-
 }
