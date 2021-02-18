@@ -56,10 +56,10 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-
       - name: Install dependencies
-        run:
-          - yarn install
-          - composer install
-          - cd client && yarn install
+        run: |
+          yarn install
+          composer install
+          cd client && yarn install
       - name: Check markdown
         run: yarn lint:md
       - name: Check PHP
