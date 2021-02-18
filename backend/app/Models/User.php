@@ -80,7 +80,8 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function setEmailAttribute(?string $value): void
     {
-        $this->attributes['email'] = strtolower($value);
+        $email = $value ? strtolower($value) : $value;
+        $this->attributes['email'] = $email;
     }
 
     /**
@@ -105,7 +106,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function getEmailVerificationUrl(): string
     {
-        $expires = Carbon::now()->addMinutes(Config::get('auth.verification.expire', 60))->timestamp;
+        $expires = (string)Carbon::now()->addMinutes(Config::get('auth.verification.expire', 60))->timestamp;
         $hash = $this->makeEmailVerificationHash($expires);
 
         return url("verify-email/{$expires}/{$hash}");

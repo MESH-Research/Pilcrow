@@ -105,7 +105,7 @@ class CreateUserMutationTest extends TestCase
             ['adamsb@msu.edu', false],
             ['notanemail', 'validation'],
             ['', 'validation'],
-            [null, 'validation'],
+            [null, 'graphql'],
             ['dupeemail@ccrproject.dev', 'validation'],
             ['nodomain@example.com', 'validation'],
         ];
