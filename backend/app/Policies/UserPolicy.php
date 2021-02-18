@@ -53,18 +53,18 @@ class UserPolicy
      */
     public function update(User $user, User $model)
     {
-        $is_updating_own_user = $user->id === $model->id;
-
-        if (!$is_updating_own_user
-            && $user->can(Permission::UPDATE_USERS)
-        ) {
+        //User is updating their own record.
+        if ($user->id === $model->id) {
+            return true;
+        }
+        //User has global permission to update users
+        if ($user->can(Permission::UPDATE_USERS)) {
             return true;
         }
 
         // TODO: Check if user can update user within own publication
-
-        return $is_updating_own_user;
-
+        // No explicit permission so return false.
+        return false;
     }
 
     /**
