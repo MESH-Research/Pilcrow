@@ -4,6 +4,15 @@
       <q-input outlined v-model="form.name" label="Display Name" />
       <q-input outlined v-model="form.email" label="Email" />
       <q-input outlined v-model="form.username" label="Username" />
+      <q-input outlined v-model="form.password" label="Password" filled :type="isPwd ? 'password' : 'text'" hint="Keep this strong">
+        <template v-slot:append>
+          <q-icon
+            :name="isPwd ? 'visibility_off' : 'visibility'"
+            class="cursor-pointer"
+            @click="isPwd = !isPwd"
+          />
+        </template>
+      </q-input>
     </q-card-section>
     <q-card-section class="bg-grey-2 row justify-end">
       <div class="q-gutter-md">
@@ -28,7 +37,9 @@ export default {
         name: "",
         email: "",
         username: "",
-      }
+        password: "",
+      },
+      isPwd: true
     };
   },
   apollo: {
