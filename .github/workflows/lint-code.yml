@@ -32,15 +32,15 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v2
       - name: Cache Composer packages
-        id: composer-cache
+        id: composer-cache-root
         uses: actions/cache@v2
         with:
-          path: backend/vendor
+          path: vendor
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
           restore-keys: |
             ${{ runner.os }}-composer-
       - name: Cache Root Node packages
-        id: yarn-cache
+        id: yarn-root-cache
         uses: actions/cache@v2
         with:
           path: node_modules
@@ -48,7 +48,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-
       - name: Cache Client Node packages
-        id: yarn-cache
+        id: yarn-client-cache
         uses: actions/cache@v2
         with:
           path: client/node_modules
