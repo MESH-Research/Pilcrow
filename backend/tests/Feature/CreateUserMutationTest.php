@@ -48,8 +48,7 @@ class CreateUserMutationTest extends TestCase
      */
     public function nameValidation(?string $name, $failure): void
     {
-
-        $testUser = User::factory()->realEmailDomain()->make(['username' => $username]);
+        $testUser = User::factory()->realEmailDomain()->make(['name' => $name]);
         $response = $this->callEndpoint($testUser->makeVisible('password')->attributesToArray());
 
         if ($failure) {
