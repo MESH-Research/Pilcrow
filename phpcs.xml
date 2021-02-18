@@ -18,12 +18,12 @@
         </properties>
     </rule>
 
-    <file>app</file>
-    <file>config</file>
-    <file>public</file>
-    <file>resources</file>
-    <file>routes</file>
-    <file>tests</file>
+    <file>backend/app</file>
+    <file>backend/config</file>
+    <file>backend/public</file>
+    <file>backend/resources</file>
+    <file>backend/routes</file>
+    <file>backend/tests</file>
 
     <exclude-pattern>*/database/*</exclude-pattern>
     <exclude-pattern>*/cache/*</exclude-pattern>
