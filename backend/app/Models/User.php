@@ -73,7 +73,7 @@ class User extends Authenticatable implements MustVerifyEmail
      * @param string $value
      * @return void
      */
-    public function setEmailAttribute(string $value): void
+    public function setEmailAttribute(?string $value): void
     {
         $this->attributes['email'] = strtolower($value);
     }

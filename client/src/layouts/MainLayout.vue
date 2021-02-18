@@ -24,13 +24,10 @@
         class="sidebar-avatar absolute-top"
         src="https://cdn.quasar.dev/img/material.png"
       >
-        <div class="absolute-bottom bg-transparent">
-          <q-avatar size="56px" class="q-mb-sm">
-            <q-img src="https://cdn.quasar.dev/img/boy-avatar.png" />
-          </q-avatar>
-          <div class="text-weight-bold">{{ currentUser.name }}</div>
-          <div>@{{ currentUser.username }}</div>
-        </div>
+        <avatar-block
+          :user="currentUser"
+          class="absolute-bottom bg-transparent"
+        />
       </q-img>
     </q-drawer>
 
@@ -47,11 +44,12 @@
 <script>
 import AppFooter from "../components/AppFooter.vue";
 import AppHeader from "src/components/AppHeader.vue";
+import AvatarBlock from "src/components/molecules/AvatarBlock.vue";
 import { CURRENT_USER } from "src/graphql/queries";
 import EmailVerificationBanner from "src/components/molecules/EmailVerificationBanner.vue";
 export default {
   name: "MainLayout",
-  components: { AppFooter, AppHeader, EmailVerificationBanner },
+  components: { AppFooter, AppHeader, EmailVerificationBanner, AvatarBlock },
   data: () => {
     return {
       leftDrawerOpen: false
