@@ -1,18 +1,16 @@
 <template>
   <q-page class="">
-    <div
-      class="row justify-center items-start content-start q-gutter-lg q-mt-sm q-mx-sm "
-    >
-      <q-card class="col-md-2">
+    <div class="row justify-center items-start content-start">
+      <q-card class="col-sm-3 col-xs-12 no-shadow no-border-radius">
         <q-card-section class="flex flex-center bg-blue-1">
           <avatar-block
-            avatar-size="150px"
+            avatar-size="80px"
             :user="currentUser"
             class="text-center"
           />
         </q-card-section>
         <q-card-section class="q-pa-none">
-          <q-list bordered separator>
+          <q-list>
             <q-item>
               <q-item-section>
                 Submissions Created
@@ -37,7 +35,7 @@
           </q-list>
         </q-card-section>
       </q-card>
-      <q-card class="col-grow ">
+      <q-card class="col-sm-9 col-xs-12 no-shadow outline no-border-radius">
         <q-card-section class="q-pa-none">
           <q-card-section class="q-pa-none">
             <q-tabs

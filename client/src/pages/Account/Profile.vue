@@ -1,11 +1,11 @@
 <template>
   <q-card-section class="q-pa-none">
     <q-card-section style="min-height: 300px;"> </q-card-section>
-    <q-card-section class="bg-grey-2 justify-end row q-gutter-sm q-pa-sm">
-      <q-btn :disabled="!dirty" class="bg-primary text-white">Save</q-btn>
-      <q-btn :disabled="!dirty" @click="onRevert" class="bg-grey-4 "
-        >Cancel</q-btn
-      >
+    <q-card-section class="bg-grey-2 row justify-end">
+      <div class="q-gutter-md">
+        <q-btn :disabled="!dirty" class="bg-primary text-white">Save</q-btn>
+        <q-btn :disabled="!dirty" @click="onRevert" class="bg-grey-4 ml-sm">Cancel</q-btn>
+      </div>
     </q-card-section>
   </q-card-section>
 </template>
@@ -24,7 +24,7 @@ export default {
         first_name: "",
         last_name: "",
         email: "",
-        username: ""
+        username: "abc123"
       }
     };
   },
