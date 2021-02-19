@@ -113,3 +113,39 @@ It is possible to run the interactive test runner, although it does require some
 :::
 
 The [Cypress Docs](https://docs.cypress.io/guides/getting-started/writing-your-first-test.html#Add-a-test-file) are a thorough resource for writing tests using Cypress.  
+
+## Code Style & Linting
+
+We use code style checking to help ensure consistency across our codebase.  Style checking is implemented using Github Actions on all pull requests, and each language's style/linting checker can also be run from the local environment.
+
+### PHP
+
+From the root of the project run:
+```sh
+lando composer lint #Check and report linting errors
+
+lando composer lint-fix #Fix fixable linting errors
+```
+
+#### Integration into VScode
+
+The [PHP Sniffer](https://marketplace.visualstudio.com/items?itemName=wongjn.php-sniffer) extension should pick up our phpcs config automatically.  You will need to have PHP installed locally, however.
+
+### Markdown
+
+From the root of the project run:
+```sh
+lando yarn lint:md
+```
+#### Integration into VSCode
+
+[Markdownlint](https://marketplace.visualstudio.com/items?itemName=DavidAnson.vscode-markdownlint) should pick up our configuration automatically.
+
+### Javascript
+
+From the `/client` directory run:
+```sh
+lando yarn lint #Check and report linting errors
+
+lando yarn lint --fix #Fix fixable linting errors
+```

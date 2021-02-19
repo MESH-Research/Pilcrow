@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<ruleset name="Laravel Standards">
+
+    <description>MESH Research Coding Standards</description>
+    
+    <rule ref="VariableAnalysis"/>
+    <rule ref="CakePHP">
+        <exclude name="CakePHP.NamingConventions"/>
+        <exclude name="CakePHP.Commenting.FunctionComment.MissingParamComment"/>
+    </rule>
+
+     <rule ref="SlevomatCodingStandard.Commenting.EmptyComment">
+        <exclude name="SlevomatCodingStandard.Commenting.EmptyComment.EmptyComment"/>
+    </rule>
+    <rule ref="VariableAnalysis.CodeAnalysis.VariableAnalysis">
+        <properties>
+            <property name="ignoreUnusedRegexp" value="/^_/"/>
+        </properties>
+    </rule>
+
+    <file>backend/app</file>
+    <file>backend/config</file>
+    <file>backend/public</file>
+    <file>backend/resources</file>
+    <file>backend/routes</file>
+    <file>backend/tests</file>
+
+    <exclude-pattern>*/database/*</exclude-pattern>
+    <exclude-pattern>*/cache/*</exclude-pattern>
+    <exclude-pattern>*/*.js</exclude-pattern>
+    <exclude-pattern>*/*.css</exclude-pattern>
+    <exclude-pattern>*/*.xml</exclude-pattern>
+    <exclude-pattern>*/*.blade.php</exclude-pattern>
+    <exclude-pattern>*/autoload.php</exclude-pattern>
+    <exclude-pattern>*/storage/*</exclude-pattern>
+    <exclude-pattern>*/docs/*</exclude-pattern>
+    <exclude-pattern>*/vendor/*</exclude-pattern>
+    <exclude-pattern>*/migrations/*</exclude-pattern>
+    <exclude-pattern>*/config/*</exclude-pattern>
+    <exclude-pattern>*/public/index.php</exclude-pattern>
+    <exclude-pattern>*/*.blade.php</exclude-pattern>
+    <exclude-pattern>*/Middleware/*</exclude-pattern>
+    <exclude-pattern>*/Console/Kernel.php</exclude-pattern>
+    <exclude-pattern>*/Exceptions/Handler.php</exclude-pattern>
+    <exclude-pattern>*/Http/Kernel.php</exclude-pattern>
+    <exclude-pattern>*/Providers/*</exclude-pattern>
+
+    <arg name="colors"/>
+    <ini name="memory_limit" value="128M"/>
+    
+    
+
+</ruleset>

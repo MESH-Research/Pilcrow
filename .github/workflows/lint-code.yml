@@ -23,24 +23,46 @@ on:
 # Set the Job #
 ###############
 jobs:
-  markdown:
+  all:
     # Name the Job
-    name: Markdown Lint
+    name: Lint/Style Checking
     # Set the agent to run on
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
+      - name: Cache Composer packages
+        id: composer-cache-root
+        uses: actions/cache@v2
         with:
-          # Full git history is needed to get a proper list of changed files within `super-linter`
-          fetch-depth: 0
-      - name: Lint Code Base
-        uses: github/super-linter@v3
-        env:
-          VALIDATE_ALL_CODEBASE: true
-          DEFAULT_BRANCH: master
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          FILTER_REGEX_EXCLUDE: .*(node_modules|vendor).*
-          VALIDATE_MARKDOWN: true
-          LINTER_RULES_PATH: /
-          MARKDOWN_CONFIG_FILE: .markdownlint.yaml
+          path: vendor
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+      - name: Cache Root Node packages
+        id: yarn-root-cache
+        uses: actions/cache@v2
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+      - name: Cache Client Node packages
+        id: yarn-client-cache
+        uses: actions/cache@v2
+        with:
+          path: client/node_modules
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+      - name: Install dependencies
+        run: |
+          yarn install
+          composer install
+          cd client && yarn install
+      - name: Check markdown
+        run: yarn lint:md
+      - name: Check PHP
+        run: composer lint
+      - name: Check Javascript
+        run: cd client && yarn lint

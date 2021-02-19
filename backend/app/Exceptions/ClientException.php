@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Exceptions;
 
@@ -17,12 +18,13 @@ class ClientException extends Exception implements RendersErrorsExtensions
      * @param string $category Application category.
      * @param string $clientCode Token for client code to match on for error message generation.
      */
-    public function __construct(string $message, string $category = null, string $clientCode)
+    public function __construct(string $message, ?string $category = null, string $clientCode)
     {
         $this->category = $category ?? 'unknown';
         $this->clientCode = $clientCode ?? 'UNKNOWN';
         parent::__construct($message);
     }
+
     /**
      * Returns true when exception message is safe to be displayed to a client.
      *
@@ -47,16 +49,16 @@ class ClientException extends Exception implements RendersErrorsExtensions
         return $this->category;
     }
 
-     /**
+    /**
      * Return the content that is put in the "extensions" part
      * of the returned error.
      *
      * @return array
      */
-     public function extensionsContent(): array
-     {
-         return [
-             'code' => strtoupper($this->clientCode)
-         ];
-     }
+    public function extensionsContent(): array
+    {
+        return [
+            'code' => strtoupper($this->clientCode),
+        ];
+    }
 }
