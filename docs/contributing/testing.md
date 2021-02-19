@@ -137,7 +137,7 @@ lando yarn lint:md
 ```
 #### Integration into VSCode
 
-[Markdownlint](]https://marketplace.visualstudio.com/items?itemName=DavidAnson.vscode-markdownlint) should pick up our configuration automatically.
+[Markdownlint](https://marketplace.visualstudio.com/items?itemName=DavidAnson.vscode-markdownlint) should pick up our configuration automatically.
 
 ### Javascript
 
