@@ -1,11 +1,20 @@
 <template>
   <q-card-section class="q-pa-none">
-    <q-card-section style="min-height: 300px;"> </q-card-section>
+    <q-card-section style="min-height: 300px;" />
     <q-card-section class="bg-grey-2 justify-end row q-gutter-sm q-pa-sm">
-      <q-btn :disabled="!dirty" class="bg-primary text-white">Save</q-btn>
-      <q-btn :disabled="!dirty" @click="onRevert" class="bg-grey-4 "
-        >Cancel</q-btn
+      <q-btn
+        :disabled="!dirty"
+        class="bg-primary text-white"
       >
+        Save
+      </q-btn>
+      <q-btn
+        :disabled="!dirty"
+        class="bg-grey-4 "
+        @click="onRevert"
+      >
+        Cancel
+      </q-btn>
     </q-card-section>
   </q-card-section>
 </template>
@@ -38,6 +47,9 @@ export default {
       return !isEqual(this.form, this.currentUser);
     }
   },
+  mounted() {
+    this.form = pick(this.currentUser, Object.keys(this.form));
+  },
   methods: {
     onRevert() {
       this.dirtyDialog().onOk(() => {
@@ -47,9 +59,6 @@ export default {
     getStateCopy() {
       return pick(this.currentUser, Object.keys(this.form));
     }
-  },
-  mounted() {
-    this.form = pick(this.currentUser, Object.keys(this.form));
   }
 };
 </script>

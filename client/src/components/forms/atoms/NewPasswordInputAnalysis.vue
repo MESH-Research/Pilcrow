@@ -1,21 +1,33 @@
 <template>
   <div>
-    <p v-html="$t('auth.password_meter.summary', { score, crack_time })" />
-    <div class="password-suggestions" v-if="suggestions.length">
+    <p v-html="$t('auth.password_meter.summary', { score, crack_time })" /> <!-- eslint-disable-line vue/no-v-html -->a
+    <div
+      v-if="suggestions.length"
+      class="password-suggestions"
+    >
       <q-list dense>
-        <q-item class="warning" v-if="warning.length">
+        <q-item
+          v-if="warning.length"
+          class="warning"
+        >
           <q-item-section avatar>
-            <q-icon class="text-red" name="warning" />
+            <q-icon
+              class="text-red"
+              name="warning"
+            />
           </q-item-section>
           {{ warning }}
         </q-item>
         <q-item
-          class="suggestion"
-          :key="index"
           v-for="(message, index) in suggestions"
+          :key="index"
+          class="suggestion"
         >
           <q-item-section avatar>
-            <q-icon color="primary" name="close" />
+            <q-icon
+              color="primary"
+              name="close"
+            />
           </q-item-section>
           {{ message }}
         </q-item>
@@ -28,7 +40,8 @@ export default {
   name: "NewPasswordInputAnalysis",
   props: {
     complexity: {
-      type: Object
+      type: Object,
+      required: true
     }
   },
   computed: {
@@ -50,5 +63,5 @@ export default {
 </script>
 <style lang="sass" scoped>
 p:last-child
-    margin: 0
+  margin: 0
 </style>

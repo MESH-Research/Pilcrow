@@ -1,35 +1,40 @@
 <template>
   <q-page class="flex-center flex">
-    <q-card style="width: 400px" square>
+    <q-card
+      style="width: 400px"
+      square
+    >
       <q-card-section class="bg-deep-purple-7 q-pa-sm">
-        <div class="text-h5 text-white">Login</div>
+        <div class="text-h5 text-white">
+          Login
+        </div>
       </q-card-section>
       <q-card-section class="q-pa-lg">
         <q-banner
+          v-if="redirectUrl"
           class="text-white bg-red text-center"
           dense
           rounded
-          v-if="redirectUrl"
           v-text="$t(`auth.loginRequired`)"
         />
         <q-form
-          v-on:submit.prevent="login()"
           class="q-px-sm q-pt-md  q-gutter-y-lg q-pb-lg"
+          @submit.prevent="login()"
         >
           <q-input
-            outlined
             ref="username"
+            outlined
             :value="$v.form.email.$model"
+            :error="$v.form.email.$error"
+            :label="$t('auth.fields.email')"
+            autofocus
+            autocomplete="username"
             @change="
               e => {
                 $v.form.email.$model = e.target.value.trim();
               }
             "
-            :error="$v.form.email.$error"
-            :label="$t('auth.fields.email')"
             @keypress.enter="$refs.password.focus()"
-            autofocus
-            autocomplete="username"
           >
             <template #error>
               <div
@@ -44,13 +49,13 @@
           </q-input>
 
           <password-input
-            outlined
             ref="password"
             v-model="$v.form.password.$model"
+            outlined
             :error="$v.form.password.$error"
             :label="$t('auth.fields.password')"
-            @keypress.enter="login"
             autocomplete="current-password"
+            @keypress.enter="login"
           >
             <template #error>
               <div
@@ -64,28 +69,30 @@
         </q-form>
 
         <q-banner
+          v-if="error"
           class="text-white bg-red text-center"
           dense
           rounded
-          v-if="error"
           v-text="$t(`auth.failures.${error}`)"
         />
       </q-card-section>
       <q-card-actions class="q-px-lg">
         <q-btn
-          @click.prevent="login()"
           unelevated
           size="lg"
           color="purple-4"
           class="full-width text-white"
           label="Login"
           :loading="loading"
+          @click.prevent="login()"
         />
       </q-card-actions>
       <q-card-section class="text-center q-pa-sm">
         <p class="text-grey-6">
           Don't have an account?
-          <router-link to="/register">Register.</router-link>
+          <router-link to="/register">
+            Register.
+          </router-link>
         </p>
       </q-card-section>
     </q-card>
@@ -99,9 +106,9 @@ import { required, email } from "vuelidate/lib/validators";
 import appAuth from "src/components/mixins/appAuth";
 
 export default {
+  name: "PageLogin",
   components: { PasswordInput },
   mixins: [validationMixin, appAuth],
-  name: "PageLogin",
   data() {
     return {
       form: {

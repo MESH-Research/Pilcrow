@@ -4,33 +4,50 @@
       <q-btn
         v-if="value !== null"
         flat
-        @click="$emit('input', !value)"
         round
         dense
         icon="menu"
         :aria-label="$t('header.menu_button_aria')"
         aria-controls="sidebar"
         :aria-expanded="value.toString()"
+        @click="$emit('input', !value)"
       />
       <q-space />
 
       <template v-if="currentUser">
-        <q-btn-dropdown stretch flat :label="currentUser.username">
+        <q-btn-dropdown
+          stretch
+          flat
+          :label="currentUser.username"
+        >
           <q-list>
-            <q-item clickable to="/dashboard">
-              <q-item-section avatar><q-icon name="dashboard"/></q-item-section>
+            <q-item
+              clickable
+              to="/dashboard"
+            >
+              <q-item-section avatar>
+                <q-icon name="dashboard" />
+              </q-item-section>
               <q-item-section>{{ $t("header.dashboard") }}</q-item-section>
             </q-item>
-            <q-item clickable to="/account/profile">
-              <q-item-section avatar
-                ><q-icon name="account_circle" />
+            <q-item
+              clickable
+              to="/account/profile"
+            >
+              <q-item-section
+                avatar
+              >
+                <q-icon name="account_circle" />
               </q-item-section>
               <q-item-section>
                 {{ $t("header.account_link") }}
               </q-item-section>
             </q-item>
             <q-separator />
-            <q-item clickable @click="logout">
+            <q-item
+              clickable
+              @click="logout"
+            >
               <q-item-section avatar>
                 <q-icon name="mdi-logout" />
               </q-item-section>
@@ -42,9 +59,22 @@
         </q-btn-dropdown>
       </template>
       <template v-else>
-        <q-btn :label="$t('auth.register')" to="/register" stretch flat />
-        <q-separator vertical dark />
-        <q-btn :label="$t('auth.login')" to="/login" stretch flat />
+        <q-btn
+          :label="$t('auth.register')"
+          to="/register"
+          stretch
+          flat
+        />
+        <q-separator
+          vertical
+          dark
+        />
+        <q-btn
+          :label="$t('auth.login')"
+          to="/login"
+          stretch
+          flat
+        />
       </template>
     </q-toolbar>
     <div class="title">
@@ -52,9 +82,14 @@
         <span class="text-weight-medium">Public</span> Philosophy Journal
         <strong>Quarterly</strong>
       </div>
-      <div class="text-subtitle">Submission Review System</div>
+      <div class="text-subtitle">
+        Submission Review System
+      </div>
     </div>
-    <q-img src="header-back.jpg" class="header-image absolute-top" />
+    <q-img
+      src="header-back.jpg"
+      class="header-image absolute-top"
+    />
   </q-header>
 </template>
 
@@ -65,18 +100,18 @@ import { CURRENT_USER } from "src/graphql/queries";
 export default {
   name: "AppHeader",
   mixins: [appAuth],
-  data() {
-    return {
-      currentUser: null,
-      drawerShowing: false
-    };
-  },
   props: {
     //Drawer status
     value: {
       type: Boolean,
       default: null
     }
+  },
+  data() {
+    return {
+      currentUser: null,
+      drawerShowing: false
+    };
   },
   apollo: {
     currentUser: {
