@@ -146,7 +146,7 @@ lando yarn lint:md
 From the `/client` directory run:
 ```sh
 lando yarn lint #Check and report linting errors
-  
+
 lando yarn lint --fix #Fix fixable linting errors
 ```
 
