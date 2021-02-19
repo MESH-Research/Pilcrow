@@ -6,12 +6,23 @@
           class="card-icon flex-center flex"
           :class="status == 'failure' ? 'error' : ''"
         >
-          <q-spinner-hourglass size="3em" v-if="status == 'loading'" />
-          <q-icon v-else-if="status == 'success'" name="email" />
-          <q-icon v-else name="error" />
+          <q-spinner-hourglass
+            v-if="status == 'loading'"
+            size="3em"
+          />
+          <q-icon
+            v-else-if="status == 'success'"
+            name="email"
+          />
+          <q-icon
+            v-else
+            name="error"
+          />
         </q-card-section>
         <q-card-section class="col-grow q-pb-none">
-          <div v-if="status == 'loading'">Loading...</div>
+          <div v-if="status == 'loading'">
+            Loading...
+          </div>
           <div v-else>
             <div v-if="status == 'success'">
               {{ $t("account.email_verify.verification_success") }}
@@ -19,7 +30,10 @@
             <div v-else>
               {{ $t("general_failure") }}
               <ul class="errors">
-                <li v-for="(message, index) in errorMessages" :key="index">
+                <li
+                  v-for="(message, index) in errorMessages"
+                  :key="index"
+                >
                   {{ message }}
                 </li>
               </ul>
@@ -27,14 +41,17 @@
           </div>
           <q-card-actions align="right">
             <email-verification-send-button
-              flat
               v-if="status == 'failure'"
+              flat
               no-color
             />
-            <q-btn flat to="/dashboard"
-              ><q-icon name="arrow_forward" />
-              {{ $t("buttons.dashboard") }}</q-btn
+            <q-btn
+              flat
+              to="/dashboard"
             >
+              <q-icon name="arrow_forward" />
+              {{ $t("buttons.dashboard") }}
+            </q-btn>
           </q-card-actions>
         </q-card-section>
       </q-card-section>
@@ -49,6 +66,7 @@ import EmailVerificationSendButton from "src/components/atoms/EmailVerificationS
 import errorMixin from "src/components/mixins/errors";
 
 export default {
+  name: "VerifyEmail",
   components: { EmailVerificationSendButton },
   mixins: [errorMixin],
   data() {
@@ -62,7 +80,6 @@ export default {
       query: CURRENT_USER
     }
   },
-  name: "VerifyEmail",
   async created() {
     const { token, expires } = this.$route.params;
 

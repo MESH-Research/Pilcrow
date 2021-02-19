@@ -1,6 +1,9 @@
 <template>
   <q-layout view="lhh lpr lFf">
-    <app-header drawer v-model="leftDrawerOpen" />
+    <app-header
+      v-model="leftDrawerOpen"
+      drawer
+    />
     <q-drawer
       id="#sidebar"
       v-model="leftDrawerOpen"
@@ -9,7 +12,10 @@
     >
       <q-scroll-area class="sidebar-nav">
         <q-list>
-          <q-item to="/dashboard" v-ripple>
+          <q-item
+            v-ripple
+            to="/dashboard"
+          >
             <q-item-section avatar>
               <q-icon name="dashboard" />
             </q-item-section>

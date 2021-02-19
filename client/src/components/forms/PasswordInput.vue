@@ -2,9 +2,9 @@
   <q-input-password
     v-bind="{ ...$props, ...$attrs }"
     :value="value"
-    @input="$emit('input', $event)"
     :label="label"
     :type="isPwd ? 'password' : 'text'"
+    @input="$emit('input', $event)"
   >
     <template #append>
       <q-icon
@@ -14,14 +14,20 @@
         role="button"
         tabindex="0"
         :aria-pressed="(!isPwd).toString()"
+        :aria-label="$t('auth.aria.show_password')"
         @click="isPwd = !isPwd"
         @keydown.enter.space="isPwd = !isPwd"
-        :aria-label="$t('auth.aria.show_password')"
       />
     </template>
-    <template v-for="(_, slot) of $scopedSlots" v-slot:[slot]="scope"
-      ><slot :name="slot" v-bind="scope"
-    /></template>
+    <template
+      v-for="(_, slot) of $scopedSlots"
+      v-slot:[slot]="scope"
+    >
+      <slot
+        :name="slot"
+        v-bind="scope"
+      />
+    </template>
   </q-input-password>
 </template>
 
@@ -29,24 +35,26 @@
 import QInputPassword from "./atoms/QInputPassword.vue";
 
 export default {
-  components: { QInputPassword },
   name: "PasswordInput",
-  data() {
-    return {
-      isPwd: true
-    };
-  },
+  components: { QInputPassword },
   props: {
     label: {
       type: String,
       default: "Password"
     },
     value: {
-      type: String
+      type: String,
+      required: true
     },
     autocomplete: {
-      default: "current-password"
+      default: "current-password",
+      type: String
     }
+  },
+  data() {
+    return {
+      isPwd: true
+    };
   }
 };
 </script>
