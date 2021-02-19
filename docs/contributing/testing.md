@@ -113,3 +113,62 @@ It is possible to run the interactive test runner, although it does require some
 :::
 
 The [Cypress Docs](https://docs.cypress.io/guides/getting-started/writing-your-first-test.html#Add-a-test-file) are a thorough resource for writing tests using Cypress.  
+
+## Code Style & Linting
+
+We use code style checking to help ensure consistency across our codebase.  Style checking is implemented using Github Actions on all pull requests, and each language's style/linting checker can also be run from the local environment.
+
+### PHP
+
+From the root of the project run:
+```sh
+lando composer lint #Check and report linting errors
+
+lando composer lint-fix #Fix fixable linting errors
+```
+
+#### PHPCS in VScode
+
+The [PHP Sniffer](https://marketplace.visualstudio.com/items?itemName=wongjn.php-sniffer) extension should pick up our phpcs config automatically.  You will need to have PHP installed locally, however.
+
+### Markdown
+
+From the root of the project run:
+```sh
+lando yarn lint:md
+```
+#### Markdownlint in VSCode
+
+[Markdownlint](https://marketplace.visualstudio.com/items?itemName=DavidAnson.vscode-markdownlint) should pick up our configuration automatically.
+
+### Javascript
+
+From the `/client` directory run:
+```sh
+lando yarn lint #Check and report linting errors
+
+lando yarn lint --fix #Fix fixable linting errors
+```
+
+#### Eslint in VSCode
+
+Instructions for integrating eslint into VSCode can be found [in the eslint-plugin-vue documentation](https://vuejs.github.io/eslint-plugin-vue/user-guide/#editor-integrations).  You will need to make an additional configuration change to what is outlined there, however:
+
+- Install [dbaeumer.vscode-eslint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
+- Edit your VSCode settings.json:
+
+```json
+{ 
+  //...
+  "eslint.format.enable": true, // Adds eslint to the formatter options in the right-click menu (Optional)
+  "eslint.packageManager": "yarn", // CCR uses yarn
+  "eslint.workingDirectories": ["./client"], // Point the eslint plugin at the client directory
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "vue"
+  ],
+  "vetur.validation.template": false // If you have vetur installed as well, disable the default validation functionality.
+  //...
+}
+```

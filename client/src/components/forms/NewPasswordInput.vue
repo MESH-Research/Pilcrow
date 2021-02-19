@@ -3,11 +3,11 @@
     <password-input
       v-bind="{ ...$props, ...$attrs }"
       :value="value"
-      @input="$emit('input', $event)"
       :label="label"
       autocomplete="new-password"
       bottom-slots
       :error="error"
+      @input="$emit('input', $event)"
     >
       <template #counter>
         <q-chip
@@ -22,12 +22,20 @@
           role="button"
           @click="showDetails = !showDetails"
           @keydown.enter.space="showDetails = !showDetails"
-          >{{ $t("buttons.more_info") }}</q-chip
         >
+          {{ $t("buttons.more_info") }}
+        </q-chip>
       </template>
       <template #hint>
-        <new-password-input-meter :max="4" :score="score" :valid="!error" />
-        <div v-if="value.length > 0" class="password-summary">
+        <new-password-input-meter
+          :max="4"
+          :score="score"
+          :valid="!error"
+        />
+        <div
+          v-if="value.length > 0"
+          class="password-summary"
+        >
           <span v-if="!error">{{
             $t("auth.validation.PASSWORD_COMPLEX")
           }}</span>
@@ -44,7 +52,9 @@
       id="password-field-analysis"
       class="password-details alert alert-tip"
     >
-      <div class="alert-title">{{ $t("auth.password_meter.header") }}</div>
+      <div class="alert-title">
+        {{ $t("auth.password_meter.header") }}
+      </div>
       <new-password-input-analysis
         :complexity="complexity"
         class="alert-body"
@@ -59,19 +69,13 @@ import PasswordInput from "./PasswordInput.vue";
 import NewPasswordInputMeter from "./atoms/NewPasswordInputMeter.vue";
 
 export default {
+  name: "NewPasswordInput",
   components: {
     NewPasswordInputAnalysis,
     PasswordInput,
     NewPasswordInputMeter
   },
-  name: "NewPasswordInput",
   inheritAttrs: false,
-  data() {
-    return {
-      isPwd: true,
-      showDetails: false
-    };
-  },
   props: {
     label: {
       type: String,
@@ -86,11 +90,18 @@ export default {
       default: 3
     },
     complexity: {
-      type: Object
+      type: Object,
+      required: true
     },
     error: {
       type: Boolean
     }
+  },
+  data() {
+    return {
+      isPwd: true,
+      showDetails: false
+    };
   },
   computed: {
     score() {

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Tests\Feature;
 
@@ -14,13 +15,14 @@ use Tests\TestCase;
 
 class VerifyEmailTest extends TestCase
 {
-    use RefreshDatabase, MakesGraphQLRequests;
-    
+    use RefreshDatabase;
+    use MakesGraphQLRequests;
 
     /**
      * @return void
      */
-    public function setUp(): void {
+    public function setUp(): void
+    {
         $testNow = Carbon::create(2021, 01, 15, 12, 30, 00);
         Carbon::setTestNow($testNow);
 
@@ -30,7 +32,8 @@ class VerifyEmailTest extends TestCase
     /**
      * @return void
      */
-    public function tearDown(): void {
+    public function tearDown(): void
+    {
         Carbon::setTestNow(null);
 
         parent::tearDown();
@@ -42,7 +45,8 @@ class VerifyEmailTest extends TestCase
      * @param array $variables
      * @return \Illuminate\Testing\TestResponse
      */
-    public function callVerifyEmailEndpoint(array $variables): \Illuminate\Testing\TestResponse {
+    public function callVerifyEmailEndpoint(array $variables): \Illuminate\Testing\TestResponse
+    {
         return $this->graphQL('
             mutation VerifyEmail($token: String!, $expires: String!) {
                 verifyEmail(token: $token, expires: $expires) {
@@ -58,7 +62,8 @@ class VerifyEmailTest extends TestCase
      * @param array $variables
      * @return \Illuminate\Testing\TestResponse
      */
-    public function callSendVerifyEmailEndpoint(array $variables): \Illuminate\Testing\TestResponse {
+    public function callSendVerifyEmailEndpoint(array $variables): \Illuminate\Testing\TestResponse
+    {
         return $this->graphQL('
             mutation SendEmail($id: ID) {
                 sendEmailVerification(id: $id) {
@@ -74,7 +79,8 @@ class VerifyEmailTest extends TestCase
      * @param array $variables
      * @return \Illuminate\Testing\TestResponse
      */
-    public function callCreateUserEndpoint(array $variables): \Illuminate\Testing\TestResponse {
+    public function callCreateUserEndpoint(array $variables): \Illuminate\Testing\TestResponse
+    {
         return $this->graphQL(
             'mutation CreateUser($username: String! $email: String! $name: String $password: String!) {
                 createUser(user: { username: $username email: $email name: $name password: $password}) {
@@ -83,46 +89,50 @@ class VerifyEmailTest extends TestCase
                     name
                     email
                 }
-            }', $variables);
-
+            }',
+            $variables
+        );
     }
 
     /**
      * @return void
      */
-    public function testEmailVerificationSent(): void {
+    public function testEmailVerificationSent(): void
+    {
         Notification::fake();
         $testUser = User::factory()->make(['email' => 'mesh@msu.edu']);
 
         $response = $this->callCreateUserEndpoint($testUser->makeVisible('password')->attributesToArray());
-        $response->assertJsonPath("data.createUser.username", $testUser->username);
+        $response->assertJsonPath('data.createUser.username', $testUser->username);
         $user = User::find(Arr::get($response, 'data.createUser.id'));
 
         $this->assertNotNull($user);
-        Notification::assertSentTo( [$user], VerifyEmail::class);
+        Notification::assertSentTo([$user], VerifyEmail::class);
     }
 
     /**
      * @return void
      */
-    public function testEmailVerificationSentOnEmailUpdate(): void {
+    public function testEmailVerificationSentOnEmailUpdate(): void
+    {
         Notification::fake();
         $testUser = User::factory()->create(['email' => 'mesh@msu.edu']);
 
         $testUser->email = 'mesh2@msu.edu';
         $testUser->save();
 
-        Notification::assertSentTo( [$testUser], VerifyEmail::class);
+        Notification::assertSentTo([$testUser], VerifyEmail::class);
         $this->assertNull($testUser->email_verified_at);
     }
 
     /**
      * @return array
      */
-    public function dataResendVerificationToSelf(): array {
+    public function dataResendVerificationToSelf(): array
+    {
         return [
             ['1'],
-            [null]
+            [null],
         ];
     }
 
@@ -131,22 +141,23 @@ class VerifyEmailTest extends TestCase
      * @param string $id Data provided
      * @return void
      */
-    public function testCanResendVerificationEmailToSelf(?string $id): void 
+    public function testCanResendVerificationEmailToSelf(?string $id): void
     {
         Notification::fake();
         $testUser = User::factory()->create(['id' => 1, 'email' => 'mesh@msu.edu', 'email_verified_at' => null]);
-        
+
         $this->actingAs($testUser);
         $response = $this->callSendVerifyEmailEndpoint(['id' => $id]);
-        
-        Notification::assertSentTo( [$testUser], VerifyEmail::class);
+
+        Notification::assertSentTo([$testUser], VerifyEmail::class);
         $response->assertJsonPath('errors', null);
     }
 
     /**
      * @return void
      */
-    public function testAdminCanResendVerificationEmailToAnother(): void {
+    public function testAdminCanResendVerificationEmailToAnother(): void
+    {
         Notification::fake();
         $testUser = User::factory()->create(['email' => 'mesh@msu.edu', 'email_verified_at' => null]);
         $adminUser = User::factory()->create(['email' => 'mesh2@msu.edu'])->assignRole(Role::APPLICATION_ADMINISTRATOR);
@@ -154,15 +165,15 @@ class VerifyEmailTest extends TestCase
         $this->actingAs($adminUser);
         $response = $this->callSendVerifyEmailEndpoint(['id' => $testUser->id]);
 
-        Notification::assertSentTo( [$testUser], VerifyEmail::class);
+        Notification::assertSentTo([$testUser], VerifyEmail::class);
         $response->assertJsonPath('errors', null);
-
-    } 
+    }
 
     /**
      * @return void
      */
-    public function testCannotResendVerificationEmailToAnother(): void {
+    public function testCannotResendVerificationEmailToAnother(): void
+    {
         Notification::fake();
         $testUser = User::factory()->create(['email' => 'mesh@msu.edu', 'email_verified_at' => null]);
         $otherUser = User::factory()->create(['email' => 'mesh2@msu.edu']);
@@ -170,15 +181,15 @@ class VerifyEmailTest extends TestCase
         $this->actingAs($otherUser);
         $response = $this->callSendVerifyEmailEndpoint(['id' => $testUser->id]);
 
-        Notification::assertNotSentTo( [$testUser], VerifyEmail::class);
+        Notification::assertNotSentTo([$testUser], VerifyEmail::class);
         $response->assertGraphQLErrorCategory('authentication');
-
-    } 
+    }
 
     /**
      * @return void
      */
-    public function testCannotSendNotifcationWhenVerified(): void {
+    public function testCannotSendNotifcationWhenVerified(): void
+    {
         Notification::fake();
         $testUser = User::factory()->create(['email' => 'mesh@msu.edu']);
         $testUser->markEmailAsVerified();
@@ -193,14 +204,15 @@ class VerifyEmailTest extends TestCase
     /**
      * @return void
      */
-    public function testCanVerifyEmail(): void {
+    public function testCanVerifyEmail(): void
+    {
         $testUser = User::factory()->create(['email' => 'mesh@msu.edu']);
         $expires = (string)Carbon::now()->addMinutes(10)->timestamp;
         $hash = $testUser->makeEmailVerificationHash($expires);
 
         $this->actingAs($testUser);
         $response = $this->callVerifyEmailEndpoint(['token' => $hash, 'expires' => $expires]);
-        
+
         $this->assertNotNull(Arr::get($response, 'data.verifyEmail'));
         $this->assertNull(Arr::get($response, 'errors'));
     }
@@ -208,7 +220,8 @@ class VerifyEmailTest extends TestCase
     /**
      * @return void
      */
-    public function testExpiredTokenFailsEmailVerification(): void {
+    public function testExpiredTokenFailsEmailVerification(): void
+    {
         $testUser = User::factory()->create(['email' => 'mesh@msu.edu']);
         $expires = (string)Carbon::now()->subMinutes(61)->timestamp;
         $hash = $testUser->makeEmailVerificationHash($expires);
@@ -222,7 +235,8 @@ class VerifyEmailTest extends TestCase
     /**
      * @return void
      */
-    public function testInvalidTokenFailsEmailVerification(): void {
+    public function testInvalidTokenFailsEmailVerification(): void
+    {
         $testUser = User::factory()->create(['email' => 'mesh@msu.edu']);
         $expires = (string)Carbon::now()->addMinutes(10)->timestamp;
         $hash = 'aninvalidhash';
@@ -236,7 +250,8 @@ class VerifyEmailTest extends TestCase
     /**
      * @return void
      */
-    public function testExpiresCannotBeManipulated(): void {
+    public function testExpiresCannotBeManipulated(): void
+    {
         $testUser = User::factory()->create(['email' => 'mesh@msu.edu']);
         $expires = (string)Carbon::now()->subMinutes(61)->timestamp; // Create an expired hash
         $hash = $testUser->makeEmailVerificationHash($expires);

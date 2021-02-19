@@ -16,8 +16,19 @@
     </q-card-section>
     <q-card-section class="bg-grey-2 row justify-end">
       <div class="q-gutter-md">
-        <q-btn :disabled="!dirty" class="bg-primary text-white">Save</q-btn>
-        <q-btn :disabled="!dirty" @click="onRevert" class="bg-grey-4 ml-sm">Cancel</q-btn>
+        <q-btn
+          :disabled="!dirty"
+          class="bg-primary text-white"
+        >
+          Save
+        </q-btn>
+        <q-btn
+          :disabled="!dirty"
+          @click="onRevert"
+          class="bg-grey-4 ml-sm"
+        >
+          Cancel
+        </q-btn>
       </div>
     </q-card-section>
   </q-card-section>
@@ -52,6 +63,9 @@ export default {
       return !isEqual(this.form, this.currentUser);
     }
   },
+  mounted() {
+    this.form = pick(this.currentUser, Object.keys(this.form));
+  },
   methods: {
     onRevert() {
       this.dirtyDialog().onOk(() => {
@@ -61,9 +75,6 @@ export default {
     getStateCopy() {
       return pick(this.currentUser, Object.keys(this.form));
     }
-  },
-  mounted() {
-    this.form = pick(this.currentUser, Object.keys(this.form));
   }
 };
 </script>

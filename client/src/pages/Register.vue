@@ -2,7 +2,9 @@
   <q-page class="flex-center flex">
     <q-card style="width: 400px">
       <q-card-section class="bg-deep-purple-7">
-        <h4 class="text-h5 text-white q-my-xs">{{ $t("auth.register") }}</h4>
+        <h4 class="text-h5 text-white q-my-xs">
+          {{ $t("auth.register") }}
+        </h4>
       </q-card-section>
 
       <q-card-section>
@@ -12,24 +14,18 @@
         </p>
         <q-form
           class="q-px-sm q-pb-lg q-gutter-y-lg column"
-          @submit="submit"
           autofocus
+          @submit="submit"
         >
           <q-input
-            outlined
             v-model.trim="form.name"
+            outlined
             :label="$t('helpers.OPTIONAL_FIELD', [$t('auth.fields.name')])"
             autocomplete="name"
             bottom-slots
-          >
-          </q-input>
+          />
           <q-input
             outlined
-            @change="
-              e => {
-                $v.form.email.$model = e.target.value.trim();
-              }
-            "
             :value="$v.form.email.$model"
             type="email"
             :label="$t('auth.fields.email')"
@@ -38,12 +34,19 @@
             :loading="emailLoading > 0"
             debounce="500"
             bottom-slots
+            @change="
+              e => {
+                $v.form.email.$model = e.target.value.trim();
+              }
+            "
           >
             <template #error>
+              <!-- eslint-disable vue/no-v-html -->
               <div
                 v-if="!$v.form.email.required"
-                v-html="$t('helpers.REQUIRED_FIELD', [$t('auth.fields.email')])"
+                v-html="$t('helpers.REQUIRED_FIELD', [$t('auth.fields.email')])" 
               />
+              <!-- eslint-enable vue/no-v-html -->
               <div
                 v-if="!$v.form.email.email || !$v.form.email.serverValid"
                 v-text="$t('auth.validation.EMAIL_INVALID')"
@@ -55,22 +58,28 @@
                 style="line-height: 1.3"
               >
                 <template #loginAction>
-                  <router-link to="/login">{{
-                    $t("auth.login_help")
-                  }}</router-link>
+                  <router-link to="/login">
+                    {{
+                      $t("auth.login_help")
+                    }}
+                  </router-link>
                 </template>
                 <template #passwordAction>
-                  <router-link to="/reset-password">{{
-                    $t("auth.password_help")
-                  }}</router-link>
+                  <router-link to="/reset-password">
+                    {{
+                      $t("auth.password_help")
+                    }}
+                  </router-link>
                 </template>
-                <template #break><br /></template>
+                <template #break>
+                  <br>
+                </template>
               </i18n>
             </template>
           </q-input>
           <q-input
-            outlined
             v-model.trim="$v.form.username.$model"
+            outlined
             :label="$t('auth.fields.username')"
             :error="$v.form.username.$error"
             :loading="usernameLoading > 0"
@@ -91,29 +100,33 @@
               />
             </template>
             <template
-              #append
               v-if="
                 !$v.form.username.$error &&
                   !usernameLoading &&
                   form.username.length
               "
+              #append
             >
-              <q-icon name="done" color="green-6" />
+              <q-icon
+                name="done"
+                color="green-6"
+              />
             </template>
             <template
-              #hint
               v-if="
                 !$v.form.username.$error &&
                   !usernameLoading &&
                   form.username.length
               "
-              >{{ $t("auth.validation.USERNAME_AVAILABLE") }}</template
+              #hint
             >
+              {{ $t("auth.validation.USERNAME_AVAILABLE") }}
+            </template>
           </q-input>
           <new-password-input
+            v-model="$v.form.password.$model"
             outlined
             :label="$t('auth.fields.password')"
-            v-model="$v.form.password.$model"
             :error="$v.form.password.$error"
             :complexity="complexity"
           />
@@ -137,8 +150,10 @@
       </q-card-actions>
       <q-card-section class="text-center q-pa-sm">
         <p class="text-grey-6">
-          <router-link to="/login"
-            >{{ $t("auth.register_login") }}
+          <router-link
+            to="/login"
+          >
+            {{ $t("auth.register_login") }}
           </router-link>
         </p>
       </q-card-section>
@@ -180,8 +195,8 @@ const importValidationErrors = function(error, vm) {
 
 export default {
   name: "PageRegister",
-  mixins: [validationMixin, appAuth],
   components: { NewPasswordInput },
+  mixins: [validationMixin, appAuth],
   apollo: {
     "user.username": {
       query: gql`

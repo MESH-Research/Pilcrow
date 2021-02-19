@@ -21,7 +21,7 @@
 <script>
 import EmailVerificationSendButton from "../atoms/EmailVerificationSendButton.vue";
 export default {
-  components: { EmailVerificationSendButton },
-  name: "EmailVerificationBanner"
+  name: "EmailVerificationBanner",
+  components: { EmailVerificationSendButton }
 };
 </script>

@@ -1,16 +1,17 @@
 <?php
+declare(strict_types=1);
 
 namespace Tests\Feature;
 
 use App\Models\User;
-use Database\Factories\UserFactory;
-use Nuwave\Lighthouse\Testing\MakesGraphQLRequests;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Nuwave\Lighthouse\Testing\MakesGraphQLRequests;
 use Tests\TestCase;
 
 class CreateUserMutationTest extends TestCase
 {
-    use MakesGraphQLRequests, RefreshDatabase;
+    use MakesGraphQLRequests;
+    use RefreshDatabase;
 
     /**
      * Call GraphQL endpoint to create a user
@@ -32,6 +33,7 @@ class CreateUserMutationTest extends TestCase
             $variables
         );
     }
+
     /**
      * @return array
      */
@@ -40,7 +42,7 @@ class CreateUserMutationTest extends TestCase
         return [
             ['', false],
             [null, false],
-            [str_repeat('*', 255), 'validation']
+            [str_repeat('*', 255), 'validation'],
         ];
     }
 
@@ -83,6 +85,7 @@ class CreateUserMutationTest extends TestCase
     public function testUsernameValidation(?string $username, $failure): void
     {
         User::factory()->create(['username' => 'duplicateUser']);
+
         $testUser = User::factory()->realEmailDomain()->make(['username' => $username]);
         $response = $this->callEndpoint($testUser->makeVisible('password')->attributesToArray());
 
@@ -102,9 +105,9 @@ class CreateUserMutationTest extends TestCase
             ['adamsb@msu.edu', false],
             ['notanemail', 'validation'],
             ['', 'validation'],
-            [null, 'validation'],
+            [null, 'graphql'],
             ['dupeemail@ccrproject.dev', 'validation'],
-            ['nodomain@example.com', 'validation']
+            ['nodomain@example.com', 'validation'],
         ];
     }
 
@@ -117,6 +120,7 @@ class CreateUserMutationTest extends TestCase
     public function testEmailValidation(?string $email, $failure): void
     {
         User::factory()->create(['email' => 'dupeemail@ccrproject.dev']);
+
         $testUser = User::factory()->make(['email' => $email]);
         $response = $this->callEndpoint($testUser->makeVisible('password')->attributesToArray());
 
@@ -137,7 +141,7 @@ class CreateUserMutationTest extends TestCase
             ['', 'validation'],
             ['qwerty', 'validation'],
             [null, 'graphql'],
-            ['coob!DrijAr5oc', false]
+            ['coob!DrijAr5oc', false],
         ];
     }
 

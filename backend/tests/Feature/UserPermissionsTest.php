@@ -1,18 +1,19 @@
 <?php
+declare(strict_types=1);
 
 namespace Tests\Feature;
 
-use Nuwave\Lighthouse\Testing\MakesGraphQLRequests;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
-use App\Models\User;
-use App\Models\Role;
 use App\Models\Permission;
+use App\Models\Role;
+use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Nuwave\Lighthouse\Testing\MakesGraphQLRequests;
+use Tests\TestCase;
 
 class UserPermissionsTest extends TestCase
 {
-    use MakesGraphQLRequests, RefreshDatabase;
+    use MakesGraphQLRequests;
+    use RefreshDatabase;
 
     private $test_permission = 'test permission';
     private $test_user_role = 'Test User Role';
@@ -43,7 +44,7 @@ class UserPermissionsTest extends TestCase
     public function testThatUserRoleRecordsExist()
     {
         $roles = Role::getArrayOfAllRoleNames();
-        foreach($roles as $role) {
+        foreach ($roles as $role) {
             $record = Role::where('name', $role)->get();
             $this->assertTrue($record->count() > 0);
         }
@@ -134,15 +135,16 @@ class UserPermissionsTest extends TestCase
                         name
                     }
                 }
-            }', ['id' => $user->id]
+            }',
+            ['id' => $user->id]
         );
         $expected_array = [
             0 => [
-                'id' => (string) $test_role->id,
-                'name' => 'Test User Role'
-            ]
+                'id' => (string)$test_role->id,
+                'name' => 'Test User Role',
+            ],
         ];
-        $response->assertJsonPath("data.user.roles", $expected_array);
+        $response->assertJsonPath('data.user.roles', $expected_array);
     }
 
     /**
@@ -161,9 +163,10 @@ class UserPermissionsTest extends TestCase
                         name
                     }
                 }
-            }', ['id' => $user->id]
+            }',
+            ['id' => $user->id]
         );
-        $response->assertJsonPath("data.user.roles", []);
+        $response->assertJsonPath('data.user.roles', []);
     }
 
     /**
@@ -171,7 +174,7 @@ class UserPermissionsTest extends TestCase
      */
     public function testPermissionToUpdateUsersExists()
     {
-        /** @var $permission Permission */
+        /** @var Permission $permission */
         $permissions = Permission::where('name', Permission::UPDATE_USERS)->get();
         $this->assertNotNull($permissions);
         $this->assertEquals(1, $permissions->count());
@@ -216,59 +219,59 @@ class UserPermissionsTest extends TestCase
                 [
                     'roles' => [
                         0 => [
-                            'id' => (string) 1,
+                            'id' => (string)1,
                             'name' => Role::APPLICATION_ADMINISTRATOR,
                             'permissions' => [
                                 0 => [
-                                    'id' => (string) 1,
-                                    'name' => Permission::UPDATE_USERS
-                                ]
-                            ]
-                        ]
-                    ]
-                ]
+                                    'id' => (string)1,
+                                    'name' => Permission::UPDATE_USERS,
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
             ],
             [
                 Role::PUBLICATION_ADMINISTRATOR,
                 [
                     'roles' => [
                         0 => [
-                            'id' => (string) 2,
+                            'id' => (string)2,
                             'name' => Role::PUBLICATION_ADMINISTRATOR,
                             'permissions' => [
                                 0 => [
-                                    'id' => (string) 2,
-                                    'name' => Permission::UPDATE_USERS_IN_OWN_PUBLICATION
-                                ]
-                            ]
-                        ]
-                    ]
-                ]
+                                    'id' => (string)2,
+                                    'name' => Permission::UPDATE_USERS_IN_OWN_PUBLICATION,
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
             ],
             [
                 Role::REVIEWER,
                 [
                     'roles' => [
                         0 => [
-                            'id' => (string) 5,
+                            'id' => (string)5,
                             'name' => Role::REVIEWER,
-                            'permissions' => [ ]
-                        ]
-                    ]
-                ]
+                            'permissions' => [ ],
+                        ],
+                    ],
+                ],
             ],
             [
                 Role::SUBMITTER,
                 [
                     'roles' => [
                         0 => [
-                            'id' => (string) 6,
+                            'id' => (string)6,
                             'name' => Role::SUBMITTER,
-                            'permissions' => [ ]
-                        ]
-                    ]
-                ]
-            ]
+                            'permissions' => [ ],
+                        ],
+                    ],
+                ],
+            ],
         ];
     }
 
@@ -292,8 +295,9 @@ class UserPermissionsTest extends TestCase
                         }
                     }
                 }
-            }', ['id' => $user->id]
+            }',
+            ['id' => $user->id]
         );
-        $response->assertJsonPath("data.user", $expected_array);
+        $response->assertJsonPath('data.user', $expected_array);
     }
 }
