@@ -2,7 +2,6 @@
   <q-banner
     inline-actions
     dense
-    m
     class="text-white bg-blue"
   >
     {{ $t("account.email_verify.unverified_email_banner") }}
