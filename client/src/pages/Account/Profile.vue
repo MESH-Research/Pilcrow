@@ -1,10 +1,29 @@
 <template>
   <q-card-section class="q-pa-none">
     <q-card-section class="q-gutter-md">
-      <q-input outlined v-model="form.name" label="Display Name" />
-      <q-input outlined v-model="form.email" label="Email" />
-      <q-input outlined v-model="form.username" label="Username" />
-      <q-input outlined v-model="form.password" label="Password" filled :type="isPwd ? 'password' : 'text'" hint="Keep this strong">
+      <q-input
+        v-model="form.name"
+        outlined
+        label="Display Name"
+      />
+      <q-input
+        v-model="form.email"
+        outlined
+        label="Email"
+      />
+      <q-input
+        v-model="form.username"
+        outlined
+        label="Username"
+      />
+      <q-input
+        v-model="form.password"
+        outlined
+        label="Password"
+        filled
+        :type="isPwd ? 'password' : 'text'"
+        hint="Keep this strong"
+      >
         <template v-slot:append>
           <q-icon
             :name="isPwd ? 'visibility_off' : 'visibility'"
@@ -24,8 +43,8 @@
         </q-btn>
         <q-btn
           :disabled="!dirty"
-          @click="onRevert"
           class="bg-grey-4 ml-sm"
+          @click="onRevert"
         >
           Cancel
         </q-btn>
