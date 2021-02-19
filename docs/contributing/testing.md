@@ -122,7 +122,9 @@ We use code style checking to help ensure consistency across our codebase.  Styl
 
 From the root of the project run:
 ```sh
-lando composer lint
+lando composer lint #Check and report linting errors
+
+lando composer lint-fix #Fix fixable linting errors
 ```
 
 #### PHPCS in VScode
@@ -143,7 +145,9 @@ lando yarn lint:md
 
 From the `/client` directory run:
 ```sh
-lando yarn lint
+lando yarn lint #Check and report linting errors
+  
+lando yarn lint --fix #Fix fixable linting errors
 ```
 
 #### Eslint in VSCode
