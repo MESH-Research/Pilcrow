@@ -125,7 +125,7 @@ From the root of the project run:
 lando composer lint
 ```
 
-#### Integration into VScode
+#### PHPCS in VScode
 
 The [PHP Sniffer](https://marketplace.visualstudio.com/items?itemName=wongjn.php-sniffer) extension should pick up our phpcs config automatically.  You will need to have PHP installed locally, however.
 
@@ -135,13 +135,36 @@ From the root of the project run:
 ```sh
 lando yarn lint:md
 ```
-#### Integration into VSCode
+#### Markdownlint in VSCode
 
-[Markdownlint](]https://marketplace.visualstudio.com/items?itemName=DavidAnson.vscode-markdownlint) should pick up our configuration automatically.
+[Markdownlint](https://marketplace.visualstudio.com/items?itemName=DavidAnson.vscode-markdownlint) should pick up our configuration automatically.
 
 ### Javascript
 
 From the `/client` directory run:
 ```sh
 lando yarn lint
+```
+
+#### Eslint in VSCode
+
+Instructions for integrating eslint into VSCode can be found [in the eslint-plugin-vue documentation](https://vuejs.github.io/eslint-plugin-vue/user-guide/#editor-integrations).  You will need to make an additional configuration change to what is outlined there, however:
+
+- Install [dbaeumer.vscode-eslint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
+- Edit your VSCode settings.json:
+
+```json
+{ 
+  //...
+  "eslint.format.enable": true, // Adds eslint to the formatter options in the right-click menu (Optional)
+  "eslint.packageManager": "yarn", // CCR uses yarn
+  "eslint.workingDirectories": ["./client"], // Point the eslint plugin at the client directory
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "vue"
+  ],
+  "vetur.validation.template": false // If you have vetur installed as well, disable the default validation functionality.
+  //...
+}
 ```
