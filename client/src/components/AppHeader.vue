@@ -86,10 +86,6 @@
         Submission Review System
       </div>
     </div>
-    <q-img
-      src="header-back.jpg"
-      class="header-image absolute-top"
-    />
   </q-header>
 </template>
 
