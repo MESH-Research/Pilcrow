@@ -32,12 +32,19 @@
           />
         </template>
       </q-input>
+      <q-banner
+        v-if="formErrorMsg"
+        dense
+        class="form-error text-white bg-red text-center"
+        v-text="$t(`auth.failures.${formErrorMsg}`)"
+      />
     </q-card-section>
     <q-card-section class="bg-grey-2 row justify-end">
       <div class="q-gutter-md">
         <q-btn
           :disabled="!dirty"
           class="bg-primary text-white"
+          @click="updateUser()"
         >
           Save
         </q-btn>
@@ -57,6 +64,22 @@
 import { isEqual, pick } from "lodash";
 import dirtyGuard from "components/mixins/dirtyGuard";
 import { CURRENT_USER } from "src/graphql/queries";
+import { UPDATE_USER } from "src/graphql/mutations";
+
+const importValidationErrors = function(error, vm) {
+  const gqlErrors = error?.graphQLErrors ?? [];
+  var hasVErrors = false;
+  gqlErrors.forEach(item => {
+    const vErrors = item?.extensions?.validation ?? false;
+    if (vErrors !== false) {
+      for (const [fieldName, fieldErrors] of Object.entries(vErrors)) {
+        vm.serverValidationErrors[fieldName] = fieldErrors;
+      }
+      hasVErrors = true;
+    }
+  });
+  return hasVErrors;
+};
 
 export default {
   name: "ProfileIndex",
@@ -64,12 +87,14 @@ export default {
   data() {
     return {
       form: {
+        id: null,
         name: "",
         email: "",
         username: "",
         password: "",
       },
-      isPwd: true
+      isPwd: true,
+      formErrorMsg: ""
     };
   },
   apollo: {
@@ -93,6 +118,25 @@ export default {
     },
     getStateCopy() {
       return pick(this.currentUser, Object.keys(this.form));
+    },
+    async updateUser() {
+      // console.log(pick(this.currentUser, Object.keys(this.form)))
+
+      this.formErrorMsg = "";
+      try {
+        await this.$apollo.mutate({
+          mutation: UPDATE_USER,
+          variables: this.form
+        });
+      } catch (error) {
+        console.log(error)
+
+        if (importValidationErrors(error, this)) {
+          this.formErrorMsg = "CREATE_FORM_VALIDATION";
+        } else {
+          this.formErrorMsg = "CREATE_FORM_INTERNAL";
+        }
+      }
     }
   }
 };

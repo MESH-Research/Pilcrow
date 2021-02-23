@@ -41,6 +41,35 @@ class UpdateUserMutationTest extends TestCase
         $response->assertJsonPath('data.updateUser.username', 'testbrandnewusername');
     }
 
+    public function testUserUpdateOwnDetailsToBeTheSame()
+    {
+        $user = User::factory()->create([
+            'name' => 'testname',
+            'email' => 'brandnew@gmail.com',
+            'username' => 'testusername',
+        ]);
+
+        $this->actingAs($user);
+
+        $response = $this->graphQL(
+            'mutation updateUser ($id: ID!){
+                updateUser(id: $id,
+                    user: {
+                        name: "testname"
+                        email: "brandnew@gmail.com"
+                        username: "testusername"
+                    }
+                ) {
+                    name
+                    email
+                    username
+                }
+            }',
+            ['id' => $user->id]
+        );
+        $response->assertJsonPath('data.updateUser.username', 'testbrandnewusername');
+    }
+
     /**
      * @return void
      */

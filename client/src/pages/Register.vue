@@ -44,7 +44,7 @@
               <!-- eslint-disable vue/no-v-html -->
               <div
                 v-if="!$v.form.email.required"
-                v-html="$t('helpers.REQUIRED_FIELD', [$t('auth.fields.email')])" 
+                v-html="$t('helpers.REQUIRED_FIELD', [$t('auth.fields.email')])"
               />
               <!-- eslint-enable vue/no-v-html -->
               <div
@@ -337,12 +337,7 @@ export default {
         await this.$login(this.form);
         this.$router.push("/dashboard");
       } catch (error) {
-        if (importValidationErrors(error, this)) {
-          this.formErrorMsg = "CREATE_FORM_VALIDATION";
-        } else {
-          this.formErrorMsg = "CREATE_FORM_INTERNAL";
-        }
-        this.$v.$touch();
+        console.log(error)
       }
     }
   }
