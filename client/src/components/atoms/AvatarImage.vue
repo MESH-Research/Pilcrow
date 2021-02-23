@@ -1,6 +1,6 @@
 <template>
   <q-avatar v-bind="{ ...$attrs, ...$props }">
-    <q-img src="https://cdn.quasar.dev/img/boy-avatar.png" />
+    <q-img src="avatar.png" alt="User Avatar" />
   </q-avatar>
 </template>
 
