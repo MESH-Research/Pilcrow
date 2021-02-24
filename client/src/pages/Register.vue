@@ -337,7 +337,12 @@ export default {
         await this.$login(this.form);
         this.$router.push("/dashboard");
       } catch (error) {
-        console.log(error)
+        if (importValidationErrors(error, this)) {
+          this.formErrorMsg = "CREATE_FORM_VALIDATION";
+        } else {
+          this.formErrorMsg = "CREATE_FORM_INTERNAL";
+        }
+          this.$v.$touch();
       }
     }
   }

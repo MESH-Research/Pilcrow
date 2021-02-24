@@ -20,9 +20,8 @@
         v-model="form.password"
         outlined
         label="Password"
-        filled
         :type="isPwd ? 'password' : 'text'"
-        hint="Keep this strong"
+        hint="Updating this will overwrite the existing password"
       >
         <template v-slot:append>
           <q-icon
@@ -36,7 +35,7 @@
         v-if="formErrorMsg"
         dense
         class="form-error text-white bg-red text-center"
-        v-text="$t(`auth.failures.${formErrorMsg}`)"
+        v-text="$t(`account.update.${formErrorMsg}`)"
       />
     </q-card-section>
     <q-card-section class="bg-grey-2 row justify-end">
@@ -53,7 +52,7 @@
           class="bg-grey-4 ml-sm"
           @click="onRevert"
         >
-          Cancel
+          Discard Changes
         </q-btn>
       </div>
     </q-card-section>
@@ -80,6 +79,7 @@ const importValidationErrors = function(error, vm) {
   });
   return hasVErrors;
 };
+
 
 export default {
   name: "ProfileIndex",
@@ -108,6 +108,7 @@ export default {
     }
   },
   mounted() {
+    console.log(isEqual(this.form, this.currentUser));
     this.form = pick(this.currentUser, Object.keys(this.form));
   },
   methods: {
@@ -120,7 +121,7 @@ export default {
       return pick(this.currentUser, Object.keys(this.form));
     },
     async updateUser() {
-      // console.log(pick(this.currentUser, Object.keys(this.form)))
+      console.log(this.dirty)
 
       this.formErrorMsg = "";
       try {
@@ -128,13 +129,19 @@ export default {
           mutation: UPDATE_USER,
           variables: this.form
         });
+        this.$q.notify({
+          color: "positive",
+          message: this.$t("account.update.success"),
+          icon: "check_circle",
+          html: true
+        });
       } catch (error) {
         console.log(error)
 
         if (importValidationErrors(error, this)) {
-          this.formErrorMsg = "CREATE_FORM_VALIDATION";
+          this.formErrorMsg = "update_form_validation";
         } else {
-          this.formErrorMsg = "CREATE_FORM_INTERNAL";
+          this.formErrorMsg = "update_form_internal";
         }
       }
     }

@@ -28,8 +28,9 @@ class UpdateUserMutationTest extends TestCase
 
         $response = $this->graphQL(
             'mutation updateUser ($id: ID!){
-                updateUser(id: $id,
+                updateUser(
                     user: {
+                        id: $id,
                         username: "testbrandnewusername"
                     }
                 ) {
@@ -53,21 +54,20 @@ class UpdateUserMutationTest extends TestCase
 
         $response = $this->graphQL(
             'mutation updateUser ($id: ID!){
-                updateUser(id: $id,
+                updateUser(
                     user: {
-                        name: "testname"
-                        email: "brandnew@gmail.com"
+                        id: $id,
+                        email: "brandnew@gmail.com",
                         username: "testusername"
                     }
                 ) {
-                    name
                     email
                     username
                 }
             }',
             ['id' => $user->id]
         );
-        $response->assertJsonPath('data.updateUser.username', 'testbrandnewusername');
+        $response->assertJsonPath('data.updateUser.username', 'testusername');
     }
 
     /**
@@ -89,8 +89,9 @@ class UpdateUserMutationTest extends TestCase
 
         $response = $this->graphQL(
             'mutation updateUser ($id: ID!){
-                updateUser(id: $id,
+                updateUser(
                     user: {
+                        id: $id,
                         username: "testbrandnewusername"
                     }
                 ) {
@@ -117,8 +118,9 @@ class UpdateUserMutationTest extends TestCase
         $this->actingAs($loggedInUser);
         $response = $this->graphQL(
             'mutation updateUser ($id: ID!){
-                updateUser(id: $id,
+                updateUser(
                     user: {
+                        id: $id,
                         username: "testbrandnewusername"
                     }
                 ) {

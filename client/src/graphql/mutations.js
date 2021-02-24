@@ -50,8 +50,8 @@ export const UPDATE_USER = gql`
     $password: String
   ) {
     updateUser(
-      id: $id,
       user: {
+        id: $id,
         email: $email
         name: $name
         username: $username
