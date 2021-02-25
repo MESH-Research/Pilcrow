@@ -15,7 +15,7 @@ describe("Profile", () => {
   const wrapper = mountQuasar(Profile, {
     quasar: { components },
     mount: {
-      type: "full",
+      type: "full"
     }
   });
 
@@ -23,4 +23,3 @@ describe("Profile", () => {
     expect(wrapper).toBeTruthy();
   });
 });
-
