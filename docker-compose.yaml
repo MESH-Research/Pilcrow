@@ -1,0 +1,44 @@
+version: '3'
+
+networks:
+  backend:
+services:
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    depends_on:
+      - phpfpm
+      - mysql
+    networks:
+      - backend
+  phpfpm:
+    env_file:
+      - .env
+    environment:
+      WAIT_HOSTS: mysql:3306
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    networks:
+      - backend
+    depends_on:
+      - mysql
+  mysql:
+    image: mysql:5.7.29
+    tty: true
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+    networks:
+      - backend
+  
+
+
+
+
+
