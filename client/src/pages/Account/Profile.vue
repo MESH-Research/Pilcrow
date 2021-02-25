@@ -61,7 +61,7 @@
 
 <script>
 import { isEqual, pick } from "lodash";
-import dirtyGuard from "components/mixins/dirtyGuard";
+import dirtyGuard from "src/components/mixins/dirtyGuard";
 import { CURRENT_USER } from "src/graphql/queries";
 import { UPDATE_USER } from "src/graphql/mutations";
 
@@ -121,8 +121,6 @@ export default {
       return pick(this.currentUser, Object.keys(this.form));
     },
     async updateUser() {
-      console.log(this.dirty)
-
       this.formErrorMsg = "";
       try {
         await this.$apollo.mutate({
@@ -136,8 +134,6 @@ export default {
           html: true
         });
       } catch (error) {
-        console.log(error)
-
         if (importValidationErrors(error, this)) {
           this.formErrorMsg = "update_form_validation";
         } else {
