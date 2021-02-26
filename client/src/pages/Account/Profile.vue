@@ -80,7 +80,6 @@ const importValidationErrors = function(error, vm) {
   return hasVErrors;
 };
 
-
 export default {
   name: "ProfileIndex",
   mixins: [dirtyGuard],
@@ -94,7 +93,8 @@ export default {
         password: "",
       },
       isPwd: true,
-      formErrorMsg: ""
+      formErrorMsg: "",
+      serverValidationErrors: { "user.username": false, "user.email": false },
     };
   },
   apollo: {
@@ -108,7 +108,6 @@ export default {
     }
   },
   mounted() {
-    console.log(isEqual(this.form, this.currentUser));
     this.form = pick(this.currentUser, Object.keys(this.form));
   },
   methods: {
