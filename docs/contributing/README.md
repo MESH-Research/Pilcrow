@@ -86,6 +86,41 @@ The MailHog interface will be available at <http://mailhog.ccr.lndo.site/> once 
 - [Trusting the Lando CA Certificate](https://docs.lando.dev/config/security.html#trusting-the-ca)
 - [ZSH Plugin](https://github.com/JoshuaBedford/lando-zsh)
 
+## Preview Environments
+
+It can be helpful to deploy pull requests for team members or stakeholders to preview and provide feedback.  `CCR-Droid` is our custom Github App dedicated to creating these environments (and other small tasks from time to time).  
+
+### Creating a Preview Deployment
+To create a preview environment, add the `pr-preview` label to a pull request in the CCR GitHub repository that meets the following criteria:
+
+- Must be open (not closed, not merged)
+- Must be targeted to either `master` or `development` branches
+- Must be a branch on the CCR repo (forks aren't allowed).
+- CI/CD checks must be passing (`CCR-Droid` will wait until checks fail or pass)
+
+If the pull request does not meet the above rules, `CCR-Droid` will comment on the pull request and remove the `pr-preview` label.  If the pull request meets the criteria, `CCR-Droid` will request the deployment for you.
+
+![pending deployment screenshot](./images/preview_in_progress.jpg)
+
+After `CCR-Droid` creates the deployment, a link will appear above the checks section.
+
+![deployment ready screenshot](./images/preview_ready.jpg)
+
+#### Mail
+Mailhog captures mail from preview deployments to prevent abuse.  Visit <https://mail.gh.ccrproject.dev> to access the Mailhog server and view any email sent by preview deployments.
+
+### Destroying a Preview Environment
+
+To destroy a preview deployment, remove the `pr-preview` label from the pull request.  Closing or merging an issue will also automatically destroy any associated environments.
+
+::: tip Dangling Previews
+Preview builds cost hosting money. It's not a lot of money, but it adds up if a build is left running.  If you don't need an environment, go ahead and destroy it.  Creating it again is simply a matter of re-adding the `pr-preview` label.
+:::
+
+### Errors During Build
+
+Currently, `CCR-Droid` is not great about spelling out specific build errors.  If you run into a problem, mention `@wreality`. He can look up the error messages and help with debugging the build.
+
 ## Contributor Workflow
 
 1. Create a new branch based on the `development` branch
