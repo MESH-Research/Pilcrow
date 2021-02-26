@@ -23,6 +23,7 @@
         >
           <q-input
             ref="username"
+            data-cy="login_email"
             outlined
             :value="$v.form.email.$model"
             :error="$v.form.email.$error"
@@ -51,10 +52,11 @@
           <password-input
             ref="password"
             v-model="$v.form.password.$model"
-            outlined
             :error="$v.form.password.$error"
             :label="$t('auth.fields.password')"
             autocomplete="current-password"
+            data-cy="login_password"
+            outlined
             @keypress.enter="login"
           >
             <template #error>
@@ -84,6 +86,7 @@
           class="full-width text-white"
           label="Login"
           :loading="loading"
+          data-cy="button_login"
           @click.prevent="login()"
         />
       </q-card-actions>

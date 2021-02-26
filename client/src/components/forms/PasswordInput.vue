@@ -4,6 +4,7 @@
     :value="value"
     :label="label"
     :type="isPwd ? 'password' : 'text'"
+    data-cy="password"
     @input="$emit('input', $event)"
   >
     <template #append>

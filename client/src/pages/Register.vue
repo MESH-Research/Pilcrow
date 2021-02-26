@@ -25,15 +25,16 @@
             bottom-slots
           />
           <q-input
-            outlined
-            :value="$v.form.email.$model"
-            type="email"
-            :label="$t('auth.fields.email')"
-            autocomplete="username"
             :error="$v.form.email.$error"
+            :label="$t('auth.fields.email')"
             :loading="emailLoading > 0"
-            debounce="500"
+            :value="$v.form.email.$model"
+            autocomplete="username"
             bottom-slots
+            data-cy="register_email"
+            debounce="500"
+            outlined
+            type="email"
             @change="
               e => {
                 $v.form.email.$model = e.target.value.trim();
@@ -84,6 +85,7 @@
             :error="$v.form.username.$error"
             :loading="usernameLoading > 0"
             autocomplete="nickname"
+            data-cy="register_username"
             debounce="500"
             bottom-slots
           >
@@ -145,6 +147,7 @@
           color="deep-purple-7"
           class="full-width text-white"
           :label="$t('auth.register_action')"
+          data-cy="button_register"
           @click="submit"
         />
       </q-card-actions>
