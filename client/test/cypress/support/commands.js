@@ -35,6 +35,28 @@ Cypress.Commands.add("dataCy", value => {
   return cy.get(`[data-cy=${value}]`);
 });
 
+
+Cypress.Commands.add('login', ({ email }) => {
+  cy.csrfToken();
+  
+  return cy.request('POST', '/graphql', { query: `mutation { forceLogin(email: "${email}") {username, email, id, name}}` })
+    .then(({ body }) => {
+      console.log(body.data);
+      return body.data.forceLogin;
+    });
+})
+
+Cypress.Commands.add('logout', () => {
+  cy.csrfToken();
+  return cy.request('POST', '/graphql', { query: `mutation { logout() }` })
+    .then(({ body }) => {
+      return body.data.logout;
+    });
+});
+
+Cypress.Commands.add('csrfToken', () => {
+  return cy.request('/sanctum/csrf-token');
+})
 /**
  * Custom command to test being on a given route.
  * @example cy.testRoute('home')

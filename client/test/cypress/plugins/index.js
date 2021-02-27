@@ -9,11 +9,31 @@
 // https://on.cypress.io/plugins-guide
 // ***********************************************************
 
+
+
 // This function is called when a project is opened or re-opened (e.g. due to
 // the project's config changing)
 
 // cypress/plugins/index.js
+const axios = require('axios');
 
-module.exports = (/*on, config*/) => {
-  //
+module.exports = (on, config) => {
+  on('task', {
+    resetDb() {
+      return new Promise((resolve, reject) => {
+        axios({
+          url: `${config.baseUrl}graphql`,
+          method: "POST",
+          data: {
+            query: 'mutation { artisanCommand(command: "migrate:fresh" parameters: [{key: "--seed" value: ""}])}'
+          }
+        }).then(({ data: { data }, errors }) => {
+          if (errors) {
+            reject();
+          }
+          resolve(data.artisanCommand);
+        });
+      });
+    }
+  });
 };
