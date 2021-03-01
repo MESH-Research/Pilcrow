@@ -36,9 +36,3 @@ services:
       SERVICE_NAME: mysql
     networks:
       - backend
-  
-
-
-
-
-
