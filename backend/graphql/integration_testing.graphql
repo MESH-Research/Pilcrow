@@ -1,5 +1,3 @@
-scalar JSON @scalar(class: "MLL\\GraphQLScalars\\JSON")
-
 extend type Mutation {
     """
     Run an artisan command and get the output as a string.
@@ -15,7 +13,7 @@ extend type Mutation {
 
     """
     Use a model factory to create a new database object.
-    Returns JSON of object(s) created
+    Returns M created
 
     (DOES create entries in the DB.)
     """
@@ -35,7 +33,7 @@ extend type Mutation {
 
     """
     Use a model factory to get data for a model object.
-    Returns JSON of object(s).
+    Returns Users created.
 
     (Does not create entries in the DB)."
     """
