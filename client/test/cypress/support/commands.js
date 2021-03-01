@@ -36,27 +36,74 @@ Cypress.Commands.add("dataCy", value => {
 });
 
 
+/**
+ * Login to the api without providing authentication.
+ * 
+ * @example cy.login({email: 'mytestuser@example.com'})
+ */
 Cypress.Commands.add('login', ({ email }) => {
-  cy.csrfToken();
-  
-  return cy.request('POST', '/graphql', { query: `mutation { forceLogin(email: "${email}") {username, email, id, name}}` })
-    .then(({ body }) => {
-      console.log(body.data);
-      return body.data.forceLogin;
+  cy.csrfToken().then((token) => {
+    
+    return cy.request(
+      {
+        method: 'POST',
+        url: '/graphql',
+        body: { query: `mutation { forceLogin(email: "${email}") {username, email, id, name}}` },
+        headers: {
+          origin: Cypress.config().baseUrl,
+          'X-XSRF-TOKEN': token
+        }
+      })
+    .then(response => {
+      expect(response.status).to.eq(200)
+      expect(response.body.data.forceLogin.email).to.eq(email)
+      console.log(response);
+      return response;
     });
+  });
 })
 
+/**
+ * Logout via the api.
+ * 
+ * @example cy.logout();
+ */
 Cypress.Commands.add('logout', () => {
-  cy.csrfToken();
-  return cy.request('POST', '/graphql', { query: `mutation { logout() }` })
-    .then(({ body }) => {
+  cy.csrfToken().then((token) => {
+    return cy.request({
+      method: 'POST',
+      url: '/graphql',
+      body: { query: `mutation { logout() }` },
+      headers: {
+        origin: Cypress.config().baseUrl,
+        'X-XSRF-TOKEN': token
+      }
+    })
+    .then((response) => {
+      expect(response.body.errors).toBeUndefined();
       return body.data.logout;
     });
+
+  });
 });
 
+/**
+ * Fetches and returns the XSRF token.
+ * 
+ * @example cy.csrfToken().then((token) => {...})
+ */
 Cypress.Commands.add('csrfToken', () => {
-  return cy.request('/sanctum/csrf-token');
-})
+  return cy.request({
+    url: '/sanctum/csrf-cookie',
+    headers: {
+      origin: Cypress.config().baseUrl,
+    }
+  }).then((response) => {
+    const cookie = response.headers['set-cookie'].filter(s => s.startsWith('XSRF-TOKEN')).reduce(c => c);
+    return cookie.match(/XSRF-TOKEN=([^;]+)/)[1].replace('%3D', '=');
+  });
+});
+
 /**
  * Custom command to test being on a given route.
  * @example cy.testRoute('home')

@@ -22,10 +22,10 @@ module.exports = (on, config) => {
     resetDb() {
       return new Promise((resolve, reject) => {
         axios({
-          url: `${config.baseUrl}graphql`,
+          url: `${config.baseUrl}/graphql`,
           method: "POST",
           data: {
-            query: 'mutation { artisanCommand(command: "migrate:fresh" parameters: [{key: "--seed" value: ""}])}'
+            query: 'mutation { artisanCommand(command: "migrate:fresh" parameters: [{key: "--seed" value: "true"}])}'
           }
         }).then(({ data: { data }, errors }) => {
           if (errors) {

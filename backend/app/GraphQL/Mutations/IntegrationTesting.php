@@ -64,7 +64,7 @@ class IntegrationTesting
 
         $user = User::where('email', $email)->firstOrFail();
 
-        Auth::login($user);
+        Auth::guard(config('sanctum.guard', 'web'))->attempt(['email' => 'regularuser@ccrproject.dev', 'password' => 'regularPassword!@#']);
 
         return $user;
     }
