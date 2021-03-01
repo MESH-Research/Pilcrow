@@ -1,6 +1,6 @@
 <template>
   <q-input-password
-    v-bind="{ ...$props, ...$attrs }"
+    v-bind="{ ...$props }"
     :value="value"
     :label="label"
     :type="isPwd ? 'password' : 'text'"
@@ -49,6 +49,10 @@ export default {
     autocomplete: {
       default: "current-password",
       type: String
+    },
+    outlined: {
+      type: Boolean,
+      default: false
     }
   },
   data() {

@@ -28,6 +28,7 @@
             :error="$v.form.email.$error"
             :label="$t('auth.fields.email')"
             autofocus
+            data-cy="emailField"
             autocomplete="username"
             @change="
               e => {
@@ -52,6 +53,7 @@
             ref="password"
             v-model="$v.form.password.$model"
             outlined
+            data-cy="passwordField"
             :error="$v.form.password.$error"
             :label="$t('auth.fields.password')"
             autocomplete="current-password"
