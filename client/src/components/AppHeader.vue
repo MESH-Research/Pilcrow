@@ -20,7 +20,7 @@
           flat
           :label="currentUser.username"
         >
-          <q-list>
+          <q-list data-cy="headerUserMenu">
             <q-item
               clickable
               to="/dashboard"
