@@ -1,29 +1,3 @@
-// ***********************************************
-// This example commands.js shows you how to
-// create various custom commands and overwrite
-// existing commands.
-//
-// For more comprehensive examples of custom
-// commands please read more here:
-// https://on.cypressio/custom-commands
-// ***********************************************
-//
-//
-// -- This is a parent command --
-// Cypress.Commands.add("login", (email, password) => { ... })
-//
-//
-// -- This is a child command --
-// Cypress.Commands.add("drag", { prevSubject: 'element'}, (subject, options) => { ... })
-//
-//
-// -- This is a dual command --
-// Cypress.Commands.add("dismiss", { prevSubject: 'optional'}, (subject, options) => { ... })
-//
-//
-// -- This is will overwrite an existing command --
-// Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
-
 /**
  * Custom command to select DOM element by data-cy attribute.
  *
@@ -42,7 +16,7 @@ Cypress.Commands.add("dataCy", value => {
  * @example cy.login({email: 'mytestuser@example.com'})
  */
 Cypress.Commands.add('login', ({ email }) => {
-  cy.csrfToken().then((token) => {
+  cy.xsrfToken().then((token) => {
     
     return cy.request(
       {
@@ -69,7 +43,7 @@ Cypress.Commands.add('login', ({ email }) => {
  * @example cy.logout();
  */
 Cypress.Commands.add('logout', () => {
-  cy.csrfToken().then((token) => {
+  cy.xsrfToken().then((token) => {
     return cy.request({
       method: 'POST',
       url: '/graphql',
@@ -81,9 +55,8 @@ Cypress.Commands.add('logout', () => {
     })
     .then((response) => {
       expect(response.body.errors).toBeUndefined();
-      return body.data.logout;
+      return response.body.data.logout;
     });
-
   });
 });
 
@@ -92,7 +65,7 @@ Cypress.Commands.add('logout', () => {
  * 
  * @example cy.csrfToken().then((token) => {...})
  */
-Cypress.Commands.add('csrfToken', () => {
+Cypress.Commands.add('xsrfToken', () => {
   return cy.request({
     url: '/sanctum/csrf-cookie',
     headers: {
@@ -100,7 +73,7 @@ Cypress.Commands.add('csrfToken', () => {
     }
   }).then((response) => {
     const cookie = response.headers['set-cookie'].filter(s => s.startsWith('XSRF-TOKEN')).reduce(c => c);
-    return cookie.match(/XSRF-TOKEN=([^;]+)/)[1].replace('%3D', '=');
+    return decodeURIComponent(cookie.match(/XSRF-TOKEN=([^;]+)/)[1].replace('%3D', '='));
   });
 });
 
