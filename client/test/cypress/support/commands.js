@@ -31,7 +31,6 @@ Cypress.Commands.add('login', ({ email }) => {
     .then(response => {
       expect(response.status).to.eq(200)
       expect(response.body.data.forceLogin.email).to.eq(email)
-      console.log(response);
       return response;
     });
   });
@@ -72,8 +71,10 @@ Cypress.Commands.add('xsrfToken', () => {
       origin: Cypress.config().baseUrl,
     }
   }).then((response) => {
-    const cookie = response.headers['set-cookie'].filter(s => s.startsWith('XSRF-TOKEN')).reduce(c => c);
-    return decodeURIComponent(cookie.match(/XSRF-TOKEN=([^;]+)/)[1].replace('%3D', '='));
+    const cookie = response.headers['set-cookie']
+        .filter(s => s.startsWith('XSRF-TOKEN'))
+        .reduce(c => c);
+    return decodeURIComponent(cookie.match(/XSRF-TOKEN=([^;]+)/)[1]);
   });
 });
 
