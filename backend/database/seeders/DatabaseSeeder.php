@@ -17,7 +17,7 @@ class DatabaseSeeder extends Seeder
     {
         User::factory()->create([
             'username' => 'regularUser',
-            'email' => 'regularUser@ccrproject.dev',
+            'email' => 'regularuser@ccrproject.dev',
             'name' => 'Regular User',
             'password' => Hash::make('regularPassword!@#')
         ]);
