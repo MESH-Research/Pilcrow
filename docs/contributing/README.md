@@ -64,7 +64,7 @@ The only exception to this is the `lando quasar` command, which always runs in t
 
 ### Additional Local Configuration
 
-You can create local containers or additional tooling commands by creating a `.lando.local.yml` file.  
+You can create local containers or additional tooling commands by creating a `.lando.local.yml` file.
 
 Some containers are useful for specific development tasks but would unnecessarily bloat the development stack for day-to-day usage.  Our `lando extras` tooling command eases the friction associated with managing your `.lando.local.yml` file.  Run `lando extras` for a list of templates and instructions to enable and disable extras.
 
@@ -88,9 +88,10 @@ The MailHog interface will be available at <http://mailhog.ccr.lndo.site/> once 
 
 ## Preview Environments
 
-It can be helpful to deploy pull requests for team members or stakeholders to preview and provide feedback.  `CCR-Droid` is our custom Github App dedicated to creating these environments (and other small tasks from time to time).  
+It can be helpful to deploy pull requests for team members or stakeholders to preview and provide feedback.  `CCR-Droid` is our custom Github App dedicated to creating these environments (and other small tasks from time to time).
 
 ### Creating a Preview Deployment
+
 To create a preview environment, add the `pr-preview` label to a pull request in the CCR GitHub repository that meets the following criteria:
 
 - Must be open (not closed, not merged)
@@ -107,6 +108,7 @@ After `CCR-Droid` creates the deployment, a link will appear above the checks se
 ![deployment ready screenshot](./images/preview_ready.jpg)
 
 #### Mail
+
 Mailhog captures mail from preview deployments to prevent abuse.  Visit <https://mail.gh.ccrproject.dev> to access the Mailhog server and view any email sent by preview deployments.
 
 ### Destroying a Preview Environment
