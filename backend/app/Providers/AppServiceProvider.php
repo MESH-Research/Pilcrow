@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 use Nuwave\Lighthouse\Events\BuildSchemaString;
 use Nuwave\Lighthouse\Schema\Source\SchemaStitcher;
@@ -26,8 +27,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
-        // Regsiter graphql routes for integration testing
+        // Register graphql routes for integration testing
         if (App::environment(['local', 'testing'])) {
             app('events')->listen(
                 BuildSchemaString::class,
@@ -37,5 +37,8 @@ class AppServiceProvider extends ServiceProvider
                 }
             );
         }
+
+        //Force https for generated URLs
+        URL::forceScheme('https');
     }
 }
