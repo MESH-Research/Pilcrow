@@ -7,13 +7,23 @@
 // ** This file is an example of how to write Cypress tests, you can safely delete it **
 
 // This test will pass when run against a clean Quasar project
+import 'cypress-axe';
+
 describe("Landing", () => {
   beforeEach(() => {
     cy.visit("/");
+    // Inject the axe-core libraray
+    cy.injectAxe();
   });
   it(".should() - assert that <title> is correct", () => {
     cy.title().should("include", "CCR");
   });
+
+  it("should() - assert home page is accessible", () => {
+    // check the page for a11y errors
+    cy.checkA11y();
+  });
+
 });
 describe("Home page tests", () => {
   beforeEach(() => {
@@ -30,6 +40,7 @@ describe("Home page tests", () => {
     cy.contains("Register").click();
     cy.url().should("include", "/register");
   });
+
 });
 
 

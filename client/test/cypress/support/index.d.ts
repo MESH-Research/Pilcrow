@@ -23,5 +23,35 @@ declare namespace Cypress {
      * @example cy.restoreLocalStorage()
      */
     restoreLocalStorage(): void;
+
+    /**
+     * Login a user without supplying credentials.
+     * @example cy.login({email: "user@example.com"})
+     */
+    login(user: UserInput): UserObject;
+
+    /**
+     * Logout the user.
+     */
+    logout(): UserObject;
+
+    /** Requests and returns a new xsrfToken
+     * 
+     * @example cy.xsrfToken().then((token) => {...})
+     */
+    xsrfToken(): string;
+
+  }
+
+  interface UserInput {
+    email: string
+  }
+
+  interface UserObject {
+    email: string
+    name: string
+    username: string
+    id: number
+
   }
 }

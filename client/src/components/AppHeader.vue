@@ -21,7 +21,7 @@
           data-cy="dropdown_username"
           :label="currentUser.username"
         >
-          <q-list>
+          <q-list data-cy="headerUserMenu">
             <q-item
               clickable
               to="/dashboard"
@@ -89,10 +89,6 @@
         Submission Review System
       </div>
     </div>
-    <q-img
-      src="header-back.jpg"
-      class="header-image absolute-top"
-    />
   </q-header>
 </template>
 

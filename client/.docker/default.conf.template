@@ -1,0 +1,44 @@
+server {
+    listen 80 default_server;
+    server_name _;
+    root /var/www/html;
+
+    add_header X-Frame-Options "SAMEORIGIN";
+    add_header X-XSS-Protection "1; mode=block";
+    add_header X-Content-Type-Options "nosniff";
+
+    add_header          Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+    add_header          X-Content-Type-Options nosniff;
+    add_header          X-Frame-Options SAMEORIGIN;
+    add_header          X-XSS-Protection "1; mode=block";
+
+    index index.html;
+
+    charset utf-8;
+
+    location /graphql {
+        error_page 404 = @backend;
+        log_not_found off;
+    }
+
+    location /sanctum/csrf-cookie {
+        error_page 404 = @backend;
+        log_not_found off;
+    }
+
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+
+    location = /favicon.ico { access_log off; log_not_found off; }
+    location = /robots.txt  { access_log off; log_not_found off; }
+
+    error_page 404 /index.html;
+
+    location @backend {
+        fastcgi_pass phpfpm:9000;
+        fastcgi_index index.php;
+        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME /var/www/html/public/index.php;
+    }
+}

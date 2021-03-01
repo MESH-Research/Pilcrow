@@ -1,0 +1,71 @@
+extend type Mutation {
+    """
+    Run an artisan command and get the output as a string.
+    """
+    artisanCommand(
+        "Artisan command to run"
+        command: String!
+
+        "Parameters for artisan command"
+        parameters: [KeyValueInput!]
+    ): String!
+        @field(resolver: "App\\GraphQL\\Mutations\\IntegrationTesting@artisan")
+
+    """
+    Use a model factory to create a new database object.
+    Returns Models created
+
+    (DOES create entries in the DB.)
+    """
+    createFactory(
+        "Model to create (i.e. User)"
+        model: String!
+
+        "Number of models to create, defaults to 1"
+        times: Int
+
+        "Attributes to apply to the created models, defaults to []"
+        attributes: [KeyValueInput!]
+    ): [User!]
+        @field(
+            resolver: "App\\GraphQL\\Mutations\\IntegrationTesting@createFactory"
+        )
+
+    """
+    Use a model factory to get data for a model object.
+    Returns Models created.
+
+    (Does not create entries in the DB)."
+    """
+    makeFactory(
+        "Model to create (i.e. User)"
+        model: String!
+
+        "Number of models to create, defaults to 1"
+        times: Int
+
+        "Attributes to apply to the created models, defaults to []"
+        attributes: [KeyValueInput!]
+    ): [User!]
+        @field(
+            resolver: "App\\GraphQL\\Mutations\\IntegrationTesting@makeFactory"
+        )
+
+    """
+    Login a user using only an email
+
+    Return the user model of the logged in user.
+    """
+    forceLogin(email: String!): User
+        @field(
+            resolver: "App\\GraphQL\\Mutations\\IntegrationTesting@forceLogin"
+        )
+}
+
+"""
+Key/Value pairs input
+"""
+input KeyValueInput {
+    key: String
+    value: String
+}
