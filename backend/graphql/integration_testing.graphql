@@ -13,7 +13,7 @@ extend type Mutation {
 
     """
     Use a model factory to create a new database object.
-    Returns M created
+    Returns Models created
 
     (DOES create entries in the DB.)
     """
@@ -33,7 +33,7 @@ extend type Mutation {
 
     """
     Use a model factory to get data for a model object.
-    Returns Users created.
+    Returns Models created.
 
     (Does not create entries in the DB)."
     """
