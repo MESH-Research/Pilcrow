@@ -1,4 +1,4 @@
-/// <reference path="cypress" />
+/// <reference types="Cypress" />
 /// <reference path="../support/index.d.ts" />
 
 describe('Header', () => {
