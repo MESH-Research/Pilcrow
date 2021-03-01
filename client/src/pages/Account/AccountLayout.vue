@@ -12,12 +12,18 @@
           />
         </q-card-section>
         <q-card-section class="q-pa-none">
-          <q-list bordered separator>
+          <q-list
+            bordered
+            separator
+          >
             <q-item>
               <q-item-section>
                 Submissions Created
               </q-item-section>
-              <q-item-section avatar class="text-primary text-bold">
+              <q-item-section
+                avatar
+                class="text-primary text-bold"
+              >
                 ??
               </q-item-section>
             </q-item>
@@ -25,11 +31,17 @@
               <q-item-section>
                 Submissions Reviewed
               </q-item-section>
-              <q-item-section avatar class="text-primary text-bold">
+              <q-item-section
+                avatar
+                class="text-primary text-bold"
+              >
                 ??
               </q-item-section>
             </q-item>
-            <q-item clickable class="text-center bg-blue-1">
+            <q-item
+              clickable
+              class="text-center bg-blue-1"
+            >
               <q-item-section>
                 View Public Profile
               </q-item-section>
@@ -46,14 +58,30 @@
               indicator-color="primary"
               align="left"
             >
-              <q-route-tab to="/account/profile" exact label="Account" />
-              <q-route-tab to="/account/connections" exact label="Profile" />
-              <q-route-tab to="/account/privacy" exact label="?Privacy?" />
-              <q-route-tab to="/account/security" exact label="?Security?" />
+              <q-route-tab
+                to="/account/profile"
+                exact
+                label="Account"
+              />
+              <q-route-tab
+                to="/account/connections"
+                exact
+                label="Profile"
+              />
+              <q-route-tab
+                to="/account/privacy"
+                exact
+                label="?Privacy?"
+              />
+              <q-route-tab
+                to="/account/security"
+                exact
+                label="?Security?"
+              />
             </q-tabs>
           </q-card-section>
           <q-card-section class="q-pa-none">
-            <router-view></router-view>
+            <router-view />
           </q-card-section>
         </q-card-section>
       </q-card>

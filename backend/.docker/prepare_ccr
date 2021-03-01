@@ -1,0 +1,6 @@
+#!/bin/sh
+cd /var/www/html
+
+composer install -q --no-dev
+
+/wait && php artisan migrate --force

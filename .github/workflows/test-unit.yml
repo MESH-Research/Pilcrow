@@ -40,7 +40,7 @@ jobs:
           path: backend/vendor
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
           restore-keys: |
-            ${{ runner.os }}-node-
+            ${{ runner.os }}-composer-
       - name: Setup Mysql
         run: |
           sudo systemctl start mysql.service
@@ -72,7 +72,7 @@ jobs:
           path: client/node_modules
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
-            ${{ runner.os }}-node-
+            ${{ runner.os }}-yarn-
       - name: Install dependencies
         run: yarn install
 

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Exceptions;
 
@@ -31,16 +32,16 @@ class InvalidCredentials extends Exception implements RendersErrorsExtensions
         return 'authentication';
     }
 
-     /**
+    /**
      * Return the content that is put in the "extensions" part
      * of the returned error.
      *
      * @return array
      */
-     public function extensionsContent(): array
-     {
-         return [
-             'code' => 'CREDENTIALS_INVALID'
-         ];
-     }
+    public function extensionsContent(): array
+    {
+        return [
+            'code' => 'CREDENTIALS_INVALID',
+        ];
+    }
 }

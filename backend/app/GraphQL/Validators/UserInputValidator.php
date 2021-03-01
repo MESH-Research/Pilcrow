@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\GraphQL\Validators;
 
@@ -16,25 +17,31 @@ class UserInputValidator extends Validator
     {
         return [
             'name' => [
-                'max:256'
+                'max:256',
             ],
             'username' => [
                 Rule::unique('users', 'username'),
-                'filled'
+                'filled',
             ],
             'email' => [
                 Rule::unique('users', 'email'),
                 'email:rfc,dns',
-                'filled'
+                'filled',
             ],
             'password' => [
                 'zxcvbn_min:3',
-                'filled'
-            ]
+                'filled',
+            ],
         ];
     }
 
-    public function messages(): array {
+    /**
+     * Return messages for validation errors.
+     *
+     * @return array
+     */
+    public function messages(): array
+    {
         return [
             'name' => [
                 'max' => 'NAME_LENGTH_EXCEEDED',
@@ -50,8 +57,8 @@ class UserInputValidator extends Validator
             ],
             'password' => [
                 'zxcvbn_min' => 'PASSWORD_NOT_COMPLEX',
-                'filled' => 'PASSWORD_EMPTY'
-            ]
+                'filled' => 'PASSWORD_EMPTY',
+            ],
         ];
     }
 }

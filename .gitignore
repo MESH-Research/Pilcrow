@@ -40,3 +40,4 @@ data/
 #Vendor Files
 node_modules/
 backend/vendor/**/*
+/vendor/

@@ -26,16 +26,16 @@ import errorsMixin from "src/components/mixins/errors";
 export default {
   name: "EmailVerificationSendButton",
   mixins: [errorsMixin],
-  data() {
-    return {
-      status: null
-    };
-  },
   props: {
     noColor: {
       type: Boolean,
       default: false
     }
+  },
+  data() {
+    return {
+      status: null
+    };
   },
   computed: {
     btnColor() {
