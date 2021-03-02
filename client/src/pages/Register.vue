@@ -31,7 +31,6 @@
             :value="$v.form.email.$model"
             autocomplete="username"
             bottom-slots
-            data-cy="register_email"
             debounce="500"
             outlined
             type="email"
@@ -85,7 +84,6 @@
             :error="$v.form.username.$error"
             :loading="usernameLoading > 0"
             autocomplete="nickname"
-            data-cy="register_username"
             debounce="500"
             bottom-slots
           >
@@ -147,7 +145,6 @@
           color="deep-purple-7"
           class="full-width text-white"
           :label="$t('auth.register_action')"
-          data-cy="button_register"
           @click="submit"
         />
       </q-card-actions>

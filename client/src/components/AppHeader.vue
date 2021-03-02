@@ -65,7 +65,6 @@
           :label="$t('auth.register')"
           to="/register"
           stretch
-          data-cy="link_register"
           flat
         />
         <q-separator
