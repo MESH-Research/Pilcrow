@@ -178,8 +178,6 @@ import zxcvbn from "zxcvbn";
 import gql from "graphql-tag";
 
 const processValidationResult = function({ data, error }, key) {
-  console.log("🚀 ~ file: Register.vue ~ line 181 ~ processValidationResult ~ error", error)
-  
   if (typeof error == "undefined") {
     this.serverValidationErrors[key] = false;
   } else {
@@ -199,7 +197,7 @@ const importValidationErrors = function(error, vm) {
       hasVErrors = true;
     }
   });
-  console.log("🚀 ~ file: Register.vue ~ line 200 ~ importValidationErrors ~ hasVErrors", hasVErrors)
+  
   return hasVErrors;
 };
 
