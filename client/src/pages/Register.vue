@@ -338,7 +338,7 @@ export default {
         this.formErrorMsg = "CREATE_FORM_VALIDATION";
         return;
       }
-      //this.resetServerValidation();
+      this.resetServerValidation();
       try {
         await this.$apollo.mutate({
           mutation: CREATE_USER,
