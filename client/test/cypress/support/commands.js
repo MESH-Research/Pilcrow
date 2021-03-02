@@ -12,12 +12,12 @@ Cypress.Commands.add("dataCy", value => {
 
 /**
  * Login to the api without providing authentication.
- * 
+ *
  * @example cy.login({email: 'mytestuser@example.com'})
  */
 Cypress.Commands.add('login', ({ email }) => {
   cy.xsrfToken().then((token) => {
-    
+
     return cy.request(
       {
         method: 'POST',
@@ -38,7 +38,7 @@ Cypress.Commands.add('login', ({ email }) => {
 
 /**
  * Logout via the api.
- * 
+ *
  * @example cy.logout();
  */
 Cypress.Commands.add('logout', () => {
@@ -61,7 +61,7 @@ Cypress.Commands.add('logout', () => {
 
 /**
  * Fetches and returns the XSRF token.
- * 
+ *
  * @example cy.csrfToken().then((token) => {...})
  */
 Cypress.Commands.add('xsrfToken', () => {
