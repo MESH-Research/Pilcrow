@@ -30,14 +30,14 @@ describe('Account', () => {
   it('can update the password field', () => {
     cy.dataCy('update_user_password').clear().type('XMYeygtC7TuxgER4');
     cy.dataCy('update_user_button_save').click();
-    cy.dataCy('update_user_notify').should('be.visible');
+    cy.dataCy('update_user_notify').should('be.visible').should('have.class','bg-positive');
   });
 
   // TODO: Uncomment once email updates work again
   // it('can update the email field', () => {
   //   cy.dataCy('update_user_email').clear().type('updateduser@ccrproject.dev');
   //   cy.dataCy('update_user_button_save').click();
-  //   cy.dataCy('update_user_notify').should('be.visible');
+  //   cy.dataCy('update_user_notify').should('be.visible').should('have.class','bg-positive');
   // });
 
 });
