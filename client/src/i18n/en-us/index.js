@@ -37,7 +37,7 @@ export default {
       USERNAME_IN_USE: "Sorry, that username is not available",
       USERNAME_AVAILABLE: "This username is available",
       EMAIL_IN_USE:
-        "This email is already registed. {break} You might want to {loginAction} or {passwordAction}."
+        "This email is already registered. {break} You might want to {loginAction} or {passwordAction}."
     },
     failures: {
       CREATE_FORM_VALIDATION:
