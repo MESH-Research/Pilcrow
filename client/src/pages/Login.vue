@@ -4,99 +4,103 @@
       style="width: 400px"
       square
     >
-      <q-card-section class="bg-deep-purple-7 q-pa-sm">
-        <div class="text-h5 text-white">
-          Login
-        </div>
-      </q-card-section>
-      <q-card-section class="q-pa-lg">
-        <q-banner
-          v-if="redirectUrl"
-          class="text-white bg-red text-center"
-          dense
-          rounded
-          v-text="$t(`auth.loginRequired`)"
-        />
-        <q-form
-          class="q-px-sm q-pt-md  q-gutter-y-lg q-pb-lg"
-          @submit.prevent="login()"
-        >
-          <q-input
-            ref="username"
-            outlined
-            :value="$v.form.email.$model"
-            :error="$v.form.email.$error"
-            :label="$t('auth.fields.email')"
-            autofocus
-            data-cy="emailField"
-            autocomplete="username"
-            @change="
-              e => {
-                $v.form.email.$model = e.target.value.trim();
-              }
-            "
-            @keypress.enter="$refs.password.focus()"
-          >
-            <template #error>
-              <div
-                v-if="!$v.form.email.required"
-                v-text="$t('helpers.REQUIRED_FIELD', [$t('auth.fields.email')])"
-              />
-              <div
-                v-if="!$v.form.email.email"
-                v-text="$t('auth.validation.EMAIL_INVALID')"
-              />
-            </template>
-          </q-input>
+      <q-form
+        class=""
+        @submit="login()"
+      >
+        <q-card-section class="bg-deep-purple-7 q-pa-sm">
+          <div class="text-h5 text-white">
+            Login
+          </div>
+        </q-card-section>
+        <q-card-section class="q-pa-lg ">
+          <fieldset class="q-px-sm q-pt-md  q-gutter-y-lg q-pb-lg">
+            <q-banner
+              v-if="redirectUrl"
+              class="text-white bg-red text-center"
+              dense
+              rounded
+              v-text="$t(`auth.loginRequired`)"
+            />
+        
+            <q-input
+              ref="username"
+              outlined
+              :value="$v.form.email.$model"
+              :error="$v.form.email.$error"
+              :label="$t('auth.fields.email')"
+              autofocus
+              data-cy="email_field"
+              autocomplete="username"
+              @change="
+                e => {
+                  $v.form.email.$model = e.target.value.trim();
+                }
+              "
+            >
+              <template #error>
+                <div
+                  v-if="!$v.form.email.required"
+                  v-text="$t('helpers.REQUIRED_FIELD', [$t('auth.fields.email')])"
+                />
+                <div
+                  v-if="!$v.form.email.email"
+                  v-text="$t('auth.validation.EMAIL_INVALID')"
+                />
+              </template>
+            </q-input>
 
-          <password-input
-            ref="password"
-            v-model="$v.form.password.$model"
-            outlined
-            data-cy="passwordField"
-            :error="$v.form.password.$error"
-            :label="$t('auth.fields.password')"
-            autocomplete="current-password"
-            @keypress.enter="login"
-          >
-            <template #error>
-              <div
-                v-if="!$v.form.password.required"
-                v-text="
-                  $t('helpers.REQUIRED_FIELD', [$t('auth.fields.password')])
-                "
-              />
-            </template>
-          </password-input>
-        </q-form>
+            <password-input
+              ref="password"
+              v-model="$v.form.password.$model"
+              outlined
+              data-cy="password_field"
+              :error="$v.form.password.$error"
+              :label="$t('auth.fields.password')"
+              autocomplete="current-password"
+              @keypress.enter="login"
+            >
+              <template #hint>
+                <div
+                  v-if="!$v.form.password.required"
+                  v-text="
+                    $t('helpers.REQUIRED_FIELD', [$t('auth.fields.password')])
+                  "
+                />
+              </template>
+            </password-input>
+          </fieldset>
 
-        <q-banner
-          v-if="error"
-          class="text-white bg-red text-center"
-          dense
-          rounded
-          v-text="$t(`auth.failures.${error}`)"
-        />
-      </q-card-section>
-      <q-card-actions class="q-px-lg">
-        <q-btn
-          unelevated
-          size="lg"
-          color="purple-4"
-          class="full-width text-white"
-          label="Login"
-          :loading="loading"
-          @click.prevent="login()"
-        />
-      </q-card-actions>
-      <q-card-section class="text-center q-pa-sm">
-        <p class="text-grey-6">
-          Don't have an account?
-          <router-link to="/register">
-            Register.
-          </router-link>
-        </p>
-      </q-card-section>
+          <q-banner
+            v-if="error"
+            class="text-white bg-red text-center"
+            dense
+            rounded
+            :data-error="error"
+            data-cy="authFailureMessages"
+            v-text="$t(`auth.failures.${error}`)"
+          />
+        </q-card-section>
+        <q-card-actions class="q-px-lg">
+          <q-btn
+            unelevated
+            size="lg"
+            color="purple-4"
+            class="full-width text-white"
+            label="Login"
+            :loading="loading"
+            type="submit"
+          />
+        </q-card-actions>
+        <q-card-section class="text-center q-pa-sm">
+          <p class="text-grey-6">
+            Don't have an account?
+            <router-link to="/register">
+              Register.
+            </router-link>
+          </p>
+        </q-card-section>
+      </q-form>
     </q-card>
   </q-page>
 </template>
