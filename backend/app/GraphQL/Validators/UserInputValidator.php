@@ -42,23 +42,31 @@ class UserInputValidator extends Validator
      */
     public function messages(): array
     {
-        return [
-            'name' => [
-                'max' => 'NAME_LENGTH_EXCEEDED',
-            ],
-            'username' => [
+        return array_merge(
+            ['name.max' => 'NAME_LENGTH_EXCEEDED'],
+            $this->prefixArrayKeys('username.', [
                 'unique' => 'USERNAME_IN_USE',
                 'filled' => 'USERNAME_EMPTY',
-            ],
-            'email' => [
+                ]),
+            $this->prefixArrayKeys('email.', [
                 'unique' => 'EMAIL_IN_USE',
                 'email' => 'EMAIL_NOT_VALID',
                 'filled' => 'EMAIL_EMPTY',
-            ],
-            'password' => [
+                ]),
+            $this->prefixArrayKeys('password.', [
                 'zxcvbn_min' => 'PASSWORD_NOT_COMPLEX',
                 'filled' => 'PASSWORD_EMPTY',
-            ],
-        ];
+            ])
+        );
+    }
+
+    protected function prefixArrayKeys(string $prefix, array $arr)
+    {
+        $prefixedArray = [];
+        foreach ($arr as $key => $value) {
+            $prefixedArray[$prefix . $key] = $value;
+        }
+
+        return $prefixedArray;
     }
 }
