@@ -1,6 +1,6 @@
 <template>
   <q-input-password
-    v-bind="{ ...$props }"
+    v-bind="{ ...$props, ...$attrs }"
     :value="value"
     :label="label"
     :type="isPwd ? 'password' : 'text'"
@@ -37,6 +37,7 @@ import QInputPassword from "./atoms/QInputPassword.vue";
 export default {
   name: "PasswordInput",
   components: { QInputPassword },
+  inheritAttrs: false,
   props: {
     label: {
       type: String,
@@ -52,6 +53,10 @@ export default {
     },
     outlined: {
       type: Boolean,
+      default: false
+    },
+    error: {
+      type: [String, Boolean],
       default: false
     }
   },
