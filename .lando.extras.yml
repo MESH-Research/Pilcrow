@@ -20,6 +20,8 @@ cypress:
         type: node:14
         overrides:
           image: "cypress/included:6.3.0"
+          environment:
+            - DISPLAY
     tooling:
       cypress:
         service: cypress
