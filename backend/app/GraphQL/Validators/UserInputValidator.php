@@ -60,7 +60,14 @@ class UserInputValidator extends Validator
         );
     }
 
-    protected function prefixArrayKeys(string $prefix, array $arr)
+    /**
+     * Prefix the supplied array keys with a string
+     *
+     * @param string $prefix
+     * @param array $arr
+     * @return array
+     */
+    protected function prefixArrayKeys(string $prefix, array $arr): array
     {
         $prefixedArray = [];
         foreach ($arr as $key => $value) {
