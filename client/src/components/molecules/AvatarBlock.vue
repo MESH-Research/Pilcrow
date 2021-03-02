@@ -5,9 +5,11 @@
       class="q-mb-sm"
     />
     <div class="text-weight-bold">
-      {{ user.name }}
+      <span data-cy="avatar_name">{{ user.name }}</span>
     </div>
-    <div>@{{ user.username }}</div>
+    <div>
+      <span data-cy="avatar_username">@{{ user.username }}</span>
+    </div>
   </div>
 </template>
 

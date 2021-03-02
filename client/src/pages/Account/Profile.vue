@@ -4,22 +4,26 @@
       <q-input
         v-model="form.name"
         outlined
+        data-cy="update_user_name"
         label="Display Name"
       />
       <q-input
         v-model="form.email"
         outlined
+        data-cy="update_user_email"
         label="Email"
       />
       <q-input
         v-model="form.username"
         outlined
+        data-cy="update_user_username"
         label="Username"
       />
       <q-input
         v-model="form.password"
         outlined
         label="Password"
+        data-cy="update_user_password"
         :type="isPwd ? 'password' : 'text'"
         hint="Updating this will overwrite the existing password"
       >
@@ -43,6 +47,7 @@
         <q-btn
           :disabled="!dirty"
           class="bg-primary text-white"
+          data-cy="update_user_button_save"
           @click="updateUser()"
         >
           Save
@@ -50,6 +55,7 @@
         <q-btn
           :disabled="!dirty"
           class="bg-grey-4 ml-sm"
+          data-cy="update_user_button_discard"
           @click="onRevert"
         >
           Discard Changes
