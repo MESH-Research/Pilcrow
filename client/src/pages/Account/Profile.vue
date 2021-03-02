@@ -136,6 +136,9 @@ export default {
           color: "positive",
           message: this.$t("account.update.success"),
           icon: "check_circle",
+          attrs: {
+            'data-cy': 'update_user_notify'
+          },
           html: true
         });
       } catch (error) {

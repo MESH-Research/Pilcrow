@@ -33,9 +33,10 @@ describe('Account', () => {
   //   cy.dataCy('update_user_button_save').click();
   // });
 
-  // it('can update the password field', () => {
-  //   cy.dataCy('update_user_password').clear().type('XMYeygtC7TuxgER4');
-  //   cy.dataCy('update_user_button_save').click();
-  // });
+  it('can update the password field', () => {
+    cy.dataCy('update_user_password').clear().type('XMYeygtC7TuxgER4');
+    cy.dataCy('update_user_button_save').click();
+    cy.dataCy('update_user_notify').should('be.visible');
+  });
 
 });
