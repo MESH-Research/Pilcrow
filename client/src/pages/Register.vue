@@ -197,7 +197,6 @@ const importValidationErrors = function(error, vm) {
       hasVErrors = true;
     }
   });
-  
   return hasVErrors;
 };
 
