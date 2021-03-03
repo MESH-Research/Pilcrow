@@ -20,6 +20,7 @@
           :aria-expanded="showDetails.toString()"
           tabindex="0"
           role="button"
+          outline
           @click="showDetails = !showDetails"
           @keydown.enter.space="showDetails = !showDetails"
         >
