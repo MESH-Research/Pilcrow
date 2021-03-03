@@ -22,7 +22,7 @@
               rounded
               v-text="$t(`auth.loginRequired`)"
             />
-        
+
             <q-input
               ref="username"
               outlined
