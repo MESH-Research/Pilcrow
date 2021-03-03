@@ -7,8 +7,8 @@
     <div class="text-weight-bold">
       <span data-cy="avatar_name">{{ user.name }}</span>
     </div>
-    <div>
-      <span data-cy="avatar_username">@{{ user.username }}</span>
+    <div data-cy="avatar_username">
+      @{{ user.username }}
     </div>
   </div>
 </template>
