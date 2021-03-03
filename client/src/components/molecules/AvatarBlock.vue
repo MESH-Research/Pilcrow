@@ -4,8 +4,11 @@
       :size="avatarSize"
       class="q-mb-sm"
     />
-    <div class="text-weight-bold">
-      <span data-cy="avatar_name">{{ user.name }}</span>
+    <div
+      class="text-weight-bold"
+      data-cy="avatar_name"
+    >
+      {{ user.name }}
     </div>
     <div data-cy="avatar_username">
       @{{ user.username }}
