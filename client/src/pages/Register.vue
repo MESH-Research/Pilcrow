@@ -6,9 +6,9 @@
         @submit="submit"
       >
         <q-card-section class="bg-deep-purple-7">
-          <h4 class="text-h5 text-white q-my-xs">
+          <h1 class="text-h5 text-white q-my-xs">
             {{ $t("auth.register") }}
-          </h4>
+          </h1>
         </q-card-section>
 
         <q-card-section>
@@ -155,7 +155,7 @@
           />
         </q-card-actions>
         <q-card-section class="text-center q-pa-sm">
-          <p class="text-grey-6">
+          <p>
             <router-link
               to="/login"
             >

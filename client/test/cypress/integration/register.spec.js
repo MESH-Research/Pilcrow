@@ -1,6 +1,7 @@
 /// <reference types="Cypress" />
 /// <reference path="../support/index.d.ts" />
 
+import 'cypress-axe';
 
 describe("Register", () => {
     beforeEach(() => {
@@ -83,6 +84,12 @@ describe("Register", () => {
     });
 
     it('submits with enter key', () => {
+        cy.injectAxe();
+        cy.checkA11y(null, {
+            rules: {
+                'autocomplete-valid': { enabled: false },
+            },
+        });
         cy.get('.q-form').within(() => {
             cy.dataCy('username_field')
                 .type('newUserName');

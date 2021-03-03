@@ -9,9 +9,9 @@
         @submit="login()"
       >
         <q-card-section class="bg-deep-purple-7 q-pa-sm">
-          <div class="text-h5 text-white">
+          <h1 class="text-h5 text-white">
             Login
-          </div>
+          </h1>
         </q-card-section>
         <q-card-section class="q-pa-lg ">
           <fieldset class="q-px-sm q-pt-md  q-gutter-y-lg q-pb-lg">
@@ -85,7 +85,7 @@
           <q-btn
             unelevated
             size="lg"
-            color="purple-4"
+            color="deep-purple-7"
             class="full-width text-white"
             label="Login"
             :loading="loading"
@@ -93,7 +93,7 @@
           />
         </q-card-actions>
         <q-card-section class="text-center q-pa-sm">
-          <p class="text-grey-6">
+          <p>
             Don't have an account?
             <router-link to="/register">
               Register.
