@@ -1,5 +1,8 @@
 <template>
-  <q-card-section class="q-pa-none">
+  <q-form
+    class="q-pa-none"
+    @submit="updateUser()"
+  >
     <q-card-section class="q-gutter-md">
       <q-input
         v-model="form.name"
@@ -48,7 +51,7 @@
           :disabled="!dirty"
           class="bg-primary text-white"
           data-cy="update_user_button_save"
-          @click="updateUser()"
+          type="submit"
         >
           Save
         </q-btn>
@@ -62,7 +65,7 @@
         </q-btn>
       </div>
     </q-card-section>
-  </q-card-section>
+  </q-form>
 </template>
 
 <script>
