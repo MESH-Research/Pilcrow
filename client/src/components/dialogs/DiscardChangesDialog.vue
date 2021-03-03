@@ -16,14 +16,14 @@
       <q-card-actions align="right">
         <q-btn
           flat
-          label="Cancel"
+          label="Keep Changes"
           color="primary"
           @click="onCancelClick"
         />
         <q-btn
           flat
           label="Discard"
-          color="primary"
+          color="negative"
           @click="onOKClick"
         />
       </q-card-actions>

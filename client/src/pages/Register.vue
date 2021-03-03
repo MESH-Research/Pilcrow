@@ -48,7 +48,7 @@
                 <!-- eslint-disable vue/no-v-html -->
                 <div
                   v-if="!$v.form.email.required"
-                  v-html="$t('helpers.REQUIRED_FIELD', [$t('auth.fields.email')])" 
+                  v-html="$t('helpers.REQUIRED_FIELD', [$t('auth.fields.email')])"
                 />
                 <!-- eslint-enable vue/no-v-html -->
                 <div
@@ -349,7 +349,7 @@ export default {
         } else {
           this.formErrorMsg = "CREATE_FORM_INTERNAL";
         }
-        this.$v.$touch();
+          this.$v.$touch();
       }
     }
   }

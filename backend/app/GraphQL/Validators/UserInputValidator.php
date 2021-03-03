@@ -20,11 +20,11 @@ class UserInputValidator extends Validator
                 'max:256',
             ],
             'username' => [
-                Rule::unique('users', 'username'),
+                Rule::unique('users', 'username')->ignore($this->arg('id'), 'id'),
                 'filled',
             ],
             'email' => [
-                Rule::unique('users', 'email'),
+                Rule::unique('users', 'email')->ignore($this->arg('id'), 'id'),
                 'email:rfc,dns',
                 'filled',
             ],

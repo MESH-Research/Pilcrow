@@ -1,4 +1,4 @@
-import DiscardChangesDialog from "components/dialogs/DiscardChangesDialog.vue";
+import DiscardChangesDialog from "../dialogs/DiscardChangesDialog.vue";
 
 export default {
   methods: {

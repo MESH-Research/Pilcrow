@@ -41,6 +41,32 @@ export const CREATE_USER = gql`
   }
 `;
 
+export const UPDATE_USER = gql`
+  mutation UpdateUser(
+    $id: ID!
+    $email: String
+    $name: String
+    $username: String
+    $password: String
+  ) {
+    updateUser(
+      user: {
+        id: $id,
+        email: $email
+        name: $name
+        username: $username
+        password: $password
+      }
+    ) {
+      id
+      email
+      name
+      username
+      updated_at
+    }
+  }
+`;
+
 export const VERIFY_EMAIL = gql`
   mutation VerifyEmail($token: String!, $expires: String!) {
     verifyEmail(token: $token, expires: $expires) {

@@ -54,6 +54,9 @@ input CreateUserInput @validator(class: "UserInputValidator") {
 Input type for updating user information via the updateUser mutation
 """
 input UpdateUserInput @validator(class: "UserInputValidator") {
+    "User ID"
+    id: ID!
+
     "Display name"
     name: String
 
@@ -137,7 +140,7 @@ type Mutation {
     logout: User @guard
 
     "Update user information"
-    updateUser(id: ID!, user: UpdateUserInput! @spread): User!
+    updateUser(user: UpdateUserInput! @spread): User!
         @update
         @can(ability: "update", find: "id")
 }

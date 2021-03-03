@@ -6,6 +6,7 @@ export const CURRENT_USER = gql`
       username
       id
       name
+      email
       email_verified_at
     }
   }
