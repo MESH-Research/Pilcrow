@@ -18,7 +18,7 @@
           v-text="$t(`auth.loginRequired`)"
         />
         <q-form
-          class="q-px-sm q-pt-md  q-gutter-y-lg q-pb-lg"
+          class="q-px-sm q-pt-md q-gutter-y-lg q-pb-lg"
           @submit.prevent="login()"
         >
           <q-input
