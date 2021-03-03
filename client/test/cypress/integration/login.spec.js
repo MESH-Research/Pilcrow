@@ -32,7 +32,7 @@ describe('login page', () => {
             
             cy.dataCy('authFailureMessages')
                 .should('be.visible')
-                .contains('invalid credentials');
+                .contains('combination is incorrect');
         });
     });
 
