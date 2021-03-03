@@ -51,10 +51,10 @@
           <password-input
             ref="password"
             v-model="$v.form.password.$model"
-            outlined
             :error="$v.form.password.$error"
             :label="$t('auth.fields.password')"
             autocomplete="current-password"
+            outlined
             @keypress.enter="login"
           >
             <template #error>

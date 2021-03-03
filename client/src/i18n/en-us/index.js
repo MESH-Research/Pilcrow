@@ -79,6 +79,12 @@ export default {
       verification_success:
         "Congrats! You have successfully verified your email."
     },
+    update: {
+      success: "Account successfully updated.",
+      update_form_validation: "Please correct errors and try again.",
+      update_form_internal: "Error processing result. Please try again later.",
+      unknown: "An unexpected error occurred while updating.",
+    },
 
     header: "My Account",
     preview_link: "Preview Public Profile",

@@ -18,6 +18,7 @@
         <q-btn-dropdown
           stretch
           flat
+          data-cy="dropdown_username"
           :label="currentUser.username"
         >
           <q-list data-cy="headerUserMenu">
@@ -32,6 +33,7 @@
             </q-item>
             <q-item
               clickable
+              data-cy="link_my_account"
               to="/account/profile"
             >
               <q-item-section

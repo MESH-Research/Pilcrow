@@ -4,10 +4,15 @@
       :size="avatarSize"
       class="q-mb-sm"
     />
-    <div class="text-weight-bold">
+    <div
+      class="text-weight-bold"
+      data-cy="avatar_name"
+    >
       {{ user.name }}
     </div>
-    <div>@{{ user.username }}</div>
+    <div data-cy="avatar_username">
+      @{{ user.username }}
+    </div>
   </div>
 </template>
 

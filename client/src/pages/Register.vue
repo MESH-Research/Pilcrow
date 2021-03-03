@@ -25,15 +25,15 @@
             bottom-slots
           />
           <q-input
-            outlined
-            :value="$v.form.email.$model"
-            type="email"
-            :label="$t('auth.fields.email')"
-            autocomplete="username"
             :error="$v.form.email.$error"
+            :label="$t('auth.fields.email')"
             :loading="emailLoading > 0"
-            debounce="500"
+            :value="$v.form.email.$model"
+            autocomplete="username"
             bottom-slots
+            debounce="500"
+            outlined
+            type="email"
             @change="
               e => {
                 $v.form.email.$model = e.target.value.trim();
@@ -44,7 +44,7 @@
               <!-- eslint-disable vue/no-v-html -->
               <div
                 v-if="!$v.form.email.required"
-                v-html="$t('helpers.REQUIRED_FIELD', [$t('auth.fields.email')])" 
+                v-html="$t('helpers.REQUIRED_FIELD', [$t('auth.fields.email')])"
               />
               <!-- eslint-enable vue/no-v-html -->
               <div
@@ -342,7 +342,7 @@ export default {
         } else {
           this.formErrorMsg = "CREATE_FORM_INTERNAL";
         }
-        this.$v.$touch();
+          this.$v.$touch();
       }
     }
   }
