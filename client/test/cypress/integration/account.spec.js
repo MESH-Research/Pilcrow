@@ -8,13 +8,6 @@ describe('Account', () => {
     cy.visit('/account/profile');
   });
 
-  it('can visit the account profile page from the dropdown', () => {
-    cy.visit('/');
-    cy.dataCy('dropdown_username').click();
-    cy.dataCy('link_my_account').click();
-    cy.url().should('include', '/account/profile');
-  });
-
   it('can update the name field', () => {
     cy.dataCy('update_user_name').clear().type('Updated User');
     cy.dataCy('update_user_button_save').click();

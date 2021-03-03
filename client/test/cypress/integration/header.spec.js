@@ -20,7 +20,12 @@ describe('Header', () => {
         cy.get('header').within(() => {
             cy.contains('regularUser').click();
         });
-        cy.dataCy('headerUserMenu').contains('Logout').click();
+
+        cy.dataCy('headerUserMenu').within(() => {
+            cy.contains('My Account').should('have.attr', 'href', '/account/profile');
+            cy.contains('Dashboard').should('have.attr', 'href', '/dashboard');
+            cy.contains('Logout').click();
+        });
 
         cy.get('header').within(() => {
             cy.contains('Login');
