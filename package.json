@@ -5,10 +5,16 @@
         "commander": "^7.0.0",
         "dedent-js": "^1.0.1",
         "markdownlint-cli": "^0.26.0",
+        "standard-version": "^9.1.1",
         "yaml-js": "^0.2.3",
         "yesno": "^0.3.1"
     },
     "scripts": {
-        "lint:md": "markdownlint '.*/**/*.md' '**/*.md' -p .gitignore"
-    }
+        "lint:md": "markdownlint '.*/**/*.md' '**/*.md' -p .gitignore",
+        "release": "standard-version",
+        "release:minor": "standard-version --release-as minor",
+        "release:patch": "standard-version --release-as patch",
+        "release:major": "standard-version --release-as major"
+    },
+    "version": "0.9.0"
 }
