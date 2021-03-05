@@ -19,28 +19,42 @@ class UpdateUserMutationTest extends TestCase
      */
     public function testUserCanUpdateOwnData(): void
     {
+        $profile_data_a = json_encode(["a" => 1]);
+        $profile_data_b = json_encode(["b" => 2]);
+
         $user = User::factory()->create([
             'name' => 'test',
             'email' => 'brandnew@gmail.com',
             'username' => 'testusername',
+            'profile_metadata' => $profile_data_a
         ]);
 
         $this->actingAs($user);
 
         $response = $this->graphQL(
-            'mutation updateUser ($id: ID!){
+            'mutation updateUser ($id: ID!, $profile_data: JSON){
                 updateUser(
                     user: {
                         id: $id,
-                        username: "testbrandnewusername"
+                        username: "testbrandnewusername",
+                        profile_metadata: $profile_data
                     }
                 ) {
                     username
+                    profile_metadata
                 }
             }',
-            ['id' => $user->id]
+            [
+                'id' => $user->id,
+                'profile_metadata' => $profile_data_b
+            ]
         );
+        echo '<pre>';
+        print_r($response);
+        echo '</pre>';
+
         $response->assertJsonPath('data.updateUser.username', 'testbrandnewusername');
+        $response->assertJsonPath('data.updateUser.profile_metadata', $profile_data_b);
     }
 
     public function testUserCanUpdateOwnDataToBeTheSame()
