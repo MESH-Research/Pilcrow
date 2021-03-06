@@ -22,6 +22,7 @@ services:
     scanner: false
   appserver:
     build:
+      - composer install
       - cd /app/backend && composer install
       - bash /app/.lando/no_env_setup.sh
 tooling:
@@ -34,5 +35,5 @@ tooling:
     dir: /app/client
   extras:
     service: client
-    cmd: node scripts/extras.js
+    cmd: node scripts/lando-extras/extras.js
     dir: /app

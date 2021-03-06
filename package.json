@@ -3,6 +3,7 @@
         "chalk": "^4.1.0",
         "columnify": "^1.5.4",
         "commander": "^7.0.0",
+        "conventional-changelog-cli": "^2.1.1",
         "dedent-js": "^1.0.1",
         "markdownlint-cli": "^0.26.0",
         "standard-version": "^9.1.1",
@@ -15,6 +16,12 @@
         "release:minor": "standard-version --release-as minor",
         "release:patch": "standard-version --release-as patch",
         "release:major": "standard-version --release-as major"
+    },
+    "standard-version": {
+        "header": "<!-- markdownlint-disable MD024 MD001 -->\n# Changelog\n\nAll notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.\n",
+        "scripts": {
+            "postchangelog": "conventional-changelog -n ./scripts/ccr-custom-changelog/release.js -r 2"
+        }
     },
     "version": "0.9.0"
 }
