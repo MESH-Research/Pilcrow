@@ -32,12 +32,12 @@ class UpdateUserMutationTest extends TestCase
         $this->actingAs($user);
 
         $response = $this->graphQL(
-            'mutation updateUser ($id: ID!, $profile_data: JSON){
+            'mutation updateUser ($id: ID!, $profile_metadata: JSON){
                 updateUser(
                     user: {
                         id: $id,
                         username: "testbrandnewusername",
-                        profile_metadata: $profile_data
+                        profile_metadata: $profile_metadata
                     }
                 ) {
                     username
@@ -49,9 +49,6 @@ class UpdateUserMutationTest extends TestCase
                 'profile_metadata' => $profile_data_b
             ]
         );
-        echo '<pre>';
-        print_r($response);
-        echo '</pre>';
 
         $response->assertJsonPath('data.updateUser.username', 'testbrandnewusername');
         $response->assertJsonPath('data.updateUser.profile_metadata', $profile_data_b);
