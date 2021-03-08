@@ -130,3 +130,10 @@ Currently, `CCR-Droid` is not great about spelling out specific build errors.  I
 3. Open a pull request on GitHub to merge your branch into the `development` branch
 4. Respond to feedback from the subsequent code review(s)
 5. The pull request can be merged by a reviewer or a maintainer
+
+## Tagging a release
+
+1. Check to make sure that tests on master are passing.
+2. Run: `lando yarn release` to tag the release and update the changelog.
+3. Push with tags: `git push --follow-tags`
+4. Run `lando yarn release:details` to generate detailed changelog for MS Teams.
