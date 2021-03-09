@@ -73,7 +73,7 @@ class UserQueryTest extends TestCase
             'username' => 'regularuser',
             'profile_metadata' => $profile_metadata,
         ]);
-        // This saves the JSON as double-encoded
+        // This saves JSON as double-escaped
         $response = $this->graphQL(
             'query getUser ($id: ID!) {
                 user (id: $id) {
