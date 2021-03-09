@@ -11,7 +11,7 @@ describe('Admin Users Index', () => {
     cy.visit('/admin/users');
     cy.url().should('include', '/error403');
 
-    cy.login({ email: "adminuser@ccrproject.dev" });
+    cy.login({ email: "applicationadministrator@ccrproject.dev" });
     cy.visit('/admin/users');
     cy.url().should('not.include', '/error403');
     cy.contains('admin users index');
