@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Database\Factories;
 
@@ -32,10 +33,16 @@ class UserFactory extends Factory
         ];
     }
 
-    public function realEmailDomain() {
+    /**
+     * State function for forcing email domain to be a real domain.
+     *
+     * @return static
+     */
+    public function realEmailDomain()
+    {
         return $this->state(function () {
             return [
-                'email' => $this->faker->unique()->userName . "@ccrproject.dev"
+                'email' => $this->faker->unique()->userName . '@ccrproject.dev',
             ];
         });
     }
