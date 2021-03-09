@@ -7,6 +7,41 @@ scalar DateTime
 
 scalar JSON @scalar(class: "MLL\\GraphQLScalars\\JSON")
 
+type ProfileMetadataSocialMedia {
+    google: String
+    twitter: String
+    facebook: String
+    instagram: String
+    linkedin: String
+    academia_edu_id: String
+    skype: String
+    zoom: String
+}
+
+type ProfileMetadataMailingAddress {
+    city: String
+    state: String
+    postal_code: String
+    street_address: String
+}
+
+type ProfileMetadata {
+    salutation: String
+    phone: String
+    mailing_address: ProfileMetadataMailingAddress,
+    orchid_id: String
+    humanities_commons: String
+    social_media: ProfileMetadataSocialMedia,
+    professional_title: String
+    specialization: String
+    affiliation: String
+    interest_keywords: [String],
+    disinterest_keywords: [String],
+    biography: [String],
+    profile_picture: String
+    websites: [String]
+}
+
 type Query {
     "Return user accounts in the application."
     users: [User!]! @paginate(defaultCount: 10)
