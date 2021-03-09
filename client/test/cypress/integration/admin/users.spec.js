@@ -16,6 +16,4 @@ describe('Admin Users Index', () => {
     cy.url().should('not.include', '/error403');
     cy.contains('admin users index');
   });
-
-
 });
