@@ -19,14 +19,14 @@ class UpdateUserMutationTest extends TestCase
      */
     public function testUserCanUpdateOwnData(): void
     {
-        $profile_data_a = json_encode(["a" => 1]);
-        $profile_data_b = json_encode(["b" => 2]);
+        $profile_data_a = json_encode(['a' => 1]);
+        $profile_data_b = json_encode(['b' => 2]);
 
         $user = User::factory()->create([
             'name' => 'test',
             'email' => 'brandnew@gmail.com',
             'username' => 'testusername',
-            'profile_metadata' => $profile_data_a
+            'profile_metadata' => $profile_data_a,
         ]);
 
         $this->actingAs($user);
@@ -56,7 +56,7 @@ class UpdateUserMutationTest extends TestCase
 
     public function testUserCanUpdateOwnDataToBeTheSame()
     {
-        $profile_data_a = json_encode(["a" => 1]);
+        $profile_data_a = json_encode(['a' => 1]);
         $user = User::factory()->create([
             'name' => 'testname',
             'email' => 'brandnew@gmail.com',
@@ -104,7 +104,7 @@ class UpdateUserMutationTest extends TestCase
             'username' => 'loggedinuser',
         ]);
 
-        $profile_data_a = json_encode(["a" => 1]);
+        $profile_data_a = json_encode(['a' => 1]);
         $userToUpdate = User::factory()->create([
             'email' => 'usertoupdate@gmail.com',
             'username' => 'usertoupdate',
@@ -143,7 +143,7 @@ class UpdateUserMutationTest extends TestCase
         $loggedInUser = User::factory()->create();
         $loggedInUser->assignRole(Role::APPLICATION_ADMINISTRATOR);
 
-        $profile_data_a = json_encode(["a" => 1]);
+        $profile_data_a = json_encode(['a' => 1]);
         $userToUpdate = User::factory()->create([
             'email' => 'usertoupdate@gmail.com',
             'username' => 'usertoupdate',
@@ -178,7 +178,7 @@ class UpdateUserMutationTest extends TestCase
         $loggedInUser = User::factory()->create();
         $loggedInUser->assignRole(Role::APPLICATION_ADMINISTRATOR);
 
-        $profile_data_a = json_encode(["a" => 1]);
+        $profile_data_a = json_encode(['a' => 1]);
         $userToUpdate = User::factory()->create([
             'name' => 'testname',
             'email' => 'testemail@gmail.com',
