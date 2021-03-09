@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Database\Factories;
 
@@ -22,7 +23,7 @@ class PermissionFactory extends Factory
     public function definition()
     {
         return [
-            'name' => $this->faker->words(2, true)
+            'name' => $this->faker->words(2, true),
         ];
     }
 }
