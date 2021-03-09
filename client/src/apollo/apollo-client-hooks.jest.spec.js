@@ -12,13 +12,13 @@ const apolloMock = {
     query: jest.fn()
 }
 
-describe('Router RequireAuth hook', () => {
+describe('requiresAuth router hook', () => {
     afterEach(() => {
         apolloMock.query.mockClear();
         Q.SessionStorage.set.mockClear();
     })
 
-    it('does nothing when logged in', async () => {
+    it('allows navigation when user is logged in', async () => {
         const to = {
             matched: [{ meta: { requiresAuth: true } }]
         };
@@ -40,7 +40,7 @@ describe('Router RequireAuth hook', () => {
         expect(next.mock.calls[0][0]).toBe(undefined);
     });
 
-    it('redirects when not logged in', async () => {
+    it('redirects to login page when user is not logged in', async () => {
         const to = {
             matched: [{ meta: { requiresAuth: true } }]
         };
@@ -61,7 +61,7 @@ describe('Router RequireAuth hook', () => {
         expect(next.mock.calls[0][0]).not.toBe(undefined);
     });
 
-    it('does nothing it route does not require auth', async () => {
+    it('allows navigation when route is missing the requiresAuth meta property', async () => {
         const to = {
             matched: [{ meta: {} }]
         };
@@ -76,12 +76,12 @@ describe('Router RequireAuth hook', () => {
     });
 });
 
-describe('Router RequireRoles hook', () => {
+describe('requiresRoles router hook', () => {
     afterEach(() => {
         apolloMock.query.mockClear();
     })
 
-    it('does nothing when user has role', async () => {
+    it('allows navigation when user has required role', async () => {
         const to = {
             matched: [{ meta: { requiresRoles: 'admin' } }]
         };
@@ -106,7 +106,7 @@ describe('Router RequireRoles hook', () => {
         expect(next.mock.calls[0][0]).toBe(undefined);
     });
 
-    it('redirects when user does not have role', async () => {
+    it('redirects to error403 when user does not have required role', async () => {
         const to = {
             matched: [{ meta: { requiresRoles: 'admin' } }]
         };
@@ -131,7 +131,7 @@ describe('Router RequireRoles hook', () => {
         expect(next.mock.calls[0][0]).not.toBe(undefined);
     });
 
-    it('does nothing is requireRoles is not present', async () => {
+    it('allows navigation when requiresRoles meta property is not present', async () => {
         const to = {
             matched: [{ meta: {} }]
         };
@@ -145,7 +145,7 @@ describe('Router RequireRoles hook', () => {
         expect(next.mock.calls[0][0]).toBe(undefined);
     });
 
-    it('requires all nested roles', async () => {
+    it('redirects to error403 when user does not have all nested required roles', async () => {
         const to = {
             matched: [{ meta: { requiresRoles: 'admin' } }, {meta: { requiresRoles: 'specialAdmin' } }]
         };
@@ -169,9 +169,56 @@ describe('Router RequireRoles hook', () => {
     });
 
 
-    it('passes if user has all nested roles', async () => {
+    it('allows navigation when user has all nested required roles', async () => {
         const to = {
             matched: [{ meta: { requiresRoles: 'admin' } }, {meta: { requiresRoles: 'specialAdmin' } }]
+        };
+
+        apolloMock.query.mockResolvedValue({
+            data: {
+                currentUser: {
+                    id: 1,
+                    roles: [
+                        { name: 'admin' },
+                        { name: 'specialAdmin'}
+                    ]
+                }
+            }
+        });
+        const next = jest.fn();
+        await beforeEachRequiresRoles(apolloMock, to, undefined, next);
+
+        expect(apolloMock.query).toHaveBeenCalled();
+        expect(next).toHaveBeenCalled();
+        expect(next.mock.calls[0][0]).toBe(undefined);
+    });
+
+    it('redirects to error403 page when user does not have all required roles', async () => {
+        const to = {
+            matched: [{ meta: { requiresRoles: ['admin', 'specialAdmin'] } }]
+        };
+
+        apolloMock.query.mockResolvedValue({
+            data: {
+                currentUser: {
+                    id: 1,
+                    roles: [
+                        { name: 'admin' }
+                    ]
+                }
+            }
+        });
+        const next = jest.fn();
+        await beforeEachRequiresRoles(apolloMock, to, undefined, next);
+
+        expect(apolloMock.query).toHaveBeenCalled();
+        expect(next).toHaveBeenCalled();
+        expect(next.mock.calls[0][0]).not.toBe(undefined);
+    });
+
+    it('allows navigation if user has all required roles', async () => {
+        const to = {
+            matched: [{ meta: { requiresRoles: ['admin', 'specialAdmin'] } }]
         };
 
         apolloMock.query.mockResolvedValue({
