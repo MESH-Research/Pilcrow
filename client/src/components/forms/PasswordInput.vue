@@ -45,7 +45,7 @@ export default {
     },
     value: {
       type: String,
-      required: true
+      default: ""
     },
     autocomplete: {
       default: "current-password",
