@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Database\Seeders;
 
@@ -19,8 +20,7 @@ class DatabaseSeeder extends Seeder
             'username' => 'regularUser',
             'email' => 'regularuser@ccrproject.dev',
             'name' => 'Regular User',
-            'password' => Hash::make('regularPassword!@#')
+            'password' => Hash::make('regularPassword!@#'),
         ]);
-        
     }
 }

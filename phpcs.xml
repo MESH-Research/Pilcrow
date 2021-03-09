@@ -2,7 +2,7 @@
 <ruleset name="Laravel Standards">
 
     <description>MESH Research Coding Standards</description>
-    
+
     <rule ref="VariableAnalysis"/>
     <rule ref="CakePHP">
         <exclude name="CakePHP.NamingConventions"/>
@@ -24,8 +24,8 @@
     <file>backend/resources</file>
     <file>backend/routes</file>
     <file>backend/tests</file>
+    <file>backend/database</file>
 
-    <exclude-pattern>*/database/*</exclude-pattern>
     <exclude-pattern>*/cache/*</exclude-pattern>
     <exclude-pattern>*/*.js</exclude-pattern>
     <exclude-pattern>*/*.css</exclude-pattern>
@@ -47,7 +47,7 @@
 
     <arg name="colors"/>
     <ini name="memory_limit" value="128M"/>
-    
-    
+
+
 
 </ruleset>
