@@ -1,9 +1,0 @@
-{
-    "types":  [
-    {"type":"feat","section":"Features"},
-    {"type":"fix","section":"Bug Fixes"},
-    {"type":"test","section":"Tests", "hidden": false},
-    {"type":"build","section":"Build System", "hidden": false},
-    {"type":"docs","section":"Documentation", "hidden": false}
-    ]
-}
