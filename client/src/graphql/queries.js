@@ -8,6 +8,9 @@ export const CURRENT_USER = gql`
       name
       email
       email_verified_at
+      roles {
+        name
+      }
     }
   }
 `;
