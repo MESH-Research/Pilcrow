@@ -25,9 +25,9 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $user = User::factory()->create([
-            'username' => 'systemAdminUser',
-            'email' => 'adminuser@ccrproject.dev',
-            'name' => 'System Admin User',
+            'username' => 'applicationAdminUser',
+            'email' => 'applicationadministrator@ccrproject.dev',
+            'name' => 'Application Admin User',
             'password' => Hash::make('adminPassword!@#'),
         ]);
         $user->assignRole(Role::APPLICATION_ADMINISTRATOR);
