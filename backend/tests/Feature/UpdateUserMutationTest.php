@@ -24,8 +24,8 @@ class UpdateUserMutationTest extends TestCase
             'email' => 'brandnew@gmail.com',
             'username' => 'testusername',
             'profile_metadata' => [
-                'salutation' => '1'
-            ]
+                'salutation' => '1',
+            ],
         ]);
 
         $this->actingAs($user);
@@ -63,8 +63,8 @@ class UpdateUserMutationTest extends TestCase
             'email' => 'brandnew@gmail.com',
             'username' => 'testusername',
             'profile_metadata' => [
-                'salutation' => '1'
-            ]
+                'salutation' => '1',
+            ],
         ]);
 
         $this->actingAs($user);
@@ -114,8 +114,8 @@ class UpdateUserMutationTest extends TestCase
             'email' => 'usertoupdate@gmail.com',
             'username' => 'usertoupdate',
             'profile_metadata' => [
-                'salutation' => '1'
-            ]
+                'salutation' => '1',
+            ],
         ]);
 
         $this->actingAs($loggedInUser);
@@ -157,8 +157,8 @@ class UpdateUserMutationTest extends TestCase
             'email' => 'usertoupdate@gmail.com',
             'username' => 'usertoupdate',
             'profile_metadata' => [
-                'salutation' => '1'
-            ]
+                'salutation' => '1',
+            ],
         ]);
         $this->actingAs($loggedInUser);
         $response = $this->graphQL(
@@ -196,8 +196,8 @@ class UpdateUserMutationTest extends TestCase
             'email' => 'testemail@gmail.com',
             'username' => 'testusername',
             'profile_metadata' => [
-                'salutation' => '1'
-            ]
+                'salutation' => '1',
+            ],
         ]);
         $this->actingAs($loggedInUser);
         $response = $this->graphQL(
