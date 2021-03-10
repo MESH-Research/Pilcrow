@@ -186,7 +186,7 @@ type ProfileMetadata {
     affiliation: String
     interest_keywords: [String]
     disinterest_keywords: [String]
-    biography: [String]
+    biography: String
     profile_picture: String
     websites: [String]
 }
