@@ -30,8 +30,18 @@ const routes = [
             component: () => import("pages/Account/Profile.vue")
           }
         ]
+      },
+      {
+        path: "/admin/users",
+        component: () => import('pages/Admin/UsersIndex.vue'),
+        meta: { requiresRoles: 'Application Administrator'}
       }
     ]
+  },
+  {
+    path: '/error403',
+    name: 'error403',
+    component: () => import("pages/Error403.vue")
   }
 ];
 

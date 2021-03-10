@@ -96,7 +96,8 @@ export default {
     }
   },
   failures: {
-    UNKNOWN_ERROR: "An unknown error has occurred."
+    UNKNOWN_ERROR: "An unknown error has occurred.",
+    FORBIDDEN_ROUTE: "You don't have permission to access that page."
   },
   general_failure: "Oops, there was an error."
 };
