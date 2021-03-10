@@ -19,79 +19,85 @@ class UpdateUserMutationTest extends TestCase
      */
     public function testUserCanUpdateOwnData(): void
     {
-        $profile_data_a = json_encode(['a' => 1]);
-        $profile_data_b = json_encode(['b' => 2]);
-
         $user = User::factory()->create([
             'name' => 'test',
             'email' => 'brandnew@gmail.com',
             'username' => 'testusername',
-            'profile_metadata' => $profile_data_a,
+            'profile_metadata' => [
+                'salutation' => '1'
+            ]
         ]);
 
         $this->actingAs($user);
 
         $response = $this->graphQL(
-            'mutation updateUser ($id: ID!, $profile_metadata: JSON){
+            'mutation updateUser ($id: ID!){
                 updateUser(
                     user: {
                         id: $id,
                         username: "testbrandnewusername",
-                        profile_metadata: $profile_metadata
+                        profile_metadata: {
+                            salutation: "2"
+                        }
                     }
                 ) {
                     username
-                    profile_metadata
+                    profile_metadata {
+                        salutation
+                    }
                 }
             }',
             [
                 'id' => $user->id,
-                'profile_metadata' => $profile_data_b,
             ]
         );
 
         $response->assertJsonPath('data.updateUser.username', 'testbrandnewusername');
-        $response->assertJsonPath('data.updateUser.profile_metadata', $profile_data_b);
+        $response->assertJsonPath('data.updateUser.profile_metadata.salutation', '2');
     }
 
     public function testUserCanUpdateOwnDataToBeTheSame()
     {
-        $profile_data_a = json_encode(['a' => 1]);
         $user = User::factory()->create([
             'name' => 'testname',
             'email' => 'brandnew@gmail.com',
             'username' => 'testusername',
-            'profile_metadata' => $profile_data_a,
+            'profile_metadata' => [
+                'salutation' => '1'
+            ]
         ]);
 
         $this->actingAs($user);
 
         $response = $this->graphQL(
-            'mutation updateUser ($id: ID!, $profile_metadata: JSON){
+            'mutation updateUser ($id: ID!){
                 updateUser(
                     user: {
                         id: $id,
                         name: "testname",
                         email: "brandnew@gmail.com",
                         username: "testusername",
-                        profile_metadata: $profile_metadata
+                        profile_metadata: {
+                            salutation: "1"
+                        }
                     }
                 ) {
                     name
                     email
                     username
-                    profile_metadata
+                    profile_metadata {
+                        salutation
+                    }
                 }
             }',
             [
                 'id' => $user->id,
-                'profile_metadata' => $profile_data_a,
             ]
         );
         $response->assertJsonPath('data.updateUser.name', 'testname');
         $response->assertJsonPath('data.updateUser.email', 'brandnew@gmail.com');
         $response->assertJsonPath('data.updateUser.username', 'testusername');
-        $response->assertJsonPath('data.updateUser.profile_metadata', $profile_data_a);
+        $response->assertJsonPath('data.updateUser.profile_metadata.salutation', '1');
     }
 
     /**
@@ -104,11 +110,12 @@ class UpdateUserMutationTest extends TestCase
             'username' => 'loggedinuser',
         ]);
 
-        $profile_data_a = json_encode(['a' => 1]);
         $userToUpdate = User::factory()->create([
             'email' => 'usertoupdate@gmail.com',
             'username' => 'usertoupdate',
-            'profile_metadata' => $profile_data_a,
+            'profile_metadata' => [
+                'salutation' => '1'
+            ]
         ]);
 
         $this->actingAs($loggedInUser);
@@ -119,16 +126,19 @@ class UpdateUserMutationTest extends TestCase
                     user: {
                         id: $id,
                         username: "testbrandnewusername",
-                        profile_metadata: $profile_data_a
+                        profile_metadata {
+                            salutation: "2"
+                        }
                     }
                 ) {
                     username
-                    profile_metadata
+                    profile_metadata {
+                        salutation
+                    }
                 }
             }',
             [
                 'id' => $userToUpdate->id,
-                'profile_metadata' => $profile_data_a,
             ]
         );
 
@@ -143,34 +153,37 @@ class UpdateUserMutationTest extends TestCase
         $loggedInUser = User::factory()->create();
         $loggedInUser->assignRole(Role::APPLICATION_ADMINISTRATOR);
 
-        $profile_data_a = json_encode(['a' => 1]);
         $userToUpdate = User::factory()->create([
             'email' => 'usertoupdate@gmail.com',
             'username' => 'usertoupdate',
-            'profile_metadata' => $profile_data_a,
+            'profile_metadata' => [
+                'salutation' => '1'
+            ]
         ]);
         $this->actingAs($loggedInUser);
         $response = $this->graphQL(
-            'mutation updateUser ($id: ID!, $profile_metadata: JSON){
+            'mutation updateUser ($id: ID!){
                 updateUser(
                     user: {
                         id: $id,
                         username: "testbrandnewusername",
-                        profile_metadata: $profile_metadata
-
+                        profile_metadata: {
+                            salutation: "2"
+                        }
                     }
                 ) {
                     username
-                    profile_metadata
+                    profile_metadata {
+                        salutation
+                    }
                 }
             }',
             [
                 'id' => $userToUpdate->id,
-                'profile_metadata' => $profile_data_a,
             ]
         );
         $response->assertJsonPath('data.updateUser.username', 'testbrandnewusername');
-        $response->assertJsonPath('data.updateUser.profile_metadata', $profile_data_a);
+        $response->assertJsonPath('data.updateUser.profile_metadata.salutation', '2');
     }
 
     public function testApplicationAdministratorCanUpdateOthersDataToBeTheSame(): void
@@ -178,39 +191,43 @@ class UpdateUserMutationTest extends TestCase
         $loggedInUser = User::factory()->create();
         $loggedInUser->assignRole(Role::APPLICATION_ADMINISTRATOR);
 
-        $profile_data_a = json_encode(['a' => 1]);
         $userToUpdate = User::factory()->create([
             'name' => 'testname',
             'email' => 'testemail@gmail.com',
             'username' => 'testusername',
-            'profile_metadata' => $profile_data_a,
+            'profile_metadata' => [
+                'salutation' => '1'
+            ]
         ]);
         $this->actingAs($loggedInUser);
         $response = $this->graphQL(
-            'mutation updateUser ($id: ID!, $profile_metadata: JSON){
+            'mutation updateUser ($id: ID!){
                 updateUser(
                     user: {
                         id: $id,
                         name: "testname",
                         email: "testemail@gmail.com",
-                        username: "testusername"
-                        profile_metadata: $profile_metadata
+                        username: "testusername",
+                        profile_metadata: {
+                            salutation: "2"
+                        }
                     }
                 ) {
                     name
                     email
                     username
-                    profile_metadata
+                    profile_metadata {
+                        salutation
+                    }
                 }
             }',
             [
                 'id' => $userToUpdate->id,
-                'profile_metadata' => $profile_data_a,
             ]
         );
         $response->assertJsonPath('data.updateUser.name', 'testname');
         $response->assertJsonPath('data.updateUser.email', 'testemail@gmail.com');
         $response->assertJsonPath('data.updateUser.username', 'testusername');
-        $response->assertJsonPath('data.updateUser.profile_metadata', $profile_data_a);
+        $response->assertJsonPath('data.updateUser.profile_metadata.salutation', '2');
     }
 }
