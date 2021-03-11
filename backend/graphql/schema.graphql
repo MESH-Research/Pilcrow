@@ -44,7 +44,6 @@ input UpdateProfileMetadataSocialMediaInput @validator(class: "ProfileMetadataSo
     linkedin: String
     academia_edu_id: String
     skype: String
-    zoom: String
 }
 
 """
@@ -166,7 +165,6 @@ type ProfileMetadata_SocialMedia {
     linkedin: String
     academia_edu_id: String
     skype: String
-    zoom: String
 }
 
 """

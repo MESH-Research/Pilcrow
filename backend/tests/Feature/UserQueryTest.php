@@ -39,7 +39,6 @@ class UserQueryTest extends TestCase
                         'linkedin' => 'regularuser',
                         'academia_edu_id' => 'regularuser',
                         'skype' => 'regularuser',
-                        'zoom' => 'regularuser',
                     ],
                     'professional_title' => 'Regular User',
                     'specialization' => 'Regular',
@@ -98,7 +97,6 @@ class UserQueryTest extends TestCase
                             linkedin
                             academia_edu_id
                             skype
-                            zoom
                         }
                         professional_title
                         specialization

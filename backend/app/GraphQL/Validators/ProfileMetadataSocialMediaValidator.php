@@ -36,9 +36,6 @@ class ProfileMetadataSocialMediaValidator extends Validator
             'skype' => [
                 'max:128',
             ],
-            'zoom' => [
-                'max:128',
-            ],
         ];
     }
 }
