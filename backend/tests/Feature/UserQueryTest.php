@@ -16,7 +16,7 @@ class UserQueryTest extends TestCase
     /**
      * @return array
      */
-    public function profileMetadataProvider()
+    public function profileMetadataProvider(): array
     {
         return [
             [
