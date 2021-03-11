@@ -159,7 +159,7 @@ type User {
 """
 Social media data for profile metadata of a user
 """
-type ProfileMetadataSocialMedia {
+type ProfileMetadata_SocialMedia {
     google: String
     twitter: String
     facebook: String
@@ -173,7 +173,7 @@ type ProfileMetadataSocialMedia {
 """
 Mailing address information for profile metadata of a user
 """
-type ProfileMetadataMailingAddress {
+type ProfileMetadata_MailingAddress {
     city: String
     state: String
     postal_code: String
@@ -186,10 +186,10 @@ Profile metadata of a user
 type ProfileMetadata {
     salutation: String
     phone: String
-    mailing_address: ProfileMetadataMailingAddress
+    mailing_address: ProfileMetadata_MailingAddress
     orchid_id: String
     humanities_commons: String
-    social_media: ProfileMetadataSocialMedia
+    social_media: ProfileMetadata_SocialMedia
     professional_title: String
     specialization: String
     affiliation: String
