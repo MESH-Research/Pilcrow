@@ -66,7 +66,7 @@ class UserQueryTest extends TestCase
      * @dataProvider profileMetadataProvider
      * @return void
      */
-    public function testThatUserDetailsCanBeQueried(?array $profile_metadata): void
+    public function testThatUserDetailsCanBeQueried(array $profile_metadata): void
     {
         $user = User::factory()->create([
             'name' => 'Regular User',
