@@ -156,6 +156,9 @@ type User {
     profile_metadata: ProfileMetadata
 }
 
+"""
+Social media data for profile metadata of a user
+"""
 type ProfileMetadataSocialMedia {
     google: String
     twitter: String
@@ -167,6 +170,9 @@ type ProfileMetadataSocialMedia {
     zoom: String
 }
 
+"""
+Mailing address information for profile metadata of a user
+"""
 type ProfileMetadataMailingAddress {
     city: String
     state: String
@@ -174,6 +180,9 @@ type ProfileMetadataMailingAddress {
     street_address: String
 }
 
+"""
+Profile metadata of a user
+"""
 type ProfileMetadata {
     salutation: String
     phone: String
