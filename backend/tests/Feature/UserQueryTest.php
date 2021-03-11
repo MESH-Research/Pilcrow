@@ -77,6 +77,9 @@ class UserQueryTest extends TestCase
         $response = $this->graphQL(
             'query getUser ($id: ID!) {
                 user (id: $id) {
+                    name
+                    email
+                    username
                     profile_metadata {
                         salutation
                         phone
@@ -114,6 +117,9 @@ class UserQueryTest extends TestCase
         $response->assertJson([
             'data' => [
                 'user' => [
+                    'name' => 'Regular User',
+                    'email' => 'regularuser@gmail.com',
+                    'username' => 'regularuser',
                     'profile_metadata' => $profile_metadata,
                 ],
             ],
