@@ -113,7 +113,7 @@ input UpdateUserInput @validator(class: "UserInputValidator") {
     "Password used to login to the application."
     password: String @hash
 
-    "Arbitrary metadata related to the profile of a user."
+    "Metadata related to the profile of a user."
     profile_metadata: UpdateProfileMetadataInput
 }
 
