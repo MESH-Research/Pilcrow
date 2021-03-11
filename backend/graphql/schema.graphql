@@ -73,7 +73,6 @@ input UpdateProfileMetadataInput @validator(class: "ProfileMetadataValidator") {
     interest_keywords: [String]
     disinterest_keywords: [String]
     biography: String
-    profile_picture: String
     websites: [String]
 }
 
@@ -196,7 +195,6 @@ type ProfileMetadata {
     interest_keywords: [String]
     disinterest_keywords: [String]
     biography: String
-    profile_picture: String
     websites: [String]
 }
 

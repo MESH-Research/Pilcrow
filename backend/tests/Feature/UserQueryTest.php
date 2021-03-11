@@ -53,7 +53,6 @@ class UserQueryTest extends TestCase
                         'irregular',
                     ],
                     'biography' => 'I am a regular user.',
-                    'profile_picture' => 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=',
                     'websites' => [
                         'https://github.com',
                     ],
@@ -107,7 +106,6 @@ class UserQueryTest extends TestCase
                         interest_keywords
                         disinterest_keywords
                         biography
-                        profile_picture
                         websites
                     }
                 }

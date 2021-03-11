@@ -45,9 +45,6 @@ class ProfileMetadataValidator extends Validator
             'biography' => [
                 'max:4096',
             ],
-            'profile_picture' => [
-                'max:512',
-            ],
             'websites.*' => [
                 'max:512',
             ],
