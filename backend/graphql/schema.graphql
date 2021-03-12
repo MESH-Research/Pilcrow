@@ -36,7 +36,7 @@ input ValidateNewUserInput @validator(class: "UserInputValidator") {
 """
 Input type for adding social media data to profile metadata
 """
-input UpdateProfileMetadataSocialMediaInput @validator(class: "ProfileMetadataSocialMediaValidator") {
+input UpdateSocialMediaInput @validator(class: "ProfileMetadataSocialMediaValidator") {
     google: String
     twitter: String
     facebook: String
@@ -49,7 +49,7 @@ input UpdateProfileMetadataSocialMediaInput @validator(class: "ProfileMetadataSo
 """
 Input type for adding mailing address data to profile metadata
 """
-input UpdateProfileMetadataMailingAddressInput @validator(class: "ProfileMetadataMailingAddressValidator") {
+input UpdateMailingAddressInput @validator(class: "ProfileMetadataMailingAddressValidator") {
     city: String
     state: String
     postal_code: String
@@ -62,10 +62,10 @@ Input type for adding profile metadata for a user
 input UpdateProfileMetadataInput @validator(class: "ProfileMetadataValidator") {
     salutation: String
     phone: String
-    mailing_address: UpdateProfileMetadataMailingAddressInput
+    mailing_address: UpdateMailingAddressInput
     orchid_id: String
     humanities_commons: String
-    social_media: UpdateProfileMetadataSocialMediaInput
+    social_media: UpdateSocialMediaInput
     professional_title: String
     specialization: String
     affiliation: String
@@ -155,9 +155,9 @@ type User {
 }
 
 """
-Social media data for profile metadata of a user
+Social media data for the profile metadata of a user
 """
-type ProfileMetadata_SocialMedia {
+type SocialMedia {
     google: String
     twitter: String
     facebook: String
@@ -168,9 +168,9 @@ type ProfileMetadata_SocialMedia {
 }
 
 """
-Mailing address information for profile metadata of a user
+Mailing address information for the profile metadata of a user
 """
-type ProfileMetadata_MailingAddress {
+type MailingAddress {
     city: String
     state: String
     postal_code: String
@@ -183,10 +183,10 @@ Profile metadata of a user
 type ProfileMetadata {
     salutation: String
     phone: String
-    mailing_address: ProfileMetadata_MailingAddress
+    mailing_address: MailingAddress
     orchid_id: String
     humanities_commons: String
-    social_media: ProfileMetadata_SocialMedia
+    social_media: SocialMedia
     professional_title: String
     specialization: String
     affiliation: String
