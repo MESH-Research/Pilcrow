@@ -35,7 +35,7 @@ export default {
       if (!this.user.email) {
         return '';
       }
-      const number = stringToInt(this.user.email) % colors.length;
+      const number = Math.abs(stringToInt(this.user.email)) % colors.length;
 
       return `avatar-${colors[number]}.png`;
     }
