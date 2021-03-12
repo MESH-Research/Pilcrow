@@ -5,6 +5,27 @@ scalar Date @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Date")
 scalar DateTime
     @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTime")
 
+scalar JSON @scalar(class: "MLL\\GraphQLScalars\\JSON")
+
+type ProfileMetadataSocialMedia {
+    google: String
+    twitter: String
+    facebook: String
+    instagram: String
+    linkedin: String
+    academia_edu_id: String
+    skype: String
+    zoom: String
+}
+
+type ProfileMetadataMailingAddress {
+    city: String
+    state: String
+    postal_code: String
+    street_address: String
+}
+
+
 type Query {
     "Return user accounts in the application."
     users: [User!]! @paginate(defaultCount: 10)
@@ -50,6 +71,24 @@ input CreateUserInput @validator(class: "UserInputValidator") {
     password: String! @hash
 }
 
+input UpdateProfileMetadataInput @validator(class: "ProfileMetadataValidator") {
+    salutation: String
+    phone: String
+    mailing_address: ProfileMetadataMailingAddress,
+    orchid_id: String
+    humanities_commons: String
+    social_media: ProfileMetadataSocialMedia,
+    professional_title: String
+    specialization: String
+    affiliation: String
+    interest_keywords: [String]
+    disinterest_keywords: [String]
+    biography: [String]
+    profile_picture: String
+    websites: [String]
+}
+
+
 """
 Input type for updating user information via the updateUser mutation
 """
@@ -68,6 +107,9 @@ input UpdateUserInput @validator(class: "UserInputValidator") {
 
     "Password used to login to the application."
     password: String @hash
+
+    "Arbitrary metadata related to the profile of a user."
+    profile_metadata: UpdateProfileMetadataInput
 }
 
 """
@@ -106,6 +148,7 @@ type User {
     email_verified_at: DateTime
     roles: [Role!]! @belongsToMany
     permissions: [Permission!] @belongsToMany
+    profile_metadata: JSON
 }
 
 type Mutation {

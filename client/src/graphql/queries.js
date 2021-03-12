@@ -14,3 +14,20 @@ export const CURRENT_USER = gql`
     }
   }
 `;
+export const GET_USERS = gql`
+  query users {
+    users {
+      paginatorInfo {
+        count
+        currentPage
+        lastPage
+        perPage
+      }
+      data {
+        id
+        name
+        email
+      }
+    }
+  }
+`;
