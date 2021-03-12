@@ -1,16 +1,17 @@
 <template>
   <q-banner v-if="users.data">
-    <q-item 
-      v-for="user in users.data" 
-      :key="user.id" 
+    <q-item
+      v-for="user in users.data"
+      :key="user.id"
     >
       <q-item-section
         top
         avatar
       >
-        <q-avatar rounded>
-          <img src="avatar.png">
-        </q-avatar>
+        <avatar-image
+          :user="user"
+          rounded
+        />
       </q-item-section>
 
       <q-item-section>
@@ -31,7 +32,7 @@
     </q-item>
     <q-pagination
       v-model="current_page"
-      class="q-pa-lg flex flex-center" 
+      class="q-pa-lg flex flex-center"
       :max="users.paginatorInfo.lastPage"
     />
   </q-banner>
@@ -39,8 +40,12 @@
 
 <script>
 import { GET_USERS } from "src/graphql/queries";
+import AvatarImage from "components/atoms/AvatarImage.vue";
 
 export default {
+  components: {
+    AvatarImage,
+  },
   data() {
     return {
       users: {
