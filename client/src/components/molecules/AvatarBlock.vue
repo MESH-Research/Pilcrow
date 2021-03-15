@@ -2,6 +2,7 @@
   <div>
     <avatar-image
       :size="avatarSize"
+      :user="user"
       class="q-mb-sm"
     />
     <div
