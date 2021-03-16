@@ -34,6 +34,17 @@
               {{ $t("header.account_link") }}
             </q-item-section>
           </q-item>
+          <q-item
+            v-ripple
+            to="/admin/users"
+          >
+            <q-item-section avatar>
+              <q-icon name="groups" />
+            </q-item-section>
+            <q-item-section>
+              {{ $t("header.user_list") }}
+            </q-item-section>
+          </q-item>
         </q-list>
       </q-scroll-area>
 
