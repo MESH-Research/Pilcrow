@@ -19,9 +19,10 @@ describe('Admin Users Index', () => {
     cy.login({ email: "applicationadministrator@ccrproject.dev" });
     cy.visit('/admin/users');
     cy.url().should('not.include', '/error403');
+  });
+  it('should assert the page is accessible', () => {
     // Inject the axe-core libraray
     cy.injectAxe();
-    //cy.contains('admin users index');
     cy.checkA11y();
   });
 

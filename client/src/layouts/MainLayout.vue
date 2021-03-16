@@ -60,7 +60,7 @@
     </q-drawer>
 
     <q-page-container>
-      <q-page>
+      <q-page role="main">
         <email-verification-banner v-if="!currentUser.email_verified_at" />
         <router-view />
       </q-page>
