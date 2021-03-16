@@ -36,13 +36,23 @@
               data-cy="link_my_account"
               to="/account/profile"
             >
-              <q-item-section
-                avatar
-              >
+              <q-item-section avatar>
                 <q-icon name="account_circle" />
               </q-item-section>
               <q-item-section>
                 {{ $t("header.account_link") }}
+              </q-item-section>
+            </q-item>
+            <q-item
+              clickable
+              data-cy="link_all_users"
+              to="/admin/users"
+            >
+              <q-item-section avatar>
+                <q-icon name="groups" />
+              </q-item-section>
+              <q-item-section>
+                {{ $t("header.user_list") }}
               </q-item-section>
             </q-item>
             <q-separator />
