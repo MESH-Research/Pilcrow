@@ -5,7 +5,7 @@
       drawer
     />
     <q-drawer
-      id="#sidebar"
+      id="sidebar"
       v-model="leftDrawerOpen"
       show-if-above
       content-class="sidebar bg-grey-1"
