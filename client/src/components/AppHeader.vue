@@ -18,7 +18,6 @@
         <q-btn-dropdown
           stretch
           flat
-          class="text-weight-bolder"
           data-cy="dropdown_username"
           :label="currentUser.username"
         >

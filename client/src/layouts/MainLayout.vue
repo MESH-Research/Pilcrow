@@ -43,7 +43,7 @@
       >
         <avatar-block
           :user="currentUser"
-          class="absolute-bottom bg-transparent"
+          class="absolute-bottom bg-dark"
         />
       </q-img>
     </q-drawer>
