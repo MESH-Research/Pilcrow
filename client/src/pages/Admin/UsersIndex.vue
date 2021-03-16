@@ -40,7 +40,7 @@
 
 <script>
 import { GET_USERS } from "src/graphql/queries";
-import AvatarImage from "components/atoms/AvatarImage.vue";
+import AvatarImage from "src/components/atoms/AvatarImage.vue";
 
 export default {
   components: {
