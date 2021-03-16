@@ -2,7 +2,7 @@
   <q-banner
     inline-actions
     dense
-    class="text-white bg-blue"
+    class="text-white bg-dark"
   >
     <template #avatar>
       <q-icon
