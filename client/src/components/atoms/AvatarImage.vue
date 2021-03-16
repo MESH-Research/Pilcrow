@@ -15,6 +15,7 @@
     border-radius: 4px;
   }
 </style>
+
 <template>
   <q-avatar v-bind="{ ...$attrs, ...$props }">
     <q-img
@@ -36,6 +37,7 @@ const stringToInt = (s) => {
   }
   return hash;
 }
+
 export default {
   name: "AvatarImage",
   props: {
