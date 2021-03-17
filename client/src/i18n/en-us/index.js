@@ -56,6 +56,7 @@ export default {
     REQUIRED_FIELD: "{0} is required."
   },
   header: {
+    user_list: "All Users",
     account_link: "My Account",
     dashboard: "My Dashboard",
     menu_button_aria: "Show/hide navigation sidebar"

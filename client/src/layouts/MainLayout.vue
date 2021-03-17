@@ -5,7 +5,7 @@
       drawer
     />
     <q-drawer
-      id="#sidebar"
+      id="sidebar"
       v-model="leftDrawerOpen"
       show-if-above
       content-class="sidebar bg-grey-1"
@@ -34,6 +34,17 @@
               {{ $t("header.account_link") }}
             </q-item-section>
           </q-item>
+          <q-item
+            v-ripple
+            to="/admin/users"
+          >
+            <q-item-section avatar>
+              <q-icon name="groups" />
+            </q-item-section>
+            <q-item-section>
+              {{ $t("header.user_list") }}
+            </q-item-section>
+          </q-item>
         </q-list>
       </q-scroll-area>
 
@@ -43,13 +54,13 @@
       >
         <avatar-block
           :user="currentUser"
-          class="absolute-bottom bg-transparent"
+          class="absolute-bottom bg-dark"
         />
       </q-img>
     </q-drawer>
 
     <q-page-container>
-      <q-page>
+      <q-page role="main">
         <email-verification-banner v-if="!currentUser.email_verified_at" />
         <router-view />
       </q-page>
