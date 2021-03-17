@@ -226,6 +226,7 @@ type Mutation {
 
     "Log out from the current session, showing the user one last time."
     logout: User @guard
+
     "Update user information"
     updateUser(user: UpdateUserInput! @spread): User!
         @update
