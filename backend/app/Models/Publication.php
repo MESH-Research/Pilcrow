@@ -12,4 +12,13 @@ class Publication extends Model
     protected $fillable = [
         'name'
     ];
+
+    /**
+     * Users that belong to a publication
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'publication_users');
+    }
 }
