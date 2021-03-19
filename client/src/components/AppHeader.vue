@@ -21,7 +21,11 @@
           data-cy="dropdown_username"
           :label="currentUser.username"
         >
-          <q-list data-cy="headerUserMenu">
+          <q-list
+            role="navigation"
+            aria-label="Dropdown Navigation"
+            data-cy="headerUserMenu"
+          >
             <q-item
               clickable
               to="/dashboard"
