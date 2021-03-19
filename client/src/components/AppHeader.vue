@@ -90,10 +90,9 @@
       </template>
     </q-toolbar>
     <div class="title">
-      <div class="text-h4 text-weight-regular">
-        <span class="text-weight-medium">Public</span> Philosophy Journal
-        <strong>Quarterly</strong>
-      </div>
+      <h1 class="q-ma-none">
+        Collaborative Community Review
+      </h1>
       <div class="text-subtitle">
         Submission Review System
       </div>
