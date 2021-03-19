@@ -3,6 +3,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.10.0](https://github.com/MESH-Research/CCR/compare/v0.9.0...v0.10.0) (2021-03-18)
+
+
+### Features
+
+* Add user list for admin users ([#173](https://github.com/MESH-Research/CCR/issues/173)) ([f8f535f](https://github.com/MESH-Research/CCR/commit/f8f535fa5027b165abecde9ab8c7b7d6986c0c6b))
+* **api:** add profile metadata to user type ([#168](https://github.com/MESH-Research/CCR/issues/168)) ([f806ce5](https://github.com/MESH-Research/CCR/commit/f806ce5b60430dc0d420f6efd343dc0386868802)), closes [#8](https://github.com/MESH-Research/CCR/issues/8)
+* **client:** Add avatar color variants ([#171](https://github.com/MESH-Research/CCR/issues/171)) ([21dfa83](https://github.com/MESH-Research/CCR/commit/21dfa835315a9e0d0793eaaf37200cc01d0a0f6b))
+
+
+### Bug Fixes
+
+* **client,deps:** upgrade dependencies to address elliptic pkg cve ([#166](https://github.com/MESH-Research/CCR/issues/166)) ([0049187](https://github.com/MESH-Research/CCR/commit/004918778b8f1ad4d0590f39a9585dfdfb45824a))
+* **docs,deps:** upgrade dependencies ([#167](https://github.com/MESH-Research/CCR/issues/167)) ([3555ed6](https://github.com/MESH-Research/CCR/commit/3555ed68ddfa6d930a267584d7729fb8b11da26d))
+
 ## [0.9.0](https://github.com/MESH-Research/CCR/compare/v0.8.0...v0.9.0) (2021-03-04)
 
 
@@ -70,4 +85,3 @@ All notable changes to this project will be documented in this file. See [standa
 * **frontend:** fix missing logout icon ([8c298f9](https://github.com/MESH-Research/CCR/commit/8c298f9bd5d3f234d6d82e73bbff9a191284bbe6)), closes [#11](https://github.com/MESH-Research/CCR/issues/11)
 * **frontend:** patch vue-auth to work correctly with quasar ([f6292fe](https://github.com/MESH-Research/CCR/commit/f6292fed95799f9758979cbed0da29228f58f15b))
 * **router:** change router mode to history ([08bc7fd](https://github.com/MESH-Research/CCR/commit/08bc7fd802ce8727bb6a30dec381c2a56f9f16bd))
-
