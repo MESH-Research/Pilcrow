@@ -49,6 +49,7 @@
       </q-scroll-area>
 
       <q-img
+        role="presentation"
         class="sidebar-avatar absolute-top"
         src="https://cdn.quasar.dev/img/material.png"
       >
