@@ -18,6 +18,11 @@
       </q-btn>
     </template>
   </q-banner>
+  <div>
+    <h2 class="q-pl-lg">
+      My Dashboard
+    </h2>
+  </div>
 </template>
 
 <script>
