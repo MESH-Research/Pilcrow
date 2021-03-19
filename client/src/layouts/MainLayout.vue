@@ -55,7 +55,7 @@
       >
         <avatar-block
           :user="currentUser"
-          class="absolute-bottom bg-dark"
+          class="absolute-bottom bg-secondary"
         />
       </q-img>
     </q-drawer>
