@@ -28,6 +28,7 @@
     "lodash": "^4.17.20",
     "quasar": "^1.15.1",
     "vue-i18n": "^8.0.0",
+    "vuedraggable": "^2.24.3",
     "vuelidate": "^0.7.6",
     "zxcvbn": "^4.4.2"
   },

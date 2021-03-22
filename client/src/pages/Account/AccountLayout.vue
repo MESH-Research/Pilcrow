@@ -56,12 +56,12 @@
               align="left"
             >
               <q-route-tab
-                to="/account/profile"
+                to="/account"
                 exact
                 label="Account"
               />
               <q-route-tab
-                to="/account/connections"
+                to="/account/profile"
                 exact
                 label="Profile"
               />

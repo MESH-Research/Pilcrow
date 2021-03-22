@@ -26,8 +26,12 @@ const routes = [
         component: () => import("pages/Account/AccountLayout.vue"),
         children: [
           {
-            path: "profile",
-            component: () => import("pages/Account/Profile.vue")
+            path: "",
+            component: () => import("pages/Account/Account.vue")
+          },
+          {
+            path: 'profile',
+            component: () => import('pages/Account/Profile.vue')
           }
         ]
       },

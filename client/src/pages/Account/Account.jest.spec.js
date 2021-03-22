@@ -1,5 +1,5 @@
 import { mountQuasar } from "@quasar/quasar-app-extension-testing-unit-jest";
-import Profile from "./Profile.vue";
+import Account from "./Account.vue";
 
 import * as All from "quasar";
 
@@ -11,9 +11,9 @@ const components = Object.keys(All).reduce((object, key) => {
   return object;
 }, {});
 
-describe("Profile", () => {
+describe("Account", () => {
   const mutate = jest.fn();
-  const wrapper = mountQuasar(Profile, {
+  const wrapper = mountQuasar(Account, {
     quasar: { components },
     mount: {
       type: "shallow",

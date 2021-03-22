@@ -34,7 +34,7 @@
             <q-item
               clickable
               data-cy="link_my_account"
-              to="/account/profile"
+              to="/account"
             >
               <q-item-section avatar>
                 <q-icon name="account_circle" />

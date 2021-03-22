@@ -5,7 +5,7 @@ describe('Account', () => {
   beforeEach(() => {
     cy.task('resetDb');
     cy.login({ email: 'regularuser@ccrproject.dev' });
-    cy.visit('/account/profile');
+    cy.visit('/account');
   });
 
   it('can update the name field', () => {
