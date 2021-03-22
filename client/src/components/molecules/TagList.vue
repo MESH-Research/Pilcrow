@@ -8,7 +8,10 @@
       @keyup.enter="addItem"
     >
       <template #after>
-        <q-btn @click="addItem">
+        <q-btn
+          class="q-py-sm"
+          @click="addItem"
+        >
           <q-icon name="add" /> Add
         </q-btn>
       </template>

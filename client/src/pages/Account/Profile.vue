@@ -146,7 +146,7 @@
     </q-card-section>
     <q-card-section class="q-col-gutter-md row">
       <fieldset
-        class="col-12 q-col-gutter-md"
+        class="col-12 q-col-gutter-sm"
       >
         <tag-list
           v-model="form.interest_keywords"
@@ -156,7 +156,7 @@
           Interest keywords will be used to help provide suggestions for submissions which may be of interest to you.
         </p>
       </fieldset>
-      <fieldset class="col-12 q-col-gutter-md">
+      <fieldset class="col-12 q-col-gutter-sm">
         <tag-list
           v-model="form.disinterest_keywords"
           label="Disinterest Keywords"

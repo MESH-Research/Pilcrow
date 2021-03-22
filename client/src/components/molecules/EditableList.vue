@@ -100,6 +100,7 @@
       </template>
       <template #after>
         <q-btn
+          class="q-py-sm"
           @click="addItem"
         >
           <q-icon name="add" /> Add
