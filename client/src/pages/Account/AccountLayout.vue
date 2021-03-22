@@ -2,7 +2,7 @@
   <div>
     <div class="row">
       <h2 class="q-pl-lg">
-        My Dashboard
+        My Account
       </h2>
     </div>
     <div class="row justify-center items-start content-start">
