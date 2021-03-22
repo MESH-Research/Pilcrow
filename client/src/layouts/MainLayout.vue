@@ -9,7 +9,7 @@
       v-model="leftDrawerOpen"
       show-if-above
       width="200"
-      content-class="sidebar bg-grey-1"
+      content-class="sidebar"
     >
       <q-scroll-area class="sidebar-nav">
         <q-list>
@@ -49,15 +49,16 @@
         </q-list>
       </q-scroll-area>
 
-      <q-img
+      <div
         class="sidebar-avatar absolute-top"
-        src="https://cdn.quasar.dev/img/material.png"
+        style="border-right: 1px solid #3d47ca"
       >
         <avatar-block
+          style="padding: 16px;"
           :user="currentUser"
-          class="absolute-bottom bg-dark"
+          class="absolute-bottom"
         />
-      </q-img>
+      </div>
     </q-drawer>
 
     <q-page-container>
@@ -97,6 +98,8 @@ export default {
   $avatar-height: 150px
   .sidebar-avatar
     height: $avatar-height
+    background-color: $primary
+    color: white
   .sidebar-nav
     height: calc(100% - #{$avatar-height})
     margin-top: $avatar-height
