@@ -76,6 +76,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     /**
      * Publications that belong to a user
+     *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function publications()

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Database\Factories;
 
@@ -22,7 +23,7 @@ class PublicationFactory extends Factory
     public function definition()
     {
         return [
-            'name' => $this->faker->unique()->company
+            'name' => $this->faker->unique()->company,
         ];
     }
 }
