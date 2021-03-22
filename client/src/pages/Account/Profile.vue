@@ -56,6 +56,7 @@
       </q-input>
       <q-input
         label="Twitter"
+        prefix="@"
         outlined
         class="col-md-6 col-12"
       >
@@ -65,6 +66,7 @@
       </q-input>
       <q-input
         label="Instagram"
+        prefix="@"
         outlined
         class="col-md-6 col-12"
       >
