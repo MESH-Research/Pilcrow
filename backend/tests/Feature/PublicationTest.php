@@ -30,7 +30,7 @@ class PublicationTest extends TestCase
         $this->assertEquals($publication->users->count(), 1);
     }
 
-    public function testUsersCanBeUnAssignedToAndQueriedForAPublication()
+    public function testUsersCanBeUnassignedToAndQueriedForAPublication()
     {
         $publication = Publication::factory()->create();
         $user = User::factory()->create();
@@ -40,7 +40,7 @@ class PublicationTest extends TestCase
         $this->assertEquals($publication->users->count(), 0);
     }
 
-    public function testPublicationsCanBeUnAssignedToAndQueriedForAUser()
+    public function testPublicationsCanBeUnassignedToAndQueriedForAUser()
     {
         $publication = Publication::factory()->create();
         $user = User::factory()->create();
