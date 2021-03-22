@@ -8,6 +8,7 @@
       id="sidebar"
       v-model="leftDrawerOpen"
       show-if-above
+      width="200"
       content-class="sidebar bg-grey-1"
     >
       <q-scroll-area class="sidebar-nav">
