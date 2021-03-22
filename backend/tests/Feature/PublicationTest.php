@@ -44,8 +44,8 @@ class PublicationTest extends TestCase
     {
         $publication = Publication::factory()->create();
         $user = User::factory()->create();
-        $user->publications()->attach([$user->id]);
-        $user->publications()->detach([$user->id]);
+        $user->publications()->attach([$publication->id]);
+        $user->publications()->detach([$publication->id]);
         $this->assertEmpty($user->publications->toArray());
         $this->assertEquals($user->publications->count(), 0);
     }
