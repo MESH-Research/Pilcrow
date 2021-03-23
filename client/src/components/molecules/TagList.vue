@@ -5,7 +5,7 @@
       outlined
       :label="label"
       class="col-md-5 col-12"
-      @keyup.enter="addItem"
+      @keydown.enter.prevent="addItem"
     >
       <template #after>
         <q-btn

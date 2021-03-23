@@ -40,7 +40,60 @@ export const CREATE_USER = gql`
     }
   }
 `;
-
+export const UPDATE_PROFILE_METADATA = gql`
+  mutation UpdateProfileMetaData(
+    $id: ID!
+    $affiliation: String
+    $biography: String
+    $disinterest_keywords: [String!]
+    $interest_keywords: [String!]
+    $websites: [String!]
+    $humanities_commons: String
+    $orchid_id: String
+    $professional_title: String
+    $specialization: String
+    $social_media: UpdateSocialMediaInput
+  ) {
+    updateUser(
+      user: {
+        id: $id,
+        profile_metadata: {
+          affiliation: $affiliation
+          biography: $biography
+          disinterest_keywords: $disinterest_keywords
+          interest_keywords: $interest_keywords
+          websites: $websites
+          humanities_commons: $humanities_commons
+          orchid_id: $orchid_id
+          professional_title: $professional_title
+          specialization: $specialization
+          social_media: $social_media
+        }
+      }
+    ) {
+      id,
+      profile_metadata {
+        biography
+        orchid_id
+        humanities_commons
+        professional_title
+        specialization
+        affiliation
+        websites
+        interest_keywords
+        disinterest_keywords
+        social_media {
+          google
+          twitter
+          instagram
+          academia_edu_id
+          facebook
+          linkedin
+        }
+      }
+    }
+  }
+`;
 export const UPDATE_USER = gql`
   mutation UpdateUser(
     $id: ID!

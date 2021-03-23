@@ -1,5 +1,5 @@
 <template>
-  <q-form>
+  <q-form @submit="save">
     <q-card-section class="bg-primary text-white">
       <div class="text-subtitle2">
         Personal Details
@@ -7,15 +7,18 @@
     </q-card-section>
     <q-card-section class="q-gutter-md">
       <q-input
+        v-model="form.professional_title"
         label="Professional Title"
         outlined
       />
       <q-input
+        v-model="form.specialization"
         label="Specialization"
         outlined
         hint="Area of expertise, specialization or research focus."
       />
       <q-input
+        v-model="form.affiliation"
         label="Affiliation"
         outlined
         hint="Institutional, group, or organization affiliation."
@@ -46,6 +49,7 @@
     </q-card-section>
     <q-card-section class="q-col-gutter-md row">
       <q-input
+        v-model="form.social_media.facebook"
         label="Facebook"
         outlined
         class="col-md-6 col-12"
@@ -166,43 +170,136 @@
         </p>
       </fieldset>
     </q-card-section>
+    <q-card-section class="bg-grey-2 row justify-end">
+      <div class="q-gutter-md">
+        <q-btn
+          :disabled="!dirty"
+          class="text-white"
+          :class="saveBtnClass"
+          data-cy="update_user_button_save"
+          type="submit"
+        >
+          <q-icon
+            v-if="saved === true && !dirty"
+            name="check"
+          />
+          <q-spinner v-else-if="saving === true" />
+          {{ saveBtnText }}
+        </q-btn>
+        <q-btn
+          :disabled="!dirty"
+          class="bg-grey-4 ml-sm"
+          data-cy="update_user_button_discard"
+          @click="resetForm"
+        >
+          Discard Changes
+        </q-btn>
+      </div>
+    </q-card-section>
   </q-form>
 </template>
 
 <script>
 import EditableList from 'src/components/molecules/EditableList.vue';
 import TagList from 'src/components/molecules/TagList.vue';
+import { CURRENT_USER } from 'src/graphql/queries';
+import { UPDATE_PROFILE_METADATA } from 'src/graphql/mutations';
+import { isEqual } from "lodash";
+import { mapObject } from 'src/utils/objUtils';
+import dirtyGuard from "components/mixins/dirtyGuard";
+
+const applyDefaults = (data) => {
+  const defaults = {
+    biography: "",
+    orchid_id: "",
+    humanities_commons: "",
+    professional_title: "",
+    specialization: "",
+    affiliation: "",
+    websites: [],
+    interest_keywords: [],
+    disinterest_keywords: [],
+    social_media: {
+      google: "",
+      twitter: "",
+      facebook: "",
+      instagram: "",
+      linkedin: "",
+      academia_edu_id: "",
+    }
+  };
+
+  return JSON.parse(JSON.stringify(mapObject(defaults, data)));
+};
 
 export default {
     name: 'ProfilePage',
-    // eslint-disable-next-line vue/no-unused-components
     components: { EditableList, TagList },
+    mixins: [dirtyGuard],
     data() {
       return {
-        addWebsiteValue: "",
-        form: {
-          biography: "",
-          orchid_id: "",
-          humanities_commons: "",
-          professional_title: "",
-          specialization: "",
-          affiliation: "",
-          websites: ["test2", "test3", "test4"],
-          interest_keywords: ["something", "something else"],
-          disinterest_keywords: [],
-          social_media: {
-            google: "",
-            twitter: "",
-            facebook: "",
-            instagram: "",
-            linkedin: "",
-            academia_edu_id: "",
-          }
+        saved: false,
+        saving: false,
+        form: applyDefaults({})
+      }
+    },
+    apollo: {
+      currentUser: {
+        query: CURRENT_USER
+      }
+    },
+    computed: {
+      dirty() {
+        return !isEqual(this.original, this.form);
+      },
+      original() {
+       return applyDefaults(this.currentUser.profile_metadata);
+      },
+      saveBtnClass() {
+        if (this.saving) {
+          return { };
+        } else if (this.saved && !this.dirty) {
+          return {'bg-positive': true};
+        } else {
+          return {'bg-primary': true};
+        }
+      },
+      saveBtnText() {
+        if (this.saving) {
+          return 'Saving';
+        } else if (this.saved && !this.dirty) {
+          return "Saved";
+        } else {
+          return "Save";
         }
       }
     },
+    watch: {
+      currentUser() {
+        this.resetForm();
+      }
+    },
     methods: {
-
+      resetForm() {
+        this.form = applyDefaults(this.currentUser.profile_metadata);
+        this.saved = false;
+      },
+      save() {
+        this.saved = false;
+        this.saving = true;
+        this.$apollo.mutate(
+          {
+            mutation: UPDATE_PROFILE_METADATA,
+            variables: {id: this.currentUser.id, ...this.form}
+          }
+        ).then(() => {
+          this.saved = true;
+        }).catch(() => {
+          this.saved = false;
+        }).finally(() => {
+          this.saving = false;
+        });
+      }
     },
 }
 </script>

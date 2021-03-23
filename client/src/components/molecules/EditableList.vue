@@ -90,7 +90,7 @@
       v-model="addItemValue"
       label="Add Website"
       outlined
-      @keyup.enter="addItem"
+      @keydown.enter.prevent="addItem"
     >
       <template
         v-if="inputIcon"
