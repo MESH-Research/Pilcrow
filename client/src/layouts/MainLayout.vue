@@ -8,7 +8,7 @@
       id="sidebar"
       v-model="leftDrawerOpen"
       show-if-above
-      width="200"
+      :width="200"
       content-class="sidebar"
     >
       <q-scroll-area class="sidebar-nav">
