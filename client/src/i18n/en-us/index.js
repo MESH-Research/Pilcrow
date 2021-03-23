@@ -4,7 +4,8 @@
 export default {
   buttons: {
     more_info: "More Info",
-    dashboard: "Dashboard"
+    dashboard: "Dashboard",
+    add: "Add"
   },
   auth: {
     loginRequired: "You need to login to access that page.",

@@ -23,7 +23,10 @@
           />
         </q-item-section>
         <q-item-section>
-          <q-item-label v-if="itemUnderEdit !== index">
+          <q-item-label
+            v-if="itemUnderEdit !== index"
+            @click="editItem(index)"
+          >
             {{ item }}
           </q-item-label>
           <q-input
@@ -36,11 +39,13 @@
             >
               <q-btn
                 dense
+                aria-label="Save Item Edit"
                 @click="saveEdit"
               >
                 <q-icon name="check" /> Save
               </q-btn>
               <q-btn
+                aria-label="Cancel Item Edit"
                 dense
                 @click="cancelEdit"
               >
@@ -57,6 +62,7 @@
             flat
             dense
             icon="edit"
+            aria-label="Edit Item"
             @click="editItem(index)"
           />
           <q-btn
@@ -67,6 +73,7 @@
             flat
             dense
             icon="arrow_upward"
+            aria-label="Move Item Up"
             @click="reorderItem(index, -1)"
           />
           <q-btn
@@ -75,12 +82,14 @@
             flat
             dense
             icon="arrow_downward"
+            aria-label="Move Item Down"
             @click="reorderItem(index, 1)"
           />
           <q-btn
             flat
             dense
             icon="delete"
+            aria-label="Delete Item"
             @click="deleteItem(index)"
           />
         </q-item-section>
@@ -88,7 +97,7 @@
     </draggable>
     <q-input
       v-model="addItemValue"
-      label="Add Website"
+      :label="inputLabel"
       outlined
       @keydown.enter.prevent="addItem"
     >
@@ -100,10 +109,11 @@
       </template>
       <template #after>
         <q-btn
+          ref="addBtn"
           class="q-py-sm"
           @click="addItem"
         >
-          <q-icon name="add" /> Add
+          <q-icon name="add" /> {{ $t('add') }}
         </q-btn>
       </template>
     </q-input>
@@ -154,18 +164,21 @@ export default {
           this.addItemValue = '';
           return;
         }
-        this.value.push(this.addItemValue);
+        this.$emit('input', [...this.value, this.addItemValue]);
         this.addItemValue = '';
       },
       deleteItem(index) {
-        this.value.splice(index, 1);
+        this.$emit('input', [...this.value.slice(0, index), ...this.value.slice(index + 1)]);
       },
       editItem(index) {
           this.editItemValue = this.value[index];
           this.itemUnderEdit = index;
       },
       saveEdit() {
-          this.value.splice(this.itemUnderEdit, 1, this.editItemValue);
+          const index = this.itemUnderEdit;
+          if (index !== false && index < this.value.length) {
+            this.$emit('input', [...this.value.slice(0, index), this.editItemValue, ...this.value.slice(index+1)]);
+          }
           this.itemUnderEdit = false;
           this.editItemValue = '';
       },
@@ -179,9 +192,12 @@ export default {
         if (newIndex === this.value.length || newIndex < 0) {
           return;
         }
-        const swap = this.value[newIndex];
-        this.value.splice(newIndex, 1, this.value[index]);
-        this.value.splice(index, 1, swap);
+        const startIndex = newIndex > index ? index : newIndex;
+        const values = this.value.slice(startIndex, startIndex + 2);
+        values.reverse();
+
+        this.$emit('input', [...this.value.slice(0,startIndex), ...values, ...this.value.slice(startIndex +2)])
+
 
       }
     },
