@@ -132,6 +132,10 @@ export default {
         inputLabel: {
             type: String,
             default: 'Enter New Item'
+        },
+        allowDuplicates: {
+            type: Boolean,
+            default: false
         }
     },
     data() {
@@ -145,6 +149,10 @@ export default {
       addItem() {
         if (!this.addItemValue.length) {
             return;
+        }
+        if (!this.allowDuplicates && this.value.includes(this.addItemValue)) {
+          this.addItemValue = '';
+          return;
         }
         this.value.push(this.addItemValue);
         this.addItemValue = '';

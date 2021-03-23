@@ -40,6 +40,11 @@ export default {
         value: {
             type: Array,
             default: () => []
+        },
+        allowDuplicates: {
+          type: Boolean,
+          default: false
+
         }
     },
     data() {
@@ -53,7 +58,11 @@ export default {
         },
         addItem() {
             if (!this.addValue.length) {
-                return;
+              return;
+            }
+            if  (!this.allowDuplicates && this.value.includes(this.addValue)) {
+              this.addValue = '';
+              return;
             }
             this.value.push(this.addValue);
             this.addValue = '';
