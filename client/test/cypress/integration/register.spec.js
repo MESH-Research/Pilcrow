@@ -4,12 +4,10 @@
 import 'cypress-axe';
 
 describe("Register", () => {
-    beforeEach(() => {
-        cy.task('resetDb');
-        cy.visit("/register");
-    });
 
     it("validates fields", () => {
+        cy.task('resetDb');
+        cy.visit("/register");
         cy.get('.q-form').within(() => {
             //Email is required
             cy.dataCy('email_field')
@@ -84,6 +82,8 @@ describe("Register", () => {
     });
 
     it('submits with enter key', () => {
+        cy.task('resetDb');
+        cy.visit("/register");
         cy.injectAxe();
         cy.checkA11y(null, {
             rules: {
@@ -102,4 +102,9 @@ describe("Register", () => {
         cy.url().should('include', '/dashboard');
     });
 
+    it('should assert the My Dashboard page is accessible', () => {
+      // Inject the axe-core libraray
+      cy.injectAxe();
+      cy.checkA11y();
+    });
 });
