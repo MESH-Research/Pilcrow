@@ -31,7 +31,7 @@ describe('login page', () => {
                 .parents('label')
                 .should('have.class', 'q-field--error')
                 .type('somePass{enter}');
-            
+
             cy.dataCy('authFailureMessages')
                 .should('be.visible')
                 .contains('combination is incorrect');

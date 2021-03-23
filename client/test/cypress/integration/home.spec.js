@@ -15,11 +15,11 @@ describe("Landing", () => {
     // Inject the axe-core libraray
     cy.injectAxe();
   });
-  it(".should() - assert that <title> is correct", () => {
+  it("should assert that <title> is correct", () => {
     cy.title().should("include", "CCR");
   });
 
-  it("should() - assert home page is accessible", () => {
+  it("should assert home page is accessible", () => {
     // check the page for a11y errors
     cy.checkA11y();
   });
