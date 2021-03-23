@@ -192,5 +192,7 @@ export default {
 .ghost
   opacity: 0.5
   background: #c8ebfb
+.handle
+  cursor: move
 
 </style>
