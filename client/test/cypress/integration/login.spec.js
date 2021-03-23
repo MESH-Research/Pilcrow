@@ -10,8 +10,6 @@ describe('login page', () => {
 
     it('allows a user to login', () => {
         cy.visit('/login');
-        cy.injectAxe();
-        cy.checkA11y();
         cy.get('.q-form').within(() => {
             cy.dataCy('email_field').type('regularuser@ccrproject.dev');
             cy.dataCy('password_field').type('regularPassword!@#');
@@ -50,5 +48,11 @@ describe('login page', () => {
             cy.dataCy('password_field').type('regularPassword!@#{enter}');
             cy.url().should('include', '/account/profile');
         })
+    });
+
+    it('should assert the page is accessible', () => {
+      // Inject the axe-core libraray
+      cy.injectAxe();
+      cy.checkA11y();
     });
 });

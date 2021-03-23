@@ -1,6 +1,8 @@
 /// <reference types="Cypress" />
 /// <reference path="../support/index.d.ts" />
 
+import 'cypress-axe';
+
 describe('Header', () => {
     beforeEach(() => {
         cy.task('resetDb');
@@ -39,4 +41,11 @@ describe('Header', () => {
             cy.contains('Register');
         });
     });
+
+    it('should assert the page is accessible', () => {
+      // Inject the axe-core libraray
+      cy.injectAxe();
+      cy.checkA11y();
+    });
+
 });
