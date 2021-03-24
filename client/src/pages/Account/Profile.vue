@@ -2,37 +2,37 @@
   <q-form @submit="save">
     <q-card-section class="bg-primary text-white">
       <div class="text-subtitle2">
-        Personal Details
+        {{ $t('account.profile.section_personal') }}
       </div>
     </q-card-section>
     <q-card-section class="q-gutter-md">
       <q-input
         v-model="form.professional_title"
-        label="Professional Title"
+        :label="$t('account.profile.fields.professional_title')"
         outlined
       />
       <q-input
         v-model="form.specialization"
-        label="Specialization"
+        :label="$t('account.profile.fields.specialization')"
         outlined
-        hint="Area of expertise, specialization or research focus."
+        :hint="$t('account.profile.fields.specializztion_hint')"
       />
       <q-input
         v-model="form.affiliation"
-        label="Affiliation"
+        :label="$t('account.profile.fields.affiliation')"
         outlined
-        hint="Institutional, group, or organization affiliation."
+        :hint="$t('account.profile.fields.affiliation_hint')"
       />
     </q-card-section>
     <q-card-section class="bg-primary text-white">
       <div class="text-subtitle2">
-        Biography
+        {{ $t('account.profile.section_biography') }}
       </div>
     </q-card-section>
     <q-card-section class="q-gutter-md">
       <q-input
         v-model="form.biography"
-        label="Biography"
+        :label="$t('account.profile.fields.biography')"
         outlined
         type="textarea"
         counter
@@ -44,7 +44,7 @@
     </q-card-section>
     <q-card-section class="bg-primary text-white">
       <div class="text-subtitle2">
-        Social Media Profiles
+        {{ $t('account.profile.section_social_media') }}
       </div>
     </q-card-section>
     <q-card-section class="q-col-gutter-md row">
@@ -90,7 +90,7 @@
     </q-card-section>
     <q-card-section class="bg-primary text-white">
       <div class="text-subtitle2">
-        Academic Profiles
+        {{ $t('account.profile.section_academic_profiles') }}
       </div>
     </q-card-section>
     <q-card-section class="q-col-gutter-md row">
@@ -133,19 +133,19 @@
     </q-card-section>
     <q-card-section class="bg-primary text-white">
       <div class="text-subtitle2">
-        Websites
+        {{ $t('account.profile.section_websites') }}
       </div>
     </q-card-section>
     <q-card-section>
       <editable-list
         v-model="form.websites"
-        item-name="Website"
+        :item-name="$t('account.profile.fields.website')"
         class="q-gutter-md"
       />
     </q-card-section>
     <q-card-section class="bg-primary text-white">
       <div class="text-subtitle2">
-        Keywords
+        {{ $t('account.profile.section_keywords') }}
       </div>
     </q-card-section>
     <q-card-section class="q-col-gutter-md row">
@@ -154,19 +154,19 @@
       >
         <tag-list
           v-model="form.interest_keywords"
-          item-name="Interest Keyword"
+          :item-name="$t('account.profile.fields.interest_keyword')"
         />
         <p>
-          Interest keywords will be used to help provide suggestions for submissions which may be of interest to you.
+          {{ $t('account.profile.fields.interest_keyword_hint') }}
         </p>
       </fieldset>
       <fieldset class="col-12 q-col-gutter-sm">
         <tag-list
           v-model="form.disinterest_keywords"
-          item-name="Disinterest Keyword"
+          :item-name="$t('account.profile.fields.disinterest_keyword')"
         />
         <p>
-          Disinterest keywords will be used to help filter suggestions for submissions that are not of interest to you.
+          {{ $t('account.profile.fields.disinterest_keyword_hint') }}
         </p>
       </fieldset>
     </q-card-section>
@@ -176,7 +176,7 @@
           :disabled="!dirty"
           class="text-white"
           :class="saveBtnClass"
-          data-cy="update_user_button_save"
+          data-cy="button_save"
           type="submit"
         >
           <q-icon
@@ -189,10 +189,10 @@
         <q-btn
           :disabled="!dirty"
           class="bg-grey-4 ml-sm"
-          data-cy="update_user_button_discard"
+          data-cy="button_discard"
           @click="resetForm"
         >
-          Discard Changes
+          {{ $t('buttons.discard_changes') }}
         </q-btn>
       </div>
     </q-card-section>
@@ -202,8 +202,10 @@
 <script>
 import EditableList from 'src/components/molecules/EditableList.vue';
 import TagList from 'src/components/molecules/TagList.vue';
+
 import { CURRENT_USER } from 'src/graphql/queries';
 import { UPDATE_PROFILE_METADATA } from 'src/graphql/mutations';
+
 import { isEqual } from "lodash";
 import { mapObject } from 'src/utils/objUtils';
 import dirtyGuard from "components/mixins/dirtyGuard";
@@ -266,11 +268,11 @@ export default {
       },
       saveBtnText() {
         if (this.saving) {
-          return 'Saving';
+          return this.$t('buttons.saving');
         } else if (this.saved && !this.dirty) {
-          return "Saved";
+          return this.$t('buttons.saved');
         } else {
-          return "Save";
+          return this.$t('buttons.save');
         }
       }
     },
