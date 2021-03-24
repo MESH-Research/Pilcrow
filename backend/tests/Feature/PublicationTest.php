@@ -12,41 +12,9 @@ class PublicationTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function testPublicationsCanBeAssignedToAndQueriedForAUser()
+    public function testPublicationsCanBeCreatedWithCustomNames()
     {
-        $publication = Publication::factory()->create();
-        $user = User::factory()->create();
-        $user->publications()->attach($publication->id);
-        $this->assertEquals($user->publications->first()->id, $publication->id);
-        $this->assertEquals($user->publications->count(), 1);
-    }
-
-    public function testUsersCanBeAssignedToAndQueriedForAPublication()
-    {
-        $publication = Publication::factory()->create();
-        $user = User::factory()->create();
-        $publication->users()->attach([$user->id]);
-        $this->assertEquals($publication->users->first()->id, $user->id);
-        $this->assertEquals($publication->users->count(), 1);
-    }
-
-    public function testUsersCanBeUnassignedToAndQueriedForAPublication()
-    {
-        $publication = Publication::factory()->create();
-        $user = User::factory()->create();
-        $publication->users()->attach([$user->id]);
-        $publication->users()->detach([$user->id]);
-        $this->assertEmpty($publication->users->toArray());
-        $this->assertEquals($publication->users->count(), 0);
-    }
-
-    public function testPublicationsCanBeUnassignedToAndQueriedForAUser()
-    {
-        $publication = Publication::factory()->create();
-        $user = User::factory()->create();
-        $user->publications()->attach([$publication->id]);
-        $user->publications()->detach([$publication->id]);
-        $this->assertEmpty($user->publications->toArray());
-        $this->assertEquals($user->publications->count(), 0);
+        $publication = Publication::factory()->create(['name' => 'Custom Name']);
+        $this->assertEquals($publication->name, 'Custom Name');
     }
 }

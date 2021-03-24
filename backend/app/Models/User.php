@@ -75,16 +75,6 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Publications that belong to a user
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function publications()
-    {
-        return $this->belongsToMany(Publication::class, 'publication_users');
-    }
-
-    /**
      * Lowercase email before saving to persistance.
      *
      * @param string $value
