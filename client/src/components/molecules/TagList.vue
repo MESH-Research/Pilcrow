@@ -3,16 +3,17 @@
     <q-input
       v-model.trim="addValue"
       outlined
-      :label="label"
+      :label="$t('lists.new', [itemName])"
       class="col-md-5 col-12"
       @keydown.enter.prevent="addItem"
     >
       <template #after>
         <q-btn
+          ref="addBtn"
           class="q-py-sm"
           @click="addItem"
         >
-          <q-icon name="add" /> Add
+          <q-icon name="add" /> {{ $t('lists.add') }}
         </q-btn>
       </template>
     </q-input>
@@ -33,9 +34,9 @@
 export default {
     name: 'TagList',
     props: {
-        label: {
+        itemName: {
             type: String,
-            default: ""
+            default: function() {return this.$t('lists.default_item_name')}
         },
         value: {
             type: Array,
