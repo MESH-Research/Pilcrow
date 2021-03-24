@@ -7,7 +7,7 @@ export default {
     dashboard: "Dashboard",
     add: "Add",
   },
-  editable_list: {
+  lists: {
     move_up: 'Move {0} Up',
     move_down: 'Move {0} Down',
     edit: 'Edit {0}',

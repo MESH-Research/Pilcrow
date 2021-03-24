@@ -60,13 +60,13 @@ describe("EditableList Component", () => {
     const items = wrapper.findAllComponents({ name: 'q-item' });
     expect(items).toHaveLength(3);
 
-    await findByAria(items.at(1), "editable_list.delete").trigger('click');
+    await findByAria(items.at(1), "lists.delete").trigger('click');
     expect(wrapper.emitted('input')[0][0]).toEqual(['a', 'c']);
 
-    await findByAria(items.at(0), "editable_list.delete").trigger('click');
+    await findByAria(items.at(0), "lists.delete").trigger('click');
     expect(wrapper.emitted('input')[1][0]).toEqual(['b', 'c']);
 
-    await findByAria(items.at(2), "editable_list.delete").trigger('click');
+    await findByAria(items.at(2), "lists.delete").trigger('click');
     expect(wrapper.emitted('input')[2][0]).toEqual(['a', 'b']);
   });
 
@@ -75,16 +75,16 @@ describe("EditableList Component", () => {
 
     const items = wrapper.findAllComponents({ name: 'q-item' });
 
-    await findByAria(items.at(0), "editable_list.move_down").trigger('click');
+    await findByAria(items.at(0), "lists.move_down").trigger('click');
     expect(wrapper.emitted('input')[0][0]).toEqual(['b', 'a', 'c']);
 
-    await findByAria(items.at(0), "editable_list.move_up").trigger('click');
+    await findByAria(items.at(0), "lists.move_up").trigger('click');
     expect(wrapper.emitted('input')).toHaveLength(1);
 
-    await findByAria(items.at(2), "editable_list.move_down").trigger('click');
+    await findByAria(items.at(2), "lists.move_down").trigger('click');
     expect(wrapper.emitted('input')).toHaveLength(1);
 
-    await findByAria(items.at(2), "editable_list.move_up").trigger('click');
+    await findByAria(items.at(2), "lists.move_up").trigger('click');
     expect(wrapper.emitted('input')[1][0]).toEqual(['a', 'c', 'b']);
   });
 
@@ -92,10 +92,10 @@ describe("EditableList Component", () => {
     const wrapper = factory(['a', 'b', 'c']);
 
     const items = wrapper.findAllComponents({ name: 'q-item' });
-    await findByAria(items.at(1), 'editable_list.edit').trigger('click');
+    await findByAria(items.at(1), 'lists.edit').trigger('click');
 
     await items.at(1).find('input').setValue('d');
-    await findByAria(items.at(1), 'editable_list.save').trigger('click');
+    await findByAria(items.at(1), 'lists.save').trigger('click');
 
     expect(wrapper.emitted('input')[0][0]).toEqual(['a', 'd', 'c']);
   })
@@ -104,10 +104,10 @@ describe("EditableList Component", () => {
     const wrapper = factory(['a', 'b', 'c']);
 
     const items = wrapper.findAllComponents({ name: 'q-item' });
-    await findByAria(items.at(1), 'editable_list.edit').trigger('click');
+    await findByAria(items.at(1), 'lists.edit').trigger('click');
     await items.at(1).find('input').setValue('d');
 
-    await findByAria(items.at(1), 'editable_list.cancel').trigger('click');
+    await findByAria(items.at(1), 'lists.cancel').trigger('click');
 
     expect(wrapper.emitted('input')).toBeUndefined();
   });

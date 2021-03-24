@@ -41,7 +41,7 @@
                 class="q-gutter-sm"
               >
                 <q-btn
-                  :aria-label="$t('editable_list.save', [itemName]) "
+                  :aria-label="$t('lists.save', [itemName]) "
                   dense
                   class="q-py-sm"
                   @click="saveEdit"
@@ -50,7 +50,7 @@
                 </q-btn>
                 <q-btn
                   dense
-                  :aria-label="$t('editable_list.cancel', [itemName])"
+                  :aria-label="$t('lists.cancel', [itemName])"
                   class="q-py-sm"
                   @click="cancelEdit"
                 >
@@ -68,7 +68,7 @@
             flat
             dense
             icon="edit"
-            :aria-label="$t('editable_list.edit', [itemName])"
+            :aria-label="$t('lists.edit', [itemName])"
             @click="editItem(index)"
           />
           <q-btn
@@ -79,7 +79,7 @@
             flat
             dense
             icon="arrow_upward"
-            :aria-label="$t('editable_list.move_up', [itemName])"
+            :aria-label="$t('lists.move_up', [itemName])"
             @click="reorderItem(index, -1)"
           />
           <q-btn
@@ -88,14 +88,14 @@
             flat
             dense
             icon="arrow_downward"
-            :aria-label="$t('editable_list.move_down', [itemName])"
+            :aria-label="$t('lists.move_down', [itemName])"
             @click="reorderItem(index, 1)"
           />
           <q-btn
             flat
             dense
             icon="delete"
-            :aria-label="$t('editable_list.delete', [itemName])"
+            :aria-label="$t('lists.delete', [itemName])"
             @click="deleteItem(index)"
           />
         </q-item-section>
@@ -103,7 +103,7 @@
     </draggable>
     <q-input
       v-model="addItemValue"
-      :label="$t('editable_list.new', [itemName])"
+      :label="$t('lists.new', [itemName])"
       outlined
       @keydown.enter.prevent="addItem"
     >
@@ -119,7 +119,7 @@
           class="q-py-sm"
           @click="addItem"
         >
-          <q-icon name="add" /> {{ $t('editable_list.add') }}
+          <q-icon name="add" /> {{ $t('lists.add') }}
         </q-btn>
       </template>
     </q-input>
@@ -147,7 +147,7 @@ export default {
         },
         itemName: {
             type: String,
-            default: function() { return this.$t('editable_list.default_item_name')}
+            default: function() { return this.$t('lists.default_item_name')}
         },
         allowDuplicates: {
             type: Boolean,
