@@ -154,7 +154,7 @@
       >
         <tag-list
           v-model="form.interest_keywords"
-          label="Interest Keywords"
+          item-name="Interest Keyword"
         />
         <p>
           Interest keywords will be used to help provide suggestions for submissions which may be of interest to you.
@@ -163,7 +163,7 @@
       <fieldset class="col-12 q-col-gutter-sm">
         <tag-list
           v-model="form.disinterest_keywords"
-          label="Disinterest Keywords"
+          item-name="Disinterest Keyword"
         />
         <p>
           Disinterest keywords will be used to help filter suggestions for submissions that are not of interest to you.
