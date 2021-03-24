@@ -120,4 +120,26 @@ describe("EditableList Component", () => {
 
     expect(items.at(1).findAll('input')).toHaveLength(1);
   });
+
+  it('does not add duplicates', async () => {
+    const wrapper = factory([]);
+
+    await wrapper.setProps({ value: ['a', 'b', 'c'], allowDuplicates: false });
+
+    await wrapper.find('input').setValue('a');
+    await wrapper.findComponent({ ref: 'addBtn' }).trigger('click');
+
+    expect(wrapper.emitted('input')).toBeUndefined();
+  });
+
+  it('can allow duplicates', async () => {
+    const wrapper = factory([]);
+
+    await wrapper.setProps({ value: ['a', 'b', 'c'], allowDuplicates: true });
+
+    await wrapper.find('input').setValue('a');
+    await wrapper.findComponent({ ref: 'addBtn' }).trigger('click');
+
+    expect(wrapper.emitted('input')[0][0]).toEqual(['a', 'b', 'c', 'a']);
+  });
 });
