@@ -32,37 +32,43 @@
           <q-input
             v-else
             v-model.trim="editItemValue"
+            outlined
           >
             <template
               #after
-              class="q-gutter-md"
             >
-              <q-btn
-                dense
-                aria-label="Save Item Edit"
-                @click="saveEdit"
+              <div
+                class="q-gutter-sm"
               >
-                <q-icon name="check" /> Save
-              </q-btn>
-              <q-btn
-                aria-label="Cancel Item Edit"
-                dense
-                @click="cancelEdit"
-              >
-                <q-icon name="close" /> Cancel
-              </q-btn>
+                <q-btn
+                  :aria-label="$t('editable_list.save', [itemName]) "
+                  dense
+                  class="q-py-sm"
+                  @click="saveEdit"
+                >
+                  <q-icon name="check" />
+                </q-btn>
+                <q-btn
+                  dense
+                  :aria-label="$t('editable_list.cancel', [itemName])"
+                  class="q-py-sm"
+                  @click="cancelEdit"
+                >
+                  <q-icon name="close" />
+                </q-btn>
+              </div>
             </template>
           </q-input>
         </q-item-section>
         <q-item-section
           side
-          style="flex-direction: row;"
+          style="flex-direction: row; align-items: center"
         >
           <q-btn
             flat
             dense
             icon="edit"
-            aria-label="Edit Item"
+            :aria-label="$t('editable_list.edit', [itemName])"
             @click="editItem(index)"
           />
           <q-btn
@@ -73,7 +79,7 @@
             flat
             dense
             icon="arrow_upward"
-            aria-label="Move Item Up"
+            :aria-label="$t('editable_list.move_up', [itemName])"
             @click="reorderItem(index, -1)"
           />
           <q-btn
@@ -82,14 +88,14 @@
             flat
             dense
             icon="arrow_downward"
-            aria-label="Move Item Down"
+            :aria-label="$t('editable_list.move_down', [itemName])"
             @click="reorderItem(index, 1)"
           />
           <q-btn
             flat
             dense
             icon="delete"
-            aria-label="Delete Item"
+            :aria-label="$t('editable_list.delete', [itemName])"
             @click="deleteItem(index)"
           />
         </q-item-section>
@@ -97,7 +103,7 @@
     </draggable>
     <q-input
       v-model="addItemValue"
-      :label="inputLabel"
+      :label="$t('editable_list.new', [itemName])"
       outlined
       @keydown.enter.prevent="addItem"
     >
@@ -113,7 +119,7 @@
           class="q-py-sm"
           @click="addItem"
         >
-          <q-icon name="add" /> {{ $t('add') }}
+          <q-icon name="add" /> {{ $t('editable_list.add') }}
         </q-btn>
       </template>
     </q-input>
@@ -139,9 +145,9 @@ export default {
             type: String,
             default: 'launch'
         },
-        inputLabel: {
+        itemName: {
             type: String,
-            default: 'Enter New Item'
+            default: function() { return this.$t('editable_list.default_item_name')}
         },
         allowDuplicates: {
             type: Boolean,

@@ -5,7 +5,17 @@ export default {
   buttons: {
     more_info: "More Info",
     dashboard: "Dashboard",
-    add: "Add"
+    add: "Add",
+  },
+  editable_list: {
+    move_up: 'Move {0} Up',
+    move_down: 'Move {0} Down',
+    edit: 'Edit {0}',
+    save: 'Save',
+    cancel: 'Cancel',
+    add: 'Add',
+    new: 'New {0}',
+    default_item_name: 'Item'
   },
   auth: {
     loginRequired: "You need to login to access that page.",

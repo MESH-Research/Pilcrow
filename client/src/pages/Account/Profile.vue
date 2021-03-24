@@ -139,7 +139,7 @@
     <q-card-section>
       <editable-list
         v-model="form.websites"
-        input-label="Add Website"
+        item-name="Website"
         class="q-gutter-md"
       />
     </q-card-section>
