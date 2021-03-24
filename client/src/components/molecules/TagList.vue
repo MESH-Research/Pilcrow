@@ -55,7 +55,7 @@ export default {
     },
     methods: {
         remove(index) {
-            this.value.splice(index, 1);
+            this.$emit('input', [...this.value.slice(0, index), ...this.value.slice(index + 1)]);
         },
         addItem() {
             if (!this.addValue.length) {
@@ -65,7 +65,7 @@ export default {
               this.addValue = '';
               return;
             }
-            this.value.push(this.addValue);
+            this.$emit('input', [...this.value, this.addValue]);
             this.addValue = '';
         }
     },
