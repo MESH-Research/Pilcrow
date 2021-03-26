@@ -7,6 +7,7 @@
       <q-item
         v-for="user in users.data"
         :key="user.id"
+        data-cy="userListItem"
       >
         <q-item-section
           top

@@ -41,11 +41,4 @@ describe('Header', () => {
             cy.contains('Register');
         });
     });
-
-    it('should assert the page is accessible', () => {
-      // Inject the axe-core libraray
-      cy.injectAxe();
-      cy.checkA11y();
-    });
-
 });

@@ -5,9 +5,12 @@ import 'cypress-axe';
 
 describe("Register", () => {
 
+    beforeEach(() => {
+        cy.visit("/register");
+    });
+
     it("validates fields", () => {
         cy.task('resetDb');
-        cy.visit("/register");
         cy.get('.q-form').within(() => {
             //Email is required
             cy.dataCy('email_field')
@@ -83,13 +86,7 @@ describe("Register", () => {
 
     it('submits with enter key', () => {
         cy.task('resetDb');
-        cy.visit("/register");
         cy.injectAxe();
-        cy.checkA11y(null, {
-            rules: {
-                'autocomplete-valid': { enabled: false },
-            },
-        });
         cy.get('.q-form').within(() => {
             cy.dataCy('username_field')
                 .type('newUserName');
@@ -105,6 +102,11 @@ describe("Register", () => {
     it('should assert the My Dashboard page is accessible', () => {
       // Inject the axe-core libraray
       cy.injectAxe();
-      cy.checkA11y();
+      cy.dataCy('vueRegister')
+      cy.checkA11y(null, {
+        rules: {
+            'autocomplete-valid': { enabled: false },
+        },
+      });
     });
 });

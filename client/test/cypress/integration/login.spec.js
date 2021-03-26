@@ -6,10 +6,10 @@ import 'cypress-axe';
 describe('login page', () => {
     beforeEach(() => {
         cy.task('resetDb');
+        cy.visit('/login');
     });
 
     it('allows a user to login', () => {
-        cy.visit('/login');
         cy.get('.q-form').within(() => {
             cy.dataCy('email_field').type('regularuser@ccrproject.dev');
             cy.dataCy('password_field').type('regularPassword!@#');
@@ -19,7 +19,6 @@ describe('login page', () => {
     });
 
     it('validates fields and displays errors', () => {
-        cy.visit('/login');
         cy.get('.q-form').within(() => {
             cy.dataCy('email_field')
                 .type('{enter}')
@@ -53,6 +52,7 @@ describe('login page', () => {
     it('should assert the page is accessible', () => {
       // Inject the axe-core libraray
       cy.injectAxe();
+      cy.dataCy('vueLogin');
       cy.checkA11y();
     });
 });
