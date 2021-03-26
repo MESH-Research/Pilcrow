@@ -11,11 +11,11 @@ export default {
   lists: {
     move_up: 'Move {0} Up',
     move_down: 'Move {0} Down',
+    delete: 'Delete {0}',
     edit: 'Edit {0}',
     save: 'Save',
-    cancel: 'Cancel',
     add: 'Add',
-    new: 'New {0}',
+    new: 'Add {0}',
     default_item_name: 'Item'
   },
   auth: {

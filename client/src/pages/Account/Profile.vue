@@ -15,7 +15,7 @@
         v-model="form.specialization"
         :label="$t('account.profile.fields.specialization')"
         outlined
-        :hint="$t('account.profile.fields.specializztion_hint')"
+        :hint="$t('account.profile.fields.specialization_hint')"
       />
       <q-input
         v-model="form.affiliation"

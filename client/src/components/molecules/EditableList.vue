@@ -6,6 +6,7 @@
       :list="value"
       handle=".handle"
       ghost-class="ghost"
+      :disabled="itemUnderEdit !== false"
       bordered
       separator
       :component-data="{props: {bordered: true, separator: true}}"
@@ -15,16 +16,19 @@
         :key="index"
       >
         <q-item-section
+          v-if="itemUnderEdit !== index"
           avatar
         >
           <q-icon
             name="reorder"
             class="handle"
+            :disabled="itemUnderEdit !== false"
           />
         </q-item-section>
         <q-item-section>
           <q-item-label
             v-if="itemUnderEdit !== index"
+            class="ellipsis"
             @click="editItem(index)"
           >
             {{ item }}
@@ -33,6 +37,7 @@
             v-else
             v-model.trim="editItemValue"
             outlined
+            @keydown.enter.prevent="saveEdit"
           >
             <template
               #after
@@ -48,56 +53,53 @@
                 >
                   <q-icon name="check" />
                 </q-btn>
-                <q-btn
-                  dense
-                  :aria-label="$t('lists.cancel', [itemName])"
-                  class="q-py-sm"
-                  @click="cancelEdit"
-                >
-                  <q-icon name="close" />
-                </q-btn>
               </div>
             </template>
           </q-input>
         </q-item-section>
         <q-item-section
+          v-if="itemUnderEdit !== index"
           side
           style="flex-direction: row; align-items: center"
         >
-          <q-btn
-            flat
-            dense
-            icon="edit"
-            :aria-label="$t('lists.edit', [itemName])"
-            @click="editItem(index)"
-          />
-          <q-btn
-            :disabled="
-              index
-                ===
-                0"
-            flat
-            dense
-            icon="arrow_upward"
-            :aria-label="$t('lists.move_up', [itemName])"
-            @click="reorderItem(index, -1)"
-          />
-          <q-btn
-            :disabled="
-              index === value.length - 1"
-            flat
-            dense
-            icon="arrow_downward"
-            :aria-label="$t('lists.move_down', [itemName])"
-            @click="reorderItem(index, 1)"
-          />
-          <q-btn
-            flat
-            dense
-            icon="delete"
-            :aria-label="$t('lists.delete', [itemName])"
-            @click="deleteItem(index)"
-          />
+          <collapse-toolbar :collapse="$q.screen.lt.md">
+            <q-btn
+              flat
+              dense
+              icon="edit"
+              :aria-label="$t('lists.edit', [itemName])"
+              :disabled="itemUnderEdit !== false"
+              @click="editItem(index)"
+            />
+            <q-btn
+              :disabled="
+                index
+                  ===
+                  0 || itemUnderEdit !== false"
+              flat
+              dense
+              icon="arrow_upward"
+              :aria-label="$t('lists.move_up', [itemName])"
+              @click="reorderItem(index, -1)"
+            />
+            <q-btn
+              :disabled="
+                index === value.length - 1 || itemUnderEdit !== false"
+              flat
+              dense
+              icon="arrow_downward"
+              :aria-label="$t('lists.move_down', [itemName])"
+              @click="reorderItem(index, 1)"
+            />
+            <q-btn
+              flat
+              dense
+              icon="delete"
+              :aria-label="$t('lists.delete', [itemName])"
+              :disabled="itemUnderEdit !== false"
+              @click="deleteItem(index)"
+            />
+          </collapse-toolbar>
         </q-item-section>
       </q-item>
     </draggable>
@@ -130,12 +132,13 @@
 import draggable from 'vuedraggable';
 import {QList} from 'quasar';
 import Vue from 'vue';
+import CollapseToolbar from './CollapseToolbar.vue';
 
 Vue.component('q-list', QList);
 
 export default {
     name: "EditableList",
-    components: { draggable },
+    components: { draggable, CollapseToolbar },
     props: {
         value: {
             type: Array,
@@ -177,18 +180,17 @@ export default {
         this.$emit('input', [...this.value.slice(0, index), ...this.value.slice(index + 1)]);
       },
       editItem(index) {
+          if (this.editItemValue !== false) {
+            this.saveEdit();
+          }
           this.editItemValue = this.value[index];
           this.itemUnderEdit = index;
       },
       saveEdit() {
           const index = this.itemUnderEdit;
-          if (index !== false && index < this.value.length) {
+          if (index !== false && index < this.value.length && this.editItemValue.length) {
             this.$emit('input', [...this.value.slice(0, index), this.editItemValue, ...this.value.slice(index+1)]);
           }
-          this.itemUnderEdit = false;
-          this.editItemValue = '';
-      },
-      cancelEdit() {
           this.itemUnderEdit = false;
           this.editItemValue = '';
       },
