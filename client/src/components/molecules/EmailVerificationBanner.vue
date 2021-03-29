@@ -2,12 +2,11 @@
   <q-banner
     inline-actions
     dense
-    class="text-white bg-dark"
+    class="bg-warning"
   >
     <template #avatar>
       <q-icon
         name="email"
-        color="white"
         size="lg"
       />
     </template>

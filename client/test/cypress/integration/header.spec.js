@@ -1,6 +1,8 @@
 /// <reference types="Cypress" />
 /// <reference path="../support/index.d.ts" />
 
+import 'cypress-axe';
+
 describe('Header', () => {
     beforeEach(() => {
         cy.task('resetDb');

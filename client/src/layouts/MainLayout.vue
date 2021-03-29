@@ -50,13 +50,14 @@
       </q-scroll-area>
 
       <div
+        role="presentation"
         class="sidebar-avatar absolute-top"
         style="border-right: 1px solid #3d47ca"
       >
         <avatar-block
           style="padding: 16px;"
           :user="currentUser"
-          class="absolute-bottom"
+          class="absolute-bottom bg-secondary"
         />
       </div>
     </q-drawer>
