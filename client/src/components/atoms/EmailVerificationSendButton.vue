@@ -2,6 +2,7 @@
   <q-btn
     :loading="status == 'loading'"
     :color="btnColor"
+    class="text-black"
     v-bind="{ ...$props, ...$attrs }"
     @click="send"
   >

@@ -15,14 +15,19 @@ describe('Admin Users Index', () => {
     cy.visit('/admin/users');
     cy.url().should('include', '/error403');
   });
+
   it('allows access based on role', () => {
     cy.login({ email: "applicationadministrator@ccrproject.dev" });
     cy.visit('/admin/users');
     cy.url().should('not.include', '/error403');
   });
+
   it('should assert the page is accessible', () => {
     // Inject the axe-core libraray
+    cy.login({ email: "applicationadministrator@ccrproject.dev" });
+    cy.visit('/admin/users');
     cy.injectAxe();
+    cy.dataCy('userListItem');
     cy.checkA11y();
   });
 

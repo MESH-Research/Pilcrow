@@ -1,6 +1,8 @@
 /// <reference types="Cypress" />
 /// <reference path="../support/index.d.ts" />
 
+import 'cypress-axe';
+
 describe('Account', () => {
   beforeEach(() => {
     cy.task('resetDb');
@@ -24,6 +26,15 @@ describe('Account', () => {
     cy.dataCy('update_user_password').clear().type('XMYeygtC7TuxgER4');
     cy.dataCy('update_user_button_save').click();
     cy.dataCy('update_user_notify').should('be.visible').should('have.class','bg-positive');
+    // Inject the axe-core libraray
+  });
+
+  it('should assert the page is accessible', () => {
+    cy.injectAxe();
+    //Wait for the page to be loaded.
+    cy.dataCy('vueAccount')
+    cy.checkA11y();
+
   });
 
   // TODO: Uncomment once email updates work again

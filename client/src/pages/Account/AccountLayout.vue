@@ -1,5 +1,10 @@
 <template>
-  <q-page class="">
+  <div>
+    <div class="row">
+      <h2 class="q-pl-lg">
+        My Account
+      </h2>
+    </div>
     <div class="row justify-center items-start content-start">
       <q-card class="col-sm-3 col-xs-12 no-shadow no-border-radius">
         <div class="row">
@@ -51,7 +56,7 @@
           <q-card-section class="q-pa-none">
             <q-tabs
               class="bg-grey-2"
-              active-color="primary"
+              active-color="black"
               indicator-color="primary"
               align="left"
             >
@@ -83,7 +88,7 @@
         </q-card-section>
       </q-card>
     </div>
-  </q-page>
+  </div>
 </template>
 
 <script>

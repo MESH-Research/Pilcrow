@@ -1,5 +1,8 @@
 <template>
-  <q-page class="flex flex-center">
+  <q-page
+    class="flex column flex-center q-pb-lg"
+    data-cy="vueIndex"
+  >
     <h1>Home Page</h1>
     <img
       alt="Quasar logo"
