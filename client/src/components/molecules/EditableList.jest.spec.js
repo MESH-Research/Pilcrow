@@ -98,18 +98,6 @@ describe("EditableList Component", () => {
     await findByAria(items.at(1), 'lists.save').trigger('click');
 
     expect(wrapper.emitted('input')[0][0]).toEqual(['a', 'd', 'c']);
-  })
-
-  it('cancels edit', async () => {
-    const wrapper = factory(['a', 'b', 'c']);
-
-    const items = wrapper.findAllComponents({ name: 'q-item' });
-    await findByAria(items.at(1), 'lists.edit').trigger('click');
-    await items.at(1).find('input').setValue('d');
-
-    await findByAria(items.at(1), 'lists.cancel').trigger('click');
-
-    expect(wrapper.emitted('input')).toBeUndefined();
   });
 
   test('label click triggers edit', async () => {
