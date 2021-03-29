@@ -1,12 +1,13 @@
 <template>
   <div>
-    <h1 class="text-h5 q-pl-lg">
+    <h2 class="q-pl-lg">
       All Users
-    </h1>
+    </h2>
     <q-banner v-if="users.data">
       <q-item
         v-for="user in users.data"
         :key="user.id"
+        data-cy="userListItem"
       >
         <q-item-section
           top

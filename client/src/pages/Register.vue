@@ -1,5 +1,8 @@
 <template>
-  <q-page class="flex-center flex">
+  <q-page
+    class="flex-center flex"
+    data-cy="vueRegister"
+  >
     <q-card style="width: 400px">
       <q-form
         autofocus

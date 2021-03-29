@@ -1,6 +1,8 @@
 /// <reference types="Cypress" />
 /// <reference path="../support/index.d.ts" />
 
+import 'cypress-axe';
+
 describe('Header', () => {
     beforeEach(() => {
         cy.task('resetDb');
@@ -8,7 +10,7 @@ describe('Header', () => {
     })
 
     it("should have a login and register link in header", () => {
-        
+
         cy.get('header').within(() => {
             cy.contains('Login').should('have.attr', 'href', '/login');
             cy.contains('Register').should('have.attr', 'href', '/register');

@@ -1,5 +1,6 @@
 <template>
   <q-form
+    data-cy="vueAccount"
     class="q-pa-none"
     @submit="updateUser()"
   >

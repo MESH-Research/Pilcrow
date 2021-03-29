@@ -21,7 +21,11 @@
           data-cy="dropdown_username"
           :label="currentUser.username"
         >
-          <q-list data-cy="headerUserMenu">
+          <q-list
+            role="navigation"
+            aria-label="Dropdown Navigation"
+            data-cy="headerUserMenu"
+          >
             <q-item
               clickable
               to="/dashboard"
@@ -90,10 +94,9 @@
       </template>
     </q-toolbar>
     <div class="title">
-      <div class="text-h4 text-weight-regular">
-        <span class="text-weight-medium">Public</span> Philosophy Journal
-        <strong>Quarterly</strong>
-      </div>
+      <h1 class="q-ma-none">
+        Collaborative Community Review
+      </h1>
       <div class="text-subtitle">
         Submission Review System
       </div>
