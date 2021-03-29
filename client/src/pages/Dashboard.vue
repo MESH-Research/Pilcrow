@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div data-cy="vueDashboard">
     <q-banner
       v-if="currentUser"
       inline-actions
