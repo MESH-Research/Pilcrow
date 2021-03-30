@@ -122,7 +122,6 @@ class UserQueryTest extends TestCase
         ]);
     }
 
-
     /**
      * @return array
      */
@@ -132,7 +131,7 @@ class UserQueryTest extends TestCase
             ['name','abcdef'],
             ['email','ghijkl@gmail.com'],
             ['username','mnopqr'],
-            ['all', '']
+            ['all', ''],
         ];
     }
 
@@ -166,9 +165,9 @@ class UserQueryTest extends TestCase
             $response->assertJson([
                 'data' => [
                     'userSearch' => [
-                        'data' => [ ]
-                    ]
-                ]
+                        'data' => [ ],
+                    ],
+                ],
             ]);
         } else {
             $response->assertJson([
@@ -179,7 +178,7 @@ class UserQueryTest extends TestCase
                                 'name' => 'abcdef',
                                 'email' => 'ghijkl@gmail.com',
                                 'username' => 'mnopqr',
-                            ]
+                            ],
                         ],
                     ],
                 ],
