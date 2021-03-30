@@ -21,7 +21,11 @@ type Query {
     "Return pre-defined user roles in the application"
     role(id: ID @eq): Role @find
 
+    "Return a permission by ID"
     permission(id: ID @eq): Permission @find
+
+    "Return user accounts based on a supplied search term"
+    userSearch(search: String @search): [User!]! @paginate
 }
 
 "Validate the availability of username and email via the validateNewUser query"
