@@ -129,7 +129,15 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Get the indexable data array for the model.
+     * Get the indexable data array for the model. Currently:
+     *
+     *     username
+     *     name
+     *     email
+     *     email_verified_at
+     *     updated_at
+     *     created_at
+     *     id
      *
      * @return array
      */
@@ -138,6 +146,7 @@ class User extends Authenticatable implements MustVerifyEmail
         $array = $this->toArray();
 
         // Customize array...
+        unset($array['profile_metadata']);
 
         return $array;
     }
