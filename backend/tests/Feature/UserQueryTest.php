@@ -121,4 +121,43 @@ class UserQueryTest extends TestCase
             ],
         ]);
     }
+
+    /**
+     * @return void
+     */
+    public function testThatUsersCanBeSearchedByName(): void
+    {
+        User::factory()->count(20)->create();
+        User::factory()->create([
+            'name' => 'abcdef',
+            'email' => 'ghijkl@gmail.com',
+            'username' => 'mnopqr',
+        ]);
+
+        $response = $this->graphQL(
+            'query SearchUsers {
+                userSearch (search:"abcdef", first: 10) {
+                    data {
+                        name
+                        email
+                        username
+                    }
+                }
+            }'
+        );
+
+        $response->assertJson([
+            'data' => [
+                'userSearch' => [
+                    'data' => [
+                        [
+                            'name' => 'abcdef',
+                            'email' => 'ghijkl@gmail.com',
+                            'username' => 'mnopqr',
+                        ]
+                    ],
+                ],
+            ],
+        ]);
+    }
 }
