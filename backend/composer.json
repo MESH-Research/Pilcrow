@@ -19,7 +19,8 @@
         "laravel/tinker": "^2.5",
         "nuwave/lighthouse": "^5.1",
         "olssonm/l5-zxcvbn": "^4.4",
-        "spatie/laravel-permission": "^3.18"
+        "spatie/laravel-permission": "^3.18",
+        "teamtnt/laravel-scout-tntsearch-driver": "^11.2"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
