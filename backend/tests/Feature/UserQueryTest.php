@@ -122,10 +122,25 @@ class UserQueryTest extends TestCase
         ]);
     }
 
+
     /**
+     * @return array
+     */
+    public function searchUserTermsProvider(): array
+    {
+        return [
+            ['name','abcdef'],
+            ['email','ghijkl@gmail.com'],
+            ['username','mnopqr'],
+            ['all', '']
+        ];
+    }
+
+    /**
+     * @dataProvider searchUserTermsProvider
      * @return void
      */
-    public function testThatUsersCanBeSearchedByName(): void
+    public function testThatAUserCanBeSearchedBySearchTerms(string $property_name, string $search_term): void
     {
         User::factory()->count(20)->create();
         User::factory()->create([
@@ -135,29 +150,40 @@ class UserQueryTest extends TestCase
         ]);
 
         $response = $this->graphQL(
-            'query SearchUsers {
-                userSearch (search:"abcdef", first: 10) {
+            'query SearchUsers ($search_term: String) {
+                userSearch (search: $search_term, first: 10) {
                     data {
                         name
                         email
                         username
                     }
                 }
-            }'
+            }',
+            [ 'search_term' => $search_term ]
         );
 
-        $response->assertJson([
-            'data' => [
-                'userSearch' => [
-                    'data' => [
-                        [
-                            'name' => 'abcdef',
-                            'email' => 'ghijkl@gmail.com',
-                            'username' => 'mnopqr',
-                        ]
+        if ($property_name == 'all') {
+            $response->assertJson([
+                'data' => [
+                    'userSearch' => [
+                        'data' => [ ]
+                    ]
+                ]
+            ]);
+        } else {
+            $response->assertJson([
+                'data' => [
+                    'userSearch' => [
+                        'data' => [
+                            [
+                                'name' => 'abcdef',
+                                'email' => 'ghijkl@gmail.com',
+                                'username' => 'mnopqr',
+                            ]
+                        ],
                     ],
                 ],
-            ],
-        ]);
+            ]);
+        }
     }
 }
