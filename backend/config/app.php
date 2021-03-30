@@ -161,11 +161,13 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
+        Laravel\Scout\ScoutServiceProvider::class,
 
         /*
          * Package Service Providers...
          */
         Spatie\Permission\PermissionServiceProvider::class,
+        TeamTNT\Scout\TNTSearchScoutServiceProvider::class,
 
         /*
          * Application Service Providers...
