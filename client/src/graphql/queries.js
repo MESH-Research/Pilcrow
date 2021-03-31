@@ -16,7 +16,7 @@ export const CURRENT_USER = gql`
 `;
 export const GET_USERS = gql`
   query users($page:Int) {
-    users(page:$page) {
+    userSearch(page:$page) {
       paginatorInfo {
         count
         currentPage

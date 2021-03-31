@@ -155,7 +155,7 @@ class UserQueryTest extends TestCase
 
         $response = $this->graphQL(
             'query SearchUsers ($search_term: String) {
-                userSearch (term: $search_term, first: 10) {
+                userSearch (term: $search_term) {
                     data {
                         name
                         email

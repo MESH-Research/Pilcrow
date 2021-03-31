@@ -31,9 +31,9 @@ describe('User Index page mount', () => {
   });
   test ('users are populated on the page', async () => {
     await wrapper.setData({
-      users: { 
+      userSearch: {
         data: [
-          {name:'test1', email:'test1@msu.edu'}, 
+          {name:'test1', email:'test1@msu.edu'},
           {name:'test2', email:'test2@msu.edu'}
         ],
         paginatorInfo: { lastPage:10 }
