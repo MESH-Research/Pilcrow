@@ -1,15 +1,17 @@
 export const mapObject = (defs, obj) => {
-    const result = {};
-    Object.entries(defs).forEach(([key, value]) => {
-      if (typeof value === 'object' && !Array.isArray(value)) {
-        console.log(value);
-        result[key] = mapObject(value, obj[key]);
-      } else {
-        result[key] = obj?.[key] ?? value;
-      }
-    });
-    return result;
-  };
+  if (typeof obj == 'undefined' || obj === null) {
+    return defs;
+  }
+  const result = {};
+  Object.entries(defs).forEach(([key, value]) => {
+    if (typeof value === 'object' && !Array.isArray(value)) {
+      result[key] = mapObject(value, obj[key]);
+    } else {
+      result[key] = obj?.[key] ?? value;
+    }
+  });
+  return result;
+};
 
 export default {
     mapObject
