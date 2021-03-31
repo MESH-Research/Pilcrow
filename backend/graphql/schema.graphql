@@ -25,7 +25,7 @@ type Query {
     permission(id: ID @eq): Permission @find
 
     "Return user accounts based on a supplied search term"
-    userSearch(search: String @search): [User!]! @paginate
+    userSearch(term: String @search): [User!]! @paginate
 }
 
 "Validate the availability of username and email via the validateNewUser query"

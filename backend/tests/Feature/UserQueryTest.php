@@ -131,6 +131,11 @@ class UserQueryTest extends TestCase
             ['name','abcdef'],
             ['email','ghijkl@gmail.com'],
             ['username','mnopqr'],
+            ['all', 'aaaaaaaaaaaaaa'],
+            ['all', '<html>'],
+            ['all', null],
+            ['all', '12345'],
+            ['all', 12345],
             ['all', ''],
         ];
     }
@@ -139,7 +144,7 @@ class UserQueryTest extends TestCase
      * @dataProvider searchUserTermsProvider
      * @return void
      */
-    public function testThatAUserCanBeSearchedBySearchTerms(string $property_name, string $search_term): void
+    public function testThatAUserCanBeSearchedBySearchTerms(string $property_name, mixed $search_term): void
     {
         User::factory()->count(20)->create();
         User::factory()->create([
@@ -150,7 +155,7 @@ class UserQueryTest extends TestCase
 
         $response = $this->graphQL(
             'query SearchUsers ($search_term: String) {
-                userSearch (search: $search_term, first: 10) {
+                userSearch (term: $search_term, first: 10) {
                     data {
                         name
                         email
@@ -158,7 +163,7 @@ class UserQueryTest extends TestCase
                     }
                 }
             }',
-            [ 'search_term' => $search_term ]
+            [ 'search_term' => (string)$search_term ]
         );
 
         if ($property_name == 'all') {
