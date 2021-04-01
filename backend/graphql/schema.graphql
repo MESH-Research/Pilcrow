@@ -6,8 +6,8 @@ scalar DateTime
     @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTime")
 
 type Query {
-    "Return user accounts in the application."
-    users: [User!]! @paginate(defaultCount: 10)
+    "Return user accounts optionally based on a supplied search term"
+    userSearch(term: String @search): [User!]! @paginate(defaultCount: 10)
 
     "Return details about a specific user in the application"
     user(id: ID @eq): User @find
@@ -21,6 +21,7 @@ type Query {
     "Return pre-defined user roles in the application"
     role(id: ID @eq): Role @find
 
+    "Return a permission by ID"
     permission(id: ID @eq): Permission @find
 }
 

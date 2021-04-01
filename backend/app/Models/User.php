@@ -10,6 +10,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Config;
 use Laravel\Sanctum\HasApiTokens;
+use Laravel\Scout\Searchable;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements MustVerifyEmail
@@ -18,6 +19,7 @@ class User extends Authenticatable implements MustVerifyEmail
     use Notifiable;
     use HasApiTokens;
     use HasRoles;
+    use Searchable;
 
     /**
      * The attributes that are mass assignable.
@@ -124,5 +126,28 @@ class User extends Authenticatable implements MustVerifyEmail
     public function verifyEmailToken(string $token, string $expires): bool
     {
         return hash_equals($this->makeEmailVerificationHash($expires), $token);
+    }
+
+    /**
+     * Get the indexable data array for the model. Currently:
+     *
+     *     username
+     *     name
+     *     email
+     *     email_verified_at
+     *     updated_at
+     *     created_at
+     *     id
+     *
+     * @return array
+     */
+    public function toSearchableArray()
+    {
+        $array = $this->toArray();
+
+        // Customize array...
+        unset($array['profile_metadata']);
+
+        return $array;
     }
 }

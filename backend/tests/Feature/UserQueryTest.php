@@ -121,4 +121,73 @@ class UserQueryTest extends TestCase
             ],
         ]);
     }
+
+    /**
+     * @return array
+     */
+    public function searchUserTermsProvider(): array
+    {
+        return [
+            ['name','abcdef'],
+            ['email','ghijkl@gmail.com'],
+            ['username','mnopqr'],
+            ['all', 'aaaaaaaaaaaaaa'],
+            ['all', '<html>'],
+            ['all', null],
+            ['all', '12345'],
+            ['all', 12345],
+            ['all', ''],
+        ];
+    }
+
+    /**
+     * @dataProvider searchUserTermsProvider
+     * @return void
+     */
+    public function testThatAUserCanBeSearchedBySearchTerms(string $property_name, mixed $search_term): void
+    {
+        User::factory()->count(20)->create();
+        User::factory()->create([
+            'name' => 'abcdef',
+            'email' => 'ghijkl@gmail.com',
+            'username' => 'mnopqr',
+        ]);
+
+        $response = $this->graphQL(
+            'query SearchUsers ($search_term: String) {
+                userSearch (term: $search_term) {
+                    data {
+                        name
+                        email
+                        username
+                    }
+                }
+            }',
+            [ 'search_term' => (string)$search_term ]
+        );
+
+        if ($property_name == 'all') {
+            $response->assertJson([
+                'data' => [
+                    'userSearch' => [
+                        'data' => [ ],
+                    ],
+                ],
+            ]);
+        } else {
+            $response->assertJson([
+                'data' => [
+                    'userSearch' => [
+                        'data' => [
+                            [
+                                'name' => 'abcdef',
+                                'email' => 'ghijkl@gmail.com',
+                                'username' => 'mnopqr',
+                            ],
+                        ],
+                    ],
+                ],
+            ]);
+        }
+    }
 }
