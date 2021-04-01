@@ -3,6 +3,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.11.0](https://github.com/MESH-Research/CCR/compare/v0.10.0...v0.11.0) (2021-03-31)
+
+
+### Features
+
+* add publications ([#187](https://github.com/MESH-Research/CCR/issues/187)) ([0ee4afc](https://github.com/MESH-Research/CCR/commit/0ee4afcf126c3113f30be7fc2908b252ed297086))
+
+
+### Bug Fixes
+
+* resolve outstanding accessibility issues ([#189](https://github.com/MESH-Research/CCR/issues/189)) ([910e278](https://github.com/MESH-Research/CCR/commit/910e278ab0a1920e5a07d670560257aaae213cf9))
+
 ## [0.10.0](https://github.com/MESH-Research/CCR/compare/v0.9.0...v0.10.0) (2021-03-18)
 
 
