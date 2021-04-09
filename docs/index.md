@@ -10,6 +10,7 @@ actionLink: /install/
 Collaborative Community Review (CCR) is an open source web tool representing the values and intent of Formative Peer Review (FPR) as established by the [Public Philosophy Journal](https://publicphilosophyjournal.com). CCR will provide a collaboration framework for the review of submissions intended for publication by journals, publications, bloggers, and more. CCR will be used to satisfy the various needs of the peer review process for works in academic and public scholarship. CCR is primarily funded through a grant by the Andrew Mellon Foundation.
 
 ## Project Sponsors
+
 <div class="sponsors">
   <div>
     <a href="https://mellon.org">
@@ -38,18 +39,12 @@ Collaborative Community Review (CCR) is an open source web tool representing the
   </div>
 </div>
 
-
-
-
 ::: slot home-banner
 
 ::: danger HEADS UP
   CCR is currently in the initial development stage and isn't ready for deployment or evaluation just yet.
   Check out our  [contributor documentation](./contributing/README.md) to help make CCR a reality.
 :::
-
-
-
 
 ::: slot home-footer
 Developed by [MESH-Research](https://meshresearch.net/).
