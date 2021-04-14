@@ -202,6 +202,8 @@
 <script>
 import EditableList from 'src/components/molecules/EditableList.vue';
 import TagList from 'src/components/molecules/TagList.vue';
+import { validationMixin } from "vuelidate";
+import { maxLength } from "vuelidate/lib/validators";
 
 import { CURRENT_USER } from 'src/graphql/queries';
 import { UPDATE_PROFILE_METADATA } from 'src/graphql/mutations';
@@ -237,7 +239,7 @@ const applyDefaults = (data) => {
 export default {
     name: 'ProfilePage',
     components: { EditableList, TagList },
-    mixins: [dirtyGuard],
+    mixins: [dirtyGuard, validationMixin],
     data() {
       return {
         saved: false,
@@ -279,6 +281,13 @@ export default {
     watch: {
       currentUser() {
         this.resetForm();
+      }
+    },
+    validations: {
+      form: {
+        professional_title: {
+          maxLength: maxLength(256)
+        }
       }
     },
     methods: {
