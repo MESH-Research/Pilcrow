@@ -1,0 +1,18 @@
+"""
+Profile metadata of a user
+"""
+type ProfileMetadata {
+    salutation: String
+    phone: String
+    mailing_address: MailingAddress
+    orchid_id: String
+    humanities_commons: String
+    social_media: SocialMedia
+    professional_title: String
+    specialization: String
+    affiliation: String
+    interest_keywords: [String]
+    disinterest_keywords: [String]
+    biography: String
+    websites: [String]
+}

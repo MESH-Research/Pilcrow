@@ -1,0 +1,12 @@
+"""
+Social media data for the profile metadata of a user
+"""
+type SocialMedia {
+    google: String
+    twitter: String
+    facebook: String
+    instagram: String
+    linkedin: String
+    academia_edu_id: String
+    skype: String
+}
