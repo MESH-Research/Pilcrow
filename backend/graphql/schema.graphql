@@ -1,15 +1,15 @@
 type Query {
-    "Return user accounts optionally based on a supplied search term"
-    userSearch(term: String @search): [User!]! @paginate(defaultCount: 10)
+    "Return information about the currently logged in user"
+    currentUser: User @auth
 
     "Return details about a specific user in the application"
     user(id: ID @eq): User @find
 
+    "Return user accounts optionally based on a supplied search term"
+    userSearch(term: String @search): [User!]! @paginate(defaultCount: 10)
+
     "Validate details of a new user.  Returns true if supplied user fields would be valid."
     validateNewUser(user: ValidateNewUserInput): Boolean @returnTrue
-
-    "Return information about the currently logged in user"
-    currentUser: User @auth
 
     "Return pre-defined user roles in the application"
     role(id: ID @eq): Role @find
@@ -19,10 +19,29 @@ type Query {
 }
 
 type Mutation {
+    "Log in to a new session and get the user."
+    login(email: String!, password: String!): User!
+
+    "Log out from the current session, showing the user one last time."
+    logout: User @guard
+
     "Create a new user"
     createUser(user: CreateUserInput! @spread): User!
         @create
         @event(dispatch: "Illuminate\\Auth\\Events\\Registered")
+
+    "Update user information"
+    updateUser(user: UpdateUserInput! @spread): User!
+        @update
+        @can(ability: "update", find: "id")
+
+    "(Re)send a verification email to a user.  "
+    sendEmailVerification(
+        "User to resend verification for. If not supplied, defaults to the current user."
+        id: ID
+    ): User!
+        @guard
+        @field(resolver: "App\\GraphQL\\Mutations\\VerifyEmail@send")
 
     "Verify the currently logged in user's email address"
     verifyEmail(
@@ -34,25 +53,6 @@ type Mutation {
     ): User!
         @guard
         @field(resolver: "App\\GraphQL\\Mutations\\VerifyEmail@verify")
-
-    "(Re)send a verification email to a user.  "
-    sendEmailVerification(
-        "User to resend verification for. If not supplied, defaults to the current user."
-        id: ID
-    ): User!
-        @guard
-        @field(resolver: "App\\GraphQL\\Mutations\\VerifyEmail@send")
-
-    "Log in to a new session and get the user."
-    login(email: String!, password: String!): User!
-
-    "Log out from the current session, showing the user one last time."
-    logout: User @guard
-
-    "Update user information"
-    updateUser(user: UpdateUserInput! @spread): User!
-        @update
-        @can(ability: "update", find: "id")
 }
 
 "A date string with format `Y-m-d`, e.g. `2011-05-23`."
@@ -68,6 +68,46 @@ scalar DateTime
 #import social_media.graphql
 #import mailing_address.graphql
 #import profile_metadata.graphql
+
+"""
+Input type for creating a new user via the userCreate mutation
+"""
+input CreateUserInput @validator(class: "UserInputValidator") {
+    "Display name. (optional)"
+    name: String
+
+    "Username. Must be unique. (required)"
+    username: String!
+
+    "Email address. Must be unique. (required)"
+    email: String!
+
+    "Password used to login to the application. (required)"
+    password: String! @hash
+}
+
+"""
+Input type for updating user information via the updateUser mutation
+"""
+input UpdateUserInput @validator(class: "UserInputValidator") {
+    "User ID"
+    id: ID!
+
+    "Display name"
+    name: String
+
+    "Username of the user. Must be unique."
+    username: String
+
+    "Email address of the user. Must be unique."
+    email: String
+
+    "Password used to login to the application."
+    password: String @hash
+
+    "Metadata related to the profile of a user."
+    profile_metadata: UpdateProfileMetadataInput
+}
 
 """
 Validate the availability of username and email via the validateNewUser query
@@ -120,44 +160,4 @@ input UpdateProfileMetadataInput @validator(class: "ProfileMetadataValidator") {
     disinterest_keywords: [String]
     biography: String
     websites: [String]
-}
-
-"""
-Input type for creating a new user via the userCreate mutation
-"""
-input CreateUserInput @validator(class: "UserInputValidator") {
-    "Display name. (optional)"
-    name: String
-
-    "Username. Must be unique. (required)"
-    username: String!
-
-    "Email address. Must be unique. (required)"
-    email: String!
-
-    "Password used to login to the application. (required)"
-    password: String! @hash
-}
-
-"""
-Input type for updating user information via the updateUser mutation
-"""
-input UpdateUserInput @validator(class: "UserInputValidator") {
-    "User ID"
-    id: ID!
-
-    "Display name"
-    name: String
-
-    "Username of the user. Must be unique."
-    username: String
-
-    "Email address of the user. Must be unique."
-    email: String
-
-    "Password used to login to the application."
-    password: String @hash
-
-    "Metadata related to the profile of a user."
-    profile_metadata: UpdateProfileMetadataInput
 }
