@@ -1,0 +1,9 @@
+"""
+Mailing address information for the profile metadata of a user
+"""
+type MailingAddress {
+    city: String
+    state: String
+    postal_code: String
+    street_address: String
+}
