@@ -226,6 +226,10 @@ class UserPermissionsTest extends TestCase
                                     'id' => (string)1,
                                     'name' => Permission::UPDATE_USERS,
                                 ],
+                                1 => [
+                                    'id' => (string)3,
+                                    'name' => Permission::CREATE_PUBLICATION,
+                                ]
                             ],
                         ],
                     ],
