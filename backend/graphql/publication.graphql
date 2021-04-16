@@ -1,0 +1,9 @@
+"""
+A publication that has users, reviews, and submissions
+"""
+type Publication {
+    id: ID!
+    name: String!
+    created_at: DateTime
+    updated_at: DateTime
+}

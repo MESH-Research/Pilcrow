@@ -16,6 +16,12 @@ type Query {
 
     "Return a permission by ID"
     permission(id: ID @eq): Permission @find
+
+    "Return a publiation by ID"
+    publication(id: ID @eq): Publication @find
+
+    "Return all publications"
+    publications: [Publication!]! @paginate(defaultCount: 10)
 }
 
 type Mutation {
@@ -53,6 +59,11 @@ type Mutation {
     ): User!
         @guard
         @field(resolver: "App\\GraphQL\\Mutations\\VerifyEmail@verify")
+
+    "Create a new publication"
+    createPublication(publication: CreatePublicationInput! @spread): Publication!
+        @create
+        @can(ability: "create")
 }
 
 "A date string with format `Y-m-d`, e.g. `2011-05-23`."
@@ -68,6 +79,7 @@ scalar DateTime
 #import social_media.graphql
 #import mailing_address.graphql
 #import profile_metadata.graphql
+#import publication.graphql
 
 """
 Input type for creating a new user via the userCreate mutation
@@ -160,4 +172,8 @@ input UpdateProfileMetadataInput @validator(class: "ProfileMetadataValidator") {
     disinterest_keywords: [String]
     biography: String
     websites: [String]
+}
+
+input CreatePublicationInput @validator(class: "PublicationInputValidator") {
+    name: String
 }

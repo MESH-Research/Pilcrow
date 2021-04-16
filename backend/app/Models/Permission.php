@@ -12,4 +12,5 @@ class Permission extends ParentModel
 
     public const UPDATE_USERS = 'update users';
     public const UPDATE_USERS_IN_OWN_PUBLICATION = 'update users in own publication';
+    public const CREATE_PUBLICATION = 'create publication';
 }
