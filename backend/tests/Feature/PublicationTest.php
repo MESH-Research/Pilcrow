@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
+use App\Models\Publication;
 use App\Models\Role;
 use App\Models\User;
-use App\Models\Publication;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Nuwave\Lighthouse\Testing\MakesGraphQLRequests;
@@ -41,8 +41,8 @@ class PublicationTest extends TestCase
         $expected_data = [
             'createPublication' => [
                 'id' => '3',
-                'name' => 'Custom Publication for Unit Testing'
-            ]
+                'name' => 'Custom Publication for Unit Testing',
+            ],
         ];
         $response->assertJsonPath('data', $expected_data);
     }
@@ -65,7 +65,7 @@ class PublicationTest extends TestCase
     public function testIndividualPublicationsCanBeQueriedById()
     {
         $publication = Publication::factory()->create([
-            'name' => 'Custom Publication for Unit Testing 1'
+            'name' => 'Custom Publication for Unit Testing 1',
         ]);
         $response = $this->graphQL(
             'query GetPublication($id: ID!) {
@@ -79,8 +79,8 @@ class PublicationTest extends TestCase
         $expected_data = [
             'publication' => [
                 'id' => (string)$publication->id,
-                'name' => 'Custom Publication for Unit Testing 1'
-            ]
+                'name' => 'Custom Publication for Unit Testing 1',
+            ],
         ];
         $response->assertJsonPath('data', $expected_data);
     }
@@ -88,10 +88,10 @@ class PublicationTest extends TestCase
     public function testAllPublicationsCanBeQueried()
     {
         $publication_1 = Publication::factory()->create([
-            'name' => 'Custom Publication for Unit Testing 1'
+            'name' => 'Custom Publication for Unit Testing 1',
         ]);
         $publication_2 = Publication::factory()->create([
-            'name' => 'Custom Publication for Unit Testing 2'
+            'name' => 'Custom Publication for Unit Testing 2',
         ]);
         $response = $this->graphQL(
             'query GetPublications {
@@ -108,15 +108,15 @@ class PublicationTest extends TestCase
                 'data' => [
                     [
                         'id' => (string)$publication_1->id,
-                        'name' => 'Custom Publication for Unit Testing 1'
+                        'name' => 'Custom Publication for Unit Testing 1',
                     ],
                     [
                         'id' => (string)$publication_2->id,
-                        'name' => 'Custom Publication for Unit Testing 2'
-                    ]
-                ]
-            ]
+                        'name' => 'Custom Publication for Unit Testing 2',
+                    ],
+                ],
+            ],
         ];
-        $response->assertJsonPath('data',$expected_data);
+        $response->assertJsonPath('data', $expected_data);
     }
 }

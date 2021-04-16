@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Policies;
 
@@ -46,6 +47,7 @@ class PublicationPolicy
         if ($user->can(Permission::CREATE_PUBLICATION)) {
             return true;
         }
+
         return false;
     }
 
