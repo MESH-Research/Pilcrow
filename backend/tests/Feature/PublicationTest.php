@@ -33,14 +33,12 @@ class PublicationTest extends TestCase
         $response = $this->graphQL(
             'mutation CreatePublication {
                 createPublication(publication:{name:"Custom Publication for Unit Testing"}) {
-                    id
                     name
                 }
             }'
         );
         $expected_data = [
             'createPublication' => [
-                'id' => '3',
                 'name' => 'Custom Publication for Unit Testing',
             ],
         ];
