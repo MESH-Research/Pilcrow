@@ -61,4 +61,62 @@ class PublicationTest extends TestCase
         );
         $response->assertJsonPath('data', null);
     }
+
+    public function testIndividualPublicationsCanBeQueriedById()
+    {
+        $publication = Publication::factory()->create([
+            'name' => 'Custom Publication for Unit Testing 1'
+        ]);
+        $response = $this->graphQL(
+            'query GetPublication($id: ID!) {
+                publication (id: $id) {
+                    id
+                    name
+                }
+            }',
+            [ 'id' => $publication->id ]
+        );
+        $expected_data = [
+            'publication' => [
+                'id' => (string)$publication->id,
+                'name' => 'Custom Publication for Unit Testing 1'
+            ]
+        ];
+        $response->assertJsonPath('data', $expected_data);
+    }
+
+    public function testAllPublicationsCanBeQueried()
+    {
+        $publication_1 = Publication::factory()->create([
+            'name' => 'Custom Publication for Unit Testing 1'
+        ]);
+        $publication_2 = Publication::factory()->create([
+            'name' => 'Custom Publication for Unit Testing 2'
+        ]);
+        $response = $this->graphQL(
+            'query GetPublications {
+                publications {
+                    data {
+                        id
+                        name
+                    }
+                }
+            }'
+        );
+        $expected_data = [
+            'publications' => [
+                'data' => [
+                    [
+                        'id' => (string)$publication_1->id,
+                        'name' => 'Custom Publication for Unit Testing 1'
+                    ],
+                    [
+                        'id' => (string)$publication_2->id,
+                        'name' => 'Custom Publication for Unit Testing 2'
+                    ]
+                ]
+            ]
+        ];
+        $response->assertJsonPath('data',$expected_data);
+    }
 }
