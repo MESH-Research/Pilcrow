@@ -229,7 +229,7 @@ class UserPermissionsTest extends TestCase
                                 1 => [
                                     'id' => (string)3,
                                     'name' => Permission::CREATE_PUBLICATION,
-                                ]
+                                ],
                             ],
                         ],
                     ],
