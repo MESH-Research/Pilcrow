@@ -25,23 +25,51 @@ class PublicationTest extends TestCase
         Publication::factory()->create(['name' => 'Custom Name']);
     }
 
-    public function testPublicationsCanBeCreatedViaMutationByAnApplicationAdministrator()
+    /**
+     * @return array
+     */
+    public function publicationMutationProvider(): array
+    {
+        return [
+            [
+                'Custom Publication Name for Unit Testing',
+                [
+                    'createPublication' => [
+                        'name' => 'Custom Publication Name for Unit Testing',
+                    ],
+                ],
+            ],
+            [
+                '        Custom Publication with Whitespace for Unit Testing       ',
+                [
+                    'createPublication' => [
+                        'name' => 'Custom Publication with Whitespace for Unit Testing',
+                    ],
+                ],
+            ],
+            [
+                '',
+                null
+            ]
+        ];
+    }
+
+    /**
+     * @dataProvider publicationMutationProvider
+     * @return void
+     */
+    public function testPublicationsCanBeCreatedViaMutationByAnApplicationAdministrator(mixed $publication_name, mixed $expected_data): void
     {
         $user = User::factory()->create();
         $user->assignRole(Role::APPLICATION_ADMINISTRATOR);
         $this->actingAs($user);
         $response = $this->graphQL(
-            'mutation CreatePublication {
-                createPublication(publication:{name:"Custom Publication for Unit Testing"}) {
+            'mutation CreatePublication ($publication_name: String) {
+                createPublication(publication:{name: $publication_name}) {
                     name
                 }
-            }'
+            }', [ 'publication_name' => $publication_name ]
         );
-        $expected_data = [
-            'createPublication' => [
-                'name' => 'Custom Publication for Unit Testing',
-            ],
-        ];
         $response->assertJsonPath('data', $expected_data);
     }
 
@@ -51,7 +79,7 @@ class PublicationTest extends TestCase
         $this->actingAs($user);
         $response = $this->graphQL(
             'mutation CreatePublication {
-                createPublication(publication:{name:"Custom Publication for Unit Testing"}) {
+                createPublication(publication:{name:"Custom Publication by Regular User for Unit Testing"}) {
                     id
                     name
                 }
