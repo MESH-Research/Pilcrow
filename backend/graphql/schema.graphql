@@ -175,5 +175,5 @@ input UpdateProfileMetadataInput @validator(class: "ProfileMetadataValidator") {
 }
 
 input CreatePublicationInput @validator(class: "PublicationInputValidator") {
-    name: String
+    name: String @trim
 }
