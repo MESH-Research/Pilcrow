@@ -49,8 +49,8 @@ class PublicationTest extends TestCase
             ],
             [
                 '',
-                null
-            ]
+                null,
+            ],
         ];
     }
 
@@ -68,7 +68,8 @@ class PublicationTest extends TestCase
                 createPublication(publication:{name: $publication_name}) {
                     name
                 }
-            }', [ 'publication_name' => $publication_name ]
+            }',
+            [ 'publication_name' => $publication_name ]
         );
         $response->assertJsonPath('data', $expected_data);
     }
@@ -122,7 +123,7 @@ class PublicationTest extends TestCase
             }'
         );
         $expected_data = [
-            'publication' => null
+            'publication' => null,
         ];
         $response->assertJsonPath('data', $expected_data);
     }
