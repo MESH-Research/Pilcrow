@@ -111,6 +111,22 @@ class PublicationTest extends TestCase
         $response->assertJsonPath('data', $expected_data);
     }
 
+    public function testPublicationThatDoesNotExistCanBeQueriedById()
+    {
+        $response = $this->graphQL(
+            'query GetPublication {
+                publication (id: "invalid") {
+                    id
+                    name
+                }
+            }'
+        );
+        $expected_data = [
+            'publication' => null
+        ];
+        $response->assertJsonPath('data', $expected_data);
+    }
+
     public function testAllPublicationsCanBeQueried()
     {
         $publication_1 = Publication::factory()->create([
