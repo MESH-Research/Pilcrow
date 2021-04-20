@@ -32,18 +32,18 @@ class PublicationTest extends TestCase
     {
         return [
             [
-                'Custom Publication Name for Unit Testing',
+                'Test Publication',
                 [
                     'createPublication' => [
-                        'name' => 'Custom Publication Name for Unit Testing',
+                        'name' => 'Test Publication',
                     ],
                 ],
             ],
             [
-                '        Custom Publication with Whitespace for Unit Testing       ',
+                '        Test Publication with Whitespace       ',
                 [
                     'createPublication' => [
-                        'name' => 'Custom Publication with Whitespace for Unit Testing',
+                        'name' => 'Test Publication with Whitespace',
                     ],
                 ],
             ],
@@ -80,7 +80,7 @@ class PublicationTest extends TestCase
         $this->actingAs($user);
         $response = $this->graphQL(
             'mutation CreatePublication {
-                createPublication(publication:{name:"Custom Publication by Regular User for Unit Testing"}) {
+                createPublication(publication:{name:"Test Publication Created by Regular User"}) {
                     id
                     name
                 }
@@ -92,7 +92,7 @@ class PublicationTest extends TestCase
     public function testIndividualPublicationsCanBeQueriedById()
     {
         $publication = Publication::factory()->create([
-            'name' => 'Custom Publication for Unit Testing 1',
+            'name' => 'Test Publication for Querying an Individual Publication',
         ]);
         $response = $this->graphQL(
             'query GetPublication($id: ID!) {
@@ -106,7 +106,7 @@ class PublicationTest extends TestCase
         $expected_data = [
             'publication' => [
                 'id' => (string)$publication->id,
-                'name' => 'Custom Publication for Unit Testing 1',
+                'name' => 'Test Publication for Querying an Individual Publication',
             ],
         ];
         $response->assertJsonPath('data', $expected_data);
@@ -116,7 +116,7 @@ class PublicationTest extends TestCase
     {
         $response = $this->graphQL(
             'query GetPublication {
-                publication (id: "invalid") {
+                publication (id: "Invalid ID") {
                     id
                     name
                 }
@@ -131,10 +131,10 @@ class PublicationTest extends TestCase
     public function testAllPublicationsCanBeQueried()
     {
         $publication_1 = Publication::factory()->create([
-            'name' => 'Custom Publication for Unit Testing 1',
+            'name' => 'Test Publication 1 for Querying All Publications',
         ]);
         $publication_2 = Publication::factory()->create([
-            'name' => 'Custom Publication for Unit Testing 2',
+            'name' => 'Test Publication 2 for Querying All Publications',
         ]);
         $response = $this->graphQL(
             'query GetPublications {
@@ -151,11 +151,11 @@ class PublicationTest extends TestCase
                 'data' => [
                     [
                         'id' => (string)$publication_1->id,
-                        'name' => 'Custom Publication for Unit Testing 1',
+                        'name' => 'Test Publication 1 for Querying All Publications',
                     ],
                     [
                         'id' => (string)$publication_2->id,
-                        'name' => 'Custom Publication for Unit Testing 2',
+                        'name' => 'Test Publication 2 for Querying All Publications',
                     ],
                 ],
             ],
