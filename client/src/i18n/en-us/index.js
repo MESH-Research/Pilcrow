@@ -56,6 +56,7 @@ export default {
     REQUIRED_FIELD: "{0} is required."
   },
   header: {
+    publications: "Publications",
     user_list: "All Users",
     account_link: "My Account",
     dashboard: "My Dashboard",
