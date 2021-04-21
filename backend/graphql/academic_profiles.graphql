@@ -1,5 +1,5 @@
 """
-Social media data for the profile metadata of a user
+Academic profile data for the profile metadata of a user
 """
 type AcademicProfiles {
     academia_edu_id: String

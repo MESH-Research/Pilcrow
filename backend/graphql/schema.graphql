@@ -119,7 +119,6 @@ input UpdateUserInput @validator(class: "UserInputValidator") {
 
     "Metadata related to the profile of a user."
     profile_metadata: UpdateProfileMetadataInput
-
 }
 
 """
