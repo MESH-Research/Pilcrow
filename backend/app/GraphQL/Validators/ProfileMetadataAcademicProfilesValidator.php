@@ -5,7 +5,7 @@ namespace App\GraphQL\Validators;
 
 use Nuwave\Lighthouse\Validation\Validator;
 
-class ProfileMetadataMailingAddressValidator extends Validator
+class ProfileMetadataAcademicProfilesValidator extends Validator
 {
     /**
      * Return the validation rules.
@@ -15,16 +15,13 @@ class ProfileMetadataMailingAddressValidator extends Validator
     public function rules(): array
     {
         return [
-            'city' => [
+            'orchid_id' => [
                 'max:128',
             ],
-            'state' => [
-                'max:64',
+            'humanities_commons' => [
+                'max:128',
             ],
-            'postal_code' => [
-                'max:16',
-            ],
-            'street_address' => [
+            'academia_edu_id' => [
                 'max:128',
             ],
         ];
