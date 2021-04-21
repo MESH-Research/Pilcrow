@@ -45,7 +45,7 @@
     "eslint-loader": "^3.0.3",
     "eslint-plugin-cypress": "^2.11.1",
     "eslint-plugin-jest": "^24.1.0",
-    "eslint-plugin-vue": "^6.1.2",
+    "eslint-plugin-vue": "^7.9.0",
     "majestic": "^1.2.24"
   },
   "engines": {
