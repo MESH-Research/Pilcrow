@@ -21,5 +21,5 @@
     "standard-version": {
         "header": "<!-- markdownlint-disable MD024 MD001 -->\n# Changelog\n\nAll notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.\n"
     },
-    "version": "0.13.0"
+    "version": "0.13.1"
 }
