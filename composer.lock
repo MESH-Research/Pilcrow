@@ -9,16 +9,16 @@
     "packages-dev": [
         {
             "name": "cakephp/cakephp-codesniffer",
-            "version": "4.2.4",
+            "version": "4.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/cakephp-codesniffer.git",
-                "reference": "c5bb1faeebf09cd4a3604bdb0c84f7bc92dc5475"
+                "reference": "53babc21cc5ebc3c2f17b5c98d29a26e08d1ed94"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cakephp/cakephp-codesniffer/zipball/c5bb1faeebf09cd4a3604bdb0c84f7bc92dc5475",
-                "reference": "c5bb1faeebf09cd4a3604bdb0c84f7bc92dc5475",
+                "url": "https://api.github.com/repos/cakephp/cakephp-codesniffer/zipball/53babc21cc5ebc3c2f17b5c98d29a26e08d1ed94",
+                "reference": "53babc21cc5ebc3c2f17b5c98d29a26e08d1ed94",
                 "shasum": ""
             },
             "require": {
@@ -57,7 +57,7 @@
                 "issues": "https://github.com/cakephp/cakephp-codesniffer/issues",
                 "source": "https://github.com/cakephp/cakephp-codesniffer"
             },
-            "time": "2020-12-03T20:39:38+00:00"
+            "time": "2021-04-04T15:26:36+00:00"
         },
         {
             "name": "dealerdirect/phpcodesniffer-composer-installer",
