@@ -3,6 +3,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.13.1](https://github.com/MESH-Research/CCR/compare/v0.13.0...v0.13.1) (2021-04-21)
+
+## [0.13.0](https://github.com/MESH-Research/CCR/compare/v0.12.0...v0.13.0) (2021-04-21)
+
+
+### Features
+
+* Enable publication creation on API ([#206](https://github.com/MESH-Research/CCR/issues/206)) ([cf472f1](https://github.com/MESH-Research/CCR/commit/cf472f1d2d0e2d521259acfc76ca9cf14599cbc7)), closes [#186](https://github.com/MESH-Research/CCR/issues/186)
+
 ## [0.12.0](https://github.com/MESH-Research/CCR/compare/v0.11.0...v0.12.0) (2021-04-14)
 
 
