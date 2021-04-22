@@ -32,7 +32,7 @@ export const GET_USERS = gql`
   }
 `;
 export const GET_PUBLICATIONS = gql`
-  query publications($page:Int) {
+  query GetPublications($page:Int) {
     publications(page:$page) {
       paginatorInfo {
         count

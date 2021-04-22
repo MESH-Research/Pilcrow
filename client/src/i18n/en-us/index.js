@@ -97,6 +97,12 @@ export default {
       privacy: "Privacy"
     }
   },
+  publications: {
+    create: {
+      success: "Publication successfully created.",
+      failure: "An error occurred while attempting to create the publication."
+    }
+  },
   failures: {
     UNKNOWN_ERROR: "An unknown error has occurred.",
     FORBIDDEN_ROUTE: "You don't have permission to access that page."

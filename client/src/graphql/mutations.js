@@ -82,3 +82,18 @@ export const SEND_VERIFY_EMAIL = gql`
     }
   }
 `;
+
+export const CREATE_PUBLICATION = gql`
+  mutation CreatePublication(
+    $name: String!
+  ) {
+    createPublication(
+      publication: {
+        name: $name
+      }
+    ) {
+      id
+      name
+    }
+  }
+`;
