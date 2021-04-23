@@ -100,7 +100,8 @@ export default {
   publications: {
     create: {
       success: "Publication successfully created.",
-      failure: "An error occurred while attempting to create the publication."
+      failure: "An error occurred while attempting to create the publication.",
+      required: "A name is required to create a publication."
     }
   },
   failures: {

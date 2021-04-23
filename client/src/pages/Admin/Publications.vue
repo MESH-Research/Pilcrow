@@ -45,8 +45,11 @@
 <script>
 import { GET_PUBLICATIONS } from 'src/graphql/queries';
 import { CREATE_PUBLICATION } from 'src/graphql/mutations';
+import { validationMixin } from 'vuelidate';
+import { required } from 'vuelidate/lib/validators';
 
 export default {
+  mixins: [validationMixin],
   data() {
     return {
       is_submitting: false,
@@ -58,41 +61,47 @@ export default {
       }
     }
   },
+  validations: {
+    new_publication: {
+      name: {
+        required
+      }
+    }
+  },
   apollo: {
     publications: {
       query: GET_PUBLICATIONS
     }
   },
   methods: {
+    notify(color, icon, message) {
+      this.$q.notify({
+        color: color,
+        message: this.$t(message),
+        icon: icon,
+        attrs: {
+          'data-cy': 'create_publication_notify'
+        },
+        html: true
+      });
+      this.is_submitting = false
+    },
     async createPublication() {
       this.is_submitting = true
+      this.$v.$touch();
+      if (this.$v.$invalid) {
+        this.notify("negative","error","publications.create.required")
+        return false;
+      }
       try {
         await this.$apollo.mutate({
           mutation: CREATE_PUBLICATION,
           variables: this.new_publication,
         })
-        this.$q.notify({
-          color: "positive",
-          message: this.$t("publications.create.success"),
-          icon: "check_circle",
-          attrs: {
-            'data-cy': 'create_publication_notify'
-          },
-          html: true
-        });
-        this.is_submitting = false;
+        this.notify("positive","check_circle","publications.create.success")
         this.new_publication.name = "";
       } catch (error) {
-        this.$q.notify({
-          color: "negative",
-          message: this.$t("publications.create.failure"),
-          icon: "error",
-          attrs: {
-            'data-cy': 'create_publication_notify'
-          },
-          html: true
-        });
-        this.is_submitting = false
+        this.notify("negative","error","publications.create.failure")
       }
     }
   },
