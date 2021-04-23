@@ -1,7 +1,7 @@
 <template>
   <div>
     <h2 class="q-pl-lg">
-      User Details {{ this.$route.params.id }} {{ this.user.name }}
+      {{ user.username }}
     </h2>
     <div class="row q-pa-lg q-col-gutter-lg">
       <div class="col-2">
@@ -11,13 +11,35 @@
         >
           <avatar-image
             :user="user"
-            rounded
+            square
             class="fit"
           />
         </q-item-section>
       </div>
       <div class="col-10">
-        .col-11
+        <div class="row">
+          <div class="col-2 text-right">
+            Username
+          </div>
+          <div class="q-pl-lg col-10">
+            <q-icon name="person_outline"/>
+            {{ user.username }}
+          </div>
+          <div class="col-2 text-right">
+            Email
+          </div>
+          <div class="q-pl-lg col-10">
+            <q-icon name="mail_outline"/>
+            {{ user.email }}
+          </div>
+          <div class="col-2 text-right">
+            Display Name
+          </div>
+          <div class="q-pl-lg col-10">
+            <q-icon name="label_outline"/>
+            {{ user.name }}
+          </div>
+        </div>
       </div>
     </div>
   </div>
