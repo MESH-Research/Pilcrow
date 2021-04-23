@@ -31,3 +31,15 @@ export const GET_USERS = gql`
     }
   }
 `;
+export const GET_USER = gql`
+  query getUser($id:ID) {
+    user(id:$id) {
+      username
+      email
+      name
+      roles {
+        name 
+      }
+    }
+  }
+`;
