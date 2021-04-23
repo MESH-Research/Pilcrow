@@ -46,7 +46,7 @@
 import { GET_PUBLICATIONS } from 'src/graphql/queries';
 import { CREATE_PUBLICATION } from 'src/graphql/mutations';
 import { validationMixin } from 'vuelidate';
-import { required } from 'vuelidate/lib/validators';
+import { required, maxLength } from 'vuelidate/lib/validators';
 
 export default {
   mixins: [validationMixin],
@@ -64,7 +64,8 @@ export default {
   validations: {
     new_publication: {
       name: {
-        required
+        required,
+        maxLength: maxLength(256)
       }
     }
   },
@@ -89,7 +90,11 @@ export default {
     async createPublication() {
       this.is_submitting = true
       this.$v.$touch();
-      if (this.$v.$invalid) {
+      if (!this.$v.new_publication.name.maxLength) {
+        this.notify("negative","error","publications.create.max_length")
+        return false;
+      }
+      if (!this.$v.new_publication.name.required) {
         this.notify("negative","error","publications.create.required")
         return false;
       }
