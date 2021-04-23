@@ -7,6 +7,4 @@ type SocialMedia {
     facebook: String
     instagram: String
     linkedin: String
-    academia_edu_id: String
-    skype: String
 }
