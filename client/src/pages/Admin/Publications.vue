@@ -99,6 +99,7 @@ export default {
           variables: this.new_publication,
         })
         this.notify("positive","check_circle","publications.create.success")
+        this.publications.data.push({name:this.new_publication.name});
         this.new_publication.name = "";
       } catch (error) {
         this.notify("negative","error","publications.create.failure")
