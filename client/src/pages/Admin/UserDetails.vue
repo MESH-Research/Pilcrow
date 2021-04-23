@@ -18,25 +18,25 @@
       </div>
       <div class="col-10">
         <div class="row">
-          <div class="col-2 text-right">
+          <div class="col-2 text-right text--grey">
             Username
           </div>
           <div class="q-pl-lg col-10">
-            <q-icon name="person_outline"/>
+            <q-icon name="person_outline" class="text--grey" />
             {{ user.username }}
           </div>
-          <div class="col-2 text-right">
+          <div class="col-2 text-right text--grey">
             Email
           </div>
           <div class="q-pl-lg col-10">
-            <q-icon name="mail_outline"/>
+            <q-icon name="mail_outline" class="text--grey" />
             {{ user.email }}
           </div>
-          <div class="col-2 text-right">
+          <div class="col-2 text-right text--grey">
             Display Name
           </div>
           <div class="q-pl-lg col-10">
-            <q-icon name="label_outline"/>
+            <q-icon name="label_outline" class="text--grey" />
             {{ user.name }}
           </div>
         </div>
