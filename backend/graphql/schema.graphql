@@ -77,9 +77,9 @@ scalar DateTime
 #import role.graphql
 #import user.graphql
 #import social_media.graphql
-#import mailing_address.graphql
 #import profile_metadata.graphql
 #import publication.graphql
+#import academic_profiles.graphql
 
 """
 Input type for creating a new user via the userCreate mutation
@@ -141,30 +141,20 @@ input UpdateSocialMediaInput @validator(class: "ProfileMetadataSocialMediaValida
     facebook: String
     instagram: String
     linkedin: String
-    academia_edu_id: String
-    skype: String
 }
 
-"""
-Input type for adding mailing address data to profile metadata
-"""
-input UpdateMailingAddressInput @validator(class: "ProfileMetadataMailingAddressValidator") {
-    city: String
-    state: String
-    postal_code: String
-    street_address: String
+input UpdateAcademicProfilesInput @validator(class: "ProfileMetadataAcademicProfilesValidator") {
+    academia_edu_id: String
+    humanities_commons: String
+    orchid_id: String
 }
 
 """
 Input type for adding profile metadata for a user
 """
 input UpdateProfileMetadataInput @validator(class: "ProfileMetadataValidator") {
-    salutation: String
-    phone: String
-    mailing_address: UpdateMailingAddressInput
-    orchid_id: String
-    humanities_commons: String
     social_media: UpdateSocialMediaInput
+    academic_profiles: UpdateAcademicProfilesInput
     professional_title: String
     specialization: String
     affiliation: String
