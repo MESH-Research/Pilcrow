@@ -15,18 +15,6 @@ class ProfileMetadataValidator extends Validator
     public function rules(): array
     {
         return [
-            'salutation' => [
-                'max:64',
-            ],
-            'phone' => [
-                'max:32',
-            ],
-            'orchid_id' => [
-                'max:128',
-            ],
-            'humanities_commons' => [
-                'max:128',
-            ],
             'professional_title' => [
                 'max:256',
             ],

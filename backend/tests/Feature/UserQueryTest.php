@@ -21,24 +21,17 @@ class UserQueryTest extends TestCase
         return [
             [
                 [
-                    'salutation' => 'Mrs.',
-                    'phone' => '(123) 456-7890',
-                    'mailing_address' => [
-                        'city' => 'Seattle',
-                        'state' => 'WA',
-                        'postal_code' => '98052',
-                        'street_address' => '20341 Whitworth Institute 405 N. Whitworth Dr.',
+                    'academic_profiles' => [
+                        'academia_edu_id' => 'regularuser',
+                        'orchid_id' => 'https://orcid.org/members/regular_user',
+                        'humanities_commons' => 'https://hcommons.org/members/regularuser',
                     ],
-                    'orchid_id' => 'https://orcid.org/members/regular_user',
-                    'humanities_commons' => 'https://hcommons.org/members/regularuser',
                     'social_media' => [
                         'google' => 'regularuser',
                         'twitter' => 'regularuser',
                         'facebook' => 'regularuser',
                         'instagram' => 'regularuser',
                         'linkedin' => 'regularuser',
-                        'academia_edu_id' => 'regularuser',
-                        'skype' => 'regularuser',
                     ],
                     'professional_title' => 'Regular User',
                     'specialization' => 'Regular',
@@ -79,24 +72,17 @@ class UserQueryTest extends TestCase
                     email
                     username
                     profile_metadata {
-                        salutation
-                        phone
-                        mailing_address {
-                            city
-                            state
-                            postal_code
-                            street_address
+                        academic_profiles {
+                            orchid_id
+                            humanities_commons
+                            academia_edu_id
                         }
-                        orchid_id
-                        humanities_commons
                         social_media {
                             google
                             twitter
                             facebook
                             instagram
                             linkedin
-                            academia_edu_id
-                            skype
                         }
                         professional_title
                         specialization
