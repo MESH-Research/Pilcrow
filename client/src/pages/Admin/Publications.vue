@@ -26,13 +26,13 @@
       </section>
       <section class="col-md-7 col-sm-6 col-xs-12">
         <h3>All Publications</h3>
-        <ol>
-          <li
+        <ol class="scroll">
             v-for="publication in publications.data"
             :key="publication.id"
           >
-            {{ publication.name }}
-          </li>
+            <li>
+              {{ publication.name }}
+            </li>
         </ol>
         <span v-if="publications.data.length == 0">
           No Publications Created
