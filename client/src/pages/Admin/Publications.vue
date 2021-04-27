@@ -4,7 +4,10 @@
       Publications
     </h2>
     <div class="row q-col-gutter-lg q-pa-lg">
-      <section class="col-md-5 col-sm-6 col-xs-12">
+      <section
+        class="col-md-5 col-sm-6 col-xs-12"
+        data-cy="create_new_publication_form"
+      >
         <h3>Create New Publication</h3>
         <q-form
           @submit="createPublication()"
@@ -13,6 +16,7 @@
             v-model="new_publication.name"
             outlined
             label="Enter Name"
+            data-cy="new_publication_input"
           />
           <q-banner
             v-if="tryCatchError"
@@ -31,16 +35,19 @@
       </section>
       <section class="col-md-7 col-sm-6 col-xs-12">
         <h3>All Publications</h3>
-        <ol class="scroll">
-          <q-item
+        <ol
+          class="scroll"
+          data-cy="publications_list"
+        >
+          <li
             v-for="publication in publications.data"
             :key="publication.id"
             class="q-pa-none"
           >
-            <li>
+            <q-item>
               {{ publication.name }}
-            </li>
-          </q-item>
+            </q-item>
+          </li>
         </ol>
         <span v-if="publications.data.length == 0">
           No Publications Created
