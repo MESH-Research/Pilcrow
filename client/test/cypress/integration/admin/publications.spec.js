@@ -27,16 +27,36 @@ describe('Publications', () => {
     cy.checkA11y();
   });
 
-  // it('prevents publication creation when the name is empty', () => {
+  it('prevents publication creation when the name is empty', () => {
+    cy.dataCy('new_publication_input')
+      .type('{enter}');
+    cy.dataCy('no_publications_message').should('be.visible');
+    cy.dataCy('create_publication_notify').should('be.visible').should('have.class','bg-negative');
+    cy.injectAxe();
+    cy.dataCy('new_publication_input')
+      .type('Draft Publication from Cypress');
+    cy.checkA11y();
+  });
 
-  // });
+  it('prevents publication creation when the name is exceeds the maximum length', () => {
+    const name_256_characters = '0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345';
+    cy.dataCy('new_publication_input')
+      .type(name_256_characters + '{enter}');
+    cy.dataCy('banner_form_error').should('be.visible').should('have.class','bg-negative');
+    cy.injectAxe();
+    cy.dataCy('new_publication_input')
+      .type('Draft Publication from Cypress');
+    cy.checkA11y();
+  });
 
-  // it('prevents publication creation when the name is not unique', () => {
-
-  // });
-
-  // it('prevents publication creation when the name is exceeds the maximum length', () => {
-
-  // });
+  it('prevents publication creation when the name is not unique', () => {
+    // cy.dataCy('new_publication_input')
+    //   .type('Publication 2 from Cypress {enter}');
+    // cy.injectAxe();
+    // cy.dataCy('new_publication_input')
+    //   .type('Publication 2 from Cypress {enter}');
+    // cy.dataCy('create_publication_notify').should('be.visible').should('have.class','bg-negative');
+    // cy.checkA11y();
+  });
 
 });

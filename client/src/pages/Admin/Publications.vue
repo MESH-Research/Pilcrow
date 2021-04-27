@@ -21,7 +21,9 @@
           <q-banner
             v-if="tryCatchError"
             dense
-            class="form-error text-white bg-red text-center q-mt-xs"
+            rounded
+            class="form-error text-white bg-negative text-center q-mt-xs"
+            data-cy="banner_form_error"
             v-text="$t(`publications.create.failure`)"
           />
           <q-btn
@@ -49,9 +51,12 @@
             </q-item>
           </li>
         </ol>
-        <span v-if="publications.data.length == 0">
+        <div
+          v-if="publications.data.length == 0"
+          data-cy="no_publications_message"
+        >
           No Publications Created
-        </span>
+        </div>
       </section>
     </div>
   </div>
