@@ -11,16 +11,19 @@ const components = Object.keys(All).reduce((object, key) => {
   return object;
 }, {});
 
+const mutate = jest.fn();
+const notify = jest.fn();
+const query = jest.fn();
+
 describe('publications page mount', () => {
-  const mutate = jest.fn();
-  const query = jest.fn();
   const wrapper = mountQuasar(PublicationsPage, {
     quasar: {
       components
     },
     mount: {
-      type: 'shallow',
+      type: 'full',
       mocks: {
+        $t: token => token,
         $apollo: {
           query,
           mutate
@@ -28,6 +31,14 @@ describe('publications page mount', () => {
       }
     }
   });
+
+  wrapper.vm.$q.notify = notify;
+
+  beforeEach(async () => {
+    mutate.mockReset();
+    notify.mockReset();
+  });
+
   it('mounts without errors', () => {
     expect(wrapper).toBeTruthy();
   });
@@ -52,9 +63,9 @@ describe('publications page mount', () => {
         name: 'New Jest Publication Name',
       }
     });
-    mutate.mockClear().mockResolvedValue({});
-    wrapper.vm.createPublication();
+    await wrapper.vm.createPublication();
     expect(wrapper.vm.isSubmitting).toBeFalsy();
     expect(mutate).toBeCalled();
+    expect(notify.mock.calls[0][0].color).toBe("positive");
   });
 });

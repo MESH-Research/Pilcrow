@@ -21,7 +21,7 @@ type Query {
     publication(id: ID @eq): Publication @find
 
     "Return all publications"
-    publications: [Publication!]! @paginate(defaultCount: 10)
+    publications: [Publication!]! @paginate(defaultCount: 100)
 }
 
 type Mutation {

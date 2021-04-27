@@ -12,12 +12,17 @@
           <q-input
             v-model="new_publication.name"
             outlined
-            class="q-mb-lg"
             label="Enter Name"
+          />
+          <q-banner
+            v-if="tryCatchError"
+            dense
+            class="form-error text-white bg-red text-center q-mt-xs"
+            v-text="$t(`publications.create.failure`)"
           />
           <q-btn
             :disabled="is_submitting"
-            class="bg-primary text-white"
+            class="bg-primary text-white q-mt-lg"
             type="submit"
           >
             Save
@@ -30,6 +35,7 @@
           <q-item
             v-for="publication in publications.data"
             :key="publication.id"
+            class="q-pa-none"
           >
             <li>
               {{ publication.name }}
@@ -55,6 +61,7 @@ export default {
   data() {
     return {
       is_submitting: false,
+      tryCatchError: false,
       publications: {
         data: []
       },
@@ -77,11 +84,11 @@ export default {
     }
   },
   methods: {
-    notify(color, icon, message) {
+    makeNotify(color, icon, message) {
       this.$q.notify({
         color: color,
-        message: this.$t(message),
         icon: icon,
+        message: this.$t(message),
         attrs: {
           'data-cy': 'create_publication_notify'
         },
@@ -91,13 +98,14 @@ export default {
     },
     async createPublication() {
       this.is_submitting = true
+      this.tryCatchError = false
       this.$v.$touch();
       if (!this.$v.new_publication.name.maxLength) {
-        this.notify("negative","error","publications.create.max_length")
+        this.makeNotify("negative", "error", "publications.create.max_length")
         return false;
       }
       if (!this.$v.new_publication.name.required) {
-        this.notify("negative","error","publications.create.required")
+        this.makeNotify("negative", "error", "publications.create.required")
         return false;
       }
       try {
@@ -105,11 +113,12 @@ export default {
           mutation: CREATE_PUBLICATION,
           variables: this.new_publication,
         })
-        this.notify("positive","check_circle","publications.create.success")
+        this.makeNotify("positive", "check_circle", "publications.create.success")
         this.publications.data.push({name:this.new_publication.name});
         this.new_publication.name = "";
       } catch (error) {
-        this.notify("negative","error","publications.create.failure")
+        this.tryCatchError = true;
+        this.is_submitting = false
       }
     }
   },
