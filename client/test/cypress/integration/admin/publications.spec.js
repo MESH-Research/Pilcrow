@@ -5,10 +5,13 @@ import 'cypress-axe';
 
 describe('Publications', () => {
   beforeEach(() => {
-    cy.task('resetDb');
     cy.login({ email: "applicationadministrator@ccrproject.dev" });
     cy.visit('/admin/publications');
   });
+
+  afterEach(() => {
+    cy.task('resetDb');
+  })
 
   it('should assert the initial load of the page is accessible', () => {
     cy.injectAxe();
@@ -59,5 +62,4 @@ describe('Publications', () => {
     cy.checkA11y();
   });
 
-  cy.task('resetDb');
 });
