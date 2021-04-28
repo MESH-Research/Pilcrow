@@ -5,18 +5,9 @@ import 'cypress-axe';
 
 describe('Publications', () => {
   beforeEach(() => {
+    cy.task('resetDb');
     cy.login({ email: "applicationadministrator@ccrproject.dev" });
     cy.visit('/admin/publications');
-  });
-
-  afterEach(() => {
-    cy.task('resetDb');
-  })
-
-  it('should assert the initial load of the page is accessible', () => {
-    cy.injectAxe();
-    cy.dataCy('create_new_publication_form');
-    cy.checkA11y();
   });
 
   it('creates new publications and updates the publications list', () => {
@@ -59,6 +50,12 @@ describe('Publications', () => {
     cy.dataCy('new_publication_input')
       .type('Duplicate Publication from Cypress{enter}');
     cy.dataCy('banner_form_error').should('be.visible').should('have.class','bg-negative');
+    cy.checkA11y();
+  });
+
+  it('should assert the initial load of the page is accessible', () => {
+    cy.injectAxe();
+    cy.dataCy('create_new_publication_form');
     cy.checkA11y();
   });
 
