@@ -31,3 +31,19 @@ export const GET_USERS = gql`
     }
   }
 `;
+export const GET_PUBLICATIONS = gql`
+  query GetPublications($page:Int) {
+    publications(page:$page) {
+      paginatorInfo {
+        count
+        currentPage
+        lastPage
+        perPage
+      }
+      data {
+        id
+        name
+      }
+    }
+  }
+`;
