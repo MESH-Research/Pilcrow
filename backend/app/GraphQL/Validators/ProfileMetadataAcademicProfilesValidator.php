@@ -15,7 +15,7 @@ class ProfileMetadataAcademicProfilesValidator extends Validator
     public function rules(): array
     {
         return [
-            'orchid_id' => [
+            'orcid_id' => [
                 'max:128',
             ],
             'humanities_commons' => [
