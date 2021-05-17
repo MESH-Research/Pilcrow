@@ -25,10 +25,9 @@
       <q-input
         v-model="form.password"
         outlined
-        label="Password"
         data-cy="update_user_password"
         :type="isPwd ? 'password' : 'text'"
-        hint="Updating this will overwrite the existing password"
+        hint="Set New Password (updating this overwrites the existing password)"
       >
         <template #append>
           <q-icon
