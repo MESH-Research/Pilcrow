@@ -146,7 +146,7 @@ input UpdateSocialMediaInput @validator(class: "ProfileMetadataSocialMediaValida
 input UpdateAcademicProfilesInput @validator(class: "ProfileMetadataAcademicProfilesValidator") {
     academia_edu_id: String
     humanities_commons: String
-    orchid_id: String
+    orcid_id: String
 }
 
 """
