@@ -1,10 +1,9 @@
 <template>
   <q-form
     data-cy="vueAccount"
-    class="q-pa-none"
     @submit="updateUser()"
   >
-    <q-card-section class="q-gutter-md">
+    <q-card-section class="q-col-gutter-y-md">
       <q-input
         v-model="form.name"
         outlined
