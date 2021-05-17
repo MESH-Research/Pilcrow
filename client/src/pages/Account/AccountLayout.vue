@@ -54,35 +54,6 @@
       <q-card class="col-sm-9 col-xs-12 no-shadow outline no-border-radius">
         <q-card-section class="q-pa-none">
           <q-card-section class="q-pa-none">
-            <q-tabs
-              class="bg-grey-2"
-              active-color="black"
-              indicator-color="primary"
-              align="left"
-            >
-              <q-route-tab
-                to="/account/profile"
-                exact
-                label="Account"
-              />
-              <q-route-tab
-                to="/account/connections"
-                exact
-                label="Profile"
-              />
-              <q-route-tab
-                to="/account/privacy"
-                exact
-                label="?Privacy?"
-              />
-              <q-route-tab
-                to="/account/security"
-                exact
-                label="?Security?"
-              />
-            </q-tabs>
-          </q-card-section>
-          <q-card-section class="q-pa-none">
             <router-view />
           </q-card-section>
         </q-card-section>
