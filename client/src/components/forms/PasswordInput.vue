@@ -21,7 +21,7 @@
     </template>
     <template
       v-for="(_, slot) of $scopedSlots"
-      #[slot]="scope"
+      v-slot:[slot]="scope"
     >
       <slot
         :name="slot"
