@@ -20,7 +20,7 @@ describe("QInputPasswordComponent", () => {
   });
 
   it("uses hint slot for errors", async () => {
-    expect(wrapper.html()).toContain("Hint Content");
-    expect(wrapper.html()).not.toContain("Error Content");
+    expect(wrapper.html()).toContain("Error Content");
+    expect(wrapper.html()).not.toContain("Hint Content");
   });
 });
