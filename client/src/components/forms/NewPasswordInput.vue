@@ -27,7 +27,7 @@
           {{ $t("buttons.more_info") }}
         </q-chip>
       </template>
-      <template #hint>
+      <template #error>
         <new-password-input-meter
           :max="4"
           :score="score"
@@ -44,7 +44,7 @@
         </div>
         <div
           v-else-if="value.length == 0 && error"
-          v-text="$t('helpers.REQUIRED_FIELD', ['Password'])"
+          v-text="$t('helpers.REQUIRED_FIELD', [[$t('auth.fields.password')]])"
         />
       </template>
     </password-input>

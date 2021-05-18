@@ -1,6 +1,6 @@
 <template>
   <q-page
-    class="flex-center flex"
+    class="flex-center flex q-pa-md"
     data-cy="vueLogin"
   >
     <q-card
@@ -8,7 +8,6 @@
       square
     >
       <q-form
-        class=""
         @submit="login()"
       >
         <q-card-section class="bg-deep-purple-7 q-pa-sm">
@@ -28,11 +27,11 @@
 
             <q-input
               ref="username"
-              outlined
               :value="$v.form.email.$model"
               :error="$v.form.email.$error"
-              :label="$t('auth.fields.email')"
+              :hint="$t('auth.fields.email')"
               autofocus
+              outlined
               data-cy="email_field"
               autocomplete="username"
               @change="
@@ -56,19 +55,17 @@
             <password-input
               ref="password"
               v-model="$v.form.password.$model"
-              outlined
-              data-cy="password_field"
               :error="$v.form.password.$error"
               :hint="$t('auth.fields.password')"
+              outlined
+              data-cy="password_field"
               autocomplete="current-password"
               @keypress.enter="login"
             >
-              <template #hint>
+              <template #error>
                 <div
                   v-if="!$v.form.password.required"
-                  v-text="
-                    $t('helpers.REQUIRED_FIELD', [$t('auth.fields.password')])
-                  "
+                  v-text="$t('helpers.REQUIRED_FIELD', [$t('auth.fields.password')])"
                 />
               </template>
             </password-input>

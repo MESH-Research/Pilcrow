@@ -9,7 +9,17 @@ export default {
     __getBottom(h) {
       let msg, key;
 
-      if (this.hideHint !== true || this.focused === true) {
+      if (this.hasError === true) {
+        if (this.computedErrorMessage !== void 0) {
+          msg = [ h('div', [ this.computedErrorMessage ]) ];
+          key = this.computedErrorMessage;
+        }
+        else {
+          msg = slot(this, 'error');
+          key = 'q--slot-error';
+        }
+      }
+      else if (this.hideHint !== true || this.focused === true) {
         if (this.hint !== void 0) {
           msg = [h("div", [this.hint])];
           key = this.hint;
