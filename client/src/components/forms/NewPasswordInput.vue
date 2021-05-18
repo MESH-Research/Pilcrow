@@ -3,7 +3,7 @@
     <password-input
       v-bind="{ ...$props, ...$attrs }"
       :value="value"
-      :label="label"
+      :hint="hint"
       autocomplete="new-password"
       bottom-slots
       :error="error"
@@ -78,7 +78,7 @@ export default {
   },
   inheritAttrs: false,
   props: {
-    label: {
+    hint: {
       type: String,
       default: "Password"
     },

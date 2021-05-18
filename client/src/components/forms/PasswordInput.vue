@@ -2,7 +2,7 @@
   <q-input-password
     v-bind="{ ...$props, ...$attrs }"
     :value="value"
-    :label="label"
+    :hint="hint"
     :type="isPwd ? 'password' : 'text'"
     @input="$emit('input', $event)"
   >
@@ -39,7 +39,7 @@ export default {
   components: { QInputPassword },
   inheritAttrs: false,
   props: {
-    label: {
+    hint: {
       type: String,
       default: "Password"
     },

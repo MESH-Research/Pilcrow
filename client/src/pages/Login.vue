@@ -59,7 +59,7 @@
               outlined
               data-cy="password_field"
               :error="$v.form.password.$error"
-              :label="$t('auth.fields.password')"
+              :hint="$t('auth.fields.password')"
               autocomplete="current-password"
               @keypress.enter="login"
             >

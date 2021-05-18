@@ -134,7 +134,7 @@
             <new-password-input
               v-model="$v.form.password.$model"
               outlined
-              :label="$t('auth.fields.password')"
+              :hint="$t('auth.fields.password')"
               :error="$v.form.password.$error"
               :complexity="complexity"
               data-cy="password_field"
