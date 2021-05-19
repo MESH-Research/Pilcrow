@@ -5,8 +5,8 @@
         "commander": "^7.0.0",
         "conventional-changelog-cli": "^2.1.1",
         "dedent-js": "^1.0.1",
-        "markdownlint-cli": "^0.26.0",
-        "standard-version": "^9.1.1",
+        "markdownlint-cli": "^0.27.1",
+        "standard-version": "^9.3.0",
         "yaml-js": "^0.2.3",
         "yesno": "^0.3.1"
     },

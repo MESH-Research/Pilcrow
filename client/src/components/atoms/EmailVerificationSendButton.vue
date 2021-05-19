@@ -13,7 +13,7 @@
     <template v-else>
       {{ $t("account.email_verify.resend_button") }}
     </template>
-    <template v-slot:loading>
+    <template #loading>
       <q-spinner-hourglass class="on-left" />
       {{ $t("account.email_verify.resend_button_loading") }}
     </template>
