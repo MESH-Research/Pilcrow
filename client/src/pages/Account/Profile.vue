@@ -1,10 +1,9 @@
 <template>
   <q-form
     data-cy="vueAccount"
-    class="q-pa-none"
     @submit="updateUser()"
   >
-    <q-card-section class="q-gutter-md">
+    <q-card-section class="q-col-gutter-y-md">
       <q-input
         v-model="form.name"
         outlined
@@ -23,15 +22,18 @@
         data-cy="update_user_username"
         label="Username"
       />
+      <h3 class="q-mt-lg q-mb-none text-h4">
+        Set New Password
+      </h3>
       <q-input
         v-model="form.password"
         outlined
-        label="Password"
         data-cy="update_user_password"
         :type="isPwd ? 'password' : 'text'"
+        label="Password"
         hint="Updating this will overwrite the existing password"
       >
-        <template v-slot:append>
+        <template #append>
           <q-icon
             :name="isPwd ? 'visibility_off' : 'visibility'"
             class="cursor-pointer"

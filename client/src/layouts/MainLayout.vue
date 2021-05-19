@@ -45,6 +45,17 @@
               {{ $t("header.user_list") }}
             </q-item-section>
           </q-item>
+          <q-item
+            v-ripple
+            to="/admin/publications"
+          >
+            <q-item-section avatar>
+              <q-icon name="collections_bookmark" />
+            </q-item-section>
+            <q-item-section>
+              {{ $t("header.publications") }}
+            </q-item-section>
+          </q-item>
         </q-list>
       </q-scroll-area>
 

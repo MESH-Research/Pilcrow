@@ -1,6 +1,6 @@
 <template>
   <q-page
-    class="flex-center flex"
+    class="flex-center flex q-pa-md"
     data-cy="vueRegister"
   >
     <q-card style="width: 400px">
