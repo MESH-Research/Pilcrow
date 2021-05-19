@@ -3,7 +3,7 @@
     <password-input
       v-bind="{ ...$props, ...$attrs }"
       :value="value"
-      :hint="hint"
+      :label="label"
       autocomplete="new-password"
       bottom-slots
       :error="error"
@@ -27,7 +27,7 @@
           {{ $t("buttons.more_info") }}
         </q-chip>
       </template>
-      <template #error>
+      <template #hint>
         <new-password-input-meter
           :max="4"
           :score="score"
@@ -78,7 +78,7 @@ export default {
   },
   inheritAttrs: false,
   props: {
-    hint: {
+    label: {
       type: String,
       default: "Password"
     },

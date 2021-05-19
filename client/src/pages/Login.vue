@@ -29,7 +29,7 @@
               ref="username"
               :value="$v.form.email.$model"
               :error="$v.form.email.$error"
-              :hint="$t('auth.fields.email')"
+              :label="$t('auth.fields.email')"
               autofocus
               outlined
               data-cy="email_field"
@@ -56,13 +56,13 @@
               ref="password"
               v-model="$v.form.password.$model"
               :error="$v.form.password.$error"
-              :hint="$t('auth.fields.password')"
+              :label="$t('auth.fields.password')"
               outlined
               data-cy="password_field"
               autocomplete="current-password"
               @keypress.enter="login"
             >
-              <template #error>
+              <template #hint>
                 <div
                   v-if="!$v.form.password.required"
                   v-text="$t('helpers.REQUIRED_FIELD', [$t('auth.fields.password')])"
