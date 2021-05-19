@@ -22,12 +22,16 @@
         data-cy="update_user_username"
         label="Username"
       />
+      <h3 class="q-mt-lg q-mb-none text-h4">
+        Set New Password
+      </h3>
       <q-input
         v-model="form.password"
         outlined
         data-cy="update_user_password"
         :type="isPwd ? 'password' : 'text'"
-        hint="Set New Password (updating this overwrites the existing password)"
+        label="Password"
+        hint="Updating this will overwrite the existing password"
       >
         <template #append>
           <q-icon
