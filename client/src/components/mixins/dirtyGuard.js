@@ -28,7 +28,7 @@ export default {
       });
   },
   mounted: function() {
-    window.addEventListener("beforeunload", this.beforeUnload);
+    window.addEventListener("beforeUnload", this.beforeUnload);
   },
   beforeDestroy: function() {
     window.removeEventListener("beforeUnload", this.beforeUnload);

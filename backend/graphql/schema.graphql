@@ -21,7 +21,7 @@ type Query {
     publication(id: ID @eq): Publication @find
 
     "Return all publications"
-    publications: [Publication!]! @paginate(defaultCount: 10)
+    publications: [Publication!]! @paginate(defaultCount: 100)
 }
 
 type Mutation {
@@ -146,7 +146,7 @@ input UpdateSocialMediaInput @validator(class: "ProfileMetadataSocialMediaValida
 input UpdateAcademicProfilesInput @validator(class: "ProfileMetadataAcademicProfilesValidator") {
     academia_edu_id: String
     humanities_commons: String
-    orchid_id: String
+    orcid_id: String
 }
 
 """

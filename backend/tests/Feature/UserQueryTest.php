@@ -23,7 +23,7 @@ class UserQueryTest extends TestCase
                 [
                     'academic_profiles' => [
                         'academia_edu_id' => 'regularuser',
-                        'orchid_id' => 'https://orcid.org/members/regular_user',
+                        'orcid_id' => 'https://orcid.org/members/regular_user',
                         'humanities_commons' => 'https://hcommons.org/members/regularuser',
                     ],
                     'social_media' => [
@@ -73,7 +73,7 @@ class UserQueryTest extends TestCase
                     username
                     profile_metadata {
                         academic_profiles {
-                            orchid_id
+                            orcid_id
                             humanities_commons
                             academia_edu_id
                         }

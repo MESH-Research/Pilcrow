@@ -39,6 +39,10 @@ const routes = [
       {
         path: "/admin/user/:id",
         component: () => import('pages/Admin/UserDetails.vue'),
+      },
+      {
+        path: "/admin/publications",
+        component: () => import('src/pages/Admin/Publications.vue'),
         meta: { requiresRoles: 'Application Administrator'}
       }
     ]

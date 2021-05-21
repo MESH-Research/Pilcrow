@@ -1,24 +1,3 @@
-<style lang="css">
-  .q-avatar::before {
-    border-radius: 50%;
-    bottom: 0;
-    box-shadow: 0 0 0 0.05rem #777, 0 0 0 0.1rem #fff;
-    content: "";
-    display: block;
-    left: 0;
-    position: absolute;
-    right: 0;
-    top: 0;
-    z-index: 1;
-  }
-  .q-avatar.rounded-borders::before {
-    border-radius: 4px;
-  }
-  .q-avatar.q-avatar--square::before {
-    border-radius: unset;
-  }
-</style>
-
 <template>
   <q-avatar v-bind="{ ...$attrs, ...$props }">
     <q-img
@@ -64,3 +43,24 @@ export default {
   },
 };
 </script>
+
+<style lang="css">
+  .q-avatar::before {
+    border-radius: 50%;
+    bottom: 0;
+    box-shadow: 0 0 0 0.05rem #777, 0 0 0 0.1rem #fff;
+    content: "";
+    display: block;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: 1;
+  }
+  .q-avatar.rounded-borders::before {
+    border-radius: 4px;
+  }
+  .q-avatar.q-avatar--square::before {
+    border-radius: unset;
+  }
+</style>

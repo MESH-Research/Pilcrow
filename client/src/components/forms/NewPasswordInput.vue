@@ -44,7 +44,7 @@
         </div>
         <div
           v-else-if="value.length == 0 && error"
-          v-text="$t('helpers.REQUIRED_FIELD', ['Password'])"
+          v-text="$t('helpers.REQUIRED_FIELD', [[$t('auth.fields.password')]])"
         />
       </template>
     </password-input>
