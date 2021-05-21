@@ -11,6 +11,7 @@
         "yesno": "^0.3.1"
     },
     "scripts": {
+        "test":"cd backend && lando artisan test && cd ../client && lando yarn test:unit && lando cypress run",
         "lint:md": "markdownlint '.*/**/*.md' '**/*.md' -p .gitignore",
         "release": "standard-version",
         "release:minor": "standard-version --release-as minor",
