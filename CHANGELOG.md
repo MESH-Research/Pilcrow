@@ -3,6 +3,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.16.0](https://github.com/MESH-Research/CCR/compare/v0.13.1...v0.16.0) (2021-05-21)
+
+
+### Features
+
+* Enable Publication Creation on the Frontend ([#242](https://github.com/MESH-Research/CCR/issues/242)) ([4565e4e](https://github.com/MESH-Research/CCR/commit/4565e4ea5faafcf69fa4af5d153b90ca343984cc))
+
+
+### Bug Fixes
+
+* "orchid" Typo ([#259](https://github.com/MESH-Research/CCR/issues/259)) ([eb10a06](https://github.com/MESH-Research/CCR/commit/eb10a06cc8dca64e39d445096ba37db786580375)), closes [#246](https://github.com/MESH-Research/CCR/issues/246)
+
 ### [0.13.1](https://github.com/MESH-Research/CCR/compare/v0.13.0...v0.13.1) (2021-04-21)
 
 ## [0.13.0](https://github.com/MESH-Research/CCR/compare/v0.12.0...v0.13.0) (2021-04-21)
