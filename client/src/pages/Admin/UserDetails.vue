@@ -1,5 +1,14 @@
 <template>
   <div>
+    <div class="q-px-lg q-pt-md q-gutter-sm">
+      <q-breadcrumbs>
+        <q-breadcrumbs-el
+          label="All Users"
+          to="/admin/users"
+        />
+        <q-breadcrumbs-el :label="user.username" />
+      </q-breadcrumbs>
+    </div>
     <h2 class="q-pl-lg">
       {{ user.username }}
     </h2>
@@ -22,21 +31,30 @@
             Username
           </div>
           <div class="q-pl-lg col-10">
-            <q-icon name="person_outline" class="text--grey" />
+            <q-icon
+              name="person_outline"
+              class="text--grey"
+            />
             {{ user.username }}
           </div>
           <div class="col-2 text-right text--grey">
             Email
           </div>
           <div class="q-pl-lg col-10">
-            <q-icon name="mail_outline" class="text--grey" />
+            <q-icon
+              name="mail_outline"
+              class="text--grey"
+            />
             {{ user.email }}
           </div>
           <div class="col-2 text-right text--grey">
             Display Name
           </div>
           <div class="q-pl-lg col-10">
-            <q-icon name="label_outline" class="text--grey" />
+            <q-icon
+              name="label_outline"
+              class="text--grey"
+            />
             {{ user.name }}
           </div>
         </div>

@@ -27,6 +27,7 @@ export const GET_USERS = gql`
       data {
         id
         name
+        username
         email
       }
     }
