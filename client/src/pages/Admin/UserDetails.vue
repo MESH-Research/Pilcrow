@@ -13,7 +13,7 @@
       {{ user.username }}
     </h2>
     <div class="row q-pa-lg q-col-gutter-lg">
-      <div class="col-2">
+      <section class="col-2">
         <q-item-section
           top
           avatar
@@ -24,13 +24,13 @@
             class="fit"
           />
         </q-item-section>
-      </div>
-      <div class="col-10">
+      </section>
+      <section class="col-10">
         <div class="row q-mb-sm">
           <div class="col-2 text-right text--grey">
             Username
           </div>
-          <div class="q-pl-lg col-10">
+          <div class="col-10 q-pl-lg">
             <q-icon
               name="person_outline"
               class="text--grey"
@@ -42,7 +42,7 @@
           <div class="col-2 text-right text--grey">
             Email
           </div>
-          <div class="q-pl-lg col-10">
+          <div class="col-10 q-pl-lg">
             <q-icon
               name="mail_outline"
               class="text--grey"
@@ -54,7 +54,7 @@
           <div class="col-2 text-right text--grey">
             Display Name
           </div>
-          <div class="q-pl-lg col-10">
+          <div class="col-10 q-pl-lg">
             <div v-if="user.name">
               <q-icon
                 name="label_outline"
@@ -75,7 +75,40 @@
             </div>
           </div>
         </div>
-      </div>
+        <div class="row q-mt-lg">
+          <div class="col-2 text-right text--grey">
+            Roles
+          </div>
+          <div class="col-10 q-pl-lg">
+            <div
+              v-for="role in user.roles"
+              :key="role.id"
+              class="text-weight-medium"
+            >
+              <q-icon
+                v-if="role.name === 'Application Administrator' || role.name === 'Publication Administrator'"
+                name="manage_accounts"
+              />
+              <q-icon
+                v-if="role.name === 'Editor'"
+                name="o_book"
+              />
+              {{ role.name }}
+            </div>
+            <div v-if="user.roles.length <= 0">
+              <q-icon
+                name="o_do_disturb_on"
+                class="text--grey"
+              />
+              <span
+                class="text--grey text-weight-light"
+              >
+                No Roles Assigned
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   </div>
 </template>
