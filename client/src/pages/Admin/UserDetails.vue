@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div class="q-px-lg q-pt-md q-gutter-sm">
+  <article>
+    <nav class="q-px-lg q-pt-md q-gutter-sm">
       <q-breadcrumbs>
         <q-breadcrumbs-el
           label="All Users"
@@ -8,29 +8,34 @@
         />
         <q-breadcrumbs-el label="User Details" />
       </q-breadcrumbs>
+    </nav>
+    <div class="row justify-center q-px-lg">
+      <h2 class="col-sm-12">
+        {{ user.username }}
+      </h2>
     </div>
-    <h2 class="q-pl-lg">
-      {{ user.username }}
-    </h2>
     <div class="row q-pa-lg q-col-gutter-lg">
-      <section class="col-2">
-        <q-item-section
-          top
-          avatar
-        >
-          <avatar-image
-            :user="user"
-            square
-            class="fit"
-          />
-        </q-item-section>
+      <section class="col-sm-2 col-xs-12">
+        <div class="row justify-center">
+          <q-item-section
+            top
+            avatar
+            class="col-sm-12 col-xs-2 q-mb-lg"
+          >
+            <avatar-image
+              :user="user"
+              rounded
+              class="fit"
+            />
+          </q-item-section>
+        </div>
       </section>
-      <section class="col-10">
+      <section class="col-sm-10 col-xs-12">
         <div class="row q-mb-sm">
-          <div class="col-2 text-right text--grey">
+          <div class="col-3 q-pr-lg text-right text--grey hide--xxs">
             Username
           </div>
-          <div class="col-10 q-pl-lg">
+          <div class="col">
             <q-icon
               name="person_outline"
               class="text--grey"
@@ -39,10 +44,10 @@
           </div>
         </div>
         <div class="row q-mb-sm">
-          <div class="col-2 text-right text--grey">
+          <div class="col-3 q-pr-lg text-right text--grey hide--xxs">
             Email
           </div>
-          <div class="col-10 q-pl-lg">
+          <div class="col">
             <q-icon
               name="mail_outline"
               class="text--grey"
@@ -51,10 +56,10 @@
           </div>
         </div>
         <div class="row q-mb-sm">
-          <div class="col-2 text-right text--grey">
+          <div class="col-3 q-pr-lg text-right text--grey hide--xxs">
             Display Name
           </div>
-          <div class="col-10 q-pl-lg">
+          <div class="col">
             <div v-if="user.name">
               <q-icon
                 name="label_outline"
@@ -76,10 +81,10 @@
           </div>
         </div>
         <div class="row q-mt-lg">
-          <div class="col-2 text-right text--grey">
+          <div class="col-3 q-pr-lg text-right text--grey">
             Roles
           </div>
-          <div class="col-10 q-pl-lg">
+          <div class="col">
             <div
               v-for="role in user.roles"
               :key="role.id"
@@ -110,7 +115,7 @@
         </div>
       </section>
     </div>
-  </div>
+  </article>
 </template>
 
 <script>
@@ -144,4 +149,3 @@ export default {
   },
 }
 </script>
-
