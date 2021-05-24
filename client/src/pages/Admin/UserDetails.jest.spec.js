@@ -1,5 +1,5 @@
 import { mountQuasar } from "@quasar/quasar-app-extension-testing-unit-jest";
-import UsersDetails from "./UsersDetails.vue";
+import UserDetails from "./UserDetails.vue";
 
 import * as All from "quasar";
 
@@ -11,23 +11,28 @@ const components = Object.keys(All).reduce((object, key) => {
   return object;
 }, {});
 
+const query = jest.fn();
+
 describe('User Details page mount', () => {
-  const query = jest.fn();
-  const wrapper = mountQuasar(UsersDetails, {
-  quasar: {
-    components
-  },
-  mount: {
-    type: 'shallow',
-    mocks: {
-      $apollo: {
-        query
+  const wrapper = mountQuasar(UserDetails, {
+    quasar: {
+      components
+    },
+    mount: {
+      type: 'full',
+      mocks: {
+        $t: token => token,
+        $apollo: {
+          query
+        }
       }
-    }
-  }
+    },
+    stubs: ["router-link"]
   });
+
   it ('mounts without errors', () => {
     expect(wrapper).toBeTruthy();
   });
+
 });
 

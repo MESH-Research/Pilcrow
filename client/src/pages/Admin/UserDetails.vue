@@ -1,5 +1,5 @@
 <template>
-  <article data-cy="">
+  <article data-cy="userDetails">
     <nav class="q-px-lg q-pt-md q-gutter-sm">
       <q-breadcrumbs>
         <q-breadcrumbs-el
