@@ -27,7 +27,7 @@ describe('Admin User Details', () => {
     cy.login({ email: "applicationadministrator@ccrproject.dev" });
     cy.visit('/admin/user/1');
     cy.injectAxe();
-    cy.dataCy('userDetails');
+    cy.dataCy('userDetailsHeading');
     cy.checkA11y();
   });
 

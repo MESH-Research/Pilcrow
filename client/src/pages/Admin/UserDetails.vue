@@ -1,5 +1,5 @@
 <template>
-  <article data-cy="userDetails">
+  <article>
     <nav class="q-px-lg q-pt-md q-gutter-sm">
       <q-breadcrumbs>
         <q-breadcrumbs-el
@@ -10,8 +10,11 @@
       </q-breadcrumbs>
     </nav>
     <div class="row justify-center q-px-lg">
-      <h2 class="col-sm-12">
-        {{ user.username }}
+      <h2
+        class="col-sm-12"
+        data-cy="userDetailsHeading"
+      >
+        {{ user.username || `loading...` }}
       </h2>
     </div>
     <div class="row q-pa-lg q-col-gutter-lg">
