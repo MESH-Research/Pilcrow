@@ -9,9 +9,12 @@ export const CURRENT_USER = gql`
       email
       email_verified_at
       profile_metadata {
+        academic_profiles {
+          orcid_id
+          humanities_commons
+          academia_edu_id
+        }
         biography
-        orchid_id
-        humanities_commons
         professional_title
         specialization
         affiliation
@@ -22,7 +25,6 @@ export const CURRENT_USER = gql`
           google
           twitter
           instagram
-          academia_edu_id
           facebook
           linkedin
         }

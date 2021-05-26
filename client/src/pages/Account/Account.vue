@@ -30,7 +30,7 @@
         :type="isPwd ? 'password' : 'text'"
         hint="Updating this will overwrite the existing password"
       >
-        <template v-slot:append>
+        <template #append>
           <q-icon
             :name="isPwd ? 'visibility_off' : 'visibility'"
             class="cursor-pointer"
