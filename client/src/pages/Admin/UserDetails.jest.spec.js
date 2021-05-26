@@ -12,27 +12,50 @@ const components = Object.keys(All).reduce((object, key) => {
 }, {});
 
 const query = jest.fn();
-
 describe('User Details page mount', () => {
-  const wrapper = mountQuasar(UserDetails, {
-    quasar: {
-      components
-    },
-    mount: {
-      type: 'full',
-      mocks: {
-        $t: token => token,
-        $apollo: {
-          query
-        }
+  const wrapperFactory = (userId) => {
+    return  mountQuasar(UserDetails, {
+      quasar: {
+        components
+      },
+      mount: {
+        type: 'full',
+        mocks: {
+          $t: token => token,
+          $apollo: {
+            query
+          },
+          $route: {
+            params: {
+              id: userId
+            }
+          }
+        },
+        stubs: ["router-link"]
       }
-    },
-    stubs: ["router-link"]
-  });
+    });
+  }
 
   it ('mounts without errors', () => {
-    expect(wrapper).toBeTruthy();
+    expect(wrapperFactory(0)).toBeTruthy();
   });
 
+  it('queries for a specific user', () => {
+    query.mockClear();
+    const wrapper = wrapperFactory(1);
+    expect(wrapper).toBeTruthy();
+
+    expect(
+      wrapper
+        .vm
+        .$options
+        .apollo
+        .user
+        .variables
+        .bind(wrapper.vm)().id
+    ).toBe(1)
+  });
+
+  //! to test how the view handles the data returned, use wrapper.setData(user: {...})
 });
 
