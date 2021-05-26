@@ -3,9 +3,9 @@
     <h2 class="q-pl-lg">
       All Users
     </h2>
-    <q-banner v-if="users.data">
+    <q-banner v-if="userSearch.data">
       <q-item
-        v-for="user in users.data"
+        v-for="user in userSearch.data"
         :key="user.id"
         data-cy="userListItem"
       >
@@ -38,7 +38,7 @@
       <q-pagination
         v-model="current_page"
         class="q-pa-lg flex flex-center"
-        :max="users.paginatorInfo.lastPage"
+        :max="userSearch.paginatorInfo.lastPage"
       />
     </q-banner>
   </div>
@@ -54,14 +54,14 @@ export default {
   },
   data() {
     return {
-      users: {
+      userSearch: {
         data: null
       },
       current_page: 1
     }
   },
   apollo: {
-    users: {
+    userSearch: {
       query: GET_USERS,
       variables () {
         return {

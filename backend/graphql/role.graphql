@@ -1,0 +1,11 @@
+"""
+A user role for permissions
+"""
+type Role {
+    id: ID!
+    name: String!
+    guard_name: String!
+    created_at: DateTime
+    updated_at: DateTime
+    permissions: [Permission!] @belongsToMany
+}

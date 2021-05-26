@@ -1,3 +1,71 @@
+type Query {
+    "Return information about the currently logged in user"
+    currentUser: User @auth
+
+    "Return details about a specific user in the application"
+    user(id: ID @eq): User @find
+
+    "Return user accounts optionally based on a supplied search term"
+    userSearch(term: String @search): [User!]! @paginate(defaultCount: 10)
+
+    "Validate details of a new user.  Returns true if supplied user fields would be valid."
+    validateNewUser(user: ValidateNewUserInput): Boolean @returnTrue
+
+    "Return pre-defined user roles in the application"
+    role(id: ID @eq): Role @find
+
+    "Return a permission by ID"
+    permission(id: ID @eq): Permission @find
+
+    "Return a publiation by ID"
+    publication(id: ID @eq): Publication @find
+
+    "Return all publications"
+    publications: [Publication!]! @paginate(defaultCount: 100)
+}
+
+type Mutation {
+    "Log in to a new session and get the user."
+    login(email: String!, password: String!): User!
+
+    "Log out from the current session, showing the user one last time."
+    logout: User @guard
+
+    "Create a new user"
+    createUser(user: CreateUserInput! @spread): User!
+        @create
+        @event(dispatch: "Illuminate\\Auth\\Events\\Registered")
+
+    "Update user information"
+    updateUser(user: UpdateUserInput! @spread): User!
+        @update
+        @can(ability: "update", find: "id")
+
+    "(Re)send a verification email to a user.  "
+    sendEmailVerification(
+        "User to resend verification for. If not supplied, defaults to the current user."
+        id: ID
+    ): User!
+        @guard
+        @field(resolver: "App\\GraphQL\\Mutations\\VerifyEmail@send")
+
+    "Verify the currently logged in user's email address"
+    verifyEmail(
+        "Token supplied to the user via email"
+        token: String!
+
+        "Token expiration as a UNIX epoch timestamp"
+        expires: String!
+    ): User!
+        @guard
+        @field(resolver: "App\\GraphQL\\Mutations\\VerifyEmail@verify")
+
+    "Create a new publication"
+    createPublication(publication: CreatePublicationInput! @spread): Publication!
+        @create
+        @can(ability: "create")
+}
+
 "A date string with format `Y-m-d`, e.g. `2011-05-23`."
 scalar Date @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Date")
 
@@ -5,75 +73,13 @@ scalar Date @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Date")
 scalar DateTime
     @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTime")
 
-type Query {
-    "Return user accounts in the application."
-    users: [User!]! @paginate(defaultCount: 10)
-
-    "Return details about a specific user in the application"
-    user(id: ID @eq): User @find
-
-    "Validate details of a new user.  Returns true if supplied user fields would be valid."
-    validateNewUser(user: ValidateNewUserInput): Boolean @returnTrue
-
-    "Return information about the currently logged in user"
-    currentUser: User @auth
-
-    "Return pre-defined user roles in the application"
-    role(id: ID @eq): Role @find
-
-    permission(id: ID @eq): Permission @find
-}
-
-"Validate the availability of username and email via the validateNewUser query"
-input ValidateNewUserInput @validator(class: "UserInputValidator") {
-    "Username.  Validation error if not unique"
-    username: String
-
-    "Email. Validation error if not unique"
-    email: String
-}
-
-"""
-Input type for adding social media data to profile metadata
-"""
-input UpdateSocialMediaInput @validator(class: "ProfileMetadataSocialMediaValidator") {
-    google: String
-    twitter: String
-    facebook: String
-    instagram: String
-    linkedin: String
-    academia_edu_id: String
-    skype: String
-}
-
-"""
-Input type for adding mailing address data to profile metadata
-"""
-input UpdateMailingAddressInput @validator(class: "ProfileMetadataMailingAddressValidator") {
-    city: String
-    state: String
-    postal_code: String
-    street_address: String
-}
-
-"""
-Input type for adding profile metadata for a user
-"""
-input UpdateProfileMetadataInput @validator(class: "ProfileMetadataValidator") {
-    salutation: String
-    phone: String
-    mailing_address: UpdateMailingAddressInput
-    orchid_id: String
-    humanities_commons: String
-    social_media: UpdateSocialMediaInput
-    professional_title: String
-    specialization: String
-    affiliation: String
-    interest_keywords: [String]
-    disinterest_keywords: [String]
-    biography: String
-    websites: [String]
-}
+#import permission.graphql
+#import role.graphql
+#import user.graphql
+#import social_media.graphql
+#import profile_metadata.graphql
+#import publication.graphql
+#import academic_profiles.graphql
 
 """
 Input type for creating a new user via the userCreate mutation
@@ -116,77 +122,39 @@ input UpdateUserInput @validator(class: "UserInputValidator") {
 }
 
 """
-A permission for roles and users
+Validate the availability of username and email via the validateNewUser query
 """
-type Permission {
-    id: ID!
-    name: String!
-    guard_name: String!
-    created_at: DateTime
-    updated_at: DateTime
+input ValidateNewUserInput @validator(class: "UserInputValidator") {
+    "Username.  Validation error if not unique"
+    username: String
+
+    "Email. Validation error if not unique"
+    email: String
 }
 
 """
-A user role for permissions
+Input type for adding social media data to profile metadata
 """
-type Role {
-    id: ID!
-    name: String!
-    guard_name: String!
-    created_at: DateTime
-    updated_at: DateTime
-    permissions: [Permission!] @belongsToMany
-}
-
-"""
-A user account
-"""
-type User {
-    id: ID!
-    name: String
-    email: String!
-    username: String!
-    created_at: DateTime!
-    updated_at: DateTime
-    email_verified_at: DateTime
-    roles: [Role!]! @belongsToMany
-    permissions: [Permission!] @belongsToMany
-    profile_metadata: ProfileMetadata
-}
-
-"""
-Social media data for the profile metadata of a user
-"""
-type SocialMedia {
+input UpdateSocialMediaInput @validator(class: "ProfileMetadataSocialMediaValidator") {
     google: String
     twitter: String
     facebook: String
     instagram: String
     linkedin: String
+}
+
+input UpdateAcademicProfilesInput @validator(class: "ProfileMetadataAcademicProfilesValidator") {
     academia_edu_id: String
-    skype: String
-}
-
-"""
-Mailing address information for the profile metadata of a user
-"""
-type MailingAddress {
-    city: String
-    state: String
-    postal_code: String
-    street_address: String
-}
-
-"""
-Profile metadata of a user
-"""
-type ProfileMetadata {
-    salutation: String
-    phone: String
-    mailing_address: MailingAddress
-    orchid_id: String
     humanities_commons: String
-    social_media: SocialMedia
+    orcid_id: String
+}
+
+"""
+Input type for adding profile metadata for a user
+"""
+input UpdateProfileMetadataInput @validator(class: "ProfileMetadataValidator") {
+    social_media: UpdateSocialMediaInput
+    academic_profiles: UpdateAcademicProfilesInput
     professional_title: String
     specialization: String
     affiliation: String
@@ -196,39 +164,6 @@ type ProfileMetadata {
     websites: [String]
 }
 
-type Mutation {
-    "Create a new user"
-    createUser(user: CreateUserInput! @spread): User!
-        @create
-        @event(dispatch: "Illuminate\\Auth\\Events\\Registered")
-
-    "Verify the currently logged in user's email address"
-    verifyEmail(
-        "Token supplied to the user via email"
-        token: String!
-
-        "Token expiration as a UNIX epoch timestamp"
-        expires: String!
-    ): User!
-        @guard
-        @field(resolver: "App\\GraphQL\\Mutations\\VerifyEmail@verify")
-
-    "(Re)send a verification email to a user.  "
-    sendEmailVerification(
-        "User to resend verification for. If not supplied, defaults to the current user."
-        id: ID
-    ): User!
-        @guard
-        @field(resolver: "App\\GraphQL\\Mutations\\VerifyEmail@send")
-
-    "Log in to a new session and get the user."
-    login(email: String!, password: String!): User!
-
-    "Log out from the current session, showing the user one last time."
-    logout: User @guard
-
-    "Update user information"
-    updateUser(user: UpdateUserInput! @spread): User!
-        @update
-        @can(ability: "update", find: "id")
+input CreatePublicationInput @validator(class: "PublicationInputValidator") {
+    name: String @trim
 }

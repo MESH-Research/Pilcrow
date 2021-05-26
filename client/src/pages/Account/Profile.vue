@@ -1,11 +1,9 @@
 <template>
-  <q-form @submit="save">
-    <q-card-section class="bg-primary text-white">
-      <div class="text-subtitle2">
-        {{ $t('account.profile.section_personal') }}
-      </div>
-    </q-card-section>
-    <q-card-section class="q-gutter-md">
+  <q-form
+    data-cy="vueAccount"
+    @submit="updateUser()"
+  >
+    <q-card-section class="q-col-gutter-y-md">
       <q-input
         v-model="form.professional_title"
         :label="$t('account.profile.fields.professional_title')"

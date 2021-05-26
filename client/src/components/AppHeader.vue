@@ -59,6 +59,17 @@
                 {{ $t("header.user_list") }}
               </q-item-section>
             </q-item>
+            <q-item
+              clickable
+              to="/admin/publications"
+            >
+              <q-item-section avatar>
+                <q-icon name="collections_bookmark" />
+              </q-item-section>
+              <q-item-section>
+                {{ $t("header.publications") }}
+              </q-item-section>
+            </q-item>
             <q-separator />
             <q-item
               clickable

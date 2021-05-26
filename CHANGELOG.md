@@ -3,6 +3,46 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.16.0](https://github.com/MESH-Research/CCR/compare/v0.13.1...v0.16.0) (2021-05-21)
+
+
+### Features
+
+* Enable Publication Creation on the Frontend ([#242](https://github.com/MESH-Research/CCR/issues/242)) ([4565e4e](https://github.com/MESH-Research/CCR/commit/4565e4ea5faafcf69fa4af5d153b90ca343984cc))
+
+
+### Bug Fixes
+
+* "orchid" Typo ([#259](https://github.com/MESH-Research/CCR/issues/259)) ([eb10a06](https://github.com/MESH-Research/CCR/commit/eb10a06cc8dca64e39d445096ba37db786580375)), closes [#246](https://github.com/MESH-Research/CCR/issues/246)
+
+### [0.13.1](https://github.com/MESH-Research/CCR/compare/v0.13.0...v0.13.1) (2021-04-21)
+
+## [0.13.0](https://github.com/MESH-Research/CCR/compare/v0.12.0...v0.13.0) (2021-04-21)
+
+
+### Features
+
+* Enable publication creation on API ([#206](https://github.com/MESH-Research/CCR/issues/206)) ([cf472f1](https://github.com/MESH-Research/CCR/commit/cf472f1d2d0e2d521259acfc76ca9cf14599cbc7)), closes [#186](https://github.com/MESH-Research/CCR/issues/186)
+
+## [0.12.0](https://github.com/MESH-Research/CCR/compare/v0.11.0...v0.12.0) (2021-04-14)
+
+
+### Features
+
+* Add user search to GraphQL API ([#194](https://github.com/MESH-Research/CCR/issues/194)) ([9d499ef](https://github.com/MESH-Research/CCR/commit/9d499ef052cca087f4a60577b5acc17d3ff9e2a6))
+
+## [0.11.0](https://github.com/MESH-Research/CCR/compare/v0.10.0...v0.11.0) (2021-03-31)
+
+
+### Features
+
+* add publications ([#187](https://github.com/MESH-Research/CCR/issues/187)) ([0ee4afc](https://github.com/MESH-Research/CCR/commit/0ee4afcf126c3113f30be7fc2908b252ed297086))
+
+
+### Bug Fixes
+
+* resolve outstanding accessibility issues ([#189](https://github.com/MESH-Research/CCR/issues/189)) ([910e278](https://github.com/MESH-Research/CCR/commit/910e278ab0a1920e5a07d670560257aaae213cf9))
+
 ## [0.10.0](https://github.com/MESH-Research/CCR/compare/v0.9.0...v0.10.0) (2021-03-18)
 
 
