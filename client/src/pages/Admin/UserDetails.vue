@@ -93,33 +93,37 @@
           <div class="col-3 q-pr-lg text-right text--grey">
             Roles
           </div>
-          <div class="col">
-            <div v-if="user.roles.length">
-              <div
-                v-for="role in user.roles"
-                :key="role.id"
-                class="text-weight-medium"
-              >
-                <q-icon
-                  v-if="role.name === 'Application Administrator' || role.name === 'Publication Administrator'"
-                  name="manage_accounts"
-                />
-                <q-icon
-                  v-if="role.name === 'Editor'"
-                  name="o_book"
-                />
-                {{ role.name }}
-              </div>
-            </div>
-            <div v-else>
+          <div
+            v-if="user.roles.length"
+            class="col"
+          >
+            <div
+              v-for="role in user.roles"
+              :key="role.id"
+              class="q-mb-sm text-weight-medium"
+            >
               <q-icon
-                name="o_do_disturb_on"
-                class="text--grey"
+                v-if="role.name === 'Application Administrator' || role.name === 'Publication Administrator'"
+                name="manage_accounts"
               />
-              <span class="text--grey text-weight-light">
-                No Roles Assigned
-              </span>
+              <q-icon
+                v-if="role.name === 'Editor'"
+                name="o_book"
+              />
+              {{ role.name }}
             </div>
+          </div>
+          <div
+            v-else
+            class="col"
+          >
+            <q-icon
+              name="o_do_disturb_on"
+              class="text--grey"
+            />
+            <span class="text--grey text-weight-light">
+              No Roles Assigned
+            </span>
           </div>
         </div>
       </section>
