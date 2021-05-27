@@ -1,5 +1,11 @@
 <template>
-  <article>
+  <div
+    v-if="$apollo.loading"
+    class="q-pa-lg"
+  >
+    Loading...
+  </div>
+  <article v-else>
     <nav class="q-px-lg q-pt-md q-gutter-sm">
       <q-breadcrumbs>
         <q-breadcrumbs-el
@@ -14,7 +20,7 @@
         class="col-sm-12"
         data-cy="userDetailsHeading"
       >
-        {{ user.username || `Loading...` }}
+        {{ user.username }}
       </h2>
     </div>
     <div class="row q-pa-lg q-col-gutter-lg">
