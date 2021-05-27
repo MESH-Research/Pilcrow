@@ -88,22 +88,24 @@
             Roles
           </div>
           <div class="col">
-            <div
-              v-for="role in user.roles"
-              :key="role.id"
-              class="text-weight-medium"
-            >
-              <q-icon
-                v-if="role.name === 'Application Administrator' || role.name === 'Publication Administrator'"
-                name="manage_accounts"
-              />
-              <q-icon
-                v-if="role.name === 'Editor'"
-                name="o_book"
-              />
-              {{ role.name }}
+            <div v-if="user.roles.length">
+              <div
+                v-for="role in user.roles"
+                :key="role.id"
+                class="text-weight-medium"
+              >
+                <q-icon
+                  v-if="role.name === 'Application Administrator' || role.name === 'Publication Administrator'"
+                  name="manage_accounts"
+                />
+                <q-icon
+                  v-if="role.name === 'Editor'"
+                  name="o_book"
+                />
+                {{ role.name }}
+              </div>
             </div>
-            <div v-if="user.roles.length <= 0">
+            <div v-else>
               <q-icon
                 name="o_do_disturb_on"
                 class="text--grey"
