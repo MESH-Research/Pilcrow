@@ -14,7 +14,7 @@
         class="col-sm-12"
         data-cy="userDetailsHeading"
       >
-        {{ user.username || `loading...` }}
+        {{ user.username || `Loading...` }}
       </h2>
     </div>
     <div class="row q-pa-lg q-col-gutter-lg">
@@ -75,9 +75,7 @@
                 name="o_do_disturb_on"
                 class="text--grey"
               />
-              <span
-                class="text--grey text-weight-light"
-              >
+              <span class="text--grey text-weight-light">
                 No Display Name
               </span>
             </div>

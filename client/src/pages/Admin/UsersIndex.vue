@@ -3,9 +3,7 @@
     <h2 class="q-pl-lg">
       All Users
     </h2>
-    <div
-      v-if="userSearch.data"
-    >
+    <div v-if="userSearch.data">
       <q-item
         v-for="user in userSearch.data"
         :key="user.id"
