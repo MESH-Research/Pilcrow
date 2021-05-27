@@ -106,9 +106,7 @@
                 name="o_do_disturb_on"
                 class="text--grey"
               />
-              <span
-                class="text--grey text-weight-light"
-              >
+              <span class="text--grey text-weight-light">
                 No Roles Assigned
               </span>
             </div>
