@@ -71,6 +71,7 @@ export default {
     publications: "Publications",
     user_list: "All Users",
     account_link: "My Account",
+    profile_link: "My Profile",
     dashboard: "My Dashboard",
     menu_button_aria: "Show/hide navigation sidebar"
   },

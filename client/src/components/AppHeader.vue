@@ -39,12 +39,26 @@
               clickable
               data-cy="link_my_account"
               to="/account"
+              exact
             >
               <q-item-section avatar>
                 <q-icon name="account_circle" />
               </q-item-section>
               <q-item-section>
                 {{ $t("header.account_link") }}
+              </q-item-section>
+            </q-item>
+            <q-item
+              clickable
+              data-cy="link_my_account"
+              to="/account/profile"
+              exact
+            >
+              <q-item-section avatar>
+                <q-icon name="contact_mail" />
+              </q-item-section>
+              <q-item-section>
+                {{ $t("header.profile_link") }}
               </q-item-section>
             </q-item>
             <q-item
