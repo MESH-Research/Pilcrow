@@ -95,6 +95,7 @@
           </div>
           <div
             v-if="user.roles.length"
+            data-roles="has_roles"
             class="col"
           >
             <div
@@ -115,6 +116,7 @@
           </div>
           <div
             v-else
+            data-roles="no_roles"
             class="col"
           >
             <q-icon
