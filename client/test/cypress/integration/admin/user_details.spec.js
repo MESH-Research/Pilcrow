@@ -22,10 +22,19 @@ describe('Admin User Details', () => {
     cy.url().should('not.include', '/error403');
   });
 
-  it('should assert the page is accessible', () => {
+  it('should assert the User Details page of an admin is accessible', () => {
     // Inject the axe-core libraray
     cy.login({ email: "applicationadministrator@ccrproject.dev" });
     cy.visit('/admin/user/1');
+    cy.injectAxe();
+    cy.dataCy('userDetailsHeading');
+    cy.checkA11y();
+  });
+
+  it('should assert the User Details page of an non-admin is accessible', () => {
+    // Inject the axe-core libraray
+    cy.login({ email: "applicationadministrator@ccrproject.dev" });
+    cy.visit('/admin/user/2');
     cy.injectAxe();
     cy.dataCy('userDetailsHeading');
     cy.checkA11y();
