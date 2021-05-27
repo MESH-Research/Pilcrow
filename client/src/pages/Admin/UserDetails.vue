@@ -29,7 +29,7 @@
           <q-item-section
             top
             avatar
-            class="col-sm-12 col-xs-2 q-mb-lg"
+            class="col-sm-12 col-xs-2 q-mb-lg q-pr-none"
           >
             <avatar-image
               :user="user"
