@@ -22,6 +22,9 @@ type Query {
 
     "Return all publications"
     publications: [Publication!]! @paginate(defaultCount: 100)
+
+    "Return only publically visible publications"
+    publically_visible_publications: [Publication]! @paginate(defaultCount: 100)
 }
 
 type Mutation {
