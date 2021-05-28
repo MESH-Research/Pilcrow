@@ -3,11 +3,14 @@
     <h2 class="q-pl-lg">
       All Users
     </h2>
-    <q-banner v-if="userSearch.data">
+    <div v-if="userSearch.data">
       <q-item
         v-for="user in userSearch.data"
         :key="user.id"
+        clickable
         data-cy="userListItem"
+        class="q-px-lg"
+        @click="goToUserDetail(user.id)"
       >
         <q-item-section
           top
@@ -20,9 +23,16 @@
         </q-item-section>
 
         <q-item-section>
-          <q-item-label>{{ user.name }}</q-item-label>
-          <q-item-label caption>
-            Secondary line text. Lorem ipsum dolor sit amet, consectetur adipiscit elit.
+          <q-item-label v-if="user.name">
+            {{ user.name }}
+          </q-item-label>
+          <q-item-label v-else>
+            {{ user.username }}
+          </q-item-label>
+          <q-item-label
+            caption
+          >
+            {{ user.email }}
           </q-item-label>
         </q-item-section>
 
@@ -40,7 +50,7 @@
         class="q-pa-lg flex flex-center"
         :max="userSearch.paginatorInfo.lastPage"
       />
-    </q-banner>
+    </div>
   </div>
 </template>
 
@@ -58,6 +68,14 @@ export default {
         data: null
       },
       current_page: 1
+    }
+  },
+  methods: {
+    goToUserDetail(userId) {
+      this.$router.push({
+        name:"user_details",
+        params:{id:userId}
+      })
     }
   },
   apollo: {
