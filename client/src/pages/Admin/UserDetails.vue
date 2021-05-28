@@ -41,7 +41,7 @@
       </section>
       <section class="col-sm-10 col-xs-12">
         <div class="row q-mb-sm">
-          <div class="col-3 q-pr-lg text-right text--grey hide--xxs">
+          <div :class="`${$q.screen.width < 440 ? 'hidden' : 'col-3 q-pr-lg text-right text--grey '}`">
             {{ $t('user.username') }}
           </div>
           <div class="col">
@@ -53,7 +53,7 @@
           </div>
         </div>
         <div class="row q-mb-sm">
-          <div class="col-3 q-pr-lg text-right text--grey hide--xxs">
+          <div :class="`${$q.screen.width < 440 ? 'hidden' : 'col-3 q-pr-lg text-right text--grey '}`">
             {{ $t('user.email') }}
           </div>
           <div class="col">
@@ -65,7 +65,7 @@
           </div>
         </div>
         <div class="row q-mb-sm">
-          <div class="col-3 q-pr-lg text-right text--grey hide--xxs">
+          <div :class="`${$q.screen.width < 440 ? 'hidden' : 'col-3 q-pr-lg text-right text--grey '}`">
             {{ $t('user.name') }}
           </div>
           <div class="col">
@@ -88,13 +88,13 @@
           </div>
         </div>
         <div class="row q-mt-lg">
-          <div :class="`${$q.screen.lt.sm ? 'col-12 text-left q-mb-sm' : 'col-3 text-right q-pr-lg'} text--grey`">
+          <div :class="`${$q.screen.width < 440 ? 'col-12 text-left q-mb-sm' : 'col-3 text-right q-pr-lg'} text--grey`">
             {{ $tc('role.self', 2) }}
           </div>
           <div
             v-if="user.roles.length"
             data-roles="has_roles"
-            :class="`${$q.screen.lt.sm ? 'col-12' : 'col'}`"
+            :class="`${$q.screen.width < 440 ? 'col-12' : 'col'}`"
           >
             <div
               v-for="role in user.roles"
