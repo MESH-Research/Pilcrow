@@ -14,7 +14,7 @@ const components = Object.keys(All).reduce((object, key) => {
 const query = jest.fn();
 describe('User Details page mount', () => {
   const wrapperFactory = (userId) => {
-    return  mountQuasar(UserDetails, {
+    return mountQuasar(UserDetails, {
       quasar: {
         components
       },
@@ -56,6 +56,46 @@ describe('User Details page mount', () => {
     ).toBe(1)
   });
 
-  //! to test how the view handles the data returned, use wrapper.setData(user: {...})
-});
+  it('reflects the lack of roles for a user with no assigned roles', async () => {
+    query.mockClear();
+    const wrapper = wrapperFactory(1);
+    expect(wrapper).toBeTruthy();
+    await wrapper.setData({
+      user: {
+        name: 'Regular User',
+        roles: []
+      }
+    });
+    expect(wrapper.text()).toContain("No Roles Assigned");
+  });
 
+  it('reflects the role of an application administrator', async () => {
+    query.mockClear();
+    const wrapper = wrapperFactory(2);
+    expect(wrapper).toBeTruthy();
+    await wrapper.setData({
+      user: {
+        name: 'Application Admin User',
+        roles: [
+          {
+            name: "Application Administrator"
+          }
+        ]
+      }
+    });
+    expect(wrapper.text()).toContain("Application Administrator");
+  });
+
+  it('reflects the lack of display name for a user with no name', async () => {
+    query.mockClear();
+    const wrapper = wrapperFactory(3);
+    expect(wrapper).toBeTruthy();
+    await wrapper.setData({
+      user: {
+        username: 'userWithNoName'
+      }
+    });
+    expect(wrapper.text()).toContain("No Display Name");
+  });
+
+});

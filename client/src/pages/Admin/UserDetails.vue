@@ -1,5 +1,11 @@
 <template>
-  <article>
+  <div
+    v-if="$apollo.loading"
+    class="q-pa-lg"
+  >
+    Loading...
+  </div>
+  <article v-else>
     <nav class="q-px-lg q-pt-md q-gutter-sm">
       <q-breadcrumbs>
         <q-breadcrumbs-el
@@ -14,7 +20,7 @@
         class="col-sm-12"
         data-cy="userDetailsHeading"
       >
-        {{ user.username || `Loading...` }}
+        {{ user.username }}
       </h2>
     </div>
     <div class="row q-pa-lg q-col-gutter-lg">
@@ -23,7 +29,7 @@
           <q-item-section
             top
             avatar
-            class="col-sm-12 col-xs-2 q-mb-lg"
+            class="col-sm-12 col-xs-2 q-mb-lg q-pr-none"
           >
             <avatar-image
               :user="user"
@@ -85,11 +91,15 @@
           <div class="col-3 q-pr-lg text-right text--grey">
             Roles
           </div>
-          <div class="col">
+          <div
+            v-if="user.roles.length"
+            data-roles="has_roles"
+            class="col"
+          >
             <div
               v-for="role in user.roles"
               :key="role.id"
-              class="text-weight-medium"
+              class="q-mb-sm text-weight-medium"
             >
               <q-icon
                 v-if="role.name === 'Application Administrator' || role.name === 'Publication Administrator'"
@@ -101,15 +111,19 @@
               />
               {{ role.name }}
             </div>
-            <div v-if="user.roles.length <= 0">
-              <q-icon
-                name="o_do_disturb_on"
-                class="text--grey"
-              />
-              <span class="text--grey text-weight-light">
-                No Roles Assigned
-              </span>
-            </div>
+          </div>
+          <div
+            v-else
+            data-roles="no_roles"
+            class="col"
+          >
+            <q-icon
+              name="o_do_disturb_on"
+              class="text--grey"
+            />
+            <span class="text--grey text-weight-light">
+              No Roles Assigned
+            </span>
           </div>
         </div>
       </section>
