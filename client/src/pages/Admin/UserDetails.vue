@@ -115,7 +115,7 @@
           <div
             v-else
             data-roles="no_roles"
-            class="col"
+            :class="`${$q.screen.width < 440 ? 'col-12' : 'col'}`"
           >
             <q-icon
               name="o_do_disturb_on"
