@@ -56,25 +56,46 @@ describe('User Details page mount', () => {
     ).toBe(1)
   });
 
-  // it('reflects the lack of roles for an regular user', () => {
+  it('reflects the lack of roles for a user with no assigned roles', async () => {
+    query.mockClear();
+    const wrapper = wrapperFactory(1);
+    expect(wrapper).toBeTruthy();
+    await wrapper.setData({
+      user: {
+        name: 'Regular User',
+        roles: []
+      }
+    });
+    expect(wrapper.text()).toContain("No Roles Assigned");
+  });
 
-  // it('reflects the role of an application administrator', async () => {
-  //   query.mockClear();
-  //   const wrapper = wrapperFactory(2);
+  it('reflects the role of an application administrator', async () => {
+    query.mockClear();
+    const wrapper = wrapperFactory(2);
+    expect(wrapper).toBeTruthy();
+    await wrapper.setData({
+      user: {
+        name: 'Application Admin User',
+        roles: [
+          {
+            name: "Application Administrator"
+          }
+        ]
+      }
+    });
+    expect(wrapper.text()).toContain("Application Administrator");
+  });
 
-  //   expect(wrapper).toBeTruthy();
-
-  //   await wrapper.setData({
-  //     user: {
-  //       name:'Application Admin User ',
-  //       roles: [
-  //         {
-  //           name: "Application Administrator"
-  //         }
-  //       ]
-  //     }
-  //   });
-  //   expect(wrapper.findAll('[data-roles="has_roles"]').toBeTruthy())
-  // });
+  it('reflects the lack of display name for a user with no name', async () => {
+    query.mockClear();
+    const wrapper = wrapperFactory(3);
+    expect(wrapper).toBeTruthy();
+    await wrapper.setData({
+      user: {
+        username: 'userWithNoName'
+      }
+    });
+    expect(wrapper.text()).toContain("No Display Name");
+  });
 
 });
