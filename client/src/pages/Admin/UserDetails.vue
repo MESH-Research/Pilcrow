@@ -81,22 +81,20 @@
                 name="o_do_disturb_on"
                 class="text--grey"
               />
-              <span
-                class="text--grey text-weight-light"
-              >
+              <span class="text--grey text-weight-light">
                 {{ $t('user.empty_name') }}
               </span>
             </div>
           </div>
         </div>
         <div class="row q-mt-lg">
-          <div class="col-3 q-pr-lg text-right text--grey">
+          <div :class="`${$q.screen.lt.sm ? 'col-12 text-left q-mb-sm' : 'col-3 text-right q-pr-lg'} text--grey`">
             {{ $tc('role.self', 2) }}
           </div>
           <div
             v-if="user.roles.length"
             data-roles="has_roles"
-            class="col"
+            :class="`${$q.screen.lt.sm ? 'col-12' : 'col'}`"
           >
             <div
               v-for="role in user.roles"
