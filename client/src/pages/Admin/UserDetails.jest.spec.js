@@ -22,6 +22,7 @@ describe('User Details page mount', () => {
         type: 'full',
         mocks: {
           $t: token => token,
+          $tc: token => token,
           $apollo: {
             query
           },
@@ -66,7 +67,7 @@ describe('User Details page mount', () => {
         roles: []
       }
     });
-    expect(wrapper.text()).toContain("No Roles Assigned");
+    expect(wrapper.text()).toContain("role.no_roles_assigned");
   });
 
   it('reflects the role of an application administrator', async () => {
@@ -95,7 +96,8 @@ describe('User Details page mount', () => {
         username: 'userWithNoName'
       }
     });
-    expect(wrapper.text()).toContain("No Display Name");
+    expect(wrapper.text()).toContain("user.empty_name"
+    );
   });
 
 });

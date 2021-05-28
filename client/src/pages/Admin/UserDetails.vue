@@ -3,16 +3,16 @@
     v-if="$apollo.loading"
     class="q-pa-lg"
   >
-    Loading...
+    {{ $t('loading') }}
   </div>
   <article v-else>
     <nav class="q-px-lg q-pt-md q-gutter-sm">
       <q-breadcrumbs>
         <q-breadcrumbs-el
-          label="All Users"
+          :label="$tc('user.self', 2)"
           to="/admin/users"
         />
-        <q-breadcrumbs-el label="User Details" />
+        <q-breadcrumbs-el :label="$t('user.details_heading')" />
       </q-breadcrumbs>
     </nav>
     <div class="row justify-center q-px-lg">
@@ -42,7 +42,7 @@
       <section class="col-sm-10 col-xs-12">
         <div class="row q-mb-sm">
           <div class="col-3 q-pr-lg text-right text--grey hide--xxs">
-            Username
+            {{ $t('user.username') }}
           </div>
           <div class="col">
             <q-icon
@@ -54,7 +54,7 @@
         </div>
         <div class="row q-mb-sm">
           <div class="col-3 q-pr-lg text-right text--grey hide--xxs">
-            Email
+            {{ $t('user.email') }}
           </div>
           <div class="col">
             <q-icon
@@ -66,7 +66,7 @@
         </div>
         <div class="row q-mb-sm">
           <div class="col-3 q-pr-lg text-right text--grey hide--xxs">
-            Display Name
+            {{ $t('user.name') }}
           </div>
           <div class="col">
             <div v-if="user.name">
@@ -84,14 +84,14 @@
               <span
                 class="text--grey text-weight-light"
               >
-                No Display Name
+                {{ $t('user.empty_name') }}
               </span>
             </div>
           </div>
         </div>
         <div class="row q-mt-lg">
           <div class="col-3 q-pr-lg text-right text--grey">
-            Roles
+            {{ $tc('role.self', 2) }}
           </div>
           <div
             v-if="user.roles.length"
@@ -124,7 +124,7 @@
               class="text--grey"
             />
             <span class="text--grey text-weight-light">
-              No Roles Assigned
+              {{ $t('role.no_roles_assigned') }}
             </span>
           </div>
         </div>
