@@ -19,11 +19,26 @@ Reviews must be a good-faith effort on the part of both the reviewer and the sub
 
 The full test suite of CCR consists of the following:
 
+* [Server Unit Testing](#server-unit-tests)
 * [Client Unit Testing](#client-unit-tests)
 * [Client Integration Testing](#integration-tests-e2e)
-* [Server Unit Testing](#server-unit-tests)
 
-In a command line, run `yarn test` from the root project directory (`/`). This will initiate all tests to be run synchronously.
+From the root project directory (`/`), run the following in a command line:
+```sh
+yarn test
+```
+This will initiate all server and client tests to be run synchronously.
+
+### Server Unit Tests
+
+On the PHP side, we use [PHPUnit](https://phpunit.de/) to run backend tests.  To run the backend unit tests:
+
+To run the PHP unit tests execute the following command **from the `/backend` directory**:
+```sh
+lando artisan test
+```
+
+Be sure to read the [Laravel testing documentation](https://laravel.com/docs/8.x/testing) and [Laravel Lighthouse testing documentation](https://lighthouse-php.com/master/testing/phpunit.html).  Both provide essential information about writing unit tests for our application.
 
 ### Client Unit Tests
 
@@ -36,7 +51,7 @@ lando yarn test:unit
 ```
 Each package's documentation is an excellent source of information on testing best practices and examples.  The [Vue Testing Handbook](https://lmiller1990.github.io/vue-testing-handbook/) is also an excellent resource for unit testing a Vue application.
 
-### Lando config for Majestic UI
+### Lando Config for Majestic UI
 
 The [Majestic](https://github.com/Raathigesh/majestic) GUI for Jest is a useful tool for running unit tests in a browser and watching code and tests for changes.  You can add the following config to your `.lando.local.yml` file to enable a container for Majestic.
 
@@ -63,17 +78,6 @@ proxy:
 ```
 
 Then, once you run `lando rebuild` the majestic interface will be available at <https://majestic.ccr.lndo.site>
-
-### Server Unit Tests
-
-On the PHP side, we use [PHPUnit](https://phpunit.de/) to run backend tests.  To run the backend unit tests:
-
-To run the PHP unit tests execute the following command **from the `/backend` directory**:
-```sh
-lando artisan test
-```
-
-Be sure to read the [Laravel testing documentation](https://laravel.com/docs/8.x/testing) and [Laravel Lighthouse testing documentation](https://lighthouse-php.com/master/testing/phpunit.html).  Both provide essential information about writing unit tests for our application.
 
 ### Integration Tests (E2E)
 
