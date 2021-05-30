@@ -51,7 +51,7 @@ lando yarn test:unit
 ```
 Each package's documentation is an excellent source of information on testing best practices and examples.  The [Vue Testing Handbook](https://lmiller1990.github.io/vue-testing-handbook/) is also an excellent resource for unit testing a Vue application.
 
-### Lando Config for Majestic UI
+#### Lando Config for Majestic UI
 
 The [Majestic](https://github.com/Raathigesh/majestic) GUI for Jest is a useful tool for running unit tests in a browser and watching code and tests for changes.  You can add the following config to your `.lando.local.yml` file to enable a container for Majestic.
 
