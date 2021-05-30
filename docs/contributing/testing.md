@@ -15,7 +15,17 @@ Reviewers should be able to follow your steps to confirm that the change works a
 
 Reviews must be a good-faith effort on the part of both the reviewer and the submitter.  Reviewers should presume that mistakes are simple oversights, and submitters should assume that reviewers are looking out for the project.
 
-## Client Unit Tests
+## Testing
+
+The full test suite of CCR consists of the following:
+
+* [Client Unit Testing](#client-unit-tests)
+* [Client Integration Testing](#integration-tests-e2e)
+* [Server Unit Testing](#server-unit-tests)
+
+In a command line, run `yarn test` from the root project directory (`/`). This will initiate all tests to be run synchronously.
+
+### Client Unit Tests
 
 The client side of the application uses [Jest](https://jestjs.io), [vue-test-utils](https://vue-test-utils.vuejs.org/) and [@quasar/testing-unit-jest](https://testing.quasar.dev/packages/unit-jest/).
 
@@ -25,6 +35,7 @@ To run the client-side unit tests, you can run the following **from the `/client
 lando yarn test:unit
 ```
 Each package's documentation is an excellent source of information on testing best practices and examples.  The [Vue Testing Handbook](https://lmiller1990.github.io/vue-testing-handbook/) is also an excellent resource for unit testing a Vue application.
+
 ### Lando config for Majestic UI
 
 The [Majestic](https://github.com/Raathigesh/majestic) GUI for Jest is a useful tool for running unit tests in a browser and watching code and tests for changes.  You can add the following config to your `.lando.local.yml` file to enable a container for Majestic.
@@ -53,7 +64,7 @@ proxy:
 
 Then, once you run `lando rebuild` the majestic interface will be available at <https://majestic.ccr.lndo.site>
 
-## Server Unit Tests
+### Server Unit Tests
 
 On the PHP side, we use [PHPUnit](https://phpunit.de/) to run backend tests.  To run the backend unit tests:
 
@@ -64,7 +75,7 @@ lando artisan test
 
 Be sure to read the [Laravel testing documentation](https://laravel.com/docs/8.x/testing) and [Laravel Lighthouse testing documentation](https://lighthouse-php.com/master/testing/phpunit.html).  Both provide essential information about writing unit tests for our application.
 
-## Integration Tests (E2E)
+### Integration Tests (E2E)
 
 We use [Cypress](https://www.cypress.io/) for our integration testing.  Cypress runs integration tests in a browser (Chrome, Firefox, Electron, or Edge) and allows controlling the browser and testing the responses of the application programmatically.
 
@@ -74,7 +85,7 @@ These instructions focus on installing Cypress under Lando.  Cypress can bit a b
 Also you can use Lando Extras to set up this configuration for you.  Run: `lando extras enable cypress`
 :::
 
-Add the following configuration to your `.lando.local.yml`.  
+Add the following configuration to your `.lando.local.yml`.
 
 ::: warning Heads Up
 NOTE: If you already have configuration in `.lando.local.yml`, be sure to merge the services and tooling keys, or Lando will fail to start/rebuild.
@@ -112,7 +123,7 @@ It is possible to run the interactive test runner, although it does require some
 )
 :::
 
-The [Cypress Docs](https://docs.cypress.io/guides/getting-started/writing-your-first-test.html#Add-a-test-file) are a thorough resource for writing tests using Cypress.  
+The [Cypress Docs](https://docs.cypress.io/guides/getting-started/writing-your-first-test.html#Add-a-test-file) are a thorough resource for writing tests using Cypress.
 
 ## Code Style & Linting
 
@@ -141,7 +152,7 @@ lando yarn lint:md
 
 [Markdownlint](https://marketplace.visualstudio.com/items?itemName=DavidAnson.vscode-markdownlint) should pick up our configuration automatically.
 
-### Javascript
+### JavaScript
 
 From the `/client` directory run:
 ```sh
@@ -158,7 +169,7 @@ Instructions for integrating eslint into VSCode can be found [in the eslint-plug
 - Edit your VSCode settings.json:
 
 ```json
-{ 
+{
   //...
   "eslint.format.enable": true, // Adds eslint to the formatter options in the right-click menu (Optional)
   "eslint.packageManager": "yarn", // CCR uses yarn
