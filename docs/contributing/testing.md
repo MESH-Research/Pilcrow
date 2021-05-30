@@ -21,7 +21,7 @@ The full test suite of CCR consists of the following:
 
 * [Server Unit Testing](#server-unit-tests)
 * [Client Unit Testing](#client-unit-tests)
-* [Client Integration Testing](#integration-tests-e2e)
+* [Integration Testing](#integration-tests-e2e)
 
 From the root project directory (`/`), run the following in a command line:
 ```sh
@@ -53,15 +53,16 @@ Each package's documentation is an excellent source of information on testing be
 
 #### Lando Config for Majestic UI
 
-The [Majestic](https://github.com/Raathigesh/majestic) GUI for Jest is a useful tool for running unit tests in a browser and watching code and tests for changes.  You can add the following config to your `.lando.local.yml` file to enable a container for Majestic.
+The [Majestic](https://github.com/Raathigesh/majestic) GUI for Jest is a useful tool for running client unit tests in a browser and watching code and tests for changes.  You can add the following config to your `.lando.local.yml` file to enable a container for Majestic.
+
+::: tip
+The lando extras tooling command can set up Majestic for you.  Run: `lando extras enable majestic` from the root project directory.
+:::
 
 ::: warning Heads Up
 If you already have configuration `.lando.local.yml`, be sure to merge the services and proxy keys, or Lando will fail to rebuild/start.
 :::
 
-::: tip
-The lando extras tooling command can set up Majestic for you.  Run: `lando extras enable majestic` from the root project directory.
-:::
 ```yaml
 #FILE: .lando.local.yml
 services:
@@ -81,7 +82,7 @@ Then, once you run `lando rebuild` the majestic interface will be available at <
 
 ### Integration Tests (E2E)
 
-We use [Cypress](https://www.cypress.io/) for our integration testing.  Cypress runs integration tests in a browser (Chrome, Firefox, Electron, or Edge) and allows controlling the browser and testing the responses of the application programmatically.
+We use [Cypress](https://www.cypress.io/) for our integration or end-to-end testing.  Cypress runs integration tests in a browser (Chrome, Firefox, Electron, or Edge) and allows controlling the browser and testing the responses of the application programmatically.
 
 ::: tip
 These instructions focus on installing Cypress under Lando.  Cypress can bit a bit of a resource hog and, as such, might be better run directly in your host environment.
