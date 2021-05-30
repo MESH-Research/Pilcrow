@@ -60,7 +60,7 @@ If you already have configuration `.lando.local.yml`, be sure to merge the servi
 :::
 
 ::: tip
-The lando extras tooling command can set up Majestic for you.  Run: `lando extras enable majestic`
+The lando extras tooling command can set up Majestic for you.  Run: `lando extras enable majestic` from the root project directory.
 :::
 ```yaml
 #FILE: .lando.local.yml
