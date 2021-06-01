@@ -27,7 +27,8 @@ From the root project directory (`/`), run the following in a command line:
 ```sh
 yarn test
 ```
-This will initiate all server and client tests to be run synchronously.
+
+This will initiate a synchronous run of all tests.
 
 ### Server Unit Tests
 
