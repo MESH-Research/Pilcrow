@@ -32,7 +32,7 @@ This will initiate a synchronous run of all tests.
 
 ### Backend Unit Tests
 
-On the PHP side, we use [PHPUnit](https://phpunit.de/) to run backend tests.  To run the backend unit tests:
+On the PHP side, we use [PHPUnit](https://phpunit.de/) to run backend tests.
 
 To run the PHP unit tests execute the following command **from the `/backend` directory**:
 ```sh
