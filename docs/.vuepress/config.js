@@ -49,7 +49,7 @@ module.exports = {
             "/contributing/": [
                 {
                     title: "Contributing",
-                    sidebarDepth: 1,
+                    sidebarDepth: 2,
                     children: ["", "architecture", "testing", "documentation"]
                 }
             ]
