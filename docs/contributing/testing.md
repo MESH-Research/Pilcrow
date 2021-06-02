@@ -30,7 +30,7 @@ yarn test
 
 This will initiate a synchronous run of all tests.
 
-### Server Unit Tests
+### Backend Unit Tests
 
 On the PHP side, we use [PHPUnit](https://phpunit.de/) to run backend tests.  To run the backend unit tests:
 
