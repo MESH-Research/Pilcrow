@@ -30,6 +30,7 @@ clover.xml
 nbproject/*
 # Visual Studio Code
 .vscode
+*.code-workspace
 # Sass preprocessor
 .sass-cache/
 # Docker
