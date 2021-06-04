@@ -40,7 +40,7 @@
     "axe-core": "^4.2.1",
     "babel-eslint": "^10.0.1",
     "cypress-axe": "^0.12.2",
-    "eslint": "^7.26.0",
+    "eslint": "^7.27.0",
     "eslint-config-prettier": "^6.15.0",
     "eslint-loader": "^4.0.2",
     "eslint-plugin-cypress": "^2.11.3",
