@@ -33,73 +33,26 @@
 
 <script>
 import { GET_PUBLICATIONS } from 'src/graphql/queries';
-import { CREATE_PUBLICATION } from 'src/graphql/mutations';
-import { validationMixin } from 'vuelidate';
-import { required, maxLength } from 'vuelidate/lib/validators';
 
 export default {
-  mixins: [validationMixin],
+  components: {
+
+  },
   data() {
     return {
-      is_submitting: false,
-      tryCatchError: false,
       publications: {
         data: []
       },
-      new_publication: {
-        name: ""
-      }
-    }
-  },
-  validations: {
-    new_publication: {
-      name: {
-        required,
-        maxLength: maxLength(256)
-      }
+      current_page: 1
     }
   },
   apollo: {
     publications: {
-      query: GET_PUBLICATIONS
-    }
-  },
-  methods: {
-    makeNotify(color, icon, message) {
-      this.$q.notify({
-        color: color,
-        icon: icon,
-        message: this.$t(message),
-        attrs: {
-          'data-cy': 'create_publication_notify'
-        },
-        html: true
-      });
-      this.is_submitting = false
-    },
-    async createPublication() {
-      this.is_submitting = true
-      this.tryCatchError = false
-      this.$v.$touch();
-      if (!this.$v.new_publication.name.maxLength) {
-        this.makeNotify("negative", "error", "publications.create.max_length")
-        return false;
-      }
-      if (!this.$v.new_publication.name.required) {
-        this.makeNotify("negative", "error", "publications.create.required")
-        return false;
-      }
-      try {
-        await this.$apollo.mutate({
-          mutation: CREATE_PUBLICATION,
-          variables: this.new_publication,
-        })
-        this.makeNotify("positive", "check_circle", "publications.create.success")
-        this.publications.data.push({name:this.new_publication.name});
-        this.new_publication.name = "";
-      } catch (error) {
-        this.tryCatchError = true;
-        this.is_submitting = false
+      query: GET_PUBLICATIONS,
+      variables () {
+        return {
+          page:this.current_page
+        }
       }
     }
   },

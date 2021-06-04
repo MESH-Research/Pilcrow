@@ -6,4 +6,5 @@ type Publication {
     name: String!
     created_at: DateTime
     updated_at: DateTime
+    is_publicly_visible: Boolean
 }

@@ -128,8 +128,12 @@ class PublicationTest extends TestCase
         $response->assertJsonPath('data', $expected_data);
     }
 
-    public function testAllPublicationsCanBeQueried()
+    public function testAllPublicationsCanBeQueriedByAnApplicationAdministrator()
     {
+        $user = User::factory()->create();
+        $user->assignRole(Role::APPLICATION_ADMINISTRATOR);
+        $this->actingAs($user);
+
         $publication_1 = Publication::factory()->create([
             'name' => 'Test Publication 1 for Querying All Publications',
         ]);
@@ -159,6 +163,33 @@ class PublicationTest extends TestCase
                     ],
                 ],
             ],
+        ];
+        $response->assertJsonPath('data', $expected_data);
+    }
+
+    public function testAllPublicationsCannotBeQueriedByARegularUser()
+    {
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        $publication_1 = Publication::factory()->create([
+            'name' => 'Test Publication 1 for Querying All Publications',
+        ]);
+        $publication_2 = Publication::factory()->create([
+            'name' => 'Test Publication 2 for Querying All Publications',
+        ]);
+        $response = $this->graphQL(
+            'query GetPublications {
+                publications {
+                    data {
+                        id
+                        name
+                    }
+                }
+            }'
+        );
+        $expected_data = [
+            'publications' => null,
         ];
         $response->assertJsonPath('data', $expected_data);
     }
