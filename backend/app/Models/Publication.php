@@ -23,4 +23,12 @@ class Publication extends Model
     {
         return $this->belongsToMany(User::class, 'publication_users');
     }
+
+    /**
+     *
+     */
+    public function submissions()
+    {
+        return $this->hasMany(Submission::class);
+    }
 }

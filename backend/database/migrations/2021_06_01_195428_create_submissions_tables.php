@@ -17,6 +17,11 @@ class CreateSubmissionsTables extends Migration
             $table->id();
             $table->timestamps();
             $table->string('title')->nullable(false);
+            $table->unsignedBigInteger('publication_id');
+
+            $table->foreign('publication_id')
+                ->references('id')
+                ->on('publications');
         });
     }
 
@@ -28,5 +33,6 @@ class CreateSubmissionsTables extends Migration
     public function down()
     {
         Schema::dropIfExists('submissions');
+        Schema::dropIfExists('publications_submissions');
     }
 }

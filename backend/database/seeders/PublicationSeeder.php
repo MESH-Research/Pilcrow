@@ -4,10 +4,9 @@ declare(strict_types=1);
 namespace Database\Seeders;
 
 use App\Models\Publication;
-use App\Models\Submission;
 use Illuminate\Database\Seeder;
 
-class SubmissionSeeder extends Seeder
+class PublicationSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -16,9 +15,9 @@ class SubmissionSeeder extends Seeder
      */
     public function run()
     {
-        $submission = Submission::factory()->create([
-            'title' => 'CCR Test Submission 1',
-            'publication_id' => Publication::first()->id,
+        $publication = Publication::factory()->create([
+            'id' => 1,
+            'name' => 'Collaborative Review Organization',
         ]);
     }
 }
