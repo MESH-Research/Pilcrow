@@ -17,6 +17,9 @@ class Submission extends Model
         'publication_id',
     ];
 
+    /**
+     * The publication that the submission belongs to
+     */
     public function publication()
     {
         return $this->belongsTo(Publication::class, 'publication_id');

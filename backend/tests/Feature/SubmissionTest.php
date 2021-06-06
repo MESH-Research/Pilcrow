@@ -20,9 +20,14 @@ class SubmissionTest extends TestCase
         $publication = Publication::factory()->create([
             'name' => 'Test Publication #1',
         ]);
-        $submissions = Submission::factory()->count(20)->create();
-        $this->assertEquals($submissions->first()->publication->id, 1);
-        $this->assertEquals($submissions->last()->publication->id, 1);
-        $this->assertEquals($publication->submissions->count(), 20);
+        Publication::factory()->count(6)->create();
+        Submission::factory()->count(10)->for($publication)->create();
+        Submission::factory()->count(16)->create();
+        $this->assertEquals(1, Submission::where('publication_id', $publication->id)
+            ->pluck('publication_id')->unique()->count()
+        );
+        $this->assertGreaterThanOrEqual(10, $publication->submissions->count());
+        $this->assertLessThanOrEqual(26, $publication->submissions->count());
+    }
     }
 }

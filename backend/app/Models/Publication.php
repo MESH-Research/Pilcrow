@@ -25,7 +25,7 @@ class Publication extends Model
     }
 
     /**
-     *
+     * Submissioss that belong to a publication
      */
     public function submissions()
     {

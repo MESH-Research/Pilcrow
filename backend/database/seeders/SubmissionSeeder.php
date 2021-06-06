@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
-use App\Models\Publication;
 use App\Models\Submission;
 use Illuminate\Database\Seeder;
 
@@ -18,7 +17,7 @@ class SubmissionSeeder extends Seeder
     {
         $submission = Submission::factory()->create([
             'title' => 'CCR Test Submission 1',
-            'publication_id' => Publication::first()->id,
+            'publication_id' => 1,
         ]);
     }
 }
