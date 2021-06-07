@@ -3,7 +3,7 @@
 
 import 'cypress-axe';
 
-describe('Publications', () => {
+describe('Admin Publications', () => {
   beforeEach(() => {
     cy.task('resetDb');
     cy.login({ email: "applicationadministrator@ccrproject.dev" });
