@@ -10,9 +10,14 @@ class Role extends ParentModel
 {
     use HasFactory;
 
+    // Relative to the application
     public const APPLICATION_ADMINISTRATOR = 'Application Administrator';
+
+    // Relative to publications
     public const PUBLICATION_ADMINISTRATOR = 'Publication Administrator';
     public const EDITOR = 'Editor';
+
+    // Relative to submissions
     public const REVIEW_COORDINATOR = 'Review Coordinator';
     public const REVIEWER = 'Reviewer';
     public const SUBMITTER = 'Submitter';

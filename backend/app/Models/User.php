@@ -150,4 +150,12 @@ class User extends Authenticatable implements MustVerifyEmail
 
         return $array;
     }
+
+    /**
+     * Submissions that belong to the user
+     */
+    public function submissions()
+    {
+        return $this->belongsToMany(Submission::class);
+    }
 }

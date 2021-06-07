@@ -23,6 +23,26 @@ class CreateSubmissionsTables extends Migration
                 ->references('id')
                 ->on('publications');
         });
+
+        Schema::create('submission_user', function (Blueprint $table) {
+            $table->id();
+            $table->timestamps();
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('submission_id');
+            $table->unsignedBigInteger('role_id');
+
+            $table->foreign('user_id')
+                ->references('id')
+                ->on('users');
+
+            $table->foreign('submission_id')
+                ->references('id')
+                ->on('submissions');
+
+            $table->foreign('role_id')
+                ->references('id')
+                ->on('roles');
+        });
     }
 
     /**
@@ -33,6 +53,7 @@ class CreateSubmissionsTables extends Migration
     public function down()
     {
         Schema::dropIfExists('submissions');
+        Schema::dropIfExists('submissions_users');
         Schema::dropIfExists('publications_submissions');
     }
 }
