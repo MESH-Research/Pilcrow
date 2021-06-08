@@ -6,4 +6,5 @@ type Publication {
     name: String!
     created_at: DateTime
     updated_at: DateTime
+    submissions: [Submission]! @belongsToMany
 }
