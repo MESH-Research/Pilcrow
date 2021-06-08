@@ -23,17 +23,9 @@ class SubmissionFactory extends Factory
      */
     public function definition()
     {
-        $publication_id = 1;
-
-        // If there are existing publications, assign the submission to a random one
-        $publication_ids = Publication::pluck('id')->toArray();
-        if (count($publication_ids) > 0) {
-            $publication_id = $this->faker->randomElement($publication_ids);
-        }
-
         return [
             'title' => $this->faker->sentence(10, true),
-            'publication_id' => $publication_id,
+            'publication_id' => Publication::factory(),
         ];
     }
 }

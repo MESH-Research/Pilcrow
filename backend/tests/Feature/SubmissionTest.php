@@ -22,38 +22,64 @@ class SubmissionTest extends TestCase
         $publication = Publication::factory()->create([
             'name' => 'Test Publication #1',
         ]);
-        Publication::factory()->count(6)->create();
-        Submission::factory()->count(10)->for($publication)->create();
+        Publication::factory()->count(5)->create();
+        $submissions = Submission::factory()->count(10)->for($publication)->create();
         Submission::factory()->count(16)->create();
-        $this->assertEquals(1, Submission::where('publication_id', $publication->id)
-            ->pluck('publication_id')->unique()->count());
+        $this->assertEquals(1, $submissions->pluck('publication_id')->unique()->count());
         $this->assertGreaterThanOrEqual(10, $publication->submissions->count());
         $this->assertLessThanOrEqual(26, $publication->submissions->count());
     }
 
     /**
      * @return void
-     * @doesNotPerformAssertions
      */
     public function testThatSubmissionsHaveAManyToManyRelationshipWithUsers()
     {
+        $submission_count = 4;
+        $user_count = 6;
+        $submitter_id = Role::where('name', Role::SUBMITTER)->first()->id;
         $publication = Publication::factory()->create([
             'name' => 'Test Publication #2',
         ]);
-        $users = User::factory()->count(6)->create();
-        $submissions = Submission::factory()
-            ->count(4)
-            ->hasAttached(
-                $users,
+        $users = User::factory()->count($user_count)->create();
+
+        // Create submissions and attach them to users randomly with random roles
+        for ($i = 0; $i < $submission_count; $i++) {
+            $random_role_id = Role::whereIn('name',
                 [
-                    'role_id' => Role::whereIn('name', [
-                        Role::REVIEW_COORDINATOR,
-                        Role::REVIEWER,
-                        Role::SUBMITTER,
-                    ])->get()->pluck('id')->random(),
+                    Role::REVIEW_COORDINATOR,
+                    Role::REVIEWER,
+                    Role::SUBMITTER,
+                ])
+                ->get()
+                ->pluck('id')
+                ->random();
+            $submission = Submission::factory()->hasAttached(
+                $users->random(),
+                [
+                    'role_id' => $random_role_id,
                 ]
             )
+            ->for($publication)
             ->create();
-        print_r($submissions->toArray());
+
+            // Ensure at least one Submitter is attached if one was not previously attached
+            if ($random_role_id !== $submitter_id) {
+                $submission->users()->attach(
+                    $users->random(),
+                    [
+                        'role_id' => $submitter_id,
+                    ]
+                );
+            }
+        }
+        Submission::all()->map(function($submission) use ($user_count) {
+            $this->assertNotEmpty($submission->users);
+            $this->assertGreaterThan(0, $submission->users->count());
+            $this->assertLessThanOrEqual($user_count, $submission->users->count());
+        });
+        User::all()->map(function($user) use ($submission_count) {
+            $this->assertLessThanOrEqual($submission_count, $user->submissions->count());
+        });
     }
 }
