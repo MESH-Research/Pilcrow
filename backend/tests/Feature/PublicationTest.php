@@ -172,12 +172,6 @@ class PublicationTest extends TestCase
         $user = User::factory()->create();
         $this->actingAs($user);
 
-        $publication_1 = Publication::factory()->create([
-            'name' => 'Test Publication 1 for Querying All Publications',
-        ]);
-        $publication_2 = Publication::factory()->create([
-            'name' => 'Test Publication 2 for Querying All Publications',
-        ]);
         $response = $this->graphQL(
             'query GetPublications {
                 publications {
