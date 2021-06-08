@@ -76,7 +76,6 @@ class SubmissionTest extends TestCase
             }
         }
         Submission::all()->map(function ($submission) use ($user_count) {
-            $this->assertNotEmpty($submission->users);
             $this->assertGreaterThan(0, $submission->users->count());
             $this->assertLessThanOrEqual($user_count, $submission->users->count());
         });
