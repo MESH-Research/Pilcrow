@@ -45,12 +45,14 @@ class SubmissionTest extends TestCase
 
         // Create submissions and attach them to users randomly with random roles
         for ($i = 0; $i < $submission_count; $i++) {
-            $random_role_id = Role::whereIn('name',
+            $random_role_id = Role::whereIn(
+                'name',
                 [
                     Role::REVIEW_COORDINATOR,
                     Role::REVIEWER,
                     Role::SUBMITTER,
-                ])
+                ]
+            )
                 ->get()
                 ->pluck('id')
                 ->random();
@@ -73,12 +75,12 @@ class SubmissionTest extends TestCase
                 );
             }
         }
-        Submission::all()->map(function($submission) use ($user_count) {
+        Submission::all()->map(function ($submission) use ($user_count) {
             $this->assertNotEmpty($submission->users);
             $this->assertGreaterThan(0, $submission->users->count());
             $this->assertLessThanOrEqual($user_count, $submission->users->count());
         });
-        User::all()->map(function($user) use ($submission_count) {
+        User::all()->map(function ($user) use ($submission_count) {
             $this->assertLessThanOrEqual($submission_count, $user->submissions->count());
         });
     }
