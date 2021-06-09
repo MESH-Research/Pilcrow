@@ -60,4 +60,7 @@ export default {
   .q-avatar.rounded-borders::before {
     border-radius: 4px;
   }
+  .q-avatar.q-avatar--square::before {
+    border-radius: unset;
+  }
 </style>
