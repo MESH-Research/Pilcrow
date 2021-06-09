@@ -79,6 +79,10 @@ type Mutation {
     createPublication(publication: CreatePublicationInput! @spread): Publication!
         @create
         @can(ability: "create")
+
+    "Create a new submission under a publication with a user"
+    createSubmission(input: CreateSubmissionInput! @spread): Submission!
+        @create
 }
 
 "A date string with format `Y-m-d`, e.g. `2011-05-23`."
@@ -173,4 +177,13 @@ input UpdateProfileMetadataInput @validator(class: "ProfileMetadataValidator") {
 
 input CreatePublicationInput @validator(class: "PublicationInputValidator") {
     name: String @trim
+}
+
+"""
+Input type for creating a new submission via the createSubmission mutation
+"""
+input CreateSubmissionInput @validator(class: "SubmissionInputValidator") {
+    title: String @trim!
+    publication_id: ID!
+    user_id: ID!
 }
