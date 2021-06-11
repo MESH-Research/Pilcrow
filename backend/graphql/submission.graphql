@@ -6,6 +6,6 @@ type Submission {
     title: String
     created_at: DateTime!
     updated_at: DateTime
-    publication: Publication
+    publication: Publication!
     users: [User!]! @belongsToMany
 }

@@ -260,4 +260,9 @@ class SubmissionTest extends TestCase
         ];
         $response->assertJsonPath('data', $expected_data);
     }
+
+    public function testSubmissionCreationViaMutation()
+    {
+        $this->assertTrue(true);
+    }
 }
