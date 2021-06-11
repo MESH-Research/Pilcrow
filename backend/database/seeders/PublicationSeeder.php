@@ -15,7 +15,7 @@ class PublicationSeeder extends Seeder
      */
     public function run()
     {
-        $publication = Publication::factory()->create([
+        Publication::factory()->create([
             'id' => 1,
             'name' => 'Collaborative Review Organization',
         ]);

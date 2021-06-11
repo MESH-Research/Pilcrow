@@ -15,7 +15,7 @@ class SubmissionSeeder extends Seeder
      */
     public function run()
     {
-        $submission = Submission::factory()->create([
+        Submission::factory()->create([
             'title' => 'CCR Test Submission 1',
             'publication_id' => 1,
         ]);

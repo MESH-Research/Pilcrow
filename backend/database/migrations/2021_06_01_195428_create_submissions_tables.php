@@ -54,6 +54,5 @@ class CreateSubmissionsTables extends Migration
     {
         Schema::dropIfExists('submissions');
         Schema::dropIfExists('submissions_users');
-        Schema::dropIfExists('publications_submissions');
     }
 }

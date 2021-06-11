@@ -153,6 +153,8 @@ class User extends Authenticatable implements MustVerifyEmail
 
     /**
      * Submissions that belong to the user
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function submissions()
     {
