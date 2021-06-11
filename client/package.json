@@ -20,7 +20,7 @@
     "test:unit:ui": "majestic"
   },
   "dependencies": {
-    "@quasar/extras": "^1.10.5",
+    "@quasar/extras": "^1.10.6",
     "apollo-link-context": "^1.0.20",
     "apollo-link-error": "^1.1.13",
     "axios": "^0.21.1",
@@ -37,15 +37,15 @@
     "@quasar/quasar-app-extension-testing": "^1.0.3",
     "@quasar/quasar-app-extension-testing-e2e-cypress": "^3.0.1",
     "@quasar/quasar-app-extension-testing-unit-jest": "^2.2.1",
-    "axe-core": "^4.2.1",
+    "axe-core": "^4.2.2",
     "babel-eslint": "^10.0.1",
     "cypress-axe": "^0.12.2",
-    "eslint": "^7.26.0",
-    "eslint-config-prettier": "^6.15.0",
+    "eslint": "^7.27.0",
+    "eslint-config-prettier": "^8.3.0",
     "eslint-loader": "^4.0.2",
     "eslint-plugin-cypress": "^2.11.3",
     "eslint-plugin-jest": "^24.3.6",
-    "eslint-plugin-vue": "^7.9.0",
+    "eslint-plugin-vue": "^7.10.0",
     "majestic": "^1.2.24"
   },
   "engines": {
