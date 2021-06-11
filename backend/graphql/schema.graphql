@@ -1,11 +1,11 @@
+#import academic_profiles.graphql
 #import permission.graphql
-#import role.graphql
-#import user.graphql
-#import social_media.graphql
 #import profile_metadata.graphql
 #import publication.graphql
-#import academic_profiles.graphql
+#import social_media.graphql
 #import submission.graphql
+#import role.graphql
+#import user.graphql
 
 type Query {
     "Return information about the currently logged in user"
