@@ -28,8 +28,7 @@ class SubmissionTest extends TestCase
         $submissions = Submission::factory()->count(10)->for($publication)->create();
         Submission::factory()->count(16)->create();
         $this->assertEquals(1, $submissions->pluck('publication_id')->unique()->count());
-        $this->assertGreaterThanOrEqual(10, $publication->submissions->count());
-        $this->assertLessThanOrEqual(26, $publication->submissions->count());
+        $this->assertEquals(10, $publication->submissions->count());
     }
 
     /**
@@ -77,9 +76,9 @@ class SubmissionTest extends TestCase
                 );
             }
         }
-        Submission::all()->map(function ($submission) use ($user_count) {
+        Submission::all()->map(function ($submission) {
             $this->assertGreaterThan(0, $submission->users->count());
-            $this->assertLessThanOrEqual($user_count, $submission->users->count());
+            $this->assertLessThanOrEqual(2, $submission->users->count());
         });
         User::all()->map(function ($user) use ($submission_count) {
             $this->assertLessThanOrEqual($submission_count, $user->submissions->count());
