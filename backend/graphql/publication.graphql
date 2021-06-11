@@ -7,4 +7,5 @@ type Publication {
     created_at: DateTime
     updated_at: DateTime
     submissions: [Submission]! @belongsToMany
+    is_publicly_visible: Boolean
 }

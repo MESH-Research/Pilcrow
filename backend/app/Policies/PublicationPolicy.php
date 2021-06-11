@@ -26,4 +26,20 @@ class PublicationPolicy
 
         return false;
     }
+
+    /**
+     * Determine whether the user can view publications.
+     *
+     * @param  \App\Models\User  $user
+     * @return bool
+     */
+    public function view(User $user)
+    {
+        //User has global permission to view all publications
+        if ($user->can(Permission::VIEW_ALL_PUBLICATIONS)) {
+            return true;
+        }
+
+        return false;
+    }
 }

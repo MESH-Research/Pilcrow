@@ -30,7 +30,9 @@ type Query {
     publication(id: ID @eq): Publication @find
 
     "Return all publications"
-    publications: [Publication!]! @paginate(defaultCount: 100)
+    publications(is_publicly_visible: Boolean @scope(name: "is_publicly_visible")): [Publication!]!
+        @paginate(defaultCount: 100)
+        @can(ability: "view")
 
     "Return a submission by ID"
     submission(id: ID @eq): Submission @find
