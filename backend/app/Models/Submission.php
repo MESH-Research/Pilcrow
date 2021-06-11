@@ -9,7 +9,11 @@ use Illuminate\Database\Eloquent\Model;
 class Submission extends Model
 {
     use HasFactory;
-
+    /**     
+     * The attributes that are mass assignable.     
+     *     
+     * @var array    
+     */
     protected $fillable = [
         'title',
         'publication_id',
