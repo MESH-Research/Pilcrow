@@ -35,7 +35,7 @@ class PublicationPolicy
      */
     public function view(User $user)
     {
-        //User has global permission to create publications
+        //User has global permission to view all publications
         if ($user->can(Permission::VIEW_ALL_PUBLICATIONS)) {
             return true;
         }
