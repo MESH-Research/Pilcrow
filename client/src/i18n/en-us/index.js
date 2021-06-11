@@ -2,6 +2,19 @@
 // so you can safely delete all default props below
 
 export default {
+  user: {
+    self: "No users | User | Users",
+    email: "Email",
+    name: "Name",
+    username: "Username",
+    password: "Password",
+    empty_name: "No display name",
+    details_heading: "User Details"
+  },
+  role: {
+    self: "No roles | Role | Roles",
+    no_roles_assigned: "No Roles Assigned"
+  },
   buttons: {
     more_info: "More Info",
     dashboard: "Dashboard"
@@ -109,5 +122,6 @@ export default {
     UNKNOWN_ERROR: "An unknown error has occurred.",
     FORBIDDEN_ROUTE: "You don't have permission to access that page."
   },
-  general_failure: "Oops, there was an error."
+  general_failure: "Oops, there was an error.",
+  loading: "Loading..."
 };
