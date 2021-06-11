@@ -79,9 +79,23 @@ class SubmissionTest extends TestCase
         Submission::all()->map(function ($submission) {
             $this->assertGreaterThan(0, $submission->users->count());
             $this->assertLessThanOrEqual(2, $submission->users->count());
+            $submission->users->map(function ($user) {
+                $this->assertIsInt(
+                    User::where('id',
+                        $user->id
+                    )->firstOrFail()->id
+                );
+            });
         });
         User::all()->map(function ($user) use ($submission_count) {
             $this->assertLessThanOrEqual($submission_count, $user->submissions->count());
+            $user->submissions->map(function ($submission) {
+                $this->assertIsInt(
+                    Submission::where('id',
+                        $submission->id
+                    )->firstOrFail()->id
+                );
+            });
         });
     }
 
