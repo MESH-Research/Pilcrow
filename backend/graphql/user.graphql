@@ -12,4 +12,5 @@ type User {
     roles: [Role!]! @belongsToMany
     permissions: [Permission!] @belongsToMany
     profile_metadata: ProfileMetadata
+    submissions: [Submission]! @belongsToMany
 }

@@ -1,3 +1,12 @@
+#import academic_profiles.graphql
+#import permission.graphql
+#import profile_metadata.graphql
+#import publication.graphql
+#import social_media.graphql
+#import submission.graphql
+#import role.graphql
+#import user.graphql
+
 type Query {
     "Return information about the currently logged in user"
     currentUser: User @auth
@@ -21,8 +30,15 @@ type Query {
     publication(id: ID @eq): Publication @find
 
     "Return all publications"
-    publications(is_publicly_visible: Boolean @scope(name: "is_publicly_visible")): [Publication!]! @paginate(defaultCount: 100) 
+    publications(is_publicly_visible: Boolean @scope(name: "is_publicly_visible")): [Publication!]!
+        @paginate(defaultCount: 100)
         @can(ability: "view")
+
+    "Return a submission by ID"
+    submission(id: ID @eq): Submission @find
+
+    "Return all submissions"
+    submissions: [Submission!]! @paginate(defaultCount: 100)
 }
 
 type Mutation {
@@ -73,14 +89,6 @@ scalar Date @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Date")
 "A datetime string with format `Y-m-d H:i:s`, e.g. `2018-05-23 13:43:32`."
 scalar DateTime
     @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTime")
-
-#import permission.graphql
-#import role.graphql
-#import user.graphql
-#import social_media.graphql
-#import profile_metadata.graphql
-#import publication.graphql
-#import academic_profiles.graphql
 
 """
 Input type for creating a new user via the userCreate mutation

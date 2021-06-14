@@ -1,0 +1,11 @@
+"""
+A Submission
+"""
+type Submission {
+    id: ID!
+    title: String
+    created_at: DateTime!
+    updated_at: DateTime
+    publication: Publication
+    users: [User!]! @belongsToMany
+}
