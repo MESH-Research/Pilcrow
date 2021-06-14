@@ -261,8 +261,66 @@ class SubmissionTest extends TestCase
         $response->assertJsonPath('data', $expected_data);
     }
 
-    public function testSubmissionCreationViaMutation()
+    /**
+     * @return array
+     */
+    public function createSubmissionMutationProvider(): array
     {
-        $this->assertTrue(true);
+        return [
+            [
+                'input' => [
+                    'title' => 'Test Submission',
+                    'publication_id' => Publication::factory()->create()->id,
+                    'user_id' => User::factory()->create()->id,
+                ],
+                [
+                    'createSubmission' => [
+                        'title' => 'Test Submission',
+                    ],
+                ],
+            ],
+            [
+                'input' => [
+                    'title' => '        Test Submission with Whitespace       ',
+                    'publication_id' => Publication::factory()->create()->id,
+                    'user_id' => User::factory()->create()->id,
+                ],
+                [
+                    'createSubmission' => [
+                        'title' => 'Test Submission with Whitespace',
+                    ],
+                ],
+            ],
+            [
+                'input' => [
+                    'title' => '',
+                    'publication_id' => null,
+                    'user_id' => null
+                ],
+                null,
+            ],
+        ];
+    }
+
+    /**
+     *
+     * @dataProvider createSubmissionMutationProvider
+     * @return void
+     */
+    public function testSubmissionCreationViaMutation(mixed $input, mixed $expected_data)
+    {
+        $response = $this->graphQL(
+            'mutation CreateSubmission ($title: String, $publication_id: ID, $user_id: ID) {
+                createSubmission(input:{title: $title, publication_id: $publication_id, user_id: $user_id}) {
+                    title
+                }
+            }',
+            [
+                'title' => $input['title'],
+                'publication_id' => $input['publication_id'],
+                'user_id' => $input['user_id']
+            ]
+        );
+        $response->assertJsonPath('data', $expected_data);
     }
 }
