@@ -25,7 +25,7 @@ class Publication extends Model
     }
 
     /**
-     * Submissioss that belong to a publication
+     * Submissions that belong to a publication
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
