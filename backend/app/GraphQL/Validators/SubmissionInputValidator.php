@@ -22,9 +22,6 @@ class SubmissionInputValidator extends Validator
             'publication_id' => [
                 'filled',
             ],
-            'user_id' => [
-                'filled',
-            ],
         ];
     }
 }

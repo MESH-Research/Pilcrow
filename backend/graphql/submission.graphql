@@ -8,4 +8,10 @@ type Submission {
     updated_at: DateTime
     publication: Publication!
     users: [User!]! @belongsToMany
+    pivot: SubmissionUser
+}
+
+type SubmissionUser {
+    id: ID!
+    role_id: ID!
 }

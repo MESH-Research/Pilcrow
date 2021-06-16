@@ -268,11 +268,7 @@ class SubmissionTest extends TestCase
     {
         return [
             [
-                'input' => [
-                    'title' => 'Test Submission',
-                    'publication_id' => Publication::factory()->create()->id,
-                    'user_id' => User::factory()->create()->id,
-                ],
+                'Test Submission',
                 [
                     'createSubmission' => [
                         'title' => 'Test Submission',
@@ -280,11 +276,7 @@ class SubmissionTest extends TestCase
                 ],
             ],
             [
-                'input' => [
-                    'title' => '        Test Submission with Whitespace       ',
-                    'publication_id' => Publication::factory()->create()->id,
-                    'user_id' => User::factory()->create()->id,
-                ],
+                '        Test Submission with Whitespace       ',
                 [
                     'createSubmission' => [
                         'title' => 'Test Submission with Whitespace',
@@ -292,23 +284,21 @@ class SubmissionTest extends TestCase
                 ],
             ],
             [
-                'input' => [
-                    'title' => '',
-                    'publication_id' => null,
-                    'user_id' => null
-                ],
+                '',
                 null,
             ],
         ];
     }
 
     /**
-     *
      * @dataProvider createSubmissionMutationProvider
      * @return void
      */
-    public function testSubmissionCreationViaMutation(mixed $input, mixed $expected_data)
+    public function testSubmissionCreationViaMutation(mixed $title, mixed $expected_data)
     {
+        $publication = Publication::factory()->create();
+        $user = User::factory()->create();
+
         $response = $this->graphQL(
             'mutation CreateSubmission ($title: String, $publication_id: ID, $user_id: ID) {
                 createSubmission(input:{title: $title, publication_id: $publication_id, user_id: $user_id}) {
@@ -316,9 +306,10 @@ class SubmissionTest extends TestCase
                 }
             }',
             [
-                'title' => $input['title'],
-                'publication_id' => $input['publication_id'],
-                'user_id' => $input['user_id']
+                'title' => $title,
+                'publication_id' => $publication->id,
+                'user_id' => $user->id,
+                'role_id' => Role::where('name', Role::SUBMITTER)->first()->id,
             ]
         );
         $response->assertJsonPath('data', $expected_data);
