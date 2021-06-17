@@ -13,7 +13,7 @@ type Submission {
 
 type SubmissionUser {
     id: ID!
-    role_id: String!
-    submission_id: String!
-    user_id: String!
+    role_id: ID!
+    submission_id: ID!
+    user_id: ID!
 }
