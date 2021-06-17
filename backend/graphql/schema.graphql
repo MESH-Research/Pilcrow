@@ -187,14 +187,21 @@ Input type for creating a new submission via the createSubmission mutation
 input CreateSubmissionInput @validator(class: "SubmissionInputValidator") {
     title: String! @trim
     publication_id: ID!
-    users: CreateSubmissionUser
+    users: CreateUserBelongsToMany
 }
-
-input CreateSubmissionUser {
-  connect: [ConnectSubmissionUser!]
+input CreateUserBelongsToMany {
+  create: [CreateSubmissionUserInput!]
+  upsert: [UpsertSubmissionUserInput!]
+  connect: [ConnectSubmissionUserInput!]
 }
-
-input ConnectSubmissionUser {
+input CreateSubmissionUserInput {
+  role_id: ID!
+}
+input UpsertSubmissionUserInput {
+  id: ID!
+  role_id: ID!
+}
+input ConnectSubmissionUserInput {
   id: ID!
   role_id: ID!
 }

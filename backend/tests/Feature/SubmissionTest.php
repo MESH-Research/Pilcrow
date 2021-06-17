@@ -301,7 +301,7 @@ class SubmissionTest extends TestCase
 
         $response = $this->graphQL(
             'mutation CreateSubmission ($title: String, $publication_id: ID, $user_id: ID) {
-                createSubmission(input:{title: $title, publication_id: $publication_id, user_id: $user_id}) {
+                createSubmission(input:{title: $title, publication_id: $publication_id, users: $user_id}) {
                     title
                 }
             }',
