@@ -82,8 +82,12 @@ type Mutation {
         @create
         @can(ability: "create")
 
-    "Create a new submission under a publication with a user"
+    "Create a new submission under a publication"
     createSubmission(input: CreateSubmissionInput! @spread): Submission!
+        @create
+
+    "Create an association between a user, a role, and a submission"
+    createSubmissionUser(input: CreateSubmissionUserInput! @spread): SubmissionUser!
         @create
 }
 
@@ -187,21 +191,9 @@ Input type for creating a new submission via the createSubmission mutation
 input CreateSubmissionInput @validator(class: "SubmissionInputValidator") {
     title: String! @trim
     publication_id: ID!
-    users: CreateUserBelongsToMany
-}
-input CreateUserBelongsToMany {
-  create: [CreateSubmissionUserInput!]
-  upsert: [UpsertSubmissionUserInput!]
-  connect: [ConnectSubmissionUserInput!]
 }
 input CreateSubmissionUserInput {
-  role_id: ID!
-}
-input UpsertSubmissionUserInput {
-  id: ID!
-  role_id: ID!
-}
-input ConnectSubmissionUserInput {
-  id: ID!
-  role_id: ID!
+    user_id: ID!
+    role_id: ID!
+    submission_id: ID!
 }

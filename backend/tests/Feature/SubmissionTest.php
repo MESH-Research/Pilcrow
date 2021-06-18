@@ -260,7 +260,7 @@ class SubmissionTest extends TestCase
                         'title' => 'Test Submission for Test User With Submission #1',
                         'pivot' => [
                             'role_id' => (string)$role_id,
-                        ]
+                        ],
                     ],
                 ],
             ],
@@ -316,7 +316,7 @@ class SubmissionTest extends TestCase
                         'name' => 'Test User With Submission #2',
                         'pivot' => [
                             'role_id' => (string)$role_id,
-                        ]
+                        ],
                     ],
                 ],
             ],
@@ -376,6 +376,17 @@ class SubmissionTest extends TestCase
         //     ]
         // );
         // $response->assertJsonPath('data', $expected_data);
+
+        $this->assertTrue(true);
+    }
+
+    /**
+     * @return void
+     */
+    public function testSubmissionUserCreationViaMutation()
+    {
+        $publication = Publication::factory()->create();
+        $user = User::factory()->create();
 
         $this->assertTrue(true);
     }
