@@ -16,6 +16,8 @@ class SubmissionTest extends TestCase
     use MakesGraphQLRequests;
     use RefreshDatabase;
 
+    private const SUBMITTER_ROLE_ID = 6;
+
     /**
      * @return void
      */
@@ -38,7 +40,6 @@ class SubmissionTest extends TestCase
     {
         $submission_count = 4;
         $user_count = 6;
-        $submitter_id = Role::where('name', Role::SUBMITTER)->first()->id;
         $publication = Publication::factory()->create([
             'name' => 'Test Publication #2',
         ]);
@@ -67,11 +68,11 @@ class SubmissionTest extends TestCase
                 ->create();
 
             // Ensure at least one Submitter is attached if one was not previously attached
-            if ($random_role_id !== $submitter_id) {
+            if ($random_role_id !== self::SUBMITTER_ROLE_ID) {
                 $submission->users()->attach(
                     $users->random(),
                     [
-                        'role_id' => $submitter_id,
+                        'role_id' => self::SUBMITTER_ROLE_ID,
                     ]
                 );
             }
@@ -107,7 +108,7 @@ class SubmissionTest extends TestCase
     public function testIndividualSubmissionsCanBeQueriedById()
     {
         $submission = Submission::factory()->create([
-            'title' => 'Test Submission for Querying an Individual Submission',
+            'title' => 'Test Submission #1 for Querying an Individual Submission',
         ]);
         $response = $this->graphQL(
             'query GetSubmission($id: ID!) {
@@ -121,7 +122,7 @@ class SubmissionTest extends TestCase
         $expected_data = [
             'submission' => [
                 'id' => (string)$submission->id,
-                'title' => 'Test Submission for Querying an Individual Submission',
+                'title' => 'Test Submission #1 for Querying an Individual Submission',
             ],
         ];
         $response->assertJsonPath('data', $expected_data);
@@ -133,10 +134,10 @@ class SubmissionTest extends TestCase
     public function testAllSubmissionsCanBeQueried()
     {
         $submission_1 = Submission::factory()->create([
-            'title' => 'Test Submission #1 for Querying All Submissions',
+            'title' => 'Test Submission #2 for Querying All Submissions',
         ]);
         $submission_2 = Submission::factory()->create([
-            'title' => 'Test Submission #2 for Querying All Submissions',
+            'title' => 'Test Submission #3 for Querying All Submissions',
         ]);
         $response = $this->graphQL(
             'query GetSubmissions {
@@ -153,11 +154,11 @@ class SubmissionTest extends TestCase
                 'data' => [
                     [
                         'id' => (string)$submission_1->id,
-                        'title' => 'Test Submission #1 for Querying All Submissions',
+                        'title' => 'Test Submission #2 for Querying All Submissions',
                     ],
                     [
                         'id' => (string)$submission_2->id,
-                        'title' => 'Test Submission #2 for Querying All Submissions',
+                        'title' => 'Test Submission #3 for Querying All Submissions',
                     ],
                 ],
             ],
@@ -176,12 +177,12 @@ class SubmissionTest extends TestCase
         $submission = Submission::factory()->hasAttached(
             User::factory()->create(),
             [
-                'role_id' => Role::where('name', Role::SUBMITTER)->first()->id,
+                'role_id' => self::SUBMITTER_ROLE_ID,
             ]
         )
             ->for($publication)
             ->create([
-                'title' => 'Submission for Publication #3',
+                'title' => 'Test Submission #4 for Publication #3',
             ]);
         $response = $this->graphQL(
             'query GetSubmissionsByPublication($id: ID!) {
@@ -203,7 +204,7 @@ class SubmissionTest extends TestCase
                 'submissions' => [
                     [
                         'id' => (string)$submission->id,
-                        'title' => 'Submission for Publication #3',
+                        'title' => 'Test Submission #4 for Publication #3',
                     ],
                 ],
             ],
@@ -220,18 +221,17 @@ class SubmissionTest extends TestCase
             'name' => 'Test Publication #4',
         ]);
         $user = User::factory()->create([
-            'name' => 'Test User With Submission #1',
+            'name' => 'Test User #1 With Submission',
         ]);
-        $role_id = Role::where('name', Role::SUBMITTER)->first()->id;
         $submission = Submission::factory()->hasAttached(
             $user,
             [
-                'role_id' => $role_id,
+                'role_id' => self::SUBMITTER_ROLE_ID,
             ]
         )
             ->for($publication)
             ->create([
-                'title' => 'Test Submission for Test User With Submission #1',
+                'title' => 'Test Submission #5 for Test User #1 With Submission',
             ]);
 
         $response = $this->graphQL(
@@ -253,13 +253,13 @@ class SubmissionTest extends TestCase
         $expected_data = [
             'user' => [
                 'id' => (string)$user->id,
-                'name' => 'Test User With Submission #1',
+                'name' => 'Test User #1 With Submission',
                 'submissions' => [
                     [
                         'id' => (string)$submission->id,
-                        'title' => 'Test Submission for Test User With Submission #1',
+                        'title' => 'Test Submission #5 for Test User #1 With Submission',
                         'pivot' => [
-                            'role_id' => (string)$role_id,
+                            'role_id' => (string)self::SUBMITTER_ROLE_ID,
                         ],
                     ],
                 ],
@@ -277,18 +277,17 @@ class SubmissionTest extends TestCase
             'name' => 'Test Publication #5',
         ]);
         $user = User::factory()->create([
-            'name' => 'Test User With Submission #2',
+            'name' => 'Test User #2 With Submission',
         ]);
-        $role_id = Role::where('name', Role::SUBMITTER)->first()->id;
         $submission = Submission::factory()->hasAttached(
             $user,
             [
-                'role_id' => $role_id,
+                'role_id' => self::SUBMITTER_ROLE_ID,
             ]
         )
             ->for($publication)
             ->create([
-                'title' => 'Test Submission for Test User With Submission #2',
+                'title' => 'Test Submission #6 for Test User #2 With Submission',
             ]);
         $response = $this->graphQL(
             'query GetUsersBySubmission($id: ID!) {
@@ -309,13 +308,13 @@ class SubmissionTest extends TestCase
         $expected_data = [
             'submission' => [
                 'id' => (string)$submission->id,
-                'title' => 'Test Submission for Test User With Submission #2',
+                'title' => 'Test Submission #6 for Test User #2 With Submission',
                 'users' => [
                     [
                         'id' => (string)$user->id,
-                        'name' => 'Test User With Submission #2',
+                        'name' => 'Test User #2 With Submission',
                         'pivot' => [
-                            'role_id' => (string)$role_id,
+                            'role_id' => (string)self::SUBMITTER_ROLE_ID,
                         ],
                     ],
                 ],
@@ -331,10 +330,10 @@ class SubmissionTest extends TestCase
     {
         return [
             [
-                'Test Submission',
+                'Test Submission #7',
                 [
                     'createSubmission' => [
-                        'title' => 'Test Submission',
+                        'title' => 'Test Submission #7',
                         'publication' => [
                             'name' => 'Test Publication #6',
                         ],
@@ -342,10 +341,10 @@ class SubmissionTest extends TestCase
                 ],
             ],
             [
-                '        Test Submission with Whitespace       ',
+                '        Test Submission #8 with Whitespace       ',
                 [
                     'createSubmission' => [
-                        'title' => 'Test Submission with Whitespace',
+                        'title' => 'Test Submission #8 with Whitespace',
                         'publication' => [
                             'name' => 'Test Publication #6',
                         ],
@@ -394,7 +393,62 @@ class SubmissionTest extends TestCase
     {
         $publication = Publication::factory()->create();
         $user = User::factory()->create();
-
-        $this->assertTrue(true);
+        $submission = Submission::factory()
+            ->for($publication)
+            ->create([
+                'title' => 'Test Submission #9 for Test User With Submission',
+            ]);
+        $response = $this->graphQL(
+            'mutation CreateSubmissionUser ($role_id: ID!, $submission_id: ID!, $user_id: ID!) {
+                createSubmissionUser(
+                    input: { role_id: $role_id, submission_id: $submission_id, user_id: $user_id }
+                ) {
+                    role_id
+                    submission_id
+                    user_id
+                }
+            }',
+            [
+                'role_id' => self::SUBMITTER_ROLE_ID,
+                'submission_id' => $submission->id,
+                'user_id' => $user->id,
+            ]
+        );
+        $expected_data = [
+            'createSubmissionUser' => [
+                'role_id' => (string)self::SUBMITTER_ROLE_ID,
+                'submission_id' => (string)$submission->id,
+                'user_id' => (string)$user->id,
+            ]
+        ];
+        $response->assertJsonPath('data', $expected_data);
+        $response = $this->graphQL(
+            'query GetSubmission ($id: ID!) {
+                submission( id: $id ) {
+                    users {
+                        id
+                        pivot {
+                            role_id
+                        }
+                    }
+                }
+            }',
+            [
+                'id' => $submission->id,
+            ]
+        );
+        $expected_data = [
+            'submission' => [
+                'users' => [
+                    [
+                        'id' => (string)$user->id,
+                        'pivot' => [
+                            'role_id' => (string)self::SUBMITTER_ROLE_ID,
+                        ],
+                    ],
+                ],
+            ],
+        ];
+        $response->assertJsonPath('data', $expected_data);
     }
 }
