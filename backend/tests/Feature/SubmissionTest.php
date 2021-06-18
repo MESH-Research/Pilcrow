@@ -335,6 +335,9 @@ class SubmissionTest extends TestCase
                 [
                     'createSubmission' => [
                         'title' => 'Test Submission',
+                        'publication' => [
+                            'name' => 'Test Publication #6',
+                        ],
                     ],
                 ],
             ],
@@ -343,6 +346,9 @@ class SubmissionTest extends TestCase
                 [
                     'createSubmission' => [
                         'title' => 'Test Submission with Whitespace',
+                        'publication' => [
+                            'name' => 'Test Publication #6',
+                        ],
                     ],
                 ],
             ],
@@ -359,25 +365,26 @@ class SubmissionTest extends TestCase
      */
     public function testSubmissionCreationViaMutation(mixed $title, mixed $expected_data)
     {
-        $publication = Publication::factory()->create();
-        $user = User::factory()->create();
-
-        // $response = $this->graphQL(
-        //     'mutation CreateSubmission ($title: String, $publication_id: ID, $user_id: ID) {
-        //         createSubmission(input:{title: $title, publication_id: $publication_id, users: $user_id}) {
-        //             title
-        //         }
-        //     }',
-        //     [
-        //         'title' => $title,
-        //         'publication_id' => $publication->id,
-        //         'user_id' => $user->id,
-        //         'role_id' => Role::where('name', Role::SUBMITTER)->first()->id,
-        //     ]
-        // );
-        // $response->assertJsonPath('data', $expected_data);
-
-        $this->assertTrue(true);
+        $publication = Publication::factory()->create([
+            'name' => 'Test Publication #6',
+        ]);
+        $response = $this->graphQL(
+            'mutation CreateSubmission ($title: String!, $publication_id: ID!) {
+                createSubmission(
+                    input: { title: $title, publication_id: $publication_id }
+                ) {
+                    title
+                    publication {
+                        name
+                    }
+                }
+            }',
+            [
+                'title' => $title,
+                'publication_id' => $publication->id,
+            ]
+        );
+        $response->assertJsonPath('data', $expected_data);
     }
 
     /**

@@ -192,6 +192,10 @@ input CreateSubmissionInput @validator(class: "SubmissionInputValidator") {
     title: String! @trim
     publication_id: ID!
 }
+
+"""
+Input type for creating a new association between a submission, role, and user via the createSubmissionUser mutation
+"""
 input CreateSubmissionUserInput {
     user_id: ID!
     role_id: ID!
