@@ -21,7 +21,7 @@ class Publication extends Model
      */
     public function users()
     {
-        return $this->belongsToMany(User::class, 'publication_users');
+        return $this->belongsToMany(User::class, 'publication_user');
     }
 
     /**
