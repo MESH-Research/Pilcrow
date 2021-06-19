@@ -419,7 +419,7 @@ class SubmissionTest extends TestCase
                 'role_id' => (string)self::SUBMITTER_ROLE_ID,
                 'submission_id' => (string)$submission->id,
                 'user_id' => (string)$user->id,
-            ]
+            ],
         ];
         $response->assertJsonPath('data', $expected_data);
         $response = $this->graphQL(

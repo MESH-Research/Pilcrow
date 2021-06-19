@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
-use App\Models\User;
 use App\Models\Submission;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class SubmissionSeeder extends Seeder
@@ -17,7 +17,7 @@ class SubmissionSeeder extends Seeder
     public function run()
     {
         Submission::factory()->hasAttached(
-            User::where('username','regularUser')->firstOrFail(),
+            User::where('username', 'regularUser')->firstOrFail(),
             [
                 'role_id' => 6,
             ]
