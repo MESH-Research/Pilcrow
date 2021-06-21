@@ -196,7 +196,7 @@ input CreateSubmissionInput @validator(class: "SubmissionInputValidator") {
 """
 Input type for creating a new association between a submission, role, and user via the createSubmissionUser mutation
 """
-input CreateSubmissionUserInput {
+input CreateSubmissionUserInput @validator(class: "SubmissionUserInputValidator") {
     user_id: ID!
     role_id: ID!
     submission_id: ID!
