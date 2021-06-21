@@ -17,12 +17,18 @@ class SubmissionUserInputValidator extends Validator
         return [
             'user_id' => [
                 'filled',
+                'numeric',
+                'integer',
             ],
             'submission_id' => [
                 'filled',
+                'numeric',
+                'integer',
             ],
             'role_id' => [
                 'filled',
+                'numeric',
+                'integer',
             ],
         ];
     }
