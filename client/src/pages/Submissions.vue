@@ -1,5 +1,5 @@
 <template>
-  <q-page padding>
+  <q-page>
     <h2 class="q-pl-lg">
       Submissions
     </h2>
