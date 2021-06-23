@@ -21,6 +21,8 @@ class SubmissionInputValidator extends Validator
             ],
             'publication_id' => [
                 'filled',
+                'numeric',
+                'integer',
             ],
         ];
     }
