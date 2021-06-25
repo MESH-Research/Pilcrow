@@ -20,14 +20,14 @@
     "test:unit:ui": "majestic"
   },
   "dependencies": {
-    "@quasar/extras": "^1.10.6",
+    "@quasar/extras": "^1.10.7",
     "apollo-link-context": "^1.0.20",
     "apollo-link-error": "^1.1.13",
     "axios": "^0.21.1",
-    "core-js": "^3.12.1",
+    "core-js": "^3.14.0",
     "lodash": "^4.17.20",
     "quasar": "^1.15.15",
-    "vue-i18n": "^8.24.4",
+    "vue-i18n": "^8.24.5",
     "vuelidate": "^0.7.6",
     "zxcvbn": "^4.4.2"
   },
@@ -45,7 +45,7 @@
     "eslint-loader": "^4.0.2",
     "eslint-plugin-cypress": "^2.11.3",
     "eslint-plugin-jest": "^24.3.6",
-    "eslint-plugin-vue": "^7.10.0",
+    "eslint-plugin-vue": "^7.11.1",
     "majestic": "^1.2.24"
   },
   "engines": {
