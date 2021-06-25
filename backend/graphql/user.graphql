@@ -13,4 +13,5 @@ type User {
     permissions: [Permission!] @belongsToMany
     profile_metadata: ProfileMetadata
     submissions: [Submission]! @belongsToMany
+    pivot: SubmissionUser
 }
