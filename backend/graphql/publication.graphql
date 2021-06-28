@@ -6,6 +6,6 @@ type Publication {
     name: String!
     created_at: DateTime
     updated_at: DateTime
-    submissions: [Submission]! @belongsToMany
+    submissions: [Submission]! @hasMany
     is_publicly_visible: Boolean
 }
