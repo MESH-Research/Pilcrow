@@ -269,7 +269,6 @@ class PublicationTest extends TestCase
     }
 
     /**
-     * @ExpectationFailedException
      * @return void
      */
     public function testUserRoleAndUserAreUniqueForAPublication()
