@@ -15,7 +15,7 @@ class PublicationUserInputValidator extends Validator
     public function rules(): array
     {
         return [
-            // TODO Add your validation rules
+            // TODO Add validation rules when GraphQL mutations are added
         ];
     }
 }
