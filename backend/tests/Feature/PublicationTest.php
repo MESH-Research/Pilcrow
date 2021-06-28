@@ -290,5 +290,14 @@ class PublicationTest extends TestCase
                 'role_id' => $role_id,
             ]
         );
+        $publication_pivot_data = PublicationUser::where(
+            [
+                'user_id' => $user->id,
+                'role_id' => $role_id,
+                'publication_id' => $publication->id
+            ]
+        )
+            ->get();
+        $this->assertEquals(1, $publication_pivot_data->count());
     }
 }
