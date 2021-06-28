@@ -20,7 +20,7 @@
     "test:unit:ui": "majestic"
   },
   "dependencies": {
-    "@quasar/extras": "^1.10.6",
+    "@quasar/extras": "^1.10.8",
     "apollo-link-context": "^1.0.20",
     "apollo-link-error": "^1.1.13",
     "axios": "^0.21.1",
