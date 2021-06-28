@@ -23,4 +23,14 @@ class Publication extends Model
     {
         return $this->belongsToMany(User::class, 'publication_users');
     }
+
+    /**
+     * Submissions that belong to a publication
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function submissions()
+    {
+        return $this->hasMany(Submission::class);
+    }
 }
