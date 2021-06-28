@@ -18,6 +18,7 @@ class CreatePublicationUserTable extends Migration
             $table->timestamps();
             $table->unsignedBigInteger('role_id');
             $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('publication_id');
 
             $table->foreign('role_id')
                 ->references('id')
@@ -26,6 +27,12 @@ class CreatePublicationUserTable extends Migration
             $table->foreign('user_id')
                 ->references('id')
                 ->on('users');
+
+            $table->foreign('publication_id')
+                ->references('id')
+                ->on('publications');
+
+            $table->unique(['user_id','role_id','publication_id'],'publication_user_unique');
         });
     }
 
