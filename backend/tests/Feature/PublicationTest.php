@@ -294,7 +294,7 @@ class PublicationTest extends TestCase
             [
                 'user_id' => $user->id,
                 'role_id' => $role_id,
-                'publication_id' => $publication->id
+                'publication_id' => $publication->id,
             ]
         )
             ->get();
