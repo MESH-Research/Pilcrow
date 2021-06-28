@@ -242,7 +242,6 @@ class PublicationTest extends TestCase
                     ]
                 );
             }
-
         }
         Publication::all()->map(function ($publication) {
             $this->assertGreaterThan(0, $publication->users->count());
@@ -269,5 +268,28 @@ class PublicationTest extends TestCase
         });
     }
 
+    /**
+     * @ExpectationFailedException
+     * @return void
+     */
+    public function testUserRoleAndUserAreUniqueForAPublication()
+    {
+        $user = User::factory()->create();
+        $role_id = Role::where('name', Role::PUBLICATION_ADMINISTRATOR)->first()->id;
 
+        $publication = Publication::factory()->hasAttached(
+            $user,
+            [
+                'role_id' => $role_id,
+            ]
+        )
+            ->create();
+        $this->expectException(QueryException::class);
+        $publication->users()->attach(
+            $user,
+            [
+                'role_id' => $role_id,
+            ]
+        );
+    }
 }
