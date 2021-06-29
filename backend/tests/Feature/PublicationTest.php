@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Tests\Feature;
 
 use App\Models\Publication;
+use App\Models\PublicationUser;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Database\QueryException;
