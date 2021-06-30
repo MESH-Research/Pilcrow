@@ -15,10 +15,15 @@
           <fieldset
             class="q-gutter-y-lg column"
           >
-            <q-input
+            <q-select
               v-model="new_submission.publication_id"
               outlined
-              label="Publication ID"
+              :options="publications.data"
+              option-label="name"
+              option-value="id"
+              emit-value
+              map-options
+              label="For Publication"
               data-cy="new_submission_publication_input"
             />
             <q-input
@@ -74,7 +79,7 @@
 </template>
 
 <script>
-import { GET_SUBMISSIONS } from 'src/graphql/queries';
+import { GET_PUBLICATIONS, GET_SUBMISSIONS } from 'src/graphql/queries';
 import { CREATE_SUBMISSION } from 'src/graphql/mutations';
 import { validationMixin } from 'vuelidate';
 import { required, maxLength } from 'vuelidate/lib/validators';
@@ -88,10 +93,13 @@ export default {
       submissions: {
         data: []
       },
+      publications: {
+        data: []
+      },
       new_submission: {
         title: "",
-        publication_id: 1
-      }
+        publication_id: null
+      },
     }
   },
   validations: {
@@ -108,6 +116,9 @@ export default {
   apollo: {
     submissions: {
       query: GET_SUBMISSIONS
+    },
+    publications: {
+      query: GET_PUBLICATIONS
     }
   },
   methods: {
