@@ -12,12 +12,22 @@
         <q-form
           @submit="createSubmission()"
         >
-          <q-input
-            v-model="new_submission.title"
-            outlined
-            label="Enter Title"
-            data-cy="new_submission_input"
-          />
+          <fieldset
+            class="q-gutter-y-lg column"
+          >
+            <q-input
+              v-model="new_submission.publication_id"
+              outlined
+              label="Publication ID"
+              data-cy="new_submission_publication_input"
+            />
+            <q-input
+              v-model="new_submission.title"
+              outlined
+              label="Enter Title"
+              data-cy="new_submission_title_input"
+            />
+          </fieldset>
           <q-banner
             v-if="tryCatchError"
             dense
