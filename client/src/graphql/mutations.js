@@ -97,3 +97,23 @@ export const CREATE_PUBLICATION = gql`
     }
   }
 `;
+
+export const CREATE_SUBMISSION = gql`
+  mutation CreateSubmission(
+    $title: String!
+    $publication_id: ID!
+  ) {
+    createSubmission(
+      input: {
+        title: $title
+        publication_id: $publication_id
+      }
+    ) {
+      id
+      title
+      publication {
+        name
+      }
+    }
+  }
+`;

@@ -119,6 +119,19 @@ export default {
       max_length: "The maximum length has been exceeded for the name."
     }
   },
+  submissions: {
+    create: {
+      success: "Submission successfully created.",
+      failure: "An error occurred while attempting to create the submission.",
+      title: {
+        required: "A title is required to create a submission.",
+        max_length: "The maximum length has been exceeded for the title."
+      },
+      publication_id: {
+        required: "A publication must be associated with a submission.",
+      },
+    }
+  },
   failures: {
     UNKNOWN_ERROR: "An unknown error has occurred.",
     FORBIDDEN_ROUTE: "You don't have permission to access that page."
