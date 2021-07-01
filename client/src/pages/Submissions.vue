@@ -30,6 +30,16 @@
               label="For Publication"
               data-cy="new_submission_publication_input"
             />
+            <q-file
+              v-model="new_submission.file"
+              rounded
+              outlined
+              label="Upload File"
+            >
+              <template #prepend>
+                <q-icon name="attach_file" />
+              </template>
+            </q-file>
           </div>
           <q-banner
             v-if="tryCatchError"
@@ -96,7 +106,8 @@ export default {
       },
       new_submission: {
         title: "",
-        publication_id: null
+        publication_id: null,
+        file: null
       },
     }
   },
@@ -158,6 +169,7 @@ export default {
         })
         this.makeNotify("positive", "check_circle", "submissions.create.success")
         this.new_submission.title = "";
+        this.new_submission.file = null;
       } catch (error) {
         this.tryCatchError = true;
         this.is_submitting = false
