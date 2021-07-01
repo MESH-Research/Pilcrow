@@ -53,6 +53,7 @@
             :disabled="is_submitting"
             class="bg-primary text-white q-mt-lg"
             type="submit"
+            data-cy="save_submission"
           >
             Save
           </q-btn>
