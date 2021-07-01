@@ -1,5 +1,5 @@
 <template>
-  <q-page>
+  <article>
     <h2 class="q-pl-lg">
       Submissions
     </h2>
@@ -83,7 +83,7 @@
         </div>
       </section>
     </div>
-  </q-page>
+  </article>
 </template>
 
 <script>
