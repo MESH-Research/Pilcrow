@@ -13,7 +13,7 @@ describe('Submissions', () => {
     cy.dataCy('new_submission_publication_input')
       .click();
     cy.get('.publication_options')
-      .contains('Collaborative Review Organization')
+      .contains('CCR Test Publication 1')
       .click();
     cy.dataCy('save_submission')
       .click();
