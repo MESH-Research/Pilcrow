@@ -17,9 +17,9 @@ describe('Submissions', () => {
       .click();
     cy.dataCy('save_submission')
       .click();
+    cy.injectAxe();
     cy.dataCy('submissions_list')
       .contains('Submission from Cypress');
-    cy.injectAxe();
     cy.dataCy('create_submission_notify').should('be.visible').should('have.class','bg-positive');
     cy.checkA11y(null, {
       rules: {
