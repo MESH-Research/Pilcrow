@@ -12,7 +12,7 @@ describe('Submissions', () => {
       .type('Submission from Cypress{enter}');
     cy.dataCy('new_submission_publication_input')
       .click();
-    cy.get('.q-virtual-scroll__content')
+    cy.get('.publication_options')
       .contains('Collaborative Review Organization')
       .click();
     cy.dataCy('save_submission')

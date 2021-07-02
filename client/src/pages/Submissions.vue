@@ -28,6 +28,7 @@
               emit-value
               map-options
               label="For Publication"
+              popup-content-class="publication_options"
               data-cy="new_submission_publication_input"
             />
             <q-file
