@@ -70,6 +70,17 @@
                 {{ $t("header.publications") }}
               </q-item-section>
             </q-item>
+            <q-item
+              v-ripple
+              to="/submissions"
+            >
+              <q-item-section avatar>
+                <q-icon name="content_copy" />
+              </q-item-section>
+              <q-item-section>
+                {{ $t("header.submissions") }}
+              </q-item-section>
+            </q-item>
             <q-separator />
             <q-item
               clickable
