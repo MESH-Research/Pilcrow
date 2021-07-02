@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Tests\Feature;
 
 use App\Models\Publication;
+use App\Models\PublicationUser;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Database\QueryException;
@@ -15,6 +16,8 @@ class PublicationTest extends TestCase
 {
     use MakesGraphQLRequests;
     use RefreshDatabase;
+
+    private const PUBLICATION_ADMINISTRATOR_ID = 2;
 
     public function testPublicationsCanBeCreatedWithCustomNamesThatAreNotDuplicates()
     {
@@ -74,6 +77,9 @@ class PublicationTest extends TestCase
         $response->assertJsonPath('data', $expected_data);
     }
 
+    /**
+     * @return void
+     */
     public function testPublicationsCannotBeCreatedViaMutationByARegularUser()
     {
         $user = User::factory()->create();
@@ -89,6 +95,9 @@ class PublicationTest extends TestCase
         $response->assertJsonPath('data', null);
     }
 
+    /**
+     * @return void
+     */
     public function testIndividualPublicationsCanBeQueriedById()
     {
         $publication = Publication::factory()->create([
@@ -112,6 +121,9 @@ class PublicationTest extends TestCase
         $response->assertJsonPath('data', $expected_data);
     }
 
+    /**
+     * @return void
+     */
     public function testPublicationThatDoesNotExistCanBeQueriedById()
     {
         $response = $this->graphQL(
@@ -128,6 +140,9 @@ class PublicationTest extends TestCase
         $response->assertJsonPath('data', $expected_data);
     }
 
+    /**
+     * @return void
+     */
     public function testAllPublicationsCanBeQueriedByAnApplicationAdministrator()
     {
         $user = User::factory()->create();
@@ -167,6 +182,9 @@ class PublicationTest extends TestCase
         $response->assertJsonPath('data', $expected_data);
     }
 
+    /**
+     * @return void
+     */
     public function testAllPublicationsCannotBeQueriedByARegularUser()
     {
         $user = User::factory()->create();
@@ -186,5 +204,101 @@ class PublicationTest extends TestCase
             'publications' => null,
         ];
         $response->assertJsonPath('data', $expected_data);
+    }
+
+    /**
+     * @return void
+     */
+    public function testPublicationsHaveAManyToManyRelationshipWithUsers()
+    {
+        $publication_count = 4;
+        $user_count = 6;
+        $users = User::factory()->count($user_count)->create();
+
+        // Create publications and attach them to users randomly with random roles
+        for ($i = 0; $i < $publication_count; $i++) {
+            $random_role_id = Role::whereIn(
+                'name',
+                [
+                    Role::PUBLICATION_ADMINISTRATOR,
+                    Role::EDITOR,
+                ]
+            )
+                ->get()
+                ->pluck('id')
+                ->random();
+            $publication = Publication::factory()->hasAttached(
+                $users->random(),
+                [
+                    'role_id' => $random_role_id,
+                ]
+            )
+                ->create();
+            // Ensure at least one publication admin is attached to the publication.
+            if ($random_role_id !== self::PUBLICATION_ADMINISTRATOR_ID) {
+                $publication->users()->attach(
+                    $users->random(),
+                    [
+                        'role_id' => self::PUBLICATION_ADMINISTRATOR_ID,
+                    ]
+                );
+            }
+        }
+        Publication::all()->map(function ($publication) {
+            $this->assertGreaterThan(0, $publication->users->count());
+            $this->assertLessThanOrEqual(2, $publication->users->count());
+            $publication->users->map(function ($user) {
+                $this->assertIsInt(
+                    User::where(
+                        'id',
+                        $user->id
+                    )->firstOrFail()->id
+                );
+            });
+        });
+        User::all()->map(function ($user) use ($publication_count) {
+            $this->assertLessThanOrEqual($publication_count, $user->publications->count());
+            $user->publications->map(function ($publication) {
+                $this->assertIsInt(
+                    Publication::where(
+                        'id',
+                        $publication->id
+                    )->firstOrFail()->id
+                );
+            });
+        });
+    }
+
+    /**
+     * @return void
+     */
+    public function testUserRoleAndUserAreUniqueForAPublication()
+    {
+        $user = User::factory()->create();
+        $role_id = Role::where('name', Role::PUBLICATION_ADMINISTRATOR)->first()->id;
+
+        $publication = Publication::factory()->hasAttached(
+            $user,
+            [
+                'role_id' => $role_id,
+            ]
+        )
+            ->create();
+        $this->expectException(QueryException::class);
+        $publication->users()->attach(
+            $user,
+            [
+                'role_id' => $role_id,
+            ]
+        );
+        $publication_pivot_data = PublicationUser::where(
+            [
+                'user_id' => $user->id,
+                'role_id' => $role_id,
+                'publication_id' => $publication->id,
+            ]
+        )
+            ->get();
+        $this->assertEquals(1, $publication_pivot_data->count());
     }
 }
