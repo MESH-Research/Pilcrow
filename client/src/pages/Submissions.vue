@@ -32,8 +32,8 @@
             />
             <q-file
               v-model="new_submission.file"
-              rounded
               outlined
+              filled
               label="Upload File"
             >
               <template #prepend>
