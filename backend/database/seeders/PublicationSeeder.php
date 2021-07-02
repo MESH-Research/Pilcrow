@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Database\Seeders;
 
 use App\Models\Publication;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class PublicationSeeder extends Seeder
@@ -15,9 +16,15 @@ class PublicationSeeder extends Seeder
      */
     public function run()
     {
-        Publication::factory()->create([
+        Publication::factory()->hasAttached(
+            User::where('username', 'applicationAdminUser')->firstOrFail(),
+            [
+                'role_id' => 2,
+            ]
+        )
+        ->create([
             'id' => 1,
-            'name' => 'Collaborative Review Organization',
+            'name' => 'CCR Test Publication 1',
         ]);
     }
 }
