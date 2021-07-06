@@ -49,6 +49,10 @@ const routes = [
       {
         path: "/publications",
         component: () => import('src/pages/Publications.vue')
+      },
+      {
+        path: "/submissions",
+        component: () => import('src/pages/Submissions.vue')
       }
     ]
   },

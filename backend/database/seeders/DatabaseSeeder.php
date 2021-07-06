@@ -31,5 +31,11 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('adminPassword!@#'),
         ]);
         $user->assignRole(Role::APPLICATION_ADMINISTRATOR);
+
+        $publication_seeder = new PublicationSeeder();
+        $publication_seeder->run();
+
+        $submission_seeder = new SubmissionSeeder();
+        $submission_seeder->run();
     }
 }

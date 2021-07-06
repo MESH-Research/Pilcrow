@@ -24,7 +24,7 @@ describe('Admin Publications', () => {
   it('prevents publication creation when the name is empty', () => {
     cy.dataCy('new_publication_input')
       .type('{enter}');
-    cy.dataCy('no_publications_message').should('be.visible');
+    cy.dataCy('publications_list');
     cy.dataCy('create_publication_notify').should('be.visible').should('have.class','bg-negative');
     cy.injectAxe();
     cy.dataCy('new_publication_input')

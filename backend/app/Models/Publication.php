@@ -21,6 +21,18 @@ class Publication extends Model
      */
     public function users()
     {
-        return $this->belongsToMany(User::class, 'publication_users');
+        return $this->belongsToMany(User::class)
+            ->withTimestamps()
+            ->withPivot('role_id');
+    }
+
+    /**
+     * Submissions that belong to a publication
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function submissions()
+    {
+        return $this->hasMany(Submission::class);
     }
 }
