@@ -15,14 +15,14 @@ for the complete dev setup steps.
 
 ## WSL Setup
 - Use the script from docker.com to install Docker Community Edition
-  (`docker-ce`) in WSL.  [https://get.docker.com](https://get.docker.com) 
-  - Ignore the warning about WSL. You need both the Windows Docker Desktop 
+  (`docker-ce`) in WSL.  [https://get.docker.com](https://get.docker.com)
+  - Ignore the warning about WSL. You need both the Windows Docker Desktop
     the Linux Community Edition package.
-  - `docker-ce` is a required as a dependancy for the lando package 
+  - `docker-ce` is a required as a dependancy for the lando package
 - Install nvm and use that to install node.js and npm in WSL.
   - Use nvm to istall node rather than the distribution's included Node.js package
 - Install the `lando` package for your distribution.
-    - [https://docs.lando.dev/basics/installation.html](https://docs.lando.dev/basics/installation.html)
+  - [https://docs.lando.dev/basics/installation.html](https://docs.lando.dev/basics/installation.html)
 - Proceed with the CCR setup (see the project README.md file)
 - Make sure that you put the CCR repo inside the WSL filesystem!
   - Accessing the Windows filesystem from WSL will slow things down considerably.
