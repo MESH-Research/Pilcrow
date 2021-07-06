@@ -20,6 +20,7 @@ for the complete dev setup steps.
     the Linux Community Edition package.
   - `docker-ce` is a required as a dependancy for the lando package
 - Install nvm and use that to install node.js and npm in WSL.
+  - nvm install page: [https://github.com/nvm-sh/nvm]
   - Use nvm to istall node rather than the distribution's included Node.js package
 - Install the `lando` package for your distribution.
   - [https://docs.lando.dev/basics/installation.html](https://docs.lando.dev/basics/installation.html)
