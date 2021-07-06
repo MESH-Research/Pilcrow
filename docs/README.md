@@ -6,7 +6,7 @@ Our documentation is a [VuePress](https://vuepress.vuejs.org/) based static site
 
 1. Change directory to the `docs/` folder.
 2. Start the Lando environment: `lando start`
-3. Visit `https://docs_dev.lndo.site` to preview the built documentation site.
+3. Visit `https://docs.ccr.lndo.site` to preview the built documentation site.
 
 The development server supports hot-reloading of most page and content changes.
 
