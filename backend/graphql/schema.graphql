@@ -89,6 +89,9 @@ type Mutation {
     "Create an association between a user, a role, and a submission"
     createSubmissionUser(input: CreateSubmissionUserInput! @spread): SubmissionUser!
         @create
+
+    "Upload a file that is publicly available."
+    upload(file: Upload!): String
 }
 
 "A date string with format `Y-m-d`, e.g. `2011-05-23`."
