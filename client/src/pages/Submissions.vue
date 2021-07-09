@@ -91,11 +91,13 @@
 <script>
 import { GET_PUBLICATIONS, GET_SUBMISSIONS } from 'src/graphql/queries';
 import { CREATE_SUBMISSION } from 'src/graphql/mutations';
-import { validationMixin } from 'vuelidate';
-import { required, maxLength } from 'vuelidate/lib/validators';
+import useVuelidate from '@vuelidate/core';
+import { required, maxLength } from '@vuelidate/validators';
 
 export default {
-  mixins: [validationMixin],
+  setup() {
+    return { $v: useVuelidate() };
+  },
   data() {
     return {
       is_submitting: false,
