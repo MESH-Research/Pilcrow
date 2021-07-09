@@ -23,6 +23,7 @@
               <div
                 v-for="error in $v.new_publication.name.$errors"
                 :key="error.$validator"
+                data-cy="banner_form_error"
               >
                 {{ $t(`publications.create.${error.$validator}`) }}
               </div>
