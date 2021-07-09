@@ -29,7 +29,7 @@ export default {
         }
         return {
           success: false,
-          errors: [error] ?? ["FAILURE_OTHER"]
+          errors: errors ?? ["FAILURE_OTHER"]
         };
       }
     },
