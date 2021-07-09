@@ -107,14 +107,17 @@
 
 <script>
 import PasswordInput from "src/components/forms/PasswordInput.vue";
-import { validationMixin } from "vuelidate";
-import { required, email } from "vuelidate/lib/validators";
+import useVuelidate from '@vuelidate/core'
+import { required, email } from "@vuelidate/validators";
 import appAuth from "src/components/mixins/appAuth";
 
 export default {
   name: "PageLogin",
   components: { PasswordInput },
-  mixins: [validationMixin, appAuth],
+  mixins: [appAuth],
+  setup() {
+    return {$v: useVuelidate() }
+  },
   data() {
     return {
       form: {
