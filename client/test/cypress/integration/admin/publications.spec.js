@@ -36,7 +36,7 @@ describe('Admin Publications', () => {
     const name_256_characters = '0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345';
     cy.dataCy('new_publication_input')
       .type(name_256_characters + '{enter}');
-    cy.dataCy('banner_form_error').should('be.visible').should('have.class','bg-negative');
+    cy.dataCy('banner_form_error').should('be.visible');
     cy.injectAxe();
     cy.checkA11y();
   });
@@ -44,7 +44,7 @@ describe('Admin Publications', () => {
   it('prevents publication creation when the name is not unique', () => {
     cy.dataCy('new_publication_input')
       .type('Duplicate Publication from Cypress{enter}');
-    cy.dataCy('create_publication_notify').should('be.visible').should('have.class','bg-positive');
+    cy.dataCy('create_publication_notify').should('be.visible');
     cy.injectAxe();
     cy.dataCy('publications_list').contains('Duplicate Publication from Cypress');
     cy.dataCy('new_publication_input')
