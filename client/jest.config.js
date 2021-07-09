@@ -42,7 +42,8 @@ module.exports = {
     "^quasar$": "quasar/dist/quasar.common.js",
     "^~/(.*)$": "<rootDir>/$1",
     "^src/(.*)$": "<rootDir>/src/$1",
-    ".*css$": "@quasar/quasar-app-extension-testing-unit-jest/stub.css"
+    ".*css$": "@quasar/quasar-app-extension-testing-unit-jest/stub.css",
+    "@vue/apollo-composable": "@vue/apollo-composable/dist/index.js",
   },
   transform: {
     ".*\\.vue$": "vue-jest",
@@ -53,6 +54,6 @@ module.exports = {
     // '.*\\.vue$': '@quasar/quasar-app-extension-testing-unit-jest/node_modules/vue-jest',
     // '.*\\.js$': '@quasar/quasar-app-extension-testing-unit-jest/node_modules/babel-jest'
   },
-  transformIgnorePatterns: [`node_modules/(?!(${esModules}))`],
+  transformIgnorePatterns: [`node_modules/(?!(${esModules}|@vue/apollo-composable))`],
   snapshotSerializers: ["jest-serializer-vue"]
 };

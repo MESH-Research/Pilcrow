@@ -126,11 +126,7 @@ export default {
         await this.$apollo.mutate({
           mutation: CREATE_PUBLICATION,
           variables: this.new_publication,
-          update: (store, publication) => {
-            const data = store.readQuery({ query: GET_PUBLICATIONS });
-            this.publications.data.push(publication.data.createPublication)
-            store.writeQuery({query: GET_PUBLICATIONS, data});
-          }
+          refetchQueries: ['GetPublications']  //In an ideal world, we would update the cache, but on a paginated query, refetch is about the only thing that makes sense.
         })
         this.makeNotify("positive", "check_circle", "publications.create.success")
         this.new_publication.name = "";
