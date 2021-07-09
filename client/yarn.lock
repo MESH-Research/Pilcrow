@@ -1851,7 +1851,7 @@
     throttle-debounce "^2.3.0"
     vue-demi "^0.4.0"
 
-"@vue/apollo-option@4.0.0-alpha.12":
+"@vue/apollo-option@4.0.0-alpha.11":
   version "4.0.0-alpha.11"
   resolved "https://registry.yarnpkg.com/@vue/apollo-option/-/apollo-option-4.0.0-alpha.11.tgz#b4ecac2d1ac40271cb7f20683fb8e4c85974329a"
   integrity sha512-IU458Y2cH/eo3RYXyoEoozyRxEgUz/BLC96DQAQKiEc7hFkE6I0g/VZu4tVIP0Od1/ivezdGaAPEVPA2AxE1ug==
@@ -11103,7 +11103,7 @@ tslib@^2.0.3:
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.2.0.tgz#fb2c475977e35e241311ede2693cee1ec6698f5c"
   integrity sha512-gS9GVHRU+RGn5KQM2rllAlR3dU6m7AcpJKdtH8gFvQiC4Otgk98XnmMU+nZenHt/+VhnBPWwgrJsyrdcw6i23w==
 
-tslib@^2.3.0:
+tslib@^2.1.0, tslib@^2.3.0:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.3.0.tgz#803b8cdab3e12ba581a4ca41c8839bbb0dacb09e"
   integrity sha512-N82ooyxVNm6h1riLCoyS9e3fuJ3AMG2zIZs2Gd1ATcSFjSA23Q0fzjjZeh0jbJvWVDZ0cJT8yaNNaaXHzueNjg==
