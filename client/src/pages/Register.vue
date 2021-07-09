@@ -173,8 +173,8 @@
 
 <script>
 import NewPasswordInput from "../components/forms/NewPasswordInput.vue";
-import { validationMixin } from "vuelidate";
-import { required, email } from "vuelidate/lib/validators";
+import useVuelidate from "@vuelidate/core";
+import { required, email } from "@vuelidate/validators";
 import { CREATE_USER } from "src/graphql/mutations";
 import appAuth from "src/components/mixins/appAuth";
 import zxcvbn from "zxcvbn";
@@ -206,7 +206,10 @@ const importValidationErrors = function(error, vm) {
 export default {
   name: "PageRegister",
   components: { NewPasswordInput },
-  mixins: [validationMixin, appAuth],
+  mixins: [appAuth],
+  setup() {
+    return {$v: useVuelidate()};
+  },
   apollo: {
     "user.username": {
       query: gql`

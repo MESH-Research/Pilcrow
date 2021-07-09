@@ -1,7 +1,4 @@
 {
-  "@quasar/apollo": {
-    "graphql_uri": "https://ccr.lndo.site/graphql"
-  },
   "@quasar/testing": {
     "harnesses": [
       "unit-jest",
@@ -16,7 +13,6 @@
     ]
   },
   "@quasar/testing-e2e-cypress": {
-    "options": [
-    ]
+    "options": []
   }
 }
