@@ -14,18 +14,21 @@
         >
           <q-input
             v-model="new_publication.name"
+            :error="$v.new_publication.$error"
             outlined
             label="Enter Name"
             data-cy="new_publication_input"
-          />
-          <q-banner
-            v-if="tryCatchError"
-            dense
-            rounded
-            class="form-error text-white bg-negative text-center q-mt-xs"
-            data-cy="banner_form_error"
-            v-text="$t(`publications.create.failure`)"
-          />
+          >
+            <template #error>
+              <div
+                v-for="error in $v.new_publication.name.$errors"
+                :key="error.$validator"
+              >
+                {{ $t(`publications.create.${error.$validator}`) }}
+              </div>
+            </template>
+          </q-input>
+
           <q-btn
             :disabled="is_submitting"
             class="bg-primary text-white q-mt-lg"
@@ -114,13 +117,11 @@ export default {
       this.is_submitting = true
       this.tryCatchError = false
       this.$v.$touch();
-      if (!this.$v.new_publication.name.maxLength) {
-        this.makeNotify("negative", "error", "publications.create.max_length")
-        return false;
-      }
-      if (!this.$v.new_publication.name.required) {
-        this.makeNotify("negative", "error", "publications.create.required")
-        return false;
+      if (this.$v.$errors.length) {
+        this.$v.$errors.forEach(({$validator}) => {
+          this.makeNotify("negative", "error", `publications.create.${$validator}`)
+        });
+        return false
       }
       try {
         await this.$apollo.mutate({
@@ -131,6 +132,7 @@ export default {
         this.makeNotify("positive", "check_circle", "publications.create.success")
         this.new_publication.name = "";
       } catch (error) {
+        console.log(error)
         this.tryCatchError = true;
         this.is_submitting = false
       }

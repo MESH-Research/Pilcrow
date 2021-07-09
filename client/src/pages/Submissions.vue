@@ -167,10 +167,8 @@ export default {
         await this.$apollo.mutate({
           mutation: CREATE_SUBMISSION,
           variables: this.new_submission,
-          update: (_store, submission) => {
-            this.submissions.data.push(submission.data.createSubmission)
-          }
-        })
+          refetchQueries: ['GetSubmissions'], // Refetch queries since the result is paginated.
+        });
         this.makeNotify("positive", "check_circle", "submissions.create.success")
         this.new_submission.title = "";
         this.new_submission.file = null;

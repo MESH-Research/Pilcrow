@@ -116,7 +116,7 @@ export default {
       success: "Publication successfully created.",
       failure: "An error occurred while attempting to create the publication.",
       required: "A name is required to create a publication.",
-      max_length: "The maximum length has been exceeded for the name."
+      maxLength: "The maximum length has been exceeded for the name."
     }
   },
   submissions: {
