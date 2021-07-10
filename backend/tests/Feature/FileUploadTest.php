@@ -6,7 +6,7 @@ namespace Tests\Feature;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Nuwave\Lighthouse\Testing\MakesGraphQLRequests;
-use PHPUnit\Framework\TestCase;
+use Tests\TestCase;
 
 class FileUploadTest extends TestCase
 {
