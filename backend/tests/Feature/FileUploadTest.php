@@ -4,9 +4,7 @@ declare(strict_types=1);
 namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Storage;
 use Nuwave\Lighthouse\Testing\MakesGraphQLRequests;
 use PHPUnit\Framework\TestCase;
 
@@ -25,15 +23,17 @@ class FileUploadTest extends TestCase
         $this->assertTrue(true);
     }
 
-    public function testPdfDocumentUpload()
+    public function testPdfDocumentsCanBeUploaded()
     {
         // Storage::fake('submissions');
 
         $operations = [
             'operationName' => 'upload',
-            'query' => 'mutation upload ($file: Upload!) {
-                upload (file: $file)
-            }',
+            'query' => '
+                mutation ($file: Upload!) {
+                    upload(file: $file)
+                }
+            ',
             'variables' => [
                 'file' => null,
             ],
@@ -47,7 +47,12 @@ class FileUploadTest extends TestCase
             '0' => UploadedFile::fake()->create('test.pdf', 500),
         ];
 
-        $this->multipartGraphQL($operations, $map, $file);
+        $this->multipartGraphQL($operations, $map, $file)
+            ->assertJson([
+                'data' => [
+                    'upload' => true,
+                ],
+            ]);
 
         // Storage::disk('submissions')->assertExists($file[0]->hashName());
     }
