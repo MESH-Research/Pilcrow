@@ -28,7 +28,6 @@ class FileUploadTest extends TestCase
         // Storage::fake('submissions');
 
         $operations = [
-            'operationName' => 'upload',
             'query' => '
                 mutation ($file: Upload!) {
                     upload(file: $file)
