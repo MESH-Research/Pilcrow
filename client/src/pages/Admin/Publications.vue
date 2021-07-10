@@ -133,7 +133,6 @@ export default {
         this.makeNotify("positive", "check_circle", "publications.create.success")
         this.new_publication.name = "";
       } catch (error) {
-        console.log(error)
         this.tryCatchError = true;
         this.is_submitting = false
       }
