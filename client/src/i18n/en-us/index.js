@@ -116,13 +116,15 @@ export default {
       success: "Publication successfully created.",
       failure: "An error occurred while attempting to create the publication.",
       required: "A name is required to create a publication.",
-      maxLength: "The maximum length has been exceeded for the name."
+      maxLength: "The maximum length has been exceeded for the name.",
+      duplicate_name: 'Publication name already exists.',
     }
   },
   submissions: {
     create: {
       success: "Submission successfully created.",
       failure: "An error occurred while attempting to create the submission.",
+
       title: {
         required: "A title is required to create a submission.",
         max_length: "The maximum length has been exceeded for the title."

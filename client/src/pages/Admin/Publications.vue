@@ -23,9 +23,9 @@
               <div
                 v-for="error in $v.new_publication.name.$errors"
                 :key="error.$validator"
-                data-cy="banner_form_error"
+                data-cy="name_field_error"
               >
-                {{ $t(`publications.create.${error.$validator}`) }}
+                {{ $t(`publications.create.${getErrorMessageKey(error)}`) }}
               </div>
             </template>
           </q-input>
@@ -85,6 +85,11 @@ export default {
       },
       new_publication: {
         name: ""
+      },
+      vuelidateExternalResults: {
+        new_publication: {
+          name: []
+        }
       }
     }
   },
@@ -101,7 +106,22 @@ export default {
       query: GET_PUBLICATIONS
     }
   },
+  watch: {
+    "new_publication.name": function() {
+      this.vuelidateExternalResults.new_publication.name = [];
+    }
+  },
   methods: {
+    getErrorMessageKey($error) {
+      if ($error.$validator === '$externalResults') {
+        return $error.$message;
+      }
+      return $error.$validator;
+    },
+    resetForm() {
+      this.new_publication.name = "";
+        this.$v.$reset();
+    },
     makeNotify(color, icon, message) {
       this.$q.notify({
         color: color,
@@ -131,12 +151,17 @@ export default {
           refetchQueries: ['GetPublications']  //In an ideal world, we would update the cache, but on a paginated query, refetch is about the only thing that makes sense.
         })
         this.makeNotify("positive", "check_circle", "publications.create.success")
-        this.new_publication.name = "";
+        this.resetForm();
       } catch (error) {
-        this.tryCatchError = true;
+        error.graphQLErrors.forEach((gqlError) => {
+          if (gqlError.extensions.category == 'validation') {
+            this.vuelidateExternalResults.new_publication.name.push(gqlError.extensions.validation["publication.name"]);
+          }
+        })
+      } finally {
         this.is_submitting = false
       }
     }
-  },
+  }
 }
 </script>
