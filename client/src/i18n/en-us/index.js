@@ -69,11 +69,12 @@ export default {
     REQUIRED_FIELD: "{0} is required."
   },
   header: {
-    publications: "Publications",
-    user_list: "All Users",
     account_link: "My Account",
     dashboard: "My Dashboard",
-    menu_button_aria: "Show/hide navigation sidebar"
+    menu_button_aria: "Show/hide navigation sidebar",
+    publications: "Publications",
+    submissions: "Submissions",
+    user_list: "All Users",
   },
   account: {
     failures: {
@@ -116,6 +117,19 @@ export default {
       failure: "An error occurred while attempting to create the publication.",
       required: "A name is required to create a publication.",
       max_length: "The maximum length has been exceeded for the name."
+    }
+  },
+  submissions: {
+    create: {
+      success: "Submission successfully created.",
+      failure: "An error occurred while attempting to create the submission.",
+      title: {
+        required: "A title is required to create a submission.",
+        max_length: "The maximum length has been exceeded for the title."
+      },
+      publication_id: {
+        required: "A publication must be associated with a submission.",
+      },
     }
   },
   failures: {

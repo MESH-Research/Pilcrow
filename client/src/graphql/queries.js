@@ -63,3 +63,23 @@ export const GET_PUBLICATIONS = gql`
     }
   }
 `;
+
+export const GET_SUBMISSIONS = gql`
+  query GetSubmissions($page:Int) {
+    submissions(page:$page) {
+      paginatorInfo {
+        count
+        currentPage
+        lastPage
+        perPage
+      }
+      data {
+        id
+        title
+        publication {
+          name
+        }
+      }
+    }
+  }
+`;

@@ -124,9 +124,13 @@ export default {
         await this.$apollo.mutate({
           mutation: CREATE_PUBLICATION,
           variables: this.new_publication,
+          update: (store, publication) => {
+            const data = store.readQuery({ query: GET_PUBLICATIONS });
+            this.publications.data.push(publication.data.createPublication)
+            store.writeQuery({query: GET_PUBLICATIONS, data});
+          }
         })
         this.makeNotify("positive", "check_circle", "publications.create.success")
-        this.publications.data.push({name:this.new_publication.name});
         this.new_publication.name = "";
       } catch (error) {
         this.tryCatchError = true;

@@ -162,4 +162,16 @@ class User extends Authenticatable implements MustVerifyEmail
             ->withTimestamps()
             ->withPivot('role_id');
     }
+
+    /**
+     * Publications that belong to the user
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function publications()
+    {
+        return $this->belongsToMany(Publication::class)
+            ->withTimestamps()
+            ->withPivot('role_id');
+    }
 }
