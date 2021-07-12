@@ -36,12 +36,13 @@ class FileUploadTest extends TestCase
             '0' => UploadedFile::fake()->create('test.pdf', 500),
         ];
 
-        $this->multipartGraphQL($operations, $map, $file)
+        $response = $this->multipartGraphQL($operations, $map, $file)
             ->assertJson([
                 'data' => [
                     'upload' => true,
                 ],
             ]);
+        print_r($response->decodeResponseJson());
 
         // Storage::disk('submissions')->assertExists($file[0]->hashName());
     }
