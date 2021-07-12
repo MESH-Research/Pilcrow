@@ -1,12 +1,9 @@
-import { createLocalVue } from '@vue/test-utils';
 import { mountQuasar } from '@quasar/quasar-app-extension-testing-unit-jest';
 import RegisterPage from "./Register.vue";
 import { CREATE_USER, LOGIN } from 'src/graphql/mutations';
 import { createMockClient } from 'mock-apollo-client';
 import { DefaultApolloClient } from '@vue/apollo-composable';
 import * as All from 'quasar';
-
-const { Quasar } = All;
 
 const components = Object.keys(All).reduce((object, key) => {
   const val = All[key];

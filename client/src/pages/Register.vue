@@ -140,20 +140,6 @@ import { useHasErrorKey } from 'src/use/validationHelpers';
 import { ref } from '@vue/composition-api';
 import {useLogin} from 'src/use/user';
 
-const processValidationResult = function({ data, error }, key) {
-  if (typeof error == "undefined") {
-    this.serverValidationErrors[key] = false;
-  } else {
-    importValidationErrors(error, this);
-  }
-};
-
-const importValidationErrors = function(error, vm) {
-
-};
-
-
-
 export default {
   name: "PageRegister",
   components: { NewPasswordInput, ErrorFieldRenderer },
@@ -175,10 +161,10 @@ export default {
     }
 
     const formErrorMsg = ref('');
-    const { $v, user, saveUser, externalValidation } = useUserValidation();
+    const { $v, user, saveUser } = useUserValidation();
     const hasErrorKey = useHasErrorKey($v);
 
-    return {$v, user, handleSubmit, hasErrorKey, externalValidation, formErrorMsg};
+    return {$v, user, handleSubmit, hasErrorKey,  formErrorMsg};
   },
 };
 </script>

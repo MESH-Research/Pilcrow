@@ -4,9 +4,7 @@ import { required, email } from "@vuelidate/validators";
 import { CREATE_USER } from "src/graphql/mutations";
 import { useMutation } from "@vue/apollo-composable";
 import zxcvbn from "zxcvbn";
-import { forIn, clone } from 'lodash';
-
-
+import { applyExternalValidationErrors } from 'src/use/validationHelpers';
 
 
 export function  useUserValidation() {
@@ -24,38 +22,6 @@ export function  useUserValidation() {
         username: []
     });
 
-    function externalFieldWatcher(field) {
-        const cancel = watch(
-            () => clone(form),
-            (form, oldValue) => {
-                if (form[field] != oldValue[field]) {
-
-                    externalValidation[field] = []
-                    cancel();
-                }
-            }
-        )
-    }
-
-
-    function applyExternalValidationErrors(externalValidation, error, strip = '') {
-        const gqlErrors = error?.graphQLErrors ?? [];
-        const validationErrors = clone(externalValidation);
-        gqlErrors.forEach(item => {
-            const vErrors = item?.extensions?.validation ?? false;
-            if (vErrors !== false) {
-                for (const [fieldName, fieldErrors] of Object.entries(vErrors)) {
-                    const key = fieldName.replace(strip, '')
-                    if (validationErrors[key]) {
-                        validationErrors?.[key]?.push(...fieldErrors);
-                        externalFieldWatcher(key);
-                    }
-
-                }
-            }
-        });
-        return Object.keys(validationErrors).some(f => validationErrors[f].length > 0);
-    }
     const rules = {
         name: {
 
@@ -93,7 +59,7 @@ export function  useUserValidation() {
             const newUser = await mutate(form);
             return newUser
         } catch (error) {
-            if (applyExternalValidationErrors(externalValidation, error, 'user.')) {
+            if (applyExternalValidationErrors(form, externalValidation, error, 'user.')) {
                 throw Error("CREATE_FORM_VALIDATION");
             } else {
                 throw Error("CREATE_FORM_INTERNAL");
