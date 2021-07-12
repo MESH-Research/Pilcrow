@@ -71,13 +71,14 @@
             :key="submission.id"
             class="q-pa-none"
           >
-            <q-item>
+            <q-item
+              class="column"
+            >
               <router-link
                 :to="{ name: 'submission_details', params: { id: submission.id }}"
               >
                 {{ submission.title }}
               </router-link>
-              <br>
               for {{ submission.publication.name }}
             </q-item>
           </li>
