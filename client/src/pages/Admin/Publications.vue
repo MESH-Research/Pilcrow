@@ -18,12 +18,15 @@
             outlined
             label="Enter Name"
             data-cy="new_publication_input"
+            bottom-slots
           >
-            <error-field-renderer
-              :errors="$v.new_publication.name.$errors"
-              prefix="publications.create.name"
-              data-cy="name_field_error"
-            />
+            <template #error>
+              <error-field-renderer
+                :errors="$v.new_publication.name.$errors"
+                prefix="publications.create.name"
+                data-cy="name_field_error"
+              />
+            </template>
           </q-input>
 
           <q-btn
@@ -114,7 +117,7 @@ export default {
     getErrorMessageKey,
     resetForm() {
       this.new_publication.name = "";
-        this.$v.$reset();
+      this.$v.$reset();
     },
     makeNotify(color, icon, message) {
       this.$q.notify({
