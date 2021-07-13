@@ -30,9 +30,9 @@ type Query {
     publication(id: ID @eq): Publication @find
 
     "Return all publications"
-    publications(
-        is_publicly_visible: Boolean @scope(name: "is_publicly_visible")
-    ): [Publication!]! @paginate(defaultCount: 100) @can(ability: "view")
+    publications(is_publicly_visible: Boolean @scope(name: "is_publicly_visible")): [Publication!]!
+        @paginate(defaultCount: 100)
+        @can(ability: "view")
 
     "Return a submission by ID"
     submission(id: ID @eq): Submission @find
@@ -78,17 +78,17 @@ type Mutation {
         @field(resolver: "App\\GraphQL\\Mutations\\VerifyEmail@verify")
 
     "Create a new publication"
-    createPublication(
-        publication: CreatePublicationInput! @spread
-    ): Publication! @create @can(ability: "create")
+    createPublication(publication: CreatePublicationInput! @spread): Publication!
+        @create
+        @can(ability: "create")
 
     "Create a new submission under a publication"
-    createSubmission(input: CreateSubmissionInput! @spread): Submission! @create
+    createSubmission(input: CreateSubmissionInput! @spread): Submission!
+        @create
 
     "Create an association between a user, a role, and a submission"
-    createSubmissionUser(
-        input: CreateSubmissionUserInput! @spread
-    ): SubmissionUser! @create
+    createSubmissionUser(input: CreateSubmissionUserInput! @spread): SubmissionUser!
+        @create
 }
 
 "A date string with format `Y-m-d`, e.g. `2011-05-23`."
@@ -152,8 +152,7 @@ input ValidateNewUserInput @validator(class: "UserInputValidator") {
 """
 Input type for adding social media data to profile metadata
 """
-input UpdateSocialMediaInput
-    @validator(class: "ProfileMetadataSocialMediaValidator") {
+input UpdateSocialMediaInput @validator(class: "ProfileMetadataSocialMediaValidator") {
     google: String
     twitter: String
     facebook: String
@@ -161,8 +160,7 @@ input UpdateSocialMediaInput
     linkedin: String
 }
 
-input UpdateAcademicProfilesInput
-    @validator(class: "ProfileMetadataAcademicProfilesValidator") {
+input UpdateAcademicProfilesInput @validator(class: "ProfileMetadataAcademicProfilesValidator") {
     academia_edu_id: String
     humanities_commons: String
     orcid_id: String
@@ -203,8 +201,7 @@ input CreateSubmissionInput @validator(class: "SubmissionInputValidator") {
 """
 Input type for creating a new association between a submission, role, and user via the createSubmissionUser mutation
 """
-input CreateSubmissionUserInput
-    @validator(class: "SubmissionUserInputValidator") {
+input CreateSubmissionUserInput @validator(class: "SubmissionUserInputValidator") {
     user_id: ID!
     role_id: ID!
     submission_id: ID!
