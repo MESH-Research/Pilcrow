@@ -132,7 +132,6 @@ export default {
     create: {
       success: "Submission successfully created.",
       failure: "An error occurred while attempting to create the submission.",
-
       title: {
         required: "A title is required to create a submission.",
         max_length: "The maximum length has been exceeded for the title."
