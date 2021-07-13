@@ -19,15 +19,10 @@
             label="Enter Name"
             data-cy="new_publication_input"
           >
-            <template #error>
-              <div
-                v-for="error in $v.new_publication.name.$errors"
-                :key="error.$validator"
-                data-cy="name_field_error"
-              >
-                {{ $t(`publications.create.${getErrorMessageKey(error)}`) }}
-              </div>
-            </template>
+            <error-field-renderer
+              :errors="$v.new_publication.name.$errors"
+              data-cy="name_field_error"
+            />
           </q-input>
 
           <q-btn
@@ -71,8 +66,10 @@ import { GET_PUBLICATIONS } from 'src/graphql/queries';
 import { CREATE_PUBLICATION } from 'src/graphql/mutations';
 import useVuelidate from '@vuelidate/core'
 import { required, maxLength } from '@vuelidate/validators';
+import ErrorFieldRenderer from 'src/components/molecules/ErrorFieldRenderer.vue';
 
 export default {
+  components: { ErrorFieldRenderer },
   setup() {
     return { $v: useVuelidate() };
   },
