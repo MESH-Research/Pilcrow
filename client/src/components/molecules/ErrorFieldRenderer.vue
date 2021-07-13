@@ -26,7 +26,6 @@ export default {
         }
     },
     setup () {
-
         return {getErrorMessageKey}
     }
 }

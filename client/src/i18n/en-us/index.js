@@ -45,12 +45,12 @@ export default {
     },
     validation: {
       username: {
-        required: 'Username is required',
-        USERNAME_IN_USE: "Sorry, this username is not available",
+        required: 'Username is required.',
+        USERNAME_IN_USE: "Sorry, this username is not available.",
       },
       email: {
-        required: 'Email address is required',
-        email: "Please enter a valid email address",
+        required: 'Email address is required.',
+        email: "Please enter a valid email address.",
         EMAIL_IN_USE:
           "This email is already registered.",
         EMAIL_NOT_VALID: "Please enter a valid email address.",
