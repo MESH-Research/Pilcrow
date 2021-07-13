@@ -21,6 +21,7 @@
           >
             <error-field-renderer
               :errors="$v.new_publication.name.$errors"
+              prefix="publications.create.name"
               data-cy="name_field_error"
             />
           </q-input>
