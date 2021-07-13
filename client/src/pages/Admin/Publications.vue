@@ -110,12 +110,7 @@ export default {
     }
   },
   methods: {
-    getErrorMessageKey($error) {
-      if ($error.$validator === '$externalResults') {
-        return $error.$message;
-      }
-      return $error.$validator;
-    },
+    getErrorMessageKey,
     resetForm() {
       this.new_publication.name = "";
         this.$v.$reset();
