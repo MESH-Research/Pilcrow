@@ -9,6 +9,7 @@ import { nextTick } from 'vue';
 
 Vue.config.productionTip = false;
 Vue.config.devtools = false;
+
 describe("useCurrentUser composable", () => {
     const mountComposable = (mocks) => {
 
@@ -54,5 +55,4 @@ describe("useCurrentUser composable", () => {
         expect(result.can.value('doStuff')).toBe(true);
         expect(result.hasRole.value('tester')).toBe(true);
     })
-
 });
