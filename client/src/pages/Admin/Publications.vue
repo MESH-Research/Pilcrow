@@ -67,6 +67,7 @@ import { CREATE_PUBLICATION } from 'src/graphql/mutations';
 import useVuelidate from '@vuelidate/core'
 import { required, maxLength } from '@vuelidate/validators';
 import ErrorFieldRenderer from 'src/components/molecules/ErrorFieldRenderer.vue';
+import { getErrorMessageKey } from 'src/use/validationHelpers';
 
 export default {
   components: { ErrorFieldRenderer },
