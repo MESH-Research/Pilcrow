@@ -3,24 +3,39 @@ import {
     useResult,
     useMutation,
   } from '@vue/apollo-composable'
-  import { reactive, computed } from '@vue/composition-api'
-  import { CURRENT_USER } from 'src/graphql/queries'
+import { computed } from '@vue/composition-api'
+import { CURRENT_USER } from 'src/graphql/queries'
 import { LOGIN, LOGOUT } from 'src/graphql/mutations'
 
+
+/**
+ * Returns an object of useful current user properties and helper methods:
+ *
+ * currentUserQuery: Query Object for the current user.
+ * currentUser<ref>: The currently logged in user.  Null if not logged in.
+ * isLoggedIn<ref>: Boolean true if a user is currently logged in.
+ * can<computed>: computed with signature can(ability) returns Boolean true if current user has ability
+ * hasRole<computed>: computed with signature hasRole(role) returns Boolean true if current user has role
+ *
+ * @returns
+ */
   export function useCurrentUser() {
     const query = useQuery(CURRENT_USER)
 
     const currentUser = useResult(query.result, null, (data) => {
       return data.currentUser
     })
+
     const isLoggedIn = useResult(query.result, false, (data) => {
       return !!data.currentUser.id
     })
+
     const abilities = useResult(
       query.result,
       [],
       (data) => data.currentUser.abilities
     )
+
     const roles = useResult(query.result, [], (data) => data.currentUser.roles)
 
     const can = computed(() => {
@@ -41,12 +56,12 @@ import { LOGIN, LOGOUT } from 'src/graphql/mutations'
     return { currentUser, currentUserQuery: query, isLoggedIn, can, hasRole }
   }
 
+  /**
+   * Provides method for logging in a user
+   *
+   * @returns Object
+   */
   export function useLogin() {
-
-
-    /**
-     * Login a user.
-     */
     const { mutate: loginMutation } = useMutation(LOGIN, () => ({
       update: (cache, { data: { login } }) => {
         cache.writeQuery({
@@ -56,15 +71,26 @@ import { LOGIN, LOGOUT } from 'src/graphql/mutations'
       },
     }))
 
+    /**
+     * Login the suppled user
+     *
+     * @param {Object} credentials
+     * @returns User object on success, throws ApolloClient error otherwise.
+     */
     async function loginUser(credentials) {
       const currentUser = await loginMutation(credentials)
-
       return currentUser.currentUser
     }
 
     return { loginUser }
   }
 
+  /**
+   * Provides function for logging out the current user.
+   *
+   * @param {Object} router Router.  If suppled the user will be redirected on logout.
+   * @returns
+   */
   export function useLogout(router) {
     const {
       mutate: logoutMutation,
@@ -77,10 +103,17 @@ import { LOGIN, LOGOUT } from 'src/graphql/mutations'
       },
     }))
 
+    /**
+     * Logout the current user.
+     *
+     * @returns Boolean true on success, false otherwise.
+     */
     async function logoutUser() {
       try {
         await logoutMutation()
-        router.push('/')
+        if (router) {
+          router.push('/')
+        }
         return true
       } catch (e) {
         return false

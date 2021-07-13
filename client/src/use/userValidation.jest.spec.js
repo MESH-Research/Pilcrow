@@ -1,5 +1,5 @@
 import { mount } from 'vue-composable-tester';
-import { useUserValidation } from './userValidation.js';
+import { useUserValidation } from './userValidation';
 import { provide } from '@vue/composition-api';
 import { DefaultApolloClient } from '@vue/apollo-composable';
 import { createMockClient } from 'mock-apollo-client';
