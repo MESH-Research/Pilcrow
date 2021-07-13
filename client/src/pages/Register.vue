@@ -137,7 +137,7 @@ import { useUserValidation } from "src/use/userValidation";
 import appAuth from "src/components/mixins/appAuth";
 import ErrorFieldRenderer from 'src/components/molecules/ErrorFieldRenderer.vue';
 import { useHasErrorKey } from 'src/use/validationHelpers';
-import { ref } from '@vue/composition-api';
+import { ref, provide } from '@vue/composition-api';
 import {useLogin} from 'src/use/user';
 
 export default {
@@ -162,7 +162,8 @@ export default {
 
     const formErrorMsg = ref('');
     const { $v, user, saveUser } = useUserValidation();
-    const hasErrorKey = useHasErrorKey($v);
+    provide('validator', $v);
+    const hasErrorKey = useHasErrorKey();
 
     return {$v, user, handleSubmit, hasErrorKey,  formErrorMsg};
   },
