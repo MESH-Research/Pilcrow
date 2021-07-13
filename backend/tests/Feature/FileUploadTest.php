@@ -13,10 +13,46 @@ class FileUploadTest extends TestCase
     use MakesGraphQLRequests;
     use RefreshDatabase;
 
-    public function testPdfDocumentsCanBeUploaded()
+    /**
+     * @return array
+     */
+    public function acceptedFileExtensionsProvider(): array
     {
-        // Storage::fake('submissions');
+        return [
+            ['aiff'],
+            ['avi'],
+            ['csv'],
+            ['doc'],
+            ['docx'],
+            ['gif'],
+            ['html'],
+            ['jpg'],
+            ['m4a'],
+            ['m4v'],
+            ['mov'],
+            ['mp3'],
+            ['mp4'],
+            ['odp'],
+            ['ods'],
+            ['pdf'],
+            ['png'],
+            ['pptx'],
+            ['svg'],
+            ['tiff'],
+            ['tsv'],
+            ['txt'],
+            ['wmv'],
+            ['xls'],
+            ['xlsx'],
+        ];
+    }
 
+    /**
+     * @dataProvider acceptedFileExtensionsProvider
+     * @param string $extension File extension value to test
+     */
+    public function testDocumentsCanBeUploaded(string $extension)
+    {
         $operations = [
             'query' => '
                 mutation ($file: Upload!) {
@@ -33,17 +69,14 @@ class FileUploadTest extends TestCase
         ];
 
         $file = [
-            '0' => UploadedFile::fake()->create('test.pdf', 500),
+            '0' => UploadedFile::fake()->create('test.'.$extension, 500),
         ];
 
-        $response = $this->multipartGraphQL($operations, $map, $file)
+        $this->multipartGraphQL($operations, $map, $file)
             ->assertJson([
                 'data' => [
                     'upload' => true,
-                ],
-            ]);
-        print_r($response->decodeResponseJson());
-
-        // Storage::disk('submissions')->assertExists($file[0]->hashName());
+            ],
+        ]);
     }
 }
