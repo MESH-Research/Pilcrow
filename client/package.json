@@ -20,11 +20,11 @@
     "test:unit:ui": "majestic"
   },
   "dependencies": {
-    "@quasar/extras": "^1.10.7",
+    "@quasar/extras": "^1.10.8",
     "apollo-link-context": "^1.0.20",
     "apollo-link-error": "^1.1.13",
     "axios": "^0.21.1",
-    "core-js": "^3.15.1",
+    "core-js": "^3.15.2",
     "lodash": "^4.17.20",
     "quasar": "^1.15.15",
     "vue-i18n": "^8.24.5",
