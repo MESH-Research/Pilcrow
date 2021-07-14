@@ -5,9 +5,11 @@ import { DefaultApolloClient } from '@vue/apollo-composable';
 import { createMockClient } from 'mock-apollo-client';
 import { text } from 'body-parser';
 import { CREATE_USER } from 'src/graphql/mutations';
+
 import Vue from 'vue';
 Vue.config.devtools = false
 Vue.config.productionTip = false
+
 describe('test uservalidation composable', () => {
 
     const mountComposable = () => {
@@ -111,7 +113,7 @@ describe('test uservalidation composable', () => {
 
         await expect(saveUser())
             .rejects
-            .toThrow("CREATE_FORM_VALIDATION");
+            .toThrow("FORM_VALIDATION");
 
         expect($v.value.username.$externalResults[0].$message).toEqual("USERNAME_IN_USE");
         expect($v.value.email.$externalResults[0].$message).toEqual("EMAIL_IN_USE");
@@ -139,6 +141,6 @@ describe('test uservalidation composable', () => {
 
         await expect(saveUser())
             .rejects
-            .toThrow("CREATE_FORM_INTERNAL");
+            .toThrow("INTERNAL");
     });
 })

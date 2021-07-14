@@ -56,14 +56,17 @@ export default {
         EMAIL_NOT_VALID: "Please enter a valid email address.",
         EMAIL_IN_USE_HINT: 'You might want to {loginAction} or {passwordAction}.'
       },
+      password: {
+        required: "Password is required"
+      },
       PASSWORD_NOT_COMPLEX: "Your password needs to be more complex.",
       PASSWORD_COMPLEX: "Your password is sufficiently complex.",
       USERNAME_AVAILABLE: "This username is available",
     },
     failures: {
-      CREATE_FORM_VALIDATION:
+      FORM_VALIDATION:
         "Oops, please correct the errors above and try again.",
-      CREATE_FORM_INTERNAL: "Error processing result, please try again later.",
+      INTERNAL: "Error processing result, please try again later.",
       LOGIN_FORM_VALIDATION: "Please correct the errors above and try again.",
       FAILURE_IDENTITY_NOT_FOUND: "Username and/or password is incorrect.",
       CREDENTIALS_INVALID: "Username and password combination is incorrect.",
