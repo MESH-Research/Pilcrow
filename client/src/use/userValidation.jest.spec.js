@@ -55,7 +55,6 @@ describe('test uservalidation composable', () => {
         const { result: { $v, user } } = mountComposable();
         const eV = $v.value.password;
 
-
         user.password = "";
         eV.$touch();
         expect(eV.required.$invalid).toBeTruthy();

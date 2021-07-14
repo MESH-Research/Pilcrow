@@ -63,23 +63,23 @@ describe("Register", () => {
                 .parents('label')
                 .should('not.have.class', 'q-field--error')
 
-             //Username must be unique
+            //Username must be unique
             cy.dataCy('username_field')
                 .clear()
                 .type('regularUser{enter}')
                 .parents('label')
                 .should('have.class', 'q-field--error')
-                 .contains('is not available');
+                .contains('is not available');
             cy.dataCy('username_field')
                 .type('brandnewusername')
 
-             //Email must be unique
+            //Email must be unique
             cy.dataCy('email_field')
-             .clear()
-             .type('regularuser@ccrproject.dev{enter}')
-             .parents('label')
-             .should('have.class', 'q-field--error')
-                 .contains('already registered');
+                .clear()
+                .type('regularuser@ccrproject.dev{enter}')
+                .parents('label')
+                .should('have.class', 'q-field--error')
+                .contains('already registered');
 
             cy.dataCy('email_field')
                 .clear()

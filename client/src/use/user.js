@@ -72,7 +72,7 @@ import { LOGIN, LOGOUT } from 'src/graphql/mutations'
     }))
 
     /**
-     * Login the suppled user
+     * Login the supplied user
      *
      * @param {Object} credentials
      * @returns User object on success, throws ApolloClient error otherwise.

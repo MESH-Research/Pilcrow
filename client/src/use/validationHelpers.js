@@ -2,7 +2,7 @@ import { computed, watch, inject } from '@vue/composition-api';
 import { clone } from 'lodash';
 
 /**
- * Create a computed property for checking for and error condition on a field.
+ * Create a computed property for checking for an error condition on a field.
  * Computed has the signature (field, key) where field is the field to check and
  * key is the validator or external validator message to check for.
  *
@@ -20,10 +20,9 @@ export const useHasErrorKey = () => {
     })
 }
 
-
 /**
  * Checks the supplied validation errors array for the presence of a validator
- * or a externalResults message.
+ * or an externalResults message.
  *
  * @param {Array} errors  Field errors
  * @param {String} key Key to find
@@ -70,7 +69,6 @@ export function externalFieldWatcher(data, externalValidation, field) {
  * @param {reactive} property
  * @param {Function} callback
  */
-
 export function oneShotPropertyWatch(data, property, callback) {
     const cancel = watch(
         () => clone(data),
@@ -84,15 +82,15 @@ export function oneShotPropertyWatch(data, property, callback) {
 }
 
 /**
- * Parses a graphql error object for any validation errors and applies them to the
+ * Parses a GraphQL error object for any validation errors and applies them to the
  * provided externalValidation reactive.  Apply the externalValidation reactive to
- * vuelidates $externalResults option to include graphql validation errors in vuelidate
- * error responses.
+ * vuelidate's $externalResults option to include GraphQL validation errors in 
+ * vuelidate error responses.
  *
  * @param {reactive} data Form data reactive
  * @param {reactive} externalValidation External validation reactive
  * @param {Object} error Error object returned by ApolloClient
- * @param {String} strip String to strip from the beginning of the graphql field name
+ * @param {String} strip String to strip from the beginning of the GraphQL field name
  * @returns
  */
 export function applyExternalValidationErrors(data, externalValidation, error, strip = '') {

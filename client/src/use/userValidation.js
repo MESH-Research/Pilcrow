@@ -6,7 +6,6 @@ import { useMutation } from "@vue/apollo-composable";
 import zxcvbn from "zxcvbn";
 import { applyExternalValidationErrors } from 'src/use/validationHelpers';
 
-
 export function  useUserValidation() {
     const form = reactive({
           email: "",
