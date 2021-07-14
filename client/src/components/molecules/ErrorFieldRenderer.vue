@@ -1,13 +1,13 @@
 <template>
-  <div>
-    <div
+  <ul>
+    <li
       v-for="error in errors"
       :key="error.$validator"
       data-cy="name_field_error"
     >
       {{ $t(`${prefix}.${getErrorMessageKey(error)}`) }}
-    </div>
-  </div>
+    </li>
+  </ul>
 </template>
 
 <script>
@@ -30,3 +30,14 @@ export default {
     }
 }
 </script>
+
+<style scoped>
+li {
+  display: block;
+}
+ul {
+  margin-block: 0;
+  padding-inline: 0;
+}
+
+</style>
