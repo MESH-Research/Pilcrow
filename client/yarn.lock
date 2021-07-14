@@ -3762,7 +3762,7 @@ core-js@^2.4.0:
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.6.12.tgz#d9333dfa7b065e347cc5682219d6f690859cc2ec"
   integrity sha512-Kb2wC0fvsWfQrgk8HU5lW6U/Lcs8+9aaYcy4ZFc6DDlo4nZ7n70dEgE5rtR0oG6ufKDUnrwfWL1mXR5ljDatrQ==
 
-core-js@^3.15.2, core-js@^3.6.5:
+core-js@^3.15.1, core-js@^3.6.5:
   version "3.15.2"
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.15.2.tgz#740660d2ff55ef34ce664d7e2455119c5bdd3d61"
   integrity sha512-tKs41J7NJVuaya8DxIOCnl8QuPHx5/ZVbFo1oKgVl1qHFBBrDctzQGtuLjPpRdNTWmKPH6oEvgN/MUID+l485Q==
@@ -7665,10 +7665,10 @@ lru-cache@^5.1.1:
   dependencies:
     yallist "^3.0.2"
 
-majestic@^1.2.24:
-  version "1.8.0"
-  resolved "https://registry.yarnpkg.com/majestic/-/majestic-1.8.0.tgz#09f50fe293a36ee2fe5d36e985e5ca1a172e57f0"
-  integrity sha512-xjQ1k3yKLtGqTjUNnvidI9HRyVfmkdjL+RsiZnzLhyvPz6DQFpCb1DYq5AEKJuP5EqAhzXWi3+NC2/Hij2YtVA==
+majestic@^1.8.1:
+  version "1.8.1"
+  resolved "https://registry.yarnpkg.com/majestic/-/majestic-1.8.1.tgz#b9ee3d18371aa07e1ebd514221e23f1474945749"
+  integrity sha512-YsSmJHrgF5JfJkbcez4oPE9xrSf9XSC7j2kFytOgVJY72vkWQqXH2gJHnMsjCrKdtxh3GX2oDP5akNDXpYAGxQ==
   dependencies:
     node-fetch "^2.3.0"
     open "^6.0.0"
