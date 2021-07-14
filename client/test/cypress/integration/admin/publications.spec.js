@@ -19,6 +19,7 @@ describe('Admin Publications', () => {
     cy.injectAxe();
     cy.dataCy('new_publication_input')
       .type('Draft Publication from Cypress');
+    cy.get('.q-transition--field-message-leave-active').should('not.exist');
     cy.checkA11y();
   });
 
@@ -33,9 +34,9 @@ describe('Admin Publications', () => {
   });
 
   it('prevents publication creation when the name exceeds the maximum length', () => {
-    const name_256_characters = '01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123450{enter}';
+    const name_257_characters = '00123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345{enter}';
     cy.dataCy('new_publication_input')
-      .type(name_256_characters + '{enter}');
+      .type(name_257_characters + '{enter}');
     cy.dataCy('name_field_error').should('be.visible');
     cy.get('.q-transition--field-message-leave-active').should('not.exist');
     cy.checkA11y();
@@ -44,7 +45,7 @@ describe('Admin Publications', () => {
   it('prevents publication creation when the name is not unique', () => {
     cy.dataCy('new_publication_input')
       .type('Duplicate Publication from Cypress{enter}');
-    cy.dataCy('create_publication_notify').should('be.visible');
+    cy.dataCy('create_publication_notify').should('be.visible').should('have.class', 'bg-positive');
     cy.dataCy('publications_list').contains('Duplicate Publication from Cypress');
     cy.dataCy('new_publication_input')
       .type('Duplicate Publication from Cypress{enter}');
