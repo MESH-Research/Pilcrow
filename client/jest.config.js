@@ -1,4 +1,4 @@
-const esModules = ["quasar/lang", "lodash-es", "quasar/src/utils"].join("|");
+const esModules = ["quasar/lang", "lodash-es", "quasar/src/utils", "@vue/apollo-composable"].join("|");
 
 module.exports = {
   globals: {
@@ -42,7 +42,8 @@ module.exports = {
     "^quasar$": "quasar/dist/quasar.common.js",
     "^~/(.*)$": "<rootDir>/$1",
     "^src/(.*)$": "<rootDir>/src/$1",
-    ".*css$": "@quasar/quasar-app-extension-testing-unit-jest/stub.css"
+    ".*css$": "@quasar/quasar-app-extension-testing-unit-jest/stub.css",
+    "@vue/apollo-composable": "@vue/apollo-composable/dist/index.js",
   },
   transform: {
     ".*\\.vue$": "vue-jest",

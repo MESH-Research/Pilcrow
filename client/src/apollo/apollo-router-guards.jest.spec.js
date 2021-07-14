@@ -1,4 +1,4 @@
-import { beforeEachRequiresAuth, beforeEachRequiresRoles } from './apollo-client-hooks';
+import { beforeEachRequiresAuth, beforeEachRequiresRoles } from './apollo-router-guards';
 import * as Q from "quasar";
 
 jest.mock('quasar', () => ({

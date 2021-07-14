@@ -14,18 +14,21 @@
         >
           <q-input
             v-model="new_publication.name"
+            :error="$v.new_publication.$error"
             outlined
             label="Enter Name"
             data-cy="new_publication_input"
-          />
-          <q-banner
-            v-if="tryCatchError"
-            dense
-            rounded
-            class="form-error text-white bg-negative text-center q-mt-xs"
-            data-cy="banner_form_error"
-            v-text="$t(`publications.create.failure`)"
-          />
+            bottom-slots
+          >
+            <template #error>
+              <error-field-renderer
+                :errors="$v.new_publication.name.$errors"
+                prefix="publications.create.name"
+                data-cy="name_field_error"
+              />
+            </template>
+          </q-input>
+
           <q-btn
             :disabled="is_submitting"
             class="bg-primary text-white q-mt-lg"
@@ -65,11 +68,16 @@
 <script>
 import { GET_PUBLICATIONS } from 'src/graphql/queries';
 import { CREATE_PUBLICATION } from 'src/graphql/mutations';
-import { validationMixin } from 'vuelidate';
-import { required, maxLength } from 'vuelidate/lib/validators';
+import useVuelidate from '@vuelidate/core'
+import { required, maxLength } from '@vuelidate/validators';
+import ErrorFieldRenderer from 'src/components/molecules/ErrorFieldRenderer.vue';
+import { getErrorMessageKey } from 'src/use/validationHelpers';
 
 export default {
-  mixins: [validationMixin],
+  components: { ErrorFieldRenderer },
+  setup() {
+    return { $v: useVuelidate() };
+  },
   data() {
     return {
       is_submitting: false,
@@ -79,6 +87,11 @@ export default {
       },
       new_publication: {
         name: ""
+      },
+      vuelidateExternalResults: {
+        new_publication: {
+          name: []
+        }
       }
     }
   },
@@ -95,7 +108,16 @@ export default {
       query: GET_PUBLICATIONS
     }
   },
+  watch: {
+    "new_publication.name": function() {
+      this.vuelidateExternalResults.new_publication.name = [];
+    }
+  },
   methods: {
+    getErrorMessageKey,
+    resetForm() {
+      this.new_publication.name = "";
+    },
     makeNotify(color, icon, message) {
       this.$q.notify({
         color: color,
@@ -112,31 +134,30 @@ export default {
       this.is_submitting = true
       this.tryCatchError = false
       this.$v.$touch();
-      if (!this.$v.new_publication.name.maxLength) {
-        this.makeNotify("negative", "error", "publications.create.max_length")
-        return false;
-      }
-      if (!this.$v.new_publication.name.required) {
-        this.makeNotify("negative", "error", "publications.create.required")
-        return false;
+      if (this.$v.$errors.length) {
+        this.$v.$errors.forEach(({$validator}) => {
+          this.makeNotify("negative", "error", `publications.create.${$validator}`)
+        });
+        return false
       }
       try {
         await this.$apollo.mutate({
           mutation: CREATE_PUBLICATION,
           variables: this.new_publication,
-          update: (store, publication) => {
-            const data = store.readQuery({ query: GET_PUBLICATIONS });
-            this.publications.data.push(publication.data.createPublication)
-            store.writeQuery({query: GET_PUBLICATIONS, data});
-          }
+          refetchQueries: ['GetPublications']  //In an ideal world, we would update the cache, but on a paginated query, refetch is about the only thing that makes sense.
         })
         this.makeNotify("positive", "check_circle", "publications.create.success")
-        this.new_publication.name = "";
+        this.resetForm();
       } catch (error) {
-        this.tryCatchError = true;
+        error.graphQLErrors.forEach((gqlError) => {
+          if (gqlError.extensions.category == 'validation') {
+            this.vuelidateExternalResults.new_publication.name.push(gqlError.extensions.validation["publication.name"]);
+          }
+        })
+      } finally {
         this.is_submitting = false
       }
     }
-  },
+  }
 }
 </script>

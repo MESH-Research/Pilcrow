@@ -3,9 +3,9 @@
     <h2 class="q-pl-lg">
       All Users
     </h2>
-    <div v-if="userSearch.data">
+    <div v-if="users.length">
       <q-item
-        v-for="user in userSearch.data"
+        v-for="user in users"
         :key="user.id"
         clickable
         data-cy="userListItem"
@@ -46,9 +46,9 @@
         </q-item-section>
       </q-item>
       <q-pagination
-        v-model="current_page"
+        v-model="currentPage"
         class="q-pa-lg flex flex-center"
-        :max="userSearch.paginatorInfo.lastPage"
+        :max="lastPage"
       />
     </div>
   </div>
@@ -57,36 +57,29 @@
 <script>
 import { GET_USERS } from "src/graphql/queries";
 import AvatarImage from "src/components/atoms/AvatarImage.vue";
+import { useQuery, useResult } from "@vue/apollo-composable";
+import { ref } from "@vue/composition-api";
 
 export default {
   components: {
     AvatarImage,
   },
-  data() {
-    return {
-      userSearch: {
-        data: null
-      },
-      current_page: 1
-    }
-  },
-  methods: {
-    goToUserDetail(userId) {
-      this.$router.push({
+  setup(_, {root}) {
+    const currentPage = ref(1);
+
+    const {result} = useQuery(GET_USERS, {page: currentPage});
+    const users = useResult(result, [], data => data.userSearch.data);
+    const lastPage = useResult(result, 1, data => data.userSearch.paginatorInfo.lastPage);
+
+    function goToUserDetail(userId) {
+      root.$router.push({
         name:"user_details",
         params:{id:userId}
       })
     }
-  },
-  apollo: {
-    userSearch: {
-      query: GET_USERS,
-      variables () {
-        return {
-          page:this.current_page
-        }
-      }
-    }
+
+    return {currentPage, users, lastPage, goToUserDetail};
+
   },
 }
 </script>
