@@ -117,7 +117,6 @@ export default {
     getErrorMessageKey,
     resetForm() {
       this.new_publication.name = "";
-      this.$v.$reset();
     },
     makeNotify(color, icon, message) {
       this.$q.notify({
