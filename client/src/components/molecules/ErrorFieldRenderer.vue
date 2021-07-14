@@ -3,7 +3,6 @@
     <li
       v-for="error in errors"
       :key="error.$validator"
-      data-cy="name_field_error"
     >
       {{ $t(`${prefix}.${getErrorMessageKey(error)}`) }}
     </li>
