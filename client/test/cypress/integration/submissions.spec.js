@@ -8,6 +8,7 @@ describe('Submissions', () => {
     cy.task('resetDb');
     cy.login({ email: "applicationadministrator@ccrproject.dev" });
     cy.visit('submissions');
+    cy.injectAxe();
     cy.dataCy('new_submission_title_input')
       .type('Submission from Cypress{enter}');
     cy.dataCy('new_submission_publication_input')
@@ -17,10 +18,10 @@ describe('Submissions', () => {
       .click();
     cy.dataCy('save_submission')
       .click();
-    cy.injectAxe();
     cy.dataCy('submissions_list')
       .contains('Submission from Cypress');
     cy.dataCy('create_submission_notify').should('be.visible').should('have.class','bg-positive');
+    cy.get('.q-notification--top-enter-active').should('not.exist');
     cy.checkA11y(null, {
       rules: {
           'nested-interactive': { enabled: false },

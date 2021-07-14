@@ -91,11 +91,13 @@
 <script>
 import { GET_PUBLICATIONS, GET_SUBMISSIONS } from 'src/graphql/queries';
 import { CREATE_SUBMISSION } from 'src/graphql/mutations';
-import { validationMixin } from 'vuelidate';
-import { required, maxLength } from 'vuelidate/lib/validators';
+import useVuelidate from '@vuelidate/core';
+import { required, maxLength } from '@vuelidate/validators';
 
 export default {
-  mixins: [validationMixin],
+  setup() {
+    return { $v: useVuelidate() };
+  },
   data() {
     return {
       is_submitting: false,
@@ -165,10 +167,8 @@ export default {
         await this.$apollo.mutate({
           mutation: CREATE_SUBMISSION,
           variables: this.new_submission,
-          update: (_store, submission) => {
-            this.submissions.data.push(submission.data.createSubmission)
-          }
-        })
+          refetchQueries: ['GetSubmissions'], // Refetch queries since the result is paginated.
+        });
         this.makeNotify("positive", "check_circle", "submissions.create.success")
         this.new_submission.title = "";
         this.new_submission.file = null;

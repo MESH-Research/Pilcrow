@@ -1439,6 +1439,7 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/laravel/framework/zipball/d892dbacbe3859cf9303ccda98ac8d782141d5ae",
                 "reference": "d892dbacbe3859cf9303ccda98ac8d782141d5ae",
+
                 "shasum": ""
             },
             "require": {
