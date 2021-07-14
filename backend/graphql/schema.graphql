@@ -182,7 +182,12 @@ input UpdateProfileMetadataInput @validator(class: "ProfileMetadataValidator") {
 }
 
 input CreatePublicationInput @validator(class: "PublicationInputValidator") {
-    name: String @trim
+    name: String
+        @trim
+        @rules(
+            apply: ["unique:publications,name"]
+            messages: [{ rule: "unique", message: "duplicate_name" }]
+        )
 }
 
 """
