@@ -17,11 +17,8 @@
         </q-card-section>
         <q-card-section class="q-pa-lg ">
           <fieldset class="q-px-sm q-pt-md  q-gutter-y-lg q-pb-lg">
-            <q-banner
+            <error-banner
               v-if="redirectUrl != '/'"
-              class="text-white bg-red text-center"
-              dense
-              rounded
               v-text="$t(`auth.loginRequired`)"
             />
 
@@ -61,12 +58,8 @@
               </template>
             </password-input>
           </fieldset>
-
-          <q-banner
+          <error-banner
             v-if="error"
-            class="text-white bg-red text-center"
-            dense
-            rounded
             :data-error="error"
             data-cy="authFailureMessages"
             v-text="$t(`auth.failures.${error}`)"
@@ -98,7 +91,7 @@
 
 <script>
 import PasswordInput from "src/components/forms/PasswordInput.vue";
-
+import ErrorBanner from "src/components/molecules/ErrorBanner.vue";
 import ErrorFieldRenderer from 'src/components/molecules/ErrorFieldRenderer.vue';
 import { defineComponent, ref } from '@vue/composition-api';
 import { useLogin } from 'src/use/user';
@@ -106,7 +99,7 @@ import { useLogin } from 'src/use/user';
 
 export default defineComponent({
   name: "PageLogin",
-  components: { PasswordInput, ErrorFieldRenderer },
+  components: { PasswordInput, ErrorFieldRenderer, ErrorBanner },
   setup(_, {root}) {
 
     const error = ref('');

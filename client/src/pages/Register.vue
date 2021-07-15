@@ -100,10 +100,9 @@
             />
           </fieldset>
 
-          <q-banner
+          <error-banner
             v-if="formErrorMsg"
-            dense
-            class="form-error text-white bg-red text-center"
+            class="form-error"
             v-text="$t(`auth.failures.${formErrorMsg}`)"
           />
         </q-card-section>
@@ -134,16 +133,15 @@
 <script>
 import NewPasswordInput from "../components/forms/NewPasswordInput.vue";
 import { useUserValidation } from "src/use/userValidation";
-import appAuth from "src/components/mixins/appAuth";
 import ErrorFieldRenderer from 'src/components/molecules/ErrorFieldRenderer.vue';
 import { useHasErrorKey } from 'src/use/validationHelpers';
 import { ref, provide } from '@vue/composition-api';
 import {useLogin} from 'src/use/user';
+import ErrorBanner from 'src/components/molecules/ErrorBanner.vue';
 
 export default {
   name: "PageRegister",
-  components: { NewPasswordInput, ErrorFieldRenderer },
-  mixins: [appAuth],
+  components: { NewPasswordInput, ErrorFieldRenderer, ErrorBanner },
   setup(_, {root}) {
     const {loginUser} = useLogin();
 

@@ -98,7 +98,7 @@ import { required, email } from '@vuelidate/validators';
       },
     }))
 
-    const redirectUrl = SessionStorage.getItem('loginRedirect') ?? '/';
+    const redirectUrl = SessionStorage.getItem('loginRedirect') ?? '/dashboard';
     SessionStorage.remove('loginRedirect');
 
     /**
