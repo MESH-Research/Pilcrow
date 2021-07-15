@@ -1,7 +1,7 @@
-import { onError } from "apollo-link-error";
+import { onError } from "@apollo/client/link/error";
 import { Cookies } from "quasar";
-import { setContext } from "apollo-link-context";
-import { Observable } from "apollo-link";
+import { setContext } from "@apollo/client/link/context";
+import { Observable } from "@apollo/client/core";
 
 const cookieXsrfToken = () => Cookies.get("XSRF-TOKEN");
 

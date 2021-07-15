@@ -34,6 +34,7 @@
               outlined
               data-cy="email_field"
               autocomplete="username"
+              bottom-slots
               @change="
                 e => {
                   $v.form.email.$model = e.target.value.trim();
@@ -42,12 +43,12 @@
             >
               <template #error>
                 <div
-                  v-if="!$v.form.email.required"
+                  v-if="!$v.form.email.required.$error"
                   v-text="$t('helpers.REQUIRED_FIELD', [$t('auth.fields.email')])"
                 />
                 <div
-                  v-if="!$v.form.email.email"
-                  v-text="$t('auth.validation.EMAIL_INVALID')"
+                  v-if="!$v.form.email.email.$error"
+                  v-text="$t('auth.validation.email.EMAIL_NOT_VALID')"
                 />
               </template>
             </q-input>
@@ -60,11 +61,12 @@
               outlined
               data-cy="password_field"
               autocomplete="current-password"
+              bottom-slots
               @keypress.enter="login"
             >
               <template #hint>
                 <div
-                  v-if="!$v.form.password.required"
+                  v-if="!$v.form.password.required.$error"
                   v-text="$t('helpers.REQUIRED_FIELD', [$t('auth.fields.password')])"
                 />
               </template>
@@ -107,14 +109,17 @@
 
 <script>
 import PasswordInput from "src/components/forms/PasswordInput.vue";
-import { validationMixin } from "vuelidate";
-import { required, email } from "vuelidate/lib/validators";
+import useVuelidate from '@vuelidate/core'
+import { required, email } from "@vuelidate/validators";
 import appAuth from "src/components/mixins/appAuth";
 
 export default {
   name: "PageLogin",
   components: { PasswordInput },
-  mixins: [validationMixin, appAuth],
+  mixins: [appAuth],
+  setup() {
+    return {$v: useVuelidate() }
+  },
   data() {
     return {
       form: {

@@ -81,6 +81,14 @@ type Mutation {
     createPublication(publication: CreatePublicationInput! @spread): Publication!
         @create
         @can(ability: "create")
+
+    "Create a new submission under a publication"
+    createSubmission(input: CreateSubmissionInput! @spread): Submission!
+        @create
+
+    "Create an association between a user, a role, and a submission"
+    createSubmissionUser(input: CreateSubmissionUserInput! @spread): SubmissionUser!
+        @create
 }
 
 "A date string with format `Y-m-d`, e.g. `2011-05-23`."
@@ -174,5 +182,27 @@ input UpdateProfileMetadataInput @validator(class: "ProfileMetadataValidator") {
 }
 
 input CreatePublicationInput @validator(class: "PublicationInputValidator") {
-    name: String @trim
+    name: String
+        @trim
+        @rules(
+            apply: ["unique:publications,name"]
+            messages: [{ rule: "unique", message: "duplicate_name" }]
+        )
+}
+
+"""
+Input type for creating a new submission via the createSubmission mutation
+"""
+input CreateSubmissionInput @validator(class: "SubmissionInputValidator") {
+    title: String! @trim
+    publication_id: ID!
+}
+
+"""
+Input type for creating a new association between a submission, role, and user via the createSubmissionUser mutation
+"""
+input CreateSubmissionUserInput @validator(class: "SubmissionUserInputValidator") {
+    user_id: ID!
+    role_id: ID!
+    submission_id: ID!
 }

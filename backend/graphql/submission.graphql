@@ -6,6 +6,17 @@ type Submission {
     title: String
     created_at: DateTime!
     updated_at: DateTime
-    publication: Publication
+    publication: Publication!
     users: [User!]! @belongsToMany
+    pivot: SubmissionUser
+}
+
+"""
+A user associated with a submission and a role
+"""
+type SubmissionUser {
+    id: ID!
+    role_id: ID!
+    submission_id: ID!
+    user_id: ID!
 }

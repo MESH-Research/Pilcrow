@@ -42,6 +42,8 @@ class CreateSubmissionsTables extends Migration
             $table->foreign('role_id')
                 ->references('id')
                 ->on('roles');
+
+            $table->unique(['user_id','role_id','submission_id'],'submission_user_unique');
         });
     }
 

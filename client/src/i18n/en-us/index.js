@@ -44,13 +44,21 @@ export default {
       show_password: "Show Password"
     },
     validation: {
+      username: {
+        required: 'Username is required.',
+        USERNAME_IN_USE: "Sorry, this username is not available.",
+      },
+      email: {
+        required: 'Email address is required.',
+        email: "Please enter a valid email address.",
+        EMAIL_IN_USE:
+          "This email is already registered.",
+        EMAIL_NOT_VALID: "Please enter a valid email address.",
+        EMAIL_IN_USE_HINT: 'You might want to {loginAction} or {passwordAction}.'
+      },
       PASSWORD_NOT_COMPLEX: "Your password needs to be more complex.",
       PASSWORD_COMPLEX: "Your password is sufficiently complex.",
-      EMAIL_INVALID: "Please enter a valid email address.",
-      USERNAME_IN_USE: "Sorry, that username is not available",
       USERNAME_AVAILABLE: "This username is available",
-      EMAIL_IN_USE:
-        "This email is already registered. {break} You might want to {loginAction} or {passwordAction}."
     },
     failures: {
       CREATE_FORM_VALIDATION:
@@ -69,11 +77,12 @@ export default {
     REQUIRED_FIELD: "{0} is required."
   },
   header: {
-    publications: "Publications",
-    user_list: "All Users",
     account_link: "My Account",
     dashboard: "My Dashboard",
-    menu_button_aria: "Show/hide navigation sidebar"
+    menu_button_aria: "Show/hide navigation sidebar",
+    publications: "Publications",
+    submissions: "Submissions",
+    user_list: "All Users",
   },
   account: {
     failures: {
@@ -115,7 +124,21 @@ export default {
       success: "Publication successfully created.",
       failure: "An error occurred while attempting to create the publication.",
       required: "A name is required to create a publication.",
-      max_length: "The maximum length has been exceeded for the name."
+      maxLength: "The maximum length has been exceeded for the name.",
+      duplicate_name: 'Publication name already exists.',
+    }
+  },
+  submissions: {
+    create: {
+      success: "Submission successfully created.",
+      failure: "An error occurred while attempting to create the submission.",
+      title: {
+        required: "A title is required to create a submission.",
+        max_length: "The maximum length has been exceeded for the title."
+      },
+      publication_id: {
+        required: "A publication must be associated with a submission.",
+      },
     }
   },
   failures: {
