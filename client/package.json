@@ -32,7 +32,7 @@
     "graphql": "^15.5.1",
     "graphql-tag": "^2.12.5",
     "lodash": "^4.17.20",
-    "quasar": "^1.15.15",
+    "quasar": "^2.0.2",
     "vue-i18n": "^8.24.5",
     "zxcvbn": "^4.4.2"
   },
@@ -50,7 +50,7 @@
     "eslint-plugin-cypress": "^2.11.3",
     "eslint-plugin-jest": "^24.3.6",
     "eslint-plugin-vue": "^7.12.1",
-    "majestic": "^1.8.1",
+    "majestic": "^1.2.24",
     "mock-apollo-client": "^1.1.0",
     "vue-composable-tester": "^0.1.3"
   },
