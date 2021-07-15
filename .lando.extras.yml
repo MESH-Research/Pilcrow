@@ -21,7 +21,7 @@ cypress:
         overrides:
           image: "cypress/included:6.3.0"
           environment:
-            - DISPLAY
+            ELECTRON_EXTRA_LAUNCH_ARGS: "--force-prefers-reduced-motion"
     tooling:
       cypress:
         service: cypress
