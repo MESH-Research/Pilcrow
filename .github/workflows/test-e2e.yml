@@ -50,4 +50,3 @@ jobs:
           path: client/test/cypress/videos
       - name: Destroy lando containers
         run: lando destroy -y
-`
