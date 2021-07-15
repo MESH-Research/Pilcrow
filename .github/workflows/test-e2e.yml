@@ -33,9 +33,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
       - name: Enable Cypress config
-        run: cp .lando/cypress.lando.local.yml ./.lando.local.yml
-      - name: Start Lando
-        run: lando start
+        run: lando extras e cypress && lando start && lando cypress install
       - name: Migrate Database
         run: lando artisan migrate
       - name: Execute Cypress Tests
@@ -52,3 +50,4 @@ jobs:
           path: client/test/cypress/videos
       - name: Destroy lando containers
         run: lando destroy -y
+`
