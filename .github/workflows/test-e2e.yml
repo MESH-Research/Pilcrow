@@ -33,7 +33,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
       - name: Enable Cypress config
-        run: lando extras e cypress && lando start && lando cypress install
+        run: lando start && lando extras e cypress -y && lando start && lando cypress install
       - name: Migrate Database
         run: lando artisan migrate
       - name: Execute Cypress Tests
