@@ -1,7 +1,6 @@
 <template>
   <q-page padding>
     <h2>{{ submission.title }}</h2>
-    <p> {{ id }} </p>
     <div id="q-app">
       <div class="q-pa-md">
         <div class="q-gutter-md row">
@@ -27,6 +26,7 @@
             </template>
           </q-select>
         </div>
+        <q-btn :ripple="{ center: true }" color="secondary" label="Add reviewe" no-caps />
       </div>
     </div>
   </q-page>
