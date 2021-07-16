@@ -204,7 +204,6 @@ Input type for creating a new submission via the createSubmission mutation
 input CreateSubmissionInput @validator(class: "SubmissionInputValidator") {
     title: String! @trim
     publication_id: ID!
-    file_upload: Upload!
 }
 
 """
@@ -221,5 +220,5 @@ Input type for creating a new association between an uploaded file and a submiss
 """
 input CreateSubmissionFileInput @validator(class: "SubmissionFileInputValidator") {
     submission_id: ID!
-    file: string
+    file_upload: string
 }
