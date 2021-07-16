@@ -84,7 +84,6 @@ describe("Register", () => {
             cy.dataCy('email_field')
                 .clear()
                 .type('newvalidemail@ccrproject.dev')
-                .should('not.have.class', 'q-field--error');
 
             cy.get('[type="submit"]').click();
             cy.url().should('include', '/dashboard');
