@@ -83,7 +83,7 @@ describe("Register", () => {
 
             cy.dataCy('email_field')
                 .clear()
-                .type('newvalidemail@ccrproject.dev')
+                .type('newvalidemail@ccrproject.dev');
 
             cy.get('[type="submit"]').click();
             cy.url().should('include', '/dashboard');
