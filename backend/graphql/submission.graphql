@@ -21,7 +21,11 @@ type SubmissionUser {
     user_id: ID!
 }
 
+"""
+An uploaded file associated with a submission
+"""
 type SubmissionFile {
+    id: ID!
     submission_id: ID!
-    file_upload: string!
+    file_upload: String!
 }
