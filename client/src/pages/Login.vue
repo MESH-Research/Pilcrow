@@ -18,7 +18,7 @@
         <q-card-section class="q-pa-lg ">
           <fieldset class="q-px-sm q-pt-md  q-gutter-y-lg q-pb-lg">
             <error-banner
-              v-if="redirectUrl != '/'"
+              v-if="redirectUrl != '/dashboard'"
               v-text="$t(`auth.loginRequired`)"
             />
 

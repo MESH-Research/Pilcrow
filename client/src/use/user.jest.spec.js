@@ -163,7 +163,7 @@ describe("useLogin composable", () => {
 
         ({ result } = mountComposable());
 
-        expect(result.redirectUrl).toEqual('/');
+        expect(result.redirectUrl).toEqual('/dashboard');
     })
 
 })

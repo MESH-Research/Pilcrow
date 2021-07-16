@@ -134,8 +134,6 @@ describe("applyExternalValidationErrors composition helper", () => {
     });
 
     test("multiple different errors", async () => {
-        //Note: I don't think this occurs in the wild, but the structure suggetss that it may so... here we are.
-
         const result = factory();
         const returnValue = result.applyErrors({
             graphQLErrors: [

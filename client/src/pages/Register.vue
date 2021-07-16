@@ -27,7 +27,7 @@
               outlined
               :label="$t('helpers.OPTIONAL_FIELD', [$t('auth.fields.name')])"
               autocomplete="name"
-              data-cy="nameField"
+              data-cy="name_field"
               bottom-slots
             />
             <q-input

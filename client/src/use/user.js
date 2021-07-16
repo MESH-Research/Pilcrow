@@ -106,8 +106,11 @@ import { required, email } from '@vuelidate/validators';
      *
      * @returns User object on success, throws Error otherwise.
      */
-    const  loginUser = async () => {
-
+    const loginUser = async (user) => {
+      if (typeof user !== undefined) {
+        Object.assign(credentials, user);
+      }
+      $v.value.$touch();
       if ($v.value.$invalid) {
         throw Error('FORM_VALIDATION');
       }
