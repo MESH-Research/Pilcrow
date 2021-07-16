@@ -1,3 +1,4 @@
+/* eslint-env node */
 module.exports = {
   root: true,
 
@@ -7,18 +8,14 @@ module.exports = {
   },
 
   env: {
-    browser: true
+    browser: true,
+    "jest/globals": true
   },
 
-  extends: [
-    "prettier",
-    // https://eslint.vuejs.org/rules/#priority-a-essential-error-prevention
-    // consider switching to `plugin:vue/strongly-recommended` or `plugin:vue/recommended` for stricter rules.
-    "plugin:vue/recommended"
-  ],
+  extends: ["eslint:recommended", "prettier", "plugin:vue/recommended"],
 
   // required to lint *.vue files
-  plugins: ["vue"],
+  plugins: ["vue", "prettier", "jest"],
 
   globals: {
     ga: true, // Google Analytics
@@ -34,6 +31,7 @@ module.exports = {
     "prefer-promise-reject-errors": "off",
 
     // allow debugger during development only
-    "no-debugger": process.env.NODE_ENV === "production" ? "error" : "off"
+    "no-debugger": process.env.NODE_ENV === "production" ? "error" : "off",
+    "prettier/prettier": "error"
   }
 };
