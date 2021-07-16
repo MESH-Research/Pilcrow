@@ -82,14 +82,14 @@
 </template>
 
 <script>
-import { GET_PUBLICATIONS, GET_SUBMISSIONS } from "src/graphql/queries";
-import { CREATE_SUBMISSION } from "src/graphql/mutations";
-import useVuelidate from "@vuelidate/core";
-import { required, maxLength } from "@vuelidate/validators";
+import { GET_PUBLICATIONS, GET_SUBMISSIONS } from "src/graphql/queries"
+import { CREATE_SUBMISSION } from "src/graphql/mutations"
+import useVuelidate from "@vuelidate/core"
+import { required, maxLength } from "@vuelidate/validators"
 
 export default {
   setup() {
-    return { $v: useVuelidate() };
+    return { $v: useVuelidate() }
   },
   data() {
     return {
@@ -106,7 +106,7 @@ export default {
         publication_id: null,
         file: null,
       },
-    };
+    }
   },
   validations: {
     new_submission: {
@@ -137,55 +137,55 @@ export default {
           "data-cy": "create_submission_notify",
         },
         html: true,
-      });
-      this.is_submitting = false;
+      })
+      this.is_submitting = false
     },
     async createSubmission() {
-      this.is_submitting = true;
-      this.tryCatchError = false;
-      this.$v.$touch();
+      this.is_submitting = true
+      this.tryCatchError = false
+      this.$v.$touch()
       if (!this.$v.new_submission.title.maxLength) {
         this.makeNotify(
           "negative",
           "error",
           "submissions.create.title.max_length"
-        );
-        return false;
+        )
+        return false
       }
       if (!this.$v.new_submission.title.required) {
         this.makeNotify(
           "negative",
           "error",
           "submissions.create.title.required"
-        );
-        return false;
+        )
+        return false
       }
       if (!this.$v.new_submission.publication_id.required) {
         this.makeNotify(
           "negative",
           "error",
           "submissions.create.publication_id.required"
-        );
-        return false;
+        )
+        return false
       }
       try {
         await this.$apollo.mutate({
           mutation: CREATE_SUBMISSION,
           variables: this.new_submission,
           refetchQueries: ["GetSubmissions"], // Refetch queries since the result is paginated.
-        });
+        })
         this.makeNotify(
           "positive",
           "check_circle",
           "submissions.create.success"
-        );
-        this.new_submission.title = "";
-        this.new_submission.file = null;
+        )
+        this.new_submission.title = ""
+        this.new_submission.file = null
       } catch (error) {
-        this.tryCatchError = true;
-        this.is_submitting = false;
+        this.tryCatchError = true
+        this.is_submitting = false
       }
     },
   },
-};
+}
 </script>

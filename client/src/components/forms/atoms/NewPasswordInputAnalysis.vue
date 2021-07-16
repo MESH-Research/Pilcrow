@@ -35,20 +35,20 @@ export default {
   },
   computed: {
     suggestions() {
-      return this.complexity.feedback.suggestions;
+      return this.complexity.feedback.suggestions
     },
     warning() {
-      return this.complexity.feedback.warning;
+      return this.complexity.feedback.warning
     },
     score() {
-      return this.complexity.score;
+      return this.complexity.score
     },
     crack_time() {
       return this.complexity.crack_times_display
-        .offline_slow_hashing_1e4_per_second;
+        .offline_slow_hashing_1e4_per_second
     },
   },
-};
+}
 </script>
 <style lang="sass" scoped>
 p:last-child

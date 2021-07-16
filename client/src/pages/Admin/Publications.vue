@@ -59,17 +59,17 @@
 </template>
 
 <script>
-import { GET_PUBLICATIONS } from "src/graphql/queries";
-import { CREATE_PUBLICATION } from "src/graphql/mutations";
-import useVuelidate from "@vuelidate/core";
-import { required, maxLength } from "@vuelidate/validators";
-import ErrorFieldRenderer from "src/components/molecules/ErrorFieldRenderer.vue";
-import { getErrorMessageKey } from "src/use/validationHelpers";
+import { GET_PUBLICATIONS } from "src/graphql/queries"
+import { CREATE_PUBLICATION } from "src/graphql/mutations"
+import useVuelidate from "@vuelidate/core"
+import { required, maxLength } from "@vuelidate/validators"
+import ErrorFieldRenderer from "src/components/molecules/ErrorFieldRenderer.vue"
+import { getErrorMessageKey } from "src/use/validationHelpers"
 
 export default {
   components: { ErrorFieldRenderer },
   setup() {
-    return { $v: useVuelidate() };
+    return { $v: useVuelidate() }
   },
   data() {
     return {
@@ -86,7 +86,7 @@ export default {
           name: [],
         },
       },
-    };
+    }
   },
   validations: {
     new_publication: {
@@ -103,13 +103,13 @@ export default {
   },
   watch: {
     "new_publication.name": function () {
-      this.vuelidateExternalResults.new_publication.name = [];
+      this.vuelidateExternalResults.new_publication.name = []
     },
   },
   methods: {
     getErrorMessageKey,
     resetForm() {
-      this.new_publication.name = "";
+      this.new_publication.name = ""
     },
     makeNotify(color, icon, message) {
       this.$q.notify({
@@ -120,47 +120,47 @@ export default {
           "data-cy": "create_publication_notify",
         },
         html: true,
-      });
-      this.is_submitting = false;
+      })
+      this.is_submitting = false
     },
     async createPublication() {
-      this.is_submitting = true;
-      this.tryCatchError = false;
-      this.$v.$touch();
+      this.is_submitting = true
+      this.tryCatchError = false
+      this.$v.$touch()
       if (this.$v.$errors.length) {
         this.$v.$errors.forEach(({ $validator }) => {
           this.makeNotify(
             "negative",
             "error",
             `publications.create.${$validator}`
-          );
-        });
-        return false;
+          )
+        })
+        return false
       }
       try {
         await this.$apollo.mutate({
           mutation: CREATE_PUBLICATION,
           variables: this.new_publication,
           refetchQueries: ["GetPublications"], //In an ideal world, we would update the cache, but on a paginated query, refetch is about the only thing that makes sense.
-        });
+        })
         this.makeNotify(
           "positive",
           "check_circle",
           "publications.create.success"
-        );
-        this.resetForm();
+        )
+        this.resetForm()
       } catch (error) {
         error.graphQLErrors.forEach((gqlError) => {
           if (gqlError.extensions.category == "validation") {
             this.vuelidateExternalResults.new_publication.name.push(
               gqlError.extensions.validation["publication.name"]
-            );
+            )
           }
-        });
+        })
       } finally {
-        this.is_submitting = false;
+        this.is_submitting = false
       }
     },
   },
-};
+}
 </script>

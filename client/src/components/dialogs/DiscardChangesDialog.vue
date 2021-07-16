@@ -22,12 +22,12 @@
 </template>
 
 <script>
-import dialog from "../mixins/dialog";
+import dialog from "../mixins/dialog"
 export default {
   // name: 'ComponentName',
   mixins: [dialog],
   data() {
-    return {};
+    return {}
   },
-};
+}
 </script>

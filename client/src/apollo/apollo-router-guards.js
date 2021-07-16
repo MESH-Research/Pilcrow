@@ -1,5 +1,5 @@
-import { SessionStorage } from "quasar";
-import { CURRENT_USER } from "src/graphql/queries";
+import { SessionStorage } from "quasar"
+import { CURRENT_USER } from "src/graphql/queries"
 
 export async function beforeEachRequiresAuth(apolloClient, to, _, next) {
   if (to.matched.some((record) => record.meta.requiresAuth)) {
@@ -7,15 +7,15 @@ export async function beforeEachRequiresAuth(apolloClient, to, _, next) {
       .query({
         query: CURRENT_USER,
       })
-      .then(({ data: { currentUser } }) => currentUser);
+      .then(({ data: { currentUser } }) => currentUser)
     if (!user) {
-      SessionStorage.set("loginRedirect", to.fullPath);
-      next("/login");
+      SessionStorage.set("loginRedirect", to.fullPath)
+      next("/login")
     } else {
-      next();
+      next()
     }
   } else {
-    next();
+    next()
   }
 }
 
@@ -25,7 +25,7 @@ export async function beforeEachRequiresRoles(apolloClient, to, _, next) {
     const requiredRoles = to.matched
       .filter((record) => record.meta.requiresRoles)
       .map((record) => record.meta.requiresRoles)
-      .flat(2);
+      .flat(2)
 
     const roles = await apolloClient
       .query({
@@ -37,14 +37,14 @@ export async function beforeEachRequiresRoles(apolloClient, to, _, next) {
             currentUser: { roles },
           },
         }) => roles.map((r) => r.name)
-      );
-    const hasRole = requiredRoles.map((role) => roles.includes(role));
+      )
+    const hasRole = requiredRoles.map((role) => roles.includes(role))
     if (!hasRole.every((role) => role === true)) {
-      next({ name: "error403" });
+      next({ name: "error403" })
     } else {
-      next();
+      next()
     }
   } else {
-    next();
+    next()
   }
 }

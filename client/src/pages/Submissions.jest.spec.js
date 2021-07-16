@@ -1,18 +1,18 @@
-import { mountQuasar } from "@quasar/quasar-app-extension-testing-unit-jest";
-import SubmissionsPage from "./Submissions.vue";
+import { mountQuasar } from "@quasar/quasar-app-extension-testing-unit-jest"
+import SubmissionsPage from "./Submissions.vue"
 
-import * as All from "quasar";
+import * as All from "quasar"
 
 const components = Object.keys(All).reduce((object, key) => {
-  const val = All[key];
+  const val = All[key]
   if (val.component?.name != null) {
-    object[key] = val;
+    object[key] = val
   }
-  return object;
-}, {});
+  return object
+}, {})
 
-const query = jest.fn();
-const notify = jest.fn();
+const query = jest.fn()
+const notify = jest.fn()
 
 describe("submissions page mount", () => {
   const wrapper = mountQuasar(SubmissionsPage, {
@@ -28,13 +28,13 @@ describe("submissions page mount", () => {
         },
       },
     },
-  });
+  })
 
-  wrapper.vm.$q.notify = notify;
+  wrapper.vm.$q.notify = notify
 
   it("mounts without errors", () => {
-    expect(wrapper).toBeTruthy();
-  });
+    expect(wrapper).toBeTruthy()
+  })
 
   test("all existing submissions appear within the list", async () => {
     await wrapper.setData({
@@ -67,7 +67,7 @@ describe("submissions page mount", () => {
           },
         ],
       },
-    });
-    expect(wrapper.findAllComponents({ name: "q-item" })).toHaveLength(5);
-  });
-});
+    })
+    expect(wrapper.findAllComponents({ name: "q-item" })).toHaveLength(5)
+  })
+})

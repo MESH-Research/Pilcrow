@@ -128,8 +128,8 @@
 </template>
 
 <script>
-import { GET_USER } from "src/graphql/queries";
-import AvatarImage from "src/components/atoms/AvatarImage.vue";
+import { GET_USER } from "src/graphql/queries"
+import AvatarImage from "src/components/atoms/AvatarImage.vue"
 
 export default {
   components: {
@@ -144,7 +144,7 @@ export default {
         roles: [],
       },
       user_id: this.$route.params.id,
-    };
+    }
   },
   apollo: {
     user: {
@@ -152,9 +152,9 @@ export default {
       variables() {
         return {
           id: this.user_id,
-        };
+        }
       },
     },
   },
-};
+}
 </script>

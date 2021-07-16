@@ -1,4 +1,4 @@
-import gql from "graphql-tag";
+import gql from "graphql-tag"
 
 export const CURRENT_USER = gql`
   query currentUser {
@@ -13,7 +13,7 @@ export const CURRENT_USER = gql`
       }
     }
   }
-`;
+`
 
 export const GET_USERS = gql`
   query users($page: Int) {
@@ -32,7 +32,7 @@ export const GET_USERS = gql`
       }
     }
   }
-`;
+`
 
 export const GET_USER = gql`
   query getUser($id: ID) {
@@ -45,7 +45,7 @@ export const GET_USER = gql`
       }
     }
   }
-`;
+`
 
 export const GET_PUBLICATIONS = gql`
   query GetPublications($page: Int) {
@@ -62,7 +62,7 @@ export const GET_PUBLICATIONS = gql`
       }
     }
   }
-`;
+`
 
 export const GET_SUBMISSIONS = gql`
   query GetSubmissions($page: Int) {
@@ -82,4 +82,4 @@ export const GET_SUBMISSIONS = gql`
       }
     }
   }
-`;
+`

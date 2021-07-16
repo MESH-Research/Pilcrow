@@ -67,25 +67,25 @@
 </template>
 
 <script>
-import { isEqual, pick } from "lodash";
-import dirtyGuard from "src/components/mixins/dirtyGuard";
-import { CURRENT_USER } from "src/graphql/queries";
-import { UPDATE_USER } from "src/graphql/mutations";
+import { isEqual, pick } from "lodash"
+import dirtyGuard from "src/components/mixins/dirtyGuard"
+import { CURRENT_USER } from "src/graphql/queries"
+import { UPDATE_USER } from "src/graphql/mutations"
 
 const importValidationErrors = function (error, vm) {
-  const gqlErrors = error?.graphQLErrors ?? [];
-  var hasVErrors = false;
+  const gqlErrors = error?.graphQLErrors ?? []
+  var hasVErrors = false
   gqlErrors.forEach((item) => {
-    const vErrors = item?.extensions?.validation ?? false;
+    const vErrors = item?.extensions?.validation ?? false
     if (vErrors !== false) {
       for (const [fieldName, fieldErrors] of Object.entries(vErrors)) {
-        vm.serverValidationErrors[fieldName] = fieldErrors;
+        vm.serverValidationErrors[fieldName] = fieldErrors
       }
-      hasVErrors = true;
+      hasVErrors = true
     }
-  });
-  return hasVErrors;
-};
+  })
+  return hasVErrors
+}
 
 export default {
   name: "ProfileIndex",
@@ -102,7 +102,7 @@ export default {
       isPwd: true,
       formErrorMsg: "",
       serverValidationErrors: { "user.username": false, "user.email": false },
-    };
+    }
   },
   apollo: {
     currentUser: {
@@ -111,28 +111,28 @@ export default {
   },
   computed: {
     dirty() {
-      return !isEqual(this.form, this.currentUser);
+      return !isEqual(this.form, this.currentUser)
     },
   },
   mounted() {
-    this.form = pick(this.currentUser, Object.keys(this.form));
+    this.form = pick(this.currentUser, Object.keys(this.form))
   },
   methods: {
     onRevert() {
       this.dirtyDialog().onOk(() => {
-        this.form = this.getStateCopy();
-      });
+        this.form = this.getStateCopy()
+      })
     },
     getStateCopy() {
-      return pick(this.currentUser, Object.keys(this.form));
+      return pick(this.currentUser, Object.keys(this.form))
     },
     async updateUser() {
-      this.formErrorMsg = "";
+      this.formErrorMsg = ""
       try {
         await this.$apollo.mutate({
           mutation: UPDATE_USER,
           variables: this.form,
-        });
+        })
         this.$q.notify({
           color: "positive",
           message: this.$t("account.update.success"),
@@ -141,15 +141,15 @@ export default {
             "data-cy": "update_user_notify",
           },
           html: true,
-        });
+        })
       } catch (error) {
         if (importValidationErrors(error, this)) {
-          this.formErrorMsg = "update_form_validation";
+          this.formErrorMsg = "update_form_validation"
         } else {
-          this.formErrorMsg = "update_form_internal";
+          this.formErrorMsg = "update_form_internal"
         }
       }
     },
   },
-};
+}
 </script>

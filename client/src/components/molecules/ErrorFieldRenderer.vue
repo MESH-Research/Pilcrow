@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import { getErrorMessageKey } from "src/use/validationHelpers";
+import { getErrorMessageKey } from "src/use/validationHelpers"
 
 export default {
   props: {
@@ -22,9 +22,9 @@ export default {
     },
   },
   setup() {
-    return { getErrorMessageKey };
+    return { getErrorMessageKey }
   },
-};
+}
 </script>
 
 <style scoped>

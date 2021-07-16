@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import QInputPassword from "./atoms/QInputPassword.vue";
+import QInputPassword from "./atoms/QInputPassword.vue"
 
 export default {
   name: "PasswordInput",
@@ -57,7 +57,7 @@ export default {
   data() {
     return {
       isPwd: true,
-    };
+    }
   },
-};
+}
 </script>

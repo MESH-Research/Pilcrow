@@ -58,9 +58,9 @@
 </template>
 
 <script>
-import NewPasswordInputAnalysis from "./atoms/NewPasswordInputAnalysis.vue";
-import PasswordInput from "./PasswordInput.vue";
-import NewPasswordInputMeter from "./atoms/NewPasswordInputMeter.vue";
+import NewPasswordInputAnalysis from "./atoms/NewPasswordInputAnalysis.vue"
+import PasswordInput from "./PasswordInput.vue"
+import NewPasswordInputMeter from "./atoms/NewPasswordInputMeter.vue"
 
 export default {
   name: "NewPasswordInput",
@@ -95,19 +95,19 @@ export default {
     return {
       isPwd: true,
       showDetails: false,
-    };
+    }
   },
   computed: {
     score() {
-      return this.complexity.score;
+      return this.complexity.score
     },
   },
   methods: {
     handleInput(event) {
-      this.$emit("input", event);
+      this.$emit("input", event)
     },
   },
-};
+}
 </script>
 
 <style lang="sass" scoped>

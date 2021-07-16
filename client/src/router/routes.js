@@ -61,13 +61,13 @@ const routes = [
     name: "error403",
     component: () => import("pages/Error403.vue"),
   },
-];
+]
 
 // Always leave this as last one
 
 routes.push({
   path: "*",
   component: () => import("pages/Error404.vue"),
-});
+})
 
-export default routes;
+export default routes

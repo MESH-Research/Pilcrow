@@ -15,15 +15,15 @@
 </template>
 
 <script>
-import appAuth from "src/components/mixins/appAuth";
-import { CURRENT_USER } from "src/graphql/queries";
+import appAuth from "src/components/mixins/appAuth"
+import { CURRENT_USER } from "src/graphql/queries"
 export default {
   name: "DashboardPage",
   mixins: [appAuth],
   data() {
     return {
       currentUser: null,
-    };
+    }
   },
   apollo: {
     currentUser: {
@@ -32,11 +32,11 @@ export default {
   },
   methods: {
     async logout() {
-      const { success } = await this.$logout();
+      const { success } = await this.$logout()
       if (success) {
-        this.$router.push("/");
+        this.$router.push("/")
       }
     },
   },
-};
+}
 </script>

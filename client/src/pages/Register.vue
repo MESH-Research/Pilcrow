@@ -118,38 +118,38 @@
 </template>
 
 <script>
-import NewPasswordInput from "../components/forms/NewPasswordInput.vue";
-import { useUserValidation } from "src/use/userValidation";
-import appAuth from "src/components/mixins/appAuth";
-import ErrorFieldRenderer from "src/components/molecules/ErrorFieldRenderer.vue";
-import { useHasErrorKey } from "src/use/validationHelpers";
-import { ref, provide } from "@vue/composition-api";
-import { useLogin } from "src/use/user";
+import NewPasswordInput from "../components/forms/NewPasswordInput.vue"
+import { useUserValidation } from "src/use/userValidation"
+import appAuth from "src/components/mixins/appAuth"
+import ErrorFieldRenderer from "src/components/molecules/ErrorFieldRenderer.vue"
+import { useHasErrorKey } from "src/use/validationHelpers"
+import { ref, provide } from "@vue/composition-api"
+import { useLogin } from "src/use/user"
 
 export default {
   name: "PageRegister",
   components: { NewPasswordInput, ErrorFieldRenderer },
   mixins: [appAuth],
   setup(_, { root }) {
-    const { loginUser } = useLogin();
+    const { loginUser } = useLogin()
 
     async function handleSubmit() {
-      formErrorMsg.value = "";
+      formErrorMsg.value = ""
       try {
-        await saveUser();
-        await loginUser({ email: user.email, password: user.password });
-        root.$router.push("/dashboard");
+        await saveUser()
+        await loginUser({ email: user.email, password: user.password })
+        root.$router.push("/dashboard")
       } catch (e) {
-        formErrorMsg.value = e.message;
+        formErrorMsg.value = e.message
       }
     }
 
-    const formErrorMsg = ref("");
-    const { $v, user, saveUser } = useUserValidation();
-    provide("validator", $v);
-    const hasErrorKey = useHasErrorKey();
+    const formErrorMsg = ref("")
+    const { $v, user, saveUser } = useUserValidation()
+    provide("validator", $v)
+    const hasErrorKey = useHasErrorKey()
 
-    return { $v, user, handleSubmit, hasErrorKey, formErrorMsg };
+    return { $v, user, handleSubmit, hasErrorKey, formErrorMsg }
   },
-};
+}
 </script>

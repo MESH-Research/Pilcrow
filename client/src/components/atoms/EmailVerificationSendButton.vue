@@ -21,8 +21,8 @@
 </template>
 
 <script>
-import { SEND_VERIFY_EMAIL } from "src/graphql/mutations";
-import errorsMixin from "src/components/mixins/errors";
+import { SEND_VERIFY_EMAIL } from "src/graphql/mutations"
+import errorsMixin from "src/components/mixins/errors"
 
 export default {
   name: "EmailVerificationSendButton",
@@ -36,22 +36,22 @@ export default {
   data() {
     return {
       status: null,
-    };
+    }
   },
   computed: {
     btnColor() {
       if (this.noColor) {
-        return null;
+        return null
       }
       if (this.status == "success") {
-        return "positive";
+        return "positive"
       }
-      return null;
+      return null
     },
   },
   methods: {
     async send() {
-      this.status = "loading";
+      this.status = "loading"
       try {
         const {
           data: {
@@ -59,8 +59,8 @@ export default {
           },
         } = await this.$apollo.mutate({
           mutation: SEND_VERIFY_EMAIL,
-        });
-        this.status = "success";
+        })
+        this.status = "success"
         this.$q.notify({
           color: "positive",
           message: this.$t("account.email_verify.send_success_notify", {
@@ -68,14 +68,14 @@ export default {
           }),
           icon: "email",
           html: true,
-        });
+        })
       } catch (error) {
         const errorMessages = this.$errorMessages(
           this.$graphQLErrorCodes(error),
           "account.failures"
-        );
+        )
         if (!errorMessages.length) {
-          errorMessages.push(this.$t("failures.UNKNOWN_ERROR"));
+          errorMessages.push(this.$t("failures.UNKNOWN_ERROR"))
         }
         this.$q.notify({
           color: "negative",
@@ -83,10 +83,10 @@ export default {
             errors: errorMessages.join(", "),
           }),
           icon: "error",
-        });
-        this.status = null;
+        })
+        this.status = null
       }
     },
   },
-};
+}
 </script>

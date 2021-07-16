@@ -75,25 +75,25 @@
 </template>
 
 <script>
-import AppFooter from "../components/AppFooter.vue";
-import AppHeader from "src/components/AppHeader.vue";
-import AvatarBlock from "src/components/molecules/AvatarBlock.vue";
-import { CURRENT_USER } from "src/graphql/queries";
-import EmailVerificationBanner from "src/components/molecules/EmailVerificationBanner.vue";
+import AppFooter from "../components/AppFooter.vue"
+import AppHeader from "src/components/AppHeader.vue"
+import AvatarBlock from "src/components/molecules/AvatarBlock.vue"
+import { CURRENT_USER } from "src/graphql/queries"
+import EmailVerificationBanner from "src/components/molecules/EmailVerificationBanner.vue"
 export default {
   name: "MainLayout",
   components: { AppFooter, AppHeader, EmailVerificationBanner, AvatarBlock },
   data: () => {
     return {
       leftDrawerOpen: false,
-    };
+    }
   },
   apollo: {
     currentUser: {
       query: CURRENT_USER,
     },
   },
-};
+}
 </script>
 
 <style lang="sass">

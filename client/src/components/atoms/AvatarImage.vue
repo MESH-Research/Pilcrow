@@ -8,15 +8,15 @@
 const stringToInt = (s) => {
   var hash = 0,
     i,
-    chr;
-  if (s.length === 0) return hash;
+    chr
+  if (s.length === 0) return hash
   for (i = 0; i < s.length; i++) {
-    chr = s.charCodeAt(i);
-    hash = (hash << 5) - hash + chr;
-    hash |= 0; // Convert to 32bit integer
+    chr = s.charCodeAt(i)
+    hash = (hash << 5) - hash + chr
+    hash |= 0 // Convert to 32bit integer
   }
-  return hash;
-};
+  return hash
+}
 
 export default {
   name: "AvatarImage",
@@ -38,16 +38,16 @@ export default {
         "purple",
         "red",
         "yellow",
-      ];
+      ]
       if (!this.user.email) {
-        return "";
+        return ""
       }
-      const number = Math.abs(stringToInt(this.user.email)) % colors.length;
+      const number = Math.abs(stringToInt(this.user.email)) % colors.length
 
-      return `avatar-${colors[number]}.png`;
+      return `avatar-${colors[number]}.png`
     },
   },
-};
+}
 </script>
 
 <style lang="css">

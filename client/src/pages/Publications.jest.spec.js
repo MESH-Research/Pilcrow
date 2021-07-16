@@ -1,18 +1,18 @@
-import { mountQuasar } from "@quasar/quasar-app-extension-testing-unit-jest";
-import PublicationsPage from "./Publications.vue";
+import { mountQuasar } from "@quasar/quasar-app-extension-testing-unit-jest"
+import PublicationsPage from "./Publications.vue"
 
-import * as All from "quasar";
+import * as All from "quasar"
 
 const components = Object.keys(All).reduce((object, key) => {
-  const val = All[key];
+  const val = All[key]
   if (val.component?.name != null) {
-    object[key] = val;
+    object[key] = val
   }
-  return object;
-}, {});
+  return object
+}, {})
 
-const query = jest.fn();
-const notify = jest.fn();
+const query = jest.fn()
+const notify = jest.fn()
 
 describe("publications page mount", () => {
   const wrapper = mountQuasar(PublicationsPage, {
@@ -28,13 +28,13 @@ describe("publications page mount", () => {
         },
       },
     },
-  });
+  })
 
-  wrapper.vm.$q.notify = notify;
+  wrapper.vm.$q.notify = notify
 
   it("mounts without errors", () => {
-    expect(wrapper).toBeTruthy();
-  });
+    expect(wrapper).toBeTruthy()
+  })
 
   test("all existing publications appear within the list", async () => {
     await wrapper.setData({
@@ -46,7 +46,7 @@ describe("publications page mount", () => {
           { id: "4", name: "Sample Jest Publication 4" },
         ],
       },
-    });
-    expect(wrapper.findAllComponents({ name: "q-item" })).toHaveLength(4);
-  });
-});
+    })
+    expect(wrapper.findAllComponents({ name: "q-item" })).toHaveLength(4)
+  })
+})

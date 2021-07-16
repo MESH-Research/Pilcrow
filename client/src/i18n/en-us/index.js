@@ -147,4 +147,4 @@ export default {
   },
   general_failure: "Oops, there was an error.",
   loading: "Loading...",
-};
+}

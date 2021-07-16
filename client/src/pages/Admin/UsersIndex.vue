@@ -40,34 +40,34 @@
 </template>
 
 <script>
-import { GET_USERS } from "src/graphql/queries";
-import AvatarImage from "src/components/atoms/AvatarImage.vue";
-import { useQuery, useResult } from "@vue/apollo-composable";
-import { ref } from "@vue/composition-api";
+import { GET_USERS } from "src/graphql/queries"
+import AvatarImage from "src/components/atoms/AvatarImage.vue"
+import { useQuery, useResult } from "@vue/apollo-composable"
+import { ref } from "@vue/composition-api"
 
 export default {
   components: {
     AvatarImage,
   },
   setup(_, { root }) {
-    const currentPage = ref(1);
+    const currentPage = ref(1)
 
-    const { result } = useQuery(GET_USERS, { page: currentPage });
-    const users = useResult(result, [], (data) => data.userSearch.data);
+    const { result } = useQuery(GET_USERS, { page: currentPage })
+    const users = useResult(result, [], (data) => data.userSearch.data)
     const lastPage = useResult(
       result,
       1,
       (data) => data.userSearch.paginatorInfo.lastPage
-    );
+    )
 
     function goToUserDetail(userId) {
       root.$router.push({
         name: "user_details",
         params: { id: userId },
-      });
+      })
     }
 
-    return { currentPage, users, lastPage, goToUserDetail };
+    return { currentPage, users, lastPage, goToUserDetail }
   },
-};
+}
 </script>

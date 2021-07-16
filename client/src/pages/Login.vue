@@ -27,7 +27,7 @@
               bottom-slots
               @change="
                 (e) => {
-                  $v.form.email.$model = e.target.value.trim();
+                  $v.form.email.$model = e.target.value.trim()
                 }
               "
             >
@@ -100,17 +100,17 @@
 </template>
 
 <script>
-import PasswordInput from "src/components/forms/PasswordInput.vue";
-import useVuelidate from "@vuelidate/core";
-import { required, email } from "@vuelidate/validators";
-import appAuth from "src/components/mixins/appAuth";
+import PasswordInput from "src/components/forms/PasswordInput.vue"
+import useVuelidate from "@vuelidate/core"
+import { required, email } from "@vuelidate/validators"
+import appAuth from "src/components/mixins/appAuth"
 
 export default {
   name: "PageLogin",
   components: { PasswordInput },
   mixins: [appAuth],
   setup() {
-    return { $v: useVuelidate() };
+    return { $v: useVuelidate() }
   },
   data() {
     return {
@@ -121,7 +121,7 @@ export default {
       error: "",
       loading: false,
       redirectUrl: null,
-    };
+    }
   },
   validations: {
     form: {
@@ -135,25 +135,25 @@ export default {
     },
   },
   mounted() {
-    this.redirectUrl = this.$q.sessionStorage.getItem("loginRedirect");
-    this.$q.sessionStorage.remove("loginRedirect");
+    this.redirectUrl = this.$q.sessionStorage.getItem("loginRedirect")
+    this.$q.sessionStorage.remove("loginRedirect")
   },
   methods: {
     async login() {
-      this.error = "";
-      this.$v.$touch();
+      this.error = ""
+      this.$v.$touch()
       if (this.$v.$invalid) {
-        this.error = "LOGIN_FORM_VALIDATION";
-        return false;
+        this.error = "LOGIN_FORM_VALIDATION"
+        return false
       }
-      const { success, errors } = await this.$login(this.form);
+      const { success, errors } = await this.$login(this.form)
 
       if (success) {
-        this.$router.push(this.redirectUrl ?? "/dashboard");
+        this.$router.push(this.redirectUrl ?? "/dashboard")
       } else {
-        this.error = errors.pop();
+        this.error = errors.pop()
       }
     },
   },
-};
+}
 </script>

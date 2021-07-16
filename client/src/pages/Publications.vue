@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import { GET_PUBLICATIONS } from "src/graphql/queries";
+import { GET_PUBLICATIONS } from "src/graphql/queries"
 
 export default {
   components: {},
@@ -37,7 +37,7 @@ export default {
         data: [],
       },
       current_page: 1,
-    };
+    }
   },
   apollo: {
     publications: {
@@ -45,9 +45,9 @@ export default {
       variables() {
         return {
           page: this.current_page,
-        };
+        }
       },
     },
   },
-};
+}
 </script>

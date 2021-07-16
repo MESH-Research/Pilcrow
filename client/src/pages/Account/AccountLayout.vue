@@ -44,8 +44,8 @@
 </template>
 
 <script>
-import { CURRENT_USER } from "src/graphql/queries";
-import AvatarBlock from "src/components/molecules/AvatarBlock.vue";
+import { CURRENT_USER } from "src/graphql/queries"
+import AvatarBlock from "src/components/molecules/AvatarBlock.vue"
 export default {
   name: "AccountLayout",
   components: { AvatarBlock },
@@ -54,5 +54,5 @@ export default {
       query: CURRENT_USER,
     },
   },
-};
+}
 </script>

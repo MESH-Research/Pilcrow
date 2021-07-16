@@ -11,9 +11,9 @@
 </template>
 
 <script>
-import EmailVerificationSendButton from "../atoms/EmailVerificationSendButton.vue";
+import EmailVerificationSendButton from "../atoms/EmailVerificationSendButton.vue"
 export default {
   name: "EmailVerificationBanner",
   components: { EmailVerificationSendButton },
-};
+}
 </script>

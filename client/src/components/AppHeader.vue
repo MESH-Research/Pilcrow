@@ -90,8 +90,8 @@
 </template>
 
 <script>
-import appAuth from "src/components/mixins/appAuth";
-import { CURRENT_USER } from "src/graphql/queries";
+import appAuth from "src/components/mixins/appAuth"
+import { CURRENT_USER } from "src/graphql/queries"
 
 export default {
   name: "AppHeader",
@@ -107,7 +107,7 @@ export default {
     return {
       currentUser: null,
       drawerShowing: false,
-    };
+    }
   },
   apollo: {
     currentUser: {
@@ -116,13 +116,13 @@ export default {
   },
   methods: {
     async logout() {
-      const { success } = await this.$logout();
+      const { success } = await this.$logout()
       if (success) {
-        this.$router.push("/login");
+        this.$router.push("/login")
       }
     },
   },
-};
+}
 </script>
 
 <style lang="sass">

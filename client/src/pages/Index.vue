@@ -8,5 +8,5 @@
 <script>
 export default {
   name: "PageIndex",
-};
+}
 </script>

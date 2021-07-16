@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import AvatarImage from "../atoms/AvatarImage.vue";
+import AvatarImage from "../atoms/AvatarImage.vue"
 export default {
   name: "AvatarBlock",
   components: { AvatarImage },
@@ -23,5 +23,5 @@ export default {
       default: "",
     },
   },
-};
+}
 </script>

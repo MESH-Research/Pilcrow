@@ -2,16 +2,16 @@ import {
   ApolloClient,
   createHttpLink,
   InMemoryCache,
-} from "@apollo/client/core";
+} from "@apollo/client/core"
 import {
   beforeEachRequiresAuth,
   beforeEachRequiresRoles,
-} from "src/apollo/apollo-router-guards";
-import { withXsrfLink, expiredTokenLink } from "src/apollo/apollo-links.js";
-import VueApollo from "@vue/apollo-option";
+} from "src/apollo/apollo-router-guards"
+import { withXsrfLink, expiredTokenLink } from "src/apollo/apollo-links.js"
+import VueApollo from "@vue/apollo-option"
 
-import { DefaultApolloClient } from "@vue/apollo-composable";
-import { provide } from "@vue/composition-api";
+import { DefaultApolloClient } from "@vue/apollo-composable"
+import { provide } from "@vue/composition-api"
 
 export default function ({ app, router, Vue }) {
   const apolloClient = new ApolloClient({
@@ -21,14 +21,14 @@ export default function ({ app, router, Vue }) {
       })
     ),
     cache: new InMemoryCache(),
-  });
+  })
 
   /**
    * Check routes for requiresAuth meta field.
    */
   router.beforeEach(async (to, from, next) =>
     beforeEachRequiresAuth(apolloClient, to, from, next)
-  );
+  )
 
   /**
    * Check routes for requiresRoles meta field.
@@ -36,16 +36,16 @@ export default function ({ app, router, Vue }) {
 
   router.beforeEach(async (to, from, next) =>
     beforeEachRequiresRoles(apolloClient, to, from, next)
-  );
+  )
 
   /**
    * Setup composable apolloclient
    */
   app.mixins = (app.mixins || []).concat({
     setup() {
-      provide(DefaultApolloClient, apolloClient);
+      provide(DefaultApolloClient, apolloClient)
     },
-  });
+  })
 
   /**
    * Setup options api client
@@ -53,7 +53,7 @@ export default function ({ app, router, Vue }) {
 
   const apolloProvider = new VueApollo({
     defaultClient: apolloClient,
-  });
-  Vue.use(VueApollo);
-  app.apolloProvider = apolloProvider;
+  })
+  Vue.use(VueApollo)
+  app.apolloProvider = apolloProvider
 }

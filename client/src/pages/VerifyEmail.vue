@@ -43,10 +43,10 @@
 </template>
 
 <script>
-import { VERIFY_EMAIL } from "src/graphql/mutations";
-import { CURRENT_USER } from "src/graphql/queries";
-import EmailVerificationSendButton from "src/components/atoms/EmailVerificationSendButton.vue";
-import errorMixin from "src/components/mixins/errors";
+import { VERIFY_EMAIL } from "src/graphql/mutations"
+import { CURRENT_USER } from "src/graphql/queries"
+import EmailVerificationSendButton from "src/components/atoms/EmailVerificationSendButton.vue"
+import errorMixin from "src/components/mixins/errors"
 
 export default {
   name: "VerifyEmail",
@@ -56,7 +56,7 @@ export default {
     return {
       status: "loading",
       errorMessages: [],
-    };
+    }
   },
   apollo: {
     currentUser: {
@@ -64,11 +64,11 @@ export default {
     },
   },
   async created() {
-    const { token, expires } = this.$route.params;
+    const { token, expires } = this.$route.params
 
     if (this.currentUser.email_verified_at) {
-      this.status = "success";
-      return;
+      this.status = "success"
+      return
     }
     try {
       await this.$apollo.mutate({
@@ -84,24 +84,24 @@ export default {
         ) => {
           const { currentUser } = store.readQuery({
             query: CURRENT_USER,
-          });
-          currentUser.email_verified_at = email_verified_at;
+          })
+          currentUser.email_verified_at = email_verified_at
           store.writeQuery({
             query: CURRENT_USER,
             data: { currentUser },
-          });
+          })
         },
-      });
-      this.status = "success";
+      })
+      this.status = "success"
     } catch (error) {
       this.errorMessages = this.$errorMessages(
         this.$graphQLErrorCodes(error),
         "account.failures"
-      );
-      this.status = "failure";
+      )
+      this.status = "failure"
     }
   },
-};
+}
 </script>
 
 <style lang="scss">

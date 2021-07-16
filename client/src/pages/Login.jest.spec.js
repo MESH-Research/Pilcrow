@@ -1,5 +1,5 @@
-import { mountQuasar } from "@quasar/quasar-app-extension-testing-unit-jest";
-import LoginPage from "./Login.vue";
+import { mountQuasar } from "@quasar/quasar-app-extension-testing-unit-jest"
+import LoginPage from "./Login.vue"
 
 import {
   QIcon,
@@ -11,10 +11,10 @@ import {
   QForm,
   QPage,
   QBanner,
-} from "quasar";
+} from "quasar"
 describe("LoginPage", () => {
-  const mutate = jest.fn();
-  const sessionStorage = jest.fn();
+  const mutate = jest.fn()
+  const sessionStorage = jest.fn()
   const wrapper = mountQuasar(LoginPage, {
     quasar: {
       components: {
@@ -45,71 +45,71 @@ describe("LoginPage", () => {
       },
       stubs: ["router-link"],
     },
-  });
+  })
 
   it("mounts without errors", () => {
-    expect(wrapper).toBeTruthy();
-  });
+    expect(wrapper).toBeTruthy()
+  })
 
   test("login action attempts mutation", async () => {
-    mutate.mockClear();
+    mutate.mockClear()
 
     await wrapper.setData({
       form: {
         email: "test@gmail.com",
         password: "blahblahblah",
       },
-    });
+    })
 
-    await wrapper.vm.login();
-    expect(mutate).toBeCalled();
-  });
+    await wrapper.vm.login()
+    expect(mutate).toBeCalled()
+  })
 
   test("login field email is required", async () => {
-    mutate.mockClear();
+    mutate.mockClear()
 
     await wrapper.setData({
       form: {
         email: "",
       },
-    });
+    })
 
-    await wrapper.vm.login();
-    expect(mutate).not.toBeCalled();
-    expect(wrapper.vm.$v.form.email.$invalid).toBe(true);
+    await wrapper.vm.login()
+    expect(mutate).not.toBeCalled()
+    expect(wrapper.vm.$v.form.email.$invalid).toBe(true)
 
     await wrapper.setData({
       form: {
         email: "notanemail",
       },
-    });
+    })
 
-    await wrapper.vm.login();
-    expect(mutate).not.toBeCalled();
-    expect(wrapper.vm.$v.form.email.$invalid).toBe(true);
-  });
+    await wrapper.vm.login()
+    expect(mutate).not.toBeCalled()
+    expect(wrapper.vm.$v.form.email.$invalid).toBe(true)
+  })
 
   test("password field is required", async () => {
-    mutate.mockClear();
+    mutate.mockClear()
     await wrapper.setData({
       form: {
         password: "",
       },
-    });
+    })
 
-    await wrapper.vm.login();
-    expect(mutate).not.toBeCalled();
-    expect(wrapper.vm.$v.form.email.$invalid).toBe(true);
-  });
+    await wrapper.vm.login()
+    expect(mutate).not.toBeCalled()
+    expect(wrapper.vm.$v.form.email.$invalid).toBe(true)
+  })
 
   test("login action extracts auth errors", async () => {
-    mutate.mockClear();
+    mutate.mockClear()
     await wrapper.setData({
       form: {
         email: "my@email.com",
         password: "mysecurepassword",
       },
-    });
+    })
     const error = {
       graphQLErrors: [
         {
@@ -118,11 +118,11 @@ describe("LoginPage", () => {
           },
         },
       ],
-    };
-    mutate.mockRejectedValue(error);
-    await wrapper.vm.login();
+    }
+    mutate.mockRejectedValue(error)
+    await wrapper.vm.login()
 
-    expect(mutate).toBeCalled();
-    expect(wrapper.vm.error).toEqual("SOME_ERROR_CODE");
-  });
-});
+    expect(mutate).toBeCalled()
+    expect(wrapper.vm.error).toEqual("SOME_ERROR_CODE")
+  })
+})
