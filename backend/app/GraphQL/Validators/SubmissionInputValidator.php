@@ -17,13 +17,16 @@ class SubmissionInputValidator extends Validator
         return [
             'title' => [
                 'max:512',
-                'filled',
+                'required',
             ],
             'publication_id' => [
-                'filled',
+                'required',
                 'numeric',
                 'integer',
             ],
+            'file_upload' => [
+                'required'
+            ]
         ];
     }
 }

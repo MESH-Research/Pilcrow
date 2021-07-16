@@ -90,8 +90,9 @@ type Mutation {
     createSubmissionUser(input: CreateSubmissionUserInput! @spread): SubmissionUser!
         @create
 
-    "Upload a file that is publicly available."
-    upload(file: Upload!): String
+    "Create an association between an uploaded file and a submission"
+    createSubmissionFile(input: CreateSubmissionFileInput! @spread): SubmissionFile!
+        @create
 }
 
 "A date string with format `Y-m-d`, e.g. `2011-05-23`."
@@ -203,6 +204,7 @@ Input type for creating a new submission via the createSubmission mutation
 input CreateSubmissionInput @validator(class: "SubmissionInputValidator") {
     title: String! @trim
     publication_id: ID!
+    file_upload: Upload!
 }
 
 """
@@ -212,4 +214,12 @@ input CreateSubmissionUserInput @validator(class: "SubmissionUserInputValidator"
     user_id: ID!
     role_id: ID!
     submission_id: ID!
+}
+
+"""
+Input type for creating a new association between an uploaded file and a submission
+"""
+input CreateSubmissionFileInput @validator(class: "SubmissionFileInputValidator") {
+    submission_id: ID!
+    file: string
 }
