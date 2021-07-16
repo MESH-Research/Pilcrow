@@ -19,14 +19,14 @@ cypress:
       cypress:
         type: node:14
         overrides:
-          image: "cypress/included:6.3.0"
+          image: "cypress/base:14"
           environment:
             ELECTRON_EXTRA_LAUNCH_ARGS: "--force-prefers-reduced-motion"
     tooling:
       cypress:
         service: cypress
         dir: /app/client
-        cmd: cypress
+        cmd: yarn cypress
 mailhog:
   description: Catch mail output from CCR with mailhog.
   template:
