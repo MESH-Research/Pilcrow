@@ -20,3 +20,8 @@ type SubmissionUser {
     submission_id: ID!
     user_id: ID!
 }
+
+type SubmissionFile {
+    submission_id: ID!
+    file_upload: string!
+}

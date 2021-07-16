@@ -220,5 +220,5 @@ Input type for creating a new association between an uploaded file and a submiss
 """
 input CreateSubmissionFileInput @validator(class: "SubmissionFileInputValidator") {
     submission_id: ID!
-    file_upload: string
+    file_upload: string!
 }

@@ -69,14 +69,14 @@ class FileUploadTest extends TestCase
         ];
 
         $file = [
-            '0' => UploadedFile::fake()->create('test.'.$extension, 500),
+            '0' => UploadedFile::fake()->create('test.' . $extension, 500),
         ];
 
         $this->multipartGraphQL($operations, $map, $file)
             ->assertJson([
                 'data' => [
                     'upload' => true,
-            ],
+                ],
         ]);
     }
 }
