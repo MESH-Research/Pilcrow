@@ -54,6 +54,7 @@
     "eslint-plugin-vue": "^7.12.1",
     "majestic": "^1.2.24",
     "mock-apollo-client": "^1.1.0",
+    "prettier": "^2.3.2",
     "vue-composable-tester": "^0.1.3"
   },
   "engines": {

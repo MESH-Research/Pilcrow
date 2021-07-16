@@ -12,7 +12,7 @@ module.exports = {
     "jest/globals": true
   },
 
-  extends: ["eslint:recommended", "prettier", "plugin:vue/recommended"],
+  extends: ["eslint:recommended", "plugin:vue/recommended", "prettier"],
 
   // required to lint *.vue files
   plugins: ["vue", "prettier", "jest"],
