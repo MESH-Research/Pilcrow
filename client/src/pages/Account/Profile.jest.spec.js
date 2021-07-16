@@ -18,13 +18,13 @@ describe("Profile", () => {
     mount: {
       type: "shallow",
       mocks: {
-        $t: token => token,
+        $t: (token) => token,
         $apollo: {
-          mutate
-        }
+          mutate,
+        },
       },
-      stubs: ["router-link"]
-    }
+      stubs: ["router-link"],
+    },
   });
 
   it("mounts without errors", () => {
@@ -38,8 +38,8 @@ describe("Profile", () => {
         name: "Joe Doe",
         username: "joedoe",
         password: "albancub4Grac&",
-        email: "joedoe@example.com"
-      }
+        email: "joedoe@example.com",
+      },
     });
 
     mutate.mockClear().mockResolvedValue({});

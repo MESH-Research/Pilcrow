@@ -34,7 +34,7 @@ export default {
         "div",
         {
           key,
-          staticClass: "q-field__messages col"
+          staticClass: "q-field__messages col",
         },
         msg
       );
@@ -44,7 +44,7 @@ export default {
         {
           staticClass:
             "q-field__bottom row items-start q-field__bottom--" +
-            (this.hideBottomSpace !== true ? "animated" : "stale")
+            (this.hideBottomSpace !== true ? "animated" : "stale"),
         },
         [
           this.hideBottomSpace === true
@@ -59,16 +59,16 @@ export default {
             ? h(
                 "div",
                 {
-                  staticClass: "q-field__counter"
+                  staticClass: "q-field__counter",
                 },
                 this.$scopedSlots.counter !== void 0
                   ? this.$scopedSlots.counter()
                   : [this.computedCounter]
               )
-            : null
+            : null,
         ]
       );
-    }
-  }
+    },
+  },
 };
 </script>

@@ -9,7 +9,7 @@ if (process.env.SERVER) {
 }
 
 // you need access to `ssrContext`
-export default function({ ssrContext }) {
+export default function ({ ssrContext }) {
   if (process.env.SERVER) {
     var cookies = Cookies.parseSSR(ssrContext);
     var phpsession = cookies.get("PHPSESSID");

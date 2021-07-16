@@ -6,14 +6,14 @@ import { QIcon } from "quasar";
 describe("PasswordInputComponent", () => {
   const wrapper = mountQuasar(PasswordInput, {
     quasar: {
-      components: { QIcon }
+      components: { QIcon },
     },
     mount: {
       type: "full",
       mocks: {
-        $t: token => token
-      }
-    }
+        $t: (token) => token,
+      },
+    },
   });
 
   it("mounts without errors", () => {

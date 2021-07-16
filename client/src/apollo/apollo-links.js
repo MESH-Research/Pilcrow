@@ -7,7 +7,7 @@ const cookieXsrfToken = () => Cookies.get("XSRF-TOKEN");
 
 const fetchXsrfToken = async () => {
   return fetch("/sanctum/csrf-cookie", {
-    credentials: "same-origin"
+    credentials: "same-origin",
   }).then(() => {
     const xsrfToken = cookieXsrfToken();
     return xsrfToken;
@@ -25,18 +25,18 @@ const withXsrfLink = setContext((_, { headers }) => {
     const context = {
       headers: {
         ...headers,
-        "X-XSRF-TOKEN": xsrfToken
-      }
+        "X-XSRF-TOKEN": xsrfToken,
+      },
     };
     return context;
   }
   //No cookie token, so we need to fetch one and set the headers that way.
-  return fetchXsrfToken().then(token => {
+  return fetchXsrfToken().then((token) => {
     return {
       headers: {
         ...headers,
-        "X-XSRF-TOKEN": token
-      }
+        "X-XSRF-TOKEN": token,
+      },
     };
   });
 });
@@ -44,9 +44,9 @@ const withXsrfLink = setContext((_, { headers }) => {
 //On a 419 error, fetch a new XSRF token and retry the request.
 const expiredTokenLink = onError(({ operation, forward, networkError }) => {
   if (networkError && networkError.statusCode == 419) {
-    return new Observable(observer => {
+    return new Observable((observer) => {
       fetchXsrfToken()
-        .then(newXsrfToken => {
+        .then((newXsrfToken) => {
           if (!newXsrfToken) {
             throw new Error("Unable to fetch new xsrf token");
           }
@@ -54,20 +54,20 @@ const expiredTokenLink = onError(({ operation, forward, networkError }) => {
           operation.setContext({
             headers: {
               ...oldHeaders,
-              "X-XSRF-TOKEN": newXsrfToken
-            }
+              "X-XSRF-TOKEN": newXsrfToken,
+            },
           });
         })
         .then(() => {
           const subscriber = {
             next: observer.next.bind(observer),
             error: observer.error.bind(observer),
-            complete: observer.complete.bind(observer)
+            complete: observer.complete.bind(observer),
           };
 
           forward(operation).subscribe(subscriber);
         })
-        .catch(error => {
+        .catch((error) => {
           observer.error(error);
         });
     });

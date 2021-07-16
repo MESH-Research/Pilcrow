@@ -9,13 +9,13 @@ describe("NewPasswordInputAnalysis", () => {
         complexity: {
           score: 2,
           crack_times_display: {
-            offline_slow_hashing_1e4_per_second: "1 week"
+            offline_slow_hashing_1e4_per_second: "1 week",
           },
           feedback: {
             warning: "warning_message",
-            suggestions: ["suggestion_1", "suggestion_2"]
-          }
-        }
+            suggestions: ["suggestion_1", "suggestion_2"],
+          },
+        },
       },
       props
     );
@@ -24,9 +24,9 @@ describe("NewPasswordInputAnalysis", () => {
   const wrapper = shallowMount(PasswordFieldAnalysis, {
     components: { QIcon, QItem, QItemSection, QList },
     mocks: {
-      $t: (token, params) => token
+      $t: (token) => token,
     },
-    propsData: mergeProps()
+    propsData: mergeProps(),
   });
 
   it("mounts without errors", () => {
@@ -39,8 +39,8 @@ describe("NewPasswordInputAnalysis", () => {
     await wrapper.setProps(
       mergeProps({
         complexity: {
-          feedback: { suggestions: ["one", "second suggestions", "three"] }
-        }
+          feedback: { suggestions: ["one", "second suggestions", "three"] },
+        },
       })
     );
     expect(wrapper.vm.suggestions.length).toBe(3);

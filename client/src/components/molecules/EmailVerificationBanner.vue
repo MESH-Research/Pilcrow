@@ -1,14 +1,7 @@
 <template>
-  <q-banner
-    inline-actions
-    dense
-    class="bg-warning"
-  >
+  <q-banner inline-actions dense class="bg-warning">
     <template #avatar>
-      <q-icon
-        name="email"
-        size="lg"
-      />
+      <q-icon name="email" size="lg" />
     </template>
     {{ $t("account.email_verify.unverified_email_banner") }}
     <template #action>
@@ -21,6 +14,6 @@
 import EmailVerificationSendButton from "../atoms/EmailVerificationSendButton.vue";
 export default {
   name: "EmailVerificationBanner",
-  components: { EmailVerificationSendButton }
+  components: { EmailVerificationSendButton },
 };
 </script>

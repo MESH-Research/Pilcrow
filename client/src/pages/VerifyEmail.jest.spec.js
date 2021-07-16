@@ -17,19 +17,19 @@ describe("VerifyEmailPage", () => {
     const $route = { params };
     const wrapper = mountQuasar(VerifyEmailPage, {
       quasar: {
-        components
+        components,
       },
       mount: {
         data: () => Object.assign(VerifyEmailPage.data(), data),
         mocks: {
-          $t: token => token,
+          $t: (token) => token,
           $apollo: {
-            mutate
+            mutate,
           },
-          $route
+          $route,
         },
-        stubs: ["router-link"]
-      }
+        stubs: ["router-link"],
+      },
     });
 
     await wrapper.vm.$nextTick();
@@ -44,7 +44,7 @@ describe("VerifyEmailPage", () => {
     const wrapper = await createWrapper(
       { token: "", expires: "" },
       {
-        currentUser: { email_verified_at: null }
+        currentUser: { email_verified_at: null },
       }
     );
     expect(wrapper).toBeTruthy();
@@ -55,7 +55,7 @@ describe("VerifyEmailPage", () => {
     const wrapper = await createWrapper(
       { token: "", expires: "" },
       {
-        currentUser: { email_verified_at: "some value" }
+        currentUser: { email_verified_at: "some value" },
       }
     );
     expect(wrapper.vm.status).toBe("success");
@@ -85,9 +85,9 @@ describe("VerifyEmailPage", () => {
     mutate.mockRejectedValue({
       graphQLErrors: [
         {
-          extensions: { code: "TEST_ERROR_CODE" }
-        }
-      ]
+          extensions: { code: "TEST_ERROR_CODE" },
+        },
+      ],
     });
 
     const wrapper = await createWrapper(

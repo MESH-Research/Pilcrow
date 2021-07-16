@@ -1,8 +1,6 @@
 <template>
   <div>
-    <h2 class="q-pl-lg">
-      All Users
-    </h2>
+    <h2 class="q-pl-lg">All Users</h2>
     <div v-if="users.length">
       <q-item
         v-for="user in users"
@@ -12,14 +10,8 @@
         class="q-px-lg"
         @click="goToUserDetail(user.id)"
       >
-        <q-item-section
-          top
-          avatar
-        >
-          <avatar-image
-            :user="user"
-            rounded
-          />
+        <q-item-section top avatar>
+          <avatar-image :user="user" rounded />
         </q-item-section>
 
         <q-item-section>
@@ -29,20 +21,13 @@
           <q-item-label v-else>
             {{ user.username }}
           </q-item-label>
-          <q-item-label
-            caption
-          >
+          <q-item-label caption>
             {{ user.email }}
           </q-item-label>
         </q-item-section>
 
-        <q-item-section
-          side
-          top
-        >
-          <q-item-label caption>
-            meta
-          </q-item-label>
+        <q-item-section side top>
+          <q-item-label caption> meta </q-item-label>
         </q-item-section>
       </q-item>
       <q-pagination
@@ -64,22 +49,25 @@ export default {
   components: {
     AvatarImage,
   },
-  setup(_, {root}) {
+  setup(_, { root }) {
     const currentPage = ref(1);
 
-    const {result} = useQuery(GET_USERS, {page: currentPage});
-    const users = useResult(result, [], data => data.userSearch.data);
-    const lastPage = useResult(result, 1, data => data.userSearch.paginatorInfo.lastPage);
+    const { result } = useQuery(GET_USERS, { page: currentPage });
+    const users = useResult(result, [], (data) => data.userSearch.data);
+    const lastPage = useResult(
+      result,
+      1,
+      (data) => data.userSearch.paginatorInfo.lastPage
+    );
 
     function goToUserDetail(userId) {
       root.$router.push({
-        name:"user_details",
-        params:{id:userId}
-      })
+        name: "user_details",
+        params: { id: userId },
+      });
     }
 
-    return {currentPage, users, lastPage, goToUserDetail};
-
+    return { currentPage, users, lastPage, goToUserDetail };
   },
-}
+};
 </script>

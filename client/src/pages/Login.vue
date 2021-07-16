@@ -1,22 +1,12 @@
 <template>
-  <q-page
-    class="flex-center flex q-pa-md"
-    data-cy="vueLogin"
-  >
-    <q-card
-      style="width: 400px"
-      square
-    >
-      <q-form
-        @submit="login()"
-      >
+  <q-page class="flex-center flex q-pa-md" data-cy="vueLogin">
+    <q-card style="width: 400px" square>
+      <q-form @submit="login()">
         <q-card-section class="bg-deep-purple-7 q-pa-sm">
-          <h1 class="text-h5 text-white">
-            Login
-          </h1>
+          <h1 class="text-h5 text-white">Login</h1>
         </q-card-section>
-        <q-card-section class="q-pa-lg ">
-          <fieldset class="q-px-sm q-pt-md  q-gutter-y-lg q-pb-lg">
+        <q-card-section class="q-pa-lg">
+          <fieldset class="q-px-sm q-pt-md q-gutter-y-lg q-pb-lg">
             <q-banner
               v-if="redirectUrl"
               class="text-white bg-red text-center"
@@ -36,7 +26,7 @@
               autocomplete="username"
               bottom-slots
               @change="
-                e => {
+                (e) => {
                   $v.form.email.$model = e.target.value.trim();
                 }
               "
@@ -44,7 +34,9 @@
               <template #error>
                 <div
                   v-if="!$v.form.email.required.$error"
-                  v-text="$t('helpers.REQUIRED_FIELD', [$t('auth.fields.email')])"
+                  v-text="
+                    $t('helpers.REQUIRED_FIELD', [$t('auth.fields.email')])
+                  "
                 />
                 <div
                   v-if="!$v.form.email.email.$error"
@@ -67,7 +59,9 @@
               <template #hint>
                 <div
                   v-if="!$v.form.password.required.$error"
-                  v-text="$t('helpers.REQUIRED_FIELD', [$t('auth.fields.password')])"
+                  v-text="
+                    $t('helpers.REQUIRED_FIELD', [$t('auth.fields.password')])
+                  "
                 />
               </template>
             </password-input>
@@ -97,9 +91,7 @@
         <q-card-section class="text-center q-pa-sm">
           <p>
             Don't have an account?
-            <router-link to="/register">
-              Register.
-            </router-link>
+            <router-link to="/register"> Register. </router-link>
           </p>
         </q-card-section>
       </q-form>
@@ -109,7 +101,7 @@
 
 <script>
 import PasswordInput from "src/components/forms/PasswordInput.vue";
-import useVuelidate from '@vuelidate/core'
+import useVuelidate from "@vuelidate/core";
 import { required, email } from "@vuelidate/validators";
 import appAuth from "src/components/mixins/appAuth";
 
@@ -118,29 +110,29 @@ export default {
   components: { PasswordInput },
   mixins: [appAuth],
   setup() {
-    return {$v: useVuelidate() }
+    return { $v: useVuelidate() };
   },
   data() {
     return {
       form: {
         email: "",
-        password: ""
+        password: "",
       },
       error: "",
       loading: false,
-      redirectUrl: null
+      redirectUrl: null,
     };
   },
   validations: {
     form: {
       email: {
         email,
-        required
+        required,
       },
       password: {
-        required
-      }
-    }
+        required,
+      },
+    },
   },
   mounted() {
     this.redirectUrl = this.$q.sessionStorage.getItem("loginRedirect");
@@ -161,7 +153,7 @@ export default {
       } else {
         this.error = errors.pop();
       }
-    }
-  }
+    },
+  },
 };
 </script>

@@ -1,33 +1,30 @@
 <template>
   <ul>
-    <li
-      v-for="error in errors"
-      :key="error.$validator"
-    >
+    <li v-for="error in errors" :key="error.$validator">
       {{ $t(`${prefix}.${getErrorMessageKey(error)}`) }}
     </li>
   </ul>
 </template>
 
 <script>
-import {getErrorMessageKey} from "src/use/validationHelpers";
+import { getErrorMessageKey } from "src/use/validationHelpers";
 
 export default {
-    props: {
-        errors: {
-            type: Array,
-            required: true
-        },
-        prefix: {
-            type: String,
-            required: false,
-            default: ''
-        }
+  props: {
+    errors: {
+      type: Array,
+      required: true,
     },
-    setup () {
-        return {getErrorMessageKey}
-    }
-}
+    prefix: {
+      type: String,
+      required: false,
+      default: "",
+    },
+  },
+  setup() {
+    return { getErrorMessageKey };
+  },
+};
 </script>
 
 <style scoped>
@@ -38,5 +35,4 @@ ul {
   margin-block: 0;
   padding-inline: 0;
 }
-
 </style>

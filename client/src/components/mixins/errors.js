@@ -9,7 +9,7 @@ export default {
     $graphQLErrorCodes(errorResponse) {
       return (
         errorResponse.graphQLErrors
-          ?.map(e => e.extensions?.code ?? false)
+          ?.map((e) => e.extensions?.code ?? false)
           .filter(Boolean) ?? []
       );
     },
@@ -21,8 +21,8 @@ export default {
      * @returns {array}
      */
     $errorMessages(errorList, i18nDomain) {
-      const msg = code => (i18nDomain ? `${i18nDomain}.${code}` : code);
-      return errorList.map(code => this.$t(msg(code)));
-    }
-  }
+      const msg = (code) => (i18nDomain ? `${i18nDomain}.${code}` : code);
+      return errorList.map((code) => this.$t(msg(code)));
+    },
+  },
 };

@@ -1,9 +1,6 @@
 <template>
   <q-layout view="lhh lpr lFf">
-    <app-header
-      v-model="leftDrawerOpen"
-      drawer
-    />
+    <app-header v-model="leftDrawerOpen" drawer />
     <q-drawer
       id="sidebar"
       v-model="leftDrawerOpen"
@@ -12,10 +9,7 @@
     >
       <q-scroll-area class="sidebar-nav">
         <q-list>
-          <q-item
-            v-ripple
-            to="/dashboard"
-          >
+          <q-item v-ripple to="/dashboard">
             <q-item-section avatar>
               <q-icon name="dashboard" />
             </q-item-section>
@@ -23,10 +17,7 @@
               {{ $t("header.dashboard") }}
             </q-item-section>
           </q-item>
-          <q-item
-            v-ripple
-            to="/account/profile"
-          >
+          <q-item v-ripple to="/account/profile">
             <q-item-section avatar>
               <q-icon name="account_circle" />
             </q-item-section>
@@ -34,10 +25,7 @@
               {{ $t("header.account_link") }}
             </q-item-section>
           </q-item>
-          <q-item
-            v-ripple
-            to="/admin/users"
-          >
+          <q-item v-ripple to="/admin/users">
             <q-item-section avatar>
               <q-icon name="groups" />
             </q-item-section>
@@ -45,10 +33,7 @@
               {{ $t("header.user_list") }}
             </q-item-section>
           </q-item>
-          <q-item
-            v-ripple
-            to="/admin/publications"
-          >
+          <q-item v-ripple to="/admin/publications">
             <q-item-section avatar>
               <q-icon name="collections_bookmark" />
             </q-item-section>
@@ -56,10 +41,7 @@
               {{ $t("header.publications") }}
             </q-item-section>
           </q-item>
-          <q-item
-            v-ripple
-            to="/submissions"
-          >
+          <q-item v-ripple to="/submissions">
             <q-item-section avatar>
               <q-icon name="content_copy" />
             </q-item-section>
@@ -103,14 +85,14 @@ export default {
   components: { AppFooter, AppHeader, EmailVerificationBanner, AvatarBlock },
   data: () => {
     return {
-      leftDrawerOpen: false
+      leftDrawerOpen: false,
     };
   },
   apollo: {
     currentUser: {
-      query: CURRENT_USER
-    }
-  }
+      query: CURRENT_USER,
+    },
+  },
 };
 </script>
 

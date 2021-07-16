@@ -1,17 +1,13 @@
 <template>
   <article>
-    <h2 class="q-pl-lg">
-      Submissions
-    </h2>
+    <h2 class="q-pl-lg">Submissions</h2>
     <div class="row q-col-gutter-lg q-pa-lg">
       <section
         class="col-md-5 col-sm-6 col-xs-12"
         data-cy="create_new_submission_form"
       >
         <h3>Create New Submission</h3>
-        <q-form
-          @submit="createSubmission()"
-        >
+        <q-form @submit="createSubmission()">
           <div class="q-gutter-md column q-pl-none q-pr-md">
             <q-input
               v-model="new_submission.title"
@@ -62,17 +58,14 @@
       </section>
       <section class="col-md-7 col-sm-6 col-xs-12">
         <h3>All Submissions</h3>
-        <ol
-          class="scroll"
-          data-cy="submissions_list"
-        >
+        <ol class="scroll" data-cy="submissions_list">
           <li
             v-for="submission in submissions.data"
             :key="submission.id"
             class="q-pa-none"
           >
             <q-item>
-              {{ submission.title }}<br>
+              {{ submission.title }}<br />
               for {{ submission.publication.name }}
             </q-item>
           </li>
@@ -89,10 +82,10 @@
 </template>
 
 <script>
-import { GET_PUBLICATIONS, GET_SUBMISSIONS } from 'src/graphql/queries';
-import { CREATE_SUBMISSION } from 'src/graphql/mutations';
-import useVuelidate from '@vuelidate/core';
-import { required, maxLength } from '@vuelidate/validators';
+import { GET_PUBLICATIONS, GET_SUBMISSIONS } from "src/graphql/queries";
+import { CREATE_SUBMISSION } from "src/graphql/mutations";
+import useVuelidate from "@vuelidate/core";
+import { required, maxLength } from "@vuelidate/validators";
 
 export default {
   setup() {
@@ -103,36 +96,36 @@ export default {
       is_submitting: false,
       tryCatchError: false,
       submissions: {
-        data: []
+        data: [],
       },
       publications: {
-        data: []
+        data: [],
       },
       new_submission: {
         title: "",
         publication_id: null,
-        file: null
+        file: null,
       },
-    }
+    };
   },
   validations: {
     new_submission: {
       title: {
         required,
-        maxLength: maxLength(512)
+        maxLength: maxLength(512),
       },
       publication_id: {
-        required
-      }
-    }
+        required,
+      },
+    },
   },
   apollo: {
     submissions: {
-      query: GET_SUBMISSIONS
+      query: GET_SUBMISSIONS,
     },
     publications: {
-      query: GET_PUBLICATIONS
-    }
+      query: GET_PUBLICATIONS,
+    },
   },
   methods: {
     makeNotify(color, icon, message) {
@@ -141,42 +134,58 @@ export default {
         icon: icon,
         message: this.$t(message),
         attrs: {
-          'data-cy': 'create_submission_notify'
+          "data-cy": "create_submission_notify",
         },
-        html: true
+        html: true,
       });
-      this.is_submitting = false
+      this.is_submitting = false;
     },
     async createSubmission() {
-      this.is_submitting = true
-      this.tryCatchError = false
+      this.is_submitting = true;
+      this.tryCatchError = false;
       this.$v.$touch();
       if (!this.$v.new_submission.title.maxLength) {
-        this.makeNotify("negative", "error", "submissions.create.title.max_length")
+        this.makeNotify(
+          "negative",
+          "error",
+          "submissions.create.title.max_length"
+        );
         return false;
       }
       if (!this.$v.new_submission.title.required) {
-        this.makeNotify("negative", "error", "submissions.create.title.required")
+        this.makeNotify(
+          "negative",
+          "error",
+          "submissions.create.title.required"
+        );
         return false;
       }
       if (!this.$v.new_submission.publication_id.required) {
-        this.makeNotify("negative", "error", "submissions.create.publication_id.required")
+        this.makeNotify(
+          "negative",
+          "error",
+          "submissions.create.publication_id.required"
+        );
         return false;
       }
       try {
         await this.$apollo.mutate({
           mutation: CREATE_SUBMISSION,
           variables: this.new_submission,
-          refetchQueries: ['GetSubmissions'], // Refetch queries since the result is paginated.
+          refetchQueries: ["GetSubmissions"], // Refetch queries since the result is paginated.
         });
-        this.makeNotify("positive", "check_circle", "submissions.create.success")
+        this.makeNotify(
+          "positive",
+          "check_circle",
+          "submissions.create.success"
+        );
         this.new_submission.title = "";
         this.new_submission.file = null;
       } catch (error) {
         this.tryCatchError = true;
-        this.is_submitting = false
+        this.is_submitting = false;
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>

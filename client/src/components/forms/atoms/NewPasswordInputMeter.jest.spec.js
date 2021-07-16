@@ -5,8 +5,8 @@ describe("NewPasswordInputMeter", () => {
   const wrapper = mount(NewPasswordInputMeter, {
     propsData: {
       max: 4,
-      valid: false
-    }
+      valid: false,
+    },
   });
 
   it("mounts without errors", () => {
@@ -17,7 +17,6 @@ describe("NewPasswordInputMeter", () => {
   });
 
   it("has correct number of child divs", async () => {
-    const bars = wrapper.findAll(".col");
     await wrapper.setProps({ max: 4 });
     expect(wrapper.findAll(".col").length).toBe(4);
 
@@ -29,10 +28,10 @@ describe("NewPasswordInputMeter", () => {
     const bars = wrapper.findAll(".col");
 
     await wrapper.setProps({ max: 4, score: 0 });
-    expect(bars.filter(w => w.classes("active")).length).toBe(0);
+    expect(bars.filter((w) => w.classes("active")).length).toBe(0);
 
     await wrapper.setProps({ max: 4, score: 2 });
-    expect(bars.filter(w => w.classes("active")).length).toBe(2);
+    expect(bars.filter((w) => w.classes("active")).length).toBe(2);
   });
 
   it("changes class when valid", async () => {

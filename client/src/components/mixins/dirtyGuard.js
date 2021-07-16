@@ -2,35 +2,35 @@ import DiscardChangesDialog from "../dialogs/DiscardChangesDialog.vue";
 
 export default {
   methods: {
-    beforeUnload: function(e) {
+    beforeUnload: function (e) {
       if (this.dirty) {
         e.preventDefault();
         e.returnValue = "";
       }
     },
 
-    dirtyDialog: function() {
+    dirtyDialog: function () {
       return this.$q.dialog({
-        component: DiscardChangesDialog
+        component: DiscardChangesDialog,
       });
-    }
+    },
   },
-  beforeRouteLeave: function(to, from, next) {
+  beforeRouteLeave: function (to, from, next) {
     if (!this.dirty) {
       return next();
     }
     this.dirtyDialog()
-      .onOk(function() {
+      .onOk(function () {
         next();
       })
-      .onCancel(function() {
+      .onCancel(function () {
         next(false);
       });
   },
-  mounted: function() {
+  mounted: function () {
     window.addEventListener("beforeUnload", this.beforeUnload);
   },
-  beforeDestroy: function() {
+  beforeDestroy: function () {
     window.removeEventListener("beforeUnload", this.beforeUnload);
-  }
+  },
 };

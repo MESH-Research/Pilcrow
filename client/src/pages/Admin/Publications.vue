@@ -1,17 +1,13 @@
 <template>
   <div>
-    <h2 class="q-pl-lg">
-      Publications
-    </h2>
+    <h2 class="q-pl-lg">Publications</h2>
     <div class="row q-col-gutter-lg q-pa-lg">
       <section
         class="col-md-5 col-sm-6 col-xs-12"
         data-cy="create_new_publication_form"
       >
         <h3>Create New Publication</h3>
-        <q-form
-          @submit="createPublication()"
-        >
+        <q-form @submit="createPublication()">
           <q-input
             v-model="new_publication.name"
             :error="$v.new_publication.$error"
@@ -40,10 +36,7 @@
       </section>
       <section class="col-md-7 col-sm-6 col-xs-12">
         <h3>All Publications</h3>
-        <ol
-          class="scroll"
-          data-cy="publications_list"
-        >
+        <ol class="scroll" data-cy="publications_list">
           <li
             v-for="publication in publications.data"
             :key="publication.id"
@@ -66,12 +59,12 @@
 </template>
 
 <script>
-import { GET_PUBLICATIONS } from 'src/graphql/queries';
-import { CREATE_PUBLICATION } from 'src/graphql/mutations';
-import useVuelidate from '@vuelidate/core'
-import { required, maxLength } from '@vuelidate/validators';
-import ErrorFieldRenderer from 'src/components/molecules/ErrorFieldRenderer.vue';
-import { getErrorMessageKey } from 'src/use/validationHelpers';
+import { GET_PUBLICATIONS } from "src/graphql/queries";
+import { CREATE_PUBLICATION } from "src/graphql/mutations";
+import useVuelidate from "@vuelidate/core";
+import { required, maxLength } from "@vuelidate/validators";
+import ErrorFieldRenderer from "src/components/molecules/ErrorFieldRenderer.vue";
+import { getErrorMessageKey } from "src/use/validationHelpers";
 
 export default {
   components: { ErrorFieldRenderer },
@@ -83,35 +76,35 @@ export default {
       is_submitting: false,
       tryCatchError: false,
       publications: {
-        data: []
+        data: [],
       },
       new_publication: {
-        name: ""
+        name: "",
       },
       vuelidateExternalResults: {
         new_publication: {
-          name: []
-        }
-      }
-    }
+          name: [],
+        },
+      },
+    };
   },
   validations: {
     new_publication: {
       name: {
         required,
-        maxLength: maxLength(256)
-      }
-    }
+        maxLength: maxLength(256),
+      },
+    },
   },
   apollo: {
     publications: {
-      query: GET_PUBLICATIONS
-    }
+      query: GET_PUBLICATIONS,
+    },
   },
   watch: {
-    "new_publication.name": function() {
+    "new_publication.name": function () {
       this.vuelidateExternalResults.new_publication.name = [];
-    }
+    },
   },
   methods: {
     getErrorMessageKey,
@@ -124,40 +117,50 @@ export default {
         icon: icon,
         message: this.$t(message),
         attrs: {
-          'data-cy': 'create_publication_notify'
+          "data-cy": "create_publication_notify",
         },
-        html: true
+        html: true,
       });
-      this.is_submitting = false
+      this.is_submitting = false;
     },
     async createPublication() {
-      this.is_submitting = true
-      this.tryCatchError = false
+      this.is_submitting = true;
+      this.tryCatchError = false;
       this.$v.$touch();
       if (this.$v.$errors.length) {
-        this.$v.$errors.forEach(({$validator}) => {
-          this.makeNotify("negative", "error", `publications.create.${$validator}`)
+        this.$v.$errors.forEach(({ $validator }) => {
+          this.makeNotify(
+            "negative",
+            "error",
+            `publications.create.${$validator}`
+          );
         });
-        return false
+        return false;
       }
       try {
         await this.$apollo.mutate({
           mutation: CREATE_PUBLICATION,
           variables: this.new_publication,
-          refetchQueries: ['GetPublications']  //In an ideal world, we would update the cache, but on a paginated query, refetch is about the only thing that makes sense.
-        })
-        this.makeNotify("positive", "check_circle", "publications.create.success")
+          refetchQueries: ["GetPublications"], //In an ideal world, we would update the cache, but on a paginated query, refetch is about the only thing that makes sense.
+        });
+        this.makeNotify(
+          "positive",
+          "check_circle",
+          "publications.create.success"
+        );
         this.resetForm();
       } catch (error) {
         error.graphQLErrors.forEach((gqlError) => {
-          if (gqlError.extensions.category == 'validation') {
-            this.vuelidateExternalResults.new_publication.name.push(gqlError.extensions.validation["publication.name"]);
+          if (gqlError.extensions.category == "validation") {
+            this.vuelidateExternalResults.new_publication.name.push(
+              gqlError.extensions.validation["publication.name"]
+            );
           }
-        })
+        });
       } finally {
-        this.is_submitting = false
+        this.is_submitting = false;
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>

@@ -10,7 +10,7 @@ import {
   QBtn,
   QForm,
   QPage,
-  QBanner
+  QBanner,
 } from "quasar";
 describe("LoginPage", () => {
   const mutate = jest.fn();
@@ -26,25 +26,25 @@ describe("LoginPage", () => {
         QBtn,
         QForm,
         QPage,
-        QBanner
-      }
+        QBanner,
+      },
     },
     mount: {
       type: "shallow",
       mocks: {
-        $t: token => token,
+        $t: (token) => token,
         $apollo: {
-          mutate
+          mutate,
         },
         $q: {
           sessionStorage: {
             remove: sessionStorage,
-            getItem: sessionStorage
-          }
-        }
+            getItem: sessionStorage,
+          },
+        },
       },
-      stubs: ["router-link"]
-    }
+      stubs: ["router-link"],
+    },
   });
 
   it("mounts without errors", () => {
@@ -57,8 +57,8 @@ describe("LoginPage", () => {
     await wrapper.setData({
       form: {
         email: "test@gmail.com",
-        password: "blahblahblah"
-      }
+        password: "blahblahblah",
+      },
     });
 
     await wrapper.vm.login();
@@ -70,8 +70,8 @@ describe("LoginPage", () => {
 
     await wrapper.setData({
       form: {
-        email: ""
-      }
+        email: "",
+      },
     });
 
     await wrapper.vm.login();
@@ -80,8 +80,8 @@ describe("LoginPage", () => {
 
     await wrapper.setData({
       form: {
-        email: "notanemail"
-      }
+        email: "notanemail",
+      },
     });
 
     await wrapper.vm.login();
@@ -93,8 +93,8 @@ describe("LoginPage", () => {
     mutate.mockClear();
     await wrapper.setData({
       form: {
-        password: ""
-      }
+        password: "",
+      },
     });
 
     await wrapper.vm.login();
@@ -107,17 +107,17 @@ describe("LoginPage", () => {
     await wrapper.setData({
       form: {
         email: "my@email.com",
-        password: "mysecurepassword"
-      }
+        password: "mysecurepassword",
+      },
     });
     const error = {
       graphQLErrors: [
         {
           extensions: {
-            code: "SOME_ERROR_CODE"
-          }
-        }
-      ]
+            code: "SOME_ERROR_CODE",
+          },
+        },
+      ],
     };
     mutate.mockRejectedValue(error);
     await wrapper.vm.login();

@@ -1,15 +1,9 @@
 <template>
   <div class="column fixed-center text-center">
     <p>
-      <q-icon
-        name="lock"
-        style="font-size: 30vmin"
-        color="negative"
-      />
+      <q-icon name="lock" style="font-size: 30vmin" color="negative" />
     </p>
-    <p class="text-faded">
-      Oops, you don't have permission to view this page.
-    </p>
+    <p class="text-faded">Oops, you don't have permission to view this page.</p>
 
     <q-btn
       color="secondary"
@@ -31,11 +25,11 @@
 
 <script>
 export default {
-  name: 'Error404',
+  name: "Error404",
   methods: {
     goBack() {
       this.$router.go(-1);
-    }
+    },
   },
-}
+};
 </script>

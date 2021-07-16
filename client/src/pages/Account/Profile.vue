@@ -1,8 +1,5 @@
 <template>
-  <q-form
-    data-cy="vueAccount"
-    @submit="updateUser()"
-  >
+  <q-form data-cy="vueAccount" @submit="updateUser()">
     <q-card-section class="q-col-gutter-y-md">
       <q-input
         v-model="form.name"
@@ -22,9 +19,7 @@
         data-cy="update_user_username"
         label="Username"
       />
-      <h3 class="q-mt-lg q-mb-none text-h4">
-        Set New Password
-      </h3>
+      <h3 class="q-mt-lg q-mb-none text-h4">Set New Password</h3>
       <q-input
         v-model="form.password"
         outlined
@@ -77,10 +72,10 @@ import dirtyGuard from "src/components/mixins/dirtyGuard";
 import { CURRENT_USER } from "src/graphql/queries";
 import { UPDATE_USER } from "src/graphql/mutations";
 
-const importValidationErrors = function(error, vm) {
+const importValidationErrors = function (error, vm) {
   const gqlErrors = error?.graphQLErrors ?? [];
   var hasVErrors = false;
-  gqlErrors.forEach(item => {
+  gqlErrors.forEach((item) => {
     const vErrors = item?.extensions?.validation ?? false;
     if (vErrors !== false) {
       for (const [fieldName, fieldErrors] of Object.entries(vErrors)) {
@@ -111,13 +106,13 @@ export default {
   },
   apollo: {
     currentUser: {
-      query: CURRENT_USER
-    }
+      query: CURRENT_USER,
+    },
   },
   computed: {
     dirty() {
       return !isEqual(this.form, this.currentUser);
-    }
+    },
   },
   mounted() {
     this.form = pick(this.currentUser, Object.keys(this.form));
@@ -136,16 +131,16 @@ export default {
       try {
         await this.$apollo.mutate({
           mutation: UPDATE_USER,
-          variables: this.form
+          variables: this.form,
         });
         this.$q.notify({
           color: "positive",
           message: this.$t("account.update.success"),
           icon: "check_circle",
           attrs: {
-            'data-cy': 'update_user_notify'
+            "data-cy": "update_user_notify",
           },
-          html: true
+          html: true,
         });
       } catch (error) {
         if (importValidationErrors(error, this)) {
@@ -154,7 +149,7 @@ export default {
           this.formErrorMsg = "update_form_internal";
         }
       }
-    }
-  }
+    },
+  },
 };
 </script>

@@ -19,14 +19,8 @@
         @keydown.enter.space="isPwd = !isPwd"
       />
     </template>
-    <template
-      v-for="(_, slot) of $scopedSlots"
-      #[slot]="scope"
-    >
-      <slot
-        :name="slot"
-        v-bind="scope"
-      />
+    <template v-for="(_, slot) of $scopedSlots" #[slot]="scope">
+      <slot :name="slot" v-bind="scope" />
     </template>
   </q-input-password>
 </template>
@@ -41,29 +35,29 @@ export default {
   props: {
     label: {
       type: String,
-      default: "Password"
+      default: "Password",
     },
     value: {
       type: String,
-      default: ""
+      default: "",
     },
     autocomplete: {
       default: "current-password",
-      type: String
+      type: String,
     },
     outlined: {
       type: Boolean,
-      default: false
+      default: false,
     },
     error: {
       type: [String, Boolean],
-      default: false
-    }
+      default: false,
+    },
   },
   data() {
     return {
-      isPwd: true
+      isPwd: true,
     };
-  }
+  },
 };
 </script>

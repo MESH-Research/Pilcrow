@@ -1,5 +1,5 @@
-import { computed, watch, inject } from '@vue/composition-api';
-import { clone } from 'lodash';
+import { computed, watch, inject } from "@vue/composition-api";
+import { clone } from "lodash";
 
 /**
  * Create a computed property for checking for an error condition on a field.
@@ -10,15 +10,14 @@ import { clone } from 'lodash';
  * @returns computed
  */
 export const useHasErrorKey = () => {
-    const validator = inject('validator');
+  const validator = inject("validator");
 
-    return computed(() => {
-
-       return (field, key) => {
-            return hasErrorKey(validator.value?.[field].$errors, key) ?? false
-        }
-    })
-}
+  return computed(() => {
+    return (field, key) => {
+      return hasErrorKey(validator.value?.[field].$errors, key) ?? false;
+    };
+  });
+};
 
 /**
  * Checks the supplied validation errors array for the presence of a validator
@@ -29,9 +28,9 @@ export const useHasErrorKey = () => {
  * @returns Boolean
  */
 export function hasErrorKey(errors, key) {
-    return  errors.some((error) => {
-        return getErrorMessageKey(error) == key
-    });
+  return errors.some((error) => {
+    return getErrorMessageKey(error) == key;
+  });
 }
 
 /**
@@ -42,10 +41,10 @@ export function hasErrorKey(errors, key) {
  * @returns String
  */
 export function getErrorMessageKey($error) {
-    if ($error.$validator === '$externalResults') {
-      return $error.$message;
-    }
-    return $error.$validator;
+  if ($error.$validator === "$externalResults") {
+    return $error.$message;
+  }
+  return $error.$validator;
 }
 
 /**
@@ -56,9 +55,9 @@ export function getErrorMessageKey($error) {
  * @param {String} field
  */
 export function externalFieldWatcher(data, externalValidation, field) {
-    oneShotPropertyWatch(data, field, () => {
-        externalValidation[field] = [];
-    });
+  oneShotPropertyWatch(data, field, () => {
+    externalValidation[field] = [];
+  });
 }
 
 /**
@@ -70,21 +69,21 @@ export function externalFieldWatcher(data, externalValidation, field) {
  * @param {Function} callback
  */
 export function oneShotPropertyWatch(data, property, callback) {
-    const cancel = watch(
-        () => clone(data),
-        (data, oldValue) => {
-            if (data[property] != oldValue[property]) {
-                callback();
-                cancel();
-            }
-        }
-    )
+  const cancel = watch(
+    () => clone(data),
+    (data, oldValue) => {
+      if (data[property] != oldValue[property]) {
+        callback();
+        cancel();
+      }
+    }
+  );
 }
 
 /**
  * Parses a GraphQL error object for any validation errors and applies them to the
  * provided externalValidation reactive.  Apply the externalValidation reactive to
- * vuelidate's $externalResults option to include GraphQL validation errors in 
+ * vuelidate's $externalResults option to include GraphQL validation errors in
  * vuelidate error responses.
  *
  * @param {reactive} data Form data reactive
@@ -93,21 +92,27 @@ export function oneShotPropertyWatch(data, property, callback) {
  * @param {String} strip String to strip from the beginning of the GraphQL field name
  * @returns
  */
-export function applyExternalValidationErrors(data, externalValidation, error, strip = '') {
-    const gqlErrors = error?.graphQLErrors ?? [];
-    const validationErrors = clone(externalValidation);
-    gqlErrors.forEach(item => {
-        const vErrors = item?.extensions?.validation ?? false;
-        if (vErrors !== false) {
-            for (const [fieldName, fieldErrors] of Object.entries(vErrors)) {
-                const key = fieldName.replace(strip, '')
-                if (validationErrors[key]) {
-                    validationErrors?.[key]?.push(...fieldErrors);
-                    externalFieldWatcher(data, externalValidation, key);
-                }
-
-            }
+export function applyExternalValidationErrors(
+  data,
+  externalValidation,
+  error,
+  strip = ""
+) {
+  const gqlErrors = error?.graphQLErrors ?? [];
+  const validationErrors = clone(externalValidation);
+  gqlErrors.forEach((item) => {
+    const vErrors = item?.extensions?.validation ?? false;
+    if (vErrors !== false) {
+      for (const [fieldName, fieldErrors] of Object.entries(vErrors)) {
+        const key = fieldName.replace(strip, "");
+        if (validationErrors[key]) {
+          validationErrors?.[key]?.push(...fieldErrors);
+          externalFieldWatcher(data, externalValidation, key);
         }
-    });
-    return Object.keys(validationErrors).some(f => validationErrors[f].length > 0);
+      }
+    }
+  });
+  return Object.keys(validationErrors).some(
+    (f) => validationErrors[f].length > 0
+  );
 }

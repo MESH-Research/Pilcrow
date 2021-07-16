@@ -5,27 +5,27 @@ import { QIcon, QList, QItem, QItemSection, QChip } from "quasar";
 describe("NewPasswordInput", () => {
   const wrapper = mountQuasar(NewPasswordInput, {
     quasar: {
-      components: { QIcon, QItem, QItemSection, QList, QChip }
+      components: { QIcon, QItem, QItemSection, QList, QChip },
     },
     mount: {
       type: "full",
 
       mocks: {
-        $t: (token, params) => token
+        $t: (token) => token,
       },
       propsData: {
         complexity: {
           score: 2,
           crack_times_display: {
-            offline_slow_hashing_1e4_per_second: "1 week"
+            offline_slow_hashing_1e4_per_second: "1 week",
           },
           feedback: {
             suggestions: [],
-            warning: ""
-          }
-        }
-      }
-    }
+            warning: "",
+          },
+        },
+      },
+    },
   });
 
   it("mounts without errors", () => {

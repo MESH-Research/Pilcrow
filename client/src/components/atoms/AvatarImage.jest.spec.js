@@ -17,17 +17,17 @@ describe("AvatarImage Component", () => {
       quasar: { components },
       propsData: {
         user: {
-          email
-        }
+          email,
+        },
       },
       mount: {
         type: "shallow",
-      }
+      },
     });
-  }
+  };
 
-  it('returns a deterministic value', () => {
-    const wrapper = factory('test@ccrproject.dev');
-    expect(wrapper.vm.avatarSrc).toBe('avatar-yellow.png');
+  it("returns a deterministic value", () => {
+    const wrapper = factory("test@ccrproject.dev");
+    expect(wrapper.vm.avatarSrc).toBe("avatar-yellow.png");
   });
-})
+});

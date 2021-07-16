@@ -1,5 +1,5 @@
-import VueCompositionAPI from '@vue/composition-api';
+import VueCompositionAPI from "@vue/composition-api";
 
-export default async ({ Vue } ) => {
-  Vue.use(VueCompositionAPI)
-}
+export default async ({ Vue }) => {
+  Vue.use(VueCompositionAPI);
+};

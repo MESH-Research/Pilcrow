@@ -18,16 +18,16 @@ export default {
   props: {
     score: {
       type: Number,
-      default: 0
+      default: 0,
     },
     max: {
       type: Number,
-      default: 4
+      default: 4,
     },
     valid: {
-      type: Boolean
-    }
-  }
+      type: Boolean,
+    },
+  },
 };
 </script>
 

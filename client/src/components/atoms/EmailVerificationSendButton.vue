@@ -30,12 +30,12 @@ export default {
   props: {
     noColor: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   data() {
     return {
-      status: null
+      status: null,
     };
   },
   computed: {
@@ -47,7 +47,7 @@ export default {
         return "positive";
       }
       return null;
-    }
+    },
   },
   methods: {
     async send() {
@@ -55,19 +55,19 @@ export default {
       try {
         const {
           data: {
-            sendEmailVerification: { email }
-          }
+            sendEmailVerification: { email },
+          },
         } = await this.$apollo.mutate({
-          mutation: SEND_VERIFY_EMAIL
+          mutation: SEND_VERIFY_EMAIL,
         });
         this.status = "success";
         this.$q.notify({
           color: "positive",
           message: this.$t("account.email_verify.send_success_notify", {
-            email
+            email,
           }),
           icon: "email",
-          html: true
+          html: true,
         });
       } catch (error) {
         const errorMessages = this.$errorMessages(
@@ -80,13 +80,13 @@ export default {
         this.$q.notify({
           color: "negative",
           message: this.$t("account.email_verify.send_failure_notify", {
-            errors: errorMessages.join(", ")
+            errors: errorMessages.join(", "),
           }),
-          icon: "error"
+          icon: "error",
         });
         this.status = null;
       }
-    }
-  }
+    },
+  },
 };
 </script>

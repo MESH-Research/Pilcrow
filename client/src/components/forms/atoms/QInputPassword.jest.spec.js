@@ -6,13 +6,13 @@ describe("QInputPasswordComponent", () => {
     mount: {
       slots: {
         hint: "Hint Content",
-        error: "Error Content"
-      }
+        error: "Error Content",
+      },
     },
     propsData: {
       "bottom-slots": true,
-      error: true
-    }
+      error: true,
+    },
   });
 
   it("mounts without errors", () => {

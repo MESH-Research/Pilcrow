@@ -7,17 +7,17 @@ const notify = jest.fn();
 describe("EmailVerificationSendButton", () => {
   const wrapper = mountQuasar(EmailVerificationSendButton, {
     quasar: {
-      components: { QIcon, QBtn, QSpinnerHourglass }
+      components: { QIcon, QBtn, QSpinnerHourglass },
     },
     mount: {
       type: "full",
       mocks: {
-        $t: token => token,
+        $t: (token) => token,
         $apollo: {
-          mutate
-        }
-      }
-    }
+          mutate,
+        },
+      },
+    },
   });
 
   wrapper.vm.$q.notify = notify;
@@ -34,7 +34,7 @@ describe("EmailVerificationSendButton", () => {
 
   it("changes state on success", async () => {
     mutate.mockResolvedValue({
-      data: { sendEmailVerification: { email: "test@example.com" } }
+      data: { sendEmailVerification: { email: "test@example.com" } },
     });
 
     expect(wrapper.text()).toMatch(/resend_button$/);

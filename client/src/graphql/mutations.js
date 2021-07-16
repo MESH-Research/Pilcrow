@@ -51,7 +51,7 @@ export const UPDATE_USER = gql`
   ) {
     updateUser(
       user: {
-        id: $id,
+        id: $id
         email: $email
         name: $name
         username: $username
@@ -84,14 +84,8 @@ export const SEND_VERIFY_EMAIL = gql`
 `;
 
 export const CREATE_PUBLICATION = gql`
-  mutation CreatePublication(
-    $name: String!
-  ) {
-    createPublication(
-      publication: {
-        name: $name
-      }
-    ) {
+  mutation CreatePublication($name: String!) {
+    createPublication(publication: { name: $name }) {
       id
       name
     }
@@ -99,15 +93,9 @@ export const CREATE_PUBLICATION = gql`
 `;
 
 export const CREATE_SUBMISSION = gql`
-  mutation CreateSubmission(
-    $title: String!
-    $publication_id: ID!
-  ) {
+  mutation CreateSubmission($title: String!, $publication_id: ID!) {
     createSubmission(
-      input: {
-        title: $title
-        publication_id: $publication_id
-      }
+      input: { title: $title, publication_id: $publication_id }
     ) {
       id
       title

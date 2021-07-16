@@ -16,8 +16,8 @@ export const CURRENT_USER = gql`
 `;
 
 export const GET_USERS = gql`
-  query users($page:Int) {
-    userSearch(page:$page) {
+  query users($page: Int) {
+    userSearch(page: $page) {
       paginatorInfo {
         count
         currentPage
@@ -35,8 +35,8 @@ export const GET_USERS = gql`
 `;
 
 export const GET_USER = gql`
-  query getUser($id:ID) {
-    user(id:$id) {
+  query getUser($id: ID) {
+    user(id: $id) {
       username
       email
       name
@@ -48,8 +48,8 @@ export const GET_USER = gql`
 `;
 
 export const GET_PUBLICATIONS = gql`
-  query GetPublications($page:Int) {
-    publications(page:$page) {
+  query GetPublications($page: Int) {
+    publications(page: $page) {
       paginatorInfo {
         count
         currentPage
@@ -65,8 +65,8 @@ export const GET_PUBLICATIONS = gql`
 `;
 
 export const GET_SUBMISSIONS = gql`
-  query GetSubmissions($page:Int) {
-    submissions(page:$page) {
+  query GetSubmissions($page: Int) {
+    submissions(page: $page) {
       paginatorInfo {
         count
         currentPage
