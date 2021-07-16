@@ -106,7 +106,7 @@ describe("applyExternalValidationErrors composition helper", () => {
         expect(result.eData.two.length).toBe(0);
     })
     test("multiple validation errors", async () => {
-        //Note: I don't think this occurs in the wild, but the structure suggetss that it may so... here we are.
+        // Note: This probably doesn't occur in the wild, but the structure suggests that it may, so... here we are.
 
         const result = factory();
         const returnValue = result.applyErrors({
