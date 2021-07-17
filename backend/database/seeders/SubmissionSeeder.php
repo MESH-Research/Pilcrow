@@ -23,6 +23,7 @@ class SubmissionSeeder extends Seeder
             ]
         )
         ->create([
+            'id' => 100,
             'title' => 'CCR Test Submission 1',
             'publication_id' => 1,
         ]);

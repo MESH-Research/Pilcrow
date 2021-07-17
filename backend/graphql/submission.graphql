@@ -8,6 +8,7 @@ type Submission {
     updated_at: DateTime
     publication: Publication!
     users: [User!]! @belongsToMany
+    files: [SubmissionFile]! @hasMany
     pivot: SubmissionUser
 }
 

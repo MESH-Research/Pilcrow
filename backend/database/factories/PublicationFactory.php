@@ -23,7 +23,7 @@ class PublicationFactory extends Factory
     public function definition()
     {
         return [
-            'name' => $this->faker->unique()->company,
+            'name' => $this->faker->unique()->company(),
         ];
     }
 }

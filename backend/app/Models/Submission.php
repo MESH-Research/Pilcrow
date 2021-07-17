@@ -5,6 +5,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\User;
+use App\Models\SubmissionFile;
 
 class Submission extends Model
 {
@@ -40,5 +42,15 @@ class Submission extends Model
         return $this->belongsToMany(User::class)
             ->withTimestamps()
             ->withPivot('role_id');
+    }
+
+    /**
+     * File uploads that belong to the submission
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function files()
+    {
+        return $this->hasMany(SubmissionFile::class);
     }
 }
