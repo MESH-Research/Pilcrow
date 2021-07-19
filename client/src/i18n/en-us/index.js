@@ -66,7 +66,7 @@ export default {
     failures: {
       FORM_VALIDATION:
         "Oops, please correct the errors above and try again.",
-      INTERNAL: "Error processing result, please try again later.",
+      INTERNAL: "An unexpected error has occurred. Please try again later.",
       LOGIN_FORM_VALIDATION: "Please correct the errors above and try again.",
       FAILURE_IDENTITY_NOT_FOUND: "Username and/or password is incorrect.",
       CREDENTIALS_INVALID: "Username and password combination is incorrect.",
