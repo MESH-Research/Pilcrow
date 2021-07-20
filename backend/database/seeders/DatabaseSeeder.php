@@ -5,6 +5,7 @@ namespace Database\Seeders;
 
 use App\Models\Role;
 use App\Models\User;
+use Database\Seeders\SubmissionFileSeeder;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -37,5 +38,8 @@ class DatabaseSeeder extends Seeder
 
         $submission_seeder = new SubmissionSeeder();
         $submission_seeder->run();
+
+        $submission_file_seeder = new SubmissionFileSeeder();
+        $submission_file_seeder->run();
     }
 }
