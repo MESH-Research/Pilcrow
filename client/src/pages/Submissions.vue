@@ -62,21 +62,31 @@
       </section>
       <section class="col-md-7 col-sm-6 col-xs-12">
         <h3>All Submissions</h3>
-        <ol
-          class="scroll"
+        <q-list
+          bordered
+          separator
           data-cy="submissions_list"
         >
-          <li
+          <q-item
             v-for="submission in submissions.data"
             :key="submission.id"
-            class="q-pa-none"
           >
-            <q-item>
-              {{ submission.title }}<br>
-              for {{ submission.publication.name }}
-            </q-item>
-          </li>
-        </ol>
+            <q-item-section>
+              <q-item-label>{{ submission.title }}</q-item-label>
+              <q-item-label caption>
+                for {{ submission.publication.name }}
+              </q-item-label>
+              <ul v-if="submission.files.length > 0">
+                <li
+                  v-for="file in submission.files"
+                  :key="file.id"
+                >
+                  <a href="#">{{ file.file_upload }}</a>
+                </li>
+              </ul>
+            </q-item-section>
+          </q-item>
+        </q-list>
         <div
           v-if="submissions.data.length == 0"
           data-cy="no_submissions_message"
