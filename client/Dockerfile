@@ -4,7 +4,7 @@ COPY . ./
 
 RUN yarn && yarn build
 
-FROM nginx:latest
+FROM nginx:1
 
 COPY --from=build-stage /app/dist/spa /var/www/html
 COPY .docker/default.conf.template /etc/nginx/templates/default.conf.template
