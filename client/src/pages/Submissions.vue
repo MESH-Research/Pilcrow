@@ -63,6 +63,7 @@
       <section class="col-md-7 col-sm-6 col-xs-12">
         <h3>All Submissions</h3>
         <q-list
+          v-if="submissions.data.length != 0"
           bordered
           separator
           data-cy="submissions_list"
