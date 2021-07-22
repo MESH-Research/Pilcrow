@@ -16,7 +16,7 @@
             <q-input
               v-model="new_submission.title"
               outlined
-              label="Enter Title"
+              label="Enter Submission Title"
               data-cy="new_submission_title_input"
             />
             <q-select
