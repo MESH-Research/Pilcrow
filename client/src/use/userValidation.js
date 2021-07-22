@@ -52,16 +52,16 @@ export function  useUserValidation() {
     const saveUser = async () => {
         $v.value.$touch();
         if ($v.value.$invalid || $v.value.$error) {
-            throw Error("CREATE_FORM_VALIDATION")
+            throw Error("FORM_VALIDATION")
         }
         try {
             const newUser = await mutate(form);
             return newUser
         } catch (error) {
             if (applyExternalValidationErrors(form, externalValidation, error, 'user.')) {
-                throw Error("CREATE_FORM_VALIDATION");
+                throw Error("FORM_VALIDATION");
             } else {
-                throw Error("CREATE_FORM_INTERNAL");
+                throw Error("INTERNAL");
             }
         }
     }
