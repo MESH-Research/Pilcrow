@@ -92,7 +92,6 @@ type Mutation {
 
     "Create an association between an uploaded file and a submission"
     createSubmissionFile(input: CreateSubmissionFileInput! @spread): SubmissionFile!
-        @create
 }
 
 "A date string with format `Y-m-d`, e.g. `2011-05-23`."
@@ -220,5 +219,5 @@ Input type for creating a new association between an uploaded file and a submiss
 """
 input CreateSubmissionFileInput @validator(class: "SubmissionFileInputValidator") {
     submission_id: ID!
-    file_upload: String!
+    file_upload: Upload!
 }

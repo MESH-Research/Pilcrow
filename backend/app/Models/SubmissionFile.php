@@ -18,6 +18,16 @@ class SubmissionFile extends Model
     public $incrementing = true;
 
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'submission_id',
+        'file_upload',
+    ];
+
+    /**
      * File uploads that belong to the submission
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

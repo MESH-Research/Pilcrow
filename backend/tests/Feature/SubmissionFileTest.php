@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
+use App\Models\Submission;
+use App\Models\SubmissionFile;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Nuwave\Lighthouse\Testing\MakesGraphQLRequests;
@@ -51,32 +53,46 @@ class SubmissionFileTest extends TestCase
      * @dataProvider acceptedFileExtensionsProvider
      * @param string $extension File extension value to test
      */
-    public function testDocumentsCanBeUploaded(string $extension)
+    public function testCreateSubmissionFileRecordsViaGraphqlEndpoint(string $extension)
     {
+        $submission = Submission::factory()->create();
         $operations = [
+            'operationName' => 'CreateSubmissionFile',
             'query' => '
-                mutation ($file: Upload!) {
-                    upload(file: $file)
+                mutation CreateSubmissionFile($submission_id: ID!, $file_upload: Upload!) {
+                    createSubmissionFile(
+                        input: {
+                            submission_id: $submission_id,
+                            file_upload: $file_upload
+                        }
+                    ) {
+                        submission_id
+                        file_upload
+                    }
                 }
             ',
             'variables' => [
-                'file' => null,
+                'submission_id' => $submission->id,
+                'file_upload' => null,
             ],
         ];
-
         $map = [
-            '0' => ['variables.file'],
+            '0' => ['variables.file_upload'],
         ];
-
         $file = [
             '0' => UploadedFile::fake()->create('test.' . $extension, 500),
         ];
-
         $this->multipartGraphQL($operations, $map, $file)
             ->assertJson([
                 'data' => [
-                    'upload' => true,
-                ],
-        ]);
+                    'createSubmissionFile' => [
+                        'submission_id' => (string)$submission->id,
+                        'file_upload' => true
+                    ]
+                ]
+            ]
+        );
+        $record = SubmissionFile::where('submission_id', $submission->id)->get();
+        $this->assertGreaterThan(0, count($record));
     }
 }
