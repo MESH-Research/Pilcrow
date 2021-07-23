@@ -5,7 +5,6 @@ namespace Database\Seeders;
 
 use App\Models\Role;
 use App\Models\User;
-use Database\Seeders\SubmissionFileSeeder;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
