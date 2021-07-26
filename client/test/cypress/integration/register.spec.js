@@ -18,13 +18,6 @@ describe("Register", () => {
                 .parents('label')
                 .should('have.class', 'q-field--error')
 
-            //Email must be unique
-            cy.dataCy('email_field')
-                .type('regularuser@ccrproject.dev{enter}')
-                .parents('label')
-                .should('have.class', 'q-field--error')
-                .contains('already registered');
-
             //Email must be valid
             cy.dataCy('email_field')
                 .clear()
@@ -44,13 +37,6 @@ describe("Register", () => {
                 .parents('label')
                 .should('have.class', 'q-field--error')
                 .contains('is required');
-
-            //Username must be unique
-            cy.dataCy('username_field')
-                .type('regularUser{enter}')
-                .parents('label')
-                .should('have.class', 'q-field--error')
-                .contains('is not available');
 
             //Username success
             cy.dataCy('username_field')
@@ -76,6 +62,28 @@ describe("Register", () => {
                 .type('!@#$#@password')
                 .parents('label')
                 .should('not.have.class', 'q-field--error')
+
+            //Username must be unique
+            cy.dataCy('username_field')
+                .clear()
+                .type('regularUser{enter}')
+                .parents('label')
+                .should('have.class', 'q-field--error')
+                .contains('is not available');
+            cy.dataCy('username_field')
+                .type('brandnewusername')
+
+            //Email must be unique
+            cy.dataCy('email_field')
+                .clear()
+                .type('regularuser@ccrproject.dev{enter}')
+                .parents('label')
+                .should('have.class', 'q-field--error')
+                .contains('already registered');
+
+            cy.dataCy('email_field')
+                .clear()
+                .type('newvalidemail@ccrproject.dev');
 
             cy.get('[type="submit"]').click();
             cy.url().should('include', '/dashboard');

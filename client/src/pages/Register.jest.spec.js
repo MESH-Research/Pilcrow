@@ -1,140 +1,79 @@
-import { mountQuasar } from "@quasar/quasar-app-extension-testing-unit-jest";
 import RegisterPage from "./Register.vue";
+import { mountQuasar } from '@quasar/quasar-app-extension-testing-unit-jest';
+import { CREATE_USER, LOGIN } from 'src/graphql/mutations';
+import { createMockClient } from 'mock-apollo-client';
+import { DefaultApolloClient } from '@vue/apollo-composable';
+import * as All from 'quasar';
 
-import {
-  QIcon,
-  QCardSection,
-  QInput,
-  QCard,
-  QCardActions,
-  QBtn,
-  QForm,
-  QPage,
-  QBanner
-} from "quasar";
+const components = Object.keys(All).reduce((object, key) => {
+  const val = All[key];
+  if (val && val.component && val.component.name != null) {
+    object[key] = val;
+  }
+  return object;
+}, {});
+
+jest.mock('quasar', () => ({
+  ...jest.requireActual('quasar'),
+  SessionStorage: {
+    remove: jest.fn(),
+    getItem: jest.fn()
+  },
+}))
+
+
 describe("RegisterPage", () => {
-  const mutate = jest.fn();
 
-  const wrapper = mountQuasar(RegisterPage, {
-    quasar: {
-      components: {
-        QIcon,
-        QCardSection,
-        QInput,
-        QCard,
-        QCardActions,
-        QBtn,
-        QForm,
-        QPage,
-        QBanner
-      }
-    },
-    mount: {
-      type: "shallow",
-      mocks: {
-        $t: token => token,
-        $apollo: {
-          mutate
-        }
+  const wrapperFactory = (mocks = []) => {
+    const apolloProvider = {};
+    const mockClient = createMockClient();
+    apolloProvider[DefaultApolloClient] = mockClient;
+
+    mocks?.forEach((mock) => {
+      mockClient.setRequestHandler(...mock)
+    });
+
+    return {
+      wrapper: mountQuasar(RegisterPage, {
+        quasar: {
+          components
+        },
+        mount: {
+        provide: apolloProvider,
+        stubs: ['router-link'],
+        mocks: {
+          $t: token => token,
+        },
       },
-      stubs: ["router-link"]
-    }
-  });
+    }), mockClient};
+  }
+
+
 
   it("mounts without errors", () => {
-    expect(wrapper).toBeTruthy();
-  });
-
-  test("isServerError method returns correct values", async () => {
-    expect(wrapper.vm.isServerError("user.password", "SOME_ERROR")).toBe(false);
-
-    expect(wrapper.vm.isServerError("user.password")).toBe(false);
-    expect(wrapper.vm.isServerError("user.nonexistant_field")).toBe(false);
-
-    await wrapper.setData({
-      serverValidationErrors: { "user.password": ["COMPLEX_PASSWORD"] }
-    });
-    expect(wrapper.vm.isServerError("user.password", "COMPLEX_PASSWORD")).toBe(
-      true
-    );
-    expect(wrapper.vm.isServerError("user.password")).toBe(true);
-    expect(wrapper.vm.isServerError("user.password", "RANDOM_TOKEN")).toBe(
-      false
-    );
+    expect(wrapperFactory().wrapper).toBeTruthy();
   });
 
   test("form submits on valid data", async () => {
-    await wrapper.setData({
-      serverValidationErrors: {},
-      form: {
-        username: "user",
-        password: "albancub4Grac&",
-        name: "Joe Doe",
-        email: "test@example.com"
-      }
-    });
+    const { wrapper, mockClient } = wrapperFactory();
 
-    mutate.mockClear().mockResolvedValue({});
-
-    wrapper.vm.submit();
-    expect(wrapper.vm.formErrorMsg).toBeFalsy();
-    expect(mutate).toBeCalled();
-  });
-
-  test("password is correctly validated", async () => {
-    await wrapper.setData({ form: { password: "" } });
-    expect(wrapper.vm.$v.form.password.$invalid).toBeTruthy();
-
-    await wrapper.setData({ form: { password: "password" } });
-    expect(wrapper.vm.$v.form.password.$invalid).toBeTruthy();
-
-    await wrapper.setData({ form: { password: "albancub4Grac&" } });
-    expect(wrapper.vm.$v.form.password.$invalid).toBeFalsy();
-  });
-
-  test("username is correctly validated", async () => {
-    await wrapper.setData({ form: { username: "" } });
-    expect(wrapper.vm.$v.form.username.$invalid).toBeTruthy();
-
-    await wrapper.setData({ form: { username: "test" } });
-    expect(wrapper.vm.$v.form.username.$invalid).toBeFalsy();
-
-    await wrapper.setData({
-      form: {
-        username: "user",
-        password: "albancub4Grac&",
-        name: "Joe Doe",
-        email: "test@example.com"
-      }
-    });
-
-    const error = {
-      graphQLErrors: [
-        {
-          extensions: {
-            validation: {
-              "user.username": ["USERNAME_IN_USE"]
-            }
-          }
-        }
-      ]
+    const user = {
+      username: "user",
+      password: "albancub4Grac&",
+      name: "Joe Doe",
+      email: "test@example.com"
     };
-    mutate.mockClear().mockRejectedValue(error);
 
-    await wrapper.vm.submit();
-    expect(mutate).toBeCalled();
+    const mutateHandler = jest.fn().mockResolvedValue({ id: 1, ...user });
 
-    expect(wrapper.vm.formErrorMsg).toBeTruthy();
+    mockClient.setRequestHandler(CREATE_USER, mutateHandler)
+    mockClient.setRequestHandler(LOGIN, jest.fn().mockResolvedValue({id: 1, ...user}));
+    Object.assign(wrapper.vm.user, user);
+
+
+    await wrapper.vm.handleSubmit();
+    expect(wrapper.vm.formErrorMsg.value).toBeFalsy();
+    expect(mutateHandler).toBeCalled();
   });
 
-  test("email is correctly validated", async () => {
-    await wrapper.setData({ form: { email: "" } });
-    expect(wrapper.vm.$v.form.email.$invalid).toBe(true);
-
-    await wrapper.setData({ form: { email: "Notanemail" } });
-    expect(wrapper.vm.$v.form.email.$invalid).toBe(true);
-
-    await wrapper.setData({ form: { email: "test@example.com" } });
-    expect(wrapper.vm.$v.form.email.$invalid).toBe(false);
-  });
 });

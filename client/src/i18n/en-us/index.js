@@ -44,18 +44,29 @@ export default {
       show_password: "Show Password"
     },
     validation: {
+      username: {
+        required: 'Username is required.',
+        USERNAME_IN_USE: "Sorry, this username is not available.",
+      },
+      email: {
+        required: 'Email address is required.',
+        email: "Please enter a valid email address.",
+        EMAIL_IN_USE:
+          "This email is already registered.",
+        EMAIL_NOT_VALID: "Please enter a valid email address.",
+        EMAIL_IN_USE_HINT: 'You might want to {loginAction} or {passwordAction}.'
+      },
+      password: {
+        required: "Password is required"
+      },
       PASSWORD_NOT_COMPLEX: "Your password needs to be more complex.",
       PASSWORD_COMPLEX: "Your password is sufficiently complex.",
-      EMAIL_INVALID: "Please enter a valid email address.",
-      USERNAME_IN_USE: "Sorry, that username is not available",
       USERNAME_AVAILABLE: "This username is available",
-      EMAIL_IN_USE:
-        "This email is already registered. {break} You might want to {loginAction} or {passwordAction}."
     },
     failures: {
-      CREATE_FORM_VALIDATION:
+      FORM_VALIDATION:
         "Oops, please correct the errors above and try again.",
-      CREATE_FORM_INTERNAL: "Error processing result, please try again later.",
+      INTERNAL: "An unexpected error has occurred. Please try again later.",
       LOGIN_FORM_VALIDATION: "Please correct the errors above and try again.",
       FAILURE_IDENTITY_NOT_FOUND: "Username and/or password is incorrect.",
       CREDENTIALS_INVALID: "Username and password combination is incorrect.",
@@ -116,7 +127,8 @@ export default {
       success: "Publication successfully created.",
       failure: "An error occurred while attempting to create the publication.",
       required: "A name is required to create a publication.",
-      max_length: "The maximum length has been exceeded for the name."
+      maxLength: "The maximum length has been exceeded for the name.",
+      duplicate_name: 'Publication name already exists.',
     }
   },
   submissions: {

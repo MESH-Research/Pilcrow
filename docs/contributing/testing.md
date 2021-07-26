@@ -101,9 +101,9 @@ NOTE: If you already have configuration in `.lando.local.yml`, be sure to merge 
 #FILE: .lando.local.yml
 services:
   cypress:
-    type: node
+    type: node:14
     overrides:
-      image: "cypress/included:6.3.0"
+      image: "cypress/base:14"
 tooling:
   cypress:
     service: cypress
@@ -111,9 +111,10 @@ tooling:
     cmd: cypress
 ```
 
-Rebuild your containers:
+Rebuild your containers and install cypress binaries:
 ```sh
 lando rebuild -y
+lando cypress install
 ```
 
 After rebuilding your containers, you can run the headless tests with the command:
