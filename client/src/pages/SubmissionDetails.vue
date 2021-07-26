@@ -1,7 +1,7 @@
 <template>
   <q-page>
     <h2 class="q-pl-lg">
-      {{ submission.title }}
+      Manage: {{ submission.title }}
     </h2>
     <div id="q-app">
       <div class="row q-col-gutter-lg q-pa-lg">
@@ -42,7 +42,7 @@
         <section
           class="col-md-5 col-sm-6 col-xs-12"
         >
-          <h3>All Reviewers</h3>
+          <h3>Assigned Reviewers</h3>
           <q-list
             bordered
             separator
@@ -50,7 +50,6 @@
             <q-item
               v-for="user in userSearch.data"
               :key="user.id"
-              v-ripple
               data-cy="userListItem"
               class="q-px-lg"
             >
@@ -73,11 +72,16 @@
                 </q-item-label>
                 <q-item-label
                   caption
+                  lines="1"
                 >
                   {{ user.email }}
                 </q-item-label>
               </q-item-section>
-              <q-item-section avatar>
+
+              <q-item-section
+                side
+                center
+              >
                 <q-icon
                   color="primary"
                   name="person_remove"
