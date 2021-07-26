@@ -1,6 +1,8 @@
 <template>
   <q-page>
-    <h2 class="q-pl-lg">{{ submission.title }}</h2>
+    <h2 class="q-pl-lg">
+      {{ submission.title }}
+    </h2>
     <div id="q-app">
       <div class="row q-col-gutter-lg q-pa-lg">
         <section
@@ -48,9 +50,9 @@
             <q-item
               v-for="user in userSearch.data"
               :key="user.id"
+              v-ripple
               data-cy="userListItem"
               class="q-px-lg"
-              v-ripple
             >
               <q-item-section
                 top
