@@ -5,9 +5,7 @@
     </h2>
     <div id="q-app">
       <div class="row q-col-gutter-lg q-pa-lg">
-        <section
-          class="col-md-5 col-sm-6 col-xs-12"
-        >
+        <section class="col-md-5 col-sm-6 col-xs-12">
           <h3>Add a Reviewer</h3>
           <div class="q-gutter-md row">
             <q-select
