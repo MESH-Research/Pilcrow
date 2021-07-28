@@ -33,7 +33,8 @@
           <q-btn
             :ripple="{ center: true }"
             color="primary"
-            label="ADD"
+            class="text-uppercase"
+            label="Add"
             no-caps
           />
         </section>
