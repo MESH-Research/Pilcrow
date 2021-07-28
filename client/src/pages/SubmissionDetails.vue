@@ -81,9 +81,11 @@
                 side
                 center
               >
-                <q-icon
+                <q-btn
+                  :aria-label="`Unassign ${user.username}`"
+                  flat
                   color="primary"
-                  name="person_remove"
+                  icon="person_remove"
                 />
               </q-item-section>
             </q-item>
