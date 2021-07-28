@@ -84,7 +84,7 @@ export function oneShotPropertyWatch(data, property, callback) {
 /**
  * Parses a GraphQL error object for any validation errors and applies them to the
  * provided externalValidation reactive.  Apply the externalValidation reactive to
- * vuelidate's $externalResults option to include GraphQL validation errors in 
+ * vuelidate's $externalResults option to include GraphQL validation errors in
  * vuelidate error responses.
  *
  * @param {reactive} data Form data reactive
@@ -95,19 +95,23 @@ export function oneShotPropertyWatch(data, property, callback) {
  */
 export function applyExternalValidationErrors(data, externalValidation, error, strip = '') {
     const gqlErrors = error?.graphQLErrors ?? [];
-    const validationErrors = clone(externalValidation);
-    gqlErrors.forEach(item => {
-        const vErrors = item?.extensions?.validation ?? false;
-        if (vErrors !== false) {
-            for (const [fieldName, fieldErrors] of Object.entries(vErrors)) {
-                const key = fieldName.replace(strip, '')
-                if (validationErrors[key]) {
-                    validationErrors?.[key]?.push(...fieldErrors);
-                    externalFieldWatcher(data, externalValidation, key);
-                }
-
+    const validationErrors = gqlErrors
+        .map(gError => {
+            const fields = gError?.extensions?.validation ?? null
+            if (!fields) return null;
+            const errors = {};
+            for (const [key, value] of Object.entries(fields)) {
+                errors[key.replace(strip, '')] = value;
             }
-        }
-    });
-    return Object.keys(validationErrors).some(f => validationErrors[f].length > 0);
+            return errors
+        }).filter(e => e);
+    if (validationErrors.length === 0) {
+        return false;
+    }
+    Object.assign(externalValidation, ...validationErrors)
+    for (const [key] of Object.entries(externalValidation)) {
+        externalFieldWatcher(data, externalValidation, key);
+    }
+    return true;
+
 }

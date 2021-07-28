@@ -12,6 +12,12 @@ updates:
     interval: daily
   open-pull-requests-limit: 10
   target-branch: development
+  ignore:
+      # Ignore quasar major version updates (requires Vue 3 upgrade)
+      - dependency-name: "quasar"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@quasar/app"
+        update-types: ["version-update:semver-major"]
 - package-ecosystem: npm
   directory: "/"
   schedule:

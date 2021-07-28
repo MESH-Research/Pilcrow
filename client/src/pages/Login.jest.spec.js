@@ -1,47 +1,43 @@
-import { mountQuasar } from "@quasar/quasar-app-extension-testing-unit-jest";
 import LoginPage from "./Login.vue";
+import { mountQuasar } from "@quasar/quasar-app-extension-testing-unit-jest";
+import { LOGIN } from 'src/graphql/mutations';
+import { createMockClient } from 'mock-apollo-client';
+import { DefaultApolloClient } from '@vue/apollo-composable';
+import * as All from 'quasar';
 
-import {
-  QIcon,
-  QCardSection,
-  QInput,
-  QCard,
-  QCardActions,
-  QBtn,
-  QForm,
-  QPage,
-  QBanner
-} from "quasar";
+const components = Object.keys(All).reduce((object, key) => {
+  const val = All[key];
+  if (val && val.component && val.component.name != null) {
+    object[key] = val;
+  }
+  return object;
+}, {});
+
+jest.mock('quasar', () => ({
+  ...jest.requireActual('quasar'),
+  SessionStorage: {
+    remove: jest.fn(),
+    getItem: jest.fn()
+  },
+}))
+
+
+
 describe("LoginPage", () => {
-  const mutate = jest.fn();
-  const sessionStorage = jest.fn();
+
+  const apolloProvider = {};
+  const mockClient = createMockClient();
+  apolloProvider[DefaultApolloClient] = mockClient;
+
   const wrapper = mountQuasar(LoginPage, {
     quasar: {
-      components: {
-        QIcon,
-        QCardSection,
-        QInput,
-        QCard,
-        QCardActions,
-        QBtn,
-        QForm,
-        QPage,
-        QBanner
-      }
+      components
     },
     mount: {
+      provide: apolloProvider,
       type: "shallow",
       mocks: {
         $t: token => token,
-        $apollo: {
-          mutate
-        },
-        $q: {
-          sessionStorage: {
-            remove: sessionStorage,
-            getItem: sessionStorage
-          }
-        }
       },
       stubs: ["router-link"]
     }
@@ -52,77 +48,13 @@ describe("LoginPage", () => {
   });
 
   test("login action attempts mutation", async () => {
-    mutate.mockClear();
+    const mutationHandler = jest.fn().mockResolvedValue({ data: { login: { user: { id: 1 } } } });
+    mockClient.setRequestHandler(LOGIN, mutationHandler);
 
-    await wrapper.setData({
-      form: {
-        email: "test@gmail.com",
-        password: "blahblahblah"
-      }
-    });
+    wrapper.vm.$v.email.$model = 'user@example.com';
+    wrapper.vm.$v.password.$model = 'password';
 
-    await wrapper.vm.login();
-    expect(mutate).toBeCalled();
-  });
-
-  test("login field email is required", async () => {
-    mutate.mockClear();
-
-    await wrapper.setData({
-      form: {
-        email: ""
-      }
-    });
-
-    await wrapper.vm.login();
-    expect(mutate).not.toBeCalled();
-    expect(wrapper.vm.$v.form.email.$invalid).toBe(true);
-
-    await wrapper.setData({
-      form: {
-        email: "notanemail"
-      }
-    });
-
-    await wrapper.vm.login();
-    expect(mutate).not.toBeCalled();
-    expect(wrapper.vm.$v.form.email.$invalid).toBe(true);
-  });
-
-  test("password field is required", async () => {
-    mutate.mockClear();
-    await wrapper.setData({
-      form: {
-        password: ""
-      }
-    });
-
-    await wrapper.vm.login();
-    expect(mutate).not.toBeCalled();
-    expect(wrapper.vm.$v.form.email.$invalid).toBe(true);
-  });
-
-  test("login action extracts auth errors", async () => {
-    mutate.mockClear();
-    await wrapper.setData({
-      form: {
-        email: "my@email.com",
-        password: "mysecurepassword"
-      }
-    });
-    const error = {
-      graphQLErrors: [
-        {
-          extensions: {
-            code: "SOME_ERROR_CODE"
-          }
-        }
-      ]
-    };
-    mutate.mockRejectedValue(error);
-    await wrapper.vm.login();
-
-    expect(mutate).toBeCalled();
-    expect(wrapper.vm.error).toEqual("SOME_ERROR_CODE");
+    await wrapper.vm.handleSubmit();
+    expect(mutationHandler).toBeCalled();
   });
 });
