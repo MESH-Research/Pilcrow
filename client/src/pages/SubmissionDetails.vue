@@ -15,7 +15,7 @@
               hide-selected
               fill-input
               input-debounce="0"
-              hint="Minimum 2 characters to trigger filtering"
+              hint="Search for a user to assign."
               style="width: 250px; padding-bottom: 32px"
               :options="options"
               @filter="filterFn"
