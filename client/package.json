@@ -22,9 +22,9 @@
   "dependencies": {
     "@apollo/client": "^3.3.21",
     "@quasar/extras": "^1.10.8",
-    "@vue/apollo-composable": "4.0.0-alpha.12",
+    "@vue/apollo-composable": "4.0.0-alpha.14",
     "@vue/apollo-option": "4.0.0-alpha.11",
-    "@vue/composition-api": "^1.0.0-rc.13",
+    "@vue/composition-api": "^1.0.3",
     "@vuelidate/core": "^2.0.0-alpha.21",
     "@vuelidate/validators": "^2.0.0-alpha.18",
     "axios": "^0.21.1",
@@ -33,7 +33,7 @@
     "graphql-tag": "^2.12.5",
     "lodash": "^4.17.20",
     "quasar": "^1.15.15",
-    "vue-i18n": "^8.24.5",
+    "vue-i18n": "^8.25.0",
     "zxcvbn": "^4.4.2"
   },
   "devDependencies": {
@@ -43,13 +43,14 @@
     "@quasar/quasar-app-extension-testing-unit-jest": "^2.2.2",
     "axe-core": "^4.2.3",
     "babel-eslint": "^10.0.1",
+    "cypress": "^8.0.0",
     "cypress-axe": "^0.12.2",
-    "eslint": "^7.30.0",
+    "eslint": "^7.31.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-loader": "^4.0.2",
     "eslint-plugin-cypress": "^2.11.3",
     "eslint-plugin-jest": "^24.3.6",
-    "eslint-plugin-vue": "^7.12.1",
+    "eslint-plugin-vue": "^7.14.0",
     "majestic": "^1.8.1",
     "mock-apollo-client": "^1.1.0",
     "vue-composable-tester": "^0.1.3"

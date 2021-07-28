@@ -1,5 +1,5 @@
-import { mountQuasar } from '@quasar/quasar-app-extension-testing-unit-jest';
 import RegisterPage from "./Register.vue";
+import { mountQuasar } from '@quasar/quasar-app-extension-testing-unit-jest';
 import { CREATE_USER, LOGIN } from 'src/graphql/mutations';
 import { createMockClient } from 'mock-apollo-client';
 import { DefaultApolloClient } from '@vue/apollo-composable';
@@ -12,6 +12,14 @@ const components = Object.keys(All).reduce((object, key) => {
   }
   return object;
 }, {});
+
+jest.mock('quasar', () => ({
+  ...jest.requireActual('quasar'),
+  SessionStorage: {
+    remove: jest.fn(),
+    getItem: jest.fn()
+  },
+}))
 
 
 describe("RegisterPage", () => {
