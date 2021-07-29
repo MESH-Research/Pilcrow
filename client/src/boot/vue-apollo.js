@@ -1,6 +1,5 @@
 import {
   ApolloClient,
-  createHttpLink,
   InMemoryCache,
 } from '@apollo/client/core'
 import {
@@ -12,13 +11,14 @@ import VueApollo from '@vue/apollo-option'
 
 import { DefaultApolloClient } from '@vue/apollo-composable'
 import { provide } from '@vue/composition-api'
+import { createUploadLink } from 'apollo-upload-client'
 
 export default function({ app, router, Vue }) {
   const apolloClient = new ApolloClient({
     link: expiredTokenLink
       .concat(withXsrfLink)
       .concat(
-        createHttpLink({
+        createUploadLink({
           uri: process.env.GRAPHQL_URI || '/graphql',
         })
       ),

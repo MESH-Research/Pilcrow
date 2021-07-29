@@ -32,10 +32,11 @@
               data-cy="new_submission_publication_input"
             />
             <q-file
-              v-model="new_submission.file"
+              v-model="new_submission_files"
               outlined
               filled
               label="Upload File"
+              multiple
             >
               <template #prepend>
                 <q-icon name="attach_file" />
@@ -101,7 +102,7 @@
 
 <script>
 import { GET_PUBLICATIONS, GET_SUBMISSIONS } from 'src/graphql/queries';
-import { CREATE_SUBMISSION } from 'src/graphql/mutations';
+import { CREATE_SUBMISSION, CREATE_SUBMISSION_FILE } from 'src/graphql/mutations';
 import useVuelidate from '@vuelidate/core';
 import { required, maxLength } from '@vuelidate/validators';
 
@@ -122,8 +123,8 @@ export default {
       new_submission: {
         title: "",
         publication_id: null,
-        file: null
       },
+      new_submission_files: [],
     }
   },
   validations: {
@@ -175,15 +176,28 @@ export default {
         return false;
       }
       try {
-        await this.$apollo.mutate({
+        const {
+          data: {
+            createSubmission: { id }
+          }
+        } = await this.$apollo.mutate({
           mutation: CREATE_SUBMISSION,
           variables: this.new_submission,
+        });
+
+        await this.$apollo.mutate({
+          mutation: CREATE_SUBMISSION_FILE,
+          variables: {
+            submission_id: id,
+            submission_file: this.new_submission_files
+          },
           refetchQueries: ['GetSubmissions'], // Refetch queries since the result is paginated.
         });
         this.makeNotify("positive", "check_circle", "submissions.create.success")
         this.new_submission.title = "";
         this.new_submission.file = null;
       } catch (error) {
+        console.log(`Error: ${error}`);
         this.tryCatchError = true;
         this.is_submitting = false
       }
