@@ -47,6 +47,17 @@
             separator
           >
             <q-item
+              v-if="userSearch.data == null"
+              class="text-grey"
+            >
+              <q-item-section avatar>
+                <q-icon name="o_do_disturb_on" />
+              </q-item-section>
+              <q-item-section>
+                No reviewers are assigned to this submission.
+              </q-item-section>
+            </q-item>
+            <q-item
               v-for="user in userSearch.data"
               :key="user.id"
               data-cy="userListItem"
