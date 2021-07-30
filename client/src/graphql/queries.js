@@ -83,3 +83,19 @@ export const GET_SUBMISSIONS = gql`
     }
   }
 `;
+
+export const GET_SUBMISSION = gql`
+  query getSubmission($id:ID) {
+    submission(id:$id) {
+      title
+      publication {
+        name
+      }
+      users {
+        name
+        email
+      }
+    }
+  }
+`;
+
