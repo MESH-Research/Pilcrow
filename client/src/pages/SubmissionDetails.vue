@@ -11,37 +11,37 @@
     </h2>
     <div class="row q-col-gutter-lg q-pa-lg">
       <section class="col-md-5 col-sm-6 col-xs-12">
-        <h3>Add a Reviewer</h3>
-        <div class="q-gutter-md row">
-          <q-select
-            v-model="model"
-            filled
-            use-input
-            hide-selected
-            fill-input
-            input-debounce="0"
-            hint="Search for a user to assign."
-            style="width: 250px; padding-bottom: 32px"
-            :options="options"
-            @filter="filterFn"
-            @input-value="setModel"
-          >
-            <template #no-option>
-              <q-item>
-                <q-item-section class="text-grey">
-                  No results
-                </q-item-section>
-              </q-item>
-            </template>
-          </q-select>
-        </div>
-        <q-btn
-          :ripple="{ center: true }"
-          color="primary"
-          class="text-uppercase"
-          label="Add"
-          no-caps
-        />
+        <h3>Assign a Reviewer</h3>
+        <q-form>
+          <div class="q-gutter-md column q-pl-none q-pr-md">
+            <q-select
+              v-model="model"
+              outlined
+              use-input
+              hide-selected
+              input-debounce="0"
+              hint="Search for a user to assign."
+              :options="options"
+              @filter="filterFn"
+              @input-value="setModel"
+            >
+              <template #no-option>
+                <q-item>
+                  <q-item-section class="text-grey">
+                    No results
+                  </q-item-section>
+                </q-item>
+              </template>
+            </q-select>
+          </div>
+          <q-btn
+            :ripple="{ center: true }"
+            color="primary"
+            class="text-uppercase q-mt-lg"
+            label="Assign"
+            no-caps
+          />
+        </q-form>
       </section>
       <section
         class="col-md-5 col-sm-6 col-xs-12"
