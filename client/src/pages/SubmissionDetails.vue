@@ -1,5 +1,5 @@
 <template>
-  <q-page>
+  <article>
     <h2 class="q-pl-lg">
       Manage: {{ submission.title }}
     </h2>
@@ -46,65 +46,66 @@
             bordered
             separator
           >
-            <q-item
-              v-if="userSearch.data == null"
-              class="text-grey"
-            >
-              <q-item-section avatar>
-                <q-icon name="o_do_disturb_on" />
-              </q-item-section>
-              <q-item-section>
-                No reviewers are assigned to this submission.
-              </q-item-section>
-            </q-item>
-            <q-item
-              v-for="user in userSearch.data"
-              :key="user.id"
-              data-cy="userListItem"
-              class="q-px-lg"
-            >
-              <q-item-section
-                top
-                avatar
+            <div v-if="userSearch.data.length">
+              <q-item
+                v-for="user in userSearch.data"
+                :key="user.id"
+                data-cy="userListItem"
+                class="q-px-lg"
               >
-                <avatar-image
-                  :user="user"
-                  rounded
-                />
-              </q-item-section>
-
-              <q-item-section>
-                <q-item-label v-if="user.name">
-                  {{ user.name }}
-                </q-item-label>
-                <q-item-label v-else>
-                  {{ user.username }}
-                </q-item-label>
-                <q-item-label
-                  caption
-                  lines="1"
+                <q-item-section
+                  top
+                  avatar
                 >
-                  {{ user.email }}
-                </q-item-label>
-              </q-item-section>
+                  <avatar-image
+                    :user="user"
+                    rounded
+                  />
+                </q-item-section>
 
-              <q-item-section
-                side
-                center
-              >
-                <q-btn
-                  :aria-label="`Unassign ${user.username}`"
-                  flat
-                  color="primary"
-                  icon="person_remove"
-                />
-              </q-item-section>
-            </q-item>
+                <q-item-section>
+                  <q-item-label v-if="user.name">
+                    {{ user.name }}
+                  </q-item-label>
+                  <q-item-label v-else>
+                    {{ user.username }}
+                  </q-item-label>
+                  <q-item-label
+                    caption
+                    lines="1"
+                  >
+                    {{ user.email }}
+                  </q-item-label>
+                </q-item-section>
+
+                <q-item-section
+                  side
+                  center
+                >
+                  <q-btn
+                    :aria-label="`Unassign ${user.username}`"
+                    flat
+                    color="primary"
+                    icon="person_remove"
+                  />
+                </q-item-section>
+              </q-item>
+            </div>
+            <div v-else>
+              <q-item class="text-grey">
+                <q-item-section avatar>
+                  <q-icon name="o_do_disturb_on" />
+                </q-item-section>
+                <q-item-section>
+                  No reviewers are assigned to this submission.
+                </q-item-section>
+              </q-item>
+            </div>
           </q-list>
         </section>
       </div>
     </div>
-  </q-page>
+  </article>
 </template>
 
 <script>
@@ -133,7 +134,7 @@ export default {
         user: null,
       },
       userSearch: {
-        data: null
+        data: []
       },
       current_page: 1,
       model: null,
