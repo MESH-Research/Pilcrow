@@ -82,7 +82,10 @@
             <q-item-label caption>
               for {{ submission.publication.name }}
             </q-item-label>
-            <ul v-if="submission.files.length > 0">
+            <ul
+              v-if="submission.files.length > 0"
+              class="q-ma-none"
+            >
               <li
                 v-for="file in submission.files"
                 :key="file.id"
