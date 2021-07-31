@@ -10,7 +10,7 @@
       >
         <h3>Create New Submission</h3>
         <q-form
-          @submit="createSubmission()"
+          @submit="createNewSubmission()"
         >
           <div class="q-gutter-md column q-pl-none q-pr-md">
             <q-input
@@ -87,7 +87,12 @@
                 v-for="file in submission.files"
                 :key="file.id"
               >
-                <a href="#">{{ file.file_upload }}</a>
+                <a
+                  :href="file.file_upload"
+                  download
+                >
+                  {{ file.file_upload }}
+                </a>
               </li>
             </ul>
           </q-item>
@@ -132,13 +137,8 @@ export default {
   },
   validations: {
     new_submission: {
-      title: {
-        required,
-        maxLength: maxLength(512)
-      },
-      publication_id: {
-        required
-      }
+      title: { required, maxLength: maxLength(512) },
+      publication_id: { required }
     }
   },
   apollo: {
@@ -162,7 +162,16 @@ export default {
       });
       this.is_submitting = false
     },
-    async createSubmission() {
+    // validateForm() {
+      // if (!this.new_submission_files.length) {
+      //   this.makeNotify("negative", "error", "submissions.create.file_upload.required")
+      //   return false;
+      // }
+    //   console.log('validated');
+    //   return true;
+    // },
+    async createNewSubmission() {
+      console.log(this.new_submission);
       this.is_submitting = true
       this.tryCatchError = false
       this.$v.$touch();
@@ -178,6 +187,10 @@ export default {
         this.makeNotify("negative", "error", "submissions.create.publication_id.required")
         return false;
       }
+      // if (!this.validateForm()) {
+      //   console.log(`validation error`);
+      //   return false;
+      // }
       try {
         const {
           data: {
@@ -186,21 +199,24 @@ export default {
         } = await this.$apollo.mutate({
           mutation: CREATE_SUBMISSION,
           variables: this.new_submission,
-        });
-
-        await this.$apollo.mutate({
-          mutation: CREATE_SUBMISSION_FILE,
-          variables: {
-            submission_id: id,
-            submission_file: this.new_submission_files
-          },
           refetchQueries: ['GetSubmissions'], // Refetch queries since the result is paginated.
         });
+        // await this.$apollo.mutate({
+        //   mutation: CREATE_SUBMISSION_FILE,
+        //   variables: {
+        //     submission_id: id,
+        //     file_upload: this.new_submission_files,
+        //   },
+        //   context: {
+        //     hasUpload: true
+        //   },
+        //   refetchQueries: ['GetSubmissions'], // Refetch queries since the result is paginated.
+        // });
         this.makeNotify("positive", "check_circle", "submissions.create.success")
         this.new_submission.title = "";
-        this.new_submission.file = null;
+        this.new_submission_files = [];
       } catch (error) {
-        console.log(`Error: ${error}`);
+        console.log(error);
         this.tryCatchError = true;
         this.is_submitting = false
       }
