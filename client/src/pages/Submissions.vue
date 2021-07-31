@@ -72,21 +72,24 @@
           <q-item
             v-for="submission in submissions.data"
             :key="submission.id"
+            class="column"
           >
-            <q-item-section>
+            <router-link
+              :to="{ name: 'submission_details', params: { id: submission.id }}"
+            >
               <q-item-label>{{ submission.title }}</q-item-label>
-              <q-item-label caption>
-                for {{ submission.publication.name }}
-              </q-item-label>
-              <ul v-if="submission.files.length > 0">
-                <li
-                  v-for="file in submission.files"
-                  :key="file.id"
-                >
-                  <a href="#">{{ file.file_upload }}</a>
-                </li>
-              </ul>
-            </q-item-section>
+            </router-link>
+            <q-item-label caption>
+              for {{ submission.publication.name }}
+            </q-item-label>
+            <ul v-if="submission.files.length > 0">
+              <li
+                v-for="file in submission.files"
+                :key="file.id"
+              >
+                <a href="#">{{ file.file_upload }}</a>
+              </li>
+            </ul>
           </q-item>
         </q-list>
         <div

@@ -21,6 +21,7 @@ describe('submissions page mount', () => {
     },
     mount: {
       type: 'full',
+      stubs: ['router-link'],
       mocks: {
         $t: token => token,
         $apollo: {
