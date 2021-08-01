@@ -7,7 +7,7 @@ describe('Submissions Details', () => {
   it('should assert the Submission Details page is accessible', () => {
     cy.task('resetDb');
     cy.login({ email: "applicationadministrator@ccrproject.dev" });
-    cy.visit('submission/1');
+    cy.visit('submission/100');
     cy.injectAxe();
     cy.dataCy('assignedReviewersList')
     cy.checkA11y();
