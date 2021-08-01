@@ -119,7 +119,9 @@ import { required, maxLength } from '@vuelidate/validators';
 
 export default {
   setup() {
-    return { $v: useVuelidate() };
+    return {
+      $v: useVuelidate()
+    }
   },
   data() {
     return {
@@ -138,10 +140,13 @@ export default {
       new_submission_files: [],
     }
   },
-  validations: {
-    new_submission: {
-      title: { required, maxLength: maxLength(512) },
-      publication_id: { required }
+  validations() {
+    return {
+      new_submission: {
+        title: { required, maxLength: maxLength(512) },
+        publication_id: { required }
+      },
+      new_submission_files: { required },
     }
   },
   apollo: {
@@ -165,35 +170,30 @@ export default {
       });
       this.is_submitting = false
     },
-    // validateForm() {
-      // if (!this.new_submission_files.length) {
-      //   this.makeNotify("negative", "error", "submissions.create.file_upload.required")
-      //   return false;
-      // }
-    //   console.log('validated');
-    //   return true;
-    // },
+    checkThatFormIsInvalid() {
+      if (this.$v.new_submission.title.maxLength.$invalid) {
+        this.makeNotify("negative", "error", "submissions.create.title.max_length")
+        return true;
+      }
+      if (this.$v.new_submission.title.required.$invalid) {
+        this.makeNotify("negative", "error", "submissions.create.title.required")
+        return true;
+      }
+      if (this.$v.new_submission.publication_id.required.$invalid) {
+        this.makeNotify("negative", "error", "submissions.create.publication_id.required")
+        return true;
+      }
+      if (this.$v.new_submission_files.required.$invalid) {
+        this.makeNotify("negative", "error", "submissions.create.file_upload.required")
+        return true;
+      }
+    },
     async createNewSubmission() {
-      console.log(this.new_submission);
       this.is_submitting = true
       this.tryCatchError = false
-      this.$v.$touch();
-      if (!this.$v.new_submission.title.maxLength) {
-        this.makeNotify("negative", "error", "submissions.create.title.max_length")
+      if (this.checkThatFormIsInvalid()) {
         return false;
       }
-      if (!this.$v.new_submission.title.required) {
-        this.makeNotify("negative", "error", "submissions.create.title.required")
-        return false;
-      }
-      if (!this.$v.new_submission.publication_id.required) {
-        this.makeNotify("negative", "error", "submissions.create.publication_id.required")
-        return false;
-      }
-      // if (!this.validateForm()) {
-      //   console.log(`validation error`);
-      //   return false;
-      // }
       try {
         const {
           data: {
@@ -202,22 +202,22 @@ export default {
         } = await this.$apollo.mutate({
           mutation: CREATE_SUBMISSION,
           variables: this.new_submission,
+        });
+        await this.$apollo.mutate({
+          mutation: CREATE_SUBMISSION_FILE,
+          variables: {
+            submission_id: id,
+            file_upload: this.new_submission_files[0],
+          },
+          context: {
+            hasUpload: true
+          },
           refetchQueries: ['GetSubmissions'], // Refetch queries since the result is paginated.
         });
-        // await this.$apollo.mutate({
-        //   mutation: CREATE_SUBMISSION_FILE,
-        //   variables: {
-        //     submission_id: id,
-        //     file_upload: this.new_submission_files,
-        //   },
-        //   context: {
-        //     hasUpload: true
-        //   },
-        //   refetchQueries: ['GetSubmissions'], // Refetch queries since the result is paginated.
-        // });
         this.makeNotify("positive", "check_circle", "submissions.create.success")
         this.new_submission.title = "";
         this.new_submission_files = [];
+        this.is_submitting = false
       } catch (error) {
         console.log(error);
         this.tryCatchError = true;
