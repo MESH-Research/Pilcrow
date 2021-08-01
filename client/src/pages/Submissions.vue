@@ -34,9 +34,9 @@
             <q-file
               v-model="new_submission_files"
               outlined
-              filled
               label="Upload File"
               multiple
+              data-cy="new_submission_file_upload_input"
             >
               <template #prepend>
                 <q-icon name="attach_file" />
