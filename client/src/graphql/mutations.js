@@ -117,3 +117,21 @@ export const CREATE_SUBMISSION = gql`
     }
   }
 `;
+
+export const CREATE_SUBMISSION_FILE = gql`
+  mutation CreateSubmissionFile(
+    $submission_id: ID!
+    $file_upload: Upload!
+  ) {
+    createSubmissionFile(
+      input: {
+        submission_id: $submission_id
+        file_upload: $file_upload
+      }
+    ) {
+      id
+      submission_id
+      file_upload
+    }
+  }
+`;

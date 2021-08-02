@@ -89,6 +89,9 @@ type Mutation {
     "Create an association between a user, a role, and a submission"
     createSubmissionUser(input: CreateSubmissionUserInput! @spread): SubmissionUser!
         @create
+
+    "Create an association between an uploaded file and a submission"
+    createSubmissionFile(input: CreateSubmissionFileInput! @spread): SubmissionFile!
 }
 
 "A date string with format `Y-m-d`, e.g. `2011-05-23`."
@@ -97,6 +100,10 @@ scalar Date @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Date")
 "A datetime string with format `Y-m-d H:i:s`, e.g. `2018-05-23 13:43:32`."
 scalar DateTime
     @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTime")
+
+"Can be used as an argument to upload files using https://github.com/jaydenseric/graphql-multipart-request-spec"
+scalar Upload
+  @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Upload")
 
 """
 Input type for creating a new user via the userCreate mutation
@@ -205,4 +212,12 @@ input CreateSubmissionUserInput @validator(class: "SubmissionUserInputValidator"
     user_id: ID!
     role_id: ID!
     submission_id: ID!
+}
+
+"""
+Input type for creating a new association between an uploaded file and a submission
+"""
+input CreateSubmissionFileInput @validator(class: "SubmissionFileInputValidator") {
+    submission_id: ID!
+    file_upload: Upload!
 }

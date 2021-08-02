@@ -41,15 +41,14 @@ describe('submissions page mount', () => {
     await wrapper.setData({
       submissions: {
         data: [
-          {id:'1',title:'Sample Jest Submission 1',publication:{id:'1', name:'Jest Publication'}},
-          {id:'2',title:'Sample Jest Submission 2',publication:{id:'1', name:'Jest Publication'}},
-          {id:'3',title:'Sample Jest Submission 3',publication:{id:'1', name:'Jest Publication'}},
-          {id:'4',title:'Sample Jest Submission 4',publication:{id:'1', name:'Jest Publication'}},
-          {id:'5',title:'Sample Jest Submission 5',publication:{id:'1', name:'Jest Publication'}},
+          {id:'1',title:'Jest Submission 1',publication:{id:'1', name:'Jest Publication'},files:[]},
+          {id:'2',title:'Jest Submission 2',publication:{id:'1', name:'Jest Publication'},files:[]},
+          {id:'3',title:'Jest Submission 3',publication:{id:'1', name:'Jest Publication'},files:[]},
+          {id:'4',title:'Jest Submission 4',publication:{id:'1', name:'Jest Publication'},files:[]},
+          {id:'5',title:'Jest Submission 5',publication:{id:'1', name:'Jest Publication'},files:[]},
         ],
       }
     });
     expect(wrapper.findAllComponents({name: 'q-item'})).toHaveLength(5);
   });
 });
-

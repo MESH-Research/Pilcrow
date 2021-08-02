@@ -16,7 +16,7 @@ class CreateSubmissionsTables extends Migration
         Schema::create('submissions', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->string('title')->nullable(false);
+            $table->string('title', 512)->nullable(false);
             $table->unsignedBigInteger('publication_id');
 
             $table->foreign('publication_id')

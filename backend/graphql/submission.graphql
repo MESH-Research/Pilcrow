@@ -8,6 +8,7 @@ type Submission {
     updated_at: DateTime
     publication: Publication!
     users: [User!]! @belongsToMany
+    files: [SubmissionFile]! @hasMany
     pivot: SubmissionUser
 }
 
@@ -19,4 +20,13 @@ type SubmissionUser {
     role_id: ID!
     submission_id: ID!
     user_id: ID!
+}
+
+"""
+An uploaded file associated with a submission
+"""
+type SubmissionFile {
+    id: ID!
+    submission_id: ID!
+    file_upload: String!
 }

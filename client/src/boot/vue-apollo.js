@@ -1,8 +1,8 @@
 import {
   ApolloClient,
-  createHttpLink,
   InMemoryCache,
-} from '@apollo/client/core'
+  ApolloLink,
+} from '@apollo/client/core';
 import {
   beforeEachRequiresAuth,
   beforeEachRequiresRoles,
@@ -12,16 +12,25 @@ import VueApollo from '@vue/apollo-option'
 
 import { DefaultApolloClient } from '@vue/apollo-composable'
 import { provide } from '@vue/composition-api'
+import { createUploadLink } from 'apollo-upload-client'
+import { BatchHttpLink } from "@apollo/client/link/batch-http";
+
+const httpOptions = {
+  uri: process.env.GRAPHQL_URI || '/graphql'
+}
+const httpLink = ApolloLink.split(
+  operation => operation.getContext().hasUpload,
+  createUploadLink(httpOptions),
+  new BatchHttpLink(httpOptions)
+)
 
 export default function({ app, router, Vue }) {
   const apolloClient = new ApolloClient({
-    link: expiredTokenLink
-      .concat(withXsrfLink)
-      .concat(
-        createHttpLink({
-          uri: process.env.GRAPHQL_URI || '/graphql',
-        })
-      ),
+    link: ApolloLink.from([
+      expiredTokenLink,
+      withXsrfLink,
+      httpLink
+    ]),
     cache: new InMemoryCache(),
   })
 

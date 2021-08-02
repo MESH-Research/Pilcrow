@@ -142,6 +142,9 @@ export default {
       publication_id: {
         required: "A publication must be associated with a submission.",
       },
+      file_upload: {
+        required: "A file must be uploaded with a submission.",
+      }
     }
   },
   failures: {

@@ -41,4 +41,14 @@ class Submission extends Model
             ->withTimestamps()
             ->withPivot('role_id');
     }
+
+    /**
+     * File uploads that belong to the submission
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function files()
+    {
+        return $this->hasMany(SubmissionFile::class);
+    }
 }

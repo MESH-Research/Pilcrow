@@ -79,6 +79,10 @@ export const GET_SUBMISSIONS = gql`
         publication {
           name
         }
+        files {
+          id
+          file_upload
+        }
       }
     }
   }

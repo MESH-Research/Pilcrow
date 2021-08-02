@@ -37,5 +37,8 @@ class DatabaseSeeder extends Seeder
 
         $submission_seeder = new SubmissionSeeder();
         $submission_seeder->run();
+
+        $submission_file_seeder = new SubmissionFileSeeder();
+        $submission_file_seeder->run();
     }
 }
