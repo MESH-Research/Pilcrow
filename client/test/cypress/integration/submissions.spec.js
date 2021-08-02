@@ -41,6 +41,7 @@ describe('Submissions', () => {
     cy.dataCy('new_submission_title_input')
       .type(name_513_characters + '{enter}');
     cy.dataCy('create_submission_notify').should('be.visible').should('have.class','bg-negative');
+    cy.get('.q-notification--top-enter-active').should('not.exist');
     cy.checkA11y();
   });
 
