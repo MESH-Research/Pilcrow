@@ -16,7 +16,7 @@ class CreateSubmissionFile
      */
     public function __invoke($_, array $args): ?SubmissionFile
     {
-        /** @var \Illuminate\Http\UploadedFile $file_upload */
+        // @var \Illuminate\Http\UploadedFile $file_upload
         $file_upload = $args['file_upload'];
 
         return SubmissionFile::create([
