@@ -12,7 +12,7 @@ class CreateSubmissionFile
      *
      * @param  mixed  $_
      * @param  array<string, mixed>  $args
-     * @return SubmissionFile|null
+     * @return \App\Models\SubmissionFile|null
      */
     public function __invoke($_, array $args): ?SubmissionFile
     {

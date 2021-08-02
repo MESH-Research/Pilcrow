@@ -87,11 +87,10 @@ class SubmissionFileTest extends TestCase
                 'data' => [
                     'createSubmissionFile' => [
                         'submission_id' => (string)$submission->id,
-                        'file_upload' => true
-                    ]
-                ]
-            ]
-        );
+                        'file_upload' => true,
+                    ],
+                ],
+            ]);
         $record = SubmissionFile::where('submission_id', $submission->id)->get();
         $this->assertGreaterThan(0, count($record));
     }
