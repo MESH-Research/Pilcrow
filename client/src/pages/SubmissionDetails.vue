@@ -1,14 +1,9 @@
 <template>
-  <div
-    v-if="$apollo.loading"
-    class="q-pa-lg"
-  >
-    {{ $t('loading') }}
+  <div v-if="$apollo.loading" class="q-pa-lg">
+    {{ $t("loading") }}
   </div>
   <article v-else>
-    <h2 class="q-pl-lg">
-      Manage: {{ submission.title }}
-    </h2>
+    <h2 class="q-pl-lg">Manage: {{ submission.title }}</h2>
     <div class="row q-col-gutter-lg q-pa-lg">
       <section class="col-md-5 col-sm-6 col-xs-12">
         <h3>Assign a Reviewer</h3>
@@ -43,15 +38,9 @@
           />
         </q-form>
       </section>
-      <section
-        class="col-md-5 col-sm-6 col-xs-12"
-      >
+      <section class="col-md-5 col-sm-6 col-xs-12">
         <h3>Assigned Reviewers</h3>
-        <q-list
-          bordered
-          separator
-          data-cy="assignedReviewersList"
-        >
+        <q-list bordered separator data-cy="assignedReviewersList">
           <div v-if="userSearch.data.length">
             <q-item
               v-for="user in userSearch.data"
@@ -59,14 +48,8 @@
               data-cy="userListItem"
               class="q-px-lg"
             >
-              <q-item-section
-                top
-                avatar
-              >
-                <avatar-image
-                  :user="user"
-                  rounded
-                />
+              <q-item-section top avatar>
+                <avatar-image :user="user" rounded />
               </q-item-section>
 
               <q-item-section>
@@ -76,18 +59,12 @@
                 <q-item-label v-else>
                   {{ user.username }}
                 </q-item-label>
-                <q-item-label
-                  caption
-                  lines="1"
-                >
+                <q-item-label caption lines="1">
                   {{ user.email }}
                 </q-item-label>
               </q-item-section>
 
-              <q-item-section
-                side
-                center
-              >
+              <q-item-section side center>
                 <q-btn
                   :aria-label="`Unassign ${user.username}`"
                   flat
@@ -114,12 +91,16 @@
 </template>
 
 <script>
-import { GET_SUBMISSION } from "src/graphql/queries";
-import { GET_USERS } from "src/graphql/queries";
-import AvatarImage from "src/components/atoms/AvatarImage.vue";
+import { GET_SUBMISSION } from "src/graphql/queries"
+import { GET_USERS } from "src/graphql/queries"
+import AvatarImage from "src/components/atoms/AvatarImage.vue"
 
 const stringOptions = [
-  'Reviewer 1', 'Reviewer 2', 'Reviewer 3', 'Reviewer 4', 'Reviewer 5'
+  "Reviewer 1",
+  "Reviewer 2",
+  "Reviewer 3",
+  "Reviewer 4",
+  "Reviewer 5",
 ]
 export default {
   components: {
@@ -139,7 +120,7 @@ export default {
         user: null,
       },
       userSearch: {
-        data: []
+        data: [],
       },
       current_page: 1,
       model: null,
@@ -147,37 +128,39 @@ export default {
     }
   },
   methods: {
-    filterFn (val, update, abort) {
+    filterFn(val, update, abort) {
       if (val.length < 2) {
         abort()
         return
       }
       update(() => {
         const needle = val.toLowerCase()
-        this.options = stringOptions.filter(v => v.toLowerCase().indexOf(needle) > -1)
+        this.options = stringOptions.filter(
+          (v) => v.toLowerCase().indexOf(needle) > -1
+        )
       })
     },
-    setModel (val) {
+    setModel(val) {
       this.model = val
-    }
+    },
   },
   apollo: {
     submission: {
       query: GET_SUBMISSION,
-      variables () {
+      variables() {
         return {
-         id: this.id,
+          id: this.id,
         }
-      }
+      },
     },
     userSearch: {
       query: GET_USERS,
-      variables () {
+      variables() {
         return {
-          page:this.current_page
+          page: this.current_page,
         }
-      }
-    }
+      },
+    },
   },
 }
 </script>
