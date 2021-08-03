@@ -1,4 +1,3 @@
-import gql from "graphql-tag"
 import { CURRENT_USER } from "src/graphql/queries"
 import { LOGIN, LOGOUT } from "src/graphql/mutations"
 export default {

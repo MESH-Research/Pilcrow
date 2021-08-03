@@ -1,5 +1,5 @@
 import { useQuery, useResult, useMutation } from "@vue/apollo-composable"
-import { computed, reactive, ref } from "@vue/composition-api"
+import { computed, reactive } from "@vue/composition-api"
 import { CURRENT_USER } from "src/graphql/queries"
 import { LOGIN, LOGOUT } from "src/graphql/mutations"
 import { SessionStorage } from "quasar"

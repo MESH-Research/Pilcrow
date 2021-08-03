@@ -15,7 +15,6 @@
 </template>
 
 <script>
-import gql from "graphql-tag"
 import appAuth from "src/components/mixins/appAuth"
 import { CURRENT_USER } from "src/graphql/queries"
 export default {

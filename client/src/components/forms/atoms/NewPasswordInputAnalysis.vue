@@ -1,7 +1,7 @@
 <template>
   <div>
+    <!-- eslint-disable-next-line vue/no-v-html -->
     <p v-html="$t('auth.password_meter.summary', { score, crack_time })" />
-    <!-- eslint-disable-line vue/no-v-html -->
     <div v-if="suggestions.length" class="password-suggestions">
       <q-list dense>
         <q-item v-if="warning.length" class="warning">

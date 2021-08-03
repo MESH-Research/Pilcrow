@@ -17,7 +17,6 @@ describe("NewPasswordInputMeter", () => {
   })
 
   it("has correct number of child divs", async () => {
-    const bars = wrapper.findAll(".col")
     await wrapper.setProps({ max: 4 })
     expect(wrapper.findAll(".col").length).toBe(4)
 

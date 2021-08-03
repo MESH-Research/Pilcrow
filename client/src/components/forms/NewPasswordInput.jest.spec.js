@@ -11,7 +11,7 @@ describe("NewPasswordInput", () => {
       type: "full",
 
       mocks: {
-        $t: (token, params) => token,
+        $t: (token) => token,
       },
       propsData: {
         complexity: {

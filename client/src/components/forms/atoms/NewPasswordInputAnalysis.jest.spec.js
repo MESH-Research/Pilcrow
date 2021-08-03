@@ -24,7 +24,7 @@ describe("NewPasswordInputAnalysis", () => {
   const wrapper = shallowMount(PasswordFieldAnalysis, {
     components: { QIcon, QItem, QItemSection, QList },
     mocks: {
-      $t: (token, params) => token,
+      $t: (token) => token,
     },
     propsData: mergeProps(),
   })
