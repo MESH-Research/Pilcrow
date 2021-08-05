@@ -25,7 +25,7 @@
     "@vue/apollo-composable": "4.0.0-alpha.14",
     "@vue/apollo-option": "4.0.0-alpha.11",
     "@vue/composition-api": "^1.0.4",
-    "@vuelidate/core": "^2.0.0-alpha.21",
+    "@vuelidate/core": "^2.0.0-alpha.22",
     "@vuelidate/validators": "^2.0.0-alpha.18",
     "apollo-upload-client": "^16.0.0",
     "axios": "^0.21.1",
