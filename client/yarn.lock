@@ -1918,10 +1918,10 @@
   dependencies:
     vue-demi "^0.9.1"
 
-"@vuelidate/validators@^2.0.0-alpha.18":
-  version "2.0.0-alpha.18"
-  resolved "https://registry.yarnpkg.com/@vuelidate/validators/-/validators-2.0.0-alpha.18.tgz#4e6008ed6d098f9a1ffd20b4fc06730c1cbc24fb"
-  integrity sha512-JLH5uoynR6lLzmzGjb6sqxmDng1BB+FUpoKb38BNqUheM7ZMJeetZVZ9T/PUL5K8btLgoEqrPHL+SWHrOwIm7w==
+"@vuelidate/validators@^2.0.0-alpha.19":
+  version "2.0.0-alpha.19"
+  resolved "https://registry.yarnpkg.com/@vuelidate/validators/-/validators-2.0.0-alpha.19.tgz#fa396b95a1c7fdd31f22a69d232a1c3db134ec8c"
+  integrity sha512-5TQxi1Wa6jFPYZ4UIUI8RKR2nqN/yujPxRjUMh5vCOhVXoqXPMfoYdfs5DBtfABhmjj7LTtXrZ78WVMQkL9tNw==
   dependencies:
     vue-demi "^0.9.1"
 
