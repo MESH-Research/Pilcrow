@@ -6,6 +6,7 @@ namespace Tests\Feature;
 use App\Models\Publication;
 use App\Models\Role;
 use App\Models\Submission;
+use App\Models\SubmissionUser;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Nuwave\Lighthouse\Testing\MakesGraphQLRequests;
@@ -450,5 +451,38 @@ class SubmissionTest extends TestCase
             ],
         ];
         $response->assertJsonPath('data', $expected_data);
+    }
+
+    /**
+     * @return void
+     */
+    public function testUserRoleAndUserAreUniqueForASubmission()
+    {
+        $user = User::factory()->create();
+        $role_id = Role::where('name', Role::REVIEW_COORDINATOR)->first()->id;
+
+        $submission = Submission::factory()->hasAttached(
+            $user,
+            [
+                'role_id' => $role_id,
+            ]
+        )
+            ->create();
+        $this->expectException(QueryException::class);
+        $submission->users()->attach(
+            $user,
+            [
+                'role_id' => $role_id,
+            ]
+        );
+        $submission_pivot_data = SubmissionUser::where(
+            [
+                'user_id' => $user->id,
+                'role_id' => $role_id,
+                'publication_id' => $submission->id,
+            ]
+        )
+            ->get();
+        $this->assertEquals(1, $submission_pivot_data->count());
     }
 }
