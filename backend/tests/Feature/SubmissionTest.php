@@ -8,6 +8,7 @@ use App\Models\Role;
 use App\Models\Submission;
 use App\Models\SubmissionUser;
 use App\Models\User;
+use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Nuwave\Lighthouse\Testing\MakesGraphQLRequests;
 use Tests\TestCase;
