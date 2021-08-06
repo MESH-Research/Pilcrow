@@ -480,7 +480,7 @@ class SubmissionTest extends TestCase
             [
                 'user_id' => $user->id,
                 'role_id' => $role_id,
-                'publication_id' => $submission->id,
+                'submission_id' => $submission->id,
             ]
         )
             ->get();
