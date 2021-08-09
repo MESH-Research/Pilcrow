@@ -148,25 +148,19 @@ export default {
   },
   methods: {
     filterFn (val, update, abort) {
-      if (val.length < 2) {
-        abort()
-        return
-      }
       update(() => {
         const needle = val.toLowerCase()
         this.$apollo.query({
           query: SEARCH_USERS,
-          variables () {
-            return {
-              term: needle,
-              page:this.current_page
-            }
-          }
+          variables: {
+            term: needle,
+            page:this.current_page
+          },
+          refetchQueries: ['userSearch']
         }).then(searchdata => {
             var usersList = []
             const dropdowndata = searchdata.data.userSearch.data
             dropdowndata.forEach( function(currentValue, index, dropdowndata) {
-              console.log(currentValue.username)
               usersList[index] = currentValue.username
             })
             this.options = usersList
