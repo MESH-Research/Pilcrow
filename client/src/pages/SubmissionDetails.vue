@@ -18,12 +18,12 @@
               v-model="model"
               outlined
               use-input
+              fill-input
               hide-selected
               input-debounce="0"
               hint="Search for a user to assign."
               :options="options"
               @filter="filterFn"
-              @input-value="setModel"
             >
               <template #no-option>
                 <q-item>
@@ -115,7 +115,7 @@
 
 <script>
 import { GET_SUBMISSION } from "src/graphql/queries";
-import { GET_USERS } from "src/graphql/queries";
+import { SEARCH_USERS } from "src/graphql/queries";
 import AvatarImage from "src/components/atoms/AvatarImage.vue";
 
 const stringOptions = [
@@ -143,7 +143,7 @@ export default {
       },
       current_page: 1,
       model: null,
-      options: stringOptions,
+      options: [],
     }
   },
   methods: {
@@ -154,7 +154,25 @@ export default {
       }
       update(() => {
         const needle = val.toLowerCase()
-        this.options = stringOptions.filter(v => v.toLowerCase().indexOf(needle) > -1)
+        this.$apollo.query({
+          query: SEARCH_USERS,
+          variables () {
+            return {
+              term: needle,
+              page:this.current_page
+            }
+          }
+        }).then(searchdata => {
+            var usersList = []
+            const dropdowndata = searchdata.data.userSearch.data
+            dropdowndata.forEach( function(currentValue, index, dropdowndata) {
+              console.log(currentValue.username)
+              usersList[index] = currentValue.username
+            })
+            this.options = usersList
+          }).catch(error =>{
+            console.log({error})
+          });
       })
     },
     setModel (val) {
@@ -167,14 +185,6 @@ export default {
       variables () {
         return {
          id: this.id,
-        }
-      }
-    },
-    userSearch: {
-      query: GET_USERS,
-      variables () {
-        return {
-          page:this.current_page
         }
       }
     }
