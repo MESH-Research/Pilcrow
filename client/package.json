@@ -20,7 +20,7 @@
     "test:unit:ui": "majestic"
   },
   "dependencies": {
-    "@apollo/client": "^3.4.5",
+    "@apollo/client": "^3.4.7",
     "@quasar/extras": "^1.10.10",
     "@vue/apollo-composable": "4.0.0-alpha.14",
     "@vue/apollo-option": "4.0.0-alpha.11",
