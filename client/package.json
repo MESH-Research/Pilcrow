@@ -51,7 +51,7 @@
     "eslint-loader": "^4.0.2",
     "eslint-plugin-cypress": "^2.11.3",
     "eslint-plugin-jest": "^24.4.0",
-    "eslint-plugin-vue": "^7.15.1",
+    "eslint-plugin-vue": "^7.16.0",
     "majestic": "^1.8.1",
     "mock-apollo-client": "^1.2.0",
     "vue-composable-tester": "^0.1.3"
