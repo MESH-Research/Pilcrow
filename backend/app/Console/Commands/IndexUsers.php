@@ -46,7 +46,7 @@ class IndexUsers extends Command
             'username'  => env('DB_USERNAME'),
             'password'  => env('DB_PASSWORD'),
             'storage'   => 'backend/storage/app/tntsearch',
-            'stemmer'   => \TeamTNT\TNTSearch\Stemmer\PorterStemmer::class,//optional,
+            'stemmer'   => \TeamTNT\TNTSearch\Stemmer\NoStemmer::class, // optional
         ];
         $tnt = new TNTSearch();
         $tnt->loadConfig($config);
