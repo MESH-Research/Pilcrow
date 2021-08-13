@@ -18,13 +18,16 @@
               v-model="model"
               outlined
               use-input
-              fill-input
-              hide-selected
               input-debounce="0"
-              hint="Search for a user to assign."
+              hide-dropdown-icon
+              hint="Search by Username, Email, or Name."
               :options="options"
+              label="User to Assign"
               @filter="filterFn"
             >
+              <template #selected-item="scope">
+                {{ scope.opt.username }} ({{ scope.opt.email }})
+              </template>
               <template #option="scope">
                 <q-item
                   v-bind="scope.itemProps"
@@ -32,16 +35,12 @@
                 >
                   <q-item-section>
                     <q-item-label>{{ scope.opt.username }} ({{ scope.opt.email }})</q-item-label>
-                    <q-item-label caption>
+                    <q-item-label
+                      v-if="scope.opt.name"
+                      caption
+                    >
                       {{ scope.opt.name }}
                     </q-item-label>
-                  </q-item-section>
-                </q-item>
-              </template>
-              <template #no-option>
-                <q-item>
-                  <q-item-section class="text-grey">
-                    No results
                   </q-item-section>
                 </q-item>
               </template>
@@ -111,7 +110,7 @@
             </q-item>
           </div>
           <div v-else>
-            <q-item class="text-grey">
+            <q-item class="text--grey">
               <q-item-section avatar>
                 <q-icon name="o_do_disturb_on" />
               </q-item-section>
