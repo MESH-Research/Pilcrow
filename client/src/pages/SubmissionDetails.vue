@@ -25,6 +25,19 @@
               :options="options"
               @filter="filterFn"
             >
+              <template #option="scope">
+                <q-item
+                  v-bind="scope.itemProps"
+                  v-on="scope.itemEvents"
+                >
+                  <q-item-section>
+                    <q-item-label>{{ scope.opt.username }} ({{ scope.opt.email }})</q-item-label>
+                    <q-item-label caption>
+                      {{ scope.opt.name }}
+                    </q-item-label>
+                  </q-item-section>
+                </q-item>
+              </template>
               <template #no-option>
                 <q-item>
                   <q-item-section class="text-grey">
@@ -158,7 +171,7 @@ export default {
             var usersList = []
             const dropdowndata = searchdata.data.userSearch.data
             dropdowndata.forEach( function(currentValue, index, dropdowndata) {
-              usersList[index] = currentValue.username
+              usersList[index] = currentValue
             })
             this.options = usersList
           }).catch(error =>{
