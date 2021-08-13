@@ -118,9 +118,6 @@ import { GET_SUBMISSION } from "src/graphql/queries";
 import { SEARCH_USERS } from "src/graphql/queries";
 import AvatarImage from "src/components/atoms/AvatarImage.vue";
 
-const stringOptions = [
-  'Reviewer 1', 'Reviewer 2', 'Reviewer 3', 'Reviewer 4', 'Reviewer 5'
-]
 export default {
   components: {
     AvatarImage,
