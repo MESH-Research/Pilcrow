@@ -20,7 +20,7 @@
               use-input
               input-debounce="0"
               hide-dropdown-icon
-              hint="Search by Username, Email, or Name."
+              hint="Search by username, email, or name."
               :options="options"
               label="User to Assign"
               @filter="filterFn"
