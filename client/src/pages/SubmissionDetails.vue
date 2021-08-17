@@ -15,21 +15,25 @@
         <q-form>
           <div class="q-gutter-md column q-pl-none q-pr-md">
             <q-select
+              id="review_assignee_input"
               v-model="model"
-              outlined
-              use-input
-              input-debounce="0"
+              :options="options"
               hide-dropdown-icon
               hint="Search by username, email, or name."
-              :options="options"
+              input-debounce="0"
               label="User to Assign"
+              outlined
+              use-input
               @filter="filterFn"
             >
               <template #selected-item="scope">
-                {{ scope.opt.username }} ({{ scope.opt.email }})
+                <div data-cy="review_assignee_selected">
+                  {{ scope.opt.username }} ({{ scope.opt.email }})
+                </div>
               </template>
               <template #option="scope">
                 <q-item
+                  data-cy="review_assignee_result"
                   v-bind="scope.itemProps"
                   v-on="scope.itemEvents"
                 >
