@@ -135,3 +135,21 @@ export const CREATE_SUBMISSION_FILE = gql`
     }
   }
 `;
+
+export const CREATE_SUBMISSION_USER = gql`
+  mutation CreateSubmissionUser(
+    $user_id: ID!
+    $role_id: ID!
+    $submission_id: ID!
+  ){
+    createSubmissionUser(
+      input: {
+        user_id: $user_id
+        role_id: $role_id
+        submission_id: $submission_id
+      }
+    ) {
+      id
+    }
+  }
+`;

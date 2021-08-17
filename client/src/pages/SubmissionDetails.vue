@@ -12,7 +12,7 @@
     <div class="row q-col-gutter-lg q-pa-lg">
       <section class="col-md-5 col-sm-6 col-xs-12">
         <h3>Assign a Reviewer</h3>
-        <q-form>
+        <q-form @submit="assignReviewer">
           <div class="q-gutter-md column q-pl-none q-pr-md">
             <q-select
               id="review_assignee_input"
@@ -56,6 +56,7 @@
             class="text-uppercase q-mt-lg"
             label="Assign"
             no-caps
+            type="submit"
           />
         </q-form>
       </section>
@@ -68,9 +69,9 @@
           separator
           data-cy="assignedReviewersList"
         >
-          <div v-if="userSearch.data.length">
+          <div v-if="submission.users.length">
             <q-item
-              v-for="user in userSearch.data"
+              v-for="user in submission.users"
               :key="user.id"
               data-cy="userListItem"
               class="q-px-lg"
@@ -130,8 +131,8 @@
 </template>
 
 <script>
-import { GET_SUBMISSION } from "src/graphql/queries";
-import { SEARCH_USERS } from "src/graphql/queries";
+import { GET_SUBMISSION, SEARCH_USERS } from "src/graphql/queries";
+import { CREATE_SUBMISSION_USER } from "src/graphql/mutations";
 import AvatarImage from "src/components/atoms/AvatarImage.vue";
 
 export default {
@@ -149,9 +150,13 @@ export default {
       submission: {
         title: null,
         publication: null,
-        user: null,
+        users: [],
+        reviewers: []
       },
       userSearch: {
+        data: []
+      },
+      assignedUsers: {
         data: []
       },
       current_page: 1,
@@ -160,6 +165,23 @@ export default {
     }
   },
   methods: {
+    async assignReviewer() {
+      try {
+        await this.$apollo.mutate({
+          mutation: CREATE_SUBMISSION_USER,
+          variables: {
+            user_id: this.model.id,
+            role_id: 5,
+            submission_id: this.id
+          },
+          refetchQueries: ['GetSubmission']
+        }).then((createdUser) => {
+          this.model = null
+        })
+      } catch (error) {
+        console.log(error)
+      }
+    },
     filterFn (val, update, abort) {
       update(() => {
         const needle = val.toLowerCase()
@@ -169,7 +191,6 @@ export default {
             term: needle,
             page:this.current_page
           },
-          refetchQueries: ['userSearch']
         }).then(searchdata => {
             var usersList = []
             const dropdowndata = searchdata.data.userSearch.data
@@ -193,7 +214,7 @@ export default {
         return {
          id: this.id,
         }
-      }
+      },
     }
   },
 }
