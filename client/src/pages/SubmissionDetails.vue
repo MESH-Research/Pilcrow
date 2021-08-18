@@ -28,13 +28,13 @@
             >
               <template #selected-item="scope">
                 <q-chip
-                  removable
-                  dense
-                  @remove="scope.removeAtIndex(scope.index)"
-                  square
                   data-cy="review_assignee_selected"
-                  >
-                    {{ scope.opt.username }} ({{ scope.opt.email }})
+                  dense
+                  square
+                  removable
+                  @remove="scope.removeAtIndex(scope.index)"
+                >
+                  {{ scope.opt.username }} ({{ scope.opt.email }})
                 </q-chip>
               </template>
               <template #option="scope">
