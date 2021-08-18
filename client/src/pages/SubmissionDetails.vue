@@ -27,9 +27,15 @@
               @filter="filterFn"
             >
               <template #selected-item="scope">
-                <div data-cy="review_assignee_selected">
-                  {{ scope.opt.username }} ({{ scope.opt.email }})
-                </div>
+                <q-chip
+                  removable
+                  dense
+                  @remove="scope.removeAtIndex(scope.index)"
+                  square
+                  data-cy="review_assignee_selected"
+                  >
+                    {{ scope.opt.username }} ({{ scope.opt.email }})
+                </q-chip>
               </template>
               <template #option="scope">
                 <q-item
