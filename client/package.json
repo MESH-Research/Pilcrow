@@ -20,11 +20,11 @@
     "test:unit:ui": "majestic"
   },
   "dependencies": {
-    "@apollo/client": "^3.4.5",
+    "@apollo/client": "^3.4.7",
     "@quasar/extras": "^1.10.10",
     "@vue/apollo-composable": "4.0.0-alpha.14",
     "@vue/apollo-option": "4.0.0-alpha.11",
-    "@vue/composition-api": "^1.0.6",
+    "@vue/composition-api": "^1.1.0",
     "@vuelidate/core": "^2.0.0-alpha.23",
     "@vuelidate/validators": "^2.0.0-alpha.20",
     "apollo-upload-client": "^16.0.0",
@@ -52,9 +52,9 @@
     "eslint-plugin-cypress": "^2.11.3",
     "eslint-plugin-jest": "^24.4.0",
     "eslint-plugin-prettier": "^3.4.0",
-    "eslint-plugin-vue": "^7.15.1",
+    "eslint-plugin-vue": "^7.16.0",
     "majestic": "^1.8.1",
-    "mock-apollo-client": "^1.1.0",
+    "mock-apollo-client": "^1.2.0",
     "prettier": "^2.3.2",
     "vue-composable-tester": "^0.1.3"
   },
