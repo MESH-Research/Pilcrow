@@ -22,11 +22,7 @@
               @filter="filterFn"
             >
               <template #selected-item="scope">
-                <q-chip
-                  data-cy="review_assignee_selected"
-                  dense
-                  square
-                >
+                <q-chip data-cy="review_assignee_selected" dense square>
                   {{ scope.opt.username }} ({{ scope.opt.email }})
                 </q-chip>
               </template>
@@ -37,11 +33,12 @@
                   v-on="scope.itemEvents"
                 >
                   <q-item-section>
-                    <q-item-label>{{ scope.opt.username }} ({{ scope.opt.email }})</q-item-label>
                     <q-item-label
-                      v-if="scope.opt.name"
-                      caption
+                      >{{ scope.opt.username }} ({{
+                        scope.opt.email
+                      }})</q-item-label
                     >
+                    <q-item-label v-if="scope.opt.name" caption>
                       {{ scope.opt.name }}
                     </q-item-label>
                   </q-item-section>
@@ -112,9 +109,9 @@
 </template>
 
 <script>
-import { GET_SUBMISSION } from "src/graphql/queries";
-import { SEARCH_USERS } from "src/graphql/queries";
-import AvatarImage from "src/components/atoms/AvatarImage.vue";
+import { GET_SUBMISSION } from "src/graphql/queries"
+import { SEARCH_USERS } from "src/graphql/queries"
+import AvatarImage from "src/components/atoms/AvatarImage.vue"
 
 export default {
   components: {
@@ -142,26 +139,29 @@ export default {
     }
   },
   methods: {
-    filterFn (val, update, abort) {
+    filterFn(val, update) {
       update(() => {
         const needle = val.toLowerCase()
-        this.$apollo.query({
-          query: SEARCH_USERS,
-          variables: {
-            term: needle,
-            page:this.current_page
-          },
-          refetchQueries: ['userSearch']
-        }).then(searchdata => {
+        this.$apollo
+          .query({
+            query: SEARCH_USERS,
+            variables: {
+              term: needle,
+              page: this.current_page,
+            },
+            refetchQueries: ["userSearch"],
+          })
+          .then((searchdata) => {
             var usersList = []
             const dropdowndata = searchdata.data.userSearch.data
-            dropdowndata.forEach( function(currentValue, index, dropdowndata) {
+            dropdowndata.forEach(function (currentValue, index) {
               usersList[index] = currentValue
             })
             this.options = usersList
-          }).catch(error =>{
-            console.log({error})
-          });
+          })
+          .catch((error) => {
+            console.log({ error })
+          })
       })
     },
     setModel(val) {
