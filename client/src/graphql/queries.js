@@ -47,6 +47,26 @@ export const GET_USER = gql`
   }
 `;
 
+export const SEARCH_USERS = gql`
+  query users($term:String, $page:Int) {
+    userSearch(term: $term, page:$page) {
+      paginatorInfo {
+        count
+        currentPage
+        lastPage
+        perPage
+      }
+      data {
+        id
+        username
+        name
+        email
+      }
+    }
+  }
+`;
+
+
 export const GET_PUBLICATIONS = gql`
   query GetPublications($page:Int) {
     publications(page:$page) {
