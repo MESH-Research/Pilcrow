@@ -20,7 +20,7 @@
     "test:unit:ui": "majestic"
   },
   "dependencies": {
-    "@apollo/client": "^3.4.7",
+    "@apollo/client": "^3.4.8",
     "@quasar/extras": "^1.10.10",
     "@vue/apollo-composable": "4.0.0-alpha.14",
     "@vue/apollo-option": "4.0.0-alpha.11",
@@ -29,7 +29,7 @@
     "@vuelidate/validators": "^2.0.0-alpha.21",
     "apollo-upload-client": "^16.0.0",
     "axios": "^0.21.1",
-    "core-js": "^3.16.1",
+    "core-js": "^3.16.2",
     "graphql": "^15.5.1",
     "graphql-tag": "^2.12.5",
     "lodash": "^4.17.20",
@@ -44,7 +44,7 @@
     "@quasar/quasar-app-extension-testing-unit-jest": "^2.2.2",
     "axe-core": "^4.3.2",
     "babel-eslint": "^10.0.1",
-    "cypress": "^8.2.0",
+    "cypress": "^8.3.0",
     "cypress-axe": "^0.13.0",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
