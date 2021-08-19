@@ -44,7 +44,7 @@
     "@quasar/quasar-app-extension-testing-unit-jest": "^2.2.2",
     "axe-core": "^4.3.2",
     "babel-eslint": "^10.0.1",
-    "cypress": "^8.2.0",
+    "cypress": "^8.3.0",
     "cypress-axe": "^0.13.0",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
