@@ -31,8 +31,6 @@
                   data-cy="review_assignee_selected"
                   dense
                   square
-                  removable
-                  @remove="scope.removeAtIndex(scope.index)"
                 >
                   {{ scope.opt.username }} ({{ scope.opt.email }})
                 </q-chip>
@@ -61,6 +59,7 @@
             color="primary"
             class="text-uppercase q-mt-lg"
             label="Assign"
+            type="submit"
             no-caps
             type="submit"
           />
