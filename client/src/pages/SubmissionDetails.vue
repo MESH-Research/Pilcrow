@@ -10,20 +10,40 @@
         <q-form>
           <div class="q-gutter-md column q-pl-none q-pr-md">
             <q-select
+              id="review_assignee_input"
               v-model="model"
+              :options="options"
+              hide-dropdown-icon
+              hint="Search by username, email, or name."
+              input-debounce="0"
+              label="User to Assign"
               outlined
               use-input
-              hide-selected
-              input-debounce="0"
-              hint="Search for a user to assign."
-              :options="options"
               @filter="filterFn"
-              @input-value="setModel"
             >
-              <template #no-option>
-                <q-item>
-                  <q-item-section class="text-grey">
-                    No results
+              <template #selected-item="scope">
+                <q-chip
+                  data-cy="review_assignee_selected"
+                  dense
+                  square
+                >
+                  {{ scope.opt.username }} ({{ scope.opt.email }})
+                </q-chip>
+              </template>
+              <template #option="scope">
+                <q-item
+                  data-cy="review_assignee_result"
+                  v-bind="scope.itemProps"
+                  v-on="scope.itemEvents"
+                >
+                  <q-item-section>
+                    <q-item-label>{{ scope.opt.username }} ({{ scope.opt.email }})</q-item-label>
+                    <q-item-label
+                      v-if="scope.opt.name"
+                      caption
+                    >
+                      {{ scope.opt.name }}
+                    </q-item-label>
                   </q-item-section>
                 </q-item>
               </template>
@@ -34,6 +54,7 @@
             color="primary"
             class="text-uppercase q-mt-lg"
             label="Assign"
+            type="submit"
             no-caps
           />
         </q-form>
@@ -75,7 +96,7 @@
             </q-item>
           </div>
           <div v-else>
-            <q-item class="text-grey">
+            <q-item class="text--grey">
               <q-item-section avatar>
                 <q-icon name="o_do_disturb_on" />
               </q-item-section>
@@ -91,17 +112,10 @@
 </template>
 
 <script>
-import { GET_SUBMISSION } from "src/graphql/queries"
-import { GET_USERS } from "src/graphql/queries"
-import AvatarImage from "src/components/atoms/AvatarImage.vue"
+import { GET_SUBMISSION } from "src/graphql/queries";
+import { SEARCH_USERS } from "src/graphql/queries";
+import AvatarImage from "src/components/atoms/AvatarImage.vue";
 
-const stringOptions = [
-  "Reviewer 1",
-  "Reviewer 2",
-  "Reviewer 3",
-  "Reviewer 4",
-  "Reviewer 5",
-]
 export default {
   components: {
     AvatarImage,
@@ -124,20 +138,30 @@ export default {
       },
       current_page: 1,
       model: null,
-      options: stringOptions,
+      options: [],
     }
   },
   methods: {
-    filterFn(val, update, abort) {
-      if (val.length < 2) {
-        abort()
-        return
-      }
+    filterFn (val, update, abort) {
       update(() => {
         const needle = val.toLowerCase()
-        this.options = stringOptions.filter(
-          (v) => v.toLowerCase().indexOf(needle) > -1
-        )
+        this.$apollo.query({
+          query: SEARCH_USERS,
+          variables: {
+            term: needle,
+            page:this.current_page
+          },
+          refetchQueries: ['userSearch']
+        }).then(searchdata => {
+            var usersList = []
+            const dropdowndata = searchdata.data.userSearch.data
+            dropdowndata.forEach( function(currentValue, index, dropdowndata) {
+              usersList[index] = currentValue
+            })
+            this.options = usersList
+          }).catch(error =>{
+            console.log({error})
+          });
       })
     },
     setModel(val) {
@@ -150,14 +174,6 @@ export default {
       variables() {
         return {
           id: this.id,
-        }
-      },
-    },
-    userSearch: {
-      query: GET_USERS,
-      variables() {
-        return {
-          page: this.current_page,
         }
       },
     },

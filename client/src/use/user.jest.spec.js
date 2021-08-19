@@ -53,6 +53,8 @@ describe("useCurrentUser composable", () => {
           id: 1,
           name: "Hello",
           email: "hello@example.com",
+          username: 'helloUser',
+          email_verified_at: '2021-08-14 02:26:32',
           roles: ["tester"],
           abilities: ["doStuff"],
         },
