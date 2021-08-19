@@ -61,7 +61,6 @@
             label="Assign"
             type="submit"
             no-caps
-            type="submit"
           />
         </q-form>
       </section>
