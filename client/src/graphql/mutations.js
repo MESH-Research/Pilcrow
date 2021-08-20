@@ -1,4 +1,4 @@
-import gql from "graphql-tag";
+import gql from "graphql-tag"
 
 export const LOGIN = gql`
   mutation Login($email: String!, $password: String!) {
@@ -9,7 +9,7 @@ export const LOGIN = gql`
       email_verified_at
     }
   }
-`;
+`
 
 export const LOGOUT = gql`
   mutation Logout {
@@ -17,7 +17,7 @@ export const LOGOUT = gql`
       id
     }
   }
-`;
+`
 
 export const CREATE_USER = gql`
   mutation CreateUser(
@@ -39,7 +39,7 @@ export const CREATE_USER = gql`
       created_at
     }
   }
-`;
+`
 
 export const UPDATE_USER = gql`
   mutation UpdateUser(
@@ -51,7 +51,7 @@ export const UPDATE_USER = gql`
   ) {
     updateUser(
       user: {
-        id: $id,
+        id: $id
         email: $email
         name: $name
         username: $username
@@ -65,7 +65,7 @@ export const UPDATE_USER = gql`
       updated_at
     }
   }
-`;
+`
 
 export const VERIFY_EMAIL = gql`
   mutation VerifyEmail($token: String!, $expires: String!) {
@@ -73,7 +73,7 @@ export const VERIFY_EMAIL = gql`
       email_verified_at
     }
   }
-`;
+`
 
 export const SEND_VERIFY_EMAIL = gql`
   mutation SendVerificationEmail($id: ID) {
@@ -81,33 +81,21 @@ export const SEND_VERIFY_EMAIL = gql`
       email
     }
   }
-`;
+`
 
 export const CREATE_PUBLICATION = gql`
-  mutation CreatePublication(
-    $name: String!
-  ) {
-    createPublication(
-      publication: {
-        name: $name
-      }
-    ) {
+  mutation CreatePublication($name: String!) {
+    createPublication(publication: { name: $name }) {
       id
       name
     }
   }
-`;
+`
 
 export const CREATE_SUBMISSION = gql`
-  mutation CreateSubmission(
-    $title: String!
-    $publication_id: ID!
-  ) {
+  mutation CreateSubmission($title: String!, $publication_id: ID!) {
     createSubmission(
-      input: {
-        title: $title
-        publication_id: $publication_id
-      }
+      input: { title: $title, publication_id: $publication_id }
     ) {
       id
       title
@@ -116,32 +104,26 @@ export const CREATE_SUBMISSION = gql`
       }
     }
   }
-`;
+`
 
 export const CREATE_SUBMISSION_FILE = gql`
-  mutation CreateSubmissionFile(
-    $submission_id: ID!
-    $file_upload: Upload!
-  ) {
+  mutation CreateSubmissionFile($submission_id: ID!, $file_upload: Upload!) {
     createSubmissionFile(
-      input: {
-        submission_id: $submission_id
-        file_upload: $file_upload
-      }
+      input: { submission_id: $submission_id, file_upload: $file_upload }
     ) {
       id
       submission_id
       file_upload
     }
   }
-`;
+`
 
 export const CREATE_SUBMISSION_USER = gql`
   mutation CreateSubmissionUser(
     $user_id: ID!
     $role_id: ID!
     $submission_id: ID!
-  ){
+  ) {
     createSubmissionUser(
       input: {
         user_id: $user_id
@@ -152,4 +134,4 @@ export const CREATE_SUBMISSION_USER = gql`
       id
     }
   }
-`;
+`

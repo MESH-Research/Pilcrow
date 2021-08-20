@@ -1,17 +1,13 @@
 <template>
   <article>
-    <h2 class="q-pl-lg">
-      Submissions
-    </h2>
+    <h2 class="q-pl-lg">Submissions</h2>
     <div class="row q-col-gutter-lg q-pa-lg">
       <section
         class="col-md-5 col-sm-6 col-xs-12"
         data-cy="create_new_submission_form"
       >
         <h3>Create New Submission</h3>
-        <q-form
-          @submit="createNewSubmission()"
-        >
+        <q-form @submit="createNewSubmission()">
           <div class="q-gutter-md column q-pl-none q-pr-md">
             <q-input
               v-model="new_submission.title"
@@ -75,25 +71,19 @@
             class="column"
           >
             <router-link
-              :to="{ name: 'submission_details', params: { id: submission.id }}"
+              :to="{
+                name: 'submission_details',
+                params: { id: submission.id },
+              }"
             >
               <q-item-label>{{ submission.title }}</q-item-label>
             </router-link>
             <q-item-label caption>
               for {{ submission.publication.name }}
             </q-item-label>
-            <ul
-              v-if="submission.files.length > 0"
-              class="q-ma-none"
-            >
-              <li
-                v-for="file in submission.files"
-                :key="file.id"
-              >
-                <a
-                  :href="file.file_upload"
-                  download
-                >
+            <ul v-if="submission.files.length > 0" class="q-ma-none">
+              <li v-for="file in submission.files" :key="file.id">
+                <a :href="file.file_upload" download>
                   {{ file.file_upload }}
                 </a>
               </li>
@@ -112,15 +102,18 @@
 </template>
 
 <script>
-import { GET_PUBLICATIONS, GET_SUBMISSIONS } from 'src/graphql/queries';
-import { CREATE_SUBMISSION, CREATE_SUBMISSION_FILE } from 'src/graphql/mutations';
-import useVuelidate from '@vuelidate/core';
-import { required, maxLength } from '@vuelidate/validators';
+import { GET_PUBLICATIONS, GET_SUBMISSIONS } from "src/graphql/queries"
+import {
+  CREATE_SUBMISSION,
+  CREATE_SUBMISSION_FILE,
+} from "src/graphql/mutations"
+import useVuelidate from "@vuelidate/core"
+import { required, maxLength } from "@vuelidate/validators"
 
 export default {
   setup() {
     return {
-      $v: useVuelidate()
+      $v: useVuelidate(),
     }
   },
   data() {
@@ -128,10 +121,10 @@ export default {
       is_submitting: false,
       tryCatchError: false,
       submissions: {
-        data: []
+        data: [],
       },
       publications: {
-        data: []
+        data: [],
       },
       new_submission: {
         title: "",
@@ -144,18 +137,18 @@ export default {
     return {
       new_submission: {
         title: { required, maxLength: maxLength(512) },
-        publication_id: { required }
+        publication_id: { required },
       },
       new_submission_files: { required },
     }
   },
   apollo: {
     submissions: {
-      query: GET_SUBMISSIONS
+      query: GET_SUBMISSIONS,
     },
     publications: {
-      query: GET_PUBLICATIONS
-    }
+      query: GET_PUBLICATIONS,
+    },
   },
   methods: {
     makeNotify(color, icon, message) {
@@ -164,45 +157,61 @@ export default {
         icon: icon,
         message: this.$t(message),
         attrs: {
-          'data-cy': 'create_submission_notify'
+          "data-cy": "create_submission_notify",
         },
-        html: true
-      });
+        html: true,
+      })
       this.is_submitting = false
     },
     checkThatFormIsInvalid() {
       if (this.$v.new_submission.title.maxLength.$invalid) {
-        this.makeNotify("negative", "error", "submissions.create.title.max_length")
-        return true;
+        this.makeNotify(
+          "negative",
+          "error",
+          "submissions.create.title.max_length"
+        )
+        return true
       }
       if (this.$v.new_submission.title.required.$invalid) {
-        this.makeNotify("negative", "error", "submissions.create.title.required")
-        return true;
+        this.makeNotify(
+          "negative",
+          "error",
+          "submissions.create.title.required"
+        )
+        return true
       }
       if (this.$v.new_submission.publication_id.required.$invalid) {
-        this.makeNotify("negative", "error", "submissions.create.publication_id.required")
-        return true;
+        this.makeNotify(
+          "negative",
+          "error",
+          "submissions.create.publication_id.required"
+        )
+        return true
       }
       if (this.$v.new_submission_files.required.$invalid) {
-        this.makeNotify("negative", "error", "submissions.create.file_upload.required")
-        return true;
+        this.makeNotify(
+          "negative",
+          "error",
+          "submissions.create.file_upload.required"
+        )
+        return true
       }
     },
     async createNewSubmission() {
       this.is_submitting = true
       this.tryCatchError = false
       if (this.checkThatFormIsInvalid()) {
-        return false;
+        return false
       }
       try {
         const {
           data: {
-            createSubmission: { id }
-          }
+            createSubmission: { id },
+          },
         } = await this.$apollo.mutate({
           mutation: CREATE_SUBMISSION,
           variables: this.new_submission,
-        });
+        })
         await this.$apollo.mutate({
           mutation: CREATE_SUBMISSION_FILE,
           variables: {
@@ -210,20 +219,24 @@ export default {
             file_upload: this.new_submission_files[0],
           },
           context: {
-            hasUpload: true
+            hasUpload: true,
           },
-          refetchQueries: ['GetSubmissions'], // Refetch queries since the result is paginated.
-        });
-        this.makeNotify("positive", "check_circle", "submissions.create.success")
-        this.new_submission.title = "";
-        this.new_submission_files = [];
+          refetchQueries: ["GetSubmissions"], // Refetch queries since the result is paginated.
+        })
+        this.makeNotify(
+          "positive",
+          "check_circle",
+          "submissions.create.success"
+        )
+        this.new_submission.title = ""
+        this.new_submission_files = []
         this.is_submitting = false
       } catch (error) {
-        console.log(error);
-        this.tryCatchError = true;
+        console.log(error)
+        this.tryCatchError = true
         this.is_submitting = false
       }
-    }
-  }
+    },
+  },
 }
 </script>

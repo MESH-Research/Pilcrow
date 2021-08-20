@@ -11,8 +11,8 @@
 </template>
 
 <script>
-import AppFooter from "../components/AppFooter.vue";
-import AppHeader from "src/components/AppHeader.vue";
+import AppFooter from "../components/AppFooter.vue"
+import AppHeader from "src/components/AppHeader.vue"
 export default {
   name: "MainLayout",
 
@@ -20,10 +20,10 @@ export default {
 
   data() {
     return {
-      leftDrawerOpen: false
-    };
+      leftDrawerOpen: false,
+    }
   },
-};
+}
 </script>
 
 <style lang="scss">

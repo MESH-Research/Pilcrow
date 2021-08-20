@@ -8,7 +8,7 @@
 </template>
 
 <script>
-    export default {
-        name: "ErrorBanner"
-    }
+export default {
+  name: "ErrorBanner",
+}
 </script>
