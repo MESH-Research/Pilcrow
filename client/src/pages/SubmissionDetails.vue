@@ -143,31 +143,35 @@ export default {
   methods: {
     async assignReviewer() {
       try {
-        await this.$apollo.mutate({
-          mutation: CREATE_SUBMISSION_USER,
-          variables: {
-            user_id: this.model.id,
-            role_id: 5,
-            submission_id: this.id
-          },
-          refetchQueries: ['GetSubmission']
-        }).then(() => {
-          this.model = null
-        })
+        await this.$apollo
+          .mutate({
+            mutation: CREATE_SUBMISSION_USER,
+            variables: {
+              user_id: this.model.id,
+              role_id: 5,
+              submission_id: this.id,
+            },
+            refetchQueries: ["GetSubmission"],
+          })
+          .then(() => {
+            this.model = null
+          })
       } catch (error) {
         console.log(error)
       }
     },
-    filterFn (val, update) {
+    filterFn(val, update) {
       update(() => {
         const needle = val.toLowerCase()
-        this.$apollo.query({
-          query: SEARCH_USERS,
-          variables: {
-            term: needle,
-            page:this.current_page
-          },
-        }).then(searchdata => {
+        this.$apollo
+          .query({
+            query: SEARCH_USERS,
+            variables: {
+              term: needle,
+              page: this.current_page,
+            },
+          })
+          .then((searchdata) => {
             var usersList = []
             const dropdowndata = searchdata.data.userSearch.data
             dropdowndata.forEach(function (currentValue, index) {
