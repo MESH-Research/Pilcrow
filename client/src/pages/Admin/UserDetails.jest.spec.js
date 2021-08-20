@@ -1,103 +1,95 @@
-import { mountQuasar } from "@quasar/quasar-app-extension-testing-unit-jest";
-import UserDetails from "./UserDetails.vue";
+import { mountQuasar } from "@quasar/quasar-app-extension-testing-unit-jest"
+import UserDetails from "./UserDetails.vue"
 
-import * as All from "quasar";
+import * as All from "quasar"
 
 const components = Object.keys(All).reduce((object, key) => {
-  const val = All[key];
+  const val = All[key]
   if (val.component?.name != null) {
-  object[key] = val;
+    object[key] = val
   }
-  return object;
-}, {});
+  return object
+}, {})
 
-const query = jest.fn();
-describe('User Details page mount', () => {
+const query = jest.fn()
+describe("User Details page mount", () => {
   const wrapperFactory = (userId) => {
     return mountQuasar(UserDetails, {
       quasar: {
-        components
+        components,
       },
       mount: {
-        type: 'full',
+        type: "full",
         mocks: {
-          $t: token => token,
-          $tc: token => token,
+          $t: (token) => token,
+          $tc: (token) => token,
           $apollo: {
-            query
+            query,
           },
           $route: {
             params: {
-              id: userId
-            }
-          }
+              id: userId,
+            },
+          },
         },
-        stubs: ["router-link"]
-      }
-    });
+        stubs: ["router-link"],
+      },
+    })
   }
 
-  it ('mounts without errors', () => {
-    expect(wrapperFactory(0)).toBeTruthy();
-  });
+  it("mounts without errors", () => {
+    expect(wrapperFactory(0)).toBeTruthy()
+  })
 
-  it('queries for a specific user', () => {
-    query.mockClear();
-    const wrapper = wrapperFactory(1);
-    expect(wrapper).toBeTruthy();
+  it("queries for a specific user", () => {
+    query.mockClear()
+    const wrapper = wrapperFactory(1)
+    expect(wrapper).toBeTruthy()
 
     expect(
-      wrapper
-        .vm
-        .$options
-        .apollo
-        .user
-        .variables
-        .bind(wrapper.vm)().id
+      wrapper.vm.$options.apollo.user.variables.bind(wrapper.vm)().id
     ).toBe(1)
-  });
+  })
 
-  it('reflects the lack of roles for a user with no assigned roles', async () => {
-    query.mockClear();
-    const wrapper = wrapperFactory(1);
-    expect(wrapper).toBeTruthy();
+  it("reflects the lack of roles for a user with no assigned roles", async () => {
+    query.mockClear()
+    const wrapper = wrapperFactory(1)
+    expect(wrapper).toBeTruthy()
     await wrapper.setData({
       user: {
-        name: 'Regular User',
-        roles: []
-      }
-    });
-    expect(wrapper.text()).toContain("role.no_roles_assigned");
-  });
+        name: "Regular User",
+        roles: [],
+      },
+    })
+    expect(wrapper.text()).toContain("role.no_roles_assigned")
+  })
 
-  it('reflects the role of an application administrator', async () => {
-    query.mockClear();
-    const wrapper = wrapperFactory(2);
-    expect(wrapper).toBeTruthy();
+  it("reflects the role of an application administrator", async () => {
+    query.mockClear()
+    const wrapper = wrapperFactory(2)
+    expect(wrapper).toBeTruthy()
     await wrapper.setData({
       user: {
-        name: 'Application Admin User',
+        name: "Application Admin User",
         roles: [
           {
-            name: "Application Administrator"
-          }
-        ]
-      }
-    });
-    expect(wrapper.text()).toContain("Application Administrator");
-  });
+            name: "Application Administrator",
+          },
+        ],
+      },
+    })
+    expect(wrapper.text()).toContain("Application Administrator")
+  })
 
-  it('reflects the lack of display name for a user with no name', async () => {
-    query.mockClear();
-    const wrapper = wrapperFactory(3);
-    expect(wrapper).toBeTruthy();
+  it("reflects the lack of display name for a user with no name", async () => {
+    query.mockClear()
+    const wrapper = wrapperFactory(3)
+    expect(wrapper).toBeTruthy()
     await wrapper.setData({
       user: {
-        username: 'userWithNoName'
-      }
-    });
-    expect(wrapper.text()).toContain("user.empty_name"
-    );
-  });
-
-});
+        username: "userWithNoName",
+      },
+    })
+    expect(wrapper.text()).toContain("user.empty_name")
+  })
+})
