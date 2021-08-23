@@ -61,7 +61,7 @@
         <q-list bordered separator data-cy="assignedReviewersList">
           <div v-if="submission.users.length">
             <q-item
-              v-for="user in submission.users"
+              v-for="user in reviewers"
               :key="user.id"
               data-cy="userListItem"
               class="q-px-lg"
@@ -127,7 +127,6 @@ export default {
         title: null,
         publication: null,
         users: [],
-        reviewers: [],
       },
       userSearch: {
         data: [],
@@ -139,6 +138,11 @@ export default {
       model: null,
       options: [],
     }
+  },
+  computed: {
+    reviewers: function () {
+      return this.submission.users.filter((user) => user.pivot.role_id === "5")
+    },
   },
   methods: {
     async assignReviewer() {
