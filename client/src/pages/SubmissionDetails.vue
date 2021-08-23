@@ -107,9 +107,9 @@
 </template>
 
 <script>
-import { GET_SUBMISSION, SEARCH_USERS } from "src/graphql/queries";
-import { CREATE_SUBMISSION_USER } from "src/graphql/mutations";
-import AvatarImage from "src/components/atoms/AvatarImage.vue";
+import { GET_SUBMISSION, SEARCH_USERS } from "src/graphql/queries"
+import { CREATE_SUBMISSION_USER } from "src/graphql/mutations"
+import AvatarImage from "src/components/atoms/AvatarImage.vue"
 
 export default {
   components: {
