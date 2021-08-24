@@ -91,7 +91,7 @@ type Mutation {
         @create
 
     "Soft delete an association between a user, role, and submission"
-    softDeleteSubmissionUser(id: ID!):  SubmissionUser!
+    softDeleteSubmissionUser(id: ID!): SubmissionUser!
         @delete
 
     "Create an association between an uploaded file and a submission"

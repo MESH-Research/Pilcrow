@@ -27,6 +27,4 @@ class SubmissionUser extends Pivot
     protected $fillable = [
         'deleted_at',
     ];
-
-
 }
