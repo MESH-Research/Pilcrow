@@ -14,7 +14,7 @@ class AddDeletedAtToSubmissionUserTable extends Migration
     public function up()
     {
         Schema::table('submission_user', function (Blueprint $table) {
-            //
+            $table->softDeletes();
         });
     }
 
@@ -26,7 +26,7 @@ class AddDeletedAtToSubmissionUserTable extends Migration
     public function down()
     {
         Schema::table('submission_user', function (Blueprint $table) {
-            //
+            $table->dropSoftDeletes();
         });
     }
 }
