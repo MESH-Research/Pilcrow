@@ -86,9 +86,13 @@ type Mutation {
     createSubmission(input: CreateSubmissionInput! @spread): Submission!
         @create
 
-    "Create an association between a user, a role, and a submission"
+    "Create an association between a user, role, and submission"
     createSubmissionUser(input: CreateSubmissionUserInput! @spread): SubmissionUser!
         @create
+
+    "Soft delete an association between a user, role, and submission"
+    softDeleteSubmissionUser(id: ID!):  SubmissionUser!
+        @delete
 
     "Create an association between an uploaded file and a submission"
     createSubmissionFile(input: CreateSubmissionFileInput! @spread): SubmissionFile!

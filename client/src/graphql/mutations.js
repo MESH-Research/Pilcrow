@@ -135,3 +135,10 @@ export const CREATE_SUBMISSION_USER = gql`
     }
   }
 `
+export const SOFT_DELETE_SUBMISSION_USER = gql`
+  mutation SoftDeleteSubmissionUser($id: ID!) {
+    softDeleteSubmissionUser(id: $id) {
+      id
+    }
+  }
+`

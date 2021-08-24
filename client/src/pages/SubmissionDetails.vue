@@ -61,31 +61,32 @@
         <q-list bordered separator data-cy="assignedReviewersList">
           <div v-if="submission.users.length">
             <q-item
-              v-for="user in reviewers"
-              :key="user.id"
+              v-for="submission_user in reviewers"
+              :key="submission_user.id"
               data-cy="userListItem"
               class="q-px-lg"
             >
               <q-item-section top avatar>
-                <avatar-image :user="user" rounded />
+                <avatar-image :user="submission_user" rounded />
               </q-item-section>
               <q-item-section>
-                <q-item-label v-if="user.name">
-                  {{ user.name }}
+                <q-item-label v-if="submission_user.name">
+                  {{ submission_user.name }}
                 </q-item-label>
                 <q-item-label v-else>
-                  {{ user.username }}
+                  {{ submission_user.username }}
                 </q-item-label>
                 <q-item-label caption lines="1">
-                  {{ user.email }}
+                  {{ submission_user.id }}
                 </q-item-label>
               </q-item-section>
               <q-item-section side center>
                 <q-btn
-                  :aria-label="`Unassign ${user.username}`"
+                  :aria-label="`Unassign ${submission_user.username}`"
                   flat
                   color="primary"
                   icon="person_remove"
+                  @click="softDeleteUser(submission_user.id)"
                 />
               </q-item-section>
             </q-item>
@@ -108,7 +109,10 @@
 
 <script>
 import { GET_SUBMISSION, SEARCH_USERS } from "src/graphql/queries"
-import { CREATE_SUBMISSION_USER } from "src/graphql/mutations"
+import {
+  CREATE_SUBMISSION_USER,
+  SOFT_DELETE_SUBMISSION_USER,
+} from "src/graphql/mutations"
 import AvatarImage from "src/components/atoms/AvatarImage.vue"
 
 export default {
@@ -160,6 +164,20 @@ export default {
           .then(() => {
             this.model = null
           })
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    async softDeleteUser(id) {
+      console.log(id)
+      try {
+        await this.$apollo.mutate({
+          mutation: SOFT_DELETE_SUBMISSION_USER,
+          variables: {
+            id: id,
+          },
+          refetchQueries: ["GetSubmission"],
+        })
       } catch (error) {
         console.log(error)
       }
