@@ -1,22 +1,12 @@
 <template>
-  <q-page
-    class="flex-center flex q-pa-md"
-    data-cy="vueLogin"
-  >
-    <q-card
-      style="width: 400px"
-      square
-    >
-      <q-form
-        @submit="handleSubmit()"
-      >
+  <q-page class="flex-center flex q-pa-md" data-cy="vueLogin">
+    <q-card style="width: 400px" square>
+      <q-form @submit="handleSubmit()">
         <q-card-section class="bg-deep-purple-7 q-pa-sm">
-          <h1 class="text-h5 text-white">
-            Login
-          </h1>
+          <h1 class="text-h5 text-white">Login</h1>
         </q-card-section>
-        <q-card-section class="q-pa-lg ">
-          <fieldset class="q-px-sm q-pt-md  q-gutter-y-lg q-pb-lg">
+        <q-card-section class="q-pa-lg">
+          <fieldset class="q-px-sm q-pt-md q-gutter-y-lg q-pb-lg">
             <error-banner
               v-if="redirectUrl != '/dashboard'"
               v-text="$t(`auth.loginRequired`)"
@@ -79,9 +69,7 @@
         <q-card-section class="text-center q-pa-sm">
           <p>
             Don't have an account?
-            <router-link to="/register">
-              Register.
-            </router-link>
+            <router-link to="/register"> Register. </router-link>
           </p>
         </q-card-section>
       </q-form>
@@ -90,33 +78,30 @@
 </template>
 
 <script>
-import PasswordInput from "src/components/forms/PasswordInput.vue";
-import ErrorBanner from "src/components/molecules/ErrorBanner.vue";
-import ErrorFieldRenderer from 'src/components/molecules/ErrorFieldRenderer.vue';
-import { defineComponent, ref } from '@vue/composition-api';
-import { useLogin } from 'src/use/user';
-
+import PasswordInput from "src/components/forms/PasswordInput.vue"
+import ErrorBanner from "src/components/molecules/ErrorBanner.vue"
+import ErrorFieldRenderer from "src/components/molecules/ErrorFieldRenderer.vue"
+import { defineComponent, ref } from "@vue/composition-api"
+import { useLogin } from "src/use/user"
 
 export default defineComponent({
   name: "PageLogin",
   components: { PasswordInput, ErrorFieldRenderer, ErrorBanner },
-  setup(_, {root}) {
+  setup(_, { root }) {
+    const error = ref("")
 
-    const error = ref('');
-
-    const { loginUser, loading, $v, redirectUrl } = useLogin();
+    const { loginUser, loading, $v, redirectUrl } = useLogin()
 
     const handleSubmit = async () => {
       try {
         await loginUser()
-        root.$router.push(redirectUrl);
+        root.$router.push(redirectUrl)
       } catch (e) {
-        error.value = e.message;
+        error.value = e.message
       }
     }
 
-
-    return {$v, handleSubmit, loading, error, redirectUrl}
+    return { $v, handleSubmit, loading, error, redirectUrl }
   },
-});
+})
 </script>

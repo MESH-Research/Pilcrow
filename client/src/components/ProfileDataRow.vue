@@ -6,29 +6,23 @@
     <div class="col-xs-8 col-md-2">
       {{ value }}
     </div>
-    <q-btn
-      flat
-      icon="edit"
-      size="sm"
-      clickable
-      @click="$emit('editClick')"
-    />
+    <q-btn flat icon="edit" size="sm" clickable @click="$emit('editClick')" />
     <q-separator class="q-mt-md" />
   </div>
 </template>
 
 <script>
 export default {
-  name: 'ProfileDataRow',
+  name: "ProfileDataRow",
   props: {
     label: {
       type: String,
-      default: ''
+      default: "",
     },
     value: {
       type: String,
-      default: ''
-    }
+      default: "",
+    },
   },
 }
 </script>
