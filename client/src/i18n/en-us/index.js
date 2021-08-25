@@ -145,6 +145,9 @@ export default {
         required: "A file must be uploaded with a submission.",
       },
     },
+    reviewers: {
+      none: "No reviewers are assigned to this submission.",
+    },
   },
   failures: {
     UNKNOWN_ERROR: "An unknown error has occurred.",

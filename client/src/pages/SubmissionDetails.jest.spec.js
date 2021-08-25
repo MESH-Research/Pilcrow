@@ -88,6 +88,8 @@ describe("submissions details page mount", () => {
         users: [],
       },
     })
+    const qitem = wrapper.find("[data-cy=assignedReviewersList]")
+    expect(qitem.text()).toContain("submissions.reviewers.none")
     expect(wrapper.findAllComponents({ name: "q-item" })).toHaveLength(1)
   })
 })

@@ -98,7 +98,7 @@
                 <q-icon name="o_do_disturb_on" />
               </q-item-section>
               <q-item-section>
-                No reviewers are assigned to this submission.
+                {{ $t("submissions.reviewers.none") }}
               </q-item-section>
             </q-item>
           </div>
