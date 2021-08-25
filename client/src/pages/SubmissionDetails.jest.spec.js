@@ -18,7 +18,7 @@ describe("submissions details page mount", () => {
       components,
     },
     mount: {
-      type: "full",
+      type: "shallow",
       mocks: {
         $t: (token) => token,
         $apollo: {
@@ -37,38 +37,55 @@ describe("submissions details page mount", () => {
 
   test("all assigned reviwers appear within the assigned reviewers list", async () => {
     await wrapper.setData({
-      userSearch: {
-        data: [
+      submission: {
+        users: [
           {
-            id: "1",
+            name: "Jest Submitter 1",
+            username: "jestSubmitter1",
+            email: "jestsubmitter1@msu.edu",
+            pivot: {
+              id: "1",
+              role_id: "6",
+            },
+          },
+          {
             name: "Jest Reviewer 1",
             username: "jestReviewer1",
             email: "jestreviewer1@msu.edu",
+            pivot: {
+              id: "2",
+              role_id: "5",
+            },
           },
           {
-            id: "2",
             name: "Jest Reviewer 2",
             username: "jestReviewer2",
             email: "jestreviewer2@msu.edu",
+            pivot: {
+              id: "3",
+              role_id: "5",
+            },
           },
           {
-            id: "3",
             name: "Jest Reviewer 3",
             username: "jestReviewer3",
             email: "jestreviewer3@msu.edu",
+            pivot: {
+              id: "4",
+              role_id: "5",
+            },
           },
         ],
-        paginatorInfo: { lastPage: 10 },
       },
     })
+
     expect(wrapper.findAllComponents({ name: "q-item" })).toHaveLength(3)
   })
 
   test("a default message still appears when there are no assigned reviewers", async () => {
     await wrapper.setData({
-      userSearch: {
-        data: [],
-        paginatorInfo: { lastPage: 10 },
+      submission: {
+        users: [],
       },
     })
     expect(wrapper.findAllComponents({ name: "q-item" })).toHaveLength(1)

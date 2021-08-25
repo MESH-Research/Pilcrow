@@ -59,7 +59,7 @@
       <section class="col-md-5 col-sm-6 col-xs-12">
         <h3>Assigned Reviewers</h3>
         <q-list bordered separator data-cy="assignedReviewersList">
-          <div v-if="submission.users.length">
+          <div v-if="reviewers.length > 0">
             <q-item
               v-for="submission_user in reviewers"
               :key="submission_user.id"
@@ -77,7 +77,8 @@
                   {{ submission_user.username }}
                 </q-item-label>
                 <q-item-label caption lines="1">
-                  {{ submission_user.id }}
+                  {{ submission_user.email }}
+                  <!-- {{ submission_user.id }} -->
                 </q-item-label>
               </q-item-section>
               <q-item-section side center>
