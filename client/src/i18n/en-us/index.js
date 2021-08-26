@@ -147,6 +147,7 @@ export default {
     },
     reviewers: {
       none: "No reviewers are assigned to this submission.",
+      duplicate: "That reviewer is already assigned to this submission.",
     },
   },
   failures: {
