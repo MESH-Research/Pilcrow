@@ -145,7 +145,7 @@ export default {
         required: "A file must be uploaded with a submission.",
       },
     },
-    reviewers: {
+    reviewer: {
       none: "No reviewers are assigned to this submission.",
       duplicate: "That reviewer is already assigned to this submission.",
     },

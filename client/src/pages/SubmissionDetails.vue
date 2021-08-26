@@ -98,7 +98,7 @@
                 <q-icon name="o_do_disturb_on" />
               </q-item-section>
               <q-item-section>
-                {{ $t("submissions.reviewers.none") }}
+                {{ $t("submissions.reviewer.none") }}
               </q-item-section>
             </q-item>
           </div>
