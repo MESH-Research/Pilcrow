@@ -18,13 +18,4 @@ class SubmissionUser extends Pivot
      * @var bool
      */
     public $incrementing = true;
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'deleted_at',
-    ];
 }
