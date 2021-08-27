@@ -22,3 +22,9 @@ The stack is running `yarn dev` in the node container, so editing source files s
 * Database migrations are *not* automatically applied, so you'll need to run `lando artisan migrate` to apply them as needed.
 * See [https://ccr.meshresearch.dev/contributing/wsl.html](https://ccr.meshresearch.dev/contributing/wsl.html) for additional notes on
   developer setup under Windows Subsystem for Linux (WSL)
+
+### CCR Wiki - <https://github.com/MESH-Research/CCR/wiki>
+
+* [An opinionated application](https://github.com/MESH-Research/CCR/wiki/An-Opinionated-Application)
+* [CCR Links](https://github.com/MESH-Research/CCR/wiki/CCR-Links)
+* [Style Guide - in the Making](https://github.com/MESH-Research/CCR/wiki/Style-Guide---in-the-making)
