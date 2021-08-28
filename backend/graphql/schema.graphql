@@ -87,7 +87,7 @@ type Mutation {
         @create
 
     "Create an association between a user, role, and submission"
-    createSubmissionUser(input: CreateSubmissionUserInput! @spread): SubmissionUser!
+    createSubmissionUser(submission_user: CreateSubmissionUserInput! @spread): SubmissionUser!
         @create
 
     "Soft delete an association between a user, role, and submission"
