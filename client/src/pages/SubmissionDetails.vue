@@ -61,33 +61,33 @@
         <q-list bordered separator data-cy="assignedReviewersList">
           <div v-if="reviewers.length > 0">
             <q-item
-              v-for="submission_user in reviewers"
-              :key="submission_user.id"
+              v-for="reviewer in reviewers"
+              :key="reviewer.id"
               data-cy="userListItem"
               class="q-px-lg"
             >
               <q-item-section top avatar>
-                <avatar-image :user="submission_user" rounded />
+                <avatar-image :user="reviewer" rounded />
               </q-item-section>
               <q-item-section>
-                <q-item-label v-if="submission_user.name">
-                  {{ submission_user.name }}
+                <q-item-label v-if="reviewer.name">
+                  {{ reviewer.name }}
                 </q-item-label>
                 <q-item-label v-else>
-                  {{ submission_user.username }}
+                  {{ reviewer.username }}
                 </q-item-label>
                 <q-item-label caption lines="1">
-                  {{ submission_user.email }}
-                  <!-- {{ submission_user.id }} -->
+                  {{ reviewer.email }}
+                  <!-- {{ reviewer.id }} -->
                 </q-item-label>
               </q-item-section>
               <q-item-section side center>
                 <q-btn
-                  :aria-label="`Unassign ${submission_user.username}`"
+                  :aria-label="`Unassign ${reviewer.username}`"
                   flat
                   color="primary"
                   icon="person_remove"
-                  @click="softDeleteUser(submission_user.id)"
+                  @click="unassignUser(reviewer.id)"
                 />
               </q-item-section>
             </q-item>
@@ -110,10 +110,7 @@
 
 <script>
 import { GET_SUBMISSION, SEARCH_USERS } from "src/graphql/queries"
-import {
-  CREATE_SUBMISSION_USER,
-  SOFT_DELETE_SUBMISSION_USER,
-} from "src/graphql/mutations"
+import { CREATE_SUBMISSION_USER } from "src/graphql/mutations"
 import AvatarImage from "src/components/atoms/AvatarImage.vue"
 
 export default {
@@ -169,19 +166,19 @@ export default {
         console.log(error)
       }
     },
-    async softDeleteUser(id) {
-      console.log(id)
-      try {
-        await this.$apollo.mutate({
-          mutation: SOFT_DELETE_SUBMISSION_USER,
-          variables: {
-            id: id,
-          },
-          refetchQueries: ["GetSubmission"],
-        })
-      } catch (error) {
-        console.log(error)
-      }
+    async unassignUser(id) {
+      console.log(`unassign`, id)
+      // try {
+      //   await this.$apollo.mutate({
+      //     mutation: SOFT_DELETE_SUBMISSION_USER,
+      //     variables: {
+      //       id: id,
+      //     },
+      //     refetchQueries: ["GetSubmission"],
+      //   })
+      // } catch (error) {
+      //   console.log(error)
+      // }
     },
     filterFn(val, update) {
       update(() => {

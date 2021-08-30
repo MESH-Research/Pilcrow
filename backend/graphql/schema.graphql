@@ -86,8 +86,14 @@ type Mutation {
     createSubmission(input: CreateSubmissionInput! @spread): Submission!
         @create
 
+    updateSubmission(input: UpdateSubmissionInput! @spread): Submission!
+        @update
+
     "Create an association between a user, role, and submission"
     createSubmissionUser(submission_user: CreateSubmissionUserInput! @spread): SubmissionUser!
+        @create
+
+    deleteSubmissionUser(input: CreateSubmissionUserInput! @spread): SubmissionUser!
         @create
 
     "Soft delete an association between a user, role, and submission"
@@ -209,6 +215,21 @@ input CreateSubmissionInput @validator(class: "SubmissionInputValidator") {
     publication_id: ID!
 }
 
+input UpdateSubmissionInput {
+    id: ID!
+    users: UpdateSubmissionUserBelongsToMany
+}
+
+input UpdateSubmissionUserBelongsToMany {
+    disconnect: [ID!]
+}
+
+# input DisconnectSubmissionUserInput {
+#     user_id: ID!
+#     role_id: ID!
+#     submission_id: ID!
+# }
+
 """
 Input type for creating a new association between a submission, role, and user via the createSubmissionUser mutation
 """
@@ -216,6 +237,10 @@ input CreateSubmissionUserInput @validator(class: "SubmissionUserInputValidator"
     user_id: ID!
     role_id: ID!
     submission_id: ID!
+    #     @rules(
+    #         apply: ["unique:submission_user,submission_user_unique"]
+    #         messages: [{ rule: "unique", message: "duplicate_submission_user" }]
+    #     )
 }
 
 """
