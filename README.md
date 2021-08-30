@@ -27,4 +27,4 @@ The stack is running `yarn dev` in the node container, so editing source files s
 
 * [An opinionated application](https://github.com/MESH-Research/CCR/wiki/An-Opinionated-Application)
 * [CCR Links](https://github.com/MESH-Research/CCR/wiki/CCR-Links)
-* [Style Guide - in the Making](https://github.com/MESH-Research/CCR/wiki/Style-Guide---in-the-making)
+* [Style Guide - in the Making](https://github.com/MESH-Research/CCR/wiki/Style-Guide---in-the-making) This is my update
