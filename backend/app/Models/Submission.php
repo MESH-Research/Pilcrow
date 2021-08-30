@@ -39,7 +39,7 @@ class Submission extends Model
     {
         return $this->belongsToMany(User::class)
             ->withTimestamps()
-            ->withPivot('role_id');
+            ->withPivot(['role_id', 'id']);
     }
 
     /**
