@@ -29,7 +29,7 @@
     "@vuelidate/validators": "^2.0.0-alpha.20",
     "apollo-upload-client": "^16.0.0",
     "axios": "^0.21.1",
-    "core-js": "^3.16.3",
+    "core-js": "^3.16.4",
     "graphql": "^15.5.1",
     "graphql-tag": "^2.12.5",
     "lodash": "^4.17.20",
