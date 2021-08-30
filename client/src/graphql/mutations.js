@@ -125,7 +125,7 @@ export const CREATE_SUBMISSION_USER = gql`
     $submission_id: ID!
   ) {
     createSubmissionUser(
-      input: {
+      submission_user: {
         user_id: $user_id
         role_id: $role_id
         submission_id: $submission_id
