@@ -87,7 +87,7 @@
                   flat
                   color="primary"
                   icon="person_remove"
-                  @click="unassignUser(reviewer.id)"
+                  @click="unassignUser(reviewer.id, 5)"
                 />
               </q-item-section>
             </q-item>
@@ -110,7 +110,10 @@
 
 <script>
 import { GET_SUBMISSION, SEARCH_USERS } from "src/graphql/queries"
-import { CREATE_SUBMISSION_USER } from "src/graphql/mutations"
+import {
+  CREATE_SUBMISSION_USER,
+  DELETE_SUBMISSION_USER,
+} from "src/graphql/mutations"
 import AvatarImage from "src/components/atoms/AvatarImage.vue"
 
 export default {
@@ -143,7 +146,7 @@ export default {
   },
   computed: {
     reviewers: function () {
-      return this.submission.users.filter((user) => user.pivot.role_id === "5")
+      return this.submission.users.filter((user) => user.pivot.role_id == "5")
     },
   },
   methods: {
@@ -154,7 +157,7 @@ export default {
             mutation: CREATE_SUBMISSION_USER,
             variables: {
               user_id: this.model.id,
-              role_id: 5,
+              role_id: "5",
               submission_id: this.id,
             },
             refetchQueries: ["GetSubmission"],
@@ -166,19 +169,21 @@ export default {
         console.log(error)
       }
     },
-    async unassignUser(id) {
-      console.log(`unassign`, id)
-      // try {
-      //   await this.$apollo.mutate({
-      //     mutation: SOFT_DELETE_SUBMISSION_USER,
-      //     variables: {
-      //       id: id,
-      //     },
-      //     refetchQueries: ["GetSubmission"],
-      //   })
-      // } catch (error) {
-      //   console.log(error)
-      // }
+    async unassignUser(user_id, role_id) {
+      // console.log(`unassign`, user_id, role_id, this.id)
+      try {
+        await this.$apollo.mutate({
+          mutation: DELETE_SUBMISSION_USER,
+          variables: {
+            user_id: `${user_id}`,
+            role_id: `${role_id}`,
+            submission_id: this.id,
+          },
+          refetchQueries: ["GetSubmission"],
+        })
+      } catch (error) {
+        console.log(error)
+      }
     },
     filterFn(val, update) {
       update(() => {

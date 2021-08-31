@@ -115,6 +115,7 @@ export const GET_SUBMISSION = gql`
         name
       }
       users {
+        id
         name
         email
         roles {
