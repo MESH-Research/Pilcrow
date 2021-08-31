@@ -6,6 +6,7 @@ namespace App\Models;
 use Carbon\Carbon;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Config;
@@ -156,7 +157,7 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function submissions()
+    public function submissions(): BelongsToMany
     {
         return $this->belongsToMany(Submission::class)
             ->withTimestamps()
@@ -168,7 +169,7 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function publications()
+    public function publications(): BelongsToMany
     {
         return $this->belongsToMany(Publication::class)
             ->withTimestamps()
