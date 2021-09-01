@@ -123,6 +123,8 @@ export const GET_SUBMISSION = gql`
           name
         }
         pivot {
+          id
+          user_id
           role_id
         }
       }

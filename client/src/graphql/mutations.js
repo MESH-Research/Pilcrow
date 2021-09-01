@@ -135,6 +135,7 @@ export const CREATE_SUBMISSION_USER = gql`
     }
   }
 `
+
 export const DELETE_SUBMISSION_USER = gql`
   mutation DeleteSubmissionUser(
     $user_id: ID!

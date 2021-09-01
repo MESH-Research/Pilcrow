@@ -5,12 +5,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\Pivot;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class SubmissionUser extends Pivot
 {
     use HasFactory;
-    use SoftDeletes;
 
     /**
      * Indicates if the IDs are auto-incrementing.

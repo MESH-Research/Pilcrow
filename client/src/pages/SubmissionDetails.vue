@@ -62,7 +62,7 @@
           <div v-if="reviewers.length > 0">
             <q-item
               v-for="reviewer in reviewers"
-              :key="reviewer.id"
+              :key="reviewer.pivot.id"
               data-cy="userListItem"
               class="q-px-lg"
             >
@@ -77,8 +77,8 @@
                   {{ reviewer.username }}
                 </q-item-label>
                 <q-item-label caption lines="1">
+                  {{ reviewer.pivot.role_id }}
                   {{ reviewer.email }}
-                  <!-- {{ reviewer.id }} -->
                 </q-item-label>
               </q-item-section>
               <q-item-section side center>
@@ -136,17 +136,19 @@ export default {
       userSearch: {
         data: [],
       },
-      assignedUsers: {
-        data: [],
-      },
       current_page: 1,
       model: null,
       options: [],
     }
   },
   computed: {
+    users: function () {
+      return this.submission.users
+    },
     reviewers: function () {
-      return this.submission.users.filter((user) => user.pivot.role_id == "5")
+      return this.submission.users.filter((user) => {
+        return parseInt(user.pivot.role_id) === 5
+      })
     },
   },
   methods: {
@@ -157,7 +159,7 @@ export default {
             mutation: CREATE_SUBMISSION_USER,
             variables: {
               user_id: this.model.id,
-              role_id: "5",
+              role_id: 5,
               submission_id: this.id,
             },
             refetchQueries: ["GetSubmission"],
@@ -175,8 +177,8 @@ export default {
         await this.$apollo.mutate({
           mutation: DELETE_SUBMISSION_USER,
           variables: {
-            user_id: `${user_id}`,
-            role_id: `${role_id}`,
+            user_id: user_id,
+            role_id: role_id,
             submission_id: this.id,
           },
           refetchQueries: ["GetSubmission"],
