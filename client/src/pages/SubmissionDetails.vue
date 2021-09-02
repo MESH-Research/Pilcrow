@@ -86,7 +86,7 @@
                   flat
                   color="primary"
                   icon="person_remove"
-                  @click="unassignUser(reviewer.pivot.user_id, 5)"
+                  @click="unassignReviewer(reviewer)"
                 />
               </q-item-section>
             </q-item>
@@ -151,6 +151,18 @@ export default {
     },
   },
   methods: {
+    makeNotify(color, icon, message, display_name = null) {
+      this.$q.notify({
+        color: color,
+        icon: icon,
+        message: this.$t(message, { display_name }),
+        attrs: {
+          "data-cy": "submission_details_notify",
+        },
+        html: true,
+      })
+      this.is_submitting = false
+    },
     async assignReviewer() {
       try {
         await this.$apollo
@@ -164,25 +176,47 @@ export default {
             refetchQueries: ["GetSubmission"],
           })
           .then(() => {
+            this.makeNotify(
+              "positive",
+              "check_circle",
+              "submissions.reviewer.assign.success",
+              this.model.name ? this.model.name : this.model.username
+            )
+          })
+          .then(() => {
             this.model = null
           })
       } catch (error) {
-        console.log(error)
+        this.makeNotify(
+          "negative",
+          "error",
+          "submissions.reviewer.assign.error"
+        )
       }
     },
-    async unassignUser(user_id, role_id) {
+    async unassignReviewer(reviewer) {
       try {
         await this.$apollo.mutate({
           mutation: DELETE_SUBMISSION_USER,
           variables: {
-            user_id: user_id,
-            role_id: role_id,
+            user_id: reviewer.pivot.user_id,
+            role_id: 5,
             submission_id: this.id,
           },
           refetchQueries: ["GetSubmission"],
         })
+        this.makeNotify(
+          "positive",
+          "check_circle",
+          "submissions.reviewer.unassign.success",
+          reviewer.name ? reviewer.name : reviewer.username
+        )
       } catch (error) {
-        console.log(error)
+        this.makeNotify(
+          "negative",
+          "error",
+          "submissions.reviewer.unassign.error"
+        )
       }
     },
     filterFn(val, update) {

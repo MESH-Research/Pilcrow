@@ -147,7 +147,16 @@ export default {
     },
     reviewer: {
       none: "No reviewers are assigned to this submission.",
-      duplicate: "That reviewer is already assigned to this submission.",
+      unassign: {
+        error: "An error occurred while attempting to unassign a reviewer.",
+        success: "{display_name} successfully unassigned as a reviewer.",
+      },
+      assign: {
+        duplicate: "That reviewer is already assigned to this submission.",
+        error:
+          "An error occurred while attempting to assign a reviewer. Is this user already assigned as a reviewer?",
+        success: "{display_name} successfully assigned as a reviewer.",
+      },
     },
   },
   failures: {
