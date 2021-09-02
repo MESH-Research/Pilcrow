@@ -77,7 +77,6 @@
                   {{ reviewer.username }}
                 </q-item-label>
                 <q-item-label caption lines="1">
-                  {{ reviewer.pivot.role_id }}
                   {{ reviewer.email }}
                 </q-item-label>
               </q-item-section>
@@ -87,7 +86,7 @@
                   flat
                   color="primary"
                   icon="person_remove"
-                  @click="unassignUser(reviewer.id, 5)"
+                  @click="unassignUser(reviewer.pivot.user_id, 5)"
                 />
               </q-item-section>
             </q-item>
@@ -172,7 +171,6 @@ export default {
       }
     },
     async unassignUser(user_id, role_id) {
-      // console.log(`unassign`, user_id, role_id, this.id)
       try {
         await this.$apollo.mutate({
           mutation: DELETE_SUBMISSION_USER,
