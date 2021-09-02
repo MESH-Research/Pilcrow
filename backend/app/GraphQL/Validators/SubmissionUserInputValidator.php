@@ -54,7 +54,7 @@ class SubmissionUserInputValidator extends Validator
     public function messages(): array
     {
         return [
-            'role_id.unique' => 'duplicate_entry'
+            'role_id.unique' => 'duplicate_entry',
         ];
     }
 }

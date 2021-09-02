@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\GraphQL\Mutations;
 
@@ -11,7 +12,7 @@ class DeleteSubmissionUser
     /**
      * @param  null  $_
      * @param  array<string, mixed>  $args
-     * @return App\Models\Submission
+     * @return \App\GraphQL\Mutations\App\Models\Submission
      */
     public function delete($_, array $args): Submission
     {
@@ -20,6 +21,7 @@ class DeleteSubmissionUser
                 ->where('role_id', $args['role_id'])
                 ->where('submission_id', $args['submission_id'])->firstOrFail();
             $submission_user->forceDelete();
+
             return Submission::where('id', $args['submission_id'])->firstOrFail();
         } catch (Error $error) {
             throw $error;
