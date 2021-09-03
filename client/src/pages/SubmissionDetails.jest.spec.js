@@ -67,12 +67,21 @@ describe("submissions details page mount", () => {
             },
           },
           {
-            name: "Jest Reviewer 3",
-            username: "jestReviewer3",
+            name: "Jest Reviewer 3 and Review Coordinator 1",
+            username: "jestReviewer3Coordinator1",
             email: "jestreviewer3@msu.edu",
             pivot: {
               id: "4",
               role_id: "5",
+            },
+          },
+          {
+            name: "Jest Reviewer 3 and Review Coordinator 1",
+            username: "jestReviewer3Coordinator1",
+            email: "jestreviewer3@msu.edu",
+            pivot: {
+              id: "4",
+              role_id: "3",
             },
           },
         ],
