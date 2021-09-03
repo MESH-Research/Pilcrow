@@ -403,7 +403,7 @@ class SubmissionTest extends TestCase
         $response = $this->graphQL(
             'mutation CreateSubmissionUser ($role_id: ID!, $submission_id: ID!, $user_id: ID!) {
                 createSubmissionUser(
-                    input: { role_id: $role_id, submission_id: $submission_id, user_id: $user_id }
+                    submission_user: { role_id: $role_id, submission_id: $submission_id, user_id: $user_id }
                 ) {
                     role_id
                     submission_id
