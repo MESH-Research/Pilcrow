@@ -1,20 +1,12 @@
 <template>
   <div>
-    <p v-html="$t('auth.password_meter.summary', { score, crack_time })" /> <!-- eslint-disable-line vue/no-v-html -->
-    <div
-      v-if="suggestions.length"
-      class="password-suggestions"
-    >
+    <!-- eslint-disable-next-line vue/no-v-html -->
+    <p v-html="$t('auth.password_meter.summary', { score, crack_time })" />
+    <div v-if="suggestions.length" class="password-suggestions">
       <q-list dense>
-        <q-item
-          v-if="warning.length"
-          class="warning"
-        >
+        <q-item v-if="warning.length" class="warning">
           <q-item-section avatar>
-            <q-icon
-              class="text-red"
-              name="warning"
-            />
+            <q-icon class="text-red" name="warning" />
           </q-item-section>
           {{ warning }}
         </q-item>
@@ -24,10 +16,7 @@
           class="suggestion"
         >
           <q-item-section avatar>
-            <q-icon
-              color="primary"
-              name="close"
-            />
+            <q-icon color="primary" name="close" />
           </q-item-section>
           {{ message }}
         </q-item>
@@ -41,25 +30,25 @@ export default {
   props: {
     complexity: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
   computed: {
     suggestions() {
-      return this.complexity.feedback.suggestions;
+      return this.complexity.feedback.suggestions
     },
     warning() {
-      return this.complexity.feedback.warning;
+      return this.complexity.feedback.warning
     },
     score() {
-      return this.complexity.score;
+      return this.complexity.score
     },
     crack_time() {
       return this.complexity.crack_times_display
-        .offline_slow_hashing_1e4_per_second;
-    }
-  }
-};
+        .offline_slow_hashing_1e4_per_second
+    },
+  },
+}
 </script>
 <style lang="sass" scoped>
 p:last-child

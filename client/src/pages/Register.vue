@@ -1,13 +1,7 @@
 <template>
-  <q-page
-    class="flex-center flex q-pa-md"
-    data-cy="vueRegister"
-  >
+  <q-page class="flex-center flex q-pa-md" data-cy="vueRegister">
     <q-card style="width: 400px">
-      <q-form
-        autofocus
-        @submit="handleSubmit"
-      >
+      <q-form autofocus @submit="handleSubmit">
         <q-card-section class="bg-deep-purple-7">
           <h1 class="text-h5 text-white q-my-xs">
             {{ $t("auth.register") }}
@@ -16,12 +10,10 @@
 
         <q-card-section>
           <p>
-            It only takes a minute to create an account and join our community of
-            scholars.
+            It only takes a minute to create an account and join our community
+            of scholars.
           </p>
-          <fieldset
-            class="q-px-sm q-pb-lg q-gutter-y-lg column"
-          >
+          <fieldset class="q-px-sm q-pb-lg q-gutter-y-lg column">
             <q-input
               v-model.trim="$v.name.$model"
               outlined
@@ -55,20 +47,16 @@
                 >
                   <template #loginAction>
                     <router-link to="/login">
-                      {{
-                        $t("auth.login_help")
-                      }}
+                      {{ $t("auth.login_help") }}
                     </router-link>
                   </template>
                   <template #passwordAction>
                     <router-link to="/reset-password">
-                      {{
-                        $t("auth.password_help")
-                      }}
+                      {{ $t("auth.password_help") }}
                     </router-link>
                   </template>
                   <template #break>
-                    <br>
+                    <br />
                   </template>
                 </i18n>
               </template>
@@ -118,9 +106,7 @@
         </q-card-actions>
         <q-card-section class="text-center q-pa-sm">
           <p>
-            <router-link
-              to="/login"
-            >
+            <router-link to="/login">
               {{ $t("auth.register_login") }}
             </router-link>
           </p>
@@ -131,39 +117,37 @@
 </template>
 
 <script>
-import NewPasswordInput from "../components/forms/NewPasswordInput.vue";
-import { useUserValidation } from "src/use/userValidation";
-import ErrorFieldRenderer from 'src/components/molecules/ErrorFieldRenderer.vue';
-import { useHasErrorKey } from 'src/use/validationHelpers';
-import { ref, provide } from '@vue/composition-api';
-import {useLogin} from 'src/use/user';
-import ErrorBanner from 'src/components/molecules/ErrorBanner.vue';
+import NewPasswordInput from "../components/forms/NewPasswordInput.vue"
+import { useUserValidation } from "src/use/userValidation"
+import ErrorFieldRenderer from "src/components/molecules/ErrorFieldRenderer.vue"
+import { useHasErrorKey } from "src/use/validationHelpers"
+import { ref, provide } from "@vue/composition-api"
+import { useLogin } from "src/use/user"
+import ErrorBanner from "src/components/molecules/ErrorBanner.vue"
 
 export default {
   name: "PageRegister",
   components: { NewPasswordInput, ErrorFieldRenderer, ErrorBanner },
-  setup(_, {root}) {
-    const {loginUser} = useLogin();
+  setup(_, { root }) {
+    const { loginUser } = useLogin()
 
     async function handleSubmit() {
-      formErrorMsg.value = '';
+      formErrorMsg.value = ""
       try {
-        await saveUser();
-        await loginUser({email: user.email, password: user.password});
-        root.$router.push('/dashboard');
+        await saveUser()
+        await loginUser({ email: user.email, password: user.password })
+        root.$router.push("/dashboard")
       } catch (e) {
-        formErrorMsg.value = e.message;
+        formErrorMsg.value = e.message
       }
-
-
     }
 
-    const formErrorMsg = ref('');
-    const { $v, user, saveUser } = useUserValidation();
-    provide('validator', $v);
-    const hasErrorKey = useHasErrorKey();
+    const formErrorMsg = ref("")
+    const { $v, user, saveUser } = useUserValidation()
+    provide("validator", $v)
+    const hasErrorKey = useHasErrorKey()
 
-    return {$v, user, handleSubmit, hasErrorKey,  formErrorMsg};
+    return { $v, user, handleSubmit, hasErrorKey, formErrorMsg }
   },
-};
+}
 </script>

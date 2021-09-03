@@ -1,15 +1,10 @@
 <template>
   <div>
-    <h2 class="q-pl-lg">
-      Publications
-    </h2>
+    <h2 class="q-pl-lg">Publications</h2>
     <div class="row q-col-gutter-lg q-pa-lg">
       <section class="col-md-7 col-sm-6 col-xs-12">
         <h3>All Publications</h3>
-        <ol
-          class="scroll"
-          data-cy="publications_list"
-        >
+        <ol class="scroll" data-cy="publications_list">
           <li
             v-for="publication in publications.data"
             :key="publication.id"
@@ -32,30 +27,27 @@
 </template>
 
 <script>
-import { GET_PUBLICATIONS } from 'src/graphql/queries';
+import { GET_PUBLICATIONS } from "src/graphql/queries"
 
 export default {
-  components: {
-
-  },
+  components: {},
   data() {
     return {
       publications: {
-        data: []
+        data: [],
       },
-      current_page: 1
+      current_page: 1,
     }
   },
   apollo: {
     publications: {
       query: GET_PUBLICATIONS,
-      variables () {
+      variables() {
         return {
-          page:this.current_page
+          page: this.current_page,
         }
-      }
-    }
+      },
+    },
   },
 }
 </script>
-

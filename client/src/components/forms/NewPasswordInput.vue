@@ -28,15 +28,8 @@
         </q-chip>
       </template>
       <template #hint>
-        <new-password-input-meter
-          :max="4"
-          :score="score"
-          :valid="!error"
-        />
-        <div
-          v-if="value.length > 0"
-          class="password-summary"
-        >
+        <new-password-input-meter :max="4" :score="score" :valid="!error" />
+        <div v-if="value.length > 0" class="password-summary">
           <span v-if="!error">{{
             $t("auth.validation.PASSWORD_COMPLEX")
           }}</span>
@@ -65,56 +58,56 @@
 </template>
 
 <script>
-import NewPasswordInputAnalysis from "./atoms/NewPasswordInputAnalysis.vue";
-import PasswordInput from "./PasswordInput.vue";
-import NewPasswordInputMeter from "./atoms/NewPasswordInputMeter.vue";
+import NewPasswordInputAnalysis from "./atoms/NewPasswordInputAnalysis.vue"
+import PasswordInput from "./PasswordInput.vue"
+import NewPasswordInputMeter from "./atoms/NewPasswordInputMeter.vue"
 
 export default {
   name: "NewPasswordInput",
   components: {
     NewPasswordInputAnalysis,
     PasswordInput,
-    NewPasswordInputMeter
+    NewPasswordInputMeter,
   },
   inheritAttrs: false,
   props: {
     label: {
       type: String,
-      default: "Password"
+      default: "Password",
     },
     value: {
       type: String,
-      default: ""
+      default: "",
     },
     threshold: {
       type: Number,
-      default: 3
+      default: 3,
     },
     complexity: {
       type: Object,
-      required: true
+      required: true,
     },
     error: {
-      type: Boolean
-    }
+      type: Boolean,
+    },
   },
   data() {
     return {
       isPwd: true,
-      showDetails: false
-    };
+      showDetails: false,
+    }
   },
   computed: {
     score() {
-      return this.complexity.score;
-    }
+      return this.complexity.score
+    },
   },
   methods: {
     handleInput(event) {
-      this.$emit("input", event);
-    }
-  }
-};
+      this.$emit("input", event)
+    },
+  },
+}
 </script>
 
 <style lang="sass" scoped>

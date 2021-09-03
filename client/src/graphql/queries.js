@@ -1,4 +1,4 @@
-import gql from "graphql-tag";
+import gql from "graphql-tag"
 
 export const CURRENT_USER = gql`
   query currentUser {
@@ -13,11 +13,11 @@ export const CURRENT_USER = gql`
       }
     }
   }
-`;
+`
 
 export const GET_USERS = gql`
-  query users($page:Int) {
-    userSearch(page:$page) {
+  query users($page: Int) {
+    userSearch(page: $page) {
       paginatorInfo {
         count
         currentPage
@@ -32,11 +32,11 @@ export const GET_USERS = gql`
       }
     }
   }
-`;
+`
 
 export const GET_USER = gql`
-  query getUser($id:ID) {
-    user(id:$id) {
+  query getUser($id: ID) {
+    user(id: $id) {
       username
       email
       name
@@ -45,11 +45,30 @@ export const GET_USER = gql`
       }
     }
   }
-`;
+`
+
+export const SEARCH_USERS = gql`
+  query users($term: String, $page: Int) {
+    userSearch(term: $term, page: $page) {
+      paginatorInfo {
+        count
+        currentPage
+        lastPage
+        perPage
+      }
+      data {
+        id
+        username
+        name
+        email
+      }
+    }
+  }
+`
 
 export const GET_PUBLICATIONS = gql`
-  query GetPublications($page:Int) {
-    publications(page:$page) {
+  query GetPublications($page: Int) {
+    publications(page: $page) {
       paginatorInfo {
         count
         currentPage
@@ -62,11 +81,11 @@ export const GET_PUBLICATIONS = gql`
       }
     }
   }
-`;
+`
 
 export const GET_SUBMISSIONS = gql`
-  query GetSubmissions($page:Int) {
-    submissions(page:$page) {
+  query GetSubmissions($page: Int) {
+    submissions(page: $page) {
       paginatorInfo {
         count
         currentPage
@@ -86,11 +105,11 @@ export const GET_SUBMISSIONS = gql`
       }
     }
   }
-`;
+`
 
 export const GET_SUBMISSION = gql`
-  query getSubmission($id:ID) {
-    submission(id:$id) {
+  query getSubmission($id: ID) {
+    submission(id: $id) {
       title
       publication {
         name
@@ -101,5 +120,4 @@ export const GET_SUBMISSION = gql`
       }
     }
   }
-`;
-
+`

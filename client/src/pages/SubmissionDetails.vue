@@ -1,34 +1,46 @@
 <template>
-  <div
-    v-if="$apollo.loading"
-    class="q-pa-lg"
-  >
-    {{ $t('loading') }}
+  <div v-if="$apollo.loading" class="q-pa-lg">
+    {{ $t("loading") }}
   </div>
   <article v-else>
-    <h2 class="q-pl-lg">
-      Manage: {{ submission.title }}
-    </h2>
+    <h2 class="q-pl-lg">Manage: {{ submission.title }}</h2>
     <div class="row q-col-gutter-lg q-pa-lg">
       <section class="col-md-5 col-sm-6 col-xs-12">
         <h3>Assign a Reviewer</h3>
         <q-form>
           <div class="q-gutter-md column q-pl-none q-pr-md">
             <q-select
+              id="review_assignee_input"
               v-model="model"
+              :options="options"
+              hide-dropdown-icon
+              hint="Search by username, email, or name."
+              input-debounce="0"
+              label="User to Assign"
               outlined
               use-input
-              hide-selected
-              input-debounce="0"
-              hint="Search for a user to assign."
-              :options="options"
               @filter="filterFn"
-              @input-value="setModel"
             >
-              <template #no-option>
-                <q-item>
-                  <q-item-section class="text-grey">
-                    No results
+              <template #selected-item="scope">
+                <q-chip data-cy="review_assignee_selected" dense square>
+                  {{ scope.opt.username }} ({{ scope.opt.email }})
+                </q-chip>
+              </template>
+              <template #option="scope">
+                <q-item
+                  data-cy="review_assignee_result"
+                  v-bind="scope.itemProps"
+                  v-on="scope.itemEvents"
+                >
+                  <q-item-section>
+                    <q-item-label
+                      >{{ scope.opt.username }} ({{
+                        scope.opt.email
+                      }})</q-item-label
+                    >
+                    <q-item-label v-if="scope.opt.name" caption>
+                      {{ scope.opt.name }}
+                    </q-item-label>
                   </q-item-section>
                 </q-item>
               </template>
@@ -39,19 +51,14 @@
             color="primary"
             class="text-uppercase q-mt-lg"
             label="Assign"
+            type="submit"
             no-caps
           />
         </q-form>
       </section>
-      <section
-        class="col-md-5 col-sm-6 col-xs-12"
-      >
+      <section class="col-md-5 col-sm-6 col-xs-12">
         <h3>Assigned Reviewers</h3>
-        <q-list
-          bordered
-          separator
-          data-cy="assignedReviewersList"
-        >
+        <q-list bordered separator data-cy="assignedReviewersList">
           <div v-if="userSearch.data.length">
             <q-item
               v-for="user in userSearch.data"
@@ -59,14 +66,8 @@
               data-cy="userListItem"
               class="q-px-lg"
             >
-              <q-item-section
-                top
-                avatar
-              >
-                <avatar-image
-                  :user="user"
-                  rounded
-                />
+              <q-item-section top avatar>
+                <avatar-image :user="user" rounded />
               </q-item-section>
 
               <q-item-section>
@@ -76,18 +77,12 @@
                 <q-item-label v-else>
                   {{ user.username }}
                 </q-item-label>
-                <q-item-label
-                  caption
-                  lines="1"
-                >
+                <q-item-label caption lines="1">
                   {{ user.email }}
                 </q-item-label>
               </q-item-section>
 
-              <q-item-section
-                side
-                center
-              >
+              <q-item-section side center>
                 <q-btn
                   :aria-label="`Unassign ${user.username}`"
                   flat
@@ -98,7 +93,7 @@
             </q-item>
           </div>
           <div v-else>
-            <q-item class="text-grey">
+            <q-item class="text--grey">
               <q-item-section avatar>
                 <q-icon name="o_do_disturb_on" />
               </q-item-section>
@@ -114,13 +109,10 @@
 </template>
 
 <script>
-import { GET_SUBMISSION } from "src/graphql/queries";
-import { GET_USERS } from "src/graphql/queries";
-import AvatarImage from "src/components/atoms/AvatarImage.vue";
+import { GET_SUBMISSION } from "src/graphql/queries"
+import { SEARCH_USERS } from "src/graphql/queries"
+import AvatarImage from "src/components/atoms/AvatarImage.vue"
 
-const stringOptions = [
-  'Reviewer 1', 'Reviewer 2', 'Reviewer 3', 'Reviewer 4', 'Reviewer 5'
-]
 export default {
   components: {
     AvatarImage,
@@ -139,45 +131,52 @@ export default {
         user: null,
       },
       userSearch: {
-        data: []
+        data: [],
       },
       current_page: 1,
       model: null,
-      options: stringOptions,
+      options: [],
     }
   },
   methods: {
-    filterFn (val, update, abort) {
-      if (val.length < 2) {
-        abort()
-        return
-      }
+    filterFn(val, update) {
       update(() => {
         const needle = val.toLowerCase()
-        this.options = stringOptions.filter(v => v.toLowerCase().indexOf(needle) > -1)
+        this.$apollo
+          .query({
+            query: SEARCH_USERS,
+            variables: {
+              term: needle,
+              page: this.current_page,
+            },
+            refetchQueries: ["userSearch"],
+          })
+          .then((searchdata) => {
+            var usersList = []
+            const dropdowndata = searchdata.data.userSearch.data
+            dropdowndata.forEach(function (currentValue, index) {
+              usersList[index] = currentValue
+            })
+            this.options = usersList
+          })
+          .catch((error) => {
+            console.log({ error })
+          })
       })
     },
-    setModel (val) {
+    setModel(val) {
       this.model = val
-    }
+    },
   },
   apollo: {
     submission: {
       query: GET_SUBMISSION,
-      variables () {
+      variables() {
         return {
-         id: this.id,
+          id: this.id,
         }
-      }
+      },
     },
-    userSearch: {
-      query: GET_USERS,
-      variables () {
-        return {
-          page:this.current_page
-        }
-      }
-    }
   },
 }
 </script>
