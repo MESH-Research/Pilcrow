@@ -141,9 +141,6 @@ export default {
     }
   },
   computed: {
-    users: function () {
-      return this.submission.users
-    },
     reviewers: function () {
       return this.submission.users.filter((user) => {
         return parseInt(user.pivot.role_id) === 5
