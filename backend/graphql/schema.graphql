@@ -95,10 +95,6 @@ type Mutation {
     createSubmissionUser(submission_user: CreateSubmissionUserInput! @spread): SubmissionUser!
         @create
 
-    "Soft delete an association between a user, role, and submission"
-    softDeleteSubmissionUser(id: ID!): SubmissionUser!
-        @delete
-
     "Create an association between an uploaded file and a submission"
     createSubmissionFile(input: CreateSubmissionFileInput! @spread): SubmissionFile!
 }
@@ -221,10 +217,6 @@ input CreateSubmissionUserInput @validator(class: "SubmissionUserInputValidator"
     user_id: ID!
     role_id: ID!
     submission_id: ID!
-    #     @rules(
-    #         apply: ["unique:submission_user,submission_user_unique"]
-    #         messages: [{ rule: "unique", message: "duplicate_submission_user" }]
-    #     )
 }
 
 """

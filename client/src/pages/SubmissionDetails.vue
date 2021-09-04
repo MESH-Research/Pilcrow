@@ -59,7 +59,7 @@
       <section class="col-md-5 col-sm-6 col-xs-12">
         <h3>Assigned Reviewers</h3>
         <q-list bordered separator data-cy="assignedReviewersList">
-          <div v-if="reviewers.length > 0">
+          <div v-if="reviewers.length">
             <q-item
               v-for="reviewer in reviewers"
               :key="reviewer.pivot.id"
