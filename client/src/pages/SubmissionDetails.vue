@@ -58,8 +58,8 @@
       </section>
       <section class="col-md-5 col-sm-6 col-xs-12">
         <h3>Assigned Reviewers</h3>
-        <q-list bordered separator data-cy="assignedReviewersList">
-          <div v-if="reviewers.length">
+        <div v-if="reviewers.length">
+          <q-list bordered separator data-cy="assignedReviewersList">
             <q-item
               v-for="reviewer in reviewers"
               :key="reviewer.pivot.id"
@@ -86,12 +86,15 @@
                   flat
                   color="primary"
                   icon="person_remove"
+                  :data-cy="`button_unassign_reviewer_${index}`"
                   @click="unassignReviewer(reviewer)"
                 />
               </q-item-section>
             </q-item>
-          </div>
-          <div v-else>
+          </q-list>
+        </div>
+        <div v-else>
+          <q-list bordered separator data-cy="assignedReviewersList">
             <q-item class="text--grey">
               <q-item-section avatar>
                 <q-icon name="o_do_disturb_on" />
@@ -100,8 +103,8 @@
                 {{ $t("submissions.reviewer.none") }}
               </q-item-section>
             </q-item>
-          </div>
-        </q-list>
+          </q-list>
+        </div>
       </section>
     </div>
   </article>
