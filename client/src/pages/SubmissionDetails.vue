@@ -51,6 +51,7 @@
             color="primary"
             class="text-uppercase q-mt-lg"
             label="Assign"
+            data-cy="button_assign_reviewer"
             type="submit"
             no-caps
           />
@@ -59,9 +60,9 @@
       <section class="col-md-5 col-sm-6 col-xs-12">
         <h3>Assigned Reviewers</h3>
         <div v-if="reviewers.length">
-          <q-list bordered separator data-cy="assignedReviewersList">
+          <q-list bordered separator data-cy="list_assigned_reviewers">
             <q-item
-              v-for="reviewer in reviewers"
+              v-for="(reviewer, index) in reviewers"
               :key="reviewer.pivot.id"
               data-cy="userListItem"
               class="q-px-lg"
@@ -94,7 +95,7 @@
           </q-list>
         </div>
         <div v-else>
-          <q-list bordered separator data-cy="assignedReviewersList">
+          <q-list bordered separator data-cy="list_assigned_reviewers">
             <q-item class="text--grey">
               <q-item-section avatar>
                 <q-icon name="o_do_disturb_on" />
