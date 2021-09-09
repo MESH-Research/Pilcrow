@@ -408,7 +408,7 @@ class SubmissionTest extends TestCase
      * @dataProvider createSubmissionUserMutationProvider
      * @return void
      */
-    public function testSubmissionUserCreationViaMutation(string $role_id)
+    public function testSubmissionUserCreationViaMutation(int $role_id)
     {
         $publication = Publication::factory()->create();
         $user = User::factory()->create();
@@ -520,15 +520,18 @@ class SubmissionTest extends TestCase
      * @dataProvider deleteSubmissionUserMutationProvider
      * @return void
      */
-    public function testSubmissionUserDeletionViaMutation(string $role_id)
+    public function testSubmissionUserDeletionViaMutation(int $role_id)
     {
+        $admin = User::factory()->create();
+        $admin->assignRole(Role::APPLICATION_ADMINISTRATOR);
+        $this->actingAs($admin);
         $publication = Publication::factory()->create();
         $user = User::factory()->create();
         $submission = Submission::factory()->hasAttached(
             $user,
             [
-                    'role_id' => $role_id,
-                ]
+                'role_id' => $role_id,
+            ]
         )
             ->for($publication)
             ->create([
@@ -539,9 +542,7 @@ class SubmissionTest extends TestCase
                 deleteSubmissionUser(
                     role_id: $role_id, submission_id: $submission_id, user_id: $user_id
                 ) {
-                    role_id
-                    submission_id
-                    user_id
+                    id
                 }
             }',
             [
@@ -550,9 +551,10 @@ class SubmissionTest extends TestCase
                 'user_id' => $user->id,
             ]
         );
+        print_r($role_id . " | " . $submission->id . " | " . $user->id);
         $expected_data = [
             'deleteSubmissionUser' => [
-                'submission_id' => (string)$submission->id,
+                'id' => (string)$submission->id,
             ],
         ];
         $response->assertJsonPath('data', $expected_data);
