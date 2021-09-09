@@ -551,7 +551,6 @@ class SubmissionTest extends TestCase
                 'user_id' => $user->id,
             ]
         );
-        print_r($role_id . " | " . $submission->id . " | " . $user->id);
         $expected_data = [
             'deleteSubmissionUser' => [
                 'id' => (string)$submission->id,

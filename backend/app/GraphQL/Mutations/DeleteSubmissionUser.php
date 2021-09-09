@@ -21,6 +21,7 @@ class DeleteSubmissionUser
                 ->where('role_id', $args['role_id'])
                 ->where('submission_id', $args['submission_id'])->firstOrFail();
             $submission_user->forceDelete();
+
             return Submission::where('id', $args['submission_id'])->firstOrFail();
         } catch (Error $error) {
             throw $error;
