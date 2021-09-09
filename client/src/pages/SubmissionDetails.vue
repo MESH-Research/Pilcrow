@@ -10,7 +10,7 @@
         <q-form @submit="assignReviewer">
           <div class="q-gutter-md column q-pl-none q-pr-md">
             <q-select
-              id="review_assignee_input"
+              id="input_review_assignee"
               v-model="model"
               :options="options"
               hide-dropdown-icon
@@ -28,7 +28,7 @@
               </template>
               <template #option="scope">
                 <q-item
-                  data-cy="review_assignee_result"
+                  data-cy="result_review_assignee"
                   v-bind="scope.itemProps"
                   v-on="scope.itemEvents"
                 >
@@ -154,6 +154,16 @@ export default {
   methods: {
     makeNotify(color, icon, message, display_name = null) {
       this.$q.notify({
+        actions: [
+          {
+            label: "Close",
+            color: "white",
+            attrs: {
+              "data-cy": "button_dismiss_notify",
+            },
+          },
+        ],
+        timeout: 50000,
         color: color,
         icon: icon,
         message: this.$t(message, { display_name }),
