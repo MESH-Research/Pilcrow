@@ -86,14 +86,14 @@ type Mutation {
     createSubmission(input: CreateSubmissionInput! @spread): Submission!
         @create
 
+    "Create an association between a user, role, and submission"
+    createSubmissionUser(submission_user: CreateSubmissionUserInput! @spread): SubmissionUser!
+        @create
+
     "Delete an association between a user, role, and submission"
     deleteSubmissionUser(user_id: ID! role_id: ID! submission_id: ID!): Submission!
         @guard
         @field(resolver: "App\\GraphQL\\Mutations\\DeleteSubmissionUser@delete")
-
-    "Create an association between a user, role, and submission"
-    createSubmissionUser(submission_user: CreateSubmissionUserInput! @spread): SubmissionUser!
-        @create
 
     "Create an association between an uploaded file and a submission"
     createSubmissionFile(input: CreateSubmissionFileInput! @spread): SubmissionFile!
