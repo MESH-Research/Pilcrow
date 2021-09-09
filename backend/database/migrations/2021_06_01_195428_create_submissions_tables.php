@@ -55,6 +55,6 @@ class CreateSubmissionsTables extends Migration
     public function down()
     {
         Schema::dropIfExists('submissions');
-        Schema::dropIfExists('submissions_users');
+        Schema::dropIfExists('submissions_user');
     }
 }
