@@ -5,10 +5,40 @@
   <article v-else>
     <h2 class="q-pl-lg">Manage: {{ submission.title }}</h2>
     <div class="row q-col-gutter-lg q-pa-lg">
+      <section class="col-md-5 col-sm-12 col-xs-12">
+        <h3>Submitter{{ submitters.length > 1 ? "s" : "" }}</h3>
+        <div class="q-gutter-md column q-pl-none">
+          <q-list bordered separator data-cy="list_assigned_reviewers">
+            <q-item
+              v-for="submitter in submitters"
+              :key="submitter.pivot.id"
+              data-cy="userListItem"
+              class="q-px-lg"
+            >
+              <q-item-section top avatar>
+                <avatar-image :user="submitter" rounded />
+              </q-item-section>
+              <q-item-section>
+                <q-item-label v-if="submitter.name">
+                  {{ submitter.name }}
+                </q-item-label>
+                <q-item-label v-else>
+                  {{ submitter.username }}
+                </q-item-label>
+                <q-item-label caption lines="1">
+                  {{ submitter.email }}
+                </q-item-label>
+              </q-item-section>
+            </q-item>
+          </q-list>
+        </div>
+      </section>
+    </div>
+    <div class="row q-col-gutter-lg q-pa-lg">
       <section class="col-md-5 col-sm-6 col-xs-12">
         <h3>Assign a Reviewer</h3>
         <q-form @submit="assignReviewer">
-          <div class="q-gutter-md column q-pl-none q-pr-md">
+          <div class="q-gutter-md column q-pl-none">
             <q-select
               id="input_review_assignee"
               v-model="model"
@@ -148,6 +178,11 @@ export default {
     reviewers: function () {
       return this.submission.users.filter((user) => {
         return parseInt(user.pivot.role_id) === 5
+      })
+    },
+    submitters: function () {
+      return this.submission.users.filter((user) => {
+        return parseInt(user.pivot.role_id) === 6
       })
     },
   },
