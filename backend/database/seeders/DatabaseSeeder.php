@@ -17,20 +17,46 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        User::factory()->create([
+        $admin = User::factory()->create([
+            'username' => 'applicationAdminUser',
+            'email' => 'applicationadministrator@ccrproject.dev',
+            'name' => 'Application Adminstrator',
+            'password' => Hash::make('adminPassword!@#'),
+        ]);
+
+        $publication_admin = User::factory()->create([
+            'username' => 'publicationAdminstrator',
+            'email' => 'publicationAdminstrator@ccrproject.dev',
+            'name' => 'Publication Adminstrator',
+            'password' => Hash::make('publicationadminPassword!@#'),
+        ]);
+
+        $editor = User::factory()->create([
+            'username' => 'publicationEditor',
+            'email' => 'publicationEditor@ccrproject.dev',
+            'name' => 'Publication Editor',
+            'password' => Hash::make('editorPassword!@#'),
+        ]);
+
+        $coordinator = User::factory()->create([
+            'username' => 'reviewCoordinator',
+            'email' => 'reviewCoordinator@ccrproject.dev',
+            'name' => 'Review Coordinator for Submission',
+            'password' => Hash::make('coordinatorPassword!@#'),
+        ]);
+
+        $regular = User::factory()->create([
             'username' => 'regularUser',
             'email' => 'regularuser@ccrproject.dev',
             'name' => 'Regular User',
             'password' => Hash::make('regularPassword!@#'),
         ]);
 
-        $user = User::factory()->create([
-            'username' => 'applicationAdminUser',
-            'email' => 'applicationadministrator@ccrproject.dev',
-            'name' => 'Application Admin User',
-            'password' => Hash::make('adminPassword!@#'),
-        ]);
-        $user->assignRole(Role::APPLICATION_ADMINISTRATOR);
+        $admin->assignRole(Role::APPLICATION_ADMINISTRATOR);
+        $publication_admin->assignRole(Role::PUBLICATION_ADMINISTRATOR);
+        $editor->assignRole(Role::EDITOR);
+        $coordinator->assignRole(Role::REVIEW_COORDINATOR);
+        $regular->assignRole(Role::SUBMITTER);
 
         $publication_seeder = new PublicationSeeder();
         $publication_seeder->run();
