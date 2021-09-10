@@ -117,3 +117,37 @@ export const CREATE_SUBMISSION_FILE = gql`
     }
   }
 `
+
+export const CREATE_SUBMISSION_USER = gql`
+  mutation CreateSubmissionUser(
+    $user_id: ID!
+    $role_id: ID!
+    $submission_id: ID!
+  ) {
+    createSubmissionUser(
+      submission_user: {
+        user_id: $user_id
+        role_id: $role_id
+        submission_id: $submission_id
+      }
+    ) {
+      id
+    }
+  }
+`
+
+export const DELETE_SUBMISSION_USER = gql`
+  mutation DeleteSubmissionUser(
+    $user_id: ID!
+    $role_id: ID!
+    $submission_id: ID!
+  ) {
+    deleteSubmissionUser(
+      user_id: $user_id
+      role_id: $role_id
+      submission_id: $submission_id
+    ) {
+      id
+    }
+  }
+`

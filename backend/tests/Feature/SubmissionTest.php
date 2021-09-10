@@ -19,6 +19,7 @@ class SubmissionTest extends TestCase
     use RefreshDatabase;
 
     private const SUBMITTER_ROLE_ID = 6;
+    private const REVIEWER_ROLE_ID = 5;
 
     /**
      * @return void
@@ -389,21 +390,37 @@ class SubmissionTest extends TestCase
     }
 
     /**
+     * @return array
+     */
+    public function createSubmissionUserMutationProvider(): array
+    {
+        return [
+            [
+                self::SUBMITTER_ROLE_ID,
+            ],
+            [
+                self::REVIEWER_ROLE_ID,
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider createSubmissionUserMutationProvider
      * @return void
      */
-    public function testSubmissionUserCreationViaMutation()
+    public function testSubmissionUserCreationViaMutation(int $role_id)
     {
         $publication = Publication::factory()->create();
         $user = User::factory()->create();
         $submission = Submission::factory()
             ->for($publication)
             ->create([
-                'title' => 'Test Submission #9 for Test User With Submission',
+                'title' => 'Test Submission for Test User With Submission',
             ]);
         $response = $this->graphQL(
             'mutation CreateSubmissionUser ($role_id: ID!, $submission_id: ID!, $user_id: ID!) {
                 createSubmissionUser(
-                    input: { role_id: $role_id, submission_id: $submission_id, user_id: $user_id }
+                    submission_user: { role_id: $role_id, submission_id: $submission_id, user_id: $user_id }
                 ) {
                     role_id
                     submission_id
@@ -411,14 +428,14 @@ class SubmissionTest extends TestCase
                 }
             }',
             [
-                'role_id' => self::SUBMITTER_ROLE_ID,
+                'role_id' => $role_id,
                 'submission_id' => $submission->id,
                 'user_id' => $user->id,
             ]
         );
         $expected_data = [
             'createSubmissionUser' => [
-                'role_id' => (string)self::SUBMITTER_ROLE_ID,
+                'role_id' => (string)$role_id,
                 'submission_id' => (string)$submission->id,
                 'user_id' => (string)$user->id,
             ],
@@ -445,7 +462,7 @@ class SubmissionTest extends TestCase
                     [
                         'id' => (string)$user->id,
                         'pivot' => [
-                            'role_id' => (string)self::SUBMITTER_ROLE_ID,
+                            'role_id' => (string)$role_id,
                         ],
                     ],
                 ],
@@ -485,5 +502,60 @@ class SubmissionTest extends TestCase
         )
             ->get();
         $this->assertEquals(1, $submission_pivot_data->count());
+    }
+
+    /**
+     * @return array
+     */
+    public function deleteSubmissionUserMutationProvider(): array
+    {
+        return [
+            [
+                self::REVIEWER_ROLE_ID,
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider deleteSubmissionUserMutationProvider
+     * @return void
+     */
+    public function testSubmissionUserDeletionViaMutation(int $role_id)
+    {
+        $admin = User::factory()->create();
+        $admin->assignRole(Role::APPLICATION_ADMINISTRATOR);
+        $this->actingAs($admin);
+        $publication = Publication::factory()->create();
+        $user = User::factory()->create();
+        $submission = Submission::factory()->hasAttached(
+            $user,
+            [
+                'role_id' => $role_id,
+            ]
+        )
+            ->for($publication)
+            ->create([
+                'title' => 'Test Submission for Reviewer Unassignment Via Mutation',
+            ]);
+        $response = $this->graphQL(
+            'mutation DeleteSubmissionUser ($role_id: ID!, $submission_id: ID!, $user_id: ID!) {
+                deleteSubmissionUser(
+                    role_id: $role_id, submission_id: $submission_id, user_id: $user_id
+                ) {
+                    id
+                }
+            }',
+            [
+                'role_id' => $role_id,
+                'submission_id' => $submission->id,
+                'user_id' => $user->id,
+            ]
+        );
+        $expected_data = [
+            'deleteSubmissionUser' => [
+                'id' => (string)$submission->id,
+            ],
+        ];
+        $response->assertJsonPath('data', $expected_data);
     }
 }
