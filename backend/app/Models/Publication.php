@@ -5,6 +5,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Publication extends Model
 {
@@ -19,7 +21,7 @@ class Publication extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function users()
+    public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class)
             ->withTimestamps()
@@ -31,7 +33,7 @@ class Publication extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function submissions()
+    public function submissions(): HasMany
     {
         return $this->hasMany(Submission::class);
     }
