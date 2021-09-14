@@ -35,59 +35,69 @@ describe("submissions details page mount", () => {
     expect(wrapper).toBeTruthy()
   })
 
-  test("all assigned reviwers appear within the assigned reviewers list", async () => {
+  const submissionUsersData = [
+    {
+      name: "Jest Submitter 1",
+      username: "jestSubmitter1",
+      email: "jestsubmitter1@msu.edu",
+      pivot: {
+        id: "1",
+        role_id: "6",
+      },
+    },
+    {
+      name: "Jest Reviewer 1",
+      username: "jestReviewer1",
+      email: "jestreviewer1@msu.edu",
+      pivot: {
+        id: "2",
+        role_id: "5",
+      },
+    },
+    {
+      name: "Jest Reviewer 2",
+      username: "jestReviewer2",
+      email: "jestreviewer2@msu.edu",
+      pivot: {
+        id: "3",
+        role_id: "5",
+      },
+    },
+    {
+      name: "Jest Reviewer 3 and Review Coordinator 1",
+      username: "jestReviewer3Coordinator1",
+      email: "jestreviewer3@msu.edu",
+      pivot: {
+        id: "4",
+        role_id: "5",
+      },
+    },
+    {
+      name: "Jest Reviewer 3 and Review Coordinator 1",
+      username: "jestReviewer3Coordinator1",
+      email: "jestreviewer3@msu.edu",
+      pivot: {
+        id: "4",
+        role_id: "3",
+      },
+    },
+    {
+      name: "Jest Submitter 2",
+      username: "jestSubmitter2",
+      email: "jestsubmitter2@msu.edu",
+      pivot: {
+        id: "5",
+        role_id: "6",
+      },
+    },
+  ]
+
+  test("all assigned reviewers appear within the assigned reviewers list", async () => {
     await wrapper.setData({
       submission: {
-        users: [
-          {
-            name: "Jest Submitter 1",
-            username: "jestSubmitter1",
-            email: "jestsubmitter1@msu.edu",
-            pivot: {
-              id: "1",
-              role_id: "6",
-            },
-          },
-          {
-            name: "Jest Reviewer 1",
-            username: "jestReviewer1",
-            email: "jestreviewer1@msu.edu",
-            pivot: {
-              id: "2",
-              role_id: "5",
-            },
-          },
-          {
-            name: "Jest Reviewer 2",
-            username: "jestReviewer2",
-            email: "jestreviewer2@msu.edu",
-            pivot: {
-              id: "3",
-              role_id: "5",
-            },
-          },
-          {
-            name: "Jest Reviewer 3 and Review Coordinator 1",
-            username: "jestReviewer3Coordinator1",
-            email: "jestreviewer3@msu.edu",
-            pivot: {
-              id: "4",
-              role_id: "5",
-            },
-          },
-          {
-            name: "Jest Reviewer 3 and Review Coordinator 1",
-            username: "jestReviewer3Coordinator1",
-            email: "jestreviewer3@msu.edu",
-            pivot: {
-              id: "4",
-              role_id: "3",
-            },
-          },
-        ],
+        users: submissionUsersData,
       },
     })
-
     expect(wrapper.findAllComponents({ name: "q-item" })).toHaveLength(3)
   })
 
