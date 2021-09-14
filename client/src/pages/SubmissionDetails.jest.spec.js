@@ -18,7 +18,7 @@ describe("submissions details page mount", () => {
       components,
     },
     mount: {
-      type: "shallow",
+      type: "full",
       mocks: {
         $t: (token) => token,
         $apollo: {
@@ -92,13 +92,35 @@ describe("submissions details page mount", () => {
     },
   ]
 
+  test("all assigned submitters appear within the assigned submitters list", async () => {
+    await wrapper.setData({
+      submission: {
+        users: submissionUsersData,
+      },
+    })
+    const list = wrapper.findComponent({ ref: "list_assigned_submitters" })
+    expect(list.findAllComponents({ name: "user-list-item" })).toHaveLength(2)
+  })
+
+  test("an message appears when there are no assigned submitters", async () => {
+    await wrapper.setData({
+      submission: {
+        users: [],
+      },
+    })
+    const list = wrapper.findComponent({ ref: "list_no_submitters" })
+    expect(list.text()).toContain("submissions.submitter.none")
+    expect(list.findAllComponents({ name: "q-item" })).toHaveLength(1)
+  })
+
   test("all assigned reviewers appear within the assigned reviewers list", async () => {
     await wrapper.setData({
       submission: {
         users: submissionUsersData,
       },
     })
-    expect(wrapper.findAllComponents({ name: "q-item" })).toHaveLength(3)
+    const list = wrapper.findComponent({ ref: "list_assigned_reviewers" })
+    expect(list.findAllComponents({ name: "q-item" })).toHaveLength(3)
   })
 
   test("a default message still appears when there are no assigned reviewers", async () => {
@@ -107,8 +129,8 @@ describe("submissions details page mount", () => {
         users: [],
       },
     })
-    const qitem = wrapper.find("[data-cy=list_assigned_reviewers]")
-    expect(qitem.text()).toContain("submissions.reviewer.none")
-    expect(wrapper.findAllComponents({ name: "q-item" })).toHaveLength(1)
+    const list = wrapper.findComponent({ ref: "list_no_reviewers" })
+    expect(list.text()).toContain("submissions.reviewer.none")
+    expect(list.findAllComponents({ name: "q-item" })).toHaveLength(1)
   })
 })

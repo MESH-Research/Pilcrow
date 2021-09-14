@@ -10,12 +10,16 @@
         <div v-if="submitters.length" class="q-gutter-md column q-pl-none">
           <user-list
             ref="list_assigned_submitters"
-            :data-cy-attr="list_assigned_submitters"
+            data-cy="list_assigned_submitters"
             :users="submitters"
           />
         </div>
         <div v-else>
-          <q-list bordered data-cy="list_no_submitters">
+          <q-list
+            ref="list_no_submitters"
+            bordered
+            data-cy="list_no_submitters"
+          >
             <q-item clickable class="text--grey">
               <q-item-section avatar>
                 <q-avatar
@@ -88,7 +92,12 @@
       <section class="col-md-5 col-sm-6 col-xs-12">
         <h3>Assigned Reviewers</h3>
         <div v-if="reviewers.length">
-          <q-list bordered separator data-cy="list_assigned_reviewers">
+          <q-list
+            ref="list_assigned_reviewers"
+            bordered
+            separator
+            data-cy="list_assigned_reviewers"
+          >
             <q-item
               v-for="(reviewer, index) in reviewers"
               :key="reviewer.pivot.id"
@@ -123,7 +132,12 @@
           </q-list>
         </div>
         <div v-else>
-          <q-list bordered separator data-cy="list_assigned_reviewers">
+          <q-list
+            ref="list_no_reviewers"
+            bordered
+            separator
+            data-cy="list_no_reviewers"
+          >
             <q-item class="text--grey">
               <q-item-section avatar>
                 <q-icon name="o_do_disturb_on" />

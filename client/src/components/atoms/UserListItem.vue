@@ -14,16 +14,6 @@
         {{ user.email }}
       </q-item-label>
     </q-item-section>
-    <q-item-section v-if="unassignable" side center>
-      <q-btn
-        :aria-label="`Unassign ${user.username}`"
-        flat
-        color="primary"
-        icon="person_remove"
-        :data-cy="`button_unassign_user_${index}`"
-        @click="unassignUser(user)"
-      />
-    </q-item-section>
   </q-item>
 </template>
 
@@ -40,10 +30,6 @@ export default {
     user: {
       type: Object,
       default: () => {},
-    },
-    dataCyAttr: {
-      type: String,
-      default: "user_list",
     },
   },
 }

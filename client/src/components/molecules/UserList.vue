@@ -1,5 +1,5 @@
 <template>
-  <q-list bordered separator :data-cy="dataCyAttr">
+  <q-list bordered separator :data-cy="dataCy">
     <user-list-item
       v-for="(user, index) in users"
       :key="user.pivot.id"
@@ -19,10 +19,14 @@ export default {
       type: Array,
       required: true,
     },
-    dataCyAttr: {
+    dataCy: {
       type: String,
       default: "user_list",
     },
+    // refAttr: {
+    //   type: String,
+    //   default: "user_list",
+    // },
   },
 }
 </script>
