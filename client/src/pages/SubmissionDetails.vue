@@ -7,27 +7,25 @@
     <div class="row q-col-gutter-lg q-pa-lg">
       <section class="col-md-5 col-sm-12 col-xs-12">
         <h3>Submitter{{ submitters.length > 1 ? "s" : "" }}</h3>
-        <div class="q-gutter-md column q-pl-none">
-          <q-list bordered separator data-cy="list_assigned_reviewers">
-            <q-item
-              v-for="submitter in submitters"
-              :key="submitter.pivot.id"
-              data-cy="userListItem"
-              class="q-px-lg"
-            >
-              <q-item-section top avatar>
-                <avatar-image :user="submitter" rounded />
+        <div v-if="submitters.length" class="q-gutter-md column q-pl-none">
+          <user-list
+            ref="list_assigned_submitters"
+            :data-cy-attr="list_assigned_submitters"
+            :users="submitters"
+          />
+        </div>
+        <div v-else>
+          <q-list bordered data-cy="list_no_submitters">
+            <q-item clickable class="text--grey">
+              <q-item-section avatar>
+                <q-avatar
+                  color="negative"
+                  text-color="white"
+                  icon="report_problem"
+                />
               </q-item-section>
               <q-item-section>
-                <q-item-label v-if="submitter.name">
-                  {{ submitter.name }}
-                </q-item-label>
-                <q-item-label v-else>
-                  {{ submitter.username }}
-                </q-item-label>
-                <q-item-label caption lines="1">
-                  {{ submitter.email }}
-                </q-item-label>
+                {{ $t("submissions.submitter.none") }}
               </q-item-section>
             </q-item>
           </q-list>
@@ -148,10 +146,12 @@ import {
   DELETE_SUBMISSION_USER,
 } from "src/graphql/mutations"
 import AvatarImage from "src/components/atoms/AvatarImage.vue"
+import UserList from "src/components/molecules/UserList.vue"
 
 export default {
   components: {
     AvatarImage,
+    UserList,
   },
   props: {
     id: {
@@ -176,17 +176,18 @@ export default {
   },
   computed: {
     reviewers: function () {
-      return this.submission.users.filter((user) => {
-        return parseInt(user.pivot.role_id) === 5
-      })
+      return this.filterUsersByRoleId(5)
     },
     submitters: function () {
-      return this.submission.users.filter((user) => {
-        return parseInt(user.pivot.role_id) === 6
-      })
+      return this.filterUsersByRoleId(6)
     },
   },
   methods: {
+    filterUsersByRoleId(id) {
+      return this.submission.users.filter((user) => {
+        return parseInt(user.pivot.role_id) === id
+      })
+    },
     makeNotify(color, icon, message, display_name = null) {
       this.$q.notify({
         actions: [
