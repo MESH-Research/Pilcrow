@@ -23,10 +23,6 @@ export default {
       type: String,
       default: "user_list",
     },
-    // refAttr: {
-    //   type: String,
-    //   default: "user_list",
-    // },
   },
 }
 </script>
