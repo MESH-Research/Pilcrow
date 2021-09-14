@@ -108,7 +108,7 @@ export const GET_SUBMISSIONS = gql`
 `
 
 export const GET_SUBMISSION = gql`
-  query getSubmission($id: ID) {
+  query GetSubmission($id: ID) {
     submission(id: $id) {
       title
       publication {
@@ -117,6 +117,11 @@ export const GET_SUBMISSION = gql`
       users {
         name
         email
+        pivot {
+          id
+          user_id
+          role_id
+        }
       }
     }
   }

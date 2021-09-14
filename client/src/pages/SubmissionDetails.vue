@@ -7,10 +7,10 @@
     <div class="row q-col-gutter-lg q-pa-lg">
       <section class="col-md-5 col-sm-6 col-xs-12">
         <h3>Assign a Reviewer</h3>
-        <q-form>
+        <q-form @submit="assignReviewer">
           <div class="q-gutter-md column q-pl-none q-pr-md">
             <q-select
-              id="review_assignee_input"
+              id="input_review_assignee"
               v-model="model"
               :options="options"
               hide-dropdown-icon
@@ -28,7 +28,7 @@
               </template>
               <template #option="scope">
                 <q-item
-                  data-cy="review_assignee_result"
+                  data-cy="result_review_assignee"
                   v-bind="scope.itemProps"
                   v-on="scope.itemEvents"
                 >
@@ -51,6 +51,7 @@
             color="primary"
             class="text-uppercase q-mt-lg"
             label="Assign"
+            data-cy="button_assign_reviewer"
             type="submit"
             no-caps
           />
@@ -58,59 +59,64 @@
       </section>
       <section class="col-md-5 col-sm-6 col-xs-12">
         <h3>Assigned Reviewers</h3>
-        <q-list bordered separator data-cy="assignedReviewersList">
-          <div v-if="userSearch.data.length">
+        <div v-if="reviewers.length">
+          <q-list bordered separator data-cy="list_assigned_reviewers">
             <q-item
-              v-for="user in userSearch.data"
-              :key="user.id"
+              v-for="(reviewer, index) in reviewers"
+              :key="reviewer.pivot.id"
               data-cy="userListItem"
               class="q-px-lg"
             >
               <q-item-section top avatar>
-                <avatar-image :user="user" rounded />
+                <avatar-image :user="reviewer" rounded />
               </q-item-section>
-
               <q-item-section>
-                <q-item-label v-if="user.name">
-                  {{ user.name }}
+                <q-item-label v-if="reviewer.name">
+                  {{ reviewer.name }}
                 </q-item-label>
                 <q-item-label v-else>
-                  {{ user.username }}
+                  {{ reviewer.username }}
                 </q-item-label>
                 <q-item-label caption lines="1">
-                  {{ user.email }}
+                  {{ reviewer.email }}
                 </q-item-label>
               </q-item-section>
-
               <q-item-section side center>
                 <q-btn
-                  :aria-label="`Unassign ${user.username}`"
+                  :aria-label="`Unassign ${reviewer.username}`"
                   flat
                   color="primary"
                   icon="person_remove"
+                  :data-cy="`button_unassign_reviewer_${index}`"
+                  @click="unassignReviewer(reviewer)"
                 />
               </q-item-section>
             </q-item>
-          </div>
-          <div v-else>
+          </q-list>
+        </div>
+        <div v-else>
+          <q-list bordered separator data-cy="list_assigned_reviewers">
             <q-item class="text--grey">
               <q-item-section avatar>
                 <q-icon name="o_do_disturb_on" />
               </q-item-section>
               <q-item-section>
-                No reviewers are assigned to this submission.
+                {{ $t("submissions.reviewer.none") }}
               </q-item-section>
             </q-item>
-          </div>
-        </q-list>
+          </q-list>
+        </div>
       </section>
     </div>
   </article>
 </template>
 
 <script>
-import { GET_SUBMISSION } from "src/graphql/queries"
-import { SEARCH_USERS } from "src/graphql/queries"
+import { GET_SUBMISSION, SEARCH_USERS } from "src/graphql/queries"
+import {
+  CREATE_SUBMISSION_USER,
+  DELETE_SUBMISSION_USER,
+} from "src/graphql/mutations"
 import AvatarImage from "src/components/atoms/AvatarImage.vue"
 
 export default {
@@ -128,7 +134,7 @@ export default {
       submission: {
         title: null,
         publication: null,
-        user: null,
+        users: [],
       },
       userSearch: {
         data: [],
@@ -138,7 +144,92 @@ export default {
       options: [],
     }
   },
+  computed: {
+    reviewers: function () {
+      return this.submission.users.filter((user) => {
+        return parseInt(user.pivot.role_id) === 5
+      })
+    },
+  },
   methods: {
+    makeNotify(color, icon, message, display_name = null) {
+      this.$q.notify({
+        actions: [
+          {
+            label: "Close",
+            color: "white",
+            attrs: {
+              "data-cy": "button_dismiss_notify",
+            },
+          },
+        ],
+        timeout: 50000,
+        color: color,
+        icon: icon,
+        message: this.$t(message, { display_name }),
+        attrs: {
+          "data-cy": "submission_details_notify",
+        },
+        html: true,
+      })
+      this.is_submitting = false
+    },
+    async assignReviewer() {
+      try {
+        await this.$apollo
+          .mutate({
+            mutation: CREATE_SUBMISSION_USER,
+            variables: {
+              user_id: this.model.id,
+              role_id: 5,
+              submission_id: this.id,
+            },
+            refetchQueries: ["GetSubmission"],
+          })
+          .then(() => {
+            this.makeNotify(
+              "positive",
+              "check_circle",
+              "submissions.reviewer.assign.success",
+              this.model.name ? this.model.name : this.model.username
+            )
+          })
+          .then(() => {
+            this.model = null
+          })
+      } catch (error) {
+        this.makeNotify(
+          "negative",
+          "error",
+          "submissions.reviewer.assign.error"
+        )
+      }
+    },
+    async unassignReviewer(reviewer) {
+      try {
+        await this.$apollo.mutate({
+          mutation: DELETE_SUBMISSION_USER,
+          variables: {
+            user_id: reviewer.pivot.user_id,
+            role_id: 5,
+            submission_id: this.id,
+          },
+          refetchQueries: ["GetSubmission"],
+        })
+        this.makeNotify(
+          "positive",
+          "check_circle",
+          "submissions.reviewer.unassign.success",
+          reviewer.name ? reviewer.name : reviewer.username
+        )
+      } catch (error) {
+        this.makeNotify(
+          "negative",
+          "error",
+          "submissions.reviewer.unassign.error"
+        )
+      }
+    },
     filterFn(val, update) {
       update(() => {
         const needle = val.toLowerCase()
@@ -149,7 +240,6 @@ export default {
               term: needle,
               page: this.current_page,
             },
-            refetchQueries: ["userSearch"],
           })
           .then((searchdata) => {
             var usersList = []
