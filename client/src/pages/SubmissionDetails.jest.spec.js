@@ -102,7 +102,7 @@ describe("submissions details page mount", () => {
     expect(list.findAllComponents({ name: "user-list-item" })).toHaveLength(2)
   })
 
-  test("an message appears when there are no assigned submitters", async () => {
+  test("an error message appears when there are no assigned submitters", async () => {
     await wrapper.setData({
       submission: {
         users: [],
