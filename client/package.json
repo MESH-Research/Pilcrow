@@ -20,7 +20,7 @@
     "test:unit:ui": "majestic"
   },
   "dependencies": {
-    "@apollo/client": "^3.4.10",
+    "@apollo/client": "^3.4.11",
     "@quasar/extras": "^1.10.12",
     "@vue/apollo-composable": "4.0.0-alpha.14",
     "@vue/apollo-option": "4.0.0-alpha.11",
@@ -44,7 +44,7 @@
     "@quasar/quasar-app-extension-testing-unit-jest": "^2.2.2",
     "axe-core": "^4.3.3",
     "babel-eslint": "^10.0.1",
-    "cypress": "^8.3.1",
+    "cypress": "^8.4.0",
     "cypress-axe": "^0.13.0",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
