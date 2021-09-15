@@ -1909,12 +1909,12 @@
     lodash "^4.17.15"
     pretty "^2.0.0"
 
-"@vuelidate/core@^2.0.0-alpha.23":
-  version "2.0.0-alpha.23"
-  resolved "https://registry.yarnpkg.com/@vuelidate/core/-/core-2.0.0-alpha.23.tgz#ef0edf70d9f9e1a9fd585bd168679a81c59911c5"
-  integrity sha512-1ZwoEdYMzenFbEx+UuLwu0ZcpH/XBQhSKkHUkYgc0Bv22GmncQckZARASugla1FrwwkHRWpXsv4G7sgwuY17/Q==
+"@vuelidate/core@^2.0.0-alpha.25":
+  version "2.0.0-alpha.25"
+  resolved "https://registry.yarnpkg.com/@vuelidate/core/-/core-2.0.0-alpha.25.tgz#079cf6b5ab6aa27f64bff8ce87e9b5274df6095b"
+  integrity sha512-8gDZsESacXw++G45yDLB5Fw+tc9fTbRvkL3XFaAhA9Wia6mPp/nS+iLPRrXhwPex5OPqdjre44ZSvMCu7fgpCA==
   dependencies:
-    vue-demi "^0.9.1"
+    vue-demi "^0.11.3"
 
 "@vuelidate/validators@^2.0.0-alpha.20":
   version "2.0.0-alpha.20"
@@ -11672,6 +11672,11 @@ vue-composable-tester@^0.1.3:
   version "0.1.3"
   resolved "https://registry.yarnpkg.com/vue-composable-tester/-/vue-composable-tester-0.1.3.tgz#e7cd22d8ebd38172b95c233681511a2e37b1065f"
   integrity sha512-iiJUoW88CwTFzbvjVLe30twrj6tmyTxMOM5aQfSjSlPtGaONFNAoNzR0T990sv4gpFPQIvo0fHPNRhKti46drQ==
+
+vue-demi@^0.11.3:
+  version "0.11.4"
+  resolved "https://registry.yarnpkg.com/vue-demi/-/vue-demi-0.11.4.tgz#6101992fe4724cf5634018a16e953f3052e94e2a"
+  integrity sha512-/3xFwzSykLW2HiiLie43a+FFgNOcokbBJ+fzvFXd0r2T8MYohqvphUyDQ8lbAwzQ3Dlcrb1c9ykifGkhSIAk6A==
 
 vue-demi@^0.9.1:
   version "0.9.1"
