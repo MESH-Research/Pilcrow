@@ -208,6 +208,7 @@ Input type for creating a new submission via the createSubmission mutation
 input CreateSubmissionInput @validator(class: "SubmissionInputValidator") {
     title: String! @trim
     publication_id: ID!
+    users: CreateSubmissionUserBelongsToMany
 }
 
 """
@@ -225,4 +226,19 @@ Input type for creating a new association between an uploaded file and a submiss
 input CreateSubmissionFileInput @validator(class: "SubmissionFileInputValidator") {
     submission_id: ID!
     file_upload: Upload!
+}
+
+"""
+Input type for connecting newly created submissions to users
+"""
+input CreateSubmissionUserBelongsToMany {
+    connect: [ConnectSubmissionUser!]
+}
+
+"""
+Input type for inserting the pivot table data of a newly created submission user:w
+"""
+input ConnectSubmissionUser {
+    id: ID!
+    role_id: ID!
 }
