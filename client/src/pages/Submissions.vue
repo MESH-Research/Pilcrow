@@ -103,10 +103,7 @@
 
 <script>
 import { GET_PUBLICATIONS, GET_SUBMISSIONS } from "src/graphql/queries"
-import {
-  CREATE_SUBMISSION,
-  CREATE_SUBMISSION_FILE,
-} from "src/graphql/mutations"
+import { CREATE_SUBMISSION } from "src/graphql/mutations"
 import useVuelidate from "@vuelidate/core"
 import { required, maxLength } from "@vuelidate/validators"
 
@@ -204,20 +201,9 @@ export default {
         return false
       }
       try {
-        const {
-          data: {
-            createSubmission: { id },
-          },
-        } = await this.$apollo.mutate({
+        await this.$apollo.mutate({
           mutation: CREATE_SUBMISSION,
           variables: this.new_submission,
-        })
-        await this.$apollo.mutate({
-          mutation: CREATE_SUBMISSION_FILE,
-          variables: {
-            submission_id: id,
-            file_upload: this.new_submission_files[0],
-          },
           context: {
             hasUpload: true,
           },
