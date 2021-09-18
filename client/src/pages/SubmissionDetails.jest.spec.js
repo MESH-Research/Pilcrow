@@ -108,9 +108,8 @@ describe("submissions details page mount", () => {
         users: [],
       },
     })
-    const list = wrapper.findComponent({ ref: "list_no_submitters" })
-    expect(list.text()).toContain("submissions.submitter.none")
-    expect(list.findAllComponents({ name: "q-card" })).toHaveLength(1)
+    const card = wrapper.findComponent({ ref: "card_no_submitters" })
+    expect(card.text()).toContain("submissions.submitter.none")
   })
 
   test("all assigned reviewers appear within the assigned reviewers list", async () => {
@@ -129,8 +128,7 @@ describe("submissions details page mount", () => {
         users: [],
       },
     })
-    const list = wrapper.findComponent({ ref: "list_no_reviewers" })
+    const list = wrapper.findComponent({ ref: "card_no_reviewers" })
     expect(list.text()).toContain("submissions.reviewer.none")
-    expect(list.findAllComponents({ name: "q-item" })).toHaveLength(1)
   })
 })

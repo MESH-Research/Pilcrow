@@ -21,18 +21,22 @@
           />
         </div>
         <div v-else>
- <q-card class="my-card">
-    <q-card-section>
-      <p>
-        <q-avatar
-          color="negative"
-          text-color="white"
-          icon="report_problem"
-         />
-         {{ $t("submissions.submitter.none") }}
-      </p>
-    </q-card-section>
-  </q-card>
+          <q-card ref="card_no_submitters" bordered flat>
+            <q-item>
+              <q-card-section avatar>
+                <q-avatar
+                  color="negative"
+                  text-color="white"
+                  icon="report_problem"
+                />
+              </q-card-section>
+              <q-card-section>
+                <p>
+                  {{ $t("submissions.submitter.none") }}
+                </p>
+              </q-card-section>
+            </q-item>
+          </q-card>
         </div>
       </section>
     </div>
@@ -94,9 +98,9 @@
         <div v-if="reviewers.length">
           <q-list
             ref="list_assigned_reviewers"
+            data-cy="list_assigned_reviewers"
             bordered
             separator
-            data-cy="list_assigned_reviewers"
           >
             <q-item
               v-for="(reviewer, index) in reviewers"
@@ -132,12 +136,7 @@
           </q-list>
         </div>
         <div v-else>
-          <q-list
-            ref="list_no_reviewers"
-            bordered
-            separator
-            data-cy="list_no_reviewers"
-          >
+          <q-card ref="card_no_reviewers" bordered flat>
             <q-item class="text--grey">
               <q-item-section avatar>
                 <q-icon name="o_do_disturb_on" />
@@ -146,7 +145,7 @@
                 {{ $t("submissions.reviewer.none") }}
               </q-item-section>
             </q-item>
-          </q-list>
+          </q-card>
         </div>
       </section>
     </div>
