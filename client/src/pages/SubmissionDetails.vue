@@ -6,7 +6,13 @@
     <h2 class="q-pl-lg">Manage: {{ submission.title }}</h2>
     <div class="row q-col-gutter-lg q-pa-lg">
       <section class="col-md-5 col-sm-12 col-xs-12">
-        <h3>Submitter{{ submitters.length > 1 ? "s" : "" }}</h3>
+        <h3>
+          {{
+            submitters.length > 1
+              ? $t("submissions.submitter.title.plural")
+              : $t("submissions.submitter.title.singular")
+          }}
+        </h3>
         <div v-if="submitters.length" class="q-gutter-md column q-pl-none">
           <user-list
             ref="list_assigned_submitters"

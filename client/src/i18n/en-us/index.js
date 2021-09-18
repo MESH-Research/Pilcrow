@@ -159,6 +159,10 @@ export default {
       },
     },
     submitter: {
+      title: {
+        singular: "Submitter",
+        plural: "Submitters",
+      },
       none: "No submitter is assigned to this submission. At least one submitter must be assigned.",
     },
   },
