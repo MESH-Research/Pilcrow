@@ -110,7 +110,7 @@ describe("submissions details page mount", () => {
     })
     const list = wrapper.findComponent({ ref: "list_no_submitters" })
     expect(list.text()).toContain("submissions.submitter.none")
-    expect(list.findAllComponents({ name: "q-item" })).toHaveLength(1)
+    expect(list.findAllComponents({ name: "q-card" })).toHaveLength(1)
   })
 
   test("all assigned reviewers appear within the assigned reviewers list", async () => {
