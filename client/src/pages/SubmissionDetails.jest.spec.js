@@ -128,7 +128,7 @@ describe("submissions details page mount", () => {
         users: [],
       },
     })
-    const list = wrapper.findComponent({ ref: "card_no_reviewers" })
-    expect(list.text()).toContain("submissions.reviewer.none")
+    const card = wrapper.findComponent({ ref: "card_no_reviewers" })
+    expect(card.text()).toContain("submissions.reviewer.none")
   })
 })
