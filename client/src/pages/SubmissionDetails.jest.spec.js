@@ -120,7 +120,7 @@ describe("submissions details page mount", () => {
       },
     })
     const list = wrapper.findComponent({ ref: "list_assigned_reviewers" })
-    expect(list.findAllComponents({ name: "q-item" })).toHaveLength(3)
+    expect(list.findAllComponents({ name: "q-card" })).toHaveLength(3)
   })
 
   test("a default message still appears when there are no assigned reviewers", async () => {
