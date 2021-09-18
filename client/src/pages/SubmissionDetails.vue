@@ -21,24 +21,18 @@
           />
         </div>
         <div v-else>
-          <q-list
-            ref="list_no_submitters"
-            bordered
-            data-cy="list_no_submitters"
-          >
-            <q-item clickable class="text--grey">
-              <q-item-section avatar>
-                <q-avatar
-                  color="negative"
-                  text-color="white"
-                  icon="report_problem"
-                />
-              </q-item-section>
-              <q-item-section>
-                {{ $t("submissions.submitter.none") }}
-              </q-item-section>
-            </q-item>
-          </q-list>
+ <q-card class="my-card">
+    <q-card-section>
+      <p>
+        <q-avatar
+          color="negative"
+          text-color="white"
+          icon="report_problem"
+         />
+         {{ $t("submissions.submitter.none") }}
+      </p>
+    </q-card-section>
+  </q-card>
         </div>
       </section>
     </div>
