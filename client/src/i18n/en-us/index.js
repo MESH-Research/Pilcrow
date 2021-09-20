@@ -141,6 +141,9 @@ export default {
       publication_id: {
         required: "A publication must be associated with a submission.",
       },
+      submitter_user_id: {
+        required: "A user must be associated with a submission as a submitter.",
+      },
       file_upload: {
         required: "A file must be uploaded with a submission.",
       },

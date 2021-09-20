@@ -28,7 +28,7 @@
               data-cy="new_submission_publication_input"
             />
             <q-file
-              v-model="new_submission.files"
+              v-model="new_submission.file_upload"
               outlined
               label="Upload File"
               multiple
@@ -126,8 +126,8 @@ export default {
       new_submission: {
         title: "",
         publication_id: null,
-        submitter_user_id: 1,
-        files: [],
+        submitter_user_id: 2,
+        file_upload: [],
       },
     }
   },
@@ -136,8 +136,8 @@ export default {
       new_submission: {
         title: { required, maxLength: maxLength(512) },
         publication_id: { required },
-        users: { required },
-        files: { required },
+        submitter_user_id: { required },
+        file_upload: { required },
       },
     }
   },
@@ -187,7 +187,15 @@ export default {
         )
         return true
       }
-      if (this.$v.new_submission.files.required.$invalid) {
+      if (this.$v.new_submission.submitter_user_id.required.$invalid) {
+        this.makeNotify(
+          "negative",
+          "error",
+          "submissions.create.submitter_user_id.required"
+        )
+        return true
+      }
+      if (this.$v.new_submission.file_upload.required.$invalid) {
         this.makeNotify(
           "negative",
           "error",
@@ -217,7 +225,7 @@ export default {
           "submissions.create.success"
         )
         this.new_submission.title = ""
-        this.new_submission.files = []
+        this.new_submission.file_upload = []
         this.is_submitting = false
       } catch (error) {
         console.log(error)

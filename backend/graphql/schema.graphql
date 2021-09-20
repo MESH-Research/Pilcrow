@@ -248,7 +248,7 @@ input CreateSubmissionFileInput @validator(class: "SubmissionFileInputValidator"
 Input type for connecting newly created submissions to files via nested mutation
 """
 input CreateSubmissionFilesHasMany {
-    create: [CreateSubmissionFile!]
+    create: [CreateSubmissionFile!]!
 }
 
 """
