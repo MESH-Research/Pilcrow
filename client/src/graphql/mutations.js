@@ -97,7 +97,7 @@ export const CREATE_SUBMISSION = gql`
     $title: String!
     $publication_id: ID!
     $submitter_user_id: ID!
-    $file_upload: Upload!
+    $file_upload: [Upload!]
   ) {
     createSubmission(
       input: {

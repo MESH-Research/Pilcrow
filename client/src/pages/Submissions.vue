@@ -126,7 +126,7 @@ export default {
       new_submission: {
         title: "",
         publication_id: null,
-        submitter_user_id: 2,
+        submitter_user_id: "2",
         file_upload: [],
       },
     }
@@ -205,6 +205,7 @@ export default {
       }
     },
     async createNewSubmission() {
+      console.log(this.new_submission)
       this.is_submitting = true
       this.tryCatchError = false
       if (this.checkThatFormIsInvalid()) {

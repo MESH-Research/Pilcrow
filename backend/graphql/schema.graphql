@@ -255,5 +255,5 @@ input CreateSubmissionFilesHasMany {
 Input type for inserting the pivot table data of a newly created submission user:w
 """
 input CreateSubmissionFile {
-    file_upload: Upload!
+    file_upload: [Upload!]
 }
