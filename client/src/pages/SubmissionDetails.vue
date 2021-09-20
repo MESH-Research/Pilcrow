@@ -24,10 +24,11 @@
           <q-card ref="card_no_submitters" bordered flat>
             <q-item>
               <q-card-section avatar>
-                <q-avatar
+                <q-icon
                   color="negative"
                   text-color="white"
-                  icon="report_problem"
+                  name="report_problem"
+                  size="lg"
                 />
               </q-card-section>
               <q-card-section>
