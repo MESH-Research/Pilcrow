@@ -26,6 +26,8 @@ class SubmissionInputValidator extends Validator
             ],
             'submitter_user_id' => [
                 'required',
+                'numeric',
+                'integer',
             ],
             'file_upload' => [
                 'required',
