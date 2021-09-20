@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.4.11",
-    "@quasar/extras": "^1.10.12",
+    "@quasar/extras": "^1.11.0",
     "@vue/apollo-composable": "4.0.0-alpha.14",
     "@vue/apollo-option": "4.0.0-alpha.11",
     "@vue/composition-api": "^1.1.5",
