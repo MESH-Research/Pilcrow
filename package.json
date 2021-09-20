@@ -8,7 +8,7 @@
         "dedent-js": "^1.0.1",
         "markdownlint-cli": "^0.28.1",
         "standard-version": "^9.3.1",
-        "yaml-js": "^0.2.3",
+        "yaml-js": "^0.3.1",
         "yesno": "^0.3.1"
     },
     "scripts": {
