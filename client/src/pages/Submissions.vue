@@ -90,8 +90,11 @@
             </ul>
           </q-item>
         </q-list>
+        <div v-if="$apollo.loading" class="q-pa-lg">
+          {{ $t("loading") }}
+        </div>
         <div
-          v-if="submissions.data.length == 0"
+          v-else-if="submissions.data.length == 0"
           data-cy="no_submissions_message"
         >
           No Submissions Created
