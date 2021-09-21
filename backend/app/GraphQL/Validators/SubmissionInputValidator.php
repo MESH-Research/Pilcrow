@@ -14,6 +14,7 @@ class SubmissionInputValidator extends Validator
      */
     public function rules(): array
     {
+
         return [
             'title' => [
                 'max:512',
@@ -24,12 +25,10 @@ class SubmissionInputValidator extends Validator
                 'numeric',
                 'integer',
             ],
-            'submitter_user_id' => [
+            'users' => [
                 'required',
-                'numeric',
-                'integer',
             ],
-            'file_upload' => [
+            'files' => [
                 'required',
             ],
         ];
