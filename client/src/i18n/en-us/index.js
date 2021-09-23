@@ -158,6 +158,13 @@ export default {
         success: "{display_name} successfully assigned as a reviewer.",
       },
     },
+    submitter: {
+      title: {
+        singular: "Submitter",
+        plural: "Submitters",
+      },
+      none: "No submitter is assigned to this submission. At least one submitter must be assigned.",
+    },
   },
   failures: {
     UNKNOWN_ERROR: "An unknown error has occurred.",

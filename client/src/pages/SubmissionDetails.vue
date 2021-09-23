@@ -5,10 +5,47 @@
   <article v-else>
     <h2 class="q-pl-lg">Manage: {{ submission.title }}</h2>
     <div class="row q-col-gutter-lg q-pa-lg">
+      <section class="col-md-5 col-sm-12 col-xs-12">
+        <h3>
+          {{
+            submitters.length > 1
+              ? $t("submissions.submitter.title.plural")
+              : $t("submissions.submitter.title.singular")
+          }}
+        </h3>
+        <div v-if="submitters.length" class="q-gutter-md column q-pl-none">
+          <user-list
+            ref="list_assigned_submitters"
+            data-cy="list_assigned_submitters"
+            :users="submitters"
+          />
+        </div>
+        <div v-else>
+          <q-card ref="card_no_submitters" bordered flat>
+            <q-item>
+              <q-card-section avatar>
+                <q-icon
+                  color="negative"
+                  text-color="white"
+                  name="report_problem"
+                  size="lg"
+                />
+              </q-card-section>
+              <q-card-section>
+                <p>
+                  {{ $t("submissions.submitter.none") }}
+                </p>
+              </q-card-section>
+            </q-item>
+          </q-card>
+        </div>
+      </section>
+    </div>
+    <div class="row q-col-gutter-lg q-pa-lg">
       <section class="col-md-5 col-sm-6 col-xs-12">
         <h3>Assign a Reviewer</h3>
         <q-form @submit="assignReviewer">
-          <div class="q-gutter-md column q-pl-none q-pr-md">
+          <div class="q-gutter-md column q-pl-none">
             <q-select
               id="input_review_assignee"
               v-model="model"
@@ -60,7 +97,12 @@
       <section class="col-md-5 col-sm-6 col-xs-12">
         <h3>Assigned Reviewers</h3>
         <div v-if="reviewers.length">
-          <q-list bordered separator data-cy="list_assigned_reviewers">
+          <q-list
+            ref="list_assigned_reviewers"
+            data-cy="list_assigned_reviewers"
+            bordered
+            separator
+          >
             <q-item
               v-for="(reviewer, index) in reviewers"
               :key="reviewer.pivot.id"
@@ -95,7 +137,7 @@
           </q-list>
         </div>
         <div v-else>
-          <q-list bordered separator data-cy="list_assigned_reviewers">
+          <q-card ref="card_no_reviewers" bordered flat>
             <q-item class="text--grey">
               <q-item-section avatar>
                 <q-icon name="o_do_disturb_on" />
@@ -104,7 +146,7 @@
                 {{ $t("submissions.reviewer.none") }}
               </q-item-section>
             </q-item>
-          </q-list>
+          </q-card>
         </div>
       </section>
     </div>
@@ -118,10 +160,12 @@ import {
   DELETE_SUBMISSION_USER,
 } from "src/graphql/mutations"
 import AvatarImage from "src/components/atoms/AvatarImage.vue"
+import UserList from "src/components/molecules/UserList.vue"
 
 export default {
   components: {
     AvatarImage,
+    UserList,
   },
   props: {
     id: {
@@ -146,12 +190,18 @@ export default {
   },
   computed: {
     reviewers: function () {
-      return this.submission.users.filter((user) => {
-        return parseInt(user.pivot.role_id) === 5
-      })
+      return this.filterUsersByRoleId(5)
+    },
+    submitters: function () {
+      return this.filterUsersByRoleId(6)
     },
   },
   methods: {
+    filterUsersByRoleId(id) {
+      return this.submission.users.filter((user) => {
+        return parseInt(user.pivot.role_id) === id
+      })
+    },
     makeNotify(color, icon, message, display_name = null) {
       this.$q.notify({
         actions: [
