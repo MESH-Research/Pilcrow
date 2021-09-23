@@ -39,7 +39,7 @@
             </q-file>
           </div>
           <q-banner
-            v-if="tryCatchError"
+            v-if="try_catch_error"
             dense
             rounded
             class="form-error text-white bg-negative text-center q-mt-xs"
@@ -104,7 +104,11 @@
 </template>
 
 <script>
-import { GET_PUBLICATIONS, GET_SUBMISSIONS } from "src/graphql/queries"
+import {
+  GET_PUBLICATIONS,
+  GET_SUBMISSIONS,
+  CURRENT_USER,
+} from "src/graphql/queries"
 import { CREATE_SUBMISSION } from "src/graphql/mutations"
 import useVuelidate from "@vuelidate/core"
 import { required, maxLength } from "@vuelidate/validators"
@@ -118,7 +122,7 @@ export default {
   data() {
     return {
       is_submitting: false,
-      tryCatchError: false,
+      try_catch_error: false,
       submissions: {
         data: [],
       },
@@ -128,7 +132,7 @@ export default {
       new_submission: {
         title: "",
         publication_id: null,
-        submitter_user_id: "2",
+        submitter_user_id: null,
         file_upload: null,
       },
     }
@@ -149,6 +153,9 @@ export default {
     },
     publications: {
       query: GET_PUBLICATIONS,
+    },
+    currentUser: {
+      query: CURRENT_USER,
     },
   },
   methods: {
@@ -207,9 +214,9 @@ export default {
       }
     },
     async createNewSubmission() {
-      console.log(this.new_submission)
       this.is_submitting = true
-      this.tryCatchError = false
+      this.try_catch_error = false
+      this.new_submission.submitter_user_id = this.currentUser.id
       if (this.checkThatFormIsInvalid()) {
         return false
       }
@@ -232,7 +239,7 @@ export default {
         this.is_submitting = false
       } catch (error) {
         console.log(error)
-        this.tryCatchError = true
+        this.try_catch_error = true
         this.is_submitting = false
       }
     },
