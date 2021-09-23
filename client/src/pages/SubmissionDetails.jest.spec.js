@@ -18,7 +18,7 @@ describe("submissions details page mount", () => {
       components,
     },
     mount: {
-      type: "shallow",
+      type: "full",
       mocks: {
         $t: (token) => token,
         $apollo: {
@@ -35,60 +35,91 @@ describe("submissions details page mount", () => {
     expect(wrapper).toBeTruthy()
   })
 
-  test("all assigned reviwers appear within the assigned reviewers list", async () => {
+  const submissionUsersData = [
+    {
+      name: "Jest Submitter 1",
+      username: "jestSubmitter1",
+      email: "jestsubmitter1@msu.edu",
+      pivot: {
+        id: "1",
+        role_id: "6",
+      },
+    },
+    {
+      name: "Jest Reviewer 1",
+      username: "jestReviewer1",
+      email: "jestreviewer1@msu.edu",
+      pivot: {
+        id: "2",
+        role_id: "5",
+      },
+    },
+    {
+      name: "Jest Reviewer 2",
+      username: "jestReviewer2",
+      email: "jestreviewer2@msu.edu",
+      pivot: {
+        id: "3",
+        role_id: "5",
+      },
+    },
+    {
+      name: "Jest Reviewer 3 and Review Coordinator 1",
+      username: "jestReviewer3Coordinator1",
+      email: "jestreviewer3@msu.edu",
+      pivot: {
+        id: "4",
+        role_id: "5",
+      },
+    },
+    {
+      name: "Jest Reviewer 3 and Review Coordinator 1",
+      username: "jestReviewer3Coordinator1",
+      email: "jestreviewer3@msu.edu",
+      pivot: {
+        id: "4",
+        role_id: "3",
+      },
+    },
+    {
+      name: "Jest Submitter 2",
+      username: "jestSubmitter2",
+      email: "jestsubmitter2@msu.edu",
+      pivot: {
+        id: "5",
+        role_id: "6",
+      },
+    },
+  ]
+
+  test("all assigned submitters appear within the assigned submitters list", async () => {
     await wrapper.setData({
       submission: {
-        users: [
-          {
-            name: "Jest Submitter 1",
-            username: "jestSubmitter1",
-            email: "jestsubmitter1@msu.edu",
-            pivot: {
-              id: "1",
-              role_id: "6",
-            },
-          },
-          {
-            name: "Jest Reviewer 1",
-            username: "jestReviewer1",
-            email: "jestreviewer1@msu.edu",
-            pivot: {
-              id: "2",
-              role_id: "5",
-            },
-          },
-          {
-            name: "Jest Reviewer 2",
-            username: "jestReviewer2",
-            email: "jestreviewer2@msu.edu",
-            pivot: {
-              id: "3",
-              role_id: "5",
-            },
-          },
-          {
-            name: "Jest Reviewer 3 and Review Coordinator 1",
-            username: "jestReviewer3Coordinator1",
-            email: "jestreviewer3@msu.edu",
-            pivot: {
-              id: "4",
-              role_id: "5",
-            },
-          },
-          {
-            name: "Jest Reviewer 3 and Review Coordinator 1",
-            username: "jestReviewer3Coordinator1",
-            email: "jestreviewer3@msu.edu",
-            pivot: {
-              id: "4",
-              role_id: "3",
-            },
-          },
-        ],
+        users: submissionUsersData,
       },
     })
+    const list = wrapper.findComponent({ ref: "list_assigned_submitters" })
+    expect(list.findAllComponents({ name: "user-list-item" })).toHaveLength(2)
+  })
 
-    expect(wrapper.findAllComponents({ name: "q-item" })).toHaveLength(3)
+  test("an error message appears when there are no assigned submitters", async () => {
+    await wrapper.setData({
+      submission: {
+        users: [],
+      },
+    })
+    const card = wrapper.findComponent({ ref: "card_no_submitters" })
+    expect(card.text()).toContain("submissions.submitter.none")
+  })
+
+  test("all assigned reviewers appear within the assigned reviewers list", async () => {
+    await wrapper.setData({
+      submission: {
+        users: submissionUsersData,
+      },
+    })
+    const list = wrapper.findComponent({ ref: "list_assigned_reviewers" })
+    expect(list.findAllComponents({ name: "q-item" })).toHaveLength(3)
   })
 
   test("a default message still appears when there are no assigned reviewers", async () => {
@@ -97,8 +128,7 @@ describe("submissions details page mount", () => {
         users: [],
       },
     })
-    const qitem = wrapper.find("[data-cy=list_assigned_reviewers]")
-    expect(qitem.text()).toContain("submissions.reviewer.none")
-    expect(wrapper.findAllComponents({ name: "q-item" })).toHaveLength(1)
+    const card = wrapper.findComponent({ ref: "card_no_reviewers" })
+    expect(card.text()).toContain("submissions.reviewer.none")
   })
 })
