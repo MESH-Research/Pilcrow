@@ -213,19 +213,10 @@ input CreateSubmissionInput @validator(class: "SubmissionInputValidator") {
 }
 
 """
-Input type for creating a new association between a submission, role, and user via the createSubmissionUser mutation
-"""
-input CreateSubmissionUserInput @validator(class: "SubmissionUserInputValidator") {
-    user_id: ID!
-    role_id: ID!
-    submission_id: ID!
-}
-
-"""
 Input type for connecting newly created submissions to users via nested mutation
 """
 input CreateSubmissionUsersBelongsToMany {
-    connect: ConnectSubmissionUser!
+    connect: [ConnectSubmissionUser!]
 }
 
 """
@@ -237,23 +228,32 @@ input ConnectSubmissionUser {
 }
 
 """
-Input type for creating a new association between an uploaded file and a submission
-"""
-input CreateSubmissionFileInput @validator(class: "SubmissionFileInputValidator") {
-    submission_id: ID!
-    file_upload: Upload!
-}
-
-"""
 Input type for connecting newly created submissions to files via nested mutation
 """
 input CreateSubmissionFilesHasMany {
-    create: CreateSubmissionFile!
+    create: [CreateSubmissionFile!]
 }
 
 """
 Input type for inserting the pivot table data of a newly created submission user:w
 """
 input CreateSubmissionFile {
+    file_upload: Upload!
+}
+
+"""
+Input type for creating a new association between a submission, role, and user via the createSubmissionUser mutation
+"""
+input CreateSubmissionUserInput @validator(class: "SubmissionUserInputValidator") {
+    user_id: ID!
+    role_id: ID!
+    submission_id: ID!
+}
+
+"""
+Input type for creating a new association between an uploaded file and a submission
+"""
+input CreateSubmissionFileInput @validator(class: "SubmissionFileInputValidator") {
+    submission_id: ID!
     file_upload: Upload!
 }
