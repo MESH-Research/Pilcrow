@@ -14,7 +14,6 @@ class SubmissionInputValidator extends Validator
      */
     public function rules(): array
     {
-
         return [
             'title' => [
                 'max:512',
