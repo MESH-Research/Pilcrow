@@ -225,7 +225,7 @@ input CreateSubmissionUserInput @validator(class: "SubmissionUserInputValidator"
 Input type for connecting newly created submissions to users via nested mutation
 """
 input CreateSubmissionUsersBelongsToMany {
-    connect: [ConnectSubmissionUser!]
+    connect: ConnectSubmissionUser!
 }
 
 """
@@ -248,12 +248,12 @@ input CreateSubmissionFileInput @validator(class: "SubmissionFileInputValidator"
 Input type for connecting newly created submissions to files via nested mutation
 """
 input CreateSubmissionFilesHasMany {
-    create: [CreateSubmissionFile!]!
+    create: CreateSubmissionFile!
 }
 
 """
 Input type for inserting the pivot table data of a newly created submission user:w
 """
 input CreateSubmissionFile {
-    file_upload: [Upload!]
+    file_upload: Upload!
 }
