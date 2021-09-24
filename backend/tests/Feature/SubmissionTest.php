@@ -360,7 +360,7 @@ class SubmissionTest extends TestCase
             [
                 '',
                 '',
-                null
+                null,
             ],
         ];
     }
@@ -372,7 +372,7 @@ class SubmissionTest extends TestCase
     public function testSubmissionCreationViaMutation(mixed $title, mixed $name, mixed $expected_data)
     {
         $publication = Publication::factory()->create([
-            'name' => $name
+            'name' => $name,
         ]);
         $user = User::factory()->create([
             'name' => 'Test User #3',
@@ -405,7 +405,7 @@ class SubmissionTest extends TestCase
                 'title' => $title,
                 'publication_id' => $publication->id,
                 'submitter_user_id' => $user->id,
-                'file_upload' => null
+                'file_upload' => null,
             ],
         ];
         $map = [
