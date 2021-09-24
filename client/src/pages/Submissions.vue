@@ -31,6 +31,7 @@
               v-model="new_submission.file_upload"
               outlined
               label="Upload File"
+              multiple
               data-cy="new_submission_file_upload_input"
             >
               <template #prepend>
@@ -133,7 +134,7 @@ export default {
         title: "",
         publication_id: null,
         submitter_user_id: null,
-        file_upload: null,
+        file_upload: [],
       },
     }
   },
@@ -235,7 +236,7 @@ export default {
           "submissions.create.success"
         )
         this.new_submission.title = ""
-        this.new_submission.file_upload = null
+        this.new_submission.file_upload = []
         this.is_submitting = false
       } catch (error) {
         console.log(error)

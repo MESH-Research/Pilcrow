@@ -10,7 +10,7 @@ use App\Models\SubmissionUser;
 class CreateSubmission
 {
     /**
-     * Create a submission with a user as a submitter and a file upload
+     * Create a submission with a user and file upload
      *
      * @param  mixed  $_
      * @param  array<string, mixed>  $args
@@ -32,7 +32,7 @@ class CreateSubmission
         collect($args['files']['create'])->map(function ($file) use ($submission) {
             return SubmissionFile::create([
                 'submission_id' => $submission->id,
-                'file_upload' => $file['file_upload']->storePublicly('uploads'),
+                'file_upload' => $file->storePublicly('uploads'),
             ]);
         });
 
