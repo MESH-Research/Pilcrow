@@ -24,7 +24,7 @@
     "@quasar/extras": "^1.11.1",
     "@vue/apollo-composable": "4.0.0-alpha.15",
     "@vue/apollo-option": "4.0.0-alpha.11",
-    "@vue/composition-api": "^1.1.5",
+    "@vue/composition-api": "^1.2.2",
     "@vuelidate/core": "^2.0.0-alpha.23",
     "@vuelidate/validators": "^2.0.0-alpha.22",
     "apollo-upload-client": "^16.0.0",
