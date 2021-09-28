@@ -9,7 +9,7 @@ describe("Submissions Details", () => {
     cy.login({ email: "applicationadministrator@ccrproject.dev" })
     cy.visit("submission/100")
     cy.injectAxe()
-    cy.dataCy("list_assigned_reviewers")
+    cy.dataCy("list_assigned_submitters")
     cy.checkA11y()
   })
 
