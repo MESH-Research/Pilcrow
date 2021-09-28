@@ -28,7 +28,7 @@
               data-cy="new_submission_publication_input"
             />
             <q-file
-              v-model="new_submission_files"
+              v-model="new_submission.file_upload"
               outlined
               label="Upload File"
               multiple
@@ -40,7 +40,7 @@
             </q-file>
           </div>
           <q-banner
-            v-if="tryCatchError"
+            v-if="try_catch_error"
             dense
             rounded
             class="form-error text-white bg-negative text-center q-mt-xs"
@@ -90,8 +90,11 @@
             </ul>
           </q-item>
         </q-list>
+        <div v-if="$apollo.loading" class="q-pa-lg">
+          {{ $t("loading") }}
+        </div>
         <div
-          v-if="submissions.data.length == 0"
+          v-else-if="submissions.data.length == 0"
           data-cy="no_submissions_message"
         >
           No Submissions Created
@@ -102,11 +105,12 @@
 </template>
 
 <script>
-import { GET_PUBLICATIONS, GET_SUBMISSIONS } from "src/graphql/queries"
 import {
-  CREATE_SUBMISSION,
-  CREATE_SUBMISSION_FILE,
-} from "src/graphql/mutations"
+  GET_PUBLICATIONS,
+  GET_SUBMISSIONS,
+  CURRENT_USER,
+} from "src/graphql/queries"
+import { CREATE_SUBMISSION } from "src/graphql/mutations"
 import useVuelidate from "@vuelidate/core"
 import { required, maxLength } from "@vuelidate/validators"
 
@@ -119,7 +123,7 @@ export default {
   data() {
     return {
       is_submitting: false,
-      tryCatchError: false,
+      try_catch_error: false,
       submissions: {
         data: [],
       },
@@ -129,8 +133,9 @@ export default {
       new_submission: {
         title: "",
         publication_id: null,
+        submitter_user_id: null,
+        file_upload: [],
       },
-      new_submission_files: [],
     }
   },
   validations() {
@@ -138,8 +143,9 @@ export default {
       new_submission: {
         title: { required, maxLength: maxLength(512) },
         publication_id: { required },
+        submitter_user_id: { required },
+        file_upload: { required },
       },
-      new_submission_files: { required },
     }
   },
   apollo: {
@@ -148,6 +154,9 @@ export default {
     },
     publications: {
       query: GET_PUBLICATIONS,
+    },
+    currentUser: {
+      query: CURRENT_USER,
     },
   },
   methods: {
@@ -188,7 +197,15 @@ export default {
         )
         return true
       }
-      if (this.$v.new_submission_files.required.$invalid) {
+      if (this.$v.new_submission.submitter_user_id.required.$invalid) {
+        this.makeNotify(
+          "negative",
+          "error",
+          "submissions.create.submitter_user_id.required"
+        )
+        return true
+      }
+      if (this.$v.new_submission.file_upload.required.$invalid) {
         this.makeNotify(
           "negative",
           "error",
@@ -199,25 +216,15 @@ export default {
     },
     async createNewSubmission() {
       this.is_submitting = true
-      this.tryCatchError = false
+      this.try_catch_error = false
+      this.new_submission.submitter_user_id = this.currentUser.id
       if (this.checkThatFormIsInvalid()) {
         return false
       }
       try {
-        const {
-          data: {
-            createSubmission: { id },
-          },
-        } = await this.$apollo.mutate({
+        await this.$apollo.mutate({
           mutation: CREATE_SUBMISSION,
           variables: this.new_submission,
-        })
-        await this.$apollo.mutate({
-          mutation: CREATE_SUBMISSION_FILE,
-          variables: {
-            submission_id: id,
-            file_upload: this.new_submission_files[0],
-          },
           context: {
             hasUpload: true,
           },
@@ -229,11 +236,11 @@ export default {
           "submissions.create.success"
         )
         this.new_submission.title = ""
-        this.new_submission_files = []
+        this.new_submission.file_upload = []
         this.is_submitting = false
       } catch (error) {
         console.log(error)
-        this.tryCatchError = true
+        this.try_catch_error = true
         this.is_submitting = false
       }
     },

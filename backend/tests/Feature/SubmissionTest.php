@@ -10,6 +10,7 @@ use App\Models\SubmissionUser;
 use App\Models\User;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
 use Nuwave\Lighthouse\Testing\MakesGraphQLRequests;
 use Tests\TestCase;
 
@@ -333,28 +334,31 @@ class SubmissionTest extends TestCase
     {
         return [
             [
-                'Test Submission #7',
+                'Test Submission Created in PHPUnit Via Mutation',
+                'Test Publication for Submission Creation in PHPUnit Via Mutation',
                 [
                     'createSubmission' => [
-                        'title' => 'Test Submission #7',
+                        'title' => 'Test Submission Created in PHPUnit Via Mutation',
                         'publication' => [
-                            'name' => 'Test Publication #6',
+                            'name' => 'Test Publication for Submission Creation in PHPUnit Via Mutation',
                         ],
                     ],
                 ],
             ],
             [
-                '        Test Submission #8 with Whitespace       ',
+                '        Test Submission with Whitespace Created in PHPUnit Via Mutation       ',
+                'Test Publication for Submission with Whitespace Creation in PHPUnit Via Mutation',
                 [
                     'createSubmission' => [
-                        'title' => 'Test Submission #8 with Whitespace',
+                        'title' => 'Test Submission with Whitespace Created in PHPUnit Via Mutation',
                         'publication' => [
-                            'name' => 'Test Publication #6',
+                            'name' => 'Test Publication for Submission with Whitespace Creation in PHPUnit Via Mutation',
                         ],
                     ],
                 ],
             ],
             [
+                '',
                 '',
                 null,
             ],
@@ -365,28 +369,53 @@ class SubmissionTest extends TestCase
      * @dataProvider createSubmissionMutationProvider
      * @return void
      */
-    public function testSubmissionCreationViaMutation(mixed $title, mixed $expected_data)
+    public function testSubmissionCreationViaMutation(mixed $title, mixed $name, mixed $expected_data)
     {
         $publication = Publication::factory()->create([
-            'name' => 'Test Publication #6',
+            'name' => $name,
         ]);
-        $response = $this->graphQL(
-            'mutation CreateSubmission ($title: String!, $publication_id: ID!) {
-                createSubmission(
-                    input: { title: $title, publication_id: $publication_id }
+        $user = User::factory()->create([
+            'name' => 'Test User #3',
+        ]);
+        $operations = [
+            'operationName' => 'CreateSubmission',
+            'query' => '
+                mutation CreateSubmission (
+                    $title: String!
+                    $publication_id: ID!
+                    $submitter_user_id: ID!
+                    $file_upload: [Upload!]
                 ) {
-                    title
-                    publication {
-                        name
+                    createSubmission(
+                        input: {
+                            title: $title,
+                            publication_id: $publication_id,
+                            users: { connect: [{ id: $submitter_user_id, role_id: 6 }] }
+                            files: { create: $file_upload }
+                        }
+                    ) {
+                        title
+                        publication {
+                            name
+                        }
                     }
                 }
-            }',
-            [
+            ',
+            'variables' => [
                 'title' => $title,
                 'publication_id' => $publication->id,
-            ]
-        );
-        $response->assertJsonPath('data', $expected_data);
+                'submitter_user_id' => $user->id,
+                'file_upload' => null,
+            ],
+        ];
+        $map = [
+            '0' => ['variables.file_upload'],
+        ];
+        $file = [
+            '0' => UploadedFile::fake()->create('test.txt', 500),
+        ];
+        $this->multipartGraphQL($operations, $map, $file)
+            ->assertJsonPath('data', $expected_data);
     }
 
     /**
