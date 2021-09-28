@@ -22,6 +22,10 @@ describe("Submissions", () => {
       .should("be.visible")
       .should("have.class", "bg-positive")
     cy.get(".q-notification--top-enter-active").should("not.exist")
+    cy.dataCy("submission_link").contains("Submission from Cypress").click()
+    cy.dataCy("list_assigned_submitters").contains(
+      "applicationadministrator@ccrproject.dev"
+    )
     cy.checkA11y(null, {
       rules: {
         "nested-interactive": { enabled: false },

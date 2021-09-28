@@ -71,6 +71,7 @@
             class="column"
           >
             <router-link
+              data-cy="submission_link"
               :to="{
                 name: 'submission_details',
                 params: { id: submission.id },
