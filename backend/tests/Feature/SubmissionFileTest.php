@@ -7,6 +7,7 @@ use App\Models\Submission;
 use App\Models\SubmissionFile;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Nuwave\Lighthouse\Testing\MakesGraphQLRequests;
 use Tests\TestCase;
 
@@ -92,6 +93,7 @@ class SubmissionFileTest extends TestCase
                 ],
             ]);
         $record = SubmissionFile::where('submission_id', $submission->id)->get();
-        $this->assertGreaterThan(0, count($record));
+        $this->assertEquals(1, count($record));
+        Storage::delete($record->first()->file_upload);
     }
 }
