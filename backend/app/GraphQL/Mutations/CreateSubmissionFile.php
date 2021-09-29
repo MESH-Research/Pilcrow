@@ -8,7 +8,7 @@ use App\Models\SubmissionFile;
 class CreateSubmissionFile
 {
     /**
-     * Upload a file, store it on the server and return the path.
+     * Upload a file, store it on the server, and return the newly created record's data.
      *
      * @param  mixed  $_
      * @param  array<string, mixed>  $args
