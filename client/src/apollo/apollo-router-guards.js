@@ -40,7 +40,7 @@ export async function beforeEachHasAccessToSubmission(
         }) => submissions.filter((submission) => submission.id == submissionId)
       )
     if (submissions.length === 0) {
-      next({ name: "error403" })
+      beforeEachRequiresRoles(apolloClient, to, _, next)
     } else {
       next()
     }
