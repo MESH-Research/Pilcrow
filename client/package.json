@@ -34,7 +34,7 @@
     "graphql-tag": "^2.12.5",
     "lodash": "^4.17.20",
     "quasar": "^1.15.15",
-    "vue-i18n": "^8.26.2",
+    "vue-i18n": "^8.26.3",
     "zxcvbn": "^4.4.2"
   },
   "devDependencies": {
@@ -50,7 +50,7 @@
     "eslint-config-prettier": "^8.3.0",
     "eslint-loader": "^4.0.2",
     "eslint-plugin-cypress": "^2.12.1",
-    "eslint-plugin-jest": "^24.4.2",
+    "eslint-plugin-jest": "^24.5.0",
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-vue": "^7.18.0",
     "majestic": "^1.8.1",
