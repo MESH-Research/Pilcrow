@@ -58,7 +58,7 @@ const routes = [
         name: "submission_details",
         path: "/submission/:id",
         component: () => import("src/pages/SubmissionDetails.vue"),
-        meta: { requiresRoles: "Application Administrator" },
+        meta: { hasAccessToSubmission: true },
         props: true,
       },
     ],
