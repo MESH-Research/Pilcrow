@@ -109,7 +109,7 @@ describe("requiresRoles router hook", () => {
 
   it("redirects to error403 when user does not have required role", async () => {
     const to = {
-      matched: [{ meta: { requiresRoles: "admin" } }],
+      matched: [{ meta: { requiresRoles: ["Application Administrator"] } }],
     }
 
     apolloMock.query.mockResolvedValue({
@@ -147,8 +147,8 @@ describe("requiresRoles router hook", () => {
   it("redirects to error403 when user does not have all nested required roles", async () => {
     const to = {
       matched: [
-        { meta: { requiresRoles: "admin" } },
-        { meta: { requiresRoles: "testExtraRole" } },
+        { meta: { requiresRoles: ["Application Administrator"] } },
+        { meta: { requiresRoles: ["testExtraRole"] } },
       ],
     }
 
@@ -156,7 +156,7 @@ describe("requiresRoles router hook", () => {
       data: {
         currentUser: {
           id: 1,
-          roles: [{ name: "admin" }],
+          roles: [{ name: "Application Administrator" }],
         },
       },
     })
@@ -171,8 +171,8 @@ describe("requiresRoles router hook", () => {
   it("allows navigation when user has all nested required roles", async () => {
     const to = {
       matched: [
-        { meta: { requiresRoles: "admin" } },
-        { meta: { requiresRoles: "testExtraRole" } },
+        { meta: { requiresRoles: ["Application Administrator"] } },
+        { meta: { requiresRoles: ["testExtraRole"] } },
       ],
     }
 
@@ -180,7 +180,10 @@ describe("requiresRoles router hook", () => {
       data: {
         currentUser: {
           id: 1,
-          roles: [{ name: "admin" }, { name: "testExtraRole" }],
+          roles: [
+            { name: "Application Administrator" },
+            { name: "testExtraRole" },
+          ],
         },
       },
     })
@@ -194,14 +197,20 @@ describe("requiresRoles router hook", () => {
 
   it("redirects to error403 page when user does not have all required roles", async () => {
     const to = {
-      matched: [{ meta: { requiresRoles: ["admin", "testExtraRole"] } }],
+      matched: [
+        {
+          meta: {
+            requiresRoles: ["Application Administrator", "testExtraRole"],
+          },
+        },
+      ],
     }
 
     apolloMock.query.mockResolvedValue({
       data: {
         currentUser: {
           id: 1,
-          roles: [{ name: "admin" }],
+          roles: [{ name: "Application Administrator" }],
         },
       },
     })
@@ -215,14 +224,23 @@ describe("requiresRoles router hook", () => {
 
   it("allows navigation if user has all required roles", async () => {
     const to = {
-      matched: [{ meta: { requiresRoles: ["admin", "testExtraRole"] } }],
+      matched: [
+        {
+          meta: {
+            requiresRoles: ["Application Administrator", "testExtraRole"],
+          },
+        },
+      ],
     }
 
     apolloMock.query.mockResolvedValue({
       data: {
         currentUser: {
           id: 1,
-          roles: [{ name: "admin" }, { name: "testExtraRole" }],
+          roles: [
+            { name: "Application Administrator" },
+            { name: "testExtraRole" },
+          ],
         },
       },
     })
