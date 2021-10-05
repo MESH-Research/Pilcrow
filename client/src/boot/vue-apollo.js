@@ -2,7 +2,7 @@ import { ApolloClient, InMemoryCache, ApolloLink } from "@apollo/client/core"
 import {
   beforeEachRequiresAuth,
   beforeEachRequiresRoles,
-  beforeEachHasAccessToSubmission,
+  beforeEachRequiresSubmissionAccess,
 } from "src/apollo/apollo-router-guards"
 import { withXsrfLink, expiredTokenLink } from "src/apollo/apollo-links.js"
 import VueApollo from "@vue/apollo-option"
@@ -37,17 +37,15 @@ export default function ({ app, router, Vue }) {
   /**
    * Check routes for requiresRoles meta field.
    */
-
   router.beforeEach(async (to, from, next) =>
     beforeEachRequiresRoles(apolloClient, to, from, next)
   )
 
   /**
-   * Check routes for hasAccessToSubmission meta field.
+   * Check routes for requiresSubmissionAccess meta field.
    */
-
   router.beforeEach(async (to, from, next) =>
-    beforeEachHasAccessToSubmission(apolloClient, to, from, next)
+    beforeEachRequiresSubmissionAccess(apolloClient, to, from, next)
   )
 
   /**
