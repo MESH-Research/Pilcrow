@@ -52,7 +52,7 @@
     "eslint-plugin-cypress": "^2.12.1",
     "eslint-plugin-jest": "^24.5.2",
     "eslint-plugin-prettier": "^4.0.0",
-    "eslint-plugin-vue": "^7.19.0",
+    "eslint-plugin-vue": "^7.19.1",
     "majestic": "^1.8.1",
     "mock-apollo-client": "^1.2.0",
     "prettier": "^2.4.1",
