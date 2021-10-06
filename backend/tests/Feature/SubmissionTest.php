@@ -19,8 +19,13 @@ class SubmissionTest extends TestCase
     use MakesGraphQLRequests;
     use RefreshDatabase;
 
+    // TODO: Refactor this out
     private const SUBMITTER_ROLE_ID = 6;
     private const REVIEWER_ROLE_ID = 5;
+    private const REVIEW_COORDINATOR_ROLE_ID = 4;
+    private const EDITOR = 3;
+    private const PUBLICATION_ADMINISTRATOR = 2;
+    private const APPLICATION_ADMINISTRATOR = 1;
 
     /**
      * @return void
@@ -334,33 +339,51 @@ class SubmissionTest extends TestCase
     {
         return [
             [
-                'Test Submission Created in PHPUnit Via Mutation',
-                'Test Publication for Submission Creation in PHPUnit Via Mutation',
                 [
-                    'createSubmission' => [
-                        'title' => 'Test Submission Created in PHPUnit Via Mutation',
-                        'publication' => [
-                            'name' => 'Test Publication for Submission Creation in PHPUnit Via Mutation',
+                    'publication_name' => 'Test Publication for Submission Creation in PHPUnit Via Mutation',
+                ],
+                [
+                    'submission_title' => 'Test Submission Created in PHPUnit Via Mutation',
+                ],
+                [
+                    'expected_data' => [
+                        'createSubmission' => [
+                            'title' => 'Test Submission Created in PHPUnit Via Mutation',
+                            'publication' => [
+                                'name' => 'Test Publication for Submission Creation in PHPUnit Via Mutation',
+                            ],
                         ],
                     ],
                 ],
             ],
             [
-                '        Test Submission with Whitespace Created in PHPUnit Via Mutation       ',
-                'Test Publication for Submission with Whitespace Creation in PHPUnit Via Mutation',
                 [
-                    'createSubmission' => [
-                        'title' => 'Test Submission with Whitespace Created in PHPUnit Via Mutation',
-                        'publication' => [
-                            'name' => 'Test Publication for Submission with Whitespace Creation in PHPUnit Via Mutation',
+                    'publication_name' => 'Test Publication for Submission with Whitespace Creation in PHPUnit Via Mutation',
+                ],
+                [
+                    'submission_title' => '        Test Submission with Whitespace Created in PHPUnit Via Mutation       ',
+                ],
+                [
+                    'expected_data' => [
+                        'createSubmission' => [
+                            'title' => 'Test Submission with Whitespace Created in PHPUnit Via Mutation',
+                            'publication' => [
+                                'name' => 'Test Publication for Submission with Whitespace Creation in PHPUnit Via Mutation',
+                            ],
                         ],
                     ],
                 ],
             ],
             [
-                '',
-                '',
-                null,
+                [
+                    'publication_name' => '',
+                ],
+                [
+                    'submission_title' => '',
+                ],
+                [
+                    'expected_data' => null,
+                ]
             ],
         ];
     }
@@ -369,10 +392,10 @@ class SubmissionTest extends TestCase
      * @dataProvider createSubmissionMutationProvider
      * @return void
      */
-    public function testSubmissionCreationViaMutation(mixed $title, mixed $name, mixed $expected_data)
+    public function testSubmissionCreationViaMutation(mixed $publication, mixed $submission, mixed $response)
     {
         $publication = Publication::factory()->create([
-            'name' => $name,
+            'name' => $publication['publication_name'],
         ]);
         $user = User::factory()->create([
             'name' => 'Test User #3',
@@ -402,7 +425,7 @@ class SubmissionTest extends TestCase
                 }
             ',
             'variables' => [
-                'title' => $title,
+                'title' => $submission['submission_title'],
                 'publication_id' => $publication->id,
                 'submitter_user_id' => $user->id,
                 'file_upload' => null,
@@ -415,7 +438,7 @@ class SubmissionTest extends TestCase
             '0' => UploadedFile::fake()->create('test.txt', 500),
         ];
         $this->multipartGraphQL($operations, $map, $file)
-            ->assertJsonPath('data', $expected_data);
+            ->assertJsonPath('data', $response['expected_data']);
     }
 
     /**
@@ -430,6 +453,24 @@ class SubmissionTest extends TestCase
             [
                 self::REVIEWER_ROLE_ID,
             ],
+            [
+                self::REVIEW_COORDINATOR_ROLE_ID,
+            ],
+            [
+                self::EDITOR,
+            ],
+            [
+                self::PUBLICATION_ADMINISTRATOR,
+            ],
+            [
+                self::APPLICATION_ADMINISTRATOR,
+            ],
+            [
+                null
+            ],
+            [
+                ""
+            ]
         ];
     }
 
@@ -437,7 +478,7 @@ class SubmissionTest extends TestCase
      * @dataProvider createSubmissionUserMutationProvider
      * @return void
      */
-    public function testSubmissionUserCreationViaMutationAsAnApplicationAdministrator(int $role_id)
+    public function testSubmissionUserCreationViaMutationAsAnApplicationAdministrator(mixed $role_id)
     {
         $admin = User::factory()->create();
         $admin->assignRole(Role::APPLICATION_ADMINISTRATOR);
@@ -465,8 +506,6 @@ class SubmissionTest extends TestCase
                 'user_id' => $user->id,
             ]
         );
-        // print_r($role_id);
-        // print_r($response);
         $expected_data = [
             'createSubmissionUser' => [
                 'role_id' => (string)$role_id,
@@ -504,6 +543,10 @@ class SubmissionTest extends TestCase
         ];
         $response->assertJsonPath('data', $expected_data);
     }
+
+    // public function testSubmissionUserCreationViaMutationAsARegularUser(mixed $role_id)
+    // {
+    // }
 
     /**
      * @return void
