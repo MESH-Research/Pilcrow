@@ -16,6 +16,4 @@ class Permission extends ParentModel
     public const VIEW_ALL_PUBLICATIONS = 'view all publications';
     public const ASSIGN_REVIEWER = 'assign reviewer';
     public const UNASSIGN_REVIEWER = 'unassign reviewer';
-
-
 }

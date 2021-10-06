@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\Policies;
 
-use App\Models\User;
 use App\Models\Permission;
+use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class SubmissionUserPolicy
@@ -17,7 +17,7 @@ class SubmissionUserPolicy
      * @param  \App\Models\User  $user
      * @param  array  $model
      * @return bool
-    */
+     */
     public function create(User $user, array $model)
     {
         // TODO: is user assigned to submission and is a review coordinator
@@ -27,6 +27,7 @@ class SubmissionUserPolicy
         if ($is_assigning_a_reviewer) {
             return $user->can(Permission::ASSIGN_REVIEWER);
         }
+
         return true; // TODO: Check for the other roles
     }
 }

@@ -371,7 +371,7 @@ class SubmissionTest extends TestCase
                     'publication_name' => '',
                     'submission_title' => '',
                     'expected_data' => null,
-                ]
+                ],
             ],
         ];
     }
@@ -431,7 +431,8 @@ class SubmissionTest extends TestCase
      * @param string $role
      * @return array
      */
-    private function createExpectedData1Array($role) {
+    private function createExpectedData1Array($role)
+    {
         return [
             'createSubmissionUser' => [
                 'role_id' => (string)$role,
@@ -445,8 +446,9 @@ class SubmissionTest extends TestCase
      * @param string|null $role
      * @return array
      */
-    private function createExpectedData2Array($role) {
-        $inner_data = ($role !== null)
+    private function createExpectedData2Array($role)
+    {
+        $inner_data = $role !== null
             ? [
                 [
                     'id' => null,
@@ -456,6 +458,7 @@ class SubmissionTest extends TestCase
                 ],
             ]
             : [];
+
         return [
             'submission' => [
                 'users' => $inner_data,
@@ -520,7 +523,7 @@ class SubmissionTest extends TestCase
             ],
             [
                 [
-                    'role_id' => "",
+                    'role_id' => '',
                     'expected_data_1' => null,
                     'expected_data_2' => $this->createExpectedData2Array(null),
                 ],
