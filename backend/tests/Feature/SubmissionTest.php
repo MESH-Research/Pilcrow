@@ -341,11 +341,7 @@ class SubmissionTest extends TestCase
             [
                 [
                     'publication_name' => 'Test Publication for Submission Creation in PHPUnit Via Mutation',
-                ],
-                [
                     'submission_title' => 'Test Submission Created in PHPUnit Via Mutation',
-                ],
-                [
                     'expected_data' => [
                         'createSubmission' => [
                             'title' => 'Test Submission Created in PHPUnit Via Mutation',
@@ -359,11 +355,7 @@ class SubmissionTest extends TestCase
             [
                 [
                     'publication_name' => 'Test Publication for Submission with Whitespace Creation in PHPUnit Via Mutation',
-                ],
-                [
                     'submission_title' => '        Test Submission with Whitespace Created in PHPUnit Via Mutation       ',
-                ],
-                [
                     'expected_data' => [
                         'createSubmission' => [
                             'title' => 'Test Submission with Whitespace Created in PHPUnit Via Mutation',
@@ -377,11 +369,7 @@ class SubmissionTest extends TestCase
             [
                 [
                     'publication_name' => '',
-                ],
-                [
                     'submission_title' => '',
-                ],
-                [
                     'expected_data' => null,
                 ]
             ],
@@ -392,14 +380,12 @@ class SubmissionTest extends TestCase
      * @dataProvider createSubmissionMutationProvider
      * @return void
      */
-    public function testSubmissionCreationViaMutation(mixed $publication, mixed $submission, mixed $response)
+    public function testSubmissionCreationViaMutation(array $case)
     {
         $publication = Publication::factory()->create([
-            'name' => $publication['publication_name'],
+            'name' => $case['publication_name'],
         ]);
-        $user = User::factory()->create([
-            'name' => 'Test User #3',
-        ]);
+        $user = User::factory()->create();
         $operations = [
             'operationName' => 'CreateSubmission',
             'query' => '
@@ -425,7 +411,7 @@ class SubmissionTest extends TestCase
                 }
             ',
             'variables' => [
-                'title' => $submission['submission_title'],
+                'title' => $case['submission_title'],
                 'publication_id' => $publication->id,
                 'submitter_user_id' => $user->id,
                 'file_upload' => null,
@@ -438,7 +424,43 @@ class SubmissionTest extends TestCase
             '0' => UploadedFile::fake()->create('test.txt', 500),
         ];
         $this->multipartGraphQL($operations, $map, $file)
-            ->assertJsonPath('data', $response['expected_data']);
+            ->assertJsonPath('data', $case['expected_data']);
+    }
+
+    /**
+     * @param string $role
+     * @return array
+     */
+    private function createExpectedData1Array($role) {
+        return [
+            'createSubmissionUser' => [
+                'role_id' => (string)$role,
+                'submission_id' => null,
+                'user_id' => null,
+            ],
+        ];
+    }
+
+    /**
+     * @param string|null $role
+     * @return array
+     */
+    private function createExpectedData2Array($role) {
+        $inner_data = ($role !== null)
+            ? [
+                [
+                    'id' => null,
+                    'pivot' => [
+                        'role_id' => (string)$role,
+                    ],
+                ],
+            ]
+            : [];
+        return [
+            'submission' => [
+                'users' => $inner_data,
+            ],
+        ];
     }
 
     /**
@@ -448,29 +470,68 @@ class SubmissionTest extends TestCase
     {
         return [
             [
-                self::SUBMITTER_ROLE_ID,
+                [
+                    'role_id' => self::SUBMITTER_ROLE_ID,
+                    'expected_data_1' => $this->createExpectedData1Array(self::SUBMITTER_ROLE_ID),
+                    'expected_data_2' => $this->createExpectedData2Array(self::SUBMITTER_ROLE_ID),
+                ],
             ],
             [
-                self::REVIEWER_ROLE_ID,
+                [
+                    'role_id' => self::REVIEWER_ROLE_ID,
+                    'expected_data_1' => $this->createExpectedData1Array(self::REVIEWER_ROLE_ID),
+                    'expected_data_2' => $this->createExpectedData2Array(self::REVIEWER_ROLE_ID),
+                ],
             ],
             [
-                self::REVIEW_COORDINATOR_ROLE_ID,
+                [
+                    'role_id' => self::REVIEW_COORDINATOR_ROLE_ID,
+                    'expected_data_1' => $this->createExpectedData1Array(self::REVIEW_COORDINATOR_ROLE_ID),
+                    'expected_data_2' => $this->createExpectedData2Array(self::REVIEW_COORDINATOR_ROLE_ID),
+                ],
             ],
             [
-                self::EDITOR,
+                [
+                    'role_id' => self::EDITOR,
+                    'expected_data_1' => $this->createExpectedData1Array(self::EDITOR),
+                    'expected_data_2' => $this->createExpectedData2Array(self::EDITOR),
+                ],
             ],
             [
-                self::PUBLICATION_ADMINISTRATOR,
+                [
+                    'role_id' => self::PUBLICATION_ADMINISTRATOR,
+                    'expected_data_1' => $this->createExpectedData1Array(self::PUBLICATION_ADMINISTRATOR),
+                    'expected_data_2' => $this->createExpectedData2Array(self::PUBLICATION_ADMINISTRATOR),
+                ],
             ],
             [
-                self::APPLICATION_ADMINISTRATOR,
+                [
+                    'role_id' => self::APPLICATION_ADMINISTRATOR,
+                    'expected_data_1' => $this->createExpectedData1Array(self::APPLICATION_ADMINISTRATOR),
+                    'expected_data_2' => $this->createExpectedData2Array(self::APPLICATION_ADMINISTRATOR),
+                ],
             ],
             [
-                null
+                [
+                    'role_id' => null,
+                    'expected_data_1' => null,
+                    'expected_data_2' => $this->createExpectedData2Array(null),
+                ],
             ],
             [
-                ""
-            ]
+                [
+                    'role_id' => "",
+                    'expected_data_1' => null,
+                    'expected_data_2' => $this->createExpectedData2Array(null),
+                ],
+            ],
+            [
+                [
+                    'role_id' => 0,
+                    'expected_data_1' => null,
+                    'expected_data_2' => $this->createExpectedData2Array(null),
+                ],
+            ],
         ];
     }
 
@@ -478,7 +539,7 @@ class SubmissionTest extends TestCase
      * @dataProvider createSubmissionUserMutationProvider
      * @return void
      */
-    public function testSubmissionUserCreationViaMutationAsAnApplicationAdministrator(mixed $role_id)
+    public function testSubmissionUserCreationViaMutationAsAnApplicationAdministrator(array $case)
     {
         $admin = User::factory()->create();
         $admin->assignRole(Role::APPLICATION_ADMINISTRATOR);
@@ -501,19 +562,16 @@ class SubmissionTest extends TestCase
                 }
             }',
             [
-                'role_id' => $role_id,
+                'role_id' => $case['role_id'],
                 'submission_id' => $submission->id,
                 'user_id' => $user->id,
             ]
         );
-        $expected_data = [
-            'createSubmissionUser' => [
-                'role_id' => (string)$role_id,
-                'submission_id' => (string)$submission->id,
-                'user_id' => (string)$user->id,
-            ],
-        ];
-        $response->assertJsonPath('data', $expected_data);
+        if ($case['expected_data_1'] !== null) {
+            $case['expected_data_1']['createSubmissionUser']['user_id'] = (string)$user->id;
+            $case['expected_data_1']['createSubmissionUser']['submission_id'] = (string)$submission->id;
+        }
+        $response->assertJsonPath('data', $case['expected_data_1']);
         $response = $this->graphQL(
             'query GetSubmission ($id: ID!) {
                 submission( id: $id ) {
@@ -529,19 +587,10 @@ class SubmissionTest extends TestCase
                 'id' => $submission->id,
             ]
         );
-        $expected_data = [
-            'submission' => [
-                'users' => [
-                    [
-                        'id' => (string)$user->id,
-                        'pivot' => [
-                            'role_id' => (string)$role_id,
-                        ],
-                    ],
-                ],
-            ],
-        ];
-        $response->assertJsonPath('data', $expected_data);
+        if ($case['expected_data_1'] !== null) {
+            $case['expected_data_2']['submission']['users'][0]['id'] = (string)$user->id;
+        }
+        $response->assertJsonPath('data', $case['expected_data_2']);
     }
 
     // public function testSubmissionUserCreationViaMutationAsARegularUser(mixed $role_id)
