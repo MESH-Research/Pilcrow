@@ -17,13 +17,11 @@ class AddReviewerAssignmentPermissions extends Migration
         $permission_1->assignRole(Role::APPLICATION_ADMINISTRATOR);
         $permission_1->assignRole(Role::PUBLICATION_ADMINISTRATOR);
         $permission_1->assignRole(Role::EDITOR);
-        $permission_1->assignRole(Role::REVIEW_COORDINATOR);
 
         $permission_2 = Permission::create(['name' => Permission::UNASSIGN_REVIEWER]);
         $permission_2->assignRole(Role::APPLICATION_ADMINISTRATOR);
         $permission_2->assignRole(Role::PUBLICATION_ADMINISTRATOR);
         $permission_2->assignRole(Role::EDITOR);
-        $permission_2->assignRole(Role::REVIEW_COORDINATOR);
     }
 
     /**
@@ -38,7 +36,6 @@ class AddReviewerAssignmentPermissions extends Migration
         $permission_1->removeRole(Role::APPLICATION_ADMINISTRATOR);
         $permission_1->assignRole(Role::PUBLICATION_ADMINISTRATOR);
         $permission_1->assignRole(Role::EDITOR);
-        $permission_1->assignRole(Role::REVIEW_COORDINATOR);
         $permission_1->delete();
 
         /** @var $permission_2 Permission */
@@ -46,7 +43,6 @@ class AddReviewerAssignmentPermissions extends Migration
         $permission_2->removeRole(Role::APPLICATION_ADMINISTRATOR);
         $permission_2->assignRole(Role::PUBLICATION_ADMINISTRATOR);
         $permission_2->assignRole(Role::EDITOR);
-        $permission_2->assignRole(Role::REVIEW_COORDINATOR);
         $permission_2->delete();
     }
 }
