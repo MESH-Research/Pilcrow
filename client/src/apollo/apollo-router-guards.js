@@ -52,6 +52,7 @@ export async function beforeEachRequiresSubmissionAccess(
     next()
   }
 }
+
 export async function beforeEachRequiresRoles(apolloClient, to, _, next) {
   if (to.matched.some((record) => record.meta.requiresRoles)) {
     const requiredRoles = to.matched

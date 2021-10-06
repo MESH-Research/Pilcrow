@@ -437,8 +437,11 @@ class SubmissionTest extends TestCase
      * @dataProvider createSubmissionUserMutationProvider
      * @return void
      */
-    public function testSubmissionUserCreationViaMutation(int $role_id)
+    public function testSubmissionUserCreationViaMutationAsAnApplicationAdministrator(int $role_id)
     {
+        $admin = User::factory()->create();
+        $admin->assignRole(Role::APPLICATION_ADMINISTRATOR);
+        $this->actingAs($admin);
         $publication = Publication::factory()->create();
         $user = User::factory()->create();
         $submission = Submission::factory()
@@ -462,6 +465,8 @@ class SubmissionTest extends TestCase
                 'user_id' => $user->id,
             ]
         );
+        // print_r($role_id);
+        // print_r($response);
         $expected_data = [
             'createSubmissionUser' => [
                 'role_id' => (string)$role_id,
