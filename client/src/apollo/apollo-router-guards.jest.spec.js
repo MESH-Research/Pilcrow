@@ -86,14 +86,14 @@ describe("requiresRoles router hook", () => {
 
   it("allows navigation when user has required role", async () => {
     const to = {
-      matched: [{ meta: { requiresRoles: "admin" } }],
+      matched: [{ meta: { requiresRoles: ["Application Admin"] } }],
     }
 
     apolloMock.query.mockResolvedValue({
       data: {
         currentUser: {
           id: 1,
-          roles: [{ name: "admin" }],
+          roles: [{ name: "Application Admin" }],
         },
       },
     })
@@ -144,11 +144,18 @@ describe("requiresRoles router hook", () => {
     expect(next.mock.calls[0][0]).toBe(undefined)
   })
 
-  it("redirects to error403 when user does not have all nested required roles", async () => {
+  it("allows navigation when user has one of the required roles", async () => {
     const to = {
       matched: [
-        { meta: { requiresRoles: ["Application Administrator"] } },
-        { meta: { requiresRoles: ["testExtraRole"] } },
+        {
+          meta: {
+            requiresRoles: [
+              "Application Administrator",
+              "Publication Administrator",
+              "Editor",
+            ],
+          },
+        },
       ],
     }
 
@@ -165,37 +172,10 @@ describe("requiresRoles router hook", () => {
 
     expect(apolloMock.query).toHaveBeenCalled()
     expect(next).toHaveBeenCalled()
-    expect(next.mock.calls[0][0]).not.toBe(undefined)
-  })
-
-  it("allows navigation when user has all nested required roles", async () => {
-    const to = {
-      matched: [
-        { meta: { requiresRoles: ["Application Administrator"] } },
-        { meta: { requiresRoles: ["testExtraRole"] } },
-      ],
-    }
-
-    apolloMock.query.mockResolvedValue({
-      data: {
-        currentUser: {
-          id: 1,
-          roles: [
-            { name: "Application Administrator" },
-            { name: "testExtraRole" },
-          ],
-        },
-      },
-    })
-    const next = jest.fn()
-    await beforeEachRequiresRoles(apolloMock, to, undefined, next)
-
-    expect(apolloMock.query).toHaveBeenCalled()
-    expect(next).toHaveBeenCalled()
     expect(next.mock.calls[0][0]).toBe(undefined)
   })
 
-  it("redirects to error403 page when user does not have all required roles", async () => {
+  it("redirects to error403 page when user does not have any required roles", async () => {
     const to = {
       matched: [
         {
@@ -210,7 +190,7 @@ describe("requiresRoles router hook", () => {
       data: {
         currentUser: {
           id: 1,
-          roles: [{ name: "Application Administrator" }],
+          roles: [{ name: "Submitter" }],
         },
       },
     })
