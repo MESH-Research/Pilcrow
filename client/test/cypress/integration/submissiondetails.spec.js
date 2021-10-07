@@ -24,13 +24,12 @@ describe("Submissions Details", () => {
       "test{backspace}{backspace}{backspace}{backspace}"
     )
     cy.dataCy("button_assign_reviewer").click()
-    cy.dataCy("list_assigned_reviewers").contains("Application Admin User")
+    cy.dataCy("list_assigned_reviewers").contains("Application Administrator")
     cy.injectAxe()
     cy.dataCy("submission_details_notify")
     cy.checkA11y(null, {
       rules: {
         "nested-interactive": { enabled: false },
-        "color-contrast": { enabled: false }, // TODO: re-enable when axe DevTools implements v4.3.3 of axe-core
       },
     })
   })

@@ -20,14 +20,14 @@ class DatabaseSeeder extends Seeder
         $admin = User::factory()->create([
             'username' => 'applicationAdminUser',
             'email' => 'applicationadministrator@ccrproject.dev',
-            'name' => 'Application Adminstrator',
+            'name' => 'Application Administrator',
             'password' => Hash::make('adminPassword!@#'),
         ]);
 
         $publication_admin = User::factory()->create([
-            'username' => 'publicationAdminstrator',
-            'email' => 'publicationAdminstrator@ccrproject.dev',
-            'name' => 'Publication Adminstrator',
+            'username' => 'publicationAdministrator',
+            'email' => 'publicationAdministrator@ccrproject.dev',
+            'name' => 'Publication Administrator',
             'password' => Hash::make('publicationadminPassword!@#'),
         ]);
 
