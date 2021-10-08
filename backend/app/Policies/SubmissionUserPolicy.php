@@ -29,13 +29,13 @@ class SubmissionUserPolicy
             return $user->can(Permission::ASSIGN_REVIEWER);
         }
 
-        $is_assigned_as_review_coordinator = SubmissionUser::where('user_id', $user->id,)
+        $is_assigned_as_a_review_coordinator = SubmissionUser::where('user_id', $user->id,)
             ->where('role_id', 4) // TODO: Use a constant for this ID
             ->where('submission_id', $model['submission_id'])->first();
-        if ($is_assigned_as_review_coordinator && $is_assigning_a_reviewer) {
+        if ($is_assigned_as_a_review_coordinator && $is_assigning_a_reviewer) {
             return true;
         }
 
-        return true;
+        return false;
     }
 }
