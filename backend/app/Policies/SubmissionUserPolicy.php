@@ -25,10 +25,10 @@ class SubmissionUserPolicy
      */
     public function create(User $user, array $model)
     {
-        $higher_priveleged_role_ids = [1, 2, 3];
-        $has_higher_priveleged_role = !empty($user->roles->whereIn('id', $higher_priveleged_role_ids)->all());
+        $higher_privileged_role_ids = [1, 2, 3];
+        $has_higher_privileged_role = !empty($user->roles->whereIn('id', $higher_privileged_role_ids)->all());
         $is_assigning_a_reviewer = $model['role_id'] == 5;
-        if ($has_higher_priveleged_role && $is_assigning_a_reviewer) {
+        if ($has_higher_privileged_role && $is_assigning_a_reviewer) {
             return $user->can(Permission::ASSIGN_REVIEWER);
         }
 
