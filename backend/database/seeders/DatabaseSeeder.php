@@ -55,14 +55,12 @@ class DatabaseSeeder extends Seeder
         $admin->assignRole(Role::APPLICATION_ADMINISTRATOR);
         $publication_admin->assignRole(Role::PUBLICATION_ADMINISTRATOR);
         $editor->assignRole(Role::EDITOR);
-        $coordinator->assignRole(Role::REVIEW_COORDINATOR);
-        $regular->assignRole(Role::SUBMITTER);
 
         $publication_seeder = new PublicationSeeder();
         $publication_seeder->run();
 
         $submission_seeder = new SubmissionSeeder();
-        $submission_seeder->run();
+        $submission_seeder->run($coordinator);
 
         $submission_file_seeder = new SubmissionFileSeeder();
         $submission_file_seeder->run();
