@@ -474,7 +474,7 @@ class SubmissionTest extends TestCase
         return [
             [
                 [
-                    'acting_as_application_administrator' => true,
+                    'acting_as_role' => Role::APPLICATION_ADMINISTRATOR,
                     'submission_user_role_id' => self::SUBMITTER_ROLE_ID,
                     'expected_data_1' => $this->createExpectedData1Array(self::SUBMITTER_ROLE_ID),
                     'expected_data_2' => $this->createExpectedData2Array(self::SUBMITTER_ROLE_ID),
@@ -482,7 +482,7 @@ class SubmissionTest extends TestCase
             ],
             [
                 [
-                    'acting_as_application_administrator' => true,
+                    'acting_as_role' => Role::APPLICATION_ADMINISTRATOR,
                     'submission_user_role_id' => self::REVIEWER_ROLE_ID,
                     'expected_data_1' => $this->createExpectedData1Array(self::REVIEWER_ROLE_ID),
                     'expected_data_2' => $this->createExpectedData2Array(self::REVIEWER_ROLE_ID),
@@ -490,7 +490,7 @@ class SubmissionTest extends TestCase
             ],
             [
                 [
-                    'acting_as_application_administrator' => true,
+                    'acting_as_role' => Role::APPLICATION_ADMINISTRATOR,
                     'submission_user_role_id' => self::REVIEW_COORDINATOR_ROLE_ID,
                     'expected_data_1' => $this->createExpectedData1Array(self::REVIEW_COORDINATOR_ROLE_ID),
                     'expected_data_2' => $this->createExpectedData2Array(self::REVIEW_COORDINATOR_ROLE_ID),
@@ -498,7 +498,7 @@ class SubmissionTest extends TestCase
             ],
             [
                 [
-                    'acting_as_application_administrator' => true,
+                    'acting_as_role' => Role::APPLICATION_ADMINISTRATOR,
                     'submission_user_role_id' => self::EDITOR,
                     'expected_data_1' => $this->createExpectedData1Array(self::EDITOR),
                     'expected_data_2' => $this->createExpectedData2Array(self::EDITOR),
@@ -506,7 +506,7 @@ class SubmissionTest extends TestCase
             ],
             [
                 [
-                    'acting_as_application_administrator' => true,
+                    'acting_as_role' => Role::APPLICATION_ADMINISTRATOR,
                     'submission_user_role_id' => self::PUBLICATION_ADMINISTRATOR,
                     'expected_data_1' => $this->createExpectedData1Array(self::PUBLICATION_ADMINISTRATOR),
                     'expected_data_2' => $this->createExpectedData2Array(self::PUBLICATION_ADMINISTRATOR),
@@ -514,7 +514,7 @@ class SubmissionTest extends TestCase
             ],
             [
                 [
-                    'acting_as_application_administrator' => true,
+                    'acting_as_role' => Role::APPLICATION_ADMINISTRATOR,
                     'submission_user_role_id' => self::APPLICATION_ADMINISTRATOR,
                     'expected_data_1' => $this->createExpectedData1Array(self::APPLICATION_ADMINISTRATOR),
                     'expected_data_2' => $this->createExpectedData2Array(self::APPLICATION_ADMINISTRATOR),
@@ -522,7 +522,7 @@ class SubmissionTest extends TestCase
             ],
             [
                 [
-                    'acting_as_application_administrator' => true,
+                    'acting_as_role' => Role::APPLICATION_ADMINISTRATOR,
                     'submission_user_role_id' => null,
                     'expected_data_1' => null,
                     'expected_data_2' => $this->createExpectedData2Array(null),
@@ -530,7 +530,7 @@ class SubmissionTest extends TestCase
             ],
             [
                 [
-                    'acting_as_application_administrator' => true,
+                    'acting_as_role' => Role::APPLICATION_ADMINISTRATOR,
                     'submission_user_role_id' => '',
                     'expected_data_1' => null,
                     'expected_data_2' => $this->createExpectedData2Array(null),
@@ -538,7 +538,7 @@ class SubmissionTest extends TestCase
             ],
             [
                 [
-                    'acting_as_application_administrator' => true,
+                    'acting_as_role' => Role::APPLICATION_ADMINISTRATOR,
                     'submission_user_role_id' => 0,
                     'expected_data_1' => null,
                     'expected_data_2' => $this->createExpectedData2Array(null),
@@ -546,7 +546,7 @@ class SubmissionTest extends TestCase
             ],
             [
                 [
-                    'acting_as_application_administrator' => false,
+                    'acting_as_role' => false,
                     'submission_user_role_id' => self::SUBMITTER_ROLE_ID,
                     'expected_data_1' => null,
                     'expected_data_2' => $this->createExpectedData2Array(null),
@@ -554,7 +554,7 @@ class SubmissionTest extends TestCase
             ],
             [
                 [
-                    'acting_as_application_administrator' => false,
+                    'acting_as_role' => false,
                     'submission_user_role_id' => self::REVIEWER_ROLE_ID,
                     'expected_data_1' => null,
                     'expected_data_2' => $this->createExpectedData2Array(null),
@@ -562,7 +562,7 @@ class SubmissionTest extends TestCase
             ],
             [
                 [
-                    'acting_as_application_administrator' => false,
+                    'acting_as_role' => false,
                     'submission_user_role_id' => self::REVIEW_COORDINATOR_ROLE_ID,
                     'expected_data_1' => null,
                     'expected_data_2' => $this->createExpectedData2Array(null),
@@ -570,7 +570,7 @@ class SubmissionTest extends TestCase
             ],
             [
                 [
-                    'acting_as_application_administrator' => false,
+                    'acting_as_role' => false,
                     'submission_user_role_id' => self::EDITOR,
                     'expected_data_1' => null,
                     'expected_data_2' => $this->createExpectedData2Array(null),
@@ -578,7 +578,7 @@ class SubmissionTest extends TestCase
             ],
             [
                 [
-                    'acting_as_application_administrator' => false,
+                    'acting_as_role' => false,
                     'submission_user_role_id' => self::PUBLICATION_ADMINISTRATOR,
                     'expected_data_1' => null,
                     'expected_data_2' => $this->createExpectedData2Array(null),
@@ -586,7 +586,7 @@ class SubmissionTest extends TestCase
             ],
             [
                 [
-                    'acting_as_application_administrator' => false,
+                    'acting_as_role' => false,
                     'submission_user_role_id' => self::APPLICATION_ADMINISTRATOR,
                     'expected_data_1' => null,
                     'expected_data_2' => $this->createExpectedData2Array(null),
@@ -594,7 +594,7 @@ class SubmissionTest extends TestCase
             ],
             [
                 [
-                    'acting_as_application_administrator' => false,
+                    'acting_as_role' => false,
                     'submission_user_role_id' => null,
                     'expected_data_1' => null,
                     'expected_data_2' => $this->createExpectedData2Array(null),
@@ -602,7 +602,7 @@ class SubmissionTest extends TestCase
             ],
             [
                 [
-                    'acting_as_application_administrator' => false,
+                    'acting_as_role' => false,
                     'submission_user_role_id' => '',
                     'expected_data_1' => null,
                     'expected_data_2' => $this->createExpectedData2Array(null),
@@ -610,7 +610,7 @@ class SubmissionTest extends TestCase
             ],
             [
                 [
-                    'acting_as_application_administrator' => false,
+                    'acting_as_role' => false,
                     'submission_user_role_id' => 0,
                     'expected_data_1' => null,
                     'expected_data_2' => $this->createExpectedData2Array(null),
@@ -625,10 +625,10 @@ class SubmissionTest extends TestCase
      */
     public function testCreateSubmissionUserViaMutation(array $case)
     {
-        if ($case['acting_as_application_administrator']) {
-            $admin = User::factory()->create();
-            $admin->assignRole(Role::APPLICATION_ADMINISTRATOR);
-            $this->actingAs($admin);
+        if ($case['acting_as_role']) {
+            $acting_as = User::factory()->create();
+            $acting_as->assignRole($case['acting_as_role']);
+            $this->actingAs($acting_as);
         }
         $publication = Publication::factory()->create();
         $user = User::factory()->create();
