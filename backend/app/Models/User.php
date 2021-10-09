@@ -175,4 +175,12 @@ class User extends Authenticatable implements MustVerifyEmail
             ->withTimestamps()
             ->withPivot('role_id');
     }
+
+    /**
+     * @return \App\Models\Role
+     */
+    public function highestPrivilegedRole()
+    {
+        return $this->roles->sortBy('id')->first();
+    }
 }
