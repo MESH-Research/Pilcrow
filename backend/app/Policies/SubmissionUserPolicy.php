@@ -26,11 +26,11 @@ class SubmissionUserPolicy
     public function create(User $user, array $model)
     {
         switch ($model['role_id']) {
-            case 5:
-                $this->assignReviewer($user, $model);
-                break;
+            case '5':
+                return $this->assignReviewer($user, $model);
         }
-        return true;
+
+        return false;
     }
 
     /**
@@ -42,11 +42,13 @@ class SubmissionUserPolicy
      */
     private function assignReviewer(User $user, array $model)
     {
-        // User has higher privileged role
+        // Assigning user has a higher privileged role
         if ($user->getHighestPrivilegedRole()) {
-            return $user->can(Permission::ASSIGN_REVIEWER);
+            $permission = $user->can(Permission::ASSIGN_REVIEWER);
+
+            return $permission;
         }
-        // User is assigned as a Review Coordinator to the submission
+        // Assigning user is a Review Coordinator of the submission
         return SubmissionUser::where('user_id', $user->id)
             ->where('role_id', 4)
             ->where('submission_id', $model['submission_id'])

@@ -150,7 +150,7 @@ class UserPermissionsTest extends TestCase
     /**
      * @return void
      */
-    public function testUserWithNoRoleReturnsAnEmptyArrayWhenQueriedFromGraphqlEndpoint()
+    public function testUserWithNoRoleReturnsAnEmptyArrayWhenRolesForUserAreQueriedFromGraphqlEndpoint()
     {
         $user = User::factory()->create();
         $response = $this->graphQL(
