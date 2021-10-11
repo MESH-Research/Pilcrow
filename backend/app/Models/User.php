@@ -179,7 +179,7 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * @return \App\Models\Role
      */
-    public function highestPrivilegedRole()
+    public function getHighestPrivilegedRole()
     {
         return $this->roles->sortBy('id')->first();
     }

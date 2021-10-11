@@ -43,7 +43,7 @@ class SubmissionUserPolicy
     private function assignReviewer(User $user, array $model)
     {
         // User has higher privileged role
-        if ($user->highestPrivilegedRole()) {
+        if ($user->getHighestPrivilegedRole()) {
             return $user->can(Permission::ASSIGN_REVIEWER);
         }
         // User is assigned as a Review Coordinator to the submission
