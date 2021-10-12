@@ -85,12 +85,11 @@
           </div>
           <q-btn
             :ripple="{ center: true }"
+            class="q-mt-lg"
             color="primary"
-            class="text-uppercase q-mt-lg"
-            label="Assign"
             data-cy="button_assign_reviewer"
+            label="Assign"
             type="submit"
-            no-caps
           />
         </q-form>
       </section>

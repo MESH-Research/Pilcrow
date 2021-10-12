@@ -27,11 +27,10 @@ describe("Submissions Details", () => {
     cy.dataCy("list_assigned_reviewers").contains("Application Administrator")
     cy.injectAxe()
     cy.dataCy("submission_details_notify")
-    cy.checkA11y(null, {
-      rules: {
-        "nested-interactive": { enabled: false },
-      },
-    })
+    cy.get("#input_review_assignee").type(
+      "typing to prevent a false positive a11y violation before submission_details_notify fully fades in"
+    )
+    cy.checkA11y()
   })
 
   it("should disallow assignments of duplicate reviewers", () => {
@@ -49,11 +48,9 @@ describe("Submissions Details", () => {
     cy.dataCy("submission_details_notify")
       .should("be.visible")
       .should("have.class", "bg-negative")
-    cy.checkA11y(null, {
-      rules: {
-        "nested-interactive": { enabled: false },
-        "color-contrast": { enabled: false }, // TODO: re-enable when axe DevTools implements v4.3.3 of axe-core
-      },
-    })
+    cy.get("#input_review_assignee").type(
+      "typing to prevent a false positive a11y violation before submission_details_notify fully fades in"
+    )
+    cy.checkA11y()
   })
 })
