@@ -20,12 +20,12 @@ class SubmissionTest extends TestCase
     use RefreshDatabase;
 
     // TODO: Refactor this out of this class
-    private const SUBMITTER_ROLE_ID = 6;
-    private const REVIEWER_ROLE_ID = 5;
-    private const REVIEW_COORDINATOR_ROLE_ID = 4;
-    private const EDITOR_ROLE_ID = 3;
-    private const PUBLICATION_ADMINISTRATOR_ROLE_ID = 2;
-    private const APPLICATION_ADMINISTRATOR_ROLE_ID = 1;
+    private const SUBMITTER_ROLE_ID = '6';
+    private const REVIEWER_ROLE_ID = '5';
+    private const REVIEW_COORDINATOR_ROLE_ID = '4';
+    private const EDITOR_ROLE_ID = '3';
+    private const PUBLICATION_ADMINISTRATOR_ROLE_ID = '2';
+    private const APPLICATION_ADMINISTRATOR_ROLE_ID = '1';
 
     /**
      * @return void
@@ -47,8 +47,8 @@ class SubmissionTest extends TestCase
      */
     public function testSubmissionsHaveAManyToManyRelationshipWithUsers()
     {
-        $submission_count = 4;
-        $user_count = 6;
+        $submission_count = 3;
+        $user_count = 10;
         $publication = Publication::factory()->create([
             'name' => 'Test Publication #2',
         ]);
@@ -428,330 +428,52 @@ class SubmissionTest extends TestCase
     }
 
     /**
-     * @param string $role
      * @return array
      */
-    private function createExpectedData1Array($role)
-    {
-        return [
-            'createSubmissionUser' => [
-                'role_id' => (string)$role,
-                'submission_id' => null,
-                'user_id' => null,
-            ],
-        ];
-    }
-
-    /**
-     * @param string|null $role
-     * @return array
-     */
-    private function createExpectedData2Array($role)
-    {
-        $inner_data = $role !== null
-            ? [
-                [
-                    'id' => null,
-                    'pivot' => [
-                        'role_id' => (string)$role,
-                    ],
-                ],
-            ]
-            : [];
-
-        return [
-            'submission' => [
-                'users' => $inner_data,
-            ],
-        ];
-    }
-
-    /**
-     * TODO: When functionality is developed to create submission users other than reviewers,
-     * change the expected data of each of these test cases.
-     *
-     * @return array
-     */
-    public function createSubmissionUserViaMutationProvider(): array
+    public function createSubmissionUserViaMutationAsAnApplicationAdministratorProvider(): array
     {
         return [
             [
                 [
-                    'acting_as_role' => Role::APPLICATION_ADMINISTRATOR,
                     'submission_user_role_id' => self::SUBMITTER_ROLE_ID,
-                    'expected_data_1' => null,
-                    'expected_data_2' => $this->createExpectedData2Array(null),
+                    'allowed' => false,
                 ],
             ],
             [
                 [
-                    'acting_as_role' => Role::APPLICATION_ADMINISTRATOR,
                     'submission_user_role_id' => self::REVIEWER_ROLE_ID,
-                    'expected_data_1' => $this->createExpectedData1Array(self::REVIEWER_ROLE_ID),
-                    'expected_data_2' => $this->createExpectedData2Array(self::REVIEWER_ROLE_ID),
+                    'allowed' => true,
                 ],
             ],
             [
                 [
-                    'acting_as_role' => Role::APPLICATION_ADMINISTRATOR,
-                    'submission_user_role_id' => self::REVIEW_COORDINATOR_ROLE_ID,
-                    'expected_data_1' => null,
-                    'expected_data_2' => $this->createExpectedData2Array(null),
-                ],
-            ],
-            [
-                [
-                    'acting_as_role' => Role::APPLICATION_ADMINISTRATOR,
-                    'submission_user_role_id' => self::EDITOR_ROLE_ID ,
-                    'expected_data_1' => null,
-                    'expected_data_2' => $this->createExpectedData2Array(null),
-                ],
-            ],
-            [
-                [
-                    'acting_as_role' => Role::APPLICATION_ADMINISTRATOR,
-                    'submission_user_role_id' => self::PUBLICATION_ADMINISTRATOR_ROLE_ID ,
-                    'expected_data_1' => null,
-                    'expected_data_2' => $this->createExpectedData2Array(null),
-                ],
-            ],
-            [
-                [
-                    'acting_as_role' => Role::APPLICATION_ADMINISTRATOR,
-                    'submission_user_role_id' => self::APPLICATION_ADMINISTRATOR_ROLE_ID,
-                    'expected_data_1' => null,
-                    'expected_data_2' => $this->createExpectedData2Array(null),
-                ],
-            ],
-            [
-                [
-                    'acting_as_role' => Role::APPLICATION_ADMINISTRATOR,
                     'submission_user_role_id' => null,
-                    'expected_data_1' => null,
-                    'expected_data_2' => $this->createExpectedData2Array(null),
-                ],
-            ],
-            [
-                [
-                    'acting_as_role' => Role::APPLICATION_ADMINISTRATOR,
-                    'submission_user_role_id' => '',
-                    'expected_data_1' => null,
-                    'expected_data_2' => $this->createExpectedData2Array(null),
-                ],
-            ],
-            [
-                [
-                    'acting_as_role' => Role::APPLICATION_ADMINISTRATOR,
-                    'submission_user_role_id' => 0,
-                    'expected_data_1' => null,
-                    'expected_data_2' => $this->createExpectedData2Array(null),
-                ],
-            ],
-            [
-                [
-                    'acting_as_role' => Role::REVIEW_COORDINATOR,
-                    'submission_user_role_id' => self::SUBMITTER_ROLE_ID,
-                    'expected_data_1' => null,
-                    'expected_data_2' => $this->createExpectedData2Array(null),
-                ],
-            ],
-            [
-                [
-                    'acting_as_role' => Role::REVIEW_COORDINATOR,
-                    'submission_user_role_id' => self::REVIEWER_ROLE_ID,
-                    'expected_data_1' => $this->createExpectedData1Array(self::REVIEWER_ROLE_ID),
-                    'expected_data_2' => $this->createExpectedData2Array(self::REVIEWER_ROLE_ID),
-                ],
-            ],
-            [
-                [
-                    'acting_as_role' => Role::REVIEW_COORDINATOR,
-                    'submission_user_role_id' => self::REVIEW_COORDINATOR_ROLE_ID,
-                    'expected_data_1' => null,
-                    'expected_data_2' => $this->createExpectedData2Array(null),
-                ],
-            ],
-            [
-                [
-                    'acting_as_role' => Role::REVIEW_COORDINATOR,
-                    'submission_user_role_id' => self::EDITOR_ROLE_ID ,
-                    'expected_data_1' => null,
-                    'expected_data_2' => $this->createExpectedData2Array(null),
-                ],
-            ],
-            [
-                [
-                    'acting_as_role' => Role::REVIEW_COORDINATOR,
-                    'submission_user_role_id' => self::PUBLICATION_ADMINISTRATOR_ROLE_ID ,
-                    'expected_data_1' => null,
-                    'expected_data_2' => $this->createExpectedData2Array(null),
-                ],
-            ],
-            [
-                [
-                    'acting_as_role' => Role::REVIEW_COORDINATOR,
-                    'submission_user_role_id' => self::APPLICATION_ADMINISTRATOR_ROLE_ID,
-                    'expected_data_1' => null,
-                    'expected_data_2' => $this->createExpectedData2Array(null),
-                ],
-            ],
-            [
-                [
-                    'acting_as_role' => Role::REVIEW_COORDINATOR,
-                    'submission_user_role_id' => null,
-                    'expected_data_1' => null,
-                    'expected_data_2' => $this->createExpectedData2Array(null),
-                ],
-            ],
-            [
-                [
-                    'acting_as_role' => Role::REVIEW_COORDINATOR,
-                    'submission_user_role_id' => '',
-                    'expected_data_1' => null,
-                    'expected_data_2' => $this->createExpectedData2Array(null),
-                ],
-            ],
-            [
-                [
-                    'acting_as_role' => Role::REVIEW_COORDINATOR,
-                    'submission_user_role_id' => 0,
-                    'expected_data_1' => null,
-                    'expected_data_2' => $this->createExpectedData2Array(null),
-                ],
-            ],
-            [
-                [
-                    'acting_as_role' => false,
-                    'submission_user_role_id' => self::SUBMITTER_ROLE_ID,
-                    'expected_data_1' => null,
-                    'expected_data_2' => $this->createExpectedData2Array(null),
-                ],
-            ],
-            [
-                [
-                    'acting_as_role' => false,
-                    'submission_user_role_id' => self::REVIEWER_ROLE_ID,
-                    'expected_data_1' => null,
-                    'expected_data_2' => $this->createExpectedData2Array(null),
-                ],
-            ],
-            [
-                [
-                    'acting_as_role' => false,
-                    'submission_user_role_id' => self::REVIEW_COORDINATOR_ROLE_ID,
-                    'expected_data_1' => null,
-                    'expected_data_2' => $this->createExpectedData2Array(null),
-                ],
-            ],
-            [
-                [
-                    'acting_as_role' => false,
-                    'submission_user_role_id' => self::SUBMITTER_ROLE_ID,
-                    'expected_data_1' => null,
-                    'expected_data_2' => $this->createExpectedData2Array(null),
-                ],
-            ],
-            [
-                [
-                    'acting_as_role' => false,
-                    'submission_user_role_id' => self::REVIEWER_ROLE_ID,
-                    'expected_data_1' => null,
-                    'expected_data_2' => $this->createExpectedData2Array(null),
-                ],
-            ],
-            [
-                [
-                    'acting_as_role' => false,
-                    'submission_user_role_id' => self::REVIEW_COORDINATOR_ROLE_ID,
-                    'expected_data_1' => null,
-                    'expected_data_2' => $this->createExpectedData2Array(null),
-                ],
-            ],
-            [
-                [
-                    'acting_as_role' => false,
-                    'submission_user_role_id' => self::EDITOR_ROLE_ID ,
-                    'expected_data_1' => null,
-                    'expected_data_2' => $this->createExpectedData2Array(null),
-                ],
-            ],
-            [
-                [
-                    'acting_as_role' => false,
-                    'submission_user_role_id' => self::PUBLICATION_ADMINISTRATOR_ROLE_ID ,
-                    'expected_data_1' => null,
-                    'expected_data_2' => $this->createExpectedData2Array(null),
-                ],
-            ],
-            [
-                [
-                    'acting_as_role' => false,
-                    'submission_user_role_id' => self::APPLICATION_ADMINISTRATOR_ROLE_ID,
-                    'expected_data_1' => null,
-                    'expected_data_2' => $this->createExpectedData2Array(null),
-                ],
-            ],
-            [
-                [
-                    'acting_as_role' => false,
-                    'submission_user_role_id' => null,
-                    'expected_data_1' => null,
-                    'expected_data_2' => $this->createExpectedData2Array(null),
-                ],
-            ],
-            [
-                [
-                    'acting_as_role' => false,
-                    'submission_user_role_id' => '',
-                    'expected_data_1' => null,
-                    'expected_data_2' => $this->createExpectedData2Array(null),
-                ],
-            ],
-            [
-                [
-                    'acting_as_role' => false,
-                    'submission_user_role_id' => 0,
-                    'expected_data_1' => null,
-                    'expected_data_2' => $this->createExpectedData2Array(null),
+                    'allowed' => false,
                 ],
             ],
         ];
     }
 
     /**
-     * @dataProvider createSubmissionUserViaMutationProvider
+     * @dataProvider createSubmissionUserViaMutationAsAnApplicationAdministratorProvider
      * @return void
      */
-    public function testCreateSubmissionUserViaMutation(array $case)
+    public function testCreateSubmissionUserViaMutationAsAnApplicationAdministrator(array $case)
     {
-        if ($case['acting_as_role'] === Role::APPLICATION_ADMINISTRATOR) {
-            $acting_as = User::factory()->create();
-            $acting_as->assignRole($case['acting_as_role']);
-            $this->actingAs($acting_as);
-        }
+        /** @var User */
+        $administrator = User::factory()->create();
+        $administrator->assignRole(Role::APPLICATION_ADMINISTRATOR);
+        $this->actingAs($administrator);
+        $user_to_be_assigned = User::factory()->create();
         $publication = Publication::factory()->create();
-        $user = User::factory()->create();
+        $submitter = User::factory()->create();
         $submission = Submission::factory()
             ->for($publication)
+            ->hasAttached($submitter, ['role_id' => 6])
             ->create([
                 'title' => 'Test Submission for Test User With Submission',
             ]);
-        if ($case['acting_as_role'] === Role::REVIEW_COORDINATOR) {
-            $review_coordinator = User::factory()->create();
-            $submission = Submission::factory()
-                ->for($publication)
-                ->hasAttached($review_coordinator, ['role_id' => 4])
-                ->create([
-                    'title' => 'Test Submission for Test User With Submission',
-            ]);
-        } else {
-            $submission = Submission::factory()
-                ->for($publication)
-                ->create([
-                    'title' => 'Test Submission for Test User With Submission',
-            ]);
-        }
-        $response = $this->graphQL(
+        $mutation_response = $this->graphQL(
             'mutation CreateSubmissionUser ($role_id: ID!, $submission_id: ID!, $user_id: ID!) {
                 createSubmissionUser(
                     submission_user: { role_id: $role_id, submission_id: $submission_id, user_id: $user_id }
@@ -764,15 +486,22 @@ class SubmissionTest extends TestCase
             [
                 'role_id' => $case['submission_user_role_id'],
                 'submission_id' => $submission->id,
-                'user_id' => $user->id,
+                'user_id' => $user_to_be_assigned->id,
             ]
         );
-        if ($case['expected_data_1'] !== null) {
-            $case['expected_data_1']['createSubmissionUser']['user_id'] = (string)$user->id;
-            $case['expected_data_1']['createSubmissionUser']['submission_id'] = (string)$submission->id;
+        $expected_mutation_response = null;
+        if ($case['allowed']) {
+            $expected_mutation_response = [
+                'createSubmissionUser' => [
+                    'role_id' => $case['submission_user_role_id'],
+                    'submission_id' => (string)$submission->id,
+                    'user_id' => (string)$user_to_be_assigned->id,
+                ],
+            ];
         }
-        $response->assertJsonPath('data', $case['expected_data_1']);
-        $response = $this->graphQL(
+        // print_r($response->decodeResponseJson());
+        $mutation_response->assertJsonPath('data', $expected_mutation_response);
+        $query_response = $this->graphQL(
             'query GetSubmission ($id: ID!) {
                 submission( id: $id ) {
                     users {
@@ -787,22 +516,145 @@ class SubmissionTest extends TestCase
                 'id' => $submission->id,
             ]
         );
-        if ($case['expected_data_1'] !== null) {
-            $case['expected_data_2']['submission']['users'][0]['id'] = (string)$user->id;
-            if ($case['acting_as_role'] === Role::REVIEW_COORDINATOR) {
-                print_r(' amending ');
-                array_push(
-                    $case['expected_data_2']['submission']['users'],
+        $expected_query_response = [
+            'submission' => [
+                'users' => [
+                    [
+                        'id' => (string)$submitter->id,
+                        'pivot' => [
+                            'role_id' => self::SUBMITTER_ROLE_ID,
+                        ],
+                    ],
+                ],
+            ],
+        ];
+        if ($case['allowed']) {
+            array_push(
+                $expected_query_response['submission']['users'],
+                [
+                    'id' => (string)$user_to_be_assigned->id,
+                    'pivot' => [
+                        'role_id' => $case['submission_user_role_id'],
+                    ],
+                ],
+            );
+        }
+        $query_response->assertJsonPath('data', $expected_query_response);
+    }
+
+    /**
+     * @return array
+     */
+    public function createSubmissionUserViaMutationAsAReviewCoordinatorProvider(): array
+    {
+        return [
+            [
+                [
+                    'submission_user_role_id' => self::SUBMITTER_ROLE_ID,
+                    'allowed' => false,
+                ],
+            ],
+            [
+                [
+                    'submission_user_role_id' => self::REVIEWER_ROLE_ID,
+                    'allowed' => true,
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider createSubmissionUserViaMutationAsAReviewCoordinatorProvider
+     * @return void
+     */
+    public function testCreateSubmissionUserViaMutationAsAReviewCoordinator(array $case)
+    {
+        /** @var User $review_coordinator */
+        $review_coordinator = User::factory()->create();
+        $this->actingAs($review_coordinator);
+        $user_to_be_assigned = User::factory()->create();
+        $publication = Publication::factory()->create();
+        $submitter = User::factory()->create();
+        $submission = Submission::factory()
+            ->for($publication)
+            ->hasAttached($submitter, ['role_id' => self::SUBMITTER_ROLE_ID])
+            ->hasAttached($review_coordinator, ['role_id' => self::REVIEW_COORDINATOR_ROLE_ID])
+            ->create([
+                'title' => 'Test Submission for Test User With Submission',
+            ]);
+        $mutation_response = $this->graphQL(
+            'mutation CreateSubmissionUser ($role_id: ID!, $submission_id: ID!, $user_id: ID!) {
+                createSubmissionUser(
+                    submission_user: { role_id: $role_id, submission_id: $submission_id, user_id: $user_id }
+                ) {
+                    role_id
+                    submission_id
+                    user_id
+                }
+            }',
+            [
+                'role_id' => $case['submission_user_role_id'],
+                'submission_id' => $submission->id,
+                'user_id' => $user_to_be_assigned->id,
+            ]
+        );
+        $expected_mutation_response = null;
+        if ($case['allowed']) {
+            $expected_mutation_response = [
+                'createSubmissionUser' => [
+                    'role_id' => $case['submission_user_role_id'],
+                    'submission_id' => (string)$submission->id,
+                    'user_id' => (string)$user_to_be_assigned->id,
+                ],
+            ];
+        }
+        // print_r($mutation_response->decodeResponseJson());
+        $mutation_response->assertJsonPath('data', $expected_mutation_response);
+        $query_response = $this->graphQL(
+            'query GetSubmission ($id: ID!) {
+                submission( id: $id ) {
+                    users {
+                        id
+                        pivot {
+                            role_id
+                        }
+                    }
+                }
+            }',
+            [
+                'id' => $submission->id,
+            ]
+        );
+        $expected_query_response = [
+            'submission' => [
+                'users' => [
+                    [
+                        'id' => (string)$submitter->id,
+                        'pivot' => [
+                            'role_id' => self::SUBMITTER_ROLE_ID,
+                        ],
+                    ],
                     [
                         'id' => (string)$review_coordinator->id,
                         'pivot' => [
-                            'role_id' => "4",
-                        ]
-                    ]
-                );
-            }
+                            'role_id' => self::REVIEW_COORDINATOR_ROLE_ID,
+                        ],
+                    ],
+                ],
+            ],
+        ];
+        if ($case['allowed']) {
+            array_push(
+                $expected_query_response['submission']['users'],
+                [
+                    'id' => (string)$user_to_be_assigned->id,
+                    'pivot' => [
+                        'role_id' => $case['submission_user_role_id'],
+                    ],
+                ],
+            );
         }
-        $response->assertJsonPath('data', $case['expected_data_2']);
+        $query_response->assertJsonPath('data', $expected_query_response);
     }
 
     /**
@@ -854,7 +706,7 @@ class SubmissionTest extends TestCase
      * @dataProvider deleteSubmissionUserMutationProvider
      * @return void
      */
-    public function testSubmissionUserDeletionViaMutation(int $role_id)
+    public function testSubmissionUserDeletionViaMutation(string $role_id)
     {
         $admin = User::factory()->create();
         $admin->assignRole(Role::APPLICATION_ADMINISTRATOR);
