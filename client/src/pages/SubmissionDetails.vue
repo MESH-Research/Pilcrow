@@ -97,6 +97,19 @@
       <section class="col-md-5 col-sm-6 col-xs-12">
         <h3>Assigned Reviewers</h3>
         <div v-if="reviewers.length">
+          <user-list
+            ref="list_assigned_reviewers"
+            data-cy="list_assigned_reviewers"
+            :users="reviewers"
+            :actions="[
+              {
+                icon: 'person_remove',
+                event: 'unassignReviewer',
+                help: 'Remove Reviewer',
+              },
+            ]"
+          />
+          <!--
           <q-list
             ref="list_assigned_reviewers"
             data-cy="list_assigned_reviewers"
@@ -135,6 +148,7 @@
               </q-item-section>
             </q-item>
           </q-list>
+          -->
         </div>
         <div v-else>
           <q-card ref="card_no_reviewers" bordered flat>
@@ -159,12 +173,11 @@ import {
   CREATE_SUBMISSION_USER,
   DELETE_SUBMISSION_USER,
 } from "src/graphql/mutations"
-import AvatarImage from "src/components/atoms/AvatarImage.vue"
+//import AvatarImage from "src/components/atoms/AvatarImage.vue"
 import UserList from "src/components/molecules/UserList.vue"
 
 export default {
   components: {
-    AvatarImage,
     UserList,
   },
   props: {

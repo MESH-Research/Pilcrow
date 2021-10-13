@@ -5,6 +5,7 @@
       :key="user.pivot.id"
       :user="user"
       :index="index"
+      :actions="actions"
     />
   </q-list>
 </template>
@@ -18,6 +19,11 @@ export default {
     users: {
       type: Array,
       required: true,
+    },
+    actions: {
+      type: Array,
+      required: false,
+      default: () => [],
     },
     dataCy: {
       type: String,

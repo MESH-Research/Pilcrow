@@ -14,6 +14,22 @@
         {{ user.email }}
       </q-item-label>
     </q-item-section>
+    <q-item-section v-if="actions.length" top side>
+      <div class="text-grey-8 q-gutter-xs">
+        <q-btn
+          v-for="{ icon, event, help } in actions"
+          :key="icon"
+          class="gt-xs"
+          size="12px"
+          flat
+          dense
+          round
+          :title="help"
+          :icon="icon"
+          @click="event(user)"
+        />
+      </div>
+    </q-item-section>
   </q-item>
 </template>
 
@@ -30,6 +46,11 @@ export default {
     user: {
       type: Object,
       default: () => {},
+    },
+    actions: {
+      type: Array,
+      required: false,
+      default: () => [],
     },
   },
 }
