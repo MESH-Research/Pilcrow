@@ -459,7 +459,7 @@ class SubmissionTest extends TestCase
             ],
             [
                 [
-                    'submission_user_role_id' => "",
+                    'submission_user_role_id' => '',
                     'allowed' => false,
                 ],
             ],
@@ -591,7 +591,7 @@ class SubmissionTest extends TestCase
             ],
             [
                 [
-                    'submission_user_role_id' => "",
+                    'submission_user_role_id' => '',
                     'allowed' => false,
                 ],
             ],
@@ -729,7 +729,7 @@ class SubmissionTest extends TestCase
             ],
             [
                 [
-                    'submission_user_role_id' => "",
+                    'submission_user_role_id' => '',
                     'allowed' => false,
                 ],
             ],
@@ -803,7 +803,6 @@ class SubmissionTest extends TestCase
         ];
         $query_response->assertJsonPath('data', $expected_query_response);
     }
-
 
     /**
      * @return void
