@@ -50,14 +50,21 @@
               id="input_review_assignee"
               v-model="model"
               :options="options"
+              bottom-slots
               hide-dropdown-icon
-              hint="Search by username, email, or name."
               input-debounce="0"
               label="User to Assign"
               outlined
+              transition-hide="none"
+              transition-show="none"
               use-input
               @filter="filterFn"
             >
+              <template #hint>
+                <div class="text--grey">
+                  Search by username, email, or name.
+                </div>
+              </template>
               <template #selected-item="scope">
                 <q-chip data-cy="review_assignee_selected" dense square>
                   {{ scope.opt.username }} ({{ scope.opt.email }})
@@ -75,7 +82,11 @@
                         scope.opt.email
                       }})</q-item-label
                     >
-                    <q-item-label v-if="scope.opt.name" caption>
+                    <q-item-label
+                      v-if="scope.opt.name"
+                      caption
+                      class="text-grey-10"
+                    >
                       {{ scope.opt.name }}
                     </q-item-label>
                   </q-item-section>
@@ -85,12 +96,11 @@
           </div>
           <q-btn
             :ripple="{ center: true }"
+            class="q-mt-lg"
             color="primary"
-            class="text-uppercase q-mt-lg"
-            label="Assign"
             data-cy="button_assign_reviewer"
+            label="Assign"
             type="submit"
-            no-caps
           />
         </q-form>
       </section>
@@ -119,7 +129,7 @@
                 <q-item-label v-else>
                   {{ reviewer.username }}
                 </q-item-label>
-                <q-item-label caption lines="1">
+                <q-item-label lines="1" caption class="text--grey">
                   {{ reviewer.email }}
                 </q-item-label>
               </q-item-section>

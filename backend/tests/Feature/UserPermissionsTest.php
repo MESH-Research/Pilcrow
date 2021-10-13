@@ -150,7 +150,7 @@ class UserPermissionsTest extends TestCase
     /**
      * @return void
      */
-    public function testUserWithNoRoleReturnsAnEmptyArrayWhenQueriedFromGraphqlEndpoint()
+    public function testUserWithNoRoleReturnsAnEmptyArrayWhenRolesForUserAreQueriedFromGraphqlEndpoint()
     {
         $user = User::factory()->create();
         $response = $this->graphQL(
@@ -219,20 +219,28 @@ class UserPermissionsTest extends TestCase
                 [
                     'roles' => [
                         0 => [
-                            'id' => (string)1,
+                            'id' => '1',
                             'name' => Role::APPLICATION_ADMINISTRATOR,
                             'permissions' => [
                                 0 => [
-                                    'id' => (string)1,
+                                    'id' => '1',
                                     'name' => Permission::UPDATE_USERS,
                                 ],
                                 1 => [
-                                    'id' => (string)3,
+                                    'id' => '3',
                                     'name' => Permission::CREATE_PUBLICATION,
                                 ],
                                 2 => [
-                                    'id' => (string)4,
+                                    'id' => '4',
                                     'name' => Permission::VIEW_ALL_PUBLICATIONS,
+                                ],
+                                3 => [
+                                    'id' => '5',
+                                    'name' => Permission::ASSIGN_REVIEWER,
+                                ],
+                                4 => [
+                                    'id' => '6',
+                                    'name' => Permission::UNASSIGN_REVIEWER,
                                 ],
                             ],
                         ],
@@ -244,12 +252,20 @@ class UserPermissionsTest extends TestCase
                 [
                     'roles' => [
                         0 => [
-                            'id' => (string)2,
+                            'id' => '2',
                             'name' => Role::PUBLICATION_ADMINISTRATOR,
                             'permissions' => [
                                 0 => [
-                                    'id' => (string)2,
+                                    'id' => '2',
                                     'name' => Permission::UPDATE_USERS_IN_OWN_PUBLICATION,
+                                ],
+                                1 => [
+                                    'id' => '5',
+                                    'name' => Permission::ASSIGN_REVIEWER,
+                                ],
+                                2 => [
+                                    'id' => '6',
+                                    'name' => Permission::UNASSIGN_REVIEWER,
                                 ],
                             ],
                         ],
@@ -261,7 +277,7 @@ class UserPermissionsTest extends TestCase
                 [
                     'roles' => [
                         0 => [
-                            'id' => (string)5,
+                            'id' => '5',
                             'name' => Role::REVIEWER,
                             'permissions' => [ ],
                         ],
@@ -273,7 +289,7 @@ class UserPermissionsTest extends TestCase
                 [
                     'roles' => [
                         0 => [
-                            'id' => (string)6,
+                            'id' => '6',
                             'name' => Role::SUBMITTER,
                             'permissions' => [ ],
                         ],
