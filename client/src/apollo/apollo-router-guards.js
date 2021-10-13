@@ -1,5 +1,5 @@
 import { SessionStorage } from "quasar"
-import { CURRENT_USER } from "src/graphql/queries"
+import { CURRENT_USER, CURRENT_USER_SUBMISSIONS } from "src/graphql/queries"
 
 export async function beforeEachRequiresAuth(apolloClient, to, _, next) {
   if (to.matched.some((record) => record.meta.requiresAuth)) {
@@ -19,14 +19,46 @@ export async function beforeEachRequiresAuth(apolloClient, to, _, next) {
   }
 }
 
+export async function beforeEachRequiresSubmissionAccess(
+  apolloClient,
+  to,
+  _,
+  next
+) {
+  if (to.matched.some((record) => record.meta.requiresSubmissionAccess)) {
+    const submissionId = to.params.id
+    const submissions = await apolloClient
+      .query({
+        query: CURRENT_USER_SUBMISSIONS,
+      })
+      .then(
+        ({
+          data: {
+            currentUser: { submissions },
+          },
+        }) => submissions.filter((submission) => submission.id == submissionId)
+      )
+    if (submissions.length === 0) {
+      to.meta.requiresRoles = [
+        "Editor",
+        "Publication Administrator",
+        "Application Administrator",
+      ]
+      beforeEachRequiresRoles(apolloClient, to, _, next)
+    } else {
+      next()
+    }
+  } else {
+    next()
+  }
+}
+
 export async function beforeEachRequiresRoles(apolloClient, to, _, next) {
   if (to.matched.some((record) => record.meta.requiresRoles)) {
-    //Collect required roles
     const requiredRoles = to.matched
       .filter((record) => record.meta.requiresRoles)
       .map((record) => record.meta.requiresRoles)
       .flat(2)
-
     const roles = await apolloClient
       .query({
         query: CURRENT_USER,
@@ -38,8 +70,7 @@ export async function beforeEachRequiresRoles(apolloClient, to, _, next) {
           },
         }) => roles.map((r) => r.name)
       )
-    const hasRole = requiredRoles.map((role) => roles.includes(role))
-    if (!hasRole.every((role) => role === true)) {
+    if (!roles.some((role) => requiredRoles.includes(role))) {
       next({ name: "error403" })
     } else {
       next()

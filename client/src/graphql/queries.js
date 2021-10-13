@@ -14,6 +14,20 @@ export const CURRENT_USER = gql`
     }
   }
 `
+export const CURRENT_USER_SUBMISSIONS = gql`
+  query currentUser {
+    currentUser {
+      id
+      submissions {
+        id
+        pivot {
+          id
+          role_id
+        }
+      }
+    }
+  }
+`
 
 export const GET_USERS = gql`
   query users($page: Int) {
