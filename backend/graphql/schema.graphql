@@ -88,6 +88,7 @@ type Mutation {
     "Create an association between a user, role, and submission"
     createSubmissionUser(submission_user: CreateSubmissionUserInput! @spread): SubmissionUser!
         @create
+        @can(ability: "create", injectArgs: true)
 
     "Delete an association between a user, role, and submission"
     deleteSubmissionUser(user_id: ID! role_id: ID! submission_id: ID!): Submission!

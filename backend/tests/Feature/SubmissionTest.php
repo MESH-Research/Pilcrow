@@ -19,8 +19,13 @@ class SubmissionTest extends TestCase
     use MakesGraphQLRequests;
     use RefreshDatabase;
 
-    private const SUBMITTER_ROLE_ID = 6;
-    private const REVIEWER_ROLE_ID = 5;
+    // TODO: Refactor this out of this class
+    private const SUBMITTER_ROLE_ID = '6';
+    private const REVIEWER_ROLE_ID = '5';
+    private const REVIEW_COORDINATOR_ROLE_ID = '4';
+    private const EDITOR_ROLE_ID = '3';
+    private const PUBLICATION_ADMINISTRATOR_ROLE_ID = '2';
+    private const APPLICATION_ADMINISTRATOR_ROLE_ID = '1';
 
     /**
      * @return void
@@ -42,8 +47,8 @@ class SubmissionTest extends TestCase
      */
     public function testSubmissionsHaveAManyToManyRelationshipWithUsers()
     {
-        $submission_count = 4;
-        $user_count = 6;
+        $submission_count = 3;
+        $user_count = 10;
         $publication = Publication::factory()->create([
             'name' => 'Test Publication #2',
         ]);
@@ -334,33 +339,39 @@ class SubmissionTest extends TestCase
     {
         return [
             [
-                'Test Submission Created in PHPUnit Via Mutation',
-                'Test Publication for Submission Creation in PHPUnit Via Mutation',
                 [
-                    'createSubmission' => [
-                        'title' => 'Test Submission Created in PHPUnit Via Mutation',
-                        'publication' => [
-                            'name' => 'Test Publication for Submission Creation in PHPUnit Via Mutation',
+                    'publication_name' => 'Test Publication for Submission Creation in PHPUnit Via Mutation',
+                    'submission_title' => 'Test Submission Created in PHPUnit Via Mutation',
+                    'expected_data' => [
+                        'createSubmission' => [
+                            'title' => 'Test Submission Created in PHPUnit Via Mutation',
+                            'publication' => [
+                                'name' => 'Test Publication for Submission Creation in PHPUnit Via Mutation',
+                            ],
                         ],
                     ],
                 ],
             ],
             [
-                '        Test Submission with Whitespace Created in PHPUnit Via Mutation       ',
-                'Test Publication for Submission with Whitespace Creation in PHPUnit Via Mutation',
                 [
-                    'createSubmission' => [
-                        'title' => 'Test Submission with Whitespace Created in PHPUnit Via Mutation',
-                        'publication' => [
-                            'name' => 'Test Publication for Submission with Whitespace Creation in PHPUnit Via Mutation',
+                    'publication_name' => 'Test Publication for Submission with Whitespace Creation in PHPUnit Via Mutation',
+                    'submission_title' => '        Test Submission with Whitespace Created in PHPUnit Via Mutation       ',
+                    'expected_data' => [
+                        'createSubmission' => [
+                            'title' => 'Test Submission with Whitespace Created in PHPUnit Via Mutation',
+                            'publication' => [
+                                'name' => 'Test Publication for Submission with Whitespace Creation in PHPUnit Via Mutation',
+                            ],
                         ],
                     ],
                 ],
             ],
             [
-                '',
-                '',
-                null,
+                [
+                    'publication_name' => '',
+                    'submission_title' => '',
+                    'expected_data' => null,
+                ],
             ],
         ];
     }
@@ -369,14 +380,12 @@ class SubmissionTest extends TestCase
      * @dataProvider createSubmissionMutationProvider
      * @return void
      */
-    public function testSubmissionCreationViaMutation(mixed $title, mixed $name, mixed $expected_data)
+    public function testSubmissionCreationViaMutation(array $case)
     {
         $publication = Publication::factory()->create([
-            'name' => $name,
+            'name' => $case['publication_name'],
         ]);
-        $user = User::factory()->create([
-            'name' => 'Test User #3',
-        ]);
+        $user = User::factory()->create();
         $operations = [
             'operationName' => 'CreateSubmission',
             'query' => '
@@ -402,7 +411,7 @@ class SubmissionTest extends TestCase
                 }
             ',
             'variables' => [
-                'title' => $title,
+                'title' => $case['submission_title'],
                 'publication_id' => $publication->id,
                 'submitter_user_id' => $user->id,
                 'file_upload' => null,
@@ -415,38 +424,74 @@ class SubmissionTest extends TestCase
             '0' => UploadedFile::fake()->create('test.txt', 500),
         ];
         $this->multipartGraphQL($operations, $map, $file)
-            ->assertJsonPath('data', $expected_data);
+            ->assertJsonPath('data', $case['expected_data']);
     }
 
     /**
      * @return array
      */
-    public function createSubmissionUserMutationProvider(): array
+    public function createSubmissionUserViaMutationAsAnApplicationAdministratorProvider(): array
     {
         return [
             [
-                self::SUBMITTER_ROLE_ID,
+                [
+                    'submission_user_role_id' => self::SUBMITTER_ROLE_ID,
+                    'allowed' => false,
+                ],
             ],
             [
-                self::REVIEWER_ROLE_ID,
+                [
+                    'submission_user_role_id' => self::REVIEWER_ROLE_ID,
+                    'allowed' => true,
+                ],
+            ],
+            [
+                [
+                    'submission_user_role_id' => self::REVIEW_COORDINATOR_ROLE_ID,
+                    'allowed' => false,
+                ],
+            ],
+            [
+                [
+                    'submission_user_role_id' => 0,
+                    'allowed' => false,
+                ],
+            ],
+            [
+                [
+                    'submission_user_role_id' => '',
+                    'allowed' => false,
+                ],
+            ],
+            [
+                [
+                    'submission_user_role_id' => null,
+                    'allowed' => false,
+                ],
             ],
         ];
     }
 
     /**
-     * @dataProvider createSubmissionUserMutationProvider
+     * @dataProvider createSubmissionUserViaMutationAsAnApplicationAdministratorProvider
      * @return void
      */
-    public function testSubmissionUserCreationViaMutation(int $role_id)
+    public function testCreateSubmissionUserViaMutationAsAnApplicationAdministrator(array $case)
     {
+        /** @var User $administrator */
+        $administrator = User::factory()->create();
+        $administrator->assignRole(Role::APPLICATION_ADMINISTRATOR);
+        $this->actingAs($administrator);
+        $user_to_be_assigned = User::factory()->create();
         $publication = Publication::factory()->create();
-        $user = User::factory()->create();
+        $submitter = User::factory()->create();
         $submission = Submission::factory()
             ->for($publication)
+            ->hasAttached($submitter, ['role_id' => 6])
             ->create([
                 'title' => 'Test Submission for Test User With Submission',
             ]);
-        $response = $this->graphQL(
+        $mutation_response = $this->graphQL(
             'mutation CreateSubmissionUser ($role_id: ID!, $submission_id: ID!, $user_id: ID!) {
                 createSubmissionUser(
                     submission_user: { role_id: $role_id, submission_id: $submission_id, user_id: $user_id }
@@ -457,20 +502,23 @@ class SubmissionTest extends TestCase
                 }
             }',
             [
-                'role_id' => $role_id,
+                'role_id' => $case['submission_user_role_id'],
                 'submission_id' => $submission->id,
-                'user_id' => $user->id,
+                'user_id' => $user_to_be_assigned->id,
             ]
         );
-        $expected_data = [
-            'createSubmissionUser' => [
-                'role_id' => (string)$role_id,
-                'submission_id' => (string)$submission->id,
-                'user_id' => (string)$user->id,
-            ],
-        ];
-        $response->assertJsonPath('data', $expected_data);
-        $response = $this->graphQL(
+        $expected_mutation_response = null;
+        if ($case['allowed']) {
+            $expected_mutation_response = [
+                'createSubmissionUser' => [
+                    'role_id' => $case['submission_user_role_id'],
+                    'submission_id' => (string)$submission->id,
+                    'user_id' => (string)$user_to_be_assigned->id,
+                ],
+            ];
+        }
+        $mutation_response->assertJsonPath('data', $expected_mutation_response);
+        $query_response = $this->graphQL(
             'query GetSubmission ($id: ID!) {
                 submission( id: $id ) {
                     users {
@@ -485,19 +533,275 @@ class SubmissionTest extends TestCase
                 'id' => $submission->id,
             ]
         );
-        $expected_data = [
+        $expected_query_response = [
             'submission' => [
                 'users' => [
                     [
-                        'id' => (string)$user->id,
+                        'id' => (string)$submitter->id,
                         'pivot' => [
-                            'role_id' => (string)$role_id,
+                            'role_id' => self::SUBMITTER_ROLE_ID,
                         ],
                     ],
                 ],
             ],
         ];
-        $response->assertJsonPath('data', $expected_data);
+        if ($case['allowed']) {
+            array_push(
+                $expected_query_response['submission']['users'],
+                [
+                    'id' => (string)$user_to_be_assigned->id,
+                    'pivot' => [
+                        'role_id' => $case['submission_user_role_id'],
+                    ],
+                ],
+            );
+        }
+        $query_response->assertJsonPath('data', $expected_query_response);
+    }
+
+    /**
+     * @return array
+     */
+    public function createSubmissionUserViaMutationAsAReviewCoordinatorProvider(): array
+    {
+        return [
+            [
+                [
+                    'submission_user_role_id' => self::SUBMITTER_ROLE_ID,
+                    'allowed' => false,
+                ],
+            ],
+            [
+                [
+                    'submission_user_role_id' => self::REVIEWER_ROLE_ID,
+                    'allowed' => true,
+                ],
+            ],
+            [
+                [
+                    'submission_user_role_id' => self::REVIEW_COORDINATOR_ROLE_ID,
+                    'allowed' => false,
+                ],
+            ],
+            [
+                [
+                    'submission_user_role_id' => 0,
+                    'allowed' => false,
+                ],
+            ],
+            [
+                [
+                    'submission_user_role_id' => '',
+                    'allowed' => false,
+                ],
+            ],
+            [
+                [
+                    'submission_user_role_id' => null,
+                    'allowed' => false,
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider createSubmissionUserViaMutationAsAReviewCoordinatorProvider
+     * @return void
+     */
+    public function testCreateSubmissionUserViaMutationAsAReviewCoordinator(array $case)
+    {
+        /** @var User $review_coordinator */
+        $review_coordinator = User::factory()->create();
+        $this->actingAs($review_coordinator);
+        $user_to_be_assigned = User::factory()->create();
+        $publication = Publication::factory()->create();
+        $submitter = User::factory()->create();
+        $submission = Submission::factory()
+            ->for($publication)
+            ->hasAttached($submitter, ['role_id' => self::SUBMITTER_ROLE_ID])
+            ->hasAttached($review_coordinator, ['role_id' => self::REVIEW_COORDINATOR_ROLE_ID])
+            ->create([
+                'title' => 'Test Submission for Test User With Submission',
+            ]);
+        $mutation_response = $this->graphQL(
+            'mutation CreateSubmissionUser ($role_id: ID!, $submission_id: ID!, $user_id: ID!) {
+                createSubmissionUser(
+                    submission_user: { role_id: $role_id, submission_id: $submission_id, user_id: $user_id }
+                ) {
+                    role_id
+                    submission_id
+                    user_id
+                }
+            }',
+            [
+                'role_id' => $case['submission_user_role_id'],
+                'submission_id' => $submission->id,
+                'user_id' => $user_to_be_assigned->id,
+            ]
+        );
+        $expected_mutation_response = null;
+        if ($case['allowed']) {
+            $expected_mutation_response = [
+                'createSubmissionUser' => [
+                    'role_id' => $case['submission_user_role_id'],
+                    'submission_id' => (string)$submission->id,
+                    'user_id' => (string)$user_to_be_assigned->id,
+                ],
+            ];
+        }
+        $mutation_response->assertJsonPath('data', $expected_mutation_response);
+        $query_response = $this->graphQL(
+            'query GetSubmission ($id: ID!) {
+                submission( id: $id ) {
+                    users {
+                        id
+                        pivot {
+                            role_id
+                        }
+                    }
+                }
+            }',
+            [
+                'id' => $submission->id,
+            ]
+        );
+        $expected_query_response = [
+            'submission' => [
+                'users' => [
+                    [
+                        'id' => (string)$submitter->id,
+                        'pivot' => [
+                            'role_id' => self::SUBMITTER_ROLE_ID,
+                        ],
+                    ],
+                    [
+                        'id' => (string)$review_coordinator->id,
+                        'pivot' => [
+                            'role_id' => self::REVIEW_COORDINATOR_ROLE_ID,
+                        ],
+                    ],
+                ],
+            ],
+        ];
+        if ($case['allowed']) {
+            array_push(
+                $expected_query_response['submission']['users'],
+                [
+                    'id' => (string)$user_to_be_assigned->id,
+                    'pivot' => [
+                        'role_id' => $case['submission_user_role_id'],
+                    ],
+                ],
+            );
+        }
+        $query_response->assertJsonPath('data', $expected_query_response);
+    }
+
+    /**
+     * @return array
+     */
+    public function createSubmissionUserViaMutationAsAUserWithNoRoleProvider(): array
+    {
+        return [
+            [
+                [
+                    'submission_user_role_id' => self::SUBMITTER_ROLE_ID,
+                    'allowed' => false,
+                ],
+            ],
+            [
+                [
+                    'submission_user_role_id' => self::REVIEWER_ROLE_ID,
+                    'allowed' => false,
+                ],
+            ],
+            [
+                [
+                    'submission_user_role_id' => self::REVIEW_COORDINATOR_ROLE_ID,
+                    'allowed' => false,
+                ],
+            ],
+            [
+                [
+                    'submission_user_role_id' => 0,
+                    'allowed' => false,
+                ],
+            ],
+            [
+                [
+                    'submission_user_role_id' => '',
+                    'allowed' => false,
+                ],
+            ],
+            [
+                [
+                    'submission_user_role_id' => null,
+                    'allowed' => false,
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider createSubmissionUserViaMutationAsAUserWithNoRoleProvider
+     * @return void
+     */
+    public function testCreateSubmissionUserViaMutationAsAUserWithNoRole(array $case)
+    {
+        $user_to_be_assigned = User::factory()->create();
+        $publication = Publication::factory()->create();
+        $submitter = User::factory()->create();
+        $submission = Submission::factory()
+            ->for($publication)
+            ->hasAttached($submitter, ['role_id' => self::SUBMITTER_ROLE_ID])
+            ->create([
+                'title' => 'Test Submission for Test User With Submission',
+            ]);
+        $mutation_response = $this->graphQL(
+            'mutation CreateSubmissionUser ($role_id: ID!, $submission_id: ID!, $user_id: ID!) {
+                createSubmissionUser(
+                    submission_user: { role_id: $role_id, submission_id: $submission_id, user_id: $user_id }
+                ) {
+                    role_id
+                    submission_id
+                    user_id
+                }
+            }',
+            [
+                'role_id' => $case['submission_user_role_id'],
+                'submission_id' => $submission->id,
+                'user_id' => $user_to_be_assigned->id,
+            ]
+        );
+        $mutation_response->assertJsonPath('data', null);
+        $query_response = $this->graphQL(
+            'query GetSubmission ($id: ID!) {
+                submission( id: $id ) {
+                    users {
+                        id
+                        pivot {
+                            role_id
+                        }
+                    }
+                }
+            }',
+            [
+                'id' => $submission->id,
+            ]
+        );
+        $expected_query_response = [
+            'submission' => [
+                'users' => [
+                    [
+                        'id' => (string)$submitter->id,
+                        'pivot' => [
+                            'role_id' => self::SUBMITTER_ROLE_ID,
+                        ],
+                    ],
+                ],
+            ],
+        ];
+        $query_response->assertJsonPath('data', $expected_query_response);
     }
 
     /**
@@ -549,7 +853,7 @@ class SubmissionTest extends TestCase
      * @dataProvider deleteSubmissionUserMutationProvider
      * @return void
      */
-    public function testSubmissionUserDeletionViaMutation(int $role_id)
+    public function testSubmissionUserDeletionViaMutation(string $role_id)
     {
         $admin = User::factory()->create();
         $admin->assignRole(Role::APPLICATION_ADMINISTRATOR);

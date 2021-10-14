@@ -10,7 +10,7 @@
       <q-item-label v-else>
         {{ user.username }}
       </q-item-label>
-      <q-item-label caption lines="1">
+      <q-item-label caption lines="1" class="text--grey">
         {{ user.email }}
       </q-item-label>
     </q-item-section>
