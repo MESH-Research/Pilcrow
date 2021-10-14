@@ -28,6 +28,8 @@ class SubmissionUserPolicy
         switch ($model['role_id']) {
             case '5':
                 return $this->assignReviewer($user, $model);
+            case '4':
+                return $this->assignReviewCoordinator($user, $model);
         }
 
         return false;
@@ -53,5 +55,23 @@ class SubmissionUserPolicy
             ->where('role_id', 4)
             ->where('submission_id', $model['submission_id'])
             ->exists();
+    }
+
+    /**
+     * Determine whether the user can assign a review coordinator to a submission
+     *
+     * @param  \App\Models\User  $user
+     * @param  array  $model
+     * @return bool
+     */
+    private function assignReviewCoordinator(User $user, array $model)
+    {
+        // Assigning user has a higher privileged role
+        if ($user->getHighestPrivilegedRole()) {
+            $permission = $user->can(Permission::ASSIGN_REVIEWER);
+
+            return $permission;
+        }
+        return false;
     }
 }
