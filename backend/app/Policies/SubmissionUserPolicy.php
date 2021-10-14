@@ -8,7 +8,6 @@ use App\Models\SubmissionUser;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-// TODO: Expand policy for the creation of other roles of submission users besides reviewers
 // TODO: Use constants for the ID usages
 class SubmissionUserPolicy
 {
@@ -26,10 +25,16 @@ class SubmissionUserPolicy
     public function create(User $user, array $model)
     {
         switch ($model['role_id']) {
+            case '6':
+                return false;
             case '5':
                 return $this->assignReviewer($user, $model);
             case '4':
                 return $this->assignReviewCoordinator($user, $model);
+            case '3':
+            case '2':
+            case '1':
+                return false;
         }
 
         return false;
@@ -72,6 +77,7 @@ class SubmissionUserPolicy
 
             return $permission;
         }
+
         return false;
     }
 }
