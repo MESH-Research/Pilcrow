@@ -160,6 +160,7 @@
         </div>
       </section>
     </div>
+    <users-assigned-section :users="submitters" />
   </article>
 </template>
 
@@ -171,11 +172,13 @@ import {
 } from "src/graphql/mutations"
 import AvatarImage from "src/components/atoms/AvatarImage.vue"
 import UserList from "src/components/molecules/UserList.vue"
+import UsersAssignedSection from "src/components/molecules/UsersAssignedSection.vue"
 
 export default {
   components: {
     AvatarImage,
     UserList,
+    UsersAssignedSection,
   },
   props: {
     id: {
