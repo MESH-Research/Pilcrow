@@ -44,7 +44,7 @@
     <div class="row q-col-gutter-lg q-pa-lg">
       <section class="col-md-5 col-sm-6 col-xs-12">
         <h3>Assign a Reviewer</h3>
-        <q-form @submit="assignReviewer">
+        <q-form @submit="assignUser(5)">
           <div class="q-gutter-md column q-pl-none">
             <q-select
               id="input_review_assignee"
@@ -160,7 +160,130 @@
         </div>
       </section>
     </div>
-    <users-assigned-section :users="submitters" />
+
+    <div class="row q-col-gutter-lg q-pa-lg">
+      <section class="col-md-5 col-sm-6 col-xs-12">
+        <h3>Assign a Review Coordinator</h3>
+        <q-form @submit="assignReviewer">
+          <div class="q-gutter-md column q-pl-none">
+            <q-select
+              id="input_review_coordinator_assignee"
+              v-model="model"
+              :options="options"
+              bottom-slots
+              hide-dropdown-icon
+              input-debounce="0"
+              label="User to Assign"
+              outlined
+              transition-hide="none"
+              transition-show="none"
+              use-input
+              @filter="filterFn"
+            >
+              <template #hint>
+                <div class="text--grey">
+                  Search by username, email, or name.
+                </div>
+              </template>
+              <template #selected-item="scope">
+                <q-chip
+                  data-cy="review_coordinator_assignee_selected"
+                  dense
+                  square
+                >
+                  {{ scope.opt.username }} ({{ scope.opt.email }})
+                </q-chip>
+              </template>
+              <template #option="scope">
+                <q-item
+                  data-cy="result_review_coordinator_assignee"
+                  v-bind="scope.itemProps"
+                  v-on="scope.itemEvents"
+                >
+                  <q-item-section>
+                    <q-item-label
+                      >{{ scope.opt.username }} ({{
+                        scope.opt.email
+                      }})</q-item-label
+                    >
+                    <q-item-label
+                      v-if="scope.opt.name"
+                      caption
+                      class="text-grey-10"
+                    >
+                      {{ scope.opt.name }}
+                    </q-item-label>
+                  </q-item-section>
+                </q-item>
+              </template>
+            </q-select>
+          </div>
+          <q-btn
+            :ripple="{ center: true }"
+            class="q-mt-lg"
+            color="primary"
+            data-cy="button_assign_review_coordinator"
+            label="Assign"
+            type="submit"
+          />
+        </q-form>
+      </section>
+      <section class="col-md-5 col-sm-6 col-xs-12">
+        <h3>Review Coordinator</h3>
+        <div v-if="review_coordinators.length">
+          <q-list
+            ref="list_assigned_review_coordinators"
+            data-cy="list_assigned_review_coordinators"
+            bordered
+            separator
+          >
+            <q-item
+              v-for="(coordinator, index) in review_coordinators"
+              :key="coordinator.pivot.id"
+              data-cy="userListItem"
+              class="q-px-lg"
+            >
+              <q-item-section top avatar>
+                <avatar-image :user="coordinator" rounded />
+              </q-item-section>
+              <q-item-section>
+                <q-item-label v-if="coordinator.name">
+                  {{ coordinator.name }}
+                </q-item-label>
+                <q-item-label v-else>
+                  {{ coordinator.username }}
+                </q-item-label>
+                <q-item-label lines="1" caption class="text--grey">
+                  {{ coordinator.email }}
+                </q-item-label>
+              </q-item-section>
+              <q-item-section side center>
+                <q-btn
+                  :aria-label="`Unassign ${coordinator.username}`"
+                  flat
+                  color="primary"
+                  icon="person_remove"
+                  :data-cy="`button_unassign_review_coordinator_${index}`"
+                  @click="unassignReviewer(reviewer)"
+                />
+              </q-item-section>
+            </q-item>
+          </q-list>
+        </div>
+        <div v-else>
+          <q-card ref="card_no_review_coordinators" bordered flat>
+            <q-item class="text--grey">
+              <q-item-section avatar>
+                <q-icon name="o_do_disturb_on" />
+              </q-item-section>
+              <q-item-section>
+                {{ $t("submissions.review_coordinator.none") }}
+              </q-item-section>
+            </q-item>
+          </q-card>
+        </div>
+      </section>
+    </div>
   </article>
 </template>
 
@@ -172,13 +295,11 @@ import {
 } from "src/graphql/mutations"
 import AvatarImage from "src/components/atoms/AvatarImage.vue"
 import UserList from "src/components/molecules/UserList.vue"
-import UsersAssignedSection from "src/components/molecules/UsersAssignedSection.vue"
 
 export default {
   components: {
     AvatarImage,
     UserList,
-    UsersAssignedSection,
   },
   props: {
     id: {
@@ -202,6 +323,9 @@ export default {
     }
   },
   computed: {
+    review_coordinators: function () {
+      return this.filterUsersByRoleId(4)
+    },
     reviewers: function () {
       return this.filterUsersByRoleId(5)
     },
@@ -237,14 +361,23 @@ export default {
       })
       this.is_submitting = false
     },
-    async assignReviewer() {
+    async assignUser(role_id) {
+      let role_name = null
+      switch (role_id) {
+        case 5:
+          role_name = "reviewer"
+          break
+        case 4:
+          role_name = "review_coordinator"
+          break
+      }
       try {
         await this.$apollo
           .mutate({
             mutation: CREATE_SUBMISSION_USER,
             variables: {
               user_id: this.model.id,
-              role_id: 5,
+              role_id: role_id,
               submission_id: this.id,
             },
             refetchQueries: ["GetSubmission"],
@@ -253,7 +386,7 @@ export default {
             this.makeNotify(
               "positive",
               "check_circle",
-              "submissions.reviewer.assign.success",
+              `submissions.${role_name}.assign.success`,
               this.model.name ? this.model.name : this.model.username
             )
           })
@@ -264,7 +397,7 @@ export default {
         this.makeNotify(
           "negative",
           "error",
-          "submissions.reviewer.assign.error"
+          `submissions.${role_name}.assign.error`
         )
       }
     },

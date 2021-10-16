@@ -89,12 +89,24 @@ export default {
   components: { UserList },
   props: {
     users: {
-      type: Array,
+      type: undefined,
       required: true,
     },
     dataCy: {
       type: String,
       default: "users_assigned_section",
+    },
+    options: {
+      type: Array,
+      default: () => [],
+    },
+    filterFn: {
+      type: Function,
+      default: () => {},
+    },
+    model: {
+      type: Object,
+      default: () => {},
     },
   },
   emits: ["assign-user"],
@@ -102,33 +114,8 @@ export default {
     function assignUser() {
       console.log("Hello World")
     }
-    function filterFn(val, update) {
-      update(() => {
-        const needle = val.toLowerCase()
-        this.$apollo
-          .query({
-            query: SEARCH_USERS,
-            variables: {
-              term: needle,
-              page: this.current_page,
-            },
-          })
-          .then((searchdata) => {
-            var usersList = []
-            const dropdowndata = searchdata.data.userSearch.data
-            dropdowndata.forEach(function (currentValue, index) {
-              usersList[index] = currentValue
-            })
-            this.options = usersList
-          })
-          .catch((error) => {
-            console.log({ error })
-          })
-      })
-    }
     return {
       assignUser: assignUser,
-      filterFn: filterFn,
     }
   },
 }
