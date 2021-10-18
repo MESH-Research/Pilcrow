@@ -48,7 +48,7 @@
           <div class="q-gutter-md column q-pl-none">
             <q-select
               id="input_review_assignee"
-              v-model="model"
+              v-model="reviewer_candidate"
               :options="options"
               bottom-slots
               hide-dropdown-icon
@@ -164,11 +164,11 @@
     <div class="row q-col-gutter-lg q-pa-lg">
       <section class="col-md-5 col-sm-6 col-xs-12">
         <h3>Assign a Review Coordinator</h3>
-        <q-form @submit="assignReviewer">
+        <q-form @submit="assignUser(4)">
           <div class="q-gutter-md column q-pl-none">
             <q-select
               id="input_review_coordinator_assignee"
-              v-model="model"
+              v-model="review_coordinator_candidate"
               :options="options"
               bottom-slots
               hide-dropdown-icon
@@ -318,7 +318,8 @@ export default {
         data: [],
       },
       current_page: 1,
-      model: null,
+      reviewer_candidate: null,
+      review_coordinator_candidate: null,
       options: [],
     }
   },
@@ -363,12 +364,15 @@ export default {
     },
     async assignUser(role_id) {
       let role_name = null
+      let candidate_model = null
       switch (role_id) {
         case 5:
           role_name = "reviewer"
+          candidate_model = this.reviewer_candidate
           break
         case 4:
           role_name = "review_coordinator"
+          candidate_model = this.review_coordinator_candidate
           break
       }
       try {
@@ -376,7 +380,7 @@ export default {
           .mutate({
             mutation: CREATE_SUBMISSION_USER,
             variables: {
-              user_id: this.model.id,
+              user_id: candidate_model.id,
               role_id: role_id,
               submission_id: this.id,
             },
@@ -387,11 +391,14 @@ export default {
               "positive",
               "check_circle",
               `submissions.${role_name}.assign.success`,
-              this.model.name ? this.model.name : this.model.username
+              candidate_model.name
+                ? candidate_model.name
+                : candidate_model.username
             )
           })
           .then(() => {
-            this.model = null
+            this.resetForm()
+            candidate_model = null
           })
       } catch (error) {
         this.makeNotify(
@@ -400,6 +407,10 @@ export default {
           `submissions.${role_name}.assign.error`
         )
       }
+    },
+    resetForm() {
+      this.review_coordinator_candidate = null
+      this.reviewer_candidate = null
     },
     async unassignReviewer(reviewer) {
       try {
@@ -415,7 +426,7 @@ export default {
         this.makeNotify(
           "positive",
           "check_circle",
-          "submissions.reviewer.unassign.success",
+          "submissions.role_name.unassign.success",
           reviewer.name ? reviewer.name : reviewer.username
         )
       } catch (error) {
@@ -449,9 +460,6 @@ export default {
             console.log({ error })
           })
       })
-    },
-    setModel(val) {
-      this.model = val
     },
   },
   apollo: {
