@@ -1915,10 +1915,10 @@
     lodash "^4.17.15"
     pretty "^2.0.0"
 
-"@vuelidate/core@^2.0.0-alpha.27":
-  version "2.0.0-alpha.27"
-  resolved "https://registry.yarnpkg.com/@vuelidate/core/-/core-2.0.0-alpha.27.tgz#38b5be950e835bfe31bd3b9701e88b620de1d893"
-  integrity sha512-hrpa0+Qz/kyOSYrUCe6sxfF0wA4oG4e/X+mIkMMckVQXNYqfOuwk0O0deC25kcJShrRQ7B/ASDIXKWwtB3OZ5w==
+"@vuelidate/core@^2.0.0-alpha.28":
+  version "2.0.0-alpha.28"
+  resolved "https://registry.yarnpkg.com/@vuelidate/core/-/core-2.0.0-alpha.28.tgz#e1278c4307c5f36c1541b526958013315da5850f"
+  integrity sha512-p6YeB5rH26+stTWX+AnrggYv+Ael8avqs9R9/x2QeetKUHuiOJ36X2YYmhwadKwbTmvt4JdvnDv7Jw2PrHUudA==
   dependencies:
     vue-demi "^0.11.3"
 
