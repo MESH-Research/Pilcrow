@@ -14,7 +14,7 @@ class SubmissionUserPolicy
     use HandlesAuthorization;
 
     /**
-     * Determine whether the user can create the model
+     * Determine whether the user can create submission user record
      *
      * TODO: Consider implementing a more maintainable pattern than a switch or series of if/else statements
      *
@@ -38,6 +38,19 @@ class SubmissionUserPolicy
         }
 
         return false;
+    }
+
+    /**
+     * Determine whether the user can delete a submission user record
+     * This mirrors the same permissions for creating/assigning
+     *
+     * @param  \App\Models\User  $user
+     * @param  array  $model
+     * @return bool
+     */
+    public function delete(User $user, array $model)
+    {
+        return $this->create($user, $model);
     }
 
     /**
