@@ -44,7 +44,7 @@
     <div class="row q-col-gutter-lg q-pa-lg">
       <section class="col-md-5 col-sm-6 col-xs-12">
         <h3>Assign a Reviewer</h3>
-        <q-form @submit="assignUser(5)">
+        <q-form @submit="assignUser(5, `reviewer`, reviewer_candidate)">
           <div class="q-gutter-md column q-pl-none">
             <q-select
               id="input_review_assignee"
@@ -140,7 +140,7 @@
                   color="primary"
                   icon="person_remove"
                   :data-cy="`button_unassign_reviewer_${index}`"
-                  @click="unassignReviewer(reviewer)"
+                  @click="unassignUser(5, `reviewer`, reviewer)"
                 />
               </q-item-section>
             </q-item>
@@ -164,7 +164,11 @@
     <div class="row q-col-gutter-lg q-pa-lg">
       <section class="col-md-5 col-sm-6 col-xs-12">
         <h3>Assign a Review Coordinator</h3>
-        <q-form @submit="assignUser(4)">
+        <q-form
+          @submit="
+            assignUser(4, `review_coordinator`, review_coordinator_candidate)
+          "
+        >
           <div class="q-gutter-md column q-pl-none">
             <q-select
               id="input_review_coordinator_assignee"
@@ -264,7 +268,7 @@
                   color="primary"
                   icon="person_remove"
                   :data-cy="`button_unassign_review_coordinator_${index}`"
-                  @click="unassignReviewer(reviewer)"
+                  @click="unassignUser(4, `review_coordinator`, coordinator)"
                 />
               </q-item-section>
             </q-item>
@@ -362,19 +366,7 @@ export default {
       })
       this.is_submitting = false
     },
-    async assignUser(role_id) {
-      let role_name = null
-      let candidate_model = null
-      switch (role_id) {
-        case 5:
-          role_name = "reviewer"
-          candidate_model = this.reviewer_candidate
-          break
-        case 4:
-          role_name = "review_coordinator"
-          candidate_model = this.review_coordinator_candidate
-          break
-      }
+    async assignUser(role_id, role_name, candidate_model) {
       try {
         await this.$apollo
           .mutate({
@@ -412,13 +404,13 @@ export default {
       this.review_coordinator_candidate = null
       this.reviewer_candidate = null
     },
-    async unassignReviewer(reviewer) {
+    async unassignUser(role_id, role_name, user) {
       try {
         await this.$apollo.mutate({
           mutation: DELETE_SUBMISSION_USER,
           variables: {
-            user_id: reviewer.pivot.user_id,
-            role_id: 5,
+            user_id: user.pivot.user_id,
+            role_id: role_id,
             submission_id: this.id,
           },
           refetchQueries: ["GetSubmission"],
@@ -426,14 +418,14 @@ export default {
         this.makeNotify(
           "positive",
           "check_circle",
-          "submissions.role_name.unassign.success",
-          reviewer.name ? reviewer.name : reviewer.username
+          `submissions.${role_name}.unassign.success`,
+          user.name ? user.name : user.username
         )
       } catch (error) {
         this.makeNotify(
           "negative",
           "error",
-          "submissions.reviewer.unassign.error"
+          `submissions.${role_name}.unassign.error`
         )
       }
     },
