@@ -11,7 +11,7 @@ class DeleteSubmissionUser
     /**
      * @param  null  $_
      * @param  array<string, mixed>  $args
-     * @return SubmissionUser
+     * @return \App\Models\SubmissionUser
      */
     public function delete($_, array $args): SubmissionUser
     {

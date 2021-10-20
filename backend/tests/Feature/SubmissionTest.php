@@ -448,7 +448,7 @@ class SubmissionTest extends TestCase
             [
                 [
                     'submission_user_role_id' => self::REVIEW_COORDINATOR_ROLE_ID,
-                    'allowed' => false,
+                    'allowed' => true,
                 ],
             ],
             [
@@ -840,30 +840,160 @@ class SubmissionTest extends TestCase
     /**
      * @return array
      */
-    public function deleteSubmissionUserMutationProvider(): array
+    public function deleteSubmissionUserViaMutationAsAnApplicationAdministratorProvider(): array
     {
         return [
             [
-                self::REVIEWER_ROLE_ID,
+                [
+                    'submission_user_role_id' => self::SUBMITTER_ROLE_ID,
+                    'allowed' => false,
+                ],
+            ],
+            [
+                [
+                    'submission_user_role_id' => self::REVIEWER_ROLE_ID,
+                    'allowed' => true,
+                ],
+            ],
+            [
+                [
+                    'submission_user_role_id' => self::REVIEW_COORDINATOR_ROLE_ID,
+                    'allowed' => true,
+                ],
+            ],
+            [
+                [
+                    'submission_user_role_id' => 0,
+                    'allowed' => false,
+                ],
+            ],
+            [
+                [
+                    'submission_user_role_id' => '',
+                    'allowed' => false,
+                ],
+            ],
+            [
+                [
+                    'submission_user_role_id' => null,
+                    'allowed' => false,
+                ],
             ],
         ];
     }
 
     /**
-     * @dataProvider deleteSubmissionUserMutationProvider
+     * @dataProvider deleteSubmissionUserViaMutationAsAnApplicationAdministratorProvider
      * @return void
      */
-    public function testSubmissionUserDeletionViaMutation(string $role_id)
+    public function testDeleteSubmissionUserViaMutationAsAnApplicationAdministrator(array $case)
     {
-        $admin = User::factory()->create();
-        $admin->assignRole(Role::APPLICATION_ADMINISTRATOR);
-        $this->actingAs($admin);
+        /** @var User $administrator */
+        $administrator = User::factory()->create();
+        $administrator->assignRole(Role::APPLICATION_ADMINISTRATOR);
+        $this->actingAs($administrator);
         $publication = Publication::factory()->create();
-        $user = User::factory()->create();
+        $user_to_be_deleted = User::factory()->create();
+        $submission_user_role_id_is_invalid = intval($case['submission_user_role_id']) <= 0;
+        print_r(' Allowed: ' .$case['allowed'] . ' ID: ' . $case['submission_user_role_id'] . ' Invalid? ' . $submission_user_role_id_is_invalid . ' | ');
+
         $submission = Submission::factory()->hasAttached(
-            $user,
+            $user_to_be_deleted,
             [
-                'role_id' => $role_id,
+                'role_id' => $submission_user_role_id_is_invalid ? self::SUBMITTER_ROLE_ID : $case['submission_user_role_id'],
+            ]
+        )
+            ->for($publication)
+            ->create([
+                'title' => 'Test Submission for Reviewer Unassignment Via Mutation',
+            ]);
+
+        $sbs = SubmissionUser::get();
+        print_r('User: ' . $user_to_be_deleted->id . ' Submission: ' . $submission->id . ' | ');
+        print_r($sbs->toArray());
+        $response = $this->graphQL(
+            'mutation DeleteSubmissionUser ($role_id: ID!, $submission_id: ID!, $user_id: ID!) {
+                deleteSubmissionUser(
+                    role_id: $role_id, submission_id: $submission_id, user_id: $user_id
+                ) {
+                    id
+                }
+            }',
+            [
+                'role' => $case['submission_user_role_id'],
+                'submission_id' => $submission->id,
+                'user_id' => $user_to_be_deleted->id,
+            ]
+        );
+        $expected_mutation_response = null;
+        if ($case['allowed']) {
+            $expected_mutation_response = [
+                'deleteSubmissionUser' => [
+                    'id' => (string)$user_to_be_deleted->id,
+                ],
+            ];
+        }
+        $response->assertJsonPath('data', $expected_mutation_response);
+    }
+
+    /**
+     * @return array
+     */
+    public function deleteSubmissionUserViaMutationAsAUserWithNoRoleProvider(): array
+    {
+        return [
+            [
+                [
+                    'submission_user_role_id' => self::SUBMITTER_ROLE_ID,
+                    'allowed' => false,
+                ],
+            ],
+            [
+                [
+                    'submission_user_role_id' => self::REVIEWER_ROLE_ID,
+                    'allowed' => false,
+                ],
+            ],
+            [
+                [
+                    'submission_user_role_id' => self::REVIEW_COORDINATOR_ROLE_ID,
+                    'allowed' => false,
+                ],
+            ],
+            [
+                [
+                    'submission_user_role_id' => 0,
+                    'allowed' => false,
+                ],
+            ],
+            [
+                [
+                    'submission_user_role_id' => '',
+                    'allowed' => false,
+                ],
+            ],
+            [
+                [
+                    'submission_user_role_id' => null,
+                    'allowed' => false,
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider deleteSubmissionUserViaMutationAsAUserWithNoRoleProvider
+     * @return void
+     */
+    public function testDeleteSubmissionUserViaMutationAsAUserWithNoRole(array $case)
+    {
+        $publication = Publication::factory()->create();
+        $user_to_be_deleted = User::factory()->create();
+        $submission_user_role_id_is_invalid = intval($case['submission_user_role_id']) <= 0;
+        $submission = Submission::factory()->hasAttached(
+            $user_to_be_deleted,
+            [
+                'role_id' => $submission_user_role_id_is_invalid ? self::SUBMITTER_ROLE_ID : $case['submission_user_role_id'],
             ]
         )
             ->for($publication)
@@ -879,16 +1009,15 @@ class SubmissionTest extends TestCase
                 }
             }',
             [
-                'role_id' => $role_id,
+                'role' => $case['submission_user_role_id'],
                 'submission_id' => $submission->id,
-                'user_id' => $user->id,
+                'user_id' => $user_to_be_deleted->id,
             ]
         );
-        $expected_data = [
-            'deleteSubmissionUser' => [
-                'id' => (string)$submission->id,
-            ],
-        ];
-        $response->assertJsonPath('data', $expected_data);
+        $expected_mutation_response = null;
+        // if ($submission_user_role_id_is_invalid) {
+        //     $this->expectException(QueryException::class);
+        // }
+        $response->assertJsonPath('data', $expected_mutation_response);
     }
 }
