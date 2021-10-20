@@ -895,8 +895,6 @@ class SubmissionTest extends TestCase
         $publication = Publication::factory()->create();
         $user_to_be_deleted = User::factory()->create();
         $submission_user_role_id_is_invalid = intval($case['submission_user_role_id']) <= 0;
-        print_r(' Allowed: ' .$case['allowed'] . ' ID: ' . $case['submission_user_role_id'] . ' Invalid? ' . $submission_user_role_id_is_invalid . ' | ');
-
         $submission = Submission::factory()->hasAttached(
             $user_to_be_deleted,
             [
@@ -908,9 +906,7 @@ class SubmissionTest extends TestCase
                 'title' => 'Test Submission for Reviewer Unassignment Via Mutation',
             ]);
 
-        $sbs = SubmissionUser::get();
-        print_r('User: ' . $user_to_be_deleted->id . ' Submission: ' . $submission->id . ' | ');
-        print_r($sbs->toArray());
+        $submission_user = SubmissionUser::firstOrFail();
         $response = $this->graphQL(
             'mutation DeleteSubmissionUser ($role_id: ID!, $submission_id: ID!, $user_id: ID!) {
                 deleteSubmissionUser(
@@ -920,7 +916,7 @@ class SubmissionTest extends TestCase
                 }
             }',
             [
-                'role' => $case['submission_user_role_id'],
+                'role_id' => $case['submission_user_role_id'],
                 'submission_id' => $submission->id,
                 'user_id' => $user_to_be_deleted->id,
             ]
@@ -929,7 +925,7 @@ class SubmissionTest extends TestCase
         if ($case['allowed']) {
             $expected_mutation_response = [
                 'deleteSubmissionUser' => [
-                    'id' => (string)$user_to_be_deleted->id,
+                    'id' => (string)$submission_user->id
                 ],
             ];
         }
@@ -1015,9 +1011,6 @@ class SubmissionTest extends TestCase
             ]
         );
         $expected_mutation_response = null;
-        // if ($submission_user_role_id_is_invalid) {
-        //     $this->expectException(QueryException::class);
-        // }
         $response->assertJsonPath('data', $expected_mutation_response);
     }
 }
