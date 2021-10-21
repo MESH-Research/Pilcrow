@@ -6,6 +6,7 @@
       :user="user"
       :index="index"
       :actions="actions"
+      @actionClick="bubble"
     />
   </q-list>
 </template>
@@ -28,6 +29,11 @@ export default {
     dataCy: {
       type: String,
       default: "user_list",
+    },
+  },
+  methods: {
+    bubble(eventData) {
+      this.$emit("actionClick", eventData)
     },
   },
 }

@@ -108,6 +108,7 @@
                 help: 'Remove Reviewer',
               },
             ]"
+            @actionClick="handlerReviewClick"
           />
           <!--
           <q-list
@@ -266,6 +267,12 @@ export default {
           "error",
           "submissions.reviewer.assign.error"
         )
+      }
+    },
+    async handleReviewClick({ user, event }) {
+      switch (event) {
+        case "unassignReviewer":
+          await this.unassignReviewer(user)
       }
     },
     async unassignReviewer(reviewer) {

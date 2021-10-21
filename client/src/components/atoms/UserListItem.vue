@@ -26,7 +26,7 @@
           round
           :title="help"
           :icon="icon"
-          @click="event(user)"
+          @click="$emit('actionClick', { user, event })"
         />
       </div>
     </q-item-section>
