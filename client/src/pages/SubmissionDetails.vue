@@ -50,14 +50,21 @@
               id="input_review_assignee"
               v-model="model"
               :options="options"
+              bottom-slots
               hide-dropdown-icon
-              hint="Search by username, email, or name."
               input-debounce="0"
               label="User to Assign"
               outlined
+              transition-hide="none"
+              transition-show="none"
               use-input
               @filter="filterFn"
             >
+              <template #hint>
+                <div class="text--grey">
+                  Search by username, email, or name.
+                </div>
+              </template>
               <template #selected-item="scope">
                 <q-chip data-cy="review_assignee_selected" dense square>
                   {{ scope.opt.username }} ({{ scope.opt.email }})
@@ -75,7 +82,11 @@
                         scope.opt.email
                       }})</q-item-label
                     >
-                    <q-item-label v-if="scope.opt.name" caption>
+                    <q-item-label
+                      v-if="scope.opt.name"
+                      caption
+                      class="text-grey-10"
+                    >
                       {{ scope.opt.name }}
                     </q-item-label>
                   </q-item-section>
@@ -85,12 +96,11 @@
           </div>
           <q-btn
             :ripple="{ center: true }"
+            class="q-mt-lg"
             color="primary"
-            class="text-uppercase q-mt-lg"
-            label="Assign"
             data-cy="button_assign_reviewer"
+            label="Assign"
             type="submit"
-            no-caps
           />
         </q-form>
       </section>
@@ -103,6 +113,7 @@
             :users="reviewers"
             :actions="[
               {
+                ariaLabel: 'Unassign',
                 icon: 'person_remove',
                 action: 'unassignReviewer',
                 help: 'Remove Reviewer',
@@ -206,7 +217,7 @@ export default {
             mutation: CREATE_SUBMISSION_USER,
             variables: {
               user_id: this.model.id,
-              role_id: 5,
+              role_id: "5",
               submission_id: this.id,
             },
             refetchQueries: ["GetSubmission"],
@@ -242,7 +253,7 @@ export default {
           mutation: DELETE_SUBMISSION_USER,
           variables: {
             user_id: reviewer.pivot.user_id,
-            role_id: 5,
+            role_id: "5",
             submission_id: this.id,
           },
           refetchQueries: ["GetSubmission"],

@@ -10,14 +10,14 @@
       <q-item-label v-else>
         {{ user.username }}
       </q-item-label>
-      <q-item-label caption lines="1">
+      <q-item-label caption lines="1" class="text--grey">
         {{ user.email }}
       </q-item-label>
     </q-item-section>
     <q-item-section v-if="actions.length" top side>
       <div class="text-grey-8 q-gutter-xs">
         <q-btn
-          v-for="{ icon, action, help, cyAttr } in actions"
+          v-for="{ ariaLabel, icon, action, help, cyAttr } in actions"
           :key="icon"
           class="gt-xs"
           size="12px"
@@ -27,6 +27,7 @@
           :title="help"
           :icon="icon"
           :data-cy="`${cyAttr}_${index}`"
+          :aria-label="`${ariaLabel} ${user.name}`"
           @click="$emit('actionClick', { user, action })"
         />
       </div>
