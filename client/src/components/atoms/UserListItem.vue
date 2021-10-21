@@ -27,7 +27,7 @@
           :title="help"
           :icon="icon"
           :data-cy="`${cyAttr}_${index}`"
-          :aria-label="`${ariaLabel} ${user.name}`"
+          :aria-label="`${ariaLabel} ${user.name || user.username}`"
           @click="$emit('actionClick', { user, action })"
         />
       </div>
