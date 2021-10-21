@@ -925,7 +925,7 @@ class SubmissionTest extends TestCase
         if ($case['allowed']) {
             $expected_mutation_response = [
                 'deleteSubmissionUser' => [
-                    'id' => (string)$submission_user->id
+                    'id' => (string)$submission_user->id,
                 ],
             ];
         }
@@ -1019,7 +1019,7 @@ class SubmissionTest extends TestCase
         if ($case['allowed']) {
             $expected_mutation_response = [
                 'deleteSubmissionUser' => [
-                    'id' => (string)$submission_user->id
+                    'id' => (string)$submission_user->id,
                 ],
             ];
         }
