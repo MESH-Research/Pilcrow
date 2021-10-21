@@ -17,7 +17,7 @@
     <q-item-section v-if="actions.length" top side>
       <div class="text-grey-8 q-gutter-xs">
         <q-btn
-          v-for="{ icon, event, help } in actions"
+          v-for="{ icon, action, help, cyAttr } in actions"
           :key="icon"
           class="gt-xs"
           size="12px"
@@ -26,7 +26,8 @@
           round
           :title="help"
           :icon="icon"
-          @click="$emit('actionClick', { user, event })"
+          :data-cy="`${cyAttr}_${index}`"
+          @click="$emit('actionClick', { user, action })"
         />
       </div>
     </q-item-section>

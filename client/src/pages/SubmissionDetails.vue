@@ -104,52 +104,13 @@
             :actions="[
               {
                 icon: 'person_remove',
-                event: 'unassignReviewer',
+                action: 'unassignReviewer',
                 help: 'Remove Reviewer',
+                cyAttr: 'button_unassign_reviewer',
               },
             ]"
-            @actionClick="handlerReviewClick"
+            @actionClick="handleReviewClick"
           />
-          <!--
-          <q-list
-            ref="list_assigned_reviewers"
-            data-cy="list_assigned_reviewers"
-            bordered
-            separator
-          >
-            <q-item
-              v-for="(reviewer, index) in reviewers"
-              :key="reviewer.pivot.id"
-              data-cy="userListItem"
-              class="q-px-lg"
-            >
-              <q-item-section top avatar>
-                <avatar-image :user="reviewer" rounded />
-              </q-item-section>
-              <q-item-section>
-                <q-item-label v-if="reviewer.name">
-                  {{ reviewer.name }}
-                </q-item-label>
-                <q-item-label v-else>
-                  {{ reviewer.username }}
-                </q-item-label>
-                <q-item-label caption lines="1">
-                  {{ reviewer.email }}
-                </q-item-label>
-              </q-item-section>
-              <q-item-section side center>
-                <q-btn
-                  :aria-label="`Unassign ${reviewer.username}`"
-                  flat
-                  color="primary"
-                  icon="person_remove"
-                  :data-cy="`button_unassign_reviewer_${index}`"
-                  @click="unassignReviewer(reviewer)"
-                />
-              </q-item-section>
-            </q-item>
-          </q-list>
-          -->
         </div>
         <div v-else>
           <q-card ref="card_no_reviewers" bordered flat>
@@ -269,8 +230,8 @@ export default {
         )
       }
     },
-    async handleReviewClick({ user, event }) {
-      switch (event) {
+    async handleReviewClick({ user, action }) {
+      switch (action) {
         case "unassignReviewer":
           await this.unassignReviewer(user)
       }
