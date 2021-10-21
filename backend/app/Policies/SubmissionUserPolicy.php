@@ -30,7 +30,7 @@ class SubmissionUserPolicy
             case '5':
                 return $this->assignReviewer($user, $model);
             case '4':
-                return $this->assignReviewCoordinator($user, $model);
+                return $this->assignReviewCoordinator($user);
             case '3':
             case '2':
             case '1':
@@ -79,10 +79,9 @@ class SubmissionUserPolicy
      * Determine whether the user can assign a review coordinator to a submission
      *
      * @param  \App\Models\User  $user
-     * @param  array  $model
      * @return bool
      */
-    private function assignReviewCoordinator(User $user, array $model)
+    private function assignReviewCoordinator(User $user)
     {
         // Assigning user has a higher privileged role
         if ($user->getHighestPrivilegedRole()) {
