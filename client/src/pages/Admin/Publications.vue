@@ -47,16 +47,22 @@
             v-for="publication in publications.data"
             :key="publication.id"
             class="column"
+            clickable
+            @click="goToPublicationDetails(publication.id)"
           >
-            <router-link
-              data-cy="publication_link"
-              :to="{
-                name: 'publication_details',
-                params: { id: publication.id },
-              }"
-            >
-              <q-item-label>{{ publication.name }}</q-item-label>
-            </router-link>
+            <q-item-section>
+              <router-link
+                data-cy="publication_link"
+                :to="{
+                  name: 'publication_details',
+                  params: { id: publication.id },
+                }"
+              >
+                <q-item-label>
+                  {{ publication.name }}
+                </q-item-label>
+              </router-link>
+            </q-item-section>
           </q-item>
         </q-list>
         <div v-else data-cy="no_publications_message">
@@ -77,8 +83,14 @@ import { getErrorMessageKey } from "src/use/validationHelpers"
 
 export default {
   components: { ErrorFieldRenderer },
-  setup() {
-    return { $v: useVuelidate() }
+  setup(_, { root }) {
+    function goToPublicationDetails(publicationId) {
+      root.$router.push({
+        name: "publication_details",
+        params: { id: publicationId },
+      })
+    }
+    return { goToPublicationDetails, $v: useVuelidate() }
   },
   data() {
     return {
