@@ -428,6 +428,40 @@ class SubmissionTest extends TestCase
     }
 
     /**
+     * @return void
+     */
+    public function testUserRoleAndUserAreUniqueForASubmission()
+    {
+        $user = User::factory()->create();
+        $role_id = Role::where('name', Role::REVIEW_COORDINATOR)->first()->id;
+
+        $submission = Submission::factory()->hasAttached(
+            $user,
+            [
+                'role_id' => $role_id,
+            ]
+        )
+            ->create();
+        $this->expectException(QueryException::class);
+        $submission->users()->attach(
+            $user,
+            [
+                'role_id' => $role_id,
+            ]
+        );
+        $submission_pivot_data = SubmissionUser::where(
+            [
+                'user_id' => $user->id,
+                'role_id' => $role_id,
+                'submission_id' => $submission->id,
+            ]
+        )
+            ->get();
+        $this->assertEquals(1, $submission_pivot_data->count());
+    }
+
+
+    /**
      * @return array
      */
     public function createSubmissionUserViaMutationAsAnApplicationAdministratorProvider(): array
@@ -802,39 +836,6 @@ class SubmissionTest extends TestCase
             ],
         ];
         $query_response->assertJsonPath('data', $expected_query_response);
-    }
-
-    /**
-     * @return void
-     */
-    public function testUserRoleAndUserAreUniqueForASubmission()
-    {
-        $user = User::factory()->create();
-        $role_id = Role::where('name', Role::REVIEW_COORDINATOR)->first()->id;
-
-        $submission = Submission::factory()->hasAttached(
-            $user,
-            [
-                'role_id' => $role_id,
-            ]
-        )
-            ->create();
-        $this->expectException(QueryException::class);
-        $submission->users()->attach(
-            $user,
-            [
-                'role_id' => $role_id,
-            ]
-        );
-        $submission_pivot_data = SubmissionUser::where(
-            [
-                'user_id' => $user->id,
-                'role_id' => $role_id,
-                'submission_id' => $submission->id,
-            ]
-        )
-            ->get();
-        $this->assertEquals(1, $submission_pivot_data->count());
     }
 
     /**
