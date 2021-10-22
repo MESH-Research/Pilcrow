@@ -146,6 +146,14 @@ export const GET_PUBLICATION = gql`
     publication(id: $id) {
       name
       is_publicly_visible
+      users {
+        id
+        name
+        username
+        pivot {
+          role_id
+        }
+      }
     }
   }
 `
