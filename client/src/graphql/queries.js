@@ -140,3 +140,12 @@ export const GET_SUBMISSION = gql`
     }
   }
 `
+
+export const GET_PUBLICATION = gql`
+  query GetPublication($id: ID!) {
+    publication(id: $id) {
+      name
+      is_publicly_visible
+    }
+  }
+`

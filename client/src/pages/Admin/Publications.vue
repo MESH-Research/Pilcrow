@@ -36,21 +36,30 @@
       </section>
       <section class="col-md-7 col-sm-6 col-xs-12">
         <h3>All Publications</h3>
-        <ol class="scroll" data-cy="publications_list">
-          <li
+        <q-list
+          v-if="publications.data.length != 0"
+          bordered
+          separator
+          data-cy="publications_list"
+          class="scroll"
+        >
+          <q-item
             v-for="publication in publications.data"
             :key="publication.id"
-            class="q-pa-none"
+            class="column"
           >
-            <q-item>
-              {{ publication.name }}
-            </q-item>
-          </li>
-        </ol>
-        <div
-          v-if="publications.data.length == 0"
-          data-cy="no_publications_message"
-        >
+            <router-link
+              data-cy="publication_link"
+              :to="{
+                name: 'publication_details',
+                params: { id: publication.id },
+              }"
+            >
+              <q-item-label>{{ publication.name }}</q-item-label>
+            </router-link>
+          </q-item>
+        </q-list>
+        <div v-else data-cy="no_publications_message">
           No Publications Created
         </div>
       </section>

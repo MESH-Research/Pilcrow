@@ -122,6 +122,7 @@ export default {
     },
   },
   publications: {
+    details: "Publication Details",
     create: {
       success: "Publication successfully created.",
       failure: "An error occurred while attempting to create the publication.",
