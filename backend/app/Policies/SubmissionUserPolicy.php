@@ -64,9 +64,7 @@ class SubmissionUserPolicy
     {
         // Assigning user has a higher privileged role
         if ($user->getHighestPrivilegedRole()) {
-            $permission = $user->can(Permission::ASSIGN_REVIEWER);
-
-            return $permission;
+            return $user->can(Permission::ASSIGN_REVIEWER);
         }
         // Assigning user is a Review Coordinator of the submission
         return SubmissionUser::where('user_id', $user->id)
@@ -85,9 +83,23 @@ class SubmissionUserPolicy
     {
         // Assigning user has a higher privileged role
         if ($user->getHighestPrivilegedRole()) {
-            $permission = $user->can(Permission::ASSIGN_REVIEWER);
+            return $user->can(Permission::ASSIGN_REVIEWER);
+        }
 
-            return $permission;
+        return false;
+    }
+
+    /**
+     * Determine whether the user can assign a review coordinator to a submission
+     *
+     * @param  \App\Models\User  $user
+     * @return bool
+     */
+    private function assignEditor(User $user)
+    {
+        // Assigning user has a higher privileged role
+        if ($user->getHighestPrivilegedRole()) {
+            return $user->can(Permission::ASSIGN_EDITOR);
         }
 
         return false;
