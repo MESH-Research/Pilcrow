@@ -250,6 +250,14 @@ class UserPermissionsTest extends TestCase
                                     'id' => '8',
                                     'name' => Permission::UNASSIGN_REVIEW_COORDINATOR,
                                 ],
+                                7 => [
+                                    'id' => '9',
+                                    'name' => Permission::ASSIGN_EDITOR,
+                                ],
+                                8 => [
+                                    'id' => '10',
+                                    'name' => Permission::UNASSIGN_EDITOR,
+                                ],
                             ],
                         ],
                     ],
@@ -283,7 +291,57 @@ class UserPermissionsTest extends TestCase
                                     'id' => '8',
                                     'name' => Permission::UNASSIGN_REVIEW_COORDINATOR,
                                 ],
+                                5 => [
+                                    'id' => '9',
+                                    'name' => Permission::ASSIGN_EDITOR,
+                                ],
+                                6 => [
+                                    'id' => '10',
+                                    'name' => Permission::UNASSIGN_EDITOR,
+                                ],
                             ],
+                        ],
+                    ],
+                ],
+            ],
+            [
+                Role::EDITOR,
+                [
+                    'roles' => [
+                        0 => [
+                            'id' => '3',
+                            'name' => Role::EDITOR,
+                            'permissions' => [
+                                0 => [
+                                    'id' => '5',
+                                    'name' => Permission::ASSIGN_REVIEWER,
+                                ],
+                                1 => [
+                                    'id' => '6',
+                                    'name' => Permission::UNASSIGN_REVIEWER,
+                                ],
+                                2 => [
+                                    'id' => '7',
+                                    'name' => Permission::ASSIGN_REVIEW_COORDINATOR,
+                                ],
+                                3 => [
+                                    'id' => '8',
+                                    'name' => Permission::UNASSIGN_REVIEW_COORDINATOR,
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            // Authorization related to submissions for review coordinators resides in SubmissionUserPolicy.php
+            [
+                Role::REVIEW_COORDINATOR,
+                [
+                    'roles' => [
+                        0 => [
+                            'id' => '4',
+                            'name' => Role::REVIEW_COORDINATOR,
+                            'permissions' => [ ],
                         ],
                     ],
                 ],

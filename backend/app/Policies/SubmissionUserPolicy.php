@@ -32,6 +32,7 @@ class SubmissionUserPolicy
             case '4':
                 return $this->assignReviewCoordinator($user);
             case '3':
+                return $this->assignEditor($user);
             case '2':
             case '1':
                 return false;
