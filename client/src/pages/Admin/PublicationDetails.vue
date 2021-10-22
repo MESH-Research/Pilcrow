@@ -17,10 +17,11 @@
         {{ publication.name }}
       </h2>
       <div v-if="publication.is_publicly_visible">
-        This publication is publicly visible to other users in CCR.
+        This publication is not private and is visible to all users in CCR.
       </div>
       <div v-else>
-        This publication is private and not visible to other users in CCR.
+        This publication is private and meant to be invisible to those outside
+        of this publication.
       </div>
     </div>
   </article>
