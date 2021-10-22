@@ -14,7 +14,7 @@ class SubmissionUserPolicy
     use HandlesAuthorization;
 
     /**
-     * Determine whether the user can create submission user record
+     * Determine whether the user can create a submission user record
      *
      * TODO: Consider implementing a more maintainable pattern than a switch or series of if/else statements
      *
