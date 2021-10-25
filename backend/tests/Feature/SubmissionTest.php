@@ -19,14 +19,6 @@ class SubmissionTest extends TestCase
     use MakesGraphQLRequests;
     use RefreshDatabase;
 
-    // TODO: Refactor this out of this class
-    private const SUBMITTER_ROLE_ID = '6';
-    private const REVIEWER_ROLE_ID = '5';
-    private const REVIEW_COORDINATOR_ROLE_ID = '4';
-    private const EDITOR_ROLE_ID = '3';
-    private const PUBLICATION_ADMINISTRATOR_ROLE_ID = '2';
-    private const APPLICATION_ADMINISTRATOR_ROLE_ID = '1';
-
     /**
      * @return void
      */
@@ -77,11 +69,11 @@ class SubmissionTest extends TestCase
                 ->create();
 
             // Ensure at least one Submitter is attached if one was not previously attached
-            if ($random_role_id !== self::SUBMITTER_ROLE_ID) {
+            if ($random_role_id !== Role::SUBMITTER_ROLE_ID) {
                 $submission->users()->attach(
                     $users->random(),
                     [
-                        'role_id' => self::SUBMITTER_ROLE_ID,
+                        'role_id' => Role::SUBMITTER_ROLE_ID,
                     ]
                 );
             }
@@ -186,7 +178,7 @@ class SubmissionTest extends TestCase
         $submission = Submission::factory()->hasAttached(
             User::factory()->create(),
             [
-                'role_id' => self::SUBMITTER_ROLE_ID,
+                'role_id' => Role::SUBMITTER_ROLE_ID,
             ]
         )
             ->for($publication)
@@ -235,7 +227,7 @@ class SubmissionTest extends TestCase
         $submission = Submission::factory()->hasAttached(
             $user,
             [
-                'role_id' => self::SUBMITTER_ROLE_ID,
+                'role_id' => Role::SUBMITTER_ROLE_ID,
             ]
         )
             ->for($publication)
@@ -268,7 +260,7 @@ class SubmissionTest extends TestCase
                         'id' => (string)$submission->id,
                         'title' => 'Test Submission #5 for Test User #1 With Submission',
                         'pivot' => [
-                            'role_id' => (string)self::SUBMITTER_ROLE_ID,
+                            'role_id' => Role::SUBMITTER_ROLE_ID,
                         ],
                     ],
                 ],
@@ -291,7 +283,7 @@ class SubmissionTest extends TestCase
         $submission = Submission::factory()->hasAttached(
             $user,
             [
-                'role_id' => self::SUBMITTER_ROLE_ID,
+                'role_id' => Role::SUBMITTER_ROLE_ID,
             ]
         )
             ->for($publication)
@@ -323,7 +315,7 @@ class SubmissionTest extends TestCase
                         'id' => (string)$user->id,
                         'name' => 'Test User #2 With Submission',
                         'pivot' => [
-                            'role_id' => (string)self::SUBMITTER_ROLE_ID,
+                            'role_id' => Role::SUBMITTER_ROLE_ID,
                         ],
                     ],
                 ],
@@ -468,26 +460,38 @@ class SubmissionTest extends TestCase
         return [
             [
                 [
-                    'submission_user_role_id' => self::SUBMITTER_ROLE_ID,
+                    'submission_user_role_id' => Role::SUBMITTER_ROLE_ID,
                     'allowed' => false,
                 ],
             ],
             [
                 [
-                    'submission_user_role_id' => self::REVIEWER_ROLE_ID,
+                    'submission_user_role_id' => Role::REVIEWER_ROLE_ID,
                     'allowed' => true,
                 ],
             ],
             [
                 [
-                    'submission_user_role_id' => self::REVIEW_COORDINATOR_ROLE_ID,
+                    'submission_user_role_id' => Role::REVIEW_COORDINATOR_ROLE_ID,
                     'allowed' => true,
                 ],
             ],
             [
                 [
-                    'submission_user_role_id' => self::EDITOR_ROLE_ID,
-                    'allowed' => true,
+                    'submission_user_role_id' => Role::EDITOR_ROLE_ID,
+                    'allowed' => false,
+                ],
+            ],
+            [
+                [
+                    'submission_user_role_id' => Role::PUBLICATION_ADMINISTRATOR_ROLE_ID,
+                    'allowed' => false,
+                ],
+            ],
+            [
+                [
+                    'submission_user_role_id' => Role::APPLICATION_ADMINISTRATOR_ROLE_ID,
+                    'allowed' => false,
                 ],
             ],
             [
@@ -578,7 +582,7 @@ class SubmissionTest extends TestCase
                     [
                         'id' => (string)$submitter->id,
                         'pivot' => [
-                            'role_id' => self::SUBMITTER_ROLE_ID,
+                            'role_id' => Role::SUBMITTER_ROLE_ID,
                         ],
                     ],
                 ],
@@ -606,25 +610,37 @@ class SubmissionTest extends TestCase
         return [
             [
                 [
-                    'submission_user_role_id' => self::SUBMITTER_ROLE_ID,
+                    'submission_user_role_id' => Role::SUBMITTER_ROLE_ID,
                     'allowed' => false,
                 ],
             ],
             [
                 [
-                    'submission_user_role_id' => self::REVIEWER_ROLE_ID,
+                    'submission_user_role_id' => Role::REVIEWER_ROLE_ID,
                     'allowed' => true,
                 ],
             ],
             [
                 [
-                    'submission_user_role_id' => self::REVIEW_COORDINATOR_ROLE_ID,
+                    'submission_user_role_id' => Role::REVIEW_COORDINATOR_ROLE_ID,
                     'allowed' => true,
                 ],
             ],
             [
                 [
-                    'submission_user_role_id' => self::EDITOR_ROLE_ID,
+                    'submission_user_role_id' => Role::EDITOR_ROLE_ID,
+                    'allowed' => false,
+                ],
+            ],
+            [
+                [
+                    'submission_user_role_id' => Role::PUBLICATION_ADMINISTRATOR_ROLE_ID,
+                    'allowed' => false,
+                ],
+            ],
+            [
+                [
+                    'submission_user_role_id' => Role::APPLICATION_ADMINISTRATOR_ROLE_ID,
                     'allowed' => false,
                 ],
             ],
@@ -716,7 +732,7 @@ class SubmissionTest extends TestCase
                     [
                         'id' => (string)$submitter->id,
                         'pivot' => [
-                            'role_id' => self::SUBMITTER_ROLE_ID,
+                            'role_id' => Role::SUBMITTER_ROLE_ID,
                         ],
                     ],
                 ],
@@ -744,25 +760,37 @@ class SubmissionTest extends TestCase
         return [
             [
                 [
-                    'submission_user_role_id' => self::SUBMITTER_ROLE_ID,
+                    'submission_user_role_id' => Role::SUBMITTER_ROLE_ID,
                     'allowed' => false,
                 ],
             ],
             [
                 [
-                    'submission_user_role_id' => self::REVIEWER_ROLE_ID,
+                    'submission_user_role_id' => Role::REVIEWER_ROLE_ID,
                     'allowed' => true,
                 ],
             ],
             [
                 [
-                    'submission_user_role_id' => self::REVIEW_COORDINATOR_ROLE_ID,
+                    'submission_user_role_id' => Role::REVIEW_COORDINATOR_ROLE_ID,
                     'allowed' => false,
                 ],
             ],
             [
                 [
-                    'submission_user_role_id' => self::EDITOR_ROLE_ID,
+                    'submission_user_role_id' => Role::EDITOR_ROLE_ID,
+                    'allowed' => false,
+                ],
+            ],
+            [
+                [
+                    'submission_user_role_id' => Role::PUBLICATION_ADMINISTRATOR_ROLE_ID,
+                    'allowed' => false,
+                ],
+            ],
+            [
+                [
+                    'submission_user_role_id' => Role::APPLICATION_ADMINISTRATOR_ROLE_ID,
                     'allowed' => false,
                 ],
             ],
@@ -801,8 +829,8 @@ class SubmissionTest extends TestCase
         $submitter = User::factory()->create();
         $submission = Submission::factory()
             ->for($publication)
-            ->hasAttached($submitter, ['role_id' => self::SUBMITTER_ROLE_ID])
-            ->hasAttached($review_coordinator, ['role_id' => self::REVIEW_COORDINATOR_ROLE_ID])
+            ->hasAttached($submitter, ['role_id' => Role::SUBMITTER_ROLE_ID])
+            ->hasAttached($review_coordinator, ['role_id' => Role::REVIEW_COORDINATOR_ROLE_ID])
             ->create([
                 'title' => 'Test Submission for Test User With Submission',
             ]);
@@ -854,13 +882,13 @@ class SubmissionTest extends TestCase
                     [
                         'id' => (string)$submitter->id,
                         'pivot' => [
-                            'role_id' => self::SUBMITTER_ROLE_ID,
+                            'role_id' => Role::SUBMITTER_ROLE_ID,
                         ],
                     ],
                     [
                         'id' => (string)$review_coordinator->id,
                         'pivot' => [
-                            'role_id' => self::REVIEW_COORDINATOR_ROLE_ID,
+                            'role_id' => Role::REVIEW_COORDINATOR_ROLE_ID,
                         ],
                     ],
                 ],
@@ -888,25 +916,37 @@ class SubmissionTest extends TestCase
         return [
             [
                 [
-                    'submission_user_role_id' => self::SUBMITTER_ROLE_ID,
+                    'submission_user_role_id' => Role::SUBMITTER_ROLE_ID,
                     'allowed' => false,
                 ],
             ],
             [
                 [
-                    'submission_user_role_id' => self::REVIEWER_ROLE_ID,
+                    'submission_user_role_id' => Role::REVIEWER_ROLE_ID,
                     'allowed' => false,
                 ],
             ],
             [
                 [
-                    'submission_user_role_id' => self::REVIEW_COORDINATOR_ROLE_ID,
+                    'submission_user_role_id' => Role::REVIEW_COORDINATOR_ROLE_ID,
                     'allowed' => false,
                 ],
             ],
             [
                 [
-                    'submission_user_role_id' => self::EDITOR_ROLE_ID,
+                    'submission_user_role_id' => Role::EDITOR_ROLE_ID,
+                    'allowed' => false,
+                ],
+            ],
+            [
+                [
+                    'submission_user_role_id' => Role::PUBLICATION_ADMINISTRATOR_ROLE_ID,
+                    'allowed' => false,
+                ],
+            ],
+            [
+                [
+                    'submission_user_role_id' => Role::APPLICATION_ADMINISTRATOR_ROLE_ID,
                     'allowed' => false,
                 ],
             ],
@@ -942,7 +982,7 @@ class SubmissionTest extends TestCase
         $submitter = User::factory()->create();
         $submission = Submission::factory()
             ->for($publication)
-            ->hasAttached($submitter, ['role_id' => self::SUBMITTER_ROLE_ID])
+            ->hasAttached($submitter, ['role_id' => Role::SUBMITTER_ROLE_ID])
             ->create([
                 'title' => 'Test Submission for Test User With Submission',
             ]);
@@ -984,7 +1024,7 @@ class SubmissionTest extends TestCase
                     [
                         'id' => (string)$submitter->id,
                         'pivot' => [
-                            'role_id' => self::SUBMITTER_ROLE_ID,
+                            'role_id' => Role::SUBMITTER_ROLE_ID,
                         ],
                     ],
                 ],
@@ -1001,26 +1041,26 @@ class SubmissionTest extends TestCase
         return [
             [
                 [
-                    'submission_user_role_id' => self::SUBMITTER_ROLE_ID,
+                    'submission_user_role_id' => Role::SUBMITTER_ROLE_ID,
                     'allowed' => false,
                 ],
             ],
             [
                 [
-                    'submission_user_role_id' => self::REVIEWER_ROLE_ID,
+                    'submission_user_role_id' => Role::REVIEWER_ROLE_ID,
                     'allowed' => true,
                 ],
             ],
             [
                 [
-                    'submission_user_role_id' => self::REVIEW_COORDINATOR_ROLE_ID,
+                    'submission_user_role_id' => Role::REVIEW_COORDINATOR_ROLE_ID,
                     'allowed' => true,
                 ],
             ],
             [
                 [
-                    'submission_user_role_id' => self::EDITOR_ROLE_ID,
-                    'allowed' => true,
+                    'submission_user_role_id' => Role::EDITOR_ROLE_ID,
+                    'allowed' => false,
                 ],
             ],
             [
@@ -1060,7 +1100,7 @@ class SubmissionTest extends TestCase
         $submission = Submission::factory()->hasAttached(
             $user_to_be_deleted,
             [
-                'role_id' => $submission_user_role_id_is_invalid ? self::SUBMITTER_ROLE_ID : $case['submission_user_role_id'],
+                'role_id' => $submission_user_role_id_is_invalid ? Role::SUBMITTER_ROLE_ID : $case['submission_user_role_id'],
             ]
         )
             ->for($publication)
@@ -1102,25 +1142,25 @@ class SubmissionTest extends TestCase
         return [
             [
                 [
-                    'submission_user_role_id' => self::SUBMITTER_ROLE_ID,
+                    'submission_user_role_id' => Role::SUBMITTER_ROLE_ID,
                     'allowed' => false,
                 ],
             ],
             [
                 [
-                    'submission_user_role_id' => self::REVIEWER_ROLE_ID,
+                    'submission_user_role_id' => Role::REVIEWER_ROLE_ID,
                     'allowed' => true,
                 ],
             ],
             [
                 [
-                    'submission_user_role_id' => self::REVIEW_COORDINATOR_ROLE_ID,
+                    'submission_user_role_id' => Role::REVIEW_COORDINATOR_ROLE_ID,
                     'allowed' => true,
                 ],
             ],
             [
                 [
-                    'submission_user_role_id' => self::EDITOR_ROLE_ID,
+                    'submission_user_role_id' => Role::EDITOR_ROLE_ID,
                     'allowed' => false,
                 ],
             ],
@@ -1161,7 +1201,7 @@ class SubmissionTest extends TestCase
         $submission = Submission::factory()->hasAttached(
             $user_to_be_deleted,
             [
-                'role_id' => $submission_user_role_id_is_invalid ? self::SUBMITTER_ROLE_ID : $case['submission_user_role_id'],
+                'role_id' => $submission_user_role_id_is_invalid ? Role::SUBMITTER_ROLE_ID : $case['submission_user_role_id'],
             ]
         )
             ->for($publication)
@@ -1203,25 +1243,25 @@ class SubmissionTest extends TestCase
         return [
             [
                 [
-                    'submission_user_role_id' => self::SUBMITTER_ROLE_ID,
+                    'submission_user_role_id' => Role::SUBMITTER_ROLE_ID,
                     'allowed' => false,
                 ],
             ],
             [
                 [
-                    'submission_user_role_id' => self::REVIEWER_ROLE_ID,
+                    'submission_user_role_id' => Role::REVIEWER_ROLE_ID,
                     'allowed' => true,
                 ],
             ],
             [
                 [
-                    'submission_user_role_id' => self::REVIEW_COORDINATOR_ROLE_ID,
+                    'submission_user_role_id' => Role::REVIEW_COORDINATOR_ROLE_ID,
                     'allowed' => false,
                 ],
             ],
             [
                 [
-                    'submission_user_role_id' => self::EDITOR_ROLE_ID,
+                    'submission_user_role_id' => Role::EDITOR_ROLE_ID,
                     'allowed' => false,
                 ],
             ],
@@ -1261,10 +1301,10 @@ class SubmissionTest extends TestCase
         $submission = Submission::factory()->hasAttached(
             $user_to_be_deleted,
             [
-                'role_id' => $submission_user_role_id_is_invalid ? self::SUBMITTER_ROLE_ID : $case['submission_user_role_id'],
+                'role_id' => $submission_user_role_id_is_invalid ? Role::SUBMITTER_ROLE_ID : $case['submission_user_role_id'],
             ]
         )
-            ->hasAttached($review_coordinator, ['role_id' => self::REVIEW_COORDINATOR_ROLE_ID])
+            ->hasAttached($review_coordinator, ['role_id' => Role::REVIEW_COORDINATOR_ROLE_ID])
             ->for($publication)
             ->create([
                 'title' => 'Test Submission for Reviewer Unassignment Via Mutation',
@@ -1303,25 +1343,25 @@ class SubmissionTest extends TestCase
         return [
             [
                 [
-                    'submission_user_role_id' => self::SUBMITTER_ROLE_ID,
+                    'submission_user_role_id' => Role::SUBMITTER_ROLE_ID,
                     'allowed' => false,
                 ],
             ],
             [
                 [
-                    'submission_user_role_id' => self::REVIEWER_ROLE_ID,
+                    'submission_user_role_id' => Role::REVIEWER_ROLE_ID,
                     'allowed' => false,
                 ],
             ],
             [
                 [
-                    'submission_user_role_id' => self::REVIEW_COORDINATOR_ROLE_ID,
+                    'submission_user_role_id' => Role::REVIEW_COORDINATOR_ROLE_ID,
                     'allowed' => false,
                 ],
             ],
             [
                 [
-                    'submission_user_role_id' => self::EDITOR_ROLE_ID,
+                    'submission_user_role_id' => Role::EDITOR_ROLE_ID,
                     'allowed' => false,
                 ],
             ],
@@ -1358,7 +1398,7 @@ class SubmissionTest extends TestCase
         $submission = Submission::factory()->hasAttached(
             $user_to_be_deleted,
             [
-                'role_id' => $submission_user_role_id_is_invalid ? self::SUBMITTER_ROLE_ID : $case['submission_user_role_id'],
+                'role_id' => $submission_user_role_id_is_invalid ? Role::SUBMITTER_ROLE_ID : $case['submission_user_role_id'],
             ]
         )
             ->for($publication)
