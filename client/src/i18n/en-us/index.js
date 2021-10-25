@@ -158,7 +158,7 @@ export default {
       },
       assign: {
         duplicate:
-          "That review coordinator is already assigned to this submission.",
+          "{display_name} is already assigned as a review coordinator to this submission.",
         error:
           "An error occurred while attempting to assign a review coordinator. Is this user already assigned as a review coordinator?",
         success:
@@ -172,7 +172,8 @@ export default {
         success: "{display_name} successfully unassigned as a reviewer.",
       },
       assign: {
-        duplicate: "That reviewer is already assigned to this submission.",
+        duplicate:
+          "{display_name} is already assigned as a reviewer to this submission.",
         error:
           "An error occurred while attempting to assign a reviewer. Is this user already assigned as a reviewer?",
         success: "{display_name} successfully assigned as a reviewer.",
