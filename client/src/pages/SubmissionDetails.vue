@@ -107,44 +107,21 @@
       <section class="col-md-5 col-sm-6 col-xs-12">
         <h3>Assigned Reviewers</h3>
         <div v-if="reviewers.length">
-          <q-list
+          <user-list
             ref="list_assigned_reviewers"
             data-cy="list_assigned_reviewers"
-            bordered
-            separator
-          >
-            <q-item
-              v-for="(reviewer, index) in reviewers"
-              :key="reviewer.pivot.id"
-              data-cy="userListItem"
-              class="q-px-lg"
-            >
-              <q-item-section top avatar>
-                <avatar-image :user="reviewer" rounded />
-              </q-item-section>
-              <q-item-section>
-                <q-item-label v-if="reviewer.name">
-                  {{ reviewer.name }}
-                </q-item-label>
-                <q-item-label v-else>
-                  {{ reviewer.username }}
-                </q-item-label>
-                <q-item-label lines="1" caption class="text--grey">
-                  {{ reviewer.email }}
-                </q-item-label>
-              </q-item-section>
-              <q-item-section side center>
-                <q-btn
-                  :aria-label="`Unassign ${reviewer.username}`"
-                  flat
-                  color="primary"
-                  icon="person_remove"
-                  :data-cy="`button_unassign_reviewer_${index}`"
-                  @click="unassignReviewer(reviewer)"
-                />
-              </q-item-section>
-            </q-item>
-          </q-list>
+            :users="reviewers"
+            :actions="[
+              {
+                ariaLabel: 'Unassign',
+                icon: 'person_remove',
+                action: 'unassignReviewer',
+                help: 'Remove Reviewer',
+                cyAttr: 'button_unassign_reviewer',
+              },
+            ]"
+            @actionClick="handleReviewClick"
+          />
         </div>
         <div v-else>
           <q-card ref="card_no_reviewers" bordered flat>
@@ -169,12 +146,11 @@ import {
   CREATE_SUBMISSION_USER,
   DELETE_SUBMISSION_USER,
 } from "src/graphql/mutations"
-import AvatarImage from "src/components/atoms/AvatarImage.vue"
+//import AvatarImage from "src/components/atoms/AvatarImage.vue"
 import UserList from "src/components/molecules/UserList.vue"
 
 export default {
   components: {
-    AvatarImage,
     UserList,
   },
   props: {
@@ -241,7 +217,7 @@ export default {
             mutation: CREATE_SUBMISSION_USER,
             variables: {
               user_id: this.model.id,
-              role_id: 5,
+              role_id: "5",
               submission_id: this.id,
             },
             refetchQueries: ["GetSubmission"],
@@ -265,13 +241,19 @@ export default {
         )
       }
     },
+    async handleReviewClick({ user, action }) {
+      switch (action) {
+        case "unassignReviewer":
+          await this.unassignReviewer(user)
+      }
+    },
     async unassignReviewer(reviewer) {
       try {
         await this.$apollo.mutate({
           mutation: DELETE_SUBMISSION_USER,
           variables: {
             user_id: reviewer.pivot.user_id,
-            role_id: 5,
+            role_id: "5",
             submission_id: this.id,
           },
           refetchQueries: ["GetSubmission"],
