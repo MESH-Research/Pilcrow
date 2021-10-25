@@ -5,6 +5,8 @@
       :key="user.pivot.id"
       :user="user"
       :index="index"
+      :actions="actions"
+      @actionClick="bubble"
     />
   </q-list>
 </template>
@@ -19,9 +21,19 @@ export default {
       type: Array,
       required: true,
     },
+    actions: {
+      type: Array,
+      required: false,
+      default: () => [],
+    },
     dataCy: {
       type: String,
       default: "user_list",
+    },
+  },
+  methods: {
+    bubble(eventData) {
+      this.$emit("actionClick", eventData)
     },
   },
 }
