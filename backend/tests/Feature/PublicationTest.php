@@ -61,6 +61,7 @@ class PublicationTest extends TestCase
      */
     public function testPublicationsCanBeCreatedViaMutationByAnApplicationAdministrator(mixed $publication_name, mixed $expected_data): void
     {
+        /** @var User $user */
         $user = User::factory()->create();
         $user->assignRole(Role::APPLICATION_ADMINISTRATOR);
         $this->actingAs($user);
@@ -80,6 +81,7 @@ class PublicationTest extends TestCase
      */
     public function testPublicationsCannotBeCreatedViaMutationByARegularUser()
     {
+        /** @var User $user */
         $user = User::factory()->create();
         $this->actingAs($user);
         $response = $this->graphQL(
@@ -143,6 +145,7 @@ class PublicationTest extends TestCase
      */
     public function testAllPublicationsCanBeQueriedByAnApplicationAdministrator()
     {
+        /** @var User $user */
         $user = User::factory()->create();
         $user->assignRole(Role::APPLICATION_ADMINISTRATOR);
         $this->actingAs($user);
@@ -185,6 +188,7 @@ class PublicationTest extends TestCase
      */
     public function testAllPublicationsCannotBeQueriedByARegularUser()
     {
+        /** @var User $user */
         $user = User::factory()->create();
         $this->actingAs($user);
 
