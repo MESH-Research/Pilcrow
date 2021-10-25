@@ -4,9 +4,9 @@ declare(strict_types=1);
 namespace Database\Seeders;
 
 use App\Models\Publication;
-use App\Models\User;
 use Illuminate\Database\Seeder;
 
+// TODO: Use constants for the ID usages
 class PublicationSeeder extends Seeder
 {
     /**
@@ -14,12 +14,19 @@ class PublicationSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run($admin, $editor)
     {
-        Publication::factory()->hasAttached(
-            User::where('username', 'applicationAdminUser')->firstOrFail(),
+        Publication::factory()
+        ->hasAttached(
+            $admin,
             [
                 'role_id' => 2,
+            ]
+        )
+        ->hasAttached(
+            $editor,
+            [
+                'role_id' => 3,
             ]
         )
         ->create([

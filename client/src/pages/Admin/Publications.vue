@@ -51,17 +51,9 @@
             @click="goToPublicationDetails(publication.id)"
           >
             <q-item-section>
-              <router-link
-                data-cy="publication_link"
-                :to="{
-                  name: 'publication_details',
-                  params: { id: publication.id },
-                }"
-              >
-                <q-item-label>
-                  {{ publication.name }}
-                </q-item-label>
-              </router-link>
+              <q-item-label>
+                {{ publication.name }}
+              </q-item-label>
             </q-item-section>
           </q-item>
         </q-list>

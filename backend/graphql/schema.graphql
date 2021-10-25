@@ -82,6 +82,17 @@ type Mutation {
         @create
         @can(ability: "create")
 
+    "Create an association between a user, role, and publication"
+    createPublicationUser(publication_user: ModifyPublicationUserInput! @spread): PublicationUser!
+        @create
+        @can(ability: "create", injectArgs: true)
+
+    "Create an association between a user, role, and publication"
+    deletePublicationUser(publication_user: ModifyPublicationUserInput! @spread): PublicationUser!
+        @guard
+        @can(ability: "delete", injectArgs: true)
+        @field(resolver: "App\\GraphQL\\Mutations\\DeletePublicationUser@delete")
+
     "Create a new submission under a publication"
     createSubmission(input: CreateSubmissionInput! @spread): Submission!
 
@@ -250,4 +261,13 @@ Input type for creating a new association between an uploaded file and a submiss
 input CreateSubmissionFileInput @validator(class: "SubmissionFileInputValidator") {
     submission_id: ID!
     file_upload: Upload!
+}
+
+"""
+Input type for modifying associations between a publication, role, and user
+"""
+input ModifyPublicationUserInput @validator(class: "PublicationUserInputValidator") {
+    user_id: ID!
+    role_id: ID!
+    publication_id: ID!
 }

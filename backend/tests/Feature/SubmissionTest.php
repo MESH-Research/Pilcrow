@@ -460,7 +460,6 @@ class SubmissionTest extends TestCase
         $this->assertEquals(1, $submission_pivot_data->count());
     }
 
-
     /**
      * @return array
      */

@@ -10,3 +10,13 @@ type Publication {
     users: [User]! @belongsToMany
     is_publicly_visible: Boolean
 }
+
+"""
+A user associated with a publication and a role
+"""
+type PublicationUser {
+    id: ID!
+    role_id: ID!
+    publication_id: ID!
+    user_id: ID!
+}
