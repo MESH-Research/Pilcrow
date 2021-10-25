@@ -120,7 +120,7 @@
                 cyAttr: 'button_unassign_reviewer',
               },
             ]"
-            @actionClick="handleReviewClick"
+            @actionClick="handleUserListClick"
           />
         </div>
         <div v-else>
@@ -212,44 +212,21 @@
       <section class="col-md-5 col-sm-6 col-xs-12">
         <h3>Review Coordinator</h3>
         <div v-if="review_coordinators.length">
-          <q-list
+          <user-list
             ref="list_assigned_review_coordinators"
             data-cy="list_assigned_review_coordinators"
-            bordered
-            separator
-          >
-            <q-item
-              v-for="(coordinator, index) in review_coordinators"
-              :key="coordinator.pivot.id"
-              data-cy="userListItem"
-              class="q-px-lg"
-            >
-              <q-item-section top avatar>
-                <avatar-image :user="coordinator" rounded />
-              </q-item-section>
-              <q-item-section>
-                <q-item-label v-if="coordinator.name">
-                  {{ coordinator.name }}
-                </q-item-label>
-                <q-item-label v-else>
-                  {{ coordinator.username }}
-                </q-item-label>
-                <q-item-label lines="1" caption class="text--grey">
-                  {{ coordinator.email }}
-                </q-item-label>
-              </q-item-section>
-              <q-item-section side center>
-                <q-btn
-                  :aria-label="`Unassign ${coordinator.username}`"
-                  flat
-                  color="primary"
-                  icon="person_remove"
-                  :data-cy="`button_unassign_review_coordinator_${index}`"
-                  @click="unassignUser(4, `review_coordinator`, coordinator)"
-                />
-              </q-item-section>
-            </q-item>
-          </q-list>
+            :users="review_coordinators"
+            :actions="[
+              {
+                ariaLabel: 'Unassign',
+                icon: 'person_remove',
+                action: 'unassignReviewCoordinator',
+                help: 'Remove Review Coordinator',
+                cyAttr: 'button_unassign_review_coordinator',
+              },
+            ]"
+            @actionClick="handleUserListClick"
+          />
         </div>
         <div v-else>
           <q-card ref="card_no_review_coordinators" bordered flat>
@@ -380,10 +357,14 @@ export default {
       this.review_coordinator_candidate = null
       this.reviewer_candidate = null
     },
-    async handleReviewClick({ user, action }) {
+    async handleUserListClick({ user, action }) {
       switch (action) {
         case "unassignReviewer":
           await this.unassignUser("5", "reviewer", user)
+          break
+        case "unassignReviewCoordinator":
+          await this.unassignUser("4", "review_coordinator", user)
+          break
       }
     },
     async unassignUser(role_id, role_name, user) {
