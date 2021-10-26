@@ -12,8 +12,8 @@ class PublicationSeeder extends Seeder
     /**
      * Run the database seed and create a publication with an administrator and editor.
      *
-     * @param $admin App\Models\User;
-     * @param $editor App\Models\User;
+     * @param $admin App\Models\User
+     * @param $editor App\Models\User
      * @return void
      */
     public function run($admin, $editor)
