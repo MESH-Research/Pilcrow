@@ -14,6 +14,24 @@
         {{ user.email }}
       </q-item-label>
     </q-item-section>
+    <q-item-section v-if="actions.length" top side>
+      <div class="text-grey-8 q-gutter-xs">
+        <q-btn
+          v-for="{ ariaLabel, icon, action, help, cyAttr } in actions"
+          :key="icon"
+          class="gt-xs"
+          size="12px"
+          flat
+          dense
+          round
+          :title="help"
+          :icon="icon"
+          :data-cy="`${cyAttr}_${index}`"
+          :aria-label="`${ariaLabel} ${user.name || user.username}`"
+          @click="$emit('actionClick', { user, action })"
+        />
+      </div>
+    </q-item-section>
   </q-item>
 </template>
 
@@ -30,6 +48,11 @@ export default {
     user: {
       type: Object,
       default: () => {},
+    },
+    actions: {
+      type: Array,
+      required: false,
+      default: () => [],
     },
   },
 }

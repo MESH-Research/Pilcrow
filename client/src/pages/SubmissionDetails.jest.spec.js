@@ -77,8 +77,8 @@ describe("submissions details page mount", () => {
       username: "jestReviewer3Coordinator1",
       email: "jestreviewer3@msu.edu",
       pivot: {
-        id: "4",
-        role_id: "3",
+        id: "5",
+        role_id: "4",
       },
     },
     {
@@ -86,8 +86,17 @@ describe("submissions details page mount", () => {
       username: "jestSubmitter2",
       email: "jestsubmitter2@msu.edu",
       pivot: {
-        id: "5",
+        id: "6",
         role_id: "6",
+      },
+    },
+    {
+      name: "Jest Review Coordinator 2",
+      username: "jestCoordinator2",
+      email: "jestcoordinator2@msu.edu",
+      pivot: {
+        id: "7",
+        role_id: "4",
       },
     },
   ]
@@ -130,5 +139,17 @@ describe("submissions details page mount", () => {
     })
     const card = wrapper.findComponent({ ref: "card_no_reviewers" })
     expect(card.text()).toContain("submissions.reviewer.none")
+  })
+
+  test("all assigned review coordinators appear within the assigned review coordinators list", async () => {
+    await wrapper.setData({
+      submission: {
+        users: submissionUsersData,
+      },
+    })
+    const list = wrapper.findComponent({
+      ref: "list_assigned_review_coordinators",
+    })
+    expect(list.findAllComponents({ name: "q-item" })).toHaveLength(2)
   })
 })

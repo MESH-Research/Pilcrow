@@ -2,34 +2,36 @@
   <div>
     <h2 class="q-pl-lg">All Users</h2>
     <div v-if="users.length">
-      <q-item
-        v-for="user in users"
-        :key="user.id"
-        clickable
-        data-cy="userListItem"
-        class="q-px-lg"
-        @click="goToUserDetail(user.id)"
-      >
-        <q-item-section top avatar>
-          <avatar-image :user="user" rounded />
-        </q-item-section>
+      <q-list>
+        <q-item
+          v-for="user in users"
+          :key="user.id"
+          clickable
+          data-cy="userListItem"
+          class="q-px-lg"
+          @click="goToUserDetail(user.id)"
+        >
+          <q-item-section top avatar>
+            <avatar-image :user="user" rounded />
+          </q-item-section>
 
-        <q-item-section>
-          <q-item-label v-if="user.name">
-            {{ user.name }}
-          </q-item-label>
-          <q-item-label v-else>
-            {{ user.username }}
-          </q-item-label>
-          <q-item-label caption>
-            {{ user.email }}
-          </q-item-label>
-        </q-item-section>
+          <q-item-section>
+            <q-item-label v-if="user.name">
+              {{ user.name }}
+            </q-item-label>
+            <q-item-label v-else>
+              {{ user.username }}
+            </q-item-label>
+            <q-item-label caption>
+              {{ user.email }}
+            </q-item-label>
+          </q-item-section>
 
-        <q-item-section side top>
-          <q-item-label caption> meta </q-item-label>
-        </q-item-section>
-      </q-item>
+          <q-item-section side top>
+            <q-item-label caption> meta </q-item-label>
+          </q-item-section>
+        </q-item>
+      </q-list>
       <q-pagination
         v-model="currentPage"
         class="q-pa-lg flex flex-center"

@@ -130,6 +130,7 @@ export const GET_SUBMISSION = gql`
       }
       users {
         name
+        username
         email
         pivot {
           id
