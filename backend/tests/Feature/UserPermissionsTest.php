@@ -242,6 +242,14 @@ class UserPermissionsTest extends TestCase
                                     'id' => '6',
                                     'name' => Permission::UNASSIGN_REVIEWER,
                                 ],
+                                5 => [
+                                    'id' => '7',
+                                    'name' => Permission::ASSIGN_REVIEW_COORDINATOR,
+                                ],
+                                6 => [
+                                    'id' => '8',
+                                    'name' => Permission::UNASSIGN_REVIEW_COORDINATOR,
+                                ],
                             ],
                         ],
                     ],
@@ -266,6 +274,14 @@ class UserPermissionsTest extends TestCase
                                 2 => [
                                     'id' => '6',
                                     'name' => Permission::UNASSIGN_REVIEWER,
+                                ],
+                                3 => [
+                                    'id' => '7',
+                                    'name' => Permission::ASSIGN_REVIEW_COORDINATOR,
+                                ],
+                                4 => [
+                                    'id' => '8',
+                                    'name' => Permission::UNASSIGN_REVIEW_COORDINATOR,
                                 ],
                             ],
                         ],
