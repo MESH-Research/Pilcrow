@@ -150,6 +150,7 @@ export const GET_PUBLICATION = gql`
       users {
         id
         name
+        email
         username
         pivot {
           role_id
