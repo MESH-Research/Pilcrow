@@ -525,7 +525,6 @@ class SubmissionTest extends TestCase
         $administrator = User::factory()->create();
         $administrator->assignRole(Role::APPLICATION_ADMINISTRATOR);
         $this->actingAs($administrator);
-        $user_to_be_assigned = User::factory()->create();
         $publication = Publication::factory()->create();
         $submitter = User::factory()->create();
         $submission = Submission::factory()
@@ -534,6 +533,7 @@ class SubmissionTest extends TestCase
             ->create([
                 'title' => 'Test Submission for Test User With Submission',
             ]);
+        $user_to_be_assigned = User::factory()->create();
         $mutation_response = $this->graphQL(
             'mutation CreateSubmissionUser ($role_id: ID!, $submission_id: ID!, $user_id: ID!) {
                 createSubmissionUser(
