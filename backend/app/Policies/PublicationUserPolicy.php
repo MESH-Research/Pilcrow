@@ -4,10 +4,10 @@ declare(strict_types=1);
 namespace App\Policies;
 
 use App\Models\Permission;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-// TODO: Use constants for the ID usages
 class PublicationUserPolicy
 {
     use HandlesAuthorization;
@@ -24,14 +24,14 @@ class PublicationUserPolicy
     public function create(User $user, array $model)
     {
         switch ($model['role_id']) {
-            case '6':
-            case '5':
-            case '4':
+            case Role::SUBMITTER_ROLE_ID:
+            case Role::REVIEWER_ROLE_ID:
+            case Role::REVIEW_COORDINATOR_ROLE_ID:
                 return false;
-            case '3':
+            case Role::EDITOR_ROLE_ID:
                 return $this->assignEditor($user);
-            case '2':
-            case '1':
+            case Role::PUBLICATION_ADMINISTRATOR_ROLE_ID:
+            case Role::APPLICATION_ADMINISTRATOR_ROLE_ID:
                 return false;
         }
 
@@ -50,14 +50,14 @@ class PublicationUserPolicy
     public function delete(User $user, array $model)
     {
         switch ($model['role_id']) {
-            case '6':
-            case '5':
-            case '4':
+            case Role::SUBMITTER_ROLE_ID:
+            case Role::REVIEWER_ROLE_ID:
+            case Role::REVIEW_COORDINATOR_ROLE_ID:
                 return false;
-            case '3':
+            case Role::EDITOR_ROLE_ID:
                 return $this->unassignEditor($user);
-            case '2':
-            case '1':
+            case Role::PUBLICATION_ADMINISTRATOR_ROLE_ID:
+            case Role::APPLICATION_ADMINISTRATOR_ROLE_ID:
                 return false;
         }
 

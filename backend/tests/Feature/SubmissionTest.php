@@ -391,7 +391,7 @@ class SubmissionTest extends TestCase
                         input: {
                             title: $title,
                             publication_id: $publication_id,
-                            users: { connect: [{ id: $submitter_user_id, role_id: 6 }] }
+                            users: { connect: [{ id: $submitter_user_id, role_id: ' . Role::SUBMITTER_ROLE_ID . ' }] }
                             files: { create: $file_upload }
                         }
                     ) {
@@ -529,7 +529,7 @@ class SubmissionTest extends TestCase
         $submitter = User::factory()->create();
         $submission = Submission::factory()
             ->for($publication)
-            ->hasAttached($submitter, ['role_id' => 6])
+            ->hasAttached($submitter, ['role_id' => Role::SUBMITTER_ROLE_ID])
             ->create([
                 'title' => 'Test Submission for Test User With Submission',
             ]);
@@ -680,7 +680,7 @@ class SubmissionTest extends TestCase
         $submitter = User::factory()->create();
         $submission = Submission::factory()
             ->for($publication)
-            ->hasAttached($submitter, ['role_id' => 6])
+            ->hasAttached($submitter, ['role_id' => Role::SUBMITTER_ROLE_ID])
             ->create([
                 'title' => 'Test Submission for Test User With Submission',
             ]);

@@ -239,7 +239,7 @@ class PublicationTest extends TestCase
                 ->create();
             // Ensure at least one publication admin is attached to the publication.
             if ($random_role_id !== Role::PUBLICATION_ADMINISTRATOR_ROLE_ID) {
-                $random_non_duplicate_user = $users->reject(function($user) use ($random_user) {
+                $random_non_duplicate_user = $users->reject(function ($user) use ($random_user) {
                     return $user->id === $random_user->id;
                 })->random();
                 $publication->users()->attach(
