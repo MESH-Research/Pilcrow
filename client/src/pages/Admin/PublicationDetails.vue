@@ -90,44 +90,21 @@
       <section class="col-md-5 col-sm-6 col-xs-12">
         <h3>Editors</h3>
         <div v-if="editors.length">
-          <q-list
+          <user-list
             ref="list_assigned_editors"
             data-cy="list_assigned_editors"
-            bordered
-            separator
-          >
-            <q-item
-              v-for="(editor, index) in editors"
-              :key="editor.id"
-              data-cy="userListItem"
-              class="q-px-lg"
-            >
-              <q-item-section top avatar>
-                <avatar-image :user="editor" rounded />
-              </q-item-section>
-              <q-item-section>
-                <q-item-label v-if="editor.name">
-                  {{ editor.name }}
-                </q-item-label>
-                <q-item-label v-else>
-                  {{ editor.username }}
-                </q-item-label>
-                <q-item-label lines="1" caption class="text--grey">
-                  {{ editor.email }}
-                </q-item-label>
-              </q-item-section>
-              <q-item-section side center>
-                <q-btn
-                  :aria-label="`Unassign ${editor.username}`"
-                  flat
-                  color="primary"
-                  icon="person_remove"
-                  :data-cy="`button_unassign_editor_${index}`"
-                  @click="unassignUser(3, `editor`, editor)"
-                />
-              </q-item-section>
-            </q-item>
-          </q-list>
+            :users="editors"
+            :actions="[
+              {
+                ariaLabel: 'Unassign',
+                icon: 'person_remove',
+                action: 'unassignEditor',
+                help: 'Remove Editor',
+                cyAttr: 'button_unassign_editor',
+              },
+            ]"
+            @actionClick="handleUserListClick"
+          />
         </div>
         <div v-else>
           <q-card ref="card_no_editors" bordered flat>
@@ -147,16 +124,16 @@
 </template>
 
 <script>
+import UserList from "src/components/molecules/UserList.vue"
 import { GET_PUBLICATION, SEARCH_USERS } from "src/graphql/queries"
 import {
   CREATE_PUBLICATION_USER,
   DELETE_PUBLICATION_USER,
 } from "src/graphql/mutations"
-import AvatarImage from "src/components/atoms/AvatarImage.vue"
 
 export default {
   components: {
-    AvatarImage,
+    UserList,
   },
   props: {
     id: {
@@ -212,6 +189,13 @@ export default {
         html: true,
       })
       this.is_submitting = false
+    },
+    async handleUserListClick({ user, action }) {
+      switch (action) {
+        case "unassignEditor":
+          await this.unassignUser("3", "editor", user)
+          break
+      }
     },
     async assignUser(role_id, role_name, candidate_model) {
       try {

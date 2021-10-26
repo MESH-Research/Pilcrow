@@ -251,7 +251,6 @@ import {
   CREATE_SUBMISSION_USER,
   DELETE_SUBMISSION_USER,
 } from "src/graphql/mutations"
-//import AvatarImage from "src/components/atoms/AvatarImage.vue"
 import UserList from "src/components/molecules/UserList.vue"
 
 export default {
