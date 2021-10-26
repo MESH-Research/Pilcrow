@@ -4,14 +4,16 @@ declare(strict_types=1);
 namespace Database\Seeders;
 
 use App\Models\Publication;
+use App\Models\Role;
 use Illuminate\Database\Seeder;
 
-// TODO: Use constants for the ID usages
 class PublicationSeeder extends Seeder
 {
     /**
-     * Run the database seeds.
+     * Run the database seed and create a publication with an administrator and editor.
      *
+     * @param $admin App\Models\User;
+     * @param $editor App\Models\User;
      * @return void
      */
     public function run($admin, $editor)
@@ -20,13 +22,13 @@ class PublicationSeeder extends Seeder
         ->hasAttached(
             $admin,
             [
-                'role_id' => 2,
+                'role_id' => Role::PUBLICATION_ADMINISTRATOR_ROLE_ID,
             ]
         )
         ->hasAttached(
             $editor,
             [
-                'role_id' => 3,
+                'role_id' => Role::EDITOR_ROLE_ID,
             ]
         )
         ->create([
