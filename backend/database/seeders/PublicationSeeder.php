@@ -5,6 +5,7 @@ namespace Database\Seeders;
 
 use App\Models\Publication;
 use App\Models\Role;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class PublicationSeeder extends Seeder
@@ -12,11 +13,11 @@ class PublicationSeeder extends Seeder
     /**
      * Run the database seed and create a publication with an administrator and editor.
      *
-     * @param $admin App\Models\User
-     * @param $editor App\Models\User
+     * @param \App\Models\User $admin
+     * @param \App\Models\User $editor
      * @return void
      */
-    public function run($admin, $editor)
+    public function run(User $admin, User $editor)
     {
         Publication::factory()
         ->hasAttached(
