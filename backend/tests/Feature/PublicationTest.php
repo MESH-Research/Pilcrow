@@ -219,6 +219,7 @@ class PublicationTest extends TestCase
 
         // Create publications and attach them to users randomly with random roles
         for ($i = 0; $i < $publication_count; $i++) {
+            $random_user = $users->random();
             $random_role_id = Role::whereIn(
                 'name',
                 [
@@ -230,7 +231,7 @@ class PublicationTest extends TestCase
                 ->pluck('id')
                 ->random();
             $publication = Publication::factory()->hasAttached(
-                $users->random(),
+                $random_user,
                 [
                     'role_id' => $random_role_id,
                 ]
@@ -238,8 +239,11 @@ class PublicationTest extends TestCase
                 ->create();
             // Ensure at least one publication admin is attached to the publication.
             if ($random_role_id !== Role::PUBLICATION_ADMINISTRATOR_ROLE_ID) {
+                $random_non_duplicate_user = $users->reject(function($user) use ($random_user) {
+                    return $user->id === $random_user->id;
+                })->random();
                 $publication->users()->attach(
-                    $users->random(),
+                    $random_non_duplicate_user,
                     [
                         'role_id' => Role::PUBLICATION_ADMINISTRATOR_ROLE_ID,
                     ]
