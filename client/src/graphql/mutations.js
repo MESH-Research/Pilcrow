@@ -92,6 +92,42 @@ export const CREATE_PUBLICATION = gql`
   }
 `
 
+export const CREATE_PUBLICATION_USER = gql`
+  mutation CreatePublicationUser(
+    $user_id: ID!
+    $role_id: ID!
+    $publication_id: ID!
+  ) {
+    createPublicationUser(
+      publication_user: {
+        user_id: $user_id
+        role_id: $role_id
+        publication_id: $publication_id
+      }
+    ) {
+      id
+    }
+  }
+`
+
+export const DELETE_PUBLICATION_USER = gql`
+  mutation DeletePublicationUser(
+    $user_id: ID!
+    $role_id: ID!
+    $publication_id: ID!
+  ) {
+    deletePublicationUser(
+      publication_user: {
+        user_id: $user_id
+        role_id: $role_id
+        publication_id: $publication_id
+      }
+    ) {
+      id
+    }
+  }
+`
+
 export const CREATE_SUBMISSION = gql`
   mutation CreateSubmission(
     $title: String!

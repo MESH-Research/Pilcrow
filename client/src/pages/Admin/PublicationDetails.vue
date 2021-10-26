@@ -98,7 +98,7 @@
           >
             <q-item
               v-for="(editor, index) in editors"
-              :key="editor.pivot.id"
+              :key="editor.id"
               data-cy="userListItem"
               class="q-px-lg"
             >
@@ -149,8 +149,8 @@
 <script>
 import { GET_PUBLICATION, SEARCH_USERS } from "src/graphql/queries"
 import {
-  CREATE_SUBMISSION_USER,
-  DELETE_SUBMISSION_USER,
+  CREATE_PUBLICATION_USER,
+  DELETE_PUBLICATION_USER,
 } from "src/graphql/mutations"
 import AvatarImage from "src/components/atoms/AvatarImage.vue"
 
@@ -207,7 +207,7 @@ export default {
         icon: icon,
         message: this.$t(message, { display_name }),
         attrs: {
-          "data-cy": "submission_details_notify",
+          "data-cy": "publication_details_notify",
         },
         html: true,
       })
@@ -217,13 +217,13 @@ export default {
       try {
         await this.$apollo
           .mutate({
-            mutation: CREATE_SUBMISSION_USER,
+            mutation: CREATE_PUBLICATION_USER,
             variables: {
               user_id: candidate_model.id,
               role_id: role_id,
-              submission_id: this.id,
+              publication_id: this.id,
             },
-            refetchQueries: ["GetSubmission"],
+            refetchQueries: ["GetPublication"],
           })
           .then(() => {
             this.makeNotify(
@@ -248,31 +248,30 @@ export default {
       }
     },
     resetForm() {
-      this.review_coordinator_candidate = null
-      this.reviewer_candidate = null
+      this.editor_candidate = null
     },
     async unassignUser(role_id, role_name, user) {
       try {
         await this.$apollo.mutate({
-          mutation: DELETE_SUBMISSION_USER,
+          mutation: DELETE_PUBLICATION_USER,
           variables: {
-            user_id: user.pivot.user_id,
+            user_id: user.id,
             role_id: role_id,
-            submission_id: this.id,
+            publication_id: this.id,
           },
-          refetchQueries: ["GetSubmission"],
+          refetchQueries: ["GetPublication"],
         })
         this.makeNotify(
           "positive",
           "check_circle",
-          `submissions.${role_name}.unassign.success`,
+          `publications.${role_name}.unassign.success`,
           user.name ? user.name : user.username
         )
       } catch (error) {
         this.makeNotify(
           "negative",
           "error",
-          `submissions.${role_name}.unassign.error`
+          `publications.${role_name}.unassign.error`
         )
       }
     },
