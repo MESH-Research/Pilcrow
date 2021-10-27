@@ -1,50 +1,53 @@
 <template>
-  <q-form data-cy="vueAccount" @submit="updateUser()">
-    <q-card-section class="q-col-gutter-y-md">
-      <q-input
-        v-model="form.name"
-        outlined
-        data-cy="update_user_name"
-        label="Display Name"
-      />
-      <q-input
-        v-model="form.email"
-        outlined
-        data-cy="update_user_email"
-        label="Email"
-      />
-      <q-input
-        v-model="form.username"
-        outlined
-        data-cy="update_user_username"
-        label="Username"
-      />
-      <h3 class="q-mt-lg q-mb-none text-h4">Set New Password</h3>
-      <q-input
-        v-model="form.password"
-        outlined
-        data-cy="update_user_password"
-        :type="isPwd ? 'password' : 'text'"
-        label="Password"
-        hint="Updating this will overwrite the existing password"
-      >
-        <template #append>
-          <q-icon
-            :name="isPwd ? 'visibility_off' : 'visibility'"
-            class="cursor-pointer"
-            @click="isPwd = !isPwd"
-          />
-        </template>
-      </q-input>
-      <q-banner
-        v-if="formErrorMsg"
-        dense
-        class="form-error text-white bg-red text-center"
-        v-text="$t(`account.update.${formErrorMsg}`)"
-      />
-    </q-card-section>
-    <q-card-section class="bg-grey-2 row justify-end">
-      <div class="q-gutter-md">
+  <div>
+    <q-form data-cy="vueAccount" @submit="updateUser()">
+      <form-section>
+        <template #header>Account Information</template>
+        <q-input
+          v-model="form.name"
+          outlined
+          data-cy="update_user_name"
+          label="Display Name"
+        />
+        <q-input
+          v-model="form.email"
+          outlined
+          data-cy="update_user_email"
+          label="Email"
+        />
+        <q-input
+          v-model="form.username"
+          outlined
+          data-cy="update_user_username"
+          label="Username"
+        />
+      </form-section>
+      <form-section>
+        <template #header>Update Password</template>
+        <q-input
+          v-model="form.password"
+          outlined
+          data-cy="update_user_password"
+          :type="isPwd ? 'password' : 'text'"
+          label="Password"
+          hint="Updating this will overwrite the existing password"
+        >
+          <template #append>
+            <q-icon
+              :name="isPwd ? 'visibility_off' : 'visibility'"
+              class="cursor-pointer"
+              @click="isPwd = !isPwd"
+            />
+          </template>
+        </q-input>
+        <q-banner
+          v-if="formErrorMsg"
+          dense
+          class="form-error text-white bg-red text-center"
+          v-text="$t(`account.update.${formErrorMsg}`)"
+        />
+      </form-section>
+      <form-actions>
         <q-btn
           :disabled="!dirty"
           class="bg-primary text-white"
@@ -61,9 +64,9 @@
         >
           Discard Changes
         </q-btn>
-      </div>
-    </q-card-section>
-  </q-form>
+      </form-actions>
+    </q-form>
+  </div>
 </template>
 
 <script>
@@ -71,6 +74,8 @@ import { isEqual, pick } from "lodash"
 import dirtyGuard from "src/components/mixins/dirtyGuard"
 import { CURRENT_USER } from "src/graphql/queries"
 import { UPDATE_USER } from "src/graphql/mutations"
+import FormSection from "src/components/molecules/FormSection.vue"
+import FormActions from "src/components/molecules/FormActions.vue"
 
 const importValidationErrors = function (error, vm) {
   const gqlErrors = error?.graphQLErrors ?? []
@@ -89,6 +94,7 @@ const importValidationErrors = function (error, vm) {
 
 export default {
   name: "ProfileIndex",
+  components: { FormSection, FormActions },
   mixins: [dirtyGuard],
   data() {
     return {

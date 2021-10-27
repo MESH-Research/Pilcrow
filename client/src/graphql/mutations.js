@@ -1,4 +1,5 @@
 import gql from "graphql-tag"
+import { PROFILE_METADATA_FRAGMENT } from "./queries"
 
 export const LOGIN = gql`
   mutation Login($email: String!, $password: String!) {
@@ -196,4 +197,40 @@ export const DELETE_SUBMISSION_USER = gql`
       id
     }
   }
+`
+
+export const UPDATE_PROFILE_METADATA = gql`
+  mutation UpdateProfileMetaData(
+    $id: ID!
+    $affiliation: String
+    $biography: String
+    $disinterest_keywords: [String!]
+    $interest_keywords: [String!]
+    $websites: [String!]
+    $professional_title: String
+    $specialization: String
+    $social_media: UpdateSocialMediaInput
+    $academic_profiles: UpdateAcademicProfilesInput
+  ) {
+    updateUser(
+      user: {
+        id: $id
+        profile_metadata: {
+          affiliation: $affiliation
+          biography: $biography
+          disinterest_keywords: $disinterest_keywords
+          interest_keywords: $interest_keywords
+          websites: $websites
+          professional_title: $professional_title
+          specialization: $specialization
+          social_media: $social_media
+          academic_profiles: $academic_profiles
+        }
+      }
+    ) {
+      id
+      ...profileMetadata
+    }
+  }
+  ${PROFILE_METADATA_FRAGMENT}
 `

@@ -14,6 +14,41 @@ export const CURRENT_USER = gql`
     }
   }
 `
+export const PROFILE_METADATA_FRAGMENT = gql`
+  fragment profileMetadata on User {
+    profile_metadata {
+      biography
+      professional_title
+      specialization
+      affiliation
+      websites
+      interest_keywords
+      disinterest_keywords
+      social_media {
+        google
+        twitter
+        instagram
+        facebook
+        linkedin
+      }
+      academic_profiles {
+        humanities_commons
+        orcid_id
+        academia_edu_id
+      }
+    }
+  }
+`
+
+export const CURRENT_USER_METADATA = gql`
+  query currentUser {
+    currentUser {
+      id
+      ...profileMetadata
+    }
+  }
+  ${PROFILE_METADATA_FRAGMENT}
+`
 export const CURRENT_USER_SUBMISSIONS = gql`
   query currentUser {
     currentUser {

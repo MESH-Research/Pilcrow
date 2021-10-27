@@ -30,6 +30,9 @@ class ProfileMetadataSocialMediaValidator extends Validator
             'linkedin' => [
                 'max:128',
             ],
+            'academia_edu_id' => [
+                'max:128',
+            ],
         ];
     }
 }
