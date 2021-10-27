@@ -194,7 +194,6 @@ const applyDefaults = (data) => {
       humanities_commons: "",
     },
   }
-  console.log(data)
   return JSON.parse(JSON.stringify(mapObject(defaults, data)))
 }
 

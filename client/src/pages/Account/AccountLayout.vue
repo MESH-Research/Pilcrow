@@ -4,9 +4,8 @@
       <q-card class="col-sm-3 col-xs-12 no-shadow no-border-radius">
         <div class="row">
           <q-card-section
-            bordered
             class="
-              col-sm-12 col-xs-4
+              col-sm-12 col-xs-12
               flex flex-center
               avatar-profile-block
               q-mt-none
@@ -18,23 +17,10 @@
               class="text-center"
             />
           </q-card-section>
-          <q-card-section class="col-sm-12 col-xs-8 q-mt-md q-pa-none">
-            <q-list bordered>
-              <q-item to="/account/profile">
-                <q-item-section avatar
-                  ><q-icon name="account_circle"
-                /></q-item-section>
-                <q-item-section> Account Information </q-item-section>
-              </q-item>
-              <q-item to="/account/metadata">
-                <q-item-section avatar>
-                  <q-icon name="contact_page" />
-                </q-item-section>
-                <q-item-section> Profile Details</q-item-section>
-              </q-item>
-            </q-list>
+          <q-card-section class="col-sm-12 col-xs-12 q-mt-md q-pa-none">
+            <collapse-menu :items="items" />
           </q-card-section>
-          <q-card-section class="col-sm-12 col-xs-8 q-mt-md q-pa-none">
+          <q-card-section class="col-sm-12 col-xs-12 q-mt-md q-pa-none">
             <q-list>
               <q-item>
                 <q-item-section> Submissions Created </q-item-section>
@@ -66,13 +52,30 @@
 <script>
 import { CURRENT_USER } from "src/graphql/queries"
 import AvatarBlock from "src/components/molecules/AvatarBlock.vue"
-export default {
+import CollapseMenu from "src/components/molecules/CollapseMenu.vue"
+import { defineComponent } from "@vue/composition-api"
+import { useQuery, useResult } from "@vue/apollo-composable"
+
+export default defineComponent({
   name: "AccountLayout",
-  components: { AvatarBlock },
-  apollo: {
-    currentUser: {
-      query: CURRENT_USER,
-    },
+  components: { AvatarBlock, CollapseMenu },
+  setup() {
+    const { result } = useQuery(CURRENT_USER)
+    const currentUser = useResult(result, {})
+
+    const items = [
+      {
+        icon: "account_circle",
+        label: "Account Information",
+        url: "/account/profile",
+      },
+      {
+        icon: "contact_page",
+        label: "Profile Details",
+        url: "/account/metadata",
+      },
+    ]
+    return { currentUser, items }
   },
-}
+})
 </script>
