@@ -1,13 +1,16 @@
 <template>
   <div>
-    <div class="row">
-      <h2 class="q-pl-lg">My Account</h2>
-    </div>
-    <div class="row justify-center items-start content-start">
+    <div class="row justify-center items-start content-start q-pa-md">
       <q-card class="col-sm-3 col-xs-12 no-shadow no-border-radius">
         <div class="row">
           <q-card-section
-            class="col-sm-12 col-xs-4 flex flex-center bg-blue-1 q-mt-md"
+            bordered
+            class="
+              col-sm-12 col-xs-4
+              flex flex-center
+              avatar-profile-block
+              q-mt-none
+            "
           >
             <avatar-block
               avatar-size="80px"
@@ -15,11 +18,24 @@
               class="text-center"
             />
           </q-card-section>
-          <q-card-section class="col-sm-12 col-xs-8 q-pa-none q-mt-md">
-            <q-list>
-              <q-item clickable class="text-center bg-grey-2">
-                <q-item-section> View Public Profile </q-item-section>
+          <q-card-section class="col-sm-12 col-xs-8 q-mt-md q-pa-none">
+            <q-list bordered>
+              <q-item to="/account/profile">
+                <q-item-section avatar
+                  ><q-icon name="account_circle"
+                /></q-item-section>
+                <q-item-section> Account Information </q-item-section>
               </q-item>
+              <q-item to="/account/metadata">
+                <q-item-section avatar>
+                  <q-icon name="contact_page" />
+                </q-item-section>
+                <q-item-section> Profile Details</q-item-section>
+              </q-item>
+            </q-list>
+          </q-card-section>
+          <q-card-section class="col-sm-12 col-xs-8 q-mt-md q-pa-none">
+            <q-list>
               <q-item>
                 <q-item-section> Submissions Created </q-item-section>
                 <q-item-section avatar class="text-primary text-bold">
@@ -31,6 +47,10 @@
                 <q-item-section avatar class="text-primary text-bold">
                   ??
                 </q-item-section>
+              </q-item>
+              <q-item clickable class="bg-grey-4">
+                <q-item-section avatar><q-icon name="launch" /></q-item-section>
+                <q-item-section> Preview Public Profile </q-item-section>
               </q-item>
             </q-list>
           </q-card-section>
