@@ -30,7 +30,7 @@
     "apollo-upload-client": "^16.0.0",
     "axios": "^0.24.0",
     "core-js": "^3.19.0",
-    "graphql": "^15.6.1",
+    "graphql": "^15.7.0",
     "graphql-tag": "^2.12.5",
     "lodash": "^4.17.20",
     "quasar": "^1.15.15",
