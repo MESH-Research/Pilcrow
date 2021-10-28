@@ -1922,10 +1922,10 @@
   dependencies:
     vue-demi "^0.11.3"
 
-"@vuelidate/validators@^2.0.0-alpha.23":
-  version "2.0.0-alpha.23"
-  resolved "https://registry.yarnpkg.com/@vuelidate/validators/-/validators-2.0.0-alpha.23.tgz#391ef8b4556ea35a94f7a1fb77a2da3572663bc1"
-  integrity sha512-pg6V3/gHVecXKzDFQINEPm1oLVdwQOgeVu0pxw9WGngFELhZLnOEZt5WnO588LMbgo2nieMzUsvfKboDZeBcgw==
+"@vuelidate/validators@^2.0.0-alpha.24":
+  version "2.0.0-alpha.24"
+  resolved "https://registry.yarnpkg.com/@vuelidate/validators/-/validators-2.0.0-alpha.24.tgz#bed71a2eb4eddf522b42fe412922fc4e7fc3212f"
+  integrity sha512-LjZGP2dK9848Xw+KLDb6RlaeN3crIdl+z2TZYyg+BqrJhWAV1ZUnpgzGKf4wefsqF5dQ4bWAZY/xnBKn2naIfg==
   dependencies:
     vue-demi "^0.11.3"
 
@@ -5919,10 +5919,10 @@ graphql-tag@^2.12.3, graphql-tag@^2.12.5:
   dependencies:
     tslib "^2.1.0"
 
-graphql@^15.6.1:
-  version "15.6.1"
-  resolved "https://registry.yarnpkg.com/graphql/-/graphql-15.6.1.tgz#9125bdf057553525da251e19e96dab3d3855ddfc"
-  integrity sha512-3i5lu0z6dRvJ48QP9kFxBkJ7h4Kso7PS8eahyTFz5Jm6CvQfLtNIE8LX9N6JLnXTuwR+sIYnXzaWp6anOg0QQw==
+graphql@^15.7.1:
+  version "15.7.1"
+  resolved "https://registry.yarnpkg.com/graphql/-/graphql-15.7.1.tgz#c821a1741e04e2bc2c91e138f34c06a86c0464f1"
+  integrity sha512-x34S6gC0/peBZnlK60zCJox/d45A7p6At9oN9EPA3qhoIAlR4LNZmXRLkICBckwwTMJzVdA8cx3QIQZMOl606A==
 
 growly@^1.3.0:
   version "1.3.0"
