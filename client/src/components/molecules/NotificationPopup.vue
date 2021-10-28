@@ -23,10 +23,11 @@
             :key="index"
             clickable
             :class="{ unread: !item.viewed }"
+            class="q-pl-none"
           >
             <q-badge v-if="!item.viewed" />
 
-            <q-item-section side="left" class="q-pr-xs q-pl-sm">
+            <q-item-section side="left" class="q-px-md">
               <q-icon size="xs" :name="item.icon" />
             </q-item-section>
             <q-item-section>
