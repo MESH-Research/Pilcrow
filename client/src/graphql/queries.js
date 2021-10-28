@@ -148,11 +148,12 @@ export const GET_PUBLICATION = gql`
       name
       is_publicly_visible
       users {
-        id
         name
         email
         username
         pivot {
+          id
+          user_id
           role_id
         }
       }
