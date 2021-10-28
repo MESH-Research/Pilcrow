@@ -44,7 +44,7 @@
     <div class="row q-col-gutter-lg q-pa-lg">
       <section class="col-md-5 col-sm-6 col-xs-12">
         <h3>Assign a Reviewer</h3>
-        <q-form @submit="assignUser(5, `reviewer`, reviewer_candidate)">
+        <q-form @submit="assignUser(`reviewer`, reviewer_candidate)">
           <div class="q-gutter-md column q-pl-none">
             <q-select
               id="input_review_assignee"
@@ -143,7 +143,7 @@
         <h3>Assign a Review Coordinator</h3>
         <q-form
           @submit="
-            assignUser(4, `review_coordinator`, review_coordinator_candidate)
+            assignUser(`review_coordinator`, review_coordinator_candidate)
           "
         >
           <div class="q-gutter-md column q-pl-none">
@@ -252,6 +252,7 @@ import {
   DELETE_SUBMISSION_USER,
 } from "src/graphql/mutations"
 import UserList from "src/components/molecules/UserList.vue"
+import RoleMapper from "src/mappers/roles"
 
 export default {
   components: {
@@ -281,13 +282,13 @@ export default {
   },
   computed: {
     review_coordinators: function () {
-      return this.filterUsersByRoleId(4)
+      return this.filterUsersByRoleId(RoleMapper[`review_coordinators`])
     },
     reviewers: function () {
-      return this.filterUsersByRoleId(5)
+      return this.filterUsersByRoleId(RoleMapper[`reviewers`])
     },
     submitters: function () {
-      return this.filterUsersByRoleId(6)
+      return this.filterUsersByRoleId(RoleMapper[`submitters`])
     },
   },
   methods: {
@@ -318,14 +319,14 @@ export default {
       })
       this.is_submitting = false
     },
-    async assignUser(role_id, role_name, candidate_model) {
+    async assignUser(role_name, candidate_model) {
       try {
         await this.$apollo
           .mutate({
             mutation: CREATE_SUBMISSION_USER,
             variables: {
               user_id: candidate_model.id,
-              role_id: role_id,
+              role_id: RoleMapper[role_name],
               submission_id: this.id,
             },
             refetchQueries: ["GetSubmission"],
@@ -359,20 +360,20 @@ export default {
     async handleUserListClick({ user, action }) {
       switch (action) {
         case "unassignReviewer":
-          await this.unassignUser("5", "reviewer", user)
+          await this.unassignUser("reviewer", user)
           break
         case "unassignReviewCoordinator":
-          await this.unassignUser("4", "review_coordinator", user)
+          await this.unassignUser("review_coordinator", user)
           break
       }
     },
-    async unassignUser(role_id, role_name, user) {
+    async unassignUser(role_name, user) {
       try {
         await this.$apollo.mutate({
           mutation: DELETE_SUBMISSION_USER,
           variables: {
             user_id: user.pivot.user_id,
-            role_id: role_id,
+            role_id: RoleMapper[role_name],
             submission_id: this.id,
           },
           refetchQueries: ["GetSubmission"],

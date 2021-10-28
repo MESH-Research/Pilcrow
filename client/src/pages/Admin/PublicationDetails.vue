@@ -27,7 +27,7 @@
     <div class="row q-col-gutter-lg q-pa-lg">
       <section class="col-md-5 col-sm-6 col-xs-12">
         <h3>Assign an Editor</h3>
-        <q-form @submit="assignUser(3, `editor`, editor_candidate)">
+        <q-form @submit="assignUser(`editor`, editor_candidate)">
           <div class="q-gutter-md column q-pl-none">
             <q-select
               id="input_editor_assignee"
@@ -130,6 +130,7 @@ import {
   CREATE_PUBLICATION_USER,
   DELETE_PUBLICATION_USER,
 } from "src/graphql/mutations"
+import RoleMapper from "src/mappers/roles"
 
 export default {
   components: {
@@ -159,7 +160,7 @@ export default {
   },
   computed: {
     editors: function () {
-      return this.filterUsersByRoleId(3)
+      return this.filterUsersByRoleId(RoleMapper[`editors`])
     },
   },
   methods: {
@@ -193,18 +194,18 @@ export default {
     async handleUserListClick({ user, action }) {
       switch (action) {
         case "unassignEditor":
-          await this.unassignUser("3", "editor", user)
+          await this.unassignUser("editor", user)
           break
       }
     },
-    async assignUser(role_id, role_name, candidate_model) {
+    async assignUser(role_name, candidate_model) {
       try {
         await this.$apollo
           .mutate({
             mutation: CREATE_PUBLICATION_USER,
             variables: {
               user_id: candidate_model.id,
-              role_id: role_id,
+              role_id: RoleMapper[role_name],
               publication_id: this.id,
             },
             refetchQueries: ["GetPublication"],
@@ -234,13 +235,13 @@ export default {
     resetForm() {
       this.editor_candidate = null
     },
-    async unassignUser(role_id, role_name, user) {
+    async unassignUser(role_name, user) {
       try {
         await this.$apollo.mutate({
           mutation: DELETE_PUBLICATION_USER,
           variables: {
-            user_id: user.id,
-            role_id: role_id,
+            user_id: user.pivot.user_id,
+            role_id: RoleMapper[role_name],
             publication_id: this.id,
           },
           refetchQueries: ["GetPublication"],
