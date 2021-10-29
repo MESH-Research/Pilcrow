@@ -13,7 +13,7 @@
       </q-breadcrumbs>
     </nav>
     <div class="q-px-lg">
-      <h2 class="col-sm-12" data-cy="userDetailsHeading">
+      <h2 class="col-sm-12" data-cy="publication_details_heading">
         {{ publication.name }}
       </h2>
       <div v-if="publication.is_publicly_visible">
@@ -32,6 +32,7 @@
             <q-select
               id="input_editor_assignee"
               v-model="editor_candidate"
+              data-cy="input_editor_assignee"
               :options="options"
               bottom-slots
               hide-dropdown-icon
