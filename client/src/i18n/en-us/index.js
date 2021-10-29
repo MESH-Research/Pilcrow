@@ -122,12 +122,26 @@ export default {
     },
   },
   publications: {
+    details: "Publication Details",
     create: {
       success: "Publication successfully created.",
       failure: "An error occurred while attempting to create the publication.",
       required: "A name is required to create a publication.",
       maxLength: "The maximum length has been exceeded for the name.",
       duplicate_name: "Publication name already exists.",
+    },
+    editor: {
+      none: "No editors are assigned to this publication.",
+      unassign: {
+        error: "An error occurred while attempting to unassign an editor.",
+        success: "{display_name} successfully unassigned as an editor.",
+      },
+      assign: {
+        duplicate: "That editor is already assigned to this publication.",
+        error:
+          "An error occurred while attempting to assign an editor. Is this user already assigned as an editor?",
+        success: "{display_name} successfully assigned as an editor.",
+      },
     },
   },
   submissions: {

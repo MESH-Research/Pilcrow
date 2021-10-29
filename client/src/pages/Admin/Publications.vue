@@ -36,21 +36,28 @@
       </section>
       <section class="col-md-7 col-sm-6 col-xs-12">
         <h3>All Publications</h3>
-        <ol class="scroll" data-cy="publications_list">
-          <li
+        <q-list
+          v-if="publications.data.length != 0"
+          bordered
+          separator
+          data-cy="publications_list"
+          class="scroll"
+        >
+          <q-item
             v-for="publication in publications.data"
             :key="publication.id"
-            class="q-pa-none"
+            class="column"
+            clickable
+            @click="goToPublicationDetails(publication.id)"
           >
-            <q-item>
-              {{ publication.name }}
-            </q-item>
-          </li>
-        </ol>
-        <div
-          v-if="publications.data.length == 0"
-          data-cy="no_publications_message"
-        >
+            <q-item-section>
+              <q-item-label>
+                {{ publication.name }}
+              </q-item-label>
+            </q-item-section>
+          </q-item>
+        </q-list>
+        <div v-else data-cy="no_publications_message">
           No Publications Created
         </div>
       </section>
@@ -68,8 +75,14 @@ import { getErrorMessageKey } from "src/use/validationHelpers"
 
 export default {
   components: { ErrorFieldRenderer },
-  setup() {
-    return { $v: useVuelidate() }
+  setup(_, { root }) {
+    function goToPublicationDetails(publicationId) {
+      root.$router.push({
+        name: "publication_details",
+        params: { id: publicationId },
+      })
+    }
+    return { goToPublicationDetails, $v: useVuelidate() }
   },
   data() {
     return {

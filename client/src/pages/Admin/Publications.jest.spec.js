@@ -1,6 +1,5 @@
 import { mountQuasar } from "@quasar/quasar-app-extension-testing-unit-jest"
 import PublicationsPage from "./Publications.vue"
-
 import * as All from "quasar"
 
 const components = Object.keys(All).reduce((object, key) => {

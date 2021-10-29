@@ -211,7 +211,10 @@ class UserPermissionsTest extends TestCase
         $this->assertFalse($user->can(Permission::UPDATE_USERS));
     }
 
-    public function updateUsersProvider()
+    /**
+     * @return array
+     */
+    public function permissionsByRoleProvider()
     {
         return [
             [
@@ -219,7 +222,7 @@ class UserPermissionsTest extends TestCase
                 [
                     'roles' => [
                         0 => [
-                            'id' => '1',
+                            'id' => Role::APPLICATION_ADMINISTRATOR_ROLE_ID,
                             'name' => Role::APPLICATION_ADMINISTRATOR,
                             'permissions' => [
                                 0 => [
@@ -250,6 +253,14 @@ class UserPermissionsTest extends TestCase
                                     'id' => '8',
                                     'name' => Permission::UNASSIGN_REVIEW_COORDINATOR,
                                 ],
+                                7 => [
+                                    'id' => '9',
+                                    'name' => Permission::ASSIGN_EDITOR,
+                                ],
+                                8 => [
+                                    'id' => '10',
+                                    'name' => Permission::UNASSIGN_EDITOR,
+                                ],
                             ],
                         ],
                     ],
@@ -260,7 +271,7 @@ class UserPermissionsTest extends TestCase
                 [
                     'roles' => [
                         0 => [
-                            'id' => '2',
+                            'id' => Role::PUBLICATION_ADMINISTRATOR_ROLE_ID,
                             'name' => Role::PUBLICATION_ADMINISTRATOR,
                             'permissions' => [
                                 0 => [
@@ -283,7 +294,57 @@ class UserPermissionsTest extends TestCase
                                     'id' => '8',
                                     'name' => Permission::UNASSIGN_REVIEW_COORDINATOR,
                                 ],
+                                5 => [
+                                    'id' => '9',
+                                    'name' => Permission::ASSIGN_EDITOR,
+                                ],
+                                6 => [
+                                    'id' => '10',
+                                    'name' => Permission::UNASSIGN_EDITOR,
+                                ],
                             ],
+                        ],
+                    ],
+                ],
+            ],
+            [
+                Role::EDITOR,
+                [
+                    'roles' => [
+                        0 => [
+                            'id' => Role::EDITOR_ROLE_ID,
+                            'name' => Role::EDITOR,
+                            'permissions' => [
+                                0 => [
+                                    'id' => '5',
+                                    'name' => Permission::ASSIGN_REVIEWER,
+                                ],
+                                1 => [
+                                    'id' => '6',
+                                    'name' => Permission::UNASSIGN_REVIEWER,
+                                ],
+                                2 => [
+                                    'id' => '7',
+                                    'name' => Permission::ASSIGN_REVIEW_COORDINATOR,
+                                ],
+                                3 => [
+                                    'id' => '8',
+                                    'name' => Permission::UNASSIGN_REVIEW_COORDINATOR,
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            // Authorization related to submissions for review coordinators resides in SubmissionUserPolicy.php
+            [
+                Role::REVIEW_COORDINATOR,
+                [
+                    'roles' => [
+                        0 => [
+                            'id' => Role::REVIEW_COORDINATOR_ROLE_ID,
+                            'name' => Role::REVIEW_COORDINATOR,
+                            'permissions' => [ ],
                         ],
                     ],
                 ],
@@ -293,7 +354,7 @@ class UserPermissionsTest extends TestCase
                 [
                     'roles' => [
                         0 => [
-                            'id' => '5',
+                            'id' => Role::REVIEWER_ROLE_ID,
                             'name' => Role::REVIEWER,
                             'permissions' => [ ],
                         ],
@@ -305,7 +366,7 @@ class UserPermissionsTest extends TestCase
                 [
                     'roles' => [
                         0 => [
-                            'id' => '6',
+                            'id' => Role::SUBMITTER_ROLE_ID,
                             'name' => Role::SUBMITTER,
                             'permissions' => [ ],
                         ],
@@ -316,10 +377,10 @@ class UserPermissionsTest extends TestCase
     }
 
     /**
-     * @dataProvider updateUsersProvider
+     * @dataProvider permissionsByRoleProvider
      * @return void
      */
-    public function testPermissionToUpdateUsersIsQueryableFromGraphqlEndpoint($role, $expected_array)
+    public function testPermissionsByRoleAreQueryableFromGraphqlEndpoint($role, $expected_array)
     {
         $user = User::factory()->create();
         $user->assignRole($role);
