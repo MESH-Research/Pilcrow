@@ -28,6 +28,7 @@ describe("publication details page mount", () => {
           mutate,
         },
       },
+      stubs: ["router-link"],
     },
     propsData: {
       id: "1",
@@ -99,7 +100,6 @@ describe("publication details page mount", () => {
       },
     })
     await wrapper.vm.assignUser("editor", wrapper.vm.editor_candidate)
-
     expect(mutate).toBeCalled()
     expect(notify.mock.calls[0][0].color).toBe("positive")
   })

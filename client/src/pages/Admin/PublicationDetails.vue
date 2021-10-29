@@ -203,32 +203,23 @@ export default {
       }
     },
     async assignUser(role_name, candidate_model) {
-      console.log(`Dumping`, role_name, candidate_model)
       try {
-        await this.$apollo
-          .mutate({
-            mutation: CREATE_PUBLICATION_USER,
-            variables: {
-              user_id: candidate_model.id,
-              role_id: RoleMapper[role_name],
-              publication_id: this.id,
-            },
-            refetchQueries: ["GetPublication"],
-          })
-          .then(() => {
-            this.makeNotify(
-              "positive",
-              "check_circle",
-              `publications.${role_name}.assign.success`,
-              candidate_model.name
-                ? candidate_model.name
-                : candidate_model.username
-            )
-          })
-          .then(() => {
-            this.resetForm()
-            candidate_model = null
-          })
+        await this.$apollo.mutate({
+          mutation: CREATE_PUBLICATION_USER,
+          variables: {
+            user_id: candidate_model.id,
+            role_id: RoleMapper[role_name],
+            publication_id: this.id,
+          },
+          refetchQueries: ["GetPublication"],
+        })
+        this.makeNotify(
+          "positive",
+          "check_circle",
+          `publications.${role_name}.assign.success`,
+          candidate_model.name ? candidate_model.name : candidate_model.username
+        )
+        this.resetForm()
       } catch (error) {
         this.makeNotify(
           "negative",
