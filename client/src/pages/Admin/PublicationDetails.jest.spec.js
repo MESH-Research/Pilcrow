@@ -86,23 +86,21 @@ describe("publication details page mount", () => {
       },
     })
     const list = wrapper.findComponent({ ref: "list_assigned_editors" })
-    console.log(list)
-    console.log(`Hello World`)
     expect(list.findAllComponents({ name: "user-list-item" })).toHaveLength(2)
   })
 
-  // test("editors can be assigned", async () => {
-  //   await wrapper.setData({
-  //     editor_candidate: {
-  //       id: "104",
-  //       name: "Jest Editor Candidate Name",
-  //       email: "jestEditorCandidate@ccrproject.dev",
-  //       username: "jestEditorCandidate",
-  //     },
-  //   })
-  //   await wrapper.vm.assignUser(`editor`, wrapper.vm.editor_candidate)
+  test("editors can be assigned", async () => {
+    await wrapper.setData({
+      editor_candidate: {
+        id: "104",
+        name: "Jest Editor Candidate Name",
+        email: "jestEditorCandidate@ccrproject.dev",
+        username: "jestEditorCandidate",
+      },
+    })
+    await wrapper.vm.assignUser("editor", wrapper.vm.editor_candidate)
 
-  //   expect(mutate).toBeCalled()
-  //   expect(notify.mock.calls[0][0].color).toBe("positive")
-  // })
+    expect(mutate).toBeCalled()
+    expect(notify.mock.calls[0][0].color).toBe("positive")
+  })
 })

@@ -154,6 +154,10 @@ export default {
   },
   data() {
     return {
+      publication: {
+        name: "",
+        users: [],
+      },
       options: [],
       editor_candidate: null,
     }
@@ -199,6 +203,7 @@ export default {
       }
     },
     async assignUser(role_name, candidate_model) {
+      console.log(`Dumping`, role_name, candidate_model)
       try {
         await this.$apollo
           .mutate({
