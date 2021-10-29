@@ -52,8 +52,15 @@ const routes = [
       },
       {
         name: "publication_details",
-        path: "/publication_details/:id",
+        path: "/publication/:id",
         component: () => import("pages/Admin/PublicationDetails.vue"),
+        meta: {
+          requiresRoles: [
+            "Application Administrator",
+            "Publication Administrator",
+            "Editor",
+          ],
+        },
         props: true,
       },
       {
