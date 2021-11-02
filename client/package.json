@@ -34,7 +34,7 @@
     "graphql-tag": "^2.12.5",
     "lodash": "^4.17.20",
     "quasar": "^1.15.15",
-    "vue-i18n": "^8.26.5",
+    "vue-i18n": "^8.26.6",
     "zxcvbn": "^4.4.2"
   },
   "devDependencies": {
