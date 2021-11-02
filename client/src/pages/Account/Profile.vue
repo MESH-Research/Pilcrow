@@ -1,7 +1,7 @@
 <template>
   <div>
     <q-form data-cy="vueAccount" @submit="updateUser()">
-      <form-section>
+      <form-section :first-section="true">
         <template #header>Account Information</template>
         <q-input
           v-model="form.name"
