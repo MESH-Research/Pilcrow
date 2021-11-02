@@ -127,27 +127,8 @@
         </p>
       </fieldset>
     </form-section>
-    <form-actions>
-      <q-btn
-        :disabled="!dirty"
-        class="text-white"
-        :class="saveBtn.class"
-        data-cy="button_save"
-        type="submit"
-      >
-        <q-icon v-if="saved === true && !dirty" name="check" />
-        <q-spinner v-else-if="saving === true" />
-        {{ $t(saveBtn.text) }}
-      </q-btn>
-      <q-btn
-        :disabled="!dirty"
-        class="bg-grey-4 ml-sm"
-        data-cy="button_discard"
-        @click="resetForm"
-      >
-        {{ $t("buttons.discard_changes") }}
-      </q-btn>
-    </form-actions>
+    <form-actions :form-state="formState" @resetClick="resetForm" />
+    Dirty: {{ dirty }}
   </q-form>
 </template>
 
@@ -211,27 +192,6 @@ export default defineComponent({
       return applyDefaults(profile_metadata.value)
     })
 
-    const saveBtn = reactive({
-      class: computed(() => {
-        if (saving.value) {
-          return {}
-        } else if (saved.value && dirty.value) {
-          return { "bg-positive": true }
-        } else {
-          return { "bg-primary": true }
-        }
-      }),
-      text: computed(() => {
-        if (saving.value) {
-          return "buttons.saving"
-        } else if (saved.value && !dirty.valuey) {
-          return "buttons.saved"
-        } else {
-          return "buttons.save"
-        }
-      }),
-    })
-
     const { result } = useQuery(CURRENT_USER_METADATA)
     const profile_metadata = useResult(
       result,
@@ -242,8 +202,22 @@ export default defineComponent({
     watch(currentUserId, () => Object.assign(form, original.value))
 
     const dirty = computed(() => {
-      return !isEqual(original.value, form.value)
+      return !isEqual(original.value, form)
     })
+
+    const formState = computed(() => {
+      if (dirty.value) {
+        return "dirty"
+      }
+      if (saved.value) {
+        return "saved"
+      }
+      if (saving.value) {
+        return "saving"
+      }
+      return "idle"
+    })
+
     const { mutate: saveProfile, loading: saving } = useMutation(
       UPDATE_PROFILE_METADATA
       //   () => ({
@@ -273,15 +247,11 @@ export default defineComponent({
     }
 
     return {
-      saved,
-      saving,
       form,
-      dirty,
-      original,
       resetForm,
       save,
       v$,
-      saveBtn,
+      formState,
     }
   },
 })
