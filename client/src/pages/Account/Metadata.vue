@@ -1,6 +1,6 @@
 <template>
   <q-form data-cy="vueAccount" @submit="save()">
-    <form-section>
+    <form-section :first-section="true">
       <template #header>{{ $t("account.profile.section_details") }}</template>
       <q-input
         v-model="form.professional_title"
