@@ -11,6 +11,7 @@ use App\Models\User;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Nuwave\Lighthouse\Testing\MakesGraphQLRequests;
 use Tests\TestCase;
 
@@ -39,8 +40,8 @@ class SubmissionTest extends TestCase
      */
     public function testSubmissionsHaveAManyToManyRelationshipWithUsers()
     {
-        $submission_count = 3;
-        $user_count = 10;
+        $submission_count = 100;
+        $user_count = 50;
         $publication = Publication::factory()->create([
             'name' => 'Test Publication #2',
         ]);
@@ -48,6 +49,7 @@ class SubmissionTest extends TestCase
 
         // Create submissions and attach them to users randomly with random roles
         for ($i = 0; $i < $submission_count; $i++) {
+            $random_user = $users->random();
             $random_role_id = Role::whereIn(
                 'name',
                 [
@@ -60,7 +62,7 @@ class SubmissionTest extends TestCase
                 ->pluck('id')
                 ->random();
             $submission = Submission::factory()->hasAttached(
-                $users->random(),
+                $random_user,
                 [
                     'role_id' => $random_role_id,
                 ]
@@ -68,10 +70,13 @@ class SubmissionTest extends TestCase
                 ->for($publication)
                 ->create();
 
-            // Ensure at least one Submitter is attached if one was not previously attached
+            // Ensure at least one submitter is attached if one was not previously attached
             if ($random_role_id !== Role::SUBMITTER_ROLE_ID) {
+                $random_non_duplicate_user = $users->reject(function ($user) use ($random_user) {
+                    return $user->id === $random_user->id;
+                })->random();
                 $submission->users()->attach(
-                    $users->random(),
+                    $random_non_duplicate_user,
                     [
                         'role_id' => Role::SUBMITTER_ROLE_ID,
                     ]
