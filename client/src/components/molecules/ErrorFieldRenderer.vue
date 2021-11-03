@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import { getErrorMessageKey } from "src/use/validationHelpers"
+import { getErrorMessageKey } from "src/composables/validationHelpers"
 
 export default {
   props: {
