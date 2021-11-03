@@ -26,7 +26,7 @@ export default {
     action: {
       type: String,
       required: false,
-      default: () => [],
+      default: "",
     },
     dataCy: {
       type: String,

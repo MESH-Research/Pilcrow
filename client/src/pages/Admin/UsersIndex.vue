@@ -4,7 +4,7 @@
     <div v-if="users.length">
       <user-list-basic
         :users="users"
-        :action="goToUserDetail"
+        action="goToUserDetail"
         @actionClick="handleUserListBasicClick"
       />
 
@@ -37,21 +37,28 @@ export default {
       1,
       (data) => data.userSearch.paginatorInfo.lastPage
     )
-    return { currentPage, users, lastPage, goToUserDetail }
-  },
-  methods: {
-    async handleUserListBasicClick({ user, action }) {
-      action(user)
-    },
-
-    async goToUserDetail(user) {
+    async function handleUserListBasicClick({ user, action }) {
+      switch (action) {
+        case "goToUserDetail":
+          this.goToUserDetail(user)
+          break
+      }
+    }
+    async function goToUserDetail(user) {
       const userId = user.id
       root.$router.push({
         name: "user_details",
         params: { id: userId },
       })
     }
-  }
 
+    return {
+      currentPage,
+      users,
+      lastPage,
+      goToUserDetail,
+      handleUserListBasicClick,
+    }
+  },
 }
 </script>

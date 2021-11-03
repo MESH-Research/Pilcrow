@@ -40,10 +40,10 @@ export default {
       type: Object,
       default: () => {},
     },
-    actions: {
-      type: Array,
+    action: {
+      type: String,
       required: false,
-      default: () => [],
+      default: "",
     },
   },
 }
