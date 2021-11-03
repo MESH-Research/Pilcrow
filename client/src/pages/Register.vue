@@ -118,11 +118,11 @@
 
 <script>
 import NewPasswordInput from "../components/forms/NewPasswordInput.vue"
-import { useUserValidation } from "src/use/userValidation"
+import { useUserValidation } from "src/composables/userValidation"
 import ErrorFieldRenderer from "src/components/molecules/ErrorFieldRenderer.vue"
-import { useHasErrorKey } from "src/use/validationHelpers"
+import { useHasErrorKey } from "src/composables/validationHelpers"
 import { ref, provide } from "@vue/composition-api"
-import { useLogin } from "src/use/user"
+import { useLogin } from "src/composables/user"
 import ErrorBanner from "src/components/molecules/ErrorBanner.vue"
 
 export default {
