@@ -55,6 +55,7 @@ module.exports = function (ctx) {
       showProgress: true,
       gzip: false,
       analyze: false,
+      devtool: "source-map",
       chainWebpack(chain, { isServer, isClient }) {
         chain.module
           .rule("vue")

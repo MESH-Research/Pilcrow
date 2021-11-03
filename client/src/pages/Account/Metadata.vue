@@ -1,98 +1,91 @@
 <template>
-  <q-form data-cy="vueAccount" @submit="save()">
+  <q-form
+    data-cy="vueAccount"
+    t="account.profile.fields"
+    @submit="save()"
+    @vqupdate="updateInput"
+  >
     <form-section :first-section="true">
       <template #header>{{ $t("account.profile.section_details") }}</template>
-      <q-input
-        v-model="form.professional_title"
-        :label="$t('account.profile.fields.professional_title')"
-        outlined
-      />
-      <q-input
-        v-model="form.specialization"
-        :label="$t('account.profile.fields.specialization')"
-        outlined
-        :hint="$t('account.profile.fields.specialization_hint')"
-      />
-      <q-input
-        v-model="form.affiliation"
-        :label="$t('account.profile.fields.affiliation')"
-        outlined
-        :hint="$t('account.profile.fields.affiliation_hint')"
-      />
+
+      <v-q-input :v="v$.professional_title" />
+      <v-q-input :v="v$.specialization" />
+      <v-q-input :v="v$.affiliation" />
     </form-section>
+
     <form-section>
       <template #header>
         {{ $t("account.profile.section_biography") }}
       </template>
-      <q-input
-        v-model="form.biography"
-        :label="$t('account.profile.fields.biography')"
-        outlined
-        type="textarea"
-        counter
-      >
+
+      <v-q-input :v="v$.biography" type="textarea" counter>
         <template #counter> {{ form.biography.length }}/4096 </template>
-      </q-input>
+      </v-q-input>
     </form-section>
+
     <form-section>
       <template #header>
         {{ $t("account.profile.section_social_media") }}
       </template>
-      <q-input
-        v-model="form.social_media.facebook"
-        label="Facebook"
-        outlined
-        class="col-md-6 col-12"
-      >
+      <v-q-input :v="v$.social_media.facebook" class="col-md-6 col-12">
         <template #prepend>
           <q-icon name="fab fa-facebook" />
         </template>
-      </q-input>
-      <q-input label="Twitter" prefix="@" outlined class="col-md-6 col-12">
+      </v-q-input>
+      <v-q-input
+        :v="v$.social_media.twitter"
+        prefix="@"
+        class="col-md-6 col-12"
+      >
         <template #prepend>
           <q-icon name="fab fa-twitter" />
         </template>
-      </q-input>
-      <q-input label="Instagram" prefix="@" outlined class="col-md-6 col-12">
+      </v-q-input>
+      <v-q-input :v="v$.social_media.instagram" class="col-md-6 col-12">
         <template #prepend>
           <q-icon name="fab fa-instagram" />
         </template>
-      </q-input>
-      <q-input label="LinkedIn" outlined class="col-md-6 col-12">
+      </v-q-input>
+      <v-q-input :v="v$.social_media.linkedin" class="col-md-6 col-12">
         <template #prepend>
           <q-icon name="fab fa-linkedin" />
         </template>
-      </q-input>
+      </v-q-input>
     </form-section>
+
     <form-section>
       <template #header>
         {{ $t("account.profile.section_academic_profiles") }}
       </template>
-      <q-input label="Academia.edu" outlined class="col-md-6 col-12">
+      <v-q-input :v="v$.academic_profiles.academia_edu" class="col-md-6 col-12">
         <template #prepend>
           <img
             style="height: 1em; display: inline-block"
             src="brand-images/academia_edu.png"
           />
         </template>
-      </q-input>
-      <q-input label="Humanities Commons" outlined class="col-md-6 col-12">
+      </v-q-input>
+      <v-q-input
+        :v="v$.academic_profiles.humanities_commons"
+        class="col-md-6 col-12"
+      >
         <template #prepend>
           <img
             style="height: 1em; display: inline-block"
             src="brand-images/humcommons.png"
           />
         </template>
-      </q-input>
-      <q-input label="Orcid ID" outlined class="col-md-6 col-12">
+      </v-q-input>
+      <v-q-input :v="v$.academic_profiles.orcid" class="col-md-6 col-12">
         <template #prepend>
           <img
             style="height: 1em; display: inline-block"
             src="brand-images/orcid.png"
           />
         </template>
-      </q-input>
+      </v-q-input>
     </form-section>
+
     <form-section>
       <template #header>
         {{ $t("account.profile.section_websites") }}
@@ -127,15 +120,19 @@
         </p>
       </fieldset>
     </form-section>
+
     <form-actions :form-state="formState" @resetClick="resetForm" />
-    Dirty: {{ dirty }}
   </q-form>
 </template>
 
 <script>
+//Import components
 import EditableList from "src/components/molecules/EditableList.vue"
+import VQInput from "src/components/atoms/VQInput.vue"
 import TagList from "src/components/molecules/TagList.vue"
 import FormSection from "src/components/molecules/FormSection.vue"
+import FormActions from "src/components/molecules/FormActions.vue"
+
 import {
   defineComponent,
   computed,
@@ -144,44 +141,16 @@ import {
   watch,
 } from "@vue/composition-api"
 import useVuelidate from "@vuelidate/core"
-import rules from "src/use/profileMetadataValidation"
+import { rules, profile_defaults } from "src/composables/profileMetadata"
 import { useMutation, useQuery, useResult } from "@vue/apollo-composable"
 import { CURRENT_USER_METADATA } from "src/graphql/queries"
 import { UPDATE_PROFILE_METADATA } from "src/graphql/mutations"
 import { isEqual } from "lodash"
 import { mapObject } from "src/utils/objUtils"
-import dirtyGuard from "components/mixins/dirtyGuard"
-import FormActions from "src/components/molecules/FormActions.vue"
-const applyDefaults = (data) => {
-  const defaults = {
-    biography: "",
-
-    professional_title: "",
-    specialization: "",
-    affiliation: "",
-    websites: [],
-    interest_keywords: [],
-    disinterest_keywords: [],
-    social_media: {
-      google: "",
-      twitter: "",
-      facebook: "",
-      instagram: "",
-      linkedin: "",
-    },
-    academic_profiles: {
-      orcid_id: "",
-      academia_edu_id: "",
-      humanities_commons: "",
-    },
-  }
-  return JSON.parse(JSON.stringify(mapObject(defaults, data)))
-}
 
 export default defineComponent({
   name: "ProfilePage",
-  components: { EditableList, TagList, FormSection, FormActions },
-  mixins: [dirtyGuard],
+  components: { EditableList, TagList, FormSection, FormActions, VQInput },
   setup() {
     const saved = ref(false)
 
@@ -199,6 +168,7 @@ export default defineComponent({
       (data) => data.currentUser.profile_metadata
     )
     const currentUserId = useResult(result, {}, (data) => data.currentUser.id)
+
     watch(currentUserId, () => Object.assign(form, original.value))
 
     const dirty = computed(() => {
@@ -235,6 +205,10 @@ export default defineComponent({
       saved.value = false
     }
 
+    function updateInput(validator, newValue) {
+      validator.$model = newValue
+    }
+
     function save() {
       saved.value = false
       saveProfile({ id: currentUserId.value, ...form })
@@ -252,7 +226,11 @@ export default defineComponent({
       save,
       v$,
       formState,
+      updateInput,
     }
   },
 })
+function applyDefaults(data) {
+  return JSON.parse(JSON.stringify(mapObject(profile_defaults, data)))
+}
 </script>
