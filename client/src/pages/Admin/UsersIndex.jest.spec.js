@@ -31,7 +31,7 @@ const wrapperFactory = (mocks) => {
     //  plugins: [VueCompositionAPI],
     mount: {
       provide: apolloProvider,
-      type: "shallow",
+      type: "full",
     },
   })
 }
