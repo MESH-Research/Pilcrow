@@ -93,6 +93,9 @@ export default {
     OPTIONAL_FIELD: "{0} (optional)",
     REQUIRED_FIELD: "{0} is required.",
   },
+  generic_validations: {
+    maxLength: "The maximum length has been exceeded.",
+  },
   header: {
     account_link: "My Account",
     dashboard: "My Dashboard",
@@ -145,13 +148,78 @@ export default {
       section_websites: "Websites",
       section_keywords: "Keywords",
       fields: {
-        professional_title: "Professional Title",
-        specialization: "Specialization",
-        specialization_hint:
-          "Area of expertise, specialization or research focus.",
-        affiliation: "Affiliation",
-        affiliation_hint: "Institutional, group, or organization affiliation.",
-        biography: "@:account.profile.section_biography",
+        professional_title: {
+          label: "Professional Title",
+          errors: {
+            maxLength: "@:generic_validations.maxLength",
+          },
+        },
+        specialization: {
+          label: "Specialization",
+          hint: "Area of expertise, specialization or research focus.",
+          errors: {
+            maxLength: "@:generic_validations.maxLength",
+          },
+        },
+
+        affiliation: {
+          label: "Affiliation",
+          hint: "Institutional, group, or organization affiliation.",
+          errors: {
+            maxLength: "@:generic_validations.maxLength",
+          },
+        },
+        social_media: {
+          twitter: {
+            label: "Twitter Handle",
+            errors: {
+              valid: "Please enter a valid Twitter handle.",
+              maxLength: "@:generic_validations.maxLength",
+            },
+          },
+          instagram: {
+            label: "Instagram",
+            errors: {
+              valid: "Please enter a valid Instagram Profile URL",
+              maxLength: "@:generic_validations.maxLength",
+            },
+          },
+          linkedin: {
+            label: "LinkedIn",
+            errors: {
+              valid: "Please enter a valid LinkedIn Profile URL",
+              maxLength: "@:generic_validations.maxLength",
+            },
+          },
+          facebook: {
+            label: "Facebook",
+            errors: {
+              valid: "Please enter a valid Facebook URL",
+              maxLength: "@:generic_validations.maxLength",
+            },
+          },
+        },
+        biography: {
+          label: "Biography",
+          maxLength: "@:generic_validations.maxLength",
+        },
+        academic_profiles: {
+          academia_edu: {
+            label: "Academia.edu",
+            errors: {
+              maxLength: "@:generic_validations.maxLength",
+            },
+          },
+          humanities_commons: {
+            label: "Humanities Commons",
+            errors: {
+              maxLength: "@:generic_validations.maxLength",
+            },
+          },
+          orcid: {
+            label: "ORCID",
+          },
+        },
         website: "Website",
         interest_keyword: "Interest Keyword",
         interest_keyword_hint:
