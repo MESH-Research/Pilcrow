@@ -54,6 +54,7 @@ describe("User Index page mount", () => {
     const wrapper = wrapperFactory([[GET_USERS, getUserHandler]])
     expect(getUserHandler).toBeCalledWith({ page: 1 })
     await Vue.nextTick()
-    expect(wrapper.findAllComponents({ name: "q-item" })).toHaveLength(2)
+    const list = wrapper.findComponent({ ref: "user_list_basic" })
+    expect(list.findAllComponents({ name: "q-item" })).toHaveLength(2)
   })
 })
