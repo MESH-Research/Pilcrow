@@ -177,7 +177,7 @@ export default defineComponent({
       (data) => data.currentUser.profile_metadata
     )
     const currentUserId = useResult(result, {}, (data) => data.currentUser.id)
-
+    Object.assign(form, original.value)
     watch(currentUserId, () => Object.assign(form, original.value))
 
     const dirty = computed(() => {
