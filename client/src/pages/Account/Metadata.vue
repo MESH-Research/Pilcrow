@@ -185,7 +185,7 @@ export default defineComponent({
     })
 
     useDirtyGuard(dirty, context)
-    console.log(context)
+
     const formState = computed(() => {
       if (dirty.value) {
         return "dirty"
