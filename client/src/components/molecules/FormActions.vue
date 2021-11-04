@@ -1,31 +1,37 @@
 <template>
-  <q-card-section class="bg-grey-2 row justify-end q-ma-md">
-    <div class="q-gutter-md">
-      <template v-if="$slots.default">
-        <slot />
-      </template>
-      <template v-else>
-        <q-btn
-          :disabled="saveButton.disabled"
-          :class="saveButton.class"
-          data-cy="button_save"
-          type="submit"
-        >
-          <q-icon v-if="saveButton.icon === 'check'" name="check" />
-          <q-spinner v-else-if="saveButton.icon === 'spinner'" />
-          {{ $t(saveButton.text) }}
-        </q-btn>
-        <q-btn
-          v-if="!resetBtn.disabled"
-          class="bg-grey-4 ml-sm"
-          data-cy="button_discard"
-          @click="$emit('resetClick')"
-        >
-          {{ $t("buttons.discard_changes") }}
-        </q-btn>
-      </template>
+  <q-page-sticky
+    v-if="formState !== 'idle'"
+    class="border-radius"
+    position="bottom-right"
+  >
+    <div class="bg-grey-4 q-ma-md q-pa-sm rounded-borders">
+      <div class="q-gutter-md">
+        <template v-if="$slots.default">
+          <slot />
+        </template>
+        <template v-else>
+          <q-btn
+            :disabled="saveButton.disabled"
+            :class="saveButton.class"
+            data-cy="button_save"
+            type="submit"
+          >
+            <q-icon v-if="saveButton.icon === 'check'" name="check" />
+            <q-spinner v-else-if="saveButton.icon === 'spinner'" />
+            {{ $t(saveButton.text) }}
+          </q-btn>
+          <q-btn
+            v-if="!resetBtn.disabled"
+            class="bg-grey-4 ml-sm"
+            data-cy="button_discard"
+            @click="$emit('resetClick')"
+          >
+            {{ $t("buttons.discard_changes") }}
+          </q-btn>
+        </template>
+      </div>
     </div>
-  </q-card-section>
+  </q-page-sticky>
 </template>
 
 <script>
@@ -61,6 +67,7 @@ export default defineComponent({
       disabled: computed(() => {
         return (
           {
+            saved: false,
             dirty: false,
           }[props.formState] ?? true
         )

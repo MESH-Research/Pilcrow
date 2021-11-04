@@ -124,7 +124,7 @@
       </fieldset>
     </form-section>
 
-    <form-actions :form-state="formState" @resetClick="resetForm" />
+    <form-actions :form-state="formState" class="" @resetClick="resetForm" />
   </q-form>
 </template>
 
@@ -187,14 +187,14 @@ export default defineComponent({
     useDirtyGuard(dirty, context)
 
     const formState = computed(() => {
+      if (saving.value) {
+        return "saving"
+      }
       if (dirty.value) {
         return "dirty"
       }
       if (saved.value) {
         return "saved"
-      }
-      if (saving.value) {
-        return "saving"
       }
       return "idle"
     })
