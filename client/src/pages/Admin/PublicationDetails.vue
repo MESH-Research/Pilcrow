@@ -276,9 +276,6 @@ export default {
             })
             this.options = usersList
           })
-          .catch((error) => {
-            console.log({ error })
-          })
       })
     },
   },

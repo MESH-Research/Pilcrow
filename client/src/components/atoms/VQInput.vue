@@ -41,7 +41,6 @@ export default {
       },
       set(newValue) {
         if (eventNode.value) {
-          console.log(eventNode.value)
           eventNode.value.$emit("vqupdate", props.v, newValue)
         }
       },
