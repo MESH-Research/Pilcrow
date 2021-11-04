@@ -1,9 +1,13 @@
 <template>
-  <q-list bordered separator :data-cy="dataCy">
+  <q-list 
+    bordered 
+    separator 
+    :data-cy="dataCy" 
+    ref="user_list_basic"
+  >
     <user-list-basic-item
       v-for="(user, index) in users"
       :key="user.id"
-      ref="user_list_basic"
       :user="user"
       :index="index"
       :action="action"
