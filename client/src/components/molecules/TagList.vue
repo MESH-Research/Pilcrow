@@ -1,7 +1,7 @@
 <template>
   <div class="q-col-gutter-md row">
     <q-input
-      v-model.trim="addValue"
+      v-model.trim="form.addValue"
       outlined
       :label="$t('lists.new', [itemName])"
       class="col-md-5 col-12"
@@ -27,6 +27,7 @@
 </template>
 
 <script>
+import { reactive } from "@vue/composition-api"
 export default {
   name: "TagList",
   props: {
@@ -45,30 +46,31 @@ export default {
       default: false,
     },
   },
-
-  data() {
-    return {
+  setup(props, { emit }) {
+    const form = reactive({
       addValue: "",
-    }
-  },
-  methods: {
-    remove(index) {
-      this.$emit("input", [
-        ...this.value.slice(0, index),
-        ...this.value.slice(index + 1),
+    })
+
+    function remove(index) {
+      emit("input", [
+        ...props.value.slice(0, index),
+        ...props.value.slice(index + 1),
       ])
-    },
-    addItem() {
-      if (!this.addValue.length) {
+    }
+
+    function addItem() {
+      if (!form.addValue.length) {
         return
       }
-      if (!this.allowDuplicates && this.value.includes(this.addValue)) {
-        this.addValue = ""
+      if (!props.allowDuplicates && props.value.includes(form.addValue)) {
+        form.addValue = ""
         return
       }
-      this.$emit("input", [...this.value, this.addValue])
-      this.addValue = ""
-    },
+      emit("input", [...props.value, form.addValue])
+      form.addValue = ""
+    }
+
+    return { remove, addItem, form }
   },
 }
 </script>
