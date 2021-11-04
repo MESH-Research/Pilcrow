@@ -15,12 +15,14 @@ export function useDirtyGuard(dirtyRef, { root }) {
     })
   }
 
-  onBeforeRouteLeave((_, __, next) => {
+  const unregisterLeave = onBeforeRouteLeave(async (_, __, next) => {
     if (!dirtyRef.value) {
+      unregisterLeave()
       return next()
     }
     dirtyDialog()
       .onOk(function () {
+        unregisterLeave()
         next()
       })
       .onCancel(function () {
