@@ -67,7 +67,7 @@ export const website_rules = {
   maxLength: maxLength(128),
   valid: helpers.regex(weburl_regex),
 }
-export const tag_rules = {
+export const keyword_rules = {
   maxLength: maxLength(128),
 }
 
@@ -76,5 +76,5 @@ export default {
   social_regex,
   profile_defaults,
   website_rules,
-  tag_rules,
+  keyword_rules,
 }

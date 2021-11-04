@@ -105,19 +105,21 @@
       <fieldset class="col-12 q-col-gutter-sm">
         <tag-list
           v-model="form.interest_keywords"
-          :item-name="$t('account.profile.fields.interest_keyword')"
+          t="account.profile.fields.interest_keyword"
+          :rules="keyword_rules"
         />
         <p>
-          {{ $t("account.profile.fields.interest_keyword_hint") }}
+          {{ $t("account.profile.fields.interest_keyword.hint") }}
         </p>
       </fieldset>
       <fieldset class="col-12 q-col-gutter-sm">
         <tag-list
           v-model="form.disinterest_keywords"
-          :item-name="$t('account.profile.fields.disinterest_keyword')"
+          t="account.profile.fields.disinterest_keyword"
+          :rules="keyword_rules"
         />
         <p>
-          {{ $t("account.profile.fields.disinterest_keyword_hint") }}
+          {{ $t("account.profile.fields.disinterest_keyword.hint") }}
         </p>
       </fieldset>
     </form-section>
@@ -146,6 +148,7 @@ import {
   rules,
   profile_defaults,
   website_rules,
+  keyword_rules,
 } from "src/composables/profileMetadata"
 import { useMutation, useQuery, useResult } from "@vue/apollo-composable"
 import { CURRENT_USER_METADATA } from "src/graphql/queries"
@@ -233,6 +236,7 @@ export default defineComponent({
       formState,
       updateInput,
       website_rules,
+      keyword_rules,
     }
   },
 })

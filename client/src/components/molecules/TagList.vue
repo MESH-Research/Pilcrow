@@ -1,14 +1,26 @@
 <template>
   <div class="q-col-gutter-md row">
     <q-input
-      v-model.trim="form.addValue"
+      v-model.trim="v$.addValue.$model"
       outlined
-      :label="$t('lists.new', [itemName])"
+      :label="$t('lists.new', [$t(`${t}.label`)])"
+      :error="v$.addValue.$error"
       class="col-md-5 col-12"
       @keydown.enter.prevent="addItem"
     >
+      <template #error>
+        <error-field-renderer
+          :errors="v$.addValue.$errors"
+          :prefix="`${t}.errors`"
+        />
+      </template>
       <template #after>
-        <q-btn ref="addBtn" class="q-py-sm" @click="addItem">
+        <q-btn
+          ref="addBtn"
+          class="q-py-sm"
+          :disabled="v$.addValue.$error || v$.addValue.$model.length === 0"
+          @click="addItem"
+        >
           <q-icon name="add" /> {{ $t("lists.add") }}
         </q-btn>
       </template>
@@ -28,18 +40,24 @@
 
 <script>
 import { reactive } from "@vue/composition-api"
+import { useVuelidate } from "@vuelidate/core"
+import ErrorFieldRenderer from "src/components/molecules/ErrorFieldRenderer.vue"
+
 export default {
   name: "TagList",
+  components: { ErrorFieldRenderer },
   props: {
-    itemName: {
+    t: {
       type: String,
-      default: function () {
-        return this.$t("lists.default_item_name")
-      },
+      default: "lists",
     },
     value: {
       type: Array,
       default: () => [],
+    },
+    rules: {
+      type: Object,
+      default: () => {},
     },
     allowDuplicates: {
       type: Boolean,
@@ -50,6 +68,17 @@ export default {
     const form = reactive({
       addValue: "",
     })
+
+    const noNewDuplicate = (value) => !props.value.includes(value)
+    const noopRule = () => true
+    const vRules = {
+      addValue: {
+        ...props.rules,
+        duplicate: props.allowDuplicates ? noopRule : noNewDuplicate,
+      },
+    }
+
+    const v$ = useVuelidate(vRules, form)
 
     function remove(index) {
       emit("input", [
@@ -62,15 +91,14 @@ export default {
       if (!form.addValue.length) {
         return
       }
-      if (!props.allowDuplicates && props.value.includes(form.addValue)) {
-        form.addValue = ""
+      if (v$.value.addValue.$error) {
         return
       }
       emit("input", [...props.value, form.addValue])
       form.addValue = ""
     }
 
-    return { remove, addItem, form }
+    return { remove, addItem, v$ }
   },
 }
 </script>

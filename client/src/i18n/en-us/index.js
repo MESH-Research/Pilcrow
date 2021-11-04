@@ -230,12 +230,22 @@ export default {
             duplicate: "This URL is already in the list",
           },
         },
-        interest_keyword: "Interest Keyword",
-        interest_keyword_hint:
-          "Interest keywords will be used to help provide suggestions for submissions which may be of interest to you.",
-        disinterest_keyword: "Disinterest Keyword",
-        disinterest_keyword_hint:
-          "Disinterest keywords will be used to help filter suggestions for submissions that are not of interest to you.",
+        interest_keyword: {
+          label: "Interest Keyword",
+          hint: "Interest keywords will be used to help provide suggestions for submissions which may be of interest to you.",
+          errors: {
+            maxLength: "@:generic_validations.maxLength",
+            duplicate: "This keyword is already in the list.",
+          },
+        },
+        disinterest_keyword: {
+          label: "Disinterest Keyword",
+          hint: "Disinterest keywords will be used to help filter suggestions for submissions that are not of interest to you.",
+          errors: {
+            maxLength: "@:generic_validations.maxLength",
+            duplicate: "This keyword is already in the list.",
+          },
+        },
       },
     },
   },
