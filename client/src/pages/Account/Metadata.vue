@@ -151,6 +151,7 @@ import {
   keyword_rules,
 } from "src/composables/profileMetadata"
 import { useMutation, useQuery, useResult } from "@vue/apollo-composable"
+import { useDirtyGuard } from "src/composables/forms"
 import { CURRENT_USER_METADATA } from "src/graphql/queries"
 import { UPDATE_PROFILE_METADATA } from "src/graphql/mutations"
 import { isEqual } from "lodash"
@@ -159,7 +160,7 @@ import { mapObject } from "src/utils/objUtils"
 export default defineComponent({
   name: "ProfilePage",
   components: { EditableList, TagList, FormSection, FormActions, VQInput },
-  setup() {
+  setup(_, context) {
     const saved = ref(false)
 
     const form = reactive(applyDefaults({}))
@@ -183,6 +184,8 @@ export default defineComponent({
       return !isEqual(original.value, form)
     })
 
+    useDirtyGuard(dirty, context)
+    console.log(context)
     const formState = computed(() => {
       if (dirty.value) {
         return "dirty"
