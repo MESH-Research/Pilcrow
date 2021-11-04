@@ -113,7 +113,14 @@
         />
       </template>
       <template #after>
-        <q-btn ref="addBtn" class="q-py-sm" @click="addItem">
+        <q-btn
+          ref="addBtn"
+          class="q-py-sm"
+          :disabled="
+            v$.addItemValue.$error || v$.addItemValue.$model.length === 0
+          "
+          @click="addItem"
+        >
           <q-icon name="add" /> {{ $t("lists.add") }}
         </q-btn>
       </template>
@@ -190,10 +197,6 @@ export default {
         return false
       }
 
-      if (!props.allowDuplicates && props.value.includes(form.addItemValue)) {
-        form.addItemValue = ""
-        return
-      }
       emit("input", [...props.value, form.addItemValue])
       form.addItemValue = ""
     }
@@ -207,7 +210,6 @@ export default {
       if (form.editItemValue !== false) {
         saveEdit()
       }
-      console.log(props.value[index])
       form.editItemValue = props.value[index]
       itemUnderEdit.value = index
     }
