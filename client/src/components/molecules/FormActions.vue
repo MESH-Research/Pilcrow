@@ -16,7 +16,7 @@
           {{ $t(saveButton.text) }}
         </q-btn>
         <q-btn
-          :disabled="resetBtn.disabled"
+          v-if="!resetBtn.disabled"
           class="bg-grey-4 ml-sm"
           data-cy="button_discard"
           @click="$emit('resetClick')"
