@@ -2,7 +2,7 @@
   <div>
     <draggable
       v-if="value.length"
-      tag="q-list"
+      tag="div"
       :list="value"
       handle=".handle"
       ghost-class="ghost"
@@ -29,14 +29,21 @@
           </q-item-label>
           <q-input
             v-else
-            v-model.trim="editItemValue"
+            v-model.trim="v$.editItemValue.$model"
+            :error="v$.editItemValue.$error"
             outlined
             @keydown.enter.prevent="saveEdit"
           >
+            <template #error>
+              <error-field-renderer
+                :errors="v$.editItemValue.$errors"
+                :prefix="`${t}.errors`"
+              />
+            </template>
             <template #after>
               <div class="q-gutter-sm">
                 <q-btn
-                  :aria-label="$t('lists.save', [itemName])"
+                  :aria-label="$t('lists.save', [$t(`${t}.label`)])"
                   dense
                   class="q-py-sm"
                   @click="saveEdit"
@@ -57,7 +64,7 @@
               flat
               dense
               icon="edit"
-              :aria-label="$t('lists.edit', [itemName])"
+              :aria-label="$t('lists.edit', [$t(`${t}.label`)])"
               :disabled="itemUnderEdit !== false"
               @click="editItem(index)"
             />
@@ -66,7 +73,7 @@
               flat
               dense
               icon="arrow_upward"
-              :aria-label="$t('lists.move_up', [itemName])"
+              :aria-label="$t('lists.move_up', [$t(`${t}.label`)])"
               @click="reorderItem(index, -1)"
             />
             <q-btn
@@ -74,14 +81,14 @@
               flat
               dense
               icon="arrow_downward"
-              :aria-label="$t('lists.move_down', [itemName])"
+              :aria-label="$t('lists.move_down', [$t(`${t}.label`)])"
               @click="reorderItem(index, 1)"
             />
             <q-btn
               flat
               dense
               icon="delete"
-              :aria-label="$t('lists.delete', [itemName])"
+              :aria-label="$t('lists.delete', [$t(`${t}.label`)])"
               :disabled="itemUnderEdit !== false"
               @click="deleteItem(index)"
             />
@@ -90,13 +97,20 @@
       </q-item>
     </draggable>
     <q-input
-      v-model="addItemValue"
-      :label="$t('lists.new', [itemName])"
+      v-model="v$.addItemValue.$model"
+      :label="$t('lists.new', [$t(`${t}.label`)])"
+      :error="v$.addItemValue.$error"
       outlined
       @keydown.enter.prevent="addItem"
     >
       <template v-if="inputIcon" #prepend>
         <q-icon :name="inputIcon" />
+      </template>
+      <template #error>
+        <error-field-renderer
+          :errors="v$.addItemValue.$errors"
+          :prefix="`${t}.errors`"
+        />
       </template>
       <template #after>
         <q-btn ref="addBtn" class="q-py-sm" @click="addItem">
@@ -108,12 +122,15 @@
 </template>
 
 <script>
-import draggable from "vuedraggable"
+import Draggable from "vuedraggable"
 import CollapseToolbar from "./CollapseToolbar.vue"
+import ErrorFieldRenderer from "src/components/molecules/ErrorFieldRenderer.vue"
+import { ref, reactive } from "@vue/composition-api"
+import useVuelidate from "@vuelidate/core"
 
 export default {
   name: "EditableList",
-  components: { draggable, CollapseToolbar },
+  components: { Draggable, CollapseToolbar, ErrorFieldRenderer },
   props: {
     value: {
       type: Array,
@@ -123,79 +140,121 @@ export default {
       type: String,
       default: "",
     },
-    itemName: {
+    rules: {
+      type: Object,
+      default: () => {},
+    },
+    t: {
       type: String,
-      default: function () {
-        return this.$t("lists.default_item_name")
-      },
+      default: "lists",
     },
     allowDuplicates: {
       type: Boolean,
       default: false,
     },
   },
-  data() {
-    return {
+  setup(props, { emit }) {
+    const itemUnderEdit = ref(false)
+
+    const form = reactive({
       addItemValue: "",
       editItemValue: "",
-      itemUnderEdit: false,
+    })
+
+    const noNewDuplicate = (value) => !props.value.includes(value)
+    const noExistingDuplicate = (value) => {
+      const otherEntries = [
+        ...props.value.slice(0, itemUnderEdit.value),
+        ...props.value.slice(itemUnderEdit.value + 1),
+      ]
+      return !otherEntries.includes(value)
     }
-  },
-  methods: {
-    addItem() {
-      if (!this.addItemValue.length) {
+    const noopRule = () => true
+    const vRules = {
+      addItemValue: {
+        ...props.rules,
+        duplicate: props.allowDuplicates ? noopRule : noNewDuplicate,
+      },
+      editItemValue: {
+        ...props.rules,
+        duplicate: props.allowDuplicates ? noopRule : noExistingDuplicate,
+      },
+    }
+    const v$ = useVuelidate(vRules, form)
+
+    function addItem() {
+      if (!form.addItemValue.length) {
         return
       }
-      if (!this.allowDuplicates && this.value.includes(this.addItemValue)) {
-        this.addItemValue = ""
+      if (v$.value.addItemValue.$error) {
+        return false
+      }
+
+      if (!props.allowDuplicates && props.value.includes(form.addItemValue)) {
+        form.addItemValue = ""
         return
       }
-      this.$emit("input", [...this.value, this.addItemValue])
-      this.addItemValue = ""
-    },
-    deleteItem(index) {
-      this.$emit("input", [
-        ...this.value.slice(0, index),
-        ...this.value.slice(index + 1),
+      emit("input", [...props.value, form.addItemValue])
+      form.addItemValue = ""
+    }
+    function deleteItem(index) {
+      emit("input", [
+        ...props.value.slice(0, index),
+        ...props.value.slice(index + 1),
       ])
-    },
-    editItem(index) {
-      if (this.editItemValue !== false) {
-        this.saveEdit()
+    }
+    function editItem(index) {
+      if (form.editItemValue !== false) {
+        saveEdit()
       }
-      this.editItemValue = this.value[index]
-      this.itemUnderEdit = index
-    },
-    saveEdit() {
-      const index = this.itemUnderEdit
+      console.log(props.value[index])
+      form.editItemValue = props.value[index]
+      itemUnderEdit.value = index
+    }
+    function saveEdit() {
+      const index = itemUnderEdit.value
+      if (v$.value.editItemValue.$error) {
+        return
+      }
       if (
         index !== false &&
-        index < this.value.length &&
-        this.editItemValue.length
+        index < props.value.length &&
+        form.editItemValue.length &&
+        !v$.value.editItemValue.$error
       ) {
-        this.$emit("input", [
-          ...this.value.slice(0, index),
-          this.editItemValue,
-          ...this.value.slice(index + 1),
+        emit("input", [
+          ...props.value.slice(0, index),
+          form.editItemValue,
+          ...props.value.slice(index + 1),
         ])
       }
-      this.itemUnderEdit = false
-      this.editItemValue = ""
-    },
-    reorderItem(index, dir) {
+      itemUnderEdit.value = false
+      form.editItemValue = ""
+    }
+    function reorderItem(index, dir) {
       const newIndex = index + dir
-      if (newIndex === this.value.length || newIndex < 0) {
+      if (newIndex === props.value.length || newIndex < 0) {
         return
       }
       const startIndex = newIndex > index ? index : newIndex
-      const values = this.value.slice(startIndex, startIndex + 2)
+      const values = props.value.slice(startIndex, startIndex + 2)
       values.reverse()
-      this.$emit("input", [
-        ...this.value.slice(0, startIndex),
+      emit("input", [
+        ...props.value.slice(0, startIndex),
         ...values,
-        ...this.value.slice(startIndex + 2),
+        ...props.value.slice(startIndex + 2),
       ])
-    },
+    }
+
+    return {
+      reorderItem,
+      saveEdit,
+      editItem,
+      deleteItem,
+      addItem,
+      v$,
+      itemUnderEdit,
+    }
   },
 }
 </script>

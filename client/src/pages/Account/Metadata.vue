@@ -93,8 +93,9 @@
 
       <editable-list
         v-model="form.websites"
-        :item-name="$t('account.profile.fields.website')"
+        t="account.profile.fields.website"
         class="q-gutter-md"
+        :rules="website_rules"
       />
     </form-section>
     <form-section>
@@ -141,7 +142,11 @@ import {
   watch,
 } from "@vue/composition-api"
 import useVuelidate from "@vuelidate/core"
-import { rules, profile_defaults } from "src/composables/profileMetadata"
+import {
+  rules,
+  profile_defaults,
+  website_rules,
+} from "src/composables/profileMetadata"
 import { useMutation, useQuery, useResult } from "@vue/apollo-composable"
 import { CURRENT_USER_METADATA } from "src/graphql/queries"
 import { UPDATE_PROFILE_METADATA } from "src/graphql/mutations"
@@ -227,6 +232,7 @@ export default defineComponent({
       v$,
       formState,
       updateInput,
+      website_rules,
     }
   },
 })

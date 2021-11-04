@@ -32,7 +32,7 @@ export default {
     save: "Save",
     add: "Add",
     new: "Add {0}",
-    default_item_name: "Item",
+    label: "Item",
   },
   auth: {
     loginRequired: "You need to login to access that page.",
@@ -217,9 +217,19 @@ export default {
           },
           orcid: {
             label: "ORCID",
+            errors: {
+              maxLength: "@:generic_validations.maxLength",
+            },
           },
         },
-        website: "Website",
+        website: {
+          label: "Website",
+          errors: {
+            maxLength: "@:generic_validations.maxLength",
+            valid: "Please enter a valid URL.",
+            duplicate: "This URL is already in the list",
+          },
+        },
         interest_keyword: "Interest Keyword",
         interest_keyword_hint:
           "Interest keywords will be used to help provide suggestions for submissions which may be of interest to you.",
