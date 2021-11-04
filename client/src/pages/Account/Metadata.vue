@@ -57,14 +57,6 @@
       <template #header>
         {{ $t("account.profile.section_academic_profiles") }}
       </template>
-      <v-q-input :v="v$.academic_profiles.academia_edu" class="col-md-6 col-12">
-        <template #prepend>
-          <img
-            style="height: 1em; display: inline-block"
-            src="brand-images/academia_edu.png"
-          />
-        </template>
-      </v-q-input>
       <v-q-input
         :v="v$.academic_profiles.humanities_commons"
         class="col-md-6 col-12"
@@ -81,6 +73,14 @@
           <img
             style="height: 1em; display: inline-block"
             src="brand-images/orcid.png"
+          />
+        </template>
+      </v-q-input>
+      <v-q-input :v="v$.academic_profiles.academia_edu" class="col-md-6 col-12">
+        <template #prepend>
+          <img
+            style="height: 1em; display: inline-block"
+            src="brand-images/academia_edu.png"
           />
         </template>
       </v-q-input>
