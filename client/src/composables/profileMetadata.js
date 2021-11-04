@@ -1,6 +1,6 @@
 import { maxLength } from "@vuelidate/validators"
 import { helpers } from "@vuelidate/validators"
-
+import { weburl_regex } from "src/utils/regex-weburl"
 export const social_regex = {
   facebook:
     /^(?:https?:)?\/\/(?:www\.)?(?:facebook|fb)\.com\/(?<profile>(?![A-z]+\.php)(?!marketplace|gaming|watch|me|messages|help|search|groups)[A-z0-9_\-.]+)\/?$/,
@@ -63,4 +63,18 @@ export const profile_defaults = {
   },
 }
 
-export default { rules, social_regex, profile_defaults }
+export const website_rules = {
+  maxLength: maxLength(128),
+  valid: helpers.regex(weburl_regex),
+}
+export const tag_rules = {
+  maxLength: maxLength(128),
+}
+
+export default {
+  rules,
+  social_regex,
+  profile_defaults,
+  website_rules,
+  tag_rules,
+}
