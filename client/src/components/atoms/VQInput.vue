@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import { computed } from "@vue/composition-api"
+import { computed, onMounted, ref } from "@vue/composition-api"
 import ErrorFieldRenderer from "src/components/molecules/ErrorFieldRenderer.vue"
 export default {
   name: "VQInput",
@@ -46,9 +46,10 @@ export default {
       },
     })
 
-    const eventNode = computed(() => {
+    function getFirstParentWith(target, type) {
       let parent = context.parent
-      while (parent && typeof parent.$listeners?.vqupdate !== "function") {
+      console.log(parent[type]?.[target])
+      while (parent && !parent[type]?.[target]) {
         if (parent.$parent) {
           parent = parent.$parent
         } else {
@@ -56,21 +57,22 @@ export default {
         }
       }
       return parent
+    }
+
+    const eventNode = ref(null)
+    const tNode = ref(null)
+
+    onMounted(() => {
+      eventNode.value = getFirstParentWith("vqupdate", "$listeners")
+      tNode.value = getFirstParentWith("t", "$attrs")
     })
 
     const tPrefix = computed(() => {
       if (typeof props.t === "string") {
         return props.t
       }
-      let parent = context.parent
-      while (parent && typeof parent.$attrs.t !== "string") {
-        if (parent.$parent) {
-          parent = parent.$parent
-        } else {
-          return null
-        }
-      }
-      return `${parent.$attrs.t}.${props.v.$path}`
+      if (tNode.value) return `${tNode.value.$attrs.t}.${props.v.$path}`
+      return null
     })
 
     function tife(field) {
