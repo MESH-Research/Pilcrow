@@ -1,10 +1,6 @@
 <template>
-  <q-page-sticky
-    v-if="formState !== 'idle'"
-    class="border-radius"
-    position="bottom-right"
-  >
-    <div class="bg-grey-4 q-ma-md q-pa-sm rounded-borders">
+  <q-page-sticky v-if="formState !== 'idle'" position="bottom-right">
+    <div class="bg-grey-1 q-ma-sm q-pa-md rounded-borders shadow-15">
       <div class="q-gutter-md">
         <template v-if="$slots.default">
           <slot />
