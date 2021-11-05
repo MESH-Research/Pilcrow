@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import { computed, onMounted, ref } from "@vue/composition-api"
+import { computed, inject } from "@vue/composition-api"
 import ErrorFieldRenderer from "src/components/molecules/ErrorFieldRenderer.vue"
 export default {
   name: "VQInput",
@@ -34,45 +34,27 @@ export default {
   },
   emits: ["vqupdate"],
   setup(props, context) {
+    const parentUpdater = inject("vqupdate", null)
     const { root } = context
     const model = computed({
       get() {
         return props.v.$model
       },
       set(newValue) {
-        if (eventNode.value) {
-          eventNode.value.$emit("vqupdate", props.v, newValue)
+        if (parentUpdater) {
+          parentUpdater(props.v, newValue)
+        } else {
+          context.emit("vqupdate", props.v, newValue)
         }
       },
     })
 
-    function getFirstParentWith(target, type) {
-      let parent = context.parent
-      console.log(parent[type]?.[target])
-      while (parent && !parent[type]?.[target]) {
-        if (parent.$parent) {
-          parent = parent.$parent
-        } else {
-          return null
-        }
-      }
-      return parent
-    }
-
-    const eventNode = ref(null)
-    const tNode = ref(null)
-
-    onMounted(() => {
-      eventNode.value = getFirstParentWith("vqupdate", "$listeners")
-      tNode.value = getFirstParentWith("t", "$attrs")
-    })
-
+    const parentTPrefix = inject("tPrefix", "")
     const tPrefix = computed(() => {
       if (typeof props.t === "string") {
         return props.t
       }
-      if (tNode.value) return `${tNode.value.$attrs.t}.${props.v.$path}`
-      return null
+      return `${parentTPrefix}.${props.v.$path}`
     })
 
     function tife(field) {
@@ -83,7 +65,16 @@ export default {
         return null
       }
     }
-    return { model, tife, context, root, tPrefix }
+
+    const parentState = inject("formState", null)
+
+    const formState = computed(() => {
+      if (parentState) {
+        return parentState.value
+      }
+      return ""
+    })
+    return { model, tife, context, root, tPrefix, formState }
   },
 }
 </script>

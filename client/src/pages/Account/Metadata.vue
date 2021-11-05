@@ -1,130 +1,134 @@
 <template>
-  <q-form
-    data-cy="vueAccount"
-    t="account.profile.fields"
-    @submit="save()"
-    @vqupdate="updateInput"
-  >
-    <form-section :first-section="true">
-      <template #header>{{ $t("account.profile.section_details") }}</template>
+  <q-form data-cy="vueAccount" @submit="save()">
+    <v-q-wrap
+      t-prefix="account.profile.fields"
+      :form-state="formState"
+      @vqupdate="updateInput"
+    >
+      <form-section :first-section="true">
+        <template #header>{{ $t("account.profile.section_details") }}</template>
 
-      <v-q-input :v="v$.professional_title" />
-      <v-q-input :v="v$.specialization" />
-      <v-q-input :v="v$.affiliation" />
-    </form-section>
+        <v-q-input :v="v$.professional_title" />
+        <v-q-input :v="v$.specialization" />
+        <v-q-input :v="v$.affiliation" />
+      </form-section>
 
-    <form-section>
-      <template #header>
-        {{ $t("account.profile.section_biography") }}
-      </template>
+      <form-section>
+        <template #header>
+          {{ $t("account.profile.section_biography") }}
+        </template>
 
-      <v-q-input :v="v$.biography" type="textarea" counter>
-        <template #counter> {{ form.biography.length }}/4096 </template>
-      </v-q-input>
-    </form-section>
+        <v-q-input :v="v$.biography" type="textarea" counter>
+          <template #counter> {{ form.biography.length }}/4096 </template>
+        </v-q-input>
+      </form-section>
 
-    <form-section>
-      <template #header>
-        {{ $t("account.profile.section_social_media") }}
-      </template>
-      <v-q-input :v="v$.social_media.facebook" class="col-md-6 col-12">
-        <template #prepend>
-          <q-icon name="fab fa-facebook" />
+      <form-section>
+        <template #header>
+          {{ $t("account.profile.section_social_media") }}
         </template>
-      </v-q-input>
-      <v-q-input
-        :v="v$.social_media.twitter"
-        prefix="@"
-        class="col-md-6 col-12"
-      >
-        <template #prepend>
-          <q-icon name="fab fa-twitter" />
-        </template>
-      </v-q-input>
-      <v-q-input :v="v$.social_media.instagram" class="col-md-6 col-12">
-        <template #prepend>
-          <q-icon name="fab fa-instagram" />
-        </template>
-      </v-q-input>
-      <v-q-input :v="v$.social_media.linkedin" class="col-md-6 col-12">
-        <template #prepend>
-          <q-icon name="fab fa-linkedin" />
-        </template>
-      </v-q-input>
-    </form-section>
+        <v-q-input :v="v$.social_media.facebook" class="col-md-6 col-12">
+          <template #prepend>
+            <q-icon name="fab fa-facebook" />
+          </template>
+        </v-q-input>
+        <v-q-input
+          :v="v$.social_media.twitter"
+          prefix="@"
+          class="col-md-6 col-12"
+        >
+          <template #prepend>
+            <q-icon name="fab fa-twitter" />
+          </template>
+        </v-q-input>
+        <v-q-input :v="v$.social_media.instagram" class="col-md-6 col-12">
+          <template #prepend>
+            <q-icon name="fab fa-instagram" />
+          </template>
+        </v-q-input>
+        <v-q-input :v="v$.social_media.linkedin" class="col-md-6 col-12">
+          <template #prepend>
+            <q-icon name="fab fa-linkedin" />
+          </template>
+        </v-q-input>
+      </form-section>
 
-    <form-section>
-      <template #header>
-        {{ $t("account.profile.section_academic_profiles") }}
-      </template>
-      <v-q-input
-        :v="v$.academic_profiles.humanities_commons"
-        class="col-md-6 col-12"
-      >
-        <template #prepend>
-          <img
-            style="height: 1em; display: inline-block"
-            src="brand-images/humcommons.png"
-          />
+      <form-section>
+        <template #header>
+          {{ $t("account.profile.section_academic_profiles") }}
         </template>
-      </v-q-input>
-      <v-q-input :v="v$.academic_profiles.orcid" class="col-md-6 col-12">
-        <template #prepend>
-          <img
-            style="height: 1em; display: inline-block"
-            src="brand-images/orcid.png"
-          />
-        </template>
-      </v-q-input>
-      <v-q-input :v="v$.academic_profiles.academia_edu" class="col-md-6 col-12">
-        <template #prepend>
-          <img
-            style="height: 1em; display: inline-block"
-            src="brand-images/academia_edu.png"
-          />
-        </template>
-      </v-q-input>
-    </form-section>
+        <v-q-input
+          :v="v$.academic_profiles.humanities_commons"
+          class="col-md-6 col-12"
+        >
+          <template #prepend>
+            <img
+              style="height: 1em; display: inline-block"
+              src="brand-images/humcommons.png"
+            />
+          </template>
+        </v-q-input>
+        <v-q-input :v="v$.academic_profiles.orcid" class="col-md-6 col-12">
+          <template #prepend>
+            <img
+              style="height: 1em; display: inline-block"
+              src="brand-images/orcid.png"
+            />
+          </template>
+        </v-q-input>
+        <v-q-input
+          :v="v$.academic_profiles.academia_edu"
+          class="col-md-6 col-12"
+        >
+          <template #prepend>
+            <img
+              style="height: 1em; display: inline-block"
+              src="brand-images/academia_edu.png"
+            />
+          </template>
+        </v-q-input>
+      </form-section>
 
-    <form-section>
-      <template #header>
-        {{ $t("account.profile.section_websites") }}
-      </template>
+      <form-section>
+        <template #header>
+          {{ $t("account.profile.section_websites") }}
+        </template>
 
-      <editable-list
-        v-model="form.websites"
-        t="account.profile.fields.website"
-        class="q-gutter-md"
-        :rules="website_rules"
-      />
-    </form-section>
-    <form-section>
-      <template #header>
-        {{ $t("account.profile.section_keywords") }}
-      </template>
-      <fieldset class="col-12 q-col-gutter-sm">
-        <tag-list
-          v-model="form.interest_keywords"
-          t="account.profile.fields.interest_keyword"
-          :rules="keyword_rules"
+        <editable-list
+          v-model="form.websites"
+          t="account.profile.fields.website"
+          class="q-gutter-md"
+          :rules="website_rules"
         />
-        <p>
-          {{ $t("account.profile.fields.interest_keyword.hint") }}
-        </p>
-      </fieldset>
-      <fieldset class="col-12 q-col-gutter-sm">
-        <tag-list
-          v-model="form.disinterest_keywords"
-          t="account.profile.fields.disinterest_keyword"
-          :rules="keyword_rules"
-        />
-        <p>
-          {{ $t("account.profile.fields.disinterest_keyword.hint") }}
-        </p>
-      </fieldset>
-    </form-section>
+      </form-section>
+      <form-section>
+        <template #header>
+          {{ $t("account.profile.section_keywords") }}
+        </template>
+        <fieldset class="col-12 q-col-gutter-sm">
+          <tag-list
+            v-model="form.interest_keywords"
+            t="account.profile.fields.interest_keyword"
+            :rules="keyword_rules"
+          />
+          <p>
+            {{ $t("account.profile.fields.interest_keyword.hint") }}
+          </p>
+        </fieldset>
+        <fieldset class="col-12 q-col-gutter-sm">
+          <tag-list
+            v-model="form.disinterest_keywords"
+            t="account.profile.fields.disinterest_keyword"
+            :rules="keyword_rules"
+          />
+          <p>
+            {{ $t("account.profile.fields.disinterest_keyword.hint") }}
+          </p>
+        </fieldset>
+      </form-section>
 
-    <form-actions :form-state="formState" class="" @resetClick="resetForm" />
+      <form-actions :form-state="formState" class="" @resetClick="resetForm" />
+    </v-q-wrap>
   </q-form>
 </template>
 
@@ -132,6 +136,7 @@
 //Import components
 import EditableList from "src/components/molecules/EditableList.vue"
 import VQInput from "src/components/atoms/VQInput.vue"
+import VQWrap from "src/components/atoms/VQWrap.vue"
 import TagList from "src/components/molecules/TagList.vue"
 import FormSection from "src/components/molecules/FormSection.vue"
 import FormActions from "src/components/molecules/FormActions.vue"
@@ -159,7 +164,14 @@ import { mapObject } from "src/utils/objUtils"
 
 export default defineComponent({
   name: "ProfilePage",
-  components: { EditableList, TagList, FormSection, FormActions, VQInput },
+  components: {
+    EditableList,
+    TagList,
+    FormSection,
+    FormActions,
+    VQInput,
+    VQWrap,
+  },
   setup(_, context) {
     const saved = ref(false)
 
@@ -170,7 +182,7 @@ export default defineComponent({
       return applyDefaults(profile_metadata.value)
     })
 
-    const { result } = useQuery(CURRENT_USER_METADATA)
+    const { result, loading } = useQuery(CURRENT_USER_METADATA)
     const profile_metadata = useResult(
       result,
       applyDefaults({}),
@@ -187,6 +199,9 @@ export default defineComponent({
     useDirtyGuard(dirty, context)
 
     const formState = computed(() => {
+      if (loading.value) {
+        return "loading"
+      }
       if (saving.value) {
         return "saving"
       }
