@@ -1,5 +1,5 @@
 <template>
-  <q-page-sticky v-if="formState !== 'idle'" position="bottom-right">
+  <q-page-sticky v-if="visible" position="bottom-right">
     <div class="bg-grey-1 q-ma-sm q-pa-md rounded-borders shadow-15">
       <div class="q-gutter-md">
         <template v-if="$slots.default">
@@ -88,7 +88,16 @@ export default defineComponent({
       }),
     })
 
-    return { saveButton, resetBtn }
+    const visible = computed(() => {
+      return (
+        {
+          idle: false,
+          loading: false,
+        }[props.formState] ?? true
+      )
+    })
+
+    return { saveButton, resetBtn, visible }
   },
 })
 </script>

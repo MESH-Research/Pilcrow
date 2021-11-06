@@ -1,9 +1,12 @@
 <template>
+  <div v-if="formState === 'loading'" :class="$attrs.class">
+    <q-skeleton type="QInput" class="q-mb-md" />
+  </div>
   <q-input
+    v-else
     v-model="model"
     :error="v.$error"
     :label="tife('label')"
-    :hint="tife('hint')"
     v-bind="$attrs"
     outlined
   >
