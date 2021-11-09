@@ -4,15 +4,13 @@ declare(strict_types=1);
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
 class SubmissionCreation extends Notification implements ShouldQueue
 {
     use Queueable;
-
-    public $afterCommit = true;
 
     private $creationData;
 
@@ -23,6 +21,7 @@ class SubmissionCreation extends Notification implements ShouldQueue
      */
     public function __construct($creationData)
     {
+        $this->after_commit = true;
         $this->creationData = $creationData;
     }
 
@@ -34,7 +33,7 @@ class SubmissionCreation extends Notification implements ShouldQueue
      */
     public function via($notifiable)
     {
-        return ['mail'];
+        return ['database'];
     }
 
     /**
@@ -51,7 +50,7 @@ class SubmissionCreation extends Notification implements ShouldQueue
     }
 
     /**
-     * Get the array representation of the notification.
+     * Get the array representation of the notification for the client.
      *
      * @param  mixed  $notifiable
      * @return array
@@ -59,7 +58,20 @@ class SubmissionCreation extends Notification implements ShouldQueue
     public function toArray($notifiable)
     {
         return [
-            'submission_id' => $this->creationData['id'],
+            'submission_id' => $this->creationData['submission_id'],
+        ];
+    }
+
+    /**
+     * Get the array representation of the notification for the datatabase.
+     *
+     * @param  mixed  $notifiable
+     * @return array
+     */
+    public function toDatabase($notifiable)
+    {
+        return [
+            'submission_id' => $this->creationData['submission_id'],
         ];
     }
 }
