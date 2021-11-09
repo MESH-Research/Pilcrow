@@ -43,7 +43,7 @@ class NotificationTest extends TestCase
             'submission_id' => 1001,
         ];
         Notification::send($users, new SubmissionCreation($notification_data));
-        $users->map(function($user) {
+        $users->map(function ($user) {
             $this->assertEquals(1, $user->notifications->count());
             $this->assertEquals("App\Notifications\SubmissionCreation", $user->notifications->first()->type);
         });
@@ -94,7 +94,7 @@ class NotificationTest extends TestCase
         ];
         Notification::send($users, new SubmissionCreation($notification_data_1));
         Notification::send($users, new SubmissionCreation($notification_data_2));
-        $users->map(function($user) {
+        $users->map(function ($user) {
             $this->assertEquals(2, $user->notifications->count());
             $this->assertEquals("App\Notifications\SubmissionCreation", $user->notifications->first()->type);
             $this->assertEquals("App\Notifications\SubmissionCreation", $user->notifications->last()->type);
@@ -140,8 +140,8 @@ class NotificationTest extends TestCase
         Notification::send($users, new SubmissionCreation($notification_data_1));
         Notification::send($users, new SubmissionCreation($notification_data_2));
 
-        $users->map(function($user) {
-            $user->notifications->map(function($notification) {
+        $users->map(function ($user) {
+            $user->notifications->map(function ($notification) {
                 $notification->markAsRead();
             });
             $this->assertEquals(0, $user->unreadNotifications->count());
