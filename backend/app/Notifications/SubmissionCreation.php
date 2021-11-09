@@ -20,6 +20,7 @@ class SubmissionCreation extends Notification implements ShouldQueue
     /**
      * Create a new notification instance.
      *
+     * @param array $creationData
      * @return void
      */
     public function __construct($creationData)
