@@ -170,7 +170,7 @@ export default {
         },
         social_media: {
           twitter: {
-            label: "Twitter Handle",
+            label: "Twitter",
             errors: {
               valid: "Please enter a valid Twitter handle.",
               maxLength: "@:generic_validations.maxLength",
@@ -179,21 +179,21 @@ export default {
           instagram: {
             label: "Instagram",
             errors: {
-              valid: "Please enter a valid Instagram Profile URL",
+              valid: "Please enter a valid Instagram profile name.",
               maxLength: "@:generic_validations.maxLength",
             },
           },
           linkedin: {
             label: "LinkedIn",
             errors: {
-              valid: "Please enter a valid LinkedIn Profile URL",
+              valid: "Please enter a valid LinkedIn permalink.",
               maxLength: "@:generic_validations.maxLength",
             },
           },
           facebook: {
             label: "Facebook",
             errors: {
-              valid: "Please enter a valid Facebook URL",
+              valid: "Please enter a valid Facebook profile name.",
               maxLength: "@:generic_validations.maxLength",
             },
           },
@@ -203,7 +203,7 @@ export default {
           maxLength: "@:generic_validations.maxLength",
         },
         academic_profiles: {
-          academia_edu: {
+          academia_edu_id: {
             label: "Academia.edu",
             errors: {
               maxLength: "@:generic_validations.maxLength",

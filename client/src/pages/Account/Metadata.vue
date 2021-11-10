@@ -23,32 +23,66 @@
         </v-q-input>
       </form-section>
 
-      <form-section>
+      <form-section class="social_controls">
         <template #header>
           {{ $t("account.profile.section_social_media") }}
         </template>
-        <v-q-input :v="v$.social_media.facebook" class="col-md-6 col-12">
+        <v-q-input
+          :v="v$.social_media.facebook"
+          prefix="https://fb.com/"
+          class="col-md-6 col-12"
+          clearable
+        >
           <template #prepend>
-            <q-icon name="fab fa-facebook" />
+            <q-icon
+              name="fab fa-facebook"
+              :class="{
+                'brand-active': v$.social_media.facebook.$model.length,
+              }"
+            />
           </template>
         </v-q-input>
         <v-q-input
           :v="v$.social_media.twitter"
-          prefix="@"
+          prefix="https://twitter.com/@"
           class="col-md-6 col-12"
+          clearable
         >
           <template #prepend>
-            <q-icon name="fab fa-twitter" />
+            <q-icon
+              :class="{ 'brand-active': v$.social_media.twitter.$model.length }"
+              name="fab fa-twitter"
+            />
           </template>
         </v-q-input>
-        <v-q-input :v="v$.social_media.instagram" class="col-md-6 col-12">
+        <v-q-input
+          :v="v$.social_media.instagram"
+          prefix="https://instagram.com/"
+          class="col-md-6 col-12"
+          clearable
+        >
           <template #prepend>
-            <q-icon name="fab fa-instagram" />
+            <q-icon
+              name="fab fa-instagram-square"
+              :class="{
+                'brand-active': v$.social_media.instagram.$model.length,
+              }"
+            />
           </template>
         </v-q-input>
-        <v-q-input :v="v$.social_media.linkedin" class="col-md-6 col-12">
+        <v-q-input
+          :v="v$.social_media.linkedin"
+          prefix="https://linkedin.com/in/"
+          class="col-md-6 col-12"
+          clearable
+        >
           <template #prepend>
-            <q-icon name="fab fa-linkedin" />
+            <q-icon
+              name="fab fa-linkedin"
+              :class="{
+                'brand-active': v$.social_media.linkedin.$model.length,
+              }"
+            />
           </template>
         </v-q-input>
       </form-section>
@@ -77,7 +111,7 @@
           </template>
         </v-q-input>
         <v-q-input
-          :v="v$.academic_profiles.academia_edu"
+          :v="v$.academic_profiles.academia_edu_id"
           class="col-md-6 col-12"
         >
           <template #prepend>
@@ -154,6 +188,7 @@ import {
   profile_defaults,
   website_rules,
   keyword_rules,
+  useSocialFieldWatchers,
 } from "src/composables/profileMetadata"
 import { useMutation, useQuery, useResult } from "@vue/apollo-composable"
 import { useDirtyGuard } from "src/composables/forms"
@@ -177,6 +212,7 @@ export default defineComponent({
 
     const form = reactive(applyDefaults({}))
     const v$ = useVuelidate(rules, form)
+    useSocialFieldWatchers(form)
 
     const original = computed(() => {
       return applyDefaults(profile_metadata.value)
@@ -188,9 +224,12 @@ export default defineComponent({
       applyDefaults({}),
       (data) => data.currentUser.profile_metadata
     )
+
     const currentUserId = useResult(result, {}, (data) => data.currentUser.id)
-    Object.assign(form, original.value)
-    watch(currentUserId, () => Object.assign(form, original.value))
+    Object.assign(form, applyDefaults(original.value))
+    watch(currentUserId, () =>
+      Object.assign(form, applyDefaults(original.value))
+    )
 
     const dirty = computed(() => {
       return !isEqual(original.value, form)
@@ -227,7 +266,7 @@ export default defineComponent({
     )
 
     function resetForm() {
-      Object.assign(form, original.value)
+      Object.assign(form, applyDefaults(original.value))
       saved.value = false
     }
 
@@ -255,6 +294,8 @@ export default defineComponent({
       updateInput,
       website_rules,
       keyword_rules,
+      original,
+      profile_metadata,
     }
   },
 })
@@ -262,3 +303,21 @@ function applyDefaults(data) {
   return JSON.parse(JSON.stringify(mapObject(profile_defaults, data)))
 }
 </script>
+
+<style lang="sass">
+.social_controls
+  .q-field__prefix
+    padding-right: 0px
+  .q-field__prepend
+    .q-icon
+      color: #cdcdcd
+      &.brand-active
+        &.fa-facebook
+          color: #3b5998
+        &.fa-twitter
+          color: #00aced
+        &.fa-instagram-square
+          color: #ff0076
+        &.fa-linkedin
+          color: #007bb6
+</style>
