@@ -28,6 +28,7 @@ class NotificationTest extends TestCase
         $user->notify(new SubmissionCreation($notification_data));
         $this->assertEquals(1, $user->notifications->count());
         $this->assertEquals("App\Notifications\SubmissionCreation", $user->notifications->first()->type);
+        $this->assertEquals($notification_data, $user->notifications->first()->data);
     }
 
     /**
@@ -43,9 +44,10 @@ class NotificationTest extends TestCase
             'submission_id' => 1001,
         ];
         Notification::send($users, new SubmissionCreation($notification_data));
-        $users->map(function ($user) {
+        $users->map(function ($user) use ($notification_data) {
             $this->assertEquals(1, $user->notifications->count());
             $this->assertEquals("App\Notifications\SubmissionCreation", $user->notifications->first()->type);
+            $this->assertEquals($notification_data, $user->notifications->first()->data);
         });
     }
 
@@ -72,6 +74,8 @@ class NotificationTest extends TestCase
         $this->assertEquals(2, $user->notifications->count());
         $this->assertEquals("App\Notifications\SubmissionCreation", $user->notifications->first()->type);
         $this->assertEquals("App\Notifications\SubmissionCreation", $user->notifications->last()->type);
+        $this->assertEquals($notification_data_1, $user->notifications->first()->data);
+        $this->assertEquals($notification_data_2, $user->notifications->last()->data);
     }
 
     /**
@@ -94,10 +98,12 @@ class NotificationTest extends TestCase
         ];
         Notification::send($users, new SubmissionCreation($notification_data_1));
         Notification::send($users, new SubmissionCreation($notification_data_2));
-        $users->map(function ($user) {
+        $users->map(function ($user) use ($notification_data_1, $notification_data_2) {
             $this->assertEquals(2, $user->notifications->count());
             $this->assertEquals("App\Notifications\SubmissionCreation", $user->notifications->first()->type);
             $this->assertEquals("App\Notifications\SubmissionCreation", $user->notifications->last()->type);
+            $this->assertEquals($notification_data_1, $user->notifications->first()->data);
+            $this->assertEquals($notification_data_2, $user->notifications->last()->data);
         });
     }
 
