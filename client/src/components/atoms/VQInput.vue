@@ -4,11 +4,14 @@
   </div>
   <q-input
     v-else
+    v-bind="$attrs"
+    ref="input"
     v-model="model"
     :error="v.$error"
     :label="tife('label')"
-    v-bind="$attrs"
+    :hint="tife('hint')"
     outlined
+    @clear="clearInput"
   >
     <template v-if="!$slots.error" #error>
       <error-field-renderer :errors="v.$errors" :prefix="`${tPrefix}.errors`" />
@@ -20,7 +23,7 @@
 </template>
 
 <script>
-import { computed, inject } from "@vue/composition-api"
+import { computed, inject, ref } from "@vue/composition-api"
 import ErrorFieldRenderer from "src/components/molecules/ErrorFieldRenderer.vue"
 export default {
   name: "VQInput",
@@ -38,16 +41,18 @@ export default {
   emits: ["vqupdate"],
   setup(props, context) {
     const parentUpdater = inject("vqupdate", null)
+    const input = ref(null)
     const { root } = context
     const model = computed({
       get() {
         return props.v.$model
       },
       set(newValue) {
+        const value = newValue !== null ? newValue : ""
         if (parentUpdater) {
-          parentUpdater(props.v, newValue)
+          parentUpdater(props.v, value)
         } else {
-          context.emit("vqupdate", props.v, newValue)
+          context.emit("vqupdate", props.v, value)
         }
       },
     })
@@ -68,7 +73,9 @@ export default {
         return null
       }
     }
-
+    function clearInput() {
+      input.value.blur()
+    }
     const parentState = inject("formState", null)
 
     const formState = computed(() => {
@@ -77,7 +84,7 @@ export default {
       }
       return ""
     })
-    return { model, tife, context, root, tPrefix, formState }
+    return { model, tife, context, root, tPrefix, formState, clearInput, input }
   },
 }
 </script>
