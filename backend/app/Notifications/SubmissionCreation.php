@@ -59,6 +59,9 @@ class SubmissionCreation extends Notification implements ShouldQueue
     public function toArray()
     {
         return [
+            'body' => $this->creationData['body'],
+            'action' => $this->creationData['action'],
+            'url' => $this->creationData['url'],
             'submission_id' => $this->creationData['submission_id'],
         ];
     }
