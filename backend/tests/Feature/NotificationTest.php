@@ -74,8 +74,18 @@ class NotificationTest extends TestCase
         $this->assertEquals(2, $user->notifications->count());
         $this->assertEquals("App\Notifications\SubmissionCreation", $user->notifications->first()->type);
         $this->assertEquals("App\Notifications\SubmissionCreation", $user->notifications->last()->type);
-        $this->assertEquals($notification_data_1, $user->notifications->first()->data);
-        $this->assertEquals($notification_data_2, $user->notifications->last()->data);
+        $notification_1 = $user->notifications
+            ->where('notifiable_type', "App\Models\User")
+            ->where('notifiable_id', $user->id)
+            ->where('data', $notification_data_1)
+            ->first();
+        $this->assertEquals($notification_data_1, $notification_1->data);
+        $notification_2 = $user->notifications
+            ->where('notifiable_type', "App\Models\User")
+            ->where('notifiable_id', $user->id)
+            ->where('data', $notification_data_2)
+            ->first();
+        $this->assertEquals($notification_data_2, $notification_2->data);
     }
 
     /**
@@ -102,8 +112,18 @@ class NotificationTest extends TestCase
             $this->assertEquals(2, $user->notifications->count());
             $this->assertEquals("App\Notifications\SubmissionCreation", $user->notifications->first()->type);
             $this->assertEquals("App\Notifications\SubmissionCreation", $user->notifications->last()->type);
-            $this->assertEquals($notification_data_1, $user->notifications->first()->data);
-            $this->assertEquals($notification_data_2, $user->notifications->last()->data);
+            $notification_1 = $user->notifications
+                ->where('notifiable_type', "App\Models\User")
+                ->where('notifiable_id', $user->id)
+                ->where('data', $notification_data_1)
+                ->first();
+            $this->assertEquals($notification_data_1, $notification_1->data);
+            $notification_2 = $user->notifications
+                ->where('notifiable_type', "App\Models\User")
+                ->where('notifiable_id', $user->id)
+                ->where('data', $notification_data_2)
+                ->first();
+            $this->assertEquals($notification_data_2, $notification_2->data);
         });
     }
 
