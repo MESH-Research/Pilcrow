@@ -31,7 +31,7 @@
     "axios": "^0.24.0",
     "core-js": "^3.19.1",
     "graphql": "^15.7.2",
-    "graphql-tag": "^2.12.5",
+    "graphql-tag": "^2.12.6",
     "lodash": "^4.17.20",
     "quasar": "^1.15.15",
     "vue-i18n": "^8.26.7",
@@ -39,7 +39,7 @@
   },
   "devDependencies": {
     "@quasar/app": "^2.2.6",
-    "@quasar/quasar-app-extension-testing": "^2.0.0",
+    "@quasar/quasar-app-extension-testing": "^2.0.1",
     "@quasar/quasar-app-extension-testing-e2e-cypress": "^3.0.1",
     "@quasar/quasar-app-extension-testing-unit-jest": "^2.2.2",
     "axe-core": "^4.3.3",

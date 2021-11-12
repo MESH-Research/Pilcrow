@@ -1432,10 +1432,10 @@
     ts-jest "^26.5.4"
     vue-jest "^3.0.7"
 
-"@quasar/quasar-app-extension-testing@^2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@quasar/quasar-app-extension-testing/-/quasar-app-extension-testing-2.0.0.tgz#af21b9067c7c23e9dcb5951b26e589def1c32c9a"
-  integrity sha512-tj2u7UfJfonYjB6132yS9W9N6MA1GY8AW1iS/G1rrdso0zP+l9Tk8YUIxPpNHTaHrhzcnLOGmsRjQvhzDte7IA==
+"@quasar/quasar-app-extension-testing@^2.0.1":
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@quasar/quasar-app-extension-testing/-/quasar-app-extension-testing-2.0.1.tgz#5845c3d6ccf5a0caa897dd1111b5d1303b3b5967"
+  integrity sha512-pY2DLb4dIET76IZWVX9q+GL99TOWip2GOIT2tdPCNkygk/iFpss3Vgkz/VL7VDYWb3XE/F20NXwdqRKHoF1ZWA==
   dependencies:
     chalk "^4.1.1"
     execa "^5.1.1"
@@ -5912,10 +5912,10 @@ graceful-fs@^4.1.11, graceful-fs@^4.1.15, graceful-fs@^4.1.2, graceful-fs@^4.1.6
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.2.6.tgz#ff040b2b0853b23c3d31027523706f1885d76bee"
   integrity sha512-nTnJ528pbqxYanhpDYsi4Rd8MAeaBA67+RZ10CM1m3bTAVFEDcd5AuA4a6W5YkGZ1iNXHzZz8T6TBKLeBuNriQ==
 
-graphql-tag@^2.12.3, graphql-tag@^2.12.5:
-  version "2.12.5"
-  resolved "https://registry.yarnpkg.com/graphql-tag/-/graphql-tag-2.12.5.tgz#5cff974a67b417747d05c8d9f5f3cb4495d0db8f"
-  integrity sha512-5xNhP4063d16Pz3HBtKprutsPrmHZi5IdUGOWRxA2B6VF7BIRGOHZ5WQvDmJXZuPcBg7rYwaFxvQYjqkSdR3TQ==
+graphql-tag@^2.12.3, graphql-tag@^2.12.6:
+  version "2.12.6"
+  resolved "https://registry.yarnpkg.com/graphql-tag/-/graphql-tag-2.12.6.tgz#d441a569c1d2537ef10ca3d1633b48725329b5f1"
+  integrity sha512-FdSNcu2QQcWnM2VNvSCCDCVS5PpPqpzgFT8+GXzqJuoDd0CBncxCY278u4mhRO7tMgo2JjgJA5aZ+nWSQ/Z+xg==
   dependencies:
     tslib "^2.1.0"
 
