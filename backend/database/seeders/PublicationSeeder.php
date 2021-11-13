@@ -4,22 +4,32 @@ declare(strict_types=1);
 namespace Database\Seeders;
 
 use App\Models\Publication;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class PublicationSeeder extends Seeder
 {
     /**
-     * Run the database seeds.
+     * Run the database seed and create a publication with an administrator and editor.
      *
+     * @param \App\Models\User $admin
+     * @param \App\Models\User $editor
      * @return void
      */
-    public function run()
+    public function run(User $admin, User $editor)
     {
-        Publication::factory()->hasAttached(
-            User::where('username', 'applicationAdminUser')->firstOrFail(),
+        Publication::factory()
+        ->hasAttached(
+            $admin,
             [
-                'role_id' => 2,
+                'role_id' => Role::PUBLICATION_ADMINISTRATOR_ROLE_ID,
+            ]
+        )
+        ->hasAttached(
+            $editor,
+            [
+                'role_id' => Role::EDITOR_ROLE_ID,
             ]
         )
         ->create([
