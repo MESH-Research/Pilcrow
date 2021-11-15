@@ -317,7 +317,7 @@ function applyDefaults(data) {
         &.fa-twitter
           color: #00aced
         &.fa-instagram-square
-          color: #ff0076
+          color: #dc3d86
         &.fa-linkedin
           color: #007bb6
 </style>
