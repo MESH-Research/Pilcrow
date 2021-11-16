@@ -7,6 +7,7 @@
     v-bind="$attrs"
     ref="input"
     v-model="model"
+    :data-cy="cyAttr"
     :error="v.$error"
     :label="tife('label')"
     :hint="tife('hint')"
@@ -35,6 +36,10 @@ export default {
   name: "VQInput",
   components: { ErrorFieldRenderer },
   props: {
+    cyAttr: {
+      type: String,
+      default: "",
+    },
     /**
      * Vuelidate validator object the input should use.
      */

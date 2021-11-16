@@ -8,7 +8,7 @@
       <form-section :first-section="true">
         <template #header>{{ $t("account.profile.section_details") }}</template>
 
-        <v-q-input :v="v$.professional_title" />
+        <v-q-input :v="v$.professional_title" cy-attr="professional_title" />
         <v-q-input :v="v$.specialization" />
         <v-q-input :v="v$.affiliation" />
       </form-section>
