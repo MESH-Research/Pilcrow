@@ -175,4 +175,33 @@ export default {
   },
   general_failure: "Oops, there was an error.",
   loading: "Loading...",
+  /*********************
+   * Notifications follow the format of:
+   * <type>: {
+   *    short: "",
+   *    long: "",
+   * }
+   */
+  notifications: {
+    review: {
+      requested: {
+        short: "{user.username} has requested your review on {object.name}",
+      },
+      commentReply: {
+        short: "{user.username} has replied to your comment on {object.name}",
+      },
+    },
+    submission: {
+      new: {
+        short:
+          "{user.username} has submitted {object.name} to {object.publication.name}",
+      },
+      approved: {
+        short: "{object.name} has been approved",
+      },
+      resubmission: {
+        short: "{object.name} has been resubmitted",
+      },
+    },
+  },
 }
