@@ -9,7 +9,7 @@
           <q-btn
             :disabled="saveButton.disabled"
             :class="saveButton.class"
-            data-cy="button_save"
+            :data-cy="saveButton.cyAttr"
             type="submit"
           >
             <q-icon v-if="saveButton.icon === 'check'" name="check" />
@@ -51,7 +51,14 @@ export default defineComponent({
           }[props.formState] ?? "bg-grey-3"
         )
       }),
-
+      cyAttr: computed(() => {
+        return (
+          {
+            saving: "button_saving",
+            saved: "button_saved",
+          }[props.formState] ?? "button_save"
+        )
+      }),
       text: computed(() => {
         return (
           {

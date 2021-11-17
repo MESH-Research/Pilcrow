@@ -5,6 +5,7 @@
       outlined
       :label="$t('lists.new', [$t(`${t}.label`)])"
       :error="v$.addValue.$error"
+      :data-cy="`add_${cyAttr}`"
       class="col-md-5 col-12"
       @keydown.enter.prevent="addItem"
     >
@@ -25,7 +26,7 @@
         </q-btn>
       </template>
     </q-input>
-    <div class="col-md-7 col-12">
+    <div class="col-md-7 col-12" :data-cy="`tag_list_${cyAttr}`">
       <q-chip
         v-for="(item, index) in value"
         :key="index"
@@ -62,6 +63,10 @@ export default {
     allowDuplicates: {
       type: Boolean,
       default: false,
+    },
+    cyAttr: {
+      type: String,
+      default: "keywords",
     },
   },
   setup(props, { emit }) {

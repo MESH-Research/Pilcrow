@@ -8,7 +8,7 @@
       <form-section :first-section="true">
         <template #header>{{ $t("account.profile.section_details") }}</template>
 
-        <v-q-input :v="v$.professional_title" />
+        <v-q-input :v="v$.professional_title" cy-attr="professional_title" />
         <v-q-input :v="v$.specialization" />
         <v-q-input :v="v$.affiliation" />
       </form-section>
@@ -29,6 +29,7 @@
         </template>
         <v-q-input
           :v="v$.social_media.facebook"
+          cy-attr="facebook"
           prefix="https://fb.com/"
           class="col-md-6 col-12"
           clearable
@@ -130,6 +131,7 @@
 
         <editable-list
           v-model="form.websites"
+          cy-attr="add_website"
           t="account.profile.fields.website"
           class="q-gutter-md"
           :rules="website_rules"
@@ -143,6 +145,7 @@
           <tag-list
             v-model="form.interest_keywords"
             t="account.profile.fields.interest_keyword"
+            cy-attr="interest_keywords"
             :rules="keyword_rules"
           />
           <p>
