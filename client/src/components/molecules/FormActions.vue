@@ -51,7 +51,6 @@ export default defineComponent({
           }[props.formState] ?? "bg-grey-3"
         )
       }),
-
       cyAttr: computed(() => {
         return (
           {
@@ -60,7 +59,6 @@ export default defineComponent({
           }[props.formState] ?? "button_save"
         )
       }),
-
       text: computed(() => {
         return (
           {

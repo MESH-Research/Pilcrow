@@ -32,6 +32,7 @@
             v-model.trim="v$.editItemValue.$model"
             :error="v$.editItemValue.$error"
             outlined
+            :data-cy="`edit_input_${[$t(`${t}.label`).toLowerCase()]}_${index}`"
             @keydown.enter.prevent="saveEdit"
           >
             <template #error>
@@ -59,11 +60,15 @@
           side
           style="flex-direction: row; align-items: center"
         >
-          <collapse-toolbar :collapse="$q.screen.lt.md">
+          <collapse-toolbar
+            :collapse="$q.screen.lt.md"
+            :data-cy="`collapse_toolbar_${index}`"
+          >
             <q-btn
               flat
               dense
               icon="edit"
+              :data-cy="`edit_btn_${[$t(`${t}.label`).toLowerCase()]}_${index}`"
               :aria-label="$t('lists.edit', [$t(`${t}.label`)])"
               :disabled="itemUnderEdit !== false"
               @click="editItem(index)"
@@ -72,6 +77,9 @@
               :disabled="index === 0 || itemUnderEdit !== false"
               flat
               dense
+              :data-cy="`arrow_upward_${[
+                $t(`${t}.label`).toLowerCase(),
+              ]}_${index}`"
               icon="arrow_upward"
               :aria-label="$t('lists.move_up', [$t(`${t}.label`)])"
               @click="reorderItem(index, -1)"
@@ -101,6 +109,7 @@
       :label="$t('lists.new', [$t(`${t}.label`)])"
       :error="v$.addItemValue.$error"
       outlined
+      :data-cy="cyAttr"
       @keydown.enter.prevent="addItem"
     >
       <template v-if="inputIcon" #prepend>
@@ -158,6 +167,10 @@ export default {
     allowDuplicates: {
       type: Boolean,
       default: false,
+    },
+    cyAttr: {
+      type: String,
+      default: "",
     },
   },
   setup(props, { emit }) {
