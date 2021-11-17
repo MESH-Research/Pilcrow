@@ -25,14 +25,29 @@
 <script>
 import { computed, inject, ref } from "@vue/composition-api"
 import ErrorFieldRenderer from "src/components/molecules/ErrorFieldRenderer.vue"
+
+/**
+ * Transparent wrapper for q-input that handles validation and translation by convention.
+ *
+ * @see https://v1.quasar.dev/vue-components/input#qinput-api
+ */
 export default {
   name: "VQInput",
   components: { ErrorFieldRenderer },
   props: {
+    /**
+     * Vuelidate validator object the input should use.
+     */
     v: {
       type: Object,
       required: true,
     },
+    /**
+     * Translation key for label, hint and error messages.
+     * VQWrap can also provide a tPrefix, allowing the component to use validation path to compute translation key.
+     *
+     * @see src/components/atoms/VQWrap.vue
+     */
     t: {
       type: [String, Boolean],
       default: false,
@@ -52,6 +67,14 @@ export default {
         if (parentUpdater) {
           parentUpdater(props.v, value)
         } else {
+          /**
+           * Emits any update to the underlying input.  Parent component is responsible for updateing the validation model.
+           *
+           * @param Object validator
+           * @param value New value for input
+           * @event vqupdate
+           * @see src/components/atoms/VQWrap.vue
+           */
           context.emit("vqupdate", props.v, value)
         }
       },
@@ -65,6 +88,9 @@ export default {
       return `${parentTPrefix}.${props.v.$path}`
     })
 
+    /**
+     * Translate if key exists.  Returns null if the key is not present.
+     */
     function tife(field) {
       const key = `${tPrefix.value}.${field}`
       if (root.$te(key)) {
@@ -73,6 +99,7 @@ export default {
         return null
       }
     }
+
     function clearInput() {
       input.value.blur()
     }
