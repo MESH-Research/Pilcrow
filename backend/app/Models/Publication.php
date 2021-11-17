@@ -25,7 +25,7 @@ class Publication extends Model
     {
         return $this->belongsToMany(User::class)
             ->withTimestamps()
-            ->withPivot('role_id');
+            ->withPivot(['id', 'user_id', 'role_id', 'publication_id']);
     }
 
     /**

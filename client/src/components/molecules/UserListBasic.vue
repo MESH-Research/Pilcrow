@@ -1,30 +1,31 @@
 <template>
   <q-list bordered separator :data-cy="dataCy">
-    <user-list-item
+    <user-list-basic-item
       v-for="(user, index) in users"
-      :key="user.pivot.id"
+      :key="user.id"
       :user="user"
       :index="index"
-      :actions="actions"
+      :action="action"
+      data-cy="userListBasicItem"
       @actionClick="bubble"
     />
   </q-list>
 </template>
 
 <script>
-import UserListItem from "../atoms/UserListItem.vue"
+import UserListBasicItem from "../atoms/UserListBasicItem.vue"
 export default {
-  name: "UserList",
-  components: { UserListItem },
+  name: "UserListBasic",
+  components: { UserListBasicItem },
   props: {
     users: {
       type: Array,
       required: true,
     },
-    actions: {
-      type: Array,
+    action: {
+      type: String,
       required: false,
-      default: () => [],
+      default: "",
     },
     dataCy: {
       type: String,

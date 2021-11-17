@@ -5,16 +5,15 @@ namespace App\Policies;
 
 use App\Models\Permission;
 use App\Models\Role;
-use App\Models\SubmissionUser;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class SubmissionUserPolicy
+class PublicationUserPolicy
 {
     use HandlesAuthorization;
 
     /**
-     * Determine whether the user can create a submission user record
+     * Determine whether the user can create a publication user record
      *
      * TODO: Consider implementing a more maintainable pattern than a switch or series of if/else statements
      *
@@ -26,12 +25,11 @@ class SubmissionUserPolicy
     {
         switch ($model['role_id']) {
             case Role::SUBMITTER_ROLE_ID:
-                return false;
             case Role::REVIEWER_ROLE_ID:
-                return $this->assignReviewer($user, $model);
             case Role::REVIEW_COORDINATOR_ROLE_ID:
-                return $this->assignReviewCoordinator($user);
+                return false;
             case Role::EDITOR_ROLE_ID:
+                return $this->assignEditor($user);
             case Role::PUBLICATION_ADMINISTRATOR_ROLE_ID:
             case Role::APPLICATION_ADMINISTRATOR_ROLE_ID:
                 return false;
@@ -41,8 +39,9 @@ class SubmissionUserPolicy
     }
 
     /**
-     * Determine whether the user can delete a submission user record
-     * This mirrors the same permissions for creating/assigning
+     * Determine whether the user can delete a publication user record
+     *
+     * TODO: Consider implementing a more maintainable pattern than a switch or series of if/else statements
      *
      * @param  \App\Models\User  $user
      * @param  array  $model
@@ -50,40 +49,48 @@ class SubmissionUserPolicy
      */
     public function delete(User $user, array $model)
     {
-        return $this->create($user, $model);
-    }
-
-    /**
-     * Determine whether the user can assign a reviewer to a submission
-     *
-     * @param  \App\Models\User  $user
-     * @param  array  $model
-     * @return bool
-     */
-    private function assignReviewer(User $user, array $model)
-    {
-        // Assigning user has a higher privileged role
-        if ($user->getHighestPrivilegedRole()) {
-            return $user->can(Permission::ASSIGN_REVIEWER);
+        switch ($model['role_id']) {
+            case Role::SUBMITTER_ROLE_ID:
+            case Role::REVIEWER_ROLE_ID:
+            case Role::REVIEW_COORDINATOR_ROLE_ID:
+                return false;
+            case Role::EDITOR_ROLE_ID:
+                return $this->unassignEditor($user);
+            case Role::PUBLICATION_ADMINISTRATOR_ROLE_ID:
+            case Role::APPLICATION_ADMINISTRATOR_ROLE_ID:
+                return false;
         }
-        // Assigning user is a Review Coordinator of the submission
-        return SubmissionUser::where('user_id', $user->id)
-            ->where('role_id', Role::REVIEW_COORDINATOR_ROLE_ID)
-            ->where('submission_id', $model['submission_id'])
-            ->exists();
+
+        return false;
     }
 
     /**
-     * Determine whether the user can assign a review coordinator to a submission
+     * Determine whether the user can assign an editor to a publication
      *
      * @param  \App\Models\User  $user
      * @return bool
      */
-    private function assignReviewCoordinator(User $user)
+    private function assignEditor(User $user)
     {
         // Assigning user has a higher privileged role
         if ($user->getHighestPrivilegedRole()) {
-            return $user->can(Permission::ASSIGN_REVIEWER);
+            return $user->can(Permission::ASSIGN_EDITOR);
+        }
+
+        return false;
+    }
+
+    /**
+     * Determine whether the user can unassign an editor to a publication
+     *
+     * @param  \App\Models\User  $user
+     * @return bool
+     */
+    private function unassignEditor(User $user)
+    {
+        // Unassigning user has a higher privileged role
+        if ($user->getHighestPrivilegedRole()) {
+            return $user->can(Permission::UNASSIGN_EDITOR);
         }
 
         return false;

@@ -122,12 +122,26 @@ export default {
     },
   },
   publications: {
+    details: "Publication Details",
     create: {
       success: "Publication successfully created.",
       failure: "An error occurred while attempting to create the publication.",
       required: "A name is required to create a publication.",
       maxLength: "The maximum length has been exceeded for the name.",
       duplicate_name: "Publication name already exists.",
+    },
+    editor: {
+      none: "No editors are assigned to this publication.",
+      unassign: {
+        error: "An error occurred while attempting to unassign an editor.",
+        success: "{display_name} successfully unassigned as an editor.",
+      },
+      assign: {
+        duplicate: "That editor is already assigned to this publication.",
+        error:
+          "An error occurred while attempting to assign an editor. Is this user already assigned as an editor?",
+        success: "{display_name} successfully assigned as an editor.",
+      },
     },
   },
   submissions: {
@@ -148,6 +162,23 @@ export default {
         required: "A file must be uploaded with a submission.",
       },
     },
+    review_coordinator: {
+      none: "No review coordinators are assigned to this submission.",
+      unassign: {
+        error:
+          "An error occurred while attempting to unassign a review coordinator.",
+        success:
+          "{display_name} successfully unassigned as a review coordinator.",
+      },
+      assign: {
+        duplicate:
+          "{display_name} is already assigned as a review coordinator to this submission.",
+        error:
+          "An error occurred while attempting to assign a review coordinator. Is this user already assigned as a review coordinator?",
+        success:
+          "{display_name} successfully assigned as a review coordinator.",
+      },
+    },
     reviewer: {
       none: "No reviewers are assigned to this submission.",
       unassign: {
@@ -155,7 +186,8 @@ export default {
         success: "{display_name} successfully unassigned as a reviewer.",
       },
       assign: {
-        duplicate: "That reviewer is already assigned to this submission.",
+        duplicate:
+          "{display_name} is already assigned as a reviewer to this submission.",
         error:
           "An error occurred while attempting to assign a reviewer. Is this user already assigned as a reviewer?",
         success: "{display_name} successfully assigned as a reviewer.",

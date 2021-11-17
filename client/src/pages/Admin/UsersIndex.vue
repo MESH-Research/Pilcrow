@@ -2,34 +2,13 @@
   <div>
     <h2 class="q-pl-lg">All Users</h2>
     <div v-if="users.length">
-      <q-item
-        v-for="user in users"
-        :key="user.id"
-        clickable
-        data-cy="userListItem"
-        class="q-px-lg"
-        @click="goToUserDetail(user.id)"
-      >
-        <q-item-section top avatar>
-          <avatar-image :user="user" rounded />
-        </q-item-section>
+      <user-list-basic
+        ref="user_list_basic"
+        :users="users"
+        action="goToUserDetail"
+        @actionClick="handleUserListBasicClick"
+      />
 
-        <q-item-section>
-          <q-item-label v-if="user.name">
-            {{ user.name }}
-          </q-item-label>
-          <q-item-label v-else>
-            {{ user.username }}
-          </q-item-label>
-          <q-item-label caption>
-            {{ user.email }}
-          </q-item-label>
-        </q-item-section>
-
-        <q-item-section side top>
-          <q-item-label caption> meta </q-item-label>
-        </q-item-section>
-      </q-item>
       <q-pagination
         v-model="currentPage"
         class="q-pa-lg flex flex-center"
@@ -41,13 +20,13 @@
 
 <script>
 import { GET_USERS } from "src/graphql/queries"
-import AvatarImage from "src/components/atoms/AvatarImage.vue"
 import { useQuery, useResult } from "@vue/apollo-composable"
 import { ref } from "@vue/composition-api"
+import UserListBasic from "src/components/molecules/UserListBasic"
 
 export default {
   components: {
-    AvatarImage,
+    UserListBasic,
   },
   setup(_, { root }) {
     const currentPage = ref(1)
@@ -59,15 +38,28 @@ export default {
       1,
       (data) => data.userSearch.paginatorInfo.lastPage
     )
-
-    function goToUserDetail(userId) {
+    async function handleUserListBasicClick({ user, action }) {
+      switch (action) {
+        case "goToUserDetail":
+          this.goToUserDetail(user)
+          break
+      }
+    }
+    async function goToUserDetail(user) {
+      const userId = user.id
       root.$router.push({
         name: "user_details",
         params: { id: userId },
       })
     }
 
-    return { currentPage, users, lastPage, goToUserDetail }
+    return {
+      currentPage,
+      users,
+      lastPage,
+      goToUserDetail,
+      handleUserListBasicClick,
+    }
   },
 }
 </script>

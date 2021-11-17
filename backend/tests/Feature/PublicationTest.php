@@ -17,8 +17,6 @@ class PublicationTest extends TestCase
     use MakesGraphQLRequests;
     use RefreshDatabase;
 
-    private const PUBLICATION_ADMINISTRATOR_ID = 2;
-
     public function testPublicationsCanBeCreatedWithCustomNamesThatAreNotDuplicates()
     {
         $publication = Publication::factory()->create(['name' => 'Custom Name']);
@@ -63,6 +61,7 @@ class PublicationTest extends TestCase
      */
     public function testPublicationsCanBeCreatedViaMutationByAnApplicationAdministrator(mixed $publication_name, mixed $expected_data): void
     {
+        /** @var User $user */
         $user = User::factory()->create();
         $user->assignRole(Role::APPLICATION_ADMINISTRATOR);
         $this->actingAs($user);
@@ -82,6 +81,7 @@ class PublicationTest extends TestCase
      */
     public function testPublicationsCannotBeCreatedViaMutationByARegularUser()
     {
+        /** @var User $user */
         $user = User::factory()->create();
         $this->actingAs($user);
         $response = $this->graphQL(
@@ -145,6 +145,7 @@ class PublicationTest extends TestCase
      */
     public function testAllPublicationsCanBeQueriedByAnApplicationAdministrator()
     {
+        /** @var User $user */
         $user = User::factory()->create();
         $user->assignRole(Role::APPLICATION_ADMINISTRATOR);
         $this->actingAs($user);
@@ -187,6 +188,7 @@ class PublicationTest extends TestCase
      */
     public function testAllPublicationsCannotBeQueriedByARegularUser()
     {
+        /** @var User $user */
         $user = User::factory()->create();
         $this->actingAs($user);
 
@@ -217,6 +219,7 @@ class PublicationTest extends TestCase
 
         // Create publications and attach them to users randomly with random roles
         for ($i = 0; $i < $publication_count; $i++) {
+            $random_user = $users->random();
             $random_role_id = Role::whereIn(
                 'name',
                 [
@@ -228,18 +231,21 @@ class PublicationTest extends TestCase
                 ->pluck('id')
                 ->random();
             $publication = Publication::factory()->hasAttached(
-                $users->random(),
+                $random_user,
                 [
                     'role_id' => $random_role_id,
                 ]
             )
                 ->create();
             // Ensure at least one publication admin is attached to the publication.
-            if ($random_role_id !== self::PUBLICATION_ADMINISTRATOR_ID) {
+            if ($random_role_id !== Role::PUBLICATION_ADMINISTRATOR_ROLE_ID) {
+                $random_non_duplicate_user = $users->reject(function ($user) use ($random_user) {
+                    return $user->id === $random_user->id;
+                })->random();
                 $publication->users()->attach(
-                    $users->random(),
+                    $random_non_duplicate_user,
                     [
-                        'role_id' => self::PUBLICATION_ADMINISTRATOR_ID,
+                        'role_id' => Role::PUBLICATION_ADMINISTRATOR_ROLE_ID,
                     ]
                 );
             }
@@ -300,5 +306,478 @@ class PublicationTest extends TestCase
         )
             ->get();
         $this->assertEquals(1, $publication_pivot_data->count());
+    }
+
+    /**
+     * @return array
+     */
+    public function createPublicationUserViaMutationAsAnEditorProvider(): array
+    {
+        return [
+            [
+                [
+                    'publication_user_role_id' => Role::SUBMITTER_ROLE_ID,
+                    'allowed' => false,
+                ],
+            ],
+            [
+                [
+                    'publication_user_role_id' => Role::REVIEWER_ROLE_ID,
+                    'allowed' => false,
+                ],
+            ],
+            [
+                [
+                    'publication_user_role_id' => Role::REVIEW_COORDINATOR_ROLE_ID,
+                    'allowed' => false,
+                ],
+            ],
+            [
+                [
+                    'publication_user_role_id' => Role::EDITOR_ROLE_ID,
+                    'allowed' => false,
+                ],
+            ],
+            [
+                [
+                    'publication_user_role_id' => 0,
+                    'allowed' => false,
+                ],
+            ],
+            [
+                [
+                    'publication_user_role_id' => '',
+                    'allowed' => false,
+                ],
+            ],
+            [
+                [
+                    'publication_user_role_id' => null,
+                    'allowed' => false,
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider createPublicationUserViaMutationAsAnEditorProvider
+     * @return void
+     */
+    public function testCreatePublicationUserViaMutationAsAnEditor(array $case)
+    {
+        /** @var User $editor */
+        $editor = User::factory()->create();
+        $editor->assignRole(Role::EDITOR);
+        $this->actingAs($editor);
+        $user_to_be_assigned = User::factory()->create();
+        $publication = Publication::factory()
+            ->hasAttached(
+                $editor,
+                [
+                    'role_id' => 3,
+                ]
+            )
+            ->create([
+                'name' => 'Test Publication for Publication User Assignment Via Mutation',
+            ]);
+        $mutation_response = $this->graphQL(
+            'mutation CreatePublicationUser ($role_id: ID!, $publication_id: ID!, $user_id: ID!) {
+                createPublicationUser(
+                    publication_user: { role_id: $role_id, publication_id: $publication_id, user_id: $user_id }
+                ) {
+                    role_id
+                    publication_id
+                    user_id
+                }
+            }',
+            [
+                'role_id' => $case['publication_user_role_id'],
+                'publication_id' => $publication->id,
+                'user_id' => $user_to_be_assigned->id,
+            ]
+        );
+        $expected_mutation_response = null;
+        if ($case['allowed']) {
+            $expected_mutation_response = [
+                'createPublicationUser' => [
+                    'role_id' => $case['publication_user_role_id'],
+                    'publication_id' => (string)$publication->id,
+                    'user_id' => (string)$user_to_be_assigned->id,
+                ],
+            ];
+        }
+        $mutation_response->assertJsonPath('data', $expected_mutation_response);
+        $query_response = $this->graphQL(
+            'query GetPublication ($id: ID!) {
+                publication( id: $id ) {
+                    users {
+                        id
+                        pivot {
+                            role_id
+                        }
+                    }
+                }
+            }',
+            [
+                'id' => $publication->id,
+            ]
+        );
+        $expected_query_response = [
+            'publication' => [
+                'users' => [
+                    [
+                        'id' => (string)$editor->id,
+                        'pivot' => [
+                            'role_id' => Role::EDITOR_ROLE_ID,
+                        ],
+                    ],
+                ],
+            ],
+        ];
+        if ($case['allowed']) {
+            array_push(
+                $expected_query_response['publication']['users'],
+                [
+                    'id' => (string)$user_to_be_assigned->id,
+                    'pivot' => [
+                        'role_id' => $case['publication_user_role_id'],
+                    ],
+                ],
+            );
+        }
+        $query_response->assertJsonPath('data', $expected_query_response);
+    }
+
+    /**
+     * @return array
+     */
+    public function deletePublicationUserViaMutationAsAnEditorProvider(): array
+    {
+        return [
+            [
+                [
+                    'publication_user_role_id' => Role::SUBMITTER_ROLE_ID,
+                    'allowed' => false,
+                ],
+            ],
+            [
+                [
+                    'publication_user_role_id' => Role::REVIEWER_ROLE_ID,
+                    'allowed' => false,
+                ],
+            ],
+            [
+                [
+                    'publication_user_role_id' => Role::REVIEW_COORDINATOR_ROLE_ID,
+                    'allowed' => false,
+                ],
+            ],
+            [
+                [
+                    'publication_user_role_id' => Role::EDITOR_ROLE_ID,
+                    'allowed' => false,
+                ],
+            ],
+            [
+                [
+                    'publication_user_role_id' => 0,
+                    'allowed' => false,
+                ],
+            ],
+            [
+                [
+                    'publication_user_role_id' => '',
+                    'allowed' => false,
+                ],
+            ],
+            [
+                [
+                    'publication_user_role_id' => null,
+                    'allowed' => false,
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider deletePublicationUserViaMutationAsAnEditorProvider
+     * @return void
+     */
+    public function testDeletePublicationUserViaMutationAsAnEditor(array $case)
+    {
+        /** @var User $editor */
+        $editor = User::factory()->create();
+        $editor->assignRole(Role::EDITOR);
+        $this->actingAs($editor);
+        $user_to_be_deleted = User::factory()->create();
+        $publication_user_role_id_is_invalid = intval($case['publication_user_role_id']) <= 0;
+        $publication = Publication::factory()
+            ->hasAttached(
+                $user_to_be_deleted,
+                [
+                    'role_id' => $publication_user_role_id_is_invalid ? Role::EDITOR_ROLE_ID : $case['publication_user_role_id'],
+                ]
+            )
+            ->hasAttached(
+                $editor,
+                [
+                    'role_id' => 3,
+                ]
+            )
+            ->create([
+                'name' => 'Test Publication for Publication User Unassignment Via Mutation',
+            ]);
+
+        $publication_user = PublicationUser::firstOrFail();
+        $response = $this->graphQL(
+            'mutation DeletePublicationUser ($role_id: ID!, $publication_id: ID!, $user_id: ID!) {
+                deletePublicationUser(
+                    publication_user: { role_id: $role_id, publication_id: $publication_id, user_id: $user_id }
+                ) {
+                    id
+                }
+            }',
+            [
+                'role_id' => $case['publication_user_role_id'],
+                'publication_id' => $publication->id,
+                'user_id' => $user_to_be_deleted->id,
+            ]
+        );
+        $expected_mutation_response = null;
+        if ($case['allowed']) {
+            $expected_mutation_response = [
+                'deletePublicationUser' => [
+                    'id' => (string)$publication_user->id,
+                ],
+            ];
+        }
+        $response->assertJsonPath('data', $expected_mutation_response);
+    }
+
+    /**
+     * @return array
+     */
+    public function createPublicationUserViaMutationAsAnApplicationAdministratorProvider(): array
+    {
+        return [
+            [
+                [
+                    'publication_user_role_id' => Role::SUBMITTER_ROLE_ID,
+                    'allowed' => false,
+                ],
+            ],
+            [
+                [
+                    'publication_user_role_id' => Role::REVIEWER_ROLE_ID,
+                    'allowed' => false,
+                ],
+            ],
+            [
+                [
+                    'publication_user_role_id' => Role::REVIEW_COORDINATOR_ROLE_ID,
+                    'allowed' => false,
+                ],
+            ],
+            [
+                [
+                    'publication_user_role_id' => Role::EDITOR_ROLE_ID,
+                    'allowed' => true,
+                ],
+            ],
+            [
+                [
+                    'publication_user_role_id' => 0,
+                    'allowed' => false,
+                ],
+            ],
+            [
+                [
+                    'publication_user_role_id' => '',
+                    'allowed' => false,
+                ],
+            ],
+            [
+                [
+                    'publication_user_role_id' => null,
+                    'allowed' => false,
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider createPublicationUserViaMutationAsAnApplicationAdministratorProvider
+     * @return void
+     */
+    public function testCreatePublicationUserViaMutationAsAnApplicationAdministrator(array $case)
+    {
+        /** @var User $admin */
+        $admin = User::factory()->create();
+        $admin->assignRole(Role::APPLICATION_ADMINISTRATOR);
+        $this->actingAs($admin);
+        $user_to_be_assigned = User::factory()->create();
+        $publication = Publication::factory()
+            ->create([
+                'name' => 'Test Publication for Publication User Assignment Via Mutation',
+            ]);
+        $mutation_response = $this->graphQL(
+            'mutation CreatePublicationUser ($role_id: ID!, $publication_id: ID!, $user_id: ID!) {
+                createPublicationUser(
+                    publication_user: { role_id: $role_id, publication_id: $publication_id, user_id: $user_id }
+                ) {
+                    role_id
+                    publication_id
+                    user_id
+                }
+            }',
+            [
+                'role_id' => $case['publication_user_role_id'],
+                'publication_id' => $publication->id,
+                'user_id' => $user_to_be_assigned->id,
+            ]
+        );
+        $expected_mutation_response = null;
+        if ($case['allowed']) {
+            $expected_mutation_response = [
+                'createPublicationUser' => [
+                    'role_id' => $case['publication_user_role_id'],
+                    'publication_id' => (string)$publication->id,
+                    'user_id' => (string)$user_to_be_assigned->id,
+                ],
+            ];
+        }
+        $mutation_response->assertJsonPath('data', $expected_mutation_response);
+        $query_response = $this->graphQL(
+            'query GetPublication ($id: ID!) {
+                publication( id: $id ) {
+                    users {
+                        id
+                        pivot {
+                            role_id
+                        }
+                    }
+                }
+            }',
+            [
+                'id' => $publication->id,
+            ]
+        );
+        $expected_query_response = [
+            'publication' => [
+                'users' => [ ],
+            ],
+        ];
+        if ($case['allowed']) {
+            array_push(
+                $expected_query_response['publication']['users'],
+                [
+                    'id' => (string)$user_to_be_assigned->id,
+                    'pivot' => [
+                        'role_id' => $case['publication_user_role_id'],
+                    ],
+                ],
+            );
+        }
+        $query_response->assertJsonPath('data', $expected_query_response);
+    }
+
+    /**
+     * @return array
+     */
+    public function deletePublicationUserViaMutationAsAnApplicationAdministratorProvider(): array
+    {
+        return [
+            [
+                [
+                    'publication_user_role_id' => Role::SUBMITTER_ROLE_ID,
+                    'allowed' => false,
+                ],
+            ],
+            [
+                [
+                    'publication_user_role_id' => Role::REVIEWER_ROLE_ID,
+                    'allowed' => false,
+                ],
+            ],
+            [
+                [
+                    'publication_user_role_id' => Role::REVIEW_COORDINATOR_ROLE_ID,
+                    'allowed' => false,
+                ],
+            ],
+            [
+                [
+                    'publication_user_role_id' => Role::EDITOR_ROLE_ID,
+                    'allowed' => true,
+                ],
+            ],
+            [
+                [
+                    'publication_user_role_id' => 0,
+                    'allowed' => false,
+                ],
+            ],
+            [
+                [
+                    'publication_user_role_id' => '',
+                    'allowed' => false,
+                ],
+            ],
+            [
+                [
+                    'publication_user_role_id' => null,
+                    'allowed' => false,
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider deletePublicationUserViaMutationAsAnApplicationAdministratorProvider
+     * @return void
+     */
+    public function testDeletePublicationUserViaMutationAsAnApplicationAdministrator(array $case)
+    {
+        /** @var User $editor */
+        $editor = User::factory()->create();
+        $editor->assignRole(Role::APPLICATION_ADMINISTRATOR);
+        $this->actingAs($editor);
+        $user_to_be_deleted = User::factory()->create();
+        $publication_user_role_id_is_invalid = intval($case['publication_user_role_id']) <= 0;
+        $publication = Publication::factory()
+            ->hasAttached(
+                $user_to_be_deleted,
+                [
+                    'role_id' => $publication_user_role_id_is_invalid ? Role::EDITOR_ROLE_ID : $case['publication_user_role_id'],
+                ]
+            )
+            ->create([
+                'name' => 'Test Publication for Publication User Unassignment Via Mutation',
+            ]);
+
+        $publication_user = PublicationUser::firstOrFail();
+        $response = $this->graphQL(
+            'mutation DeletePublicationUser ($role_id: ID!, $publication_id: ID!, $user_id: ID!) {
+                deletePublicationUser(
+                    publication_user: { role_id: $role_id, publication_id: $publication_id, user_id: $user_id }
+                ) {
+                    id
+                }
+            }',
+            [
+                'role_id' => $case['publication_user_role_id'],
+                'publication_id' => $publication->id,
+                'user_id' => $user_to_be_deleted->id,
+            ]
+        );
+        $expected_mutation_response = null;
+        if ($case['allowed']) {
+            $expected_mutation_response = [
+                'deletePublicationUser' => [
+                    'id' => (string)$publication_user->id,
+                ],
+            ];
+        }
+        $response->assertJsonPath('data', $expected_mutation_response);
     }
 }

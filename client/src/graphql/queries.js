@@ -130,7 +130,27 @@ export const GET_SUBMISSION = gql`
       }
       users {
         name
+        username
         email
+        pivot {
+          id
+          user_id
+          role_id
+        }
+      }
+    }
+  }
+`
+
+export const GET_PUBLICATION = gql`
+  query GetPublication($id: ID!) {
+    publication(id: $id) {
+      name
+      is_publicly_visible
+      users {
+        name
+        email
+        username
         pivot {
           id
           user_id

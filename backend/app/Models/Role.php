@@ -22,6 +22,14 @@ class Role extends ParentModel
     public const REVIEWER = 'Reviewer';
     public const SUBMITTER = 'Submitter';
 
+    // Primary Key IDs
+    public const APPLICATION_ADMINISTRATOR_ROLE_ID = '1';
+    public const PUBLICATION_ADMINISTRATOR_ROLE_ID = '2';
+    public const EDITOR_ROLE_ID = '3';
+    public const REVIEW_COORDINATOR_ROLE_ID = '4';
+    public const REVIEWER_ROLE_ID = '5';
+    public const SUBMITTER_ROLE_ID = '6';
+
     /**
      * @return array
      */
