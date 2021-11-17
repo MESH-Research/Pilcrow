@@ -40,6 +40,9 @@ import { defineComponent } from "@vue/composition-api"
 import { notificationItems } from "src/graphql/fillerData"
 import NotificationListItem from "src/components/atoms/NotificationListItem.vue"
 
+/**
+ * Notification Dropdown menu
+ */
 export default defineComponent({
   name: "NotificationPopup",
   components: { NotificationListItem },
