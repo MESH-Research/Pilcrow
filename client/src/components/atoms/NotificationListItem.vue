@@ -9,7 +9,10 @@
         {{ $t(tKey, flattened) }}
       </p>
     </q-item-section>
-    <q-item-section v-if="!!showTime" class="text-caption items-end col-xs-1">
+    <q-item-section
+      v-if="!!showTime"
+      class="text-caption items-end col-md-3 col-xs-1"
+    >
       {{ relativeTime }}
     </q-item-section>
   </q-item>

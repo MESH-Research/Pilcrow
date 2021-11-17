@@ -83,4 +83,9 @@ export default {
 <style lang="sass">
 .notifications-list .q-item
     overflow: hidden
+
+@media (max-width: $breakpoint-xs-max)
+    .notifications-list .q-item
+      min-height: 45px
+      padding: 8px 10px 8px 0
 </style>
