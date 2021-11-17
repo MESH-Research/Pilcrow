@@ -4,6 +4,7 @@
     padding="none"
     data-cy="dropdown_notificiations"
     class="notifications-dropdown"
+    :aria-label="$t('header.notification_button')"
   >
     <q-icon name="notifications" />
     <q-badge floating color="light-blue-3" rounded />
