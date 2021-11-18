@@ -5,7 +5,7 @@
     </div>
     <div class="row justify-center">
       <div class="col-md-8 q-pa-sm">
-        <div class="row">
+        <div class="row q-mb-md q-col-gutter-md justify-between items-center">
           <q-select
             v-model="filterMode"
             :options="filterModes"
@@ -13,12 +13,15 @@
             filled
             dense
             clearable
-            class="q-mb-md col-md-3 col-xs-12"
+            class="col-8 col-md-4"
           >
             <template #before>
               <q-icon name="filter_alt" />
             </template>
           </q-select>
+          <div class="col-4 col-md-3">
+            <q-btn dense class="full-width">Dismiss All</q-btn>
+          </div>
         </div>
         <q-list class="notifications-list">
           <notification-list-item
