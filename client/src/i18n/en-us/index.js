@@ -85,7 +85,7 @@ export default {
     publications: "Publications",
     submissions: "Submissions",
     user_list: "All Users",
-    notifications_button: "View Notifications",
+    notification_button: "View Notifications",
   },
   account: {
     failures: {
