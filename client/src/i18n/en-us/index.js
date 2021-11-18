@@ -220,19 +220,19 @@ export default {
       requested: {
         short: "{user.username} has requested your review on {object.name}",
       },
-      commentReply: {
+      commentReplied: {
         short: "{user.username} has replied to your comment on {object.name}",
       },
     },
     submission: {
-      new: {
+      created: {
         short:
           "{user.username} has submitted {object.name} to {object.publication.name}",
       },
       approved: {
         short: "{object.name} has been approved",
       },
-      resubmission: {
+      resubmitted: {
         short: "{object.name} has been resubmitted",
       },
     },

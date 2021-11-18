@@ -50,7 +50,7 @@ export const notificationItems = [
     time: randomPastTime(),
   },
   {
-    type: "submission.new",
+    type: "submission.created",
     user: users.user3,
     object: objects.submission2,
     viewed: false,
@@ -66,7 +66,7 @@ export const notificationItems = [
     time: randomPastTime(),
   },
   {
-    type: "review.commentReply",
+    type: "review.commentReplied",
     user: users.user2,
     object: objects.submission,
     viewed: true,
@@ -82,7 +82,7 @@ export const notificationItems = [
     time: randomPastTime(),
   },
   {
-    type: "submission.resubmission",
+    type: "submission.resubmitted",
     user: users.user2,
     object: objects.submission,
     viewed: false,
