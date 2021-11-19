@@ -14,4 +14,5 @@ type User {
     profile_metadata: ProfileMetadata
     submissions: [Submission]! @belongsToMany
     pivot: SubmissionUser
+    notifications: [Notification]! @morphMany
 }

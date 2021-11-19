@@ -1,0 +1,9 @@
+"""
+A notification for an event
+"""
+type Notification {
+    id: ID!
+    notifiable: Notifiable! @morphTo
+}
+
+union Notifiable = Notification | User
