@@ -200,8 +200,10 @@ class NotificationTest extends TestCase
                         id
                         notifications (first: 10, page: 1) {
                             data {
-                                body
-                                submission_id
+                                data {
+                                    body
+                                    submission_id
+                                }
                             }
                         }
                     }
@@ -213,22 +215,20 @@ class NotificationTest extends TestCase
                 'userSearch' => [
                     'data' => [
                         [
-                            'id' => $user_1->id,
+                            'id' => (string)$user_1->id,
                             'notifications' => [
                                 'data' => [
                                     [
                                         'data' => [
-                                            [
-                                                'body' => 'A submission has been created',
-                                                'submission_id' => '1000',
-                                            ],
+                                            'body' => 'A submission has been created.',
+                                            'submission_id' => '1000',
                                         ],
                                     ],
                                 ],
                             ],
                         ],
                         [
-                            'id' => $user_2->id,
+                            'id' => (string)$user_2->id,
                             'notifications' => [
                                 'data' => [ ],
                             ],
