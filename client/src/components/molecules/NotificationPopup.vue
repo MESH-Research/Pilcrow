@@ -8,13 +8,16 @@
   >
     <q-icon name="notifications" />
     <q-badge floating color="light-blue-3" rounded />
-
-    <q-menu id="notifications-menu">
+    <q-popup-proxy
+      ref="popupProxy"
+      v-model="isVisible"
+      max-width="400px"
+      position="top"
+    >
       <div class="notifications-container">
         <q-list
           role="navigation"
           aria-label="Dropdown Navigation"
-          style="width: 400px"
           bordered
           separator
           class="notifications-list"
@@ -32,12 +35,12 @@
           <q-btn>Dismiss All</q-btn>
         </q-btn-group>
       </div>
-    </q-menu>
+    </q-popup-proxy>
   </q-btn>
 </template>
 
 <script>
-import { defineComponent } from "@vue/composition-api"
+import { defineComponent, ref, watch, nextTick } from "@vue/composition-api"
 import { notificationItems } from "src/graphql/fillerData"
 import NotificationListItem from "src/components/atoms/NotificationListItem.vue"
 
@@ -48,29 +51,45 @@ export default defineComponent({
   name: "NotificationPopup",
   components: { NotificationListItem },
   setup() {
-    return { items: notificationItems }
+    const popupProxy = ref(null)
+    const isVisible = ref(false)
+
+    watch(isVisible, (newValue) => {
+      if (newValue === false) {
+        return
+      }
+      nextTick(() => {
+        popupProxy.value.$refs.popup.$children[0].$el.id =
+          "notifications-wrapper"
+      })
+    })
+    return { items: notificationItems, isVisible, popupProxy }
   },
 })
 </script>
 
 <style lang="sass">
+.q-dialog__inner .notifications-container .q-list.notifications-list
+  width: auto
+  .q-item
+    width: 100%
 
-#notifications-menu.q-menu
+#notifications-wrapper.q-menu
   display: flex
   overflow: hidden
   flex-flow: column
 .notifications-container
+  background: white
   display: flex
   flex-flow: column
   overflow: hidden
   .q-list.notifications-list
     display: flex
     flex-flow: column wrap
-    width: auto
     overflow: hidden
     .q-item
       min-height: 40px
       padding: 2px 16px 2px 0px
+      width: 100%
       margin-right: 10px
-      width: 410px
 </style>
