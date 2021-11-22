@@ -14,7 +14,7 @@ type NotificationData {
     body: String!
     action: String
     url: String
-    submission_id: ID!
+    submission_id: ID
 }
 
 union Notifiable = Notification | User
