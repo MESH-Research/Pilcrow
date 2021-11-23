@@ -1,0 +1,20 @@
+"""
+A notification for an event
+"""
+type Notification {
+    id: ID!
+    notifiable: Notifiable! @morphTo
+    data: NotificationData
+}
+
+"""
+JSON data for a notification
+"""
+type NotificationData {
+    body: String!
+    action: String
+    url: String
+    submission_id: ID
+}
+
+union Notifiable = Notification | User

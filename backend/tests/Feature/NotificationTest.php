@@ -7,10 +7,12 @@ use App\Models\User;
 use App\Notifications\SubmissionCreation;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
+use Nuwave\Lighthouse\Testing\MakesGraphQLRequests;
 use Tests\TestCase;
 
 class NotificationTest extends TestCase
 {
+    use MakesGraphQLRequests;
     use RefreshDatabase;
 
     /**
@@ -172,5 +174,69 @@ class NotificationTest extends TestCase
             });
             $this->assertEquals(0, $user->unreadNotifications->count());
         });
+    }
+
+    /**
+     * @return void
+     */
+    public function testNotificationsCanOnlyBeQueriedForOneself()
+    {
+        /** @var User $user_1 */
+        $user_1 = User::factory()->create();
+        $user_2 = User::factory()->create();
+        $this->actingAs($user_1);
+        $notification_data = [
+            'body' => 'A submission has been created.',
+            'action' => 'Visit CCR',
+            'url' => '/',
+            'submission_id' => 1000,
+        ];
+        $user_1->notify(new SubmissionCreation($notification_data));
+        $user_2->notify(new SubmissionCreation($notification_data));
+        $response = $this->graphQL(
+            'query GetUsers {
+                userSearch {
+                    data {
+                        id
+                        notifications (first: 10, page: 1) {
+                            data {
+                                data {
+                                    body
+                                    submission_id
+                                }
+                            }
+                        }
+                    }
+                }
+            }'
+        );
+        $expected_data = [
+            'data' => [
+                'userSearch' => [
+                    'data' => [
+                        [
+                            'id' => (string)$user_1->id,
+                            'notifications' => [
+                                'data' => [
+                                    [
+                                        'data' => [
+                                            'body' => 'A submission has been created.',
+                                            'submission_id' => '1000',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                        [
+                            'id' => (string)$user_2->id,
+                            'notifications' => [
+                                'data' => [ ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+        $response->assertJson($expected_data);
     }
 }
