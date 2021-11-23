@@ -9,8 +9,8 @@
     v-model="model"
     :data-cy="cyAttr"
     :error="v.$error"
-    :label="tife('label')"
-    :hint="tife('hint')"
+    :label="$te(fullTKey('label')) ? $t(fullTKey('label')) : null"
+    :hint="$te(fullTKey('hint')) ? $t(fullTKey('hint')) : null"
     outlined
     @clear="clearInput"
   >
@@ -59,10 +59,9 @@ export default {
     },
   },
   emits: ["vqupdate"],
-  setup(props, context) {
+  setup(props, { emit }) {
     const parentUpdater = inject("vqupdate", null)
     const input = ref(null)
-    const { root } = context
     const model = computed({
       get() {
         return props.v.$model
@@ -80,7 +79,7 @@ export default {
            * @event vqupdate
            * @see src/components/atoms/VQWrap.vue
            */
-          context.emit("vqupdate", props.v, value)
+          emit("vqupdate", props.v, value)
         }
       },
     })
@@ -94,15 +93,10 @@ export default {
     })
 
     /**
-     * Translate if key exists.  Returns null if the key is not present.
+     * Provide full translation key for a field.
      */
-    function tife(field) {
-      const key = `${tPrefix.value}.${field}`
-      if (root.$te(key)) {
-        return root.$t(key)
-      } else {
-        return null
-      }
+    const fullTKey = (key) => {
+      return `${tPrefix.value}.${key}`
     }
 
     function clearInput() {
@@ -116,7 +110,14 @@ export default {
       }
       return ""
     })
-    return { model, tife, context, root, tPrefix, formState, clearInput, input }
+    return {
+      model,
+      tPrefix,
+      fullTKey,
+      formState,
+      clearInput,
+      input,
+    }
   },
 }
 </script>
