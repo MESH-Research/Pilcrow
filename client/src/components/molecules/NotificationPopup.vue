@@ -73,8 +73,6 @@ export default defineComponent({
 <style lang="sass">
 #notifications-wrapper.q-menu
   display: flex
-  overflow: hidden
-  flex-flow: column
 .notifications-container
   background: white
   display: flex
