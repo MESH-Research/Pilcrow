@@ -56,7 +56,7 @@ export default {
      */
     iconSize: {
       type: String,
-      default: "xs",
+      default: "sm",
     },
   },
   setup(props) {

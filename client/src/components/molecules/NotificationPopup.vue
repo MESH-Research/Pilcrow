@@ -3,11 +3,13 @@
     flat
     padding="none"
     data-cy="dropdown_notificiations"
-    class="notifications-dropdown"
     :aria-label="$t('header.notification_button')"
+    aria-haspopup="true"
+    :aria-expanded="isVisible ? 'true' : 'false'"
   >
     <q-icon name="notifications" />
-    <q-badge floating color="light-blue-3" rounded />
+    <q-badge role="presentation" floating color="light-blue-3" rounded />
+
     <q-popup-proxy
       ref="popupProxy"
       v-model="isVisible"
@@ -69,11 +71,6 @@ export default defineComponent({
 </script>
 
 <style lang="sass">
-.q-dialog__inner .notifications-container .q-list.notifications-list
-  width: auto
-  .q-item
-    width: 100%
-
 #notifications-wrapper.q-menu
   display: flex
   overflow: hidden
@@ -89,7 +86,7 @@ export default defineComponent({
     overflow: hidden
     .q-item
       min-height: 40px
-      padding: 2px 16px 2px 0px
+      padding: 4px 16px 4px 0px
       width: 100%
       margin-right: 10px
 </style>

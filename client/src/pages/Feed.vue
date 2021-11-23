@@ -10,9 +10,9 @@
             v-model="filterMode"
             :options="filterModes"
             label="Filter"
-            filled
             dense
             clearable
+            outlined
             class="col-8 col-md-4"
           >
             <template #before>
