@@ -48,22 +48,37 @@ export default {
   name: "TagList",
   components: { ErrorFieldRenderer },
   props: {
+    /**
+     * Translation prefix for label, hint, errors, etc
+     */
     t: {
       type: String,
       default: "lists",
     },
+    /**
+     * Model value, list of items
+     */
     value: {
       type: Array,
       default: () => [],
     },
+    /**
+     * Vuelidate rules to apply to new and edited items.
+     */
     rules: {
       type: Object,
       default: () => {},
     },
+    /**
+     * Set true to allow duplicate items to be added to the list.
+     */
     allowDuplicates: {
       type: Boolean,
       default: false,
     },
+    /**
+     * Cypress data-cy attribute value.
+     */
     cyAttr: {
       type: String,
       default: "keywords",
@@ -86,6 +101,9 @@ export default {
     const v$ = useVuelidate(vRules, form)
 
     function remove(index) {
+      /**
+       * Emits input method on update of model value
+       */
       emit("input", [
         ...props.value.slice(0, index),
         ...props.value.slice(index + 1),

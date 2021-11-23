@@ -148,26 +148,44 @@ export default {
   name: "EditableList",
   components: { Draggable, CollapseToolbar, ErrorFieldRenderer },
   props: {
+    /**
+     * Model property for list of items.
+     */
     value: {
       type: Array,
       default: () => [],
     },
+    /**
+     * Icon to prepend to input
+     */
     inputIcon: {
       type: String,
       default: "",
     },
+    /**
+     * Vuelidate valdiation rules to apply to new and edited items
+     */
     rules: {
       type: Object,
       default: () => {},
     },
+    /**
+     * Translation root to use for label, hint, etc.
+     */
     t: {
       type: String,
       default: "lists",
     },
+    /**
+     * Set true to allow duplicates items in list.
+     */
     allowDuplicates: {
       type: Boolean,
       default: false,
     },
+    /**
+     * Cypress attribute for data-cy element
+     */
     cyAttr: {
       type: String,
       default: "",
@@ -214,6 +232,9 @@ export default {
       form.addItemValue = ""
     }
     function deleteItem(index) {
+      /**
+       * Emits input event on update of model value.
+       */
       emit("input", [
         ...props.value.slice(0, index),
         ...props.value.slice(index + 1),
