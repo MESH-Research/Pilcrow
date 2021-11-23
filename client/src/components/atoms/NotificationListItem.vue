@@ -77,7 +77,6 @@ export default {
      */
     const relativeTime = computed(() => {
       const style = Screen.lt.md ? "mini-now" : "long"
-      console.log(style)
       return timeAgo.format(new Date(props.note.time), style)
     })
     return { tKey, flattened, relativeTime }
