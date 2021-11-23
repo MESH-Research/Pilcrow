@@ -15,6 +15,7 @@
       <q-space />
 
       <template v-if="currentUser">
+        <notification-popup />
         <q-btn-dropdown
           stretch
           flat
@@ -92,9 +93,10 @@
 <script>
 import appAuth from "src/components/mixins/appAuth"
 import { CURRENT_USER } from "src/graphql/queries"
-
+import NotificationPopup from "src/components/molecules/NotificationPopup.vue"
 export default {
   name: "AppHeader",
+  components: { NotificationPopup },
   mixins: [appAuth],
   props: {
     //Drawer status
