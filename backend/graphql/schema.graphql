@@ -1,4 +1,5 @@
 #import academic_profiles.graphql
+#import notification.graphql
 #import permission.graphql
 #import profile_metadata.graphql
 #import publication.graphql
