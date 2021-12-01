@@ -1,5 +1,5 @@
 const { program } = require("commander");
-const chalk = require("chalk");
+const chalk = import("chalk");
 const columnify = require("columnify");
 const yesno = require("yesno");
 const dedent = require("dedent-js");
