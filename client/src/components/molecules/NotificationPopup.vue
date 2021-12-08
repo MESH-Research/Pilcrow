@@ -43,7 +43,9 @@
 
 <script>
 import { defineComponent, ref, watch, nextTick } from "@vue/composition-api"
-import { notificationItems } from "src/graphql/fillerData"
+//import { notificationItems } from "src/graphql/fillerData"
+import { useQuery, useResult } from "@vue/apollo-composable"
+import { CURRENT_USER_NOTIFICATIONS } from "src/graphql/queries"
 import NotificationListItem from "src/components/atoms/NotificationListItem.vue"
 
 /**
@@ -53,9 +55,17 @@ export default defineComponent({
   name: "NotificationPopup",
   components: { NotificationListItem },
   setup() {
+    const currentPage = ref(1)
     const popupProxy = ref(null)
     const isVisible = ref(false)
-
+    const { result } = useQuery(CURRENT_USER_NOTIFICATIONS, {
+      page: currentPage,
+    })
+    const notificationItems = useResult(
+      result,
+      [],
+      (data) => data.currentUser.notifications
+    )
     watch(isVisible, (newValue) => {
       if (newValue === false) {
         return

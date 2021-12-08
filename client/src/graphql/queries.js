@@ -14,6 +14,28 @@ export const CURRENT_USER = gql`
     }
   }
 `
+export const CURRENT_USER_NOTIFICATIONS = gql`
+  query currentUserNotifications($page: Int) {
+    currentUser {
+      id
+      notifications(page: $page) {
+        paginatorInfo {
+          count
+          currentPage
+          lastPage
+          perPage
+        }
+        data {
+          id
+          data {
+            body
+            read_at
+          }
+        }
+      }
+    }
+  }
+`
 export const CURRENT_USER_SUBMISSIONS = gql`
   query currentUser {
     currentUser {
@@ -122,7 +144,7 @@ export const GET_SUBMISSIONS = gql`
 `
 
 export const GET_SUBMISSION = gql`
-  query GetSubmission($id: ID) {
+  query GetSubmission($id: ID!) {
     submission(id: $id) {
       title
       publication {
