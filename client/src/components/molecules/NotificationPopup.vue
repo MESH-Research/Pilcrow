@@ -29,7 +29,7 @@
             :key="index"
             :note="item"
             clickable
-            :class="{ unread: !item.viewed }"
+            :class="{ unread: !item.data.read_at }"
           />
         </q-list>
         <q-btn-group spread>
@@ -64,7 +64,7 @@ export default defineComponent({
     const notificationItems = useResult(
       result,
       [],
-      (data) => data.currentUser.notifications
+      (data) => data.currentUser.notifications.data
     )
     watch(isVisible, (newValue) => {
       if (newValue === false) {

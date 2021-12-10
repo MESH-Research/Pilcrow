@@ -11,6 +11,7 @@ type Notification {
 JSON data for a notification
 """
 type NotificationData {
+    type: String
     body: String!
     action: String
     url: String

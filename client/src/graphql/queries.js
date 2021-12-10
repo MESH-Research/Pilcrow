@@ -18,7 +18,7 @@ export const CURRENT_USER_NOTIFICATIONS = gql`
   query currentUserNotifications($page: Int) {
     currentUser {
       id
-      notifications(page: $page) {
+      notifications(first: 10, page: $page) {
         paginatorInfo {
           count
           currentPage
@@ -28,6 +28,7 @@ export const CURRENT_USER_NOTIFICATIONS = gql`
         data {
           id
           data {
+            type
             body
             read_at
           }
