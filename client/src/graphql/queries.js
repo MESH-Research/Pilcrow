@@ -28,6 +28,15 @@ export const CURRENT_USER_NOTIFICATIONS = gql`
         data {
           id
           data {
+            user {
+              username
+            }
+            submission {
+              title
+            }
+            publication {
+              name
+            }
             type
             body
             read_at

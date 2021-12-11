@@ -70,7 +70,7 @@ export default {
      * Flattened version of the note for passing to i18n
      */
     const flattened = computed(() => {
-      return flatten(props.note)
+      return flatten(props.note.data)
     })
     /**
      * Relative representation of the note's time property
