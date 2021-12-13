@@ -60,16 +60,16 @@ class SubmissionCreated extends Notification implements ShouldQueue
     {
         return [
             'submission' => [
-                'id' => $this->creationData['submission_id'],
-                'title' => '',
+                'id' => $this->creationData['submission']->id,
+                'title' => $this->creationData['submission']->title,
             ],
             'publication' => [
-                'id' => $this->creationData['publication_id'],
-                'name' => '',
+                'id' => $this->creationData['publication']->id,
+                'name' => $this->creationData['publication']->name,
             ],
             'user' => [
-                'id' => $this->creationData['user_id'],
-                'username' => '',
+                'id' => $this->creationData['user']->id,
+                'username' => $this->creationData['user']->username,
             ],
             'type' => 'submission.created',
             'body' => $this->creationData['body'],
