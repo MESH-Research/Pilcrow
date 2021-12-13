@@ -1,7 +1,10 @@
 import { flatten } from "flat"
 
-export default flatten({
-  submission: {
-    created: "remove_red_eye",
-  },
-})
+export default function getIcon(type) {
+  const icons = flatten({
+    submission: {
+      create: "remove_red_eye",
+    },
+  })
+  return icons[type] ?? "help"
+}

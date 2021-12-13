@@ -2,7 +2,7 @@
   <q-item clickable :class="{ unread: !note.data.read_at }" class="q-pl-none">
     <q-badge v-if="!note.data.read_at" />
     <q-item-section side class="q-px-md">
-      <q-icon :size="iconSize" :name="iconMapper[note.data.type]" />
+      <q-icon :size="iconSize" :name="iconMapper(note.data.type)" />
     </q-item-section>
     <q-item-section>
       <p class="q-pa-none q-ma-none">
