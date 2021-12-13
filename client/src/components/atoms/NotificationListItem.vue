@@ -2,7 +2,7 @@
   <q-item clickable :class="{ unread: !note.data.read_at }" class="q-pl-none">
     <q-badge v-if="!note.data.read_at" />
     <q-item-section side class="q-px-md">
-      <q-icon :size="iconSize" :name="note.icon" />
+      <q-icon :size="iconSize" :name="iconMapper[note.data.type]" />
     </q-item-section>
     <q-item-section>
       <p class="q-pa-none q-ma-none">
@@ -22,6 +22,7 @@
 import { computed } from "@vue/composition-api"
 import { Screen } from "quasar"
 import { flatten } from "flat"
+import iconMapper from "src/mappers/notification_icons"
 import TimeAgo from "javascript-time-ago"
 import en from "javascript-time-ago/locale/en.json"
 
@@ -79,7 +80,7 @@ export default {
       const style = Screen.lt.md ? "mini-now" : "long"
       return timeAgo.format(new Date(props.note.data.time), style)
     })
-    return { tKey, flattened, relativeTime }
+    return { tKey, flattened, relativeTime, iconMapper }
   },
 }
 </script>
