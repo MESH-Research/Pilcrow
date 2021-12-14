@@ -1,15 +1,17 @@
 import gql from "graphql-tag"
-import { PROFILE_METADATA_FRAGMENT } from "./queries"
+import {
+  PROFILE_METADATA_FRAGMENT,
+  CURRENT_USER_FIELDS_FRAGMENT,
+} from "./fragments"
 
 export const LOGIN = gql`
   mutation Login($email: String!, $password: String!) {
     login(email: $email, password: $password) {
       id
-      name
-      username
-      email_verified_at
+      ...currentUserFields
     }
   }
+  ${CURRENT_USER_FIELDS_FRAGMENT}
 `
 
 export const LOGOUT = gql`
