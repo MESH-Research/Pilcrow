@@ -30,30 +30,18 @@ export function useCurrentUser() {
     return !!data.currentUser.id
   })
 
-  const abilities = useResult(
-    query.result,
-    [],
-    (data) => data.currentUser.abilities
-  )
-
   const roles = useResult(query.result, [], (data) => data.currentUser.roles)
-
-  const can = computed(() => {
-    return (ability) => {
-      return abilities.value.includes("*") || abilities.value.includes(ability)
-    }
-  })
 
   const hasRole = computed(() => {
     return (role) => {
       if (typeof role === "undefined" || role === "*") {
         return roles.value?.length ?? 0 > 0
       }
-      return roles.value.includes(role)
+      return roles.value.find((v) => v.name === role) ? true : false
     }
   })
 
-  return { currentUser, currentUserQuery: query, isLoggedIn, can, hasRole }
+  return { currentUser, currentUserQuery: query, isLoggedIn, hasRole }
 }
 
 /**

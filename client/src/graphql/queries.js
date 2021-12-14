@@ -1,56 +1,30 @@
 import gql from "graphql-tag"
+import {
+  PROFILE_METADATA_FRAGMENT,
+  CURRENT_USER_FIELDS_FRAGMENT,
+} from "./fragments"
 
 export const CURRENT_USER = gql`
-  query currentUser {
+  ${CURRENT_USER_FIELDS_FRAGMENT}
+  query CurrentUser {
     currentUser {
-      username
       id
-      name
-      email
-      email_verified_at
-      roles {
-        name
-      }
-    }
-  }
-`
-export const PROFILE_METADATA_FRAGMENT = gql`
-  fragment profileMetadata on User {
-    profile_metadata {
-      biography
-      professional_title
-      specialization
-      affiliation
-      websites
-      interest_keywords
-      disinterest_keywords
-      social_media {
-        google
-        twitter
-        instagram
-        facebook
-        linkedin
-      }
-      academic_profiles {
-        humanities_commons
-        orcid_id
-        academia_edu_id
-      }
+      ...currentUserFields
     }
   }
 `
 
 export const CURRENT_USER_METADATA = gql`
-  query currentUser {
+  ${PROFILE_METADATA_FRAGMENT}
+  query CurrentUserMetadata {
     currentUser {
       id
       ...profileMetadata
     }
   }
-  ${PROFILE_METADATA_FRAGMENT}
 `
 export const CURRENT_USER_SUBMISSIONS = gql`
-  query currentUser {
+  query CurrentUserSubmission {
     currentUser {
       id
       submissions {

@@ -26,10 +26,9 @@
 </template>
 
 <script>
-import { defineComponent, computed } from "@vue/composition-api"
+import { computed } from "@vue/composition-api"
 
-export default defineComponent({
-  name: "CollapseMenu",
+export default {
   props: {
     items: {
       type: Array,
@@ -47,5 +46,5 @@ export default defineComponent({
     }
     return { isActive, activeRoute }
   },
-})
+}
 </script>

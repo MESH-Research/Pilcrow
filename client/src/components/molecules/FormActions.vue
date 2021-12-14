@@ -1,5 +1,5 @@
 <template>
-  <q-page-sticky v-if="visible" position="bottom-right">
+  <q-page-sticky v-show="visible" position="bottom-right">
     <div class="bg-grey-1 q-ma-sm q-pa-md rounded-borders shadow-15">
       <div class="q-gutter-md">
         <template v-if="$slots.default">
@@ -8,9 +8,10 @@
         <template v-else>
           <q-btn
             :disabled="saveButton.disabled"
-            :class="saveButton.class"
+            :class="saveButton.classList"
             :data-cy="saveButton.cyAttr"
             type="submit"
+            ```
           >
             <q-icon v-if="saveButton.icon === 'check'" name="check" />
             <q-spinner v-else-if="saveButton.icon === 'spinner'" />
@@ -31,9 +32,9 @@
 </template>
 
 <script>
-import { defineComponent, computed, reactive } from "@vue/composition-api"
+import { computed, reactive } from "@vue/composition-api"
 
-export default defineComponent({
+export default {
   name: "FormActions",
   props: {
     formState: {
@@ -43,7 +44,7 @@ export default defineComponent({
   },
   setup(props) {
     const saveButton = reactive({
-      class: computed(() => {
+      classList: computed(() => {
         return (
           {
             saved: "bg-positive text-white",
@@ -106,5 +107,5 @@ export default defineComponent({
 
     return { saveButton, resetBtn, visible }
   },
-})
+}
 </script>

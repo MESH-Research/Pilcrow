@@ -24,7 +24,7 @@ jest.mock("quasar", () => ({
 describe("RegisterPage", () => {
   const wrapperFactory = (mocks = []) => {
     const apolloProvider = {}
-    const mockClient = createMockClient()
+    const mockClient = createMockClient({ query: { fetchPolicy: "no-cache" } })
     apolloProvider[DefaultApolloClient] = mockClient
 
     mocks?.forEach((mock) => {
@@ -56,20 +56,27 @@ describe("RegisterPage", () => {
     const { wrapper, mockClient } = wrapperFactory()
 
     const user = {
-      username: "user",
-      password: "albancub4Grac&",
+      id: 1,
       name: "Joe Doe",
+      username: "user",
+      email_verified_at: null,
+      password: "albancub4Grac&",
       email: "test@example.com",
+      created_at: "2021-12-01",
+      roles: [],
     }
 
-    const mutateHandler = jest.fn().mockResolvedValue({ id: 1, ...user })
+    const mutateHandler = jest
+      .fn()
+      .mockResolvedValue({ data: { createUser: { ...user } } })
 
     mockClient.setRequestHandler(CREATE_USER, mutateHandler)
+
     mockClient.setRequestHandler(
       LOGIN,
-      jest.fn().mockResolvedValue({ id: 1, ...user })
+      jest.fn().mockResolvedValue({ data: { login: { ...user } } })
     )
-    Object.assign(wrapper.vm.user, user)
+    Object.assign(wrapper.vm.user, { ...user })
 
     await wrapper.vm.handleSubmit()
     expect(wrapper.vm.formErrorMsg.value).toBeFalsy()
