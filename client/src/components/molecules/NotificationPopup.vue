@@ -8,7 +8,13 @@
     :aria-expanded="isVisible ? 'true' : 'false'"
   >
     <q-icon name="notifications" />
-    <q-badge role="presentation" floating color="light-blue-3" rounded />
+    <q-badge
+      ref="notiication_indicator"
+      role="presentation"
+      floating
+      color="light-blue-3"
+      rounded
+    />
 
     <q-popup-proxy
       ref="popupProxy"

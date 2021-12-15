@@ -1,4 +1,5 @@
 import { mountQuasar } from "@quasar/quasar-app-extension-testing-unit-jest"
+import { useQuery, useResult } from "@vue/apollo-composable"
 import SubmissionsPage from "./Submissions.vue"
 
 import * as All from "quasar"
