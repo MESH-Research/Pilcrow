@@ -41,6 +41,7 @@ describe("useCurrentUser composable", () => {
       [CURRENT_USER, jest.fn().mockResolvedValue(response)],
     ])
     await nextTick()
+
     expect(result.currentUser.value).toBeNull()
     expect(result.isLoggedIn.value).toBe(false)
     expect(result.hasRole.value("someRole")).toBe(false)
