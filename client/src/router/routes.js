@@ -36,6 +36,10 @@ const routes = [
         ],
       },
       {
+        path: "feed/",
+        component: () => import("pages/Feed.vue"),
+      },
+      {
         path: "/admin/users",
         component: () => import("pages/Admin/UsersIndex.vue"),
         meta: { requiresRoles: ["Application Administrator"] },

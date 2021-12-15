@@ -1,0 +1,90 @@
+<template>
+  <q-btn
+    flat
+    padding="none"
+    data-cy="dropdown_notificiations"
+    :aria-label="$t('header.notification_button')"
+    aria-haspopup="true"
+    :aria-expanded="isVisible ? 'true' : 'false'"
+  >
+    <q-icon name="notifications" />
+    <q-badge role="presentation" floating color="light-blue-3" rounded />
+
+    <q-popup-proxy
+      ref="popupProxy"
+      v-model="isVisible"
+      max-width="400px"
+      position="top"
+    >
+      <div class="notifications-container">
+        <q-list
+          role="navigation"
+          aria-label="Dropdown Navigation"
+          bordered
+          separator
+          class="notifications-list"
+        >
+          <notification-list-item
+            v-for="(item, index) in items"
+            :key="index"
+            :note="item"
+            clickable
+            :class="{ unread: !item.viewed }"
+          />
+        </q-list>
+        <q-btn-group spread>
+          <q-btn to="/feed">View More</q-btn>
+          <q-btn>Dismiss All</q-btn>
+        </q-btn-group>
+      </div>
+    </q-popup-proxy>
+  </q-btn>
+</template>
+
+<script>
+import { defineComponent, ref, watch, nextTick } from "@vue/composition-api"
+import { notificationItems } from "src/graphql/fillerData"
+import NotificationListItem from "src/components/atoms/NotificationListItem.vue"
+
+/**
+ * Notification Dropdown menu
+ */
+export default defineComponent({
+  name: "NotificationPopup",
+  components: { NotificationListItem },
+  setup() {
+    const popupProxy = ref(null)
+    const isVisible = ref(false)
+
+    watch(isVisible, (newValue) => {
+      if (newValue === false) {
+        return
+      }
+      nextTick(() => {
+        popupProxy.value.$refs.popup.$children[0].$el.id =
+          "notifications-wrapper"
+      })
+    })
+    return { items: notificationItems, isVisible, popupProxy }
+  },
+})
+</script>
+
+<style lang="sass">
+#notifications-wrapper.q-menu
+  display: flex
+.notifications-container
+  background: white
+  display: flex
+  flex-flow: column
+  overflow: hidden
+  .q-list.notifications-list
+    display: flex
+    flex-flow: column wrap
+    overflow: hidden
+    .q-item
+      min-height: 40px
+      padding: 4px 16px 4px 0px
+      width: 100%
+      margin-right: 10px
+</style>
