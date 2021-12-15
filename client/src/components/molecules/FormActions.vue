@@ -7,18 +7,17 @@
         </template>
         <template v-else>
           <q-btn
-            :disabled="saveButton.disabled"
-            :class="saveButton.classList"
-            :data-cy="saveButton.cyAttr"
+            :disabled="saveDisabled"
+            :class="saveClassList"
+            :data-cy="saveCyAttr"
             type="submit"
-            ```
           >
-            <q-icon v-if="saveButton.icon === 'check'" name="check" />
-            <q-spinner v-else-if="saveButton.icon === 'spinner'" />
-            {{ $t(saveButton.text) }}
+            <q-icon v-if="saveIcon === 'check'" name="check" />
+            <q-spinner v-else-if="saveIcon === 'spinner'" />
+            {{ $t(saveText) }}
           </q-btn>
           <q-btn
-            v-if="!resetBtn.disabled"
+            v-if="!resetDisabled"
             class="bg-grey-4 ml-sm"
             data-cy="button_discard"
             @click="$emit('resetClick')"
@@ -32,7 +31,7 @@
 </template>
 
 <script>
-import { computed, reactive } from "@vue/composition-api"
+import { computed } from "@vue/composition-api"
 
 export default {
   name: "FormActions",
@@ -43,57 +42,52 @@ export default {
     },
   },
   setup(props) {
-    const saveButton = reactive({
-      classList: computed(() => {
-        return (
-          {
-            saved: "bg-positive text-white",
-            dirty: "bg-primary text-white",
-          }[props.formState] ?? "bg-grey-3"
-        )
-      }),
-      cyAttr: computed(() => {
-        return (
-          {
-            saving: "button_saving",
-            saved: "button_saved",
-          }[props.formState] ?? "button_save"
-        )
-      }),
-      text: computed(() => {
-        return (
-          {
-            saving: "buttons.saving",
-            saved: "buttons.saved",
-          }[props.formState] ?? "buttons.save"
-        )
-      }),
-      disabled: computed(() => {
-        return (
-          {
-            saved: false,
-            dirty: false,
-          }[props.formState] ?? true
-        )
-      }),
-      icon: computed(() => {
-        return (
-          {
-            saved: "check",
-            saving: "spinner",
-          }[props.formState] ?? ""
-        )
-      }),
+    const saveClassList = computed(() => {
+      const classes = {
+        saved: "bg-positive text-white",
+        dirty: "bg-primary text-white",
+      }
+      return classes[props.formState] ?? "bg-grey-3"
+    })
+    const saveCyAttr = computed(() => {
+      return (
+        {
+          saving: "button_saving",
+          saved: "button_saved",
+        }[props.formState] ?? "button_save"
+      )
+    })
+    const saveText = computed(() => {
+      return (
+        {
+          saving: "buttons.saving",
+          saved: "buttons.saved",
+        }[props.formState] ?? "buttons.save"
+      )
+    })
+    const saveDisabled = computed(() => {
+      return (
+        {
+          saved: false,
+          dirty: false,
+        }[props.formState] ?? true
+      )
+    })
+    const saveIcon = computed(() => {
+      return (
+        {
+          saved: "check",
+          saving: "spinner",
+        }[props.formState] ?? ""
+      )
     })
 
-    const resetBtn = reactive({
-      disabled: computed(() => {
-        return (
-          {
-            dirty: false,
-          }[props.formState] ?? true
-        )
-      }),
+    const resetDisabled = computed(() => {
+      return (
+        {
+          dirty: false,
+        }[props.formState] ?? true
+      )
     })
 
     const visible = computed(() => {
@@ -105,7 +99,15 @@ export default {
       )
     })
 
-    return { saveButton, resetBtn, visible }
+    return {
+      saveClassList,
+      saveCyAttr,
+      saveText,
+      saveDisabled,
+      saveIcon,
+      resetDisabled,
+      visible,
+    }
   },
 }
 </script>
