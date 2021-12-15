@@ -51,7 +51,7 @@ describe("Nofitication Popup", () => {
   })
 
   it("displays an indicator for a user that has notifications", async () => {
-    const indicator = wrapper.findComponent({ ref: "notiication_indicator" })
     expect(wrapper).toContain(indicator)
+    const indicator = wrapper.findComponent({ ref: "notification_indicator" })
   })
 })

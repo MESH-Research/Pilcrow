@@ -9,7 +9,7 @@
   >
     <q-icon name="notifications" />
     <q-badge
-      ref="notiication_indicator"
+      ref="notification_indicator"
       role="presentation"
       floating
       color="light-blue-3"
