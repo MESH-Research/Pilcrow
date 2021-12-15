@@ -9,6 +9,7 @@
   >
     <q-icon name="notifications" />
     <q-badge
+      v-if="notificationItems.length > 0"
       ref="notification_indicator"
       role="presentation"
       floating
@@ -31,7 +32,7 @@
           class="notifications-list"
         >
           <notification-list-item
-            v-for="(item, index) in items"
+            v-for="(item, index) in notificationItems"
             :key="index"
             :note="item"
             clickable
@@ -81,7 +82,7 @@ export default defineComponent({
           "notifications-wrapper"
       })
     })
-    return { items: notificationItems, isVisible, popupProxy }
+    return { notificationItems, isVisible, popupProxy }
   },
 })
 </script>
