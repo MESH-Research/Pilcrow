@@ -825,11 +825,11 @@ class SubmissionTest extends TestCase
      */
     public function testCreateSubmissionUserViaMutationAsAReviewCoordinator(array $case)
     {
+        $publication = Publication::factory()->create();
         /** @var User $review_coordinator */
         $review_coordinator = User::factory()->create();
         $this->actingAs($review_coordinator);
         $user_to_be_assigned = User::factory()->create();
-        $publication = Publication::factory()->create();
         $submitter = User::factory()->create();
         $submission = Submission::factory()
             ->for($publication)
