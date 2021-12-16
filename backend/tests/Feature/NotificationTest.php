@@ -25,7 +25,7 @@ class NotificationTest extends TestCase
         return [
             'submission' => [
                 'id' => $submission_id,
-                'title' => 'Test Submission from PHPUnit'
+                'title' => 'Test Submission from PHPUnit',
             ],
             'user' => [
                 'id' => $user->id,
@@ -34,7 +34,7 @@ class NotificationTest extends TestCase
             ],
             'publication' => [
                 'id' => 1,
-                'name' => 'Test Publication from PHPUnit'
+                'name' => 'Test Publication from PHPUnit',
             ],
             'type' => 'submission.created',
             'action' => 'Visit CCR',
