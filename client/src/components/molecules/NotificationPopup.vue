@@ -9,7 +9,7 @@
   >
     <q-icon name="notifications" />
     <q-badge
-      v-if="notificationItems.length > 0 && hasUnreadNotifications"
+      v-if="hasUnreadNotifications"
       ref="notification_indicator"
       role="presentation"
       floating
@@ -74,7 +74,8 @@ export default defineComponent({
       (data) => data.currentUser.notifications.data
     )
     const hasUnreadNotifications = computed(() => {
-      return notificationItems.value.find((item) => item.data.read_at === null)
+      return notificationItems.value.length > 0 &&
+        notificationItems.value.find((item) => item.data.read_at === null)
         ? true
         : false
     })
