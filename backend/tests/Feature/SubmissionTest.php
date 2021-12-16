@@ -11,6 +11,7 @@ use App\Models\User;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Testing\Fluent\AssertableJson;
 use Nuwave\Lighthouse\Testing\MakesGraphQLRequests;
 use Tests\TestCase;
 
@@ -909,7 +910,9 @@ class SubmissionTest extends TestCase
                 ],
             );
         }
-        $query_response->assertJsonPath('data', $expected_query_response);
+        $query_response_json = $query_response->decodeResponseJson();
+        $query_response_value = AssertableJson::fromAssertableJsonString($query_response_json);
+        $this->assertEquals($query_response_value->toArray()['data'], $expected_query_response);
     }
 
     /**
