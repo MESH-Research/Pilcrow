@@ -9,7 +9,7 @@
   >
     <q-icon name="notifications" />
     <q-badge
-      v-if="notificationItems.length > 0"
+      v-if="notificationItems.length > 0 && hasUnreadNotifications"
       ref="notification_indicator"
       role="presentation"
       floating
@@ -50,10 +50,10 @@
 
 <script>
 import { defineComponent, ref, watch, nextTick } from "@vue/composition-api"
-//import { notificationItems } from "src/graphql/fillerData"
 import { useQuery, useResult } from "@vue/apollo-composable"
 import { CURRENT_USER_NOTIFICATIONS } from "src/graphql/queries"
 import NotificationListItem from "src/components/atoms/NotificationListItem.vue"
+import { computed } from "@vue/composition-api"
 
 /**
  * Notification Dropdown menu
@@ -73,6 +73,11 @@ export default defineComponent({
       [],
       (data) => data.currentUser.notifications.data
     )
+    const hasUnreadNotifications = computed(() => {
+      return notificationItems.value.find((item) => item.data.read_at === null)
+        ? true
+        : false
+    })
     watch(isVisible, (newValue) => {
       if (newValue === false) {
         return
@@ -82,7 +87,7 @@ export default defineComponent({
           "notifications-wrapper"
       })
     })
-    return { notificationItems, isVisible, popupProxy }
+    return { notificationItems, hasUnreadNotifications, isVisible, popupProxy }
   },
 })
 </script>
