@@ -70,7 +70,7 @@ class SubmissionCreated extends Notification implements ShouldQueue
             'user' => [
                 'id' => $this->creationData['user']['id'],
                 'username' => $this->creationData['user']['username'],
-                'name' => $this->creationData['user']['name'],
+                'name' => $this->creationData['user']['name'] ?? '',
             ],
             'type' => 'submission.created',
             'body' => $this->creationData['body'] ?? '',
