@@ -1,8 +1,8 @@
 <template>
-  <q-item clickable :class="{ unread: !note.viewed }" class="q-pl-none">
-    <q-badge v-if="!note.viewed" />
+  <q-item clickable :class="{ unread: !note.data.read_at }" class="q-pl-none">
+    <q-badge v-if="!note.data.read_at" />
     <q-item-section side class="q-px-md">
-      <q-icon :size="iconSize" :name="note.icon" />
+      <q-icon :size="iconSize" :name="iconMapper(note.data.type)" />
     </q-item-section>
     <q-item-section>
       <p class="q-pa-none q-ma-none">
@@ -22,6 +22,7 @@
 import { computed } from "@vue/composition-api"
 import { Screen } from "quasar"
 import { flatten } from "flat"
+import iconMapper from "src/mappers/notification_icons"
 import TimeAgo from "javascript-time-ago"
 import en from "javascript-time-ago/locale/en.json"
 
@@ -64,22 +65,22 @@ export default {
      * The parsed translation key to use for the supplied note
      */
     const tKey = computed(() => {
-      return `notifications.${props.note.type}.short`
+      return `notifications.${props.note.data.type}.short`
     })
     /**
      * Flattened version of the note for passing to i18n
      */
     const flattened = computed(() => {
-      return flatten(props.note)
+      return flatten(props.note.data)
     })
     /**
      * Relative representation of the note's time property
      */
     const relativeTime = computed(() => {
       const style = Screen.lt.md ? "mini-now" : "long"
-      return timeAgo.format(new Date(props.note.time), style)
+      return timeAgo.format(new Date(props.note.data.time), style)
     })
-    return { tKey, flattened, relativeTime }
+    return { tKey, flattened, relativeTime, iconMapper }
   },
 }
 </script>

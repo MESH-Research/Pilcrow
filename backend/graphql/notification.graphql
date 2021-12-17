@@ -11,10 +11,14 @@ type Notification {
 JSON data for a notification
 """
 type NotificationData {
-    body: String!
+    type: String
+    user: User
+    body: String
     action: String
     url: String
-    submission_id: ID
+    read_at: DateTime
+    submission: Submission
+    publication: Publication
 }
 
 union Notifiable = Notification | User
