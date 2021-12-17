@@ -3,7 +3,7 @@ import { flatten } from "flat"
 export default function getIcon(type) {
   const icons = flatten({
     submission: {
-      created: "remove_red_eye",
+      created: "content_copy",
     },
   })
   return icons[type] ?? "help"
