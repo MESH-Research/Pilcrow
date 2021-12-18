@@ -14,7 +14,7 @@ jobs:
     name: "Cypress.io"
     steps:
       - name: Install Lando
-        run: wget -nv https://files.lando.dev/installer/lando-x64-stable.deb && sudo dpkg -i --ignore-depends=docker-ce lando-stable.deb
+        run: wget -nv https://files.lando.dev/installer/lando-x64-stable.deb && sudo dpkg -i --ignore-depends=docker-ce lando-x64-stable.deb
       - uses: actions/checkout@v2
       - name: Cache Composer packages
         id: composer-cache
