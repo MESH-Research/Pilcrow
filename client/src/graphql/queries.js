@@ -23,6 +23,38 @@ export const CURRENT_USER_METADATA = gql`
     }
   }
 `
+export const CURRENT_USER_NOTIFICATIONS = gql`
+  query currentUserNotifications($page: Int) {
+    currentUser {
+      id
+      notifications(first: 10, page: $page) {
+        paginatorInfo {
+          count
+          currentPage
+          lastPage
+          perPage
+        }
+        data {
+          id
+          data {
+            user {
+              username
+            }
+            submission {
+              title
+            }
+            publication {
+              name
+            }
+            type
+            body
+            read_at
+          }
+        }
+      }
+    }
+  }
+`
 export const CURRENT_USER_SUBMISSIONS = gql`
   query CurrentUserSubmission {
     currentUser {
@@ -131,7 +163,7 @@ export const GET_SUBMISSIONS = gql`
 `
 
 export const GET_SUBMISSION = gql`
-  query GetSubmission($id: ID) {
+  query GetSubmission($id: ID!) {
     submission(id: $id) {
       title
       publication {

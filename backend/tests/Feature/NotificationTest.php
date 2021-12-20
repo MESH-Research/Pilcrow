@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Tests\Feature;
 
 use App\Models\User;
-use App\Notifications\SubmissionCreation;
+use App\Notifications\SubmissionCreated;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
 use Nuwave\Lighthouse\Testing\MakesGraphQLRequests;
@@ -16,39 +16,57 @@ class NotificationTest extends TestCase
     use RefreshDatabase;
 
     /**
-     * @return void
+     * @param User $user
+     * @param int $submission_id
+     * @return array
      */
-    public function testSubmissionCreationNotificationForAnIndividualUser()
+    private function getSampleNotificationData(User $user, $submission_id = 1000)
     {
-        $user = User::factory()->create();
-        $notification_data = [
-            'body' => 'A submission has been created.',
+        return [
+            'submission' => [
+                'id' => $submission_id,
+                'title' => 'Test Submission from PHPUnit',
+            ],
+            'user' => [
+                'id' => $user->id,
+                'username' => $user->username,
+                'name' => $user->name,
+            ],
+            'publication' => [
+                'id' => 1,
+                'name' => 'Test Publication from PHPUnit',
+            ],
+            'type' => 'submission.created',
             'action' => 'Visit CCR',
             'url' => '/',
-            'submission_id' => 1000,
+            'body' => 'A submission has been created.',
         ];
-        $user->notify(new SubmissionCreation($notification_data));
+    }
+
+    /**
+     * @return void
+     */
+    public function testSubmissionCreatedNotificationForAnIndividualUser()
+    {
+        $user = User::factory()->create();
+        $notification_data = $this->getSampleNotificationData($user);
+        $user->notify(new SubmissionCreated($notification_data));
         $this->assertEquals(1, $user->notifications->count());
-        $this->assertEquals("App\Notifications\SubmissionCreation", $user->notifications->first()->type);
+        $this->assertEquals("App\Notifications\SubmissionCreated", $user->notifications->first()->type);
         $this->assertEquals($notification_data, $user->notifications->first()->data);
     }
 
     /**
      * @return void
      */
-    public function testSubmissionCreationNotificationForMultipleUsers()
+    public function testSubmissionCreatedNotificationForMultipleUsers()
     {
         $users = User::factory()->count(4)->create();
-        $notification_data = [
-            'body' => 'A submission has been created.',
-            'action' => 'Visit CCR',
-            'url' => '/',
-            'submission_id' => 1001,
-        ];
-        Notification::send($users, new SubmissionCreation($notification_data));
+        $notification_data = $this->getSampleNotificationData($users->first());
+        Notification::send($users, new SubmissionCreated($notification_data));
         $users->map(function ($user) use ($notification_data) {
             $this->assertEquals(1, $user->notifications->count());
-            $this->assertEquals("App\Notifications\SubmissionCreation", $user->notifications->first()->type);
+            $this->assertEquals("App\Notifications\SubmissionCreated", $user->notifications->first()->type);
             $this->assertEquals($notification_data, $user->notifications->first()->data);
         });
     }
@@ -56,26 +74,16 @@ class NotificationTest extends TestCase
     /**
      * @return void
      */
-    public function testMultipleSubmissionCreationNotificationsForAnIndividualUser()
+    public function testMultipleSubmissionCreatedNotificationsForAnIndividualUser()
     {
         $user = User::factory()->create();
-        $notification_data_1 = [
-            'body' => 'A submission has been created.',
-            'action' => 'Visit CCR',
-            'url' => '/',
-            'submission_id' => 1002,
-        ];
-        $notification_data_2 = [
-            'body' => 'A submission has been created.',
-            'action' => 'Visit CCR',
-            'url' => '/',
-            'submission_id' => 1003,
-        ];
-        $user->notify(new SubmissionCreation($notification_data_1));
-        $user->notify(new SubmissionCreation($notification_data_2));
+        $notification_data_1 = $this->getSampleNotificationData($user, 1002);
+        $notification_data_2 = $this->getSampleNotificationData($user, 1003);
+        $user->notify(new SubmissionCreated($notification_data_1));
+        $user->notify(new SubmissionCreated($notification_data_2));
         $this->assertEquals(2, $user->notifications->count());
-        $this->assertEquals("App\Notifications\SubmissionCreation", $user->notifications->first()->type);
-        $this->assertEquals("App\Notifications\SubmissionCreation", $user->notifications->last()->type);
+        $this->assertEquals("App\Notifications\SubmissionCreated", $user->notifications->first()->type);
+        $this->assertEquals("App\Notifications\SubmissionCreated", $user->notifications->last()->type);
         $notification_1 = $user->notifications
             ->where('notifiable_type', "App\Models\User")
             ->where('notifiable_id', $user->id)
@@ -93,27 +101,17 @@ class NotificationTest extends TestCase
     /**
      * @return void
      */
-    public function testMultipleSubmissionCreationNotificationsForMultipleUsers()
+    public function testMultipleSubmissionCreatedNotificationsForMultipleUsers()
     {
         $users = User::factory()->count(4)->create();
-        $notification_data_1 = [
-            'body' => 'A submission has been created.',
-            'action' => 'Visit CCR',
-            'url' => '/',
-            'submission_id' => 1004,
-        ];
-        $notification_data_2 = [
-            'body' => 'A submission has been created.',
-            'action' => 'Visit CCR',
-            'url' => '/',
-            'submission_id' => 1005,
-        ];
-        Notification::send($users, new SubmissionCreation($notification_data_1));
-        Notification::send($users, new SubmissionCreation($notification_data_2));
+        $notification_data_1 = $this->getSampleNotificationData($users->first(), 1004);
+        $notification_data_2 = $this->getSampleNotificationData($users->first(), 1005);
+        Notification::send($users, new SubmissionCreated($notification_data_1));
+        Notification::send($users, new SubmissionCreated($notification_data_2));
         $users->map(function ($user) use ($notification_data_1, $notification_data_2) {
             $this->assertEquals(2, $user->notifications->count());
-            $this->assertEquals("App\Notifications\SubmissionCreation", $user->notifications->first()->type);
-            $this->assertEquals("App\Notifications\SubmissionCreation", $user->notifications->last()->type);
+            $this->assertEquals("App\Notifications\SubmissionCreated", $user->notifications->first()->type);
+            $this->assertEquals("App\Notifications\SubmissionCreated", $user->notifications->last()->type);
             $notification_1 = $user->notifications
                 ->where('notifiable_type', "App\Models\User")
                 ->where('notifiable_id', $user->id)
@@ -132,16 +130,11 @@ class NotificationTest extends TestCase
     /**
      * @return void
      */
-    public function testMarkingASubmissionCreationNotificationAsReadForAnIndividualUser()
+    public function testMarkingASubmissionCreatedNotificationAsReadForAnIndividualUser()
     {
         $user = User::factory()->create();
-        $notification_data = [
-            'body' => 'A submission has been created.',
-            'action' => 'Visit CCR',
-            'url' => '/',
-            'submission_id' => 1006,
-        ];
-        $user->notify(new SubmissionCreation($notification_data));
+        $notification_data = $this->getSampleNotificationData($user, 1006);
+        $user->notify(new SubmissionCreated($notification_data));
         $notification = $user->notifications->first();
         $notification->markAsRead();
         $this->assertEquals(0, $user->unreadNotifications->count());
@@ -150,23 +143,13 @@ class NotificationTest extends TestCase
     /**
      * @return void
      */
-    public function testMarkingMultipleSubmissionCreationNotificationsAsReadForMultipleUsers()
+    public function testMarkingMultipleSubmissionCreatedNotificationsAsReadForMultipleUsers()
     {
         $users = User::factory()->count(4)->create();
-        $notification_data_1 = [
-            'body' => 'A submission has been created.',
-            'action' => 'Visit CCR',
-            'url' => '/',
-            'submission_id' => 1007,
-        ];
-        $notification_data_2 = [
-            'body' => 'A submission has been created.',
-            'action' => 'Visit CCR',
-            'url' => '/',
-            'submission_id' => 1008,
-        ];
-        Notification::send($users, new SubmissionCreation($notification_data_1));
-        Notification::send($users, new SubmissionCreation($notification_data_2));
+        $notification_data_1 = $this->getSampleNotificationData($users->first(), 1007);
+        $notification_data_2 = $this->getSampleNotificationData($users->first(), 1008);
+        Notification::send($users, new SubmissionCreated($notification_data_1));
+        Notification::send($users, new SubmissionCreated($notification_data_2));
 
         $users->map(function ($user) {
             $user->notifications->map(function ($notification) {
@@ -185,14 +168,9 @@ class NotificationTest extends TestCase
         $user_1 = User::factory()->create();
         $user_2 = User::factory()->create();
         $this->actingAs($user_1);
-        $notification_data = [
-            'body' => 'A submission has been created.',
-            'action' => 'Visit CCR',
-            'url' => '/',
-            'submission_id' => 1000,
-        ];
-        $user_1->notify(new SubmissionCreation($notification_data));
-        $user_2->notify(new SubmissionCreation($notification_data));
+        $notification_data = $this->getSampleNotificationData($user_1, 1009);
+        $user_1->notify(new SubmissionCreated($notification_data));
+        $user_2->notify(new SubmissionCreated($notification_data));
         $response = $this->graphQL(
             'query GetUsers {
                 userSearch {
@@ -201,8 +179,13 @@ class NotificationTest extends TestCase
                         notifications (first: 10, page: 1) {
                             data {
                                 data {
-                                    body
-                                    submission_id
+                                    type
+                                    user {
+                                        id
+                                    }
+                                    submission {
+                                        id
+                                    }
                                 }
                             }
                         }
@@ -220,8 +203,13 @@ class NotificationTest extends TestCase
                                 'data' => [
                                     [
                                         'data' => [
-                                            'body' => 'A submission has been created.',
-                                            'submission_id' => '1000',
+                                            'type' => 'submission.created',
+                                            'user' => [
+                                                'id' => (string)$user_1->id,
+                                            ],
+                                            'submission' => [
+                                                'id' => '1009',
+                                            ],
                                         ],
                                     ],
                                 ],
