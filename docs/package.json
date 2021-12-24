@@ -11,7 +11,7 @@
     },
     "devDependencies": {
         "@vuepress/plugin-back-to-top": "^1.9.1",
-        "vuepress": "^1.9.1",
+        "vuepress": "^1.9.4",
         "vuepress-plugin-robots": "^1.0.1",
         "vuepress-plugin-zooming": "^1.1.8"
     }
