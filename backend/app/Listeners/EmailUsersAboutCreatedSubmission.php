@@ -48,7 +48,7 @@ class EmailUsersAboutCreatedSubmission
                 'name' => $event->submission->publication->name,
             ],
             'type' => 'submission.created',
-            'action' => 'Visit CCR',
+            'action' => 'Review Submission',
             'url' => url('/submission/'.$event->submission->id),
             'body' => 'A submission has been created.',
         ];
