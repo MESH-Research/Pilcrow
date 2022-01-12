@@ -5,7 +5,6 @@ namespace App\Listeners;
 
 use App\Models\Role;
 use App\Notifications\SubmissionCreated;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Notification;
 
 class EmailUsersAboutCreatedSubmission
@@ -49,7 +48,7 @@ class EmailUsersAboutCreatedSubmission
             ],
             'type' => 'submission.created',
             'action' => 'Review Submission',
-            'url' => url('/submission/'.$event->submission->id),
+            'url' => url('/submission/' . $event->submission->id),
             'body' => 'A submission has been created.',
         ];
         // Notify submitters and editors
