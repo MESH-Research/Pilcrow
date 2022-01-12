@@ -3,7 +3,7 @@
 namespace App\Providers;
 
 use App\Events\SubmissionCreated;
-use App\Listeners\EmailUsersAboutCreatedSubmission;
+use App\Listeners\NotifyUsersAboutCreatedSubmission;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -21,7 +21,7 @@ class EventServiceProvider extends ServiceProvider
             SendEmailVerificationNotification::class,
         ],
         SubmissionCreated::class => [
-            EmailUsersAboutCreatedSubmission::class,
+            NotifyUsersAboutCreatedSubmission::class,
         ],
     ];
 

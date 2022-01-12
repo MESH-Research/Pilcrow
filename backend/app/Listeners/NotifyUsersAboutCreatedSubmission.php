@@ -7,7 +7,7 @@ use App\Models\Role;
 use App\Notifications\SubmissionCreated;
 use Illuminate\Support\Facades\Notification;
 
-class EmailUsersAboutCreatedSubmission
+class NotifyUsersAboutCreatedSubmission
 {
     /**
      * Create the event listener.

@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Tests\Feature\Notifications;
 
 use App\Events\SubmissionCreated;
-use App\Listeners\EmailUsersAboutCreatedSubmission;
+use App\Listeners\NotifyUsersAboutCreatedSubmission;
 use App\Models\Publication;
 use App\Models\Submission;
 use App\Models\User;
@@ -44,7 +44,7 @@ class SubmissionCreatedTest extends TestCase
                 'publication_id' => $publication->id,
             ]);
         $event = new SubmissionCreated($submission);
-        $listener = new EmailUsersAboutCreatedSubmission();
+        $listener = new NotifyUsersAboutCreatedSubmission();
         $listener->handle($event);
         Notification::assertSentTo($submitter, NotificationsSubmissionCreated::class);
         Notification::assertSentTo($editor, NotificationsSubmissionCreated::class);
