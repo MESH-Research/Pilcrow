@@ -14,6 +14,9 @@ class SubmissionCreated
     use InteractsWithSockets;
     use SerializesModels;
 
+    /**
+     * @var \App\Models\Submission $submission
+     */
     public $submission;
 
     /**
