@@ -10,7 +10,6 @@ use App\Models\Submission;
 use App\Models\User;
 use App\Notifications\SubmissionCreated as NotificationsSubmissionCreated;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
 
@@ -21,16 +20,22 @@ class SubmissionCreatedTest extends TestCase
     /**
      * @return void
      */
-    public function testThatNotificationsAreSent()
+    public function testThatNotificationsAreSentToTheExpectedUsers()
     {
         Notification::fake();
-        Mail::fake();
-
-        $user = User::factory()->create();
-        $publication = Publication::factory()->create();
+        $submitter = User::factory()->create();
+        $editor = User::factory()->create();
+        $publication = Publication::factory()
+            ->hasAttached(
+                $editor,
+                [
+                    'role_id' => 3,
+                ]
+            )
+            ->create();
         $submission = Submission::factory()
             ->hasAttached(
-                $user,
+                $submitter,
                 [
                     'role_id' => 6,
                 ]
@@ -41,8 +46,7 @@ class SubmissionCreatedTest extends TestCase
         $event = new SubmissionCreated($submission);
         $listener = new EmailUsersAboutCreatedSubmission();
         $listener->handle($event);
-
-        Notification::assertSentTo($user, NotificationsSubmissionCreated::class);
-        Mail::assertSent(NotificationsSubmissionCreated::class);
+        Notification::assertSentTo($submitter, NotificationsSubmissionCreated::class);
+        Notification::assertSentTo($editor, NotificationsSubmissionCreated::class);
     }
 }
