@@ -10,16 +10,6 @@ use Illuminate\Support\Facades\Notification;
 class NotifyUsersAboutCreatedSubmission
 {
     /**
-     * Create the event listener.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        //
-    }
-
-    /**
      * Handle the event.
      *
      * TODO: Refactor the user data to use the "created_by" property once it's added to submissions
