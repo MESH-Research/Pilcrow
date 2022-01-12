@@ -16,14 +16,14 @@ class SubmissionCreated
     use SerializesModels;
 
     /**
-     * @var App\Models\Submission $submission
+     * @var \App\Models\Submission $submission
      */
     public $submission;
 
     /**
      * Create a new event instance.
      *
-     * @param App\Models\Submission $submission
+     * @param \App\Models\Submission $submission
      * @return void
      */
     public function __construct(Submission $submission)
