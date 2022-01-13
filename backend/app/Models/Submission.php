@@ -21,6 +21,16 @@ class Submission extends Model
     protected $fillable = [
         'title',
         'publication_id',
+        'status',
+    ];
+
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = [
+        'status_name',
     ];
 
     /**
@@ -53,5 +63,28 @@ class Submission extends Model
     public function files(): HasMany
     {
         return $this->hasMany(SubmissionFile::class);
+    }
+
+    /**
+     * @return string
+     */
+    public function getStatusNameAttribute()
+    {
+        $statuses = [
+            1 => 'Initially Submitted',
+            2 => 'Awaiting Resubmission',
+            3 => 'Resubmitted',
+            4 => 'Awaiting Review',
+            5 => 'Rejected',
+            6 => 'Accepted as Final',
+            7 => 'Expired',
+            8 => 'Under Review',
+            9 => 'Awaiting Decision',
+            10 => 'Awaiting Revision',
+            11 => 'Archived',
+            12 => 'Deleted',
+        ];
+
+        return $statuses[(int)$this->status];
     }
 }
