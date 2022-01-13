@@ -10,6 +10,8 @@ type Submission {
     users: [User!]! @belongsToMany
     files: [SubmissionFile]! @hasMany
     pivot: SubmissionUser
+    status: Int!
+    status_name: String!
 }
 
 """
