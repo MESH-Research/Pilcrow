@@ -1429,4 +1429,16 @@ class SubmissionTest extends TestCase
         $expected_mutation_response = null;
         $response->assertJsonPath('data', $expected_mutation_response);
     }
+
+    /**
+     * @return void
+     */
+    public function testThatTheStatusOfASubmissionCanBeRetrievedAndChangedViaEloquent()
+    {
+        $submission = Submission::factory()->create();
+        $this->assertEquals(1, $submission->status);
+        $submission->status = 4;
+        $this->assertEquals(4, $submission->status);
+        $this->assertEquals('Awaiting Review', $submission->status_name);
+    }
 }
