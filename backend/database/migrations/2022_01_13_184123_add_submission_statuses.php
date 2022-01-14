@@ -31,7 +31,7 @@ class AddSubmissionStatuses extends Migration
      */
     public function down()
     {
-        if(Schema::hasColumn($this->table_name, $this->__visibility_flag)) {
+        if (Schema::hasColumn($this->table_name, $this->column_name)) {
             Schema::table($this->table_name, function (Blueprint $table) {
                 $table->dropColumn($this->column_name);
             });
