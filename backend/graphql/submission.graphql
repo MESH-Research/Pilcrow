@@ -10,8 +10,7 @@ type Submission {
     users: [User!]! @belongsToMany
     files: [SubmissionFile]! @hasMany
     pivot: SubmissionUser
-    status: Int!
-    status_name: String!
+    status: SubmissionStatus!
 }
 
 """
@@ -31,4 +30,19 @@ type SubmissionFile {
     id: ID!
     submission_id: ID!
     file_upload: String!
+}
+
+enum SubmissionStatus {
+    INITIALLY_SUBMITTED
+    AWAITING_RESUBMISSION
+    RESUBMITTED
+    AWAITING_REVIEW
+    REJECTED
+    ACCEPTED_AS_FINAL
+    EXPIRED
+    UNDER_REVIEW
+    AWAITING_DECISION
+    AWAITING_REVISION
+    ARCHIVED
+    DELETED
 }
