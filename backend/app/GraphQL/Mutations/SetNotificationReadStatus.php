@@ -18,14 +18,12 @@ class SetNotificationReadStatus
     public function __invoke($_, array $args): Notification
     {
         $user = Auth::user();
-
-        $user->notifications(function($notification) use ($args) {
-
-        })
-
-        /** @var Notification $notification */
-        $notification = Notification::where('id', $args['id'])->first();
-
+        $notification = $user->notifications->map(function($notification) use ($args) {
+            /** @var Notification $notification */
+            $notification = Notification::where('id', $args['id'])->first();
+            $notification->markAsread();
+            return $notification;
+        });
         return $notification;
     }
 }
