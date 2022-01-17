@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\GraphQL\Mutations;
 
-use Illuminate\Notifications\Notification;
+use Illuminate\Notifications\DatabaseNotification as Notification;
 use Illuminate\Support\Facades\Auth;
 
 class MarkNotificationReadStatus
@@ -18,12 +18,11 @@ class MarkNotificationReadStatus
     public function __invoke($_, array $args): Notification
     {
         $user = Auth::user();
-        $notification = $user->notifications->map(function($notification) use ($args) {
-            /** @var Notification $notification */
-            $notification = Notification::where('id', $args['id'])->first();
-            $notification->markAsRead();
-            return $notification;
-        });
+        $notification = Notification::where('id', $args['id'])
+            ->where('notifiable_id', $user->id)
+            ->where('notifiable_type', "App\Models\User")
+            ->firstOrFail();
+        $notification->markAsRead();
         return $notification;
     }
 }

@@ -113,7 +113,7 @@ type Mutation {
     createSubmissionFile(input: CreateSubmissionFileInput! @spread): SubmissionFile!
 
     "Mark a user notification as read"
-    markNotificationReadStatus(id: ID! read_status: Boolean): Notification!
+    markNotificationReadStatus(id: ID!): Notification!
         @field(resolver: "App\\GraphQL\\Mutations\\MarkNotificationReadStatus")
 }
 
