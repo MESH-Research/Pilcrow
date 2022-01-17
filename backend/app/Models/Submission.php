@@ -38,6 +38,15 @@ class Submission extends Model
     ];
 
     /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = [
+        'status_name',
+    ];
+
+    /**
      * The publication that the submission belongs to
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -67,5 +76,27 @@ class Submission extends Model
     public function files(): HasMany
     {
         return $this->hasMany(SubmissionFile::class);
+    }
+
+    /**
+     * @return string
+     */
+    public function getStatusNameAttribute()
+    {
+        $statuses = [
+            1 => 'INITIALLY_SUBMITTED',
+            2 => 'AWAITING_RESUBMISSION',
+            3 => 'RESUBMITTED',
+            4 => 'AWAITING_REVIEW',
+            5 => 'REJECTED',
+            6 => 'ACCEPTED_AS_FINAL',
+            7 => 'EXPIRED',
+            8 => 'UNDER_REVIEW',
+            9 => 'AWAITING_DECISION',
+            10 => 'AWAITING_REVISION',
+            11 => 'ARCHIVED',
+            12 => 'DELETED',
+        ];
+        return $statuses[(int)$this->status];
     }
 }

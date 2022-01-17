@@ -1433,11 +1433,13 @@ class SubmissionTest extends TestCase
     /**
      * @return void
      */
-    public function testThatTheStatusOfASubmissionCanBeRetrievedAndChangedViaEloquent()
+    public function testSubmissionStatusCanBeRetrievedAndChangedViaEloquent()
     {
         $submission = Submission::factory()->create();
         $this->assertEquals(Submission::INITIALLY_SUBMITTED, $submission->status);
+        $this->assertEquals("INITIALLY_SUBMITTED", $submission->status_name);
         $submission->status = Submission::AWAITING_REVIEW;
         $this->assertEquals(Submission::AWAITING_REVIEW, $submission->status);
+        $this->assertEquals("AWAITING_REVIEW", $submission->status_name);
     }
 }
