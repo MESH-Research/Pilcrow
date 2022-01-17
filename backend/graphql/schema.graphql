@@ -114,7 +114,11 @@ type Mutation {
 
     "Mark a user notification as read"
     markNotificationReadStatus(id: ID!): Notification!
-        @field(resolver: "App\\GraphQL\\Mutations\\MarkNotificationReadStatus")
+        @field(resolver: "App\\GraphQL\\Mutations\\MarkNotificationReadStatus@markAsRead")
+
+    "Mark all of a user's notification as read"
+    markAllNotificationsReadStatus: Int
+        @field(resolver: "App\\GraphQL\\Mutations\\MarkNotificationReadStatus@markAllAsRead")
 }
 
 "A date string with format `Y-m-d`, e.g. `2011-05-23`."
