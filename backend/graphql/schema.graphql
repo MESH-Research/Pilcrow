@@ -114,6 +114,7 @@ type Mutation {
 
     "Mark a user notification as read"
     markNotificationReadStatus(id: ID! read_status: Boolean): Notification!
+        @field(resolver: "App\\GraphQL\\Mutations\\MarkNotificationReadStatus")
 }
 
 "A date string with format `Y-m-d`, e.g. `2011-05-23`."
