@@ -11,6 +11,7 @@
     <q-badge
       v-if="hasUnreadNotifications"
       ref="notification_indicator"
+      data-cy="notification_indicator"
       role="presentation"
       floating
       color="light-blue-3"

@@ -36,7 +36,10 @@ class SubmissionCreated extends Notification implements ShouldQueue
      */
     public function via()
     {
-        return ['database'];
+        return [
+            'database',
+            'mail',
+        ];
     }
 
     /**
