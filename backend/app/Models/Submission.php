@@ -97,6 +97,7 @@ class Submission extends Model
             11 => 'ARCHIVED',
             12 => 'DELETED',
         ];
+
         return $statuses[(int)$this->status];
     }
 }
