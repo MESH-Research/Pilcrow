@@ -6,7 +6,7 @@ namespace App\GraphQL\Mutations;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\Auth;
 
-class SetNotificationReadStatus
+class MarkNotificationReadStatus
 {
     /**
      * Create a submission with a user and file upload
