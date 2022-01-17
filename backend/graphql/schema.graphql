@@ -111,6 +111,9 @@ type Mutation {
 
     "Create an association between an uploaded file and a submission"
     createSubmissionFile(input: CreateSubmissionFileInput! @spread): SubmissionFile!
+
+    "Mark a user notification as read"
+    markNotificationReadStatus(id: ID! read_status: Boolean): Notification!
 }
 
 "A date string with format `Y-m-d`, e.g. `2011-05-23`."
