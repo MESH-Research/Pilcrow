@@ -21,7 +21,7 @@ class MarkNotificationReadStatus
         $notification = $user->notifications->map(function($notification) use ($args) {
             /** @var Notification $notification */
             $notification = Notification::where('id', $args['id'])->first();
-            $notification->markAsread();
+            $notification->markAsRead();
             return $notification;
         });
         return $notification;
