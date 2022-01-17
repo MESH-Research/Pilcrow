@@ -36,6 +36,9 @@ export default {
   name: "VQInput",
   components: { ErrorFieldRenderer },
   props: {
+    /**
+     * Apply to the input data-cy attribute
+     */
     cyAttr: {
       type: String,
       default: "",

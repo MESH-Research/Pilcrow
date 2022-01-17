@@ -4,12 +4,7 @@
       <q-card class="col-sm-3 col-xs-12 no-shadow no-border-radius">
         <div class="row">
           <q-card-section
-            class="
-              col-sm-12 col-xs-12
-              flex flex-center
-              avatar-profile-block
-              q-mt-none
-            "
+            class="col-sm-12 col-xs-12 flex flex-center avatar-profile-block q-mt-none"
           >
             <avatar-block
               avatar-size="80px"
