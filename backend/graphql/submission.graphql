@@ -33,16 +33,16 @@ type SubmissionFile {
 }
 
 enum SubmissionStatus {
-    INITIALLY_SUBMITTED
-    AWAITING_RESUBMISSION
-    RESUBMITTED
-    AWAITING_REVIEW
-    REJECTED
-    ACCEPTED_AS_FINAL
-    EXPIRED
-    UNDER_REVIEW
-    AWAITING_DECISION
-    AWAITING_REVISION
-    ARCHIVED
-    DELETED
+    INITIALLY_SUBMITTED @enum(value: 1)
+    AWAITING_RESUBMISSION @enum(value: 2)
+    RESUBMITTED @enum(value: 3)
+    AWAITING_REVIEW @enum(value: 4)
+    REJECTED @enum(value: 5)
+    ACCEPTED_AS_FINAL @enum(value: 6)
+    EXPIRED @enum(value: 7)
+    UNDER_REVIEW @enum(value: 8)
+    AWAITING_DECISION @enum(value: 9)
+    AWAITING_REVISION @enum(value: 10)
+    ARCHIVED @enum(value: 11)
+    DELETED @enum(value: 12)
 }
