@@ -18,7 +18,7 @@
             <q-select
               v-model="new_submission.publication_id"
               outlined
-              :options="publications.data"
+              :options="publications"
               option-label="name"
               option-value="id"
               emit-value
@@ -60,13 +60,13 @@
       <section class="col-md-7 col-sm-6 col-xs-12">
         <h3>All Submissions</h3>
         <q-list
-          v-if="submissions.data.length != 0"
+          v-if="submissions.length != 0"
           bordered
           separator
           data-cy="submissions_list"
         >
           <q-item
-            v-for="submission in submissions.data"
+            v-for="submission in submissions"
             :key="submission.id"
             class="column"
           >
@@ -95,7 +95,7 @@
           {{ $t("loading") }}
         </div>
         <div
-          v-else-if="submissions.data.length == 0"
+          v-else-if="submissions.length == 0"
           data-cy="no_submissions_message"
         >
           No Submissions Created
@@ -105,146 +105,119 @@
   </article>
 </template>
 
-<script>
-import {
-  GET_PUBLICATIONS,
-  GET_SUBMISSIONS,
-  CURRENT_USER,
-} from "src/graphql/queries"
+<script setup>
+import { GET_PUBLICATIONS, GET_SUBMISSIONS } from "src/graphql/queries"
 import { CREATE_SUBMISSION } from "src/graphql/mutations"
-import useVuelidate from "@vuelidate/core"
 import { required, maxLength } from "@vuelidate/validators"
+import { useCurrentUser } from "src/use/user"
+import { useQuasar } from "quasar"
+import { useI18n } from "vue-i18n"
+import { ref, reactive } from "vue"
+import { useResult, useQuery, useMutation } from "@vue/apollo-composable"
 
-export default {
-  setup() {
-    return {
-      $v: useVuelidate(),
-    }
+const { currentUser } = useCurrentUser()
+
+const is_submitting = ref(false)
+const try_catch_error = ref(false)
+const new_submission = reactive({
+  title: "",
+  publication_id: null,
+  submitter_user_id: null,
+  file_upload: [],
+})
+
+//TODO: Implement validation rules a little more DRYly
+const rules = {
+  title: { required, maxLength: maxLength(512) },
+  publication_id: { required },
+  submitter_user_id: { required },
+  file_upload: { required },
+}
+const submissions = useResult(
+  useQuery(GET_SUBMISSIONS).result,
+  [],
+  (data) => data.submissions.data
+)
+const publications = useResult(
+  useQuery(GET_PUBLICATIONS).result,
+  [],
+  (data) => data.publications.data
+)
+
+const { notify } = useQuasar()
+const { t } = useI18n()
+function makeNotify(color, icon, message) {
+  notify({
+    color: color,
+    icon: icon,
+    message: t(message),
+    attrs: {
+      "data-cy": "create_submission_notify",
+    },
+    html: true,
+  })
+  is_submitting.value = false
+}
+function checkThatFormIsInvalid() {
+  if (this.$v.new_submission.title.maxLength.$invalid) {
+    makeNotify("negative", "error", "submissions.create.title.max_length")
+    return true
+  }
+  if (this.$v.new_submission.title.required.$invalid) {
+    makeNotify("negative", "error", "submissions.create.title.required")
+    return true
+  }
+  if (this.$v.new_submission.publication_id.required.$invalid) {
+    makeNotify(
+      "negative",
+      "error",
+      "submissions.create.publication_id.required"
+    )
+    return true
+  }
+  if (this.$v.new_submission.submitter_user_id.required.$invalid) {
+    makeNotify(
+      "negative",
+      "error",
+      "submissions.create.submitter_user_id.required"
+    )
+    return true
+  }
+  if (this.$v.new_submission.file_upload.required.$invalid) {
+    makeNotify("negative", "error", "submissions.create.file_upload.required")
+    return true
+  }
+}
+
+const { mutate: createMutate } = useMutation(CREATE_SUBMISSION, {
+  context: {
+    hasUpload: true,
   },
-  data() {
-    return {
-      is_submitting: false,
-      try_catch_error: false,
-      submissions: {
-        data: [],
-      },
-      publications: {
-        data: [],
-      },
-      new_submission: {
-        title: "",
-        publication_id: null,
-        submitter_user_id: null,
-        file_upload: [],
-      },
-    }
-  },
-  validations() {
-    return {
-      new_submission: {
-        title: { required, maxLength: maxLength(512) },
-        publication_id: { required },
-        submitter_user_id: { required },
-        file_upload: { required },
-      },
-    }
-  },
-  apollo: {
-    submissions: {
-      query: GET_SUBMISSIONS,
-    },
-    publications: {
-      query: GET_PUBLICATIONS,
-    },
-    currentUser: {
-      query: CURRENT_USER,
-    },
-  },
-  methods: {
-    makeNotify(color, icon, message) {
-      this.$q.notify({
-        color: color,
-        icon: icon,
-        message: this.$t(message),
-        attrs: {
-          "data-cy": "create_submission_notify",
-        },
-        html: true,
-      })
-      this.is_submitting = false
-    },
-    checkThatFormIsInvalid() {
-      if (this.$v.new_submission.title.maxLength.$invalid) {
-        this.makeNotify(
-          "negative",
-          "error",
-          "submissions.create.title.max_length"
-        )
-        return true
-      }
-      if (this.$v.new_submission.title.required.$invalid) {
-        this.makeNotify(
-          "negative",
-          "error",
-          "submissions.create.title.required"
-        )
-        return true
-      }
-      if (this.$v.new_submission.publication_id.required.$invalid) {
-        this.makeNotify(
-          "negative",
-          "error",
-          "submissions.create.publication_id.required"
-        )
-        return true
-      }
-      if (this.$v.new_submission.submitter_user_id.required.$invalid) {
-        this.makeNotify(
-          "negative",
-          "error",
-          "submissions.create.submitter_user_id.required"
-        )
-        return true
-      }
-      if (this.$v.new_submission.file_upload.required.$invalid) {
-        this.makeNotify(
-          "negative",
-          "error",
-          "submissions.create.file_upload.required"
-        )
-        return true
-      }
-    },
-    async createNewSubmission() {
-      this.is_submitting = true
-      this.try_catch_error = false
-      this.new_submission.submitter_user_id = this.currentUser.id
-      if (this.checkThatFormIsInvalid()) {
-        return false
-      }
-      try {
-        await this.$apollo.mutate({
-          mutation: CREATE_SUBMISSION,
-          variables: this.new_submission,
-          context: {
-            hasUpload: true,
-          },
-          refetchQueries: ["GetSubmissions"], // Refetch queries since the result is paginated.
-        })
-        this.makeNotify(
-          "positive",
-          "check_circle",
-          "submissions.create.success"
-        )
-        this.new_submission.title = ""
-        this.new_submission.file_upload = []
-        this.is_submitting = false
-      } catch (error) {
-        console.log(error)
-        this.try_catch_error = true
-        this.is_submitting = false
-      }
-    },
-  },
+  refetchQueries: ["GetSubmissions"],
+})
+
+async function createNewSubmission() {
+  is_submitting.value = true
+  try_catch_error.value = false
+  console.log(currentUser.value)
+  new_submission.submitter_user_id = currentUser.value.id
+  //TODO: Form invalid needs to be rewritten to use error slots on the form/inputs
+  // if (checkThatFormIsInvalid()) {
+  //   return false
+  // }
+  try {
+    await createMutate({ ...new_submission })
+    makeNotify("positive", "check_circle", "submissions.create.success")
+    resetForm()
+    is_submitting.value = false
+  } catch (error) {
+    console.log(error)
+    try_catch_error.value = true
+    is_submitting.value = false
+  }
+
+  function resetForm() {
+    Object.assign(new_submission, { title: "", file_upload: [] })
+  }
 }
 </script>
