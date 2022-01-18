@@ -43,16 +43,9 @@
   </div>
 </template>
 
-<script>
-import { CURRENT_USER } from "src/graphql/queries"
+<script setup>
 import AvatarBlock from "src/components/molecules/AvatarBlock.vue"
-export default {
-  name: "AccountLayout",
-  components: { AvatarBlock },
-  apollo: {
-    currentUser: {
-      query: CURRENT_USER,
-    },
-  },
-}
+import { useCurrentUser } from "src/use/user"
+
+const { currentUser } = useCurrentUser()
 </script>

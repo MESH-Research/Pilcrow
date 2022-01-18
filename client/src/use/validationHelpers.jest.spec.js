@@ -1,6 +1,6 @@
 import * as validationHelpers from "./validationHelpers"
 import { mount } from "vue-composable-tester"
-import { nextTick, provide, reactive } from "@vue/composition-api"
+import { nextTick, provide, reactive } from "vue"
 import useVuelidate from "@vuelidate/core"
 import { required } from "@vuelidate/validators"
 import Vue from "vue"

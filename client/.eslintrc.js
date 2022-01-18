@@ -3,16 +3,16 @@ module.exports = {
   root: true,
 
   parserOptions: {
-    parser: "babel-eslint",
-    sourceType: "module"
+    parser: "@babel/eslint-parser",
+    sourceType: "module",
   },
 
   env: {
     browser: true,
-    "jest/globals": true
+    "jest/globals": true,
   },
 
-  extends: ["eslint:recommended", "plugin:vue/recommended", "prettier"],
+  extends: ["plugin:vue/vue3-recommended", "prettier"],
 
   // required to lint *.vue files
   plugins: ["vue", "prettier", "jest"],
@@ -23,7 +23,7 @@ module.exports = {
     __statics: true,
     process: true,
     Capacitor: true,
-    chrome: true
+    chrome: true,
   },
 
   // add your custom rules here
@@ -31,7 +31,8 @@ module.exports = {
     "prefer-promise-reject-errors": "off",
 
     // allow debugger during development only
+    "vue/script-setup-uses-vars": "error",
     "no-debugger": process.env.NODE_ENV === "production" ? "error" : "off",
-    "prettier/prettier": "error"
-  }
-};
+    "prettier/prettier": "error",
+  },
+}

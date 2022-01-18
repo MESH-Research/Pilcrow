@@ -1,5 +1,5 @@
 import { mountQuasar } from "@quasar/quasar-app-extension-testing-unit-jest"
-import SubmissionsPage from "./Submissions.vue"
+import SubmissionsPage from "./SubmissionPage.vue"
 
 import * as All from "quasar"
 

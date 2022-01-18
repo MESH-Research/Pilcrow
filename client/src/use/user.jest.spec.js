@@ -4,7 +4,7 @@ import { useCurrentUser, useLogin } from "./user"
 import { DefaultApolloClient } from "@vue/apollo-composable"
 import { CURRENT_USER } from "src/graphql/queries"
 import { LOGIN } from "src/graphql/mutations"
-import { provide } from "@vue/composition-api"
+import { provide } from "vue"
 import * as Q from "quasar"
 
 jest.mock("quasar", () => ({

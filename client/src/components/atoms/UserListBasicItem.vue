@@ -46,5 +46,6 @@ export default {
       default: "",
     },
   },
+  emits: ["actionClick"],
 }
 </script>

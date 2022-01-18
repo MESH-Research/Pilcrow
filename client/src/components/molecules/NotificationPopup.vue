@@ -50,11 +50,11 @@
 </template>
 
 <script>
-import { defineComponent, ref, watch, nextTick } from "@vue/composition-api"
+import { defineComponent, ref, watch, nextTick } from "vue"
 import { useQuery, useResult } from "@vue/apollo-composable"
 import { CURRENT_USER_NOTIFICATIONS } from "src/graphql/queries"
 import NotificationListItem from "src/components/atoms/NotificationListItem.vue"
-import { computed } from "@vue/composition-api"
+import { computed } from "vue"
 
 /**
  * Notification Dropdown menu

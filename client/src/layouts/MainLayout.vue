@@ -74,30 +74,21 @@
   </q-layout>
 </template>
 
-<script>
+<script setup>
 import AppFooter from "../components/AppFooter.vue"
 import AppHeader from "src/components/AppHeader.vue"
 import AvatarBlock from "src/components/molecules/AvatarBlock.vue"
-import { CURRENT_USER } from "src/graphql/queries"
 import EmailVerificationBanner from "src/components/molecules/EmailVerificationBanner.vue"
-export default {
-  name: "MainLayout",
-  components: { AppFooter, AppHeader, EmailVerificationBanner, AvatarBlock },
-  data: () => {
-    return {
-      leftDrawerOpen: false,
-    }
-  },
-  apollo: {
-    currentUser: {
-      query: CURRENT_USER,
-    },
-  },
-}
+
+import { useCurrentUser } from "src/use/user"
+import { ref } from "vue"
+
+const leftDrawerOpen = ref(true)
+const { currentUser } = useCurrentUser()
 </script>
 
 <style lang="sass">
-.sidebar
+#sidebar
   $avatar-height: 150px
   .sidebar-avatar
     height: $avatar-height

@@ -1,10 +1,9 @@
 <template>
-  <q-input-password
+  <q-input
     v-bind="{ ...$props, ...$attrs }"
     :value="value"
     :label="label"
     :type="isPwd ? 'password' : 'text'"
-    @input="$emit('input', $event)"
   >
     <template #append>
       <q-icon
@@ -19,45 +18,45 @@
         @keydown.enter.space="isPwd = !isPwd"
       />
     </template>
-    <template v-for="(_, slot) of $scopedSlots" #[slot]="scope">
-      <slot :name="slot" v-bind="scope" />
+    <template v-for="(_, name) in $slots" #[name]="slotData">
+      <slot :name="name" v-bind="{ ...slotData }" />
     </template>
-  </q-input-password>
+  </q-input>
 </template>
 
 <script>
-import QInputPassword from "./atoms/QInputPassword.vue"
-
-export default {
-  name: "PasswordInput",
-  components: { QInputPassword },
+import { defineComponent } from "vue"
+export default defineComponent({
   inheritAttrs: false,
-  props: {
-    label: {
-      type: String,
-      default: "Password",
-    },
-    value: {
-      type: String,
-      default: "",
-    },
-    autocomplete: {
-      default: "current-password",
-      type: String,
-    },
-    outlined: {
-      type: Boolean,
-      default: false,
-    },
-    error: {
-      type: [String, Boolean],
-      default: false,
-    },
+})
+</script>
+
+<script setup>
+import { ref, useSlots } from "vue"
+defineProps({
+  label: {
+    type: String,
+    default: "Password",
   },
-  data() {
-    return {
-      isPwd: true,
-    }
+  value: {
+    type: String,
+    default: "",
   },
-}
+  autocomplete: {
+    default: "current-password",
+    type: String,
+  },
+  outlined: {
+    type: Boolean,
+    default: false,
+  },
+  error: {
+    type: [String, Boolean],
+    default: false,
+  },
+})
+
+const isPwd = ref(true)
+
+const $slots = useSlots()
 </script>

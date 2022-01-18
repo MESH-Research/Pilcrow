@@ -46,7 +46,7 @@
 
 <script>
 import NotificationListItem from "src/components/atoms/NotificationListItem.vue"
-import { ref, computed } from "@vue/composition-api"
+import { ref, computed } from "vue"
 import { notificationItems } from "src/graphql/fillerData"
 /**
  * Notification feed page

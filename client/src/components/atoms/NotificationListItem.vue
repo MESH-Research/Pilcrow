@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import { computed } from "@vue/composition-api"
+import { computed } from "vue"
 import { Screen } from "quasar"
 import { flatten } from "flat"
 import iconMapper from "src/mappers/notification_icons"

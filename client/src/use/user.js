@@ -1,10 +1,11 @@
 import { useQuery, useResult, useMutation } from "@vue/apollo-composable"
-import { computed, reactive } from "@vue/composition-api"
+import { computed, reactive } from "vue"
 import { CURRENT_USER } from "src/graphql/queries"
 import { LOGIN, LOGOUT } from "src/graphql/mutations"
 import { SessionStorage } from "quasar"
 import { useVuelidate } from "@vuelidate/core"
 import { required, email } from "@vuelidate/validators"
+import { useRouter } from "vue-router"
 
 /**
  * Returns an object of useful current user properties and helper methods:
@@ -60,7 +61,7 @@ export function useCurrentUser() {
  * Provides method for logging in a user
  *
  * State:
- *  $v<ref>: vuelidate validator object
+ *  v$<ref>: vuelidate validator object
  *  loading<ref>: true if the mutation is currently running
  *  redirecUrl: The url the user should be redirected to after login
  *
@@ -84,7 +85,7 @@ export const useLogin = () => {
       required,
     },
   }
-  const $v = useVuelidate(rules, credentials)
+  const v$ = useVuelidate(rules, credentials)
 
   const { mutate: loginMutation, loading } = useMutation(LOGIN, () => ({
     update: (cache, { data: { login } }) => {
@@ -107,8 +108,8 @@ export const useLogin = () => {
     if (typeof user !== undefined) {
       Object.assign(credentials, user)
     }
-    $v.value.$touch()
-    if ($v.value.$invalid) {
+    v$.value.$touch()
+    if (v$.value.$invalid) {
       throw Error("FORM_VALIDATION")
     }
     try {
@@ -128,7 +129,7 @@ export const useLogin = () => {
     }
   }
 
-  return { loginUser, loading, $v, redirectUrl }
+  return { loginUser, loading, v$, redirectUrl }
 }
 
 /**
@@ -140,7 +141,8 @@ export const useLogin = () => {
  * @param {Object} router Router.  If suppled the user will be redirected on logout.
  * @returns
  */
-export function useLogout(router) {
+export function useLogout() {
+  const { push } = useRouter()
   const {
     mutate: logoutMutation,
     loading: logoutLoading,
@@ -160,9 +162,7 @@ export function useLogout(router) {
   async function logoutUser() {
     try {
       await logoutMutation()
-      if (router) {
-        router.push("/")
-      }
+      push("/")
       return true
     } catch (e) {
       return false

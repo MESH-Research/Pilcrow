@@ -33,7 +33,7 @@ const routes = [
       },
       {
         path: "feed/",
-        component: () => import("pages/Feed.vue"),
+        component: () => import("src/pages/FeedPage.vue"),
       },
       {
         path: "/admin/users",
@@ -43,18 +43,19 @@ const routes = [
       {
         name: "user_details",
         path: "/admin/user/:id",
+        props: true,
         component: () => import("pages/Admin/UserDetails.vue"),
       },
       {
         path: "/admin/publications",
-        component: () => import("src/pages/Admin/Publications.vue"),
+        component: () => import("src/pages/Admin/PublicationsPage.vue"),
         meta: {
           requiresRoles: ["Application Administrator"],
         },
       },
       {
         path: "/publications",
-        component: () => import("src/pages/Publications.vue"),
+        component: () => import("src/pages/PublicationsPage.vue"),
       },
       {
         name: "publication_details",
@@ -71,7 +72,7 @@ const routes = [
       },
       {
         path: "/submissions",
-        component: () => import("src/pages/Submissions.vue"),
+        component: () => import("src/pages/SubmissionPage.vue"),
       },
       {
         name: "submission_details",
@@ -87,15 +88,15 @@ const routes = [
   {
     path: "/error403",
     name: "error403",
-    component: () => import("pages/Error403.vue"),
+    component: () => import("src/pages/Error403Page.vue"),
   },
 ]
 
 // Always leave this as last one
 
 routes.push({
-  path: "*",
-  component: () => import("pages/Error404.vue"),
+  path: "/:catchAll(.*)*",
+  component: () => import("src/pages/Error404Page.vue"),
 })
 
 export default routes

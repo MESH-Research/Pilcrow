@@ -1,4 +1,4 @@
-import { computed, watch, inject } from "@vue/composition-api"
+import { computed, watch, inject } from "vue"
 import { clone } from "lodash"
 
 /**

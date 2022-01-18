@@ -121,7 +121,7 @@ import NewPasswordInput from "../components/forms/NewPasswordInput.vue"
 import { useUserValidation } from "src/use/userValidation"
 import ErrorFieldRenderer from "src/components/molecules/ErrorFieldRenderer.vue"
 import { useHasErrorKey } from "src/use/validationHelpers"
-import { ref, provide } from "@vue/composition-api"
+import { ref, provide } from "vue"
 import { useLogin } from "src/use/user"
 import ErrorBanner from "src/components/molecules/ErrorBanner.vue"
 

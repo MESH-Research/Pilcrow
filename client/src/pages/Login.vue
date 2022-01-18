@@ -14,8 +14,8 @@
 
             <q-input
               ref="username"
-              v-model="$v.email.$model"
-              :error="$v.email.$error"
+              v-model="v$.email.$model"
+              :error="v$.email.$error"
               :label="$t('auth.fields.email')"
               autofocus
               outlined
@@ -24,7 +24,7 @@
             >
               <template #error>
                 <error-field-renderer
-                  :errors="$v.email.$errors"
+                  :errors="v$.email.$errors"
                   prefix="auth.validation.email"
                 />
               </template>
@@ -32,8 +32,8 @@
 
             <password-input
               ref="password"
-              v-model="$v.password.$model"
-              :error="$v.password.$error"
+              v-model="v$.password.$model"
+              :error="v$.password.$error"
               :label="$t('auth.fields.password')"
               outlined
               data-cy="password_field"
@@ -42,7 +42,7 @@
             >
               <template #hint>
                 <error-field-renderer
-                  :errors="$v.password.$errors"
+                  :errors="v$.password.$errors"
                   prefix="auth.validation.password"
                 />
               </template>
@@ -77,31 +77,24 @@
   </q-page>
 </template>
 
-<script>
+<script setup>
 import PasswordInput from "src/components/forms/PasswordInput.vue"
 import ErrorBanner from "src/components/molecules/ErrorBanner.vue"
 import ErrorFieldRenderer from "src/components/molecules/ErrorFieldRenderer.vue"
-import { defineComponent, ref } from "@vue/composition-api"
+import { ref } from "vue"
 import { useLogin } from "src/use/user"
+import { useRouter } from "vue-router"
 
-export default defineComponent({
-  name: "PageLogin",
-  components: { PasswordInput, ErrorFieldRenderer, ErrorBanner },
-  setup(_, { root }) {
-    const error = ref("")
+const error = ref("")
 
-    const { loginUser, loading, $v, redirectUrl } = useLogin()
-
-    const handleSubmit = async () => {
-      try {
-        await loginUser()
-        root.$router.push(redirectUrl)
-      } catch (e) {
-        error.value = e.message
-      }
-    }
-
-    return { $v, handleSubmit, loading, error, redirectUrl }
-  },
-})
+const { loginUser, loading, v$, redirectUrl } = useLogin()
+const { push } = useRouter()
+const handleSubmit = async () => {
+  try {
+    await loginUser()
+    push(redirectUrl)
+  } catch (e) {
+    error.value = e.message
+  }
+}
 </script>

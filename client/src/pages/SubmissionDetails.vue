@@ -120,7 +120,7 @@
                 cyAttr: 'button_unassign_reviewer',
               },
             ]"
-            @actionClick="handleUserListClick"
+            @action-click="handleUserListClick"
           />
         </div>
         <div v-else>
@@ -225,7 +225,7 @@
                 cyAttr: 'button_unassign_review_coordinator',
               },
             ]"
-            @actionClick="handleUserListClick"
+            @action-click="handleUserListClick"
           />
         </div>
         <div v-else>
