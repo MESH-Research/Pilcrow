@@ -248,7 +248,6 @@
 <script setup>
 import { GET_SUBMISSION, SEARCH_USERS } from "src/graphql/queries"
 import {
-  CREATE_SUBMISSION,
   CREATE_SUBMISSION_USER,
   DELETE_SUBMISSION_USER,
 } from "src/graphql/mutations"
