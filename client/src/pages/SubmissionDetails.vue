@@ -1,5 +1,5 @@
 <template>
-  <div v-if="$apollo.loading" class="q-pa-lg">
+  <div v-if="!submission" class="q-pa-lg">
     {{ $t("loading") }}
   </div>
   <article v-else>
@@ -245,187 +245,147 @@
   </article>
 </template>
 
-<script>
+<script setup>
 import { GET_SUBMISSION, SEARCH_USERS } from "src/graphql/queries"
 import {
+  CREATE_SUBMISSION,
   CREATE_SUBMISSION_USER,
   DELETE_SUBMISSION_USER,
 } from "src/graphql/mutations"
 import UserList from "src/components/molecules/UserList.vue"
 import RoleMapper from "src/mappers/roles"
+import { useQuasar } from "quasar"
+import { useMutation, useQuery, useResult } from "@vue/apollo-composable"
+import { ref, computed } from "vue"
+import { useI18n } from "vue-i18n"
+const props = defineProps({
+  id: {
+    type: String,
+    required: true,
+  },
+})
 
-export default {
-  components: {
-    UserList,
-  },
-  props: {
-    id: {
-      type: String,
-      required: true,
-    },
-  },
-  data() {
-    return {
-      submission: {
-        title: null,
-        publication: null,
-        users: [],
-      },
-      userSearch: {
-        data: [],
-      },
-      current_page: 1,
-      reviewer_candidate: null,
-      review_coordinator_candidate: null,
-      options: [],
-    }
-  },
-  computed: {
-    review_coordinators: function () {
-      return this.filterUsersByRoleId(RoleMapper[`review_coordinators`])
-    },
-    reviewers: function () {
-      return this.filterUsersByRoleId(RoleMapper[`reviewers`])
-    },
-    submitters: function () {
-      return this.filterUsersByRoleId(RoleMapper[`submitters`])
-    },
-  },
-  methods: {
-    filterUsersByRoleId(id) {
-      return this.submission.users.filter((user) => {
-        return parseInt(user.pivot.role_id) === id
-      })
-    },
-    makeNotify(color, icon, message, display_name = null) {
-      this.$q.notify({
-        actions: [
-          {
-            label: "Close",
-            color: "white",
-            attrs: {
-              "data-cy": "button_dismiss_notify",
-            },
-          },
-        ],
-        timeout: 50000,
-        color: color,
-        icon: icon,
-        message: this.$t(message, { display_name }),
+const submission = useResult(useQuery(GET_SUBMISSION, { id: props.id }).result)
+
+const current_page = ref(1)
+const reviewer_candidate = ref(null)
+const review_coordinator_candidate = ref(null)
+
+const review_coordinators = computed(() => {
+  return filterUsersByRoleId(
+    submission.value.users,
+    RoleMapper[`review_coordinators`]
+  )
+})
+const reviewers = computed(() => {
+  return filterUsersByRoleId(submission.value.users, RoleMapper[`reviewers`])
+})
+const submitters = computed(() => {
+  return filterUsersByRoleId(submission.value.users, RoleMapper[`submitters`])
+})
+
+function filterUsersByRoleId(users, id) {
+  return users.filter((user) => {
+    return parseInt(user.pivot.role_id) === id
+  })
+}
+
+const { notify } = useQuasar()
+const { t } = useI18n()
+function makeNotify(color, icon, message, display_name = null) {
+  notify({
+    actions: [
+      {
+        label: "Close",
+        color: "white",
         attrs: {
-          "data-cy": "submission_details_notify",
+          "data-cy": "button_dismiss_notify",
         },
-        html: true,
-      })
-      this.is_submitting = false
+      },
+    ],
+    timeout: 50000,
+    color: color,
+    icon: icon,
+    message: t(message, { display_name }),
+    attrs: {
+      "data-cy": "submission_details_notify",
     },
-    async assignUser(role_name, candidate_model) {
-      try {
-        await this.$apollo
-          .mutate({
-            mutation: CREATE_SUBMISSION_USER,
-            variables: {
-              user_id: candidate_model.id,
-              role_id: RoleMapper[role_name],
-              submission_id: this.id,
-            },
-            refetchQueries: ["GetSubmission"],
-          })
-          .then(() => {
-            this.makeNotify(
-              "positive",
-              "check_circle",
-              `submissions.${role_name}.assign.success`,
-              candidate_model.name
-                ? candidate_model.name
-                : candidate_model.username
-            )
-          })
-          .then(() => {
-            this.resetForm()
-            candidate_model = null
-          })
-      } catch (error) {
-        this.makeNotify(
-          "negative",
-          "error",
-          `submissions.${role_name}.assign.error`
-        )
-      }
-    },
-    resetForm() {
-      this.review_coordinator_candidate = null
-      this.reviewer_candidate = null
-    },
-    async handleUserListClick({ user, action }) {
-      switch (action) {
-        case "unassignReviewer":
-          await this.unassignUser("reviewer", user)
-          break
-        case "unassignReviewCoordinator":
-          await this.unassignUser("review_coordinator", user)
-          break
-      }
-    },
-    async unassignUser(role_name, user) {
-      try {
-        await this.$apollo.mutate({
-          mutation: DELETE_SUBMISSION_USER,
-          variables: {
-            user_id: user.pivot.user_id,
-            role_id: RoleMapper[role_name],
-            submission_id: this.id,
-          },
-          refetchQueries: ["GetSubmission"],
-        })
-        this.makeNotify(
+    html: true,
+  })
+  this.is_submitting = false
+}
+
+const { mutate: assignUserMutate } = useMutation(CREATE_SUBMISSION_USER, {
+  refetchQueries: ["GetSubmission"],
+})
+
+async function assignUser(role_name, candidate_model) {
+  try {
+    await assignUserMutate({
+      user_id: candidate_model.id,
+      role_id: RoleMapper[role_name],
+      submission_id: props.id,
+    })
+      .then(() => {
+        makeNotify(
           "positive",
           "check_circle",
-          `submissions.${role_name}.unassign.success`,
-          user.name ? user.name : user.username
+          `submissions.${role_name}.assign.success`,
+          candidate_model.name ? candidate_model.name : candidate_model.username
         )
-      } catch (error) {
-        this.makeNotify(
-          "negative",
-          "error",
-          `submissions.${role_name}.unassign.error`
-        )
-      }
-    },
-    filterFn(val, update) {
-      update(() => {
-        const needle = val.toLowerCase()
-        this.$apollo
-          .query({
-            query: SEARCH_USERS,
-            variables: {
-              term: needle,
-              page: this.current_page,
-            },
-          })
-          .then((searchdata) => {
-            var usersList = []
-            const dropdowndata = searchdata.data.userSearch.data
-            dropdowndata.forEach(function (currentValue, index) {
-              usersList[index] = currentValue
-            })
-            this.options = usersList
-          })
-          .catch((error) => {
-            console.log({ error })
-          })
       })
-    },
-  },
-  apollo: {
-    submission: {
-      query: GET_SUBMISSION,
-      variables() {
-        return {
-          id: this.id,
-        }
-      },
-    },
-  },
+      .then(() => {
+        resetForm()
+        candidate_model = null
+      })
+  } catch (error) {
+    makeNotify("negative", "error", `submissions.${role_name}.assign.error`)
+  }
+}
+function resetForm() {
+  review_coordinator_candidate.value = null
+  reviewer_candidate.value = null
+}
+
+async function handleUserListClick({ user, action }) {
+  switch (action) {
+    case "unassignReviewer":
+      await unassignUser("reviewer", user)
+      break
+    case "unassignReviewCoordinator":
+      await unassignUser("review_coordinator", user)
+      break
+  }
+}
+
+const { mutate: unassignUserMutate } = useMutation(DELETE_SUBMISSION_USER, {
+  refetchQueries: ["GetSubmission"],
+})
+
+async function unassignUser(role_name, user) {
+  try {
+    await unassignUserMutate({
+      user_id: user.pivot.user_id,
+      role_id: RoleMapper[role_name],
+      submission_id: props.id,
+    })
+    makeNotify(
+      "positive",
+      "check_circle",
+      `submissions.${role_name}.unassign.success`,
+      user.name ? user.name : user.username
+    )
+  } catch (error) {
+    makeNotify("negative", "error", `submissions.${role_name}.unassign.error`)
+  }
+}
+
+const searchVal = ref("")
+const { result: searchResult } = useQuery(SEARCH_USERS, { term: searchVal })
+const options = useResult(searchResult, [], (data) => data.userSearch.data)
+function filterFn(val, update) {
+  update(() => {
+    searchVal.value = val.toLowerCase()
+  })
 }
 </script>
