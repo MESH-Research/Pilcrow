@@ -58,7 +58,6 @@
                 <q-item
                   data-cy="result_editor_assignee"
                   v-bind="scope.itemProps"
-                  v-on="scope.itemEvents"
                 >
                   <q-item-section>
                     <q-item-label

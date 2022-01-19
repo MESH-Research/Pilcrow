@@ -74,7 +74,6 @@
                 <q-item
                   data-cy="result_review_assignee"
                   v-bind="scope.itemProps"
-                  v-on="scope.itemEvents"
                 >
                   <q-item-section>
                     <q-item-label
@@ -179,7 +178,6 @@
                 <q-item
                   data-cy="result_review_coordinator_assignee"
                   v-bind="scope.itemProps"
-                  v-on="scope.itemEvents"
                 >
                   <q-item-section>
                     <q-item-label
@@ -311,7 +309,6 @@ function makeNotify(color, icon, message, display_name = null) {
     },
     html: true,
   })
-  this.is_submitting = false
 }
 
 const { mutate: assignUserMutate } = useMutation(CREATE_SUBMISSION_USER, {

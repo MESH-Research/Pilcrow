@@ -48,6 +48,7 @@ export const notificationItems = [
     viewed: false,
     icon: "remove_red_eye",
     time: randomPastTime(),
+    read_at: randomPastTime(),
   },
   {
     type: "submission.created",
@@ -56,6 +57,7 @@ export const notificationItems = [
     viewed: false,
     icon: "article",
     time: randomPastTime(),
+    read_at: randomPastTime(),
   },
   {
     type: "review.requested",
@@ -64,6 +66,7 @@ export const notificationItems = [
     viewed: true,
     icon: "book",
     time: randomPastTime(),
+    read_at: randomPastTime(),
   },
   {
     type: "review.commentReplied",
@@ -72,6 +75,7 @@ export const notificationItems = [
     viewed: true,
     icon: "reply",
     time: randomPastTime(),
+    read_at: null,
   },
   {
     type: "review.requested",
@@ -80,6 +84,7 @@ export const notificationItems = [
     viewed: false,
     icon: "remove_red_eye",
     time: randomPastTime(),
+    read_at: null,
   },
   {
     type: "submission.resubmitted",
@@ -88,6 +93,7 @@ export const notificationItems = [
     viewed: false,
     icon: "sync",
     time: randomPastTime(),
+    read_at: null,
   },
   {
     type: "submission.approved",
@@ -96,6 +102,7 @@ export const notificationItems = [
     viewed: true,
     icon: "book",
     time: randomPastTime(),
+    read_at: null,
   },
   {
     type: "submission.approved",
@@ -104,6 +111,7 @@ export const notificationItems = [
     viewed: false,
     icon: "verified",
     time: randomPastTime(),
+    read_at: null,
   },
   {
     type: "review.requested",
@@ -112,6 +120,7 @@ export const notificationItems = [
     viewed: true,
     icon: "book",
     time: randomPastTime(),
+    read_at: null,
   },
   {
     type: "review.requested",
@@ -120,6 +129,7 @@ export const notificationItems = [
     viewed: false,
     icon: "book",
     time: randomPastTime(),
+    read_at: null,
   },
   {
     type: "review.requested",
@@ -128,6 +138,7 @@ export const notificationItems = [
     viewed: false,
     icon: "book",
     time: randomPastTime(),
+    read_at: null,
   },
   {
     type: "review.requested",
@@ -136,6 +147,7 @@ export const notificationItems = [
     viewed: false,
     icon: "book",
     time: randomPastTime(),
+    read_at: null,
   },
   {
     type: "review.requested",
@@ -144,5 +156,6 @@ export const notificationItems = [
     viewed: true,
     icon: "book",
     time: randomPastTime(),
+    read_at: null,
   },
 ]

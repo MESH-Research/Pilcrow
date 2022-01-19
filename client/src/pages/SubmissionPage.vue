@@ -199,7 +199,6 @@ const { mutate: createMutate } = useMutation(CREATE_SUBMISSION, {
 async function createNewSubmission() {
   is_submitting.value = true
   try_catch_error.value = false
-  console.log(currentUser.value)
   new_submission.submitter_user_id = currentUser.value.id
   //TODO: Form invalid needs to be rewritten to use error slots on the form/inputs
   // if (checkThatFormIsInvalid()) {
