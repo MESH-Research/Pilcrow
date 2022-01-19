@@ -827,11 +827,11 @@ class SubmissionTest extends TestCase
     public function testCreateSubmissionUserViaMutationAsAReviewCoordinator(array $case)
     {
         $publication = Publication::factory()->create();
+        $submitter = User::factory()->create();
         /** @var User $review_coordinator */
         $review_coordinator = User::factory()->create();
         $this->actingAs($review_coordinator);
         $user_to_be_assigned = User::factory()->create();
-        $submitter = User::factory()->create();
         $submission = Submission::factory()
             ->for($publication)
             ->hasAttached($submitter, ['role_id' => Role::SUBMITTER_ROLE_ID])
@@ -912,7 +912,7 @@ class SubmissionTest extends TestCase
         }
         $query_response_json = $query_response->decodeResponseJson();
         $query_response_value = AssertableJson::fromAssertableJsonString($query_response_json);
-        $this->assertEquals($query_response_value->toArray()['data'], $expected_query_response);
+        $this->assertEquals($expected_query_response, $query_response_value->toArray()['data']);
     }
 
     /**
@@ -1428,5 +1428,18 @@ class SubmissionTest extends TestCase
         );
         $expected_mutation_response = null;
         $response->assertJsonPath('data', $expected_mutation_response);
+    }
+
+    /**
+     * @return void
+     */
+    public function testSubmissionStatusCanBeRetrievedAndChangedViaEloquent()
+    {
+        $submission = Submission::factory()->create();
+        $this->assertEquals(Submission::INITIALLY_SUBMITTED, $submission->status);
+        $this->assertEquals('INITIALLY_SUBMITTED', $submission->status_name);
+        $submission->status = Submission::AWAITING_REVIEW;
+        $this->assertEquals(Submission::AWAITING_REVIEW, $submission->status);
+        $this->assertEquals('AWAITING_REVIEW', $submission->status_name);
     }
 }
