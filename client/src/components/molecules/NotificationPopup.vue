@@ -37,7 +37,7 @@
             :key="index"
             :note="item"
             clickable
-            :class="{ unread: !item.data.read_at }"
+            :class="{ unread: !item.read_at }"
           />
         </q-list>
         <q-btn-group spread>
@@ -76,7 +76,7 @@ export default defineComponent({
     )
     const hasUnreadNotifications = computed(() => {
       return notificationItems.value.length > 0 &&
-        notificationItems.value.find((item) => item.data.read_at === null)
+        notificationItems.value.find((item) => item.read_at === null)
         ? true
         : false
     })
@@ -89,7 +89,12 @@ export default defineComponent({
           "notifications-wrapper"
       })
     })
-    return { notificationItems, hasUnreadNotifications, isVisible, popupProxy }
+    return {
+      notificationItems,
+      hasUnreadNotifications,
+      isVisible,
+      popupProxy,
+    }
   },
 })
 </script>

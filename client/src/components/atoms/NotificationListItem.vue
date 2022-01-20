@@ -1,6 +1,11 @@
 <template>
-  <q-item clickable :class="{ unread: !note.data.read_at }" class="q-pl-none">
-    <q-badge v-if="!note.data.read_at" />
+  <q-item
+    clickable
+    :class="{ unread: !note.read_at }"
+    class="q-pl-none"
+    @click.prevent="handleClick(note.id)"
+  >
+    <q-badge v-if="!note.read_at" />
     <q-item-section side class="q-px-md">
       <q-icon :size="iconSize" :name="iconMapper(note.data.type)" />
     </q-item-section>
@@ -25,6 +30,8 @@ import { flatten } from "flat"
 import iconMapper from "src/mappers/notification_icons"
 import TimeAgo from "javascript-time-ago"
 import en from "javascript-time-ago/locale/en.json"
+import { useMutation } from "@vue/apollo-composable"
+import { MARK_NOTIFICATION_READ } from "src/graphql/mutations"
 
 TimeAgo.addDefaultLocale(en)
 
@@ -80,7 +87,21 @@ export default {
       const style = Screen.lt.md ? "mini-now" : "long"
       return timeAgo.format(new Date(props.note.data.time), style)
     })
-    return { tKey, flattened, relativeTime, iconMapper }
+
+    const handleClick = (id) => {
+      try {
+        const { mutate: markNotificationRead } = useMutation(
+          MARK_NOTIFICATION_READ,
+          {
+            notification_id: id,
+          }
+        )
+        markNotificationRead()
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    return { tKey, flattened, relativeTime, iconMapper, handleClick }
   },
 }
 </script>
