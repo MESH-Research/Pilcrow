@@ -4,8 +4,6 @@ declare(strict_types=1);
 namespace App\GraphQL\Mutations;
 
 use Illuminate\Notifications\DatabaseNotification as Notification;
-// use Illuminate\Notifications\DatabaseNotificationCollection as Collection;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 
 class MarkNotificationReadStatus
