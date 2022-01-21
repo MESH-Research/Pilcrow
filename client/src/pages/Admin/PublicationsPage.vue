@@ -89,7 +89,7 @@ function goToPublicationDetails(publicationId) {
 const is_submitting = ref(false)
 const tryCatchError = ref(false)
 
-/** TODO: This query is assuming only one page of results. */
+// TODO: This query is assuming only one page of results.
 const { result: publicationsResult } = useQuery(GET_PUBLICATIONS, { page: 1 })
 const publications = useResult(
   publicationsResult,
@@ -125,8 +125,11 @@ function resetForm() {
 
 const { notify } = useQuasar()
 const { t } = useI18n()
+//TODO: Extract makeNotify function into a composables (also used in submissiondetails)
 function makeNotify(color, icon, message) {
   notify({
+    group: false,
+    progress: true,
     color: color,
     icon: icon,
     message: t(message),
@@ -141,7 +144,6 @@ function makeNotify(color, icon, message) {
 const { mutate } = useMutation(CREATE_PUBLICATION)
 
 async function createPublication() {
-  is_submitting.value = true
   tryCatchError.value = false
   pubV$.value.$touch()
   if (pubV$.value.$errors.length) {
@@ -151,6 +153,7 @@ async function createPublication() {
     return false
   }
 
+  is_submitting.value = true
   try {
     await mutate({ ...newPublication }, { refetchQueries: ["GetPublications"] })
 

@@ -205,8 +205,10 @@ function filterUsersByRoleId(users, id) {
 
 const { notify } = useQuasar()
 const { t } = useI18n()
+//TODO: Extract makeNotify function into a composable
 function makeNotify(color, icon, message, display_name = null) {
   notify({
+    group: false,
     actions: [
       {
         label: "Close",
