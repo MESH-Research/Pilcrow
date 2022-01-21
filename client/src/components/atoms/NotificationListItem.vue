@@ -88,18 +88,17 @@ export default {
       return timeAgo.format(new Date(props.note.data.time), style)
     })
 
-    const handleClick = (id) => {
-      try {
-        const { mutate: markNotificationRead } = useMutation(
-          MARK_NOTIFICATION_READ,
-          {
-            notification_id: id,
-          }
-        )
-        markNotificationRead()
-      } catch (error) {
-        console.log(error)
+    const { mutate: markNotificationRead } = useMutation(
+      MARK_NOTIFICATION_READ,
+      {
+        refetchQueries: ["currentUserNotifications"],
       }
+    )
+
+    const handleClick = async (id) => {
+      await markNotificationRead({
+        notification_id: id,
+      })
     }
     return { tKey, flattened, relativeTime, iconMapper, handleClick }
   },
