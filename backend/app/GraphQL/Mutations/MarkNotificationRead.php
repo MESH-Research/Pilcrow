@@ -6,7 +6,7 @@ namespace App\GraphQL\Mutations;
 use Illuminate\Notifications\DatabaseNotification as Notification;
 use Illuminate\Support\Facades\Auth;
 
-class MarkNotificationReadStatus
+class MarkNotificationRead
 {
     /**
      * Mark a single user notification as read
