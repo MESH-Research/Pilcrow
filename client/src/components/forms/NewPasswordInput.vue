@@ -40,6 +40,9 @@
           v-text="$t('helpers.REQUIRED_FIELD', [[$t('auth.fields.password')]])"
         />
       </template>
+      <template v-for="(_, name) in $slots" #[name]="slotData">
+        <slot :name="name" v-bind="{ ...slotData }" />
+      </template>
     </password-input>
     <div
       v-if="showDetails"

@@ -58,6 +58,7 @@ export default {
       },
       password: {
         required: "Password is required",
+        notComplex: "Your password needs to be more complex.",
       },
       PASSWORD_NOT_COMPLEX: "Your password needs to be more complex.",
       PASSWORD_COMPLEX: "Your password is sufficiently complex.",

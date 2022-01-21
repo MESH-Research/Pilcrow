@@ -39,9 +39,9 @@
                   prefix="auth.validation.email"
                 />
 
-                <i18n
+                <i18n-t
                   v-if="hasErrorKey('email', 'EMAIL_IN_USE')"
-                  path="auth.validation.email.EMAIL_IN_USE_HINT"
+                  keypath="auth.validation.email.EMAIL_IN_USE_HINT"
                   tag="div"
                   style="line-height: 1.3"
                 >
@@ -58,7 +58,7 @@
                   <template #break>
                     <br />
                   </template>
-                </i18n>
+                </i18n-t>
               </template>
             </q-input>
             <q-input
@@ -85,7 +85,14 @@
               :error="$v.password.$error"
               :complexity="$v.password.notComplex.$response.complexity"
               data-cy="password_field"
-            />
+            >
+              <template #error>
+                <error-field-renderer
+                  :errors="$v.password.$errors"
+                  prefix="auth.validation.password"
+                />
+              </template>
+            </new-password-input>
           </fieldset>
 
           <error-banner
@@ -116,38 +123,32 @@
   </q-page>
 </template>
 
-<script>
+<script setup>
 import NewPasswordInput from "../components/forms/NewPasswordInput.vue"
 import { useUserValidation } from "src/use/userValidation"
 import ErrorFieldRenderer from "src/components/molecules/ErrorFieldRenderer.vue"
 import { useHasErrorKey } from "src/use/validationHelpers"
 import { ref, provide } from "vue"
 import { useLogin } from "src/use/user"
+import { useRouter } from "vue-router"
 import ErrorBanner from "src/components/molecules/ErrorBanner.vue"
 
-export default {
-  name: "PageRegister",
-  components: { NewPasswordInput, ErrorFieldRenderer, ErrorBanner },
-  setup(_, { root }) {
-    const { loginUser } = useLogin()
+const { loginUser } = useLogin()
+const { push } = useRouter()
+const { $v, user, saveUser } = useUserValidation()
+provide("validator", $v)
+async function handleSubmit() {
+  formErrorMsg.value = ""
+  try {
+    await saveUser()
+    await loginUser({ email: user.email, password: user.password })
 
-    async function handleSubmit() {
-      formErrorMsg.value = ""
-      try {
-        await saveUser()
-        await loginUser({ email: user.email, password: user.password })
-        root.$router.push("/dashboard")
-      } catch (e) {
-        formErrorMsg.value = e.message
-      }
-    }
-
-    const formErrorMsg = ref("")
-    const { $v, user, saveUser } = useUserValidation()
-    provide("validator", $v)
-    const hasErrorKey = useHasErrorKey()
-
-    return { $v, user, handleSubmit, hasErrorKey, formErrorMsg }
-  },
+    push("/dashboard")
+  } catch (e) {
+    formErrorMsg.value = e.message
+  }
 }
+
+const formErrorMsg = ref("")
+const hasErrorKey = useHasErrorKey($v)
 </script>
