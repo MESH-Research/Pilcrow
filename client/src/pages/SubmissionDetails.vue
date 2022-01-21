@@ -46,52 +46,12 @@
         <h3>Assign a Reviewer</h3>
         <q-form @submit="assignUser(`reviewer`, reviewer_candidate)">
           <div class="q-gutter-md column q-pl-none">
-            <q-select
+            <find-user-select
               id="input_review_assignee"
               v-model="reviewer_candidate"
-              :options="options"
-              bottom-slots
-              hide-dropdown-icon
-              input-debounce="0"
-              label="User to Assign"
-              outlined
-              transition-hide="none"
-              transition-show="none"
-              use-input
-              @filter="filterFn"
-            >
-              <template #hint>
-                <div class="text--grey">
-                  Search by username, email, or name.
-                </div>
-              </template>
-              <template #selected-item="scope">
-                <q-chip data-cy="review_assignee_selected" dense square>
-                  {{ scope.opt.username }} ({{ scope.opt.email }})
-                </q-chip>
-              </template>
-              <template #option="scope">
-                <q-item
-                  data-cy="result_review_assignee"
-                  v-bind="scope.itemProps"
-                >
-                  <q-item-section>
-                    <q-item-label
-                      >{{ scope.opt.username }} ({{
-                        scope.opt.email
-                      }})</q-item-label
-                    >
-                    <q-item-label
-                      v-if="scope.opt.name"
-                      caption
-                      class="text-grey-10"
-                    >
-                      {{ scope.opt.name }}
-                    </q-item-label>
-                  </q-item-section>
-                </q-item>
-              </template>
-            </q-select>
+              cy-selected-item="review_assignee_selected"
+              cy-options-item="result_review_assignee"
+            />
           </div>
           <q-btn
             :ripple="{ center: true }"
@@ -146,56 +106,12 @@
           "
         >
           <div class="q-gutter-md column q-pl-none">
-            <q-select
+            <find-user-select
               id="input_review_coordinator_assignee"
               v-model="review_coordinator_candidate"
-              :options="options"
-              bottom-slots
-              hide-dropdown-icon
-              input-debounce="0"
-              label="User to Assign"
-              outlined
-              transition-hide="none"
-              transition-show="none"
-              use-input
-              @filter="filterFn"
-            >
-              <template #hint>
-                <div class="text--grey">
-                  Search by username, email, or name.
-                </div>
-              </template>
-              <template #selected-item="scope">
-                <q-chip
-                  data-cy="review_coordinator_assignee_selected"
-                  dense
-                  square
-                >
-                  {{ scope.opt.username }} ({{ scope.opt.email }})
-                </q-chip>
-              </template>
-              <template #option="scope">
-                <q-item
-                  data-cy="result_review_coordinator_assignee"
-                  v-bind="scope.itemProps"
-                >
-                  <q-item-section>
-                    <q-item-label
-                      >{{ scope.opt.username }} ({{
-                        scope.opt.email
-                      }})</q-item-label
-                    >
-                    <q-item-label
-                      v-if="scope.opt.name"
-                      caption
-                      class="text-grey-10"
-                    >
-                      {{ scope.opt.name }}
-                    </q-item-label>
-                  </q-item-section>
-                </q-item>
-              </template>
-            </q-select>
+              cy-selected-item="review_coordinator_assignee_selected"
+              cy-options-item="result_review_coordinator_assignee"
+            />
           </div>
           <q-btn
             :ripple="{ center: true }"
@@ -244,7 +160,7 @@
 </template>
 
 <script setup>
-import { GET_SUBMISSION, SEARCH_USERS } from "src/graphql/queries"
+import { GET_SUBMISSION } from "src/graphql/queries"
 import {
   CREATE_SUBMISSION_USER,
   DELETE_SUBMISSION_USER,
@@ -255,6 +171,7 @@ import { useQuasar } from "quasar"
 import { useMutation, useQuery, useResult } from "@vue/apollo-composable"
 import { ref, computed } from "vue"
 import { useI18n } from "vue-i18n"
+import FindUserSelect from "src/components/forms/FindUserSelect.vue"
 const props = defineProps({
   id: {
     type: String,
@@ -264,7 +181,6 @@ const props = defineProps({
 
 const submission = useResult(useQuery(GET_SUBMISSION, { id: props.id }).result)
 
-const current_page = ref(1)
 const reviewer_candidate = ref(null)
 const review_coordinator_candidate = ref(null)
 
@@ -295,12 +211,11 @@ function makeNotify(color, icon, message, display_name = null) {
       {
         label: "Close",
         color: "white",
-        attrs: {
-          "data-cy": "button_dismiss_notify",
-        },
+        "data-cy": "button_dismiss_notify",
       },
     ],
     timeout: 50000,
+    progress: true,
     color: color,
     icon: icon,
     message: t(message, { display_name }),
@@ -374,14 +289,5 @@ async function unassignUser(role_name, user) {
   } catch (error) {
     makeNotify("negative", "error", `submissions.${role_name}.unassign.error`)
   }
-}
-
-const searchVal = ref("")
-const { result: searchResult } = useQuery(SEARCH_USERS, { term: searchVal })
-const options = useResult(searchResult, [], (data) => data.userSearch.data)
-function filterFn(val, update) {
-  update(() => {
-    searchVal.value = val.toLowerCase()
-  })
 }
 </script>

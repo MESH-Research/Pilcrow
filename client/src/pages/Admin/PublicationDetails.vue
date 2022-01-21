@@ -29,53 +29,12 @@
         <h3>Assign an Editor</h3>
         <q-form @submit="assignUser(`editor`, editor_candidate)">
           <div class="q-gutter-md column q-pl-none">
-            <q-select
+            <find-user-select
               id="input_editor_assignee"
               v-model="editor_candidate"
-              data-cy="input_editor_assignee"
-              :options="options"
-              bottom-slots
-              hide-dropdown-icon
-              input-debounce="0"
-              label="User to Assign"
-              outlined
-              transition-hide="none"
-              transition-show="none"
-              use-input
-              @filter="filterFn"
-            >
-              <template #hint>
-                <div class="text--grey">
-                  Search by username, email, or name.
-                </div>
-              </template>
-              <template #selected-item="scope">
-                <q-chip data-cy="editor_assignee_selected" dense square>
-                  {{ scope.opt.username }} ({{ scope.opt.email }})
-                </q-chip>
-              </template>
-              <template #option="scope">
-                <q-item
-                  data-cy="result_editor_assignee"
-                  v-bind="scope.itemProps"
-                >
-                  <q-item-section>
-                    <q-item-label
-                      >{{ scope.opt.username }} ({{
-                        scope.opt.email
-                      }})</q-item-label
-                    >
-                    <q-item-label
-                      v-if="scope.opt.name"
-                      caption
-                      class="text-grey-10"
-                    >
-                      {{ scope.opt.name }}
-                    </q-item-label>
-                  </q-item-section>
-                </q-item>
-              </template>
-            </q-select>
+              cy-selected-item="editor_assignee_selected"
+              cy-options-item="result_editor_assignee"
+            />
           </div>
           <q-btn
             :ripple="{ center: true }"
@@ -125,7 +84,7 @@
 
 <script setup>
 import UserList from "src/components/molecules/UserList.vue"
-import { GET_PUBLICATION, SEARCH_USERS } from "src/graphql/queries"
+import { GET_PUBLICATION } from "src/graphql/queries"
 import {
   CREATE_PUBLICATION_USER,
   DELETE_PUBLICATION_USER,
@@ -135,6 +94,7 @@ import { useMutation, useQuery, useResult } from "@vue/apollo-composable"
 import { useQuasar } from "quasar"
 import { useI18n } from "vue-i18n"
 import { ref, computed } from "vue"
+import FindUserSelect from "src/components/forms/FindUserSelect.vue"
 const props = defineProps({
   id: {
     type: String,
@@ -238,13 +198,5 @@ async function unassignUser(role_name, user) {
     console.log(error)
     makeNotify("negative", "error", `publications.${role_name}.unassign.error`)
   }
-}
-const searchVal = ref("")
-const { result: searchResult } = useQuery(SEARCH_USERS, { term: searchVal })
-const options = useResult(searchResult, [], (data) => data.userSearch.data)
-function filterFn(val, update) {
-  update(() => {
-    searchVal.value = val.toLowerCase()
-  })
 }
 </script>

@@ -2,6 +2,7 @@
   <q-layout view="lhh lpr lFf">
     <app-header v-model="leftDrawerOpen" drawer />
     <q-drawer
+      v-if="currentUser"
       id="sidebar"
       v-model="leftDrawerOpen"
       show-if-above
@@ -66,7 +67,7 @@
 
     <q-page-container>
       <q-page role="main">
-        <email-verification-banner v-if="!currentUser.email_verified_at" />
+        <email-verification-banner v-if="!currentUser?.email_verified_at" />
         <router-view />
       </q-page>
     </q-page-container>
@@ -83,7 +84,7 @@ import EmailVerificationBanner from "src/components/molecules/EmailVerificationB
 import { useCurrentUser } from "src/use/user"
 import { ref } from "vue"
 
-const leftDrawerOpen = ref(true)
+const leftDrawerOpen = ref(false)
 const { currentUser } = useCurrentUser()
 </script>
 

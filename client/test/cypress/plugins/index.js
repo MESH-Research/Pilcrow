@@ -9,42 +9,48 @@
 // https://on.cypress.io/plugins-guide
 // ***********************************************************
 
-
-
 // This function is called when a project is opened or re-opened (e.g. due to
 // the project's config changing)
 
 // cypress/plugins/index.js
-const axios = require('axios');
+const axios = require("axios")
 
 module.exports = (on, config) => {
-  on('task', {
+  on("task", {
     resetDb() {
       return new Promise((resolve, reject) => {
         axios({
           url: `${config.baseUrl}/graphql`,
           method: "POST",
           data: {
-            query: 'mutation { artisanCommand(command: "migrate:fresh" parameters: [{key: "--seed" value: "true"}])}'
+            query:
+              'mutation { artisanCommand(command: "migrate:fresh" parameters: [{key: "--seed" value: "true"}])}',
+          },
+        }).then((response) => {
+          const {
+            data: { data, errors },
+          } = response
+          if (!data) {
+            console.log(response)
           }
-        }).then(({ data: { data }, errors }) => {
           if (errors) {
-            reject();
+            console.log(errors)
+            reject()
           }
-          resolve(data.artisanCommand);
-        });
-      });
-    }
-  });
-
-  on('before:browser:launch' , (browser = {}, launchOptions) => {
-    const REDUCE = 1;
-    if (browser.family === 'firefox') {
-      launchOptions.preferences['ui.prefersReducedMotion'] = REDUCE;
-    }
-    if (browser.family === 'chromium') {
-      launchOptions.args.push('--force-prefers-reduced-motion');
-    }
-    return launchOptions;
+          resolve(data.artisanCommand)
+        })
+      })
+    },
   })
-};
+
+  on("before:browser:launch", (browser = {}, launchOptions) => {
+    const REDUCE = 1
+    if (browser.family === "firefox") {
+      launchOptions.preferences["ui.prefersReducedMotion"] = REDUCE
+    }
+    if (browser.family === "chromium") {
+      launchOptions.args.push("--force-prefers-reduced-motion")
+    }
+    return launchOptions
+  })
+}

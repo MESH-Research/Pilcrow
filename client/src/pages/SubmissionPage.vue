@@ -114,6 +114,7 @@ import { useQuasar } from "quasar"
 import { useI18n } from "vue-i18n"
 import { ref, reactive } from "vue"
 import { useResult, useQuery, useMutation } from "@vue/apollo-composable"
+import useVuelidate from "@vuelidate/core"
 
 const { currentUser } = useCurrentUser()
 
@@ -133,6 +134,8 @@ const rules = {
   submitter_user_id: { required },
   file_upload: { required },
 }
+
+const newPubV$ = useVuelidate(rules, new_submission)
 const submissions = useResult(
   useQuery(GET_SUBMISSIONS).result,
   [],
@@ -159,15 +162,15 @@ function makeNotify(color, icon, message) {
   is_submitting.value = false
 }
 function checkThatFormIsInvalid() {
-  if (this.$v.new_submission.title.maxLength.$invalid) {
+  if (newPubV$.value.title.maxLength.$invalid) {
     makeNotify("negative", "error", "submissions.create.title.max_length")
     return true
   }
-  if (this.$v.new_submission.title.required.$invalid) {
+  if (newPubV$.value.title.required.$invalid) {
     makeNotify("negative", "error", "submissions.create.title.required")
     return true
   }
-  if (this.$v.new_submission.publication_id.required.$invalid) {
+  if (newPubV$.value.publication_id.required.$invalid) {
     makeNotify(
       "negative",
       "error",
@@ -175,7 +178,7 @@ function checkThatFormIsInvalid() {
     )
     return true
   }
-  if (this.$v.new_submission.submitter_user_id.required.$invalid) {
+  if (newPubV$.value.submitter_user_id.required.$invalid) {
     makeNotify(
       "negative",
       "error",
@@ -183,7 +186,7 @@ function checkThatFormIsInvalid() {
     )
     return true
   }
-  if (this.$v.new_submission.file_upload.required.$invalid) {
+  if (newPubV$.value.file_upload.required.$invalid) {
     makeNotify("negative", "error", "submissions.create.file_upload.required")
     return true
   }
@@ -200,10 +203,9 @@ async function createNewSubmission() {
   is_submitting.value = true
   try_catch_error.value = false
   new_submission.submitter_user_id = currentUser.value.id
-  //TODO: Form invalid needs to be rewritten to use error slots on the form/inputs
-  // if (checkThatFormIsInvalid()) {
-  //   return false
-  // }
+  if (checkThatFormIsInvalid()) {
+    return false
+  }
   try {
     await createMutate({ ...new_submission })
     makeNotify("positive", "check_circle", "submissions.create.success")
