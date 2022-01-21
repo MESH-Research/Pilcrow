@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="publications">
     <h2 class="q-pl-lg">Publications</h2>
     <div class="row q-col-gutter-lg q-pa-lg">
       <section class="col-md-7 col-sm-6 col-xs-12">
@@ -26,28 +26,12 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { useQuery, useResult } from "@vue/apollo-composable"
 import { GET_PUBLICATIONS } from "src/graphql/queries"
+import { ref } from "vue"
+const current_page = ref(1)
 
-export default {
-  components: {},
-  data() {
-    return {
-      publications: {
-        data: [],
-      },
-      current_page: 1,
-    }
-  },
-  apollo: {
-    publications: {
-      query: GET_PUBLICATIONS,
-      variables() {
-        return {
-          page: this.current_page,
-        }
-      },
-    },
-  },
-}
+const { result } = useQuery(GET_PUBLICATIONS, { page: current_page.value })
+const publications = useResult(result)
 </script>

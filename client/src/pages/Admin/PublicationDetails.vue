@@ -126,9 +126,7 @@ function makeNotify(color, icon, message, display_name = null) {
       {
         label: "Close",
         color: "white",
-        attrs: {
-          "data-cy": "button_dismiss_notify",
-        },
+        "data-cy": "button_dismiss_notify",
       },
     ],
     timeout: 50000,
