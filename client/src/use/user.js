@@ -113,8 +113,8 @@ export const useLogin = () => {
       throw Error("FORM_VALIDATION")
     }
     try {
-      const currentUser = await loginMutation(credentials)
-      return currentUser.currentUser
+      const result = await loginMutation(credentials)
+      return result.data.login
     } catch (e) {
       const codes = e?.graphQLErrors
         .map((gError) => gError?.extensions?.code ?? null)

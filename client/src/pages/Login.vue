@@ -57,6 +57,8 @@
         </q-card-section>
         <q-card-actions class="q-px-lg">
           <q-btn
+            id="submitBtn"
+            ref="submitBtn"
             unelevated
             size="lg"
             color="deep-purple-7"
