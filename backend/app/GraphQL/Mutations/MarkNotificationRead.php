@@ -13,7 +13,7 @@ class MarkNotificationReadStatus
      *
      * @param  mixed  $_
      * @param  array<string, mixed>  $args
-     * @return Notification
+     * @return \Illuminate\Notifications\DatabaseNotification
      */
     public function markAsRead($_, array $args): Notification
     {
@@ -23,6 +23,7 @@ class MarkNotificationReadStatus
             ->where('notifiable_type', "App\Models\User")
             ->firstOrFail();
         $notification->markAsRead();
+
         return $notification;
     }
 
@@ -34,8 +35,10 @@ class MarkNotificationReadStatus
     public function markAllAsRead(): int
     {
         $user = Auth::user();
+
         return $user->unreadNotifications->map(function ($notification) {
             $notification->markAsRead();
+
             return $notification;
         })->count();
     }
