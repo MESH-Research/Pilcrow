@@ -1,11 +1,13 @@
 import LoginPage from "./Login.vue"
 import { describe, expect, it } from "@jest/globals"
-import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-jest"
+import {
+  installQuasarPlugin,
+  qLayoutInjections,
+} from "@quasar/quasar-app-extension-testing-unit-jest"
 import { mount } from "@vue/test-utils"
 import { LOGIN } from "src/graphql/mutations"
 import { createMockClient } from "mock-apollo-client"
 import { DefaultApolloClient } from "@vue/apollo-composable"
-import { qLayoutInjections } from "@quasar/quasar-app-extension-testing-unit-jest"
 import { ApolloClients } from "@vue/apollo-composable"
 import quasar from "quasar"
 import flushPromises from "flush-promises"
@@ -39,19 +41,14 @@ describe("LoginPage", () => {
   beforeEach(() => {
     jest.resetAllMocks()
   })
-  const apolloProvider = {}
   const mockClient = createMockClient()
-  apolloProvider[DefaultApolloClient] = mockClient
-  const apolloClients = {
-    default: mockClient,
-  }
 
   const wrapperFactory = () =>
     mount(LoginPage, {
       global: {
         provide: {
           ...qLayoutInjections(),
-          [ApolloClients]: apolloClients,
+          [ApolloClients]: { default: mockClient },
         },
         mocks: {
           $t: (token) => token,
