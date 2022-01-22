@@ -1,79 +1,112 @@
-import { mountQuasar } from "@quasar/quasar-app-extension-testing-unit-jest"
+import { mount } from "@vue/test-utils"
+import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-jest"
 import SubmissionsPage from "./SubmissionPage.vue"
+import { ApolloClients } from "@vue/apollo-composable"
+import { createMockClient } from "mock-apollo-client"
+import { GET_PUBLICATIONS, GET_SUBMISSIONS } from "src/graphql/queries"
+import flushPromises from "flush-promises"
 
-import * as All from "quasar"
+jest.mock("quasar", () => ({
+  ...jest.requireActual("quasar"),
+  useQuasar: () => ({
+    notify: jest.fn(),
+  }),
+}))
+jest.mock("vue-i18n", () => ({
+  useI18n: () => ({
+    t: (t) => t,
+  }),
+}))
 
-const components = Object.keys(All).reduce((object, key) => {
-  const val = All[key]
-  if (val.component?.name != null) {
-    object[key] = val
-  }
-  return object
-}, {})
-
-const query = jest.fn()
-const notify = jest.fn()
-
+installQuasarPlugin()
 describe("submissions page mount", () => {
-  const wrapper = mountQuasar(SubmissionsPage, {
-    quasar: {
-      components,
-    },
-    mount: {
-      type: "full",
-      stubs: ["router-link"],
-      mocks: {
-        $t: (token) => token,
-        $apollo: {
-          query,
+  const mockClient = createMockClient()
+  const makeWrapper = async () => {
+    const wrapper = mount(SubmissionsPage, {
+      global: {
+        provide: {
+          [ApolloClients]: { default: mockClient },
+        },
+        stubs: ["router-link"],
+        mocks: {
+          $t: (token) => token,
         },
       },
-    },
-  })
+    })
+    await flushPromises()
+    return wrapper
+  }
 
-  wrapper.vm.$q.notify = notify
+  const getSubsHandler = jest.fn()
+  mockClient.setRequestHandler(GET_SUBMISSIONS, getSubsHandler)
+  const getPubsHandler = jest.fn()
+  mockClient.setRequestHandler(GET_PUBLICATIONS, getPubsHandler)
 
-  it("mounts without errors", () => {
-    expect(wrapper).toBeTruthy()
-  })
-
-  test("all existing submissions appear within the list", async () => {
-    await wrapper.setData({
-      submissions: {
-        data: [
-          {
-            id: "1",
-            title: "Jest Submission 1",
-            publication: { id: "1", name: "Jest Publication" },
-            files: [],
+  const mockPublications = () => {
+    getPubsHandler.mockResolvedValue({
+      data: {
+        publications: {
+          paginatorInfo: {
+            count: 1,
+            currentPage: 1,
+            lastPage: 1,
+            perPage: 10,
           },
-          {
-            id: "2",
-            title: "Jest Submission 2",
-            publication: { id: "1", name: "Jest Publication" },
-            files: [],
-          },
-          {
-            id: "3",
-            title: "Jest Submission 3",
-            publication: { id: "1", name: "Jest Publication" },
-            files: [],
-          },
-          {
-            id: "4",
-            title: "Jest Submission 4",
-            publication: { id: "1", name: "Jest Publication" },
-            files: [],
-          },
-          {
-            id: "5",
-            title: "Jest Submission 5",
-            publication: { id: "1", name: "Jest Publication" },
-            files: [],
-          },
-        ],
+          data: [{ id: 1, name: "Jest Publication" }],
+        },
       },
     })
+  }
+
+  test("all existing submissions appear within the list", async () => {
+    getSubsHandler.mockResolvedValue({
+      data: {
+        submissions: {
+          paginatorInfo: {
+            count: 5,
+            currentPage: 1,
+            lastPage: 1,
+            perPage: 10,
+          },
+          data: [
+            {
+              id: "1",
+              title: "Jest Submission 1",
+              publication: { name: "Jest Publication" },
+              files: [],
+            },
+            {
+              id: "2",
+              title: "Jest Submission 2",
+              publication: { name: "Jest Publication" },
+              files: [],
+            },
+            {
+              id: "3",
+              title: "Jest Submission 3",
+              publication: { name: "Jest Publication" },
+              files: [],
+            },
+            {
+              id: "4",
+              title: "Jest Submission 4",
+              publication: { name: "Jest Publication" },
+              files: [],
+            },
+            {
+              id: "5",
+              title: "Jest Submission 5",
+              publication: { name: "Jest Publication" },
+              files: [],
+            },
+          ],
+        },
+      },
+    })
+    mockPublications()
+    const wrapper = await makeWrapper()
     expect(wrapper.findAllComponents({ name: "q-item" })).toHaveLength(5)
   })
+
+  //TODO: Test submission creation
 })

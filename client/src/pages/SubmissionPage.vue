@@ -91,7 +91,7 @@
             </ul>
           </q-item>
         </q-list>
-        <div v-if="$apollo.loading" class="q-pa-lg">
+        <div v-if="subsLoading" class="q-pa-lg">
           {{ $t("loading") }}
         </div>
         <div
@@ -136,11 +136,9 @@ const rules = {
 }
 
 const newPubV$ = useVuelidate(rules, new_submission)
-const submissions = useResult(
-  useQuery(GET_SUBMISSIONS).result,
-  [],
-  (data) => data.submissions.data
-)
+
+const { result: subsResult, loading: subsLoading } = useQuery(GET_SUBMISSIONS)
+const submissions = useResult(subsResult, [], (data) => data.submissions.data)
 const publications = useResult(
   useQuery(GET_PUBLICATIONS).result,
   [],
