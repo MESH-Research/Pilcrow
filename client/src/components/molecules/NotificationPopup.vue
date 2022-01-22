@@ -42,7 +42,7 @@
         </q-list>
         <q-btn-group spread>
           <q-btn to="/feed">View More</q-btn>
-          <q-btn>Dismiss All</q-btn>
+          <q-btn @click="dismissAll">Dismiss All</q-btn>
         </q-btn-group>
       </div>
     </q-popup-proxy>
@@ -51,10 +51,11 @@
 
 <script>
 import { defineComponent, ref, watch, nextTick } from "@vue/composition-api"
-import { useQuery, useResult } from "@vue/apollo-composable"
+import { useQuery, useResult, useMutation } from "@vue/apollo-composable"
 import { CURRENT_USER_NOTIFICATIONS } from "src/graphql/queries"
 import NotificationListItem from "src/components/atoms/NotificationListItem.vue"
 import { computed } from "@vue/composition-api"
+import { MARK_ALL_NOTIFICATIONS_READ } from "src/graphql/mutations"
 
 /**
  * Notification Dropdown menu
@@ -89,11 +90,21 @@ export default defineComponent({
           "notifications-wrapper"
       })
     })
+    const { mutate: markAllNotificationsRead } = useMutation(
+      MARK_ALL_NOTIFICATIONS_READ,
+      {
+        refetchQueries: ["currentUserNotifications"],
+      }
+    )
+    const dismissAll = async () => {
+      await markAllNotificationsRead()
+    }
     return {
       notificationItems,
       hasUnreadNotifications,
       isVisible,
       popupProxy,
+      dismissAll,
     }
   },
 })

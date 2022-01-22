@@ -3,7 +3,7 @@
     clickable
     :class="{ unread: !note.read_at }"
     class="q-pl-none"
-    @click.prevent="handleClick(note.id)"
+    @click="handleClick(note.id)"
   >
     <q-badge v-if="!note.read_at" />
     <q-item-section side class="q-px-md">
