@@ -95,9 +95,9 @@ export default {
       }
     )
 
-    const handleClick = async (id) => {
+    const handleClick = async (notification_id) => {
       await markNotificationRead({
-        notification_id: id,
+        notification_id: notification_id,
       })
     }
     return { tKey, flattened, relativeTime, iconMapper, handleClick }
