@@ -37,6 +37,7 @@
             />
           </div>
           <q-btn
+            ref="assignBtn"
             :ripple="{ center: true }"
             class="q-mt-lg"
             color="primary"

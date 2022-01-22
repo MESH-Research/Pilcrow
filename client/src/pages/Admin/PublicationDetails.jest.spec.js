@@ -1,51 +1,51 @@
-import { mountQuasar } from "@quasar/quasar-app-extension-testing-unit-jest"
+//import { jest, describe, test, it } from "@jest/globals"
+import { mount } from "@vue/test-utils"
+import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-jest"
 import PublicationDetailsPage from "./PublicationDetails.vue"
-import * as All from "quasar"
+import { ApolloClients } from "@vue/apollo-composable"
+import { createMockClient } from "mock-apollo-client"
+import { GET_PUBLICATION } from "src/graphql/queries"
+import flushPromises from "flush-promises"
+import RoleMapper from "src/mappers/roles"
+import {
+  CREATE_PUBLICATION_USER,
+  DELETE_PUBLICATION_USER,
+} from "src/graphql/mutations"
+jest.mock("quasar", () => ({
+  ...jest.requireActual("quasar"),
+  useQuasar: () => ({
+    notify: jest.fn(),
+  }),
+}))
 
-const components = Object.keys(All).reduce((object, key) => {
-  const val = All[key]
-  if (val.component?.name != null) {
-    object[key] = val
-  }
-  return object
-}, {})
+jest.mock("vue-i18n", () => ({
+  useI18n: () => ({
+    t: (t) => t,
+  }),
+}))
 
-const mutate = jest.fn()
-const notify = jest.fn()
-const query = jest.fn()
+installQuasarPlugin()
 
 describe("publication details page mount", () => {
-  const wrapper = mountQuasar(PublicationDetailsPage, {
-    quasar: {
-      components,
-    },
-    mount: {
-      type: "full",
-      mocks: {
-        $t: (token) => token,
-        $apollo: {
-          query,
-          mutate,
+  const mockClient = createMockClient()
+  const makeWrapper = () =>
+    mount(PublicationDetailsPage, {
+      global: {
+        provide: {
+          [ApolloClients]: { default: mockClient },
         },
+        mocks: {
+          $t: (t) => t,
+        },
+        stubs: ["router-link"],
       },
-      stubs: ["router-link"],
-    },
-    propsData: {
-      id: "1",
-    },
-  })
+      props: {
+        id: "1",
+      },
+    })
 
-  wrapper.vm.$q.notify = notify
-
-  beforeEach(async () => {
-    mutate.mockReset()
-    notify.mockReset()
-  })
-
-  it("mounts without errors", () => {
-    expect(wrapper).toBeTruthy()
-  })
-
+  const getPubHandler = jest.fn()
+  mockClient.setRequestHandler(GET_PUBLICATION, getPubHandler)
   const publicationUsersData = [
     {
       email: "jestEditor@ccrproject.dev",
@@ -79,28 +79,111 @@ describe("publication details page mount", () => {
     },
   ]
 
-  test("all existing editors appear within the editors list", async () => {
-    await wrapper.setData({
-      publication: {
-        name: "Jest Publication",
-        users: publicationUsersData,
+  const mutateAssignHandler = jest.fn()
+  mockClient.setRequestHandler(CREATE_PUBLICATION_USER, mutateAssignHandler)
+
+  const mutateRemoveHandler = jest.fn()
+  mockClient.setRequestHandler(DELETE_PUBLICATION_USER, mutateRemoveHandler)
+
+  beforeEach(async () => {
+    jest.resetAllMocks()
+    getPubHandler.mockResolvedValue({
+      data: {
+        publication: {
+          id: 1,
+          name: "Jest Publication",
+          is_publicly_visible: true,
+          users: publicationUsersData,
+        },
       },
     })
+  })
+
+  it("mounts without errors", async () => {
+    const wrapper = makeWrapper()
+    await flushPromises()
+    expect(wrapper).toBeTruthy()
+    expect(getPubHandler).toBeCalledWith({ id: "1" })
+  })
+
+  test("all existing editors appear within the editors list", async () => {
+    const wrapper = makeWrapper()
+
     const list = wrapper.findComponent({ ref: "list_assigned_editors" })
     expect(list.findAllComponents({ name: "user-list-item" })).toHaveLength(2)
   })
 
   test("editors can be assigned", async () => {
-    await wrapper.setData({
-      editor_candidate: {
-        id: "104",
-        name: "Jest Editor Candidate Name",
-        email: "jestEditorCandidate@ccrproject.dev",
-        username: "jestEditorCandidate",
+    const wrapper = makeWrapper()
+    const newPivotData = {
+      user_id: "104",
+      role_id: RoleMapper["editor"],
+      publication_id: "1",
+    }
+    mutateAssignHandler.mockResolvedValue({
+      data: {
+        createPublicationUser: {
+          id: "1",
+        },
       },
     })
-    await wrapper.vm.assignUser("editor", wrapper.vm.editor_candidate)
-    expect(mutate).toBeCalled()
-    expect(notify.mock.calls[0][0].color).toBe("positive")
+
+    wrapper.vm.editor_candidate = {
+      id: "104",
+      name: "Jest Editor Candidate Name",
+      email: "jestEditorCandidate@ccrproject.dev",
+      username: "jestEditorCandidate",
+    }
+    wrapper.findComponent({ ref: "assignBtn" }).trigger("submit")
+    await flushPromises()
+
+    expect(mutateAssignHandler).toBeCalledWith(newPivotData)
+    expect(wrapper.vm.notify).toBeCalledWith(
+      expect.objectContaining({ color: "positive" })
+    )
+  })
+
+  test("failure message on rejection", async () => {
+    const wrapper = makeWrapper()
+    const newPivotData = {
+      user_id: "104",
+      role_id: RoleMapper["editor"],
+      publication_id: "1",
+    }
+    mutateAssignHandler.mockRejectedValue({})
+
+    wrapper.vm.editor_candidate = {
+      id: "104",
+      name: "Jest Editor Candidate Name",
+      email: "jestEditorCandidate@ccrproject.dev",
+      username: "jestEditorCandidate",
+    }
+    wrapper.findComponent({ ref: "assignBtn" }).trigger("submit")
+    await flushPromises()
+
+    expect(mutateAssignHandler).toBeCalledWith(newPivotData)
+    expect(wrapper.vm.notify).toBeCalledWith(
+      expect.objectContaining({ color: "negative" })
+    )
+  })
+
+  test("can remove editor", async () => {
+    mutateRemoveHandler.mockResolvedValue({
+      data: { deletePublicationUser: { id: "103" } },
+    })
+    const wrapper = makeWrapper()
+    await flushPromises()
+    const user = wrapper
+      .findComponent({ name: "user-list-item" })
+      .findComponent({ name: "q-btn" })
+      .trigger("click")
+    await flushPromises()
+
+    expect(mutateRemoveHandler).toBeCalledWith(
+      expect.objectContaining({ user_id: 103 })
+    )
+    expect(wrapper.vm.notify).toBeCalledWith(
+      expect.objectContaining({ color: "positive" })
+    )
   })
 })

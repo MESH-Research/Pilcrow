@@ -22,7 +22,7 @@ jest.mock("vue-router", () => ({
 
 jest.mock("vue-i18n", () => ({
   useI18n: () => ({
-    t: jest.fn().mockImplementation((t) => t),
+    t: (t) => t,
   }),
 }))
 
