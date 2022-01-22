@@ -7,17 +7,9 @@ import {
 import { mount } from "@vue/test-utils"
 import { LOGIN } from "src/graphql/mutations"
 import { createMockClient } from "mock-apollo-client"
-import { DefaultApolloClient } from "@vue/apollo-composable"
 import { ApolloClients } from "@vue/apollo-composable"
 import quasar from "quasar"
 import flushPromises from "flush-promises"
-// const components = Object.keys(All).reduce((object, key) => {
-//   const val = All[key]
-//   if (val && val.component && val.component.name != null) {
-//     object[key] = val
-//   }
-//   return object
-// }, {})
 
 jest.mock("quasar", () => ({
   ...jest.requireActual("quasar"),
