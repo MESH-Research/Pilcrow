@@ -1,37 +1,29 @@
-import { mountQuasar } from "@quasar/quasar-app-extension-testing-unit-jest"
-import { DefaultApolloClient } from "@vue/apollo-composable"
+import { mount } from "@vue/test-utils"
+import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-jest"
+import { ApolloClients } from "@vue/apollo-composable"
 import { createMockClient } from "mock-apollo-client"
 import UsersIndexPage from "./UsersIndex.vue"
 import { GET_USERS } from "../../graphql/queries"
-import Vue from "vue"
+import flushPromises from "flush-promises"
 
-import * as All from "quasar"
-
-const components = Object.keys(All).reduce((object, key) => {
-  const val = All[key]
-  if (val.component?.name != null) {
-    object[key] = val
-  }
-  return object
-}, {})
-
+jest.mock("vue-router", () => ({
+  useRouter: () => ({
+    push: jest.fn(),
+  }),
+}))
+installQuasarPlugin()
 const wrapperFactory = (mocks) => {
-  const apolloProvider = {}
   const mockClient = createMockClient()
-  apolloProvider[DefaultApolloClient] = mockClient
 
   mocks?.forEach((mock) => {
     mockClient.setRequestHandler(...mock)
   })
 
-  return mountQuasar(UsersIndexPage, {
-    quasar: {
-      components,
-    },
-    //  plugins: [VueCompositionAPI],
-    mount: {
-      provide: apolloProvider,
-      type: "full",
+  return mount(UsersIndexPage, {
+    global: {
+      provide: {
+        [ApolloClients]: { default: mockClient },
+      },
     },
   })
 }
@@ -44,17 +36,35 @@ describe("User Index page mount", () => {
       data: {
         userSearch: {
           data: [
-            { name: "test1", email: "test1@msu.edu" },
-            { name: "test2", email: "test2@msu.edu" },
+            {
+              id: "1",
+              name: "test1",
+              email: "test1@msu.edu",
+              username: "test1",
+            },
+            {
+              id: "2",
+              name: "test2",
+              email: "test2@msu.edu",
+              username: "test2",
+            },
           ],
-          paginatorInfo: { lastPage: 10 },
+          paginatorInfo: {
+            count: 2,
+            currentPage: 1,
+            lastPage: 1,
+            perPage: 10,
+          },
         },
       },
     })
     const wrapper = wrapperFactory([[GET_USERS, getUserHandler]])
+    await flushPromises()
     expect(getUserHandler).toBeCalledWith({ page: 1 })
-    await Vue.nextTick()
+
     const list = wrapper.findComponent({ ref: "user_list_basic" })
     expect(list.findAllComponents({ name: "q-item" })).toHaveLength(2)
+
+    //TODO: Validate router.push on click
   })
 })
