@@ -15,6 +15,7 @@
           </p>
           <fieldset class="q-px-sm q-pb-lg q-gutter-y-lg column">
             <q-input
+              ref="nameInput"
               v-model.trim="$v.name.$model"
               outlined
               :label="$t('helpers.OPTIONAL_FIELD', [$t('auth.fields.name')])"
@@ -23,6 +24,7 @@
               bottom-slots
             />
             <q-input
+              ref="emailInput"
               v-model="$v.email.$model"
               outlined
               type="email"
@@ -62,6 +64,7 @@
               </template>
             </q-input>
             <q-input
+              ref="usernameInput"
               v-model.trim="$v.username.$model"
               outlined
               :label="$t('auth.fields.username')"
@@ -79,6 +82,7 @@
               </template>
             </q-input>
             <new-password-input
+              ref="passwordInput"
               v-model="$v.password.$model"
               outlined
               :label="$t('auth.fields.password')"
@@ -128,7 +132,7 @@ import NewPasswordInput from "../components/forms/NewPasswordInput.vue"
 import { useUserValidation } from "src/use/userValidation"
 import ErrorFieldRenderer from "src/components/molecules/ErrorFieldRenderer.vue"
 import { useHasErrorKey } from "src/use/validationHelpers"
-import { ref, provide } from "vue"
+import { ref } from "vue"
 import { useLogin } from "src/use/user"
 import { useRouter } from "vue-router"
 import ErrorBanner from "src/components/molecules/ErrorBanner.vue"
@@ -136,7 +140,6 @@ import ErrorBanner from "src/components/molecules/ErrorBanner.vue"
 const { loginUser } = useLogin()
 const { push } = useRouter()
 const { $v, user, saveUser } = useUserValidation()
-provide("validator", $v)
 async function handleSubmit() {
   formErrorMsg.value = ""
   try {
