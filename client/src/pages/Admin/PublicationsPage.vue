@@ -9,6 +9,7 @@
         <h3>Create New Publication</h3>
         <q-form @submit="createPublication()">
           <q-input
+            ref="nameInput"
             v-model="pubV$.name.$model"
             :error="pubV$.name.$error"
             outlined
@@ -26,6 +27,7 @@
           </q-input>
 
           <q-btn
+            ref="submitBtn"
             :disabled="is_submitting"
             class="bg-primary text-white q-mt-lg"
             type="submit"
@@ -37,7 +39,7 @@
       <section class="col-md-7 col-sm-6 col-xs-12">
         <h3>All Publications</h3>
         <q-list
-          v-if="publications.length != 0"
+          v-if="publications.length !== 0"
           bordered
           separator
           data-cy="publications_list"
