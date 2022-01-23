@@ -1,31 +1,42 @@
-import { mountQuasar } from "@quasar/quasar-app-extension-testing-unit-jest"
+import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-jest"
+import { ApolloClients } from "@vue/apollo-composable"
+import { mount } from "@vue/test-utils"
+import flushPromises from "flush-promises"
+import { createMockClient } from "mock-apollo-client"
+import { SEND_VERIFY_EMAIL } from "src/graphql/mutations"
 import EmailVerificationSendButton from "./EmailVerificationSendButton.vue"
-import { QIcon, QBtn, QSpinnerHourglass } from "quasar"
 
-const mutate = jest.fn()
-const notify = jest.fn()
+jest.mock("quasar", () => ({
+  ...jest.requireActual("quasar"),
+  useQuasar: () => ({
+    notify: jest.fn(),
+  }),
+}))
+jest.mock("vue-i18n", () => ({
+  useI18n: () => ({
+    t: (t) => t,
+  }),
+}))
+
+installQuasarPlugin()
 describe("EmailVerificationSendButton", () => {
-  const wrapper = mountQuasar(EmailVerificationSendButton, {
-    quasar: {
-      components: { QIcon, QBtn, QSpinnerHourglass },
-    },
-    mount: {
-      type: "full",
+  const mockClient = createMockClient()
+  const wrapper = mount(EmailVerificationSendButton, {
+    global: {
+      provide: {
+        [ApolloClients]: { default: mockClient },
+      },
       mocks: {
-        $t: (token) => token,
-        $apollo: {
-          mutate,
-        },
+        $t: (t) => t,
       },
     },
   })
 
-  wrapper.vm.$q.notify = notify
+  const emailMutationHandler = jest.fn()
+  mockClient.setRequestHandler(SEND_VERIFY_EMAIL, emailMutationHandler)
 
   beforeEach(async () => {
-    mutate.mockReset()
-    notify.mockReset()
-    await wrapper.setData({ status: null })
+    jest.resetAllMocks()
   })
 
   it("mounts without errors", () => {
@@ -33,34 +44,35 @@ describe("EmailVerificationSendButton", () => {
   })
 
   it("changes state on success", async () => {
-    mutate.mockResolvedValue({
+    emailMutationHandler.mockResolvedValue({
       data: { sendEmailVerification: { email: "test@example.com" } },
     })
 
     expect(wrapper.text()).toMatch(/resend_button$/)
 
     await wrapper.trigger("click")
-
+    await flushPromises()
     expect(wrapper.text()).toMatch(/resend_button_success$/)
-    expect(notify.mock.calls[0][0].color).toBe("positive")
-    expect(mutate).toBeCalled()
+    expect(wrapper.vm.notify).toBeCalledWith(
+      expect.objectContaining({ color: "positive" })
+    )
 
-    const btn = wrapper.findComponent(QBtn)
-    expect(btn.props("color")).toBe("positive")
-
-    await wrapper.setProps({ noColor: true })
-    expect(btn.props("color")).toBeNull()
+    expect(emailMutationHandler).toBeCalled()
   })
 
   it("returns to state on failure", async () => {
-    mutate.mockRejectedValue({})
-
+    emailMutationHandler.mockRejectedValue({})
+    wrapper.vm.status = null
+    await flushPromises()
     expect(wrapper.text()).toMatch(/resend_button$/)
 
     await wrapper.trigger("click")
+    await flushPromises()
 
-    expect(mutate).toBeCalled()
+    expect(emailMutationHandler).toBeCalled()
     expect(wrapper.text()).toMatch(/resend_button$/)
-    expect(notify.mock.calls[0][0].color).toBe("negative")
+    expect(wrapper.vm.notify).toBeCalledWith(
+      expect.objectContaining({ color: "negative" })
+    )
   })
 })
