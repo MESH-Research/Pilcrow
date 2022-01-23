@@ -173,7 +173,7 @@ describe("publication details page mount", () => {
     })
     const wrapper = makeWrapper()
     await flushPromises()
-    const user = wrapper
+    wrapper
       .findComponent({ name: "user-list-item" })
       .findComponent({ name: "q-btn" })
       .trigger("click")
