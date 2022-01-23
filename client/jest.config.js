@@ -1,9 +1,9 @@
+/* eslint-env node */
 const esModules = [
   "quasar/lang",
   "quasar",
   "lodash-es",
   "quasar/src/utils",
-  "@vue/apollo-composable",
 ].join("|")
 
 module.exports = {
@@ -45,8 +45,13 @@ module.exports = {
     "^quasar$": "quasar/dist/quasar.esm.prod.js",
     "^~/(.*)$": "<rootDir>/$1",
     "^src/(.*)$": "<rootDir>/src/$1",
+    "^app/(.*)$": "<rootDir>/$1",
+    "^components/(.*)$": "<rootDir>/src/components/$1",
+    "^layouts/(.*)$": "<rootDir>/src/layouts/$1",
+    "^pages/(.*)$": "<rootDir>/src/pages/$1",
+    "^assets/(.*)$": "<rootDir>/src/assets/$1",
+    "^boot/(.*)$": "<rootDir>/src/boot/$1",
     ".*css$": "@quasar/quasar-app-extension-testing-unit-jest/stub.css",
-    "@vue/apollo-composable": "@vue/apollo-composable/dist/index.js",
   },
   transform: {
     ".*\\.vue$": "vue-jest",
