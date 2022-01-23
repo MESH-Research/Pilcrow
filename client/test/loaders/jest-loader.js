@@ -1,3 +1,4 @@
+/* eslint-env node*/
 const fs = require("fs")
 const loaderUtils = require("loader-utils")
 const path = require("path")

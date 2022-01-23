@@ -10,9 +10,15 @@ module.exports = {
   env: {
     browser: true,
     "jest/globals": true,
+    "vue/setup-compiler-macros": true,
   },
 
-  extends: ["plugin:vue/vue3-recommended", "prettier"],
+  extends: [
+    "plugin:jest/recommended",
+    "eslint:recommended",
+    "plugin:vue/vue3-recommended",
+    "prettier",
+  ],
 
   // required to lint *.vue files
   plugins: ["vue", "prettier", "jest"],
