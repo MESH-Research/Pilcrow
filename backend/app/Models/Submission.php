@@ -13,6 +13,19 @@ class Submission extends Model
 {
     use HasFactory;
 
+    public const INITIALLY_SUBMITTED = 1;
+    public const AWAITING_RESUBMISSION = 2;
+    public const RESUBMITTED = 3;
+    public const AWAITING_REVIEW = 4;
+    public const REJECTED = 5;
+    public const ACCEPTED_AS_FINAL = 6;
+    public const EXPIRED = 7;
+    public const UNDER_REVIEW = 8;
+    public const AWAITING_DECISION = 9;
+    public const AWAITING_REVISION = 10;
+    public const ARCHIVED = 11;
+    public const DELETED = 12;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -21,6 +34,16 @@ class Submission extends Model
     protected $fillable = [
         'title',
         'publication_id',
+        'status',
+    ];
+
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = [
+        'status_name',
     ];
 
     /**
@@ -53,5 +76,28 @@ class Submission extends Model
     public function files(): HasMany
     {
         return $this->hasMany(SubmissionFile::class);
+    }
+
+    /**
+     * @return string
+     */
+    public function getStatusNameAttribute()
+    {
+        $statuses = [
+            1 => 'INITIALLY_SUBMITTED',
+            2 => 'AWAITING_RESUBMISSION',
+            3 => 'RESUBMITTED',
+            4 => 'AWAITING_REVIEW',
+            5 => 'REJECTED',
+            6 => 'ACCEPTED_AS_FINAL',
+            7 => 'EXPIRED',
+            8 => 'UNDER_REVIEW',
+            9 => 'AWAITING_DECISION',
+            10 => 'AWAITING_REVISION',
+            11 => 'ARCHIVED',
+            12 => 'DELETED',
+        ];
+
+        return $statuses[(int)$this->status];
     }
 }

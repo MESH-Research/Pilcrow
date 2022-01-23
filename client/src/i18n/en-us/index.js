@@ -85,6 +85,7 @@ export default {
     publications: "Publications",
     submissions: "Submissions",
     user_list: "All Users",
+    notification_button: "View Notifications",
   },
   account: {
     failures: {
@@ -207,4 +208,33 @@ export default {
   },
   general_failure: "Oops, there was an error.",
   loading: "Loading...",
+  /*********************
+   * Notifications follow the format of:
+   * <type>: {
+   *    short: "",
+   *    long: "",
+   * }
+   */
+  notifications: {
+    review: {
+      requested: {
+        short: "{user.username} has requested your review on {object.name}",
+      },
+      commentReplied: {
+        short: "{user.username} has replied to your comment on {object.name}",
+      },
+    },
+    submission: {
+      created: {
+        short:
+          "{user.username} has submitted {submission.title} to {publication.name}",
+      },
+      approved: {
+        short: "{object.name} has been approved",
+      },
+      resubmitted: {
+        short: "{object.name} has been resubmitted",
+      },
+    },
+  },
 }
