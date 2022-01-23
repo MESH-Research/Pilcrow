@@ -2,18 +2,21 @@
   <q-form data-cy="vueAccount" @submit="updateUser()">
     <q-card-section class="q-col-gutter-y-md">
       <q-input
+        ref="nameInput"
         v-model="form.name"
         outlined
         data-cy="update_user_name"
         label="Display Name"
       />
       <q-input
+        ref="emailInput"
         v-model="form.email"
         outlined
         data-cy="update_user_email"
         label="Email"
       />
       <q-input
+        ref="usernameInput"
         v-model="form.username"
         outlined
         data-cy="update_user_username"
@@ -21,6 +24,7 @@
       />
       <h3 class="q-mt-lg q-mb-none text-h4">Set New Password</h3>
       <q-input
+        ref="passwordInput"
         v-model="form.password"
         outlined
         data-cy="update_user_password"
@@ -136,6 +140,7 @@ async function updateUser() {
 
   try {
     await mutate(vars)
+    //TODO: Refactor to use makeNofity composable
     notify({
       color: "positive",
       message: t("account.update.success"),

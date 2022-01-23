@@ -23,11 +23,11 @@ const routes = [
       },
       {
         path: "account/",
-        component: () => import("pages/Account/AccountLayout.vue"),
+        component: () => import("src/layouts/Account/AccountLayout.vue"),
         children: [
           {
             path: "profile",
-            component: () => import("pages/Account/Profile.vue"),
+            component: () => import("src/pages/Account/ProfilePage.vue"),
           },
         ],
       },
