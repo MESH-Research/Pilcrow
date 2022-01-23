@@ -27,7 +27,7 @@ describe('Admin Users Index', () => {
     cy.login({ email: "applicationadministrator@ccrproject.dev" });
     cy.visit('/admin/users');
     cy.injectAxe();
-    cy.dataCy('userListItem');
+    cy.dataCy('userListBasicItem');
     cy.checkA11y();
   });
 

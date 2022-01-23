@@ -4,11 +4,11 @@ declare(strict_types=1);
 namespace App\Policies;
 
 use App\Models\Permission;
+use App\Models\Role;
 use App\Models\SubmissionUser;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-// TODO: Use constants for the ID usages
 class SubmissionUserPolicy
 {
     use HandlesAuthorization;
@@ -25,15 +25,15 @@ class SubmissionUserPolicy
     public function create(User $user, array $model)
     {
         switch ($model['role_id']) {
-            case '6':
+            case Role::SUBMITTER_ROLE_ID:
                 return false;
-            case '5':
+            case Role::REVIEWER_ROLE_ID:
                 return $this->assignReviewer($user, $model);
-            case '4':
+            case Role::REVIEW_COORDINATOR_ROLE_ID:
                 return $this->assignReviewCoordinator($user);
-            case '3':
-            case '2':
-            case '1':
+            case Role::EDITOR_ROLE_ID:
+            case Role::PUBLICATION_ADMINISTRATOR_ROLE_ID:
+            case Role::APPLICATION_ADMINISTRATOR_ROLE_ID:
                 return false;
         }
 
@@ -64,13 +64,11 @@ class SubmissionUserPolicy
     {
         // Assigning user has a higher privileged role
         if ($user->getHighestPrivilegedRole()) {
-            $permission = $user->can(Permission::ASSIGN_REVIEWER);
-
-            return $permission;
+            return $user->can(Permission::ASSIGN_REVIEWER);
         }
         // Assigning user is a Review Coordinator of the submission
         return SubmissionUser::where('user_id', $user->id)
-            ->where('role_id', 4)
+            ->where('role_id', Role::REVIEW_COORDINATOR_ROLE_ID)
             ->where('submission_id', $model['submission_id'])
             ->exists();
     }
@@ -85,9 +83,7 @@ class SubmissionUserPolicy
     {
         // Assigning user has a higher privileged role
         if ($user->getHighestPrivilegedRole()) {
-            $permission = $user->can(Permission::ASSIGN_REVIEWER);
-
-            return $permission;
+            return $user->can(Permission::ASSIGN_REVIEWER);
         }
 
         return false;

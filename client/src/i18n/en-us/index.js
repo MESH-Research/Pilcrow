@@ -85,6 +85,7 @@ export default {
     publications: "Publications",
     submissions: "Submissions",
     user_list: "All Users",
+    notification_button: "View Notifications",
   },
   account: {
     failures: {
@@ -122,12 +123,26 @@ export default {
     },
   },
   publications: {
+    details: "Publication Details",
     create: {
       success: "Publication successfully created.",
       failure: "An error occurred while attempting to create the publication.",
       required: "A name is required to create a publication.",
       maxLength: "The maximum length has been exceeded for the name.",
       duplicate_name: "Publication name already exists.",
+    },
+    editor: {
+      none: "No editors are assigned to this publication.",
+      unassign: {
+        error: "An error occurred while attempting to unassign an editor.",
+        success: "{display_name} successfully unassigned as an editor.",
+      },
+      assign: {
+        duplicate: "That editor is already assigned to this publication.",
+        error:
+          "An error occurred while attempting to assign an editor. Is this user already assigned as an editor?",
+        success: "{display_name} successfully assigned as an editor.",
+      },
     },
   },
   submissions: {
@@ -193,4 +208,33 @@ export default {
   },
   general_failure: "Oops, there was an error.",
   loading: "Loading...",
+  /*********************
+   * Notifications follow the format of:
+   * <type>: {
+   *    short: "",
+   *    long: "",
+   * }
+   */
+  notifications: {
+    review: {
+      requested: {
+        short: "{user.username} has requested your review on {object.name}",
+      },
+      commentReplied: {
+        short: "{user.username} has replied to your comment on {object.name}",
+      },
+    },
+    submission: {
+      created: {
+        short:
+          "{user.username} has submitted {submission.title} to {publication.name}",
+      },
+      approved: {
+        short: "{object.name} has been approved",
+      },
+      resubmitted: {
+        short: "{object.name} has been resubmitted",
+      },
+    },
+  },
 }

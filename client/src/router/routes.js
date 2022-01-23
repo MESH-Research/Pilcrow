@@ -32,6 +32,10 @@ const routes = [
         ],
       },
       {
+        path: "feed/",
+        component: () => import("pages/Feed.vue"),
+      },
+      {
         path: "/admin/users",
         component: () => import("pages/Admin/UsersIndex.vue"),
         meta: { requiresRoles: ["Application Administrator"] },
@@ -44,11 +48,26 @@ const routes = [
       {
         path: "/admin/publications",
         component: () => import("src/pages/Admin/Publications.vue"),
-        meta: { requiresRoles: ["Application Administrator"] },
+        meta: {
+          requiresRoles: ["Application Administrator"],
+        },
       },
       {
         path: "/publications",
         component: () => import("src/pages/Publications.vue"),
+      },
+      {
+        name: "publication_details",
+        path: "/publication/:id",
+        component: () => import("pages/Admin/PublicationDetails.vue"),
+        meta: {
+          requiresRoles: [
+            "Application Administrator",
+            "Publication Administrator",
+            "Editor",
+          ],
+        },
+        props: true,
       },
       {
         path: "/submissions",

@@ -57,7 +57,7 @@ class DatabaseSeeder extends Seeder
         $editor->assignRole(Role::EDITOR);
 
         $publication_seeder = new PublicationSeeder();
-        $publication_seeder->run();
+        $publication_seeder->run($publication_admin, $editor);
 
         $submission_seeder = new SubmissionSeeder();
         $submission_seeder->run($coordinator);
