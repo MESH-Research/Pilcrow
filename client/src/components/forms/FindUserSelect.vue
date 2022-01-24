@@ -45,9 +45,7 @@ const props = defineProps({
   modelValue: {
     default: null,
     validator: (prop) =>
-      typeof prop === null ||
-      typeof prop === "object" ||
-      typeof prop === "function",
+      prop === null || typeof prop === "object" || typeof prop === "function",
   },
   cySelectedItem: {
     type: String,

@@ -103,10 +103,6 @@ const form = reactive({
 })
 const isPwd = ref(true)
 const formErrorMsg = ref("")
-const serverValidationErrors = reactive({
-  "user.username": false,
-  "user.email": false,
-})
 
 const { currentUser } = useCurrentUser()
 
