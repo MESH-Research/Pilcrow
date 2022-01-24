@@ -24,32 +24,33 @@
     </div>
   </div>
 </template>
-<script>
-export default {
-  name: "NewPasswordInputAnalysis",
-  props: {
-    complexity: {
-      type: Object,
-      required: true,
-    },
+
+<script setup>
+import { computed } from "vue"
+const props = defineProps({
+  complexity: {
+    type: Object,
+    required: true,
   },
-  computed: {
-    suggestions() {
-      return this.complexity.feedback.suggestions
-    },
-    warning() {
-      return this.complexity.feedback.warning
-    },
-    score() {
-      return this.complexity.score
-    },
-    crack_time() {
-      return this.complexity.crack_times_display
-        .offline_slow_hashing_1e4_per_second
-    },
-  },
-}
+})
+
+const suggestions = computed(() => {
+  return props.complexity.feedback.suggestions
+})
+const warning = computed(() => {
+  return props.complexity.feedback.warning
+})
+
+const score = computed(() => {
+  return props.complexity.score
+})
+
+const crack_time = computed(() => {
+  return props.complexity.crack_times_display
+    .offline_slow_hashing_1e4_per_second
+})
 </script>
+
 <style lang="sass" scoped>
 p:last-child
   margin: 0
