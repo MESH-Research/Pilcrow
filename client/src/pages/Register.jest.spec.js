@@ -83,15 +83,9 @@ describe("RegisterPage", () => {
       .findComponent({ ref: "usernameInput" })
       .setValue(user.username)
 
-    //TODO: Remove this once newpasswordinput is migrated and this starts breaking
-    jest.spyOn(console, "warn").mockImplementation(() => {})
     await wrapper
       .findComponent({ ref: "passwordInput" })
       .setValue(user.password)
-    expect(console.warn).toBeCalledWith(
-      expect.stringContaining('emitted event "update:modelValue"')
-    )
-    console.warn.mockRestore()
 
     wrapper.findComponent({ name: "q-btn" }).trigger("submit")
     await flushPromises()
