@@ -1,4 +1,3 @@
-//import { jest, describe, test, it } from "@jest/globals"
 import { mount } from "@vue/test-utils"
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-jest"
 import PublicationDetailsPage from "./PublicationDetails.vue"

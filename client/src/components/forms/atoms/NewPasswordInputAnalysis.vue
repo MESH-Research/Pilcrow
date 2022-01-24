@@ -37,6 +37,7 @@ const props = defineProps({
 const suggestions = computed(() => {
   return props.complexity.feedback.suggestions
 })
+
 const warning = computed(() => {
   return props.complexity.feedback.warning
 })
