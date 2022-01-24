@@ -1,25 +1,33 @@
 <template>
-  <div v-if="publications">
+  <div>
     <h2 class="q-pl-lg">Publications</h2>
     <div class="row q-col-gutter-lg q-pa-lg">
       <section class="col-md-7 col-sm-6 col-xs-12">
-        <h3>All Publications</h3>
-        <ol class="scroll" data-cy="publications_list">
-          <li
-            v-for="publication in publications.data"
-            :key="publication.id"
-            class="q-pa-none"
+        <h3>
+          All Publications
+          <q-spinner v-if="loading" />
+        </h3>
+        <div class="column q-gutter-md">
+          <q-list
+            v-if="publications.length !== 0"
+            class="scroll col"
+            separator
+            bordered
+            data-cy="publications_list"
           >
-            <q-item>
-              {{ publication.name }}
+            <q-item v-for="publication in publications" :key="publication.id">
+              <q-item-section>
+                {{ publication.name }}
+              </q-item-section>
             </q-item>
-          </li>
-        </ol>
-        <div
-          v-if="publications.data.length == 0"
-          data-cy="no_publications_message"
-        >
-          No Publications Created
+          </q-list>
+          <q-pagination v-bind="binds" class="col" v-on="listeners" />
+          <div
+            v-if="paginatorInfo.count == 0"
+            data-cy="no_publications_message"
+          >
+            No Publications Created
+          </div>
         </div>
       </section>
     </div>
@@ -27,11 +35,15 @@
 </template>
 
 <script setup>
-import { useQuery, useResult } from "@vue/apollo-composable"
 import { GET_PUBLICATIONS } from "src/graphql/queries"
-import { ref } from "vue"
-const current_page = ref(1)
+import { usePagination } from "src/use/pagination"
 
-const { result } = useQuery(GET_PUBLICATIONS, { page: current_page.value })
-const publications = useResult(result)
+const {
+  binds,
+  listeners,
+  data: publications,
+  paginatorInfo,
+  loading,
+} = usePagination(GET_PUBLICATIONS)
 </script>
+//TODO: Needs translation

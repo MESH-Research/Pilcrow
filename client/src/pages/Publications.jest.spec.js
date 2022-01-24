@@ -1,43 +1,20 @@
-import { mountQuasar } from "@quasar/quasar-app-extension-testing-unit-jest"
 import PublicationsPage from "./PublicationsPage.vue"
+import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-jest"
+import { mount } from "@vue/test-utils"
+import { createMockClient } from "mock-apollo-client"
+import { ApolloClients } from "@vue/apollo-composable"
+import { GET_PUBLICATIONS } from "src/graphql/queries"
+import flushPromises from "flush-promises"
 
-import * as All from "quasar"
-
-const components = Object.keys(All).reduce((object, key) => {
-  const val = All[key]
-  if (val.component?.name != null) {
-    object[key] = val
-  }
-  return object
-}, {})
-
-const query = jest.fn()
-const notify = jest.fn()
-
+installQuasarPlugin()
 describe("publications page mount", () => {
-  const wrapper = mountQuasar(PublicationsPage, {
-    quasar: {
-      components,
-    },
-    mount: {
-      type: "full",
-      mocks: {
-        $t: (token) => token,
-        $apollo: {
-          query,
-        },
-      },
-    },
-  })
+  const mockClient = createMockClient()
 
-  wrapper.vm.$q.notify = notify
+  const getPubsHandler = jest.fn()
+  mockClient.setRequestHandler(GET_PUBLICATIONS, getPubsHandler)
 
-  it("mounts without errors", () => {
-    expect(wrapper).toBeTruthy()
-  })
-
-  test("all existing publications appear within the list", async () => {
-    await wrapper.setData({
+  getPubsHandler.mockResolvedValue({
+    data: {
       publications: {
         data: [
           { id: "1", name: "Sample Jest Publication 1" },
@@ -45,8 +22,31 @@ describe("publications page mount", () => {
           { id: "3", name: "Sample Jest Publication 3" },
           { id: "4", name: "Sample Jest Publication 4" },
         ],
+        paginatorInfo: {
+          count: 4,
+          currentPage: 1,
+          lastPage: 1,
+          perPage: 10,
+        },
       },
-    })
+    },
+  })
+
+  const wrapper = mount(PublicationsPage, {
+    global: {
+      provide: {
+        [ApolloClients]: { default: mockClient },
+      },
+      mocks: {
+        $t: (t) => t,
+      },
+    },
+  })
+
+  it("mounts without errors", async () => {
+    await flushPromises()
+    expect(wrapper).toBeTruthy()
     expect(wrapper.findAllComponents({ name: "q-item" })).toHaveLength(4)
+    expect(getPubsHandler).toBeCalledWith({ page: 1 })
   })
 })
