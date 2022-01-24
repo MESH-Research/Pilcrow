@@ -1,9 +1,10 @@
 <template>
   <q-input
     v-bind="{ ...$props, ...$attrs }"
-    :value="value"
+    :value="modelValue"
     :label="label"
     :type="isPwd ? 'password' : 'text'"
+    @update:model-value="$emit('update:modelValue', $event)"
   >
     <template #append>
       <q-icon
@@ -38,7 +39,7 @@ defineProps({
     type: String,
     default: "Password",
   },
-  value: {
+  modelValue: {
     type: String,
     default: "",
   },
@@ -56,6 +57,7 @@ defineProps({
   },
 })
 
+defineEmits(["update:modelValue"])
 const isPwd = ref(true)
 
 const $slots = useSlots()
