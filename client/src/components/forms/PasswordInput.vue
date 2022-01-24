@@ -1,7 +1,7 @@
 <template>
   <q-input
     v-bind="{ ...$props, ...$attrs }"
-    :value="modelValue"
+    :model-value="$props.modelValue"
     :label="label"
     :type="isPwd ? 'password' : 'text'"
     @update:model-value="$emit('update:modelValue', $event)"

@@ -2,7 +2,7 @@
   <div>
     <password-input
       v-bind="{ ...$props, ...$attrs }"
-      :model-value="value"
+      :model-value="$props.modelValue"
       :label="label"
       autocomplete="new-password"
       bottom-slots
@@ -29,14 +29,14 @@
       </template>
       <template #hint>
         <new-password-input-meter :max="4" :score="score" :valid="!error" />
-        <div v-if="value.length > 0" class="password-summary">
+        <div v-if="$props.modelValue.length > 0" class="password-summary">
           <span v-if="!error">{{
             $t("auth.validation.PASSWORD_COMPLEX")
           }}</span>
           <span v-else>{{ $t("auth.validation.PASSWORD_NOT_COMPLEX") }}</span>
         </div>
         <div
-          v-else-if="value.length == 0 && error"
+          v-else-if="$props.modelValue.length == 0 && error"
           v-text="$t('helpers.REQUIRED_FIELD', [[$t('auth.fields.password')]])"
         />
       </template>
@@ -77,7 +77,7 @@ const props = defineProps({
     type: String,
     default: "Password",
   },
-  value: {
+  modelValue: {
     type: String,
     default: "",
   },
