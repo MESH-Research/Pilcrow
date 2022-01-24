@@ -3,9 +3,6 @@ import { mount } from "vue-composable-tester"
 import { nextTick, provide, reactive } from "vue"
 import useVuelidate from "@vuelidate/core"
 import { required } from "@vuelidate/validators"
-import Vue from "vue"
-Vue.config.productionTip = false
-Vue.config.devtools = false
 
 describe("test validation helpers", () => {
   test("getErrorMessageKey function", () => {
@@ -41,7 +38,7 @@ describe("test composables", () => {
       const $v = useVuelidate({ one: { required }, two: {} }, fields)
       provide("validator", $v)
       return {
-        hasErrorKey: validationHelpers.useHasErrorKey(),
+        hasErrorKey: validationHelpers.useHasErrorKey($v),
         $v,
         fields,
       }

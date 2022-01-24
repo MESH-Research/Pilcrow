@@ -3,12 +3,8 @@ import { useUserValidation } from "./userValidation"
 import { provide } from "vue"
 import { DefaultApolloClient } from "@vue/apollo-composable"
 import { createMockClient } from "mock-apollo-client"
-import { text } from "body-parser"
 import { CREATE_USER } from "src/graphql/mutations"
-
-import Vue from "vue"
-Vue.config.devtools = false
-Vue.config.productionTip = false
+import flushPromises from "flush-promises"
 
 describe("test uservalidation composable", () => {
   const mountComposable = () => {
@@ -54,7 +50,7 @@ describe("test uservalidation composable", () => {
     expect(eV.$invalid).toBeFalsy()
   })
 
-  text("locally validated password", () => {
+  test("locally validated password", () => {
     const {
       result: { $v, user },
     } = mountComposable()
@@ -63,15 +59,15 @@ describe("test uservalidation composable", () => {
     user.password = ""
     eV.$touch()
     expect(eV.required.$invalid).toBeTruthy()
-    expect(eV.complexity.$invalid).toBeTruthy()
+    expect(eV.notComplex.$invalid).toBeTruthy()
 
     user.password = "password"
     eV.$touch()
-    expect(eV.complexity.$invalid).toBeTruthy()
-    expect(eV.required.$invalid).toBeTruthy()
+    expect(eV.notComplex.$invalid).toBeTruthy()
+    expect(eV.required.$invalid).not.toBeTruthy()
 
     user.password = "albancub4Grac&"
-    expect(eV.complexity.$invalid).toBeFalsy()
+    expect(eV.notComplex.$invalid).toBeFalsy()
     expect(eV.$invalid).toBeFalsy()
   })
 
@@ -122,11 +118,11 @@ describe("test uservalidation composable", () => {
     expect($v.value.email.$externalResults[0].$message).toEqual("EMAIL_IN_USE")
 
     user.username = "anotherusername"
-    await Vue.nextTick()
+    await flushPromises()
     expect($v.value.username.$externalResults.length).toBe(0)
 
     user.email = "email@example.com"
-    await Vue.nextTick()
+    await flushPromises()
     expect($v.value.email.$externalResults.length).toBe(0)
   })
 
