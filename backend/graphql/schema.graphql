@@ -1,4 +1,5 @@
 #import academic_profiles.graphql
+#import notification.graphql
 #import permission.graphql
 #import profile_metadata.graphql
 #import publication.graphql
@@ -95,6 +96,7 @@ type Mutation {
 
     "Create a new submission under a publication"
     createSubmission(input: CreateSubmissionInput! @spread): Submission!
+        @event(dispatch: "App\\Events\\SubmissionCreated")
 
     "Create an association between a user, role, and submission"
     createSubmissionUser(submission_user: CreateSubmissionUserInput! @spread): SubmissionUser!
