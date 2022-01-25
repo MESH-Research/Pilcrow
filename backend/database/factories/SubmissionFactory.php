@@ -26,6 +26,7 @@ class SubmissionFactory extends Factory
         return [
             'title' => $this->faker->sentence(10, true),
             'publication_id' => Publication::factory(),
+            'status' => 1,
         ];
     }
 }

@@ -18,6 +18,9 @@ updates:
         update-types: ["version-update:semver-major"]
       - dependency-name: "@quasar/app"
         update-types: ["version-update:semver-major"]
+      # Ignore chalk major version updates  
+      - dependency-name: "chalk"
+        update-types: ["version-update:semver-major"]
 - package-ecosystem: npm
   directory: "/"
   schedule:

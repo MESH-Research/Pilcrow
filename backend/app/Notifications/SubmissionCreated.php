@@ -8,7 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class SubmissionCreation extends Notification implements ShouldQueue
+class SubmissionCreated extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -36,7 +36,10 @@ class SubmissionCreation extends Notification implements ShouldQueue
      */
     public function via()
     {
-        return ['database'];
+        return [
+            'database',
+            'mail',
+        ];
     }
 
     /**
@@ -59,10 +62,23 @@ class SubmissionCreation extends Notification implements ShouldQueue
     public function toArray()
     {
         return [
-            'body' => $this->creationData['body'],
+            'submission' => [
+                'id' => $this->creationData['submission']['id'],
+                'title' => $this->creationData['submission']['title'],
+            ],
+            'publication' => [
+                'id' => $this->creationData['publication']['id'],
+                'name' => $this->creationData['publication']['name'],
+            ],
+            'user' => [
+                'id' => $this->creationData['user']['id'],
+                'username' => $this->creationData['user']['username'],
+                'name' => $this->creationData['user']['name'] ?? '',
+            ],
+            'type' => 'submission.created',
+            'body' => $this->creationData['body'] ?? '',
             'action' => $this->creationData['action'],
             'url' => $this->creationData['url'],
-            'submission_id' => $this->creationData['submission_id'],
         ];
     }
 }
