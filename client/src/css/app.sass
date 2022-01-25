@@ -52,3 +52,18 @@ fieldset
 @media (prefers-reduced-motion)
     *
         transition: none !important
+
+.q-list.notifications-list .q-item
+    .q-badge
+        position: absolute
+        left: 0
+        top: 50%
+        background: $light-blue-5
+        transform: translate(-50%, -50%)
+        height: 100%
+        padding: 4px
+        border-radius: 3px
+    span
+        font-weight: bold
+    &.unread
+        background: $light-blue-1
