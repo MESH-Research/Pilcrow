@@ -44,43 +44,39 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import NotificationListItem from "src/components/atoms/NotificationListItem.vue"
-import { ref, computed } from "@vue/composition-api"
+import { ref, computed } from "vue"
 import { notificationItems } from "src/graphql/fillerData"
 /**
  * Notification feed page
  */
-export default {
-  components: { NotificationListItem },
-  setup() {
-    /**
-     * Current filter mode
-     * @values null, 'Read', 'Unread'
-     *  */
-    const filterMode = ref(null)
-    /**
-     * Current page displayed
-     * @TODO Implement pagination with graphql
-     */
-    const currentPage = ref(1)
+/**
+ * Current filter mode
+ * @values null, 'Read', 'Unread'
+ *  */
+const filterMode = ref(null)
+/**
+ * Current page displayed
+ * @TODO Implement pagination with graphql
+ */
+const currentPage = ref(1)
 
-    const filterModes = ["Unread", "Read"]
+const filterModes = ["Unread", "Read"]
 
-    /**
-     * Filtered items based on filterMode
-     */
-    const filteredItems = computed(() => {
-      if (!filterMode.value) {
-        return notificationItems
-      }
+/**
+ * Filtered items based on filterMode
+ */
+const filteredItems = computed(() => {
+  if (!filterMode.value) {
+    return notificationItems
+  }
 
-      const read = filterMode.value === "Read" ? true : false
-      return notificationItems.filter((i) => i.viewed === read)
-    })
-    return { filterMode, filterModes, filteredItems, currentPage }
-  },
-}
+  const read = filterMode.value === "Read" ? true : false
+  return notificationItems.filter((i) =>
+    read ? i.read_at !== null : i.read_at === null
+  )
+})
 </script>
 
 <style lang="sass">

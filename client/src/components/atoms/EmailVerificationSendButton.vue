@@ -20,73 +20,57 @@
   </q-btn>
 </template>
 
-<script>
+<script setup>
 import { SEND_VERIFY_EMAIL } from "src/graphql/mutations"
-import errorsMixin from "src/components/mixins/errors"
+import { ref, computed } from "vue"
+import { useMutation } from "@vue/apollo-composable"
+import { useQuasar } from "quasar"
+import { useGraphErrors } from "src/use/errors"
+import { useI18n } from "vue-i18n"
 
-export default {
-  name: "EmailVerificationSendButton",
-  mixins: [errorsMixin],
-  props: {
-    noColor: {
-      type: Boolean,
-      default: false,
-    },
-  },
-  data() {
-    return {
-      status: null,
+const status = ref(null)
+const btnColor = computed(() => {
+  if (status.value == "success") {
+    return "positive"
+  }
+  return null
+})
+
+const { mutate: sendEmail } = useMutation(SEND_VERIFY_EMAIL)
+const { notify } = useQuasar()
+const { errorMessages, graphQLErrorCodes } = useGraphErrors()
+const { t } = useI18n()
+
+async function send() {
+  status.value = "loading"
+  try {
+    const result = await sendEmail()
+    const email = result.data.sendEmailVerification.email
+    status.value = "success"
+    notify({
+      color: "positive",
+      message: t("account.email_verify.send_success_notify", {
+        email,
+      }),
+      icon: "email",
+      html: true,
+    })
+  } catch (error) {
+    const errorMessagesList = errorMessages(
+      graphQLErrorCodes(error),
+      "account.failures"
+    )
+    if (!errorMessagesList.length) {
+      errorMessagesList.push(t("failures.UNKNOWN_ERROR"))
     }
-  },
-  computed: {
-    btnColor() {
-      if (this.noColor) {
-        return null
-      }
-      if (this.status == "success") {
-        return "positive"
-      }
-      return null
-    },
-  },
-  methods: {
-    async send() {
-      this.status = "loading"
-      try {
-        const {
-          data: {
-            sendEmailVerification: { email },
-          },
-        } = await this.$apollo.mutate({
-          mutation: SEND_VERIFY_EMAIL,
-        })
-        this.status = "success"
-        this.$q.notify({
-          color: "positive",
-          message: this.$t("account.email_verify.send_success_notify", {
-            email,
-          }),
-          icon: "email",
-          html: true,
-        })
-      } catch (error) {
-        const errorMessages = this.$errorMessages(
-          this.$graphQLErrorCodes(error),
-          "account.failures"
-        )
-        if (!errorMessages.length) {
-          errorMessages.push(this.$t("failures.UNKNOWN_ERROR"))
-        }
-        this.$q.notify({
-          color: "negative",
-          message: this.$t("account.email_verify.send_failure_notify", {
-            errors: errorMessages.join(", "),
-          }),
-          icon: "error",
-        })
-        this.status = null
-      }
-    },
-  },
+    notify({
+      color: "negative",
+      message: t("account.email_verify.send_failure_notify", {
+        errors: errorMessagesList.join(", "),
+      }),
+      icon: "error",
+    })
+    status.value = null
+  }
 }
 </script>

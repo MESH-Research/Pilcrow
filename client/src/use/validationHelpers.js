@@ -1,4 +1,4 @@
-import { computed, watch, inject } from "@vue/composition-api"
+import { computed, watch, unref } from "vue"
 import { clone } from "lodash"
 
 /**
@@ -9,12 +9,11 @@ import { clone } from "lodash"
  * @inject Validator Vuelidate validation object.
  * @returns computed
  */
-export const useHasErrorKey = () => {
-  const validator = inject("validator")
-
+export const useHasErrorKey = (validator) => {
+  const v = unref(validator)
   return computed(() => {
     return (field, key) => {
-      return hasErrorKey(validator.value?.[field].$errors, key) ?? false
+      return hasErrorKey(v?.[field].$errors, key) ?? false
     }
   })
 }

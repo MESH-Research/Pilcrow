@@ -49,48 +49,37 @@
   </q-btn>
 </template>
 
-<script>
-import { defineComponent, ref, watch, nextTick } from "@vue/composition-api"
+<script setup>
+import { ref, watch, nextTick } from "vue"
 import { useQuery, useResult } from "@vue/apollo-composable"
 import { CURRENT_USER_NOTIFICATIONS } from "src/graphql/queries"
 import NotificationListItem from "src/components/atoms/NotificationListItem.vue"
-import { computed } from "@vue/composition-api"
+import { computed } from "vue"
 
-/**
- * Notification Dropdown menu
- */
-export default defineComponent({
-  name: "NotificationPopup",
-  components: { NotificationListItem },
-  setup() {
-    const currentPage = ref(1)
-    const popupProxy = ref(null)
-    const isVisible = ref(false)
-    const { result } = useQuery(CURRENT_USER_NOTIFICATIONS, {
-      page: currentPage,
-    })
-    const notificationItems = useResult(
-      result,
-      [],
-      (data) => data.currentUser.notifications.data
-    )
-    const hasUnreadNotifications = computed(() => {
-      return notificationItems.value.length > 0 &&
-        notificationItems.value.find((item) => item.data.read_at === null)
-        ? true
-        : false
-    })
-    watch(isVisible, (newValue) => {
-      if (newValue === false) {
-        return
-      }
-      nextTick(() => {
-        popupProxy.value.$refs.popup.$children[0].$el.id =
-          "notifications-wrapper"
-      })
-    })
-    return { notificationItems, hasUnreadNotifications, isVisible, popupProxy }
-  },
+const currentPage = ref(1)
+const popupProxy = ref(null)
+const isVisible = ref(false)
+const { result } = useQuery(CURRENT_USER_NOTIFICATIONS, {
+  page: currentPage,
+})
+const notificationItems = useResult(
+  result,
+  [],
+  (data) => data.currentUser.notifications.data
+)
+const hasUnreadNotifications = computed(() => {
+  return notificationItems.value.length > 0 &&
+    notificationItems.value.find((item) => item.data.read_at === null)
+    ? true
+    : false
+})
+watch(isVisible, (newValue) => {
+  if (newValue === false) {
+    return
+  }
+  nextTick(() => {
+    popupProxy.value.$refs.popup.$children[0].$el.id = "notifications-wrapper"
+  })
 })
 </script>
 

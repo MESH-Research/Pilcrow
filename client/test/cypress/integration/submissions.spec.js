@@ -10,6 +10,8 @@ describe("Submissions", () => {
     cy.login({ email: "applicationadministrator@ccrproject.dev" })
     cy.visit("submissions")
     cy.injectAxe()
+    cy.dataCy("new_submission_title_input")
+    cy.checkA11y()
     cy.dataCy("new_submission_title_input").type(
       "Submission from Cypress{enter}"
     )
@@ -41,7 +43,6 @@ describe("Submissions", () => {
     cy.task("resetDb")
     cy.login({ email: "applicationadministrator@ccrproject.dev" })
     cy.visit("submissions")
-    cy.injectAxe()
     cy.dataCy("new_submission_title_input").type(
       name_513_characters + "{enter}"
     )
@@ -49,6 +50,5 @@ describe("Submissions", () => {
       .should("be.visible")
       .should("have.class", "bg-negative")
     cy.get(".q-notification--top-enter-active").should("not.exist")
-    cy.checkA11y()
   })
 })

@@ -1,39 +1,51 @@
-import { mountQuasar } from "@quasar/quasar-app-extension-testing-unit-jest"
+import { mount } from "@vue/test-utils"
+import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-jest"
 import SubmissionDetailsPage from "./SubmissionDetails.vue"
-import * as All from "quasar"
+import { createMockClient } from "mock-apollo-client"
+import { ApolloClients } from "@vue/apollo-composable"
+import flushPromises from "flush-promises"
+import { GET_SUBMISSION } from "src/graphql/queries"
+import {
+  CREATE_SUBMISSION_USER,
+  DELETE_SUBMISSION_USER,
+} from "src/graphql/mutations"
 
-const components = Object.keys(All).reduce((object, key) => {
-  const val = All[key]
-  if (val.component?.name != null) {
-    object[key] = val
-  }
-  return object
-}, {})
+jest.mock("quasar", () => ({
+  ...jest.requireActual("quasar"),
+  useQuasar: () => ({
+    notify: jest.fn(),
+  }),
+}))
 
-const query = jest.fn()
+jest.mock("vue-i18n", () => ({
+  useI18n: () => ({
+    t: (t) => t,
+  }),
+}))
+
+installQuasarPlugin()
 
 describe("submissions details page mount", () => {
-  const wrapper = mountQuasar(SubmissionDetailsPage, {
-    quasar: {
-      components,
-    },
-    mount: {
-      type: "full",
-      mocks: {
-        $t: (token) => token,
-        $apollo: {
-          query,
+  const mockClient = createMockClient({
+    defaultOptions: { watchQuery: { fetchPolicy: "network-only" } },
+  })
+  const makeWrapper = async () => {
+    const wrapper = mount(SubmissionDetailsPage, {
+      global: {
+        provide: {
+          [ApolloClients]: { default: mockClient },
+        },
+        mocks: {
+          $t: (t) => t,
         },
       },
-    },
-    propsData: {
-      id: "1",
-    },
-  })
-
-  it("mounts without errors", () => {
-    expect(wrapper).toBeTruthy()
-  })
+      props: {
+        id: "1",
+      },
+    })
+    await flushPromises()
+    return wrapper
+  }
 
   const submissionUsersData = [
     {
@@ -43,6 +55,7 @@ describe("submissions details page mount", () => {
       pivot: {
         id: "1",
         role_id: "6",
+        user_id: "1",
       },
     },
     {
@@ -52,6 +65,7 @@ describe("submissions details page mount", () => {
       pivot: {
         id: "2",
         role_id: "5",
+        user_id: "2",
       },
     },
     {
@@ -61,6 +75,7 @@ describe("submissions details page mount", () => {
       pivot: {
         id: "3",
         role_id: "5",
+        user_id: "3",
       },
     },
     {
@@ -70,6 +85,7 @@ describe("submissions details page mount", () => {
       pivot: {
         id: "4",
         role_id: "5",
+        user_id: "4",
       },
     },
     {
@@ -79,6 +95,7 @@ describe("submissions details page mount", () => {
       pivot: {
         id: "5",
         role_id: "4",
+        user_id: "4",
       },
     },
     {
@@ -88,6 +105,7 @@ describe("submissions details page mount", () => {
       pivot: {
         id: "6",
         role_id: "6",
+        user_id: "5",
       },
     },
     {
@@ -97,56 +115,96 @@ describe("submissions details page mount", () => {
       pivot: {
         id: "7",
         role_id: "4",
+        user_id: "",
       },
     },
   ]
 
-  test("all assigned submitters appear within the assigned submitters list", async () => {
-    await wrapper.setData({
-      submission: {
-        users: submissionUsersData,
+  const GetSubHandler = jest.fn()
+  mockClient.setRequestHandler(GET_SUBMISSION, GetSubHandler)
+  const createSubUserHandler = jest.fn()
+  mockClient.setRequestHandler(CREATE_SUBMISSION_USER, createSubUserHandler)
+  mockClient.setRequestHandler(DELETE_SUBMISSION_USER, createSubUserHandler)
+
+  beforeEach(() => {
+    jest.resetAllMocks()
+  })
+
+  const defaultApolloMock = () => {
+    GetSubHandler.mockResolvedValue({
+      data: {
+        submission: {
+          title: "This Submission",
+          publication: {
+            name: "Jest Publication",
+          },
+          users: submissionUsersData,
+        },
       },
     })
+  }
+
+  it("mounts without errors", async () => {
+    defaultApolloMock()
+    const wrapper = await makeWrapper()
+    expect(GetSubHandler).toBeCalledWith({ id: "1" })
+    expect(wrapper).toBeTruthy()
+  })
+
+  test("all assigned submitters appear within the assigned submitters list", async () => {
+    defaultApolloMock()
+    const wrapper = await makeWrapper()
+
     const list = wrapper.findComponent({ ref: "list_assigned_submitters" })
     expect(list.findAllComponents({ name: "user-list-item" })).toHaveLength(2)
   })
 
   test("an error message appears when there are no assigned submitters", async () => {
-    await wrapper.setData({
-      submission: {
-        users: [],
+    GetSubHandler.mockResolvedValue({
+      data: {
+        submission: {
+          title: "This submission",
+          publication: {
+            name: "Jest Publication",
+          },
+          users: [],
+        },
       },
     })
+    const wrapper = await makeWrapper()
     const card = wrapper.findComponent({ ref: "card_no_submitters" })
     expect(card.text()).toContain("submissions.submitter.none")
   })
 
   test("all assigned reviewers appear within the assigned reviewers list", async () => {
-    await wrapper.setData({
-      submission: {
-        users: submissionUsersData,
-      },
-    })
+    defaultApolloMock()
+    const wrapper = await makeWrapper()
+
     const list = wrapper.findComponent({ ref: "list_assigned_reviewers" })
     expect(list.findAllComponents({ name: "q-item" })).toHaveLength(3)
   })
 
   test("a default message still appears when there are no assigned reviewers", async () => {
-    await wrapper.setData({
-      submission: {
-        users: [],
+    GetSubHandler.mockResolvedValue({
+      data: {
+        submission: {
+          title: "This submission",
+          publication: {
+            name: "Jest Publication",
+          },
+          users: [],
+        },
       },
     })
+
+    const wrapper = await makeWrapper()
     const card = wrapper.findComponent({ ref: "card_no_reviewers" })
     expect(card.text()).toContain("submissions.reviewer.none")
   })
 
   test("all assigned review coordinators appear within the assigned review coordinators list", async () => {
-    await wrapper.setData({
-      submission: {
-        users: submissionUsersData,
-      },
-    })
+    defaultApolloMock()
+    const wrapper = await makeWrapper()
     const list = wrapper.findComponent({
       ref: "list_assigned_review_coordinators",
     })

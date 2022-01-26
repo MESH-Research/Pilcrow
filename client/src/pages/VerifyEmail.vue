@@ -19,7 +19,7 @@
             <div v-else>
               {{ $t("general_failure") }}
               <ul class="errors">
-                <li v-for="(message, index) in errorMessages" :key="index">
+                <li v-for="(message, index) in errorMessagesList" :key="index">
                   {{ message }}
                 </li>
               </ul>
@@ -42,66 +42,41 @@
   </q-page>
 </template>
 
-<script>
+<script setup>
 import { VERIFY_EMAIL } from "src/graphql/mutations"
-import { CURRENT_USER } from "src/graphql/queries"
 import EmailVerificationSendButton from "src/components/atoms/EmailVerificationSendButton.vue"
-import errorMixin from "src/components/mixins/errors"
+import { ref, onMounted } from "vue"
+import { useCurrentUser } from "src/use/user"
+import { useMutation } from "@vue/apollo-composable"
+import { useRoute } from "vue-router"
+import { useGraphErrors } from "src/use/errors"
+const status = ref("loading")
+const errorMessagesList = ref([])
+const { currentUser } = useCurrentUser()
 
-export default {
-  name: "VerifyEmail",
-  components: { EmailVerificationSendButton },
-  mixins: [errorMixin],
-  data() {
-    return {
-      status: "loading",
-      errorMessages: [],
-    }
-  },
-  apollo: {
-    currentUser: {
-      query: CURRENT_USER,
-    },
-  },
-  async created() {
-    const { token, expires } = this.$route.params
+const { mutate: verifyEmail } = useMutation(VERIFY_EMAIL, {
+  refetchQueries: ["currentUser"],
+})
+const { params } = useRoute()
+const { errorMessages, graphQLErrorCodes } = useGraphErrors()
+onMounted(async () => {
+  const { token, expires } = params
 
-    if (this.currentUser.email_verified_at) {
-      this.status = "success"
-      return
-    }
-    try {
-      await this.$apollo.mutate({
-        mutation: VERIFY_EMAIL,
-        variables: { token, expires },
-        update: (
-          store,
-          {
-            data: {
-              verifyEmail: { email_verified_at },
-            },
-          }
-        ) => {
-          const { currentUser } = store.readQuery({
-            query: CURRENT_USER,
-          })
-          currentUser.email_verified_at = email_verified_at
-          store.writeQuery({
-            query: CURRENT_USER,
-            data: { currentUser },
-          })
-        },
-      })
-      this.status = "success"
-    } catch (error) {
-      this.errorMessages = this.$errorMessages(
-        this.$graphQLErrorCodes(error),
-        "account.failures"
-      )
-      this.status = "failure"
-    }
-  },
-}
+  if (currentUser.value.email_verified_at) {
+    status.value = "success"
+    return
+  }
+  try {
+    await verifyEmail({ token, expires })
+    status.value = "success"
+  } catch (error) {
+    errorMessagesList.value = errorMessages(
+      graphQLErrorCodes(error),
+      "account.failures"
+    )
+    status.value = "failure"
+  }
+})
 </script>
 
 <style lang="scss">

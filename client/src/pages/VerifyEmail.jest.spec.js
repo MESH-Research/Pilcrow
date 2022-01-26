@@ -1,99 +1,128 @@
-import { mountQuasar } from "@quasar/quasar-app-extension-testing-unit-jest"
+import { mount } from "@vue/test-utils"
+import {
+  installQuasarPlugin,
+  qLayoutInjections,
+} from "@quasar/quasar-app-extension-testing-unit-jest"
 import VerifyEmailPage from "./VerifyEmail.vue"
+import { useRoute } from "vue-router"
+import { useCurrentUser } from "src/use/user"
+import { ref } from "vue"
+import flushPromises from "flush-promises"
+import { createMockClient } from "mock-apollo-client"
+import { ApolloClients } from "@vue/apollo-composable"
+import { VERIFY_EMAIL } from "src/graphql/mutations"
+jest.mock("src/use/user", () => ({
+  useCurrentUser: jest.fn(),
+}))
 
-import * as All from "quasar"
+jest.mock("vue-router", () => ({
+  useRoute: jest.fn(),
+}))
 
-const components = Object.keys(All).reduce((object, key) => {
-  const val = All[key]
-  if (val.component?.name != null) {
-    object[key] = val
-  }
-  return object
-}, {})
+jest.mock("vue-i18n", () => ({
+  useI18n: () => ({
+    t: (t) => t,
+  }),
+}))
 
+installQuasarPlugin()
 describe("VerifyEmailPage", () => {
-  const mutate = jest.fn()
-  const createWrapper = async (params, data) => {
-    const $route = { params }
-    const wrapper = mountQuasar(VerifyEmailPage, {
-      quasar: {
-        components,
-      },
-      mount: {
-        data: () => Object.assign(VerifyEmailPage.data(), data),
+  const mockClient = createMockClient()
+  const createWrapper = async () => {
+    const wrapper = mount(VerifyEmailPage, {
+      global: {
+        provide: {
+          ...qLayoutInjections(),
+          [ApolloClients]: { default: mockClient },
+        },
         mocks: {
-          $t: (token) => token,
-          $apollo: {
-            mutate,
-          },
-          $route,
+          $t: (t) => t,
         },
         stubs: ["router-link"],
       },
     })
-
-    await wrapper.vm.$nextTick()
+    await flushPromises()
     return wrapper
   }
+  const verifyHandler = jest.fn()
+  mockClient.setRequestHandler(VERIFY_EMAIL, verifyHandler)
 
   beforeEach(() => {
-    mutate.mockReset()
+    jest.resetAllMocks()
   })
 
   it("mounts without errors", async () => {
-    const wrapper = await createWrapper(
-      { token: "", expires: "" },
-      {
-        currentUser: { email_verified_at: null },
-      }
-    )
+    useRoute.mockReturnValue({
+      params: { token: "", expires: "" },
+    })
+    useCurrentUser.mockReturnValue({
+      currentUser: ref({ email_verified_at: null }),
+    })
+    const wrapper = await createWrapper()
+
     expect(wrapper).toBeTruthy()
-    wrapper.destroy()
   })
 
   test("renders success immediately if email is already verified", async () => {
-    const wrapper = await createWrapper(
-      { token: "", expires: "" },
-      {
-        currentUser: { email_verified_at: "some value" },
-      }
-    )
+    useRoute.mockReturnValue({
+      params: { token: "", expires: "" },
+    })
+
+    useCurrentUser.mockReturnValue({
+      currentUser: ref({ email_verified_at: "some value" }),
+    })
+    const wrapper = await createWrapper()
     expect(wrapper.vm.status).toBe("success")
     expect(wrapper.text()).toContain(
       "account.email_verify.verification_success"
     )
-    wrapper.destroy()
   })
 
   test("renders success", async () => {
-    mutate.mockResolvedValue(true)
+    //Apollo throws error upon refetching the currentUser query (which is mocked out)
+    const warn = jest.spyOn(console, "warn").mockImplementation(() => {})
 
-    const wrapper = await createWrapper(
-      { token: "", expires: "" },
-      { currentUser: { email_verified_at: null } }
-    )
+    verifyHandler.mockResolvedValue({
+      data: { verifyEmail: { email_verified_at: "timestamp" } },
+    })
 
-    expect(mutate).toHaveBeenCalled()
+    useRoute.mockReturnValue({
+      params: { token: "", expires: "" },
+    })
+    useCurrentUser.mockReturnValue({
+      currentUser: ref({ email_verified_at: null }),
+    })
+    const wrapper = await createWrapper()
+
+    expect(verifyHandler).toHaveBeenCalledWith({ token: "", expires: "" })
     expect(wrapper.vm.status).toBe("success")
     expect(wrapper.text()).toContain(
       "account.email_verify.verification_success"
     )
-    wrapper.destroy()
+    expect(warn).toBeCalledTimes(1)
+    expect(warn).toBeCalledWith(
+      expect.stringContaining('Unknown query named "currentUser"')
+    )
   })
 
   it("renders errors", async () => {
-    mutate.mockRejectedValue({
-      graphQLErrors: [
+    verifyHandler.mockResolvedValue({
+      errors: [
         {
           extensions: { code: "TEST_ERROR_CODE" },
         },
       ],
     })
 
-    const wrapper = await createWrapper(
-      { token: "", expires: "" },
-      { currentUser: { email_verified_at: null } }
-    )
+    useRoute.mockReturnValue({
+      params: { token: "", expires: "" },
+    })
+
+    useCurrentUser.mockReturnValue({
+      currentUser: ref({ email_verified_at: null }),
+    })
+
+    const wrapper = await createWrapper()
 
     expect(wrapper.vm.status).toBe("failure")
     const errorUl = wrapper.find("ul.errors")

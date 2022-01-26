@@ -1,14 +1,14 @@
 import gql from "graphql-tag"
+import { _CURRENT_USER_FIELDS } from "./queries"
 
 export const LOGIN = gql`
   mutation Login($email: String!, $password: String!) {
     login(email: $email, password: $password) {
       id
-      name
-      username
-      email_verified_at
+      ...currentUserFields
     }
   }
+  ${_CURRENT_USER_FIELDS}
 `
 
 export const LOGOUT = gql`
