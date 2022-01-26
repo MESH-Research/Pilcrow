@@ -4,7 +4,7 @@ import { required, email } from "@vuelidate/validators"
 import { CREATE_USER } from "src/graphql/mutations"
 import { useMutation } from "@vue/apollo-composable"
 import zxcvbn from "zxcvbn"
-import { applyExternalValidationErrors } from "src/composables/validationHelpers"
+import { applyExternalValidationErrors } from "src/use/validationHelpers"
 
 export function useUserValidation() {
   const form = reactive({

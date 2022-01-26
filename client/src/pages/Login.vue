@@ -82,7 +82,7 @@ import PasswordInput from "src/components/forms/PasswordInput.vue"
 import ErrorBanner from "src/components/molecules/ErrorBanner.vue"
 import ErrorFieldRenderer from "src/components/molecules/ErrorFieldRenderer.vue"
 import { defineComponent, ref } from "@vue/composition-api"
-import { useLogin } from "src/composables/user"
+import { useLogin } from "src/use/user"
 
 export default defineComponent({
   name: "PageLogin",

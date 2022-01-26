@@ -192,9 +192,9 @@ import {
   website_rules,
   keyword_rules,
   useSocialFieldWatchers,
-} from "src/composables/profileMetadata"
+} from "src/use/profileMetadata"
 import { useMutation, useQuery, useResult } from "@vue/apollo-composable"
-import { useDirtyGuard } from "src/composables/forms"
+import { useDirtyGuard } from "src/use/forms"
 import { CURRENT_USER_METADATA } from "src/graphql/queries"
 import { UPDATE_PROFILE_METADATA } from "src/graphql/mutations"
 import { isEqual } from "lodash"
