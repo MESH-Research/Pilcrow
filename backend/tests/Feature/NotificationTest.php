@@ -249,7 +249,7 @@ class NotificationTest extends TestCase
                 'notification_id' => $user->notifications->first()->id
             ]
         );
-        $this->assertEquals(0, $user->unreadNotifications->count());
+        $this->assertEquals(0, $user->unreadNotifications()->count());
     }
 
     /**
@@ -273,7 +273,7 @@ class NotificationTest extends TestCase
                 'notification_id' => $user_2->notifications->first()->id
             ]
         );
-        $this->assertEquals(1, $user_2->unreadNotifications->count());
+        $this->assertEquals(1, $user_2->unreadNotifications()->count());
     }
 
     /**
@@ -290,11 +290,10 @@ class NotificationTest extends TestCase
         $user->notify(new SubmissionCreated($notification_data_2));
         $response = $this->graphQL(
             'mutation MarkAllNotificationsRead {
-                markAllNotificationsRead
+                markAllNotificationsRead {
             }'
         );
-        print_r($response);
-        $this->assertEquals(0, $user->unreadNotifications->count());
+        $this->assertEquals(0, $user->unreadNotifications()->count());
     }
 
     /**
@@ -315,6 +314,6 @@ class NotificationTest extends TestCase
                 markAllNotificationsRead
             }'
         );
-        $this->assertEquals(2, $user_2->unreadNotifications->count());
+        $this->assertEquals(2, $user_2->unreadNotifications()->count());
     }
 }
