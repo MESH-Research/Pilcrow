@@ -45,16 +45,9 @@ describe("LoginPage", () => {
   })
 
   test("login action attempts mutation", async () => {
-    const mutationHandler = jest.fn().mockResolvedValue({
-      data: {
-        login: {
-          id: 1,
-          name: "Test User",
-          username: "testuser",
-          email_verified_at: null,
-        },
-      },
-    })
+    const mutationHandler = jest
+      .fn()
+      .mockResolvedValue({ data: { login: { user: { id: 1 } } } })
     mockClient.setRequestHandler(LOGIN, mutationHandler)
 
     wrapper.vm.$v.email.$model = "user@example.com"
