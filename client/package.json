@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.5.6",
-    "@quasar/extras": "^1.11.3",
+    "@quasar/extras": "^1.11.5",
     "@vue/apollo-composable": "4.0.0-alpha.15",
     "@vue/apollo-option": "4.0.0-alpha.11",
     "@vue/composition-api": "^1.2.4",
@@ -44,7 +44,7 @@
     "@quasar/app": "^2.2.6",
     "@quasar/quasar-app-extension-testing": "^2.0.1",
     "@quasar/quasar-app-extension-testing-e2e-cypress": "^3.1.1",
-    "@quasar/quasar-app-extension-testing-unit-jest": "^2.2.2",
+    "@quasar/quasar-app-extension-testing-unit-jest": "^2.2.3",
     "axe-core": "^4.3.3",
     "babel-eslint": "^10.0.1",
     "cypress": "^8.5.0",
