@@ -16,10 +16,11 @@ class SubmissionSeeder extends Seeder
      * - Submitter: regularUser
      * - Review Coordinator: supplied user
      *
-     * @param \App\Models\User $review_coordinator
+     * @param int $id
+     * @param string $title
      * @return void
      */
-    public function run($review_coordinator)
+    public function run($id, $title)
     {
         $submission = Submission::factory()
             ->hasAttached(
@@ -29,14 +30,14 @@ class SubmissionSeeder extends Seeder
                 ]
             )
             ->hasAttached(
-                $review_coordinator,
+                User::where('username', 'reviewCoordinator')->firstOrFail(),
                 [
                     'role_id' => 4,
                 ]
             )
             ->create([
-                'id' => 100,
-                'title' => 'CCR Test Submission 1',
+                'id' => $id,
+                'title' => $title,
                 'publication_id' => 1,
             ]);
 

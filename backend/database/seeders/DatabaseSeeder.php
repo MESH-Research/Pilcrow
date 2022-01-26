@@ -60,7 +60,8 @@ class DatabaseSeeder extends Seeder
         $publication_seeder->run($publication_admin, $editor);
 
         $submission_seeder = new SubmissionSeeder();
-        $submission_seeder->run($coordinator);
+        $submission_seeder->run(100, 'CCR Test Submission 1');
+        $submission_seeder->run(101, 'CCR Test Submission 2');
 
         $submission_file_seeder = new SubmissionFileSeeder();
         $submission_file_seeder->run();
