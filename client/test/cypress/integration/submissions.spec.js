@@ -31,6 +31,8 @@ describe("Submissions", () => {
         "nested-interactive": { enabled: false },
       },
     })
+    cy.reload()
+    cy.dataCy("notification_indicator").should("be.visible")
   })
 
   it("prevents submission creation when the title exceeds the maximum length", () => {
