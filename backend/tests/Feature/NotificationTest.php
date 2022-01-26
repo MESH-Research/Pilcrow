@@ -7,7 +7,6 @@ use App\Models\User;
 use App\Notifications\SubmissionCreated;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
-use Illuminate\Testing\Fluent\AssertableJson;
 use Nuwave\Lighthouse\Testing\MakesGraphQLRequests;
 use Tests\TestCase;
 
@@ -246,7 +245,7 @@ class NotificationTest extends TestCase
                 }
             }',
             [
-                'notification_id' => $user->notifications->first()->id
+                'notification_id' => $user->notifications->first()->id,
             ]
         );
         $this->assertEquals(0, $user->unreadNotifications()->count());
@@ -270,7 +269,7 @@ class NotificationTest extends TestCase
                 }
             }',
             [
-                'notification_id' => $user_2->notifications->first()->id
+                'notification_id' => $user_2->notifications->first()->id,
             ]
         );
         $this->assertEquals(1, $user_2->unreadNotifications()->count());
