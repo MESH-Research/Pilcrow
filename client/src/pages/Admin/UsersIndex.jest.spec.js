@@ -44,15 +44,10 @@ describe("User Index page mount", () => {
       data: {
         userSearch: {
           data: [
-            { id: 1, name: "test1", email: "test1@msu.edu", username: "test1" },
-            { id: 2, name: "test2", email: "test2@msu.edu", username: "test2" },
+            { name: "test1", email: "test1@msu.edu" },
+            { name: "test2", email: "test2@msu.edu" },
           ],
-          paginatorInfo: {
-            count: 2,
-            currentPage: 1,
-            perPage: 10,
-            lastPage: 10,
-          },
+          paginatorInfo: { lastPage: 10 },
         },
       },
     })

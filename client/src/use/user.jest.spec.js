@@ -32,18 +32,17 @@ describe("useCurrentUser composable", () => {
     return { mockClient, result }
   }
 
-  test("when a user is not logged in", async () => {
-    const response = {
-      data: { currentUser: null },
-    }
-
+  test("when a user is not logged in", () => {
     const { result } = mountComposable([
-      [CURRENT_USER, jest.fn().mockResolvedValue(response)],
+      [
+        CURRENT_USER,
+        jest.fn().mockResolvedValue({ data: { currentUser: null } }),
+      ],
     ])
-    await nextTick()
 
     expect(result.currentUser.value).toBeNull()
     expect(result.isLoggedIn.value).toBe(false)
+    expect(result.can.value("doSomething")).toBe(false)
     expect(result.hasRole.value("someRole")).toBe(false)
   })
 
@@ -51,13 +50,13 @@ describe("useCurrentUser composable", () => {
     const response = {
       data: {
         currentUser: {
-          __typename: "User",
-          id: 100,
+          id: 1,
           name: "Hello",
           email: "hello@example.com",
           username: "helloUser",
           email_verified_at: "2021-08-14 02:26:32",
-          roles: [{ name: "tester" }],
+          roles: ["tester"],
+          abilities: ["doStuff"],
         },
       },
     }
@@ -69,7 +68,9 @@ describe("useCurrentUser composable", () => {
 
     expect(result.currentUser.value).not.toBeNull()
     expect(result.isLoggedIn.value).toBe(true)
+    expect(result.can.value("doSomething")).toBe(false)
     expect(result.hasRole.value("someRole")).toBe(false)
+    expect(result.can.value("doStuff")).toBe(true)
     expect(result.hasRole.value("tester")).toBe(true)
   })
 })

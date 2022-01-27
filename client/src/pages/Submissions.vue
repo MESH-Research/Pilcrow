@@ -240,6 +240,7 @@ export default {
         this.new_submission.file_upload = []
         this.is_submitting = false
       } catch (error) {
+        console.log(error)
         this.try_catch_error = true
         this.is_submitting = false
       }
