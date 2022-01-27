@@ -2,20 +2,20 @@
   <q-header class="header">
     <q-toolbar>
       <q-btn
-        v-if="value !== null"
+        v-if="props.modelValue !== null"
         flat
         round
         dense
         icon="menu"
         :aria-label="$t('header.menu_button_aria')"
         aria-controls="sidebar"
-        :aria-expanded="value.toString()"
-        @click="$emit('input', !value)"
+        :aria-expanded="(!!props.modelValue).toString()"
+        @click="toggleDrawer"
       />
       <q-space />
 
       <template v-if="currentUser">
-        <notification-popup />
+        <NotificationPopup />
         <q-btn-dropdown
           stretch
           flat
@@ -67,40 +67,24 @@
   </q-header>
 </template>
 
-<script>
-import appAuth from "src/components/mixins/appAuth"
-import { CURRENT_USER } from "src/graphql/queries"
+<script setup>
 import NotificationPopup from "src/components/molecules/NotificationPopup.vue"
-export default {
-  name: "AppHeader",
-  components: { NotificationPopup },
-  mixins: [appAuth],
-  props: {
-    //Drawer status
-    value: {
-      type: Boolean,
-      default: null,
-    },
+import { useLogout, useCurrentUser } from "src/use/user"
+
+const props = defineProps({
+  //Drawer status
+  modelValue: {
+    type: Boolean,
+    default: null,
   },
-  data() {
-    return {
-      currentUser: null,
-      drawerShowing: false,
-    }
-  },
-  apollo: {
-    currentUser: {
-      query: CURRENT_USER,
-    },
-  },
-  methods: {
-    async logout() {
-      const { success } = await this.$logout()
-      if (success) {
-        this.$router.push("/login")
-      }
-    },
-  },
+})
+const emit = defineEmits(["update:modelValue"])
+
+const { currentUser } = useCurrentUser()
+const { logoutUser: logout } = useLogout()
+
+function toggleDrawer() {
+  emit("update:modelValue", !props.modelValue)
 }
 </script>
 

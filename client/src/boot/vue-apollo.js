@@ -1,3 +1,4 @@
+import { boot } from "quasar/wrappers"
 import { ApolloClient, InMemoryCache, ApolloLink } from "@apollo/client/core"
 import {
   beforeEachRequiresAuth,
@@ -5,15 +6,14 @@ import {
   beforeEachRequiresSubmissionAccess,
 } from "src/apollo/apollo-router-guards"
 import { withXsrfLink, expiredTokenLink } from "src/apollo/apollo-links.js"
-import VueApollo from "@vue/apollo-option"
+import { createApolloProvider } from "@vue/apollo-option"
 
-import { DefaultApolloClient } from "@vue/apollo-composable"
-import { provide } from "@vue/composition-api"
+import { ApolloClients } from "@vue/apollo-composable"
 import { createUploadLink } from "apollo-upload-client"
 import { BatchHttpLink } from "@apollo/client/link/batch-http"
 
 const httpOptions = {
-  uri: process.env.GRAPHQL_URI || "/graphql",
+  uri: "/graphql",
 }
 const httpLink = ApolloLink.split(
   (operation) => operation.getContext().hasUpload,
@@ -21,7 +21,7 @@ const httpLink = ApolloLink.split(
   new BatchHttpLink(httpOptions)
 )
 
-export default function ({ app, router, Vue }) {
+export default boot(async ({ app, router }) => {
   const apolloClient = new ApolloClient({
     link: ApolloLink.from([expiredTokenLink, withXsrfLink, httpLink]),
     cache: new InMemoryCache(),
@@ -48,22 +48,10 @@ export default function ({ app, router, Vue }) {
     beforeEachRequiresSubmissionAccess(apolloClient, to, from, next)
   )
 
-  /**
-   * Setup composable apolloclient
-   */
-  app.mixins = (app.mixins || []).concat({
-    setup() {
-      provide(DefaultApolloClient, apolloClient)
-    },
-  })
-
-  /**
-   * Setup options api client
-   */
-
-  const apolloProvider = new VueApollo({
-    defaultClient: apolloClient,
-  })
-  Vue.use(VueApollo)
-  app.apolloProvider = apolloProvider
-}
+  const apolloClients = {
+    default: apolloClient,
+  }
+  const apolloProvider = createApolloProvider(apolloClients)
+  app.provide(ApolloClients, apolloClients) // Provide for composition api
+  app.use(apolloProvider)
+})

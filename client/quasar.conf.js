@@ -1,13 +1,14 @@
 // Configuration for your app
 // https://quasar.dev/quasar-cli/quasar-conf-js
-
-module.exports = function(ctx) {
+/* eslint-env node */
+const { configure } = require("quasar/wrappers")
+const ESLintPlugin = require("eslint-webpack-plugin")
+module.exports = configure(function () {
   return {
     // app boot file (/src/boot)
     // --> boot files are part of "main.js"
     // https://quasar.dev/quasar-cli/cli-documentation/boot-files
-    boot: ["i18n", "axios", 'composition-api', 'vue-apollo'],
-    preFetch: false,
+    boot: ["i18n", "vue-apollo"],
     // https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-css
     css: ["app.sass"],
 
@@ -29,7 +30,7 @@ module.exports = function(ctx) {
     // https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-framework
     framework: {
       iconSet: "material-icons", // Quasar icon set
-      lang: "en-us", // Quasar language pack
+      lang: "en-US", // Quasar language pack
 
       // Possible values for "all":
       // * 'auto' - Auto-import needed Quasar components & directives
@@ -45,51 +46,32 @@ module.exports = function(ctx) {
 
       // Quasar plugins
       plugins: ["Cookies", "Dialog", "SessionStorage", "Notify"],
-      config: { notify: { position: "top" } }
+      config: { notify: { position: "top" } },
     },
 
     // Full list of options: https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-build
     build: {
-      scopeHoisting: true,
       vueRouterMode: "history", // available values: 'hash', 'history'
       showProgress: true,
-      gzip: false,
-      analyze: false,
-      chainWebpack(chain, { isServer, isClient }) {
-        chain.module
-          .rule("vue")
-          .use("vue-loader")
-          .loader("vue-loader")
-          .tap(options => {
-            options.transpileOptions = {
-              transforms: {
-                dangerousTaggedTemplateString: true
-              }
-            };
-            return options;
-          });
+      devtool: "source-map",
+      chainWebpack(chain) {
+        chain
+          .plugin("eslint-webpack-plugin")
+          .use(ESLintPlugin, [{ extensions: ["js", "vue"] }])
       },
-
-      // https://quasar.dev/quasar-cli/cli-documentation/handling-webpack
-      extendWebpack(cfg) {
-        cfg.module.rules.push({
-          enforce: "pre",
-          test: /\.(js|vue)$/,
-          loader: "eslint-loader",
-          exclude: /node_modules/,
-          options: {
-            formatter: require("eslint").CLIEngine.getFormatter("stylish")
-          }
-        });
-      }
     },
-
     // Full list of options: https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-devServer
     devServer: {
       https: false,
       port: 8080,
-      open: true,
-      public: "ccr.lndo.site"
+      open: false,
+      client: {
+        webSocketURL: "auto://ccr.lndo.site/ws",
+        progress: true,
+      },
+      historyApiFallback: {
+        disableDotRule: true,
+      },
     },
 
     // animations: 'all', // --- includes all animations
@@ -98,7 +80,7 @@ module.exports = function(ctx) {
 
     // https://quasar.dev/quasar-cli/developing-ssr/configuring-ssr
     ssr: {
-      pwa: false
+      pwa: false,
     },
     // Full list of options: https://quasar.dev/quasar-cli/developing-electron-apps/configuring-electron
     electron: {
@@ -118,16 +100,11 @@ module.exports = function(ctx) {
       builder: {
         // https://www.electron.build/configuration/configuration
 
-        appId: "app"
+        appId: "app",
       },
 
       // More info: https://quasar.dev/quasar-cli/developing-electron-apps/node-integration
       nodeIntegration: true,
-
-      extendWebpack(cfg) {
-        // do something with Electron main process Webpack cfg
-        // chainWebpack also available besides this extendWebpack
-      }
-    }
-  };
-};
+    },
+  }
+})

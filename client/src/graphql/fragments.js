@@ -1,6 +1,6 @@
 import gql from "graphql-tag"
 
-export const PROFILE_METADATA_FRAGMENT = gql`
+export const _PROFILE_METADATA_FIELDS = gql`
   fragment profileMetadata on User {
     profile_metadata {
       biography
@@ -26,7 +26,7 @@ export const PROFILE_METADATA_FRAGMENT = gql`
   }
 `
 
-export const CURRENT_USER_FIELDS_FRAGMENT = gql`
+export const _CURRENT_USER_FIELDS = gql`
   fragment currentUserFields on User {
     username
     name

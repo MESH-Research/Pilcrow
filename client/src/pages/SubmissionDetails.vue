@@ -1,5 +1,5 @@
 <template>
-  <div v-if="$apollo.loading" class="q-pa-lg">
+  <div v-if="!submission" class="q-pa-lg">
     {{ $t("loading") }}
   </div>
   <article v-else>
@@ -46,53 +46,12 @@
         <h3>Assign a Reviewer</h3>
         <q-form @submit="assignUser(`reviewer`, reviewer_candidate)">
           <div class="q-gutter-md column q-pl-none">
-            <q-select
+            <find-user-select
               id="input_review_assignee"
               v-model="reviewer_candidate"
-              :options="options"
-              bottom-slots
-              hide-dropdown-icon
-              input-debounce="0"
-              label="User to Assign"
-              outlined
-              transition-hide="none"
-              transition-show="none"
-              use-input
-              @filter="filterFn"
-            >
-              <template #hint>
-                <div class="text--grey">
-                  Search by username, email, or name.
-                </div>
-              </template>
-              <template #selected-item="scope">
-                <q-chip data-cy="review_assignee_selected" dense square>
-                  {{ scope.opt.username }} ({{ scope.opt.email }})
-                </q-chip>
-              </template>
-              <template #option="scope">
-                <q-item
-                  data-cy="result_review_assignee"
-                  v-bind="scope.itemProps"
-                  v-on="scope.itemEvents"
-                >
-                  <q-item-section>
-                    <q-item-label
-                      >{{ scope.opt.username }} ({{
-                        scope.opt.email
-                      }})</q-item-label
-                    >
-                    <q-item-label
-                      v-if="scope.opt.name"
-                      caption
-                      class="text-grey-10"
-                    >
-                      {{ scope.opt.name }}
-                    </q-item-label>
-                  </q-item-section>
-                </q-item>
-              </template>
-            </q-select>
+              cy-selected-item="review_assignee_selected"
+              cy-options-item="result_review_assignee"
+            />
           </div>
           <q-btn
             :ripple="{ center: true }"
@@ -120,7 +79,7 @@
                 cyAttr: 'button_unassign_reviewer',
               },
             ]"
-            @actionClick="handleUserListClick"
+            @action-click="handleUserListClick"
           />
         </div>
         <div v-else>
@@ -147,57 +106,12 @@
           "
         >
           <div class="q-gutter-md column q-pl-none">
-            <q-select
+            <find-user-select
               id="input_review_coordinator_assignee"
               v-model="review_coordinator_candidate"
-              :options="options"
-              bottom-slots
-              hide-dropdown-icon
-              input-debounce="0"
-              label="User to Assign"
-              outlined
-              transition-hide="none"
-              transition-show="none"
-              use-input
-              @filter="filterFn"
-            >
-              <template #hint>
-                <div class="text--grey">
-                  Search by username, email, or name.
-                </div>
-              </template>
-              <template #selected-item="scope">
-                <q-chip
-                  data-cy="review_coordinator_assignee_selected"
-                  dense
-                  square
-                >
-                  {{ scope.opt.username }} ({{ scope.opt.email }})
-                </q-chip>
-              </template>
-              <template #option="scope">
-                <q-item
-                  data-cy="result_review_coordinator_assignee"
-                  v-bind="scope.itemProps"
-                  v-on="scope.itemEvents"
-                >
-                  <q-item-section>
-                    <q-item-label
-                      >{{ scope.opt.username }} ({{
-                        scope.opt.email
-                      }})</q-item-label
-                    >
-                    <q-item-label
-                      v-if="scope.opt.name"
-                      caption
-                      class="text-grey-10"
-                    >
-                      {{ scope.opt.name }}
-                    </q-item-label>
-                  </q-item-section>
-                </q-item>
-              </template>
-            </q-select>
+              cy-selected-item="review_coordinator_assignee_selected"
+              cy-options-item="result_review_coordinator_assignee"
+            />
           </div>
           <q-btn
             :ripple="{ center: true }"
@@ -225,7 +139,7 @@
                 cyAttr: 'button_unassign_review_coordinator',
               },
             ]"
-            @actionClick="handleUserListClick"
+            @action-click="handleUserListClick"
           />
         </div>
         <div v-else>
@@ -245,184 +159,137 @@
   </article>
 </template>
 
-<script>
-import { GET_SUBMISSION, SEARCH_USERS } from "src/graphql/queries"
+<script setup>
+import { GET_SUBMISSION } from "src/graphql/queries"
 import {
   CREATE_SUBMISSION_USER,
   DELETE_SUBMISSION_USER,
 } from "src/graphql/mutations"
 import UserList from "src/components/molecules/UserList.vue"
 import RoleMapper from "src/mappers/roles"
+import { useQuasar } from "quasar"
+import { useMutation, useQuery, useResult } from "@vue/apollo-composable"
+import { ref, computed } from "vue"
+import { useI18n } from "vue-i18n"
+import FindUserSelect from "src/components/forms/FindUserSelect.vue"
+const props = defineProps({
+  id: {
+    type: String,
+    required: true,
+  },
+})
 
-export default {
-  components: {
-    UserList,
-  },
-  props: {
-    id: {
-      type: String,
-      required: true,
-    },
-  },
-  data() {
-    return {
-      submission: {
-        title: null,
-        publication: null,
-        users: [],
+const submission = useResult(useQuery(GET_SUBMISSION, { id: props.id }).result)
+
+const reviewer_candidate = ref(null)
+const review_coordinator_candidate = ref(null)
+
+const review_coordinators = computed(() => {
+  return filterUsersByRoleId(
+    submission.value.users,
+    RoleMapper[`review_coordinators`]
+  )
+})
+const reviewers = computed(() => {
+  return filterUsersByRoleId(submission.value.users, RoleMapper[`reviewers`])
+})
+const submitters = computed(() => {
+  return filterUsersByRoleId(submission.value.users, RoleMapper[`submitters`])
+})
+
+function filterUsersByRoleId(users, id) {
+  return users.filter((user) => {
+    return parseInt(user.pivot.role_id) === id
+  })
+}
+
+const { notify } = useQuasar()
+const { t } = useI18n()
+//TODO: Extract makeNotify function into a composable
+function makeNotify(color, icon, message, display_name = null) {
+  notify({
+    group: false,
+    actions: [
+      {
+        label: "Close",
+        color: "white",
+        "data-cy": "button_dismiss_notify",
       },
-      userSearch: {
-        data: [],
-      },
-      current_page: 1,
-      reviewer_candidate: null,
-      review_coordinator_candidate: null,
-      options: [],
-    }
-  },
-  computed: {
-    review_coordinators: function () {
-      return this.filterUsersByRoleId(RoleMapper[`review_coordinators`])
+    ],
+    timeout: 50000,
+    progress: true,
+    color: color,
+    icon: icon,
+    message: t(message, { display_name }),
+    attrs: {
+      "data-cy": "submission_details_notify",
     },
-    reviewers: function () {
-      return this.filterUsersByRoleId(RoleMapper[`reviewers`])
-    },
-    submitters: function () {
-      return this.filterUsersByRoleId(RoleMapper[`submitters`])
-    },
-  },
-  methods: {
-    filterUsersByRoleId(id) {
-      return this.submission.users.filter((user) => {
-        return parseInt(user.pivot.role_id) === id
-      })
-    },
-    makeNotify(color, icon, message, display_name = null) {
-      this.$q.notify({
-        actions: [
-          {
-            label: "Close",
-            color: "white",
-            attrs: {
-              "data-cy": "button_dismiss_notify",
-            },
-          },
-        ],
-        timeout: 50000,
-        color: color,
-        icon: icon,
-        message: this.$t(message, { display_name }),
-        attrs: {
-          "data-cy": "submission_details_notify",
-        },
-        html: true,
-      })
-      this.is_submitting = false
-    },
-    async assignUser(role_name, candidate_model) {
-      try {
-        await this.$apollo
-          .mutate({
-            mutation: CREATE_SUBMISSION_USER,
-            variables: {
-              user_id: candidate_model.id,
-              role_id: RoleMapper[role_name],
-              submission_id: this.id,
-            },
-            refetchQueries: ["GetSubmission"],
-          })
-          .then(() => {
-            this.makeNotify(
-              "positive",
-              "check_circle",
-              `submissions.${role_name}.assign.success`,
-              candidate_model.name
-                ? candidate_model.name
-                : candidate_model.username
-            )
-          })
-          .then(() => {
-            this.resetForm()
-            candidate_model = null
-          })
-      } catch (error) {
-        this.makeNotify(
-          "negative",
-          "error",
-          `submissions.${role_name}.assign.error`
-        )
-      }
-    },
-    resetForm() {
-      this.review_coordinator_candidate = null
-      this.reviewer_candidate = null
-    },
-    async handleUserListClick({ user, action }) {
-      switch (action) {
-        case "unassignReviewer":
-          await this.unassignUser("reviewer", user)
-          break
-        case "unassignReviewCoordinator":
-          await this.unassignUser("review_coordinator", user)
-          break
-      }
-    },
-    async unassignUser(role_name, user) {
-      try {
-        await this.$apollo.mutate({
-          mutation: DELETE_SUBMISSION_USER,
-          variables: {
-            user_id: user.pivot.user_id,
-            role_id: RoleMapper[role_name],
-            submission_id: this.id,
-          },
-          refetchQueries: ["GetSubmission"],
-        })
-        this.makeNotify(
+    html: true,
+  })
+}
+
+const { mutate: assignUserMutate } = useMutation(CREATE_SUBMISSION_USER, {
+  refetchQueries: ["GetSubmission"],
+})
+
+async function assignUser(role_name, candidate_model) {
+  try {
+    await assignUserMutate({
+      user_id: candidate_model.id,
+      role_id: RoleMapper[role_name],
+      submission_id: props.id,
+    })
+      .then(() => {
+        makeNotify(
           "positive",
           "check_circle",
-          `submissions.${role_name}.unassign.success`,
-          user.name ? user.name : user.username
+          `submissions.${role_name}.assign.success`,
+          candidate_model.name ? candidate_model.name : candidate_model.username
         )
-      } catch (error) {
-        this.makeNotify(
-          "negative",
-          "error",
-          `submissions.${role_name}.unassign.error`
-        )
-      }
-    },
-    filterFn(val, update) {
-      update(() => {
-        const needle = val.toLowerCase()
-        this.$apollo
-          .query({
-            query: SEARCH_USERS,
-            variables: {
-              term: needle,
-              page: this.current_page,
-            },
-          })
-          .then((searchdata) => {
-            var usersList = []
-            const dropdowndata = searchdata.data.userSearch.data
-            dropdowndata.forEach(function (currentValue, index) {
-              usersList[index] = currentValue
-            })
-            this.options = usersList
-          })
       })
-    },
-  },
-  apollo: {
-    submission: {
-      query: GET_SUBMISSION,
-      variables() {
-        return {
-          id: this.id,
-        }
-      },
-    },
-  },
+      .then(() => {
+        resetForm()
+        candidate_model = null
+      })
+  } catch (error) {
+    makeNotify("negative", "error", `submissions.${role_name}.assign.error`)
+  }
+}
+function resetForm() {
+  review_coordinator_candidate.value = null
+  reviewer_candidate.value = null
+}
+
+async function handleUserListClick({ user, action }) {
+  switch (action) {
+    case "unassignReviewer":
+      await unassignUser("reviewer", user)
+      break
+    case "unassignReviewCoordinator":
+      await unassignUser("review_coordinator", user)
+      break
+  }
+}
+
+const { mutate: unassignUserMutate } = useMutation(DELETE_SUBMISSION_USER, {
+  refetchQueries: ["GetSubmission"],
+})
+
+async function unassignUser(role_name, user) {
+  try {
+    await unassignUserMutate({
+      user_id: user.pivot.user_id,
+      role_id: RoleMapper[role_name],
+      submission_id: props.id,
+    })
+    makeNotify(
+      "positive",
+      "check_circle",
+      `submissions.${role_name}.unassign.success`,
+      user.name ? user.name : user.username
+    )
+  } catch (error) {
+    makeNotify("negative", "error", `submissions.${role_name}.unassign.error`)
+  }
 }
 </script>

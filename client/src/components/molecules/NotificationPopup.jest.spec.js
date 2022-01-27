@@ -1,39 +1,26 @@
 import NotificationPopup from "./NotificationPopup.vue"
-import { mountQuasar } from "@quasar/quasar-app-extension-testing-unit-jest"
+import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-jest"
+import { mount } from "@vue/test-utils"
 import { CURRENT_USER_NOTIFICATIONS } from "src/graphql/queries"
 import { createMockClient } from "mock-apollo-client"
-import { DefaultApolloClient } from "@vue/apollo-composable"
-
-import * as All from "quasar"
-
-const components = Object.keys(All).reduce((object, key) => {
-  const val = All[key]
-  if (val.component?.name != null) {
-    object[key] = val
-  }
-  return object
-}, {})
-
+import { ApolloClients } from "@vue/apollo-composable"
+installQuasarPlugin()
 describe("Nofitication Popup", () => {
   const wrapperFactory = (mocks = []) => {
-    const apolloProvider = {}
     const mockClient = createMockClient()
-    apolloProvider[DefaultApolloClient] = mockClient
 
     mocks?.forEach((mock) => {
       mockClient.setRequestHandler(...mock)
     })
 
     return {
-      wrapper: mountQuasar(NotificationPopup, {
-        quasar: {
-          components,
-        },
-        mount: {
-          provide: apolloProvider,
-          type: "full",
+      wrapper: mount(NotificationPopup, {
+        global: {
+          provide: {
+            [ApolloClients]: { default: mockClient },
+          },
           mocks: {
-            $t: (token) => token,
+            $t: (t) => t,
           },
         },
       }),

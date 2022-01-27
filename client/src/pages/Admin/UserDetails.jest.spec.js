@@ -1,95 +1,103 @@
-import { mountQuasar } from "@quasar/quasar-app-extension-testing-unit-jest"
+import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-jest"
+import { ApolloClients } from "@vue/apollo-composable"
+import { mount } from "@vue/test-utils"
+import flushPromises from "flush-promises"
+import { createMockClient } from "mock-apollo-client"
+import { GET_USER } from "src/graphql/queries"
 import UserDetails from "./UserDetails.vue"
 
-import * as All from "quasar"
-
-const components = Object.keys(All).reduce((object, key) => {
-  const val = All[key]
-  if (val.component?.name != null) {
-    object[key] = val
-  }
-  return object
-}, {})
-
-const query = jest.fn()
+installQuasarPlugin()
 describe("User Details page mount", () => {
-  const wrapperFactory = (userId) => {
-    return mountQuasar(UserDetails, {
-      quasar: {
-        components,
-      },
-      mount: {
-        type: "full",
+  const mockClient = createMockClient()
+  const wrapperFactory = async (id) => {
+    const wrapper = mount(UserDetails, {
+      global: {
+        provide: {
+          [ApolloClients]: { default: mockClient },
+        },
         mocks: {
-          $t: (token) => token,
-          $tc: (token) => token,
-          $apollo: {
-            query,
-          },
-          $route: {
-            params: {
-              id: userId,
-            },
-          },
+          $t: (t) => t,
+          $tc: (t) => t,
         },
         stubs: ["router-link"],
       },
+      props: {
+        id,
+      },
     })
+    await flushPromises()
+    return wrapper
   }
 
-  it("mounts without errors", () => {
-    expect(wrapperFactory(0)).toBeTruthy()
+  const getUserHandler = jest.fn()
+  mockClient.setRequestHandler(GET_USER, getUserHandler)
+
+  beforeEach(() => {
+    jest.resetAllMocks()
   })
 
-  it("queries for a specific user", () => {
-    query.mockClear()
-    const wrapper = wrapperFactory(1)
-    expect(wrapper).toBeTruthy()
+  it("mounts without errors", async () => {
+    expect(await wrapperFactory("0")).toBeTruthy()
+    expect(getUserHandler).toBeCalledWith({ id: "0" })
+  })
 
-    expect(
-      wrapper.vm.$options.apollo.user.variables.bind(wrapper.vm)().id
-    ).toBe(1)
+  it("queries for a specific user", async () => {
+    const wrapper = await wrapperFactory("1")
+    expect(wrapper).toBeTruthy()
+    expect(getUserHandler).toBeCalledWith({ id: "1" })
   })
 
   it("reflects the lack of roles for a user with no assigned roles", async () => {
-    query.mockClear()
-    const wrapper = wrapperFactory(1)
-    expect(wrapper).toBeTruthy()
-    await wrapper.setData({
-      user: {
-        name: "Regular User",
-        roles: [],
+    getUserHandler.mockResolvedValue({
+      data: {
+        user: {
+          username: "Username",
+          email: "email",
+          name: "Regular User",
+          roles: [],
+        },
       },
     })
+
+    const wrapper = await wrapperFactory("1")
     expect(wrapper.text()).toContain("role.no_roles_assigned")
   })
 
   it("reflects the role of an application administrator", async () => {
-    query.mockClear()
-    const wrapper = wrapperFactory(2)
-    expect(wrapper).toBeTruthy()
-    await wrapper.setData({
-      user: {
-        name: "Application Admin User",
-        roles: [
-          {
-            name: "Application Administrator",
-          },
-        ],
+    getUserHandler.mockResolvedValue({
+      data: {
+        user: {
+          name: "Application Admin User",
+          username: "Username",
+          email: "email",
+          roles: [
+            {
+              name: "Application Administrator",
+            },
+          ],
+        },
       },
     })
+
+    const wrapper = await wrapperFactory("2")
+    expect(wrapper).toBeTruthy()
+    //TODO: Make this test less fragile by finding the roles list component/el first
     expect(wrapper.text()).toContain("Application Administrator")
   })
 
   it("reflects the lack of display name for a user with no name", async () => {
-    query.mockClear()
-    const wrapper = wrapperFactory(3)
-    expect(wrapper).toBeTruthy()
-    await wrapper.setData({
-      user: {
-        username: "userWithNoName",
+    getUserHandler.mockResolvedValue({
+      data: {
+        user: {
+          name: null,
+          email: "email",
+          username: "userWithNoName",
+          roles: [],
+        },
       },
     })
+    const wrapper = await wrapperFactory("3")
+    expect(wrapper).toBeTruthy()
     expect(wrapper.text()).toContain("user.empty_name")
   })
 })

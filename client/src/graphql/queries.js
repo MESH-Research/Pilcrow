@@ -1,11 +1,11 @@
 import gql from "graphql-tag"
 import {
-  PROFILE_METADATA_FRAGMENT,
-  CURRENT_USER_FIELDS_FRAGMENT,
+  _CURRENT_USER_FIELDS,
+  _PROFILE_METADATA_FIELDS
 } from "./fragments"
 
 export const CURRENT_USER = gql`
-  ${CURRENT_USER_FIELDS_FRAGMENT}
+  ${_CURRENT_USER_FIELDS}
   query CurrentUser {
     currentUser {
       id
@@ -15,7 +15,7 @@ export const CURRENT_USER = gql`
 `
 
 export const CURRENT_USER_METADATA = gql`
-  ${PROFILE_METADATA_FRAGMENT}
+  ${_PROFILE_METADATA_FIELDS}
   query CurrentUserMetadata {
     currentUser {
       id
@@ -23,6 +23,7 @@ export const CURRENT_USER_METADATA = gql`
     }
   }
 `
+
 export const CURRENT_USER_NOTIFICATIONS = gql`
   query currentUserNotifications($page: Int) {
     currentUser {

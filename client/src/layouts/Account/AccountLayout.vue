@@ -44,33 +44,23 @@
   </div>
 </template>
 
-<script>
-import { CURRENT_USER } from "src/graphql/queries"
+<script setup>
 import AvatarBlock from "src/components/molecules/AvatarBlock.vue"
 import CollapseMenu from "src/components/molecules/CollapseMenu.vue"
-import { defineComponent } from "@vue/composition-api"
-import { useQuery, useResult } from "@vue/apollo-composable"
+import { useCurrentUser } from "src/use/user"
 
-export default defineComponent({
-  name: "AccountLayout",
-  components: { AvatarBlock, CollapseMenu },
-  setup() {
-    const { result } = useQuery(CURRENT_USER)
-    const currentUser = useResult(result, {})
-
-    const items = [
-      {
-        icon: "account_circle",
-        label: "Account Information",
-        url: "/account/profile",
-      },
-      {
-        icon: "contact_page",
-        label: "Profile Details",
-        url: "/account/metadata",
-      },
-    ]
-    return { currentUser, items }
+const items = [
+  {
+    icon: "account_circle",
+    label: "Account Information",
+    url: "/account/profile",
   },
-})
+  {
+    icon: "contact_page",
+    label: "Profile Details",
+    url: "/account/metadata",
+  },
+]
+
+const { currentUser } = useCurrentUser()
 </script>
