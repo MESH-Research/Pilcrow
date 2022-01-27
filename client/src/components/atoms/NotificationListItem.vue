@@ -2,6 +2,7 @@
   <q-item
     clickable
     :class="{ unread: !note.read_at }"
+    data-cy="notification_list_item"
     class="q-pl-none"
     @click="handleClick(note.id)"
   >

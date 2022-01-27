@@ -42,7 +42,9 @@
         </q-list>
         <q-btn-group spread>
           <q-btn to="/feed">View More</q-btn>
-          <q-btn @click="dismissAll">Dismiss All</q-btn>
+          <q-btn data-cy="dismiss_all_notifications" @click="dismissAll"
+            >Dismiss All</q-btn
+          >
         </q-btn-group>
       </div>
     </q-popup-proxy>
