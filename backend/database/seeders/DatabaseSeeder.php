@@ -38,7 +38,7 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('editorPassword!@#'),
         ]);
 
-        $coordinator = User::factory()->create([
+        User::factory()->create([
             'username' => 'reviewCoordinator',
             'email' => 'reviewCoordinator@ccrproject.dev',
             'name' => 'Review Coordinator for Submission',
