@@ -33,7 +33,6 @@ describe("Submissions", () => {
         "nested-interactive": { enabled: false },
       },
     })
-    cy.reload()
     cy.dataCy("notification_indicator").should("be.visible")
   })
 
