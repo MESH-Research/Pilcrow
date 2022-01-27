@@ -53,7 +53,7 @@
 
 <script setup>
 import { ref, watch, nextTick } from "vue"
-import { useQuery, useResult } from "@vue/apollo-composable"
+import { useQuery, useResult, useMutation } from "@vue/apollo-composable"
 import { CURRENT_USER_NOTIFICATIONS } from "src/graphql/queries"
 import NotificationListItem from "src/components/atoms/NotificationListItem.vue"
 import { computed } from "vue"

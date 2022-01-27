@@ -66,15 +66,12 @@ const props = defineProps({
   iconSize: {
     type: String,
     default: "sm",
-  }
+  },
 })
 
-const { mutate: markNotificationRead } = useMutation(
-  MARK_NOTIFICATION_READ,
-  {
-    refetchQueries: ["currentUserNotifications"],
-  }
-)
+const { mutate: markNotificationRead } = useMutation(MARK_NOTIFICATION_READ, {
+  refetchQueries: ["currentUserNotifications"],
+})
 
 const handleClick = async (notification_id) => {
   await markNotificationRead({
