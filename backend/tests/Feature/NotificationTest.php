@@ -287,9 +287,9 @@ class NotificationTest extends TestCase
         $user->notify(new SubmissionCreated($notification_data_1));
         $notification_data_2 = $this->getSampleNotificationData($user, 1013);
         $user->notify(new SubmissionCreated($notification_data_2));
-        $response = $this->graphQL(
+        $this->graphQL(
             'mutation MarkAllNotificationsRead {
-                markAllNotificationsRead {
+                markAllNotificationsRead
             }'
         );
         $this->assertEquals(0, $user->unreadNotifications()->count());
