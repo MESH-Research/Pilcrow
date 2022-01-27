@@ -28,7 +28,7 @@
     </q-input>
     <div class="col-md-7 col-12" :data-cy="`tag_list_${cyAttr}`">
       <q-chip
-        v-for="(item, index) in value"
+        v-for="(item, index) in modelValue"
         :key="index"
         removable
         @remove="remove(index)"
@@ -40,7 +40,7 @@
 </template>
 
 <script>
-import { reactive } from "@vue/composition-api"
+import { reactive } from "vue"
 import { useVuelidate } from "@vuelidate/core"
 import ErrorFieldRenderer from "src/components/molecules/ErrorFieldRenderer.vue"
 
@@ -58,7 +58,7 @@ export default {
     /**
      * Model value, list of items
      */
-    value: {
+    modelValue: {
       type: Array,
       default: () => [],
     },
@@ -84,12 +84,13 @@ export default {
       default: "keywords",
     },
   },
+  emits: ["update:modelValue"],
   setup(props, { emit }) {
     const form = reactive({
       addValue: "",
     })
 
-    const noNewDuplicate = (value) => !props.value.includes(value)
+    const noNewDuplicate = (value) => !props.modelValue.includes(value)
     const noopRule = () => true
     const vRules = {
       addValue: {
@@ -104,9 +105,9 @@ export default {
       /**
        * Emits input method on update of model value
        */
-      emit("input", [
-        ...props.value.slice(0, index),
-        ...props.value.slice(index + 1),
+      emit("update:modelValue", [
+        ...props.modelValue.slice(0, index),
+        ...props.modelValue.slice(index + 1),
       ])
     }
 
@@ -117,7 +118,7 @@ export default {
       if (v$.value.addValue.$error) {
         return
       }
-      emit("input", [...props.value, form.addValue])
+      emit("update:modelValue", [...props.modelValue, form.addValue])
       form.addValue = ""
     }
 

@@ -1,6 +1,6 @@
 import DiscardChangesDialog from "src/components/dialogs/DiscardChangesDialog.vue"
-import { onMounted, onUnmounted } from "@vue/composition-api"
-import { onBeforeRouteLeave } from "src/use/router"
+import { onMounted, onUnmounted } from "vue"
+import { onBeforeRouteLeave } from "vue-router"
 
 export function useDirtyGuard(dirtyRef, { root }) {
   function beforeUnload(e) {

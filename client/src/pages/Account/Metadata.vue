@@ -164,7 +164,7 @@
         </fieldset>
       </form-section>
 
-      <form-actions :form-state="formState" class="" @resetClick="resetForm" />
+      <form-actions :form-state="formState" class="" @reset-click="resetForm" />
     </v-q-wrap>
   </q-form>
 </template>
@@ -178,13 +178,7 @@ import TagList from "src/components/molecules/TagList.vue"
 import FormSection from "src/components/molecules/FormSection.vue"
 import FormActions from "src/components/molecules/FormActions.vue"
 
-import {
-  defineComponent,
-  computed,
-  reactive,
-  ref,
-  watch,
-} from "@vue/composition-api"
+import { defineComponent, computed, reactive, ref, watch } from "vue"
 import useVuelidate from "@vuelidate/core"
 import {
   rules,

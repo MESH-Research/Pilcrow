@@ -1,38 +1,18 @@
-import { mountQuasar } from "@quasar/quasar-app-extension-testing-unit-jest"
+import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-jest"
+import { mount } from "@vue/test-utils"
 import EditableList from "./EditableList.vue"
-import {
-  QIcon,
-  QBtn,
-  QItem,
-  QList,
-  QItemLabel,
-  QInput,
-  QItemSection,
-} from "quasar"
-
+installQuasarPlugin()
 describe("EditableList Component", () => {
-  const factory = (value, addProps = {}) => {
-    return mountQuasar(EditableList, {
-      quasar: {
-        components: {
-          QIcon,
-          QBtn,
-          QItem,
-          QList,
-          QItemLabel,
-          QInput,
-          QItemSection,
-        },
-      },
-      mount: {
-        type: "full",
+  const factory = (modelValue, addProps = {}) => {
+    return mount(EditableList, {
+      global: {
         mocks: {
           $t: (token) => token,
         },
-        propsData: {
-          value,
-          ...addProps,
-        },
+      },
+      props: {
+        modelValue,
+        ...addProps,
       },
     })
   }
@@ -54,20 +34,23 @@ describe("EditableList Component", () => {
 
   it("adds items to list", async () => {
     const wrapper = factory([])
-    const inputWrapper = wrapper.find("input")
-
+    const inputWrapper = wrapper.findComponent({ name: "q-input" })
+    const addBtn = wrapper.findComponent({ ref: "addBtn" })
     await inputWrapper.setValue("newItem")
-    await wrapper.findComponent({ ref: "addBtn" }).trigger("click")
+    await addBtn.trigger("click")
 
-    expect(wrapper.emitted("input")[0][0]).toHaveLength(1)
-    expect(wrapper.emitted("input")[0][0]).toEqual(["newItem"])
+    expect(wrapper.emitted("update:modelValue")[0][0]).toHaveLength(1)
+    expect(wrapper.emitted("update:modelValue")[0][0]).toEqual(["newItem"])
 
-    await wrapper.setProps({ value: ["item"] })
+    await wrapper.setProps({ modelValue: ["item"] })
     await inputWrapper.setValue("another new item")
-    await wrapper.findComponent({ ref: "addBtn" }).trigger("click")
+    await addBtn.trigger("click")
 
-    expect(wrapper.emitted("input")[1][0]).toHaveLength(2)
-    expect(wrapper.emitted("input")[1][0]).toEqual(["item", "another new item"])
+    expect(wrapper.emitted("update:modelValue")[1][0]).toHaveLength(2)
+    expect(wrapper.emitted("update:modelValue")[1][0]).toEqual([
+      "item",
+      "another new item",
+    ])
   })
 
   it("deletes list items", async () => {
@@ -77,13 +60,13 @@ describe("EditableList Component", () => {
     expect(items).toHaveLength(3)
 
     await findByAria(items.at(1), "lists.delete").trigger("click")
-    expect(wrapper.emitted("input")[0][0]).toEqual(["a", "c"])
+    expect(wrapper.emitted("update:modelValue")[0][0]).toEqual(["a", "c"])
 
     await findByAria(items.at(0), "lists.delete").trigger("click")
-    expect(wrapper.emitted("input")[1][0]).toEqual(["b", "c"])
+    expect(wrapper.emitted("update:modelValue")[1][0]).toEqual(["b", "c"])
 
     await findByAria(items.at(2), "lists.delete").trigger("click")
-    expect(wrapper.emitted("input")[2][0]).toEqual(["a", "b"])
+    expect(wrapper.emitted("update:modelValue")[2][0]).toEqual(["a", "b"])
   })
 
   it("moves items", async () => {
@@ -92,16 +75,16 @@ describe("EditableList Component", () => {
     const items = wrapper.findAllComponents({ name: "q-item" })
 
     await findByAria(items.at(0), "lists.move_down").trigger("click")
-    expect(wrapper.emitted("input")[0][0]).toEqual(["b", "a", "c"])
+    expect(wrapper.emitted("update:modelValue")[0][0]).toEqual(["b", "a", "c"])
 
     await findByAria(items.at(0), "lists.move_up").trigger("click")
-    expect(wrapper.emitted("input")).toHaveLength(1)
+    expect(wrapper.emitted("update:modelValue")).toHaveLength(1)
 
     await findByAria(items.at(2), "lists.move_down").trigger("click")
-    expect(wrapper.emitted("input")).toHaveLength(1)
+    expect(wrapper.emitted("update:modelValue")).toHaveLength(1)
 
     await findByAria(items.at(2), "lists.move_up").trigger("click")
-    expect(wrapper.emitted("input")[1][0]).toEqual(["a", "c", "b"])
+    expect(wrapper.emitted("update:modelValue")[1][0]).toEqual(["a", "c", "b"])
   })
 
   it("edits items", async () => {
@@ -113,7 +96,7 @@ describe("EditableList Component", () => {
     await items.at(1).find("input").setValue("d")
     await findByAria(items.at(1), "lists.save").trigger("click")
 
-    expect(wrapper.emitted("input")[0][0]).toEqual(["a", "d", "c"])
+    expect(wrapper.emitted("update:modelValue")[0][0]).toEqual(["a", "d", "c"])
   })
 
   test("label click triggers edit", async () => {
@@ -126,14 +109,12 @@ describe("EditableList Component", () => {
   })
 
   it("does not add duplicates", async () => {
-    const wrapper = factory([])
+    const wrapper = factory(["a", "b", "c"], { allowDuplicates: false })
 
-    await wrapper.setProps({ value: ["a", "b", "c"], allowDuplicates: false })
-
-    await wrapper.find("input").setValue("a")
+    await wrapper.findComponent({ name: "q-input" }).setValue("a")
     await wrapper.findComponent({ ref: "addBtn" }).trigger("click")
 
-    expect(wrapper.emitted("input")).toBeUndefined()
+    expect(wrapper.emitted("update:modelValue")).toBeUndefined()
   })
 
   it("can allow duplicates", async () => {
@@ -142,6 +123,11 @@ describe("EditableList Component", () => {
     await wrapper.find("input").setValue("a")
     await wrapper.findComponent({ ref: "addBtn" }).trigger("click")
 
-    expect(wrapper.emitted("input")[0][0]).toEqual(["a", "b", "c", "a"])
+    expect(wrapper.emitted("update:modelValue")[0][0]).toEqual([
+      "a",
+      "b",
+      "c",
+      "a",
+    ])
   })
 })

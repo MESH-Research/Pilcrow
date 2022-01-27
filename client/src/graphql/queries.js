@@ -1,8 +1,5 @@
 import gql from "graphql-tag"
-import {
-  _CURRENT_USER_FIELDS,
-  _PROFILE_METADATA_FIELDS
-} from "./fragments"
+import { _CURRENT_USER_FIELDS, _PROFILE_METADATA_FIELDS } from "./fragments"
 
 export const CURRENT_USER = gql`
   ${_CURRENT_USER_FIELDS}

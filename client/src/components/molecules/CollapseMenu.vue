@@ -26,8 +26,8 @@
 </template>
 
 <script>
-import { computed } from "@vue/composition-api"
-
+import { computed } from "vue"
+import { useRoute } from "vue-router"
 export default {
   props: {
     items: {
@@ -35,10 +35,11 @@ export default {
       default: () => [],
     },
   },
-  setup({ items }, context) {
-    const currentPath = computed(() => context.root.$route.path)
+  setup(props) {
+    const route = useRoute()
+    const currentPath = computed(() => route.path)
     const activeRoute = computed(() => {
-      return items.find((e) => e.url === currentPath.value)
+      return props.items.find((e) => e.url === currentPath.value)
     })
 
     function isActive(url) {

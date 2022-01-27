@@ -1,7 +1,7 @@
 import { maxLength } from "@vuelidate/validators"
 import { helpers } from "@vuelidate/validators"
 import { weburl_regex } from "src/utils/regex-weburl"
-import { watch } from "@vue/composition-api"
+import { watch } from "vue"
 export const social_regex = {
   facebook: {
     url: /^(?:https?:)?\/\/(?:www\.)?(?:facebook|fb)\.com\/(?<profile>(?![A-z]+\.php)(?!marketplace|gaming|watch|me|messages|help|search|groups)[A-z0-9_\-.]+)\/?/,

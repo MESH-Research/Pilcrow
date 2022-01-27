@@ -7,23 +7,15 @@
   </q-card-section>
 </template>
 
-<script>
-import { defineComponent, computed } from "@vue/composition-api"
-
-export default defineComponent({
-  name: "FormSectionHeader",
-  props: {
-    firstSection: {
-      type: Boolean,
-      default: false,
-    },
+<script setup>
+import { computed } from "vue"
+const props = defineProps({
+  firstSection: {
+    type: Boolean,
+    default: false,
   },
-  setup(props) {
-    const headerClass = computed(() => {
-      return props.firstSection ? "text-h4" : "text-subtitle2"
-    })
-
-    return { headerClass }
-  },
+})
+const headerClass = computed(() => {
+  return props.firstSection ? "text-h4" : "text-subtitle2"
 })
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <q-page-sticky v-show="visible" position="bottom-right">
+  <q-page-sticky v-if="visible" position="bottom-right">
     <div class="bg-grey-1 q-ma-sm q-pa-md rounded-borders shadow-15">
       <div class="q-gutter-md">
         <template v-if="$slots.default">
@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import { computed } from "@vue/composition-api"
+import { computed } from "vue"
 
 export default {
   name: "FormActions",
@@ -41,6 +41,7 @@ export default {
       default: "idle",
     },
   },
+  emits: ["resetClick"],
   setup(props) {
     const saveClassList = computed(() => {
       const classes = {

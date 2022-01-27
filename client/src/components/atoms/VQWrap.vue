@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import { provide, toRef } from "@vue/composition-api"
+import { provide, toRef } from "vue"
 export default {
   props: {
     /**
@@ -25,6 +25,7 @@ export default {
       default: "",
     },
   },
+  emits: ["vqupdate"],
   setup(props, { emit }) {
     provide("tPrefix", props.tPrefix)
     provide("formState", toRef(props, "formState"))

@@ -1,22 +1,26 @@
-import { mountQuasar } from "@quasar/quasar-app-extension-testing-unit-jest"
-import { QInput, QSkeleton } from "quasar"
+import { mount } from "@vue/test-utils"
+import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-jest"
 import { useVuelidate } from "@vuelidate/core"
-import { reactive, ref } from "@vue/composition-api"
+import { reactive, ref } from "vue"
 import { nextTick } from "vue"
 import VQInput from "./VQInput"
 
+jest.mock("vue-i18n", () => ({
+  useI18n: () => ({
+    te: (t) => t,
+  }),
+}))
+installQuasarPlugin()
 const factory = (props, provide) => {
-  return mountQuasar(VQInput, {
-    quasar: { components: { QInput, QSkeleton } },
-    mount: {
-      type: "full",
+  return mount(VQInput, {
+    global: {
       provide: provide,
       mocks: {
         $t: (token) => token,
         $te: () => true,
       },
     },
-    propsData: {
+    props: {
       ...props,
     },
   })
@@ -46,7 +50,7 @@ describe("VQInput", () => {
     const form = reactive({ field: "test" })
     const v$ = useVuelidate({ field: {} }, form)
     const wrapper = factory({ v: v$.value.field, t: "field" })
-    const qinput = wrapper.findComponent(QInput)
+    const qinput = wrapper.findComponent({ name: "q-input" })
 
     expect(qinput.props("hint")).toEqual("field.hint")
     expect(qinput.props("label")).toEqual("field.label")
@@ -56,7 +60,7 @@ describe("VQInput", () => {
     const stub = vuelidateStub
     const wrapper = factory({ v: stub }, { tPrefix: "myPrefix" })
 
-    const qinput = wrapper.findComponent(QInput)
+    const qinput = wrapper.findComponent({ name: "q-input" })
 
     expect(qinput.props("hint")).toEqual("myPrefix.field.hint")
     expect(qinput.props("label")).toEqual("myPrefix.field.label")
@@ -81,12 +85,12 @@ describe("VQInput", () => {
 
     const wrapper = factory({ v: stub }, { formState })
 
-    expect(wrapper.findComponent(QInput).exists()).toBe(true)
+    expect(wrapper.findComponent({ name: "q-input" }).exists()).toBe(true)
 
     formState.value = "loading"
     await nextTick()
 
-    expect(wrapper.findComponent(QInput).exists()).toBe(false)
-    expect(wrapper.findComponent(QSkeleton).exists()).toBe(true)
+    expect(wrapper.findComponent({ name: "q-input" }).exists()).toBe(false)
+    expect(wrapper.findComponent({ name: "q-skeleton" }).exists()).toBe(true)
   })
 })
