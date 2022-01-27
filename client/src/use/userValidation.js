@@ -1,4 +1,4 @@
-import { reactive } from "@vue/composition-api"
+import { reactive } from "vue"
 import useVuelidate from "@vuelidate/core"
 import { required, email } from "@vuelidate/validators"
 import { CREATE_USER } from "src/graphql/mutations"

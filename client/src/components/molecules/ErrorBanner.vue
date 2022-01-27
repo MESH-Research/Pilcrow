@@ -6,9 +6,3 @@
     v-bind="$attrs"
   />
 </template>
-
-<script>
-export default {
-  name: "ErrorBanner",
-}
-</script>

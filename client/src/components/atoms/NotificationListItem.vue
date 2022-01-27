@@ -8,7 +8,7 @@
   >
     <q-badge v-if="!note.read_at" />
     <q-item-section side class="q-px-md">
-      <q-icon :size="iconSize" :name="iconMapper(note.data.type)" />
+      <q-icon :size="iconSize" :name="iconMapper(note.type)" />
     </q-item-section>
     <q-item-section>
       <p class="q-pa-none q-ma-none">
@@ -24,8 +24,8 @@
   </q-item>
 </template>
 
-<script>
-import { computed } from "@vue/composition-api"
+<script setup>
+import { computed } from "vue"
 import { Screen } from "quasar"
 import { flatten } from "flat"
 import iconMapper from "src/mappers/notification_icons"
@@ -42,66 +42,63 @@ const timeAgo = new TimeAgo("en-US")
  *
  * @see https://v1.quasar.dev/vue-components/list-and-list-items#qitem-api
  */
-export default {
-  props: {
-    /**
-     * Notification item to display
-     */
-    note: {
-      type: Object,
-      requred: true,
-      default: () => {},
-    },
-    /**
-     * Show the relative time q-item-section
-     */
-    showTime: {
-      type: Boolean,
-      default: false,
-    },
-    /**
-     * Specify the size for the q-icon
-     * @see https://v1.quasar.dev/vue-components/icon#size-and-colors
-     */
-    iconSize: {
-      type: String,
-      default: "sm",
-    },
-  },
-  setup(props) {
-    /**
-     * The parsed translation key to use for the supplied note
-     */
-    const tKey = computed(() => {
-      return `notifications.${props.note.data.type}.short`
-    })
-    /**
-     * Flattened version of the note for passing to i18n
-     */
-    const flattened = computed(() => {
-      return flatten(props.note.data)
-    })
-    /**
-     * Relative representation of the note's time property
-     */
-    const relativeTime = computed(() => {
-      const style = Screen.lt.md ? "mini-now" : "long"
-      return timeAgo.format(new Date(props.note.data.time), style)
-    })
 
-    const { mutate: markNotificationRead } = useMutation(
-      MARK_NOTIFICATION_READ,
-      {
-        refetchQueries: ["currentUserNotifications"],
-      }
-    )
-
-    const handleClick = async (notification_id) => {
-      await markNotificationRead({
-        notification_id: notification_id,
-      })
-    }
-    return { tKey, flattened, relativeTime, iconMapper, handleClick }
+const props = defineProps({
+  /**
+   * Notification item to display
+   */
+  note: {
+    type: Object,
+    requred: true,
+    default: () => {},
   },
+  /**
+   * Show the relative time q-item-section
+   */
+  showTime: {
+    type: Boolean,
+    default: false,
+  },
+  /**
+   * Specify the size for the q-icon
+   * @see https://v1.quasar.dev/vue-components/icon#size-and-colors
+   */
+  iconSize: {
+    type: String,
+    default: "sm",
+  }
+})
+
+const { mutate: markNotificationRead } = useMutation(
+  MARK_NOTIFICATION_READ,
+  {
+    refetchQueries: ["currentUserNotifications"],
+  }
+)
+
+const handleClick = async (notification_id) => {
+  await markNotificationRead({
+    notification_id: notification_id,
+  })
 }
+
+/**
+ * The parsed translation key to use for the supplied note
+ */
+const tKey = computed(() => {
+  return `notifications.${props.note.type}.short`
+})
+/**
+ * Flattened version of the note for passing to i18n
+ */
+const flattened = computed(() => {
+  return flatten(props.note)
+})
+/**
+ * Relative representation of the note's time property
+ */
+const relativeTime = computed(() => {
+  const style = Screen.lt.md ? "mini-now" : "long"
+  return timeAgo.format(new Date(props.note.time), style)
+})
 </script>

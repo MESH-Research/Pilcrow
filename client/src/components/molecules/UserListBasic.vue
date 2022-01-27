@@ -7,7 +7,7 @@
       :index="index"
       :action="action"
       data-cy="userListBasicItem"
-      @actionClick="bubble"
+      @action-click="bubble"
     />
   </q-list>
 </template>
@@ -32,6 +32,7 @@ export default {
       default: "user_list",
     },
   },
+  emits: ["actionClick"],
   methods: {
     bubble(eventData) {
       this.$emit("actionClick", eventData)

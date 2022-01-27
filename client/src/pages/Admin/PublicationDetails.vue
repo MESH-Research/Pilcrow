@@ -1,5 +1,5 @@
 <template>
-  <div v-if="$apollo.loading" class="q-pa-lg">
+  <div v-if="!publication" class="q-pa-lg">
     {{ $t("loading") }}
   </div>
   <article v-else>
@@ -29,56 +29,15 @@
         <h3>Assign an Editor</h3>
         <q-form @submit="assignUser(`editor`, editor_candidate)">
           <div class="q-gutter-md column q-pl-none">
-            <q-select
+            <find-user-select
               id="input_editor_assignee"
               v-model="editor_candidate"
-              data-cy="input_editor_assignee"
-              :options="options"
-              bottom-slots
-              hide-dropdown-icon
-              input-debounce="0"
-              label="User to Assign"
-              outlined
-              transition-hide="none"
-              transition-show="none"
-              use-input
-              @filter="filterFn"
-            >
-              <template #hint>
-                <div class="text--grey">
-                  Search by username, email, or name.
-                </div>
-              </template>
-              <template #selected-item="scope">
-                <q-chip data-cy="editor_assignee_selected" dense square>
-                  {{ scope.opt.username }} ({{ scope.opt.email }})
-                </q-chip>
-              </template>
-              <template #option="scope">
-                <q-item
-                  data-cy="result_editor_assignee"
-                  v-bind="scope.itemProps"
-                  v-on="scope.itemEvents"
-                >
-                  <q-item-section>
-                    <q-item-label
-                      >{{ scope.opt.username }} ({{
-                        scope.opt.email
-                      }})</q-item-label
-                    >
-                    <q-item-label
-                      v-if="scope.opt.name"
-                      caption
-                      class="text-grey-10"
-                    >
-                      {{ scope.opt.name }}
-                    </q-item-label>
-                  </q-item-section>
-                </q-item>
-              </template>
-            </q-select>
+              cy-selected-item="editor_assignee_selected"
+              cy-options-item="result_editor_assignee"
+            />
           </div>
           <q-btn
+            ref="assignBtn"
             :ripple="{ center: true }"
             class="q-mt-lg"
             color="primary"
@@ -104,7 +63,7 @@
                 cyAttr: 'button_unassign_editor',
               },
             ]"
-            @actionClick="handleUserListClick"
+            @action-click="handleUserListClick"
           />
         </div>
         <div v-else>
@@ -124,163 +83,119 @@
   </article>
 </template>
 
-<script>
+<script setup>
 import UserList from "src/components/molecules/UserList.vue"
-import { GET_PUBLICATION, SEARCH_USERS } from "src/graphql/queries"
+import { GET_PUBLICATION } from "src/graphql/queries"
 import {
   CREATE_PUBLICATION_USER,
   DELETE_PUBLICATION_USER,
 } from "src/graphql/mutations"
 import RoleMapper from "src/mappers/roles"
+import { useMutation, useQuery, useResult } from "@vue/apollo-composable"
+import { useQuasar } from "quasar"
+import { useI18n } from "vue-i18n"
+import { ref, computed } from "vue"
+import FindUserSelect from "src/components/forms/FindUserSelect.vue"
+const props = defineProps({
+  id: {
+    type: String,
+    required: true,
+  },
+})
 
-export default {
-  components: {
-    UserList,
-  },
-  props: {
-    id: {
-      type: String,
-      required: true,
-    },
-  },
-  apollo: {
-    publication: {
-      query: GET_PUBLICATION,
-      variables() {
-        return {
-          id: this.id,
-        }
+const { result: pubResult } = useQuery(GET_PUBLICATION, { id: props.id })
+const publication = useResult(pubResult)
+
+const editor_candidate = ref(null)
+
+const editors = computed(() => {
+  return filterUsersByRoleId(publication.value.users, RoleMapper["editors"])
+})
+
+function filterUsersByRoleId(users, id) {
+  return users.filter((user) => {
+    return parseInt(user.pivot.role_id) === id
+  })
+}
+
+const { notify } = useQuasar()
+const { t } = useI18n()
+
+function makeNotify(color, icon, message, display_name = null) {
+  notify({
+    actions: [
+      {
+        label: "Close",
+        color: "white",
+        "data-cy": "button_dismiss_notify",
       },
+    ],
+    timeout: 50000,
+    color: color,
+    icon: icon,
+    message: t(message, { display_name }),
+    attrs: {
+      "data-cy": "publication_details_notify",
     },
-  },
-  data() {
-    return {
-      publication: {
-        name: "",
-        users: [],
-      },
-      options: [],
-      editor_candidate: null,
-    }
-  },
-  computed: {
-    editors: function () {
-      return this.filterUsersByRoleId(RoleMapper[`editors`])
-    },
-  },
-  methods: {
-    filterUsersByRoleId(id) {
-      return this.publication.users.filter((user) => {
-        return parseInt(user.pivot.role_id) === id
-      })
-    },
-    makeNotify(color, icon, message, display_name = null) {
-      this.$q.notify({
-        actions: [
-          {
-            label: "Close",
-            color: "white",
-            attrs: {
-              "data-cy": "button_dismiss_notify",
-            },
-          },
-        ],
-        timeout: 50000,
-        color: color,
-        icon: icon,
-        message: this.$t(message, { display_name }),
-        attrs: {
-          "data-cy": "publication_details_notify",
-        },
-        html: true,
-      })
-      this.is_submitting = false
-    },
-    async handleUserListClick({ user, action }) {
-      switch (action) {
-        case "unassignEditor":
-          await this.unassignUser("editor", user)
-          break
-      }
-    },
-    async assignUser(role_name, candidate_model) {
-      try {
-        await this.$apollo.mutate({
-          mutation: CREATE_PUBLICATION_USER,
-          variables: {
-            user_id: candidate_model.id,
-            role_id: RoleMapper[role_name],
-            publication_id: this.id,
-          },
-          refetchQueries: ["GetPublication"],
-        })
-        this.makeNotify(
-          "positive",
-          "check_circle",
-          `publications.${role_name}.assign.success`,
-          candidate_model.name ? candidate_model.name : candidate_model.username
-        )
-        this.resetForm()
-      } catch (error) {
-        this.makeNotify(
-          "negative",
-          "error",
-          `publications.${role_name}.assign.error`
-        )
-      }
-    },
-    resetForm() {
-      this.editor_candidate = null
-    },
-    async unassignUser(role_name, user) {
-      try {
-        await this.$apollo.mutate({
-          mutation: DELETE_PUBLICATION_USER,
-          variables: {
-            user_id: user.pivot.user_id,
-            role_id: RoleMapper[role_name],
-            publication_id: this.id,
-          },
-          refetchQueries: ["GetPublication"],
-        })
-        this.makeNotify(
-          "positive",
-          "check_circle",
-          `publications.${role_name}.unassign.success`,
-          user.name ? user.name : user.username
-        )
-      } catch (error) {
-        this.makeNotify(
-          "negative",
-          "error",
-          `publications.${role_name}.unassign.error`
-        )
-      }
-    },
-    filterFn(val, update) {
-      update(() => {
-        const needle = val.toLowerCase()
-        this.$apollo
-          .query({
-            query: SEARCH_USERS,
-            variables: {
-              term: needle,
-              page: this.current_page,
-            },
-          })
-          .then((searchdata) => {
-            var usersList = []
-            const dropdowndata = searchdata.data.userSearch.data
-            dropdowndata.forEach(function (currentValue, index) {
-              usersList[index] = currentValue
-            })
-            this.options = usersList
-          })
-          .catch((error) => {
-            console.log({ error })
-          })
-      })
-    },
-  },
+    html: true,
+  })
+}
+
+async function handleUserListClick({ user, action }) {
+  switch (action) {
+    case "unassignEditor":
+      await unassignUser("editor", user)
+      break
+  }
+}
+
+const { mutate: assignUserMutate } = useMutation(CREATE_PUBLICATION_USER, {
+  refetchQueries: ["GetPublication"],
+})
+
+async function assignUser(role_name, candidate_model) {
+  try {
+    await assignUserMutate({
+      user_id: candidate_model.id,
+      role_id: RoleMapper[role_name],
+      publication_id: props.id,
+    })
+    makeNotify(
+      "positive",
+      "check_circle",
+      `publications.${role_name}.assign.success`,
+      candidate_model.name ? candidate_model.name : candidate_model.username
+    )
+    resetForm()
+  } catch (error) {
+    makeNotify("negative", "error", `publications.${role_name}.assign.error`)
+  }
+}
+
+function resetForm() {
+  editor_candidate.value = null
+}
+
+const { mutate: unassignUserMutate } = useMutation(DELETE_PUBLICATION_USER, {
+  refetchQueries: ["GetPublication"],
+})
+
+async function unassignUser(role_name, user) {
+  try {
+    await unassignUserMutate({
+      user_id: user.pivot.user_id,
+      role_id: RoleMapper[role_name],
+      publication_id: props.id,
+    })
+    makeNotify(
+      "positive",
+      "check_circle",
+      `publications.${role_name}.unassign.success`,
+      user.name ? user.name : user.username
+    )
+  } catch (error) {
+    console.log(error)
+    makeNotify("negative", "error", `publications.${role_name}.unassign.error`)
+  }
 }
 </script>

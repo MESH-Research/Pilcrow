@@ -1,19 +1,26 @@
 import gql from "graphql-tag"
 
-export const CURRENT_USER = gql`
-  query currentUser {
-    currentUser {
-      username
-      id
+export const _CURRENT_USER_FIELDS = gql`
+  fragment currentUserFields on User {
+    username
+    name
+    email
+    email_verified_at
+    roles {
       name
-      email
-      email_verified_at
-      roles {
-        name
-      }
     }
   }
 `
+export const CURRENT_USER = gql`
+  query currentUser {
+    currentUser {
+      id
+      ...currentUserFields
+    }
+  }
+  ${_CURRENT_USER_FIELDS}
+`
+
 export const CURRENT_USER_NOTIFICATIONS = gql`
   query currentUserNotifications($page: Int) {
     currentUser {

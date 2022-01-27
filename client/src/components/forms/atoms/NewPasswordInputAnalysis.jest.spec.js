@@ -1,7 +1,9 @@
-import { shallowMount } from "@vue/test-utils"
 import PasswordFieldAnalysis from "./NewPasswordInputAnalysis.vue"
+import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-jest"
+import { mount } from "@vue/test-utils"
 import { merge } from "lodash"
-import { QIcon, QList, QItem, QItemSection } from "quasar"
+
+installQuasarPlugin()
 describe("NewPasswordInputAnalysis", () => {
   const mergeProps = (props = {}) => {
     return merge(
@@ -21,12 +23,13 @@ describe("NewPasswordInputAnalysis", () => {
     )
   }
 
-  const wrapper = shallowMount(PasswordFieldAnalysis, {
-    components: { QIcon, QItem, QItemSection, QList },
-    mocks: {
-      $t: (token) => token,
+  const wrapper = mount(PasswordFieldAnalysis, {
+    global: {
+      mocks: {
+        $t: (token) => token,
+      },
     },
-    propsData: mergeProps(),
+    props: mergeProps(),
   })
 
   it("mounts without errors", () => {
@@ -34,8 +37,7 @@ describe("NewPasswordInputAnalysis", () => {
   })
 
   it("correctly displays suggestions", async () => {
-    expect(wrapper.findAll(".suggestion").length).toBe(2)
-
+    expect(wrapper.findAllComponents(".suggestion").length).toBe(2)
     await wrapper.setProps(
       mergeProps({
         complexity: {
@@ -44,7 +46,7 @@ describe("NewPasswordInputAnalysis", () => {
       })
     )
     expect(wrapper.vm.suggestions.length).toBe(3)
-    const suggestions = wrapper.findAll(".suggestion")
+    const suggestions = wrapper.findAllComponents(".suggestion")
     expect(suggestions.length).toBe(3)
     expect(suggestions.at(1).html()).toContain("second suggestion")
   })
@@ -52,14 +54,13 @@ describe("NewPasswordInputAnalysis", () => {
   it("correctly displays warnings", async () => {
     expect(wrapper.vm.warning).toBe("warning_message")
 
-    const warning = wrapper.findAll(".warning")
-    expect(warning.length).toBe(1)
-    expect(warning.at(0).html()).toContain("warning_message")
+    const warning = wrapper.findComponent(".warning")
+    expect(warning.html()).toContain("warning_message")
 
     await wrapper.setProps(
       mergeProps({ complexity: { feedback: { warning: "" } } })
     )
 
-    expect(wrapper.findAll(".warning").length).toBe(0)
+    expect(wrapper.findComponent(".warning").exists()).toBe(false)
   })
 })

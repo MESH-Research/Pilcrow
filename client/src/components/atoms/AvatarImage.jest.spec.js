@@ -1,27 +1,15 @@
-import { mountQuasar } from "@quasar/quasar-app-extension-testing-unit-jest"
 import AvatarImage from "./AvatarImage.vue"
+import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-jest"
+import { mount } from "@vue/test-utils"
 
-import * as All from "quasar"
-
-const components = Object.keys(All).reduce((object, key) => {
-  const val = All[key]
-  if (val.component?.name != null) {
-    object[key] = val
-  }
-  return object
-}, {})
-
+installQuasarPlugin()
 describe("AvatarImage Component", () => {
   const factory = (email) => {
-    return mountQuasar(AvatarImage, {
-      quasar: { components },
-      propsData: {
+    return mount(AvatarImage, {
+      props: {
         user: {
           email,
         },
-      },
-      mount: {
-        type: "shallow",
       },
     })
   }

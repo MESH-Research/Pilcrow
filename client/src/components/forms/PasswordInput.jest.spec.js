@@ -1,17 +1,13 @@
-import { mountQuasar } from "@quasar/quasar-app-extension-testing-unit-jest"
-
 import PasswordInput from "./PasswordInput.vue"
+import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-jest"
+import { mount } from "@vue/test-utils"
 
-import { QIcon } from "quasar"
+installQuasarPlugin()
 describe("PasswordInputComponent", () => {
-  const wrapper = mountQuasar(PasswordInput, {
-    quasar: {
-      components: { QIcon },
-    },
-    mount: {
-      type: "full",
+  const wrapper = mount(PasswordInput, {
+    global: {
       mocks: {
-        $t: (token) => token,
+        $t: (t) => t,
       },
     },
   })
@@ -36,17 +32,21 @@ describe("PasswordInputComponent", () => {
   })
 
   it("switches input type when visibility button clicked", async () => {
-    await wrapper.findComponent(QIcon).trigger("click")
+    await wrapper.findComponent({ name: "q-icon" }).trigger("click")
 
     expect(wrapper.find("input").attributes("type")).toBe("text")
     expect(wrapper.find("i").attributes("aria-pressed")).toBe("true")
   })
 
   it("passes input event up the component tree", async () => {
-    const input = wrapper.find("input")
+    const input = wrapper.findComponent({ name: "q-input" })
 
-    input.setValue("test")
-    expect(wrapper.emitted("input")[0]).toEqual(["test"])
+    await input.setValue("test")
+
+    const updateEvent = wrapper.emitted("update:modelValue")
+
+    expect(updateEvent).toHaveLength(1)
+    expect(updateEvent[0]).toEqual(["test"])
   })
 
   it("has current-password autocomplete attr by default", () => {

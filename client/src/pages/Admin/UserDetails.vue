@@ -1,11 +1,11 @@
 <template>
-  <div v-if="$apollo.loading" class="q-pa-lg">
+  <div v-if="!user" class="q-pa-lg">
     {{ $t("loading") }}
   </div>
   <article v-else>
     <nav class="q-px-lg q-pt-md q-gutter-sm">
       <q-breadcrumbs>
-        <q-breadcrumbs-el :label="$tc('user.self', 2)" to="/admin/users" />
+        <q-breadcrumbs-el :label="$t('user.self', 2)" to="/admin/users" />
         <q-breadcrumbs-el :label="$t('user.details_heading')" />
       </q-breadcrumbs>
     </nav>
@@ -88,7 +88,7 @@
                 : 'col-3 text-right q-pr-lg'
             } text--grey`"
           >
-            {{ $tc("role.self", 2) }}
+            {{ $t("role.self", 2) }}
           </div>
           <div
             v-if="user.roles.length"
@@ -127,34 +127,18 @@
   </article>
 </template>
 
-<script>
+<script setup>
 import { GET_USER } from "src/graphql/queries"
 import AvatarImage from "src/components/atoms/AvatarImage.vue"
+import { useQuery, useResult } from "@vue/apollo-composable"
 
-export default {
-  components: {
-    AvatarImage,
+const props = defineProps({
+  id: {
+    type: String,
+    required: true,
   },
-  data() {
-    return {
-      user: {
-        name: null,
-        email: null,
-        username: null,
-        roles: [],
-      },
-      user_id: this.$route.params.id,
-    }
-  },
-  apollo: {
-    user: {
-      query: GET_USER,
-      variables() {
-        return {
-          id: this.user_id,
-        }
-      },
-    },
-  },
-}
+})
+
+const { result } = useQuery(GET_USER, { id: props.id })
+const user = useResult(result)
 </script>
