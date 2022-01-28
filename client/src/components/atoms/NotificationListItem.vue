@@ -30,11 +30,8 @@ import { Screen } from "quasar"
 import { flatten } from "flat"
 import iconMapper from "src/mappers/notification_icons"
 import TimeAgo from "javascript-time-ago"
-import en from "javascript-time-ago/locale/en.json"
 import { useMutation } from "@vue/apollo-composable"
 import { MARK_NOTIFICATION_READ } from "src/graphql/mutations"
-
-TimeAgo.addDefaultLocale(en)
 
 const timeAgo = new TimeAgo("en-US")
 /**
