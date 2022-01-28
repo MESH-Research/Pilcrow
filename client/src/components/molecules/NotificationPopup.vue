@@ -19,6 +19,7 @@
     />
 
     <q-popup-proxy
+      id="notifications-wrapper"
       ref="popupProxy"
       v-model="isVisible"
       max-width="400px"
@@ -52,7 +53,7 @@
 </template>
 
 <script setup>
-import { ref, watch, nextTick } from "vue"
+import { ref } from "vue"
 import { useQuery, useResult, useMutation } from "@vue/apollo-composable"
 import { CURRENT_USER_NOTIFICATIONS } from "src/graphql/queries"
 import NotificationListItem from "src/components/atoms/NotificationListItem.vue"
@@ -75,14 +76,6 @@ const hasUnreadNotifications = computed(() => {
     notificationItems.value.find((item) => item.data.read_at === null)
     ? true
     : false
-})
-watch(isVisible, (newValue) => {
-  if (newValue === false) {
-    return
-  }
-  nextTick(() => {
-    popupProxy.value.$refs.popup.$children[0].$el.id = "notifications-wrapper"
-  })
 })
 const { mutate: markAllNotificationsRead } = useMutation(
   MARK_ALL_NOTIFICATIONS_READ,
