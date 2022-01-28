@@ -46,6 +46,9 @@ describe("Publication Details", () => {
     cy.get("#input_editor_assignee").type("applicationAd{backspace}{backspace}")
     cy.dataCy("result_editor_assignee").click()
     cy.dataCy("button_assign_editor").click()
+    // Type characters to delay the a11y checker and prevent a false positive
+    // a11y violation before publication_details_notify fully fades in
+    cy.get("#input_editor_assignee").type("allow notify to fully fade in")
     cy.injectAxe()
     cy.dataCy("publication_details_notify")
       .should("be.visible")
