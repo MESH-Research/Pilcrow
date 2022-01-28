@@ -30,7 +30,7 @@ describe("CollapseToolbar", () => {
   test("transparent wrapper when not collapsed", () => {
     const wrapper = makeWrapper(defaultContent, {})
 
-    const items = wrapper.findAll("[data-v-app=''] > div")
+    const items = wrapper.findAll("[data-v-app=''] > div > div")
     expect(items).toHaveLength(2)
     expect(items[0].classes()).toContain("btn-1")
   })
