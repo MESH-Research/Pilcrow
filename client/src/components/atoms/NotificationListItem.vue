@@ -24,9 +24,6 @@ import { Screen } from "quasar"
 import { flatten } from "flat"
 import iconMapper from "src/mappers/notification_icons"
 import TimeAgo from "javascript-time-ago"
-import en from "javascript-time-ago/locale/en.json"
-
-TimeAgo.addDefaultLocale(en)
 
 const timeAgo = new TimeAgo("en-US")
 /**
