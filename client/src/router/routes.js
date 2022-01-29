@@ -31,7 +31,7 @@ const routes = [
           },
           {
             path: "metadata",
-            component: () => import("pages/Account/Metadata.vue"),
+            component: () => import("src/pages/Account/MetadataPage.vue"),
           },
         ],
       },

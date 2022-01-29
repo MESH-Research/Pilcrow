@@ -188,7 +188,7 @@ import {
   useSocialFieldWatchers,
 } from "src/use/profileMetadata"
 import { useMutation, useQuery, useResult } from "@vue/apollo-composable"
-import { useDirtyGuard } from "src/use/forms"
+import { useDirtyGuard, useFormState } from "src/use/forms"
 import { CURRENT_USER_METADATA } from "src/graphql/queries"
 import { UPDATE_PROFILE_METADATA } from "src/graphql/mutations"
 import { isEqual } from "lodash"
@@ -204,7 +204,7 @@ export default defineComponent({
     VQInput,
     VQWrap,
   },
-  setup(_, context) {
+  setup() {
     const saved = ref(false)
 
     const form = reactive(applyDefaults({}))
@@ -215,7 +215,8 @@ export default defineComponent({
       return applyDefaults(profile_metadata.value)
     })
 
-    const { result, loading } = useQuery(CURRENT_USER_METADATA)
+    const userQuery = useQuery(CURRENT_USER_METADATA)
+    const { result } = userQuery
     const profile_metadata = useResult(
       result,
       applyDefaults({}),
@@ -232,36 +233,13 @@ export default defineComponent({
       return !isEqual(original.value, form)
     })
 
-    useDirtyGuard(dirty, context)
+    useDirtyGuard(dirty)
 
-    const formState = computed(() => {
-      if (loading.value) {
-        return "loading"
-      }
-      if (saving.value) {
-        return "saving"
-      }
-      if (dirty.value) {
-        return "dirty"
-      }
-      if (saved.value) {
-        return "saved"
-      }
-      return "idle"
-    })
+    const saveMutation = useMutation(UPDATE_PROFILE_METADATA)
 
-    const { mutate: saveProfile, loading: saving } = useMutation(
-      UPDATE_PROFILE_METADATA
-      //   () => ({
-      //     update: (cache) => {
-      //       cache.writeQuery({
-      //         query: CURRENT_USER,
-      //         data: { currentUser: {} },
-      //       })
-      //     },
-      //   })
-    )
+    const formState = useFormState(dirty, saved, [userQuery], [saveMutation])
 
+    const { mutate: saveProfile } = saveMutation
     function resetForm() {
       Object.assign(form, applyDefaults(original.value))
       saved.value = false
