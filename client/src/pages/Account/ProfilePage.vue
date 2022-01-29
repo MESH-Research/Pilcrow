@@ -51,7 +51,7 @@
           v-text="$t(`account.update.${formErrorMsg}`)"
         />
       </form-section>
-      <form-actions>{{ dirty }} </form-actions>
+      <form-actions :form-state="formState" @reset-click="onRevert" />
     </q-form>
   </div>
 </template>
@@ -66,7 +66,8 @@ import { useQuasar } from "quasar"
 import { useMutation } from "@vue/apollo-composable"
 import { reactive, ref, computed, onMounted } from "vue"
 import { useI18n } from "vue-i18n"
-
+import { useFormState, useDirtyGuard } from "src/use/forms"
+//TODO: ProfilePage form needs vuelidate/validation
 const importValidationErrors = function (error, vm) {
   const gqlErrors = error?.graphQLErrors ?? []
   var hasVErrors = false
@@ -89,13 +90,19 @@ const form = reactive({
   username: "",
   password: "",
 })
+
 const isPwd = ref(true)
 const formErrorMsg = ref("")
+const saved = ref(false)
 
-const { currentUser } = useCurrentUser()
+const { currentUserQuery, currentUser } = useCurrentUser()
 
 const dirty = computed(() => {
-  return !isEqual(form, currentUser)
+  return !isEqual(form, original.value)
+})
+
+const original = computed(() => {
+  return { ...pickFields(currentUser.value), password: "" }
 })
 
 function pickFields(obj) {
@@ -103,19 +110,30 @@ function pickFields(obj) {
 }
 
 function onRevert() {
-  Object.assign(form, pickFields(currentUser.value))
+  Object.assign(form, original.value)
 }
 
 onMounted(() => {
   onRevert()
 })
 
-const { mutate } = useMutation(UPDATE_USER)
+const updateUserMutation = useMutation(UPDATE_USER)
+const { mutate } = updateUserMutation
+
+useDirtyGuard(dirty)
+const formState = useFormState(
+  dirty,
+  saved,
+  [currentUserQuery],
+  [updateUserMutation]
+)
+
 const { notify } = useQuasar()
 const { t } = useI18n()
 
 async function updateUser() {
   formErrorMsg.value = ""
+  saved.value = false
   const vars = { ...form }
 
   if ((vars?.password?.length ?? 0) === 0) {
@@ -134,6 +152,7 @@ async function updateUser() {
       },
       html: true,
     })
+    saved.value = true
   } catch (error) {
     if (importValidationErrors(error, this)) {
       formErrorMsg.value = "update_form_validation"
