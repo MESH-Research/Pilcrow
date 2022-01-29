@@ -74,9 +74,8 @@ describe("VQInput", () => {
     const input = wrapper.find("input")
     input.setValue("tstValue")
 
-    expect(updater.mock.calls.length).toBe(1)
-    expect(updater.mock.calls[0][0]).toEqual(stub)
-    expect(updater.mock.calls[0][1]).toEqual("tstValue")
+    expect(updater).toHaveBeenCalledTimes(1)
+    expect(updater).toHaveBeenCalledWith(stub, "tstValue")
   })
 
   test("shows skeleton component from provided formState", async () => {
