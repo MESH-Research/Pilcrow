@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import { provide, toRef } from "vue"
+import { provide } from "vue"
 export default {
   props: {
     /**
@@ -16,19 +16,10 @@ export default {
       type: [String, Boolean],
       default: false,
     },
-    /**
-     * Provide formState to VQInput components to allow inputs to adapt to form states.
-     * @values "Saved", "Saving", "Idle", "Dirty", "Error"
-     */
-    formState: {
-      type: [String, Boolean],
-      default: "",
-    },
   },
   emits: ["vqupdate"],
   setup(props, { emit }) {
     provide("tPrefix", props.tPrefix)
-    provide("formState", toRef(props, "formState"))
     provide("vqupdate", (validator, value) => {
       /**
        * VQInputs will emit their vqupdate events from this component instead of locally.

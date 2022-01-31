@@ -6,6 +6,9 @@
           <slot />
         </template>
         <template v-else>
+          <q-banner v-if="state === 'error'" class="text-white bg-red" dense>
+            {{ errorMessage }}
+          </q-banner>
           <q-btn
             :disabled="saveDisabled"
             :class="saveClassList"
@@ -30,85 +33,69 @@
   </q-page-sticky>
 </template>
 
-<script>
-import { computed } from "vue"
+<script setup>
+import { computed, inject } from "vue"
 
-export default {
-  name: "FormActions",
-  props: {
-    formState: {
-      type: String,
-      default: "idle",
-    },
-  },
-  emits: ["resetClick"],
-  setup(props) {
-    const saveClassList = computed(() => {
-      const classes = {
-        saved: "bg-positive text-white",
-        dirty: "bg-primary text-white",
-      }
-      return classes[props.formState] ?? "bg-grey-3"
-    })
-    const saveCyAttr = computed(() => {
-      return (
-        {
-          saving: "button_saving",
-          saved: "button_saved",
-        }[props.formState] ?? "button_save"
-      )
-    })
-    const saveText = computed(() => {
-      return (
-        {
-          saving: "buttons.saving",
-          saved: "buttons.saved",
-        }[props.formState] ?? "buttons.save"
-      )
-    })
-    const saveDisabled = computed(() => {
-      return (
-        {
-          saved: false,
-          dirty: false,
-        }[props.formState] ?? true
-      )
-    })
-    const saveIcon = computed(() => {
-      return (
-        {
-          saved: "check",
-          saving: "spinner",
-        }[props.formState] ?? ""
-      )
-    })
+const { state, errorMessage } = inject("formState")
 
-    const resetDisabled = computed(() => {
-      return (
-        {
-          dirty: false,
-        }[props.formState] ?? true
-      )
-    })
+defineEmits(["resetClick"])
 
-    const visible = computed(() => {
-      return (
-        {
-          idle: false,
-          loading: false,
-        }[props.formState] ?? true
-      )
-    })
+const saveClassList = computed(() => {
+  const classes = {
+    saved: "bg-positive text-white",
+    dirty: "bg-primary text-white",
+  }
+  return classes[state.value] ?? "bg-grey-3"
+})
+const saveCyAttr = computed(() => {
+  return (
+    {
+      saving: "button_saving",
+      saved: "button_saved",
+    }[state.value] ?? "button_save"
+  )
+})
+const saveText = computed(() => {
+  return (
+    {
+      saving: "buttons.saving",
+      saved: "buttons.saved",
+    }[state.value] ?? "buttons.save"
+  )
+})
+const saveDisabled = computed(() => {
+  return (
+    {
+      saved: false,
+      dirty: false,
+      error: false,
+    }[state.value] ?? true
+  )
+})
+const saveIcon = computed(() => {
+  return (
+    {
+      saved: "check",
+      saving: "spinner",
+    }[state.value] ?? ""
+  )
+})
 
-    return {
-      saveClassList,
-      saveCyAttr,
-      saveText,
-      saveDisabled,
-      saveIcon,
-      resetDisabled,
-      visible,
-    }
-  },
-}
+const resetDisabled = computed(() => {
+  return (
+    {
+      dirty: false,
+      error: false,
+    }[state.value] ?? true
+  )
+})
+
+const visible = computed(() => {
+  return (
+    {
+      idle: false,
+      loading: false,
+    }[state.value] ?? true
+  )
+})
 </script>

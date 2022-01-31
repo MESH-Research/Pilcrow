@@ -1,5 +1,5 @@
 import DiscardChangesDialog from "src/components/dialogs/DiscardChangesDialog.vue"
-import { computed, onMounted, onUnmounted } from "vue"
+import { computed, onMounted, onUnmounted, ref } from "vue"
 import { onBeforeRouteLeave } from "vue-router"
 import { useQuasar } from "quasar"
 
@@ -39,41 +39,34 @@ export function useDirtyGuard(dirtyRef) {
   })
 }
 
-export function useFormState(dirtyRef, savedRef, queries, mutations) {
-  const queryLoading = computed(() => {
-    if (Array.isArray(queries)) {
-      if (queries.find((i) => i.loading.value)) {
-        return true
-      }
-      return false
-    }
-    return queries.loading
-  })
-
-  const mutationLoading = computed(() => {
-    if (Array.isArray(mutations)) {
-      if (mutations.find((i) => i.loading.value)) {
-        return true
-      }
-      return false
-    }
-    return mutations.loading
-  })
-
-  return computed(() => {
-    if (mutationLoading.value) {
+export function useFormState(queryLoadingRef, mutationLoadingRef) {
+  const dirty = ref(false)
+  const saved = ref(false)
+  const errorMessage = ref("")
+  const state = computed(() => {
+    if (mutationLoadingRef.value) {
       return "saving"
     }
-    if (queryLoading.value) {
+    if (queryLoadingRef.value) {
       return "loading"
     }
-    if (dirtyRef.value) {
+    if (errorMessage.value) {
+      return "error"
+    }
+    if (dirty.value) {
       return "dirty"
     }
-    if (savedRef.value) {
+    if (saved.value) {
       return "saved"
     }
     return "idle"
   })
+  return {
+    state,
+    saved,
+    dirty,
+    queryLoading: queryLoadingRef,
+    mutationLoading: mutationLoadingRef,
+    errorMessage,
+  }
 }
-export default { useDirtyGuard, useFormState }

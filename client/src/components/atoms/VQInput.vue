@@ -108,7 +108,7 @@ const fullTKey = (key) => {
 function clearInput() {
   input.value.blur()
 }
-const parentState = inject("formState", null)
+const { state: parentState } = inject("formState", null)
 
 const formState = computed(() => {
   if (parentState) {
