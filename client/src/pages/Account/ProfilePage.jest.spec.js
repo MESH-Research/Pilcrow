@@ -13,6 +13,8 @@ jest.mock("vue-i18n", () => ({
   }),
 }))
 
+jest.mock("src/use/forms")
+
 jest.mock("quasar", () => ({
   ...jest.requireActual("quasar"),
   useQuasar: () => ({
