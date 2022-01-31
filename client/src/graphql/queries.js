@@ -69,7 +69,7 @@ export const CURRENT_USER_SUBMISSIONS = gql`
 `
 
 export const GET_USERS = gql`
-  query users($page: Int) {
+  query GetUsers($page: Int) {
     userSearch(page: $page) {
       paginatorInfo {
         count
@@ -101,7 +101,7 @@ export const GET_USER = gql`
 `
 
 export const SEARCH_USERS = gql`
-  query users($term: String, $page: Int) {
+  query SearchUsers($term: String, $page: Int) {
     userSearch(term: $term, page: $page) {
       paginatorInfo {
         count
