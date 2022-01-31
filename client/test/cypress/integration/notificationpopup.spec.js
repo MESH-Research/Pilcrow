@@ -12,7 +12,7 @@ describe("Notification Popup", () => {
     cy.dataCy("dropdown_notificiations").click()
     cy.dataCy("notification_list_item").eq(0).click()
     cy.dataCy("notification_list_item").eq(0).should("not.have.class", "unread")
-    cy.dataCy("notification_list_item").eq(1).should("have.class", "read")
+    cy.dataCy("notification_list_item").eq(1).should("have.class", "unread")
   })
 
   it("allows multiple notifications to be marked as read", () => {
