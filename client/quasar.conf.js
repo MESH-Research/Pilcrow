@@ -41,7 +41,7 @@ module.exports = configure(function () {
       //            (not treeshaking Quasar; biggest bundle size; convenient)
       importStrategy: "auto",
 
-      components: [],
+      components: ["QList"],
       directives: [],
 
       // Quasar plugins
