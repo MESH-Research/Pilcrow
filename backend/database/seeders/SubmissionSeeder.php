@@ -14,7 +14,7 @@ class SubmissionSeeder extends Seeder
     /**
      * Seed a submission with the following roles:
      * - Submitter: regularUser
-     * - Review Coordinator: supplied user
+     * - Review Coordinator: reviewCoordinator
      *
      * @param int $id
      * @param string $title
