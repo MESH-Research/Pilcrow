@@ -8,7 +8,7 @@
   >
     <q-badge v-if="!note.read_at" />
     <q-item-section side class="q-px-md">
-      <q-icon :size="iconSize" :name="iconMapper(note.type)" />
+      <q-icon :size="iconSize" :name="iconMapper(note.data.type)" />
     </q-item-section>
     <q-item-section>
       <p class="q-pa-none q-ma-none">
@@ -80,7 +80,7 @@ const handleClick = async (notification_id) => {
  * The parsed translation key to use for the supplied note
  */
 const tKey = computed(() => {
-  return `notifications.${props.note.type}.short`
+  return `notifications.${props.note.data.type}.short`
 })
 /**
  * Flattened version of the note for passing to i18n
@@ -90,8 +90,10 @@ const flattened = computed(() => {
 
   const mutated_keys = {}
   Object.keys(flattened).forEach((k) => {
-    mutated_keys[k.replaceAll(".", "_")] = flattened[k]
+    // console.log("k", k.replaceAll("data.", "").replaceAll(".", "_"))
+    mutated_keys[k.replaceAll("data.", "").replaceAll(".", "_")] = flattened[k]
   })
+  console.log("mutated", mutated_keys)
   return mutated_keys
 })
 /**

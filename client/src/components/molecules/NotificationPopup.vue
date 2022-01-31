@@ -73,7 +73,7 @@ const notificationItems = useResult(
 )
 const hasUnreadNotifications = computed(() => {
   return notificationItems.value.length > 0 &&
-    notificationItems.value.find((item) => item.data.read_at === null)
+    notificationItems.value.find((item) => item.read_at === null)
     ? true
     : false
 })
