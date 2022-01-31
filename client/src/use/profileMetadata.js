@@ -23,6 +23,19 @@ export const social_regex = {
   },
 }
 
+export const website_rules = {
+  maxLength: maxLength(128),
+  valid: helpers.regex(weburl_regex),
+}
+export const keyword_rules = {
+  maxLength: maxLength(128),
+}
+
+const validWebsites = (value) =>
+  Array.isArray(value)
+    ? value.every((v) => v.match(weburl_regex) !== null)
+    : true
+
 export const rules = {
   professional_title: { maxLength: maxLength(256) },
   specialization: { maxLength: maxLength(256) },
@@ -51,6 +64,9 @@ export const rules = {
     humanities_commons: { maxLength: maxLength(128) },
     orcid: { maxLength: maxLength(128) },
   },
+  websites: {
+    validWebsites,
+  },
 }
 
 export const profile_defaults = {
@@ -73,14 +89,6 @@ export const profile_defaults = {
     academia_edu_id: "",
     humanities_commons: "",
   },
-}
-
-export const website_rules = {
-  maxLength: maxLength(128),
-  valid: helpers.regex(weburl_regex),
-}
-export const keyword_rules = {
-  maxLength: maxLength(128),
 }
 
 export function useSocialFieldWatchers(form) {
