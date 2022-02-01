@@ -293,7 +293,7 @@ class NotificationTest extends TestCase
             }'
         );
         $expected_response = [
-            'markAllNotificationsRead' => 2
+            'markAllNotificationsRead' => 2,
         ];
         $response->assertJsonPath('data', $expected_response);
         $this->assertEquals(0, $user->unreadNotifications()->count());
@@ -318,7 +318,7 @@ class NotificationTest extends TestCase
             }'
         );
         $expected_response = [
-            'markAllNotificationsRead' => 0
+            'markAllNotificationsRead' => 0,
         ];
         $response->assertJsonPath('data', $expected_response);
         $this->assertEquals(2, $user_2->unreadNotifications()->count());
