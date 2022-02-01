@@ -43,9 +43,6 @@ describe("Nofitication Popup", () => {
         },
       },
     ]
-    if (readStatus === "read") {
-      data[0]["read_at"] = "2021-12-31 12:15:15"
-    }
     return data
   }
 
