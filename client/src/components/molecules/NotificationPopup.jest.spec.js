@@ -59,7 +59,7 @@ describe("Nofitication Popup", () => {
     const { wrapper, mockClient } = wrapperFactory()
     const queryHandler = jest
       .fn()
-      .mockResolvedValue(getNotificationData("unread"))
+      .mockResolvedValue(getNotificationData(false))
     mockClient.setRequestHandler(CURRENT_USER_NOTIFICATIONS, queryHandler)
     const indicator = wrapper.findComponent({ ref: "notification_indicator" })
     expect(indicator).toBeTruthy()
