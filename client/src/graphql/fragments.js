@@ -11,7 +11,6 @@ export const _PROFILE_METADATA_FIELDS = gql`
       interest_keywords
       disinterest_keywords
       social_media {
-        google
         twitter
         instagram
         facebook
