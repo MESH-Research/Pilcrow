@@ -228,7 +228,7 @@ export default {
     submission: {
       created: {
         short:
-          "{user_username} has submitted {submission_title} to {publication_name}",
+          "{data_user_username} has submitted {data_submission_title} to {data_publication_name}",
       },
       approved: {
         short: "{object_name} has been approved",

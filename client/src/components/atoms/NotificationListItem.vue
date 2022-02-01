@@ -86,15 +86,7 @@ const tKey = computed(() => {
  * Flattened version of the note for passing to i18n
  */
 const flattened = computed(() => {
-  const flattened = flatten(props.note)
-
-  const mutated_keys = {}
-  Object.keys(flattened).forEach((k) => {
-    // console.log("k", k.replaceAll("data.", "").replaceAll(".", "_"))
-    mutated_keys[k.replaceAll("data.", "").replaceAll(".", "_")] = flattened[k]
-  })
-  console.log("mutated", mutated_keys)
-  return mutated_keys
+  return flatten(props.note, { delimiter: "_" })
 })
 /**
  * Relative representation of the note's time property
