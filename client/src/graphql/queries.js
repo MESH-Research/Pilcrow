@@ -34,6 +34,7 @@ export const CURRENT_USER_NOTIFICATIONS = gql`
         }
         data {
           id
+          read_at
           data {
             user {
               username
@@ -46,7 +47,6 @@ export const CURRENT_USER_NOTIFICATIONS = gql`
             }
             type
             body
-            read_at
           }
         }
       }

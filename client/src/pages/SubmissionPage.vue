@@ -194,7 +194,7 @@ const { mutate: createMutate } = useMutation(CREATE_SUBMISSION, {
   context: {
     hasUpload: true,
   },
-  refetchQueries: ["GetSubmissions"],
+  refetchQueries: ["GetSubmissions", "currentUserNotifications"],
 })
 
 async function createNewSubmission() {

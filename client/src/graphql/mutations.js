@@ -197,3 +197,17 @@ export const DELETE_SUBMISSION_USER = gql`
     }
   }
 `
+
+export const MARK_NOTIFICATION_READ = gql`
+  mutation MarkNotificationRead($notification_id: ID!) {
+    markNotificationRead(id: $notification_id) {
+      read_at
+    }
+  }
+`
+
+export const MARK_ALL_NOTIFICATIONS_READ = gql`
+  mutation MarkAllNotificationsRead {
+    markAllNotificationsRead
+  }
+`

@@ -18,5 +18,8 @@ class SubmissionFileSeeder extends Seeder
         SubmissionFile::factory()->count(2)->create([
             'submission_id' => 100,
         ]);
+        SubmissionFile::factory()->count(1)->create([
+            'submission_id' => 101,
+        ]);
     }
 }

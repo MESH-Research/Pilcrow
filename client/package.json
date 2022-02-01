@@ -36,7 +36,7 @@
     "lodash": "^4.17.20",
     "luxon": "^2.1.1",
     "quasar": "2",
-    "vue-i18n": "^9.2.0-beta.26",
+    "vue-i18n": "^9.2.0-beta.30",
     "zxcvbn": "^4.4.2"
   },
   "devDependencies": {
