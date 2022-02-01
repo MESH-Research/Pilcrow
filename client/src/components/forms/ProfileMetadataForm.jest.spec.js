@@ -3,8 +3,19 @@ import { mount } from "@vue/test-utils"
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-jest"
 import { useFormState } from "src/use/forms"
 import flushPromises from "flush-promises"
+import { ref as mockRef } from "vue"
 
-jest.mock("src/use/forms")
+jest.mock("src/use/forms", () => ({
+  useDirtyGuard: () => {},
+  useFormState: () => ({
+    dirty: mockRef(false),
+    saved: mockRef(false),
+    state: mockRef("idle"),
+    queryLoading: mockRef(false),
+    mutationLoading: mockRef(false),
+    errorMessage: mockRef(""),
+  }),
+}))
 
 installQuasarPlugin()
 describe("ProfileMetadataForm", () => {

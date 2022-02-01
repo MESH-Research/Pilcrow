@@ -1,5 +1,9 @@
 <template>
-  <profile-metadata-form :profile-metadata="profileMetadata" @save="save" />
+  <profile-metadata-form
+    ref="form"
+    :profile-metadata="profileMetadata"
+    @save="save"
+  />
 </template>
 
 <script setup>
@@ -15,7 +19,6 @@ const metadataQuery = useQuery(CURRENT_USER_METADATA)
 const metadataMutation = useMutation(UPDATE_PROFILE_METADATA)
 
 const formState = useFormState(metadataQuery.loading, metadataMutation.loading)
-
 provide("formState", formState)
 
 const profileMetadata = useResult(
@@ -26,7 +29,7 @@ const profileMetadata = useResult(
 
 const currentUserId = useResult(
   metadataQuery.result,
-  {},
+  null,
   (data) => data.currentUser.id
 )
 

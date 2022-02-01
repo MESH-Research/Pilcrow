@@ -44,14 +44,8 @@
             />
           </template>
         </q-input>
-        <q-banner
-          v-if="formErrorMsg"
-          dense
-          class="form-error text-white bg-red text-center"
-          v-text="$t(`account.update.${formErrorMsg}`)"
-        />
       </form-section>
-      <form-actions :form-state="formState" @reset-click="onRevert" />
+      <form-actions @reset-click="onRevert" />
     </q-form>
   </div>
 </template>
@@ -64,7 +58,7 @@ import FormActions from "src/components/molecules/FormActions.vue"
 import { useCurrentUser } from "src/use/user"
 import { useQuasar } from "quasar"
 import { useMutation } from "@vue/apollo-composable"
-import { reactive, ref, computed, onMounted } from "vue"
+import { reactive, ref, computed, onMounted, provide, watchEffect } from "vue"
 import { useI18n } from "vue-i18n"
 import { useFormState, useDirtyGuard } from "src/use/forms"
 //TODO: ProfilePage form needs vuelidate/validation
@@ -92,8 +86,6 @@ const form = reactive({
 })
 
 const isPwd = ref(true)
-const formErrorMsg = ref("")
-const saved = ref(false)
 
 const { currentUserQuery, currentUser } = useCurrentUser()
 
@@ -122,17 +114,21 @@ const { mutate } = updateUserMutation
 
 useDirtyGuard(dirty)
 const formState = useFormState(
-  dirty,
-  saved,
-  [currentUserQuery],
-  [updateUserMutation]
+  currentUserQuery.loading,
+  updateUserMutation.loading
 )
+
+const { saved, errorMessage, dirty: dirtyState } = formState
+provide("formState", formState)
+watchEffect(() => {
+  dirtyState.value = dirty.value
+})
 
 const { notify } = useQuasar()
 const { t } = useI18n()
 
 async function updateUser() {
-  formErrorMsg.value = ""
+  errorMessage.value = ""
   saved.value = false
   const vars = { ...form }
 
@@ -155,9 +151,9 @@ async function updateUser() {
     saved.value = true
   } catch (error) {
     if (importValidationErrors(error, this)) {
-      formErrorMsg.value = "update_form_validation"
+      errorMessage.value = "update_form_validation"
     } else {
-      formErrorMsg.value = "update_form_internal"
+      errorMessage.value = "update_form_internal"
     }
   }
 }

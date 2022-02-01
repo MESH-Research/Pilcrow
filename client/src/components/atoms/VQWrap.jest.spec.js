@@ -34,9 +34,6 @@ describe("VQWrap", () => {
   test("provides supplied props", () => {
     makeWrapper({ tPrefix: "testPrefix", formState: "idle" })
     expect(provide).toBeCalledWith(expect.anything(), "testPrefix")
-    const formState = provide.mock.calls.find((call) => call[0] === "formState")
-    expect(formState[1]).toBeTruthy()
-    expect(formState[1].value).toBe("idle")
   })
 
   test("emits update event", () => {

@@ -1,20 +1,38 @@
 import { mount } from "@vue/test-utils"
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-jest"
 import { useVuelidate } from "@vuelidate/core"
-import { reactive, ref } from "vue"
+import { reactive } from "vue"
 import { nextTick } from "vue"
 import VQInput from "./VQInput"
+import { ref as mockRef } from "vue"
+import { useFormState } from "src/use/forms"
 
 jest.mock("vue-i18n", () => ({
   useI18n: () => ({
     te: (t) => t,
   }),
 }))
+
+jest.mock("src/use/forms", () => ({
+  useDirtyGuard: () => {},
+  useFormState: () => ({
+    dirty: mockRef(false),
+    saved: mockRef(false),
+    state: mockRef("idle"),
+    queryLoading: mockRef(false),
+    mutationLoading: mockRef(false),
+    errorMessage: mockRef(""),
+  }),
+}))
+
 installQuasarPlugin()
 const factory = (props, provide) => {
   return mount(VQInput, {
     global: {
-      provide: provide,
+      provide: {
+        formState: useFormState(),
+        ...provide,
+      },
       mocks: {
         $t: (token) => token,
         $te: () => true,
@@ -80,13 +98,12 @@ describe("VQInput", () => {
 
   test("shows skeleton component from provided formState", async () => {
     const stub = reactive(vuelidateStub)
-    const formState = ref("idle")
 
-    const wrapper = factory({ v: stub }, { formState })
+    const wrapper = factory({ v: stub })
 
     expect(wrapper.findComponent({ name: "q-input" }).exists()).toBe(true)
 
-    formState.value = "loading"
+    wrapper.vm.parentState = "loading"
     await nextTick()
 
     expect(wrapper.findComponent({ name: "q-input" }).exists()).toBe(false)
