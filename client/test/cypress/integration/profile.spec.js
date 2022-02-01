@@ -33,11 +33,9 @@ describe("Profile", () => {
     const site2 = "https://yahoo.com"
     cy.dataCy("add_website").type(site1 + "{enter}")
     cy.dataCy("add_website").type(site2 + "{enter}")
-    cy.dataCy("collapse_toolbar_1").click()
     cy.dataCy("arrow_upward_website_1").click()
     cy.dataCy("button_save").click()
     cy.dataCy("button_saved").contains("Saved")
-    cy.dataCy("collapse_toolbar_0").click()
     cy.dataCy("edit_btn_website_0").click()
     cy.dataCy("edit_input_website_0").should("have.value", site2)
   })
