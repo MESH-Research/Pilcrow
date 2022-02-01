@@ -16,13 +16,13 @@
       <h2 class="col-sm-12" data-cy="publication_details_heading">
         {{ publication.name }}
       </h2>
-      <p v-if="publication.is_publicly_visible">
-        This publication is not private and is visible to all users in CCR.
-      </p>
-      <p v-else>
-        This publication is private and meant to be invisible to those outside
-        of this publication.
-      </p>
+      <div v-if="publication.is_publicly_visible">
+        <p>This publication is not private and is visible to all users in CCR.</p>
+      </div>
+      <div v-else>
+        <p>This publication is private and meant to be invisible to those outside
+        of this publication.</p>
+      </div>
     </div>
     <div class="row q-col-gutter-lg q-pa-lg">
       <section class="col-md-5 col-sm-6 col-xs-12">
