@@ -287,11 +287,15 @@ class NotificationTest extends TestCase
         $user->notify(new SubmissionCreated($notification_data_1));
         $notification_data_2 = $this->getSampleNotificationData($user, 1013);
         $user->notify(new SubmissionCreated($notification_data_2));
-        $this->graphQL(
+        $response = $this->graphQL(
             'mutation MarkAllNotificationsRead {
                 markAllNotificationsRead
             }'
         );
+        $expected_response = [
+            'markAllNotificationsRead' => 2
+        ];
+        $response->assertJsonPath('data', $expected_response);
         $this->assertEquals(0, $user->unreadNotifications()->count());
     }
 
@@ -308,11 +312,15 @@ class NotificationTest extends TestCase
         $user_2->notify(new SubmissionCreated($notification_data_1));
         $notification_data_2 = $this->getSampleNotificationData($user_2, 1015);
         $user_2->notify(new SubmissionCreated($notification_data_2));
-        $this->graphQL(
+        $response = $this->graphQL(
             'mutation MarkAllNotificationsRead {
                 markAllNotificationsRead
             }'
         );
+        $expected_response = [
+            'markAllNotificationsRead' => 0
+        ];
+        $response->assertJsonPath('data', $expected_response);
         $this->assertEquals(2, $user_2->unreadNotifications()->count());
     }
 }
