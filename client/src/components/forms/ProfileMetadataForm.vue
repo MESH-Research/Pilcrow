@@ -214,7 +214,7 @@ import { mapObject } from "src/utils/objUtils"
 const props = defineProps({
   profileMetadata: {
     required: true,
-    type: Object,
+    validator: (v) => v === null || typeof v === "object",
   },
 })
 
@@ -228,7 +228,8 @@ const v$ = useVuelidate(rules, form)
 useSocialFieldWatchers(form)
 
 const original = computed(() => {
-  return applyDefaults(profileMetadata.value)
+  const originalData = profileMetadata.value ?? {}
+  return applyDefaults(originalData)
 })
 
 watchEffect(() => {
