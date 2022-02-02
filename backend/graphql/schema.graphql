@@ -111,6 +111,14 @@ type Mutation {
 
     "Create an association between an uploaded file and a submission"
     createSubmissionFile(input: CreateSubmissionFileInput! @spread): SubmissionFile!
+
+    "Mark a user notification as read"
+    markNotificationRead(id: ID!): Notification!
+        @field(resolver: "App\\GraphQL\\Mutations\\MarkNotificationRead@markAsRead")
+
+    "Mark all of a user's notification as read"
+    markAllNotificationsRead: Int
+        @field(resolver: "App\\GraphQL\\Mutations\\MarkNotificationRead@markAllAsRead")
 }
 
 "A date string with format `Y-m-d`, e.g. `2011-05-23`."

@@ -754,7 +754,9 @@ class SubmissionTest extends TestCase
                 ],
             );
         }
-        $query_response->assertJsonPath('data', $expected_query_response);
+        $query_response_json = $query_response->decodeResponseJson();
+        $query_response_value = AssertableJson::fromAssertableJsonString($query_response_json);
+        $this->assertEquals($expected_query_response, $query_response_value->toArray()['data']);
     }
 
     /**

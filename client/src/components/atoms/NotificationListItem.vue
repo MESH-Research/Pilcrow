@@ -1,8 +1,14 @@
 <template>
-  <q-item clickable :class="{ unread: !note.read_at }" class="q-pl-none">
+  <q-item
+    clickable
+    :class="{ unread: !note.read_at }"
+    data-cy="notification_list_item"
+    class="q-pl-none"
+    @click="handleClick(note.id)"
+  >
     <q-badge v-if="!note.read_at" />
     <q-item-section side class="q-px-md">
-      <q-icon :size="iconSize" :name="iconMapper(note.type)" />
+      <q-icon :size="iconSize" :name="iconMapper(note.data.type)" />
     </q-item-section>
     <q-item-section>
       <p class="q-pa-none q-ma-none">
@@ -24,6 +30,8 @@ import { Screen } from "quasar"
 import { flatten } from "flat"
 import iconMapper from "src/mappers/notification_icons"
 import TimeAgo from "javascript-time-ago"
+import { useMutation } from "@vue/apollo-composable"
+import { MARK_NOTIFICATION_READ } from "src/graphql/mutations"
 
 const timeAgo = new TimeAgo("en-US")
 /**
@@ -58,17 +66,27 @@ const props = defineProps({
   },
 })
 
+const { mutate: markNotificationRead } = useMutation(MARK_NOTIFICATION_READ, {
+  refetchQueries: ["currentUserNotifications"],
+})
+
+const handleClick = async (notification_id) => {
+  await markNotificationRead({
+    notification_id: notification_id,
+  })
+}
+
 /**
  * The parsed translation key to use for the supplied note
  */
 const tKey = computed(() => {
-  return `notifications.${props.note.type}.short`
+  return `notifications.${props.note.data.type}.short`
 })
 /**
  * Flattened version of the note for passing to i18n
  */
 const flattened = computed(() => {
-  return flatten(props.note)
+  return flatten(props.note, { delimiter: "_" })
 })
 /**
  * Relative representation of the note's time property

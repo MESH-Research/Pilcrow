@@ -5,6 +5,7 @@ type Notification {
     id: ID!
     notifiable: Notifiable! @morphTo
     data: NotificationData
+    read_at: DateTime
 }
 
 """
@@ -16,7 +17,6 @@ type NotificationData {
     body: String
     action: String
     url: String
-    read_at: DateTime
     submission: Submission
     publication: Publication
 }

@@ -19,6 +19,7 @@
     />
 
     <q-popup-proxy
+      id="notifications-wrapper"
       ref="popupProxy"
       v-model="isVisible"
       max-width="400px"
@@ -37,12 +38,14 @@
             :key="index"
             :note="item"
             clickable
-            :class="{ unread: !item.data.read_at }"
+            :class="{ unread: !item.read_at }"
           />
         </q-list>
         <q-btn-group spread>
           <q-btn to="/feed">View More</q-btn>
-          <q-btn>Dismiss All</q-btn>
+          <q-btn data-cy="dismiss_all_notifications" @click="dismissAll"
+            >Dismiss All</q-btn
+          >
         </q-btn-group>
       </div>
     </q-popup-proxy>
@@ -50,11 +53,12 @@
 </template>
 
 <script setup>
-import { ref, watch, nextTick } from "vue"
-import { useQuery, useResult } from "@vue/apollo-composable"
+import { ref } from "vue"
+import { useQuery, useResult, useMutation } from "@vue/apollo-composable"
 import { CURRENT_USER_NOTIFICATIONS } from "src/graphql/queries"
 import NotificationListItem from "src/components/atoms/NotificationListItem.vue"
 import { computed } from "vue"
+import { MARK_ALL_NOTIFICATIONS_READ } from "src/graphql/mutations"
 
 const currentPage = ref(1)
 const popupProxy = ref(null)
@@ -69,18 +73,19 @@ const notificationItems = useResult(
 )
 const hasUnreadNotifications = computed(() => {
   return notificationItems.value.length > 0 &&
-    notificationItems.value.find((item) => item.data.read_at === null)
+    notificationItems.value.find((item) => item.read_at === null)
     ? true
     : false
 })
-watch(isVisible, (newValue) => {
-  if (newValue === false) {
-    return
+const { mutate: markAllNotificationsRead } = useMutation(
+  MARK_ALL_NOTIFICATIONS_READ,
+  {
+    refetchQueries: ["currentUserNotifications"],
   }
-  nextTick(() => {
-    popupProxy.value.$refs.popup.$children[0].$el.id = "notifications-wrapper"
-  })
-})
+)
+const dismissAll = async () => {
+  await markAllNotificationsRead()
+}
 </script>
 
 <style lang="sass">
