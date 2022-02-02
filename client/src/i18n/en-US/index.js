@@ -347,22 +347,22 @@ export default {
   notifications: {
     review: {
       requested: {
-        short: "{user.username} has requested your review on {object.name}",
+        short: "{user_username} has requested your review on {object_name}",
       },
       commentReplied: {
-        short: "{user.username} has replied to your comment on {object.name}",
+        short: "{user_username} has replied to your comment on {object_name}",
       },
     },
     submission: {
       created: {
         short:
-          "{user.username} has submitted {submission.title} to {publication.name}",
+          "{data_user_username} has submitted {data_submission_title} to {data_publication_name}",
       },
       approved: {
-        short: "{object.name} has been approved",
+        short: "{object_name} has been approved",
       },
       resubmitted: {
-        short: "{object.name} has been resubmitted",
+        short: "{object_name} has been resubmitted",
       },
     },
   },
