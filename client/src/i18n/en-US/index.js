@@ -18,6 +18,21 @@ export default {
   buttons: {
     more_info: "More Info",
     dashboard: "Dashboard",
+    add: "Add",
+    save: "Save",
+    saving: "Saving",
+    saved: "Saved",
+    discard_changes: "Discard Changes",
+  },
+  lists: {
+    move_up: "Move {0} Up",
+    move_down: "Move {0} Down",
+    delete: "Delete {0}",
+    edit: "Edit {0}",
+    save: "Save",
+    add: "Add",
+    new: "Add {0}",
+    label: "Item",
   },
   auth: {
     loginRequired: "You need to login to access that page.",
@@ -79,6 +94,9 @@ export default {
     OPTIONAL_FIELD: "{0} (optional)",
     REQUIRED_FIELD: "{0} is required.",
   },
+  generic_validations: {
+    maxLength: "The maximum length has been exceeded.",
+  },
   header: {
     account_link: "My Account",
     dashboard: "My Dashboard",
@@ -121,6 +139,116 @@ export default {
       security: "Security and Passwords",
       affiliations: "Affiliations",
       privacy: "Privacy",
+    },
+    profile: {
+      section_details: "Profile Details",
+      section_personal: "Personal Details",
+      section_biography: "Biography",
+      section_social_media: "Social Media Profiles",
+      section_academic_profiles: "Academic Profiles",
+      section_websites: "Websites",
+      section_keywords: "Keywords",
+      fields: {
+        professional_title: {
+          label: "Professional Title",
+          errors: {
+            maxLength: "@:generic_validations.maxLength",
+          },
+        },
+        specialization: {
+          label: "Specialization",
+          hint: "Area of expertise, specialization or research focus.",
+          errors: {
+            maxLength: "@:generic_validations.maxLength",
+          },
+        },
+
+        affiliation: {
+          label: "Affiliation",
+          hint: "Institutional, group, or organization affiliation.",
+          errors: {
+            maxLength: "@:generic_validations.maxLength",
+          },
+        },
+        social_media: {
+          twitter: {
+            label: "Twitter",
+            errors: {
+              valid: "Please enter a valid Twitter handle.",
+              maxLength: "@:generic_validations.maxLength",
+            },
+          },
+          instagram: {
+            label: "Instagram",
+            errors: {
+              valid: "Please enter a valid Instagram profile name.",
+              maxLength: "@:generic_validations.maxLength",
+            },
+          },
+          linkedin: {
+            label: "LinkedIn",
+            errors: {
+              valid: "Please enter a valid LinkedIn permalink.",
+              maxLength: "@:generic_validations.maxLength",
+            },
+          },
+          facebook: {
+            label: "Facebook",
+            errors: {
+              valid: "Please enter a valid Facebook profile name.",
+              maxLength: "@:generic_validations.maxLength",
+            },
+          },
+        },
+        biography: {
+          label: "Biography",
+          maxLength: "@:generic_validations.maxLength",
+        },
+        academic_profiles: {
+          academia_edu_id: {
+            label: "Academia.edu",
+            errors: {
+              maxLength: "@:generic_validations.maxLength",
+            },
+          },
+          humanities_commons: {
+            label: "Humanities Commons",
+            errors: {
+              maxLength: "@:generic_validations.maxLength",
+            },
+          },
+          orcid: {
+            label: "ORCID",
+            errors: {
+              maxLength: "@:generic_validations.maxLength",
+            },
+          },
+        },
+        website: {
+          label: "Website",
+          errors: {
+            maxLength: "@:generic_validations.maxLength",
+            valid: "Please enter a valid URL.",
+            duplicate: "This URL is already in the list",
+          },
+        },
+        interest_keyword: {
+          label: "Interest Keyword",
+          hint: "Interest keywords will be used to help provide suggestions for submissions which may be of interest to you.",
+          errors: {
+            maxLength: "@:generic_validations.maxLength",
+            duplicate: "This keyword is already in the list.",
+          },
+        },
+        disinterest_keyword: {
+          label: "Disinterest Keyword",
+          hint: "Disinterest keywords will be used to help filter suggestions for submissions that are not of interest to you.",
+          errors: {
+            maxLength: "@:generic_validations.maxLength",
+            duplicate: "This keyword is already in the list.",
+          },
+        },
+      },
     },
   },
   publications: {

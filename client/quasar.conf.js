@@ -25,6 +25,7 @@ module.exports = configure(function () {
       "roboto-font", // optional, you are not bound to it
       "material-icons", // optional, you are not bound to it
       "material-icons-outlined",
+      "fontawesome-v5",
     ],
 
     // https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-framework
@@ -41,7 +42,7 @@ module.exports = configure(function () {
       //            (not treeshaking Quasar; biggest bundle size; convenient)
       importStrategy: "auto",
 
-      components: [],
+      components: ["QList"],
       directives: [],
 
       // Quasar plugins

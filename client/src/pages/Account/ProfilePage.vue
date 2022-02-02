@@ -1,84 +1,67 @@
 <template>
-  <q-form data-cy="vueAccount" @submit="updateUser()">
-    <q-card-section class="q-col-gutter-y-md">
-      <q-input
-        ref="nameInput"
-        v-model="form.name"
-        outlined
-        data-cy="update_user_name"
-        label="Display Name"
-      />
-      <q-input
-        ref="emailInput"
-        v-model="form.email"
-        outlined
-        data-cy="update_user_email"
-        label="Email"
-      />
-      <q-input
-        ref="usernameInput"
-        v-model="form.username"
-        outlined
-        data-cy="update_user_username"
-        label="Username"
-      />
-      <h3 class="q-mt-lg q-mb-none text-h4">Set New Password</h3>
-      <q-input
-        ref="passwordInput"
-        v-model="form.password"
-        outlined
-        data-cy="update_user_password"
-        :type="isPwd ? 'password' : 'text'"
-        label="Password"
-        hint="Updating this will overwrite the existing password"
-      >
-        <template #append>
-          <q-icon
-            :name="isPwd ? 'visibility_off' : 'visibility'"
-            class="cursor-pointer"
-            @click="isPwd = !isPwd"
-          />
-        </template>
-      </q-input>
-      <q-banner
-        v-if="formErrorMsg"
-        dense
-        class="form-error text-white bg-red text-center"
-        v-text="$t(`account.update.${formErrorMsg}`)"
-      />
-    </q-card-section>
-    <q-card-section class="bg-grey-2 row justify-end">
-      <div class="q-gutter-md">
-        <q-btn
-          :disabled="!dirty"
-          class="bg-primary text-white"
-          data-cy="update_user_button_save"
-          type="submit"
+  <div>
+    <q-form data-cy="vueAccount" @submit="updateUser()">
+      <form-section :first-section="true">
+        <template #header>Account Information</template>
+        <q-input
+          ref="nameInput"
+          v-model="form.name"
+          outlined
+          data-cy="update_user_name"
+          label="Display Name"
+        />
+        <q-input
+          ref="emailInput"
+          v-model="form.email"
+          outlined
+          data-cy="update_user_email"
+          label="Email"
+        />
+        <q-input
+          ref="usernameInput"
+          v-model="form.username"
+          outlined
+          data-cy="update_user_username"
+          label="Username"
+        />
+      </form-section>
+      <form-section>
+        <template #header>Update Password</template>
+        <q-input
+          ref="passwordInput"
+          v-model="form.password"
+          outlined
+          data-cy="update_user_password"
+          :type="isPwd ? 'password' : 'text'"
+          label="Password"
+          hint="Updating this will overwrite the existing password"
         >
-          Save
-        </q-btn>
-        <q-btn
-          :disabled="!dirty"
-          class="bg-grey-4 ml-sm"
-          data-cy="update_user_button_discard"
-          @click="onRevert"
-        >
-          Discard Changes
-        </q-btn>
-      </div>
-    </q-card-section>
-  </q-form>
+          <template #append>
+            <q-icon
+              :name="isPwd ? 'visibility_off' : 'visibility'"
+              class="cursor-pointer"
+              @click="isPwd = !isPwd"
+            />
+          </template>
+        </q-input>
+      </form-section>
+      <form-actions @reset-click="onRevert" />
+    </q-form>
+  </div>
 </template>
 
 <script setup>
 import { isEqual, pick } from "lodash"
 import { UPDATE_USER } from "src/graphql/mutations"
+import FormSection from "src/components/molecules/FormSection.vue"
+import FormActions from "src/components/molecules/FormActions.vue"
 import { useCurrentUser } from "src/use/user"
 import { useQuasar } from "quasar"
 import { useMutation } from "@vue/apollo-composable"
-import { reactive, ref, computed, onMounted } from "vue"
+import { reactive, ref, computed, onMounted, provide, watchEffect } from "vue"
 import { useI18n } from "vue-i18n"
-
+import { useFormState, useDirtyGuard } from "src/use/forms"
+//TODO: ProfilePage form needs vuelidate/validation
 const importValidationErrors = function (error, vm) {
   const gqlErrors = error?.graphQLErrors ?? []
   var hasVErrors = false
@@ -101,13 +84,17 @@ const form = reactive({
   username: "",
   password: "",
 })
-const isPwd = ref(true)
-const formErrorMsg = ref("")
 
-const { currentUser } = useCurrentUser()
+const isPwd = ref(true)
+
+const { currentUserQuery, currentUser } = useCurrentUser()
 
 const dirty = computed(() => {
-  return !isEqual(form, currentUser)
+  return !isEqual(form, original.value)
+})
+
+const original = computed(() => {
+  return { ...pickFields(currentUser.value), password: "" }
 })
 
 function pickFields(obj) {
@@ -115,19 +102,34 @@ function pickFields(obj) {
 }
 
 function onRevert() {
-  Object.assign(form, pickFields(currentUser.value))
+  Object.assign(form, original.value)
 }
 
 onMounted(() => {
   onRevert()
 })
 
-const { mutate } = useMutation(UPDATE_USER)
+const updateUserMutation = useMutation(UPDATE_USER)
+const { mutate } = updateUserMutation
+
+useDirtyGuard(dirty)
+const formState = useFormState(
+  currentUserQuery.loading,
+  updateUserMutation.loading
+)
+
+const { saved, errorMessage, dirty: dirtyState } = formState
+provide("formState", formState)
+watchEffect(() => {
+  dirtyState.value = dirty.value
+})
+
 const { notify } = useQuasar()
 const { t } = useI18n()
 
 async function updateUser() {
-  formErrorMsg.value = ""
+  errorMessage.value = ""
+  saved.value = false
   const vars = { ...form }
 
   if ((vars?.password?.length ?? 0) === 0) {
@@ -146,11 +148,12 @@ async function updateUser() {
       },
       html: true,
     })
+    saved.value = true
   } catch (error) {
     if (importValidationErrors(error, this)) {
-      formErrorMsg.value = "update_form_validation"
+      errorMessage.value = "update_form_validation"
     } else {
-      formErrorMsg.value = "update_form_internal"
+      errorMessage.value = "update_form_internal"
     }
   }
 }

@@ -1,24 +1,24 @@
 import gql from "graphql-tag"
+import { _CURRENT_USER_FIELDS, _PROFILE_METADATA_FIELDS } from "./fragments"
 
-export const _CURRENT_USER_FIELDS = gql`
-  fragment currentUserFields on User {
-    username
-    name
-    email
-    email_verified_at
-    roles {
-      name
-    }
-  }
-`
 export const CURRENT_USER = gql`
-  query currentUser {
+  ${_CURRENT_USER_FIELDS}
+  query CurrentUser {
     currentUser {
       id
       ...currentUserFields
     }
   }
-  ${_CURRENT_USER_FIELDS}
+`
+
+export const CURRENT_USER_METADATA = gql`
+  ${_PROFILE_METADATA_FIELDS}
+  query CurrentUserMetadata {
+    currentUser {
+      id
+      ...profileMetadata
+    }
+  }
 `
 
 export const CURRENT_USER_NOTIFICATIONS = gql`
@@ -54,7 +54,7 @@ export const CURRENT_USER_NOTIFICATIONS = gql`
   }
 `
 export const CURRENT_USER_SUBMISSIONS = gql`
-  query currentUser {
+  query CurrentUserSubmission {
     currentUser {
       id
       submissions {
@@ -69,7 +69,7 @@ export const CURRENT_USER_SUBMISSIONS = gql`
 `
 
 export const GET_USERS = gql`
-  query users($page: Int) {
+  query GetUsers($page: Int) {
     userSearch(page: $page) {
       paginatorInfo {
         count
@@ -101,7 +101,7 @@ export const GET_USER = gql`
 `
 
 export const SEARCH_USERS = gql`
-  query users($term: String, $page: Int) {
+  query SearchUsers($term: String, $page: Int) {
     userSearch(term: $term, page: $page) {
       paginatorInfo {
         count

@@ -29,6 +29,10 @@ const routes = [
             path: "profile",
             component: () => import("src/pages/Account/ProfilePage.vue"),
           },
+          {
+            path: "metadata",
+            component: () => import("src/pages/Account/MetadataPage.vue"),
+          },
         ],
       },
       {

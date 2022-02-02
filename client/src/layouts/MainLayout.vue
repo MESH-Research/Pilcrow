@@ -18,14 +18,7 @@
               {{ $t("header.dashboard") }}
             </q-item-section>
           </q-item>
-          <q-item v-ripple to="/account/profile">
-            <q-item-section avatar>
-              <q-icon name="account_circle" />
-            </q-item-section>
-            <q-item-section>
-              {{ $t("header.account_link") }}
-            </q-item-section>
-          </q-item>
+
           <q-item v-ripple to="/admin/users">
             <q-item-section avatar>
               <q-icon name="groups" />

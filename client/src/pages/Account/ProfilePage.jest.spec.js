@@ -5,11 +5,17 @@ import { createMockClient } from "mock-apollo-client"
 import { ApolloClients } from "@vue/apollo-composable"
 import flushPromises from "flush-promises"
 import { UPDATE_USER } from "src/graphql/mutations"
-import { useCurrentUser } from "src/use/user"
-import { ref } from "vue"
-jest.mock("vue-i18n", () => ({
-  useI18n: () => ({
-    t: (t) => t,
+import { CURRENT_USER } from "src/graphql/queries"
+import { ref as mockRef } from "vue"
+jest.mock("src/use/forms", () => ({
+  useDirtyGuard: () => {},
+  useFormState: () => ({
+    dirty: mockRef(false),
+    saved: mockRef(false),
+    state: mockRef("idle"),
+    queryLoading: mockRef(false),
+    mutationLoading: mockRef(false),
+    errorMessage: mockRef(""),
   }),
 }))
 
@@ -18,10 +24,6 @@ jest.mock("quasar", () => ({
   useQuasar: () => ({
     notify: jest.fn(),
   }),
-}))
-
-jest.mock("src/use/user", () => ({
-  useCurrentUser: jest.fn(),
 }))
 
 installQuasarPlugin()
@@ -45,21 +47,24 @@ describe("Profile", () => {
 
   beforeEach(() => {
     jest.resetAllMocks()
-    useCurrentUser.mockReturnValue({
-      currentUser: ref({
-        id: 1,
-        username: "test",
-        name: "TestDoe",
-        email: "test@example.com",
-        email_verified_at: null,
-        roles: [],
-      }),
+    requestHandler.mockResolvedValue({
+      data: {
+        currentUser: {
+          id: 1,
+          username: "test",
+          name: "TestDoe",
+          email: "test@example.com",
+          email_verified_at: null,
+          roles: [],
+        },
+      },
     })
   })
 
   const mutateHandler = jest.fn()
+  const requestHandler = jest.fn()
   mockClient.setRequestHandler(UPDATE_USER, mutateHandler)
-
+  mockClient.setRequestHandler(CURRENT_USER, requestHandler)
   it("mounts without errors", async () => {
     const wrapper = await makeWrapper()
     expect(wrapper).toBeTruthy()
