@@ -37,6 +37,7 @@
         >
           <template #prepend>
             <q-icon
+              role="presentation"
               name="fab fa-facebook"
               :class="{
                 'brand-active': v$.social_media.facebook.$model.length,
@@ -53,6 +54,7 @@
         >
           <template #prepend>
             <q-icon
+              role="presentation"
               :class="{ 'brand-active': v$.social_media.twitter.$model.length }"
               name="fab fa-twitter"
             />
@@ -68,6 +70,7 @@
           <template #prepend>
             <q-icon
               name="fab fa-instagram-square"
+              role="presentation"
               :class="{
                 'brand-active': v$.social_media.instagram.$model.length,
               }"
@@ -84,6 +87,7 @@
           <template #prepend>
             <q-icon
               name="fab fa-linkedin"
+              role="presentation"
               :class="{
                 'brand-active': v$.social_media.linkedin.$model.length,
               }"
@@ -105,6 +109,7 @@
             <img
               style="height: 1em; display: inline-block"
               src="brand-images/humcommons.png"
+              role="presentation"
             />
           </template>
         </v-q-input>
@@ -117,6 +122,7 @@
             <img
               style="height: 1em; display: inline-block"
               src="brand-images/orcid.png"
+              role="presentation"
             />
           </template>
         </v-q-input>
@@ -129,6 +135,7 @@
             <img
               style="height: 1em; display: inline-block"
               src="brand-images/academia_edu.png"
+              role="presentation"
             />
           </template>
         </v-q-input>
