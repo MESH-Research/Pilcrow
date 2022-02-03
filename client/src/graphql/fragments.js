@@ -36,3 +36,12 @@ export const _CURRENT_USER_FIELDS = gql`
     }
   }
 `
+
+export const _PAGINATION_FIELDS = gql`
+  fragment paginationFields on PaginatorInfo {
+    count
+    currentPage
+    lastPage
+    perPage
+  }
+`

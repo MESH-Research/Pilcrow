@@ -50,6 +50,7 @@ describe("User Index page mount", () => {
             },
           ],
           paginatorInfo: {
+            __typename: "PaginatorInfo",
             count: 2,
             currentPage: 1,
             lastPage: 1,
