@@ -1,6 +1,6 @@
 import { reactive } from "vue"
 import useVuelidate from "@vuelidate/core"
-import { required, email } from "@vuelidate/validators"
+import { required, email, helpers } from "@vuelidate/validators"
 import { CREATE_USER } from "src/graphql/mutations"
 import { useMutation } from "@vue/apollo-composable"
 import zxcvbn from "zxcvbn"
@@ -21,7 +21,7 @@ export const rules = {
       const complexity = zxcvbn(value)
       return {
         complexity,
-        $valid: complexity.score >= 3,
+        $valid: !helpers.req(value) || complexity.score >= 3,
       }
     },
   },
