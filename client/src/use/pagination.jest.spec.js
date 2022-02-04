@@ -64,26 +64,36 @@ describe("useCurrentUser composable", () => {
         .map((_, v) => ({ id: v, name: `Pub ${v}` })),
     ]
 
-    queryMock.mockResolvedValue({
+    const mockResponseData = (data = []) => ({
       data: {
         publications: {
           paginatorInfo: {
             __typename: "PaginatorInfo",
-            count: 0,
+            count: data.length,
             currentPage: 1,
             lastPage: 1,
             perPage: 10,
           },
-          data: [...returnData],
+          data,
         },
       },
     })
 
+    queryMock.mockResolvedValue(mockResponseData(returnData))
     const result = await mountComposable()
 
     expect(queryMock).toHaveBeenCalled()
     expect(isRef(result.data)).toBe(true)
     expect(result.data.value).toHaveLength(5)
+
+    //Resolve with empty data array.
+    queryMock.mockResolvedValue(mockResponseData())
+
+    //Update page to trigger a new query
+    result.updatePage(2)
+    await flushPromises()
+
+    expect(result.data.value).toHaveLength(0)
   })
 
   test("can override variables", async () => {
