@@ -4,7 +4,7 @@
     :class="valid ? 'password-success' : 'password-error'"
   >
     <div
-      v-for="(item, index) in new Array(max)"
+      v-for="(_, index) in new Array(max)"
       :key="index"
       :class="score > index ? 'active' : ''"
       class="col"
