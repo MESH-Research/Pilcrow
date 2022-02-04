@@ -1,5 +1,9 @@
 import gql from "graphql-tag"
-import { _CURRENT_USER_FIELDS, _PROFILE_METADATA_FIELDS } from "./fragments"
+import {
+  _CURRENT_USER_FIELDS,
+  _PAGINATION_FIELDS,
+  _PROFILE_METADATA_FIELDS,
+} from "./fragments"
 
 export const CURRENT_USER = gql`
   ${_CURRENT_USER_FIELDS}
@@ -27,10 +31,7 @@ export const CURRENT_USER_NOTIFICATIONS = gql`
       id
       notifications(first: 10, page: $page) {
         paginatorInfo {
-          count
-          currentPage
-          lastPage
-          perPage
+          ...paginationFields
         }
         data {
           id
@@ -52,6 +53,7 @@ export const CURRENT_USER_NOTIFICATIONS = gql`
       }
     }
   }
+  ${_PAGINATION_FIELDS}
 `
 export const CURRENT_USER_SUBMISSIONS = gql`
   query CurrentUserSubmission {
@@ -72,10 +74,7 @@ export const GET_USERS = gql`
   query GetUsers($page: Int) {
     userSearch(page: $page) {
       paginatorInfo {
-        count
-        currentPage
-        lastPage
-        perPage
+        ...paginationFields
       }
       data {
         id
@@ -85,6 +84,7 @@ export const GET_USERS = gql`
       }
     }
   }
+  ${_PAGINATION_FIELDS}
 `
 
 export const GET_USER = gql`
@@ -104,10 +104,7 @@ export const SEARCH_USERS = gql`
   query SearchUsers($term: String, $page: Int) {
     userSearch(term: $term, page: $page) {
       paginatorInfo {
-        count
-        currentPage
-        lastPage
-        perPage
+        ...paginationFields
       }
       data {
         id
@@ -117,16 +114,14 @@ export const SEARCH_USERS = gql`
       }
     }
   }
+  ${_PAGINATION_FIELDS}
 `
 
 export const GET_PUBLICATIONS = gql`
   query GetPublications($page: Int) {
     publications(page: $page) {
       paginatorInfo {
-        count
-        currentPage
-        lastPage
-        perPage
+        ...paginationFields
       }
       data {
         id
@@ -134,16 +129,14 @@ export const GET_PUBLICATIONS = gql`
       }
     }
   }
+  ${_PAGINATION_FIELDS}
 `
 
 export const GET_SUBMISSIONS = gql`
   query GetSubmissions($page: Int) {
     submissions(page: $page) {
       paginatorInfo {
-        count
-        currentPage
-        lastPage
-        perPage
+        ...paginationFields
       }
       data {
         id
@@ -158,6 +151,7 @@ export const GET_SUBMISSIONS = gql`
       }
     }
   }
+  ${_PAGINATION_FIELDS}
 `
 
 export const GET_SUBMISSION = gql`

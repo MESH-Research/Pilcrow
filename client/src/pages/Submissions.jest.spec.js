@@ -47,6 +47,7 @@ describe("submissions page mount", () => {
       data: {
         publications: {
           paginatorInfo: {
+            __typename: "PaginatorInfo",
             count: 1,
             currentPage: 1,
             lastPage: 1,
@@ -63,6 +64,7 @@ describe("submissions page mount", () => {
       data: {
         submissions: {
           paginatorInfo: {
+            __typename: "PaginatorInfo",
             count: 5,
             currentPage: 1,
             lastPage: 1,

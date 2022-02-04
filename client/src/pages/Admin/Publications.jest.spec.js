@@ -65,6 +65,7 @@ describe("publications page mount", () => {
             { id: "4", name: "Sample Jest Publication 4" },
           ],
           paginatorInfo: {
+            __typename: "PaginatorInfo",
             count: 4,
             currentPage: 1,
             lastPage: 1,
