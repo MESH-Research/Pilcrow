@@ -1,67 +1,18 @@
 <template>
   <div>
-    <q-form data-cy="vueAccount" @submit="updateUser()">
-      <form-section :first-section="true">
-        <template #header>Account Information</template>
-        <q-input
-          ref="nameInput"
-          v-model="form.name"
-          outlined
-          data-cy="update_user_name"
-          label="Display Name"
-        />
-        <q-input
-          ref="emailInput"
-          v-model="form.email"
-          outlined
-          data-cy="update_user_email"
-          label="Email"
-        />
-        <q-input
-          ref="usernameInput"
-          v-model="form.username"
-          outlined
-          data-cy="update_user_username"
-          label="Username"
-        />
-      </form-section>
-      <form-section>
-        <template #header>Update Password</template>
-        <q-input
-          ref="passwordInput"
-          v-model="form.password"
-          outlined
-          data-cy="update_user_password"
-          :type="isPwd ? 'password' : 'text'"
-          label="Password"
-          hint="Updating this will overwrite the existing password"
-        >
-          <template #append>
-            <q-icon
-              :name="isPwd ? 'visibility_off' : 'visibility'"
-              class="cursor-pointer"
-              @click="isPwd = !isPwd"
-            />
-          </template>
-        </q-input>
-      </form-section>
-      <form-actions @reset-click="onRevert" />
-    </q-form>
+    <account-profile-form :account-profile="currentUser" @save="updateUser" />
   </div>
 </template>
 
 <script setup>
-import { isEqual, pick } from "lodash"
 import { UPDATE_USER } from "src/graphql/mutations"
-import FormSection from "src/components/molecules/FormSection.vue"
-import FormActions from "src/components/molecules/FormActions.vue"
 import { useCurrentUser } from "src/use/user"
 import { useQuasar } from "quasar"
 import { useMutation } from "@vue/apollo-composable"
-import { reactive, ref, computed, onMounted, provide, watchEffect } from "vue"
 import { useI18n } from "vue-i18n"
 import { useFormState, useDirtyGuard } from "src/use/forms"
-//TODO: ProfilePage form needs vuelidate/validation
+import { provide } from "vue"
+import AccountProfileForm from "src/components/forms/atoms/AccountProfileForm.vue"
 const importValidationErrors = function (error, vm) {
   const gqlErrors = error?.graphQLErrors ?? []
   var hasVErrors = false
@@ -77,60 +28,28 @@ const importValidationErrors = function (error, vm) {
   return hasVErrors
 }
 
-const form = reactive({
-  id: null,
-  name: "",
-  email: "",
-  username: "",
-  password: "",
-})
-
-const isPwd = ref(true)
-
 const { currentUserQuery, currentUser } = useCurrentUser()
-
-const dirty = computed(() => {
-  return !isEqual(form, original.value)
-})
-
-const original = computed(() => {
-  return { ...pickFields(currentUser.value), password: "" }
-})
-
-function pickFields(obj) {
-  return pick(obj, Object.keys(form))
-}
-
-function onRevert() {
-  Object.assign(form, original.value)
-}
-
-onMounted(() => {
-  onRevert()
-})
 
 const updateUserMutation = useMutation(UPDATE_USER)
 const { mutate } = updateUserMutation
 
-useDirtyGuard(dirty)
 const formState = useFormState(
   currentUserQuery.loading,
   updateUserMutation.loading
 )
-
-const { saved, errorMessage, dirty: dirtyState } = formState
 provide("formState", formState)
-watchEffect(() => {
-  dirtyState.value = dirty.value
-})
+
+useDirtyGuard(formState.dirty)
+
+const { saved, errorMessage } = formState
 
 const { notify } = useQuasar()
 const { t } = useI18n()
 
-async function updateUser() {
+async function updateUser(newValues) {
   errorMessage.value = ""
   saved.value = false
-  const vars = { ...form }
+  const vars = { ...newValues }
 
   if ((vars?.password?.length ?? 0) === 0) {
     delete vars.password
