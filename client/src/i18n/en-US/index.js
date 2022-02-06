@@ -140,6 +140,40 @@ export default {
       affiliations: "Affiliations",
       privacy: "Privacy",
     },
+    account: {
+      fields: {
+        username: {
+          label: "Username",
+          hint: "Your username is your identify on this site.",
+          errors: {
+            maxLength: "@:generic_validations.maxLength",
+          },
+        },
+        name: {
+          label: "Name",
+          hint: "How you would like your name represented on the site.  Include any honorific, etc that you would like to use.",
+          errors: {
+            maxLength: "@:generic_validation.maxLength",
+          },
+        },
+        email: {
+          label: "Email Address",
+          hint: "Note updating your email address will require you to re-validate your account.",
+          errors: {
+            maxLength: "@:generic_validations.maxLength",
+            email: "Please enter a valid email address.",
+          },
+        },
+        password: {
+          label: "New Password",
+          hint: "Enter a new password here. (Leave blank to keep your current password)",
+          errors: {
+            notComplex:
+              "Your password is not complex enough.  Click (More Info) for suggestions.",
+          },
+        },
+      },
+    },
     profile: {
       section_details: "Profile Details",
       section_personal: "Personal Details",
