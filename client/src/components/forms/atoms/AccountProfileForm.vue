@@ -1,3 +1,4 @@
++
 <template>
   <q-form data-cy="vueAccount" @submit="onSubmit">
     <v-q-wrap t-prefix="account.account.fields" @vqupdate="updateVQ">
@@ -13,25 +14,12 @@
       </form-section>
       <form-section>
         <template #header>Update Password</template>
-        <NewPasswordInput
+        <VNewPasswordInput
           ref="passwordInput"
-          v-model="v$.password.$model"
-          outlined
           data-cy="update_user_password"
-          :complexity="v$.password.notComplex.$response.complexity"
-          :error="v$.password.$error"
-          label="Password"
+          :v="v$.password"
         >
-          <template #append>
-            <q-icon class="cursor-pointer" />
-          </template>
-          <template #error>
-            <error-field-renderer
-              :errors="v$.password.$errors"
-              prefix="auth.validation.password"
-            />
-          </template>
-        </NewPasswordInput>
+        </VNewPasswordInput>
       </form-section>
       <form-actions @reset-click="onRevert" />
     </v-q-wrap>
@@ -39,12 +27,11 @@
 </template>
 
 <script setup>
-import ErrorFieldRenderer from "src/components/molecules/ErrorFieldRenderer.vue"
 import FormSection from "src/components/molecules/FormSection.vue"
 import FormActions from "src/components/molecules/FormActions.vue"
 import VQInput from "src/components/atoms/VQInput.vue"
 import VQWrap from "src/components/atoms/VQWrap.vue"
-import NewPasswordInput from "../NewPasswordInput.vue"
+import VNewPasswordInput from "../VNewPasswordInput.vue"
 import { useVuelidate } from "@vuelidate/core"
 import { reactive, watchEffect, inject, computed } from "vue"
 import { isEqual, pick } from "lodash"
