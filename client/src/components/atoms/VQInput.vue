@@ -9,15 +9,18 @@
     v-model="model"
     :data-cy="cyAttr"
     :error="v.$error"
-    :label="te(fullTKey('label')) ? $t(fullTKey('label')) : null"
-    :hint="te(fullTKey('hint')) ? $t(fullTKey('hint')) : null"
+    :label="getTranslation('label')"
+    :hint="getTranslation('hint')"
     outlined
     @clear="clearInput"
   >
     <template v-if="!$slots.error" #error>
-      <error-field-renderer :errors="v.$errors" :prefix="`${tPrefix}.errors`" />
+      <error-field-renderer
+        :errors="v.$errors"
+        :prefix="getTranslationKey('errors')"
+      />
     </template>
-    <template v-for="(index, name) in $slots" #[name]>
+    <template v-for="(_, name) in $slots" #[name]>
       <slot :name="name" />
     </template>
   </q-input>
@@ -29,9 +32,9 @@ export default {
 }
 </script>
 <script setup>
-import { computed, inject, ref } from "vue"
+import { inject, ref } from "vue"
 import ErrorFieldRenderer from "src/components/molecules/ErrorFieldRenderer.vue"
-import { useI18n } from "vue-i18n"
+import { useVQWrap } from "src/use/forms"
 /**
  * Transparent wrapper for q-input that handles validation and translation by convention.
  *
@@ -64,58 +67,16 @@ const props = defineProps({
     default: false,
   },
 })
-const emit = defineEmits(["vqupdate"])
-const parentUpdater = inject("vqupdate", null)
+defineEmits(["vqupdate"])
+
 const input = ref(null)
-const model = computed({
-  get() {
-    return props.v.$model
-  },
-  set(newValue) {
-    const value = newValue !== null ? newValue : ""
-    if (parentUpdater) {
-      parentUpdater(props.v, value)
-    } else {
-      /**
-       * Emits any update to the underlying input.  Parent component is responsible for updateing the validation model.
-       *
-       * @param Object validator
-       * @param value New value for input
-       * @event vqupdate
-       * @see src/components/atoms/VQWrap.vue
-       */
-      emit("vqupdate", props.v, value)
-    }
-  },
-})
-const { te } = useI18n()
 
-const parentTPrefix = inject("tPrefix", "")
-const tPrefix = computed(() => {
-  if (typeof props.t === "string") {
-    return props.t
-  }
-  return `${parentTPrefix}.${props.v.$path}`
-})
-
-/**
- * Provide full translation key for a field.
- */
-const fullTKey = (key) => {
-  return `${tPrefix.value}.${key}`
-}
+const { getTranslation, getTranslationKey, model } = useVQWrap(props.v, props.t)
 
 function clearInput() {
   input.value.blur()
 }
-const { state: parentState } = inject("formState", null)
-
-const formState = computed(() => {
-  if (parentState) {
-    return parentState.value
-  }
-  return ""
-})
+const { state: formState = "" } = inject("formState", {})
 </script>
 
 <style lang="scss" scoped></style>
