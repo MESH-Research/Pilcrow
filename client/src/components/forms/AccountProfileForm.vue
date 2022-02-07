@@ -4,13 +4,13 @@
     <v-q-wrap t-prefix="account.account.fields" @vqupdate="updateVQ">
       <form-section first-section>
         <template #header>Account Information</template>
-        <v-q-input ref="nameInput" :v="v$.name" data-cy="update_user_name" />
-        <v-q-input ref="emailInput" :v="v$.email" data-cy="update_user_email" />
         <v-q-input
           ref="usernameInput"
           :v="v$.username"
           data-cy="update_user_username"
         />
+        <v-q-input ref="nameInput" :v="v$.name" data-cy="update_user_name" />
+        <v-q-input ref="emailInput" :v="v$.email" data-cy="update_user_email" />
       </form-section>
       <form-section>
         <template #header>Update Password</template>
@@ -31,7 +31,7 @@ import FormSection from "src/components/molecules/FormSection.vue"
 import FormActions from "src/components/molecules/FormActions.vue"
 import VQInput from "src/components/atoms/VQInput.vue"
 import VQWrap from "src/components/atoms/VQWrap.vue"
-import VNewPasswordInput from "../VNewPasswordInput.vue"
+import VNewPasswordInput from "./VNewPasswordInput.vue"
 import { useVuelidate } from "@vuelidate/core"
 import { reactive, watchEffect, inject, computed } from "vue"
 import { isEqual, pick } from "lodash"
@@ -62,7 +62,7 @@ delete rules.password.required
 
 const v$ = useVuelidate(rules, form)
 
-const { dirty } = inject("formState")
+const { dirty, errorMessage } = inject("formState")
 
 watchEffect(() => {
   dirty.value = !isEqual(original.value, form)
@@ -81,6 +81,11 @@ function onRevert() {
   Object.assign(form, original.value)
 }
 function onSubmit() {
-  emit("save", form)
+  v$.value.$touch()
+  if (v$.value.$invalid) {
+    errorMessage.value = "Oops, check form about for errors."
+  } else {
+    emit("save", form)
+  }
 }
 </script>

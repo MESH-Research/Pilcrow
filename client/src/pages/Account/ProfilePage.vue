@@ -16,7 +16,7 @@ import { useMutation } from "@vue/apollo-composable"
 import { useI18n } from "vue-i18n"
 import { useFormState, useDirtyGuard } from "src/use/forms"
 import { provide } from "vue"
-import AccountProfileForm from "src/components/forms/atoms/AccountProfileForm.vue"
+import AccountProfileForm from "src/components/forms/AccountProfileForm.vue"
 const importValidationErrors = function (error, vm) {
   const gqlErrors = error?.graphQLErrors ?? []
   var hasVErrors = false
