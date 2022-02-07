@@ -1,4 +1,3 @@
-+
 <template>
   <q-form data-cy="vueAccount" @submit="onSubmit">
     <v-q-wrap t-prefix="account.account.fields" @vqupdate="updateVQ">
