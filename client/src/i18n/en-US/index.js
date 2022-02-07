@@ -158,7 +158,7 @@ export default {
         },
         email: {
           label: "Email Address",
-          hint: "Note updating your email address will require you to re-validate your account.",
+          hint: "Updating your email address will require you to re-verify your account.",
           errors: {
             maxLength: "@:generic_validations.maxLength",
             email: "Please enter a valid email address.",
