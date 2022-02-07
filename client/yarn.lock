@@ -1331,9 +1331,9 @@
   integrity sha1-FPzHEqUwA475vhzmlSMVqDn0Zqg=
 
 "@quasar/app@3":
-  version "3.3.0"
-  resolved "https://registry.yarnpkg.com/@quasar/app/-/app-3.3.0.tgz#b63c3aa31ba92f6ed97e9cc1fed9907c2501791b"
-  integrity sha512-1ZSpkSxmigy3h6uTiJmoQVAlI0I9WPgh4e8DcGvG4iBVoKKqB33C+PVgqx+uJd6Ro6aAGv+vMYozpBPdijCThQ==
+  version "3.3.2"
+  resolved "https://registry.yarnpkg.com/@quasar/app/-/app-3.3.2.tgz#32fc75d63bbe0aa7b86b63667e9e0cda6b7852fe"
+  integrity sha512-pX2Fu4hz1n8x+/wMiUE1fBd9okMI2aCRZUkPNY0/cZG4hy1LWRtyd7HjrZL9XSVZSPoO3XeXeKXi7D6ztH/iHg==
   dependencies:
     "@quasar/babel-preset-app" "2.0.1"
     "@quasar/fastclick" "1.1.4"
