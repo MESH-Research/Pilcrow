@@ -9,11 +9,13 @@ import { useFormState } from "src/use/forms"
 
 jest.mock("vue-i18n", () => ({
   useI18n: () => ({
-    te: (t) => t,
+    te: () => true,
+    t: (t) => t,
   }),
 }))
 
 jest.mock("src/use/forms", () => ({
+  ...jest.requireActual("src/use/forms"),
   useDirtyGuard: () => {},
   useFormState: () => ({
     dirty: mockRef(false),
@@ -103,7 +105,7 @@ describe("VQInput", () => {
 
     expect(wrapper.findComponent({ name: "q-input" }).exists()).toBe(true)
 
-    wrapper.vm.parentState = "loading"
+    wrapper.vm.formState = "loading"
     await nextTick()
 
     expect(wrapper.findComponent({ name: "q-input" }).exists()).toBe(false)

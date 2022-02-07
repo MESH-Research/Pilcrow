@@ -1,6 +1,10 @@
 <template>
   <div>
-    <account-profile-form :account-profile="currentUser" @save="updateUser" />
+    <account-profile-form
+      ref="form"
+      :account-profile="currentUser"
+      @save="updateUser"
+    />
   </div>
 </template>
 

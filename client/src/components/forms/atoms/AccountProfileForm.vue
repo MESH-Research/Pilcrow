@@ -38,8 +38,9 @@ import { isEqual, pick } from "lodash"
 import { rules } from "src/use/userValidation"
 const props = defineProps({
   accountProfile: {
-    type: Object,
     required: true,
+    validator: (v) =>
+      v === null || typeof v === "object" || typeof v === "undefined",
   },
 })
 
