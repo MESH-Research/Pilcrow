@@ -144,7 +144,7 @@ export default {
       fields: {
         username: {
           label: "Username",
-          hint: "Your username is your identify on this site.",
+          hint: "Your username is your primary identity on this site.",
           errors: {
             maxLength: "@:generic_validations.maxLength",
           },
