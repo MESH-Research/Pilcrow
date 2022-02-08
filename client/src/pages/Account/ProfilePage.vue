@@ -53,7 +53,7 @@ const { t } = useI18n()
 async function updateUser(newValues) {
   errorMessage.value = ""
   saved.value = false
-  const vars = { ...newValues }
+  const vars = { id: currentUser.value.id, ...newValues }
 
   if ((vars?.password?.length ?? 0) === 0) {
     delete vars.password
