@@ -1,10 +1,31 @@
 import { reactive } from "vue"
 import useVuelidate from "@vuelidate/core"
-import { required, email } from "@vuelidate/validators"
+import { required, email, helpers } from "@vuelidate/validators"
 import { CREATE_USER } from "src/graphql/mutations"
 import { useMutation } from "@vue/apollo-composable"
 import zxcvbn from "zxcvbn"
 import { applyExternalValidationErrors } from "src/use/validationHelpers"
+
+export const rules = {
+  name: {},
+  email: {
+    required,
+    email,
+  },
+  username: {
+    required,
+  },
+  password: {
+    required,
+    notComplex(value) {
+      const complexity = zxcvbn(value)
+      return {
+        complexity,
+        $valid: !helpers.req(value) || complexity.score >= 3,
+      }
+    },
+  },
+}
 
 export function useUserValidation() {
   const form = reactive({
@@ -20,27 +41,6 @@ export function useUserValidation() {
     name: [],
     username: [],
   })
-
-  const rules = {
-    name: {},
-    email: {
-      required,
-      email,
-    },
-    username: {
-      required,
-    },
-    password: {
-      required,
-      notComplex(value) {
-        const complexity = zxcvbn(value)
-        return {
-          complexity,
-          $valid: complexity.score >= 3,
-        }
-      },
-    },
-  }
 
   const $v = useVuelidate(rules, form, { $externalResults: externalValidation })
 

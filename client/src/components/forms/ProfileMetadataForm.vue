@@ -214,7 +214,8 @@ import { mapObject } from "src/utils/objUtils"
 const props = defineProps({
   profileMetadata: {
     required: true,
-    validator: (v) => v === null || typeof v === "object",
+    validator: (v) =>
+      v === null || typeof v === "object" || typeof v === "undefined",
   },
 })
 

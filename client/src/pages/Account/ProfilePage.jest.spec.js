@@ -8,6 +8,7 @@ import { UPDATE_USER } from "src/graphql/mutations"
 import { CURRENT_USER } from "src/graphql/queries"
 import { ref as mockRef } from "vue"
 jest.mock("src/use/forms", () => ({
+  ...jest.requireActual("src/use/forms"),
   useDirtyGuard: () => {},
   useFormState: () => ({
     dirty: mockRef(false),
@@ -65,47 +66,51 @@ describe("Profile", () => {
   const requestHandler = jest.fn()
   mockClient.setRequestHandler(UPDATE_USER, mutateHandler)
   mockClient.setRequestHandler(CURRENT_USER, requestHandler)
+
+  const accountData = () => ({
+    id: 1,
+    username: "username1",
+    name: "Test User",
+    email: "testemail@example.com",
+  })
+
+  beforeEach(() => {
+    jest.resetAllMocks()
+  })
+
   it("mounts without errors", async () => {
     const wrapper = await makeWrapper()
     expect(wrapper).toBeTruthy()
   })
 
-  test("form submits valid data", async () => {
-    const wrapper = await makeWrapper()
-    const userData = {
-      name: "Joe Doe",
-      username: "joedoe",
-      password: "albancub4Grac&",
-      email: "joedoe@example.com",
-    }
+  test("saves account data", async () => {
+    const initialData = accountData()
+    const newData = accountData()
+    newData.username = "Tester User"
 
+    requestHandler.mockResolvedValue({ data: { currentUser: initialData } })
     mutateHandler.mockResolvedValue({
-      data: {
-        updateUser: {
-          ...userData,
-          id: 1,
-          updated_at: "nowish",
-        },
-      },
+      data: { updateUser: { ...newData, updated_at: "soonish" } },
     })
+    const wrapper = await makeWrapper()
+    await wrapper.findComponent({ ref: "form" }).vm.$emit("save", newData)
 
-    await wrapper.findComponent({ ref: "nameInput" }).setValue(userData.name)
-    await wrapper
-      .findComponent({ ref: "usernameInput" })
-      .setValue(userData.username)
-    await wrapper
-      .findComponent({ ref: "passwordInput" })
-      .setValue(userData.password)
-    await wrapper.findComponent({ ref: "emailInput" }).setValue(userData.email)
-
-    await wrapper.findComponent({ name: "q-form" }).trigger("submit")
-    await flushPromises()
-    expect(mutateHandler).toBeCalledWith(
-      expect.objectContaining({ ...userData, id: 1 })
-    )
-    expect(wrapper.vm.notify).toBeCalledWith(
-      expect.objectContaining({ color: "positive" })
-    )
+    expect(requestHandler).toHaveBeenCalledTimes(1)
+    expect(mutateHandler).toBeCalledWith({
+      ...newData,
+    })
   })
-  //TODO: Test failing validation cases.
+
+  test("sets error on failure", async () => {
+    const formData = accountData()
+    requestHandler.mockResolvedValue({ data: { currentUser: formData } })
+    mutateHandler.mockRejectedValue({})
+
+    const wrapper = await makeWrapper()
+
+    await wrapper.findComponent({ ref: "form" }).vm.$emit("save", formData)
+    await flushPromises()
+
+    expect(wrapper.vm.formState.errorMessage.value).not.toBe("")
+  })
 })

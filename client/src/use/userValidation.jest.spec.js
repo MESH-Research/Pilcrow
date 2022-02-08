@@ -59,7 +59,7 @@ describe("test uservalidation composable", () => {
     user.password = ""
     eV.$touch()
     expect(eV.required.$invalid).toBeTruthy()
-    expect(eV.notComplex.$invalid).toBeTruthy()
+    expect(eV.notComplex.$invalid).not.toBeTruthy()
 
     user.password = "password"
     eV.$touch()

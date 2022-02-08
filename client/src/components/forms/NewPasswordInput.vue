@@ -5,45 +5,45 @@
       :model-value="$props.modelValue"
       :label="label"
       autocomplete="new-password"
-      bottom-slots
       :error="error"
       @update:model-value="$emit('update:modelValue', $event)"
     >
-      <template #counter>
-        <q-chip
-          icon="help"
-          dense
-          size="sm"
-          clickable
-          :aria-label="$t('auth.aria.more_info_password')"
-          aria-controls="password-field-analysis"
-          :aria-expanded="showDetails.toString()"
-          tabindex="0"
-          role="button"
-          outline
-          @click="showDetails = !showDetails"
-          @keydown.enter.space="showDetails = !showDetails"
-        >
-          {{ $t("buttons.more_info") }}
-        </q-chip>
-      </template>
-      <template #hint>
-        <new-password-input-meter :max="4" :score="score" :valid="!error" />
-        <div v-if="$props.modelValue.length > 0" class="password-summary">
-          <span v-if="!error">{{
-            $t("auth.validation.PASSWORD_COMPLEX")
-          }}</span>
-          <span v-else>{{ $t("auth.validation.PASSWORD_NOT_COMPLEX") }}</span>
-        </div>
-        <div
-          v-else-if="$props.modelValue.length == 0 && error"
-          v-text="$t('helpers.REQUIRED_FIELD', [[$t('auth.fields.password')]])"
-        />
-      </template>
       <template v-for="(_, name) in $slots" #[name]="slotData">
         <slot :name="name" v-bind="{ ...slotData }" />
       </template>
     </password-input>
+    <div class="row items-center">
+      <new-password-input-meter
+        :max="4"
+        :score="score"
+        :valid="!error"
+        class="col"
+      />
+      <q-chip
+        icon="help"
+        dense
+        size="sm"
+        clickable
+        :aria-label="$t('auth.aria.more_info_password')"
+        aria-controls="password-field-analysis"
+        :aria-expanded="showDetails.toString()"
+        tabindex="0"
+        role="button"
+        outline
+        class="col-3"
+        @click="showDetails = !showDetails"
+        @keydown.enter.space="showDetails = !showDetails"
+      >
+        {{ $t("buttons.more_info") }}
+      </q-chip>
+    </div>
+    <div v-if="$props.modelValue.length > 0" class="password-summary">
+      <span v-if="!error">{{ $t("auth.validation.PASSWORD_COMPLEX") }}</span>
+    </div>
+    <div
+      v-else-if="$props.modelValue.length == 0 && error"
+      v-text="$t('helpers.REQUIRED_FIELD', [[$t('auth.fields.password')]])"
+    />
     <div
       v-if="showDetails"
       id="password-field-analysis"

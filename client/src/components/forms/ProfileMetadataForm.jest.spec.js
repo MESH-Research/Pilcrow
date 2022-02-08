@@ -6,6 +6,7 @@ import flushPromises from "flush-promises"
 import { ref as mockRef } from "vue"
 
 jest.mock("src/use/forms", () => ({
+  ...jest.requireActual("src/use/forms"),
   useDirtyGuard: () => {},
   useFormState: () => ({
     dirty: mockRef(false),

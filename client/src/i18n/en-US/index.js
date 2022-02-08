@@ -140,6 +140,41 @@ export default {
       affiliations: "Affiliations",
       privacy: "Privacy",
     },
+    account: {
+      fields: {
+        username: {
+          label: "Username",
+          hint: "Your username is your primary identity on this site.",
+          errors: {
+            maxLength: "@:generic_validations.maxLength",
+            USERNAME_IN_USE: "Sorry, this username is already in use.",
+          },
+        },
+        name: {
+          label: "Name",
+          hint: "(Optional) Your name will often substitute appearances of your username on this site.  Honorifics accepted.",
+          errors: {
+            maxLength: "@:generic_validation.maxLength",
+          },
+        },
+        email: {
+          label: "Email Address",
+          hint: "Updating your email address will require you to re-verify your account.",
+          errors: {
+            maxLength: "@:generic_validations.maxLength",
+            email: "Please enter a valid email address.",
+          },
+        },
+        password: {
+          label: "New Password",
+          hint: "Enter a new password here. (Leave blank to keep your current password)",
+          errors: {
+            notComplex:
+              "Your password is not complex enough.  Click (More Info) for suggestions.",
+          },
+        },
+      },
+    },
     profile: {
       section_details: "Profile Details",
       section_personal: "Personal Details",

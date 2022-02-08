@@ -9,6 +9,7 @@ import { UPDATE_PROFILE_METADATA } from "src/graphql/mutations"
 import flushPromises from "flush-promises"
 
 jest.mock("src/use/forms", () => ({
+  ...jest.requireActual("src/use/forms"),
   useDirtyGuard: () => {},
   useFormState: () => ({
     dirty: mockRef(false),
@@ -32,6 +33,7 @@ describe("MetadataPage", () => {
         mocks: {
           $t: (t) => t,
         },
+        stubs: ["profile-metadata-form"],
       },
     })
     await flushPromises()
