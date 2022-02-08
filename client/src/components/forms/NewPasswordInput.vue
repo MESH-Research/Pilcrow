@@ -12,7 +12,7 @@
         <slot :name="name" v-bind="{ ...slotData }" />
       </template>
     </password-input>
-    <div class="row items-center" style="max-width: 400px">
+    <div class="row items-center">
       <new-password-input-meter
         :max="4"
         :score="score"
