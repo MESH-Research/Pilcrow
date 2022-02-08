@@ -3,39 +3,32 @@
     <account-profile-form
       ref="form"
       :account-profile="currentUser"
+      :graphql-validation="validationErrors"
       @save="updateUser"
     />
   </div>
 </template>
 
 <script setup>
+import AccountProfileForm from "src/components/forms/AccountProfileForm.vue"
 import { UPDATE_USER } from "src/graphql/mutations"
 import { useCurrentUser } from "src/use/user"
 import { useQuasar } from "quasar"
 import { useMutation } from "@vue/apollo-composable"
 import { useI18n } from "vue-i18n"
-import { useFormState, useDirtyGuard } from "src/use/forms"
+import {
+  useFormState,
+  useDirtyGuard,
+  useGraphQLValidation,
+} from "src/use/forms"
 import { provide } from "vue"
-import AccountProfileForm from "src/components/forms/AccountProfileForm.vue"
-const importValidationErrors = function (error, vm) {
-  const gqlErrors = error?.graphQLErrors ?? []
-  var hasVErrors = false
-  gqlErrors.forEach((item) => {
-    const vErrors = item?.extensions?.validation ?? false
-    if (vErrors !== false) {
-      for (const [fieldName, fieldErrors] of Object.entries(vErrors)) {
-        vm.serverValidationErrors[fieldName] = fieldErrors
-      }
-      hasVErrors = true
-    }
-  })
-  return hasVErrors
-}
 
 const { currentUserQuery, currentUser } = useCurrentUser()
 
 const updateUserMutation = useMutation(UPDATE_USER)
-const { mutate } = updateUserMutation
+
+const { mutate, error } = updateUserMutation
+const { validationErrors, hasValidationErrors } = useGraphQLValidation(error)
 
 const formState = useFormState(
   currentUserQuery.loading,
@@ -73,8 +66,8 @@ async function updateUser(newValues) {
     })
     saved.value = true
   } catch (error) {
-    if (importValidationErrors(error, this)) {
-      errorMessage.value = "update_form_validation"
+    if (hasValidationErrors.value) {
+      errorMessage.value = "Unable to save.  Check form for errors."
     } else {
       errorMessage.value = "update_form_internal"
     }

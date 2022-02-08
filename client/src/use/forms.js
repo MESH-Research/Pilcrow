@@ -10,6 +10,8 @@ import {
 import { onBeforeRouteLeave } from "vue-router"
 import { useQuasar } from "quasar"
 import { useI18n } from "vue-i18n"
+import { isEmpty } from "lodash"
+import { unflatten } from "flat"
 
 export function useDirtyGuard(dirtyRef) {
   const { dialog } = useQuasar()
@@ -123,4 +125,26 @@ export function useVQWrap(validator, tPath) {
   })
 
   return { getTranslationKey, getTranslation, model }
+}
+
+export function useGraphQLValidation(errorRef) {
+  const validationErrors = computed(() => {
+    const gqlErrors = errorRef.value?.graphQLErrors ?? []
+    const serverValidationErrors = {}
+    gqlErrors.forEach((item) => {
+      const vErrors = item?.extensions?.validation ?? false
+      if (vErrors !== false) {
+        for (const [fieldName, fieldErrors] of Object.entries(vErrors)) {
+          serverValidationErrors[fieldName] = fieldErrors
+        }
+      }
+    })
+    return unflatten(serverValidationErrors)
+  })
+
+  const hasValidationErrors = computed(() => {
+    return !isEmpty(validationErrors.value)
+  })
+
+  return { validationErrors, hasValidationErrors }
 }

@@ -32,7 +32,7 @@ import VQInput from "src/components/atoms/VQInput.vue"
 import VQWrap from "src/components/atoms/VQWrap.vue"
 import VNewPasswordInput from "./VNewPasswordInput.vue"
 import { useVuelidate } from "@vuelidate/core"
-import { reactive, watchEffect, inject, computed } from "vue"
+import { reactive, watchEffect, watch, inject, computed, ref } from "vue"
 import { isEqual, pick } from "lodash"
 import { rules } from "src/use/userValidation"
 const props = defineProps({
@@ -41,7 +41,20 @@ const props = defineProps({
     validator: (v) =>
       v === null || typeof v === "object" || typeof v === "undefined",
   },
+  graphqlValidation: {
+    required: false,
+    type: Object,
+    default: () => ({}),
+  },
 })
+const $externalResults = ref({})
+
+watch(
+  () => props.graphqlValidation,
+  (newValue) => {
+    $externalResults.value = newValue.user ?? []
+  }
+)
 
 const emit = defineEmits(["save"])
 
@@ -59,7 +72,9 @@ const form = reactive({
 
 delete rules.password.required
 
-const v$ = useVuelidate(rules, form)
+const v$ = useVuelidate(rules, form, {
+  $externalResults,
+})
 
 const { dirty, errorMessage } = inject("formState")
 
@@ -78,6 +93,8 @@ function updateVQ(validator, newValue) {
 
 function onRevert() {
   Object.assign(form, original.value)
+  v$.value.$clearExternalResults()
+  errorMessage.value = ""
 }
 function onSubmit() {
   v$.value.$touch()

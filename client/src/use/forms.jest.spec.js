@@ -1,5 +1,10 @@
 import { mount } from "vue-composable-tester"
-import { useDirtyGuard, useFormState, useVQWrap } from "./forms"
+import {
+  useDirtyGuard,
+  useFormState,
+  useGraphQLValidation,
+  useVQWrap,
+} from "./forms"
 import { provide, ref } from "vue"
 
 let dirtyGuardCallback = null
@@ -197,5 +202,50 @@ describe("useVQWrap composable", () => {
     const { getTranslation } = result
 
     expect(getTranslation("error")).toBe("localPath.error")
+  })
+})
+
+describe("useGraphQLValidation composable", () => {
+  const error = ref({
+    graphQLErrors: [
+      {
+        message: "Validation failed for the field [updateUser].",
+        extensions: {
+          validation: {
+            "user.username": ["USERNAME_IN_USE"],
+          },
+          category: "validation",
+        },
+        locations: [
+          {
+            line: 2,
+            column: 3,
+          },
+        ],
+        path: ["updateUser"],
+      },
+      {
+        message: "Something else happened",
+      },
+    ],
+    clientErrors: [],
+    networkError: null,
+    message: "Validation failed for the field [updateUser].",
+  })
+
+  test("correctly extracts only validation errors", () => {
+    const { result } = mount(() => useGraphQLValidation(error))
+
+    const { hasValidationErrors, validationErrors } = result
+
+    expect(hasValidationErrors.value).toBe(true)
+    expect(validationErrors.value).toEqual({
+      user: { username: ["USERNAME_IN_USE"] },
+    })
+
+    error.value = {}
+
+    expect(hasValidationErrors.value).toBe(false)
+    expect(validationErrors.value).toEqual({})
   })
 })

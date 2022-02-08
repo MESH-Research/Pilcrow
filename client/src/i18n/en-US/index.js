@@ -147,6 +147,7 @@ export default {
           hint: "Your username is your primary identity on this site.",
           errors: {
             maxLength: "@:generic_validations.maxLength",
+            USERNAME_IN_USE: "Sorry, this username is already in use.",
           },
         },
         name: {
