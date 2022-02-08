@@ -151,7 +151,7 @@ export default {
         },
         name: {
           label: "Name",
-          hint: "How you would like your name represented on the site.  Include any honorific, etc that you would like to use.",
+          hint: "(Optional) Your name will often substitute appearances of your username on this site.  Honorifics accepted.",
           errors: {
             maxLength: "@:generic_validation.maxLength",
           },
