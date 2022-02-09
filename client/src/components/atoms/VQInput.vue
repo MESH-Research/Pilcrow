@@ -7,7 +7,6 @@
     v-bind="$attrs"
     ref="input"
     v-model="model"
-    :data-cy="cyAttr"
     :error="v.$error"
     :label="getTranslation('label')"
     :hint="getTranslation('hint')"
@@ -42,13 +41,6 @@ import { useVQWrap } from "src/use/forms"
  */
 
 const props = defineProps({
-  /**
-   * Apply to the input data-cy attribute
-   */
-  cyAttr: {
-    type: String,
-    default: "",
-  },
   /**
    * Vuelidate validator object the input should use.
    */
