@@ -5587,10 +5587,10 @@ javascript-stringify@^2.0.1:
   resolved "https://registry.yarnpkg.com/javascript-stringify/-/javascript-stringify-2.1.0.tgz#27c76539be14d8bd128219a2d731b09337904e79"
   integrity sha512-JVAfqNPTvNq3sB/VHQJAFxN/sPgKnsKrCwyRt15zwNCdrMMJDdcEOdubuy+DuJYYdm0ox1J4uzEuYKkN+9yhVg==
 
-javascript-time-ago@^2.3.10:
-  version "2.3.10"
-  resolved "https://registry.yarnpkg.com/javascript-time-ago/-/javascript-time-ago-2.3.10.tgz#483e960d158a24394806aed96f34f00669b671e8"
-  integrity sha512-eeZx3B8ACZpFTiaow4Xl3YTIG9UjebwVjHEDnKyzJ1NBve1ZqJIgy97yoT9Esw+Vf+XgSk4YCpOsyK5X/ByRzQ==
+javascript-time-ago@^2.3.12:
+  version "2.3.12"
+  resolved "https://registry.yarnpkg.com/javascript-time-ago/-/javascript-time-ago-2.3.12.tgz#12c6cccce153d89e36b7e64c81f157570e72b1fe"
+  integrity sha512-GXDLkoejgc4nDE/Q0LpgFVSodq9of8bSAFXiqgVox/HSv8Gykv7YOaFpV5Nf3GeaiKiQiyYDlbghsloVce9rnA==
   dependencies:
     relative-time-format "^1.0.6"
 
