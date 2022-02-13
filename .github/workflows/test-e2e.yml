@@ -123,3 +123,4 @@ jobs:
           working-directory: ./client
           wait-on: "http://localhost:8080"
           config: baseUrl=http://localhost:8080
+          tag: ${{ github.event_name }}
