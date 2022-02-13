@@ -49,10 +49,10 @@ jobs:
         containers: [1, 2, 3, 4]
     steps:
       - uses: actions/checkout@v2
-      - name: Override cypress name if pull request
-        run: |
-          echo "COMMIT_INFO_MESSAGE=${{ github.event.pull_request.title }}" >> $GITHUB_ENV
-        if: github.event_name == 'pull_request'
+      # - name: Override cypress name if pull request
+      #   run: |
+      #     echo "COMMIT_INFO_MESSAGE=${{ github.event.pull_request.title }}" >> $GITHUB_ENV
+      #   if: github.event_name == 'pull_request'
       - name: Download client build
         uses: actions/download-artifact@v2
         with:
