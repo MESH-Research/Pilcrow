@@ -261,6 +261,10 @@ class UserPermissionsTest extends TestCase
                                     'id' => '10',
                                     'name' => Permission::UNASSIGN_EDITOR,
                                 ],
+                                9 => [
+                                    'id' => '11',
+                                    'name' => Permission::UPDATE_SITE_SETTINGS,
+                                ],
                             ],
                         ],
                     ],
