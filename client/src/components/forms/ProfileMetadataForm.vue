@@ -149,8 +149,8 @@
         <editable-list
           ref="websites"
           v-model="form.websites"
-          data-cy="add_website"
           t="account.profile.fields.website"
+          data-cy="websites_list_control"
           class="q-gutter-md"
           :rules="website_rules"
         />
@@ -164,7 +164,7 @@
             ref="interest_keywords"
             v-model="form.interest_keywords"
             t="account.profile.fields.interest_keyword"
-            data-cy="interest_keywords"
+            data-cy="interest_keywords_control"
             :rules="keyword_rules"
           />
           <p>
@@ -175,6 +175,7 @@
           <tag-list
             ref="disinterest_keywords"
             v-model="form.disinterest_keywords"
+            data-cy="disinterest_keywords_control"
             t="account.profile.fields.disinterest_keyword"
             :rules="keyword_rules"
           />
