@@ -7,7 +7,7 @@
         <v-q-input
           ref="professionalTitle"
           :v="v$.professional_title"
-          cy-attr="professional_title"
+          data-cy="professional_title"
         />
         <v-q-input ref="specialization" :v="v$.specialization" />
         <v-q-input ref="affiliation" :v="v$.affiliation" />
@@ -30,7 +30,7 @@
         <v-q-input
           ref="facebook"
           :v="v$.social_media.facebook"
-          cy-attr="facebook"
+          data-cy="facebook"
           prefix="https://fb.com/"
           class="col-md-6 col-12"
           clearable
@@ -149,7 +149,7 @@
         <editable-list
           ref="websites"
           v-model="form.websites"
-          cy-attr="add_website"
+          data-cy="add_website"
           t="account.profile.fields.website"
           class="q-gutter-md"
           :rules="website_rules"
@@ -164,7 +164,7 @@
             ref="interest_keywords"
             v-model="form.interest_keywords"
             t="account.profile.fields.interest_keyword"
-            cy-attr="interest_keywords"
+            data-cy="interest_keywords"
             :rules="keyword_rules"
           />
           <p>
