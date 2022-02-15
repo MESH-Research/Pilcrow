@@ -18,7 +18,11 @@
         <q-btn
           color="primary"
           size="lg"
-          :label="$t('submissions.view_button')"
+          :label="$t('submissions.view_heading')"
+          :to="{
+            name: 'submission_view',
+            params: { id: props.id },
+          }"
         />
       </section>
       <section class="col-md-5 col-sm-12 col-xs-12">
