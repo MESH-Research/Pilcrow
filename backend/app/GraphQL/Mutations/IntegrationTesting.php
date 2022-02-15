@@ -80,7 +80,7 @@ class IntegrationTesting
 
         $attributes = $this->parseKeyValues($args['attributes']) ?? [];
 
-        $factory = app("App\\Models\\{$model}")->factory();
+        $factory = call_user_func(["App\\Models\\{$model}", 'factory']);
 
         $collection = $factory
             ->times(intval($times))
