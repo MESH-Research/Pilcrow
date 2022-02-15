@@ -1,11 +1,11 @@
 <?php
-declare(strict_types=1);
+ declare(strict_types=1);
 
-namespace App\GraphQL\Mutations;
+ namespace App\GraphQL\Mutations;
 
-use App\Exceptions\InvalidCredentials;
-use App\Models\User;
-use Illuminate\Support\Facades\Auth;
+ use App\Exceptions\InvalidCredentials;
+ use App\Models\User;
+ use Illuminate\Support\Facades\Auth;
 
 class Login
 {
@@ -18,7 +18,7 @@ class Login
     {
         // Plain Laravel: Auth::guard()
         // Laravel Sanctum: Auth::guard(config('sanctum.guard', 'web'))
-        $guard = Auth::guard(config('sanctum.guard', 'web'));
+        $guard = Auth::guard('web');
 
         if (! $guard->attempt($args)) {
             throw new InvalidCredentials('Invalid credentials supplied');
