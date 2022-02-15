@@ -60,7 +60,7 @@ class IntegrationTesting
         $email = $args['email'];
         $user = User::where('email', $email)->firstOrFail();
 
-        Auth::guard(config('sanctum.guard', 'web'))
+        Auth::guard('web')
             ->login($user);
 
         return $user;
@@ -80,7 +80,7 @@ class IntegrationTesting
 
         $attributes = $this->parseKeyValues($args['attributes']) ?? [];
 
-        $factory = app("App\\Models\\{$model}")->factory();
+        $factory = call_user_func(["App\\Models\\{$model}", 'factory']);
 
         $collection = $factory
             ->times(intval($times))
