@@ -12,10 +12,14 @@
         <q-breadcrumbs-el :label="$t('submissions.details_heading')" />
       </q-breadcrumbs>
     </nav>
-    <h2 class="q-pl-lg">Manage: {{ submission.title }}</h2>
+    <h2 class="q-pl-lg">{{ submission.title }}</h2>
     <div class="row q-col-gutter-lg q-pa-lg">
       <section class="col-12">
-        <q-btn color="primary" size="lg" label="View Submission" />
+        <q-btn
+          color="primary"
+          size="lg"
+          :label="$t('submissions.view_button')"
+        />
       </section>
       <section class="col-md-5 col-sm-12 col-xs-12">
         <h3>
