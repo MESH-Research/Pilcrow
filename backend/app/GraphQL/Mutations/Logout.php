@@ -17,7 +17,7 @@ class Logout
     {
         // Plain Laravel: Auth::guard()
         // Laravel Sanctum: Auth::guard(config('sanctum.guard', 'web'))
-        $guard = Auth::guard(config('sanctum.guard', 'web'));
+        $guard = Auth::guard('web');
 
         /** @var \App\Models\User|null $user */
         $user = $guard->user();
