@@ -60,7 +60,7 @@ class IntegrationTesting
         $email = $args['email'];
         $user = User::where('email', $email)->firstOrFail();
 
-        Auth::guard(config('sanctum.guard', 'web'))
+        Auth::guard('web')
             ->login($user);
 
         return $user;
