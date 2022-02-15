@@ -310,6 +310,7 @@ export default {
     },
   },
   submissions: {
+    details_heading: "Submission Details",
     create: {
       success: "Submission successfully created.",
       failure: "An error occurred while attempting to create the submission.",

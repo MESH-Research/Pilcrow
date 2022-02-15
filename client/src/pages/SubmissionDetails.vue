@@ -3,6 +3,15 @@
     {{ $t("loading") }}
   </div>
   <article v-else>
+    <nav class="q-px-lg q-pt-md q-gutter-sm">
+      <q-breadcrumbs>
+        <q-breadcrumbs-el
+          :label="$t('header.submissions', 2)"
+          to="/submissions"
+        />
+        <q-breadcrumbs-el :label="$t('submissions.details_heading')" />
+      </q-breadcrumbs>
+    </nav>
     <h2 class="q-pl-lg">Manage: {{ submission.title }}</h2>
     <div class="row q-col-gutter-lg q-pa-lg">
       <section class="col-md-5 col-sm-12 col-xs-12">
