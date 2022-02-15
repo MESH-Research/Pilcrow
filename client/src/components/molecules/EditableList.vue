@@ -34,9 +34,7 @@
               v-model.trim="v$.editItemValue.$model"
               :error="v$.editItemValue.$error"
               outlined
-              :data-cy="`edit_input_${[
-                $t(`${t}.label`).toLowerCase(),
-              ]}_${index}`"
+              :data-cy="`edit_input_${index}`"
               @keydown.enter.prevent="saveEdit"
             >
               <template #error>
@@ -72,9 +70,7 @@
                 flat
                 dense
                 icon="edit"
-                :data-cy="`edit_btn_${[
-                  $t(`${t}.label`).toLowerCase(),
-                ]}_${index}`"
+                :data-cy="`edit_btn_${index}`"
                 :aria-label="$t('lists.edit', [$t(`${t}.label`)])"
                 :disabled="itemUnderEdit !== false"
                 @click="editItem(index)"
@@ -83,9 +79,7 @@
                 :disabled="index === 0 || itemUnderEdit !== false"
                 flat
                 dense
-                :data-cy="`arrow_upward_${[
-                  $t(`${t}.label`).toLowerCase(),
-                ]}_${index}`"
+                :data-cy="`arrow_upward_${index}`"
                 icon="arrow_upward"
                 :aria-label="$t('lists.move_up', [$t(`${t}.label`)])"
                 @click="reorderItem(index, -1)"
@@ -118,7 +112,7 @@
       :label="$t('lists.new', [$t(`${t}.label`)])"
       :error="v$.addItemValue.$error"
       outlined
-      :data-cy="cyAttr"
+      data-cy="input_field"
       @keydown.enter.prevent="addItem"
     >
       <template v-if="inputIcon" #prepend>
@@ -191,13 +185,6 @@ export default {
     allowDuplicates: {
       type: Boolean,
       default: false,
-    },
-    /**
-     * Cypress attribute for data-cy element
-     */
-    cyAttr: {
-      type: String,
-      default: "",
     },
   },
   emits: ["update:modelValue"],
