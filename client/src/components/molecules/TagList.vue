@@ -5,7 +5,7 @@
       outlined
       :label="$t('lists.new', [$t(`${t}.label`)])"
       :error="v$.addValue.$error"
-      :data-cy="`add_${cyAttr}`"
+      data-cy="input_field"
       class="col-md-5 col-12"
       @keydown.enter.prevent="addItem"
     >
@@ -26,7 +26,7 @@
         </q-btn>
       </template>
     </q-input>
-    <div class="col-md-7 col-12" :data-cy="`tag_list_${cyAttr}`">
+    <div class="col-md-7 col-12" data-cy="tag_list">
       <q-chip
         v-for="(item, index) in modelValue"
         :key="index"
@@ -75,13 +75,6 @@ export default {
     allowDuplicates: {
       type: Boolean,
       default: false,
-    },
-    /**
-     * Cypress data-cy attribute value.
-     */
-    cyAttr: {
-      type: String,
-      default: "keywords",
     },
   },
   emits: ["update:modelValue"],
