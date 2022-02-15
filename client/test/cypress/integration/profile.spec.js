@@ -31,21 +31,30 @@ describe("Profile", () => {
   it("can add websites to the websites editable list and re-order them via clickable arrows", () => {
     const site1 = "https://ccr.lndo.site"
     const site2 = "https://yahoo.com"
-    cy.dataCy("add_website").type(site1 + "{enter}")
-    cy.dataCy("add_website").type(site2 + "{enter}")
-    cy.dataCy("arrow_upward_website_1").click()
+    cy.dataCy("websites_list_control")
+      .within(() => {
+        cy.dataCy("input_field").type(site1 + "{enter}")
+        cy.dataCy("input_field").type(site2 + "{enter}")
+        cy.dataCy("arrow_upward_1").click()
+      })
     cy.dataCy("button_save").click()
     cy.dataCy("button_saved").contains("Saved")
-    cy.dataCy("edit_btn_website_0").click()
-    cy.dataCy("edit_input_website_0").should("have.value", site2)
+    cy.dataCy("websites_list_control")
+      .within(() => {
+        cy.dataCy("edit_btn_0").click()
+        cy.dataCy("edit_input_0").should("have.value", site2)
+      })
   })
 
   it("can add interest keywords", () => {
-    const word1 = "manuscript"
-    const word2 = "video"
-    cy.dataCy("add_interest_keywords").type(word1 + "{enter}")
-    cy.dataCy("add_interest_keywords").type(word2 + "{enter}")
-    cy.dataCy("tag_list_interest_keywords").contains(word1)
-    cy.dataCy("tag_list_interest_keywords").contains(word2)
+    cy.dataCy("interest_keywords_control")
+      .within(() => {
+        const word1 = "manuscript"
+        const word2 = "video"
+        cy.dataCy("input_field").type(word1 + "{enter}")
+        cy.dataCy("input_field").type(word2 + "{enter}")
+        cy.dataCy("tag_list").contains(word1)
+        cy.dataCy("tag_list").contains(word2)
+      })
   })
 })
