@@ -45,8 +45,8 @@ return [
     ],
 
     /*
-     * The contents of settings classes can be cached through your application,
-     * settings will be stored within a provided Laravel store and can have an
+     * The contents of settings classes can be cached through your application.
+     * Settings will be stored within a provided Laravel store and can have an
      * additional prefix.
      */
     'cache' => [
