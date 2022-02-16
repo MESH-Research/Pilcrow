@@ -98,7 +98,10 @@ export const useLogin = () => {
       throw Error("FORM_VALIDATION")
     }
     try {
-      const result = await loginMutation(credentials)
+      const result = await loginMutation({
+        email: credentials.email.toLowerCase(),
+        password: credentials.password,
+      })
       return result.data.login
     } catch (e) {
       const codes = e?.graphQLErrors
