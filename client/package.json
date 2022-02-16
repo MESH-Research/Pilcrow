@@ -47,7 +47,7 @@
     "@quasar/app": "3",
     "@quasar/quasar-app-extension-testing-unit-jest": "^3.0.0-alpha.8",
     "axe-core": "^4.3.3",
-    "cypress": "8.3",
+    "cypress": "9.5",
     "cypress-axe": "^0.14.0",
     "cypress-file-upload": "^5.0.8",
     "eslint": "^7.32.0",
