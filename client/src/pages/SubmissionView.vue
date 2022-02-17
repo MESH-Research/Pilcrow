@@ -21,7 +21,7 @@
     </nav>
     <h2 class="q-pl-lg">{{ submission.title }}</h2>
     <div class="row q-col-gutter-lg q-pa-lg">
-      <article class="col-sm-9">
+      <article class="col-sm-9 submission-content">
         <h1>Submission Title</h1>
         <p>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
@@ -109,3 +109,27 @@ const props = defineProps({
 
 const submission = useResult(useQuery(GET_SUBMISSION, { id: props.id }).result)
 </script>
+
+<style scoped>
+.submission-content {
+  counter-reset: paragraph_counter;
+  padding-left: 60px;
+}
+.submission-content p {
+  position: relative;
+}
+.submission-content p:before {
+  color: #555;
+  content: "¶ " counter(paragraph_counter);
+  counter-increment: paragraph_counter;
+  display: block;
+  font-family: Helvetica, Arial, san-serif;
+  font-size: 1em;
+  margin-right: 10px;
+  position: absolute;
+  right: 100%;
+  text-align: right;
+  top: 0;
+  width: 50px;
+}
+</style>
