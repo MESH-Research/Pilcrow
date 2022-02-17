@@ -20,13 +20,12 @@
         "nuwave/lighthouse": "^5.1",
         "olssonm/l5-zxcvbn": "^4.4",
         "spatie/laravel-permission": "^3.18",
-        "spatie/laravel-settings": "^2.3",
+        "spatie/laravel-settings": "^5.5",
         "teamtnt/laravel-scout-tntsearch-driver": "^11.2"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
         "fakerphp/faker": "^1.9.1",
-        "laravel/sail": "^0.0.5",
         "mll-lab/laravel-graphql-playground": "^2.4",
         "mockery/mockery": "^1.4.2",
         "nunomaduro/collision": "^5.0",
