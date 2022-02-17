@@ -25,7 +25,7 @@
     "require-dev": {
         "facade/ignition": "^2.5",
         "fakerphp/faker": "^1.9.1",
-        "laravel/sail": "^0.0.5",
+        "laravel/sail": "^1.13.3",
         "mll-lab/laravel-graphql-playground": "^2.4",
         "mockery/mockery": "^1.4.2",
         "nunomaduro/collision": "^5.0",
