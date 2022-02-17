@@ -3971,6 +3971,10 @@
             },
             "funding": [
                 {
+                    "url": "https://spatie.be/open-source/support-us",
+                    "type": "custom"
+                },
+                {
                     "url": "https://github.com/spatie",
                     "type": "github"
                 }
