@@ -1,0 +1,20 @@
+type GeneralSettings {
+    site_name: String
+}
+
+input GeneralSettingsInput {
+    site_name: String
+}
+
+extend type Query {
+    generalSettings: GeneralSettings
+        @field(resolver: "App\\Settings\\GeneralSettings@query")
+}
+
+extend type Mutation {
+    saveGeneralSettings(
+        settings: GeneralSettingsInput! @spread
+    ): GeneralSettings
+        @field(resolver: "App\\Settings\\GeneralSettings@mutate")
+        @gate(ability: "update site settings")
+}
