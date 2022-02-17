@@ -32,9 +32,9 @@ type Query {
     publication(id: ID @eq): Publication @find
 
     "Return all publications"
-    publications(
-        is_publicly_visible: Boolean @scope(name: "is_publicly_visible")
-    ): [Publication!]! @paginate(defaultCount: 100) @can(ability: "view")
+    publications(is_publicly_visible: Boolean @scope(name: "is_publicly_visible")): [Publication!]!
+        @paginate(defaultCount: 100)
+        @can(ability: "view")
 
     "Return a submission by ID"
     submission(id: ID @eq): Submission @find
@@ -80,60 +80,46 @@ type Mutation {
         @field(resolver: "App\\GraphQL\\Mutations\\VerifyEmail@verify")
 
     "Create a new publication"
-    createPublication(
-        publication: CreatePublicationInput! @spread
-    ): Publication! @create @can(ability: "create")
+    createPublication(publication: CreatePublicationInput! @spread): Publication!
+        @create
+        @can(ability: "create")
 
     "Create an association between a user, role, and publication"
-    createPublicationUser(
-        publication_user: PublicationUserInput! @spread
-    ): PublicationUser! @create @can(ability: "create", injectArgs: true)
+    createPublicationUser(publication_user: PublicationUserInput! @spread): PublicationUser!
+        @create
+        @can(ability: "create", injectArgs: true)
 
     "Create an association between a user, role, and publication"
-    deletePublicationUser(
-        publication_user: PublicationUserInput! @spread
-    ): PublicationUser!
+    deletePublicationUser(publication_user: PublicationUserInput! @spread): PublicationUser!
         @guard
         @can(ability: "delete", injectArgs: true)
-        @field(
-            resolver: "App\\GraphQL\\Mutations\\DeletePublicationUser@delete"
-        )
+        @field(resolver: "App\\GraphQL\\Mutations\\DeletePublicationUser@delete")
 
     "Create a new submission under a publication"
     createSubmission(input: CreateSubmissionInput! @spread): Submission!
         @event(dispatch: "App\\Events\\SubmissionCreated")
 
     "Create an association between a user, role, and submission"
-    createSubmissionUser(
-        submission_user: CreateSubmissionUserInput! @spread
-    ): SubmissionUser! @create @can(ability: "create", injectArgs: true)
+    createSubmissionUser(submission_user: CreateSubmissionUserInput! @spread): SubmissionUser!
+        @create
+        @can(ability: "create", injectArgs: true)
 
     "Delete an association between a user, role, and submission"
-    deleteSubmissionUser(
-        user_id: ID!
-        role_id: ID!
-        submission_id: ID!
-    ): SubmissionUser!
+    deleteSubmissionUser(user_id: ID! role_id: ID! submission_id: ID!): SubmissionUser!
         @guard
         @can(ability: "delete", injectArgs: true)
         @field(resolver: "App\\GraphQL\\Mutations\\DeleteSubmissionUser@delete")
 
     "Create an association between an uploaded file and a submission"
-    createSubmissionFile(
-        input: CreateSubmissionFileInput! @spread
-    ): SubmissionFile!
+    createSubmissionFile(input: CreateSubmissionFileInput! @spread): SubmissionFile!
 
     "Mark a user notification as read"
     markNotificationRead(id: ID!): Notification!
-        @field(
-            resolver: "App\\GraphQL\\Mutations\\MarkNotificationRead@markAsRead"
-        )
+        @field(resolver: "App\\GraphQL\\Mutations\\MarkNotificationRead@markAsRead")
 
     "Mark all of a user's notification as read"
     markAllNotificationsRead: Int
-        @field(
-            resolver: "App\\GraphQL\\Mutations\\MarkNotificationRead@markAllAsRead"
-        )
+        @field(resolver: "App\\GraphQL\\Mutations\\MarkNotificationRead@markAllAsRead")
 }
 
 "A date string with format `Y-m-d`, e.g. `2011-05-23`."
@@ -201,8 +187,7 @@ input ValidateNewUserInput @validator(class: "UserInputValidator") {
 """
 Input type for adding social media data to profile metadata
 """
-input UpdateSocialMediaInput
-    @validator(class: "ProfileMetadataSocialMediaValidator") {
+input UpdateSocialMediaInput @validator(class: "ProfileMetadataSocialMediaValidator") {
     google: String
     twitter: String
     facebook: String
@@ -210,8 +195,7 @@ input UpdateSocialMediaInput
     linkedin: String
 }
 
-input UpdateAcademicProfilesInput
-    @validator(class: "ProfileMetadataAcademicProfilesValidator") {
+input UpdateAcademicProfilesInput @validator(class: "ProfileMetadataAcademicProfilesValidator") {
     academia_edu_id: String
     humanities_commons: String
     orcid_id: String
@@ -276,8 +260,7 @@ input CreateSubmissionFilesHasMany {
 """
 Input type for creating a new association between a submission, role, and user via the createSubmissionUser mutation
 """
-input CreateSubmissionUserInput
-    @validator(class: "SubmissionUserInputValidator") {
+input CreateSubmissionUserInput @validator(class: "SubmissionUserInputValidator") {
     user_id: ID!
     role_id: ID!
     submission_id: ID!
@@ -286,8 +269,7 @@ input CreateSubmissionUserInput
 """
 Input type for creating a new association between an uploaded file and a submission
 """
-input CreateSubmissionFileInput
-    @validator(class: "SubmissionFileInputValidator") {
+input CreateSubmissionFileInput @validator(class: "SubmissionFileInputValidator") {
     submission_id: ID!
     file_upload: Upload!
 }
