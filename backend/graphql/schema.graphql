@@ -7,6 +7,7 @@
 #import submission.graphql
 #import role.graphql
 #import user.graphql
+#import settings.graphql
 
 type Query {
     "Return information about the currently logged in user"
@@ -130,7 +131,7 @@ scalar DateTime
 
 "Can be used as an argument to upload files using https://github.com/jaydenseric/graphql-multipart-request-spec"
 scalar Upload
-  @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Upload")
+    @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Upload")
 
 """
 Input type for creating a new user via the userCreate mutation
