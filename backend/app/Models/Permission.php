@@ -20,4 +20,5 @@ class Permission extends ParentModel
     public const UNASSIGN_REVIEW_COORDINATOR = 'unassign review coordinator';
     public const ASSIGN_EDITOR = 'assign editor';
     public const UNASSIGN_EDITOR = 'unassign editor';
+    public const UPDATE_SITE_SETTINGS = 'update site settings';
 }
