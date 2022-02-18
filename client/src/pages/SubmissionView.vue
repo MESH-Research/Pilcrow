@@ -3,7 +3,7 @@
     {{ $t("loading") }}
   </div>
   <article v-else>
-    <nav class="q-px-lg q-pt-md q-gutter-sm">
+    <nav class="q-px-lg q-py-md q-gutter-sm">
       <q-breadcrumbs>
         <q-breadcrumbs-el
           :label="$t('header.submissions', 2)"
@@ -19,13 +19,22 @@
         <q-breadcrumbs-el :label="$t('submissions.view_heading')" />
       </q-breadcrumbs>
     </nav>
-    <h2 class="q-pl-lg">{{ submission.title }}</h2>
     <q-layout view="hHh lpR fFf" container style="min-height: 500px">
-      <q-header reveal elevated class="bg-primary text-white">
+      <q-header reveal elevated class="bg-secondary text-white">
         <q-toolbar>
-          <q-toolbar-title> <!-- --> </q-toolbar-title>
+          <q-toolbar-title>
+            <h2 class="text-h4 q-ma-sm q-pl-sm">
+              {{ submission.title }}
+            </h2>
+          </q-toolbar-title>
 
-          <q-btn dense flat round icon="menu" @click="toggleRightDrawer" />
+          <q-btn
+            dense
+            flat
+            round
+            icon="question_answer"
+            @click="toggleRightDrawer"
+          />
         </q-toolbar>
       </q-header>
 
@@ -65,6 +74,7 @@
           <div class="q-pb-sm">
             <q-chip size="16px" icon="bookmark"> Relevance </q-chip>
             <q-chip size="16px" icon="bookmark"> Accessibility </q-chip>
+            <q-chip size="16px" icon="bookmark"> Coherence </q-chip>
           </div>
 
           <q-card-actions>
@@ -102,13 +112,11 @@
           </q-card-section>
 
           <q-card-section>
-            {{ lorem }}
+            {{ lorem2 }}
           </q-card-section>
 
           <div class="q-pb-sm">
             <q-chip size="16px" icon="bookmark"> Relevance </q-chip>
-            <q-chip size="16px" icon="bookmark"> Accessibility </q-chip>
-            <q-chip size="16px" icon="bookmark"> Coherence </q-chip>
           </div>
 
           <q-card-actions>
@@ -226,14 +234,14 @@ const rightDrawerOpen = ref(false)
 function toggleRightDrawer() {
   rightDrawerOpen.value = !rightDrawerOpen.value
 }
-const lorem = `At quis risus sed vulputate odio ut enim blandit
-            volutpat. Tempor id eu nisl nunc mi. Malesuada nunc vel risus
-            commodo viverra maecenas accumsan lacus. Porttitor leo a diam
-            sollicitudin tempor. Blandit massa enim nec dui nunc mattis enim.
-
-            Elementum nisi quis eleifend quam adipiscing vitae proin sagittis.
-            Placerat orci nulla pellentesque dignissim. Condimentum id venenatis
-            a condimentum vitae sapien pellentesque.`
+const lorem = `At quis risus sed vulputate odio. Aliquam
+            eleifend mi in nulla. Ornare arcu odio ut sem nulla pharetra diam
+            sit amet. Nulla pharetra diam sit amet. Faucibus ornare suspendisse
+            sed nisi lacus sed. Commodo quis imperdiet massa tincidunt nunc
+            pulvinar sapien. Egestas tellus rutrum tellus pellentesque eu
+            tincidunt tortor.`
+const lorem2 = `Ut sem nulla pharetra diam sit amet. Sed lectus vestibulum mattis
+            ullamcorper.`
 </script>
 
 <style scoped>
