@@ -228,85 +228,89 @@
             a condimentum vitae sapien pellentesque.
           </p>
         </article>
-        <q-separator />
+        <q-separator class="page-seperator" />
         <section class="comments">
-          <h3>Overall Comments</h3>
-          <q-card class="q-mb-md">
-            <q-card-section>
-              <div class="text-h4">Vitae Congue</div>
-              <small>February 17th, 2021 at 6:35pm</small>
-            </q-card-section>
-            <q-separator />
-            <q-card-section>
-              <p>
-                Vitae semper quis lectus nulla at volutpat. Eleifend quam
-                adipiscing vitae proin sagittis. Tellus molestie nunc non
-                blandit massa. Odio tempor orci dapibus ultrices in. Condimentum
-                id venenatis a condimentum vitae sapien pellentesque habitant.
-                Auctor augue mauris augue neque gravida in. Etiam sit amet nisl
-                purus in. Fringilla ut morbi tincidunt augue. Morbi tincidunt
-                ornare massa eget egestas purus viverra accumsan. Sed odio morbi
-                quis commodo. Velit euismod in pellentesque massa. Massa massa
-                ultricies mi quis hendrerit dolor magna eget.
-              </p>
-              <p>
-                Sed sed risus pretium quam vulputate. Amet mauris commodo quis
-                imperdiet massa tincidunt nunc. Consequat mauris nunc congue
-                nisi vitae suscipit tellus mauris a. Non nisi est sit amet
-                facilisis magna. Turpis massa tincidunt dui ut ornare lectus.
-                Vel risus commodo viverra maecenas accumsan lacus vel facilisis.
-                Mauris cursus mattis molestie a iaculis at. Aenean sed
-                adipiscing diam donec. Nisl nunc mi ipsum faucibus. Sed
-                elementum tempus egestas sed sed risus. Risus pretium quam
-                vulputate dignissim suspendisse in. Ut faucibus pulvinar
-                elementum integer. Volutpat ac tincidunt vitae semper quis. Cras
-                semper auctor neque vitae tempus. Malesuada bibendum arcu vitae
-                elementum curabitur vitae nunc sed. Tortor vitae purus faucibus
-                ornare suspendisse sed. Turpis tincidunt id aliquet risus
-                feugiat. Mauris augue neque gravida in fermentum et sollicitudin
-                ac orci. In pellentesque massa placerat duis ultricies lacus
-                sed.
-              </p>
-            </q-card-section>
-          </q-card>
-          <q-card class="q-mb-md">
-            <q-card-section>
-              <div class="text-h4">Amet Nisl Purus</div>
-              <small>February 17th, 2021 at 6:35pm</small>
-            </q-card-section>
-            <q-separator />
-            <q-card-section>
-              <p>
-                Vitae semper quis lectus nulla at volutpat. Eleifend quam
-                adipiscing vitae proin sagittis. Tellus molestie nunc non
-                blandit massa. Odio tempor orci dapibus ultrices in. Condimentum
-                id venenatis a condimentum vitae sapien pellentesque habitant.
-                Auctor augue mauris augue neque gravida in. Etiam sit amet nisl
-                purus in. Fringilla ut morbi tincidunt augue. Morbi tincidunt
-                ornare massa eget egestas purus viverra accumsan. Sed odio morbi
-                quis commodo. Velit euismod in pellentesque massa. Massa massa
-                ultricies mi quis hendrerit dolor magna eget.
-              </p>
-              <p>
-                Sed sed risus pretium quam vulputate. Amet mauris commodo quis
-                imperdiet massa tincidunt nunc. Consequat mauris nunc congue
-                nisi vitae suscipit tellus mauris a. Non nisi est sit amet
-                facilisis magna. Turpis massa tincidunt dui ut ornare lectus.
-                Vel risus commodo viverra maecenas accumsan lacus vel facilisis.
-                Mauris cursus mattis molestie a iaculis at. Aenean sed
-                adipiscing diam donec. Nisl nunc mi ipsum faucibus. Sed
-                elementum tempus egestas sed sed risus. Risus pretium quam
-                vulputate dignissim suspendisse in. Ut faucibus pulvinar
-                elementum integer. Volutpat ac tincidunt vitae semper quis. Cras
-                semper auctor neque vitae tempus. Malesuada bibendum arcu vitae
-                elementum curabitur vitae nunc sed. Tortor vitae purus faucibus
-                ornare suspendisse sed. Turpis tincidunt id aliquet risus
-                feugiat. Mauris augue neque gravida in fermentum et sollicitudin
-                ac orci. In pellentesque massa placerat duis ultricies lacus
-                sed.
-              </p>
-            </q-card-section>
-          </q-card>
+          <div class="comments-wrapper">
+            <h3 class="text-h1">Overall Comments</h3>
+            <q-card class="q-mb-md">
+              <q-card-section>
+                <div class="text-h4">Vitae Congue</div>
+                <small>February 17th, 2021 at 6:35pm</small>
+              </q-card-section>
+              <q-separator />
+              <q-card-section>
+                <p>
+                  Vitae semper quis lectus nulla at volutpat. Eleifend quam
+                  adipiscing vitae proin sagittis. Tellus molestie nunc non
+                  blandit massa. Odio tempor orci dapibus ultrices in.
+                  Condimentum id venenatis a condimentum vitae sapien
+                  pellentesque habitant. Auctor augue mauris augue neque gravida
+                  in. Etiam sit amet nisl purus in. Fringilla ut morbi tincidunt
+                  augue. Morbi tincidunt ornare massa eget egestas purus viverra
+                  accumsan. Sed odio morbi quis commodo. Velit euismod in
+                  pellentesque massa. Massa massa ultricies mi quis hendrerit
+                  dolor magna eget.
+                </p>
+                <p>
+                  Sed sed risus pretium quam vulputate. Amet mauris commodo quis
+                  imperdiet massa tincidunt nunc. Consequat mauris nunc congue
+                  nisi vitae suscipit tellus mauris a. Non nisi est sit amet
+                  facilisis magna. Turpis massa tincidunt dui ut ornare lectus.
+                  Vel risus commodo viverra maecenas accumsan lacus vel
+                  facilisis. Mauris cursus mattis molestie a iaculis at. Aenean
+                  sed adipiscing diam donec. Nisl nunc mi ipsum faucibus. Sed
+                  elementum tempus egestas sed sed risus. Risus pretium quam
+                  vulputate dignissim suspendisse in. Ut faucibus pulvinar
+                  elementum integer. Volutpat ac tincidunt vitae semper quis.
+                  Cras semper auctor neque vitae tempus. Malesuada bibendum arcu
+                  vitae elementum curabitur vitae nunc sed. Tortor vitae purus
+                  faucibus ornare suspendisse sed. Turpis tincidunt id aliquet
+                  risus feugiat. Mauris augue neque gravida in fermentum et
+                  sollicitudin ac orci. In pellentesque massa placerat duis
+                  ultricies lacus sed.
+                </p>
+              </q-card-section>
+            </q-card>
+            <q-card class="q-mb-md">
+              <q-card-section>
+                <div class="text-h4">Amet Nisl Purus</div>
+                <small>February 17th, 2021 at 6:35pm</small>
+              </q-card-section>
+              <q-separator />
+              <q-card-section>
+                <p>
+                  Vitae semper quis lectus nulla at volutpat. Eleifend quam
+                  adipiscing vitae proin sagittis. Tellus molestie nunc non
+                  blandit massa. Odio tempor orci dapibus ultrices in.
+                  Condimentum id venenatis a condimentum vitae sapien
+                  pellentesque habitant. Auctor augue mauris augue neque gravida
+                  in. Etiam sit amet nisl purus in. Fringilla ut morbi tincidunt
+                  augue. Morbi tincidunt ornare massa eget egestas purus viverra
+                  accumsan. Sed odio morbi quis commodo. Velit euismod in
+                  pellentesque massa. Massa massa ultricies mi quis hendrerit
+                  dolor magna eget.
+                </p>
+                <p>
+                  Sed sed risus pretium quam vulputate. Amet mauris commodo quis
+                  imperdiet massa tincidunt nunc. Consequat mauris nunc congue
+                  nisi vitae suscipit tellus mauris a. Non nisi est sit amet
+                  facilisis magna. Turpis massa tincidunt dui ut ornare lectus.
+                  Vel risus commodo viverra maecenas accumsan lacus vel
+                  facilisis. Mauris cursus mattis molestie a iaculis at. Aenean
+                  sed adipiscing diam donec. Nisl nunc mi ipsum faucibus. Sed
+                  elementum tempus egestas sed sed risus. Risus pretium quam
+                  vulputate dignissim suspendisse in. Ut faucibus pulvinar
+                  elementum integer. Volutpat ac tincidunt vitae semper quis.
+                  Cras semper auctor neque vitae tempus. Malesuada bibendum arcu
+                  vitae elementum curabitur vitae nunc sed. Tortor vitae purus
+                  faucibus ornare suspendisse sed. Turpis tincidunt id aliquet
+                  risus feugiat. Mauris augue neque gravida in fermentum et
+                  sollicitudin ac orci. In pellentesque massa placerat duis
+                  ultricies lacus sed.
+                </p>
+              </q-card-section>
+            </q-card>
+          </div>
         </section>
       </q-page-container>
     </q-layout>
@@ -353,43 +357,46 @@ function handlePan({ ...newInfo }) {
 }
 </script>
 
-<style scoped>
-.comments,
-.submission-content {
-  max-width: 700px;
-  padding: 0 60px;
-  margin: 0 auto;
-}
-.comments {
-  padding: 60px;
-}
-.submission-content {
-  counter-reset: paragraph_counter;
-  font-size: 16px;
-}
-.submission-content p {
-  position: relative;
-}
-.submission-content p:before {
-  color: #555;
-  content: "¶ " counter(paragraph_counter);
-  counter-increment: paragraph_counter;
-  display: block;
-  font-family: Helvetica, Arial, san-serif;
-  font-size: 1em;
-  margin-right: 10px;
-  min-width: 50px;
-  position: absolute;
-  right: 100%;
-  text-align: right;
-  top: 0;
-  white-space: nowrap;
-}
-.highlight {
-  color: #000;
-  background-color: #bbe2e8;
-}
-.tag__value {
-  background: #orange;
-}
+<style lang="sass" scoped>
+.comments
+  background-color: #efefef
+
+.comments-wrapper,
+.submission-content
+  max-width: 700px
+  margin: 0 auto
+  padding: 10px 60px 60px
+
+.submission-content
+  counter-reset: paragraph_counter
+  font-size: 16px
+
+.submission-content p
+  position: relative
+
+.submission-content p:before
+  color: #555
+  content: "¶ " counter(paragraph_counter)
+  counter-increment: paragraph_counter
+  display: block
+  font-family: Helvetica, Arial, san-serif
+  font-size: 1em
+  margin-right: 10px
+  min-width: 50px
+  position: absolute
+  right: 100%
+  text-align: right
+  top: 0
+  white-space: nowrap
+
+.highlight
+  color: #000
+  background-color: #bbe2e8
+
+.tag__value
+  background: #orange
+
+.page-seperator
+  height: 3px
+  background-color: #888
 </style>
