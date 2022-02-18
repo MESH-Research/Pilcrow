@@ -6,7 +6,6 @@
     :aria-label="$t('header.notification_button')"
     aria-haspopup="true"
     :aria-expanded="isVisible ? 'true' : 'false'"
-    stretch
   >
     <q-icon name="notifications" />
     <q-badge
