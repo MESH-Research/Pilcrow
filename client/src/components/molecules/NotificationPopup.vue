@@ -1,7 +1,6 @@
 <template>
   <q-btn
     flat
-    padding="none"
     data-cy="dropdown_notificiations"
     :aria-label="$t('header.notification_button')"
     aria-haspopup="true"
@@ -11,6 +10,7 @@
     <q-badge
       v-if="hasUnreadNotifications"
       ref="notification_indicator"
+      class="notification_indicator"
       data-cy="notification_indicator"
       role="presentation"
       floating
@@ -105,4 +105,7 @@ const dismissAll = async () => {
       padding: 4px 16px 4px 0px
       width: 100%
       margin-right: 10px
+.notification_indicator
+  top: 0
+  right: 11px
 </style>

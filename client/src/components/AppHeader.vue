@@ -1,6 +1,6 @@
 <template>
   <q-header class="header">
-    <q-toolbar>
+    <q-toolbar class="header-toolbar">
       <q-btn
         v-if="props.modelValue !== null"
         flat
@@ -12,11 +12,11 @@
         :aria-expanded="(!!props.modelValue).toString()"
         @click="toggleDrawer"
       />
-      <div class="q-pa-md">
-        <h1 class="q-ma-none text-h4" style="line-height: 1">
+      <div class="q-pa-sm">
+        <h1 class="q-ma-none text-h4 site-title">
           Collaborative Community Review
         </h1>
-        <small>Submission Review System</small>
+        <small class="site-subtitle">Submission Review System</small>
       </div>
       <q-space />
 
@@ -91,20 +91,9 @@ function toggleDrawer() {
 </script>
 
 <style lang="sass">
-.site-title a
-  text-decoration: none
-  color: white
-.header
-  height:70px
+.header-toolbar
+  height: 70px
   overflow: hidden
-  .header-image
-    height: 100%
-    z-index: -1
-    opacity: 0.2
-    filter: grayscale(2%)
-
-@media (max-width: $breakpoint-xs)
-  .header
-    height: auto
-    padding-bottom: 10px
+.site-title
+  line-height: 1
 </style>
