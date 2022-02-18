@@ -184,6 +184,7 @@
               commodo.</span
             >
           </p>
+          <h3>Commodo quis</h3>
           <p>
             Odio euismod lacinia at quis risus sed vulputate odio. Aliquam
             eleifend mi in nulla. Ornare arcu odio ut sem nulla pharetra diam
@@ -194,10 +195,15 @@
             Ut sem nulla pharetra diam sit amet. Sed lectus vestibulum mattis
             ullamcorper. Sit amet nisl purus in mollis nunc sed id semper. Non
             tellus orci ac auctor. In egestas erat imperdiet sed euismod.
+          </p>
+          <h3>Facilisi nullam vehicula ipsum a arcu</h3>
+          <p>
             Blandit aliquam etiam erat velit scelerisque in dictum. Euismod quis
             viverra nibh cras pulvinar mattis nunc sed blandit. Risus feugiat in
             ante metus dictum at tempor. Facilisi nullam vehicula ipsum a arcu
             cursus vitae congue mauris. Sit amet facilisis magna etiam tempor
+          </p>
+          <p>
             orci eu lobortis. At quis risus sed vulputate odio ut enim blandit
             volutpat. Tempor id eu nisl nunc mi. Malesuada nunc vel risus
             commodo viverra maecenas accumsan lacus. Porttitor leo a diam
@@ -242,6 +248,7 @@ const lorem2 = `Ut sem nulla pharetra diam sit amet. Sed lectus vestibulum matti
 <style scoped>
 .submission-content {
   counter-reset: paragraph_counter;
+  margin: 0 auto;
   max-width: 700px;
   padding: 0 60px;
   font-size: 16px;
@@ -257,11 +264,12 @@ const lorem2 = `Ut sem nulla pharetra diam sit amet. Sed lectus vestibulum matti
   font-family: Helvetica, Arial, san-serif;
   font-size: 1em;
   margin-right: 10px;
+  min-width: 50px;
   position: absolute;
   right: 100%;
   text-align: right;
   top: 0;
-  width: 50px;
+  white-space: nowrap;
 }
 .highlight {
   color: #000;
