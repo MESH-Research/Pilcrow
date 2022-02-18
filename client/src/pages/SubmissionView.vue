@@ -86,7 +86,7 @@
               </div>
 
               <q-card-actions>
-                <q-btn bordered flat>Reply</q-btn>
+                <q-btn bordered color="primary">Reply</q-btn>
               </q-card-actions>
 
               <q-separator />
@@ -128,7 +128,7 @@
               </div>
 
               <q-card-actions>
-                <q-btn bordered flat>Reply</q-btn>
+                <q-btn bordered color="primary">Reply</q-btn>
               </q-card-actions>
 
               <q-separator />
