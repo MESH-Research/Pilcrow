@@ -3,27 +3,22 @@
     {{ $t("loading") }}
   </div>
   <article v-else>
-    <nav class="q-px-lg q-py-md q-gutter-sm">
-      <q-breadcrumbs>
-        <q-breadcrumbs-el
-          :label="$t('header.submissions', 2)"
-          to="/submissions"
-        />
-        <q-breadcrumbs-el
-          :label="$t('submissions.details_heading')"
-          :to="{
-            name: 'submission_details',
-            params: { id: props.id },
-          }"
-        />
-        <q-breadcrumbs-el :label="$t('submissions.view_heading')" />
-      </q-breadcrumbs>
-    </nav>
-    <q-layout view="hHh lpR fFf" container style="min-height: 500px">
-      <q-header reveal elevated class="bg-secondary text-white">
+    <q-layout view="hHh lpR fFr" container style="min-height: 650px">
+      <q-header reveal elevated class="bg-grey-9 text-white">
         <q-toolbar>
+          <q-btn
+            dense
+            flat
+            round
+            icon="arrow_back_ios_new"
+            class="q-mr-sm"
+            :to="{
+              name: 'submission_details',
+              params: { id: props.id },
+            }"
+          />
           <q-toolbar-title>
-            <h2 class="text-h4 q-ma-sm q-pl-sm">
+            <h2 class="text-h4 q-ma-sm">
               {{ submission.title }}
             </h2>
           </q-toolbar-title>

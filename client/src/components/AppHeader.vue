@@ -12,6 +12,12 @@
         :aria-expanded="(!!props.modelValue).toString()"
         @click="toggleDrawer"
       />
+      <div class="q-pa-md">
+        <h1 class="q-ma-none text-h4" style="line-height: 1">
+          Collaborative Community Review
+        </h1>
+        <small>Submission Review System</small>
+      </div>
       <q-space />
 
       <template v-if="currentUser">
@@ -60,10 +66,6 @@
         <q-btn :label="$t('auth.login')" to="/login" stretch flat />
       </template>
     </q-toolbar>
-    <div class="title">
-      <h1 class="q-ma-none">Collaborative Community Review</h1>
-      <div class="text-subtitle">Submission Review System</div>
-    </div>
   </q-header>
 </template>
 
@@ -93,10 +95,8 @@ function toggleDrawer() {
   text-decoration: none
   color: white
 .header
-  height: 150px
+  height:70px
   overflow: hidden
-  .title
-    padding: 24px 48px 8px 48px
   .header-image
     height: 100%
     z-index: -1
@@ -107,8 +107,4 @@ function toggleDrawer() {
   .header
     height: auto
     padding-bottom: 10px
-    .title
-      padding: 0px 15px 5px 15px
-      .text-h4
-        font-size: 1.3rem
 </style>

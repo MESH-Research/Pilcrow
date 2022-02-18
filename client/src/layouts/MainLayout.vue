@@ -8,6 +8,12 @@
       show-if-above
       content-class="sidebar bg-grey-1"
     >
+      <div
+        class="bg-secondary row items-center text-white"
+        style="height: 70px"
+      >
+        <avatar-block :user="currentUser" />
+      </div>
       <q-scroll-area class="sidebar-nav">
         <q-list>
           <q-item v-ripple to="/dashboard">
@@ -45,17 +51,6 @@
           </q-item>
         </q-list>
       </q-scroll-area>
-
-      <q-img
-        role="presentation"
-        class="sidebar-avatar absolute-top"
-        src="https://cdn.quasar.dev/img/material.png"
-      >
-        <avatar-block
-          :user="currentUser"
-          class="absolute-bottom bg-secondary"
-        />
-      </q-img>
     </q-drawer>
 
     <q-page-container>
@@ -83,11 +78,10 @@ const { currentUser } = useCurrentUser()
 
 <style lang="sass">
 #sidebar
-  $avatar-height: 150px
+  $avatar-height: 70px
   .sidebar-avatar
     height: $avatar-height
   .sidebar-nav
     height: calc(100% - #{$avatar-height})
-    margin-top: $avatar-height
     border-right: 1px solid #ddd
 </style>
