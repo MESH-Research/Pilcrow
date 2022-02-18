@@ -33,93 +33,108 @@
         </q-toolbar>
       </q-header>
 
-      <q-drawer v-model="rightDrawerOpen" show-if-above side="right" bordered>
-        <q-card flat class="bg-grey-1">
-          <q-card-section>
-            <div class="row items-center no-wrap">
-              <div class="col">
-                <div class="text-subtitle1">John Doe</div>
-                <small>February 17th, 2021 at 6:35pm</small>
+      <q-drawer
+        v-model="rightDrawerOpen"
+        show-if-above
+        side="right"
+        bordered
+        :width="drawerWidth"
+      >
+        <div class="row fit">
+          <div
+            v-touch-pan.horizontal.prevent.mouse.preserveCursor="handlePan"
+            style="width: 6px; cursor: col-resize"
+            class="bg-primary"
+          ></div>
+          <q-scroll-area class="fit col">
+            <q-card flat class="bg-grey-1">
+              <q-card-section>
+                <div class="row items-center no-wrap">
+                  <div class="col">
+                    <div class="text-subtitle1">Magna Fringilla</div>
+                    <small>February 17th, 2021 at 6:35pm</small>
+                  </div>
+
+                  <div class="col-auto">
+                    <q-btn color="grey-7" round flat icon="more_vert">
+                      <q-menu cover auto-close>
+                        <q-list>
+                          <q-item clickable>
+                            <q-item-section>Remove Card</q-item-section>
+                          </q-item>
+                          <q-item clickable>
+                            <q-item-section>Send Feedback</q-item-section>
+                          </q-item>
+                          <q-item clickable>
+                            <q-item-section>Share</q-item-section>
+                          </q-item>
+                        </q-list>
+                      </q-menu>
+                    </q-btn>
+                  </div>
+                </div>
+              </q-card-section>
+
+              <q-card-section>
+                {{ lorem }}
+              </q-card-section>
+
+              <div class="q-pb-sm">
+                <q-chip size="16px" icon="bookmark"> Relevance </q-chip>
+                <q-chip size="16px" icon="bookmark"> Accessibility </q-chip>
+                <q-chip size="16px" icon="bookmark"> Coherence </q-chip>
               </div>
 
-              <div class="col-auto">
-                <q-btn color="grey-7" round flat icon="more_vert">
-                  <q-menu cover auto-close>
-                    <q-list>
-                      <q-item clickable>
-                        <q-item-section>Remove Card</q-item-section>
-                      </q-item>
-                      <q-item clickable>
-                        <q-item-section>Send Feedback</q-item-section>
-                      </q-item>
-                      <q-item clickable>
-                        <q-item-section>Share</q-item-section>
-                      </q-item>
-                    </q-list>
-                  </q-menu>
-                </q-btn>
-              </div>
-            </div>
-          </q-card-section>
+              <q-card-actions>
+                <q-btn bordered flat>Reply</q-btn>
+              </q-card-actions>
 
-          <q-card-section>
-            {{ lorem }}
-          </q-card-section>
+              <q-separator />
+            </q-card>
+            <q-card flat class="bg-grey-1">
+              <q-card-section>
+                <div class="row items-center no-wrap">
+                  <div class="col">
+                    <div class="text-subtitle1">Egestas</div>
+                    <small>February 17th, 2021 at 6:35pm</small>
+                  </div>
 
-          <div class="q-pb-sm">
-            <q-chip size="16px" icon="bookmark"> Relevance </q-chip>
-            <q-chip size="16px" icon="bookmark"> Accessibility </q-chip>
-            <q-chip size="16px" icon="bookmark"> Coherence </q-chip>
-          </div>
+                  <div class="col-auto">
+                    <q-btn color="grey-7" round flat icon="more_vert">
+                      <q-menu cover auto-close>
+                        <q-list>
+                          <q-item clickable>
+                            <q-item-section>Remove Card</q-item-section>
+                          </q-item>
+                          <q-item clickable>
+                            <q-item-section>Send Feedback</q-item-section>
+                          </q-item>
+                          <q-item clickable>
+                            <q-item-section>Share</q-item-section>
+                          </q-item>
+                        </q-list>
+                      </q-menu>
+                    </q-btn>
+                  </div>
+                </div>
+              </q-card-section>
 
-          <q-card-actions>
-            <q-btn bordered flat>Reply</q-btn>
-          </q-card-actions>
+              <q-card-section>
+                {{ lorem2 }}
+              </q-card-section>
 
-          <q-separator />
-        </q-card>
-        <q-card flat class="bg-grey-1">
-          <q-card-section>
-            <div class="row items-center no-wrap">
-              <div class="col">
-                <div class="text-subtitle1">John Doe</div>
-                <small>February 17th, 2021 at 6:35pm</small>
+              <div class="q-pb-sm">
+                <q-chip size="16px" icon="bookmark"> Relevance </q-chip>
               </div>
 
-              <div class="col-auto">
-                <q-btn color="grey-7" round flat icon="more_vert">
-                  <q-menu cover auto-close>
-                    <q-list>
-                      <q-item clickable>
-                        <q-item-section>Remove Card</q-item-section>
-                      </q-item>
-                      <q-item clickable>
-                        <q-item-section>Send Feedback</q-item-section>
-                      </q-item>
-                      <q-item clickable>
-                        <q-item-section>Share</q-item-section>
-                      </q-item>
-                    </q-list>
-                  </q-menu>
-                </q-btn>
-              </div>
-            </div>
-          </q-card-section>
+              <q-card-actions>
+                <q-btn bordered flat>Reply</q-btn>
+              </q-card-actions>
 
-          <q-card-section>
-            {{ lorem2 }}
-          </q-card-section>
-
-          <div class="q-pb-sm">
-            <q-chip size="16px" icon="bookmark"> Relevance </q-chip>
-          </div>
-
-          <q-card-actions>
-            <q-btn bordered flat>Reply</q-btn>
-          </q-card-actions>
-
-          <q-separator />
-        </q-card>
+              <q-separator />
+            </q-card>
+          </q-scroll-area>
+        </div>
       </q-drawer>
 
       <q-page-container>
@@ -213,6 +228,86 @@
             a condimentum vitae sapien pellentesque.
           </p>
         </article>
+        <q-separator />
+        <section class="comments">
+          <h3>Overall Comments</h3>
+          <q-card class="q-mb-md">
+            <q-card-section>
+              <div class="text-h4">Vitae Congue</div>
+              <small>February 17th, 2021 at 6:35pm</small>
+            </q-card-section>
+            <q-separator />
+            <q-card-section>
+              <p>
+                Vitae semper quis lectus nulla at volutpat. Eleifend quam
+                adipiscing vitae proin sagittis. Tellus molestie nunc non
+                blandit massa. Odio tempor orci dapibus ultrices in. Condimentum
+                id venenatis a condimentum vitae sapien pellentesque habitant.
+                Auctor augue mauris augue neque gravida in. Etiam sit amet nisl
+                purus in. Fringilla ut morbi tincidunt augue. Morbi tincidunt
+                ornare massa eget egestas purus viverra accumsan. Sed odio morbi
+                quis commodo. Velit euismod in pellentesque massa. Massa massa
+                ultricies mi quis hendrerit dolor magna eget.
+              </p>
+              <p>
+                Sed sed risus pretium quam vulputate. Amet mauris commodo quis
+                imperdiet massa tincidunt nunc. Consequat mauris nunc congue
+                nisi vitae suscipit tellus mauris a. Non nisi est sit amet
+                facilisis magna. Turpis massa tincidunt dui ut ornare lectus.
+                Vel risus commodo viverra maecenas accumsan lacus vel facilisis.
+                Mauris cursus mattis molestie a iaculis at. Aenean sed
+                adipiscing diam donec. Nisl nunc mi ipsum faucibus. Sed
+                elementum tempus egestas sed sed risus. Risus pretium quam
+                vulputate dignissim suspendisse in. Ut faucibus pulvinar
+                elementum integer. Volutpat ac tincidunt vitae semper quis. Cras
+                semper auctor neque vitae tempus. Malesuada bibendum arcu vitae
+                elementum curabitur vitae nunc sed. Tortor vitae purus faucibus
+                ornare suspendisse sed. Turpis tincidunt id aliquet risus
+                feugiat. Mauris augue neque gravida in fermentum et sollicitudin
+                ac orci. In pellentesque massa placerat duis ultricies lacus
+                sed.
+              </p>
+            </q-card-section>
+          </q-card>
+          <q-card class="q-mb-md">
+            <q-card-section>
+              <div class="text-h4">Amet Nisl Purus</div>
+              <small>February 17th, 2021 at 6:35pm</small>
+            </q-card-section>
+            <q-separator />
+            <q-card-section>
+              <p>
+                Vitae semper quis lectus nulla at volutpat. Eleifend quam
+                adipiscing vitae proin sagittis. Tellus molestie nunc non
+                blandit massa. Odio tempor orci dapibus ultrices in. Condimentum
+                id venenatis a condimentum vitae sapien pellentesque habitant.
+                Auctor augue mauris augue neque gravida in. Etiam sit amet nisl
+                purus in. Fringilla ut morbi tincidunt augue. Morbi tincidunt
+                ornare massa eget egestas purus viverra accumsan. Sed odio morbi
+                quis commodo. Velit euismod in pellentesque massa. Massa massa
+                ultricies mi quis hendrerit dolor magna eget.
+              </p>
+              <p>
+                Sed sed risus pretium quam vulputate. Amet mauris commodo quis
+                imperdiet massa tincidunt nunc. Consequat mauris nunc congue
+                nisi vitae suscipit tellus mauris a. Non nisi est sit amet
+                facilisis magna. Turpis massa tincidunt dui ut ornare lectus.
+                Vel risus commodo viverra maecenas accumsan lacus vel facilisis.
+                Mauris cursus mattis molestie a iaculis at. Aenean sed
+                adipiscing diam donec. Nisl nunc mi ipsum faucibus. Sed
+                elementum tempus egestas sed sed risus. Risus pretium quam
+                vulputate dignissim suspendisse in. Ut faucibus pulvinar
+                elementum integer. Volutpat ac tincidunt vitae semper quis. Cras
+                semper auctor neque vitae tempus. Malesuada bibendum arcu vitae
+                elementum curabitur vitae nunc sed. Tortor vitae purus faucibus
+                ornare suspendisse sed. Turpis tincidunt id aliquet risus
+                feugiat. Mauris augue neque gravida in fermentum et sollicitudin
+                ac orci. In pellentesque massa placerat duis ultricies lacus
+                sed.
+              </p>
+            </q-card-section>
+          </q-card>
+        </section>
       </q-page-container>
     </q-layout>
 
@@ -243,14 +338,33 @@ const lorem = `At quis risus sed vulputate odio. Aliquam
             tincidunt tortor.`
 const lorem2 = `Ut sem nulla pharetra diam sit amet. Sed lectus vestibulum mattis
             ullamcorper.`
+const drawerWidth = ref(320)
+let originalWidth
+let originalLeft
+function handlePan({ ...newInfo }) {
+  if (newInfo.isFirst) {
+    originalWidth = drawerWidth.value
+    originalLeft = newInfo.position.left
+  } else {
+    const newDelta = newInfo.position.left - originalLeft
+    const newWidth = Math.max(200, Math.min(800, originalWidth - newDelta))
+    drawerWidth.value = newWidth
+  }
+}
 </script>
 
 <style scoped>
+.comments,
 .submission-content {
-  counter-reset: paragraph_counter;
-  margin: 0 auto;
   max-width: 700px;
   padding: 0 60px;
+  margin: 0 auto;
+}
+.comments {
+  padding: 60px;
+}
+.submission-content {
+  counter-reset: paragraph_counter;
   font-size: 16px;
 }
 .submission-content p {
