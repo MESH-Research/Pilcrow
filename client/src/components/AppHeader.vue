@@ -6,7 +6,7 @@
         flat
         round
         dense
-        icon="menu"
+        icon="switch_right"
         :aria-label="$t('header.menu_button_aria')"
         aria-controls="sidebar"
         :aria-expanded="(!!props.modelValue).toString()"
