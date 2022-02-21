@@ -50,7 +50,7 @@
             <q-card flat square class="bg-grey-1">
               <q-card-section>
                 <div
-                  class="row items-center justify-between content-stretch no-wrap"
+                  class="row items-start justify-between content-stretch no-wrap"
                 >
                   <div class="col-grow content-between">
                     <div class="text-subtitle1">Magna Fringilla</div>
@@ -105,15 +105,16 @@
             <div class="q-ml-md q-mb-md">
               <q-card flat square class="bg-grey-1">
                 <q-card-section>
-                  <div class="row items-center no-wrap">
+                  <div class="row items-start no-wrap">
                     <div class="col">
                       <div class="text-subtitle1">Egestas</div>
-                      <small> February 17th, 2021 at 6:35pm</small>
                       <div>
                         <small>
-                          <q-icon name="reply" /> Reply to Magna Fringilla
+                          <q-icon size="sm" name="subdirectory_arrow_right" />
+                          <span>Reply to Magna Fringilla</span>
                         </small>
                       </div>
+                      <small> February 18th, 2021 at 6:35pm</small>
                     </div>
 
                     <div class="col-auto">
@@ -136,7 +137,7 @@
                   </div>
                 </q-card-section>
 
-                <q-card-section>
+                <q-card-section class="q-py-none">
                   <p>
                     Sagittis eu volutpat odio facilisis. Vitae congue eu
                     consequat ac. Cursus sit amet dictum sit amet. Nibh tellus
@@ -155,10 +156,16 @@
               </q-card>
               <q-card flat square class="bg-grey-1">
                 <q-card-section>
-                  <div class="row items-center no-wrap">
+                  <div class="row items-start no-wrap">
                     <div class="col">
                       <div class="text-subtitle1">Nibh Mauris</div>
-                      <small>February 17th, 2021 at 6:35pm</small>
+                      <div>
+                        <small>
+                          <q-icon size="sm" name="subdirectory_arrow_right" />
+                          <span>Reply to Egestas</span>
+                        </small>
+                      </div>
+                      <small>February 20th, 2021 at 6:35pm</small>
                     </div>
 
                     <div class="col-auto">
@@ -181,11 +188,11 @@
                   </div>
                 </q-card-section>
 
-                <q-card-section>
+                <q-card-section class="q-py-none">
                   <p>Dictum at tempor commodo.</p>
                 </q-card-section>
 
-                <q-card-actions>
+                <q-card-actions class="q-pa-md">
                   <q-btn bordered color="primary">Reply</q-btn>
                 </q-card-actions>
 
@@ -195,7 +202,7 @@
 
             <q-card flat square class="bg-grey-1 q-mb-md">
               <q-card-section>
-                <div class="row items-center no-wrap">
+                <div class="row items-start no-wrap">
                   <div class="col">
                     <div class="text-subtitle1">Egestas</div>
                     <small>February 17th, 2021 at 6:35pm</small>
@@ -221,18 +228,18 @@
                 </div>
               </q-card-section>
 
-              <q-card-section>
+              <q-card-section class="q-py-none">
                 <p>
                   Ut sem nulla pharetra diam sit amet. Sed lectus vestibulum
                   mattis ullamcorper.
                 </p>
               </q-card-section>
 
-              <div class="q-pb-sm">
+              <div class="q-px-sm">
                 <q-chip size="16px" icon="bookmark"> Relevance </q-chip>
               </div>
 
-              <q-card-actions>
+              <q-card-actions class="q-pa-md">
                 <q-btn bordered color="primary">Reply</q-btn>
               </q-card-actions>
 
@@ -343,11 +350,37 @@
             <h3 class="text-h1">Overall Comments</h3>
             <q-card class="q-mb-md">
               <q-card-section>
-                <div class="text-h4">Vitae Congue</div>
-                <small>February 17th, 2021 at 6:35pm</small>
+                <div
+                  class="row items-start justify-between content-stretch no-wrap"
+                >
+                  <div class="col-grow content-between">
+                    <div class="text-h4">Vitae Congue</div>
+                    <div>
+                      <small>February 17th, 2021 at 6:35pm</small>
+                    </div>
+                  </div>
+
+                  <div class="col-auto">
+                    <q-btn color="grey-7" round flat icon="more_vert">
+                      <q-menu cover auto-close>
+                        <q-list>
+                          <q-item clickable>
+                            <q-item-section>Remove Card</q-item-section>
+                          </q-item>
+                          <q-item clickable>
+                            <q-item-section>Send Feedback</q-item-section>
+                          </q-item>
+                          <q-item clickable>
+                            <q-item-section>Share</q-item-section>
+                          </q-item>
+                        </q-list>
+                      </q-menu>
+                    </q-btn>
+                  </div>
+                </div>
               </q-card-section>
               <q-separator />
-              <q-card-section>
+              <q-card-section class="q-pb-none">
                 <p>
                   Vitae semper quis lectus nulla at volutpat. Eleifend quam
                   adipiscing vitae proin sagittis. Tellus molestie nunc non
@@ -379,14 +412,141 @@
                   ultricies lacus sed.
                 </p>
               </q-card-section>
+              <q-card-actions class="q-pa-md">
+                <q-btn bordered color="primary">Reply</q-btn>
+              </q-card-actions>
+
+              <q-separator />
+              <q-card flat square class="bg-grey-1">
+                <q-card-section>
+                  <div class="row items-start no-wrap">
+                    <div class="col">
+                      <div class="text-subtitle1">Egestas</div>
+                      <div>
+                        <small>
+                          <q-icon size="sm" name="subdirectory_arrow_right" />
+                          <span>Reply to Magna Fringilla</span>
+                        </small>
+                      </div>
+                      <small> February 18th, 2021 at 6:35pm</small>
+                    </div>
+
+                    <div class="col-auto">
+                      <q-btn color="grey-7" round flat icon="more_vert">
+                        <q-menu cover auto-close>
+                          <q-list>
+                            <q-item clickable>
+                              <q-item-section>Remove Card</q-item-section>
+                            </q-item>
+                            <q-item clickable>
+                              <q-item-section>Send Feedback</q-item-section>
+                            </q-item>
+                            <q-item clickable>
+                              <q-item-section>Share</q-item-section>
+                            </q-item>
+                          </q-list>
+                        </q-menu>
+                      </q-btn>
+                    </div>
+                  </div>
+                </q-card-section>
+
+                <q-card-section class="q-py-none">
+                  <p>
+                    Sagittis eu volutpat odio facilisis. Vitae congue eu
+                    consequat ac. Cursus sit amet dictum sit amet. Nibh tellus
+                    molestie nunc non blandit massa enim. Et tortor consequat id
+                    porta nibh venenatis. Dictum at tempor commodo ullamcorper.
+                    Placerat orci nulla pellentesque dignissim. Rhoncus dolor
+                    purus non enim praesent elementum facilisis.
+                  </p>
+                </q-card-section>
+
+                <q-card-actions class="q-pa-md">
+                  <q-btn bordered color="primary">Reply</q-btn>
+                </q-card-actions>
+
+                <q-separator />
+              </q-card>
+              <q-card flat square class="bg-grey-1">
+                <q-card-section>
+                  <div class="row items-start no-wrap">
+                    <div class="col">
+                      <div class="text-subtitle1">Nibh Mauris</div>
+                      <div>
+                        <small>
+                          <q-icon size="sm" name="subdirectory_arrow_right" />
+                          <span>Reply to Egestas</span>
+                        </small>
+                      </div>
+                      <small> February 18th, 2021 at 6:35pm</small>
+                    </div>
+
+                    <div class="col-auto">
+                      <q-btn color="grey-7" round flat icon="more_vert">
+                        <q-menu cover auto-close>
+                          <q-list>
+                            <q-item clickable>
+                              <q-item-section>Remove Card</q-item-section>
+                            </q-item>
+                            <q-item clickable>
+                              <q-item-section>Send Feedback</q-item-section>
+                            </q-item>
+                            <q-item clickable>
+                              <q-item-section>Share</q-item-section>
+                            </q-item>
+                          </q-list>
+                        </q-menu>
+                      </q-btn>
+                    </div>
+                  </div>
+                </q-card-section>
+
+                <q-card-section class="q-py-none">
+                  <p>Dictum at tempor commodo.</p>
+                </q-card-section>
+
+                <q-card-actions class="q-pa-md">
+                  <q-btn bordered color="primary">Reply</q-btn>
+                </q-card-actions>
+
+                <q-separator />
+              </q-card>
             </q-card>
+
             <q-card class="q-mb-md">
               <q-card-section>
-                <div class="text-h4">Amet Nisl Purus</div>
-                <small>February 17th, 2021 at 6:35pm</small>
+                <div
+                  class="row items-start justify-between content-stretch no-wrap"
+                >
+                  <div class="col-grow content-between">
+                    <div class="text-h4">Amet Nisl Purus</div>
+                    <div>
+                      <small>February 17th, 2021 at 6:35pm</small>
+                    </div>
+                  </div>
+
+                  <div class="col-auto">
+                    <q-btn color="grey-7" round flat icon="more_vert">
+                      <q-menu cover auto-close>
+                        <q-list>
+                          <q-item clickable>
+                            <q-item-section>Remove Card</q-item-section>
+                          </q-item>
+                          <q-item clickable>
+                            <q-item-section>Send Feedback</q-item-section>
+                          </q-item>
+                          <q-item clickable>
+                            <q-item-section>Share</q-item-section>
+                          </q-item>
+                        </q-list>
+                      </q-menu>
+                    </q-btn>
+                  </div>
+                </div>
               </q-card-section>
               <q-separator />
-              <q-card-section>
+              <q-card-section class="q-pb-none">
                 <p>
                   Vitae semper quis lectus nulla at volutpat. Eleifend quam
                   adipiscing vitae proin sagittis. Tellus molestie nunc non
@@ -418,6 +578,9 @@
                   ultricies lacus sed.
                 </p>
               </q-card-section>
+              <q-card-actions class="q-pa-md">
+                <q-btn bordered color="primary">Reply</q-btn>
+              </q-card-actions>
             </q-card>
           </div>
         </section>
