@@ -6,6 +6,8 @@
       id="sidebar"
       v-model="leftDrawerOpen"
       show-if-above
+      role="navigation"
+      aria-label="Main Navigation"
       content-class="sidebar bg-grey-1"
     >
       <div

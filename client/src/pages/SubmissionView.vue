@@ -3,27 +3,31 @@
     {{ $t("loading") }}
   </div>
   <article v-else>
-    <q-layout view="hHh lpR fFr" container style="min-height: 650px">
+    <q-layout
+      data-cy="submission_view_layout"
+      view="hHh lpR fFr"
+      container
+      style="min-height: 650px"
+    >
       <q-header reveal elevated class="bg-grey-9 text-white">
         <q-toolbar>
           <q-btn
             dense
+            aria-label="Back to Submission Details"
             flat
             round
             icon="arrow_back_ios_new"
-            class="q-mr-sm"
             :to="{
               name: 'submission_details',
               params: { id: props.id },
             }"
           />
           <q-toolbar-title>
-            <h2 class="text-h4 q-ma-sm">
-              {{ submission.title }}
-            </h2>
+            {{ submission.title }}
           </q-toolbar-title>
 
           <q-btn
+            aria-label="Toggle Inline Comments"
             dense
             flat
             round
@@ -32,226 +36,6 @@
           />
         </q-toolbar>
       </q-header>
-
-      <q-drawer
-        v-model="rightDrawerOpen"
-        show-if-above
-        side="right"
-        bordered
-        :width="drawerWidth"
-      >
-        <div class="row fit">
-          <div
-            v-touch-pan.horizontal.prevent.mouse.preserveCursor="handlePan"
-            style="width: 6px; cursor: col-resize"
-            class="bg-primary"
-          ></div>
-          <q-scroll-area class="fit col bg-grey-4">
-            <q-card flat square class="bg-grey-1">
-              <q-card-section>
-                <div
-                  class="row items-start justify-between content-stretch no-wrap"
-                >
-                  <div class="col-grow content-between">
-                    <div class="text-subtitle1">Magna Fringilla</div>
-                    <div>
-                      <small>February 17th, 2021 at 6:35pm</small>
-                    </div>
-                  </div>
-
-                  <div class="col-auto">
-                    <q-btn color="grey-7" round flat icon="more_vert">
-                      <q-menu cover auto-close>
-                        <q-list>
-                          <q-item clickable>
-                            <q-item-section>Remove Card</q-item-section>
-                          </q-item>
-                          <q-item clickable>
-                            <q-item-section>Send Feedback</q-item-section>
-                          </q-item>
-                          <q-item clickable>
-                            <q-item-section>Share</q-item-section>
-                          </q-item>
-                        </q-list>
-                      </q-menu>
-                    </q-btn>
-                  </div>
-                </div>
-              </q-card-section>
-
-              <q-card-section class="q-py-none">
-                <p>
-                  At quis risus sed vulputate odio. Aliquam eleifend mi in
-                  nulla. Ornare arcu odio ut sem nulla pharetra diam sit amet.
-                  Nulla pharetra diam sit amet. Faucibus ornare suspendisse sed
-                  nisi lacus sed. Commodo quis imperdiet massa tincidunt nunc
-                  pulvinar sapien. Egestas tellus rutrum tellus pellentesque eu
-                  tincidunt tortor.
-                </p>
-              </q-card-section>
-
-              <div class="q-px-sm">
-                <q-chip size="16px" icon="bookmark"> Relevance </q-chip>
-                <q-chip size="16px" icon="bookmark"> Accessibility </q-chip>
-                <q-chip size="16px" icon="bookmark"> Coherence </q-chip>
-              </div>
-
-              <q-card-actions class="q-pa-md">
-                <q-btn bordered color="primary">Reply</q-btn>
-              </q-card-actions>
-
-              <q-separator />
-            </q-card>
-            <div class="q-ml-md q-mb-md">
-              <q-card flat square class="bg-grey-1">
-                <q-card-section>
-                  <div class="row items-start no-wrap">
-                    <div class="col">
-                      <div class="text-subtitle1">Egestas</div>
-                      <div>
-                        <small>
-                          <q-icon size="sm" name="subdirectory_arrow_right" />
-                          <span>Reply to Magna Fringilla</span>
-                        </small>
-                      </div>
-                      <small> February 18th, 2021 at 6:35pm</small>
-                    </div>
-
-                    <div class="col-auto">
-                      <q-btn color="grey-7" round flat icon="more_vert">
-                        <q-menu cover auto-close>
-                          <q-list>
-                            <q-item clickable>
-                              <q-item-section>Remove Card</q-item-section>
-                            </q-item>
-                            <q-item clickable>
-                              <q-item-section>Send Feedback</q-item-section>
-                            </q-item>
-                            <q-item clickable>
-                              <q-item-section>Share</q-item-section>
-                            </q-item>
-                          </q-list>
-                        </q-menu>
-                      </q-btn>
-                    </div>
-                  </div>
-                </q-card-section>
-
-                <q-card-section class="q-py-none">
-                  <p>
-                    Sagittis eu volutpat odio facilisis. Vitae congue eu
-                    consequat ac. Cursus sit amet dictum sit amet. Nibh tellus
-                    molestie nunc non blandit massa enim. Et tortor consequat id
-                    porta nibh venenatis. Dictum at tempor commodo ullamcorper.
-                    Placerat orci nulla pellentesque dignissim. Rhoncus dolor
-                    purus non enim praesent elementum facilisis.
-                  </p>
-                </q-card-section>
-
-                <q-card-actions class="q-pa-md">
-                  <q-btn bordered color="primary">Reply</q-btn>
-                </q-card-actions>
-
-                <q-separator />
-              </q-card>
-              <q-card flat square class="bg-grey-1">
-                <q-card-section>
-                  <div class="row items-start no-wrap">
-                    <div class="col">
-                      <div class="text-subtitle1">Nibh Mauris</div>
-                      <div>
-                        <small>
-                          <q-icon size="sm" name="subdirectory_arrow_right" />
-                          <span>Reply to Egestas</span>
-                        </small>
-                      </div>
-                      <small>February 20th, 2021 at 6:35pm</small>
-                    </div>
-
-                    <div class="col-auto">
-                      <q-btn color="grey-7" round flat icon="more_vert">
-                        <q-menu cover auto-close>
-                          <q-list>
-                            <q-item clickable>
-                              <q-item-section>Remove Card</q-item-section>
-                            </q-item>
-                            <q-item clickable>
-                              <q-item-section>Send Feedback</q-item-section>
-                            </q-item>
-                            <q-item clickable>
-                              <q-item-section>Share</q-item-section>
-                            </q-item>
-                          </q-list>
-                        </q-menu>
-                      </q-btn>
-                    </div>
-                  </div>
-                </q-card-section>
-
-                <q-card-section class="q-py-none">
-                  <p>Dictum at tempor commodo.</p>
-                </q-card-section>
-
-                <q-card-actions class="q-pa-md">
-                  <q-btn bordered color="primary">Reply</q-btn>
-                </q-card-actions>
-
-                <q-separator />
-              </q-card>
-            </div>
-
-            <q-card flat square class="bg-grey-1 q-mb-md">
-              <q-card-section>
-                <div class="row items-start no-wrap">
-                  <div class="col">
-                    <div class="text-subtitle1">Egestas</div>
-                    <small>February 17th, 2021 at 6:35pm</small>
-                  </div>
-
-                  <div class="col-auto">
-                    <q-btn color="grey-7" round flat icon="more_vert">
-                      <q-menu cover auto-close>
-                        <q-list>
-                          <q-item clickable>
-                            <q-item-section>Remove Card</q-item-section>
-                          </q-item>
-                          <q-item clickable>
-                            <q-item-section>Send Feedback</q-item-section>
-                          </q-item>
-                          <q-item clickable>
-                            <q-item-section>Share</q-item-section>
-                          </q-item>
-                        </q-list>
-                      </q-menu>
-                    </q-btn>
-                  </div>
-                </div>
-              </q-card-section>
-
-              <q-card-section class="q-py-none">
-                <p>
-                  Ut sem nulla pharetra diam sit amet. Sed lectus vestibulum
-                  mattis ullamcorper.
-                </p>
-              </q-card-section>
-
-              <div class="q-px-sm">
-                <q-chip size="16px" icon="bookmark"> Relevance </q-chip>
-              </div>
-
-              <q-card-actions class="q-pa-md">
-                <q-btn bordered color="primary">Reply</q-btn>
-              </q-card-actions>
-
-              <q-separator />
-            </q-card>
-
-            <div class="row justify-center q-pa-md">
-              <q-btn color="dark" icon="arrow_upward">Scroll to Top</q-btn>
-            </div>
-          </q-scroll-area>
-        </div>
-      </q-drawer>
 
       <q-page-container>
         <article class="col-sm-9 submission-content">
@@ -361,7 +145,13 @@
                   </div>
 
                   <div class="col-auto">
-                    <q-btn color="grey-7" round flat icon="more_vert">
+                    <q-btn
+                      color="grey-7"
+                      round
+                      flat
+                      icon="more_vert"
+                      aria-label="Comment Menu"
+                    >
                       <q-menu cover auto-close>
                         <q-list>
                           <q-item clickable>
@@ -432,7 +222,13 @@
                     </div>
 
                     <div class="col-auto">
-                      <q-btn color="grey-7" round flat icon="more_vert">
+                      <q-btn
+                        color="grey-7"
+                        round
+                        flat
+                        icon="more_vert"
+                        aria-label="Reply Comment Menu"
+                      >
                         <q-menu cover auto-close>
                           <q-list>
                             <q-item clickable>
@@ -483,7 +279,13 @@
                     </div>
 
                     <div class="col-auto">
-                      <q-btn color="grey-7" round flat icon="more_vert">
+                      <q-btn
+                        color="grey-7"
+                        round
+                        flat
+                        icon="more_vert"
+                        aria-label="Reply Comment Menu"
+                      >
                         <q-menu cover auto-close>
                           <q-list>
                             <q-item clickable>
@@ -527,7 +329,13 @@
                   </div>
 
                   <div class="col-auto">
-                    <q-btn color="grey-7" round flat icon="more_vert">
+                    <q-btn
+                      color="grey-7"
+                      round
+                      flat
+                      icon="more_vert"
+                      aria-label="Comment Menu"
+                    >
                       <q-menu cover auto-close>
                         <q-list>
                           <q-item clickable>
@@ -594,7 +402,15 @@
 <script setup>
 import { GET_SUBMISSION } from "src/graphql/queries"
 import { useQuery, useResult } from "@vue/apollo-composable"
-import { ref } from "vue"
+// import { ref } from "vue"
+// const right_drawer_ref = ""
+// function right_drawer_ref(el) {
+//   if (!el) {
+//     return
+//   }
+//   console.log(el)
+//   el.setAttribute("role", "region")
+// }
 const props = defineProps({
   id: {
     type: String,
@@ -602,23 +418,23 @@ const props = defineProps({
   },
 })
 const submission = useResult(useQuery(GET_SUBMISSION, { id: props.id }).result)
-const rightDrawerOpen = ref(false)
-function toggleRightDrawer() {
-  rightDrawerOpen.value = !rightDrawerOpen.value
-}
-const drawerWidth = ref(520)
-let originalWidth
-let originalLeft
-function handlePan({ ...newInfo }) {
-  if (newInfo.isFirst) {
-    originalWidth = drawerWidth.value
-    originalLeft = newInfo.position.left
-  } else {
-    const newDelta = newInfo.position.left - originalLeft
-    const newWidth = Math.max(200, Math.min(800, originalWidth - newDelta))
-    drawerWidth.value = newWidth
-  }
-}
+// const rightDrawerOpen = ref(false)
+// function toggleRightDrawer() {
+//   rightDrawerOpen.value = !rightDrawerOpen.value
+// }
+// const drawerWidth = ref(520)
+// let originalWidth
+// let originalLeft
+// function handlePan({ ...newInfo }) {
+//   if (newInfo.isFirst) {
+//     originalWidth = drawerWidth.value
+//     originalLeft = newInfo.position.left
+//   } else {
+//     const newDelta = newInfo.position.left - originalLeft
+//     const newWidth = Math.max(200, Math.min(800, originalWidth - newDelta))
+//     drawerWidth.value = newWidth
+//   }
+// }
 </script>
 
 <style lang="sass" scoped>
