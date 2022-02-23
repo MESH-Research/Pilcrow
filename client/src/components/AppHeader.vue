@@ -3,6 +3,7 @@
     <q-toolbar class="header-toolbar">
       <q-btn
         v-if="props.modelValue !== null"
+        data-cy="sidebar_toggle"
         flat
         round
         dense
