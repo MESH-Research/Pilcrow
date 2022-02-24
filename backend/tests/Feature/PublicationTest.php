@@ -9,6 +9,7 @@ use App\Models\Role;
 use App\Models\User;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Nuwave\Lighthouse\Exceptions\ValidationException;
 use Nuwave\Lighthouse\Testing\MakesGraphQLRequests;
 use Tests\TestCase;
 
@@ -22,7 +23,7 @@ class PublicationTest extends TestCase
         $publication = Publication::factory()->create(['name' => 'Custom Name']);
         $this->assertEquals($publication->name, 'Custom Name');
 
-        $this->expectException(QueryException::class);
+        $this->expectException(ValidationException::class);
         Publication::factory()->create(['name' => 'Custom Name']);
     }
 
@@ -313,57 +314,25 @@ class PublicationTest extends TestCase
      */
     public function createPublicationUserViaMutationAsAnEditorProvider(): array
     {
+        //@codingStandardsIgnoreStart
         return [
-            [
-                [
-                    'publication_user_role_id' => Role::SUBMITTER_ROLE_ID,
-                    'allowed' => false,
-                ],
-            ],
-            [
-                [
-                    'publication_user_role_id' => Role::REVIEWER_ROLE_ID,
-                    'allowed' => false,
-                ],
-            ],
-            [
-                [
-                    'publication_user_role_id' => Role::REVIEW_COORDINATOR_ROLE_ID,
-                    'allowed' => false,
-                ],
-            ],
-            [
-                [
-                    'publication_user_role_id' => Role::EDITOR_ROLE_ID,
-                    'allowed' => false,
-                ],
-            ],
-            [
-                [
-                    'publication_user_role_id' => 0,
-                    'allowed' => false,
-                ],
-            ],
-            [
-                [
-                    'publication_user_role_id' => '',
-                    'allowed' => false,
-                ],
-            ],
-            [
-                [
-                    'publication_user_role_id' => null,
-                    'allowed' => false,
-                ],
-            ],
+            //User Role ID,                      Allowed?
+            [ Role::SUBMITTER_ROLE_ID,          false ],
+            [ Role::REVIEWER_ROLE_ID,           false ],
+            [ Role::REVIEW_COORDINATOR_ROLE_ID, false ],
+            [ Role::EDITOR_ROLE_ID,             false ],
+            [ 0,                                false ],
+            [ '',                               false ],
+            [ null,                             false ],
         ];
+        //@codingStandardsIgnoreEnd
     }
 
     /**
      * @dataProvider createPublicationUserViaMutationAsAnEditorProvider
      * @return void
      */
-    public function testCreatePublicationUserViaMutationAsAnEditor(array $case)
+    public function testCreatePublicationUserViaMutationAsAnEditor($userRoleId, bool $allowed)
     {
         /** @var User $editor */
         $editor = User::factory()->create();
@@ -391,16 +360,16 @@ class PublicationTest extends TestCase
                 }
             }',
             [
-                'role_id' => $case['publication_user_role_id'],
+                'role_id' => $userRoleId,
                 'publication_id' => $publication->id,
                 'user_id' => $user_to_be_assigned->id,
             ]
         );
         $expected_mutation_response = null;
-        if ($case['allowed']) {
+        if ($allowed) {
             $expected_mutation_response = [
                 'createPublicationUser' => [
-                    'role_id' => $case['publication_user_role_id'],
+                    'role_id' => $userRoleId,
                     'publication_id' => (string)$publication->id,
                     'user_id' => (string)$user_to_be_assigned->id,
                 ],
@@ -434,13 +403,13 @@ class PublicationTest extends TestCase
                 ],
             ],
         ];
-        if ($case['allowed']) {
+        if ($allowed) {
             array_push(
                 $expected_query_response['publication']['users'],
                 [
                     'id' => (string)$user_to_be_assigned->id,
                     'pivot' => [
-                        'role_id' => $case['publication_user_role_id'],
+                        'role_id' => $userRoleId,
                     ],
                 ],
             );
@@ -453,69 +422,37 @@ class PublicationTest extends TestCase
      */
     public function deletePublicationUserViaMutationAsAnEditorProvider(): array
     {
+        //@codingStandardsIgnoreStart
         return [
-            [
-                [
-                    'publication_user_role_id' => Role::SUBMITTER_ROLE_ID,
-                    'allowed' => false,
-                ],
-            ],
-            [
-                [
-                    'publication_user_role_id' => Role::REVIEWER_ROLE_ID,
-                    'allowed' => false,
-                ],
-            ],
-            [
-                [
-                    'publication_user_role_id' => Role::REVIEW_COORDINATOR_ROLE_ID,
-                    'allowed' => false,
-                ],
-            ],
-            [
-                [
-                    'publication_user_role_id' => Role::EDITOR_ROLE_ID,
-                    'allowed' => false,
-                ],
-            ],
-            [
-                [
-                    'publication_user_role_id' => 0,
-                    'allowed' => false,
-                ],
-            ],
-            [
-                [
-                    'publication_user_role_id' => '',
-                    'allowed' => false,
-                ],
-            ],
-            [
-                [
-                    'publication_user_role_id' => null,
-                    'allowed' => false,
-                ],
-            ],
+            //User Role ID                      Allowed?
+            [ Role::SUBMITTER_ROLE_ID,          false ],
+            [ Role::REVIEWER_ROLE_ID,           false ],
+            [ Role::REVIEW_COORDINATOR_ROLE_ID, false ],
+            [ Role::EDITOR_ROLE_ID,             false ],
+            [ 0,                                false ],
+            [ '',                               false ],
+            [ null,                             false ],
         ];
+        //@codingStandardsIgnoreEnd
     }
 
     /**
      * @dataProvider deletePublicationUserViaMutationAsAnEditorProvider
      * @return void
      */
-    public function testDeletePublicationUserViaMutationAsAnEditor(array $case)
+    public function testDeletePublicationUserViaMutationAsAnEditor($userRoleId, bool $allowed)
     {
         /** @var User $editor */
         $editor = User::factory()->create();
         $editor->assignRole(Role::EDITOR);
         $this->actingAs($editor);
         $user_to_be_deleted = User::factory()->create();
-        $publication_user_role_id_is_invalid = intval($case['publication_user_role_id']) <= 0;
+        $publication_user_role_id_is_invalid = intval($userRoleId) <= 0;
         $publication = Publication::factory()
             ->hasAttached(
                 $user_to_be_deleted,
                 [
-                    'role_id' => $publication_user_role_id_is_invalid ? Role::EDITOR_ROLE_ID : $case['publication_user_role_id'],
+                    'role_id' => $publication_user_role_id_is_invalid ? Role::EDITOR_ROLE_ID : $userRoleId,
                 ]
             )
             ->hasAttached(
@@ -538,13 +475,13 @@ class PublicationTest extends TestCase
                 }
             }',
             [
-                'role_id' => $case['publication_user_role_id'],
+                'role_id' => $userRoleId,
                 'publication_id' => $publication->id,
                 'user_id' => $user_to_be_deleted->id,
             ]
         );
         $expected_mutation_response = null;
-        if ($case['allowed']) {
+        if ($allowed) {
             $expected_mutation_response = [
                 'deletePublicationUser' => [
                     'id' => (string)$publication_user->id,
@@ -559,57 +496,25 @@ class PublicationTest extends TestCase
      */
     public function createPublicationUserViaMutationAsAnApplicationAdministratorProvider(): array
     {
+        //@codingStandardsIgnoreStart
         return [
-            [
-                [
-                    'publication_user_role_id' => Role::SUBMITTER_ROLE_ID,
-                    'allowed' => false,
-                ],
-            ],
-            [
-                [
-                    'publication_user_role_id' => Role::REVIEWER_ROLE_ID,
-                    'allowed' => false,
-                ],
-            ],
-            [
-                [
-                    'publication_user_role_id' => Role::REVIEW_COORDINATOR_ROLE_ID,
-                    'allowed' => false,
-                ],
-            ],
-            [
-                [
-                    'publication_user_role_id' => Role::EDITOR_ROLE_ID,
-                    'allowed' => true,
-                ],
-            ],
-            [
-                [
-                    'publication_user_role_id' => 0,
-                    'allowed' => false,
-                ],
-            ],
-            [
-                [
-                    'publication_user_role_id' => '',
-                    'allowed' => false,
-                ],
-            ],
-            [
-                [
-                    'publication_user_role_id' => null,
-                    'allowed' => false,
-                ],
-            ],
+            //User Role                         Allowed
+            [ Role::SUBMITTER_ROLE_ID,          false ],
+            [ Role::REVIEWER_ROLE_ID,           false ],
+            [ Role::REVIEW_COORDINATOR_ROLE_ID, false ],
+            [ Role::EDITOR_ROLE_ID,             true  ],
+            [ 0,                                false ],
+            [ '',                               false ],
+            [ null,                             false ],
         ];
+        //@codingStandardsIgnoreEnd
     }
 
     /**
      * @dataProvider createPublicationUserViaMutationAsAnApplicationAdministratorProvider
      * @return void
      */
-    public function testCreatePublicationUserViaMutationAsAnApplicationAdministrator(array $case)
+    public function testCreatePublicationUserViaMutationAsAnApplicationAdministrator($userRoleId, bool $allowed)
     {
         /** @var User $admin */
         $admin = User::factory()->create();
@@ -631,16 +536,16 @@ class PublicationTest extends TestCase
                 }
             }',
             [
-                'role_id' => $case['publication_user_role_id'],
+                'role_id' => $userRoleId,
                 'publication_id' => $publication->id,
                 'user_id' => $user_to_be_assigned->id,
             ]
         );
         $expected_mutation_response = null;
-        if ($case['allowed']) {
+        if ($allowed) {
             $expected_mutation_response = [
                 'createPublicationUser' => [
-                    'role_id' => $case['publication_user_role_id'],
+                    'role_id' => $userRoleId,
                     'publication_id' => (string)$publication->id,
                     'user_id' => (string)$user_to_be_assigned->id,
                 ],
@@ -667,13 +572,13 @@ class PublicationTest extends TestCase
                 'users' => [ ],
             ],
         ];
-        if ($case['allowed']) {
+        if ($allowed) {
             array_push(
                 $expected_query_response['publication']['users'],
                 [
                     'id' => (string)$user_to_be_assigned->id,
                     'pivot' => [
-                        'role_id' => $case['publication_user_role_id'],
+                        'role_id' => $userRoleId,
                     ],
                 ],
             );
@@ -686,69 +591,37 @@ class PublicationTest extends TestCase
      */
     public function deletePublicationUserViaMutationAsAnApplicationAdministratorProvider(): array
     {
+        //@codingStandardsIgnoreStart
         return [
-            [
-                [
-                    'publication_user_role_id' => Role::SUBMITTER_ROLE_ID,
-                    'allowed' => false,
-                ],
-            ],
-            [
-                [
-                    'publication_user_role_id' => Role::REVIEWER_ROLE_ID,
-                    'allowed' => false,
-                ],
-            ],
-            [
-                [
-                    'publication_user_role_id' => Role::REVIEW_COORDINATOR_ROLE_ID,
-                    'allowed' => false,
-                ],
-            ],
-            [
-                [
-                    'publication_user_role_id' => Role::EDITOR_ROLE_ID,
-                    'allowed' => true,
-                ],
-            ],
-            [
-                [
-                    'publication_user_role_id' => 0,
-                    'allowed' => false,
-                ],
-            ],
-            [
-                [
-                    'publication_user_role_id' => '',
-                    'allowed' => false,
-                ],
-            ],
-            [
-                [
-                    'publication_user_role_id' => null,
-                    'allowed' => false,
-                ],
-            ],
+            // User Role ID                     Allowed
+            [ Role::SUBMITTER_ROLE_ID,          false ],
+            [ Role::REVIEWER_ROLE_ID,           false ],
+            [ Role::REVIEW_COORDINATOR_ROLE_ID, false ],
+            [ Role::EDITOR_ROLE_ID,             true  ],
+            [ 0,                                false ],
+            [ '',                               false ],
+            [ null,                             false ],
         ];
+        //@codingStandardsIgnoreEnd
     }
 
     /**
      * @dataProvider deletePublicationUserViaMutationAsAnApplicationAdministratorProvider
      * @return void
      */
-    public function testDeletePublicationUserViaMutationAsAnApplicationAdministrator(array $case)
+    public function testDeletePublicationUserViaMutationAsAnApplicationAdministrator($userRoleId, bool $allowed)
     {
         /** @var User $editor */
         $editor = User::factory()->create();
         $editor->assignRole(Role::APPLICATION_ADMINISTRATOR);
         $this->actingAs($editor);
         $user_to_be_deleted = User::factory()->create();
-        $publication_user_role_id_is_invalid = intval($case['publication_user_role_id']) <= 0;
+        $publication_user_role_id_is_invalid = intval($userRoleId) <= 0;
         $publication = Publication::factory()
             ->hasAttached(
                 $user_to_be_deleted,
                 [
-                    'role_id' => $publication_user_role_id_is_invalid ? Role::EDITOR_ROLE_ID : $case['publication_user_role_id'],
+                    'role_id' => $publication_user_role_id_is_invalid ? Role::EDITOR_ROLE_ID : $userRoleId,
                 ]
             )
             ->create([
@@ -765,13 +638,13 @@ class PublicationTest extends TestCase
                 }
             }',
             [
-                'role_id' => $case['publication_user_role_id'],
+                'role_id' => $userRoleId,
                 'publication_id' => $publication->id,
                 'user_id' => $user_to_be_deleted->id,
             ]
         );
         $expected_mutation_response = null;
-        if ($case['allowed']) {
+        if ($allowed) {
             $expected_mutation_response = [
                 'deletePublicationUser' => [
                     'id' => (string)$publication_user->id,
