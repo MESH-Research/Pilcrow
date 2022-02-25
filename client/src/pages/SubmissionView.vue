@@ -116,10 +116,29 @@
                 <q-card-section>
                   <div class="row items-start no-wrap">
                     <div class="col">
-                      <div class="text-subtitle1">Egestas</div>
-                      <div>
+                      <div class="row items-center">
+                        <div style="width: 30px">
+                          <avatar-image :user="currentUser" round class="fit" />
+                        </div>
+                        <div class="text-subtitle1 q-pl-sm">Egestas</div>
+                      </div>
+                      <div class="q-pl-sm">
                         <small>
                           <q-icon size="sm" name="subdirectory_arrow_right" />
+                          <div
+                            style="
+                              display: inline-block;
+                              height: 18px;
+                              width: 18px;
+                            "
+                            class="q-mr-sm"
+                          >
+                            <avatar-image
+                              :user="currentUser"
+                              round
+                              class="fit"
+                            />
+                          </div>
                           <span>Reply to Magna Fringilla</span>
                         </small>
                       </div>
