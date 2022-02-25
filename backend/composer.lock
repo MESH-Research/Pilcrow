@@ -5044,12 +5044,12 @@
                 }
             },
             "autoload": {
-                "psr-4": {
-                    "Symfony\\Polyfill\\Ctype\\": ""
-                },
                 "files": [
                     "bootstrap.php"
-                ]
+                ],
+                "psr-4": {
+                    "Symfony\\Polyfill\\Ctype\\": ""
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -6095,12 +6095,12 @@
             },
             "type": "library",
             "autoload": {
-                "psr-4": {
-                    "Symfony\\Component\\String\\": ""
-                },
                 "files": [
                     "Resources/functions.php"
                 ],
+                "psr-4": {
+                    "Symfony\\Component\\String\\": ""
+                },
                 "exclude-from-classmap": [
                     "/Tests/"
                 ]
@@ -6414,27 +6414,27 @@
         },
         {
             "name": "teamtnt/laravel-scout-tntsearch-driver",
-            "version": "v11.5.0",
+            "version": "v11.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/teamtnt/laravel-scout-tntsearch-driver.git",
-                "reference": "ea962275ee5b977af81dccc138a0fa87d062492b"
+                "reference": "b98729b0c7179218c9a5e1445922a9313d45c487"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/teamtnt/laravel-scout-tntsearch-driver/zipball/ea962275ee5b977af81dccc138a0fa87d062492b",
-                "reference": "ea962275ee5b977af81dccc138a0fa87d062492b",
+                "url": "https://api.github.com/repos/teamtnt/laravel-scout-tntsearch-driver/zipball/b98729b0c7179218c9a5e1445922a9313d45c487",
+                "reference": "b98729b0c7179218c9a5e1445922a9313d45c487",
                 "shasum": ""
             },
             "require": {
-                "illuminate/bus": "~5.4|^6.0|^7.0|^8.0",
-                "illuminate/contracts": "~5.4|^6.0|^7.0|^8.0",
-                "illuminate/pagination": "~5.4|^6.0|^7.0|^8.0",
-                "illuminate/queue": "~5.4|^6.0|^7.0|^8.0",
-                "illuminate/support": "~5.4|^6.0|^7.0|^8.0",
+                "illuminate/bus": "~5.4|^6.0|^7.0|^8.0|^9.0",
+                "illuminate/contracts": "~5.4|^6.0|^7.0|^8.0|^9.0",
+                "illuminate/pagination": "~5.4|^6.0|^7.0|^8.0|^9.0",
+                "illuminate/queue": "~5.4|^6.0|^7.0|^8.0|^9.0",
+                "illuminate/support": "~5.4|^6.0|^7.0|^8.0|^9.0",
                 "laravel/scout": "7.*|^8.0|^8.3|^9.0",
                 "php": ">=7.1|^8",
-                "teamtnt/tntsearch": "2.7.0"
+                "teamtnt/tntsearch": "2.7.0|^2.8"
             },
             "require-dev": {
                 "mockery/mockery": "^1.0",
@@ -6478,22 +6478,22 @@
             ],
             "support": {
                 "issues": "https://github.com/teamtnt/laravel-scout-tntsearch-driver/issues",
-                "source": "https://github.com/teamtnt/laravel-scout-tntsearch-driver/tree/v11.5.0"
+                "source": "https://github.com/teamtnt/laravel-scout-tntsearch-driver/tree/v11.6.0"
             },
-            "time": "2021-06-04T12:00:35+00:00"
+            "time": "2022-02-25T10:32:29+00:00"
         },
         {
             "name": "teamtnt/tntsearch",
-            "version": "v2.7.0",
+            "version": "v2.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/teamtnt/tntsearch.git",
-                "reference": "c7d0f67070ea22e835bb1416b85dee0f74780fdc"
+                "reference": "ccedae0cfe21f7831f2dd1f973cf8904dad42d8d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/teamtnt/tntsearch/zipball/c7d0f67070ea22e835bb1416b85dee0f74780fdc",
-                "reference": "c7d0f67070ea22e835bb1416b85dee0f74780fdc",
+                "url": "https://api.github.com/repos/teamtnt/tntsearch/zipball/ccedae0cfe21f7831f2dd1f973cf8904dad42d8d",
+                "reference": "ccedae0cfe21f7831f2dd1f973cf8904dad42d8d",
                 "shasum": ""
             },
             "require": {
@@ -6508,12 +6508,12 @@
             },
             "type": "library",
             "autoload": {
-                "psr-4": {
-                    "TeamTNT\\TNTSearch\\": "src"
-                },
                 "files": [
                     "helper/helpers.php"
-                ]
+                ],
+                "psr-4": {
+                    "TeamTNT\\TNTSearch\\": "src"
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -6542,7 +6542,7 @@
             ],
             "support": {
                 "issues": "https://github.com/teamtnt/tntsearch/issues",
-                "source": "https://github.com/teamtnt/tntsearch/tree/v2.7.0"
+                "source": "https://github.com/teamtnt/tntsearch/tree/v2.9.0"
             },
             "funding": [
                 {
@@ -6558,7 +6558,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2021-03-11T15:26:17+00:00"
+            "time": "2022-02-22T10:35:34+00:00"
         },
         {
             "name": "thecodingmachine/safe",
