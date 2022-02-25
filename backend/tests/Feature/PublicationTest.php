@@ -18,7 +18,7 @@ class PublicationTest extends TestCase
     use MakesGraphQLRequests;
     use RefreshDatabase;
 
-    public function testPublicationsCanBeCreatedWithCustomNamesThatAreNotDuplicates()
+    public function testNoDuplicateNames()
     {
         $publication = Publication::factory()->create(['name' => 'Custom Name']);
         $this->assertEquals($publication->name, 'Custom Name');
@@ -40,6 +40,7 @@ class PublicationTest extends TestCase
                         'name' => 'Test Publication',
                     ],
                 ],
+                'Unable to create publication',
             ],
             [
                 '        Test Publication with Whitespace       ',
@@ -48,6 +49,7 @@ class PublicationTest extends TestCase
                         'name' => 'Test Publication with Whitespace',
                     ],
                 ],
+                'Whitespace should be trimmed around name',
             ],
             [
                 '',
@@ -60,7 +62,7 @@ class PublicationTest extends TestCase
      * @dataProvider publicationMutationProvider
      * @return void
      */
-    public function testPublicationsCanBeCreatedViaMutationByAnApplicationAdministrator(mixed $publication_name, mixed $expected_data): void
+    public function testCreation(mixed $publication_name, mixed $expected_data, string $message): void
     {
         /** @var User $user */
         $user = User::factory()->create();
@@ -74,13 +76,14 @@ class PublicationTest extends TestCase
             }',
             [ 'publication_name' => $publication_name ]
         );
-        $response->assertJsonPath('data', $expected_data);
+        $json = $response->json();
+        $this->assertSame($json['data'], $expected_data, $message);
     }
 
     /**
      * @return void
      */
-    public function testPublicationsCannotBeCreatedViaMutationByARegularUser()
+    public function testCreationRequiresAppAdmin()
     {
         /** @var User $user */
         $user = User::factory()->create();
@@ -99,11 +102,9 @@ class PublicationTest extends TestCase
     /**
      * @return void
      */
-    public function testIndividualPublicationsCanBeQueriedById()
+    public function testCanBeQueriedById()
     {
-        $publication = Publication::factory()->create([
-            'name' => 'Test Publication for Querying an Individual Publication',
-        ]);
+        $publication = Publication::factory()->create();
         $response = $this->graphQL(
             'query GetPublication($id: ID!) {
                 publication (id: $id) {
@@ -116,7 +117,7 @@ class PublicationTest extends TestCase
         $expected_data = [
             'publication' => [
                 'id' => (string)$publication->id,
-                'name' => 'Test Publication for Querying an Individual Publication',
+                'name' => $publication->name,
             ],
         ];
         $response->assertJsonPath('data', $expected_data);
@@ -125,38 +126,16 @@ class PublicationTest extends TestCase
     /**
      * @return void
      */
-    public function testPublicationThatDoesNotExistCanBeQueriedById()
-    {
-        $response = $this->graphQL(
-            'query GetPublication {
-                publication (id: "Invalid ID") {
-                    id
-                    name
-                }
-            }'
-        );
-        $expected_data = [
-            'publication' => null,
-        ];
-        $response->assertJsonPath('data', $expected_data);
-    }
-
-    /**
-     * @return void
-     */
-    public function testAllPublicationsCanBeQueriedByAnApplicationAdministrator()
+    public function testAppAdminQueryShowsHiddenItems()
     {
         /** @var User $user */
         $user = User::factory()->create();
         $user->assignRole(Role::APPLICATION_ADMINISTRATOR);
         $this->actingAs($user);
 
-        $publication_1 = Publication::factory()->create([
-            'name' => 'Test Publication 1 for Querying All Publications',
-        ]);
-        $publication_2 = Publication::factory()->create([
-            'name' => 'Test Publication 2 for Querying All Publications',
-        ]);
+        Publication::factory()->count(2)->create();
+        Publication::factory()->hidden()->count(2)->create();
+
         $response = $this->graphQL(
             'query GetPublications {
                 publications {
@@ -167,32 +146,21 @@ class PublicationTest extends TestCase
                 }
             }'
         );
-        $expected_data = [
-            'publications' => [
-                'data' => [
-                    [
-                        'id' => (string)$publication_1->id,
-                        'name' => 'Test Publication 1 for Querying All Publications',
-                    ],
-                    [
-                        'id' => (string)$publication_2->id,
-                        'name' => 'Test Publication 2 for Querying All Publications',
-                    ],
-                ],
-            ],
-        ];
-        $response->assertJsonPath('data', $expected_data);
+
+        $json = $response->json('data.publications');
+        $this->assertCount(4, $json);
     }
 
     /**
      * @return void
      */
-    public function testAllPublicationsCannotBeQueriedByARegularUser()
+    public function testQueryFiltersHiddenItems()
     {
         /** @var User $user */
         $user = User::factory()->create();
         $this->actingAs($user);
-
+        Publication::factory()->count(2)->create();
+        Publication::factory()->hidden()->count(2)->create();
         $response = $this->graphQL(
             'query GetPublications {
                 publications {
@@ -203,83 +171,14 @@ class PublicationTest extends TestCase
                 }
             }'
         );
-        $expected_data = [
-            'publications' => null,
-        ];
-        $response->assertJsonPath('data', $expected_data);
+        $json = $response->json('data.publications');
+        $this->assertCount(2, $json);
     }
 
     /**
      * @return void
      */
-    public function testPublicationsHaveAManyToManyRelationshipWithUsers()
-    {
-        $publication_count = 4;
-        $user_count = 6;
-        $users = User::factory()->count($user_count)->create();
-
-        // Create publications and attach them to users randomly with random roles
-        for ($i = 0; $i < $publication_count; $i++) {
-            $random_user = $users->random();
-            $random_role_id = Role::whereIn(
-                'name',
-                [
-                    Role::PUBLICATION_ADMINISTRATOR,
-                    Role::EDITOR,
-                ]
-            )
-                ->get()
-                ->pluck('id')
-                ->random();
-            $publication = Publication::factory()->hasAttached(
-                $random_user,
-                [
-                    'role_id' => $random_role_id,
-                ]
-            )
-                ->create();
-            // Ensure at least one publication admin is attached to the publication.
-            if ($random_role_id !== Role::PUBLICATION_ADMINISTRATOR_ROLE_ID) {
-                $random_non_duplicate_user = $users->reject(function ($user) use ($random_user) {
-                    return $user->id === $random_user->id;
-                })->random();
-                $publication->users()->attach(
-                    $random_non_duplicate_user,
-                    [
-                        'role_id' => Role::PUBLICATION_ADMINISTRATOR_ROLE_ID,
-                    ]
-                );
-            }
-        }
-        Publication::all()->map(function ($publication) {
-            $this->assertGreaterThan(0, $publication->users->count());
-            $this->assertLessThanOrEqual(2, $publication->users->count());
-            $publication->users->map(function ($user) {
-                $this->assertIsInt(
-                    User::where(
-                        'id',
-                        $user->id
-                    )->firstOrFail()->id
-                );
-            });
-        });
-        User::all()->map(function ($user) use ($publication_count) {
-            $this->assertLessThanOrEqual($publication_count, $user->publications->count());
-            $user->publications->map(function ($publication) {
-                $this->assertIsInt(
-                    Publication::where(
-                        'id',
-                        $publication->id
-                    )->firstOrFail()->id
-                );
-            });
-        });
-    }
-
-    /**
-     * @return void
-     */
-    public function testUserRoleAndUserAreUniqueForAPublication()
+    public function testUserRoleAndUserMustBeUniqueForAPublication()
     {
         $user = User::factory()->create();
         $role_id = Role::where('name', Role::PUBLICATION_ADMINISTRATOR)->first()->id;
