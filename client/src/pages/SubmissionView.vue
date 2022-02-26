@@ -7,7 +7,7 @@
       data-cy="submission_view_layout"
       view="hHh lpR fFr"
       container
-      style="min-height: 650px"
+      style="min-height: calc(100vh - 70px)"
     >
       <q-header reveal elevated class="bg-grey-9 text-white">
         <q-toolbar>

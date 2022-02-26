@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="lhh lpr lFf">
+  <q-layout view="lhh lpr lff">
     <app-header v-model="leftDrawerOpen" drawer />
     <q-drawer
       v-if="currentUser"
@@ -61,12 +61,10 @@
         <router-view />
       </q-page>
     </q-page-container>
-    <app-footer />
   </q-layout>
 </template>
 
 <script setup>
-import AppFooter from "../components/AppFooter.vue"
 import AppHeader from "src/components/AppHeader.vue"
 import AvatarBlock from "src/components/molecules/AvatarBlock.vue"
 import EmailVerificationBanner from "src/components/molecules/EmailVerificationBanner.vue"
