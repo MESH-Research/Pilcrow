@@ -13,24 +13,7 @@
             <small>February 17th, 2021 at 6:35pm</small>
           </div>
         </div>
-
-        <div class="col-auto">
-          <q-btn color="grey-7" round flat icon="more_vert">
-            <q-menu cover auto-close>
-              <q-list>
-                <q-item clickable>
-                  <q-item-section>Remove Card</q-item-section>
-                </q-item>
-                <q-item clickable>
-                  <q-item-section>Send Feedback</q-item-section>
-                </q-item>
-                <q-item clickable>
-                  <q-item-section>Share</q-item-section>
-                </q-item>
-              </q-list>
-            </q-menu>
-          </q-btn>
-        </div>
+        <comment-actions />
       </div>
     </q-card-section>
 
@@ -60,6 +43,7 @@
 
 <script setup>
 import AvatarImage from "./AvatarImage.vue"
+import CommentActions from "./CommentActions.vue"
 defineProps({
   user: {
     type: Object,
