@@ -44,5 +44,5 @@
 <script setup>
 import AvatarImage from "./AvatarImage.vue"
 import CommentActions from "./CommentActions.vue"
-const user = { email: "commenter@example.com"}
+const user = { email: "commenter@example.com" }
 </script>
