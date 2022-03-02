@@ -44,10 +44,5 @@
 <script setup>
 import AvatarImage from "./AvatarImage.vue"
 import CommentActions from "./CommentActions.vue"
-defineProps({
-  user: {
-    type: Object,
-    default: () => {},
-  },
-})
+const user = { email: "commenter@example.com"}
 </script>
