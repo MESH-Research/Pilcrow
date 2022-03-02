@@ -2707,16 +2707,16 @@
         },
         {
             "name": "nuwave/lighthouse",
-            "version": "v5.41.0",
+            "version": "v5.42.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nuwave/lighthouse.git",
-                "reference": "b3dbac7372be8d0013e09b7611dfada14dea591c"
+                "reference": "58ab219d2417626f496357dec21d0cd802210b7b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nuwave/lighthouse/zipball/b3dbac7372be8d0013e09b7611dfada14dea591c",
-                "reference": "b3dbac7372be8d0013e09b7611dfada14dea591c",
+                "url": "https://api.github.com/repos/nuwave/lighthouse/zipball/58ab219d2417626f496357dec21d0cd802210b7b",
+                "reference": "58ab219d2417626f496357dec21d0cd802210b7b",
                 "shasum": ""
             },
             "require": {
@@ -2833,7 +2833,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-02-28T11:23:07+00:00"
+            "time": "2022-03-02T10:01:42+00:00"
         },
         {
             "name": "olssonm/l5-zxcvbn",
@@ -3812,12 +3812,12 @@
                 }
             },
             "autoload": {
-                "psr-4": {
-                    "Ramsey\\Uuid\\": "src/"
-                },
                 "files": [
                     "src/functions.php"
-                ]
+                ],
+                "psr-4": {
+                    "Ramsey\\Uuid\\": "src/"
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
