@@ -9,7 +9,7 @@
       container
       style="min-height: calc(100vh - 70px)"
     >
-      <q-header reveal elevated class="bg-grey-9 text-white">
+      <q-header reveal class="bg-grey-9 text-white">
         <q-toolbar>
           <q-btn
             dense
