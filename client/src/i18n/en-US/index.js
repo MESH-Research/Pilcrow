@@ -367,6 +367,9 @@ export default {
       },
       none: "No submitter is assigned to this submission. At least one submitter must be assigned.",
     },
+    comment: {
+      actions_btn_aria: "Comment Actions",
+    },
   },
   failures: {
     UNKNOWN_ERROR: "An unknown error has occurred.",

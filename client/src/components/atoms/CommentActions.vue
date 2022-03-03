@@ -1,6 +1,12 @@
 <template>
   <div class="col-auto">
-    <q-btn color="grey-7" round flat icon="more_vert">
+    <q-btn
+      color="grey-7"
+      round
+      flat
+      icon="more_vert"
+      aria-label="$t('comment.actions_btn_aria')"
+    >
       <q-menu cover auto-close>
         <q-list>
           <q-item clickable>
