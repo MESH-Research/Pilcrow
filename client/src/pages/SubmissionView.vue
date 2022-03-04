@@ -429,11 +429,11 @@
 <script setup>
 import InlineComment from "src/components/atoms/InlineComment.vue"
 import InlineCommentReply from "src/components/atoms/InlineCommentReply.vue"
+import { ref } from "vue"
 import { GET_SUBMISSION } from "src/graphql/queries"
 import { useQuery, useResult } from "@vue/apollo-composable"
 import { useCurrentUser } from "src/use/user"
 const { currentUser } = useCurrentUser()
-import { ref } from "vue"
 const props = defineProps({
   id: {
     type: String,
