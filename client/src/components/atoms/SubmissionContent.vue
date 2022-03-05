@@ -88,3 +88,34 @@
     </p>
   </article>
 </template>
+
+<style lang="sass" scoped>
+.submission-content
+  counter-reset: paragraph_counter
+  font-size: 16px
+  margin: 0 auto
+  max-width: 700px
+  padding: 10px 60px 60px
+
+.submission-content p
+  position: relative
+
+.submission-content p:before
+  color: #555
+  content: "¶ " counter(paragraph_counter)
+  counter-increment: paragraph_counter
+  display: block
+  font-family: Helvetica, Arial, san-serif
+  font-size: 1em
+  margin-right: 10px
+  min-width: 50px
+  position: absolute
+  right: 100%
+  text-align: right
+  top: 0
+  white-space: nowrap
+
+.highlight
+  color: #000
+  background-color: #bbe2e8
+</style>
