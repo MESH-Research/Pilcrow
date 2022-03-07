@@ -37,6 +37,12 @@
       </p>
     </q-card-section>
 
+    <div v-if="!props.isReply" class="q-px-sm">
+      <q-chip size="16px" icon="bookmark"> Relevance </q-chip>
+      <q-chip size="16px" icon="bookmark"> Accessibility </q-chip>
+      <q-chip size="16px" icon="bookmark"> Coherence </q-chip>
+    </div>
+
     <q-card-actions class="q-pa-md">
       <q-btn bordered color="primary">Reply</q-btn>
     </q-card-actions>
