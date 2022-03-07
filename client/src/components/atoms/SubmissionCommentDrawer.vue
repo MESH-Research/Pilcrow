@@ -1,6 +1,6 @@
 <template>
   <q-drawer
-    :v-model="props.commentDrawerOpen"
+    v-model="DrawerOpen"
     show-if-above
     side="right"
     bordered
@@ -14,9 +14,7 @@
       ></div>
       <q-scroll-area class="fit col bg-grey-4">
         <submission-comment />
-        <div class="q-ml-md q-mb-md">
-          <submission-comment />
-        </div>
+        <submission-comment />
         <div class="row justify-center q-pa-md">
           <q-btn color="dark" icon="arrow_upward">Scroll to Top</q-btn>
         </div>
@@ -26,7 +24,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue"
+import { ref, watch } from "vue"
 import SubmissionComment from "src/components/atoms/SubmissionComment.vue"
 const drawerWidth = ref(400)
 let originalWidth
@@ -43,9 +41,13 @@ function handlePan({ ...newInfo }) {
 }
 const props = defineProps({
   // Drawer status
-  modelValue: {
+  commentDrawerOpen: {
     type: Boolean,
     default: null,
   },
+})
+const DrawerOpen = ref(props.commentDrawerOpen)
+watch(props, () => {
+  DrawerOpen.value = props.commentDrawerOpen
 })
 </script>

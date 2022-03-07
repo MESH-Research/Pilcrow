@@ -9,7 +9,7 @@
             </div>
             <div class="text-subtitle1 q-pl-sm">Egestas</div>
           </div>
-          <div class="q-pl-sm">
+          <div v-if="props.isReply" class="q-pl-sm">
             <small>
               <q-icon size="sm" name="subdirectory_arrow_right" />
               <div
@@ -43,9 +43,19 @@
 
     <q-separator />
   </q-card>
+  <div v-if="!props.isReply" class="q-ml-md q-mb-md">
+    <submission-comment is-reply />
+    <submission-comment is-reply />
+  </div>
 </template>
 <script setup>
 import AvatarImage from "./AvatarImage.vue"
 import CommentActions from "./CommentActions.vue"
 const user = { email: "commenter@example.com" }
+const props = defineProps({
+  isReply: {
+    type: Boolean,
+    default: false,
+  },
+})
 </script>

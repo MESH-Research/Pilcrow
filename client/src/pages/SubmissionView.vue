@@ -15,7 +15,7 @@
         :submission="submission"
       />
       <submission-comment-drawer
-        :v-model="commentDrawerOpen"
+        :comment-drawer-open="commentDrawerOpen"
         :comments="comments"
       />
       <q-page-container>
@@ -47,6 +47,7 @@ const submission = useResult(useQuery(GET_SUBMISSION, { id: props.id }).result)
 const commentDrawerOpen = ref(true)
 const comments = [
   {
+    commentThread: 1,
     commentNumber: 1,
     replyTo: null,
     annotationNumber: null,
@@ -87,6 +88,7 @@ const comments = [
     styleCriteria: [],
   },
   {
+    commentThread: 1,
     commentNumber: 2,
     replyTo: 1,
     hasAnnotation: false,
