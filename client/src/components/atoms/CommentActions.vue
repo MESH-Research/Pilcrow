@@ -6,7 +6,7 @@
       round
       flat
       icon="more_vert"
-      aria-label="$t('comment.actions_btn_aria')"
+      :aria-label="$t('submissions.comment.actions_btn_aria')"
     >
       <q-menu cover auto-close>
         <q-list>
