@@ -70,19 +70,19 @@
         text-color="black"
         @click="toggleThread"
       >
-        <span>Collapse Thread</span>
         <q-icon name="expand_less"></q-icon>
+        <span>Hide Replies</span>
       </q-btn>
       <q-btn
         v-if="!props.isReply && !isCollapsed"
         aria-label="Toggle Thread"
         bordered
-        color="grey-3"
-        text-color="black"
+        color="secondary"
+        text-color="white"
         @click="toggleThread"
       >
-        <span>Expand Thread</span>
         <q-icon name="expand_more"></q-icon>
+        <span>Show Replies</span>
       </q-btn>
     </q-card-actions>
   </q-card>
