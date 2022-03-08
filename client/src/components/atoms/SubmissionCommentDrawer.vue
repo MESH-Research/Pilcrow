@@ -9,9 +9,11 @@
     <div class="row fit">
       <div
         v-touch-pan.horizontal.prevent.mouse.preserveCursor="handlePan"
-        style="width: 6px; cursor: col-resize"
-        class="bg-primary"
-      ></div>
+        style="width: 12px; cursor: col-resize"
+        class="bg-primary column items-center justify-center"
+      >
+        <q-icon name="fas fa-grip-lines-vertical" color="white" size="12px" />
+      </div>
       <q-scroll-area class="fit col bg-grey-4">
         <div class="q-px-md">
           <h3 id="inline_comments">Inline Comments</h3>
