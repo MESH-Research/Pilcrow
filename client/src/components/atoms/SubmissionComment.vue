@@ -3,7 +3,7 @@
     <q-card-section>
       <div class="row items-start no-wrap">
         <div class="col">
-          <small id="comment" class="text-uppercase">Comment #</small>
+          <small id="comment" class="text-uppercase">Inline Comment #</small>
           <div class="row items-start no-wrap q-pt-xs">
             <div style="width: 30px">
               <avatar-image :user="user" round class="fit" />

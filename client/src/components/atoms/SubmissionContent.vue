@@ -1,4 +1,36 @@
 <template>
+  <div class="row items-center justify-end q-pa-md">
+    <q-select v-model="selectedFont" :options="fonts" label="Font" />
+
+    <div class="q-ml-md">
+      <q-btn
+        aria-label="Decrease Font Size"
+        round
+        flat
+        icon="remove_circle"
+        color="white"
+        text-color="grey"
+      />
+      <q-btn
+        aria-label="Increase Font Size"
+        round
+        flat
+        icon="add_circle"
+        color="white"
+        text-color="grey"
+      />
+      <q-btn
+        size="sm"
+        class="q-ml-md"
+        aria-label="Toggle Dark Mode"
+        round
+        :icon="darkMode ? `dark_mode` : `light_mode`"
+        color="white"
+        text-color="grey"
+        @click="toggleDarkMode()"
+      />
+    </div>
+  </div>
   <article class="col-sm-9 submission-content">
     <h1>Et Sollicitudin Ac Orci</h1>
     <p>
@@ -88,6 +120,15 @@
     </p>
   </article>
 </template>
+<script setup>
+import { ref } from "vue"
+let darkMode = ref(true)
+let selectedFont = ref("San-serif")
+function toggleDarkMode() {
+  darkMode.value = !darkMode.value
+}
+const fonts = ["Sans-serif", "Serif"]
+</script>
 
 <style lang="sass" scoped>
 .submission-content

@@ -17,6 +17,13 @@
       </q-toolbar-title>
 
       <q-btn
+        aria-label="Toggle Annotations"
+        dense
+        flat
+        round
+        icon="power_input"
+      />
+      <q-btn
         aria-label="Toggle Inline Comments"
         dense
         flat
