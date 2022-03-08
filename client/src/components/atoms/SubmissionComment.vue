@@ -3,11 +3,12 @@
     <q-card-section>
       <div class="row items-start no-wrap">
         <div class="col">
-          <div class="row items-center">
+          <small id="comment" class="text-uppercase">Comment #</small>
+          <div class="row items-start no-wrap q-pt-xs">
             <div style="width: 30px">
               <avatar-image :user="user" round class="fit" />
             </div>
-            <div class="text-subtitle1 q-pl-sm">Egestas</div>
+            <div class="text-h4 q-pl-sm">Egestas</div>
           </div>
           <div v-if="props.isReply" class="q-pl-sm">
             <small>
@@ -18,7 +19,11 @@
               >
                 <avatar-image :user="user" round class="fit" />
               </div>
-              <span>Reply to Magna Fringilla</span>
+              <span
+                >Reply to
+                <router-link to="#inline-comments">Comment #</router-link> by
+                Magna Fringilla</span
+              >
             </small>
           </div>
           <small> February 18th, 2021 at 6:35pm</small>
@@ -28,6 +33,7 @@
     </q-card-section>
 
     <q-card-section class="q-py-none">
+      <q-separator class="q-mb-sm" />
       <p>
         Sagittis eu volutpat odio facilisis. Vitae congue eu consequat ac.
         Cursus sit amet dictum sit amet. Nibh tellus molestie nunc non blandit
@@ -44,7 +50,11 @@
     </div>
 
     <q-card-actions class="q-pa-md">
-      <q-btn bordered color="primary">Reply</q-btn>
+      <q-btn v-if="!props.isReply" bordered color="grey-3" text-color="black">
+        <span>Collapse</span>
+        <q-icon name="expand_less"></q-icon>
+      </q-btn>
+      <q-btn bordered color="primary" label="Reply" />
     </q-card-actions>
 
     <q-separator />

@@ -13,6 +13,9 @@
         class="bg-primary"
       ></div>
       <q-scroll-area class="fit col bg-grey-4">
+        <div class="q-px-md">
+          <h3 id="inline_comments">Inline Comments</h3>
+        </div>
         <submission-comment />
         <submission-comment />
         <div class="row justify-center q-pa-md">
