@@ -1,5 +1,5 @@
 <template>
-  <q-card square class="bg-grey-1 shadow-4">
+  <q-card square class="bg-grey-1 shadow-2">
     <q-separator color="grey-7" />
     <q-card-section
       :style="
