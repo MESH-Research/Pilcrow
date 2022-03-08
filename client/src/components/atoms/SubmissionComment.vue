@@ -64,7 +64,7 @@
       <q-btn bordered color="primary" label="Reply" />
       <q-btn
         v-if="!props.isReply && isCollapsed"
-        aria-label="Toggle Thread"
+        aria-label="Hide Replies"
         bordered
         color="grey-3"
         text-color="black"
@@ -75,7 +75,7 @@
       </q-btn>
       <q-btn
         v-if="!props.isReply && !isCollapsed"
-        aria-label="Toggle Thread"
+        aria-label="Show Replies"
         bordered
         color="secondary"
         text-color="white"
