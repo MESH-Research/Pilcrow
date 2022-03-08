@@ -336,7 +336,8 @@ class SubmissionTest extends TestCase
     public function createSubmissionMutationProvider(): array
     {
         return [
-            [   'Test Submission Created in PHPUnit Via Mutation',
+            [
+                'Test Submission Created in PHPUnit Via Mutation',
                 [
                     'createSubmission' => [
                         'title' => 'Test Submission Created in PHPUnit Via Mutation',
