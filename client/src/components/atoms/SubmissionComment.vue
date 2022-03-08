@@ -36,7 +36,7 @@
             <avatar-image :user="user" round class="fit" />
           </div>
           <span
-            >Reply to
+            >Replied to
             <router-link to="#inline-comments">Comment #</router-link> by Magna
             Fringilla</span
           >
