@@ -11,6 +11,7 @@ use App\Models\User;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Str;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Nuwave\Lighthouse\Testing\MakesGraphQLRequests;
 use Tests\TestCase;
@@ -335,39 +336,25 @@ class SubmissionTest extends TestCase
     public function createSubmissionMutationProvider(): array
     {
         return [
-            [
+            [   'Test Submission Created in PHPUnit Via Mutation',
                 [
-                    'publication_name' => 'Test Publication for Submission Creation in PHPUnit Via Mutation',
-                    'submission_title' => 'Test Submission Created in PHPUnit Via Mutation',
-                    'expected_data' => [
-                        'createSubmission' => [
-                            'title' => 'Test Submission Created in PHPUnit Via Mutation',
-                            'publication' => [
-                                'name' => 'Test Publication for Submission Creation in PHPUnit Via Mutation',
-                            ],
+                    'createSubmission' => [
+                        'title' => 'Test Submission Created in PHPUnit Via Mutation',
+                        'publication' => [
+                            'name' => 'Test Publication for Submission Creation in PHPUnit Via Mutation',
                         ],
                     ],
                 ],
             ],
             [
+                '        Test Submission with Whitespace Created in PHPUnit Via Mutation       ',
                 [
-                    'publication_name' => 'Test Publication for Submission with Whitespace Creation in PHPUnit Via Mutation',
-                    'submission_title' => '        Test Submission with Whitespace Created in PHPUnit Via Mutation       ',
-                    'expected_data' => [
-                        'createSubmission' => [
-                            'title' => 'Test Submission with Whitespace Created in PHPUnit Via Mutation',
-                            'publication' => [
-                                'name' => 'Test Publication for Submission with Whitespace Creation in PHPUnit Via Mutation',
-                            ],
+                    'createSubmission' => [
+                        'title' => 'Test Submission with Whitespace Created in PHPUnit Via Mutation',
+                        'publication' => [
+                            'name' => 'Test Publication for Submission with Whitespace Creation in PHPUnit Via Mutation',
                         ],
                     ],
-                ],
-            ],
-            [
-                [
-                    'publication_name' => '',
-                    'submission_title' => '',
-                    'expected_data' => null,
                 ],
             ],
         ];
@@ -377,10 +364,10 @@ class SubmissionTest extends TestCase
      * @dataProvider createSubmissionMutationProvider
      * @return void
      */
-    public function testSubmissionCreationViaMutation(array $case)
+    public function testSubmissionCreationViaMutation($submissionTitle, $expectedData)
     {
         $publication = Publication::factory()->create([
-            'name' => $case['publication_name'],
+            'name' => 'Test publication ' . Str::uuid(),
         ]);
         $user = User::factory()->create();
         $operations = [
@@ -408,7 +395,7 @@ class SubmissionTest extends TestCase
                 }
             ',
             'variables' => [
-                'title' => $case['submission_title'],
+                'title' => $submissionTitle,
                 'publication_id' => $publication->id,
                 'submitter_user_id' => $user->id,
                 'file_upload' => null,
@@ -421,7 +408,7 @@ class SubmissionTest extends TestCase
             '0' => UploadedFile::fake()->create('test.txt', 500),
         ];
         $this->multipartGraphQL($operations, $map, $file)
-            ->assertJsonPath('data', $case['expected_data']);
+            ->assertJsonPath('data', $expectedData);
     }
 
     /**
