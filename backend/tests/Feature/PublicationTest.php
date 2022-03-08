@@ -555,9 +555,33 @@ class PublicationTest extends TestCase
         $response->assertJsonPath('data', $expected_mutation_response);
     }
 
-    public function canSavePublicationStyleCriteria()
+    public function testCanUpdatePublicationStyleCriteria()
     {
-        $this->graphQL(
-        )
+        $this->beAppAdmin();
+        $publication = Publication::factory()->create();
+        $criteria = [['name' => 'criteria one', 'description' => 'wonderful criteria']];
+        $response = $this->graphQL(
+            'mutation UpdatePublication($pubId: ID!, $styleCriteria: [CreateStyleCriteriaInput!]) {
+                updatePublication(
+                    publication: {
+                        id: $pubId,
+                        style_criterias: {
+                            create: $styleCriteria
+                        }
+                    }
+                ) {
+                    style_criterias {
+                        name
+                        description
+                    }
+                }
+            }',
+            [
+                'pubId' => $publication->id,
+                'styleCriteria' => $criteria,
+            ]
+        );
+
+        $response->assertJsonFragment($criteria);
     }
 }

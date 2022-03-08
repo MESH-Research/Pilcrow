@@ -13,6 +13,8 @@ class StyleCriteria extends Model
     use HasFactory;
     use ValidatingTrait;
 
+    protected $table = 'style_criteria';
+
     /**
      * The attributes that are mass assignable.
      *
@@ -25,9 +27,9 @@ class StyleCriteria extends Model
     ];
 
     protected $rules = [
-        'name' => 'required|maxLength:20',
-        'description' => 'maxLength:4096',
-        'icon' => 'maxLength:50',
+        'name' => 'required|max:20',
+        'description' => 'max:4096',
+        'icon' => 'max:50',
     ];
 
     /**

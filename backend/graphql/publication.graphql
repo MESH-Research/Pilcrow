@@ -38,14 +38,16 @@ extend type Mutation {
 
 input CreatePublicationInput {
     name: String
-    style_criteria: [CreateStyleCriteriaInput!]
+    style_criterias: [CreateStyleCriteriaInput!]
+        @rename(attribute: "styleCriterias")
 }
 
 input UpdatePublicationInput {
     id: ID!
     name: String
     description: String
-    style_criteria: UpdateStyleCriteriaHasMany
+    style_criterias: UpdateStyleCriteriaHasMany
+        @rename(attribute: "styleCriterias")
 }
 
 input UpdateStyleCriteriaHasMany {
@@ -87,7 +89,7 @@ type Publication {
     submissions: [Submission]! @hasMany
     users: [User]! @belongsToMany
     is_publicly_visible: Boolean
-    style_criteria: [StyleCriteria!]! @hasMany
+    style_criterias: [StyleCriteria!]! @hasMany(relation: "styleCriterias")
 }
 
 """

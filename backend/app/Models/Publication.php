@@ -68,7 +68,7 @@ class Publication extends BaseModel
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function styleCriteria(): HasMany
+    public function styleCriterias(): HasMany
     {
         return $this->hasMany(StyleCriteria::class);
     }
