@@ -62,21 +62,44 @@
 
     <q-card-actions class="q-pa-md q-pb-lg">
       <q-btn bordered color="primary" label="Reply" />
-      <q-btn v-if="!props.isReply" bordered color="grey-3" text-color="black">
+      <q-btn
+        v-if="!props.isReply && isCollapsed"
+        aria-label="Toggle Thread"
+        bordered
+        color="grey-3"
+        text-color="black"
+        @click="toggleThread"
+      >
         <span>Collapse Thread</span>
         <q-icon name="expand_less"></q-icon>
       </q-btn>
+      <q-btn
+        v-if="!props.isReply && !isCollapsed"
+        aria-label="Toggle Thread"
+        bordered
+        color="grey-3"
+        text-color="black"
+        @click="toggleThread"
+      >
+        <span>Expand Thread</span>
+        <q-icon name="expand_more"></q-icon>
+      </q-btn>
     </q-card-actions>
   </q-card>
-  <div v-if="!props.isReply" class="q-ml-md">
+  <div v-if="!props.isReply && isCollapsed" class="q-ml-md">
     <submission-comment is-reply />
     <submission-comment is-reply />
   </div>
 </template>
 <script setup>
+import { ref } from "vue"
 import AvatarImage from "./AvatarImage.vue"
 import CommentActions from "./CommentActions.vue"
 const user = { email: "commenter@example.com" }
+const isCollapsed = ref(false)
+function toggleThread() {
+  isCollapsed.value = !isCollapsed.value
+}
 const props = defineProps({
   isReply: {
     type: Boolean,
