@@ -4,7 +4,7 @@
   </div>
   <article v-else>
     <q-layout
-      data-cy="submission_view_layout"
+      data-cy="submission_review_layout"
       view="hHh lpR fFr"
       container
       style="min-height: calc(100vh - 70px)"

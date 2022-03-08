@@ -88,9 +88,9 @@ const routes = [
         props: true,
       },
       {
-        name: "submission_view",
-        path: "/submission/view/:id",
-        component: () => import("src/pages/SubmissionView.vue"),
+        name: "submission_review",
+        path: "/submission/review/:id",
+        component: () => import("src/pages/SubmissionReview.vue"),
         meta: {
           requiresSubmissionAccess: true,
         },

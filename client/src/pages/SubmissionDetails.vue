@@ -16,12 +16,12 @@
     <div class="row q-col-gutter-lg q-pa-lg">
       <section class="col-12">
         <q-btn
-          data-cy="submission_view_btn"
+          data-cy="submission_review_btn"
           color="primary"
           size="lg"
           :label="$t('submissions.view_heading')"
           :to="{
-            name: 'submission_view',
+            name: 'submission_review',
             params: { id: props.id },
           }"
         />
