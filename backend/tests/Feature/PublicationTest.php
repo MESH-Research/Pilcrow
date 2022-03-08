@@ -54,6 +54,7 @@ class PublicationTest extends TestCase
             [
                 '',
                 null,
+                'Name must be required',
             ],
         ];
     }
@@ -77,7 +78,7 @@ class PublicationTest extends TestCase
             [ 'publication_name' => $publication_name ]
         );
         $json = $response->json();
-        $this->assertSame($json['data'], $expected_data, $message);
+        $this->assertSame($json['data'] ?? null, $expected_data, $message);
     }
 
     /**
@@ -147,7 +148,7 @@ class PublicationTest extends TestCase
             }'
         );
 
-        $json = $response->json('data.publications');
+        $json = $response->json('data.publications.data');
         $this->assertCount(4, $json);
     }
 
@@ -163,7 +164,7 @@ class PublicationTest extends TestCase
         Publication::factory()->hidden()->count(2)->create();
         $response = $this->graphQL(
             'query GetPublications {
-                publications {
+                publications(is_publicly_visible: true) {
                     data {
                         id
                         name
@@ -171,7 +172,8 @@ class PublicationTest extends TestCase
                 }
             }'
         );
-        $json = $response->json('data.publications');
+        $json = $response->json('data.publications.data');
+
         $this->assertCount(2, $json);
     }
 
@@ -220,7 +222,7 @@ class PublicationTest extends TestCase
             [ Role::REVIEWER_ROLE_ID,           false ],
             [ Role::REVIEW_COORDINATOR_ROLE_ID, false ],
             [ Role::EDITOR_ROLE_ID,             false ],
-            [ 0,                                false ],
+            [ 0,                                false ], //TODO: These should be tested in the context of validating role ids, not repeatedly as a possible input
             [ '',                               false ],
             [ null,                             false ],
         ];
@@ -235,7 +237,7 @@ class PublicationTest extends TestCase
     {
         /** @var User $editor */
         $editor = User::factory()->create();
-        $editor->assignRole(Role::EDITOR);
+        $editor->assignRole(Role::EDITOR); //TODO: What does Role::EDITOR mean when not referencing a publication.
         $this->actingAs($editor);
         $user_to_be_assigned = User::factory()->create();
         $publication = Publication::factory()
@@ -324,7 +326,7 @@ class PublicationTest extends TestCase
         //@codingStandardsIgnoreStart
         return [
             //User Role ID                      Allowed?
-            [ Role::SUBMITTER_ROLE_ID,          false ],
+            [ Role::SUBMITTER_ROLE_ID,          false ], //TODO: Everything is false, whats the point ?
             [ Role::REVIEWER_ROLE_ID,           false ],
             [ Role::REVIEW_COORDINATOR_ROLE_ID, false ],
             [ Role::EDITOR_ROLE_ID,             false ],
@@ -346,12 +348,12 @@ class PublicationTest extends TestCase
         $editor->assignRole(Role::EDITOR);
         $this->actingAs($editor);
         $user_to_be_deleted = User::factory()->create();
-        $publication_user_role_id_is_invalid = intval($userRoleId) <= 0;
+        $publication_user_role_id_is_invalid = intval($userRoleId) <= 0; //TODO: Overly verbose variable name
         $publication = Publication::factory()
             ->hasAttached(
                 $user_to_be_deleted,
                 [
-                    'role_id' => $publication_user_role_id_is_invalid ? Role::EDITOR_ROLE_ID : $userRoleId,
+                    'role_id' => $publication_user_role_id_is_invalid ? Role::EDITOR_ROLE_ID : $userRoleId, //TODO: What is the point of this ? If the role is invalid we just pretend it says EDITOR?
                 ]
             )
             ->hasAttached(
@@ -551,5 +553,11 @@ class PublicationTest extends TestCase
             ];
         }
         $response->assertJsonPath('data', $expected_mutation_response);
+    }
+
+    public function canSavePublicationStyleCriteria()
+    {
+        $this->graphQL(
+        )
     }
 }

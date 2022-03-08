@@ -21,7 +21,8 @@
         "olssonm/l5-zxcvbn": "^4.4",
         "spatie/laravel-permission": "^5.5",
         "spatie/laravel-settings": "^2.3",
-        "teamtnt/laravel-scout-tntsearch-driver": "^11.2"
+        "teamtnt/laravel-scout-tntsearch-driver": "^11.2",
+        "watson/validating": "^7.0"
     },
     "require-dev": {
         "facade/ignition": "^2.5",

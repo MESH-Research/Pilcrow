@@ -24,7 +24,7 @@ class PublicationFactory extends Factory
     {
         return [
             'name' => $this->faker->unique()->company(),
-            'is_publically_visible' => true,
+            'is_publicly_visible' => true,
         ];
     }
 
@@ -37,7 +37,7 @@ class PublicationFactory extends Factory
     {
         return $this->state(function (array $_) {
             return [
-                'is_publically_visible' => false,
+                'is_publicly_visible' => false,
             ];
         });
     }

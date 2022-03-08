@@ -1,3 +1,81 @@
+extend type Query {
+    "Return a publiation by ID"
+    publication(id: ID @eq): Publication @find
+
+    "Return all publications"
+    publications(
+        is_publicly_visible: Boolean @scope(name: "IsPubliclyVisible")
+    ): [Publication!]!
+        @paginate(defaultCount: 100)
+        @can(ability: "view", query: true)
+}
+
+extend type Mutation {
+    "Create a new publication"
+    createPublication(
+        publication: CreatePublicationInput! @spread
+    ): Publication! @create @can(ability: "create")
+
+    updatePublication(
+        publication: UpdatePublicationInput! @spread
+    ): Publication @update @can(ability: "update", query: true)
+
+    "Create an association between a user, role, and publication"
+    createPublicationUser(
+        publication_user: PublicationUserInput! @spread
+    ): PublicationUser! @create @can(ability: "create", injectArgs: true)
+
+    "Create an association between a user, role, and publication"
+    deletePublicationUser(
+        publication_user: PublicationUserInput! @spread
+    ): PublicationUser!
+        @guard
+        @can(ability: "delete", injectArgs: true)
+        @field(
+            resolver: "App\\GraphQL\\Mutations\\DeletePublicationUser@delete"
+        )
+}
+
+input CreatePublicationInput {
+    name: String
+    style_criteria: [CreateStyleCriteriaInput!]
+}
+
+input UpdatePublicationInput {
+    id: ID!
+    name: String
+    description: String
+    style_criteria: UpdateStyleCriteriaHasMany
+}
+
+input UpdateStyleCriteriaHasMany {
+    create: [CreateStyleCriteriaInput!]
+    update: [UpdateStyleCriteriaInput!]
+    delete: [ID!]
+}
+
+input CreateStyleCriteriaInput {
+    name: String!
+    description: String!
+    icon: String
+}
+
+input UpdateStyleCriteriaInput {
+    id: ID!
+    name: String
+    description: String
+    icon: String
+}
+
+"""
+Input type for creating or modifying associations between a publication, role, and user
+"""
+input PublicationUserInput @validator(class: "PublicationUserInputValidator") {
+    user_id: ID!
+    role_id: ID!
+    publication_id: ID!
+}
+
 """
 A publication that has users, reviews, and submissions
 """
@@ -9,6 +87,7 @@ type Publication {
     submissions: [Submission]! @hasMany
     users: [User]! @belongsToMany
     is_publicly_visible: Boolean
+    style_criteria: [StyleCriteria!]! @hasMany
 }
 
 """
@@ -19,4 +98,11 @@ type PublicationUser {
     role_id: ID!
     publication_id: ID!
     user_id: ID!
+}
+
+type StyleCriteria {
+    id: ID!
+    name: String!
+    description: String!
+    publication: Publication!
 }
