@@ -1,46 +1,50 @@
 <template>
-  <q-card square class="bg-grey-1 shadow-2">
-    <q-separator color="grey-7" />
+  <q-card square class="bg-grey-1 shadow-2 q-mb-md">
+    <q-separator :color="props.isReply ? `grey-3` : `blue-1`" />
     <q-card-section
+      class="q-py-xs"
       :style="
         props.isReply
-          ? `background-color: #e6e6e6`
+          ? `background-color: #eeeeee`
           : `background-color: #bbe2e8`
       "
     >
-      <div class="row items-start no-wrap">
-        <div class="col">
-          <small id="comment" class="text-uppercase">Inline Comment #</small>
-          <div class="row items-start no-wrap q-pt-xs">
-            <div style="width: 30px">
-              <avatar-image :user="user" round class="fit" />
-            </div>
-            <div class="text-h4 q-pl-sm">Egestas</div>
-          </div>
-          <div v-if="props.isReply" class="q-pl-sm">
-            <small>
-              <q-icon size="sm" name="subdirectory_arrow_right" />
-              <div
-                style="display: inline-block; height: 18px; width: 18px"
-                class="q-mr-sm"
-              >
-                <avatar-image :user="user" round class="fit" />
-              </div>
-              <span
-                >Reply to
-                <router-link to="#inline-comments">Comment #</router-link> by
-                Magna Fringilla</span
-              >
-            </small>
-          </div>
-          <small> February 18th, 2021 at 6:35pm</small>
+      <div class="row no-wrap justify-between">
+        <div class="column justify-center">
+          <span>
+            <a id="comment">Inline Comment # </a>
+            <span>on February 18th, 2021 at 6:35pm</span>
+          </span>
         </div>
         <comment-actions />
       </div>
     </q-card-section>
+    <q-card-section class="q-py-sm">
+      <div class="row">
+        <div style="height: 30px; width: 30px">
+          <avatar-image :user="user" round class="fit" />
+        </div>
+        <div class="text-h4 q-pl-sm">Egestas</div>
+      </div>
+      <div v-if="props.isReply" class="q-pl-sm">
+        <small>
+          <q-icon size="sm" name="subdirectory_arrow_right" />
+          <div
+            style="display: inline-block; height: 18px; width: 18px"
+            class="q-mr-sm"
+          >
+            <avatar-image :user="user" round class="fit" />
+          </div>
+          <span
+            >Reply to
+            <router-link to="#inline-comments">Comment #</router-link> by Magna
+            Fringilla</span
+          >
+        </small>
+      </div>
+    </q-card-section>
 
-    <q-separator color="grey-4" />
-    <q-card-section class="q-pb-none">
+    <q-card-section class="q-py-none">
       <p>
         Sagittis eu volutpat odio facilisis. Vitae congue eu consequat ac.
         Cursus sit amet dictum sit amet. Nibh tellus molestie nunc non blandit
@@ -57,14 +61,14 @@
     </div>
 
     <q-card-actions class="q-pa-md q-pb-lg">
+      <q-btn bordered color="primary" label="Reply" />
       <q-btn v-if="!props.isReply" bordered color="grey-3" text-color="black">
-        <span>Collapse</span>
+        <span>Collapse Thread</span>
         <q-icon name="expand_less"></q-icon>
       </q-btn>
-      <q-btn bordered color="primary" label="Reply" />
     </q-card-actions>
   </q-card>
-  <div v-if="!props.isReply" class="q-ml-md q-mb-md">
+  <div v-if="!props.isReply" class="q-ml-md">
     <submission-comment is-reply />
     <submission-comment is-reply />
   </div>

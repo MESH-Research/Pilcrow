@@ -2,6 +2,7 @@
   <div class="col-auto">
     <q-btn
       color="grey-7"
+      dense
       round
       flat
       icon="more_vert"

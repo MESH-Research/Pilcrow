@@ -20,7 +20,7 @@
         </div>
         <submission-comment />
         <submission-comment />
-        <div class="row justify-center q-pa-md">
+        <div class="row justify-center q-pa-md q-pb-xl">
           <q-btn color="dark" icon="arrow_upward">Scroll to Top</q-btn>
         </div>
       </q-scroll-area>
@@ -31,7 +31,7 @@
 <script setup>
 import { ref, watch } from "vue"
 import SubmissionComment from "src/components/atoms/SubmissionComment.vue"
-const drawerWidth = ref(400)
+const drawerWidth = ref(440)
 let originalWidth
 let originalLeft
 function handlePan({ ...newInfo }) {
