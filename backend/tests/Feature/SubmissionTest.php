@@ -11,7 +11,6 @@ use App\Models\User;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Str;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Nuwave\Lighthouse\Testing\MakesGraphQLRequests;
 use Tests\TestCase;
@@ -341,9 +340,6 @@ class SubmissionTest extends TestCase
                 [
                     'createSubmission' => [
                         'title' => 'Test Submission Created in PHPUnit Via Mutation',
-                        'publication' => [
-                            'name' => 'Test Publication for Submission Creation in PHPUnit Via Mutation',
-                        ],
                     ],
                 ],
             ],
@@ -352,9 +348,6 @@ class SubmissionTest extends TestCase
                 [
                     'createSubmission' => [
                         'title' => 'Test Submission with Whitespace Created in PHPUnit Via Mutation',
-                        'publication' => [
-                            'name' => 'Test Publication for Submission with Whitespace Creation in PHPUnit Via Mutation',
-                        ],
                     ],
                 ],
             ],
@@ -367,9 +360,7 @@ class SubmissionTest extends TestCase
      */
     public function testSubmissionCreationViaMutation($submissionTitle, $expectedData)
     {
-        $publication = Publication::factory()->create([
-            'name' => 'Test publication ' . Str::uuid(),
-        ]);
+        $publication = Publication::factory()->create();
         $user = User::factory()->create();
         $operations = [
             'operationName' => 'CreateSubmission',
@@ -389,9 +380,6 @@ class SubmissionTest extends TestCase
                         }
                     ) {
                         title
-                        publication {
-                            name
-                        }
                     }
                 }
             ',
