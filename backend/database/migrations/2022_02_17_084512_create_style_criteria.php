@@ -13,7 +13,7 @@ class CreateStyleCriteria extends Migration
      */
     public function up()
     {
-        Schema::create('style_criteria', function (Blueprint $table) {
+        Schema::create('style_criterias', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
             $table->string('name');
