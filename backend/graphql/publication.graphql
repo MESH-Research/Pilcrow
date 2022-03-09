@@ -38,7 +38,7 @@ extend type Mutation {
 
 input CreatePublicationInput {
     name: String
-    style_criterias: [CreateStyleCriteriaInput!]
+    style_criterias: CreateStyleCriteriaHasMany
         @rename(attribute: "styleCriterias")
 }
 
@@ -48,6 +48,9 @@ input UpdatePublicationInput {
     description: String
     style_criterias: UpdateStyleCriteriaHasMany
         @rename(attribute: "styleCriterias")
+}
+input CreateStyleCriteriaHasMany {
+    create: [CreateStyleCriteriaInput!]
 }
 
 input UpdateStyleCriteriaHasMany {

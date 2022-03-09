@@ -9,6 +9,7 @@ use App\Models\Role;
 use App\Models\User;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Testing\Fluent\AssertableJson;
 use Nuwave\Lighthouse\Exceptions\ValidationException;
 use Nuwave\Lighthouse\Testing\MakesGraphQLRequests;
 use Tests\TestCase;
@@ -583,5 +584,119 @@ class PublicationTest extends TestCase
         );
 
         $response->assertJsonFragment($criteria);
+    }
+
+    public function testCanCreatePublicationWithStyleCriteria()
+    {
+        $this->beAppAdmin();
+
+        $response = $this->graphQL(
+            'mutation CreatePublication($styleCriterias: [CreateStyleCriteriaInput!]) {
+                createPublication(
+                    publication: {
+                        name: "Style Critera Pub",
+                        style_criterias: {
+                            create: $styleCriterias
+                        }
+                    }
+                ) {
+                    name
+                    style_criterias {
+                        id
+                        name
+                        description
+                    }
+                }
+            }
+            ',
+            [
+                'styleCriterias' => [
+                    ['name' => 'Criteria one', 'description' => 'one'],
+                    ['name' => 'Criteria two', 'description' => 'twp'],
+                ],
+            ]
+        );
+        $response->assertJson(fn (AssertableJson $json) =>
+            $json->has('data.createPublication.style_criterias', 2)
+                ->etc());
+    }
+
+    public function testCanUpdateExistingStyleCriteria()
+    {
+        $this->beAppAdmin();
+        $publication = Publication::factory()
+            ->hasStyleCriterias(3)
+            ->create();
+        $criteriaId = $publication->styleCriterias[0]->id;
+        $response = $this->graphQL(
+            'mutation UpdatePublication($publicationId: ID!, $styleCriteria: UpdateStyleCriteriaInput!) {
+                updatePublication(
+                    publication: {
+                        id: $publicationId,
+                        style_criterias: {
+                            update: [$styleCriteria]
+                        }
+                    }) {
+                        style_criterias {
+                            id
+                            name
+                            description
+                        }
+                    }
+                }
+            ',
+            [
+                'styleCriteria' => [
+                    'id' => $criteriaId,
+                    'name' => 'New Name',
+                    'description' => 'new description',
+                ],
+                'publicationId' => $publication->id,
+            ]
+        );
+        $response->assertJson(fn (AssertableJson $json) =>
+            $json->has('data.updatePublication.style_criterias', 3)
+                ->has('data.updatePublication.style_criterias.0', fn ($json) =>
+                    $json->where('name', 'New Name')
+                        ->where('description', 'new description')
+                        ->where('id', (string)$criteriaId))
+                        ->etc()
+                ->etc());
+    }
+
+    public function testCanDeleteStyleCriteria()
+    {
+        $this->beAppAdmin();
+
+        $publication = Publication::factory()
+            ->hasStyleCriterias(2)
+            ->create();
+        $criteriaId = $publication->styleCriterias[0]->id;
+
+        $response = $this->graphQL(
+            'mutation DeleteStyleCriteria($publicationId: ID!, $styleCriteriaId: ID!) {
+                updatePublication(
+                    publication: {
+                        id: $publicationId
+                        style_criterias: {
+                            delete: [$styleCriteriaId]
+                        }
+                    })
+                    {
+                        style_criterias {
+                            name
+                        }
+                    }
+                }
+            ',
+            [
+                'publicationId' => $publication->id,
+                'styleCriteriaId' => $criteriaId,
+
+            ]
+        );
+        $response->assertJson(fn (AssertableJson $json) =>
+            $json->has('data.updatePublication.style_criterias', 1)
+            ->etc());
     }
 }
