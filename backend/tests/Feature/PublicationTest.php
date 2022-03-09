@@ -560,7 +560,7 @@ class PublicationTest extends TestCase
     {
         $this->beAppAdmin();
         $publication = Publication::factory()->create();
-        $criteria = [['name' => 'criteria one', 'description' => 'wonderful criteria']];
+        $criteria = [['name' => 'criteria one', 'description' => 'wonderful criteria', 'icon' => 'icon']];
         $response = $this->graphQL(
             'mutation UpdatePublication($pubId: ID!, $styleCriteria: [CreateStyleCriteriaInput!]) {
                 updatePublication(
@@ -574,6 +574,7 @@ class PublicationTest extends TestCase
                     style_criterias {
                         name
                         description
+                        icon
                     }
                 }
             }',
@@ -611,7 +612,7 @@ class PublicationTest extends TestCase
             ',
             [
                 'styleCriterias' => [
-                    ['name' => 'Criteria one', 'description' => 'one'],
+                    ['name' => 'Criteria one', 'description' => 'one', 'icon' => 'eye'],
                     ['name' => 'Criteria two', 'description' => 'twp'],
                 ],
             ]
@@ -641,6 +642,7 @@ class PublicationTest extends TestCase
                             id
                             name
                             description
+                            icon
                         }
                     }
                 }
@@ -650,6 +652,7 @@ class PublicationTest extends TestCase
                     'id' => $criteriaId,
                     'name' => 'New Name',
                     'description' => 'new description',
+                    'icon' => 'icon',
                 ],
                 'publicationId' => $publication->id,
             ]
@@ -659,7 +662,8 @@ class PublicationTest extends TestCase
                 ->has('data.updatePublication.style_criterias.0', fn ($json) =>
                     $json->where('name', 'New Name')
                         ->where('description', 'new description')
-                        ->where('id', (string)$criteriaId))
+                        ->where('id', (string)$criteriaId)
+                        ->where('icon', 'icon'))
                         ->etc()
                 ->etc());
     }

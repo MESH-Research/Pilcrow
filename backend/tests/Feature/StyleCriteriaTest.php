@@ -47,4 +47,14 @@ class StyleCriteriaTest extends TestCase
 
         $this->assertTrue($styleCriteria->isValid());
     }
+
+    public function testIconMax()
+    {
+        $styleCriteria = new StyleCriteria();
+
+        $styleCriteria->name = 'test name';
+        $styleCriteria->icon = str_repeat('a', 51);
+
+        $this->assertTrue($styleCriteria->isInvalid());
+    }
 }

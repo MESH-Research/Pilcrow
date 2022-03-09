@@ -108,6 +108,7 @@ type PublicationUser {
 type StyleCriteria {
     id: ID!
     name: String!
-    description: String!
+    description: String
     publication: Publication!
+    icon: String
 }
