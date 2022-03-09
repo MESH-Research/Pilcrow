@@ -33,7 +33,7 @@
             style="display: inline-block; height: 18px; width: 18px"
             class="q-mr-sm"
           >
-            <avatar-image :user="user" round class="fit" />
+            <avatar-image :user="user2" round class="fit" />
           </div>
           <span
             >Replied to
@@ -96,6 +96,7 @@ import { ref } from "vue"
 import AvatarImage from "./AvatarImage.vue"
 import CommentActions from "./CommentActions.vue"
 const user = { email: "commenter@example.com" }
+const user2 = { email: "magnafringilla@example.com" }
 const isCollapsed = ref(false)
 function toggleThread() {
   isCollapsed.value = !isCollapsed.value
