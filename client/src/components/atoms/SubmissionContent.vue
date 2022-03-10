@@ -1,7 +1,6 @@
 <template>
   <div class="row items-center justify-end q-pa-md">
-    <q-select v-model="selectedFont" :options="fonts" label="Font" />
-
+    <q-select v-model="selectedFont" outlined :options="fonts" label="Font" />
     <div class="q-ml-md">
       <q-btn
         aria-label="Decrease Font Size"
@@ -9,7 +8,7 @@
         flat
         icon="remove_circle"
         color="white"
-        text-color="grey"
+        text-color="grey-7"
       />
       <q-btn
         aria-label="Increase Font Size"
@@ -17,7 +16,7 @@
         flat
         icon="add_circle"
         color="white"
-        text-color="grey"
+        text-color="grey-7"
       />
       <q-btn
         size="sm"
@@ -26,7 +25,7 @@
         round
         :icon="darkMode ? `dark_mode` : `light_mode`"
         color="white"
-        text-color="grey"
+        text-color="grey-7"
         @click="toggleDarkMode()"
       />
     </div>

@@ -31,8 +31,8 @@
         <div class="q-px-md">
           <h3 id="inline_comments" class="q-mb-sm">Inline Comments</h3>
         </div>
-        <submission-comment />
-        <submission-comment />
+        <submission-comment comment-id="1" />
+        <submission-comment comment-id="2" />
         <div class="row justify-center q-pa-md q-pb-xl">
           <q-btn color="dark" icon="arrow_upward">Scroll to Top</q-btn>
         </div>
