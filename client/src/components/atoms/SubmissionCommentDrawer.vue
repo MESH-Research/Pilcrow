@@ -17,25 +17,16 @@
       <q-scroll-area class="fit col bg-grey-4">
         <section>
           <div class="q-px-md">
-            <h3 id="inline_comments" class="q-mb-sm">Commenters</h3>
+            <span id="inline_comments" class="text-h3 q-mb-sm">
+              Inline Comments
+            </span>
           </div>
-          <div class="bg-white q-pa-md">
-            <user-list data-cy="list_commenters" :users="users" />
-            <q-pagination
-              v-model="currentPage"
-              class="q-pa-md flex flex-center"
-              :max="lastPage"
-            />
+          <submission-comment comment-id="1" />
+          <submission-comment comment-id="2" />
+          <div class="row justify-center q-pa-md q-pb-xl">
+            <q-btn color="dark" icon="arrow_upward">Scroll to Top</q-btn>
           </div>
         </section>
-        <div class="q-px-md">
-          <h3 id="inline_comments" class="q-mb-sm">Inline Comments</h3>
-        </div>
-        <submission-comment comment-id="1" />
-        <submission-comment comment-id="2" />
-        <div class="row justify-center q-pa-md q-pb-xl">
-          <q-btn color="dark" icon="arrow_upward">Scroll to Top</q-btn>
-        </div>
       </q-scroll-area>
     </div>
   </q-drawer>
@@ -43,18 +34,7 @@
 
 <script setup>
 import { ref, watch } from "vue"
-import { GET_USERS } from "src/graphql/queries"
-import { useQuery, useResult } from "@vue/apollo-composable"
 import SubmissionComment from "src/components/atoms/SubmissionComment.vue"
-import UserList from "src/components/molecules/UserList.vue"
-const currentPage = ref(1)
-const { result } = useQuery(GET_USERS, { page: currentPage })
-const users = useResult(result, [], (data) => data.userSearch.data)
-const lastPage = useResult(
-  result,
-  1,
-  (data) => data.userSearch.paginatorInfo.lastPage
-)
 
 const drawerWidth = ref(440)
 let originalWidth
