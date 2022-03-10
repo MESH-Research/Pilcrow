@@ -3,8 +3,29 @@
     {{ $t("loading") }}
   </div>
   <article v-else>
-    <h2 class="q-pl-lg">Manage: {{ submission.title }}</h2>
+    <nav class="q-px-lg q-pt-md q-gutter-sm">
+      <q-breadcrumbs>
+        <q-breadcrumbs-el
+          :label="$t('header.submissions', 2)"
+          to="/submissions"
+        />
+        <q-breadcrumbs-el :label="$t('submissions.details_heading')" />
+      </q-breadcrumbs>
+    </nav>
+    <h2 class="q-pl-lg">{{ submission.title }}</h2>
     <div class="row q-col-gutter-lg q-pa-lg">
+      <section class="col-12">
+        <q-btn
+          data-cy="submission_review_btn"
+          color="primary"
+          size="lg"
+          :label="$t('submissions.view_heading')"
+          :to="{
+            name: 'submission_review',
+            params: { id: props.id },
+          }"
+        />
+      </section>
       <section class="col-md-5 col-sm-12 col-xs-12">
         <h3>
           {{

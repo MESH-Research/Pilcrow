@@ -87,6 +87,15 @@ const routes = [
         },
         props: true,
       },
+      {
+        name: "submission_review",
+        path: "/submission/review/:id",
+        component: () => import("src/pages/SubmissionReview.vue"),
+        meta: {
+          requiresSubmissionAccess: true,
+        },
+        props: true,
+      },
     ],
   },
   {

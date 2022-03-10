@@ -310,6 +310,8 @@ export default {
     },
   },
   submissions: {
+    details_heading: "Submission Details",
+    view_heading: "View Submission",
     create: {
       success: "Submission successfully created.",
       failure: "An error occurred while attempting to create the submission.",
@@ -364,6 +366,9 @@ export default {
         plural: "Submitters",
       },
       none: "No submitter is assigned to this submission. At least one submitter must be assigned.",
+    },
+    comment: {
+      actions_btn_aria: "Comment Actions",
     },
   },
   failures: {
