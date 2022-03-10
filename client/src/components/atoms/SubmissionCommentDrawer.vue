@@ -16,10 +16,8 @@
       </div>
       <q-scroll-area class="fit col bg-grey-4">
         <section>
-          <div class="q-px-md">
-            <span id="inline_comments" class="text-h3 q-mb-sm">
-              Inline Comments
-            </span>
+          <div id="inline_comments_section" class="q-pa-md">
+            <span class="text-h3"> Inline Comments </span>
           </div>
           <submission-comment comment-id="1" />
           <submission-comment comment-id="2" />
