@@ -61,7 +61,7 @@ input UpdateStyleCriteriaHasMany {
 
 input CreateStyleCriteriaInput {
     name: String!
-    description: String!
+    description: String
     icon: String
 }
 

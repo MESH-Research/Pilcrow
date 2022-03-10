@@ -4,14 +4,11 @@ declare(strict_types=1);
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Watson\Validating\ValidatingTrait;
 
-class StyleCriteria extends Model
+class StyleCriteria extends BaseModel
 {
     use HasFactory;
-    use ValidatingTrait;
 
     /**
      * The attributes that are mass assignable.
@@ -27,6 +24,7 @@ class StyleCriteria extends Model
 
     protected $rules = [
         'name' => 'required|max:20',
+        'publication_id' => 'required|style_criteria_count',
         'description' => 'max:4096',
         'icon' => 'max:50',
     ];
@@ -39,5 +37,21 @@ class StyleCriteria extends Model
     public function publication(): BelongsTo
     {
         return $this->belongsTo(Publication::class);
+    }
+
+    /**
+     * Prepare a style_criteria_count rule, adding a model identifier if required.
+     *
+     * @param  array  $_
+     * @param  string $__
+     * @return string
+     */
+    protected function prepareStyleCriteriaCountRule($_, $__)
+    {
+        if ($this->exists) {
+            return 'style_criteria_count:' . $this->getKey();
+        }
+
+        return 'style_criteria_count';
     }
 }

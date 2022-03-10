@@ -327,7 +327,7 @@ class PublicationTest extends TestCase
         //@codingStandardsIgnoreStart
         return [
             //User Role ID                      Allowed?
-            [ Role::SUBMITTER_ROLE_ID,          false ], //TODO: Everything is false, whats the point ?
+            [ Role::SUBMITTER_ROLE_ID,          false ],
             [ Role::REVIEWER_ROLE_ID,           false ],
             [ Role::REVIEW_COORDINATOR_ROLE_ID, false ],
             [ Role::EDITOR_ROLE_ID,             false ],
@@ -349,7 +349,7 @@ class PublicationTest extends TestCase
         $editor->assignRole(Role::EDITOR);
         $this->actingAs($editor);
         $user_to_be_deleted = User::factory()->create();
-        $publication_user_role_id_is_invalid = intval($userRoleId) <= 0; //TODO: Overly verbose variable name
+        $publication_user_role_id_is_invalid = intval($userRoleId) <= 0;
         $publication = Publication::factory()
             ->hasAttached(
                 $user_to_be_deleted,
@@ -701,6 +701,118 @@ class PublicationTest extends TestCase
         );
         $response->assertJson(fn (AssertableJson $json) =>
             $json->has('data.updatePublication.style_criterias', 1)
+            ->etc());
+    }
+
+    public function testMaxNumberOfStyleCriteria()
+    {
+        $this->beAppAdmin();
+
+        $response = $this->graphQL(
+            'mutation CreatePublication($criteria: [CreateStyleCriteriaInput!]) {
+                createPublication(
+                    publication: {
+                        name: "Test publication",
+                        style_criterias: {
+                            create: $criteria
+                        }
+                    }
+                ) {
+                    name
+                    style_criterias {
+                        name
+                    }
+                }
+            }
+            ',
+            [
+                'criteria' => [
+                    ['name' => 'one',],
+                    ['name' => 'two',],
+                    ['name' => 'three',],
+                    ['name' => 'four',],
+                    ['name' => 'five',],
+                    ['name' => 'six',],
+                    ['name' => 'seven',],
+                ],
+            ]
+        );
+        $response->assertJson(fn (AssertableJson $json) =>
+            $json->has('errors', 1));
+    }
+
+    public function testCannotAddTooManyStyleCriteria()
+    {
+        $this->beAppAdmin();
+        $publication = Publication::factory()->hasStyleCriterias(6)->create();
+
+        $response = $this->graphQL(
+            'mutation UpdatePublication($publicationId: ID! $criteria: [CreateStyleCriteriaInput!]) {
+                updatePublication(
+                    publication: {
+                        id: $publicationId
+                        style_criterias: {
+                            create: $criteria
+                        }
+                    }
+                ) {
+                    name
+                    style_criterias {
+                        name
+                    }
+                }
+            }
+            ',
+            [
+                'publicationId' => $publication->id,
+                'criteria' => [
+                    ['name' => 'one',],
+                    ['name' => 'two',],
+                    ['name' => 'three',],
+                    ['name' => 'four',],
+                    ['name' => 'five',],
+                    ['name' => 'six',],
+                    ['name' => 'seven',],
+                ],
+            ]
+        );
+        $response->assertJson(fn (AssertableJson $json) =>
+            $json->has('errors', 1)
+            ->etc());
+    }
+
+    public function testCanUpdateTooManyStyleCriteria()
+    {
+        $this->beAppAdmin();
+        $publication = Publication::factory()->hasStyleCriterias(6)->create();
+        $criteriaId = $publication->styleCriterias[0]->id;
+
+        $response = $this->graphQL(
+            'mutation UpdatePublication($publicationId: ID! $criteria: [UpdateStyleCriteriaInput!]) {
+                updatePublication(
+                    publication: {
+                        id: $publicationId
+                        style_criterias: {
+                            update: $criteria
+                        }
+                    }
+                ) {
+                    name
+                    style_criterias {
+                        name
+                    }
+                }
+            }
+            ',
+            [
+                'publicationId' => $publication->id,
+                'criteria' => [
+                    ['id' => $criteriaId, 'name' => 'one',],
+                ],
+            ]
+        );
+        $response->assertJson(fn (AssertableJson $json) =>
+            $json->where('data.updatePublication.style_criterias.0.name', 'one')
             ->etc());
     }
 }

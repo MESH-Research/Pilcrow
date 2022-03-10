@@ -4,42 +4,48 @@ declare(strict_types=1);
 namespace Tests\Feature;
 
 use App\Models\StyleCriteria;
+use Illuminate\Support\Str;
 use Tests\TestCase;
 
 class StyleCriteriaTest extends TestCase
 {
-    public function testValidationFailures()
+    protected function makeTestCriteria()
     {
-        $styleCriteria = new StyleCriteria();
+        return StyleCriteria::factory()->makeOne(['publication_id' => Str::uuid()]);
+    }
+
+    public function testNameValidationFailures()
+    {
+        $styleCriteria = $this->makeTestCriteria();
 
         $styleCriteria->name = str_repeat('a', 21);
 
         $this->assertTrue($styleCriteria->isInvalid());
+        $this->assertCount(1, $styleCriteria->getErrors()->get('name'));
     }
 
     public function testDescriptionValidationFailures()
     {
-        $styleCriteria = new StyleCriteria();
+        $styleCriteria = $this->makeTestCriteria();
 
-        $styleCriteria->name = str_repeat('a', 4097);
+        $styleCriteria->description = str_repeat('a', 4097);
 
         $this->assertTrue($styleCriteria->isInvalid());
+        $this->assertCount(1, $styleCriteria->getErrors()->get('description'));
     }
 
     public function testValidationSuccess()
     {
-        $styleCriteria = new StyleCriteria();
-
-        $styleCriteria->name = str_repeat('a', 20);
-
-        $styleCriteria->description = str_repeat('a', 4096);
+        $styleCriteria = $this->makeTestCriteria();
 
         $this->assertTrue($styleCriteria->isValid());
     }
 
     public function testNameRequired()
     {
-        $styleCriteria = new StyleCriteria();
+        $styleCriteria = $this->makeTestCriteria();
+
+        $styleCriteria->name = '';
 
         $this->assertFalse($styleCriteria->isValid());
 
@@ -50,9 +56,8 @@ class StyleCriteriaTest extends TestCase
 
     public function testIconMax()
     {
-        $styleCriteria = new StyleCriteria();
+        $styleCriteria = $this->makeTestCriteria();
 
-        $styleCriteria->name = 'test name';
         $styleCriteria->icon = str_repeat('a', 51);
 
         $this->assertTrue($styleCriteria->isInvalid());
