@@ -4,7 +4,9 @@
     <q-card-section
       class="q-py-xs"
       :style="
-        props.isReply
+        props.isOverallComment
+          ? `background-color: #eeeeee`
+          : props.isReply
           ? `background-color: #eeeeee`
           : `background-color: #bbe2e8`
       "
@@ -12,7 +14,10 @@
       <div class="row no-wrap justify-between">
         <div class="column justify-center">
           <span>
-            <a :id="random_id">Inline Comment # </a>
+            <a v-if="props.isOverallComment" :id="random_id"
+              >Overall Comment #
+            </a>
+            <a v-else :id="random_id">Inline Comment # </a>
             <span>on February 18th, 2021 at 6:35pm</span>
           </span>
         </div>
@@ -54,16 +59,19 @@
       </p>
     </q-card-section>
 
-    <div v-if="!props.isReply" class="q-px-sm">
+    <q-card-section
+      v-if="!props.isReply && !props.isOverallComment"
+      class="q-px-sm q-py-none"
+    >
       <q-chip size="16px" icon="bookmark"> Relevance </q-chip>
       <q-chip size="16px" icon="bookmark"> Accessibility </q-chip>
       <q-chip size="16px" icon="bookmark"> Coherence </q-chip>
-    </div>
+    </q-card-section>
 
     <q-card-actions class="q-pa-md q-pb-lg">
       <q-btn bordered color="primary" label="Reply" />
       <q-btn
-        v-if="!props.isReply && isCollapsed"
+        v-if="!props.isReply && !isCollapsed"
         aria-label="Hide Replies"
         bordered
         color="grey-3"
@@ -74,7 +82,7 @@
         <span>Hide Replies</span>
       </q-btn>
       <q-btn
-        v-if="!props.isReply && !isCollapsed"
+        v-if="!props.isReply && isCollapsed"
         aria-label="Show Replies"
         bordered
         color="secondary"
@@ -86,10 +94,12 @@
       </q-btn>
     </q-card-actions>
   </q-card>
-  <div v-if="!props.isReply && isCollapsed" class="q-ml-md">
-    <submission-comment is-reply />
-    <submission-comment is-reply />
-  </div>
+  <section v-if="!props.isReply" class="q-ml-md">
+    <div v-if="!isCollapsed">
+      <submission-comment is-reply />
+      <submission-comment is-reply />
+    </div>
+  </section>
 </template>
 <script setup>
 import { ref } from "vue"
@@ -103,6 +113,10 @@ function toggleThread() {
 }
 const random_id = Math.ceil(Math.random() * 1000000)
 const props = defineProps({
+  isOverallComment: {
+    type: Boolean,
+    default: false,
+  },
   isReply: {
     type: Boolean,
     default: false,
