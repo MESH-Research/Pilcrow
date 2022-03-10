@@ -81,11 +81,6 @@ export const GET_USERS = gql`
         name
         username
         email
-        pivot {
-          id
-          role_id
-          submission_id
-        }
       }
     }
   }
