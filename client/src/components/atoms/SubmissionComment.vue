@@ -12,7 +12,7 @@
       <div class="row no-wrap justify-between">
         <div class="column justify-center">
           <span>
-            <a :id="`comment_${commentId}`">Inline Comment # </a>
+            <a :id="random_id">Inline Comment # </a>
             <span>on February 18th, 2021 at 6:35pm</span>
           </span>
         </div>
@@ -101,11 +101,8 @@ const isCollapsed = ref(false)
 function toggleThread() {
   isCollapsed.value = !isCollapsed.value
 }
+const random_id = Math.ceil(Math.random() * 1000000)
 const props = defineProps({
-  commentId: {
-    type: Number,
-    default: null,
-  },
   isReply: {
     type: Boolean,
     default: false,
