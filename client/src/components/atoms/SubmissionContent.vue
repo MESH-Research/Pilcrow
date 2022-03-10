@@ -1,6 +1,12 @@
 <template>
   <div class="row items-center justify-end q-pa-md">
-    <q-select v-model="selectedFont" outlined :options="fonts" label="Font" />
+    <q-select
+      v-model="selectedFont"
+      outlined
+      :options="fonts"
+      label="Font"
+      style="min-width: 150px"
+    />
     <div class="q-ml-md">
       <q-btn
         aria-label="Decrease Font Size"
