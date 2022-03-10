@@ -1,20 +1,20 @@
 <template>
   <q-card square class="bg-grey-1 shadow-2 q-mb-md">
-    <q-separator :color="props.isReply ? `grey-3` : `blue-1`" />
+    <q-separator :color="props.isInlineComment ? `blue-1` : `grey-3`" />
     <q-card-section
       class="q-py-xs"
       :style="
-        props.isOverallComment
-          ? `background-color: #eeeeee`
-          : props.isReply
-          ? `background-color: #eeeeee`
-          : `background-color: #bbe2e8`
+        props.isInlineComment
+          ? `background-color: #bbe2e8`
+          : `background-color: #eeeeee`
       "
     >
       <div class="row no-wrap justify-between">
         <div class="column justify-center">
           <span>
-            <a v-if="props.isOverallComment" :id="random_id"
+            <a
+              v-if="props.isOverallComment || props.isOverallReply"
+              :id="random_id"
               >Overall Comment #
             </a>
             <a v-else :id="random_id">Inline Comment # </a>
@@ -31,7 +31,7 @@
         </div>
         <div class="text-h4 q-pl-sm">Egestas</div>
       </div>
-      <div v-if="props.isReply" class="q-pl-sm">
+      <div v-if="props.isInlineReply || props.isOverallReply" class="q-pl-sm">
         <small>
           <q-icon size="sm" name="subdirectory_arrow_right" />
           <div
@@ -59,10 +59,7 @@
       </p>
     </q-card-section>
 
-    <q-card-section
-      v-if="!props.isReply && !props.isOverallComment"
-      class="q-px-sm q-py-none"
-    >
+    <q-card-section v-if="props.isInlineComment" class="q-px-sm q-py-none">
       <q-chip size="16px" icon="bookmark"> Relevance </q-chip>
       <q-chip size="16px" icon="bookmark"> Accessibility </q-chip>
       <q-chip size="16px" icon="bookmark"> Coherence </q-chip>
@@ -71,7 +68,7 @@
     <q-card-actions class="q-pa-md q-pb-lg">
       <q-btn bordered color="primary" label="Reply" />
       <q-btn
-        v-if="!props.isReply && !isCollapsed"
+        v-if="!props.isInlineReply && !props.isOverallReply && !isCollapsed"
         aria-label="Hide Replies"
         bordered
         color="grey-3"
@@ -82,7 +79,7 @@
         <span>Hide Replies</span>
       </q-btn>
       <q-btn
-        v-if="!props.isReply && isCollapsed"
+        v-if="!props.isInlineReply && !props.isOverallReply && isCollapsed"
         aria-label="Show Replies"
         bordered
         color="secondary"
@@ -94,10 +91,16 @@
       </q-btn>
     </q-card-actions>
   </q-card>
-  <section v-if="!props.isReply" class="q-ml-md">
+  <section v-if="props.isInlineComment" class="q-ml-md">
     <div v-if="!isCollapsed">
-      <submission-comment is-reply />
-      <submission-comment is-reply />
+      <submission-comment is-inline-reply />
+      <submission-comment is-inline-reply />
+    </div>
+  </section>
+  <section v-if="props.isOverallComment" class="q-mx-md">
+    <div v-if="!isCollapsed">
+      <submission-comment is-overall-reply />
+      <submission-comment is-overall-reply />
     </div>
   </section>
 </template>
@@ -117,7 +120,15 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-  isReply: {
+  isOverallReply: {
+    type: Boolean,
+    default: false,
+  },
+  isInlineComment: {
+    type: Boolean,
+    default: false,
+  },
+  isInlineReply: {
     type: Boolean,
     default: false,
   },
