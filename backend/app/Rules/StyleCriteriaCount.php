@@ -33,7 +33,7 @@ class StyleCriteriaCount
             ->whereNot('id', $criteriaId ?? null)
             ->count();
 
-        if ($count == $this->maxCriteriaCount) {
+        if ($count >= $this->maxCriteriaCount) {
             return false;
         }
 

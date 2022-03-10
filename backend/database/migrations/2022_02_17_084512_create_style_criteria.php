@@ -30,6 +30,6 @@ class CreateStyleCriteria extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('style_criteria');
+        Schema::dropIfExists('style_criterias');
     }
 }

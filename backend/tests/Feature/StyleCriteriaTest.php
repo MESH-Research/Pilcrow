@@ -48,6 +48,7 @@ class StyleCriteriaTest extends TestCase
         $styleCriteria->name = '';
 
         $this->assertFalse($styleCriteria->isValid());
+        $this->assertCount(1, $styleCriteria->getErrors()->get('name'));
 
         $styleCriteria->name = 'test name';
 
@@ -61,5 +62,6 @@ class StyleCriteriaTest extends TestCase
         $styleCriteria->icon = str_repeat('a', 51);
 
         $this->assertTrue($styleCriteria->isInvalid());
+        $this->assertCount(1, $styleCriteria->getErrors()->get('icon'));
     }
 }
