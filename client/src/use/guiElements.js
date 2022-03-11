@@ -11,7 +11,7 @@ export function useFeedbackMessages(opts) {
           "data-cy": "button_dismiss_notify",
         },
       ],
-      timeout: 50000,
+      timeout: 10000,
       progress: true,
       html: true,
     })
