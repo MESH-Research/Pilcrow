@@ -24,6 +24,21 @@ class PublicationFactory extends Factory
     {
         return [
             'name' => $this->faker->unique()->company(),
+            'is_publicly_visible' => true,
         ];
+    }
+
+    /**
+     * Factory State for public visibility
+     *
+     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     */
+    public function hidden()
+    {
+        return $this->state(function (array $_) {
+            return [
+                'is_publicly_visible' => false,
+            ];
+        });
     }
 }

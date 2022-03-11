@@ -9,6 +9,8 @@ use App\Models\Role;
 use App\Models\User;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Testing\Fluent\AssertableJson;
+use Nuwave\Lighthouse\Exceptions\ValidationException;
 use Nuwave\Lighthouse\Testing\MakesGraphQLRequests;
 use Tests\TestCase;
 
@@ -17,12 +19,12 @@ class PublicationTest extends TestCase
     use MakesGraphQLRequests;
     use RefreshDatabase;
 
-    public function testPublicationsCanBeCreatedWithCustomNamesThatAreNotDuplicates()
+    public function testNoDuplicateNames()
     {
         $publication = Publication::factory()->create(['name' => 'Custom Name']);
         $this->assertEquals($publication->name, 'Custom Name');
 
-        $this->expectException(QueryException::class);
+        $this->expectException(ValidationException::class);
         Publication::factory()->create(['name' => 'Custom Name']);
     }
 
@@ -39,6 +41,7 @@ class PublicationTest extends TestCase
                         'name' => 'Test Publication',
                     ],
                 ],
+                'Unable to create publication',
             ],
             [
                 '        Test Publication with Whitespace       ',
@@ -47,10 +50,12 @@ class PublicationTest extends TestCase
                         'name' => 'Test Publication with Whitespace',
                     ],
                 ],
+                'Whitespace should be trimmed around name',
             ],
             [
                 '',
                 null,
+                'Name must be required',
             ],
         ];
     }
@@ -59,7 +64,7 @@ class PublicationTest extends TestCase
      * @dataProvider publicationMutationProvider
      * @return void
      */
-    public function testPublicationsCanBeCreatedViaMutationByAnApplicationAdministrator(mixed $publication_name, mixed $expected_data): void
+    public function testCreation(mixed $publication_name, mixed $expected_data, string $message): void
     {
         /** @var User $user */
         $user = User::factory()->create();
@@ -73,13 +78,14 @@ class PublicationTest extends TestCase
             }',
             [ 'publication_name' => $publication_name ]
         );
-        $response->assertJsonPath('data', $expected_data);
+        $json = $response->json();
+        $this->assertSame($json['data'] ?? null, $expected_data, $message);
     }
 
     /**
      * @return void
      */
-    public function testPublicationsCannotBeCreatedViaMutationByARegularUser()
+    public function testCreationRequiresAppAdmin()
     {
         /** @var User $user */
         $user = User::factory()->create();
@@ -98,11 +104,9 @@ class PublicationTest extends TestCase
     /**
      * @return void
      */
-    public function testIndividualPublicationsCanBeQueriedById()
+    public function testCanBeQueriedById()
     {
-        $publication = Publication::factory()->create([
-            'name' => 'Test Publication for Querying an Individual Publication',
-        ]);
+        $publication = Publication::factory()->create();
         $response = $this->graphQL(
             'query GetPublication($id: ID!) {
                 publication (id: $id) {
@@ -115,7 +119,7 @@ class PublicationTest extends TestCase
         $expected_data = [
             'publication' => [
                 'id' => (string)$publication->id,
-                'name' => 'Test Publication for Querying an Individual Publication',
+                'name' => $publication->name,
             ],
         ];
         $response->assertJsonPath('data', $expected_data);
@@ -124,38 +128,16 @@ class PublicationTest extends TestCase
     /**
      * @return void
      */
-    public function testPublicationThatDoesNotExistCanBeQueriedById()
-    {
-        $response = $this->graphQL(
-            'query GetPublication {
-                publication (id: "Invalid ID") {
-                    id
-                    name
-                }
-            }'
-        );
-        $expected_data = [
-            'publication' => null,
-        ];
-        $response->assertJsonPath('data', $expected_data);
-    }
-
-    /**
-     * @return void
-     */
-    public function testAllPublicationsCanBeQueriedByAnApplicationAdministrator()
+    public function testAppAdminQueryShowsHiddenItems()
     {
         /** @var User $user */
         $user = User::factory()->create();
         $user->assignRole(Role::APPLICATION_ADMINISTRATOR);
         $this->actingAs($user);
 
-        $publication_1 = Publication::factory()->create([
-            'name' => 'Test Publication 1 for Querying All Publications',
-        ]);
-        $publication_2 = Publication::factory()->create([
-            'name' => 'Test Publication 2 for Querying All Publications',
-        ]);
+        Publication::factory()->count(2)->create();
+        Publication::factory()->hidden()->count(2)->create();
+
         $response = $this->graphQL(
             'query GetPublications {
                 publications {
@@ -166,35 +148,24 @@ class PublicationTest extends TestCase
                 }
             }'
         );
-        $expected_data = [
-            'publications' => [
-                'data' => [
-                    [
-                        'id' => (string)$publication_1->id,
-                        'name' => 'Test Publication 1 for Querying All Publications',
-                    ],
-                    [
-                        'id' => (string)$publication_2->id,
-                        'name' => 'Test Publication 2 for Querying All Publications',
-                    ],
-                ],
-            ],
-        ];
-        $response->assertJsonPath('data', $expected_data);
+
+        $json = $response->json('data.publications.data');
+        $this->assertCount(4, $json);
     }
 
     /**
      * @return void
      */
-    public function testAllPublicationsCannotBeQueriedByARegularUser()
+    public function testQueryFiltersHiddenItems()
     {
         /** @var User $user */
         $user = User::factory()->create();
         $this->actingAs($user);
-
+        Publication::factory()->count(2)->create();
+        Publication::factory()->hidden()->count(2)->create();
         $response = $this->graphQL(
             'query GetPublications {
-                publications {
+                publications(is_publicly_visible: true) {
                     data {
                         id
                         name
@@ -202,83 +173,15 @@ class PublicationTest extends TestCase
                 }
             }'
         );
-        $expected_data = [
-            'publications' => null,
-        ];
-        $response->assertJsonPath('data', $expected_data);
+        $json = $response->json('data.publications.data');
+
+        $this->assertCount(2, $json);
     }
 
     /**
      * @return void
      */
-    public function testPublicationsHaveAManyToManyRelationshipWithUsers()
-    {
-        $publication_count = 4;
-        $user_count = 6;
-        $users = User::factory()->count($user_count)->create();
-
-        // Create publications and attach them to users randomly with random roles
-        for ($i = 0; $i < $publication_count; $i++) {
-            $random_user = $users->random();
-            $random_role_id = Role::whereIn(
-                'name',
-                [
-                    Role::PUBLICATION_ADMINISTRATOR,
-                    Role::EDITOR,
-                ]
-            )
-                ->get()
-                ->pluck('id')
-                ->random();
-            $publication = Publication::factory()->hasAttached(
-                $random_user,
-                [
-                    'role_id' => $random_role_id,
-                ]
-            )
-                ->create();
-            // Ensure at least one publication admin is attached to the publication.
-            if ($random_role_id !== Role::PUBLICATION_ADMINISTRATOR_ROLE_ID) {
-                $random_non_duplicate_user = $users->reject(function ($user) use ($random_user) {
-                    return $user->id === $random_user->id;
-                })->random();
-                $publication->users()->attach(
-                    $random_non_duplicate_user,
-                    [
-                        'role_id' => Role::PUBLICATION_ADMINISTRATOR_ROLE_ID,
-                    ]
-                );
-            }
-        }
-        Publication::all()->map(function ($publication) {
-            $this->assertGreaterThan(0, $publication->users->count());
-            $this->assertLessThanOrEqual(2, $publication->users->count());
-            $publication->users->map(function ($user) {
-                $this->assertIsInt(
-                    User::where(
-                        'id',
-                        $user->id
-                    )->firstOrFail()->id
-                );
-            });
-        });
-        User::all()->map(function ($user) use ($publication_count) {
-            $this->assertLessThanOrEqual($publication_count, $user->publications->count());
-            $user->publications->map(function ($publication) {
-                $this->assertIsInt(
-                    Publication::where(
-                        'id',
-                        $publication->id
-                    )->firstOrFail()->id
-                );
-            });
-        });
-    }
-
-    /**
-     * @return void
-     */
-    public function testUserRoleAndUserAreUniqueForAPublication()
+    public function testUserRoleAndUserMustBeUniqueForAPublication()
     {
         $user = User::factory()->create();
         $role_id = Role::where('name', Role::PUBLICATION_ADMINISTRATOR)->first()->id;
@@ -313,61 +216,29 @@ class PublicationTest extends TestCase
      */
     public function createPublicationUserViaMutationAsAnEditorProvider(): array
     {
+        //@codingStandardsIgnoreStart
         return [
-            [
-                [
-                    'publication_user_role_id' => Role::SUBMITTER_ROLE_ID,
-                    'allowed' => false,
-                ],
-            ],
-            [
-                [
-                    'publication_user_role_id' => Role::REVIEWER_ROLE_ID,
-                    'allowed' => false,
-                ],
-            ],
-            [
-                [
-                    'publication_user_role_id' => Role::REVIEW_COORDINATOR_ROLE_ID,
-                    'allowed' => false,
-                ],
-            ],
-            [
-                [
-                    'publication_user_role_id' => Role::EDITOR_ROLE_ID,
-                    'allowed' => false,
-                ],
-            ],
-            [
-                [
-                    'publication_user_role_id' => 0,
-                    'allowed' => false,
-                ],
-            ],
-            [
-                [
-                    'publication_user_role_id' => '',
-                    'allowed' => false,
-                ],
-            ],
-            [
-                [
-                    'publication_user_role_id' => null,
-                    'allowed' => false,
-                ],
-            ],
+            //User Role ID,                     Allowed?
+            [ Role::SUBMITTER_ROLE_ID,          false ],
+            [ Role::REVIEWER_ROLE_ID,           false ],
+            [ Role::REVIEW_COORDINATOR_ROLE_ID, false ],
+            [ Role::EDITOR_ROLE_ID,             false ],
+            [ 0,                                false ], //TODO: These should be tested in the context of validating role ids, not repeatedly as a possible input
+            [ '',                               false ],
+            [ null,                             false ],
         ];
+        //@codingStandardsIgnoreEnd
     }
 
     /**
      * @dataProvider createPublicationUserViaMutationAsAnEditorProvider
      * @return void
      */
-    public function testCreatePublicationUserViaMutationAsAnEditor(array $case)
+    public function testCreatePublicationUserViaMutationAsAnEditor($userRoleId, bool $allowed)
     {
         /** @var User $editor */
         $editor = User::factory()->create();
-        $editor->assignRole(Role::EDITOR);
+        $editor->assignRole(Role::EDITOR); //TODO: What does Role::EDITOR mean when not referencing a publication.
         $this->actingAs($editor);
         $user_to_be_assigned = User::factory()->create();
         $publication = Publication::factory()
@@ -391,16 +262,16 @@ class PublicationTest extends TestCase
                 }
             }',
             [
-                'role_id' => $case['publication_user_role_id'],
+                'role_id' => $userRoleId,
                 'publication_id' => $publication->id,
                 'user_id' => $user_to_be_assigned->id,
             ]
         );
         $expected_mutation_response = null;
-        if ($case['allowed']) {
+        if ($allowed) {
             $expected_mutation_response = [
                 'createPublicationUser' => [
-                    'role_id' => $case['publication_user_role_id'],
+                    'role_id' => $userRoleId,
                     'publication_id' => (string)$publication->id,
                     'user_id' => (string)$user_to_be_assigned->id,
                 ],
@@ -434,13 +305,13 @@ class PublicationTest extends TestCase
                 ],
             ],
         ];
-        if ($case['allowed']) {
+        if ($allowed) {
             array_push(
                 $expected_query_response['publication']['users'],
                 [
                     'id' => (string)$user_to_be_assigned->id,
                     'pivot' => [
-                        'role_id' => $case['publication_user_role_id'],
+                        'role_id' => $userRoleId,
                     ],
                 ],
             );
@@ -453,69 +324,37 @@ class PublicationTest extends TestCase
      */
     public function deletePublicationUserViaMutationAsAnEditorProvider(): array
     {
+        //@codingStandardsIgnoreStart
         return [
-            [
-                [
-                    'publication_user_role_id' => Role::SUBMITTER_ROLE_ID,
-                    'allowed' => false,
-                ],
-            ],
-            [
-                [
-                    'publication_user_role_id' => Role::REVIEWER_ROLE_ID,
-                    'allowed' => false,
-                ],
-            ],
-            [
-                [
-                    'publication_user_role_id' => Role::REVIEW_COORDINATOR_ROLE_ID,
-                    'allowed' => false,
-                ],
-            ],
-            [
-                [
-                    'publication_user_role_id' => Role::EDITOR_ROLE_ID,
-                    'allowed' => false,
-                ],
-            ],
-            [
-                [
-                    'publication_user_role_id' => 0,
-                    'allowed' => false,
-                ],
-            ],
-            [
-                [
-                    'publication_user_role_id' => '',
-                    'allowed' => false,
-                ],
-            ],
-            [
-                [
-                    'publication_user_role_id' => null,
-                    'allowed' => false,
-                ],
-            ],
+            //User Role ID                      Allowed?
+            [ Role::SUBMITTER_ROLE_ID,          false ],
+            [ Role::REVIEWER_ROLE_ID,           false ],
+            [ Role::REVIEW_COORDINATOR_ROLE_ID, false ],
+            [ Role::EDITOR_ROLE_ID,             false ],
+            [ 0,                                false ],
+            [ '',                               false ],
+            [ null,                             false ],
         ];
+        //@codingStandardsIgnoreEnd
     }
 
     /**
      * @dataProvider deletePublicationUserViaMutationAsAnEditorProvider
      * @return void
      */
-    public function testDeletePublicationUserViaMutationAsAnEditor(array $case)
+    public function testDeletePublicationUserViaMutationAsAnEditor($userRoleId, bool $allowed)
     {
         /** @var User $editor */
         $editor = User::factory()->create();
         $editor->assignRole(Role::EDITOR);
         $this->actingAs($editor);
         $user_to_be_deleted = User::factory()->create();
-        $publication_user_role_id_is_invalid = intval($case['publication_user_role_id']) <= 0;
+        $publication_user_role_id_is_invalid = intval($userRoleId) <= 0;
         $publication = Publication::factory()
             ->hasAttached(
                 $user_to_be_deleted,
                 [
-                    'role_id' => $publication_user_role_id_is_invalid ? Role::EDITOR_ROLE_ID : $case['publication_user_role_id'],
+                    'role_id' => $publication_user_role_id_is_invalid ? Role::EDITOR_ROLE_ID : $userRoleId, //TODO: What is the point of this ? If the role is invalid we just pretend it says EDITOR?
                 ]
             )
             ->hasAttached(
@@ -538,13 +377,13 @@ class PublicationTest extends TestCase
                 }
             }',
             [
-                'role_id' => $case['publication_user_role_id'],
+                'role_id' => $userRoleId,
                 'publication_id' => $publication->id,
                 'user_id' => $user_to_be_deleted->id,
             ]
         );
         $expected_mutation_response = null;
-        if ($case['allowed']) {
+        if ($allowed) {
             $expected_mutation_response = [
                 'deletePublicationUser' => [
                     'id' => (string)$publication_user->id,
@@ -559,57 +398,25 @@ class PublicationTest extends TestCase
      */
     public function createPublicationUserViaMutationAsAnApplicationAdministratorProvider(): array
     {
+        //@codingStandardsIgnoreStart
         return [
-            [
-                [
-                    'publication_user_role_id' => Role::SUBMITTER_ROLE_ID,
-                    'allowed' => false,
-                ],
-            ],
-            [
-                [
-                    'publication_user_role_id' => Role::REVIEWER_ROLE_ID,
-                    'allowed' => false,
-                ],
-            ],
-            [
-                [
-                    'publication_user_role_id' => Role::REVIEW_COORDINATOR_ROLE_ID,
-                    'allowed' => false,
-                ],
-            ],
-            [
-                [
-                    'publication_user_role_id' => Role::EDITOR_ROLE_ID,
-                    'allowed' => true,
-                ],
-            ],
-            [
-                [
-                    'publication_user_role_id' => 0,
-                    'allowed' => false,
-                ],
-            ],
-            [
-                [
-                    'publication_user_role_id' => '',
-                    'allowed' => false,
-                ],
-            ],
-            [
-                [
-                    'publication_user_role_id' => null,
-                    'allowed' => false,
-                ],
-            ],
+            //User Role                         Allowed?
+            [ Role::SUBMITTER_ROLE_ID,          false ],
+            [ Role::REVIEWER_ROLE_ID,           false ],
+            [ Role::REVIEW_COORDINATOR_ROLE_ID, false ],
+            [ Role::EDITOR_ROLE_ID,             true  ],
+            [ 0,                                false ],
+            [ '',                               false ],
+            [ null,                             false ],
         ];
+        //@codingStandardsIgnoreEnd
     }
 
     /**
      * @dataProvider createPublicationUserViaMutationAsAnApplicationAdministratorProvider
      * @return void
      */
-    public function testCreatePublicationUserViaMutationAsAnApplicationAdministrator(array $case)
+    public function testCreatePublicationUserViaMutationAsAnApplicationAdministrator($userRoleId, bool $allowed)
     {
         /** @var User $admin */
         $admin = User::factory()->create();
@@ -631,16 +438,16 @@ class PublicationTest extends TestCase
                 }
             }',
             [
-                'role_id' => $case['publication_user_role_id'],
+                'role_id' => $userRoleId,
                 'publication_id' => $publication->id,
                 'user_id' => $user_to_be_assigned->id,
             ]
         );
         $expected_mutation_response = null;
-        if ($case['allowed']) {
+        if ($allowed) {
             $expected_mutation_response = [
                 'createPublicationUser' => [
-                    'role_id' => $case['publication_user_role_id'],
+                    'role_id' => $userRoleId,
                     'publication_id' => (string)$publication->id,
                     'user_id' => (string)$user_to_be_assigned->id,
                 ],
@@ -667,13 +474,13 @@ class PublicationTest extends TestCase
                 'users' => [ ],
             ],
         ];
-        if ($case['allowed']) {
+        if ($allowed) {
             array_push(
                 $expected_query_response['publication']['users'],
                 [
                     'id' => (string)$user_to_be_assigned->id,
                     'pivot' => [
-                        'role_id' => $case['publication_user_role_id'],
+                        'role_id' => $userRoleId,
                     ],
                 ],
             );
@@ -686,69 +493,37 @@ class PublicationTest extends TestCase
      */
     public function deletePublicationUserViaMutationAsAnApplicationAdministratorProvider(): array
     {
+        //@codingStandardsIgnoreStart
         return [
-            [
-                [
-                    'publication_user_role_id' => Role::SUBMITTER_ROLE_ID,
-                    'allowed' => false,
-                ],
-            ],
-            [
-                [
-                    'publication_user_role_id' => Role::REVIEWER_ROLE_ID,
-                    'allowed' => false,
-                ],
-            ],
-            [
-                [
-                    'publication_user_role_id' => Role::REVIEW_COORDINATOR_ROLE_ID,
-                    'allowed' => false,
-                ],
-            ],
-            [
-                [
-                    'publication_user_role_id' => Role::EDITOR_ROLE_ID,
-                    'allowed' => true,
-                ],
-            ],
-            [
-                [
-                    'publication_user_role_id' => 0,
-                    'allowed' => false,
-                ],
-            ],
-            [
-                [
-                    'publication_user_role_id' => '',
-                    'allowed' => false,
-                ],
-            ],
-            [
-                [
-                    'publication_user_role_id' => null,
-                    'allowed' => false,
-                ],
-            ],
+            // User Role ID                     Allowed?
+            [ Role::SUBMITTER_ROLE_ID,          false ],
+            [ Role::REVIEWER_ROLE_ID,           false ],
+            [ Role::REVIEW_COORDINATOR_ROLE_ID, false ],
+            [ Role::EDITOR_ROLE_ID,             true  ],
+            [ 0,                                false ],
+            [ '',                               false ],
+            [ null,                             false ],
         ];
+        //@codingStandardsIgnoreEnd
     }
 
     /**
      * @dataProvider deletePublicationUserViaMutationAsAnApplicationAdministratorProvider
      * @return void
      */
-    public function testDeletePublicationUserViaMutationAsAnApplicationAdministrator(array $case)
+    public function testDeletePublicationUserViaMutationAsAnApplicationAdministrator($userRoleId, bool $allowed)
     {
         /** @var User $editor */
         $editor = User::factory()->create();
         $editor->assignRole(Role::APPLICATION_ADMINISTRATOR);
         $this->actingAs($editor);
         $user_to_be_deleted = User::factory()->create();
-        $publication_user_role_id_is_invalid = intval($case['publication_user_role_id']) <= 0;
+        $publication_user_role_id_is_invalid = intval($userRoleId) <= 0;
         $publication = Publication::factory()
             ->hasAttached(
                 $user_to_be_deleted,
                 [
-                    'role_id' => $publication_user_role_id_is_invalid ? Role::EDITOR_ROLE_ID : $case['publication_user_role_id'],
+                    'role_id' => $publication_user_role_id_is_invalid ? Role::EDITOR_ROLE_ID : $userRoleId,
                 ]
             )
             ->create([
@@ -765,13 +540,13 @@ class PublicationTest extends TestCase
                 }
             }',
             [
-                'role_id' => $case['publication_user_role_id'],
+                'role_id' => $userRoleId,
                 'publication_id' => $publication->id,
                 'user_id' => $user_to_be_deleted->id,
             ]
         );
         $expected_mutation_response = null;
-        if ($case['allowed']) {
+        if ($allowed) {
             $expected_mutation_response = [
                 'deletePublicationUser' => [
                     'id' => (string)$publication_user->id,
@@ -779,5 +554,265 @@ class PublicationTest extends TestCase
             ];
         }
         $response->assertJsonPath('data', $expected_mutation_response);
+    }
+
+    public function testCanUpdatePublicationStyleCriteria()
+    {
+        $this->beAppAdmin();
+        $publication = Publication::factory()->create();
+        $criteria = [['name' => 'criteria one', 'description' => 'wonderful criteria', 'icon' => 'icon']];
+        $response = $this->graphQL(
+            'mutation UpdatePublication($pubId: ID!, $styleCriteria: [CreateStyleCriteriaInput!]) {
+                updatePublication(
+                    publication: {
+                        id: $pubId,
+                        style_criterias: {
+                            create: $styleCriteria
+                        }
+                    }
+                ) {
+                    style_criterias {
+                        name
+                        description
+                        icon
+                    }
+                }
+            }',
+            [
+                'pubId' => $publication->id,
+                'styleCriteria' => $criteria,
+            ]
+        );
+
+        $response->assertJsonFragment($criteria);
+    }
+
+    public function testCanCreatePublicationWithStyleCriteria()
+    {
+        $this->beAppAdmin();
+
+        $response = $this->graphQL(
+            'mutation CreatePublication($styleCriterias: [CreateStyleCriteriaInput!]) {
+                createPublication(
+                    publication: {
+                        name: "Style Critera Pub",
+                        style_criterias: {
+                            create: $styleCriterias
+                        }
+                    }
+                ) {
+                    name
+                    style_criterias {
+                        id
+                        name
+                        description
+                    }
+                }
+            }
+            ',
+            [
+                'styleCriterias' => [
+                    ['name' => 'Criteria one', 'description' => 'one', 'icon' => 'eye'],
+                    ['name' => 'Criteria two', 'description' => 'twp'],
+                ],
+            ]
+        );
+        $response->assertJson(fn (AssertableJson $json) =>
+            $json->has('data.createPublication.style_criterias', 2)
+                ->etc());
+    }
+
+    public function testCanUpdateExistingStyleCriteria()
+    {
+        $this->beAppAdmin();
+        $publication = Publication::factory()
+            ->hasStyleCriterias(3)
+            ->create();
+        $criteriaId = $publication->styleCriterias[0]->id;
+        $response = $this->graphQL(
+            'mutation UpdatePublication($publicationId: ID!, $styleCriteria: UpdateStyleCriteriaInput!) {
+                updatePublication(
+                    publication: {
+                        id: $publicationId,
+                        style_criterias: {
+                            update: [$styleCriteria]
+                        }
+                    }) {
+                        style_criterias {
+                            id
+                            name
+                            description
+                            icon
+                        }
+                    }
+                }
+            ',
+            [
+                'styleCriteria' => [
+                    'id' => $criteriaId,
+                    'name' => 'New Name',
+                    'description' => 'new description',
+                    'icon' => 'icon',
+                ],
+                'publicationId' => $publication->id,
+            ]
+        );
+        $response->assertJson(fn (AssertableJson $json) =>
+            $json->has('data.updatePublication.style_criterias', 3)
+                ->has('data.updatePublication.style_criterias.0', fn ($json) =>
+                    $json->where('name', 'New Name')
+                        ->where('description', 'new description')
+                        ->where('id', (string)$criteriaId)
+                        ->where('icon', 'icon'))
+                        ->etc()
+                ->etc());
+    }
+
+    public function testCanDeleteStyleCriteria()
+    {
+        $this->beAppAdmin();
+
+        $publication = Publication::factory()
+            ->hasStyleCriterias(2)
+            ->create();
+        $criteriaId = $publication->styleCriterias[0]->id;
+
+        $response = $this->graphQL(
+            'mutation DeleteStyleCriteria($publicationId: ID!, $styleCriteriaId: ID!) {
+                updatePublication(
+                    publication: {
+                        id: $publicationId
+                        style_criterias: {
+                            delete: [$styleCriteriaId]
+                        }
+                    })
+                    {
+                        style_criterias {
+                            name
+                        }
+                    }
+                }
+            ',
+            [
+                'publicationId' => $publication->id,
+                'styleCriteriaId' => $criteriaId,
+
+            ]
+        );
+        $response->assertJson(fn (AssertableJson $json) =>
+            $json->has('data.updatePublication.style_criterias', 1)
+            ->etc());
+    }
+
+    public function testMaxNumberOfStyleCriteria()
+    {
+        $this->beAppAdmin();
+
+        $response = $this->graphQL(
+            'mutation CreatePublication($criteria: [CreateStyleCriteriaInput!]) {
+                createPublication(
+                    publication: {
+                        name: "Test publication",
+                        style_criterias: {
+                            create: $criteria
+                        }
+                    }
+                ) {
+                    name
+                    style_criterias {
+                        name
+                    }
+                }
+            }
+            ',
+            [
+                'criteria' => [
+                    ['name' => 'one',],
+                    ['name' => 'two',],
+                    ['name' => 'three',],
+                    ['name' => 'four',],
+                    ['name' => 'five',],
+                    ['name' => 'six',],
+                    ['name' => 'seven',],
+                ],
+            ]
+        );
+        $response->assertJson(fn (AssertableJson $json) =>
+            $json->has('errors', 1));
+    }
+
+    public function testCannotAddTooManyStyleCriteria()
+    {
+        $this->beAppAdmin();
+        $publication = Publication::factory()->hasStyleCriterias(6)->create();
+
+        $response = $this->graphQL(
+            'mutation UpdatePublication($publicationId: ID! $criteria: [CreateStyleCriteriaInput!]) {
+                updatePublication(
+                    publication: {
+                        id: $publicationId
+                        style_criterias: {
+                            create: $criteria
+                        }
+                    }
+                ) {
+                    name
+                    style_criterias {
+                        name
+                    }
+                }
+            }
+            ',
+            [
+                'publicationId' => $publication->id,
+                'criteria' => [
+                    ['name' => 'one',],
+                    ['name' => 'two',],
+                    ['name' => 'three',],
+                    ['name' => 'four',],
+                    ['name' => 'five',],
+                    ['name' => 'six',],
+                    ['name' => 'seven',],
+                ],
+            ]
+        );
+        $response->assertJson(fn (AssertableJson $json) =>
+            $json->has('errors', 1)
+            ->etc());
+    }
+
+    public function testCanUpdateTooManyStyleCriteria()
+    {
+        $this->beAppAdmin();
+        $publication = Publication::factory()->hasStyleCriterias(6)->create();
+        $criteriaId = $publication->styleCriterias[0]->id;
+
+        $response = $this->graphQL(
+            'mutation UpdatePublication($publicationId: ID! $criteria: [UpdateStyleCriteriaInput!]) {
+                updatePublication(
+                    publication: {
+                        id: $publicationId
+                        style_criterias: {
+                            update: $criteria
+                        }
+                    }
+                ) {
+                    name
+                    style_criterias {
+                        name
+                    }
+                }
+            }
+            ',
+            [
+                'publicationId' => $publication->id,
+                'criteria' => [
+                    ['id' => $criteriaId, 'name' => 'one',],
+                ],
+            ]
+        );
+        $response->assertJson(fn (AssertableJson $json) =>
+            $json->where('data.updatePublication.style_criterias.0.name', 'one')
+            ->etc());
     }
 }
