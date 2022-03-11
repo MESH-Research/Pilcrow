@@ -110,7 +110,7 @@ import { GET_PUBLICATIONS, GET_SUBMISSIONS } from "src/graphql/queries"
 import { CREATE_SUBMISSION } from "src/graphql/mutations"
 import { required, maxLength } from "@vuelidate/validators"
 import { useCurrentUser } from "src/use/user"
-import { useQuasar } from "quasar"
+import { useFeedbackMessages } from "src/use/guiElements"
 import { useI18n } from "vue-i18n"
 import { ref, reactive } from "vue"
 import { useResult, useQuery, useMutation } from "@vue/apollo-composable"
@@ -145,49 +145,32 @@ const publications = useResult(
   (data) => data.publications.data
 )
 
-const { notify } = useQuasar()
 const { t } = useI18n()
-function makeNotify(color, icon, message) {
-  notify({
-    color: color,
-    icon: icon,
-    message: t(message),
-    attrs: {
-      "data-cy": "create_submission_notify",
-    },
-    html: true,
-  })
-  is_submitting.value = false
-}
+const { newStatusMessage } = useFeedbackMessages({
+  attrs: {
+    "data-cy": "create_submission_notify",
+  },
+})
+
 function checkThatFormIsInvalid() {
+  let failureMessage = false
   if (newPubV$.value.title.maxLength.$invalid) {
-    makeNotify("negative", "error", "submissions.create.title.max_length")
+    failureMessage = "submissions.create.title.max_length"
+  } else if (newPubV$.value.title.required.$invalid) {
+    failureMessage = "submissions.create.title.required"
+  } else if (newPubV$.value.publication_id.required.$invalid) {
+    failureMessage = "submissions.create.publication_id.required"
+  } else if (newPubV$.value.submitter_user_id.required.$invalid) {
+    failureMessage = "submissions.create.submitter_user_id.required"
+  } else if (newPubV$.value.file_upload.required.$invalid) {
+    failureMessage = "submissions.create.file_upload.required"
+  }
+
+  if (failureMessage !== false) {
+    newStatusMessage("failure", t(failureMessage))
     return true
   }
-  if (newPubV$.value.title.required.$invalid) {
-    makeNotify("negative", "error", "submissions.create.title.required")
-    return true
-  }
-  if (newPubV$.value.publication_id.required.$invalid) {
-    makeNotify(
-      "negative",
-      "error",
-      "submissions.create.publication_id.required"
-    )
-    return true
-  }
-  if (newPubV$.value.submitter_user_id.required.$invalid) {
-    makeNotify(
-      "negative",
-      "error",
-      "submissions.create.submitter_user_id.required"
-    )
-    return true
-  }
-  if (newPubV$.value.file_upload.required.$invalid) {
-    makeNotify("negative", "error", "submissions.create.file_upload.required")
-    return true
-  }
+  return false
 }
 
 const { mutate: createMutate } = useMutation(CREATE_SUBMISSION, {
@@ -202,11 +185,12 @@ async function createNewSubmission() {
   try_catch_error.value = false
   new_submission.submitter_user_id = currentUser.value.id
   if (checkThatFormIsInvalid()) {
+    is_submitting.value = false
     return false
   }
   try {
     await createMutate({ ...new_submission })
-    makeNotify("positive", "check_circle", "submissions.create.success")
+    newStatusMessage("success", t("submissions.create.success"))
     resetForm()
     is_submitting.value = false
   } catch (error) {
