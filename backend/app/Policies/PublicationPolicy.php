@@ -30,7 +30,7 @@ class PublicationPolicy
     }
 
     /**
-     * Can user update a publication
+     * Determine whether the user can update a publication.
      *
      * @param \App\Models\User $user
      * @param \App\Models\Publication $publication
