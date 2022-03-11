@@ -218,7 +218,7 @@ class PublicationTest extends TestCase
     {
         //@codingStandardsIgnoreStart
         return [
-            //User Role ID,                      Allowed?
+            //User Role ID,                     Allowed?
             [ Role::SUBMITTER_ROLE_ID,          false ],
             [ Role::REVIEWER_ROLE_ID,           false ],
             [ Role::REVIEW_COORDINATOR_ROLE_ID, false ],
@@ -400,7 +400,7 @@ class PublicationTest extends TestCase
     {
         //@codingStandardsIgnoreStart
         return [
-            //User Role                         Allowed
+            //User Role                         Allowed?
             [ Role::SUBMITTER_ROLE_ID,          false ],
             [ Role::REVIEWER_ROLE_ID,           false ],
             [ Role::REVIEW_COORDINATOR_ROLE_ID, false ],
@@ -495,7 +495,7 @@ class PublicationTest extends TestCase
     {
         //@codingStandardsIgnoreStart
         return [
-            // User Role ID                     Allowed
+            // User Role ID                     Allowed?
             [ Role::SUBMITTER_ROLE_ID,          false ],
             [ Role::REVIEWER_ROLE_ID,           false ],
             [ Role::REVIEW_COORDINATOR_ROLE_ID, false ],

@@ -440,6 +440,7 @@ class SubmissionTest extends TestCase
     {
         //@codingStandardsIgnoreStart
         return [
+            //User Role ID,                           Allowed?
             [Role::SUBMITTER_ROLE_ID,                 false],
             [Role::REVIEWER_ROLE_ID,                  true ],
             [Role::REVIEW_COORDINATOR_ROLE_ID,        true ],
@@ -547,6 +548,7 @@ class SubmissionTest extends TestCase
     {
         //@codingStandardsIgnoreStart
         return [
+            //User Role ID,                           Allowed?
             [Role::SUBMITTER_ROLE_ID,                 false],
             [Role::REVIEWER_ROLE_ID,                  true],
             [Role::REVIEW_COORDINATOR_ROLE_ID,        true],
@@ -656,6 +658,7 @@ class SubmissionTest extends TestCase
     {
         //@codingStandardsIgnoreStart
         return [
+            //User Role ID,                           Allowed?
             [Role::SUBMITTER_ROLE_ID,                 false],
             [Role::REVIEWER_ROLE_ID,                  true],
             [Role::REVIEW_COORDINATOR_ROLE_ID,        false],
@@ -853,6 +856,7 @@ class SubmissionTest extends TestCase
     {
         //@codingStandardsIgnoreStart
         return [
+            //User Role ID,                    Allowed?
             [Role::SUBMITTER_ROLE_ID,          false],
             [Role::REVIEWER_ROLE_ID,           true],
             [Role::REVIEW_COORDINATOR_ROLE_ID, true],
@@ -921,6 +925,7 @@ class SubmissionTest extends TestCase
     {
         //@codingStandardsIgnoreStart
         return [
+            //User Role ID,                    Allowed?
             [Role::SUBMITTER_ROLE_ID,          false],
             [Role::REVIEWER_ROLE_ID,           true],
             [Role::REVIEW_COORDINATOR_ROLE_ID, true],
@@ -989,6 +994,7 @@ class SubmissionTest extends TestCase
     {
         //@codingStandardsIgnoreStart
         return [
+            //User Role ID,                    Allowed?
             [Role::SUBMITTER_ROLE_ID,          false],
             [Role::REVIEWER_ROLE_ID,           true],
             [Role::REVIEW_COORDINATOR_ROLE_ID, false],
