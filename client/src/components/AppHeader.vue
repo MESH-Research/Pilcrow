@@ -50,7 +50,7 @@
             </q-item>
 
             <q-separator />
-            <q-item clickable @click="logout">
+            <q-item to="/logout">
               <q-item-section avatar>
                 <q-icon name="mdi-logout" />
               </q-item-section>
@@ -72,7 +72,7 @@
 
 <script setup>
 import NotificationPopup from "src/components/molecules/NotificationPopup.vue"
-import { useLogout, useCurrentUser } from "src/use/user"
+import { useCurrentUser } from "src/use/user"
 
 const props = defineProps({
   //Drawer status
@@ -84,7 +84,6 @@ const props = defineProps({
 const emit = defineEmits(["update:modelValue"])
 
 const { currentUser } = useCurrentUser()
-const { logoutUser: logout } = useLogout()
 
 function toggleDrawer() {
   emit("update:modelValue", !props.modelValue)
