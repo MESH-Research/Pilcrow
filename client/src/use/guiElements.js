@@ -1,6 +1,11 @@
 import { useQuasar } from "quasar"
 import { useI18n } from "vue-i18n"
 
+/**
+ * Display feedback messages to the user using the Quasar notify plugin.
+ *
+ * @param   {Object}  overrideDefaults  Override default options for message functions
+ */
 export function useFeedbackMessages(overrideDefaults) {
   const { t } = useI18n()
   const { notify } = useQuasar()
