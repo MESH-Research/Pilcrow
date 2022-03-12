@@ -16,7 +16,7 @@ describe("Header", () => {
     })
 
     cy.login({ email: "regularuser@ccrproject.dev" })
-    cy.visit("/")
+    cy.reload()
 
     cy.get("header").within(() => {
       cy.contains("regularUser").click()
@@ -38,6 +38,34 @@ describe("Header", () => {
     cy.get("header").within(() => {
       cy.contains("Login")
       cy.contains("Register")
+    })
+  })
+
+  it("should not logout when page changes are protected", () => {
+    cy.login({ email: "regularuser@ccrproject.dev" })
+    cy.visit("/account/metadata")
+    cy.dataCy("facebook").type("myface")
+
+    cy.get("header").within(() => {
+      cy.contains("regularUser").click()
+    })
+
+    cy.dataCy("headerUserMenu").within(() => {
+      cy.contains("Logout").click()
+    })
+    cy.dataCy('dirtyKeepChanges').click()
+
+    cy.url().should('include', '/account/metadata')
+
+    cy.dataCy("headerUserMenu").within(() => {
+      cy.contains("Logout").click()
+    })
+
+    cy.dataCy('dirtyDiscardChanges').click()
+    cy.url().should('eq', Cypress.config().baseUrl + "/")
+
+    cy.get("header").within(() => {
+      cy.contains("Login")
     })
   })
 })

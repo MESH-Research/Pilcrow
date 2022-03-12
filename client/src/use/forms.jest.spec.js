@@ -33,18 +33,15 @@ jest.mock("quasar", () => ({
 }))
 
 describe("useDirtyGuard composable", () => {
-  test("allows a clean navigation to continue", () => {
+  test("allows a clean navigation to continue", async () => {
     const dirty = ref(false)
 
     mount(() => useDirtyGuard(dirty))
 
-    const mockNext = jest.fn()
-    dirtyGuardCallback(null, null, mockNext)
-    expect(mockNext).toHaveBeenCalledTimes(1)
-    expect(mockNext).toHaveBeenCalledWith()
+    expect(await dirtyGuardCallback()).toBe(true)
   })
 
-  test("Shows dialog appropriatly and correctly responds to user feedback", () => {
+  test("Shows dialog appropriately and correctly responds to user feedback", async () => {
     const dirty = ref(true)
     let okCallback, cancelCallback
     const dialogReturn = {
@@ -60,25 +57,20 @@ describe("useDirtyGuard composable", () => {
     mockDialog.mockImplementation(() => dialogReturn)
 
     mount(() => useDirtyGuard(dirty))
-    const mockNext = jest.fn()
-    dirtyGuardCallback(null, null, mockNext)
 
-    expect(mockDialog).toBeCalledTimes(1)
+    let promise = dirtyGuardCallback()
     okCallback()
-    expect(mockNext).toHaveBeenCalledTimes(1)
-    expect(mockNext).toHaveBeenCalledWith()
+    await expect(promise).resolves.toBe(true)
 
-    mockNext.mockReset()
+    promise = dirtyGuardCallback()
 
     cancelCallback()
-    expect(mockNext).toHaveBeenCalledTimes(1)
-    expect(mockNext).toHaveBeenCalledWith(false)
+    await expect(promise).resolves.toBe(false)
 
-    mockNext.mockReset()
     dirty.value = false
-    dirtyGuardCallback(null, null, mockNext)
-    expect(mockNext).toHaveBeenCalledTimes(1)
-    expect(mockNext).toBeCalledWith()
+
+    promise = dirtyGuardCallback()
+    await expect(promise).resolves.toBe(true)
   })
 
   test("sets and removes window handlers", () => {
