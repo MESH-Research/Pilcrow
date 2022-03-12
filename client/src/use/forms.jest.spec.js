@@ -41,7 +41,7 @@ describe("useDirtyGuard composable", () => {
     expect(await dirtyGuardCallback()).toBe(true)
   })
 
-  test("Shows dialog appropriatly and correctly responds to user feedback", async () => {
+  test("Shows dialog appropriately and correctly responds to user feedback", async () => {
     const dirty = ref(true)
     let okCallback, cancelCallback
     const dialogReturn = {
