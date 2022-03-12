@@ -183,4 +183,44 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->roles->sortBy('id')->first();
     }
+
+    /**
+     * Check if user has given publication role
+     *
+     * @param int | array $role Role id to check, use * to check for any role.
+     * @param int $publicationId Publication to check for role on
+     * @return bool
+     */
+    public function hasPublicationRole($role, $publicationId)
+    {
+        $publications = $this->publications()->wherePivot('publication_id', $publicationId);
+
+        if ($role === '*') {
+            return $publications->exists();
+        }
+
+        if (is_array($role)) {
+            return $publications->wherePivotIn('role_id', $role)->exists();
+        } else {
+            return $publications->wherePivot('role_id', $role)->exists();
+        }
+    }
+
+    /**
+     * Check if user has given submission role
+     *
+     * @param int|array $role Role id to check
+     * @param int $submissionId Submission to check for role on
+     * @return bool
+     */
+    public function hasSubmissionRole($role, $submissionId)
+    {
+        $submissions = $this->submissions()->wherePivot('submission_id', $submissionId);
+
+        if (is_array($role)) {
+            return $submissions->wherePivotIn('role_id', $role)->exists();
+        } else {
+            return $submissions->wherePivot('role_id', $role)->exists();
+        }
+    }
 }
