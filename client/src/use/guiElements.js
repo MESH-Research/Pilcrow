@@ -1,29 +1,23 @@
 import { useQuasar } from "quasar"
 import { useI18n } from "vue-i18n"
-export function useFeedbackMessages(opts) {
+
+export function useFeedbackMessages(overrideDefaults) {
   const { t } = useI18n()
   const { notify } = useQuasar()
 
-  /**
-   * Return default options with user supplied options applied onto them.
-   *
-   * @return {Object} Notify Options
-   */
-  function getOpts() {
-    return Object.assign(opts, {
-      group: false,
-      actions: [
-        {
-          label: t("guiElements.feedbackMessage.closeButton"),
-          color: "white",
-          "data-cy": "button_dismiss_notify",
-        },
-      ],
-      timeout: 10000,
-      progress: true,
-      html: true,
-    })
-  }
+  const defaultOptions = Object.assign(overrideDefaults, {
+    group: false,
+    actions: [
+      {
+        label: t("guiElements.feedbackMessage.closeButton"),
+        color: "white",
+        "data-cy": "button_dismiss_notify",
+      },
+    ],
+    timeout: 10000,
+    progress: true,
+    html: true,
+  })
 
   /**
    * Show a new feedback message to the user.
@@ -32,7 +26,7 @@ export function useFeedbackMessages(opts) {
    * @param   {Object}  opts     Override default options
    */
   function newMessage(message, opts) {
-    const options = Object.assign({ message, ...opts }, getOpts())
+    const options = Object.assign({ message, ...opts }, defaultOptions)
     notify(options)
   }
 
