@@ -1,12 +1,13 @@
 import { useQuasar } from "quasar"
-
+import { useI18n } from "vue-i18n"
 export function useFeedbackMessages(opts) {
+  const { t } = useI18n()
   function getOpts() {
     return Object.assign(opts, {
       group: false,
       actions: [
         {
-          label: "Close",
+          label: t("guiElements.feedbackMessage.closeButton"),
           color: "white",
           "data-cy": "button_dismiss_notify",
         },
