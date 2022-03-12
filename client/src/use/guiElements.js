@@ -2,6 +2,13 @@ import { useQuasar } from "quasar"
 import { useI18n } from "vue-i18n"
 export function useFeedbackMessages(opts) {
   const { t } = useI18n()
+  const { notify } = useQuasar()
+
+  /**
+   * Return default options with user supplied options applied onto them.
+   *
+   * @return {Object} Notify Options
+   */
   function getOpts() {
     return Object.assign(opts, {
       group: false,
@@ -17,18 +24,30 @@ export function useFeedbackMessages(opts) {
       html: true,
     })
   }
-  const { notify } = useQuasar()
 
-  function newMessage(color, icon, message) {
-    notify(Object.assign({ message, color, icon }, getOpts()))
+  /**
+   * Show a new feedback message to the user.
+   *
+   * @param   {string}  message  Message content
+   * @param   {Object}  opts     Override default options
+   */
+  function newMessage(message, opts) {
+    const options = Object.assign({ message, ...opts }, getOpts())
+    notify(options)
   }
 
+  /**
+   * Show a status (success or failure) feedback message to the user.
+   *
+   * @param   {string}  status   One of: failure, success
+   * @param   {string}  message  Message content
+   */
   function newStatusMessage(status, message) {
-    const [color, icon] = {
-      success: ["positive", "check_circle"],
-      failure: ["negative", "error"],
+    const type = {
+      success: "positive",
+      failure: "negative",
     }[status]
-    newMessage(color, icon, message)
+    newMessage(message, { type })
   }
 
   return { newMessage, newStatusMessage }
