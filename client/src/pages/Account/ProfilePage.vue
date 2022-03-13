@@ -13,7 +13,7 @@
 import AccountProfileForm from "src/components/forms/AccountProfileForm.vue"
 import { UPDATE_USER } from "src/graphql/mutations"
 import { useCurrentUser } from "src/use/user"
-import { useQuasar } from "quasar"
+import { useFeedbackMessages } from "src/use/guiElements"
 import { useMutation } from "@vue/apollo-composable"
 import { useI18n } from "vue-i18n"
 import {
@@ -40,8 +40,12 @@ useDirtyGuard(formState.dirty)
 
 const { saved, errorMessage } = formState
 
-const { notify } = useQuasar()
 const { t } = useI18n()
+const { newStatusMessage } = useFeedbackMessages({
+  attrs: {
+    "data-cy": "update_user_notify",
+  },
+})
 
 async function updateUser(newValues) {
   errorMessage.value = ""
@@ -54,16 +58,7 @@ async function updateUser(newValues) {
 
   try {
     await mutate(vars)
-    //TODO: Refactor to use makeNofity composable
-    notify({
-      color: "positive",
-      message: t("account.update.success"),
-      icon: "check_circle",
-      attrs: {
-        "data-cy": "update_user_notify",
-      },
-      html: true,
-    })
+    newStatusMessage("success", t("account.update.success"))
     saved.value = true
   } catch (error) {
     if (hasValidationErrors.value) {

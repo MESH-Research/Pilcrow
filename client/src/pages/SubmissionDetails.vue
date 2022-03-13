@@ -188,7 +188,7 @@ import {
 } from "src/graphql/mutations"
 import UserList from "src/components/molecules/UserList.vue"
 import RoleMapper from "src/mappers/roles"
-import { useQuasar } from "quasar"
+import { useFeedbackMessages } from "src/use/guiElements"
 import { useMutation, useQuery, useResult } from "@vue/apollo-composable"
 import { ref, computed } from "vue"
 import { useI18n } from "vue-i18n"
@@ -224,30 +224,13 @@ function filterUsersByRoleId(users, id) {
   })
 }
 
-const { notify } = useQuasar()
 const { t } = useI18n()
-//TODO: Extract makeNotify function into a composable
-function makeNotify(color, icon, message, display_name = null) {
-  notify({
-    group: false,
-    actions: [
-      {
-        label: "Close",
-        color: "white",
-        "data-cy": "button_dismiss_notify",
-      },
-    ],
-    timeout: 50000,
-    progress: true,
-    color: color,
-    icon: icon,
-    message: t(message, { display_name }),
-    attrs: {
-      "data-cy": "submission_details_notify",
-    },
-    html: true,
-  })
-}
+
+const { newStatusMessage } = useFeedbackMessages({
+  attrs: {
+    "data-cy": "submission_details_notify",
+  },
+})
 
 const { mutate: assignUserMutate } = useMutation(CREATE_SUBMISSION_USER, {
   refetchQueries: ["GetSubmission"],
@@ -261,11 +244,13 @@ async function assignUser(role_name, candidate_model) {
       submission_id: props.id,
     })
       .then(() => {
-        makeNotify(
-          "positive",
-          "check_circle",
-          `submissions.${role_name}.assign.success`,
-          candidate_model.name ? candidate_model.name : candidate_model.username
+        newStatusMessage(
+          "success",
+          t(`submissions.${role_name}.assign.success`, {
+            display_name: candidate_model.name
+              ? candidate_model.name
+              : candidate_model.username,
+          })
         )
       })
       .then(() => {
@@ -273,7 +258,7 @@ async function assignUser(role_name, candidate_model) {
         candidate_model = null
       })
   } catch (error) {
-    makeNotify("negative", "error", `submissions.${role_name}.assign.error`)
+    newStatusMessage("failure", t(`submissions.${role_name}.assign.error`))
   }
 }
 function resetForm() {
@@ -303,14 +288,14 @@ async function unassignUser(role_name, user) {
       role_id: RoleMapper[role_name],
       submission_id: props.id,
     })
-    makeNotify(
-      "positive",
-      "check_circle",
-      `submissions.${role_name}.unassign.success`,
-      user.name ? user.name : user.username
+    newStatusMessage(
+      "success",
+      t(`submissions.${role_name}.unassign.success`, {
+        display_name: user.name ? user.name : user.username,
+      })
     )
   } catch (error) {
-    makeNotify("negative", "error", `submissions.${role_name}.unassign.error`)
+    newStatusMessage("failure", t(`submissions.${role_name}.unassign.error`))
   }
 }
 </script>

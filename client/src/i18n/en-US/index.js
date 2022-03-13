@@ -406,4 +406,9 @@ export default {
       },
     },
   },
+  guiElements: {
+    feedbackMessage: {
+      closeButton: "Close",
+    },
+  },
 }

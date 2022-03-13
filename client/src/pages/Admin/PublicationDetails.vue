@@ -96,7 +96,7 @@ import {
 } from "src/graphql/mutations"
 import RoleMapper from "src/mappers/roles"
 import { useMutation, useQuery, useResult } from "@vue/apollo-composable"
-import { useQuasar } from "quasar"
+import { useFeedbackMessages } from "src/use/guiElements"
 import { useI18n } from "vue-i18n"
 import { ref, computed } from "vue"
 import FindUserSelect from "src/components/forms/FindUserSelect.vue"
@@ -122,28 +122,12 @@ function filterUsersByRoleId(users, id) {
   })
 }
 
-const { notify } = useQuasar()
 const { t } = useI18n()
-
-function makeNotify(color, icon, message, display_name = null) {
-  notify({
-    actions: [
-      {
-        label: "Close",
-        color: "white",
-        "data-cy": "button_dismiss_notify",
-      },
-    ],
-    timeout: 50000,
-    color: color,
-    icon: icon,
-    message: t(message, { display_name }),
-    attrs: {
-      "data-cy": "publication_details_notify",
-    },
-    html: true,
-  })
-}
+const { newStatusMessage } = useFeedbackMessages({
+  attrs: {
+    "data-cy": "publication_details_notify",
+  },
+})
 
 async function handleUserListClick({ user, action }) {
   switch (action) {
@@ -164,15 +148,17 @@ async function assignUser(role_name, candidate_model) {
       role_id: RoleMapper[role_name],
       publication_id: props.id,
     })
-    makeNotify(
-      "positive",
-      "check_circle",
-      `publications.${role_name}.assign.success`,
-      candidate_model.name ? candidate_model.name : candidate_model.username
+    newStatusMessage(
+      "success",
+      t(`publications.${role_name}.assign.success`, {
+        display_name: candidate_model.name
+          ? candidate_model.name
+          : candidate_model.username,
+      })
     )
     resetForm()
   } catch (error) {
-    makeNotify("negative", "error", `publications.${role_name}.assign.error`)
+    newStatusMessage("failure", t(`publications.${role_name}.assign.error`))
   }
 }
 
@@ -191,15 +177,15 @@ async function unassignUser(role_name, user) {
       role_id: RoleMapper[role_name],
       publication_id: props.id,
     })
-    makeNotify(
-      "positive",
-      "check_circle",
-      `publications.${role_name}.unassign.success`,
-      user.name ? user.name : user.username
+    newStatusMessage(
+      "success",
+      t(`publications.${role_name}.unassign.success`, {
+        display_name: user.name ? user.name : user.username,
+      })
     )
   } catch (error) {
     console.log(error)
-    makeNotify("negative", "error", `publications.${role_name}.unassign.error`)
+    newStatusMessage("failure", t(`publications.${role_name}.unassign.error`))
   }
 }
 </script>
