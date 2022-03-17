@@ -17,20 +17,17 @@ describe("Submissions Details", () => {
     cy.task("resetDb")
     cy.login({ email: "applicationadministrator@ccrproject.dev" })
     cy.visit("submission/100")
-    cy.get("#input_review_assignee").type("applicationAd")
+    cy.dataCy("input_review_assignee").type("applicationAd")
     cy.dataCy("result_review_assignee").click()
     cy.dataCy("review_assignee_selected").contains("applicationAdminUser")
-    cy.get("#input_review_assignee").type(
+    cy.dataCy("input_review_assignee").type(
       "test{backspace}{backspace}{backspace}{backspace}"
     )
     cy.dataCy("button_assign_reviewer").click()
     cy.dataCy("list_assigned_reviewers").contains("Application Administrator")
     cy.injectAxe()
     cy.dataCy("submission_details_notify")
-    //TODO: Make this less hinkey
-    cy.get("#input_review_assignee").type(
-      "typing to prevent a false positive a11y violation before submission_details_notify fully fades in"
-    )
+
     cy.checkA11y(null, {
       rules: {
         "nested-interactive": { enabled: false },
@@ -42,10 +39,10 @@ describe("Submissions Details", () => {
     cy.task("resetDb")
     cy.login({ email: "reviewcoordinator@ccrproject.dev" })
     cy.visit("submission/100")
-    cy.get("#input_review_assignee").type("applicationAd{backspace}{backspace}")
+    cy.dataCy("input_review_assignee").type("applicationAd{backspace}{backspace}")
     cy.dataCy("result_review_assignee").click()
     cy.dataCy("review_assignee_selected").contains("applicationAdminUser")
-    cy.get("#input_review_assignee").type(
+    cy.dataCy("input_review_assignee").type(
       "test{backspace}{backspace}{backspace}{backspace}"
     )
     cy.dataCy("button_assign_reviewer").click()
@@ -54,7 +51,7 @@ describe("Submissions Details", () => {
     cy.dataCy("submission_details_notify")
     // Type characters to delay the a11y checker and prevent a false positive
     // a11y violation before submission_details_notify fully fades in
-    cy.get("#input_review_assignee").type("allow notify to fully fade in")
+    cy.dataCy("input_review_assignee").type("allow notify to fully fade in")
     cy.checkA11y(null, {
       rules: {
         "nested-interactive": { enabled: false },
@@ -66,12 +63,12 @@ describe("Submissions Details", () => {
     cy.task("resetDb")
     cy.login({ email: "applicationadministrator@ccrproject.dev" })
     cy.visit("submission/100")
-    cy.get("#input_review_coordinator_assignee").type("applicationAd")
+    cy.dataCy("input_review_coordinator_assignee").type("applicationAd")
     cy.dataCy("result_review_coordinator_assignee").click()
     cy.dataCy("review_coordinator_assignee_selected").contains(
       "applicationAdminUser"
     )
-    cy.get("#input_review_coordinator_assignee").type(
+    cy.dataCy("input_review_coordinator_assignee").type(
       "test{backspace}{backspace}{backspace}{backspace}"
     )
     cy.dataCy("button_assign_review_coordinator").click()
@@ -80,11 +77,6 @@ describe("Submissions Details", () => {
     )
     cy.injectAxe()
     cy.dataCy("submission_details_notify")
-    // Type characters to delay the a11y checker and prevent a false positive
-    // a11y violation before submission_details_notify fully fades in
-    cy.get("#input_review_coordinator_assignee").type(
-      "allow notify to fully fade in"
-    )
     cy.checkA11y(null, {
       rules: {
         "nested-interactive": { enabled: false },
@@ -96,20 +88,17 @@ describe("Submissions Details", () => {
     cy.task("resetDb")
     cy.login({ email: "applicationadministrator@ccrproject.dev" })
     cy.visit("submission/100")
-    cy.get("#input_review_assignee").type("applicationAd")
+    cy.dataCy("input_review_assignee").type("applicationAd")
     cy.dataCy("result_review_assignee").click()
     cy.dataCy("button_assign_reviewer").click()
     cy.dataCy("button_dismiss_notify").click()
-    cy.get("#input_review_assignee").type("applicationAd")
+    cy.dataCy("input_review_assignee").type("applicationAd")
     cy.dataCy("result_review_assignee").click()
     cy.dataCy("button_assign_reviewer").click()
     cy.injectAxe()
     cy.dataCy("submission_details_notify")
       .should("be.visible")
       .should("have.class", "bg-negative")
-    cy.get("#input_review_assignee").type(
-      "typing to prevent a false positive a11y violation before submission_details_notify fully fades in"
-    )
     cy.checkA11y(null, {
       rules: {
         "nested-interactive": { enabled: false },
