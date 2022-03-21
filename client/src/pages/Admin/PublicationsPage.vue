@@ -74,7 +74,7 @@ import { CREATE_PUBLICATION } from "src/graphql/mutations"
 import useVuelidate from "@vuelidate/core"
 import { required, maxLength } from "@vuelidate/validators"
 import { useMutation, useQuery, useResult } from "@vue/apollo-composable"
-import { useQuasar } from "quasar"
+import { useFeedbackMessages } from "src/use/guiElements"
 import { useI18n } from "vue-i18n"
 import { ref, reactive, watch } from "vue"
 import { useRouter } from "vue-router"
@@ -125,23 +125,12 @@ function resetForm() {
   newPublication.name = ""
 }
 
-const { notify } = useQuasar()
 const { t } = useI18n()
-//TODO: Extract makeNotify function into a composables (also used in submissiondetails)
-function makeNotify(color, icon, message) {
-  notify({
-    group: false,
-    progress: true,
-    color: color,
-    icon: icon,
-    message: t(message),
-    attrs: {
-      "data-cy": "create_publication_notify",
-    },
-    html: true,
-  })
-  is_submitting.value = false
-}
+const { newStatusMessage } = useFeedbackMessages({
+  attrs: {
+    "data-cy": "create_publication_notify",
+  },
+})
 
 const { mutate } = useMutation(CREATE_PUBLICATION)
 
@@ -150,7 +139,7 @@ async function createPublication() {
   pubV$.value.$touch()
   if (pubV$.value.$errors.length) {
     pubV$.value.$errors.forEach(({ $validator }) => {
-      this.makeNotify("negative", "error", `publications.create.${$validator}`)
+      newStatusMessage("failure", t(`publications.create.${$validator}`))
     })
     return false
   }
@@ -159,7 +148,7 @@ async function createPublication() {
   try {
     await mutate({ ...newPublication }, { refetchQueries: ["GetPublications"] })
 
-    makeNotify("positive", "check_circle", "publications.create.success")
+    newStatusMessage("success", t("publications.create.success"))
     resetForm()
   } catch (error) {
     error.graphQLErrors.forEach((gqlError) => {

@@ -1,5 +1,5 @@
 <template>
-  <q-dialog ref="dialog" @hide="onDialogHide">
+  <q-dialog ref="dialogRef" @hide="onDialogHide">
     <q-card>
       <q-card-section class="row items-center">
         <q-avatar icon="mdi-file-undo" color="primary" text-color="white" />
@@ -13,21 +13,26 @@
           flat
           label="Keep Changes"
           color="primary"
-          @click="onCancelClick"
+          data-cy="dirtyKeepChanges"
+          @click="onDialogCancel"
         />
-        <q-btn flat label="Discard" color="negative" @click="onOKClick" />
+        <q-btn
+          flat
+          label="Discard"
+          color="negative"
+          data-cy="dirtyDiscardChanges"
+          @click="onDialogOK"
+        />
       </q-card-actions>
     </q-card>
   </q-dialog>
 </template>
 
-<script>
-import dialog from "../mixins/dialog"
-export default {
-  // name: 'ComponentName',
-  mixins: [dialog],
-  data() {
-    return {}
-  },
-}
+<script setup>
+import { useDialogPluginComponent } from "quasar"
+
+defineEmits([...useDialogPluginComponent.emits])
+
+const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } =
+  useDialogPluginComponent()
 </script>

@@ -126,10 +126,13 @@ Currently, `CCR-Droid` is not great about spelling out specific build errors.  I
 ## Contributor Workflow
 
 1. Create a new branch based on the `development` branch
-2. Work on your feature/fix
-3. Open a pull request on GitHub to merge your branch into the `development` branch
-4. Respond to feedback from the subsequent code review(s)
-5. The pull request can be merged by a reviewer or a maintainer
+2. (Optional) Ensure your locally installed versions of the client dependencies match the `development` branch
+    - Delete the `/client/node_modules` folder
+    - Run `lando rebuild`
+3. Work on your feature/fix
+4. Open a pull request on GitHub to merge your branch into the `development` branch
+5. Respond to feedback from the subsequent code review(s)
+6. The pull request can be merged by a reviewer or a maintainer once approved
 
 ## Tagging a release
 

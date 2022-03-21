@@ -7,10 +7,17 @@ import { CREATE_PUBLICATION } from "src/graphql/mutations"
 import { GET_PUBLICATIONS } from "src/graphql/queries"
 import flushPromises from "flush-promises"
 
+const mockNewStatus = jest.fn()
 jest.mock("quasar", () => ({
   ...jest.requireActual("quasar"),
   useQuasar: () => ({
     notify: jest.fn(),
+  }),
+}))
+
+jest.mock("src/use/guiElements", () => ({
+  useFeedbackMessages: () => ({
+    newStatusMessage: mockNewStatus,
   }),
 }))
 
@@ -97,9 +104,7 @@ describe("publications page mount", () => {
     await flushPromises()
 
     expect(mutationHandler).toBeCalledWith(expect.objectContaining({ name }))
-    expect(wrapper.vm.notify).toBeCalledWith(
-      expect.objectContaining({ color: "positive" })
-    )
+    expect(mockNewStatus).toBeCalledWith("success", expect.any(String))
   })
 
   //TODO: Test for no publications returned

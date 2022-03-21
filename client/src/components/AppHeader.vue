@@ -1,17 +1,24 @@
 <template>
   <q-header class="header">
-    <q-toolbar>
+    <q-toolbar class="header-toolbar">
       <q-btn
         v-if="props.modelValue !== null"
+        data-cy="sidebar_toggle"
         flat
         round
         dense
-        icon="menu"
+        icon="switch_right"
         :aria-label="$t('header.menu_button_aria')"
         aria-controls="sidebar"
         :aria-expanded="(!!props.modelValue).toString()"
         @click="toggleDrawer"
       />
+      <div class="q-pa-sm">
+        <h1 class="q-ma-none text-h4 site-title">
+          Collaborative Community Review
+        </h1>
+        <small class="site-subtitle">Submission Review System</small>
+      </div>
       <q-space />
 
       <template v-if="currentUser">
@@ -43,7 +50,7 @@
             </q-item>
 
             <q-separator />
-            <q-item clickable @click="logout">
+            <q-item to="/logout">
               <q-item-section avatar>
                 <q-icon name="mdi-logout" />
               </q-item-section>
@@ -60,16 +67,12 @@
         <q-btn :label="$t('auth.login')" to="/login" stretch flat />
       </template>
     </q-toolbar>
-    <div class="title">
-      <h1 class="q-ma-none">Collaborative Community Review</h1>
-      <div class="text-subtitle">Submission Review System</div>
-    </div>
   </q-header>
 </template>
 
 <script setup>
 import NotificationPopup from "src/components/molecules/NotificationPopup.vue"
-import { useLogout, useCurrentUser } from "src/use/user"
+import { useCurrentUser } from "src/use/user"
 
 const props = defineProps({
   //Drawer status
@@ -81,7 +84,6 @@ const props = defineProps({
 const emit = defineEmits(["update:modelValue"])
 
 const { currentUser } = useCurrentUser()
-const { logoutUser: logout } = useLogout()
 
 function toggleDrawer() {
   emit("update:modelValue", !props.modelValue)
@@ -89,26 +91,9 @@ function toggleDrawer() {
 </script>
 
 <style lang="sass">
-.site-title a
-  text-decoration: none
-  color: white
-.header
-  height: 150px
+.header-toolbar
+  height: 70px
   overflow: hidden
-  .title
-    padding: 24px 48px 8px 48px
-  .header-image
-    height: 100%
-    z-index: -1
-    opacity: 0.2
-    filter: grayscale(2%)
-
-@media (max-width: $breakpoint-xs)
-  .header
-    height: auto
-    padding-bottom: 10px
-    .title
-      padding: 0px 15px 5px 15px
-      .text-h4
-        font-size: 1.3rem
+.site-title
+  line-height: 1
 </style>

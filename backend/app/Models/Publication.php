@@ -4,17 +4,42 @@ declare(strict_types=1);
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Publication extends Model
+class Publication extends BaseModel
 {
     use HasFactory;
 
     protected $fillable = [
         'name',
     ];
+
+    protected $rules = [
+        'name' => 'max:256|unique:publications,name|required',
+    ];
+
+    /**
+     * Mutator: Trim name attribute before persisting
+     *
+     * @param string $value
+     * @return void
+     */
+    public function setNameAttribute($value)
+    {
+        $this->attributes['name'] = trim($value);
+    }
+
+    /**
+     * Scope only publically visible publications.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeIsPubliclyVisible($query)
+    {
+        return $query->where('is_publicly_visible', true);
+    }
 
     /**
      * Users that belong to a publication
@@ -36,5 +61,15 @@ class Publication extends Model
     public function submissions(): HasMany
     {
         return $this->hasMany(Submission::class);
+    }
+
+    /**
+     * Style Criteria Relationship
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function styleCriterias(): HasMany
+    {
+        return $this->hasMany(StyleCriteria::class);
     }
 }

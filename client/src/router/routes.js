@@ -6,6 +6,7 @@ const routes = [
       { path: "", component: () => import("pages/Index.vue") },
       { path: "register", component: () => import("pages/Register.vue") },
       { path: "login", component: () => import("pages/Login.vue") },
+      { path: "logout", component: () => import("src/pages/LogoutPage.vue") },
     ],
   },
   {
@@ -82,6 +83,15 @@ const routes = [
         name: "submission_details",
         path: "/submission/:id",
         component: () => import("src/pages/SubmissionDetails.vue"),
+        meta: {
+          requiresSubmissionAccess: true,
+        },
+        props: true,
+      },
+      {
+        name: "submission_review",
+        path: "/submission/review/:id",
+        component: () => import("src/pages/SubmissionReview.vue"),
         meta: {
           requiresSubmissionAccess: true,
         },

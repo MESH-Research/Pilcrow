@@ -310,6 +310,8 @@ export default {
     },
   },
   submissions: {
+    details_heading: "Submission Details",
+    view_heading: "View Submission",
     create: {
       success: "Submission successfully created.",
       failure: "An error occurred while attempting to create the submission.",
@@ -365,6 +367,9 @@ export default {
       },
       none: "No submitter is assigned to this submission. At least one submitter must be assigned.",
     },
+    comment: {
+      actions_btn_aria: "Comment Actions",
+    },
   },
   failures: {
     UNKNOWN_ERROR: "An unknown error has occurred.",
@@ -399,6 +404,11 @@ export default {
       resubmitted: {
         short: "{object_name} has been resubmitted",
       },
+    },
+  },
+  guiElements: {
+    feedbackMessage: {
+      closeButton: "Close",
     },
   },
 }

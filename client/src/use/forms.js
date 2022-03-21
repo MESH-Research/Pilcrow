@@ -28,17 +28,19 @@ export function useDirtyGuard(dirtyRef) {
     })
   }
 
-  onBeforeRouteLeave(async (_, __, next) => {
-    if (!dirtyRef.value) {
-      return next()
-    }
-    return await dirtyDialog()
-      .onOk(function () {
-        next()
-      })
-      .onCancel(function () {
-        next(false)
-      })
+  onBeforeRouteLeave(() => {
+    return new Promise((resolve) => {
+      if (!dirtyRef.value) {
+        resolve(true)
+      }
+      dirtyDialog()
+        .onOk(function () {
+          resolve(true)
+        })
+        .onCancel(function () {
+          resolve(false)
+        })
+    })
   })
 
   onMounted(() => {

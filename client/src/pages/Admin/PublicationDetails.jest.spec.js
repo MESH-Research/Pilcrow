@@ -10,6 +10,13 @@ import {
   CREATE_PUBLICATION_USER,
   DELETE_PUBLICATION_USER,
 } from "src/graphql/mutations"
+
+const mockNewStatus = jest.fn()
+jest.mock("src/use/guiElements", () => ({
+  useFeedbackMessages: () => ({
+    newStatusMessage: mockNewStatus,
+  }),
+}))
 jest.mock("quasar", () => ({
   ...jest.requireActual("quasar"),
   useQuasar: () => ({
@@ -137,9 +144,7 @@ describe("publication details page mount", () => {
     await flushPromises()
 
     expect(mutateAssignHandler).toBeCalledWith(newPivotData)
-    expect(wrapper.vm.notify).toBeCalledWith(
-      expect.objectContaining({ color: "positive" })
-    )
+    expect(mockNewStatus).toBeCalledWith("success", expect.any(String))
   })
 
   test("failure message on rejection", async () => {
@@ -161,9 +166,7 @@ describe("publication details page mount", () => {
     await flushPromises()
 
     expect(mutateAssignHandler).toBeCalledWith(newPivotData)
-    expect(wrapper.vm.notify).toBeCalledWith(
-      expect.objectContaining({ color: "negative" })
-    )
+    expect(mockNewStatus).toBeCalledWith("failure", expect.any(String))
   })
 
   test("can remove editor", async () => {
@@ -181,8 +184,6 @@ describe("publication details page mount", () => {
     expect(mutateRemoveHandler).toBeCalledWith(
       expect.objectContaining({ user_id: 103 })
     )
-    expect(wrapper.vm.notify).toBeCalledWith(
-      expect.objectContaining({ color: "positive" })
-    )
+    expect(mockNewStatus).toBeCalledWith("success", expect.any(String))
   })
 })
