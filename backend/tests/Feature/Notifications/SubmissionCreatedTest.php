@@ -6,6 +6,7 @@ namespace Tests\Feature\Notifications;
 use App\Events\SubmissionCreated;
 use App\Listeners\NotifyUsersAboutCreatedSubmission;
 use App\Models\Publication;
+use App\Models\Role;
 use App\Models\Submission;
 use App\Models\User;
 use App\Notifications\SubmissionCreated as NotificationsSubmissionCreated;
@@ -29,7 +30,7 @@ class SubmissionCreatedTest extends TestCase
             ->hasAttached(
                 $editor,
                 [
-                    'role_id' => 3,
+                    'role_id' => Role::EDITOR_ROLE_ID,
                 ]
             )
             ->create();
@@ -37,7 +38,7 @@ class SubmissionCreatedTest extends TestCase
             ->hasAttached(
                 $submitter,
                 [
-                    'role_id' => 6,
+                    'role_id' => Role::SUBMITTER_ROLE_ID,
                 ]
             )
             ->create([
