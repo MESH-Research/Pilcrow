@@ -25,7 +25,7 @@
         </div>
         <q-list class="notifications-list">
           <notification-list-item
-            v-for="(item, index) in notificationItems"
+            v-for="(item, index) in filteredItems"
             :key="index"
             :note="item"
             clickable
@@ -47,7 +47,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue"
+import { ref, computed } from "vue"
 import { useQuery, useResult } from "@vue/apollo-composable"
 import { CURRENT_USER_NOTIFICATIONS } from "src/graphql/queries"
 import NotificationListItem from "src/components/atoms/NotificationListItem.vue"
@@ -61,21 +61,19 @@ const notificationItems = useResult(
   [],
   (data) => data.currentUser.notifications.data
 )
-// let notificationItems = []
 
-/**
- * The currently set filter mode
- * @var filterMode
- * @values null, 'Read', 'Unread'
- *  */
 const filterMode = ref(null)
 const filterModes = ["Unread", "Read"]
-// const filteredItems = computed(() => {
-//   if (filterMode.value) {
-//     // TODO: filter notifications according to filterMode
-//   }
-//   return notificationItems
-// })
+const filteredItems = computed(() => {
+  if (!filterMode.value) {
+    return notificationItems.value
+  }
+
+  const read = filterMode.value === "Read" ? true : false
+  return notificationItems.value.filter((i) =>
+    read ? i.read_at !== null : i.read_at === null
+  )
+})
 </script>
 
 <style lang="sass">
