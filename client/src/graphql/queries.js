@@ -36,6 +36,7 @@ export const CURRENT_USER_NOTIFICATIONS = gql`
         data {
           id
           read_at
+          created_at
           data {
             user {
               username
