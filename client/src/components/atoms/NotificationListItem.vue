@@ -26,14 +26,14 @@
 
 <script setup>
 import { computed } from "vue"
-import { Screen } from "quasar"
+// import { Screen } from "quasar"
 import { flatten } from "flat"
 import iconMapper from "src/mappers/notification_icons"
-import TimeAgo from "javascript-time-ago"
+// import TimeAgo from "javascript-time-ago"
 import { useMutation } from "@vue/apollo-composable"
 import { MARK_NOTIFICATION_READ } from "src/graphql/mutations"
 
-const timeAgo = new TimeAgo("en-US")
+// const timeAgo = new TimeAgo("en-US")
 /**
  * Q-Item based component for displaying notification items.
  *
@@ -92,7 +92,8 @@ const flattened = computed(() => {
  * Relative representation of the note's time property
  */
 const relativeTime = computed(() => {
-  const style = Screen.lt.md ? "mini-now" : "long"
-  return timeAgo.format(new Date(props.note.time), style)
+  // const style = Screen.lt.md ? "mini-now" : "long"
+  // return timeAgo.format(new Date(props.note.time), style)
+  return "Hello"
 })
 </script>

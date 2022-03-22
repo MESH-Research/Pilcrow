@@ -25,13 +25,15 @@
         </div>
         <q-list class="notifications-list">
           <notification-list-item
-            v-for="(item, index) in filteredItems"
+            v-for="(item, index) in notificationItems"
             :key="index"
-            class="q-pa-none q-pr-md"
-            style="border-bottom: 1px solid #acd"
             :note="item"
-            show-time
+            clickable
+            class="q-pa-none q-pr-md"
+            :class="{ unread: !item.read_at }"
             :icon-size="$q.screen.lt.md ? 'xs' : 'md'"
+            show-time
+            style="border-bottom: 1px solid #acd"
           />
         </q-list>
         <div class="row justify-center">
@@ -45,38 +47,35 @@
 </template>
 
 <script setup>
+import { ref } from "vue"
+import { useQuery, useResult } from "@vue/apollo-composable"
+import { CURRENT_USER_NOTIFICATIONS } from "src/graphql/queries"
 import NotificationListItem from "src/components/atoms/NotificationListItem.vue"
-import { ref, computed } from "vue"
-import { notificationItems } from "src/graphql/fillerData"
+
+const currentPage = ref(1)
+const { result } = useQuery(CURRENT_USER_NOTIFICATIONS, {
+  page: currentPage,
+})
+const notificationItems = useResult(
+  result,
+  [],
+  (data) => data.currentUser.notifications.data
+)
+// let notificationItems = []
+
 /**
- * Notification feed page
- */
-/**
- * Current filter mode
+ * The currently set filter mode
+ * @var filterMode
  * @values null, 'Read', 'Unread'
  *  */
 const filterMode = ref(null)
-/**
- * Current page displayed
- * @TODO Implement pagination with graphql
- */
-const currentPage = ref(1)
-
 const filterModes = ["Unread", "Read"]
-
-/**
- * Filtered items based on filterMode
- */
-const filteredItems = computed(() => {
-  if (!filterMode.value) {
-    return notificationItems
-  }
-
-  const read = filterMode.value === "Read" ? true : false
-  return notificationItems.filter((i) =>
-    read ? i.read_at !== null : i.read_at === null
-  )
-})
+// const filteredItems = computed(() => {
+//   if (filterMode.value) {
+//     // TODO: filter notifications according to filterMode
+//   }
+//   return notificationItems
+// })
 </script>
 
 <style lang="sass">
