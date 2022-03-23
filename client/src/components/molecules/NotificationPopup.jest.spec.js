@@ -78,4 +78,12 @@ describe("Nofitication Popup", () => {
       wrapper.findAllComponents({ ref: "notification_indicator" })
     ).toHaveLength(0)
   })
+
+  it("displays a default message for a user that has no notifications", async () => {
+    const { wrapper, mockClient } = wrapperFactory()
+    const queryHandler = jest.fn().mockResolvedValue([])
+    mockClient.setRequestHandler(CURRENT_USER_NOTIFICATIONS, queryHandler)
+    const message = wrapper.findComponent({ ref: "default_message" })
+    expect(message.text()).toContain("notifications.none")
+  })
 })

@@ -26,12 +26,15 @@
       position="top"
     >
       <div class="notifications-container">
-        <div
+        <q-card
           v-if="notificationItems.length == 0"
+          ref="default_message"
           class="text-center q-py-lg q-px-md"
+          flat
+          square
         >
-          {{ $t("notifications.none") }}
-        </div>
+          <p class="q-mb-none">{{ $t("notifications.none") }}</p>
+        </q-card>
         <q-list
           role="navigation"
           aria-label="Dropdown Navigation"
