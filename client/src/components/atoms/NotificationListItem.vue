@@ -89,15 +89,11 @@ const flattened = computed(() => {
   return flatten(props.note, { delimiter: "_" })
 })
 
-function getCreatedAtTimestamp() {
-  const c = props.note.created_at.split(/[- :]/)
-  return new Date(Date.UTC(c[0], c[1] - 1, c[2], c[3], c[4], c[5]))
-}
 /**
  * Relative representation of the note's time property
  */
 const relativeTime = computed(() => {
   const style = Screen.lt.md ? "mini-now" : "long"
-  return timeAgo.format(getCreatedAtTimestamp(), style)
+  return timeAgo.format(Date.parse(props.note.created_at), style)
 })
 </script>
