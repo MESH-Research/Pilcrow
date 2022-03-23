@@ -26,10 +26,10 @@ export const CURRENT_USER_METADATA = gql`
 `
 
 export const CURRENT_USER_NOTIFICATIONS = gql`
-  query currentUserNotifications($page: Int) {
+  query currentUserNotifications($page: Int, $unread: Boolean, $read: Boolean) {
     currentUser {
       id
-      notifications(first: 10, page: $page) {
+      notifications(first: 10, page: $page, unread: $unread, read: $read) {
         paginatorInfo {
           ...paginationFields
         }
