@@ -26,6 +26,12 @@
       position="top"
     >
       <div class="notifications-container">
+        <div
+          v-if="notificationItems.length == 0"
+          class="text-center q-py-lg q-px-md"
+        >
+          {{ $t("notifications.none") }}
+        </div>
         <q-list
           role="navigation"
           aria-label="Dropdown Navigation"
@@ -42,9 +48,12 @@
           />
         </q-list>
         <q-btn-group spread>
-          <q-btn to="/feed">View More</q-btn>
-          <q-btn data-cy="dismiss_all_notifications" @click="dismissAll"
-            >Dismiss All</q-btn
+          <q-btn to="/feed">{{ $t("notifications.view_more") }}</q-btn>
+          <q-btn
+            v-if="hasUnreadNotifications"
+            data-cy="dismiss_all_notifications"
+            @click="dismissAll"
+            >{{ $t("notifications.dismiss_all") }}</q-btn
           >
         </q-btn-group>
       </div>
