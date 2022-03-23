@@ -385,9 +385,6 @@ export default {
    * }
    */
   notifications: {
-    none: "There are no notifications.",
-    view_more: "View More",
-    dismiss_all: "Dismiss All",
     review: {
       requested: {
         short: "{user_username} has requested your review on {object_name}",

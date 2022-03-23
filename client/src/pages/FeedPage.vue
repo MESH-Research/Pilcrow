@@ -19,10 +19,8 @@
               <q-icon name="filter_alt" />
             </template>
           </q-select>
-          <div v-if="hasUnreadNotifications" class="col-4 col-md-3">
-            <q-btn dense class="full-width">{{
-              $t("notifications.dismiss_all")
-            }}</q-btn>
+          <div class="col-4 col-md-3">
+            <q-btn dense class="full-width">Dismiss All</q-btn>
           </div>
         </div>
         <q-list class="notifications-list">
@@ -38,13 +36,10 @@
             style="border-bottom: 1px solid #acd"
           />
         </q-list>
-        <div v-if="isPaginationVisible" class="row justify-center">
+        <div class="row justify-center">
           <div class="q-pa-lg">
             <q-pagination v-model="currentPage" :max="5" class="col-12" />
           </div>
-        </div>
-        <div v-else class="q-pa-xl text-center">
-          <p class="text-h3 text-grey">{{ $t("notifications.none") }}</p>
         </div>
       </div>
     </div>
@@ -78,18 +73,6 @@ const filteredItems = computed(() => {
   return notificationItems.value.filter((i) =>
     read ? i.read_at !== null : i.read_at === null
   )
-})
-const isPaginationVisible = computed(() => {
-  if (currentPage.value > 1 || filteredItems.value.length > 0) {
-    return true
-  }
-  return false
-})
-const hasUnreadNotifications = computed(() => {
-  return notificationItems.value.length > 0 &&
-    notificationItems.value.find((item) => item.read_at === null)
-    ? true
-    : false
 })
 </script>
 
