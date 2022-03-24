@@ -4,7 +4,7 @@
     data-cy="dropdown_notificiations"
     :aria-label="$t('header.notification_button')"
     aria-haspopup="true"
-    :aria-expanded="isVisible ? 'true' : 'false'"
+    :aria-expanded="isExpanded ? 'true' : 'false'"
   >
     <q-icon name="notifications" />
     <q-badge
@@ -21,7 +21,7 @@
     <q-popup-proxy
       id="notifications-wrapper"
       ref="popupProxy"
-      v-model="isVisible"
+      v-model="isExpanded"
       max-width="400px"
       position="top"
     >
@@ -74,7 +74,7 @@ import { MARK_ALL_NOTIFICATIONS_READ } from "src/graphql/mutations"
 
 const currentPage = ref(1)
 const popupProxy = ref(null)
-const isVisible = ref(false)
+const isExpanded = ref(false)
 const { result } = useQuery(CURRENT_USER_NOTIFICATIONS, {
   page: currentPage,
 })
