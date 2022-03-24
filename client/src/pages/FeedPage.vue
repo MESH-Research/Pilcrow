@@ -86,6 +86,18 @@ const paginatorData = useResult(
   { count: 0, currentPage: 1, lastPage: 1, perPage: 10 },
   (data) => data.currentUser.notifications.paginatorInfo
 )
+const isPaginationVisible = computed(() => {
+  if (currentPage.value > 1 || filteredItems.value.length > 0) {
+    return true
+  }
+  return false
+})
+const hasUnreadNotifications = computed(() => {
+  return notificationItems.value.length > 0 &&
+    notificationItems.value.find((item) => item.read_at === null)
+    ? true
+    : false
+})
 </script>
 
 <style lang="sass">
