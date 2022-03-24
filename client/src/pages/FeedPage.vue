@@ -67,13 +67,14 @@ const filterModes = ["Unread", "Read"]
 const currentPage = ref(1)
 
 const variables = computed(() => {
+  const vars = { currentPage: currentPage.value }
   if (filterMode.value == "Read") {
-    return { currentPage: currentPage.value, read: true }
+    vars.read = true
   }
   if (filterMode.value == "Unread") {
-    return { currentPage: currentPage.value, unread: true }
+    vars.unread = true
   }
-  return { currentPage: currentPage.value }
+  return vars
 })
 const { result } = useQuery(CURRENT_USER_NOTIFICATIONS, variables)
 const notificationItems = useResult(
