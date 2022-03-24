@@ -4,6 +4,8 @@ import { mount } from "@vue/test-utils"
 import { CURRENT_USER_NOTIFICATIONS } from "src/graphql/queries"
 import { createMockClient } from "mock-apollo-client"
 import { ApolloClients } from "@vue/apollo-composable"
+import flushPromises from "flush-promises"
+
 installQuasarPlugin()
 describe("Nofitication Popup", () => {
   const wrapperFactory = (mocks = []) => {
@@ -79,10 +81,12 @@ describe("Nofitication Popup", () => {
     ).toHaveLength(0)
   })
 
-  it("displays a default message for a user that has no notifications", async () => {
+  it("provides a default message for a user that has no notifications", async () => {
     const { wrapper, mockClient } = wrapperFactory()
     const queryHandler = jest.fn().mockResolvedValue([])
     mockClient.setRequestHandler(CURRENT_USER_NOTIFICATIONS, queryHandler)
+    wrapper.vm.isExpanded = true
+    await flushPromises()
     const message = wrapper.findComponent({ ref: "default_message" })
     expect(message.text()).toContain("notifications.none")
   })
