@@ -1,11 +1,21 @@
+extend type User {
+    notifications(
+        read: Boolean @scope
+        unread: Boolean @scope
+    ): [Notification]!
+        @hasMany(type: PAGINATOR)
+        @whereAuth(relation: "notifiable")
+}
+
 """
 A notification for an event
 """
 type Notification {
     id: ID!
     notifiable: Notifiable! @morphTo
-    data: NotificationData
     read_at: DateTime
+    created_at: DateTimeUtc
+    data: NotificationData
 }
 
 """
