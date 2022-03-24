@@ -32,6 +32,7 @@ import iconMapper from "src/mappers/notification_icons"
 import TimeAgo from "javascript-time-ago"
 import { useMutation } from "@vue/apollo-composable"
 import { MARK_NOTIFICATION_READ } from "src/graphql/mutations"
+import { DateTime } from "luxon"
 
 const timeAgo = new TimeAgo("en-US")
 /**
@@ -88,11 +89,15 @@ const tKey = computed(() => {
 const flattened = computed(() => {
   return flatten(props.note, { delimiter: "_" })
 })
+
 /**
  * Relative representation of the note's time property
  */
 const relativeTime = computed(() => {
   const style = Screen.lt.md ? "mini-now" : "long"
-  return timeAgo.format(new Date(props.note.time), style)
+  return timeAgo.format(
+    DateTime.fromISO(props.note.created_at).toJSDate(),
+    style
+  )
 })
 </script>
