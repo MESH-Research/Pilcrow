@@ -88,7 +88,7 @@ const paginatorData = useResult(
   (data) => data.currentUser.notifications.paginatorInfo
 )
 const isPaginationVisible = computed(() => {
-  if (currentPage.value > 1 || filteredItems.value.length > 0) {
+  if (currentPage.value > 1 || notificationItems.value.length > 0) {
     return true
   }
   return false
