@@ -47,8 +47,8 @@
             />
           </div>
         </div>
-        <div v-else class="q-pa-xl text-center">
-          <p class="text-h3 text-grey">{{ $t("notifications.none") }}</p>
+        <div v-else class="q-py-xl text-center">
+          <p class="text-h3 text--grey">{{ $t("notifications.none") }}</p>
         </div>
       </div>
     </div>
