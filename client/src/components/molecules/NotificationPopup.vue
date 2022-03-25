@@ -37,7 +37,7 @@
         </q-card>
         <q-list
           role="navigation"
-          aria-label="Dropdown Navigation"
+          :aria-label="$t('notifications.list')"
           bordered
           separator
           class="notifications-list"
