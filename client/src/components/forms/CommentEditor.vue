@@ -1,6 +1,6 @@
 <template>
-  <div v-if="editor">
-    <q-btn-group spread unelevated>
+  <div v-if="editor" class="q-mx-md q-pa-md tiptap-editor">
+    <q-btn-group spread unelevated class="block text-center q-pb-md">
       <q-btn
         aria-label="Toggle Bold Selected Text"
         color="primary"
@@ -82,7 +82,24 @@
         <q-icon name="link_off"></q-icon>
       </q-btn>
     </q-btn-group>
-    <editor-content :editor="editor" />
+    <div class="editor">
+      <editor-content
+        :editor="editor"
+        style="
+          background: #dddddd;
+          min-height: 200px !important;
+          border-radius: 5px;
+        "
+        class="q-pa-xs"
+      />
+    </div>
+    <div class="q-pa-md q-gutter-y-sm column">
+      <q-toggle v-model="relevance" label="Relevance" />
+      <q-toggle v-model="accessibility" label="Accessibility" />
+      <q-toggle v-model="coherence" label="Coherence" />
+      <q-toggle v-model="scholarlydialog" label="Scholarly Dialog" />
+    </div>
+    <q-btn color="primary">Submit</q-btn>
   </div>
 </template>
 
@@ -94,6 +111,7 @@ import Italic from "@tiptap/extension-italic"
 import BulletList from "@tiptap/extension-bullet-list"
 import OrderedList from "@tiptap/extension-ordered-list"
 import Link from "@tiptap/extension-link"
+import { ref } from "vue"
 
 export default {
   components: {
@@ -102,7 +120,8 @@ export default {
 
   setup() {
     const editor = useEditor({
-      content: "<p>I’m running Tiptap with Vue.js.</p>",
+      content: "<p>Add your comment...</p>",
+      injectCSS: true,
       extensions: [
         StarterKit,
         Bold,
@@ -140,7 +159,24 @@ export default {
         .run()
     }
 
-    return { editor, setLink }
+    return {
+      editor,
+      setLink,
+      relevance: ref(true),
+      accessibility: ref(true),
+      coherence: ref(true),
+      scholarlydialog: ref(true),
+    }
   },
 }
 </script>
+<style lang="sass" scoped>
+.tiptap-editor
+  background-color: #efefef
+  min-height: 200px
+  border: 1px solid rgb(56, 118, 187)
+  border-radius: 5px
+  margin-top: 10px
+.ProseMirror
+  min-height: 200px
+</style>
