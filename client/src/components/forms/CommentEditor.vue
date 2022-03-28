@@ -127,6 +127,7 @@ import Italic from "@tiptap/extension-italic"
 import BulletList from "@tiptap/extension-bullet-list"
 import OrderedList from "@tiptap/extension-ordered-list"
 import Link from "@tiptap/extension-link"
+import Placeholder from "@tiptap/extension-placeholder"
 import { ref } from "vue"
 
 export default {
@@ -136,7 +137,6 @@ export default {
 
   setup() {
     const editor = useEditor({
-      content: "<p>Add your comment...</p>",
       injectCSS: true,
       extensions: [
         StarterKit,
@@ -146,6 +146,9 @@ export default {
         OrderedList,
         Link.configure({
           openOnClick: false,
+        }),
+        Placeholder.configure({
+          placeholder: "Add a comment …",
         }),
       ],
     })
@@ -186,13 +189,19 @@ export default {
   },
 }
 </script>
-<style lang="sass" scoped>
-.tiptap-editor
-  background-color: #efefef
-  min-height: 200px
-  border: 1px solid rgb(56, 118, 187)
-  border-radius: 5px
-  margin-top: 10px
-.ProseMirror
-  min-height: 200px
+<style>
+.tiptap-editor {
+  background-color: #efefef;
+  border: 1px solid rgb(56, 118, 187);
+  border-radius: 5px;
+  margin-top: 10px;
+}
+/* Placeholder (at the top) */
+.ProseMirror p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  color: #18453b;
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
 </style>
