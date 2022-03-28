@@ -1,10 +1,10 @@
-import NotificationPopup from "./NotificationPopup.vue"
-import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-jest"
 import { mount } from "@vue/test-utils"
-import { CURRENT_USER_NOTIFICATIONS } from "src/graphql/queries"
-import { createMockClient } from "mock-apollo-client"
+import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-jest"
 import { ApolloClients } from "@vue/apollo-composable"
+import { createMockClient } from "mock-apollo-client"
 import flushPromises from "flush-promises"
+import { CURRENT_USER_NOTIFICATIONS } from "src/graphql/queries"
+import FeedPage from "./FeedPage.vue"
 
 installQuasarPlugin()
 describe("Nofitication Popup", () => {
@@ -16,7 +16,7 @@ describe("Nofitication Popup", () => {
     })
 
     return {
-      wrapper: mount(NotificationPopup, {
+      wrapper: mount(FeedPage, {
         global: {
           provide: {
             [ApolloClients]: { default: mockClient },
@@ -55,47 +55,19 @@ describe("Nofitication Popup", () => {
     expect(wrapperFactory().wrapper).toBeTruthy()
   })
 
-  it("displays an indicator for a user that has unread notifications", async () => {
-    const { wrapper, mockClient } = wrapperFactory()
-    const queryHandler = jest.fn().mockResolvedValue(getNotificationData(false))
-    mockClient.setRequestHandler(CURRENT_USER_NOTIFICATIONS, queryHandler)
-    const indicator = wrapper.findComponent({ ref: "notification_indicator" })
-    expect(indicator).toBeTruthy()
-  })
-
-  it("displays no indicator for a user that has no unread notifications", async () => {
-    const { wrapper, mockClient } = wrapperFactory()
-    const queryHandler = jest.fn().mockResolvedValue(getNotificationData(true))
-    mockClient.setRequestHandler(CURRENT_USER_NOTIFICATIONS, queryHandler)
-    expect(
-      wrapper.findAllComponents({ ref: "notification_indicator" })
-    ).toHaveLength(0)
-  })
-
-  it("displays no indicator for a user that has no notifications", async () => {
+  it("displays a default message for a user that has no notifications", async () => {
     const { wrapper, mockClient } = wrapperFactory()
     const queryHandler = jest.fn().mockResolvedValue([])
     mockClient.setRequestHandler(CURRENT_USER_NOTIFICATIONS, queryHandler)
-    expect(
-      wrapper.findAllComponents({ ref: "notification_indicator" })
-    ).toHaveLength(0)
-  })
-
-  it("provides a default message for a user that has no notifications", async () => {
-    const { wrapper, mockClient } = wrapperFactory()
-    const queryHandler = jest.fn().mockResolvedValue([])
-    mockClient.setRequestHandler(CURRENT_USER_NOTIFICATIONS, queryHandler)
-    wrapper.vm.isExpanded = true
     await flushPromises()
     const message = wrapper.findComponent({ ref: "default_message" })
     expect(message.text()).toContain("notifications.none")
   })
 
-  it("doesn't provide a default message for a user that has notifications", async () => {
+  it("does not display the default message for a user that has notifications", async () => {
     const { wrapper, mockClient } = wrapperFactory()
     const queryHandler = jest.fn().mockResolvedValue(getNotificationData(true))
     mockClient.setRequestHandler(CURRENT_USER_NOTIFICATIONS, queryHandler)
-    wrapper.vm.isExpanded = true
     await flushPromises()
     expect(wrapper.findAllComponents({ ref: "default_message" })).toHaveLength(
       0

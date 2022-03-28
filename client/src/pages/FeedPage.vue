@@ -20,7 +20,9 @@
             </template>
           </q-select>
           <div class="col-4 col-md-3">
-            <q-btn dense class="full-width">Dismiss All</q-btn>
+            <q-btn dense class="full-width">{{
+              $t("notifications.dismiss_all")
+            }}</q-btn>
           </div>
         </div>
         <q-list class="notifications-list">
@@ -36,7 +38,7 @@
             style="border-bottom: 1px solid #acd"
           />
         </q-list>
-        <div class="row justify-center">
+        <div v-if="isPaginationVisible" class="row justify-center">
           <div class="q-pa-lg">
             <q-pagination
               v-model="currentPage"
@@ -45,6 +47,9 @@
             />
           </div>
         </div>
+        <q-card v-else ref="default_message" class="q-py-xl text-center" flat>
+          <p class="text-h3 text--grey">{{ $t("notifications.none") }}</p>
+        </q-card>
       </div>
     </div>
   </div>
@@ -62,13 +67,14 @@ const filterModes = ["Unread", "Read"]
 const currentPage = ref(1)
 
 const variables = computed(() => {
+  const vars = { currentPage: currentPage.value }
   if (filterMode.value == "Read") {
-    return { currentPage: currentPage.value, read: true }
+    vars.read = true
   }
   if (filterMode.value == "Unread") {
-    return { currentPage: currentPage.value, unread: true }
+    vars.unread = true
   }
-  return { currentPage: currentPage.value }
+  return vars
 })
 const { result } = useQuery(CURRENT_USER_NOTIFICATIONS, variables)
 const notificationItems = useResult(
@@ -81,6 +87,9 @@ const paginatorData = useResult(
   { count: 0, currentPage: 1, lastPage: 1, perPage: 10 },
   (data) => data.currentUser.notifications.paginatorInfo
 )
+const isPaginationVisible = computed(() => {
+  return currentPage.value > 1 || notificationItems.value.length > 0
+})
 </script>
 
 <style lang="sass">
