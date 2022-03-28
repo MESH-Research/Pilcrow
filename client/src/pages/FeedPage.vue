@@ -47,9 +47,9 @@
             />
           </div>
         </div>
-        <div v-else class="q-py-xl text-center">
+        <q-card v-else ref="default_message" class="q-py-xl text-center" flat>
           <p class="text-h3 text--grey">{{ $t("notifications.none") }}</p>
-        </div>
+        </q-card>
       </div>
     </div>
   </div>
@@ -88,10 +88,7 @@ const paginatorData = useResult(
   (data) => data.currentUser.notifications.paginatorInfo
 )
 const isPaginationVisible = computed(() => {
-  if (currentPage.value > 1 || notificationItems.value.length > 0) {
-    return true
-  }
-  return false
+  return currentPage.value > 1 || notificationItems.value.length > 0
 })
 const hasUnreadNotifications = computed(() => {
   return notificationItems.value.length > 0 &&
