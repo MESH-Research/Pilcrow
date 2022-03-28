@@ -2,8 +2,8 @@
   <div v-if="editor" class="q-mx-md q-pa-md tiptap-editor">
     <q-btn-group spread unelevated class="block text-center q-pb-md">
       <q-btn
-        aria-label="Toggle Bold Selected Text"
-        color="balck"
+        aria-label="Toggle bold selected text"
+        color="black"
         outline
         dense
         size="sm"
@@ -14,7 +14,7 @@
         <q-icon name="format_bold"></q-icon>
       </q-btn>
       <q-btn
-        aria-label="Toggle Italic Selected Text"
+        aria-label="Toggle italic selected text"
         color="black"
         outline
         dense
@@ -27,7 +27,7 @@
       </q-btn>
       <q-btn
         aria-label="Toggle bulleted list"
-        color="balck"
+        color="black"
         outline
         dense
         size="sm"
@@ -39,7 +39,7 @@
       </q-btn>
       <q-btn
         aria-label="Toggle numbered list"
-        color="balck"
+        color="black"
         outline
         dense
         size="sm"
@@ -51,7 +51,7 @@
       </q-btn>
       <q-btn
         aria-label="Indent list item"
-        color="balck"
+        color="black"
         outline
         dense
         size="sm"
@@ -63,7 +63,7 @@
       </q-btn>
       <q-btn
         aria-label="Unindent list item"
-        color="balck"
+        color="black"
         outline
         dense
         size="sm"
@@ -75,7 +75,7 @@
       </q-btn>
       <q-btn
         aria-label="Insert a link"
-        color="balck"
+        color="black"
         outline
         dense
         size="sm"
@@ -87,7 +87,7 @@
       </q-btn>
       <q-btn
         aria-label="Unset a link"
-        color="balck"
+        color="black"
         outline
         dense
         size="sm"
@@ -113,7 +113,7 @@
       <q-toggle v-model="relevance" label="Relevance" />
       <q-toggle v-model="accessibility" label="Accessibility" />
       <q-toggle v-model="coherence" label="Coherence" />
-      <q-toggle v-model="scholarlydialog" label="Scholarly Dialog" />
+      <q-toggle v-model="scholarlydialogue" label="Scholarly Dialogue" />
     </div>
     <q-btn color="primary">Submit</q-btn>
   </div>
@@ -181,7 +181,7 @@ export default {
       relevance: ref(true),
       accessibility: ref(true),
       coherence: ref(true),
-      scholarlydialog: ref(true),
+      scholarlydialogue: ref(true),
     }
   },
 }
