@@ -19,9 +19,9 @@
           <div id="inline_comments_section" class="q-pa-md">
             <span class="text-h3"> Inline Comments </span>
           </div>
-          <submission-comment is-inline-comment />
-          <submission-comment is-inline-comment />
           <comment-editor />
+          <submission-comment is-inline-comment />
+          <submission-comment is-inline-comment />
           <div class="row justify-center q-pa-md q-pb-xl">
             <q-btn color="dark" icon="arrow_upward">Scroll to Top</q-btn>
           </div>

@@ -3,82 +3,98 @@
     <q-btn-group spread unelevated class="block text-center q-pb-md">
       <q-btn
         aria-label="Toggle Bold Selected Text"
-        color="primary"
+        color="balck"
         outline
+        dense
         size="sm"
         :class="{ 'is-active': editor.isActive('bold') }"
         @click="editor.chain().focus().toggleBold().run()"
       >
+        <q-tooltip class="bg-primary">Bold</q-tooltip>
         <q-icon name="format_bold"></q-icon>
       </q-btn>
       <q-btn
         aria-label="Toggle Italic Selected Text"
-        color="primary"
+        color="black"
         outline
+        dense
         size="sm"
         :class="{ 'is-active': editor.isActive('italic') }"
         @click="editor.chain().focus().toggleItalic().run()"
       >
+        <q-tooltip class="bg-primary">Italic</q-tooltip>
         <q-icon name="format_italic"></q-icon>
       </q-btn>
       <q-btn
         aria-label="Toggle bulleted list"
-        color="primary"
+        color="balck"
         outline
+        dense
         size="sm"
         :class="{ 'is-active': editor.isActive('bulletList') }"
         @click="editor.chain().focus().toggleBulletList().run()"
       >
+        <q-tooltip class="bg-primary">Bulleted list</q-tooltip>
         <q-icon name="list"></q-icon>
       </q-btn>
       <q-btn
         aria-label="Toggle numbered list"
-        color="primary"
+        color="balck"
         outline
+        dense
         size="sm"
         :class="{ 'is-active': editor.isActive('orderedList') }"
         @click="editor.chain().focus().toggleOrderedList().run()"
       >
+        <q-tooltip class="bg-primary">Numbered list</q-tooltip>
         <q-icon name="format_list_numbered"></q-icon>
       </q-btn>
       <q-btn
         aria-label="Indent list item"
-        color="primary"
+        color="balck"
         outline
+        dense
         size="sm"
         :disabled="!editor.can().sinkListItem('listItem')"
         @click="editor.chain().focus().sinkListItem('listItem').run()"
       >
+        <q-tooltip class="bg-primary">Indent list item</q-tooltip>
         <q-icon name="format_indent_increase"></q-icon>
       </q-btn>
       <q-btn
         aria-label="Unindent list item"
-        color="primary"
+        color="balck"
         outline
+        dense
         size="sm"
         :disabled="!editor.can().liftListItem('listItem')"
         @click="editor.chain().focus().liftListItem('listItem').run()"
       >
+        <q-tooltip class="bg-primary">Unindent list item</q-tooltip>
         <q-icon name="format_indent_decrease"></q-icon>
       </q-btn>
       <q-btn
         aria-label="Insert a link"
-        color="primary"
+        color="balck"
         outline
+        dense
         size="sm"
         :class="{ 'is-active': editor.isActive('link') }"
         @click="setLink"
       >
+        <q-tooltip class="bg-primary">Insert link</q-tooltip>
         <q-icon name="insert_link"></q-icon>
       </q-btn>
       <q-btn
         aria-label="Unset a link"
-        color="primary"
+        color="balck"
         outline
+        dense
         size="sm"
         :disabled="!editor.isActive('link')"
         @click="editor.chain().focus().unsetLink().run()"
       >
+        <q-tooltip class="bg-primary">Unset link</q-tooltip>
         <q-icon name="link_off"></q-icon>
       </q-btn>
     </q-btn-group>
