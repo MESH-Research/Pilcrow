@@ -5,6 +5,7 @@ namespace Database\Seeders;
 
 use App\Events\SubmissionCreated;
 use App\Listeners\NotifyUsersAboutCreatedSubmission;
+use App\Models\Role;
 use App\Models\Submission;
 use App\Models\User;
 use Illuminate\Database\Seeder;
@@ -26,13 +27,13 @@ class SubmissionSeeder extends Seeder
             ->hasAttached(
                 User::where('username', 'regularUser')->firstOrFail(),
                 [
-                    'role_id' => 6,
+                    'role_id' => Role::SUBMITTER_ROLE_ID,
                 ]
             )
             ->hasAttached(
                 User::where('username', 'reviewCoordinator')->firstOrFail(),
                 [
-                    'role_id' => 4,
+                    'role_id' => Role::REVIEW_COORDINATOR_ROLE_ID,
                 ]
             )
             ->create([

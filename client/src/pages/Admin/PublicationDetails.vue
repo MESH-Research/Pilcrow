@@ -34,8 +34,8 @@
         <q-form @submit="assignUser(`editor`, editor_candidate)">
           <div class="q-gutter-md column q-pl-none">
             <find-user-select
-              id="input_editor_assignee"
               v-model="editor_candidate"
+              data-cy="input_editor_assignee"
               cy-selected-item="editor_assignee_selected"
               cy-options-item="result_editor_assignee"
             />

@@ -1,6 +1,5 @@
 <template>
   <q-select
-    id="input_review_assignee"
     :model-value="props.modelValue"
     :options="options"
     bottom-slots

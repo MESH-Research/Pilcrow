@@ -32,8 +32,9 @@ describe("Publication Details", () => {
     cy.task("resetDb")
     cy.login({ email: "applicationadministrator@ccrproject.dev" })
     cy.visit("/publication/1")
+    cy.injectAxe()
     // Initial Assignment
-    cy.get("#input_editor_assignee").type("applicationAd{backspace}{backspace}")
+    cy.dataCy("input_editor_assignee").type("applicationAd{backspace}{backspace}")
     cy.dataCy("result_editor_assignee").click()
     cy.dataCy("editor_assignee_selected").contains("applicationAdminUser")
     cy.dataCy("button_assign_editor").click()
@@ -43,13 +44,9 @@ describe("Publication Details", () => {
     cy.dataCy("list_assigned_editors").contains("Application Administrator")
     cy.dataCy("button_dismiss_notify").click()
     // Duplicate Assignment
-    cy.get("#input_editor_assignee").type("applicationAd{backspace}{backspace}")
+    cy.dataCy("input_editor_assignee").type("applicationAd{backspace}{backspace}")
     cy.dataCy("result_editor_assignee").click()
     cy.dataCy("button_assign_editor").click()
-    // Type characters to delay the a11y checker and prevent a false positive
-    // a11y violation before publication_details_notify fully fades in
-    cy.get("#input_editor_assignee").type("allow notify to fully fade in")
-    cy.injectAxe()
     cy.dataCy("publication_details_notify")
       .should("be.visible")
       .should("have.class", "bg-negative")
