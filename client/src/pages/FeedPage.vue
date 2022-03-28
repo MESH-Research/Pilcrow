@@ -19,7 +19,7 @@
               <q-icon name="filter_alt" />
             </template>
           </q-select>
-          <div v-if="hasUnreadNotifications" class="col-4 col-md-3">
+          <div class="col-4 col-md-3">
             <q-btn dense class="full-width">{{
               $t("notifications.dismiss_all")
             }}</q-btn>
@@ -89,12 +89,6 @@ const paginatorData = useResult(
 )
 const isPaginationVisible = computed(() => {
   return currentPage.value > 1 || notificationItems.value.length > 0
-})
-const hasUnreadNotifications = computed(() => {
-  return notificationItems.value.length > 0 &&
-    notificationItems.value.find((item) => item.read_at === null)
-    ? true
-    : false
 })
 </script>
 
