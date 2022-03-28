@@ -68,8 +68,8 @@
         <q-form @submit="assignUser(`reviewer`, reviewer_candidate)">
           <div class="q-gutter-md column q-pl-none">
             <find-user-select
-              id="input_review_assignee"
               v-model="reviewer_candidate"
+              data-cy="input_review_assignee"
               cy-selected-item="review_assignee_selected"
               cy-options-item="result_review_assignee"
             />
@@ -128,8 +128,8 @@
         >
           <div class="q-gutter-md column q-pl-none">
             <find-user-select
-              id="input_review_coordinator_assignee"
               v-model="review_coordinator_candidate"
+              data-cy="input_review_coordinator_assignee"
               cy-selected-item="review_coordinator_assignee_selected"
               cy-options-item="result_review_coordinator_assignee"
             />

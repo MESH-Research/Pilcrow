@@ -14,5 +14,4 @@ type User {
     profile_metadata: ProfileMetadata
     submissions: [Submission]! @belongsToMany
     pivot: SubmissionUser
-    notifications: [Notification]! @hasMany(type: PAGINATOR) @whereAuth(relation: "notifiable")
 }

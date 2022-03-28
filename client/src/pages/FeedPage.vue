@@ -25,18 +25,24 @@
         </div>
         <q-list class="notifications-list">
           <notification-list-item
-            v-for="(item, index) in filteredItems"
+            v-for="(item, index) in notificationItems"
             :key="index"
-            class="q-pa-none q-pr-md"
-            style="border-bottom: 1px solid #acd"
             :note="item"
-            show-time
+            clickable
+            class="q-pa-none q-pr-md"
+            :class="{ unread: !item.read_at }"
             :icon-size="$q.screen.lt.md ? 'xs' : 'md'"
+            show-time
+            style="border-bottom: 1px solid #acd"
           />
         </q-list>
         <div class="row justify-center">
           <div class="q-pa-lg">
-            <q-pagination v-model="currentPage" :max="5" class="col-12" />
+            <q-pagination
+              v-model="currentPage"
+              :max="paginatorData.lastPage"
+              class="col-12"
+            />
           </div>
         </div>
       </div>
@@ -45,38 +51,36 @@
 </template>
 
 <script setup>
-import NotificationListItem from "src/components/atoms/NotificationListItem.vue"
 import { ref, computed } from "vue"
-import { notificationItems } from "src/graphql/fillerData"
-/**
- * Notification feed page
- */
-/**
- * Current filter mode
- * @values null, 'Read', 'Unread'
- *  */
-const filterMode = ref(null)
-/**
- * Current page displayed
- * @TODO Implement pagination with graphql
- */
-const currentPage = ref(1)
+import { useQuery, useResult } from "@vue/apollo-composable"
+import { CURRENT_USER_NOTIFICATIONS } from "src/graphql/queries"
+import NotificationListItem from "src/components/atoms/NotificationListItem.vue"
 
+const filterMode = ref(null)
 const filterModes = ["Unread", "Read"]
 
-/**
- * Filtered items based on filterMode
- */
-const filteredItems = computed(() => {
-  if (!filterMode.value) {
-    return notificationItems
-  }
+const currentPage = ref(1)
 
-  const read = filterMode.value === "Read" ? true : false
-  return notificationItems.filter((i) =>
-    read ? i.read_at !== null : i.read_at === null
-  )
+const variables = computed(() => {
+  if (filterMode.value == "Read") {
+    return { currentPage: currentPage.value, read: true }
+  }
+  if (filterMode.value == "Unread") {
+    return { currentPage: currentPage.value, unread: true }
+  }
+  return { currentPage: currentPage.value }
 })
+const { result } = useQuery(CURRENT_USER_NOTIFICATIONS, variables)
+const notificationItems = useResult(
+  result,
+  [],
+  (data) => data.currentUser.notifications.data
+)
+const paginatorData = useResult(
+  result,
+  { count: 0, currentPage: 1, lastPage: 1, perPage: 10 },
+  (data) => data.currentUser.notifications.paginatorInfo
+)
 </script>
 
 <style lang="sass">
