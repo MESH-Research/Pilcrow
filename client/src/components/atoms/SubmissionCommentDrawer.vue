@@ -19,6 +19,7 @@
           <div id="inline_comments_section" class="q-pa-md">
             <span class="text-h3"> Inline Comments </span>
           </div>
+          <comment-editor />
           <submission-comment is-inline-comment />
           <submission-comment is-inline-comment />
           <div class="row justify-center q-pa-md q-pb-xl">
@@ -33,6 +34,7 @@
 <script setup>
 import { ref, watch } from "vue"
 import SubmissionComment from "src/components/atoms/SubmissionComment.vue"
+import CommentEditor from "src/components/forms/CommentEditor.vue"
 
 const drawerWidth = ref(440)
 let originalWidth

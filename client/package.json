@@ -22,6 +22,13 @@
   "dependencies": {
     "@apollo/client": "^3.5.10",
     "@quasar/extras": "^1.13.4",
+    "@tiptap/extension-bold": "^2.0.0-beta.26",
+    "@tiptap/extension-italic": "^2.0.0-beta.26",
+    "@tiptap/extension-link": "^2.0.0-beta.36",
+    "@tiptap/extension-ordered-list": "^2.0.0-beta.27",
+    "@tiptap/extension-placeholder": "^2.0.0-beta.48",
+    "@tiptap/starter-kit": "^2.0.0-beta.183",
+    "@tiptap/vue-3": "^2.0.0-beta.90",
     "@vue/apollo-composable": "^4.0.0-alpha.16",
     "@vue/apollo-option": "^4.0.0-alpha.16",
     "@vuelidate/core": "^2.0.0-alpha.38",
