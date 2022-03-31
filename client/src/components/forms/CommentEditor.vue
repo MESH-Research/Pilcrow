@@ -203,12 +203,10 @@ const styleCriteria = ref([
     selected: false,
   },
 ])
-console.log(styleCriteria)
 
 const hasStyleCriteria = computed(() => {
   return styleCriteria.value.some((criteria) => criteria.selected)
 })
-console.log("selected:", hasStyleCriteria.value)
 </script>
 <style>
 .tiptap-editor {
