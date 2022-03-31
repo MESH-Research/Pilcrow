@@ -110,16 +110,18 @@
       />
     </div>
     <div class="q-pa-md q-gutter-y-sm column">
-      <q-toggle v-model="relevance" label="Relevance" />
-      <q-toggle v-model="accessibility" label="Accessibility" />
-      <q-toggle v-model="coherence" label="Coherence" />
-      <q-toggle v-model="scholarlydialogue" label="Scholarly Dialogue" />
+      <q-toggle
+        v-for="criteria in styleCriteria"
+        :key="criteria.id"
+        v-model="criteria.selected"
+        :label="criteria.label"
+      />
     </div>
-    <q-btn color="primary">Submit</q-btn>
+    <q-btn color="primary" @click="submitHandler()">Submit</q-btn>
   </div>
 </template>
 
-<script>
+<script setup>
 import { useEditor, EditorContent } from "@tiptap/vue-3"
 import StarterKit from "@tiptap/starter-kit"
 import Bold from "@tiptap/extension-bold"
@@ -128,66 +130,85 @@ import BulletList from "@tiptap/extension-bullet-list"
 import OrderedList from "@tiptap/extension-ordered-list"
 import Link from "@tiptap/extension-link"
 import Placeholder from "@tiptap/extension-placeholder"
-import { ref } from "vue"
+import { ref, computed } from "vue"
 
-export default {
-  components: {
-    EditorContent,
-  },
+const editor = useEditor({
+  injectCSS: true,
+  extensions: [
+    StarterKit,
+    Bold,
+    Italic,
+    BulletList,
+    OrderedList,
+    Link.configure({
+      openOnClick: false,
+    }),
+    Placeholder.configure({
+      placeholder: "Add a comment …",
+    }),
+  ],
+})
 
-  setup() {
-    const editor = useEditor({
-      injectCSS: true,
-      extensions: [
-        StarterKit,
-        Bold,
-        Italic,
-        BulletList,
-        OrderedList,
-        Link.configure({
-          openOnClick: false,
-        }),
-        Placeholder.configure({
-          placeholder: "Add a comment …",
-        }),
-      ],
-    })
-
-    function setLink() {
-      const previousUrl = editor.value.getAttributes("link").href
-      const url = window.prompt("URL", previousUrl)
-
-      // cancelled
-      if (url === null) {
-        return
-      }
-
-      // empty
-      if (url === "") {
-        editor.value.chain().focus().extendMarkRange("link").unsetLink().run()
-
-        return
-      }
-
-      // update link
-      editor.value
-        .chain()
-        .focus()
-        .extendMarkRange("link")
-        .setLink({ href: url })
-        .run()
-    }
-
-    return {
-      editor,
-      setLink,
-      relevance: ref(true),
-      accessibility: ref(true),
-      coherence: ref(true),
-      scholarlydialogue: ref(true),
-    }
-  },
+function submitHandler() {
+  console.log(hasStyleCriteria.value)
+  return true
 }
+
+function setLink() {
+  const previousUrl = editor.value.getAttributes("link").href
+  const url = window.prompt("URL", previousUrl)
+
+  // cancelled
+  if (url === null) {
+    return
+  }
+
+  // empty
+  if (url === "") {
+    editor.value.chain().focus().extendMarkRange("link").unsetLink().run()
+
+    return
+  }
+
+  // update link
+  editor.value
+    .chain()
+    .focus()
+    .extendMarkRange("link")
+    .setLink({ href: url })
+    .run()
+}
+
+  },
+
+const styleCriteria = ref([
+  {
+    id: 1,
+    label: "Relevance",
+    selected: false,
+  },
+  {
+    id: 2,
+    label: "Accessibility",
+    selected: false,
+  },
+  {
+    id: 3,
+    label: "Coherence",
+    selected: false,
+  },
+  {
+    id: 4,
+    label: "Scholarly Dialogue",
+    selected: false,
+  },
+])
+console.log(styleCriteria)
+
+const hasStyleCriteria = computed(() => {
+  return styleCriteria.value.some((criteria) => criteria.selected)
+})
+console.log("selected:", hasStyleCriteria.value)
 </script>
 <style>
 .tiptap-editor {
