@@ -1,18 +1,16 @@
 <template>
   <div v-if="editor" class="q-mx-md q-pa-md tiptap-editor">
     <q-btn-group spread unelevated class="block text-center q-pb-md">
-      <q-btn
-        aria-label="Toggle bold selected text"
-        color="black"
-        outline
-        dense
-        size="sm"
-        :class="{ 'is-active': editor.isActive('bold') }"
-        @click="editor.chain().focus().toggleBold().run()"
-      >
-        <q-tooltip class="bg-primary">Bold</q-tooltip>
-        <q-icon name="format_bold"></q-icon>
-      </q-btn>
+      <comment-editor-button
+        v-for="{ button, index } in commentEditorButtons"
+        :key="index"
+        :aria-label="button.ariaLabel"
+        :is-active="button.isActive"
+        :is-disabled="button.isDisabled"
+        :click-handler="button.clickHandler"
+        :tooltip-text="button.tooltipText"
+        :icon-name="button.iconName"
+      />
       <q-btn
         aria-label="Toggle italic selected text"
         color="black"
@@ -131,7 +129,8 @@ import OrderedList from "@tiptap/extension-ordered-list"
 import Link from "@tiptap/extension-link"
 import Placeholder from "@tiptap/extension-placeholder"
 import { ref, computed } from "vue"
-
+import CommentEditorButton from "../atoms/CommentEditorButton.vue"
+// import { useDirtyGuard } from "src/use/forms"
 const editor = useEditor({
   injectCSS: true,
   extensions: [
@@ -148,6 +147,26 @@ const editor = useEditor({
     }),
   ],
 })
+
+const commentEditorButtons = ref([
+  {
+    ariaLabel: "Bold",
+    isActive: false, //editor.value.isActive("bold"),
+    clickHandler: () => () => {
+      console.log(`Bold`)
+    }, //editor.value.chain().focus().toggleBold().run(),
+    tooltipText: "Bold",
+    iconName: "format_bold",
+  },
+  // {
+  //   ariaLabel: "",
+  //   isActive: editor.isActive(""),
+  //   isDisabled: false,
+  //   clickHandler: () => {},
+  //   tooltipText: "",
+  //   iconName: "",
+  // },
+])
 
 function submitHandler() {
   console.log(hasStyleCriteria.value)
@@ -178,8 +197,6 @@ function setLink() {
     .setLink({ href: url })
     .run()
 }
-
-  },
 
 const styleCriteria = ref([
   {
