@@ -102,7 +102,7 @@
       <editor-content
         :editor="editor"
         style="
-          background: #dddddd;
+          background: #ddd;
           min-height: 200px !important;
           border-radius: 5px;
         "
