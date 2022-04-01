@@ -201,15 +201,15 @@ const hasStyleCriteria = computed(() => {
 <style>
 .tiptap-editor {
   background-color: #efefef;
-  border: 1px solid rgb(56, 118, 187);
   border-radius: 5px;
+  border: 1px solid rgb(56, 118, 187);
   margin-top: 10px;
 }
 .ProseMirror {
-  min-height: 200px;
   background: #ddd;
-  border: 1px solid #595959;
   border-radius: 5px;
+  border: 1px solid #595959;
+  min-height: 200px;
   padding: 8px;
 }
 .ProseMirror p.is-editor-empty:first-child::before {
