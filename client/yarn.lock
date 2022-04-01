@@ -8093,9 +8093,9 @@ qs@~6.5.2:
   integrity sha512-qxXIEh4pCGfHICj1mAJQ2/2XVZkjCDTcEgfoSQxc/fYivUZxTkk7L3bDBJSoNrEzXI17oUO5Dp07ktqE5KzczA==
 
 quasar@2:
-  version "2.6.3"
-  resolved "https://registry.yarnpkg.com/quasar/-/quasar-2.6.3.tgz#337957b02be596bd7b429de3c5873462aed8f357"
-  integrity sha512-eSQ1l0T2CXSbQ936aj8+NgyIrWt92YSs8xO7FD9ZUoC+wtY9trk0+LBHxcjJqr2p7mNxqaHoXJrvHZdN/VBUdg==
+  version "2.6.5"
+  resolved "https://registry.yarnpkg.com/quasar/-/quasar-2.6.5.tgz#f744e2f12c53430da58da413d31e0720cbd6a6fa"
+  integrity sha512-ABaFt6eXDtXwV6RUt8VW5xxvqb8gpflIdYc8+ucGFnZ5zKH20YzqHOlIg/jJOw3T/C1s8T/c6T4yxvhxxj/uxA==
 
 querystring@0.2.0:
   version "0.2.0"
