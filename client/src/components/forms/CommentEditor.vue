@@ -123,6 +123,15 @@ import OrderedList from "@tiptap/extension-ordered-list"
 import Link from "@tiptap/extension-link"
 import Placeholder from "@tiptap/extension-placeholder"
 import { ref, computed } from "vue"
+import BypassStyleCriteriaDialogVue from "../dialogs/BypassStyleCriteriaDialog.vue"
+import { useQuasar } from "quasar"
+
+const { dialog } = useQuasar()
+function dirtyDialog() {
+  return dialog({
+    component: BypassStyleCriteriaDialogVue,
+  })
+}
 
 const editor = useEditor({
   injectCSS: true,
@@ -142,8 +151,18 @@ const editor = useEditor({
 })
 
 function submitHandler() {
-  console.log(hasStyleCriteria.value)
-  return true
+  if (hasStyleCriteria.value) {
+    return true
+  }
+  return new Promise((resolve) => {
+    dirtyDialog()
+      .onOk(function () {
+        resolve(true)
+      })
+      .onCancel(function () {
+        resolve(false)
+      })
+  })
 }
 
 function setLink() {
@@ -208,7 +227,6 @@ const hasStyleCriteria = computed(() => {
 .ProseMirror {
   background: #ddd;
   border-radius: 5px;
-  border: 1px solid #595959;
   min-height: 200px;
   padding: 8px;
 }
