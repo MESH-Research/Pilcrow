@@ -23,15 +23,16 @@ class PublicationSeeder extends Seeder
         ->hasAttached(
             $admin,
             [
-                'role_id' => Role::PUBLICATION_ADMINISTRATOR_ROLE_ID,
+            'role_id' => Role::PUBLICATION_ADMINISTRATOR_ROLE_ID,
             ]
         )
         ->hasAttached(
             $editor,
             [
-                'role_id' => Role::EDITOR_ROLE_ID,
+            'role_id' => Role::EDITOR_ROLE_ID,
             ]
         )
+        ->hasStyleCriterias(4)
         ->create([
             'id' => 1,
             'name' => 'CCR Test Publication 1',
