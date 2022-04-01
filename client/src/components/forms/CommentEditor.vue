@@ -99,15 +99,7 @@
       </q-btn>
     </q-btn-group>
     <div class="editor">
-      <editor-content
-        :editor="editor"
-        style="
-          background: #ddd;
-          min-height: 200px !important;
-          border-radius: 5px;
-        "
-        class="q-pa-xs"
-      />
+      <editor-content :editor="editor" />
     </div>
     <div class="q-pa-md q-gutter-y-sm column">
       <q-toggle
@@ -213,10 +205,16 @@ const hasStyleCriteria = computed(() => {
   border-radius: 5px;
   margin-top: 10px;
 }
-/* Placeholder (at the top) */
+.ProseMirror {
+  min-height: 200px;
+  background: #ddd;
+  border: 1px solid #595959;
+  border-radius: 5px;
+  padding: 8px;
+}
 .ProseMirror p.is-editor-empty:first-child::before {
-  content: attr(data-placeholder);
   color: #18453b;
+  content: attr(data-placeholder);
   float: left;
   height: 0;
   pointer-events: none;
