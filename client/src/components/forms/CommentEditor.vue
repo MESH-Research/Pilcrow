@@ -97,15 +97,7 @@
       </q-btn>
     </q-btn-group>
     <div class="editor">
-      <editor-content
-        :editor="editor"
-        style="
-          background: #ddd;
-          min-height: 200px !important;
-          border-radius: 5px;
-        "
-        class="q-pa-xs"
-      />
+      <editor-content :editor="editor" />
     </div>
     <div class="q-pa-md q-gutter-y-sm column">
       <q-toggle
@@ -130,7 +122,16 @@ import Link from "@tiptap/extension-link"
 import Placeholder from "@tiptap/extension-placeholder"
 import { ref, computed } from "vue"
 import CommentEditorButton from "../atoms/CommentEditorButton.vue"
-// import { useDirtyGuard } from "src/use/forms"
+import BypassStyleCriteriaDialogVue from "../dialogs/BypassStyleCriteriaDialog.vue"
+import { useQuasar } from "quasar"
+
+const { dialog } = useQuasar()
+function dirtyDialog() {
+  return dialog({
+    component: BypassStyleCriteriaDialogVue,
+  })
+}
+
 const editor = useEditor({
   injectCSS: true,
   extensions: [
@@ -169,8 +170,18 @@ const commentEditorButtons = ref([
 ])
 
 function submitHandler() {
-  console.log(hasStyleCriteria.value)
-  return true
+  if (hasStyleCriteria.value) {
+    return true
+  }
+  return new Promise((resolve) => {
+    dirtyDialog()
+      .onOk(function () {
+        resolve(true)
+      })
+      .onCancel(function () {
+        resolve(false)
+      })
+  })
 }
 
 function setLink() {
@@ -228,14 +239,19 @@ const hasStyleCriteria = computed(() => {
 <style>
 .tiptap-editor {
   background-color: #efefef;
-  border: 1px solid rgb(56, 118, 187);
   border-radius: 5px;
+  border: 1px solid rgb(56, 118, 187);
   margin-top: 10px;
 }
-/* Placeholder (at the top) */
+.ProseMirror {
+  background: #ddd;
+  border-radius: 5px;
+  min-height: 200px;
+  padding: 8px;
+}
 .ProseMirror p.is-editor-empty:first-child::before {
-  content: attr(data-placeholder);
   color: #18453b;
+  content: attr(data-placeholder);
   float: left;
   height: 0;
   pointer-events: none;
