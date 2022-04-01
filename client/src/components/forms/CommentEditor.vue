@@ -179,8 +179,6 @@ function setLink() {
     .run()
 }
 
-  },
-
 const styleCriteria = ref([
   {
     id: 1,
