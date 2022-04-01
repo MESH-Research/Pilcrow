@@ -2,99 +2,10 @@
   <div v-if="editor" class="q-mx-md q-pa-md tiptap-editor">
     <q-btn-group spread unelevated class="block text-center q-pb-md">
       <comment-editor-button
-        v-for="{ button, index } in commentEditorButtons"
+        v-for="(button, index) in commentEditorButtons"
         :key="index"
-        :aria-label="button.ariaLabel"
-        :is-active="button.isActive"
-        :is-disabled="button.isDisabled"
-        :click-handler="button.clickHandler"
-        :tooltip-text="button.tooltipText"
-        :icon-name="button.iconName"
+        v-bind="button"
       />
-      <q-btn
-        aria-label="Toggle italic selected text"
-        color="black"
-        outline
-        dense
-        size="sm"
-        :class="{ 'is-active': editor.isActive('italic') }"
-        @click="editor.chain().focus().toggleItalic().run()"
-      >
-        <q-tooltip class="bg-primary">Italic</q-tooltip>
-        <q-icon name="format_italic"></q-icon>
-      </q-btn>
-      <q-btn
-        aria-label="Toggle bulleted list"
-        color="black"
-        outline
-        dense
-        size="sm"
-        :class="{ 'is-active': editor.isActive('bulletList') }"
-        @click="editor.chain().focus().toggleBulletList().run()"
-      >
-        <q-tooltip class="bg-primary">Bulleted list</q-tooltip>
-        <q-icon name="list"></q-icon>
-      </q-btn>
-      <q-btn
-        aria-label="Toggle numbered list"
-        color="black"
-        outline
-        dense
-        size="sm"
-        :class="{ 'is-active': editor.isActive('orderedList') }"
-        @click="editor.chain().focus().toggleOrderedList().run()"
-      >
-        <q-tooltip class="bg-primary">Numbered list</q-tooltip>
-        <q-icon name="format_list_numbered"></q-icon>
-      </q-btn>
-      <q-btn
-        aria-label="Indent list item"
-        color="black"
-        outline
-        dense
-        size="sm"
-        :disabled="!editor.can().sinkListItem('listItem')"
-        @click="editor.chain().focus().sinkListItem('listItem').run()"
-      >
-        <q-tooltip class="bg-primary">Indent list item</q-tooltip>
-        <q-icon name="format_indent_increase"></q-icon>
-      </q-btn>
-      <q-btn
-        aria-label="Unindent list item"
-        color="black"
-        outline
-        dense
-        size="sm"
-        :disabled="!editor.can().liftListItem('listItem')"
-        @click="editor.chain().focus().liftListItem('listItem').run()"
-      >
-        <q-tooltip class="bg-primary">Unindent list item</q-tooltip>
-        <q-icon name="format_indent_decrease"></q-icon>
-      </q-btn>
-      <q-btn
-        aria-label="Insert a link"
-        color="black"
-        outline
-        dense
-        size="sm"
-        :class="{ 'is-active': editor.isActive('link') }"
-        @click="setLink"
-      >
-        <q-tooltip class="bg-primary">Insert link</q-tooltip>
-        <q-icon name="insert_link"></q-icon>
-      </q-btn>
-      <q-btn
-        aria-label="Unset a link"
-        color="black"
-        outline
-        dense
-        size="sm"
-        :disabled="!editor.isActive('link')"
-        @click="editor.chain().focus().unsetLink().run()"
-      >
-        <q-tooltip class="bg-primary">Unset link</q-tooltip>
-        <q-icon name="link_off"></q-icon>
-      </q-btn>
     </q-btn-group>
     <div class="editor">
       <editor-content :editor="editor" />
@@ -151,22 +62,63 @@ const editor = useEditor({
 
 const commentEditorButtons = ref([
   {
-    ariaLabel: "Bold",
-    isActive: false, //editor.value.isActive("bold"),
-    clickHandler: () => () => {
-      console.log(`Bold`)
-    }, //editor.value.chain().focus().toggleBold().run(),
+    ariaLabel: "Toggle bold selected text",
+    isActive: computed(() => editor.value.isActive("bold")),
+    clickHandler: () => editor.value.chain().focus().toggleBold().run(),
     tooltipText: "Bold",
     iconName: "format_bold",
   },
-  // {
-  //   ariaLabel: "",
-  //   isActive: editor.isActive(""),
-  //   isDisabled: false,
-  //   clickHandler: () => {},
-  //   tooltipText: "",
-  //   iconName: "",
-  // },
+  {
+    ariaLabel: "Toggle italic selected text",
+    isActive: computed(() => editor.value.isActive("italic")),
+    clickHandler: () => editor.value.chain().focus().toggleItalic().run(),
+    tooltipText: "Italic",
+    iconName: "format_italic",
+  },
+  {
+    ariaLabel: "Toggle bulleted list",
+    isActive: computed(() => editor.value.isActive("bulletList")),
+    clickHandler: () => editor.value.chain().focus().toggleBulletList().run(),
+    tooltipText: "Bulleted list",
+    iconName: "list",
+  },
+  {
+    ariaLabel: "Toggle numbered list",
+    isActive: computed(() => editor.value.isActive("orderedList")),
+    clickHandler: () => editor.value.chain().focus().toggleOrderedList().run(),
+    tooltipText: "Numbered list",
+    iconName: "format_list_numbered",
+  },
+  {
+    ariaLabel: "Indent list item",
+    isDisabled: computed(() => !editor.value.can().sinkListItem("listItem")),
+    clickHandler: () =>
+      editor.value.chain().focus().sinkListItem("listItem").run(),
+    tooltipText: "Indent list item",
+    iconName: "format_indent_increase",
+  },
+  {
+    ariaLabel: "Unindent list item",
+    isDisabled: computed(() => !editor.value.can().liftListItem("listItem")),
+    clickHandler: () =>
+      editor.value.chain().focus().liftListItem("listItem").run(),
+    tooltipText: "Unindent list item",
+    iconName: "format_indent_decrease",
+  },
+  {
+    ariaLabel: "Insert a link",
+    isActive: computed(() => editor.value.isActive("link")),
+    clickHandler: () => setLink(),
+    tooltipText: "Insert link",
+    iconName: "insert_link",
+  },
+  {
+    ariaLabel: "Unset a link",
+    isActive: computed(() => editor.value.isActive("link")),
+    clickHandler: () => editor.value.chain().focus().unsetLink().run(),
+    tooltipText: "Unset link",
+    iconName: "link_off",
+  },
 ])
 
 function submitHandler() {
