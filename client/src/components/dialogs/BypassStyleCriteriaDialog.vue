@@ -16,17 +16,17 @@
         </div>
       </q-card-section>
 
-      <q-card-actions align="center">
+      <q-card-actions align="around" class="q-pb-md">
         <q-btn
           flat
+          color="negative"
           label="Post comment as is"
           data-cy="dirtyYesPostComment"
           @click="onDialogOK"
         />
         <q-btn
-          flat
-          label="Go back and add style criteria"
-          color="primary"
+          label="add style criteria"
+          color="positive"
           data-cy="dirtyNoGoBack"
           @click="onDialogCancel"
         />
