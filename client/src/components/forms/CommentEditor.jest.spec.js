@@ -1,38 +1,46 @@
 import CommentEditor from "./CommentEditor.vue"
+import flushPromises from "flush-promises"
+import { createMockClient } from "mock-apollo-client"
 import { mount } from "@vue/test-utils"
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-jest"
-import { ref as mockRef } from "vue"
-
-jest.mock("src/use/forms", () => ({
-  ...jest.requireActual("src/use/forms"),
-  useDirtyGuard: () => {},
-  useFormState: () => ({
-    dirty: mockRef(false),
-    saved: mockRef(false),
-    state: mockRef("idle"),
-    queryLoading: mockRef(false),
-    mutationLoading: mockRef(false),
-    errorMessage: mockRef(""),
-  }),
-}))
 
 installQuasarPlugin()
 describe("CommentEditor", () => {
-  const makeWrapper = (props = {}) => {
-    return mount(CommentEditor, {
-      global: {
-        mocks: {
-          $t: (t) => t,
-        },
-      },
-      props: {
-        ...props,
-      },
+  const wrapperFactory = (mocks = []) => {
+    const mockClient = createMockClient()
+
+    mocks?.forEach((mock) => {
+      mockClient.setRequestHandler(...mock)
     })
+
+    return {
+      wrapper: mount(CommentEditor, {
+        global: {
+          mocks: {
+            $t: (t) => t,
+          },
+        },
+      }),
+      mockClient,
+    }
   }
 
   test("able to mount", () => {
-    const wrapper = makeWrapper()
+    const { wrapper } = wrapperFactory()
     expect(wrapper).toBeTruthy()
+  })
+
+  test.each([
+    // ["relevance"],
+    // ["accessibility"],
+    // ["coherence"],
+    ["scholarly_dialogue"],
+  ])("recognizes if style criteria are selected", async (fieldRef) => {
+    const { wrapper } = wrapperFactory()
+    const field = wrapper.findComponent({ ref: fieldRef })
+    console.log(wrapper)
+    field.trigger("click")
+    await flushPromises()
+    expect(wrapper.vm.hasStyleCriteria).equals(true)
   })
 })

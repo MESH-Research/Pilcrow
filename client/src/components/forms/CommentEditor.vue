@@ -13,6 +13,7 @@
     <div class="q-pa-md q-gutter-y-sm column">
       <q-toggle
         v-for="criteria in styleCriteria"
+        :ref="criteria.ref"
         :key="criteria.id"
         v-model="criteria.selected"
         :label="criteria.label"
@@ -164,21 +165,25 @@ const styleCriteria = ref([
   {
     id: 1,
     label: "Relevance",
+    ref: "relevance",
     selected: false,
   },
   {
     id: 2,
     label: "Accessibility",
+    ref: "accessibility",
     selected: false,
   },
   {
     id: 3,
     label: "Coherence",
+    ref: "coherence",
     selected: false,
   },
   {
     id: 4,
     label: "Scholarly Dialogue",
+    ref: "scholarly_dialogue",
     selected: false,
   },
 ])
