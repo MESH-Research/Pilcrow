@@ -46,7 +46,9 @@ function dirtyDialog() {
 const editor = useEditor({
   injectCSS: true,
   extensions: [
-    StarterKit,
+    StarterKit.configure({
+      heading: false,
+    }),
     Bold,
     Italic,
     BulletList,
