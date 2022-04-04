@@ -23,18 +23,18 @@
 </template>
 
 <script setup>
-import { useEditor, EditorContent } from "@tiptap/vue-3"
-import StarterKit from "@tiptap/starter-kit"
-import Bold from "@tiptap/extension-bold"
-import Italic from "@tiptap/extension-italic"
-import BulletList from "@tiptap/extension-bullet-list"
-import OrderedList from "@tiptap/extension-ordered-list"
-import Link from "@tiptap/extension-link"
-import Placeholder from "@tiptap/extension-placeholder"
 import { ref, computed } from "vue"
-import CommentEditorButton from "../atoms/CommentEditorButton.vue"
-import BypassStyleCriteriaDialogVue from "../dialogs/BypassStyleCriteriaDialog.vue"
+import { useEditor, EditorContent } from "@tiptap/vue-3"
 import { useQuasar } from "quasar"
+import Bold from "@tiptap/extension-bold"
+import BulletList from "@tiptap/extension-bullet-list"
+import BypassStyleCriteriaDialogVue from "../dialogs/BypassStyleCriteriaDialog.vue"
+import CommentEditorButton from "../atoms/CommentEditorButton.vue"
+import Italic from "@tiptap/extension-italic"
+import Link from "@tiptap/extension-link"
+import OrderedList from "@tiptap/extension-ordered-list"
+import Placeholder from "@tiptap/extension-placeholder"
+import StarterKit from "@tiptap/starter-kit"
 
 const { dialog } = useQuasar()
 function dirtyDialog() {
