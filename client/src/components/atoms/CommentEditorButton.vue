@@ -9,7 +9,13 @@
     :disabled="props.isDisabled"
     @click="props.clickHandler"
   >
-    <q-tooltip class="bg-primary">{{ props.tooltipText }}</q-tooltip>
+    <q-tooltip
+      class="bg-primary"
+      anchor="top middle"
+      self="bottom middle"
+      :offset="[0, 5]"
+      >{{ props.tooltipText }}</q-tooltip
+    >
     <q-icon :name="props.iconName"></q-icon>
   </q-btn>
 </template>
