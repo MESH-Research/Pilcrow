@@ -197,7 +197,6 @@ const hasStyleCriteria = computed(() => {
   background-color: #efefef;
   border-radius: 5px;
   border: 1px solid rgb(56, 118, 187);
-  margin-top: 10px;
 }
 .ProseMirror {
   background: #ddd;
