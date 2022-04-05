@@ -18,4 +18,10 @@ describe("AvatarImage Component", () => {
     const wrapper = factory("test@ccrproject.dev")
     expect(wrapper.vm.avatarSrc).toBe("avatar-yellow.png")
   })
+
+  it("finds an element", () => {
+    const wrapper = factory("test@ccrproject.dev")
+    const element = wrapper.find("toggle_ref")
+    expect(element).toBeTruthy()
+  })
 })

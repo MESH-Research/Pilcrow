@@ -1,10 +1,16 @@
 <template>
   <q-avatar v-bind="{ ...$attrs, ...$props }">
-    <q-img :src="avatarSrc" alt="User Avatar" />
+    <q-img ref="image_ref" :src="avatarSrc" alt="User Avatar" />
+    <div class="q-pa-md q-gutter-y-sm column">
+      <input type="checkbox" />
+      <q-toggle :ref="refAttr" v-model="value" color="red" label="Example" />
+    </div>
   </q-avatar>
 </template>
 
 <script>
+import { ref } from "vue"
+
 const stringToInt = (s) => {
   var hash = 0,
     i,
@@ -25,6 +31,12 @@ export default {
       type: Object,
       required: true,
     },
+  },
+  setup() {
+    return {
+      value: ref(true),
+      refAttr: ref("toggle_ref"),
+    }
   },
   computed: {
     avatarSrc() {
