@@ -23,8 +23,23 @@ class StyleCriteriaFactory extends Factory
     public function definition()
     {
         return [
-            'name' => $this->faker->word(),
+            'name' => $this->faker->streetName,
             'description' => $this->faker->paragraph(3, true),
+            'icon' => $this->faker->randomElement($this->iconOptions),
         ];
     }
+
+    public $iconOptions = [
+        'ac_unit', 'bungalow', 'corporate_fare', 'escalator_warning', 'grass', 'night_shelter', 'pool',
+        'sports_bar', 'wash', 'airport_shuttle', 'business_center', 'cottage', 'family_restroom',
+        'holiday_village', 'no_backpack', 'rice_bowl', 'stairs', 'water_damage', 'all_inclusive',
+        'cabin', 'countertops', 'fence', 'hot_tub', 'no_cell', 'roofing', 'storefront', 'wheelchair_pickup',
+        'apartment', 'carpenter', 'crib', 'fire_extinguisher', 'house', 'no_drinks', 'room_preferences', 'stroller',
+        'baby_changing_station', 'casino', 'desk', 'fitness_center', 'house_siding', 'no_flash', 'room_service',
+        'backpack', 'chalet', 'do_not_step', 'food_bank', 'houseboat', 'no_food', 'rv_hookup', 'tty',
+        'balcony', 'charging_station', 'do_not_touch', 'foundation', 'iron', 'no_meeting_room', 'smoke_free',
+        'bathtub', 'checkroom', 'dry', 'free_breakfast', 'kitchen', 'no_photography', 'smoking_rooms', 'vape_free',
+        'beach_access', 'child_care', 'elevator', 'gite', 'meeting_room', 'no_stroller', 'soap', 'vaping_rooms',
+        'bento', 'child_friendly', 'escalator', 'golf_course', 'microwave', 'other_houses', 'spa', 'villa',
+    ];
 }
