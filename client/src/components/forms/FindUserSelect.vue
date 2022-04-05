@@ -33,6 +33,9 @@
         </q-item-section>
       </q-item>
     </template>
+    <template v-for="(_, name) in $slots" #[name]="slotData">
+      <slot :name="name" v-bind="{ ...slotData }" />
+    </template>
   </q-select>
 </template>
 
@@ -55,7 +58,6 @@ const props = defineProps({
     default: "",
   },
 })
-
 const emit = defineEmits(["update:modelValue"])
 
 function onSelectUpdate(newValue) {
