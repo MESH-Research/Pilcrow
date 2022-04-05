@@ -1,5 +1,5 @@
 <template>
-  <div v-if="editor" class="q-mx-md q-pa-md tiptap-editor">
+  <q-card v-if="editor" class="q-ma-md q-pa-md tiptap-editor">
     <q-btn-group spread unelevated class="block text-center q-pb-md">
       <comment-editor-button
         v-for="(button, index) in commentEditorButtons"
@@ -20,7 +20,7 @@
       />
     </div>
     <q-btn color="primary" @click="submitHandler()">Submit</q-btn>
-  </div>
+  </q-card>
 </template>
 
 <script setup>

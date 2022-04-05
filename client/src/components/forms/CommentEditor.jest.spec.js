@@ -1,5 +1,5 @@
 import CommentEditor from "./CommentEditor.vue"
-// import flushPromises from "flush-promises"
+import flushPromises from "flush-promises"
 import { mount } from "@vue/test-utils"
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-jest"
 
@@ -21,11 +21,15 @@ describe("CommentEditor", () => {
     expect(wrapper.vm.hasStyleCriteria).toBe(false)
   })
 
-  it("recognizes if style criteria are selected", async () => {
+  test.each([
+    ["relevance"],
+    // ["accessibility"],
+    // ["coherence"],
+    // ["scholarly_dialogue"],
+  ])("recognizes if style criteria are selected", async (refAttr) => {
     const { wrapper } = wrapperFactory()
-    // const field = wrapper.findComponent({ ref: refAttr })
-    // await wrapper.findComponent({ ref: "relevance" }).trigger("click")
-    // await flushPromises()
+    console.log(wrapper)
+    await wrapper.findComponent({ ref: refAttr }).trigger("click")
     expect(wrapper.vm.hasStyleCriteria).toBe(false)
   })
 })
