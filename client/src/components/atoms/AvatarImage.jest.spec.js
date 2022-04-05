@@ -21,7 +21,7 @@ describe("AvatarImage Component", () => {
 
   it("finds an element", () => {
     const wrapper = factory("test@ccrproject.dev")
-    const element = wrapper.find("toggle_ref")
+    const element = wrapper.findComponent({ ref: "toggle_ref" })
     expect(element).toBeTruthy()
   })
 })
