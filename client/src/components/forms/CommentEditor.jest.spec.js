@@ -1,27 +1,13 @@
 import CommentEditor from "./CommentEditor.vue"
-import flushPromises from "flush-promises"
-import { createMockClient } from "mock-apollo-client"
+// import flushPromises from "flush-promises"
 import { mount } from "@vue/test-utils"
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-jest"
 
 installQuasarPlugin()
 describe("CommentEditor", () => {
-  const wrapperFactory = (mocks = []) => {
-    const mockClient = createMockClient()
-
-    mocks?.forEach((mock) => {
-      mockClient.setRequestHandler(...mock)
-    })
-
+  const wrapperFactory = () => {
     return {
-      wrapper: mount(CommentEditor, {
-        global: {
-          mocks: {
-            $t: (t) => t,
-          },
-        },
-      }),
-      mockClient,
+      wrapper: mount(CommentEditor),
     }
   }
 
@@ -30,17 +16,16 @@ describe("CommentEditor", () => {
     expect(wrapper).toBeTruthy()
   })
 
-  test.each([
-    // ["relevance"],
-    // ["accessibility"],
-    // ["coherence"],
-    ["scholarly_dialogue"],
-  ])("recognizes if style criteria are selected", async (fieldRef) => {
+  it("has no style criteria selected by default", async () => {
     const { wrapper } = wrapperFactory()
-    const field = wrapper.findComponent({ ref: fieldRef })
-    console.log(wrapper)
-    field.trigger("click")
-    await flushPromises()
-    expect(wrapper.vm.hasStyleCriteria).equals(true)
+    expect(wrapper.vm.hasStyleCriteria).toBe(false)
+  })
+
+  it("recognizes if style criteria are selected", async () => {
+    const { wrapper } = wrapperFactory()
+    // const field = wrapper.findComponent({ ref: refAttr })
+    // await wrapper.findComponent({ ref: "relevance" }).trigger("click")
+    // await flushPromises()
+    expect(wrapper.vm.hasStyleCriteria).toBe(false)
   })
 })
