@@ -188,6 +188,12 @@ export const GET_PUBLICATION = gql`
       id
       name
       is_publicly_visible
+      style_criterias {
+        name
+        id
+        icon
+        description
+      }
       users {
         name
         email

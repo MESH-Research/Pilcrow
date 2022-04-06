@@ -28,7 +28,10 @@
         <recent-submissions />
       </div>
       <div class="col-md-4">
-        <publication-users :publication="publication" />
+        <div class="column q-gutter-md">
+          <publication-users :publication="publication" />
+          <publication-style-criteria :publication="publication" />
+        </div>
       </div>
     </div>
   </article>
@@ -39,6 +42,7 @@ import PublicationUsers from "src/components/PublicationUsers.vue"
 import { GET_PUBLICATION } from "src/graphql/queries"
 import { useQuery, useResult } from "@vue/apollo-composable"
 import RecentSubmissions from "../../components/RecentSubmissions.vue"
+import PublicationStyleCriteria from "src/components/PublicationStyleCriteria.vue"
 const props = defineProps({
   id: {
     type: String,
