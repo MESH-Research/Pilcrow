@@ -2,14 +2,33 @@
 import { mount } from "@vue/test-utils"
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-jest"
 import CommentEditor from "./CommentEditor.vue"
+import flushPromises from "flush-promises"
+
+const mockDialog = jest.fn()
+jest.mock("quasar", () => ({
+  ...jest.requireActual("quasar"),
+  useQuasar: () => ({
+    dialog: mockDialog,
+  }),
+}))
 
 installQuasarPlugin()
 describe("CommentEditor", () => {
+  const dialogReturn = {
+    onOk: () => dialogReturn,
+    onCancel: () => dialogReturn,
+  }
+
+  mockDialog.mockImplementation(() => dialogReturn)
   const wrapperFactory = () => {
     return {
       wrapper: mount(CommentEditor),
     }
   }
+
+  beforeEach(() => {
+    jest.clearAllMocks()
+  })
 
   test("able to mount", () => {
     const { wrapper } = wrapperFactory()
@@ -21,15 +40,23 @@ describe("CommentEditor", () => {
     expect(wrapper.vm.hasStyleCriteria).toBe(false)
   })
 
+  it("shows dialog if not criteria are selected", async () => {
+    const { wrapper } = wrapperFactory()
+    await flushPromises()
+    await wrapper.findComponent('[data-ref="submit"]').trigger("click")
+    expect(mockDialog).toHaveBeenCalled()
+  })
+
   test.each([
     ["relevance"],
-    // ["accessibility"],
-    // ["coherence"],
-    // ["scholarly_dialogue"],
+    ["accessibility"],
+    ["coherence"],
+    ["scholarly_dialogue"],
   ])("recognizes if style criteria are selected", async (refAttr) => {
     const { wrapper } = wrapperFactory()
-    console.log(wrapper)
-    await wrapper.findComponent({ ref: refAttr }).trigger("click")
-    expect(wrapper.vm.hasStyleCriteria).toBe(false)
+    await flushPromises()
+    await wrapper.findComponent(`[data-ref="${refAttr}"]`).trigger("click")
+    expect(wrapper.vm.hasStyleCriteria).toBe(true)
+    expect(mockDialog).not.toHaveBeenCalled()
   })
 })

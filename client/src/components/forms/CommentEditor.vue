@@ -13,13 +13,15 @@
     <div class="q-pa-md q-gutter-y-sm column">
       <q-toggle
         v-for="criteria in styleCriteria"
-        :ref="criteria.refAttr"
         :key="criteria.id"
         v-model="criteria.selected"
+        :data-ref="criteria.refAttr"
         :label="criteria.label"
       />
     </div>
-    <q-btn color="primary" @click="submitHandler()">Submit</q-btn>
+    <q-btn data-ref="submit" color="primary" @click="submitHandler()"
+      >Submit</q-btn
+    >
   </q-card>
 </template>
 
