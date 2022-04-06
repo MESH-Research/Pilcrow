@@ -37,6 +37,24 @@
     </div>
   </div>
   <article class="col-sm-9 submission-content">
+    <editor-content :editor="editor" />
+  </article>
+</template>
+<script setup>
+import { ref } from "vue"
+import { Editor, EditorContent } from "@tiptap/vue-3"
+import StarterKit from "@tiptap/starter-kit"
+
+let darkMode = ref(true)
+function toggleDarkMode() {
+  darkMode.value = !darkMode.value
+}
+const fonts = ["Sans-serif", "Serif"]
+let selectedFont = ref("San-serif")
+
+const editor = new Editor({
+  editable: false,
+  content: `
     <h1>Et Sollicitudin Ac Orci</h1>
     <p>
       Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
@@ -123,16 +141,9 @@
       dignissim. Condimentum id venenatis a condimentum vitae sapien
       pellentesque.
     </p>
-  </article>
-</template>
-<script setup>
-import { ref } from "vue"
-let darkMode = ref(true)
-let selectedFont = ref("San-serif")
-function toggleDarkMode() {
-  darkMode.value = !darkMode.value
-}
-const fonts = ["Sans-serif", "Serif"]
+      `,
+  extensions: [StarterKit],
+})
 </script>
 
 <style lang="sass" scoped>
