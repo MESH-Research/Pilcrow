@@ -43,6 +43,7 @@
 <script setup>
 import { ref } from "vue"
 import { Editor, EditorContent } from "@tiptap/vue-3"
+import Highlight from "@tiptap/extension-highlight"
 import StarterKit from "@tiptap/starter-kit"
 
 let darkMode = ref(true)
@@ -63,11 +64,9 @@ const editor = new Editor({
       justo donec enim diam vulputate ut. Eget lorem dolor sed viverra ipsum
       nunc. Ut tortor pretium viverra suspendisse potenti nullam ac tortor
       vitae.
-      <span class="highlight"
-        >Et sollicitudin ac orci phasellus egestas tellus rutrum tellus. Et
+      <mark>Et sollicitudin ac orci phasellus egestas tellus rutrum tellus. Et
         egestas quis ipsum suspendisse ultrices gravida. In est ante in nibh
-        mauris cursus mattis.</span
-      >
+        mauris cursus mattis.</mark>
       Amet purus gravida quis blandit turpis cursus. Auctor neque vitae tempus
       quam pellentesque nec nam aliquam sem. At consectetur lorem donec massa
       sapien faucibus. Et ultrices neque ornare aenean. Hac habitasse platea
@@ -107,11 +106,9 @@ const editor = new Editor({
       rhoncus dolor purus non enim. In nisl nisi scelerisque eu ultrices. Tempor
       commodo ullamcorper a lacus vestibulum. Nisl nisi scelerisque eu ultrices
       vitae auctor eu. Urna id volutpat
-      <span class="highlight"
-        >lacus laoreet non curabitur. Dolor magna eget est lorem ipsum dolor.
+      <mark>lacus laoreet non curabitur. Dolor magna eget est lorem ipsum dolor.
         Mauris vitae ultricies leo integer malesuada nunc vel risus
-        commodo.</span
-      >
+        commodo.</mark>
     </p>
     <h3>Commodo quis</h3>
     <p>
@@ -142,37 +139,41 @@ const editor = new Editor({
       pellentesque.
     </p>
       `,
-  extensions: [StarterKit],
+  extensions: [StarterKit, Highlight],
 })
 </script>
 
-<style lang="sass" scoped>
-.submission-content
-  counter-reset: paragraph_counter
-  font-size: 16px
-  margin: 0 auto
-  max-width: 700px
-  padding: 10px 60px 60px
+<style lang="scss">
+.submission-content {
+  counter-reset: paragraph_counter;
+  font-size: 16px;
+  margin: 0 auto;
+  max-width: 700px;
+  padding: 10px 60px 60px;
+}
 
-.submission-content p
-  position: relative
+.submission-content p {
+  position: relative;
+}
 
-.submission-content p:before
-  color: #555
-  content: "¶ " counter(paragraph_counter)
-  counter-increment: paragraph_counter
-  display: block
-  font-family: Helvetica, Arial, san-serif
-  font-size: 1em
-  margin-right: 10px
-  min-width: 50px
-  position: absolute
-  right: 100%
-  text-align: right
-  top: 0
-  white-space: nowrap
+.submission-content p:before {
+  color: #555;
+  content: "¶ " counter(paragraph_counter);
+  counter-increment: paragraph_counter;
+  display: block;
+  font-family: Helvetica, Arial, san-serif;
+  font-size: 1em;
+  margin-right: 10px;
+  min-width: 50px;
+  position: absolute;
+  right: 100%;
+  text-align: right;
+  top: 0;
+  white-space: nowrap;
+}
 
-.highlight
-  color: #000
-  background-color: #bbe2e8
+mark {
+  color: #000;
+  background-color: #bbe2e8;
+}
 </style>
