@@ -1,5 +1,10 @@
 <template>
-  <q-card v-if="editor" class="q-ma-md q-pa-md tiptap-editor">
+  <q-card
+    v-if="editor"
+    bordered
+    class="q-ma-md q-pa-md"
+    style="border-color: rgb(56, 118, 187)"
+  >
     <q-btn-group spread unelevated class="block text-center q-pb-md">
       <comment-editor-button
         v-for="(button, index) in commentEditorButtons"
@@ -195,10 +200,6 @@ const hasStyleCriteria = computed(() => {
 })
 </script>
 <style>
-.tiptap-editor {
-  background-color: #efefef;
-  border: 1px solid rgb(56, 118, 187);
-}
 .ProseMirror {
   background: #ddd;
   border-radius: 5px;
