@@ -97,7 +97,6 @@ describe("Nofitication Popup", () => {
     mockClient.setRequestHandler(CURRENT_USER_NOTIFICATIONS, queryHandler)
     wrapper.vm.isExpanded = true
     await flushPromises()
-    console.log(wrapper)
     expect(wrapper.findAllComponents({ ref: "default_message" })).toHaveLength(
       0
     )

@@ -197,7 +197,6 @@ const hasStyleCriteria = computed(() => {
 <style>
 .tiptap-editor {
   background-color: #efefef;
-  border-radius: 5px;
   border: 1px solid rgb(56, 118, 187);
 }
 .ProseMirror {

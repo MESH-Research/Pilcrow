@@ -1,4 +1,3 @@
-// import flushPromises from "flush-promises"
 import { mount } from "@vue/test-utils"
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-jest"
 import CommentEditor from "./CommentEditor.vue"
