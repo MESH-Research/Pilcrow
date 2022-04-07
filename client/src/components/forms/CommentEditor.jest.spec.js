@@ -3,6 +3,13 @@ import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-j
 import CommentEditor from "./CommentEditor.vue"
 import flushPromises from "flush-promises"
 
+jest.mock("vue-i18n", () => ({
+  useI18n: () => ({
+    te: () => true,
+    t: (t) => t,
+  }),
+}))
+
 const mockDialog = jest.fn()
 jest.mock("quasar", () => ({
   ...jest.requireActual("quasar"),
@@ -21,7 +28,13 @@ describe("CommentEditor", () => {
   mockDialog.mockImplementation(() => dialogReturn)
   const wrapperFactory = () => {
     return {
-      wrapper: mount(CommentEditor),
+      wrapper: mount(CommentEditor, {
+        global: {
+          mocks: {
+            $t: (token) => token,
+          },
+        },
+      }),
     }
   }
 
