@@ -7,27 +7,26 @@
         </div>
         <div class="column justify-center q-pr-md">
           <p class="q-ml-sm q-mb-none">
-            Style criteria are an important part of
-            <abbr title="Formative Peer Review">FPR</abbr>.
+            {{ $t("dialog.bypassStyleCriteria.line_1") }}
           </p>
           <p class="q-ml-sm q-mb-none">
-            Are you sure you do not want to associate one with this comment?
+            {{ $t("dialog.bypassStyleCriteria.line_2") }}
           </p>
         </div>
       </q-card-section>
 
       <q-card-actions align="around" class="q-pb-md">
         <q-btn
-          flat
-          color="negative"
-          label="Post comment as is"
           data-cy="dirtyYesPostComment"
+          :label="$t('dialog.bypassStyleCriteria.action_submit')"
+          color="negative"
+          flat
           @click="onDialogOK"
         />
         <q-btn
-          label="add style criteria"
-          color="positive"
           data-cy="dirtyNoGoBack"
+          :label="$t('dialog.bypassStyleCriteria.action_cancel')"
+          color="positive"
           @click="onDialogCancel"
         />
       </q-card-actions>

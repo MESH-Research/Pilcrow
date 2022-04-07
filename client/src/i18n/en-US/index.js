@@ -453,4 +453,13 @@ export default {
       },
     },
   },
+  dialog: {
+    bypassStyleCriteria: {
+      line_1: "Style criteria are an important part of Formative Peer Review.",
+      line_2:
+        "Are you sure you do not want to associate one with this comment?",
+      action_submit: "Post comment as is",
+      action_cancel: "Add style criteria",
+    },
+  },
 }
