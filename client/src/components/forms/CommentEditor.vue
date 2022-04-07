@@ -24,9 +24,9 @@
         :label="criteria.label"
       />
     </div>
-    <q-btn data-ref="submit" color="primary" @click="submitHandler()"
-      >Submit</q-btn
-    >
+    <q-btn data-ref="submit" color="primary" @click="submitHandler()">{{
+      $t("guiElements.form.submit")
+    }}</q-btn>
   </q-card>
 </template>
 
@@ -39,6 +39,7 @@ import Link from "@tiptap/extension-link"
 import Placeholder from "@tiptap/extension-placeholder"
 import CommentEditorButton from "../atoms/CommentEditorButton.vue"
 import BypassStyleCriteriaDialogVue from "../dialogs/BypassStyleCriteriaDialog.vue"
+import { useI18n } from "vue-i18n"
 
 const { dialog } = useQuasar()
 function dirtyDialog() {
@@ -47,6 +48,7 @@ function dirtyDialog() {
   })
 }
 
+const { t } = useI18n()
 const editor = useEditor({
   injectCSS: true,
   extensions: [
@@ -62,68 +64,68 @@ const editor = useEditor({
       openOnClick: false,
     }),
     Placeholder.configure({
-      placeholder: "Add a comment …",
+      placeholder: t("submissions.comment.placeholder"),
     }),
   ],
 })
 
 const commentEditorButtons = ref([
   {
-    ariaLabel: "Toggle bold selected text",
+    ariaLabel: "guiElements.button.bold.ariaLabel",
     isActive: computed(() => editor.value.isActive("bold")),
     clickHandler: () => editor.value.chain().focus().toggleBold().run(),
-    tooltipText: "Bold",
+    tooltipText: "guiElements.button.bold.tooltipText",
     iconName: "format_bold",
   },
   {
-    ariaLabel: "Toggle italic selected text",
+    ariaLabel: "guiElements.button.italic.ariaLabel",
     isActive: computed(() => editor.value.isActive("italic")),
     clickHandler: () => editor.value.chain().focus().toggleItalic().run(),
-    tooltipText: "Italic",
+    tooltipText: "guiElements.button.italic.tooltipText",
     iconName: "format_italic",
   },
   {
-    ariaLabel: "Toggle bulleted list",
+    ariaLabel: "guiElements.button.bulletedList.ariaLabel",
     isActive: computed(() => editor.value.isActive("bulletList")),
     clickHandler: () => editor.value.chain().focus().toggleBulletList().run(),
-    tooltipText: "Bulleted list",
+    tooltipText: "guiElements.button.bulletedList.tooltipText",
     iconName: "list",
   },
   {
-    ariaLabel: "Toggle numbered list",
+    ariaLabel: "guiElements.button.numberedList.ariaLabel",
     isActive: computed(() => editor.value.isActive("orderedList")),
     clickHandler: () => editor.value.chain().focus().toggleOrderedList().run(),
-    tooltipText: "Numbered list",
+    tooltipText: "guiElements.button.numberedList.tooltipText",
     iconName: "format_list_numbered",
   },
   {
-    ariaLabel: "Indent list item",
+    ariaLabel: "guiElements.button.indent.ariaLabel",
     isDisabled: computed(() => !editor.value.can().sinkListItem("listItem")),
     clickHandler: () =>
       editor.value.chain().focus().sinkListItem("listItem").run(),
-    tooltipText: "Indent list item",
+    tooltipText: "guiElements.button.indent.tooltipText",
     iconName: "format_indent_increase",
   },
   {
-    ariaLabel: "Unindent list item",
+    ariaLabel: "guiElements.button.unindent.ariaLabel",
     isDisabled: computed(() => !editor.value.can().liftListItem("listItem")),
     clickHandler: () =>
       editor.value.chain().focus().liftListItem("listItem").run(),
-    tooltipText: "Unindent list item",
+    tooltipText: "guiElements.button.unindent.tooltipText",
     iconName: "format_indent_decrease",
   },
   {
-    ariaLabel: "Insert a link",
+    ariaLabel: "guiElements.button.link.ariaLabel",
     isActive: computed(() => editor.value.isActive("link")),
     clickHandler: () => setLink(),
-    tooltipText: "Insert link",
+    tooltipText: "guiElements.button.link.tooltipText",
     iconName: "insert_link",
   },
   {
-    ariaLabel: "Unset a link",
+    ariaLabel: "guiElements.button.unlink.ariaLabel",
     isActive: computed(() => editor.value.isActive("link")),
     clickHandler: () => editor.value.chain().focus().unsetLink().run(),
-    tooltipText: "Unset link",
+    tooltipText: "guiElements.button.unlink.tooltipText",
     iconName: "link_off",
   },
 ])

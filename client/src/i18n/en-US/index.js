@@ -369,6 +369,7 @@ export default {
     },
     comment: {
       actions_btn_aria: "Comment Actions",
+      placeholder: "Add a comment …",
     },
   },
   failures: {
@@ -413,6 +414,43 @@ export default {
   guiElements: {
     feedbackMessage: {
       closeButton: "Close",
+    },
+    form: {
+      submit: "Submit",
+    },
+    button: {
+      bold: {
+        ariaLabel: "Toggle bold on selected text",
+        tooltipText: "Bold",
+      },
+      italic: {
+        ariaLabel: "Toggle italics on selected text",
+        tooltipText: "Italics",
+      },
+      bulletedList: {
+        ariaLabel: "Toggle bulleted list",
+        tooltipText: "Bulleted list",
+      },
+      numberedList: {
+        ariaLabel: "Toggle numbered list",
+        tooltipText: "Numbered list",
+      },
+      indent: {
+        ariaLabel: "Indent list item",
+        tooltipText: "Indent list item",
+      },
+      unindent: {
+        ariaLabel: "Unindent list item",
+        tooltipText: "Unindent list item",
+      },
+      link: {
+        ariaLabel: "Insert a link",
+        tooltipText: "Insert link",
+      },
+      unlink: {
+        ariaLabel: "Unset a link",
+        tooltipText: "Unset link",
+      },
     },
   },
 }
