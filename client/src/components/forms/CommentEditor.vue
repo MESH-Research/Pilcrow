@@ -1,10 +1,6 @@
 <template>
-  <q-card
-    v-if="editor"
-    bordered
-    class="q-ma-md q-pa-md"
-    style="border-color: rgb(56, 118, 187)"
-  >
+  <q-card v-if="editor" flat class="bg-grey-1">
+    <!-- <div class="text-h4 q-pl-sm">Your Reply</div> -->
     <q-btn-group spread unelevated class="block text-center q-pb-md">
       <comment-editor-button
         v-for="(button, index) in commentEditorButtons"
@@ -15,7 +11,7 @@
     <div class="editor">
       <editor-content :editor="editor" />
     </div>
-    <div class="q-pa-md q-gutter-y-sm column">
+    <div v-if="props.isInlineComment" class="q-pa-md q-gutter-y-sm column">
       <q-toggle
         v-for="criteria in styleCriteria"
         :key="criteria.id"
@@ -24,9 +20,11 @@
         :label="criteria.label"
       />
     </div>
-    <q-btn data-ref="submit" color="primary" @click="submitHandler()">{{
-      $t("guiElements.form.submit")
-    }}</q-btn>
+    <q-card-actions class="q-mt-md q-pa-none">
+      <q-btn data-ref="submit" color="primary" @click="submitHandler()">{{
+        $t("guiElements.form.submit")
+      }}</q-btn>
+    </q-card-actions>
   </q-card>
 </template>
 
@@ -47,6 +45,12 @@ function dirtyDialog() {
     component: BypassStyleCriteriaDialogVue,
   })
 }
+const props = defineProps({
+  isInlineComment: {
+    type: Boolean,
+    default: false,
+  },
+})
 
 const { t } = useI18n()
 const editor = useEditor({

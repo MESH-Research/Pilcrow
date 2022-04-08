@@ -19,7 +19,13 @@
           <div id="inline_comments_section" class="q-pa-md">
             <span class="text-h3"> Inline Comments </span>
           </div>
-          <comment-editor />
+          <q-card
+            class="q-ma-md q-pa-md"
+            bordered
+            style="border-color: rgb(56, 118, 187)"
+          >
+            <comment-editor :is-inline-comment="true" />
+          </q-card>
           <submission-comment is-inline-comment />
           <submission-comment is-inline-comment />
           <div class="row justify-center q-pa-md q-pb-xl">
