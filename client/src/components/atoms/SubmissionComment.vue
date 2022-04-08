@@ -65,8 +65,10 @@
       <q-chip size="16px" icon="bookmark"> Coherence </q-chip>
     </q-card-section>
 
-    <q-card-section class="q-pa-md">
-      <comment-editor v-if="isReplying" :is-inline-comment="false" />
+    <q-card-section v-if="isReplying" class="q-pa-md">
+      <q-separator class="q-mb-md" />
+      <span class="text-h4 q-pl-sm">Your Reply</span>
+      <comment-editor :is-inline-comment="false" />
     </q-card-section>
     <q-card-actions class="q-pa-md q-pb-lg">
       <q-btn

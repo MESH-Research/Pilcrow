@@ -20,7 +20,7 @@
             <span class="text-h3"> Inline Comments </span>
           </div>
           <q-card
-            class="q-ma-md q-pa-md"
+            class="q-ma-md q-pa-md bg-grey-1"
             bordered
             style="border-color: rgb(56, 118, 187)"
           >

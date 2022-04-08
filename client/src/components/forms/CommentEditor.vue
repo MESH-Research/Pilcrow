@@ -1,6 +1,5 @@
 <template>
   <q-card v-if="editor" flat class="bg-grey-1">
-    <!-- <div class="text-h4 q-pl-sm">Your Reply</div> -->
     <q-btn-group spread unelevated class="block text-center q-pb-md">
       <comment-editor-button
         v-for="(button, index) in commentEditorButtons"
@@ -11,19 +10,52 @@
     <div class="editor">
       <editor-content :editor="editor" />
     </div>
-    <div v-if="props.isInlineComment" class="q-pa-md q-gutter-y-sm column">
-      <q-toggle
-        v-for="criteria in styleCriteria"
-        :key="criteria.id"
-        v-model="criteria.selected"
-        :data-ref="criteria.refAttr"
-        :label="criteria.label"
-      />
+    <div v-if="props.isInlineComment" class="q-py-md q-gutter-y-sm column">
+      <q-list>
+        <q-expansion-item
+          v-for="criteria in styleCriteria"
+          :key="criteria.id"
+          v-model="criteria.selected"
+          style="padding: 0"
+        >
+          <template #header>
+            <q-item-section avatar>
+              <q-icon :name="criteria.icon" size="sm" color="secondary" />
+            </q-item-section>
+            <q-item-section>{{ criteria.label }}</q-item-section>
+            <q-item-section avatar>
+              <q-toggle
+                v-model="criteria.selected"
+                size="lg"
+                :data-ref="criteria.refAttr"
+              />
+            </q-item-section>
+          </template>
+          <ul>
+            <li>
+              Does the composer identify claims that support their argument?
+            </li>
+            <li>
+              How does the composer explain how the claims are related to each
+              other and the larger argument?
+            </li>
+            <li>
+              Does the composer provide compelling evidence in support of their
+              claims?
+            </li>
+            <li>
+              For more creative works, how does the composer convey their
+              intended message to readers, listeners, and/or reviewers?
+            </li>
+          </ul>
+        </q-expansion-item>
+      </q-list>
     </div>
-    <q-card-actions class="q-mt-md q-pa-none">
+    <q-card-actions class="q-mt-md q-pa-none" align="between">
       <q-btn data-ref="submit" color="primary" @click="submitHandler()">{{
         $t("guiElements.form.submit")
       }}</q-btn>
+      <q-btn flat>Cancel</q-btn>
     </q-card-actions>
   </q-card>
 </template>
@@ -180,24 +212,28 @@ const styleCriteria = ref([
     label: "Relevance",
     refAttr: "relevance",
     selected: false,
+    icon: "close_fullscreen",
   },
   {
     id: 2,
     label: "Accessibility",
     refAttr: "accessibility",
     selected: false,
+    icon: "accessibility",
   },
   {
     id: 3,
     label: "Coherence",
     refAttr: "coherence",
     selected: false,
+    icon: "psychology",
   },
   {
     id: 4,
     label: "Scholarly Dialogue",
     refAttr: "scholarly_dialogue",
     selected: false,
+    icon: "question_answer",
   },
 ])
 
