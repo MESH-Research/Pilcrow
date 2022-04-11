@@ -1,6 +1,6 @@
 <template>
   <q-btn
-    :aria-label="$t(props.ariaLabel)"
+    :aria-label="props.ariaLabel"
     color="black"
     outline
     dense
@@ -14,7 +14,7 @@
       anchor="top middle"
       self="bottom middle"
       :offset="[0, 5]"
-      >{{ $t(props.tooltipText) }}</q-tooltip
+      >{{ props.tooltipText }}</q-tooltip
     >
     <q-icon :name="props.iconName"></q-icon>
   </q-btn>
