@@ -13,7 +13,7 @@
         v-bind="button"
       />
     </q-btn-group>
-    <div class="editor">
+    <div class="comment-editor">
       <editor-content :editor="editor" />
     </div>
     <div class="q-pa-md q-gutter-y-sm column">
@@ -203,13 +203,13 @@ const hasStyleCriteria = computed(() => {
 })
 </script>
 <style>
-.ProseMirror {
+.comment-editor .ProseMirror {
   background: #ddd;
   border-radius: 5px;
   min-height: 200px;
   padding: 8px;
 }
-.ProseMirror p.is-editor-empty:first-child::before {
+.comment-editor .ProseMirror p.is-editor-empty:first-child::before {
   color: #18453b;
   content: attr(data-placeholder);
   float: left;
