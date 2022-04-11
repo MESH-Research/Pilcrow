@@ -9,6 +9,7 @@
       <comment-editor-button
         v-for="(button, index) in commentEditorButtons"
         :key="index"
+        :aria-label="button.ariaLabel"
         v-bind="button"
       />
     </q-btn-group>

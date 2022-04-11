@@ -1,6 +1,5 @@
 <template>
   <q-btn
-    :aria-label="props.ariaLabel"
     color="black"
     outline
     dense
@@ -22,10 +21,6 @@
 
 <script setup>
 const props = defineProps({
-  ariaLabel: {
-    type: String,
-    default: "",
-  },
   isActive: {
     type: Boolean,
     default: false,
