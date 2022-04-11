@@ -17,7 +17,8 @@
           v-for="criteria in styleCriteria"
           :key="criteria.id"
           v-model="criteria.selected"
-          style="padding: 0"
+          :data-ref="criteria.refAttr"
+          :label="criteria.label"
         >
           <template #header>
             <q-item-section avatar>
