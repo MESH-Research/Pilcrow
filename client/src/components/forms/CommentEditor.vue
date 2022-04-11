@@ -1,205 +1,217 @@
 <template>
-  <div v-if="editor" class="q-mx-md q-pa-md tiptap-editor">
+  <q-card
+    v-if="editor"
+    bordered
+    class="q-ma-md q-pa-md"
+    style="border-color: rgb(56, 118, 187)"
+  >
     <q-btn-group spread unelevated class="block text-center q-pb-md">
-      <q-btn
-        aria-label="Toggle bold selected text"
-        color="black"
-        outline
-        dense
-        size="sm"
-        :class="{ 'is-active': editor.isActive('bold') }"
-        @click="editor.chain().focus().toggleBold().run()"
-      >
-        <q-tooltip class="bg-primary">Bold</q-tooltip>
-        <q-icon name="format_bold"></q-icon>
-      </q-btn>
-      <q-btn
-        aria-label="Toggle italic selected text"
-        color="black"
-        outline
-        dense
-        size="sm"
-        :class="{ 'is-active': editor.isActive('italic') }"
-        @click="editor.chain().focus().toggleItalic().run()"
-      >
-        <q-tooltip class="bg-primary">Italic</q-tooltip>
-        <q-icon name="format_italic"></q-icon>
-      </q-btn>
-      <q-btn
-        aria-label="Toggle bulleted list"
-        color="black"
-        outline
-        dense
-        size="sm"
-        :class="{ 'is-active': editor.isActive('bulletList') }"
-        @click="editor.chain().focus().toggleBulletList().run()"
-      >
-        <q-tooltip class="bg-primary">Bulleted list</q-tooltip>
-        <q-icon name="list"></q-icon>
-      </q-btn>
-      <q-btn
-        aria-label="Toggle numbered list"
-        color="black"
-        outline
-        dense
-        size="sm"
-        :class="{ 'is-active': editor.isActive('orderedList') }"
-        @click="editor.chain().focus().toggleOrderedList().run()"
-      >
-        <q-tooltip class="bg-primary">Numbered list</q-tooltip>
-        <q-icon name="format_list_numbered"></q-icon>
-      </q-btn>
-      <q-btn
-        aria-label="Indent list item"
-        color="black"
-        outline
-        dense
-        size="sm"
-        :disabled="!editor.can().sinkListItem('listItem')"
-        @click="editor.chain().focus().sinkListItem('listItem').run()"
-      >
-        <q-tooltip class="bg-primary">Indent list item</q-tooltip>
-        <q-icon name="format_indent_increase"></q-icon>
-      </q-btn>
-      <q-btn
-        aria-label="Unindent list item"
-        color="black"
-        outline
-        dense
-        size="sm"
-        :disabled="!editor.can().liftListItem('listItem')"
-        @click="editor.chain().focus().liftListItem('listItem').run()"
-      >
-        <q-tooltip class="bg-primary">Unindent list item</q-tooltip>
-        <q-icon name="format_indent_decrease"></q-icon>
-      </q-btn>
-      <q-btn
-        aria-label="Insert a link"
-        color="black"
-        outline
-        dense
-        size="sm"
-        :class="{ 'is-active': editor.isActive('link') }"
-        @click="setLink"
-      >
-        <q-tooltip class="bg-primary">Insert link</q-tooltip>
-        <q-icon name="insert_link"></q-icon>
-      </q-btn>
-      <q-btn
-        aria-label="Unset a link"
-        color="black"
-        outline
-        dense
-        size="sm"
-        :disabled="!editor.isActive('link')"
-        @click="editor.chain().focus().unsetLink().run()"
-      >
-        <q-tooltip class="bg-primary">Unset link</q-tooltip>
-        <q-icon name="link_off"></q-icon>
-      </q-btn>
-    </q-btn-group>
-    <div class="editor">
-      <editor-content
-        :editor="editor"
-        style="
-          background: #dddddd;
-          min-height: 200px !important;
-          border-radius: 5px;
-        "
-        class="q-pa-xs"
+      <comment-editor-button
+        v-for="(button, index) in commentEditorButtons"
+        :key="index"
+        :aria-label="button.ariaLabel"
+        v-bind="button"
       />
+    </q-btn-group>
+    <div class="comment-editor">
+      <editor-content :editor="editor" />
     </div>
     <div class="q-pa-md q-gutter-y-sm column">
-      <q-toggle v-model="relevance" label="Relevance" />
-      <q-toggle v-model="accessibility" label="Accessibility" />
-      <q-toggle v-model="coherence" label="Coherence" />
-      <q-toggle v-model="scholarlydialogue" label="Scholarly Dialogue" />
+      <q-toggle
+        v-for="criteria in styleCriteria"
+        :key="criteria.id"
+        v-model="criteria.selected"
+        :data-ref="criteria.refAttr"
+        :label="criteria.label"
+      />
     </div>
-    <q-btn color="primary">Submit</q-btn>
-  </div>
+    <q-btn data-ref="submit" color="primary" @click="submitHandler()">{{
+      $t("guiElements.form.submit")
+    }}</q-btn>
+  </q-card>
 </template>
 
-<script>
+<script setup>
+import { ref, computed } from "vue"
 import { useEditor, EditorContent } from "@tiptap/vue-3"
+import { useQuasar } from "quasar"
 import StarterKit from "@tiptap/starter-kit"
-import Bold from "@tiptap/extension-bold"
-import Italic from "@tiptap/extension-italic"
-import BulletList from "@tiptap/extension-bullet-list"
-import OrderedList from "@tiptap/extension-ordered-list"
 import Link from "@tiptap/extension-link"
 import Placeholder from "@tiptap/extension-placeholder"
-import { ref } from "vue"
+import CommentEditorButton from "../atoms/CommentEditorButton.vue"
+import BypassStyleCriteriaDialogVue from "../dialogs/BypassStyleCriteriaDialog.vue"
+import { useI18n } from "vue-i18n"
 
-export default {
-  components: {
-    EditorContent,
-  },
-
-  setup() {
-    const editor = useEditor({
-      injectCSS: true,
-      extensions: [
-        StarterKit,
-        Bold,
-        Italic,
-        BulletList,
-        OrderedList,
-        Link.configure({
-          openOnClick: false,
-        }),
-        Placeholder.configure({
-          placeholder: "Add a comment …",
-        }),
-      ],
-    })
-
-    function setLink() {
-      const previousUrl = editor.value.getAttributes("link").href
-      const url = window.prompt("URL", previousUrl)
-
-      // cancelled
-      if (url === null) {
-        return
-      }
-
-      // empty
-      if (url === "") {
-        editor.value.chain().focus().extendMarkRange("link").unsetLink().run()
-
-        return
-      }
-
-      // update link
-      editor.value
-        .chain()
-        .focus()
-        .extendMarkRange("link")
-        .setLink({ href: url })
-        .run()
-    }
-
-    return {
-      editor,
-      setLink,
-      relevance: ref(true),
-      accessibility: ref(true),
-      coherence: ref(true),
-      scholarlydialogue: ref(true),
-    }
-  },
+const { dialog } = useQuasar()
+function dirtyDialog() {
+  return dialog({
+    component: BypassStyleCriteriaDialogVue,
+  })
 }
+
+const { t } = useI18n()
+const editor = useEditor({
+  injectCSS: true,
+  extensions: [
+    StarterKit.configure({
+      blockquote: false,
+      codeblock: false,
+      hardbreak: false,
+      heading: false,
+      horizontalrule: false,
+      strike: false,
+    }),
+    Link.configure({
+      openOnClick: false,
+    }),
+    Placeholder.configure({
+      placeholder: t("submissions.comment.placeholder"),
+    }),
+  ],
+})
+
+const commentEditorButtons = ref([
+  {
+    ariaLabel: t("guiElements.button.bold.ariaLabel"),
+    isActive: computed(() => editor.value.isActive("bold")),
+    clickHandler: () => editor.value.chain().focus().toggleBold().run(),
+    tooltipText: t("guiElements.button.bold.tooltipText"),
+    iconName: "format_bold",
+  },
+  {
+    ariaLabel: t("guiElements.button.italic.ariaLabel"),
+    isActive: computed(() => editor.value.isActive("italic")),
+    clickHandler: () => editor.value.chain().focus().toggleItalic().run(),
+    tooltipText: t("guiElements.button.italic.tooltipText"),
+    iconName: "format_italic",
+  },
+  {
+    ariaLabel: t("guiElements.button.bulletedList.ariaLabel"),
+    isActive: computed(() => editor.value.isActive("bulletList")),
+    clickHandler: () => editor.value.chain().focus().toggleBulletList().run(),
+    tooltipText: t("guiElements.button.bulletedList.tooltipText"),
+    iconName: "list",
+  },
+  {
+    ariaLabel: t("guiElements.button.numberedList.ariaLabel"),
+    isActive: computed(() => editor.value.isActive("orderedList")),
+    clickHandler: () => editor.value.chain().focus().toggleOrderedList().run(),
+    tooltipText: t("guiElements.button.numberedList.tooltipText"),
+    iconName: "format_list_numbered",
+  },
+  {
+    ariaLabel: t("guiElements.button.indent.ariaLabel"),
+    isDisabled: computed(() => !editor.value.can().sinkListItem("listItem")),
+    clickHandler: () =>
+      editor.value.chain().focus().sinkListItem("listItem").run(),
+    tooltipText: t("guiElements.button.indent.tooltipText"),
+    iconName: "format_indent_increase",
+  },
+  {
+    ariaLabel: t("guiElements.button.unindent.ariaLabel"),
+    isDisabled: computed(() => !editor.value.can().liftListItem("listItem")),
+    clickHandler: () =>
+      editor.value.chain().focus().liftListItem("listItem").run(),
+    tooltipText: t("guiElements.button.unindent.tooltipText"),
+    iconName: "format_indent_decrease",
+  },
+  {
+    ariaLabel: t("guiElements.button.link.ariaLabel"),
+    isActive: computed(() => editor.value.isActive("link")),
+    clickHandler: () => setLink(),
+    tooltipText: t("guiElements.button.link.tooltipText"),
+    iconName: "insert_link",
+  },
+  {
+    ariaLabel: t("guiElements.button.unlink.ariaLabel"),
+    isActive: computed(() => editor.value.isActive("link")),
+    clickHandler: () => editor.value.chain().focus().unsetLink().run(),
+    tooltipText: t("guiElements.button.unlink.tooltipText"),
+    iconName: "link_off",
+  },
+])
+
+function submitHandler() {
+  if (hasStyleCriteria.value) {
+    return true
+  }
+  return new Promise((resolve) => {
+    dirtyDialog()
+      .onOk(function () {
+        resolve(true)
+      })
+      .onCancel(function () {
+        resolve(false)
+      })
+  })
+}
+
+function setLink() {
+  const previousUrl = editor.value.getAttributes("link").href
+  const url = window.prompt("URL", previousUrl)
+
+  // cancelled
+  if (url === null) {
+    return
+  }
+
+  // empty
+  if (url === "") {
+    editor.value.chain().focus().extendMarkRange("link").unsetLink().run()
+
+    return
+  }
+
+  // update link
+  editor.value
+    .chain()
+    .focus()
+    .extendMarkRange("link")
+    .setLink({ href: url })
+    .run()
+}
+
+const styleCriteria = ref([
+  {
+    id: 1,
+    label: "Relevance",
+    refAttr: "relevance",
+    selected: false,
+  },
+  {
+    id: 2,
+    label: "Accessibility",
+    refAttr: "accessibility",
+    selected: false,
+  },
+  {
+    id: 3,
+    label: "Coherence",
+    refAttr: "coherence",
+    selected: false,
+  },
+  {
+    id: 4,
+    label: "Scholarly Dialogue",
+    refAttr: "scholarly_dialogue",
+    selected: false,
+  },
+])
+
+const hasStyleCriteria = computed(() => {
+  return styleCriteria.value.some((criteria) => criteria.selected)
+})
 </script>
 <style>
-.tiptap-editor {
-  background-color: #efefef;
-  border: 1px solid rgb(56, 118, 187);
+.comment-editor .ProseMirror {
+  background: #ddd;
   border-radius: 5px;
-  margin-top: 10px;
+  min-height: 200px;
+  padding: 8px;
 }
-/* Placeholder (at the top) */
-.ProseMirror p.is-editor-empty:first-child::before {
-  content: attr(data-placeholder);
+.comment-editor .ProseMirror p.is-editor-empty:first-child::before {
   color: #18453b;
+  content: attr(data-placeholder);
   float: left;
   height: 0;
   pointer-events: none;
