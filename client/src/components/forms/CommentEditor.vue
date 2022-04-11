@@ -168,7 +168,7 @@ const commentEditorButtons = ref([
 ])
 
 function submitHandler() {
-  if (hasStyleCriteria.value) {
+  if (hasStyleCriteria.value || !props.isInlineComment) {
     return true
   }
   return new Promise((resolve) => {
