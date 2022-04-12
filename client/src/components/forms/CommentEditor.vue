@@ -24,12 +24,17 @@
             <q-item-section avatar>
               <q-icon :name="criteria.icon" size="sm" color="secondary" />
             </q-item-section>
-            <q-item-section>{{ criteria.label }}</q-item-section>
+            <q-item-section>
+              <q-item-label :id="`${criteria.refAttr}_${criteria.id}`">{{
+                criteria.label
+              }}</q-item-label>
+            </q-item-section>
             <q-item-section avatar>
               <q-toggle
                 v-model="criteria.selected"
                 size="lg"
                 :data-ref="criteria.refAttr"
+                :aria-labelledby="`${criteria.refAttr}_${criteria.id}`"
               />
             </q-item-section>
           </template>
