@@ -33,6 +33,7 @@
               />
             </q-item-section>
           </template>
+          <!-- Sample Style Criteria Description Markup -->
           <ul>
             <li>
               Does the composer identify claims that support their argument?
@@ -57,7 +58,7 @@
       <q-btn data-ref="submit" color="primary" @click="submitHandler()">{{
         $t("guiElements.form.submit")
       }}</q-btn>
-      <q-btn flat>Cancel</q-btn>
+      <q-btn flat>{{ $t("guiElements.form.cancel") }}</q-btn>
     </q-card-actions>
   </q-card>
 </template>
