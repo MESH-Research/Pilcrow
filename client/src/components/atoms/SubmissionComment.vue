@@ -65,7 +65,7 @@
       <q-chip size="16px" icon="bookmark"> Coherence </q-chip>
     </q-card-section>
 
-    <q-card-section v-if="isReplying" class="q-pa-md">
+    <q-card-section v-if="isReplying" ref="comment_reply" class="q-pa-md">
       <q-separator class="q-mb-md" />
       <span class="text-h4 q-pl-sm">{{
         $t("submissions.comment.reply.title")
@@ -75,6 +75,7 @@
     <q-card-actions class="q-pa-md q-pb-lg">
       <q-btn
         v-if="!isReplying"
+        ref="reply_button"
         bordered
         color="primary"
         label="Reply"
@@ -148,7 +149,9 @@ const props = defineProps({
     default: false,
   },
 })
+const emit = defineEmits(["reply"])
 function initiateReply() {
+  emit("reply")
   isReplying.value = true
 }
 </script>

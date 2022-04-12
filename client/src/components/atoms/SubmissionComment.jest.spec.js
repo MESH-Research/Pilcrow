@@ -37,4 +37,12 @@ describe("SubmissionComment", () => {
     const { wrapper } = wrapperFactory()
     expect(wrapper).toBeTruthy()
   })
+
+  it("reply button click triggers a reply", async () => {
+    const { wrapper } = wrapperFactory()
+    expect(wrapper.findComponent({ ref: "comment_reply" }).exists()).toBe(false)
+    const button = wrapper.findComponent({ ref: "reply_button" })
+    await button.trigger("click")
+    expect(wrapper.emitted("reply")).toBeTruthy()
+  })
 })
