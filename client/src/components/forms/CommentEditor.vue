@@ -17,7 +17,6 @@
           v-for="criteria in styleCriteria"
           :key="criteria.id"
           v-model="criteria.selected"
-          :data-ref="criteria.refAttr"
           :label="criteria.label"
         >
           <template #header>
