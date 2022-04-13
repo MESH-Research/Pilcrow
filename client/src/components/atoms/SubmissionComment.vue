@@ -68,7 +68,7 @@
     <q-card-section v-if="isReplying" class="q-pa-md">
       <q-separator class="q-mb-md" />
       <span class="text-h4 q-pl-sm">Your Reply</span>
-      <comment-editor :is-inline-comment="false" />
+      <comment-editor :is-inline-comment="false" @cancel="cancelReply" />
     </q-card-section>
     <q-card-actions class="q-pa-md q-pb-lg">
       <q-btn
@@ -148,5 +148,8 @@ const props = defineProps({
 })
 function initiateReply() {
   isReplying.value = true
+}
+function cancelReply() {
+  isReplying.value = false
 }
 </script>

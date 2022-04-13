@@ -55,7 +55,7 @@
       <q-btn data-ref="submit" color="primary" @click="submitHandler()">{{
         $t("guiElements.form.submit")
       }}</q-btn>
-      <q-btn flat>Cancel</q-btn>
+      <q-btn flat @click="cancelHandler()">Cancel</q-btn>
     </q-card-actions>
   </q-card>
 </template>
@@ -83,6 +83,8 @@ const props = defineProps({
     default: false,
   },
 })
+
+const emit = defineEmits(["cancel"])
 
 const { t } = useI18n()
 const editor = useEditor({
@@ -179,6 +181,10 @@ function submitHandler() {
         resolve(false)
       })
   })
+}
+
+function cancelHandler() {
+  emit("cancel")
 }
 
 function setLink() {
