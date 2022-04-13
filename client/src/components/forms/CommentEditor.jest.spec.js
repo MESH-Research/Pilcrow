@@ -34,6 +34,9 @@ describe("CommentEditor", () => {
             $t: (token) => token,
           },
         },
+        props: {
+          isInlineComment: true,
+        },
       }),
     }
   }
