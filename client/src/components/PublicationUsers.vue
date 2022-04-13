@@ -9,19 +9,15 @@
           ref="list_assigned_editors"
           data-cy="list_assigned_editors"
           :users="editors"
-          :actions="
-            editMode
-              ? [
-                  {
-                    ariaLabel: 'Unassign',
-                    icon: 'person_remove',
-                    action: 'unassignEditor',
-                    help: 'Remove Editor',
-                    cyAttr: 'button_unassign_editor',
-                  },
-                ]
-              : []
-          "
+          :actions="[
+            {
+              ariaLabel: 'Unassign',
+              icon: 'person_remove',
+              action: 'unassignEditor',
+              help: 'Remove Editor',
+              cyAttr: 'button_unassign_editor',
+            },
+          ]"
           @action-click="handleUserListClick"
         />
       </div>
@@ -38,11 +34,16 @@
         </q-card>
       </div>
     </q-card-section>
-    <q-card-actions align="right">
-      <q-btn :label="editMode ? 'Done' : 'Edit'" flat @click="changeEditMode" />
+    <q-card-actions v-if="!addMode" align="right">
+      <q-btn
+        icon="person_add"
+        label="Add editor"
+        flat
+        @click="addMode = true"
+      />
     </q-card-actions>
-    <q-separator v-if="editMode" />
-    <q-card-section v-if="editMode">
+    <q-separator v-if="addMode" />
+    <q-card-section v-if="addMode">
       <q-form @submit="assignUser(`editor`, editor_candidate)">
         <div class="q-pl-none">
           <find-user-select
@@ -88,11 +89,8 @@ const props = defineProps({
     required: true,
   },
 })
-const editMode = ref(false)
+const addMode = ref(false)
 
-function changeEditMode() {
-  editMode.value = !editMode.value
-}
 const publication = toRef(props, "publication")
 const editor_candidate = ref(null)
 
