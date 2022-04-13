@@ -5,23 +5,24 @@
     </q-card-section>
     <q-card-section>
       <q-list>
-        <q-item
+        <component
+          :is="editId === criteria.id ? StyleCriteriaForm : StyleCriteriaItem"
           v-for="criteria in publication.style_criterias"
           :key="criteria.id"
-        >
-          <q-item-section avatar>
-            <q-icon :name="criteria.icon" />
-          </q-item-section>
-          <q-item-section>
-            <q-item-label>{{ criteria.name }}</q-item-label>
-            <q-item-label caption>{{ criteria.description }}</q-item-label>
-          </q-item-section>
-        </q-item>
+          :criteria="criteria"
+          :edit-id="editId"
+          @edit="editItem(criteria.id)"
+          @cancel="cancelEdit"
+        />
       </q-list>
     </q-card-section>
-    <q-card-actions align="right">
-      <q-btn :label="editMode ? 'Done' : 'Edit'" flat @click="changeEditMode" />
+    <q-card-section v-if="editId == ''">
+      <style-criteria-form @cancel="cancelEdit" />
+    </q-card-section>
+    <q-card-actions v-else align="right">
+      <q-btn icon="add_task" label="Add Criteria" flat @click="newItem" />
     </q-card-actions>
+
     <q-separator v-if="editMode" />
     <q-card-section v-if="editMode"> </q-card-section>
   </q-card>
@@ -29,8 +30,10 @@
 
 <script setup>
 import { ref, toRef } from "vue"
+import StyleCriteriaItem from "src/components/molecules/StyleCriteriaItem.vue"
+import StyleCriteriaForm from "./forms/StyleCriteriaForm.vue"
 
-const editMode = ref(false)
+const editId = ref(null)
 
 const props = defineProps({
   publication: {
@@ -39,10 +42,19 @@ const props = defineProps({
   },
 })
 
-const publication = toRef(props, "publication")
-function changeEditMode() {
-  editMode.value = !editMode.value
-}
-</script>
+function editItem(criteriaId) {
+  if (editId.value !== null) return
 
-<style></style>
+  editId.value = criteriaId
+}
+
+function cancelEdit() {
+  editId.value = null
+}
+
+function newItem() {
+  editId.value = ""
+}
+
+const publication = toRef(props, "publication")
+</script>
