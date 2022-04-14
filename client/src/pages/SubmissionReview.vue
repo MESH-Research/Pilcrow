@@ -14,7 +14,10 @@
         v-model="commentDrawerOpen"
         :submission="submission"
       />
-      <submission-comment-drawer :comment-drawer-open="commentDrawerOpen" />
+      <submission-comment-drawer
+        :comment-drawer-open="commentDrawerOpen"
+        :submission="submission"
+      />
       <q-page-container>
         <submission-content />
         <q-separator class="page-seperator" />

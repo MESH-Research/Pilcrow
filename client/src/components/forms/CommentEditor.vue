@@ -49,6 +49,13 @@ function dirtyDialog() {
   })
 }
 
+const props = defineProps({
+  submission: {
+    type: Object,
+    default: null,
+  },
+})
+
 const { t } = useI18n()
 const editor = useEditor({
   injectCSS: true,
@@ -171,32 +178,20 @@ function setLink() {
     .run()
 }
 
-const styleCriteria = ref([
-  {
-    id: 1,
-    label: "Relevance",
-    refAttr: "relevance",
-    selected: false,
-  },
-  {
-    id: 2,
-    label: "Accessibility",
-    refAttr: "accessibility",
-    selected: false,
-  },
-  {
-    id: 3,
-    label: "Coherence",
-    refAttr: "coherence",
-    selected: false,
-  },
-  {
-    id: 4,
-    label: "Scholarly Dialogue",
-    refAttr: "scholarly_dialogue",
-    selected: false,
-  },
-])
+const processedStyleCriteria = () => {
+  const collection = []
+  props.submission.publication.style_criterias.forEach((criteria) => {
+    collection.push({
+      id: criteria.id,
+      label: criteria.name,
+      refAttr: criteria.name,
+      selected: false,
+      icon: criteria.icon,
+    })
+  })
+  return collection
+}
+const styleCriteria = ref(processedStyleCriteria())
 
 const hasStyleCriteria = computed(() => {
   return styleCriteria.value.some((criteria) => criteria.selected)

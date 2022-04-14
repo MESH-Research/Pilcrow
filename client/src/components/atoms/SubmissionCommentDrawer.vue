@@ -19,7 +19,7 @@
           <div id="inline_comments_section" class="q-pa-md">
             <span class="text-h3"> Inline Comments </span>
           </div>
-          <comment-editor />
+          <comment-editor :submission="submission" />
           <submission-comment is-inline-comment />
           <submission-comment is-inline-comment />
           <div class="row justify-center q-pa-md q-pb-xl">
@@ -53,6 +53,10 @@ const props = defineProps({
   // Drawer status
   commentDrawerOpen: {
     type: Boolean,
+    default: null,
+  },
+  submission: {
+    type: Object,
     default: null,
   },
 })
