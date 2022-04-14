@@ -184,7 +184,7 @@ const processedStyleCriteria = () => {
     collection.push({
       id: criteria.id,
       label: criteria.name,
-      refAttr: criteria.name,
+      refAttr: criteria.name.toLowerCase().replace(/ /g, "_"),
       selected: false,
       icon: criteria.icon,
     })
