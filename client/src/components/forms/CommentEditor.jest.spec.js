@@ -18,6 +18,37 @@ jest.mock("quasar", () => ({
   }),
 }))
 
+const styleCriteria = [
+  {
+    __typename: "StyleCriteria",
+    id: 1,
+    name: "Relevance",
+    description: "",
+    icon: "close_fullscreen",
+  },
+  {
+    __typename: "StyleCriteria",
+    id: 2,
+    name: "Accessibility",
+    description: "",
+    icon: "accessibility",
+  },
+  {
+    __typename: "StyleCriteria",
+    id: 3,
+    name: "Coherence",
+    description: "",
+    icon: "psychology",
+  },
+  {
+    __typename: "StyleCriteria",
+    id: 4,
+    name: "Scholarly Dialogue",
+    description: "",
+    icon: "question_answer",
+  },
+]
+
 installQuasarPlugin()
 describe("CommentEditor", () => {
   const dialogReturn = {
@@ -32,6 +63,13 @@ describe("CommentEditor", () => {
         global: {
           mocks: {
             $t: (token) => token,
+          },
+        },
+        props: {
+          submission: {
+            publication: {
+              style_criterias: styleCriteria,
+            },
           },
         },
       }),
