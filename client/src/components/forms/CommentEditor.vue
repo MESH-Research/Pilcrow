@@ -11,19 +11,26 @@
     <div class="comment-editor">
       <editor-content :editor="editor" />
     </div>
-    <div v-if="props.isInlineComment" class="q-py-md q-gutter-y-sm column">
+    <div v-if="props.isInlineComment" class="q-py-md">
       <q-list>
         <q-expansion-item
           v-for="criteria in styleCriteria"
           :key="criteria.id"
-          v-model="criteria.selected"
           :label="criteria.label"
+          popup
+          expand-icon="help_outline"
+          expanded-icon="expand_less"
+          expand-separator
+          expand-icon-toggle
         >
           <template #header>
-            <q-item-section avatar>
+            <q-item-section
+              avatar
+              @click="criteria.selected = !criteria.selected"
+            >
               <q-icon :name="criteria.icon" size="sm" color="secondary" />
             </q-item-section>
-            <q-item-section>
+            <q-item-section @click="criteria.selected = !criteria.selected">
               <q-item-label :id="`${criteria.refAttr}_${criteria.id}`">{{
                 criteria.label
               }}</q-item-label>
@@ -38,23 +45,27 @@
             </q-item-section>
           </template>
           <!-- Sample Style Criteria Description Markup -->
-          <ul>
-            <li>
-              Does the composer identify claims that support their argument?
-            </li>
-            <li>
-              How does the composer explain how the claims are related to each
-              other and the larger argument?
-            </li>
-            <li>
-              Does the composer provide compelling evidence in support of their
-              claims?
-            </li>
-            <li>
-              For more creative works, how does the composer convey their
-              intended message to readers, listeners, and/or reviewers?
-            </li>
-          </ul>
+          <q-card>
+            <q-card-section>
+              <ul>
+                <li>
+                  Does the composer identify claims that support their argument?
+                </li>
+                <li>
+                  How does the composer explain how the claims are related to
+                  each other and the larger argument?
+                </li>
+                <li>
+                  Does the composer provide compelling evidence in support of
+                  their claims?
+                </li>
+                <li>
+                  For more creative works, how does the composer convey their
+                  intended message to readers, listeners, and/or reviewers?
+                </li>
+              </ul>
+            </q-card-section>
+          </q-card>
         </q-expansion-item>
       </q-list>
     </div>
@@ -261,5 +272,14 @@ const hasStyleCriteria = computed(() => {
   float: left;
   height: 0;
   pointer-events: none;
+}
+
+.q-icon.q-expansion-item__toggle-icon,
+.q-icon.q-expansion-item__toggle-focus {
+  font-size: 1.3em;
+}
+
+.q-expansion-item--popup.q-expansion-item--collapsed {
+  padding: 0 0;
 }
 </style>
