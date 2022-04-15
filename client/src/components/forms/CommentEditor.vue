@@ -277,6 +277,7 @@ const hasStyleCriteria = computed(() => {
 .q-icon.q-expansion-item__toggle-icon,
 .q-icon.q-expansion-item__toggle-focus {
   font-size: 1.3em;
+  color: black;
 }
 
 .q-expansion-item--popup.q-expansion-item--collapsed {
