@@ -1,10 +1,10 @@
 <template>
-  <q-card flat bordered>
+  <q-card flat>
     <q-card-section>
       <div class="text-h3">Style Critiera</div>
     </q-card-section>
     <q-card-section>
-      <q-list>
+      <q-list bordered separator>
         <component
           :is="editId === criteria.id ? StyleCriteriaForm : StyleCriteriaItem"
           v-for="criteria in publication.style_criterias"

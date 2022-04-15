@@ -1,6 +1,6 @@
 <template>
   <q-item>
-    <q-item-section avatar top>
+    <q-item-section avatar>
       <q-icon :name="criteria.icon" />
     </q-item-section>
     <q-item-section>

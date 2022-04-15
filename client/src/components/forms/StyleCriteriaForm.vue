@@ -80,7 +80,7 @@ function editIcon() {
       icon: state.icon,
     },
   }).onOk((icon) => {
-    v$.icon.$model.value = icon
+    v$.value.icon.$model = icon
   })
 }
 </script>

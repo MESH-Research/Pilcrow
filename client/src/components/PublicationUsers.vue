@@ -1,5 +1,5 @@
 <template>
-  <q-card flat bordered>
+  <q-card flat>
     <q-card-section>
       <div class="text-h3">Editors</div>
     </q-card-section>
