@@ -2,7 +2,7 @@
     "devDependencies": {
         "chalk": "^5.0.1",
         "columnify": "^1.5.4",
-        "commander": "^9.1.0",
+        "commander": "^9.2.0",
         "conventional-changelog-cli": "^2.1.1",
         "cypress-file-upload": "^5.0.8",
         "dedent-js": "^1.0.1",
