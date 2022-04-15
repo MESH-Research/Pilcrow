@@ -18,7 +18,7 @@
       </div>
       <q-scroll-area class="sidebar-nav">
         <q-list>
-          <q-item v-ripple to="/dashboard">
+          <q-item to="/dashboard">
             <q-item-section avatar>
               <q-icon name="dashboard" />
             </q-item-section>
@@ -27,7 +27,7 @@
             </q-item-section>
           </q-item>
 
-          <q-item v-ripple to="/admin/users">
+          <q-item to="/admin/users">
             <q-item-section avatar>
               <q-icon name="groups" />
             </q-item-section>
@@ -35,7 +35,7 @@
               {{ $t("header.user_list") }}
             </q-item-section>
           </q-item>
-          <q-item v-ripple to="/admin/publications">
+          <q-item to="/admin/publications">
             <q-item-section avatar>
               <q-icon name="collections_bookmark" />
             </q-item-section>
@@ -43,7 +43,7 @@
               {{ $t("header.publications") }}
             </q-item-section>
           </q-item>
-          <q-item v-ripple data-cy="submissions_link" to="/submissions">
+          <q-item data-cy="submissions_link" to="/submissions">
             <q-item-section avatar>
               <q-icon name="content_copy" />
             </q-item-section>
