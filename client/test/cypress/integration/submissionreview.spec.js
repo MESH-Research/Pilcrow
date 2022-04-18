@@ -23,4 +23,14 @@ describe("Submissions Review", () => {
     cy.dataCy("submission_review_btn").click()
     cy.dataCy("submission_review_layout")
   })
+
+  it("should display style criteria from the database in the comment editor", () => {
+    cy.task("resetDb")
+    cy.login({ email: "applicationadministrator@ccrproject.dev" })
+    cy.visit("submission/review/100")
+    cy.dataCy("accessibility").should("be.visible")
+    cy.dataCy("relevance").should("be.visible")
+    cy.dataCy("coherence").should("be.visible")
+    cy.dataCy("scholarly_dialogue").should("be.visible")
+  })
 })

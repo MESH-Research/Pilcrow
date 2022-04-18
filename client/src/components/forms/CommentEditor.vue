@@ -22,6 +22,7 @@
         :key="criteria.id"
         v-model="criteria.selected"
         :data-ref="criteria.refAttr"
+        :data-cy="criteria.refAttr"
         :label="criteria.label"
       />
     </div>
