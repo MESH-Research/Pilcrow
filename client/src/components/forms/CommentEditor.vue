@@ -63,7 +63,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue"
+import { ref, computed, inject } from "vue"
 import { useEditor, EditorContent } from "@tiptap/vue-3"
 import { useQuasar } from "quasar"
 import StarterKit from "@tiptap/starter-kit"
@@ -81,15 +81,13 @@ function dirtyDialog() {
 }
 
 const props = defineProps({
-  submission: {
-    type: Object,
-    default: null,
-  },
   isInlineComment: {
     type: Boolean,
     default: false,
   },
 })
+
+const submission = inject("submission")
 
 const { t } = useI18n()
 const editor = useEditor({
@@ -215,7 +213,7 @@ function setLink() {
 
 const processedStyleCriteria = () => {
   const collection = []
-  props.submission.publication.style_criterias.forEach((criteria) => {
+  submission.value.publication.style_criterias.forEach((criteria) => {
     collection.push({
       id: criteria.id,
       label: criteria.name,

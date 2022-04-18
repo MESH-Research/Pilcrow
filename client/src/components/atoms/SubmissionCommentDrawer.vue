@@ -24,10 +24,7 @@
             bordered
             style="border-color: rgb(56, 118, 187)"
           >
-            <comment-editor
-              :submission="props.submission"
-              :is-inline-comment="true"
-            />
+            <comment-editor :is-inline-comment="true" />
           </q-card>
           <submission-comment
             :submission="props.submission"

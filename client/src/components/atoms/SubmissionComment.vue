@@ -70,7 +70,7 @@
       <span class="text-h4 q-pl-sm">{{
         $t("submissions.comment.reply.title")
       }}</span>
-      <comment-editor :submission="submission" :is-inline-comment="false" />
+      <comment-editor :is-inline-comment="false" />
     </q-card-section>
     <q-card-actions class="q-pa-md q-pb-lg">
       <q-btn
