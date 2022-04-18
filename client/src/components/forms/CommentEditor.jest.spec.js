@@ -2,6 +2,7 @@ import { mount } from "@vue/test-utils"
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-jest"
 import CommentEditor from "./CommentEditor.vue"
 import flushPromises from "flush-promises"
+import { ref } from "vue"
 
 jest.mock("vue-i18n", () => ({
   useI18n: () => ({
@@ -68,11 +69,11 @@ describe("CommentEditor", () => {
             $t: (token) => token,
           },
           provide: {
-            submission: {
+            submission: ref({
               publication: {
                 style_criterias: styleCriteria,
               },
-            },
+            }),
           },
         },
         props: {
