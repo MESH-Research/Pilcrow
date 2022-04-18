@@ -45,26 +45,9 @@
               />
             </q-item-section>
           </template>
-          <!-- Sample Style Criteria Description Markup -->
           <q-card>
             <q-card-section>
-              <ul>
-                <li>
-                  Does the composer identify claims that support their argument?
-                </li>
-                <li>
-                  How does the composer explain how the claims are related to
-                  each other and the larger argument?
-                </li>
-                <li>
-                  Does the composer provide compelling evidence in support of
-                  their claims?
-                </li>
-                <li>
-                  For more creative works, how does the composer convey their
-                  intended message to readers, listeners, and/or reviewers?
-                </li>
-              </ul>
+              {{ criteria.description }}
             </q-card-section>
           </q-card>
         </q-expansion-item>
@@ -239,6 +222,7 @@ const processedStyleCriteria = () => {
       refAttr: criteria.name.toLowerCase().replace(/ /g, "_"),
       selected: false,
       icon: criteria.icon,
+      description: criteria.description,
     })
   })
   return collection
