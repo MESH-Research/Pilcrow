@@ -74,6 +74,7 @@ describe("CommentEditor", () => {
               style_criterias: styleCriteria,
             },
           },
+          isInlineComment: true,
         },
       }),
     }
@@ -93,7 +94,7 @@ describe("CommentEditor", () => {
     expect(wrapper.vm.hasStyleCriteria).toBe(false)
   })
 
-  it("shows dialog if not criteria are selected", async () => {
+  it("shows dialog if no criteria are selected", async () => {
     const { wrapper } = wrapperFactory()
     await flushPromises()
     await wrapper.findComponent('[data-ref="submit"]').trigger("click")

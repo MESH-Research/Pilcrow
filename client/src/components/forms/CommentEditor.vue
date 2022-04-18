@@ -1,10 +1,5 @@
 <template>
-  <q-card
-    v-if="editor"
-    bordered
-    class="q-ma-md q-pa-md"
-    style="border-color: rgb(56, 118, 187)"
-  >
+  <q-card v-if="editor" flat class="bg-grey-1">
     <q-btn-group spread unelevated class="block text-center q-pb-md">
       <comment-editor-button
         v-for="(button, index) in commentEditorButtons"
@@ -16,19 +11,71 @@
     <div class="comment-editor">
       <editor-content :editor="editor" />
     </div>
-    <div class="q-pa-md q-gutter-y-sm column">
-      <q-toggle
-        v-for="criteria in styleCriteria"
-        :key="criteria.id"
-        v-model="criteria.selected"
-        :data-ref="criteria.refAttr"
-        :data-cy="criteria.refAttr"
-        :label="criteria.label"
-      />
+    <div v-if="props.isInlineComment" class="q-py-md">
+      <q-list>
+        <q-expansion-item
+          v-for="criteria in styleCriteria"
+          :key="criteria.id"
+          :label="criteria.label"
+          popup
+          expand-icon="help_outline"
+          expanded-icon="expand_less"
+          expand-separator
+          expand-icon-toggle
+        >
+          <template #header>
+            <q-item-section
+              avatar
+              @click="criteria.selected = !criteria.selected"
+            >
+              <q-icon :name="criteria.icon" size="sm" color="secondary" />
+            </q-item-section>
+            <q-item-section @click="criteria.selected = !criteria.selected">
+              <q-item-label :id="`${criteria.refAttr}_${criteria.id}`">{{
+                criteria.label
+              }}</q-item-label>
+            </q-item-section>
+            <q-item-section avatar>
+              <q-toggle
+                v-model="criteria.selected"
+                size="lg"
+                :data-ref="criteria.refAttr"
+                :data-cy="criteria.refAttr"
+                :aria-labelledby="`${criteria.refAttr}_${criteria.id}`"
+              />
+            </q-item-section>
+          </template>
+          <!-- Sample Style Criteria Description Markup -->
+          <q-card>
+            <q-card-section>
+              <ul>
+                <li>
+                  Does the composer identify claims that support their argument?
+                </li>
+                <li>
+                  How does the composer explain how the claims are related to
+                  each other and the larger argument?
+                </li>
+                <li>
+                  Does the composer provide compelling evidence in support of
+                  their claims?
+                </li>
+                <li>
+                  For more creative works, how does the composer convey their
+                  intended message to readers, listeners, and/or reviewers?
+                </li>
+              </ul>
+            </q-card-section>
+          </q-card>
+        </q-expansion-item>
+      </q-list>
     </div>
-    <q-btn data-ref="submit" color="primary" @click="submitHandler()">{{
-      $t("guiElements.form.submit")
-    }}</q-btn>
+    <q-card-actions class="q-mt-md q-pa-none" align="between">
+      <q-btn data-ref="submit" color="primary" @click="submitHandler()">{{
+        $t("guiElements.form.submit")
+      }}</q-btn>
+      <q-btn flat>{{ $t("guiElements.form.cancel") }}</q-btn>
+    </q-card-actions>
   </q-card>
 </template>
 
@@ -49,6 +96,12 @@ function dirtyDialog() {
     component: BypassStyleCriteriaDialogVue,
   })
 }
+const props = defineProps({
+  isInlineComment: {
+    type: Boolean,
+    default: false,
+  },
+})
 
 const props = defineProps({
   submission: {
@@ -140,7 +193,7 @@ const commentEditorButtons = ref([
 ])
 
 function submitHandler() {
-  if (hasStyleCriteria.value) {
+  if (hasStyleCriteria.value || !props.isInlineComment) {
     return true
   }
   return new Promise((resolve) => {
@@ -211,5 +264,15 @@ const hasStyleCriteria = computed(() => {
   float: left;
   height: 0;
   pointer-events: none;
+}
+
+.q-icon.q-expansion-item__toggle-icon,
+.q-icon.q-expansion-item__toggle-focus {
+  font-size: 1.3em;
+  color: black;
+}
+
+.q-expansion-item--popup.q-expansion-item--collapsed {
+  padding: 0 0;
 }
 </style>
