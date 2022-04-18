@@ -96,17 +96,15 @@ function dirtyDialog() {
     component: BypassStyleCriteriaDialogVue,
   })
 }
-const props = defineProps({
-  isInlineComment: {
-    type: Boolean,
-    default: false,
-  },
-})
 
 const props = defineProps({
   submission: {
     type: Object,
     default: null,
+  },
+  isInlineComment: {
+    type: Boolean,
+    default: false,
   },
 })
 
