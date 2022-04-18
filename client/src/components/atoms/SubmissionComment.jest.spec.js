@@ -26,11 +26,6 @@ describe("SubmissionComment", () => {
           stubs: ["router-link"],
         },
         props: {
-          submission: {
-            publication: {
-              style_criterias: [],
-            },
-          },
           isInlineComment: true,
         },
       }),
