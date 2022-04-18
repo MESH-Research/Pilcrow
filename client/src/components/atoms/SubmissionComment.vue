@@ -70,7 +70,7 @@
       <span class="text-h4 q-pl-sm">{{
         $t("submissions.comment.reply.title")
       }}</span>
-      <comment-editor :is-inline-comment="false" />
+      <comment-editor :submission="submission" :is-inline-comment="false" />
     </q-card-section>
     <q-card-actions class="q-pa-md q-pb-lg">
       <q-btn
@@ -107,14 +107,14 @@
   </q-card>
   <section v-if="props.isInlineComment" class="q-ml-md">
     <div v-if="!isCollapsed">
-      <submission-comment is-inline-reply />
-      <submission-comment is-inline-reply />
+      <submission-comment :submission="submission" is-inline-reply />
+      <submission-comment :submission="submission" is-inline-reply />
     </div>
   </section>
   <section v-if="props.isOverallComment" class="q-mx-md">
     <div v-if="!isCollapsed">
-      <submission-comment is-overall-reply />
-      <submission-comment is-overall-reply />
+      <submission-comment :submission="submission" is-overall-reply />
+      <submission-comment :submission="submission" is-overall-reply />
     </div>
   </section>
 </template>
@@ -147,6 +147,10 @@ const props = defineProps({
   isInlineReply: {
     type: Boolean,
     default: false,
+  },
+  submission: {
+    type: Object,
+    default: null,
   },
 })
 
