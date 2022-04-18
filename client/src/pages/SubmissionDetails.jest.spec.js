@@ -137,6 +137,13 @@ describe("submissions details page mount", () => {
           title: "This Submission",
           publication: {
             name: "Jest Publication",
+            style_criterias: [
+              {
+                name: "Coherence",
+                description: `Compelling and well-ordered according to the genre of the piece.`,
+                icon: "psychology",
+              },
+            ],
           },
           users: submissionUsersData,
         },
