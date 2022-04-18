@@ -140,9 +140,9 @@ describe("submissions details page mount", () => {
             style_criterias: [
               {
                 id: 1,
-                name: "Coherence",
-                description: `Compelling and well-ordered according to the genre of the piece.`,
-                icon: "psychology",
+                name: "Jest Criteria 1",
+                description: `A description of the style criteria`,
+                icon: "home",
               },
             ],
           },
