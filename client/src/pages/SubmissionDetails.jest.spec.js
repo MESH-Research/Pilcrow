@@ -174,6 +174,14 @@ describe("submissions details page mount", () => {
           title: "This submission",
           publication: {
             name: "Jest Publication",
+            style_criterias: [
+              {
+                id: 1,
+                name: "Jest Criteria 1",
+                description: `A description of the style criteria`,
+                icon: "home",
+              },
+            ],
           },
           users: [],
         },
@@ -199,6 +207,14 @@ describe("submissions details page mount", () => {
           title: "This submission",
           publication: {
             name: "Jest Publication",
+            style_criterias: [
+              {
+                id: 1,
+                name: "Jest Criteria 1",
+                description: `A description of the style criteria`,
+                icon: "home",
+              },
+            ],
           },
           users: [],
         },
