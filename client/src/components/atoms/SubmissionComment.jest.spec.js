@@ -43,6 +43,6 @@ describe("SubmissionComment", () => {
     expect(wrapper.findComponent({ ref: "comment_reply" }).exists()).toBe(false)
     const button = wrapper.findComponent({ ref: "reply_button" })
     await button.trigger("click")
-    expect(wrapper.emitted("reply")).toBeTruthy()
+    expect(wrapper.findComponent({ ref: "comment_reply" }).exists()).toBe(true)
   })
 })

@@ -149,9 +149,8 @@ const props = defineProps({
     default: false,
   },
 })
-const emit = defineEmits(["reply"])
+
 function initiateReply() {
-  emit("reply")
   isReplying.value = true
 }
 </script>
