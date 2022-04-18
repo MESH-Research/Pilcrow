@@ -26,14 +26,8 @@
           >
             <comment-editor :is-inline-comment="true" />
           </q-card>
-          <submission-comment
-            :submission="props.submission"
-            is-inline-comment
-          />
-          <submission-comment
-            :submission="props.submission"
-            is-inline-comment
-          />
+          <submission-comment is-inline-comment />
+          <submission-comment is-inline-comment />
           <div class="row justify-center q-pa-md q-pb-xl">
             <q-btn color="dark" icon="arrow_upward">Scroll to Top</q-btn>
           </div>
@@ -62,10 +56,6 @@ function handlePan({ ...newInfo }) {
   }
 }
 const props = defineProps({
-  submission: {
-    type: Object,
-    default: null,
-  },
   // Drawer status
   commentDrawerOpen: {
     type: Boolean,
