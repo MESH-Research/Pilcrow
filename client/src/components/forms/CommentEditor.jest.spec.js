@@ -23,28 +23,31 @@ const styleCriteria = [
     __typename: "StyleCriteria",
     id: 1,
     name: "Relevance",
-    description: "",
+    description: `Timely and responsive to an issue that concerns a specific public community.`,
     icon: "close_fullscreen",
   },
   {
     __typename: "StyleCriteria",
     id: 2,
     name: "Accessibility",
-    description: "",
+    description: `Connects with the public at large and resonates with specific, publicly engaged individuals and organizations.
+       This usually requires unpacking technical terms, linking to source and related materials, providing transcripts
+       for audio and video, and providing alt-text for images.`,
     icon: "accessibility",
   },
   {
     __typename: "StyleCriteria",
     id: 3,
     name: "Coherence",
-    description: "",
+    description: `Compelling and well-ordered according to the genre of the piece.`,
     icon: "psychology",
   },
   {
     __typename: "StyleCriteria",
     id: 4,
     name: "Scholarly Dialogue",
-    description: "",
+    description: `Cites and considers related discussions either within or outside of the academy, whether encountered in
+        peer-reviewed literature or other media such as blogs, magazines, podcasts, galleries, or listservs.`,
     icon: "question_answer",
   },
 ]
