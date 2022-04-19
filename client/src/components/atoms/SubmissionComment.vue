@@ -65,8 +65,22 @@
       <q-chip size="16px" icon="bookmark"> Coherence </q-chip>
     </q-card-section>
 
+    <q-card-section v-if="isReplying" ref="comment_reply" class="q-pa-md">
+      <q-separator class="q-mb-md" />
+      <span class="text-h4 q-pl-sm">{{
+        $t("submissions.comment.reply.title")
+      }}</span>
+      <comment-editor :is-inline-comment="false" />
+    </q-card-section>
     <q-card-actions class="q-pa-md q-pb-lg">
-      <q-btn bordered color="primary" label="Reply" />
+      <q-btn
+        v-if="!isReplying"
+        ref="reply_button"
+        bordered
+        color="primary"
+        label="Reply"
+        @click="initiateReply()"
+      />
       <q-btn
         v-if="!props.isInlineReply && !props.isOverallReply && !isCollapsed"
         aria-label="Hide Replies"
@@ -108,9 +122,11 @@
 import { ref } from "vue"
 import AvatarImage from "./AvatarImage.vue"
 import CommentActions from "./CommentActions.vue"
+import CommentEditor from "../forms/CommentEditor.vue"
 const user = { email: "commenter@example.com" }
 const user2 = { email: "magnafringilla@example.com" }
 const isCollapsed = ref(false)
+const isReplying = ref(false)
 function toggleThread() {
   isCollapsed.value = !isCollapsed.value
 }
@@ -133,4 +149,8 @@ const props = defineProps({
     default: false,
   },
 })
+
+function initiateReply() {
+  isReplying.value = true
+}
 </script>
