@@ -34,7 +34,7 @@
             </q-item-section>
             <q-item-section @click="criteria.selected = !criteria.selected">
               <q-item-label
-                :id="`criteria-${criteria.id}`"
+                :id="`criteria-${uuid}-${criteria.id}`"
                 data-cy="criteria-label"
                 >{{ criteria.name }}</q-item-label
               >
@@ -44,7 +44,7 @@
                 v-model="criteria.selected"
                 size="lg"
                 data-cy="criteria-toggle"
-                :aria-labelledby="`criteria-${criteria.id}`"
+                :aria-labelledby="`criteria-${uuid}-${criteria.id}`"
               />
             </q-item-section>
           </template>
@@ -75,6 +75,7 @@ import Placeholder from "@tiptap/extension-placeholder"
 import CommentEditorButton from "../atoms/CommentEditorButton.vue"
 import BypassStyleCriteriaDialogVue from "../dialogs/BypassStyleCriteriaDialog.vue"
 import { useI18n } from "vue-i18n"
+import { uniqueId } from "lodash"
 
 const { dialog } = useQuasar()
 function dirtyDialog() {
@@ -82,6 +83,7 @@ function dirtyDialog() {
     component: BypassStyleCriteriaDialogVue,
   })
 }
+const uuid = uniqueId()
 
 const props = defineProps({
   isInlineComment: {
