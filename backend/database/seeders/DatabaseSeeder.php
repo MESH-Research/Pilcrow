@@ -63,6 +63,9 @@ class DatabaseSeeder extends Seeder
         $submission_seeder->run(100, 'CCR Test Submission 1');
         $submission_seeder->run(101, 'CCR Test Submission 2');
 
+        $style_criterias_seeder = new StyleCriteriasSeeder();
+        $style_criterias_seeder->run();
+
         $submission_file_seeder = new SubmissionFileSeeder();
         $submission_file_seeder->run();
     }

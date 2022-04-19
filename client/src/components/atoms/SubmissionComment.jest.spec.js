@@ -23,7 +23,7 @@ describe("SubmissionComment", () => {
           mocks: {
             $t: (token) => token,
           },
-          stubs: ["router-link"],
+          stubs: ["router-link", "CommentEditor"],
         },
       }),
     }

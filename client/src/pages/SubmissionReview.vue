@@ -31,7 +31,7 @@ import SubmissionCommentDrawer from "src/components/atoms/SubmissionCommentDrawe
 import SubmissionCommentSection from "src/components/atoms/SubmissionCommentSection.vue"
 import SubmissionContent from "src/components/atoms/SubmissionContent.vue"
 import SubmissionToolbar from "src/components/atoms/SubmissionToolbar.vue"
-import { ref } from "vue"
+import { ref, provide } from "vue"
 import { GET_SUBMISSION } from "src/graphql/queries"
 import { useQuery, useResult } from "@vue/apollo-composable"
 const props = defineProps({
@@ -40,7 +40,11 @@ const props = defineProps({
     required: true,
   },
 })
-const submission = useResult(useQuery(GET_SUBMISSION, { id: props.id }).result)
+const { result } = useQuery(GET_SUBMISSION, { id: props.id })
+const submission = useResult(result)
+
+provide("submission", submission)
+
 const commentDrawerOpen = ref(true)
 </script>
 

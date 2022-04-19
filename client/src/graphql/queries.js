@@ -161,6 +161,12 @@ export const GET_SUBMISSION = gql`
       title
       publication {
         name
+        style_criterias {
+          id
+          name
+          description
+          icon
+        }
       }
       users {
         name

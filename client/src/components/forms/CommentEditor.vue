@@ -22,48 +22,35 @@
           expanded-icon="expand_less"
           expand-separator
           expand-icon-toggle
+          data-cy="criteria-item"
         >
           <template #header>
             <q-item-section
               avatar
+              data-cy="criteria-icon"
               @click="criteria.selected = !criteria.selected"
             >
               <q-icon :name="criteria.icon" size="sm" color="secondary" />
             </q-item-section>
             <q-item-section @click="criteria.selected = !criteria.selected">
-              <q-item-label :id="`${criteria.refAttr}_${criteria.id}`">{{
-                criteria.label
-              }}</q-item-label>
+              <q-item-label
+                :id="`criteria-${uuid}-${criteria.id}`"
+                data-cy="criteria-label"
+                >{{ criteria.name }}</q-item-label
+              >
             </q-item-section>
             <q-item-section avatar>
               <q-toggle
                 v-model="criteria.selected"
                 size="lg"
-                :data-ref="criteria.refAttr"
-                :aria-labelledby="`${criteria.refAttr}_${criteria.id}`"
+                data-cy="criteria-toggle"
+                :aria-labelledby="`criteria-${uuid}-${criteria.id}`"
               />
             </q-item-section>
           </template>
-          <!-- Sample Style Criteria Description Markup -->
-          <q-card>
+          <q-card data-cy="criteria-description">
             <q-card-section>
-              <ul>
-                <li>
-                  Does the composer identify claims that support their argument?
-                </li>
-                <li>
-                  How does the composer explain how the claims are related to
-                  each other and the larger argument?
-                </li>
-                <li>
-                  Does the composer provide compelling evidence in support of
-                  their claims?
-                </li>
-                <li>
-                  For more creative works, how does the composer convey their
-                  intended message to readers, listeners, and/or reviewers?
-                </li>
-              </ul>
+              {{ criteria.description }}
             </q-card-section>
           </q-card>
         </q-expansion-item>
@@ -79,7 +66,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue"
+import { ref, computed, inject } from "vue"
 import { useEditor, EditorContent } from "@tiptap/vue-3"
 import { useQuasar } from "quasar"
 import StarterKit from "@tiptap/starter-kit"
@@ -88,6 +75,7 @@ import Placeholder from "@tiptap/extension-placeholder"
 import CommentEditorButton from "../atoms/CommentEditorButton.vue"
 import BypassStyleCriteriaDialogVue from "../dialogs/BypassStyleCriteriaDialog.vue"
 import { useI18n } from "vue-i18n"
+import { uniqueId } from "lodash"
 
 const { dialog } = useQuasar()
 function dirtyDialog() {
@@ -95,6 +83,8 @@ function dirtyDialog() {
     component: BypassStyleCriteriaDialogVue,
   })
 }
+const uuid = uniqueId()
+
 const props = defineProps({
   isInlineComment: {
     type: Boolean,
@@ -224,36 +214,14 @@ function setLink() {
     .run()
 }
 
-const styleCriteria = ref([
-  {
-    id: 1,
-    label: "Relevance",
-    refAttr: "relevance",
+const submission = inject("submission")
+
+const styleCriteria = ref(
+  submission.value.publication.style_criterias.map((c) => ({
+    ...c,
     selected: false,
-    icon: "close_fullscreen",
-  },
-  {
-    id: 2,
-    label: "Accessibility",
-    refAttr: "accessibility",
-    selected: false,
-    icon: "accessibility",
-  },
-  {
-    id: 3,
-    label: "Coherence",
-    refAttr: "coherence",
-    selected: false,
-    icon: "psychology",
-  },
-  {
-    id: 4,
-    label: "Scholarly Dialogue",
-    refAttr: "scholarly_dialogue",
-    selected: false,
-    icon: "question_answer",
-  },
-])
+  }))
+)
 
 const hasStyleCriteria = computed(() => {
   return styleCriteria.value.some((criteria) => criteria.selected)

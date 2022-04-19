@@ -32,7 +32,6 @@ class PublicationSeeder extends Seeder
                 'role_id' => Role::EDITOR_ROLE_ID,
             ]
         )
-        ->hasStyleCriterias(4)
         ->create([
             'id' => 1,
             'name' => 'CCR Test Publication 1',
