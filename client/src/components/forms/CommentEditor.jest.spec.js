@@ -104,16 +104,23 @@ describe("CommentEditor", () => {
     expect(mockDialog).toHaveBeenCalled()
   })
 
-  test.each([
-    ["relevance"],
-    ["accessibility"],
-    ["coherence"],
-    ["scholarly_dialogue"],
-  ])("recognizes if style criteria are selected", async (refAttr) => {
+  it("does not show dialog if critiera are selected", async () => {
     const { wrapper } = wrapperFactory()
     await flushPromises()
-    await wrapper.findComponent(`[data-ref="${refAttr}"]`).trigger("click")
+    await wrapper
+      .findAllComponents('[data-cy="criteria-toggle"]')
+      .at(0)
+      .trigger("click")
     expect(wrapper.vm.hasStyleCriteria).toBe(true)
+    await wrapper.findComponent('[data-ref="submit"]').trigger("click")
     expect(mockDialog).not.toHaveBeenCalled()
+  })
+
+  it("renders correct number of criteria controls", async () => {
+    const { wrapper } = wrapperFactory()
+    await flushPromises()
+    expect(
+      wrapper.findAllComponents('[data-cy="criteria-toggle"]').length
+    ).toBe(4)
   })
 })

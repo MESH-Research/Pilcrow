@@ -28,9 +28,34 @@ describe("Submissions Review", () => {
     cy.task("resetDb")
     cy.login({ email: "applicationadministrator@ccrproject.dev" })
     cy.visit("submission/review/100")
-    cy.dataCy("accessibility").should("be.visible")
-    cy.dataCy("relevance").should("be.visible")
-    cy.dataCy("coherence").should("be.visible")
-    cy.dataCy("scholarly_dialogue").should("be.visible")
+
+    const criteriaLabels = ["Accessibility", "Relevance", "Coherence", "Scholarly Dialogue"]
+    cy.dataCy('criteria-item').should('have.length', 4);
+
+    cy.dataCy('criteria-item').each(($el, index) => {
+      cy.wrap($el).contains(criteriaLabels[index])
+    })
+
+    cy.dataCy('criteria-item').first().within(($el) => {
+      const $toggle = $el.find('.q-toggle')
+      cy.wrap($toggle).should('have.attr', 'aria-checked', "false")
+
+      cy.wrap($el).dataCy('criteria-label').click()
+      cy.wrap($toggle).should('have.attr', 'aria-checked', "true") //Clicking label toggles input
+
+      cy.wrap($el).dataCy('criteria-icon').click()
+      cy.wrap($toggle).should('have.attr', 'aria-checked', "false") //Clicking icon toggles input
+
+      //Expansion item is hidden
+      cy.wrap($el).dataCy('criteria-description').should('not.be.visible')
+
+      //Expansion item becomes visible on click
+      cy.wrap($el).get('.q-expansion-item__toggle-icon').click()
+      cy.wrap($el).dataCy('criteria-description').should('be.visible')
+
+      //Toggle state is unchanged
+      cy.wrap($toggle).should('have.attr', 'aria-checked', "false")
+
+    })
   })
 })

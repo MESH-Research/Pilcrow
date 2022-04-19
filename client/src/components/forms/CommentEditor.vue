@@ -22,30 +22,33 @@
           expanded-icon="expand_less"
           expand-separator
           expand-icon-toggle
+          data-cy="criteria-item"
         >
           <template #header>
             <q-item-section
               avatar
+              data-cy="criteria-icon"
               @click="criteria.selected = !criteria.selected"
             >
               <q-icon :name="criteria.icon" size="sm" color="secondary" />
             </q-item-section>
             <q-item-section @click="criteria.selected = !criteria.selected">
-              <q-item-label :id="`${criteria.refAttr}_${criteria.id}`">{{
-                criteria.label
-              }}</q-item-label>
+              <q-item-label
+                :id="`criteria-${criteria.id}`"
+                data-cy="criteria-label"
+                >{{ criteria.name }}</q-item-label
+              >
             </q-item-section>
             <q-item-section avatar>
               <q-toggle
                 v-model="criteria.selected"
                 size="lg"
-                :data-ref="criteria.refAttr"
-                :data-cy="criteria.refAttr"
-                :aria-labelledby="`${criteria.refAttr}_${criteria.id}`"
+                data-cy="criteria-toggle"
+                :aria-labelledby="`criteria-${criteria.id}`"
               />
             </q-item-section>
           </template>
-          <q-card>
+          <q-card data-cy="criteria-description">
             <q-card-section>
               {{ criteria.description }}
             </q-card-section>
@@ -209,24 +212,14 @@ function setLink() {
     .run()
 }
 
-const processedStyleCriteria = () => {
-  const collection = []
-  if (props.isInlineComment) {
-    const submission = inject("submission")
-    submission.value.publication.style_criterias.forEach((criteria) => {
-      collection.push({
-        id: criteria.id,
-        label: criteria.name,
-        refAttr: criteria.name.toLowerCase().replace(/ /g, "_"),
-        selected: false,
-        icon: criteria.icon,
-        description: criteria.description,
-      })
-    })
-  }
-  return collection
-}
-const styleCriteria = ref(processedStyleCriteria())
+const submission = inject("submission")
+
+const styleCriteria = ref(
+  submission.value.publication.style_criterias.map((c) => ({
+    ...c,
+    selected: false,
+  }))
+)
 
 const hasStyleCriteria = computed(() => {
   return styleCriteria.value.some((criteria) => criteria.selected)
