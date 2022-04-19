@@ -87,8 +87,6 @@ const props = defineProps({
   },
 })
 
-const submission = inject("submission")
-
 const { t } = useI18n()
 const editor = useEditor({
   injectCSS: true,
@@ -213,16 +211,19 @@ function setLink() {
 
 const processedStyleCriteria = () => {
   const collection = []
-  submission.value.publication.style_criterias.forEach((criteria) => {
-    collection.push({
-      id: criteria.id,
-      label: criteria.name,
-      refAttr: criteria.name.toLowerCase().replace(/ /g, "_"),
-      selected: false,
-      icon: criteria.icon,
-      description: criteria.description,
+  if (props.isInlineComment) {
+    const submission = inject("submission")
+    submission.value.publication.style_criterias.forEach((criteria) => {
+      collection.push({
+        id: criteria.id,
+        label: criteria.name,
+        refAttr: criteria.name.toLowerCase().replace(/ /g, "_"),
+        selected: false,
+        icon: criteria.icon,
+        description: criteria.description,
+      })
     })
-  })
+  }
   return collection
 }
 const styleCriteria = ref(processedStyleCriteria())

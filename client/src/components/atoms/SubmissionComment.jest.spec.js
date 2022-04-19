@@ -25,9 +25,6 @@ describe("SubmissionComment", () => {
           },
           stubs: ["router-link"],
         },
-        props: {
-          isInlineComment: true,
-        },
       }),
     }
   }
