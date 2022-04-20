@@ -2,6 +2,7 @@
 /// <reference path="../support/index.d.ts" />
 
 import "cypress-axe"
+import { a11yLogViolations } from '../support/helpers'
 
 describe("Dashboard", () => {
   beforeEach(() => {
@@ -13,6 +14,6 @@ describe("Dashboard", () => {
     cy.injectAxe()
     //Wait for the page to be loaded.
     cy.dataCy("vueDashboard")
-    cy.checkA11y()
+    cy.checkA11y(null, null, a11yLogViolations)
   })
 })

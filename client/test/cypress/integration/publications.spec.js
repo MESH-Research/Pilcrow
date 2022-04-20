@@ -2,6 +2,7 @@
 /// <reference path="../support/index.d.ts" />
 
 import "cypress-axe"
+import { a11yLogViolations } from '../support/helpers'
 
 describe("Publications", () => {
   it("creates new publications and checks the publications page", () => {
@@ -13,7 +14,7 @@ describe("Publications", () => {
     cy.visit("/publications")
     cy.injectAxe()
     cy.dataCy("publications_list").contains("Publication from Cypress")
-    cy.checkA11y()
+    cy.checkA11y(null, null, a11yLogViolations)
   })
 
   it("excludes the publications from the list when they are not publicly visible", () => {
@@ -22,6 +23,6 @@ describe("Publications", () => {
     // cy.visit("/publications")
     // cy.injectAxe()
     // cy.dataCy("publications_list").should("be.empty")
-    // cy.checkA11y()
+    // cy.checkA11y(null, null, a11yLogViolations)
   })
 })

@@ -2,6 +2,7 @@
 /// <reference path="../support/index.d.ts" />
 
 import "cypress-axe"
+import { a11yLogViolations } from '../support/helpers'
 import "cypress-file-upload"
 
 describe("Submissions", () => {
@@ -11,7 +12,7 @@ describe("Submissions", () => {
     cy.visit("submissions")
     cy.injectAxe()
     cy.dataCy("new_submission_title_input")
-    cy.checkA11y()
+    cy.checkA11y(null, null, a11yLogViolations)
     cy.dataCy("new_submission_title_input").type(
       "Submission from Cypress{enter}"
     )
@@ -32,7 +33,7 @@ describe("Submissions", () => {
       rules: {
         "nested-interactive": { enabled: false },
       },
-    })
+    }, a11yLogViolations)
     cy.reload()
     cy.dataCy("notification_indicator").should("be.visible")
   })

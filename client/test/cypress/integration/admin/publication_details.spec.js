@@ -2,6 +2,7 @@
 /// <reference path="../../support/index.d.ts" />
 
 import "cypress-axe"
+import { a11yLogViolations } from '../../support/helpers'
 
 describe("Publication Details", () => {
   beforeEach(() => {
@@ -25,7 +26,7 @@ describe("Publication Details", () => {
     cy.visit("/publication/1")
     cy.injectAxe()
     cy.dataCy("publication_details_heading")
-    cy.checkA11y()
+    cy.checkA11y(null, null, a11yLogViolations)
   })
 
   it("should allow assignments of editors and reject assignments of duplicate editors", () => {
@@ -55,6 +56,6 @@ describe("Publication Details", () => {
       rules: {
         "nested-interactive": { enabled: false },
       },
-    })
+    }, a11yLogViolations)
   })
 })

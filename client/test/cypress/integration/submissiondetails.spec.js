@@ -2,6 +2,7 @@
 /// <reference path="../support/index.d.ts" />
 
 import "cypress-axe"
+import { a11yLogViolations } from '../support/helpers'
 
 describe("Submissions Details", () => {
   it("should assert the Submission Details page is accessible", () => {
@@ -10,7 +11,7 @@ describe("Submissions Details", () => {
     cy.visit("submission/100")
     cy.injectAxe()
     cy.dataCy("list_assigned_submitters")
-    cy.checkA11y()
+    cy.checkA11y(null, null, a11yLogViolations)
   })
 
   it("should allow assignments of reviewers by application administrators", () => {
@@ -32,7 +33,7 @@ describe("Submissions Details", () => {
       rules: {
         "nested-interactive": { enabled: false },
       },
-    })
+    }, a11yLogViolations)
   })
 
   it("should allow assignments of reviewers by review coordinators", () => {
@@ -56,7 +57,7 @@ describe("Submissions Details", () => {
       rules: {
         "nested-interactive": { enabled: false },
       },
-    })
+    }, a11yLogViolations)
   })
 
   it("should allow assignments of review coordinators by application administrators", () => {
@@ -81,7 +82,7 @@ describe("Submissions Details", () => {
       rules: {
         "nested-interactive": { enabled: false },
       },
-    })
+    }, a11yLogViolations)
   })
 
   it("should disallow assignments of duplicate reviewers", () => {
@@ -103,6 +104,6 @@ describe("Submissions Details", () => {
       rules: {
         "nested-interactive": { enabled: false },
       },
-    })
+    }, a11yLogViolations)
   })
 })

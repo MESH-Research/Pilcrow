@@ -4,6 +4,7 @@
 // See https://docs.cypress.io/guides/references/best-practices.html#Selecting-Elements
 
 import "cypress-axe"
+import { a11yLogViolations } from '../../support/helpers'
 
 describe("Admin Users Index", () => {
   beforeEach(() => {
@@ -28,6 +29,6 @@ describe("Admin Users Index", () => {
     cy.visit("/admin/users")
     cy.injectAxe()
     cy.dataCy("userListBasicItem")
-    cy.checkA11y()
+    cy.checkA11y(null, null, a11yLogViolations)
   })
 })

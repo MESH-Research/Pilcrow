@@ -2,6 +2,7 @@
 /// <reference path="../support/index.d.ts" />
 
 import "cypress-axe"
+import { a11yLogViolations } from '../support/helpers'
 
 describe("login page", () => {
   beforeEach(() => {
@@ -53,6 +54,6 @@ describe("login page", () => {
     // Inject the axe-core libraray
     cy.injectAxe()
     cy.dataCy("vueLogin")
-    cy.checkA11y()
+    cy.checkA11y(null, null, a11yLogViolations)
   })
 })

@@ -2,6 +2,7 @@
 /// <reference path="../support/index.d.ts" />
 
 import "cypress-axe"
+import { a11yLogViolations } from '../support/helpers'
 
 describe("Register", () => {
   beforeEach(() => {
@@ -106,6 +107,6 @@ describe("Register", () => {
       rules: {
         "autocomplete-valid": { enabled: false },
       },
-    })
+    }, a11yLogViolations)
   })
 })
