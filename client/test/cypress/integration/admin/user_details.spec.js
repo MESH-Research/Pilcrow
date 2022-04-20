@@ -4,6 +4,7 @@
 // See https://docs.cypress.io/guides/references/best-practices.html#Selecting-Elements
 
 import "cypress-axe"
+import { a11yLogViolations } from '../../support/helpers'
 
 describe("Admin User Details", () => {
   beforeEach(() => {
@@ -28,7 +29,7 @@ describe("Admin User Details", () => {
     cy.visit("/admin/user/2")
     cy.injectAxe()
     cy.dataCy("userDetailsHeading")
-    cy.checkA11y()
+    cy.checkA11y(null, null, a11yLogViolations)
   })
 
   it("should assert the User Details page of an non-admin is accessible", () => {
@@ -37,6 +38,6 @@ describe("Admin User Details", () => {
     cy.visit("/admin/user/1")
     cy.injectAxe()
     cy.dataCy("userDetailsHeading")
-    cy.checkA11y()
+    cy.checkA11y(null, null, a11yLogViolations)
   })
 })

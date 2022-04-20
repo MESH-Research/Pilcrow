@@ -2,6 +2,7 @@
 /// <reference path="../../support/index.d.ts" />
 
 import "cypress-axe"
+import { a11yLogViolations } from '../../support/helpers'
 
 describe("Admin Publications", () => {
   beforeEach(() => {
@@ -19,7 +20,7 @@ describe("Admin Publications", () => {
       .should("have.class", "bg-positive")
     cy.dataCy("new_publication_input").type("Draft Publication from Cypress")
     cy.get(".q-transition--field-message-leave-active").should("not.exist")
-    cy.checkA11y()
+    cy.checkA11y(null, null, a11yLogViolations)
   })
 
   it("prevents publication creation when the name is empty", () => {
@@ -27,7 +28,7 @@ describe("Admin Publications", () => {
     cy.dataCy("publications_list")
     cy.dataCy("name_field_error").should("be.visible")
     cy.dataCy("new_publication_input").type("Draft Publication from Cypress")
-    cy.checkA11y()
+    cy.checkA11y(null, null, a11yLogViolations)
   })
 
   it("prevents publication creation when the name exceeds the maximum length", () => {
@@ -38,7 +39,7 @@ describe("Admin Publications", () => {
     cy.dataCy("name_field_error").should("be.visible")
     cy.get(".q-transition--field-message-leave-active").should("not.exist")
     cy.get(".q-notification--top-enter-active").should("not.exist")
-    cy.checkA11y()
+    cy.checkA11y(null, null, a11yLogViolations)
   })
 
   it("prevents publication creation when the name is not unique", () => {
@@ -57,11 +58,11 @@ describe("Admin Publications", () => {
     cy.dataCy("name_field_error").should("be.visible")
     cy.get(".q-transition--field-message-leave-active").should("not.exist")
     cy.get(".q-notification--top-enter-active").should("not.exist")
-    cy.checkA11y()
+    cy.checkA11y(null, null, a11yLogViolations)
   })
 
   it("should assert the initial load of the page is accessible", () => {
     cy.dataCy("create_new_publication_form")
-    cy.checkA11y()
+    cy.checkA11y(null, null, a11yLogViolations)
   })
 })

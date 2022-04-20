@@ -2,6 +2,7 @@
 /// <reference path="../support/index.d.ts" />
 
 import "cypress-axe"
+import { a11yLogViolations } from '../support/helpers'
 
 describe("Account", () => {
   beforeEach(() => {
@@ -35,7 +36,7 @@ describe("Account", () => {
     cy.injectAxe()
     //Wait for the page to be loaded.
     cy.dataCy("vueAccount")
-    cy.checkA11y()
+    cy.checkA11y(null, null, a11yLogViolations)
   })
 
   // TODO: Uncomment once email updates work again
