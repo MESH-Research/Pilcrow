@@ -368,6 +368,9 @@ export default {
       none: "No submitter is assigned to this submission. At least one submitter must be assigned.",
     },
     comment: {
+      reply: {
+        title: "Your Reply",
+      },
       actions_btn_aria: "Comment Actions",
       placeholder: "Add a comment …",
     },
@@ -417,6 +420,7 @@ export default {
     },
     form: {
       submit: "Submit",
+      cancel: "Cancel",
     },
     button: {
       bold: {

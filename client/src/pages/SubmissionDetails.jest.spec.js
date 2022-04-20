@@ -137,6 +137,7 @@ describe("submissions details page mount", () => {
           title: "This Submission",
           publication: {
             name: "Jest Publication",
+            style_criterias: [],
           },
           users: submissionUsersData,
         },
@@ -166,6 +167,7 @@ describe("submissions details page mount", () => {
           title: "This submission",
           publication: {
             name: "Jest Publication",
+            style_criterias: [],
           },
           users: [],
         },
@@ -191,6 +193,7 @@ describe("submissions details page mount", () => {
           title: "This submission",
           publication: {
             name: "Jest Publication",
+            style_criterias: [],
           },
           users: [],
         },

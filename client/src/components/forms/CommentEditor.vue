@@ -4,50 +4,55 @@
       <comment-editor-button
         v-for="(button, index) in commentEditorButtons"
         :key="index"
+        :aria-label="button.ariaLabel"
         v-bind="button"
       />
     </q-btn-group>
-    <div class="editor">
+    <div class="comment-editor">
       <editor-content :editor="editor" />
     </div>
-    <div v-if="props.isInlineComment" class="q-py-md q-gutter-y-sm column">
+    <div v-if="props.isInlineComment" class="q-py-md">
       <q-list>
         <q-expansion-item
           v-for="criteria in styleCriteria"
           :key="criteria.id"
-          v-model="criteria.selected"
-          style="padding: 0"
+          :label="criteria.label"
+          popup
+          expand-icon="help_outline"
+          expanded-icon="expand_less"
+          expand-separator
+          expand-icon-toggle
+          data-cy="criteria-item"
         >
           <template #header>
-            <q-item-section avatar>
+            <q-item-section
+              avatar
+              data-cy="criteria-icon"
+              @click="criteria.selected = !criteria.selected"
+            >
               <q-icon :name="criteria.icon" size="sm" color="secondary" />
             </q-item-section>
-            <q-item-section>{{ criteria.label }}</q-item-section>
+            <q-item-section @click="criteria.selected = !criteria.selected">
+              <q-item-label
+                :id="`criteria-${uuid}-${criteria.id}`"
+                data-cy="criteria-label"
+                >{{ criteria.name }}</q-item-label
+              >
+            </q-item-section>
             <q-item-section avatar>
               <q-toggle
                 v-model="criteria.selected"
                 size="lg"
-                :data-ref="criteria.refAttr"
+                data-cy="criteria-toggle"
+                :aria-labelledby="`criteria-${uuid}-${criteria.id}`"
               />
             </q-item-section>
           </template>
-          <ul>
-            <li>
-              Does the composer identify claims that support their argument?
-            </li>
-            <li>
-              How does the composer explain how the claims are related to each
-              other and the larger argument?
-            </li>
-            <li>
-              Does the composer provide compelling evidence in support of their
-              claims?
-            </li>
-            <li>
-              For more creative works, how does the composer convey their
-              intended message to readers, listeners, and/or reviewers?
-            </li>
-          </ul>
+          <q-card data-cy="criteria-description">
+            <q-card-section>
+              {{ criteria.description }}
+            </q-card-section>
+          </q-card>
         </q-expansion-item>
       </q-list>
     </div>
@@ -55,13 +60,15 @@
       <q-btn data-ref="submit" color="primary" @click="submitHandler()">{{
         $t("guiElements.form.submit")
       }}</q-btn>
-      <q-btn flat @click="cancelHandler()">Cancel</q-btn>
+      <q-btn flat ref="cancel_button" @click="cancelHandler()">{{
+        $t("guiElements.form.cancel")
+      }}</q-btn>
     </q-card-actions>
   </q-card>
 </template>
 
 <script setup>
-import { ref, computed } from "vue"
+import { ref, computed, inject } from "vue"
 import { useEditor, EditorContent } from "@tiptap/vue-3"
 import { useQuasar } from "quasar"
 import StarterKit from "@tiptap/starter-kit"
@@ -70,6 +77,7 @@ import Placeholder from "@tiptap/extension-placeholder"
 import CommentEditorButton from "../atoms/CommentEditorButton.vue"
 import BypassStyleCriteriaDialogVue from "../dialogs/BypassStyleCriteriaDialog.vue"
 import { useI18n } from "vue-i18n"
+import { uniqueId } from "lodash"
 
 const { dialog } = useQuasar()
 function dirtyDialog() {
@@ -77,14 +85,16 @@ function dirtyDialog() {
     component: BypassStyleCriteriaDialogVue,
   })
 }
+const uuid = uniqueId()
+
+const emit = defineEmits(["cancel"])
+
 const props = defineProps({
   isInlineComment: {
     type: Boolean,
     default: false,
   },
 })
-
-const emit = defineEmits(["cancel"])
 
 const { t } = useI18n()
 const editor = useEditor({
@@ -109,67 +119,67 @@ const editor = useEditor({
 
 const commentEditorButtons = ref([
   {
-    ariaLabel: "guiElements.button.bold.ariaLabel",
+    ariaLabel: t("guiElements.button.bold.ariaLabel"),
     isActive: computed(() => editor.value.isActive("bold")),
     clickHandler: () => editor.value.chain().focus().toggleBold().run(),
-    tooltipText: "guiElements.button.bold.tooltipText",
+    tooltipText: t("guiElements.button.bold.tooltipText"),
     iconName: "format_bold",
   },
   {
-    ariaLabel: "guiElements.button.italic.ariaLabel",
+    ariaLabel: t("guiElements.button.italic.ariaLabel"),
     isActive: computed(() => editor.value.isActive("italic")),
     clickHandler: () => editor.value.chain().focus().toggleItalic().run(),
-    tooltipText: "guiElements.button.italic.tooltipText",
+    tooltipText: t("guiElements.button.italic.tooltipText"),
     iconName: "format_italic",
   },
   {
-    ariaLabel: "guiElements.button.bulletedList.ariaLabel",
+    ariaLabel: t("guiElements.button.bulletedList.ariaLabel"),
     isActive: computed(() => editor.value.isActive("bulletList")),
     clickHandler: () => editor.value.chain().focus().toggleBulletList().run(),
-    tooltipText: "guiElements.button.bulletedList.tooltipText",
+    tooltipText: t("guiElements.button.bulletedList.tooltipText"),
     iconName: "list",
   },
   {
-    ariaLabel: "guiElements.button.numberedList.ariaLabel",
+    ariaLabel: t("guiElements.button.numberedList.ariaLabel"),
     isActive: computed(() => editor.value.isActive("orderedList")),
     clickHandler: () => editor.value.chain().focus().toggleOrderedList().run(),
-    tooltipText: "guiElements.button.numberedList.tooltipText",
+    tooltipText: t("guiElements.button.numberedList.tooltipText"),
     iconName: "format_list_numbered",
   },
   {
-    ariaLabel: "guiElements.button.indent.ariaLabel",
+    ariaLabel: t("guiElements.button.indent.ariaLabel"),
     isDisabled: computed(() => !editor.value.can().sinkListItem("listItem")),
     clickHandler: () =>
       editor.value.chain().focus().sinkListItem("listItem").run(),
-    tooltipText: "guiElements.button.indent.tooltipText",
+    tooltipText: t("guiElements.button.indent.tooltipText"),
     iconName: "format_indent_increase",
   },
   {
-    ariaLabel: "guiElements.button.unindent.ariaLabel",
+    ariaLabel: t("guiElements.button.unindent.ariaLabel"),
     isDisabled: computed(() => !editor.value.can().liftListItem("listItem")),
     clickHandler: () =>
       editor.value.chain().focus().liftListItem("listItem").run(),
-    tooltipText: "guiElements.button.unindent.tooltipText",
+    tooltipText: t("guiElements.button.unindent.tooltipText"),
     iconName: "format_indent_decrease",
   },
   {
-    ariaLabel: "guiElements.button.link.ariaLabel",
+    ariaLabel: t("guiElements.button.link.ariaLabel"),
     isActive: computed(() => editor.value.isActive("link")),
     clickHandler: () => setLink(),
-    tooltipText: "guiElements.button.link.tooltipText",
+    tooltipText: t("guiElements.button.link.tooltipText"),
     iconName: "insert_link",
   },
   {
-    ariaLabel: "guiElements.button.unlink.ariaLabel",
+    ariaLabel: t("guiElements.button.unlink.ariaLabel"),
     isActive: computed(() => editor.value.isActive("link")),
     clickHandler: () => editor.value.chain().focus().unsetLink().run(),
-    tooltipText: "guiElements.button.unlink.tooltipText",
+    tooltipText: t("guiElements.button.unlink.tooltipText"),
     iconName: "link_off",
   },
 ])
 
 function submitHandler() {
-  if (hasStyleCriteria.value) {
+  if (hasStyleCriteria.value || !props.isInlineComment) {
     return true
   }
   return new Promise((resolve) => {
@@ -212,53 +222,41 @@ function setLink() {
     .run()
 }
 
-const styleCriteria = ref([
-  {
-    id: 1,
-    label: "Relevance",
-    refAttr: "relevance",
+const submission = inject("submission")
+
+const styleCriteria = ref(
+  submission.value.publication.style_criterias.map((c) => ({
+    ...c,
     selected: false,
-    icon: "close_fullscreen",
-  },
-  {
-    id: 2,
-    label: "Accessibility",
-    refAttr: "accessibility",
-    selected: false,
-    icon: "accessibility",
-  },
-  {
-    id: 3,
-    label: "Coherence",
-    refAttr: "coherence",
-    selected: false,
-    icon: "psychology",
-  },
-  {
-    id: 4,
-    label: "Scholarly Dialogue",
-    refAttr: "scholarly_dialogue",
-    selected: false,
-    icon: "question_answer",
-  },
-])
+  }))
+)
 
 const hasStyleCriteria = computed(() => {
   return styleCriteria.value.some((criteria) => criteria.selected)
 })
 </script>
 <style>
-.ProseMirror {
+.comment-editor .ProseMirror {
   background: #ddd;
   border-radius: 5px;
   min-height: 200px;
   padding: 8px;
 }
-.ProseMirror p.is-editor-empty:first-child::before {
+.comment-editor .ProseMirror p.is-editor-empty:first-child::before {
   color: #18453b;
   content: attr(data-placeholder);
   float: left;
   height: 0;
   pointer-events: none;
+}
+
+.q-icon.q-expansion-item__toggle-icon,
+.q-icon.q-expansion-item__toggle-focus {
+  font-size: 1.3em;
+  color: black;
+}
+
+.q-expansion-item--popup.q-expansion-item--collapsed {
+  padding: 0 0;
 }
 </style>
