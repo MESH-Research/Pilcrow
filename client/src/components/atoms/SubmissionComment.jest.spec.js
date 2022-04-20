@@ -38,7 +38,7 @@ describe("SubmissionComment", () => {
     expect(wrapper).toBeTruthy()
   })
 
-  it("reply button click triggers a reply and cancel dismisses the inline comment editor", async () => {
+  it("reply button click triggers a reply and cancel dismisses it", async () => {
     const { wrapper } = wrapperFactory()
     expect(wrapper.findComponent({ ref: "comment_reply" }).exists()).toBe(false)
     const button = wrapper.findComponent({ ref: "reply_button" })
