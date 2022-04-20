@@ -131,5 +131,4 @@ describe("CommentEditor", () => {
     await button.trigger("click")
     expect(wrapper.emitted().cancel).toHaveLength(1)
   })
-
 })

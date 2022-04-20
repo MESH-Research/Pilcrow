@@ -60,7 +60,7 @@
       <q-btn data-ref="submit" color="primary" @click="submitHandler()">{{
         $t("guiElements.form.submit")
       }}</q-btn>
-      <q-btn flat ref="cancel_button" @click="cancelHandler()">{{
+      <q-btn ref="cancel_button" flat @click="cancelHandler()">{{
         $t("guiElements.form.cancel")
       }}</q-btn>
     </q-card-actions>

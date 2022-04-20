@@ -44,7 +44,7 @@ describe("SubmissionComment", () => {
     const button = wrapper.findComponent({ ref: "reply_button" })
     await button.trigger("click")
     expect(wrapper.findComponent({ ref: "comment_reply" }).exists()).toBe(true)
-    await wrapper.findComponent({name: "CommentEditor"}).trigger('cancel')
+    await wrapper.findComponent({ name: "CommentEditor" }).trigger("cancel")
     expect(wrapper.findComponent({ ref: "comment_reply" }).exists()).toBe(false)
   })
 })
