@@ -8,6 +8,7 @@
 
 // This test will pass when run against a clean Quasar project
 import "cypress-axe"
+import { a11yLogViolations } from '../support/helpers'
 
 describe("Landing", () => {
   beforeEach(() => {
@@ -23,7 +24,7 @@ describe("Landing", () => {
     //Wait for page to be ready
     cy.dataCy("vueIndex")
     // check the page for a11y errors
-    cy.checkA11y()
+    cy.checkA11y(null, null, a11yLogViolations)
   })
 })
 describe("Home page tests", () => {

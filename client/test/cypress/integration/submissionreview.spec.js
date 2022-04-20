@@ -2,6 +2,7 @@
 /// <reference path="../support/index.d.ts" />
 
 import "cypress-axe"
+import { a11yLogViolations } from '../support/helpers'
 
 describe("Submissions Review", () => {
   it("should assert the Submission Review page is accessible", () => {
@@ -10,7 +11,7 @@ describe("Submissions Review", () => {
     cy.visit("submission/review/100")
     cy.injectAxe()
     cy.dataCy("submission_review_layout")
-    cy.checkA11y()
+    cy.checkA11y(null, null, a11yLogViolations)
   })
 
   it("should assert the Submission Review page can be accessed from the dashboard", () => {
