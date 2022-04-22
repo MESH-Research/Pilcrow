@@ -1,4 +1,4 @@
-import RegisterPage from "./Register.vue"
+import RegisterPage from "./RegisterPage.vue"
 import { mount } from "@vue/test-utils"
 import {
   installQuasarPlugin,
