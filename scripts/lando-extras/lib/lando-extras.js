@@ -1,7 +1,7 @@
-const yaml = require("yaml-js");
-const fs = require("fs");
+import yaml from 'yaml-js'
+import fs from 'fs'
 
-class LandoExtras {
+export default class LandoExtras {
     #ymlPath;
     #localConfigFile;
     #extrasConfigFile;
@@ -215,5 +215,3 @@ class LandoExtras {
         return this.#getFullPath(this.#extrasConfigFile);
     }
 }
-
-module.exports = LandoExtras;
