@@ -1,9 +1,11 @@
-const { program } = require("commander");
-const chalk = require("chalk");
-const columnify = require("columnify");
-const yesno = require("yesno");
-const dedent = require("dedent-js");
-const LandoExtras = require("./lib/lando-extras");
+import { program } from 'commander';
+import chalk from 'chalk'
+import columnify from 'columnify';
+import yesno from 'yesno';
+import dedent from 'dedent-js'
+
+import LandoExtras from './lib/lando-extras.js';
+
 
 const error = chalk.red;
 const errorBold = chalk.redBright.bold;
@@ -106,9 +108,9 @@ async function main() {
         .description("list available extras templates")
         .action(() => {
             console.log(dedent`
-            
+
             ${getActionsList(extras)}
-            
+
             `);
             program.help();
         });
