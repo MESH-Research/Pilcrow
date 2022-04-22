@@ -54,6 +54,7 @@ Lando has built-in tooling commands that allow a developer to run commands insid
 - `lando mysql`: Start a MySQL client session (TIP: use `lando mysql laravel` to start with the CCR database selected).
 - `lando quasar`: Run the quasar cli inside the client container.
 - `lando extras`: Manage and install tools into `.lando.local.yml`.
+- `lando pandoc`: Run pandoc inside the appserver container
 
 There are other useful tooling commands available. To view a list of all commands available, run `lando` at your command prompt with no arguments.
 
