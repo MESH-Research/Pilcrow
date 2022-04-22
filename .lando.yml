@@ -25,7 +25,12 @@ services:
       - composer install
       - cd /app/backend && composer install
       - bash /app/.lando/no_env_setup.sh
+    build_as_root:
+      - bash /app/.lando/install-pandoc.sh
 tooling:
+  pandoc:
+    service: appserver
+    cmd: pandoc
   yarn:
     service: client
     cmd: yarn
