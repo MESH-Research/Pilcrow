@@ -1,4 +1,4 @@
-import LoginPage from "./Login.vue"
+import LoginPage from "./LoginPage.vue"
 import { describe, expect, it } from "@jest/globals"
 import {
   installQuasarPlugin,
