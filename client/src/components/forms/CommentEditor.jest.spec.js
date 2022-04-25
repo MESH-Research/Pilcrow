@@ -123,4 +123,12 @@ describe("CommentEditor", () => {
       wrapper.findAllComponents('[data-cy="criteria-toggle"]').length
     ).toBe(4)
   })
+
+  it("emits cancel event on click", async () => {
+    const { wrapper } = wrapperFactory()
+    await flushPromises()
+    const button = wrapper.findComponent({ ref: "cancel_button" })
+    await button.trigger("click")
+    expect(wrapper.emitted().cancel).toHaveLength(1)
+  })
 })
