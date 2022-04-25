@@ -42,7 +42,6 @@
         @click="addMode = true"
       />
     </q-card-actions>
-    <q-separator v-if="addMode" />
     <q-card-section v-if="addMode">
       <q-form @submit="assignUser(`editor`, editor_candidate)">
         <div class="q-pl-none">

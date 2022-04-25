@@ -1,5 +1,6 @@
 <template>
   <q-form @submit="onSave">
+    <q-separator />
     <q-item>
       <q-item-section avatar top>
         <q-btn :icon="v$.icon.$model" dense @click="editIcon">
@@ -28,6 +29,7 @@
         </div>
       </q-item-section>
     </q-item>
+    <q-separator />
   </q-form>
 </template>
 

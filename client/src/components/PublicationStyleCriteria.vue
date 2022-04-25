@@ -15,12 +15,14 @@
           @cancel="cancelEdit"
           @save="saveEdit"
         />
+        <style-criteria-form
+          v-if="editId == ''"
+          @cancel="cancelEdit"
+          @save="saveEdit"
+        />
       </q-list>
     </q-card-section>
-    <q-card-section v-if="editId == ''">
-      <style-criteria-form @cancel="cancelEdit" @save="saveEdit" />
-    </q-card-section>
-    <q-card-actions v-else align="right">
+    <q-card-actions v-if="editId === null" align="right">
       <q-btn icon="add_task" label="Add Criteria" flat @click="newItem" />
     </q-card-actions>
   </q-card>
