@@ -38,7 +38,7 @@
     "axios": "^0.26.1",
     "core-js": "^3.22.2",
     "flat": "^5.0.2",
-    "graphql": "^16.3.0",
+    "graphql": "^16.4.0",
     "graphql-tag": "^2.12.6",
     "javascript-time-ago": "^2.3.10",
     "lodash": "^4.17.20",
