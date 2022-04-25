@@ -14,7 +14,11 @@
           <slot />
         </template>
         <template v-else>
-          <q-banner v-if="state === 'error'" class="text-white bg-red" dense>
+          <q-banner
+            v-if="state === 'error'"
+            class="text-white bg-negative"
+            dense
+          >
             {{ errorMessage }}
           </q-banner>
           <q-btn
