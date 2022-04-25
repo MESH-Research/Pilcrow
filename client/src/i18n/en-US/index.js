@@ -317,6 +317,12 @@ export default {
             required: "Name is required.",
           },
         },
+        description: {
+          placeholder: "Enter an optional description for this style criteria",
+          errors: {
+            maxLength: "Description cannot be longer than 4096 characters.",
+          },
+        },
       },
     },
   },

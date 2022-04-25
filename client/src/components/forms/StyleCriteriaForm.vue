@@ -21,8 +21,19 @@
             ['unordered', 'ordered', 'outdent', 'indent'],
             ['undo', 'redo'],
           ]"
+          :class="v$.description.$error ? 'error' : ''"
           placeholder="Enter a description for this style criteria"
         />
+        <div
+          v-if="v$.description.$error && v$.description.maxLength.$invalid"
+          class="text-negative"
+        >
+          {{
+            $t(
+              "publications.style_criteria.fields.description.errors.maxLength"
+            )
+          }}
+        </div>
 
         <div class="row q-gutter-sm justify-end">
           <FormActions :sticky="false" @reset-click="onCancel" />
@@ -119,4 +130,7 @@ function updateModel(validator, value) {
 }
 </script>
 
-<style></style>
+<style lang="sass">
+.q-editor.error
+  border: $negative 1px solid
+</style>
