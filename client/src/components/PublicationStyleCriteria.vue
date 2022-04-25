@@ -35,7 +35,7 @@ import StyleCriteriaForm from "./forms/StyleCriteriaForm.vue"
 import { useFormState } from "src/use/forms"
 import {
   UPDATE_PUBLICATION_STYLE_CRITIERA,
-  create_PUBLICATION_STYLE_CRITIERA,
+  CREATE_PUBLICATION_STYLE_CRITIERA,
 } from "src/graphql/mutations"
 import { useMutation } from "@vue/apollo-composable"
 const editId = ref(null)
@@ -57,7 +57,7 @@ const { updateLoading, mutate: updateCriteria } = useMutation(
   }
 )
 const { createLoading, mutate: createCriteria } = useMutation(
-  create_PUBLICATION_STYLE_CRITIERA,
+  CREATE_PUBLICATION_STYLE_CRITIERA,
   {
     variables: {
       publication_id: publication.value.id,
