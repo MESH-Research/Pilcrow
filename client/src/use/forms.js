@@ -79,6 +79,10 @@ export function useFormState(queryLoadingRef, mutationLoadingRef) {
     saved.value = false
     errorMessage.value = ""
   }
+
+  function setError(message) {
+    errorMessage.value = message
+  }
   return {
     state,
     saved,
@@ -87,6 +91,7 @@ export function useFormState(queryLoadingRef, mutationLoadingRef) {
     mutationLoading: mutationLoadingRef,
     errorMessage,
     reset,
+    setError,
   }
 }
 
