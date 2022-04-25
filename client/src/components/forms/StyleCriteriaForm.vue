@@ -35,7 +35,7 @@
           }}
         </div>
 
-        <div class="row q-gutter-sm justify-end">
+        <div class="row justify-end">
           <FormActions :sticky="false" @reset-click="onCancel" />
         </div>
       </q-item-section>
@@ -51,11 +51,10 @@ import { reactive, onMounted, inject, watchEffect, computed } from "vue"
 import useVuelidate from "@vuelidate/core"
 import { required, maxLength } from "@vuelidate/validators"
 import { isEqual, pick } from "lodash"
-import { getErrorMessageKey } from "src/use/validationHelpers"
 import VQInput from "src/components/atoms/VQInput.vue"
 import FormActions from "../molecules/FormActions.vue"
 
-const { dirty } = inject("formState")
+const { dirty, setError } = inject("formState")
 
 const props = defineProps({
   criteria: {
@@ -119,7 +118,7 @@ function onCancel() {
 function onSave() {
   v$.value.$touch()
   if (v$.value.$invalid) {
-    getErrorMessageKey.value = "Oops, check form above for errors"
+    setError("Oops, check form above for errors")
   } else {
     emit("save", state)
   }
