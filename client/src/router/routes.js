@@ -4,8 +4,8 @@ const routes = [
     component: () => import("layouts/PublicLayout.vue"),
     children: [
       { path: "", component: () => import("pages/Index.vue") },
-      { path: "register", component: () => import("pages/Register.vue") },
-      { path: "login", component: () => import("pages/Login.vue") },
+      { path: "register", component: () => import("pages/RegisterPage.vue") },
+      { path: "login", component: () => import("pages/LoginPage.vue") },
       { path: "logout", component: () => import("src/pages/LogoutPage.vue") },
     ],
   },
@@ -20,7 +20,7 @@ const routes = [
       },
       {
         path: "dashboard/",
-        component: () => import("pages/Dashboard.vue"),
+        component: () => import("pages/DashboardPage.vue"),
       },
       {
         path: "account/",
