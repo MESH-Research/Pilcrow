@@ -1,6 +1,14 @@
 <template>
-  <q-page-sticky v-if="visible" position="bottom-right">
-    <div class="bg-grey-1 q-ma-sm q-pa-md rounded-borders shadow-15">
+  <component
+    :is="sticky ? 'q-page-sticky' : 'div'"
+    v-if="visible"
+    position="bottom-right"
+  >
+    <div
+      :class="
+        sticky ? 'bg-grey-1 q-ma-sm q-pa-md rounded-borders shadow-15' : ''
+      "
+    >
       <div class="q-gutter-md">
         <template v-if="$slots.default">
           <slot />
@@ -30,7 +38,7 @@
         </template>
       </div>
     </div>
-  </q-page-sticky>
+  </component>
 </template>
 
 <script setup>
@@ -39,6 +47,13 @@ import { computed, inject } from "vue"
 const { state, errorMessage } = inject("formState")
 
 defineEmits(["resetClick"])
+
+const props = defineProps({
+  sticky: {
+    type: Boolean,
+    default: true,
+  },
+})
 
 const saveClassList = computed(() => {
   const classes = {
@@ -91,6 +106,8 @@ const resetDisabled = computed(() => {
 })
 
 const visible = computed(() => {
+  if (!props.sticky) return true
+
   return (
     {
       idle: false,

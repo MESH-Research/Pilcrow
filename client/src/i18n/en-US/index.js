@@ -308,6 +308,17 @@ export default {
         success: "{display_name} successfully assigned as an editor.",
       },
     },
+    style_criteria: {
+      fields: {
+        name: {
+          label: "Name",
+          errors: {
+            maxLength: "Name cannot be longer than 20 characters.",
+            required: "Name is required.",
+          },
+        },
+      },
+    },
   },
   submissions: {
     details_heading: "Submission Details",

@@ -1,42 +1,48 @@
 <template>
-  <q-item>
-    <q-item-section avatar top>
-      <q-btn :icon="v$.icon.$model" dense @click="editIcon">
-        <q-tooltip> Click to change icon </q-tooltip>
-      </q-btn>
-    </q-item-section>
-    <q-item-section class="column q-gutter-sm">
-      <q-input
-        v-model="v$.name.$model"
-        outlined
-        label="Criteria Name"
-        :error="v$.name.$error"
-      >
-      </q-input>
-      <q-editor
-        v-model="v$.description.$model"
-        :toolbar="[
-          ['bold', 'italic', 'underline'],
-          ['unordered', 'ordered', 'outdent', 'indent'],
-          ['undo', 'redo'],
-        ]"
-        placeholder="Enter a description for this style criteria"
-      />
+  <q-form @submit="onSave">
+    <q-item>
+      <q-item-section avatar top>
+        <q-btn :icon="v$.icon.$model" dense @click="editIcon">
+          <q-tooltip> Click to change icon </q-tooltip>
+        </q-btn>
+      </q-item-section>
+      <q-item-section class="column q-gutter-sm">
+        <v-q-input
+          :v="v$.name"
+          label="Criteria Name"
+          t="publications.style_criteria.fields.name"
+          @vqupdate="updateModel"
+        />
+        <q-editor
+          v-model="v$.description.$model"
+          :toolbar="[
+            ['bold', 'italic', 'underline'],
+            ['unordered', 'ordered', 'outdent', 'indent'],
+            ['undo', 'redo'],
+          ]"
+          placeholder="Enter a description for this style criteria"
+        />
 
-      <div class="row q-gutter-sm justify-end">
-        <q-btn icon="check" label="Save" />
-        <q-btn icon="cancel" label="Cancel" @click="$emit('cancel')" />
-      </div>
-    </q-item-section>
-  </q-item>
+        <div class="row q-gutter-sm justify-end">
+          <FormActions :sticky="false" @reset-click="onCancel" />
+        </div>
+      </q-item-section>
+    </q-item>
+  </q-form>
 </template>
 
 <script setup>
 import IconFieldDialog from "src/components/forms/IconFieldDialog.vue"
 import { useQuasar } from "quasar"
-import { reactive, onMounted } from "vue"
+import { reactive, onMounted, inject, watchEffect, computed } from "vue"
 import useVuelidate from "@vuelidate/core"
 import { required, maxLength } from "@vuelidate/validators"
+import { isEqual, pick } from "lodash"
+import { getErrorMessageKey } from "src/use/validationHelpers"
+import VQInput from "src/components/atoms/VQInput.vue"
+import FormActions from "../molecules/FormActions.vue"
+
+const { dirty } = inject("formState")
 
 const props = defineProps({
   criteria: {
@@ -44,7 +50,7 @@ const props = defineProps({
     default: () => ({}),
   },
 })
-defineEmits(["cancel", "save"])
+const emit = defineEmits(["cancel", "save"])
 
 const state = reactive({
   id: "",
@@ -68,9 +74,18 @@ const rules = {
 
 const v$ = useVuelidate(rules, state)
 
+const original = computed(() => ({
+  ...pick(props.criteria, ["id", "name", "icon", "description"]),
+}))
+
 onMounted(() => {
   Object.assign(state, props.criteria)
 })
+
+watchEffect(() => {
+  dirty.value = !isEqual(state, original.value)
+})
+
 const { dialog } = useQuasar()
 
 function editIcon() {
@@ -82,6 +97,23 @@ function editIcon() {
   }).onOk((icon) => {
     v$.value.icon.$model = icon
   })
+}
+
+function onCancel() {
+  emit("cancel")
+}
+
+function onSave() {
+  v$.value.$touch()
+  if (v$.value.$invalid) {
+    getErrorMessageKey.value = "Oops, check form above for errors"
+  } else {
+    emit("save", state)
+  }
+}
+
+function updateModel(validator, value) {
+  validator.$model = value
 }
 </script>
 

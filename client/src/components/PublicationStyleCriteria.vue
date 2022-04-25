@@ -1,5 +1,5 @@
 <template>
-  <q-card flat>
+  <q-card flat class="q-ma-none">
     <q-card-section>
       <div class="text-h3">Style Critiera</div>
     </q-card-section>
@@ -13,26 +13,29 @@
           :edit-id="editId"
           @edit="editItem(criteria.id)"
           @cancel="cancelEdit"
+          @save="saveEdit"
         />
       </q-list>
     </q-card-section>
     <q-card-section v-if="editId == ''">
-      <style-criteria-form @cancel="cancelEdit" />
+      <style-criteria-form @cancel="cancelEdit" @save="saveEdit" />
     </q-card-section>
     <q-card-actions v-else align="right">
       <q-btn icon="add_task" label="Add Criteria" flat @click="newItem" />
     </q-card-actions>
-
-    <q-separator v-if="editMode" />
-    <q-card-section v-if="editMode"> </q-card-section>
   </q-card>
 </template>
 
 <script setup>
-import { ref, toRef } from "vue"
+import { ref, toRef, provide, computed } from "vue"
 import StyleCriteriaItem from "src/components/molecules/StyleCriteriaItem.vue"
 import StyleCriteriaForm from "./forms/StyleCriteriaForm.vue"
-
+import { useFormState } from "src/use/forms"
+import {
+  UPDATE_PUBLICATION_STYLE_CRITIERA,
+  create_PUBLICATION_STYLE_CRITIERA,
+} from "src/graphql/mutations"
+import { useMutation } from "@vue/apollo-composable"
 const editId = ref(null)
 
 const props = defineProps({
@@ -41,6 +44,27 @@ const props = defineProps({
     required: true,
   },
 })
+const publication = toRef(props, "publication")
+
+const { updateLoading, mutate: updateCriteria } = useMutation(
+  UPDATE_PUBLICATION_STYLE_CRITIERA,
+  {
+    variables: {
+      publication_id: publication.value.id,
+    },
+  }
+)
+const { createLoading, mutate: createCriteria } = useMutation(
+  create_PUBLICATION_STYLE_CRITIERA,
+  {
+    variables: {
+      publication_id: publication.value.id,
+    },
+  }
+)
+const loading = computed(() => updateLoading || createLoading)
+const formState = useFormState(ref(false), loading)
+provide("formState", formState)
 
 function editItem(criteriaId) {
   if (editId.value !== null) return
@@ -50,11 +74,21 @@ function editItem(criteriaId) {
 
 function cancelEdit() {
   editId.value = null
+  formState.reset()
 }
 
 function newItem() {
   editId.value = ""
 }
 
-const publication = toRef(props, "publication")
+async function saveEdit(criteria) {
+  try {
+    const method = criteria.id === "" ? createCriteria : updateCriteria
+    await method(criteria)
+    formState.reset()
+    editId.value = null
+  } catch (error) {
+    formState.errorMessage.value = "Unable to save.  Check form for errors."
+  }
+}
 </script>

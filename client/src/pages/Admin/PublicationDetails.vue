@@ -15,13 +15,22 @@
     <div class="row">
       <h2 class="col-sm-12" data-cy="publication_details_heading">
         {{ publication.name }}
+
+        <div v-if="publication.is_publicly_visible">
+          <q-badge>
+            Public
+            <q-tooltip>This publication is visible to anyone.</q-tooltip>
+          </q-badge>
+        </div>
+        <div v-else>
+          <q-badge>
+            Private
+            <q-tooltip>
+              Only visible to users associated with the publication.
+            </q-tooltip>
+          </q-badge>
+        </div>
       </h2>
-      <div v-if="publication.is_publicly_visible">
-        <p>Public</p>
-      </div>
-      <div v-else>
-        <p>Only visible to users associated with the publication.</p>
-      </div>
     </div>
     <div class="column q-gutter-md">
       <publication-users :publication="publication" />
