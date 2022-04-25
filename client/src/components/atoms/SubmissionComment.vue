@@ -70,7 +70,7 @@
       <span class="text-h4 q-pl-sm">{{
         $t("submissions.comment.reply.title")
       }}</span>
-      <comment-editor :is-inline-comment="false" />
+      <comment-editor :is-inline-comment="false" @cancel="cancelReply" />
     </q-card-section>
     <q-card-actions class="q-pa-md q-pb-lg">
       <q-btn
@@ -150,6 +150,9 @@ const props = defineProps({
   },
 })
 
+function cancelReply() {
+  isReplying.value = false
+}
 function initiateReply() {
   isReplying.value = true
 }

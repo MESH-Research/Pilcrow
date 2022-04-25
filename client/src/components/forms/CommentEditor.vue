@@ -60,7 +60,9 @@
       <q-btn data-ref="submit" color="primary" @click="submitHandler()">{{
         $t("guiElements.form.submit")
       }}</q-btn>
-      <q-btn flat>{{ $t("guiElements.form.cancel") }}</q-btn>
+      <q-btn ref="cancel_button" flat @click="cancelHandler()">{{
+        $t("guiElements.form.cancel")
+      }}</q-btn>
     </q-card-actions>
   </q-card>
 </template>
@@ -84,6 +86,8 @@ function dirtyDialog() {
   })
 }
 const uuid = uniqueId()
+
+const emit = defineEmits(["cancel"])
 
 const props = defineProps({
   isInlineComment: {
@@ -187,6 +191,10 @@ function submitHandler() {
         resolve(false)
       })
   })
+}
+
+function cancelHandler() {
+  emit("cancel")
 }
 
 function setLink() {
