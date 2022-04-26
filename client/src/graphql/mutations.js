@@ -268,7 +268,7 @@ export const MARK_ALL_NOTIFICATIONS_READ = gql`
   }
 `
 
-export const UPDATE_PUBLICATION_STYLE_CRITIERA = gql`
+export const UPDATE_PUBLICATION_STYLE_CRITERIA = gql`
   mutation UpdatePublicationStyleCriteria(
     $publication_id: ID!
     $id: ID!
@@ -297,7 +297,7 @@ export const UPDATE_PUBLICATION_STYLE_CRITIERA = gql`
   }
 `
 
-export const CREATE_PUBLICATION_STYLE_CRITIERA = gql`
+export const CREATE_PUBLICATION_STYLE_CRITERIA = gql`
   mutation CreatePublicationStyleCriteria(
     $publication_id: ID!
     $name: String!
