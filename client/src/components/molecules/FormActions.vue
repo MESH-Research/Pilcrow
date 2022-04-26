@@ -26,6 +26,7 @@
             :class="saveClassList"
             :data-cy="saveCyAttr"
             type="submit"
+            :flat="flat"
           >
             <q-icon v-if="saveIcon === 'check'" name="check" />
             <q-spinner v-else-if="saveIcon === 'spinner'" />
@@ -35,6 +36,7 @@
             v-if="!resetDisabled"
             class="bg-grey-4 ml-sm"
             data-cy="button_discard"
+            :flat="flat"
             @click="$emit('resetClick')"
           >
             {{ $t("buttons.discard_changes") }}
@@ -56,6 +58,10 @@ const props = defineProps({
   sticky: {
     type: Boolean,
     default: true,
+  },
+  flat: {
+    type: Boolean,
+    default: false,
   },
 })
 

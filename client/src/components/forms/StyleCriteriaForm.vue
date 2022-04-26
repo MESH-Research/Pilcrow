@@ -36,7 +36,7 @@
         </div>
 
         <div class="row justify-end">
-          <FormActions :sticky="false" @reset-click="onCancel" />
+          <FormActions flat :sticky="false" @reset-click="onCancel" />
         </div>
       </q-item-section>
     </q-item>
