@@ -54,7 +54,7 @@
 </template>
 
 <script setup>
-import IconFieldDialog from "src/components/forms/IconFieldDialog.vue"
+import SelectIconDialog from "src/components/dialogs/SelectIconDialog.vue"
 import { useQuasar } from "quasar"
 import { reactive, onMounted, inject, watchEffect, computed } from "vue"
 import useVuelidate from "@vuelidate/core"
@@ -111,7 +111,7 @@ const { dialog } = useQuasar()
 
 function editIcon() {
   dialog({
-    component: IconFieldDialog,
+    component: SelectIconDialog,
     componentProps: {
       icon: state.icon,
     },
