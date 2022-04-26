@@ -4,7 +4,9 @@
     <q-item>
       <q-item-section avatar top>
         <q-btn :icon="v$.icon.$model" dense @click="editIcon">
-          <q-tooltip> Click to change icon </q-tooltip>
+          <q-tooltip
+            >{{ $t("publications.style_criteria.fields.icon.tooltip") }}
+          </q-tooltip>
         </q-btn>
       </q-item-section>
       <q-item-section class="column q-gutter-sm">
@@ -22,7 +24,9 @@
             ['undo', 'redo'],
           ]"
           :class="v$.description.$error ? 'error' : ''"
-          placeholder="Enter a description for this style criteria"
+          :placeholder="
+            $t('publications.style_criteria.fields.description.placeholder')
+          "
         />
         <div
           v-if="v$.description.$error && v$.description.maxLength.$invalid"

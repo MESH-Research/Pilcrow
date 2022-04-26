@@ -323,6 +323,9 @@ export default {
             maxLength: "Description cannot be longer than 4096 characters.",
           },
         },
+        icon: {
+          tooltip: "Click to change icon.",
+        },
       },
     },
   },
