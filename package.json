@@ -18,12 +18,12 @@
         "release:minor": "standard-version --release-as minor",
         "release:patch": "standard-version --release-as patch",
         "release:major": "standard-version --release-as major",
-        "release:details": "conventional-changelog -n ./scripts/ccr-custom-changelog/release.js -r 2"
+        "release:details": "conventional-changelog -n ./scripts/ccr-custom-changelog/release.cjs -r 2"
     },
     "standard-version": {
         "header": "<!-- markdownlint-disable MD024 MD001 -->\n# Changelog\n\nAll notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.\n"
     },
     "type": "module",
-    "version": "0.16.0",
+    "version": "0.16.1",
     "dependencies": {}
 }
