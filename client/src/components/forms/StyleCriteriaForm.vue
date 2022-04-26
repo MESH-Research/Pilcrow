@@ -3,7 +3,7 @@
     <q-separator />
     <q-item>
       <q-item-section avatar top>
-        <q-btn :icon="v$.icon.$model" dense @click="editIcon">
+        <q-btn ref="icon-button" :icon="v$.icon.$model" dense @click="editIcon">
           <q-tooltip
             >{{ $t("publications.style_criteria.fields.icon.tooltip") }}
           </q-tooltip>
@@ -11,13 +11,17 @@
       </q-item-section>
       <q-item-section class="column q-gutter-sm">
         <v-q-input
+          ref="name-input"
           :v="v$.name"
           label="Criteria Name"
           t="publications.style_criteria.fields.name"
+          data-cy="name-input"
           @vqupdate="updateModel"
         />
         <q-editor
+          ref="description-input"
           v-model="v$.description.$model"
+          data-cy="description-input"
           :toolbar="[
             ['bold', 'italic', 'underline'],
             ['unordered', 'ordered', 'outdent', 'indent'],
@@ -31,6 +35,7 @@
         <div
           v-if="v$.description.$error && v$.description.maxLength.$invalid"
           class="text-negative"
+          data-cy="description-errors"
         >
           {{
             $t(
