@@ -1,9 +1,9 @@
 import { mount } from "@vue/test-utils"
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-jest"
-import PublicationDetailsPage from "./PublicationDetails.vue"
+import PublicationUsers from "./PublicationUsers.vue"
 import { ApolloClients } from "@vue/apollo-composable"
 import { createMockClient } from "mock-apollo-client"
-import { GET_PUBLICATION } from "src/graphql/queries"
+import { nextTick } from "vue"
 import flushPromises from "flush-promises"
 import RoleMapper from "src/mappers/roles"
 import {
@@ -34,8 +34,40 @@ installQuasarPlugin()
 
 describe("publication details page mount", () => {
   const mockClient = createMockClient()
-  const makeWrapper = () =>
-    mount(PublicationDetailsPage, {
+  const makeWrapper = () => {
+    const publicationUsersData = [
+      {
+        email: "jestEditor@ccrproject.dev",
+        name: "Jest Editor",
+        username: "jestEditor",
+        pivot: {
+          id: 1,
+          role_id: 3,
+          user_id: 103,
+        },
+      },
+      {
+        email: "jestPublicationAdministrator@ccrproject.dev",
+        name: "Jest Publication Admin",
+        username: "jestPubAdmin",
+        pivot: {
+          id: 2,
+          role_id: 2,
+          user_id: 102,
+        },
+      },
+      {
+        email: "jestApplicationAdministrator@ccrproject.dev",
+        name: "Jest Application Admin And Editor",
+        username: "jestAppAdminEditor",
+        pivot: {
+          id: 3,
+          role_id: 3,
+          user_id: 101,
+        },
+      },
+    ]
+    return mount(PublicationUsers, {
       global: {
         provide: {
           [ApolloClients]: { default: mockClient },
@@ -46,44 +78,16 @@ describe("publication details page mount", () => {
         stubs: ["router-link"],
       },
       props: {
-        id: "1",
+        publication: {
+          id: "1",
+          name: "Jest Publication",
+          is_publicly_visible: true,
+          users: publicationUsersData,
+          style_criterias: [],
+        },
       },
     })
-
-  const getPubHandler = jest.fn()
-  mockClient.setRequestHandler(GET_PUBLICATION, getPubHandler)
-  const publicationUsersData = [
-    {
-      email: "jestEditor@ccrproject.dev",
-      name: "Jest Editor",
-      username: "jestEditor",
-      pivot: {
-        id: 1,
-        role_id: 3,
-        user_id: 103,
-      },
-    },
-    {
-      email: "jestPublicationAdministrator@ccrproject.dev",
-      name: "Jest Publication Admin",
-      username: "jestPubAdmin",
-      pivot: {
-        id: 2,
-        role_id: 2,
-        user_id: 102,
-      },
-    },
-    {
-      email: "jestApplicationAdministrator@ccrproject.dev",
-      name: "Jest Application Admin And Editor",
-      username: "jestAppAdminEditor",
-      pivot: {
-        id: 3,
-        role_id: 3,
-        user_id: 101,
-      },
-    },
-  ]
+  }
 
   const mutateAssignHandler = jest.fn()
   mockClient.setRequestHandler(CREATE_PUBLICATION_USER, mutateAssignHandler)
@@ -93,23 +97,12 @@ describe("publication details page mount", () => {
 
   beforeEach(async () => {
     jest.resetAllMocks()
-    getPubHandler.mockResolvedValue({
-      data: {
-        publication: {
-          id: 1,
-          name: "Jest Publication",
-          is_publicly_visible: true,
-          users: publicationUsersData,
-        },
-      },
-    })
   })
 
   it("mounts without errors", async () => {
     const wrapper = makeWrapper()
     await flushPromises()
     expect(wrapper).toBeTruthy()
-    expect(getPubHandler).toBeCalledWith({ id: "1" })
   })
 
   test("all existing editors appear within the editors list", async () => {
@@ -140,6 +133,8 @@ describe("publication details page mount", () => {
       email: "jestEditorCandidate@ccrproject.dev",
       username: "jestEditorCandidate",
     }
+    wrapper.vm.addMode = true
+    await nextTick()
     wrapper.findComponent({ ref: "assignBtn" }).trigger("submit")
     await flushPromises()
 
@@ -162,6 +157,8 @@ describe("publication details page mount", () => {
       email: "jestEditorCandidate@ccrproject.dev",
       username: "jestEditorCandidate",
     }
+    wrapper.vm.addMode = true
+    await nextTick()
     wrapper.findComponent({ ref: "assignBtn" }).trigger("submit")
     await flushPromises()
 
