@@ -118,7 +118,9 @@ async function handleUserListClick({ user, action }) {
   }
 }
 
-const { mutate: assignUserMutate } = useMutation(CREATE_PUBLICATION_USER)
+const { mutate: assignUserMutate } = useMutation(CREATE_PUBLICATION_USER, {
+  refetchQueries: ["GetPublication"],
+})
 
 async function assignUser(role_name, candidate_model) {
   try {
@@ -145,7 +147,9 @@ function resetForm() {
   editor_candidate.value = null
 }
 
-const { mutate: unassignUserMutate } = useMutation(DELETE_PUBLICATION_USER)
+const { mutate: unassignUserMutate } = useMutation(DELETE_PUBLICATION_USER, {
+  refetchQueries: ["GetPublication"],
+})
 
 async function unassignUser(role_name, user) {
   try {

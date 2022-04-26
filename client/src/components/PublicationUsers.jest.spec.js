@@ -10,6 +10,7 @@ import {
   CREATE_PUBLICATION_USER,
   DELETE_PUBLICATION_USER,
 } from "src/graphql/mutations"
+import { GET_PUBLICATION } from "src/graphql/queries"
 
 const mockNewStatus = jest.fn()
 jest.mock("src/use/guiElements", () => ({
@@ -32,41 +33,48 @@ jest.mock("vue-i18n", () => ({
 
 installQuasarPlugin()
 
+const publicationData = {
+  id: "1",
+  name: "Jest Publication",
+  is_publicly_visible: true,
+  users: [
+    {
+      email: "jestEditor@ccrproject.dev",
+      name: "Jest Editor",
+      username: "jestEditor",
+      pivot: {
+        id: 1,
+        role_id: 3,
+        user_id: 103,
+      },
+    },
+    {
+      email: "jestPublicationAdministrator@ccrproject.dev",
+      name: "Jest Publication Admin",
+      username: "jestPubAdmin",
+      pivot: {
+        id: 2,
+        role_id: 2,
+        user_id: 102,
+      },
+    },
+    {
+      email: "jestApplicationAdministrator@ccrproject.dev",
+      name: "Jest Application Admin And Editor",
+      username: "jestAppAdminEditor",
+      pivot: {
+        id: 3,
+        role_id: 3,
+        user_id: 101,
+      },
+    },
+  ],
+  style_criterias: [],
+}
+
 describe("publication details page mount", () => {
   const mockClient = createMockClient()
   const makeWrapper = () => {
-    const publicationUsersData = [
-      {
-        email: "jestEditor@ccrproject.dev",
-        name: "Jest Editor",
-        username: "jestEditor",
-        pivot: {
-          id: 1,
-          role_id: 3,
-          user_id: 103,
-        },
-      },
-      {
-        email: "jestPublicationAdministrator@ccrproject.dev",
-        name: "Jest Publication Admin",
-        username: "jestPubAdmin",
-        pivot: {
-          id: 2,
-          role_id: 2,
-          user_id: 102,
-        },
-      },
-      {
-        email: "jestApplicationAdministrator@ccrproject.dev",
-        name: "Jest Application Admin And Editor",
-        username: "jestAppAdminEditor",
-        pivot: {
-          id: 3,
-          role_id: 3,
-          user_id: 101,
-        },
-      },
-    ]
     return mount(PublicationUsers, {
       global: {
         provide: {
@@ -78,13 +86,7 @@ describe("publication details page mount", () => {
         stubs: ["router-link"],
       },
       props: {
-        publication: {
-          id: "1",
-          name: "Jest Publication",
-          is_publicly_visible: true,
-          users: publicationUsersData,
-          style_criterias: [],
-        },
+        publication: publicationData,
       },
     })
   }
@@ -95,8 +97,23 @@ describe("publication details page mount", () => {
   const mutateRemoveHandler = jest.fn()
   mockClient.setRequestHandler(DELETE_PUBLICATION_USER, mutateRemoveHandler)
 
+  mockClient.setRequestHandler(
+    GET_PUBLICATION,
+    jest.fn().mockResolvedValue({ data: { publication: publicationData } })
+  )
+  const originalWarn = console.warn.bind(console.warn)
   beforeEach(async () => {
     jest.resetAllMocks()
+
+    //refetchQueries warning is thrown when trying to test this outside of the parent component.
+    //We override console.warn to silence this warning while still passing on other warnings.
+    console.warn = (msg) =>
+      !msg.toString().includes("refetchQueries options.include array") &&
+      originalWarn(msg)
+  })
+
+  afterEach(() => {
+    console.warn = originalWarn
   })
 
   it("mounts without errors", async () => {
