@@ -9,6 +9,7 @@
           :is="editId === criteria.id ? StyleCriteriaForm : StyleCriteriaItem"
           v-for="criteria in publication.style_criterias"
           :key="criteria.id"
+          data-cy="listItem"
           :criteria="criteria"
           :edit-id="editId"
           @edit="editItem(criteria.id)"
@@ -17,13 +18,20 @@
         />
         <style-criteria-form
           v-if="editId == ''"
+          ref="addForm"
           @cancel="cancelEdit"
           @save="saveEdit"
         />
       </q-list>
     </q-card-section>
     <q-card-actions v-if="editId === null" align="right">
-      <q-btn icon="add_task" label="Add Criteria" flat @click="newItem" />
+      <q-btn
+        ref="addBtn"
+        icon="add_task"
+        label="Add Criteria"
+        flat
+        @click="newItem"
+      />
     </q-card-actions>
   </q-card>
 </template>

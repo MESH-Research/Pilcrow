@@ -8,7 +8,7 @@
       <q-item-label caption>{{ criteria.description }}</q-item-label>
     </q-item-section>
     <q-item-section v-if="editId === null" side>
-      <q-btn icon="edit" dense flat @click="$emit('edit')" />
+      <q-btn data-cy="editBtn" icon="edit" dense flat @click="$emit('edit')" />
     </q-item-section>
   </q-item>
 </template>
