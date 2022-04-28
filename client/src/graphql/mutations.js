@@ -178,16 +178,6 @@ export const CREATE_SUBMISSION_USER = gql`
       }
     ) {
       id
-      users {
-        name
-        email
-        username
-        pivot {
-          id
-          user_id
-          role_id
-        }
-      }
     }
   }
 `
@@ -204,16 +194,6 @@ export const DELETE_SUBMISSION_USER = gql`
       submission_id: $submission_id
     ) {
       id
-      users {
-        name
-        email
-        username
-        pivot {
-          id
-          user_id
-          role_id
-        }
-      }
     }
   }
 `
