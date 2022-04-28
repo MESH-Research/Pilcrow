@@ -40,7 +40,7 @@
 <script setup>
 import { ref, toRef, provide, computed } from "vue"
 import StyleCriteriaItem from "src/components/molecules/StyleCriteriaItem.vue"
-import StyleCriteriaForm from "./forms/StyleCriteriaForm.vue"
+import StyleCriteriaForm from "src/components/forms/StyleCriteriaForm.vue"
 import { useFormState } from "src/use/forms"
 import {
   UPDATE_PUBLICATION_STYLE_CRITERIA,
