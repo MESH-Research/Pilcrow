@@ -2,7 +2,11 @@
   <q-dialog ref="dialogRef" full-width @hide="onDialogHide">
     <q-card>
       <q-card-section class="column q-gutter-sm">
-        <q-input v-model="filter" label="Search Icons" icon="search" />
+        <q-input
+          v-model="filter"
+          label="$t('publications.style_criteria.fields.icon.search')"
+          icon="search"
+        />
         <q-icon-picker
           :model-value="props.icon"
           icon-set="material-icons"

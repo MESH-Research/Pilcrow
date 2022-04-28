@@ -1,7 +1,7 @@
 <template>
   <q-card flat class="q-ma-none">
     <q-card-section>
-      <div class="text-h3">Style Critiera</div>
+      <div class="text-h3">{{ $t("publications.style_criteria.heading") }}</div>
     </q-card-section>
     <q-card-section>
       <q-list bordered separator>

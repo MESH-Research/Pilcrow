@@ -296,12 +296,16 @@ export default {
       duplicate_name: "Publication name already exists.",
     },
     editor: {
+      heading: "Editors",
       none: "No editors are assigned to this publication.",
       unassign: {
+        ariaLabel: "Unassign",
+        helpText: "Remove editor",
         error: "An error occurred while attempting to unassign an editor.",
         success: "{display_name} successfully unassigned as an editor.",
       },
       assign: {
+        label: "Assign",
         duplicate: "That editor is already assigned to this publication.",
         error:
           "An error occurred while attempting to assign an editor. Is this user already assigned as an editor?",
@@ -309,6 +313,7 @@ export default {
       },
     },
     style_criteria: {
+      heading: "Style Criteria",
       edit_button: "Edit",
       fields: {
         name: {
@@ -327,6 +332,7 @@ export default {
         icon: {
           tooltip: "Click to change icon.",
           ariaLabel: "Change icon.",
+          search: "Search icons",
         },
       },
     },

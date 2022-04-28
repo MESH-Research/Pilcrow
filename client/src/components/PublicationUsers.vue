@@ -1,7 +1,7 @@
 <template>
   <q-card flat class="q-ma-none">
     <q-card-section>
-      <div class="text-h3">Editors</div>
+      <div class="text-h3">{{ $t("publications.editor.heading") }}}</div>
     </q-card-section>
     <q-card-section>
       <div v-if="editors.length">
@@ -11,10 +11,10 @@
           :users="editors"
           :actions="[
             {
-              ariaLabel: 'Unassign',
+              ariaLabel: $t('publications.editor.unassign.ariaLabel'),
               icon: 'person_remove',
               action: 'unassignEditor',
-              help: 'Remove Editor',
+              help: $t('publications.editor.unassign.helpText'),
               cyAttr: 'button_unassign_editor',
             },
           ]"
@@ -37,7 +37,7 @@
     <q-card-actions v-if="!addMode" align="right">
       <q-btn
         icon="person_add"
-        label="Add editor"
+        :label="$t('publications.editor.assign.label')"
         data-cy="addEditorButton"
         flat
         @click="addMode = true"
@@ -58,7 +58,7 @@
                 :ripple="{ center: true }"
                 color="primary"
                 data-cy="button_assign_editor"
-                label="Assign"
+                label="$t('publications.editor.assign.label')"
                 type="submit"
                 stretch
                 @click="assignUser('editor', editor_candidate)"
