@@ -6,6 +6,7 @@
       :user="user"
       :index="index"
       :actions="actions"
+      :data-cy="dataCy"
       @action-click="bubble"
     />
   </q-list>
