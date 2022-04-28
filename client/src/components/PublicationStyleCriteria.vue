@@ -57,21 +57,16 @@ const props = defineProps({
 })
 const publication = toRef(props, "publication")
 
+const variables = {
+  publication_id: publication.value.id,
+}
 const { updateLoading, mutate: updateCriteria } = useMutation(
   UPDATE_PUBLICATION_STYLE_CRITERIA,
-  {
-    variables: {
-      publication_id: publication.value.id,
-    },
-  }
+  { variables }
 )
 const { createLoading, mutate: createCriteria } = useMutation(
   CREATE_PUBLICATION_STYLE_CRITERIA,
-  {
-    variables: {
-      publication_id: publication.value.id,
-    },
-  }
+  { variables }
 )
 const loading = computed(() => updateLoading || createLoading)
 const formState = useFormState(ref(false), loading)
