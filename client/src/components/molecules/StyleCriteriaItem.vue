@@ -8,7 +8,14 @@
       <q-item-label caption>{{ criteria.description }}</q-item-label>
     </q-item-section>
     <q-item-section v-if="editId === null" side>
-      <q-btn data-cy="editBtn" icon="edit" dense flat @click="$emit('edit')" />
+      <q-btn
+        data-cy="editBtn"
+        icon="edit"
+        dense
+        flat
+        aria-label="$t('publication.style_critiera.edit_button')"
+        @click="$emit('edit')"
+      />
     </q-item-section>
   </q-item>
 </template>

@@ -3,7 +3,14 @@
     <q-separator />
     <q-item>
       <q-item-section avatar top>
-        <q-btn ref="icon-button" :icon="v$.icon.$model" dense @click="editIcon">
+        <q-btn
+          ref="icon-button"
+          data-cy="icon-button"
+          :icon="v$.icon.$model"
+          dense
+          aria-label="$t('publications.style_criteria.fields.icon.ariaLabel')"
+          @click="editIcon"
+        >
           <q-tooltip
             >{{ $t("publications.style_criteria.fields.icon.tooltip") }}
           </q-tooltip>

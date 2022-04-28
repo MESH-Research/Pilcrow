@@ -38,6 +38,7 @@
       <q-btn
         icon="person_add"
         label="Add editor"
+        data-cy="addEditorButton"
         flat
         @click="addMode = true"
       />

@@ -309,6 +309,7 @@ export default {
       },
     },
     style_criteria: {
+      edit_button: "Edit",
       fields: {
         name: {
           label: "Name",
@@ -325,6 +326,7 @@ export default {
         },
         icon: {
           tooltip: "Click to change icon.",
+          ariaLabel: "Change icon.",
         },
       },
     },

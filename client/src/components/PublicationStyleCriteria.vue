@@ -27,6 +27,7 @@
     <q-card-actions v-if="editId === null" align="right">
       <q-btn
         ref="addBtn"
+        data-cy="add-criteria-button"
         icon="add_task"
         label="Add Criteria"
         flat
