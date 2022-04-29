@@ -6,7 +6,9 @@
   >
     <div
       :class="
-        sticky ? 'bg-grey-1 q-ma-sm q-pa-md rounded-borders shadow-15' : ''
+        sticky
+          ? 'bg-grey-1 q-ma-sm q-pa-md rounded-borders shadow-15'
+          : 'q-my-sm'
       "
     >
       <div class="q-gutter-md">

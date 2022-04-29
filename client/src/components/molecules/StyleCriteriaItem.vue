@@ -1,6 +1,6 @@
 <template>
-  <q-item>
-    <q-item-section avatar>
+  <q-item class="q-px-md">
+    <q-item-section avatar class="column content-center">
       <q-icon :name="criteria.icon" />
     </q-item-section>
     <q-item-section>
