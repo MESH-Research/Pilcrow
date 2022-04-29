@@ -1,0 +1,37 @@
+<template>
+  <q-item class="q-px-md">
+    <q-item-section avatar class="column content-center">
+      <q-icon :name="criteria.icon" />
+    </q-item-section>
+    <q-item-section>
+      <q-item-label>{{ criteria.name }}</q-item-label>
+      <q-item-label caption>{{ criteria.description }}</q-item-label>
+    </q-item-section>
+    <q-item-section v-if="editId === null" side>
+      <q-btn
+        data-cy="editBtn"
+        icon="edit"
+        dense
+        flat
+        aria-label="$t('publication.style_critiera.edit_button')"
+        @click="$emit('edit')"
+      />
+    </q-item-section>
+  </q-item>
+</template>
+
+<script setup>
+defineProps({
+  criteria: {
+    type: Object,
+    required: true,
+  },
+  editId: {
+    type: String,
+    default: null,
+    required: false,
+  },
+})
+
+defineEmits(["edit"])
+</script>
