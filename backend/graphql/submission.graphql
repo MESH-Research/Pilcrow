@@ -1,3 +1,37 @@
+extend type Query {
+    "Return a submission by ID"
+    submission(id: ID @eq): Submission @find
+
+    "Return all submissions"
+    submissions: [Submission!]! @paginate(defaultCount: 100)
+}
+
+extend type Mutation {
+    "Create a new submission under a publication"
+    createSubmission(input: CreateSubmissionInput! @spread): Submission!
+        @event(dispatch: "App\\Events\\SubmissionCreated")
+
+    "Create an association between a user, role, and submission"
+    createSubmissionUser(
+        submission_user: CreateSubmissionUserInput! @spread
+    ): SubmissionUser! @create @can(ability: "create", injectArgs: true)
+
+    "Delete an association between a user, role, and submission"
+    deleteSubmissionUser(
+        user_id: ID!
+        role_id: ID!
+        submission_id: ID!
+    ): SubmissionUser!
+        @guard
+        @can(ability: "delete", injectArgs: true)
+        @field(resolver: "App\\GraphQL\\Mutations\\DeleteSubmissionUser@delete")
+
+    "Create an association between an uploaded file and a submission"
+    createSubmissionFile(
+        input: CreateSubmissionFileInput! @spread
+    ): SubmissionFile!
+}
+
 """
 A Submission
 """
@@ -7,7 +41,9 @@ type Submission {
     created_at: DateTime!
     updated_at: DateTime
     publication: Publication!
-    users: [User!]! @belongsToMany
+    reviewers: [User!]! @belongsToMany
+    review_coordinators: [User!]! @belongsToMany(relation: "reviewCoordinators")
+    submitters: [User!]! @belongsToMany
     files: [SubmissionFile]! @hasMany
     pivot: SubmissionUser
     status: SubmissionStatus!
@@ -45,4 +81,55 @@ enum SubmissionStatus {
     AWAITING_REVISION @enum(value: 10)
     ARCHIVED @enum(value: 11)
     DELETED @enum(value: 12)
+}
+
+"""
+Input type for creating a new submission via the createSubmission mutation
+"""
+input CreateSubmissionInput @validator(class: "SubmissionInputValidator") {
+    title: String! @trim
+    publication_id: ID!
+    users: CreateSubmissionUsersBelongsToMany
+    files: CreateSubmissionFilesHasMany
+}
+
+"""
+Input type for connecting newly created submissions to users via nested mutation
+"""
+input CreateSubmissionUsersBelongsToMany {
+    connect: [ConnectSubmissionUser!]
+}
+
+"""
+Input type for inserting the pivot table data of a newly created submission user:w
+"""
+input ConnectSubmissionUser {
+    id: ID!
+    role_id: ID!
+}
+
+"""
+Input type for connecting newly created submissions to files via nested mutation
+"""
+input CreateSubmissionFilesHasMany {
+    create: [Upload!]
+}
+
+"""
+Input type for creating a new association between a submission, role, and user via the createSubmissionUser mutation
+"""
+input CreateSubmissionUserInput
+    @validator(class: "SubmissionUserInputValidator") {
+    user_id: ID!
+    role_id: ID!
+    submission_id: ID!
+}
+
+"""
+Input type for creating a new association between an uploaded file and a submission
+"""
+input CreateSubmissionFileInput
+    @validator(class: "SubmissionFileInputValidator") {
+    submission_id: ID!
+    file_upload: Upload!
 }

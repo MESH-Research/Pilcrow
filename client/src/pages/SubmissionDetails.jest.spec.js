@@ -47,78 +47,56 @@ describe("submissions details page mount", () => {
     return wrapper
   }
 
-  const submissionUsersData = [
-    {
-      name: "Jest Submitter 1",
-      username: "jestSubmitter1",
-      email: "jestsubmitter1@msu.edu",
-      pivot: {
+  const submissionUsersData = {
+    submitters: [
+      {
         id: "1",
-        role_id: "6",
-        user_id: "1",
+        name: "Jest Submitter 1",
+        username: "jestSubmitter1",
+        email: "jestsubmitter1@msu.edu",
       },
-    },
-    {
-      name: "Jest Reviewer 1",
-      username: "jestReviewer1",
-      email: "jestreviewer1@msu.edu",
-      pivot: {
-        id: "2",
-        role_id: "5",
-        user_id: "2",
-      },
-    },
-    {
-      name: "Jest Reviewer 2",
-      username: "jestReviewer2",
-      email: "jestreviewer2@msu.edu",
-      pivot: {
-        id: "3",
-        role_id: "5",
-        user_id: "3",
-      },
-    },
-    {
-      name: "Jest Reviewer 3 and Review Coordinator 1",
-      username: "jestReviewer3Coordinator1",
-      email: "jestreviewer3@msu.edu",
-      pivot: {
-        id: "4",
-        role_id: "5",
-        user_id: "4",
-      },
-    },
-    {
-      name: "Jest Reviewer 3 and Review Coordinator 1",
-      username: "jestReviewer3Coordinator1",
-      email: "jestreviewer3@msu.edu",
-      pivot: {
+      {
         id: "5",
-        role_id: "4",
-        user_id: "4",
+        name: "Jest Submitter 2",
+        username: "jestSubmitter2",
+        email: "jestsubmitter2@msu.edu",
       },
-    },
-    {
-      name: "Jest Submitter 2",
-      username: "jestSubmitter2",
-      email: "jestsubmitter2@msu.edu",
-      pivot: {
+    ],
+    reviewers: [
+      {
+        id: "2",
+        name: "Jest Reviewer 1",
+        username: "jestReviewer1",
+        email: "jestreviewer1@msu.edu",
+      },
+      {
+        id: "3",
+        name: "Jest Reviewer 2",
+        username: "jestReviewer2",
+        email: "jestreviewer2@msu.edu",
+      },
+      {
+        id: "4",
+        name: "Jest Reviewer 3 and Review Coordinator 1",
+        username: "jestReviewer3Coordinator1",
+        email: "jestreviewer3@msu.edu",
+      },
+    ],
+    review_coordinators: [
+      {
+        id: "4",
+        name: "Jest Reviewer 3 and Review Coordinator 1",
+        username: "jestReviewer3Coordinator1",
+        email: "jestreviewer3@msu.edu",
+      },
+      {
         id: "6",
-        role_id: "6",
-        user_id: "5",
+        name: "Jest Review Coordinator 2",
+        username: "jestCoordinator2",
+        email: "jestcoordinator2@msu.edu",
       },
-    },
-    {
-      name: "Jest Review Coordinator 2",
-      username: "jestCoordinator2",
-      email: "jestcoordinator2@msu.edu",
-      pivot: {
-        id: "7",
-        role_id: "4",
-        user_id: "",
-      },
-    },
-  ]
+    ],
+  }
 
   const GetSubHandler = jest.fn()
   mockClient.setRequestHandler(GET_SUBMISSION, GetSubHandler)
@@ -139,7 +117,7 @@ describe("submissions details page mount", () => {
             name: "Jest Publication",
             style_criterias: [],
           },
-          users: submissionUsersData,
+          ...submissionUsersData,
         },
       },
     })
@@ -169,7 +147,9 @@ describe("submissions details page mount", () => {
             name: "Jest Publication",
             style_criterias: [],
           },
-          users: [],
+          reviewers: [],
+          review_coordinators: [],
+          submitters: [],
         },
       },
     })
@@ -195,7 +175,9 @@ describe("submissions details page mount", () => {
             name: "Jest Publication",
             style_criterias: [],
           },
-          users: [],
+          reviewers: [],
+          review_coordinators: [],
+          submitters: [],
         },
       },
     })

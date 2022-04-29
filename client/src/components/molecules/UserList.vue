@@ -2,7 +2,7 @@
   <q-list bordered separator :data-cy="dataCy">
     <user-list-item
       v-for="(user, index) in users"
-      :key="user.pivot.id"
+      :key="user.id"
       :user="user"
       :index="index"
       :actions="actions"

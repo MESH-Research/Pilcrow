@@ -168,15 +168,23 @@ export const GET_SUBMISSION = gql`
           icon
         }
       }
-      users {
+      reviewers {
+        id
         name
         username
         email
-        pivot {
-          id
-          user_id
-          role_id
-        }
+      }
+      review_coordinators {
+        id
+        name
+        username
+        email
+      }
+      submitters {
+        id
+        name
+        username
+        email
       }
     }
   }

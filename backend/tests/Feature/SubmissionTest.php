@@ -40,72 +40,57 @@ class SubmissionTest extends TestCase
      */
     public function testSubmissionsHaveAManyToManyRelationshipWithUsers()
     {
-        $submission_count = 100;
-        $user_count = 50;
         $publication = Publication::factory()->create([
             'name' => 'Test Publication #2',
         ]);
-        $users = User::factory()->count($user_count)->create();
 
-        // Create submissions and attach them to users randomly with random roles
-        for ($i = 0; $i < $submission_count; $i++) {
-            $random_user = $users->random();
-            $random_role_id = Role::whereIn(
-                'name',
-                [
-                    Role::REVIEW_COORDINATOR,
-                    Role::REVIEWER,
-                    Role::SUBMITTER,
-                ]
-            )
-                ->get()
-                ->pluck('id')
-                ->random();
-            $submission = Submission::factory()->hasAttached(
-                $random_user,
-                [
-                    'role_id' => $random_role_id,
-                ]
-            )
-                ->for($publication)
-                ->create();
+        [$submitter, $reviewer, $reviewCoordinator] = User::factory()->count(3)->create();
 
-            // Ensure at least one submitter is attached if one was not previously attached
-            if ($random_role_id !== Role::SUBMITTER_ROLE_ID) {
-                $random_non_duplicate_user = $users->reject(function ($user) use ($random_user) {
-                    return $user->id === $random_user->id;
-                })->random();
-                $submission->users()->attach(
-                    $random_non_duplicate_user,
-                    [
-                        'role_id' => Role::SUBMITTER_ROLE_ID,
-                    ]
-                );
-            }
-        }
-        Submission::all()->map(function ($submission) {
-            $this->assertGreaterThan(0, $submission->users->count());
-            $this->assertLessThanOrEqual(2, $submission->users->count());
-            $submission->users->map(function ($user) {
-                $this->assertIsInt(
-                    User::where(
-                        'id',
-                        $user->id
-                    )->firstOrFail()->id
-                );
-            });
-        });
-        User::all()->map(function ($user) use ($submission_count) {
-            $this->assertLessThanOrEqual($submission_count, $user->submissions->count());
-            $user->submissions->map(function ($submission) {
-                $this->assertIsInt(
-                    Submission::where(
-                        'id',
-                        $submission->id
-                    )->firstOrFail()->id
-                );
-            });
-        });
+        $submission = Submission::factory()->hasAttached(
+            $submitter,
+            ['role_id' => Role::SUBMITTER_ROLE_ID]
+        )
+        ->hasAttached(
+            $reviewer,
+            ['role_id' => Role::REVIEWER_ROLE_ID]
+        )
+        ->hasAttached(
+            $reviewCoordinator,
+            ['role_id' => Role::REVIEW_COORDINATOR_ROLE_ID]
+        )
+        ->for($publication)
+        ->create();
+
+        $response = $this->graphQL(
+            'query GetSubmission($id: ID!) {
+                submission(id: $id) {
+                    id
+                    title
+                    reviewers {
+                        id
+                    }
+                    review_coordinators {
+                        id
+                    }
+                    submitters {
+                        id
+                    }
+                }
+            }',
+            [ 'id' => $submission->id ]
+        );
+
+        $response->assertJson(fn (AssertableJson $json) =>
+            $json
+                ->has('data', fn ($json) =>
+                    $json->has('submission', fn ($json) =>
+                        $json->has('reviewers', 1, fn ($json) =>
+                            $json->where('id', (string)$reviewer->id))
+                        ->has('submitters', 1, fn ($json) =>
+                            $json->where('id', (string)$submitter->id))
+                        ->has('review_coordinators', 1, fn ($json) =>
+                            $json->where('id', (string)$reviewCoordinator->id))
+                        ->etc())));
     }
 
     /**
@@ -264,61 +249,6 @@ class SubmissionTest extends TestCase
                     [
                         'id' => (string)$submission->id,
                         'title' => 'Test Submission #5 for Test User #1 With Submission',
-                        'pivot' => [
-                            'role_id' => Role::SUBMITTER_ROLE_ID,
-                        ],
-                    ],
-                ],
-            ],
-        ];
-        $response->assertJsonPath('data', $expected_data);
-    }
-
-    /**
-     * @return void
-     */
-    public function testUsersCanBeQueriedForASubmission()
-    {
-        $publication = Publication::factory()->create([
-            'name' => 'Test Publication #5',
-        ]);
-        $user = User::factory()->create([
-            'name' => 'Test User #2 With Submission',
-        ]);
-        $submission = Submission::factory()->hasAttached(
-            $user,
-            [
-                'role_id' => Role::SUBMITTER_ROLE_ID,
-            ]
-        )
-            ->for($publication)
-            ->create([
-                'title' => 'Test Submission #6 for Test User #2 With Submission',
-            ]);
-        $response = $this->graphQL(
-            'query GetUsersBySubmission($id: ID!) {
-                submission (id: $id) {
-                    id
-                    title
-                    users {
-                        id
-                        name
-                        pivot {
-                            role_id
-                        }
-                    }
-                }
-            }',
-            [ 'id' => $submission->id ]
-        );
-        $expected_data = [
-            'submission' => [
-                'id' => (string)$submission->id,
-                'title' => 'Test Submission #6 for Test User #2 With Submission',
-                'users' => [
-                    [
-                        'id' => (string)$user->id,
-                        'name' => 'Test User #2 With Submission',
                         'pivot' => [
                             'role_id' => Role::SUBMITTER_ROLE_ID,
                         ],

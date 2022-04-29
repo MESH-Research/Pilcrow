@@ -190,7 +190,7 @@ import UserList from "src/components/molecules/UserList.vue"
 import RoleMapper from "src/mappers/roles"
 import { useFeedbackMessages } from "src/use/guiElements"
 import { useMutation, useQuery, useResult } from "@vue/apollo-composable"
-import { ref, computed } from "vue"
+import { ref } from "vue"
 import { useI18n } from "vue-i18n"
 import FindUserSelect from "src/components/forms/FindUserSelect.vue"
 const props = defineProps({
@@ -200,29 +200,18 @@ const props = defineProps({
   },
 })
 
-const submission = useResult(useQuery(GET_SUBMISSION, { id: props.id }).result)
+const { result } = useQuery(GET_SUBMISSION, { id: props.id })
 
+const submission = useResult(result)
+const reviewers = useResult(result, [], (data) => data.submission.reviewers)
+const review_coordinators = useResult(
+  result,
+  [],
+  (data) => data.submission.review_coordinators
+)
+const submitters = useResult(result, [], (data) => data.submission.submitters)
 const reviewer_candidate = ref(null)
 const review_coordinator_candidate = ref(null)
-
-const review_coordinators = computed(() => {
-  return filterUsersByRoleId(
-    submission.value.users,
-    RoleMapper[`review_coordinators`]
-  )
-})
-const reviewers = computed(() => {
-  return filterUsersByRoleId(submission.value.users, RoleMapper[`reviewers`])
-})
-const submitters = computed(() => {
-  return filterUsersByRoleId(submission.value.users, RoleMapper[`submitters`])
-})
-
-function filterUsersByRoleId(users, id) {
-  return users.filter((user) => {
-    return parseInt(user.pivot.role_id) === id
-  })
-}
 
 const { t } = useI18n()
 
@@ -284,7 +273,7 @@ const { mutate: unassignUserMutate } = useMutation(DELETE_SUBMISSION_USER, {
 async function unassignUser(role_name, user) {
   try {
     await unassignUserMutate({
-      user_id: user.pivot.user_id,
+      user_id: user.id,
       role_id: RoleMapper[role_name],
       submission_id: props.id,
     })
