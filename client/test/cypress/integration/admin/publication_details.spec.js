@@ -37,7 +37,7 @@ describe("Publication Details", () => {
 
     cy.dataCy("addEditorButton").click()
     // Initial Assignment
-    cy.dataCy("input_editor_assignee").type("appl", {delay: 50})
+    cy.dataCy("input_editor_assignee").type("appl", {delay: 5})
     cy.dataCy("result_editor_assignee").click()
     cy.dataCy("editor_assignee_selected").contains("applicationAdminUser")
     cy.dataCy("button_assign_editor").click()
@@ -47,7 +47,7 @@ describe("Publication Details", () => {
     cy.dataCy("list_assigned_editors").contains("Application Administrator")
     cy.dataCy("button_dismiss_notify").click()
     // Duplicate Assignment
-    cy.dataCy("input_editor_assignee").type("appl", {delay: 50})
+    cy.dataCy("input_editor_assignee").type("appl", {delay: 5})
     cy.dataCy("result_editor_assignee").click()
     cy.dataCy("button_assign_editor").click()
     cy.dataCy("publication_details_notify")
