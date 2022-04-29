@@ -4,7 +4,7 @@
     :options="options"
     bottom-slots
     hide-dropdown-icon
-    input-debounce="300"
+    input-debounce="50"
     label="User to Assign"
     outlined
     transition-hide="none"
