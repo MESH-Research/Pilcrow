@@ -296,16 +296,44 @@ export default {
       duplicate_name: "Publication name already exists.",
     },
     editor: {
+      heading: "Editors",
       none: "No editors are assigned to this publication.",
       unassign: {
+        ariaLabel: "Unassign",
+        helpText: "Remove editor",
         error: "An error occurred while attempting to unassign an editor.",
         success: "{display_name} successfully unassigned as an editor.",
       },
       assign: {
+        label: "Assign",
         duplicate: "That editor is already assigned to this publication.",
         error:
           "An error occurred while attempting to assign an editor. Is this user already assigned as an editor?",
         success: "{display_name} successfully assigned as an editor.",
+      },
+    },
+    style_criteria: {
+      heading: "Style Criteria",
+      edit_button: "Edit",
+      fields: {
+        name: {
+          label: "Name",
+          errors: {
+            maxLength: "Name cannot be longer than 20 characters.",
+            required: "Name is required.",
+          },
+        },
+        description: {
+          placeholder: "Enter an optional description for this style criteria",
+          errors: {
+            maxLength: "Description cannot be longer than 4096 characters.",
+          },
+        },
+        icon: {
+          tooltip: "Click to change icon.",
+          ariaLabel: "Change icon.",
+          search: "Search icons",
+        },
       },
     },
   },

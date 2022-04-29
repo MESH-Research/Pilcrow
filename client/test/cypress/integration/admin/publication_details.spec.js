@@ -34,6 +34,8 @@ describe("Publication Details", () => {
     cy.login({ email: "applicationadministrator@ccrproject.dev" })
     cy.visit("/publication/1")
     cy.injectAxe()
+
+    cy.dataCy("addEditorButton").click()
     // Initial Assignment
     cy.dataCy("input_editor_assignee").type("applicationAd{backspace}{backspace}")
     cy.dataCy("result_editor_assignee").click()
@@ -57,5 +59,64 @@ describe("Publication Details", () => {
         "nested-interactive": { enabled: false },
       },
     }, a11yLogViolations)
+  })
+
+  it("should allow editing of style criteria", () => {
+    cy.task("resetDb")
+    cy.login({ email: "applicationadministrator@ccrproject.dev" })
+    cy.visit("/publication/1")
+    cy.injectAxe()
+
+    //Click edit on item 1
+    cy.dataCy('editBtn').first().click()
+    cy.checkA11y({
+      exclude: [['[data-cy="description-input"']], //TODO: Restore this check once quasar #13275 is closed
+      },
+      null,
+      a11yLogViolations
+    )
+
+    //Edit the criteria
+    cy.dataCy('name-input').type(' Update')
+    cy.dataCy('description-input').type("{selectAll}Updated description.")
+    cy.dataCy("icon-button").click()
+
+    //Change the icon and save the resulting new icon name
+    cy.get('.q-icon-picker__container button:first', {timeout: 10000}).then(($button) => {
+      const newIconName = $button.find('i').text()
+      expect(newIconName).to.not.be.empty
+      cy.wrap($button).click()
+      cy.dataCy("button_save").click()
+
+      //Wait for the form to go away
+      cy.get('form[data-cy="listItem"]:first').should('not.exist')
+      cy.dataCy("listItem").first().contains("Accessibility Update")
+      cy.dataCy("listItem").first().contains("Updated description")
+      cy.dataCy("listItem").first().contains(newIconName)
+    })
+  })
+
+  it("should allow adding a style criteria", () => {
+    cy.task("resetDb")
+    cy.login({ email: "applicationadministrator@ccrproject.dev" })
+    cy.visit("/publication/1")
+
+    //Check existing number of items:
+    cy.dataCy('listItem').should('have.length', 4)
+
+    //Create new item
+    cy.dataCy('add-criteria-button').click()
+    cy.dataCy('name-input').type('New Criteria')
+    cy.dataCy('description-input').type("New criteria description.")
+    cy.dataCy("button_save").click()
+
+    //Wait for the form to go away
+    cy.get('form[data-cy="listItem"]').should('not.exist')
+
+    //Check a new item exists
+    cy.dataCy('listItem').should('have.length', 5)
+    cy.dataCy("listItem").last().contains("New Criteria")
+    cy.dataCy("listItem").last().contains("New criteria description")
+    cy.dataCy("listItem").last().contains('task_alt')
   })
 })

@@ -1617,6 +1617,12 @@
     ts-jest "^26.5.6"
     vue-jest "^5.0.0-alpha.10"
 
+"@quasar/quasar-ui-qiconpicker@^2.0.6":
+  version "2.0.6"
+  resolved "https://registry.yarnpkg.com/@quasar/quasar-ui-qiconpicker/-/quasar-ui-qiconpicker-2.0.6.tgz#f00d756b9fe873bfbd673b7e07790bccf98285d3"
+  integrity sha512-4H27tC89v/BlZHyFcdqdNGAvogkE6/QjVL3yLioF8DSCU+lx4tW85iC2FVmjn67le2PBq2+3YCYTBJpWMRWRQQ==
+
+
 "@quasar/ssr-helpers@2.2.0":
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/@quasar/ssr-helpers/-/ssr-helpers-2.2.0.tgz#33ee22a8fb0d24b53c48485d7916f733f0c2ef7a"

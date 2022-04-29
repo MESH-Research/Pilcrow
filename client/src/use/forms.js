@@ -73,6 +73,16 @@ export function useFormState(queryLoadingRef, mutationLoadingRef) {
     }
     return "idle"
   })
+
+  function reset() {
+    dirty.value = false
+    saved.value = false
+    errorMessage.value = ""
+  }
+
+  function setError(message) {
+    errorMessage.value = message
+  }
   return {
     state,
     saved,
@@ -80,6 +90,8 @@ export function useFormState(queryLoadingRef, mutationLoadingRef) {
     queryLoading: queryLoadingRef,
     mutationLoading: mutationLoadingRef,
     errorMessage,
+    reset,
+    setError,
   }
 }
 

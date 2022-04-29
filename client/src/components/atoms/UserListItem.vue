@@ -14,7 +14,7 @@
         {{ user.email }}
       </q-item-label>
     </q-item-section>
-    <q-item-section v-if="actions.length" top side>
+    <q-item-section v-if="actions.length" side>
       <div class="text-grey-8 q-gutter-xs">
         <q-btn
           v-for="{ ariaLabel, icon, action, help, cyAttr } in actions"

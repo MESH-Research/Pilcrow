@@ -1,15 +1,16 @@
 import { mount } from "@vue/test-utils"
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-jest"
-import PublicationDetailsPage from "./PublicationDetails.vue"
+import PublicationUsers from "./PublicationUsers.vue"
 import { ApolloClients } from "@vue/apollo-composable"
 import { createMockClient } from "mock-apollo-client"
-import { GET_PUBLICATION } from "src/graphql/queries"
+import { nextTick } from "vue"
 import flushPromises from "flush-promises"
 import RoleMapper from "src/mappers/roles"
 import {
   CREATE_PUBLICATION_USER,
   DELETE_PUBLICATION_USER,
 } from "src/graphql/mutations"
+import { GET_PUBLICATION } from "src/graphql/queries"
 
 const mockNewStatus = jest.fn()
 jest.mock("src/use/guiElements", () => ({
@@ -32,27 +33,11 @@ jest.mock("vue-i18n", () => ({
 
 installQuasarPlugin()
 
-describe("publication details page mount", () => {
-  const mockClient = createMockClient()
-  const makeWrapper = () =>
-    mount(PublicationDetailsPage, {
-      global: {
-        provide: {
-          [ApolloClients]: { default: mockClient },
-        },
-        mocks: {
-          $t: (t) => t,
-        },
-        stubs: ["router-link"],
-      },
-      props: {
-        id: "1",
-      },
-    })
-
-  const getPubHandler = jest.fn()
-  mockClient.setRequestHandler(GET_PUBLICATION, getPubHandler)
-  const publicationUsersData = [
+const publicationData = {
+  id: "1",
+  name: "Jest Publication",
+  is_publicly_visible: true,
+  users: [
     {
       email: "jestEditor@ccrproject.dev",
       name: "Jest Editor",
@@ -83,7 +68,28 @@ describe("publication details page mount", () => {
         user_id: 101,
       },
     },
-  ]
+  ],
+  style_criterias: [],
+}
+
+describe("publication details page mount", () => {
+  const mockClient = createMockClient()
+  const makeWrapper = () => {
+    return mount(PublicationUsers, {
+      global: {
+        provide: {
+          [ApolloClients]: { default: mockClient },
+        },
+        mocks: {
+          $t: (t) => t,
+        },
+        stubs: ["router-link"],
+      },
+      props: {
+        publication: publicationData,
+      },
+    })
+  }
 
   const mutateAssignHandler = jest.fn()
   mockClient.setRequestHandler(CREATE_PUBLICATION_USER, mutateAssignHandler)
@@ -91,25 +97,29 @@ describe("publication details page mount", () => {
   const mutateRemoveHandler = jest.fn()
   mockClient.setRequestHandler(DELETE_PUBLICATION_USER, mutateRemoveHandler)
 
+  mockClient.setRequestHandler(
+    GET_PUBLICATION,
+    jest.fn().mockResolvedValue({ data: { publication: publicationData } })
+  )
+  const originalWarn = console.warn.bind(console.warn)
   beforeEach(async () => {
     jest.resetAllMocks()
-    getPubHandler.mockResolvedValue({
-      data: {
-        publication: {
-          id: 1,
-          name: "Jest Publication",
-          is_publicly_visible: true,
-          users: publicationUsersData,
-        },
-      },
-    })
+
+    //refetchQueries warning is thrown when trying to test this outside of the parent component.
+    //We override console.warn to silence this warning while still passing on other warnings.
+    console.warn = (msg) =>
+      !msg.toString().includes("refetchQueries options.include array") &&
+      originalWarn(msg)
+  })
+
+  afterEach(() => {
+    console.warn = originalWarn
   })
 
   it("mounts without errors", async () => {
     const wrapper = makeWrapper()
     await flushPromises()
     expect(wrapper).toBeTruthy()
-    expect(getPubHandler).toBeCalledWith({ id: "1" })
   })
 
   test("all existing editors appear within the editors list", async () => {
@@ -140,6 +150,8 @@ describe("publication details page mount", () => {
       email: "jestEditorCandidate@ccrproject.dev",
       username: "jestEditorCandidate",
     }
+    wrapper.vm.addMode = true
+    await nextTick()
     wrapper.findComponent({ ref: "assignBtn" }).trigger("submit")
     await flushPromises()
 
@@ -162,6 +174,8 @@ describe("publication details page mount", () => {
       email: "jestEditorCandidate@ccrproject.dev",
       username: "jestEditorCandidate",
     }
+    wrapper.vm.addMode = true
+    await nextTick()
     wrapper.findComponent({ ref: "assignBtn" }).trigger("submit")
     await flushPromises()
 

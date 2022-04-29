@@ -22,6 +22,7 @@
   "dependencies": {
     "@apollo/client": "^3.6.1",
     "@quasar/extras": "^1.13.6",
+    "@quasar/quasar-ui-qiconpicker": "^2.0.6",
     "@tiptap/extension-bold": "^2.0.0-beta.26",
     "@tiptap/extension-highlight": "^2.0.0-beta.33",
     "@tiptap/extension-italic": "^2.0.0-beta.26",

@@ -247,3 +247,58 @@ export const MARK_ALL_NOTIFICATIONS_READ = gql`
     markAllNotificationsRead
   }
 `
+
+export const UPDATE_PUBLICATION_STYLE_CRITERIA = gql`
+  mutation UpdatePublicationStyleCriteria(
+    $publication_id: ID!
+    $id: ID!
+    $name: String
+    $description: String
+    $icon: String
+  ) {
+    updatePublication(
+      publication: {
+        id: $publication_id
+        style_criterias: {
+          update: [
+            { id: $id, name: $name, description: $description, icon: $icon }
+          ]
+        }
+      }
+    ) {
+      id
+      style_criterias {
+        id
+        name
+        description
+        icon
+      }
+    }
+  }
+`
+
+export const CREATE_PUBLICATION_STYLE_CRITERIA = gql`
+  mutation CreatePublicationStyleCriteria(
+    $publication_id: ID!
+    $name: String!
+    $description: String
+    $icon: String
+  ) {
+    updatePublication(
+      publication: {
+        id: $publication_id
+        style_criterias: {
+          create: [{ name: $name, description: $description, icon: $icon }]
+        }
+      }
+    ) {
+      id
+      style_criterias {
+        id
+        name
+        description
+        icon
+      }
+    }
+  }
+`
