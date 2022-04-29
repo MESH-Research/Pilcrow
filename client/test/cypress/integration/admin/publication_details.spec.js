@@ -76,7 +76,7 @@ describe("Publication Details", () => {
       a11yLogViolations
     )
 
-    //Edit the critiera
+    //Edit the criteria
     cy.dataCy('name-input').type(' Update')
     cy.dataCy('description-input').type("{selectAll}Updated description.")
     cy.dataCy("icon-button").click()
