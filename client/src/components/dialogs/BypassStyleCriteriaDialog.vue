@@ -7,7 +7,16 @@
         </div>
         <div class="column justify-center q-pr-md">
           <p class="q-ml-sm q-mb-none">
-            {{ $t("dialog.bypassStyleCriteria.line_1") }}
+            <i18n-t keypath="dialog.bypassStyleCriteria.line_1" tag="span">
+              <template #link>
+                <a
+                  href="https://publicphilosophyjournal.org/overview/"
+                  target="_blank"
+                >
+                  {{ $t("dialog.bypassStyleCriteria.line_1_linktext") }}
+                </a>
+              </template>
+            </i18n-t>
           </p>
           <p class="q-ml-sm q-mb-none">
             {{ $t("dialog.bypassStyleCriteria.line_2") }}
