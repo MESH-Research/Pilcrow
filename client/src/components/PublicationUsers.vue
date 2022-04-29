@@ -1,7 +1,7 @@
 <template>
   <q-card flat class="q-ma-none">
     <q-card-section>
-      <div class="text-h3">{{ $t("publications.editor.heading") }}}</div>
+      <div class="text-h3">{{ $t("publications.editor.heading") }}</div>
     </q-card-section>
     <q-card-section>
       <div v-if="editors.length">
