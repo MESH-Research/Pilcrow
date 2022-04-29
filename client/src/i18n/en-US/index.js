@@ -487,7 +487,8 @@ export default {
   },
   dialog: {
     bypassStyleCriteria: {
-      line_1: "Style criteria are an important part of Formative Peer Review.",
+      line_1: "Style criteria are an important part of {link}.",
+      line_1_linktext: "Collaborative Community Review",
       line_2:
         "Are you sure you do not want to associate one with this comment?",
       action_submit: "Post comment as is",
