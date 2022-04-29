@@ -58,7 +58,7 @@
                 :ripple="{ center: true }"
                 color="primary"
                 data-cy="button_assign_editor"
-                label="$t('publications.editor.assign.label')"
+                :label="$t('publications.editor.assign.label')"
                 type="submit"
                 stretch
                 @click="assignUser('editor', editor_candidate)"
