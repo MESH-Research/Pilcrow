@@ -4,7 +4,7 @@
       <q-card-section class="column q-gutter-sm">
         <q-input
           v-model="filter"
-          label="$t('publications.style_criteria.fields.icon.search')"
+          :label="$t('publications.style_criteria.fields.icon.search')"
           icon="search"
         />
         <q-icon-picker
