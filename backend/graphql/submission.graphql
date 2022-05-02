@@ -1,6 +1,6 @@
 extend type Query {
     "Return a submission by ID"
-    submission(id: ID @eq): Submission @find
+    submission(id: ID @eq): Submission @find @can(ability: "view", find: "id")
 
     "Return all submissions"
     submissions: [Submission!]! @paginate(defaultCount: 100)
@@ -10,21 +10,19 @@ extend type Mutation {
     "Create a new submission under a publication"
     createSubmission(input: CreateSubmissionInput! @spread): Submission!
         @event(dispatch: "App\\Events\\SubmissionCreated")
+        @create
 
-    "Create an association between a user, role, and submission"
-    createSubmissionUser(
-        submission_user: CreateSubmissionUserInput! @spread
-    ): SubmissionUser! @create @can(ability: "create", injectArgs: true)
-
-    "Delete an association between a user, role, and submission"
-    deleteSubmissionUser(
-        user_id: ID!
-        role_id: ID!
-        submission_id: ID!
-    ): SubmissionUser!
-        @guard
-        @can(ability: "delete", injectArgs: true)
-        @field(resolver: "App\\GraphQL\\Mutations\\DeleteSubmissionUser@delete")
+    updateSubmission(input: UpdateSubmissionInput! @spread): Submission!
+        @update
+        @can(ability: "update", find: 'id')
+        @argPolicy(
+            find: "id"
+            apply: [
+                "submitters:updateSubmitters"
+                "reviewers:updateReviewers"
+                "reviewCoordinators:updateReviewCoordinators"
+            ]
+        )
 
     "Create an association between an uploaded file and a submission"
     createSubmissionFile(
@@ -89,23 +87,27 @@ Input type for creating a new submission via the createSubmission mutation
 input CreateSubmissionInput @validator(class: "SubmissionInputValidator") {
     title: String! @trim
     publication_id: ID!
-    users: CreateSubmissionUsersBelongsToMany
+    submitters: CreateSubmissionUserInput
     files: CreateSubmissionFilesHasMany
 }
 
-"""
-Input type for connecting newly created submissions to users via nested mutation
-"""
-input CreateSubmissionUsersBelongsToMany {
-    connect: [ConnectSubmissionUser!]
+input UpdateSubmissionInput {
+    id: ID!
+    title: String @trim
+    reviewers: UpdateSubmissionUserInput
+    review_coordinators: UpdateSubmissionUserInput
+        @rename(attribute: "reviewCoordinators")
+    submitters: UpdateSubmissionUserInput
+    publication_id: ID
 }
 
-"""
-Input type for inserting the pivot table data of a newly created submission user:w
-"""
-input ConnectSubmissionUser {
-    id: ID!
-    role_id: ID!
+input CreateSubmissionUserInput {
+    connect: [ID!]!
+}
+
+input UpdateSubmissionUserInput {
+    connect: [ID!]
+    disconnect: [ID!]
 }
 
 """
@@ -113,16 +115,6 @@ Input type for connecting newly created submissions to files via nested mutation
 """
 input CreateSubmissionFilesHasMany {
     create: [Upload!]
-}
-
-"""
-Input type for creating a new association between a submission, role, and user via the createSubmissionUser mutation
-"""
-input CreateSubmissionUserInput
-    @validator(class: "SubmissionUserInputValidator") {
-    user_id: ID!
-    role_id: ID!
-    submission_id: ID!
 }
 
 """

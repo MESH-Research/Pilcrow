@@ -64,7 +64,7 @@ class Submission extends Model
     {
         return $this->belongsToMany(User::class)
             ->withTimestamps()
-            ->wherePivot('role_id', Role::REVIEWER_ROLE_ID);
+            ->withPivotValue('role_id', Role::REVIEWER_ROLE_ID);
     }
 
     /**
@@ -76,7 +76,7 @@ class Submission extends Model
     {
         return $this->belongsToMany(User::class)
             ->withTimestamps()
-            ->wherePivot('role_id', Role::REVIEW_COORDINATOR_ROLE_ID);
+            ->withPivotValue('role_id', Role::REVIEW_COORDINATOR_ROLE_ID);
     }
 
     /**
@@ -88,7 +88,7 @@ class Submission extends Model
     {
          return $this->belongsToMany(User::class)
             ->withTimeStamps()
-            ->wherePivot('role_id', Role::SUBMITTER_ROLE_ID);
+            ->withPivotValue('role_id', Role::SUBMITTER_ROLE_ID);
     }
 
     /**
