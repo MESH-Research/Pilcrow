@@ -14,7 +14,7 @@ extend type Mutation {
 
     updateSubmission(input: UpdateSubmissionInput! @spread): Submission!
         @update
-        @can(ability: "update", find: 'id')
+        @can(ability: "update", find: "id")
         @argPolicy(
             find: "id"
             apply: [
@@ -23,11 +23,6 @@ extend type Mutation {
                 "reviewCoordinators:updateReviewCoordinators"
             ]
         )
-
-    "Create an association between an uploaded file and a submission"
-    createSubmissionFile(
-        input: CreateSubmissionFileInput! @spread
-    ): SubmissionFile!
 }
 
 """
@@ -88,7 +83,7 @@ input CreateSubmissionInput @validator(class: "SubmissionInputValidator") {
     title: String! @trim
     publication_id: ID!
     submitters: CreateSubmissionUserInput
-    files: CreateSubmissionFilesHasMany
+    files: CreateSubmissionFilesHasMany @createSubmissionFiles
 }
 
 input UpdateSubmissionInput {

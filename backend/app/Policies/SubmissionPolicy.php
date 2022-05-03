@@ -102,7 +102,7 @@ class SubmissionPolicy
      * @param \App\Models\Submission $submission
      * @return bool|\Illuminate\Auth\Access\Response
      */
-    public function viewSubmission(User $user, Submission $submission)
+    public function view(User $user, Submission $submission)
     {
         if ($this->checkAdminRoles($user, $submission->publication_id)) {
             return true;
@@ -124,7 +124,7 @@ class SubmissionPolicy
      * @param \App\Models\Submission $submission
      * @return bool|\Illuminate\Auth\Access\Response
      */
-    public function updateSubmission(User $user, Submission $submission)
+    public function update(User $user, Submission $submission)
     {
         if ($this->checkAdminRoles($user, $submission->publication_id)) {
             return true;
