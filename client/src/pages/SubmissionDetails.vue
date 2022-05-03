@@ -32,6 +32,7 @@
       relationship="review_coordinators"
       :submission="submission"
       mutable
+      :max-users="1"
     />
     <submission-users
       relationship="reviewers"

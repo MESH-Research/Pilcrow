@@ -36,7 +36,7 @@
         </q-card>
       </div>
 
-      <q-form v-if="mutable" class="col" @submit="handleSubmit">
+      <q-form v-if="acceptMore" class="col" @submit="handleSubmit">
         <find-user-select v-model="user" data-cy="input_user">
           <template #after>
             <q-btn
@@ -80,6 +80,11 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  maxUsers: {
+    type: [Boolean, Number],
+    required: false,
+    default: false,
+  },
 })
 
 const user = ref(null)
@@ -102,6 +107,13 @@ const documents = {
 }
 const users = computed(() => {
   return props.submission[props.relationship]
+})
+
+const acceptMore = computed(() => {
+  return (
+    props.mutable &&
+    (props.maxUsers === false) | (users.value.length < props.maxUsers)
+  )
 })
 
 const { mutate } = useMutation(documents[props.relationship], opts)

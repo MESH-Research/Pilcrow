@@ -358,8 +358,8 @@ export default {
       },
     },
     review_coordinators: {
-      heading: "Review Coordinators",
-      none: "No review coordinators are assigned to this submission.",
+      heading: "Review Coordinator",
+      none: "A review coordinator is not assigned to this submission.",
       unassign: {
         error:
           "An error occurred while attempting to unassign a review coordinator.",
@@ -370,7 +370,7 @@ export default {
         duplicate:
           "{display_name} is already assigned as a review coordinator to this submission.",
         error:
-          "An error occurred while attempting to assign a review coordinator. Is this user already assigned as a review coordinator?",
+          "An error occurred while attempting to assign a review coordinator. Is the user already assigned to this submission?",
         success:
           "{display_name} successfully assigned as a review coordinator.",
       },
@@ -390,7 +390,7 @@ export default {
         duplicate:
           "{display_name} is already assigned as a reviewer to this submission.",
         error:
-          "An error occurred while attempting to assign a reviewer. Is this user already assigned as a reviewer?",
+          "An error occurred while attempting to assign a reviewer. Is the user already assigned to this submission?",
         success: "{display_name} successfully assigned as a reviewer.",
       },
       unassign_button: {
