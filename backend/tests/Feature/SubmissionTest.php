@@ -347,6 +347,21 @@ class SubmissionTest extends TestCase
         $this->assertEquals(1, $reviewCoordinators);
     }
 
+    /**
+     * @return void
+     */
+    public function testUserCanOnlyBeAssignedOneRole()
+    {
+        $user = User::factory()->create();
+        $submission = Submission::factory()
+            ->hasAttached($user, [], 'reviewers')
+            ->create();
+
+        $this->expectException(QueryException::class);
+
+        $submission->reviewCoordinators()->attach($user);
+    }
+
     protected function executeSubmissionRoleAssignment(string $role, Submission $submission, User $user)
     {
         return $this->graphQL(
