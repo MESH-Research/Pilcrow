@@ -159,6 +159,7 @@ export const GET_SUBMISSIONS = gql`
 export const GET_SUBMISSION = gql`
   query GetSubmission($id: ID!) {
     submission(id: $id) {
+      id
       title
       publication {
         name

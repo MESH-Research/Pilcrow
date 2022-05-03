@@ -208,38 +208,26 @@ export const UPDATE_SUBMISSION_REVIEW_COORDINATORS = gql`
   }
   ${_RELATED_USER_FIELDS}
 `
-export const CREATE_SUBMISSION_USER = gql`
-  mutation CreateSubmissionUser(
-    $user_id: ID!
-    $role_id: ID!
+
+export const UPDATE_SUBMISSION_SUBMITERS = gql`
+  mutation UpdateSubmissionReviewCoordinators(
     $submission_id: ID!
+    $connect: [ID!]
+    $disconnect: [ID!]
   ) {
-    createSubmissionUser(
-      submission_user: {
-        user_id: $user_id
-        role_id: $role_id
-        submission_id: $submission_id
+    updateSubmission(
+      input: {
+        id: $submission_id
+        submitters: { connect: $connect, disconnect: $disconnect }
       }
     ) {
       id
+      submitters {
+        ...relatedUserFields
+      }
     }
   }
-`
-
-export const DELETE_SUBMISSION_USER = gql`
-  mutation DeleteSubmissionUser(
-    $user_id: ID!
-    $role_id: ID!
-    $submission_id: ID!
-  ) {
-    deleteSubmissionUser(
-      user_id: $user_id
-      role_id: $role_id
-      submission_id: $submission_id
-    ) {
-      id
-    }
-  }
+  ${_RELATED_USER_FIELDS}
 `
 
 export const UPDATE_PROFILE_METADATA = gql`

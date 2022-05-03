@@ -357,7 +357,8 @@ export default {
         required: "A file must be uploaded with a submission.",
       },
     },
-    review_coordinator: {
+    review_coordinators: {
+      heading: "Review Coordinators",
       none: "No review coordinators are assigned to this submission.",
       unassign: {
         error:
@@ -373,8 +374,13 @@ export default {
         success:
           "{display_name} successfully assigned as a review coordinator.",
       },
+      unassign_button: {
+        ariaLabel: "Unassign Review Coordinator",
+        help: "Remove Review Coordinator",
+      },
     },
-    reviewer: {
+    reviewers: {
+      heading: "Reviewers",
       none: "No reviewers are assigned to this submission.",
       unassign: {
         error: "An error occurred while attempting to unassign a reviewer.",
@@ -387,13 +393,22 @@ export default {
           "An error occurred while attempting to assign a reviewer. Is this user already assigned as a reviewer?",
         success: "{display_name} successfully assigned as a reviewer.",
       },
+      unassign_button: {
+        ariaLabel: "Unassign Reviewer",
+        help: "Remove Reviewer",
+      },
     },
-    submitter: {
+    submitters: {
+      heading: "Submitters",
       title: {
         singular: "Submitter",
         plural: "Submitters",
       },
       none: "No submitter is assigned to this submission. At least one submitter must be assigned.",
+      unassign_button: {
+        ariaLabel: "Unassign Submitterr",
+        help: "Remove Submitter",
+      },
     },
     comment: {
       reply: {

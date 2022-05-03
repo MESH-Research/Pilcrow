@@ -13,6 +13,9 @@
     @update:model-value="onSelectUpdate"
     @filter="filterFn"
   >
+    <template #prepend>
+      <q-icon name="search" />
+    </template>
     <template #hint>
       <div class="text--grey">Search by username, email, or name.</div>
     </template>

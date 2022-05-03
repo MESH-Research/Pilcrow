@@ -26,123 +26,25 @@
           }"
         />
       </section>
-      <section class="col-md-5 col-sm-12 col-xs-12">
-        <h3>
-          {{
-            submitters.length > 1
-              ? $t("submissions.submitter.title.plural")
-              : $t("submissions.submitter.title.singular")
-          }}
-        </h3>
-        <div v-if="submitters.length" class="q-gutter-md column q-pl-none">
-          <user-list
-            ref="list_assigned_submitters"
-            data-cy="list_assigned_submitters"
-            :users="submitters"
-          />
-        </div>
-        <div v-else>
-          <q-card ref="card_no_submitters" bordered flat>
-            <q-item>
-              <q-card-section avatar>
-                <q-icon
-                  color="negative"
-                  text-color="white"
-                  name="report_problem"
-                  size="lg"
-                />
-              </q-card-section>
-              <q-card-section>
-                <p>
-                  {{ $t("submissions.submitter.none") }}
-                </p>
-              </q-card-section>
-            </q-item>
-          </q-card>
-        </div>
-      </section>
     </div>
+    <submission-users relationship="submitters" :submission="submission" />
     <submission-users
       relationship="review_coordinators"
       :submission="submission"
+      mutable
     />
-
-    <div class="row q-col-gutter-lg q-pa-lg">
-      <section class="col-md-5 col-sm-6 col-xs-12">
-        <h3>Assign a Review Coordinator</h3>
-        <q-form
-          @submit="
-            assignUser(`review_coordinator`, review_coordinator_candidate)
-          "
-        >
-          <div class="q-gutter-md column q-pl-none">
-            <find-user-select
-              v-model="review_coordinator_candidate"
-              data-cy="input_review_coordinator_assignee"
-              cy-selected-item="review_coordinator_assignee_selected"
-              cy-options-item="result_review_coordinator_assignee"
-            />
-          </div>
-          <q-btn
-            :ripple="{ center: true }"
-            class="q-mt-lg"
-            color="primary"
-            data-cy="button_assign_review_coordinator"
-            label="Assign"
-            type="submit"
-          />
-        </q-form>
-      </section>
-      <section class="col-md-5 col-sm-6 col-xs-12">
-        <h3>Review Coordinator</h3>
-        <div v-if="review_coordinators.length">
-          <user-list
-            ref="list_assigned_review_coordinators"
-            data-cy="list_assigned_review_coordinators"
-            :users="review_coordinators"
-            :actions="[
-              {
-                ariaLabel: 'Unassign',
-                icon: 'person_remove',
-                action: 'unassignReviewCoordinator',
-                help: 'Remove Review Coordinator',
-                cyAttr: 'button_unassign_review_coordinator',
-              },
-            ]"
-            @action-click="handleUserListClick"
-          />
-        </div>
-        <div v-else>
-          <q-card ref="card_no_review_coordinators" bordered flat>
-            <q-item class="text--grey">
-              <q-item-section avatar>
-                <q-icon name="o_do_disturb_on" />
-              </q-item-section>
-              <q-item-section>
-                {{ $t("submissions.review_coordinator.none") }}
-              </q-item-section>
-            </q-item>
-          </q-card>
-        </div>
-      </section>
-    </div>
+    <submission-users
+      relationship="reviewers"
+      :submission="submission"
+      mutable
+    />
   </article>
 </template>
 
 <script setup>
 import { GET_SUBMISSION } from "src/graphql/queries"
-import {
-  CREATE_SUBMISSION_USER,
-  DELETE_SUBMISSION_USER,
-} from "src/graphql/mutations"
 import SubmissionUsers from "src/components/SubmissionUsers.vue"
-import UserList from "src/components/molecules/UserList.vue"
-import RoleMapper from "src/mappers/roles"
-import { useFeedbackMessages } from "src/use/guiElements"
-import { useMutation, useQuery, useResult } from "@vue/apollo-composable"
-import { ref } from "vue"
-import { useI18n } from "vue-i18n"
-import FindUserSelect from "src/components/forms/FindUserSelect.vue"
+import { useQuery, useResult } from "@vue/apollo-composable"
 const props = defineProps({
   id: {
     type: String,
@@ -153,87 +55,4 @@ const props = defineProps({
 const { result } = useQuery(GET_SUBMISSION, { id: props.id })
 
 const submission = useResult(result)
-const review_coordinators = useResult(
-  result,
-  [],
-  (data) => data.submission.review_coordinators
-)
-const submitters = useResult(result, [], (data) => data.submission.submitters)
-const reviewer_candidate = ref(null)
-const review_coordinator_candidate = ref(null)
-
-const { t } = useI18n()
-
-const { newStatusMessage } = useFeedbackMessages({
-  attrs: {
-    "data-cy": "submission_details_notify",
-  },
-})
-
-const { mutate: assignUserMutate } = useMutation(CREATE_SUBMISSION_USER, {
-  refetchQueries: ["GetSubmission"],
-})
-
-async function assignUser(role_name, candidate_model) {
-  try {
-    await assignUserMutate({
-      user_id: candidate_model.id,
-      role_id: RoleMapper[role_name],
-      submission_id: props.id,
-    })
-      .then(() => {
-        newStatusMessage(
-          "success",
-          t(`submissions.${role_name}.assign.success`, {
-            display_name: candidate_model.name
-              ? candidate_model.name
-              : candidate_model.username,
-          })
-        )
-      })
-      .then(() => {
-        resetForm()
-        candidate_model = null
-      })
-  } catch (error) {
-    newStatusMessage("failure", t(`submissions.${role_name}.assign.error`))
-  }
-}
-function resetForm() {
-  review_coordinator_candidate.value = null
-  reviewer_candidate.value = null
-}
-
-async function handleUserListClick({ user, action }) {
-  switch (action) {
-    case "unassignReviewer":
-      await unassignUser("reviewer", user)
-      break
-    case "unassignReviewCoordinator":
-      await unassignUser("review_coordinator", user)
-      break
-  }
-}
-
-const { mutate: unassignUserMutate } = useMutation(DELETE_SUBMISSION_USER, {
-  refetchQueries: ["GetSubmission"],
-})
-
-async function unassignUser(role_name, user) {
-  try {
-    await unassignUserMutate({
-      user_id: user.id,
-      role_id: RoleMapper[role_name],
-      submission_id: props.id,
-    })
-    newStatusMessage(
-      "success",
-      t(`submissions.${role_name}.unassign.success`, {
-        display_name: user.name ? user.name : user.username,
-      })
-    )
-  } catch (error) {
-    newStatusMessage("failure", t(`submissions.${role_name}.unassign.error`))
-  }
-}
 </script>
