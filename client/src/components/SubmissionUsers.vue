@@ -45,6 +45,7 @@
               data-cy="button-assign"
               label="Assign"
               type="submit"
+              stretch
               @click="handleSubmit"
             />
           </template>
