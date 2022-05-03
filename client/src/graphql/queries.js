@@ -3,6 +3,7 @@ import {
   _CURRENT_USER_FIELDS,
   _PAGINATION_FIELDS,
   _PROFILE_METADATA_FIELDS,
+  _RELATED_USER_FIELDS,
 } from "./fragments"
 
 export const CURRENT_USER = gql`
@@ -169,25 +170,17 @@ export const GET_SUBMISSION = gql`
         }
       }
       reviewers {
-        id
-        name
-        username
-        email
+        ...relatedUserFields
       }
       review_coordinators {
-        id
-        name
-        username
-        email
+        ...relatedUserFields
       }
       submitters {
-        id
-        name
-        username
-        email
+        ...relatedUserFields
       }
     }
   }
+  ${_RELATED_USER_FIELDS}
 `
 
 export const GET_PUBLICATION = gql`

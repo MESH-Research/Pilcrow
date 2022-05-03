@@ -62,61 +62,10 @@
         </div>
       </section>
     </div>
-    <div class="row q-col-gutter-lg q-pa-lg">
-      <section class="col-md-5 col-sm-6 col-xs-12">
-        <h3>Assign a Reviewer</h3>
-        <q-form @submit="assignUser(`reviewer`, reviewer_candidate)">
-          <div class="q-gutter-md column q-pl-none">
-            <find-user-select
-              v-model="reviewer_candidate"
-              data-cy="input_review_assignee"
-              cy-selected-item="review_assignee_selected"
-              cy-options-item="result_review_assignee"
-            />
-          </div>
-          <q-btn
-            :ripple="{ center: true }"
-            class="q-mt-lg"
-            color="primary"
-            data-cy="button_assign_reviewer"
-            label="Assign"
-            type="submit"
-          />
-        </q-form>
-      </section>
-      <section class="col-md-5 col-sm-6 col-xs-12">
-        <h3>Assigned Reviewers</h3>
-        <div v-if="reviewers.length">
-          <user-list
-            ref="list_assigned_reviewers"
-            data-cy="list_assigned_reviewers"
-            :users="reviewers"
-            :actions="[
-              {
-                ariaLabel: 'Unassign',
-                icon: 'person_remove',
-                action: 'unassignReviewer',
-                help: 'Remove Reviewer',
-                cyAttr: 'button_unassign_reviewer',
-              },
-            ]"
-            @action-click="handleUserListClick"
-          />
-        </div>
-        <div v-else>
-          <q-card ref="card_no_reviewers" bordered flat>
-            <q-item class="text--grey">
-              <q-item-section avatar>
-                <q-icon name="o_do_disturb_on" />
-              </q-item-section>
-              <q-item-section>
-                {{ $t("submissions.reviewer.none") }}
-              </q-item-section>
-            </q-item>
-          </q-card>
-        </div>
-      </section>
-    </div>
+    <submission-users
+      relationship="review_coordinators"
+      :submission="submission"
+    />
 
     <div class="row q-col-gutter-lg q-pa-lg">
       <section class="col-md-5 col-sm-6 col-xs-12">
@@ -186,6 +135,7 @@ import {
   CREATE_SUBMISSION_USER,
   DELETE_SUBMISSION_USER,
 } from "src/graphql/mutations"
+import SubmissionUsers from "src/components/SubmissionUsers.vue"
 import UserList from "src/components/molecules/UserList.vue"
 import RoleMapper from "src/mappers/roles"
 import { useFeedbackMessages } from "src/use/guiElements"
@@ -203,7 +153,6 @@ const props = defineProps({
 const { result } = useQuery(GET_SUBMISSION, { id: props.id })
 
 const submission = useResult(result)
-const reviewers = useResult(result, [], (data) => data.submission.reviewers)
 const review_coordinators = useResult(
   result,
   [],

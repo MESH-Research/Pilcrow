@@ -1,5 +1,9 @@
 import gql from "graphql-tag"
-import { _CURRENT_USER_FIELDS, _PROFILE_METADATA_FIELDS } from "./fragments"
+import {
+  _CURRENT_USER_FIELDS,
+  _PROFILE_METADATA_FIELDS,
+  _RELATED_USER_FIELDS,
+} from "./fragments"
 
 export const LOGIN = gql`
   mutation Login($email: String!, $password: String!) {
@@ -164,6 +168,46 @@ export const CREATE_SUBMISSION_FILE = gql`
   }
 `
 
+export const UPDATE_SUBMISSION_REVIEWERS = gql`
+  mutation UpdateSubmissionReviewers(
+    $submission_id: ID!
+    $connect: [ID!]
+    $disconnect: [ID!]
+  ) {
+    updateSubmission(
+      input: {
+        id: $submission_id
+        reviewers: { connect: $connect, disconnect: $disconnect }
+      }
+    ) {
+      id
+      reviewers {
+        ...relatedUserFields
+      }
+    }
+  }
+  ${_RELATED_USER_FIELDS}
+`
+export const UPDATE_SUBMISSION_REVIEW_COORDINATORS = gql`
+  mutation UpdateSubmissionReviewCoordinators(
+    $submission_id: ID!
+    $connect: [ID!]
+    $disconnect: [ID!]
+  ) {
+    updateSubmission(
+      input: {
+        id: $submission_id
+        review_coordinators: { connect: $connect, disconnect: $disconnect }
+      }
+    ) {
+      id
+      review_coordinators {
+        ...relatedUserFields
+      }
+    }
+  }
+  ${_RELATED_USER_FIELDS}
+`
 export const CREATE_SUBMISSION_USER = gql`
   mutation CreateSubmissionUser(
     $user_id: ID!
