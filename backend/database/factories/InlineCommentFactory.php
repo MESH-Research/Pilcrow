@@ -32,9 +32,10 @@ class InlineCommentFactory extends Factory
         $user = User::factory();
         $time = $this->faker->dateTimeBetween(Carbon::now()->subDays(5), Carbon::now());
         $style_criterias = StyleCriteria::inRandomOrder()
-            ->limit(rand(1,4))
+            ->limit(rand(1, 4))
             ->get()
             ->toArray();
+
         return [
             'submission_id' => Submission::factory(),
             'content' => $this->faker->paragraph(2, true),

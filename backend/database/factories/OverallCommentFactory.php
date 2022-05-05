@@ -30,6 +30,7 @@ class OverallCommentFactory extends Factory
     {
         $user = User::factory();
         $time = $this->faker->dateTimeBetween(Carbon::now()->subDays(5), Carbon::now());
+
         return [
             'submission_id' => Submission::factory(),
             'content' => $this->faker->paragraph(2, true),

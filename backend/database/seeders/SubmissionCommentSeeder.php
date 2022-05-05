@@ -3,12 +3,12 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
-use Faker\Factory as Faker;
 use App\Models\InlineComment;
 use App\Models\OverallComment;
 use App\Models\User;
-use Illuminate\Database\Seeder;
 use Carbon\Carbon;
+use Faker\Factory as Faker;
+use Illuminate\Database\Seeder;
 
 class SubmissionCommentSeeder extends Seeder
 {
@@ -33,7 +33,6 @@ class SubmissionCommentSeeder extends Seeder
             'updated_by' => $user->id,
         ]);
         if ($reply_count > 0) {
-
             // Seed inline comment replies
             for ($i = $reply_count; $i > 0; $i--) {
                 $inline_reply = $this->createCommentReply(true, $user, $inline_parent);
@@ -53,13 +52,14 @@ class SubmissionCommentSeeder extends Seeder
     }
 
     /**
-     * @param boolean $is_inline
-     * @param User $user
-     * @param InlineComment|OverallComment $parent
-     * @param InlineComment|OverallComment $reply_to
-     * @return InlineComment|OverallComment
+     * @param bool $is_inline
+     * @param \App\Models\User $user
+     * @param \App\Models\InlineComment|\App\Models\OverallComment $parent
+     * @param \App\Models\InlineComment|\App\Models\OverallComment $reply_to
+     * @return \App\Models\InlineComment|\App\Models\OverallComment
      */
-    private function createCommentReply($is_inline, $user, $parent, $reply_to = null) {
+    private function createCommentReply($is_inline, $user, $parent, $reply_to = null)
+    {
         $faker = Faker::create();
         $time = $reply_to ? Carbon::parse($reply_to->created_at) : Carbon::parse($parent->created_at);
         $data = [
@@ -70,6 +70,7 @@ class SubmissionCommentSeeder extends Seeder
             'created_by' => $user->id,
             'updated_by' => $user->id,
         ];
+
         return $is_inline ? InlineComment::factory()->create($data) : OverallComment::factory()->create($data);
     }
 }
