@@ -11,6 +11,8 @@ type Submission {
     files: [SubmissionFile]! @hasMany
     pivot: SubmissionUser
     status: SubmissionStatus!
+    inline_comments: [InlineComment!]!
+    overall_comments: [OverallComment!]!
 }
 
 """
@@ -45,4 +47,51 @@ enum SubmissionStatus {
     AWAITING_REVISION @enum(value: 10)
     ARCHIVED @enum(value: 11)
     DELETED @enum(value: 12)
+}
+
+type InlineComment {
+    id: ID!
+    content: String!
+    created_by: User!
+    reply_to: InlineComment  # This references the particular comment being replied to.
+    parent: InlineComment # The top level comment this comment is under.
+    created_at: DateTime!
+    style_criteria: [String!] # Style criteria are saved as strings rather than a reference to the model to avoid issues with future changes to criteria names
+}
+
+type OverallComment {
+    id: ID!
+    content: String!
+    created_by: User!
+    reply_to: OverallComment
+    parent: OverallComment
+    created_at: DateTime!
+}
+
+extend type Mutation {
+    updateSubmission(submission: SubmissionInput @spread): Submission @update
+}
+
+input SubmissionInput {
+    id: ID!
+    inline_comments: UpdateInlineCommentsHasMany
+    overall_comments: UpdateOverallCommentsHasMany
+}
+
+input UpdateInlineCommentsHasMany {
+    create: [CreateInlineCommentInput!]
+}
+
+input UpdateOverallCommentsHasMany {
+    create: [CreateOverallCommentInput!]
+}
+input CreateInlineCommentInput {
+    content: String!
+    reply_to: String
+    style_criteria: [String!]
+}
+
+input CreateOverallCommentInput {
+    content: String!
+    reply_to: String
 }
