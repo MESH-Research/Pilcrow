@@ -6,6 +6,7 @@ namespace App\Models;
 use App\Traits\CreatedUpdatedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class OverallComment extends BaseModel
 {
@@ -20,5 +21,15 @@ class OverallComment extends BaseModel
     public function submission(): BelongsTo
     {
         return $this->belongsTo(Submission::class);
+    }
+
+    /**
+     * The replies to an overall comment parent
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function replies_to_parent(): HasMany
+    {
+        return $this->hasMany(OverallComment::class, 'parent')->whereNotNull('reply_to');
     }
 }

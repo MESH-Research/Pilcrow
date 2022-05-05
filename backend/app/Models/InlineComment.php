@@ -6,6 +6,7 @@ namespace App\Models;
 use App\Traits\CreatedUpdatedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class InlineComment extends BaseModel
 {
@@ -20,5 +21,25 @@ class InlineComment extends BaseModel
     public function submission(): BelongsTo
     {
         return $this->belongsTo(Submission::class);
+    }
+
+    /**
+     * The replies to an inline comment
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function replies(): HasMany
+    {
+        return $this->hasMany(InlineComment::class, 'parent')->whereNull('reply_to');
+    }
+
+    /**
+     * The replies to an inline comment
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function replies_to_parent(): HasMany
+    {
+        return $this->hasMany(InlineComment::class, 'parent');
     }
 }

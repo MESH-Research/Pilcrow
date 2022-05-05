@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Database\Factories;
 
 use App\Models\InlineComment;
-use App\Models\StyleCriteria;
 use App\Models\Submission;
 use App\Models\User;
 use Carbon\Carbon;
@@ -31,10 +30,6 @@ class InlineCommentFactory extends Factory
     {
         $user = User::factory();
         $time = $this->faker->dateTimeBetween(Carbon::now()->subDays(5), Carbon::now());
-        $style_criterias = StyleCriteria::inRandomOrder()
-            ->limit(rand(1, 4))
-            ->get()
-            ->toArray();
 
         return [
             'submission_id' => Submission::factory(),
@@ -43,7 +38,6 @@ class InlineCommentFactory extends Factory
             'updated_at' => $time,
             'created_by' => $user,
             'updated_by' => $user,
-            'style_criteria' => json_encode($style_criterias),
         ];
     }
 }

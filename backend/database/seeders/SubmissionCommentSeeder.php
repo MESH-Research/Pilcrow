@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Database\Seeders;
 
 use App\Models\InlineComment;
+use App\Models\StyleCriteria;
 use App\Models\OverallComment;
 use App\Models\User;
 use Carbon\Carbon;
@@ -22,29 +23,41 @@ class SubmissionCommentSeeder extends Seeder
     public function run($reply_count = 0, $reply_reply_count = 0)
     {
         $user = User::where('username', 'regularUser')->firstOrFail();
+        $style_criterias = StyleCriteria::inRandomOrder()
+            ->limit(rand(1, 4))
+            ->get()
+            ->toArray();
         $inline_parent = InlineComment::factory()->create([
             'submission_id' => 100,
             'created_by' => $user->id,
             'updated_by' => $user->id,
+            'style_criteria' => json_encode($style_criterias),
         ]);
         $overall_parent = OverallComment::factory()->create([
             'submission_id' => 100,
             'created_by' => $user->id,
             'updated_by' => $user->id,
         ]);
+
+        // Replies
         if ($reply_count > 0) {
+
             // Seed inline comment replies
             for ($i = $reply_count; $i > 0; $i--) {
-                $inline_reply = $this->createCommentReply(true, $user, $inline_parent);
+                $inline_reply = $this->createCommentReply(true, $user, $inline_parent, $inline_parent);
             }
+
+            // Seed replies to inline comment replies
             for ($i = $reply_reply_count; $i > 0; $i--) {
                 $this->createCommentReply(true, $user, $inline_parent, $inline_reply);
             }
 
             // Seed overall comment replies
             for ($i = $reply_count; $i > 0; $i--) {
-                $overall_reply = $this->createCommentReply(false, $user, $overall_parent);
+                $overall_reply = $this->createCommentReply(false, $user, $overall_parent, $overall_parent);
             }
+
+            // Seed replies to overall comment replies
             for ($i = $reply_reply_count; $i > 0; $i--) {
                 $this->createCommentReply(false, $user, $overall_parent, $overall_reply);
             }
@@ -58,19 +71,23 @@ class SubmissionCommentSeeder extends Seeder
      * @param \App\Models\InlineComment|\App\Models\OverallComment $reply_to
      * @return \App\Models\InlineComment|\App\Models\OverallComment
      */
-    private function createCommentReply($is_inline, $user, $parent, $reply_to = null)
+    private function createCommentReply($is_inline, $user, $parent, $reply_to)
     {
         $faker = Faker::create();
-        $time = $reply_to ? Carbon::parse($reply_to->created_at) : Carbon::parse($parent->created_at);
+        $time = Carbon::parse($reply_to->created_at);
+        $datetime = $faker->dateTimeBetween($time, $time->addHours(24));
         $data = [
             'submission_id' => 100,
             'parent' => $parent->id,
-            'reply_to' => $reply_to ? $reply_to->id : null,
-            'created_at' => $faker->dateTimeBetween($time, $time->addHours(24)),
+            'reply_to' => $reply_to->id,
+            'created_at' => $datetime,
+            'updated_at' => $datetime,
             'created_by' => $user->id,
             'updated_by' => $user->id,
         ];
 
-        return $is_inline ? InlineComment::factory()->create($data) : OverallComment::factory()->create($data);
+        return $is_inline
+            ? InlineComment::factory()->create($data)
+            : OverallComment::factory()->create($data);
     }
 }
