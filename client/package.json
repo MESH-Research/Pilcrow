@@ -31,7 +31,7 @@
     "@tiptap/extension-placeholder": "^2.0.0-beta.48",
     "@tiptap/starter-kit": "^2.0.0-beta.184",
     "@tiptap/vue-3": "^2.0.0-beta.91",
-    "@vue/apollo-composable": "^4.0.0-alpha.16",
+    "@vue/apollo-composable": "^4.0.0-alpha.17",
     "@vue/apollo-option": "^4.0.0-alpha.17",
     "@vuelidate/core": "^2.0.0-alpha.41",
     "@vuelidate/validators": "^2.0.0-alpha.29",
