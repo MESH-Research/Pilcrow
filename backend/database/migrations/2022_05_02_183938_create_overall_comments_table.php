@@ -19,8 +19,8 @@ return new class extends Migration
             $table->text('content');
             $table->unsignedBigInteger('created_by');
             $table->unsignedBigInteger('updated_by');
-            $table->unsignedBigInteger('reply_to')->nullable();
-            $table->unsignedBigInteger('parent')->nullable();
+            $table->unsignedBigInteger('reply_to_id')->nullable();
+            $table->unsignedBigInteger('parent_id')->nullable();
             $table->timestamps();
 
             $table->foreign('created_by')
@@ -31,11 +31,11 @@ return new class extends Migration
                 ->references('id')
                 ->on('users');
 
-            $table->foreign('reply_to')
+            $table->foreign('reply_to_id')
                 ->references('id')
                 ->on('overall_comments');
 
-            $table->foreign('parent')
+            $table->foreign('parent_id')
                 ->references('id')
                 ->on('overall_comments');
         });

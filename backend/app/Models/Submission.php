@@ -85,7 +85,7 @@ class Submission extends Model
      */
     public function inline_comments(): HasMany
     {
-        return $this->hasMany(InlineComment::class);
+        return $this->hasMany(InlineComment::class)->whereNull('parent_id');
     }
 
     /**
@@ -95,7 +95,7 @@ class Submission extends Model
      */
     public function overall_comments(): HasMany
     {
-        return $this->hasMany(OverallComment::class);
+        return $this->hasMany(OverallComment::class)->whereNull('parent_id');
     }
 
     /**

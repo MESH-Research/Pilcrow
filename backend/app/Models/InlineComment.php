@@ -30,16 +30,6 @@ class InlineComment extends BaseModel
      */
     public function replies(): HasMany
     {
-        return $this->hasMany(InlineComment::class, 'parent')->whereNull('reply_to');
-    }
-
-    /**
-     * The replies to an inline comment
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function replies_to_parent(): HasMany
-    {
-        return $this->hasMany(InlineComment::class, 'parent');
+        return $this->hasMany(InlineComment::class, 'parent_id');
     }
 }

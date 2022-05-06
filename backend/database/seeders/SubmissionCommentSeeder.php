@@ -78,8 +78,8 @@ class SubmissionCommentSeeder extends Seeder
         $datetime = $faker->dateTimeBetween($time, $time->addHours(24));
         $data = [
             'submission_id' => 100,
-            'parent' => $parent->id,
-            'reply_to' => $reply_to->id,
+            'parent_id' => $parent->id,
+            'reply_to_id' => $reply_to->id,
             'created_at' => $datetime,
             'updated_at' => $datetime,
             'created_by' => $user->id,
