@@ -54,11 +54,7 @@ describe("Publication Details", () => {
       .should("be.visible")
       .should("have.class", "bg-negative")
 
-    cy.checkA11y(null, {
-      rules: {
-        "nested-interactive": { enabled: false },
-      },
-    }, a11yLogViolations)
+    cy.checkA11y(null, null, a11yLogViolations)
   })
 
   it("should allow editing of style criteria", () => {
