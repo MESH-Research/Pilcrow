@@ -1,10 +1,9 @@
 <template>
   <q-list bordered separator :data-cy="dataCy">
     <user-list-item
-      v-for="(user, index) in users"
+      v-for="user in users"
       :key="user.id"
       :user="user"
-      :index="index"
       :actions="actions"
       @action-click="bubble"
     />

@@ -27,14 +27,20 @@
         />
       </section>
     </div>
-    <submission-users relationship="submitters" :submission="submission" />
+    <submission-users
+      data-cy="submitters_list"
+      relationship="submitters"
+      :submission="submission"
+    />
     <submission-users
       relationship="review_coordinators"
+      data-cy="coordinators_list"
       :submission="submission"
       mutable
       :max-users="1"
     />
     <submission-users
+      data-cy="reviewers_list"
       relationship="reviewers"
       :submission="submission"
       mutable
