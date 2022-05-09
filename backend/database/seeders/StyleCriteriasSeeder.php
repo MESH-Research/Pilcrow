@@ -16,9 +16,9 @@ class StyleCriteriasSeeder extends Seeder
         $style_criterias = collect([
             [
                 'name' => 'Accessibility',
-                'description' => 'Connects with the public at large and resonates with specific, publicly engaged '.
-                                 'individuals and organizations. This usually requires unpacking technical terms, '.
-                                 'linking to source and related materials, providing transcripts for audio and '.
+                'description' => 'Connects with the public at large and resonates with specific, publicly engaged ' .
+                                 'individuals and organizations. This usually requires unpacking technical terms, ' .
+                                 'linking to source and related materials, providing transcripts for audio and ' .
                                  'video, and providing alt-text for images.',
                 'icon' => 'accessibility',
             ],
@@ -34,8 +34,8 @@ class StyleCriteriasSeeder extends Seeder
             ],
             [
                 'name' => 'Scholarly Dialogue',
-                'description' => 'Cites and considers related discussions either within or outside of the academy, '.
-                                 'whether encountered in peer-reviewed literature or other media such as blogs, '.
+                'description' => 'Cites and considers related discussions either within or outside of the academy, ' .
+                                 'whether encountered in peer-reviewed literature or other media such as blogs, ' .
                                  'magazines, podcasts, galleries, or listservs.',
                 'icon' => 'question_answer',
             ],

@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace Database\Seeders;
 
 use App\Models\InlineComment;
-use App\Models\StyleCriteria;
 use App\Models\OverallComment;
+use App\Models\StyleCriteria;
 use App\Models\User;
 use Carbon\Carbon;
 use Faker\Factory as Faker;
@@ -41,7 +41,6 @@ class SubmissionCommentSeeder extends Seeder
 
         // Replies
         if ($reply_count > 0) {
-
             // Seed inline comment replies
             for ($i = $reply_count; $i > 0; $i--) {
                 $inline_reply = $this->createCommentReply(true, $user, $inline_parent, $inline_parent);
