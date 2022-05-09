@@ -1,8 +1,26 @@
 extend type Mutation {
-   addInlineComment(submission_id: ID!, content: String!, style_criteria: [ID!]): InlineComment
-   addInlineCommentReply(submission_id: ID!, content: String!, reply_to: ID!): InlineComment
-   addOverallComment(submission_id: ID!, content: String!): OverallComment
-   addOverallCommentReply(submission_id: ID!, content: String!, reply_to: ID!): OverallComment
+    addInlineComment(
+        submission_id: ID!
+        content: String!
+        style_criteria: [ID!]
+    ): InlineComment @create
+
+    addInlineCommentReply(
+        submission_id: ID!
+        content: String!
+        reply_to: ID!
+    ): InlineComment @create
+
+    addOverallComment(
+        submission_id: ID!
+        content: String!
+    ): OverallComment @create
+
+    addOverallCommentReply(
+       submission_id: ID!
+       content: String!
+       reply_to: ID!
+    ): OverallComment @create
 }
 
 """
@@ -79,7 +97,7 @@ type InlineComment {
     created_by: User!
     created_at: DateTime!
     replies: [InlineCommentReply!]
-    style_criteria: [String!] # Style criteria are saved as strings rather than a reference to the model to avoid issues with future changes to criteria names
+    style_criteria: [StyleCriteria!]
 }
 
 """
