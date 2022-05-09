@@ -4,12 +4,12 @@
     :options="options"
     bottom-slots
     hide-dropdown-icon
-    input-debounce="50"
     label="User to Assign"
     outlined
     transition-hide="none"
     transition-show="none"
     use-input
+    :loading="loading"
     @update:model-value="onSelectUpdate"
     @filter="filterFn"
   >
@@ -40,7 +40,7 @@
 </template>
 
 <script setup>
-import { useQuery } from "@vue/apollo-composable"
+import { useQuery, useResult } from "@vue/apollo-composable"
 import { SEARCH_USERS } from "src/graphql/queries"
 import { ref } from "vue"
 const props = defineProps({
@@ -64,15 +64,16 @@ function onSelectUpdate(newValue) {
   emit("update:modelValue", newValue)
 }
 
-const options = ref([])
-const { refetch } = useQuery(SEARCH_USERS)
+const variables = ref({ term: "" })
+const { result, loading, refetch } = useQuery(SEARCH_USERS, variables)
+const options = useResult(result, [], (data) => data.userSearch.data)
 
 async function filterFn(val, update) {
-  const newData = await refetch({ term: val.toLowerCase() })
-  const newOptions = newData.data.userSearch.data
+  variables.value = { term: val }
+  refetch()
 
-  update(() => {
-    options.value = newOptions
-  })
+  //Immediately call the update function to clear the loading flag for the filter
+  //The loading ref on the query will indicate loading to the user.
+  update(() => {})
 }
 </script>

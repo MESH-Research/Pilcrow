@@ -29,11 +29,7 @@ describe("Submissions", () => {
     cy.dataCy("list_assigned_submitters").contains(
       "applicationadministrator@ccrproject.dev"
     )
-    cy.checkA11y(null, {
-      rules: {
-        "nested-interactive": { enabled: false },
-      },
-    }, a11yLogViolations)
+    cy.checkA11y(null, null, a11yLogViolations)
     cy.reload()
     cy.dataCy("notification_indicator").should("be.visible")
   })
