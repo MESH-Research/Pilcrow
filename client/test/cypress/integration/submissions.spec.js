@@ -26,22 +26,21 @@ describe("Submissions", () => {
       .should("have.class", "bg-positive")
     cy.get(".q-notification--top-enter-active").should("not.exist")
     cy.dataCy("submission_link").contains("Submission from Cypress").click()
-    cy.dataCy("list_assigned_submitters").contains(
-      "applicationadministrator@ccrproject.dev"
-    )
+    cy.dataCy("submitters_list").contains("applicationadministrator@ccrproject.dev")
     cy.checkA11y(null, null, a11yLogViolations)
     cy.reload()
     cy.dataCy("notification_indicator").should("be.visible")
   })
 
+  //TODO: If this is checked at the jest and/or laravel level, it doesn't need to be checked here
   it("prevents submission creation when the title exceeds the maximum length", () => {
-    const name_513_characters =
-      "123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123"
+    const name_520_characters =
+      "1234567890".repeat(52)
     cy.task("resetDb")
     cy.login({ email: "applicationadministrator@ccrproject.dev" })
     cy.visit("submissions")
     cy.dataCy("new_submission_title_input").type(
-      name_513_characters + "{enter}"
+      name_520_characters + "{enter}"
     )
     cy.dataCy("create_submission_notify")
       .should("be.visible")
