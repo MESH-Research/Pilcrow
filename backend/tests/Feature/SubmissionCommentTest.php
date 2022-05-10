@@ -63,6 +63,7 @@ class SubmissionCommentTest extends TestCase
         $style_criteria = $this->createStyleCriteria($submission->publication->id);
         InlineComment::factory()->count($count)->create([
             'submission_id' => $submission->id,
+            'content' => 'This is some content.',
             'created_by' => $user->id,
             'updated_by' => $user->id,
             'style_criteria' => json_encode($style_criteria),
@@ -120,7 +121,7 @@ class SubmissionCommentTest extends TestCase
                 submission (id: $id) {
                     id
                     inline_comments {
-                        id
+                        content
                         style_criteria {
                             name
                             description
@@ -137,7 +138,7 @@ class SubmissionCommentTest extends TestCase
                 'id' => (string)$submission->id,
                 'inline_comments' => [
                     '0' => [
-                        'id' => '2',
+                        'content' => 'This is some content.',
                         'style_criteria' => [
                             '0' => [
                                 'name' => 'PHPUnit Criteria',
@@ -148,7 +149,7 @@ class SubmissionCommentTest extends TestCase
                         ],
                     ],
                     '1' => [
-                        'id' => '3',
+                        'content' => 'This is some content.',
                         'style_criteria' => [
                             '0' => [
                                 'name' => 'PHPUnit Criteria',

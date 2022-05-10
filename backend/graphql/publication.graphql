@@ -109,6 +109,6 @@ type StyleCriteria {
     id: ID!
     name: String!
     description: String
-    publication_id: Publication!
+    publication: Publication!
     icon: String
 }

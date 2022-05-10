@@ -32,4 +32,14 @@ class InlineComment extends BaseModel
     {
         return $this->hasMany(InlineComment::class, 'parent_id');
     }
+
+    /**
+     * The associated style criteria of an inline comment
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function style_criteria(): HasMany
+    {
+        return $this->hasMany(StyleCriteria::class, 'id');
+    }
 }
