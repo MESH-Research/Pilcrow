@@ -11,15 +11,13 @@ extend type Mutation {
         reply_to: ID!
     ): InlineComment @create
 
-    addOverallComment(
-        submission_id: ID!
-        content: String!
-    ): OverallComment @create
+    addOverallComment(submission_id: ID!, content: String!): OverallComment
+        @create
 
     addOverallCommentReply(
-       submission_id: ID!
-       content: String!
-       reply_to: ID!
+        submission_id: ID!
+        content: String!
+        reply_to: ID!
     ): OverallComment @create
 }
 
@@ -82,10 +80,10 @@ enum SubmissionStatus {
 The content of a submission
 """
 type SubmissionContent {
-  content: String!
-  created_at: DateTime!
-  modified_at: DateTime!
-  src_file: SubmissionFile!
+    content: String!
+    created_at: DateTime!
+    modified_at: DateTime!
+    src_file: SubmissionFile!
 }
 
 """
@@ -97,7 +95,7 @@ type InlineComment {
     created_by: User!
     created_at: DateTime!
     replies: [InlineCommentReply!]
-    style_criteria: [InlineCommentStyleCriteria!] @hasMany
+    style_criteria: [InlineCommentStyleCriteria!]
 }
 
 type InlineCommentStyleCriteria {
@@ -110,11 +108,11 @@ type InlineCommentStyleCriteria {
 A reply to an inline comment of a submission
 """
 type InlineCommentReply {
-  id: ID!
-  content: String!
-  created_by: User!
-  reply_to_id: ID!
-  created_at: DateTime!
+    id: ID!
+    content: String!
+    created_by: User!
+    reply_to_id: ID!
+    created_at: DateTime!
 }
 
 """

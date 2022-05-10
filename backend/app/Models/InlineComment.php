@@ -13,6 +13,10 @@ class InlineComment extends BaseModel
     use HasFactory;
     use CreatedUpdatedBy;
 
+    protected $casts = [
+        'style_criteria' => 'json',
+    ];
+
     /**
      * The submission that owns the inline comment
      *
@@ -31,15 +35,5 @@ class InlineComment extends BaseModel
     public function replies(): HasMany
     {
         return $this->hasMany(InlineComment::class, 'parent_id');
-    }
-
-    /**
-     * The associated style criteria of an inline comment
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function style_criteria(): HasMany
-    {
-        return $this->hasMany(StyleCriteria::class, 'id');
     }
 }
