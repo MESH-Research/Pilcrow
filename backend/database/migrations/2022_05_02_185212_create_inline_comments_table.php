@@ -21,7 +21,7 @@ return new class extends Migration
             $table->unsignedBigInteger('updated_by');
             $table->unsignedBigInteger('reply_to_id')->nullable();
             $table->unsignedBigInteger('parent_id')->nullable();
-            $table->json('style_criteria')->nullable();
+            $table->json('inline_comment_style_criteria')->nullable();
             $table->timestamps();
 
             $table->foreign('created_by')

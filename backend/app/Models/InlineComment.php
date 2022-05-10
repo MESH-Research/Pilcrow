@@ -14,7 +14,7 @@ class InlineComment extends BaseModel
     use CreatedUpdatedBy;
 
     protected $casts = [
-        'style_criteria' => 'json',
+        'inline_comment_style_criteria' => 'json',
     ];
 
     /**

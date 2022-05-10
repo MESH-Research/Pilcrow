@@ -95,13 +95,15 @@ type InlineComment {
     created_by: User!
     created_at: DateTime!
     replies: [InlineCommentReply!]
-    style_criteria: [InlineCommentStyleCriteria!]
+    inline_comment_style_criteria: [InlineCommentStyleCriteria!]
 }
 
+"""
+The static style criteria of an inline comment
+"""
 type InlineCommentStyleCriteria {
     name: String
     icon: String
-    description: String
 }
 
 """
