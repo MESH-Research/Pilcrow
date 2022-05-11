@@ -6,7 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class SubmissionFile extends Model
+class SubmissionContent extends Model
 {
     use HasFactory;
 
@@ -23,28 +23,28 @@ class SubmissionFile extends Model
      * @var array
      */
     protected $fillable = [
-        'submission_id',
-        'file_upload',
+        'content',
+        'submission_file_id',
     ];
 
     /**
-     * File uploads that belong to the submission
+     * files that belong to the submission
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function files()
+    {
+        return $this->belongsTo(SubmissionFile::class);
+    }
+
+    /**
+     * content that belong to the submission
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function submission()
     {
-        return $this->belongsTo(Submission::class, 'submission_id');
+        return $this->belongsTo(Submission::class, 'content');
     }
-
-    /**
-     * Content that belong to the submission
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
-     */
-    public function content(): HasOne
-    {
-        return $this->hasOne(SubmissionContent::class);
-    }
-
 }
+

@@ -35,6 +35,7 @@ class Submission extends Model
         'title',
         'publication_id',
         'status',
+        'content_id',
     ];
 
     /**
@@ -76,6 +77,16 @@ class Submission extends Model
     public function files(): HasMany
     {
         return $this->hasMany(SubmissionFile::class);
+    }
+
+    /**
+     * Content that belongs to the submission
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function content(): HasOne
+    {
+        return $this->hasOne(SubmissionContent::class);
     }
 
     /**
