@@ -3,6 +3,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.16.2](https://github.com/MESH-Research/CCR/compare/v0.16.1...v0.16.2) (2022-05-09)
+
+
+### Bug Fixes
+
+* **client:** Fix lockup in find-user-select component ([#1078](https://github.com/MESH-Research/CCR/issues/1078)) ([494c3ef](https://github.com/MESH-Research/CCR/commit/494c3ef4647c7886a984c163f3aa9cda3fa9ede3))
+
 ### [0.16.1](https://github.com/MESH-Research/CCR/compare/v0.16.0...v0.16.1) (2022-05-02)
 
 
