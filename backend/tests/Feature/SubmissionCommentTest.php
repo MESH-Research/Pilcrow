@@ -50,6 +50,7 @@ class SubmissionCommentTest extends TestCase
             'description' => 'This is a test style criteria created by PHPUnit',
             'icon' => 'php',
         ]);
+
         return $criteria;
     }
 
@@ -69,6 +70,7 @@ class SubmissionCommentTest extends TestCase
             'updated_by' => $user->id,
             'style_criteria' => [$style_criteria->toArray()],
         ]);
+
         return $submission;
     }
 
@@ -86,6 +88,7 @@ class SubmissionCommentTest extends TestCase
             'created_by' => $user->id,
             'updated_by' => $user->id,
         ]);
+
         return $submission;
     }
 
