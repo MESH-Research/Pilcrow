@@ -5,6 +5,9 @@ namespace App\Traits;
 
 trait CreatedUpdatedBy
 {
+    /**
+     * Add functionality to automatically update the database upon events
+     */
     public static function bootCreatedUpdatedBy()
     {
         // This automatically updates the created_by and updated_by fields when the model is created

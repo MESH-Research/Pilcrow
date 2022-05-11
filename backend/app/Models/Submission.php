@@ -83,7 +83,7 @@ class Submission extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function inline_comments(): HasMany
+    public function inlineComments(): HasMany
     {
         return $this->hasMany(InlineComment::class)->whereNull('parent_id');
     }
@@ -93,7 +93,7 @@ class Submission extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function overall_comments(): HasMany
+    public function overallComments(): HasMany
     {
         return $this->hasMany(OverallComment::class)->whereNull('parent_id');
     }
