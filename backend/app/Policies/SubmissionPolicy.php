@@ -52,7 +52,7 @@ class SubmissionPolicy
             return true;
         }
 
-        //Check is the user is a submitter or review coordinator
+        //Check if the user is a submitter or review coordinator
         if ($user->hasSubmissionRole([Role::REVIEW_COORDINATOR_ROLE_ID, Role::SUBMITTER_ROLE_ID], $submission->id)) {
             return true;
         }
