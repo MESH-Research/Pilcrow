@@ -79,6 +79,26 @@ class Submission extends Model
     }
 
     /**
+     * Inline comments that belong to the submission
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function inlineComments(): HasMany
+    {
+        return $this->hasMany(InlineComment::class)->whereNull('parent_id');
+    }
+
+    /**
+     * Overall comments that belong to the submission
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function overallComments(): HasMany
+    {
+        return $this->hasMany(OverallComment::class)->whereNull('parent_id');
+    }
+
+    /**
      * @return string
      */
     public function getStatusNameAttribute()
