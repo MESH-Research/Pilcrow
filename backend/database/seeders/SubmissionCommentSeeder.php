@@ -31,7 +31,7 @@ class SubmissionCommentSeeder extends Seeder
             'submission_id' => 100,
             'created_by' => $user->id,
             'updated_by' => $user->id,
-            'inline_comment_style_criteria' => $style_criterias,
+            'style_criteria' => $style_criterias,
         ]);
         $overall_parent = OverallComment::factory()->create([
             'submission_id' => 100,

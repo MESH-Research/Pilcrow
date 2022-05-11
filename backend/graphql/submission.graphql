@@ -95,7 +95,7 @@ type InlineComment {
     created_by: User!
     created_at: DateTime!
     replies: [InlineCommentReply!]
-    inline_comment_style_criteria: [InlineCommentStyleCriteria!]
+    style_criteria: [InlineCommentStyleCriteria!]
 }
 
 """
