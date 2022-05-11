@@ -95,25 +95,25 @@ class SubmissionCommentTest extends TestCase
     public function testInlineCommentsAreNotRetrievedForASubmissionThatHasNone()
     {
         $submission = $this->createSubmission();
-        $this->assertEmpty($submission->inline_comments);
+        $this->assertEmpty($submission->inlineComments);
     }
 
     public function testOverallCommentsAreNotRetrievedForASubmissionThatHasNone()
     {
         $submission = $this->createSubmission();
-        $this->assertEmpty($submission->overall_comments);
+        $this->assertEmpty($submission->overallComments);
     }
 
     public function testInlineCommentsCanBeRetrievedBySubmission()
     {
         $submission = $this->createSubmissionWithInlineComment();
-        $this->assertEquals(1, $submission->inline_comments->count());
+        $this->assertEquals(1, $submission->inlineComments->count());
     }
 
     public function testOverallCommentsCanBeRetrievedBySubmission()
     {
         $submission = $this->createSubmissionWithOverallComment();
-        $this->assertEquals(1, $submission->overall_comments->count());
+        $this->assertEquals(1, $submission->overallComments->count());
     }
 
     public function testInlineCommentsCanBeRetrievedOnTheGraphqlEndpoint()
