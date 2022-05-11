@@ -7,6 +7,8 @@ trait CreatedUpdatedBy
 {
     /**
      * Add functionality to automatically update the database upon events
+     *
+     * @return void
      */
     public static function bootCreatedUpdatedBy()
     {
