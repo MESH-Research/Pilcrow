@@ -118,6 +118,8 @@ class SubmissionCommentTest extends TestCase
 
     public function testInlineCommentsCanBeRetrievedOnTheGraphqlEndpoint()
     {
+        $this->beAppAdmin();
+
         $submission = $this->createSubmissionWithInlineComment(2);
         $response = $this->graphQL(
             'query GetSubmission($id: ID!) {
@@ -164,6 +166,8 @@ class SubmissionCommentTest extends TestCase
 
     public function testOverallCommentsCanBeRetrievedOnTheGraphqlEndpoint()
     {
+        $this->beAppAdmin();
+
         $submission = $this->createSubmissionWithOverallComment(2);
         $response = $this->graphQL(
             'query GetSubmission($id: ID!) {
