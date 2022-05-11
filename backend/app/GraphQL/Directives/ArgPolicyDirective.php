@@ -87,7 +87,15 @@ GRAPHQL;
         $apply = $this->directiveArgValue('apply');
 
         $fieldValue->setResolver(
-            function ($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo) use ($previousResolver, $apply) {
+            function (
+                $root,
+                array $args,
+                GraphQLContext $context,
+                ResolveInfo $resolveInfo
+            ) use (
+                $previousResolver,
+                $apply
+            ) {
                 $argCollection = collect($args);
                 foreach ($apply as $applyField) {
                     [$fieldToCheck, $ability] = explode(':', $applyField);
