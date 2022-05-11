@@ -119,7 +119,7 @@ const acceptMore = computed(() => {
 const { mutate } = useMutation(documents[props.relationship], opts)
 
 async function handleSubmit() {
-  if (!props.mutable) {
+  if (!acceptMore.value) {
     console.log("not muatble")
     return
   }
