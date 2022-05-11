@@ -16,9 +16,10 @@ return new class extends Migration
         Schema::create('submission_content', function (Blueprint $table) {
             $table->id();
             $table->text('content');
+            $table->unsignedBigInteger('submission_file_id');
             $table->foreign('submission_file_id')
                 ->references('id')
-                ->on('submissions_files');
+                ->on('submission_files');
             $table->timestamps();
         });
     }
