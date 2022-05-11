@@ -82,10 +82,10 @@ class SubmissionCommentTest extends TestCase
         $submission = $this->createSubmission();
         OverallComment::factory()->count($count)->create([
             'submission_id' => $submission->id,
+            'content' => 'This is some content for an overall comment created by PHPUnit.',
             'created_by' => $user->id,
             'updated_by' => $user->id,
         ]);
-
         return $submission;
     }
 
@@ -159,8 +159,33 @@ class SubmissionCommentTest extends TestCase
         $response->assertJsonPath('data', $expected_data);
     }
 
-    // public function testOverallCommentsCanBeRetrievedOnTheGraphqlEndpoint()
-    // {
-    //     return true;
-    // }
+    public function testOverallCommentsCanBeRetrievedOnTheGraphqlEndpoint()
+    {
+        $submission = $this->createSubmissionWithOverallComment(2);
+        $response = $this->graphQL(
+            'query GetSubmission($id: ID!) {
+                submission (id: $id) {
+                    id
+                    overall_comments {
+                        content
+                    }
+                }
+            }',
+            [ 'id' => $submission->id ]
+        );
+        $expected_data = [
+            'submission' => [
+                'id' => (string)$submission->id,
+                'overall_comments' => [
+                    '0' => [
+                        'content' => 'This is some content for an overall comment created by PHPUnit.',
+                    ],
+                    '1' => [
+                        'content' => 'This is some content for an overall comment created by PHPUnit.',
+                    ],
+                ],
+            ],
+        ];
+        $response->assertJsonPath('data', $expected_data);
+    }
 }
