@@ -34,8 +34,8 @@ type Submission {
     files: [SubmissionFile]! @hasMany
     pivot: SubmissionUser
     status: SubmissionStatus!
-    inline_comments: [InlineComment!]!
-    overall_comments: [OverallComment!]!
+    inline_comments: [InlineComment!]! @hasMany(relation: "inlineComments")
+    overall_comments: [OverallComment!]! @hasMany(relation: "overallComments")
     content: SubmissionContent #This field is optional bc it may be null if the pandoc process is still importing the document
 }
 
