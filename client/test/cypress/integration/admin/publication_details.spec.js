@@ -115,4 +115,19 @@ describe("Publication Details", () => {
     cy.dataCy("listItem").last().contains("New criteria description")
     cy.dataCy("listItem").last().contains('task_alt')
   })
+
+  it("should allow deleting a style criteria", () => {
+    cy.task("resetDb")
+    cy.login({ email: "applicationadministrator@ccrproject.dev" })
+    cy.visit("/publication/1")
+    //Check existing number of items:
+    cy.dataCy('listItem').should('have.length', 4)
+
+    cy.dataCy('editBtn').first().click()
+    cy.dataCy('button-delete').click()
+
+    cy.get('.q-dialog .q-btn').last().click()
+
+    cy.dataCy('listItem').should('have.length', 3)
+  });
 })

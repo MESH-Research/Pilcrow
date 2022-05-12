@@ -54,7 +54,8 @@
         <div class="row justify-between">
           <q-btn
             ref="button_delete"
-            color="red"
+            data-cy="button-delete"
+            color="red-10"
             label="Delete"
             @click="onDelete"
           />
