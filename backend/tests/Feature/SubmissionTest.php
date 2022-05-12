@@ -549,6 +549,94 @@ class SubmissionTest extends TestCase
         $response->assertJsonPath('errors.0.extensions.category', 'authorization');
     }
 
+    public function testCreatedByFieldIsSet()
+    {
+        //TODO: Once file uploads are no longer required at initial submission creation, remove file upload portion of this test.
+        /** @var User $user */
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        $publication = Publication::factory()->create();
+
+        $operations = [
+            'operationName' => 'CreateSubmission',
+            'query' => '
+                mutation CreateSubmission (
+                    $title: String!
+                    $publication_id: ID!
+                    $file_upload: [Upload!]
+                    $user_id: ID!
+                ) {
+                    createSubmission(
+                        input: {
+                            title: $title,
+                            publication_id: $publication_id,
+                            submitters: { connect: [$user_id] },
+                            files: { create: $file_upload }
+                        }
+                    ) {
+                        title
+                        created_by {
+                            id
+                        }
+                        updated_by {
+                            id
+                        }
+                    }
+                }
+            ',
+            'variables' => [
+                'title' => '    Test Submission    ',
+                'publication_id' => $publication->id,
+                'user_id' => $user->id,
+                'file_upload' => null,
+            ],
+        ];
+        $map = [
+            '0' => ['variables.file_upload'],
+        ];
+        $file = [
+            '0' => UploadedFile::fake()->create('test.txt', 500),
+        ];
+
+        $response = $this->multipartGraphQL($operations, $map, $file);
+
+        $response
+            ->assertJsonPath('data.createSubmission.created_by.id', (string)$user->id);
+        $response
+            ->assertJsonPath('data.createSubmission.updated_by.id', (string)$user->id);
+    }
+
+    public function testUpdatedByFieldIsSet()
+    {
+        $submission = Submission::factory()->create();
+
+        $user = $this->beAppAdmin();
+
+        $response = $this->graphQL(
+            'mutation updateSubmission($id: ID!, $title: String) {
+                updateSubmission(input: {
+                    id: $id
+                    title: $title
+                }) {
+                    created_by {
+                        id
+                    }
+                    updated_by {
+                        id
+                    }
+                }
+            }',
+            [
+                'id' => $submission->id,
+                'title' => 'A new title',
+            ]
+        );
+
+        $response->assertJsonPath('data.updateSubmission.created_by.id', (string)$submission->created_by);
+        $response->assertJsonPath('data.updateSubmission.updated_by.id', (string)$user->id);
+    }
+
     /**
      * @return void
      */
