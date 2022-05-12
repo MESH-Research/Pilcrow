@@ -26,7 +26,7 @@ class SubmissionSeeder extends Seeder
             ->hasAttached(
                 User::where('username', 'regularUser')->firstOrFail(),
                 [],
-                'submitter'
+                'submitters'
             )
             ->hasAttached(
                 User::where('username', 'reviewCoordinator')->firstOrFail(),
