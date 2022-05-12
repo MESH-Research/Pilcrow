@@ -49,9 +49,7 @@ import {
   DELETE_PUBLICATION_STYLE_CRITERIA,
 } from "src/graphql/mutations"
 import { useMutation } from "@vue/apollo-composable"
-import { useQuasar } from "quasar"
 
-const { dialog } = useQuasar()
 const editId = ref(null)
 
 const props = defineProps({
@@ -99,21 +97,14 @@ function newItem() {
   editId.value = ""
 }
 
-function onDelete(criteria) {
-  dialog({
-    title: "Confirm Delete Criteria",
-    message: `Are you sure you want to delete "${criteria.name}"?`,
-    cancel: true,
-    persistent: true,
-  }).onOk(async () => {
-    try {
-      await deleteCriteria({ id: criteria.id })
-      formState.reset()
-      editId.value = null
-    } catch (error) {
-      formState.errorMessage.value = "Unable to delete.  Try again?"
-    }
-  })
+async function onDelete(criteria) {
+  try {
+    await deleteCriteria({ id: criteria.id })
+    formState.reset()
+    editId.value = null
+  } catch (error) {
+    formState.errorMessage.value = "Unable to delete.  Try again?"
+  }
 }
 
 async function saveEdit(criteria) {

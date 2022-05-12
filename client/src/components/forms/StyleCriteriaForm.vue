@@ -52,7 +52,13 @@
         </div>
 
         <div class="row justify-between">
-          <q-btn color="red" @click="onDelete">Delete</q-btn>
+          <q-btn
+            ref="button_delete"
+            color="red"
+            label="Delete"
+            @click="onDelete"
+          />
+
           <FormActions flat :sticky="false" @reset-click="onCancel" />
         </div>
       </q-item-section>
@@ -129,7 +135,14 @@ function editIcon() {
 }
 
 function onDelete() {
-  emit("delete", props.criteria)
+  dialog({
+    title: "Confirm Delete Criteria",
+    message: `Are you sure you want to delete "${props.criteria.name}"?`,
+    cancel: true,
+    persistent: true,
+  }).onOk(() => {
+    emit("delete", props.criteria)
+  })
 }
 
 function onCancel() {
