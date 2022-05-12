@@ -315,6 +315,12 @@ export default {
     style_criteria: {
       heading: "Style Criteria",
       edit_button: "Edit",
+      delete_confirm: "Are you sure you want to delete {name}?",
+      delete_header: "Confirm Delete Criteria",
+      addBtnLabel: "Add Criteria",
+      saveError:
+        "Oops, there was an error saving, check the form above for errors.",
+      deleteError: "Oops, unable to delete.",
       fields: {
         name: {
           label: "Name",

@@ -30,7 +30,7 @@
         ref="addBtn"
         data-cy="add-criteria-button"
         icon="add_task"
-        label="Add Criteria"
+        :label="$t('publications.style_criteria.addBtnLabel')"
         flat
         @click="newItem"
       />
@@ -49,6 +49,8 @@ import {
   DELETE_PUBLICATION_STYLE_CRITERIA,
 } from "src/graphql/mutations"
 import { useMutation } from "@vue/apollo-composable"
+import { useI18n } from "vue-i18n"
+const { t } = useI18n()
 
 const editId = ref(null)
 
@@ -103,7 +105,7 @@ async function onDelete(criteria) {
     formState.reset()
     editId.value = null
   } catch (error) {
-    formState.errorMessage.value = "Unable to delete.  Try again?"
+    formState.errorMessage.value = t("publications.style_criteria.deleteError")
   }
 }
 
@@ -114,7 +116,7 @@ async function saveEdit(criteria) {
     formState.reset()
     editId.value = null
   } catch (error) {
-    formState.errorMessage.value = "Unable to save.  Check form for errors."
+    formState.errorMessage.value = t("publications.style_criteria.saveError")
   }
 }
 </script>

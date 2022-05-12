@@ -20,7 +20,6 @@
         <v-q-input
           ref="name-input"
           :v="v$.name"
-          label="Criteria Name"
           t="publications.style_criteria.fields.name"
           data-cy="name-input"
           @vqupdate="updateModel"
@@ -51,8 +50,9 @@
           }}
         </div>
 
-        <div class="row justify-between">
+        <div class="row" :class="isNew ? 'justify-end' : 'justify-between'">
           <q-btn
+            v-if="!isNew"
             ref="button_delete"
             data-cy="button-delete"
             color="red-10"
@@ -77,9 +77,10 @@ import { required, maxLength } from "@vuelidate/validators"
 import { isEqual, pick } from "lodash"
 import VQInput from "src/components/atoms/VQInput.vue"
 import FormActions from "../molecules/FormActions.vue"
-
+import { useI18n } from "vue-i18n"
 const { dirty, setError } = inject("formState")
 
+const { t } = useI18n()
 const props = defineProps({
   criteria: {
     type: Object,
@@ -114,6 +115,10 @@ const original = computed(() => ({
   ...pick(props.criteria, ["id", "name", "icon", "description"]),
 }))
 
+const isNew = computed(() => {
+  return Object.keys(props.criteria).length === 0
+})
+
 onMounted(() => {
   Object.assign(state, props.criteria)
 })
@@ -137,8 +142,10 @@ function editIcon() {
 
 function onDelete() {
   dialog({
-    title: "Confirm Delete Criteria",
-    message: `Are you sure you want to delete "${props.criteria.name}"?`,
+    title: t("publications.style_criteria.delete_header"),
+    message: t("publications.style_criteria.delete_confirm", {
+      name: props.criteria.name,
+    }),
     cancel: true,
     persistent: true,
   }).onOk(() => {
@@ -153,7 +160,7 @@ function onCancel() {
 function onSave() {
   v$.value.$touch()
   if (v$.value.$invalid) {
-    setError("Oops, check form above for errors")
+    setError(t("publications.style_criteria.saveError"))
   } else {
     emit("save", state)
   }
