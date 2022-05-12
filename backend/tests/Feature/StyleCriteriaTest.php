@@ -1,11 +1,11 @@
 <?php
-declare(strict_types=1);
+    declare(strict_types=1);
 
-namespace Tests\Feature;
+    namespace Tests\Feature;
 
-use App\Models\StyleCriteria;
-use Illuminate\Support\Str;
-use Tests\TestCase;
+    use App\Models\StyleCriteria;
+    use Illuminate\Support\Str;
+    use Tests\TestCase;
 
 class StyleCriteriaTest extends TestCase
 {
@@ -63,5 +63,37 @@ class StyleCriteriaTest extends TestCase
 
         $this->assertTrue($styleCriteria->isInvalid());
         $this->assertCount(1, $styleCriteria->getErrors()->get('icon'));
+    }
+
+    /**
+     * Test data for admin editable html fields
+     *
+     * @return array
+     */
+    public function adminFieldHtml()
+    {
+        return [
+            ['<b>Bold</b><i>Italic</i><u>Underline</u>','<b>Bold</b><i>Italic</i><u>Underline</u>'],
+            ['<DIV><BR />Some text</DIV>', '<div><br />Some text</div>'],
+            ['<script src="somewhere"/>', ''],
+            ['<ol><li>Item</li></ol>', '<ol><li>Item</li></ol>'],
+            ['<ul><li>Item</li></ol>', '<ul><li>Item</li></ul>'],
+            ['<p style="font-size: 1000000px;">GIANT TEXT</p>', '<p>GIANT TEXT</p>'],
+        ];
+    }
+
+    /**
+     * @dataProvider adminFieldHtml
+     * @param string $testHtml
+     * @param string $expected
+     * @return void
+     */
+    public function testStyleCritieraDescriptionFieldIsPurified($testHtml, $expected)
+    {
+        $criteria = StyleCriteria::factory()->make([
+        'description' => $testHtml,
+        ]);
+
+        $this->assertEquals($expected, $criteria->description);
     }
 }
