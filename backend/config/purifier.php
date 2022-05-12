@@ -27,7 +27,7 @@ return [
         ],
         //Admin fields are separated out here b/c we'll likely want to grant admins more leeway in terms of tags/styles in HTML fields
         'admin_fields' => [
-            'HTML.Allowed'             => 'div,b,u,i,ul,ol,li,br,p',
+            'HTML.Allowed'             => 'div,a[href|title],b,u,i,ul,ol,li,br,p',
             'AutoFormat.RemoveEmpty'   => true,
         ]
     ]
