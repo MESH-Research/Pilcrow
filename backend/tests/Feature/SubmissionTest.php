@@ -60,6 +60,12 @@ class SubmissionTest extends TestCase
                 submission(id: $id) {
                     id
                     title
+                    created_by {
+                        id
+                    }
+                    updated_by {
+                        id
+                    }
                     reviewers {
                         id
                     }
@@ -284,7 +290,12 @@ class SubmissionTest extends TestCase
     public function testFileUpload()
     {
         $publication = Publication::factory()->create();
+        /**
+         * @var User
+         */
         $user = User::factory()->create();
+        $this->actingAs($user);
+
         $operations = [
             'operationName' => 'CreateSubmission',
             'query' => '
