@@ -15,6 +15,7 @@
           @edit="editItem(criteria.id)"
           @cancel="cancelEdit"
           @save="saveEdit"
+          @delete="onDelete"
         />
         <style-criteria-form
           v-if="editId == ''"
@@ -45,8 +46,12 @@ import { useFormState } from "src/use/forms"
 import {
   UPDATE_PUBLICATION_STYLE_CRITERIA,
   CREATE_PUBLICATION_STYLE_CRITERIA,
+  DELETE_PUBLICATION_STYLE_CRITERIA,
 } from "src/graphql/mutations"
 import { useMutation } from "@vue/apollo-composable"
+import { useQuasar } from "quasar"
+
+const { dialog } = useQuasar()
 const editId = ref(null)
 
 const props = defineProps({
@@ -60,15 +65,22 @@ const publication = toRef(props, "publication")
 const variables = {
   publication_id: publication.value.id,
 }
-const { updateLoading, mutate: updateCriteria } = useMutation(
+const { loading: updateLoading, mutate: updateCriteria } = useMutation(
   UPDATE_PUBLICATION_STYLE_CRITERIA,
   { variables }
 )
-const { createLoading, mutate: createCriteria } = useMutation(
+const { loading: createLoading, mutate: createCriteria } = useMutation(
   CREATE_PUBLICATION_STYLE_CRITERIA,
   { variables }
 )
-const loading = computed(() => updateLoading || createLoading)
+
+const { loading: deleteLoading, mutate: deleteCriteria } = useMutation(
+  DELETE_PUBLICATION_STYLE_CRITERIA,
+  { variables }
+)
+const loading = computed(
+  () => updateLoading.value || createLoading.value || deleteLoading.value
+)
 const formState = useFormState(ref(false), loading)
 provide("formState", formState)
 
@@ -85,6 +97,23 @@ function cancelEdit() {
 
 function newItem() {
   editId.value = ""
+}
+
+function onDelete(criteria) {
+  dialog({
+    title: "Confirm Delete Criteria",
+    message: `Are you sure you want to delete "${criteria.name}"?`,
+    cancel: true,
+    persistent: true,
+  }).onOk(async () => {
+    try {
+      await deleteCriteria({ id: criteria.id })
+      formState.reset()
+      editId.value = null
+    } catch (error) {
+      formState.errorMessage.value = "Unable to delete.  Try again?"
+    }
+  })
 }
 
 async function saveEdit(criteria) {

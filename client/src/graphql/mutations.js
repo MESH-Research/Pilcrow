@@ -302,3 +302,19 @@ export const CREATE_PUBLICATION_STYLE_CRITERIA = gql`
     }
   }
 `
+
+export const DELETE_PUBLICATION_STYLE_CRITERIA = gql`
+  mutation DeletePublicationStyleCriteria($publication_id: ID!, $id: ID!) {
+    updatePublication(
+      publication: { id: $publication_id, style_criterias: { delete: [$id] } }
+    ) {
+      id
+      style_criterias {
+        id
+        name
+        description
+        icon
+      }
+    }
+  }
+`

@@ -51,7 +51,8 @@
           }}
         </div>
 
-        <div class="row justify-end">
+        <div class="row justify-between">
+          <q-btn color="red" @click="onDelete">Delete</q-btn>
           <FormActions flat :sticky="false" @reset-click="onCancel" />
         </div>
       </q-item-section>
@@ -78,7 +79,7 @@ const props = defineProps({
     default: () => ({}),
   },
 })
-const emit = defineEmits(["cancel", "save"])
+const emit = defineEmits(["cancel", "save", "delete"])
 
 const state = reactive({
   id: "",
@@ -125,6 +126,10 @@ function editIcon() {
   }).onOk((icon) => {
     v$.value.icon.$model = icon
   })
+}
+
+function onDelete() {
+  emit("delete", props.criteria)
 }
 
 function onCancel() {
