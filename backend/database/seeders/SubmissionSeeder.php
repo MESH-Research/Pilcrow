@@ -31,7 +31,7 @@ class SubmissionSeeder extends Seeder
             ->hasAttached(
                 User::where('username', 'reviewCoordinator')->firstOrFail(),
                 [],
-                'reviewCoordinator'
+                'reviewCoordinators'
             )
             ->create([
                 'id' => $id,
