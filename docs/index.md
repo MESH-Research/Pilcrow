@@ -15,7 +15,7 @@ Collaborative Community Review (CCR) is an open source web tool representing the
   <div>
     <a href="https://mellon.org">
       <div class="sponsor-img">
-      <img :src="$withBase('/logos/mellon.png')">
+      <img :src="$withBase('/logos/mellon.svg')" style="width:190px">
       </div>
       <span>Andrew W. Mellon <br/>Foundation</span>
     </a>
