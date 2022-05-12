@@ -1,3 +1,26 @@
+extend type Mutation {
+    addInlineComment(
+        submission_id: ID!
+        content: String!
+        style_criteria: [ID!]
+    ): InlineComment @create
+
+    addInlineCommentReply(
+        submission_id: ID!
+        content: String!
+        reply_to: ID!
+    ): InlineComment @create
+
+    addOverallComment(submission_id: ID!, content: String!): OverallComment
+        @create
+
+    addOverallCommentReply(
+        submission_id: ID!
+        content: String!
+        reply_to: ID!
+    ): OverallComment @create
+}
+
 """
 A Submission
 """
@@ -11,6 +34,9 @@ type Submission {
     files: [SubmissionFile]! @hasMany
     pivot: SubmissionUser
     status: SubmissionStatus!
+    inline_comments: [InlineComment!]! @hasMany(relation: "inlineComments")
+    overall_comments: [OverallComment!]! @hasMany(relation: "overallComments")
+    content: SubmissionContent #This field is optional bc it may be null if the pandoc process is still importing the document
 }
 
 """
@@ -32,6 +58,9 @@ type SubmissionFile {
     file_upload: String!
 }
 
+"""
+The status of a submission in a review
+"""
 enum SubmissionStatus {
     INITIALLY_SUBMITTED @enum(value: 1)
     AWAITING_RESUBMISSION @enum(value: 2)
@@ -45,4 +74,67 @@ enum SubmissionStatus {
     AWAITING_REVISION @enum(value: 10)
     ARCHIVED @enum(value: 11)
     DELETED @enum(value: 12)
+}
+
+"""
+The content of a submission
+"""
+type SubmissionContent {
+    content: String!
+    created_at: DateTime!
+    modified_at: DateTime!
+    src_file: SubmissionFile!
+}
+
+"""
+An inline comment of a submission
+"""
+type InlineComment {
+    id: ID!
+    content: String!
+    created_by: User!
+    created_at: DateTime!
+    replies: [InlineCommentReply!]
+    style_criteria: [InlineCommentStyleCriteria!]
+}
+
+"""
+The static style criteria of an inline comment
+"""
+type InlineCommentStyleCriteria {
+    name: String
+    icon: String
+}
+
+"""
+A reply to an inline comment of a submission
+"""
+type InlineCommentReply {
+    id: ID!
+    content: String!
+    created_by: User!
+    reply_to_id: ID!
+    created_at: DateTime!
+}
+
+"""
+An overall comment of a submission
+"""
+type OverallComment {
+    id: ID!
+    content: String!
+    created_by: User!
+    created_at: DateTime!
+    replies: [OverallCommentReply!]
+}
+
+"""
+A reply to an overall comment of a submission
+"""
+type OverallCommentReply {
+    id: ID!
+    content: String!
+    created_by: User!
+    reply_to_id: ID!
+    created_at: DateTime!
 }
