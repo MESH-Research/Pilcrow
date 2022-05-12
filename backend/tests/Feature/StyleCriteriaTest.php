@@ -1,11 +1,11 @@
 <?php
-    declare(strict_types=1);
+declare(strict_types=1);
 
-    namespace Tests\Feature;
+namespace Tests\Feature;
 
-    use App\Models\StyleCriteria;
-    use Illuminate\Support\Str;
-    use Tests\TestCase;
+use App\Models\StyleCriteria;
+use Illuminate\Support\Str;
+use Tests\TestCase;
 
 class StyleCriteriaTest extends TestCase
 {
