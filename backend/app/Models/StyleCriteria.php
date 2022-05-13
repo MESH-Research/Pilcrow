@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Models\Casts\CleanAdminHtml;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -27,6 +28,10 @@ class StyleCriteria extends BaseModel
         'publication_id' => 'required|style_criteria_count',
         'description' => 'max:4096',
         'icon' => 'max:50',
+    ];
+
+    protected $casts = [
+        'description' => CleanAdminHtml::class,
     ];
 
     /**
