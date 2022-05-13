@@ -138,3 +138,13 @@ type OverallCommentReply {
     reply_to_id: ID!
     created_at: DateTime!
 }
+
+"""
+Content of the submission.
+"""
+type SubmissionContent {
+  content: String!
+  created_at: DateTime!
+  modified_at: DateTime!
+  submission_file_id: SubmissionFile!
+}
