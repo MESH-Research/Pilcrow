@@ -1,5 +1,5 @@
-import { useQuery, useResult, useMutation } from "@vue/apollo-composable"
-import { reactive } from "vue"
+import { useQuery, useMutation } from "@vue/apollo-composable"
+import { computed, reactive } from "vue"
 import { CURRENT_USER } from "src/graphql/queries"
 import { LOGIN, LOGOUT } from "src/graphql/mutations"
 import { SessionStorage } from "quasar"
@@ -23,21 +23,21 @@ import { useRouter } from "vue-router"
 export function useCurrentUser() {
   const query = useQuery(CURRENT_USER)
 
-  const currentUser = useResult(query.result, null, (data) => {
-    return data.currentUser
+  const currentUser = computed(() => {
+    return query.result.value?.currentUser
   })
 
-  const isLoggedIn = useResult(query.result, false, (data) => {
-    return !!data.currentUser.id
+  const isLoggedIn = computed(() => {
+    return !!query.result.value?.currentUser?.id
   })
 
-  const abilities = useResult(
-    query.result,
-    [],
-    (data) => data.currentUser.abilities
-  )
+  const abilities = computed(() => {
+    return query.result.value?.currentUser.abilities ?? []
+  })
 
-  const roles = useResult(query.result, [], (data) => data.currentUser.roles)
+  const roles = computed(() => {
+    return query.result.value?.currentUser.roles ?? []
+  })
 
   return { currentUser, currentUserQuery: query, isLoggedIn, roles, abilities }
 }

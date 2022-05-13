@@ -130,7 +130,8 @@
 <script setup>
 import { GET_USER } from "src/graphql/queries"
 import AvatarImage from "src/components/atoms/AvatarImage.vue"
-import { useQuery, useResult } from "@vue/apollo-composable"
+import { useQuery } from "@vue/apollo-composable"
+import { computed } from "vue"
 
 const props = defineProps({
   id: {
@@ -140,5 +141,7 @@ const props = defineProps({
 })
 
 const { result } = useQuery(GET_USER, { id: props.id })
-const user = useResult(result)
+const user = computed(() => {
+  return result.value?.user
+})
 </script>

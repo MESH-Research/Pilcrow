@@ -112,8 +112,8 @@ import { required, maxLength } from "@vuelidate/validators"
 import { useCurrentUser } from "src/use/user"
 import { useFeedbackMessages } from "src/use/guiElements"
 import { useI18n } from "vue-i18n"
-import { ref, reactive } from "vue"
-import { useResult, useQuery, useMutation } from "@vue/apollo-composable"
+import { ref, reactive, computed } from "vue"
+import { useQuery, useMutation } from "@vue/apollo-composable"
 import useVuelidate from "@vuelidate/core"
 
 const { currentUser } = useCurrentUser()
@@ -138,12 +138,15 @@ const rules = {
 const newPubV$ = useVuelidate(rules, new_submission)
 
 const { result: subsResult, loading: subsLoading } = useQuery(GET_SUBMISSIONS)
-const submissions = useResult(subsResult, [], (data) => data.submissions.data)
-const publications = useResult(
-  useQuery(GET_PUBLICATIONS).result,
-  [],
-  (data) => data.publications.data
-)
+
+const submissions = computed(() => {
+  return subsResult.value?.submissions.data ?? []
+})
+
+const { result: pubsResult } = useQuery(GET_PUBLICATIONS)
+const publications = computed(() => {
+  return pubsResult.value?.publications.data ?? []
+})
 
 const { t } = useI18n()
 const { newStatusMessage } = useFeedbackMessages({

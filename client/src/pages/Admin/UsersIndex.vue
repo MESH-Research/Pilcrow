@@ -20,19 +20,22 @@
 
 <script setup>
 import { GET_USERS } from "src/graphql/queries"
-import { useQuery, useResult } from "@vue/apollo-composable"
-import { ref } from "vue"
+import { useQuery } from "@vue/apollo-composable"
+import { computed, ref } from "vue"
 import UserListBasic from "src/components/molecules/UserListBasic"
 import { useRouter } from "vue-router"
 const currentPage = ref(1)
 
 const { result } = useQuery(GET_USERS, { page: currentPage })
-const users = useResult(result, [], (data) => data.userSearch.data)
-const lastPage = useResult(
-  result,
-  1,
-  (data) => data.userSearch.paginatorInfo.lastPage
-)
+
+const users = computed(() => {
+  return result.value?.userSearch.data ?? []
+})
+
+const lastPage = computed(() => {
+  return result.value?.userSearch.paginatorInfo.lastPage ?? 1
+})
+
 async function handleUserListBasicClick({ user, action }) {
   switch (action) {
     case "goToUserDetail":
