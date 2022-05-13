@@ -31,7 +31,7 @@
           data-cy="description-input"
           :toolbar="[
             ['bold', 'italic', 'underline'],
-            ['unordered', 'ordered', 'outdent', 'indent'],
+            ['link', 'unordered', 'ordered', 'outdent', 'indent'],
             ['undo', 'redo'],
           ]"
           :class="v$.description.$error ? 'error' : ''"
