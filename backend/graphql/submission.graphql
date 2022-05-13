@@ -11,6 +11,7 @@ type Submission {
     files: [SubmissionFile]! @hasMany
     pivot: SubmissionUser
     status: SubmissionStatus!
+    content: SubmissionContent
 }
 
 """

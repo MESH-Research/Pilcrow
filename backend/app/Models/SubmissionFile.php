@@ -46,5 +46,4 @@ class SubmissionFile extends Model
     {
         return $this->hasOne(SubmissionContent::class);
     }
-
 }

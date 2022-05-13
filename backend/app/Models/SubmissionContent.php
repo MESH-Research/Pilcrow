@@ -47,4 +47,3 @@ class SubmissionContent extends Model
         return $this->belongsTo(Submission::class, 'content');
     }
 }
-

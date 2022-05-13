@@ -1,0 +1,6 @@
+type SubmissionContent {
+  content: String!
+  created_at: DateTime!
+  modified_at: DateTime!
+  submission_file_id: SubmissionFile!
+}
