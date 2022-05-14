@@ -6,6 +6,7 @@ import { ApolloClients } from "@vue/apollo-composable"
 import {
   UPDATE_PUBLICATION_STYLE_CRITERIA,
   CREATE_PUBLICATION_STYLE_CRITERIA,
+  DELETE_PUBLICATION_STYLE_CRITERIA,
 } from "src/graphql/mutations"
 import flushPromises from "flush-promises"
 
@@ -39,6 +40,12 @@ describe("PublicationStyleCriteria", () => {
   mockClient.setRequestHandler(
     CREATE_PUBLICATION_STYLE_CRITERIA,
     createCriteriaHandler
+  )
+
+  const deleteCriteriaHandler = jest.fn()
+  mockClient.setRequestHandler(
+    DELETE_PUBLICATION_STYLE_CRITERIA,
+    deleteCriteriaHandler
   )
 
   beforeEach(() => {
@@ -127,5 +134,24 @@ describe("PublicationStyleCriteria", () => {
 
     await flushPromises()
     expect(wrapper.findComponent({ name: "QForm" }).exists()).toBe(false)
+  })
+
+  test("able to delete item", async () => {
+    const wrapper = makeWrapper({
+      id: "1",
+      style_criterias: [
+        { id: "1", name: "Criteria 1", description: "Description 1" },
+        { id: "2", name: "Criteria 2", description: "Description 2" },
+      ],
+    })
+    const items = () => wrapper.findAllComponents('[data-cy="listItem"]')
+    await items().at(0).findComponent('[data-cy="editBtn').trigger("click")
+    await items().at(0).vm.$emit("delete", { id: "1" })
+
+    expect(deleteCriteriaHandler).toHaveBeenCalledTimes(1)
+    expect(deleteCriteriaHandler).toHaveBeenCalledWith({
+      id: "1",
+      publication_id: "1",
+    })
   })
 })
