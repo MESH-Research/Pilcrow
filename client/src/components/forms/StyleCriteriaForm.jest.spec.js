@@ -160,4 +160,29 @@ describe("StyleCriteriaForm", () => {
       },
     ])
   })
+
+  test("delete confirm dialog", async () => {
+    const wrapper = makeWrapper({
+      id: "1",
+      name: "TestName",
+      description: "",
+      icon: "initial_icon",
+    })
+
+    let okCallback
+    const dialogReturn = {
+      onOk: (okCb) => {
+        okCallback = okCb
+        return dialogReturn
+      },
+    }
+
+    mockDialog.mockImplementation(() => dialogReturn)
+    await wrapper.findComponent({ ref: "button_delete" }).trigger("click")
+    expect(mockDialog).toHaveBeenCalled()
+    expect(wrapper.emitted("delete")).toBeUndefined()
+    okCallback()
+    expect(wrapper.emitted("delete")).toHaveLength(1)
+    expect(wrapper.emitted("delete")[0][0].id).toEqual("1")
+  })
 })
