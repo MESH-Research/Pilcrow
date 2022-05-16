@@ -3,6 +3,7 @@ import {
   _CURRENT_USER_FIELDS,
   _PAGINATION_FIELDS,
   _PROFILE_METADATA_FIELDS,
+  _RELATED_USER_FIELDS,
 } from "./fragments"
 
 export const CURRENT_USER = gql`
@@ -158,6 +159,7 @@ export const GET_SUBMISSIONS = gql`
 export const GET_SUBMISSION = gql`
   query GetSubmission($id: ID!) {
     submission(id: $id) {
+      id
       title
       publication {
         name
@@ -168,18 +170,18 @@ export const GET_SUBMISSION = gql`
           icon
         }
       }
-      users {
-        name
-        username
-        email
-        pivot {
-          id
-          user_id
-          role_id
-        }
+      reviewers {
+        ...relatedUserFields
+      }
+      review_coordinators {
+        ...relatedUserFields
+      }
+      submitters {
+        ...relatedUserFields
       }
     }
   }
+  ${_RELATED_USER_FIELDS}
 `
 
 export const GET_PUBLICATION = gql`

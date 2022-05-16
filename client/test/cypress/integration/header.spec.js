@@ -6,10 +6,10 @@ import "cypress-axe"
 describe("Header", () => {
   beforeEach(() => {
     cy.task("resetDb")
-    cy.visit("/")
   })
 
   it("should have a login and register link in header", () => {
+    cy.visit('/')
     cy.get("header").within(() => {
       cy.contains("Login").should("have.attr", "href", "/login")
       cy.contains("Register").should("have.attr", "href", "/register")
@@ -18,9 +18,7 @@ describe("Header", () => {
     cy.login({ email: "regularuser@ccrproject.dev" })
     cy.reload()
 
-    cy.get("header").within(() => {
-      cy.contains("regularUser").click()
-    })
+    cy.get("header").contains("regularUser").click()
 
     cy.dataCy("headerUserMenu").within(() => {
       cy.contains("My Account").should("have.attr", "href", "/account/profile")

@@ -16,7 +16,7 @@ abstract class TestCase extends BaseTestCase
      *
      * @return App\Models\User New user with adminsitrator role
      */
-    public function beAppAdmin()
+    public function beAppAdmin(): User
     {
         /** @var User $user */
         $user = User::factory()->create();
@@ -24,5 +24,26 @@ abstract class TestCase extends BaseTestCase
         $this->actingAs($user);
 
         return $user;
+    }
+
+    /**
+     * Remove the trace key from error arrays.
+     *
+     * Useful for debugging as the trace key overwhelms var_dump ouput of a response json.
+     *
+     * @param array $json
+     * @return array
+     */
+    public function unsetJsonTrace($json): array
+    {
+        if (empty($json['errors'])) {
+            return $json;
+        }
+
+        foreach ($json['errors'] as $index => $error) {
+            unset($json['errors'][$index]['trace']);
+        }
+
+        return $json;
     }
 }

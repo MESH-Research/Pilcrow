@@ -8,6 +8,18 @@
 Cypress.Commands.add("dataCy", (value) => {
   return cy.get(`[data-cy=${value}]`)
 })
+Cypress.Commands.add("findCy", (value) => {
+  return cy.find(`[data-cy=${value}]`)
+})
+
+Cypress.Commands.add("qSelectItems", (value) => {
+  return cy.get(`[data-cy=${value}]`)
+    .then((input) => {
+      return cy.wrap(input).invoke('attr', 'id').then(id => {
+        return cy.root().closest('html').find(`#${id}_lb`).find('.q-item')
+      })
+    })
+})
 
 /**
  * Login to the api without providing authentication.

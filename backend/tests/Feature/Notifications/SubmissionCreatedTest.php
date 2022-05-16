@@ -35,12 +35,7 @@ class SubmissionCreatedTest extends TestCase
             )
             ->create();
         $submission = Submission::factory()
-            ->hasAttached(
-                $submitter,
-                [
-                    'role_id' => Role::SUBMITTER_ROLE_ID,
-                ]
-            )
+            ->hasAttached($submitter, [], 'submitters')
             ->create([
                 'publication_id' => $publication->id,
             ]);
