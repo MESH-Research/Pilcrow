@@ -10,7 +10,7 @@ describe("Submissions Details", () => {
     cy.login({ email: "applicationadministrator@ccrproject.dev" })
     cy.visit("submission/100")
     cy.injectAxe()
-    cy.dataCy("list_assigned_submitters")
+    cy.dataCy("submitters_list")
     cy.checkA11y(null, null, a11yLogViolations)
   })
 
@@ -18,15 +18,18 @@ describe("Submissions Details", () => {
     cy.task("resetDb")
     cy.login({ email: "applicationadministrator@ccrproject.dev" })
     cy.visit("submission/100")
-    cy.dataCy("input_review_assignee").type("applicationAd")
-    cy.dataCy("result_review_assignee").click()
-    cy.dataCy("review_assignee_selected").contains("applicationAdminUser")
 
-    cy.dataCy("button_assign_reviewer").click()
-    cy.dataCy("list_assigned_reviewers").contains("Application Administrator")
+    cy.dataCy("reviewers_list").within(() => {
+      cy.dataCy('input_user').type("applicationAd")
+      cy.qSelectItems('input_user').eq(0).click()
+      cy.intercept("/graphql").as("graphQL")
+      cy.dataCy('button-assign').click();
+    })
+
+    cy.wait("@graphQL")
+    cy.dataCy("reviewers_list").find(".q-list").contains("Application Administrator")
+
     cy.injectAxe()
-    cy.dataCy("submission_details_notify")
-
     cy.checkA11y(null, null, a11yLogViolations)
   })
 
@@ -34,31 +37,47 @@ describe("Submissions Details", () => {
     cy.task("resetDb")
     cy.login({ email: "reviewcoordinator@ccrproject.dev" })
     cy.visit("submission/100")
-    cy.dataCy("input_review_assignee").type("applicationAd")
-    cy.dataCy("result_review_assignee").click()
-    cy.dataCy("review_assignee_selected").contains("applicationAdminUser")
-    cy.dataCy("button_assign_reviewer").click()
-    cy.dataCy("list_assigned_reviewers").contains("Application Administrator")
+
+    cy.dataCy("reviewers_list").within(() => {
+      cy.dataCy('input_user').type("applicationAd")
+      cy.qSelectItems('input_user').eq(0).click()
+      cy.intercept("/graphql").as('graphQL')
+      cy.dataCy('button-assign').click()
+    })
+
+    cy.wait("@graphQL")
+    cy.dataCy("reviewers_list").find(".q-list").contains("Application Administrator")
+
     cy.injectAxe()
-    cy.dataCy("submission_details_notify")
     cy.checkA11y(null, null, a11yLogViolations)
   })
 
-  it("should allow assignments of review coordinators by application administrators", () => {
+  it("should allow removal and assignment of review coordinators by application administrators", () => {
     cy.task("resetDb")
     cy.login({ email: "applicationadministrator@ccrproject.dev" })
     cy.visit("submission/100")
-    cy.dataCy("input_review_coordinator_assignee").type("applicationAd")
-    cy.dataCy("result_review_coordinator_assignee").click()
-    cy.dataCy("review_coordinator_assignee_selected").contains(
-      "applicationAdminUser"
-    )
-    cy.dataCy("button_assign_review_coordinator").click()
-    cy.dataCy("list_assigned_review_coordinators").contains(
-      "Application Administrator"
-    )
+
+    cy.intercept("/graphql").as("removeCoordinatorFetch")
+    cy.dataCy("coordinators_list")
+        .find('.q-list')
+        .eq(0)
+        .dataCy("button_unassign")
+        .click();
+    cy.wait("@removeCoordinatorFetch")
+
+    cy.dataCy("coordinators_list").find(".q-list").should("not.exist")
+
+    cy.dataCy("coordinators_list").within(() => {
+      cy.intercept("/graphql").as("userListFetch")
+      cy.dataCy('input_user').type("applicationAd")
+      cy.qSelectItems('input_user').eq(0).click()
+      cy.intercept("/graphql").as("addCoordinatorFetch")
+      cy.dataCy('button-assign').click();
+    })
+    cy.wait("@addCoordinatorFetch")
+    cy.dataCy("coordinators_list").find('.q-list').contains("Application Administrator")
+
     cy.injectAxe()
-    cy.dataCy("submission_details_notify")
     cy.checkA11y(null, null, a11yLogViolations)
   })
 
@@ -66,17 +85,26 @@ describe("Submissions Details", () => {
     cy.task("resetDb")
     cy.login({ email: "applicationadministrator@ccrproject.dev" })
     cy.visit("submission/100")
-    cy.dataCy("input_review_assignee").type("applicationAd")
-    cy.dataCy("result_review_assignee").click()
-    cy.dataCy("button_assign_reviewer").click()
-    cy.dataCy("button_dismiss_notify").click()
-    cy.dataCy("input_review_assignee").type("applicationAd")
-    cy.dataCy("result_review_assignee").click()
-    cy.dataCy("button_assign_reviewer").click()
-    cy.injectAxe()
+
+    cy.dataCy('reviewers_list').within(() => {
+      cy.dataCy('input_user').type("applicationAd")
+      cy.qSelectItems('input_user').eq(0).click()
+      cy.intercept("/graphql").as("addReviewer1")
+      cy.dataCy('button-assign').click()
+      cy.wait("@addReviewer1")
+    })
+
+    cy.dataCy('reviewers_list').within(() => {
+      cy.dataCy('input_user').type("applicationAd")
+      cy.qSelectItems('input_user').eq(0).click()
+      cy.intercept("/graphql").as("addReviewer2")
+      cy.dataCy('button-assign').click()
+      cy.wait("@addReviewer2")
+    })
+
     cy.dataCy("submission_details_notify")
       .should("be.visible")
       .should("have.class", "bg-negative")
-    cy.checkA11y(null, null, a11yLogViolations)
+
   })
 })

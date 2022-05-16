@@ -13,16 +13,19 @@
     @update:model-value="onSelectUpdate"
     @filter="filterFn"
   >
+    <template #prepend>
+      <q-icon name="search" />
+    </template>
     <template #hint>
       <div class="text--grey">Search by username, email, or name.</div>
     </template>
     <template #selected-item="scope">
-      <q-chip :data-cy="props.cySelectedItem" dense square>
+      <q-chip data-cy="selected_item" dense square>
         {{ scope.opt.username }} ({{ scope.opt.email }})
       </q-chip>
     </template>
     <template #option="scope">
-      <q-item :data-cy="props.cyOptionsItem" v-bind="scope.itemProps">
+      <q-item data-cy="options_item" v-bind="scope.itemProps">
         <q-item-section>
           <q-item-label>
             {{ scope.opt.username }} ({{ scope.opt.email }})
@@ -48,14 +51,6 @@ const props = defineProps({
     default: null,
     validator: (prop) =>
       prop === null || typeof prop === "object" || typeof prop === "function",
-  },
-  cySelectedItem: {
-    type: String,
-    default: "",
-  },
-  cyOptionsItem: {
-    type: String,
-    default: "",
   },
 })
 const emit = defineEmits(["update:modelValue"])

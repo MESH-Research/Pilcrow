@@ -217,6 +217,10 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         $submissions = $this->submissions()->wherePivot('submission_id', $submissionId);
 
+        if ($role === '*') {
+            return $submissions->exists();
+        }
+
         if (is_array($role)) {
             return $submissions->wherePivotIn('role_id', $role)->exists();
         } else {
