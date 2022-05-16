@@ -12,6 +12,7 @@ extend type Mutation {
         @event(dispatch: "App\\Events\\SubmissionCreated")
         @create
 
+    "Update an existing submission"
     updateSubmission(input: UpdateSubmissionInput! @spread): Submission!
         @update
         @can(ability: "update", find: "id")
