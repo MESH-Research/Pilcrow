@@ -15,7 +15,14 @@ class CreateSubmissionFilesDirective extends BaseDirective implements ArgResolve
      */
     public static function definition(): string
     {
-        return '';
+        //phpcs:disable
+        return /* @lang GraphQL */ <<< 'GRAPHQL'
+            """
+            Process submission uploads
+            """
+            directive @createSubmissionFiles on ARGUMENT_DEFINITION
+        GRAPHQL;
+        //phpcs:enable
     }
 
     /**
