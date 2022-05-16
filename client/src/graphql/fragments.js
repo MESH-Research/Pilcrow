@@ -37,6 +37,15 @@ export const _CURRENT_USER_FIELDS = gql`
   }
 `
 
+export const _RELATED_USER_FIELDS = gql`
+  fragment relatedUserFields on User {
+    id
+    username
+    name
+    email
+  }
+`
+
 export const _PAGINATION_FIELDS = gql`
   fragment paginationFields on PaginatorInfo {
     count

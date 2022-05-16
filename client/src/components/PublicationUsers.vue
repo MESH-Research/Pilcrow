@@ -49,8 +49,6 @@
           <find-user-select
             v-model="editor_candidate"
             data-cy="input_editor_assignee"
-            cy-selected-item="editor_assignee_selected"
-            cy-options-item="result_editor_assignee"
           >
             <template #after>
               <q-btn

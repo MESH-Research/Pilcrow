@@ -26,7 +26,7 @@
           round
           :title="help"
           :icon="icon"
-          :data-cy="`${cyAttr}_${index}`"
+          :data-cy="`${cyAttr}`"
           :aria-label="`${ariaLabel} ${user.name || user.username}`"
           @click="$emit('actionClick', { user, action })"
         />
@@ -41,10 +41,6 @@ export default {
   name: "UserListItem",
   components: { AvatarImage },
   props: {
-    index: {
-      type: Number,
-      default: null,
-    },
     user: {
       type: Object,
       default: () => {},

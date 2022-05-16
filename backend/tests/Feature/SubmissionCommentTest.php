@@ -6,7 +6,6 @@ namespace Tests\Feature;
 use App\Models\InlineComment;
 use App\Models\OverallComment;
 use App\Models\Publication;
-use App\Models\Role;
 use App\Models\StyleCriteria;
 use App\Models\Submission;
 use App\Models\User;
@@ -27,14 +26,11 @@ class SubmissionCommentTest extends TestCase
         $publication = Publication::factory()->create();
         $user = User::factory()->create();
 
-        return Submission::factory()->hasAttached(
-            $user,
-            [
-                'role_id' => Role::SUBMITTER_ROLE_ID,
-            ]
-        )->create([
-            'publication_id' => $publication->id,
-        ]);
+        return Submission::factory()
+            ->hasAttached($user, [], 'submitters')
+            ->create([
+                'publication_id' => $publication->id,
+            ]);
     }
 
     /**
@@ -118,6 +114,8 @@ class SubmissionCommentTest extends TestCase
 
     public function testInlineCommentsCanBeRetrievedOnTheGraphqlEndpoint()
     {
+        $this->beAppAdmin();
+
         $submission = $this->createSubmissionWithInlineComment(2);
         $response = $this->graphQL(
             'query GetSubmission($id: ID!) {
@@ -164,6 +162,8 @@ class SubmissionCommentTest extends TestCase
 
     public function testOverallCommentsCanBeRetrievedOnTheGraphqlEndpoint()
     {
+        $this->beAppAdmin();
+
         $submission = $this->createSubmissionWithOverallComment(2);
         $response = $this->graphQL(
             'query GetSubmission($id: ID!) {

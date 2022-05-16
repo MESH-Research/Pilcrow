@@ -37,19 +37,24 @@ describe("Publication Details", () => {
 
     cy.dataCy("addEditorButton").click()
     // Initial Assignment
-    cy.dataCy("input_editor_assignee").type("applicationAd{backspace}{backspace}")
-    cy.dataCy("result_editor_assignee").click()
-    cy.dataCy("editor_assignee_selected").contains("applicationAdminUser")
+    cy.dataCy("input_editor_assignee").type("applicationAd")
+    cy.qSelectItems("input_editor_assignee").eq(0).click()
+    cy.dataCy("input_editor_assignee").prev('.q-chip').contains("applicationAdminUser")
     cy.dataCy("button_assign_editor").click()
+
     cy.dataCy("publication_details_notify")
       .should("be.visible")
       .should("have.class", "bg-positive")
+
     cy.dataCy("list_assigned_editors").contains("Application Administrator")
     cy.dataCy("button_dismiss_notify").click()
+
     // Duplicate Assignment
-    cy.dataCy("input_editor_assignee").type("applicationAd{backspace}{backspace}")
-    cy.dataCy("result_editor_assignee").click()
+    cy.dataCy("input_editor_assignee").type("applicationAd")
+    cy.qSelectItems("input_editor_assignee").eq(0).click()
+    cy.dataCy("input_editor_assignee").prev('.q-chip').contains("applicationAdminUser")
     cy.dataCy("button_assign_editor").click()
+
     cy.dataCy("publication_details_notify")
       .should("be.visible")
       .should("have.class", "bg-negative")
@@ -115,4 +120,19 @@ describe("Publication Details", () => {
     cy.dataCy("listItem").last().contains("New criteria description")
     cy.dataCy("listItem").last().contains('task_alt')
   })
+
+  it("should allow deleting a style criteria", () => {
+    cy.task("resetDb")
+    cy.login({ email: "applicationadministrator@ccrproject.dev" })
+    cy.visit("/publication/1")
+    //Check existing number of items:
+    cy.dataCy('listItem').should('have.length', 4)
+
+    cy.dataCy('editBtn').first().click()
+    cy.dataCy('button-delete').click()
+
+    cy.get('.q-dialog .q-btn').last().click()
+
+    cy.dataCy('listItem').should('have.length', 3)
+  });
 })

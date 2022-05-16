@@ -1,5 +1,9 @@
 import gql from "graphql-tag"
-import { _CURRENT_USER_FIELDS, _PROFILE_METADATA_FIELDS } from "./fragments"
+import {
+  _CURRENT_USER_FIELDS,
+  _PROFILE_METADATA_FIELDS,
+  _RELATED_USER_FIELDS,
+} from "./fragments"
 
 export const LOGIN = gql`
   mutation Login($email: String!, $password: String!) {
@@ -139,7 +143,7 @@ export const CREATE_SUBMISSION = gql`
       input: {
         title: $title
         publication_id: $publication_id
-        users: { connect: [{ id: $submitter_user_id, role_id: 6 }] }
+        submitters: { connect: [$submitter_user_id] }
         files: { create: $file_upload }
       }
     ) {
@@ -164,38 +168,66 @@ export const CREATE_SUBMISSION_FILE = gql`
   }
 `
 
-export const CREATE_SUBMISSION_USER = gql`
-  mutation CreateSubmissionUser(
-    $user_id: ID!
-    $role_id: ID!
+export const UPDATE_SUBMISSION_REVIEWERS = gql`
+  mutation UpdateSubmissionReviewers(
     $submission_id: ID!
+    $connect: [ID!]
+    $disconnect: [ID!]
   ) {
-    createSubmissionUser(
-      submission_user: {
-        user_id: $user_id
-        role_id: $role_id
-        submission_id: $submission_id
+    updateSubmission(
+      input: {
+        id: $submission_id
+        reviewers: { connect: $connect, disconnect: $disconnect }
       }
     ) {
       id
+      reviewers {
+        ...relatedUserFields
+      }
     }
   }
+  ${_RELATED_USER_FIELDS}
 `
-
-export const DELETE_SUBMISSION_USER = gql`
-  mutation DeleteSubmissionUser(
-    $user_id: ID!
-    $role_id: ID!
+export const UPDATE_SUBMISSION_REVIEW_COORDINATORS = gql`
+  mutation UpdateSubmissionReviewCoordinators(
     $submission_id: ID!
+    $connect: [ID!]
+    $disconnect: [ID!]
   ) {
-    deleteSubmissionUser(
-      user_id: $user_id
-      role_id: $role_id
-      submission_id: $submission_id
+    updateSubmission(
+      input: {
+        id: $submission_id
+        review_coordinators: { connect: $connect, disconnect: $disconnect }
+      }
     ) {
       id
+      review_coordinators {
+        ...relatedUserFields
+      }
     }
   }
+  ${_RELATED_USER_FIELDS}
+`
+
+export const UPDATE_SUBMISSION_SUBMITERS = gql`
+  mutation UpdateSubmissionReviewCoordinators(
+    $submission_id: ID!
+    $connect: [ID!]
+    $disconnect: [ID!]
+  ) {
+    updateSubmission(
+      input: {
+        id: $submission_id
+        submitters: { connect: $connect, disconnect: $disconnect }
+      }
+    ) {
+      id
+      submitters {
+        ...relatedUserFields
+      }
+    }
+  }
+  ${_RELATED_USER_FIELDS}
 `
 
 export const UPDATE_PROFILE_METADATA = gql`
@@ -291,6 +323,22 @@ export const CREATE_PUBLICATION_STYLE_CRITERIA = gql`
           create: [{ name: $name, description: $description, icon: $icon }]
         }
       }
+    ) {
+      id
+      style_criterias {
+        id
+        name
+        description
+        icon
+      }
+    }
+  }
+`
+
+export const DELETE_PUBLICATION_STYLE_CRITERIA = gql`
+  mutation DeletePublicationStyleCriteria($publication_id: ID!, $id: ID!) {
+    updatePublication(
+      publication: { id: $publication_id, style_criterias: { delete: [$id] } }
     ) {
       id
       style_criterias {

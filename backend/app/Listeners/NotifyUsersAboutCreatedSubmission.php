@@ -19,9 +19,7 @@ class NotifyUsersAboutCreatedSubmission
      */
     public function handle($event)
     {
-        $submitters = $event->submission->users->filter(function ($user) {
-            return $user->pivot->role_id == Role::SUBMITTER_ROLE_ID;
-        });
+        $submitters = $event->submission->submitters()->get();
         $notification_data = [
             'submission' => [
                 'id' => $event->submission->id,

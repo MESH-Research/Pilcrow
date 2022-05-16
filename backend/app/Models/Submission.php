@@ -56,6 +56,41 @@ class Submission extends Model
         return $this->belongsTo(Publication::class, 'publication_id');
     }
 
+    /** Users with reviewer role
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function reviewers(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class)
+            ->withTimestamps()
+            ->withPivotValue('role_id', Role::REVIEWER_ROLE_ID);
+    }
+
+    /**
+     * Users with a review_coordinator role
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function reviewCoordinators(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class)
+            ->withTimestamps()
+            ->withPivotValue('role_id', Role::REVIEW_COORDINATOR_ROLE_ID);
+    }
+
+    /**
+     * Users with submitter role
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function submitters(): BelongsToMany
+    {
+         return $this->belongsToMany(User::class)
+            ->withTimeStamps()
+            ->withPivotValue('role_id', Role::SUBMITTER_ROLE_ID);
+    }
+
     /**
      * Users that belong to the submission
      *
