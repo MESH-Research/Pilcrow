@@ -73,5 +73,8 @@ class DatabaseSeeder extends Seeder
         $submission_comment_seeder->run();
         $submission_comment_seeder->run(1);
         $submission_comment_seeder->run(2, 2);
+
+        $submission_content = new SubmissionContentSeeder();
+        $submission_content->run();
     }
 }
