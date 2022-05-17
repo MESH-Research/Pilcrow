@@ -5,11 +5,11 @@
     size="md"
     :flat="isActive"
     dense
-    :color="isActive ? `secondary` : `secondary`"
-    :icon="iconName"
+    color="secondary"
     style="margin-top: -3px"
     @click="clickHandler"
-  ></q-btn>
+    ><q-icon v-for="icon in icons" :key="icon" :name="icon"
+  /></q-btn>
 </template>
 
 <script setup>
@@ -18,9 +18,9 @@ defineProps({
     type: Function,
     default: () => {},
   },
-  iconName: {
-    type: String,
-    default: "chat",
+  icons: {
+    type: Array,
+    default: () => ["chat"],
   },
   isActive: {
     type: Boolean,

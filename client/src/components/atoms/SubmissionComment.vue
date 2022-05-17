@@ -60,9 +60,9 @@
     </q-card-section>
 
     <q-card-section v-if="props.isInlineComment" class="q-px-sm q-py-none">
-      <q-chip size="16px" icon="bookmark"> Relevance </q-chip>
-      <q-chip size="16px" icon="bookmark"> Accessibility </q-chip>
-      <q-chip size="16px" icon="bookmark"> Coherence </q-chip>
+      <q-chip size="16px" icon="close_fullscreen"> Relevance </q-chip>
+      <q-chip size="16px" icon="accessibility"> Accessibility </q-chip>
+      <q-chip size="16px" icon="psychology"> Coherence </q-chip>
     </q-card-section>
 
     <q-card-section v-if="isReplying" ref="comment_reply" class="q-pa-md">
