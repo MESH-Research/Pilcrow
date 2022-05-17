@@ -3,6 +3,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.16.3](https://github.com/MESH-Research/CCR/compare/v0.16.2...v0.16.3) (2022-05-16)
+
+
+### Features
+
+* **api:** html purify style criteria description fields ([#1089](https://github.com/MESH-Research/CCR/issues/1089)) ([3109b53](https://github.com/MESH-Research/CCR/commit/3109b53a12d527d997e6ac731f88412edf9c5528)), closes [#999](https://github.com/MESH-Research/CCR/issues/999)
+* **client:** add delete interface for style criteria ([#1090](https://github.com/MESH-Research/CCR/issues/1090)) ([aff6269](https://github.com/MESH-Research/CCR/commit/aff6269ccc7f8390f0feca97136f7a66768796fb))
+* Extend API for inline and overall comments ([#1083](https://github.com/MESH-Research/CCR/issues/1083)) ([f1c53e9](https://github.com/MESH-Research/CCR/commit/f1c53e9511f42c62af3f9f9b98a8de6d8b4a40bf)), closes [#1045](https://github.com/MESH-Research/CCR/issues/1045)
+
 ### [0.16.2](https://github.com/MESH-Research/CCR/compare/v0.16.1...v0.16.2) (2022-05-09)
 
 
