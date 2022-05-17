@@ -141,9 +141,55 @@ const editor = new Editor({
       `,
   extensions: [StarterKit, Highlight],
 })
+editor.registerPlugin(testPlugin)
+</script>
+
+<script>
+import { Plugin } from "prosemirror-state"
+import { Decoration, DecorationSet } from "prosemirror-view"
+
+function getDecorations(doc) {
+  let decos = [
+    Decoration.inline(8, 25, { class: "comment-highlight" }),
+    Decoration.inline(20, 43, { class: "comment-highlight2" }),
+    Decoration.inline(100, 122, { class: "comment-highlight" }),
+    Decoration.inline(300, 322, { class: "comment-highlight2" }),
+    Decoration.widget(300, lintIcon()),
+    Decoration.widget(302, lintIcon()),
+  ]
+  return DecorationSet.create(doc, decos)
+}
+function lintIcon() {
+  let icon = document.createElement("div")
+  icon.className = "lint-icon"
+
+  return icon
+}
+
+let testPlugin = new Plugin({
+  state: {
+    init(_, { doc }) {
+      return getDecorations(doc)
+    },
+    apply(tr) {
+      return getDecorations(tr.doc)
+    },
+  },
+  props: {
+    decorations(state) {
+      return this.getState(state)
+    },
+  },
+})
 </script>
 
 <style lang="scss">
+.comment-highlight {
+  text-decoration: underline;
+}
+.comment-highlight2 {
+  background: rgba(120, 0, 100, 0.5);
+}
 .submission-content {
   counter-reset: paragraph_counter;
   font-size: 16px;
@@ -159,6 +205,7 @@ const editor = new Editor({
 .submission-content p:before {
   color: #555;
   content: "¶ " counter(paragraph_counter);
+  right: 0px;
   counter-increment: paragraph_counter;
   display: block;
   font-family: Helvetica, Arial, san-serif;
@@ -175,5 +222,23 @@ const editor = new Editor({
 mark {
   color: #000;
   background-color: #bbe2e8;
+}
+
+.lint-icon {
+  display: inline-block;
+  right: 2px;
+  cursor: pointer;
+  float: right;
+  border-radius: 100px;
+  background: #f22;
+  color: white;
+  font-family: times, georgia, serif;
+  font-size: 15px;
+  font-weight: bold;
+  width: 1.1em;
+  height: 1.1em;
+  text-align: center;
+  padding-left: 0.5px;
+  line-height: 1.1em;
 }
 </style>
