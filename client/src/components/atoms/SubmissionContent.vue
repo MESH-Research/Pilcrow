@@ -37,80 +37,16 @@
     </div>
   </div>
   <article class="col-sm-9 submission-content">
-    <h1>Small Buttons</h1>
-    <p>
-      Justo donec enim diam vulputate ut. Eget lorem dolor sed viverra ipsum
-      nunc. Ut tortor pretium viverra suspendisse potenti nullam ac tortor
-      vitae.
-      <span
-        :class="{
-          highlight: comments[0].isActive || comments[1].isActive,
-        }"
-      >
-        Et sollicitudin ac orci phasellus egestas tellus rutrum tellus.</span
-      >
-      <span :class="{ highlight: comments[1].isActive }">
-        <q-btn
-          size="md"
-          flat
-          dense
-          icon="rate_review"
-          style="margin-top: -3px"
-          @click="toggleHighlightVisibility(0)"
-        ></q-btn>
-        Et egestas quis ipsum suspendisse ultrices gravida. </span
-      ><span
-        :class="{ highlight: comments[1].isActive || comments[2].isActive }"
-      >
-        In est ante in nibh mauris cursus mattis.</span
-      ><q-btn
-        size="md"
-        flat
-        dense
-        icon="try"
-        style="margin-top: -3px"
-        @click="toggleHighlightVisibility(1)"
-      ></q-btn>
-      <q-btn
-        size="md"
-        flat
-        dense
-        icon="chat"
-        style="margin-top: -3px"
-        @click="toggleHighlightVisibility(2)"
-      ></q-btn>
+    <h1>Embedded Buttons</h1>
 
-      <span :class="{ highlight: comments[3].isActive }">Amet purus</span>
-      <q-btn
-        size="md"
-        flat
-        dense
-        icon="question_answer"
-        style="margin-top: -3px"
-        @click="toggleHighlightVisibility(3)"
-      ></q-btn>
-      gravida quis blandit turpis cursus. Auctor neque vitae tempus quam
-      pellentesque nec nam aliquam sem.
+    <sample-submission-content icon-name="question_answer" />
 
-      <span :class="{ highlight: comments[4].isActive }"
-        >At consectetur lorem donec massa</span
-      >
-      <q-btn
-        size="md"
-        flat
-        dense
-        icon="history_edu"
-        style="margin-top: -3px"
-        @click="toggleHighlightVisibility(4)"
-      ></q-btn>
-      sapien faucibus. Et ultrices neque ornare aenean. Hac habitasse platea
-    </p>
-    <p>
-      Dui id ornare arcu odio ut sem. Est ullamcorper eget nulla facilisi etiam
-      dignissim diam quis. In nibh mauris cursus mattis molestie. Arcu dictum
-      varius duis at consectetur lorem donec massa. Ultricies tristique nulla
-      aliquet enim tortor.
-    </p>
+    <sample-submission-content icon-name="chat" />
+
+    <sample-submission-content icon-name="try" />
+
+    <sample-submission-content icon-name="history_edu" />
+
     <p>
       In egestas erat imperdiet sed euismod nisi porta lorem. Ut aliquam purus
       sit amet luctus venenatis. Sagittis eu volutpat odio facilisis. Vitae
@@ -177,6 +113,7 @@ import { ref } from "vue"
 import { Editor } from "@tiptap/vue-3"
 import Highlight from "@tiptap/extension-highlight"
 import StarterKit from "@tiptap/starter-kit"
+import SampleSubmissionContent from "./SampleSubmissionContent.vue"
 
 let darkMode = ref(true)
 function toggleDarkMode() {
@@ -184,38 +121,6 @@ function toggleDarkMode() {
 }
 const fonts = ["Sans-serif", "Serif"]
 let selectedFont = ref("San-serif")
-
-let comments = ref([
-  {
-    id: "ic1",
-    isActive: false,
-  },
-  {
-    id: "ic2",
-    isActive: true,
-  },
-  {
-    id: "ic3",
-    isActive: false,
-  },
-  {
-    id: "ic4",
-    isActive: false,
-  },
-  {
-    id: "ic5",
-    isActive: false,
-  },
-])
-
-function toggleHighlightVisibility(commentIndex) {
-  comments.value.forEach((comment, index) => {
-    if (index != commentIndex) {
-      comment.isActive = false
-    }
-  })
-  comments.value[commentIndex].isActive = !comments.value[commentIndex].isActive
-}
 
 const editor = new Editor({
   editable: false,
