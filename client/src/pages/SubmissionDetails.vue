@@ -51,7 +51,8 @@
 <script setup>
 import { GET_SUBMISSION } from "src/graphql/queries"
 import SubmissionUsers from "src/components/SubmissionUsers.vue"
-import { useQuery, useResult } from "@vue/apollo-composable"
+import { useQuery } from "@vue/apollo-composable"
+import { computed } from "vue"
 const props = defineProps({
   id: {
     type: String,
@@ -60,6 +61,7 @@ const props = defineProps({
 })
 
 const { result } = useQuery(GET_SUBMISSION, { id: props.id })
-
-const submission = useResult(result)
+const submission = computed(() => {
+  return result.value?.submission ?? null
+})
 </script>

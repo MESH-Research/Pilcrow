@@ -57,7 +57,7 @@
 
 <script setup>
 import { ref, computed } from "vue"
-import { useQuery, useResult } from "@vue/apollo-composable"
+import { useQuery } from "@vue/apollo-composable"
 import { CURRENT_USER_NOTIFICATIONS } from "src/graphql/queries"
 import NotificationListItem from "src/components/atoms/NotificationListItem.vue"
 
@@ -77,16 +77,20 @@ const variables = computed(() => {
   return vars
 })
 const { result } = useQuery(CURRENT_USER_NOTIFICATIONS, variables)
-const notificationItems = useResult(
-  result,
-  [],
-  (data) => data.currentUser.notifications.data
-)
-const paginatorData = useResult(
-  result,
-  { count: 0, currentPage: 1, lastPage: 1, perPage: 10 },
-  (data) => data.currentUser.notifications.paginatorInfo
-)
+
+const notificationItems = computed(() => {
+  return result.value?.currentUser.notifications.data ?? []
+})
+const paginatorData = computed(() => {
+  return (
+    result.value?.currentUser.notifications.paginatorInfo ?? {
+      count: 0,
+      currentPage: 1,
+      lastPage: 1,
+      perPage: 10,
+    }
+  )
+})
 const isPaginationVisible = computed(() => {
   return currentPage.value > 1 || notificationItems.value.length > 0
 })

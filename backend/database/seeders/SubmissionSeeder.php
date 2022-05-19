@@ -37,6 +37,8 @@ class SubmissionSeeder extends Seeder
                 'id' => $id,
                 'title' => $title,
                 'publication_id' => 1,
+                'created_by' => 1,
+                'updated_by' => 1,
             ]);
 
         $event = new SubmissionCreated($submission);
