@@ -45,8 +45,9 @@
             rounded
             class="form-error text-white bg-negative text-center q-mt-xs"
             data-cy="banner_form_error"
-            v-text="$t(`submissions.create.failure`)"
-          />
+          >
+            {{ $t(`submissions.create.failure`) }}
+          </q-banner>
           <q-btn
             :disabled="is_submitting"
             class="bg-primary text-white q-mt-lg"
