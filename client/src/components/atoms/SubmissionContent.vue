@@ -36,7 +36,7 @@
       />
     </div>
   </div>
-  <article class="col-sm-9 submission-content">
+  <article ref="contentRef" class="col-sm-9 submission-content">
     <editor-content :editor="editor" />
   </article>
 </template>
@@ -52,9 +52,35 @@ function toggleDarkMode() {
 }
 const fonts = ["Sans-serif", "Serif"]
 let selectedFont = ref("San-serif")
+const contentRef = ref(null)
 const activeComment = inject("activeComment")
-const onAnnotationClick = (context) => {
-  activeComment.value = context.id
+const onAnnotationClick = (context, { target }) => {
+  //First we need to get all the comment widget elements
+  const widgets = [...contentRef.value.querySelectorAll(".lint-icon")]
+    .filter((e) => e.offsetTop === target.offsetTop)
+    .map((e) => e.dataset.comment)
+
+  //Only one comment here. We're done
+  if (widgets.length === 1) {
+    activeComment.value = context.id
+    return
+  }
+  const currentIndex = widgets.indexOf(activeComment.value)
+
+  //The active comment isn't one of these, show the first
+  if (currentIndex === -1) {
+    activeComment.value = widgets[0]
+    return
+  }
+
+  //We're at the last in the lit, start over
+  if (currentIndex + 1 === widgets.length) {
+    activeComment.value = widgets[0]
+    return
+  }
+
+  //Next in the list
+  activeComment.value = widgets[currentIndex + 1]
 }
 //TODO: Comments will ideally be provided as part of the submission, either via prop or injection
 const comments = inject("comments")

@@ -54,9 +54,10 @@ provide("activeComment", ref(1))
 const someLorem =
   "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ex eveniet dolorum reprehenderit libero officia veritatis quidem ratione corporis dignissimos qui cupiditate maiores consequatur, distinctio soluta, quos ut, magni rem! Iste."
 const comments = ref([
-  { id: 1, content: someLorem, from: 100, to: 200 },
-  { id: 2, content: someLorem, from: 220, to: 310 },
-  { id: 3, content: someLorem, from: 520, to: 810 },
+  { id: "1", content: someLorem, from: 100, to: 200 },
+  { id: "2", content: someLorem, from: 220, to: 310 },
+  { id: "4", content: someLorem, from: 220, to: 229 },
+  { id: "3", content: someLorem, from: 520, to: 810 },
 ])
 provide("comments", comments)
 </script>

@@ -22,7 +22,8 @@ function lintIcon({ click, context }) {
   let icon = document.createElement("i")
   icon.className = "q-icon material-icons lint-icon"
   icon.innerText = "chat_bubble"
-  icon.onclick = () => click(context)
+  icon.dataset.comment = context.id
+  icon.onclick = (...args) => click(context, ...args)
   return icon
 }
 export const AnnotationPlugin = () =>
