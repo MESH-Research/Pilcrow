@@ -8,7 +8,7 @@ function getDecorations(doc, annotations) {
   const decorations = annotations
     .map((a) => [
       Decoration.inline(a.from, a.to, {
-        class: "comment-highlight",
+        class: `comment-highlight ${a.active ? "active" : ""}`,
         ...a.context,
       }),
       Decoration.widget(a.from, lintIcon(a)),

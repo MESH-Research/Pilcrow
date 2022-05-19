@@ -40,14 +40,25 @@ const props = defineProps({
     required: true,
   },
 })
+const commentDrawerOpen = ref(true)
+
 const { result } = useQuery(GET_SUBMISSION, { id: props.id })
 const submission = computed(() => {
   return result.value?.submission
 })
 
 provide("submission", submission)
+provide("activeComment", ref(1))
+//TODO: comments will ideally be provided as part of the submission query, but providing separately for mocking purposes
 
-const commentDrawerOpen = ref(true)
+const someLorem =
+  "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ex eveniet dolorum reprehenderit libero officia veritatis quidem ratione corporis dignissimos qui cupiditate maiores consequatur, distinctio soluta, quos ut, magni rem! Iste."
+const comments = ref([
+  { id: 1, content: someLorem, from: 100, to: 200 },
+  { id: 2, content: someLorem, from: 220, to: 310 },
+  { id: 3, content: someLorem, from: 520, to: 810 },
+])
+provide("comments", comments)
 </script>
 
 <style lang="sass" scoped>

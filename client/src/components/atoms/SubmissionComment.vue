@@ -1,5 +1,12 @@
 <template>
-  <q-card square class="bg-grey-1 shadow-2 q-mb-md">
+  <div ref="scrollTarget" />
+  <q-card
+    ref="cardRef"
+    square
+    class="bg-grey-1 shadow-2 q-mb-md"
+    :class="active ? 'active' : ''"
+    @click="onClick"
+  >
     <q-separator :color="props.isInlineComment ? `blue-1` : `grey-3`" />
     <q-card-section
       class="q-py-xs"
@@ -119,13 +126,13 @@
   </section>
 </template>
 <script setup>
-import { ref } from "vue"
+import { computed, inject, ref, watch } from "vue"
 import AvatarImage from "./AvatarImage.vue"
 import CommentActions from "./CommentActions.vue"
 import CommentEditor from "../forms/CommentEditor.vue"
 const user = { email: "commenter@example.com" }
 const user2 = { email: "magnafringilla@example.com" }
-const isCollapsed = ref(false)
+const isCollapsed = ref(true)
 const isReplying = ref(false)
 function toggleThread() {
   isCollapsed.value = !isCollapsed.value
@@ -148,12 +155,38 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  comment: {
+    type: Object,
+    default: () => ({}),
+  },
 })
 
+const activeComment = inject("activeComment")
+const active = computed(() => {
+  return activeComment.value === props.comment.id
+})
+
+watch(active, (newValue) => {
+  isCollapsed.value = !newValue
+})
 function cancelReply() {
   isReplying.value = false
 }
 function initiateReply() {
   isReplying.value = true
 }
+function onClick() {
+  activeComment.value = props.comment.id
+}
+
+const scrollTarget = ref(null)
+defineExpose({
+  scrollTarget,
+})
 </script>
+
+<style>
+.q-card.active {
+  border: 2px yellow solid;
+}
+</style>

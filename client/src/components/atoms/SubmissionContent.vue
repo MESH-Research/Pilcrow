@@ -41,7 +41,7 @@
   </article>
 </template>
 <script setup>
-import { ref, computed } from "vue"
+import { ref, computed, inject } from "vue"
 import { Editor, EditorContent } from "@tiptap/vue-3"
 import Highlight from "@tiptap/extension-highlight"
 import StarterKit from "@tiptap/starter-kit"
@@ -52,22 +52,19 @@ function toggleDarkMode() {
 }
 const fonts = ["Sans-serif", "Serif"]
 let selectedFont = ref("San-serif")
+const activeComment = inject("activeComment")
 const onAnnotationClick = (context) => {
-  console.log(context)
+  activeComment.value = context.id
 }
-const comments = ref([
-  { from: 123, to: 125, id: "one" },
-  { from: 8, to: 43, id: "two" },
-  { from: 8, to: 43, id: "eithg" },
-  { from: 100, to: 122, id: "three" },
-  { from: 300, to: 322, id: "four" },
-])
+//TODO: Comments will ideally be provided as part of the submission, either via prop or injection
+const comments = inject("comments")
 
 const annotations = computed(() =>
   comments.value.map(({ from, to, id }) => ({
     from,
     to,
     context: { id },
+    active: id === activeComment.value,
     click: onAnnotationClick,
   }))
 )
@@ -169,6 +166,9 @@ const editor = new Editor({
 <style lang="scss">
 .comment-highlight {
   background: #ddd;
+}
+.comment-highlight.active {
+  background: rgb(255, 254, 169);
 }
 .comment-highlight2 {
   background: rgba(120, 0, 100, 0.5);

@@ -20,14 +20,20 @@
             <span class="text-h3"> Inline Comments </span>
           </div>
           <q-card
+            v-if="false"
             class="q-ma-md q-pa-md bg-grey-1"
             bordered
             style="border-color: rgb(56, 118, 187)"
           >
             <comment-editor :is-inline-comment="true" />
           </q-card>
-          <submission-comment is-inline-comment />
-          <submission-comment is-inline-comment />
+          <submission-comment
+            v-for="comment in comments"
+            ref="commentsRefs"
+            :key="comment.id"
+            :comment="comment"
+            is-inline-comment
+          />
           <div class="row justify-center q-pa-md q-pb-xl">
             <q-btn color="dark" icon="arrow_upward">Scroll to Top</q-btn>
           </div>
@@ -38,9 +44,12 @@
 </template>
 
 <script setup>
-import { ref, watch } from "vue"
+import { ref, watch, inject, nextTick } from "vue"
 import SubmissionComment from "src/components/atoms/SubmissionComment.vue"
 import CommentEditor from "src/components/forms/CommentEditor.vue"
+import { scroll } from "quasar"
+
+const { getScrollTarget, setVerticalScrollPosition } = scroll
 
 const drawerWidth = ref(440)
 let originalWidth
@@ -65,5 +74,21 @@ const props = defineProps({
 const DrawerOpen = ref(props.commentDrawerOpen)
 watch(props, () => {
   DrawerOpen.value = props.commentDrawerOpen
+})
+const comments = inject("comments")
+const commentsRefs = ref([])
+const activeComment = inject("activeComment")
+
+watch(activeComment, (newValue) => {
+  if (!newValue) return
+  nextTick(() => {
+    //TODO: There's a potential problem here since per Vue's docs the order of refs in the array is not guarenteed to match the order of the v-fot array
+    //TODO: Solution: Since the ref is a component ref, expose an id that can be used to find the correct component directly in the refs array
+    const index = comments.value.findIndex((o) => o.id === newValue)
+    const el = commentsRefs.value[index].scrollTarget
+    const target = getScrollTarget(el)
+    const offset = el.offsetTop
+    setVerticalScrollPosition(target, offset, 250)
+  })
 })
 </script>
