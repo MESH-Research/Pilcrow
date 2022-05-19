@@ -63,7 +63,7 @@
 
 <script setup>
 import { ref } from "vue"
-import { useQuery, useResult, useMutation } from "@vue/apollo-composable"
+import { useQuery, useMutation } from "@vue/apollo-composable"
 import { CURRENT_USER_NOTIFICATIONS } from "src/graphql/queries"
 import NotificationListItem from "src/components/atoms/NotificationListItem.vue"
 import { computed } from "vue"
@@ -75,11 +75,10 @@ const isExpanded = ref(false)
 const { result } = useQuery(CURRENT_USER_NOTIFICATIONS, {
   page: currentPage,
 })
-const notificationItems = useResult(
-  result,
-  [],
-  (data) => data.currentUser.notifications.data
-)
+
+const notificationItems = computed(() => {
+  return result.value?.currentUser?.notifications.data ?? []
+})
 const hasUnreadNotifications = computed(() => {
   return notificationItems.value.length > 0 &&
     notificationItems.value.find((item) => item.read_at === null)

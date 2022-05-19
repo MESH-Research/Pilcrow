@@ -73,10 +73,10 @@ import { GET_PUBLICATIONS } from "src/graphql/queries"
 import { CREATE_PUBLICATION } from "src/graphql/mutations"
 import useVuelidate from "@vuelidate/core"
 import { required, maxLength } from "@vuelidate/validators"
-import { useMutation, useQuery, useResult } from "@vue/apollo-composable"
+import { useMutation, useQuery } from "@vue/apollo-composable"
 import { useFeedbackMessages } from "src/use/guiElements"
 import { useI18n } from "vue-i18n"
-import { ref, reactive, watch } from "vue"
+import { ref, reactive, watch, computed } from "vue"
 import { useRouter } from "vue-router"
 
 const { push } = useRouter()
@@ -93,11 +93,9 @@ const tryCatchError = ref(false)
 
 // TODO: This query is assuming only one page of results.
 const { result: publicationsResult } = useQuery(GET_PUBLICATIONS, { page: 1 })
-const publications = useResult(
-  publicationsResult,
-  [],
-  (data) => data.publications.data
-)
+const publications = computed(() => {
+  return publicationsResult.value?.publications.data ?? []
+})
 
 const $externalResults = reactive({ name: [] })
 const newPublication = reactive({
