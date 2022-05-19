@@ -41,17 +41,36 @@
   </article>
 </template>
 <script setup>
-import { ref } from "vue"
+import { ref, computed } from "vue"
 import { Editor, EditorContent } from "@tiptap/vue-3"
 import Highlight from "@tiptap/extension-highlight"
 import StarterKit from "@tiptap/starter-kit"
-
+import AnnotationExtension from "src/tiptap/annotation-extension"
 let darkMode = ref(true)
 function toggleDarkMode() {
   darkMode.value = !darkMode.value
 }
 const fonts = ["Sans-serif", "Serif"]
 let selectedFont = ref("San-serif")
+const onAnnotationClick = (context) => {
+  console.log(context)
+}
+const comments = ref([
+  { from: 123, to: 125, id: "one" },
+  { from: 8, to: 43, id: "two" },
+  { from: 8, to: 43, id: "eithg" },
+  { from: 100, to: 122, id: "three" },
+  { from: 300, to: 322, id: "four" },
+])
+
+const annotations = computed(() =>
+  comments.value.map(({ from, to, id }) => ({
+    from,
+    to,
+    context: { id },
+    click: onAnnotationClick,
+  }))
+)
 
 const editor = new Editor({
   editable: false,
@@ -64,9 +83,9 @@ const editor = new Editor({
       justo donec enim diam vulputate ut. Eget lorem dolor sed viverra ipsum
       nunc. Ut tortor pretium viverra suspendisse potenti nullam ac tortor
       vitae.
-      <mark>Et sollicitudin ac orci phasellus egestas tellus rutrum tellus. Et
+      Et sollicitudin ac orci phasellus egestas tellus rutrum tellus. Et
         egestas quis ipsum suspendisse ultrices gravida. In est ante in nibh
-        mauris cursus mattis.</mark>
+        mauris cursus mattis.
       Amet purus gravida quis blandit turpis cursus. Auctor neque vitae tempus
       quam pellentesque nec nam aliquam sem. At consectetur lorem donec massa
       sapien faucibus. Et ultrices neque ornare aenean. Hac habitasse platea
@@ -106,9 +125,9 @@ const editor = new Editor({
       rhoncus dolor purus non enim. In nisl nisi scelerisque eu ultrices. Tempor
       commodo ullamcorper a lacus vestibulum. Nisl nisi scelerisque eu ultrices
       vitae auctor eu. Urna id volutpat
-      <mark>lacus laoreet non curabitur. Dolor magna eget est lorem ipsum dolor.
+      lacus laoreet non curabitur. Dolor magna eget est lorem ipsum dolor.
         Mauris vitae ultricies leo integer malesuada nunc vel risus
-        commodo.</mark>
+        commodo.
     </p>
     <h3>Commodo quis</h3>
     <p>
@@ -139,53 +158,17 @@ const editor = new Editor({
       pellentesque.
     </p>
       `,
-  extensions: [StarterKit, Highlight],
-})
-editor.registerPlugin(testPlugin)
-</script>
-
-<script>
-import { Plugin } from "prosemirror-state"
-import { Decoration, DecorationSet } from "prosemirror-view"
-
-function getDecorations(doc) {
-  let decos = [
-    Decoration.inline(8, 25, { class: "comment-highlight" }),
-    Decoration.inline(20, 43, { class: "comment-highlight2" }),
-    Decoration.inline(100, 122, { class: "comment-highlight" }),
-    Decoration.inline(300, 322, { class: "comment-highlight2" }),
-    Decoration.widget(300, lintIcon()),
-    Decoration.widget(302, lintIcon()),
-  ]
-  return DecorationSet.create(doc, decos)
-}
-function lintIcon() {
-  let icon = document.createElement("div")
-  icon.className = "lint-icon"
-
-  return icon
-}
-
-let testPlugin = new Plugin({
-  state: {
-    init(_, { doc }) {
-      return getDecorations(doc)
-    },
-    apply(tr) {
-      return getDecorations(tr.doc)
-    },
-  },
-  props: {
-    decorations(state) {
-      return this.getState(state)
-    },
-  },
+  extensions: [
+    StarterKit,
+    Highlight,
+    AnnotationExtension.configure({ annotations }),
+  ],
 })
 </script>
 
 <style lang="scss">
 .comment-highlight {
-  text-decoration: underline;
+  background: #ddd;
 }
 .comment-highlight2 {
   background: rgba(120, 0, 100, 0.5);
@@ -226,17 +209,11 @@ mark {
 
 .lint-icon {
   display: inline-block;
-  right: 2px;
   cursor: pointer;
-  float: right;
-  border-radius: 100px;
-  background: #f22;
-  color: white;
-  font-family: times, georgia, serif;
-  font-size: 15px;
-  font-weight: bold;
-  width: 1.1em;
-  height: 1.1em;
+  position: absolute;
+  right: -50px;
+  font-size: 1.4rem;
+  color: $primary;
   text-align: center;
   padding-left: 0.5px;
   line-height: 1.1em;
