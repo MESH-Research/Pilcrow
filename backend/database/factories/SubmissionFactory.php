@@ -5,6 +5,7 @@ namespace Database\Factories;
 
 use App\Models\Publication;
 use App\Models\Submission;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class SubmissionFactory extends Factory
@@ -23,10 +24,17 @@ class SubmissionFactory extends Factory
      */
     public function definition()
     {
+        $user = auth()->user();
+        if (!$user) {
+            $user = User::factory()->create();
+        }
+
         return [
             'title' => $this->faker->sentence(10, true),
             'publication_id' => Publication::factory(),
             'status' => 1,
+            'created_by' => $user->id,
+            'updated_by' => $user->id,
         ];
     }
 }
