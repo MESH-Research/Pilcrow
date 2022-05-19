@@ -5,7 +5,7 @@
     </q-item-section>
     <q-item-section>
       <q-item-label>{{ criteria.name }}</q-item-label>
-      <!-- eslint-disable-next-line vue/no-v-html -->
+      <!-- eslint-disable-next-line vue/no-v-html vue/no-v-text-v-html-on-component -->
       <q-item-label caption v-html="criteria.description" />
     </q-item-section>
     <q-item-section v-if="editId === null" side>

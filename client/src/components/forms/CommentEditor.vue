@@ -49,7 +49,7 @@
             </q-item-section>
           </template>
           <q-card data-cy="criteria-description">
-            <!--  eslint-disable-next-line vue/no-v-html -->
+            <!-- eslint-disable-next-line vue/no-v-html vue/no-v-text-v-html-on-component -->
             <q-card-section v-html="criteria.description" />
           </q-card>
         </q-expansion-item>
