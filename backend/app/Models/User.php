@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Config;
@@ -162,6 +163,26 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->belongsToMany(Submission::class)
             ->withTimestamps()
             ->withPivot(['id', 'user_id', 'role_id', 'submission_id']);
+    }
+
+    /**
+     * Inline comments that belong to the user
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function inlineComments() : HasMany
+    {
+        return $this->hasMany(InlineComment::class, 'created_by');
+    }
+
+    /**
+     * Overall comments that belong to the user
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function overallComments() : HasMany
+    {
+        return $this->hasMany(OverallComment::class, 'created_by');
     }
 
     /**

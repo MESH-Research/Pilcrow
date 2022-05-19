@@ -166,11 +166,15 @@ An inline comment of a submission
 """
 type InlineComment {
     id: ID!
+    submission: Submission! @belongsTo
     content: String!
-    created_by: User!
+    created_by: User! @belongsTo(relation:"createdBy")
     created_at: DateTime!
+    updated_by: User! @belongsTo(relation:"updatedBy")
+    updated_at: DateTime!
     replies: [InlineCommentReply!]
     style_criteria: [InlineCommentStyleCriteria!]
+    user: User! @belongsTo(relation: "created_by")
 }
 
 """
@@ -197,10 +201,14 @@ An overall comment of a submission
 """
 type OverallComment {
     id: ID!
+    submission: Submission! @belongsTo
     content: String!
-    created_by: User!
+    created_by: User! @belongsTo(relation:"createdBy")
     created_at: DateTime!
+    updated_by: User! @belongsTo(relation:"updatedBy")
+    updated_at: DateTime!
     replies: [OverallCommentReply!]
+    user: User! @belongsTo(relation: "created_by")
 }
 
 """
