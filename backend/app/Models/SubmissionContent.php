@@ -36,14 +36,4 @@ class SubmissionContent extends Model
     {
         return $this->belongsTo(SubmissionFile::class);
     }
-
-    /**
-     * content that belong to the submission
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function submission()
-    {
-        return $this->belongsTo(Submission::class, 'content');
-    }
 }
