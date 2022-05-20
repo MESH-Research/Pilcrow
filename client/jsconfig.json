@@ -10,11 +10,8 @@
       "assets/*": ["src/assets/*"],
       "boot/*": ["src/boot/*"],
       "vue$": ["node_modules/vue/dist/vue.esm.js"]
-    }
+    },
+    "jsx": "preserve"
   },
-  "exclude": [
-    "dist",
-    ".quasar",
-    "node_modules"
-  ]
+  "exclude": ["dist", ".quasar", "node_modules"]
 }

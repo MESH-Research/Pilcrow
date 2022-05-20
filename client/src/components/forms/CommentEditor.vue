@@ -49,9 +49,8 @@
             </q-item-section>
           </template>
           <q-card data-cy="criteria-description">
-            <q-card-section>
-              {{ criteria.description }}
-            </q-card-section>
+            <!-- eslint-disable-next-line vue/no-v-html vue/no-v-text-v-html-on-component -->
+            <q-card-section v-html="criteria.description" />
           </q-card>
         </q-expansion-item>
       </q-list>

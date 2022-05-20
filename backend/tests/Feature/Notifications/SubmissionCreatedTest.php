@@ -24,7 +24,14 @@ class SubmissionCreatedTest extends TestCase
     public function testThatNotificationsAreSentToTheExpectedUsers()
     {
         Notification::fake();
+
+        /**
+         * @var User
+         */
         $submitter = User::factory()->create();
+
+        $this->actingAs($submitter);
+
         $editor = User::factory()->create();
         $publication = Publication::factory()
             ->hasAttached(

@@ -1,11 +1,12 @@
 <template>
-  <q-item class="q-px-md">
-    <q-item-section avatar class="column content-center">
-      <q-icon :name="criteria.icon" />
+  <q-item class="q-pa-md">
+    <q-item-section top avatar style="min-width: auto">
+      <q-icon size="md" :name="criteria.icon" />
     </q-item-section>
     <q-item-section>
       <q-item-label>{{ criteria.name }}</q-item-label>
-      <q-item-label caption>{{ criteria.description }}</q-item-label>
+      <!-- eslint-disable-next-line vue/no-v-html vue/no-v-text-v-html-on-component -->
+      <q-item-label caption v-html="criteria.description" />
     </q-item-section>
     <q-item-section v-if="editId === null" side>
       <q-btn
