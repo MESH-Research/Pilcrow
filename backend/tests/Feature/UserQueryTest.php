@@ -146,12 +146,6 @@ class UserQueryTest extends TestCase
                         name
                         email
                         username
-                        inline_comments {
-                            content
-                        }
-                        overall_comments {
-                            content
-                        }
                     }
                 }
             }',
