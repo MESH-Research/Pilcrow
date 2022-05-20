@@ -146,6 +146,12 @@ class UserQueryTest extends TestCase
                         name
                         email
                         username
+                        inline_comments {
+                            content
+                        }
+                        overall_comments {
+                            content
+                        }
                     }
                 }
             }',
@@ -169,6 +175,8 @@ class UserQueryTest extends TestCase
                                 'name' => 'abcdef',
                                 'email' => 'ghijkl@gmail.com',
                                 'username' => 'mnopqr',
+                                'inline_comments' => [],
+                                'overall_comments' => [],
                             ],
                         ],
                     ],
