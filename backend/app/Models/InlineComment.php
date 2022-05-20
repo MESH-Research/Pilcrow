@@ -36,4 +36,24 @@ class InlineComment extends BaseModel
     {
         return $this->hasMany(InlineComment::class, 'parent_id');
     }
+
+    /**
+     * The creator of the inline comment
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function createdBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    /**
+     * The updater of the inline comment
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function updatedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'updated_by');
+    }
 }
