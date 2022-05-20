@@ -170,7 +170,7 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function inlineComments() : HasMany
+    public function inlineComments(): HasMany
     {
         return $this->hasMany(InlineComment::class, 'created_by');
     }
@@ -180,7 +180,7 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function overallComments() : HasMany
+    public function overallComments(): HasMany
     {
         return $this->hasMany(OverallComment::class, 'created_by');
     }
