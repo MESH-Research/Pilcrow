@@ -169,8 +169,6 @@ class UserQueryTest extends TestCase
                                 'name' => 'abcdef',
                                 'email' => 'ghijkl@gmail.com',
                                 'username' => 'mnopqr',
-                                'inline_comments' => [],
-                                'overall_comments' => [],
                             ],
                         ],
                     ],
