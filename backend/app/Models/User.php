@@ -165,26 +165,6 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Inline comments that belong to the user
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function inlineComments(): HasMany
-    {
-        return $this->hasMany(InlineComment::class, 'created_by');
-    }
-
-    /**
-     * Overall comments that belong to the user
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function overallComments(): HasMany
-    {
-        return $this->hasMany(OverallComment::class, 'created_by');
-    }
-
-    /**
      * Publications that belong to the user
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
