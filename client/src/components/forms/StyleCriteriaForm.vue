@@ -20,7 +20,6 @@
         <v-q-input
           ref="name-input"
           :v="v$.name"
-          label="Criteria Name"
           t="publications.style_criteria.fields.name"
           data-cy="name-input"
           @vqupdate="updateModel"
@@ -31,7 +30,7 @@
           data-cy="description-input"
           :toolbar="[
             ['bold', 'italic', 'underline'],
-            ['unordered', 'ordered', 'outdent', 'indent'],
+            ['link', 'unordered', 'ordered', 'outdent', 'indent'],
             ['undo', 'redo'],
           ]"
           :class="v$.description.$error ? 'error' : ''"
@@ -51,7 +50,16 @@
           }}
         </div>
 
-        <div class="row justify-end">
+        <div class="row" :class="isNew ? 'justify-end' : 'justify-between'">
+          <q-btn
+            v-if="!isNew"
+            ref="button_delete"
+            data-cy="button-delete"
+            color="red-10"
+            label="Delete"
+            @click="onDelete"
+          />
+
           <FormActions flat :sticky="false" @reset-click="onCancel" />
         </div>
       </q-item-section>
@@ -69,16 +77,17 @@ import { required, maxLength } from "@vuelidate/validators"
 import { isEqual, pick } from "lodash"
 import VQInput from "src/components/atoms/VQInput.vue"
 import FormActions from "../molecules/FormActions.vue"
-
+import { useI18n } from "vue-i18n"
 const { dirty, setError } = inject("formState")
 
+const { t } = useI18n()
 const props = defineProps({
   criteria: {
     type: Object,
     default: () => ({}),
   },
 })
-const emit = defineEmits(["cancel", "save"])
+const emit = defineEmits(["cancel", "save", "delete"])
 
 const state = reactive({
   id: "",
@@ -106,6 +115,10 @@ const original = computed(() => ({
   ...pick(props.criteria, ["id", "name", "icon", "description"]),
 }))
 
+const isNew = computed(() => {
+  return Object.keys(props.criteria).length === 0
+})
+
 onMounted(() => {
   Object.assign(state, props.criteria)
 })
@@ -127,6 +140,19 @@ function editIcon() {
   })
 }
 
+function onDelete() {
+  dialog({
+    title: t("publications.style_criteria.delete_header"),
+    message: t("publications.style_criteria.delete_confirm", {
+      name: props.criteria.name,
+    }),
+    cancel: true,
+    persistent: true,
+  }).onOk(() => {
+    emit("delete", props.criteria)
+  })
+}
+
 function onCancel() {
   emit("cancel")
 }
@@ -134,7 +160,7 @@ function onCancel() {
 function onSave() {
   v$.value.$touch()
   if (v$.value.$invalid) {
-    setError("Oops, check form above for errors")
+    setError(t("publications.style_criteria.saveError"))
   } else {
     emit("save", state)
   }

@@ -1,4 +1,30 @@
+extend type Query {
+    "Return a submission by ID"
+    submission(id: ID @eq): Submission @find @can(ability: "view", find: "id")
+
+    "Return all submissions"
+    submissions: [Submission!]! @paginate(defaultCount: 100)
+}
+
 extend type Mutation {
+    "Create a new submission under a publication"
+    createSubmission(input: CreateSubmissionInput! @spread): Submission!
+        @event(dispatch: "App\\Events\\SubmissionCreated")
+        @create
+
+    "Update an existing submission"
+    updateSubmission(input: UpdateSubmissionInput! @spread): Submission!
+        @update
+        @can(ability: "update", find: "id")
+        @argPolicy(
+            find: "id"
+            apply: [
+                "submitters:updateSubmitters"
+                "reviewers:updateReviewers"
+                "reviewCoordinators:updateReviewCoordinators"
+            ]
+        )
+
     addInlineComment(
         submission_id: ID!
         content: String!
@@ -29,8 +55,12 @@ type Submission {
     title: String
     created_at: DateTime!
     updated_at: DateTime
+    created_by: User! @belongsTo(relation: "createdBy")
+    updated_by: User! @belongsTo(relation: "updatedBy")
     publication: Publication!
-    users: [User!]! @belongsToMany
+    reviewers: [User!]! @belongsToMany
+    review_coordinators: [User!]! @belongsToMany(relation: "reviewCoordinators")
+    submitters: [User!]! @belongsToMany
     files: [SubmissionFile]! @hasMany
     pivot: SubmissionUser
     status: SubmissionStatus!
@@ -74,6 +104,51 @@ enum SubmissionStatus {
     AWAITING_REVISION @enum(value: 10)
     ARCHIVED @enum(value: 11)
     DELETED @enum(value: 12)
+}
+
+"""
+Input type for creating a new submission via the createSubmission mutation
+"""
+input CreateSubmissionInput @validator(class: "SubmissionInputValidator") {
+    title: String! @trim
+    publication_id: ID!
+    submitters: CreateSubmissionUserInput
+    files: CreateSubmissionFilesHasMany @createSubmissionFiles
+}
+
+input UpdateSubmissionInput {
+    id: ID!
+    title: String @trim
+    reviewers: UpdateSubmissionUserInput
+    review_coordinators: UpdateSubmissionUserInput
+        @rename(attribute: "reviewCoordinators")
+    submitters: UpdateSubmissionUserInput
+    publication_id: ID
+}
+
+input CreateSubmissionUserInput {
+    connect: [ID!]!
+}
+
+input UpdateSubmissionUserInput {
+    connect: [ID!]
+    disconnect: [ID!]
+}
+
+"""
+Input type for connecting newly created submissions to files via nested mutation
+"""
+input CreateSubmissionFilesHasMany {
+    create: [Upload!]
+}
+
+"""
+Input type for creating a new association between an uploaded file and a submission
+"""
+input CreateSubmissionFileInput
+    @validator(class: "SubmissionFileInputValidator") {
+    submission_id: ID!
+    file_upload: Upload!
 }
 
 """

@@ -4,5 +4,7 @@
     dense
     rounded
     v-bind="$attrs"
-  />
+  >
+    <slot />
+  </q-banner>
 </template>

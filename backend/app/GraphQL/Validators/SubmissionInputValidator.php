@@ -24,7 +24,7 @@ class SubmissionInputValidator extends Validator
                 'numeric',
                 'integer',
             ],
-            'users' => [
+            'submitters' => [
                 'required',
             ],
             'files' => [
