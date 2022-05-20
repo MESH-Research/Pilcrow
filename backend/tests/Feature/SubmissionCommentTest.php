@@ -122,6 +122,12 @@ class SubmissionCommentTest extends TestCase
                 submission (id: $id) {
                     id
                     inline_comments {
+                        created_by {
+                            name
+                        }
+                        updated_by {
+                            name
+                        }
                         content
                         style_criteria {
                             name
@@ -137,6 +143,12 @@ class SubmissionCommentTest extends TestCase
                 'id' => (string)$submission->id,
                 'inline_comments' => [
                     '0' => [
+                        'created_by' => [
+                            'name' => $submission->inlineComments->first()->createdBy->name,
+                        ],
+                        'updated_by' => [
+                            'name' => $submission->inlineComments->first()->updatedBy->name,
+                        ],
                         'content' => 'This is some content for an inline comment created by PHPUnit.',
                         'style_criteria' => [
                             '0' => [
@@ -146,6 +158,12 @@ class SubmissionCommentTest extends TestCase
                         ],
                     ],
                     '1' => [
+                        'created_by' => [
+                            'name' => $submission->inlineComments->last()->createdBy->name,
+                        ],
+                        'updated_by' => [
+                            'name' => $submission->inlineComments->last()->updatedBy->name,
+                        ],
                         'content' => 'This is some content for an inline comment created by PHPUnit.',
                         'style_criteria' => [
                             '0' => [
@@ -170,6 +188,12 @@ class SubmissionCommentTest extends TestCase
                 submission (id: $id) {
                     id
                     overall_comments {
+                        created_by {
+                            name
+                        }
+                        updated_by {
+                            name
+                        }
                         content
                     }
                 }
@@ -181,9 +205,21 @@ class SubmissionCommentTest extends TestCase
                 'id' => (string)$submission->id,
                 'overall_comments' => [
                     '0' => [
+                        'created_by' => [
+                            'name' => $submission->overallComments->first()->createdBy->name,
+                        ],
+                        'updated_by' => [
+                            'name' => $submission->overallComments->first()->updatedBy->name,
+                        ],
                         'content' => 'This is some content for an overall comment created by PHPUnit.',
                     ],
                     '1' => [
+                        'created_by' => [
+                            'name' => $submission->overallComments->last()->createdBy->name,
+                        ],
+                        'updated_by' => [
+                            'name' => $submission->overallComments->last()->updatedBy->name,
+                        ],
                         'content' => 'This is some content for an overall comment created by PHPUnit.',
                     ],
                 ],
