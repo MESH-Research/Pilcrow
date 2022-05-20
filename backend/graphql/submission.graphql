@@ -205,7 +205,6 @@ type OverallComment {
     updated_by: User! @belongsTo(relation:"updatedBy")
     updated_at: DateTime!
     replies: [OverallCommentReply!]
-    user: User! @belongsTo(relation: "created_by")
 }
 
 """
