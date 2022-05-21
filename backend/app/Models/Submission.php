@@ -124,7 +124,7 @@ class Submission extends Model
      */
     public function content(): HasOne
     {
-        return $this->hasOne(SubmissionContent::class);
+        return $this->hasOne(SubmissionContent::class, 'id');
     }
 
     /**

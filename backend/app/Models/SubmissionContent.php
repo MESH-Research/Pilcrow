@@ -28,7 +28,7 @@ class SubmissionContent extends Model
     ];
 
     /**
-     * files that belong to the submission
+     * Submission files that belong to the submission content
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
