@@ -19,7 +19,7 @@ class SubmissionContentFactory extends Factory
     public function definition()
     {
         return [
-            'content' => $this->faker->paragraph(10, true),
+            'data' => $this->faker->paragraph(10, true),
             'submission_file_id' => SubmissionFile::factory(),
         ];
     }

@@ -23,7 +23,7 @@ class SubmissionContent extends Model
      * @var array
      */
     protected $fillable = [
-        'content',
+        'data',
         'submission_file_id',
     ];
 

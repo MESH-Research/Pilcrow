@@ -118,23 +118,13 @@ class Submission extends Model
     }
 
     /**
-     * Content that belongs to the submission
+     * Primary content that belongs to the submission
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
     public function content(): HasOne
     {
         return $this->hasOne(SubmissionContent::class, 'id');
-    }
-
-    /**
-     * History of content of the submmission
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function contentRevisions(): HasMany
-    {
-        return $this->hasMany(SubmissionContent::class, 'content_id');
     }
 
     /**

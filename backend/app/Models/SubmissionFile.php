@@ -5,6 +5,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class SubmissionFile extends Model
 {
@@ -28,7 +29,7 @@ class SubmissionFile extends Model
     ];
 
     /**
-     * File uploads that belong to the submission
+     * Submission that belongs to the submission file
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -38,7 +39,7 @@ class SubmissionFile extends Model
     }
 
     /**
-     * Content that belong to the submission
+     * Content that belongs to the submission file
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */

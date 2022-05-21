@@ -155,7 +155,7 @@ input CreateSubmissionFileInput
 The content of a submission
 """
 type SubmissionContent {
-    content: String!
+    data: String!
     created_at: DateTime!
     modified_at: DateTime!
     src_file: SubmissionFile!
@@ -216,14 +216,4 @@ type OverallCommentReply {
     created_by: User!
     reply_to_id: ID!
     created_at: DateTime!
-}
-
-"""
-Content of the submission.
-"""
-type SubmissionContent {
-  content: String!
-  created_at: DateTime!
-  modified_at: DateTime!
-  submission_file_id: SubmissionFile!
 }

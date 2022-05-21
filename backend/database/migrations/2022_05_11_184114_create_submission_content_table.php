@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('submission_contents', function (Blueprint $table) {
             $table->id();
-            $table->text('content');
+            $table->text('data');
             $table->unsignedBigInteger('submission_file_id');
             $table->foreign('submission_file_id')
                 ->references('id')

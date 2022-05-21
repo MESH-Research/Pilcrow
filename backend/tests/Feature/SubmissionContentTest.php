@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
+use App\Models\Submission;
 use App\Models\SubmissionContent;
 use App\Models\SubmissionFile;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -15,17 +16,21 @@ class SubmissionContentTest extends TestCase
     /**
      * @return void
      */
-    public function testSubmissionContentCanBeAccessedFromSubmission()
+    public function testPrimarySubmissionContentCanBeAccessedFromASubmission()
     {
-        $submission_file = SubmissionFile::factory()->create();
+        $submission = Submission::factory()->create();
+        $submission_file = SubmissionFile::factory()->create([
+            'submission_id' => $submission->id
+        ]);
         $submission_content = SubmissionContent::factory()->create([
-            'content' => 'Example content',
+            'data' => 'Example content from PHPUnit',
             'submission_file_id' => $submission_file->id,
         ]);
-        $submission_file->submission->content_id = $submission_content->id;
-        $expected_content = $submission_file->submission->content->content;
-        $this->assertNotNull($expected_content);
-        $this->assertNotEmpty($expected_content);
-        $this->assertIsString($expected_content);
+        $submission->content_id = $submission_content->id;
+        $data = $submission->content->data;
+        $this->assertNotNull($data);
+        $this->assertNotEmpty($data);
+        $this->assertIsString($data);
+    }
     }
 }

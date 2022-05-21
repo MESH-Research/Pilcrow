@@ -17,7 +17,7 @@ class SubmissionContentSeeder extends Seeder
     public function run()
     {
         $submission_content = SubmissionContent::factory()->create([
-          'content' => 'Example content',
+          'data' => 'Example content',
           'submission_file_id' => 1,
         ]);
         Submission::find('100')->content_id = $submission_content->id;
