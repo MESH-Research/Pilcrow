@@ -3,6 +3,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.16.4](https://github.com/MESH-Research/CCR/compare/v0.16.3...v0.16.4) (2022-05-23)
+
+
+### Features
+
+* **api:** add created_by and updated_by fields to submission ([#1088](https://github.com/MESH-Research/CCR/issues/1088)) ([52c593f](https://github.com/MESH-Research/CCR/commit/52c593f49c05073d007ca8d491737b5bd6581794)), closes [#1074](https://github.com/MESH-Research/CCR/issues/1074)
+* Extend Comments API with Fields and Attributes ([#1109](https://github.com/MESH-Research/CCR/issues/1109)) ([92ed745](https://github.com/MESH-Research/CCR/commit/92ed745956b3bcb64e1dc262e87db457feb034e4)), closes [#1087](https://github.com/MESH-Research/CCR/issues/1087)
+
+
+### Bug Fixes
+
+* **client:** add default slot to error banner ([#1107](https://github.com/MESH-Research/CCR/issues/1107)) ([8517553](https://github.com/MESH-Research/CCR/commit/8517553c53022b1745604c69242d49df00a3dabd))
+* **client:** remove deprecated useResult function ([#1095](https://github.com/MESH-Research/CCR/issues/1095)) ([d5f22da](https://github.com/MESH-Research/CCR/commit/d5f22dacacb72c645952fa9281a581e9e4486cd7))
+* **client:** Render HTML in style criteria description ([#1092](https://github.com/MESH-Research/CCR/issues/1092)) ([a48c4bc](https://github.com/MESH-Research/CCR/commit/a48c4bc32af01ad05c753d46b990ef0cb06a2dcd)), closes [#1062](https://github.com/MESH-Research/CCR/issues/1062)
+
 ### [0.16.3](https://github.com/MESH-Research/CCR/compare/v0.16.2...v0.16.3) (2022-05-16)
 
 
