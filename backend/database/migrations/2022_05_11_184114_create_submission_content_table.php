@@ -16,10 +16,14 @@ return new class extends Migration
         Schema::create('submission_contents', function (Blueprint $table) {
             $table->id();
             $table->text('data');
-            $table->unsignedBigInteger('submission_file_id');
+            $table->unsignedBigInteger('submission_file_id')->nullable();
             $table->foreign('submission_file_id')
                 ->references('id')
                 ->on('submission_files');
+            $table->unsignedBigInteger('submission_id');
+            $table->foreign('submission_id')
+                ->references('id')
+                ->on('submissions');
             $table->timestamps();
         });
     }

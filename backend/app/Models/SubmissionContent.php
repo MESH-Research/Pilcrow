@@ -25,6 +25,7 @@ class SubmissionContent extends Model
     protected $fillable = [
         'data',
         'submission_file_id',
+        'submission_id',
     ];
 
     /**
@@ -35,5 +36,15 @@ class SubmissionContent extends Model
     public function files()
     {
         return $this->belongsTo(SubmissionFile::class);
+    }
+
+    /**
+     * Submission id that belong to the submission
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function submission()
+    {
+        return $this->hasOne(Submission::class, 'submission_id');
     }
 }
