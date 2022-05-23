@@ -7,10 +7,9 @@
         </q-card-section>
         <q-card-section class="q-pa-lg">
           <fieldset class="q-px-sm q-pt-md q-gutter-y-lg q-pb-lg">
-            <error-banner
-              v-if="redirectUrl != '/dashboard'"
-              v-text="$t(`auth.loginRequired`)"
-            />
+            <error-banner v-if="redirectUrl != '/dashboard'">
+              {{ $t(`auth.loginRequired`) }}
+            </error-banner>
 
             <q-input
               ref="username"
@@ -52,8 +51,9 @@
             v-if="error"
             :data-error="error"
             data-cy="authFailureMessages"
-            v-text="$t(`auth.failures.${error}`)"
-          />
+          >
+            {{ $t(`auth.failures.${error}`) }}
+          </error-banner>
         </q-card-section>
         <q-card-actions class="q-px-lg">
           <q-btn

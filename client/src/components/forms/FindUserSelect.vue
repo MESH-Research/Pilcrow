@@ -43,9 +43,9 @@
 </template>
 
 <script setup>
-import { useQuery, useResult } from "@vue/apollo-composable"
+import { useQuery } from "@vue/apollo-composable"
 import { SEARCH_USERS } from "src/graphql/queries"
-import { ref } from "vue"
+import { ref, computed } from "vue"
 const props = defineProps({
   modelValue: {
     default: null,
@@ -61,7 +61,10 @@ function onSelectUpdate(newValue) {
 
 const variables = ref({ term: "" })
 const { result, loading, refetch } = useQuery(SEARCH_USERS, variables)
-const options = useResult(result, [], (data) => data.userSearch.data)
+
+const options = computed(() => {
+  return result.value?.userSearch.data ?? []
+})
 
 async function filterFn(val, update) {
   variables.value = { term: val }

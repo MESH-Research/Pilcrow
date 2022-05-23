@@ -99,11 +99,9 @@
             </new-password-input>
           </fieldset>
 
-          <error-banner
-            v-if="formErrorMsg"
-            class="form-error"
-            v-text="$t(`auth.failures.${formErrorMsg}`)"
-          />
+          <error-banner v-if="formErrorMsg" class="form-error">
+            {{ $t(`auth.failures.${formErrorMsg}`) }}
+          </error-banner>
         </q-card-section>
         <q-card-actions class="q-px-lg">
           <q-btn

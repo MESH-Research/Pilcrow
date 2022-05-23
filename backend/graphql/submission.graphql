@@ -55,6 +55,8 @@ type Submission {
     title: String
     created_at: DateTime!
     updated_at: DateTime
+    created_by: User! @belongsTo(relation: "createdBy")
+    updated_by: User! @belongsTo(relation: "updatedBy")
     publication: Publication!
     reviewers: [User!]! @belongsToMany
     review_coordinators: [User!]! @belongsToMany(relation: "reviewCoordinators")
@@ -165,8 +167,10 @@ An inline comment of a submission
 type InlineComment {
     id: ID!
     content: String!
-    created_by: User!
+    created_by: User! @belongsTo(relation:"createdBy")
     created_at: DateTime!
+    updated_by: User! @belongsTo(relation:"updatedBy")
+    updated_at: DateTime!
     replies: [InlineCommentReply!]
     style_criteria: [InlineCommentStyleCriteria!]
 }
@@ -196,8 +200,10 @@ An overall comment of a submission
 type OverallComment {
     id: ID!
     content: String!
-    created_by: User!
+    created_by: User! @belongsTo(relation:"createdBy")
     created_at: DateTime!
+    updated_by: User! @belongsTo(relation:"updatedBy")
+    updated_at: DateTime!
     replies: [OverallCommentReply!]
 }
 

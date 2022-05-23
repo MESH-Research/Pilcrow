@@ -42,8 +42,9 @@
 <script setup>
 import PublicationUsers from "src/components/PublicationUsers.vue"
 import { GET_PUBLICATION } from "src/graphql/queries"
-import { useQuery, useResult } from "@vue/apollo-composable"
+import { useQuery } from "@vue/apollo-composable"
 import PublicationStyleCriteria from "src/components/PublicationStyleCriteria.vue"
+import { computed } from "vue"
 const props = defineProps({
   id: {
     type: String,
@@ -52,5 +53,7 @@ const props = defineProps({
 })
 
 const { result: pubResult } = useQuery(GET_PUBLICATION, { id: props.id })
-const publication = useResult(pubResult)
+const publication = computed(() => {
+  return pubResult.value?.publication
+})
 </script>
