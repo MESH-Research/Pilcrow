@@ -6016,12 +6016,12 @@ javascript-stringify@^2.0.1:
   resolved "https://registry.yarnpkg.com/javascript-stringify/-/javascript-stringify-2.1.0.tgz#27c76539be14d8bd128219a2d731b09337904e79"
   integrity sha512-JVAfqNPTvNq3sB/VHQJAFxN/sPgKnsKrCwyRt15zwNCdrMMJDdcEOdubuy+DuJYYdm0ox1J4uzEuYKkN+9yhVg==
 
-javascript-time-ago@^2.5.2:
-  version "2.5.2"
-  resolved "https://registry.yarnpkg.com/javascript-time-ago/-/javascript-time-ago-2.5.2.tgz#7a3768e4b98a7c42d0fedb13aeedeaa7b40d857d"
-  integrity sha512-YvVhsRDwfwoA11ODy+Rp1j9OBPVTH9K59BwIOk14fsSoNWPaSgtCmWqtIOs6sqqRKdsFMhts6thTnfjVNeh2jg==
+javascript-time-ago@^2.5.4:
+  version "2.5.4"
+  resolved "https://registry.yarnpkg.com/javascript-time-ago/-/javascript-time-ago-2.5.4.tgz#ffb5046c3aaaa7af887c572778f8b2b1979d7705"
+  integrity sha512-4y+AOCkUfB/JQNzUdM4c7tu7IDbrdyM0B1slrhtDAhgLQpXeKDhcwKwHlyQ1sNfgLLQUExX+3WXuVgI/KWFkig==
   dependencies:
-    relative-time-format "^1.1.2"
+    relative-time-format "^1.1.4"
 
 jest-changed-files@^26.6.2:
   version "26.6.2"
@@ -8401,10 +8401,10 @@ relateurl@^0.2.7:
   resolved "https://registry.yarnpkg.com/relateurl/-/relateurl-0.2.7.tgz#54dbf377e51440aca90a4cd274600d3ff2d888a9"
   integrity sha1-VNvzd+UUQKypCkzSdGANP/LYiKk=
 
-relative-time-format@^1.1.2:
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/relative-time-format/-/relative-time-format-1.1.2.tgz#65d811ffbfdafc1c6ca7f311a8fac97cb0e5c7f0"
-  integrity sha512-sMNgiPKLIJb+jeB44YEkgGC5ngyFnLs0gAEdwARV8f501B0w8qJNtIEGcdikWeX5xVgqP7JwJICAZPqW4J9/vg==
+relative-time-format@^1.1.4:
+  version "1.1.4"
+  resolved "https://registry.yarnpkg.com/relative-time-format/-/relative-time-format-1.1.4.tgz#50c308a482985333a13df119b1ff2763e3eb0685"
+  integrity sha512-WRWEDEZFTD/95oYMd58kzlYHI6QzexMpPkxvi4/P+NLdzli/tteNonmAa5jYLm8ehJVTGiM2siNg7i1Dkn/gDw==
 
 remove-trailing-separator@^1.0.1:
   version "1.1.0"
