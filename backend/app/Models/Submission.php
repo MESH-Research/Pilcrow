@@ -127,7 +127,7 @@ class Submission extends Model
         return $this->hasOne(SubmissionContent::class, 'id');
     }
 
-     /**
+    /**
      * Content history that belongs to the submission
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

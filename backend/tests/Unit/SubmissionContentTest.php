@@ -20,7 +20,7 @@ class SubmissionContentTest extends TestCase
     {
         $submission = Submission::factory()->create();
         $submission_file = SubmissionFile::factory()->create([
-            'submission_id' => $submission->id
+            'submission_id' => $submission->id,
         ]);
         $submission_content = SubmissionContent::factory()->create([
             'data' => 'Example content from PHPUnit',
@@ -47,7 +47,7 @@ class SubmissionContentTest extends TestCase
         }
         $submission->content_id = $submission_content->id;
         $this->assertEquals(3, $submission->contentHistory->count());
-        $submission->contentHistory->map(function($content, $key){
+        $submission->contentHistory->map(function ($content, $key) {
             $this->assertEquals($content->data, 'Example content from PHPUnit ' . $key);
         });
     }
