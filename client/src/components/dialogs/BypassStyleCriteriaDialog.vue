@@ -10,7 +10,7 @@
             <i18n-t keypath="dialog.bypassStyleCriteria.line_1" tag="span">
               <template #link>
                 <a
-                  href="https://publicphilosophyjournal.org/about-community-collaborative-review/"
+                  href="https://publicphilosophyjournal.org/overview/"
                   target="_blank"
                 >
                   {{ $t("dialog.bypassStyleCriteria.line_1_linktext") }}
