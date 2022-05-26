@@ -26,6 +26,7 @@ class SubmissionContentTest extends TestCase
             ]);
             $submission_content = SubmissionContent::factory()->create([
                 'data' => 'Example content from PHPUnit ' . $index,
+                'submission_id' => $submission->first()->id,
                 'submission_file_id' => $submission_file->id,
             ]);
             $submission->content_id = $submission_content->id;
