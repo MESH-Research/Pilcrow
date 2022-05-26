@@ -20,7 +20,7 @@ class SubmissionContentTest extends TestCase
     {
         $number_of_submissions = 3;
         $submissions = Submission::factory()->count($number_of_submissions)->create();
-        $submissions->map(function($submission, $index) {
+        $submissions->map(function ($submission, $index) {
             $submission_file = SubmissionFile::factory()->create([
                 'submission_id' => $submission->first()->id,
             ]);
