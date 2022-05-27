@@ -24,7 +24,7 @@ class StyleCriteriaFactory extends Factory
     {
         return [
             'name' => $this->faker->streetName,
-            'description' => $this->faker->paragraph(3, true),
+            'description' => '<p>' . $this->faker->paragraph(3, true) . '</p>',
             'icon' => $this->faker->randomElement($this->iconOptions),
         ];
     }

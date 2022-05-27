@@ -76,9 +76,13 @@ class StyleCriteriaTest extends TestCase
             ['<b>Bold</b><i>Italic</i><u>Underline</u>','<b>Bold</b><i>Italic</i><u>Underline</u>'],
             ['<DIV><BR />Some text</DIV>', '<div><br />Some text</div>'],
             ['<script src="somewhere"/>', ''],
+            ['<script>alert(10)</script>', ''],
+            ['<style><script>alert(20)</script></style>', ''],
+            ['<input type="text" value="Sample Text Input" />', ''],
             ['<ol><li>Item</li></ol>', '<ol><li>Item</li></ol>'],
             ['<ul><li>Item</li></ol>', '<ul><li>Item</li></ul>'],
             ['<p style="font-size: 1000000px;">GIANT TEXT</p>', '<p>GIANT TEXT</p>'],
+            ['<a href="#">Sample Hyperlink</a>', '<a href="#">Sample Hyperlink</a>'],
         ];
     }
 

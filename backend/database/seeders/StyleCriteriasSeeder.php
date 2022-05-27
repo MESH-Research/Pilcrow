@@ -16,27 +16,37 @@ class StyleCriteriasSeeder extends Seeder
         $style_criterias = collect([
             [
                 'name' => 'Accessibility',
-                'description' => 'Connects with the public at large and resonates with specific, publicly engaged ' .
-                                 'individuals and organizations. This usually requires unpacking technical terms, ' .
-                                 'linking to source and related materials, providing transcripts for audio and ' .
-                                 'video, and providing alt-text for images.',
+                'description' => '<ul><li>Can the author replace or explain any technical terms?</li><li>How does ' .
+                                 'the piece consider multiple accessibility needs, such as accessing and interacting ' .
+                                 'with text, audio, video, and other media?</li><li>Are people of all genders, races,' .
+                                 'classes, religions, abilities, sexual orientations and other groups treated ' .
+                                 'equitably in the piece? If so, how?</li></ul>',
                 'icon' => 'accessibility',
             ],
             [
                 'name' => 'Relevance',
-                'description' => 'Timely and responsive to an issue that concerns a specific public community.',
+                'description' => '<ul><li>Which specific audience(s) or communities does the author acknowledge, ' .
+                                 'consider, and engage with in their work?</li><li>What organizations and individuals' .
+                                 'are engaged in public initiatives associated with the questions or issues addressed' .
+                                 'by the submission?</li><li>Why is this specific issue of interest to this specific ' .
+                                 'at the time of composition or publication?</li></ul>',
                 'icon' => 'close_fullscreen',
             ],
             [
                 'name' => 'Coherence',
-                'description' => 'Compelling and well-ordered according to the genre of the piece.',
+                'description' => '<ul><li>Does the author identify claims that support their argument?</li><li>How ' .
+                                 'does the author explain how the claims are related to each other and the larger ' .
+                                 'argument?</li><li>Does the author provide compelling evidence in support of their ' .
+                                 'claims?</li><li>For more creative works, how does the author convey their intended ' .
+                                 'message to readers, listeners, and/or reviewers?</li></ul>',
                 'icon' => 'psychology',
             ],
             [
                 'name' => 'Scholarly Dialogue',
-                'description' => 'Cites and considers related discussions either within or outside of the academy, ' .
-                                 'whether encountered in peer-reviewed literature or other media such as blogs, ' .
-                                 'magazines, podcasts, galleries, or listservs.',
+                'description' => '<ul><li>How does the author demonstrate their awareness of existing discussions of ' .
+                                 'their topic?</li><li>How has the author cited the work of others in their project?' .
+                                 '</li><li>How do the author’s citations represent members of the community concerned' .
+                                 ' with the issue at hand?</li></ul>',
                 'icon' => 'question_answer',
             ],
         ]);
