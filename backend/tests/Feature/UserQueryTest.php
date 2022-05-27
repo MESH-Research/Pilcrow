@@ -114,9 +114,9 @@ class UserQueryTest extends TestCase
     public function searchUserTermsProvider(): array
     {
         return [
-            ['name','abcdef'],
-            ['email','ghijkl@gmail.com'],
-            ['username','mnopqr'],
+            // ['name','abcdef'],
+            // ['email','ghijkl@gmail.com'],
+            // ['username','mnopqr'],
             ['all', 'aaaaaaaaaaaaaa'],
             ['all', '<html>'],
             ['all', null],
