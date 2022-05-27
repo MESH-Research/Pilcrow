@@ -21,21 +21,19 @@ class SubmissionContentTest extends TestCase
         $number_of_submissions = 3;
         $submissions = Submission::factory()->count($number_of_submissions)->create();
         $submissions->map(function ($submission, $index) {
-            $submission_file = SubmissionFile::factory()->create([
-                'submission_id' => $submission->first()->id,
-            ]);
             $submission_content = SubmissionContent::factory()->create([
                 'data' => 'Example content from PHPUnit ' . $index,
                 'submission_id' => $submission->first()->id,
-                'submission_file_id' => $submission_file->id,
             ]);
             $submission->content_id = $submission_content->id;
         });
         $first_data = $submissions->first()->content->data;
-        $this->assertEquals($first_data, 'Example content from PHPUnit 0');
+        $expected_first = 'Example content from PHPUnit 0';
+        $this->assertEquals($expected_first, $first_data);
 
         $last_data = $submissions->last()->content->data;
-        $this->assertEquals($last_data, 'Example content from PHPUnit ' . ($number_of_submissions - 1));
+        $expected_last = 'Example content from PHPUnit ' . ($number_of_submissions - 1);
+        $this->assertEquals($expected_last, $last_data);
     }
 
     /**
@@ -53,7 +51,37 @@ class SubmissionContentTest extends TestCase
         $submission->content_id = $submission_content->id;
         $this->assertEquals(3, $submission->contentHistory->count());
         $submission->contentHistory->map(function ($content, $key) {
-            $this->assertEquals($content->data, 'Example content from PHPUnit ' . $key);
+            $expected_data = 'Example content from PHPUnit ' . $key;
+            $this->assertEquals($expected_data, $content->data);
         });
+    }
+
+    /**
+     * @return void
+     */
+    public function testSubmissionContentCanBeAccessedFromASubmissionFile()
+    {
+        $number_of_submissions = 3;
+        $submissions = Submission::factory()->count($number_of_submissions)->create();
+        $submissions->map(function ($submission, $index) {
+            $submission_content = SubmissionContent::factory()->create([
+                'data' => 'Example content from PHPUnit ' . $index,
+                'submission_id' => $submission->id,
+            ]);
+            SubmissionFile::factory()->create([
+                'submission_id' => $submission->id,
+                'content_id' => $submission_content->id,
+            ]);
+            $submission->content_id = $submission_content->id;
+        });
+
+        $first_data = $submissions->first()->files->first()->content->data;
+        $expected_first = 'Example content from PHPUnit 0';
+        $this->assertEquals($expected_first, $first_data);
+
+        $last_data = $submissions->last()->files->first()->content->data;
+        $expected_last = 'Example content from PHPUnit ' . ($number_of_submissions - 1);
+        $this->assertEquals($expected_last, $last_data);
+    }
     }
 }
