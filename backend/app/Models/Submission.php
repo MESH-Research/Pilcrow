@@ -120,11 +120,11 @@ class Submission extends Model
     /**
      * Primary content that belongs to the submission
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function content(): HasOne
+    public function content(): BelongsTo
     {
-        return $this->hasOne(SubmissionContent::class, 'id');
+        return $this->belongsTo(SubmissionContent::class);
     }
 
     /**
