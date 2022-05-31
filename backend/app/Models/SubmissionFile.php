@@ -5,7 +5,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class SubmissionFile extends Model
 {
@@ -25,6 +25,7 @@ class SubmissionFile extends Model
      */
     protected $fillable = [
         'submission_id',
+        'content_id',
         'file_upload',
     ];
 
@@ -33,7 +34,7 @@ class SubmissionFile extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function submission()
+    public function submission(): BelongsTo
     {
         return $this->belongsTo(Submission::class, 'submission_id');
     }
@@ -41,10 +42,10 @@ class SubmissionFile extends Model
     /**
      * Content that belongs to the submission file
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function content(): HasOne
+    public function content(): BelongsTo
     {
-        return $this->hasOne(SubmissionContent::class);
+        return $this->belongsTo(SubmissionContent::class, 'content_id');
     }
 }

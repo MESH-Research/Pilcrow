@@ -1,12 +1,12 @@
 <template>
   <q-dialog ref="dialogRef" @hide="onDialogHide">
     <q-card>
-      <q-card-section class="row">
-        <div class="q-pa-sm column">
+      <q-card-section class="row no-wrap">
+        <div class="q-pa-sm q-pr-md column">
           <q-avatar icon="toggle_on" color="primary" text-color="white" />
         </div>
-        <div class="column justify-center q-pr-md">
-          <p class="q-ml-sm q-mb-none">
+        <div class="column justify-center q-my-sm q-mb-none">
+          <p class="q-mb-none">
             <i18n-t keypath="dialog.bypassStyleCriteria.line_1" tag="span">
               <template #link>
                 <a
@@ -18,7 +18,7 @@
               </template>
             </i18n-t>
           </p>
-          <p class="q-ml-sm q-mb-none">
+          <p class="q-mb-none">
             {{ $t("dialog.bypassStyleCriteria.line_2") }}
           </p>
         </div>
