@@ -84,31 +84,4 @@ class SubmissionContentTest extends TestCase
         $this->assertEquals($expected_last, $last_data);
     }
 
-    // /**
-    //  * @return void
-    //  */
-    // public function testSubmissionCanBeAccessedFromASubmissionContent()
-    // {
-    //     $number_of_submissions = 3;
-    //     $submissions = Submission::factory()
-    //         ->count($number_of_submissions)
-    //         ->sequence(function ($index) {
-    //             $content = SubmissionContent::factory()->create([
-    //                 'data' => 'Example content from PHPUnit ' . $index,
-    //             ]);
-
-    //             return [
-    //                 'content_id' => $content->id,
-    //             ];
-    //         })
-    //         ->create();
-    //     $d = SubmissionContent::first()->submission;
-    //     print_r("hello? \r\n");
-    //     print_r($d->toArray());
-    //     // $first_data = $submissions->first()->content->submission->id;
-    //     // $this->assertEquals($submissions->first()->id, $first_data);
-
-    //     // $last_data = $submissions->last()->content->submission->id;
-    //     // $this->assertEquals($submissions->last()->id, $first_data);
-    // }
 }
