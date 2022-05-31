@@ -6,14 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /** @var string $table_name */
-    private $table_name = 'submissions';
-
-    /** @var string $column_name */
-    private $column_name = 'content_id';
-
-    /** @var string $foreign_table_name */
-    private $foreign_table_name = 'submission_contents';
 
     /**
      * Run the migration.
@@ -22,11 +14,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table($this->table_name, function (Blueprint $table) {
-            $table->unsignedBigInteger($this->column_name)->nullable();
-            $table->foreign($this->column_name)
+        Schema::table('submissions', function (Blueprint $table) {
+            $table->unsignedBigInteger('content_id')->nullable();
+            $table->foreign('content_id)
                 ->references('id')
-                ->on($this->foreign_table_name)
+                ->on('submission_contents')
                 ->onDelete('cascade');
         });
     }
@@ -38,10 +30,10 @@ return new class extends Migration
      */
     public function down()
     {
-        if (Schema::hasColumn($this->table_name, $this->column_name)) {
-            Schema::table($this->table_name, function (Blueprint $table) {
-                $table->dropForeign($this->column_name);
-                $table->dropColumn($this->column_name);
+        if (Schema::hasColumn('submissions', 'content_id)) {
+            Schema::table('submissions', function (Blueprint $table) {
+                $table->dropForeign(['content_id']);
+                $table->dropColumn('content_id');
             });
         }
     }
