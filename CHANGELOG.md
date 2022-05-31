@@ -3,6 +3,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.16.5](https://github.com/MESH-Research/CCR/compare/v0.16.4...v0.16.5) (2022-05-31)
+
+
+### Features
+
+* Use HTML in Style Criteria Seeder and Factory ([#1137](https://github.com/MESH-Research/CCR/issues/1137)) ([109921c](https://github.com/MESH-Research/CCR/commit/109921cd7400a78b02e9985e413bf2284bcf75a8)), closes [#1128](https://github.com/MESH-Research/CCR/issues/1128)
+
+
+### Bug Fixes
+
+* Alignment in Bypass Style Criteria Dialog ([#1134](https://github.com/MESH-Research/CCR/issues/1134)) ([7c782a9](https://github.com/MESH-Research/CCR/commit/7c782a9480d2edcf3ff85972bd283f9927b9077f)), closes [#1126](https://github.com/MESH-Research/CCR/issues/1126)
+* Namespace Discrepancy in Logout.php ([#1136](https://github.com/MESH-Research/CCR/issues/1136)) ([c798019](https://github.com/MESH-Research/CCR/commit/c79801987096719adb1b858ee603fa344950311e)), closes [#1127](https://github.com/MESH-Research/CCR/issues/1127)
+
 ### [0.16.4](https://github.com/MESH-Research/CCR/compare/v0.16.3...v0.16.4) (2022-05-23)
 
 

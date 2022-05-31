@@ -2,7 +2,7 @@
     "devDependencies": {
         "chalk": "^5.0.1",
         "columnify": "^1.5.4",
-        "commander": "^9.2.0",
+        "commander": "^9.3.0",
         "conventional-changelog-cli": "^2.1.1",
         "cypress-file-upload": "^5.0.8",
         "dedent-js": "^1.0.1",
@@ -24,6 +24,6 @@
         "header": "<!-- markdownlint-disable MD024 MD001 -->\n# Changelog\n\nAll notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.\n"
     },
     "type": "module",
-    "version": "0.16.4",
+    "version": "0.16.5",
     "dependencies": {}
 }
