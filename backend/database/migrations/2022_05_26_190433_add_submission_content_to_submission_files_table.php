@@ -39,7 +39,7 @@ return new class extends Migration
     {
         if (Schema::hasColumn($this->table_name, $this->column_name)) {
             Schema::table($this->table_name, function (Blueprint $table) {
-                $table->dropForeign($this->column_name);
+                $table->dropForeign([$this->column_name]);
                 $table->dropColumn($this->column_name);
             });
         }
