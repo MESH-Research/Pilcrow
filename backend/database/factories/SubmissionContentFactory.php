@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
-use App\Models\Submission;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -19,8 +18,7 @@ class SubmissionContentFactory extends Factory
     public function definition()
     {
         return [
-            'data' => $this->faker->paragraph(10, true),
-            'submission_id' => Submission::factory(),
+            'data' => $this->faker->content(),
         ];
     }
 }
