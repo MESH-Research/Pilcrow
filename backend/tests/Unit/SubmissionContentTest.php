@@ -83,5 +83,4 @@ class SubmissionContentTest extends TestCase
         $expected_last = 'Example content from PHPUnit ' . ($number_of_submissions - 1);
         $this->assertEquals($expected_last, $last_data);
     }
-
 }
