@@ -22,55 +22,57 @@ class SubmissionCommentSeeder extends Seeder
      */
     public function run($reply_count = 0, $reply_reply_count = 0)
     {
-        $user = User::where('username', 'regularUser')->firstOrFail();
+        $userIds = User::all()->pluck('id');
+        $userId = $userIds->random();
         $style_criterias = StyleCriteria::inRandomOrder()
             ->limit(rand(1, 4))
             ->get()
             ->toArray();
+
         $inline_parent = InlineComment::factory()->create([
             'submission_id' => 100,
-            'created_by' => $user->id,
-            'updated_by' => $user->id,
+            'created_by' => $userId,
+            'updated_by' => $userId,
             'style_criteria' => $style_criterias,
         ]);
         $overall_parent = OverallComment::factory()->create([
             'submission_id' => 100,
-            'created_by' => $user->id,
-            'updated_by' => $user->id,
+            'created_by' => $userId,
+            'updated_by' => $userId,
         ]);
 
         // Replies
         if ($reply_count > 0) {
             // Seed inline comment replies
             for ($i = $reply_count; $i > 0; $i--) {
-                $inline_reply = $this->createCommentReply(true, $user, $inline_parent, $inline_parent);
+                $inline_reply = $this->createCommentReply(true, $userIds->random(), $inline_parent, $inline_parent);
             }
 
             // Seed replies to inline comment replies
             for ($i = $reply_reply_count; $i > 0; $i--) {
-                $this->createCommentReply(true, $user, $inline_parent, $inline_reply);
+                $this->createCommentReply(true, $userIds->random(), $inline_parent, $inline_reply);
             }
 
             // Seed overall comment replies
             for ($i = $reply_count; $i > 0; $i--) {
-                $overall_reply = $this->createCommentReply(false, $user, $overall_parent, $overall_parent);
+                $overall_reply = $this->createCommentReply(false, $userIds->random(), $overall_parent, $overall_parent);
             }
 
             // Seed replies to overall comment replies
             for ($i = $reply_reply_count; $i > 0; $i--) {
-                $this->createCommentReply(false, $user, $overall_parent, $overall_reply);
+                $this->createCommentReply(false, $userIds->random(), $overall_parent, $overall_reply);
             }
         }
     }
 
     /**
      * @param bool $is_inline
-     * @param \App\Models\User $user
+     * @param \App\Models\User $userId
      * @param \App\Models\InlineComment|\App\Models\OverallComment $parent
      * @param \App\Models\InlineComment|\App\Models\OverallComment $reply_to
      * @return \App\Models\InlineComment|\App\Models\OverallComment
      */
-    private function createCommentReply($is_inline, $user, $parent, $reply_to)
+    private function createCommentReply($is_inline, $userId, $parent, $reply_to)
     {
         $faker = Faker::create();
         $time = Carbon::parse($reply_to->created_at);
@@ -81,8 +83,8 @@ class SubmissionCommentSeeder extends Seeder
             'reply_to_id' => $reply_to->id,
             'created_at' => $datetime,
             'updated_at' => $datetime,
-            'created_by' => $user->id,
-            'updated_by' => $user->id,
+            'created_by' => $userId,
+            'updated_by' => $userId,
         ];
 
         return $is_inline
