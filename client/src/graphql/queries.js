@@ -184,6 +184,45 @@ export const GET_SUBMISSION = gql`
   ${_RELATED_USER_FIELDS}
 `
 
+export const GET_SUBMISSION_REVIEW = gql`
+  query GetSubmissionReview($id: ID!) {
+    submission(id: $id) {
+      id
+      title
+      publication {
+        style_criterias {
+          id
+          name
+          description
+          icon
+        }
+      }
+      inline_comments {
+        id
+        content
+        created_at
+        created_by {
+          ...relatedUserFields
+        }
+        style_criteria {
+          name
+          icon
+        }
+        replies {
+          id
+          content
+          created_at
+          created_by {
+            ...relatedUserFields
+          }
+          reply_to_id
+        }
+      }
+    }
+  }
+  ${_RELATED_USER_FIELDS}
+`
+
 export const GET_PUBLICATION = gql`
   query GetPublication($id: ID!) {
     publication(id: $id) {
