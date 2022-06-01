@@ -7,7 +7,10 @@
       </div>
       <div class="row items-center">
         <div class="text-caption">
-          {{ createdDate.toFormat("yyyy LLL dd") }} ({{ relativeTime }})
+          <q-tooltip>
+            {{ createdDate.toFormat("LLL dd yyyy hh:mm a") }}
+          </q-tooltip>
+          {{ relativeTime }}
         </div>
         <comment-actions />
       </div>
