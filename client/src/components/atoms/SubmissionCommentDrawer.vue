@@ -24,10 +24,12 @@
             bordered
             style="border-color: rgb(56, 118, 187)"
           >
-            <comment-editor :is-inline-comment="true" />
           </q-card>
-          <submission-comment is-inline-comment />
-          <submission-comment is-inline-comment />
+          <inline-comment
+            v-for="comment in inline_comments"
+            :key="comment.id"
+            :comment="comment"
+          />
           <div class="row justify-center q-pa-md q-pb-xl">
             <q-btn color="dark" icon="arrow_upward">Scroll to Top</q-btn>
           </div>
@@ -38,9 +40,8 @@
 </template>
 
 <script setup>
-import { ref, watch } from "vue"
-import SubmissionComment from "src/components/atoms/SubmissionComment.vue"
-import CommentEditor from "src/components/forms/CommentEditor.vue"
+import { ref, watch, inject, computed } from "vue"
+import InlineComment from "src/components/atoms/InlineComment.vue"
 
 const drawerWidth = ref(440)
 let originalWidth
@@ -61,6 +62,11 @@ const props = defineProps({
     type: Boolean,
     default: null,
   },
+})
+const submission = inject("submission")
+
+const inline_comments = computed(() => {
+  return submission.value?.inline_comments ?? []
 })
 const DrawerOpen = ref(props.commentDrawerOpen)
 watch(props, () => {
