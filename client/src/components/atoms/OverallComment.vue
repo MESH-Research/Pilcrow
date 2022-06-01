@@ -1,0 +1,91 @@
+<template>
+  <q-card square class="bg-grey-1 shadow-2 q-mb-md">
+    <q-separator color="grey-3" />
+    <comment-header :comment="comment" />
+    <q-card-section>
+      <!-- eslint-disable-next-line vue/no-v-html -->
+      <div v-html="comment.content" />
+    </q-card-section>
+
+    <q-card-section v-if="isReplying" ref="comment_reply" class="q-pa-md">
+      <q-separator class="q-mb-md" />
+      <span class="text-h4 q-pl-sm">{{
+        $t("submissions.comment.reply.title")
+      }}</span>
+      <comment-editor :is-inline-comment="false" @cancel="cancelReply" />
+    </q-card-section>
+    <q-card-actions class="q-pa-md q-pb-lg">
+      <q-btn
+        v-if="!isReplying"
+        ref="reply_button"
+        bordered
+        color="primary"
+        label="Reply"
+        @click="initiateReply()"
+      />
+      <template v-if="hasReplies">
+        <q-btn
+          v-if="!props.isInlineReply && !props.isOverallReply && !isCollapsed"
+          aria-label="Hide Replies"
+          bordered
+          color="grey-3"
+          text-color="black"
+          @click="toggleThread"
+        >
+          <q-icon name="expand_less"></q-icon>
+          <span>Hide Replies</span>
+        </q-btn>
+        <q-btn
+          v-if="!props.isInlineReply && !props.isOverallReply && isCollapsed"
+          aria-label="Show Replies"
+          bordered
+          color="secondary"
+          text-color="white"
+          @click="toggleThread"
+        >
+          <q-icon name="expand_more"></q-icon>
+          <span>Show Replies</span>
+        </q-btn>
+      </template>
+    </q-card-actions>
+  </q-card>
+  <section class="q-mx-md">
+    <div v-if="!isCollapsed">
+      <overall-comment-reply
+        v-for="reply in comment.replies"
+        :key="reply.id"
+        :comment="reply"
+        :replies="comment.replies"
+      />
+    </div>
+  </section>
+</template>
+<script setup>
+import { computed, ref } from "vue"
+import OverallCommentReply from "./OverallCommentReply.vue"
+import CommentEditor from "../forms/CommentEditor.vue"
+import CommentHeader from "./CommentHeader.vue"
+const isCollapsed = ref(false)
+const isReplying = ref(false)
+function toggleThread() {
+  isCollapsed.value = !isCollapsed.value
+}
+
+const props = defineProps({
+  comment: {
+    type: Object,
+    required: true,
+  },
+})
+
+function cancelReply() {
+  isReplying.value = false
+}
+function initiateReply() {
+  isReplying.value = true
+}
+
+const hasReplies = computed(() => {
+  return props.comment.replies.length > 0
+})
+</script>

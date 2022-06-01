@@ -209,6 +209,13 @@ export const GET_SUBMISSION_REVIEW = gql`
           reply_to_id
         }
       }
+      overall_comments {
+        ...commentFields
+        replies {
+          ...commentFields
+          reply_to_id
+        }
+      }
     }
   }
   ${_COMMENT_FIELDS}
