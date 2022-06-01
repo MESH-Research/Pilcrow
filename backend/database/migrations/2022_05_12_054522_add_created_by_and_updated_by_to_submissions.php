@@ -46,7 +46,8 @@ return new class extends Migration
     public function down()
     {
         Schema::table('submissions', function (Blueprint $table) {
-            $table->dropForeign(['submissions_created_by_foreign', 'submissions_updated_by_foreign']);
+            $table->dropForeign('submissions_created_by_foreign');
+            $table->dropForeign('submissions_updated_by_foreign');
             $table->dropColumn(['created_by', 'updated_by']);
         });
     }
