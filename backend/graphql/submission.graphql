@@ -29,6 +29,8 @@ extend type Mutation {
         submission_id: ID!
         content: String!
         style_criteria: [ID!]
+        from: Int!
+        to: Int!
     ): InlineComment @create
 
     addInlineCommentReply(
@@ -174,6 +176,8 @@ type InlineComment {
     updated_at: DateTime!
     replies: [InlineCommentReply!]
     style_criteria: [InlineCommentStyleCriteria!]
+    from: Int
+    to: Int
 }
 
 """
