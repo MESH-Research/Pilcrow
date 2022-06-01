@@ -1,20 +1,7 @@
 <template>
   <q-card square class="bg-grey-1 shadow-2 q-mb-md">
     <q-separator color="blue-1" />
-    <q-card-section class="q-py-xs" style="background-color: #bbe2e8">
-      <div class="row no-wrap justify-between">
-        <div class="row items-center">
-          <avatar-image :user="comment.created_by" round size="30px" />
-          <div class="text-h4 q-pl-sm">{{ comment.created_by.username }}</div>
-        </div>
-        <div class="row items-center">
-          <div class="text-caption">
-            {{ createdDate.toFormat("yyyy LLL dd") }} ({{ relativeTime }})
-          </div>
-          <comment-actions />
-        </div>
-      </div>
-    </q-card-section>
+    <comment-header :comment="comment" />
     <q-card-section class="q-py-sm"> </q-card-section>
 
     <q-card-section class="q-py-none">
@@ -88,15 +75,11 @@
 </template>
 <script setup>
 import { ref, computed } from "vue"
-import AvatarImage from "./AvatarImage.vue"
-import CommentActions from "./CommentActions.vue"
+import CommentHeader from "./CommentHeader.vue"
 import InlineCommentReply from "./InlineCommentReply.vue"
 import CommentEditor from "../forms/CommentEditor.vue"
-import { DateTime } from "luxon"
-import TimeAgo from "javascript-time-ago"
 const isCollapsed = ref(false)
 const isReplying = ref(false)
-const timeAgo = new TimeAgo("en-US")
 
 function toggleThread() {
   isCollapsed.value = !isCollapsed.value
@@ -106,16 +89,6 @@ const props = defineProps({
     type: Object,
     required: true,
   },
-})
-
-const createdDate = computed(() => {
-  return DateTime.fromISO(props.comment.created_at)
-})
-
-const relativeTime = computed(() => {
-  return createdDate.value
-    ? timeAgo.format(createdDate.value.toJSDate(), "long")
-    : ""
 })
 
 const hasReplies = computed(() => {
