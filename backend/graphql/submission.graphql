@@ -47,6 +47,14 @@ extend type Mutation {
         content: String!
         reply_to: ID!
     ): OverallComment @create
+
+    updateInlineComment(
+        submission_id: ID!
+        content: String!
+        style_criteria: [ID!]
+        from: Int
+        to: Int
+    ): InlineComment @update
 }
 
 """
