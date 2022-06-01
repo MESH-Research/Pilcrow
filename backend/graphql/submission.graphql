@@ -165,12 +165,12 @@ type SubmissionContent {
 """
 An inline comment of a submission
 """
-type InlineComment {
+type InlineComment implements Comment {
     id: ID!
     content: String!
     created_by: User! @belongsTo(relation: "createdBy")
-    created_at: DateTimeUtc!
     updated_by: User! @belongsTo(relation: "updatedBy")
+    created_at: DateTimeUtc!
     updated_at: DateTimeUtc!
     replies: [InlineCommentReply!]
     style_criteria: [InlineCommentStyleCriteria!]
@@ -187,23 +187,25 @@ type InlineCommentStyleCriteria {
 """
 A reply to an inline comment of a submission
 """
-type InlineCommentReply {
+type InlineCommentReply implements Comment {
     id: ID!
+    reply_to_id: ID!
     content: String!
     created_by: User! @belongsTo(relation: "createdBy")
-    reply_to_id: ID!
+    updated_by: User! @belongsTo(relation: "updatedBy")
     created_at: DateTimeUtc!
+    updated_at: DateTimeUtc!
 }
 
 """
 An overall comment of a submission
 """
-type OverallComment {
+type OverallComment implements Comment {
     id: ID!
     content: String!
     created_by: User! @belongsTo(relation: "createdBy")
-    created_at: DateTimeUtc!
     updated_by: User! @belongsTo(relation: "updatedBy")
+    created_at: DateTimeUtc!
     updated_at: DateTimeUtc!
     replies: [OverallCommentReply!]
 }
@@ -211,10 +213,21 @@ type OverallComment {
 """
 A reply to an overall comment of a submission
 """
-type OverallCommentReply {
+type OverallCommentReply implements Comment {
+    id: ID!
+    reply_to_id: ID!
+    content: String!
+    created_by: User! @belongsTo(relation: "createdBy")
+    updated_by: User! @belongsTo(relation: "updatedBy")
+    created_at: DateTimeUtc!
+    updated_at: DateTimeUtc!
+}
+
+interface Comment {
     id: ID!
     content: String!
     created_by: User!
-    reply_to_id: ID!
+    updated_by: User!
     created_at: DateTimeUtc!
+    updated_at: DateTimeUtc!
 }
