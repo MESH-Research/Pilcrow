@@ -43,6 +43,11 @@ class CreatePublicationUserTable extends Migration
      */
     public function down()
     {
+        Schema::table('publication_user', function (Blueprint $table) {
+            $table->dropForeign('publication_user_role_id_foreign');
+            $table->dropForeign('publication_user_user_id_foreign');
+            $table->dropForeign('publication_user_publication_id_foreign');
+        });
         Schema::dropIfExists('publication_user');
     }
 }
