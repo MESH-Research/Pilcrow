@@ -227,4 +227,79 @@ class SubmissionCommentTest extends TestCase
         ];
         $response->assertJsonPath('data', $expected_data);
     }
+
+    /**
+     * @return void
+     */
+    public function testInlineCommentsCanBeCreatedOnTheGraphqlEndpoint()
+    {
+        $this->beAppAdmin();
+        $submission = $this->createSubmission();
+        $response = $this->graphQL('
+            mutation AddInlineComment($submission_id: ID!) {
+                addInlineComment(
+                    submission_id: $submission_id
+                    content: "Hello World"
+                    from: 100
+                    to: 110
+                ) {
+                    content
+                    from
+                    to
+                }
+            }',
+            [
+                'submission_id' => $submission->id,
+            ]
+        );
+        $expected = [
+            'addInlineComment' => [
+                'content' => 'Hello World',
+                'from' => 100,
+                'to' => 110,
+            ],
+        ];
+        $response->assertJsonPath('data', $expected);
+    }
+
+    /**
+     * @return void
+     */
+    public function testInlineCommentsCanBeUpdatedOnTheGraphqlEndpoint()
+    {
+        $updated_content = 'Hello World Updated';
+        $this->beAppAdmin();
+        $submission = $this->createSubmissionWithInlineComment();
+        $inline_comment = $submission->inlineComments()->first();
+        $response = $this->graphQL('
+            mutation UpdateInlineComment($id: ID!, $content: String!) {
+                updateInlineComment(
+                    comment: {
+                        id: $id
+                        content: $content
+                        from: 120
+                        to: 130
+                    }
+                ) {
+                    id
+                    content
+                    from
+                    to
+                }
+            }',
+            [
+                'id' => $inline_comment->id,
+                'content' => $updated_content,
+            ]
+        );
+        $expected = [
+            'updateInlineComment' => [
+                'id' => (string)$inline_comment->id,
+                'content' => $updated_content,
+                'from' => 120,
+                'to' => 130,
+            ],
+        ];
+        $response->assertJsonPath('data', $expected);
+    }
 }
