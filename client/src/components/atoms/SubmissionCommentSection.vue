@@ -5,6 +5,7 @@
       <overall-comment
         v-for="comment in overall_comments"
         :key="comment.id"
+        ref="commentRefs"
         :comment="comment"
       />
     </div>
@@ -13,12 +14,40 @@
 
 <script setup>
 import OverallComment from "src/components/atoms/OverallComment.vue"
-import { computed, inject } from "vue"
+import { computed, inject, nextTick, ref, watch } from "vue"
+import { scroll } from "quasar"
+const { getScrollTarget, setVerticalScrollPosition } = scroll
 
 const submission = inject("submission")
+const activeComment = inject("activeComment")
 
 const overall_comments = computed(() => {
   return submission.value?.overall_comments ?? []
+})
+const commentRefs = ref([])
+watch(activeComment, (newValue) => {
+  if (!newValue) return
+  if (newValue.__typename !== "OverallCommentReply") return
+  nextTick(() => {
+    let scrollTarget = null
+    for (const commentRef of commentRefs.value) {
+      if (commentRef.comment.id === newValue.id) {
+        scrollTarget = commentRef.scrollTarget
+        break
+      }
+      if (commentRef.replyIds.includes(newValue.id)) {
+        const reply = commentRef.replyRefs.find(
+          (r) => r.comment.id === newValue.id
+        )
+        scrollTarget = reply.scrollTarget
+        break
+      }
+    }
+    if (!scrollTarget) return
+    const target = getScrollTarget(scrollTarget)
+    const offset = scrollTarget.offsetTop
+    setVerticalScrollPosition(target, offset - 50, 250)
+  })
 })
 </script>
 

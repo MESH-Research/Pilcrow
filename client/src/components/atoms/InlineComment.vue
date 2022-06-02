@@ -1,5 +1,10 @@
 <template>
-  <q-card square class="bg-grey-1 shadow-2 q-mb-md">
+  <div ref="scrollTarget" />
+  <q-card
+    square
+    :class="{ active: isActive }"
+    class="bg-grey-1 shadow-2 q-mb-md"
+  >
     <comment-header :comment="comment" bg-color="#bbe2e8" />
     <q-card-section class="q-py-sm"> </q-card-section>
 
@@ -66,6 +71,7 @@
       <inline-comment-reply
         v-for="reply in comment.replies"
         :key="reply.id"
+        ref="replyRefs"
         :comment="reply"
         :replies="comment.replies"
       />
@@ -73,7 +79,7 @@
   </section>
 </template>
 <script setup>
-import { ref, computed } from "vue"
+import { ref, computed, inject } from "vue"
 import CommentHeader from "./CommentHeader.vue"
 import InlineCommentReply from "./InlineCommentReply.vue"
 import CommentEditor from "../forms/CommentEditor.vue"
@@ -100,4 +106,21 @@ function cancelReply() {
 function initiateReply() {
   isReplying.value = true
 }
+
+const replyRefs = ref([])
+const scrollTarget = ref(null)
+const activeComment = inject("activeComment")
+const isActive = computed(() => {
+  return (
+    activeComment.value?.__typename === props.comment.__typename &&
+    activeComment.value?.id === props.comment.id
+  )
+})
+
+defineExpose({
+  scrollTarget,
+  replyRefs,
+  comment: props.comment,
+  replyIds: props.comment.replies.map((c) => c.id),
+})
 </script>

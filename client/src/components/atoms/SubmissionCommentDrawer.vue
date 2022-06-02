@@ -28,6 +28,7 @@
           <inline-comment
             v-for="comment in inline_comments"
             :key="comment.id"
+            ref="commentRefs"
             :comment="comment"
           />
           <div class="row justify-center q-pa-md q-pb-xl">
@@ -40,8 +41,11 @@
 </template>
 
 <script setup>
-import { ref, watch, inject, computed } from "vue"
+import { ref, watch, inject, computed, nextTick } from "vue"
 import InlineComment from "src/components/atoms/InlineComment.vue"
+import { scroll } from "quasar"
+
+const { getScrollTarget, setVerticalScrollPosition } = scroll
 
 const drawerWidth = ref(440)
 let originalWidth
@@ -63,7 +67,9 @@ const props = defineProps({
     default: null,
   },
 })
+const commentRefs = ref([])
 const submission = inject("submission")
+const activeComment = inject("activeComment")
 
 const inline_comments = computed(() => {
   return submission.value?.inline_comments ?? []
@@ -71,5 +77,30 @@ const inline_comments = computed(() => {
 const DrawerOpen = ref(props.commentDrawerOpen)
 watch(props, () => {
   DrawerOpen.value = props.commentDrawerOpen
+})
+
+watch(activeComment, (newValue) => {
+  if (!newValue) return
+  if (newValue.__typename !== "InlineCommentReply") return
+  nextTick(() => {
+    let scrollTarget = null
+    for (const commentRef of commentRefs.value) {
+      if (commentRef.comment.id === newValue.id) {
+        scrollTarget = commentRef.scrollTarget
+        break
+      }
+      if (commentRef.replyIds.includes(newValue.id)) {
+        const reply = commentRef.replyRefs.find(
+          (r) => r.comment.id === newValue.id
+        )
+        scrollTarget = reply.scrollTarget
+        break
+      }
+    }
+    if (!scrollTarget) return
+    const target = getScrollTarget(scrollTarget)
+    const offset = scrollTarget.offsetTop
+    setVerticalScrollPosition(target, offset, 250)
+  })
 })
 </script>

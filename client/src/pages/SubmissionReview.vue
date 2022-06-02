@@ -46,7 +46,7 @@ const submission = computed(() => {
 })
 
 provide("submission", submission)
-
+provide("activeComment", ref(null))
 const commentDrawerOpen = ref(true)
 </script>
 

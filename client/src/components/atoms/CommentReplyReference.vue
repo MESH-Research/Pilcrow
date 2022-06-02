@@ -1,30 +1,27 @@
 <template>
-  <q-card-section v-if="referencedComment" class="q-py-none">
-    <div class="q-pl-sm">
-      <small>
-        <q-icon size="sm" name="subdirectory_arrow_right" />
-        <div
-          style="display: inline-block; height: 18px; width: 18px"
-          class="q-mr-sm"
-        >
-          <avatar-image
-            :user="referencedComment.created_by"
-            round
-            class="fit"
-          />
-        </div>
-        <span>
-          <router-link to="#overall-comments">
-            Reply to {{ referencedComment.created_by.username }}
-          </router-link>
-        </span>
-      </small>
-    </div>
+  <q-card-section v-if="referencedComment" class="q-pa-none">
+    <q-btn
+      dense
+      flat
+      icon="subdirectory_arrow_right"
+      class="q-pl-sm q-ml-md"
+      no-caps
+      @click="setActive"
+    >
+      <avatar-image
+        :user="referencedComment.created_by"
+        round
+        size="15px"
+        class="q-mr-sm"
+      />
+
+      <div>In reply to {{ referencedComment.created_by.username }}</div>
+    </q-btn>
   </q-card-section>
 </template>
 
 <script setup>
-import { computed } from "vue"
+import { computed, inject, nextTick } from "vue"
 import AvatarImage from "./AvatarImage.vue"
 
 const props = defineProps({
@@ -43,4 +40,14 @@ const referencedComment = computed(() => {
     ? props.replies.find((e) => e.id === props.comment.reply_to_id)
     : null
 })
+const activeComment = inject("activeComment")
+
+function setActive() {
+  //Null the active comment first to trigger the scroll watcher
+  //TODO: Do this in a more elegant way.
+  activeComment.value = null
+  nextTick(() => {
+    activeComment.value = referencedComment.value
+  })
+}
 </script>

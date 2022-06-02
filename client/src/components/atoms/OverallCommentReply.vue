@@ -1,5 +1,10 @@
 <template>
-  <q-card square class="bg-grey-1 shadow-2 q-mb-md">
+  <div ref="scrollTarget" />
+  <q-card
+    square
+    :class="{ active: isActive }"
+    class="bg-grey-1 shadow-2 q-mb-md"
+  >
     <comment-header :comment="comment" bg-color="#eeeeee" />
     <comment-reply-reference :comment="comment" :replies="replies" />
     <q-card-section>
@@ -27,13 +32,13 @@
   </q-card>
 </template>
 <script setup>
-import { ref } from "vue"
+import { computed, inject, ref } from "vue"
 import CommentReplyReference from "./CommentReplyReference.vue"
 import CommentHeader from "./CommentHeader.vue"
 import CommentEditor from "../forms/CommentEditor.vue"
 const isReplying = ref(false)
 
-defineProps({
+const props = defineProps({
   comment: {
     type: Object,
     required: true,
@@ -50,4 +55,21 @@ function cancelReply() {
 function initiateReply() {
   isReplying.value = true
 }
+const activeComment = inject("activeComment")
+const isActive = computed(() => {
+  return (
+    activeComment.value?.__typename === props.comment.__typename &&
+    activeComment.value?.id === props.comment.id
+  )
+})
+const scrollTarget = ref(null)
+defineExpose({
+  scrollTarget,
+  comment: props.comment,
+})
 </script>
+
+<style lang="sass" scoped>
+.q-card.active
+  border: 2px solid yellow
+</style>
