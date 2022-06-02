@@ -24,6 +24,7 @@ class InlineComment extends BaseModel
      */
     protected $fillable = [
         'submission_id',
+        'content',
         'style_criteria',
         'from',
         'to',
