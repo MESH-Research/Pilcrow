@@ -28,7 +28,7 @@ extend type Mutation {
     addInlineComment(
         submission_id: ID!
         content: String!
-        style_criteria: [ID!]
+        style_criteria: [InlineCommentStyleCriteriaInput!]
         from: Int!
         to: Int!
     ): InlineComment @create
@@ -54,9 +54,14 @@ extend type Mutation {
 input UpdateInlineCommentInput {
     id: ID!
     content: String
-    style_criteria: [ID!]
+    style_criteria: [InlineCommentStyleCriteriaInput!]
     from: Int
     to: Int
+}
+
+input InlineCommentStyleCriteriaInput {
+    name: String
+    icon: String
 }
 
 """
