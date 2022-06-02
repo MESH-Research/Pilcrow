@@ -1,7 +1,6 @@
 <template>
   <q-card square class="bg-grey-1 shadow-2 q-mb-md">
-    <q-separator color="blue-1" />
-    <comment-header :comment="comment" />
+    <comment-header :comment="comment" bg-color="#bbe2e8" />
     <q-card-section class="q-py-sm"> </q-card-section>
 
     <q-card-section class="q-py-none">

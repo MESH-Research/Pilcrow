@@ -1,5 +1,5 @@
 <template>
-  <q-card-section class="q-py-xs" style="background-color: #bbe2e8">
+  <q-card-section class="q-py-xs" :style="style">
     <div class="row no-wrap justify-between">
       <div class="row items-center">
         <avatar-image :user="comment.created_by" round size="30px" />
@@ -31,8 +31,21 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+  bgColor: {
+    type: String,
+    required: false,
+    default: null,
+  },
 })
 
+const style = computed(() => {
+  const style = {}
+  if (props.bgColor) {
+    style.backgroundColor = props.bgColor
+  }
+
+  return style
+})
 const createdDate = computed(() => {
   return DateTime.fromISO(props.comment.created_at)
 })

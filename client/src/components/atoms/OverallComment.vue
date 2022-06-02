@@ -1,7 +1,6 @@
 <template>
   <q-card square class="bg-grey-1 shadow-2 q-mb-md">
-    <q-separator color="grey-3" />
-    <comment-header :comment="comment" />
+    <comment-header :comment="comment" bg-color="#eeeeee" />
     <q-card-section>
       <!-- eslint-disable-next-line vue/no-v-html -->
       <div v-html="comment.content" />
