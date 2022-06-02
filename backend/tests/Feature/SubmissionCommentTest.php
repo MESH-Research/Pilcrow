@@ -240,10 +240,24 @@ class SubmissionCommentTest extends TestCase
                 addInlineComment(
                     submission_id: $submission_id
                     content: "Hello World"
+                    style_criteria: [
+                        {
+                            "name": "Hello"
+                            "icon": "hello"
+                        }
+                        {
+                            "name": "World"
+                            "icon": "world"
+                        }
+                    ]
                     from: 100
                     to: 110
                 ) {
                     content
+                    style_criteria {
+                        name
+                        icon
+                    }
                     from
                     to
                 }
@@ -255,6 +269,16 @@ class SubmissionCommentTest extends TestCase
         $expected = [
             'addInlineComment' => [
                 'content' => 'Hello World',
+                'style_criteria' => [
+                    '0' => [
+                        'name' => 'Hello',
+                        'icon' => 'hello',
+                    ],
+                    '1' => [
+                        'name' => 'World',
+                        'icon' => 'world',
+                    ],
+                ],
                 'from' => 100,
                 'to' => 110,
             ],
@@ -279,10 +303,24 @@ class SubmissionCommentTest extends TestCase
                         content: $content
                         from: 120
                         to: 130
+                        style_criteria: [
+                            {
+                                "name": "Hello"
+                                "icon": "hello"
+                            }
+                            {
+                                "name": "World"
+                                "icon": "world"
+                            }
+                        ]
                     }
                 ) {
                     id
                     content
+                    style_criteria {
+                        name
+                        icon
+                    }
                     from
                     to
                 }
@@ -296,6 +334,16 @@ class SubmissionCommentTest extends TestCase
             'updateInlineComment' => [
                 'id' => (string)$inline_comment->id,
                 'content' => $updated_content,
+                'style_criteria' => [
+                    '0' => [
+                        'name' => 'Hello',
+                        'icon' => 'hello',
+                    ],
+                    '1' => [
+                        'name' => 'World',
+                        'icon' => 'world',
+                    ],
+                ],
                 'from' => 120,
                 'to' => 130,
             ],
