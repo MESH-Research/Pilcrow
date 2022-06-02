@@ -4,11 +4,16 @@
     square
     :class="{ active: isActive }"
     class="bg-grey-1 shadow-2 q-mb-md"
+    :aria-label="
+      $t('submissions.comment.ariaLabel', {
+        username: comment.created_by.username,
+        replies: comment.replies.length,
+      })
+    "
   >
     <comment-header :comment="comment" bg-color="#bbe2e8" />
-    <q-card-section class="q-py-sm"> </q-card-section>
 
-    <q-card-section class="q-py-none">
+    <q-card-section>
       <!-- eslint-disable-next-line vue/no-v-html -->
       <div v-html="comment.content" />
     </q-card-section>

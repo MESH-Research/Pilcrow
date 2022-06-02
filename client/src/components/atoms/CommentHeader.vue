@@ -6,7 +6,12 @@
         <div class="text-h4 q-pl-sm">{{ comment.created_by.username }}</div>
       </div>
       <div class="row items-center">
-        <div class="text-caption">
+        <div
+          class="text-caption"
+          :aria-label="
+            $t('submissions.comment.dateLabel', { date: relativeTime })
+          "
+        >
           <q-tooltip>
             {{ createdDate.toFormat("LLL dd yyyy hh:mm a") }}
           </q-tooltip>

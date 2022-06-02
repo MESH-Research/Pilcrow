@@ -6,6 +6,7 @@
       icon="subdirectory_arrow_right"
       class="q-pl-sm q-ml-md"
       no-caps
+      :aria-label="$t('submissions.comment.reply.referenceButtonAria')"
       @click="setActive"
     >
       <avatar-image

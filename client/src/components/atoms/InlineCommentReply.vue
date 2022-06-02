@@ -4,6 +4,11 @@
     square
     :class="{ active: isActive }"
     class="bg-grey-1 shadow-2 q-mb-md"
+    :aria-label="
+      $t('submissions.comment.reply.ariaLabel', {
+        username: comment.created_by.username,
+      })
+    "
   >
     <comment-header :comment="comment" bg-color="#eeeeee" />
     <comment-reply-reference :comment="comment" :replies="replies" />
