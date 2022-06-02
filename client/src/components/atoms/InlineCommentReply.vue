@@ -5,7 +5,7 @@
     :class="{ active: isActive }"
     class="bg-grey-1 shadow-2 q-mb-md"
   >
-    <comment-header :comment="comment" bg-color="#bbe2e8" />
+    <comment-header :comment="comment" bg-color="#eeeeee" />
     <comment-reply-reference :comment="comment" :replies="replies" />
     <q-card-section>
       <!-- eslint-disable-next-line vue/no-v-html -->
