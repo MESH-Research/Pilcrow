@@ -235,7 +235,8 @@ class SubmissionCommentTest extends TestCase
     {
         $this->beAppAdmin();
         $submission = $this->createSubmission();
-        $response = $this->graphQL('
+        $response = $this->graphQL(
+            '
             mutation AddInlineComment($submission_id: ID!) {
                 addInlineComment(
                     submission_id: $submission_id
@@ -271,7 +272,8 @@ class SubmissionCommentTest extends TestCase
         $this->beAppAdmin();
         $submission = $this->createSubmissionWithInlineComment();
         $inline_comment = $submission->inlineComments()->first();
-        $response = $this->graphQL('
+        $response = $this->graphQL(
+            '
             mutation UpdateInlineComment($id: ID!, $content: String!) {
                 updateInlineComment(
                     comment: {
