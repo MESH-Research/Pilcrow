@@ -70,7 +70,7 @@ describe("ProfileMetadataForm", () => {
     ["valid", "humanities_commons", "myprofile", true],
     ["maxlength", "humanities_commons", "1".repeat(129), false],
   ])(
-    "test validation rules %s (%s)",
+    "validation rules %s (%s)",
     async (_, fieldRef, testValue, assertValid) => {
       const wrapper = makeWrapper()
 
@@ -91,7 +91,7 @@ describe("ProfileMetadataForm", () => {
     ["valid", "interest_keywords", ["keyword1", "keyword2"], true],
     ["valid", "disinterest_keywords", ["keyword1", "keyword2"], true],
   ])(
-    "test array field rules %s (%s)",
+    "array field rules %s (%s)",
     async (_, fieldRef, testValue, assertValid) => {
       const wrapper = makeWrapper()
 
@@ -109,7 +109,7 @@ describe("ProfileMetadataForm", () => {
     ["twitter", "https://twitter.com/my_profile", "my_profile"],
     ["instagram", "https://instagr.am/my_user", "my_user"],
     ["linkedin", "https://linkedin.com/in/my_profile", "my_profile"],
-  ])("test url paste feature: %s", async (fieldRef, url, result) => {
+  ])("url paste feature: %s", async (fieldRef, url, result) => {
     const wrapper = makeWrapper()
 
     const field = wrapper
