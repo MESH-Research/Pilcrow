@@ -291,28 +291,27 @@ class SubmissionCommentTest extends TestCase
      */
     public function testInlineCommentsCanBeUpdatedOnTheGraphqlEndpoint()
     {
-        $updated_content = 'Hello World Updated';
         $this->beAppAdmin();
         $submission = $this->createSubmissionWithInlineComment();
         $inline_comment = $submission->inlineComments()->first();
         $response = $this->graphQL(
-            'mutation UpdateInlineComment($id: ID!, $content: String!) {
+            'mutation UpdateInlineComment($id: ID!) {
                 updateInlineComment(
                     comment: {
                         id: $id
-                        content: $content
-                        from: 120
-                        to: 130
+                        content: "Hello World Updated"
                         style_criteria: [
                             {
                                 name: "Hello"
                                 icon: "hello"
                             }
                             {
-                                "name": "World"
-                                "icon": "world"
+                                name: "World"
+                                icon: "world"
                             }
                         ]
+                        from: 120
+                        to: 130
                     }
                 ) {
                     id
@@ -327,13 +326,12 @@ class SubmissionCommentTest extends TestCase
             }',
             [
                 'id' => $inline_comment->id,
-                'content' => $updated_content,
             ]
         );
         $expected = [
             'updateInlineComment' => [
                 'id' => (string)$inline_comment->id,
-                'content' => $updated_content,
+                'content' => 'Hello World Updated',
                 'style_criteria' => [
                     '0' => [
                         'name' => 'Hello',
