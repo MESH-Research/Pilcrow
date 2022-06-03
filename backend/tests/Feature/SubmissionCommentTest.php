@@ -242,12 +242,12 @@ class SubmissionCommentTest extends TestCase
                     content: "Hello World"
                     style_criteria: [
                         {
-                            "name": "Hello"
-                            "icon": "hello"
+                            name: "Hello"
+                            icon: "hello"
                         }
                         {
-                            "name": "World"
-                            "icon": "world"
+                            name: "World"
+                            icon: "world"
                         }
                     ]
                     from: 100
@@ -305,8 +305,8 @@ class SubmissionCommentTest extends TestCase
                         to: 130
                         style_criteria: [
                             {
-                                "name": "Hello"
-                                "icon": "hello"
+                                name: "Hello"
+                                icon: "hello"
                             }
                             {
                                 "name": "World"
