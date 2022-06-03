@@ -24,6 +24,7 @@
             bordered
             style="border-color: rgb(56, 118, 187)"
           >
+            <comment-editor :is-inline-comment="true" />
           </q-card>
           <inline-comment
             v-for="comment in inline_comments"
@@ -42,6 +43,7 @@
 
 <script setup>
 import { ref, watch, inject, computed, nextTick } from "vue"
+import CommentEditor from "src/components/forms/CommentEditor.vue"
 import InlineComment from "src/components/atoms/InlineComment.vue"
 import { scroll } from "quasar"
 
