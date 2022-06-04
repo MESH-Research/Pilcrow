@@ -1,13 +1,13 @@
 import { mount } from "@vue/test-utils"
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-jest"
-import SubmissionCommentDrawer from "./SubmissionCommentDrawer.vue"
+import InlineComments from "./InlineComments.vue"
 import { ref } from "vue"
 
 installQuasarPlugin()
 describe("SubmissionCommentDrawer", () => {
   const wrapperFactory = () => {
     return {
-      wrapper: mount(SubmissionCommentDrawer, {
+      wrapper: mount(InlineComments, {
         global: {
           provide: {
             submission: ref({
@@ -16,6 +16,15 @@ describe("SubmissionCommentDrawer", () => {
                 {
                   id: "1",
                   content: "Hello World",
+                  created_at: "2022-06-04 01:07:47",
+                  created_by: {
+                    id: "1",
+                    email: "sample@example.net",
+                    name: "Sample Commenter",
+                    username: "sampleCommenter",
+                  },
+                  replies: [],
+                  style_criteria: [],
                 },
               ],
             }),
