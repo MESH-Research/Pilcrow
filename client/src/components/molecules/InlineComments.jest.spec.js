@@ -2,9 +2,12 @@ import { mount } from "@vue/test-utils"
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-jest"
 import InlineComments from "./InlineComments.vue"
 import { ref } from "vue"
+import TimeAgo from "javascript-time-ago"
+import en from "javascript-time-ago/locale/en.json"
 
 installQuasarPlugin()
-describe("SubmissionCommentDrawer", () => {
+describe("InlineComments", () => {
+  TimeAgo.addDefaultLocale(en)
   const wrapperFactory = () => {
     return {
       wrapper: mount(InlineComments, {
@@ -38,10 +41,6 @@ describe("SubmissionCommentDrawer", () => {
       }),
     }
   }
-
-  beforeEach(() => {
-    jest.clearAllMocks()
-  })
 
   test("able to mount", () => {
     const { wrapper } = wrapperFactory()
