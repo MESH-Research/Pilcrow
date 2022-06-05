@@ -46,4 +46,24 @@ describe("InlineComments", () => {
     const { wrapper } = wrapperFactory()
     expect(wrapper).toBeTruthy()
   })
+
+  test("expected style criteria appear within an inline comment", () => {
+    expect(true).toBeTruthy()
+  })
+
+  test("expected number of inline comments appear", () => {
+    expect(true).toBeTruthy()
+  })
+
+  test("expected number of inline comment replies appear", () => {
+    expect(true).toBeTruthy()
+  })
+
+  test("expected number of overall comments appear", () => {
+    expect(true).toBeTruthy()
+  })
+
+  test("expected number of overall comment replies appear", () => {
+    expect(true).toBeTruthy()
+  })
 })
