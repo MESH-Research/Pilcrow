@@ -19,7 +19,7 @@ describe("InlineComments", () => {
                 {
                   id: "1",
                   content: "Hello World",
-                  created_at: "2022-06-04 01:07:47",
+                  created_at: "2022-06-05T01:57:20Z",
                   created_by: {
                     id: "1",
                     email: "sample@example.net",
