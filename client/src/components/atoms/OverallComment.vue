@@ -10,6 +10,7 @@
         replies: comment.replies.length,
       })
     "
+    data-cy="overallComment"
   >
     <comment-header :comment="comment" bg-color="#eeeeee" />
     <q-card-section>

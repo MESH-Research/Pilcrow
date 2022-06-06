@@ -9,6 +9,7 @@
         username: comment.created_by.username,
       })
     "
+    data-cy="overallCommentReply"
   >
     <comment-header :comment="comment" bg-color="#eeeeee" />
     <comment-reply-reference :comment="comment" :replies="replies" />
