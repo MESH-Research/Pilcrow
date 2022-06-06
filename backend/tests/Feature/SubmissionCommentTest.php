@@ -237,29 +237,36 @@ class SubmissionCommentTest extends TestCase
         $submission = $this->createSubmission();
         $response = $this->graphQL(
             'mutation AddInlineComment($submission_id: ID!) {
-                addInlineComment(
-                    submission_id: $submission_id
-                    content: "Hello World"
-                    style_criteria: [
-                        {
-                            name: "Hello"
-                            icon: "hello"
-                        }
-                        {
-                            name: "World"
-                            icon: "world"
-                        }
-                    ]
-                    from: 100
-                    to: 110
-                ) {
-                    content
-                    style_criteria {
-                        name
-                        icon
+                updateSubmission(input: {
+                    id: $submission_id
+                    inline_comments: {
+                        create: [{
+
+                        content: "Hello World"
+                        style_criteria: [
+                            {
+                                name: "Hello"
+                                icon: "hello"
+                            }
+                            {
+                                name: "World"
+                                icon: "world"
+                            }
+                        ]
+                        from: 100
+                        to: 110
+                        }]
                     }
-                    from
-                    to
+                }) {
+                 inline_comments {
+                    content
+                        style_criteria {
+                            name
+                            icon
+                        }
+                        from
+                        to
+                    }
                 }
             }',
             [
@@ -267,20 +274,24 @@ class SubmissionCommentTest extends TestCase
             ]
         );
         $expected = [
-            'addInlineComment' => [
-                'content' => 'Hello World',
-                'style_criteria' => [
-                    '0' => [
-                        'name' => 'Hello',
-                        'icon' => 'hello',
-                    ],
-                    '1' => [
-                        'name' => 'World',
-                        'icon' => 'world',
+            'updateSubmission' => [
+                'inline_comments' => [
+                    [
+                        'content' => 'Hello World',
+                        'style_criteria' => [
+                            '0' => [
+                                'name' => 'Hello',
+                                'icon' => 'hello',
+                            ],
+                            '1' => [
+                                'name' => 'World',
+                                'icon' => 'world',
+                            ],
+                        ],
+                        'from' => 100,
+                        'to' => 110,
                     ],
                 ],
-                'from' => 100,
-                'to' => 110,
             ],
         ];
         $response->assertJsonPath('data', $expected);
@@ -295,55 +306,69 @@ class SubmissionCommentTest extends TestCase
         $submission = $this->createSubmissionWithInlineComment();
         $inline_comment = $submission->inlineComments()->first();
         $response = $this->graphQL(
-            'mutation UpdateInlineComment($id: ID!) {
-                updateInlineComment(
-                    comment: {
-                        id: $id
-                        content: "Hello World Updated"
-                        style_criteria: [
+            'mutation UpdateInlineComment($submissionId: ID! $commentId: ID!) {
+                updateSubmission(input: {
+                    id: $submissionId
+                    inline_comments: {
+                        update: [
                             {
-                                name: "Hello"
-                                icon: "hello"
-                            }
-                            {
-                                name: "World"
-                                icon: "world"
+                                id: $commentId
+                                content: "Hello World Updated"
+                                style_criteria: [
+                                    {
+                                        name: "Hello"
+                                        icon: "hello"
+                                    }
+                                    {
+                                        name: "World"
+                                        icon: "world"
+                                    }
+                                ]
+                                from: 120
+                                to: 130
                             }
                         ]
-                        from: 120
-                        to: 130
                     }
-                ) {
+                }) {
                     id
-                    content
-                    style_criteria {
-                        name
-                        icon
+                    inline_comments {
+                        id
+                        content
+                        style_criteria {
+                            name
+                            icon
+                        }
+                        from
+                        to
                     }
-                    from
-                    to
                 }
             }',
             [
-                'id' => $inline_comment->id,
+                'commentId' => $inline_comment->id,
+                'submissionId' => $submission->id,
             ]
         );
         $expected = [
-            'updateInlineComment' => [
-                'id' => (string)$inline_comment->id,
-                'content' => 'Hello World Updated',
-                'style_criteria' => [
-                    '0' => [
-                        'name' => 'Hello',
-                        'icon' => 'hello',
-                    ],
-                    '1' => [
-                        'name' => 'World',
-                        'icon' => 'world',
+            'updateSubmission' => [
+                'id' => (string)$submission->id,
+                'inline_comments' => [
+                    [
+                        'id' => (string)$inline_comment->id,
+                        'content' => 'Hello World Updated',
+                        'style_criteria' => [
+                            '0' => [
+                                'name' => 'Hello',
+                                'icon' => 'hello',
+                            ],
+                            '1' => [
+                                'name' => 'World',
+                                'icon' => 'world',
+                            ],
+                        ],
+                        'from' => 120,
+                        'to' => 130,
                     ],
                 ],
-                'from' => 120,
-                'to' => 130,
             ],
         ];
         $response->assertJsonPath('data', $expected);
