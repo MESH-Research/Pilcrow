@@ -227,4 +227,150 @@ class SubmissionCommentTest extends TestCase
         ];
         $response->assertJsonPath('data', $expected_data);
     }
+
+    /**
+     * @return void
+     */
+    public function testInlineCommentsCanBeCreatedOnTheGraphqlEndpoint()
+    {
+        $this->beAppAdmin();
+        $submission = $this->createSubmission();
+        $response = $this->graphQL(
+            'mutation AddInlineComment($submission_id: ID!) {
+                updateSubmission(input: {
+                    id: $submission_id
+                    inline_comments: {
+                        create: [{
+
+                        content: "Hello World"
+                        style_criteria: [
+                            {
+                                name: "Hello"
+                                icon: "hello"
+                            }
+                            {
+                                name: "World"
+                                icon: "world"
+                            }
+                        ]
+                        from: 100
+                        to: 110
+                        }]
+                    }
+                }) {
+                 inline_comments {
+                    content
+                        style_criteria {
+                            name
+                            icon
+                        }
+                        from
+                        to
+                    }
+                }
+            }',
+            [
+                'submission_id' => $submission->id,
+            ]
+        );
+        $expected = [
+            'updateSubmission' => [
+                'inline_comments' => [
+                    [
+                        'content' => 'Hello World',
+                        'style_criteria' => [
+                            '0' => [
+                                'name' => 'Hello',
+                                'icon' => 'hello',
+                            ],
+                            '1' => [
+                                'name' => 'World',
+                                'icon' => 'world',
+                            ],
+                        ],
+                        'from' => 100,
+                        'to' => 110,
+                    ],
+                ],
+            ],
+        ];
+        $response->assertJsonPath('data', $expected);
+    }
+
+    /**
+     * @return void
+     */
+    public function testInlineCommentsCanBeUpdatedOnTheGraphqlEndpoint()
+    {
+        $this->beAppAdmin();
+        $submission = $this->createSubmissionWithInlineComment();
+        $inline_comment = $submission->inlineComments()->first();
+        $response = $this->graphQL(
+            'mutation UpdateInlineComment($submissionId: ID! $commentId: ID!) {
+                updateSubmission(input: {
+                    id: $submissionId
+                    inline_comments: {
+                        update: [
+                            {
+                                id: $commentId
+                                content: "Hello World Updated"
+                                style_criteria: [
+                                    {
+                                        name: "Hello"
+                                        icon: "hello"
+                                    }
+                                    {
+                                        name: "World"
+                                        icon: "world"
+                                    }
+                                ]
+                                from: 120
+                                to: 130
+                            }
+                        ]
+                    }
+                }) {
+                    id
+                    inline_comments {
+                        id
+                        content
+                        style_criteria {
+                            name
+                            icon
+                        }
+                        from
+                        to
+                    }
+                }
+            }',
+            [
+                'commentId' => $inline_comment->id,
+                'submissionId' => $submission->id,
+            ]
+        );
+        $expected = [
+            'updateSubmission' => [
+                'id' => (string)$submission->id,
+                'inline_comments' => [
+                    [
+                        'id' => (string)$inline_comment->id,
+                        'content' => 'Hello World Updated',
+                        'style_criteria' => [
+                            '0' => [
+                                'name' => 'Hello',
+                                'icon' => 'hello',
+                            ],
+                            '1' => [
+                                'name' => 'World',
+                                'icon' => 'world',
+                            ],
+                        ],
+                        'from' => 120,
+                        'to' => 130,
+                    ],
+                ],
+            ],
+        ];
+        $response->assertJsonPath('data', $expected);
+    }
 }
