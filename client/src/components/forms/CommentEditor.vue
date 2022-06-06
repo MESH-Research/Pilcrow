@@ -59,9 +59,13 @@
       <q-btn data-ref="submit" color="primary" @click="submitHandler()">{{
         $t("guiElements.form.submit")
       }}</q-btn>
-      <q-btn ref="cancel_button" flat @click="cancelHandler()">{{
-        $t("guiElements.form.cancel")
-      }}</q-btn>
+      <q-btn
+        v-if="props.isInlineComment"
+        ref="cancel_button"
+        flat
+        @click="cancelHandler()"
+        >{{ $t("guiElements.form.cancel") }}</q-btn
+      >
     </q-card-actions>
   </q-card>
 </template>

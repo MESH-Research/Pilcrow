@@ -2,6 +2,9 @@
   <section class="comments">
     <div class="comments-wrapper">
       <h3 class="text-h1">Overall Comments</h3>
+      <q-card class="q-mb-md q-pa-md bg-grey-1">
+        <comment-editor />
+      </q-card>
       <overall-comment
         v-for="comment in overall_comments"
         :key="comment.id"
@@ -13,6 +16,7 @@
 </template>
 
 <script setup>
+import CommentEditor from "src/components/forms/CommentEditor.vue"
 import OverallComment from "src/components/atoms/OverallComment.vue"
 import { computed, inject, nextTick, ref, watch } from "vue"
 import { scroll } from "quasar"
