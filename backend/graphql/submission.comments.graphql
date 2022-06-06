@@ -111,3 +111,10 @@ input UpdateOverallCommentInput {
     id: ID!
     content: String
 }
+
+interface Comment {
+    id: ID
+    content: String
+    created_at: DateTime
+    created_by: DateTime
+}
