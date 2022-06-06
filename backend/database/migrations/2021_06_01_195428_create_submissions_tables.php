@@ -54,7 +54,15 @@ class CreateSubmissionsTables extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('submissions');
+        Schema::table('submission_user', function (Blueprint $table) {
+            $table->dropForeign('submission_user_role_id_foreign');
+            $table->dropForeign('submission_user_user_id_foreign');
+            $table->dropForeign('submission_user_submission_id_foreign');
+        });
+        Schema::table('submissions', function (Blueprint $table) {
+            $table->dropForeign('submissions_publication_id_foreign');
+        });
         Schema::dropIfExists('submissions_user');
+        Schema::dropIfExists('submissions');
     }
 }

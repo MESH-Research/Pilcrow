@@ -6,6 +6,7 @@ namespace Database\Seeders;
 use App\Events\SubmissionCreated;
 use App\Listeners\NotifyUsersAboutCreatedSubmission;
 use App\Models\Submission;
+use App\Models\SubmissionContent;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
@@ -33,6 +34,7 @@ class SubmissionSeeder extends Seeder
                 [],
                 'reviewCoordinators'
             )
+            ->has(SubmissionContent::factory()->count(3), 'contentHistory')
             ->create([
                 'id' => $id,
                 'title' => $title,
@@ -40,7 +42,8 @@ class SubmissionSeeder extends Seeder
                 'created_by' => 1,
                 'updated_by' => 1,
             ]);
-
+        $submission->updated_by = 2;
+        $submission->content()->associate($submission->contentHistory->last())->save();
         $event = new SubmissionCreated($submission);
         $listener = new NotifyUsersAboutCreatedSubmission();
         $listener->handle($event);

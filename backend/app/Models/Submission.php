@@ -37,6 +37,7 @@ class Submission extends Model
         'title',
         'publication_id',
         'status',
+        'content_id',
     ];
 
     /**
@@ -112,7 +113,27 @@ class Submission extends Model
      */
     public function files(): HasMany
     {
-        return $this->hasMany(SubmissionFile::class);
+        return $this->hasMany(SubmissionFile::class, 'submission_id');
+    }
+
+    /**
+     * Primary content that belongs to the submission
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function content(): BelongsTo
+    {
+        return $this->belongsTo(SubmissionContent::class);
+    }
+
+    /**
+     * Content history that belongs to the submission
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function contentHistory(): HasMany
+    {
+        return $this->hasMany(SubmissionContent::class);
     }
 
     /**
