@@ -188,7 +188,11 @@ describe("Overall Comments", () => {
 
   test("expected number of overall comment replies appear", () => {
     const { wrapper } = wrapperFactory()
-    const items = wrapper.findAllComponents('[data-cy="overallCommentReply"]')
-    expect(items).toHaveLength(9)
+    const overallComments = wrapper.findAll('[data-cy="overallComment"]')
+    const findRepliesTo = (w) => w.findAll('[data-cy="overallCommentReply"]')
+
+    expect(findRepliesTo(overallComments.at(0))).toHaveLength(0)
+    expect(findRepliesTo(overallComments.at(1))).toHaveLength(1)
+    expect(findRepliesTo(overallComments.at(2))).toHaveLength(8)
   })
 })
