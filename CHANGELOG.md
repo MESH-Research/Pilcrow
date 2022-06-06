@@ -3,6 +3,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.16.6](https://github.com/MESH-Research/CCR/compare/v0.16.5...v0.16.6) (2022-06-06)
+
+
+### Features
+
+* Add Content Fields to Submissions ([#1119](https://github.com/MESH-Research/CCR/issues/1119)) ([3a08fe1](https://github.com/MESH-Research/CCR/commit/3a08fe1cc4517cabf1f1129bd75448b0655d4e28)), closes [#1044](https://github.com/MESH-Research/CCR/issues/1044)
+
 ### [0.16.5](https://github.com/MESH-Research/CCR/compare/v0.16.4...v0.16.5) (2022-05-31)
 
 
