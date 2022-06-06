@@ -10,6 +10,7 @@
         replies: comment.replies.length,
       })
     "
+    data-cy="inlineComment"
   >
     <comment-header :comment="comment" bg-color="#bbe2e8" />
 
@@ -24,6 +25,7 @@
         :key="comment.id + criteria.icon"
         size="16px"
         :icon="criteria.icon"
+        data-cy="styleCriteria"
       >
         {{ criteria.name }}
       </q-chip>

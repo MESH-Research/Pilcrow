@@ -238,15 +238,21 @@ describe("InlineComments", () => {
     expect(wrapper).toBeTruthy()
   })
 
-  test("expected style criteria appear within an inline comment", () => {
-    expect(true).toBeTruthy()
+  test("expected style criteria appear within all inline comments", () => {
+    const { wrapper } = wrapperFactory()
+    const items = wrapper.findAllComponents('[data-cy="styleCriteria"]')
+    expect(items).toHaveLength(7)
   })
 
   test("expected number of inline comments appear", () => {
-    expect(true).toBeTruthy()
+    const { wrapper } = wrapperFactory()
+    const items = wrapper.findAllComponents('[data-cy="inlineComment"]')
+    expect(items).toHaveLength(3)
   })
 
   test("expected number of inline comment replies appear", () => {
-    expect(true).toBeTruthy()
+    const { wrapper } = wrapperFactory()
+    const items = wrapper.findAllComponents('[data-cy="inlineCommentReply"]')
+    expect(items).toHaveLength(11)
   })
 })
