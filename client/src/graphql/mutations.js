@@ -350,3 +350,19 @@ export const DELETE_PUBLICATION_STYLE_CRITERIA = gql`
     }
   }
 `
+
+export const CREATE_OVERALL_COMMENT = gql`
+  mutation AddOverallComment($submission_id: ID!, $content: String!) {
+    addOverallComment(submission_id: $submission_id, content: $content) {
+      id
+      content
+      created_at
+      created_by {
+        id
+        email
+        name
+        username
+      }
+    }
+  }
+`
