@@ -11,7 +11,7 @@ type InlineComment {
     content: String!
     created_by: User! @belongsTo(relation: "createdBy")
     updated_by: User! @belongsTo(relation: "updatedBy")
-    created_at: DateTime!
+    created_at: DateTimeUtc!
     updated_at: DateTime!
     replies: [InlineCommentReply!]
     style_criteria: [InlineCommentStyleCriteria!]
@@ -35,7 +35,7 @@ type InlineCommentReply {
     content: String!
     created_by: User! @belongsTo(relation: "createdBy")
     reply_to_id: ID!
-    created_at: DateTime!
+    created_at: DateTimeUtc!
 }
 
 """
@@ -45,7 +45,7 @@ type OverallComment {
     id: ID!
     content: String!
     created_by: User! @belongsTo(relation: "createdBy")
-    created_at: DateTime!
+    created_at: DateTimeUtc!
     updated_by: User! @belongsTo(relation: "updatedBy")
     updated_at: DateTime!
     replies: [OverallCommentReply!]
@@ -59,7 +59,7 @@ type OverallCommentReply {
     content: String!
     created_by: User! @belongsTo(relation: "createdBy")
     reply_to_id: ID!
-    created_at: DateTime!
+    created_at: DateTimeUtc!
 }
 
 extend input UpdateSubmissionInput {
