@@ -56,7 +56,7 @@ class InlineCommentSeeder extends Seeder
     {
         $faker = Faker::create();
         $time = Carbon::parse($reply_to->created_at);
-        $datetime = $faker->dateTimeBetween($time, $time->addHours(24));
+        $datetime = $faker->dateTimeBetween($time, Carbon::now());
 
         return InlineComment::factory()->create([
             'submission_id' => $submissionId,
