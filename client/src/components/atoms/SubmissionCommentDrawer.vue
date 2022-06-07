@@ -1,11 +1,5 @@
 <template>
-  <q-drawer
-    v-model="drawerOpen"
-    show-if-above
-    side="right"
-    bordered
-    :width="drawerWidth"
-  >
+  <q-drawer show-if-above side="right" bordered :width="drawerWidth">
     <div class="row fit">
       <div
         v-touch-pan.horizontal.prevent.mouse.preserveCursor="handlePan"
@@ -36,6 +30,4 @@ function handlePan({ ...newInfo }) {
     drawerWidth.value = newWidth
   }
 }
-
-const drawerOpen = ref(true)
 </script>

@@ -33,7 +33,7 @@ A reply to an inline comment of a submission
 type InlineCommentReply {
     id: ID!
     content: String!
-    created_by: User!
+    created_by: User! @belongsTo(relation: "createdBy")
     reply_to_id: ID!
     created_at: DateTime!
 }
@@ -57,7 +57,7 @@ A reply to an overall comment of a submission
 type OverallCommentReply {
     id: ID!
     content: String!
-    created_by: User!
+    created_by: User! @belongsTo(relation: "createdBy")
     reply_to_id: ID!
     created_at: DateTime!
 }
@@ -110,11 +110,4 @@ input CreateOverallCommentInput {
 input UpdateOverallCommentInput {
     id: ID!
     content: String
-}
-
-interface Comment {
-    id: ID
-    content: String
-    created_at: DateTime
-    created_by: DateTime
 }
