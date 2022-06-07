@@ -14,7 +14,7 @@
         v-model="commentDrawerOpen"
         :submission="submission"
       />
-      <submission-comment-drawer :comment-drawer-open="commentDrawerOpen" />
+      <submission-comment-drawer v-model="commentDrawerOpen" />
       <q-page-container>
         <submission-content />
         <q-separator class="page-seperator" />
@@ -45,9 +45,10 @@ const submission = computed(() => {
   return result.value?.submission
 })
 
+const commentDrawerOpen = ref(true)
+
 provide("submission", submission)
 provide("activeComment", ref(null))
-const commentDrawerOpen = ref(true)
 </script>
 
 <style lang="sass" scoped>

@@ -240,8 +240,12 @@ describe("InlineComments", () => {
 
   test("expected style criteria appear within all inline comments", () => {
     const { wrapper } = wrapperFactory()
-    const items = wrapper.findAllComponents('[data-cy="styleCriteria"]')
-    expect(items).toHaveLength(7)
+    const items = wrapper.findAllComponents('[data-cy="inlineComment"]')
+    const findStyleCriteria = (w) =>
+      w.findAllComponents('[data-cy="styleCriteria"]')
+    expect(findStyleCriteria(items.at(0))).toHaveLength(1)
+    expect(findStyleCriteria(items.at(1))).toHaveLength(4)
+    expect(findStyleCriteria(items.at(2))).toHaveLength(2)
   })
 
   test("expected number of inline comments appear", () => {
@@ -252,7 +256,12 @@ describe("InlineComments", () => {
 
   test("expected number of inline comment replies appear", () => {
     const { wrapper } = wrapperFactory()
-    const items = wrapper.findAllComponents('[data-cy="inlineCommentReply"]')
-    expect(items).toHaveLength(11)
+    const items = wrapper.findAllComponents('[data-cy="inlineComment"]')
+    const findReplies = (w) =>
+      w.findAllComponents('[data-cy="inlineCommentReply"]')
+
+    expect(findReplies(items.at(0))).toHaveLength(1)
+    expect(findReplies(items.at(1))).toHaveLength(0)
+    expect(findReplies(items.at(2))).toHaveLength(10)
   })
 })

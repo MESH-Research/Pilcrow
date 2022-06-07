@@ -29,30 +29,34 @@ const overall_comments = computed(() => {
   return submission.value?.overall_comments ?? []
 })
 const commentRefs = ref([])
-watch(activeComment, (newValue) => {
-  if (!newValue) return
-  if (newValue.__typename !== "OverallCommentReply") return
-  nextTick(() => {
-    let scrollTarget = null
-    for (const commentRef of commentRefs.value) {
-      if (commentRef.comment.id === newValue.id) {
-        scrollTarget = commentRef.scrollTarget
-        break
+watch(
+  activeComment,
+  (newValue) => {
+    if (!newValue) return
+    if (newValue.__typename !== "OverallCommentReply") return
+    nextTick(() => {
+      let scrollTarget = null
+      for (const commentRef of commentRefs.value) {
+        if (commentRef.comment.id === newValue.id) {
+          scrollTarget = commentRef.scrollTarget
+          break
+        }
+        if (commentRef.replyIds.includes(newValue.id)) {
+          const reply = commentRef.replyRefs.find(
+            (r) => r.comment.id === newValue.id
+          )
+          scrollTarget = reply.scrollTarget
+          break
+        }
       }
-      if (commentRef.replyIds.includes(newValue.id)) {
-        const reply = commentRef.replyRefs.find(
-          (r) => r.comment.id === newValue.id
-        )
-        scrollTarget = reply.scrollTarget
-        break
-      }
-    }
-    if (!scrollTarget) return
-    const target = getScrollTarget(scrollTarget)
-    const offset = scrollTarget.offsetTop
-    setVerticalScrollPosition(target, offset - 50, 250)
-  })
-})
+      if (!scrollTarget) return
+      const target = getScrollTarget(scrollTarget)
+      const offset = scrollTarget.offsetTop
+      setVerticalScrollPosition(target, offset - 50, 250)
+    })
+  },
+  { deep: false }
+)
 </script>
 
 <style lang="sass" scoped>
