@@ -1,5 +1,6 @@
 import gql from "graphql-tag"
 import {
+  _COMMENT_FIELDS,
   _CURRENT_USER_FIELDS,
   _PAGINATION_FIELDS,
   _PROFILE_METADATA_FIELDS,
@@ -198,46 +199,26 @@ export const GET_SUBMISSION_REVIEW = gql`
         }
       }
       inline_comments {
-        id
-        content
-        created_at
-        created_by {
-          ...relatedUserFields
-        }
+        ...commentFields
         style_criteria {
           name
           icon
         }
         replies {
-          id
-          content
-          created_at
-          created_by {
-            ...relatedUserFields
-          }
+          ...commentFields
           reply_to_id
         }
       }
       overall_comments {
-        id
-        content
-        created_at
-        created_by {
-          ...relatedUserFields
-        }
+        ...commentFields
         replies {
-          id
-          content
-          created_at
-          created_by {
-            ...relatedUserFields
-          }
+          ...commentFields
           reply_to_id
         }
       }
     }
   }
-  ${_RELATED_USER_FIELDS}
+  ${_COMMENT_FIELDS}
 `
 
 export const GET_PUBLICATION = gql`
