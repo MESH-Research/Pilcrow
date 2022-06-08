@@ -18,6 +18,7 @@ class InlineCommentSeeder extends Seeder
      *
      * @param int $submissionId
      * @param int $replies
+     * @param int[] $highlightRange Min and max values for highlight length
      * @return void
      */
     public function run($submissionId, $replies = 0, $highlightRange = [15, 120])
