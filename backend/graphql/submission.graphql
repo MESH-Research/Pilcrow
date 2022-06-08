@@ -34,8 +34,8 @@ A Submission
 type Submission {
     id: ID!
     title: String
-    created_at: DateTime!
-    updated_at: DateTime
+    created_at: DateTimeUtc!
+    updated_at: DateTimeUtc
     created_by: User! @belongsTo(relation: "createdBy")
     updated_by: User! @belongsTo(relation: "updatedBy")
     publication: Publication!
@@ -135,7 +135,7 @@ The content of a submission
 type SubmissionContent {
     id: ID!
     data: String!
-    created_at: DateTime!
-    modified_at: DateTime!
+    created_at: DateTimeUtc!
+    modified_at: DateTimeUtc!
     src_file: SubmissionFile!
 }
