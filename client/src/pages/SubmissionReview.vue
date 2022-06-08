@@ -11,10 +11,10 @@
     >
       <submission-toolbar
         :id="id"
-        v-model="commentDrawerOpen"
+        v-model:commentDrawerOpen="commentDrawerOpen"
         :submission="submission"
       />
-      <submission-comment-drawer />
+      <submission-comment-drawer v-model:drawerOpen="commentDrawerOpen" />
       <q-page-container>
         <submission-content />
         <q-separator class="page-seperator" />
@@ -44,7 +44,7 @@ const { result } = useQuery(GET_SUBMISSION_REVIEW, { id: props.id })
 const submission = computed(() => {
   return result.value?.submission
 })
-
+const commentDrawerOpen = ref(true)
 provide("submission", submission)
 provide("activeComment", ref(null))
 </script>
