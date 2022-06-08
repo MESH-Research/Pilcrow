@@ -5,6 +5,7 @@ namespace Database\Seeders;
 
 use App\Models\InlineComment;
 use App\Models\StyleCriteria;
+use App\Models\Submission;
 use App\Models\User;
 use Carbon\Carbon;
 use Faker\Factory as Faker;
@@ -19,7 +20,7 @@ class InlineCommentSeeder extends Seeder
      * @param int $replies
      * @return void
      */
-    public function run($submissionId, $replies = 0)
+    public function run($submissionId, $replies = 0, $highlightRange = [15, 120])
     {
         $userIds = User::all()->pluck('id');
         $userId = $userIds->random();
@@ -28,11 +29,18 @@ class InlineCommentSeeder extends Seeder
             ->get()
             ->toArray();
 
+        $submission = Submission::find($submissionId);
+        $contentLength = mb_strlen($submission->content->data);
+        $from = rand(0, $contentLength);
+        $length = rand(...$highlightRange);
+        $to = $from + $length > $contentLength ? $contentLength : $from + $length;
         $parent = InlineComment::factory()->create([
             'submission_id' => $submissionId,
             'created_by' => $userId,
             'updated_by' => $userId,
             'style_criteria' => $style_criterias,
+            'from' => $from,
+            'to' => $to,
         ]);
 
         // Replies
