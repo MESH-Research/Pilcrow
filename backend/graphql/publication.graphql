@@ -38,6 +38,8 @@ extend type Mutation {
 
 input CreatePublicationInput {
     name: String
+    home_page_content: String
+    new_submission_content: String
     style_criterias: CreateStyleCriteriaHasMany
         @rename(attribute: "styleCriterias")
 }
@@ -46,6 +48,8 @@ input UpdatePublicationInput {
     id: ID!
     name: String
     description: String
+    home_page_content: String
+    new_submission_content: String
     style_criterias: UpdateStyleCriteriaHasMany
         @rename(attribute: "styleCriterias")
 }
@@ -87,6 +91,8 @@ A publication that has users, reviews, and submissions
 type Publication {
     id: ID!
     name: String!
+    home_page_content: String!
+    new_submission_content: String!
     created_at: DateTime
     updated_at: DateTime
     submissions: [Submission]! @hasMany

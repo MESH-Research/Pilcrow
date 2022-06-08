@@ -6,6 +6,7 @@ namespace Database\Seeders;
 use App\Models\Publication;
 use App\Models\Role;
 use App\Models\User;
+use Faker\Factory as Faker;
 use Illuminate\Database\Seeder;
 
 class PublicationSeeder extends Seeder
@@ -19,6 +20,7 @@ class PublicationSeeder extends Seeder
      */
     public function run(User $admin, User $editor)
     {
+        $faker = Faker::create();
         Publication::factory()
         ->hasAttached(
             $admin,
@@ -35,6 +37,8 @@ class PublicationSeeder extends Seeder
         ->create([
             'id' => 1,
             'name' => 'CCR Test Publication 1',
+            'home_page_content' => $faker->paragraphs(2, true),
+            'new_submission_content' => $faker->paragraphs(2, true),
         ]);
     }
 }
