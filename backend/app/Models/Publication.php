@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Models\Casts\CleanAdminHtml;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -17,6 +18,11 @@ class Publication extends BaseModel
 
     protected $rules = [
         'name' => 'max:256|unique:publications,name|required',
+    ];
+
+    protected $casts = [
+        'home_page_content' => CleanAdminHtml::class,
+        'new_submission_content' => CleanAdminHtml::class,
     ];
 
     /**
