@@ -14,8 +14,8 @@ return new class extends Migration
     public function up()
     {
         Schema::table('publications', function (Blueprint $table) {
-            $table->string('home_page_content')->nullable();
-            $table->string('new_submission_content')->nullable();
+            $table->longText('home_page_content')->nullable();
+            $table->longText('new_submission_content')->nullable();
         });
 
     }
