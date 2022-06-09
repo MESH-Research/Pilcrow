@@ -231,6 +231,44 @@ class SubmissionCommentTest extends TestCase
     /**
      * @return void
      */
+    public function testOverallCommentsCanBeCreatedOnTheGraphqlEndpoint()
+    {
+        $this->beAppAdmin();
+        $submission = $this->createSubmission();
+        $response = $this->graphQL(
+            'mutation AddOverallComment($submission_id: ID!) {
+                updateSubmission (input: {
+                    id: $submission_id
+                    overall_comments: {
+                        create: [{
+                            content: "Hello World"
+                        }]
+                    }
+                }) {
+                    overall_comments {
+                        content
+                    }
+                }
+            }',
+            [
+                'submission_id' => $submission->id,
+            ]
+        );
+        $expected = [
+            'updateSubmission' => [
+                'overall_comments' => [
+                    [
+                        'content' => 'Hello World',
+                    ],
+                ],
+            ],
+        ];
+        $response->assertJsonPath('data', $expected);
+    }
+
+    /**
+     * @return void
+     */
     public function testInlineCommentsCanBeCreatedOnTheGraphqlEndpoint()
     {
         $this->beAppAdmin();
@@ -241,20 +279,19 @@ class SubmissionCommentTest extends TestCase
                     id: $submission_id
                     inline_comments: {
                         create: [{
-
-                        content: "Hello World"
-                        style_criteria: [
-                            {
-                                name: "Hello"
-                                icon: "hello"
-                            }
-                            {
-                                name: "World"
-                                icon: "world"
-                            }
-                        ]
-                        from: 100
-                        to: 110
+                            content: "Hello World"
+                            style_criteria: [
+                                {
+                                    name: "Hello"
+                                    icon: "hello"
+                                }
+                                {
+                                    name: "World"
+                                    icon: "world"
+                                }
+                            ]
+                            from: 100
+                            to: 110
                         }]
                     }
                 }) {
