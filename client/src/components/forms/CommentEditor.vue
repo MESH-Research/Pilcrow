@@ -217,6 +217,9 @@ async function submitHandler() {
         })
     })
   }
+  if (editor.value.isEmpty) {
+    return false
+  }
   try {
     const args = {
       submission_id: submission.value.id,
