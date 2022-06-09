@@ -60,10 +60,7 @@
         $t("guiElements.form.submit")
       }}</q-btn>
       <q-btn
-        v-if="
-          props.commentType === 'inlineReply' ||
-          props.commentType === 'overallReply'
-        "
+        v-if="!props.commentType === 'overall'"
         ref="cancel_button"
         flat
         @click="cancelHandler()"
