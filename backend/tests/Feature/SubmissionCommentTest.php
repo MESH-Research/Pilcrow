@@ -88,31 +88,7 @@ class SubmissionCommentTest extends TestCase
         return $submission;
     }
 
-    public function testInlineCommentsAreNotRetrievedForASubmissionThatHasNone()
-    {
-        $submission = $this->createSubmission();
-        $this->assertEmpty($submission->inlineComments);
-    }
-
-    public function testOverallCommentsAreNotRetrievedForASubmissionThatHasNone()
-    {
-        $submission = $this->createSubmission();
-        $this->assertEmpty($submission->overallComments);
-    }
-
-    public function testInlineCommentsCanBeRetrievedBySubmission()
-    {
-        $submission = $this->createSubmissionWithInlineComment();
-        $this->assertEquals(1, $submission->inlineComments->count());
-    }
-
-    public function testOverallCommentsCanBeRetrievedBySubmission()
-    {
-        $submission = $this->createSubmissionWithOverallComment();
-        $this->assertEquals(1, $submission->overallComments->count());
-    }
-
-    public function testInlineCommentsCanBeRetrievedOnTheGraphqlEndpoint()
+    public function testRetrieveInlineComments()
     {
         $this->beAppAdmin();
 
@@ -178,7 +154,7 @@ class SubmissionCommentTest extends TestCase
         $response->assertJsonPath('data', $expected_data);
     }
 
-    public function testOverallCommentsCanBeRetrievedOnTheGraphqlEndpoint()
+    public function testRetrieveOverallComments()
     {
         $this->beAppAdmin();
 
@@ -231,45 +207,7 @@ class SubmissionCommentTest extends TestCase
     /**
      * @return void
      */
-    public function testOverallCommentsCanBeCreatedOnTheGraphqlEndpoint()
-    {
-        $this->beAppAdmin();
-        $submission = $this->createSubmission();
-        $response = $this->graphQL(
-            'mutation AddOverallComment($submission_id: ID!) {
-                updateSubmission (input: {
-                    id: $submission_id
-                    overall_comments: {
-                        create: [{
-                            content: "Hello World"
-                        }]
-                    }
-                }) {
-                    overall_comments {
-                        content
-                    }
-                }
-            }',
-            [
-                'submission_id' => $submission->id,
-            ]
-        );
-        $expected = [
-            'updateSubmission' => [
-                'overall_comments' => [
-                    [
-                        'content' => 'Hello World',
-                    ],
-                ],
-            ],
-        ];
-        $response->assertJsonPath('data', $expected);
-    }
-
-    /**
-     * @return void
-     */
-    public function testInlineCommentsCanBeCreatedOnTheGraphqlEndpoint()
+    public function testCreateInlineComment()
     {
         $this->beAppAdmin();
         $submission = $this->createSubmission();
@@ -334,10 +272,140 @@ class SubmissionCommentTest extends TestCase
         $response->assertJsonPath('data', $expected);
     }
 
+    public function testCreateInlineCommentReply(): void
+    {
+        $this->beAppAdmin();
+        $submission = $this->createSubmissionWithInlineComment();
+        $inline_comment = $submission->inlineComments()->first();
+
+        $response = $this->graphQL(
+            /** @lang GraphQL */
+            'mutation CreateInlineCommentReply($submissionId: ID! $parentId: ID $replyToId: ID) {
+                updateSubmission(input: {
+                    id: $submissionId
+                    inline_comments: {
+                        create: [
+                            {
+                                content: "New Inline Comment Reply"
+                                parent_id: $parentId
+                                reply_to_id: $replyToId
+                            }
+                        ]
+                    }
+                }) {
+                    inline_comments {
+                        replies {
+                            content
+                            reply_to_id
+                        }
+                    }
+                }
+            }',
+            [
+                    'submissionId' => $submission->id,
+                    'parentId' => $inline_comment->id,
+                    'replyToId' => $inline_comment->id,
+            ]
+        );
+
+        $response->assertJsonPath('data.updateSubmission.inline_comments', [
+            [
+                'replies' => [
+                    [
+                        'content' => 'New Inline Comment Reply',
+                        'reply_to_id' => (string)$inline_comment->id,
+                    ],
+                ],
+            ],
+        ]);
+    }
+
+    public function testCreateOverallComment(): void
+    {
+        $this->beAppAdmin();
+        $submission = $this->createSubmission();
+
+        $response = $this->graphQL(
+            /** @lang GraphQL */
+            'mutation CreateInlineCommentReply($submissionId: ID!) {
+                updateSubmission(input: {
+                    id: $submissionId
+                    overall_comments: {
+                        create: [
+                            {
+                                content: "New Overall Comment"
+                            }
+                        ]
+                    }
+                }) {
+                    overall_comments {
+                        content
+                    }
+                }
+            }',
+            [
+                    'submissionId' => $submission->id,
+            ]
+        );
+        $response->assertJsonPath('data.updateSubmission.overall_comments', [
+            [
+                'content' => 'New Overall Comment',
+            ],
+        ]);
+    }
+
+    public function testCreateOverallCommentReply(): void
+    {
+        $this->beAppAdmin();
+        $submission = $this->createSubmissionWithOverallComment();
+        $overall_comment = $submission->overallComments()->first();
+
+        $response = $this->graphQL(
+            /** @lang GraphQL */
+            'mutation CreateOverallCommentReply($submissionId: ID! $parentId: ID $replyToId: ID) {
+                updateSubmission(input: {
+                    id: $submissionId
+                    overall_comments: {
+                        create: [
+                            {
+                                content: "New Overall Comment Reply"
+                                parent_id: $parentId
+                                reply_to_id: $replyToId
+                            }
+                        ]
+                    }
+                }) {
+                    overall_comments {
+                        replies {
+                            content
+                            reply_to_id
+                        }
+                    }
+                }
+            }',
+            [
+                    'submissionId' => $submission->id,
+                    'parentId' => $overall_comment->id,
+                    'replyToId' => $overall_comment->id,
+            ]
+        );
+
+        $response->assertJsonPath('data.updateSubmission.overall_comments', [
+            [
+                'replies' => [
+                    [
+                        'content' => 'New Overall Comment Reply',
+                        'reply_to_id' => (string)$overall_comment->id,
+                    ],
+                ],
+            ],
+        ]);
+    }
+
     /**
      * @return void
      */
-    public function testInlineCommentsCanBeUpdatedOnTheGraphqlEndpoint()
+    public function testUpdateInlineComment()
     {
         $this->beAppAdmin();
         $submission = $this->createSubmissionWithInlineComment();
