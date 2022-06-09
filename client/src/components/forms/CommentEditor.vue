@@ -11,7 +11,7 @@
     <div class="comment-editor">
       <editor-content :editor="editor" />
     </div>
-    <div v-if="props.isInlineComment" class="q-py-md">
+    <div v-if="props.commentType === 'inline'" class="q-py-md">
       <q-list>
         <q-expansion-item
           v-for="criteria in styleCriteria"
@@ -60,7 +60,10 @@
         $t("guiElements.form.submit")
       }}</q-btn>
       <q-btn
-        v-if="props.isInlineComment"
+        v-if="
+          props.commentType === 'inlineReply' ||
+          props.commentType === 'overallReply'
+        "
         ref="cancel_button"
         flat
         @click="cancelHandler()"
@@ -73,12 +76,18 @@
 <script setup>
 import { ref, computed, inject } from "vue"
 import { useEditor, EditorContent } from "@tiptap/vue-3"
+import { useMutation } from "@vue/apollo-composable"
 import { useQuasar } from "quasar"
 import StarterKit from "@tiptap/starter-kit"
 import Link from "@tiptap/extension-link"
 import Placeholder from "@tiptap/extension-placeholder"
 import CommentEditorButton from "../atoms/CommentEditorButton.vue"
 import BypassStyleCriteriaDialogVue from "../dialogs/BypassStyleCriteriaDialog.vue"
+import {
+  CREATE_OVERALL_COMMENT,
+  CREATE_OVERALL_COMMENT_REPLY,
+  CREATE_INLINE_COMMENT_REPLY,
+} from "src/graphql/mutations"
 import { useI18n } from "vue-i18n"
 import { uniqueId } from "lodash"
 
@@ -89,13 +98,19 @@ function dirtyDialog() {
   })
 }
 const uuid = uniqueId()
-
-const emit = defineEmits(["cancel"])
-
+const emit = defineEmits(["cancel", "submit"])
 const props = defineProps({
-  isInlineComment: {
-    type: Boolean,
-    default: false,
+  commentType: {
+    type: String,
+    required: true,
+  },
+  parent: {
+    type: Object,
+    default: () => {},
+  },
+  replyTo: {
+    type: Object,
+    default: () => {},
   },
 })
 
@@ -180,20 +195,52 @@ const commentEditorButtons = ref([
     iconName: "link_off",
   },
 ])
-
-function submitHandler() {
-  if (hasStyleCriteria.value || !props.isInlineComment) {
-    return true
+const submission = inject("submission")
+const mutations = {
+  inlineReply: CREATE_INLINE_COMMENT_REPLY,
+  overall: CREATE_OVERALL_COMMENT,
+  overallReply: CREATE_OVERALL_COMMENT_REPLY,
+}
+const { mutate: createComment } = useMutation(mutations[props.commentType])
+const hasStyleCriteria = computed(() => {
+  return styleCriteria.value.some((criteria) => criteria.selected)
+})
+async function submitHandler() {
+  if (!hasStyleCriteria.value && props.commentType === "inline") {
+    return new Promise((resolve) => {
+      dirtyDialog()
+        .onOk(function () {
+          resolve(true)
+        })
+        .onCancel(function () {
+          resolve(false)
+        })
+    })
   }
-  return new Promise((resolve) => {
-    dirtyDialog()
-      .onOk(function () {
-        resolve(true)
+  try {
+    const args = {
+      submission_id: submission.value.id,
+      content: editor.value.getHTML(),
+    }
+    if (
+      props.commentType === "overallReply" ||
+      props.commentType === "inlineReply"
+    ) {
+      args.reply_to_id = props.replyTo.id
+      args.parent_id = props.parent.id
+    }
+    await createComment({
+      ...args,
+    })
+      .then(() => {
+        editor.value.commands.clearContent(true)
       })
-      .onCancel(function () {
-        resolve(false)
+      .then(() => {
+        emit("submit")
       })
-  })
+  } catch (error) {
+    console.log("Error", error)
+  }
 }
 
 function cancelHandler() {
@@ -225,18 +272,12 @@ function setLink() {
     .run()
 }
 
-const submission = inject("submission")
-
 const styleCriteria = ref(
   submission.value.publication.style_criterias.map((c) => ({
     ...c,
     selected: false,
   }))
 )
-
-const hasStyleCriteria = computed(() => {
-  return styleCriteria.value.some((criteria) => criteria.selected)
-})
 </script>
 <style>
 .comment-editor .ProseMirror {

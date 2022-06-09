@@ -3,7 +3,7 @@
     <div class="comments-wrapper">
       <h3 class="text-h1">Overall Comments</h3>
       <q-card class="q-mb-md q-pa-md bg-grey-1">
-        <comment-editor />
+        <comment-editor comment-type="overall" />
       </q-card>
       <overall-comment
         v-for="comment in overall_comments"

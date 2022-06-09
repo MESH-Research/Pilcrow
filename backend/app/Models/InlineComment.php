@@ -26,6 +26,8 @@ class InlineComment extends BaseModel
         'submission_id',
         'content',
         'style_criteria',
+        'parent_id',
+        'reply_to_id',
         'from',
         'to',
     ];

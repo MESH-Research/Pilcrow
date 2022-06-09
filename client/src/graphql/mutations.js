@@ -1,5 +1,6 @@
 import gql from "graphql-tag"
 import {
+  _COMMENT_FIELDS,
   _CURRENT_USER_FIELDS,
   _PROFILE_METADATA_FIELDS,
   _RELATED_USER_FIELDS,
@@ -352,17 +353,78 @@ export const DELETE_PUBLICATION_STYLE_CRITERIA = gql`
 `
 
 export const CREATE_OVERALL_COMMENT = gql`
-  mutation AddOverallComment($submission_id: ID!, $content: String!) {
-    addOverallComment(submission_id: $submission_id, content: $content) {
+  mutation CreateOverallComment($submission_id: ID!, $content: String!) {
+    updateSubmission(
+      input: {
+        id: $submission_id
+        overall_comments: { create: [{ content: $content }] }
+      }
+    ) {
       id
-      content
-      created_at
-      created_by {
-        id
-        email
-        name
-        username
+      overall_comments {
+        ...commentFields
       }
     }
   }
+  ${_COMMENT_FIELDS}
+`
+
+export const CREATE_OVERALL_COMMENT_REPLY = gql`
+  mutation CreateOverallCommentReply(
+    $submission_id: ID!
+    $content: String!
+    $reply_to_id: ID!
+    $parent_id: ID!
+  ) {
+    updateSubmission(
+      input: {
+        id: $submission_id
+        overall_comments: {
+          create: [
+            {
+              content: $content
+              reply_to_id: $reply_to_id
+              parent_id: $parent_id
+            }
+          ]
+        }
+      }
+    ) {
+      id
+      overall_comments {
+        ...commentFields
+      }
+    }
+  }
+  ${_COMMENT_FIELDS}
+`
+
+export const CREATE_INLINE_COMMENT_REPLY = gql`
+  mutation CreateInlineCommentReply(
+    $submission_id: ID!
+    $content: String!
+    $reply_to_id: ID!
+    $parent_id: ID!
+  ) {
+    updateSubmission(
+      input: {
+        id: $submission_id
+        inline_comments: {
+          create: [
+            {
+              content: $content
+              reply_to_id: $reply_to_id
+              parent_id: $parent_id
+            }
+          ]
+        }
+      }
+    ) {
+      id
+      inline_comments {
+        ...commentFields
+      }
+    }
+  }
+  ${_COMMENT_FIELDS}
 `

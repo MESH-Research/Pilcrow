@@ -23,7 +23,13 @@
         <span class="text-h4 q-pl-sm">{{
           $t("submissions.comment.reply.title")
         }}</span>
-        <comment-editor :is-inline-comment="false" @cancel="cancelReply" />
+        <comment-editor
+          comment-type="overallReply"
+          :parent="comment"
+          :reply-to="comment"
+          @cancel="cancelReply"
+          @submit="submitReply"
+        />
       </q-card-section>
       <q-card-actions class="q-pa-md q-pb-lg">
         <q-btn
@@ -36,7 +42,7 @@
         />
         <template v-if="hasReplies">
           <q-btn
-            v-if="!props.isInlineReply && !props.isOverallReply && !isCollapsed"
+            v-if="!isCollapsed"
             aria-label="Hide Replies"
             bordered
             color="grey-3"
@@ -47,7 +53,7 @@
             <span>Hide Replies</span>
           </q-btn>
           <q-btn
-            v-if="!props.isInlineReply && !props.isOverallReply && isCollapsed"
+            v-if="isCollapsed"
             aria-label="Show Replies"
             bordered
             color="secondary"
@@ -67,6 +73,7 @@
           :key="reply.id"
           ref="replyRefs"
           :comment="reply"
+          :parent="comment"
           :replies="comment.replies"
         />
       </div>
@@ -91,6 +98,9 @@ const props = defineProps({
   },
 })
 
+function submitReply() {
+  isReplying.value = false
+}
 function cancelReply() {
   isReplying.value = false
 }

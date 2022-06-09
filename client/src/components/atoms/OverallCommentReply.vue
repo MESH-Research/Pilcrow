@@ -23,7 +23,13 @@
       <span class="text-h4 q-pl-sm">{{
         $t("submissions.comment.reply.title")
       }}</span>
-      <comment-editor :is-inline-comment="false" @cancel="cancelReply" />
+      <comment-editor
+        comment-type="overallReply"
+        :parent="parent"
+        :reply-to="comment"
+        @cancel="cancelReply"
+        @submit="submitReply"
+      />
     </q-card-section>
     <q-card-actions class="q-pa-md q-pb-lg">
       <q-btn
@@ -45,6 +51,10 @@ import CommentEditor from "../forms/CommentEditor.vue"
 const isReplying = ref(false)
 
 const props = defineProps({
+  parent: {
+    type: Object,
+    required: true,
+  },
   comment: {
     type: Object,
     required: true,
@@ -55,6 +65,9 @@ const props = defineProps({
   },
 })
 
+function submitReply() {
+  isReplying.value = false
+}
 function cancelReply() {
   isReplying.value = false
 }

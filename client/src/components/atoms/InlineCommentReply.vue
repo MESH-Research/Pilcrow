@@ -18,6 +18,19 @@
       <div v-html="comment.content" />
     </q-card-section>
 
+    <q-card-section v-if="isReplying" ref="comment_reply" class="q-pa-md">
+      <q-separator class="q-mb-md" />
+      <span class="text-h4 q-pl-sm">{{
+        $t("submissions.comment.reply.title")
+      }}</span>
+      <comment-editor
+        comment-type="inlineReply"
+        :parent="parent"
+        :reply-to="comment"
+        @cancel="cancelReply"
+        @submit="submitReply"
+      />
+    </q-card-section>
     <q-card-actions class="q-pa-md q-pb-lg">
       <q-btn
         v-if="!isReplying"
@@ -34,8 +47,13 @@
 import { computed, inject, ref } from "vue"
 import CommentReplyReference from "./CommentReplyReference.vue"
 import CommentHeader from "./CommentHeader.vue"
+import CommentEditor from "../forms/CommentEditor.vue"
 const isReplying = ref(false)
 const props = defineProps({
+  parent: {
+    type: Object,
+    required: true,
+  },
   comment: {
     required: true,
     type: Object,
@@ -46,6 +64,15 @@ const props = defineProps({
   },
 })
 
+function submitReply() {
+  isReplying.value = false
+}
+function cancelReply() {
+  isReplying.value = false
+}
+function initiateReply() {
+  isReplying.value = true
+}
 const activeComment = inject("activeComment")
 const isActive = computed(() => {
   return (

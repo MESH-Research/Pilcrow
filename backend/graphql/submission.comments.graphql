@@ -12,8 +12,8 @@ type InlineComment implements Comment {
     created_by: User! @belongsTo(relation: "createdBy")
     updated_by: User! @belongsTo(relation: "updatedBy")
     created_at: DateTimeUtc!
-    updated_at: DateTime!
-    replies: [InlineCommentReply!]
+    updated_at: DateTimeUtc!
+    replies: [InlineCommentReply!] @hasMany
     style_criteria: [InlineCommentStyleCriteria!]
     from: Int
     to: Int
@@ -34,8 +34,11 @@ type InlineCommentReply implements Comment {
     id: ID!
     content: String!
     created_by: User! @belongsTo(relation: "createdBy")
-    reply_to_id: ID!
+    updated_by: User! @belongsTo(relation: "updatedBy")
     created_at: DateTimeUtc!
+    updated_at: DateTimeUtc!
+    parent_id: ID!
+    reply_to_id: ID!
 }
 
 """
@@ -47,8 +50,8 @@ type OverallComment implements Comment {
     created_by: User! @belongsTo(relation: "createdBy")
     created_at: DateTimeUtc!
     updated_by: User! @belongsTo(relation: "updatedBy")
-    updated_at: DateTime!
-    replies: [OverallCommentReply!]
+    updated_at: DateTimeUtc!
+    replies: [OverallCommentReply!] @hasMany
 }
 
 """
@@ -58,8 +61,11 @@ type OverallCommentReply implements Comment {
     id: ID!
     content: String!
     created_by: User! @belongsTo(relation: "createdBy")
-    reply_to_id: ID!
+    updated_by: User! @belongsTo(relation: "updatedBy")
     created_at: DateTimeUtc!
+    updated_at: DateTimeUtc!
+    parent_id: ID!
+    reply_to_id: ID!
 }
 
 extend input UpdateSubmissionInput {
@@ -97,8 +103,8 @@ input InlineCommentStyleCriteriaInput {
 }
 
 input OverallCommentHasManyInput {
-    create: [CreateInlineCommentInput!]
-    update: [UpdateInlineCommentInput!]
+    create: [CreateOverallCommentInput!]
+    update: [UpdateOverallCommentInput!]
 }
 
 input CreateOverallCommentInput {
