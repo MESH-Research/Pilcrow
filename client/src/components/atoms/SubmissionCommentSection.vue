@@ -52,7 +52,7 @@ watch(
       if (!scrollTarget) return
       const target = getScrollTarget(scrollTarget)
       const offset = scrollTarget.offsetTop
-      setVerticalScrollPosition(target, offset - 50, 250)
+      setVerticalScrollPosition(target, offset - 64, 250)
     })
   },
   { deep: false }

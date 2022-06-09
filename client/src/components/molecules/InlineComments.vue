@@ -60,7 +60,7 @@ watch(
       }
       if (!scrollTarget) return
       const target = getScrollTarget(scrollTarget)
-      const offset = scrollTarget.offsetTop
+      const offset = scrollTarget.offsetTop - 14
       setVerticalScrollPosition(target, offset, 250)
     })
   },

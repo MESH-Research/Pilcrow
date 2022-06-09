@@ -44,7 +44,7 @@
           @submit="submitReply"
         />
       </q-card-section>
-      <q-card-actions class="q-pa-md q-pb-lg">
+      <q-card-actions v-if="!isReplying || hasReplies" class="q-pa-md q-pb-lg">
         <q-btn
           v-if="!isReplying"
           ref="reply_button"
