@@ -92,15 +92,32 @@ describe("Submissions Review", () => {
     cy.intercept("/graphql").as("addOverallCommentReplyMutation")
     cy.dataCy("overallCommentReplyForm").first().find("[data-cy=submit]").click()
     cy.wait("@addOverallCommentReplyMutation")
-    //   9 overall comment parents already exist from database seeding
-    // + 1 newly created overall comment
-    // + 0 disallowed empty overall comment creation attempt
+    //   9 overall comment replies already exist from database seeding
+    // + 1 newly created overall comment reply
+    // + 0 disallowed empty overall comment reply creation attempt
     // = 10
     cy.dataCy("overallCommentReply").should('have.length', 10)
     cy.dataCy("overallCommentReply").first().contains("Hello World")
   })
 
   it("should allow a reviewer to submit inline comment replies", () => {
-    // TODO
+    cy.task("resetDb")
+    cy.login({ email: "reviewer@ccrproject.dev" })
+    cy.visit("submission/review/100")
+    cy.dataCy("toggleInlineCommentsButton").click()
+    cy.dataCy("inlineComment").first().find("[data-cy=inlineCommentReplyButton]").click()
+    // An attempt to create an empty inline comment reply
+    cy.dataCy("inlineCommentReplyForm").first().find("[data-cy=submit]").click()
+    // Creating an inline comment reply
+    cy.dataCy("inlineCommentReplyEditor").first().type("Hello World")
+    cy.intercept("/graphql").as("addInlineCommentReplyMutation")
+    cy.dataCy("inlineCommentReplyForm").first().find("[data-cy=submit]").click()
+    cy.wait("@addInlineCommentReplyMutation")
+    //   1 inline comment reply already exists on the first inline comment from database seeding
+    // + 1 newly created inline comment reply
+    // + 0 disallowed empty inline comment reply creation attempt
+    // = 2
+    cy.dataCy("inlineComment").first().find("[data-cy=inlineCommentReply]").should('have.length', 2)
+    cy.dataCy("inlineComment").first().find("[data-cy=inlineCommentReply]").last().contains("Hello World")
   })
 })
