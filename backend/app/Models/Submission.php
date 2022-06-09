@@ -90,7 +90,7 @@ class Submission extends Model
     public function submitters(): BelongsToMany
     {
          return $this->belongsToMany(User::class)
-            ->withTimeStamps()
+            ->withTimestamps()
             ->withPivotValue('role_id', Role::SUBMITTER_ROLE_ID);
     }
 
