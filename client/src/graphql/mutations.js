@@ -363,6 +363,10 @@ export const CREATE_OVERALL_COMMENT = gql`
       id
       overall_comments {
         ...commentFields
+        replies {
+          ...commentFields
+          reply_to_id
+        }
       }
     }
   }
@@ -393,6 +397,10 @@ export const CREATE_OVERALL_COMMENT_REPLY = gql`
       id
       overall_comments {
         ...commentFields
+        replies {
+          reply_to_id
+          ...commentFields
+        }
       }
     }
   }
@@ -423,6 +431,10 @@ export const CREATE_INLINE_COMMENT_REPLY = gql`
       id
       inline_comments {
         ...commentFields
+        replies {
+          reply_to_id
+          ...commentFields
+        }
       }
     }
   }
