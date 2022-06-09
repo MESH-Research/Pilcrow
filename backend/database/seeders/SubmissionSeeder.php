@@ -34,6 +34,11 @@ class SubmissionSeeder extends Seeder
                 [],
                 'reviewCoordinators'
             )
+            ->hasAttached(
+                User::where('username', 'reviewer')->firstOrFail(),
+                [],
+                'reviewers'
+            )
             ->has(SubmissionContent::factory()->count(3), 'contentHistory')
             ->create([
                 'id' => $id,

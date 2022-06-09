@@ -1,29 +1,31 @@
 <template>
-  <div v-if="!submission" class="q-pa-lg">
-    {{ $t("loading") }}
-  </div>
-  <article v-else>
-    <q-layout
-      data-cy="submission_review_layout"
-      view="hHh lpR fFr"
-      container
-      style="min-height: calc(100vh - 70px)"
-    >
-      <submission-toolbar
-        :id="id"
-        v-model:commentDrawerOpen="commentDrawerOpen"
-        :submission="submission"
-      />
-      <submission-comment-drawer v-model:drawerOpen="commentDrawerOpen" />
-      <q-page-container>
-        <submission-content />
-        <q-separator class="page-seperator" />
-        <submission-comment-section />
-      </q-page-container>
-    </q-layout>
+  <div data-cy="submission_review_page">
+    <div v-if="!submission" class="q-pa-lg">
+      {{ $t("loading") }}
+    </div>
+    <article v-else>
+      <q-layout
+        data-cy="submission_review_layout"
+        view="hHh lpR fFr"
+        container
+        style="min-height: calc(100vh - 70px)"
+      >
+        <submission-toolbar
+          :id="id"
+          v-model:commentDrawerOpen="commentDrawerOpen"
+          :submission="submission"
+        />
+        <submission-comment-drawer v-model:drawerOpen="commentDrawerOpen" />
+        <q-page-container>
+          <submission-content />
+          <q-separator class="page-seperator" />
+          <submission-comment-section />
+        </q-page-container>
+      </q-layout>
 
-    <div class="row q-col-gutter-lg q-pa-lg"></div>
-  </article>
+      <div class="row q-col-gutter-lg q-pa-lg"></div>
+    </article>
+  </div>
 </template>
 
 <script setup>
@@ -44,7 +46,7 @@ const { result } = useQuery(GET_SUBMISSION_REVIEW, { id: props.id })
 const submission = computed(() => {
   return result.value?.submission
 })
-const commentDrawerOpen = ref(true)
+const commentDrawerOpen = ref(false)
 provide("submission", submission)
 provide("activeComment", ref(null))
 </script>

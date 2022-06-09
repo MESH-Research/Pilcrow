@@ -56,7 +56,7 @@
       </q-list>
     </div>
     <q-card-actions class="q-mt-md q-pa-none" align="between">
-      <q-btn data-ref="submit" color="primary" @click="submitHandler()">{{
+      <q-btn data-cy="submit" color="primary" @click="submitHandler()">{{
         $t("guiElements.form.submit")
       }}</q-btn>
       <q-btn

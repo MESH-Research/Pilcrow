@@ -46,6 +46,13 @@ class DatabaseSeeder extends Seeder
         ]);
 
         User::factory()->create([
+            'username' => 'reviewer',
+            'email' => 'reviewer@ccrproject.dev',
+            'name' => 'Reviewer for Submission',
+            'password' => Hash::make('reviewerPassword!@#'),
+        ]);
+
+        User::factory()->create([
             'username' => 'regularUser',
             'email' => 'regularuser@ccrproject.dev',
             'name' => 'Regular User',

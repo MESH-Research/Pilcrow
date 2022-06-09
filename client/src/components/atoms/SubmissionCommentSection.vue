@@ -2,8 +2,8 @@
   <section class="comments">
     <div class="comments-wrapper">
       <h3 class="text-h1">Overall Comments</h3>
-      <q-card class="q-mb-md q-pa-md bg-grey-1">
-        <comment-editor comment-type="overall" />
+      <q-card class="q-mb-md q-pa-md bg-grey-1" data-cy="overallCommentForm">
+        <comment-editor comment-type="overall" data-cy="overallCommentEditor" />
       </q-card>
       <overall-comment
         v-for="comment in overall_comments"
