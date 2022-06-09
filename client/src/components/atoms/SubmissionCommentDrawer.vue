@@ -1,5 +1,11 @@
 <template>
-  <q-drawer show-if-above side="right" bordered :width="drawerWidth">
+  <q-drawer
+    v-model="drawerOpen"
+    show-if-above
+    side="right"
+    bordered
+    :width="drawerWidth"
+  >
     <div class="row fit">
       <div
         v-touch-pan.horizontal.prevent.mouse.preserveCursor="handlePan"
@@ -14,8 +20,23 @@
 </template>
 
 <script setup>
-import { ref } from "vue"
+import { ref, computed } from "vue"
 import InlineComments from "../molecules/InlineComments.vue"
+
+const props = defineProps({
+  drawerOpen: {
+    type: Boolean,
+    required: false,
+    default: true,
+  },
+})
+
+const emit = defineEmits(["update:drawerOpen"])
+
+const drawerOpen = computed({
+  get: () => props.drawerOpen,
+  set: (value) => emit("update:drawerOpen", value),
+})
 
 const drawerWidth = ref(440)
 let originalWidth

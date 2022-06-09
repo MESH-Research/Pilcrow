@@ -54,3 +54,15 @@ export const _PAGINATION_FIELDS = gql`
     perPage
   }
 `
+
+export const _COMMENT_FIELDS = gql`
+  fragment commentFields on Comment {
+    id
+    content
+    created_at
+    created_by {
+      ...relatedUserFields
+    }
+  }
+  ${_RELATED_USER_FIELDS}
+`

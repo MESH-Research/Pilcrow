@@ -6,7 +6,7 @@ extend type Submission {
 """
 An inline comment of a submission
 """
-type InlineComment {
+type InlineComment implements Comment {
     id: ID!
     content: String!
     created_by: User! @belongsTo(relation: "createdBy")
@@ -30,7 +30,7 @@ type InlineCommentStyleCriteria {
 """
 A reply to an inline comment of a submission
 """
-type InlineCommentReply {
+type InlineCommentReply implements Comment {
     id: ID!
     content: String!
     created_by: User! @belongsTo(relation: "createdBy")
@@ -41,7 +41,7 @@ type InlineCommentReply {
 """
 An overall comment of a submission
 """
-type OverallComment {
+type OverallComment implements Comment {
     id: ID!
     content: String!
     created_by: User! @belongsTo(relation: "createdBy")
@@ -54,7 +54,7 @@ type OverallComment {
 """
 A reply to an overall comment of a submission
 """
-type OverallCommentReply {
+type OverallCommentReply implements Comment {
     id: ID!
     content: String!
     created_by: User! @belongsTo(relation: "createdBy")
@@ -110,4 +110,13 @@ input CreateOverallCommentInput {
 input UpdateOverallCommentInput {
     id: ID!
     content: String
+}
+
+interface Comment {
+    id: ID!
+    content: String!
+    created_by: User!
+    updated_by: User!
+    created_at: DateTimeUtc!
+    updated_at: DateTimeUtc!
 }
