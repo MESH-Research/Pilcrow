@@ -88,6 +88,30 @@ class SubmissionCommentTest extends TestCase
         return $submission;
     }
 
+    public function testInlineCommentsAreNotRetrievedForASubmissionThatHasNone()
+    {
+        $submission = $this->createSubmission();
+        $this->assertEmpty($submission->inlineComments);
+    }
+
+    public function testOverallCommentsAreNotRetrievedForASubmissionThatHasNone()
+    {
+        $submission = $this->createSubmission();
+        $this->assertEmpty($submission->overallComments);
+    }
+
+    public function testInlineCommentsCanBeRetrievedBySubmission()
+    {
+        $submission = $this->createSubmissionWithInlineComment();
+        $this->assertEquals(1, $submission->inlineComments->count());
+    }
+
+    public function testOverallCommentsCanBeRetrievedBySubmission()
+    {
+        $submission = $this->createSubmissionWithOverallComment();
+        $this->assertEquals(1, $submission->overallComments->count());
+    }
+
     public function testRetrieveInlineComments()
     {
         $this->beAppAdmin();
