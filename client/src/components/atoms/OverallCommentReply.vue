@@ -35,6 +35,7 @@
       <q-btn
         v-if="!isReplying"
         ref="reply_button"
+        data-cy="overallCommentReplyButton"
         bordered
         color="primary"
         label="Reply"

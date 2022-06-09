@@ -81,7 +81,23 @@ describe("Submissions Review", () => {
   })
 
   it("should allow a reviewer to submit overall comment replies", () => {
-    // TODO
+    cy.task("resetDb")
+    cy.login({ email: "reviewer@ccrproject.dev" })
+    cy.visit("submission/review/100")
+    cy.dataCy("overallComment").first().find("[data-cy=overallCommentReplyButton]").click()
+    // An attempt to create an empty overall comment
+    cy.dataCy("overallCommentReplyForm").first().find("[data-cy=submit]").click()
+    // Creating an overall comment
+    cy.dataCy("overallCommentReplyEditor").first().type("Hello World")
+    cy.intercept("/graphql").as("addOverallCommentReplyMutation")
+    cy.dataCy("overallCommentReplyForm").first().find("[data-cy=submit]").click()
+    cy.wait("@addOverallCommentReplyMutation")
+    //   9 overall comment parents already exist from database seeding
+    // + 1 newly created overall comment
+    // + 0 disallowed empty overall comment creation attempt
+    // = 10
+    cy.dataCy("overallCommentReply").should('have.length', 10)
+    cy.dataCy("overallCommentReply").first().contains("Hello World")
   })
 
   it("should allow a reviewer to submit inline comment replies", () => {
