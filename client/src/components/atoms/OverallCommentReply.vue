@@ -22,7 +22,7 @@
       v-if="isReplying"
       ref="comment_reply"
       data-cy="overallCommentReplyForm"
-      class="q-pa-md"
+      class="q-pa-md q-pb-lg"
     >
       <q-separator class="q-mb-md" />
       <span class="text-h4 q-pl-sm">{{

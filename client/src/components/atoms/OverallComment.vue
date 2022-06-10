@@ -22,7 +22,7 @@
         v-if="isReplying"
         ref="comment_reply"
         data-cy="overallCommentReplyForm"
-        class="q-pa-md"
+        class="q-pa-md q-pb-lg"
       >
         <q-separator class="q-mb-md" />
         <span class="text-h4 q-pl-sm">{{
@@ -37,7 +37,7 @@
           @submit="submitReply"
         />
       </q-card-section>
-      <q-card-actions class="q-pa-md q-pb-lg">
+      <q-card-actions v-if="!isReplying || hasReplies" class="q-pa-md q-pb-lg">
         <q-btn
           v-if="!isReplying"
           ref="reply_button"
