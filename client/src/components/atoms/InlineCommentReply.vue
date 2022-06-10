@@ -21,7 +21,6 @@
     <q-card-section
       v-if="isReplying"
       ref="comment_reply"
-      data-cy="inlineCommentReplyForm"
       class="q-pa-md q-pb-lg"
     >
       <q-separator class="q-mb-md" />

@@ -8,8 +8,8 @@
         ref="commentRefs"
         :comment="comment"
       />
-      <q-card class="q-mb-md q-pa-md bg-grey-1" data-cy="overallCommentForm">
-        <h4 class="q-mt-none">Add a New Overall Comment</h4>
+      <q-card class="q-mb-md q-pa-md bg-grey-1">
+        <h4 class="q-mt-none">Add Your Overall Comment</h4>
         <comment-editor comment-type="overall" data-cy="overallCommentEditor" />
       </q-card>
     </div>

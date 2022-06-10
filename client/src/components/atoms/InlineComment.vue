@@ -31,12 +31,7 @@
         </q-chip>
       </q-card-section>
 
-      <q-card-section
-        v-if="isReplying"
-        ref="comment_reply"
-        data-cy="inlineCommentReplyForm"
-        class="q-pa-md"
-      >
+      <q-card-section v-if="isReplying" ref="comment_reply" class="q-pa-md">
         <q-separator class="q-mb-md" />
         <span class="text-h4 q-pl-sm">{{
           $t("submissions.comment.reply.title")

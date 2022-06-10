@@ -66,11 +66,11 @@ describe("Submissions Review", () => {
     cy.login({ email: "reviewer@ccrproject.dev" })
     cy.visit("submission/review/100")
     // Attempt to create an empty overall comment
-    cy.dataCy("overallCommentForm").find("[data-cy=submit]").click()
+    cy.dataCy("overallCommentEditor").find("button[type=submit]").click()
     // Create an overall comment
     cy.dataCy("overallCommentEditor").type("This is an overall comment.")
     cy.intercept("/graphql").as("addOverallCommentMutation")
-    cy.dataCy("overallCommentForm").find("[data-cy=submit]").click()
+    cy.dataCy("overallCommentEditor").find("button[type=submit]").click()
     cy.wait("@addOverallCommentMutation")
     //   3 overall comment parents already exist from database seeding
     // + 0 disallowed empty overall comment creation attempt
@@ -86,11 +86,11 @@ describe("Submissions Review", () => {
     cy.visit("submission/review/100")
     cy.dataCy("overallComment").first().find("[data-cy=overallCommentReplyButton]").click()
     // Attempt to create an empty overall comment reply
-    cy.dataCy("overallCommentReplyForm").first().find("[data-cy=submit]").click()
+    cy.dataCy("overallCommentReplyEditor").first().find("button[type=submit]").click()
     // Create an overall comment reply
     cy.dataCy("overallCommentReplyEditor").first().type("This is a reply to an overall comment.")
     cy.intercept("/graphql").as("addOverallCommentReplyMutation")
-    cy.dataCy("overallCommentReplyForm").first().find("[data-cy=submit]").click()
+    cy.dataCy("overallCommentReplyEditor").first().find("button[type=submit]").click()
     cy.wait("@addOverallCommentReplyMutation")
     //   0 overall comment replies already exist from database seeding
     // + 0 disallowed empty overall comment reply creation attempt
@@ -106,11 +106,11 @@ describe("Submissions Review", () => {
     cy.visit("submission/review/100")
     cy.dataCy("overallCommentReply").last().find("[data-cy=overallCommentReplyButton]").click()
     // Attempt to create an empty reply to an overall comment reply
-    cy.dataCy("overallCommentReplyForm").last().find("[data-cy=submit]").click()
+    cy.dataCy("overallCommentReplyEditor").last().find("button[type=submit]").click()
     // Create a reply to an overall comment reply
     cy.dataCy("overallCommentReplyEditor").last().type("This is a reply to an overall comment reply.")
     cy.intercept("/graphql").as("addOverallCommentReplyMutation")
-    cy.dataCy("overallCommentReplyForm").last().find("[data-cy=submit]").click()
+    cy.dataCy("overallCommentReplyEditor").last().find("button[type=submit]").click()
     cy.wait("@addOverallCommentReplyMutation")
     //   9 overall comment replies already exist in total from database seeding
     // + 0 disallowed empty overall comment reply creation attempt
@@ -131,11 +131,11 @@ describe("Submissions Review", () => {
       .first() // This gets the Reply button of the inline comment and not its reply
       .click()
     // Attempt to create an empty inline comment reply
-    cy.dataCy("inlineCommentReplyForm").first().find("[data-cy=submit]").click()
+    cy.dataCy("inlineCommentReplyEditor").first().find("button[type=submit]").click()
     // Create an inline comment reply
     cy.dataCy("inlineCommentReplyEditor").first().type("This is an inline comment reply.")
     cy.intercept("/graphql").as("addInlineCommentReplyMutation")
-    cy.dataCy("inlineCommentReplyForm").first().find("[data-cy=submit]").click()
+    cy.dataCy("inlineCommentReplyEditor").first().find("button[type=submit]").click()
     cy.wait("@addInlineCommentReplyMutation")
     //   1 inline comment reply already exists on the first inline comment from database seeding
     // + 0 disallowed empty inline comment reply creation attempt
@@ -152,11 +152,11 @@ describe("Submissions Review", () => {
     cy.dataCy("toggleInlineCommentsButton").click()
     cy.dataCy("inlineCommentReply").last().find("[data-cy=inlineCommentReplyButton]").click()
     // Attempt to create an empty reply to an inline comment reply
-    cy.dataCy("inlineCommentReplyForm").last().find("[data-cy=submit]").click()
+    cy.dataCy("inlineCommentReplyEditor").last().find("button[type=submit]").click()
     // Create a reply to an inline comment reply
     cy.dataCy("inlineCommentReplyEditor").first().type("This is a reply to an inline comment reply.")
     cy.intercept("/graphql").as("addInlineCommentReplyMutation")
-    cy.dataCy("inlineCommentReplyForm").first().find("[data-cy=submit]").click()
+    cy.dataCy("inlineCommentReplyEditor").first().find("button[type=submit]").click()
     cy.wait("@addInlineCommentReplyMutation")
     //   11 inline comment reples already exist in total from database seeding
     // + 0 disallowed empty inline comment reply creation attempt
