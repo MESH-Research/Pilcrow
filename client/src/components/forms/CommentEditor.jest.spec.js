@@ -100,7 +100,7 @@ describe("CommentEditor", () => {
   it("shows dialog if no criteria are selected", async () => {
     const { wrapper } = wrapperFactory()
     await flushPromises()
-    await wrapper.findComponent('[type="submit"]').trigger("click")
+    await wrapper.findComponent({ name: "QForm" }).trigger("submit")
     expect(mockDialog).toHaveBeenCalled()
   })
 
@@ -112,7 +112,7 @@ describe("CommentEditor", () => {
       .at(0)
       .trigger("click")
     expect(wrapper.vm.hasStyleCriteria).toBe(true)
-    await wrapper.findComponent('[type="submit"]').trigger("click")
+    await wrapper.findComponent({ name: "QForm" }).trigger("submit")
     expect(mockDialog).not.toHaveBeenCalled()
   })
 

@@ -1,5 +1,5 @@
 <template>
-  <q-form @submit="submitHandler()">
+  <q-form @submit="submitHandler">
     <q-card v-if="editor" flat class="bg-grey-1">
       <q-btn-group spread unelevated class="block text-center q-pb-md">
         <comment-editor-button
