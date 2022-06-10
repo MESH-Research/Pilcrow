@@ -56,9 +56,9 @@
       </q-list>
     </div>
     <q-card-actions class="q-mt-md q-pa-none" align="between">
-      <q-btn data-cy="submit" color="primary" @click="submitHandler()">{{
-        $t("guiElements.form.submit")
-      }}</q-btn>
+      <q-btn data-cy="submit" color="primary" @click="submitHandler()">
+        {{ $t("guiElements.form.submit") }}
+      </q-btn>
       <q-btn
         v-if="props.commentType !== 'overall'"
         ref="cancel_button"
