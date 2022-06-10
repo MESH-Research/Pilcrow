@@ -64,8 +64,9 @@
         ref="cancel_button"
         flat
         @click="cancelHandler()"
-        >{{ $t("guiElements.form.cancel") }}</q-btn
-      >
+        >
+          {{ $t("guiElements.form.cancel") }}
+        </q-btn>
     </q-card-actions>
   </q-card>
 </template>
