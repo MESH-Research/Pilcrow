@@ -37,9 +37,8 @@
         @submit="submitReply"
       />
     </q-card-section>
-    <q-card-actions class="q-pa-md q-pb-lg">
+    <q-card-actions v-if="!isReplying" class="q-pa-md q-pb-lg">
       <q-btn
-        v-if="!isReplying"
         ref="reply_button"
         data-cy="overallCommentReplyButton"
         bordered
@@ -97,5 +96,7 @@ defineExpose({
 
 <style lang="sass" scoped>
 .q-card.active
-  border: 2px solid yellow
+  box-shadow: inset 0 0 5px 2px yellow, 0 1px 5px rgba(0, 0, 0, 0.2), 0 2px 2px rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12)
+.q-card.active > .q-card__section:first-child
+  background-color: #edf0c6 !important
 </style>
