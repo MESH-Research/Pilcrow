@@ -14,6 +14,18 @@ class OverallComment extends BaseModel
     use CreatedUpdatedBy;
 
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'submission_id',
+        'content',
+        'reply_to_id',
+        'parent_id',
+    ];
+
+    /**
      * The submission that owns the overall comment
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

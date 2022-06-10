@@ -27,7 +27,7 @@ const props = defineProps({
   drawerOpen: {
     type: Boolean,
     required: false,
-    default: true,
+    default: false,
   },
 })
 

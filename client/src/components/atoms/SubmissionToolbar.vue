@@ -29,6 +29,7 @@
         flat
         round
         icon="question_answer"
+        data-cy="toggleInlineCommentsButton"
         @click="toggleCommentDrawer"
       />
     </q-toolbar>

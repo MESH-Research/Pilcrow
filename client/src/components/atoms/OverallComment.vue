@@ -18,17 +18,29 @@
         <div v-html="comment.content" />
       </q-card-section>
 
-      <q-card-section v-if="isReplying" ref="comment_reply" class="q-pa-md">
+      <q-card-section
+        v-if="isReplying"
+        ref="comment_reply"
+        class="q-pa-md q-pb-lg"
+      >
         <q-separator class="q-mb-md" />
         <span class="text-h4 q-pl-sm">{{
           $t("submissions.comment.reply.title")
         }}</span>
-        <comment-editor :is-inline-comment="false" @cancel="cancelReply" />
+        <comment-editor
+          comment-type="overallReply"
+          data-cy="overallCommentReplyEditor"
+          :parent="comment"
+          :reply-to="comment"
+          @cancel="cancelReply"
+          @submit="submitReply"
+        />
       </q-card-section>
-      <q-card-actions class="q-pa-md q-pb-lg">
+      <q-card-actions v-if="!isReplying || hasReplies" class="q-pa-md q-pb-lg">
         <q-btn
           v-if="!isReplying"
           ref="reply_button"
+          data-cy="overallCommentReplyButton"
           bordered
           color="primary"
           label="Reply"
@@ -36,7 +48,7 @@
         />
         <template v-if="hasReplies">
           <q-btn
-            v-if="!props.isInlineReply && !props.isOverallReply && !isCollapsed"
+            v-if="!isCollapsed"
             aria-label="Hide Replies"
             bordered
             color="grey-3"
@@ -47,7 +59,7 @@
             <span>Hide Replies</span>
           </q-btn>
           <q-btn
-            v-if="!props.isInlineReply && !props.isOverallReply && isCollapsed"
+            v-if="isCollapsed"
             aria-label="Show Replies"
             bordered
             color="secondary"
@@ -67,6 +79,7 @@
           :key="reply.id"
           ref="replyRefs"
           :comment="reply"
+          :parent="comment"
           :replies="comment.replies"
         />
       </div>
@@ -91,6 +104,9 @@ const props = defineProps({
   },
 })
 
+function submitReply() {
+  isReplying.value = false
+}
 function cancelReply() {
   isReplying.value = false
 }

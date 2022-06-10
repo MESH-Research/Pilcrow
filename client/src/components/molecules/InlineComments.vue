@@ -9,7 +9,7 @@
         bordered
         style="border-color: rgb(56, 118, 187)"
       >
-        <comment-editor :is-inline-comment="true" />
+        <comment-editor comment-type="inline" />
       </q-card>
       <inline-comment
         v-for="comment in inline_comments"
@@ -60,7 +60,7 @@ watch(
       }
       if (!scrollTarget) return
       const target = getScrollTarget(scrollTarget)
-      const offset = scrollTarget.offsetTop
+      const offset = scrollTarget.offsetTop - 14
       setVerticalScrollPosition(target, offset, 250)
     })
   },

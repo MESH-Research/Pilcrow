@@ -8,11 +8,16 @@
         ref="commentRefs"
         :comment="comment"
       />
+      <q-card class="q-mb-md q-pa-md bg-grey-1">
+        <h4 class="q-mt-none">Add Your Overall Comment</h4>
+        <comment-editor comment-type="overall" data-cy="overallCommentEditor" />
+      </q-card>
     </div>
   </section>
 </template>
 
 <script setup>
+import CommentEditor from "src/components/forms/CommentEditor.vue"
 import OverallComment from "src/components/atoms/OverallComment.vue"
 import { computed, inject, nextTick, ref, watch } from "vue"
 import { scroll } from "quasar"
@@ -48,7 +53,7 @@ watch(
       if (!scrollTarget) return
       const target = getScrollTarget(scrollTarget)
       const offset = scrollTarget.offsetTop
-      setVerticalScrollPosition(target, offset - 50, 250)
+      setVerticalScrollPosition(target, offset - 64, 250)
     })
   },
   { deep: false }
