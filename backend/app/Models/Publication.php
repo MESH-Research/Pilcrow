@@ -54,6 +54,30 @@ class Publication extends BaseModel
     }
 
     /**
+     * Publication administrators relationship
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function publicationAdmins(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class)
+            ->withTimestamps()
+            ->withPivotValue('role_id', Role::PUBLICATION_ADMINISTRATOR_ROLE_ID);
+    }
+
+    /**
+     * Editors  relationship
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function editors(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class)
+            ->withTimestamps()
+            ->withPivotValue('role_id', Role::EDITOR_ROLE_ID);
+    }
+
+    /**
      * Submissions that belong to a publication
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

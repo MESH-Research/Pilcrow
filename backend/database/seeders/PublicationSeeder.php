@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Database\Seeders;
 
 use App\Models\Publication;
-use App\Models\Role;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
@@ -20,18 +19,8 @@ class PublicationSeeder extends Seeder
     public function run(User $admin, User $editor)
     {
         Publication::factory()
-        ->hasAttached(
-            $admin,
-            [
-                'role_id' => Role::PUBLICATION_ADMINISTRATOR_ROLE_ID,
-            ]
-        )
-        ->hasAttached(
-            $editor,
-            [
-                'role_id' => Role::EDITOR_ROLE_ID,
-            ]
-        )
+        ->hasAttached($admin, [], 'publicationAdmins')
+        ->hasAttached($editor, [], 'editors')
         ->create([
             'id' => 1,
             'name' => 'CCR Test Publication 1',
