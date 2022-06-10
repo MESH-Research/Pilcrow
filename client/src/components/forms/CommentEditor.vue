@@ -11,7 +11,7 @@
     <div class="comment-editor">
       <editor-content :editor="editor" />
     </div>
-    <div v-if="props.commentType === 'inline'" class="q-py-md">
+    <div v-if="commentType === 'inline'" class="q-py-md">
       <q-list>
         <q-expansion-item
           v-for="criteria in styleCriteria"
