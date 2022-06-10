@@ -1,3 +1,5 @@
+#import submission.comments.graphql
+
 extend type Query {
     "Return a submission by ID"
     submission(id: ID @eq): Submission @find @can(ability: "view", find: "id")
@@ -24,27 +26,6 @@ extend type Mutation {
                 "reviewCoordinators:updateReviewCoordinators"
             ]
         )
-
-    addInlineComment(
-        submission_id: ID!
-        content: String!
-        style_criteria: [ID!]
-    ): InlineComment @create
-
-    addInlineCommentReply(
-        submission_id: ID!
-        content: String!
-        reply_to: ID!
-    ): InlineComment @create
-
-    addOverallComment(submission_id: ID!, content: String!): OverallComment
-        @create
-
-    addOverallCommentReply(
-        submission_id: ID!
-        content: String!
-        reply_to: ID!
-    ): OverallComment @create
 }
 
 """
@@ -53,8 +34,8 @@ A Submission
 type Submission {
     id: ID!
     title: String
-    created_at: DateTime!
-    updated_at: DateTime
+    created_at: DateTimeUtc!
+    updated_at: DateTimeUtc
     created_by: User! @belongsTo(relation: "createdBy")
     updated_by: User! @belongsTo(relation: "updatedBy")
     publication: Publication!
@@ -64,8 +45,6 @@ type Submission {
     files: [SubmissionFile]! @hasMany
     pivot: SubmissionUser
     status: SubmissionStatus!
-    inline_comments: [InlineComment!]! @hasMany(relation: "inlineComments")
-    overall_comments: [OverallComment!]! @hasMany(relation: "overallComments")
     content: SubmissionContent #This field is optional bc it may be null if the pandoc process is still importing the document
 }
 
@@ -123,7 +102,6 @@ input UpdateSubmissionInput {
     review_coordinators: UpdateSubmissionUserInput
         @rename(attribute: "reviewCoordinators")
     submitters: UpdateSubmissionUserInput
-    publication_id: ID
 }
 
 input CreateSubmissionUserInput {
@@ -157,64 +135,7 @@ The content of a submission
 type SubmissionContent {
     id: ID!
     data: String!
-    created_at: DateTime!
-    modified_at: DateTime!
+    created_at: DateTimeUtc!
+    modified_at: DateTimeUtc!
     src_file: SubmissionFile!
-}
-
-"""
-An inline comment of a submission
-"""
-type InlineComment {
-    id: ID!
-    content: String!
-    created_by: User! @belongsTo(relation: "createdBy")
-    created_at: DateTime!
-    updated_by: User! @belongsTo(relation: "updatedBy")
-    updated_at: DateTime!
-    replies: [InlineCommentReply!]
-    style_criteria: [InlineCommentStyleCriteria!]
-}
-
-"""
-The static style criteria of an inline comment
-"""
-type InlineCommentStyleCriteria {
-    name: String
-    icon: String
-}
-
-"""
-A reply to an inline comment of a submission
-"""
-type InlineCommentReply {
-    id: ID!
-    content: String!
-    created_by: User!
-    reply_to_id: ID!
-    created_at: DateTime!
-}
-
-"""
-An overall comment of a submission
-"""
-type OverallComment {
-    id: ID!
-    content: String!
-    created_by: User! @belongsTo(relation: "createdBy")
-    created_at: DateTime!
-    updated_by: User! @belongsTo(relation: "updatedBy")
-    updated_at: DateTime!
-    replies: [OverallCommentReply!]
-}
-
-"""
-A reply to an overall comment of a submission
-"""
-type OverallCommentReply {
-    id: ID!
-    content: String!
-    created_by: User!
-    reply_to_id: ID!
-    created_at: DateTime!
 }

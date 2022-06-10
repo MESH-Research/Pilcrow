@@ -112,7 +112,7 @@ class SubmissionCommentTest extends TestCase
         $this->assertEquals(1, $submission->overallComments->count());
     }
 
-    public function testInlineCommentsCanBeRetrievedOnTheGraphqlEndpoint()
+    public function testRetrieveInlineComments()
     {
         $this->beAppAdmin();
 
@@ -178,7 +178,7 @@ class SubmissionCommentTest extends TestCase
         $response->assertJsonPath('data', $expected_data);
     }
 
-    public function testOverallCommentsCanBeRetrievedOnTheGraphqlEndpoint()
+    public function testRetrieveOverallComments()
     {
         $this->beAppAdmin();
 
@@ -226,5 +226,280 @@ class SubmissionCommentTest extends TestCase
             ],
         ];
         $response->assertJsonPath('data', $expected_data);
+    }
+
+    /**
+     * @return void
+     */
+    public function testCreateInlineComment()
+    {
+        $this->beAppAdmin();
+        $submission = $this->createSubmission();
+        $response = $this->graphQL(
+            'mutation AddInlineComment($submission_id: ID!) {
+                updateSubmission(input: {
+                    id: $submission_id
+                    inline_comments: {
+                        create: [{
+                            content: "Hello World"
+                            style_criteria: [
+                                {
+                                    name: "Hello"
+                                    icon: "hello"
+                                }
+                                {
+                                    name: "World"
+                                    icon: "world"
+                                }
+                            ]
+                            from: 100
+                            to: 110
+                        }]
+                    }
+                }) {
+                 inline_comments {
+                    content
+                        style_criteria {
+                            name
+                            icon
+                        }
+                        from
+                        to
+                    }
+                }
+            }',
+            [
+                'submission_id' => $submission->id,
+            ]
+        );
+        $expected = [
+            'updateSubmission' => [
+                'inline_comments' => [
+                    [
+                        'content' => 'Hello World',
+                        'style_criteria' => [
+                            '0' => [
+                                'name' => 'Hello',
+                                'icon' => 'hello',
+                            ],
+                            '1' => [
+                                'name' => 'World',
+                                'icon' => 'world',
+                            ],
+                        ],
+                        'from' => 100,
+                        'to' => 110,
+                    ],
+                ],
+            ],
+        ];
+        $response->assertJsonPath('data', $expected);
+    }
+
+    public function testCreateInlineCommentReply(): void
+    {
+        $this->beAppAdmin();
+        $submission = $this->createSubmissionWithInlineComment();
+        $inline_comment = $submission->inlineComments()->first();
+
+        $response = $this->graphQL(
+            /** @lang GraphQL */
+            'mutation CreateInlineCommentReply($submissionId: ID! $parentId: ID $replyToId: ID) {
+                updateSubmission(input: {
+                    id: $submissionId
+                    inline_comments: {
+                        create: [
+                            {
+                                content: "New Inline Comment Reply"
+                                parent_id: $parentId
+                                reply_to_id: $replyToId
+                            }
+                        ]
+                    }
+                }) {
+                    inline_comments {
+                        replies {
+                            content
+                            reply_to_id
+                        }
+                    }
+                }
+            }',
+            [
+                    'submissionId' => $submission->id,
+                    'parentId' => $inline_comment->id,
+                    'replyToId' => $inline_comment->id,
+            ]
+        );
+
+        $response->assertJsonPath('data.updateSubmission.inline_comments', [
+            [
+                'replies' => [
+                    [
+                        'content' => 'New Inline Comment Reply',
+                        'reply_to_id' => (string)$inline_comment->id,
+                    ],
+                ],
+            ],
+        ]);
+    }
+
+    public function testCreateOverallComment(): void
+    {
+        $this->beAppAdmin();
+        $submission = $this->createSubmission();
+
+        $response = $this->graphQL(
+            /** @lang GraphQL */
+            'mutation CreateInlineCommentReply($submissionId: ID!) {
+                updateSubmission(input: {
+                    id: $submissionId
+                    overall_comments: {
+                        create: [
+                            {
+                                content: "New Overall Comment"
+                            }
+                        ]
+                    }
+                }) {
+                    overall_comments {
+                        content
+                    }
+                }
+            }',
+            [
+                    'submissionId' => $submission->id,
+            ]
+        );
+        $response->assertJsonPath('data.updateSubmission.overall_comments', [
+            [
+                'content' => 'New Overall Comment',
+            ],
+        ]);
+    }
+
+    public function testCreateOverallCommentReply(): void
+    {
+        $this->beAppAdmin();
+        $submission = $this->createSubmissionWithOverallComment();
+        $overall_comment = $submission->overallComments()->first();
+
+        $response = $this->graphQL(
+            /** @lang GraphQL */
+            'mutation CreateOverallCommentReply($submissionId: ID! $parentId: ID $replyToId: ID) {
+                updateSubmission(input: {
+                    id: $submissionId
+                    overall_comments: {
+                        create: [
+                            {
+                                content: "New Overall Comment Reply"
+                                parent_id: $parentId
+                                reply_to_id: $replyToId
+                            }
+                        ]
+                    }
+                }) {
+                    overall_comments {
+                        replies {
+                            content
+                            reply_to_id
+                        }
+                    }
+                }
+            }',
+            [
+                    'submissionId' => $submission->id,
+                    'parentId' => $overall_comment->id,
+                    'replyToId' => $overall_comment->id,
+            ]
+        );
+
+        $response->assertJsonPath('data.updateSubmission.overall_comments', [
+            [
+                'replies' => [
+                    [
+                        'content' => 'New Overall Comment Reply',
+                        'reply_to_id' => (string)$overall_comment->id,
+                    ],
+                ],
+            ],
+        ]);
+    }
+
+    /**
+     * @return void
+     */
+    public function testUpdateInlineComment()
+    {
+        $this->beAppAdmin();
+        $submission = $this->createSubmissionWithInlineComment();
+        $inline_comment = $submission->inlineComments()->first();
+        $response = $this->graphQL(
+            'mutation UpdateInlineComment($submissionId: ID! $commentId: ID!) {
+                updateSubmission(input: {
+                    id: $submissionId
+                    inline_comments: {
+                        update: [
+                            {
+                                id: $commentId
+                                content: "Hello World Updated"
+                                style_criteria: [
+                                    {
+                                        name: "Hello"
+                                        icon: "hello"
+                                    }
+                                    {
+                                        name: "World"
+                                        icon: "world"
+                                    }
+                                ]
+                                from: 120
+                                to: 130
+                            }
+                        ]
+                    }
+                }) {
+                    id
+                    inline_comments {
+                        id
+                        content
+                        style_criteria {
+                            name
+                            icon
+                        }
+                        from
+                        to
+                    }
+                }
+            }',
+            [
+                'commentId' => $inline_comment->id,
+                'submissionId' => $submission->id,
+            ]
+        );
+        $expected = [
+            'updateSubmission' => [
+                'id' => (string)$submission->id,
+                'inline_comments' => [
+                    [
+                        'id' => (string)$inline_comment->id,
+                        'content' => 'Hello World Updated',
+                        'style_criteria' => [
+                            '0' => [
+                                'name' => 'Hello',
+                                'icon' => 'hello',
+                            ],
+                            '1' => [
+                                'name' => 'World',
+                                'icon' => 'world',
+                            ],
+                        ],
+                        'from' => 120,
+                        'to' => 130,
+                    ],
+                ],
+            ],
+        ];
+        $response->assertJsonPath('data', $expected);
     }
 }

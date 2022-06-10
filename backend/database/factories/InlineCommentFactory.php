@@ -29,7 +29,7 @@ class InlineCommentFactory extends Factory
     public function definition()
     {
         $user = User::factory();
-        $time = $this->faker->dateTimeBetween(Carbon::now()->subDays(5), Carbon::now());
+        $time = $this->faker->dateTimeBetween(Carbon::now()->subDays(5), Carbon::now()->subHour());
 
         return [
             'submission_id' => Submission::factory(),

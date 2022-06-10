@@ -61,7 +61,7 @@ describe("Submissions Details", () => {
     cy.dataCy("coordinators_list")
         .find('.q-list')
         .eq(0)
-        .dataCy("button_unassign")
+        .find("[data-cy=button_unassign]")
         .click();
     cy.wait("@removeCoordinatorFetch")
 

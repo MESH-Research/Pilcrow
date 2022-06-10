@@ -417,7 +417,11 @@ export default {
       },
     },
     comment: {
+      ariaLabel: "Comment. Author {username}. {replies} replies.",
+      dateLabel: "Created {date}",
       reply: {
+        ariaLabel: "Comment Reply.  Author {username}.",
+        referenceButtonAria: "Jump to referenced comment",
         title: "Your Reply",
       },
       actions_btn_aria: "Comment Actions",

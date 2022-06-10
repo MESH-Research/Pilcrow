@@ -24,7 +24,16 @@ const httpLink = ApolloLink.split(
 export default boot(async ({ app, router }) => {
   const apolloClient = new ApolloClient({
     link: ApolloLink.from([expiredTokenLink, withXsrfLink, httpLink]),
-    cache: new InMemoryCache(),
+    cache: new InMemoryCache({
+      possibleTypes: {
+        Comment: [
+          "InlineComment",
+          "InlineCommentReply",
+          "OverallComment",
+          "OverallCommentReply",
+        ],
+      },
+    }),
   })
 
   /**

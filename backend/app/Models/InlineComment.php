@@ -18,6 +18,21 @@ class InlineComment extends BaseModel
     ];
 
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'submission_id',
+        'content',
+        'style_criteria',
+        'parent_id',
+        'reply_to_id',
+        'from',
+        'to',
+    ];
+
+    /**
      * The submission that owns the inline comment
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

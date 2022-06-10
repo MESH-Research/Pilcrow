@@ -1,29 +1,31 @@
 <template>
-  <div v-if="!submission" class="q-pa-lg">
-    {{ $t("loading") }}
-  </div>
-  <article v-else>
-    <q-layout
-      data-cy="submission_review_layout"
-      view="hHh lpR fFr"
-      container
-      style="min-height: calc(100vh - 70px)"
-    >
-      <submission-toolbar
-        :id="id"
-        v-model="commentDrawerOpen"
-        :submission="submission"
-      />
-      <submission-comment-drawer :comment-drawer-open="commentDrawerOpen" />
-      <q-page-container>
-        <submission-content />
-        <q-separator class="page-seperator" />
-        <submission-comment-section />
-      </q-page-container>
-    </q-layout>
+  <div data-cy="submission_review_page">
+    <div v-if="!submission" class="q-pa-lg">
+      {{ $t("loading") }}
+    </div>
+    <article v-else>
+      <q-layout
+        data-cy="submission_review_layout"
+        view="hHh lpR fFr"
+        container
+        style="min-height: calc(100vh - 70px)"
+      >
+        <submission-toolbar
+          :id="id"
+          v-model:commentDrawerOpen="commentDrawerOpen"
+          :submission="submission"
+        />
+        <submission-comment-drawer v-model:drawerOpen="commentDrawerOpen" />
+        <q-page-container>
+          <submission-content />
+          <q-separator class="page-seperator" />
+          <submission-comment-section />
+        </q-page-container>
+      </q-layout>
 
-    <div class="row q-col-gutter-lg q-pa-lg"></div>
-  </article>
+      <div class="row q-col-gutter-lg q-pa-lg"></div>
+    </article>
+  </div>
 </template>
 
 <script setup>
@@ -32,7 +34,7 @@ import SubmissionCommentSection from "src/components/atoms/SubmissionCommentSect
 import SubmissionContent from "src/components/atoms/SubmissionContent.vue"
 import SubmissionToolbar from "src/components/atoms/SubmissionToolbar.vue"
 import { ref, provide, computed } from "vue"
-import { GET_SUBMISSION } from "src/graphql/queries"
+import { GET_SUBMISSION_REVIEW } from "src/graphql/queries"
 import { useQuery } from "@vue/apollo-composable"
 const props = defineProps({
   id: {
@@ -40,14 +42,13 @@ const props = defineProps({
     required: true,
   },
 })
-const { result } = useQuery(GET_SUBMISSION, { id: props.id })
+const { result } = useQuery(GET_SUBMISSION_REVIEW, { id: props.id })
 const submission = computed(() => {
   return result.value?.submission
 })
-
+const commentDrawerOpen = ref(false)
 provide("submission", submission)
-
-const commentDrawerOpen = ref(true)
+provide("activeComment", ref(null))
 </script>
 
 <style lang="sass" scoped>
