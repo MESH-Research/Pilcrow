@@ -18,12 +18,18 @@
       <div v-html="comment.content" />
     </q-card-section>
 
-    <q-card-section v-if="isReplying" ref="comment_reply" class="q-pa-md">
+    <q-card-section
+      v-if="isReplying"
+      ref="comment_reply"
+      data-cy="inlineCommentReplyForm"
+      class="q-pa-md"
+    >
       <q-separator class="q-mb-md" />
       <span class="text-h4 q-pl-sm">{{
         $t("submissions.comment.reply.title")
       }}</span>
       <comment-editor
+        data-cy="inlineCommentReplyEditor"
         comment-type="inlineReply"
         :parent="parent"
         :reply-to="comment"
@@ -35,6 +41,7 @@
       <q-btn
         v-if="!isReplying"
         ref="reply_button"
+        data-cy="inlineCommentReplyButton"
         bordered
         color="primary"
         label="Reply"
