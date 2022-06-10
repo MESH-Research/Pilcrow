@@ -1,35 +1,48 @@
 <template>
-  <section class="comments">
-    <div class="comments-wrapper">
-      <h3 class="text-h1">Overall Comments</h3>
-      <overall-comment
-        v-for="comment in overall_comments"
+  <q-scroll-area class="fit col bg-grey-4">
+    <section>
+      <div id="inline_comments_section" class="q-pa-md">
+        <span class="text-h3"> Inline Comments </span>
+      </div>
+      <q-card
+        class="q-ma-md q-pa-md bg-grey-1"
+        bordered
+        style="border-color: rgb(56, 118, 187)"
+      >
+        <comment-editor :is-inline-comment="true" />
+      </q-card>
+      <inline-comment
+        v-for="comment in inline_comments"
         :key="comment.id"
         ref="commentRefs"
         :comment="comment"
       />
-    </div>
-  </section>
+      <div class="row justify-center q-pa-md q-pb-xl">
+        <q-btn color="dark" icon="arrow_upward">Scroll to Top</q-btn>
+      </div>
+    </section>
+  </q-scroll-area>
 </template>
 
 <script setup>
-import OverallComment from "src/components/atoms/OverallComment.vue"
-import { computed, inject, nextTick, ref, watch } from "vue"
+import { ref, watch, inject, computed, nextTick } from "vue"
+import CommentEditor from "src/components/forms/CommentEditor.vue"
+import InlineComment from "src/components/atoms/InlineComment.vue"
 import { scroll } from "quasar"
 const { getScrollTarget, setVerticalScrollPosition } = scroll
 
 const submission = inject("submission")
 const activeComment = inject("activeComment")
 
-const overall_comments = computed(() => {
-  return submission.value?.overall_comments ?? []
-})
 const commentRefs = ref([])
+const inline_comments = computed(() => {
+  return submission.value?.inline_comments ?? []
+})
 watch(
   activeComment,
   (newValue) => {
     if (!newValue) return
-    if (newValue.__typename !== "OverallCommentReply") return
+    if (newValue.__typename !== "InlineCommentReply") return
     nextTick(() => {
       let scrollTarget = null
       for (const commentRef of commentRefs.value) {
@@ -48,19 +61,9 @@ watch(
       if (!scrollTarget) return
       const target = getScrollTarget(scrollTarget)
       const offset = scrollTarget.offsetTop
-      setVerticalScrollPosition(target, offset - 50, 250)
+      setVerticalScrollPosition(target, offset, 250)
     })
   },
   { deep: false }
 )
 </script>
-
-<style lang="sass" scoped>
-.comments
-  background-color: #efefef
-
-.comments-wrapper
-  max-width: 700px
-  margin: 0 auto
-  padding: 10px 60px 60px
-</style>
