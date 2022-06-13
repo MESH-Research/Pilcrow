@@ -14,6 +14,8 @@ class Publication extends BaseModel
 
     protected $fillable = [
         'name',
+        'home_page_content',
+        'new_submission_content',
     ];
 
     protected $rules = [
