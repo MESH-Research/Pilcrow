@@ -3,6 +3,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.16.7](https://github.com/MESH-Research/CCR/compare/v0.16.6...v0.16.7) (2022-06-13)
+
+
+### Features
+
+* Add Positional Fields to Inline Comments ([#1150](https://github.com/MESH-Research/CCR/issues/1150)) ([4e11d4b](https://github.com/MESH-Research/CCR/commit/4e11d4b998c7390ef1fccb0020c77a8829dd1dcc)), closes [#1111](https://github.com/MESH-Research/CCR/issues/1111)
+* **client:** fetch submission comments from API ([#1149](https://github.com/MESH-Research/CCR/issues/1149)) ([743d444](https://github.com/MESH-Research/CCR/commit/743d444d385562166f5e5e7103a401a55857eaec))
+* Enable Comment Saving ([#1161](https://github.com/MESH-Research/CCR/issues/1161)) ([99c2a94](https://github.com/MESH-Research/CCR/commit/99c2a94863c452608c6ae58e076d715ed53e4e59)), closes [#1025](https://github.com/MESH-Research/CCR/issues/1025)
+
 ### [0.16.6](https://github.com/MESH-Research/CCR/compare/v0.16.5...v0.16.6) (2022-06-06)
 
 
