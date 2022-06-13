@@ -3,6 +3,32 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.17.0](https://github.com/MESH-Research/CCR/compare/v0.16.1...v0.17.0) (2022-06-13)
+
+
+### Features
+
+* Add Content Fields to Submissions ([#1119](https://github.com/MESH-Research/CCR/issues/1119)) ([3a08fe1](https://github.com/MESH-Research/CCR/commit/3a08fe1cc4517cabf1f1129bd75448b0655d4e28)), closes [#1044](https://github.com/MESH-Research/CCR/issues/1044)
+* Add Positional Fields to Inline Comments ([#1150](https://github.com/MESH-Research/CCR/issues/1150)) ([4e11d4b](https://github.com/MESH-Research/CCR/commit/4e11d4b998c7390ef1fccb0020c77a8829dd1dcc)), closes [#1111](https://github.com/MESH-Research/CCR/issues/1111)
+* **api:** add created_by and updated_by fields to submission ([#1088](https://github.com/MESH-Research/CCR/issues/1088)) ([52c593f](https://github.com/MESH-Research/CCR/commit/52c593f49c05073d007ca8d491737b5bd6581794)), closes [#1074](https://github.com/MESH-Research/CCR/issues/1074)
+* **api:** html purify style criteria description fields ([#1089](https://github.com/MESH-Research/CCR/issues/1089)) ([3109b53](https://github.com/MESH-Research/CCR/commit/3109b53a12d527d997e6ac731f88412edf9c5528))
+* **client:** add delete interface for style criteria ([#1090](https://github.com/MESH-Research/CCR/issues/1090)) ([aff6269](https://github.com/MESH-Research/CCR/commit/aff6269ccc7f8390f0feca97136f7a66768796fb))
+* **client:** fetch submission comments from API ([#1149](https://github.com/MESH-Research/CCR/issues/1149)) ([743d444](https://github.com/MESH-Research/CCR/commit/743d444d385562166f5e5e7103a401a55857eaec))
+* Enable Comment Saving ([#1161](https://github.com/MESH-Research/CCR/issues/1161)) ([99c2a94](https://github.com/MESH-Research/CCR/commit/99c2a94863c452608c6ae58e076d715ed53e4e59)), closes [#1025](https://github.com/MESH-Research/CCR/issues/1025)
+* Extend API for inline and overall comments ([#1083](https://github.com/MESH-Research/CCR/issues/1083)) ([f1c53e9](https://github.com/MESH-Research/CCR/commit/f1c53e9511f42c62af3f9f9b98a8de6d8b4a40bf)), closes [#1045](https://github.com/MESH-Research/CCR/issues/1045)
+* Extend Comments API with Fields and Attributes ([#1109](https://github.com/MESH-Research/CCR/issues/1109)) ([92ed745](https://github.com/MESH-Research/CCR/commit/92ed745956b3bcb64e1dc262e87db457feb034e4)), closes [#1087](https://github.com/MESH-Research/CCR/issues/1087)
+* Use HTML in Style Criteria Seeder and Factory ([#1137](https://github.com/MESH-Research/CCR/issues/1137)) ([109921c](https://github.com/MESH-Research/CCR/commit/109921cd7400a78b02e9985e413bf2284bcf75a8)), closes [#1128](https://github.com/MESH-Research/CCR/issues/1128)
+
+
+### Bug Fixes
+
+* Alignment in Bypass Style Criteria Dialog ([#1134](https://github.com/MESH-Research/CCR/issues/1134)) ([7c782a9](https://github.com/MESH-Research/CCR/commit/7c782a9480d2edcf3ff85972bd283f9927b9077f)), closes [#1126](https://github.com/MESH-Research/CCR/issues/1126)
+* **client:** add default slot to error banner ([#1107](https://github.com/MESH-Research/CCR/issues/1107)) ([8517553](https://github.com/MESH-Research/CCR/commit/8517553c53022b1745604c69242d49df00a3dabd))
+* **client:** Fix lockup in find-user-select component ([#1078](https://github.com/MESH-Research/CCR/issues/1078)) ([494c3ef](https://github.com/MESH-Research/CCR/commit/494c3ef4647c7886a984c163f3aa9cda3fa9ede3))
+* **client:** remove deprecated useResult function ([#1095](https://github.com/MESH-Research/CCR/issues/1095)) ([d5f22da](https://github.com/MESH-Research/CCR/commit/d5f22dacacb72c645952fa9281a581e9e4486cd7))
+* **client:** Render HTML in style criteria description ([#1092](https://github.com/MESH-Research/CCR/issues/1092)) ([a48c4bc](https://github.com/MESH-Research/CCR/commit/a48c4bc32af01ad05c753d46b990ef0cb06a2dcd)), closes [#1062](https://github.com/MESH-Research/CCR/issues/1062)
+* Namespace Discrepancy in Logout.php ([#1136](https://github.com/MESH-Research/CCR/issues/1136)) ([c798019](https://github.com/MESH-Research/CCR/commit/c79801987096719adb1b858ee603fa344950311e)), closes [#1127](https://github.com/MESH-Research/CCR/issues/1127)
+
 ### [0.16.7](https://github.com/MESH-Research/CCR/compare/v0.16.6...v0.16.7) (2022-06-13)
 
 
