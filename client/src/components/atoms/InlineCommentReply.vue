@@ -21,7 +21,6 @@
     <q-card-section
       v-if="isReplying"
       ref="comment_reply"
-      data-cy="inlineCommentReplyForm"
       class="q-pa-md q-pb-lg"
     >
       <q-separator class="q-mb-md" />
@@ -96,6 +95,6 @@ defineExpose({
 <style lang="sass" scoped>
 .q-card.active
   box-shadow: inset 0 0 5px 2px yellow, 0 1px 5px rgba(0, 0, 0, 0.2), 0 2px 2px rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12)
-.q-card.active > .q-card__section:first-child
-  background-color: #edf0c6 !important
+  > .q-card__section:first-child
+    background-color: #edf0c6 !important
 </style>

@@ -1,73 +1,76 @@
 <template>
-  <q-card v-if="editor" flat class="bg-grey-1">
-    <q-btn-group spread unelevated class="block text-center q-pb-md">
-      <comment-editor-button
-        v-for="(button, index) in commentEditorButtons"
-        :key="index"
-        :aria-label="button.ariaLabel"
-        v-bind="button"
-      />
-    </q-btn-group>
-    <div class="comment-editor">
-      <editor-content :editor="editor" />
-    </div>
-    <div v-if="props.commentType === 'inline'" class="q-py-md">
-      <q-list>
-        <q-expansion-item
-          v-for="criteria in styleCriteria"
-          :key="criteria.id"
-          :label="criteria.label"
-          popup
-          expand-icon="help_outline"
-          expanded-icon="expand_less"
-          expand-separator
-          expand-icon-toggle
-          data-cy="criteria-item"
-        >
-          <template #header>
-            <q-item-section
-              avatar
-              data-cy="criteria-icon"
-              @click="criteria.selected = !criteria.selected"
-            >
-              <q-icon :name="criteria.icon" size="sm" color="secondary" />
-            </q-item-section>
-            <q-item-section @click="criteria.selected = !criteria.selected">
-              <q-item-label
-                :id="`criteria-${uuid}-${criteria.id}`"
-                data-cy="criteria-label"
-                >{{ criteria.name }}</q-item-label
+  <q-form @submit="submitHandler">
+    <q-card v-if="editor" flat class="bg-grey-1">
+      <q-btn-group spread unelevated class="block text-center q-pb-md">
+        <comment-editor-button
+          v-for="(button, index) in commentEditorButtons"
+          :key="index"
+          :aria-label="button.ariaLabel"
+          v-bind="button"
+        />
+      </q-btn-group>
+      <div class="comment-editor">
+        <editor-content :editor="editor" />
+      </div>
+      <div v-if="commentType === 'inline'" class="q-py-md">
+        <q-list>
+          <q-expansion-item
+            v-for="criteria in styleCriteria"
+            :key="criteria.id"
+            :label="criteria.label"
+            popup
+            expand-icon="help_outline"
+            expanded-icon="expand_less"
+            expand-separator
+            expand-icon-toggle
+            data-cy="criteria-item"
+          >
+            <template #header>
+              <q-item-section
+                avatar
+                data-cy="criteria-icon"
+                @click="criteria.selected = !criteria.selected"
               >
-            </q-item-section>
-            <q-item-section avatar>
-              <q-toggle
-                v-model="criteria.selected"
-                size="lg"
-                data-cy="criteria-toggle"
-                :aria-labelledby="`criteria-${uuid}-${criteria.id}`"
-              />
-            </q-item-section>
-          </template>
-          <q-card data-cy="criteria-description">
-            <!-- eslint-disable-next-line vue/no-v-html vue/no-v-text-v-html-on-component -->
-            <q-card-section v-html="criteria.description" />
-          </q-card>
-        </q-expansion-item>
-      </q-list>
-    </div>
-    <q-card-actions class="q-mt-md q-pa-none" align="between">
-      <q-btn data-cy="submit" color="primary" @click="submitHandler()">{{
-        $t("guiElements.form.submit")
-      }}</q-btn>
-      <q-btn
-        v-if="props.commentType !== 'overall'"
-        ref="cancel_button"
-        flat
-        @click="cancelHandler()"
-        >{{ $t("guiElements.form.cancel") }}</q-btn
-      >
-    </q-card-actions>
-  </q-card>
+                <q-icon :name="criteria.icon" size="sm" color="secondary" />
+              </q-item-section>
+              <q-item-section @click="criteria.selected = !criteria.selected">
+                <q-item-label
+                  :id="`criteria-${uuid}-${criteria.id}`"
+                  data-cy="criteria-label"
+                  >{{ criteria.name }}</q-item-label
+                >
+              </q-item-section>
+              <q-item-section avatar>
+                <q-toggle
+                  v-model="criteria.selected"
+                  size="lg"
+                  data-cy="criteria-toggle"
+                  :aria-labelledby="`criteria-${uuid}-${criteria.id}`"
+                />
+              </q-item-section>
+            </template>
+            <q-card data-cy="criteria-description">
+              <!-- eslint-disable-next-line vue/no-v-html vue/no-v-text-v-html-on-component -->
+              <q-card-section v-html="criteria.description" />
+            </q-card>
+          </q-expansion-item>
+        </q-list>
+      </div>
+      <q-card-actions class="q-mt-md q-pa-none" align="between">
+        <q-btn type="submit" color="primary">
+          {{ $t("guiElements.form.submit") }}
+        </q-btn>
+        <q-btn
+          v-if="commentType !== 'overall'"
+          ref="cancel_button"
+          flat
+          @click="cancelHandler()"
+        >
+          {{ $t("guiElements.form.cancel") }}
+        </q-btn>
+      </q-card-actions>
+    </q-card>
+  </q-form>
 </template>
 
 <script setup>
