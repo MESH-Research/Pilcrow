@@ -61,7 +61,7 @@ describe("Submissions Review", () => {
     })
   })
 
-it("should allow a reviewer to submit overall comments", () => {
+  it("should allow a reviewer to submit overall comments", () => {
     cy.task("resetDb")
     cy.login({ email: "reviewer@ccrproject.dev" })
     cy.visit("submission/review/100")
