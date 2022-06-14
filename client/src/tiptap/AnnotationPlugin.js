@@ -9,19 +9,20 @@ function getDecorations(doc, annotations) {
     .map((a) => [
       Decoration.inline(a.from, a.to, {
         class: `comment-highlight ${a.active ? "active" : ""}`,
-        ...a.context,
+        dataset: { comment: a.context.id },
       }),
-      Decoration.widget(a.from, lintIcon(a)),
+      Decoration.widget(a.from, commentWidget(a)),
     ])
     .reduce((a, c) => [...a, ...c], [])
 
   return decorations.length ? DecorationSet.create(doc, decorations) : null
 }
-function lintIcon({ click, context }) {
+function commentWidget({ click, context }) {
   let icon = document.createElement("i")
-  icon.className = "q-icon material-icons comment-icon"
+  icon.className = "q-icon material-icons comment-widget"
   icon.innerText = "chat_bubble"
   icon.dataset.comment = context.id
+  icon.dataset.cy = "comment-widget"
   icon.onclick = (...args) => click(context, ...args)
   return icon
 }

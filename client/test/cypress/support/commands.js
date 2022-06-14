@@ -8,9 +8,15 @@
 Cypress.Commands.add("dataCy", (value) => {
   return cy.get(`[data-cy=${value}]`)
 })
-Cypress.Commands.add("findCy", (value) => {
-  return cy.find(`[data-cy=${value}]`)
-})
+Cypress.Commands.add(
+  'findCy',
+  {
+    prevSubject: true,
+  },
+  (subject, value) => {
+    return  subject.find(`[data-cy=${value}]`)
+  }
+)
 
 Cypress.Commands.add("qSelectItems", (value) => {
   return cy.get(`[data-cy=${value}]`)

@@ -36,7 +36,11 @@
       />
     </div>
   </div>
-  <article ref="contentRef" class="col-sm-9 submission-content">
+  <article
+    ref="contentRef"
+    data-cy="content"
+    class="col-sm-9 submission-content"
+  >
     <editor-content :editor="editor" />
   </article>
 </template>
@@ -63,23 +67,24 @@ const findCommentFromId = (id) =>
   submission.value.inline_comments.find((c) => c.id === id)
 
 const onAnnotationClick = (context, { target }) => {
-  //First we need to get all the comment widget elements
-  const widgets = [...contentRef.value.querySelectorAll(".comment-icon")]
-    .filter((e) => e.offsetTop === target.offsetTop)
+  //First we need to get all the comment widget elements with the same Y index
+  const { top: targetTop } = target.getBoundingClientRect()
+  const widgets = [...contentRef.value.querySelectorAll(".comment-widget")]
+    .filter((e) => e.getBoundingClientRect().top === targetTop)
     .map((e) => e.dataset.comment)
-  console.log(widgets)
+
   //Only one comment here. We're done
   if (widgets.length === 1) {
     activeComment.value = findCommentFromId(context.id)
     return
   }
-  const currentIndex = widgets.indexOf(activeComment.value.id)
+  const currentIndex = widgets.indexOf(activeComment.value?.id)
   //The active comment isn't one of these, show the first
   if (currentIndex === -1) {
     activeComment.value = findCommentFromId(widgets[0])
     return
   }
-  //We're at the last in the lit, start over
+  //We're at the last in the list, start over
   if (currentIndex + 1 === widgets.length) {
     activeComment.value = findCommentFromId(widgets[0])
     return
@@ -93,7 +98,7 @@ const annotations = computed(() =>
     from,
     to,
     context: { id },
-    active: id === activeComment.value,
+    active: id === activeComment.value?.id,
     click: onAnnotationClick,
   }))
 )
@@ -116,7 +121,7 @@ const editor = new Editor({
 .comment-highlight.active {
   background: rgb(255, 254, 169);
 }
-.comment-icon {
+.comment-widget {
   display: inline-block;
   cursor: pointer;
   position: absolute;

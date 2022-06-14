@@ -61,7 +61,7 @@ describe("Submissions Review", () => {
     })
   })
 
-  it("should allow a reviewer to submit overall comments", () => {
+it("should allow a reviewer to submit overall comments", () => {
     cy.task("resetDb")
     cy.login({ email: "reviewer@ccrproject.dev" })
     cy.visit("submission/review/100")
@@ -164,5 +164,22 @@ describe("Submissions Review", () => {
     // = 12
     cy.dataCy("inlineCommentReply").should('have.length', 12)
     cy.dataCy("inlineCommentReply").last().contains("This is a reply to an inline comment reply.")
+  })
+
+  it("should display comment highlights and focus when clicked", () => {
+    cy.task("resetDb")
+    cy.login({ email: "reviewer@ccrproject.dev" })
+    cy.visit("submission/review/100")
+    cy.dataCy("comment-widget").should('have.length', 3)
+    cy.dataCy("comment-widget").each((_, index) => {
+      cy.get(".fullscreen.q-drawer__backdrop:not('.hidden')").should('not.exist')
+      cy.dataCy("comment-widget").eq(index).click()
+      cy.dataCy("toggleInlineCommentsButton").click()
+      cy.dataCy("inlineComment").eq(index).find('> .q-card').should('have.class', 'active')
+      //TODO: Redesign so comment drawer toggle is not hidden when the drawer is visible at small screen sizes.
+      cy.get(".fullscreen.q-drawer__backdrop:not('.hidden')").click()
+
+    })
+
   })
 })
