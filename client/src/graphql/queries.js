@@ -190,6 +190,9 @@ export const GET_SUBMISSION_REVIEW = gql`
     submission(id: $id) {
       id
       title
+      content {
+        data
+      }
       publication {
         style_criterias {
           id
@@ -199,6 +202,8 @@ export const GET_SUBMISSION_REVIEW = gql`
         }
       }
       inline_comments {
+        from
+        to
         ...commentFields
         style_criteria {
           name

@@ -36,13 +36,17 @@ const activeComment = inject("activeComment")
 
 const commentRefs = ref([])
 const inline_comments = computed(() => {
-  return submission.value?.inline_comments ?? []
+  const comments = submission.value?.inline_comments ?? []
+
+  return [...comments].sort((a, b) => {
+    return a.from - b.from
+  })
 })
 watch(
   activeComment,
   (newValue) => {
     if (!newValue) return
-    if (newValue.__typename !== "InlineCommentReply") return
+    if (!newValue.__typename.startsWith("InlineComment")) return
     nextTick(() => {
       let scrollTarget = null
       for (const commentRef of commentRefs.value) {
