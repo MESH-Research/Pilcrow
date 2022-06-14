@@ -93,8 +93,9 @@ const onAnnotationClick = (context, { target }) => {
   activeComment.value = findCommentFromId(widgets[currentIndex + 1])
 }
 
+const inlineComments = computed(() => submission.value?.inline_comments ?? [])
 const annotations = computed(() =>
-  submission.value.inline_comments.map(({ from, to, id }) => ({
+  inlineComments.value.map(({ from, to, id }) => ({
     from,
     to,
     context: { id },
