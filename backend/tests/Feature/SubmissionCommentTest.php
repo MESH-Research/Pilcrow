@@ -10,6 +10,7 @@ use App\Models\StyleCriteria;
 use App\Models\Submission;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Str;
 use Nuwave\Lighthouse\Testing\MakesGraphQLRequests;
 use Tests\TestCase;
 
@@ -319,64 +320,51 @@ class SubmissionCommentTest extends TestCase
     public function commentReplyCreationProvider(): array
     {
         return [
-            'both with values' => [true, 'both', 'parent_id: $parentId, reply_to_id: $replyToId'],
-            'parent_id only' => [false, 'parent_id', 'parent_id: $parentId'],
-            [false, 'parent_id', 'parentId: null'],
-            [false, 'both', 'parentId: null, reply_to_id: $replyToId'],
-            [false, 'both', 'parent_id: $parentId, reply_to_id: null'],
-            [false, 'reply_to_id', 'reply_to_id: null'],
-            [false, 'reply_to_id', 'reply_to_id: $replyToId'],
+            'both with values' => [true, ['parent_id' => true, 'reply_to_id' => true]],
+            'parent_id only' => [false, ['parent_id' => true]],
+            'parent_id only null' => [false, ['parent_id' => null]],
+            [false, ['parent_id' => null, 'reply_to_id' => true]],
+            [false, ['parent_id' => true, 'reply_to_id' => null]],
+            [false, [ 'reply_to_id' => null]],
+            [false, ['reply_to_id' => true]],
         ];
     }
 
     /**
      * @dataProvider commentReplyCreationProvider
      * @param bool $validity Expected validity of test case
-     * @param string $args Arguments to be included in the GraphQL mutation
-     * @param string $fragment GraphQL fragment to include in the mutation
+     * @param array $args Arguments to be included in the GraphQL mutation
      * @return void
      */
-    public function testCreateInlineCommentReply(bool $validity, string $args, string $fragment): void
+    public function testCreateInlineCommentReply(bool $validity, array $args): void
     {
         $this->beAppAdmin();
         $submission = $this->createSubmissionWithInlineComment();
         $inline_comment = $submission->inlineComments()->first();
 
-        $arguments = [
-            'both' => '$parentId: ID $replyToId: ID',
-            'parent_id' => '$parentId: ID',
-            'reply_to_id' => '$replyToId: ID',
-        ];
+        $parentId = $inline_comment->id;
+        $replyToId = $inline_comment->id;
 
-        $variables = [
-            'both' =>
-                [
-                    'submissionId' => $submission->id,
-                    'parentId' => $inline_comment->id,
-                    'replyToId' => $inline_comment->id,
-                ],
-            'parent_id' =>
-                [
-                    'submissionId' => $submission->id,
-                    'parentId' => $inline_comment->id,
-                ],
-            'reply_to_id' =>
-                [
-                    'submissionId' => $submission->id,
-                    'replyToId' => $inline_comment->id,
-                ],
-        ];
+        $arguments = [];
+        $fragment = [];
+        $variables = ['submissionId' => $submission->id];
+        foreach ($args as $input => $variable) {
+            $camelName = Str::camel($input);
+            $arguments[] = "$$camelName: ID";
+            $fragment[] = "$input: $$camelName";
+            $variables[$camelName] = $variable ? $$camelName : null;
+        }
 
-        $response = $this->graphQL(
+        $graphQL =
             /** @lang GraphQL */
-            'mutation CreateInlineCommentReply($submissionId: ID! ' . $arguments[$args] . ') {
+            'mutation CreateInlineCommentReply($submissionId: ID! ' . implode(' ', $arguments) . ') {
                 updateSubmission(input: {
                     id: $submissionId
                     inline_comments: {
                         create: [
                             {
                                 content: "New Inline Comment Reply"
-                                ' . $fragment . '
+                                ' . implode("\n", $fragment) . '
                             }
                         ]
                     }
@@ -388,8 +376,11 @@ class SubmissionCommentTest extends TestCase
                         }
                     }
                 }
-            }',
-            $variables[$args]
+            }';
+
+        $response = $this->graphql(
+            $graphQL,
+            $variables
         );
 
         if ($validity) {
