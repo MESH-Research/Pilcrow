@@ -367,24 +367,27 @@ class SubmissionCommentTest extends TestCase
         $this->beAppAdmin();
         $submission = $this->createSubmission();
 
-        $response = $this->graphQL(
-            /** @lang GraphQL */
-            'mutation CreateInlineCommentReply($submissionId: ID!) {
-                updateSubmission(input: {
-                    id: $submissionId
-                    overall_comments: {
+        $fragment = 'overall_comments: {
                         create: [
                             {
                                 content: "New Overall Comment"
                             }
                         ]
-                    }
+                    }';
+        $string = 'mutation CreateInlineCommentReply($submissionId: ID!) {
+                updateSubmission(input: {
+                    id: $submissionId
+                    '. $fragment .'
                 }) {
                     overall_comments {
                         content
                     }
                 }
-            }',
+            }';
+
+        $response = $this->graphQL(
+            /** @lang GraphQL */
+            $string,
             [
                     'submissionId' => $submission->id,
             ]
