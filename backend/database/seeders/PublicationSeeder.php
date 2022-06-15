@@ -38,6 +38,12 @@ class PublicationSeeder extends Seeder
             'name' => 'CCR Test Publication 1',
         ]);
 
-        Publication::factory()->count(5)->has(StyleCriteria::factory()->count(4))->create();
+        Publication::factory()
+            ->count(5)
+            ->has(
+                StyleCriteria::factory()
+                    ->count(4)
+            )
+            ->create();
     }
 }
