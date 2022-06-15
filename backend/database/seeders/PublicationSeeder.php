@@ -5,6 +5,7 @@ namespace Database\Seeders;
 
 use App\Models\Publication;
 use App\Models\Role;
+use App\Models\StyleCriteria;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
@@ -37,6 +38,6 @@ class PublicationSeeder extends Seeder
             'name' => 'CCR Test Publication 1',
         ]);
 
-        Publication::factory()->count(5)->create();
+        Publication::factory()->count(5)->has(StyleCriteria::factory()->count(4))->create();
     }
 }
