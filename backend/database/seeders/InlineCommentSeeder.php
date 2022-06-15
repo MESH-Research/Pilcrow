@@ -5,6 +5,7 @@ namespace Database\Seeders;
 
 use App\Models\InlineComment;
 use App\Models\StyleCriteria;
+use App\Models\Submission;
 use App\Models\User;
 use Carbon\Carbon;
 use Faker\Factory as Faker;
@@ -12,15 +13,21 @@ use Illuminate\Database\Seeder;
 
 class InlineCommentSeeder extends Seeder
 {
+    protected $defaultOptions = [
+        'replies' => 0,
+        'highlight' => null,
+    ];
+
     /**
      * Run the database seeds.
      *
      * @param int $submissionId
-     * @param int $replies
+     * @param array $options
      * @return void
      */
-    public function run($submissionId, $replies = 0)
+    public function run($submissionId, $options = [])
     {
+        $opts = array_merge($this->defaultOptions, $options);
         $userIds = User::all()->pluck('id');
         $userId = $userIds->random();
         $style_criterias = StyleCriteria::inRandomOrder()
@@ -28,18 +35,30 @@ class InlineCommentSeeder extends Seeder
             ->get()
             ->toArray();
 
+        $submission = Submission::find($submissionId);
+        $contentLength = mb_strlen($submission->content->data);
+
+        if (is_array($opts['highlight'])) {
+            [$from, $to] = $opts['highlight'];
+        } else {
+            $from = rand(0, $contentLength);
+            $length = rand(13, 150);
+            $to = $from + $length > $contentLength ? $contentLength : $from + $length;
+        }
         $parent = InlineComment::factory()->create([
             'submission_id' => $submissionId,
             'created_by' => $userId,
             'updated_by' => $userId,
             'style_criteria' => $style_criterias,
+            'from' => $from,
+            'to' => $to,
         ]);
 
         // Replies
-        if ($replies > 0) {
+        if ($opts['replies'] > 0) {
             // Seed inline comment replies
             $comments = collect([$parent]);
-            for ($i = 0; $i < $replies; $i++) {
+            for ($i = 0; $i < $opts['replies']; $i++) {
                 $comments->push($this->createCommentReply(true, $userIds->random(), $parent, $comments->random()));
             }
         }

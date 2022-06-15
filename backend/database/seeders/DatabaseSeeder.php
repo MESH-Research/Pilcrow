@@ -77,9 +77,9 @@ class DatabaseSeeder extends Seeder
         $submission_file_seeder->run();
 
         $inlineCommentSeeder = new InlineCommentSeeder();
-        $inlineCommentSeeder->run(100, 1);
-        $inlineCommentSeeder->run(100, 0);
-        $inlineCommentSeeder->run(100, 10);
+        $inlineCommentSeeder->run(100, ['replies' => 1, 'highlight' => [30, 80]]);
+        $inlineCommentSeeder->run(100, ['highlight' => [430, 445]]);
+        $inlineCommentSeeder->run(100, ['replies' => 10, 'highlight' => [630, 720]]);
 
         $overallCommentSeeder = new OverallCommentSeeder();
         $overallCommentSeeder->run(100);
