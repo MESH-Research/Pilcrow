@@ -349,8 +349,10 @@ class SubmissionCommentTest extends TestCase
         $submission = $this->createSubmissionWithInlineComment();
         $inline_comment = $submission->inlineComments()->first();
 
+        //phpcs:disable
         $parentId = $inline_comment->id;
         $replyToId = $inline_comment->id;
+        //phpcs:enable
 
         $arguments = [];
         $fragment = [];
