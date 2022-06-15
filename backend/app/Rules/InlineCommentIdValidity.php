@@ -84,18 +84,16 @@ class InlineCommentIdValidity implements Rule, DataAwareRule
                 is_null($data['reply_to_id'])
             ) {
                 return true;
+
             } elseif (
                 // If the attribute has a value, then the other must also have a value
                 !is_null($data['parent_id']) &&
                 !is_null($data['reply_to_id'])
             ) {
                 try {
-                    // Set the parent and reply_to
                     $this->parent = InlineComment::where('id', $data['parent_id'])->firstOrFail();
-                    $this->reply_to = InlineComment::where('id', $data['reply_to_id'])->firstOrFail();
                 } catch (Exception $error) {
                     $this->error_message = $error->getMessage();
-
                     return false;
                 }
 
@@ -108,7 +106,6 @@ class InlineCommentIdValidity implements Rule, DataAwareRule
                 }
             }
         }
-
         return false;
     }
 
@@ -135,11 +132,12 @@ class InlineCommentIdValidity implements Rule, DataAwareRule
      */
     private function checkIfReplyIsTheParentOrIsAReplyToTheParent()
     {
-        if ($this->parent->id === $this->reply_to->id) {
+        $reply_to_id = (int)$this->data['input']['inline_comments']['create'][0]['reply_to_id'];
+        if ($this->parent->id === $reply_to_id) {
             return true;
         }
         $reply_ids = $this->parent->replies()->pluck('id')->toArray();
-        if (in_array($this->reply_to->id, $reply_ids)) {
+        if (in_array($reply_to_id, $reply_ids)) {
             return true;
         }
         $this->error_message = 'The comment being replied to is not the parent ' .
