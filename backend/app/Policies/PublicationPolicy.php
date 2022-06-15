@@ -54,13 +54,12 @@ class PublicationPolicy
      * @param \App\Models\Publication $publication
      * @return bool
      */
-    public function view(User $user, Publication $publication)
+    public function view(?User $user, Publication $publication)
     {
-        if ($user->hasRole(Role::APPLICATION_ADMINISTRATOR)) {
+        if ($publication->is_publicly_visible) {
             return true;
         }
-
-        if ($publication->is_publicly_visible) {
+        if ($user->hasRole(Role::APPLICATION_ADMINISTRATOR)) {
             return true;
         }
 

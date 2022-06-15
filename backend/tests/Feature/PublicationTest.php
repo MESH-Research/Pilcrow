@@ -100,7 +100,7 @@ class PublicationTest extends TestCase
      */
     public function testCanBeQueriedById()
     {
-        $publication = Publication::factory()->create();
+        $publication = Publication::factory()->create(['is_publicly_visible' => true]);
         $response = $this->graphQL(
             'query GetPublication($id: ID!) {
                 publication (id: $id) {
@@ -116,6 +116,7 @@ class PublicationTest extends TestCase
                 'name' => $publication->name,
             ],
         ];
+
         $response->assertJsonPath('data', $expected_data);
     }
 

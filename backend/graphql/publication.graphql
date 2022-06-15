@@ -1,8 +1,6 @@
 extend type Query {
-    "Return a publiation by ID"
-    publication(id: ID @eq): Publication
-        @find
-        @can(ability: "view", query: true)
+    "Return a publication by ID"
+    publication(id: ID @eq): Publication @find @can(ability: "view", find: "id")
 
     "Return all publications"
     publications(
@@ -48,6 +46,7 @@ extend type Mutation {
 
 input CreatePublicationInput {
     name: String
+    is_publicly_visible: Boolean
     style_criterias: CreateStyleCriteriaHasMany
         @rename(attribute: "styleCriterias")
 }
@@ -66,6 +65,7 @@ input UpdatePublicationInput {
     id: ID!
     name: String
     description: String
+    is_publicly_visible: Boolean
     style_criterias: UpdateStyleCriteriaHasMany
         @rename(attribute: "styleCriterias")
     editors: UpdatePublicationEditorsInput

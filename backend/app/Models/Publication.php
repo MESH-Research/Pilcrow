@@ -13,10 +13,12 @@ class Publication extends BaseModel
 
     protected $fillable = [
         'name',
+        'is_publicly_visible',
     ];
 
     protected $rules = [
         'name' => 'max:256|unique:publications,name|required',
+        'is_publicly_visible' => 'boolean',
     ];
 
     /**
