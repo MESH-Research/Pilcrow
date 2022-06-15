@@ -13,21 +13,21 @@ class PublicationSeeder extends Seeder
     /**
      * Run the database seed and create a publication with an administrator and editor.
      *
-     * @param \App\Models\User $admin
-     * @param \App\Models\User $editor
      * @return void
      */
-    public function run(User $admin, User $editor)
+    public function run()
     {
+        $this->callOnce(UserSeeder::class);
+
         Publication::factory()
         ->hasAttached(
-            $admin,
+            User::firstWhere('username', 'publicationAdministrator'),
             [
                 'role_id' => Role::PUBLICATION_ADMINISTRATOR_ROLE_ID,
             ]
         )
         ->hasAttached(
-            $editor,
+            User::firstWhere('username', 'publicationEditor'),
             [
                 'role_id' => Role::EDITOR_ROLE_ID,
             ]
@@ -36,5 +36,7 @@ class PublicationSeeder extends Seeder
             'id' => 1,
             'name' => 'CCR Test Publication 1',
         ]);
+
+        Publication::factory()->count(5)->create();
     }
 }
