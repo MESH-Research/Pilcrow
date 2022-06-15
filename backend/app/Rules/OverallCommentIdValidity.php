@@ -84,7 +84,6 @@ class OverallCommentIdValidity implements Rule, DataAwareRule
                 is_null($data['reply_to_id'])
             ) {
                 return true;
-
             } elseif (
                 // If the attribute has a value, then the other must also have a value
                 !is_null($data['parent_id']) &&
@@ -94,6 +93,7 @@ class OverallCommentIdValidity implements Rule, DataAwareRule
                     $this->parent = OverallComment::where('id', $data['parent_id'])->firstOrFail();
                 } catch (Exception $error) {
                     $this->error_message = $error->getMessage();
+
                     return false;
                 }
 
@@ -106,6 +106,7 @@ class OverallCommentIdValidity implements Rule, DataAwareRule
                 }
             }
         }
+
         return false;
     }
 
