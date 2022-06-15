@@ -132,7 +132,7 @@ class OverallCommentIdValidity implements Rule, DataAwareRule
      */
     private function checkIfReplyIsTheParentOrIsAReplyToTheParent()
     {
-        $reply_to_id = (int)$this->data['input']['inline_comments']['create'][0]['reply_to_id'];
+        $reply_to_id = (int)$this->data['input']['overall_comments']['create'][0]['reply_to_id'];
         if ($this->parent->id === $reply_to_id) {
             return true;
         }
