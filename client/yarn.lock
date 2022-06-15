@@ -3731,10 +3731,10 @@ core-js-compat@^3.20.2, core-js-compat@^3.21.0, core-js-compat@^3.6.5:
     browserslist "^4.20.2"
     semver "7.0.0"
 
-core-js@^3.23.0, core-js@^3.6.5:
-  version "3.23.0"
-  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.23.0.tgz#9e33448c8fd3b02ad023d85bd6e85da6335b5cc4"
-  integrity sha512-v2/hZoRcRrvQiBoGsHwmRdr+S4oICKcjA6xb2qjVurin6TpcDC1X2CIDa8rdu/d5n8RT/Sdoos2IlnpQ1rXs5A==
+core-js@^3.23.1, core-js@^3.6.5:
+  version "3.23.1"
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.23.1.tgz#9f9a9255115f62c512db56d567f636da32ca0b78"
+  integrity sha512-wfMYHWi1WQjpgZNC9kAlN4ut04TM9fUTdi7CqIoTVM7yaiOUQTklOzfb+oWH3r9edQcT3F887swuVmxrV+CC8w==
 
 core-util-is@1.0.2:
   version "1.0.2"
@@ -8007,10 +8007,10 @@ prettier-linter-helpers@^1.0.0:
   dependencies:
     fast-diff "^1.1.2"
 
-prettier@^2.6.2:
-  version "2.6.2"
-  resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.6.2.tgz#e26d71a18a74c3d0f0597f55f01fb6c06c206032"
-  integrity sha512-PkUpF+qoXTqhOeWL9fu7As8LXsIUZ1WYaJiY/a7McAQzxjk82OF0tibkFXVCDImZtWxbvojFjerkiLb0/q8mew==
+prettier@^2.7.0:
+  version "2.7.0"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.7.0.tgz#a4fdae07e5596c51c9857ea676cd41a0163879d6"
+  integrity sha512-nwoX4GMFgxoPC6diHvSwmK/4yU8FFH3V8XWtLQrbj4IBsK2pkYhG4kf/ljF/haaZ/aii+wNJqISrCDPgxGWDVQ==
 
 pretty-bytes@^5.6.0:
   version "5.6.0"
