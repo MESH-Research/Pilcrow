@@ -79,6 +79,12 @@ class InlineCommentIdValidity implements Rule, DataAwareRule
         }
         if ($parent_id_exists && $reply_to_id_exists) {
             if (
+                // If the attribute is null, then the other must also be null
+                is_null($data['parent_id']) &&
+                is_null($data['reply_to_id'])
+            ) {
+                return true;
+            } elseif (
                 // If the attribute has a value, then the other must also have a value
                 !is_null($data['parent_id']) &&
                 !is_null($data['reply_to_id'])
@@ -100,12 +106,6 @@ class InlineCommentIdValidity implements Rule, DataAwareRule
                 if ($matches_submission && $matches_parent) {
                     return true;
                 }
-            } elseif (
-                // If the attribute is null, then the other must also be null
-                is_null($data['parent_id']) &&
-                is_null($data['reply_to_id'])
-            ) {
-                return true;
             }
         }
 
