@@ -339,11 +339,11 @@ class SubmissionCommentTest extends TestCase
 
     /**
      * @dataProvider commentReplyCreationProvider
-     * @param bool $validity Expected validity of test case
+     * @param bool $is_valid Expected validity of test case
      * @param array $args Arguments to be included in the GraphQL mutation
      * @return void
      */
-    public function testCreateInlineCommentReply(bool $validity, array $args): void
+    public function testCreateInlineCommentReply(bool $is_valid, array $args): void
     {
         $this->beAppAdmin();
         $submission = $this->createSubmissionWithInlineComment();
@@ -390,7 +390,7 @@ class SubmissionCommentTest extends TestCase
             $variables
         );
 
-        if ($validity) {
+        if ($is_valid) {
             $response->assertJsonPath('data.updateSubmission.inline_comments', [
                 [
                     'replies' => [
