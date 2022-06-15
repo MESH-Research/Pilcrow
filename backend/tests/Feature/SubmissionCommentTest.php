@@ -381,6 +381,7 @@ class SubmissionCommentTest extends TestCase
                     inline_comments {
                         replies {
                             content
+                            parent_id
                             reply_to_id
                         }
                     }
@@ -398,6 +399,7 @@ class SubmissionCommentTest extends TestCase
                     'replies' => [
                         [
                             'content' => 'New Inline Comment Reply',
+                            'parent_id' => (string)$inline_comment->id,
                             'reply_to_id' => (string)$inline_comment->id,
                         ],
                     ],
