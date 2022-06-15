@@ -347,7 +347,6 @@ class SubmissionCommentTest extends TestCase
      */
     public function testCreateInlineCommentReply(bool $is_valid, array $args): void
     {
-        //```
         $this->beAppAdmin();
         $submission = $this->createSubmissionWithInlineComment();
         $inline_comment = $submission->inlineComments()->first();
@@ -466,7 +465,6 @@ class SubmissionCommentTest extends TestCase
      */
     public function testCreateOverallCommentReply(bool $is_valid, array $args): void
     {
-        //```
         $this->beAppAdmin();
         $submission = $this->createSubmissionWithOverallComment();
         $overall_comment = $submission->overallComments()->first();
