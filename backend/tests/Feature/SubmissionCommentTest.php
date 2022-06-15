@@ -235,8 +235,8 @@ class SubmissionCommentTest extends TestCase
     public function commentCreationProvider(): array
     {
         return [
-            [true, ''],
-            [true, 'parent_id: null, reply_to_id: null'],
+            'parent_id missing and reply_to_id missing' => [true, ''],
+            'parent_id null and reply_to_id null' => [true, 'parent_id: null, reply_to_id: null'],
         ];
     }
 
@@ -320,13 +320,20 @@ class SubmissionCommentTest extends TestCase
     public function commentReplyCreationProvider(): array
     {
         return [
-            'both with values' => [true, ['parent_id' => true, 'reply_to_id' => true]],
-            'parent_id only' => [false, ['parent_id' => true]],
-            'parent_id only null' => [false, ['parent_id' => null]],
-            [false, ['parent_id' => null, 'reply_to_id' => true]],
-            [false, ['parent_id' => true, 'reply_to_id' => null]],
-            [false, [ 'reply_to_id' => null]],
-            [false, ['reply_to_id' => true]],
+            'parent_id with a value and reply_to_id with a value' =>
+                [true, ['parent_id' => true, 'reply_to_id' => true]],
+            'parent_id with a value and reply_to_id missing' =>
+                [false, ['parent_id' => true]],
+            'parent_id null and reply_to_id missing' =>
+                [false, ['parent_id' => null]],
+            'parent_id null and reply_to_id with a value' =>
+                [false, ['parent_id' => null, 'reply_to_id' => true]],
+            'parent_id with a value and reply_to_id null' =>
+                [false, ['parent_id' => true, 'reply_to_id' => null]],
+            'parent_id missing and reply_to_id null' =>
+                [false, [ 'reply_to_id' => null]],
+            'parent_id missing and reply_to_id with a value' =>
+                [false, ['reply_to_id' => true]],
         ];
     }
 
