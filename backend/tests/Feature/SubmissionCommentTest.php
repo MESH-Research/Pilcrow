@@ -234,22 +234,18 @@ class SubmissionCommentTest extends TestCase
     public function commentCreationProvider(): array
     {
         return [
-            [true, []],
-            [false, ['parent_id' => 1, ]],
-            [false, ['parent_id' => null, ]],
-            [false, ['parent_id' => null, 'reply_to_id' => 1, ]],
-            [true, ['parent_id' => null, 'reply_to_id' => null, ]],
-            [false, ['parent_id' => 1, 'reply_to_id' => null, ]],
-            [true, ['parent_id' => 1, 'reply_to_id' => 1, ]],
-            [false, ['reply_to_id' => null, ]],
-            [false, ['reply_to_id' => 1, ]],
+            [true, ''],
+            [true, 'parent_id: null, reply_to_id: null'],
         ];
     }
 
     /**
+     * @dataProvider commentCreationProvider
+     * @param bool $validity Expected validity of test case
+     * @param string $fragment GraphQL fragment to include in the mutation
      * @return void
      */
-    public function testCreateInlineComment()
+    public function testCreateInlineComment(bool $validity, string $fragment)
     {
         $this->beAppAdmin();
         $submission = $this->createSubmission();
@@ -270,6 +266,7 @@ class SubmissionCommentTest extends TestCase
                                     icon: "world"
                                 }
                             ]
+                            ' . $fragment . '
                             from: 100
                             to: 110
                         }]
@@ -311,26 +308,75 @@ class SubmissionCommentTest extends TestCase
                 ],
             ],
         ];
-        $response->assertJsonPath('data', $expected);
+        if ($validity) {
+            $response->assertJsonPath('data', $expected);
+        }
     }
 
-    public function testCreateInlineCommentReply(): void
+    /**
+     * @return array
+     */
+    public function commentReplyCreationProvider(): array
+    {
+        return [
+            'both with values' => [true, 'both', 'parent_id: $parentId, reply_to_id: $replyToId'],
+            'parent_id only' => [false, 'parent_id', 'parent_id: $parentId'],
+            [false, 'parent_id', 'parentId: null'],
+            [false, 'both', 'parentId: null, reply_to_id: $replyToId'],
+            [false, 'both', 'parent_id: $parentId, reply_to_id: null'],
+            [false, 'reply_to_id', 'reply_to_id: null'],
+            [false, 'reply_to_id', 'reply_to_id: $replyToId'],
+        ];
+    }
+
+    /**
+     * @dataProvider commentReplyCreationProvider
+     * @param bool $validity Expected validity of test case
+     * @param string $args Arguments to be included in the GraphQL mutation
+     * @param string $fragment GraphQL fragment to include in the mutation
+     * @return void
+     */
+    public function testCreateInlineCommentReply(bool $validity, string $args, string $fragment): void
     {
         $this->beAppAdmin();
         $submission = $this->createSubmissionWithInlineComment();
         $inline_comment = $submission->inlineComments()->first();
 
+        $arguments = [
+            'both' => '$parentId: ID $replyToId: ID',
+            'parent_id' => '$parentId: ID',
+            'reply_to_id' => '$replyToId: ID',
+        ];
+
+        $variables = [
+            'both' =>
+                [
+                    'submissionId' => $submission->id,
+                    'parentId' => $inline_comment->id,
+                    'replyToId' => $inline_comment->id,
+                ],
+            'parent_id' =>
+                [
+                    'submissionId' => $submission->id,
+                    'parentId' => $inline_comment->id,
+                ],
+            'reply_to_id' =>
+                [
+                    'submissionId' => $submission->id,
+                    'replyToId' => $inline_comment->id,
+                ],
+        ];
+
         $response = $this->graphQL(
             /** @lang GraphQL */
-            'mutation CreateInlineCommentReply($submissionId: ID! $parentId: ID $replyToId: ID) {
+            'mutation CreateInlineCommentReply($submissionId: ID! ' . $arguments[$args] . ') {
                 updateSubmission(input: {
                     id: $submissionId
                     inline_comments: {
                         create: [
                             {
                                 content: "New Inline Comment Reply"
-                                parent_id: $parentId
-                                reply_to_id: $replyToId
+                                ' . $fragment . '
                             }
                         ]
                     }
@@ -343,23 +389,23 @@ class SubmissionCommentTest extends TestCase
                     }
                 }
             }',
-            [
-                    'submissionId' => $submission->id,
-                    'parentId' => $inline_comment->id,
-                    'replyToId' => $inline_comment->id,
-            ]
+            $variables[$args]
         );
 
-        $response->assertJsonPath('data.updateSubmission.inline_comments', [
-            [
-                'replies' => [
-                    [
-                        'content' => 'New Inline Comment Reply',
-                        'reply_to_id' => (string)$inline_comment->id,
+        if ($validity) {
+            $response->assertJsonPath('data.updateSubmission.inline_comments', [
+                [
+                    'replies' => [
+                        [
+                            'content' => 'New Inline Comment Reply',
+                            'reply_to_id' => (string)$inline_comment->id,
+                        ],
                     ],
                 ],
-            ],
-        ]);
+            ]);
+        } else {
+            $response->assertGraphQLErrorCategory('validation');
+        }
     }
 
     public function testCreateOverallComment(): void
