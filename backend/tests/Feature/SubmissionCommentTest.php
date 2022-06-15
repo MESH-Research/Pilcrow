@@ -229,6 +229,24 @@ class SubmissionCommentTest extends TestCase
     }
 
     /**
+     * @return array
+     */
+    public function commentCreationProvider(): array
+    {
+        return [
+            [true, []],
+            [false, ['parent_id' => 1, ]],
+            [false, ['parent_id' => null, ]],
+            [false, ['parent_id' => null, 'reply_to_id' => 1, ]],
+            [true, ['parent_id' => null, 'reply_to_id' => null, ]],
+            [false, ['parent_id' => 1, 'reply_to_id' => null, ]],
+            [true, ['parent_id' => 1, 'reply_to_id' => 1, ]],
+            [false, ['reply_to_id' => null, ]],
+            [false, ['reply_to_id' => 1, ]],
+        ];
+    }
+
+    /**
      * @return void
      */
     public function testCreateInlineComment()
