@@ -273,8 +273,8 @@ class SubmissionCommentTest extends TestCase
                         }]
                     }
                 }) {
-                 inline_comments {
-                    content
+                    inline_comments {
+                        content
                         style_criteria {
                             name
                             icon
