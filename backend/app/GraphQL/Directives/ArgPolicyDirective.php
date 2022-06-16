@@ -75,7 +75,7 @@ GRAPHQL;
     }
 
     /**
-     * Check nested input fields for poolicies
+     * Check nested input fields for policies
      *
      * @param \Nuwave\Lighthouse\Schema\Values\FieldValue $fieldValue
      * @param \Closure $next
