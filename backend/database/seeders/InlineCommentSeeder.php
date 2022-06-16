@@ -19,13 +19,26 @@ class InlineCommentSeeder extends Seeder
     ];
 
     /**
+     * Run the seeder
+     *
+     * @return void
+     */
+    public function run()
+    {
+        $this->callOnce(SubmissionSeeder::class);
+        $this->create(100, ['replies' => 1, 'highlight' => [30, 80]]);
+        $this->create(100, ['highlight' => [430, 445]]);
+        $this->create(100, ['replies' => 10, 'highlight' => [630, 720]]);
+    }
+
+    /**
      * Run the database seeds.
      *
      * @param int $submissionId
      * @param array $options
      * @return void
      */
-    public function run($submissionId, $options = [])
+    public function create($submissionId, $options = [])
     {
         $opts = array_merge($this->defaultOptions, $options);
         $userIds = User::all()->pluck('id');

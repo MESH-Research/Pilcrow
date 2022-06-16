@@ -12,13 +12,27 @@ use Illuminate\Database\Seeder;
 class OverallCommentSeeder extends Seeder
 {
     /**
+     * Run the seeder
+     *
+     * @return void
+     */
+    public function run()
+    {
+        $this->callOnce(SubmissionSeeder::class);
+
+        $this->create(100);
+        $this->create(100, 1);
+        $this->create(100, 8);
+    }
+
+    /**
      * Run the database seeds.
      *
      * @param int $submissionId
      * @param int $replies
      * @return void
      */
-    public function run($submissionId, $replies = 0)
+    protected function create($submissionId, $replies = 0)
     {
         $userIds = User::all()->pluck('id');
         $userId = $userIds->random();
