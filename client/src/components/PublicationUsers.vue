@@ -1,171 +1,142 @@
 <template>
-  <q-card flat class="q-ma-none">
-    <q-card-section>
-      <div class="text-h3">{{ $t("publications.editor.heading") }}</div>
-    </q-card-section>
-    <q-card-section>
-      <div v-if="editors.length">
+  <div class="q-pa-lg">
+    <section class="column q-gutter-sm">
+      <h3>{{ tp$("heading") }}</h3>
+      <div v-if="users.length" class="col">
         <user-list
-          ref="list_assigned_editors"
-          data-cy="list_assigned_editors"
-          :users="editors"
-          :actions="[
-            {
-              ariaLabel: $t('publications.editor.unassign.ariaLabel'),
-              icon: 'person_remove',
-              action: 'unassignEditor',
-              help: $t('publications.editor.unassign.helpText'),
-              cyAttr: 'button_unassign_editor',
-            },
-          ]"
+          ref="userList"
+          data-cy="user-list"
+          :users="users"
+          :actions="
+            mutable
+              ? [
+                  {
+                    ariaLabel: tp$('unassign_button.ariaLabel'),
+                    icon: 'person_remove',
+                    action: 'unassign',
+                    help: tp$('unassign_button.help'),
+                    cyAttr: 'button_unassign',
+                  },
+                ]
+              : []
+          "
           @action-click="handleUserListClick"
         />
       </div>
-      <div v-else>
-        <q-card ref="card_no_editors" bordered flat>
+      <div v-else class="col">
+        <q-card ref="card_no_users" bordered flat>
           <q-item class="text--grey">
             <q-item-section avatar>
               <q-icon name="o_do_disturb_on" />
             </q-item-section>
             <q-item-section>
-              {{ $t("publications.editor.none") }}
+              {{ tp$("none") }}
             </q-item-section>
           </q-item>
         </q-card>
       </div>
-    </q-card-section>
-    <q-card-actions v-if="!addMode" align="right">
-      <q-btn
-        icon="person_add"
-        :label="$t('publications.editor.assign.label')"
-        data-cy="addEditorButton"
-        flat
-        @click="addMode = true"
-      />
-    </q-card-actions>
-    <q-card-section v-if="addMode">
-      <q-form @submit="assignUser(`editor`, editor_candidate)">
-        <div class="q-pl-none">
-          <find-user-select
-            v-model="editor_candidate"
-            data-cy="input_editor_assignee"
-          >
-            <template #after>
-              <q-btn
-                ref="assignBtn"
-                :ripple="{ center: true }"
-                color="primary"
-                data-cy="button_assign_editor"
-                :label="$t('publications.editor.assign.label')"
-                type="submit"
-                stretch
-                @click="assignUser('editor', editor_candidate)"
-              />
-            </template>
-          </find-user-select>
-        </div>
+
+      <q-form v-if="mutable" class="col" @submit="handleSubmit">
+        <find-user-select v-model="user" data-cy="input_user">
+          <template #after>
+            <q-btn
+              :ripple="{ center: true }"
+              color="primary"
+              data-cy="button-assign"
+              label="Assign"
+              type="submit"
+              stretch
+              @click="handleSubmit"
+            />
+          </template>
+        </find-user-select>
       </q-form>
-    </q-card-section>
-  </q-card>
+    </section>
+  </div>
 </template>
 
 <script setup>
 import UserList from "src/components/molecules/UserList.vue"
 import FindUserSelect from "src/components/forms/FindUserSelect.vue"
 import {
-  CREATE_PUBLICATION_USER,
-  DELETE_PUBLICATION_USER,
+  UPDATE_PUBLICATION_EDITORS,
+  UPDATE_PUBLICATION_ADMINS,
 } from "src/graphql/mutations"
-import RoleMapper from "src/mappers/roles"
 import { useMutation } from "@vue/apollo-composable"
 import { useFeedbackMessages } from "src/use/guiElements"
 import { useI18n } from "vue-i18n"
-import { ref, computed, toRef } from "vue"
+import { ref, computed } from "vue"
 const props = defineProps({
   publication: {
     type: Object,
     required: true,
   },
+  relationship: {
+    type: String,
+    required: true,
+  },
+  mutable: {
+    type: Boolean,
+    default: false,
+  },
 })
-const addMode = ref(false)
-
-const publication = toRef(props, "publication")
-const editor_candidate = ref(null)
-
-const editors = computed(() => {
-  return filterUsersByRoleId(publication.value.users, RoleMapper["editors"])
-})
-
-function filterUsersByRoleId(users, id) {
-  return users.filter((user) => {
-    return parseInt(user.pivot.role_id) === id
-  })
-}
 
 const { t } = useI18n()
+const tPrefix = (key) => `publications.${props.relationship}.${key}`
+const tp$ = (key, ...args) => t(tPrefix(key), ...args)
+
 const { newStatusMessage } = useFeedbackMessages({
   attrs: {
     "data-cy": "publication_details_notify",
   },
 })
 
-async function handleUserListClick({ user, action }) {
-  switch (action) {
-    case "unassignEditor":
-      await unassignUser("editor", user)
-      break
-  }
+const opts = { variables: { publication_id: props.publication.id } }
+const documents = {
+  editors: UPDATE_PUBLICATION_EDITORS,
+  publication_admins: UPDATE_PUBLICATION_ADMINS,
 }
 
-const { mutate: assignUserMutate } = useMutation(CREATE_PUBLICATION_USER, {
-  refetchQueries: ["GetPublication"],
+const users = computed(() => {
+  return props.publication[props.relationship]
 })
 
-async function assignUser(role_name, candidate_model) {
+const { mutate } = useMutation(documents[props.relationship], opts)
+
+const user = ref(null)
+async function handleSubmit() {
   try {
-    await assignUserMutate({
-      user_id: candidate_model.id,
-      role_id: RoleMapper[role_name],
-      publication_id: publication.value.id,
+    await mutate({
+      connect: [user.value.id],
     })
-    newStatusMessage(
-      "success",
-      t(`publications.${role_name}.assign.success`, {
-        display_name: candidate_model.name
-          ? candidate_model.name
-          : candidate_model.username,
+      .then(() => {
+        newStatusMessage(
+          "success",
+          tp$("assign.success", {
+            display_name: user.value.name ?? user.value.username,
+          })
+        )
       })
-    )
-    resetForm()
+      .then(() => {
+        user.value = null
+      })
   } catch (error) {
-    newStatusMessage("failure", t(`publications.${role_name}.assign.error`))
+    newStatusMessage("failure", tp$("assign.error"))
   }
 }
 
-function resetForm() {
-  editor_candidate.value = null
-}
-
-const { mutate: unassignUserMutate } = useMutation(DELETE_PUBLICATION_USER, {
-  refetchQueries: ["GetPublication"],
-})
-
-async function unassignUser(role_name, user) {
+async function handleUserListClick({ user }) {
+  if (!props.mutable) return
   try {
-    await unassignUserMutate({
-      user_id: user.pivot.user_id,
-      role_id: RoleMapper[role_name],
-      publication_id: publication.value.id,
-    })
+    await mutate({ disconnect: [user.id] })
     newStatusMessage(
       "success",
-      t(`publications.${role_name}.unassign.success`, {
+      tp$("unassign.success", {
         display_name: user.name ? user.name : user.username,
       })
     )
   } catch (error) {
-    console.log(error)
-    newStatusMessage("failure", t(`publications.${role_name}.unassign.error`))
+    newStatusMessage("failure", tp$("unassign.error"))
   }
 }
 </script>

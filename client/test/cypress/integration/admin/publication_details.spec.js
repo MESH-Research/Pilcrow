@@ -29,41 +29,77 @@ describe("Publication Details", () => {
     cy.checkA11y(null, null, a11yLogViolations)
   })
 
-  it("should allow assignments of editors and reject assignments of duplicate editors", () => {
-    cy.task("resetDb")
+  it("should allow assignment of administrators by application administrators", () => {
     cy.login({ email: "applicationadministrator@ccrproject.dev" })
-    cy.visit("/publication/1")
+    cy.visit("publication/1")
+
+    cy.dataCy("admins_list").within(() => {
+      cy.dataCy('input_user').type("applicationAd")
+      cy.qSelectItems('input_user').eq(0).click()
+      cy.intercept("/graphql").as("graphQL")
+      cy.dataCy('button-assign').click();
+    })
+
+    cy.wait("@graphQL")
+    cy.dataCy("admins_list").find(".q-list").contains("Application Administrator")
+
     cy.injectAxe()
-
-    cy.dataCy("addEditorButton").click()
-    // Initial Assignment
-    cy.dataCy("input_editor_assignee").type("applicationAd")
-    cy.qSelectItems("input_editor_assignee").eq(0).click()
-    cy.dataCy("input_editor_assignee").prev('.q-chip').contains("applicationAdminUser")
-    cy.dataCy("button_assign_editor").click()
-
-    cy.dataCy("publication_details_notify")
-      .should("be.visible")
-      .should("have.class", "bg-positive")
-
-    cy.dataCy("list_assigned_editors").contains("Application Administrator")
-    cy.dataCy("button_dismiss_notify").click()
-
-    // Duplicate Assignment
-    cy.dataCy("input_editor_assignee").type("applicationAd")
-    cy.qSelectItems("input_editor_assignee").eq(0).click()
-    cy.dataCy("input_editor_assignee").prev('.q-chip').contains("applicationAdminUser")
-    cy.dataCy("button_assign_editor").click()
-
-    cy.dataCy("publication_details_notify")
-      .should("be.visible")
-      .should("have.class", "bg-negative")
-
     cy.checkA11y(null, null, a11yLogViolations)
   })
 
+
+  it("should allow assignment of editors by application administrators", () => {
+    cy.login({ email: "applicationadministrator@ccrproject.dev" })
+    cy.visit("publication/1")
+
+    cy.dataCy("editors_list").within(() => {
+      cy.dataCy('input_user').type("applicationAd")
+      cy.qSelectItems('input_user').eq(0).click()
+      cy.intercept("/graphql").as("graphQL")
+      cy.dataCy('button-assign').click();
+    })
+
+    cy.wait("@graphQL")
+    cy.dataCy("editors_list").find(".q-list").contains("Application Administrator")
+
+    cy.injectAxe()
+    cy.checkA11y(null, null, a11yLogViolations)
+  })
+
+  it("should allow removal of admins by application administrators", () => {
+    cy.login({ email: "applicationadministrator@ccrproject.dev" })
+    cy.visit("publication/1")
+
+    cy.intercept("/graphql").as("removeCoordinatorFetch")
+    cy.dataCy("admins_list")
+        .find('.q-list')
+        .eq(0)
+        .findCy("button_unassign")
+        .click();
+    cy.wait("@removeCoordinatorFetch")
+
+    cy.dataCy("admins_list").find(".q-list").should("not.exist")
+
+  })
+
+
+  it("should allow removal of editors by application administrators", () => {
+    cy.login({ email: "applicationadministrator@ccrproject.dev" })
+    cy.visit("publication/1")
+
+    cy.intercept("/graphql").as("removeCoordinatorFetch")
+    cy.dataCy("editors_list")
+        .find('.q-list')
+        .eq(0)
+        .findCy("button_unassign")
+        .click();
+    cy.wait("@removeCoordinatorFetch")
+
+    cy.dataCy("editors_list").find(".q-list").should("not.exist")
+
+  })
+
   it("should allow editing of style criteria", () => {
-    cy.task("resetDb")
     cy.login({ email: "applicationadministrator@ccrproject.dev" })
     cy.visit("/publication/1")
     cy.injectAxe()
@@ -98,7 +134,6 @@ describe("Publication Details", () => {
   })
 
   it("should allow adding a style criteria", () => {
-    cy.task("resetDb")
     cy.login({ email: "applicationadministrator@ccrproject.dev" })
     cy.visit("/publication/1")
 
@@ -122,7 +157,6 @@ describe("Publication Details", () => {
   })
 
   it("should allow deleting a style criteria", () => {
-    cy.task("resetDb")
     cy.login({ email: "applicationadministrator@ccrproject.dev" })
     cy.visit("/publication/1")
     //Check existing number of items:

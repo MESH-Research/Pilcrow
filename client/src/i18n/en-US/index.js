@@ -295,21 +295,43 @@ export default {
       maxLength: "The maximum length has been exceeded for the name.",
       duplicate_name: "Publication name already exists.",
     },
-    editor: {
+    editors: {
       heading: "Editors",
-      none: "No editors are assigned to this publication.",
+      none: "An editor is not assigned to this publication.",
       unassign: {
-        ariaLabel: "Unassign",
-        helpText: "Remove editor",
         error: "An error occurred while attempting to unassign an editor.",
         success: "{display_name} successfully unassigned as an editor.",
       },
       assign: {
-        label: "Assign",
-        duplicate: "That editor is already assigned to this publication.",
+        duplicate:
+          "{display_name} is already assigned as an editor for this publication.",
         error:
-          "An error occurred while attempting to assign an editor. Is this user already assigned as an editor?",
+          "An error occurred while attempting to assign an editor. Is the user already assigned to this publication?",
         success: "{display_name} successfully assigned as an editor.",
+      },
+      unassign_button: {
+        ariaLabel: "Unassign Editor",
+        help: "Remove Editor",
+      },
+    },
+    publication_admins: {
+      heading: "Administrators",
+      none: "An administrator is not assigned to this publication.",
+      unassign: {
+        error:
+          "An error occurred while attempting to unassign an administrator.",
+        success: "{display_name} successfully unassigned as an administrator.",
+      },
+      assign: {
+        duplicate:
+          "{display_name} is already assigned as an administrator for this publication.",
+        error:
+          "An error occurred while attempting to assign an editor. Is the user already assigned to this publication?",
+        success: "{display_name} successfully assigned as an administrator.",
+      },
+      unassign_button: {
+        ariaLabel: "Unassign Administator",
+        help: "Remove Administrator",
       },
     },
     style_criteria: {

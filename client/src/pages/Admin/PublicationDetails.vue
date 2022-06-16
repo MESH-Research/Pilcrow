@@ -33,7 +33,18 @@
       </h2>
     </div>
     <div class="column q-gutter-md">
-      <publication-users :publication="publication" />
+      <publication-users
+        data-cy="admins_list"
+        relationship="publication_admins"
+        :publication="publication"
+        mutable
+      />
+      <publication-users
+        data-cy="editors_list"
+        relationship="editors"
+        :publication="publication"
+        mutable
+      />
       <publication-style-criteria :publication="publication" />
     </div>
   </article>
@@ -52,8 +63,8 @@ const props = defineProps({
   },
 })
 
-const { result: pubResult } = useQuery(GET_PUBLICATION, { id: props.id })
+const { result } = useQuery(GET_PUBLICATION, { id: props.id })
 const publication = computed(() => {
-  return pubResult.value?.publication
+  return result.value?.publication ?? null
 })
 </script>

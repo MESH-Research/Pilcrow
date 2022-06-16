@@ -97,40 +97,46 @@ export const CREATE_PUBLICATION = gql`
   }
 `
 
-export const CREATE_PUBLICATION_USER = gql`
-  mutation CreatePublicationUser(
-    $user_id: ID!
-    $role_id: ID!
+export const UPDATE_PUBLICATION_EDITORS = gql`
+  mutation UpdatePublicationEditors(
     $publication_id: ID!
+    $connect: [ID!]
+    $disconnect: [ID!]
   ) {
-    createPublicationUser(
-      publication_user: {
-        user_id: $user_id
-        role_id: $role_id
-        publication_id: $publication_id
+    updatePublication(
+      publication: {
+        id: $publication_id
+        editors: { connect: $connect, disconnect: $disconnect }
       }
     ) {
       id
+      editors {
+        ...relatedUserFields
+      }
     }
   }
+  ${_RELATED_USER_FIELDS}
 `
 
-export const DELETE_PUBLICATION_USER = gql`
-  mutation DeletePublicationUser(
-    $user_id: ID!
-    $role_id: ID!
+export const UPDATE_PUBLICATION_ADMINS = gql`
+  mutation UpdatePublicationAdmins(
     $publication_id: ID!
+    $connect: [ID!]
+    $disconnect: [ID!]
   ) {
-    deletePublicationUser(
-      publication_user: {
-        user_id: $user_id
-        role_id: $role_id
-        publication_id: $publication_id
+    updatePublication(
+      publication: {
+        id: $publication_id
+        publication_admins: { connect: $connect, disconnect: $disconnect }
       }
     ) {
       id
+      publication_admins {
+        ...relatedUserFields
+      }
     }
   }
+  ${_RELATED_USER_FIELDS}
 `
 
 export const CREATE_SUBMISSION = gql`

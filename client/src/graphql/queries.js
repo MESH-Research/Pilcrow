@@ -238,16 +238,13 @@ export const GET_PUBLICATION = gql`
         icon
         description
       }
-      users {
-        name
-        email
-        username
-        pivot {
-          id
-          user_id
-          role_id
-        }
+      publication_admins {
+        ...relatedUserFields
+      }
+      editors {
+        ...relatedUserFields
       }
     }
   }
+  ${_RELATED_USER_FIELDS}
 `
