@@ -77,6 +77,7 @@ extend input UpdateSubmissionInput {
 
 input InlineCommentHasManyInput {
     create: [CreateInlineCommentInput!]
+        @rules(apply: ["App\\Rules\\InlineCommentIdValidity"])
     update: [UpdateInlineCommentInput!]
 }
 
@@ -104,6 +105,7 @@ input InlineCommentStyleCriteriaInput {
 
 input OverallCommentHasManyInput {
     create: [CreateOverallCommentInput!]
+        @rules(apply: ["App\\Rules\\OverallCommentIdValidity"])
     update: [UpdateOverallCommentInput!]
 }
 
