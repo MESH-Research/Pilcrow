@@ -33,16 +33,16 @@
       </h2>
     </div>
     <div class="column q-gutter-md">
-      <publication-users
+      <assigned-users
         data-cy="admins_list"
         relationship="publication_admins"
-        :publication="publication"
+        :container="publication"
         mutable
       />
-      <publication-users
+      <assigned-users
         data-cy="editors_list"
         relationship="editors"
-        :publication="publication"
+        :container="publication"
         mutable
       />
       <publication-style-criteria :publication="publication" />
@@ -51,7 +51,7 @@
 </template>
 
 <script setup>
-import PublicationUsers from "src/components/PublicationUsers.vue"
+import AssignedUsers from "src/components/AssignedUsersComponent.vue"
 import { GET_PUBLICATION } from "src/graphql/queries"
 import { useQuery } from "@vue/apollo-composable"
 import PublicationStyleCriteria from "src/components/PublicationStyleCriteria.vue"

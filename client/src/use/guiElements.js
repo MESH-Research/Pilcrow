@@ -6,7 +6,7 @@ import { useI18n } from "vue-i18n"
  *
  * @param   {Object}  overrideDefaults  Override default options for message functions
  */
-export function useFeedbackMessages(overrideDefaults) {
+export function useFeedbackMessages(overrideDefaults = {}) {
   const { t } = useI18n()
   const { notify } = useQuasar()
 

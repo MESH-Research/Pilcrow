@@ -286,15 +286,7 @@ export default {
       },
     },
   },
-  publications: {
-    details: "Publication Details",
-    create: {
-      success: "Publication successfully created.",
-      failure: "An error occurred while attempting to create the publication.",
-      required: "A name is required to create a publication.",
-      maxLength: "The maximum length has been exceeded for the name.",
-      duplicate_name: "Publication name already exists.",
-    },
+  publication: {
     editors: {
       heading: "Editors",
       none: "An editor is not assigned to this publication.",
@@ -334,6 +326,16 @@ export default {
         help: "Remove Administrator",
       },
     },
+  },
+  publications: {
+    details: "Publication Details",
+    create: {
+      success: "Publication successfully created.",
+      failure: "An error occurred while attempting to create the publication.",
+      required: "A name is required to create a publication.",
+      maxLength: "The maximum length has been exceeded for the name.",
+      duplicate_name: "Publication name already exists.",
+    },
     style_criteria: {
       heading: "Style Criteria",
       edit_button: "Edit",
@@ -365,26 +367,7 @@ export default {
       },
     },
   },
-  submissions: {
-    details_heading: "Submission Details",
-    view_heading: "View Submission",
-    create: {
-      success: "Submission successfully created.",
-      failure: "An error occurred while attempting to create the submission.",
-      title: {
-        required: "A title is required to create a submission.",
-        max_length: "The maximum length has been exceeded for the title.",
-      },
-      publication_id: {
-        required: "A publication must be associated with a submission.",
-      },
-      submitter_user_id: {
-        required: "A user must be associated with a submission as a submitter.",
-      },
-      file_upload: {
-        required: "A file must be uploaded with a submission.",
-      },
-    },
+  submission: {
     review_coordinators: {
       heading: "Review Coordinator",
       none: "A review coordinator is not assigned to this submission.",
@@ -436,6 +419,27 @@ export default {
       unassign_button: {
         ariaLabel: "Unassign Submitterr",
         help: "Remove Submitter",
+      },
+    },
+  },
+  submissions: {
+    details_heading: "Submission Details",
+    view_heading: "View Submission",
+    create: {
+      success: "Submission successfully created.",
+      failure: "An error occurred while attempting to create the submission.",
+      title: {
+        required: "A title is required to create a submission.",
+        max_length: "The maximum length has been exceeded for the title.",
+      },
+      publication_id: {
+        required: "A publication must be associated with a submission.",
+      },
+      submitter_user_id: {
+        required: "A user must be associated with a submission as a submitter.",
+      },
+      file_upload: {
+        required: "A file must be uploaded with a submission.",
       },
     },
     comment: {

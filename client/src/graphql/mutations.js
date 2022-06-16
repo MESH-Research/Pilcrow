@@ -99,13 +99,13 @@ export const CREATE_PUBLICATION = gql`
 
 export const UPDATE_PUBLICATION_EDITORS = gql`
   mutation UpdatePublicationEditors(
-    $publication_id: ID!
+    $id: ID!
     $connect: [ID!]
     $disconnect: [ID!]
   ) {
     updatePublication(
       publication: {
-        id: $publication_id
+        id: $id
         editors: { connect: $connect, disconnect: $disconnect }
       }
     ) {
@@ -120,13 +120,13 @@ export const UPDATE_PUBLICATION_EDITORS = gql`
 
 export const UPDATE_PUBLICATION_ADMINS = gql`
   mutation UpdatePublicationAdmins(
-    $publication_id: ID!
+    $id: ID!
     $connect: [ID!]
     $disconnect: [ID!]
   ) {
     updatePublication(
       publication: {
-        id: $publication_id
+        id: $id
         publication_admins: { connect: $connect, disconnect: $disconnect }
       }
     ) {
@@ -177,13 +177,13 @@ export const CREATE_SUBMISSION_FILE = gql`
 
 export const UPDATE_SUBMISSION_REVIEWERS = gql`
   mutation UpdateSubmissionReviewers(
-    $submission_id: ID!
+    $id: ID!
     $connect: [ID!]
     $disconnect: [ID!]
   ) {
     updateSubmission(
       input: {
-        id: $submission_id
+        id: $id
         reviewers: { connect: $connect, disconnect: $disconnect }
       }
     ) {
@@ -197,13 +197,13 @@ export const UPDATE_SUBMISSION_REVIEWERS = gql`
 `
 export const UPDATE_SUBMISSION_REVIEW_COORDINATORS = gql`
   mutation UpdateSubmissionReviewCoordinators(
-    $submission_id: ID!
+    $id: ID!
     $connect: [ID!]
     $disconnect: [ID!]
   ) {
     updateSubmission(
       input: {
-        id: $submission_id
+        id: $id
         review_coordinators: { connect: $connect, disconnect: $disconnect }
       }
     ) {
@@ -218,13 +218,13 @@ export const UPDATE_SUBMISSION_REVIEW_COORDINATORS = gql`
 
 export const UPDATE_SUBMISSION_SUBMITERS = gql`
   mutation UpdateSubmissionReviewCoordinators(
-    $submission_id: ID!
+    $id: ID!
     $connect: [ID!]
     $disconnect: [ID!]
   ) {
     updateSubmission(
       input: {
-        id: $submission_id
+        id: $id
         submitters: { connect: $connect, disconnect: $disconnect }
       }
     ) {
