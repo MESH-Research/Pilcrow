@@ -102,9 +102,5 @@ describe("Submissions Details", () => {
       cy.wait("@addReviewer2")
     })
 
-    cy.dataCy("submission_details_notify")
-      .should("be.visible")
-      .should("have.class", "bg-negative")
-
   })
 })
