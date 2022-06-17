@@ -30,31 +30,7 @@
           {{ criteria.name }}
         </q-chip>
       </q-card-section>
-
-      <q-card-section v-if="isReplying" ref="comment_reply" class="q-pa-md">
-        <q-separator class="q-mb-md" />
-        <span class="text-h4 q-pl-sm">{{
-          $t("submissions.comment.reply.title")
-        }}</span>
-        <comment-editor
-          data-cy="inlineCommentReplyEditor"
-          comment-type="inlineReply"
-          :parent="comment"
-          :reply-to="comment"
-          @cancel="cancelReply"
-          @submit="submitReply"
-        />
-      </q-card-section>
-      <q-card-actions v-if="!isReplying || hasReplies" class="q-pa-md q-pb-lg">
-        <q-btn
-          v-if="!isReplying"
-          ref="reply_button"
-          data-cy="inlineCommentReplyButton"
-          bordered
-          color="primary"
-          label="Reply"
-          @click="initiateReply()"
-        />
+      <q-card-actions v-if="hasReplies" class="q-pa-md q-pb-lg">
         <template v-if="hasReplies">
           <q-btn
             v-if="!isCollapsed"
@@ -80,19 +56,44 @@
           </q-btn>
         </template>
       </q-card-actions>
-    </q-card>
-    <section class="q-ml-md">
-      <div v-if="!isCollapsed">
-        <inline-comment-reply
-          v-for="reply in comment.replies"
-          :key="reply.id"
-          ref="replyRefs"
-          :comment="reply"
+      <section>
+        <div v-if="!isCollapsed">
+          <inline-comment-reply
+            v-for="reply in comment.replies"
+            :key="reply.id"
+            ref="replyRefs"
+            :comment="reply"
+            :parent="comment"
+            :replies="comment.replies"
+            @reply-to="nestedReply"
+          />
+        </div>
+      </section>
+      <q-card-section v-if="isReplying" ref="comment_reply" class="q-pa-md">
+        <q-separator class="q-mb-md" />
+        <span class="text-h4 q-pl-sm">{{
+          $t("submissions.comment.reply.title")
+        }}</span>
+        <comment-editor
+          data-cy="inlineCommentReplyEditor"
+          comment-type="InlineCommentReply"
           :parent="comment"
-          :replies="comment.replies"
+          :reply-to="commentReply ?? comment"
+          @cancel="cancelReply"
+          @submit="submitReply"
         />
-      </div>
-    </section>
+      </q-card-section>
+      <q-card-section v-if="showReplyButton" class="q-pt-none">
+        <q-btn
+          ref="reply_button"
+          data-cy="inlineCommentReplyButton"
+          bordered
+          color="primary"
+          label="Reply"
+          @click="initiateReply"
+        />
+      </q-card-section>
+    </q-card>
   </div>
 </template>
 <script setup>
@@ -100,7 +101,7 @@ import { ref, computed, inject } from "vue"
 import CommentHeader from "./CommentHeader.vue"
 import InlineCommentReply from "./InlineCommentReply.vue"
 import CommentEditor from "../forms/CommentEditor.vue"
-const isCollapsed = ref(false)
+const isCollapsed = ref(true)
 const isReplying = ref(false)
 
 function toggleThread() {
@@ -119,13 +120,27 @@ const hasReplies = computed(() => {
 
 function submitReply() {
   isReplying.value = false
+  commentReply.value = null
 }
 function cancelReply() {
   isReplying.value = false
+  commentReply.value = null
 }
 function initiateReply() {
   isReplying.value = true
 }
+const commentReply = ref(null)
+function nestedReply(comment) {
+  isReplying.value = true
+  console.log(comment)
+  commentReply.value = comment
+}
+
+const showReplyButton = computed(() => {
+  if (isReplying.value) return false
+  if (hasReplies.value && isCollapsed.value) return false
+  return true
+})
 
 const replyRefs = ref([])
 const scrollTarget = ref(null)

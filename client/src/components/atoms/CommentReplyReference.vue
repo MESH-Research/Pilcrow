@@ -1,5 +1,5 @@
 <template>
-  <q-card-section v-if="referencedComment" class="q-pa-none q-pt-sm">
+  <q-card-section v-if="referencedComment" class="q-pa-none">
     <q-btn
       dense
       flat

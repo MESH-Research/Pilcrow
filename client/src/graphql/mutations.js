@@ -406,6 +406,45 @@ export const CREATE_OVERALL_COMMENT_REPLY = gql`
   }
   ${_COMMENT_FIELDS}
 `
+export const CREATE_INLINE_COMMENT = gql`
+  mutation CreateInlineCommentReply(
+    $submission_id: ID!
+    $content: String!
+    $from: Int
+    $to: Int
+    $style_criteria: [InlineCommentStyleCriteriaInput!]
+  ) {
+    updateSubmission(
+      input: {
+        id: $submission_id
+        inline_comments: {
+          create: [
+            {
+              content: $content
+              style_criteria: $style_criteria
+              from: $from
+              to: $to
+            }
+          ]
+        }
+      }
+    ) {
+      id
+      inline_comments {
+        style_criteria {
+          name
+          icon
+        }
+        ...commentFields
+        replies {
+          reply_to_id
+          ...commentFields
+        }
+      }
+    }
+  }
+  ${_COMMENT_FIELDS}
+`
 
 export const CREATE_INLINE_COMMENT_REPLY = gql`
   mutation CreateInlineCommentReply(
@@ -430,6 +469,10 @@ export const CREATE_INLINE_COMMENT_REPLY = gql`
     ) {
       id
       inline_comments {
+        style_criteria {
+          name
+          icon
+        }
         ...commentFields
         replies {
           reply_to_id
