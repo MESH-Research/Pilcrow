@@ -33,14 +33,25 @@
       </h2>
     </div>
     <div class="column q-gutter-md">
-      <publication-users :publication="publication" />
+      <assigned-users
+        data-cy="admins_list"
+        relationship="publication_admins"
+        :container="publication"
+        mutable
+      />
+      <assigned-users
+        data-cy="editors_list"
+        relationship="editors"
+        :container="publication"
+        mutable
+      />
       <publication-style-criteria :publication="publication" />
     </div>
   </article>
 </template>
 
 <script setup>
-import PublicationUsers from "src/components/PublicationUsers.vue"
+import AssignedUsers from "src/components/AssignedUsersComponent.vue"
 import { GET_PUBLICATION } from "src/graphql/queries"
 import { useQuery } from "@vue/apollo-composable"
 import PublicationStyleCriteria from "src/components/PublicationStyleCriteria.vue"
@@ -52,8 +63,8 @@ const props = defineProps({
   },
 })
 
-const { result: pubResult } = useQuery(GET_PUBLICATION, { id: props.id })
+const { result } = useQuery(GET_PUBLICATION, { id: props.id })
 const publication = computed(() => {
-  return pubResult.value?.publication
+  return result.value?.publication ?? null
 })
 </script>

@@ -61,6 +61,8 @@ import UserList from "./molecules/UserList.vue"
 import { useFeedbackMessages } from "src/use/guiElements"
 import { useMutation } from "@vue/apollo-composable"
 import {
+  UPDATE_PUBLICATION_ADMINS,
+  UPDATE_PUBLICATION_EDITORS,
   UPDATE_SUBMISSION_REVIEWERS,
   UPDATE_SUBMISSION_REVIEW_COORDINATORS,
   UPDATE_SUBMISSION_SUBMITERS,
@@ -68,7 +70,7 @@ import {
 import { computed, ref } from "vue"
 import { useI18n } from "vue-i18n"
 const props = defineProps({
-  submission: {
+  container: {
     type: Object,
     required: true,
   },
@@ -85,28 +87,35 @@ const props = defineProps({
     required: false,
     default: false,
   },
-})
-
-const user = ref(null)
-
-const { t } = useI18n()
-const tPrefix = (key) => `submissions.${props.relationship}.${key}`
-const tp$ = (key, ...args) => t(tPrefix(key), ...args)
-
-const { newStatusMessage } = useFeedbackMessages({
-  attrs: {
-    "data-cy": "submission_details_notify",
+  containerType: {
+    type: String,
+    requred: false,
+    default: null,
   },
 })
 
-const opts = { variables: { submission_id: props.submission.id } }
+const user = ref(null)
+const containerType = computed(() => props.container.__typename.toLowerCase())
+const { t } = useI18n()
+const tPrefix = (key) => `${containerType.value}.${props.relationship}.${key}`
+const tp$ = (key, ...args) => t(tPrefix(key), ...args)
+
+const { newStatusMessage } = useFeedbackMessages()
+
+const opts = { variables: { id: props.container.id } }
 const documents = {
-  reviewers: UPDATE_SUBMISSION_REVIEWERS,
-  review_coordinators: UPDATE_SUBMISSION_REVIEW_COORDINATORS,
-  submitters: UPDATE_SUBMISSION_SUBMITERS,
+  submission: {
+    reviewers: UPDATE_SUBMISSION_REVIEWERS,
+    review_coordinators: UPDATE_SUBMISSION_REVIEW_COORDINATORS,
+    submitters: UPDATE_SUBMISSION_SUBMITERS,
+  },
+  publication: {
+    editors: UPDATE_PUBLICATION_EDITORS,
+    publication_admins: UPDATE_PUBLICATION_ADMINS,
+  },
 }
 const users = computed(() => {
-  return props.submission[props.relationship]
+  return props.container[props.relationship]
 })
 
 const acceptMore = computed(() => {
@@ -116,7 +125,10 @@ const acceptMore = computed(() => {
   )
 })
 
-const { mutate } = useMutation(documents[props.relationship], opts)
+const { mutate } = useMutation(
+  documents[containerType.value][props.relationship],
+  opts
+)
 
 async function handleSubmit() {
   if (!acceptMore.value) {

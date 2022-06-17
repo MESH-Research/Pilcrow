@@ -97,40 +97,46 @@ export const CREATE_PUBLICATION = gql`
   }
 `
 
-export const CREATE_PUBLICATION_USER = gql`
-  mutation CreatePublicationUser(
-    $user_id: ID!
-    $role_id: ID!
-    $publication_id: ID!
+export const UPDATE_PUBLICATION_EDITORS = gql`
+  mutation UpdatePublicationEditors(
+    $id: ID!
+    $connect: [ID!]
+    $disconnect: [ID!]
   ) {
-    createPublicationUser(
-      publication_user: {
-        user_id: $user_id
-        role_id: $role_id
-        publication_id: $publication_id
+    updatePublication(
+      publication: {
+        id: $id
+        editors: { connect: $connect, disconnect: $disconnect }
       }
     ) {
       id
+      editors {
+        ...relatedUserFields
+      }
     }
   }
+  ${_RELATED_USER_FIELDS}
 `
 
-export const DELETE_PUBLICATION_USER = gql`
-  mutation DeletePublicationUser(
-    $user_id: ID!
-    $role_id: ID!
-    $publication_id: ID!
+export const UPDATE_PUBLICATION_ADMINS = gql`
+  mutation UpdatePublicationAdmins(
+    $id: ID!
+    $connect: [ID!]
+    $disconnect: [ID!]
   ) {
-    deletePublicationUser(
-      publication_user: {
-        user_id: $user_id
-        role_id: $role_id
-        publication_id: $publication_id
+    updatePublication(
+      publication: {
+        id: $id
+        publication_admins: { connect: $connect, disconnect: $disconnect }
       }
     ) {
       id
+      publication_admins {
+        ...relatedUserFields
+      }
     }
   }
+  ${_RELATED_USER_FIELDS}
 `
 
 export const CREATE_SUBMISSION = gql`
@@ -171,13 +177,13 @@ export const CREATE_SUBMISSION_FILE = gql`
 
 export const UPDATE_SUBMISSION_REVIEWERS = gql`
   mutation UpdateSubmissionReviewers(
-    $submission_id: ID!
+    $id: ID!
     $connect: [ID!]
     $disconnect: [ID!]
   ) {
     updateSubmission(
       input: {
-        id: $submission_id
+        id: $id
         reviewers: { connect: $connect, disconnect: $disconnect }
       }
     ) {
@@ -191,13 +197,13 @@ export const UPDATE_SUBMISSION_REVIEWERS = gql`
 `
 export const UPDATE_SUBMISSION_REVIEW_COORDINATORS = gql`
   mutation UpdateSubmissionReviewCoordinators(
-    $submission_id: ID!
+    $id: ID!
     $connect: [ID!]
     $disconnect: [ID!]
   ) {
     updateSubmission(
       input: {
-        id: $submission_id
+        id: $id
         review_coordinators: { connect: $connect, disconnect: $disconnect }
       }
     ) {
@@ -212,13 +218,13 @@ export const UPDATE_SUBMISSION_REVIEW_COORDINATORS = gql`
 
 export const UPDATE_SUBMISSION_SUBMITERS = gql`
   mutation UpdateSubmissionReviewCoordinators(
-    $submission_id: ID!
+    $id: ID!
     $connect: [ID!]
     $disconnect: [ID!]
   ) {
     updateSubmission(
       input: {
-        id: $submission_id
+        id: $id
         submitters: { connect: $connect, disconnect: $disconnect }
       }
     ) {

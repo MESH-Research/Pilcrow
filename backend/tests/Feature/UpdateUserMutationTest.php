@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
-use App\Models\Role;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Nuwave\Lighthouse\Testing\MakesGraphQLRequests;
@@ -28,6 +27,7 @@ class UpdateUserMutationTest extends TestCase
             ],
         ]);
 
+        /** @var User $user */
         $this->actingAs($user);
 
         $response = $this->graphQL(
@@ -67,6 +67,7 @@ class UpdateUserMutationTest extends TestCase
             ],
         ]);
 
+        /** @var User $user */
         $this->actingAs($user);
 
         $response = $this->graphQL(
@@ -105,6 +106,7 @@ class UpdateUserMutationTest extends TestCase
      */
     public function testUserCannotUpdateOthersData(): void
     {
+        /** @var User $loggedInUser */
         $loggedInUser = User::factory()->create([
             'email' => 'loggedin@gmail.com',
             'username' => 'loggedinuser',
@@ -150,8 +152,7 @@ class UpdateUserMutationTest extends TestCase
      */
     public function testApplicationAdministratorCanUpdateOthersData(): void
     {
-        $loggedInUser = User::factory()->create();
-        $loggedInUser->assignRole(Role::APPLICATION_ADMINISTRATOR);
+        $this->beAppAdmin();
 
         $userToUpdate = User::factory()->create([
             'email' => 'usertoupdate@gmail.com',
@@ -160,7 +161,6 @@ class UpdateUserMutationTest extends TestCase
                 'specialization' => '1',
             ],
         ]);
-        $this->actingAs($loggedInUser);
         $response = $this->graphQL(
             'mutation updateUser ($id: ID!){
                 updateUser(
@@ -188,8 +188,7 @@ class UpdateUserMutationTest extends TestCase
 
     public function testApplicationAdministratorCanUpdateOthersDataToBeTheSame(): void
     {
-        $loggedInUser = User::factory()->create();
-        $loggedInUser->assignRole(Role::APPLICATION_ADMINISTRATOR);
+        $this->beAppAdmin();
 
         $userToUpdate = User::factory()->create([
             'name' => 'testname',
@@ -199,7 +198,6 @@ class UpdateUserMutationTest extends TestCase
                 'specialization' => '1',
             ],
         ]);
-        $this->actingAs($loggedInUser);
         $response = $this->graphQL(
             'mutation updateUser ($id: ID!){
                 updateUser(

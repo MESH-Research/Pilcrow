@@ -13,10 +13,12 @@ class Publication extends BaseModel
 
     protected $fillable = [
         'name',
+        'is_publicly_visible',
     ];
 
     protected $rules = [
         'name' => 'max:256|unique:publications,name|required',
+        'is_publicly_visible' => 'boolean',
     ];
 
     /**
@@ -51,6 +53,30 @@ class Publication extends BaseModel
         return $this->belongsToMany(User::class)
             ->withTimestamps()
             ->withPivot(['id', 'user_id', 'role_id', 'publication_id']);
+    }
+
+    /**
+     * Publication administrators relationship
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function publicationAdmins(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class)
+            ->withTimestamps()
+            ->withPivotValue('role_id', Role::PUBLICATION_ADMINISTRATOR_ROLE_ID);
+    }
+
+    /**
+     * Editors  relationship
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function editors(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class)
+            ->withTimestamps()
+            ->withPivotValue('role_id', Role::EDITOR_ROLE_ID);
     }
 
     /**

@@ -32,7 +32,7 @@ class CreatePublicationUserTable extends Migration
                 ->references('id')
                 ->on('publications');
 
-            $table->unique(['user_id','role_id','publication_id'],'publication_user_unique');
+            $table->unique(['user_id','publication_id'],'publication_user_unique');
         });
     }
 

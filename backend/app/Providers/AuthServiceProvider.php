@@ -11,18 +11,6 @@ use Illuminate\Support\Facades\Gate;
 class AuthServiceProvider extends ServiceProvider
 {
     /**
-     * The policy mappings for the application.
-     *
-     * @var array
-     */
-    protected $policies = [
-        // 'App\Models\Model' => 'App\Policies\ModelPolicy',
-        User::class => UserPolicy::class,
-        Publication::class => PublicationPolicy::class,
-        SubmissionUser::class => SubmissionUserPolicy::class,
-    ];
-
-    /**
      * Register any authentication / authorization services.
      *
      * @return void
