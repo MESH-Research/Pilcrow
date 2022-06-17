@@ -10,6 +10,7 @@ use App\Models\StyleCriteria;
 use App\Models\Submission;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Str;
 use Nuwave\Lighthouse\Testing\MakesGraphQLRequests;
 use Tests\TestCase;
 
@@ -112,7 +113,7 @@ class SubmissionCommentTest extends TestCase
         $this->assertEquals(1, $submission->overallComments->count());
     }
 
-    public function testInlineCommentsCanBeRetrievedOnTheGraphqlEndpoint()
+    public function testRetrieveInlineComments()
     {
         $this->beAppAdmin();
 
@@ -178,7 +179,7 @@ class SubmissionCommentTest extends TestCase
         $response->assertJsonPath('data', $expected_data);
     }
 
-    public function testOverallCommentsCanBeRetrievedOnTheGraphqlEndpoint()
+    public function testRetrieveOverallComments()
     {
         $this->beAppAdmin();
 
@@ -226,5 +227,383 @@ class SubmissionCommentTest extends TestCase
             ],
         ];
         $response->assertJsonPath('data', $expected_data);
+    }
+
+    /**
+     * @return array
+     */
+    public function commentCreationProvider(): array
+    {
+        return [
+            'parent_id missing and reply_to_id missing' => [true, ''],
+            'parent_id null and reply_to_id null' => [true, 'parent_id: null, reply_to_id: null'],
+        ];
+    }
+
+    /**
+     * @dataProvider commentCreationProvider
+     * @param bool $is_valid Expected validity of test case
+     * @param string $fragment GraphQL fragment to include in the mutation
+     * @return void
+     */
+    public function testCreateInlineComment(bool $is_valid, string $fragment)
+    {
+        $this->beAppAdmin();
+        $submission = $this->createSubmission();
+        $response = $this->graphQL(
+            'mutation AddInlineComment($submission_id: ID!) {
+                updateSubmission(input: {
+                    id: $submission_id
+                    inline_comments: {
+                        create: [{
+                            content: "Hello World"
+                            style_criteria: [
+                                {
+                                    name: "Hello"
+                                    icon: "hello"
+                                }
+                                {
+                                    name: "World"
+                                    icon: "world"
+                                }
+                            ]
+                            ' . $fragment . '
+                            from: 100
+                            to: 110
+                        }]
+                    }
+                }) {
+                    inline_comments {
+                        content
+                        style_criteria {
+                            name
+                            icon
+                        }
+                        from
+                        to
+                    }
+                }
+            }',
+            [
+                'submission_id' => $submission->id,
+            ]
+        );
+        $expected = [
+            'updateSubmission' => [
+                'inline_comments' => [
+                    [
+                        'content' => 'Hello World',
+                        'style_criteria' => [
+                            '0' => [
+                                'name' => 'Hello',
+                                'icon' => 'hello',
+                            ],
+                            '1' => [
+                                'name' => 'World',
+                                'icon' => 'world',
+                            ],
+                        ],
+                        'from' => 100,
+                        'to' => 110,
+                    ],
+                ],
+            ],
+        ];
+        if ($is_valid) {
+            $response->assertJsonPath('data', $expected);
+        } else {
+            $response->assertGraphQLErrorCategory('validation');
+        }
+    }
+
+    /**
+     * @return array
+     */
+    public function commentReplyCreationProvider(): array
+    {
+        return [
+            'parent_id with a value and reply_to_id with a value' =>
+                [true, ['parent_id' => true, 'reply_to_id' => true]],
+            'parent_id with a value and reply_to_id missing' =>
+                [false, ['parent_id' => true]],
+            'parent_id null and reply_to_id missing' =>
+                [false, ['parent_id' => null]],
+            'parent_id null and reply_to_id with a value' =>
+                [false, ['parent_id' => null, 'reply_to_id' => true]],
+            'parent_id with a value and reply_to_id null' =>
+                [false, ['parent_id' => true, 'reply_to_id' => null]],
+            'parent_id missing and reply_to_id null' =>
+                [false, [ 'reply_to_id' => null]],
+            'parent_id missing and reply_to_id with a value' =>
+                [false, ['reply_to_id' => true]],
+        ];
+    }
+
+    /**
+     * @dataProvider commentReplyCreationProvider
+     * @param bool $is_valid Expected validity of test case
+     * @param array $args Arguments to include in the GraphQL mutation
+     * @return void
+     */
+    public function testCreateInlineCommentReply(bool $is_valid, array $args): void
+    {
+        $this->beAppAdmin();
+        $submission = $this->createSubmissionWithInlineComment();
+        $inline_comment = $submission->inlineComments()->first();
+
+        //phpcs:disable
+        $parentId = $inline_comment->id;
+        $replyToId = $inline_comment->id;
+        //phpcs:enable
+
+        $arguments = [];
+        $fragment = [];
+        $variables = ['submissionId' => $submission->id];
+        foreach ($args as $input => $variable) {
+            $camelName = Str::camel($input);
+            $arguments[] = "$$camelName: ID";
+            $fragment[] = "$input: $$camelName";
+            $variables[$camelName] = $variable ? $$camelName : null;
+        }
+
+        $graphQL =
+            /** @lang GraphQL */
+            'mutation CreateInlineCommentReply($submissionId: ID! ' . implode(' ', $arguments) . ') {
+                updateSubmission(input: {
+                    id: $submissionId
+                    inline_comments: {
+                        create: [
+                            {
+                                content: "New Inline Comment Reply"
+                                ' . implode("\n", $fragment) . '
+                            }
+                        ]
+                    }
+                }) {
+                    inline_comments {
+                        replies {
+                            content
+                            parent_id
+                            reply_to_id
+                        }
+                    }
+                }
+            }';
+
+        $response = $this->graphql(
+            $graphQL,
+            $variables
+        );
+
+        if ($is_valid) {
+            $response->assertJsonPath('data.updateSubmission.inline_comments', [
+                [
+                    'replies' => [
+                        [
+                            'content' => 'New Inline Comment Reply',
+                            'parent_id' => (string)$inline_comment->id,
+                            'reply_to_id' => (string)$inline_comment->id,
+                        ],
+                    ],
+                ],
+            ]);
+        } else {
+            $response->assertGraphQLErrorCategory('validation');
+        }
+    }
+
+    /**
+     * @dataProvider commentCreationProvider
+     * @param bool $is_valid Expected validity of test case
+     * @param string $fragment GraphQL fragment to include in the mutation
+     * @return void
+     */
+    public function testCreateOverallComment(bool $is_valid, string $fragment): void
+    {
+        $this->beAppAdmin();
+        $submission = $this->createSubmission();
+
+        $response = $this->graphQL(
+            /** @lang GraphQL */
+            'mutation CreateOverallComment($submissionId: ID!) {
+                updateSubmission(input: {
+                    id: $submissionId
+                    overall_comments: {
+                        create: [
+                            {
+                                content: "New Overall Comment"
+                                ' . $fragment . '
+                            }
+                        ]
+                    }
+                }) {
+                    overall_comments {
+                        content
+                    }
+                }
+            }',
+            [
+                'submissionId' => $submission->id,
+            ]
+        );
+        if ($is_valid) {
+            $response->assertJsonPath('data.updateSubmission.overall_comments', [
+                [
+                    'content' => 'New Overall Comment',
+                ],
+            ]);
+        } else {
+            $response->assertGraphQLErrorCategory('validation');
+        }
+    }
+
+    /**
+     * @dataProvider commentReplyCreationProvider
+     * @param bool $is_valid Expected validity of test case
+     * @param array $args Arguments to include in the GraphQL mutation
+     * @return void
+     */
+    public function testCreateOverallCommentReply(bool $is_valid, array $args): void
+    {
+        $this->beAppAdmin();
+        $submission = $this->createSubmissionWithOverallComment();
+        $overall_comment = $submission->overallComments()->first();
+
+        //phpcs:disable
+        $parentId = $overall_comment->id;
+        $replyToId = $overall_comment->id;
+        //phpcs:enable
+
+        $arguments = [];
+        $fragment = [];
+        $variables = ['submissionId' => $submission->id];
+        foreach ($args as $input => $variable) {
+            $camelName = Str::camel($input);
+            $arguments[] = "$$camelName: ID";
+            $fragment[] = "$input: $$camelName";
+            $variables[$camelName] = $variable ? $$camelName : null;
+        }
+
+        $graphQL =
+            /** @lang GraphQL */
+            'mutation CreateOverallCommentReply($submissionId: ID! ' . implode(' ', $arguments) . ') {
+                updateSubmission(input: {
+                    id: $submissionId
+                    overall_comments: {
+                        create: [
+                            {
+                                content: "New Overall Comment Reply"
+                                ' . implode("\n", $fragment) . '
+                            }
+                        ]
+                    }
+                }) {
+                    overall_comments {
+                        replies {
+                            content
+                            parent_id
+                            reply_to_id
+                        }
+                    }
+                }
+            }';
+
+        $response = $this->graphql(
+            $graphQL,
+            $variables
+        );
+
+        if ($is_valid) {
+            $response->assertJsonPath('data.updateSubmission.overall_comments', [
+                [
+                    'replies' => [
+                        [
+                            'content' => 'New Overall Comment Reply',
+                            'parent_id' => (string)$overall_comment->id,
+                            'reply_to_id' => (string)$overall_comment->id,
+                        ],
+                    ],
+                ],
+            ]);
+        } else {
+            $response->assertGraphQLErrorCategory('validation');
+        }
+    }
+
+    /**
+     * @return void
+     */
+    public function testUpdateInlineComment()
+    {
+        $this->beAppAdmin();
+        $submission = $this->createSubmissionWithInlineComment();
+        $inline_comment = $submission->inlineComments()->first();
+        $response = $this->graphQL(
+            'mutation UpdateInlineComment($submissionId: ID! $commentId: ID!) {
+                updateSubmission(input: {
+                    id: $submissionId
+                    inline_comments: {
+                        update: [
+                            {
+                                id: $commentId
+                                content: "Hello World Updated"
+                                style_criteria: [
+                                    {
+                                        name: "Hello"
+                                        icon: "hello"
+                                    }
+                                    {
+                                        name: "World"
+                                        icon: "world"
+                                    }
+                                ]
+                                from: 120
+                                to: 130
+                            }
+                        ]
+                    }
+                }) {
+                    id
+                    inline_comments {
+                        id
+                        content
+                        style_criteria {
+                            name
+                            icon
+                        }
+                        from
+                        to
+                    }
+                }
+            }',
+            [
+                'commentId' => $inline_comment->id,
+                'submissionId' => $submission->id,
+            ]
+        );
+        $expected = [
+            'updateSubmission' => [
+                'id' => (string)$submission->id,
+                'inline_comments' => [
+                    [
+                        'id' => (string)$inline_comment->id,
+                        'content' => 'Hello World Updated',
+                        'style_criteria' => [
+                            '0' => [
+                                'name' => 'Hello',
+                                'icon' => 'hello',
+                            ],
+                            '1' => [
+                                'name' => 'World',
+                                'icon' => 'world',
+                            ],
+                        ],
+                        'from' => 120,
+                        'to' => 130,
+                    ],
+                ],
+            ],
+        ];
+        $response->assertJsonPath('data', $expected);
     }
 }

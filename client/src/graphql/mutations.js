@@ -1,5 +1,6 @@
 import gql from "graphql-tag"
 import {
+  _COMMENT_FIELDS,
   _CURRENT_USER_FIELDS,
   _PROFILE_METADATA_FIELDS,
   _RELATED_USER_FIELDS,
@@ -96,40 +97,46 @@ export const CREATE_PUBLICATION = gql`
   }
 `
 
-export const CREATE_PUBLICATION_USER = gql`
-  mutation CreatePublicationUser(
-    $user_id: ID!
-    $role_id: ID!
-    $publication_id: ID!
+export const UPDATE_PUBLICATION_EDITORS = gql`
+  mutation UpdatePublicationEditors(
+    $id: ID!
+    $connect: [ID!]
+    $disconnect: [ID!]
   ) {
-    createPublicationUser(
-      publication_user: {
-        user_id: $user_id
-        role_id: $role_id
-        publication_id: $publication_id
+    updatePublication(
+      publication: {
+        id: $id
+        editors: { connect: $connect, disconnect: $disconnect }
       }
     ) {
       id
+      editors {
+        ...relatedUserFields
+      }
     }
   }
+  ${_RELATED_USER_FIELDS}
 `
 
-export const DELETE_PUBLICATION_USER = gql`
-  mutation DeletePublicationUser(
-    $user_id: ID!
-    $role_id: ID!
-    $publication_id: ID!
+export const UPDATE_PUBLICATION_ADMINS = gql`
+  mutation UpdatePublicationAdmins(
+    $id: ID!
+    $connect: [ID!]
+    $disconnect: [ID!]
   ) {
-    deletePublicationUser(
-      publication_user: {
-        user_id: $user_id
-        role_id: $role_id
-        publication_id: $publication_id
+    updatePublication(
+      publication: {
+        id: $id
+        publication_admins: { connect: $connect, disconnect: $disconnect }
       }
     ) {
       id
+      publication_admins {
+        ...relatedUserFields
+      }
     }
   }
+  ${_RELATED_USER_FIELDS}
 `
 
 export const CREATE_SUBMISSION = gql`
@@ -170,13 +177,13 @@ export const CREATE_SUBMISSION_FILE = gql`
 
 export const UPDATE_SUBMISSION_REVIEWERS = gql`
   mutation UpdateSubmissionReviewers(
-    $submission_id: ID!
+    $id: ID!
     $connect: [ID!]
     $disconnect: [ID!]
   ) {
     updateSubmission(
       input: {
-        id: $submission_id
+        id: $id
         reviewers: { connect: $connect, disconnect: $disconnect }
       }
     ) {
@@ -190,13 +197,13 @@ export const UPDATE_SUBMISSION_REVIEWERS = gql`
 `
 export const UPDATE_SUBMISSION_REVIEW_COORDINATORS = gql`
   mutation UpdateSubmissionReviewCoordinators(
-    $submission_id: ID!
+    $id: ID!
     $connect: [ID!]
     $disconnect: [ID!]
   ) {
     updateSubmission(
       input: {
-        id: $submission_id
+        id: $id
         review_coordinators: { connect: $connect, disconnect: $disconnect }
       }
     ) {
@@ -211,13 +218,13 @@ export const UPDATE_SUBMISSION_REVIEW_COORDINATORS = gql`
 
 export const UPDATE_SUBMISSION_SUBMITERS = gql`
   mutation UpdateSubmissionReviewCoordinators(
-    $submission_id: ID!
+    $id: ID!
     $connect: [ID!]
     $disconnect: [ID!]
   ) {
     updateSubmission(
       input: {
-        id: $submission_id
+        id: $id
         submitters: { connect: $connect, disconnect: $disconnect }
       }
     ) {
@@ -349,4 +356,93 @@ export const DELETE_PUBLICATION_STYLE_CRITERIA = gql`
       }
     }
   }
+`
+
+export const CREATE_OVERALL_COMMENT = gql`
+  mutation CreateOverallComment($submission_id: ID!, $content: String!) {
+    updateSubmission(
+      input: {
+        id: $submission_id
+        overall_comments: { create: [{ content: $content }] }
+      }
+    ) {
+      id
+      overall_comments {
+        ...commentFields
+        replies {
+          ...commentFields
+          reply_to_id
+        }
+      }
+    }
+  }
+  ${_COMMENT_FIELDS}
+`
+
+export const CREATE_OVERALL_COMMENT_REPLY = gql`
+  mutation CreateOverallCommentReply(
+    $submission_id: ID!
+    $content: String!
+    $reply_to_id: ID!
+    $parent_id: ID!
+  ) {
+    updateSubmission(
+      input: {
+        id: $submission_id
+        overall_comments: {
+          create: [
+            {
+              content: $content
+              reply_to_id: $reply_to_id
+              parent_id: $parent_id
+            }
+          ]
+        }
+      }
+    ) {
+      id
+      overall_comments {
+        ...commentFields
+        replies {
+          reply_to_id
+          ...commentFields
+        }
+      }
+    }
+  }
+  ${_COMMENT_FIELDS}
+`
+
+export const CREATE_INLINE_COMMENT_REPLY = gql`
+  mutation CreateInlineCommentReply(
+    $submission_id: ID!
+    $content: String!
+    $reply_to_id: ID!
+    $parent_id: ID!
+  ) {
+    updateSubmission(
+      input: {
+        id: $submission_id
+        inline_comments: {
+          create: [
+            {
+              content: $content
+              reply_to_id: $reply_to_id
+              parent_id: $parent_id
+            }
+          ]
+        }
+      }
+    ) {
+      id
+      inline_comments {
+        ...commentFields
+        replies {
+          reply_to_id
+          ...commentFields
+        }
+      }
+    }
+  }
+  ${_COMMENT_FIELDS}
 `

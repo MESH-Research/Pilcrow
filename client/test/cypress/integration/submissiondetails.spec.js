@@ -61,7 +61,7 @@ describe("Submissions Details", () => {
     cy.dataCy("coordinators_list")
         .find('.q-list')
         .eq(0)
-        .dataCy("button_unassign")
+        .find("[data-cy=button_unassign]")
         .click();
     cy.wait("@removeCoordinatorFetch")
 
@@ -102,9 +102,7 @@ describe("Submissions Details", () => {
       cy.wait("@addReviewer2")
     })
 
-    cy.dataCy("submission_details_notify")
-      .should("be.visible")
-      .should("have.class", "bg-negative")
+    cy.dataCy('reviewers_list').find('.q-item').should('have.length', 2)
 
   })
 })

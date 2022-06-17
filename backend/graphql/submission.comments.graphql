@@ -1,0 +1,130 @@
+extend type Submission {
+    inline_comments: [InlineComment!]! @hasMany(relation: "inlineComments")
+    overall_comments: [OverallComment!]! @hasMany(relation: "overallComments")
+}
+
+"""
+An inline comment of a submission
+"""
+type InlineComment implements Comment {
+    id: ID!
+    content: String!
+    created_by: User! @belongsTo(relation: "createdBy")
+    updated_by: User! @belongsTo(relation: "updatedBy")
+    created_at: DateTimeUtc!
+    updated_at: DateTimeUtc!
+    replies: [InlineCommentReply!] @hasMany
+    style_criteria: [InlineCommentStyleCriteria!]
+    from: Int
+    to: Int
+}
+
+"""
+The static style criteria of an inline comment
+"""
+type InlineCommentStyleCriteria {
+    name: String
+    icon: String
+}
+
+"""
+A reply to an inline comment of a submission
+"""
+type InlineCommentReply implements Comment {
+    id: ID!
+    content: String!
+    created_by: User! @belongsTo(relation: "createdBy")
+    updated_by: User! @belongsTo(relation: "updatedBy")
+    created_at: DateTimeUtc!
+    updated_at: DateTimeUtc!
+    parent_id: ID!
+    reply_to_id: ID!
+}
+
+"""
+An overall comment of a submission
+"""
+type OverallComment implements Comment {
+    id: ID!
+    content: String!
+    created_by: User! @belongsTo(relation: "createdBy")
+    created_at: DateTimeUtc!
+    updated_by: User! @belongsTo(relation: "updatedBy")
+    updated_at: DateTimeUtc!
+    replies: [OverallCommentReply!] @hasMany
+}
+
+"""
+A reply to an overall comment of a submission
+"""
+type OverallCommentReply implements Comment {
+    id: ID!
+    content: String!
+    created_by: User! @belongsTo(relation: "createdBy")
+    updated_by: User! @belongsTo(relation: "updatedBy")
+    created_at: DateTimeUtc!
+    updated_at: DateTimeUtc!
+    parent_id: ID!
+    reply_to_id: ID!
+}
+
+extend input UpdateSubmissionInput {
+    inline_comments: InlineCommentHasManyInput
+        @rename(attribute: "inlineComments")
+    overall_comments: OverallCommentHasManyInput
+        @rename(attribute: "overallComments")
+}
+
+input InlineCommentHasManyInput {
+    create: [CreateInlineCommentInput!]
+        @rules(apply: ["App\\Rules\\InlineCommentIdValidity"])
+    update: [UpdateInlineCommentInput!]
+}
+
+input CreateInlineCommentInput {
+    content: String!
+    style_criteria: [InlineCommentStyleCriteriaInput!]
+    from: Int
+    to: Int
+    parent_id: ID
+    reply_to_id: ID
+}
+
+input UpdateInlineCommentInput {
+    id: ID!
+    content: String
+    style_criteria: [InlineCommentStyleCriteriaInput!]
+    from: Int
+    to: Int
+}
+
+input InlineCommentStyleCriteriaInput {
+    name: String
+    icon: String
+}
+
+input OverallCommentHasManyInput {
+    create: [CreateOverallCommentInput!]
+        @rules(apply: ["App\\Rules\\OverallCommentIdValidity"])
+    update: [UpdateOverallCommentInput!]
+}
+
+input CreateOverallCommentInput {
+    content: String!
+    parent_id: ID
+    reply_to_id: ID
+}
+
+input UpdateOverallCommentInput {
+    id: ID!
+    content: String
+}
+
+interface Comment {
+    id: ID!
+    content: String!
+    created_by: User!
+    updated_by: User!
+    created_at: DateTimeUtc!
+    updated_at: DateTimeUtc!
+}

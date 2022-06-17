@@ -15,6 +15,8 @@ class SubmissionFileSeeder extends Seeder
      */
     public function run()
     {
+        $this->callOnce(SubmissionSeeder::class);
+
         SubmissionFile::factory()->count(2)->create([
             'submission_id' => 100,
         ]);

@@ -1,6 +1,6 @@
 <template>
   <q-drawer
-    v-model="DrawerOpen"
+    v-model="drawerOpen"
     show-if-above
     side="right"
     bordered
@@ -14,33 +14,29 @@
       >
         <q-icon name="fas fa-grip-lines-vertical" color="white" size="12px" />
       </div>
-      <q-scroll-area class="fit col bg-grey-4">
-        <section>
-          <div id="inline_comments_section" class="q-pa-md">
-            <span class="text-h3"> Inline Comments </span>
-          </div>
-          <q-card
-            class="q-ma-md q-pa-md bg-grey-1"
-            bordered
-            style="border-color: rgb(56, 118, 187)"
-          >
-            <comment-editor :is-inline-comment="true" />
-          </q-card>
-          <submission-comment is-inline-comment />
-          <submission-comment is-inline-comment />
-          <div class="row justify-center q-pa-md q-pb-xl">
-            <q-btn color="dark" icon="arrow_upward">Scroll to Top</q-btn>
-          </div>
-        </section>
-      </q-scroll-area>
+      <inline-comments />
     </div>
   </q-drawer>
 </template>
 
 <script setup>
-import { ref, watch } from "vue"
-import SubmissionComment from "src/components/atoms/SubmissionComment.vue"
-import CommentEditor from "src/components/forms/CommentEditor.vue"
+import { ref, computed } from "vue"
+import InlineComments from "../molecules/InlineComments.vue"
+
+const props = defineProps({
+  drawerOpen: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
+})
+
+const emit = defineEmits(["update:drawerOpen"])
+
+const drawerOpen = computed({
+  get: () => props.drawerOpen,
+  set: (value) => emit("update:drawerOpen", value),
+})
 
 const drawerWidth = ref(440)
 let originalWidth
@@ -55,15 +51,4 @@ function handlePan({ ...newInfo }) {
     drawerWidth.value = newWidth
   }
 }
-const props = defineProps({
-  // Drawer status
-  commentDrawerOpen: {
-    type: Boolean,
-    default: null,
-  },
-})
-const DrawerOpen = ref(props.commentDrawerOpen)
-watch(props, () => {
-  DrawerOpen.value = props.commentDrawerOpen
-})
 </script>

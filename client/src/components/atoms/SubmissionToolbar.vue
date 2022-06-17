@@ -29,6 +29,7 @@
         flat
         round
         icon="question_answer"
+        data-cy="toggleInlineCommentsButton"
         @click="toggleCommentDrawer"
       />
     </q-toolbar>
@@ -37,7 +38,7 @@
 <script setup>
 const props = defineProps({
   // Drawer status
-  modelValue: {
+  commentDrawerOpen: {
     type: Boolean,
     default: null,
   },
@@ -50,8 +51,8 @@ const props = defineProps({
     default: null,
   },
 })
-const emit = defineEmits(["update:modelValue"])
+const emit = defineEmits(["update:commentDrawerOpen"])
 function toggleCommentDrawer() {
-  emit("update:modelValue", !props.modelValue)
+  emit("update:commentDrawerOpen", !props.commentDrawerOpen)
 }
 </script>

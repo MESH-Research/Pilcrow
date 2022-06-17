@@ -1,5 +1,6 @@
 import gql from "graphql-tag"
 import {
+  _COMMENT_FIELDS,
   _CURRENT_USER_FIELDS,
   _PAGINATION_FIELDS,
   _PROFILE_METADATA_FIELDS,
@@ -184,6 +185,47 @@ export const GET_SUBMISSION = gql`
   ${_RELATED_USER_FIELDS}
 `
 
+export const GET_SUBMISSION_REVIEW = gql`
+  query GetSubmissionReview($id: ID!) {
+    submission(id: $id) {
+      id
+      title
+      content {
+        data
+      }
+      publication {
+        style_criterias {
+          id
+          name
+          description
+          icon
+        }
+      }
+      inline_comments {
+        from
+        to
+        ...commentFields
+        style_criteria {
+          name
+          icon
+        }
+        replies {
+          ...commentFields
+          reply_to_id
+        }
+      }
+      overall_comments {
+        ...commentFields
+        replies {
+          ...commentFields
+          reply_to_id
+        }
+      }
+    }
+  }
+  ${_COMMENT_FIELDS}
+`
+
 export const GET_PUBLICATION = gql`
   query GetPublication($id: ID!) {
     publication(id: $id) {
@@ -196,16 +238,13 @@ export const GET_PUBLICATION = gql`
         icon
         description
       }
-      users {
-        name
-        email
-        username
-        pivot {
-          id
-          user_id
-          role_id
-        }
+      publication_admins {
+        ...relatedUserFields
+      }
+      editors {
+        ...relatedUserFields
       }
     }
   }
+  ${_RELATED_USER_FIELDS}
 `

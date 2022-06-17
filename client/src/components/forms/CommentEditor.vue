@@ -1,80 +1,93 @@
 <template>
-  <q-card v-if="editor" flat class="bg-grey-1">
-    <q-btn-group spread unelevated class="block text-center q-pb-md">
-      <comment-editor-button
-        v-for="(button, index) in commentEditorButtons"
-        :key="index"
-        :aria-label="button.ariaLabel"
-        v-bind="button"
-      />
-    </q-btn-group>
-    <div class="comment-editor">
-      <editor-content :editor="editor" />
-    </div>
-    <div v-if="props.isInlineComment" class="q-py-md">
-      <q-list>
-        <q-expansion-item
-          v-for="criteria in styleCriteria"
-          :key="criteria.id"
-          :label="criteria.label"
-          popup
-          expand-icon="help_outline"
-          expanded-icon="expand_less"
-          expand-separator
-          expand-icon-toggle
-          data-cy="criteria-item"
-        >
-          <template #header>
-            <q-item-section
-              avatar
-              data-cy="criteria-icon"
-              @click="criteria.selected = !criteria.selected"
-            >
-              <q-icon :name="criteria.icon" size="sm" color="secondary" />
-            </q-item-section>
-            <q-item-section @click="criteria.selected = !criteria.selected">
-              <q-item-label
-                :id="`criteria-${uuid}-${criteria.id}`"
-                data-cy="criteria-label"
-                >{{ criteria.name }}</q-item-label
+  <q-form @submit="submitHandler">
+    <q-card v-if="editor" flat class="bg-grey-1">
+      <q-btn-group spread unelevated class="block text-center q-pb-md">
+        <comment-editor-button
+          v-for="(button, index) in commentEditorButtons"
+          :key="index"
+          :aria-label="button.ariaLabel"
+          v-bind="button"
+        />
+      </q-btn-group>
+      <div class="comment-editor">
+        <editor-content :editor="editor" />
+      </div>
+      <div v-if="commentType === 'inline'" class="q-py-md">
+        <q-list>
+          <q-expansion-item
+            v-for="criteria in styleCriteria"
+            :key="criteria.id"
+            :label="criteria.label"
+            popup
+            expand-icon="help_outline"
+            expanded-icon="expand_less"
+            expand-separator
+            expand-icon-toggle
+            data-cy="criteria-item"
+          >
+            <template #header>
+              <q-item-section
+                avatar
+                data-cy="criteria-icon"
+                @click="criteria.selected = !criteria.selected"
               >
-            </q-item-section>
-            <q-item-section avatar>
-              <q-toggle
-                v-model="criteria.selected"
-                size="lg"
-                data-cy="criteria-toggle"
-                :aria-labelledby="`criteria-${uuid}-${criteria.id}`"
-              />
-            </q-item-section>
-          </template>
-          <q-card data-cy="criteria-description">
-            <!-- eslint-disable-next-line vue/no-v-html vue/no-v-text-v-html-on-component -->
-            <q-card-section v-html="criteria.description" />
-          </q-card>
-        </q-expansion-item>
-      </q-list>
-    </div>
-    <q-card-actions class="q-mt-md q-pa-none" align="between">
-      <q-btn data-ref="submit" color="primary" @click="submitHandler()">{{
-        $t("guiElements.form.submit")
-      }}</q-btn>
-      <q-btn ref="cancel_button" flat @click="cancelHandler()">{{
-        $t("guiElements.form.cancel")
-      }}</q-btn>
-    </q-card-actions>
-  </q-card>
+                <q-icon :name="criteria.icon" size="sm" color="secondary" />
+              </q-item-section>
+              <q-item-section @click="criteria.selected = !criteria.selected">
+                <q-item-label
+                  :id="`criteria-${uuid}-${criteria.id}`"
+                  data-cy="criteria-label"
+                  >{{ criteria.name }}</q-item-label
+                >
+              </q-item-section>
+              <q-item-section avatar>
+                <q-toggle
+                  v-model="criteria.selected"
+                  size="lg"
+                  data-cy="criteria-toggle"
+                  :aria-labelledby="`criteria-${uuid}-${criteria.id}`"
+                />
+              </q-item-section>
+            </template>
+            <q-card data-cy="criteria-description">
+              <!-- eslint-disable-next-line vue/no-v-html vue/no-v-text-v-html-on-component -->
+              <q-card-section v-html="criteria.description" />
+            </q-card>
+          </q-expansion-item>
+        </q-list>
+      </div>
+      <q-card-actions class="q-mt-md q-pa-none" align="between">
+        <q-btn type="submit" color="primary">
+          {{ $t("guiElements.form.submit") }}
+        </q-btn>
+        <q-btn
+          v-if="commentType !== 'overall'"
+          ref="cancel_button"
+          flat
+          @click="cancelHandler()"
+        >
+          {{ $t("guiElements.form.cancel") }}
+        </q-btn>
+      </q-card-actions>
+    </q-card>
+  </q-form>
 </template>
 
 <script setup>
 import { ref, computed, inject } from "vue"
 import { useEditor, EditorContent } from "@tiptap/vue-3"
+import { useMutation } from "@vue/apollo-composable"
 import { useQuasar } from "quasar"
 import StarterKit from "@tiptap/starter-kit"
 import Link from "@tiptap/extension-link"
 import Placeholder from "@tiptap/extension-placeholder"
 import CommentEditorButton from "../atoms/CommentEditorButton.vue"
 import BypassStyleCriteriaDialogVue from "../dialogs/BypassStyleCriteriaDialog.vue"
+import {
+  CREATE_OVERALL_COMMENT,
+  CREATE_OVERALL_COMMENT_REPLY,
+  CREATE_INLINE_COMMENT_REPLY,
+} from "src/graphql/mutations"
 import { useI18n } from "vue-i18n"
 import { uniqueId } from "lodash"
 
@@ -85,13 +98,19 @@ function dirtyDialog() {
   })
 }
 const uuid = uniqueId()
-
-const emit = defineEmits(["cancel"])
-
+const emit = defineEmits(["cancel", "submit"])
 const props = defineProps({
-  isInlineComment: {
-    type: Boolean,
-    default: false,
+  commentType: {
+    type: String,
+    required: true,
+  },
+  parent: {
+    type: Object,
+    default: () => {},
+  },
+  replyTo: {
+    type: Object,
+    default: () => {},
   },
 })
 
@@ -176,20 +195,55 @@ const commentEditorButtons = ref([
     iconName: "link_off",
   },
 ])
-
-function submitHandler() {
-  if (hasStyleCriteria.value || !props.isInlineComment) {
-    return true
+const submission = inject("submission")
+const mutations = {
+  inlineReply: CREATE_INLINE_COMMENT_REPLY,
+  overall: CREATE_OVERALL_COMMENT,
+  overallReply: CREATE_OVERALL_COMMENT_REPLY,
+}
+const { mutate: createComment } = useMutation(mutations[props.commentType])
+const hasStyleCriteria = computed(() => {
+  return styleCriteria.value.some((criteria) => criteria.selected)
+})
+async function submitHandler() {
+  if (!hasStyleCriteria.value && props.commentType === "inline") {
+    return new Promise((resolve) => {
+      dirtyDialog()
+        .onOk(function () {
+          resolve(true)
+        })
+        .onCancel(function () {
+          resolve(false)
+        })
+    })
   }
-  return new Promise((resolve) => {
-    dirtyDialog()
-      .onOk(function () {
-        resolve(true)
+  if (editor.value.isEmpty) {
+    return false
+  }
+  try {
+    const args = {
+      submission_id: submission.value.id,
+      content: editor.value.getHTML(),
+    }
+    if (
+      props.commentType === "overallReply" ||
+      props.commentType === "inlineReply"
+    ) {
+      args.reply_to_id = props.replyTo.id
+      args.parent_id = props.parent.id
+    }
+    await createComment({
+      ...args,
+    })
+      .then(() => {
+        editor.value.commands.clearContent(true)
       })
-      .onCancel(function () {
-        resolve(false)
+      .then(() => {
+        emit("submit")
       })
-  })
+  } catch (error) {
+    console.log("Error", error)
+  }
 }
 
 function cancelHandler() {
@@ -221,18 +275,12 @@ function setLink() {
     .run()
 }
 
-const submission = inject("submission")
-
 const styleCriteria = ref(
   submission.value.publication.style_criterias.map((c) => ({
     ...c,
     selected: false,
   }))
 )
-
-const hasStyleCriteria = computed(() => {
-  return styleCriteria.value.some((criteria) => criteria.selected)
-})
 </script>
 <style>
 .comment-editor .ProseMirror {
