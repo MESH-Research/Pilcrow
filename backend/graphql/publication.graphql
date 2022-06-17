@@ -23,6 +23,8 @@ type Publication {
     editors: [User!]! @belongsToMany(relation: "editors")
     is_publicly_visible: Boolean
     style_criterias: [StyleCriteria!]! @hasMany(relation: "styleCriterias")
+    my_role: PublicationRole @method(name: "getMyRole")
+    effective_role: PublicationRole @method(name: "getEffectiveRole")
 }
 
 type StyleCriteria {
@@ -94,4 +96,9 @@ input UpdateStyleCriteriaInput {
     name: String
     description: String
     icon: String
+}
+
+enum PublicationRole {
+    publication_administrator @enum(value: 2)
+    editor @enum(value: 3)
 }
