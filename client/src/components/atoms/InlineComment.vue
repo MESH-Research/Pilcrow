@@ -34,6 +34,7 @@
           <template v-if="hasReplies">
             <q-btn
               v-if="!isCollapsed"
+              data-cy="collapseRepliesButton"
               aria-label="Hide Replies"
               bordered
               color="grey-3"
@@ -45,6 +46,7 @@
             </q-btn>
             <q-btn
               v-if="isCollapsed"
+              data-cy="collapseRepliesButton"
               aria-label="Show Replies"
               bordered
               color="secondary"
