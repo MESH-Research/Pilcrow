@@ -286,6 +286,47 @@ export default {
       },
     },
   },
+  publication: {
+    editors: {
+      heading: "Editors",
+      none: "An editor is not assigned to this publication.",
+      unassign: {
+        error: "An error occurred while attempting to unassign an editor.",
+        success: "{display_name} successfully unassigned as an editor.",
+      },
+      assign: {
+        duplicate:
+          "{display_name} is already assigned as an editor for this publication.",
+        error:
+          "An error occurred while attempting to assign an editor. Is the user already assigned to this publication?",
+        success: "{display_name} successfully assigned as an editor.",
+      },
+      unassign_button: {
+        ariaLabel: "Unassign Editor",
+        help: "Remove Editor",
+      },
+    },
+    publication_admins: {
+      heading: "Administrators",
+      none: "An administrator is not assigned to this publication.",
+      unassign: {
+        error:
+          "An error occurred while attempting to unassign an administrator.",
+        success: "{display_name} successfully unassigned as an administrator.",
+      },
+      assign: {
+        duplicate:
+          "{display_name} is already assigned as an administrator for this publication.",
+        error:
+          "An error occurred while attempting to assign an editor. Is the user already assigned to this publication?",
+        success: "{display_name} successfully assigned as an administrator.",
+      },
+      unassign_button: {
+        ariaLabel: "Unassign Administator",
+        help: "Remove Administrator",
+      },
+    },
+  },
   publications: {
     details: "Publication Details",
     create: {
@@ -294,23 +335,6 @@ export default {
       required: "A name is required to create a publication.",
       maxLength: "The maximum length has been exceeded for the name.",
       duplicate_name: "Publication name already exists.",
-    },
-    editor: {
-      heading: "Editors",
-      none: "No editors are assigned to this publication.",
-      unassign: {
-        ariaLabel: "Unassign",
-        helpText: "Remove editor",
-        error: "An error occurred while attempting to unassign an editor.",
-        success: "{display_name} successfully unassigned as an editor.",
-      },
-      assign: {
-        label: "Assign",
-        duplicate: "That editor is already assigned to this publication.",
-        error:
-          "An error occurred while attempting to assign an editor. Is this user already assigned as an editor?",
-        success: "{display_name} successfully assigned as an editor.",
-      },
     },
     style_criteria: {
       heading: "Style Criteria",
@@ -343,26 +367,7 @@ export default {
       },
     },
   },
-  submissions: {
-    details_heading: "Submission Details",
-    view_heading: "View Submission",
-    create: {
-      success: "Submission successfully created.",
-      failure: "An error occurred while attempting to create the submission.",
-      title: {
-        required: "A title is required to create a submission.",
-        max_length: "The maximum length has been exceeded for the title.",
-      },
-      publication_id: {
-        required: "A publication must be associated with a submission.",
-      },
-      submitter_user_id: {
-        required: "A user must be associated with a submission as a submitter.",
-      },
-      file_upload: {
-        required: "A file must be uploaded with a submission.",
-      },
-    },
+  submission: {
     review_coordinators: {
       heading: "Review Coordinator",
       none: "A review coordinator is not assigned to this submission.",
@@ -414,6 +419,27 @@ export default {
       unassign_button: {
         ariaLabel: "Unassign Submitterr",
         help: "Remove Submitter",
+      },
+    },
+  },
+  submissions: {
+    details_heading: "Submission Details",
+    view_heading: "View Submission",
+    create: {
+      success: "Submission successfully created.",
+      failure: "An error occurred while attempting to create the submission.",
+      title: {
+        required: "A title is required to create a submission.",
+        max_length: "The maximum length has been exceeded for the title.",
+      },
+      publication_id: {
+        required: "A publication must be associated with a submission.",
+      },
+      submitter_user_id: {
+        required: "A user must be associated with a submission as a submitter.",
+      },
+      file_upload: {
+        required: "A file must be uploaded with a submission.",
       },
     },
     comment: {

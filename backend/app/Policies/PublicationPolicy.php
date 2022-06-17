@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Policies;
 
-use App\Models\Permission;
 use App\Models\Publication;
 use App\Models\Role;
 use App\Models\User;
@@ -21,8 +20,7 @@ class PublicationPolicy
      */
     public function create(User $user)
     {
-        //User has global permission to create publications
-        if ($user->can(Permission::CREATE_PUBLICATION)) {
+        if ($user->hasRole(Role::APPLICATION_ADMINISTRATOR)) {
             return true;
         }
 
@@ -38,7 +36,7 @@ class PublicationPolicy
      */
     public function update(User $user, Publication $publication)
     {
-        if ($user->can(Permission::CREATE_PUBLICATION)) {
+        if ($user->hasRole(Role::APPLICATION_ADMINISTRATOR)) {
             return true;
         }
 
@@ -56,14 +54,12 @@ class PublicationPolicy
      * @param \App\Models\Publication $publication
      * @return bool
      */
-    public function view(User $user, Publication $publication)
+    public function view(?User $user, Publication $publication)
     {
-        //User has global permission to view all publications
-        if ($user->can(Permission::VIEW_ALL_PUBLICATIONS)) {
+        if ($publication->is_publicly_visible) {
             return true;
         }
-
-        if ($publication->is_publicly_visible) {
+        if ($user->hasRole(Role::APPLICATION_ADMINISTRATOR)) {
             return true;
         }
 

@@ -1,4 +1,4 @@
-import SubmissionUsers from "./SubmissionUsers.vue"
+import AssignedUsers from "./AssignedUsersComponent.vue"
 import { mount } from "@vue/test-utils"
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-jest"
 import { createMockClient } from "mock-apollo-client"
@@ -17,12 +17,12 @@ jest.mock("quasar", () => ({
 }))
 
 installQuasarPlugin()
-describe("SubmissionUsers", () => {
+describe("AssignedUsers", () => {
   const mockClient = createMockClient({
     defaultOptions: { watchQuery: { fetchPolicy: "network-only" } },
   })
   const makeWrapper = (props) => {
-    return mount(SubmissionUsers, {
+    return mount(AssignedUsers, {
       global: {
         mocks: {
           $t: (t) => t,
@@ -52,7 +52,8 @@ describe("SubmissionUsers", () => {
   test("shows relationship users", () => {
     const wrapper = makeWrapper({
       relationship: "reviewers",
-      submission: {
+      container: {
+        __typename: "Submission",
         id: 1,
         reviewers: [
           { id: 1, email: "test@example.com", name: "TestUser" },
@@ -67,7 +68,8 @@ describe("SubmissionUsers", () => {
   test("shows empty card if no users", async () => {
     const wrapper = makeWrapper({
       relationship: "reviewers",
-      submission: {
+      container: {
+        __typename: "Submission",
         id: 1,
         reviewers: [],
       },
@@ -76,7 +78,8 @@ describe("SubmissionUsers", () => {
 
     await wrapper.setProps({
       relationship: "reviewers",
-      submission: {
+      container: {
+        __typename: "Submission",
         id: 1,
         reviewers: [{ id: 1, email: "test@example.com", name: "TestUser" }],
       },
@@ -88,7 +91,8 @@ describe("SubmissionUsers", () => {
   test("mutable prop hides mutation controls", async () => {
     const wrapper = makeWrapper({
       relationship: "reviewers",
-      submission: {
+      container: {
+        __typename: "Submission",
         id: 1,
         reviewers: [{ id: 1, email: "test@example.com", name: "Test" }],
       },
@@ -100,7 +104,8 @@ describe("SubmissionUsers", () => {
     await wrapper.setProps({
       relationship: "reviewers",
       mutable: true,
-      submission: {
+      container: {
+        __typename: "Submission",
         id: 1,
         reviewers: [{ id: 1, email: "test@example.com", name: "Test" }],
       },
@@ -115,7 +120,8 @@ describe("SubmissionUsers", () => {
       relationship: "reviewers",
       mutable: true,
       maxUsers: 1,
-      submission: {
+      container: {
+        __typename: "Submission",
         id: 1,
         reviewers: [{ id: 1, email: "test@example.com", name: "Test" }],
       },
@@ -127,7 +133,8 @@ describe("SubmissionUsers", () => {
       relationship: "reviewers",
       mutable: true,
       maxUsers: 2,
-      submission: {
+      container: {
+        __typename: "Submission",
         id: 1,
         reviewers: [{ id: 1, email: "test@example.com", name: "Test" }],
       },
@@ -138,7 +145,8 @@ describe("SubmissionUsers", () => {
   test("mutable props disables mutations", async () => {
     const wrapper = makeWrapper({
       relationship: "reviewers",
-      submission: {
+      container: {
+        __typename: "Submission",
         id: 1,
         reviewers: [{ id: 1, email: "test@example.com", name: "Test" }],
       },
@@ -156,7 +164,8 @@ describe("SubmissionUsers", () => {
       relationship: "reviewers",
       mutable: true,
       maxUsers: 1,
-      submission: {
+      container: {
+        __typename: "Submission",
         id: 1,
         reviewers: [{ id: 1, email: "test@example.com", name: "Test" }],
       },
@@ -168,7 +177,7 @@ describe("SubmissionUsers", () => {
     await wrapper.vm.handleUserListClick({ user: { id: 1 } })
     expect(reviewersMutation).toHaveBeenCalledWith({
       disconnect: [1],
-      submission_id: 1,
+      id: 1,
     })
   })
 
@@ -176,7 +185,8 @@ describe("SubmissionUsers", () => {
     const wrapper = makeWrapper({
       relationship: "reviewers",
       mutable: true,
-      submission: {
+      container: {
+        __typename: "Submission",
         id: 1,
         reviewers: [{ id: 1, email: "test@example.com", name: "Test" }],
       },
@@ -185,7 +195,7 @@ describe("SubmissionUsers", () => {
     await wrapper.vm.handleSubmit()
     expect(reviewersMutation).toHaveBeenCalledWith({
       connect: [1],
-      submission_id: 1,
+      id: 1,
     })
   })
 
@@ -197,21 +207,22 @@ describe("SubmissionUsers", () => {
     const props = {
       relationship,
       mutable: true,
-      submission: {
+      container: {
         id: 1,
+        __typename: "Submission",
       },
     }
-    props.submission[relationship] = [
+    props.container[relationship] = [
       { id: 1, username: "Test", email: "test@example.com" },
     ]
     const wrapper = makeWrapper(props)
 
     wrapper.vm.user = { id: 2 }
     await wrapper.vm.handleSubmit()
-    expect(mock).toBeCalledWith({ connect: [2], submission_id: 1 })
+    expect(mock).toBeCalledWith({ connect: [2], id: 1 })
 
     mock.mockClear()
     await wrapper.vm.handleUserListClick({ user: { id: 2 } })
-    expect(mock).toBeCalledWith({ disconnect: [2], submission_id: 1 })
+    expect(mock).toBeCalledWith({ disconnect: [2], id: 1 })
   })
 })

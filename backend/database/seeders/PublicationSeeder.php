@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Database\Seeders;
 
 use App\Models\Publication;
-use App\Models\Role;
 use App\Models\StyleCriteria;
 use App\Models\User;
 use Illuminate\Database\Seeder;
@@ -21,18 +20,8 @@ class PublicationSeeder extends Seeder
         $this->callOnce(UserSeeder::class);
 
         Publication::factory()
-        ->hasAttached(
-            User::firstWhere('username', 'publicationAdministrator'),
-            [
-                'role_id' => Role::PUBLICATION_ADMINISTRATOR_ROLE_ID,
-            ]
-        )
-        ->hasAttached(
-            User::firstWhere('username', 'publicationEditor'),
-            [
-                'role_id' => Role::EDITOR_ROLE_ID,
-            ]
-        )
+        ->hasAttached(User::firstWhere('username', 'publicationAdministrator'), [], 'publicationAdmins')
+        ->hasAttached(User::firstWhere('username', 'publicationEditor'), [], 'editors')
         ->create([
             'id' => 1,
             'name' => 'CCR Test Publication 1',

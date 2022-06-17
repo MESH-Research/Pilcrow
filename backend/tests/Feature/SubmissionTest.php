@@ -448,7 +448,7 @@ class SubmissionTest extends TestCase
         $this->actingAs($publicationAdmin);
 
         $publication = Publication::factory()
-            ->hasAttached($publicationAdmin, ['role_id' => Role::PUBLICATION_ADMINISTRATOR_ROLE_ID])
+            ->hasAttached($publicationAdmin, [], 'publicationAdmins')
             ->create();
 
         $submission = Submission::factory()

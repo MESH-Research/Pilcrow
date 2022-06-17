@@ -5,6 +5,7 @@ import { createMockClient } from "mock-apollo-client"
 import { ApolloClients } from "@vue/apollo-composable"
 import flushPromises from "flush-promises"
 import { GET_SUBMISSION } from "src/graphql/queries"
+import { InMemoryCache } from "@apollo/client/core"
 
 jest.mock("quasar", () => ({
   ...jest.requireActual("quasar"),
@@ -22,8 +23,12 @@ jest.mock("vue-i18n", () => ({
 installQuasarPlugin()
 
 describe("submissions details page mount", () => {
+  const cache = new InMemoryCache({
+    addTypename: true,
+  })
   const mockClient = createMockClient({
     defaultOptions: { watchQuery: { fetchPolicy: "network-only" } },
+    cache,
   })
   const makeWrapper = async () => {
     const wrapper = mount(SubmissionDetailsPage, {
@@ -100,6 +105,7 @@ describe("submissions details page mount", () => {
       data: {
         submission: {
           id: 1,
+          __typename: "Submission",
           title: "This Submission",
           publication: {
             id: 1,
