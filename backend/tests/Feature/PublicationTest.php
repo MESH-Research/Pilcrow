@@ -97,13 +97,14 @@ class PublicationTest extends TestCase
      */
     public function testContentCreation(mixed $publication_data, mixed $expected_data): void
     {
-        /** @var User $user */
-        $user = User::factory()->create();
-        $user->assignRole(Role::APPLICATION_ADMINISTRATOR);
-        $this->actingAs($user);
+        $this->beAppAdmin();
         $response = $this->graphQL(
             'mutation CreatePublication ($publication_name: String, $home_page_content: String, $new_submission_content: String) {
-                createPublication(publication:{name: $publication_name home_page_content: $home_page_content new_submission_content: $new_submission_content}) {
+                createPublication(publication: {
+                    name: $publication_name
+                    home_page_content: $home_page_content
+                    new_submission_content: $new_submission_content
+                }) {
                     name,
                     home_page_content,
                     new_submission_content,
