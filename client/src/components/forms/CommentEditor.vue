@@ -125,7 +125,7 @@ const defaultContent = computed(() => {
   if (!props.parent?.id) return ""
   if (props.parent.id === props.replyTo?.id) return ""
   //TODO: Make this more robust to handle multi paragraphs, etc
-  return `<blockquote>${props.replyTo.content}</blockquote>`
+  return `<blockquote>${props.replyTo.content}</blockquote><p></p>`
 })
 const { t } = useI18n()
 const editor = useEditor({
@@ -311,9 +311,6 @@ const styleCriteria = ref(
     selected: false,
   }))
 )
-defineExpose({
-  comment: props.comment,
-})
 </script>
 <style>
 .comment-editor .ProseMirror {

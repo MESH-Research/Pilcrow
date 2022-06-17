@@ -12,6 +12,7 @@
         ref="commentRefs"
         :comment="comment"
         @submit="closeEditor"
+        @cancel="closeEditor"
       />
       <div class="row justify-center q-pa-md q-pb-xl">
         <q-btn color="dark" icon="arrow_upward">Scroll to Top</q-btn>
@@ -65,6 +66,7 @@ watch(
         }
       }
       if (!scrollTarget) return
+      console.log(scrollTarget)
       const target = getScrollTarget(scrollTarget)
       const offset = scrollTarget.offsetTop - 14
       setVerticalScrollPosition(target, offset, 250)
