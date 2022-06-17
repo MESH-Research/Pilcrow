@@ -17,25 +17,39 @@ class SubmissionSeeder extends Seeder
      * - Submitter: regularUser
      * - Review Coordinator: reviewCoordinator
      *
+     * @return void
+     */
+    public function run()
+    {
+        $this->callOnce(PublicationSeeder::class);
+        $this->callOnce(UserSeeder::class);
+
+        $this->createSubmission(100, 'CCR Test Submission 1');
+        $this->createSubmission(101, 'CCR Test Submission 2');
+    }
+
+    /**
+     * Create a submission
+     *
      * @param int $id
      * @param string $title
      * @return void
      */
-    public function run($id, $title)
+    protected function createSubmission($id, $title)
     {
         $submission = Submission::factory()
             ->hasAttached(
-                User::where('username', 'regularUser')->firstOrFail(),
+                User::firstWhere('username', 'regularUser'),
                 [],
                 'submitters'
             )
             ->hasAttached(
-                User::where('username', 'reviewCoordinator')->firstOrFail(),
+                User::firstWhere('username', 'reviewCoordinator'),
                 [],
                 'reviewCoordinators'
             )
             ->hasAttached(
-                User::where('username', 'reviewer')->firstOrFail(),
+                User::firstWhere('username', 'reviewer'),
                 [],
                 'reviewers'
             )
@@ -49,6 +63,7 @@ class SubmissionSeeder extends Seeder
             ]);
         $submission->updated_by = 2;
         $submission->content()->associate($submission->contentHistory->last())->save();
+        //TODO: Put this event on the model so it gets called no matter how the object is created.
         $event = new SubmissionCreated($submission);
         $listener = new NotifyUsersAboutCreatedSubmission();
         $listener->handle($event);

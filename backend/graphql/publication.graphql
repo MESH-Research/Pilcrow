@@ -1,6 +1,6 @@
 extend type Query {
-    "Return a publiation by ID"
-    publication(id: ID @eq): Publication @find
+    "Return a publication by ID"
+    publication(id: ID @eq): Publication @find @can(ability: "view", find: "id")
 
     "Return all publications"
     publications(
@@ -8,77 +8,6 @@ extend type Query {
     ): [Publication!]!
         @paginate(defaultCount: 100)
         @can(ability: "view", query: true)
-}
-
-extend type Mutation {
-    "Create a new publication"
-    createPublication(
-        publication: CreatePublicationInput! @spread
-    ): Publication! @create @can(ability: "create")
-
-    updatePublication(
-        publication: UpdatePublicationInput! @spread
-    ): Publication @update @can(ability: "update", query: true)
-
-    "Create an association between a user, role, and publication"
-    createPublicationUser(
-        publication_user: PublicationUserInput! @spread
-    ): PublicationUser! @create @can(ability: "create", injectArgs: true)
-
-    "Create an association between a user, role, and publication"
-    deletePublicationUser(
-        publication_user: PublicationUserInput! @spread
-    ): PublicationUser!
-        @guard
-        @can(ability: "delete", injectArgs: true)
-        @field(
-            resolver: "App\\GraphQL\\Mutations\\DeletePublicationUser@delete"
-        )
-}
-
-input CreatePublicationInput {
-    name: String
-    style_criterias: CreateStyleCriteriaHasMany
-        @rename(attribute: "styleCriterias")
-}
-
-input UpdatePublicationInput {
-    id: ID!
-    name: String
-    description: String
-    style_criterias: UpdateStyleCriteriaHasMany
-        @rename(attribute: "styleCriterias")
-}
-input CreateStyleCriteriaHasMany {
-    create: [CreateStyleCriteriaInput!]
-}
-
-input UpdateStyleCriteriaHasMany {
-    create: [CreateStyleCriteriaInput!]
-    update: [UpdateStyleCriteriaInput!]
-    delete: [ID!]
-}
-
-input CreateStyleCriteriaInput {
-    name: String!
-    description: String
-    icon: String
-}
-
-input UpdateStyleCriteriaInput {
-    id: ID!
-    name: String
-    description: String
-    icon: String
-}
-
-"""
-Input type for creating or modifying associations between a publication, role, and user
-"""
-input PublicationUserInput @validator(class: "PublicationUserInputValidator") {
-    user_id: ID!
-    role_id: ID!
-    publication_id: ID!
 }
 
 """
@@ -90,19 +19,10 @@ type Publication {
     created_at: DateTime
     updated_at: DateTime
     submissions: [Submission]! @hasMany
-    users: [User]! @belongsToMany
+    publication_admins: [User!]! @belongsToMany(relation: "publicationAdmins")
+    editors: [User!]! @belongsToMany(relation: "editors")
     is_publicly_visible: Boolean
     style_criterias: [StyleCriteria!]! @hasMany(relation: "styleCriterias")
-}
-
-"""
-A user associated with a publication and a role
-"""
-type PublicationUser {
-    id: ID!
-    role_id: ID!
-    publication_id: ID!
-    user_id: ID!
 }
 
 type StyleCriteria {
@@ -110,5 +30,68 @@ type StyleCriteria {
     name: String!
     description: String
     publication: Publication!
+    icon: String
+}
+
+extend type Mutation {
+    "Create a new publication"
+    createPublication(
+        publication: CreatePublicationInput! @spread
+    ): Publication! @create @can(ability: "create")
+
+    updatePublication(
+        publication: UpdatePublicationInput! @spread
+    ): Publication @update @can(ability: "update", query: true)
+}
+
+input CreatePublicationInput {
+    name: String
+    is_publicly_visible: Boolean
+    style_criterias: CreateStyleCriteriaHasMany
+        @rename(attribute: "styleCriterias")
+}
+
+input CreateStyleCriteriaHasMany {
+    create: [CreateStyleCriteriaInput!]
+}
+
+input CreateStyleCriteriaInput {
+    name: String!
+    description: String
+    icon: String
+}
+
+input UpdatePublicationInput {
+    id: ID!
+    name: String
+    description: String
+    is_publicly_visible: Boolean
+    style_criterias: UpdateStyleCriteriaHasMany
+        @rename(attribute: "styleCriterias")
+    editors: UpdatePublicationEditorsInput
+    publication_admins: UpdatePublicationAdministratorsInput
+        @rename(attribute: "publicationAdmins")
+}
+
+input UpdatePublicationAdministratorsInput {
+    connect: [ID!]
+    disconnect: [ID!]
+}
+
+input UpdatePublicationEditorsInput {
+    connect: [ID!]
+    disconnect: [ID!]
+}
+
+input UpdateStyleCriteriaHasMany {
+    create: [CreateStyleCriteriaInput!]
+    update: [UpdateStyleCriteriaInput!]
+    delete: [ID!]
+}
+
+input UpdateStyleCriteriaInput {
+    id: ID!
+    name: String
+    description: String
     icon: String
 }

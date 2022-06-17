@@ -13,7 +13,7 @@ class StyleCriteriasSeeder extends Seeder
      */
     public function run()
     {
-        $style_criterias = collect([
+        $style_criterias = [
             [
                 'name' => 'Accessibility',
                 'description' => '<ul><li>Can the author replace or explain any technical terms?</li><li>How does ' .
@@ -49,8 +49,9 @@ class StyleCriteriasSeeder extends Seeder
                                  ' with the issue at hand?</li></ul>',
                 'icon' => 'question_answer',
             ],
-        ]);
-        $style_criterias->map(function ($criteria) {
+        ];
+
+        foreach ($style_criterias as $criteria) {
             StyleCriteria::factory()
                 ->create([
                     'name' => $criteria['name'],
@@ -58,6 +59,6 @@ class StyleCriteriasSeeder extends Seeder
                     'description' => $criteria['description'],
                     'icon' => $criteria['icon'],
                 ]);
-        });
+        }
     }
 }

@@ -27,22 +27,22 @@
         />
       </section>
     </div>
-    <submission-users
+    <assigned-users
       data-cy="submitters_list"
       relationship="submitters"
-      :submission="submission"
+      :container="submission"
     />
-    <submission-users
+    <assigned-users
       relationship="review_coordinators"
       data-cy="coordinators_list"
-      :submission="submission"
+      :container="submission"
       mutable
       :max-users="1"
     />
-    <submission-users
+    <assigned-users
       data-cy="reviewers_list"
       relationship="reviewers"
-      :submission="submission"
+      :container="submission"
       mutable
     />
   </article>
@@ -50,7 +50,7 @@
 
 <script setup>
 import { GET_SUBMISSION } from "src/graphql/queries"
-import SubmissionUsers from "src/components/SubmissionUsers.vue"
+import AssignedUsers from "src/components/AssignedUsersComponent.vue"
 import { useQuery } from "@vue/apollo-composable"
 import { computed } from "vue"
 const props = defineProps({
