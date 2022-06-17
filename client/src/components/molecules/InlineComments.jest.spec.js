@@ -1,7 +1,7 @@
 import { mount } from "@vue/test-utils"
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-jest"
 import InlineComments from "./InlineComments.vue"
-import { nextTick, ref } from "vue"
+import { ref } from "vue"
 import TimeAgo from "javascript-time-ago"
 import en from "javascript-time-ago/locale/en.json"
 
