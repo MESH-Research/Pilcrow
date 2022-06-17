@@ -10,6 +10,9 @@
     >
       <q-menu cover auto-close>
         <q-list>
+          <q-item clickable @click="$emit('reply')"
+            ><q-item-section>Quote Reply</q-item-section></q-item
+          >
           <q-item clickable>
             <q-item-section>Modify</q-item-section>
           </q-item>

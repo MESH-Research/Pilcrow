@@ -28,7 +28,7 @@
         $t("submissions.comment.reply.title")
       }}</span>
       <comment-editor
-        comment-type="overallReply"
+        comment-type="OverallCommentReply"
         data-cy="overallCommentReplyEditor"
         :parent="parent"
         :reply-to="comment"

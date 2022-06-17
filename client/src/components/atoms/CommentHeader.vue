@@ -17,7 +17,7 @@
           </q-tooltip>
           {{ relativeTime }}
         </div>
-        <comment-actions />
+        <comment-actions @reply="$emit('reply')" />
       </div>
     </div>
   </q-card-section>
@@ -42,7 +42,7 @@ const props = defineProps({
     default: null,
   },
 })
-
+defineEmits(["reply"])
 const style = computed(() => {
   const style = {}
   if (props.bgColor) {

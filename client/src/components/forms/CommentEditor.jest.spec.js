@@ -77,7 +77,7 @@ describe("CommentEditor", () => {
           },
         },
         props: {
-          commentType: "inline",
+          commentType: "InlineComment",
         },
       }),
     }

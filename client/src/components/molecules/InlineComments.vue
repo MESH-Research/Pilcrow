@@ -4,18 +4,15 @@
       <div id="inline_comments_section" class="q-pa-md">
         <span class="text-h3"> Inline Comments </span>
       </div>
-      <q-card
-        class="q-ma-md q-pa-md bg-grey-1"
-        bordered
-        style="border-color: rgb(56, 118, 187)"
-      >
-        <comment-editor comment-type="inline" />
-      </q-card>
-      <inline-comment
+
+      <component
+        :is="comment.new ? NewInlineComment : InlineComment"
         v-for="comment in inline_comments"
         :key="comment.id"
         ref="commentRefs"
         :comment="comment"
+        @submit="closeEditor"
+        @cancel="closeEditor"
       />
       <div class="row justify-center q-pa-md q-pb-xl">
         <q-btn color="dark" icon="arrow_upward">Scroll to Top</q-btn>
@@ -26,7 +23,7 @@
 
 <script setup>
 import { ref, watch, inject, computed, nextTick } from "vue"
-import CommentEditor from "src/components/forms/CommentEditor.vue"
+import NewInlineComment from "../NewInlineCommentComponent.vue"
 import InlineComment from "src/components/atoms/InlineComment.vue"
 import { scroll } from "quasar"
 const { getScrollTarget, setVerticalScrollPosition } = scroll
@@ -36,12 +33,18 @@ const activeComment = inject("activeComment")
 
 const commentRefs = ref([])
 const inline_comments = computed(() => {
-  const comments = submission.value?.inline_comments ?? []
-
-  return [...comments].sort((a, b) => {
+  const comments = [...submission.value?.inline_comments] ?? []
+  if (activeComment.value?.new === true) {
+    comments.push(activeComment.value)
+  }
+  return comments.sort((a, b) => {
     return a.from - b.from
   })
 })
+
+function closeEditor() {
+  activeComment.value = null
+}
 watch(
   activeComment,
   (newValue) => {
@@ -63,6 +66,7 @@ watch(
         }
       }
       if (!scrollTarget) return
+      console.log(scrollTarget)
       const target = getScrollTarget(scrollTarget)
       const offset = scrollTarget.offsetTop - 14
       setVerticalScrollPosition(target, offset, 250)
