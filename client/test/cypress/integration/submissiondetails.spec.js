@@ -102,5 +102,7 @@ describe("Submissions Details", () => {
       cy.wait("@addReviewer2")
     })
 
+    cy.dataCy('reviewers_list').find('.q-item').should('have.length', 2)
+
   })
 })

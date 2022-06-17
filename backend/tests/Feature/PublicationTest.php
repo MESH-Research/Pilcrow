@@ -37,7 +37,7 @@ class PublicationTest extends TestCase
                     'name' => 'Test Publication',
                 ],
                 [
-                        'name' => 'Test Publication',
+                    'name' => 'Test Publication',
                 ],
             ],
             'Name with whitespace' => [
@@ -45,7 +45,7 @@ class PublicationTest extends TestCase
                     'name' => '        Test Publication with Whitespace       ',
                 ],
                 [
-                        'name' => 'Test Publication with Whitespace',
+                    'name' => 'Test Publication with Whitespace',
                 ],
             ],
             'Name Missing' => [
@@ -59,6 +59,8 @@ class PublicationTest extends TestCase
 
     /**
      * @dataProvider publicationMutationProvider
+     * @param mixed $data
+     * @param mixed $expected Data
      * @return void
      */
     public function testCreation(mixed $data, mixed $expectedData): void
@@ -244,7 +246,7 @@ class PublicationTest extends TestCase
         $response = $this->executePublicationRoleAssignment($role, $publication, $user);
 
         $response->assertJsonPath("data.updatePublication.$role", [
-                [ 'id' => (string)$user->id],
+            [ 'id' => (string)$user->id],
         ]);
     }
 

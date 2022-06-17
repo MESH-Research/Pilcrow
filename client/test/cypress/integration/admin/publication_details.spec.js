@@ -70,13 +70,13 @@ describe("Publication Details", () => {
     cy.login({ email: "applicationadministrator@ccrproject.dev" })
     cy.visit("publication/1")
 
-    cy.intercept("/graphql").as("removeCoordinatorFetch")
+    cy.intercept("/graphql").as("graphql")
     cy.dataCy("admins_list")
         .find('.q-list')
         .eq(0)
         .findCy("button_unassign")
         .click();
-    cy.wait("@removeCoordinatorFetch")
+    cy.wait("@graphql")
 
     cy.dataCy("admins_list").find(".q-list").should("not.exist")
 
