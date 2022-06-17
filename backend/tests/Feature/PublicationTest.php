@@ -49,28 +49,46 @@ class PublicationTest extends TestCase
             [
                 [
                     'name' => 'Test Publication',
-                    'home_page_content' => 'Amet animi <div class="example">quaerat eum sint</div> <i>placeat</i> aut <u>ratione</u> <b>iure</b>. Quod <ul><li>dolor</li> <li>esse</li></ul> et. Error et <b>tempora</b> ipsa eum eos sequi facilis. A ipsam enim ullam minima. | Aut quam repellat ut nemo qui rerum quam. Veniam aut amet ullam nam eum odit laboriosam. Praesentium nulla similique omnis sed dolor. Et impedit quasi odit veritatis.',
-                    'new_submission_content' => 'Voluptatem <p style="font-size:12px">nam quidem perspiciatis</p>. Qui sed quis harum aut porro maxime. Illo ipsa sint nobis repudiandae a voluptatem. Aut nostrum sunt soluta possimus.',
+                    'home_page_content' => '<div class="Example">Div content</div>
+                                            <a href="http://example">Example link</a>
+                                            <b>Bold content</b>
+                                            <i>Italics content</i>
+                                            <u>Underlined content</u>
+                                            <p>Paragraph content</p>
+                                            <span>Itema with a break <br /></span>
+                                            <ol><li>List item 1</li><li>List item 2</li></ol>
+                                            <ul><li>List item 1</li><li>List item 2</li></ul>',
+                    'new_submission_content' => '<div class="Example">Div content</div>
+                                            <a href="http://example">Example link</a>
+                                            <b>Bold content</b>
+                                            <i>Italics content</i>
+                                            <u>Underlined content</u>
+                                            <p>Paragraph content</p>
+                                            <span>Itema with a break <br /></span>
+                                            <ol><li>List item 1</li><li>List item 2</li></ol>
+                                            <ul><li>List item 1</li><li>List item 2</li></ul>',
                 ],
                 [
                     'createPublication' => [
                         'name' => 'Test Publication',
-                        'home_page_content' => 'Amet animi <div>quaerat eum sint</div> <i>placeat</i> aut <u>ratione</u> <b>iure</b>. Quod <ul><li>dolor</li> <li>esse</li></ul> et. Error et <b>tempora</b> ipsa eum eos sequi facilis. A ipsam enim ullam minima. | Aut quam repellat ut nemo qui rerum quam. Veniam aut amet ullam nam eum odit laboriosam. Praesentium nulla similique omnis sed dolor. Et impedit quasi odit veritatis.',
-                        'new_submission_content' => 'Voluptatem <p>nam quidem perspiciatis</p>. Qui sed quis harum aut porro maxime. Illo ipsa sint nobis repudiandae a voluptatem. Aut nostrum sunt soluta possimus.',
-                    ],
-                ],
-            ],
-            [
-                [
-                    'name' => 'Test Publication',
-                    'home_page_content' => 'Amet animi <a href="https://google.com/">quaerat</a> eum sint placeat aut ratione iure. Quod dolor esse et. Error et tempora ipsa eum eos sequi facilis. A ipsam <strong>enim</strong> ullam minima. | Aut quam <span>repellat</span> ut nemo qui rerum quam. <td>Veniam</td> aut amet ullam nam eum odit laboriosam. Praesentium nulla similique omnis sed dolor. Et impedit quasi odit veritatis.',
-                    'new_submission_content' => 'Voluptatem <p style="font-size:12px">nam quidem perspiciatis</p>. Qui sed quis harum aut porro maxime. Illo ipsa sint <ol><li>dolor</li> <li>esse</li></ol> repudiandae a voluptatem. <br>Aut nostrum sunt soluta possimus.',
-                ],
-                [
-                    'createPublication' => [
-                        'name' => 'Test Publication',
-                        'home_page_content' => 'Amet animi <a href="https://google.com/">quaerat</a> eum sint placeat aut ratione iure. Quod dolor esse et. Error et tempora ipsa eum eos sequi facilis. A ipsam enim ullam minima. | Aut quam repellat ut nemo qui rerum quam. Veniam aut amet ullam nam eum odit laboriosam. Praesentium nulla similique omnis sed dolor. Et impedit quasi odit veritatis.',
-                      'new_submission_content' => 'Voluptatem <p>nam quidem perspiciatis</p>. Qui sed quis harum aut porro maxime. Illo ipsa sint <ol><li>dolor</li> <li>esse</li></ol> repudiandae a voluptatem. <br />Aut nostrum sunt soluta possimus.',
+                        'home_page_content' => '<div>Div content</div>
+                                            <a href="http://example">Example link</a>
+                                            <b>Bold content</b>
+                                            <i>Italics content</i>
+                                            <u>Underlined content</u>
+                                            <p>Paragraph content</p>
+                                            Itema with a break <br />
+                                            <ol><li>List item 1</li><li>List item 2</li></ol>
+                                            <ul><li>List item 1</li><li>List item 2</li></ul>',
+                        'new_submission_content' => '<div>Div content</div>
+                                            <a href="http://example">Example link</a>
+                                            <b>Bold content</b>
+                                            <i>Italics content</i>
+                                            <u>Underlined content</u>
+                                            <p>Paragraph content</p>
+                                            Itema with a break <br />
+                                            <ol><li>List item 1</li><li>List item 2</li></ol>
+                                            <ul><li>List item 1</li><li>List item 2</li></ul>',
                     ],
                 ],
             ],
