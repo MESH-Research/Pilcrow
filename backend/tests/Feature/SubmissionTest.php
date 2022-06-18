@@ -549,6 +549,73 @@ class SubmissionTest extends TestCase
         $response->assertJsonPath('errors.0.extensions.category', 'authorization');
     }
 
+    /**
+     * @dataProvider allSubmissionRoles
+     * @param string $role
+     * @return void
+     */
+    public function testMyRoleFields(string $role): void
+    {
+        /** @var User $user */
+        $user = User::factory()->create();
+        $this->actingAs($user);
+        $submission = Submission::factory()->create();
+        $camelized = Str::camel($role);
+        $submission->$camelized()->attach($user);
+        $graphql = '
+            query GetSubmission($id: ID!) {
+                submission(id: $id) {
+                    my_role
+                    effective_role
+                }
+            }
+        ';
+
+        $response = $this->graphQL($graphql, ['id' => $submission->id]);
+        $response
+            ->assertJsonPath('data.submission.my_role', Str::singular($role))
+            ->assertJsonPath('data.submission.effective_role', Str::singular($role));
+    }
+
+    public function testAdminGetsEffectiveRole()
+    {
+        $this->beAppAdmin();
+        $submission = Submission::factory()->create();
+        $gql = '
+            query GetSubmission($id: ID!) {
+                submission(id: $id) {
+                    my_role
+                    effective_role
+                }
+            }
+        ';
+
+        $this->graphQL($gql, ['id' => $submission->id])
+            ->assertJsonPath('data.submission.my_role', null)
+            ->assertJsonPath('data.submission.effective_role', 'review_coordinator');
+    }
+
+    public function testPublicationAdminGetsEffectiveRole()
+    {
+        /** @var User $user */
+        $user = User::factory()->create();
+        $this->actingAs($user);
+        $submission = Submission::factory()->create();
+        $submission->publication->editors()->attach($user);
+        $gql = '
+            query GetSubmission($id: ID!) {
+                submission(id: $id) {
+                    my_role
+                    effective_role
+                }
+            }
+        ';
+
+        $this->graphQL($gql, ['id' => $submission->id])
+            ->assertJsonPath('data.submission.my_role', null)
+            ->assertJsonPath('data.submission.effective_role', 'review_coordinator');
+    }
+
     public function testCreatedByFieldIsSet()
     {
         //TODO: Once file uploads are no longer required at initial submission creation, remove file upload portion of this test.

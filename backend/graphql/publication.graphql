@@ -99,6 +99,6 @@ input UpdateStyleCriteriaInput {
 }
 
 enum PublicationRole {
-    publication_administrator @enum(value: 2)
+    publication_admin @enum(value: 2)
     editor @enum(value: 3)
 }
