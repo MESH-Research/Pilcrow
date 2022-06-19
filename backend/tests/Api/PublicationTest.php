@@ -419,7 +419,7 @@ class PublicationTest extends ApiTestCase
         );
     }
 
-    public function allSubmissionRoles(): array
+    public function allPublicationRoles(): array
     {
         return [
             'publication_admins' => ['publication_admins'],
@@ -428,7 +428,7 @@ class PublicationTest extends ApiTestCase
     }
 
     /**
-     * @dataProvider allSubmissionRoles
+     * @dataProvider allPublicationRoles
      * @param string $role
      * @return void
      */
@@ -448,7 +448,7 @@ class PublicationTest extends ApiTestCase
     }
 
     /**
-     * @dataProvider allSubmissionRoles
+     * @dataProvider allPublicationRoles
      * @param string $role
      * @return void
      */
@@ -471,7 +471,7 @@ class PublicationTest extends ApiTestCase
     }
 
     /**
-     * @dataProvider allSubmissionRoles
+     * @dataProvider allPublicationRoles
      * @param string $role
      * @return void
      */
