@@ -40,6 +40,7 @@
     ref="contentRef"
     data-cy="content"
     class="col-sm-9 submission-content"
+    :data-visibility="props.highlightVisibility"
   >
     <bubble-menu
       v-if="editor"
@@ -61,6 +62,13 @@ import Highlight from "@tiptap/extension-highlight"
 
 import StarterKit from "@tiptap/starter-kit"
 import AnnotationExtension from "src/tiptap/annotation-extension"
+
+const props = defineProps({
+  highlightVisibility: {
+    type: Boolean,
+    default: true,
+  },
+})
 
 const submission = inject("submission")
 const activeComment = inject("activeComment")
@@ -106,13 +114,15 @@ const onAnnotationClick = (context, { target }) => {
 
 const inlineComments = computed(() => submission.value?.inline_comments ?? [])
 const annotations = computed(() =>
-  inlineComments.value.map(({ from, to, id }) => ({
-    from,
-    to,
-    context: { id },
-    active: id === activeComment.value?.id,
-    click: onAnnotationClick,
-  }))
+  props.highlightVisibility
+    ? []
+    : inlineComments.value.map(({ from, to, id }) => ({
+        from,
+        to,
+        context: { id },
+        active: id === activeComment.value?.id,
+        click: onAnnotationClick,
+      }))
 )
 
 const editor = new Editor({

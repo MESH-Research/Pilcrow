@@ -17,11 +17,12 @@
       </q-toolbar-title>
 
       <q-btn
-        aria-label="Toggle Annotations"
+        aria-label="Toggle Annotation Highlights"
         dense
         flat
         round
         icon="power_input"
+        @click="toggleAnnotationHighlights"
       />
       <q-btn
         aria-label="Toggle Inline Comments"
@@ -42,6 +43,10 @@ const props = defineProps({
     type: Boolean,
     default: null,
   },
+  highlightVisibility: {
+    type: Boolean,
+    default: true,
+  },
   submission: {
     type: Object,
     default: null,
@@ -51,8 +56,14 @@ const props = defineProps({
     default: null,
   },
 })
-const emit = defineEmits(["update:commentDrawerOpen"])
+const emit = defineEmits([
+  "update:commentDrawerOpen",
+  "update:highlightVisibility",
+])
 function toggleCommentDrawer() {
   emit("update:commentDrawerOpen", !props.commentDrawerOpen)
+}
+function toggleAnnotationHighlights() {
+  emit("update:highlightVisibility", !props.highlightVisibility)
 }
 </script>

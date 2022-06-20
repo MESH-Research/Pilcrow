@@ -13,11 +13,14 @@
         <submission-toolbar
           :id="id"
           v-model:commentDrawerOpen="commentDrawerOpen"
+          v-model:highlightVisibility="highlightVisibility"
           :submission="submission"
         />
         <submission-comment-drawer v-model:drawerOpen="commentDrawerOpen" />
         <q-page-container>
-          <submission-content />
+          <submission-content
+            v-model:highlightVisibility="highlightVisibility"
+          />
           <q-separator class="page-seperator" />
           <submission-comment-section />
         </q-page-container>
@@ -46,6 +49,7 @@ const { result } = useQuery(GET_SUBMISSION_REVIEW, { id: props.id })
 const submission = computed(() => {
   return result.value?.submission
 })
+const highlightVisibility = ref(true)
 const commentDrawerOpen = ref(false)
 provide("submission", submission)
 provide("activeComment", ref(null))
