@@ -229,7 +229,6 @@ class PublicationTest extends TestCase
     {
         $this->beAppAdmin();
         $user = User::factory()->create();
-        $this->actingAs($user);
 
         $publication = Publication::factory()
             ->hasAttached($user, [], 'publicationAdmins')
