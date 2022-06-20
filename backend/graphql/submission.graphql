@@ -46,6 +46,8 @@ type Submission {
     pivot: SubmissionUser
     status: SubmissionStatus!
     content: SubmissionContent #This field is optional bc it may be null if the pandoc process is still importing the document
+    my_role: SubmissionUserRoles @method(name: "getMyRole")
+    effective_role: SubmissionUserRoles @method(name: "getEffectiveRole")
 }
 
 """
@@ -138,4 +140,10 @@ type SubmissionContent {
     created_at: DateTimeUtc!
     modified_at: DateTimeUtc!
     src_file: SubmissionFile!
+}
+
+enum SubmissionUserRoles {
+    submitter @enum(value: 6)
+    reviewer @enum(value: 5)
+    review_coordinator @enum(value: 4)
 }

@@ -7,6 +7,7 @@ use App\Models\Publication;
 use App\Models\User;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Str;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Nuwave\Lighthouse\Exceptions\ValidationException;
 use Nuwave\Lighthouse\Testing\MakesGraphQLRequests;
@@ -456,7 +457,7 @@ class PublicationTest extends TestCase
         );
     }
 
-    public function allSubmissionRoles(): array
+    public function allPublicationRoles(): array
     {
         return [
             'publication_admins' => ['publication_admins'],
@@ -465,7 +466,7 @@ class PublicationTest extends TestCase
     }
 
     /**
-     * @dataProvider allSubmissionRoles
+     * @dataProvider allPublicationRoles
      * @param string $role
      * @return void
      */
@@ -485,7 +486,7 @@ class PublicationTest extends TestCase
     }
 
     /**
-     * @dataProvider allSubmissionRoles
+     * @dataProvider allPublicationRoles
      * @param string $role
      * @return void
      */
@@ -508,7 +509,7 @@ class PublicationTest extends TestCase
     }
 
     /**
-     * @dataProvider allSubmissionRoles
+     * @dataProvider allPublicationRoles
      * @param string $role
      * @return void
      */
@@ -528,6 +529,52 @@ class PublicationTest extends TestCase
         $response = $this->executePublicationRoleAssignment($role, $publication, $user);
 
         $response->assertJsonPath('data.updatePublication', null);
+    }
+
+    /**
+     * @dataProvider allPublicationRoles
+     * @param string $role
+     * @return void
+     */
+    public function testMyRoleFields(string $role): void
+    {
+        /** @var User $user */
+        $user = User::factory()->create();
+        $this->actingAs($user);
+        $publication = Publication::factory()->create();
+        $camelized = Str::camel($role);
+        $publication->$camelized()->attach($user);
+        $graphql = '
+            query GetPublication($id: ID!) {
+                publication(id: $id) {
+                    my_role
+                    effective_role
+                }
+            }
+        ';
+
+        $response = $this->graphQL($graphql, ['id' => $publication->id]);
+        $response
+            ->assertJsonPath('data.publication.my_role', Str::singular($role))
+            ->assertJsonPath('data.publication.effective_role', Str::singular($role));
+    }
+
+    public function testAdminGetsEffectiveRole()
+    {
+        $this->beAppAdmin();
+        $publication = Publication::factory()->create();
+        $gql = '
+            query GetPublication($id: ID!) {
+                publication(id: $id) {
+                    my_role
+                    effective_role
+                }
+            }
+        ';
+
+        $this->graphQL($gql, ['id' => $publication->id])
+            ->assertJsonPath('data.publication.my_role', null)
+            ->assertJsonPath('data.publication.effective_role', 'publication_admin');
     }
 
     public function provideCanUpdatePublicationStyleCriteriaRoles(): array
