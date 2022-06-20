@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Models\Casts\CleanAdminHtml;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -13,12 +14,19 @@ class Publication extends BaseModel
 
     protected $fillable = [
         'name',
+        'home_page_content',
+        'new_submission_content',
         'is_publicly_visible',
     ];
 
     protected $rules = [
         'name' => 'max:256|unique:publications,name|required',
         'is_publicly_visible' => 'boolean',
+    ];
+
+    protected $casts = [
+        'home_page_content' => CleanAdminHtml::class,
+        'new_submission_content' => CleanAdminHtml::class,
     ];
 
     /**
