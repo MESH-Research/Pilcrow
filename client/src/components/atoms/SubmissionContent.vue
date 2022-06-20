@@ -41,13 +41,24 @@
     data-cy="content"
     class="col-sm-9 submission-content"
   >
+    <bubble-menu
+      v-if="editor"
+      :editor="editor"
+      :tippy-options="{ duration: 100 }"
+      :should-show="shouldShow"
+    >
+      <q-btn color="white" text-color="primary" @click="addComment">
+        <q-icon name="add_comment" />
+      </q-btn>
+    </bubble-menu>
     <editor-content :editor="editor" />
   </article>
 </template>
 <script setup>
 import { ref, inject, computed } from "vue"
-import { Editor, EditorContent } from "@tiptap/vue-3"
+import { Editor, EditorContent, BubbleMenu } from "@tiptap/vue-3"
 import Highlight from "@tiptap/extension-highlight"
+
 import StarterKit from "@tiptap/starter-kit"
 import AnnotationExtension from "src/tiptap/annotation-extension"
 
@@ -113,6 +124,27 @@ const editor = new Editor({
     AnnotationExtension.configure({ annotations }),
   ],
 })
+
+function shouldShow({ state }) {
+  return !state.selection.empty
+}
+
+function addComment() {
+  const [from, to] = [
+    editor.state.selection.$anchor.pos,
+    editor.state.selection.$head.pos,
+  ].sort((a, b) => a - b)
+  const range = { from, to }
+  activeComment.value = {
+    __typename: "InlineComment",
+    new: true,
+    from,
+    to,
+    parent_id: null,
+    id: "new",
+  }
+  console.log(range)
+}
 </script>
 
 <style lang="scss">

@@ -12,7 +12,7 @@
       <div class="comment-editor">
         <editor-content :editor="editor" />
       </div>
-      <div v-if="commentType === 'inline'" class="q-py-md">
+      <div v-if="commentType === 'InlineComment'" class="q-py-md">
         <q-list>
           <q-expansion-item
             v-for="criteria in styleCriteria"
@@ -87,6 +87,7 @@ import {
   CREATE_OVERALL_COMMENT,
   CREATE_OVERALL_COMMENT_REPLY,
   CREATE_INLINE_COMMENT_REPLY,
+  CREATE_INLINE_COMMENT,
 } from "src/graphql/mutations"
 import { useI18n } from "vue-i18n"
 import { uniqueId } from "lodash"
@@ -102,7 +103,8 @@ const emit = defineEmits(["cancel", "submit"])
 const props = defineProps({
   commentType: {
     type: String,
-    required: true,
+    required: false,
+    default: null,
   },
   parent: {
     type: Object,
@@ -112,14 +114,26 @@ const props = defineProps({
     type: Object,
     default: () => {},
   },
+  comment: {
+    type: Object,
+    required: false,
+    default: null,
+  },
 })
 
+const defaultContent = computed(() => {
+  if (!props.parent?.id) return ""
+  if (props.parent.id === props.replyTo?.id) return ""
+  //TODO: Make this more robust to handle multi paragraphs, etc
+  return `<blockquote>${props.replyTo.content}</blockquote><p></p>`
+})
 const { t } = useI18n()
 const editor = useEditor({
+  content: defaultContent.value,
   injectCSS: true,
   extensions: [
     StarterKit.configure({
-      blockquote: false,
+      blockquote: true,
       codeblock: false,
       hardbreak: false,
       heading: false,
@@ -134,7 +148,13 @@ const editor = useEditor({
     }),
   ],
 })
+const commentType = computed(
+  () => props.commentType ?? props.comment.__typename
+)
 
+const isReply = computed(() =>
+  ["OverallCommentReply", "InlineCommentReply"].includes(commentType.value)
+)
 const commentEditorButtons = ref([
   {
     ariaLabel: t("guiElements.button.bold.ariaLabel"),
@@ -197,25 +217,33 @@ const commentEditorButtons = ref([
 ])
 const submission = inject("submission")
 const mutations = {
-  inlineReply: CREATE_INLINE_COMMENT_REPLY,
-  overall: CREATE_OVERALL_COMMENT,
-  overallReply: CREATE_OVERALL_COMMENT_REPLY,
+  InlineComment: CREATE_INLINE_COMMENT,
+  InlineCommentReply: CREATE_INLINE_COMMENT_REPLY,
+  OverallComment: CREATE_OVERALL_COMMENT,
+  OverallCommentReply: CREATE_OVERALL_COMMENT_REPLY,
 }
-const { mutate: createComment } = useMutation(mutations[props.commentType])
-const hasStyleCriteria = computed(() => {
-  return styleCriteria.value.some((criteria) => criteria.selected)
-})
+const { mutate: createComment } = useMutation(mutations[commentType.value])
+const selectedCriteria = computed(() =>
+  styleCriteria.value
+    .filter((criteria) => criteria.selected)
+    .map(({ name, icon }) => ({ name, icon }))
+)
+const hasStyleCriteria = computed(() => selectedCriteria.value.length > 0)
 async function submitHandler() {
-  if (!hasStyleCriteria.value && props.commentType === "inline") {
-    return new Promise((resolve) => {
-      dirtyDialog()
-        .onOk(function () {
-          resolve(true)
-        })
-        .onCancel(function () {
-          resolve(false)
-        })
-    })
+  if (!hasStyleCriteria.value && commentType.value === "InlineComment") {
+    if (
+      !(await new Promise((resolve) => {
+        dirtyDialog()
+          .onOk(function () {
+            resolve(true)
+          })
+          .onCancel(function () {
+            resolve(false)
+          })
+      }))
+    ) {
+      return
+    }
   }
   if (editor.value.isEmpty) {
     return false
@@ -225,10 +253,12 @@ async function submitHandler() {
       submission_id: submission.value.id,
       content: editor.value.getHTML(),
     }
-    if (
-      props.commentType === "overallReply" ||
-      props.commentType === "inlineReply"
-    ) {
+    if (commentType.value === "InlineComment") {
+      args.style_criteria = selectedCriteria.value
+      args.from = props.comment.from
+      args.to = props.comment.to
+    }
+    if (isReply.value) {
       args.reply_to_id = props.replyTo.id
       args.parent_id = props.parent.id
     }
@@ -295,6 +325,12 @@ const styleCriteria = ref(
   float: left;
   height: 0;
   pointer-events: none;
+}
+
+.ProseMirror blockquote {
+  border-left: 4px solid #888888;
+  margin-inline-start: 1em;
+  padding-left: 0.5em;
 }
 
 .q-icon.q-expansion-item__toggle-icon,
