@@ -595,13 +595,13 @@ class SubmissionTest extends TestCase
             ->assertJsonPath('data.submission.effective_role', 'review_coordinator');
     }
 
-    public function testPublicationAdminGetsEffectiveRole()
+    public function testPublicationRoleGetsEffectiveRole()
     {
         /** @var User $user */
         $user = User::factory()->create();
         $this->actingAs($user);
         $submission = Submission::factory()->create();
-        $submission->publication->editors()->attach($user);
+        $submission->publication->publicationAdmins()->attach($user);
         $gql = '
             query GetSubmission($id: ID!) {
                 submission(id: $id) {
