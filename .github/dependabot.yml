@@ -15,8 +15,8 @@ updates:
       interval: daily
     open-pull-requests-limit: 10
     commit-message:
-      prefix: "fix(client,deps)"
-      prefix-development: "build(client,deps)"
+      prefix: "fix(app,deps)"
+      prefix-development: "build(app,deps)"
     target-branch: master
   - package-ecosystem: npm
     directory: "/"
@@ -24,14 +24,16 @@ updates:
       interval: daily
     open-pull-requests-limit: 10
     target-branch: master
-    prefix: "build(deps)"
+    commit-message:
+      prefix: "build(deps)"
   - package-ecosystem: npm
     directory: "/docs"
     schedule:
       interval: daily
     open-pull-requests-limit: 10
     target-branch: master
-    prefix: "docs(deps)"
+    commit-message:
+      prefix: "docs(deps)"
   - package-ecosystem: composer
     directory: "/"
     schedule:
