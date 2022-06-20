@@ -6,36 +6,37 @@ updates:
       interval: daily
     open-pull-requests-limit: 10
     target-branch: master
+    commit-message:
+      prefix: "fix(api,deps)"
+      prefix-development: "build(api,deps)"
   - package-ecosystem: npm
     directory: "/client"
     schedule:
       interval: daily
     open-pull-requests-limit: 10
+    commit-message:
+      prefix: "fix(client,deps)"
+      prefix-development: "build(client,deps)"
     target-branch: master
-    ignore:
-      # Ignore quasar major version updates (requires Vue 3 upgrade)
-      - dependency-name: "quasar"
-        update-types: ["version-update:semver-major"]
-      - dependency-name: "@quasar/app"
-        update-types: ["version-update:semver-major"]
-      # Ignore chalk major version updates
-      - dependency-name: "chalk"
-        update-types: ["version-update:semver-major"]
   - package-ecosystem: npm
     directory: "/"
     schedule:
       interval: daily
     open-pull-requests-limit: 10
     target-branch: master
+    prefix: "build(deps)"
   - package-ecosystem: npm
     directory: "/docs"
     schedule:
       interval: daily
     open-pull-requests-limit: 10
     target-branch: master
+    prefix: "docs(deps)"
   - package-ecosystem: composer
     directory: "/"
     schedule:
       interval: daily
     open-pull-requests-limit: 10
     target-branch: master
+    commit-message:
+      prefix: "build(deps)"
