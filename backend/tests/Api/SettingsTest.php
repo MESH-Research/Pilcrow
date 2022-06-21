@@ -7,12 +7,10 @@ use App\Models\Role;
 use App\Models\User;
 use App\Settings\GeneralSettings;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Nuwave\Lighthouse\Testing\MakesGraphQLRequests;
 use Tests\ApiTestCase;
 
 class SettingsTest extends ApiTestCase
 {
-    use MakesGraphQLRequests;
     use RefreshDatabase;
 
     public function testSettingsCanBeRetreived()

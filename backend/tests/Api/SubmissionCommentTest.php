@@ -10,12 +10,10 @@ use App\Models\Submission;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
-use Nuwave\Lighthouse\Testing\MakesGraphQLRequests;
 use Tests\ApiTestCase;
 
 class SubmissionCommentTest extends ApiTestCase
 {
-    use MakesGraphQLRequests;
     use RefreshDatabase;
 
     /**
