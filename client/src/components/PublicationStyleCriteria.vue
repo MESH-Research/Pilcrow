@@ -1,10 +1,7 @@
 <template>
   <q-card flat>
     <q-card-section>
-      <div class="text-h3">{{ $t("publications.style_criteria.heading") }}</div>
-    </q-card-section>
-    <q-card-section>
-      <q-list bordered separator>
+      <q-list separator>
         <component
           :is="editId === criteria.id ? StyleCriteriaForm : StyleCriteriaItem"
           v-for="criteria in publication.style_criterias"
@@ -31,7 +28,7 @@
         data-cy="add-criteria-button"
         icon="add_task"
         :label="$t('publications.style_criteria.addBtnLabel')"
-        flat
+        color="primary"
         @click="newItem"
       />
     </q-card-actions>

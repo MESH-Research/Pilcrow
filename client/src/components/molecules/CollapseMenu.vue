@@ -6,6 +6,12 @@
           ><q-icon :name="item.icon"
         /></q-item-section>
         <q-item-section>{{ item.label }}</q-item-section>
+        <q-item-section v-if="item.problem" side>
+          <q-icon name="warning" color="orange" size="xs" />
+          <q-tooltip v-if="item.problemTooltip">
+            {{ item.problemTooltip }}
+          </q-tooltip>
+        </q-item-section>
       </q-item>
     </q-list>
     <q-btn
@@ -22,6 +28,12 @@
             :to="item.url"
           >
             <q-item-section>{{ item.label }}</q-item-section>
+            <q-item-section v-if="item.problem" side>
+              <q-icon name="warning" color="orange" />
+              <q-tooltip v-if="item.problemTooltip">
+                {{ item.problemTooltip }}
+              </q-tooltip>
+            </q-item-section>
           </q-item>
         </q-list>
       </q-menu>
@@ -43,11 +55,14 @@ export default {
     const route = useRoute()
     const currentPath = computed(() => route.path)
     const activeRoute = computed(() => {
-      return props.items.find((e) => e.url === currentPath.value)
+      return props.items.find((e) => isActive(e.url))
     })
 
     function isActive(url) {
-      return url === currentPath.value
+      if (typeof url === "string") return url === currentPath.value
+      if (url.name) {
+        return url.name === route.name
+      }
     }
     return { isActive, activeRoute }
   },

@@ -1,7 +1,8 @@
 <template>
-  <section class="column q-gutter-sm">
-    <h3>{{ tp$("heading") }}</h3>
-    <div v-if="users.length" class="col">
+  <section class="column q-gutter-md">
+    <h3 class="q-mb-none q-mx-none">{{ tp$("heading") }}</h3>
+    <p class="q-mb-none q-mx-none">{{ tp$("description") }}</p>
+    <div v-if="users.length">
       <user-list
         ref="userList"
         data-cy="user-list"

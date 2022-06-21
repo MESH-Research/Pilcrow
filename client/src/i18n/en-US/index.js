@@ -311,6 +311,8 @@ export default {
     },
     editors: {
       heading: "Editors",
+      description:
+        "Editors can perform any action on a submission, including assigning review coordinators.  They do not have access to the publication setup pages and cannot change publication settings.",
       none: "An editor is not assigned to this publication.",
       unassign: {
         error: "An error occurred while attempting to unassign an editor.",
@@ -329,7 +331,9 @@ export default {
       },
     },
     publication_admins: {
-      heading: "Administrators",
+      heading: "Admins",
+      description:
+        "Admins are allowed to access the setup pages for the publication.  They can change any setting, perform any action on a submission, and add/remove users.",
       none: "An administrator is not assigned to this publication.",
       unassign: {
         error:

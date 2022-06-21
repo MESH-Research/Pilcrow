@@ -1,5 +1,7 @@
 <template>
-  <article class="q-pa-md">
+  <article class="q-px-md">
+    <h2>Users</h2>
+    <p>Assigned users have special permissions on your publication.</p>
     <div class="column q-gutter-md">
       <assigned-users
         data-cy="admins_list"
@@ -7,6 +9,7 @@
         :container="publication"
         mutable
       />
+      <q-separator />
       <assigned-users
         data-cy="editors_list"
         relationship="editors"

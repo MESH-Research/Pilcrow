@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="column">
     <nav class="q-px-lg q-pt-md q-gutter-sm">
       <q-breadcrumbs>
         <q-breadcrumbs-el
@@ -15,22 +15,14 @@
         <q-breadcrumbs-el :label="route.meta.name" />
       </q-breadcrumbs>
     </nav>
-    <div class="row justify-center items-start content-start q-pa-md">
+    <h2 class="q-px-lg" data-cy="publication_details_heading">
+      {{ publicationName }}
+    </h2>
+    <div class="row justify-center items-start content-start q-px-lg">
       <q-card class="col-sm-3 col-xs-12 no-shadow no-border-radius">
-        <div class="row">
-          <q-card-section
-            class="col-sm-12 col-xs-12 flex flex-center avatar-profile-block q-mt-none"
-          >
-            <div class="row">
-              <h2 class="col-sm-12" data-cy="publication_details_heading">
-                {{ publicationName }}
-              </h2>
-            </div>
-          </q-card-section>
-          <q-card-section class="col-sm-12 col-xs-12 q-mt-md q-pa-none">
-            <collapse-menu :items="items" />
-          </q-card-section>
-        </div>
+        <q-card-section class="col-sm-12 col-xs-12 q-mt-md q-pa-none">
+          <collapse-menu :items="items" />
+        </q-card-section>
       </q-card>
       <q-card class="col-sm-9 col-xs-12 no-shadow outline no-border-radius">
         <router-view v-if="publication" :publication="publication" />
@@ -55,9 +47,12 @@ const props = defineProps({
 const { result } = useQuery(GET_PUBLICATION, { id: props.id })
 const publication = computed(() => result.value?.publication ?? null)
 const publicationName = computed(() => publication.value?.name ?? "")
+const noStyleCriteria = computed(
+  () => publication.value?.style_criterias.length === 0
+)
 const route = useRoute()
 const params = { id: props.id }
-const items = [
+const items = computed(() => [
   {
     icon: "account_circle",
     label: "General Settings",
@@ -81,6 +76,8 @@ const items = [
       name: "publication:setup:criteria",
       params,
     },
+    problem: noStyleCriteria.value,
+    problemTooltip: "Setup style criteria for your publication.",
   },
   {
     icon: "contact_page",
@@ -90,5 +87,5 @@ const items = [
       params,
     },
   },
-]
+])
 </script>
