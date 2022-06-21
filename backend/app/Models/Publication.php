@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Models\Casts\CleanAdminHtml;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -13,12 +14,19 @@ class Publication extends BaseModel
 
     protected $fillable = [
         'name',
+        'home_page_content',
+        'new_submission_content',
         'is_publicly_visible',
     ];
 
     protected $rules = [
         'name' => 'max:256|unique:publications,name|required',
         'is_publicly_visible' => 'boolean',
+    ];
+
+    protected $casts = [
+        'home_page_content' => CleanAdminHtml::class,
+        'new_submission_content' => CleanAdminHtml::class,
     ];
 
     /**
@@ -97,5 +105,41 @@ class Publication extends BaseModel
     public function styleCriterias(): HasMany
     {
         return $this->hasMany(StyleCriteria::class);
+    }
+
+    /**
+     * Return the currently logged in users role
+     *
+     * @return int|null
+     */
+    public function getMyRole(): int|null
+    {
+        /** @var \App\Models\User $user */
+        $user = auth()->user();
+        if (!$user) {
+            return null;
+        }
+
+        return $this->users()->wherePivot('user_id', $user->id)->first()->pivot->role_id ?? null;
+    }
+
+    /**
+     * Return the effective role of a user on a submission taking into account parent roles they may have.
+     *
+     * @return int|null
+     */
+    public function getEffectiveRole(): int|null
+    {
+        /** @var \App\Models\User $user */
+        $user = auth()->user();
+        if (!$user) {
+            return null;
+        }
+
+        if ($user->hasRole(Role::APPLICATION_ADMINISTRATOR)) {
+            return (int)Role::PUBLICATION_ADMINISTRATOR_ROLE_ID;
+        }
+
+        return $this->getMyRole();
     }
 }

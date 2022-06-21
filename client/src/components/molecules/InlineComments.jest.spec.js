@@ -18,6 +18,8 @@ describe("InlineComments", () => {
               inline_comments: [
                 {
                   id: "1",
+                  from: 1,
+                  to: 10,
                   content:
                     "Excepturi consectetur autem temporibus modi. Ipsum unde reiciendis ipsa quidem. Nihil nisi sint ut et.",
                   created_at: "2022-06-01T03:53:17Z",
@@ -49,6 +51,8 @@ describe("InlineComments", () => {
                 },
                 {
                   id: "3",
+                  from: 11,
+                  to: 20,
                   content:
                     "Iure itaque non illo et. Et assumenda quasi doloribus natus vitae. Cupiditate aut exercitationem rerum quidem iusto occaecati saepe.",
                   created_at: "2022-05-30T19:20:59Z",
@@ -79,6 +83,8 @@ describe("InlineComments", () => {
                 },
                 {
                   id: "4",
+                  from: 21,
+                  to: 30,
                   content:
                     "Quia ea numquam delectus sapiente in molestiae. Omnis placeat impedit doloribus atque. Beatae est repellat officia magnam molestiae similique.",
                   created_at: "2022-05-31T16:28:10Z",
@@ -254,14 +260,19 @@ describe("InlineComments", () => {
     expect(items).toHaveLength(3)
   })
 
-  test("expected number of inline comment replies appear", () => {
+  test("expected number of inline comment replies appear", async () => {
     const { wrapper } = wrapperFactory()
     const items = wrapper.findAllComponents('[data-cy="inlineComment"]')
-    const findReplies = (w) =>
-      w.findAllComponents('[data-cy="inlineCommentReply"]')
+    const findReplies = (w) => w.findAll('[data-cy="inlineCommentReply"]')
+    await items.at(0).find('[data-cy="collapseRepliesButton"]').trigger("click")
 
     expect(findReplies(items.at(0))).toHaveLength(1)
-    expect(findReplies(items.at(1))).toHaveLength(0)
+
+    expect(items.at(1).find("[data-cy=collapseRepliesButton").exists()).toBe(
+      false
+    )
+
+    await items.at(2).find('[data-cy="collapseRepliesButton"]').trigger("click")
     expect(findReplies(items.at(2))).toHaveLength(10)
   })
 })

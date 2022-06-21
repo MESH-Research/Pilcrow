@@ -16,6 +16,8 @@ A publication that has users, reviews, and submissions
 type Publication {
     id: ID!
     name: String!
+    home_page_content: String
+    new_submission_content: String
     created_at: DateTime
     updated_at: DateTime
     submissions: [Submission]! @hasMany
@@ -23,6 +25,8 @@ type Publication {
     editors: [User!]! @belongsToMany(relation: "editors")
     is_publicly_visible: Boolean
     style_criterias: [StyleCriteria!]! @hasMany(relation: "styleCriterias")
+    my_role: PublicationRole @method(name: "getMyRole")
+    effective_role: PublicationRole @method(name: "getEffectiveRole")
 }
 
 type StyleCriteria {
@@ -47,6 +51,8 @@ extend type Mutation {
 input CreatePublicationInput {
     name: String
     is_publicly_visible: Boolean
+    home_page_content: String
+    new_submission_content: String
     style_criterias: CreateStyleCriteriaHasMany
         @rename(attribute: "styleCriterias")
 }
@@ -66,6 +72,8 @@ input UpdatePublicationInput {
     name: String
     description: String
     is_publicly_visible: Boolean
+    home_page_content: String
+    new_submission_content: String
     style_criterias: UpdateStyleCriteriaHasMany
         @rename(attribute: "styleCriterias")
     editors: UpdatePublicationEditorsInput
@@ -94,4 +102,9 @@ input UpdateStyleCriteriaInput {
     name: String
     description: String
     icon: String
+}
+
+enum PublicationRole {
+    publication_admin @enum(value: 2)
+    editor @enum(value: 3)
 }

@@ -7,6 +7,7 @@ use App\Models\Publication;
 use App\Models\User;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Str;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Nuwave\Lighthouse\Exceptions\ValidationException;
 use Nuwave\Lighthouse\Testing\MakesGraphQLRequests;
@@ -24,6 +25,240 @@ class PublicationTest extends TestCase
 
         $this->expectException(ValidationException::class);
         Publication::factory()->create(['name' => 'Custom Name']);
+    }
+
+    /**
+     * @return array
+     */
+    public function publicationContentMutationProvider(): array
+    {
+        return [
+            [
+                [
+                    'name' => 'Test Publication',
+                    'home_page_content' => 'Amet animi quaerat eum sint placeat aut ratione iure. Quod dolor esse et. Error et tempora ipsa eum eos sequi facilis. A ipsam enim ullam minima. | Aut quam repellat ut nemo qui rerum quam. Veniam aut amet ullam nam eum odit laboriosam. Praesentium nulla similique omnis sed dolor. Et impedit quasi odit veritatis.',
+                    'new_submission_content' => 'Voluptatem nam quidem perspiciatis. Qui sed quis harum aut porro maxime. Illo ipsa sint nobis repudiandae a voluptatem. Aut nostrum sunt soluta possimus.',
+                ],
+                [
+                    'createPublication' => [
+                        'name' => 'Test Publication',
+                        'home_page_content' => 'Amet animi quaerat eum sint placeat aut ratione iure. Quod dolor esse et. Error et tempora ipsa eum eos sequi facilis. A ipsam enim ullam minima. | Aut quam repellat ut nemo qui rerum quam. Veniam aut amet ullam nam eum odit laboriosam. Praesentium nulla similique omnis sed dolor. Et impedit quasi odit veritatis.',
+                        'new_submission_content' => 'Voluptatem nam quidem perspiciatis. Qui sed quis harum aut porro maxime. Illo ipsa sint nobis repudiandae a voluptatem. Aut nostrum sunt soluta possimus.',
+                    ],
+                ],
+            ],
+            [
+                [
+                    'name' => 'Test Publication',
+                    'home_page_content' => '<div class="Example">Div content</div>
+                                            <a href="http://example">Example link</a>
+                                            <b>Bold content</b>
+                                            <i>Italics content</i>
+                                            <u>Underlined content</u>
+                                            <p>Paragraph content</p>
+                                            <span>Itema with a break <br /></span>
+                                            <ol><li>List item 1</li><li>List item 2</li></ol>
+                                            <ul><li>List item 1</li><li>List item 2</li></ul>',
+                    'new_submission_content' => '<div class="Example">Div content</div>
+                                            <a href="http://example">Example link</a>
+                                            <b>Bold content</b>
+                                            <i>Italics content</i>
+                                            <u>Underlined content</u>
+                                            <p>Paragraph content</p>
+                                            <span>Itema with a break <br /></span>
+                                            <ol><li>List item 1</li><li>List item 2</li></ol>
+                                            <ul><li>List item 1</li><li>List item 2</li></ul>',
+                ],
+                [
+                    'createPublication' => [
+                        'name' => 'Test Publication',
+                        'home_page_content' => '<div>Div content</div>
+                                            <a href="http://example">Example link</a>
+                                            <b>Bold content</b>
+                                            <i>Italics content</i>
+                                            <u>Underlined content</u>
+                                            <p>Paragraph content</p>
+                                            Itema with a break <br />
+                                            <ol><li>List item 1</li><li>List item 2</li></ol>
+                                            <ul><li>List item 1</li><li>List item 2</li></ul>',
+                        'new_submission_content' => '<div>Div content</div>
+                                            <a href="http://example">Example link</a>
+                                            <b>Bold content</b>
+                                            <i>Italics content</i>
+                                            <u>Underlined content</u>
+                                            <p>Paragraph content</p>
+                                            Itema with a break <br />
+                                            <ol><li>List item 1</li><li>List item 2</li></ol>
+                                            <ul><li>List item 1</li><li>List item 2</li></ul>',
+                    ],
+                ],
+            ],
+            [
+                [
+                    'name' => 'Test Publication',
+                    'home_page_content' => '',
+                    'new_submission_content' => '',
+                ],
+                [
+                    'createPublication' => [
+                        'name' => 'Test Publication',
+                        'home_page_content' => '',
+                        'new_submission_content' => '',
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function publicationContentUpdateProvider(): array
+    {
+        return [
+            [
+                [
+                    'name' => 'Test Publication',
+                    'home_page_content' => 'Amet animi quaerat eum sint placeat aut ratione iure. Quod dolor esse et. Error et tempora ipsa eum eos sequi facilis. A ipsam enim ullam minima. | Aut quam repellat ut nemo qui rerum quam. Veniam aut amet ullam nam eum odit laboriosam. Praesentium nulla similique omnis sed dolor. Et impedit quasi odit veritatis.',
+                    'new_submission_content' => 'Voluptatem nam quidem perspiciatis. Qui sed quis harum aut porro maxime. Illo ipsa sint nobis repudiandae a voluptatem. Aut nostrum sunt soluta possimus.',
+                ],
+                [
+                    'updatePublication' => [
+                        'name' => 'Test Publication',
+                        'home_page_content' => 'Amet animi quaerat eum sint placeat aut ratione iure. Quod dolor esse et. Error et tempora ipsa eum eos sequi facilis. A ipsam enim ullam minima. | Aut quam repellat ut nemo qui rerum quam. Veniam aut amet ullam nam eum odit laboriosam. Praesentium nulla similique omnis sed dolor. Et impedit quasi odit veritatis.',
+                        'new_submission_content' => 'Voluptatem nam quidem perspiciatis. Qui sed quis harum aut porro maxime. Illo ipsa sint nobis repudiandae a voluptatem. Aut nostrum sunt soluta possimus.',
+                    ],
+                ],
+            ],
+            [
+                [
+                    'name' => 'Test Publication',
+                    'home_page_content' => '<div class="Example">Div content</div>
+                                            <a href="http://example">Example link</a>
+                                            <b>Bold content</b>
+                                            <i>Italics content</i>
+                                            <u>Underlined content</u>
+                                            <p>Paragraph content</p>
+                                            <span>Itema with a break <br /></span>
+                                            <ol><li>List item 1</li><li>List item 2</li></ol>
+                                            <ul><li>List item 1</li><li>List item 2</li></ul>',
+                    'new_submission_content' => '<div class="Example">Div content</div>
+                                            <a href="http://example">Example link</a>
+                                            <b>Bold content</b>
+                                            <i>Italics content</i>
+                                            <u>Underlined content</u>
+                                            <p>Paragraph content</p>
+                                            <span>Itema with a break <br /></span>
+                                            <ol><li>List item 1</li><li>List item 2</li></ol>
+                                            <ul><li>List item 1</li><li>List item 2</li></ul>',
+                ],
+                [
+                    'updatePublication' => [
+                        'name' => 'Test Publication',
+                        'home_page_content' => '<div>Div content</div>
+                                            <a href="http://example">Example link</a>
+                                            <b>Bold content</b>
+                                            <i>Italics content</i>
+                                            <u>Underlined content</u>
+                                            <p>Paragraph content</p>
+                                            Itema with a break <br />
+                                            <ol><li>List item 1</li><li>List item 2</li></ol>
+                                            <ul><li>List item 1</li><li>List item 2</li></ul>',
+                        'new_submission_content' => '<div>Div content</div>
+                                            <a href="http://example">Example link</a>
+                                            <b>Bold content</b>
+                                            <i>Italics content</i>
+                                            <u>Underlined content</u>
+                                            <p>Paragraph content</p>
+                                            Itema with a break <br />
+                                            <ol><li>List item 1</li><li>List item 2</li></ol>
+                                            <ul><li>List item 1</li><li>List item 2</li></ul>',
+                    ],
+                ],
+            ],
+            [
+                [
+                    'name' => 'Test Publication',
+                    'home_page_content' => '',
+                    'new_submission_content' => '',
+                ],
+                [
+                    'updatePublication' => [
+                        'name' => 'Test Publication',
+                        'home_page_content' => '',
+                        'new_submission_content' => '',
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider publicationContentMutationProvider
+     * @return void
+     */
+    public function testContentCreation(mixed $publication_data, mixed $expected_data): void
+    {
+        $this->beAppAdmin();
+        $response = $this->graphQL(
+            'mutation CreatePublication ($publication_name: String, $home_page_content: String, $new_submission_content: String) {
+                createPublication(publication: {
+                    name: $publication_name
+                    home_page_content: $home_page_content
+                    new_submission_content: $new_submission_content
+                }) {
+                    name,
+                    home_page_content,
+                    new_submission_content,
+                }
+            }',
+            [
+              'publication_name' => $publication_data['name'],
+              'home_page_content' => $publication_data['home_page_content'],
+              'new_submission_content' => $publication_data['new_submission_content'],
+            ],
+        );
+        $json = $response->json();
+        $this->assertSame($json['data'] ?? null, $expected_data);
+    }
+
+    /**
+     * @dataProvider publicationContentUpdateProvider
+     * @return void
+     */
+    public function testContentUpdate(mixed $publication_data, mixed $expected_data): void
+    {
+        $this->beAppAdmin();
+        $user = User::factory()->create();
+
+        $publication = Publication::factory()
+            ->hasAttached($user, [], 'publicationAdmins')
+            ->create();
+
+        $response = $this->graphQL(
+            'mutation UpdatePublication ($pubId: ID!, $publication_name: String, $home_page_content: String, $new_submission_content: String) {
+                updatePublication(
+                    publication: {
+                      id: $pubId,
+                      name: $publication_name
+                      home_page_content: $home_page_content
+                      new_submission_content: $new_submission_content
+                    }
+                ) {
+                    name,
+                    home_page_content,
+                    new_submission_content,
+                }
+            }',
+            [
+              'pubId' => $publication->id,
+              'publication_name' => $publication_data['name'],
+              'home_page_content' => $publication_data['home_page_content'],
+              'new_submission_content' => $publication_data['new_submission_content'],
+            ],
+        );
+        $json = $response->json();
+        $this->assertSame($json['data'] ?? null, $expected_data);
     }
 
     /**
@@ -222,7 +457,7 @@ class PublicationTest extends TestCase
         );
     }
 
-    public function allSubmissionRoles(): array
+    public function allPublicationRoles(): array
     {
         return [
             'publication_admins' => ['publication_admins'],
@@ -231,7 +466,7 @@ class PublicationTest extends TestCase
     }
 
     /**
-     * @dataProvider allSubmissionRoles
+     * @dataProvider allPublicationRoles
      * @param string $role
      * @return void
      */
@@ -251,7 +486,7 @@ class PublicationTest extends TestCase
     }
 
     /**
-     * @dataProvider allSubmissionRoles
+     * @dataProvider allPublicationRoles
      * @param string $role
      * @return void
      */
@@ -274,7 +509,7 @@ class PublicationTest extends TestCase
     }
 
     /**
-     * @dataProvider allSubmissionRoles
+     * @dataProvider allPublicationRoles
      * @param string $role
      * @return void
      */
@@ -294,6 +529,52 @@ class PublicationTest extends TestCase
         $response = $this->executePublicationRoleAssignment($role, $publication, $user);
 
         $response->assertJsonPath('data.updatePublication', null);
+    }
+
+    /**
+     * @dataProvider allPublicationRoles
+     * @param string $role
+     * @return void
+     */
+    public function testMyRoleFields(string $role): void
+    {
+        /** @var User $user */
+        $user = User::factory()->create();
+        $this->actingAs($user);
+        $publication = Publication::factory()->create();
+        $camelized = Str::camel($role);
+        $publication->$camelized()->attach($user);
+        $graphql = '
+            query GetPublication($id: ID!) {
+                publication(id: $id) {
+                    my_role
+                    effective_role
+                }
+            }
+        ';
+
+        $response = $this->graphQL($graphql, ['id' => $publication->id]);
+        $response
+            ->assertJsonPath('data.publication.my_role', Str::singular($role))
+            ->assertJsonPath('data.publication.effective_role', Str::singular($role));
+    }
+
+    public function testAdminGetsEffectiveRole()
+    {
+        $this->beAppAdmin();
+        $publication = Publication::factory()->create();
+        $gql = '
+            query GetPublication($id: ID!) {
+                publication(id: $id) {
+                    my_role
+                    effective_role
+                }
+            }
+        ';
+
+        $this->graphQL($gql, ['id' => $publication->id])
+            ->assertJsonPath('data.publication.my_role', null)
+            ->assertJsonPath('data.publication.effective_role', 'publication_admin');
     }
 
     public function provideCanUpdatePublicationStyleCriteriaRoles(): array

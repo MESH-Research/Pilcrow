@@ -3,6 +3,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.17.0](https://github.com/MESH-Research/CCR/compare/v0.16.7...v0.17.0) (2022-06-20)
+
+
+### Features
+
+* **api:** Add publication home page and submission content fields ([#1201](https://github.com/MESH-Research/CCR/issues/1201)) ([18f5928](https://github.com/MESH-Research/CCR/commit/18f59286d24e314e3cbda7712dd78b3e5bfc6f92))
+* **api:** Add Validation for Inline and Overall Comments ([#1184](https://github.com/MESH-Research/CCR/issues/1184)) ([9a48945](https://github.com/MESH-Research/CCR/commit/9a489451e5eb2aa9d691251c1a0c5fc77a7ba7a5)), closes [#1162](https://github.com/MESH-Research/CCR/issues/1162)
+* **api:** Update seeders to include inline comment positions ([ec77d22](https://github.com/MESH-Research/CCR/commit/ec77d224c4baf92e815dea01908ea36e9ce0c93d))
+* **client:** Display inline comment highlights on submission review ([c2b2e6b](https://github.com/MESH-Research/CCR/commit/c2b2e6bad5d68b9de9e49e571b21ec4ae7a80e1c))
+* **client:** implement inline comment creation functionality ([#1187](https://github.com/MESH-Research/CCR/issues/1187)) ([44e0912](https://github.com/MESH-Research/CCR/commit/44e0912490cfa4c99fc5313b8ab7f7acc0fa32a2))
+* **client:** Load submission content from API on submission review page ([c2b2e6b](https://github.com/MESH-Research/CCR/commit/c2b2e6bad5d68b9de9e49e571b21ec4ae7a80e1c))
+
+
+### Bug Fixes
+
+* **api:** add missing method preventing migration:reset from succeeding ([#1198](https://github.com/MESH-Research/CCR/issues/1198)) ([e1cec26](https://github.com/MESH-Research/CCR/commit/e1cec2671c2442ca5ad44f32c44542a1eaf53885)), closes [#1138](https://github.com/MESH-Research/CCR/issues/1138)
+
 ### [0.16.7](https://github.com/MESH-Research/CCR/compare/v0.16.6...v0.16.7) (2022-06-13)
 
 

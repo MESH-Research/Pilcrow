@@ -198,4 +198,44 @@ class Submission extends Model
 
         return $statuses[(int)$this->status];
     }
+
+    /**
+     * Get the logged in users assigned role for this submission
+     *
+     * @return int|null
+     */
+    public function getMyRole(): int|null
+    {
+        /** @var \App\Models\User $user */
+        $user = auth()->user();
+
+        if (!$user) {
+            return null;
+        }
+
+        return $this->users()->wherePivot('user_id', $user->id)->first()->pivot->role_id ?? null;
+    }
+
+    /**
+     * Get the logged in users role taking into account parent roles granted to the user
+     *
+     * @return int|null
+     */
+    public function getEffectiveRole(): int|null
+    {
+        /** @var \App\Models\User $user */
+        $user = auth()->user();
+
+        if (!$user) {
+            return null;
+        }
+
+        $publicationRole = $this->publication->getEffectiveRole();
+
+        if ($publicationRole !== null) {
+            return (int)Role::REVIEW_COORDINATOR_ROLE_ID;
+        }
+
+        return $this->getMyRole();
+    }
 }

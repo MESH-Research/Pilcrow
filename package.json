@@ -9,7 +9,7 @@
         "markdownlint-cli": "^0.31.1",
         "standard-version": "^9.5.0",
         "yaml-js": "^0.3.1",
-        "yesno": "^0.3.1"
+        "yesno": "^0.4.0"
     },
     "scripts": {
         "test": "cd backend && lando artisan test && cd ../client && lando yarn test:unit && lando cypress run",
@@ -24,6 +24,6 @@
         "header": "<!-- markdownlint-disable MD024 MD001 -->\n# Changelog\n\nAll notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.\n"
     },
     "type": "module",
-    "version": "0.16.7",
+    "version": "0.17.0",
     "dependencies": {}
 }

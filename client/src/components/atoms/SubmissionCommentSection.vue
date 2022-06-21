@@ -10,7 +10,10 @@
       />
       <q-card class="q-mb-md q-pa-md bg-grey-1">
         <h4 class="q-mt-none">Add Your Overall Comment</h4>
-        <comment-editor comment-type="overall" data-cy="overallCommentEditor" />
+        <comment-editor
+          comment-type="OverallComment"
+          data-cy="overallCommentEditor"
+        />
       </q-card>
     </div>
   </section>
