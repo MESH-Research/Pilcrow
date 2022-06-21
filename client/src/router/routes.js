@@ -77,7 +77,7 @@ const routes = [
       },
       {
         path: "/submissions",
-        component: () => import("src/pages/SubmissionPage.vue"),
+        component: () => import("src/pages/SubmissionsPage.vue"),
       },
       {
         name: "submission_details",
