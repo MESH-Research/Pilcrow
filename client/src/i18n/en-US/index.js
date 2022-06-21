@@ -287,6 +287,28 @@ export default {
     },
   },
   publication: {
+    basic: {
+      fields: {
+        name: {
+          label: "Publication Name",
+          hint: "This is the name your publication will be known as across the site.",
+          errors: {
+            maxLength: "@:generic_validations.maxLength",
+          },
+        },
+        is_publicly_visible: {
+          options: {
+            true: "Publicly Visible",
+            false: "Hidden",
+          },
+          effect: {
+            true: "Anyone can find this publication.",
+            false: "This publication will be hidden from search.",
+          },
+          hint: "Set to publicly visible to allow your publication to be discoverable.",
+        },
+      },
+    },
     editors: {
       heading: "Editors",
       none: "An editor is not assigned to this publication.",

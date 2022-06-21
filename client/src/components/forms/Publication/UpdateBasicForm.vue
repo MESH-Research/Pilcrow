@@ -1,7 +1,12 @@
 <template>
   <q-form @submit="save()">
-    <v-q-wrap t-prefix="publication.basic.fields" @vqupdate="updateInput">
+    <v-q-wrap
+      t-prefix="publication.basic.fields"
+      class="q-gutter-md"
+      @vqupdate="updateInput"
+    >
       <v-q-input :v="v$.name" />
+      <v-q-toggle-button :v="v$.is_publicly_visible" />
     </v-q-wrap>
     <form-actions @reset-click="resetForm" />
   </q-form>
@@ -10,6 +15,7 @@
 <script setup>
 import VQWrap from "src/components/atoms/VQWrap.vue"
 import VQInput from "src/components/atoms/VQInput.vue"
+import VQToggleButton from "src/components/atoms/VQToggleButton.vue"
 import FormActions from "src/components/molecules/FormActions.vue"
 import { pick, isEqual } from "lodash"
 import { computed, inject, reactive, toRef, watchEffect } from "vue"
