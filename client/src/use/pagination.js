@@ -1,5 +1,5 @@
 //TODO: This composable needs unit tests
-import { unref, reactive, computed } from "vue"
+import { unref, reactive, computed, watchEffect } from "vue"
 import { defaults } from "lodash"
 import { useQuery } from "@vue/apollo-composable"
 
@@ -19,22 +19,29 @@ export function usePagination(doc, options) {
 
   const paginatorInfo = computed(() => {
     return query.loading.value
-      ? {}
+      ? null
       : extractElement(query.result.value, "paginatorInfo")
   })
 
   function updatePage(newValue) {
-    console.log(vars)
-    console.log(newValue)
     vars.page = newValue
-    console.log(vars)
+    console.log(
+      "🚀 ~ file: pagination.js ~ line 28 ~ updatePage ~ newValue",
+      newValue
+    )
   }
-
-  const binds = computed(() => ({
+  const binds = reactive({
     modelValue: vars.page,
     min: 1,
-    max: paginatorInfo.value?.lastPage ?? 1,
-  }))
+    max: 1,
+  })
+
+  watchEffect(() => {
+    if (paginatorInfo.value) {
+      binds.max = paginatorInfo.value.lastPage
+      binds.modelValue = paginatorInfo.value.currentPage
+    }
+  })
 
   const listeners = {
     "update:modelValue": updatePage,

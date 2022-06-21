@@ -7,7 +7,7 @@
           All Publications
           <q-spinner v-if="loading" />
         </h3>
-        <div class="column q-gutter-md">
+        <div v-if="!loading" class="column q-gutter-md">
           <q-list
             v-if="publications.length !== 0"
             class="scroll col"
@@ -28,12 +28,14 @@
               </q-item-section>
             </q-item>
           </q-list>
-          <q-pagination v-bind="binds" class="col" v-on="listeners" />
-          <div
-            v-if="paginatorInfo.count == 0"
-            data-cy="no_publications_message"
-          >
-            No Publications Created
+          <div v-if="paginatorInfo">
+            <q-pagination v-bind="binds" class="col" v-on="listeners" />
+            <div
+              v-if="paginatorInfo.count == 0"
+              data-cy="no_publications_message"
+            >
+              No Publications Created
+            </div>
           </div>
         </div>
       </section>
@@ -51,7 +53,7 @@ const {
   listeners,
   data: publications,
   paginatorInfo,
-  loading,
+  query: { loading },
 } = pubsPaginator
 </script>
 //TODO: Needs translation

@@ -6,18 +6,10 @@
 </template>
 
 <script setup>
-import { GET_PUBLICATION } from "src/graphql/queries"
-import { useQuery } from "@vue/apollo-composable"
-import { computed } from "vue"
-const props = defineProps({
-  id: {
-    type: String,
+defineProps({
+  publication: {
+    type: Object,
     required: true,
   },
-})
-
-const { result } = useQuery(GET_PUBLICATION, { id: props.id })
-const publication = computed(() => {
-  return result.value?.publication ?? null
 })
 </script>

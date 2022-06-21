@@ -59,7 +59,7 @@ export function useFormState(queryLoadingRef, mutationLoadingRef) {
     if (mutationLoadingRef.value) {
       return "saving"
     }
-    if (queryLoadingRef.value) {
+    if (queryLoadingRef?.value) {
       return "loading"
     }
     if (errorMessage.value) {

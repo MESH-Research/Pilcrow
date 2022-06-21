@@ -33,7 +33,7 @@
         </div>
       </q-card>
       <q-card class="col-sm-9 col-xs-12 no-shadow outline no-border-radius">
-        <router-view :id="id" />
+        <router-view v-if="publication" :publication="publication" />
       </q-card>
     </div>
   </div>
@@ -53,9 +53,9 @@ const props = defineProps({
 })
 
 const { result } = useQuery(GET_PUBLICATION, { id: props.id })
-const publicationName = computed(() => result.value?.publication.name ?? "")
+const publication = computed(() => result.value?.publication ?? null)
+const publicationName = computed(() => publication.value?.name ?? "")
 const route = useRoute()
-console.log(route.matched)
 const params = { id: props.id }
 const items = [
   {
