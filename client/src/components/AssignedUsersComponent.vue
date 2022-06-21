@@ -1,58 +1,56 @@
 <template>
-  <div class="q-pa-lg">
-    <section class="column q-gutter-sm">
-      <h3>{{ tp$("heading") }}</h3>
-      <div v-if="users.length" class="col">
-        <user-list
-          ref="userList"
-          data-cy="user-list"
-          :users="users"
-          :actions="
-            mutable
-              ? [
-                  {
-                    ariaLabel: tp$('unassign_button.ariaLabel'),
-                    icon: 'person_remove',
-                    action: 'unassign',
-                    help: tp$('unassign_button.help'),
-                    cyAttr: 'button_unassign',
-                  },
-                ]
-              : []
-          "
-          @action-click="handleUserListClick"
-        />
-      </div>
-      <div v-else class="col">
-        <q-card ref="card_no_users" bordered flat>
-          <q-item class="text--grey">
-            <q-item-section avatar>
-              <q-icon name="o_do_disturb_on" />
-            </q-item-section>
-            <q-item-section>
-              {{ tp$("none") }}
-            </q-item-section>
-          </q-item>
-        </q-card>
-      </div>
+  <section class="column q-gutter-sm">
+    <h3>{{ tp$("heading") }}</h3>
+    <div v-if="users.length" class="col">
+      <user-list
+        ref="userList"
+        data-cy="user-list"
+        :users="users"
+        :actions="
+          mutable
+            ? [
+                {
+                  ariaLabel: tp$('unassign_button.ariaLabel'),
+                  icon: 'person_remove',
+                  action: 'unassign',
+                  help: tp$('unassign_button.help'),
+                  cyAttr: 'button_unassign',
+                },
+              ]
+            : []
+        "
+        @action-click="handleUserListClick"
+      />
+    </div>
+    <div v-else class="col">
+      <q-card ref="card_no_users" bordered flat>
+        <q-item class="text--grey">
+          <q-item-section avatar>
+            <q-icon name="o_do_disturb_on" />
+          </q-item-section>
+          <q-item-section>
+            {{ tp$("none") }}
+          </q-item-section>
+        </q-item>
+      </q-card>
+    </div>
 
-      <q-form v-if="acceptMore" class="col" @submit="handleSubmit">
-        <find-user-select v-model="user" data-cy="input_user">
-          <template #after>
-            <q-btn
-              :ripple="{ center: true }"
-              color="primary"
-              data-cy="button-assign"
-              label="Assign"
-              type="submit"
-              stretch
-              @click="handleSubmit"
-            />
-          </template>
-        </find-user-select>
-      </q-form>
-    </section>
-  </div>
+    <q-form v-if="acceptMore" class="col" @submit="handleSubmit">
+      <find-user-select v-model="user" data-cy="input_user">
+        <template #after>
+          <q-btn
+            :ripple="{ center: true }"
+            color="primary"
+            data-cy="button-assign"
+            label="Assign"
+            type="submit"
+            stretch
+            @click="handleSubmit"
+          />
+        </template>
+      </find-user-select>
+    </q-form>
+  </section>
 </template>
 
 <script setup>

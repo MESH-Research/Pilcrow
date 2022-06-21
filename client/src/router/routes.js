@@ -37,6 +37,37 @@ const routes = [
         ],
       },
       {
+        path: "publication/:id/setup/",
+        component: () => import("src/layouts/Publication/SetupLayout.vue"),
+        props: true,
+        children: [
+          {
+            path: "basic",
+            name: "Basic",
+            component: () =>
+              import("src/pages/Publication/Setup/BasicPage.vue"),
+          },
+          {
+            name: "Users",
+            path: "users",
+            component: () =>
+              import("src/pages/Publication/Setup/UsersPage.vue"),
+          },
+          {
+            name: "Page Content",
+            path: "content",
+            component: () =>
+              import("src/pages/Publication/Setup/ContentPage.vue"),
+          },
+          {
+            name: "Style Criteria",
+            path: "criteria",
+            component: () =>
+              import("src/pages/Publication/Setup/CriteriaPage.vue"),
+          },
+        ],
+      },
+      {
         path: "feed/",
         component: () => import("src/pages/FeedPage.vue"),
       },
@@ -67,6 +98,7 @@ const routes = [
         path: "/publication/:id",
         component: () => import("pages/Admin/PublicationDetails.vue"),
         meta: {
+          //TODO: Nothing about this currently restricts this page to the publication admin or editor
           requiresRoles: [
             "Application Administrator",
             "Publication Administrator",

@@ -8,7 +8,11 @@
         <q-item-section>{{ item.label }}</q-item-section>
       </q-item>
     </q-list>
-    <q-btn class="lt-sm full-width" :label="activeRoute.label">
+    <q-btn
+      v-if="activeRoute"
+      class="lt-sm full-width"
+      :label="activeRoute.label"
+    >
       <q-menu>
         <q-list class="full-width">
           <q-item

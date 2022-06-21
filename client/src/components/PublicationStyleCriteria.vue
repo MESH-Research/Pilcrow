@@ -1,5 +1,5 @@
 <template>
-  <q-card flat class="q-ma-none">
+  <q-card flat>
     <q-card-section>
       <div class="text-h3">{{ $t("publications.style_criteria.heading") }}</div>
     </q-card-section>
