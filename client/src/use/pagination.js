@@ -1,41 +1,39 @@
 //TODO: This composable needs unit tests
-import { unref, ref, toRef, toRefs, reactive, computed, readonly } from "vue"
+import { unref, reactive, computed } from "vue"
 import { defaults } from "lodash"
 import { useQuery } from "@vue/apollo-composable"
 
-export function usePagination(query, options) {
+export function usePagination(doc, options) {
   const opts = defaults(unref(options) || {}, {
     variables: {},
   })
 
   const vars = reactive(Object.assign({ page: 1 }, opts.variables))
 
-  const itemData = ref([])
-  const paginatorInfo = reactive({
-    count: 0,
-    currentPage: 1,
-    lastPage: 1,
-    perPage: 10,
+  const query = useQuery(doc, vars)
+
+  const itemData = computed(() => {
+    if (query.loading.value) return []
+    return extractElement(query.result.value, "data")
   })
 
-  const queryReturn = useQuery(query, vars)
-
-  queryReturn.onResult((result) => {
-    if (result.loading) {
-      return
-    }
-    itemData.value = extractElement(result.data, "data")
-    Object.assign(paginatorInfo, extractElement(result.data, "paginatorInfo"))
+  const paginatorInfo = computed(() => {
+    return query.loading.value
+      ? {}
+      : extractElement(query.result.value, "paginatorInfo")
   })
 
   function updatePage(newValue) {
+    console.log(vars)
+    console.log(newValue)
     vars.page = newValue
+    console.log(vars)
   }
 
   const binds = computed(() => ({
     modelValue: vars.page,
     min: 1,
-    max: paginatorInfo.lastPage,
+    max: paginatorInfo.value?.lastPage ?? 1,
   }))
 
   const listeners = {
@@ -44,12 +42,12 @@ export function usePagination(query, options) {
 
   return {
     data: itemData,
-    currentPage: readonly(toRef(vars, "page")),
     updatePage,
-    paginatorInfo: toRefs(paginatorInfo),
+    paginatorInfo,
     binds,
     listeners,
-    ...queryReturn,
+    query: query,
+    vars,
   }
 }
 

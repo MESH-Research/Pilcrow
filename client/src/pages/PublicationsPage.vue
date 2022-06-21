@@ -15,7 +15,14 @@
             bordered
             data-cy="publications_list"
           >
-            <q-item v-for="publication in publications" :key="publication.id">
+            <q-item
+              v-for="publication in publications"
+              :key="publication.id"
+              :to="{
+                name: 'publication:home',
+                params: { id: publication.id },
+              }"
+            >
               <q-item-section>
                 {{ publication.name }}
               </q-item-section>
@@ -38,12 +45,13 @@
 import { GET_PUBLICATIONS } from "src/graphql/queries"
 import { usePagination } from "src/use/pagination"
 
+const pubsPaginator = usePagination(GET_PUBLICATIONS)
 const {
   binds,
   listeners,
   data: publications,
   paginatorInfo,
   loading,
-} = usePagination(GET_PUBLICATIONS)
+} = pubsPaginator
 </script>
 //TODO: Needs translation

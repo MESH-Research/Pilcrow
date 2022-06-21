@@ -35,7 +35,7 @@
               {{ $t("header.user_list") }}
             </q-item-section>
           </q-item>
-          <q-item to="/admin/publications">
+          <q-item to="/publications">
             <q-item-section avatar>
               <q-icon name="collections_bookmark" />
             </q-item-section>

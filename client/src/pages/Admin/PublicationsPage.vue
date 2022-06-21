@@ -49,8 +49,10 @@
             v-for="publication in publications"
             :key="publication.id"
             class="column"
-            clickable
-            @click="goToPublicationDetails(publication.id)"
+            :to="{
+              name: 'publication:home',
+              params: { id: publication.id },
+            }"
           >
             <q-item-section>
               <q-item-label>
@@ -77,16 +79,6 @@ import { useMutation, useQuery } from "@vue/apollo-composable"
 import { useFeedbackMessages } from "src/use/guiElements"
 import { useI18n } from "vue-i18n"
 import { ref, reactive, watch, computed } from "vue"
-import { useRouter } from "vue-router"
-
-const { push } = useRouter()
-
-function goToPublicationDetails(publicationId) {
-  push({
-    name: "publication_details",
-    params: { id: publicationId },
-  })
-}
 
 const is_submitting = ref(false)
 const tryCatchError = ref(false)

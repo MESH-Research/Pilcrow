@@ -42,25 +42,37 @@ const routes = [
         props: true,
         children: [
           {
+            name: "publication:setup:basic",
             path: "basic",
-            name: "Basic",
+            meta: {
+              name: "Basic",
+            },
             component: () =>
               import("src/pages/Publication/Setup/BasicPage.vue"),
           },
           {
-            name: "Users",
+            name: "publication:setup:users",
             path: "users",
+            meta: {
+              name: "Users",
+            },
             component: () =>
               import("src/pages/Publication/Setup/UsersPage.vue"),
           },
           {
-            name: "Page Content",
+            name: "publication:setup:content",
             path: "content",
+            meta: {
+              name: "Page Content",
+            },
             component: () =>
               import("src/pages/Publication/Setup/ContentPage.vue"),
           },
           {
-            name: "Style Criteria",
+            name: "publication:setup:criteria",
+            meta: {
+              name: "Style Criteria",
+            },
             path: "criteria",
             component: () =>
               import("src/pages/Publication/Setup/CriteriaPage.vue"),
@@ -91,20 +103,13 @@ const routes = [
       },
       {
         path: "/publications",
+        name: "publication:index",
         component: () => import("src/pages/PublicationsPage.vue"),
       },
       {
-        name: "publication_details",
+        name: "publication:home",
         path: "/publication/:id",
         component: () => import("pages/Admin/PublicationDetails.vue"),
-        meta: {
-          //TODO: Nothing about this currently restricts this page to the publication admin or editor
-          requiresRoles: [
-            "Application Administrator",
-            "Publication Administrator",
-            "Editor",
-          ],
-        },
         props: true,
       },
       {

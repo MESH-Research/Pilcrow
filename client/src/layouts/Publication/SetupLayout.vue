@@ -2,11 +2,17 @@
   <div>
     <nav class="q-px-lg q-pt-md q-gutter-sm">
       <q-breadcrumbs>
-        <q-breadcrumbs-el :label="'Publications'" to="/publications" />
-        <q-breadcrumbs-el :label="publicationName" :to="fullRoute()" />
+        <q-breadcrumbs-el
+          :label="'Publications'"
+          :to="{ name: 'publication:index' }"
+        />
+        <q-breadcrumbs-el
+          :label="publicationName"
+          :to="{ name: 'publication:home', params }"
+        />
         <q-breadcrumbs-el label="Setup" />
 
-        <q-breadcrumbs-el :label="route.name" />
+        <q-breadcrumbs-el :label="route.meta.name" />
       </q-breadcrumbs>
     </nav>
     <div class="row justify-center items-start content-start q-pa-md">
@@ -50,28 +56,39 @@ const { result } = useQuery(GET_PUBLICATION, { id: props.id })
 const publicationName = computed(() => result.value?.publication.name ?? "")
 const route = useRoute()
 console.log(route.matched)
+const params = { id: props.id }
 const items = [
   {
     icon: "account_circle",
     label: "General Settings",
-    url: `/publication/${props.id}/setup/basic`,
+    url: {
+      name: "publication:setup:basic",
+      params,
+    },
   },
   {
     icon: "contact_page",
     label: "Users",
-    url: `/publication/${props.id}/setup/users`,
+    url: {
+      name: "publication:setup:users",
+      params,
+    },
   },
   {
     icon: "contact_page",
     label: "Style Criteria",
-    url: `/publication/${props.id}/setup/criteria`,
+    url: {
+      name: "publication:setup:criteria",
+      params,
+    },
   },
   {
     icon: "contact_page",
     label: "Page Content",
-    url: `/publication/${props.id}/setup/content`,
+    url: {
+      name: "publication:setup:content",
+      params,
+    },
   },
 ]
-
-const fullRoute = (addendum = "") => `/publication/${props.id}/${addendum}`
 </script>

@@ -3,9 +3,9 @@
     <q-breadcrumbs>
       <q-breadcrumbs-el
         :label="$t('header.publications')"
-        to="/admin/publications"
+        :to="{ name: 'publication:index' }"
       />
-      <q-breadcrumbs-el :label="$t('publications.details')" />
+      <q-breadcrumbs-el :label="publication?.name ?? ''" />
     </q-breadcrumbs>
   </nav>
   <div v-if="!publication" class="q-pa-lg">
@@ -15,46 +15,23 @@
     <div class="row">
       <h2 class="col-sm-12" data-cy="publication_details_heading">
         {{ publication.name }}
-
-        <div v-if="publication.is_publicly_visible">
-          <q-badge>
-            Public
-            <q-tooltip>This publication is visible to anyone.</q-tooltip>
-          </q-badge>
-        </div>
-        <div v-else>
-          <q-badge>
-            Private
-            <q-tooltip>
-              Only visible to users associated with the publication.
-            </q-tooltip>
-          </q-badge>
-        </div>
+        <q-btn
+          v-if="isPublicationAdmin"
+          icon="settings"
+          class="float-right"
+          :to="{ name: 'publication:setup:basic', param: { id: id } }"
+          >Configure Publication</q-btn
+        >
       </h2>
-    </div>
-    <div class="column q-gutter-md">
-      <assigned-users
-        data-cy="admins_list"
-        relationship="publication_admins"
-        :container="publication"
-        mutable
-      />
-      <assigned-users
-        data-cy="editors_list"
-        relationship="editors"
-        :container="publication"
-        mutable
-      />
-      <publication-style-criteria :publication="publication" />
+      <!--  eslint-disable-next-line vue/no-v-html -->
+      <div class="content" v-html="publication.home_page_content"></div>
     </div>
   </article>
 </template>
 
 <script setup>
-import AssignedUsers from "src/components/AssignedUsersComponent.vue"
 import { GET_PUBLICATION } from "src/graphql/queries"
 import { useQuery } from "@vue/apollo-composable"
-import PublicationStyleCriteria from "src/components/PublicationStyleCriteria.vue"
 import { computed } from "vue"
 const props = defineProps({
   id: {
@@ -66,5 +43,9 @@ const props = defineProps({
 const { result } = useQuery(GET_PUBLICATION, { id: props.id })
 const publication = computed(() => {
   return result.value?.publication ?? null
+})
+
+const isPublicationAdmin = computed(() => {
+  return publication.value?.effective_role === "publication_admin"
 })
 </script>
