@@ -369,7 +369,7 @@ export default {
   },
   submission: {
     toolbar: {
-      back_button: "Back to Submission Details",
+      back: "Back to Submission Details",
       toggle_inline_comments: "Toggle Inline Comments",
       toggle_annotation_highlights: "Toggle Annotation Highlights",
     },

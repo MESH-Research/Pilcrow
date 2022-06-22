@@ -2,7 +2,7 @@
   <q-header reveal class="bg-grey-9 text-white">
     <q-toolbar>
       <q-btn
-        :aria-label="$t('submission.toolbar.back_button')"
+        :aria-label="$t('submission.toolbar.back')"
         dense
         flat
         round
