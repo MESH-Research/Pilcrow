@@ -2,7 +2,7 @@
   <article class="q-px-md">
     <h2>Page Content</h2>
     <p>Customize blocks of text displayed to your publication's users.</p>
-    <UpdateContentForm :publication="publication" @save="save" />
+    <UpdateContentForm ref="form" :publication="publication" @save="save" />
   </article>
 </template>
 
