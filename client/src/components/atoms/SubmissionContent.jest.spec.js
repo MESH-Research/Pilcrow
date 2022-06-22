@@ -117,7 +117,6 @@ describe("SubmissionContent", () => {
 
   test("inline comment annotations can be toggled", async () => {
     const { wrapper } = makeTestArticle()
-    console.log()
     expect(wrapper.vm.annotations.length).toBe(3)
     await wrapper.setProps({ highlightVisibility: false })
     expect(wrapper.vm.annotations.length).toBe(0)
