@@ -1,7 +1,7 @@
 <template>
   <article class="q-px-md">
     <h2>General Settings</h2>
-    <UpdateBasicForm :publication="publication" @save="save" />
+    <UpdateBasicForm ref="form" :publication="publication" @save="save" />
   </article>
 </template>
 
