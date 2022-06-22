@@ -5,8 +5,6 @@
       filled
       :options="options"
       label="Choose Content Block"
-      color="teal"
-      options-selected-class="text-deep-orange"
     >
       <template #option="scope">
         <q-item v-bind="scope.itemProps">
@@ -27,7 +25,7 @@
       </template>
     </q-select>
     <div v-if="itemUnderEdit">
-      <q-banner class="bg-yellow-1 q-ma-md" rounded>
+      <q-banner class="bg-yellow-2 q-ma-md" rounded>
         <template #avatar>
           <q-icon name="tips_and_updates" />
         </template>

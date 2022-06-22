@@ -18,7 +18,7 @@
       v-if="publication.style_criterias.length === 0"
       inline-actions
       rounded
-      class="bg-orange text-white"
+      class="bg-yellow-2 text-black"
     >
       <template #avatar>
         <q-icon name="tips_and_updates" />

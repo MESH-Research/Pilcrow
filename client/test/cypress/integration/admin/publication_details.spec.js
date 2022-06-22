@@ -9,12 +9,6 @@ describe("Publication Details", () => {
     cy.task("resetDb")
   })
 
-  it("restricts access based on role", () => {
-    cy.login({ email: "regularuser@ccrproject.dev" })
-    cy.visit("/publication/1")
-    cy.url().should("include", "/error403")
-  })
-
   it("allows access based on role", () => {
     cy.login({ email: "applicationadministrator@ccrproject.dev" })
     cy.visit("/publication/1")
@@ -31,7 +25,7 @@ describe("Publication Details", () => {
 
   it("should allow assignment of administrators by application administrators", () => {
     cy.login({ email: "applicationadministrator@ccrproject.dev" })
-    cy.visit("publication/1")
+    cy.visit("publication/1/setup/users")
 
     cy.dataCy("admins_list").within(() => {
       cy.dataCy('input_user').type("applicationAd")
@@ -50,7 +44,7 @@ describe("Publication Details", () => {
 
   it("should allow assignment of editors by application administrators", () => {
     cy.login({ email: "applicationadministrator@ccrproject.dev" })
-    cy.visit("publication/1")
+    cy.visit("publication/1/setup/users")
 
     cy.dataCy("editors_list").within(() => {
       cy.dataCy('input_user').type("applicationAd")
@@ -68,7 +62,7 @@ describe("Publication Details", () => {
 
   it("should allow removal of admins by application administrators", () => {
     cy.login({ email: "applicationadministrator@ccrproject.dev" })
-    cy.visit("publication/1")
+    cy.visit("publication/1/setup/users")
 
     cy.intercept("/graphql").as("graphql")
     cy.dataCy("admins_list")
@@ -85,7 +79,7 @@ describe("Publication Details", () => {
 
   it("should allow removal of editors by application administrators", () => {
     cy.login({ email: "applicationadministrator@ccrproject.dev" })
-    cy.visit("publication/1")
+    cy.visit("publication/1/setup/users")
 
     cy.intercept("/graphql").as("removeCoordinatorFetch")
     cy.dataCy("editors_list")
@@ -101,7 +95,7 @@ describe("Publication Details", () => {
 
   it("should allow editing of style criteria", () => {
     cy.login({ email: "applicationadministrator@ccrproject.dev" })
-    cy.visit("/publication/1")
+    cy.visit("publication/1/setup/criteria")
     cy.injectAxe()
 
     //Click edit on item 1
@@ -135,7 +129,7 @@ describe("Publication Details", () => {
 
   it("should allow adding a style criteria", () => {
     cy.login({ email: "applicationadministrator@ccrproject.dev" })
-    cy.visit("/publication/1")
+    cy.visit("publication/1/setup/criteria")
 
     //Check existing number of items:
     cy.dataCy('listItem').should('have.length', 4)
@@ -158,7 +152,7 @@ describe("Publication Details", () => {
 
   it("should allow deleting a style criteria", () => {
     cy.login({ email: "applicationadministrator@ccrproject.dev" })
-    cy.visit("/publication/1")
+    cy.visit("publication/1/setup/criteria")
     //Check existing number of items:
     cy.dataCy('listItem').should('have.length', 4)
 
