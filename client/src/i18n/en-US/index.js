@@ -309,6 +309,22 @@ export default {
         },
       },
     },
+    content: {
+      fields: {
+        home_page_content: {
+          label: "Home Page",
+          description:
+            "Displayed to users who view the home page of your publication.",
+          hint: "This is usually a good place to describe your publication's focus, goals, team, etc.",
+        },
+        new_submission_content: {
+          label: "New Submission",
+          description:
+            "Displayed to users when they start the create submission process.",
+          hint: "This is a good place to describe the submission and review process of your publication.",
+        },
+      },
+    },
     editors: {
       heading: "Editors",
       description:

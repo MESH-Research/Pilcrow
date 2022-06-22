@@ -25,9 +25,11 @@ provide("formState", formState)
 
 function save(form) {
   const { saved, errorMessage } = formState
+  const vars = { id: props.publication.id }
+  vars[form.field] = form.content
   saved.value = false
   mutation
-    .mutate({ id: props.publication.id, ...form })
+    .mutate(vars)
     .then(() => {
       saved.value = true
       errorMessage.value = ""

@@ -1,30 +1,72 @@
 <template>
   <q-form @submit="save()">
-    <v-q-wrap
-      t-prefix="publication.basic.fields"
-      class="q-gutter-md"
-      @vqupdate="updateInput"
+    <q-select
+      v-model="itemUnderEdit"
+      filled
+      :options="options"
+      label="Choose Content Block"
+      color="teal"
+      options-selected-class="text-deep-orange"
     >
+      <template #option="scope">
+        <q-item v-bind="scope.itemProps">
+          <q-item-section>
+            <q-item-label>
+              {{ $t(getI18nString(scope.opt, "label")) }}
+            </q-item-label>
+            <q-item-label caption>
+              {{ $t(getI18nString(scope.opt, "description")) }}
+            </q-item-label>
+          </q-item-section>
+        </q-item>
+      </template>
+      <template #selected>
+        <div v-if="itemUnderEdit">
+          {{ $t(getI18nString(itemUnderEdit, "label")) }}
+        </div>
+      </template>
+    </q-select>
+    <div v-if="itemUnderEdit">
+      <q-banner class="bg-yellow-1 q-ma-md" rounded>
+        <template #avatar>
+          <q-icon name="tips_and_updates" />
+        </template>
+        <div class="text-h4">
+          {{ $t(getI18nString(itemUnderEdit, "label")) }}
+        </div>
+        <div>
+          {{ $t(getI18nString(itemUnderEdit, "description")) }}
+        </div>
+        <div>
+          {{ $t(getI18nString(itemUnderEdit, "hint")) }}
+        </div>
+      </q-banner>
       <q-editor
-        v-model="v$.home_page_content.$model"
-        label="Home Page Content"
-        hint="Do these take hints"
+        v-model="v$.content.$model"
+        :toolbar="[
+          [
+            {
+              label: $q.lang.editor.formatting,
+              icon: $q.iconSet.editor.formatting,
+              list: 'no-icons',
+              options: ['p', 'h2', 'h3', 'h4', 'h5', 'h6'],
+            },
+          ],
+          ['bold', 'italic', 'underline'],
+          ['link', 'unordered', 'ordered', 'outdent', 'indent'],
+          ['undo', 'redo'],
+        ]"
       />
-      <q-editor
-        v-model="v$.new_submission_content.$model"
-        label="Home Page Content"
-        hint="Do these take hints"
-      />
-    </v-q-wrap>
+    </div>
+
     <form-actions @reset-click="resetForm" />
   </q-form>
 </template>
 
 <script setup>
-import VQWrap from "src/components/atoms/VQWrap.vue"
 import FormActions from "src/components/molecules/FormActions.vue"
-import { pick, isEqual } from "lodash"
-import { computed, inject, reactive, toRef, watchEffect } from "vue"
+import { isEqual } from "lodash"
+import { computed, inject, reactive, ref, toRef, watch, watchEffect } from "vue"
 import { useDirtyGuard } from "src/use/forms"
 import { maxLength } from "@vuelidate/validators"
 import useVuelidate from "@vuelidate/core"
@@ -36,22 +78,19 @@ const props = defineProps({
   },
 })
 const emit = defineEmits(["save"])
-
+const itemUnderEdit = ref(null)
 const publication = toRef(props, "publication")
 
+const options = ["home_page_content", "new_submission_content"]
 const applyDefaults = (obj) => {
-  const defaults = {
-    new_submission_content: "",
-    home_page_content: "",
+  return {
+    content: obj[itemUnderEdit.value] ?? "",
+    field: itemUnderEdit.value,
   }
-  return Object.assign(defaults, pick(obj ?? {}, Object.keys(defaults)))
 }
 
 const rules = {
-  home_page_content: {
-    maxLength: maxLength(4096),
-  },
-  new_submission_content: {
+  content: {
     maxLength: maxLength(4096),
   },
 }
@@ -60,7 +99,7 @@ const original = computed(() => applyDefaults(publication.value))
 const form = reactive(applyDefaults({}))
 const v$ = useVuelidate(rules, form)
 
-const { dirty, errorMessage } = inject("formState")
+const { dirty, errorMessage, saved } = inject("formState")
 watchEffect(() => {
   dirty.value = !isEqual(original.value, form)
 })
@@ -73,11 +112,9 @@ function resetForm() {
 watchEffect(() => {
   Object.assign(form, original.value)
 })
-
-function updateInput(validator, newValue) {
-  validator.$model = newValue
-}
-
+watch(itemUnderEdit, () => {
+  saved.value = false
+})
 function save() {
   v$.value.$touch()
   if (v$.value.$invalid) {
@@ -86,4 +123,7 @@ function save() {
     emit("save", form)
   }
 }
+
+const getI18nString = (field, item) =>
+  `publication.content.fields.${field}.${item}`
 </script>

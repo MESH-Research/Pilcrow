@@ -32,6 +32,7 @@ export function useDirtyGuard(dirtyRef) {
     return new Promise((resolve) => {
       if (!dirtyRef.value) {
         resolve(true)
+        return
       }
       dirtyDialog()
         .onOk(function () {

@@ -1,7 +1,10 @@
 <template>
   <article class="q-px-md">
     <h2>Users</h2>
-    <p>Assigned users have special permissions on your publication.</p>
+    <p>
+      Assigned users have special permissions on your publication. A user cannot
+      be both an admin and a editor at the same time.
+    </p>
     <div class="column q-gutter-md">
       <assigned-users
         data-cy="admins_list"
