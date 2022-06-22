@@ -306,6 +306,27 @@ export const UPDATE_PUBLICATION_BASICS = gql`
     }
   }
 `
+
+export const UPDATE_PUBLICATION_CONTENT = gql`
+  mutation UpdatePublicationContent(
+    $id: ID!
+    $home_page_content: String
+    $new_submission_content: String
+  ) {
+    updatePublication(
+      publication: {
+        id: $id
+        home_page_content: $home_page_content
+        new_submission_content: $new_submission_content
+      }
+    ) {
+      id
+      home_page_content
+      new_submission_content
+    }
+  }
+`
+
 export const UPDATE_PUBLICATION_STYLE_CRITERIA = gql`
   mutation UpdatePublicationStyleCriteria(
     $publication_id: ID!

@@ -234,6 +234,7 @@ export const GET_PUBLICATION = gql`
       is_publicly_visible
       effective_role
       home_page_content
+      new_submission_content
       style_criterias {
         name
         id
