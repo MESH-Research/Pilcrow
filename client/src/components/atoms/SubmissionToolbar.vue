@@ -20,7 +20,11 @@
         round
         icon="power_input"
         @click="toggleAnnotationHighlights"
-      />
+      >
+        <q-tooltip>{{
+          $t("submission.toolbar.toggle_annotation_highlights")
+        }}</q-tooltip>
+      </q-btn>
       <q-btn
         :aria-label="$t('submission.toolbar.toggle_inline_comments')"
         dense
@@ -29,7 +33,11 @@
         icon="question_answer"
         data-cy="toggleInlineCommentsButton"
         @click="toggleCommentDrawer"
-      />
+      >
+        <q-tooltip>{{
+          $t("submission.toolbar.toggle_inline_comments")
+        }}</q-tooltip>
+      </q-btn>
     </q-toolbar>
   </q-header>
 </template>

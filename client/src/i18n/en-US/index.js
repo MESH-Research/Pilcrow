@@ -371,7 +371,7 @@ export default {
     toolbar: {
       back: "Back to Submission Details",
       toggle_inline_comments: "Toggle Inline Comments",
-      toggle_annotation_highlights: "Toggle Annotation Highlights",
+      toggle_annotation_highlights: "Toggle Highlights",
     },
     review_coordinators: {
       heading: "Review Coordinator",
