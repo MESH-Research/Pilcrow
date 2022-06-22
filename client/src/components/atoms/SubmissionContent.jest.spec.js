@@ -115,11 +115,13 @@ describe("SubmissionContent", () => {
     expect(wrapper).toBeTruthy()
   })
 
-  test("inline comment widgets can be toggled", async () => {
+  test("inline comment annotations can be toggled", async () => {
     const { wrapper } = makeTestArticle()
-    console.log(wrapper.vm.inlineComments)
-    expect(wrapper.findAll("[data-cy='comment-widget']").length).toBe(3)
+    console.log()
+    expect(wrapper.vm.annotations.length).toBe(3)
     await wrapper.setProps({ highlightVisibility: false })
-    expect(wrapper.findAll("[data-cy='comment-widget']").length).toBe(0)
+    expect(wrapper.vm.annotations.length).toBe(0)
+    await wrapper.setProps({ highlightVisibility: true })
+    expect(wrapper.vm.annotations.length).toBe(3)
   })
 })
