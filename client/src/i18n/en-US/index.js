@@ -368,6 +368,11 @@ export default {
     },
   },
   submission: {
+    toolbar: {
+      back_button: "Back to Submission Details",
+      toggle_inline_comments: "Toggle Inline Comments",
+      toggle_annotation_highlights: "Toggle Annotation Highlights",
+    },
     review_coordinators: {
       heading: "Review Coordinator",
       none: "A review coordinator is not assigned to this submission.",

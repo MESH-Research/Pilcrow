@@ -2,22 +2,19 @@
   <q-header reveal class="bg-grey-9 text-white">
     <q-toolbar>
       <q-btn
+        :aria-label="$t('submission.toolbar.back_button')"
         dense
-        aria-label="Back to Submission Details"
         flat
         round
         icon="arrow_back_ios_new"
-        :to="{
-          name: 'submission_details',
-          params: { id: props.id },
-        }"
+        :to="{ name: 'submission_details', params: { id: props.id } }"
       />
       <q-toolbar-title>
         {{ submission.title }}
       </q-toolbar-title>
 
       <q-btn
-        aria-label="Toggle Annotation Highlights"
+        :aria-label="$t('submission.toolbar.toggle_annotation_highlights')"
         dense
         flat
         round
@@ -25,7 +22,7 @@
         @click="toggleAnnotationHighlights"
       />
       <q-btn
-        aria-label="Toggle Inline Comments"
+        :aria-label="$t('submission.toolbar.toggle_inline_comments')"
         dense
         flat
         round
