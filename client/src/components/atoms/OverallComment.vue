@@ -4,7 +4,7 @@
     <q-card
       square
       :class="{ active: isActive }"
-      class="bg-grey-1 shadow-2 q-mb-md"
+      class="bg-grey-1 shadow-2 q-mt-md"
       :aria-label="
         $t('submissions.comment.ariaLabel', {
           username: comment.created_by.username,
@@ -12,7 +12,7 @@
         })
       "
     >
-      <comment-header :comment="comment" bg-color="#eeeeee" />
+      <comment-header :comment="comment" bg-color="#eeeeee" class="q-pt-sm" />
       <q-card-section>
         <!-- eslint-disable-next-line vue/no-v-html -->
         <div v-html="comment.content" />
@@ -36,7 +36,11 @@
           @submit="submitReply"
         />
       </q-card-section>
-      <q-card-actions v-if="!isReplying || hasReplies" class="q-pa-md q-pb-lg">
+      <q-card-actions
+        v-if="!isReplying || hasReplies"
+        class="q-pa-md q-pb-lg"
+        align="right"
+      >
         <q-btn
           v-if="!isReplying"
           ref="reply_button"
@@ -51,8 +55,8 @@
             v-if="!isCollapsed"
             aria-label="Hide Replies"
             bordered
-            color="grey-3"
-            text-color="black"
+            color="secondary"
+            text-color="white"
             @click="toggleThread"
           >
             <q-icon name="expand_less"></q-icon>
@@ -72,7 +76,7 @@
         </template>
       </q-card-actions>
     </q-card>
-    <section class="q-mx-md">
+    <section>
       <div v-if="!isCollapsed">
         <overall-comment-reply
           v-for="reply in comment.replies"

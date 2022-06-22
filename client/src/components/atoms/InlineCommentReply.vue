@@ -3,7 +3,7 @@
   <div
     square
     :class="{ active: isActive }"
-    class="bg-grey-1 q-mb-md"
+    class="q-mb-md"
     :aria-label="
       $t('submissions.comment.reply.ariaLabel', {
         username: comment.created_by.username,

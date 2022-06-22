@@ -13,7 +13,7 @@
       "
     >
       <comment-header :comment="comment" bg-color="#bbe2e8" />
-      <q-card-section class="column q-gutter-sm q-pa-none">
+      <q-card-section class="column q-gutter-sm q-pa-sm">
         <q-card-section class="q-pa-sm">
           <!-- eslint-disable-next-line vue/no-v-html -->
           <div v-html="comment.content" />
@@ -30,15 +30,15 @@
             {{ criteria.name }}
           </q-chip>
         </q-card-section>
-        <q-card-actions v-if="hasReplies" class="">
+        <q-card-actions v-if="hasReplies" align="right">
           <template v-if="hasReplies">
             <q-btn
               v-if="!isCollapsed"
               data-cy="collapseRepliesButton"
               aria-label="Hide Replies"
               bordered
-              color="grey-3"
-              text-color="black"
+              color="secondary"
+              text-color="white"
               @click="toggleThread"
             >
               <q-icon name="expand_less"></q-icon>
@@ -84,7 +84,7 @@
           @submit="submitReply"
         />
       </q-card-section>
-      <q-card-actions v-if="showReplyButton">
+      <q-card-actions v-if="showReplyButton" class="q-pa-md" align="right">
         <q-btn
           ref="reply_button"
           data-cy="inlineCommentReplyButton"

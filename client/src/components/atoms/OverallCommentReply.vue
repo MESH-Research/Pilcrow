@@ -3,7 +3,7 @@
   <q-card
     square
     :class="{ active: isActive }"
-    class="bg-grey-1 shadow-2 q-mb-md"
+    class="bg-grey-1 shadow-2"
     :aria-label="
       $t('submissions.comment.reply.ariaLabel', {
         username: comment.created_by.username,
@@ -11,7 +11,7 @@
     "
     data-cy="overallCommentReply"
   >
-    <comment-header :comment="comment" bg-color="#eeeeee" />
+    <comment-header :comment="comment" class="q-pt-sm" />
     <comment-reply-reference :comment="comment" :replies="replies" />
     <q-card-section>
       <!--  eslint-disable-next-line vue/no-v-html -->
@@ -36,7 +36,7 @@
         @submit="submitReply"
       />
     </q-card-section>
-    <q-card-actions v-if="!isReplying" class="q-pa-md q-pb-lg">
+    <q-card-actions v-if="!isReplying" class="q-pa-md q-pb-lg" align="right">
       <q-btn
         ref="reply_button"
         data-cy="overallCommentReplyButton"
