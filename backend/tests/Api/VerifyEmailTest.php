@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Tests\Feature;
+namespace Tests\Api;
 
 use App\Models\Role;
 use App\Models\User;
@@ -11,9 +11,9 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Notification;
 use Nuwave\Lighthouse\Testing\MakesGraphQLRequests;
-use Tests\TestCase;
+use Tests\ApiTestCase;
 
-class VerifyEmailTest extends TestCase
+class VerifyEmailTest extends ApiTestCase
 {
     use RefreshDatabase;
     use MakesGraphQLRequests;
@@ -146,7 +146,9 @@ class VerifyEmailTest extends TestCase
         Notification::fake();
         $testUser = User::factory()->create(['id' => 1, 'email' => 'mesh@msu.edu', 'email_verified_at' => null]);
 
+        /** @var User $testUser */
         $this->actingAs($testUser);
+
         $response = $this->callSendVerifyEmailEndpoint(['id' => $id]);
 
         Notification::assertSentTo([$testUser], VerifyEmail::class);
@@ -178,7 +180,9 @@ class VerifyEmailTest extends TestCase
         $testUser = User::factory()->create(['email' => 'mesh@msu.edu', 'email_verified_at' => null]);
         $otherUser = User::factory()->create(['email' => 'mesh2@msu.edu']);
 
+        /** @var User $otherUser */
         $this->actingAs($otherUser);
+
         $response = $this->callSendVerifyEmailEndpoint(['id' => $testUser->id]);
 
         Notification::assertNotSentTo([$testUser], VerifyEmail::class);
@@ -194,7 +198,9 @@ class VerifyEmailTest extends TestCase
         $testUser = User::factory()->create(['email' => 'mesh@msu.edu']);
         $testUser->markEmailAsVerified();
 
+        /** @var User $testUser */
         $this->actingAs($testUser);
+
         $response = $this->callSendVerifyEmailEndpoint(['id' => $testUser->id]);
 
         Notification::assertNotSentTo([$testUser], VerifyEmail::class);
@@ -210,7 +216,9 @@ class VerifyEmailTest extends TestCase
         $expires = (string)Carbon::now()->addMinutes(10)->timestamp;
         $hash = $testUser->makeEmailVerificationHash($expires);
 
+        /** @var User $testUser */
         $this->actingAs($testUser);
+
         $response = $this->callVerifyEmailEndpoint(['token' => $hash, 'expires' => $expires]);
 
         $this->assertNotNull(Arr::get($response, 'data.verifyEmail'));
@@ -226,7 +234,9 @@ class VerifyEmailTest extends TestCase
         $expires = (string)Carbon::now()->subMinutes(61)->timestamp;
         $hash = $testUser->makeEmailVerificationHash($expires);
 
+        /** @var User $testUser */
         $this->actingAs($testUser);
+
         $response = $this->callVerifyEmailEndpoint(['token' => $hash, 'expires' => $expires]);
 
         $response->assertJsonPath('errors.0.extensions.code', 'VERIFY_TOKEN_EXPIRED');
@@ -241,6 +251,7 @@ class VerifyEmailTest extends TestCase
         $expires = (string)Carbon::now()->addMinutes(10)->timestamp;
         $hash = 'aninvalidhash';
 
+        /** @var User $testUser */
         $this->actingAs($testUser);
         $response = $this->callVerifyEmailEndpoint(['token' => $hash, 'expires' => $expires]);
 
@@ -257,6 +268,8 @@ class VerifyEmailTest extends TestCase
         $hash = $testUser->makeEmailVerificationHash($expires);
 
         $invalidExpires = (string)Carbon::now()->addMinutes(10)->timestamp;
+
+        /** @var User $testUser */
         $this->actingAs($testUser);
         $response = $this->callVerifyEmailEndpoint(['token' => $hash, 'expires' => $invalidExpires]);
 

@@ -1,16 +1,14 @@
 <?php
 declare(strict_types=1);
 
-namespace Tests\Feature;
+namespace Tests\Api;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Nuwave\Lighthouse\Testing\MakesGraphQLRequests;
-use Tests\TestCase;
+use Tests\ApiTestCase;
 
-class UpdateUserMutationTest extends TestCase
+class UpdateUserMutationTest extends ApiTestCase
 {
-    use MakesGraphQLRequests;
     use RefreshDatabase;
 
     /**
