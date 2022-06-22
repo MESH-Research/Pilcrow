@@ -46,7 +46,7 @@
       v-if="editor"
       :editor="editor"
       :tippy-options="{ duration: 100 }"
-      :should-show="shouldShow"
+      :should-show="bubbleMenuVisibility"
     >
       <q-btn color="white" text-color="primary" @click="addComment">
         <q-icon name="add_comment" />
@@ -135,7 +135,7 @@ const editor = new Editor({
   ],
 })
 
-function shouldShow({ state }) {
+function bubbleMenuVisibility({ state }) {
   return !state.selection.empty
 }
 
