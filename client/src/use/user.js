@@ -1,4 +1,4 @@
-import { useQuery, useMutation } from "@vue/apollo-composable"
+import { useQuery, useMutation, useApolloClient } from "@vue/apollo-composable"
 import { computed, reactive } from "vue"
 import { CURRENT_USER } from "src/graphql/queries"
 import { LOGIN, LOGOUT } from "src/graphql/mutations"
@@ -130,6 +130,7 @@ export const useLogin = () => {
  * @returns
  */
 export function useLogout() {
+  const { resolveClient } = useApolloClient()
   const { push } = useRouter()
   const {
     mutate: logoutMutation,
@@ -150,6 +151,7 @@ export function useLogout() {
   async function logoutUser() {
     try {
       await logoutMutation()
+      await resolveClient().resetStore()
       push("/")
       return true
     } catch (e) {
