@@ -15,7 +15,8 @@
     <comment-header
       :comment="comment"
       class="q-pt-sm"
-      @reply="$emit('replyTo', comment)"
+      @quote-reply-to="$emit('quoteReplyTo', comment)"
+      @reply-to="$emit('replyTo', comment)"
     />
     <comment-reply-reference :comment="comment" :replies="replies" />
     <q-card-section class="q-pt-xs">
@@ -42,7 +43,7 @@ const props = defineProps({
     type: Array,
   },
 })
-defineEmits(["replyTo"])
+defineEmits(["quoteReplyTo", "replyTo"])
 // function initiateReply() {
 //   isReplying.value = true
 // }

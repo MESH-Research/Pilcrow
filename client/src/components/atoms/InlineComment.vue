@@ -12,7 +12,12 @@
         })
       "
     >
-      <comment-header :comment="comment" bg-color="#bbe2e8" />
+      <comment-header
+        :comment="comment"
+        bg-color="#bbe2e8"
+        @quote-reply-to="initiateQuoteReply"
+        @reply-to="initiateReply"
+      />
       <q-card-section class="column q-gutter-sm q-pa-sm">
         <q-card-section class="q-pa-sm">
           <!-- eslint-disable-next-line vue/no-v-html -->
@@ -67,7 +72,8 @@
           :comment="reply"
           :parent="comment"
           :replies="comment.replies"
-          @reply-to="nestedReply"
+          @quote-reply-to="initiateQuoteReply"
+          @reply-to="initiateReplyToReply"
         />
       </section>
       <q-card-section v-if="isReplying" ref="comment_reply">
@@ -80,6 +86,7 @@
           comment-type="InlineCommentReply"
           :parent="comment"
           :reply-to="commentReply ?? comment"
+          :is-quote-replying="isQuoteReplying"
           @cancel="cancelReply"
           @submit="submitReply"
         />
@@ -102,8 +109,11 @@ import { ref, computed, inject } from "vue"
 import CommentHeader from "./CommentHeader.vue"
 import InlineCommentReply from "./InlineCommentReply.vue"
 import CommentEditor from "../forms/CommentEditor.vue"
+
 const isCollapsed = ref(true)
 const isReplying = ref(false)
+const isQuoteReplying = ref(false)
+const commentReply = ref(null)
 
 function toggleThread() {
   isCollapsed.value = !isCollapsed.value
@@ -115,25 +125,34 @@ const props = defineProps({
   },
 })
 
+defineEmits(["quoteReplyTo", "replyTo"])
+
 const hasReplies = computed(() => {
   return props.comment.replies.length > 0
 })
 
 function submitReply() {
   isReplying.value = false
+  isQuoteReplying.value = false
   commentReply.value = null
 }
 function cancelReply() {
   isReplying.value = false
+  isQuoteReplying.value = false
   commentReply.value = null
 }
 function initiateReply() {
   isReplying.value = true
+  isQuoteReplying.value = false
 }
-const commentReply = ref(null)
-function nestedReply(comment) {
+function initiateReplyToReply(comment) {
   isReplying.value = true
-  console.log(comment)
+  isQuoteReplying.value = false
+  commentReply.value = comment
+}
+function initiateQuoteReply(comment) {
+  isReplying.value = true
+  isQuoteReplying.value = true
   commentReply.value = comment
 }
 
