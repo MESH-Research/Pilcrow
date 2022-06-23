@@ -34,11 +34,16 @@ export function useDirtyGuard(dirtyRef) {
     return new Promise((resolve) => {
       if (!dirtyRef.value) {
         resolve(true)
+        console.log(
+          "🚀 ~ file: forms.js ~ line 37 ~ returnnewPromise ~ true",
+          true
+        )
         return
       }
       dirtyDialog()
         .onOk(function () {
           resolve(true)
+          console.log("🚀 ~ file: forms.js ~ line 42 ~ true", true)
         })
         .onCancel(function () {
           resolve(false)
@@ -54,10 +59,12 @@ export function useDirtyGuard(dirtyRef) {
   })
 }
 
-export function useFormState(queryLoadingRef, mutationLoadingRef) {
+export function useFormState(query, mutation) {
   const dirty = ref(false)
   const saved = ref(false)
   const errorMessage = ref("")
+  const queryLoadingRef = query?.loading ?? null
+  const mutationLoadingRef = mutation.loading
   const state = computed(() => {
     if (mutationLoadingRef.value) {
       return "saving"
@@ -93,6 +100,7 @@ export function useFormState(queryLoadingRef, mutationLoadingRef) {
     queryLoading: queryLoadingRef,
     mutationLoading: mutationLoadingRef,
     errorMessage,
+    mutationError: mutation.error,
     reset,
     setError,
   }
@@ -175,14 +183,19 @@ export function useExternalResultFromGraphQL(form, error) {
     $externalResults.value = newValue
   })
 
-  const clearResults = () => ($externalResults.value = {})
+  const clearErrors = () => ($externalResults.value = {})
 
   watch(
     () => unref(form),
     () => {
-      clearResults()
+      console.log(
+        "🚀 ~ file: forms.js ~ line 189 ~ useExternalResultFromGraphQL ~ true",
+        true
+      )
+
+      clearErrors()
     }
   )
 
-  return { $externalResults }
+  return { $externalResults, clearErrors }
 }

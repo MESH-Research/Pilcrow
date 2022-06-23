@@ -78,7 +78,7 @@ const { loading: deleteLoading, mutate: deleteCriteria } = useMutation(
 const loading = computed(
   () => updateLoading.value || createLoading.value || deleteLoading.value
 )
-const formState = useFormState(ref(false), loading)
+const formState = useFormState(null, { loading })
 provide("formState", formState)
 
 function editItem(criteriaId) {

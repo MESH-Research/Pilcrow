@@ -17,6 +17,7 @@ jest.mock("src/use/forms", () => ({
     queryLoading: mockRef(false),
     mutationLoading: mockRef(false),
     errorMessage: mockRef(""),
+    mutationError: mockRef({}),
   }),
 }))
 

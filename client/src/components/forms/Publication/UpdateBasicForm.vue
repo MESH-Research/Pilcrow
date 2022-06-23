@@ -22,7 +22,7 @@ import VQToggleButton from "src/components/atoms/VQToggleButton.vue"
 import FormActions from "src/components/molecules/FormActions.vue"
 import { pick, isEqual } from "lodash"
 import { computed, inject, reactive, toRef, watchEffect } from "vue"
-import { useDirtyGuard } from "src/use/forms"
+import { useDirtyGuard, useExternalResultFromGraphQL } from "src/use/forms"
 import { maxLength, required } from "@vuelidate/validators"
 import useVuelidate from "@vuelidate/core"
 
@@ -52,18 +52,23 @@ const rules = {
     boolean: (value) => typeof value === "boolean",
   },
 }
-
-const original = computed(() => applyDefaults(publication.value))
 const form = reactive(applyDefaults({}))
-const v$ = useVuelidate(rules, form)
+const original = computed(() => applyDefaults(publication.value))
 
-const { dirty, errorMessage } = inject("formState")
+const { dirty, errorMessage, mutationError, reset } = inject("formState")
+const { clearErrors: clearGraphQLErrors, $externalResults } =
+  useExternalResultFromGraphQL(form, mutationError)
+const v$ = useVuelidate(rules, form, {
+  $externalResults,
+})
 watchEffect(() => {
   dirty.value = !isEqual(original.value, form)
 })
 useDirtyGuard(dirty)
 
 function resetForm() {
+  reset()
+  clearGraphQLErrors()
   Object.assign(form, original.value)
 }
 
