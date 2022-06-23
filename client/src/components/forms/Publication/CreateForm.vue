@@ -83,7 +83,6 @@ async function submit() {
     const publication = await mutate({ ...newPublication })
     newStatusMessage("success", t("publications.create.success"))
     resetForm()
-    console.log(publication.data.createPublication)
     emit("created", publication.data.createPublication)
   } catch (error) {
     console.log(error)

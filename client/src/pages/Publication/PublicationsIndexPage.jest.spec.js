@@ -17,10 +17,10 @@ describe("publications page mount", () => {
     data: {
       publications: {
         data: [
-          { id: "1", name: "Sample Jest Publication 1" },
-          { id: "2", name: "Sample Jest Publication 2" },
-          { id: "3", name: "Sample Jest Publication 3" },
-          { id: "4", name: "Sample Jest Publication 4" },
+          { id: "1", name: "Sample Jest Publication 1", home_page_content: "" },
+          { id: "2", name: "Sample Jest Publication 2", home_page_content: "" },
+          { id: "3", name: "Sample Jest Publication 3", home_page_content: "" },
+          { id: "4", name: "Sample Jest Publication 4", home_page_content: "" },
         ],
         paginatorInfo: {
           __typename: "PaginatorInfo",

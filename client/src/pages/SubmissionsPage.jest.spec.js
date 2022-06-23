@@ -53,7 +53,7 @@ describe("submissions page mount", () => {
             lastPage: 1,
             perPage: 10,
           },
-          data: [{ id: 1, name: "Jest Publication" }],
+          data: [{ id: 1, name: "Jest Publication", home_page_content: "" }],
         },
       },
     })

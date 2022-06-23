@@ -13,22 +13,18 @@ export function usePagination(doc, options) {
   const query = useQuery(doc, vars)
 
   const itemData = computed(() => {
-    if (query.loading.value) return []
+    if (query.loading.value || !query.result.value) return []
     return extractElement(query.result.value, "data")
   })
 
   const paginatorInfo = computed(() => {
-    return query.loading.value
-      ? null
-      : extractElement(query.result.value, "paginatorInfo")
+    return !query.loading.value && query.result.value
+      ? extractElement(query.result.value, "paginatorInfo")
+      : null
   })
 
   function updatePage(newValue) {
     vars.page = newValue
-    console.log(
-      "🚀 ~ file: pagination.js ~ line 28 ~ updatePage ~ newValue",
-      newValue
-    )
   }
   const binds = reactive({
     modelValue: vars.page,

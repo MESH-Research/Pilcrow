@@ -5,6 +5,7 @@
       label="Create New Publication"
       switch-toggle-side
       header-class="bg-grey-3"
+      data-cy="create_pub_button"
     >
       <CreateForm @created="publicationCreated" />
     </q-expansion-item>
