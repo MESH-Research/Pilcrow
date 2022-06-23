@@ -2194,10 +2194,10 @@
     ts-essentials "^9.1.2"
     vue-demi "^0.13.1"
 
-"@vue/apollo-option@^4.0.0-alpha.17":
-  version "4.0.0-alpha.17"
-  resolved "https://registry.yarnpkg.com/@vue/apollo-option/-/apollo-option-4.0.0-alpha.17.tgz#443b5a8e04145e30722a5159cd43f3609b61cc95"
-  integrity sha512-JDoQqbmWMlHMIVuzsHdNKp9AwDc+K1or5V0SsMeu9sf/JCEujmydQ+T/EBnXBLOOHwwJtGz6HlTud1V8ua2mlQ==
+"@vue/apollo-option@^4.0.0-alpha.18":
+  version "4.0.0-alpha.18"
+  resolved "https://registry.yarnpkg.com/@vue/apollo-option/-/apollo-option-4.0.0-alpha.18.tgz#6303e16c61cba9c8c980279a1c44cb0797bb4c9c"
+  integrity sha512-SeAEIOO8Wff7n04GNJmkdNIG/7CkBgDoRes/M8RFvr5qayGpqv6SlSLdghZ1umENM9I2kPjuq2v1RP6aeYfjZg==
   dependencies:
     throttle-debounce "^3.0.1"
 
