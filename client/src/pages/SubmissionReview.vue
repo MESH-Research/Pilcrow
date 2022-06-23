@@ -17,9 +17,9 @@
         />
         <submission-comment-drawer v-model:drawerOpen="commentDrawerOpen" />
         <q-page-container>
-          <submission-content />
-          <q-separator class="page-seperator" />
           <submission-comment-section />
+          <q-separator class="page-seperator" />
+          <submission-content />
         </q-page-container>
       </q-layout>
 

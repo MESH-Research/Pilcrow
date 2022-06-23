@@ -18,52 +18,52 @@
         @quote-reply-to="initiateQuoteReply"
         @reply-to="initiateReply"
       />
-      <q-card-section class="column q-gutter-sm q-pa-sm">
-        <q-card-section class="q-pa-sm">
-          <!-- eslint-disable-next-line vue/no-v-html -->
-          <div v-html="comment.content" />
-        </q-card-section>
-
-        <q-card-section v-if="comment.style_criteria.length" class="q-pa-none">
-          <q-chip
-            v-for="criteria in comment.style_criteria"
-            :key="comment.id + criteria.icon"
-            size="16px"
-            :icon="criteria.icon"
-            data-cy="styleCriteria"
-          >
-            {{ criteria.name }}
-          </q-chip>
-        </q-card-section>
-        <q-card-actions v-if="hasReplies" align="right">
-          <template v-if="hasReplies">
-            <q-btn
-              v-if="!isCollapsed"
-              data-cy="collapseRepliesButton"
-              aria-label="Hide Replies"
-              bordered
-              color="secondary"
-              text-color="white"
-              @click="toggleThread"
-            >
-              <q-icon name="expand_less"></q-icon>
-              <span>Hide Replies</span>
-            </q-btn>
-            <q-btn
-              v-if="isCollapsed"
-              data-cy="collapseRepliesButton"
-              aria-label="Show Replies"
-              bordered
-              color="secondary"
-              text-color="white"
-              @click="toggleThread"
-            >
-              <q-icon name="expand_more"></q-icon>
-              <span>Show Replies</span>
-            </q-btn>
-          </template>
-        </q-card-actions>
+      <q-card-section>
+        <!-- eslint-disable-next-line vue/no-v-html -->
+        <div v-html="comment.content" />
       </q-card-section>
+
+      <q-card-section
+        v-if="comment.style_criteria.length"
+        class="q-mx-sm q-mb-sm q-pa-none"
+      >
+        <q-chip
+          v-for="criteria in comment.style_criteria"
+          :key="comment.id + criteria.icon"
+          size="16px"
+          :icon="criteria.icon"
+          data-cy="styleCriteria"
+        >
+          {{ criteria.name }}
+        </q-chip>
+      </q-card-section>
+
+      <q-card-actions v-if="hasReplies" align="right" class="q-pa-md">
+        <q-btn
+          v-if="!isCollapsed"
+          data-cy="collapseRepliesButton"
+          aria-label="Hide Replies"
+          bordered
+          color="secondary"
+          text-color="white"
+          @click="toggleThread"
+        >
+          <q-icon name="expand_less"></q-icon>
+          <span>Hide Replies</span>
+        </q-btn>
+        <q-btn
+          v-if="isCollapsed"
+          data-cy="collapseRepliesButton"
+          aria-label="Show Replies"
+          bordered
+          color="secondary"
+          text-color="white"
+          @click="toggleThread"
+        >
+          <q-icon name="expand_more"></q-icon>
+          <span>Show Replies</span>
+        </q-btn>
+      </q-card-actions>
       <section v-if="!isCollapsed">
         <inline-comment-reply
           v-for="reply in comment.replies"

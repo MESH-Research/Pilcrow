@@ -3,7 +3,8 @@
   <q-card
     square
     :class="{ active: isActive }"
-    class="bg-grey-1 shadow-2"
+    flat
+    class="q-mb-md bg-none transparent"
     :aria-label="
       $t('submissions.comment.reply.ariaLabel', {
         username: comment.created_by.username,
@@ -11,10 +12,16 @@
     "
     data-cy="overallCommentReply"
   >
-    <comment-header :comment="comment" class="q-pt-sm" />
+    <q-separator />
+    <comment-header
+      :comment="comment"
+      class="q-pt-sm"
+      @quote-reply-to="$emit('quoteReplyTo', comment)"
+      @reply-to="$emit('replyTo', comment)"
+    />
     <comment-reply-reference :comment="comment" :replies="replies" />
-    <q-card-section>
-      <!--  eslint-disable-next-line vue/no-v-html -->
+    <q-card-section class="q-pt-xs">
+      <!-- eslint-disable-next-line vue/no-v-html -->
       <div v-html="comment.content" />
     </q-card-section>
 
@@ -36,16 +43,6 @@
         @submit="submitReply"
       />
     </q-card-section>
-    <q-card-actions v-if="!isReplying" class="q-pa-md q-pb-lg" align="right">
-      <q-btn
-        ref="reply_button"
-        data-cy="overallCommentReplyButton"
-        bordered
-        color="primary"
-        label="Reply"
-        @click="initiateReply()"
-      />
-    </q-card-actions>
   </q-card>
 </template>
 <script setup>
@@ -69,6 +66,7 @@ const props = defineProps({
     required: true,
   },
 })
+defineEmits(["quoteReplyTo", "replyTo"])
 
 function submitReply() {
   isReplying.value = false
@@ -76,9 +74,9 @@ function submitReply() {
 function cancelReply() {
   isReplying.value = false
 }
-function initiateReply() {
-  isReplying.value = true
-}
+// function initiateReply() {
+//   isReplying.value = true
+// }
 const activeComment = inject("activeComment")
 const isActive = computed(() => {
   return (

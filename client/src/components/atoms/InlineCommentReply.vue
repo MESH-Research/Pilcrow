@@ -1,9 +1,10 @@
 <template>
   <div ref="scrollTarget" />
-  <div
+  <q-card
     square
     :class="{ active: isActive }"
-    class="q-mb-md"
+    flat
+    class="q-mb-md bg-none transparent"
     :aria-label="
       $t('submissions.comment.reply.ariaLabel', {
         username: comment.created_by.username,
@@ -23,7 +24,7 @@
       <!-- eslint-disable-next-line vue/no-v-html -->
       <div v-html="comment.content" />
     </q-card-section>
-  </div>
+  </q-card>
 </template>
 <script setup>
 import { computed, inject, ref } from "vue"
