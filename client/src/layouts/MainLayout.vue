@@ -43,7 +43,7 @@
             </q-item-section>
           </q-item>
         </q-list>
-        <q-list>
+        <q-list v-if="isAppAdmin">
           <q-expansion-item
             expand-separator
             icon="settings"
@@ -56,6 +56,14 @@
                 </q-item-section>
                 <q-item-section>
                   {{ $t("header.user_list") }}
+                </q-item-section>
+              </q-item>
+              <q-item :to="{ name: 'admin:publication:index' }">
+                <q-item-section avatar>
+                  <q-icon name="collections_bookmark" />
+                </q-item-section>
+                <q-item-section>
+                  {{ $t("header.publications") }}
                 </q-item-section>
               </q-item>
             </q-list>
@@ -82,7 +90,7 @@ import { useCurrentUser } from "src/use/user"
 import { ref } from "vue"
 
 const leftDrawerOpen = ref(false)
-const { currentUser } = useCurrentUser()
+const { currentUser, isAppAdmin } = useCurrentUser()
 </script>
 
 <style lang="sass">

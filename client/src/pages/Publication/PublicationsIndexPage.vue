@@ -12,6 +12,7 @@
           <q-item
             v-for="publication in publications"
             :key="publication.id"
+            class="q-py-md"
             :to="destRoute(publication.id)"
           >
             <q-item-section>
@@ -21,9 +22,6 @@
               <q-item-label caption>
                 {{ strip(publication.home_page_content) }}
               </q-item-label>
-            </q-item-section>
-            <q-item-section side>
-              <q-btn :to="destRoute(publication.id)">View</q-btn>
             </q-item-section>
           </q-item>
         </q-list>

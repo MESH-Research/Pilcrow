@@ -6,6 +6,8 @@ import {
   ref,
   getCurrentInstance,
   inject,
+  watch,
+  unref,
 } from "vue"
 import { onBeforeRouteLeave } from "vue-router"
 import { useQuasar } from "quasar"
@@ -162,4 +164,25 @@ export function useGraphQLValidation(errorRef) {
   })
 
   return { validationErrors, hasValidationErrors }
+}
+
+export function useExternalResultFromGraphQL(form, error) {
+  const { validationErrors } = useGraphQLValidation(error)
+
+  const $externalResults = ref({})
+
+  watch(validationErrors, (newValue) => {
+    $externalResults.value = newValue
+  })
+
+  const clearResults = () => ($externalResults.value = {})
+
+  watch(
+    () => unref(form),
+    () => {
+      clearResults()
+    }
+  )
+
+  return { $externalResults }
 }

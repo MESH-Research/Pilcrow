@@ -288,6 +288,18 @@ export default {
     },
   },
   publication: {
+    entity: "Publication | Publications",
+    setup_pages: {
+      breadcrumb_heading: "Setup",
+      basic: "Basic Settings",
+      users: "Users",
+      criteria: "Style Criteria",
+      content: "Page Content",
+      problems: {
+        no_admins: "This publication has no users assigned to administer it.",
+        no_criteria: "Setup style criteria for your publication.",
+      },
+    },
     basic: {
       fields: {
         name: {
@@ -295,6 +307,8 @@ export default {
           hint: "This is the name your publication will be known as across the site.",
           errors: {
             maxLength: "@:generic_validations.maxLength",
+            required: "A name is required to create a publication.",
+            NOT_UNIQUE: "There is already a publication with this name.",
           },
         },
         is_publicly_visible: {
@@ -375,9 +389,6 @@ export default {
     create: {
       success: "Publication successfully created.",
       failure: "An error occurred while attempting to create the publication.",
-      required: "A name is required to create a publication.",
-      maxLength: "The maximum length has been exceeded for the name.",
-      duplicate_name: "Publication name already exists.",
     },
     style_criteria: {
       heading: "Style Criteria",

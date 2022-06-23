@@ -11,7 +11,7 @@
   <div v-if="!publication" class="q-pa-lg">
     {{ $t("loading") }}
   </div>
-  <article v-else class="q-pa-md">
+  <article v-else class="q-px-lg">
     <div class="row">
       <h2 class="col-sm-12" data-cy="publication_details_heading">
         {{ publication.name }}

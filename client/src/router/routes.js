@@ -96,7 +96,8 @@ const routes = [
       },
       {
         path: "/admin/publications",
-        component: () => import("src/pages/Admin/PublicationsPage.vue"),
+        name: "admin:publication:index",
+        component: () => import("src/pages/Admin/PublicationIndexPage.vue"),
         meta: {
           requiresRoles: ["Application Administrator"],
         },

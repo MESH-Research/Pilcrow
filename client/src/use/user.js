@@ -31,15 +31,26 @@ export function useCurrentUser() {
     return !!query.result.value?.currentUser?.id
   })
 
+  const isAppAdmin = computed(() => {
+    return !!roles.value.includes("Application Administrator")
+  })
+
   const abilities = computed(() => {
     return query.result.value?.currentUser.abilities ?? []
   })
 
   const roles = computed(() => {
-    return query.result.value?.currentUser.roles ?? []
+    return query.result.value?.currentUser.roles.map(({ name }) => name) ?? []
   })
 
-  return { currentUser, currentUserQuery: query, isLoggedIn, roles, abilities }
+  return {
+    currentUser,
+    currentUserQuery: query,
+    isLoggedIn,
+    roles,
+    abilities,
+    isAppAdmin,
+  }
 }
 
 /**

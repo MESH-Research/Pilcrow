@@ -18,6 +18,7 @@
       </div>
       <div
         v-if="getTranslation('effect.true') || getTranslation('effect.false')"
+        class="q-pa-sm"
       >
         <span v-if="model">{{ getTranslation("effect.true") }}</span>
         <span v-else>{{ getTranslation("effect.false") }} </span>

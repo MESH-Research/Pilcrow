@@ -3,14 +3,14 @@
     <nav class="q-px-lg q-pt-md q-gutter-sm">
       <q-breadcrumbs>
         <q-breadcrumbs-el
-          :label="'Publications'"
+          :label="$t('publication.entity', 2)"
           :to="{ name: 'publication:index' }"
         />
         <q-breadcrumbs-el
           :label="publicationName"
           :to="{ name: 'publication:home', params }"
         />
-        <q-breadcrumbs-el label="Setup" />
+        <q-breadcrumbs-el :label="$t(labelKey('breadcrumb_heading'))" />
 
         <q-breadcrumbs-el :label="route.meta.name" />
       </q-breadcrumbs>
@@ -72,6 +72,8 @@ const items = computed(() => [
       name: "publication:setup:users",
       params,
     },
+    problem: publication.value?.publication_admins.length === 0,
+    problemTooltip: t(labelKey("problems.no_admins")),
   },
   {
     icon: "card_membership",
@@ -81,7 +83,7 @@ const items = computed(() => [
       params,
     },
     problem: noStyleCriteria.value,
-    problemTooltip: "Setup style criteria for your publication.",
+    problemTooltip: t(labelKey("problems.no_criteria")),
   },
   {
     icon: "toc",
