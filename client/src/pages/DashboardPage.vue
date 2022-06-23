@@ -10,18 +10,13 @@
         <q-btn @click="logout"> Logout </q-btn>
       </template>
     </q-banner>
-    <h2 class="q-px-lg">My Dashboard</h2>
+    <h2 class="q-pl-lg">My Dashboard</h2>
   </div>
 </template>
 
 <script setup>
 import { useCurrentUser, useLogout } from "src/use/user"
-import { ref, onMounted } from "vue"
+
 const { currentUser } = useCurrentUser()
 const { logoutUser: logout } = useLogout()
-
-const mounted = ref(false)
-onMounted(() => {
-  mounted.value = true
-})
 </script>
