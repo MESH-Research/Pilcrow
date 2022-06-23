@@ -1,10 +1,8 @@
 <template>
   <div ref="scrollTarget" />
-  <q-card
+  <div
     square
     :class="{ active: isActive }"
-    flat
-    class="q-mb-md bg-none transparent"
     :aria-label="
       $t('submissions.comment.reply.ariaLabel', {
         username: comment.created_by.username,
@@ -43,7 +41,7 @@
         @submit="submitReply"
       />
     </q-card-section>
-  </q-card>
+  </div>
 </template>
 <script setup>
 import { computed, inject, ref } from "vue"
@@ -92,7 +90,7 @@ defineExpose({
 </script>
 
 <style lang="sass" scoped>
-.q-card.active
+div.active
   box-shadow: inset 0 0 5px 2px yellow, 0 1px 5px rgba(0, 0, 0, 0.2), 0 2px 2px rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12)
   > .q-card__section:first-child
     background-color: #edf0c6 !important
