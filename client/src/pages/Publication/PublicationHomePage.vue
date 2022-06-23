@@ -17,6 +17,7 @@
         {{ publication.name }}
         <q-btn
           v-if="isPublicationAdmin"
+          data-cy="configure_button"
           icon="settings"
           class="float-right"
           :to="{ name: 'publication:setup:basic', param: { id: id } }"

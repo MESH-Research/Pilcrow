@@ -5,8 +5,11 @@
       class="q-gutter-md"
       @vqupdate="updateInput"
     >
-      <v-q-input :v="v$.name" />
-      <v-q-toggle-button :v="v$.is_publicly_visible" />
+      <v-q-input data-cy="name_field" :v="v$.name" />
+      <v-q-toggle-button
+        data-cy="visibility_field"
+        :v="v$.is_publicly_visible"
+      />
     </v-q-wrap>
     <form-actions @reset-click="resetForm" />
   </q-form>

@@ -2,6 +2,7 @@
   <q-form @submit="save()">
     <q-select
       v-model="itemUnderEdit"
+      data-cy="content_block_select"
       filled
       :options="options"
       label="Choose Content Block"
@@ -41,6 +42,7 @@
       </q-banner>
       <q-editor
         v-model="v$.content.$model"
+        data-cy="content_field"
         :toolbar="[
           [
             {

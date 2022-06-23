@@ -104,12 +104,12 @@ const routes = [
       {
         path: "/publications",
         name: "publication:index",
-        component: () => import("src/pages/PublicationsPage.vue"),
+        component: () => import("pages/Publication/PublicationsIndexPage.vue"),
       },
       {
         name: "publication:home",
         path: "/publication/:id",
-        component: () => import("pages/Admin/PublicationDetails.vue"),
+        component: () => import("pages/Publication/PublicationHomePage.vue"),
         props: true,
       },
       {

@@ -35,8 +35,8 @@
 import CollapseMenu from "src/components/molecules/CollapseMenu.vue"
 import { useQuery } from "@vue/apollo-composable"
 import { GET_PUBLICATION } from "src/graphql/queries"
-import { computed } from "vue"
-import { useRoute } from "vue-router"
+import { computed, watchEffect } from "vue"
+import { useRoute, useRouter } from "vue-router"
 const props = defineProps({
   id: {
     type: String,
@@ -51,6 +51,7 @@ const noStyleCriteria = computed(
   () => publication.value?.style_criterias.length === 0
 )
 const route = useRoute()
+const { replace } = useRouter()
 const params = { id: props.id }
 const items = computed(() => [
   {
@@ -88,4 +89,11 @@ const items = computed(() => [
     },
   },
 ])
+watchEffect(() => {
+  if (publication.value) {
+    if (publication.value.effective_role !== "publication_admin") {
+      replace("/error403")
+    }
+  }
+})
 </script>

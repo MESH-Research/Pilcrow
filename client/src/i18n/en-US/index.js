@@ -105,6 +105,7 @@ export default {
     submissions: "Submissions",
     user_list: "All Users",
     notification_button: "View Notifications",
+    application_administration: "Application Administration",
   },
   account: {
     failures: {

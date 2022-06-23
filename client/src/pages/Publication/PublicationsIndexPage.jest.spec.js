@@ -1,4 +1,4 @@
-import PublicationsPage from "./PublicationsPage.vue"
+import PublicationsIndexPage from "./PublicationsIndexPage.vue"
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-jest"
 import { mount } from "@vue/test-utils"
 import { createMockClient } from "mock-apollo-client"
@@ -33,7 +33,7 @@ describe("publications page mount", () => {
     },
   })
 
-  const wrapper = mount(PublicationsPage, {
+  const wrapper = mount(PublicationsIndexPage, {
     global: {
       provide: {
         [ApolloClients]: { default: mockClient },

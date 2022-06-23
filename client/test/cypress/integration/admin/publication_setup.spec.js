@@ -4,15 +4,22 @@
 import "cypress-axe"
 import { a11yLogViolations } from '../../support/helpers'
 
-describe("Publication Details", () => {
+describe("Publication Setup", () => {
   beforeEach(() => {
     cy.task("resetDb")
   })
 
   it("allows access based on role", () => {
-    cy.login({ email: "applicationadministrator@ccrproject.dev" })
-    cy.visit("/publication/1")
+    cy.login({ email: "publicationadministrator@ccrproject.dev" })
+    cy.visit("/publication/1/setup/basic")
     cy.url().should("not.include", "/error403")
+  })
+
+
+  it("restricts access based on role", () => {
+    cy.login({ email: "publicationadministrator@ccrproject.dev" })
+    cy.visit("/publication/2/setup/basic")
+    cy.url().should("include", "/error403")
   })
 
   it("should assert the Publication Details page is accessible", () => {
@@ -21,6 +28,14 @@ describe("Publication Details", () => {
     cy.injectAxe()
     cy.dataCy("publication_details_heading")
     cy.checkA11y(null, null, a11yLogViolations)
+  })
+
+  it("should show and hide the configuration button", () => {
+    cy.login({ email: "publicationadministrator@ccrproject.dev" })
+    cy.visit("publication/1")
+    cy.dataCy('configure_button')
+    cy.visit("publication/2")
+    cy.dataCy('configure_button').should('not.exist')
   })
 
   it("should allow assignment of administrators by application administrators", () => {
@@ -163,4 +178,39 @@ describe("Publication Details", () => {
 
     cy.dataCy('listItem').should('have.length', 3)
   });
+
+  it("should allow editing basic settings", () => {
+    cy.login({ email: "applicationadministrator@ccrproject.dev" })
+    cy.visit("publication/1/setup/basic")
+
+    cy.dataCy('name_field').type(" Update")
+    cy.dataCy('visibility_field').find('button:last').click()
+    cy.dataCy('button_save').click()
+    cy.dataCy('button_saved').contains('Saved')
+    cy.injectAxe()
+    cy.checkA11y(
+      null,
+      null,
+      a11yLogViolations
+    )
+  })
+
+  it("should allow editing content blocks", () => {
+    cy.login({ email: "applicationadministrator@ccrproject.dev" })
+    cy.visit("publication/1/setup/content")
+
+    cy.dataCy('content_block_select').click()
+    cy.qSelectItems('content_block_select').eq(0).click()
+    cy.injectAxe()
+
+    cy.checkA11y({
+      exclude: [['[data-cy="content_field"']], //TODO: Restore this check once quasar #13275 is closed
+      },
+      null,
+      a11yLogViolations
+    )
+    cy.dataCy('content_field').type("More description.")
+    cy.dataCy('button_save').click()
+    cy.dataCy('button_saved').contains('Saved')
+  })
 })

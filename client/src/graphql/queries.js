@@ -129,6 +129,7 @@ export const GET_PUBLICATIONS = gql`
       data {
         id
         name
+        home_page_content
       }
     }
   }
