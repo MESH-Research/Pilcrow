@@ -37,6 +37,7 @@ import { useQuery } from "@vue/apollo-composable"
 import { GET_PUBLICATION } from "src/graphql/queries"
 import { computed, watchEffect } from "vue"
 import { useRoute, useRouter } from "vue-router"
+import { useI18n } from "vue-i18n"
 const props = defineProps({
   id: {
     type: String,
@@ -53,26 +54,28 @@ const noStyleCriteria = computed(
 const route = useRoute()
 const { replace } = useRouter()
 const params = { id: props.id }
+const labelKey = (page) => `publication.setup_pages.${page}`
+const { t } = useI18n()
 const items = computed(() => [
   {
-    icon: "account_circle",
-    label: "General Settings",
+    icon: "tune",
+    label: t(labelKey("basic")),
     url: {
       name: "publication:setup:basic",
       params,
     },
   },
   {
-    icon: "contact_page",
-    label: "Users",
+    icon: "people",
+    label: t(labelKey("users")),
     url: {
       name: "publication:setup:users",
       params,
     },
   },
   {
-    icon: "contact_page",
-    label: "Style Criteria",
+    icon: "card_membership",
+    label: t(labelKey("criteria")),
     url: {
       name: "publication:setup:criteria",
       params,
@@ -81,8 +84,8 @@ const items = computed(() => [
     problemTooltip: "Setup style criteria for your publication.",
   },
   {
-    icon: "contact_page",
-    label: "Page Content",
+    icon: "toc",
+    label: t(labelKey("content")),
     url: {
       name: "publication:setup:content",
       params,
