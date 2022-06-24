@@ -1,7 +1,7 @@
 <template>
   <div>
     <h2 class="q-px-lg">Publications</h2>
-    <section class="q-pa-lg">
+    <section class="q-px-lg">
       <div v-if="!loading" class="column q-gutter-md items-center">
         <q-list
           v-if="publications.length !== 0"

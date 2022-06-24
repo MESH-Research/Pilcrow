@@ -18,7 +18,7 @@
     <h2 class="q-px-lg" data-cy="publication_details_heading">
       {{ publicationName }}
     </h2>
-    <div class="row justify-center items-start content-start q-px-lg q-pb-lg">
+    <div class="row justify-center items-start content-start q-px-lg">
       <q-card class="col-sm-3 col-xs-12 no-shadow no-border-radius">
         <q-card-section class="col-sm-12 col-xs-12 q-mt-md q-pa-none">
           <collapse-menu :items="items" />
