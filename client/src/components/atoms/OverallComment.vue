@@ -75,7 +75,7 @@
           comment-type="OverallCommentReply"
           data-cy="overallCommentReplyEditor"
           :parent="comment"
-          :reply-to="comment"
+          :reply-to="commentReply ?? comment"
           :is-quote-replying="isQuoteReplying"
           @cancel="cancelReply"
           @submit="submitReply"
