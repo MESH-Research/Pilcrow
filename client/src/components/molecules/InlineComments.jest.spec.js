@@ -275,11 +275,4 @@ describe("InlineComments", () => {
     await items.at(2).find('[data-cy="collapseRepliesButton"]').trigger("click")
     expect(findReplies(items.at(2))).toHaveLength(10)
   })
-
-  test("scroll to top button triggers scrolling functionality when clicked upon", async () => {
-    const { wrapper } = wrapperFactory()
-    const button = wrapper.findComponent({ ref: "scroll_to_top_button" })
-    await button.trigger("click")
-    expect(wrapper.emitted("scrollInlineCommentsTop")).toHaveLength(1)
-  })
 })
