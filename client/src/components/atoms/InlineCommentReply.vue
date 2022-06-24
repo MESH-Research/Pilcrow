@@ -43,9 +43,6 @@ const props = defineProps({
   },
 })
 defineEmits(["quoteReplyTo", "replyTo"])
-// function initiateReply() {
-//   isReplying.value = true
-// }
 const activeComment = inject("activeComment")
 const isActive = computed(() => {
   return (
