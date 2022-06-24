@@ -53,7 +53,6 @@ const inline_comments = computed(() => {
 function scrollToTop() {
   const target = getScrollTarget(inline_comments_section.value)
   setVerticalScrollPosition(target, 0, 250)
-  emit("scrollInlineCommentsTop")
 }
 
 function closeEditor() {
