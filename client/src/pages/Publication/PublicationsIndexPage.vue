@@ -1,19 +1,18 @@
 <template>
   <div>
     <h2 class="q-px-lg">Publications</h2>
-    <section class="q-pb-lg">
-      <div v-if="!loading">
+    <section class="q-pa-lg">
+      <div v-if="!loading" class="column q-gutter-md items-center">
         <q-list
           v-if="publications.length !== 0"
           class="full-width"
           separator
-          bordered
           data-cy="publications_list"
         >
           <q-item
             v-for="publication in publications"
             :key="publication.id"
-            class="q-px-lg q-py-md"
+            class="q-py-md"
             :to="destRoute(publication.id)"
           >
             <q-item-section>
@@ -29,7 +28,7 @@
         <q-pagination
           v-if="paginatorInfo"
           v-bind="binds"
-          class="column q-gutter-md items-center q-mt-md"
+          class="col"
           v-on="listeners"
         />
       </div>
