@@ -129,8 +129,6 @@ const defaultContent = computed(() => {
   if (!props.isQuoteReplying) {
     return ""
   }
-  // if (!props.parent?.id) return ""
-  // if (props.parent.id === props.replyTo?.id) return ""
   //TODO: Make this more robust to handle multi paragraphs, etc
   return `<blockquote>${props.replyTo.content}</blockquote><p></p>`
 })
