@@ -15,7 +15,11 @@
         @cancel="closeEditor"
       />
       <div class="row justify-center q-pa-md q-pb-xl">
-        <q-btn color="dark" icon="arrow_upward" @click="scrollToTop"
+        <q-btn
+          ref="scroll_to_top_button"
+          color="dark"
+          icon="arrow_upward"
+          @click="scrollToTop"
           >Scroll to Top</q-btn
         >
       </div>
@@ -28,6 +32,9 @@ import { ref, watch, inject, computed, nextTick } from "vue"
 import NewInlineComment from "../NewInlineCommentComponent.vue"
 import InlineComment from "src/components/atoms/InlineComment.vue"
 import { scroll } from "quasar"
+
+const emit = defineEmits(["scrollInlineCommentsTop"])
+
 const { getScrollTarget, setVerticalScrollPosition } = scroll
 
 const submission = inject("submission")
@@ -49,6 +56,7 @@ const inline_comments = computed(() => {
 function scrollToTop() {
   const target = getScrollTarget(inline_comments_section.value)
   setVerticalScrollPosition(target, 0, 250)
+  emit("scrollInlineCommentsTop")
 }
 
 function closeEditor() {
