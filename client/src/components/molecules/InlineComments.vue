@@ -20,8 +20,9 @@
           color="dark"
           icon="arrow_upward"
           @click="scrollToTop"
-          >Scroll to Top</q-btn
         >
+          Scroll to Top
+        </q-btn>
       </div>
     </section>
   </q-scroll-area>
