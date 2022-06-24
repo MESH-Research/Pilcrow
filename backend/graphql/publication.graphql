@@ -45,7 +45,7 @@ extend type Mutation {
 
     updatePublication(
         publication: UpdatePublicationInput! @spread
-    ): Publication @update @can(ability: "update", query: true)
+    ): Publication @update @can(ability: "update", injectArgs: true)
 }
 
 input CreatePublicationInput {
