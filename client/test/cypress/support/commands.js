@@ -21,6 +21,9 @@ Cypress.Commands.add(
 Cypress.Commands.add("qSelectItems", (value) => {
   return cy.get(`[data-cy=${value}]`)
     .then((input) => {
+      if (!input.is('input')) {
+        input = input.find('input')
+      }
       return cy.wrap(input).invoke('attr', 'id').then(id => {
         return cy.root().closest('html').find(`#${id}_lb`).find('.q-item')
       })

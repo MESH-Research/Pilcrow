@@ -16,7 +16,7 @@
       >
         <avatar-block :user="currentUser" />
       </div>
-      <q-scroll-area class="sidebar-nav">
+      <div class="sidebar-nav column justify-between">
         <q-list>
           <q-item to="/dashboard">
             <q-item-section avatar>
@@ -26,16 +26,7 @@
               {{ $t("header.dashboard") }}
             </q-item-section>
           </q-item>
-
-          <q-item to="/admin/users">
-            <q-item-section avatar>
-              <q-icon name="groups" />
-            </q-item-section>
-            <q-item-section>
-              {{ $t("header.user_list") }}
-            </q-item-section>
-          </q-item>
-          <q-item to="/admin/publications">
+          <q-item to="/publications">
             <q-item-section avatar>
               <q-icon name="collections_bookmark" />
             </q-item-section>
@@ -52,7 +43,33 @@
             </q-item-section>
           </q-item>
         </q-list>
-      </q-scroll-area>
+        <q-list v-if="isAppAdmin">
+          <q-expansion-item
+            expand-separator
+            icon="settings"
+            :label="$t('header.application_administration')"
+          >
+            <q-list class="submenu">
+              <q-item to="/admin/users">
+                <q-item-section avatar>
+                  <q-icon name="groups" />
+                </q-item-section>
+                <q-item-section>
+                  {{ $t("header.user_list") }}
+                </q-item-section>
+              </q-item>
+              <q-item :to="{ name: 'admin:publication:index' }">
+                <q-item-section avatar>
+                  <q-icon name="collections_bookmark" />
+                </q-item-section>
+                <q-item-section>
+                  {{ $t("header.publications") }}
+                </q-item-section>
+              </q-item>
+            </q-list>
+          </q-expansion-item>
+        </q-list>
+      </div>
     </q-drawer>
 
     <q-page-container>
@@ -73,7 +90,7 @@ import { useCurrentUser } from "src/use/user"
 import { ref } from "vue"
 
 const leftDrawerOpen = ref(false)
-const { currentUser } = useCurrentUser()
+const { currentUser, isAppAdmin } = useCurrentUser()
 </script>
 
 <style lang="sass">
@@ -84,4 +101,6 @@ const { currentUser } = useCurrentUser()
   .sidebar-nav
     height: calc(100% - #{$avatar-height})
     border-right: 1px solid #ddd
+  .submenu .q-item
+    padding-left: 40px
 </style>

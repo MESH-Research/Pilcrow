@@ -1,5 +1,5 @@
 <template>
-  <q-item class="q-pa-md">
+  <q-item class="q-py-sm q-px-none">
     <q-item-section top avatar style="min-width: auto">
       <q-icon size="md" :name="criteria.icon" />
     </q-item-section>
@@ -8,8 +8,9 @@
       <!-- eslint-disable-next-line vue/no-v-html vue/no-v-text-v-html-on-component -->
       <q-item-label caption v-html="criteria.description" />
     </q-item-section>
-    <q-item-section v-if="editId === null" side>
+    <q-item-section side>
       <q-btn
+        v-if="editId === null"
         data-cy="editBtn"
         icon="edit"
         dense
@@ -17,6 +18,7 @@
         aria-label="$t('publication.style_critiera.edit_button')"
         @click="$emit('edit')"
       />
+      <div v-else style="width: 2.2em; height: 2.2em" />
     </q-item-section>
   </q-item>
 </template>

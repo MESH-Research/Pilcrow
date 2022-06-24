@@ -7,7 +7,7 @@ import { GET_PUBLICATIONS } from "src/graphql/queries"
 import flushPromises from "flush-promises"
 import { isRef } from "vue"
 
-describe("useCurrentUser composable", () => {
+describe("usePagination composable", () => {
   const mockClient = createMockClient({
     defaultOptions: { watchQuery: { fetchPolicy: "network-only" } },
   })
@@ -28,40 +28,11 @@ describe("useCurrentUser composable", () => {
     jest.resetAllMocks()
   })
 
-  test("current page functionality", async () => {
-    queryMock.mockResolvedValue({
-      data: {
-        publications: {
-          paginatorInfo: {
-            __typename: "PaginatorInfo",
-            count: 0,
-            currentPage: 1,
-            lastPage: 1,
-            perPage: 10,
-          },
-          data: [],
-        },
-      },
-    })
-
-    const result = await mountComposable()
-    expect(queryMock).toHaveBeenCalledWith(expect.objectContaining({ page: 1 }))
-    expect(isRef(result.currentPage)).toBe(true)
-    expect(result.currentPage.value).toBe(1)
-    queryMock.mockClear()
-
-    result.updatePage(2)
-    await flushPromises()
-
-    expect(queryMock).toHaveBeenCalledWith(expect.objectContaining({ page: 2 }))
-    expect(result.currentPage.value).toBe(2)
-  })
-
   test("data functionality", async () => {
     const returnData = [
       ...Array(5)
         .fill(0)
-        .map((_, v) => ({ id: v, name: `Pub ${v}` })),
+        .map((_, v) => ({ id: v, name: `Pub ${v}`, home_page_content: "" })),
     ]
 
     const mockResponseData = (data = []) => ({
@@ -135,8 +106,6 @@ describe("useCurrentUser composable", () => {
 
     const result = await mountComposable()
 
-    expect(isRef(result.binds)).toBe(true)
-    const binds = result.binds.value
-    expect(binds).toEqual({ modelValue: 1, min: 1, max: 4 })
+    expect(result.binds).toEqual({ modelValue: 1, min: 1, max: 4 })
   })
 })

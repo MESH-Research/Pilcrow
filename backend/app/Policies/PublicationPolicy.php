@@ -31,16 +31,15 @@ class PublicationPolicy
      * Determine whether the user can update a publication.
      *
      * @param \App\Models\User $user
-     * @param \App\Models\Publication $publication
+     * @param \App\Models\Publication $args
      * @return bool
      */
-    public function update(User $user, Publication $publication)
+    public function update(User $user, array $args)
     {
         if ($user->hasRole(Role::APPLICATION_ADMINISTRATOR)) {
             return true;
         }
-
-        if ($user->hasPublicationRole(Role::PUBLICATION_ADMINISTRATOR_ROLE_ID, $publication->id)) {
+        if ($user->hasPublicationRole(Role::PUBLICATION_ADMINISTRATOR_ROLE_ID, $args['id'])) {
             return true;
         }
 

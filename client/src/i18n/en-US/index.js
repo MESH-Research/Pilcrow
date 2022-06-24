@@ -105,6 +105,7 @@ export default {
     submissions: "Submissions",
     user_list: "All Users",
     notification_button: "View Notifications",
+    application_administration: "Application Administration",
   },
   account: {
     failures: {
@@ -287,8 +288,62 @@ export default {
     },
   },
   publication: {
+    entity: "Publication | Publications",
+    setup_pages: {
+      breadcrumb_heading: "Setup",
+      basic: "Basic Settings",
+      users: "Users",
+      criteria: "Style Criteria",
+      content: "Page Content",
+      problems: {
+        no_admins: "This publication has no users assigned to administer it.",
+        no_criteria: "Setup style criteria for your publication.",
+      },
+    },
+    basic: {
+      fields: {
+        name: {
+          label: "Publication Name",
+          hint: "This is the name your publication will be known as across the site.",
+          errors: {
+            maxLength: "@:generic_validations.maxLength",
+            required: "A name is required to create a publication.",
+            NOT_UNIQUE: "There is already a publication with this name.",
+          },
+        },
+        is_publicly_visible: {
+          options: {
+            true: "Publicly Visible",
+            false: "Hidden",
+          },
+          effect: {
+            true: "Anyone can find this publication.",
+            false: "This publication will be hidden from search.",
+          },
+          hint: "Set to publicly visible to allow your publication to be discoverable.",
+        },
+      },
+    },
+    content: {
+      fields: {
+        home_page_content: {
+          label: "Home Page",
+          description:
+            "Displayed to users who view the home page of your publication.",
+          hint: "This is usually a good place to describe your publication's focus, goals, team, etc.",
+        },
+        new_submission_content: {
+          label: "New Submission",
+          description:
+            "Displayed to users when they start the create submission process.",
+          hint: "This is a good place to describe the submission and review process of your publication.",
+        },
+      },
+    },
     editors: {
       heading: "Editors",
+      description:
+        "Editors can perform any action on a submission, including assigning review coordinators.  They do not have access to the publication setup pages and cannot change publication settings.",
       none: "An editor is not assigned to this publication.",
       unassign: {
         error: "An error occurred while attempting to unassign an editor.",
@@ -307,7 +362,9 @@ export default {
       },
     },
     publication_admins: {
-      heading: "Administrators",
+      heading: "Admins",
+      description:
+        "Admins are allowed to access the setup pages for the publication.  They can change any setting, perform any action on a submission, and add/remove users.",
       none: "An administrator is not assigned to this publication.",
       unassign: {
         error:
@@ -332,9 +389,6 @@ export default {
     create: {
       success: "Publication successfully created.",
       failure: "An error occurred while attempting to create the publication.",
-      required: "A name is required to create a publication.",
-      maxLength: "The maximum length has been exceeded for the name.",
-      duplicate_name: "Publication name already exists.",
     },
     style_criteria: {
       heading: "Style Criteria",
