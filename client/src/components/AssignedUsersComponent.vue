@@ -1,7 +1,9 @@
 <template>
-  <section class="column q-gutter-md">
-    <h3 class="q-mb-none q-mx-none">{{ tp$("heading") }}</h3>
-    <p class="q-mb-none q-mx-none">{{ tp$("description") }}</p>
+  <section class="column q-gutter-y-sm">
+    <h3 class="q-my-none">{{ tp$("heading") }}</h3>
+    <p v-if="te(tPrefix('description'))" class="q-mb-none q-mx-none">
+      {{ tp$("description") }}
+    </p>
     <div v-if="users.length">
       <user-list
         ref="userList"
@@ -95,7 +97,7 @@ const props = defineProps({
 
 const user = ref(null)
 const containerType = computed(() => props.container.__typename.toLowerCase())
-const { t } = useI18n()
+const { t, te } = useI18n()
 const tPrefix = (key) => `${containerType.value}.${props.relationship}.${key}`
 const tp$ = (key, ...args) => t(tPrefix(key), ...args)
 
