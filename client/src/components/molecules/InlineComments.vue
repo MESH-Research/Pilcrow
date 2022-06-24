@@ -32,9 +32,6 @@ import { ref, watch, inject, computed, nextTick } from "vue"
 import NewInlineComment from "../NewInlineCommentComponent.vue"
 import InlineComment from "src/components/atoms/InlineComment.vue"
 import { scroll } from "quasar"
-
-const emit = defineEmits(["scrollInlineCommentsTop"])
-
 const { getScrollTarget, setVerticalScrollPosition } = scroll
 
 const submission = inject("submission")
