@@ -6,7 +6,6 @@ namespace Database\Seeders;
 use App\Models\Publication;
 use App\Models\StyleCriteria;
 use App\Models\User;
-use Faker\Factory as Faker;
 use Illuminate\Database\Seeder;
 
 class PublicationSeeder extends Seeder
@@ -18,21 +17,18 @@ class PublicationSeeder extends Seeder
      */
     public function run()
     {
-        $faker = Faker::create();
         $this->callOnce(UserSeeder::class);
 
         Publication::factory()
-        ->hasAttached(User::firstWhere('username', 'publicationAdministrator'), [], 'publicationAdmins')
-        ->hasAttached(User::firstWhere('username', 'publicationEditor'), [], 'editors')
-        ->create([
-            'id' => 1,
-            'name' => 'CCR Test Publication 1',
-            'home_page_content' => $faker->paragraphs(2, true),
-            'new_submission_content' => $faker->paragraphs(2, true),
-        ]);
+            ->hasAttached(User::firstWhere('username', 'publicationAdministrator'), [], 'publicationAdmins')
+            ->hasAttached(User::firstWhere('username', 'publicationEditor'), [], 'editors')
+            ->create([
+                'id' => 1,
+                'name' => 'CCR Test Publication 1',
+            ]);
 
         Publication::factory()
-            ->count(5)
+            ->count(50)
             ->has(
                 StyleCriteria::factory()
                     ->count(4)

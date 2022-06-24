@@ -287,6 +287,46 @@ export const MARK_ALL_NOTIFICATIONS_READ = gql`
   }
 `
 
+export const UPDATE_PUBLICATION_BASICS = gql`
+  mutation UpdatePublicationBasics(
+    $id: ID!
+    $name: String
+    $is_publicly_visible: Boolean
+  ) {
+    updatePublication(
+      publication: {
+        id: $id
+        name: $name
+        is_publicly_visible: $is_publicly_visible
+      }
+    ) {
+      id
+      name
+      is_publicly_visible
+    }
+  }
+`
+
+export const UPDATE_PUBLICATION_CONTENT = gql`
+  mutation UpdatePublicationContent(
+    $id: ID!
+    $home_page_content: String
+    $new_submission_content: String
+  ) {
+    updatePublication(
+      publication: {
+        id: $id
+        home_page_content: $home_page_content
+        new_submission_content: $new_submission_content
+      }
+    ) {
+      id
+      home_page_content
+      new_submission_content
+    }
+  }
+`
+
 export const UPDATE_PUBLICATION_STYLE_CRITERIA = gql`
   mutation UpdatePublicationStyleCriteria(
     $publication_id: ID!

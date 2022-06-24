@@ -1,4 +1,4 @@
-import { useQuery, useMutation } from "@vue/apollo-composable"
+import { useQuery, useMutation, useApolloClient } from "@vue/apollo-composable"
 import { computed, reactive } from "vue"
 import { CURRENT_USER } from "src/graphql/queries"
 import { LOGIN, LOGOUT } from "src/graphql/mutations"
@@ -31,15 +31,26 @@ export function useCurrentUser() {
     return !!query.result.value?.currentUser?.id
   })
 
+  const isAppAdmin = computed(() => {
+    return !!roles.value.includes("Application Administrator")
+  })
+
   const abilities = computed(() => {
     return query.result.value?.currentUser.abilities ?? []
   })
 
   const roles = computed(() => {
-    return query.result.value?.currentUser.roles ?? []
+    return query.result.value?.currentUser.roles.map(({ name }) => name) ?? []
   })
 
-  return { currentUser, currentUserQuery: query, isLoggedIn, roles, abilities }
+  return {
+    currentUser,
+    currentUserQuery: query,
+    isLoggedIn,
+    roles,
+    abilities,
+    isAppAdmin,
+  }
 }
 
 /**
@@ -130,6 +141,7 @@ export const useLogin = () => {
  * @returns
  */
 export function useLogout() {
+  const { resolveClient } = useApolloClient()
   const { push } = useRouter()
   const {
     mutate: logoutMutation,
@@ -150,6 +162,7 @@ export function useLogout() {
   async function logoutUser() {
     try {
       await logoutMutation()
+      await resolveClient().resetStore()
       push("/")
       return true
     } catch (e) {

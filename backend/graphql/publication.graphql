@@ -6,7 +6,7 @@ extend type Query {
     publications(
         is_publicly_visible: Boolean @scope(name: "IsPubliclyVisible")
     ): [Publication!]!
-        @paginate(defaultCount: 100)
+        @paginate(defaultCount: 10)
         @can(ability: "view", query: true)
 }
 
@@ -45,7 +45,7 @@ extend type Mutation {
 
     updatePublication(
         publication: UpdatePublicationInput! @spread
-    ): Publication @update @can(ability: "update", query: true)
+    ): Publication @update @can(ability: "update", injectArgs: true)
 }
 
 input CreatePublicationInput {
