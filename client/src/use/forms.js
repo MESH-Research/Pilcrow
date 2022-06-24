@@ -34,16 +34,12 @@ export function useDirtyGuard(dirtyRef) {
     return new Promise((resolve) => {
       if (!dirtyRef.value) {
         resolve(true)
-        console.log(
-          "🚀 ~ file: forms.js ~ line 37 ~ returnnewPromise ~ true",
-          true
-        )
+
         return
       }
       dirtyDialog()
         .onOk(function () {
           resolve(true)
-          console.log("🚀 ~ file: forms.js ~ line 42 ~ true", true)
         })
         .onCancel(function () {
           resolve(false)
@@ -188,11 +184,6 @@ export function useExternalResultFromGraphQL(form, error) {
   watch(
     () => unref(form),
     () => {
-      console.log(
-        "🚀 ~ file: forms.js ~ line 189 ~ useExternalResultFromGraphQL ~ true",
-        true
-      )
-
       clearErrors()
     }
   )
