@@ -25,6 +25,8 @@ class PublicationFactory extends Factory
         return [
             'name' => $this->faker->unique()->company(),
             'is_publicly_visible' => true,
+            'home_page_content' => $this->faker->content(1),
+            'new_submission_content' => $this->faker->paragraphs(2, true),
         ];
     }
 

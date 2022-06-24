@@ -30,10 +30,7 @@ const updateUserMutation = useMutation(UPDATE_USER)
 const { mutate, error } = updateUserMutation
 const { validationErrors, hasValidationErrors } = useGraphQLValidation(error)
 
-const formState = useFormState(
-  currentUserQuery.loading,
-  updateUserMutation.loading
-)
+const formState = useFormState(currentUserQuery, updateUserMutation)
 provide("formState", formState)
 
 useDirtyGuard(formState.dirty)

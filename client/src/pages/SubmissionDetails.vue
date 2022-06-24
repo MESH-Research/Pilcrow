@@ -27,24 +27,26 @@
         />
       </section>
     </div>
-    <assigned-users
-      data-cy="submitters_list"
-      relationship="submitters"
-      :container="submission"
-    />
-    <assigned-users
-      relationship="review_coordinators"
-      data-cy="coordinators_list"
-      :container="submission"
-      mutable
-      :max-users="1"
-    />
-    <assigned-users
-      data-cy="reviewers_list"
-      relationship="reviewers"
-      :container="submission"
-      mutable
-    />
+    <div class="q-pa-lg column q-gutter-lg">
+      <assigned-users
+        data-cy="submitters_list"
+        relationship="submitters"
+        :container="submission"
+      />
+      <assigned-users
+        relationship="review_coordinators"
+        data-cy="coordinators_list"
+        :container="submission"
+        mutable
+        :max-users="1"
+      />
+      <assigned-users
+        data-cy="reviewers_list"
+        relationship="reviewers"
+        :container="submission"
+        mutable
+      />
+    </div>
   </article>
 </template>
 
