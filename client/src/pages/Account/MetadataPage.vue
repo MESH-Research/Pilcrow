@@ -18,7 +18,7 @@ import { useFormState } from "src/use/forms"
 const metadataQuery = useQuery(CURRENT_USER_METADATA)
 const metadataMutation = useMutation(UPDATE_PROFILE_METADATA)
 
-const formState = useFormState(metadataQuery.loading, metadataMutation.loading)
+const formState = useFormState(metadataQuery, metadataMutation)
 provide("formState", formState)
 
 const profileMetadata = computed(() => {

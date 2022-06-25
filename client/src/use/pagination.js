@@ -1,42 +1,43 @@
 //TODO: This composable needs unit tests
-import { unref, ref, toRef, toRefs, reactive, computed, readonly } from "vue"
+import { unref, reactive, computed, watchEffect } from "vue"
 import { defaults } from "lodash"
 import { useQuery } from "@vue/apollo-composable"
 
-export function usePagination(query, options) {
+export function usePagination(doc, options) {
   const opts = defaults(unref(options) || {}, {
     variables: {},
   })
 
   const vars = reactive(Object.assign({ page: 1 }, opts.variables))
 
-  const itemData = ref([])
-  const paginatorInfo = reactive({
-    count: 0,
-    currentPage: 1,
-    lastPage: 1,
-    perPage: 10,
+  const query = useQuery(doc, vars)
+
+  const itemData = computed(() => {
+    if (query.loading.value || !query.result.value) return []
+    return extractElement(query.result.value, "data")
   })
 
-  const queryReturn = useQuery(query, vars)
-
-  queryReturn.onResult((result) => {
-    if (result.loading) {
-      return
-    }
-    itemData.value = extractElement(result.data, "data")
-    Object.assign(paginatorInfo, extractElement(result.data, "paginatorInfo"))
+  const paginatorInfo = computed(() => {
+    return !query.loading.value && query.result.value
+      ? extractElement(query.result.value, "paginatorInfo")
+      : null
   })
 
   function updatePage(newValue) {
     vars.page = newValue
   }
-
-  const binds = computed(() => ({
+  const binds = reactive({
     modelValue: vars.page,
     min: 1,
-    max: paginatorInfo.lastPage,
-  }))
+    max: 1,
+  })
+
+  watchEffect(() => {
+    if (paginatorInfo.value) {
+      binds.max = paginatorInfo.value.lastPage
+      binds.modelValue = paginatorInfo.value.currentPage
+    }
+  })
 
   const listeners = {
     "update:modelValue": updatePage,
@@ -44,12 +45,12 @@ export function usePagination(query, options) {
 
   return {
     data: itemData,
-    currentPage: readonly(toRef(vars, "page")),
     updatePage,
-    paginatorInfo: toRefs(paginatorInfo),
+    paginatorInfo,
     binds,
     listeners,
-    ...queryReturn,
+    query: query,
+    vars,
   }
 }
 

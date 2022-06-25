@@ -17,6 +17,7 @@ jest.mock("quasar", () => ({
 jest.mock("vue-i18n", () => ({
   useI18n: () => ({
     t: (t) => t,
+    te: () => true,
   }),
 }))
 

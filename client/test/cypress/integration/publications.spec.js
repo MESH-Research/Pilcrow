@@ -5,17 +5,6 @@ import "cypress-axe"
 import { a11yLogViolations } from '../support/helpers'
 
 describe("Publications", () => {
-  it("creates new publications and checks the publications page", () => {
-    cy.task("resetDb")
-    cy.login({ email: "applicationadministrator@ccrproject.dev" })
-    cy.visit("admin/publications")
-    cy.dataCy("new_publication_input").type("Publication from Cypress{enter}")
-    cy.dataCy("publications_list").contains("Publication from Cypress")
-    cy.visit("/publications")
-    cy.injectAxe()
-    cy.dataCy("publications_list").contains("Publication from Cypress")
-    cy.checkA11y(null, null, a11yLogViolations)
-  })
 
   it("excludes the publications from the list when they are not publicly visible", () => {
     // TODO: test needs to be rewritten when the functionality to check the visibility of a publication is implemented

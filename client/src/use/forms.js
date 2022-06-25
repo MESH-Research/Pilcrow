@@ -6,6 +6,8 @@ import {
   ref,
   getCurrentInstance,
   inject,
+  watch,
+  unref,
 } from "vue"
 import { onBeforeRouteLeave } from "vue-router"
 import { useQuasar } from "quasar"
@@ -32,6 +34,8 @@ export function useDirtyGuard(dirtyRef) {
     return new Promise((resolve) => {
       if (!dirtyRef.value) {
         resolve(true)
+
+        return
       }
       dirtyDialog()
         .onOk(function () {
@@ -51,15 +55,17 @@ export function useDirtyGuard(dirtyRef) {
   })
 }
 
-export function useFormState(queryLoadingRef, mutationLoadingRef) {
+export function useFormState(query, mutation) {
   const dirty = ref(false)
   const saved = ref(false)
   const errorMessage = ref("")
+  const queryLoadingRef = query?.loading ?? null
+  const mutationLoadingRef = mutation.loading
   const state = computed(() => {
     if (mutationLoadingRef.value) {
       return "saving"
     }
-    if (queryLoadingRef.value) {
+    if (queryLoadingRef?.value) {
       return "loading"
     }
     if (errorMessage.value) {
@@ -90,6 +96,7 @@ export function useFormState(queryLoadingRef, mutationLoadingRef) {
     queryLoading: queryLoadingRef,
     mutationLoading: mutationLoadingRef,
     errorMessage,
+    mutationError: mutation.error,
     reset,
     setError,
   }
@@ -161,4 +168,25 @@ export function useGraphQLValidation(errorRef) {
   })
 
   return { validationErrors, hasValidationErrors }
+}
+
+export function useExternalResultFromGraphQL(form, error) {
+  const { validationErrors } = useGraphQLValidation(error)
+
+  const $externalResults = ref({})
+
+  watch(validationErrors, (newValue) => {
+    $externalResults.value = newValue
+  })
+
+  const clearErrors = () => ($externalResults.value = {})
+
+  watch(
+    () => unref(form),
+    () => {
+      clearErrors()
+    }
+  )
+
+  return { $externalResults, clearErrors }
 }

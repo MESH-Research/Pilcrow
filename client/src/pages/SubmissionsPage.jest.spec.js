@@ -1,6 +1,6 @@
 import { mount } from "@vue/test-utils"
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-jest"
-import SubmissionsPage from "./SubmissionPage.vue"
+import SubmissionsPage from "./SubmissionsPage.vue"
 import { ApolloClients } from "@vue/apollo-composable"
 import { createMockClient } from "mock-apollo-client"
 import { GET_PUBLICATIONS, GET_SUBMISSIONS } from "src/graphql/queries"
@@ -53,7 +53,7 @@ describe("submissions page mount", () => {
             lastPage: 1,
             perPage: 10,
           },
-          data: [{ id: 1, name: "Jest Publication" }],
+          data: [{ id: 1, name: "Jest Publication", home_page_content: "" }],
         },
       },
     })

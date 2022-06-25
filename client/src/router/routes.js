@@ -37,6 +37,49 @@ const routes = [
         ],
       },
       {
+        path: "publication/:id/setup/",
+        component: () => import("src/layouts/Publication/SetupLayout.vue"),
+        props: true,
+        children: [
+          {
+            name: "publication:setup:basic",
+            path: "basic",
+            meta: {
+              name: "Basic",
+            },
+            component: () =>
+              import("src/pages/Publication/Setup/BasicPage.vue"),
+          },
+          {
+            name: "publication:setup:users",
+            path: "users",
+            meta: {
+              name: "Users",
+            },
+            component: () =>
+              import("src/pages/Publication/Setup/UsersPage.vue"),
+          },
+          {
+            name: "publication:setup:content",
+            path: "content",
+            meta: {
+              name: "Page Content",
+            },
+            component: () =>
+              import("src/pages/Publication/Setup/ContentPage.vue"),
+          },
+          {
+            name: "publication:setup:criteria",
+            meta: {
+              name: "Style Criteria",
+            },
+            path: "criteria",
+            component: () =>
+              import("src/pages/Publication/Setup/CriteriaPage.vue"),
+          },
+        ],
+      },
+      {
         path: "feed/",
         component: () => import("src/pages/FeedPage.vue"),
       },
@@ -53,31 +96,26 @@ const routes = [
       },
       {
         path: "/admin/publications",
-        component: () => import("src/pages/Admin/PublicationsPage.vue"),
+        name: "admin:publication:index",
+        component: () => import("src/pages/Admin/PublicationIndexPage.vue"),
         meta: {
           requiresRoles: ["Application Administrator"],
         },
       },
       {
         path: "/publications",
-        component: () => import("src/pages/PublicationsPage.vue"),
+        name: "publication:index",
+        component: () => import("pages/Publication/PublicationsIndexPage.vue"),
       },
       {
-        name: "publication_details",
+        name: "publication:home",
         path: "/publication/:id",
-        component: () => import("pages/Admin/PublicationDetails.vue"),
-        meta: {
-          requiresRoles: [
-            "Application Administrator",
-            "Publication Administrator",
-            "Editor",
-          ],
-        },
+        component: () => import("pages/Publication/PublicationHomePage.vue"),
         props: true,
       },
       {
         path: "/submissions",
-        component: () => import("src/pages/SubmissionPage.vue"),
+        component: () => import("src/pages/SubmissionsPage.vue"),
       },
       {
         name: "submission_details",

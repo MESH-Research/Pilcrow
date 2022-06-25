@@ -116,7 +116,9 @@ describe("useFormState composable", () => {
   test("form states", () => {
     const queryLoading = ref(false),
       mutationLoading = ref(false)
-    const { result } = mount(() => useFormState(queryLoading, mutationLoading))
+    const { result } = mount(() =>
+      useFormState({ loading: queryLoading }, { loading: mutationLoading })
+    )
     const { state, saved, dirty, errorMessage } = result
 
     expect(state.value).toBe("idle")

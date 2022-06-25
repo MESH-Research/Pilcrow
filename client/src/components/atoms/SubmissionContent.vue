@@ -56,12 +56,13 @@
     ref="contentRef"
     data-cy="content"
     class="col-sm-9 submission-content"
+    :data-visibility="props.highlightVisibility"
   >
     <bubble-menu
       v-if="editor"
       :editor="editor"
       :tippy-options="{ duration: 100 }"
-      :should-show="shouldShow"
+      :should-show="bubbleMenuVisibility"
     >
       <q-btn color="white" text-color="primary" @click="addComment">
         <q-icon name="add_comment" />
@@ -81,6 +82,13 @@ import SampleSubmissionContentGrouped from "./SampleSubmissionContentGrouped.vue
 import SampleSubmissionContentCriteria from "./SampleSubmissionContentCriteria.vue"
 import SampleSubmissionContentAvatars from "./SampleSubmissionContentAvatars.vue"
 import AnnotationExtension from "src/tiptap/annotation-extension"
+
+const props = defineProps({
+  highlightVisibility: {
+    type: Boolean,
+    default: true,
+  },
+})
 
 const submission = inject("submission")
 const activeComment = inject("activeComment")
@@ -126,13 +134,15 @@ const onAnnotationClick = (context, { target }) => {
 
 const inlineComments = computed(() => submission.value?.inline_comments ?? [])
 const annotations = computed(() =>
-  inlineComments.value.map(({ from, to, id }) => ({
-    from,
-    to,
-    context: { id },
-    active: id === activeComment.value?.id,
-    click: onAnnotationClick,
-  }))
+  props.highlightVisibility
+    ? inlineComments.value.map(({ from, to, id }) => ({
+        from,
+        to,
+        context: { id },
+        active: id === activeComment.value?.id,
+        click: onAnnotationClick,
+      }))
+    : []
 )
 
 const editor = new Editor({
@@ -145,7 +155,7 @@ const editor = new Editor({
   ],
 })
 
-function shouldShow({ state }) {
+function bubbleMenuVisibility({ state }) {
   return !state.selection.empty
 }
 

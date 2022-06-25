@@ -12,18 +12,19 @@ describe("Admin Publications", () => {
     cy.injectAxe()
   })
 
-  it("creates new publications and updates the publications list", () => {
+  it("creates new publications and navigates to setup page", () => {
+
+    cy.dataCy("create_pub_button").click()
+    cy.checkA11y(null, null, a11yLogViolations)
     cy.dataCy("new_publication_input").type("Publication from Cypress{enter}")
-    cy.dataCy("publications_list").contains("Publication from Cypress")
     cy.dataCy("create_publication_notify")
       .should("be.visible")
       .should("have.class", "bg-positive")
-    cy.dataCy("new_publication_input").type("Draft Publication from Cypress")
-    cy.get(".q-transition--field-message-leave-active").should("not.exist")
-    cy.checkA11y(null, null, a11yLogViolations)
+    cy.url().should('match', /publication\/[0-9]+\/setup\/basic$/)
   })
 
   it("prevents publication creation when the name is empty", () => {
+    cy.dataCy("create_pub_button").click()
     cy.dataCy("new_publication_input").type("{enter}")
     cy.dataCy("publications_list")
     cy.dataCy("name_field_error").should("be.visible")
@@ -32,6 +33,7 @@ describe("Admin Publications", () => {
   })
 
   it("prevents publication creation when the name exceeds the maximum length", () => {
+    cy.dataCy("create_pub_button").click()
     const name_257_characters = "".padEnd(257, "01234567890")
     cy.dataCy("new_publication_input").type(name_257_characters, {
       delay: 0,
@@ -43,26 +45,18 @@ describe("Admin Publications", () => {
   })
 
   it("prevents publication creation when the name is not unique", () => {
+    cy.dataCy("create_pub_button").click()
     cy.dataCy("new_publication_input").type(
       "Duplicate Publication from Cypress{enter}"
     )
     cy.dataCy("create_publication_notify")
       .should("be.visible")
       .should("have.class", "bg-positive")
-    cy.dataCy("publications_list").contains(
-      "Duplicate Publication from Cypress"
-    )
+    cy.visit('/admin/publications')
+    cy.dataCy("create_pub_button").click()
     cy.dataCy("new_publication_input").type(
       "Duplicate Publication from Cypress{enter}"
     )
     cy.dataCy("name_field_error").should("be.visible")
-    cy.get(".q-transition--field-message-leave-active").should("not.exist")
-    cy.get(".q-notification--top-enter-active").should("not.exist")
-    cy.checkA11y(null, null, a11yLogViolations)
-  })
-
-  it("should assert the initial load of the page is accessible", () => {
-    cy.dataCy("create_new_publication_form")
-    cy.checkA11y(null, null, a11yLogViolations)
   })
 })
