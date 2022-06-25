@@ -27,6 +27,7 @@
         <q-btn
           v-if="!isCollapsed"
           aria-label="Hide Replies"
+          data-cy="hideOverallCommentRepliesButton"
           bordered
           color="secondary"
           text-color="white"
@@ -38,6 +39,7 @@
         <q-btn
           v-if="isCollapsed"
           aria-label="Show Replies"
+          data-cy="showOverallCommentRepliesButton"
           bordered
           color="secondary"
           text-color="white"
@@ -101,7 +103,7 @@ import OverallCommentReply from "./OverallCommentReply.vue"
 import CommentEditor from "../forms/CommentEditor.vue"
 import CommentHeader from "./CommentHeader.vue"
 
-const isCollapsed = ref(false)
+const isCollapsed = ref(true)
 const isReplying = ref(false)
 const isQuoteReplying = ref(false)
 const commentReply = ref(null)

@@ -1,6 +1,7 @@
 <template>
   <div class="col-auto">
     <q-btn
+      data-cy="commentActions"
       color="grey-7"
       dense
       round
@@ -10,10 +11,10 @@
     >
       <q-menu cover auto-close>
         <q-list>
-          <q-item clickable @click="$emit('quoteReplyTo')"
+          <q-item data-cy="quoteReply" clickable @click="$emit('quoteReplyTo')"
             ><q-item-section>Quote Reply</q-item-section></q-item
           >
-          <q-item clickable @click="$emit('replyTo')"
+          <q-item data-cy="reply" clickable @click="$emit('replyTo')"
             ><q-item-section>Reply</q-item-section></q-item
           >
           <q-item clickable>
