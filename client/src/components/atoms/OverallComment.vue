@@ -27,7 +27,7 @@
         <q-btn
           v-if="!isCollapsed"
           aria-label="Hide Replies"
-          data-cy="hideOverallCommentRepliesButton"
+          data-cy="hideRepliesButton"
           bordered
           color="secondary"
           text-color="white"
@@ -39,7 +39,7 @@
         <q-btn
           v-if="isCollapsed"
           aria-label="Show Replies"
-          data-cy="showOverallCommentRepliesButton"
+          data-cy="showRepliesButton"
           bordered
           color="secondary"
           text-color="white"

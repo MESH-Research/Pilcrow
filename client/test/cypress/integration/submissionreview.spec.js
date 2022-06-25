@@ -97,7 +97,7 @@ describe("Submissions Review", () => {
     // + 0 disallowed empty overall comment reply creation attempt
     // + 1 newly created overall comment reply
     // = 1
-    cy.dataCy("overallComment").first().find("[data-cy=showOverallCommentRepliesButton]").click()
+    cy.dataCy("overallComment").first().find("[data-cy=showRepliesButton]").click()
     cy.dataCy("overallComment").first().find("[data-cy=overallCommentReply]").should('have.length', 1)
     cy.dataCy("overallComment").first().find("[data-cy=overallCommentReply]").first().contains("This is a reply to an overall comment.")
   })
@@ -106,7 +106,7 @@ describe("Submissions Review", () => {
     cy.task("resetDb")
     cy.login({ email: "reviewer@ccrproject.dev" })
     cy.visit("submission/review/100")
-    cy.dataCy("overallComment").last().find("[data-cy=showOverallCommentRepliesButton]").click()
+    cy.dataCy("overallComment").last().find("[data-cy=showRepliesButton]").click()
     cy.dataCy("overallCommentReply").last().find("[data-cy=commentActions]").click()
     cy.dataCy("reply").click()
     cy.dataCy("overallCommentReplyEditor").last().type("This is a reply to an overall comment reply.")
