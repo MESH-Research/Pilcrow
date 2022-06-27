@@ -14,9 +14,6 @@
           <q-item data-cy="quoteReply" clickable @click="$emit('quoteReplyTo')"
             ><q-item-section>Quote Reply</q-item-section></q-item
           >
-          <q-item data-cy="reply" clickable @click="$emit('replyTo')"
-            ><q-item-section>Reply</q-item-section></q-item
-          >
           <q-item clickable>
             <q-item-section>Modify</q-item-section>
           </q-item>

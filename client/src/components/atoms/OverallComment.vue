@@ -16,7 +16,6 @@
         :comment="comment"
         bg-color="#eeeeee"
         @quote-reply-to="initiateQuoteReply"
-        @reply-to="initiateReply"
       />
       <q-card-section>
         <!-- eslint-disable-next-line vue/no-v-html -->
@@ -60,7 +59,6 @@
             :parent="comment"
             :replies="comment.replies"
             @quote-reply-to="initiateQuoteReply"
-            @reply-to="initiateReplyToReply"
           />
         </div>
       </section>
@@ -132,11 +130,6 @@ function cancelReply() {
 function initiateReply() {
   isReplying.value = true
   isQuoteReplying.value = false
-}
-function initiateReplyToReply(comment) {
-  isReplying.value = true
-  isQuoteReplying.value = false
-  commentReply.value = comment
 }
 function initiateQuoteReply(comment) {
   isReplying.value = true

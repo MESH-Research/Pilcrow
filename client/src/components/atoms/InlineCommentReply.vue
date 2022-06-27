@@ -15,7 +15,6 @@
       :comment="comment"
       class="q-pt-sm"
       @quote-reply-to="$emit('quoteReplyTo', comment)"
-      @reply-to="$emit('replyTo', comment)"
     />
     <comment-reply-reference :comment="comment" :replies="replies" />
     <q-card-section class="q-pt-xs">
@@ -42,7 +41,7 @@ const props = defineProps({
     type: Array,
   },
 })
-defineEmits(["quoteReplyTo", "replyTo"])
+defineEmits(["quoteReplyTo"])
 const activeComment = inject("activeComment")
 const isActive = computed(() => {
   return (
