@@ -28,7 +28,7 @@
     "@tiptap/extension-italic": "^2.0.0-beta.28",
     "@tiptap/extension-link": "^2.0.0-beta.42",
     "@tiptap/extension-ordered-list": "^2.0.0-beta.30",
-    "@tiptap/extension-placeholder": "^2.0.0-beta.52",
+    "@tiptap/extension-placeholder": "^2.0.0-beta.53",
     "@tiptap/starter-kit": "^2.0.0-beta.189",
     "@tiptap/vue-3": "^2.0.0-beta.95",
     "@vue/apollo-composable": "^4.0.0-alpha.18",
