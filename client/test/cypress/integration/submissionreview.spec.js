@@ -108,7 +108,7 @@ describe("Submissions Review", () => {
     cy.visit("submission/review/100")
     cy.dataCy("overallComment").last().find("[data-cy=showRepliesButton]").click()
     cy.dataCy("overallCommentReply").last().find("[data-cy=commentActions]").click()
-    cy.dataCy("reply").click()
+    cy.dataCy("quoteReply").click()
     cy.dataCy("overallCommentReplyEditor").last().type("This is a reply to an overall comment reply.")
     // Create a reply to an overall comment reply
     cy.intercept("/graphql").as("addOverallCommentReplyMutation")
