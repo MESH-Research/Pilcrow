@@ -73,10 +73,10 @@
         <q-btn :label="$t('auth.login')" to="/login" stretch flat />
       </template>
     </q-toolbar>
-    <div class="bg-blue-10">
+    <div class="header-nav bg-blue-10">
       <q-list class="row">
         <q-item v-if="currentUser" to="/dashboard">
-          <q-item-section side class="text-white">
+          <q-item-section side>
             <q-icon name="dashboard" />
           </q-item-section>
           <q-item-section>
@@ -84,7 +84,7 @@
           </q-item-section>
         </q-item>
         <q-item to="/publications">
-          <q-item-section side class="text-white">
+          <q-item-section side>
             <q-icon name="collections_bookmark" />
           </q-item-section>
           <q-item-section>
@@ -92,7 +92,7 @@
           </q-item-section>
         </q-item>
         <q-item data-cy="submissions_link" to="/submissions">
-          <q-item-section side class="text-white">
+          <q-item-section side>
             <q-icon name="content_copy" />
           </q-item-section>
           <q-item-section>
@@ -125,4 +125,6 @@ const { currentUser, isAppAdmin } = useCurrentUser()
   overflow: hidden
 .site-title
   line-height: 1
+.header-nav .q-item__section--side
+  color: inherit
 </style>

@@ -14,17 +14,6 @@ describe("Submissions Review", () => {
     cy.checkA11y(null, null, a11yLogViolations)
   })
 
-  it("should assert the Submission Review page can be accessed from the dashboard", () => {
-    cy.task("resetDb")
-    cy.login({ email: "applicationadministrator@ccrproject.dev" })
-    cy.visit("/dashboard")
-    cy.dataCy("sidebar_toggle").click()
-    cy.dataCy("submissions_link").click()
-    cy.dataCy("submission_link").contains("CCR Test Submission 1").click()
-    cy.dataCy("submission_review_btn").click()
-    cy.dataCy("submission_review_page")
-  })
-
   //TODO: Refactor with text selection etc.
 /*   it("should display style criteria from the database in the inline comment editor", () => {
     cy.task("resetDb")
