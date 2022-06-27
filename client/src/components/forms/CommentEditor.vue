@@ -61,7 +61,7 @@
           {{ $t("guiElements.form.submit") }}
         </q-btn>
         <q-btn
-          v-if="commentType !== 'overall'"
+          v-if="commentType !== 'OverallComment'"
           ref="cancel_button"
           flat
           @click="cancelHandler()"
@@ -110,6 +110,10 @@ const props = defineProps({
     type: Object,
     default: () => {},
   },
+  isQuoteReplying: {
+    type: Boolean,
+    default: false,
+  },
   replyTo: {
     type: Object,
     default: () => {},
@@ -122,8 +126,9 @@ const props = defineProps({
 })
 
 const defaultContent = computed(() => {
-  if (!props.parent?.id) return ""
-  if (props.parent.id === props.replyTo?.id) return ""
+  if (!props.isQuoteReplying) {
+    return ""
+  }
   //TODO: Make this more robust to handle multi paragraphs, etc
   return `<blockquote>${props.replyTo.content}</blockquote><p></p>`
 })

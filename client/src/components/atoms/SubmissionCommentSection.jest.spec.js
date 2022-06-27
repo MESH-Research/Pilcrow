@@ -186,13 +186,34 @@ describe("Overall Comments", () => {
     expect(items).toHaveLength(3)
   })
 
-  test("expected number of overall comment replies appear", () => {
+  test("expected number of overall comment replies appear", async () => {
     const { wrapper } = wrapperFactory()
     const overallComments = wrapper.findAll('[data-cy="overallComment"]')
-    const findRepliesTo = (w) => w.findAll('[data-cy="overallCommentReply"]')
+    const findReplies = (w) => w.findAll('[data-cy="overallCommentReply"]')
 
-    expect(findRepliesTo(overallComments.at(0))).toHaveLength(0)
-    expect(findRepliesTo(overallComments.at(1))).toHaveLength(1)
-    expect(findRepliesTo(overallComments.at(2))).toHaveLength(8)
+    // First Overall Comment
+    expect(
+      overallComments.at(0).find("[data-cy=showRepliesButton").exists()
+    ).toBe(false)
+    expect(findReplies(overallComments.at(0))).toHaveLength(0)
+
+    // Second Overall Comment
+    await overallComments
+      .at(1)
+      .find('[data-cy="showRepliesButton"]')
+      .trigger("click")
+    expect(findReplies(overallComments.at(1))).toHaveLength(1)
+
+    // Third Overall Comment
+    await overallComments
+      .at(2)
+      .find('[data-cy="showRepliesButton"]')
+      .trigger("click")
+    expect(findReplies(overallComments.at(2))).toHaveLength(8)
+    await overallComments
+      .at(2)
+      .find('[data-cy="hideRepliesButton"]')
+      .trigger("click")
+    expect(findReplies(overallComments.at(2))).toHaveLength(0)
   })
 })
