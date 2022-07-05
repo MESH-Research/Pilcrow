@@ -14,17 +14,6 @@ describe("Submissions Review", () => {
     cy.checkA11y(null, null, a11yLogViolations)
   })
 
-  it("should assert the Submission Review page can be accessed from the dashboard", () => {
-    cy.task("resetDb")
-    cy.login({ email: "applicationadministrator@ccrproject.dev" })
-    cy.visit("/dashboard")
-    cy.dataCy("sidebar_toggle").click()
-    cy.dataCy("submissions_link").click()
-    cy.dataCy("submission_link").contains("CCR Test Submission 1").click()
-    cy.dataCy("submission_review_btn").click()
-    cy.dataCy("submission_review_page")
-  })
-
   //TODO: Refactor with text selection etc.
 /*   it("should display style criteria from the database in the inline comment editor", () => {
     cy.task("resetDb")
@@ -97,6 +86,7 @@ describe("Submissions Review", () => {
     // + 0 disallowed empty overall comment reply creation attempt
     // + 1 newly created overall comment reply
     // = 1
+    cy.dataCy("overallComment").first().find("[data-cy=showRepliesButton]").click()
     cy.dataCy("overallComment").first().find("[data-cy=overallCommentReply]").should('have.length', 1)
     cy.dataCy("overallComment").first().find("[data-cy=overallCommentReply]").first().contains("This is a reply to an overall comment.")
   })
@@ -105,17 +95,19 @@ describe("Submissions Review", () => {
     cy.task("resetDb")
     cy.login({ email: "reviewer@ccrproject.dev" })
     cy.visit("submission/review/100")
-    cy.dataCy("overallCommentReply").last().find("[data-cy=overallCommentReplyButton]").click()
+    cy.dataCy("overallComment").last().find("[data-cy=showRepliesButton]").click()
+    cy.dataCy("overallCommentReply").last().find("[data-cy=commentActions]").click()
+    cy.dataCy("quoteReply").click()
     cy.dataCy("overallCommentReplyEditor").last().type("This is a reply to an overall comment reply.")
     // Create a reply to an overall comment reply
     cy.intercept("/graphql").as("addOverallCommentReplyMutation")
     cy.dataCy("overallCommentReplyEditor").last().find("button[type=submit]").click()
     cy.wait("@addOverallCommentReplyMutation")
-    //   9 overall comment replies already exist in total from database seeding
+    //   8 overall comment replies are already visible in this thread from database seeding
     // + 0 disallowed empty overall comment reply creation attempt
     // + 1 newly created overall comment reply
-    // = 10
-    cy.dataCy("overallCommentReply").should('have.length', 10)
+    // = 9
+    cy.dataCy("overallCommentReply").should('have.length', 9)
     cy.dataCy("overallCommentReply").last().contains("This is a reply to an overall comment reply.")
   })
 
@@ -177,8 +169,6 @@ describe("Submissions Review", () => {
       cy.dataCy("inlineComment").eq(index).find('> .q-card').should('have.class', 'active')
       //TODO: Redesign so comment drawer toggle is not hidden when the drawer is visible at small screen sizes.
       cy.get(".fullscreen.q-drawer__backdrop:not('.hidden')").click()
-
     })
-
   })
 })

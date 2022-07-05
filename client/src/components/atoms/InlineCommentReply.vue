@@ -3,7 +3,6 @@
   <div
     square
     :class="{ active: isActive }"
-    class="bg-grey-1 q-mb-md"
     :aria-label="
       $t('submissions.comment.reply.ariaLabel', {
         username: comment.created_by.username,
@@ -15,7 +14,7 @@
     <comment-header
       :comment="comment"
       class="q-pt-sm"
-      @reply="$emit('replyTo', comment)"
+      @quote-reply-to="$emit('quoteReplyTo', comment)"
     />
     <comment-reply-reference :comment="comment" :replies="replies" />
     <q-card-section class="q-pt-xs">
@@ -42,10 +41,7 @@ const props = defineProps({
     type: Array,
   },
 })
-defineEmits(["replyTo"])
-// function initiateReply() {
-//   isReplying.value = true
-// }
+defineEmits(["quoteReplyTo"])
 const activeComment = inject("activeComment")
 const isActive = computed(() => {
   return (

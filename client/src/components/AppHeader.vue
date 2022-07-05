@@ -1,18 +1,6 @@
 <template>
   <q-header class="header">
     <q-toolbar class="header-toolbar">
-      <q-btn
-        v-if="props.modelValue !== null"
-        data-cy="sidebar_toggle"
-        flat
-        round
-        dense
-        icon="switch_right"
-        :aria-label="$t('header.menu_button_aria')"
-        aria-controls="sidebar"
-        :aria-expanded="(!!props.modelValue).toString()"
-        @click="toggleDrawer"
-      />
       <div class="q-pa-sm">
         <h1 class="q-ma-none text-h4 site-title">
           Collaborative Community Review
@@ -20,7 +8,6 @@
         <small class="site-subtitle">Submission Review System</small>
       </div>
       <q-space />
-
       <template v-if="currentUser">
         <NotificationPopup />
         <q-btn-dropdown
@@ -34,12 +21,6 @@
             aria-label="Dropdown Navigation"
             data-cy="headerUserMenu"
           >
-            <q-item clickable to="/dashboard">
-              <q-item-section avatar>
-                <q-icon name="dashboard" />
-              </q-item-section>
-              <q-item-section>{{ $t("header.dashboard") }}</q-item-section>
-            </q-item>
             <q-item clickable data-cy="link_my_account" to="/account/profile">
               <q-item-section avatar>
                 <q-icon name="account_circle" />
@@ -48,7 +29,32 @@
                 {{ $t("header.account_link") }}
               </q-item-section>
             </q-item>
-
+            <div v-if="isAppAdmin">
+              <q-separator />
+              <q-item dense>
+                <q-item-section>
+                  <q-item-label class="text-bold"
+                    >Application Administration</q-item-label
+                  >
+                </q-item-section>
+              </q-item>
+              <q-item to="/admin/users">
+                <q-item-section avatar>
+                  <q-icon name="groups" />
+                </q-item-section>
+                <q-item-section>
+                  {{ $t("header.user_list") }}
+                </q-item-section>
+              </q-item>
+              <q-item :to="{ name: 'admin:publication:index' }">
+                <q-item-section avatar>
+                  <q-icon name="collections_bookmark" />
+                </q-item-section>
+                <q-item-section>
+                  {{ $t("header.publications") }}
+                </q-item-section>
+              </q-item>
+            </div>
             <q-separator />
             <q-item to="/logout">
               <q-item-section avatar>
@@ -67,6 +73,34 @@
         <q-btn :label="$t('auth.login')" to="/login" stretch flat />
       </template>
     </q-toolbar>
+    <div class="header-nav bg-blue-10">
+      <q-list class="row">
+        <q-item v-if="currentUser" to="/dashboard">
+          <q-item-section side>
+            <q-icon name="dashboard" />
+          </q-item-section>
+          <q-item-section>
+            {{ $t("header.dashboard") }}
+          </q-item-section>
+        </q-item>
+        <q-item to="/publications">
+          <q-item-section side>
+            <q-icon name="collections_bookmark" />
+          </q-item-section>
+          <q-item-section>
+            {{ $t("header.publications") }}
+          </q-item-section>
+        </q-item>
+        <q-item data-cy="submissions_link" to="/submissions">
+          <q-item-section side>
+            <q-icon name="content_copy" />
+          </q-item-section>
+          <q-item-section>
+            {{ $t("header.submissions") }}
+          </q-item-section>
+        </q-item>
+      </q-list>
+    </div>
   </q-header>
 </template>
 
@@ -74,20 +108,15 @@
 import NotificationPopup from "src/components/molecules/NotificationPopup.vue"
 import { useCurrentUser } from "src/use/user"
 
-const props = defineProps({
+defineProps({
   //Drawer status
   modelValue: {
     type: Boolean,
     default: null,
   },
 })
-const emit = defineEmits(["update:modelValue"])
 
-const { currentUser } = useCurrentUser()
-
-function toggleDrawer() {
-  emit("update:modelValue", !props.modelValue)
-}
+const { currentUser, isAppAdmin } = useCurrentUser()
 </script>
 
 <style lang="sass">
@@ -96,4 +125,6 @@ function toggleDrawer() {
   overflow: hidden
 .site-title
   line-height: 1
+.header-nav .q-item__section--side
+  color: inherit
 </style>
