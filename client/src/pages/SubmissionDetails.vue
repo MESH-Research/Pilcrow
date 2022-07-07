@@ -23,7 +23,7 @@
             icon="radio_button_checked"
             color="primary"
             text-color="white"
-            >{{ submission.status }}</q-chip
+            >{{ toTitleCase(submission.status) }}</q-chip
           >
         </div>
       </q-banner>
@@ -81,4 +81,9 @@ const { result } = useQuery(GET_SUBMISSION, { id: props.id })
 const submission = computed(() => {
   return result.value?.submission ?? null
 })
+const toTitleCase = (s) =>
+  s
+    .toLowerCase()
+    .replace(/^\w/, (c) => c.toUpperCase())
+    .replace(/[_]+(.)/g, (_, c) => " " + c.toUpperCase())
 </script>
