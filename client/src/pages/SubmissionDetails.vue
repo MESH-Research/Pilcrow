@@ -16,14 +16,16 @@
     <section>
       <q-banner class="bg-grey-3">
         <div class="flex row items-center">
-          <h3 class="q-ml-sm q-mr-md text-h4">Submission Status</h3>
+          <h3 class="q-ml-sm q-mr-md text-h4">
+            {{ $t("submission.status.title") }}
+          </h3>
           <q-separator vertical />
           <q-chip
             class="q-ml-md"
             icon="radio_button_checked"
             color="primary"
             text-color="white"
-            >{{ toTitleCase(submission.status) }}</q-chip
+            >{{ $t(`submission.status.${submission.status}`) }}</q-chip
           >
         </div>
       </q-banner>
@@ -81,9 +83,4 @@ const { result } = useQuery(GET_SUBMISSION, { id: props.id })
 const submission = computed(() => {
   return result.value?.submission ?? null
 })
-const toTitleCase = (s) =>
-  s
-    .toLowerCase()
-    .replace(/^\w/, (c) => c.toUpperCase())
-    .replace(/[_]+(.)/g, (_, c) => " " + c.toUpperCase())
 </script>
