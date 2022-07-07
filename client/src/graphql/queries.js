@@ -163,6 +163,7 @@ export const GET_SUBMISSION = gql`
     submission(id: $id) {
       id
       title
+      status
       publication {
         name
         style_criterias {

@@ -23,7 +23,7 @@
             icon="radio_button_checked"
             color="primary"
             text-color="white"
-            >Initially Submitted</q-chip
+            >{{ submission.status }}</q-chip
           >
         </div>
       </q-banner>
