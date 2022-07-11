@@ -1649,10 +1649,10 @@
   dependencies:
     "@sinonjs/commons" "^1.7.0"
 
-"@tiptap/core@^2.0.0-beta.181":
-  version "2.0.0-beta.181"
-  resolved "https://registry.yarnpkg.com/@tiptap/core/-/core-2.0.0-beta.181.tgz#07aeea26336814ab82eb7f4199b17538187c6fbb"
-  integrity sha512-tbwRqjTVvY9v31TNAH6W0Njhr/OVwI28zWXmH55/USrwyU2CB1iCVfXktZKOhB+8WyvOaBv1JA5YplMIhstYTw==
+"@tiptap/core@^2.0.0-beta.182":
+  version "2.0.0-beta.182"
+  resolved "https://registry.yarnpkg.com/@tiptap/core/-/core-2.0.0-beta.182.tgz#d2001e9b765adda95e15d171479860a3349e2d04"
+  integrity sha512-MZGkMGnVnWhBzjvpBNwQ9zBz38ndi3Irbf90uCTSArR0kaCVkW4vmyuPuOXd+0SO8Yv/l5oyDdOCpaG3rnQYfw==
   dependencies:
     prosemirror-commands "1.3.0"
     prosemirror-keymap "1.2.0"
@@ -1803,12 +1803,12 @@
   resolved "https://registry.yarnpkg.com/@tiptap/extension-text/-/extension-text-2.0.0-beta.17.tgz#4fdd1bdf62c82c1af6feef91c689906a8f5b171e"
   integrity sha512-OyKL+pqWJEtjyd9/mrsuY1kZh2b3LWpOQDWKtd4aWR4EA0efmQG+7FPwcIeAVEh7ZoqM+/ABCnPjN6IjzIrSfg==
 
-"@tiptap/starter-kit@^2.0.0-beta.190":
-  version "2.0.0-beta.190"
-  resolved "https://registry.yarnpkg.com/@tiptap/starter-kit/-/starter-kit-2.0.0-beta.190.tgz#fe0021e29d070fc5707722513a398c8884e15f71"
-  integrity sha512-jaFMkE6mjCHmCJsXUyLiXGYRVDcHF+PbH/5hEu1riUIAT0Hmm7uak5TYsPeuoCVN7P/tmDEBbBRASZ5CzEQpvw==
+"@tiptap/starter-kit@^2.0.0-beta.191":
+  version "2.0.0-beta.191"
+  resolved "https://registry.yarnpkg.com/@tiptap/starter-kit/-/starter-kit-2.0.0-beta.191.tgz#3f549367f6dbb8cf83f63aa0941722d91d0fd8e7"
+  integrity sha512-YRrBCi9W4jiH/xLTJJOCdD7pL4Wb98Ip8qCJ94RElShDj0O1i5tT9wWlgVWoGIU+CRAds5XENRwZ97sJ+YfYyg==
   dependencies:
-    "@tiptap/core" "^2.0.0-beta.181"
+    "@tiptap/core" "^2.0.0-beta.182"
     "@tiptap/extension-blockquote" "^2.0.0-beta.29"
     "@tiptap/extension-bold" "^2.0.0-beta.28"
     "@tiptap/extension-bullet-list" "^2.0.0-beta.29"
@@ -3656,10 +3656,10 @@ core-js-compat@^3.20.2, core-js-compat@^3.21.0, core-js-compat@^3.6.5:
     browserslist "^4.20.2"
     semver "7.0.0"
 
-core-js@^3.23.3, core-js@^3.6.5:
-  version "3.23.3"
-  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.23.3.tgz#3b977612b15da6da0c9cc4aec487e8d24f371112"
-  integrity sha512-oAKwkj9xcWNBAvGbT//WiCdOMpb9XQG92/Fe3ABFM/R16BsHgePG00mFOgKf7IsCtfj8tA1kHtf/VwErhriz5Q==
+core-js@^3.23.4, core-js@^3.6.5:
+  version "3.23.4"
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.23.4.tgz#92d640faa7f48b90bbd5da239986602cfc402aa6"
+  integrity sha512-vjsKqRc1RyAJC3Ye2kYqgfdThb3zYnx9CrqoCcjMOENMtQPC7ZViBvlDxwYU/2z2NI/IPuiXw5mT4hWhddqjzQ==
 
 core-util-is@1.0.2:
   version "1.0.2"
@@ -4387,10 +4387,10 @@ eslint-plugin-quasar@^1.1.0:
     requireindex "~1.2.0"
     semver-compare "^1.0.0"
 
-eslint-plugin-vue@^9.1.1:
-  version "9.1.1"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-vue/-/eslint-plugin-vue-9.1.1.tgz#341f7533cb041958455138834341d5be01f9f327"
-  integrity sha512-W9n5PB1X2jzC7CK6riG0oAcxjmKrjTF6+keL1rni8n57DZeilx/Fulz+IRJK3lYseLNAygN0I62L7DvioW40Tw==
+eslint-plugin-vue@^9.2.0:
+  version "9.2.0"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-vue/-/eslint-plugin-vue-9.2.0.tgz#b7ca02b2ce8218b7586346440fc61c2655db353a"
+  integrity sha512-W2hc+NUXoce8sZtWgZ45miQTy6jNyuSdub5aZ1IBune4JDeAyzucYX0TzkrQ1jMO52sNUDYlCIHDoaNePe0p5g==
   dependencies:
     eslint-utils "^3.0.0"
     natural-compare "^1.4.0"
@@ -5947,10 +5947,10 @@ javascript-stringify@^2.0.1:
   resolved "https://registry.yarnpkg.com/javascript-stringify/-/javascript-stringify-2.1.0.tgz#27c76539be14d8bd128219a2d731b09337904e79"
   integrity sha512-JVAfqNPTvNq3sB/VHQJAFxN/sPgKnsKrCwyRt15zwNCdrMMJDdcEOdubuy+DuJYYdm0ox1J4uzEuYKkN+9yhVg==
 
-javascript-time-ago@^2.5.5:
-  version "2.5.5"
-  resolved "https://registry.yarnpkg.com/javascript-time-ago/-/javascript-time-ago-2.5.5.tgz#5487015c59c7115c6281548e627be4ee6f6376a8"
-  integrity sha512-vZWIEKTPDcxH2B+ZVBK4AIuHkDcUoV80L9d+1WsRmp68hMXym0cQrf45WCP4mKgZjVGxTio7uYeDTkveX3DzlA==
+javascript-time-ago@^2.5.6:
+  version "2.5.6"
+  resolved "https://registry.yarnpkg.com/javascript-time-ago/-/javascript-time-ago-2.5.6.tgz#1a7a381dc2acbe8201a18a72dcb78782bbef4c63"
+  integrity sha512-uqnLU334Dtu6lC2pIOnPyH8GkG0UnSlDLD19sfEaAITIg5zR3x0O0MkFYJEVXtY4Q9JWOcxFJoXoxxT5/B5Okg==
   dependencies:
     relative-time-format "^1.1.4"
 
@@ -9744,10 +9744,10 @@ vue-loader@17.0.0:
     hash-sum "^2.0.0"
     loader-utils "^2.0.0"
 
-vue-router@^4.1.0:
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/vue-router/-/vue-router-4.1.0.tgz#3029bf815885954ec02330e5f6fa8a00a7e5f53c"
-  integrity sha512-A+dYO0ZXLJFZ40ebW3XtqehCW0Wv2xNH4lFddOByDja4NtItEdyirrShTlvD3UA4xc5a5mG2RRI30BusYpOb9g==
+vue-router@^4.1.2:
+  version "4.1.2"
+  resolved "https://registry.yarnpkg.com/vue-router/-/vue-router-4.1.2.tgz#ae08f63c9610afa6bff6743e8f128b7054d4c9f5"
+  integrity sha512-5BP1qXFncVRwgV/XnqzsKApdMjQPqWIpoUBdL1ynz8HyLxIX/UDAx7Ql2BjmA5CXT/p61JfZvkpiFWFpaqcfag==
   dependencies:
     "@vue/devtools-api" "^6.1.4"
 
