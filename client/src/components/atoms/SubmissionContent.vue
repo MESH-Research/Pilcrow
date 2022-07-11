@@ -80,7 +80,7 @@ function toggleDarkMode() {
   darkMode.value = !darkMode.value
 }
 const fonts = ["Sans-serif", "Serif"]
-let selectedFont = ref("San-serif")
+let selectedFont = ref("Sans-serif")
 
 const findCommentFromId = (id) =>
   submission.value.inline_comments.find((c) => c.id === id)
