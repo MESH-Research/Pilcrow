@@ -25,8 +25,9 @@
             icon="radio_button_checked"
             color="primary"
             text-color="white"
-            >{{ $t(`submission.status.${submission.status}`) }}</q-chip
           >
+            {{ $t(`submission.status.${submission.status}`) }}
+          </q-chip>
         </div>
       </q-banner>
     </section>
