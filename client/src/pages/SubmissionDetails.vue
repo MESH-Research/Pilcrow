@@ -13,6 +13,24 @@
       </q-breadcrumbs>
     </nav>
     <h2 class="q-pl-lg">{{ submission.title }}</h2>
+    <section>
+      <q-banner class="bg-grey-3">
+        <div class="flex row items-center">
+          <h3 class="q-ml-sm q-mr-md text-h4">
+            {{ $t("submission.status.title") }}
+          </h3>
+          <q-separator vertical />
+          <q-chip
+            class="q-ml-md"
+            icon="radio_button_checked"
+            color="primary"
+            text-color="white"
+          >
+            {{ $t(`submission.status.${submission.status}`) }}
+          </q-chip>
+        </div>
+      </q-banner>
+    </section>
     <div class="row q-col-gutter-lg q-pa-lg">
       <section class="col-12">
         <q-btn
