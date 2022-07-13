@@ -649,4 +649,207 @@ class SubmissionTest extends ApiTestCase
         $response->assertJsonPath('data.updateSubmission.created_by.id', (string)$submission->created_by);
         $response->assertJsonPath('data.updateSubmission.updated_by.id', (string)$user->id);
     }
+
+    /**
+     * @param Submission $submission
+     * @param string $status
+     * @return void
+     */
+    protected function executeSubmissionStatusUpdateSuccessfully(Submission $submission, string $status)
+    {
+        $response = $this->graphQL(
+            'mutation UpdateSubmissionStatus ($submission_id: ID!, $status: SubmissionStatus) {
+                updateSubmission(
+                    input: {
+                        id: $submission_id
+                        status: $status
+                    }
+                ) {
+                    id
+                    status
+                }
+            }',
+            [
+                'submission_id' => $submission->id,
+                'status' => $status,
+            ]
+        );
+        $expected_data = [
+            'updateSubmission' => [
+                'id' => (string)$submission->id,
+                'status' => $status,
+            ],
+        ];
+        $response->assertJsonPath('data', $expected_data);
+    }
+
+    /**
+     * @param Submission $submission
+     * @param string $status
+     * @return void
+     */
+    protected function executeSubmissionStatusUpdateUnsuccessfully(Submission $submission, string $status)
+    {
+        $response = $this->graphQL(
+            'mutation UpdateSubmissionStatus ($submission_id: ID!, $status: SubmissionStatus) {
+                updateSubmission(
+                    input: {
+                        id: $submission_id
+                        status: $status
+                    }
+                ) {
+                    id
+                    status
+                }
+            }',
+            [
+                'submission_id' => $submission->id,
+                'status' => $status,
+            ]
+        );
+        $response->assertJsonPath('errors.0.extensions.category', 'authorization');
+    }
+
+    /**
+     * @return array
+     */
+    public function allSubmissionStates(): array
+    {
+        return [
+            'Initially Submitted' => [
+                'INITIALLY_SUBMITTED',
+            ],
+            'Awaiting Resubmission' => [
+                'AWAITING_RESUBMISSION',
+            ],
+            'Resubmitted' => [
+                'RESUBMITTED',
+            ],
+            'Awaiting Review' => [
+                'AWAITING_REVIEW',
+            ],
+            'Rejected' => [
+                'REJECTED',
+            ],
+            'Accepted as Final' => [
+                'ACCEPTED_AS_FINAL',
+            ],
+            'Expired' => [
+                'EXPIRED',
+            ],
+            'Under Review' => [
+                'UNDER_REVIEW',
+            ],
+            'Awaiting Decision' => [
+                'AWAITING_DECISION',
+            ],
+            'Awaiting Revision' => [
+                'AWAITING_REVISION',
+            ],
+            'Archived' => [
+                'ARCHIVED',
+            ],
+            'Deleted' => [
+                'DELETED',
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider allSubmissionStates
+     * @return void
+     */
+    public function testApplicationAdminCanUpdateSubmissionStatus(string $status)
+    {
+        $this->beAppAdmin();
+        $submission = Submission::factory()->create();
+        $this->executeSubmissionStatusUpdateSuccessfully($submission, $status);
+    }
+
+    /**
+     * @dataProvider allSubmissionStates
+     * @return void
+     */
+    public function testPublicationAdminCanUpdateSubmissionStatus(string $status)
+    {
+        /** @var User $admin */
+        $admin = User::factory()->create();
+        $this->actingAs($admin);
+        $publication = Publication::factory()
+            ->hasAttached($admin, [], 'publicationAdmins')
+            ->create();
+        $submission = Submission::factory()
+            ->for($publication)
+            ->create(['title' => 'Test submission']);
+        $this->executeSubmissionStatusUpdateSuccessfully($submission, $status);
+    }
+
+    /**
+     * @dataProvider allSubmissionStates
+     * @return void
+     */
+    public function testEditorCanUpdateSubmissionStatus(string $status)
+    {
+        /** @var User $editor */
+        $editor = User::factory()->create();
+        $this->actingAs($editor);
+        $publication = Publication::factory()
+            ->hasAttached($editor, [], 'editors')
+            ->create();
+        $submission = Submission::factory()
+            ->for($publication)
+            ->create(['title' => 'Test submission']);
+        $this->executeSubmissionStatusUpdateSuccessfully($submission, $status);
+    }
+
+    /**
+     * @dataProvider allSubmissionStates
+     * @return void
+     */
+    public function testReviewCoordinatorCanUpdateSubmissionStatus(string $status)
+    {
+        /** @var User $reviewCoordinator */
+        $reviewCoordinator = User::factory()->create();
+        $this->actingAs($reviewCoordinator);
+
+        $submission = Submission::factory()
+            ->for(Publication::factory()->create())
+            ->hasAttached($reviewCoordinator, [], 'reviewCoordinators')
+            ->create(['title' => 'Test submission']);
+        $this->executeSubmissionStatusUpdateSuccessfully($submission, $status);
+    }
+
+    /**
+     * @dataProvider allSubmissionStates
+     * @return void
+     */
+    public function testReviewerCannotUpdateSubmissionStatus(string $status)
+    {
+        /** @var User $reviewer */
+        $reviewer = User::factory()->create();
+        $this->actingAs($reviewer);
+
+        $submission = Submission::factory()
+            ->for(Publication::factory()->create())
+            ->hasAttached($reviewer, [], 'reviewers')
+            ->create(['title' => 'Test submission']);
+        $this->executeSubmissionStatusUpdateUnsuccessfully($submission, $status);
+    }
+
+    /**
+     * @dataProvider allSubmissionStates
+     * @return void
+     */
+    public function testSubmitterCannotUpdateSubmissionStatus(string $status)
+    {
+        /** @var User $reviewer */
+        $reviewer = User::factory()->create();
+        $this->actingAs($reviewer);
+
+        $submission = Submission::factory()
+            ->for(Publication::factory()->create())
+            ->hasAttached($reviewer, [], 'reviewers')
+            ->create(['title' => 'Test submission']);
+        $this->executeSubmissionStatusUpdateUnsuccessfully($submission, $status);
+    }
 }
