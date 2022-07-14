@@ -54,8 +54,19 @@ watch(
         }
       }
       if (!scrollTarget) return
+      const getOffsetTop = function (element) {
+        if (!element) return 0
+        return getOffsetTop(element.offsetParent) + element.offsetTop
+      }
+      const secondaryNavHeight = 48
+      const toolbarHeight = 50
+      const negativeSpaceAdjustment = 14
+      const offset =
+        getOffsetTop(scrollTarget) -
+        toolbarHeight -
+        secondaryNavHeight -
+        negativeSpaceAdjustment
       const target = getScrollTarget(scrollTarget)
-      const offset = scrollTarget.offsetTop
       setVerticalScrollPosition(target, offset - 64, 250)
     })
   },

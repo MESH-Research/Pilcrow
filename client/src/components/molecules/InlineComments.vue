@@ -80,9 +80,17 @@ watch(
         }
       }
       if (!scrollTarget) return
-      console.log(scrollTarget)
+      const getOffsetTop = function (element) {
+        if (!element) return 0
+        return getOffsetTop(element.offsetParent) + element.offsetTop
+      }
+      const secondaryNavHeight = 48
+      const negativeSpaceAdjustment = 14
+      const offset =
+        getOffsetTop(scrollTarget) -
+        secondaryNavHeight -
+        negativeSpaceAdjustment
       const target = getScrollTarget(scrollTarget)
-      const offset = scrollTarget.offsetTop - 14
       setVerticalScrollPosition(target, offset, 250)
     })
   },

@@ -422,6 +422,21 @@ export default {
     },
   },
   submission: {
+    status: {
+      title: "Submission Status",
+      INITIALLY_SUBMITTED: "Initially Submitted",
+      AWAITING_RESUBMISSION: "Awaiting Resubmission",
+      RESUBMITTED: "Resubmitted",
+      AWAITING_REVIEW: "Awaiting Review",
+      REJECTED: "Rejected",
+      ACCEPTED_AS_FINAL: "Accepted as Final",
+      EXPIRED: "Expired",
+      UNDER_REVIEW: "Under Review",
+      AWAITING_DECISION: "Awaiting Decision",
+      AWAITING_REVISION: "Awaiting Revision",
+      ARCHIVED: "Archived",
+      DELETED: "Deleted",
+    },
     toolbar: {
       back: "Back to Submission Details",
       toggle_inline_comments: "Toggle Inline Comments",
