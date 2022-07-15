@@ -62,7 +62,6 @@ The commands to migrate and seed will need to be ran each time a new migration o
 
 `lando artisan db:seed`
 
-
 Once seeding is complete, you can log in at <https://ccr.lndo.site/login> as any one of the sample users defined in `backend/database/seeders/UserSeeder.php` in the repository.
 
 ### Lando tooling commands
