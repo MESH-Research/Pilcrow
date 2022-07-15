@@ -54,6 +54,8 @@ The commands to migrate and seed will need to be ran each time a new migration o
 
 `lando artisan migrate:fresh --seed`
 
+`:fresh` clears the database and then runs migrations. `--seed` will run the seeders after migrations complete.
+
 #### Migrate Only
 
 `lando artisan migrate:fresh`
