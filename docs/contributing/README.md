@@ -48,6 +48,8 @@ You can then open a browser to <https://ccr.lndo.site/> and view the project run
 
 By default, the database of the application will be empty. To log in as a sample user, the database tables must be [migrated](https://laravel.com/docs/master/migrations) and [seeded](https://laravel.com/docs/master/seeding#main-content).
 
+The commands to migrate and seed will need to be ran each time a new migration or seed is added to the repository.
+
 #### Migrate and Seed
 
 `lando artisan migrate:fresh --seed`
