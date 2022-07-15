@@ -44,6 +44,25 @@ Lando will then download the appropriate containers and get everything spun up. 
 
 You can then open a browser to <https://ccr.lndo.site/> and view the project running on your local machine.
 
+### Database Migration and Seeding
+
+By default, the database of the application will be empty. To log in as a sample user, the database tables must be [migrated](https://laravel.com/docs/master/migrations) and [seeded](https://laravel.com/docs/master/seeding#main-content).
+
+#### Migrate and Seed
+
+`lando artisan migrate:fresh --seed`
+
+#### Migrate Only
+
+`lando artisan migrate:fresh`
+
+#### Seed Only
+
+`lando artisan db:seed`
+
+
+Once seeding is complete, you can log in at <https://ccr.lndo.site/login> as any one of the sample users defined in `backend/database/seeders/UserSeeder.php` in the repository.
+
 ### Lando tooling commands
 
 Lando has built-in tooling commands that allow a developer to run commands inside a container from their terminal.
