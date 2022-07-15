@@ -713,7 +713,7 @@ class SubmissionTest extends ApiTestCase
     /**
      * @return array
      */
-    public function allSubmissionStates(): array
+    public function provideAllSubmissionStates(): array
     {
         return [
             'Initially Submitted' => [
@@ -756,7 +756,7 @@ class SubmissionTest extends ApiTestCase
     }
 
     /**
-     * @dataProvider allSubmissionStates
+     * @dataProvider provideAllSubmissionStates
      * @return void
      */
     public function testApplicationAdminCanUpdateSubmissionStatus(string $status)
@@ -767,7 +767,7 @@ class SubmissionTest extends ApiTestCase
     }
 
     /**
-     * @dataProvider allSubmissionStates
+     * @dataProvider provideAllSubmissionStates
      * @return void
      */
     public function testPublicationAdminCanUpdateSubmissionStatus(string $status)
@@ -785,7 +785,7 @@ class SubmissionTest extends ApiTestCase
     }
 
     /**
-     * @dataProvider allSubmissionStates
+     * @dataProvider provideAllSubmissionStates
      * @return void
      */
     public function testEditorCanUpdateSubmissionStatus(string $status)
@@ -803,7 +803,7 @@ class SubmissionTest extends ApiTestCase
     }
 
     /**
-     * @dataProvider allSubmissionStates
+     * @dataProvider provideAllSubmissionStates
      * @return void
      */
     public function testReviewCoordinatorCanUpdateSubmissionStatus(string $status)
@@ -820,7 +820,7 @@ class SubmissionTest extends ApiTestCase
     }
 
     /**
-     * @dataProvider allSubmissionStates
+     * @dataProvider provideAllSubmissionStates
      * @return void
      */
     public function testReviewerCannotUpdateSubmissionStatus(string $status)
@@ -837,7 +837,7 @@ class SubmissionTest extends ApiTestCase
     }
 
     /**
-     * @dataProvider allSubmissionStates
+     * @dataProvider provideAllSubmissionStates
      * @return void
      */
     public function testSubmitterCannotUpdateSubmissionStatus(string $status)
