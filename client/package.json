@@ -46,7 +46,7 @@
     "luxon": "^2.4.0",
     "quasar": "2",
     "vue": "^3.2.37",
-    "vue-i18n": "^9.2.0-beta.37",
+    "vue-i18n": "^9.2.0-beta.39",
     "vue-router": "^4.1.2",
     "vuedraggable": "^4.1.0",
     "zxcvbn": "^4.4.2"
