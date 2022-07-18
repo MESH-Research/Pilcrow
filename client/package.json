@@ -52,7 +52,7 @@
     "zxcvbn": "^4.4.2"
   },
   "devDependencies": {
-    "@babel/eslint-parser": "^7.18.2",
+    "@babel/eslint-parser": "^7.18.9",
     "@quasar/app-webpack": "^3.5.7",
     "@quasar/quasar-app-extension-testing-unit-jest": "^3.0.0-alpha.10",
     "axe-core": "^4.4.3",
