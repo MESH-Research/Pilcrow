@@ -69,20 +69,51 @@
           <q-item
             v-for="submission in submissions"
             :key="submission.id"
-            class="column"
+            class="row justify-between"
           >
-            <router-link
-              data-cy="submission_link"
-              :to="{
-                name: 'submission_details',
-                params: { id: submission.id },
-              }"
-            >
-              <q-item-label>{{ submission.title }}</q-item-label>
-            </router-link>
-            <q-item-label caption>
-              for {{ submission.publication.name }}
-            </q-item-label>
+            <div>
+              <router-link
+                data-cy="submission_link"
+                :to="{
+                  name: 'submission_details',
+                  params: { id: submission.id },
+                }"
+              >
+                <q-item-label>{{ submission.title }}</q-item-label>
+              </router-link>
+              <q-item-label caption>
+                for {{ submission.publication.name }}
+              </q-item-label>
+            </div>
+            <!-- TODO menu -->
+            <div class="q-gutter-sm submission-options">
+              <q-btn>
+                <q-icon name="more_vert" />
+                <q-menu anchor="bottom right" self="top right">
+                  <q-item clickable>
+                    <!-- TODO link to submission page-->
+                    <q-item-section
+                      ><a :href="'submission/review/' + submission.id"
+                        >View Submission</a
+                      ></q-item-section
+                    >
+                  </q-item>
+                  <q-item clickable>
+                    <q-item-section>Change Status</q-item-section>
+                    <q-item-section side>
+                      <q-icon name="keyboard_arrow_right" />
+                    </q-item-section>
+                    <!-- TODO replace placeholders with functionality for different statuses -->
+                    <q-menu anchor="bottom end" self="top end">
+                      <q-item clickable>status</q-item>
+                      <q-item clickable>status</q-item>
+                      <q-item clickable>status</q-item>
+                    </q-menu>
+                  </q-item>
+                </q-menu>
+              </q-btn>
+            </div>
+
             <ul v-if="submission.files.length > 0" class="q-ma-none">
               <li v-for="file in submission.files" :key="file.id">
                 <a :href="file.file_upload" download>
