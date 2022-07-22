@@ -26,7 +26,7 @@ we've decided to defer implementing SSR and directly ship compiled assets via th
 :::
 
 ## Application Server (API)
-
+<a id="application-server"></a>
 <CaptionImage href="https://laravel.com" :src="$withBase('/logos/laravel.jpg')" caption="Laravel" />
 <CaptionImage href="https://lighthouse-php.com" :src="$withBase('/logos/lighthouse.png')" caption="Lighthouse" />
 
