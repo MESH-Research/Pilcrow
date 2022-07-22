@@ -35,7 +35,7 @@ class NotifyUsersAboutCreatedSubmission
                 'name' => $event->submission->publication->name,
             ],
             'type' => 'submission.created',
-            'action' => 'Review Submission',
+            'action' => 'Visit Submission',
             'url' => url('/submission/' . $event->submission->id),
             'body' => 'A submission has been created.',
         ];

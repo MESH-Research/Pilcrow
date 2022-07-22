@@ -77,4 +77,20 @@ class SubmissionTest extends TestCase
         $this->assertEquals(Submission::AWAITING_REVIEW, $submission->status);
         $this->assertEquals('AWAITING_REVIEW', $submission->status_name);
     }
+
+    /**
+     * @return void
+     */
+    public function testChanges()
+    {
+        $this->beAppAdmin();
+        $submission = Submission::factory()->create();
+        $submission->title = 'New Title';
+        $submission->status = 3;
+        $submission->save();
+        $changes = $submission->getChanges();
+        $inarray = array_key_exists('status', $changes);
+
+        $this->assertEquals($inarray, 1);
+    }
 }

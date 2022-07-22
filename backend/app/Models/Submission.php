@@ -3,17 +3,20 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Events\SubmissionStatusUpdated;
 use App\Http\Traits\CreatedUpdatedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Notifications\Notifiable;
 
 class Submission extends Model
 {
     use HasFactory;
     use CreatedUpdatedBy;
+    use Notifiable;
 
     public const INITIALLY_SUBMITTED = 1;
     public const AWAITING_RESUBMISSION = 2;
@@ -27,6 +30,28 @@ class Submission extends Model
     public const AWAITING_REVISION = 10;
     public const ARCHIVED = 11;
     public const DELETED = 12;
+
+    /**
+     * The "booted" method of the model.
+     *
+     * @return void
+     */
+    protected static function booted()
+    {
+        static::updated(function ($submission) {
+            $changes = $submission->getChanges();
+            // print_r($changes);
+            // print_r($submission);
+
+            SubmissionStatusUpdated::dispatchIf(array_key_exists('status', $changes), $submission);
+
+            // $event = new SubmissionCreated($submission);
+            // $listener = new NotifyUsersAboutCreatedSubmission();
+            // $listener->handle($event);
+            // Notification::assertSentTo($submitter, NotificationsSubmissionCreated::class);
+            // Notification::assertSentTo($editor, NotificationsSubmissionCreated::class);
+        });
+    }
 
     /**
      * The attributes that are mass assignable.
