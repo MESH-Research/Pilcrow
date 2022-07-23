@@ -40,16 +40,7 @@ class Submission extends Model
     {
         static::updated(function ($submission) {
             $changes = $submission->getChanges();
-            // print_r($changes);
-            // print_r($submission);
-
             SubmissionStatusUpdated::dispatchIf(array_key_exists('status', $changes), $submission);
-
-            // $event = new SubmissionCreated($submission);
-            // $listener = new NotifyUsersAboutCreatedSubmission();
-            // $listener->handle($event);
-            // Notification::assertSentTo($submitter, NotificationsSubmissionCreated::class);
-            // Notification::assertSentTo($editor, NotificationsSubmissionCreated::class);
         });
     }
 

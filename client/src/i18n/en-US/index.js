@@ -423,6 +423,8 @@ export default {
   },
   submission: {
     status: {
+      updated:
+        "The status of {data_submission_title} has been updated to {data_submission_status_name}.",
       title: "Submission Status",
       INITIALLY_SUBMITTED: "Initially Submitted",
       AWAITING_RESUBMISSION: "Awaiting Resubmission",
@@ -555,15 +557,35 @@ export default {
       },
     },
     submission: {
+      updated: {
+        short:
+          "The status of {data_submission_title} has been updated to {data_submission_status_name}",
+      },
+      initially_submitted: {
+        short:
+          "{data_submission_title} has been submitted to the publication. Its fitness for review is to be determined.",
+      },
+      resubmission_requested: {
+        short:
+          "A submission has been determined to be unfit for review. A request has been made for resubmission.",
+      },
+      resubmitted: {
+        short: "{data_submission_title} has been resubmitted for review.",
+      },
+      accepted_for_review: {
+        short:
+          "A submission has been accepted for review. It is currently awaiting review from the assigned reviewers.",
+      },
+      rejected_for_review: {
+        short:
+          "A submission has been determined to be unfit for review and has been rejected.",
+      },
       created: {
         short:
           "{data_user_username} has submitted {data_submission_title} to {data_publication_name}",
       },
       approved: {
         short: "{object_name} has been approved",
-      },
-      resubmitted: {
-        short: "{object_name} has been resubmitted",
       },
     },
   },

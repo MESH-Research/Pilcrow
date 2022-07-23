@@ -50,8 +50,9 @@ class SubmissionStatusUpdated extends Notification implements ShouldQueue
     public function toMail()
     {
         return (new MailMessage)
-                    ->line($this->updateData['body'])
-                    ->action($this->updateData['action'], $this->updateData['url']);
+            ->subject($this->updateData['subject'])
+            ->line($this->updateData['body'])
+            ->action($this->updateData['action'], $this->updateData['url']);
     }
 
     /**
@@ -66,8 +67,9 @@ class SubmissionStatusUpdated extends Notification implements ShouldQueue
                 'id' => $this->updateData['submission']['id'],
                 'title' => $this->updateData['submission']['title'],
                 'status' => $this->updateData['submission']['status'],
+                'status_name' => $this->updateData['submission']['status_name'],
             ],
-            'type' => 'submission.updated',
+            'type' => $this->updateData['type'] ?? 'submission.updated',
             'body' => $this->updateData['body'] ?? '',
             'action' => $this->updateData['action'],
             'url' => $this->updateData['url'],
