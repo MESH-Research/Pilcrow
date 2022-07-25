@@ -248,6 +248,7 @@ class NotificationTest extends ApiTestCase
         $submission = Submission::factory()
             ->for(Publication::factory()
                 ->hasAttached($editor, [], 'editors')
+                ->hasAttached($publication_administrator, [], 'publicationAdmins')
                 ->create())
             ->hasAttached($submitter, [], 'submitters')
             ->hasAttached($reviewer, [], 'reviewers')
@@ -262,7 +263,7 @@ class NotificationTest extends ApiTestCase
                 $review_coordinator,
                 $editor,
                 $application_administrator,
-                $publication_administrator
+                $publication_administrator,
             ]);
         } else {
             Notification::assertSentTo([
