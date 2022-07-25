@@ -6,7 +6,6 @@ namespace Tests\Api;
 use App\Models\Publication;
 use App\Models\Submission;
 use App\Models\User;
-use App\Notifications\SubmissionCreated;
 use App\Notifications\SubmissionStatusUpdated;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
@@ -37,10 +36,10 @@ class NotificationTest extends ApiTestCase
                 'id' => 1,
                 'name' => 'Test Publication from PHPUnit',
             ],
-            'type' => 'submission.created',
+            'type' => 'submission.initially_submitted',
             'action' => 'Visit CCR',
             'url' => '/',
-            'body' => 'A submission has been created.',
+            'body' => 'A submission has been initially submitted.',
         ];
     }
 

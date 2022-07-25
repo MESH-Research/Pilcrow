@@ -557,10 +557,6 @@ export default {
       },
     },
     submission: {
-      created: {
-        short:
-          "{data_user_username} has submitted {data_submission_title} to {data_publication_name}",
-      },
       updated: {
         short:
           "The status of {data_submission_title} has been updated to {data_submission_status_name}",

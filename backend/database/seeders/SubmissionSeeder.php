@@ -63,9 +63,5 @@ class SubmissionSeeder extends Seeder
             ]);
         $submission->updated_by = 2;
         $submission->content()->associate($submission->contentHistory->last())->save();
-        //TODO: Put this event on the model so it gets called no matter how the object is created.
-        $event = new SubmissionCreated($submission);
-        $listener = new NotifyUsersAboutCreatedSubmission();
-        $listener->handle($event);
     }
 }

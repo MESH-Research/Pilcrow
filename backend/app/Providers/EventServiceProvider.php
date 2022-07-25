@@ -2,9 +2,7 @@
 
 namespace App\Providers;
 
-use App\Events\SubmissionCreated;
 use App\Events\SubmissionStatusUpdated;
-use App\Listeners\NotifyUsersAboutCreatedSubmission;
 use App\Listeners\NotifyUsersAboutUpdatedSubmissionStatus;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -20,9 +18,6 @@ class EventServiceProvider extends ServiceProvider
     protected $listen = [
         Registered::class => [
             SendEmailVerificationNotification::class,
-        ],
-        SubmissionCreated::class => [
-            NotifyUsersAboutCreatedSubmission::class,
         ],
         SubmissionStatusUpdated::class => [
             NotifyUsersAboutUpdatedSubmissionStatus::class,

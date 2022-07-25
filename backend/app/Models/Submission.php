@@ -18,6 +18,7 @@ class Submission extends Model
     use CreatedUpdatedBy;
     use Notifiable;
 
+    public const DRAFT = 0;
     public const INITIALLY_SUBMITTED = 1;
     public const AWAITING_RESUBMISSION = 2;
     public const RESUBMITTED = 3;
@@ -198,6 +199,7 @@ class Submission extends Model
     public function getStatusNameAttribute()
     {
         $statuses = [
+            0 => 'DRAFT',
             1 => 'INITIALLY_SUBMITTED',
             2 => 'AWAITING_RESUBMISSION',
             3 => 'RESUBMITTED',
