@@ -557,35 +557,55 @@ export default {
       },
     },
     submission: {
+      created: {
+        short:
+          "{data_user_username} has submitted {data_submission_title} to {data_publication_name}",
+      },
       updated: {
         short:
           "The status of {data_submission_title} has been updated to {data_submission_status_name}",
       },
       initially_submitted: {
         short:
-          "{data_submission_title} has been submitted to the publication. Its fitness for review is to be determined.",
+          "{data_submission_title} has been submitted for review. Its fitness for review is to be determined.",
       },
       resubmission_requested: {
         short:
-          "A submission has been determined to be unfit for review. A request has been made for resubmission.",
+          "{data_submission_title} has been determined to be unfit for review. A request has been made for resubmission.",
       },
       resubmitted: {
         short: "{data_submission_title} has been resubmitted for review.",
       },
       accepted_for_review: {
         short:
-          "A submission has been accepted for review. It is currently awaiting review from the assigned reviewers.",
+          "{data_submission_title} has been accepted for review. It is currently awaiting review from the assigned reviewers.",
       },
       rejected_for_review: {
         short:
-          "A submission has been determined to be unfit for review and has been rejected.",
+          "{data_submission_title} has been determined to be unfit for review and has been rejected.",
       },
-      created: {
+      accepted_as_final: {
         short:
-          "{data_user_username} has submitted {data_submission_title} to {data_publication_name}",
+          "{data_submission_title} has been reviewed and accepted as final.",
       },
-      approved: {
-        short: "{object_name} has been approved",
+      expired: {
+        short: "The review for {data_submission_title} has expired.",
+      },
+      under_review: {
+        short: "{data_submission_title} is currently under review.",
+      },
+      awaiting_decision: {
+        short:
+          "{data_submission_title} has been reviewed and is awaiting a decision on whether or not it will be accepted as final.",
+      },
+      awaiting_revision: {
+        short: "{data_submission_title} has been requested for revision.",
+      },
+      archived: {
+        short: "{data_submission_title} has been archived.",
+      },
+      deleted: {
+        short: "{data_submission_title} has been deleted.",
       },
     },
   },

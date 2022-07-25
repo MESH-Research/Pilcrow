@@ -8,7 +8,7 @@ const icons = flatten({
     resubmission_requested: "undo",
     accepted_for_review: "task_alt",
     rejected_for_review: "cancel",
-    acceptedAsFinal: "task_alt",
+    accepted_as_final: "task_alt",
     expired: "disabled_by_default",
     under_review: "start",
     awaiting_decision: "schedule",
