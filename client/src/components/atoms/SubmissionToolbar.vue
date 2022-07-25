@@ -9,12 +9,21 @@
         icon="arrow_back_ios_new"
         :to="{ name: 'submission_details', params: { id: props.id } }"
       />
-      <q-toolbar-title>
-        {{ submission.title }}
+      <q-toolbar-title class="q-pt-xs q-pb-sm">
+        <div class="flex">
+          {{ submission.title }}
+        </div>
+        <div class="flex">
+          <q-badge align="middle">Initially Submitted</q-badge>
+        </div>
       </q-toolbar-title>
-      <q-btn rounded label="Initially Submitted" class="q-mx-md"> </q-btn>
-      <q-separator vertical inset color="grey-1"></q-separator>
-      <q-btn rounded color="positive" label="Accept for Review" class="q-ml-md">
+      <q-btn
+        rounded
+        color="positive"
+        label="Accept for Review"
+        class="q-ml-md"
+        @click="confirmHandler('accept_for_review')"
+      >
       </q-btn>
       <q-btn
         rounded
@@ -24,7 +33,14 @@
         @click="confirmHandler('request_resubmission')"
       >
       </q-btn>
-      <q-btn rounded color="negative" label="Reject" class="q-ml-md"> </q-btn>
+      <q-btn
+        rounded
+        color="negative"
+        label="Reject"
+        class="q-ml-md"
+        @click="confirmHandler('reject')"
+      >
+      </q-btn>
       <q-space></q-space>
       <q-btn
         :aria-label="$t('submission.toolbar.toggle_annotation_highlights')"

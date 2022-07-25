@@ -625,9 +625,13 @@ export default {
       action_cancel: "Add style criteria",
     },
     confirmStatusChange: {
-      line_1: "You are about to change the status of this submission.",
+      body: {
+        accept_for_review: "You are about to accept the submission for review.",
+        reject: "You are about to reject the submission for review.",
+        request_resubmission: "You are about to request resubmission.",
+      },
       action: {
-        accept_review: "Accept for Review",
+        accept_for_review: "Accept for Review",
         cancel: "Cancel",
         reject: "Reject",
         request_resubmission: "Request Resubmission",
