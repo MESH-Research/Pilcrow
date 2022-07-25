@@ -3,9 +3,13 @@ declare(strict_types=1);
 
 namespace Tests\Api;
 
+use App\Models\Publication;
+use App\Models\Submission;
 use App\Models\User;
 use App\Notifications\SubmissionCreated;
+use App\Notifications\SubmissionStatusUpdated;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Notification;
 use Tests\ApiTestCase;
 
 class NotificationTest extends ApiTestCase
@@ -203,5 +207,52 @@ class NotificationTest extends ApiTestCase
         ];
         $response->assertJsonPath('data', $expected_response);
         $this->assertEquals(2, $user_2->unreadNotifications()->count());
+    }
+
+    /**
+     * @return array
+     */
+    public function provideAllSubmissionStates()
+    {
+        return [
+            'INITIALLY_SUBMITTED' => [ 1 ],
+            'AWAITING_RESUBMISSION' => [ 2 ],
+            'RESUBMITTED' => [ 3 ],
+            'AWAITING_REVIEW' => [ 4 ],
+            'REJECTED' => [ 5 ],
+            'ACCEPTED_AS_FINAL' => [ 6 ],
+            'EXPIRED' => [ 7 ],
+            'UNDER_REVIEW' => [ 8 ],
+            'AWAITING_DECISION' => [ 9 ],
+            'AWAITING_REVISION' => [ 10 ],
+            'ARCHIVED' => [ 11 ],
+            'DELETED' => [ 12 ],
+        ];
+    }
+
+    /**
+     * @dataProvider provideAllSubmissionStates
+     * @param int $state
+     * @return void
+     */
+    public function testThatNotificationsAreSentUponSubmissionStatusUpdates($state)
+    {
+        Notification::fake();
+        $this->beAppAdmin();
+        $submitter = User::factory()->create();
+        $reviewer = User::factory()->create();
+        $review_coordinator = User::factory()->create();
+        $editor = User::factory()->create();
+        $submission = Submission::factory()
+            ->for(Publication::factory()
+                ->hasAttached($editor, [], 'editors')
+                ->create())
+            ->hasAttached($submitter, [], 'submitters')
+            ->hasAttached($reviewer, [], 'reviewers')
+            ->hasAttached($review_coordinator, [], 'reviewCoordinators')
+            ->create();
+        $submission->status = $state;
+        $submission->save();
+        Notification::assertSentTo([$submitter], SubmissionStatusUpdated::class);
     }
 }
