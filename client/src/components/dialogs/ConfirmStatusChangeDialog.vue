@@ -16,13 +16,13 @@
       <q-card-actions align="around" class="q-pb-md">
         <q-btn
           data-cy="dirtyYesPostComment"
-          :label="$t('dialog.confirmStatusChange.action_submit')"
+          :label="$t(`dialog.confirmStatusChange.action.${props.action}`)"
           color="primary"
           @click="onDialogOK"
         />
         <q-btn
           data-cy="dirtyNoGoBack"
-          :label="$t('dialog.confirmStatusChange.action_cancel')"
+          :label="$t('dialog.confirmStatusChange.action.cancel')"
           color="grey"
           flat
           @click="onDialogCancel"
@@ -39,4 +39,12 @@ defineEmits([...useDialogPluginComponent.emits])
 
 const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } =
   useDialogPluginComponent()
+
+const props = defineProps({
+  action: {
+    type: String,
+    required: false,
+    default: null,
+  },
+})
 </script>

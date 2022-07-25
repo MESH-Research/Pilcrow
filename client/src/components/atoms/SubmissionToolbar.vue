@@ -12,7 +12,20 @@
       <q-toolbar-title>
         {{ submission.title }}
       </q-toolbar-title>
-
+      <q-btn rounded label="Initially Submitted" class="q-mx-md"> </q-btn>
+      <q-separator vertical inset color="grey-1"></q-separator>
+      <q-btn rounded color="positive" label="Accept for Review" class="q-ml-md">
+      </q-btn>
+      <q-btn
+        rounded
+        color="deep-orange"
+        label="Request Resubmit"
+        class="q-ml-md"
+        @click="confirmHandler('request_resubmission')"
+      >
+      </q-btn>
+      <q-btn rounded color="negative" label="Reject" class="q-ml-md"> </q-btn>
+      <q-space></q-space>
       <q-btn
         :aria-label="$t('submission.toolbar.toggle_annotation_highlights')"
         dense
@@ -42,6 +55,11 @@
   </q-header>
 </template>
 <script setup>
+import ConfirmStatusChangeDialog from "../dialogs/ConfirmStatusChangeDialog.vue"
+import { useQuasar } from "quasar"
+
+const { dialog } = useQuasar()
+
 const props = defineProps({
   // Drawer status
   commentDrawerOpen: {
@@ -70,5 +88,29 @@ function toggleCommentDrawer() {
 }
 function toggleAnnotationHighlights() {
   emit("update:highlightVisibility", !props.highlightVisibility)
+}
+async function confirmHandler(action) {
+  // fire dialog
+  // todo conditional logic
+  await new Promise((resolve) => {
+    dirtyDialog(action)
+      .onOk(function () {
+        resolve(true)
+      })
+      .onCancel(function () {
+        resolve(false)
+      })
+  })
+  {
+    return
+  }
+}
+function dirtyDialog(action) {
+  return dialog({
+    component: ConfirmStatusChangeDialog,
+    componentProps: {
+      action: action,
+    },
+  })
 }
 </script>
