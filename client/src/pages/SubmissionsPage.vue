@@ -271,9 +271,12 @@ async function confirmHandler(action) {
     return
   }
 }
-function dirtyDialog() {
+function dirtyDialog(action) {
   return dialog({
     component: ConfirmStatusChangeDialog,
+    componentProps: {
+      action: action,
+    },
   })
 }
 </script>

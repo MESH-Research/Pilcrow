@@ -626,8 +626,12 @@ export default {
     },
     confirmStatusChange: {
       line_1: "You are about to change the status of this submission.",
-      action_submit: "Confirm?",
-      action_cancel: "Cancel",
+      action: {
+        accept_review: "Accept for Review",
+        cancel: "Cancel",
+        reject: "Reject",
+        request_resubmission: "Request Resubmission",
+      },
     },
   },
 }
