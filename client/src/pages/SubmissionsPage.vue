@@ -105,7 +105,7 @@
                     <q-menu anchor="bottom end" self="top end">
                       <q-item
                         clickable
-                        @click="confirmHandler('accept_for_review')"
+                        @click="confirmHandler('accept_review')"
                         >{{ $t("submission.action.accept_for_review") }}</q-item
                       >
                       <q-item
@@ -118,8 +118,6 @@
                       <q-item clickable @click="confirmHandler('reject')"
                         >{{ $t("submission.action.reject") }}
                       </q-item>
-
-                      <!-- modal dialog here-->
                     </q-menu>
                   </q-item>
                 </q-menu>
@@ -256,8 +254,6 @@ async function createNewSubmission() {
 }
 
 async function confirmHandler(action) {
-  // fire dialog
-  // todo conditional logic
   await new Promise((resolve) => {
     dirtyDialog(action)
       .onOk(function () {
