@@ -69,20 +69,63 @@
           <q-item
             v-for="submission in submissions"
             :key="submission.id"
-            class="column"
+            class="row justify-between"
           >
-            <router-link
-              data-cy="submission_link"
-              :to="{
-                name: 'submission_details',
-                params: { id: submission.id },
-              }"
-            >
-              <q-item-label>{{ submission.title }}</q-item-label>
-            </router-link>
-            <q-item-label caption>
-              for {{ submission.publication.name }}
-            </q-item-label>
+            <div>
+              <router-link
+                data-cy="submission_link"
+                :to="{
+                  name: 'submission_details',
+                  params: { id: submission.id },
+                }"
+              >
+                <q-item-label>{{ submission.title }}</q-item-label>
+              </router-link>
+              <q-item-label caption>
+                for {{ submission.publication.name }}
+              </q-item-label>
+            </div>
+            <!-- TODO menu -->
+            <div class="q-gutter-sm submission-options">
+              <q-btn>
+                <q-icon name="more_vert" />
+                <q-menu anchor="bottom right" self="top right">
+                  <q-item clickable>
+                    <q-item-section
+                      ><a :href="'submission/review/' + submission.id"
+                        >View Submission</a
+                      ></q-item-section
+                    >
+                  </q-item>
+                  <q-item clickable>
+                    <q-item-section>Change Status</q-item-section>
+                    <q-item-section side>
+                      <q-icon name="keyboard_arrow_right" />
+                    </q-item-section>
+                    <q-menu anchor="bottom end" self="top end">
+                      <q-item
+                        clickable
+                        @click="confirmHandler('accept_for_review')"
+                        >{{ $t("submission.action.accept_for_review") }}</q-item
+                      >
+                      <q-item
+                        clickable
+                        @click="confirmHandler('request_resubmission')"
+                        >{{
+                          $t("submission.action.request_resubmission")
+                        }}</q-item
+                      >
+                      <q-item clickable @click="confirmHandler('reject')"
+                        >{{ $t("submission.action.reject") }}
+                      </q-item>
+
+                      <!-- modal dialog here-->
+                    </q-menu>
+                  </q-item>
+                </q-menu>
+              </q-btn>
+            </div>
+
             <ul v-if="submission.files.length > 0" class="q-ma-none">
               <li v-for="file in submission.files" :key="file.id">
                 <a :href="file.file_upload" download>
@@ -116,6 +159,10 @@ import { useI18n } from "vue-i18n"
 import { ref, reactive, computed } from "vue"
 import { useQuery, useMutation } from "@vue/apollo-composable"
 import useVuelidate from "@vuelidate/core"
+import ConfirmStatusChangeDialog from "../components/dialogs/ConfirmStatusChangeDialog.vue"
+import { useQuasar } from "quasar"
+
+const { dialog } = useQuasar()
 
 const { currentUser } = useCurrentUser()
 
@@ -206,5 +253,27 @@ async function createNewSubmission() {
   function resetForm() {
     Object.assign(new_submission, { title: "", file_upload: [] })
   }
+}
+
+async function confirmHandler(action) {
+  // fire dialog
+  // todo conditional logic
+  await new Promise((resolve) => {
+    dirtyDialog(action)
+      .onOk(function () {
+        resolve(true)
+      })
+      .onCancel(function () {
+        resolve(false)
+      })
+  })
+  {
+    return
+  }
+}
+function dirtyDialog() {
+  return dialog({
+    component: ConfirmStatusChangeDialog,
+  })
 }
 </script>

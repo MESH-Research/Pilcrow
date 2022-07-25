@@ -422,6 +422,11 @@ export default {
     },
   },
   submission: {
+    action: {
+      accept_for_review: "Accept for Review",
+      request_resubmission: "Request Resubmission",
+      reject: "Reject",
+    },
     status: {
       title: "Submission Status",
       INITIALLY_SUBMITTED: "Initially Submitted",
@@ -618,6 +623,11 @@ export default {
         "Are you sure you do not want to associate one with this comment?",
       action_submit: "Post comment as is",
       action_cancel: "Add style criteria",
+    },
+    confirmStatusChange: {
+      line_1: "You are about to change the status of this submission.",
+      action_submit: "Confirm?",
+      action_cancel: "Cancel",
     },
   },
 }
