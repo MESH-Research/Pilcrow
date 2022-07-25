@@ -215,7 +215,7 @@ class NotificationTest extends ApiTestCase
     public function provideAllSubmissionStates()
     {
         return [
-            'INITIALLY_SUBMITTED' => [ 1 ],
+            'INITIALLY_SUBMITTED' => [ 1, true ],
             'AWAITING_RESUBMISSION' => [ 2 ],
             'RESUBMITTED' => [ 3 ],
             'AWAITING_REVIEW' => [ 4 ],
@@ -233,12 +233,14 @@ class NotificationTest extends ApiTestCase
     /**
      * @dataProvider provideAllSubmissionStates
      * @param int $state
+     * @param bool $exception
      * @return void
      */
-    public function testThatNotificationsAreSentUponSubmissionStatusUpdates($state)
+    public function testThatNotificationsAreSentUponSubmissionStatusUpdates($state, $exception = false)
     {
         Notification::fake();
-        $this->beAppAdmin();
+        $application_administrator = $this->beAppAdmin();
+        $publication_administrator = User::factory()->create();
         $submitter = User::factory()->create();
         $reviewer = User::factory()->create();
         $review_coordinator = User::factory()->create();
@@ -253,6 +255,26 @@ class NotificationTest extends ApiTestCase
             ->create();
         $submission->status = $state;
         $submission->save();
-        Notification::assertSentTo([$submitter], SubmissionStatusUpdated::class);
+        if ($exception) {
+            Notification::assertNothingSentTo([
+                $submitter,
+                $reviewer,
+                $review_coordinator,
+                $editor,
+                $application_administrator,
+                $publication_administrator
+            ]);
+        } else {
+            Notification::assertSentTo([
+                $submitter,
+                $reviewer,
+                $review_coordinator,
+                $editor,
+            ], SubmissionStatusUpdated::class);
+            Notification::assertNothingSentTo([
+                $application_administrator,
+                $publication_administrator,
+            ]);
+        }
     }
 }
