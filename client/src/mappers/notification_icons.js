@@ -2,7 +2,6 @@ import { flatten } from "flat"
 
 const icons = flatten({
   submission: {
-    created: "content_copy",
     initially_submitted: "content_copy",
     resubmitted: "redo",
     resubmission_requested: "undo",

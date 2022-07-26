@@ -26,6 +26,8 @@ class NotificationTest extends ApiTestCase
             'submission' => [
                 'id' => $submission_id,
                 'title' => 'Test Submission from PHPUnit',
+                'status' => 1,
+                'status_name' => 'INITIALLY_SUBMITTED'
             ],
             'user' => [
                 'id' => $user->id,
@@ -53,8 +55,8 @@ class NotificationTest extends ApiTestCase
         $user_2 = User::factory()->create();
         $this->actingAs($user_1);
         $notification_data = $this->getSampleNotificationData($user_1, 1009);
-        $user_1->notify(new SubmissionCreated($notification_data));
-        $user_2->notify(new SubmissionCreated($notification_data));
+        $user_1->notify(new SubmissionStatusUpdated($notification_data));
+        $user_2->notify(new SubmissionStatusUpdated($notification_data));
         $response = $this->graphQL(
             'query GetUsers {
                 userSearch {
@@ -121,7 +123,7 @@ class NotificationTest extends ApiTestCase
         $user = User::factory()->create();
         $this->actingAs($user);
         $notification_data = $this->getSampleNotificationData($user, 1010);
-        $user->notify(new SubmissionCreated($notification_data));
+        $user->notify(new SubmissionStatusUpdated($notification_data));
         $this->graphQL(
             'mutation MarkNotificationRead ($notification_id: ID!) {
                 markNotificationRead(id: $notification_id) {
@@ -145,7 +147,7 @@ class NotificationTest extends ApiTestCase
         $user_2 = User::factory()->create();
         $this->actingAs($user_1);
         $notification_data = $this->getSampleNotificationData($user_2, 1011);
-        $user_2->notify(new SubmissionCreated($notification_data));
+        $user_2->notify(new SubmissionStatusUpdated($notification_data));
         $this->graphQL(
             'mutation MarkNotificationRead ($notification_id: ID!) {
                 markNotificationRead(id: $notification_id) {
@@ -168,9 +170,9 @@ class NotificationTest extends ApiTestCase
         $user = User::factory()->create();
         $this->actingAs($user);
         $notification_data_1 = $this->getSampleNotificationData($user, 1012);
-        $user->notify(new SubmissionCreated($notification_data_1));
+        $user->notify(new SubmissionStatusUpdated($notification_data_1));
         $notification_data_2 = $this->getSampleNotificationData($user, 1013);
-        $user->notify(new SubmissionCreated($notification_data_2));
+        $user->notify(new SubmissionStatusUpdated($notification_data_2));
         $response = $this->graphQL(
             'mutation MarkAllNotificationsRead {
                 markAllNotificationsRead
@@ -193,9 +195,9 @@ class NotificationTest extends ApiTestCase
         $user_2 = User::factory()->create();
         $this->actingAs($user_1);
         $notification_data_1 = $this->getSampleNotificationData($user_2, 1014);
-        $user_2->notify(new SubmissionCreated($notification_data_1));
+        $user_2->notify(new SubmissionStatusUpdated($notification_data_1));
         $notification_data_2 = $this->getSampleNotificationData($user_2, 1015);
-        $user_2->notify(new SubmissionCreated($notification_data_2));
+        $user_2->notify(new SubmissionStatusUpdated($notification_data_2));
         $response = $this->graphQL(
             'mutation MarkAllNotificationsRead {
                 markAllNotificationsRead

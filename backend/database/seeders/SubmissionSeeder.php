@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
-use App\Events\SubmissionCreated;
-use App\Listeners\NotifyUsersAboutCreatedSubmission;
 use App\Models\Submission;
 use App\Models\SubmissionContent;
 use App\Models\User;
