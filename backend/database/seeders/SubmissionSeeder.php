@@ -59,6 +59,7 @@ class SubmissionSeeder extends Seeder
                 'created_by' => 1,
                 'updated_by' => 1,
             ]);
+        $submission->status = 1;
         $submission->updated_by = 2;
         $submission->content()->associate($submission->contentHistory->last())->save();
     }
