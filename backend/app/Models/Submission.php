@@ -10,13 +10,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Notifications\Notifiable;
 
 class Submission extends Model
 {
     use HasFactory;
     use CreatedUpdatedBy;
-    use Notifiable;
 
     public const DRAFT = 0;
     public const INITIALLY_SUBMITTED = 1;

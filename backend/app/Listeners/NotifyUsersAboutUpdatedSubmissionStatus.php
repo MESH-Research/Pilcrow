@@ -17,12 +17,23 @@ class NotifyUsersAboutUpdatedSubmissionStatus
     public function handle($event)
     {
         $status = $event->submission->status;
+        $user = $event->submission->updatedBy;
+        $publication = $event->submission->publication;
         $default = [
             'submission' => [
                 'id' => $event->submission->id,
                 'title' => (string)$event->submission->title,
                 'status' => $status,
                 'status_name' => $event->submission->getStatusNameAttribute(),
+            ],
+            'user' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'username' => $user->username,
+            ],
+            'publication' => [
+                'id' => $publication->id,
+                'name' => $publication->name,
             ],
             'type' => 'submission.updated',
             'url' => url('/submission/' . $event->submission->id),
