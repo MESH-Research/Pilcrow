@@ -13,12 +13,6 @@
         {{ submission.title }}
       </q-toolbar-title>
 
-      <q-btn rounded color="primary" label="Accept for Review"></q-btn>
-
-      <q-btn rounded color="secondary" label="Reject"></q-btn>
-      <q-btn rounded color="negative" label="Request Resubmission"></q-btn>
-
-      <q-space></q-space>
       <q-btn
         :aria-label="$t('submission.toolbar.toggle_annotation_highlights')"
         dense
