@@ -27,8 +27,6 @@ class NotifyUsersAboutUpdatedSubmissionStatus
             'type' => 'submission.updated',
             'url' => url('/submission/' . $event->submission->id),
             'action' => 'View Submission',
-            'subject' => 'Submission Status Update',
-            'body' => 'The status of a submission has been updated.',
         ];
         $actions = [
             1 => $this->initiallySubmitted($default),

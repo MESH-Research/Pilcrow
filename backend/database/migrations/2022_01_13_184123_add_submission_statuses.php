@@ -20,7 +20,7 @@ class AddSubmissionStatuses extends Migration
     public function up()
     {
         Schema::table($this->table_name, function (Blueprint $table) {
-            $table->tinyInteger($this->column_name)->default(1);
+            $table->tinyInteger($this->column_name)->default(0);
         });
     }
 

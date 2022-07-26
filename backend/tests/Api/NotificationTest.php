@@ -42,6 +42,7 @@ class NotificationTest extends ApiTestCase
             'action' => 'Visit CCR',
             'url' => '/',
             'body' => 'A submission has been initially submitted.',
+            'subject' => 'Submission Status Update',
         ];
     }
 
@@ -89,7 +90,7 @@ class NotificationTest extends ApiTestCase
                                 'data' => [
                                     [
                                         'data' => [
-                                            'type' => 'submission.created',
+                                            'type' => 'submission.initially_submitted',
                                             'user' => [
                                                 'id' => (string)$user_1->id,
                                             ],
@@ -216,7 +217,7 @@ class NotificationTest extends ApiTestCase
     public function provideAllSubmissionStates()
     {
         return [
-            'INITIALLY_SUBMITTED' => [ 1, true ],
+            'INITIALLY_SUBMITTED' => [ 1 ],
             'AWAITING_RESUBMISSION' => [ 2 ],
             'RESUBMITTED' => [ 3 ],
             'AWAITING_REVIEW' => [ 4 ],
@@ -234,10 +235,9 @@ class NotificationTest extends ApiTestCase
     /**
      * @dataProvider provideAllSubmissionStates
      * @param int $state
-     * @param bool $exception
      * @return void
      */
-    public function testThatNotificationsAreSentUponSubmissionStatusUpdates($state, $exception = false)
+    public function testThatNotificationsAreSentUponSubmissionStatusUpdates($state)
     {
         Notification::fake();
         $application_administrator = $this->beAppAdmin();
@@ -257,26 +257,15 @@ class NotificationTest extends ApiTestCase
             ->create();
         $submission->status = $state;
         $submission->save();
-        if ($exception) {
-            Notification::assertNothingSentTo([
-                $submitter,
-                $reviewer,
-                $review_coordinator,
-                $editor,
-                $application_administrator,
-                $publication_administrator,
-            ]);
-        } else {
-            Notification::assertSentTo([
-                $submitter,
-                $reviewer,
-                $review_coordinator,
-                $editor,
-            ], SubmissionStatusUpdated::class);
-            Notification::assertNothingSentTo([
-                $application_administrator,
-                $publication_administrator,
-            ]);
-        }
+        Notification::assertSentTo([
+            $submitter,
+            $reviewer,
+            $review_coordinator,
+            $editor,
+        ], SubmissionStatusUpdated::class);
+        Notification::assertNothingSentTo([
+            $application_administrator,
+            $publication_administrator,
+        ]);
     }
 }

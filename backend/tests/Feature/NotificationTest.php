@@ -24,6 +24,8 @@ class NotificationTest extends TestCase
             'submission' => [
                 'id' => $submission_id,
                 'title' => 'Test Submission from PHPUnit',
+                'status' => 1,
+                'status_name' => 'INITIALLY_SUBMITTED'
             ],
             'user' => [
                 'id' => $user->id,
@@ -34,10 +36,11 @@ class NotificationTest extends TestCase
                 'id' => 1,
                 'name' => 'Test Publication from PHPUnit',
             ],
-            'type' => 'submission.created',
+            'type' => 'submission.initially_submitted',
             'action' => 'Visit CCR',
             'url' => '/',
-            'body' => 'A submission has been created.',
+            'body' => 'A submission status has been updated.',
+            'subject' => '',
         ];
     }
 

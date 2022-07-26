@@ -70,9 +70,10 @@ type SubmissionFile {
 }
 
 """
-The status of a submission in a review
+The status of a submission
 """
 enum SubmissionStatus {
+    DRAFT @enum(value: 0)
     INITIALLY_SUBMITTED @enum(value: 1)
     AWAITING_RESUBMISSION @enum(value: 2)
     RESUBMITTED @enum(value: 3)
