@@ -76,7 +76,7 @@ class SubmissionStatusUpdated extends Notification implements ShouldQueue
             ],
             'publication' => [
                 'id' => $this->updateData['publication']['id'],
-                'name' => $this->updateData['publication']['name']
+                'name' => $this->updateData['publication']['name'],
             ],
             'type' => $this->updateData['type'] ?? 'submission.updated',
             'body' => $this->updateData['body'] ?? '',

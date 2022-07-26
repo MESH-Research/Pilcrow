@@ -27,7 +27,7 @@ class NotificationTest extends ApiTestCase
                 'id' => $submission_id,
                 'title' => 'Test Submission from PHPUnit',
                 'status' => 1,
-                'status_name' => 'INITIALLY_SUBMITTED'
+                'status_name' => 'INITIALLY_SUBMITTED',
             ],
             'user' => [
                 'id' => $user->id,
