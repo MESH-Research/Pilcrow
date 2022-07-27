@@ -7,7 +7,10 @@
         </div>
         <div class="column justify-center q-my-sm q-mb-none">
           <p class="q-mb-none">
-            <i18n-t keypath="dialog.confirmStatusChange.line_1" tag="span">
+            <i18n-t
+              :keypath="`dialog.confirmStatusChange.body.${props.action}`"
+              tag="span"
+            >
             </i18n-t>
           </p>
         </div>

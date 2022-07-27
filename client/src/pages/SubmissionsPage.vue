@@ -105,7 +105,7 @@
                     <q-menu anchor="bottom end" self="top end">
                       <q-item
                         clickable
-                        @click="confirmHandler('accept_review')"
+                        @click="confirmHandler('accept_for_review')"
                         >{{ $t("submission.action.accept_for_review") }}</q-item
                       >
                       <q-item
