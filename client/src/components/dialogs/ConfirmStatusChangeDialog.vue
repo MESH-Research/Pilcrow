@@ -21,7 +21,7 @@
           data-cy="dirtyYesPostComment"
           :label="$t(`dialog.confirmStatusChange.action.${props.action}`)"
           color="primary"
-          @click="onDialogOK"
+          @click="onDialogOK(updateStatus())"
         />
         <q-btn
           data-cy="dirtyNoGoBack"
@@ -37,6 +37,8 @@
 
 <script setup>
 import { useDialogPluginComponent } from "quasar"
+import { useMutation } from "@vue/apollo-composable"
+import { UPDATE_SUBMISSION_STATUS } from "src/graphql/mutations"
 
 defineEmits([...useDialogPluginComponent.emits])
 
@@ -50,4 +52,26 @@ const props = defineProps({
     default: null,
   },
 })
+
+const statuses = {
+  accept_for_review: "AWAITING_REVIEW",
+  reject: "REJECTED",
+  request_resubmission: "AWAITING_RESUBMISSION",
+}
+
+const variables = {
+  id: "100",
+  status: statuses[props.action],
+}
+
+const { mutate } = useMutation(UPDATE_SUBMISSION_STATUS, { variables })
+
+async function updateStatus() {
+  try {
+    await mutate()
+    console.log("submission status updated")
+  } catch (error) {
+    console.log(error)
+  }
+}
 </script>
