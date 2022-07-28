@@ -18,7 +18,7 @@ class Submission extends Model
 
     public const DRAFT = 0;
     public const INITIALLY_SUBMITTED = 1;
-    public const AWAITING_RESUBMISSION = 2;
+    public const RESUBMISSION_REQUESTED = 2;
     public const RESUBMITTED = 3;
     public const AWAITING_REVIEW = 4;
     public const REJECTED = 5;
@@ -26,7 +26,7 @@ class Submission extends Model
     public const EXPIRED = 7;
     public const UNDER_REVIEW = 8;
     public const AWAITING_DECISION = 9;
-    public const AWAITING_REVISION = 10;
+    public const REVISION_REQUESTED = 10;
     public const ARCHIVED = 11;
     public const DELETED = 12;
 
@@ -199,7 +199,7 @@ class Submission extends Model
         $statuses = [
             0 => 'DRAFT',
             1 => 'INITIALLY_SUBMITTED',
-            2 => 'AWAITING_RESUBMISSION',
+            2 => 'RESUBMISSION_REQUESTED',
             3 => 'RESUBMITTED',
             4 => 'AWAITING_REVIEW',
             5 => 'REJECTED',

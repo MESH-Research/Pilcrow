@@ -218,7 +218,7 @@ class NotificationTest extends ApiTestCase
     {
         return [
             'INITIALLY_SUBMITTED' => [ 1 ],
-            'AWAITING_RESUBMISSION' => [ 2 ],
+            'RESUBMISSION_REQUESTED' => [ 2 ],
             'RESUBMITTED' => [ 3 ],
             'AWAITING_REVIEW' => [ 4 ],
             'REJECTED' => [ 5 ],

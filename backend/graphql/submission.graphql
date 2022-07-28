@@ -75,7 +75,7 @@ The status of a submission
 enum SubmissionStatus {
     DRAFT @enum(value: 0)
     INITIALLY_SUBMITTED @enum(value: 1)
-    AWAITING_RESUBMISSION @enum(value: 2)
+    RESUBMISSION_REQUESTED @enum(value: 2)
     RESUBMITTED @enum(value: 3)
     AWAITING_REVIEW @enum(value: 4)
     REJECTED @enum(value: 5)

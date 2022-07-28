@@ -427,7 +427,7 @@ export default {
         "The status of {data_submission_title} has been updated to {data_submission_status_name}.",
       title: "Submission Status",
       INITIALLY_SUBMITTED: "Initially Submitted",
-      AWAITING_RESUBMISSION: "Awaiting Resubmission",
+      RESUBMISSION_REQUESTED: "Resubmission Requested",
       RESUBMITTED: "Resubmitted",
       AWAITING_REVIEW: "Awaiting Review",
       REJECTED: "Rejected",
@@ -435,7 +435,7 @@ export default {
       EXPIRED: "Expired",
       UNDER_REVIEW: "Under Review",
       AWAITING_DECISION: "Awaiting Decision",
-      AWAITING_REVISION: "Awaiting Revision",
+      REVISION_REQUESTED: "Revision Requested",
       ARCHIVED: "Archived",
       DELETED: "Deleted",
     },
@@ -565,7 +565,7 @@ export default {
         short:
           "{data_submission_title} has been submitted for review. Its fitness for review is to be determined.",
       },
-      awaiting_resubmission: {
+      resubmission_requested: {
         short:
           "{data_submission_title} has been determined to be unfit for review. A request has been made for resubmission.",
       },
@@ -594,7 +594,7 @@ export default {
         short:
           "{data_submission_title} has been reviewed and is awaiting a decision on whether or not it will be accepted as final.",
       },
-      awaiting_revision: {
+      revision_requested: {
         short: "{data_submission_title} has been requested for revision.",
       },
       archived: {
