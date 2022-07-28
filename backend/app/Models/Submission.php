@@ -207,7 +207,7 @@ class Submission extends Model
             7 => 'EXPIRED',
             8 => 'UNDER_REVIEW',
             9 => 'AWAITING_DECISION',
-            10 => 'AWAITING_REVISION',
+            10 => 'REVISION_REQUESTED',
             11 => 'ARCHIVED',
             12 => 'DELETED',
         ];
