@@ -36,9 +36,13 @@
 </template>
 
 <script setup>
-import { useDialogPluginComponent } from "quasar"
+import { useDialogPluginComponent, useQuasar } from "quasar"
 import { useMutation } from "@vue/apollo-composable"
 import { UPDATE_SUBMISSION_STATUS } from "src/graphql/mutations"
+import { useI18n } from "vue-i18n"
+
+const { t } = useI18n()
+const { notify } = useQuasar()
 
 defineEmits([...useDialogPluginComponent.emits])
 
@@ -69,9 +73,17 @@ const { mutate } = useMutation(UPDATE_SUBMISSION_STATUS, { variables })
 async function updateStatus() {
   try {
     await mutate()
-    console.log("submission status updated")
+    notify({
+      color: "positive",
+      message: t(`dialog.confirmStatusChange.statusChanged.${props.action}`),
+      icon: "done",
+    })
   } catch (error) {
-    console.log(error)
+    notify({
+      color: "negative",
+      message: t("dialog.confirmStatusChange.unauthorized"),
+      icon: "error",
+    })
   }
 }
 </script>

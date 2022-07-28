@@ -636,6 +636,15 @@ export default {
         reject: "Reject",
         request_resubmission: "Request Resubmission",
       },
+      unauthorized:
+        "You are not authorized to change the status of this submission. Please contact your administrator.",
+      statusChanged: {
+        accept_for_review:
+          "This submission is accepted for review. It is currently awaiting review from the assigned reviewers.",
+        reject: "This submission is rejected for review.",
+        request_resubmission:
+          "A resubmission is requested for this submission.",
+      },
     },
   },
 }

@@ -275,20 +275,4 @@ function dirtyDialog(action) {
     },
   })
 }
-
-// async function confirmUserPermission() {
-//   const userRoles = currentUser.roles
-//   if(userRoles.value) // reviewer/admin/revcoord in userRoles?
-//   try {
-//     await // execute action -> continue?
-//   } catch(error) {
-//     console.log(error)
-//     // redirect to 403
-//   }
-//   // get user.roles?
-//   // match role with
-//   // get current user.abilities
-//   // if abilites do not match action, error
-//   // else proceed
-// }
 </script>
