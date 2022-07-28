@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
+use App\Models\Submission;
 use App\Models\User;
 use App\Notifications\SubmissionStatusUpdated;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -24,7 +25,7 @@ class NotificationTest extends TestCase
             'submission' => [
                 'id' => $submission_id,
                 'title' => 'Test Submission from PHPUnit',
-                'status' => 1,
+                'status' => Submission::INITIALLY_SUBMITTED,
                 'status_name' => 'INITIALLY_SUBMITTED',
             ],
             'user' => [
