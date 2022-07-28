@@ -86,7 +86,7 @@ class NotifyUsersAboutUpdatedSubmissionStatus
         $default['subject'] = 'Resubmission Requested';
         $default['body'] = $default['submission']['title'] . ' has been determined to be unfit for review. ' .
                            'A request has been made for resubmission.';
-        $default['type'] = 'submission.resubmission_requested';
+        $default['type'] = 'submission.awaiting_resubmission';
 
         return $default;
     }
@@ -113,7 +113,7 @@ class NotifyUsersAboutUpdatedSubmissionStatus
         $default['subject'] = 'Submission Accepted for Review';
         $default['body'] = $default['submission']['title'] . ' has been accepted for review. ' .
                            'It is currently awaiting review from the assigned reviewers.';
-        $default['type'] = 'submission.accepted_for_review';
+        $default['type'] = 'submission.awaiting_review';
 
         return $default;
     }
@@ -127,7 +127,7 @@ class NotifyUsersAboutUpdatedSubmissionStatus
         $default['subject'] = 'Submission Rejected for Review';
         $default['body'] = $default['submission']['title'] . ' has been determined to be unfit ' .
                            'for review and has been rejected.';
-        $default['type'] = 'submission.rejected_for_review';
+        $default['type'] = 'submission.rejected';
 
         return $default;
     }

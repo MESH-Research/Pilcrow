@@ -565,18 +565,18 @@ export default {
         short:
           "{data_submission_title} has been submitted for review. Its fitness for review is to be determined.",
       },
-      resubmission_requested: {
+      awaiting_resubmission: {
         short:
           "{data_submission_title} has been determined to be unfit for review. A request has been made for resubmission.",
       },
       resubmitted: {
         short: "{data_submission_title} has been resubmitted for review.",
       },
-      accepted_for_review: {
+      awaiting_review: {
         short:
           "{data_submission_title} has been accepted for review. It is currently awaiting review from the assigned reviewers.",
       },
-      rejected_for_review: {
+      rejected: {
         short:
           "{data_submission_title} has been determined to be unfit for review and has been rejected.",
       },

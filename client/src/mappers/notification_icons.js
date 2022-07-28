@@ -4,9 +4,9 @@ const icons = flatten({
   submission: {
     initially_submitted: "content_copy",
     resubmitted: "redo",
-    resubmission_requested: "undo",
-    accepted_for_review: "task_alt",
-    rejected_for_review: "cancel",
+    awaiting_resubmission: "undo",
+    awaiting_review: "task_alt",
+    rejected: "cancel",
     accepted_as_final: "task_alt",
     expired: "disabled_by_default",
     under_review: "start",
