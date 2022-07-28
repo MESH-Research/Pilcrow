@@ -192,6 +192,7 @@ export const GET_SUBMISSION_REVIEW = gql`
     submission(id: $id) {
       id
       title
+      status
       content {
         data
       }

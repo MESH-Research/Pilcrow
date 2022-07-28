@@ -10,11 +10,16 @@
         :to="{ name: 'submission_details', params: { id: props.id } }"
       />
       <q-toolbar-title class="q-pt-xs q-pb-sm">
-        <div class="flex">
-          {{ submission.title }}
-        </div>
-        <div class="flex">
-          <q-badge align="middle">Initially Submitted</q-badge>
+        <div>
+          <h3 class="q-ma-none">{{ submission.title }}</h3>
+          <q-chip
+            class="q-ma-none"
+            icon="radio_button_checked"
+            color="primary"
+            text-color="white"
+          >
+            {{ $t(`submission.status.${submission.status}`) }}
+          </q-chip>
         </div>
       </q-toolbar-title>
       <q-btn
