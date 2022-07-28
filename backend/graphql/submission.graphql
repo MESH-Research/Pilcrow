@@ -83,7 +83,7 @@ enum SubmissionStatus {
     EXPIRED @enum(value: 7)
     UNDER_REVIEW @enum(value: 8)
     AWAITING_DECISION @enum(value: 9)
-    AWAITING_REVISION @enum(value: 10)
+    REVISION_REQUESTED @enum(value: 10)
     ARCHIVED @enum(value: 11)
     DELETED @enum(value: 12)
 }

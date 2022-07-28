@@ -226,7 +226,7 @@ class NotificationTest extends ApiTestCase
             'EXPIRED' => [ 7 ],
             'UNDER_REVIEW' => [ 8 ],
             'AWAITING_DECISION' => [ 9 ],
-            'AWAITING_REVISION' => [ 10 ],
+            'REVISION_REQUESTED' => [ 10 ],
             'ARCHIVED' => [ 11 ],
             'DELETED' => [ 12 ],
         ];
