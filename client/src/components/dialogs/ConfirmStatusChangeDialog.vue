@@ -3,7 +3,11 @@
     <q-card>
       <q-card-section class="row no-wrap">
         <div class="q-pa-sm q-pr-md column">
-          <q-avatar icon="priority_high" color="negative" text-color="white" />
+          <q-avatar
+            :icon="$t(`dialog.confirmStatusChange.icon.${props.action}`)"
+            :color="$t(`dialog.confirmStatusChange.color.${props.action}`)"
+            text-color="white"
+          />
         </div>
         <div class="column justify-center q-my-sm q-mb-none">
           <p class="q-mb-none">

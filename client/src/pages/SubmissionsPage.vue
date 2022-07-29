@@ -104,18 +104,23 @@
                     </q-item-section>
                     <q-menu anchor="bottom end" self="top end">
                       <q-item
+                        class="items-center"
                         clickable
                         @click="confirmHandler('accept_for_review')"
                         >{{ $t("submission.action.accept_for_review") }}</q-item
                       >
                       <q-item
+                        class="items-center"
                         clickable
                         @click="confirmHandler('request_resubmission')"
                         >{{
                           $t("submission.action.request_resubmission")
                         }}</q-item
                       >
-                      <q-item clickable @click="confirmHandler('reject')"
+                      <q-item
+                        class="items-center"
+                        clickable
+                        @click="confirmHandler('reject')"
                         >{{ $t("submission.action.reject") }}
                       </q-item>
                     </q-menu>
