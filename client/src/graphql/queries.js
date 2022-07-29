@@ -62,8 +62,16 @@ export const CURRENT_USER_SUBMISSIONS = gql`
   query CurrentUserSubmission {
     currentUser {
       id
+      roles {
+        name
+      }
       submissions {
         id
+        status
+        my_role
+        publication {
+          my_role
+        }
         pivot {
           id
           role_id
