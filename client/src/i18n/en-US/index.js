@@ -628,7 +628,8 @@ export default {
       body: {
         accept_for_review: "You are about to accept the submission for review.",
         reject: "You are about to reject the submission for review.",
-        request_resubmission: "You are about to request resubmission.",
+        request_resubmission:
+          "You are about to request the submitter to resubmit this submission as a new submission to be reviewed.",
       },
       action: {
         accept_for_review: "Accept for Review",

@@ -25,7 +25,7 @@
       <q-btn
         rounded
         color="positive"
-        label="Accept for Review"
+        :label="$t(`submission.action.accept_for_review`)"
         class="q-ml-md"
         @click="confirmHandler('accept_for_review')"
       >
@@ -33,7 +33,7 @@
       <q-btn
         rounded
         color="deep-orange"
-        label="Request Resubmit"
+        :label="$t(`submission.action.request_resubmission`)"
         class="q-ml-md"
         @click="confirmHandler('request_resubmission')"
       >
@@ -41,7 +41,7 @@
       <q-btn
         rounded
         color="negative"
-        label="Reject"
+        :label="$t(`submission.action.reject`)"
         class="q-ml-md"
         @click="confirmHandler('reject')"
       >
