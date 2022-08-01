@@ -171,4 +171,16 @@ describe("Submissions Review", () => {
       cy.get(".fullscreen.q-drawer__backdrop:not('.hidden')").click()
     })
   })
+
+  it("should allow an application administrator to accept a submission for review", () => {
+
+  })
+
+  it("should deny a reviewer access to a submission's contents before it is accepted for review", () => {
+
+  })
+
+  it("should allow a reviewer access to a submission's contents after it is accepted for review", () => {
+
+  })
 })
