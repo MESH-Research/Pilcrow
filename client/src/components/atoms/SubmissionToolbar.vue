@@ -23,6 +23,7 @@
         </div>
       </q-toolbar-title>
       <q-btn
+        data-cy="accept_for_review"
         rounded
         color="positive"
         :label="$t(`submission.action.accept_for_review`)"

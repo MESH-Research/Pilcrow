@@ -172,15 +172,26 @@ describe("Submissions Review", () => {
     })
   })
 
-  it("should allow an application administrator to accept a submission for review", () => {
-
+  it("should deny a reviewer access to a submission's contents before it is accepted for review", () => {
+    cy.task("resetDb")
+    cy.login({ email: "reviewer@ccrproject.dev" })
+    cy.visit("submission/review/100")
+    cy.url().should("include", "/error403")
   })
 
-  it("should deny a reviewer access to a submission's contents before it is accepted for review", () => {
-
+  it("should allow an application administrator to accept a submission for review", () => {
+    cy.task("resetDb")
+    cy.login({ email: "applicationadministrator@ccrproject.dev" })
+    cy.visit("submission/review/100")
+    cy.dataCy("accept_for_review").click()
+    cy.dataCy("dirtyYesChangeStatus").click()
+    cy.dataCy("submission_status").contains("Awaiting Review")
+    cy.checkA11y(null, null, a11yLogViolations)
   })
 
   it("should allow a reviewer access to a submission's contents after it is accepted for review", () => {
-
+    cy.login({ email: "reviewer@ccrproject.dev" })
+    cy.visit("submission/review/100")
+    cy.url().should("not.include", "/error403")
   })
 })

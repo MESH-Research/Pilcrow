@@ -22,13 +22,13 @@
 
       <q-card-actions align="around" class="q-pb-md">
         <q-btn
-          data-cy="dirtyYesPostComment"
+          data-cy="dirtyYesChangeStatus"
           :label="$t(`dialog.confirmStatusChange.action.${props.action}`)"
           color="primary"
           @click="onDialogOK(updateStatus())"
         />
         <q-btn
-          data-cy="dirtyNoGoBack"
+          data-cy="dirtyNoCancelChangeStatus"
           :label="$t('dialog.confirmStatusChange.action.cancel')"
           color="grey"
           flat
