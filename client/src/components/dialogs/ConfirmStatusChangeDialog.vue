@@ -4,8 +4,8 @@
       <q-card-section class="row no-wrap">
         <div class="q-pa-sm q-pr-md column">
           <q-avatar
-            :icon="$t(`dialog.confirmStatusChange.icon.${props.action}`)"
-            :color="$t(`dialog.confirmStatusChange.color.${props.action}`)"
+            :icon="icons[props.action]"
+            :color="colors[props.action]"
             text-color="white"
           />
         </div>
@@ -65,6 +65,18 @@ const statuses = {
   accept_for_review: "AWAITING_REVIEW",
   reject: "REJECTED",
   request_resubmission: "AWAITING_RESUBMISSION",
+}
+
+const icons = {
+  accept_for_review: "done",
+  reject: "do_not_disturb",
+  request_resubmission: "refresh",
+}
+
+const colors = {
+  accept_for_review: "positive",
+  reject: "negative",
+  request_resubmission: "deep-orange",
 }
 
 const variables = {

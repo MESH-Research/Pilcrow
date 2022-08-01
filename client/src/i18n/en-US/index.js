@@ -637,18 +637,6 @@ export default {
         reject: "Reject",
         request_resubmission: "Request Resubmission",
       },
-      icon: {
-        accept_for_review: "done",
-        cancel: "close",
-        reject: "do_not_disturb",
-        request_resubmission: "refresh",
-      },
-      color: {
-        accept_for_review: "positive",
-        cancel: "negative",
-        reject: "negative",
-        request_resubmission: "negative",
-      },
       unauthorized:
         "You are not authorized to change the status of this submission. Please contact your administrator.",
       statusChanged: {
