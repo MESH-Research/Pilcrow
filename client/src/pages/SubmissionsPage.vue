@@ -83,6 +83,14 @@
               </router-link>
               <q-item-label caption>
                 for {{ submission.publication.name }}
+
+                <ul v-if="submission.files.length > 0" class="q-ma-none">
+                  <li v-for="file in submission.files" :key="file.id">
+                    <a :href="file.file_upload" download>
+                      {{ file.file_upload }}
+                    </a>
+                  </li>
+                </ul>
               </q-item-label>
             </div>
             <!-- TODO menu -->
@@ -128,14 +136,6 @@
                 </q-menu>
               </q-btn>
             </div>
-
-            <ul v-if="submission.files.length > 0" class="q-ma-none">
-              <li v-for="file in submission.files" :key="file.id">
-                <a :href="file.file_upload" download>
-                  {{ file.file_upload }}
-                </a>
-              </li>
-            </ul>
           </q-item>
         </q-list>
         <div v-if="subsLoading" class="q-pa-lg">
