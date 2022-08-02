@@ -2876,16 +2876,16 @@
         },
         {
             "name": "nuwave/lighthouse",
-            "version": "v5.57.0",
+            "version": "v5.57.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nuwave/lighthouse.git",
-                "reference": "77fb645de4d58622a515b5ff7575c3df96e768f1"
+                "reference": "9cc3583a42b409be7c80a4a034b1326de87879a9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nuwave/lighthouse/zipball/77fb645de4d58622a515b5ff7575c3df96e768f1",
-                "reference": "77fb645de4d58622a515b5ff7575c3df96e768f1",
+                "url": "https://api.github.com/repos/nuwave/lighthouse/zipball/9cc3583a42b409be7c80a4a034b1326de87879a9",
+                "reference": "9cc3583a42b409be7c80a4a034b1326de87879a9",
                 "shasum": ""
             },
             "require": {
@@ -2997,13 +2997,9 @@
                 {
                     "url": "https://www.patreon.com/lighthouse_php",
                     "type": "patreon"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/nuwave/lighthouse",
-                    "type": "tidelift"
                 }
             ],
-            "time": "2022-07-08T08:50:28+00:00"
+            "time": "2022-08-02T13:36:04+00:00"
         },
         {
             "name": "olssonm/l5-zxcvbn",
