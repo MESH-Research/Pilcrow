@@ -59,6 +59,10 @@ const props = defineProps({
     required: false,
     default: null,
   },
+  submissionId: {
+    type: String,
+    required: true,
+  },
 })
 
 const statuses = {
@@ -76,11 +80,11 @@ const icons = {
 const colors = {
   accept_for_review: "positive",
   reject: "negative",
-  request_resubmission: "deep-orange",
+  request_resubmission: "deep-orange-10",
 }
 
 const variables = {
-  id: "100",
+  id: String(props.submissionId),
   status: statuses[props.action],
 }
 

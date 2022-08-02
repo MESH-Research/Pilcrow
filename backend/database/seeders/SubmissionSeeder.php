@@ -24,7 +24,10 @@ class SubmissionSeeder extends Seeder
         $this->callOnce(PublicationSeeder::class);
         $this->callOnce(UserSeeder::class);
 
-        $this->createSubmission(100, 'CCR Test Submission 1');
+        $submission_1 = $this->createSubmission(100, 'CCR Test Submission 1');
+        $submission_1->status = Submission::AWAITING_REVIEW;
+        $submission_1->updated_by = 1;
+        $submission_1->save();
         $this->createSubmission(101, 'CCR Test Submission 2');
     }
 
@@ -33,9 +36,9 @@ class SubmissionSeeder extends Seeder
      *
      * @param int $id
      * @param string $title
-     * @return void
+     * @return App\Models\Submission
      */
-    protected function createSubmission($id, $title)
+    protected function createSubmission(int $id, string $title)
     {
         $submission = Submission::factory()
             ->hasAttached(
@@ -67,5 +70,6 @@ class SubmissionSeeder extends Seeder
         $event = new SubmissionCreated($submission);
         $listener = new NotifyUsersAboutCreatedSubmission();
         $listener->handle($event);
+        return $submission;
     }
 }

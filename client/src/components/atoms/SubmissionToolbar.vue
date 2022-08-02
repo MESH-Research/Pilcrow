@@ -11,8 +11,9 @@
       />
       <q-toolbar-title class="q-pt-xs q-pb-sm">
         <div>
-          <h3 class="q-ma-none">{{ submission.title }}</h3>
+          <h1 class="text-h3 q-ma-none">{{ submission.title }}</h1>
           <q-chip
+            data-cy="submission_status"
             class="q-ma-none"
             icon="radio_button_checked"
             color="primary"
@@ -33,7 +34,7 @@
       </q-btn>
       <q-btn
         rounded
-        color="deep-orange"
+        color="deep-orange-10"
         :label="$t(`submission.action.request_resubmission`)"
         class="q-ml-md"
         @click="confirmHandler('request_resubmission')"
@@ -132,6 +133,7 @@ function dirtyDialog(action) {
     component: ConfirmStatusChangeDialog,
     componentProps: {
       action: action,
+      submissionId: props.submission.id,
     },
   })
 }

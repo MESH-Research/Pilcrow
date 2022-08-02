@@ -114,13 +114,17 @@
                       <q-item
                         class="items-center"
                         clickable
-                        @click="confirmHandler('accept_for_review')"
+                        @click="
+                          confirmHandler('accept_for_review', submission.id)
+                        "
                         >{{ $t("submission.action.accept_for_review") }}</q-item
                       >
                       <q-item
                         class="items-center"
                         clickable
-                        @click="confirmHandler('request_resubmission')"
+                        @click="
+                          confirmHandler('request_resubmission', submission.id)
+                        "
                         >{{
                           $t("submission.action.request_resubmission")
                         }}</q-item
@@ -128,7 +132,7 @@
                       <q-item
                         class="items-center"
                         clickable
-                        @click="confirmHandler('reject')"
+                        @click="confirmHandler('reject', submission.id)"
                         >{{ $t("submission.action.reject") }}
                       </q-item>
                     </q-menu>
@@ -258,9 +262,9 @@ async function createNewSubmission() {
   }
 }
 
-async function confirmHandler(action) {
+async function confirmHandler(action, id) {
   await new Promise((resolve) => {
-    dirtyDialog(action)
+    dirtyDialog(action, id)
       .onOk(function () {
         resolve(true)
       })
@@ -272,11 +276,12 @@ async function confirmHandler(action) {
     return
   }
 }
-function dirtyDialog(action) {
+function dirtyDialog(action, id) {
   return dialog({
     component: ConfirmStatusChangeDialog,
     componentProps: {
       action: action,
+      submissionId: id,
     },
   })
 }
