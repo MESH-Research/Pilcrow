@@ -2,13 +2,15 @@ describe("Copywriting Screenshots", () => {
     it("Makes screenshots", () => {
         function setLocale(locale = 'copy') {
             cy.get('#locale-switch').then((el) => {
-                el.get(0).__vueParentComponent.exposed.locale.value = locale
+                el.val(locale)
+                const event = new Event('input', { bubbles: true })
+                el.get(0).dispatchEvent(event)
             })
         }
         function screenshotPath(url) {
             cy.visit(url)
             const name = url.replace(/\//g, "#");
-            cy.task("log", name)
+
             setLocale('en-US')
             cy.screenshot(name + ' (Copy)')
 
