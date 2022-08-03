@@ -183,6 +183,7 @@ describe("Submissions Review", () => {
     cy.task("resetDb")
     cy.login({ email: "applicationadministrator@ccrproject.dev" })
     cy.visit("submission/review/101")
+    cy.dataCy("submission_status").contains("Initially Submitted")
     cy.dataCy("accept_for_review").click()
     cy.dataCy("dirtyYesChangeStatus").click()
     cy.dataCy("submission_status").contains("Awaiting Review")

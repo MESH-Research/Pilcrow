@@ -95,7 +95,7 @@
             </div>
             <!-- TODO menu -->
             <div class="q-gutter-sm submission-options">
-              <q-btn>
+              <q-btn data-cy="submission_actions">
                 <q-icon name="more_vert" />
                 <q-menu anchor="bottom right" self="top right">
                   <q-item clickable>
@@ -105,13 +105,14 @@
                       ></q-item-section
                     >
                   </q-item>
-                  <q-item clickable>
+                  <q-item data-cy="change_status" clickable>
                     <q-item-section>Change Status</q-item-section>
                     <q-item-section side>
                       <q-icon name="keyboard_arrow_right" />
                     </q-item-section>
                     <q-menu anchor="bottom end" self="top end">
                       <q-item
+                        data-cy="accept_for_review"
                         class="items-center"
                         clickable
                         @click="

@@ -97,12 +97,18 @@ async function updateStatus() {
       color: "positive",
       message: t(`dialog.confirmStatusChange.statusChanged.${props.action}`),
       icon: "done",
+      attrs: {
+        "data-cy": "change_status_notify",
+      },
     })
   } catch (error) {
     notify({
       color: "negative",
       message: t("dialog.confirmStatusChange.unauthorized"),
       icon: "error",
+      attrs: {
+        "data-cy": "change_status_notify",
+      },
     })
   }
 }
