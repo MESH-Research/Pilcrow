@@ -7,8 +7,9 @@ describe("Copywriting Screenshots", () => {
                 el.get(0).dispatchEvent(event)
             })
         }
-        function screenshotPath(url) {
+        function screenshotPath(url, waitOn) {
             cy.visit(url)
+            if (waitOn) cy.get(waitOn)
             const name = url.replace(/\//g, "#");
 
             setLocale('en-US')
@@ -23,7 +24,7 @@ describe("Copywriting Screenshots", () => {
         screenshotPath('/login')
         screenshotPath('/register')
         screenshotPath('/dashboard')
-        screenshotPath("/publications")
+        screenshotPath("/publications", "[data-cy=publications_list]")
         screenshotPath("account/profile")
         screenshotPath("account/metadata")
         screenshotPath("/publication/1/setup/basic")
