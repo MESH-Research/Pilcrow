@@ -720,7 +720,7 @@ class SubmissionTest extends ApiTestCase
                 'INITIALLY_SUBMITTED',
             ],
             'Awaiting Resubmission' => [
-                'AWAITING_RESUBMISSION',
+                'RESUBMISSION_REQUESTED',
             ],
             'Resubmitted' => [
                 'RESUBMITTED',
@@ -743,8 +743,8 @@ class SubmissionTest extends ApiTestCase
             'Awaiting Decision' => [
                 'AWAITING_DECISION',
             ],
-            'Awaiting Revision' => [
-                'AWAITING_REVISION',
+            'Revision Requested' => [
+                'REVISION_REQUESTED',
             ],
             'Archived' => [
                 'ARCHIVED',
