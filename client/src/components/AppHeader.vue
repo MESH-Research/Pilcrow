@@ -1,5 +1,5 @@
 <template>
-  <input id="locale-switch" v-model="locale" />
+  <input id="locale-switch" v-model="locale" type="hidden" />
   <q-header class="header">
     <q-toolbar class="header-toolbar">
       <div class="q-pa-sm">
