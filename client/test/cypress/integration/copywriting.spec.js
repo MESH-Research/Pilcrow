@@ -15,7 +15,7 @@ describe("Copywriting Screenshots", () => {
             setLocale('copy')
             cy.screenshot(name + ' (Keys)')
         }
-
+        cy.task("resetDb")
         cy.login({ email: "applicationadministrator@ccrproject.dev" })
         screenshotPath('/')
         screenshotPath('/login')
