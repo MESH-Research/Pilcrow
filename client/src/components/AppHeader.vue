@@ -1,4 +1,5 @@
 <template>
+  <input id="locale-switch" v-model="locale" />
   <q-header class="header">
     <q-toolbar class="header-toolbar">
       <div class="q-pa-sm">
@@ -8,6 +9,7 @@
         <small class="site-subtitle">Submission Review System</small>
       </div>
       <q-space />
+
       <template v-if="currentUser">
         <NotificationPopup />
         <q-btn-dropdown
@@ -107,6 +109,7 @@
 <script setup>
 import NotificationPopup from "src/components/molecules/NotificationPopup.vue"
 import { useCurrentUser } from "src/use/user"
+import { useI18n } from "vue-i18n"
 
 defineProps({
   //Drawer status
@@ -117,6 +120,8 @@ defineProps({
 })
 
 const { currentUser, isAppAdmin } = useCurrentUser()
+const { locale } = useI18n({ useScope: "global" })
+defineExpose({ locale })
 </script>
 
 <style lang="sass">
