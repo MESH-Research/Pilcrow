@@ -28,8 +28,6 @@ describe("Submissions", () => {
     cy.dataCy("submission_link").contains("Submission from Cypress").click()
     cy.dataCy("submitters_list").contains("applicationadministrator@ccrproject.dev")
     cy.checkA11y(null, null, a11yLogViolations)
-    cy.reload()
-    cy.dataCy("notification_indicator").should("be.visible")
   })
 
   //TODO: If this is checked at the jest and/or laravel level, it doesn't need to be checked here

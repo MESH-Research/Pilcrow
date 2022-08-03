@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
-use App\Events\SubmissionCreated;
-use App\Listeners\NotifyUsersAboutCreatedSubmission;
 use App\Models\Submission;
 use App\Models\SubmissionContent;
 use App\Models\User;
@@ -64,12 +62,8 @@ class SubmissionSeeder extends Seeder
                 'created_by' => 1,
                 'updated_by' => 1,
             ]);
+        $submission->status = Submission::INITIALLY_SUBMITTED;
         $submission->updated_by = 2;
         $submission->content()->associate($submission->contentHistory->last())->save();
-        //TODO: Put this event on the model so it gets called no matter how the object is created.
-        $event = new SubmissionCreated($submission);
-        $listener = new NotifyUsersAboutCreatedSubmission();
-        $listener->handle($event);
-        return $submission;
     }
 }

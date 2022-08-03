@@ -11,7 +11,6 @@ extend type Query {
 extend type Mutation {
     "Create a new submission under a publication"
     createSubmission(input: CreateSubmissionInput! @spread): Submission!
-        @event(dispatch: "App\\Events\\SubmissionCreated")
         @create
 
     "Update an existing submission"
@@ -71,11 +70,12 @@ type SubmissionFile {
 }
 
 """
-The status of a submission in a review
+The status of a submission
 """
 enum SubmissionStatus {
+    DRAFT @enum(value: 0)
     INITIALLY_SUBMITTED @enum(value: 1)
-    AWAITING_RESUBMISSION @enum(value: 2)
+    RESUBMISSION_REQUESTED @enum(value: 2)
     RESUBMITTED @enum(value: 3)
     AWAITING_REVIEW @enum(value: 4)
     REJECTED @enum(value: 5)
@@ -83,7 +83,7 @@ enum SubmissionStatus {
     EXPIRED @enum(value: 7)
     UNDER_REVIEW @enum(value: 8)
     AWAITING_DECISION @enum(value: 9)
-    AWAITING_REVISION @enum(value: 10)
+    REVISION_REQUESTED @enum(value: 10)
     ARCHIVED @enum(value: 11)
     DELETED @enum(value: 12)
 }

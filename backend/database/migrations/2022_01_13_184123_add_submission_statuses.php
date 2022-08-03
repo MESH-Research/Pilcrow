@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Submission;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -20,7 +21,7 @@ class AddSubmissionStatuses extends Migration
     public function up()
     {
         Schema::table($this->table_name, function (Blueprint $table) {
-            $table->tinyInteger($this->column_name)->default(1);
+            $table->tinyInteger($this->column_name)->default(Submission::DRAFT);
         });
     }
 

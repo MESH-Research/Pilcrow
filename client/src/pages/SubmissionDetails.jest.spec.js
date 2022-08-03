@@ -106,6 +106,7 @@ describe("submissions details page mount", () => {
       data: {
         submission: {
           id: 1,
+          status: 0,
           __typename: "Submission",
           title: "This Submission",
           publication: {

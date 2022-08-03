@@ -32,7 +32,7 @@ class SubmissionFactory extends Factory
         return [
             'title' => $this->faker->sentence(10, true),
             'publication_id' => Publication::factory(),
-            'status' => 1,
+            'status' => Submission::DRAFT,
             'created_by' => $user->id,
             'updated_by' => $user->id,
         ];
