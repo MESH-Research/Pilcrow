@@ -1704,16 +1704,16 @@
         },
         {
             "name": "laravel/sanctum",
-            "version": "v3.0.0",
+            "version": "v3.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/sanctum.git",
-                "reference": "fae52063ea7fb1d916baba787918c40fd3d8ab62"
+                "reference": "b71e80a3a8e8029e2ec8c1aa814b999609ce16dc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/sanctum/zipball/fae52063ea7fb1d916baba787918c40fd3d8ab62",
-                "reference": "fae52063ea7fb1d916baba787918c40fd3d8ab62",
+                "url": "https://api.github.com/repos/laravel/sanctum/zipball/b71e80a3a8e8029e2ec8c1aa814b999609ce16dc",
+                "reference": "b71e80a3a8e8029e2ec8c1aa814b999609ce16dc",
                 "shasum": ""
             },
             "require": {
@@ -1765,7 +1765,7 @@
                 "issues": "https://github.com/laravel/sanctum/issues",
                 "source": "https://github.com/laravel/sanctum"
             },
-            "time": "2022-07-25T13:44:55+00:00"
+            "time": "2022-07-29T21:33:30+00:00"
         },
         {
             "name": "laravel/scout",
@@ -2876,16 +2876,16 @@
         },
         {
             "name": "nuwave/lighthouse",
-            "version": "v5.57.1",
+            "version": "v5.57.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nuwave/lighthouse.git",
-                "reference": "9cc3583a42b409be7c80a4a034b1326de87879a9"
+                "reference": "d01d0aae675a4a1fef38efb9ac0beca11dd6757d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nuwave/lighthouse/zipball/9cc3583a42b409be7c80a4a034b1326de87879a9",
-                "reference": "9cc3583a42b409be7c80a4a034b1326de87879a9",
+                "url": "https://api.github.com/repos/nuwave/lighthouse/zipball/d01d0aae675a4a1fef38efb9ac0beca11dd6757d",
+                "reference": "d01d0aae675a4a1fef38efb9ac0beca11dd6757d",
                 "shasum": ""
             },
             "require": {
@@ -2999,7 +2999,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2022-08-02T13:36:04+00:00"
+            "time": "2022-08-04T08:13:49+00:00"
         },
         {
             "name": "olssonm/l5-zxcvbn",
@@ -6481,16 +6481,16 @@
         },
         {
             "name": "thecodingmachine/safe",
-            "version": "v2.2.2",
+            "version": "v2.2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thecodingmachine/safe.git",
-                "reference": "440284f9592c9df402832452a6871a8b3c48d97e"
+                "reference": "e454a3142d2197694d1fda291a4462ccd3f66e12"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thecodingmachine/safe/zipball/440284f9592c9df402832452a6871a8b3c48d97e",
-                "reference": "440284f9592c9df402832452a6871a8b3c48d97e",
+                "url": "https://api.github.com/repos/thecodingmachine/safe/zipball/e454a3142d2197694d1fda291a4462ccd3f66e12",
+                "reference": "e454a3142d2197694d1fda291a4462ccd3f66e12",
                 "shasum": ""
             },
             "require": {
@@ -6613,9 +6613,9 @@
             "description": "PHP core functions that throw exceptions instead of returning FALSE on error",
             "support": {
                 "issues": "https://github.com/thecodingmachine/safe/issues",
-                "source": "https://github.com/thecodingmachine/safe/tree/v2.2.2"
+                "source": "https://github.com/thecodingmachine/safe/tree/v2.2.3"
             },
-            "time": "2022-07-20T17:46:34+00:00"
+            "time": "2022-08-04T14:05:49+00:00"
         },
         {
             "name": "tijsverkoyen/css-to-inline-styles",
