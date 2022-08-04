@@ -7,7 +7,10 @@
         flat
         round
         icon="arrow_back_ios_new"
-        :to="{ name: 'submission_details', params: { id: props.id } }"
+        :to="{
+          name: 'submission_details',
+          params: { id: props.submission.id },
+        }"
       />
       <q-toolbar-title class="q-pt-xs q-pb-sm">
         <div>
@@ -97,10 +100,6 @@ const props = defineProps({
     type: Object,
     default: null,
   },
-  id: {
-    type: String,
-    default: null,
-  },
 })
 const emit = defineEmits([
   "update:commentDrawerOpen",
@@ -113,8 +112,6 @@ function toggleAnnotationHighlights() {
   emit("update:highlightVisibility", !props.highlightVisibility)
 }
 async function confirmHandler(action) {
-  // fire dialog
-  // todo conditional logic
   await new Promise((resolve) => {
     dirtyDialog(action)
       .onOk(function () {
