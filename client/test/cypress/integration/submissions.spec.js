@@ -78,6 +78,6 @@ describe("Submissions Page", () => {
       .should("be.visible")
       .should("have.class", "bg-negative")
     cy.visit("submission/review/101")
-    cy.url().should("not.include", "/error403")
+    cy.url().should("include", "/error403")
   })
 })
