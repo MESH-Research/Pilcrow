@@ -34,7 +34,7 @@ class SubmissionSeeder extends Seeder
      *
      * @param int $id
      * @param string $title
-     * @return App\Models\Submission
+     * @return \Database\Seeders\App\Models\Submission
      */
     protected function createSubmission(int $id, string $title)
     {
@@ -65,6 +65,7 @@ class SubmissionSeeder extends Seeder
         $submission->status = Submission::INITIALLY_SUBMITTED;
         $submission->updated_by = 2;
         $submission->content()->associate($submission->contentHistory->last())->save();
+
         return $submission;
     }
 }
