@@ -99,13 +99,15 @@
                 <q-menu anchor="bottom right" self="top right">
                   <q-item clickable>
                     <q-item-section
-                      ><a :href="'submission/review/' + submission.id"
-                        >View Submission</a
-                      ></q-item-section
+                      ><a :href="'submission/review/' + submission.id">{{
+                        $t("submissions.action.review")
+                      }}</a></q-item-section
                     >
                   </q-item>
                   <q-item data-cy="change_status" clickable>
-                    <q-item-section>Change Status</q-item-section>
+                    <q-item-section>{{
+                      $t("submissions.action.change_status")
+                    }}</q-item-section>
                     <q-item-section side>
                       <q-icon name="keyboard_arrow_right" />
                     </q-item-section>

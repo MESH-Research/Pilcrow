@@ -505,7 +505,10 @@ export default {
   },
   submissions: {
     details_heading: "Submission Details",
-    view_heading: "View Submission",
+    action: {
+      review: "Review Submission",
+      change_status: "Change Status",
+    },
     create: {
       success: "Submission successfully created.",
       failure: "An error occurred while attempting to create the submission.",
