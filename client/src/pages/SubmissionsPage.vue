@@ -93,7 +93,6 @@
                 </ul>
               </q-item-label>
             </div>
-            <!-- TODO menu -->
             <div class="q-gutter-sm submission-options">
               <q-btn data-cy="submission_actions">
                 <q-icon name="more_vert" />
