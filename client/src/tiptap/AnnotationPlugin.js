@@ -18,11 +18,11 @@ function getDecorations(doc, annotations) {
   return decorations.length ? DecorationSet.create(doc, decorations) : null
 }
 function commentWidget({ click, context }) {
-  let button = document.createElement("button")
-  button.className = "comment-widget no-border transparent"
   let icon = document.createElement("i")
   icon.className = "q-icon material-icons no-pointer-events"
   icon.innerText = "chat_bubble"
+  let button = document.createElement("button")
+  button.className = "comment-widget no-border transparent"
   button.dataset.comment = context.id
   button.dataset.cy = "comment-widget"
   button.onclick = (...args) => click(context, ...args)
