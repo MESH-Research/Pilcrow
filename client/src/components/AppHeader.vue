@@ -121,7 +121,6 @@ defineProps({
 
 const { currentUser, isAppAdmin } = useCurrentUser()
 const { locale } = useI18n({ useScope: "global" })
-defineExpose({ locale })
 </script>
 
 <style lang="sass">
