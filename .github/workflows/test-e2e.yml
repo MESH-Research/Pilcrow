@@ -129,9 +129,9 @@ jobs:
           wait-on: "http://localhost:8080"
           config: baseUrl=http://localhost:8080
           tag: ${{ github.event_name }}
-       - name: Upload Screenshots
-         uses: actions/upload-artifact@v2
-         with:
+      - name: Upload Screenshots
+        uses: actions/upload-artifact@v2
+        with:
           name: screenshots
           path: "client/test/cypress/screenshots"
           retention-days: 14
