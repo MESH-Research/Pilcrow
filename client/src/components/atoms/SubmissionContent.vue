@@ -176,7 +176,6 @@ function addComment() {
   font-size: 1.4rem;
   color: $primary;
   text-align: center;
-  padding-left: 0.5px;
   line-height: 1.1em;
 }
 .submission-content {

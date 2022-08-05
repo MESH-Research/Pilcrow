@@ -18,13 +18,16 @@ function getDecorations(doc, annotations) {
   return decorations.length ? DecorationSet.create(doc, decorations) : null
 }
 function commentWidget({ click, context }) {
+  let button = document.createElement("button")
+  button.className = "comment-widget no-border transparent"
   let icon = document.createElement("i")
-  icon.className = "q-icon material-icons comment-widget"
+  icon.className = "q-icon material-icons no-pointer-events"
   icon.innerText = "chat_bubble"
-  icon.dataset.comment = context.id
-  icon.dataset.cy = "comment-widget"
-  icon.onclick = (...args) => click(context, ...args)
-  return icon
+  button.dataset.comment = context.id
+  button.dataset.cy = "comment-widget"
+  button.onclick = (...args) => click(context, ...args)
+  button.appendChild(icon)
+  return button
 }
 export const AnnotationPlugin = () =>
   new Plugin({
