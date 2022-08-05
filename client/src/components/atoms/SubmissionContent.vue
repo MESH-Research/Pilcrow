@@ -70,6 +70,7 @@ const props = defineProps({
   },
 })
 
+const commentDrawerOpen = inject("commentDrawerOpen")
 const submission = inject("submission")
 const activeComment = inject("activeComment")
 
@@ -86,6 +87,9 @@ const findCommentFromId = (id) =>
   submission.value.inline_comments.find((c) => c.id === id)
 
 const onAnnotationClick = (context, { target }) => {
+  // Open the inline comment drawer if it's closed
+  commentDrawerOpen.value = true
+
   //First we need to get all the comment widget elements with the same Y index
   const { top: targetTop } = target.getBoundingClientRect()
   const widgets = [...contentRef.value.querySelectorAll(".comment-widget")]
