@@ -10,6 +10,7 @@ function getDecorations(doc, annotations) {
       Decoration.inline(a.from, a.to, {
         class: `comment-highlight ${a.active ? "active" : ""}`,
         dataset: { comment: a.context.id },
+        onclick: "console.log(this)",
       }),
       Decoration.widget(a.from, commentWidget(a)),
     ])
