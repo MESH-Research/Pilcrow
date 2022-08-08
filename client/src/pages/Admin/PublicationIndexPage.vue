@@ -82,6 +82,7 @@
       </q-list>
       <q-pagination
         v-if="paginatorInfo"
+        data-cy="publications_pagination"
         v-bind="binds"
         class="col"
         v-on="listeners"
