@@ -112,6 +112,7 @@
             </div>
           </div>
           <div
+            data-cy="role-item"
             v-else
             data-roles="no_roles"
             :class="`${$q.screen.width < 440 ? 'col-12' : 'col'}`"
