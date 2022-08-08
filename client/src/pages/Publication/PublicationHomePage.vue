@@ -25,7 +25,11 @@
         >
       </h2>
       <!--  eslint-disable-next-line vue/no-v-html -->
-      <div class="content" v-html="publication.home_page_content"></div>
+      <div
+        data-cy="publication_home_content"
+        class="content"
+        v-html="publication.home_page_content"
+      ></div>
     </div>
   </article>
 </template>
