@@ -109,26 +109,26 @@ jobs:
         run: |
           yarn global add @quasar/cli
           quasar serve --port 8080 --proxy ../client/proxy.js --history &
-      - name: Cypress Run
-        uses: cypress-io/github-action@v3
-        env:
-          ELECTRON_EXTRA_LAUNCH_ARGS: "--force-prefers-reduced-motion"
-          CYPRESS_defaultCommandTimeout: 10000
-          # pass the Dashboard record key as an environment variable
-          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
-          # pass GitHub token to allow accurately detecting a build vs a re-run build
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # pass the project ID from the secrets through environment variable
-          CYPRESS_PROJECT_ID: ${{ secrets.PROJECT_ID }}
-          CYPRESS_RETRIES: 3
-        with:
-          record: true
-          parallel: true
-          group: "github-actions"
-          working-directory: ./client
-          wait-on: "http://localhost:8080"
-          config: baseUrl=http://localhost:8080
-          tag: ${{ github.event_name }}
+      # - name: Cypress Run
+      #   uses: cypress-io/github-action@v3
+      #   env:
+      #     ELECTRON_EXTRA_LAUNCH_ARGS: "--force-prefers-reduced-motion"
+      #     CYPRESS_defaultCommandTimeout: 10000
+      #     # pass the Dashboard record key as an environment variable
+      #     CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+      #     # pass GitHub token to allow accurately detecting a build vs a re-run build
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #     # pass the project ID from the secrets through environment variable
+      #     CYPRESS_PROJECT_ID: ${{ secrets.PROJECT_ID }}
+      #     CYPRESS_RETRIES: 3
+      #   with:
+      #     record: true
+      #     parallel: true
+      #     group: "github-actions"
+      #     working-directory: ./client
+      #     wait-on: "http://localhost:8080"
+      #     config: baseUrl=http://localhost:8080
+      #     tag: ${{ github.event_name }}
       - name: Upload Screenshots
         uses: actions/upload-artifact@v2
         with:
