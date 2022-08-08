@@ -11,6 +11,7 @@
 
       <q-pagination
         v-model="currentPage"
+        data-cy="user_list_pagination"
         class="q-pa-lg flex flex-center"
         :max="lastPage"
       />
