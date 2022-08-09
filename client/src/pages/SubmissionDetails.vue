@@ -26,7 +26,7 @@
             color="primary"
             text-color="white"
           >
-            {{ $t(`submission.status.${submission.status}`) }}
+            {{ $t(`submission.status.${submission.status}.display`) }}
           </q-chip>
         </div>
       </q-banner>

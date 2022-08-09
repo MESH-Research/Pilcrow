@@ -426,19 +426,40 @@ export default {
       accept_for_review: "Accept for Review",
       request_resubmission: "Request Resubmission",
       reject: "Reject",
+      accept_as_final: "Accept as Final",
+      open: "Open for Review",
+      close: "Close for Review",
     },
     status: {
       updated:
         "The status of {data_submission_title} has been updated to {data_submission_status_name}.",
       title: "Submission Status",
-      INITIALLY_SUBMITTED: "Initially Submitted",
+      INITIALLY_SUBMITTED: {
+        display: "Initially Submitted",
+        actions: {
+          accept_for_review: "Accept for Review",
+          request_resubmission: "Request Resubmission",
+          reject: "Reject",
+        },
+      },
       RESUBMISSION_REQUESTED: "Resubmission Requested",
       RESUBMITTED: "Resubmitted",
-      AWAITING_REVIEW: "Awaiting Review",
+      AWAITING_REVIEW: {
+        display: "Awaiting Review",
+        actions: {
+          open: "Open for Review",
+        },
+      },
       REJECTED: "Rejected",
       ACCEPTED_AS_FINAL: "Accepted as Final",
       EXPIRED: "Expired",
-      UNDER_REVIEW: "Under Review",
+      UNDER_REVIEW: {
+        display: "Under Review",
+        actions: {
+          accept_as_final: "Accept as Final",
+          close: "Close Review",
+        },
+      },
       AWAITING_DECISION: "Awaiting Decision",
       REVISION_REQUESTED: "Revision Requested",
       ARCHIVED: "Archived",
@@ -671,12 +692,16 @@ export default {
         reject: "You are about to reject the submission for review.",
         request_resubmission:
           "You are about to request the submitter to resubmit this submission as a new submission to be reviewed.",
+        open: "You are about to open this submission for review.",
+        close: "You are about to close this submission for review.",
       },
       action: {
         accept_for_review: "Accept for Review",
         cancel: "Cancel",
         reject: "Reject",
         request_resubmission: "Request Resubmission",
+        open: "Open for Review",
+        close: "Close for Review",
       },
       unauthorized:
         "You are not authorized to change the status of this submission. Please contact your administrator.",
@@ -686,6 +711,8 @@ export default {
         reject: "This submission is rejected for review.",
         request_resubmission:
           "A resubmission is requested for this submission.",
+        open: "This submission is now under review.",
+        close: "This submission is closed for review.",
       },
     },
   },

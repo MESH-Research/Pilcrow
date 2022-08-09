@@ -69,18 +69,26 @@ const statuses = {
   accept_for_review: "AWAITING_REVIEW",
   reject: "REJECTED",
   request_resubmission: "AWAITING_RESUBMISSION",
+  open: "UNDER_REVIEW",
+  accept_as_final: "ACCEPTED_AS_FINAL",
 }
 
 const icons = {
   accept_for_review: "done",
   reject: "do_not_disturb",
   request_resubmission: "refresh",
+  open: "grading",
+  close: "grading",
+  accept_as_final: "done",
 }
 
 const colors = {
   accept_for_review: "positive",
   reject: "negative",
   request_resubmission: "deep-orange-10",
+  open: "black",
+  close: "black",
+  accept_as_final: "positive",
 }
 
 const variables = {
