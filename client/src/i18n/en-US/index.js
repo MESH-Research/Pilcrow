@@ -676,6 +676,7 @@ export default {
           "You are about to request the submitter to resubmit this submission as a new submission to be reviewed.",
         open: "You are about to open this submission for review.",
         close: "You are about to close this submission for review.",
+        accept_as_final: "You are about to accept this submission as final.",
       },
       action: {
         accept_for_review: "Accept for Review",
@@ -684,6 +685,7 @@ export default {
         request_resubmission: "Request Resubmission",
         open: "Open for Review",
         close: "Close for Review",
+        accept_as_final: "Accept as Final",
       },
       unauthorized:
         "You are not authorized to change the status of this submission. Please contact your administrator.",
@@ -695,6 +697,7 @@ export default {
           "A resubmission is requested for this submission.",
         open: "This submission is now under review.",
         close: "This submission is closed for review.",
+        accept_as_final: "This submission is accepted as final.",
       },
     },
   },
