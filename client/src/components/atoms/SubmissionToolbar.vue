@@ -22,7 +22,7 @@
             color="primary"
             text-color="white"
           >
-            {{ $t(`submission.status.${submission.status}.display`) }}
+            {{ $t(`submission.status.${submission.status}`) }}
           </q-chip>
         </div>
       </q-toolbar-title>
@@ -68,7 +68,7 @@
         v-if="submission.status == 'AWAITING_REVIEW'"
         rounded
         color="black"
-        :label="$t(`submission.status.${submission.status}.actions.open`)"
+        :label="$t(`submission.action.open`)"
         class="q-ml-md"
         @click="confirmHandler('open')"
       >
@@ -77,7 +77,7 @@
         v-if="submission.status == 'UNDER_REVIEW'"
         rounded
         color="black"
-        :label="$t(`submission.status.${submission.status}.actions.close`)"
+        :label="$t(`submission.action.close`)"
         class="q-ml-md"
         @click="confirmHandler('close')"
       >

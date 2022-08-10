@@ -434,32 +434,14 @@ export default {
       updated:
         "The status of {data_submission_title} has been updated to {data_submission_status_name}.",
       title: "Submission Status",
-      INITIALLY_SUBMITTED: {
-        display: "Initially Submitted",
-        actions: {
-          accept_for_review: "Accept for Review",
-          request_resubmission: "Request Resubmission",
-          reject: "Reject",
-        },
-      },
+      INITIALLY_SUBMITTED: "Initially Submitted",
       RESUBMISSION_REQUESTED: "Resubmission Requested",
       RESUBMITTED: "Resubmitted",
-      AWAITING_REVIEW: {
-        display: "Awaiting Review",
-        actions: {
-          open: "Open for Review",
-        },
-      },
+      AWAITING_REVIEW: "Awaiting Review",
       REJECTED: "Rejected",
       ACCEPTED_AS_FINAL: "Accepted as Final",
       EXPIRED: "Expired",
-      UNDER_REVIEW: {
-        display: "Under Review",
-        actions: {
-          accept_as_final: "Accept as Final",
-          close: "Close Review",
-        },
-      },
+      UNDER_REVIEW: "Under Review",
       AWAITING_DECISION: "Awaiting Decision",
       REVISION_REQUESTED: "Revision Requested",
       ARCHIVED: "Archived",
