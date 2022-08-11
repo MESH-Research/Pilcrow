@@ -151,6 +151,7 @@
                       <q-separator />
                       <q-item
                         v-if="submission.status == 'AWAITING_REVIEW'"
+                        data-cy="open_review"
                         class="items-center"
                         clickable
                         @click="confirmHandler('open', submission.id)"
@@ -158,6 +159,7 @@
                       </q-item>
                       <q-item
                         v-if="submission.status == 'UNDER_REVIEW'"
+                        data-cy="close_review"
                         class="items-center"
                         clickable
                         @click="confirmHandler('close', submission.id)"
