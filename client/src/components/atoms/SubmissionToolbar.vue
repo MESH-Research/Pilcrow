@@ -69,6 +69,7 @@
       </div>
       <q-btn
         v-if="submission.status == 'AWAITING_REVIEW'"
+        data-cy="open_for_review"
         rounded
         color="black"
         :label="$t(`submission.action.open`)"
@@ -78,6 +79,7 @@
       </q-btn>
       <q-btn
         v-if="submission.status == 'UNDER_REVIEW'"
+        data-cy="close_for_review"
         rounded
         color="black"
         :label="$t(`submission.action.close`)"
