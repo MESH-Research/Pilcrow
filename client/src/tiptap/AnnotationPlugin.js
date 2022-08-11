@@ -9,8 +9,11 @@ function getDecorations(doc, annotations) {
     .map((a) => [
       Decoration.inline(a.from, a.to, {
         class: `comment-highlight ${a.active ? "active" : ""}`,
+        "data-context-id": a.context.id,
         dataset: { comment: a.context.id },
-        onclick: "console.log(this)",
+        style: "cursor: pointer",
+        onclick:
+          "console.log(this.getAttribute('data-context-id')",
       }),
       Decoration.widget(a.from, commentWidget(a)),
     ])
