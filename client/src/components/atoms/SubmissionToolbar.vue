@@ -26,7 +26,10 @@
           </q-chip>
         </div>
       </q-toolbar-title>
-      <div v-if="submission.status != 'AWAITING_REVIEW'">
+      <div
+        v-if="submission.status != 'AWAITING_REVIEW'"
+        data-cy="decision_options"
+      >
         <q-btn
           v-if="submission.status == 'INITIALLY_SUBMITTED'"
           data-cy="accept_for_review"

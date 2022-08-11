@@ -68,7 +68,7 @@ const props = defineProps({
 const statuses = {
   accept_for_review: "AWAITING_REVIEW",
   reject: "REJECTED",
-  request_resubmission: "AWAITING_RESUBMISSION",
+  request_resubmission: "RESUBMISSION_REQUESTED",
   open: "UNDER_REVIEW",
   accept_as_final: "ACCEPTED_AS_FINAL",
   close: "AWAITING_DECISION",
@@ -111,6 +111,7 @@ async function updateStatus() {
       },
     })
   } catch (error) {
+    console.log(error)
     notify({
       color: "negative",
       message: t("dialog.confirmStatusChange.unauthorized"),
