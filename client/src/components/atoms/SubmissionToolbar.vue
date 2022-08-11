@@ -28,7 +28,7 @@
       </q-toolbar-title>
       <div v-if="submission.status != 'AWAITING_REVIEW'">
         <q-btn
-          v-if="submission.status == 'INITALLY_SUBMITTED'"
+          v-if="submission.status == 'INITIALLY_SUBMITTED'"
           data-cy="accept_for_review"
           rounded
           color="positive"
@@ -38,7 +38,7 @@
         >
         </q-btn>
         <q-btn
-          v-if="submission.status != 'INITALLY_SUBMITTED'"
+          v-if="submission.status != 'INITIALLY_SUBMITTED'"
           data-cy="accept_as_final"
           rounded
           color="positive"

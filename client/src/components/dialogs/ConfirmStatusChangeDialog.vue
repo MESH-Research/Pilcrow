@@ -71,6 +71,7 @@ const statuses = {
   request_resubmission: "AWAITING_RESUBMISSION",
   open: "UNDER_REVIEW",
   accept_as_final: "ACCEPTED_AS_FINAL",
+  close: "AWAITING_DECISION",
 }
 
 const icons = {
