@@ -36,7 +36,7 @@ describe("Copywriting Screenshots", () => {
         screenshotPath("/admin/user/1", "[data-cy=role_item]")
         screenshotPath("/admin/publications", "[data-cy=publications_list]")
         screenshotPath("/publication/1", "[data-cy=publication_home_content]")
-         screenshotPath("/submissions", "[data-cy=submissions_list]")
+        screenshotPath("/submissions", "[data-cy=submissions_list]")
         screenshotPath("/submission/100", "[data-cy=reviewers_list]")
         screenshotPath("/submission/review/100", "[data-cy=submission_review_layout]")
     })
