@@ -29,7 +29,7 @@ describe("Copywriting Screenshots", () => {
         screenshotPath("account/metadata", "[data-cy=disinterest_keywords_control]")
         screenshotPath("/publication/1/setup/basic", "[data-cy=name_field]")
         screenshotPath("/publication/1/setup/users", "[data-cy=editors_list]")
-        screenshotPath("/publication/1/setup/content", "[data-cy=content_field]")
+        screenshotPath("/publication/1/setup/content", "[data-cy=content_block_select]")
         screenshotPath("/publication/1/setup/criteria", "[data-cy=add-criteria-button]")
         screenshotPath("/feed")
         screenshotPath("/admin/users", "[data-cy=user_list_pagination]")
