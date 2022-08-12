@@ -92,6 +92,7 @@
           </div>
           <div
             v-if="user.roles.length"
+            data-cy="role_item"
             data-roles="has_roles"
             :class="`${$q.screen.width < 440 ? 'col-12' : 'col'}`"
           >
