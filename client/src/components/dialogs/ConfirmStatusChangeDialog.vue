@@ -111,7 +111,6 @@ async function updateStatus() {
       },
     })
   } catch (error) {
-    console.log(error)
     notify({
       color: "negative",
       message: t("dialog.confirmStatusChange.unauthorized"),
