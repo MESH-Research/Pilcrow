@@ -153,6 +153,7 @@ export const GET_SUBMISSIONS = gql`
       data {
         id
         title
+        status
         publication {
           name
         }

@@ -26,29 +26,65 @@
           </q-chip>
         </div>
       </q-toolbar-title>
+      <div
+        v-if="submission.status != 'AWAITING_REVIEW'"
+        data-cy="decision_options"
+      >
+        <q-btn
+          v-if="submission.status == 'INITIALLY_SUBMITTED'"
+          data-cy="accept_for_review"
+          rounded
+          color="positive"
+          :label="$t(`submission.action.accept_for_review`)"
+          class="q-ml-md"
+          @click="confirmHandler('accept_for_review')"
+        >
+        </q-btn>
+        <q-btn
+          v-if="submission.status != 'INITIALLY_SUBMITTED'"
+          data-cy="accept_as_final"
+          rounded
+          color="positive"
+          :label="$t(`submission.action.accept_as_final`)"
+          class="q-ml-md"
+          @click="confirmHandler('accept_as_final')"
+        >
+        </q-btn>
+        <q-btn
+          rounded
+          color="deep-orange-10"
+          :label="$t(`submission.action.request_resubmission`)"
+          class="q-ml-md"
+          @click="confirmHandler('request_resubmission')"
+        >
+        </q-btn>
+        <q-btn
+          rounded
+          color="negative"
+          :label="$t(`submission.action.reject`)"
+          class="q-ml-md"
+          @click="confirmHandler('reject')"
+        >
+        </q-btn>
+      </div>
       <q-btn
-        data-cy="accept_for_review"
+        v-if="submission.status == 'AWAITING_REVIEW'"
+        data-cy="open_for_review"
         rounded
-        color="positive"
-        :label="$t(`submission.action.accept_for_review`)"
+        color="black"
+        :label="$t(`submission.action.open`)"
         class="q-ml-md"
-        @click="confirmHandler('accept_for_review')"
+        @click="confirmHandler('open')"
       >
       </q-btn>
       <q-btn
+        v-if="submission.status == 'UNDER_REVIEW'"
+        data-cy="close_for_review"
         rounded
-        color="deep-orange-10"
-        :label="$t(`submission.action.request_resubmission`)"
+        color="black"
+        :label="$t(`submission.action.close`)"
         class="q-ml-md"
-        @click="confirmHandler('request_resubmission')"
-      >
-      </q-btn>
-      <q-btn
-        rounded
-        color="negative"
-        :label="$t(`submission.action.reject`)"
-        class="q-ml-md"
-        @click="confirmHandler('reject')"
+        @click="confirmHandler('close')"
       >
       </q-btn>
       <q-space></q-space>

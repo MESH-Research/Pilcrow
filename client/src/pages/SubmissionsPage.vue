@@ -112,30 +112,65 @@
                       <q-icon name="keyboard_arrow_right" />
                     </q-item-section>
                     <q-menu anchor="bottom end" self="top end">
+                      <div v-if="submission.status != 'AWAITING_REVIEW'">
+                        <q-item
+                          v-if="submission.status == 'INITIALLY_SUBMITTED'"
+                          data-cy="accept_for_review"
+                          class="items-center"
+                          clickable
+                          @click="
+                            confirmHandler('accept_for_review', submission.id)
+                          "
+                          >{{
+                            $t("submission.action.accept_for_review")
+                          }}</q-item
+                        >
+                        <q-item
+                          v-if="submission.status != 'INITIALLY_SUBMITTED'"
+                          data-cy="accept_as_final"
+                          class="items-center"
+                          clickable
+                          @click="
+                            confirmHandler('accept_as_final', submission.id)
+                          "
+                          >{{ $t("submission.action.accept_as_final") }}</q-item
+                        >
+                        <q-item
+                          class="items-center"
+                          clickable
+                          @click="
+                            confirmHandler(
+                              'request_resubmission',
+                              submission.id
+                            )
+                          "
+                          >{{
+                            $t("submission.action.request_resubmission")
+                          }}</q-item
+                        >
+                        <q-item
+                          class="items-center"
+                          clickable
+                          @click="confirmHandler('reject', submission.id)"
+                          >{{ $t("submission.action.reject") }}
+                        </q-item>
+                      </div>
+                      <q-separator />
                       <q-item
-                        data-cy="accept_for_review"
+                        v-if="submission.status == 'AWAITING_REVIEW'"
+                        data-cy="open_review"
                         class="items-center"
                         clickable
-                        @click="
-                          confirmHandler('accept_for_review', submission.id)
-                        "
-                        >{{ $t("submission.action.accept_for_review") }}</q-item
-                      >
+                        @click="confirmHandler('open', submission.id)"
+                        >{{ $t("submission.action.open") }}
+                      </q-item>
                       <q-item
+                        v-if="submission.status == 'UNDER_REVIEW'"
+                        data-cy="close_review"
                         class="items-center"
                         clickable
-                        @click="
-                          confirmHandler('request_resubmission', submission.id)
-                        "
-                        >{{
-                          $t("submission.action.request_resubmission")
-                        }}</q-item
-                      >
-                      <q-item
-                        class="items-center"
-                        clickable
-                        @click="confirmHandler('reject', submission.id)"
-                        >{{ $t("submission.action.reject") }}
+                        @click="confirmHandler('close', submission.id)"
+                        >{{ $t("submission.action.close") }}
                       </q-item>
                     </q-menu>
                   </q-item>
