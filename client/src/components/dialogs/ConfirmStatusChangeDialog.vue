@@ -19,7 +19,7 @@
           </p>
         </div>
       </q-card-section>
-
+      <q-separator />
       <q-card-section>
         <div class="column items-center">
           <p>
