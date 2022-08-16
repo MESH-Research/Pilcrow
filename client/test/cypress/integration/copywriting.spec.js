@@ -9,6 +9,7 @@ describe("Copywriting Screenshots", () => {
         }
         function screenshotPath(url, waitOn) {
             cy.visit(url)
+            cy.task("log", `Creating screenshots for: ${url}`)
             if (waitOn) cy.get(waitOn)
             const name = url.replace(/\//g, "#");
 
