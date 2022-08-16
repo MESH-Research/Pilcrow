@@ -24,12 +24,13 @@
           >Configure Publication</q-btn
         >
       </h2>
-      <!--  eslint-disable-next-line vue/no-v-html -->
+      <!--  eslint-disable vue/no-v-html -->
       <div
         data-cy="publication_home_content"
         class="content"
         v-html="publication.home_page_content"
-      ></div>
+      />
+      <!--  eslint-enable vue/no-v-html -->
     </div>
   </article>
 </template>
