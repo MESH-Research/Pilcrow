@@ -52,7 +52,9 @@
         <q-icon name="add_comment" />
       </q-btn>
     </bubble-menu>
-    <editor-content :editor="editor" />
+    <div @click="highlightClickHandler">
+      <editor-content :editor="editor" />
+    </div>
   </article>
 </template>
 <script setup>
@@ -158,6 +160,14 @@ function addComment() {
     id: "new",
   }
   console.log(range)
+}
+
+function highlightClickHandler(event) {
+  const id = event.target.dataset["context-id"]
+  if (id === undefined) {
+    return
+  }
+  activeComment.value = findCommentFromId(id)
 }
 </script>
 

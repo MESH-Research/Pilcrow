@@ -12,7 +12,6 @@ function getDecorations(doc, annotations) {
         "data-context-id": a.context.id,
         dataset: { comment: a.context.id },
         style: "cursor: pointer",
-        onclick: "console.log(this.getAttribute('data-context-id')",
       }),
       Decoration.widget(a.from, commentWidget(a)),
     ])
