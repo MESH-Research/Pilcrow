@@ -168,6 +168,9 @@ function highlightClickHandler(event) {
     return
   }
   activeComment.value = findCommentFromId(id)
+
+  // Open the inline comment drawer if it's closed
+  commentDrawerOpen.value = true
 }
 </script>
 
