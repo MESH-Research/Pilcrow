@@ -89,7 +89,7 @@ const findCommentFromId = (id) =>
   submission.value.inline_comments.find((c) => c.id === id)
 
 const onAnnotationClick = (context, { target }) => {
-  // Open the inline comment drawer if it's closed
+  // Open the inline comment drawer
   commentDrawerOpen.value = true
 
   //First we need to get all the comment widget elements with the same Y index
@@ -169,7 +169,7 @@ function highlightClickHandler(event) {
   }
   activeComment.value = findCommentFromId(id)
 
-  // Open the inline comment drawer if it's closed
+  // Open the inline comment drawer
   commentDrawerOpen.value = true
 }
 </script>
