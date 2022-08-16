@@ -687,6 +687,11 @@ export default {
         close: "Close for Review",
         accept_as_final: "Accept as Final",
       },
+      reason: {
+        request_resubmission:
+          "Please enter reasons for requesting a resubmission:",
+        reject: "Please enter reasons for rejecting this submission:",
+      },
       unauthorized:
         "You are not authorized to change the status of this submission. Please contact your administrator.",
       statusChanged: {

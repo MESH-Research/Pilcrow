@@ -20,6 +20,23 @@
         </div>
       </q-card-section>
 
+      <q-card-section
+        v-if="
+          [props.action] == 'reject' || [props.action] == 'request_resubmission'
+        "
+      >
+        <div class="column items-center">
+          <p>
+            <i18n-t
+              :keypath="`dialog.confirmStatusChange.reason.${props.action}`"
+              tag="span"
+            >
+            </i18n-t>
+          </p>
+        </div>
+        <q-input v-model="text" filled type="textarea" />
+      </q-card-section>
+
       <q-card-actions align="around" class="q-pb-md">
         <q-btn
           data-cy="dirtyYesChangeStatus"
