@@ -70,7 +70,7 @@
     "eslint-webpack-plugin": "^3.2.0",
     "flush-promises": "^1.0.2",
     "majestic": "^1.8.1",
-    "mock-apollo-client": "^1.2.0",
+    "mock-apollo-client": "^1.2.1",
     "prettier": "^2.7.1",
     "vue-composable-tester": "^0.1.3"
   },
