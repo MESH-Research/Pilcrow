@@ -7016,10 +7016,10 @@ mkdirp@1.x:
   resolved "https://registry.yarnpkg.com/mkdirp/-/mkdirp-1.0.4.tgz#3eb5ed62622756d79a5f0e2a221dfebad75c2f7e"
   integrity sha512-vVqVZQyf3WLx2Shd0qJ9xuvqgAyKPLAiqITEtqW0oIUjzo3PePDd6fW9iFz30ef7Ysp/oiWqbhszeGWW2T6Gzw==
 
-mock-apollo-client@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/mock-apollo-client/-/mock-apollo-client-1.2.0.tgz#72543df0d74577d29be1b34cecba8898c7e71451"
-  integrity sha512-zCVHv3p7zvUmen9zce9l965ZrI6rMbrm2/oqGaTerVYOaYskl/cVgTG/L7iIToTIpI7onk/f6tu8hxPXZdyy/g==
+mock-apollo-client@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/mock-apollo-client/-/mock-apollo-client-1.2.1.tgz#e3bfdc3ff73b1fea28fa7e91ec82e43ba8cbfa39"
+  integrity sha512-QYQ6Hxo+t7hard1bcHHbsHxlNQYTQsaMNsm2Psh/NbwLMi2R4tGzplJKt97MUWuARHMq3GHB4PTLj/gxej4Caw==
 
 mrmime@^1.0.0:
   version "1.0.0"
