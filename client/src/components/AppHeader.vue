@@ -1,6 +1,6 @@
 <template>
   <input id="locale-switch" v-model="locale" type="hidden" />
-  <q-header class="header">
+  <q-header class="header" @keypress="toggleLocale">
     <q-toolbar class="header-toolbar">
       <div class="q-pa-sm">
         <h1 class="q-ma-none text-h4 site-title">
@@ -110,7 +110,8 @@
 import NotificationPopup from "src/components/molecules/NotificationPopup.vue"
 import { useCurrentUser } from "src/use/user"
 import { useI18n } from "vue-i18n"
-
+import { useMagicKeys } from "@vueuse/core"
+import { watchEffect } from "vue"
 defineProps({
   //Drawer status
   modelValue: {
@@ -121,6 +122,20 @@ defineProps({
 
 const { currentUser, isAppAdmin } = useCurrentUser()
 const { locale } = useI18n({ useScope: "global" })
+const { ctrl, shift, alt, t } = useMagicKeys()
+
+watchEffect(() => {
+  if (ctrl.value && shift.value && alt.value && t.value) {
+    toggleLocale()
+  }
+})
+function toggleLocale() {
+  if (locale.value == "en-US") {
+    locale.value = "copy"
+  } else {
+    locale.value = "en-US"
+  }
+}
 </script>
 
 <style lang="sass">
