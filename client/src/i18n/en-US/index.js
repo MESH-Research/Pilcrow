@@ -688,6 +688,10 @@ export default {
         accept_as_final: "Accept as Final",
       },
       reason: {
+        accept_for_review:
+          "Please enter reasons for accepting this submission for review:",
+        accept_as_final:
+          "Please enter reasons for accepting this submission as final:",
         request_resubmission:
           "Please enter reasons for requesting a resubmission:",
         reject: "Please enter reasons for rejecting this submission:",

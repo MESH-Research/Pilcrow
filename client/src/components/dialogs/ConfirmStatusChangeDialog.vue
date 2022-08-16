@@ -20,11 +20,7 @@
         </div>
       </q-card-section>
 
-      <q-card-section
-        v-if="
-          [props.action] == 'reject' || [props.action] == 'request_resubmission'
-        "
-      >
+      <q-card-section>
         <div class="column items-center">
           <p>
             <i18n-t
@@ -34,7 +30,12 @@
             </i18n-t>
           </p>
         </div>
-        <q-input v-model="text" filled type="textarea" />
+        <q-input
+          v-model="text"
+          filled
+          label="Enter reasons here..."
+          type="textarea"
+        />
       </q-card-section>
 
       <q-card-actions align="around" class="q-pb-md">
