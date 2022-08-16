@@ -167,10 +167,9 @@ function highlightClickHandler(event) {
   if (id === undefined) {
     return
   }
-  activeComment.value = findCommentFromId(id)
-
-  // Open the inline comment drawer
+  // Open the inline comment drawer and set the active comment
   commentDrawerOpen.value = true
+  activeComment.value = findCommentFromId(id)
 }
 </script>
 
