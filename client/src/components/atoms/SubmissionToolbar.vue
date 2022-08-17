@@ -27,7 +27,10 @@
         </div>
       </q-toolbar-title>
       <div
-        v-if="submission.status != 'AWAITING_REVIEW'"
+        v-if="
+          submission.status != 'AWAITING_REVIEW' &&
+          submission.status != 'REJECTED'
+        "
         data-cy="decision_options"
       >
         <q-btn
