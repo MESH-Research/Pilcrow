@@ -22,10 +22,7 @@ class SubmissionSeeder extends Seeder
         $this->callOnce(PublicationSeeder::class);
         $this->callOnce(UserSeeder::class);
 
-        $submission_1 = $this->createSubmission(100, 'CCR Test Submission 1');
-        $submission_1->status = Submission::AWAITING_REVIEW;
-        $submission_1->updated_by = 1;
-        $submission_1->save();
+        $this->createSubmission(100, 'CCR Test Submission 1', ['status' => Submission::AWAITING_REVIEW]);
         $this->createSubmission(101, 'CCR Test Submission 2');
     }
 
@@ -34,10 +31,22 @@ class SubmissionSeeder extends Seeder
      *
      * @param int $id
      * @param string $title
+     * @param array $data
      * @return \Database\Seeders\App\Models\Submission
      */
-    protected function createSubmission(int $id, string $title)
+    protected function createSubmission(int $id, string $title, array $data = [])
     {
+        $dataWithDefaults = [
+            'id' => $id,
+            'title' => $title,
+            'publication_id' => 1,
+            'created_by' => 1,
+            'updated_by' => 1,
+            'status' => Submission::INITIALLY_SUBMITTED,
+
+            ...$data,
+        ];
+
         $submission = Submission::factory()
             ->hasAttached(
                 User::firstWhere('username', 'regularUser'),
@@ -55,14 +64,7 @@ class SubmissionSeeder extends Seeder
                 'reviewers'
             )
             ->has(SubmissionContent::factory()->count(3), 'contentHistory')
-            ->create([
-                'id' => $id,
-                'title' => $title,
-                'publication_id' => 1,
-                'created_by' => 1,
-                'updated_by' => 1,
-            ]);
-        $submission->status = Submission::INITIALLY_SUBMITTED;
+            ->create($dataWithDefaults);
         $submission->updated_by = 2;
         $submission->content()->associate($submission->contentHistory->last())->save();
 
