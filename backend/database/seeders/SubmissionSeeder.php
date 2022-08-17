@@ -22,7 +22,8 @@ class SubmissionSeeder extends Seeder
         $this->callOnce(PublicationSeeder::class);
         $this->callOnce(UserSeeder::class);
 
-        $this->createSubmission(100, 'CCR Test Submission 1', ['status' => Submission::AWAITING_REVIEW]);
+        $this->createSubmission(100, 'CCR Test Submission 1')
+            ->update(['status' => Submission::AWAITING_REVIEW]);
         $this->createSubmission(101, 'CCR Test Submission 2');
     }
 
@@ -34,7 +35,7 @@ class SubmissionSeeder extends Seeder
      * @param array $data
      * @return \Database\Seeders\App\Models\Submission
      */
-    protected function createSubmission(int $id, string $title, array $data = [])
+    protected function createSubmission(int $id, string $title, array $data = []): Submission
     {
         $dataWithDefaults = [
             'id' => $id,
