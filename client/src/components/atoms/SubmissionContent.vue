@@ -52,7 +52,7 @@
         <q-icon name="add_comment" />
       </q-btn>
     </bubble-menu>
-    <div @click="highlightClickHandler">
+    <div data-cy="highlight-click-handler" @click="highlightClickHandler">
       <editor-content :editor="editor" />
     </div>
   </article>

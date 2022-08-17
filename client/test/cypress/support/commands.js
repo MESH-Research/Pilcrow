@@ -144,3 +144,19 @@ Cypress.Commands.add("getVue", () => {
     cy.wrap($app.get(0).__vue__)
   })
 })
+
+Cypress.Commands.add('clickAt',
+  {
+    prevSubject: true,
+  },
+  (subject, value, index) => {
+
+    const getCoords = ($el) => {
+      // const domRect = $el[0].getBoundingClientRect()
+      // return { x: domRect.left + (domRect.width / 2 || 0), y: domRect.top + (domRect.height / 2 || 0) }
+      return { x: 0, y: 0 }
+    }
+    let atCoords = getCoords(cy.$$(value).eq(index))
+    subject.click(atCoords.x, atCoords.y)
+  }
+)
