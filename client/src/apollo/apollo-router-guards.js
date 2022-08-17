@@ -85,7 +85,11 @@ export async function beforeEachRequiresReviewAccess(
       }
 
       // Deny Reviewers when the submission is in a nonreviewable state
-      const nonreviewableStates = new Set(["DRAFT", "INITIALLY_SUBMITTED"])
+      const nonreviewableStates = new Set([
+        "DRAFT",
+        "INITIALLY_SUBMITTED",
+        "REJECTED",
+      ])
       if ("reviewer" === s.my_role && nonreviewableStates.has(s.status)) {
         access = false
       }

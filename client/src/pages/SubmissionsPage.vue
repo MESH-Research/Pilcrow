@@ -97,22 +97,47 @@
               <q-btn data-cy="submission_actions">
                 <q-icon name="more_vert" />
                 <q-menu anchor="bottom right" self="top right">
-                  <q-item clickable>
+                  <q-item clickable :disable="submission.status == 'REJECTED'">
                     <q-item-section
                       ><a :href="'submission/review/' + submission.id">{{
                         $t("submissions.action.review")
-                      }}</a></q-item-section
-                    >
+                      }}</a>
+                      <q-tooltip
+                        anchor="top middle"
+                        self="bottom middle"
+                        :offset="[10, 10]"
+                        class="text-body1"
+                      >
+                        Reviewers cannot access rejected submissions
+                      </q-tooltip>
+                    </q-item-section>
                   </q-item>
-                  <q-item data-cy="change_status" clickable>
-                    <q-item-section>{{
-                      $t("submissions.action.change_status")
-                    }}</q-item-section>
+                  <q-item
+                    data-cy="change_status"
+                    clickable
+                    :disable="submission.status == 'REJECTED'"
+                  >
+                    <q-item-section
+                      >{{ $t("submissions.action.change_status") }}
+                      <q-tooltip
+                        anchor="top middle"
+                        self="bottom middle"
+                        :offset="[10, 10]"
+                        class="text-body1"
+                      >
+                        Reviewers cannot access rejected submissions
+                      </q-tooltip>
+                    </q-item-section>
                     <q-item-section side>
                       <q-icon name="keyboard_arrow_right" />
                     </q-item-section>
                     <q-menu anchor="bottom end" self="top end">
-                      <div v-if="submission.status != 'AWAITING_REVIEW'">
+                      <div
+                        v-if="
+                          submission.status != 'AWAITING_REVIEW' &&
+                          submission.status != 'REJECTED'
+                        "
+                      >
                         <q-item
                           v-if="submission.status == 'INITIALLY_SUBMITTED'"
                           data-cy="accept_for_review"
