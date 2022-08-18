@@ -204,7 +204,6 @@ describe("Submissions Review", () => {
     cy.url().should("not.include", "/error403")
   })
 
-  // TODO update seeder with subission that is awaiting review
   it("should allow an application administrator to open a review, close a review, and that final decision options are visible", () => {
     cy.task("resetDb")
     cy.login({ email: "applicationadministrator@ccrproject.dev" })
