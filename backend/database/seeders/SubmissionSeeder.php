@@ -44,7 +44,6 @@ class SubmissionSeeder extends Seeder
             'created_by' => 1,
             'updated_by' => 1,
             'status' => Submission::INITIALLY_SUBMITTED,
-
             ...$data,
         ];
 
