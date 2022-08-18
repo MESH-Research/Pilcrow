@@ -163,7 +163,7 @@ function addComment() {
 }
 
 function highlightClickHandler(event) {
-  const id = event.target.dataset["context-id"]
+  const id = event.target.dataset["contextId"]
   if (id === undefined) {
     return
   }
