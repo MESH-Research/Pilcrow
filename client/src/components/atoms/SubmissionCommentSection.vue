@@ -58,7 +58,7 @@ watch(
         if (!element) return 0
         return getOffsetTop(element.offsetParent) + element.offsetTop
       }
-      const secondaryNavHeight = 48
+      const secondaryNavHeight = 75
       const toolbarHeight = 50
       const negativeSpaceAdjustment = 14
       const offset =
