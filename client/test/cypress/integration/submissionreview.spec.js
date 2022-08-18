@@ -207,9 +207,7 @@ describe("Submissions Review", () => {
   it("should allow an application administrator to open a review, close a review, and that final decision options are visible", () => {
     cy.task("resetDb")
     cy.login({ email: "applicationadministrator@ccrproject.dev" })
-    cy.visit("submission/review/101")
-    cy.dataCy("accept_for_review").click()
-    cy.dataCy("dirtyYesChangeStatus").click()
+    cy.visit("submission/review/100")
     cy.dataCy("submission_status").contains("Awaiting Review")
     cy.dataCy("open_for_review").click()
     cy.dataCy("dirtyYesChangeStatus").click()
