@@ -37,7 +37,7 @@
           data-cy="submission_review_btn"
           color="primary"
           size="lg"
-          :label="$t('submissions.view_heading')"
+          :label="$t('submissions.action.review')"
           :to="{
             name: 'submission_review',
             params: { id: props.id },

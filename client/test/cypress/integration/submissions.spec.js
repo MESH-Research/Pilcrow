@@ -5,7 +5,7 @@ import "cypress-axe"
 import { a11yLogViolations } from '../support/helpers'
 import "cypress-file-upload"
 
-describe("Submissions", () => {
+describe("Submissions Page", () => {
   it("creates new submissions", () => {
     cy.task("resetDb")
     cy.login({ email: "applicationadministrator@ccrproject.dev" })
@@ -44,5 +44,60 @@ describe("Submissions", () => {
       .should("be.visible")
       .should("have.class", "bg-negative")
     cy.get(".q-notification--top-enter-active").should("not.exist")
+  })
+
+  it("should allow an application administrator to accept a submission for review and permit reviewers access", () => {
+    cy.task("resetDb")
+    cy.login({ email: "applicationadministrator@ccrproject.dev" })
+    cy.visit("submissions")
+    cy.dataCy("submission_actions").last().click()
+    cy.dataCy("change_status").click()
+    cy.dataCy("accept_for_review").click()
+    cy.intercept("/graphql").as("graphQL")
+    cy.dataCy("dirtyYesChangeStatus").click()
+    cy.wait("@graphQL")
+    cy.dataCy("change_status_notify")
+      .should("be.visible")
+      .should("have.class", "bg-positive")
+    cy.login({ email: "reviewer@ccrproject.dev" })
+    cy.visit("submission/review/101")
+    cy.url().should("not.include", "/error403")
+  })
+
+  it("should deny a reviewer from accepting a submission for review", () => {
+    cy.task("resetDb")
+    cy.login({ email: "reviewer@ccrproject.dev" })
+    cy.visit("submissions")
+    cy.dataCy("submission_actions").last().click()
+    cy.dataCy("change_status").click()
+    cy.dataCy("accept_for_review").click()
+    cy.intercept("/graphql").as("graphQL")
+    cy.dataCy("dirtyYesChangeStatus").click()
+    cy.wait("@graphQL")
+    cy.dataCy("change_status_notify")
+      .should("be.visible")
+      .should("have.class", "bg-negative")
+    cy.visit("submission/review/101")
+    cy.url().should("include", "/error403")
+  })
+
+  it("should allow an application administrator to open a review and close a review", () => {
+    cy.task("resetDb")
+    cy.login({ email: "applicationadministrator@ccrproject.dev" })
+    cy.visit("submissions")
+    cy.dataCy("submission_actions").first().click()
+    cy.dataCy("change_status").click()
+    cy.dataCy("open_review").click()
+    cy.intercept("/graphql").as("graphQL")
+    cy.dataCy("dirtyYesChangeStatus").click()
+    cy.wait("@graphQL")
+    cy.dataCy("change_status_notify")
+      .should("be.visible")
+      .should("have.class", "bg-positive")
+    cy.dataCy("accept_as_final")
+    cy.dataCy("close_review").click()
+    cy.intercept("/graphql").as("graphQL")
+    cy.dataCy("dirtyYesChangeStatus").click()
+    cy.wait("@graphQL")
   })
 })

@@ -4,6 +4,7 @@ import {
   beforeEachRequiresAuth,
   beforeEachRequiresRoles,
   beforeEachRequiresSubmissionAccess,
+  beforeEachRequiresReviewAccess,
 } from "src/apollo/apollo-router-guards"
 import { withXsrfLink, expiredTokenLink } from "src/apollo/apollo-links.js"
 import { createApolloProvider } from "@vue/apollo-option"
@@ -55,6 +56,13 @@ export default boot(async ({ app, router }) => {
    */
   router.beforeEach(async (to, from, next) =>
     beforeEachRequiresSubmissionAccess(apolloClient, to, from, next)
+  )
+
+  /**
+   * Check routes for requiresReviewAccess meta field.
+   */
+  router.beforeEach(async (to, from, next) =>
+    beforeEachRequiresReviewAccess(apolloClient, to, from, next)
   )
 
   const apolloClients = {
