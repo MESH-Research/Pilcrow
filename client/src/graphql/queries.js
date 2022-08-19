@@ -154,6 +154,7 @@ export const GET_SUBMISSIONS = gql`
         id
         title
         status
+        my_role
         publication {
           name
         }

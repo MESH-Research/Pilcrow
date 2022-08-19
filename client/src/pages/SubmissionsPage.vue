@@ -97,7 +97,10 @@
               <q-btn data-cy="submission_actions">
                 <q-icon name="more_vert" />
                 <q-menu anchor="bottom right" self="top right">
-                  <q-item clickable :disable="submission.status == 'REJECTED'">
+                  <q-item
+                    clickable
+                    :disable="submission.status == 'REJECTED' && !isAppAdmin()"
+                  >
                     <q-item-section
                       ><a :href="'submission/review/' + submission.id">{{
                         $t("submissions.action.review")
@@ -115,7 +118,11 @@
                   <q-item
                     data-cy="change_status"
                     clickable
-                    :disable="submission.status == 'REJECTED'"
+                    :disable="
+                      submission.status == 'REJECTED' &&
+                      submission.my_role == 'reviewer' &&
+                      !isAppAdmin()
+                    "
                   >
                     <q-item-section
                       >{{ $t("submissions.action.change_status") }}
@@ -234,6 +241,16 @@ import { useQuasar } from "quasar"
 const { dialog } = useQuasar()
 
 const { currentUser } = useCurrentUser()
+
+function isAppAdmin() {
+  const adminRole = currentUser.value.roles.find(
+    (arr) => arr.name == "Application Administrator"
+  )
+  if (adminRole) {
+    return true
+  }
+  return false
+}
 
 const is_submitting = ref(false)
 const try_catch_error = ref(false)
