@@ -70,6 +70,7 @@ describe("Submissions Details", () => {
     cy.dataCy("coordinators_list").within(() => {
       cy.intercept("/graphql").as("userListFetch")
       cy.dataCy('input_user').type("applicationAd")
+      cy.wait(["@userListFetch", "@userListFetch"])
       cy.qSelectItems('input_user').eq(0).click()
       cy.intercept("/graphql").as("addCoordinatorFetch")
       cy.dataCy('button-assign').click();
