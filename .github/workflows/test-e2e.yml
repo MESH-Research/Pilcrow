@@ -85,7 +85,7 @@ jobs:
           ini-values: opcache.enable_cli=1
       - uses: shogo82148/actions-setup-mysql@v1
         with:
-          mysql-version: '5.7'
+          mysql-version: "5.7"
       - name: API Startup
         working-directory: ./backend
         env:
@@ -101,7 +101,6 @@ jobs:
           DB_DATABASE: laravel
           DB_USERNAME: root
           DB_PASSWORD: ""
-          DB_DATABASE: ${{ github.workspace }}/backend/testdb.sqlite
           LIGHTHOUSE_CACHE_ENABLE: true
           LIGHTHOUSE_CACHE_VERSION: 2
         run: |
