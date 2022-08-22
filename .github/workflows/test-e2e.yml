@@ -83,6 +83,9 @@ jobs:
           php-version: "8.1"
           coverage: none
           ini-values: opcache.enable_cli=1
+      - uses: shogo82148/actions-setup-mysql@v1
+        with:
+          mysql-version: '5.7'
       - name: API Startup
         working-directory: ./backend
         env:
@@ -92,7 +95,12 @@ jobs:
           APP_URL: http://localhost:8080
           APP_KEY: base64:J6SHqWBtKA18a8eCxIWziMSPuJqJRPuqy0GdX75P+rM=
           SANCTUM_STATEFUL_DOMAINS: localhost:8080
-          DB_CONNECTION: sqlite
+          DB_CONNECTION: mysql
+          DB_HOST: 127.0.0.1
+          DB_PORT: 3306
+          DB_DATABASE: laravel
+          DB_USERNAME: root
+          DB_PASSWORD: ""
           DB_DATABASE: ${{ github.workspace }}/backend/testdb.sqlite
           LIGHTHOUSE_CACHE_ENABLE: true
           LIGHTHOUSE_CACHE_VERSION: 2
