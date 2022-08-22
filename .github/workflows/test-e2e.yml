@@ -83,9 +83,12 @@ jobs:
           php-version: "8.1"
           coverage: none
           ini-values: opcache.enable_cli=1
-      - uses: shogo82148/actions-setup-mysql@v1
+      - name: Setup MySql 5.7
+        uses: shogo82148/actions-setup-mysql@v1
         with:
           mysql-version: "5.7"
+      - name: Create Laravel Database
+        run: mysql -uroot -h127.0.0.1 -e 'create schema laravel;'
       - name: API Startup
         working-directory: ./backend
         env:
