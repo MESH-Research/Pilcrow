@@ -120,12 +120,12 @@
                   <q-item
                     data-cy="change_status"
                     clickable
-                    :disable="cannotAccessSubmission(submission)"
+                    :disable="submission.status == 'REJECTED'"
                   >
                     <q-item-section
                       >{{ $t("submissions.action.change_status") }}
                       <q-tooltip
-                        v-if="cannotAccessSubmission(submission)"
+                        v-if="submission.status == 'REJECTED'"
                         anchor="top middle"
                         self="bottom middle"
                         :offset="[10, 10]"
