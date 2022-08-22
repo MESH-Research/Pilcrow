@@ -509,8 +509,14 @@ export default {
   submissions: {
     details_heading: "Submission Details",
     action: {
-      review: "Review Submission",
-      change_status: "Change Status",
+      review: {
+        name: "Review Submission",
+        no_access: "Reviewers can only access submissions in reviewable states",
+      },
+      change_status: {
+        name: "Change Status",
+        no_access: "Cannot change the status of submission.",
+      },
     },
     create: {
       success: "Submission successfully created.",

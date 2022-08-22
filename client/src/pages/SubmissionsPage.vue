@@ -103,7 +103,7 @@
                   >
                     <q-item-section
                       ><a :href="'submission/review/' + submission.id">{{
-                        $t("submissions.action.review")
+                        $t("submissions.action.review.name")
                       }}</a>
                       <q-tooltip
                         v-if="cannotAccessSubmission(submission)"
@@ -112,8 +112,7 @@
                         :offset="[10, 10]"
                         class="text-body1"
                       >
-                        Reviewers can only access submissions in reviewable
-                        states
+                        {{ $t("submissions.action.review.no_access") }}
                       </q-tooltip>
                     </q-item-section>
                   </q-item>
@@ -123,7 +122,7 @@
                     :disable="submission.status == 'REJECTED'"
                   >
                     <q-item-section
-                      >{{ $t("submissions.action.change_status") }}
+                      >{{ $t("submissions.action.change_status.name") }}
                       <q-tooltip
                         v-if="submission.status == 'REJECTED'"
                         anchor="top middle"
@@ -131,7 +130,7 @@
                         :offset="[10, 10]"
                         class="text-body1"
                       >
-                        Cannot change the status of submission.
+                        {{ $t("submissions.action.change_status.no_access") }}
                       </q-tooltip>
                     </q-item-section>
                     <q-item-section side>
