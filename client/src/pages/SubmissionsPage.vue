@@ -99,40 +99,39 @@
                 <q-menu anchor="bottom right" self="top right">
                   <q-item
                     clickable
-                    :disable="submission.status == 'REJECTED' && !isAppAdmin()"
+                    :disable="cannotAccessSubmission(submission)"
                   >
                     <q-item-section
                       ><a :href="'submission/review/' + submission.id">{{
                         $t("submissions.action.review")
                       }}</a>
                       <q-tooltip
+                        v-if="cannotAccessSubmission(submission)"
                         anchor="top middle"
                         self="bottom middle"
                         :offset="[10, 10]"
                         class="text-body1"
                       >
-                        Reviewers cannot access rejected submissions
+                        Reviewers can only access submissions in reviewable
+                        states
                       </q-tooltip>
                     </q-item-section>
                   </q-item>
                   <q-item
                     data-cy="change_status"
                     clickable
-                    :disable="
-                      submission.status == 'REJECTED' &&
-                      submission.my_role == 'reviewer' &&
-                      !isAppAdmin()
-                    "
+                    :disable="cannotAccessSubmission(submission)"
                   >
                     <q-item-section
                       >{{ $t("submissions.action.change_status") }}
                       <q-tooltip
+                        v-if="cannotAccessSubmission(submission)"
                         anchor="top middle"
                         self="bottom middle"
                         :offset="[10, 10]"
                         class="text-body1"
                       >
-                        Reviewers cannot access rejected submissions
+                        Cannot change the status of submission.
                       </q-tooltip>
                     </q-item-section>
                     <q-item-section side>
@@ -242,14 +241,28 @@ const { dialog } = useQuasar()
 
 const { currentUser } = useCurrentUser()
 
-function isAppAdmin() {
-  const adminRole = currentUser.value.roles.find(
-    (arr) => arr.name == "Application Administrator"
+function cannotAccessSubmission(submission) {
+  console.log(submission)
+  // TODO: check for draft and initallay submitted statuses
+
+  // TODO: An app admin who is also a reviewer should not see the tooltips,
+  // and the buttons should be enabled for rejected, dtaft, initally submitted status
+
+  // TODO: An non app admin who is an editor should not see the tooltips,
+  // and the buttons should be enabled for rejected, dtaft, initally submitted status
+
+  // TODO: An non app admin who is a reviewer should  see the tooltips,
+  // and the buttons should be disabled for rejected, dtaft, initally submitted status
+  const nonreviewableStates = new Set([
+    "DRAFT",
+    "INITIALLY_SUBMITTED",
+    "REJECTED",
+  ])
+  return (
+    nonreviewableStates.has(submission.status) &&
+    submission.my_role == "reviewer" &&
+    submission.effective_role == "reviewer"
   )
-  if (adminRole) {
-    return true
-  }
-  return false
 }
 
 const is_submitting = ref(false)
@@ -281,7 +294,7 @@ const { result: pubsResult } = useQuery(GET_PUBLICATIONS)
 const publications = computed(() => {
   return pubsResult.value?.publications.data ?? []
 })
-
+console.log(publications)
 const { t } = useI18n()
 const { newStatusMessage } = useFeedbackMessages({
   attrs: {

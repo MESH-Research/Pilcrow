@@ -75,7 +75,7 @@ export async function beforeEachRequiresReviewAccess(
     if (submission.length) {
       const s = submission[0]
 
-      // Allow Review Coordinators, Reviewers, and Submitters
+      // Allow those who are assigned to the submission
       if (
         ["review_coordinator", "reviewer", "submitter"].some(
           (role) => role === s.my_role
