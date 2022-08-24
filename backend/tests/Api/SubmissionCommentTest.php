@@ -504,9 +504,7 @@ class SubmissionCommentTest extends ApiTestCase
         $this->beAppAdmin();
         $submission = $this->createSubmissionWithInlineComment();
         $inline_comment = $submission->inlineComments()->first();
-        print_r($submission->publication->id);
         $criteria_1 = $this->createStyleCriteria($submission->publication->id);
-        print_r($criteria_1->toArray());
         $criteria_2 = $this->createStyleCriteria($submission->publication->id);
         $response = $this->graphQL(
             'mutation UpdateInlineComment($submissionId: ID! $commentId: ID!) {
