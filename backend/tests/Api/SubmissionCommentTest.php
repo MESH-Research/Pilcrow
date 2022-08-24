@@ -5,6 +5,7 @@ namespace Tests\Api;
 
 use App\Models\InlineComment;
 use App\Models\OverallComment;
+use App\Models\Publication;
 use App\Models\StyleCriteria;
 use App\Models\Submission;
 use App\Models\User;
@@ -59,7 +60,7 @@ class SubmissionCommentTest extends ApiTestCase
             'content' => 'This is some content for an inline comment created by PHPUnit.',
             'created_by' => $user->id,
             'updated_by' => $user->id,
-            'style_criteria' => [$style_criteria->toArray()],
+            'style_criteria' => [$style_criteria],
         ]);
 
         return $submission;
@@ -219,6 +220,10 @@ class SubmissionCommentTest extends ApiTestCase
     public function testCreateInlineComment(bool $is_valid, string $fragment)
     {
         $this->beAppAdmin();
+        $publication = Publication::factory()
+            ->hasStyleCriterias(3)
+            ->create();
+        $style_criteria = StyleCriteria::where('publication_id',$publication->id)->get();
         $submission = $this->createSubmission();
         $response = $this->graphQL(
             'mutation AddInlineComment($submission_id: ID!) {
@@ -227,16 +232,7 @@ class SubmissionCommentTest extends ApiTestCase
                     inline_comments: {
                         create: [{
                             content: "Hello World"
-                            style_criteria: [
-                                {
-                                    name: "Hello"
-                                    icon: "hello"
-                                }
-                                {
-                                    name: "World"
-                                    icon: "world"
-                                }
-                            ]
+                            style_criteria: ['. $style_criteria->first()->id . ', ' . $style_criteria->last()->id .']
                             ' . $fragment . '
                             from: 100
                             to: 110
@@ -265,12 +261,12 @@ class SubmissionCommentTest extends ApiTestCase
                         'content' => 'Hello World',
                         'style_criteria' => [
                             '0' => [
-                                'name' => 'Hello',
-                                'icon' => 'hello',
+                                'name' => $style_criteria->first()->name,
+                                'icon' => $style_criteria->first()->icon,
                             ],
                             '1' => [
-                                'name' => 'World',
-                                'icon' => 'world',
+                                'name' => $style_criteria->last()->name,
+                                'icon' => $style_criteria->last()->icon,
                             ],
                         ],
                         'from' => 100,
@@ -508,6 +504,10 @@ class SubmissionCommentTest extends ApiTestCase
         $this->beAppAdmin();
         $submission = $this->createSubmissionWithInlineComment();
         $inline_comment = $submission->inlineComments()->first();
+        print_r($submission->publication->id);
+        $criteria_1 = $this->createStyleCriteria($submission->publication->id);
+        print_r($criteria_1->toArray());
+        $criteria_2 = $this->createStyleCriteria($submission->publication->id);
         $response = $this->graphQL(
             'mutation UpdateInlineComment($submissionId: ID! $commentId: ID!) {
                 updateSubmission(input: {
@@ -517,16 +517,7 @@ class SubmissionCommentTest extends ApiTestCase
                             {
                                 id: $commentId
                                 content: "Hello World Updated"
-                                style_criteria: [
-                                    {
-                                        name: "Hello"
-                                        icon: "hello"
-                                    }
-                                    {
-                                        name: "World"
-                                        icon: "world"
-                                    }
-                                ]
+                                style_criteria: ['. $criteria_1->id . ', ' . $criteria_2->id .']
                                 from: 120
                                 to: 130
                             }
@@ -560,12 +551,12 @@ class SubmissionCommentTest extends ApiTestCase
                         'content' => 'Hello World Updated',
                         'style_criteria' => [
                             '0' => [
-                                'name' => 'Hello',
-                                'icon' => 'hello',
+                                'name' => $criteria_1->name,
+                                'icon' => $criteria_1->icon,
                             ],
                             '1' => [
-                                'name' => 'World',
-                                'icon' => 'world',
+                                'name' => $criteria_2->name,
+                                'icon' => $criteria_2->icon,
                             ],
                         ],
                         'from' => 120,

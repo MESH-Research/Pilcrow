@@ -93,7 +93,7 @@ input CreateInlineCommentInput {
 input UpdateInlineCommentInput {
     id: ID!
     content: String
-    style_criteria: [ID!]
+    style_criteria: [ID!] @transformStyleCriteriaIds
     from: Int
     to: Int
 }
