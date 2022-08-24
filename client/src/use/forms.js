@@ -105,7 +105,7 @@ export function useFormState(query, mutation) {
 export function useVQWrap(validator, tPath) {
   const { emit } = getCurrentInstance()
 
-  const { te, t } = useI18n()
+  const { t } = useI18n()
   const parentUpdate = inject("vqupdate", null)
 
   const parentTPrefix = inject("tPrefix", "")
@@ -123,7 +123,6 @@ export function useVQWrap(validator, tPath) {
   }
 
   function getTranslation(key) {
-    if (!te(getTranslationKey(key))) return ""
     return t(getTranslationKey(key))
   }
 

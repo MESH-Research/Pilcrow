@@ -50,7 +50,7 @@ module.exports = {
                 {
                     title: "Contributing",
                     sidebarDepth: 2,
-                    children: ["", "architecture", "testing", "documentation", "wsl"]
+                    children: ["", "architecture", "testing", "i18n", "documentation", "wsl"]
                 }
             ]
         }
@@ -62,9 +62,9 @@ module.exports = {
     plugins: [
         "@vuepress/plugin-back-to-top",
         [
-            "vuepress-plugin-zooming",
+            "vuepress-plugin-medium-zoom",
             {
-                selector: ".theme-default-content :not(a):not(figure) img"
+                selector: ".theme-default-content :not(a):not(figure) img",
             }
         ],
         [

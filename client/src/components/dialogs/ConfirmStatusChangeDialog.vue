@@ -19,7 +19,6 @@
           </p>
         </div>
       </q-card-section>
-
       <q-card-section>
         <div class="column items-center">
           <p>
@@ -37,7 +36,6 @@
           type="textarea"
         />
       </q-card-section>
-
       <q-card-actions align="around" class="q-pb-md">
         <q-btn
           data-cy="dirtyYesChangeStatus"

@@ -53,6 +53,7 @@ const highlightVisibility = ref(true)
 const commentDrawerOpen = ref(false)
 provide("submission", submission)
 provide("activeComment", ref(null))
+provide("commentDrawerOpen", commentDrawerOpen)
 </script>
 
 <style lang="sass" scoped>

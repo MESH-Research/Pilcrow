@@ -133,6 +133,7 @@
                         {{ $t("submissions.action.change_status.no_access") }}
                       </q-tooltip>
                     </q-item-section>
+
                     <q-item-section side>
                       <q-icon name="keyboard_arrow_right" />
                     </q-item-section>
@@ -143,6 +144,7 @@
                           submission.status != 'REJECTED'
                         "
                       >
+
                         <q-item
                           v-if="submission.status == 'INITIALLY_SUBMITTED'"
                           data-cy="accept_for_review"
