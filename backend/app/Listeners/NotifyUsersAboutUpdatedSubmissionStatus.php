@@ -57,10 +57,19 @@ class NotifyUsersAboutUpdatedSubmissionStatus
 
         // Notify submitters, reviewers, review coordinators, and editors
         Notification::send(
-            $event->submission->users,
+            $event->submission->submitters,
+            new SubmissionStatusUpdated($notification_data)
+        );
+        Notification::send(
+            $event->submission->reviewCoordinators,
             new SubmissionStatusUpdated($notification_data)
         );
         Notification::send($event->submission->publication->editors, new SubmissionStatusUpdated($notification_data));
+        $notification_data['action'] = '' // TODO define reviewer follow up action (or non-action)
+        Notification::send(
+            $event->submission->reviewCoordinators,
+            new SubmissionStatusUpdated($notification_data)
+        );
     }
 
     /**

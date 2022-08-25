@@ -101,11 +101,16 @@ input CreateSubmissionInput @validator(class: "SubmissionInputValidator") {
 input UpdateSubmissionInput {
     id: ID!
     title: String @trim
-    status: SubmissionStatus
+    status: UpdateStatusInput
     reviewers: UpdateSubmissionUserInput
     review_coordinators: UpdateSubmissionUserInput
         @rename(attribute: "reviewCoordinators")
     submitters: UpdateSubmissionUserInput
+}
+
+input UpdateStatusInput {
+    name: SubmissionStatus!
+    message: String @trim
 }
 
 input CreateSubmissionUserInput {
