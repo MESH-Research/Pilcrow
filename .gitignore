@@ -46,6 +46,3 @@ node_modules/
 backend/vendor/**/*
 /vendor/
 /backend/storage/
-
-# WSL #
-lando-x64-stable.deb
