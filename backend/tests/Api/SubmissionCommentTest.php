@@ -5,7 +5,6 @@ namespace Tests\Api;
 
 use App\Models\InlineComment;
 use App\Models\OverallComment;
-use App\Models\Publication;
 use App\Models\StyleCriteria;
 use App\Models\Submission;
 use App\Models\User;
@@ -220,11 +219,9 @@ class SubmissionCommentTest extends ApiTestCase
     public function testCreateInlineComment(bool $is_valid, string $fragment)
     {
         $this->beAppAdmin();
-        $publication = Publication::factory()
-            ->hasStyleCriterias(3)
-            ->create();
-        $style_criteria = StyleCriteria::where('publication_id',$publication->id)->get();
         $submission = $this->createSubmission();
+        $criteria_1 = $this->createStyleCriteria($submission->publication->id);
+        $criteria_2 = $this->createStyleCriteria($submission->publication->id);
         $response = $this->graphQL(
             'mutation AddInlineComment($submission_id: ID!) {
                 updateSubmission(input: {
@@ -232,7 +229,7 @@ class SubmissionCommentTest extends ApiTestCase
                     inline_comments: {
                         create: [{
                             content: "Hello World"
-                            style_criteria: ['. $style_criteria->first()->id . ', ' . $style_criteria->last()->id .']
+                            style_criteria: ['. $criteria_1->id . ', ' . $criteria_2->id .']
                             ' . $fragment . '
                             from: 100
                             to: 110
@@ -261,12 +258,12 @@ class SubmissionCommentTest extends ApiTestCase
                         'content' => 'Hello World',
                         'style_criteria' => [
                             '0' => [
-                                'name' => $style_criteria->first()->name,
-                                'icon' => $style_criteria->first()->icon,
+                                'name' => $criteria_1->name,
+                                'icon' => $criteria_1->icon,
                             ],
                             '1' => [
-                                'name' => $style_criteria->last()->name,
-                                'icon' => $style_criteria->last()->icon,
+                                'name' => $criteria_2->name,
+                                'icon' => $criteria_2->icon,
                             ],
                         ],
                         'from' => 100,
