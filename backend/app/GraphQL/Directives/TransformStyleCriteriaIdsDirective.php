@@ -28,15 +28,15 @@ class TransformStyleCriteriaIdsDirective extends BaseDirective implements ArgTra
 
     /**
      * @param string $id
-     * @return StyleCriteria
-     * @throws Exception
+     * @return \App\Models\StyleCriteria
+     * @throws \Exception
      */
     public function transform($id): StyleCriteria
     {
         try {
             return StyleCriteria::where('id', $id)->firstOrFail();
         } catch (Exception $e) {
-            throw new Exception("An invalid style criteria ID was supplied.");
+            throw new Exception('An invalid style criteria ID was supplied.');
         }
     }
 }

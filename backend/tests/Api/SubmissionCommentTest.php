@@ -229,7 +229,7 @@ class SubmissionCommentTest extends ApiTestCase
                     inline_comments: {
                         create: [{
                             content: "Hello World"
-                            style_criteria: ['. $criteria_1->id . ', ' . $criteria_2->id .']
+                            style_criteria: [' . $criteria_1->id . ', ' . $criteria_2->id . ']
                             ' . $fragment . '
                             from: 100
                             to: 110
@@ -512,7 +512,7 @@ class SubmissionCommentTest extends ApiTestCase
                             {
                                 id: $commentId
                                 content: "Hello World Updated"
-                                style_criteria: ['. $criteria_1->id . ', ' . $criteria_2->id .']
+                                style_criteria: [' . $criteria_1->id . ', ' . $criteria_2->id . ']
                                 from: 120
                                 to: 130
                             }
