@@ -30,6 +30,11 @@ The full text of our Code of Conduct is available in our repository: <https://gi
 ## Development Environments
 
 We use a Docker-based container management system called [Lando](https://lando.dev/) to manage reusable development environments to ensure everyone is working with the same dependencies. To get started spinning up a development environment, you'll roughly need to follow these steps:
+
+::: warning Windows
+If you're using Windows as a development environment, please refer to the documentation on [setting up WSL before proceeding](). WSL is highly recommended for Windows development.
+:::
+
 ::: warning Minimum Version
 CCR requires Lando version &ge; 3.0.25
 :::
