@@ -11,6 +11,9 @@ abstract class TestCase extends BaseTestCase
 {
     use CreatesApplication;
 
+    public $seed = true;
+    public $seeder = 'RoleSeeder';
+
     /**
      * Act as a new user with application administrator role
      *
