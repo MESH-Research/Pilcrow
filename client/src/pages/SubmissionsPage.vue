@@ -144,7 +144,6 @@
                           submission.status != 'REJECTED'
                         "
                       >
-
                         <q-item
                           v-if="submission.status == 'INITIALLY_SUBMITTED'"
                           data-cy="accept_for_review"
