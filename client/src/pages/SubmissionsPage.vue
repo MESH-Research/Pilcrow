@@ -100,6 +100,7 @@
                   <q-item
                     clickable
                     :disable="cannotAccessSubmission(submission)"
+                    data-cy="review"
                   >
                     <q-item-section
                       ><a :href="'submission/review/' + submission.id">{{
@@ -111,6 +112,7 @@
                         self="bottom middle"
                         :offset="[10, 10]"
                         class="text-body1"
+                        data-cy="cannot_access_submission_tooltip"
                       >
                         {{ $t("submissions.action.review.no_access") }}
                       </q-tooltip>
@@ -144,7 +146,6 @@
                           submission.status != 'REJECTED'
                         "
                       >
-
                         <q-item
                           v-if="submission.status == 'INITIALLY_SUBMITTED'"
                           data-cy="accept_for_review"
@@ -244,16 +245,7 @@ const { currentUser } = useCurrentUser()
 
 function cannotAccessSubmission(submission) {
   console.log(submission)
-  // TODO: check for draft and initallay submitted statuses
 
-  // TODO: An app admin who is also a reviewer should not see the tooltips,
-  // and the buttons should be enabled for rejected, dtaft, initally submitted status
-
-  // TODO: An non app admin who is an editor should not see the tooltips,
-  // and the buttons should be enabled for rejected, dtaft, initally submitted status
-
-  // TODO: An non app admin who is a reviewer should  see the tooltips,
-  // and the buttons should be disabled for rejected, dtaft, initally submitted status
   const nonreviewableStates = new Set([
     "DRAFT",
     "INITIALLY_SUBMITTED",
