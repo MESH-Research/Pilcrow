@@ -83,7 +83,7 @@ input InlineCommentHasManyInput {
 
 input CreateInlineCommentInput {
     content: String!
-    style_criteria: [InlineCommentStyleCriteriaInput!]
+    style_criteria: [ID!] @transformStyleCriteriaIds
     from: Int
     to: Int
     parent_id: ID
@@ -93,14 +93,9 @@ input CreateInlineCommentInput {
 input UpdateInlineCommentInput {
     id: ID!
     content: String
-    style_criteria: [InlineCommentStyleCriteriaInput!]
+    style_criteria: [ID!] @transformStyleCriteriaIds
     from: Int
     to: Int
-}
-
-input InlineCommentStyleCriteriaInput {
-    name: String
-    icon: String
 }
 
 input OverallCommentHasManyInput {
