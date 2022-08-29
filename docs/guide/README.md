@@ -7,5 +7,3 @@ The defining feature of Pilcrow is its focus on collaborative, values-based dial
 This structure enables editorial teams to develop an inclusive and supportive space in which ideas are explored and refined collaboratively. By facilitating a more collegial and thoughtful peer review process, Pilcrow aims to better both scholarship and the processes used to create it. Pilcrow also provides editorial teams with a full review process flow, allowing them to move a piece of scholarship from submission through peer review and export it for publication. Editorial teams can also invite, manage, and correspond with authors and reviewers.
 
 Pilcrow is funded by Mellon Grant #XYZ. More on the Public Philsophy Journal and our ongoing work can be found here: LINK.
-
-(noticeable change)
