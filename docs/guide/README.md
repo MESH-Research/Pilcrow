@@ -1,6 +1,6 @@
 # Introduction
 
-CCR is a new application that facilitates values-based open peer review for scholarly communications.
+The Collaborative Community Review (CCR) is a new application that facilitates values-based open peer review for scholarly communications.
 
 The defining feature of CCR is its focus on collaborative, values-based dialogue around a submission in lieu of traditional peer review. After an article is submitted, editorial teams can invite reviewers to have an asynchronous discussion with the text and author in which each comment is associated with at least one of a set of values defined by the publication. For the Public Philosophy Journal, these values include accessibility, relevance, intellectual coherence, and scholarly dialogue. CCR allows publications to define their own sets of values.
 
