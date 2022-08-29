@@ -6,7 +6,7 @@ import { a11yLogViolations } from '../support/helpers'
 import "cypress-file-upload"
 
 describe("Submissions Page", () => {
-  it("creates new submissions", () => {
+ it("creates new submissions", () => {
     cy.task("resetDb")
     cy.login({ email: "applicationadministrator@ccrproject.dev" })
     cy.visit("submissions")
@@ -30,6 +30,7 @@ describe("Submissions Page", () => {
     cy.checkA11y(null, null, a11yLogViolations)
   })
 
+  
   //TODO: If this is checked at the jest and/or laravel level, it doesn't need to be checked here
   it("prevents submission creation when the title exceeds the maximum length", () => {
     const name_520_characters =
@@ -98,27 +99,40 @@ describe("Submissions Page", () => {
     cy.url().should("include", "/error403")
   })
 
-  it("should deny the reviewer from accessing rejected submissions", () => {
-    cy.task("resetDb")
-    cy.login({ email: "reviewer@ccrproject.dev" })
-    cy.visit("submissions")
-    cy.dataCy("submission_actions").eq(2).click()
-    cy.dataCy("change_status").should('have.class', 'disabled')
-    cy.url().should("include", "/error403")
-  })
-
+    // test to verify that a reviewer cannot change the status of a rejected submission on the submissions page.
   it("should deny the reviewer from changing the stage of rejected submissions", () => {
     cy.task("resetDb")
     cy.login({ email: "reviewer@ccrproject.dev" })
     cy.visit("submissions")
     cy.dataCy("submission_actions").eq(2).click()
+    cy.dataCy("change_status").should('have.class', 'disabled')
+    cy.dataCy("change_status_item_section").trigger('mouseenter')
+    cy.dataCy("cannot_change_submission_status_tooltip")
+  })
+
+  // test to verify that a reviewer is redirected to a 403 page when the submission is rejected.
+  it("should deny the reviewer from accessing rejected submissions", () => {
+    cy.task("resetDb")
+    cy.login({ email: "reviewer@ccrproject.dev" })
+    cy.visit("submissions")
+    cy.dataCy("submission_actions").eq(2).click()
     cy.dataCy("review").should('have.class', 'disabled')
-    cy.dataCy("review").trigger('mouseover')
-    cy.dataCy("cannot_access_submission_tooltip").should('be.visible')
+    cy.dataCy("review_link").trigger('mouseenter')
+    cy.dataCy("cannot_access_submission_tooltip")
     cy.dataCy("review").click()
     cy.url().should("include", "/error403")
   })
 
+  it("should allow the app admin access rejected submissions", () => {
+    cy.task("resetDb")
+    cy.login({ email: "applicationadministrator@ccrproject.dev" })
+    cy.visit("submissions")
+    cy.dataCy("submission_actions").eq(2).click()
+    cy.dataCy("review").click()
+    cy.url().should("include", "/submission/review")
+    cy.dataCy("submussion_title")
+  })
+ 
   it("should allow an application administrator to open a review and close a review", () => {
     cy.task("resetDb")
     cy.login({ email: "applicationadministrator@ccrproject.dev" })
