@@ -218,4 +218,12 @@ describe("Submissions Review", () => {
     cy.dataCy("submission_status").contains("Awaiting Decision")
     cy.dataCy("decision_options")
   })
+
+  it("should not display the decision options for rejected submissions", () => {
+    cy.task("resetDb")
+    cy.login({ email: "applicationadministrator@ccrproject.dev" })
+    cy.visit("submission/review/102")
+    cy.dataCy("submission_status").contains("Rejected")
+    cy.dataCy("decision_options").should('not.exist'); 
+  })
 })
