@@ -247,8 +247,6 @@ const { dialog } = useQuasar()
 const { currentUser } = useCurrentUser()
 
 function cannotAccessSubmission(submission) {
-  console.log(submission)
-
   const nonreviewableStates = new Set([
     "DRAFT",
     "INITIALLY_SUBMITTED",
