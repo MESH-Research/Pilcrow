@@ -75,7 +75,7 @@ export async function beforeEachRequiresReviewAccess(
     if (submission.length) {
       const s = submission[0]
 
-      // Allow Review Coordinators, Reviewers, and Submitters
+      // Allow those who are assigned to the submission
       if (
         ["review_coordinator", "reviewer", "submitter"].some(
           (role) => role === s.my_role
@@ -85,7 +85,11 @@ export async function beforeEachRequiresReviewAccess(
       }
 
       // Deny Reviewers when the submission is in a nonreviewable state
-      const nonreviewableStates = new Set(["DRAFT", "INITIALLY_SUBMITTED"])
+      const nonreviewableStates = new Set([
+        "DRAFT",
+        "INITIALLY_SUBMITTED",
+        "REJECTED",
+      ])
       if ("reviewer" === s.my_role && nonreviewableStates.has(s.status)) {
         access = false
       }
