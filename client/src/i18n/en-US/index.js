@@ -515,7 +515,7 @@ export default {
       },
       change_status: {
         name: "Change Status",
-        no_access: "Cannot change the status of submission.",
+        no_access: "Rejected submissions cannot have their statuses changed.",
       },
     },
     create: {
