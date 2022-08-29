@@ -684,6 +684,15 @@ export default {
         close: "You are about to close this submission for review.",
         accept_as_final: "You are about to accept this submission as final.",
       },
+      action: {
+        accept_for_review: "Accept for Review",
+        cancel: "Cancel",
+        reject: "Reject",
+        request_resubmission: "Request Resubmission",
+        open: "Open for Review",
+        close: "Close for Review",
+        accept_as_final: "Accept as Final",
+      },
       unauthorized:
         "You are not authorized to change the status of this submission. Please contact your administrator.",
       statusChanged: {
