@@ -288,7 +288,6 @@ const { result: pubsResult } = useQuery(GET_PUBLICATIONS)
 const publications = computed(() => {
   return pubsResult.value?.publications.data ?? []
 })
-console.log(publications)
 const { t } = useI18n()
 const { newStatusMessage } = useFeedbackMessages({
   attrs: {
@@ -338,7 +337,6 @@ async function createNewSubmission() {
     resetForm()
     is_submitting.value = false
   } catch (error) {
-    console.log(error)
     try_catch_error.value = true
     is_submitting.value = false
   }
