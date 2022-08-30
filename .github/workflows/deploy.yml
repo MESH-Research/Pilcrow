@@ -1,0 +1,20 @@
+name: deploy to production
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to Reclaim Cloud
+        uses: appleboy/ssh-action@master
+        with:
+          script: |
+            cd ccr-staging
+            redeploy.sh
+          host: ${{ secrets.STAGING_HOST }}
+          port: ${{ secrets.STAGING_PORT }}
+          username: ${{ secrets.STAGING_USER }}
+          key: ${{ secrets.PRIVATE_KEY}}
