@@ -97,22 +97,58 @@
               <q-btn data-cy="submission_actions">
                 <q-icon name="more_vert" />
                 <q-menu anchor="bottom right" self="top right">
-                  <q-item clickable>
+                  <q-item
+                    clickable
+                    :disable="cannotAccessSubmission(submission)"
+                    data-cy="review"
+                  >
                     <q-item-section
-                      ><a :href="'submission/review/' + submission.id">{{
-                        $t("submissions.action.review")
-                      }}</a></q-item-section
-                    >
+                      ><a
+                        data-cy="review_link"
+                        :href="'submission/review/' + submission.id"
+                        >{{ $t("submissions.action.review.name") }}</a
+                      >
+                      <q-tooltip
+                        v-if="cannotAccessSubmission(submission)"
+                        anchor="top middle"
+                        self="bottom middle"
+                        :offset="[10, 10]"
+                        class="text-body1"
+                        data-cy="cannot_access_submission_tooltip"
+                      >
+                        {{ $t("submissions.action.review.no_access") }}
+                      </q-tooltip>
+                    </q-item-section>
                   </q-item>
-                  <q-item data-cy="change_status" clickable>
-                    <q-item-section>{{
-                      $t("submissions.action.change_status")
-                    }}</q-item-section>
+                  <q-item
+                    data-cy="change_status"
+                    clickable
+                    :disable="submission.status == 'REJECTED'"
+                  >
+                    <q-item-section data-cy="change_status_item_section"
+                      >{{ $t("submissions.action.change_status.name") }}
+                      <q-tooltip
+                        v-if="submission.status == 'REJECTED'"
+                        anchor="top middle"
+                        self="bottom middle"
+                        :offset="[10, 10]"
+                        class="text-body1"
+                        data-cy="cannot_change_submission_status_tooltip"
+                      >
+                        {{ $t("submissions.action.change_status.no_access") }}
+                      </q-tooltip>
+                    </q-item-section>
+
                     <q-item-section side>
                       <q-icon name="keyboard_arrow_right" />
                     </q-item-section>
                     <q-menu anchor="bottom end" self="top end">
-                      <div v-if="submission.status != 'AWAITING_REVIEW'">
+                      <div
+                        v-if="
+                          submission.status != 'AWAITING_REVIEW' &&
+                          submission.status != 'REJECTED'
+                        "
+                      >
                         <q-item
                           v-if="submission.status == 'INITIALLY_SUBMITTED'"
                           data-cy="accept_for_review"
@@ -210,6 +246,19 @@ const { dialog } = useQuasar()
 
 const { currentUser } = useCurrentUser()
 
+function cannotAccessSubmission(submission) {
+  const nonreviewableStates = new Set([
+    "DRAFT",
+    "INITIALLY_SUBMITTED",
+    "REJECTED",
+  ])
+  return (
+    nonreviewableStates.has(submission.status) &&
+    submission.my_role == "reviewer" &&
+    submission.effective_role == "reviewer"
+  )
+}
+
 const is_submitting = ref(false)
 const try_catch_error = ref(false)
 const new_submission = reactive({
@@ -239,7 +288,6 @@ const { result: pubsResult } = useQuery(GET_PUBLICATIONS)
 const publications = computed(() => {
   return pubsResult.value?.publications.data ?? []
 })
-
 const { t } = useI18n()
 const { newStatusMessage } = useFeedbackMessages({
   attrs: {
@@ -289,7 +337,6 @@ async function createNewSubmission() {
     resetForm()
     is_submitting.value = false
   } catch (error) {
-    console.log(error)
     try_catch_error.value = true
     is_submitting.value = false
   }
