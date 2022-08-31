@@ -13,7 +13,7 @@ jobs:
         with:
           script: |
             cd ccr-staging
-            redeploy.sh
+            ./redeploy.sh
           host: ${{ secrets.STAGING_HOST }}
           port: ${{ secrets.STAGING_PORT }}
           username: ${{ secrets.STAGING_USER }}
