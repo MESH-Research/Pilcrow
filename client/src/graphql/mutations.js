@@ -458,7 +458,7 @@ export const CREATE_INLINE_COMMENT = gql`
     $content: String!
     $from: Int
     $to: Int
-    $style_criteria: [InlineCommentStyleCriteriaInput!]
+    $style_criteria: [ID!]
   ) {
     updateSubmission(
       input: {
@@ -528,4 +528,13 @@ export const CREATE_INLINE_COMMENT_REPLY = gql`
     }
   }
   ${_COMMENT_FIELDS}
+`
+
+export const UPDATE_SUBMISSION_STATUS = gql`
+  mutation UpdateSubmissionStatus($id: ID!, $status: SubmissionStatus) {
+    updateSubmission(input: { id: $id, status: $status }) {
+      id
+      status
+    }
+  }
 `

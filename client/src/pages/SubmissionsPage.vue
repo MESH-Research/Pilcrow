@@ -69,27 +69,150 @@
           <q-item
             v-for="submission in submissions"
             :key="submission.id"
-            class="column"
+            class="row justify-between"
           >
-            <router-link
-              data-cy="submission_link"
-              :to="{
-                name: 'submission_details',
-                params: { id: submission.id },
-              }"
-            >
-              <q-item-label>{{ submission.title }}</q-item-label>
-            </router-link>
-            <q-item-label caption>
-              for {{ submission.publication.name }}
-            </q-item-label>
-            <ul v-if="submission.files.length > 0" class="q-ma-none">
-              <li v-for="file in submission.files" :key="file.id">
-                <a :href="file.file_upload" download>
-                  {{ file.file_upload }}
-                </a>
-              </li>
-            </ul>
+            <div>
+              <router-link
+                data-cy="submission_link"
+                :to="{
+                  name: 'submission_details',
+                  params: { id: submission.id },
+                }"
+              >
+                <q-item-label>{{ submission.title }}</q-item-label>
+              </router-link>
+              <q-item-label caption>
+                for {{ submission.publication.name }}
+
+                <ul v-if="submission.files.length > 0" class="q-ma-none">
+                  <li v-for="file in submission.files" :key="file.id">
+                    <a :href="file.file_upload" download>
+                      {{ file.file_upload }}
+                    </a>
+                  </li>
+                </ul>
+              </q-item-label>
+            </div>
+            <div class="q-gutter-sm submission-options">
+              <q-btn data-cy="submission_actions">
+                <q-icon name="more_vert" />
+                <q-menu anchor="bottom right" self="top right">
+                  <q-item
+                    clickable
+                    :disable="cannotAccessSubmission(submission)"
+                    data-cy="review"
+                  >
+                    <q-item-section
+                      ><a
+                        data-cy="review_link"
+                        :href="'submission/review/' + submission.id"
+                        >{{ $t("submissions.action.review.name") }}</a
+                      >
+                      <q-tooltip
+                        v-if="cannotAccessSubmission(submission)"
+                        anchor="top middle"
+                        self="bottom middle"
+                        :offset="[10, 10]"
+                        class="text-body1"
+                        data-cy="cannot_access_submission_tooltip"
+                      >
+                        {{ $t("submissions.action.review.no_access") }}
+                      </q-tooltip>
+                    </q-item-section>
+                  </q-item>
+                  <q-item
+                    data-cy="change_status"
+                    clickable
+                    :disable="submission.status == 'REJECTED'"
+                  >
+                    <q-item-section data-cy="change_status_item_section"
+                      >{{ $t("submissions.action.change_status.name") }}
+                      <q-tooltip
+                        v-if="submission.status == 'REJECTED'"
+                        anchor="top middle"
+                        self="bottom middle"
+                        :offset="[10, 10]"
+                        class="text-body1"
+                        data-cy="cannot_change_submission_status_tooltip"
+                      >
+                        {{ $t("submissions.action.change_status.no_access") }}
+                      </q-tooltip>
+                    </q-item-section>
+
+                    <q-item-section side>
+                      <q-icon name="keyboard_arrow_right" />
+                    </q-item-section>
+                    <q-menu anchor="bottom end" self="top end">
+                      <div
+                        v-if="
+                          submission.status != 'AWAITING_REVIEW' &&
+                          submission.status != 'REJECTED'
+                        "
+                      >
+                        <q-item
+                          v-if="submission.status == 'INITIALLY_SUBMITTED'"
+                          data-cy="accept_for_review"
+                          class="items-center"
+                          clickable
+                          @click="
+                            confirmHandler('accept_for_review', submission.id)
+                          "
+                          >{{
+                            $t("submission.action.accept_for_review")
+                          }}</q-item
+                        >
+                        <q-item
+                          v-if="submission.status != 'INITIALLY_SUBMITTED'"
+                          data-cy="accept_as_final"
+                          class="items-center"
+                          clickable
+                          @click="
+                            confirmHandler('accept_as_final', submission.id)
+                          "
+                          >{{ $t("submission.action.accept_as_final") }}</q-item
+                        >
+                        <q-item
+                          class="items-center"
+                          clickable
+                          @click="
+                            confirmHandler(
+                              'request_resubmission',
+                              submission.id
+                            )
+                          "
+                          >{{
+                            $t("submission.action.request_resubmission")
+                          }}</q-item
+                        >
+                        <q-item
+                          class="items-center"
+                          clickable
+                          @click="confirmHandler('reject', submission.id)"
+                          >{{ $t("submission.action.reject") }}
+                        </q-item>
+                      </div>
+                      <q-separator />
+                      <q-item
+                        v-if="submission.status == 'AWAITING_REVIEW'"
+                        data-cy="open_review"
+                        class="items-center"
+                        clickable
+                        @click="confirmHandler('open', submission.id)"
+                        >{{ $t("submission.action.open") }}
+                      </q-item>
+                      <q-item
+                        v-if="submission.status == 'UNDER_REVIEW'"
+                        data-cy="close_review"
+                        class="items-center"
+                        clickable
+                        @click="confirmHandler('close', submission.id)"
+                        >{{ $t("submission.action.close") }}
+                      </q-item>
+                    </q-menu>
+                  </q-item>
+                </q-menu>
+              </q-btn>
+            </div>
           </q-item>
         </q-list>
         <div v-if="subsLoading" class="q-pa-lg">
@@ -116,8 +239,25 @@ import { useI18n } from "vue-i18n"
 import { ref, reactive, computed } from "vue"
 import { useQuery, useMutation } from "@vue/apollo-composable"
 import useVuelidate from "@vuelidate/core"
+import ConfirmStatusChangeDialog from "../components/dialogs/ConfirmStatusChangeDialog.vue"
+import { useQuasar } from "quasar"
+
+const { dialog } = useQuasar()
 
 const { currentUser } = useCurrentUser()
+
+function cannotAccessSubmission(submission) {
+  const nonreviewableStates = new Set([
+    "DRAFT",
+    "INITIALLY_SUBMITTED",
+    "REJECTED",
+  ])
+  return (
+    nonreviewableStates.has(submission.status) &&
+    submission.my_role == "reviewer" &&
+    submission.effective_role == "reviewer"
+  )
+}
 
 const is_submitting = ref(false)
 const try_catch_error = ref(false)
@@ -148,7 +288,6 @@ const { result: pubsResult } = useQuery(GET_PUBLICATIONS)
 const publications = computed(() => {
   return pubsResult.value?.publications.data ?? []
 })
-
 const { t } = useI18n()
 const { newStatusMessage } = useFeedbackMessages({
   attrs: {
@@ -198,7 +337,6 @@ async function createNewSubmission() {
     resetForm()
     is_submitting.value = false
   } catch (error) {
-    console.log(error)
     try_catch_error.value = true
     is_submitting.value = false
   }
@@ -206,5 +344,29 @@ async function createNewSubmission() {
   function resetForm() {
     Object.assign(new_submission, { title: "", file_upload: [] })
   }
+}
+
+async function confirmHandler(action, id) {
+  await new Promise((resolve) => {
+    dirtyDialog(action, id)
+      .onOk(function () {
+        resolve(true)
+      })
+      .onCancel(function () {
+        resolve(false)
+      })
+  })
+  {
+    return
+  }
+}
+function dirtyDialog(action, id) {
+  return dialog({
+    component: ConfirmStatusChangeDialog,
+    componentProps: {
+      action: action,
+      submissionId: id,
+    },
+  })
 }
 </script>

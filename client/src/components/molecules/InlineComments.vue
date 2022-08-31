@@ -84,7 +84,7 @@ watch(
         if (!element) return 0
         return getOffsetTop(element.offsetParent) + element.offsetTop
       }
-      const secondaryNavHeight = 48
+      const secondaryNavHeight = 75
       const negativeSpaceAdjustment = 14
       const offset =
         getOffsetTop(scrollTarget) -

@@ -157,7 +157,7 @@ describe("Submissions Review", () => {
     cy.dataCy("inlineCommentReply").last().contains("This is a reply to an inline comment reply.")
   }) */
 
-  it("should display comment highlights and focus when clicked", () => {
+  it("should make inline comments active upon clicks to their corresponding bubble widgets", () => {
     cy.task("resetDb")
     cy.login({ email: "reviewer@ccrproject.dev" })
     cy.visit("submission/review/100")
@@ -165,10 +165,65 @@ describe("Submissions Review", () => {
     cy.dataCy("comment-widget").each((_, index) => {
       cy.get(".fullscreen.q-drawer__backdrop:not('.hidden')").should('not.exist')
       cy.dataCy("comment-widget").eq(index).click()
-      cy.dataCy("toggleInlineCommentsButton").click()
       cy.dataCy("inlineComment").eq(index).find('> .q-card').should('have.class', 'active')
       //TODO: Redesign so comment drawer toggle is not hidden when the drawer is visible at small screen sizes.
       cy.get(".fullscreen.q-drawer__backdrop:not('.hidden')").click()
     })
+  })
+
+  it("should make inline comments active upon clicks to their corresponding highlights", () => {
+    cy.task("resetDb")
+    cy.login({ email: "reviewer@ccrproject.dev" })
+    cy.visit("submission/review/100")
+    cy.dataCy("comment-highlight").each((_, index) => {
+      cy.get(".fullscreen.q-drawer__backdrop:not('.hidden')").should('not.exist')
+      cy.dataCy("comment-highlight").eq(index).click()
+      cy.dataCy("inlineComment").find('> .q-card.active').should('have.length', 1)
+      //TODO: Redesign so comment drawer toggle is not hidden when the drawer is visible at small screen sizes.
+      cy.get(".fullscreen.q-drawer__backdrop:not('.hidden')").click()
+    })
+  })
+
+  it("should deny a reviewer access to a submission's contents before it is accepted for review", () => {
+    cy.task("resetDb")
+    cy.login({ email: "reviewer@ccrproject.dev" })
+    cy.visit("submission/review/101")
+    cy.url().should("include", "/error403")
+  })
+
+  it("should allow an application administrator to accept a submission for review and permit reviewers access", () => {
+    cy.task("resetDb")
+    cy.login({ email: "applicationadministrator@ccrproject.dev" })
+    cy.visit("submission/review/101")
+    cy.dataCy("submission_status").contains("Initially Submitted")
+    cy.dataCy("accept_for_review").click()
+    cy.dataCy("dirtyYesChangeStatus").click()
+    cy.dataCy("submission_status").contains("Awaiting Review")
+    cy.login({ email: "reviewer@ccrproject.dev" })
+    cy.visit("submission/review/101")
+    cy.url().should("not.include", "/error403")
+  })
+
+  it("should allow an application administrator to open a review, close a review, and that final decision options are visible", () => {
+    cy.task("resetDb")
+    cy.login({ email: "applicationadministrator@ccrproject.dev" })
+    cy.visit("submission/review/100")
+    cy.dataCy("submission_status").contains("Awaiting Review")
+    cy.dataCy("open_for_review").click()
+    cy.dataCy("dirtyYesChangeStatus").click()
+    cy.dataCy("submission_status").contains("Under Review")
+    cy.dataCy("decision_options")
+    cy.dataCy("close_for_review").click()
+    cy.dataCy("dirtyYesChangeStatus").click()
+    cy.dataCy("submission_status").contains("Awaiting Decision")
+    cy.dataCy("decision_options")
+  })
+
+  it("should not display the decision options for rejected submissions", () => {
+    cy.task("resetDb")
+    cy.login({ email: "applicationadministrator@ccrproject.dev" })
+    cy.visit("submission/review/102")
+    cy.dataCy("submission_status").contains("Rejected")
+    cy.dataCy("decision_options").should('not.exist'); 
   })
 })

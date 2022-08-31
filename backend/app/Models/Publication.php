@@ -76,7 +76,7 @@ class Publication extends BaseModel
     }
 
     /**
-     * Editors  relationship
+     * Editors relationship
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */

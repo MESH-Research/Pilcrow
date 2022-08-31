@@ -68,7 +68,9 @@
         <q-icon name="add_comment" />
       </q-btn>
     </bubble-menu>
-    <editor-content :editor="editor" />
+    <div data-cy="highlight-click-handler" @click="highlightClickHandler">
+      <editor-content :editor="editor" />
+    </div>
   </article>
 </template>
 
@@ -90,6 +92,7 @@ const props = defineProps({
   },
 })
 
+const commentDrawerOpen = inject("commentDrawerOpen")
 const submission = inject("submission")
 const activeComment = inject("activeComment")
 
@@ -106,6 +109,9 @@ const findCommentFromId = (id) =>
   submission.value.inline_comments.find((c) => c.id === id)
 
 const onAnnotationClick = (context, { target }) => {
+  // Open the inline comment drawer
+  commentDrawerOpen.value = true
+
   //First we need to get all the comment widget elements with the same Y index
   const { top: targetTop } = target.getBoundingClientRect()
   const widgets = [...contentRef.value.querySelectorAll(".comment-widget")]
@@ -164,7 +170,6 @@ function addComment() {
     editor.state.selection.$anchor.pos,
     editor.state.selection.$head.pos,
   ].sort((a, b) => a - b)
-  const range = { from, to }
   activeComment.value = {
     __typename: "InlineComment",
     new: true,
@@ -173,7 +178,16 @@ function addComment() {
     parent_id: null,
     id: "new",
   }
-  console.log(range)
+}
+
+function highlightClickHandler(event) {
+  const id = event.target.dataset["contextId"]
+  if (id === undefined) {
+    return
+  }
+  // Open the inline comment drawer and set the active comment
+  commentDrawerOpen.value = true
+  activeComment.value = findCommentFromId(id)
 }
 </script>
 
@@ -192,7 +206,6 @@ function addComment() {
   font-size: 1.4rem;
   color: $primary;
   text-align: center;
-  padding-left: 0.5px;
   line-height: 1.1em;
 }
 .submission-content {

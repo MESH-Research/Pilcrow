@@ -422,10 +422,20 @@ export default {
     },
   },
   submission: {
+    action: {
+      accept_for_review: "Accept for Review",
+      request_resubmission: "Request Resubmission",
+      reject: "Reject",
+      accept_as_final: "Accept as Final",
+      open: "Open for Review",
+      close: "Close for Review",
+    },
     status: {
+      updated:
+        "The status of {data_submission_title} has been updated to {data_submission_status_name}.",
       title: "Submission Status",
       INITIALLY_SUBMITTED: "Initially Submitted",
-      AWAITING_RESUBMISSION: "Awaiting Resubmission",
+      RESUBMISSION_REQUESTED: "Resubmission Requested",
       RESUBMITTED: "Resubmitted",
       AWAITING_REVIEW: "Awaiting Review",
       REJECTED: "Rejected",
@@ -433,7 +443,7 @@ export default {
       EXPIRED: "Expired",
       UNDER_REVIEW: "Under Review",
       AWAITING_DECISION: "Awaiting Decision",
-      AWAITING_REVISION: "Awaiting Revision",
+      REVISION_REQUESTED: "Revision Requested",
       ARCHIVED: "Archived",
       DELETED: "Deleted",
     },
@@ -498,7 +508,16 @@ export default {
   },
   submissions: {
     details_heading: "Submission Details",
-    view_heading: "View Submission",
+    action: {
+      review: {
+        name: "Review Submission",
+        no_access: "Reviewers can only access submissions in reviewable states",
+      },
+      change_status: {
+        name: "Change Status",
+        no_access: "Rejected submissions cannot have their statuses changed.",
+      },
+    },
     create: {
       success: "Submission successfully created.",
       failure: "An error occurred while attempting to create the submission.",
@@ -555,15 +574,51 @@ export default {
       },
     },
     submission: {
-      created: {
+      updated: {
         short:
-          "{data_user_username} has submitted {data_submission_title} to {data_publication_name}",
+          "The status of {data_submission_title} has been updated to {data_submission_status_name}",
       },
-      approved: {
-        short: "{object_name} has been approved",
+      initially_submitted: {
+        short:
+          "{data_submission_title} has been submitted for review. Its fitness for review is to be determined.",
+      },
+      resubmission_requested: {
+        short:
+          "{data_submission_title} has been determined to be unfit for review. A request has been made for resubmission.",
       },
       resubmitted: {
-        short: "{object_name} has been resubmitted",
+        short: "{data_submission_title} has been resubmitted for review.",
+      },
+      awaiting_review: {
+        short:
+          "{data_submission_title} has been accepted for review. It is currently awaiting review from the assigned reviewers.",
+      },
+      rejected: {
+        short:
+          "{data_submission_title} has been determined to be unfit for review and has been rejected.",
+      },
+      accepted_as_final: {
+        short:
+          "{data_submission_title} has been reviewed and accepted as final.",
+      },
+      expired: {
+        short: "The review for {data_submission_title} has expired.",
+      },
+      under_review: {
+        short: "{data_submission_title} is currently under review.",
+      },
+      awaiting_decision: {
+        short:
+          "{data_submission_title} has been reviewed and is awaiting a decision on whether or not it will be accepted as final.",
+      },
+      revision_requested: {
+        short: "{data_submission_title} has been requested for revision.",
+      },
+      archived: {
+        short: "{data_submission_title} has been archived.",
+      },
+      deleted: {
+        short: "{data_submission_title} has been deleted.",
       },
     },
   },
@@ -618,6 +673,38 @@ export default {
         "Are you sure you do not want to associate one with this comment?",
       action_submit: "Post comment as is",
       action_cancel: "Add style criteria",
+    },
+    confirmStatusChange: {
+      body: {
+        accept_for_review: "You are about to accept the submission for review.",
+        reject: "You are about to reject the submission for review.",
+        request_resubmission:
+          "You are about to request the submitter to resubmit this submission as a new submission to be reviewed.",
+        open: "You are about to open this submission for review.",
+        close: "You are about to close this submission for review.",
+        accept_as_final: "You are about to accept this submission as final.",
+      },
+      action: {
+        accept_for_review: "Accept for Review",
+        cancel: "Cancel",
+        reject: "Reject",
+        request_resubmission: "Request Resubmission",
+        open: "Open for Review",
+        close: "Close for Review",
+        accept_as_final: "Accept as Final",
+      },
+      unauthorized:
+        "You are not authorized to change the status of this submission. Please contact your administrator.",
+      statusChanged: {
+        accept_for_review:
+          "This submission is accepted for review. It is currently awaiting review from the assigned reviewers.",
+        reject: "This submission is rejected for review.",
+        request_resubmission:
+          "A resubmission is requested for this submission.",
+        open: "This submission is now under review.",
+        close: "This submission is closed for review.",
+        accept_as_final: "This submission is accepted as final.",
+      },
     },
   },
 }

@@ -62,8 +62,16 @@ export const CURRENT_USER_SUBMISSIONS = gql`
   query CurrentUserSubmission {
     currentUser {
       id
+      roles {
+        name
+      }
       submissions {
         id
+        status
+        my_role
+        publication {
+          my_role
+        }
         pivot {
           id
           role_id
@@ -145,6 +153,9 @@ export const GET_SUBMISSIONS = gql`
       data {
         id
         title
+        status
+        my_role
+        effective_role
         publication {
           name
         }
@@ -192,6 +203,7 @@ export const GET_SUBMISSION_REVIEW = gql`
     submission(id: $id) {
       id
       title
+      status
       content {
         data
       }

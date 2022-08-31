@@ -9,7 +9,10 @@ function getDecorations(doc, annotations) {
     .map((a) => [
       Decoration.inline(a.from, a.to, {
         class: `comment-highlight ${a.active ? "active" : ""}`,
+        "data-context-id": a.context.id,
+        "data-cy": "comment-highlight",
         dataset: { comment: a.context.id },
+        style: "cursor: pointer",
       }),
       Decoration.widget(a.from, commentWidget(a)),
     ])
@@ -19,12 +22,15 @@ function getDecorations(doc, annotations) {
 }
 function commentWidget({ click, context }) {
   let icon = document.createElement("i")
-  icon.className = "q-icon material-icons comment-widget"
+  icon.className = "q-icon material-icons no-pointer-events"
   icon.innerText = "chat_bubble"
-  icon.dataset.comment = context.id
-  icon.dataset.cy = "comment-widget"
-  icon.onclick = (...args) => click(context, ...args)
-  return icon
+  let button = document.createElement("button")
+  button.className = "comment-widget no-border transparent"
+  button.dataset.comment = context.id
+  button.dataset.cy = "comment-widget"
+  button.onclick = (...args) => click(context, ...args)
+  button.appendChild(icon)
+  return button
 }
 export const AnnotationPlugin = () =>
   new Plugin({
