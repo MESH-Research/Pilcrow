@@ -73,7 +73,7 @@ describe("BasicPage", () => {
       .findComponent({ ref: "form" })
       .vm.$emit("save", { field: "home_page_content", content: "New Content" })
 
-    expect(mutateHandler).toBeCalledWith({
+    expect(mutateHandler).toHaveBeenCalledWith({
       id: "1",
       home_page_content: "New Content",
     })
