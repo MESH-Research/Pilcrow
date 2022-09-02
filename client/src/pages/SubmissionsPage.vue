@@ -123,19 +123,29 @@
                   <q-item
                     data-cy="change_status"
                     clickable
-                    :disable="submission.status == 'REJECTED'"
+                    :disable="
+                      submission.status == 'REJECTED' ||
+                      submission.status == 'RESUBMISSION_REQUESTED'
+                    "
                   >
                     <q-item-section data-cy="change_status_item_section"
                       >{{ $t("submissions.action.change_status.name") }}
                       <q-tooltip
-                        v-if="submission.status == 'REJECTED'"
+                        v-if="
+                          submission.status == 'REJECTED' ||
+                          submission.status == 'RESUBMISSION_REQUESTED'
+                        "
                         anchor="top middle"
                         self="bottom middle"
                         :offset="[10, 10]"
                         class="text-body1"
                         data-cy="cannot_change_submission_status_tooltip"
                       >
-                        {{ $t("submissions.action.change_status.no_access") }}
+                        {{
+                          $t(
+                            `submissions.action.change_status.no_access.${submission.status}`
+                          )
+                        }}
                       </q-tooltip>
                     </q-item-section>
 
