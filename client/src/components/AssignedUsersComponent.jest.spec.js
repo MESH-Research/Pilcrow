@@ -219,10 +219,10 @@ describe("AssignedUsers", () => {
 
     wrapper.vm.user = { id: 2 }
     await wrapper.vm.handleSubmit()
-    expect(mock).toBeCalledWith({ connect: [2], id: 1 })
+    expect(mock).toHaveBeenCalledWith({ connect: [2], id: 1 })
 
     mock.mockClear()
     await wrapper.vm.handleUserListClick({ user: { id: 2 } })
-    expect(mock).toBeCalledWith({ disconnect: [2], id: 1 })
+    expect(mock).toHaveBeenCalledWith({ disconnect: [2], id: 1 })
   })
 })

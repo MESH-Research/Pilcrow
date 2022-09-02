@@ -68,7 +68,7 @@ describe("LoginPage", () => {
     await wrapper.findComponent({ ref: "submitBtn" }).trigger("submit")
     await flushPromises()
 
-    expect(mutationHandler).toBeCalled()
+    expect(mutationHandler).toHaveBeenCalled()
     expect(wrapper.vm.push).toHaveBeenCalledTimes(1)
     expect(wrapper.vm.push).toHaveBeenCalledWith("/dashboard")
   })
@@ -84,7 +84,7 @@ describe("LoginPage", () => {
     await wrapper.findComponent({ ref: "submitBtn" }).trigger("submit")
     await flushPromises()
 
-    expect(mutationHandler).toBeCalled()
+    expect(mutationHandler).toHaveBeenCalled()
     expect(wrapper.vm.push).toHaveBeenCalledTimes(1)
     expect(wrapper.vm.push).toHaveBeenCalledWith("/test-result")
   })

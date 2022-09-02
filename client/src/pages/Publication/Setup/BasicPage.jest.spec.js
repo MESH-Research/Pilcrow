@@ -72,7 +72,7 @@ describe("BasicPage", () => {
     const wrapper = await makeWrapper()
     await wrapper.findComponent({ ref: "form" }).vm.$emit("save", newData)
 
-    expect(mutateHandler).toBeCalledWith({
+    expect(mutateHandler).toHaveBeenCalledWith({
       id: "1",
       ...newData,
     })

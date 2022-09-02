@@ -99,8 +99,8 @@ describe("VerifyEmailPage", () => {
     expect(wrapper.text()).toContain(
       "account.email_verify.verification_success"
     )
-    expect(warn).toBeCalledTimes(1)
-    expect(warn).toBeCalledWith(
+    expect(warn).toHaveBeenCalledTimes(1)
+    expect(warn).toHaveBeenCalledWith(
       expect.stringContaining('Unknown query named "currentUser"')
     )
   })
