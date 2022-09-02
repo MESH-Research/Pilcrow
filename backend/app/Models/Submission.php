@@ -54,6 +54,7 @@ class Submission extends Model implements Auditable
         'title',
         'publication_id',
         'status',
+        'status_change_comment',
         'content_id',
     ];
 

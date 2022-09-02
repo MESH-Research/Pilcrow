@@ -531,10 +531,17 @@ export const CREATE_INLINE_COMMENT_REPLY = gql`
 `
 
 export const UPDATE_SUBMISSION_STATUS = gql`
-  mutation UpdateSubmissionStatus($id: ID!, $status: SubmissionStatus) {
-    updateSubmission(input: { id: $id, status: $status }) {
+  mutation UpdateSubmissionStatus(
+    $id: ID!
+    $status: SubmissionStatus!
+    $comment: String!
+  ) {
+    updateSubmission(
+      input: { id: $id, status: $status, status_change_comment: $comment }
+    ) {
       id
       status
+      status_change_comment
     }
   }
 `
