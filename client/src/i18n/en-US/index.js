@@ -693,6 +693,8 @@ export default {
         close: "Close for Review",
         accept_as_final: "Accept as Final",
       },
+      comment:
+        "Add an optional comment explaining your decision. This will be visible to those associated with this submission.",
       unauthorized:
         "You are not authorized to change the status of this submission. Please contact your administrator.",
       statusChanged: {

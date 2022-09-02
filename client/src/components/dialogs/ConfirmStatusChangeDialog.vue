@@ -19,6 +19,21 @@
           </p>
         </div>
       </q-card-section>
+      <q-separator />
+      <q-card-section>
+        <div class="column items-center">
+          <p>
+            <i18n-t :keypath="`dialog.confirmStatusChange.comment`" tag="span">
+            </i18n-t>
+          </p>
+        </div>
+        <q-input
+          v-model="comment"
+          filled
+          label="Optional Comment"
+          type="textarea"
+        />
+      </q-card-section>
 
       <q-card-actions align="around" class="q-pb-md">
         <q-btn
@@ -41,8 +56,9 @@
 
 <script setup>
 import { useDialogPluginComponent, useQuasar } from "quasar"
-import { useMutation } from "@vue/apollo-composable"
-import { UPDATE_SUBMISSION_STATUS } from "src/graphql/mutations"
+// import { useMutation } from "@vue/apollo-composable"
+// import { UPDATE_SUBMISSION_STATUS } from "src/graphql/mutations"
+import { ref } from "vue"
 import { useI18n } from "vue-i18n"
 
 const { t } = useI18n()
@@ -91,25 +107,28 @@ const colors = {
   close: "black",
   accept_as_final: "positive",
 }
+const comment = ref(null)
 
-const variables = {
+const variables = ref({
   id: String(props.submissionId),
   status: statuses[props.action],
-}
+  status_change_comment: comment.value,
+})
 
-const { mutate } = useMutation(UPDATE_SUBMISSION_STATUS, { variables })
+// const { mutate } = useMutation(UPDATE_SUBMISSION_STATUS, { variables })
 
 async function updateStatus() {
   try {
-    await mutate()
-    notify({
-      color: "positive",
-      message: t(`dialog.confirmStatusChange.statusChanged.${props.action}`),
-      icon: "done",
-      attrs: {
-        "data-cy": "change_status_notify",
-      },
-    })
+    console.log(comment.value, variables.value)
+    // await mutate()
+    // notify({
+    //   color: "positive",
+    //   message: t(`dialog.confirmStatusChange.statusChanged.${props.action}`),
+    //   icon: "done",
+    //   attrs: {
+    //     "data-cy": "change_status_notify",
+    //   },
+    // })
   } catch (error) {
     notify({
       color: "negative",

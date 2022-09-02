@@ -534,7 +534,7 @@ export const UPDATE_SUBMISSION_STATUS = gql`
   mutation UpdateSubmissionStatus(
     $id: ID!
     $status: SubmissionStatus!
-    $comment: String!
+    $comment: String
   ) {
     updateSubmission(
       input: { id: $id, status: $status, status_change_comment: $comment }
