@@ -10,3 +10,8 @@
     </q-toolbar>
   </q-footer>
 </template>
+
+<style lang="sass">
+q-footer
+  background: $info
+</style>
