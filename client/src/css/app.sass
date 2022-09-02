@@ -1,6 +1,6 @@
 // app global css in Sass form
 .text--grey
-    color: #595959
+    color: $banner
 
 .alert
     background-color: #eee
@@ -19,20 +19,20 @@
         border-bottom: 1px solid
 
 .alert-tip
-    background-color: #c1e0f4
-    border-color: #2156ba
+    background-color: $active
+    border-color: $active
 
     .alert-title
         font-weight: bold
-        border-color: #2156ba
+        border-color: $secondary
 
 .alert-success
     background-color: #c1f4c5
-    border-color: #2eba21
+    border-color: $positive
 
     .alert-title
         font-weight: bold
-        border-color: #2eba21
+        border-color: $positive
 fieldset
     border: none
 
@@ -44,7 +44,7 @@ fieldset
 .q-tab--active
     color: #000
     font-weight: 500
-    background-color: #bbdefb
+    background-color: $active
 
 .q-tab--active .q-tab__label
     font-weight: 500
@@ -58,7 +58,7 @@ fieldset
         position: absolute
         left: 0
         top: 50%
-        background: $light-blue-5
+        background: $primary
         transform: translate(-50%, -50%)
         height: 100%
         padding: 4px
@@ -66,9 +66,12 @@ fieldset
     span
         font-weight: bold
     &.unread
-        background: $light-blue-1
+        background: $active
 a[target="_blank"]::after
     font-family: 'Material Icons'
     content: "open_in_new"
     font-feature-settings: 'liga'
     padding-left: 1px
+
+.accent
+    background: $accent
