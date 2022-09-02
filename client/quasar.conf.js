@@ -60,6 +60,11 @@ module.exports = configure(function () {
           .plugin("eslint-webpack-plugin")
           .use(ESLintPlugin, [{ extensions: ["js", "vue"] }])
       },
+      env: {
+        VERSION: process.env.VERSION ?? undefined,
+        VERSION_URL: process.env.VERSION_URL ?? undefined,
+        VERSION_DATE: process.env.VERSION_DATE ?? undefined,
+      },
     },
     // Full list of options: https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-devServer
     devServer: {

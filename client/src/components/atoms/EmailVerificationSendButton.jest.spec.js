@@ -53,11 +53,11 @@ describe("EmailVerificationSendButton", () => {
     await wrapper.trigger("click")
     await flushPromises()
     expect(wrapper.text()).toMatch(/resend_button_success$/)
-    expect(wrapper.vm.notify).toBeCalledWith(
+    expect(wrapper.vm.notify).toHaveBeenCalledWith(
       expect.objectContaining({ color: "positive" })
     )
 
-    expect(emailMutationHandler).toBeCalled()
+    expect(emailMutationHandler).toHaveBeenCalled()
   })
 
   it("returns to state on failure", async () => {
@@ -69,9 +69,9 @@ describe("EmailVerificationSendButton", () => {
     await wrapper.trigger("click")
     await flushPromises()
 
-    expect(emailMutationHandler).toBeCalled()
+    expect(emailMutationHandler).toHaveBeenCalled()
     expect(wrapper.text()).toMatch(/resend_button$/)
-    expect(wrapper.vm.notify).toBeCalledWith(
+    expect(wrapper.vm.notify).toHaveBeenCalledWith(
       expect.objectContaining({ color: "negative" })
     )
   })

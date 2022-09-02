@@ -123,7 +123,7 @@ describe("submissions details page mount", () => {
   it("mounts without errors", async () => {
     defaultApolloMock()
     const wrapper = await makeWrapper()
-    expect(GetSubHandler).toBeCalledWith({ id: "1" })
+    expect(GetSubHandler).toHaveBeenCalledWith({ id: "1" })
     expect(wrapper).toBeTruthy()
   })
 

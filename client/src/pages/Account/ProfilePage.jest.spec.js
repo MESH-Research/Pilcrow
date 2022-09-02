@@ -96,7 +96,7 @@ describe("Profile", () => {
     await wrapper.findComponent({ ref: "form" }).vm.$emit("save", newData)
 
     expect(requestHandler).toHaveBeenCalledTimes(1)
-    expect(mutateHandler).toBeCalledWith({
+    expect(mutateHandler).toHaveBeenCalledWith({
       ...newData,
     })
   })

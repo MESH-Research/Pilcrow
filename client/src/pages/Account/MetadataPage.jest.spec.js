@@ -93,7 +93,7 @@ describe("MetadataPage", () => {
       .vm.$emit("save", newData.profile_metadata)
 
     expect(queryHandler).toHaveBeenCalledTimes(1)
-    expect(mutateHandler).toBeCalledWith({
+    expect(mutateHandler).toHaveBeenCalledWith({
       id: newData.id,
       ...newData.profile_metadata,
     })

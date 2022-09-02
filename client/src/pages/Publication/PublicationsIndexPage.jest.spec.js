@@ -48,6 +48,6 @@ describe("publications page mount", () => {
     await flushPromises()
     expect(wrapper).toBeTruthy()
     expect(wrapper.findAllComponents({ name: "q-item" })).toHaveLength(4)
-    expect(getPubsHandler).toBeCalledWith({ page: 1 })
+    expect(getPubsHandler).toHaveBeenCalledWith({ page: 1 })
   })
 })
