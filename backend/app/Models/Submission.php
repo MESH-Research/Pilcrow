@@ -10,11 +10,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class Submission extends Model
+class Submission extends Model implements Auditable
 {
     use HasFactory;
     use CreatedUpdatedBy;
+    use \OwenIt\Auditing\Auditable;
 
     public const DRAFT = 0;
     public const INITIALLY_SUBMITTED = 1;
