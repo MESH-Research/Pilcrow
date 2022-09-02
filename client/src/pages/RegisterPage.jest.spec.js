@@ -91,7 +91,7 @@ describe("RegisterPage", () => {
     await flushPromises()
 
     expect(wrapper.vm.formErrorMsg).toBeFalsy()
-    expect(mutateHandler).toBeCalledWith(
+    expect(mutateHandler).toHaveBeenCalledWith(
       expect.objectContaining(omit(user, "created_at"))
     )
   })

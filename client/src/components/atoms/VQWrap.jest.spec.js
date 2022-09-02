@@ -33,7 +33,7 @@ describe("VQWrap", () => {
 
   test("provides supplied props", () => {
     makeWrapper({ tPrefix: "testPrefix", formState: "idle" })
-    expect(provide).toBeCalledWith(expect.anything(), "testPrefix")
+    expect(provide).toHaveBeenCalledWith(expect.anything(), "testPrefix")
   })
 
   test("emits update event", () => {
