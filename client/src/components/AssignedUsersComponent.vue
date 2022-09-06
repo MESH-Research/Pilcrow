@@ -43,7 +43,7 @@
         <template #after>
           <q-btn
             :ripple="{ center: true }"
-            color="primary"
+            color="accent"
             data-cy="button-assign"
             label="Assign"
             type="submit"

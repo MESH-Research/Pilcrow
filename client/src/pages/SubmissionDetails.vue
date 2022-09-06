@@ -14,7 +14,7 @@
     </nav>
     <h2 class="q-pl-lg">{{ submission.title }}</h2>
     <section>
-      <q-banner class="bg-grey-3">
+      <q-banner class="info">
         <div class="flex row items-center">
           <h3 class="q-ml-sm q-mr-md text-h4">
             {{ $t("submission.status.title") }}
@@ -35,7 +35,7 @@
       <section class="col-12">
         <q-btn
           data-cy="submission_review_btn"
-          color="primary"
+          color="accent"
           size="lg"
           :label="$t('submissions.action.review')"
           :to="{

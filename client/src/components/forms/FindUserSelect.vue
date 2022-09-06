@@ -14,7 +14,7 @@
     @filter="filterFn"
   >
     <template #prepend>
-      <q-icon name="search" />
+      <q-icon color="accent" name="search" />
     </template>
     <template #hint>
       <div class="text--grey">Search by username, email, or name.</div>
@@ -30,7 +30,7 @@
           <q-item-label>
             {{ scope.opt.username }} ({{ scope.opt.email }})
           </q-item-label>
-          <q-item-label v-if="scope.opt.name" caption class="text-grey-10">
+          <q-item-label v-if="scope.opt.name" caption class="text--grey">
             {{ scope.opt.name }}
           </q-item-label>
         </q-item-section>
