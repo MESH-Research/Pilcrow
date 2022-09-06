@@ -7,13 +7,13 @@
           >Collaborative Community Review (CCR)</a
         >
         <span v-if="version">
-          &nbsp; Version:
+          &nbsp;
           <component :is="version_url ? 'a' : 'span'" :href="version_url">
             {{ version }}
-            <span v-if="parsedDate && !parsedDate.invalid">
-              {{ parsedDate.toFormat("dd-LLL-yyyy T") }} ({{ version_age }})
-            </span>
           </component>
+          <q-tooltip v-if="parsedDate && !parsedDate.invalid">
+            {{ parsedDate.toFormat("dd-LLL-yyyy T") }} ({{ version_age }})
+          </q-tooltip>
         </span>
       </div>
     </q-toolbar>
