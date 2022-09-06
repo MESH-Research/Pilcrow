@@ -1,5 +1,5 @@
 <template>
-  <q-header reveal class="bg-grey-9 text-white">
+  <q-header reveal class="info text-black">
     <q-toolbar>
       <q-btn
         :aria-label="$t('submission.toolbar.back')"
@@ -52,9 +52,8 @@
         </q-btn>
         <q-btn
           rounded
-          color="deep-orange-10"
           :label="$t(`submission.action.request_resubmission`)"
-          class="q-ml-md"
+          class="btn-grey q-ml-md text-white"
           @click="confirmHandler('request_resubmission')"
         >
         </q-btn>
