@@ -35,7 +35,7 @@
               data-cy="new_submission_file_upload_input"
             >
               <template #prepend>
-                <q-icon name="attach_file" />
+                <q-icon color="accent" name="attach_file" />
               </template>
             </q-file>
           </div>
@@ -43,14 +43,15 @@
             v-if="try_catch_error"
             dense
             rounded
-            class="form-error text-white bg-negative text-center q-mt-xs"
+            background-color="negative"
+            class="form-error text-white text-center q-mt-xs"
             data-cy="banner_form_error"
           >
             {{ $t(`submissions.create.failure`) }}
           </q-banner>
           <q-btn
             :disabled="is_submitting"
-            class="bg-primary text-white q-mt-lg"
+            class="accent text-white q-mt-lg"
             type="submit"
             data-cy="save_submission"
           >
@@ -109,7 +110,7 @@
                       $t("submissions.action.change_status")
                     }}</q-item-section>
                     <q-item-section side>
-                      <q-icon name="keyboard_arrow_right" />
+                      <q-icon color="accent" name="keyboard_arrow_right" />
                     </q-item-section>
                     <q-menu anchor="bottom end" self="top end">
                       <div v-if="submission.status != 'AWAITING_REVIEW'">
