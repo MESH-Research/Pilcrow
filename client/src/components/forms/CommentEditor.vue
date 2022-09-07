@@ -31,7 +31,7 @@
                 data-cy="criteria-icon"
                 @click="criteria.selected = !criteria.selected"
               >
-                <q-icon :name="criteria.icon" size="sm" color="secondary" />
+                <q-icon :name="criteria.icon" size="sm" color="accent" />
               </q-item-section>
               <q-item-section @click="criteria.selected = !criteria.selected">
                 <q-item-label
@@ -57,7 +57,7 @@
         </q-list>
       </div>
       <q-card-actions class="q-mt-md q-pa-none" align="between">
-        <q-btn type="submit" color="primary">
+        <q-btn type="submit" color="accent">
           {{ $t("guiElements.form.submit") }}
         </q-btn>
         <q-btn
@@ -341,10 +341,14 @@ const styleCriteria = ref(
 .q-icon.q-expansion-item__toggle-icon,
 .q-icon.q-expansion-item__toggle-focus {
   font-size: 1.3em;
-  color: black;
+  color: #520bbd;
 }
 
 .q-expansion-item--popup.q-expansion-item--collapsed {
   padding: 0 0;
+}
+
+.q-toggle__inner--truthy {
+  color: #520bbd;
 }
 </style>
