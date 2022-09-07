@@ -56,8 +56,8 @@
 
 <script setup>
 import { useDialogPluginComponent, useQuasar } from "quasar"
-// import { useMutation } from "@vue/apollo-composable"
-// import { UPDATE_SUBMISSION_STATUS } from "src/graphql/mutations"
+import { useMutation } from "@vue/apollo-composable"
+import { UPDATE_SUBMISSION_STATUS } from "src/graphql/mutations"
 import { ref } from "vue"
 import { useI18n } from "vue-i18n"
 
@@ -109,26 +109,23 @@ const colors = {
 }
 const comment = ref(null)
 
-const variables = ref({
-  id: String(props.submissionId),
-  status: statuses[props.action],
-  status_change_comment: comment.value,
-})
-
-// const { mutate } = useMutation(UPDATE_SUBMISSION_STATUS, { variables })
+const { mutate } = useMutation(UPDATE_SUBMISSION_STATUS)
 
 async function updateStatus() {
   try {
-    console.log(comment.value, variables.value)
-    // await mutate()
-    // notify({
-    //   color: "positive",
-    //   message: t(`dialog.confirmStatusChange.statusChanged.${props.action}`),
-    //   icon: "done",
-    //   attrs: {
-    //     "data-cy": "change_status_notify",
-    //   },
-    // })
+    await mutate({
+      id: String(props.submissionId),
+      status: statuses[props.action],
+      status_change_comment: comment.value,
+    })
+    notify({
+      color: "positive",
+      message: t(`dialog.confirmStatusChange.statusChanged.${props.action}`),
+      icon: "done",
+      attrs: {
+        "data-cy": "change_status_notify",
+      },
+    })
   } catch (error) {
     notify({
       color: "negative",
