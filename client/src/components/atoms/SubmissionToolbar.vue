@@ -53,7 +53,7 @@
         <q-btn
           rounded
           :label="$t(`submission.action.request_resubmission`)"
-          class="btn-grey q-ml-md text-white"
+          class="dark-grey q-ml-md text-white"
           @click="confirmHandler('request_resubmission')"
         >
         </q-btn>
