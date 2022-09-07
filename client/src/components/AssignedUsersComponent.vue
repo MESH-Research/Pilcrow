@@ -29,7 +29,7 @@
       <q-card ref="card_no_users" bordered flat>
         <q-item class="text--grey">
           <q-item-section avatar>
-            <q-icon name="o_do_disturb_on" />
+            <q-icon color="accent" name="o_do_disturb_on" />
           </q-item-section>
           <q-item-section>
             {{ tp$("none") }}
