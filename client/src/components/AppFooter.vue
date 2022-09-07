@@ -13,5 +13,5 @@
 
 <style lang="sass">
 q-footer
-  background: $info
+  background: $light-grey
 </style>
