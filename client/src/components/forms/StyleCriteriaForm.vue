@@ -6,6 +6,7 @@
         <q-btn
           ref="icon-button"
           data-cy="icon-button"
+          color="secondary"
           :icon="v$.icon.$model"
           dense
           aria-label="$t('publications.style_criteria.fields.icon.ariaLabel')"
@@ -55,7 +56,7 @@
             v-if="!isNew"
             ref="button_delete"
             data-cy="button-delete"
-            color="red-10"
+            color="negative"
             label="Delete"
             @click="onDelete"
           />

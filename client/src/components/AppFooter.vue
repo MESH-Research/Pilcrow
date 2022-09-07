@@ -1,5 +1,5 @@
 <template>
-  <q-footer bordered class="bg-grey-4 text-black">
+  <q-footer bordered class="light-grey text-black">
     <q-toolbar class="flex flex-center text-caption">
       <div>
         Powered by

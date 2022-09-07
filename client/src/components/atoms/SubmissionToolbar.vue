@@ -1,5 +1,5 @@
 <template>
-  <q-header reveal class="info text-black">
+  <q-header reveal class="light-grey text-black">
     <q-toolbar>
       <q-btn
         :aria-label="$t('submission.toolbar.back')"

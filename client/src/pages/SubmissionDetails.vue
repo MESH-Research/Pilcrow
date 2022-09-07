@@ -14,7 +14,7 @@
     </nav>
     <h2 class="q-pl-lg">{{ submission.title }}</h2>
     <section>
-      <q-banner class="info">
+      <q-banner class="light-grey">
         <div class="flex row items-center">
           <h3 class="q-ml-sm q-mr-md text-h4">
             {{ $t("submission.status.title") }}
