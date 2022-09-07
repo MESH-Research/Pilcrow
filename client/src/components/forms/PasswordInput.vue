@@ -10,6 +10,7 @@
       <q-icon
         :name="isPwd ? 'visibility_off' : 'visibility'"
         class="cursor-pointer"
+        color="accent"
         aria-hidden="false"
         role="button"
         tabindex="0"
