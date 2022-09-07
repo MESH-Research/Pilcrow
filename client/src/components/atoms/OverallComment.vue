@@ -14,7 +14,7 @@
     >
       <comment-header
         :comment="comment"
-        bg-color="#eeeeee"
+        bg-color="#ccd3e0"
         @quote-reply-to="initiateQuoteReply"
       />
       <q-card-section>

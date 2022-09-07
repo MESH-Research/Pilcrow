@@ -178,7 +178,7 @@ function highlightClickHandler(event) {
   background: #ddd;
 }
 .comment-highlight.active {
-  background: rgb(255, 254, 169);
+  background: rgb(250, 217, 128);
 }
 .comment-widget {
   display: inline-block;
