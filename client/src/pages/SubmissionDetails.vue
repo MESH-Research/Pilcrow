@@ -67,6 +67,7 @@
     </div>
     <section class="q-pa-lg">
       <h3>Activity</h3>
+      <p v-if="submission.audits.length == 0">No Activity</p>
       <ul>
         <li v-for="audit in submission.audits" :key="audit.id">
           <p>
@@ -81,9 +82,21 @@
 
             at {{ audit.created_at }}
           </p>
-          <div v-if="audit.event == 'updated'">
-            <p>from {{ JSON.stringify(audit.old_data) }}</p>
-            <p>to {{ JSON.stringify(audit.new_data) }}</p>
+          <div
+            v-if="
+              audit.event == 'updated' &&
+              JSON.parse(audit.old_values).status != null
+            "
+          >
+            <p>
+              from {{ JSON.parse(audit.old_values).status }} to
+              {{ JSON.parse(audit.new_values).status }}
+            </p>
+            <p
+              v-if="JSON.parse(audit.new_values).status_change_comment != null"
+            >
+              Comment: {{ JSON.parse(audit.new_values).status_change_comment }}
+            </p>
           </div>
         </li>
       </ul>
