@@ -434,6 +434,7 @@ export default {
       updated:
         "The status of {data_submission_title} has been updated to {data_submission_status_name}.",
       title: "Submission Status",
+      DRAFT: "Draft",
       INITIALLY_SUBMITTED: "Initially Submitted",
       RESUBMISSION_REQUESTED: "Resubmission Requested",
       RESUBMITTED: "Resubmitted",

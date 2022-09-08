@@ -177,15 +177,21 @@ export const GET_SUBMISSION = gql`
       status
       audits {
         id
+        event
         user {
           id
           name
           username
           email
         }
-        event
-        old_values
-        new_values
+        old_values {
+          status
+          status_change_comment
+        }
+        new_values {
+          status
+          status_change_comment
+        }
         created_at
       }
       publication {

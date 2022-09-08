@@ -69,35 +69,11 @@
       <h3>Activity</h3>
       <p v-if="submission.audits.length == 0">No Activity</p>
       <ul>
-        <li v-for="audit in submission.audits" :key="audit.id">
-          <p>
-            {{ audit.event }} by
-            <router-link
-              :to="{
-                name: 'user_details',
-                params: { id: audit.user.id },
-              }"
-              >{{ audit.user.name || audit.user.username }}
-            </router-link>
-
-            at {{ audit.created_at }}
-          </p>
-          <div
-            v-if="
-              audit.event == 'updated' &&
-              JSON.parse(audit.old_values).status != null
-            "
-          >
-            <p>
-              from {{ JSON.parse(audit.old_values).status }} to
-              {{ JSON.parse(audit.new_values).status }}
-            </p>
-            <p
-              v-if="JSON.parse(audit.new_values).status_change_comment != null"
-            >
-              Comment: {{ JSON.parse(audit.new_values).status_change_comment }}
-            </p>
-          </div>
+        <li
+          v-for="audit in submission.audits.slice().reverse()"
+          :key="audit.id"
+        >
+          <submission-audit :audit="audit"></submission-audit>
         </li>
       </ul>
     </section>
@@ -109,6 +85,7 @@ import { GET_SUBMISSION } from "src/graphql/queries"
 import AssignedUsers from "src/components/AssignedUsersComponent.vue"
 import { useQuery } from "@vue/apollo-composable"
 import { computed } from "vue"
+import SubmissionAudit from "../components/SubmissionAudit.vue"
 const props = defineProps({
   id: {
     type: String,
