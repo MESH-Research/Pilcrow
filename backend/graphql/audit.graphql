@@ -1,8 +1,7 @@
 type Audit {
     id: ID
+    user: User! @belongsTo
     event: String
-    auditable_type: String
-    auditable_id: ID
     old_values: JSON
     new_values: JSON
     created_at: DateTimeUtc!

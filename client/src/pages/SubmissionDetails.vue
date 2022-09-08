@@ -65,6 +65,29 @@
         mutable
       />
     </div>
+    <section class="q-pa-lg">
+      <h3>Activity</h3>
+      <ul>
+        <li v-for="audit in submission.audits" :key="audit.id">
+          <p>
+            {{ audit.event }} by
+            <router-link
+              :to="{
+                name: 'user_details',
+                params: { id: audit.user.id },
+              }"
+              >{{ audit.user.name || audit.user.username }}
+            </router-link>
+
+            at {{ audit.created_at }}
+          </p>
+          <div v-if="audit.event == 'updated'">
+            <p>from {{ JSON.stringify(audit.old_data) }}</p>
+            <p>to {{ JSON.stringify(audit.new_data) }}</p>
+          </div>
+        </li>
+      </ul>
+    </section>
   </article>
 </template>
 

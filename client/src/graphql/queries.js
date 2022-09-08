@@ -175,6 +175,19 @@ export const GET_SUBMISSION = gql`
       id
       title
       status
+      audits {
+        id
+        user {
+          id
+          name
+          username
+          email
+        }
+        event
+        old_values
+        new_values
+        created_at
+      }
       publication {
         name
         style_criterias {
