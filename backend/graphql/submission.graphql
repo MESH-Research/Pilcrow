@@ -49,6 +49,7 @@ type Submission {
     content: SubmissionContent #This field is optional bc it may be null if the pandoc process is still importing the document
     my_role: SubmissionUserRoles @method(name: "getMyRole")
     effective_role: SubmissionUserRoles @method(name: "getEffectiveRole")
+    audits: [Audit] @belongsToMany
 }
 
 """
