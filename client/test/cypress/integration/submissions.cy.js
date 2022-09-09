@@ -98,7 +98,7 @@ describe("Submissions Page", () => {
     cy.url().should("include", "/error403")
   })
 
-  it("should deny the reviewer from changing the stage of rejected submissions", () => {
+  it("should deny a reviewer from changing the stage of rejected submissions", () => {
     cy.task("resetDb")
     cy.login({ email: "reviewer@ccrproject.dev" })
     cy.visit("submissions")
@@ -108,19 +108,19 @@ describe("Submissions Page", () => {
     cy.dataCy("cannot_change_submission_status_tooltip")
   })
 
-  it("should deny the reviewer from accessing rejected submissions", () => {
+  it("should deny a reviewer from accessing rejected submissions", () => {
     cy.task("resetDb")
     cy.login({ email: "reviewer@ccrproject.dev" })
     cy.visit("submissions")
     cy.dataCy("submission_actions").eq(2).click()
     cy.dataCy("review").should('have.class', 'disabled')
-    cy.dataCy("review_link").trigger('mouseenter')
+    cy.dataCy("review").trigger('mouseenter')
     cy.dataCy("cannot_access_submission_tooltip")
     cy.dataCy("review").click()
     cy.url().should("include", "/error403")
   })
 
-  it("should allow the app admin access rejected submissions", () => {
+  it("should allow an application administrator to access rejected submissions", () => {
     cy.task("resetDb")
     cy.login({ email: "applicationadministrator@ccrproject.dev" })
     cy.visit("submissions")
@@ -129,8 +129,8 @@ describe("Submissions Page", () => {
     cy.url().should("include", "/submission/review")
     cy.dataCy("submussion_title")
   })
- 
-  it("should allow an application administrator to open a review and close a review", () => {
+
+  it("should allow an application administrator to open and close a review", () => {
     cy.task("resetDb")
     cy.login({ email: "applicationadministrator@ccrproject.dev" })
     cy.visit("submissions")
