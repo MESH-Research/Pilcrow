@@ -98,7 +98,7 @@ describe("Submissions Page", () => {
     cy.url().should("include", "/error403")
   })
 
-  it("should deny the reviewer from changing the stage of rejected submissions", () => {
+  it("should deny the reviewer from changing the status of rejected submissions", () => {
     cy.task("resetDb")
     cy.login({ email: "reviewer@ccrproject.dev" })
     cy.visit("submissions")
@@ -125,6 +125,40 @@ describe("Submissions Page", () => {
     cy.login({ email: "applicationadministrator@ccrproject.dev" })
     cy.visit("submissions")
     cy.dataCy("submission_actions").eq(2).click()
+    cy.dataCy("review").click()
+    cy.url().should("include", "/submission/review")
+    cy.dataCy("submussion_title")
+  })
+
+  it("should deny the reviewer from changing the status of submissions requested for resubmission", () => {
+    cy.task("resetDb")
+    cy.login({ email: "reviewer@ccrproject.dev" })
+    cy.visit("submissions")
+    cy.dataCy("submission_actions").eq(3).click()
+    cy.dataCy("change_status").should('have.class', 'disabled')
+    cy.dataCy("change_status_item_section").trigger('mouseenter')
+    cy.dataCy("cannot_change_submission_status_tooltip")
+    cy.dataCy("change_status_item_section").trigger('click')
+    cy.dataCy("change_status_dropdown").should("not.be.visible")
+  })
+
+  it("should deny the reviewer from accessing submissions requested for resubmission", () => {
+    cy.task("resetDb")
+    cy.login({ email: "reviewer@ccrproject.dev" })
+    cy.visit("submissions")
+    cy.dataCy("submission_actions").eq(3).click()
+    cy.dataCy("review").should('have.class', 'disabled')
+    cy.dataCy("review_link").trigger('mouseenter')
+    cy.dataCy("cannot_access_submission_tooltip")
+    cy.dataCy("review").click()
+    cy.url().should("include", "/error403")
+  })
+
+  it("should allow the app admin access submissions requested for resubmission", () => {
+    cy.task("resetDb")
+    cy.login({ email: "applicationadministrator@ccrproject.dev" })
+    cy.visit("submissions")
+    cy.dataCy("submission_actions").eq(3).click()
     cy.dataCy("review").click()
     cy.url().should("include", "/submission/review")
     cy.dataCy("submussion_title")

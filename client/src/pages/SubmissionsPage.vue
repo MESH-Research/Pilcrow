@@ -152,11 +152,16 @@
                     <q-item-section side>
                       <q-icon name="keyboard_arrow_right" />
                     </q-item-section>
-                    <q-menu anchor="bottom end" self="top end">
+                    <q-menu
+                      anchor="bottom end"
+                      self="top end"
+                      data-cy="change_status_dropdown"
+                    >
                       <div
                         v-if="
                           submission.status != 'AWAITING_REVIEW' &&
-                          submission.status != 'REJECTED'
+                          submission.status != 'REJECTED' &&
+                          submission.status != 'RESUBMISSION_REQUESTED'
                         "
                       >
                         <q-item
@@ -261,6 +266,7 @@ function cannotAccessSubmission(submission) {
     "DRAFT",
     "INITIALLY_SUBMITTED",
     "REJECTED",
+    "RESUBMISSION_REQUESTED",
   ])
   return (
     nonreviewableStates.has(submission.status) &&
