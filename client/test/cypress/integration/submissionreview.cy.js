@@ -230,7 +230,7 @@ describe("Submissions Review", () => {
   it("should not display the decision options for submissions requested for resubmission", () => {
     cy.task("resetDb")
     cy.login({ email: "applicationadministrator@ccrproject.dev" })
-    cy.visit("submission/review/101")
+    cy.visit("submission/review/103")
     cy.dataCy("submission_status").contains("Resubmission Requested")
     cy.dataCy("decision_options").should('not.exist');
   })
