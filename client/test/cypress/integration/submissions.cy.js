@@ -158,7 +158,7 @@ describe("Submissions Page", () => {
     cy.visit("submissions")
     cy.dataCy("submission_actions").eq(3).click()
     cy.dataCy("review").should('have.class', 'disabled')
-    cy.dataCy("review_link").trigger('mouseenter')
+    cy.dataCy("review").trigger('mouseenter')
     cy.dataCy("cannot_access_submission_tooltip")
     cy.visit("submission/review/101")
     cy.url().should("include", "/error403")
