@@ -140,7 +140,7 @@ describe("Submissions Page", () => {
     cy.dataCy("submussion_title")
   })
 
-  it("should deny the reviewer from changing the status of submissions requested for resubmission", () => {
+  it("should deny a reviewer from changing the status of submissions requested for resubmission", () => {
     cy.task("resetDb")
     cy.login({ email: "reviewer@ccrproject.dev" })
     cy.visit("submissions")
@@ -152,7 +152,7 @@ describe("Submissions Page", () => {
     cy.dataCy("change_status_dropdown").should("not.be.visible")
   })
 
-  it("should deny the reviewer from accessing submissions requested for resubmission", () => {
+  it("should deny a reviewer from accessing submissions requested for resubmission", () => {
     cy.task("resetDb")
     cy.login({ email: "reviewer@ccrproject.dev" })
     cy.visit("submissions")
@@ -164,7 +164,7 @@ describe("Submissions Page", () => {
     cy.url().should("include", "/error403")
   })
 
-  it("should allow the app admin access submissions requested for resubmission", () => {
+  it("should allow an application administrator to access submissions requested for resubmission", () => {
     cy.task("resetDb")
     cy.login({ email: "applicationadministrator@ccrproject.dev" })
     cy.visit("submissions")
@@ -173,11 +173,8 @@ describe("Submissions Page", () => {
     cy.url().should("include", "/submission/review")
     cy.dataCy("submussion_title")
   })
- 
-  it("should allow an application administrator to open a review and close a review", () => {
-=======
+
   it("should allow an application administrator to open and close a review", () => {
->>>>>>> 185ea3cb538cc9c207453a35005ae37e8411b58e
     cy.task("resetDb")
     cy.login({ email: "applicationadministrator@ccrproject.dev" })
     cy.visit("submissions")
