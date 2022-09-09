@@ -98,9 +98,19 @@ describe("Submissions Page", () => {
     cy.url().should("include", "/error403")
   })
 
-  it("should deny a reviewer from changing the stage of rejected submissions", () => {
+  it("should deny a reviewer from changing the status of rejected submissions", () => {
     cy.task("resetDb")
     cy.login({ email: "reviewer@ccrproject.dev" })
+    cy.visit("submissions")
+    cy.dataCy("submission_actions").eq(2).click()
+    cy.dataCy("change_status").should('have.class', 'disabled')
+    cy.dataCy("change_status_item_section").trigger('mouseenter')
+    cy.dataCy("cannot_change_submission_status_tooltip")
+  })
+
+  it("should deny an application administrator from changing the status of rejected submissions", () => {
+    cy.task("resetDb")
+    cy.login({ email: "applicationadministrator@ccrproject.dev" })
     cy.visit("submissions")
     cy.dataCy("submission_actions").eq(2).click()
     cy.dataCy("change_status").should('have.class', 'disabled')
