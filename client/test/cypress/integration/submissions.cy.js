@@ -126,7 +126,7 @@ describe("Submissions Page", () => {
     cy.dataCy("review").should('have.class', 'disabled')
     cy.dataCy("review").trigger('mouseenter')
     cy.dataCy("cannot_access_submission_tooltip")
-    cy.dataCy("review").click()
+    cy.visit("submission/review/102")
     cy.url().should("include", "/error403")
   })
 
@@ -160,7 +160,7 @@ describe("Submissions Page", () => {
     cy.dataCy("review").should('have.class', 'disabled')
     cy.dataCy("review_link").trigger('mouseenter')
     cy.dataCy("cannot_access_submission_tooltip")
-    cy.dataCy("review").click()
+    cy.visit("submission/review/101")
     cy.url().should("include", "/error403")
   })
 
