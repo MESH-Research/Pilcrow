@@ -71,7 +71,7 @@
             :key="submission.id"
             class="row justify-between"
           >
-            <div>
+            <q-item-section>
               <router-link
                 data-cy="submission_link"
                 :to="{
@@ -84,69 +84,90 @@
               <q-item-label caption>
                 for {{ submission.publication.name }}
 
-                <ul v-if="submission.files.length > 0" class="q-ma-none">
-                  <li v-for="file in submission.files" :key="file.id">
-                    <a :href="file.file_upload" download>
-                      {{ file.file_upload }}
-                    </a>
-                  </li>
-                </ul>
+                <!-- <ul v-if="submission.files.length > 0">
+                    <li v-for="file in submission.files" :key="file.id">
+                      <a :href="file.file_upload" download>
+                        {{ file.file_upload }}
+                      </a>
+                    </li>
+                  </ul> -->
               </q-item-label>
-            </div>
+            </q-item-section>
             <div class="q-gutter-sm submission-options">
-              <q-btn data-cy="submission_actions">
+              <q-btn
+                data-cy="submission_actions"
+                aria-label="{{$t(submissions.action.toggle_label)}}"
+              >
                 <q-icon name="more_vert" />
                 <q-menu anchor="bottom right" self="top right">
                   <q-item
                     clickable
                     :disable="cannotAccessSubmission(submission)"
                     data-cy="review"
+                    :to="{
+                      name: 'submission_review',
+                      params: { id: submission.id },
+                    }"
                   >
-                    <q-item-section
-                      ><a
-                        data-cy="review_link"
-                        :href="'submission/review/' + submission.id"
-                        >{{ $t("submissions.action.review.name") }}</a
-                      >
-                      <q-tooltip
-                        v-if="cannotAccessSubmission(submission)"
-                        anchor="top middle"
-                        self="bottom middle"
-                        :offset="[10, 10]"
-                        class="text-body1"
-                        data-cy="cannot_access_submission_tooltip"
-                      >
-                        {{ $t("submissions.action.review.no_access") }}
-                      </q-tooltip>
+                    <q-item-section>
+                      <q-item-label>
+                        {{ $t("submissions.action.review.name") }}
+                      </q-item-label>
                     </q-item-section>
+                    <q-tooltip
+                      v-if="cannotAccessSubmission(submission)"
+                      anchor="top middle"
+                      self="bottom middle"
+                      class="text-body1"
+                      data-cy="cannot_access_submission_tooltip"
+                    >
+                      {{ $t("submissions.action.review.no_access") }}
+                    </q-tooltip>
                   </q-item>
                   <q-item
                     data-cy="change_status"
                     clickable
-                    :disable="submission.status == 'REJECTED'"
+                    :disable="
+                      submission.status == 'REJECTED' ||
+                      submission.status == 'RESUBMISSION_REQUESTED'
+                    "
                   >
-                    <q-item-section data-cy="change_status_item_section"
-                      >{{ $t("submissions.action.change_status.name") }}
-                      <q-tooltip
-                        v-if="submission.status == 'REJECTED'"
-                        anchor="top middle"
-                        self="bottom middle"
-                        :offset="[10, 10]"
-                        class="text-body1"
-                        data-cy="cannot_change_submission_status_tooltip"
-                      >
-                        {{ $t("submissions.action.change_status.no_access") }}
-                      </q-tooltip>
+                    <q-item-section data-cy="change_status_item_section">
+                      <q-item-label>
+                        {{ $t("submissions.action.change_status.name") }}
+                      </q-item-label>
                     </q-item-section>
+                    <q-tooltip
+                      v-if="
+                        submission.status == 'REJECTED' ||
+                        submission.status == 'RESUBMISSION_REQUESTED'
+                      "
+                      anchor="top middle"
+                      self="bottom middle"
+                      :offset="[10, 10]"
+                      class="text-body1"
+                      data-cy="cannot_change_submission_status_tooltip"
+                    >
+                      {{
+                        $t(
+                          `submissions.action.change_status.no_access.${submission.status}`
+                        )
+                      }}
+                    </q-tooltip>
 
                     <q-item-section side>
                       <q-icon name="keyboard_arrow_right" />
                     </q-item-section>
-                    <q-menu anchor="bottom end" self="top end">
+                    <q-menu
+                      anchor="bottom end"
+                      self="top end"
+                      data-cy="change_status_dropdown"
+                    >
                       <div
                         v-if="
                           submission.status != 'AWAITING_REVIEW' &&
-                          submission.status != 'REJECTED'
+                          submission.status != 'REJECTED' &&
+                          submission.status != 'RESUBMISSION_REQUESTED'
                         "
                       >
                         <q-item
@@ -251,6 +272,7 @@ function cannotAccessSubmission(submission) {
     "DRAFT",
     "INITIALLY_SUBMITTED",
     "REJECTED",
+    "RESUBMISSION_REQUESTED",
   ])
   return (
     nonreviewableStates.has(submission.status) &&

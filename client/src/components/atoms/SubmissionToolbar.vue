@@ -31,7 +31,8 @@
       <div
         v-if="
           submission.status != 'AWAITING_REVIEW' &&
-          submission.status != 'REJECTED'
+          submission.status != 'REJECTED' &&
+          submission.status != 'RESUBMISSION_REQUESTED'
         "
         data-cy="decision_options"
       >
