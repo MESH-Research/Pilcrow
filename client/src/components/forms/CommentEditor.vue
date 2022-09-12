@@ -31,7 +31,7 @@
                 data-cy="criteria-icon"
                 @click="criteria.selected = !criteria.selected"
               >
-                <q-icon :name="criteria.icon" size="sm" color="accent" />
+                <q-icon :name="criteria.icon" size="sm" color="secondary" />
               </q-item-section>
               <q-item-section @click="criteria.selected = !criteria.selected">
                 <q-item-label
@@ -341,7 +341,7 @@ const styleCriteria = ref(
 .q-icon.q-expansion-item__toggle-icon,
 .q-icon.q-expansion-item__toggle-focus {
   font-size: 1.3em;
-  color: #520bbd;
+  color: #032c73;
 }
 
 .q-expansion-item--popup.q-expansion-item--collapsed {
@@ -349,6 +349,6 @@ const styleCriteria = ref(
 }
 
 .q-toggle__inner--truthy {
-  color: #520bbd;
+  color: #032c73;
 }
 </style>
