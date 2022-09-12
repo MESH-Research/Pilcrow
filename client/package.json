@@ -23,7 +23,7 @@
     "@apollo/client": "^3.6.9",
     "@quasar/extras": "^1.15.3",
     "@quasar/quasar-ui-qiconpicker": "^2.0.6",
-    "@tiptap/extension-bold": "^2.0.0-beta.28",
+    "@tiptap/extension-bold": "^2.0.0-beta.194",
     "@tiptap/extension-highlight": "^2.0.0-beta.35",
     "@tiptap/extension-italic": "^2.0.0-beta.28",
     "@tiptap/extension-link": "^2.0.0-beta.43",
