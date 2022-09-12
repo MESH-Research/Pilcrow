@@ -224,6 +224,14 @@ describe("Submissions Review", () => {
     cy.login({ email: "applicationadministrator@ccrproject.dev" })
     cy.visit("submission/review/102")
     cy.dataCy("submission_status").contains("Rejected")
-    cy.dataCy("decision_options").should('not.exist'); 
+    cy.dataCy("decision_options").should('not.exist');
+  })
+
+  it("should not display the decision options for submissions requested for resubmission", () => {
+    cy.task("resetDb")
+    cy.login({ email: "applicationadministrator@ccrproject.dev" })
+    cy.visit("submission/review/103")
+    cy.dataCy("submission_status").contains("Resubmission Requested")
+    cy.dataCy("decision_options").should('not.exist');
   })
 })
