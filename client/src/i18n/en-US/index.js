@@ -509,6 +509,7 @@ export default {
   submissions: {
     details_heading: "Submission Details",
     action: {
+      toggle_label: "Toggle Submission Actions",
       review: {
         name: "Review Submission",
         no_access: "Reviewers can only access submissions in reviewable states",

@@ -71,7 +71,7 @@
             :key="submission.id"
             class="row justify-between"
           >
-            <div>
+            <q-item-section>
               <router-link
                 data-cy="submission_link"
                 :to="{
@@ -84,17 +84,20 @@
               <q-item-label caption>
                 for {{ submission.publication.name }}
 
-                <ul v-if="submission.files.length > 0" class="q-ma-none">
-                  <li v-for="file in submission.files" :key="file.id">
-                    <a :href="file.file_upload" download>
-                      {{ file.file_upload }}
-                    </a>
-                  </li>
-                </ul>
+                <!-- <ul v-if="submission.files.length > 0">
+                    <li v-for="file in submission.files" :key="file.id">
+                      <a :href="file.file_upload" download>
+                        {{ file.file_upload }}
+                      </a>
+                    </li>
+                  </ul> -->
               </q-item-label>
-            </div>
+            </q-item-section>
             <div class="q-gutter-sm submission-options">
-              <q-btn data-cy="submission_actions">
+              <q-btn
+                data-cy="submission_actions"
+                aria-label="{{$t(submissions.action.toggle_label)}}"
+              >
                 <q-icon name="more_vert" />
                 <q-menu anchor="bottom right" self="top right">
                   <q-item
