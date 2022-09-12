@@ -89,6 +89,7 @@ export async function beforeEachRequiresReviewAccess(
         "DRAFT",
         "INITIALLY_SUBMITTED",
         "REJECTED",
+        "RESUBMISSION_REQUESTED",
       ])
       if ("reviewer" === s.my_role && nonreviewableStates.has(s.status)) {
         access = false

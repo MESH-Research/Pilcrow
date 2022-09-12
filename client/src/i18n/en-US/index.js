@@ -509,13 +509,18 @@ export default {
   submissions: {
     details_heading: "Submission Details",
     action: {
+      toggle_label: "Toggle Submission Actions",
       review: {
         name: "Review Submission",
         no_access: "Reviewers can only access submissions in reviewable states",
       },
       change_status: {
         name: "Change Status",
-        no_access: "Rejected submissions cannot have their statuses changed.",
+        no_access: {
+          REJECTED: "Rejected submissions cannot have their statuses changed.",
+          RESUBMISSION_REQUESTED:
+            "Submissions requested for resubmission cannot have their statuses changed.",
+        },
       },
     },
     create: {
