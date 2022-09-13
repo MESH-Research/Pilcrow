@@ -21,10 +21,13 @@ class SubmissionSeeder extends Seeder
     {
         $this->callOnce(PublicationSeeder::class);
         $this->callOnce(UserSeeder::class);
-
         $this->createSubmission(100, 'CCR Test Submission 1')
             ->update(['status' => Submission::AWAITING_REVIEW, 'updated_by' => 1]);
         $this->createSubmission(101, 'CCR Test Submission 2');
+        $this->createSubmission(102, 'CCR Test Submission 3')
+            ->update(['status' => Submission::REJECTED, 'updated_by' => 1]);
+        $this->createSubmission(103, 'CCR Test Submission 4')
+            ->update(['status' => Submission::RESUBMISSION_REQUESTED, 'updated_by' => 1]);
     }
 
     /**

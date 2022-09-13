@@ -2,6 +2,10 @@ FROM node:14-alpine as build-stage
 WORKDIR /app
 COPY . ./
 
+ARG VERSION
+ARG VERSION_URL
+ARG VERSION_DATE
+
 RUN yarn && yarn build
 
 FROM nginx:latest

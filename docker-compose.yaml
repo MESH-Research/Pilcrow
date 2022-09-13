@@ -1,7 +1,4 @@
 version: '3'
-
-networks:
-  backend:
 services:
   client:
     build:
@@ -10,8 +7,8 @@ services:
     depends_on:
       - phpfpm
       - mysql
-    networks:
-      - backend
+    expose:
+      - 8888
   phpfpm:
     env_file:
       - .env
@@ -20,8 +17,6 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    networks:
-      - backend
     depends_on:
       - mysql
   mysql:
@@ -34,5 +29,4 @@ services:
       MYSQL_RANDOM_ROOT_PASSWORD: "yes"
       SERVICE_TAGS: dev
       SERVICE_NAME: mysql
-    networks:
-      - backend
+

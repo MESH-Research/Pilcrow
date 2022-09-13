@@ -231,7 +231,7 @@ const { mutate: createComment } = useMutation(mutations[commentType.value])
 const selectedCriteria = computed(() =>
   styleCriteria.value
     .filter((criteria) => criteria.selected)
-    .map(({ name, icon }) => ({ name, icon }))
+    .map((criteria) => criteria.id)
 )
 const hasStyleCriteria = computed(() => selectedCriteria.value.length > 0)
 async function submitHandler() {

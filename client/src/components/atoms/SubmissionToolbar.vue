@@ -14,7 +14,9 @@
       />
       <q-toolbar-title class="q-pt-xs q-pb-sm">
         <div>
-          <h1 class="text-h3 q-ma-none">{{ submission.title }}</h1>
+          <h1 data-cy="submussion_title" class="text-h3 q-ma-none">
+            {{ submission.title }}
+          </h1>
           <q-chip
             data-cy="submission_status"
             class="q-ma-none"
@@ -27,7 +29,11 @@
         </div>
       </q-toolbar-title>
       <div
-        v-if="submission.status != 'AWAITING_REVIEW'"
+        v-if="
+          submission.status != 'AWAITING_REVIEW' &&
+          submission.status != 'REJECTED' &&
+          submission.status != 'RESUBMISSION_REQUESTED'
+        "
         data-cy="decision_options"
       >
         <q-btn

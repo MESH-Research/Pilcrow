@@ -48,11 +48,13 @@ describe("CreateForm", () => {
     wrapper.findComponent({ ref: "nameInput" }).setValue(name)
     wrapper.findComponent({ ref: "submitBtn" }).trigger("submit")
     await flushPromises()
-    expect(warn).toBeCalledTimes(1)
-    expect(warn).toBeCalledWith(
+    expect(warn).toHaveBeenCalledTimes(1)
+    expect(warn).toHaveBeenCalledWith(
       expect.stringContaining('Unknown query named "GetPublications"')
     )
-    expect(mutationHandler).toBeCalledWith(expect.objectContaining({ name }))
-    expect(mockNewStatus).toBeCalledWith("success", expect.any(String))
+    expect(mutationHandler).toHaveBeenCalledWith(
+      expect.objectContaining({ name })
+    )
+    expect(mockNewStatus).toHaveBeenCalledWith("success", expect.any(String))
   })
 })

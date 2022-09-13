@@ -64,7 +64,7 @@ div.active
   > .q-card__section:first-child
     background-color: #F8DB8B !important
 
-div::v-deep blockquote
+div :deep(blockquote)
   border-left: 4px solid #888888
   margin-inline-start: 1em
   padding-left: 0.5em

@@ -458,7 +458,7 @@ export const CREATE_INLINE_COMMENT = gql`
     $content: String!
     $from: Int
     $to: Int
-    $style_criteria: [InlineCommentStyleCriteriaInput!]
+    $style_criteria: [ID!]
   ) {
     updateSubmission(
       input: {

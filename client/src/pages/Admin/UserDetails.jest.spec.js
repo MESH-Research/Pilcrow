@@ -38,13 +38,13 @@ describe("User Details page mount", () => {
 
   it("mounts without errors", async () => {
     expect(await wrapperFactory("0")).toBeTruthy()
-    expect(getUserHandler).toBeCalledWith({ id: "0" })
+    expect(getUserHandler).toHaveBeenCalledWith({ id: "0" })
   })
 
   it("queries for a specific user", async () => {
     const wrapper = await wrapperFactory("1")
     expect(wrapper).toBeTruthy()
-    expect(getUserHandler).toBeCalledWith({ id: "1" })
+    expect(getUserHandler).toHaveBeenCalledWith({ id: "1" })
   })
 
   it("reflects the lack of roles for a user with no assigned roles", async () => {

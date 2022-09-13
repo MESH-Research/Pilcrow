@@ -150,7 +150,6 @@ function addComment() {
     editor.state.selection.$anchor.pos,
     editor.state.selection.$head.pos,
   ].sort((a, b) => a - b)
-  const range = { from, to }
   activeComment.value = {
     __typename: "InlineComment",
     new: true,
@@ -159,7 +158,6 @@ function addComment() {
     parent_id: null,
     id: "new",
   }
-  console.log(range)
 }
 
 function highlightClickHandler(event) {
