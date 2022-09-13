@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "105d94db65f9265ebeaebc9c27f11c6f",
+    "content-hash": "7fd8890742a6403c8ad7a2817ff0a440",
     "packages": [
         {
             "name": "bjeavons/zxcvbn-php",
@@ -3014,31 +3014,33 @@
         },
         {
             "name": "olssonm/l5-zxcvbn",
-            "version": "v4.5",
+            "version": "v5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/olssonm/laravel-zxcvbn.git",
-                "reference": "1ea671c7fea1a1fbfb10e03b7e1d971d3c856143"
+                "reference": "3d6e0448e45f7396b5dfda683dd61b03397f936c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/olssonm/laravel-zxcvbn/zipball/1ea671c7fea1a1fbfb10e03b7e1d971d3c856143",
-                "reference": "1ea671c7fea1a1fbfb10e03b7e1d971d3c856143",
+                "url": "https://api.github.com/repos/olssonm/laravel-zxcvbn/zipball/3d6e0448e45f7396b5dfda683dd61b03397f936c",
+                "reference": "3d6e0448e45f7396b5dfda683dd61b03397f936c",
                 "shasum": ""
             },
             "require": {
                 "bjeavons/zxcvbn-php": "^1.2",
                 "illuminate/support": "^7.0|^8.0|^9.0",
-                "php": "^7.3|^8.0"
+                "php": "^7.4|^8.0"
             },
             "require-dev": {
                 "orchestra/testbench": ">=4.0",
-                "phpunit/phpunit": "^8.0|^9.0"
+                "pestphp/pest": "^1.22",
+                "phpunit/phpunit": "^8.0|^9.0",
+                "squizlabs/php_codesniffer": "^3.7"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "4.x-dev"
+                    "dev-master": "5.x-dev"
                 },
                 "laravel": {
                     "providers": [
@@ -3075,9 +3077,19 @@
             ],
             "support": {
                 "issues": "https://github.com/olssonm/laravel-zxcvbn/issues",
-                "source": "https://github.com/olssonm/laravel-zxcvbn/tree/v4.5"
+                "source": "https://github.com/olssonm/laravel-zxcvbn/tree/v5.0"
             },
-            "time": "2022-02-08T16:33:29+00:00"
+            "funding": [
+                {
+                    "url": "https://marcusolsson.me/kontakta",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/olssonm",
+                    "type": "github"
+                }
+            ],
+            "time": "2022-09-08T12:17:02+00:00"
         },
         {
             "name": "phpdocumentor/reflection-common",
