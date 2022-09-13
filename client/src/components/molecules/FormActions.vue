@@ -34,7 +34,7 @@
           </q-btn>
           <q-btn
             v-if="!resetDisabled"
-            class="bg-grey-4 ml-sm"
+            class="light-grey ml-sm"
             data-cy="button_discard"
             :flat="flat"
             @click="$emit('resetClick')"
@@ -68,7 +68,7 @@ const props = defineProps({
 const saveClassList = computed(() => {
   const classes = {
     saved: "bg-positive text-white",
-    dirty: "bg-primary text-white",
+    dirty: "bg-accent text-white",
   }
   return classes[state.value] ?? "bg-grey-3"
 })

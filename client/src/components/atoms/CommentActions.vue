@@ -2,7 +2,7 @@
   <div class="col-auto">
     <q-btn
       data-cy="commentActions"
-      color="grey-7"
+      class="dark-grey"
       dense
       round
       flat
