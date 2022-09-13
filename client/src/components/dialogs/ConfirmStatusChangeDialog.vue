@@ -23,7 +23,10 @@
       <q-card-section>
         <div class="column items-center">
           <p>
-            <i18n-t :keypath="`dialog.confirmStatusChange.comment`" tag="span" />
+            <i18n-t
+              :keypath="`dialog.confirmStatusChange.comment`"
+              tag="span"
+            />
           </p>
         </div>
         <q-input
