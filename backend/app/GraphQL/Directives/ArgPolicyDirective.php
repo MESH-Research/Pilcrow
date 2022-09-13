@@ -96,7 +96,6 @@ GRAPHQL;
                 $previousResolver,
                 $apply
             ) {
-                $argCollection = collect($args);
                 foreach ($apply as $applyField) {
                     [$fieldToCheck, $ability] = explode(':', $applyField);
                     $argValue = Arr::get($args, $fieldToCheck);
