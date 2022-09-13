@@ -75,7 +75,7 @@
         <q-btn :label="$t('auth.login')" to="/login" stretch flat />
       </template>
     </q-toolbar>
-    <div class="header-nav bg-blue-10">
+    <div class="header-nav">
       <q-list class="row">
         <q-item v-if="currentUser" to="/dashboard">
           <q-item-section side>
@@ -144,6 +144,8 @@ function toggleLocale() {
   overflow: hidden
 .site-title
   line-height: 1
+.header-nav
+  background: $secondary
 .header-nav .q-item__section--side
   color: inherit
 </style>

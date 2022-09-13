@@ -3,7 +3,7 @@
   <q-card
     class="q-ma-md q-pa-md bg-grey-1"
     bordered
-    style="border-color: rgb(56, 118, 187)"
+    style="border-color: rgb(82, 11, 189)"
   >
     <comment-editor
       v-bind="props"

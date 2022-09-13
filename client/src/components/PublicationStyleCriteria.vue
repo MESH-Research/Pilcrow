@@ -28,7 +28,7 @@
         data-cy="add-criteria-button"
         icon="add_task"
         :label="$t('publications.style_criteria.addBtnLabel')"
-        color="primary"
+        color="accent"
         @click="newItem"
       />
     </q-card-actions>

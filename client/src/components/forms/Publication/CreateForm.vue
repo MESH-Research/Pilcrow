@@ -21,7 +21,7 @@
           <q-btn
             ref="submitBtn"
             :disabled="loading"
-            color="primary"
+            color="accent"
             stretch
             @click="submit"
           >
