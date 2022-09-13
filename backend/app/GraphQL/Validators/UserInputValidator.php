@@ -29,7 +29,7 @@ class UserInputValidator extends Validator
                 'filled',
             ],
             'password' => [
-                'zxcvbn_min:3',
+                'zxcvbn:3',
                 'filled',
             ],
         ];
@@ -54,7 +54,7 @@ class UserInputValidator extends Validator
                 'filled' => 'EMAIL_EMPTY',
                 ]),
             $this->prefixArrayKeys('password.', [
-                'zxcvbn_min' => 'PASSWORD_NOT_COMPLEX',
+                'zxcvbn' => 'PASSWORD_NOT_COMPLEX',
                 'filled' => 'PASSWORD_EMPTY',
             ])
         );
