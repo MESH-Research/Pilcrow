@@ -73,7 +73,7 @@
           v-for="audit in submission.audits.slice().reverse()"
           :key="audit.id"
         >
-          <submission-audit :audit="audit"></submission-audit>
+          <submission-audit :audit="audit" />
         </li>
       </ul>
     </section>
