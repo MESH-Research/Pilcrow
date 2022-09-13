@@ -9,7 +9,7 @@
       v-if="publication.publication_admins.length === 0"
       inline-actions
       rounded
-      class="bg-yellow-2 text-black"
+      class="highlight text-black"
     >
       <template #avatar>
         <q-icon name="tips_and_updates" />

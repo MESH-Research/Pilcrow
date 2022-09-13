@@ -7,7 +7,7 @@
         /></q-item-section>
         <q-item-section>{{ item.label }}</q-item-section>
         <q-item-section v-if="item.problem" side>
-          <q-icon name="warning" color="orange" size="xs" />
+          <q-icon name="warning" color="accent" size="xs" />
           <q-tooltip v-if="item.problemTooltip">
             {{ item.problemTooltip }}
           </q-tooltip>

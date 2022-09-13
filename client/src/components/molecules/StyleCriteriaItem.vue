@@ -1,7 +1,7 @@
 <template>
   <q-item class="q-py-sm q-px-none">
     <q-item-section top avatar style="min-width: auto">
-      <q-icon size="md" :name="criteria.icon" />
+      <q-icon color="secondary" size="md" :name="criteria.icon" />
     </q-item-section>
     <q-item-section>
       <q-item-label>{{ criteria.name }}</q-item-label>

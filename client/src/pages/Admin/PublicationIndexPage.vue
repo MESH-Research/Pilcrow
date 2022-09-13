@@ -4,7 +4,7 @@
     <q-expansion-item
       label="Create New Publication"
       switch-toggle-side
-      header-class="bg-grey-3"
+      header-class="light-grey"
       data-cy="create_pub_button"
     >
       <CreateForm @created="publicationCreated" />
@@ -27,6 +27,7 @@
             <q-btn-group flat>
               <q-btn
                 icon="visibility"
+                class="dark-grey"
                 :to="{
                   name: 'publication:home',
                   params: { id: publication.id },
@@ -36,11 +37,15 @@
                 <q-tooltip :delay="500">View Publication</q-tooltip>
               </q-btn>
 
-              <q-btn-dropdown auto-close aria-label="Configure Publication">
+              <q-btn-dropdown
+                auto-close
+                class="dark-grey"
+                aria-label="Configure Publication"
+              >
                 <q-list>
                   <q-item :to="destRoute(publication.id, 'basic')">
                     <q-item-section avatar>
-                      <q-icon name="tune" />
+                      <q-icon class="dark-grey" name="tune" />
                     </q-item-section>
                     <q-item-section>
                       {{ $t(pageTitleKey("basic")) }}
@@ -48,7 +53,7 @@
                   </q-item>
                   <q-item :to="destRoute(publication.id, 'users')">
                     <q-item-section avatar>
-                      <q-icon name="people" />
+                      <q-icon class="dark-grey" name="people" />
                     </q-item-section>
                     <q-item-section>
                       {{ $t(pageTitleKey("users")) }}
@@ -56,7 +61,7 @@
                   </q-item>
                   <q-item :to="destRoute(publication.id, 'criteria')">
                     <q-item-section avatar>
-                      <q-icon name="card_membership" />
+                      <q-icon class="dark-grey" name="card_membership" />
                     </q-item-section>
                     <q-item-section>
                       {{ $t(pageTitleKey("criteria")) }}
@@ -64,7 +69,7 @@
                   </q-item>
                   <q-item :to="destRoute(publication.id, 'content')">
                     <q-item-section avatar>
-                      <q-icon name="toc" />
+                      <q-icon class="dark-grey" name="toc" />
                     </q-item-section>
                     <q-item-section>
                       {{ $t(pageTitleKey("content")) }}

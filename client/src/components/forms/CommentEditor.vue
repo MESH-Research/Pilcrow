@@ -57,7 +57,7 @@
         </q-list>
       </div>
       <q-card-actions class="q-mt-md q-pa-none" align="between">
-        <q-btn type="submit" color="primary">
+        <q-btn type="submit" color="accent">
           {{ $t("guiElements.form.submit") }}
         </q-btn>
         <q-btn
@@ -341,10 +341,14 @@ const styleCriteria = ref(
 .q-icon.q-expansion-item__toggle-icon,
 .q-icon.q-expansion-item__toggle-focus {
   font-size: 1.3em;
-  color: black;
+  color: #032c73;
 }
 
 .q-expansion-item--popup.q-expansion-item--collapsed {
   padding: 0 0;
+}
+
+.q-toggle__inner--truthy {
+  color: #032c73;
 }
 </style>
