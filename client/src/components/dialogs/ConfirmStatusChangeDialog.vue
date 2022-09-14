@@ -104,7 +104,7 @@ const icons = {
 const colors = {
   accept_for_review: "positive",
   reject: "negative",
-  request_resubmission: "deep-orange-10",
+  request_resubmission: "dark-grey",
   open: "black",
   close: "black",
   accept_as_final: "positive",
