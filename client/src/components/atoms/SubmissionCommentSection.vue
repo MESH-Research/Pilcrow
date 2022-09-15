@@ -76,7 +76,7 @@ watch(
 
 <style lang="sass" scoped>
 .comments
-  background-color: #efefef
+  background-color: #F3F4F7
 
 .comments-wrapper
   max-width: 700px

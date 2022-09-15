@@ -29,7 +29,7 @@
                   ??
                 </q-item-section>
               </q-item>
-              <q-item clickable class="bg-grey-4">
+              <q-item clickable class="light-grey">
                 <q-item-section avatar><q-icon name="launch" /></q-item-section>
                 <q-item-section> Preview Public Profile </q-item-section>
               </q-item>

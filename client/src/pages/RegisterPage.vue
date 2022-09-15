@@ -2,7 +2,7 @@
   <q-page class="flex-center flex q-pa-md" data-cy="vueRegister">
     <q-card style="width: 400px">
       <q-form autofocus @submit="handleSubmit">
-        <q-card-section class="bg-deep-purple-7">
+        <q-card-section class="accent">
           <h1 class="text-h5 text-white q-my-xs">
             {{ $t("auth.register") }}
           </h1>
@@ -107,7 +107,7 @@
           <q-btn
             unelevated
             size="lg"
-            color="deep-purple-7"
+            color="accent"
             class="full-width text-white"
             :label="$t('auth.register_action')"
             type="submit"

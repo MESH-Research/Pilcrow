@@ -4,6 +4,7 @@
       dense
       flat
       icon="subdirectory_arrow_right"
+      color="accent"
       class="q-pl-sm q-ml-md"
       no-caps
       :aria-label="$t('submissions.comment.reply.referenceButtonAria')"

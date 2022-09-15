@@ -2,7 +2,7 @@
   <q-page class="flex-center flex q-pa-md" data-cy="vueLogin">
     <q-card style="width: 400px" square>
       <q-form @submit="handleSubmit()">
-        <q-card-section class="bg-deep-purple-7 q-pa-sm">
+        <q-card-section class="accent q-pa-sm">
           <h1 class="text-h5 text-white">Login</h1>
         </q-card-section>
         <q-card-section class="q-pa-lg">
@@ -61,7 +61,7 @@
             ref="submitBtn"
             unelevated
             size="lg"
-            color="deep-purple-7"
+            color="accent"
             class="full-width text-white"
             label="Login"
             :loading="loading"

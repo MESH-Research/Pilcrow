@@ -14,7 +14,7 @@
     >
       <comment-header
         :comment="comment"
-        bg-color="#eeeeee"
+        bg-color="#C9E5F8"
         @quote-reply-to="initiateQuoteReply"
       />
       <q-card-section>
@@ -87,7 +87,7 @@
           ref="reply_button"
           data-cy="overallCommentReplyButton"
           bordered
-          color="primary"
+          color="accent"
           label="Reply"
           @click="initiateReply()"
         />
