@@ -17,9 +17,9 @@ cypress:
   template:
     services:
       cypress:
-        type: node:14
+        type: node:16
         overrides:
-          image: "cypress/base:14"
+          image: "cypress/base:16"
           environment:
             ELECTRON_EXTRA_LAUNCH_ARGS: "--force-prefers-reduced-motion"
     tooling:
