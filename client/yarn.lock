@@ -1694,10 +1694,10 @@
   resolved "https://registry.yarnpkg.com/@tiptap/extension-blockquote/-/extension-blockquote-2.0.0-beta.194.tgz#f2800e95529bcd61576b0ccb3bd175b89b58df55"
   integrity sha512-iAfBUzV+gZsV/Ez9KpyDe64XSAP2UQzJvr62dIPUb+w3nX0d0H0Y4I4xgnspWmEnz1DklnHJv9KRLKUvpC0g2g==
 
-"@tiptap/extension-bold@^2.0.0-beta.194", "@tiptap/extension-bold@^2.0.0-beta.28":
-  version "2.0.0-beta.194"
-  resolved "https://registry.yarnpkg.com/@tiptap/extension-bold/-/extension-bold-2.0.0-beta.194.tgz#d266b14b7daa18f46d7188a69988c24e3f869fb8"
-  integrity sha512-hyW51OuH0uJDn2FpFq3cXcSck1wt9SVgPsgKqX6lVyav+ciYVbKD0/idTx9FEgsNyZKzQ1f14QNsnbnm7nPeZg==
+"@tiptap/extension-bold@^2.0.0-beta.194", "@tiptap/extension-bold@^2.0.0-beta.195":
+  version "2.0.0-beta.195"
+  resolved "https://registry.yarnpkg.com/@tiptap/extension-bold/-/extension-bold-2.0.0-beta.195.tgz#aa7c88860d825b0460ce38d73ea2546717f16fc8"
+  integrity sha512-LD1xd5B0VYQ+6rmeb7weSziPcTcKlSGTftU7sEfR02LgDfkI4qEN/Km6madNVItwO++qceCIaDfVazRSGfZU3A==
 
 "@tiptap/extension-bubble-menu@^2.0.0-beta.194":
   version "2.0.0-beta.194"
@@ -1763,10 +1763,10 @@
   resolved "https://registry.yarnpkg.com/@tiptap/extension-heading/-/extension-heading-2.0.0-beta.194.tgz#7e3af9d73cb97874ede29cf550bff0cdfb373e4c"
   integrity sha512-FiZ9GDgbctG48XowV/2qPCDhtqafvShVJ4qCKArHSu3RvceOMXWyWvmxkHReb0hJaRs+4tPGswW0e2qgLwZaAQ==
 
-"@tiptap/extension-highlight@^2.0.0-beta.194":
-  version "2.0.0-beta.194"
-  resolved "https://registry.yarnpkg.com/@tiptap/extension-highlight/-/extension-highlight-2.0.0-beta.194.tgz#377b26b0e25c3e3d0d8aa3d72832b6b28a758788"
-  integrity sha512-YhXbZQM0gJZTI6I9tCl39X1vX1K75WQ8fVUq8gti/HxfAqW1CvzdM0OemheJPzTXAdMOE4aagy4NAhbvMQSV4A==
+"@tiptap/extension-highlight@^2.0.0-beta.195":
+  version "2.0.0-beta.195"
+  resolved "https://registry.yarnpkg.com/@tiptap/extension-highlight/-/extension-highlight-2.0.0-beta.195.tgz#50818f4833034d69c7b75e2f96ab0eaea537ba2a"
+  integrity sha512-BG/XplXLVmtJLSGzUzefVB4+DFvTlwu9hw27MGTmNZmfavBSGoXYQShhFgVBOIZAevJuwb19AMezYokKL+pztA==
 
 "@tiptap/extension-history@^2.0.0-beta.194":
   version "2.0.0-beta.194"
