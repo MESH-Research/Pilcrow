@@ -1,0 +1,25 @@
+type Audit {
+    id: ID
+    user: User! @belongsTo
+    event: String
+    old_values: JSON
+    new_values: JSON
+    created_at: DateTimeUtc!
+    updated_at: DateTimeUtc
+}
+
+type SubmissionAudit {
+    id: ID
+    user: User! @belongsTo
+    event: String
+    old_values: SubmissionAuditValues
+    new_values: SubmissionAuditValues
+    created_at: DateTimeUtc!
+    updated_at: DateTimeUtc
+}
+
+type SubmissionAuditValues {
+    title: String
+    status: SubmissionStatus
+    status_change_comment: String
+}

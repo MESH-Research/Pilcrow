@@ -24,16 +24,15 @@
         <div class="column items-center">
           <p>
             <i18n-t
-              :keypath="`dialog.confirmStatusChange.reason.${props.action}`"
+              :keypath="`dialog.confirmStatusChange.comment`"
               tag="span"
-            >
-            </i18n-t>
+            />
           </p>
         </div>
         <q-input
-          v-model="text"
+          v-model="comment"
           filled
-          label="Enter reasons here..."
+          label="Optional Comment"
           type="textarea"
         />
       </q-card-section>
@@ -61,6 +60,7 @@
 import { useDialogPluginComponent, useQuasar } from "quasar"
 import { useMutation } from "@vue/apollo-composable"
 import { UPDATE_SUBMISSION_STATUS } from "src/graphql/mutations"
+import { ref } from "vue"
 import { useI18n } from "vue-i18n"
 
 const { t } = useI18n()
@@ -109,17 +109,17 @@ const colors = {
   close: "black",
   accept_as_final: "positive",
 }
+const comment = ref(null)
 
-const variables = {
-  id: String(props.submissionId),
-  status: statuses[props.action],
-}
-
-const { mutate } = useMutation(UPDATE_SUBMISSION_STATUS, { variables })
+const { mutate } = useMutation(UPDATE_SUBMISSION_STATUS)
 
 async function updateStatus() {
   try {
-    await mutate()
+    await mutate({
+      id: String(props.submissionId),
+      status: statuses[props.action],
+      status_change_comment: comment.value,
+    })
     notify({
       color: "positive",
       message: t(`dialog.confirmStatusChange.statusChanged.${props.action}`),

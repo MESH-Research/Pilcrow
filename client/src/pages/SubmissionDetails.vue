@@ -65,6 +65,18 @@
         mutable
       />
     </div>
+    <section class="q-pa-lg">
+      <h3>Activity</h3>
+      <p v-if="submission.audits.length == 0">No Activity</p>
+      <ul>
+        <li
+          v-for="audit in submission.audits.slice().reverse()"
+          :key="audit.id"
+        >
+          <submission-audit :audit="audit" />
+        </li>
+      </ul>
+    </section>
   </article>
 </template>
 
@@ -73,6 +85,7 @@ import { GET_SUBMISSION } from "src/graphql/queries"
 import AssignedUsers from "src/components/AssignedUsersComponent.vue"
 import { useQuery } from "@vue/apollo-composable"
 import { computed } from "vue"
+import SubmissionAudit from "../components/SubmissionAudit.vue"
 const props = defineProps({
   id: {
     type: String,
