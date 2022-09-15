@@ -111,11 +111,6 @@ input UpdateSubmissionInput {
     submitters: UpdateSubmissionUserInput
 }
 
-input UpdateStatusInput {
-    name: SubmissionStatus!
-    message: String @trim
-}
-
 input CreateSubmissionUserInput {
     connect: [ID!]!
 }
