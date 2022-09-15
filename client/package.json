@@ -54,7 +54,7 @@
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.18.9",
-    "@quasar/app-webpack": "^3.5.9",
+    "@quasar/app-webpack": "^3.6.0",
     "@quasar/quasar-app-extension-testing-unit-jest": "^3.0.0-alpha.10",
     "axe-core": "^4.4.3",
     "cypress": "10.7",
