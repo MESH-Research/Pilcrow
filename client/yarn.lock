@@ -1801,10 +1801,10 @@
   resolved "https://registry.yarnpkg.com/@tiptap/extension-list-item/-/extension-list-item-2.0.0-beta.194.tgz#109dbb75f2785c9f4ebaee5af98056a140662244"
   integrity sha512-pncX/dIpUiEEitYVMOpKHSrsdpPvP0b0ZjesWRGoJ7N0a0bhPWrwRpkkW7Cqfs0CyeEX+LJjPEA9Ujp931NXiQ==
 
-"@tiptap/extension-ordered-list@^2.0.0-beta.194", "@tiptap/extension-ordered-list@^2.0.0-beta.30":
-  version "2.0.0-beta.194"
-  resolved "https://registry.yarnpkg.com/@tiptap/extension-ordered-list/-/extension-ordered-list-2.0.0-beta.194.tgz#5e9d19eafd50d71c3b0d285341318505a9434c49"
-  integrity sha512-cfFj6QeYQigRPsvcg16wNgjm7/M+kD7wltd/CpLXFY1O5gfdaAZfHwfSadAjUNzvsGdyN3WphsVrros/tkYhIg==
+"@tiptap/extension-ordered-list@^2.0.0-beta.194", "@tiptap/extension-ordered-list@^2.0.0-beta.195":
+  version "2.0.0-beta.195"
+  resolved "https://registry.yarnpkg.com/@tiptap/extension-ordered-list/-/extension-ordered-list-2.0.0-beta.195.tgz#980fa6de3c17bb075ef8b179a92bde1dec7c4615"
+  integrity sha512-rYxEY02kTusyZsIurWrO0hqv6rlu2Zlojfd/ZU0kT/gegfAkM/ca6csvCRuiBGej2TnCHF13XliK2IinWqfx8Q==
 
 "@tiptap/extension-paragraph@^2.0.0-beta.194":
   version "2.0.0-beta.194"
