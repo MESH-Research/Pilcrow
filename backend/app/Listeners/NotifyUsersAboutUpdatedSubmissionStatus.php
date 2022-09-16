@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Listeners;
 
+use App\Models\Submission;
 use App\Notifications\SubmissionStatusUpdated;
 use Illuminate\Support\Facades\Notification;
 
@@ -67,11 +68,13 @@ class NotifyUsersAboutUpdatedSubmissionStatus
             new SubmissionStatusUpdated($notification_data)
         );
         // Notify editors
-        Notification::send($event->submission->publication->editors, new SubmissionStatusUpdated($notification_data));
-
-        // TODO define follow up action (or non-action) specific to reviewers
-        // $notification_data['action'] = '';
-
+        Notification::send($event->submission->publication->editors,
+            new SubmissionStatusUpdated($notification_data)
+        );
+        // Remove followup action for reviewers for submissions in nonreviewable states
+        if ($default['submission']['status'] !== Submission::UNDER_REVIEW) {
+            $notification_data['action'] = '';
+        }
         // Notify reviewers
         Notification::send(
             $event->submission->reviewers,
