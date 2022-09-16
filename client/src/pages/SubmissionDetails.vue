@@ -68,14 +68,11 @@
     <section class="q-pa-lg">
       <h3>Activity</h3>
       <p v-if="submission.audits.length == 0">No Activity</p>
-      <ul>
-        <li
-          v-for="audit in submission.audits.slice().reverse()"
-          :key="audit.id"
-        >
-          <submission-audit :audit="audit" />
-        </li>
-      </ul>
+      <submission-audit
+        v-for="audit in submission.audits.slice().reverse()"
+        :key="audit.id"
+        :audit="audit"
+      />
     </section>
   </article>
 </template>

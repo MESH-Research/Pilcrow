@@ -71,7 +71,7 @@ class NotifyUsersAboutUpdatedSubmissionStatus
         Notification::send($event->submission->publication->editors,
             new SubmissionStatusUpdated($notification_data)
         );
-        // Remove followup action for reviewers for submissions in nonreviewable states
+        // Remove call to action for reviewers of submissions in nonreviewable states
         if ($default['submission']['status'] !== Submission::UNDER_REVIEW) {
             $notification_data['action'] = '';
         }
