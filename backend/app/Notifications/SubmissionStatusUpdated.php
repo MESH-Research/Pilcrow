@@ -52,6 +52,10 @@ class SubmissionStatusUpdated extends Notification implements ShouldQueue
         return (new MailMessage())
             ->subject($this->updateData['subject'] ?? 'Submission Status Update')
             ->line($this->updateData['body'] ?? 'The status of a submission has been updated.')
+            ->linesIf($this->updateData['submission']['status_change_comment'], [
+                'Message from ' . ($this->updateData['user']['name'] ?: $this->updateData['user']['username']) . ': ',
+                $this->updateData['submission']['status_change_comment']
+            ])
             ->action($this->updateData['action'], $this->updateData['url']);
     }
 

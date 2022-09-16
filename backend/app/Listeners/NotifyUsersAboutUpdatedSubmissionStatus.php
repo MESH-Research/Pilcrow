@@ -128,7 +128,7 @@ class NotifyUsersAboutUpdatedSubmissionStatus
     {
         $default['subject'] = 'Submission Accepted for Review';
         $default['body'] = $default['submission']['title'] . ' has been accepted for review. ' .
-                           'Once it is opened for review, it will be available for review .';
+                           'Once it is opened for review, it will be available for review.';
         $default['type'] = 'submission.awaiting_review';
 
         return $default;
@@ -181,7 +181,8 @@ class NotifyUsersAboutUpdatedSubmissionStatus
     public function underReview($default)
     {
         $default['subject'] = 'Submission Under Review';
-        $default['body'] = $default['submission']['title'] . ' has been opened for review. It is currently awaiting review from the assigned reviewers.';
+        $default['body'] = $default['submission']['title'] . ' has been opened for review.' .
+                            'It is currently awaiting review from the assigned reviewers.';
         $default['type'] = 'submission.under_review';
 
         return $default;
