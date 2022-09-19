@@ -106,4 +106,28 @@ describe("Submissions Details", () => {
     cy.dataCy('reviewers_list').find('.q-item').should('have.length', 2)
 
   })
+
+  it("should show comments associated with status changes in the Activity section", () => {
+    cy.task("resetDb")
+    cy.login({ email: "applicationadministrator@ccrproject.dev" })
+    cy.visit("submissions")
+    cy.dataCy("submission_actions").first().click()
+    cy.dataCy("change_status").click()
+    cy.dataCy("open_review").click()
+    cy.intercept("/graphql").as("graphQL")
+    cy.dataCy("status_change_comment").type("comment from admin 1")
+    cy.dataCy("dirtyYesChangeStatus").click()
+    cy.wait("@graphQL")
+    cy.dataCy("change_status_notify")
+      .should("be.visible")
+      .should("have.class", "bg-positive")
+    cy.dataCy("accept_as_final")
+    cy.dataCy("close_review").click()
+    cy.intercept("/graphql").as("graphQL")
+    cy.dataCy("status_change_comment").type("comment from admin 2")
+    cy.dataCy("dirtyYesChangeStatus").click()
+    cy.wait("@graphQL")
+    cy.visit("/submission/100")
+    cy.dataCy("activity_section").contains("comment from admin 1").contains("comment from admin 2")
+  });
 })

@@ -32,6 +32,7 @@
         <q-input
           v-model="comment"
           filled
+          data-cy="status_change_comment"
           label="Optional Comment"
           type="textarea"
         />

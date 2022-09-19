@@ -65,7 +65,7 @@
         mutable
       />
     </div>
-    <section class="q-pa-lg">
+    <section class="q-pa-lg" data-cy="activity_section">
       <h3>Activity</h3>
       <p v-if="submission.audits.length == 0">No Activity</p>
       <submission-audit
