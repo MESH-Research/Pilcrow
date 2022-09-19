@@ -434,6 +434,14 @@ export default {
       title: "Activity",
       no_activity: "No Activity",
     },
+    activity_record: {
+      description: "{event} by {user} {datetime}",
+      status_change: "from {previous_status} to {current_status}",
+      comment_title: "Comment",
+      events: {
+        updated: "Updated",
+      },
+    },
     status: {
       updated:
         "The status of {data_submission_title} has been updated to {data_submission_status_name}.",
@@ -496,12 +504,6 @@ export default {
       unassign_button: {
         ariaLabel: "Unassign Reviewer",
         help: "Remove Reviewer",
-      },
-    },
-    audit: {
-      event_header: "{event} by {user}",
-      events: {
-        updated: "Updated",
       },
     },
     submitters: {

@@ -1,6 +1,8 @@
 <template>
-  <i18n-t keypath="submission.audit.event_header" tag="span">
-    <template #event>{{ audit.event }}</template>
+  <i18n-t keypath="submission.activity_record.description" tag="span">
+    <template #event>{{
+      $t(`submission.activity_record.events.${audit.event}`)
+    }}</template>
     <template #user>
       <router-link
         :to="{
@@ -10,25 +12,36 @@
         >{{ audit.user.name || audit.user.username }}
       </router-link>
     </template>
+    <template #datetime>
+      <span
+        :aria-label="
+          $t('submissions.comment.dateLabel', { date: relativeTime })
+        "
+      >
+        <q-tooltip anchor="top middle" self="center middle">
+          {{ createdDate.toFormat("LLL dd yyyy hh:mm a") }}
+        </q-tooltip>
+        {{ relativeTime }}
+      </span>
+    </template>
   </i18n-t>
 
-  <span
-    :aria-label="$t('submissions.comment.dateLabel', { date: relativeTime })"
+  <i18n-t
+    v-if="audit.event == 'updated' && audit.old_values.status != null"
+    keypath="submission.activity_record.status_change"
+    tag="span"
   >
-    <q-tooltip anchor="top middle" self="center middle">
-      {{ createdDate.toFormat("LLL dd yyyy hh:mm a") }}
-    </q-tooltip>
-    {{ relativeTime }}
-  </span>
-  <span v-if="audit.event == 'updated' && audit.old_values.status != null">
-    <span>
-      from {{ $t(`submission.status.${audit.old_values.status}`) }} to
+    <template #previous_status>{{
+      $t(`submission.status.${audit.old_values.status}`)
+    }}</template>
+    <template #current_status>
       <b>{{ $t(`submission.status.${audit.new_values.status}`) }}</b>
-    </span>
-    <p v-if="audit.new_values.status_change_comment != null">
-      Comment: {{ audit.new_values.status_change_comment }}
-    </p>
-  </span>
+    </template>
+  </i18n-t>
+  <p v-if="audit.new_values.status_change_comment != null">
+    {{ $t("submission.activity_record.comment_title") }}:
+    {{ audit.new_values.status_change_comment }}
+  </p>
   <q-separator class="q-my-md" />
 </template>
 
