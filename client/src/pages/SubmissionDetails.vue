@@ -66,8 +66,10 @@
       />
     </div>
     <section class="q-pa-lg" data-cy="activity_section">
-      <h3>Activity</h3>
-      <p v-if="submission.audits.length == 0">No Activity</p>
+      <h3>{{ $t("submission.activity_section.title") }}</h3>
+      <p v-if="submission.audits.length == 0">
+        {{ $t("submission.activity_section.no_activity") }}
+      </p>
       <submission-audit
         v-for="audit in submission.audits.slice().reverse()"
         :key="audit.id"

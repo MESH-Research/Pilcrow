@@ -430,6 +430,10 @@ export default {
       open: "Open for Review",
       close: "Close for Review",
     },
+    activity_section: {
+      title: "Activity",
+      no_activity: "No Activity",
+    },
     status: {
       updated:
         "The status of {data_submission_title} has been updated to {data_submission_status_name}.",
@@ -701,6 +705,7 @@ export default {
       },
       comment:
         "Add an optional comment explaining your decision. This will be visible to those associated with this submission.",
+      comment_placeholder: "Optional Comment",
       unauthorized:
         "You are not authorized to change the status of this submission. Please contact your administrator.",
       statusChanged: {

@@ -33,7 +33,7 @@
           v-model="comment"
           filled
           data-cy="status_change_comment"
-          label="Optional Comment"
+          :label="$t('dialog.confirmStatusChange.comment_placeholder')"
           type="textarea"
         />
       </q-card-section>
