@@ -1,12 +1,16 @@
 <template>
-  {{ audit.event }} by
-  <router-link
-    :to="{
-      name: 'user_details',
-      params: { id: audit.user.id },
-    }"
-    >{{ audit.user.name || audit.user.username }}
-  </router-link>
+  <i18n-t keypath="submission.audit.event_header" tag="span">
+    <template #event>{{ audit.event }}</template>
+    <template #user>
+      <router-link
+        :to="{
+          name: 'user_details',
+          params: { id: audit.user.id },
+        }"
+        >{{ audit.user.name || audit.user.username }}
+      </router-link>
+    </template>
+  </i18n-t>
 
   <span
     :aria-label="$t('submissions.comment.dateLabel', { date: relativeTime })"

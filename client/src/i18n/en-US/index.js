@@ -498,6 +498,12 @@ export default {
         help: "Remove Reviewer",
       },
     },
+    audit: {
+      event_header: "{event} by {user}",
+      events: {
+        updated: "Updated",
+      },
+    },
     submitters: {
       heading: "Submitters",
       title: {
