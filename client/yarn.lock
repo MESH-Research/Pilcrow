@@ -3707,10 +3707,10 @@ core-js-compat@^3.20.2, core-js-compat@^3.21.0, core-js-compat@^3.6.5:
     browserslist "^4.20.2"
     semver "7.0.0"
 
-core-js@^3.25.1, core-js@^3.6.5:
-  version "3.25.1"
-  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.25.1.tgz#5818e09de0db8956e16bf10e2a7141e931b7c69c"
-  integrity sha512-sr0FY4lnO1hkQ4gLDr24K0DGnweGO1QwSj5BpfQjpSJPdqWalja4cTps29Y/PJVG/P7FYlPDkH3hO+Tr0CvDgQ==
+core-js@^3.25.2, core-js@^3.6.5:
+  version "3.25.2"
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.25.2.tgz#2d3670c1455432b53fa780300a6fc1bd8304932c"
+  integrity sha512-YB4IAT1bjEfxTJ1XYy11hJAKskO+qmhuDBM8/guIfMz4JvdsAQAqvyb97zXX7JgSrfPLG5mRGFWJwJD39ruq2A==
 
 core-util-is@1.0.2:
   version "1.0.2"
@@ -4432,10 +4432,10 @@ eslint-plugin-quasar@^1.1.0:
     requireindex "~1.2.0"
     semver-compare "^1.0.0"
 
-eslint-plugin-vue@^9.5.0:
-  version "9.5.0"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-vue/-/eslint-plugin-vue-9.5.0.tgz#bbfea787cee8d57d6418d0425c5daa00d044f530"
-  integrity sha512-Dm4KJRD6yFZGy6OhtgcG35oMR9rAhGfP6vbANw2k5wvQn9YjKu9huRV3Y63pYUbqPTHJ3V4v5+EcGmJSSjWgSA==
+eslint-plugin-vue@^9.5.1:
+  version "9.5.1"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-vue/-/eslint-plugin-vue-9.5.1.tgz#87ce075882cf7d824b95f46c224f91495fafcc54"
+  integrity sha512-Y0sL2RY7Xc9S8kNih9lbwHIDmewUg9bfas6WSzsOWRgDXhIHKxRBZYNAnVcXBFfE+bMWHUA5GLChl7TcTYUI8w==
   dependencies:
     eslint-utils "^3.0.0"
     natural-compare "^1.4.0"
@@ -8162,9 +8162,9 @@ qs@~6.5.2:
   integrity sha512-qxXIEh4pCGfHICj1mAJQ2/2XVZkjCDTcEgfoSQxc/fYivUZxTkk7L3bDBJSoNrEzXI17oUO5Dp07ktqE5KzczA==
 
 quasar@2:
-  version "2.8.2"
-  resolved "https://registry.yarnpkg.com/quasar/-/quasar-2.8.2.tgz#fbfd91811a0bafda71d191a144980cfd76d8647e"
-  integrity sha512-sHnW1SI0q5ZxFPGqRixC5i4FyiHK2xpgSHrSuS4nRQIXHiqsvrqafqOxfAAGhnBR+1fWJrHk8+8vDmBMhxzy1Q==
+  version "2.8.3"
+  resolved "https://registry.yarnpkg.com/quasar/-/quasar-2.8.3.tgz#1bfd6e3dc040a9e8fe8ed0be66c38770ec502832"
+  integrity sha512-ioiXQ8vaims9nW1+cNqkSvK0zQZGToYmiGLNcHHxRT5+dYhY0l1YCSXR54ZbXVNAgdCNs1va63Mnfq5UU9miDA==
 
 queue-microtask@^1.2.2:
   version "1.2.3"
