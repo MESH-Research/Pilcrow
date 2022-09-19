@@ -4,7 +4,7 @@
 import "cypress-axe"
 import { a11yLogViolations } from '../support/helpers'
 
-describe("Submissions Details", () => {
+describe("Submission Details", () => {
   it("should assert the Submission Details page is accessible", () => {
     cy.task("resetDb")
     cy.login({ email: "applicationadministrator@ccrproject.dev" })
