@@ -68,7 +68,8 @@ class NotifyUsersAboutUpdatedSubmissionStatus
             new SubmissionStatusUpdated($notification_data)
         );
         // Notify editors
-        Notification::send($event->submission->publication->editors,
+        Notification::send(
+            $event->submission->publication->editors,
             new SubmissionStatusUpdated($notification_data)
         );
         // Remove call to action for reviewers of submissions in nonreviewable states
