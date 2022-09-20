@@ -1,10 +1,18 @@
 <template>
-  <i18n-t keypath="submission.activity_record.description" tag="span">
+  <i18n-t
+    :keypath="
+      audit.user
+        ? `submission.activity_record.description`
+        : `submission.activity_record.description_no_user`
+    "
+    tag="span"
+  >
     <template #event>{{
       $t(`submission.activity_record.events.${audit.event}`)
     }}</template>
     <template #user>
       <router-link
+        v-if="audit.user"
         :to="{
           name: 'user_details',
           params: { id: audit.user.id },

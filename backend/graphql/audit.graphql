@@ -10,7 +10,7 @@ type Audit {
 
 type SubmissionAudit {
     id: ID
-    user: User! @belongsTo
+    user: User @belongsTo
     event: String
     old_values: SubmissionAuditValues
     new_values: SubmissionAuditValues

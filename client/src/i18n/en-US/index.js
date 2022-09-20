@@ -435,10 +435,12 @@ export default {
       no_activity: "No Activity",
     },
     activity_record: {
-      description: "{event} by {user} {datetime}",
+      description: "{event} by {user} {datetime} ",
+      description_no_user: "{event} {datetime} ",
       status_change: "from {previous_status} to {current_status}",
       comment_title: "Comment",
       events: {
+        created: "Created",
         updated: "Updated",
       },
     },
