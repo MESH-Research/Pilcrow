@@ -1701,10 +1701,10 @@
   resolved "https://registry.yarnpkg.com/@tiptap/extension-blockquote/-/extension-blockquote-2.0.0-beta.195.tgz#ac4188eca06e9596af1c5393efa74e529464bfeb"
   integrity sha512-vPVWahbyap46W0O892ejZ5v4+X8i8lKtuxC+50QBeQWZBtqgxkwAeMmJTN3Oh+Y1fngoJFoprRgLHol0BHBE+Q==
 
-"@tiptap/extension-bold@^2.0.0-beta.195", "@tiptap/extension-bold@^2.0.0-beta.28":
-  version "2.0.0-beta.195"
-  resolved "https://registry.yarnpkg.com/@tiptap/extension-bold/-/extension-bold-2.0.0-beta.195.tgz#aa7c88860d825b0460ce38d73ea2546717f16fc8"
-  integrity sha512-LD1xd5B0VYQ+6rmeb7weSziPcTcKlSGTftU7sEfR02LgDfkI4qEN/Km6madNVItwO++qceCIaDfVazRSGfZU3A==
+"@tiptap/extension-bold@^2.0.0-beta.195", "@tiptap/extension-bold@^2.0.0-beta.196":
+  version "2.0.0-beta.196"
+  resolved "https://registry.yarnpkg.com/@tiptap/extension-bold/-/extension-bold-2.0.0-beta.196.tgz#d3480dd327603271aa91fa999da7a287f187c26d"
+  integrity sha512-gEpklSFhrrghG8OHzARWNAcMQ4nG5dCY22ikIMZfFUsfKaSgOaZsg79qBJMpIUn5rCgBz3fE9diJf+5kLhNSwQ==
 
 "@tiptap/extension-bubble-menu@^2.0.0-beta.196":
   version "2.0.0-beta.196"
