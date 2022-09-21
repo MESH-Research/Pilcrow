@@ -151,6 +151,32 @@ Preview builds cost hosting money. It's not a lot of money, but it adds up if a 
 
 Currently, `CCR-Droid` is not great about spelling out specific build errors.  If you run into a problem, mention `@wreality`. He can look up the error messages and help with debugging the build.
 
+## Staging Environment
+
+- [https://staging.ccrproject.dev](https://staging.ccrproject.dev): Automatically built from the `master` branch
+- [https://mailhog.ccrproject.dev](https://mailhog.ccrproject.dev): Email notifications from the staging environment are sent here, NOT to a real inbox.
+
+::: warning
+:warning: Data in the staging environment is **not permanent** and will be reset **every** time the code base is updated.
+:::
+
+### Staging Server User Login Information
+
+These users are permanent on the staging server, and will not be deleted. However, data associated with these users **may be reset at any time**.
+
+Name | Username | Login email | Login Password
+:---- | :---- | :---- | :----
+Application Administrator | applicationAdminUser | applicationadministrator@ccrproject.dev | adminPassword!@#
+Publication Administrator | publicationAdministrator | publicationAdministrator@ccrproject.dev | publicationadminPassword!@#
+Publication Editor | publicationEditor | publicationEditor@ccrproject.dev | editorPassword!@#
+Review Coordinator for Submission | reviewCoordinator | reviewCoordinator@ccrproject.dev | coordinatorPassword!@#
+Reviewer for Submission | reviewer | reviewer@ccrproject.dev | reviewerPassword!@#
+Regular User | regularUser | regularuser@ccrproject.dev | regularPassword!@#
+
+Other users can be registered to the staging environment, but please note that these users and any data associated with them **may be wiped any time the code base is updated**.
+
+
+
 ## Contributor Workflow
 
 1. Create a new branch based on the `development` branch
