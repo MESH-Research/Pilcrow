@@ -1,0 +1,228 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="400" height="800" viewBox="0 0 400 800">
+  <defs>
+    <filter id="_537B3D" x="264" y="758" width="121" height="50" filterUnits="userSpaceOnUse">
+      <feOffset dy="3" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feFlood flood-opacity="0.161"/>
+      <feComposite operator="in" in2="blur"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+    <filter id="Rectangle_128" x="4" y="6" width="393" height="118" filterUnits="userSpaceOnUse">
+      <feOffset dy="3" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="3" result="blur-2"/>
+      <feFlood flood-opacity="0.161"/>
+      <feComposite operator="in" in2="blur-2"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+    <filter id="Rectangle_129" x="4" y="6" width="133" height="118" filterUnits="userSpaceOnUse">
+      <feOffset dy="3" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="3" result="blur-3"/>
+      <feFlood flood-opacity="0.161"/>
+      <feComposite operator="in" in2="blur-3"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+    <filter id="Rectangle_128-2" x="4" y="113" width="393" height="118" filterUnits="userSpaceOnUse">
+      <feOffset dy="3" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="3" result="blur-4"/>
+      <feFlood flood-opacity="0.161"/>
+      <feComposite operator="in" in2="blur-4"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+    <filter id="Rectangle_129-2" x="4" y="113" width="133" height="118" filterUnits="userSpaceOnUse">
+      <feOffset dy="3" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="3" result="blur-5"/>
+      <feFlood flood-opacity="0.161"/>
+      <feComposite operator="in" in2="blur-5"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+    <filter id="Rectangle_128-3" x="4" y="220" width="393" height="118" filterUnits="userSpaceOnUse">
+      <feOffset dy="3" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="3" result="blur-6"/>
+      <feFlood flood-opacity="0.161"/>
+      <feComposite operator="in" in2="blur-6"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+    <filter id="Rectangle_129-3" x="4" y="220" width="133" height="118" filterUnits="userSpaceOnUse">
+      <feOffset dy="3" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="3" result="blur-7"/>
+      <feFlood flood-opacity="0.161"/>
+      <feComposite operator="in" in2="blur-7"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+    <filter id="Rectangle_128-4" x="4" y="327" width="393" height="118" filterUnits="userSpaceOnUse">
+      <feOffset dy="3" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="3" result="blur-8"/>
+      <feFlood flood-opacity="0.161"/>
+      <feComposite operator="in" in2="blur-8"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+    <filter id="Rectangle_129-4" x="4" y="327" width="133" height="118" filterUnits="userSpaceOnUse">
+      <feOffset dy="3" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="3" result="blur-9"/>
+      <feFlood flood-opacity="0.161"/>
+      <feComposite operator="in" in2="blur-9"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+    <filter id="Rectangle_128-5" x="4" y="434" width="393" height="118" filterUnits="userSpaceOnUse">
+      <feOffset dy="3" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="3" result="blur-10"/>
+      <feFlood flood-opacity="0.161"/>
+      <feComposite operator="in" in2="blur-10"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+    <filter id="Rectangle_129-5" x="4" y="434" width="133" height="118" filterUnits="userSpaceOnUse">
+      <feOffset dy="3" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="3" result="blur-11"/>
+      <feFlood flood-opacity="0.161"/>
+      <feComposite operator="in" in2="blur-11"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+    <clipPath id="clip-_537B3D-guide">
+      <rect width="400" height="800"/>
+    </clipPath>
+  </defs>
+  <g id="_537B3D-guide" data-name="537B3D-guide" clip-path="url(#clip-_537B3D-guide)">
+    <rect width="400" height="800" fill="#537b3d"/>
+    <g transform="matrix(1, 0, 0, 1, 0, 0)" filter="url(#_537B3D)">
+      <text id="_537B3D-2" data-name="#537B3D" transform="translate(273 790)" fill="#fff" font-size="24" font-family="SegoeUI-Bold, Segoe UI" font-weight="700"><tspan x="0" y="0">#537B3D</tspan></text>
+    </g>
+    <g id="Group_83" data-name="Group 83" transform="translate(-14561 -4)">
+      <g transform="matrix(1, 0, 0, 1, 14561, 4)" filter="url(#Rectangle_128)">
+        <g id="Rectangle_128-6" data-name="Rectangle 128" transform="translate(13 12)" fill="none" stroke="#fff" stroke-width="1">
+          <rect width="375" height="100" rx="5" stroke="none"/>
+          <rect x="0.5" y="0.5" width="374" height="99" rx="4.5" fill="none"/>
+        </g>
+      </g>
+      <g transform="matrix(1, 0, 0, 1, 14561, 4)" filter="url(#Rectangle_129)">
+        <path id="Rectangle_129-6" data-name="Rectangle 129" d="M5,0H115a0,0,0,0,1,0,0V100a0,0,0,0,1,0,0H5a5,5,0,0,1-5-5V5A5,5,0,0,1,5,0Z" transform="translate(13 12)" fill="#fff"/>
+      </g>
+      <text id="_4.91:1" data-name="4.91:1" transform="translate(14578 42)" fill="#537b3d" font-size="24" font-family="SegoeUI, Segoe UI"><tspan x="0" y="0">4.91:1</tspan></text>
+      <text id="_FFFFFF" data-name="#FFFFFF" transform="translate(14578 110)" fill="#537b3d" font-size="24" font-family="SegoeUI, Segoe UI"><tspan x="0" y="0">#FFFFFF</tspan></text>
+      <g id="Rectangle_101" data-name="Rectangle 101" transform="translate(14902 20)" fill="#537b3d" stroke="#fff" stroke-width="2">
+        <rect width="40" height="25" rx="5" stroke="none"/>
+        <rect x="1" y="1" width="38" height="23" rx="4" fill="none"/>
+      </g>
+      <text id="AAA" transform="translate(14922 39)" fill="#fff" font-size="16" font-family="SegoeUI-Bold, Segoe UI" font-weight="700"><tspan x="-16.875" y="0">AAA</tspan></text>
+      <g id="Rectangle_100" data-name="Rectangle 100" transform="translate(14694 20)" fill="#537b3d" stroke="#fff" stroke-width="2">
+        <rect width="40" height="25" rx="5" stroke="none"/>
+        <rect x="1" y="1" width="38" height="23" rx="4" fill="none"/>
+      </g>
+      <text id="AA" transform="translate(14714 39)" fill="#fff" font-size="16" font-family="SegoeUI-Bold, Segoe UI" font-weight="700"><tspan x="-11.25" y="0">AA</tspan></text>
+      <g id="Group_82" data-name="Group 82" transform="translate(817 245)">
+        <text id="Normal_Text" data-name="Normal Text" transform="translate(13922 -183)" fill="#fff" font-size="16" font-family="SegoeUI, Segoe UI"><tspan x="-42.52" y="0">Normal Text</tspan></text>
+        <text id="Large_Text" data-name="Large Text" transform="translate(13915 -162)" fill="#fff" font-size="16" font-family="SegoeUI, Segoe UI"><tspan x="-35.68" y="0">Large Text</tspan></text>
+        <text id="UI_Elements" data-name="UI Elements" transform="translate(13921 -141)" fill="#fff" font-size="16" font-family="SegoeUI, Segoe UI"><tspan x="-41.691" y="0">UI Elements</tspan></text>
+        <text id="Large_Text-2" data-name="Large Text" transform="translate(14080 -163)" fill="#fff" font-size="20" font-family="SegoeUI, Segoe UI"><tspan x="-44.6" y="0">Large Text</tspan></text>
+        <text id="UI_Elements-2" data-name="UI Elements" transform="translate(14073 -139)" fill="#fff" font-size="20" font-family="SegoeUI, Segoe UI"><tspan x="-52.114" y="0">UI Elements</tspan></text>
+      </g>
+    </g>
+    <g id="Group_85" data-name="Group 85" transform="translate(-14483 117)">
+      <g transform="matrix(1, 0, 0, 1, 14483, -117)" filter="url(#Rectangle_128-2)">
+        <g id="Rectangle_128-7" data-name="Rectangle 128" transform="translate(13 119)" fill="none" stroke="#f3f4f7" stroke-width="1">
+          <rect width="375" height="100" rx="5" stroke="none"/>
+          <rect x="0.5" y="0.5" width="374" height="99" rx="4.5" fill="none"/>
+        </g>
+      </g>
+      <g transform="matrix(1, 0, 0, 1, 14483, -117)" filter="url(#Rectangle_129-2)">
+        <path id="Rectangle_129-7" data-name="Rectangle 129" d="M5,0H115a0,0,0,0,1,0,0V100a0,0,0,0,1,0,0H5a5,5,0,0,1-5-5V5A5,5,0,0,1,5,0Z" transform="translate(13 119)" fill="#f3f4f7"/>
+      </g>
+      <text id="_4.47:1" data-name="4.47:1" transform="translate(14500 28)" fill="#537b3d" font-size="24" font-family="SegoeUI, Segoe UI"><tspan x="0" y="0">4.47:1</tspan></text>
+      <text id="_F3F4F7" data-name="#F3F4F7" transform="translate(14500 96)" fill="#537b3d" font-size="24" font-family="SegoeUI, Segoe UI"><tspan x="0" y="0">#F3F4F7</tspan></text>
+      <g id="Rectangle_101-2" data-name="Rectangle 101" transform="translate(14824 6)" fill="#537b3d" stroke="#f3f4f7" stroke-width="2">
+        <rect width="40" height="25" rx="5" stroke="none"/>
+        <rect x="1" y="1" width="38" height="23" rx="4" fill="none"/>
+      </g>
+      <text id="AAA-2" data-name="AAA" transform="translate(14844 25)" fill="#f3f4f7" font-size="16" font-family="SegoeUI-Bold, Segoe UI" font-weight="700"><tspan x="-16.875" y="0">AAA</tspan></text>
+      <g id="Rectangle_100-2" data-name="Rectangle 100" transform="translate(14616 6)" fill="#537b3d" stroke="#f3f4f7" stroke-width="2">
+        <rect width="40" height="25" rx="5" stroke="none"/>
+        <rect x="1" y="1" width="38" height="23" rx="4" fill="none"/>
+      </g>
+      <text id="AA-2" data-name="AA" transform="translate(14636 25)" fill="#f3f4f7" font-size="16" font-family="SegoeUI-Bold, Segoe UI" font-weight="700"><tspan x="-11.25" y="0">AA</tspan></text>
+      <g id="Group_84" data-name="Group 84" transform="translate(726 268)">
+        <text id="Large_Text-3" data-name="Large Text" transform="translate(13936 -203)" fill="#f3f4f7" font-size="20" font-family="SegoeUI, Segoe UI"><tspan x="-44.6" y="0">Large Text</tspan></text>
+        <text id="UI_Elements-3" data-name="UI Elements" transform="translate(13942 -175)" fill="#f3f4f7" font-size="20" font-family="SegoeUI, Segoe UI"><tspan x="-52.114" y="0">UI Elements</tspan></text>
+      </g>
+    </g>
+    <g id="Group_91" data-name="Group 91" transform="translate(-14770 221)">
+      <g transform="matrix(1, 0, 0, 1, 14770, -221)" filter="url(#Rectangle_128-3)">
+        <g id="Rectangle_128-8" data-name="Rectangle 128" transform="translate(13 226)" fill="none" stroke="#c9e5f8" stroke-width="1">
+          <rect width="375" height="100" rx="5" stroke="none"/>
+          <rect x="0.5" y="0.5" width="374" height="99" rx="4.5" fill="none"/>
+        </g>
+      </g>
+      <g transform="matrix(1, 0, 0, 1, 14770, -221)" filter="url(#Rectangle_129-3)">
+        <path id="Rectangle_129-8" data-name="Rectangle 129" d="M5,0H115a0,0,0,0,1,0,0V100a0,0,0,0,1,0,0H5a5,5,0,0,1-5-5V5A5,5,0,0,1,5,0Z" transform="translate(13 226)" fill="#c9e5f8"/>
+      </g>
+      <text id="_3.75:1" data-name="3.75:1" transform="translate(14787 31)" fill="#537b3d" font-size="24" font-family="SegoeUI, Segoe UI"><tspan x="0" y="0">3.75:1</tspan></text>
+      <text id="_C9E5F8" data-name="#C9E5F8" transform="translate(14787 99)" fill="#537b3d" font-size="24" font-family="SegoeUI, Segoe UI"><tspan x="0" y="0">#C9E5F8</tspan></text>
+      <g id="Rectangle_101-3" data-name="Rectangle 101" transform="translate(15111 9)" fill="#537b3d" stroke="#c9e5f8" stroke-width="2">
+        <rect width="40" height="25" rx="5" stroke="none"/>
+        <rect x="1" y="1" width="38" height="23" rx="4" fill="none"/>
+      </g>
+      <text id="AAA-3" data-name="AAA" transform="translate(15131 28)" fill="#c9e5f8" font-size="16" font-family="SegoeUI-Bold, Segoe UI" font-weight="700"><tspan x="-16.875" y="0">AAA</tspan></text>
+      <g id="Rectangle_100-3" data-name="Rectangle 100" transform="translate(14903 9)" fill="#537b3d" stroke="#c9e5f8" stroke-width="2">
+        <rect width="40" height="25" rx="5" stroke="none"/>
+        <rect x="1" y="1" width="38" height="23" rx="4" fill="none"/>
+      </g>
+      <text id="AA-3" data-name="AA" transform="translate(14923 28)" fill="#c9e5f8" font-size="16" font-family="SegoeUI-Bold, Segoe UI" font-weight="700"><tspan x="-11.25" y="0">AA</tspan></text>
+      <g id="Group_90" data-name="Group 90" transform="translate(1015 266)">
+        <text id="Large_Text-4" data-name="Large Text" transform="translate(13936 -203)" fill="#c9e5f8" font-size="20" font-family="SegoeUI, Segoe UI"><tspan x="-44.6" y="0">Large Text</tspan></text>
+        <text id="UI_Elements-4" data-name="UI Elements" transform="translate(13942 -175)" fill="#c9e5f8" font-size="20" font-family="SegoeUI, Segoe UI"><tspan x="-52.114" y="0">UI Elements</tspan></text>
+      </g>
+    </g>
+    <g id="Group_93" data-name="Group 93" transform="translate(-14742 329)">
+      <g transform="matrix(1, 0, 0, 1, 14742, -329)" filter="url(#Rectangle_128-4)">
+        <g id="Rectangle_128-9" data-name="Rectangle 128" transform="translate(13 333)" fill="none" stroke="#fad980" stroke-width="1">
+          <rect width="375" height="100" rx="5" stroke="none"/>
+          <rect x="0.5" y="0.5" width="374" height="99" rx="4.5" fill="none"/>
+        </g>
+      </g>
+      <g transform="matrix(1, 0, 0, 1, 14742, -329)" filter="url(#Rectangle_129-4)">
+        <path id="Rectangle_129-9" data-name="Rectangle 129" d="M5,0H115a0,0,0,0,1,0,0V100a0,0,0,0,1,0,0H5a5,5,0,0,1-5-5V5A5,5,0,0,1,5,0Z" transform="translate(13 333)" fill="#fad980"/>
+      </g>
+      <text id="_3.58:1" data-name="3.58:1" transform="translate(14759 30)" fill="#537b3d" font-size="24" font-family="SegoeUI, Segoe UI"><tspan x="0" y="0">3.58:1</tspan></text>
+      <text id="_FAD980" data-name="#FAD980" transform="translate(14759 98)" fill="#537b3d" font-size="24" font-family="SegoeUI, Segoe UI"><tspan x="0" y="0">#FAD980</tspan></text>
+      <g id="Rectangle_101-4" data-name="Rectangle 101" transform="translate(15083 8)" fill="#537b3d" stroke="#fad980" stroke-width="2">
+        <rect width="40" height="25" rx="5" stroke="none"/>
+        <rect x="1" y="1" width="38" height="23" rx="4" fill="none"/>
+      </g>
+      <text id="AAA-4" data-name="AAA" transform="translate(15103 27)" fill="#fad980" font-size="16" font-family="SegoeUI-Bold, Segoe UI" font-weight="700"><tspan x="-16.875" y="0">AAA</tspan></text>
+      <g id="Rectangle_100-4" data-name="Rectangle 100" transform="translate(14875 8)" fill="#537b3d" stroke="#fad980" stroke-width="2">
+        <rect width="40" height="25" rx="5" stroke="none"/>
+        <rect x="1" y="1" width="38" height="23" rx="4" fill="none"/>
+      </g>
+      <text id="AA-4" data-name="AA" transform="translate(14895 27)" fill="#fad980" font-size="16" font-family="SegoeUI-Bold, Segoe UI" font-weight="700"><tspan x="-11.25" y="0">AA</tspan></text>
+      <g id="Group_92" data-name="Group 92" transform="translate(985 267)">
+        <text id="Large_Text-5" data-name="Large Text" transform="translate(13936 -203)" fill="#fad980" font-size="20" font-family="SegoeUI, Segoe UI"><tspan x="-44.6" y="0">Large Text</tspan></text>
+        <text id="UI_Elements-5" data-name="UI Elements" transform="translate(13942 -175)" fill="#fad980" font-size="20" font-family="SegoeUI, Segoe UI"><tspan x="-52.114" y="0">UI Elements</tspan></text>
+      </g>
+    </g>
+    <g id="Group_95" data-name="Group 95" transform="translate(-14576 446)">
+      <g transform="matrix(1, 0, 0, 1, 14576, -446)" filter="url(#Rectangle_128-5)">
+        <g id="Rectangle_128-10" data-name="Rectangle 128" transform="translate(13 440)" fill="none" stroke="#ccd3e0" stroke-width="1">
+          <rect width="375" height="100" rx="5" stroke="none"/>
+          <rect x="0.5" y="0.5" width="374" height="99" rx="4.5" fill="none"/>
+        </g>
+      </g>
+      <g transform="matrix(1, 0, 0, 1, 14576, -446)" filter="url(#Rectangle_129-5)">
+        <path id="Rectangle_129-10" data-name="Rectangle 129" d="M5,0H115a0,0,0,0,1,0,0V100a0,0,0,0,1,0,0H5a5,5,0,0,1-5-5V5A5,5,0,0,1,5,0Z" transform="translate(13 440)" fill="#ccd3e0"/>
+      </g>
+      <text id="_3.27:1" data-name="3.27:1" transform="translate(14593 20)" fill="#537b3d" font-size="24" font-family="SegoeUI, Segoe UI"><tspan x="0" y="0">3.27:1</tspan></text>
+      <text id="_CCD3E0" data-name="#CCD3E0" transform="translate(14593 88)" fill="#537b3d" font-size="24" font-family="SegoeUI, Segoe UI"><tspan x="0" y="0">#CCD3E0</tspan></text>
+      <g id="Rectangle_101-5" data-name="Rectangle 101" transform="translate(14917 -2)" fill="#537b3d" stroke="#ccd3e0" stroke-width="2">
+        <rect width="40" height="25" rx="5" stroke="none"/>
+        <rect x="1" y="1" width="38" height="23" rx="4" fill="none"/>
+      </g>
+      <text id="AAA-5" data-name="AAA" transform="translate(14937 17)" fill="#ccd3e0" font-size="16" font-family="SegoeUI-Bold, Segoe UI" font-weight="700"><tspan x="-16.875" y="0">AAA</tspan></text>
+      <g id="Rectangle_100-5" data-name="Rectangle 100" transform="translate(14709 -2)" fill="#537b3d" stroke="#ccd3e0" stroke-width="2">
+        <rect width="40" height="25" rx="5" stroke="none"/>
+        <rect x="1" y="1" width="38" height="23" rx="4" fill="none"/>
+      </g>
+      <text id="AA-5" data-name="AA" transform="translate(14729 17)" fill="#ccd3e0" font-size="16" font-family="SegoeUI-Bold, Segoe UI" font-weight="700"><tspan x="-11.25" y="0">AA</tspan></text>
+      <g id="Group_94" data-name="Group 94" transform="translate(819 260)">
+        <text id="Large_Text-6" data-name="Large Text" transform="translate(13936 -203)" fill="#ccd3e0" font-size="20" font-family="SegoeUI, Segoe UI"><tspan x="-44.6" y="0">Large Text</tspan></text>
+        <text id="UI_Elements-6" data-name="UI Elements" transform="translate(13942 -175)" fill="#ccd3e0" font-size="20" font-family="SegoeUI, Segoe UI"><tspan x="-52.114" y="0">UI Elements</tspan></text>
+      </g>
+    </g>
+  </g>
+</svg>
