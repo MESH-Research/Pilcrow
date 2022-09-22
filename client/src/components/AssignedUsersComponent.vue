@@ -4,6 +4,19 @@
     <p v-if="te(tPrefix('description'))" class="q-mb-none q-mx-none">
       {{ tp$("description") }}
     </p>
+
+    <q-form v-if="acceptMore" class="col" @submit="handleSubmit">
+      <find-user-select v-model="user" data-cy="input_user" />
+      <q-btn
+        :ripple="{ center: true }"
+        color="accent"
+        data-cy="button-assign"
+        label="Assign"
+        type="submit"
+        class="full-width"
+        @click="handleSubmit"
+      />
+    </q-form>
     <div v-if="users.length">
       <user-list
         ref="userList"
@@ -26,7 +39,7 @@
       />
     </div>
     <div v-else class="col">
-      <q-card ref="card_no_users" bordered flat>
+      <q-card ref="card_no_users" flat>
         <q-item class="text--grey">
           <q-item-section avatar>
             <q-icon color="accent" name="o_do_disturb_on" />
@@ -37,22 +50,6 @@
         </q-item>
       </q-card>
     </div>
-
-    <q-form v-if="acceptMore" class="col" @submit="handleSubmit">
-      <find-user-select v-model="user" data-cy="input_user">
-        <template #after>
-          <q-btn
-            :ripple="{ center: true }"
-            color="accent"
-            data-cy="button-assign"
-            label="Assign"
-            type="submit"
-            stretch
-            @click="handleSubmit"
-          />
-        </template>
-      </find-user-select>
-    </q-form>
   </section>
 </template>
 

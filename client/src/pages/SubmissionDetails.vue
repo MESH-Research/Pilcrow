@@ -28,42 +28,50 @@
           >
             {{ $t(`submission.status.${submission.status}`) }}
           </q-chip>
+          <q-space />
+          <q-btn
+            data-cy="submission_review_btn"
+            class="q-mr-sm"
+            color="accent"
+            size="lg"
+            :label="$t('submissions.action.review.name')"
+            :to="{
+              name: 'submission_review',
+              params: { id: props.id },
+            }"
+          />
         </div>
       </q-banner>
     </section>
-    <div class="row q-col-gutter-lg q-pa-lg">
-      <section class="col-12">
-        <q-btn
-          data-cy="submission_review_btn"
-          color="accent"
-          size="lg"
-          :label="$t('submissions.action.review.name')"
-          :to="{
-            name: 'submission_review',
-            params: { id: props.id },
-          }"
-        />
-      </section>
-    </div>
-    <div class="q-pa-lg column q-gutter-lg">
-      <assigned-users
-        data-cy="submitters_list"
-        relationship="submitters"
-        :container="submission"
-      />
-      <assigned-users
-        relationship="review_coordinators"
-        data-cy="coordinators_list"
-        :container="submission"
-        mutable
-        :max-users="1"
-      />
-      <assigned-users
-        data-cy="reviewers_list"
-        relationship="reviewers"
-        :container="submission"
-        mutable
-      />
+    <div class="q-pa-lg">
+      <div class="row q-col-gutter-lg">
+        <div class="col-3">
+          <assigned-users
+            data-cy="submitters_list"
+            relationship="submitters"
+            :container="submission"
+          />
+        </div>
+        <div class="col-3">
+          <assigned-users
+            relationship="review_coordinators"
+            data-cy="coordinators_list"
+            :container="submission"
+            mutable
+            :max-users="1"
+          />
+        </div>
+      </div>
+      <div class="row q-col-gutter-lg q-mt-lg">
+        <div class="col-6">
+          <assigned-users
+            data-cy="reviewers_list"
+            relationship="reviewers"
+            :container="submission"
+            mutable
+          />
+        </div>
+      </div>
     </div>
     <section class="q-pa-lg" data-cy="activity_section">
       <h3>{{ $t("submission.activity_section.title") }}</h3>
