@@ -27,6 +27,7 @@ class NotificationTest extends TestCase
                 'title' => 'Test Submission from PHPUnit',
                 'status' => Submission::INITIALLY_SUBMITTED,
                 'status_name' => 'INITIALLY_SUBMITTED',
+                'status_change_comment' => '',
             ],
             'user' => [
                 'id' => $user->id,
