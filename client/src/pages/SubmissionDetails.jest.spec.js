@@ -114,6 +114,7 @@ describe("submissions details page mount", () => {
             name: "Jest Publication",
             style_criterias: [],
           },
+          audits: [],
           ...submissionUsersData,
         },
       },

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Listeners;
 
+use App\Models\Submission;
 use App\Notifications\SubmissionStatusUpdated;
 use Illuminate\Support\Facades\Notification;
 
@@ -24,6 +25,7 @@ class NotifyUsersAboutUpdatedSubmissionStatus
                 'id' => $event->submission->id,
                 'title' => (string)$event->submission->title,
                 'status' => $status,
+                'status_change_comment' => $event->submission->status_change_comment,
                 'status_name' => $event->submission->getStatusNameAttribute(),
             ],
             'user' => [
@@ -55,12 +57,30 @@ class NotifyUsersAboutUpdatedSubmissionStatus
         ];
         $notification_data = $actions[$status];
 
-        // Notify submitters, reviewers, review coordinators, and editors
+        // Notify submitters
         Notification::send(
-            $event->submission->users,
+            $event->submission->submitters,
             new SubmissionStatusUpdated($notification_data)
         );
-        Notification::send($event->submission->publication->editors, new SubmissionStatusUpdated($notification_data));
+        // Notify review coordinators
+        Notification::send(
+            $event->submission->reviewCoordinators,
+            new SubmissionStatusUpdated($notification_data)
+        );
+        // Notify editors
+        Notification::send(
+            $event->submission->publication->editors,
+            new SubmissionStatusUpdated($notification_data)
+        );
+        // Remove call to action for reviewers of submissions in nonreviewable states
+        if ($default['submission']['status'] !== Submission::UNDER_REVIEW) {
+            $notification_data['action'] = '';
+        }
+        // Notify reviewers
+        Notification::send(
+            $event->submission->reviewers,
+            new SubmissionStatusUpdated($notification_data)
+        );
     }
 
     /**
@@ -112,7 +132,7 @@ class NotifyUsersAboutUpdatedSubmissionStatus
     {
         $default['subject'] = 'Submission Accepted for Review';
         $default['body'] = $default['submission']['title'] . ' has been accepted for review. ' .
-                           'It is currently awaiting review from the assigned reviewers.';
+                           'Once it is opened for review, it will be available for review.';
         $default['type'] = 'submission.awaiting_review';
 
         return $default;
@@ -165,7 +185,8 @@ class NotifyUsersAboutUpdatedSubmissionStatus
     public function underReview($default)
     {
         $default['subject'] = 'Submission Under Review';
-        $default['body'] = $default['submission']['title'] . ' is currently under review.';
+        $default['body'] = $default['submission']['title'] . ' has been opened for review.' .
+                            'It is currently awaiting review from the assigned reviewers.';
         $default['type'] = 'submission.under_review';
 
         return $default;

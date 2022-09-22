@@ -430,10 +430,25 @@ export default {
       open: "Open for Review",
       close: "Close for Review",
     },
+    activity_section: {
+      title: "Activity",
+      no_activity: "No Activity",
+    },
+    activity_record: {
+      description: "{event} by {user} {datetime} ",
+      description_no_user: "{event} {datetime} ",
+      status_change: "from {previous_status} to {current_status}",
+      comment_title: "Comment",
+      events: {
+        created: "Created",
+        updated: "Updated",
+      },
+    },
     status: {
       updated:
         "The status of {data_submission_title} has been updated to {data_submission_status_name}.",
       title: "Submission Status",
+      DRAFT: "Draft",
       INITIALLY_SUBMITTED: "Initially Submitted",
       RESUBMISSION_REQUESTED: "Resubmission Requested",
       RESUBMITTED: "Resubmitted",
@@ -698,6 +713,9 @@ export default {
         close: "Close for Review",
         accept_as_final: "Accept as Final",
       },
+      comment:
+        "Add an optional comment explaining your decision. This will be visible to those associated with this submission.",
+      comment_placeholder: "Optional Comment",
       unauthorized:
         "You are not authorized to change the status of this submission. Please contact your administrator.",
       statusChanged: {
