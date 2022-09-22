@@ -45,9 +45,11 @@ type Submission {
     files: [SubmissionFile]! @hasMany
     pivot: SubmissionUser
     status: SubmissionStatus!
+    status_change_comment: String
     content: SubmissionContent #This field is optional bc it may be null if the pandoc process is still importing the document
     my_role: SubmissionUserRoles @method(name: "getMyRole")
     effective_role: SubmissionUserRoles @method(name: "getEffectiveRole")
+    audits: [SubmissionAudit] @belongsToMany
 }
 
 """
@@ -102,6 +104,7 @@ input UpdateSubmissionInput {
     id: ID!
     title: String @trim
     status: SubmissionStatus
+    status_change_comment: String @trim
     reviewers: UpdateSubmissionUserInput
     review_coordinators: UpdateSubmissionUserInput
         @rename(attribute: "reviewCoordinators")
