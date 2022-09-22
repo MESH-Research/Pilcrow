@@ -14,7 +14,6 @@
         label="Assign"
         type="submit"
         class="full-width"
-        @click="handleSubmit"
       />
     </q-form>
     <div v-if="users.length">
