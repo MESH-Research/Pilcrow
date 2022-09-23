@@ -1,5 +1,5 @@
 <template>
-  <q-item class="q-px-lg">
+  <q-item class="q-px-none">
     <q-item-section top avatar>
       <avatar-image :user="user" rounded />
     </q-item-section>

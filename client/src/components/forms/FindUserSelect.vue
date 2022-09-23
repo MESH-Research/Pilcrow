@@ -17,7 +17,7 @@
       <q-icon color="accent" name="search" />
     </template>
     <template #hint>
-      <div class="text--grey">Search by username, email, or name.</div>
+      <div class="text--grey q-mt-xs">Search by username, email, or name.</div>
     </template>
     <template #selected-item="scope">
       <q-chip data-cy="selected_item" dense square>

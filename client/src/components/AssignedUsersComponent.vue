@@ -5,7 +5,24 @@
       {{ tp$("description") }}
     </p>
 
-    <q-form v-if="acceptMore" class="col" @submit="handleSubmit">
+    <div v-if="!users.length" class="col">
+      <q-card ref="card_no_users" flat>
+        <q-item class="text--grey q-pa-none">
+          <q-item-section
+            avatar
+            class="content-center q-pa-none q-pr-xs"
+            style="min-width: 50px"
+          >
+            <q-icon color="accent" name="o_do_disturb_on" />
+          </q-item-section>
+          <q-item-section class="content-start">
+            {{ tp$("none") }}
+          </q-item-section>
+        </q-item>
+      </q-card>
+    </div>
+
+    <q-form v-if="acceptMore" class="col q-mb-lg" @submit="handleSubmit">
       <find-user-select v-model="user" data-cy="input_user" class="q-mb-md" />
       <q-btn
         :ripple="{ center: true }"
@@ -36,18 +53,6 @@
         "
         @action-click="handleUserListClick"
       />
-    </div>
-    <div v-else class="col">
-      <q-card ref="card_no_users" flat>
-        <q-item class="text--grey">
-          <q-item-section avatar>
-            <q-icon color="accent" name="o_do_disturb_on" />
-          </q-item-section>
-          <q-item-section>
-            {{ tp$("none") }}
-          </q-item-section>
-        </q-item>
-      </q-card>
     </div>
   </section>
 </template>
