@@ -23,6 +23,9 @@
     </div>
 
     <q-form v-if="acceptMore" class="col q-mb-lg" @submit="handleSubmit">
+      <div class="comment-editor q-mb-sm">
+        <editor-content :editor="editor" />
+      </div>
       <find-user-select v-model="user" data-cy="input_user" class="q-mb-md" />
       <q-btn
         :ripple="{ center: true }"
@@ -71,6 +74,18 @@ import {
 } from "src/graphql/mutations"
 import { computed, ref } from "vue"
 import { useI18n } from "vue-i18n"
+import { Editor, EditorContent } from "@tiptap/vue-3"
+import StarterKit from "@tiptap/starter-kit"
+import Placeholder from "@tiptap/extension-placeholder"
+const editor = new Editor({
+  content: "",
+  extensions: [
+    StarterKit,
+    Placeholder.configure({
+      placeholder: "Message (optional)",
+    }),
+  ],
+})
 const props = defineProps({
   container: {
     type: Object,
@@ -173,4 +188,19 @@ async function handleUserListClick({ user }) {
 }
 </script>
 
-<style></style>
+<style>
+.comment-editor .ProseMirror {
+  background: #fff;
+  border: 1px solid #c2c2c2;
+  border-radius: 5px;
+  min-height: 5rem;
+  padding: 8px;
+}
+.comment-editor .ProseMirror p.is-editor-empty:first-child::before {
+  color: #666667;
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
+</style>

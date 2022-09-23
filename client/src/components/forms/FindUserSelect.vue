@@ -4,7 +4,7 @@
     :options="options"
     bottom-slots
     hide-dropdown-icon
-    label="User to Assign"
+    label="User to Add"
     outlined
     transition-hide="none"
     transition-show="none"
