@@ -10,7 +10,7 @@
       <q-btn
         :ripple="{ center: true }"
         color="accent"
-        :label="$t(`submission.${relationship}.add_button.label`)"
+        :label="tp$('add_button.label')"
         data-cy="button-assign"
         type="submit"
         class="full-width"
