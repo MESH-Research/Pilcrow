@@ -1,17 +1,17 @@
 <template>
   <section class="column q-gutter-y-sm">
-    <h3 class="q-my-none">{{ tp$("heading") }}</h3>
+    <h3 class="q-my-none">{{ tp$("heading", 2) }}</h3>
     <p v-if="te(tPrefix('description'))" class="q-mb-none q-mx-none">
       {{ tp$("description") }}
     </p>
 
     <q-form v-if="acceptMore" class="col" @submit="handleSubmit">
-      <find-user-select v-model="user" data-cy="input_user" />
+      <find-user-select v-model="user" data-cy="input_user" class="q-mb-md" />
       <q-btn
         :ripple="{ center: true }"
         color="accent"
+        :label="$t(`submission.${relationship}.add_button.label`)"
         data-cy="button-assign"
-        label="Assign"
         type="submit"
         class="full-width"
       />

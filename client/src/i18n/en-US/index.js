@@ -484,13 +484,16 @@ export default {
         success:
           "{display_name} successfully assigned as a review coordinator.",
       },
+      add_button: {
+        label: "Add Review Coordinator",
+      },
       unassign_button: {
         ariaLabel: "Unassign Review Coordinator",
         help: "Remove Review Coordinator",
       },
     },
     reviewers: {
-      heading: "Reviewers",
+      heading: "Reviewer | Reviewers",
       none: "No reviewers are assigned to this submission.",
       unassign: {
         error: "An error occurred while attempting to unassign a reviewer.",
@@ -502,6 +505,9 @@ export default {
         error:
           "An error occurred while attempting to assign a reviewer. Is the user already assigned to this submission?",
         success: "{display_name} successfully assigned as a reviewer.",
+      },
+      add_button: {
+        label: "Add Reviewer",
       },
       unassign_button: {
         ariaLabel: "Unassign Reviewer",
@@ -515,6 +521,9 @@ export default {
         plural: "Submitters",
       },
       none: "No submitter is assigned to this submission. At least one submitter must be assigned.",
+      add_button: {
+        label: "Add Submitter",
+      },
       unassign_button: {
         ariaLabel: "Unassign Submitterr",
         help: "Remove Submitter",
