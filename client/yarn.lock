@@ -1794,14 +1794,14 @@
   resolved "https://registry.yarnpkg.com/@tiptap/extension-italic/-/extension-italic-2.0.0-beta.197.tgz#2f51af47cb58bdd799bccc8ff7e9eba1f87ae42e"
   integrity sha512-2IUI7iaXRX2PsnizfDjDhbJ84Ws8OKCb4N5H5ofXv4wPQN6vbt+8Vd0Wwa0FcgWHk7RB8Jk5YX8znwUUHeyUWA==
 
-"@tiptap/extension-link@^2.0.0-beta.196":
-  version "2.0.0-beta.196"
-  resolved "https://registry.yarnpkg.com/@tiptap/extension-link/-/extension-link-2.0.0-beta.196.tgz#b65e514781d07c89e691a29e50dd284a7821fc20"
-  integrity sha512-ZDatdBfg8wjV7al8Iz8sOctfo3kWMR4eWUV7Xbl0Gu3m4DrBGQcOqECptKwn/TOrdhBSFK/KolR0tlEhZZ3XNw==
+"@tiptap/extension-link@^2.0.0-beta.197":
+  version "2.0.0-beta.197"
+  resolved "https://registry.yarnpkg.com/@tiptap/extension-link/-/extension-link-2.0.0-beta.197.tgz#346f4e3ac35ea7486f769712b6dfd0c82396ff94"
+  integrity sha512-kEYtcB4f8hZEMpwYWQttee83rJK2a6XyWHNn3A0kTO+3s6h7T7aLN2UsYMryScZkRX2QPk6LFGdoN3nA6wjkJw==
   dependencies:
     linkifyjs "^3.0.5"
-    prosemirror-model "1.18.1"
-    prosemirror-state "1.4.1"
+    prosemirror-model "^1.18.1"
+    prosemirror-state "^1.4.1"
 
 "@tiptap/extension-list-item@^2.0.0-beta.196":
   version "2.0.0-beta.196"
@@ -8061,7 +8061,7 @@ prosemirror-keymap@^1.0.0:
     prosemirror-state "^1.0.0"
     w3c-keyname "^2.2.0"
 
-prosemirror-model@1.18.1, prosemirror-model@^1.0.0, prosemirror-model@^1.16.0:
+prosemirror-model@1.18.1, prosemirror-model@^1.0.0, prosemirror-model@^1.16.0, prosemirror-model@^1.18.1:
   version "1.18.1"
   resolved "https://registry.yarnpkg.com/prosemirror-model/-/prosemirror-model-1.18.1.tgz#1d5d6b6de7b983ee67a479dc607165fdef3935bd"
   integrity sha512-IxSVBKAEMjD7s3n8cgtwMlxAXZrC7Mlag7zYsAKDndAqnDScvSmp/UdnRTV/B33lTCVU3CCm7dyAn/rVVD0mcw==
