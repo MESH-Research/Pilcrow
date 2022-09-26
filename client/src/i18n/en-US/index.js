@@ -497,7 +497,7 @@ export default {
       },
     },
     reviewers: {
-      heading: "Reviewer | Reviewers",
+      heading: "Reviewers",
       none: "No reviewers are assigned to this submission.",
       unassign: {
         error: "An error occurred while attempting to unassign a reviewer.",
@@ -519,7 +519,7 @@ export default {
       },
     },
     submitters: {
-      heading: "Submitters",
+      heading: "Submitter | Submitters",
       title: {
         singular: "Submitter",
         plural: "Submitters",

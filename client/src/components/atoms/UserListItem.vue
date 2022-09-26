@@ -31,6 +31,7 @@
             v-model="unconfirmedVisibility"
             anchor="top middle"
             self="center middle"
+            class="text-subtitle2"
             >{{ $t("user.unconfirmed.tooltip") }}</q-tooltip
           >
         </q-btn>

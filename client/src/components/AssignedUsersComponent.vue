@@ -1,7 +1,7 @@
 <template>
   <section class="column q-gutter-y-sm">
     <h3 class="q-my-none">
-      {{ tp$("heading", 2) }}
+      {{ tp$("heading", users.length) }}
       <q-icon
         v-if="!users.length"
         color="accent"
@@ -22,7 +22,7 @@
     </div>
 
     <q-form v-if="acceptMore" class="col q-mb-lg" @submit="handleSubmit">
-      <div class="comment-editor q-mb-sm">
+      <div class="optional-message q-mb-sm">
         <editor-content :editor="editor" />
       </div>
       <find-user-select v-model="user" data-cy="input_user" class="q-mb-md" />
@@ -188,14 +188,14 @@ async function handleUserListClick({ user }) {
 </script>
 
 <style>
-.comment-editor .ProseMirror {
-  background: #fff;
+.optional-message .ProseMirror {
+  background-color: #fff;
   border: 1px solid #c2c2c2;
   border-radius: 5px;
   min-height: 5rem;
   padding: 8px;
 }
-.comment-editor .ProseMirror p.is-editor-empty:first-child::before {
+.optional-message .ProseMirror p.is-editor-empty:first-child::before {
   color: #666667;
   content: attr(data-placeholder);
   float: left;
