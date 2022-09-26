@@ -1,6 +1,14 @@
 <template>
   <section class="column q-gutter-y-sm">
-    <h3 class="q-my-none">{{ tp$("heading", 2) }}</h3>
+    <h3 class="q-my-none">
+      {{ tp$("heading", 2) }}
+      <q-icon
+        v-if="!users.length"
+        color="accent"
+        name="error_outline"
+        title="Needs attention"
+      />
+    </h3>
     <p v-if="te(tPrefix('description'))" class="q-mb-none q-mx-none">
       {{ tp$("description") }}
     </p>
@@ -8,16 +16,7 @@
     <div v-if="!users.length" class="col">
       <q-card ref="card_no_users" flat>
         <q-item class="text--grey q-pa-none">
-          <q-item-section
-            avatar
-            class="content-center q-pa-none q-pr-xs"
-            style="min-width: 50px"
-          >
-            <q-icon color="accent" name="o_do_disturb_on" />
-          </q-item-section>
-          <q-item-section class="content-start">
-            {{ tp$("none") }}
-          </q-item-section>
+          {{ tp$("none") }}
         </q-item>
       </q-card>
     </div>

@@ -17,6 +17,24 @@
     <q-item-section v-if="actions.length" side>
       <div class="text-grey-8 q-gutter-xs">
         <q-btn
+          class="gt-xs"
+          size="12px"
+          color="negative"
+          flat
+          dense
+          :title="$t('user.unconfirmed.title')"
+          icon="warning_amber"
+          data-cy="user_unconfirmed"
+          @click="unconfirmedVisibility = !unconfirmedVisibility"
+        >
+          <q-tooltip
+            v-model="unconfirmedVisibility"
+            anchor="top middle"
+            self="center middle"
+            >{{ $t("user.unconfirmed.tooltip") }}</q-tooltip
+          >
+        </q-btn>
+        <q-btn
           v-for="{ ariaLabel, icon, action, help, cyAttr } in actions"
           :key="icon"
           class="gt-xs"
@@ -35,22 +53,20 @@
   </q-item>
 </template>
 
-<script>
+<script setup>
 import AvatarImage from "./AvatarImage.vue"
-export default {
-  name: "UserListItem",
-  components: { AvatarImage },
-  props: {
-    user: {
-      type: Object,
-      default: () => {},
-    },
-    actions: {
-      type: Array,
-      required: false,
-      default: () => [],
-    },
+import { ref } from "vue"
+defineProps({
+  user: {
+    type: Object,
+    default: () => {},
   },
-  emits: ["actionClick"],
-}
+  actions: {
+    type: Array,
+    required: false,
+    default: () => [],
+  },
+})
+defineEmits(["actionClick"])
+const unconfirmedVisibility = ref(false)
 </script>
