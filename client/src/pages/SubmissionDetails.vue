@@ -54,9 +54,10 @@
         </div>
 
         <div
-          :class="`${
-            $q.screen.width < 600 ? 'q-mt-lg' : ''
-          } col-12 col-xs-8 col-sm-5 col-md-3`"
+          :class="{
+            'q-mt-lg': $q.screen.width < 600,
+          }"
+          class="col-12 col-xs-8 col-sm-5 col-md-3"
         >
           <assigned-users
             relationship="review_coordinators"
