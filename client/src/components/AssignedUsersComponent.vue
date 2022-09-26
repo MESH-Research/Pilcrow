@@ -24,6 +24,7 @@
     <q-form
       v-if="acceptMore && container.effective_role === `review_coordinator`"
       class="col q-mb-lg"
+      data-cy="invitation_form"
       @submit="handleSubmit"
     >
       <div class="optional-message q-mb-sm">

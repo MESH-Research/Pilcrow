@@ -130,4 +130,18 @@ describe("Submission Details", () => {
     cy.dataCy("activity_section").contains("first comment from admin")
     cy.dataCy("activity_section").contains("second comment from admin")
   });
+
+  it("should show the invitation form for a review coordinator", () => {
+    cy.task("resetDb")
+    cy.login({ email: "reviewcoordinator@ccrproject.dev" })
+    cy.visit("/submission/100")
+    cy.dataCy("invitation_form")
+  });
+
+  it("should hide the invitation form for a reviewer", () => {
+    cy.task("resetDb")
+    cy.login({ email: "reviewer@ccrproject.dev" })
+    cy.visit("/submission/100")
+    cy.dataCy("invitation_form").should("not.exist")
+  });
 })
