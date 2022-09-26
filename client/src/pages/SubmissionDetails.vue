@@ -45,14 +45,19 @@
     </section>
     <div class="q-pa-lg">
       <div class="row q-col-gutter-lg">
-        <div class="col-3">
+        <div class="col-12 col-xs-8 col-sm-5 col-md-3">
           <assigned-users
             data-cy="submitters_list"
             relationship="submitters"
             :container="submission"
           />
         </div>
-        <div class="col-3">
+
+        <div
+          :class="`${
+            $q.screen.width < 600 ? 'q-mt-lg' : ''
+          } col-12 col-xs-8 col-sm-5 col-md-3`"
+        >
           <assigned-users
             relationship="review_coordinators"
             data-cy="coordinators_list"
@@ -63,7 +68,7 @@
         </div>
       </div>
       <div class="row q-col-gutter-lg q-mt-lg">
-        <div class="col-6">
+        <div class="col-12 col-xs-8 col-sm-10 col-md-6">
           <assigned-users
             data-cy="reviewers_list"
             relationship="reviewers"
