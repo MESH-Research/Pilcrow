@@ -21,7 +21,11 @@
       </q-card>
     </div>
 
-    <q-form v-if="acceptMore" class="col q-mb-lg" @submit="handleSubmit">
+    <q-form
+      v-if="acceptMore && container.effective_role === `review_coordinator`"
+      class="col q-mb-lg"
+      @submit="handleSubmit"
+    >
       <div class="optional-message q-mb-sm">
         <editor-content :editor="editor" />
       </div>
@@ -40,6 +44,7 @@
       <user-list
         ref="userList"
         data-cy="user-list"
+        :persistent-separator="relationship === 'reviewers'"
         :users="users"
         :actions="
           mutable

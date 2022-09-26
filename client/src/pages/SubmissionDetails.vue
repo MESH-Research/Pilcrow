@@ -43,7 +43,7 @@
         </div>
       </q-banner>
     </section>
-    <div class="q-pa-lg">
+    <section class="q-pa-lg">
       <div class="row q-col-gutter-lg">
         <div class="col-12 col-xs-8 col-sm-5 col-md-3">
           <assigned-users
@@ -78,7 +78,7 @@
           />
         </div>
       </div>
-    </div>
+    </section>
     <section class="q-pa-lg" data-cy="activity_section">
       <h3>{{ $t("submission.activity_section.title") }}</h3>
       <p v-if="submission.audits.length == 0">

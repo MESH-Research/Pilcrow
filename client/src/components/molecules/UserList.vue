@@ -7,34 +7,34 @@
       :actions="actions"
       @action-click="bubble"
     />
+    <q-separator v-if="persistentSeparator" />
   </q-list>
 </template>
 
-<script>
+<script setup>
 import UserListItem from "../atoms/UserListItem.vue"
-export default {
-  name: "UserList",
-  components: { UserListItem },
-  props: {
-    users: {
-      type: Array,
-      required: true,
-    },
-    actions: {
-      type: Array,
-      required: false,
-      default: () => [],
-    },
-    dataCy: {
-      type: String,
-      default: "user_list",
-    },
+defineProps({
+  users: {
+    type: Array,
+    required: true,
   },
-  emits: ["actionClick"],
-  methods: {
-    bubble(eventData) {
-      this.$emit("actionClick", eventData)
-    },
+  persistentSeparator: {
+    type: Boolean,
+    default: false,
   },
+  actions: {
+    type: Array,
+    required: false,
+    default: () => [],
+  },
+  dataCy: {
+    type: String,
+    default: "user_list",
+  },
+})
+const emit = defineEmits(["actionClick"])
+
+function bubble(eventData) {
+  emit("actionClick", eventData)
 }
 </script>
