@@ -4,9 +4,9 @@
       {{ tp$("heading", users.length) }}
       <q-icon
         v-if="!users.length"
-        color="accent"
+        color="negative"
         name="error_outline"
-        title="Needs attention"
+        :title="$t('needs_attention')"
       />
     </h3>
     <p v-if="te(tPrefix('description'))" class="q-mb-none q-mx-none">
