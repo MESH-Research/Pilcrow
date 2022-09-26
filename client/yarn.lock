@@ -1818,14 +1818,14 @@
   resolved "https://registry.yarnpkg.com/@tiptap/extension-paragraph/-/extension-paragraph-2.0.0-beta.196.tgz#87e9b763a7399fc9b166c763b94af323219f1d7e"
   integrity sha512-RxlY1mb3eKieSpYUtCstukBGaHQVGwoH7/pVMX7Bq0hggk1fBgx094Y4f3VamO0ijYhdqI+S7R03gnjOC/DcmA==
 
-"@tiptap/extension-placeholder@^2.0.0-beta.196":
-  version "2.0.0-beta.196"
-  resolved "https://registry.yarnpkg.com/@tiptap/extension-placeholder/-/extension-placeholder-2.0.0-beta.196.tgz#c488ecb41517020620bb8c80914dddabec280239"
-  integrity sha512-5tBvEx2HemLVhxLwozb+Ba0tulrNNMLlFkIpNUKWReeV7jlCOCXE8bDAWAAjrp4WekkFqxb2r8x/DUVVSpL+ng==
+"@tiptap/extension-placeholder@^2.0.0-beta.197":
+  version "2.0.0-beta.197"
+  resolved "https://registry.yarnpkg.com/@tiptap/extension-placeholder/-/extension-placeholder-2.0.0-beta.197.tgz#58c82ef8373effd294f4b6091b398457a5eab59c"
+  integrity sha512-kzY9ctX/0gFFxuOPJPOmDs8I9giDX38YHZFW2mLyO81TC2kyRNuGcmV/I/8Abe4+efhkZm8PBK3WwaK5/q3IWA==
   dependencies:
-    prosemirror-model "1.18.1"
-    prosemirror-state "1.4.1"
-    prosemirror-view "1.26.2"
+    prosemirror-model "^1.18.1"
+    prosemirror-state "^1.4.1"
+    prosemirror-view "^1.28.2"
 
 "@tiptap/extension-strike@^2.0.0-beta.196":
   version "2.0.0-beta.196"
