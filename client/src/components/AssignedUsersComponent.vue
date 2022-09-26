@@ -35,6 +35,7 @@
         class="full-width"
       />
     </q-form>
+
     <div v-if="users.length">
       <user-list
         ref="userList"
@@ -76,15 +77,6 @@ import { useI18n } from "vue-i18n"
 import { Editor, EditorContent } from "@tiptap/vue-3"
 import StarterKit from "@tiptap/starter-kit"
 import Placeholder from "@tiptap/extension-placeholder"
-const editor = new Editor({
-  content: "",
-  extensions: [
-    StarterKit,
-    Placeholder.configure({
-      placeholder: "Message (optional)",
-    }),
-  ],
-})
 const props = defineProps({
   container: {
     type: Object,
@@ -145,6 +137,16 @@ const { mutate } = useMutation(
   documents[containerType.value][props.relationship],
   opts
 )
+
+const editor = new Editor({
+  content: "",
+  extensions: [
+    StarterKit,
+    Placeholder.configure({
+      placeholder: t("submissions.invite_user.message.placeholder"),
+    }),
+  ],
+})
 
 async function handleSubmit() {
   if (!acceptMore.value) {

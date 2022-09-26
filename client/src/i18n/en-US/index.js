@@ -552,6 +552,15 @@ export default {
         },
       },
     },
+    invite_user: {
+      message: {
+        placeholder: "Message (optional)",
+      },
+      search: {
+        label: "User to Add",
+        hint: "Search by username, email, or name.",
+      },
+    },
     create: {
       success: "Submission successfully created.",
       failure: "An error occurred while attempting to create the submission.",
