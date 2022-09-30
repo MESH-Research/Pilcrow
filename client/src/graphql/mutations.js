@@ -549,3 +549,43 @@ export const UPDATE_SUBMISSION_STATUS = gql`
     }
   }
 `
+
+export const UPDATE_INLINE_COMMENT = gql`
+  mutation UpdateInlineComment(
+    $submission_id: ID!
+    $content: String!
+    $from: Int
+    $to: Int
+    $style_criteria: [ID!]
+  ) {
+    updateSubmission(
+      input: {
+        id: $submission_id
+        inline_comments: {
+          update: [
+            {
+              content: $content
+              style_criteria: $style_criteria
+              from: $from
+              to: $to
+            }
+          ]
+        }
+      }
+    ) {
+      id
+      inline_comments {
+        style_criteria {
+          name
+          icon
+        }
+        ...commentFields
+        replies {
+          reply_to_id
+          ...commentFields
+        }
+      }
+    }
+  }
+  ${_COMMENT_FIELDS}
+`

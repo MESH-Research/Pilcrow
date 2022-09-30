@@ -564,6 +564,11 @@ export default {
         title: "Your Reply",
       },
       actions_btn_aria: "Comment Actions",
+      actions: {
+        quote_reply: "Quote Reply",
+        modify: "Modify",
+        share: "Share",
+      },
       placeholder: "Add a comment …",
     },
   },
