@@ -22,7 +22,7 @@
     </div>
 
     <q-form
-      v-if="acceptMore && container.effective_role === `review_coordinator`"
+      v-if="acceptMore && checkSubmission"
       class="col q-mb-lg"
       data-cy="invitation_form"
       @submit="handleSubmit"
@@ -137,6 +137,13 @@ const acceptMore = computed(() => {
     props.mutable &&
     (props.maxUsers === false) | (users.value.length < props.maxUsers)
   )
+})
+
+const checkSubmission = computed(() => {
+  if (props.container.__typename === "Submission") {
+    return props.container.effective_role === `review_coordinator`
+  }
+  return true
 })
 
 const { mutate } = useMutation(
