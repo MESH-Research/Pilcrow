@@ -16,13 +16,13 @@
   dependencies:
     "@jridgewell/trace-mapping" "^0.3.0"
 
-"@apollo/client@^3.6.9":
-  version "3.6.9"
-  resolved "https://registry.yarnpkg.com/@apollo/client/-/client-3.6.9.tgz#ad0ee2e3a3c92dbed4acd6917b6158a492739d94"
-  integrity sha512-Y1yu8qa2YeaCUBVuw08x8NHenFi0sw2I3KCu7Kw9mDSu86HmmtHJkCAifKVrN2iPgDTW/BbP3EpSV8/EQCcxZA==
+"@apollo/client@^3.6.10":
+  version "3.6.10"
+  resolved "https://registry.yarnpkg.com/@apollo/client/-/client-3.6.10.tgz#f12d1f0cc4811d6bfe68b3f48a18e08a757ee301"
+  integrity sha512-zow8+Z7Wz8OeH+8bhIxqPtqqXY87APoUbXlaXD/rgs3O9ijSyHSbUt3E4DnkLNP9q3+/OsRWY+Mx+WxkQQ4oig==
   dependencies:
     "@graphql-typed-document-node/core" "^3.1.1"
-    "@wry/context" "^0.6.0"
+    "@wry/context" "^0.7.0"
     "@wry/equality" "^0.5.0"
     "@wry/trie" "^0.3.0"
     graphql-tag "^2.12.6"
@@ -1794,10 +1794,10 @@
   resolved "https://registry.yarnpkg.com/@tiptap/extension-italic/-/extension-italic-2.0.0-beta.197.tgz#2f51af47cb58bdd799bccc8ff7e9eba1f87ae42e"
   integrity sha512-2IUI7iaXRX2PsnizfDjDhbJ84Ws8OKCb4N5H5ofXv4wPQN6vbt+8Vd0Wwa0FcgWHk7RB8Jk5YX8znwUUHeyUWA==
 
-"@tiptap/extension-link@^2.0.0-beta.197":
-  version "2.0.0-beta.197"
-  resolved "https://registry.yarnpkg.com/@tiptap/extension-link/-/extension-link-2.0.0-beta.197.tgz#346f4e3ac35ea7486f769712b6dfd0c82396ff94"
-  integrity sha512-kEYtcB4f8hZEMpwYWQttee83rJK2a6XyWHNn3A0kTO+3s6h7T7aLN2UsYMryScZkRX2QPk6LFGdoN3nA6wjkJw==
+"@tiptap/extension-link@^2.0.0-beta.199":
+  version "2.0.0-beta.199"
+  resolved "https://registry.yarnpkg.com/@tiptap/extension-link/-/extension-link-2.0.0-beta.199.tgz#57865aa0211d7d9972ed5fee9a92fedbf0083b37"
+  integrity sha512-zwXDg+zsHhn2a4rJkFd/pND4zUfJ2RCgyrkBqAL+nimSiknaSsIw4NpnZTZFWze9i3NDcc2BNngDNovoEIEukg==
   dependencies:
     linkifyjs "^3.0.5"
     prosemirror-model "^1.18.1"
@@ -2525,6 +2525,13 @@
   version "0.6.1"
   resolved "https://registry.yarnpkg.com/@wry/context/-/context-0.6.1.tgz#c3c29c0ad622adb00f6a53303c4f965ee06ebeb2"
   integrity sha512-LOmVnY1iTU2D8tv4Xf6MVMZZ+juIJ87Kt/plMijjN20NMAXGmH4u8bS1t0uT74cZ5gwpocYueV58YwyI8y+GKw==
+  dependencies:
+    tslib "^2.3.0"
+
+"@wry/context@^0.7.0":
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/@wry/context/-/context-0.7.0.tgz#be88e22c0ddf62aeb0ae9f95c3d90932c619a5c8"
+  integrity sha512-LcDAiYWRtwAoSOArfk7cuYvFXytxfVrdX7yxoUmK7pPITLk5jYh2F8knCwS7LjgYL8u1eidPlKKV6Ikqq0ODqQ==
   dependencies:
     tslib "^2.3.0"
 
