@@ -12,7 +12,9 @@
       <q-menu anchor="bottom right" self="top right" auto-close>
         <q-list>
           <q-item data-cy="quoteReply" clickable @click="$emit('quoteReplyTo')"
-            ><q-item-section>Quote Reply</q-item-section></q-item
+            ><q-item-section>{{
+              $t("submissions.comment.actions.quote_reply")
+            }}</q-item-section></q-item
           >
           <q-item clickable>
             <q-item-section>{{
@@ -20,7 +22,9 @@
             }}</q-item-section>
           </q-item>
           <q-item clickable>
-            <q-item-section>Share</q-item-section>
+            <q-item-section>{{
+              $t("submissions.comment.actions.share")
+            }}</q-item-section>
           </q-item>
         </q-list>
       </q-menu>
