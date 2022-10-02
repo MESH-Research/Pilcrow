@@ -46,7 +46,7 @@
     <section class="q-pa-lg">
       <div class="row q-col-gutter-lg">
         <div class="col-12 col-xs-8 col-sm-5 col-md-3">
-          <assigned-users
+          <assigned-submission-users
             data-cy="submitters_list"
             relationship="submitters"
             :container="submission"
@@ -59,7 +59,7 @@
           }"
           class="col-12 col-xs-8 col-sm-5 col-md-3"
         >
-          <assigned-users
+          <assigned-submission-users
             relationship="review_coordinators"
             data-cy="coordinators_list"
             :container="submission"
@@ -70,7 +70,7 @@
       </div>
       <div class="row q-col-gutter-lg q-mt-lg">
         <div class="col-12 col-xs-8 col-sm-10 col-md-6">
-          <assigned-users
+          <assigned-submission-users
             data-cy="reviewers_list"
             relationship="reviewers"
             :container="submission"
@@ -95,7 +95,7 @@
 
 <script setup>
 import { GET_SUBMISSION } from "src/graphql/queries"
-import AssignedUsers from "src/components/AssignedUsersComponent.vue"
+import AssignedSubmissionUsers from "src/components/AssignedSubmissionUsers.vue"
 import { useQuery } from "@vue/apollo-composable"
 import { computed } from "vue"
 import SubmissionAudit from "../components/SubmissionAudit.vue"

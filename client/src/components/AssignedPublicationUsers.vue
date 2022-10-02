@@ -1,51 +1,13 @@
 <template>
   <section class="column q-gutter-y-sm">
-    <h3 class="q-my-none">
-      {{ tp$("heading", users.length) }}
-      <q-icon
-        v-if="!users.length"
-        color="negative"
-        name="error_outline"
-        :title="$t('needs_attention')"
-      />
-    </h3>
+    <h3 class="q-my-none">{{ tp$("heading") }}</h3>
     <p v-if="te(tPrefix('description'))" class="q-mb-none q-mx-none">
       {{ tp$("description") }}
     </p>
-
-    <div v-if="!users.length" class="col">
-      <q-card ref="card_no_users" flat>
-        <q-item class="text--grey q-pa-none">
-          {{ tp$("none") }}
-        </q-item>
-      </q-card>
-    </div>
-
-    <q-form
-      v-if="acceptMore && checkSubmission"
-      class="col q-mb-lg"
-      data-cy="invitation_form"
-      @submit="handleSubmit"
-    >
-      <div class="optional-message q-mb-sm">
-        <editor-content :editor="editor" />
-      </div>
-      <find-user-select v-model="user" data-cy="input_user" class="q-mb-md" />
-      <q-btn
-        :ripple="{ center: true }"
-        color="accent"
-        :label="tp$('add_button.label')"
-        data-cy="button-assign"
-        type="submit"
-        class="full-width"
-      />
-    </q-form>
-
     <div v-if="users.length">
       <user-list
         ref="userList"
         data-cy="user-list"
-        :persistent-separator="relationship === 'reviewers'"
         :users="users"
         :actions="
           mutable
@@ -63,6 +25,34 @@
         @action-click="handleUserListClick"
       />
     </div>
+    <div v-else class="col">
+      <q-card ref="card_no_users" bordered flat>
+        <q-item class="text--grey">
+          <q-item-section avatar>
+            <q-icon color="accent" name="o_do_disturb_on" />
+          </q-item-section>
+          <q-item-section>
+            {{ tp$("none") }}
+          </q-item-section>
+        </q-item>
+      </q-card>
+    </div>
+
+    <q-form v-if="acceptMore" class="col" @submit="handleSubmit">
+      <find-user-select v-model="user" data-cy="input_user">
+        <template #after>
+          <q-btn
+            :ripple="{ center: true }"
+            color="accent"
+            data-cy="button-assign"
+            label="Assign"
+            type="submit"
+            stretch
+            @click="handleSubmit"
+          />
+        </template>
+      </find-user-select>
+    </q-form>
   </section>
 </template>
 
@@ -80,9 +70,6 @@ import {
 } from "src/graphql/mutations"
 import { computed, ref } from "vue"
 import { useI18n } from "vue-i18n"
-import { Editor, EditorContent } from "@tiptap/vue-3"
-import StarterKit from "@tiptap/starter-kit"
-import Placeholder from "@tiptap/extension-placeholder"
 const props = defineProps({
   container: {
     type: Object,
@@ -139,27 +126,10 @@ const acceptMore = computed(() => {
   )
 })
 
-const checkSubmission = computed(() => {
-  if (props.container.__typename === "Submission") {
-    return props.container.effective_role === `review_coordinator`
-  }
-  return true
-})
-
 const { mutate } = useMutation(
   documents[containerType.value][props.relationship],
   opts
 )
-
-const editor = new Editor({
-  content: "",
-  extensions: [
-    StarterKit,
-    Placeholder.configure({
-      placeholder: t("submissions.invite_user.message.placeholder"),
-    }),
-  ],
-})
 
 async function handleSubmit() {
   if (!acceptMore.value) {
@@ -202,19 +172,4 @@ async function handleUserListClick({ user }) {
 }
 </script>
 
-<style>
-.optional-message .ProseMirror {
-  background-color: #fff;
-  border: 1px solid #c2c2c2;
-  border-radius: 5px;
-  min-height: 5rem;
-  padding: 8px;
-}
-.optional-message .ProseMirror p.is-editor-empty:first-child::before {
-  color: #666667;
-  content: attr(data-placeholder);
-  float: left;
-  height: 0;
-  pointer-events: none;
-}
-</style>
+<style></style>
