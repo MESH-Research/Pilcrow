@@ -69,6 +69,7 @@ class SubmissionContentTest extends TestCase
                 'submission_id' => $submission->id,
             ]);
             SubmissionFile::factory()->create([
+                'file_upload' => '/tmp/testfile.txt',
                 'submission_id' => $submission->id,
                 'content_id' => $submission_content->id,
             ]);
