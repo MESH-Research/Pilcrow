@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Event;
 use OwenIt\Auditing\Events\AuditCustom;
-use Pandoc\Pandoc;
+use Pandoc\Facades\Pandoc;
 use function Illuminate\Events\queueable;
 
 class SubmissionFile extends Model
@@ -74,8 +74,8 @@ class SubmissionFile extends Model
             try {
                 $content->submission_id = $file->submission_id;
                 $content->submission_file_id = $file->id;
-                $content->data = (new Pandoc())
-                    ->inputFile(storage_path('app/' . $file->file_upload))
+                $content->data = Pandoc::
+                    inputFile(storage_path('app/' . $file->file_upload))
                     ->to('html')
                     ->run();
                 if (empty($content->data)) {
