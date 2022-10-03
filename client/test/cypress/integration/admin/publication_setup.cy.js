@@ -15,7 +15,6 @@ describe("Publication Setup", () => {
     cy.url().should("not.include", "/error403")
   })
 
-
   it("restricts access based on role", () => {
     cy.login({ email: "publicationadministrator@ccrproject.dev" })
     cy.visit("/publication/2/setup/basic")
