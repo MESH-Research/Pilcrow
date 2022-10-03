@@ -13,7 +13,7 @@ export default {
     details_heading: "User Details",
     unconfirmed: {
       title: "User not confirmed",
-      tooltip: "This user has not yet registered to accept the invitation.",
+      tooltip: "This user has not yet accepted the invitation.",
     },
   },
   role: {
