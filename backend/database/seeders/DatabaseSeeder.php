@@ -20,7 +20,6 @@ class DatabaseSeeder extends Seeder
             PublicationSeeder::class,
             StyleCriteriasSeeder::class,
             SubmissionSeeder::class,
-            SubmissionFileSeeder::class,
             InlineCommentSeeder::class,
             OverallCommentSeeder::class,
         ]);
