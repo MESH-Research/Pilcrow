@@ -8,6 +8,8 @@ use App\Exceptions\EmptyContentOnImport;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Event;
+use OwenIt\Auditing\Events\AuditCustom;
 use Pandoc\Pandoc;
 use function Illuminate\Events\queueable;
 
@@ -44,6 +46,17 @@ class SubmissionFile extends Model
      */
     protected static function booted()
     {
+        static::created(function (SubmissionFile $file) {
+            $submission = $file->submission;
+            $submission->auditEvent = 'contentUpload';
+            $submission->isCustomEvent = true;
+            $submission->auditCustomNew = [
+                'submission_file_id' => $file->id,
+            ];
+
+            Event::dispatch(AuditCustom::class, [$submission]);
+        });
+
         static::created(queueable(function (SubmissionFile $file) {
             //Test seeded files are currently added with a /tmp/ file name.  Until those seeders are updated to handle this, ignore processing them.
             if (preg_match('%^/tmp/%', (string)$file->file_upload) == 1) {
