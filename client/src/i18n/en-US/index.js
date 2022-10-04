@@ -575,6 +575,7 @@ export default {
         share: "Share",
       },
       placeholder: "Add a comment …",
+      scroll_to_top: "Scroll to top",
     },
   },
   failures: {

@@ -23,7 +23,7 @@
           icon="arrow_upward"
           @click="scrollToTop"
         >
-          Scroll to Top
+          {{ $t("submissions.scroll_to_top") }}
         </q-btn>
       </div>
     </section>
