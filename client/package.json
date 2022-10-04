@@ -57,7 +57,7 @@
     "@quasar/app-webpack": "^3.6.1",
     "@quasar/quasar-app-extension-testing-unit-jest": "^3.0.0-alpha.10",
     "axe-core": "^4.4.3",
-    "cypress": "10.8",
+    "cypress": "10.9",
     "cypress-axe": "^1.0.0",
     "cypress-file-upload": "^5.0.8",
     "eslint": "^7.32.0",
