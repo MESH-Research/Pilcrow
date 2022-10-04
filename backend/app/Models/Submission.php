@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Notifications\Messages\MailMessage;
 use OwenIt\Auditing\Contracts\Auditable;
 
 class Submission extends Model implements Auditable
@@ -256,5 +257,31 @@ class Submission extends Model implements Auditable
         }
 
         return $this->getMyRole();
+    }
+
+     /**
+      * Send an email inviting an unstaged user as a specified role to a submission
+      *
+      * @param String $role
+      * @param String $email
+      * @return void
+      */
+    public function sendInvitation(String $role, String $email)
+    {
+        $mail = [
+            'reviewer' => [
+                'subject' => 'Invitation to Review',
+                'line' => 'You have been invited to review a submission.'
+            ],
+            'review_coordinator' => [
+                'Invitation to Coordinate a Submission Review',
+                'line' => 'You have been invited to coordinate the review of a submission.'
+            ],
+        ];
+
+        $mail = new MailMessage();
+        $mail->subject($mail[$role]['subject'])
+            ->line($mail[$role]['line'])
+            ->action('Accept Invitation', url('/submission/' . $this->id));
     }
 }
