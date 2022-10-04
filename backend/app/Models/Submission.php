@@ -274,7 +274,7 @@ class Submission extends Model implements Auditable
                 'line' => 'You have been invited to review a submission.'
             ],
             'review_coordinator' => [
-                'Invitation to Coordinate a Submission Review',
+                'subject' => 'Invitation to Coordinate a Submission Review',
                 'line' => 'You have been invited to coordinate the review of a submission.'
             ],
         ];

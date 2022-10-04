@@ -227,4 +227,19 @@ class User extends Authenticatable implements MustVerifyEmail
             return $submissions->wherePivot('role_id', $role)->exists();
         }
     }
+
+     /**
+      * @param String $email
+      * @return void
+      * @return User
+      */
+    public static function createStagedUser(String $email)
+    {
+        return User::create([
+            'username' => "",
+            'email' => $email,
+            'password' => "",
+            'staged' => true,
+        ]);
+    }
 }

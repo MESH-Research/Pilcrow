@@ -16,4 +16,28 @@ class SubmissionUser extends Pivot
      * @var bool
      */
     public $incrementing = true;
+
+    /**
+     * @param String $email
+     * @param Submission $submission
+     * @return User
+     */
+    public function createStagedReviewer(String $email, Submission $submission)
+    {
+        $user = User::createStagedUser($email);
+        $submission->reviewers()->associate($user);
+        return $user;
+    }
+
+    /**
+     * @param String $email
+     * @param Submission $submission
+     * @return User
+     */
+    public function createStagedReviewCoordinator(String $email, Submission $submission)
+    {
+        $user = User::createStagedUser($email);
+        $submission->reviewCoordinators()->associate($user);
+        return $user;
+    }
 }
