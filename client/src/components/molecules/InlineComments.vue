@@ -2,7 +2,9 @@
   <q-scroll-area class="fit col su-light-grey">
     <section ref="inline_comments_section">
       <div class="q-pa-md">
-        <span class="text-h3"> Inline Comments </span>
+        <span class="text-h3">{{
+          $t("submissions.inline_comments_heading")
+        }}</span>
       </div>
 
       <component

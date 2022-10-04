@@ -33,7 +33,7 @@
           @click="toggleThread"
         >
           <q-icon name="expand_less"></q-icon>
-          <span>Hide Replies</span>
+          <span>{{ $t("submissions.comment.toggle_replies.hide_reply") }}</span>
         </q-btn>
         <q-btn
           v-if="isCollapsed"
@@ -45,7 +45,7 @@
           @click="toggleThread"
         >
           <q-icon name="expand_more"></q-icon>
-          <span>Show Replies</span>
+          <span>{{ $t("submissions.comment.toggle_replies.show_reply") }}</span>
         </q-btn>
       </q-card-actions>
 

@@ -555,9 +555,14 @@ export default {
         required: "A file must be uploaded with a submission.",
       },
     },
+    inline_comments_heading: "Inline Comments",
     comment: {
       ariaLabel: "Comment. Author {username}. {replies} replies.",
       dateLabel: "Created {date}",
+      toggle_replies: {
+        show_reply: "Show Replies",
+        hide_reply: "Hide Replies",
+      },
       reply: {
         ariaLabel: "Comment Reply.  Author {username}.",
         referenceButtonAria: "Jump to referenced comment",
