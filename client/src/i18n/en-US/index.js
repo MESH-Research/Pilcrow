@@ -423,6 +423,7 @@ export default {
   },
   submission: {
     action: {
+      submit_for_review: "Submit for Review",
       accept_for_review: "Accept for Review",
       request_resubmission: "Request Resubmission",
       reject: "Reject",
