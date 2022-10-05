@@ -57,7 +57,9 @@ class SubmissionFile extends Model
 
         static::created(function (SubmissionFile $file) {
             //Test files start with /tmp so skip them for now.
-            ImportFileContent::dispatchIf(preg_match('%^/tmp/%', (string)$file->file_upload) == 0, $file, auth()->user());
+            $fileName = (string)$file->file_upload;
+            $user = auth()->user();
+            ImportFileContent::dispatchIf(preg_match('%^/tmp/%', $fileName) == 0, $file, $user);
         });
     }
 
