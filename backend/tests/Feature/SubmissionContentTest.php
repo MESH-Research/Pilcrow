@@ -177,4 +177,27 @@ class SubmissionContentTest extends TestCase
         $this->assertStringContainsString('EmptyContentOnImport', $file->error_message);
         $this->assertNotEquals($file->id, $file->submission->content_id);
     }
+
+    public function testImportFileJobIgnoresNonPendingFiles()
+    {
+        Queue::fake();
+        $user = $this->beAppAdmin();
+        $fileName = '/myfile.txt';
+
+        $file = SubmissionFile::factory()
+            ->forSubmission()
+            ->create([
+                'file_upload' => $fileName,
+                'import_status' => SubmissionFileImportStatus::Processing(),
+            ]);
+
+        Pandoc::spy();
+
+        $job = new ImportFileContent($file, $user);
+
+        $job->handle();
+
+        $file->refresh();
+        Pandoc::shouldNotHaveReceived('run');
+    }
 }
