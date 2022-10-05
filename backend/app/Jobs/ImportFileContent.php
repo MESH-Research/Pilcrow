@@ -80,6 +80,7 @@ class ImportFileContent implements ShouldQueue
             $this->file->import_status = SubmissionFileImportStatus::Failure;
             $this->file->error_message = 'Exception: ' . get_class($e) . ' (' . $e->getMessage() . ')';
             $this->file->save();
+            $this->fail($e);
 
             return;
         }
