@@ -4,14 +4,12 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Enums\SubmissionFileImportStatus;
-use App\Exceptions\EmptyContentOnImport;
+use App\Jobs\ImportFileContent;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Event;
 use OwenIt\Auditing\Events\AuditCustom;
-use Pandoc\Facades\Pandoc;
-use function Illuminate\Events\queueable;
 
 class SubmissionFile extends Model
 {
@@ -57,46 +55,10 @@ class SubmissionFile extends Model
             Event::dispatch(AuditCustom::class, [$submission]);
         });
 
-        static::created(queueable(function (SubmissionFile $file) {
-            //Test seeded files are currently added with a /tmp/ file name.  Until those seeders are updated to handle this, ignore processing them.
-            if (preg_match('%^/tmp/%', (string)$file->file_upload) == 1) {
-                return;
-            }
-            //Fetch file from DB to ensure it hasn't already been processed or cancelled
-            $file->refresh();
-            if ($file->import_status->isNot(SubmissionFileImportStatus::Pending)) {
-                return;
-            }
-            $file->import_status = SubmissionFileImportStatus::Processing();
-            $file->save();
-
-            $content = new SubmissionContent();
-            try {
-                $content->submission_id = $file->submission_id;
-                $content->submission_file_id = $file->id;
-                $content->data = Pandoc::
-                    inputFile(storage_path('app/' . $file->file_upload))
-                    ->to('html')
-                    ->run();
-                if (empty($content->data)) {
-                    throw new EmptyContentOnImport();
-                }
-                $content->save();
-            } catch (\Exception $e) {
-                $file->import_status = SubmissionFileImportStatus::Failure;
-                $file->error_message = 'Exception: ' . get_class($e);
-                $file->save();
-
-                return;
-            }
-            $file->import_status = SubmissionFileImportStatus::Success();
-            $file->content_id = $content->id;
-
-            //Make the new content import the "live" content version.
-            $submission = $file->submission;
-            $submission->content_id = $content->id;
-            $submission->save();
-        }));
+        static::created(function (SubmissionFile $file) {
+            //Test files start with /tmp so skip them for now.
+            ImportFileContent::dispatchIf(preg_match('%^/tmp/%', (string)$file->file_upload) == 0, $file, auth()->user());
+        });
     }
 
     /**
