@@ -175,6 +175,7 @@ export const GET_SUBMISSION = gql`
       id
       title
       status
+      effective_role
       audits {
         id
         event

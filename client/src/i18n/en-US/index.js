@@ -2,6 +2,7 @@
 // so you can safely delete all default props below
 
 export default {
+  needs_attention: "Needs attention",
   user: {
     self: "No users | User | Users",
     email: "Email",
@@ -10,6 +11,10 @@ export default {
     password: "Password",
     empty_name: "No display name",
     details_heading: "User Details",
+    unconfirmed: {
+      title: "User not confirmed",
+      tooltip: "This user has not yet accepted the invitation.",
+    },
   },
   role: {
     self: "No roles | Role | Roles",
@@ -484,6 +489,9 @@ export default {
         success:
           "{display_name} successfully assigned as a review coordinator.",
       },
+      add_button: {
+        label: "Add Review Coordinator",
+      },
       unassign_button: {
         ariaLabel: "Unassign Review Coordinator",
         help: "Remove Review Coordinator",
@@ -503,18 +511,24 @@ export default {
           "An error occurred while attempting to assign a reviewer. Is the user already assigned to this submission?",
         success: "{display_name} successfully assigned as a reviewer.",
       },
+      add_button: {
+        label: "Add Reviewer",
+      },
       unassign_button: {
         ariaLabel: "Unassign Reviewer",
         help: "Remove Reviewer",
       },
     },
     submitters: {
-      heading: "Submitters",
+      heading: "Submitter | Submitters",
       title: {
         singular: "Submitter",
         plural: "Submitters",
       },
       none: "No submitter is assigned to this submission. At least one submitter must be assigned.",
+      add_button: {
+        label: "Add Submitter",
+      },
       unassign_button: {
         ariaLabel: "Unassign Submitterr",
         help: "Remove Submitter",
@@ -536,6 +550,15 @@ export default {
           RESUBMISSION_REQUESTED:
             "Submissions requested for resubmission cannot have their statuses changed.",
         },
+      },
+    },
+    invite_user: {
+      message: {
+        placeholder: "Message (optional)",
+      },
+      search: {
+        label: "User to Add",
+        hint: "Search by username, email, or name.",
       },
     },
     create: {
