@@ -50,12 +50,14 @@ describe("Submissions Page", () => {
     cy.task("resetDb")
     cy.login({ email: "applicationadministrator@ccrproject.dev" })
     cy.visit("submissions")
+
+    cy.interceptGQLOperation("UpdateSubmissionStatus")
+
     cy.dataCy("submission_actions").eq(1).click()
     cy.dataCy("change_status").click()
     cy.dataCy("accept_for_review").click()
-    cy.intercept("/graphql").as("graphQL")
     cy.dataCy("dirtyYesChangeStatus").click()
-    cy.wait("@graphQL")
+    cy.wait("@UpdateSubmissionStatus")
     cy.dataCy("change_status_notify")
       .should("be.visible")
       .should("have.class", "bg-positive")
@@ -68,12 +70,15 @@ describe("Submissions Page", () => {
     cy.task("resetDb")
     cy.login({ email: "reviewer@ccrproject.dev" })
     cy.visit("submissions")
+
+    cy.interceptGQLOperation("UpdateSubmissionStatus")
+
     cy.dataCy("submission_actions").eq(1).click()
     cy.dataCy("change_status").click()
     cy.dataCy("accept_for_review").click()
-    cy.intercept("/graphql").as("graphQL")
+
     cy.dataCy("dirtyYesChangeStatus").click()
-    cy.wait("@graphQL")
+    cy.wait("@UpdateSubmissionStatus")
     cy.dataCy("change_status_notify")
       .should("be.visible")
       .should("have.class", "bg-negative")
@@ -85,12 +90,15 @@ describe("Submissions Page", () => {
     cy.task("resetDb")
     cy.login({ email: "reviewer@ccrproject.dev" })
     cy.visit("submissions")
+
+    cy.interceptGQLOperation("UpdateSubmissionStatus")
+
     cy.dataCy("submission_actions").eq(1).click()
     cy.dataCy("change_status").click()
     cy.dataCy("accept_for_review").click()
     cy.intercept("/graphql").as("graphQL")
     cy.dataCy("dirtyYesChangeStatus").click()
-    cy.wait("@graphQL")
+    cy.wait("@UpdateSubmissionStatus")
     cy.dataCy("change_status_notify")
       .should("be.visible")
       .should("have.class", "bg-negative")
@@ -178,19 +186,22 @@ describe("Submissions Page", () => {
     cy.task("resetDb")
     cy.login({ email: "applicationadministrator@ccrproject.dev" })
     cy.visit("submissions")
+
+    cy.interceptGQLOperation('UpdateSubmissionStatus')
+
     cy.dataCy("submission_actions").first().click()
     cy.dataCy("change_status").click()
     cy.dataCy("open_review").click()
-    cy.intercept("/graphql").as("graphQL")
+
     cy.dataCy("dirtyYesChangeStatus").click()
-    cy.wait("@graphQL")
+    cy.wait("@UpdateSubmissionStatus")
     cy.dataCy("change_status_notify")
       .should("be.visible")
       .should("have.class", "bg-positive")
     cy.dataCy("accept_as_final")
     cy.dataCy("close_review").click()
-    cy.intercept("/graphql").as("graphQL")
+
     cy.dataCy("dirtyYesChangeStatus").click()
-    cy.wait("@graphQL")
+    cy.wait("@UpdateSubmissionStatus")
   })
 })
