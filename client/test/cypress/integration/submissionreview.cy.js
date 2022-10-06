@@ -55,16 +55,13 @@ describe("Submissions Review", () => {
     cy.task("resetDb")
     cy.login({ email: "reviewer@ccrproject.dev" })
     cy.visit("submission/review/100")
-
-    cy.interceptGQLOperation('CreateOverallComment')
-
     // Attempt to create an empty overall comment
     cy.dataCy("overallCommentEditor").find("button[type=submit]").click()
     // Create an overall comment
     cy.dataCy("overallCommentEditor").type("This is an overall comment.")
+    cy.intercept("/graphql").as("addOverallCommentMutation")
     cy.dataCy("overallCommentEditor").find("button[type=submit]").click()
-
-    cy.wait("@CreateOverallComment")
+    cy.wait("@addOverallCommentMutation")
     //   3 overall comment parents already exist from database seeding
     // + 0 disallowed empty overall comment creation attempt
     // + 1 newly created overall comment
@@ -77,17 +74,14 @@ describe("Submissions Review", () => {
     cy.task("resetDb")
     cy.login({ email: "reviewer@ccrproject.dev" })
     cy.visit("submission/review/100")
-
-    cy.interceptGQLOperation("CreateOverallCommentReply")
-
     cy.dataCy("overallComment").first().find("[data-cy=overallCommentReplyButton]").click()
     // Attempt to create an empty overall comment reply
     cy.dataCy("overallCommentReplyEditor").first().find("button[type=submit]").click()
     // Create an overall comment reply
     cy.dataCy("overallCommentReplyEditor").first().type("This is a reply to an overall comment.")
-
+    cy.intercept("/graphql").as("addOverallCommentReplyMutation")
     cy.dataCy("overallCommentReplyEditor").first().find("button[type=submit]").click()
-    cy.wait("@CreateOverallCommentReply")
+    cy.wait("@addOverallCommentReplyMutation")
     //   0 overall comment replies already exist from database seeding
     // + 0 disallowed empty overall comment reply creation attempt
     // + 1 newly created overall comment reply
@@ -101,16 +95,14 @@ describe("Submissions Review", () => {
     cy.task("resetDb")
     cy.login({ email: "reviewer@ccrproject.dev" })
     cy.visit("submission/review/100")
-
-    cy.interceptGQLOperation("CreateOverallCommentReply")
     cy.dataCy("overallComment").last().find("[data-cy=showRepliesButton]").click()
     cy.dataCy("overallCommentReply").last().find("[data-cy=commentActions]").click()
     cy.dataCy("quoteReply").click()
     cy.dataCy("overallCommentReplyEditor").last().type("This is a reply to an overall comment reply.")
     // Create a reply to an overall comment reply
-
+    cy.intercept("/graphql").as("addOverallCommentReplyMutation")
     cy.dataCy("overallCommentReplyEditor").last().find("button[type=submit]").click()
-    cy.wait("@CreateOverallCommentReply")
+    cy.wait("@addOverallCommentReplyMutation")
     //   8 overall comment replies are already visible in this thread from database seeding
     // + 0 disallowed empty overall comment reply creation attempt
     // + 1 newly created overall comment reply
@@ -123,9 +115,6 @@ describe("Submissions Review", () => {
     cy.task("resetDb")
     cy.login({ email: "reviewer@ccrproject.dev" })
     cy.visit("submission/review/100")
-
-    cy.interceptGQLOperation("CreateInlineCommentReply")
-
     cy.dataCy("toggleInlineCommentsButton").click()
     cy.dataCy("inlineComment")
       .first()
@@ -133,10 +122,11 @@ describe("Submissions Review", () => {
         cy.wrap(el).findCy('collapseRepliesButton').click()
         cy.wrap(el).findCy('inlineCommentReplyButton').click()
         cy.dataCy("inlineCommentReplyEditor").type("This is an inline comment reply.")
+        cy.intercept("/graphql").as("addInlineCommentReplyMutation")
         cy.dataCy('inlineCommentReplyEditor').find('button[type=submit]').click()
 
       })
-    cy.wait("@CreateInlineCommentReply")
+    cy.wait("@addInlineCommentReplyMutation")
     //   1 inline comment reply already exists on the first inline comment from database seeding
     // + 0 disallowed empty inline comment reply creation attempt
     // + 1 newly created inline comment reply on the first inline comment

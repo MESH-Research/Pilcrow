@@ -30,50 +30,6 @@ Cypress.Commands.add("qSelectItems", (value) => {
     })
 })
 
-Cypress.Commands.add("userSearch", (dataCy, searchTerm) => {
-  cy.intercept("/graphql", (req) => {
-    let operation;
-    if (Array.isArray(req.body)) {
-      operation = req.body.find((op) => {
-        return (op.hasOwnProperty('operationName') && op.operationName == 'SearchUsers') &&
-          (op.variables.term == searchTerm)
-      })
-    } else {
-      if ((req.body.hasOwnProperty('operationName') && req.body.operationName == 'SearchUsers') &&
-        (req.body.variables.term == searchTerm)) {
-        operation = req.body;
-      }
-    }
-    if (operation) {
-      req.alias = 'searchResult';
-      req.reply();
-    } else {
-      console.log(req);
-    }
-  });
-  cy.dataCy(dataCy).type(searchTerm);
-  cy.wait('@searchResult');
-})
-
-Cypress.Commands.add("interceptGQLOperation", (operationName) => {
-  cy.intercept("/graphql", (req) => {
-    let operation;
-    if (Array.isArray(req.body)) {
-      operation = req.body.find((op) => {
-        return (op.hasOwnProperty('operationName') && op.operationName == operationName)
-      })
-    } else {
-      if (req.body.hasOwnProperty('operation') && op.operationName == operationName) {
-        operation = req.body;
-      }
-    }
-    if (operation) {
-      req.alias = operationName;
-      req.reply();
-    }
-  });
-})
-
 /**
  * Login to the api without providing authentication.
  *

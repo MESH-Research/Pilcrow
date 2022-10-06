@@ -40,15 +40,15 @@ describe("Publication Setup", () => {
   it("should allow assignment of administrators by application administrators", () => {
     cy.login({ email: "applicationadministrator@ccrproject.dev" })
     cy.visit("publication/1/setup/users")
-    cy.interceptGQLOperation('UpdatePublicationAdmins')
-
 
     cy.dataCy("admins_list").within(() => {
-      cy.userSearch('input_user', 'applicationAd')
+      cy.dataCy('input_user').type("applicationAd")
       cy.qSelectItems('input_user').eq(0).click()
+      cy.intercept("/graphql").as("graphQL")
       cy.dataCy('button-assign').click();
     })
-    cy.wait("@UpdatePublicationAdmins")
+
+    cy.wait("@graphQL")
     cy.dataCy("admins_list").find(".q-list").contains("Application Administrator")
 
     cy.injectAxe()
@@ -59,15 +59,15 @@ describe("Publication Setup", () => {
   it("should allow assignment of editors by application administrators", () => {
     cy.login({ email: "applicationadministrator@ccrproject.dev" })
     cy.visit("publication/1/setup/users")
-    cy.interceptGQLOperation('UpdatePublicationEditors')
 
     cy.dataCy("editors_list").within(() => {
-      cy.userSearch('input_user', 'applicationAd')
+      cy.dataCy('input_user').type("applicationAd")
       cy.qSelectItems('input_user').eq(0).click()
+      cy.intercept("/graphql").as("graphQL")
       cy.dataCy('button-assign').click();
     })
 
-    cy.wait("@UpdatePublicationEditors")
+    cy.wait("@graphQL")
     cy.dataCy("editors_list").find(".q-list").contains("Application Administrator")
 
     cy.injectAxe()
@@ -79,13 +79,12 @@ describe("Publication Setup", () => {
     cy.visit("publication/1/setup/users")
 
     cy.intercept("/graphql").as("graphql")
-    cy.interceptGQLOperation("UpdatePublicationAdmins")
     cy.dataCy("admins_list")
         .find('.q-list')
         .eq(0)
         .findCy("button_unassign")
         .click();
-    cy.wait("@UpdatePublicationAdmins")
+    cy.wait("@graphql")
 
     cy.dataCy("admins_list").find(".q-list").should("not.exist")
 
@@ -96,13 +95,13 @@ describe("Publication Setup", () => {
     cy.login({ email: "applicationadministrator@ccrproject.dev" })
     cy.visit("publication/1/setup/users")
 
-    cy.interceptGQLOperation("UpdatePublicationEditors")
+    cy.intercept("/graphql").as("removeCoordinatorFetch")
     cy.dataCy("editors_list")
         .find('.q-list')
         .eq(0)
         .findCy("button_unassign")
         .click();
-    cy.wait("@UpdatePublicationEditors")
+    cy.wait("@removeCoordinatorFetch")
 
     cy.dataCy("editors_list").find(".q-list").should("not.exist")
 

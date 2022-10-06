@@ -18,15 +18,15 @@ describe("Submission Details", () => {
     cy.task("resetDb")
     cy.login({ email: "applicationadministrator@ccrproject.dev" })
     cy.visit("submission/100")
-    cy.interceptGQLOperation('UpdateSubmissionReviewers');
 
     cy.dataCy("reviewers_list").within(() => {
-      cy.userSearch('input_user', 'applicationAd')
+      cy.dataCy('input_user').type("applicationAd")
       cy.qSelectItems('input_user').eq(0).click()
+      cy.intercept("/graphql").as("graphQL")
       cy.dataCy('button-assign').click();
     })
 
-    cy.wait("@UpdateSubmissionReviewers")
+    cy.wait("@graphQL")
     cy.dataCy("reviewers_list").find(".q-list").contains("Application Administrator")
 
     cy.injectAxe()
@@ -37,15 +37,15 @@ describe("Submission Details", () => {
     cy.task("resetDb")
     cy.login({ email: "reviewcoordinator@ccrproject.dev" })
     cy.visit("submission/100")
-    cy.interceptGQLOperation('UpdateSubmissionReviewers')
 
     cy.dataCy("reviewers_list").within(() => {
-      cy.userSearch('input_user', 'applicationAd')
+      cy.dataCy('input_user').type("applicationAd")
       cy.qSelectItems('input_user').eq(0).click()
+      cy.intercept("/graphql").as('graphQL')
       cy.dataCy('button-assign').click()
     })
 
-    cy.wait("@UpdateSubmissionReviewers")
+    cy.wait("@graphQL")
     cy.dataCy("reviewers_list").find(".q-list").contains("Application Administrator")
 
     cy.injectAxe()
@@ -56,23 +56,26 @@ describe("Submission Details", () => {
     cy.task("resetDb")
     cy.login({ email: "applicationadministrator@ccrproject.dev" })
     cy.visit("submission/100")
-    cy.interceptGQLOperation("UpdateSubmissionReviewCoordinators")
 
+    cy.intercept("/graphql").as("removeCoordinatorFetch")
     cy.dataCy("coordinators_list")
         .find('.q-list')
         .eq(0)
         .find("[data-cy=button_unassign]")
         .click();
-    cy.wait("@UpdateSubmissionReviewCoordinators")
+    cy.wait("@removeCoordinatorFetch")
 
     cy.dataCy("coordinators_list").find(".q-list").should("not.exist")
 
     cy.dataCy("coordinators_list").within(() => {
-      cy.userSearch('input_user', "applicationAd")
+      cy.intercept("/graphql").as("userListFetch")
+      cy.dataCy('input_user').type("applicationAd")
+      cy.wait(["@userListFetch", "@userListFetch"])
       cy.qSelectItems('input_user').eq(0).click()
+      cy.intercept("/graphql").as("addCoordinatorFetch")
       cy.dataCy('button-assign').click();
     })
-    cy.wait("@UpdateSubmissionReviewCoordinators")
+    cy.wait("@addCoordinatorFetch")
     cy.dataCy("coordinators_list").find('.q-list').contains("Application Administrator")
 
     cy.injectAxe()
@@ -83,21 +86,22 @@ describe("Submission Details", () => {
     cy.task("resetDb")
     cy.login({ email: "applicationadministrator@ccrproject.dev" })
     cy.visit("submission/100")
-    cy.interceptGQLOperation("UpdateSubmissionReviewers")
 
     cy.dataCy('reviewers_list').within(() => {
-      cy.userSearch('input_user', 'applicationAd')
+      cy.dataCy('input_user').type("applicationAd")
       cy.qSelectItems('input_user').eq(0).click()
+      cy.intercept("/graphql").as("addReviewer1")
       cy.dataCy('button-assign').click()
+      cy.wait("@addReviewer1")
     })
-    cy.wait("@UpdateSubmissionReviewers")
 
     cy.dataCy('reviewers_list').within(() => {
-      cy.userSearch('input_user', 'applicationAd')
+      cy.dataCy('input_user').type("applicationAd")
       cy.qSelectItems('input_user').eq(0).click()
+      cy.intercept("/graphql").as("addReviewer2")
       cy.dataCy('button-assign').click()
+      cy.wait("@addReviewer2")
     })
-    cy.wait("@UpdateSubmissionReviewers")
 
     cy.dataCy('reviewers_list').find('.q-item').should('have.length', 2)
 
@@ -107,25 +111,21 @@ describe("Submission Details", () => {
     cy.task("resetDb")
     cy.login({ email: "applicationadministrator@ccrproject.dev" })
     cy.visit("submissions")
-
-    cy.interceptGQLOperation("UpdateSubmissionStatus");
-
     cy.dataCy("submission_actions").first().click()
     cy.dataCy("change_status").click()
     cy.dataCy("open_review").click()
+    cy.intercept("/graphql").as("graphQL")
     cy.dataCy("status_change_comment").type("first comment from admin")
     cy.dataCy("dirtyYesChangeStatus").click()
-    cy.wait("@UpdateSubmissionStatus")
-
+    cy.wait("@graphQL")
     cy.dataCy("change_status_notify")
       .should("be.visible")
       .should("have.class", "bg-positive")
-
     cy.dataCy("close_review").click()
+    cy.intercept("/graphql").as("graphQL")
     cy.dataCy("status_change_comment").type("second comment from admin")
     cy.dataCy("dirtyYesChangeStatus").click()
-    cy.wait("@UpdateSubmissionStatus")
-
+    cy.wait("@graphQL")
     cy.visit("/submission/100")
     cy.dataCy("activity_section").contains("first comment from admin")
     cy.dataCy("activity_section").contains("second comment from admin")
