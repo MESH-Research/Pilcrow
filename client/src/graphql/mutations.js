@@ -550,35 +550,20 @@ export const UPDATE_SUBMISSION_STATUS = gql`
   }
 `
 
-export const UPDATE_INLINE_COMMENT = gql`
-  mutation UpdateInlineComment(
+export const UPDATE_OVERALL_COMMENT = gql`
+  mutation UpdateOverallComment(
     $submission_id: ID!
+    $comment_id: ID!
     $content: String!
-    $from: Int
-    $to: Int
-    $style_criteria: [ID!]
   ) {
     updateSubmission(
       input: {
         id: $submission_id
-        inline_comments: {
-          update: [
-            {
-              content: $content
-              style_criteria: $style_criteria
-              from: $from
-              to: $to
-            }
-          ]
-        }
+        overall_comments: { update: { id: $comment_id, content: $content } }
       }
     ) {
       id
-      inline_comments {
-        style_criteria {
-          name
-          icon
-        }
+      overall_comments {
         ...commentFields
         replies {
           reply_to_id

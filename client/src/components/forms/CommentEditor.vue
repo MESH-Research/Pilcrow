@@ -88,6 +88,7 @@ import {
   CREATE_OVERALL_COMMENT_REPLY,
   CREATE_INLINE_COMMENT_REPLY,
   CREATE_INLINE_COMMENT,
+  UPDATE_OVERALL_COMMENT,
 } from "src/graphql/mutations"
 import { useI18n } from "vue-i18n"
 import { uniqueId } from "lodash"
@@ -114,6 +115,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  isModifying: {
+    type: Boolean,
+    default: false,
+  },
   replyTo: {
     type: Object,
     default: () => {},
@@ -126,8 +131,11 @@ const props = defineProps({
 })
 
 const defaultContent = computed(() => {
-  if (!props.isQuoteReplying) {
+  if (!props.isQuoteReplying && !props.isModifying) {
     return ""
+  }
+  if (props.isModifying) {
+    return `${props.comment.content}`
   }
   //TODO: Make this more robust to handle multi paragraphs, etc
   return `<blockquote>${props.replyTo.content}</blockquote><p></p>`
@@ -221,11 +229,19 @@ const commentEditorButtons = ref([
   },
 ])
 const submission = inject("submission")
-const mutations = {
+let mutations = {
   InlineComment: CREATE_INLINE_COMMENT,
   InlineCommentReply: CREATE_INLINE_COMMENT_REPLY,
   OverallComment: CREATE_OVERALL_COMMENT,
   OverallCommentReply: CREATE_OVERALL_COMMENT_REPLY,
+}
+if (props.isModifying) {
+  mutations = {
+    // InlineComment: UPDATE_INLINE_COMMENT,
+    // InlineCommentReply: UPDATE_INLINE_COMMENT_REPLY,
+    OverallComment: UPDATE_OVERALL_COMMENT,
+    // OverallCommentReply: UPDATE_OVERALL_COMMENT_REPLY,
+  }
 }
 const { mutate: createComment } = useMutation(mutations[commentType.value])
 const selectedCriteria = computed(() =>
@@ -235,6 +251,7 @@ const selectedCriteria = computed(() =>
 )
 const hasStyleCriteria = computed(() => selectedCriteria.value.length > 0)
 async function submitHandler() {
+  console.log(mutations[commentType.value])
   if (!hasStyleCriteria.value && commentType.value === "InlineComment") {
     if (
       !(await new Promise((resolve) => {
@@ -266,6 +283,9 @@ async function submitHandler() {
     if (isReply.value) {
       args.reply_to_id = props.replyTo.id
       args.parent_id = props.parent.id
+    }
+    if (props.isModifying) {
+      args.comment_id = props.comment.id
     }
     await createComment({
       ...args,

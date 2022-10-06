@@ -16,7 +16,7 @@
               $t("submissions.comment.actions.quote_reply")
             }}</q-item-section></q-item
           >
-          <q-item clickable>
+          <q-item clickable @click="$emit('modifyComment')">
             <q-item-section>{{
               $t("submissions.comment.actions.modify")
             }}</q-item-section>
