@@ -89,6 +89,7 @@ import {
   CREATE_INLINE_COMMENT_REPLY,
   CREATE_INLINE_COMMENT,
   UPDATE_OVERALL_COMMENT,
+  UPDATE_INLINE_COMMENT,
 } from "src/graphql/mutations"
 import { useI18n } from "vue-i18n"
 import { uniqueId } from "lodash"
@@ -237,7 +238,7 @@ let mutations = {
 }
 if (props.isModifying) {
   mutations = {
-    // InlineComment: UPDATE_INLINE_COMMENT,
+    InlineComment: UPDATE_INLINE_COMMENT,
     // InlineCommentReply: UPDATE_INLINE_COMMENT_REPLY,
     OverallComment: UPDATE_OVERALL_COMMENT,
     // OverallCommentReply: UPDATE_OVERALL_COMMENT_REPLY,
