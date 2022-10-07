@@ -17,7 +17,7 @@ abstract class TestCase extends BaseTestCase
     /**
      * Act as a new user with application administrator role
      *
-     * @return App\Models\User New user with adminsitrator role
+     * @return \App\Models\User New user with adminsitrator role
      */
     public function beAppAdmin(): User
     {

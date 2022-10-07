@@ -447,6 +447,7 @@ export default {
       events: {
         created: "Created",
         updated: "Updated",
+        contentUpload: "New content uploaded",
       },
     },
     status: {
