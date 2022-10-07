@@ -25,7 +25,7 @@ export default {
     dashboard: "Dashboard",
     add: "Add",
     save: "Save",
-    saving: "Saving",
+    saving: "Savasdfg",
     saved: "Saved",
     discard_changes: "Discard Changes",
   },
