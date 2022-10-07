@@ -1,6 +1,6 @@
 {
     "devDependencies": {
-        "chalk": "^5.0.1",
+        "chalk": "^5.1.0",
         "columnify": "^1.5.4",
         "commander": "^9.4.1",
         "conventional-changelog-cli": "^2.1.1",
