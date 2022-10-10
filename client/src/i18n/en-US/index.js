@@ -697,6 +697,7 @@ export default {
     },
     confirmStatusChange: {
       body: {
+        submit_for_review: "You are about to submit the submission for review.",
         accept_for_review: "You are about to accept the submission for review.",
         reject: "You are about to reject the submission for review.",
         request_resubmission:
@@ -706,6 +707,7 @@ export default {
         accept_as_final: "You are about to accept this submission as final.",
       },
       action: {
+        submit_for_review: "Submit for Review",
         accept_for_review: "Accept for Review",
         cancel: "Cancel",
         reject: "Reject",
