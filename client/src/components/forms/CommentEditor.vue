@@ -91,6 +91,7 @@ import {
   UPDATE_OVERALL_COMMENT,
   UPDATE_INLINE_COMMENT,
   UPDATE_INLINE_COMMENT_REPLY,
+  UPDATE_OVERALL_COMMENT_REPLY,
 } from "src/graphql/mutations"
 import { useI18n } from "vue-i18n"
 import { uniqueId } from "lodash"
@@ -242,7 +243,7 @@ if (props.isModifying) {
     InlineComment: UPDATE_INLINE_COMMENT,
     InlineCommentReply: UPDATE_INLINE_COMMENT_REPLY,
     OverallComment: UPDATE_OVERALL_COMMENT,
-    // OverallCommentReply: UPDATE_OVERALL_COMMENT_REPLY,
+    OverallCommentReply: UPDATE_OVERALL_COMMENT_REPLY,
   }
 }
 const { mutate: createComment } = useMutation(mutations[commentType.value])

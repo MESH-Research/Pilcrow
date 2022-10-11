@@ -624,3 +624,28 @@ export const UPDATE_INLINE_COMMENT_REPLY = gql`
   }
   ${_COMMENT_FIELDS}
 `
+
+export const UPDATE_OVERALL_COMMENT_REPLY = gql`
+  mutation UpdateInlineCommentReply(
+    $submission_id: ID!
+    $comment_id: ID!
+    $content: String!
+  ) {
+    updateSubmission(
+      input: {
+        id: $submission_id
+        overall_comments: { update: { id: $comment_id, content: $content } }
+      }
+    ) {
+      id
+      overall_comments {
+        ...commentFields
+        replies {
+          reply_to_id
+          ...commentFields
+        }
+      }
+    }
+  }
+  ${_COMMENT_FIELDS}
+`
