@@ -10,8 +10,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\HasApiTokens;
 use Laravel\Scout\Searchable;
+use Illuminate\Support\Str;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements MustVerifyEmail
@@ -228,18 +230,30 @@ class User extends Authenticatable implements MustVerifyEmail
         }
     }
 
-     /**
-      * @param String $email
-      * @return void
-      * @return User
-      */
+    /**
+     * @param String $email
+     * @return User
+     */
     public static function createStagedUser(String $email)
     {
         return User::create([
-            'username' => "",
+            'username' => User::generateUniqueUsername($email),
             'email' => $email,
-            'password' => "",
+            'password' => Hash::make('peer-review!'),
             'staged' => true,
         ]);
+    }
+
+    /**
+     * @param String $email
+     * @return String
+     */
+    public static function generateUniqueUsername(String $email) {
+        $username = explode("@", $email)[0];
+        if (User::where('username',$username)->exists()) {
+            $unique = $username . '_' . Str::random(2) . random_int(0,50);
+            $username = self::generateUniqueUsername($unique);
+        }
+        return $username;
     }
 }

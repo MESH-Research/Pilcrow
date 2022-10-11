@@ -25,7 +25,7 @@ class SubmissionUser extends Pivot
     public function createStagedReviewer(String $email, Submission $submission)
     {
         $user = User::createStagedUser($email);
-        $submission->reviewers()->associate($user);
+        $submission->reviewers()->attach($user);
         return $user;
     }
 
@@ -37,7 +37,7 @@ class SubmissionUser extends Pivot
     public function createStagedReviewCoordinator(String $email, Submission $submission)
     {
         $user = User::createStagedUser($email);
-        $submission->reviewCoordinators()->associate($user);
+        $submission->reviewCoordinators()->attach($user);
         return $user;
     }
 }
