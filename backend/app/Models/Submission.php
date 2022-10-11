@@ -259,23 +259,23 @@ class Submission extends Model implements Auditable
         return $this->getMyRole();
     }
 
-     /**
-      * Send an email inviting an unstaged user as a specified role to a submission
-      *
-      * @param String $role
-      * @param String $email
-      * @return void
-      */
-    public function sendInvitation(String $role, String $email)
+    /**
+     * Send an email inviting an unstaged user as a specified role to a submission
+     *
+     * @param string $role
+     * @param string $email
+     * @return void
+     */
+    public function sendInvitation(string $role, string $email)
     {
         $mail = [
             'reviewer' => [
                 'subject' => 'Invitation to Review',
-                'line' => 'You have been invited to review a submission.'
+                'line' => 'You have been invited to review a submission.',
             ],
             'review_coordinator' => [
                 'subject' => 'Invitation to Coordinate a Submission Review',
-                'line' => 'You have been invited to coordinate the review of a submission.'
+                'line' => 'You have been invited to coordinate the review of a submission.',
             ],
         ];
 

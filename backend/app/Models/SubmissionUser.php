@@ -18,26 +18,28 @@ class SubmissionUser extends Pivot
     public $incrementing = true;
 
     /**
-     * @param String $email
-     * @param Submission $submission
-     * @return User
+     * @param string $email
+     * @param \App\Models\Submission $submission
+     * @return \App\Models\User
      */
-    public function createStagedReviewer(String $email, Submission $submission)
+    public function createStagedReviewer(string $email, Submission $submission)
     {
         $user = User::createStagedUser($email);
         $submission->reviewers()->attach($user);
+
         return $user;
     }
 
     /**
-     * @param String $email
-     * @param Submission $submission
-     * @return User
+     * @param string $email
+     * @param \App\Models\Submission $submission
+     * @return \App\Models\User
      */
-    public function createStagedReviewCoordinator(String $email, Submission $submission)
+    public function createStagedReviewCoordinator(string $email, Submission $submission)
     {
         $user = User::createStagedUser($email);
         $submission->reviewCoordinators()->attach($user);
+
         return $user;
     }
 }

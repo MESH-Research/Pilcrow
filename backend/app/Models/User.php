@@ -11,9 +11,9 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Laravel\Sanctum\HasApiTokens;
 use Laravel\Scout\Searchable;
-use Illuminate\Support\Str;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements MustVerifyEmail
@@ -231,10 +231,10 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * @param String $email
-     * @return User
+     * @param string $email
+     * @return \App\Models\User
      */
-    public static function createStagedUser(String $email)
+    public static function createStagedUser(string $email)
     {
         return User::create([
             'username' => User::generateUniqueUsername($email),
@@ -245,15 +245,17 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * @param String $email
+     * @param string $email
      * @return String
      */
-    public static function generateUniqueUsername(String $email) {
-        $username = explode("@", $email)[0];
-        if (User::where('username',$username)->exists()) {
-            $unique = $username . '_' . Str::random(2) . random_int(0,50);
+    public static function generateUniqueUsername(string $email)
+    {
+        $username = explode('@', $email)[0];
+        if (User::where('username', $username)->exists()) {
+            $unique = $username . '_' . Str::random(2) . random_int(0, 50);
             $username = self::generateUniqueUsername($unique);
         }
+
         return $username;
     }
 }
