@@ -35,6 +35,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'email',
         'password',
         'profile_metadata',
+        'staged',
     ];
 
     /**
@@ -240,7 +241,7 @@ class User extends Authenticatable implements MustVerifyEmail
             'username' => User::generateUniqueUsername($email),
             'email' => $email,
             'password' => Hash::make('peer-review!'),
-            'staged' => true,
+            'staged' => 1,
         ]);
     }
 

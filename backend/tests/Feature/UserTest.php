@@ -29,4 +29,13 @@ class UserTest extends TestCase
         $username2 = User::generateUniqueUsername($email);
         $this->assertNotEquals($username1, $username2);
     }
+
+    /**
+     * @return void
+     */
+    public function testStagedUserCreation()
+    {
+        $user = User::createStagedUser($this->faker->email());
+        $this->assertEquals(1, $user->staged);
+    }
 }

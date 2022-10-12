@@ -43,6 +43,7 @@ export const _RELATED_USER_FIELDS = gql`
     username
     name
     email
+    staged
   }
 `
 
