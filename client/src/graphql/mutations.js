@@ -580,16 +580,27 @@ export const UPDATE_INLINE_COMMENT = gql`
     $submission_id: ID!
     $comment_id: ID!
     $content: String!
+    $style_criteria: [ID!]
   ) {
     updateSubmission(
       input: {
         id: $submission_id
-        inline_comments: { update: { id: $comment_id, content: $content } }
+        inline_comments: {
+          update: {
+            id: $comment_id
+            content: $content
+            style_criteria: $style_criteria
+          }
+        }
       }
     ) {
       id
       inline_comments {
         ...commentFields
+        style_criteria {
+          name
+          icon
+        }
         replies {
           reply_to_id
           ...commentFields

@@ -7,15 +7,30 @@
       </div>
       <div class="row items-center">
         <div
+          v-if="comment.updated_at != ''"
           class="text-caption"
           :aria-label="
-            $t('submissions.comment.dateLabel', { date: relativeTime })
+            $t('submissions.comment.dateLabelUpdated', {
+              date: relativeUpdatedTime,
+            })
+          "
+        >
+          <q-tooltip>
+            {{ updatedDate.toFormat("LLL dd yyyy hh:mm a") }}
+          </q-tooltip>
+          {{ relativeUpdatedTime }}
+        </div>
+        <div
+          v-else
+          class="text-caption"
+          :aria-label="
+            $t('submissions.comment.dateLabel', { date: relativeCreatedTime })
           "
         >
           <q-tooltip>
             {{ createdDate.toFormat("LLL dd yyyy hh:mm a") }}
           </q-tooltip>
-          {{ relativeTime }}
+          {{ relativeCreatedTime }}
         </div>
         <comment-actions
           @quote-reply-to="$emit('quoteReplyTo')"
@@ -58,9 +73,19 @@ const createdDate = computed(() => {
   return DateTime.fromISO(props.comment.created_at)
 })
 
-const relativeTime = computed(() => {
+const relativeCreatedTime = computed(() => {
   return createdDate.value
     ? timeAgo.format(createdDate.value.toJSDate(), "long")
+    : ""
+})
+
+const updatedDate = computed(() => {
+  return DateTime.fromISO(props.comment.updated_at)
+})
+
+const relativeUpdatedTime = computed(() => {
+  return updatedDate.value
+    ? timeAgo.format(updatedDate.value.toJSDate(), "long")
     : ""
 })
 </script>

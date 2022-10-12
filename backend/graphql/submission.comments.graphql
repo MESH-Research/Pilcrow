@@ -23,6 +23,7 @@ type InlineComment implements Comment {
 The static style criteria of an inline comment
 """
 type InlineCommentStyleCriteria {
+    id: ID
     name: String
     icon: String
 }

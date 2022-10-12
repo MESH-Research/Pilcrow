@@ -37,8 +37,8 @@
                 <q-item-label
                   :id="`criteria-${uuid}-${criteria.id}`"
                   data-cy="criteria-label"
-                  >{{ criteria.name }}</q-item-label
-                >
+                  >{{ criteria.name }}
+                </q-item-label>
               </q-item-section>
               <q-item-section avatar>
                 <q-toggle
@@ -129,7 +129,7 @@ const props = defineProps({
   comment: {
     type: Object,
     required: false,
-    default: null,
+    default: () => {},
   },
 })
 
@@ -333,11 +333,28 @@ function setLink() {
     .run()
 }
 
+// for comment_criteria
+//    if in pub_criteria
+//      selected: true
+
+const a = computed(() => props.comment)
+
+function isCriteriaSelected(publication_style_criteria, comment) {
+  if (commentType.value === "InlineComment") {
+    return comment.value.style_criteria.some((comment_style_criteria) => {
+      return comment_style_criteria.id == publication_style_criteria.id
+    }, publication_style_criteria)
+  }
+}
+
 const styleCriteria = ref(
-  submission.value.publication.style_criterias.map((c) => ({
-    ...c,
-    selected: false,
-  }))
+  submission.value.publication.style_criterias.map(
+    (c) => ({
+      ...c,
+      selected: isCriteriaSelected(c, a),
+    }),
+    a
+  )
 )
 </script>
 <style>
@@ -347,6 +364,7 @@ const styleCriteria = ref(
   min-height: 200px;
   padding: 8px;
 }
+
 .comment-editor .ProseMirror p.is-editor-empty:first-child::before {
   color: #18453b;
   content: attr(data-placeholder);

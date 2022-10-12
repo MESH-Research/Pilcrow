@@ -559,6 +559,7 @@ export default {
     comment: {
       ariaLabel: "Comment. Author {username}. {replies} replies.",
       dateLabel: "Created {date}",
+      dateLabelUpdated: "Updated {date}",
       toggle_replies: {
         show_reply: "Show Replies",
         hide_reply: "Hide Replies",
