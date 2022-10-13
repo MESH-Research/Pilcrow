@@ -26,6 +26,24 @@ extend type Mutation {
                 "status:updateStatus"
             ]
         )
+
+    "Stage a user as a reviewer of a submission"
+    stageReviewer(
+        submission_id: ID!
+        email: String!
+    ): Submission
+        @field(
+            resolver: "App\\GraphQL\\Mutations\\CreateStagedUser@stageReviewer"
+        )
+
+    "Stage a user as a review coordinator of a submission"
+    stageReviewCoordinator(
+        submission_id: ID!
+        email: String!
+    ): Submission
+        @field(
+            resolver: "App\\GraphQL\\Mutations\\CreateStagedUser@stageReviewCoordinator"
+        )
 }
 
 """

@@ -77,6 +77,7 @@ import {
   UPDATE_SUBMISSION_REVIEWERS,
   UPDATE_SUBMISSION_REVIEW_COORDINATORS,
   UPDATE_SUBMISSION_SUBMITERS,
+  STAGE_REVIEWER,
 } from "src/graphql/mutations"
 import { computed, ref } from "vue"
 import { useI18n } from "vue-i18n"
@@ -158,6 +159,18 @@ const editor = new Editor({
 async function handleSubmit() {
   if (!acceptMore.value) {
     return
+  }
+
+  if (user.value === null) {
+    const { stageUser } = useMutation(STAGE_REVIEWER, {
+      variables: {
+        submission_id: props.container.id,
+        email: "",
+      },
+    })
+    await stageUser().then(() => {
+      console.log("staged")
+    })
   }
 
   try {

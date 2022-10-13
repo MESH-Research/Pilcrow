@@ -284,4 +284,26 @@ class Submission extends Model implements Auditable
             ->line($mail[$role]['line'])
             ->action('Accept Invitation', url('/submission/' . $this->id));
     }
+
+    /**
+     * Create a staged user and attach them as a reviewer to a submisison
+     *
+     * @param string $email
+     */
+    public function stageReviewer(string $email)
+    {
+        $user = User::createStagedUser($email);
+        $this->reviewers()->attach($user);
+    }
+
+    /**
+     * Create a staged user and attach them as a review coordinator to a submisison
+     *
+     * @param string $email
+     */
+    public function stageReviewCoordinator(string $email)
+    {
+        $user = User::createStagedUser($email);
+        $this->reviewCoordinators()->attach($user);
+    }
 }

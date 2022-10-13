@@ -549,3 +549,27 @@ export const UPDATE_SUBMISSION_STATUS = gql`
     }
   }
 `
+
+export const STAGE_REVIEWER = gql`
+  mutation StageReviewer($submission_id: ID!, $email: String!) {
+    stageReviewer(submission_id: $submission_id, email: $email) {
+      id
+      reviewers {
+        ...relatedUserFields
+      }
+    }
+  }
+  ${_RELATED_USER_FIELDS}
+`
+
+export const STAGE_REVIEW_COORDINATOR = gql`
+  mutation StageReviewCoordinator($submission_id: ID!, $email: String!) {
+    stageReviewCoordinator(submission_id: $submission_id, email: $email) {
+      id
+      reviewers {
+        ...relatedUserFields
+      }
+    }
+  }
+  ${_RELATED_USER_FIELDS}
+`

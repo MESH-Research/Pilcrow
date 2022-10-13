@@ -10,11 +10,20 @@
     transition-show="none"
     use-input
     :loading="loading"
+    fill-input
+    :input-style="{ paddingLeft: '0px' }"
+    @input-value="setInput"
     @update:model-value="onSelectUpdate"
     @filter="filterFn"
   >
     <template #prepend>
       <q-icon color="accent" name="search" />
+    </template>
+    <template #no-option>
+      <div class="text--grey q-mt-xs q-py-xs q-px-md">
+        No user found. A brand new user will be added if you specify an
+        <strong>email address</strong>.
+      </div>
     </template>
     <template #hint>
       <div class="text--grey q-mt-xs">
@@ -22,9 +31,11 @@
       </div>
     </template>
     <template #selected-item="scope">
-      <q-chip data-cy="selected_item" dense square>
-        {{ scope.opt.username }} ({{ scope.opt.email }})
-      </q-chip>
+      <div v-if="scope.opt.username && scope.opt.email">
+        <q-chip data-cy="selected_item" dense square class="q-ml-none">
+          {{ scope.opt.username }} ({{ scope.opt.email }})
+        </q-chip>
+      </div>
     </template>
     <template #option="scope">
       <q-item data-cy="options_item" v-bind="scope.itemProps">
@@ -52,13 +63,22 @@ const props = defineProps({
   modelValue: {
     default: null,
     validator: (prop) =>
-      prop === null || typeof prop === "object" || typeof prop === "function",
+      prop === null ||
+      typeof prop === "object" ||
+      typeof prop === "function" ||
+      typeof prop === "string",
   },
 })
 const emit = defineEmits(["update:modelValue"])
 
-function onSelectUpdate(newValue) {
+function setInput(newValue) {
+  console.log(newValue)
   emit("update:modelValue", newValue)
+}
+
+function onSelectUpdate(newValue) {
+  // emit("update:modelValue", newValue)
+  console.log(newValue)
 }
 
 const variables = ref({ term: "" })
