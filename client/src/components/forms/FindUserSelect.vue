@@ -1,20 +1,20 @@
 <template>
   <q-select
+    :input-style="{ paddingLeft: '0px' }"
+    :label="$t(`submissions.invite_user.search.label`)"
+    :loading="loading"
     :model-value="props.modelValue"
     :options="options"
     bottom-slots
     hide-dropdown-icon
-    :label="$t(`submissions.invite_user.search.label`)"
+    :fill-input="userIsSelected"
     outlined
     transition-hide="none"
     transition-show="none"
     use-input
-    :loading="loading"
-    fill-input
-    :input-style="{ paddingLeft: '0px' }"
+    @filter="filterFn"
     @input-value="setInput"
     @update:model-value="onSelectUpdate"
-    @filter="filterFn"
   >
     <template #prepend>
       <q-icon color="accent" name="search" />
@@ -71,14 +71,21 @@ const props = defineProps({
 })
 const emit = defineEmits(["update:modelValue"])
 
+const userIsSelected = computed(() => {
+  console.log("check if selected")
+  return typeof props.modelValue === "object" && props.modelValue !== null
+})
+
 function setInput(newValue) {
-  console.log(newValue)
-  emit("update:modelValue", newValue)
+  if (!userIsSelected.value) {
+    emit("update:modelValue", newValue)
+  }
+  return newValue
 }
 
 function onSelectUpdate(newValue) {
-  // emit("update:modelValue", newValue)
-  console.log(newValue)
+  console.log("select", newValue, props.modelValue)
+  emit("update:modelValue", newValue)
 }
 
 const variables = ref({ term: "" })
