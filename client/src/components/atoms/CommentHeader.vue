@@ -7,7 +7,9 @@
       </div>
       <div class="row items-center">
         <div
-          v-if="comment.updated_at != ''"
+          v-if="
+            comment.updated_at != '' && comment.updated_at != comment.created_at
+          "
           class="text-caption"
           :aria-label="
             $t('submissions.comment.dateLabelUpdated', {
@@ -15,9 +17,12 @@
             })
           "
         >
-          <q-tooltip>
+          <q-tooltip
+            >{{ createdDate.toFormat("LLL dd yyyy hh:mm a") }} |
+            {{ $t("submissions.comment.updatedLabel") }}
             {{ updatedDate.toFormat("LLL dd yyyy hh:mm a") }}
           </q-tooltip>
+          {{ $t("submissions.comment.updatedLabel") }}
           {{ relativeUpdatedTime }}
         </div>
         <div
