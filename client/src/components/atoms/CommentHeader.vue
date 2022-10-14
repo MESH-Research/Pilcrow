@@ -10,6 +10,7 @@
           v-if="
             comment.updated_at != '' && comment.updated_at != comment.created_at
           "
+          data-cy="timestampUpdated"
           class="text-caption"
           :aria-label="
             $t('submissions.comment.dateLabelUpdated', {
@@ -27,6 +28,7 @@
         </div>
         <div
           v-else
+          data-cy="timestampCreated"
           class="text-caption"
           :aria-label="
             $t('submissions.comment.dateLabel', { date: relativeCreatedTime })

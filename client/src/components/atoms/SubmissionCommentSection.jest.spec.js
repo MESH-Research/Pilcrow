@@ -105,7 +105,13 @@ describe("Overall Comments", () => {
                       content:
                         "Aut numquam harum dolorem aliquam nulla. Ut tempore numquam modi maiores quia iusto.",
                       created_at: "2022-06-04T10:38:18Z",
+                      udpated_at: "2022-08-04T05:38:18Z",
                       created_by: {
+                        id: "2",
+                        username: "publicationAdministrator",
+                        email: "publicationadministrator@ccrproject.dev",
+                      },
+                      updated_by: {
                         id: "2",
                         username: "publicationAdministrator",
                         email: "publicationadministrator@ccrproject.dev",
@@ -215,5 +221,12 @@ describe("Overall Comments", () => {
       .find('[data-cy="hideRepliesButton"]')
       .trigger("click")
     expect(findReplies(overallComments.at(2))).toHaveLength(0)
+  })
+  test("expected timestamp is shown for created and updated overall comments", () => {
+    const { wrapper } = wrapperFactory()
+    const overallComments = wrapper.findAll('[data-cy="overallComment"]')
+    expect(
+      overallComments.at(7).find("[data-cy=timestampUpdated").exists()
+    ).toBe(true)
   })
 })
