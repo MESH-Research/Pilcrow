@@ -1,4 +1,4 @@
-import AssignedUsers from "./AssignedUsersComponent.vue"
+import AssignedSubmissionUsers from "./AssignedSubmissionUsers.vue"
 import { mount } from "@vue/test-utils"
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-jest"
 import { createMockClient } from "mock-apollo-client"
@@ -17,12 +17,12 @@ jest.mock("quasar", () => ({
 }))
 
 installQuasarPlugin()
-describe("AssignedUsers", () => {
+describe("AssignedSubmissionUsers", () => {
   const mockClient = createMockClient({
     defaultOptions: { watchQuery: { fetchPolicy: "network-only" } },
   })
   const makeWrapper = (props) => {
-    return mount(AssignedUsers, {
+    return mount(AssignedSubmissionUsers, {
       global: {
         mocks: {
           $t: (t) => t,
@@ -55,6 +55,7 @@ describe("AssignedUsers", () => {
       container: {
         __typename: "Submission",
         id: 1,
+        effective_role: "review_coordinator",
         reviewers: [
           { id: 1, email: "test@example.com", name: "TestUser" },
           { id: 2, email: "test2@example.com", name: "TestUser2" },
@@ -71,6 +72,7 @@ describe("AssignedUsers", () => {
       container: {
         __typename: "Submission",
         id: 1,
+        effective_role: "review_coordinator",
         reviewers: [],
       },
     })
@@ -81,6 +83,7 @@ describe("AssignedUsers", () => {
       container: {
         __typename: "Submission",
         id: 1,
+        effective_role: "review_coordinator",
         reviewers: [{ id: 1, email: "test@example.com", name: "TestUser" }],
       },
     })
@@ -94,6 +97,7 @@ describe("AssignedUsers", () => {
       container: {
         __typename: "Submission",
         id: 1,
+        effective_role: "review_coordinator",
         reviewers: [{ id: 1, email: "test@example.com", name: "Test" }],
       },
     })
@@ -107,6 +111,7 @@ describe("AssignedUsers", () => {
       container: {
         __typename: "Submission",
         id: 1,
+        effective_role: "review_coordinator",
         reviewers: [{ id: 1, email: "test@example.com", name: "Test" }],
       },
     })
@@ -123,6 +128,7 @@ describe("AssignedUsers", () => {
       container: {
         __typename: "Submission",
         id: 1,
+        effective_role: "review_coordinator",
         reviewers: [{ id: 1, email: "test@example.com", name: "Test" }],
       },
     })
@@ -136,6 +142,7 @@ describe("AssignedUsers", () => {
       container: {
         __typename: "Submission",
         id: 1,
+        effective_role: "review_coordinator",
         reviewers: [{ id: 1, email: "test@example.com", name: "Test" }],
       },
     })
@@ -148,6 +155,7 @@ describe("AssignedUsers", () => {
       container: {
         __typename: "Submission",
         id: 1,
+        effective_role: "review_coordinator",
         reviewers: [{ id: 1, email: "test@example.com", name: "Test" }],
       },
     })
@@ -167,6 +175,7 @@ describe("AssignedUsers", () => {
       container: {
         __typename: "Submission",
         id: 1,
+        effective_role: "review_coordinator",
         reviewers: [{ id: 1, email: "test@example.com", name: "Test" }],
       },
     })
@@ -188,6 +197,7 @@ describe("AssignedUsers", () => {
       container: {
         __typename: "Submission",
         id: 1,
+        effective_role: "review_coordinator",
         reviewers: [{ id: 1, email: "test@example.com", name: "Test" }],
       },
     })
@@ -209,6 +219,7 @@ describe("AssignedUsers", () => {
       mutable: true,
       container: {
         id: 1,
+        effective_role: "review_coordinator",
         __typename: "Submission",
       },
     }
