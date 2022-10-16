@@ -563,10 +563,10 @@ export const STAGE_REVIEWER = gql`
 `
 
 export const STAGE_REVIEW_COORDINATOR = gql`
-  mutation StageReviewCoordinator($submission_id: ID!, $email: String!) {
-    stageReviewCoordinator(submission_id: $submission_id, email: $email) {
+  mutation StageReviewCoordinator($id: ID!, $email: String!) {
+    stageReviewCoordinator(submission_id: $id, email: $email) {
       id
-      reviewers {
+      review_coordinators {
         ...relatedUserFields
       }
     }
