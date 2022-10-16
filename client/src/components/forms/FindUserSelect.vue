@@ -7,13 +7,13 @@
     :options="options"
     bottom-slots
     hide-dropdown-icon
-    :fill-input="userIsSelected"
+    :fill-input="!isUserSelected"
     outlined
     transition-hide="none"
     transition-show="none"
     use-input
     @filter="filterFn"
-    @input-value="setInput"
+    @input-value="setInputValue"
     @update:model-value="onSelectUpdate"
   >
     <template #prepend>
@@ -71,20 +71,18 @@ const props = defineProps({
 })
 const emit = defineEmits(["update:modelValue"])
 
-const userIsSelected = computed(() => {
-  console.log("check if selected")
+const isUserSelected = computed(() => {
   return typeof props.modelValue === "object" && props.modelValue !== null
 })
 
-function setInput(newValue) {
-  if (!userIsSelected.value) {
+function setInputValue(newValue) {
+  if (!isUserSelected.value) {
     emit("update:modelValue", newValue)
   }
   return newValue
 }
 
 function onSelectUpdate(newValue) {
-  console.log("select", newValue, props.modelValue)
   emit("update:modelValue", newValue)
 }
 
