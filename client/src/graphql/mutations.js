@@ -551,8 +551,8 @@ export const UPDATE_SUBMISSION_STATUS = gql`
 `
 
 export const STAGE_REVIEWER = gql`
-  mutation StageReviewer($submission_id: ID!, $email: String!) {
-    stageReviewer(submission_id: $submission_id, email: $email) {
+  mutation StageReviewer($id: ID!, $email: String!) {
+    stageReviewer(submission_id: $id, email: $email) {
       id
       reviewers {
         ...relatedUserFields
