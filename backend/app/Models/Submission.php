@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Support\Facades\Auth;
 use OwenIt\Auditing\Contracts\Auditable;
 
 class Submission extends Model implements Auditable
@@ -264,10 +265,12 @@ class Submission extends Model implements Auditable
      *
      * @param string $role
      * @param string $email
+     * @param string $message
      * @return void
      */
-    public function sendInvitation(string $role, string $email)
+    public function sendInvitation(string $role, string $email, string $message)
     {
+        $user_by = Auth::user();
         $mail = [
             'reviewer' => [
                 'subject' => 'Invitation to Review',
@@ -278,17 +281,22 @@ class Submission extends Model implements Auditable
                 'line' => 'You have been invited to coordinate the review of a submission.',
             ],
         ];
-
         $mail = new MailMessage();
         $mail->subject($mail[$role]['subject'])
             ->line($mail[$role]['line'])
+            ->linesIf($message, [
+                'Comment from ' . ($user_by['name'] ?: $user_by['username']) . ': ',
+                $message,
+            ])
             ->action('Accept Invitation', url('/submission/' . $this->id));
+        return $mail;
     }
 
     /**
      * Create a staged user and attach them as a reviewer to a submisison
      *
      * @param string $email
+     * @return void
      */
     public function stageReviewer(string $email)
     {
@@ -300,6 +308,7 @@ class Submission extends Model implements Auditable
      * Create a staged user and attach them as a review coordinator to a submisison
      *
      * @param string $email
+     * @return void
      */
     public function stageReviewCoordinator(string $email)
     {

@@ -18,6 +18,7 @@ final class CreateStagedUser
     {
         $submission = Submission::where('id', $args['submission_id'])->firstOrFail();
         $submission->stageReviewer($args['email']);
+        $submission->sendInvitation('reviewer', $args['email']);
 
         return $submission;
     }
