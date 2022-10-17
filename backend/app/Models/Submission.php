@@ -261,32 +261,40 @@ class Submission extends Model implements Auditable
     }
 
     /**
-     * Send an email inviting an unstaged user as a specified role to a submission
+     * Send an email inviting a staged user as a reviewer to a submission
      *
-     * @param string $role
-     * @param string $email
-     * @param string $message
-     * @return void
+     * @param array $args
+     * @return MailMessage
      */
-    public function sendInvitation(string $role, string $email, string $message)
+    public function inviteReviewer(array $args)
     {
         $user_by = Auth::user();
-        $mail = [
-            'reviewer' => [
-                'subject' => 'Invitation to Review',
-                'line' => 'You have been invited to review a submission.',
-            ],
-            'review_coordinator' => [
-                'subject' => 'Invitation to Coordinate a Submission Review',
-                'line' => 'You have been invited to coordinate the review of a submission.',
-            ],
-        ];
         $mail = new MailMessage();
-        $mail->subject($mail[$role]['subject'])
-            ->line($mail[$role]['line'])
-            ->linesIf($message, [
+        $mail->subject('Invitation to Review')
+            ->line('You have been invited to review a submission.')
+            ->linesIf(array_key_exists('message', $args), [
                 'Comment from ' . ($user_by['name'] ?: $user_by['username']) . ': ',
-                $message,
+                $args['message'],
+            ])
+            ->action('Accept Invitation', url('/submission/' . $this->id));
+        return $mail;
+    }
+
+    /**
+     * Send an email inviting a staged user as a review coordinator to a submission
+     *
+     * @param array $args
+     * @return MailMessage
+     */
+    public function inviteReviewCoordinator(array $args)
+    {
+        $user_by = Auth::user();
+        $mail = new MailMessage();
+        $mail->subject('Invitation to Coordinate a Submission Review')
+            ->line('You have been invited to coordinate the review of a submission.')
+            ->linesIf(array_key_exists('message', $args), [
+                'Comment from ' . ($user_by['name'] ?: $user_by['username']) . ': ',
+                $args['message'],
             ])
             ->action('Accept Invitation', url('/submission/' . $this->id));
         return $mail;

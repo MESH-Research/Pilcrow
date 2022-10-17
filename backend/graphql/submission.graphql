@@ -31,7 +31,7 @@ extend type Mutation {
     stageReviewer(
         submission_id: ID!
         email: String!
-        message: String!
+        message: String
     ): Submission
         @field(
             resolver: "App\\GraphQL\\Mutations\\CreateStagedUser@stageReviewer"
@@ -41,7 +41,7 @@ extend type Mutation {
     stageReviewCoordinator(
         submission_id: ID!
         email: String!
-        message: String!
+        message: String
     ): Submission
         @field(
             resolver: "App\\GraphQL\\Mutations\\CreateStagedUser@stageReviewCoordinator"

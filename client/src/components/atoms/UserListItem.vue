@@ -20,11 +20,11 @@
           v-if="user.staged"
           class="gt-xs"
           size="12px"
-          color="negative"
+          color="secondary"
           flat
           dense
           :title="$t('user.unconfirmed.title')"
-          icon="warning_amber"
+          icon="schedule"
           data-cy="user_unconfirmed"
           @click="unconfirmedVisibility = !unconfirmedVisibility"
         >
