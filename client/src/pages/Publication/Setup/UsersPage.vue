@@ -18,14 +18,14 @@
       be administered by application admins.
     </q-banner>
     <div class="column q-gutter-md">
-      <assigned-users
+      <assigned-publication-users
         data-cy="admins_list"
         relationship="publication_admins"
         :container="publication"
         mutable
       />
       <q-separator />
-      <assigned-users
+      <assigned-publication-users
         data-cy="editors_list"
         relationship="editors"
         :container="publication"
@@ -36,7 +36,7 @@
 </template>
 
 <script setup>
-import AssignedUsers from "src/components/AssignedUsersComponent.vue"
+import AssignedPublicationUsers from "src/components/AssignedPublicationUsers.vue"
 defineProps({
   publication: {
     type: Object,

@@ -4,7 +4,7 @@
     :options="options"
     bottom-slots
     hide-dropdown-icon
-    label="User to Assign"
+    :label="$t(`submissions.invite_user.search.label`)"
     outlined
     transition-hide="none"
     transition-show="none"
@@ -17,7 +17,9 @@
       <q-icon color="accent" name="search" />
     </template>
     <template #hint>
-      <div class="text--grey">Search by username, email, or name.</div>
+      <div class="text--grey q-mt-xs">
+        {{ $t("submissions.invite_user.search.hint") }}
+      </div>
     </template>
     <template #selected-item="scope">
       <q-chip data-cy="selected_item" dense square>
