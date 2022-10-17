@@ -244,4 +244,11 @@ describe("Submissions Review", () => {
     cy.dataCy("submission_status").contains("Resubmission Requested")
     cy.dataCy("decision_options").should('not.exist');
   })
+
+  it("should allow comments and their replies to be modified", () => {
+    cy.task("resetDb")
+    cy.login({ email: "applicationadministrator@ccrproject.dev" })
+    cy.visit("submission/review/100")
+    cy.dataCy("inlineComment").first()
+  })
 })
