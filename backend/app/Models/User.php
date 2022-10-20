@@ -232,6 +232,9 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
+     * Create a staged user based on a supplied email and
+     * assign a default username and password
+     *
      * @param string $email
      * @return \App\Models\User
      */
@@ -246,6 +249,10 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
+     * Generate a username from an email address and ensure it
+     * does not conflict with existing usernames in the application
+     * by appending random text when necessary
+     *
      * @param string $email
      * @return String
      */

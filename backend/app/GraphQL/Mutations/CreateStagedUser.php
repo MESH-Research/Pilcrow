@@ -4,6 +4,9 @@ declare(strict_types=1);
 namespace App\GraphQL\Mutations;
 
 use App\Models\Submission;
+use App\Notifications\InviteReviewer;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Notification;
 
 final class CreateStagedUser
 {
@@ -17,8 +20,22 @@ final class CreateStagedUser
     public function stageReviewer($_, array $args)
     {
         $submission = Submission::where('id', $args['submission_id'])->firstOrFail();
-        $submission->stageReviewer($args['email']);
-        // $submission->inviteReviewer($args);
+        $reviewer = $submission->stageReviewer($args['email']);
+        $auth_user = Auth::user();
+        $notification_data = [
+            'submission' => [
+                'id' => $submission->id,
+            ],
+            'inviter' => [
+                'name' => $auth_user->name,
+                'username' => $auth_user->username,
+            ],
+            'message' => $args['message'],
+        ];
+        Notification::send(
+            $reviewer,
+            new InviteReviewer($notification_data)
+        );
 
         return $submission;
     }

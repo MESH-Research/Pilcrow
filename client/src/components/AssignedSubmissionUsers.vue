@@ -80,7 +80,7 @@ import {
 } from "src/graphql/mutations"
 import { computed, ref } from "vue"
 import { useI18n } from "vue-i18n"
-import { Editor, EditorContent } from "@tiptap/vue-3"
+import { useEditor, EditorContent } from "@tiptap/vue-3"
 import StarterKit from "@tiptap/starter-kit"
 import Placeholder from "@tiptap/extension-placeholder"
 const props = defineProps({
@@ -152,7 +152,7 @@ const acceptMore = computed(() => {
   )
 })
 
-const editor = new Editor({
+const editor = useEditor({
   content: "",
   extensions: [
     StarterKit,
@@ -162,20 +162,29 @@ const editor = new Editor({
   ],
 })
 
+function resetForm() {
+  user.value = null
+  editor.value.commands.clearContent(true)
+  editor.value.commands.blur()
+}
+
 async function handleSubmit() {
   if (!acceptMore.value) {
     return
   }
 
   try {
+    // Stage user
     if (typeof user.value === "string") {
       await mutate({
         email: user.value,
-      }).then(() => {
-        user.value = null
-      })
+        message: editor.value.getText(),
+      }).then(() => {})
+      resetForm()
       return
     }
+
+    // Assign user
     await mutate({
       connect: [user.value.id],
     })
@@ -188,7 +197,7 @@ async function handleSubmit() {
         )
       })
       .then(() => {
-        user.value = null
+        resetForm()
       })
   } catch (error) {
     newStatusMessage("failure", tp$("assign.error"))

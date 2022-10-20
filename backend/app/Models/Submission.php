@@ -261,30 +261,10 @@ class Submission extends Model implements Auditable
     }
 
     /**
-     * Send an email inviting a staged user as a reviewer to a submission
-     *
-     * @param array $args
-     * @return MailMessage
-     */
-    public function inviteReviewer(array $args)
-    {
-        $user_by = Auth::user();
-        $mail = new MailMessage();
-        $mail->subject('Invitation to Review')
-            ->line('You have been invited to review a submission.')
-            ->linesIf(array_key_exists('message', $args), [
-                'Comment from ' . ($user_by['name'] ?: $user_by['username']) . ': ',
-                $args['message'],
-            ])
-            ->action('Accept Invitation', url('/submission/' . $this->id));
-        return $mail;
-    }
-
-    /**
      * Send an email inviting a staged user as a review coordinator to a submission
      *
      * @param array $args
-     * @return MailMessage
+     * @return \Illuminate\Notifications\Messages\MailMessage
      */
     public function inviteReviewCoordinator(array $args)
     {
@@ -297,30 +277,35 @@ class Submission extends Model implements Auditable
                 $args['message'],
             ])
             ->action('Accept Invitation', url('/submission/' . $this->id));
+
         return $mail;
     }
 
     /**
-     * Create a staged user and attach them as a reviewer to a submisison
+     * Create a staged user and attach them as a reviewer to this submisison
      *
      * @param string $email
-     * @return void
+     * @return \App\Models\User
      */
     public function stageReviewer(string $email)
     {
         $user = User::createStagedUser($email);
         $this->reviewers()->attach($user);
+
+        return $user;
     }
 
     /**
-     * Create a staged user and attach them as a review coordinator to a submisison
+     * Create a staged user and attach them as a review coordinator to this submisison
      *
      * @param string $email
-     * @return void
+     * @return \App\Models\User
      */
     public function stageReviewCoordinator(string $email)
     {
         $user = User::createStagedUser($email);
         $this->reviewCoordinators()->attach($user);
+
+        return $user;
     }
 }
