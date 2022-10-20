@@ -401,8 +401,7 @@ export default {
       delete_confirm: "Are you sure you want to delete {name}?",
       delete_header: "Confirm Delete Criteria",
       addBtnLabel: "Add Criteria",
-      saveError:
-        "There was an error saving, check the form above for errors.",
+      saveError: "There was an error saving, check the form above for errors.",
       deleteError: "Unable to delete.",
       fields: {
         name: {
