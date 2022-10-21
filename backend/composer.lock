@@ -763,23 +763,23 @@
         },
         {
             "name": "doctrine/inflector",
-            "version": "2.0.5",
+            "version": "2.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/inflector.git",
-                "reference": "ade2b3bbfb776f27f0558e26eed43b5d9fe1b392"
+                "reference": "d9d313a36c872fd6ee06d9a6cbcf713eaa40f024"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/inflector/zipball/ade2b3bbfb776f27f0558e26eed43b5d9fe1b392",
-                "reference": "ade2b3bbfb776f27f0558e26eed43b5d9fe1b392",
+                "url": "https://api.github.com/repos/doctrine/inflector/zipball/d9d313a36c872fd6ee06d9a6cbcf713eaa40f024",
+                "reference": "d9d313a36c872fd6ee06d9a6cbcf713eaa40f024",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.2 || ^8.0"
             },
             "require-dev": {
-                "doctrine/coding-standard": "^9",
+                "doctrine/coding-standard": "^10",
                 "phpstan/phpstan": "^1.8",
                 "phpstan/phpstan-phpunit": "^1.1",
                 "phpstan/phpstan-strict-rules": "^1.3",
@@ -834,7 +834,7 @@
             ],
             "support": {
                 "issues": "https://github.com/doctrine/inflector/issues",
-                "source": "https://github.com/doctrine/inflector/tree/2.0.5"
+                "source": "https://github.com/doctrine/inflector/tree/2.0.6"
             },
             "funding": [
                 {
@@ -850,7 +850,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-09-07T09:01:28+00:00"
+            "time": "2022-10-20T09:10:12+00:00"
         },
         {
             "name": "doctrine/lexer",
@@ -1656,16 +1656,16 @@
         },
         {
             "name": "haydenpierce/class-finder",
-            "version": "0.4.3",
+            "version": "0.4.4",
             "source": {
                 "type": "git",
-                "url": "https://gitlab.com/hpierce1102/ClassFinder.git",
-                "reference": "d6c68f386c764674c59ee336d1dfca35aada5f90"
+                "url": "git@gitlab.com:hpierce1102/ClassFinder.git",
+                "reference": "94c602870ddf8d4fa2d67fb9bae637d88f9bd76e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://gitlab.com/api/v4/projects/hpierce1102%2FClassFinder/repository/archive.zip?sha=d6c68f386c764674c59ee336d1dfca35aada5f90",
-                "reference": "d6c68f386c764674c59ee336d1dfca35aada5f90",
+                "url": "https://gitlab.com/api/v4/projects/hpierce1102%2FClassFinder/repository/archive.zip?sha=94c602870ddf8d4fa2d67fb9bae637d88f9bd76e",
+                "reference": "94c602870ddf8d4fa2d67fb9bae637d88f9bd76e",
                 "shasum": ""
             },
             "require": {
@@ -1694,10 +1694,7 @@
                 }
             ],
             "description": "A library that can provide of a list of classes in a given namespace",
-            "support": {
-                "issues": "https://gitlab.com/api/v4/projects/7670051/issues"
-            },
-            "time": "2021-01-05T20:50:49+00:00"
+            "time": "2022-09-26T22:42:59+00:00"
         },
         {
             "name": "laminas/laminas-code",
@@ -1825,16 +1822,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v9.36.3",
+            "version": "v9.36.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "80ba0561b3682b96743e1c152fde0698bbdb2412"
+                "reference": "15ce569fd93124e8e2257c24e3ed85b9ef9951d6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/80ba0561b3682b96743e1c152fde0698bbdb2412",
-                "reference": "80ba0561b3682b96743e1c152fde0698bbdb2412",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/15ce569fd93124e8e2257c24e3ed85b9ef9951d6",
+                "reference": "15ce569fd93124e8e2257c24e3ed85b9ef9951d6",
                 "shasum": ""
             },
             "require": {
@@ -1846,7 +1843,7 @@
                 "fruitcake/php-cors": "^1.2",
                 "laravel/serializable-closure": "^1.2.2",
                 "league/commonmark": "^2.2",
-                "league/flysystem": "^3.0.16",
+                "league/flysystem": "^3.8.0",
                 "monolog/monolog": "^2.0",
                 "nesbot/carbon": "^2.62.1",
                 "nunomaduro/termwind": "^1.13",
@@ -2007,7 +2004,7 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2022-10-19T13:23:53+00:00"
+            "time": "2022-10-20T16:11:03+00:00"
         },
         {
             "name": "laravel/sanctum",
@@ -2692,16 +2689,16 @@
         },
         {
             "name": "mll-lab/graphql-php-scalars",
-            "version": "v5.4.0",
+            "version": "v5.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mll-lab/graphql-php-scalars.git",
-                "reference": "a4c51fdfbed29d6d12453d2107a19bd33a3dfce0"
+                "reference": "0e71c350f1192819f603db783b92598e00c80549"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mll-lab/graphql-php-scalars/zipball/a4c51fdfbed29d6d12453d2107a19bd33a3dfce0",
-                "reference": "a4c51fdfbed29d6d12453d2107a19bd33a3dfce0",
+                "url": "https://api.github.com/repos/mll-lab/graphql-php-scalars/zipball/0e71c350f1192819f603db783b92598e00c80549",
+                "reference": "0e71c350f1192819f603db783b92598e00c80549",
                 "shasum": ""
             },
             "require": {
@@ -2748,9 +2745,9 @@
             ],
             "support": {
                 "issues": "https://github.com/mll-lab/graphql-php-scalars/issues",
-                "source": "https://github.com/mll-lab/graphql-php-scalars/tree/v5.4.0"
+                "source": "https://github.com/mll-lab/graphql-php-scalars/tree/v5.4.1"
             },
-            "time": "2022-01-28T09:28:10+00:00"
+            "time": "2022-10-20T19:34:29+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -3247,16 +3244,16 @@
         },
         {
             "name": "nuwave/lighthouse",
-            "version": "v5.61.0",
+            "version": "v5.62.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nuwave/lighthouse.git",
-                "reference": "e1a21d5498d80cbc727e46ec373b58f16be3a278"
+                "reference": "4dd08990889ecf996a2a955434852c967cb9c2ee"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nuwave/lighthouse/zipball/e1a21d5498d80cbc727e46ec373b58f16be3a278",
-                "reference": "e1a21d5498d80cbc727e46ec373b58f16be3a278",
+                "url": "https://api.github.com/repos/nuwave/lighthouse/zipball/4dd08990889ecf996a2a955434852c967cb9c2ee",
+                "reference": "4dd08990889ecf996a2a955434852c967cb9c2ee",
                 "shasum": ""
             },
             "require": {
@@ -3277,6 +3274,7 @@
                 "webonyx/graphql-php": "^14.7"
             },
             "require-dev": {
+                "algolia/algoliasearch-client-php": "^3 || ^4",
                 "bensampo/laravel-enum": "^1.28.3 || ^2 || ^3 || ^4 || ^5 || ^6",
                 "ergebnis/composer-normalize": "^2.2.2",
                 "laravel/framework": "5.6.* || 5.7.* || 5.8.* || ^6 || ^7 || ^8 || ^9",
@@ -3370,7 +3368,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2022-09-19T12:24:22+00:00"
+            "time": "2022-10-21T10:38:15+00:00"
         },
         {
             "name": "olssonm/l5-zxcvbn",
@@ -4493,16 +4491,16 @@
         },
         {
             "name": "spatie/laravel-permission",
-            "version": "5.5.5",
+            "version": "5.5.14",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/laravel-permission.git",
-                "reference": "f2303a70be60919811ca8afc313e8244fda00974"
+                "reference": "87850d72185278b65a33b58b6016dd3564d3a583"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/laravel-permission/zipball/f2303a70be60919811ca8afc313e8244fda00974",
-                "reference": "f2303a70be60919811ca8afc313e8244fda00974",
+                "url": "https://api.github.com/repos/spatie/laravel-permission/zipball/87850d72185278b65a33b58b6016dd3564d3a583",
+                "reference": "87850d72185278b65a33b58b6016dd3564d3a583",
                 "shasum": ""
             },
             "require": {
@@ -4563,7 +4561,7 @@
             ],
             "support": {
                 "issues": "https://github.com/spatie/laravel-permission/issues",
-                "source": "https://github.com/spatie/laravel-permission/tree/5.5.5"
+                "source": "https://github.com/spatie/laravel-permission/tree/5.5.14"
             },
             "funding": [
                 {
@@ -4571,7 +4569,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-06-29T23:11:42+00:00"
+            "time": "2022-10-21T04:50:01+00:00"
         },
         {
             "name": "spatie/laravel-settings",
@@ -7180,16 +7178,16 @@
         },
         {
             "name": "thecodingmachine/safe",
-            "version": "v2.3.0",
+            "version": "v2.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thecodingmachine/safe.git",
-                "reference": "dc8df8f5047e7d3021a3f41f492dc99f8b3dc475"
+                "reference": "e788f3d09dcd36f806350aedb77eac348fafadd3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thecodingmachine/safe/zipball/dc8df8f5047e7d3021a3f41f492dc99f8b3dc475",
-                "reference": "dc8df8f5047e7d3021a3f41f492dc99f8b3dc475",
+                "url": "https://api.github.com/repos/thecodingmachine/safe/zipball/e788f3d09dcd36f806350aedb77eac348fafadd3",
+                "reference": "e788f3d09dcd36f806350aedb77eac348fafadd3",
                 "shasum": ""
             },
             "require": {
@@ -7213,6 +7211,7 @@
                     "deprecated/array.php",
                     "deprecated/datetime.php",
                     "deprecated/libevent.php",
+                    "deprecated/misc.php",
                     "deprecated/password.php",
                     "deprecated/mssql.php",
                     "deprecated/stats.php",
@@ -7312,9 +7311,9 @@
             "description": "PHP core functions that throw exceptions instead of returning FALSE on error",
             "support": {
                 "issues": "https://github.com/thecodingmachine/safe/issues",
-                "source": "https://github.com/thecodingmachine/safe/tree/v2.3.0"
+                "source": "https://github.com/thecodingmachine/safe/tree/v2.4.0"
             },
-            "time": "2022-09-13T15:49:48+00:00"
+            "time": "2022-10-07T14:02:17+00:00"
         },
         {
             "name": "tijsverkoyen/css-to-inline-styles",
@@ -7697,16 +7696,16 @@
         },
         {
             "name": "webonyx/graphql-php",
-            "version": "v14.11.6",
+            "version": "v14.11.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webonyx/graphql-php.git",
-                "reference": "6070542725b61fc7d0654a8a9855303e5e157434"
+                "reference": "04a48693acd785330eefd3b0e4fa67df8dfee7c3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webonyx/graphql-php/zipball/6070542725b61fc7d0654a8a9855303e5e157434",
-                "reference": "6070542725b61fc7d0654a8a9855303e5e157434",
+                "url": "https://api.github.com/repos/webonyx/graphql-php/zipball/04a48693acd785330eefd3b0e4fa67df8dfee7c3",
+                "reference": "04a48693acd785330eefd3b0e4fa67df8dfee7c3",
                 "shasum": ""
             },
             "require": {
@@ -7751,7 +7750,7 @@
             ],
             "support": {
                 "issues": "https://github.com/webonyx/graphql-php/issues",
-                "source": "https://github.com/webonyx/graphql-php/tree/v14.11.6"
+                "source": "https://github.com/webonyx/graphql-php/tree/v14.11.8"
             },
             "funding": [
                 {
@@ -7759,7 +7758,7 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2022-04-13T16:25:32+00:00"
+            "time": "2022-09-21T15:35:03+00:00"
         }
     ],
     "packages-dev": [
