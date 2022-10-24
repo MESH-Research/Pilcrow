@@ -2462,16 +2462,16 @@
         },
         {
             "name": "league/flysystem",
-            "version": "3.9.0",
+            "version": "3.10.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/flysystem.git",
-                "reference": "60f3760352fe08e918bc3b1acae4e91af092ebe1"
+                "reference": "9857d7208a94fc63c7bf09caf223280e59ac7274"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/60f3760352fe08e918bc3b1acae4e91af092ebe1",
-                "reference": "60f3760352fe08e918bc3b1acae4e91af092ebe1",
+                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/9857d7208a94fc63c7bf09caf223280e59ac7274",
+                "reference": "9857d7208a94fc63c7bf09caf223280e59ac7274",
                 "shasum": ""
             },
             "require": {
@@ -2487,7 +2487,7 @@
             },
             "require-dev": {
                 "async-aws/s3": "^1.5",
-                "async-aws/simple-s3": "^1.0",
+                "async-aws/simple-s3": "^1.1",
                 "aws/aws-sdk-php": "^3.198.1",
                 "composer/semver": "^3.0",
                 "ext-fileinfo": "*",
@@ -2533,7 +2533,7 @@
             ],
             "support": {
                 "issues": "https://github.com/thephpleague/flysystem/issues",
-                "source": "https://github.com/thephpleague/flysystem/tree/3.9.0"
+                "source": "https://github.com/thephpleague/flysystem/tree/3.10.1"
             },
             "funding": [
                 {
@@ -2549,7 +2549,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-10-18T21:02:43+00:00"
+            "time": "2022-10-21T18:57:47+00:00"
         },
         {
             "name": "league/mime-type-detection",
@@ -4492,16 +4492,16 @@
         },
         {
             "name": "spatie/laravel-permission",
-            "version": "5.5.14",
+            "version": "5.5.16",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/laravel-permission.git",
-                "reference": "87850d72185278b65a33b58b6016dd3564d3a583"
+                "reference": "e57a67b51a02cbfcd074ed68786897db1dbbf2fa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/laravel-permission/zipball/87850d72185278b65a33b58b6016dd3564d3a583",
-                "reference": "87850d72185278b65a33b58b6016dd3564d3a583",
+                "url": "https://api.github.com/repos/spatie/laravel-permission/zipball/e57a67b51a02cbfcd074ed68786897db1dbbf2fa",
+                "reference": "e57a67b51a02cbfcd074ed68786897db1dbbf2fa",
                 "shasum": ""
             },
             "require": {
@@ -4562,7 +4562,7 @@
             ],
             "support": {
                 "issues": "https://github.com/spatie/laravel-permission/issues",
-                "source": "https://github.com/spatie/laravel-permission/tree/5.5.14"
+                "source": "https://github.com/spatie/laravel-permission/tree/5.5.16"
             },
             "funding": [
                 {
@@ -4570,7 +4570,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-10-21T04:50:01+00:00"
+            "time": "2022-10-23T02:49:28+00:00"
         },
         {
             "name": "spatie/laravel-settings",
