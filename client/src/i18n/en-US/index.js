@@ -40,7 +40,7 @@ export default {
     label: "Item",
   },
   auth: {
-    loginRequired: "You need to login to access that page.",
+    loginRequired: "Please login to access that page.",
     login: "Login",
     logout: "Logout",
     register: "Register",
@@ -85,7 +85,7 @@ export default {
       USERNAME_AVAILABLE: "This username is available",
     },
     failures: {
-      FORM_VALIDATION: "Oops, please correct the errors above and try again.",
+      FORM_VALIDATION: "Please correct the errors above and try again.",
       INTERNAL: "An unexpected error has occurred. Please try again later.",
       LOGIN_FORM_VALIDATION: "Please correct the errors above and try again.",
       FAILURE_IDENTITY_NOT_FOUND: "Username and/or password is incorrect.",
@@ -104,7 +104,7 @@ export default {
   },
   header: {
     account_link: "My Account",
-    dashboard: "My Dashboard",
+    dashboard: "Dashboard",
     menu_button_aria: "Show/hide navigation sidebar",
     publications: "Publications",
     submissions: "Submissions",
@@ -222,7 +222,7 @@ export default {
           instagram: {
             label: "Instagram",
             errors: {
-              valid: "Please enter a valid Instagram profile name.",
+              valid: "Please enter a valid Instagram username.",
               maxLength: "@:generic_validations.maxLength",
             },
           },
@@ -401,9 +401,8 @@ export default {
       delete_confirm: "Are you sure you want to delete {name}?",
       delete_header: "Confirm Delete Criteria",
       addBtnLabel: "Add Criteria",
-      saveError:
-        "Oops, there was an error saving, check the form above for errors.",
-      deleteError: "Oops, unable to delete.",
+      saveError: "There was an error saving, check the form above for errors.",
+      deleteError: "Unable to delete.",
       fields: {
         name: {
           label: "Name",
