@@ -74,7 +74,7 @@ class SubmissionPolicy
         }
 
         //Check if the user is a review_coordinator
-        if ($user->hasSubmissionRole(Role::REVIEW_COORDINATOR_ROLE_ID, $submission->id)) {
+        if ($user->hasSubmissionRole([Role::REVIEW_COORDINATOR_ROLE_ID], $submission->id)) {
             return true;
         }
 
