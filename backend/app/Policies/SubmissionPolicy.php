@@ -112,7 +112,7 @@ class SubmissionPolicy
             return true;
         }
 
-        if($user->hasSubmissionRole([Role::SUBMITTER_ROLE_ID], $submission->id) && ($submission->status == Submission::DRAFT)) {
+        if ($user->hasSubmissionRole([Role::SUBMITTER_ROLE_ID], $submission->id) && ($submission->status == Submission::DRAFT)) {
             return true;
         }
 
