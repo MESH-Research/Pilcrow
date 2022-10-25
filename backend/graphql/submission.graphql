@@ -27,24 +27,30 @@ extend type Mutation {
             ]
         )
 
+    "Accept an invitation to a submission as the assigned role"
+    acceptSubmissionInvite(token: String!): Submission
+        @field(
+            resolver: "App\\GraphQL\\Mutations\\InviteSubmissionUser@acceptInvite"
+        )
+
     "Stage a user as a reviewer of a submission"
-    stageReviewer(
+    inviteReviewer(
         submission_id: ID!
         email: String!
         message: String
     ): Submission
         @field(
-            resolver: "App\\GraphQL\\Mutations\\CreateStagedUser@stageReviewer"
+            resolver: "App\\GraphQL\\Mutations\\InviteSubmissionUser@inviteReviewer"
         )
 
     "Stage a user as a review coordinator of a submission"
-    stageReviewCoordinator(
+    inviteReviewCoordinator(
         submission_id: ID!
         email: String!
         message: String
     ): Submission
         @field(
-            resolver: "App\\GraphQL\\Mutations\\CreateStagedUser@stageReviewCoordinator"
+            resolver: "App\\GraphQL\\Mutations\\InviteSubmissionUser@inviteReviewCoordinator"
         )
 }
 

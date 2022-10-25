@@ -251,7 +251,7 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * Generate a username from an email address and ensure it
      * does not conflict with existing usernames in the application
-     * by appending random text when necessary
+     * by appending random text to the username when necessary
      *
      * @param string $email
      * @return String

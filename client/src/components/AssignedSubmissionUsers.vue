@@ -75,8 +75,8 @@ import {
   UPDATE_SUBMISSION_REVIEWERS,
   UPDATE_SUBMISSION_REVIEW_COORDINATORS,
   UPDATE_SUBMISSION_SUBMITERS,
-  STAGE_REVIEWER,
-  STAGE_REVIEW_COORDINATOR,
+  INVITE_REVIEWER,
+  INVITE_REVIEW_COORDINATOR,
 } from "src/graphql/mutations"
 import { computed, ref } from "vue"
 import { useI18n } from "vue-i18n"
@@ -120,21 +120,21 @@ const opts = { variables: { id: props.container.id } }
 const mutations = {
   reviewers: {
     update: UPDATE_SUBMISSION_REVIEWERS,
-    stage: STAGE_REVIEWER,
+    invite: INVITE_REVIEWER,
   },
   review_coordinators: {
     update: UPDATE_SUBMISSION_REVIEW_COORDINATORS,
-    stage: STAGE_REVIEW_COORDINATOR,
+    invite: INVITE_REVIEW_COORDINATOR,
   },
   submitters: {
     update: UPDATE_SUBMISSION_SUBMITERS,
-    stage: UPDATE_SUBMISSION_SUBMITERS,
+    invite: UPDATE_SUBMISSION_SUBMITERS, // TODO: Enable submitter invitation
   },
 }
 const setMutationType = computed(() => {
   let type = mutations[props.relationship]
   if (typeof user.value === "string") {
-    return type["stage"]
+    return type["invite"]
   }
   return type["update"]
 })
@@ -174,7 +174,7 @@ async function handleSubmit() {
   }
 
   try {
-    // Stage user
+    // Invite user
     if (typeof user.value === "string") {
       await mutate({
         email: user.value,
@@ -200,6 +200,7 @@ async function handleSubmit() {
         resetForm()
       })
   } catch (error) {
+    console.log(error)
     newStatusMessage("failure", tp$("assign.error"))
   }
 }

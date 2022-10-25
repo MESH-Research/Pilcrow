@@ -19,6 +19,10 @@ const routes = [
         component: () => import("pages/VerifyEmail.vue"),
       },
       {
+        path: "accept-invite/:token",
+        component: () => import("pages/AcceptInvite.vue"),
+      },
+      {
         path: "dashboard/",
         component: () => import("pages/DashboardPage.vue"),
       },

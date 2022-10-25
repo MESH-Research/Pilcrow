@@ -53,7 +53,7 @@ class InviteReviewer extends Notification implements ShouldQueue
                 'Comment from ' . ($this->data['inviter']['name'] ?: $this->data['inviter']['username']) . ': ',
                 $this->data['message'],
             ])
-            ->action('Accept Invitation', url('/submission/' . $this->data['submission']['id']));
+            ->action('Accept Invitation', url('/accept-invite/' . $this->data['token']));
 
         return $mail;
     }

@@ -71,7 +71,17 @@ export const UPDATE_USER = gql`
     }
   }
 `
-
+export const ACCEPT_SUBMISSION_INVITE = gql`
+  mutation AcceptSubmissionInvite($token: String!) {
+    acceptSubmissionInvite(token: $token) {
+      id
+      reviewers {
+        ...relatedUserFields
+      }
+    }
+  }
+  ${_RELATED_USER_FIELDS}
+`
 export const VERIFY_EMAIL = gql`
   mutation VerifyEmail($token: String!, $expires: String!) {
     verifyEmail(token: $token, expires: $expires) {
@@ -79,7 +89,6 @@ export const VERIFY_EMAIL = gql`
     }
   }
 `
-
 export const SEND_VERIFY_EMAIL = gql`
   mutation SendVerificationEmail($id: ID) {
     sendEmailVerification(id: $id) {
@@ -550,9 +559,9 @@ export const UPDATE_SUBMISSION_STATUS = gql`
   }
 `
 
-export const STAGE_REVIEWER = gql`
-  mutation StageReviewer($id: ID!, $email: String!, $message: String) {
-    stageReviewer(submission_id: $id, email: $email, message: $message) {
+export const INVITE_REVIEWER = gql`
+  mutation InviteReviewer($id: ID!, $email: String!, $message: String) {
+    inviteReviewer(submission_id: $id, email: $email, message: $message) {
       id
       reviewers {
         ...relatedUserFields
@@ -562,9 +571,13 @@ export const STAGE_REVIEWER = gql`
   ${_RELATED_USER_FIELDS}
 `
 
-export const STAGE_REVIEW_COORDINATOR = gql`
-  mutation StageReviewCoordinator($id: ID!, $email: String!, $message: String) {
-    stageReviewCoordinator(
+export const INVITE_REVIEW_COORDINATOR = gql`
+  mutation InviteReviewCoordinator(
+    $id: ID!
+    $email: String!
+    $message: String
+  ) {
+    inviteReviewCoordinator(
       submission_id: $id
       email: $email
       message: $message

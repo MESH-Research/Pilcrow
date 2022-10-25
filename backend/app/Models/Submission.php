@@ -261,34 +261,16 @@ class Submission extends Model implements Auditable
     }
 
     /**
-     * Send an email inviting a staged user as a review coordinator to a submission
-     *
-     * @param array $args
-     * @return \Illuminate\Notifications\Messages\MailMessage
-     */
-    public function inviteReviewCoordinator(array $args)
-    {
-        $user_by = Auth::user();
-        $mail = new MailMessage();
-        $mail->subject('Invitation to Coordinate a Submission Review')
-            ->line('You have been invited to coordinate the review of a submission.')
-            ->linesIf(array_key_exists('message', $args), [
-                'Comment from ' . ($user_by['name'] ?: $user_by['username']) . ': ',
-                $args['message'],
-            ])
-            ->action('Accept Invitation', url('/submission/' . $this->id));
-
-        return $mail;
-    }
-
-    /**
      * Create a staged user and attach them as a reviewer to this submisison
      *
      * @param string $email
-     * @return \App\Models\User
+     * @return \App\Models\User|void
      */
     public function stageReviewer(string $email)
     {
+        if (!$email) {
+            return; // TODO: throw an error
+        }
         $user = User::createStagedUser($email);
         $this->reviewers()->attach($user);
 
@@ -299,10 +281,13 @@ class Submission extends Model implements Auditable
      * Create a staged user and attach them as a review coordinator to this submisison
      *
      * @param string $email
-     * @return \App\Models\User
+     * @return \App\Models\User|void
      */
     public function stageReviewCoordinator(string $email)
     {
+        if (!$email) {
+            return; // TODO: throw an error
+        }
         $user = User::createStagedUser($email);
         $this->reviewCoordinators()->attach($user);
 
