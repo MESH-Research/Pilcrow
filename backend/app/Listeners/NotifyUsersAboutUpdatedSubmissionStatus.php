@@ -17,7 +17,6 @@ class NotifyUsersAboutUpdatedSubmissionStatus
      */
     public function handle($event)
     {
-
         $status = $event->submission->status;
         if ($status == 0) {
             return;
