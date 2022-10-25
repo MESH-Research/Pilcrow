@@ -745,6 +745,8 @@ export default {
       unauthorized:
         "You are not authorized to change the status of this submission. Please contact your administrator.",
       statusChanged: {
+        submit_for_review:
+          "This submission is submitted for review. It is currently awating acceptance for review.",
         accept_for_review:
           "This submission is accepted for review. It is currently awaiting review from the assigned reviewers.",
         reject: "This submission is rejected for review.",

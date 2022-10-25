@@ -19,7 +19,9 @@ describe("Submissions Page", () => {
     cy.dataCy("new_submission_publication_input").click()
     cy.get(".publication_options").contains("CCR Test Publication 1").click()
     cy.dataCy("new_submission_file_upload_input").attachFile("test.txt")
+    cy.interceptGQLOperation("CreateSubmission")
     cy.dataCy("save_submission").click()
+    cy.wait('@CreateSubmission')
     cy.dataCy("submissions_list").contains("Submission from Cypress")
     cy.dataCy("create_submission_notify")
       .should("be.visible")
@@ -184,7 +186,7 @@ describe("Submissions Page", () => {
 
   it("should allow the submission in draft status be visible to the submitter", () => {
     cy.task("resetDb")
-    cy.login({ email: "areviewer@ccrproject.dev" })
+    cy.login({ email: "regularuser@ccrproject.dev" })
     cy.visit("submissions")
     cy.dataCy("submission_actions").eq(4).should('exist')
   })

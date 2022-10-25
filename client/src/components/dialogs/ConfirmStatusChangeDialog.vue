@@ -85,7 +85,7 @@ const props = defineProps({
 })
 
 const statuses = {
-  submit_for_review: "DRAFT",
+  submit_for_review: "INITIALLY_SUBMITTED",
   accept_for_review: "AWAITING_REVIEW",
   reject: "REJECTED",
   request_resubmission: "RESUBMISSION_REQUESTED",

@@ -112,6 +112,10 @@ class SubmissionPolicy
             return true;
         }
 
+        if($user->hasSubmissionRole([Role::SUBMITTER_ROLE_ID], $submission->id) && ($submission->status == Submission::DRAFT)) {
+            return true;
+        }
+
         return Response::deny('You do not have permission to update the status of this submission');
     }
 
