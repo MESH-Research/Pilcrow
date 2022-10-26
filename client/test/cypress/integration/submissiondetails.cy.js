@@ -144,4 +144,20 @@ describe("Submission Details", () => {
     cy.visit("/submission/100")
     cy.dataCy("invitation_form").should("not.exist")
   });
+
+  it("should allow review coordinators to invite unregistered reviewers", () => {
+    cy.task("resetDb")
+    cy.login({ email: "reviewcoordinator@ccrproject.dev" })
+    cy.visit("submission/100")
+
+    cy.dataCy("reviewers_list").within(() => {
+      cy.userSearch('input_user', 'stranger@scholarlywebsite.com')
+      cy.dataCy('button-assign').click();
+    })
+
+    cy.dataCy("reviewers_list").find(".q-list").contains("stranger")
+
+    cy.injectAxe()
+    cy.checkA11y(null, null, a11yLogViolations)
+  })
 })
