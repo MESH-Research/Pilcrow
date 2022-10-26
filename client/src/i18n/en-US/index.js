@@ -95,6 +95,7 @@ export default {
       UNKNOWN: "An unexpected error occurred.",
     },
   },
+  invitation: {},
   helpers: {
     OPTIONAL_FIELD: "{0} (optional)",
     REQUIRED_FIELD: "{0} is required.",
@@ -559,6 +560,17 @@ export default {
       search: {
         label: "User to Add",
         hint: "Search by username, email, or name.",
+      },
+    },
+    accept_invite: {
+      success: {
+        title: "Success",
+        message: "You have accepted the invitation.",
+      },
+      failure: {
+        title: "Error",
+        message:
+          "An error occurred while attempting to accept the invitation. Please contact your administrator.",
       },
     },
     create: {

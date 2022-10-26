@@ -24,7 +24,7 @@ final class InviteSubmissionUser
     public function acceptInvite($_, $args)
     {
         $invite = Invitation::where('token', $args['token'])->firstOrFail();
-        $invite->registered_at = Carbon::now()->toDateTimeString();
+        $invite->accepted_at = Carbon::now()->toDateTimeString();
         $invite->save();
         $user = User::where('email', $invite->email)->firstOrFail();
         $user->staged = null;

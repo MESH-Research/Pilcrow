@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('token', 36)->unique()->nullable();
             $table->unsignedBigInteger('submission_id');
             $table->timestamp('expiration')->nullable();
-            $table->timestamp('registered_at')->nullable();
+            $table->timestamp('accepted_at')->nullable();
             $table->timestamps();
         });
     }

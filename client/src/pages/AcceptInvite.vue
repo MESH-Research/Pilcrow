@@ -1,15 +1,24 @@
 <template>
   <q-page>
-    <section v-if="status == 'loading'">
-      <q-spinner-hourglass size="3em" />
-    </section>
-    <section v-if="status == 'success'">
-      <h1>Success</h1>
-      <q-icon color="positive" name="check_circle" />
-    </section>
-    <section v-if="status == 'error'">
-      <h1>Error</h1>
-      <q-icon color="negative" name="error" />
+    <section class="q-pa-lg">
+      <div v-if="status == 'loading'" class="column flex-center">
+        <q-spinner color="primary" size="2em" />
+        <strong class="text-h3">{{ $t("loading") }}</strong>
+      </div>
+      <div v-if="status == 'success'" class="column flex-center">
+        <q-icon color="positive" name="check_circle" size="2em" />
+        <strong class="text-h3">{{
+          $t("submissions.accept_invite.success.title")
+        }}</strong>
+        <p>{{ $t("submissions.accept_invite.success.message") }}</p>
+      </div>
+      <div v-if="status == 'error'" class="column flex-center">
+        <q-icon color="negative" name="error" size="2em" />
+        <strong class="text-h3">{{
+          $t("submissions.accept_invite.failure.title")
+        }}</strong>
+        <p>{{ $t("submissions.accept_invite.failure.message") }}</p>
+      </div>
     </section>
   </q-page>
 </template>
@@ -32,7 +41,6 @@ onMounted(async () => {
     await invite({ token })
     status.value = "success"
   } catch (error) {
-    console.log(error)
     status.value = "error"
   }
 })
