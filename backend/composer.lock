@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "bensampo/laravel-enum",
-            "version": "v6.0.0",
+            "version": "v6.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/BenSampo/laravel-enum.git",
-                "reference": "5a6d643a20a123b899893af779d0431f8f9e8dd9"
+                "reference": "9ff2ee868adb8c415c5e0062698ddb5536564257"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/BenSampo/laravel-enum/zipball/5a6d643a20a123b899893af779d0431f8f9e8dd9",
-                "reference": "5a6d643a20a123b899893af779d0431f8f9e8dd9",
+                "url": "https://api.github.com/repos/BenSampo/laravel-enum/zipball/9ff2ee868adb8c415c5e0062698ddb5536564257",
+                "reference": "9ff2ee868adb8c415c5e0062698ddb5536564257",
                 "shasum": ""
             },
             "require": {
@@ -83,7 +83,7 @@
             ],
             "support": {
                 "issues": "https://github.com/BenSampo/laravel-enum/issues",
-                "source": "https://github.com/BenSampo/laravel-enum/tree/v6.0.0"
+                "source": "https://github.com/BenSampo/laravel-enum/tree/v6.1.0"
             },
             "funding": [
                 {
@@ -91,7 +91,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-08-12T13:55:55+00:00"
+            "time": "2022-10-26T14:22:52+00:00"
         },
         {
             "name": "bjeavons/zxcvbn-php",
