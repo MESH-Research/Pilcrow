@@ -1823,16 +1823,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v9.36.4",
+            "version": "v9.37.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "15ce569fd93124e8e2257c24e3ed85b9ef9951d6"
+                "reference": "0c9675abf6d966e834b2ebeca3319f524e07a330"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/15ce569fd93124e8e2257c24e3ed85b9ef9951d6",
-                "reference": "15ce569fd93124e8e2257c24e3ed85b9ef9951d6",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/0c9675abf6d966e834b2ebeca3319f524e07a330",
+                "reference": "0c9675abf6d966e834b2ebeca3319f524e07a330",
                 "shasum": ""
             },
             "require": {
@@ -2005,7 +2005,7 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2022-10-20T16:11:03+00:00"
+            "time": "2022-10-25T15:43:46+00:00"
         },
         {
             "name": "laravel/sanctum",
@@ -2462,16 +2462,16 @@
         },
         {
             "name": "league/flysystem",
-            "version": "3.10.1",
+            "version": "3.10.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/flysystem.git",
-                "reference": "9857d7208a94fc63c7bf09caf223280e59ac7274"
+                "reference": "b9bd194b016114d6ff6765c09d40c7d427e4e3f6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/9857d7208a94fc63c7bf09caf223280e59ac7274",
-                "reference": "9857d7208a94fc63c7bf09caf223280e59ac7274",
+                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/b9bd194b016114d6ff6765c09d40c7d427e4e3f6",
+                "reference": "b9bd194b016114d6ff6765c09d40c7d427e4e3f6",
                 "shasum": ""
             },
             "require": {
@@ -2533,7 +2533,7 @@
             ],
             "support": {
                 "issues": "https://github.com/thephpleague/flysystem/issues",
-                "source": "https://github.com/thephpleague/flysystem/tree/3.10.1"
+                "source": "https://github.com/thephpleague/flysystem/tree/3.10.2"
             },
             "funding": [
                 {
@@ -2549,7 +2549,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-10-21T18:57:47+00:00"
+            "time": "2022-10-25T07:01:47+00:00"
         },
         {
             "name": "league/mime-type-detection",
@@ -3245,16 +3245,16 @@
         },
         {
             "name": "nuwave/lighthouse",
-            "version": "v5.62.0",
+            "version": "v5.63.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nuwave/lighthouse.git",
-                "reference": "4dd08990889ecf996a2a955434852c967cb9c2ee"
+                "reference": "0ba0060992846ef5c71863d4ea29398cfadce6c5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nuwave/lighthouse/zipball/4dd08990889ecf996a2a955434852c967cb9c2ee",
-                "reference": "4dd08990889ecf996a2a955434852c967cb9c2ee",
+                "url": "https://api.github.com/repos/nuwave/lighthouse/zipball/0ba0060992846ef5c71863d4ea29398cfadce6c5",
+                "reference": "0ba0060992846ef5c71863d4ea29398cfadce6c5",
                 "shasum": ""
             },
             "require": {
@@ -3369,7 +3369,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2022-10-21T10:38:15+00:00"
+            "time": "2022-10-26T14:10:09+00:00"
         },
         {
             "name": "olssonm/l5-zxcvbn",
