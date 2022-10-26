@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
-class Invitation extends Model
+class SubmissionInvitation extends Model
 {
     use HasFactory;
 
@@ -27,7 +27,7 @@ class Invitation extends Model
      */
     protected static function booted()
     {
-        static::created(function (Invitation $invite) {
+        static::created(function (SubmissionInvitation $invite) {
             $invite->token = Str::uuid()->toString();
             $invite->expiration = Carbon::now()->addDays(5)->toDateTimeString();
             $invite->save();

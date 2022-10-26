@@ -565,7 +565,8 @@ export default {
     accept_invite: {
       success: {
         title: "Success",
-        message: "You have accepted the invitation.",
+        message: "You have accepted the invitation to the submission.",
+        action: "Visit Submission",
       },
       failure: {
         title: "Error",

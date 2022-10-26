@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('invitations', function (Blueprint $table) {
+        Schema::create('submission_invitations', function (Blueprint $table) {
             $table->id();
             $table->string('email');
             $table->string('token', 36)->unique()->nullable();
@@ -31,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('invitations');
+        Schema::dropIfExists('submission_invitations');
     }
 };

@@ -3,9 +3,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
-use App\Models\Invitation;
 use App\Models\User;
-use Illuminate\Support\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -41,14 +39,14 @@ class UserTest extends TestCase
         $this->assertEquals(1, $user->staged);
     }
 
-    /**
-     * @return void
-     */
-    public function testInvitationCreation()
-    {
-        $invite = Invitation::create(['email' => $this->faker->email()]);
-        print_r($invite->toArray());
-        $this->assertEquals(36, strlen($invite->token));
-        $this->assertNotNull($invite->expiration);
-    }
+    // /**
+    //  * @return void
+    //  */
+    // public function testInvitationCreation()
+    // {
+    //     $invite = Invitation::create(['email' => $this->faker->email()]);
+    //     print_r($invite->toArray());
+    //     $this->assertEquals(36, strlen($invite->token));
+    //     $this->assertNotNull($invite->expiration);
+    // }
 }

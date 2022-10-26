@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\GraphQL\Mutations;
 
-use App\Models\Invitation;
+use App\Models\SubmissionInvitation;
 use App\Models\Submission;
 use App\Models\User;
 use App\Notifications\InviteReviewCoordinator;
@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Notification;
 final class InviteSubmissionUser
 {
     /**
-     * Undocumented function
+     * Accept a submission invitation and unstage a user
      *
      * @param  null  $_
      * @param  array{}  $args
@@ -23,7 +23,7 @@ final class InviteSubmissionUser
      */
     public function acceptInvite($_, $args)
     {
-        $invite = Invitation::where('token', $args['token'])->firstOrFail();
+        $invite = SubmissionInvitation::where('token', $args['token'])->firstOrFail();
         $invite->accepted_at = Carbon::now()->toDateTimeString();
         $invite->save();
         $user = User::where('email', $invite->email)->firstOrFail();
@@ -44,7 +44,7 @@ final class InviteSubmissionUser
     {
         $submission = Submission::where('id', $args['submission_id'])->firstOrFail();
         $reviewer = $submission->stageReviewer($args['email']);
-        $invite = Invitation::create([
+        $invite = SubmissionInvitation::create([
             'submission_id' => $args['submission_id'],
             'email' => $reviewer->email,
         ]);
