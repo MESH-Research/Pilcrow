@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\GraphQL\Mutations;
 
-use App\Models\SubmissionInvitation;
 use App\Models\Submission;
+use App\Models\SubmissionInvitation;
 use App\Models\User;
 use App\Notifications\InviteReviewCoordinator;
 use App\Notifications\InviteReviewer;
@@ -29,6 +29,7 @@ final class InviteSubmissionUser
         $user = User::where('email', $invite->email)->firstOrFail();
         $user->staged = null;
         $user->save();
+
         return Submission::where('id', $invite->submission_id)->firstOrFail();
     }
 
