@@ -28,6 +28,8 @@ class SubmissionSeeder extends Seeder
             ->update(['status' => Submission::REJECTED, 'updated_by' => 1]);
         $this->createSubmission(103, 'CCR Test Submission 4')
             ->update(['status' => Submission::RESUBMISSION_REQUESTED, 'updated_by' => 1]);
+        $this->createSubmission(104, 'CCR Test Submission 5')
+            ->update(['status' => Submission::DRAFT, 'updated_by' => 1]);
     }
 
     /**

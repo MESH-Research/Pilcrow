@@ -28,8 +28,19 @@
           </q-chip>
         </div>
       </q-toolbar-title>
+      <div v-if="submission.status == 'DRAFT'">
+        <q-btn
+          data-cy="initially_submit"
+          rounded
+          color="positive"
+          :label="$t(`submission.action.submit_for_review`)"
+          class="q-ml-md"
+          @click="confirmHandler('submit_for_review')"
+        >
+        </q-btn>
+      </div>
       <div
-        v-if="
+        v-else-if="
           submission.status != 'AWAITING_REVIEW' &&
           submission.status != 'REJECTED' &&
           submission.status != 'RESUBMISSION_REQUESTED'
@@ -46,6 +57,7 @@
           @click="confirmHandler('accept_for_review')"
         >
         </q-btn>
+
         <q-btn
           v-if="submission.status != 'INITIALLY_SUBMITTED'"
           data-cy="accept_as_final"

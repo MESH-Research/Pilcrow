@@ -229,6 +229,26 @@ describe("Submissions Review", () => {
     cy.dataCy("decision_options")
   })
 
+  it("should display the Draft status and the option to submit for review when a submission is in Draft status", () => {
+    cy.task("resetDb")
+    cy.login({ email: "regularuser@ccrproject.dev" })
+    cy.visit("submission/review/104")
+    cy.dataCy("submission_status").contains("Draft")
+    cy.dataCy("initially_submit").contains("Submit for Review")
+  })
+
+  it("should be able to submit a submission in draft status to review and allow reviewers to access the submission", () => {
+    cy.task("resetDb")
+    cy.login({ email: "regularuser@ccrproject.dev" })
+    cy.visit("submission/review/104")
+    cy.dataCy("initially_submit").click()
+    cy.dataCy("dirtyYesChangeStatus").click()
+   
+    cy.login({ email: "reviewer@ccrproject.dev" })
+    cy.visit("submission/review/104")
+    cy.url().should("not.include", "/error403")
+  })
+
   it("should not display the decision options for rejected submissions", () => {
     cy.task("resetDb")
     cy.login({ email: "applicationadministrator@ccrproject.dev" })

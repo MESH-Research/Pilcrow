@@ -227,7 +227,7 @@ class User extends Authenticatable implements MustVerifyEmail
         if (is_array($role)) {
             return $submissions->wherePivotIn('role_id', $role)->exists();
         } else {
-            return $submissions->wherePivot('role_id', $role)->exists();
+            return $submissions->wherePivot('role_id', null, $role)->exists();
         }
     }
 
