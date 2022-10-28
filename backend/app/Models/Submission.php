@@ -267,7 +267,7 @@ class Submission extends Model implements Auditable
     public function stageReviewer(string $email)
     {
         if (!$email) {
-            return; // TODO: throw an error
+            return; // TODO: Validate email and throw an error
         }
         $user = User::createStagedUser($email);
         $this->reviewers()->attach($user);
@@ -284,7 +284,7 @@ class Submission extends Model implements Auditable
     public function stageReviewCoordinator(string $email)
     {
         if (!$email) {
-            return; // TODO: throw an error
+            return; // TODO: Validate email and throw an error
         }
         $user = User::createStagedUser($email);
         $this->reviewCoordinators()->attach($user);

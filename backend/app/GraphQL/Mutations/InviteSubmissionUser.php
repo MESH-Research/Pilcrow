@@ -76,7 +76,11 @@ final class InviteSubmissionUser
     public function inviteReviewCoordinator($_, array $args)
     {
         $submission = Submission::where('id', $args['submission_id'])->firstOrFail();
-        $review_coordinator = $submission->stageReviewCoordinator($args['email']);
+        $coordinator = $submission->stageReviewCoordinator($args['email']);
+        $invite = SubmissionInvitation::create([
+            'submission_id' => $args['submission_id'],
+            'email' => $coordinator->email,
+        ]);
         $auth_user = Auth::user();
         $notification_data = [
             'submission' => [
@@ -87,11 +91,9 @@ final class InviteSubmissionUser
                 'username' => $auth_user->username,
             ],
             'message' => $args['message'],
+            'token' => $invite->token,
         ];
-        Notification::send(
-            $review_coordinator,
-            new InviteReviewCoordinator($notification_data)
-        );
+        Notification::send($coordinator, new InviteReviewCoordinator($notification_data));
 
         return $submission;
     }

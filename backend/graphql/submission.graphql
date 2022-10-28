@@ -33,7 +33,10 @@ extend type Mutation {
             resolver: "App\\GraphQL\\Mutations\\InviteSubmissionUser@acceptInvite"
         )
 
-    "Stage a user as a reviewer of a submission"
+    """
+    Create a staged user, attach them as a reviewer to a submisison,
+    and send them an email notification inviting them to accept the assignment"
+    """
     inviteReviewer(
         submission_id: ID!
         email: String!

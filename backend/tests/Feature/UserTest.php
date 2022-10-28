@@ -38,15 +38,4 @@ class UserTest extends TestCase
         $user = User::createStagedUser($this->faker->email());
         $this->assertEquals(1, $user->staged);
     }
-
-    // /**
-    //  * @return void
-    //  */
-    // public function testInvitationCreation()
-    // {
-    //     $invite = Invitation::create(['email' => $this->faker->email()]);
-    //     print_r($invite->toArray());
-    //     $this->assertEquals(36, strlen($invite->token));
-    //     $this->assertNotNull($invite->expiration);
-    // }
 }
