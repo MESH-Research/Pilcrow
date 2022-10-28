@@ -561,6 +561,8 @@ export default {
       search: {
         label: "User to Add",
         hint: "Search by username, email, or name.",
+        no_option:
+          "No user found. A brand new user will be invited if you specify an <strong>email address</strong>.",
       },
     },
     accept_invite: {

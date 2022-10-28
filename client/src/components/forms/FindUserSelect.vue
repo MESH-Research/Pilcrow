@@ -21,8 +21,8 @@
     </template>
     <template #no-option>
       <div class="text--grey q-mt-xs q-py-xs q-px-md">
-        No user found. A brand new user will be added if you specify an
-        <strong>email address</strong>.
+        <!-- eslint-disable-next-line vue/no-v-html -->
+        <span v-html="$t('submissions.invite_user.search.no_option')" />
       </div>
     </template>
     <template #hint>

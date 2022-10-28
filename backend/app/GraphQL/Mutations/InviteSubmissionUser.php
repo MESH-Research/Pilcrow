@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Notification;
 final class InviteSubmissionUser
 {
     /**
-     * Accept a submission invitation and unstage a user
+     * Accept a submission invitation and unstage the invited user
      *
      * @param  null  $_
      * @param  array{}  $args
@@ -67,7 +67,8 @@ final class InviteSubmissionUser
     }
 
     /**
-     * Create a staged user and attach them as a review coordinator to a submisison
+     * Create a staged user, attach them as a review coordinator to a submisison,
+     * and send them an email notification inviting them to accept the assignment
      *
      * @param  null  $_
      * @param  array{}  $args
