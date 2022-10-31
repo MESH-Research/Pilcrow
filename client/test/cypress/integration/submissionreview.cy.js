@@ -298,7 +298,6 @@ describe("Submissions Review", () => {
     cy.dataCy("modifyOverallCommentReplyEditor").find("button[type=submit]").click()
 
     // verify comment includes "This is a modified overall comment reply."
-    // cy.dataCy("overallComment").last().find("[data-cy=showRepliesButton]").click()
     cy.dataCy("overallCommentReply").first().contains("This is a modified overall comment reply.")
   })
 
