@@ -87,7 +87,9 @@ const relativeCreatedTime = computed(() => {
 })
 
 const updatedDate = computed(() => {
-  return DateTime.fromISO(props.comment.updated_at)
+  return props.comment?.updated_at
+    ? DateTime.fromISO(props.comment.updated_at)
+    : false
 })
 
 const relativeUpdatedTime = computed(() => {
