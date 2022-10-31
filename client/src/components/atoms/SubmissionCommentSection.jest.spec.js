@@ -234,11 +234,18 @@ describe("Overall Comments", () => {
       .trigger("click")
     expect(findReplies(overallComments.at(2))).toHaveLength(0)
   })
-  test("expected timestamp is shown for created and updated overall comments", () => {
+  test("expected timestamp is shown for created and updated overall comment replies", async () => {
     const { wrapper } = wrapperFactory()
     const overallComments = wrapper.findAll('[data-cy="overallComment"]')
+    await overallComments
+      .at(2)
+      .find('[data-cy="showRepliesButton"]')
+      .trigger("click")
+    const overallCommentReplies = wrapper.findAll(
+      '[data-cy="overallCommentReply"]'
+    )
     expect(
-      overallComments.at(7).find("[data-cy=timestampUpdated").exists()
+      overallCommentReplies.at(7).find("[data-cy=timestampUpdated").exists()
     ).toBe(true)
   })
 })
