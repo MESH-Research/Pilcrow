@@ -19,6 +19,7 @@ describe("InlineComments", () => {
               inline_comments: [
                 {
                   id: "1",
+                  __typename: "InlineComment",
                   from: 1,
                   to: 10,
                   content:
@@ -32,6 +33,7 @@ describe("InlineComments", () => {
                   replies: [
                     {
                       id: "2",
+                      __typename: "InlineCommentReply",
                       content:
                         "Sed ullam culpa dolore ea qui. Enim voluptatem eos voluptas et est.",
                       created_at: "2022-06-02T03:53:17Z",
