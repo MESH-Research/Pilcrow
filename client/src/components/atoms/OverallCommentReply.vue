@@ -40,7 +40,6 @@ import CommentReplyReference from "./CommentReplyReference.vue"
 import CommentHeader from "./CommentHeader.vue"
 import CommentEditor from "../forms/CommentEditor.vue"
 
-// const isCollapsed = ref(true)
 const isReplying = ref(false)
 const isQuoteReplying = ref(false)
 const commentReply = ref(null)
