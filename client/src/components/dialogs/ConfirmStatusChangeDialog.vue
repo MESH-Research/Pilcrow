@@ -85,6 +85,7 @@ const props = defineProps({
 })
 
 const statuses = {
+  submit_for_review: "INITIALLY_SUBMITTED",
   accept_for_review: "AWAITING_REVIEW",
   reject: "REJECTED",
   request_resubmission: "RESUBMISSION_REQUESTED",
@@ -94,6 +95,7 @@ const statuses = {
 }
 
 const icons = {
+  submit_for_review: "edit_document",
   accept_for_review: "done",
   reject: "do_not_disturb",
   request_resubmission: "refresh",
@@ -103,6 +105,7 @@ const icons = {
 }
 
 const colors = {
+  submit_for_review: "positive",
   accept_for_review: "positive",
   reject: "negative",
   request_resubmission: "dark-grey",

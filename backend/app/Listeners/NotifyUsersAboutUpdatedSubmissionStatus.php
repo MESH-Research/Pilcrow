@@ -18,6 +18,9 @@ class NotifyUsersAboutUpdatedSubmissionStatus
     public function handle($event)
     {
         $status = $event->submission->status;
+        if ($status == 0) {
+            return;
+        }
         $user = $event->submission->updatedBy;
         $publication = $event->submission->publication;
         $default = [

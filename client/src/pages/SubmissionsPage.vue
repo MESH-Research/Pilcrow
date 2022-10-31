@@ -164,8 +164,21 @@
                       self="top end"
                       data-cy="change_status_dropdown"
                     >
+                      <div v-if="submission.status == 'DRAFT'">
+                        <q-item
+                          data-cy="initially_submit"
+                          class="items-center"
+                          clickable
+                          @click="
+                            confirmHandler('accept_for_review', submission.id)
+                          "
+                          >{{
+                            $t("submission.action.submit_for_review")
+                          }}</q-item
+                        >
+                      </div>
                       <div
-                        v-if="
+                        v-else-if="
                           submission.status != 'AWAITING_REVIEW' &&
                           submission.status != 'REJECTED' &&
                           submission.status != 'RESUBMISSION_REQUESTED'
@@ -282,6 +295,13 @@ function cannotAccessSubmission(submission) {
   )
 }
 
+function includeDraftSubmissions(submission) {
+  return (
+    (submission.my_role == "submitter" && submission.status == "DRAFT") ||
+    submission.status !== "DRAFT"
+  )
+}
+
 const is_submitting = ref(false)
 const try_catch_error = ref(false)
 const new_submission = reactive({
@@ -304,7 +324,11 @@ const newPubV$ = useVuelidate(rules, new_submission)
 const { result: subsResult, loading: subsLoading } = useQuery(GET_SUBMISSIONS)
 
 const submissions = computed(() => {
-  return subsResult.value?.submissions.data ?? []
+  return (
+    subsResult.value?.submissions.data.filter((submission) =>
+      includeDraftSubmissions(submission)
+    ) ?? []
+  )
 })
 
 const { result: pubsResult } = useQuery(GET_PUBLICATIONS)

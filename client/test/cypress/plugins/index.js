@@ -61,7 +61,7 @@ module.exports = (on, config) => {
     if (browser.family === "firefox") {
       launchOptions.preferences["ui.prefersReducedMotion"] = REDUCE
     }
-    if (browser.family === "chromium") {
+    if (browser.family === "chromium" && browser.name !== "electron") {
       launchOptions.args.push("--force-prefers-reduced-motion")
     }
     return launchOptions
