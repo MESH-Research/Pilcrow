@@ -332,10 +332,6 @@ function setLink() {
     .run()
 }
 
-// for comment_criteria
-//    if in pub_criteria
-//      selected: true
-
 const a = computed(() => props.comment)
 
 function isCriteriaSelected(publication_style_criteria, comment) {
