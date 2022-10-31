@@ -105,7 +105,7 @@ describe("Overall Comments", () => {
                       content:
                         "Aut numquam harum dolorem aliquam nulla. Ut tempore numquam modi maiores quia iusto.",
                       created_at: "2022-06-04T10:38:18Z",
-                      udpated_at: "2022-08-04T05:38:18Z",
+                      updated_at: "2022-08-04T05:38:18Z",
                       created_by: {
                         id: "2",
                         username: "publicationAdministrator",
