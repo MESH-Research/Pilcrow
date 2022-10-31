@@ -245,7 +245,7 @@ describe("Overall Comments", () => {
       '[data-cy="overallCommentReply"]'
     )
     expect(
-      overallCommentReplies.at(7).find("[data-cy=timestampUpdated").exists()
+      overallCommentReplies.at(4).find("[data-cy=timestampUpdated").exists()
     ).toBe(true)
   })
 })
