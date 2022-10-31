@@ -18,6 +18,7 @@ describe("Overall Comments", () => {
               overall_comments: [
                 {
                   id: "1",
+                  __typename: "OverallComment",
                   content:
                     "Commodi ipsam excepturi non excepturi. Dolore quia eum sit neque quibusdam fugiat. Excepturi est enim reprehenderit atque unde rerum eum.",
                   created_at: "2022-06-02T08:18:09Z",
@@ -30,6 +31,7 @@ describe("Overall Comments", () => {
                 },
                 {
                   id: "2",
+                  __typename: "OverallComment",
                   content:
                     "Fugit id officia facere nesciunt modi beatae beatae. Assumenda culpa consequatur vel autem.",
                   created_at: "2022-06-01T20:57:28Z",
@@ -41,6 +43,7 @@ describe("Overall Comments", () => {
                   replies: [
                     {
                       id: "3",
+                      __typename: "OverallCommentReply",
                       content:
                         "Asperiores aut commodi dolorum enim iusto consequatur minima. Neque adipisci animi tempora voluptatem error nam cupiditate.",
                       created_at: "2022-06-02T20:57:28Z",
@@ -55,6 +58,7 @@ describe("Overall Comments", () => {
                 },
                 {
                   id: "4",
+                  __typename: "OverallComment",
                   content:
                     "Temporibus voluptatem ea aut placeat atque eum. A officia ea eos quo. Ut dolor sequi deserunt quo.",
                   created_at: "2022-06-02T10:38:18Z",
@@ -66,6 +70,7 @@ describe("Overall Comments", () => {
                   replies: [
                     {
                       id: "5",
+                      __typename: "OverallCommentReply",
                       content:
                         "Nihil beatae omnis illum laborum magni quam quia rerum. Quia doloremque fugit ipsa debitis ratione laborum dolorem.",
                       created_at: "2022-06-03T10:38:18Z",
@@ -78,6 +83,7 @@ describe("Overall Comments", () => {
                     },
                     {
                       id: "6",
+                      __typename: "OverallCommentReply",
                       content:
                         "Sed nostrum est perferendis labore rem molestiae molestiae. Necessitatibus officiis quia labore et eum harum eveniet. Officia ut accusantium non saepe ut.",
                       created_at: "2022-06-04T10:38:18Z",
@@ -90,6 +96,7 @@ describe("Overall Comments", () => {
                     },
                     {
                       id: "7",
+                      __typename: "OverallCommentReply",
                       content:
                         "Ut labore dignissimos aperiam ipsum et unde velit. Maxime animi quidem perspiciatis nihil possimus qui sequi labore.",
                       created_at: "2022-06-05T10:38:18Z",
@@ -102,6 +109,7 @@ describe("Overall Comments", () => {
                     },
                     {
                       id: "8",
+                      __typename: "OverallCommentReply",
                       content:
                         "Aut numquam harum dolorem aliquam nulla. Ut tempore numquam modi maiores quia iusto.",
                       created_at: "2022-06-04T10:38:18Z",
@@ -120,6 +128,7 @@ describe("Overall Comments", () => {
                     },
                     {
                       id: "9",
+                      __typename: "OverallCommentReply",
                       content:
                         "Ut praesentium cumque beatae reiciendis laboriosam quia illum alias. Est quasi corrupti eveniet sequi et. Voluptatem ea ut in sed ipsa officiis et.",
                       created_at: "2022-06-05T10:38:18Z",
@@ -132,6 +141,7 @@ describe("Overall Comments", () => {
                     },
                     {
                       id: "10",
+                      __typename: "OverallCommentReply",
                       content:
                         "Consequuntur dignissimos quibusdam eum placeat est. Aut eos nobis accusantium omnis sapiente.",
                       created_at: "2022-06-03T10:38:18Z",
@@ -144,6 +154,7 @@ describe("Overall Comments", () => {
                     },
                     {
                       id: "11",
+                      __typename: "OverallCommentReply",
                       content:
                         "Error facere qui vel labore explicabo sint dignissimos. Recusandae minima quia enim fugiat. Suscipit aut voluptate consequatur molestiae omnis sint.",
                       created_at: "2022-06-04T10:38:18Z",
@@ -156,6 +167,7 @@ describe("Overall Comments", () => {
                     },
                     {
                       id: "12",
+                      __typename: "OverallCommentReply",
                       content:
                         "Est incidunt nisi perferendis magni. Voluptatum ex quae quam dicta earum repellendus.",
                       created_at: "2022-06-05T10:38:18Z",
