@@ -15,6 +15,7 @@ describe("InlineComments", () => {
           provide: {
             submission: ref({
               id: "1",
+              effective_role: "review_coordinator",
               inline_comments: [
                 {
                   id: "1",
