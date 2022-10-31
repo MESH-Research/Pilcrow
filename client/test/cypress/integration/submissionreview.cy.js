@@ -298,7 +298,6 @@ describe("Submissions Review", () => {
     cy.dataCy("modifyOverallCommentReplyEditor").find("button[type=submit]").click()
 
     // verify comment includes "This is a modified overall comment reply."
-    // cy.dataCy("overallComment").last().find("[data-cy=showRepliesButton]").click()
     cy.dataCy("overallCommentReply").first().contains("This is a modified overall comment reply.")
   })
 
@@ -310,12 +309,10 @@ describe("Submissions Review", () => {
     cy.dataCy("toggleInlineCommentsButton").click()
     cy.dataCy("inlineComment").last().find("[data-cy=commentActions]").click()
     cy.dataCy("modifyComment").click()
-    // cy.dataCy("modifyInlineCommentEditor")
 
     // modify, submit
     cy.dataCy("comment-editor").first().type("This is a modified inline comment.")
     cy.dataCy("criteria-item").last().click()
-    // cy.dataCy("modifyInlineCommentEditor").type("This is a modified inline comment.")
     cy.dataCy("modifyInlineCommentEditor").find("button[type=submit]").click()
 
     // verify comment includes "This is a modified inline comment."

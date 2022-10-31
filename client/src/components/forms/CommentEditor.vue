@@ -254,7 +254,6 @@ const selectedCriteria = computed(() =>
 )
 const hasStyleCriteria = computed(() => selectedCriteria.value.length > 0)
 async function submitHandler() {
-  // console.log(mutations[commentType.value])
   if (!hasStyleCriteria.value && commentType.value === "InlineComment") {
     if (
       !(await new Promise((resolve) => {
@@ -332,10 +331,6 @@ function setLink() {
     .setLink({ href: url })
     .run()
 }
-
-// for comment_criteria
-//    if in pub_criteria
-//      selected: true
 
 const a = computed(() => props.comment)
 

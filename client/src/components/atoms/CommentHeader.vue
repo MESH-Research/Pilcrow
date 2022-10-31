@@ -19,7 +19,7 @@
           "
         >
           <q-tooltip
-            >{{ createdDate.toFormat("LLL dd yyyy hh:mm a") }} |
+            >{{ createdDate.toFormat("LLL dd yyyy hh:mm a") }} <br />
             {{ $t("submissions.comment.updatedLabel") }}
             {{ updatedDate.toFormat("LLL dd yyyy hh:mm a") }}
           </q-tooltip>
