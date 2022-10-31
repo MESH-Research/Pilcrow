@@ -271,11 +271,9 @@ describe("InlineComments", () => {
 
     expect(findReplies(items.at(0))).toHaveLength(1)
 
-    expect(items.at(1).find("[data-cy=collapseRepliesButton").exists()).toBe(
-      false
-    )
+    expect(items.at(1).find("[data-cy=showRepliesButton").exists()).toBe(false)
 
-    await items.at(2).find('[data-cy="collapseRepliesButton"]').trigger("click")
+    await items.at(2).find('[data-cy="showRepliesButton"]').trigger("click")
     expect(findReplies(items.at(2))).toHaveLength(10)
   })
 })
