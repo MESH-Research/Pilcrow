@@ -87,17 +87,6 @@ function cancelReply() {
   isQuoteReplying.value = false
   commentReply.value = null
 }
-// function initiateReply() {
-//   isReplying.value = true
-//   isModifying.value = false
-//   isQuoteReplying.value = false
-// }
-// function initiateQuoteReply(comment) {
-//   isReplying.value = true
-//   isModifying.value = false
-//   isQuoteReplying.value = true
-//   commentReply.value = comment
-// }
 function modifyComment(comment) {
   isReplying.value = false
   isQuoteReplying.value = false
