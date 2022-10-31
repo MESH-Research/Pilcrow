@@ -309,7 +309,6 @@ describe("Submissions Review", () => {
     cy.dataCy("toggleInlineCommentsButton").click()
     cy.dataCy("inlineComment").last().find("[data-cy=commentActions]").click()
     cy.dataCy("modifyComment").click()
-    // cy.dataCy("modifyInlineCommentEditor")
 
     // modify, submit
     cy.dataCy("comment-editor").first().type("This is a modified inline comment.")
