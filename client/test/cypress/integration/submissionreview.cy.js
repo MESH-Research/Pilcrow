@@ -314,7 +314,6 @@ describe("Submissions Review", () => {
     // modify, submit
     cy.dataCy("comment-editor").first().type("This is a modified inline comment.")
     cy.dataCy("criteria-item").last().click()
-    // cy.dataCy("modifyInlineCommentEditor").type("This is a modified inline comment.")
     cy.dataCy("modifyInlineCommentEditor").find("button[type=submit]").click()
 
     // verify comment includes "This is a modified inline comment."
