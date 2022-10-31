@@ -267,7 +267,7 @@ describe("InlineComments", () => {
     const { wrapper } = wrapperFactory()
     const items = wrapper.findAllComponents('[data-cy="inlineComment"]')
     const findReplies = (w) => w.findAll('[data-cy="inlineCommentReply"]')
-    await items.at(0).find('[data-cy="collapseRepliesButton"]').trigger("click")
+    await items.at(0).find('[data-cy="showRepliesButton"]').trigger("click")
 
     expect(findReplies(items.at(0))).toHaveLength(1)
 
