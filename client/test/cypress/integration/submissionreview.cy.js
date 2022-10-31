@@ -130,7 +130,7 @@ describe("Submissions Review", () => {
     cy.dataCy("inlineComment")
       .first()
       .within((el) => {
-        cy.wrap(el).findCy('collapseRepliesButton').click()
+        cy.wrap(el).findCy('showRepliesButton').click()
         cy.wrap(el).findCy('inlineCommentReplyButton').click()
         cy.dataCy("inlineCommentReplyEditor").type("This is an inline comment reply.")
         cy.dataCy('inlineCommentReplyEditor').find('button[type=submit]').click()
@@ -245,13 +245,78 @@ describe("Submissions Review", () => {
     cy.dataCy("decision_options").should('not.exist');
   })
 
-  it("should allow comments and their replies to be modified", () => {
+  it("should allow overall comments to be modified", () => {
     cy.task("resetDb")
     cy.login({ email: "applicationadministrator@ccrproject.dev" })
     cy.visit("submission/review/100")
-    cy.dataCy("inlineComment").first().find("[data-cy=commentActions]").click()
+    cy.dataCy("overallComment").first().find("[data-cy=commentActions]").click()
     cy.dataCy("modifyComment").click()
-    cy.dataCy("inlineCommentEditor").type("This commend is modified.")
-    cy.dataCy('inlineCommentEditor').find('button[type=submit]').click()
+
+    // cy.interceptGQLOperation('UpdateOverallComment')
+    // modify, submit
+    cy.dataCy("modifyOverallCommentEditor").type("This is a modified overall comment.")
+    cy.dataCy("modifyOverallCommentEditor").find("button[type=submit]").click()
+
+    // verify comment includes "This is a modified overall comment."
+    cy.dataCy("overallComment").first().contains("This is a modified overall comment")
+  })
+
+  it("should allow overall comment replies to be modified", () => {
+    cy.task("resetDb")
+    cy.login({ email: "applicationadministrator@ccrproject.dev" })
+    cy.visit("submission/review/100")
+
+    cy.dataCy("overallComment").last().find("[data-cy=showRepliesButton]").click()
+    cy.dataCy("overallCommentReply").first().find("[data-cy=commentActions]").click()
+    cy.dataCy("modifyComment").click()
+
+    // cy.interceptGQLOperation("UpdateOverallCommentReply")
+    // Thought this might be needed, but tests are passing without
+
+    // modify, submit
+    cy.dataCy("modifyOverallCommentReplyEditor").type("This is a modified overall comment reply.")
+    cy.dataCy("modifyOverallCommentReplyEditor").find("button[type=submit]").click()
+
+    // verify comment includes "This is a modified overall comment reply."
+    // cy.dataCy("overallComment").last().find("[data-cy=showRepliesButton]").click()
+    cy.dataCy("overallCommentReply").first().contains("This is a modified overall comment reply.")
+  })
+
+  it("should allow inline comments to be modified", () => {
+    cy.task("resetDb")
+    cy.login({ email: "applicationadministrator@ccrproject.dev" })
+    cy.visit("submission/review/100")
+
+    cy.dataCy("toggleInlineCommentsButton").click()
+    cy.dataCy("inlineComment").last().find("[data-cy=commentActions]").click()
+    cy.dataCy("modifyComment").click()
+    // cy.dataCy("modifyInlineCommentEditor")
+
+    // modify, submit
+    cy.dataCy("comment-editor").first().type("This is a modified inline comment.")
+    cy.dataCy("criteria-item").last().click()
+    // cy.dataCy("modifyInlineCommentEditor").type("This is a modified inline comment.")
+    cy.dataCy("modifyInlineCommentEditor").find("button[type=submit]").click()
+
+    // verify comment includes "This is a modified inline comment."
+    cy.dataCy("inlineComment").last().contains("This is a modified inline comment.")
+  })
+
+  it("should allow inline comment replies to be modified", () => {
+    cy.task("resetDb")
+    cy.login({ email: "applicationadministrator@ccrproject.dev" })
+    cy.visit("submission/review/100")
+
+    cy.dataCy("toggleInlineCommentsButton").click()
+    cy.dataCy("inlineComment").last().find("[data-cy=showRepliesButton]").click()
+    cy.dataCy("inlineCommentReply").last().find("[data-cy=commentActions]").click()
+    cy.dataCy("modifyComment").click()
+
+    // modify, submit
+    cy.dataCy("modifyInlineCommentReplyEditor").type("This is a modified inline comment reply.")
+    cy.dataCy("modifyInlineCommentReplyEditor").find("button[type=submit]").click()
+
+    // verify comment includes "This is a modified inline comment reply."
+    cy.dataCy("inlineCommentReply").last().contains("This is a modified inline comment reply.")
   })
 })

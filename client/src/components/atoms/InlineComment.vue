@@ -25,7 +25,7 @@
       <q-card-section v-else ref="modify_comment" class="q-pa-md q-pb-lg">
         <comment-editor
           comment-type="InlineComment"
-          data-cy="inlineCommentEditor"
+          data-cy="modifyInlineCommentEditor"
           :comment="commentModify"
           :is-modifying="isModifying"
           @cancel="cancelReply"
@@ -63,7 +63,7 @@
         </q-btn>
         <q-btn
           v-if="isCollapsed"
-          data-cy="collapseRepliesButton"
+          data-cy="showRepliesButton"
           aria-label="Show Replies"
           bordered
           color="secondary"

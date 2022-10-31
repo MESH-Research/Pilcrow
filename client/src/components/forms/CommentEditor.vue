@@ -10,7 +10,7 @@
         />
       </q-btn-group>
       <div class="comment-editor">
-        <editor-content :editor="editor" />
+        <editor-content data-cy="comment-editor" :editor="editor" />
       </div>
       <div v-if="commentType === 'InlineComment'" class="q-py-md">
         <q-list>

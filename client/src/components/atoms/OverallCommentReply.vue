@@ -25,7 +25,7 @@
     <q-card-section v-else ref="modify_comment" class="q-pa-md q-pb-lg">
       <comment-editor
         comment-type="OverallCommentReply"
-        data-cy="overallCommentReplyEditor"
+        data-cy="modifyOverallCommentReplyEditor"
         :comment="commentModify"
         :is-modifying="isModifying"
         @cancel="cancelReply"
