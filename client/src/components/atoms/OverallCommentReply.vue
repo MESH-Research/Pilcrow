@@ -10,8 +10,9 @@
     "
     data-cy="overallCommentReply"
   >
-    <q-separator />
+    <q-separator data-cy="testAttribute" />
     <comment-header
+      data-cy="CommentHeader"
       :comment="comment"
       class="q-pt-sm"
       @quote-reply-to="$emit('quoteReplyTo', comment)"

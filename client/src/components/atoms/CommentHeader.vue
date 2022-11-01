@@ -1,4 +1,5 @@
 <template>
+  <div data-cy="thisisunique">hello world</div>
   <q-card-section class="q-py-xs" :style="style">
     <div class="row no-wrap justify-between">
       <div class="row items-center">
@@ -7,9 +8,7 @@
       </div>
       <div class="row items-center">
         <div
-          v-if="
-            comment.updated_at != '' && comment.updated_at != comment.created_at
-          "
+          v-if="comment.updated_at != comment.created_at"
           data-cy="timestampUpdated"
           class="text-caption"
           :aria-label="
