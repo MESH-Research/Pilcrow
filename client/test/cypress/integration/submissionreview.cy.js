@@ -290,9 +290,6 @@ describe("Submissions Review", () => {
     cy.dataCy("overallCommentReply").first().find("[data-cy=commentActions]").click()
     cy.dataCy("modifyComment").click()
 
-    // cy.interceptGQLOperation("UpdateOverallCommentReply")
-    // Thought this might be needed, but tests are passing without
-
     // modify, submit
     cy.dataCy("modifyOverallCommentReplyEditor").type("This is a modified overall comment reply.")
     cy.dataCy("modifyOverallCommentReplyEditor").find("button[type=submit]").click()
