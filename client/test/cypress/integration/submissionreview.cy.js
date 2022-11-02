@@ -272,7 +272,6 @@ describe("Submissions Review", () => {
     cy.dataCy("overallComment").first().find("[data-cy=commentActions]").click()
     cy.dataCy("modifyComment").click()
 
-    // cy.interceptGQLOperation('UpdateOverallComment')
     // modify, submit
     cy.dataCy("modifyOverallCommentEditor").type("This is a modified overall comment.")
     cy.dataCy("modifyOverallCommentEditor").find("button[type=submit]").click()
