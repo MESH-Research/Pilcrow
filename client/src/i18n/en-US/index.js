@@ -579,16 +579,29 @@ export default {
         required: "A file must be uploaded with a submission.",
       },
     },
+    inline_comments_heading: "Inline Comments",
     comment: {
       ariaLabel: "Comment. Author {username}. {replies} replies.",
       dateLabel: "Created {date}",
+      dateLabelUpdated: "Updated {date}",
+      updatedLabel: "Updated",
+      toggle_replies: {
+        show_reply: "Show Replies",
+        hide_reply: "Hide Replies",
+      },
       reply: {
         ariaLabel: "Comment Reply.  Author {username}.",
         referenceButtonAria: "Jump to referenced comment",
         title: "Your Reply",
       },
       actions_btn_aria: "Comment Actions",
+      actions: {
+        quote_reply: "Quote Reply",
+        modify: "Modify",
+        share: "Share",
+      },
       placeholder: "Add a comment …",
+      scroll_to_top: "Scroll to top",
     },
   },
   failures: {

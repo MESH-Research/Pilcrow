@@ -60,6 +60,10 @@ export const _COMMENT_FIELDS = gql`
     id
     content
     created_at
+    updated_at
+    updated_by {
+      ...relatedUserFields
+    }
     created_by {
       ...relatedUserFields
     }

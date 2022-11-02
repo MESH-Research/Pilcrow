@@ -549,3 +549,114 @@ export const UPDATE_SUBMISSION_STATUS = gql`
     }
   }
 `
+
+export const UPDATE_OVERALL_COMMENT = gql`
+  mutation UpdateOverallComment(
+    $submission_id: ID!
+    $comment_id: ID!
+    $content: String!
+  ) {
+    updateSubmission(
+      input: {
+        id: $submission_id
+        overall_comments: { update: { id: $comment_id, content: $content } }
+      }
+    ) {
+      id
+      overall_comments {
+        ...commentFields
+        replies {
+          reply_to_id
+          ...commentFields
+        }
+      }
+    }
+  }
+  ${_COMMENT_FIELDS}
+`
+
+export const UPDATE_INLINE_COMMENT = gql`
+  mutation UpdateInlineComment(
+    $submission_id: ID!
+    $comment_id: ID!
+    $content: String!
+    $style_criteria: [ID!]
+  ) {
+    updateSubmission(
+      input: {
+        id: $submission_id
+        inline_comments: {
+          update: {
+            id: $comment_id
+            content: $content
+            style_criteria: $style_criteria
+          }
+        }
+      }
+    ) {
+      id
+      inline_comments {
+        ...commentFields
+        style_criteria {
+          name
+          icon
+        }
+        replies {
+          reply_to_id
+          ...commentFields
+        }
+      }
+    }
+  }
+  ${_COMMENT_FIELDS}
+`
+
+export const UPDATE_INLINE_COMMENT_REPLY = gql`
+  mutation UpdateInlineCommentReply(
+    $submission_id: ID!
+    $comment_id: ID!
+    $content: String!
+  ) {
+    updateSubmission(
+      input: {
+        id: $submission_id
+        inline_comments: { update: { id: $comment_id, content: $content } }
+      }
+    ) {
+      id
+      inline_comments {
+        ...commentFields
+        replies {
+          reply_to_id
+          ...commentFields
+        }
+      }
+    }
+  }
+  ${_COMMENT_FIELDS}
+`
+
+export const UPDATE_OVERALL_COMMENT_REPLY = gql`
+  mutation UpdateInlineCommentReply(
+    $submission_id: ID!
+    $comment_id: ID!
+    $content: String!
+  ) {
+    updateSubmission(
+      input: {
+        id: $submission_id
+        overall_comments: { update: { id: $comment_id, content: $content } }
+      }
+    ) {
+      id
+      overall_comments {
+        ...commentFields
+        replies {
+          reply_to_id
+          ...commentFields
+        }
+      }
+    }
+  }
+  ${_COMMENT_FIELDS}
+`
