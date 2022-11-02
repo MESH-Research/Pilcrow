@@ -1,5 +1,4 @@
 <template>
-  <div data-cy="thisisunique">hello world</div>
   <q-card-section class="q-py-xs" :style="style">
     <div class="row no-wrap justify-between">
       <div class="row items-center">

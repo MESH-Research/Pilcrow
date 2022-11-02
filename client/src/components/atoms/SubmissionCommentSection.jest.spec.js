@@ -292,19 +292,8 @@ describe("Overall Comments", () => {
     const overallCommentReplies = wrapper.findAll(
       '[data-cy="overallCommentReply"]'
     )
-    // const header = overallCommentReplies.at(3)
-    console.log(overallCommentReplies.at(3).find('[data-cy="CommentHeader"]'))
-    // expect(wrapper.findAll('[data-cy="thisisunique"]')).toHaveLength(8)
-    // const updateLabel = header.find("[data-cy=testAttribute")
-    console.log(overallCommentReplies.at(3).html())
-    expect(overallCommentReplies).toHaveLength(8)
-    // expect(updateLabel.exists()).toBe(true)
-    // expect(
-    //   overallCommentReplies.at(3).find("[data-cy=testAttribute").exists()
-    // ).toBe(true)
-    // const test = wrapper.findAllComponents({ name: "QSeparator" })
-    const thisTest = wrapper.find('[data-cy="testAttribute"]')
-    expect(thisTest.exists()).toBe(true)
-    // expect(example).toHaveLength(8)
+    expect(
+      overallCommentReplies.at(3).find('[data-cy="timestampUpdated"]').exists()
+    ).toBe(true)
   })
 })

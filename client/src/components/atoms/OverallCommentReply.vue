@@ -10,7 +10,7 @@
     "
     data-cy="overallCommentReply"
   >
-    <q-separator data-cy="testAttribute" />
+    <q-separator />
     <comment-header
       data-cy="CommentHeader"
       :comment="comment"
