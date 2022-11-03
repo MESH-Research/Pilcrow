@@ -110,6 +110,7 @@ describe("submissions details page mount", () => {
       data: {
         submission: {
           id: 1,
+          effective_role: "review_coordinator",
           status: 0,
           effective_role: "review_coordinator",
           __typename: "Submission",

@@ -15,9 +15,11 @@ describe("InlineComments", () => {
           provide: {
             submission: ref({
               id: "1",
+              effective_role: "review_coordinator",
               inline_comments: [
                 {
                   id: "1",
+                  __typename: "InlineComment",
                   from: 1,
                   to: 10,
                   content:
@@ -31,6 +33,7 @@ describe("InlineComments", () => {
                   replies: [
                     {
                       id: "2",
+                      __typename: "InlineCommentReply",
                       content:
                         "Sed ullam culpa dolore ea qui. Enim voluptatem eos voluptas et est.",
                       created_at: "2022-06-02T03:53:17Z",
@@ -264,15 +267,13 @@ describe("InlineComments", () => {
     const { wrapper } = wrapperFactory()
     const items = wrapper.findAllComponents('[data-cy="inlineComment"]')
     const findReplies = (w) => w.findAll('[data-cy="inlineCommentReply"]')
-    await items.at(0).find('[data-cy="collapseRepliesButton"]').trigger("click")
+    await items.at(0).find('[data-cy="showRepliesButton"]').trigger("click")
 
     expect(findReplies(items.at(0))).toHaveLength(1)
 
-    expect(items.at(1).find("[data-cy=collapseRepliesButton").exists()).toBe(
-      false
-    )
+    expect(items.at(1).find("[data-cy=showRepliesButton").exists()).toBe(false)
 
-    await items.at(2).find('[data-cy="collapseRepliesButton"]').trigger("click")
+    await items.at(2).find('[data-cy="showRepliesButton"]').trigger("click")
     expect(findReplies(items.at(2))).toHaveLength(10)
   })
 })

@@ -240,6 +240,7 @@ export const GET_SUBMISSION_REVIEW = gql`
         to
         ...commentFields
         style_criteria {
+          id
           name
           icon
         }

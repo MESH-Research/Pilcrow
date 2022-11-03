@@ -10,7 +10,7 @@
         />
       </q-btn-group>
       <div class="comment-editor">
-        <editor-content :editor="editor" />
+        <editor-content data-cy="comment-editor" :editor="editor" />
       </div>
       <div v-if="commentType === 'InlineComment'" class="q-py-md">
         <q-list>
@@ -37,8 +37,8 @@
                 <q-item-label
                   :id="`criteria-${uuid}-${criteria.id}`"
                   data-cy="criteria-label"
-                  >{{ criteria.name }}</q-item-label
-                >
+                  >{{ criteria.name }}
+                </q-item-label>
               </q-item-section>
               <q-item-section avatar>
                 <q-toggle
@@ -88,6 +88,10 @@ import {
   CREATE_OVERALL_COMMENT_REPLY,
   CREATE_INLINE_COMMENT_REPLY,
   CREATE_INLINE_COMMENT,
+  UPDATE_OVERALL_COMMENT,
+  UPDATE_INLINE_COMMENT,
+  UPDATE_INLINE_COMMENT_REPLY,
+  UPDATE_OVERALL_COMMENT_REPLY,
 } from "src/graphql/mutations"
 import { useI18n } from "vue-i18n"
 import { uniqueId } from "lodash"
@@ -114,6 +118,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  isModifying: {
+    type: Boolean,
+    default: false,
+  },
   replyTo: {
     type: Object,
     default: () => {},
@@ -121,13 +129,16 @@ const props = defineProps({
   comment: {
     type: Object,
     required: false,
-    default: null,
+    default: () => {},
   },
 })
 
 const defaultContent = computed(() => {
-  if (!props.isQuoteReplying) {
+  if (!props.isQuoteReplying && !props.isModifying) {
     return ""
+  }
+  if (props.isModifying) {
+    return `${props.comment.content}`
   }
   //TODO: Make this more robust to handle multi paragraphs, etc
   return `<blockquote>${props.replyTo.content}</blockquote><p></p>`
@@ -221,11 +232,19 @@ const commentEditorButtons = ref([
   },
 ])
 const submission = inject("submission")
-const mutations = {
+let mutations = {
   InlineComment: CREATE_INLINE_COMMENT,
   InlineCommentReply: CREATE_INLINE_COMMENT_REPLY,
   OverallComment: CREATE_OVERALL_COMMENT,
   OverallCommentReply: CREATE_OVERALL_COMMENT_REPLY,
+}
+if (props.isModifying) {
+  mutations = {
+    InlineComment: UPDATE_INLINE_COMMENT,
+    InlineCommentReply: UPDATE_INLINE_COMMENT_REPLY,
+    OverallComment: UPDATE_OVERALL_COMMENT,
+    OverallCommentReply: UPDATE_OVERALL_COMMENT_REPLY,
+  }
 }
 const { mutate: createComment } = useMutation(mutations[commentType.value])
 const selectedCriteria = computed(() =>
@@ -263,9 +282,12 @@ async function submitHandler() {
       args.from = props.comment.from
       args.to = props.comment.to
     }
-    if (isReply.value) {
+    if (isReply.value && !props.isModifying) {
       args.reply_to_id = props.replyTo.id
       args.parent_id = props.parent.id
+    }
+    if (props.isModifying) {
+      args.comment_id = props.comment.id
     }
     await createComment({
       ...args,
@@ -310,11 +332,24 @@ function setLink() {
     .run()
 }
 
+const a = computed(() => props.comment)
+
+function isCriteriaSelected(publication_style_criteria, comment) {
+  if (commentType.value === "InlineComment") {
+    return comment.value.style_criteria.some((comment_style_criteria) => {
+      return comment_style_criteria.id == publication_style_criteria.id
+    }, publication_style_criteria)
+  }
+}
+
 const styleCriteria = ref(
-  submission.value.publication.style_criterias.map((c) => ({
-    ...c,
-    selected: false,
-  }))
+  submission.value.publication.style_criterias.map(
+    (c) => ({
+      ...c,
+      selected: isCriteriaSelected(c, a),
+    }),
+    a
+  )
 )
 </script>
 <style>
@@ -324,6 +359,7 @@ const styleCriteria = ref(
   min-height: 200px;
   padding: 8px;
 }
+
 .comment-editor .ProseMirror p.is-editor-empty:first-child::before {
   color: #18453b;
   content: attr(data-placeholder);
