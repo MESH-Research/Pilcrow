@@ -175,6 +175,16 @@ class Submission extends Model implements Auditable
     }
 
     /**
+     * Invitations that belong to the submission
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function invitations(): HasMany
+    {
+        return $this->hasMany(SubmissionInvitation::class, 'submission_id');
+    }
+
+    /**
      * User that created the submission
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -256,39 +266,5 @@ class Submission extends Model implements Auditable
         }
 
         return $this->getMyRole();
-    }
-
-    /**
-     * Create a staged user and attach them as a reviewer to this submisison
-     *
-     * @param string $email
-     * @return \App\Models\User|void
-     */
-    public function stageReviewer(string $email)
-    {
-        if (!$email) {
-            return; // TODO: Validate email and throw an error
-        }
-        $user = User::createStagedUser($email);
-        $this->reviewers()->attach($user);
-
-        return $user;
-    }
-
-    /**
-     * Create a staged user and attach them as a review coordinator to this submisison
-     *
-     * @param string $email
-     * @return \App\Models\User|void
-     */
-    public function stageReviewCoordinator(string $email)
-    {
-        if (!$email) {
-            return; // TODO: Validate email and throw an error
-        }
-        $user = User::createStagedUser($email);
-        $this->reviewCoordinators()->attach($user);
-
-        return $user;
     }
 }

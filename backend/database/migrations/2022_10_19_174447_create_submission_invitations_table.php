@@ -16,10 +16,13 @@ return new class extends Migration
         Schema::create('submission_invitations', function (Blueprint $table) {
             $table->id();
             $table->string('email');
+            $table->text('message')->nullable();
             $table->string('token', 36)->unique()->nullable();
-            $table->unsignedBigInteger('submission_id');
-            $table->timestamp('expiration')->nullable();
+            $table->foreignId('submission_id')->constrained('submissions');
+            $table->foreignId('created_by')->constrained('users');
+            $table->foreignId('updated_by')->constrained('users');
             $table->timestamp('accepted_at')->nullable();
+            $table->timestamp('expiration')->nullable();
             $table->timestamps();
         });
     }

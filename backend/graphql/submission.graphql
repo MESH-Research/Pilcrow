@@ -30,7 +30,7 @@ extend type Mutation {
     "Accept an invitation to a submission as the assigned role"
     acceptSubmissionInvite(token: String!): Submission
         @field(
-            resolver: "App\\GraphQL\\Mutations\\InviteSubmissionUser@acceptInvite"
+            resolver: "App\\GraphQL\\Mutations\\AcceptSubmissionInvite@acceptInvite"
         )
 
     """
@@ -42,6 +42,7 @@ extend type Mutation {
         email: String!
         message: String
     ): Submission
+        @can(ability: "invite", find: "submission_id")
         @field(
             resolver: "App\\GraphQL\\Mutations\\InviteSubmissionUser@inviteReviewer"
         )
@@ -52,6 +53,7 @@ extend type Mutation {
         email: String!
         message: String
     ): Submission
+        @can(ability: "invite", find: "submission_id")
         @field(
             resolver: "App\\GraphQL\\Mutations\\InviteSubmissionUser@inviteReviewCoordinator"
         )

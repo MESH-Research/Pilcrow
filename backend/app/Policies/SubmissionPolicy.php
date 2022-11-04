@@ -5,6 +5,7 @@ namespace App\Policies;
 
 use App\Models\Role;
 use App\Models\Submission;
+use App\Models\SubmissionInvitation;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Auth\Access\Response;
@@ -164,5 +165,21 @@ class SubmissionPolicy
         }
 
         return Response::deny('You do not have permission to update this submission');
+    }
+
+    /**
+     * Invite users to a submission
+     *
+     * @param \App\Models\User $user
+     * @param \App\Models\Submission $submission
+     * @return bool|\Illuminate\Auth\Access\Response
+     */
+    public function invite(User $user, Submission $submission)
+    {
+        if ($submission->getEffectiveRole() == (int)Role::REVIEW_COORDINATOR_ROLE_ID) {
+            return true;
+        }
+
+        return Response::deny('You do not have permission to invite users to this submission.');
     }
 }
