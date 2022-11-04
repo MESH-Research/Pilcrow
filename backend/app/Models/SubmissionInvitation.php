@@ -164,7 +164,9 @@ class SubmissionInvitation extends Model
     public function acceptInvite()
     {
         $user = User::where('email', $this->email)->firstOrFail();
-        $this->updated_by = (Auth::user()) ? Auth::user()->id : $user->id;
+        $this->updated_by = Auth::user()
+            ? Auth::user()->id
+            : $user->id;
         $this->accepted_at = Carbon::now()->toDateTimeString();
         $this->save();
         $user->staged = null;
