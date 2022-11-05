@@ -47,10 +47,11 @@ class InviteReviewCoordinator extends Notification implements ShouldQueue
     public function toMail()
     {
         $mail = new MailMessage();
+        $name = ($this->data['inviter']['name'] ?: $this->data['inviter']['username']);
         $mail->subject('Invitation to Coordinate a Submission Review')
-            ->line('You have been invited to coordinate the review of a submission.')
+            ->line('You have been invited by ' . $name . ' to coordinate the review of a submission.')
             ->linesIf($this->data['message'], [
-                'Comment from ' . ($this->data['inviter']['name'] ?: $this->data['inviter']['username']) . ': ',
+                'Comment from ' . $name . ': ',
                 $this->data['message'],
             ])
             ->action('Accept Invitation', url('/accept-invite/' . $this->data['token']));

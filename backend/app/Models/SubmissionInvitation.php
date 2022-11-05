@@ -3,15 +3,14 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Events\ReviewCoordinatorInvited;
+use App\Events\ReviewerInvited;
 use App\Http\Traits\CreatedUpdatedBy;
-use App\Notifications\InviteReviewCoordinator;
-use App\Notifications\InviteReviewer;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
 
 class SubmissionInvitation extends Model
@@ -73,51 +72,27 @@ class SubmissionInvitation extends Model
     }
 
     /**
-     * Create a staged review coordinator to a submisison and send them an email notification
-     * inviting them to accept the assignment
+     * Create a staged review coordinator to a submisison and dispatch the ReviewCoordinatorInvited event
      *
      * @return \App\Models\Submission
      */
     public function inviteReviewCoordinator(): Submission
     {
-        $reviewer = $this->stageReviewCoordinator($this->email);
-        $notification_data = [
-            'submission' => [
-                'id' => $this->id,
-            ],
-            'inviter' => [
-                'name' => $this->createdBy->name,
-                'username' => $this->createdBy->username,
-            ],
-            'message' => $this->message,
-            'token' => $this->token,
-        ];
-        Notification::send($reviewer, new InviteReviewCoordinator($notification_data));
+        $this->stageReviewCoordinator($this->email);
+        ReviewCoordinatorInvited::dispatch($this);
 
         return $this->submission;
     }
 
     /**
-     * Create a staged reviewer to a submisison and send them an email notification
-     * inviting them to accept the assignment
+     * Create a staged reviewer to a submisison and dispatch the ReviewerInvited event
      *
      * @return \App\Models\Submission
      */
     public function inviteReviewer(): Submission
     {
-        $reviewer = $this->stageReviewer($this->email);
-        $notification_data = [
-            'submission' => [
-                'id' => $this->id,
-            ],
-            'inviter' => [
-                'name' => $this->createdBy->name,
-                'username' => $this->createdBy->username,
-            ],
-            'message' => $this->message,
-            'token' => $this->token,
-        ];
-        Notification::send($reviewer, new InviteReviewer($notification_data));
+        $this->stageReviewer($this->email);
+        ReviewerInvited::dispatch($this);
 
         return $this->submission;
     }
@@ -161,8 +136,11 @@ class SubmissionInvitation extends Model
      *
      * @return \App\Models\Submission
      */
-    public function acceptInvite()
+    public function acceptInvite(): Submission
     {
+        if ($this->accepted_at != null) {
+            return $this->submission;
+        }
         $user = User::where('email', $this->email)->firstOrFail();
         $this->updated_by = Auth::user()
             ? Auth::user()->id
