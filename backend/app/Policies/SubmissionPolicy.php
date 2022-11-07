@@ -40,6 +40,21 @@ class SubmissionPolicy
     }
 
     /**
+     * Check if publication is accepting submissions
+     *
+     * @param \App\Models\User $user
+     * @param int $publicationId
+     * @return bool
+     */
+    public function create(User $user, $args)
+    {
+        
+        //Check if the publication is rejecting submissions
+        //var_dump($args);
+        return true;
+    }
+
+    /**
      * updateSubmitters
      *
      * @param \App\Models\User $user

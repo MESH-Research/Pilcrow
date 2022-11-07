@@ -17,11 +17,13 @@ class Publication extends BaseModel
         'home_page_content',
         'new_submission_content',
         'is_publicly_visible',
+        'is_rejecting_submissions',
     ];
 
     protected $rules = [
         'name' => 'max:256|unique:publications,name|required',
         'is_publicly_visible' => 'boolean',
+        'is_rejecting_submissions' => 'boolean',
     ];
 
     protected $casts = [
