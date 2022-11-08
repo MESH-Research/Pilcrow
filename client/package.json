@@ -42,7 +42,7 @@
     "flat": "^5.0.2",
     "graphql": "^16.6.0",
     "graphql-tag": "^2.12.6",
-    "javascript-time-ago": "^2.5.7",
+    "javascript-time-ago": "^2.5.9",
     "lodash": "^4.17.20",
     "luxon": "^3.1.0",
     "quasar": "2",
