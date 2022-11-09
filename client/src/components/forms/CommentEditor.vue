@@ -332,13 +332,15 @@ function setLink() {
     .run()
 }
 
-const a = computed(() => props.comment)
+const comment = computed(() => props.comment)
 
 function isCriteriaSelected(publication_style_criteria, comment) {
-  if (commentType.value === "InlineComment") {
+  if (commentType.value === "InlineComment" && props.isModifying) {
     return comment.value.style_criteria.some((comment_style_criteria) => {
       return comment_style_criteria.id == publication_style_criteria.id
     }, publication_style_criteria)
+  } else {
+    return false
   }
 }
 
@@ -346,9 +348,9 @@ const styleCriteria = ref(
   submission.value.publication.style_criterias.map(
     (c) => ({
       ...c,
-      selected: isCriteriaSelected(c, a),
+      selected: isCriteriaSelected(c, comment),
     }),
-    a
+    comment
   )
 )
 </script>
