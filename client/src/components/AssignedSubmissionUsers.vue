@@ -27,10 +27,10 @@
       data-cy="invitation_form"
       @submit="handleSubmit"
     >
-      <div class="optional-message q-mb-sm">
+      <find-user-select v-model="user" data-cy="input_user" class="q-mb-md" />
+      <div class="optional-message q-mb-md">
         <editor-content :editor="editor" />
       </div>
-      <find-user-select v-model="user" data-cy="input_user" class="q-mb-md" />
       <q-btn
         :ripple="{ center: true }"
         color="accent"
