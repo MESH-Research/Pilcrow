@@ -42,6 +42,7 @@ extend type Mutation {
         email: String!
         message: String
     ): Submission
+        @validator(class: "SubmissionInvitationValidator")
         @can(ability: "invite", find: "submission_id")
         @field(
             resolver: "App\\GraphQL\\Mutations\\InviteSubmissionUser@inviteReviewer"
