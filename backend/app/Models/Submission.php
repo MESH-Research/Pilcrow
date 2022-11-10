@@ -175,6 +175,16 @@ class Submission extends Model implements Auditable
     }
 
     /**
+     * Invitations that belong to the submission
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function invitations(): HasMany
+    {
+        return $this->hasMany(SubmissionInvitation::class, 'submission_id');
+    }
+
+    /**
      * User that created the submission
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

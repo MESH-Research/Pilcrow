@@ -13,7 +13,7 @@ export default {
     details_heading: "User Details",
     unconfirmed: {
       title: "User not confirmed",
-      tooltip: "This user has not yet accepted the invitation.",
+      tooltip: "This user has not yet registered to accept the invitation.",
     },
   },
   role: {
@@ -95,6 +95,7 @@ export default {
       UNKNOWN: "An unexpected error occurred.",
     },
   },
+  invitation: {},
   helpers: {
     OPTIONAL_FIELD: "{0} (optional)",
     REQUIRED_FIELD: "{0} is required.",
@@ -560,6 +561,20 @@ export default {
       search: {
         label: "User to Add",
         hint: "Search by username, email, or name.",
+        no_option:
+          "No user found. A brand new user will be invited if you specify an <strong>email address</strong>.",
+      },
+    },
+    accept_invite: {
+      success: {
+        title: "Success",
+        message: "You have accepted the invitation to the submission.",
+        action: "Visit Submission",
+      },
+      failure: {
+        title: "Error",
+        message:
+          "An error occurred while attempting to accept the invitation. Please contact your administrator.",
       },
     },
     create: {

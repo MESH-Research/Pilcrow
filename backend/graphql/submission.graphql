@@ -26,6 +26,37 @@ extend type Mutation {
                 "status:updateStatus"
             ]
         )
+
+    "Accept an invitation to a submission as the assigned role"
+    acceptSubmissionInvite(token: String!): Submission
+        @field(
+            resolver: "App\\GraphQL\\Mutations\\AcceptSubmissionInvite@acceptInvite"
+        )
+
+    """
+    Create a staged user, attach them as a reviewer to a submisison,
+    and send them an email notification inviting them to accept the assignment"
+    """
+    inviteReviewer(
+        submission_id: ID!
+        email: String!
+        message: String
+    ): Submission
+        @can(ability: "invite", find: "submission_id")
+        @field(
+            resolver: "App\\GraphQL\\Mutations\\InviteSubmissionUser@inviteReviewer"
+        )
+
+    "Stage a user as a review coordinator of a submission"
+    inviteReviewCoordinator(
+        submission_id: ID!
+        email: String!
+        message: String
+    ): Submission
+        @can(ability: "invite", find: "submission_id")
+        @field(
+            resolver: "App\\GraphQL\\Mutations\\InviteSubmissionUser@inviteReviewCoordinator"
+        )
 }
 
 """

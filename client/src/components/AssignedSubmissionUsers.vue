@@ -72,15 +72,15 @@ import UserList from "./molecules/UserList.vue"
 import { useFeedbackMessages } from "src/use/guiElements"
 import { useMutation } from "@vue/apollo-composable"
 import {
-  UPDATE_PUBLICATION_ADMINS,
-  UPDATE_PUBLICATION_EDITORS,
   UPDATE_SUBMISSION_REVIEWERS,
   UPDATE_SUBMISSION_REVIEW_COORDINATORS,
   UPDATE_SUBMISSION_SUBMITERS,
+  INVITE_REVIEWER,
+  INVITE_REVIEW_COORDINATOR,
 } from "src/graphql/mutations"
 import { computed, ref } from "vue"
 import { useI18n } from "vue-i18n"
-import { Editor, EditorContent } from "@tiptap/vue-3"
+import { useEditor, EditorContent } from "@tiptap/vue-3"
 import StarterKit from "@tiptap/starter-kit"
 import Placeholder from "@tiptap/extension-placeholder"
 const props = defineProps({
@@ -117,17 +117,29 @@ const tp$ = (key, ...args) => t(tPrefix(key), ...args)
 const { newStatusMessage } = useFeedbackMessages()
 
 const opts = { variables: { id: props.container.id } }
-const documents = {
-  submission: {
-    reviewers: UPDATE_SUBMISSION_REVIEWERS,
-    review_coordinators: UPDATE_SUBMISSION_REVIEW_COORDINATORS,
-    submitters: UPDATE_SUBMISSION_SUBMITERS,
+const mutations = {
+  reviewers: {
+    update: UPDATE_SUBMISSION_REVIEWERS,
+    invite: INVITE_REVIEWER,
   },
-  publication: {
-    editors: UPDATE_PUBLICATION_EDITORS,
-    publication_admins: UPDATE_PUBLICATION_ADMINS,
+  review_coordinators: {
+    update: UPDATE_SUBMISSION_REVIEW_COORDINATORS,
+    invite: INVITE_REVIEW_COORDINATOR,
+  },
+  submitters: {
+    update: UPDATE_SUBMISSION_SUBMITERS,
+    invite: UPDATE_SUBMISSION_SUBMITERS, // TODO: Enable submitter invitation
   },
 }
+const setMutationType = computed(() => {
+  let type = mutations[props.relationship]
+  if (typeof user.value === "string") {
+    return type["invite"]
+  }
+  return type["update"]
+})
+const { mutate } = useMutation(setMutationType, opts)
+
 const users = computed(() => {
   return props.container[props.relationship]
 })
@@ -140,12 +152,7 @@ const acceptMore = computed(() => {
   )
 })
 
-const { mutate } = useMutation(
-  documents[containerType.value][props.relationship],
-  opts
-)
-
-const editor = new Editor({
+const editor = useEditor({
   content: "",
   extensions: [
     StarterKit,
@@ -155,12 +162,29 @@ const editor = new Editor({
   ],
 })
 
+function resetForm() {
+  user.value = null
+  editor.value.commands.clearContent(true)
+  editor.value.commands.blur()
+}
+
 async function handleSubmit() {
   if (!acceptMore.value) {
     return
   }
 
   try {
+    // Invite user
+    if (typeof user.value === "string") {
+      await mutate({
+        email: user.value,
+        message: editor.value.getText(),
+      }).then(() => {})
+      resetForm()
+      return
+    }
+
+    // Assign user
     await mutate({
       connect: [user.value.id],
     })
@@ -173,9 +197,10 @@ async function handleSubmit() {
         )
       })
       .then(() => {
-        user.value = null
+        resetForm()
       })
   } catch (error) {
+    console.log(error)
     newStatusMessage("failure", tp$("assign.error"))
   }
 }
