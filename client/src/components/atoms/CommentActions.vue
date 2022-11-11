@@ -17,10 +17,10 @@
             }}</q-item-section></q-item
           >
           <q-item
-            :disable="checkCommentCreatedBy"
+            v-if="checkCommentCreatedBy == false"
             data-cy="modifyComment"
             clickable
-            @click="$emit('quoteReplyTo')"
+            @click="$emit('modifyComment')"
           >
             <q-item-section>{{
               $t("submissions.comment.actions.modify")
@@ -57,4 +57,5 @@ const checkCommentCreatedBy = computed(() => {
     return true
   }
 })
+// :disable="checkCommentCreatedBy"
 </script>
