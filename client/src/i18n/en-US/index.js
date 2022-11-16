@@ -355,7 +355,17 @@ export default {
         error: "An error occurred while attempting to unassign an editor.",
         success: "{display_name} successfully unassigned as an editor.",
       },
+      invite: {
+        NOT_UNIQUE:
+          "Please select {display_name} from the search results dropdown.",
+        invalid_email:
+          "Pleaes provide a valid email address for the user you want to invite as an editor.",
+      },
       assign: {
+        unauthorized:
+          "You are not authorized to assign editors. Please contact your administrator.",
+        no_value:
+          "Please provide the username, email, or name of the person you want to assign as an editor.",
         duplicate:
           "{display_name} is already assigned as an editor for this publication.",
         error:
@@ -377,11 +387,21 @@ export default {
           "An error occurred while attempting to unassign an administrator.",
         success: "{display_name} successfully unassigned as an administrator.",
       },
+      invite: {
+        NOT_UNIQUE:
+          "Please select {display_name} from the search results dropdown.",
+        invalid_email:
+          "Pleaes provide a valid email address for the user you want to invite as a publication administrator.",
+      },
       assign: {
+        unauthorized:
+          "You are not authorized to assign publication administrators. Please contact your administrator.",
+        no_value:
+          "Please provide the username, email, or name of the person you want to assign as a publication administrator.",
         duplicate:
           "{display_name} is already assigned as an administrator for this publication.",
         error:
-          "An error occurred while attempting to assign an editor. Is the user already assigned to this publication?",
+          "An error occurred while attempting to assign a publication administrator. Is the user already assigned to this publication?",
         success: "{display_name} successfully assigned as an administrator.",
       },
       unassign_button: {
@@ -483,7 +503,17 @@ export default {
         success:
           "{display_name} successfully unassigned as a review coordinator.",
       },
+      invite: {
+        NOT_UNIQUE:
+          "Please select {display_name} from the search results dropdown.",
+        invalid_email:
+          "Pleaes provide a valid email address for the user you want to invite as a review coordinator.",
+      },
       assign: {
+        unauthorized:
+          "You are not authorized to assign review coordinators. Please contact your administrator.",
+        no_value:
+          "Please provide the username, email, or name of the person you want to assign as a review coordinator.",
         duplicate:
           "{display_name} is already assigned as a review coordinator to this submission.",
         error:
@@ -506,7 +536,17 @@ export default {
         error: "An error occurred while attempting to unassign a reviewer.",
         success: "{display_name} successfully unassigned as a reviewer.",
       },
+      invite: {
+        NOT_UNIQUE:
+          "Please select {display_name} from the search results dropdown.",
+        invalid_email:
+          "Pleaes provide a valid email address for the user you want to invite as a reviewer.",
+      },
       assign: {
+        unauthorized:
+          "You are not authorized to assign reviewers. Please contact your administrator.",
+        no_value:
+          "Please provide the username, email, or name of the person you want to assign as a reviewer.",
         duplicate:
           "{display_name} is already assigned as a reviewer to this submission.",
         error:

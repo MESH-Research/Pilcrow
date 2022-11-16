@@ -561,7 +561,9 @@ export const UPDATE_SUBMISSION_STATUS = gql`
 
 export const INVITE_REVIEWER = gql`
   mutation InviteReviewer($id: ID!, $email: String!, $message: String) {
-    inviteReviewer(submission_id: $id, email: $email, message: $message) {
+    inviteReviewer(
+      input: { submission_id: $id, email: $email, message: $message }
+    ) {
       id
       reviewers {
         ...relatedUserFields
@@ -578,9 +580,7 @@ export const INVITE_REVIEW_COORDINATOR = gql`
     $message: String
   ) {
     inviteReviewCoordinator(
-      submission_id: $id
-      email: $email
-      message: $message
+      input: { submission_id: $id, email: $email, message: $message }
     ) {
       id
       review_coordinators {

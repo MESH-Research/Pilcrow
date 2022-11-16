@@ -38,11 +38,8 @@ extend type Mutation {
     and send them an email notification inviting them to accept the assignment"
     """
     inviteReviewer(
-        submission_id: ID!
-        email: String!
-        message: String
+        input: inviteSubmissionUserInput @spread
     ): Submission
-        @validator(class: "SubmissionInvitationValidator")
         @can(ability: "invite", find: "submission_id")
         @field(
             resolver: "App\\GraphQL\\Mutations\\InviteSubmissionUser@inviteReviewer"
@@ -50,14 +47,18 @@ extend type Mutation {
 
     "Stage a user as a review coordinator of a submission"
     inviteReviewCoordinator(
-        submission_id: ID!
-        email: String!
-        message: String
+        input: inviteSubmissionUserInput @spread
     ): Submission
         @can(ability: "invite", find: "submission_id")
         @field(
             resolver: "App\\GraphQL\\Mutations\\InviteSubmissionUser@inviteReviewCoordinator"
         )
+}
+
+input inviteSubmissionUserInput @validator(class: "SubmissionInvitationValidator") {
+    submission_id: ID!
+    email: String!
+    message: String
 }
 
 """

@@ -83,6 +83,7 @@ import { useI18n } from "vue-i18n"
 import { useEditor, EditorContent } from "@tiptap/vue-3"
 import StarterKit from "@tiptap/starter-kit"
 import Placeholder from "@tiptap/extension-placeholder"
+
 const props = defineProps({
   container: {
     type: Object,
@@ -172,19 +173,52 @@ async function handleSubmit() {
   if (!acceptMore.value) {
     return
   }
+  if (user.value == null) {
+    newStatusMessage("failure", tp$("assign.no_value"))
+    return
+  }
+  // TODO: Attempt to assign instead of invite when user.value matches a known user
+  if (typeof user.value === "string") {
+    inviteUser()
+  } else {
+    assignUser()
+  }
+}
 
-  try {
-    // Invite user
-    if (typeof user.value === "string") {
-      await mutate({
-        email: user.value,
-        message: editor.value.getText(),
-      }).then(() => {})
+function processErrorsForEmailValidation(errorsFromCatch) {
+  const v = errorsFromCatch.graphQLErrors[0].extensions.validation
+  if (!Object.hasOwn(v, "input.email")) {
+    return
+  }
+  const key = v["input.email"][0]
+  if (key === "NOT_UNIQUE") {
+    newStatusMessage(
+      "failure",
+      tp$("invite.NOT_UNIQUE", {
+        display_name: user.value,
+      })
+    )
+  }
+  if (key === "The input.email must be a valid email address.") {
+    newStatusMessage("failure", tp$("invite.invalid_email"))
+  }
+}
+
+async function inviteUser() {
+  await mutate({
+    email: user.value,
+    message: editor.value.getText(),
+  })
+    .then(() => {
       resetForm()
-      return
-    }
+    })
+    .catch((error) => {
+      processErrorsForEmailValidation(error)
+    })
+}
 
-    // Assign user
+async function assignUser() {
+  try {
     await mutate({
       connect: [user.value.id],
     })
@@ -200,7 +234,6 @@ async function handleSubmit() {
         resetForm()
       })
   } catch (error) {
-    console.log(error)
     newStatusMessage("failure", tp$("assign.error"))
   }
 }

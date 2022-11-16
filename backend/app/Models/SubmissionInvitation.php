@@ -106,7 +106,7 @@ class SubmissionInvitation extends Model
     private function stageReviewer(string $email)
     {
         if (!$email) {
-            return; // TODO: Validate email and throw an error
+            return;
         }
         $user = User::createStagedUser($email);
         $this->submission->reviewers()->attach($user);
@@ -123,7 +123,7 @@ class SubmissionInvitation extends Model
     private function stageReviewCoordinator(string $email)
     {
         if (!$email) {
-            return; // TODO: Validate email and throw an error
+            return;
         }
         $user = User::createStagedUser($email);
         $this->submission->reviewCoordinators()->attach($user);
