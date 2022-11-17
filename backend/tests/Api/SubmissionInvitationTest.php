@@ -16,7 +16,7 @@ class SubmissionInvitationTest extends ApiTestCase
      */
     public function testValidEmailsCanBeProvidedInAnInvitation()
     {
-        $valid_email = "test@gmail.com";
+        $valid_email = 'test@gmail.com';
         $this->beAppAdmin();
         $submission = Submission::factory()->create();
         $response = $this->graphQL(
