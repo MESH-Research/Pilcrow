@@ -149,14 +149,28 @@ describe("Submission Details", () => {
     cy.task("resetDb")
     cy.login({ email: "reviewcoordinator@ccrproject.dev" })
     cy.visit("submission/100")
-
+    cy.interceptGQLOperation('InviteReviewer');
     cy.dataCy("reviewers_list").within(() => {
-      cy.userSearch('input_user', 'stranger@scholarlywebsite.com')
+      cy.userSearch('input_user', 'scholarlysstranger@gmail.com')
       cy.dataCy('button-assign').click();
     })
-
+    cy.wait("@InviteReviewer")
     cy.dataCy("reviewers_list").find(".q-list").contains("stranger")
+    cy.injectAxe()
+    cy.checkA11y(null, null, a11yLogViolations)
+  })
 
+  it("should disallow invitations for invalid emails", () => {
+    cy.task("resetDb")
+    cy.login({ email: "reviewcoordinator@ccrproject.dev" })
+    cy.visit("submission/100")
+    cy.interceptGQLOperation('InviteReviewer');
+    cy.dataCy("reviewers_list").within(() => {
+      cy.userSearch('input_user', 'invalidemail')
+      cy.dataCy('button-assign').click();
+    })
+    cy.wait("@InviteReviewer")
+    cy.dataCy('reviewers_list').find('.q-item').should('have.length', 1)
     cy.injectAxe()
     cy.checkA11y(null, null, a11yLogViolations)
   })
