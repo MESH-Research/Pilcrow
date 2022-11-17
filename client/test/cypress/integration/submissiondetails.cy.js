@@ -151,7 +151,7 @@ describe("Submission Details", () => {
     cy.visit("submission/100")
     cy.interceptGQLOperation('InviteReviewer');
     cy.dataCy("reviewers_list").within(() => {
-      cy.userSearch('input_user', 'scholarlysstranger@gmail.com')
+      cy.userSearch('input_user', 'scholarlystranger@gmail.com')
       cy.dataCy('button-assign').click();
     })
     cy.wait("@InviteReviewer")
