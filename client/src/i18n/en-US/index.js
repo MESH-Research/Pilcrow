@@ -11,10 +11,7 @@ export default {
     password: "Password",
     empty_name: "No display name",
     details_heading: "User Details",
-    unconfirmed: {
-      title: "User not confirmed",
-      tooltip: "This user has not yet registered to accept the invitation.",
-    },
+    unconfirmed: "User not confirmed",
   },
   role: {
     self: "No roles | Role | Roles",
