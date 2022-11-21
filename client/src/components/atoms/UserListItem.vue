@@ -23,7 +23,7 @@
           color="secondary"
           flat
           dense
-          :title="$t('user.unconfirmed.title')"
+          :title="$t('user.unconfirmed')"
           icon="schedule"
           data-cy="user_unconfirmed"
           @click="unconfirmedVisibility = !unconfirmedVisibility"
@@ -33,7 +33,7 @@
             anchor="top middle"
             self="center middle"
             class="text-subtitle2"
-            >{{ $t("user.unconfirmed.tooltip") }}</q-tooltip
+            >{{ $t("user.unconfirmed") }}</q-tooltip
           >
         </q-btn>
         <q-btn
