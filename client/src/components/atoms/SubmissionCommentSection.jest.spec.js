@@ -1,9 +1,13 @@
 import { mount } from "@vue/test-utils"
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-jest"
 import SubmissionCommentSection from "./SubmissionCommentSection.vue"
+import { useCurrentUser } from "src/use/user"
 import { ref } from "vue"
 import TimeAgo from "javascript-time-ago"
 import en from "javascript-time-ago/locale/en.json"
+jest.mock("src/use/user", () => ({
+  useCurrentUser: jest.fn(),
+}))
 
 installQuasarPlugin()
 describe("Overall Comments", () => {
@@ -242,11 +246,17 @@ describe("Overall Comments", () => {
   }
 
   test("able to mount", () => {
+    useCurrentUser.mockReturnValue({
+      currentUser: ref({ id: 1 }),
+    })
     const { wrapper } = wrapperFactory()
     expect(wrapper).toBeTruthy()
   })
 
   test("expected number of overall comments appear", () => {
+    useCurrentUser.mockReturnValue({
+      currentUser: ref({ id: 1 }),
+    })
     const { wrapper } = wrapperFactory()
     const items = wrapper.findAllComponents('[data-cy="overallComment"]')
     expect(items).toHaveLength(3)
@@ -256,6 +266,10 @@ describe("Overall Comments", () => {
     const { wrapper } = wrapperFactory()
     const overallComments = wrapper.findAll('[data-cy="overallComment"]')
     const findReplies = (w) => w.findAll('[data-cy="overallCommentReply"]')
+
+    useCurrentUser.mockReturnValue({
+      currentUser: ref({ id: 1 }),
+    })
 
     // First Overall Comment
     expect(
@@ -284,6 +298,11 @@ describe("Overall Comments", () => {
   })
   test("expected timestamp is shown for created and updated overall comment replies", async () => {
     const { wrapper } = wrapperFactory()
+
+    useCurrentUser.mockReturnValue({
+      currentUser: ref({ id: 1 }),
+    })
+
     const overallComments = wrapper.findAll('[data-cy="overallComment"]')
     await overallComments
       .at(2)
