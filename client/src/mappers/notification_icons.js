@@ -14,6 +14,9 @@ const icons = flatten({
     revision_requested: "undo",
     archived: "inventory_2",
     deleted: "delete",
+    invitation: {
+      accepted: "emoji_people",
+    },
   },
 })
 

@@ -19,6 +19,7 @@ return new class extends Migration
             $table->text('message')->nullable();
             $table->string('token', 36)->unique()->nullable();
             $table->foreignId('submission_id')->constrained('submissions');
+            $table->foreignId('role_id')->constrained('roles');
             $table->foreignId('created_by')->constrained('users');
             $table->foreignId('updated_by')->constrained('users');
             $table->timestamp('accepted_at')->nullable();

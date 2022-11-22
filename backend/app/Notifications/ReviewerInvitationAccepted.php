@@ -8,7 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class ReviewerInviteAccepted extends Notification implements ShouldQueue
+class ReviewerInvitationAccepted extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -63,13 +63,23 @@ class ReviewerInviteAccepted extends Notification implements ShouldQueue
     /**
      * Get the array representation of the notification.
      *
-     * @param  mixed  $notifiable
      * @return array
      */
-    public function toArray($notifiable)
+    public function toArray()
     {
         return [
-            //
+            'submission' => [
+                'id' => $this->data['submission']['id'],
+            ],
+            'inviter' => [
+                'name' => $this->data['inviter']['name'],
+                'username' => $this->data['invitee']['username'],
+            ],
+            'invitee' => [
+                'name' => $this->data['invitee']['name'],
+                'username' => $this->data['invitee']['username'],
+            ],
+            'type' => 'submission.invitation.accepted',
         ];
     }
 }

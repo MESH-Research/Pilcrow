@@ -683,6 +683,12 @@ export default {
       },
     },
     submission: {
+      invitation: {
+        accepted: {
+          short:
+            "{data_invitee} has accepted the invitation from {inviter} to review {submission_title}.",
+        },
+      },
       updated: {
         short:
           "The status of {data_submission_title} has been updated to {data_submission_status_name}",
