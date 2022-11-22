@@ -141,7 +141,7 @@ describe("Overall Comments", () => {
                       created_by: {
                         id: "1",
                         username: "applicationAdministrator",
-                        email: "publicationadministrator@ccrproject.dev",
+                        email: "applicationadministrator@ccrproject.dev",
                       },
                       updated_by: {
                         id: "1",
