@@ -616,7 +616,8 @@ export const UPDATE_OVERALL_COMMENT = gql`
       }
     }
   }
-  ${(_COMMENT_FIELDS, _RELATED_USER_FIELDS)}
+  ${_COMMENT_FIELDS}
+  ${_RELATED_USER_FIELDS}
 `
 
 export const UPDATE_INLINE_COMMENT = gql`
@@ -655,7 +656,8 @@ export const UPDATE_INLINE_COMMENT = gql`
       }
     }
   }
-  ${(_COMMENT_FIELDS, _RELATED_USER_FIELDS)}
+  ${_COMMENT_FIELDS}
+  ${_RELATED_USER_FIELDS}
 `
 
 export const UPDATE_INLINE_COMMENT_REPLY = gql`
@@ -683,7 +685,8 @@ export const UPDATE_INLINE_COMMENT_REPLY = gql`
       }
     }
   }
-  ${(_COMMENT_FIELDS, _RELATED_USER_FIELDS)}
+  ${_COMMENT_FIELDS}
+  ${_RELATED_USER_FIELDS}
 `
 
 export const UPDATE_OVERALL_COMMENT_REPLY = gql`
@@ -711,5 +714,6 @@ export const UPDATE_OVERALL_COMMENT_REPLY = gql`
       }
     }
   }
-  ${(_COMMENT_FIELDS, _RELATED_USER_FIELDS)}
+  ${_COMMENT_FIELDS}
+  ${_RELATED_USER_FIELDS}
 `
