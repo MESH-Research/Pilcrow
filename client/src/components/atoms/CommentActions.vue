@@ -50,7 +50,6 @@ defineEmits(["quoteReplyTo", "modifyComment"])
 const checkCommentCreatedBy = computed(() => {
   const userToCheck = currentUser.value.id
   const commentCreatedBy = comment.created_by.id
-  console.log(userToCheck, commentCreatedBy)
   if (userToCheck == commentCreatedBy) {
     return false
   } else {
