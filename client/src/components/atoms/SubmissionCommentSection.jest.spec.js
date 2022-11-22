@@ -64,14 +64,14 @@ describe("Overall Comments", () => {
                   created_at: "2022-06-02T10:38:18Z",
                   updated_at: "2022-06-02T10:38:18Z",
                   created_by: {
-                    id: "2",
-                    email: "publicationadministrator@ccrproject.dev",
-                    name: "Publication Administrator",
+                    id: "1",
+                    email: "applicationadministrator@ccrproject.dev",
+                    name: "Application Administrator",
                   },
                   updated_by: {
-                    id: "2",
-                    email: "publicationadministrator@ccrproject.dev",
-                    name: "Publication Administrator",
+                    id: "1",
+                    email: "applicationadministrator@ccrproject.dev",
+                    name: "Application Administrator",
                   },
                   replies: [
                     {
@@ -139,14 +139,14 @@ describe("Overall Comments", () => {
                       created_at: "2022-06-04T10:38:18Z",
                       updated_at: "2022-08-04T05:38:18Z",
                       created_by: {
-                        id: "2",
-                        username: "publicationAdministrator",
+                        id: "1",
+                        username: "applicationAdministrator",
                         email: "publicationadministrator@ccrproject.dev",
                       },
                       updated_by: {
-                        id: "2",
-                        username: "publicationAdministrator",
-                        email: "publicationadministrator@ccrproject.dev",
+                        id: "1",
+                        username: "applicationAdministrator",
+                        email: "applicationadministrator@ccrproject.dev",
                       },
                       reply_to_id: "5",
                     },
