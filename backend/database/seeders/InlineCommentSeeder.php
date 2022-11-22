@@ -35,6 +35,7 @@ class InlineCommentSeeder extends Seeder
      * Run the database seeds.
      *
      * @param int $submissionId
+     * @param int $userId
      * @param array $options
      * @return void
      */
