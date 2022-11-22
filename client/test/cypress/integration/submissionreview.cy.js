@@ -312,29 +312,24 @@ describe("Submissions Review", () => {
     cy.dataCy("overallCommentReply").first().contains("This is a modified overall comment reply.")
   })
 
-  // it("should allow inline comments to be modified", () => {
-  //   cy.task("resetDb")
-  //   cy.login({ email: "applicationadministrator@ccrproject.dev" })
-  //   cy.visit("submission/review/100")
+  it("should allow inline comments to be modified", () => {
+    cy.task("resetDb")
+    cy.login({ email: "applicationadministrator@ccrproject.dev" })
+    cy.visit("submission/review/100")
 
-  //   cy.dataCy("toggleInlineCommentsButton").click()
+    cy.dataCy("toggleInlineCommentsButton").click()
 
-  //   // create new inline comment
-  //   // cy.interceptGQLOperation("CreateInlineCommentReply")
+    cy.dataCy("inlineComment").first().find("[data-cy=commentActions]").click()
+    cy.dataCy("modifyComment").click()
 
-  //   // cy.wait("@CreateInlineCommentReply")
+    // modify, submit
+    cy.dataCy("comment-editor").first().type("This is a modified inline comment.")
+    cy.dataCy("criteria-item").last().click()
+    cy.dataCy("modifyInlineCommentEditor").find("button[type=submit]").click()
 
-  //   cy.dataCy("inlineComment").first().find("[data-cy=commentActions]").click()
-  //   cy.dataCy("modifyComment").click()
-
-  //   // modify, submit
-  //   cy.dataCy("comment-editor").first().type("This is a modified inline comment.")
-  //   cy.dataCy("criteria-item").last().click()
-  //   cy.dataCy("modifyInlineCommentEditor").find("button[type=submit]").click()
-
-  //   // verify comment includes "This is a modified inline comment."
-  //   cy.dataCy("inlineComment").first().contains("This is a modified inline comment.")
-  // })
+    // verify comment includes "This is a modified inline comment."
+    cy.dataCy("inlineComment").first().contains("This is a modified inline comment.")
+  })
 
   it("should allow inline comment replies to be modified", () => {
     cy.task("resetDb")
@@ -372,7 +367,7 @@ describe("Submissions Review", () => {
 
     // attempt to modify an inline comment
     cy.dataCy("toggleInlineCommentsButton").click()
-    cy.dataCy("inlineComment").first().find("[data-cy=commentActions]").click()
+    cy.dataCy("inlineComment").eq(1).find("[data-cy=commentActions]").click()
     cy.dataCy("modifyComment").should("not.exist")
   })
 })

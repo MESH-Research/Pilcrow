@@ -26,9 +26,9 @@ class InlineCommentSeeder extends Seeder
     public function run()
     {
         $this->callOnce(SubmissionSeeder::class);
-        $this->create(100, ['replies' => 1, 'highlight' => [30, 80]]);
-        $this->create(100, ['highlight' => [430, 445]]);
-        $this->create(100, ['replies' => 10, 'highlight' => [630, 720]]);
+        $this->create(100, 1, ['replies' => 1, 'highlight' => [30, 80]]);
+        $this->create(100, 3, ['highlight' => [430, 445]]);
+        $this->create(100, 5, ['replies' => 10, 'highlight' => [630, 720]]);
     }
 
     /**
@@ -38,11 +38,11 @@ class InlineCommentSeeder extends Seeder
      * @param array $options
      * @return void
      */
-    public function create($submissionId, $options = [])
+    public function create($submissionId, $userId, $options = [])
     {
         $opts = array_merge($this->defaultOptions, $options);
         $userIds = User::all()->pluck('id');
-        $userId = $userIds->random();
+        // $userId = $userIds->random();
         $style_criterias = StyleCriteria::inRandomOrder()
             ->limit(rand(1, 4))
             ->get()
