@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Listeners;
 
 use App\Events\ReviewerInvitationAccepted as EventsReviewerInvitationAccepted;
+use App\Models\User;
 use App\Notifications\ReviewerInvitationAccepted;
 use Illuminate\Support\Facades\Notification;
 
@@ -22,17 +23,20 @@ class NotifyUsersAboutAcceptedReviewerInvitation
             return $value->email !== $event->submission_invitation->email && $value->staged !== 1;
         });
 
+        $invitee = User::where('email', $event->submission_invitation->email)->firstOrFail();
+
         $notification_data = [
             'submission' => [
-                'id' => $event->submission_invitation->id,
+                'id' => $event->submission_invitation->submission->id,
+                'title' => $event->submission_invitation->submission->title,
             ],
             'inviter' => [
                 'name' => $event->submission_invitation->createdBy->name,
                 'username' => $event->submission_invitation->createdBy->username,
             ],
             'invitee' => [
-                'name' => $event->submission_invitation->createdBy->name,
-                'username' => $event->submission_invitation->createdBy->username,
+                'name' => $invitee->name,
+                'username' => $invitee->username,
             ],
             'message' => $event->submission_invitation->message,
             'token' => $event->submission_invitation->token,

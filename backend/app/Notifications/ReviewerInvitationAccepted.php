@@ -70,10 +70,11 @@ class ReviewerInvitationAccepted extends Notification implements ShouldQueue
         return [
             'submission' => [
                 'id' => $this->data['submission']['id'],
+                'title' => $this->data['submission']['title'],
             ],
             'inviter' => [
                 'name' => $this->data['inviter']['name'],
-                'username' => $this->data['invitee']['username'],
+                'username' => $this->data['inviter']['username'],
             ],
             'invitee' => [
                 'name' => $this->data['invitee']['name'],

@@ -686,7 +686,7 @@ export default {
       invitation: {
         accepted: {
           short:
-            "{data_invitee} has accepted the invitation from {inviter} to review {submission_title}.",
+            "{data_invitee_name} has accepted the invitation from {data_inviter_name} to review {data_submission_title}.",
         },
       },
       updated: {
