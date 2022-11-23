@@ -29,7 +29,7 @@ class PublicationSeeder extends Seeder
         Publication::factory()
         ->create([
             'name' => 'CCR Test Publication Reject Submissions',
-            'is_rejecting_submissions' => true,
+            'is_accepting_submissions' => true,
         ]);
         Publication::factory()
             ->count(50)

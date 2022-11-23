@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Policies;
 
+use App\Models\Publication;
 use App\Models\Role;
 use App\Models\Submission;
 use App\Models\User;
@@ -40,7 +41,7 @@ class SubmissionPolicy
     }
 
     /**
-     * Check if publication is accepting submissions
+     * Check if a submission can be created
      *
      * @param \App\Models\User $user
      * @param array $args
@@ -48,11 +49,11 @@ class SubmissionPolicy
      */
     public function create(User $user, $args)
     {
-        
         //Check if the publication is rejecting submissions
-       
-        $publication_id =  $args["publication_id"];
-        return true;
+        $publication_id = $args['publication_id'];
+        $publication = Publication::where('id', $publication_id)->firstOrFail();
+
+        return $publication->is_rejecting_submissions ?? true;
     }
 
     /**

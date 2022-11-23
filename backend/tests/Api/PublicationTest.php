@@ -280,6 +280,57 @@ class PublicationTest extends ApiTestCase
     }
 
     /**
+     * @return array
+     */
+    public function publicationAcceptSubmissionsUpdateProvider(): array
+    {
+        return [
+            'Publication Administrator Can Update Setting to Accept Submissions' => [
+                'publicationAdmins', true, true,
+            ],
+            'Publication Administrator Can Update Setting to Reject Submissions' => [
+                'publicationAdmins', false, false,
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider publicationAcceptSubmissionsUpdateProvider
+     * @param string $role
+     * @param bool $update_value
+     * @param bool $expected_value
+     * @return void
+     */
+    public function testUserCanUpdateAcceptSubmissionsSetting(string $role, bool $update_value, bool $expected_value): void
+    {
+        /** @var User $user */
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        $publication = Publication::factory()
+         ->hasAttached($user, [], $role)
+         ->create();
+
+        $response = $this->graphQL(
+            'mutation UpdatePublication($pubId: ID!, $isAcceptingSubmissions: Boolean) {
+             updatePublication(
+                 publication: {
+                     id: $pubId,
+                     is_accepting_submissions: $isAcceptingSubmissions
+                 }
+             ) {
+                is_accepting_submissions
+             }
+         }',
+            [
+             'pubId' => $publication->id,
+             'isAcceptingSubmissions' => $update_value,
+            ]
+        );
+        $response->assertJsonPath('data.updatePublication.is_accepting_submissions', $expected_value);
+    }
+
+    /**
      * @dataProvider publicationMutationProvider
      * @param mixed $data
      * @param mixed $expected Data

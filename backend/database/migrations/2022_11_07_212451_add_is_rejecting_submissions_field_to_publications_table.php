@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('publications', function (Blueprint $table) {
-            $table->boolean('is_rejecting_submissions')->nullable();
+            $table->boolean('is_accepting_submissions')->default(0);
         });
     }
 
@@ -26,7 +26,7 @@ return new class extends Migration
     public function down()
     {
         Schema::table('publications', function (Blueprint $table) {
-            $table->dropColumn('is_rejecting_submissions');
+            $table->dropColumn('is_accepting_submissions');
         });
     }
 };
