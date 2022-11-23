@@ -43,7 +43,6 @@ class InlineCommentSeeder extends Seeder
     {
         $opts = array_merge($this->defaultOptions, $options);
         $userIds = User::all()->pluck('id');
-        // $userId = $userIds->random();
         $style_criterias = StyleCriteria::inRandomOrder()
             ->limit(rand(1, 4))
             ->get()
