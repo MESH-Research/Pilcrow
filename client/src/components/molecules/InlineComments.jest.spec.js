@@ -259,21 +259,19 @@ describe("InlineComments", () => {
   }
 
   test("able to mount", () => {
-    const { wrapper } = wrapperFactory()
-
     useCurrentUser.mockReturnValue({
       currentUser: ref({ id: 1 }),
     })
+    const { wrapper } = wrapperFactory()
     expect(wrapper).toBeTruthy()
   })
 
   test("expected style criteria appear within all inline comments", () => {
-    const { wrapper } = wrapperFactory()
-    const items = wrapper.findAllComponents('[data-cy="inlineComment"]')
-
     useCurrentUser.mockReturnValue({
       currentUser: ref({ id: 1 }),
     })
+    const { wrapper } = wrapperFactory()
+    const items = wrapper.findAllComponents('[data-cy="inlineComment"]')
     const findStyleCriteria = (w) =>
       w.findAllComponents('[data-cy="styleCriteria"]')
     expect(findStyleCriteria(items.at(0))).toHaveLength(1)
@@ -282,23 +280,21 @@ describe("InlineComments", () => {
   })
 
   test("expected number of inline comments appear", () => {
-    const { wrapper } = wrapperFactory()
-
     useCurrentUser.mockReturnValue({
       currentUser: ref({ id: 1 }),
     })
+    const { wrapper } = wrapperFactory()
     const items = wrapper.findAllComponents('[data-cy="inlineComment"]')
     expect(items).toHaveLength(3)
   })
 
   test("expected number of inline comment replies appear", async () => {
-    const { wrapper } = wrapperFactory()
-    const items = wrapper.findAllComponents('[data-cy="inlineComment"]')
-    const findReplies = (w) => w.findAll('[data-cy="inlineCommentReply"]')
-
     useCurrentUser.mockReturnValue({
       currentUser: ref({ id: 1 }),
     })
+    const { wrapper } = wrapperFactory()
+    const items = wrapper.findAllComponents('[data-cy="inlineComment"]')
+    const findReplies = (w) => w.findAll('[data-cy="inlineCommentReply"]')
     await items.at(0).find('[data-cy="showRepliesButton"]').trigger("click")
 
     expect(findReplies(items.at(0))).toHaveLength(1)
