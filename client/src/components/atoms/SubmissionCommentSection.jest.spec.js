@@ -263,13 +263,12 @@ describe("Overall Comments", () => {
   })
 
   test("expected number of overall comment replies appear", async () => {
-    const { wrapper } = wrapperFactory()
-    const overallComments = wrapper.findAll('[data-cy="overallComment"]')
-    const findReplies = (w) => w.findAll('[data-cy="overallCommentReply"]')
-
     useCurrentUser.mockReturnValue({
       currentUser: ref({ id: 1 }),
     })
+    const { wrapper } = wrapperFactory()
+    const overallComments = wrapper.findAll('[data-cy="overallComment"]')
+    const findReplies = (w) => w.findAll('[data-cy="overallCommentReply"]')
 
     // First Overall Comment
     expect(
@@ -297,11 +296,10 @@ describe("Overall Comments", () => {
     expect(findReplies(overallComments.at(2))).toHaveLength(0)
   })
   test("expected timestamp is shown for created and updated overall comment replies", async () => {
-    const { wrapper } = wrapperFactory()
-
     useCurrentUser.mockReturnValue({
       currentUser: ref({ id: 1 }),
     })
+    const { wrapper } = wrapperFactory()
 
     const overallComments = wrapper.findAll('[data-cy="overallComment"]')
     await overallComments
