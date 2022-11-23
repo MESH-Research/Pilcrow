@@ -17,6 +17,7 @@
             }}</q-item-section></q-item
           >
           <q-item
+            v-if="checkCommentCreatedBy == false"
             data-cy="modifyComment"
             clickable
             @click="$emit('modifyComment')"
@@ -35,3 +36,24 @@
     </q-btn>
   </div>
 </template>
+
+<script setup>
+import { inject, computed } from "vue"
+import { useCurrentUser } from "src/use/user"
+
+const { currentUser } = useCurrentUser()
+
+const comment = inject("comment")
+
+defineEmits(["quoteReplyTo", "modifyComment"])
+
+const checkCommentCreatedBy = computed(() => {
+  const userToCheck = currentUser.value.id
+  const commentCreatedBy = comment.created_by.id
+  if (userToCheck == commentCreatedBy) {
+    return false
+  } else {
+    return true
+  }
+})
+</script>

@@ -1,9 +1,13 @@
 import { mount } from "@vue/test-utils"
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-jest"
 import SubmissionCommentSection from "./SubmissionCommentSection.vue"
+import { useCurrentUser } from "src/use/user"
 import { ref } from "vue"
 import TimeAgo from "javascript-time-ago"
 import en from "javascript-time-ago/locale/en.json"
+jest.mock("src/use/user", () => ({
+  useCurrentUser: jest.fn(),
+}))
 
 installQuasarPlugin()
 describe("Overall Comments", () => {
@@ -64,14 +68,14 @@ describe("Overall Comments", () => {
                   created_at: "2022-06-02T10:38:18Z",
                   updated_at: "2022-06-02T10:38:18Z",
                   created_by: {
-                    id: "2",
-                    email: "publicationadministrator@ccrproject.dev",
-                    name: "Publication Administrator",
+                    id: "1",
+                    email: "applicationadministrator@ccrproject.dev",
+                    name: "Application Administrator",
                   },
                   updated_by: {
-                    id: "2",
-                    email: "publicationadministrator@ccrproject.dev",
-                    name: "Publication Administrator",
+                    id: "1",
+                    email: "applicationadministrator@ccrproject.dev",
+                    name: "Application Administrator",
                   },
                   replies: [
                     {
@@ -139,14 +143,14 @@ describe("Overall Comments", () => {
                       created_at: "2022-06-04T10:38:18Z",
                       updated_at: "2022-08-04T05:38:18Z",
                       created_by: {
-                        id: "2",
-                        username: "publicationAdministrator",
-                        email: "publicationadministrator@ccrproject.dev",
+                        id: "1",
+                        username: "applicationAdministrator",
+                        email: "applicationadministrator@ccrproject.dev",
                       },
                       updated_by: {
-                        id: "2",
-                        username: "publicationAdministrator",
-                        email: "publicationadministrator@ccrproject.dev",
+                        id: "1",
+                        username: "applicationAdministrator",
+                        email: "applicationadministrator@ccrproject.dev",
                       },
                       reply_to_id: "5",
                     },
@@ -242,17 +246,26 @@ describe("Overall Comments", () => {
   }
 
   test("able to mount", () => {
+    useCurrentUser.mockReturnValue({
+      currentUser: ref({ id: 1 }),
+    })
     const { wrapper } = wrapperFactory()
     expect(wrapper).toBeTruthy()
   })
 
   test("expected number of overall comments appear", () => {
+    useCurrentUser.mockReturnValue({
+      currentUser: ref({ id: 1 }),
+    })
     const { wrapper } = wrapperFactory()
     const items = wrapper.findAllComponents('[data-cy="overallComment"]')
     expect(items).toHaveLength(3)
   })
 
   test("expected number of overall comment replies appear", async () => {
+    useCurrentUser.mockReturnValue({
+      currentUser: ref({ id: 1 }),
+    })
     const { wrapper } = wrapperFactory()
     const overallComments = wrapper.findAll('[data-cy="overallComment"]')
     const findReplies = (w) => w.findAll('[data-cy="overallCommentReply"]')
@@ -283,7 +296,11 @@ describe("Overall Comments", () => {
     expect(findReplies(overallComments.at(2))).toHaveLength(0)
   })
   test("expected timestamp is shown for created and updated overall comment replies", async () => {
+    useCurrentUser.mockReturnValue({
+      currentUser: ref({ id: 1 }),
+    })
     const { wrapper } = wrapperFactory()
+
     const overallComments = wrapper.findAll('[data-cy="overallComment"]')
     await overallComments
       .at(2)

@@ -604,6 +604,9 @@ export const UPDATE_OVERALL_COMMENT = gql`
       }
     ) {
       id
+      created_by {
+        ...relatedUserFields
+      }
       overall_comments {
         ...commentFields
         replies {
@@ -614,6 +617,7 @@ export const UPDATE_OVERALL_COMMENT = gql`
     }
   }
   ${_COMMENT_FIELDS}
+  ${_RELATED_USER_FIELDS}
 `
 
 export const UPDATE_INLINE_COMMENT = gql`
@@ -636,6 +640,9 @@ export const UPDATE_INLINE_COMMENT = gql`
       }
     ) {
       id
+      created_by {
+        ...relatedUserFields
+      }
       inline_comments {
         ...commentFields
         style_criteria {
@@ -650,6 +657,7 @@ export const UPDATE_INLINE_COMMENT = gql`
     }
   }
   ${_COMMENT_FIELDS}
+  ${_RELATED_USER_FIELDS}
 `
 
 export const UPDATE_INLINE_COMMENT_REPLY = gql`
@@ -665,6 +673,9 @@ export const UPDATE_INLINE_COMMENT_REPLY = gql`
       }
     ) {
       id
+      created_by {
+        ...relatedUserFields
+      }
       inline_comments {
         ...commentFields
         replies {
@@ -675,6 +686,7 @@ export const UPDATE_INLINE_COMMENT_REPLY = gql`
     }
   }
   ${_COMMENT_FIELDS}
+  ${_RELATED_USER_FIELDS}
 `
 
 export const UPDATE_OVERALL_COMMENT_REPLY = gql`
@@ -690,6 +702,9 @@ export const UPDATE_OVERALL_COMMENT_REPLY = gql`
       }
     ) {
       id
+      created_by {
+        ...relatedUserFields
+      }
       overall_comments {
         ...commentFields
         replies {
@@ -700,4 +715,5 @@ export const UPDATE_OVERALL_COMMENT_REPLY = gql`
     }
   }
   ${_COMMENT_FIELDS}
+  ${_RELATED_USER_FIELDS}
 `

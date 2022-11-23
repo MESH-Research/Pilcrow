@@ -61,7 +61,7 @@
           {{ $t("guiElements.form.submit") }}
         </q-btn>
         <q-btn
-          v-if="commentType !== 'OverallComment'"
+          v-if="commentType !== 'OverallComment' && isModifying === false"
           ref="cancel_button"
           flat
           @click="cancelHandler()"
