@@ -47,16 +47,6 @@ const comment = inject("comment")
 
 defineEmits(["quoteReplyTo", "modifyComment"])
 
-// const checkCommentCreatedBy = computed(() => {
-//   const userToCheck = 1
-//   const commentCreatedBy = comment.created_by.id
-//   if (userToCheck == commentCreatedBy) {
-//     return false
-//   } else {
-//     return true
-//   }
-// })
-
 const checkCommentCreatedBy = computed(() => {
   const userToCheck = currentUser.value.id
   const commentCreatedBy = comment.created_by.id
