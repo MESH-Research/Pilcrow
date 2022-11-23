@@ -35,7 +35,7 @@
   </div>
 </template>
 <script setup>
-import { computed, inject, ref } from "vue"
+import { computed, inject, ref, provide } from "vue"
 import CommentReplyReference from "./CommentReplyReference.vue"
 import CommentHeader from "./CommentHeader.vue"
 import CommentEditor from "../forms/CommentEditor.vue"
@@ -61,6 +61,9 @@ const props = defineProps({
   },
 })
 defineEmits(["quoteReplyTo", "replyTo"])
+
+provide("comment", props.comment)
+
 const activeComment = inject("activeComment")
 const isActive = computed(() => {
   return (

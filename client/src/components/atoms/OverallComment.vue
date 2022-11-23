@@ -107,7 +107,7 @@
   </div>
 </template>
 <script setup>
-import { computed, inject, ref } from "vue"
+import { computed, inject, ref, provide } from "vue"
 import OverallCommentReply from "./OverallCommentReply.vue"
 import CommentEditor from "../forms/CommentEditor.vue"
 import CommentHeader from "./CommentHeader.vue"
@@ -129,6 +129,8 @@ const props = defineProps({
     required: true,
   },
 })
+
+provide("comment", props.comment)
 
 function submitReply() {
   isReplying.value = false

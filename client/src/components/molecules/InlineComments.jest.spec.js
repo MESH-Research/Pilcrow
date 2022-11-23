@@ -1,9 +1,13 @@
 import { mount } from "@vue/test-utils"
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-jest"
 import InlineComments from "./InlineComments.vue"
+import { useCurrentUser } from "src/use/user"
 import { ref } from "vue"
 import TimeAgo from "javascript-time-ago"
 import en from "javascript-time-ago/locale/en.json"
+jest.mock("src/use/user", () => ({
+  useCurrentUser: jest.fn(),
+}))
 
 installQuasarPlugin()
 describe("InlineComments", () => {
@@ -54,6 +58,7 @@ describe("InlineComments", () => {
                 },
                 {
                   id: "3",
+                  __typename: "InlineComment",
                   from: 11,
                   to: 20,
                   content:
@@ -86,6 +91,7 @@ describe("InlineComments", () => {
                 },
                 {
                   id: "4",
+                  __typename: "InlineComment",
                   from: 21,
                   to: 30,
                   content:
@@ -99,6 +105,7 @@ describe("InlineComments", () => {
                   replies: [
                     {
                       id: "5",
+                      __typename: "InlineCommentReply",
                       content:
                         "Repudiandae voluptatem voluptatum in quia quos. Molestiae molestias fugit distinctio sed deserunt culpa itaque. Autem quo accusantium autem eaque autem.",
                       created_at: "2022-06-01T16:28:10Z",
@@ -111,6 +118,7 @@ describe("InlineComments", () => {
                     },
                     {
                       id: "6",
+                      __typename: "InlineCommentReply",
                       content:
                         "Voluptatem earum deleniti non possimus et libero. Illo a quia est perferendis libero ipsa.",
                       created_at: "2022-06-02T16:28:10Z",
@@ -123,6 +131,7 @@ describe("InlineComments", () => {
                     },
                     {
                       id: "7",
+                      __typename: "InlineCommentReply",
                       content:
                         "Id temporibus quia ut placeat at qui nemo. Dolorum numquam consequatur amet repellat veniam enim aliquam.",
                       created_at: "2022-06-01T16:28:10Z",
@@ -135,6 +144,7 @@ describe("InlineComments", () => {
                     },
                     {
                       id: "8",
+                      __typename: "InlineCommentReply",
                       content:
                         "Autem blanditiis labore ducimus rerum assumenda. Quam deleniti nesciunt voluptas aut alias. Magni est ut ea rerum.",
                       created_at: "2022-06-02T16:28:10Z",
@@ -147,6 +157,7 @@ describe("InlineComments", () => {
                     },
                     {
                       id: "9",
+                      __typename: "InlineCommentReply",
                       content:
                         "Et velit hic voluptate illo praesentium dicta. Dolores repudiandae qui non et consequatur et et autem. Laudantium qui sint accusantium soluta facilis esse ut.",
                       created_at: "2022-06-01T16:28:10Z",
@@ -159,6 +170,7 @@ describe("InlineComments", () => {
                     },
                     {
                       id: "10",
+                      __typename: "InlineCommentReply",
                       content:
                         "Odit ut nihil similique accusamus a et deleniti quam. Non voluptates quis ipsa voluptatem. Voluptas reprehenderit id aut ab officia facere.",
                       created_at: "2022-06-03T16:28:10Z",
@@ -171,6 +183,7 @@ describe("InlineComments", () => {
                     },
                     {
                       id: "11",
+                      __typename: "InlineCommentReply",
                       content:
                         "Et aut voluptates alias dicta ut quis. Illum dolore occaecati quia ut excepturi autem. Rem ratione molestias perspiciatis est.",
                       created_at: "2022-06-02T16:28:10Z",
@@ -183,6 +196,7 @@ describe("InlineComments", () => {
                     },
                     {
                       id: "12",
+                      __typename: "InlineCommentReply",
                       content:
                         "Rerum est aut ratione expedita vitae earum. Vel aliquid eum quia corporis quidem nisi enim consequatur.",
                       created_at: "2022-06-03T16:28:10Z",
@@ -195,6 +209,7 @@ describe("InlineComments", () => {
                     },
                     {
                       id: "13",
+                      __typename: "InlineCommentReply",
                       content:
                         "Aut est unde dolores assumenda. Cum consectetur corrupti quaerat vel ab ea hic. Quasi repellat dolor ducimus omnis.",
                       created_at: "2022-06-02T16:28:10Z",
@@ -207,6 +222,7 @@ describe("InlineComments", () => {
                     },
                     {
                       id: "14",
+                      __typename: "InlineCommentReply",
                       content:
                         "Porro minima et laboriosam non. Perspiciatis quis doloremque ut saepe neque.",
                       created_at: "2022-06-01T16:28:10Z",
@@ -243,11 +259,17 @@ describe("InlineComments", () => {
   }
 
   test("able to mount", () => {
+    useCurrentUser.mockReturnValue({
+      currentUser: ref({ id: 1 }),
+    })
     const { wrapper } = wrapperFactory()
     expect(wrapper).toBeTruthy()
   })
 
   test("expected style criteria appear within all inline comments", () => {
+    useCurrentUser.mockReturnValue({
+      currentUser: ref({ id: 1 }),
+    })
     const { wrapper } = wrapperFactory()
     const items = wrapper.findAllComponents('[data-cy="inlineComment"]')
     const findStyleCriteria = (w) =>
@@ -258,12 +280,18 @@ describe("InlineComments", () => {
   })
 
   test("expected number of inline comments appear", () => {
+    useCurrentUser.mockReturnValue({
+      currentUser: ref({ id: 1 }),
+    })
     const { wrapper } = wrapperFactory()
     const items = wrapper.findAllComponents('[data-cy="inlineComment"]')
     expect(items).toHaveLength(3)
   })
 
   test("expected number of inline comment replies appear", async () => {
+    useCurrentUser.mockReturnValue({
+      currentUser: ref({ id: 1 }),
+    })
     const { wrapper } = wrapperFactory()
     const items = wrapper.findAllComponents('[data-cy="inlineComment"]')
     const findReplies = (w) => w.findAll('[data-cy="inlineCommentReply"]')

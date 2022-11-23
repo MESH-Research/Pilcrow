@@ -243,7 +243,7 @@ describe("Submissions Review", () => {
     cy.visit("submission/review/104")
     cy.dataCy("initially_submit").click()
     cy.dataCy("dirtyYesChangeStatus").click()
-   
+
     cy.login({ email: "reviewer@ccrproject.dev" })
     cy.visit("submission/review/104")
     cy.url().should("not.include", "/error403")
@@ -269,7 +269,15 @@ describe("Submissions Review", () => {
     cy.task("resetDb")
     cy.login({ email: "applicationadministrator@ccrproject.dev" })
     cy.visit("submission/review/100")
-    cy.dataCy("overallComment").first().find("[data-cy=commentActions]").click()
+
+    // create new overall comment
+    cy.interceptGQLOperation('CreateOverallComment')
+    cy.dataCy("overallCommentEditor").type("This is an overall comment.")
+    cy.dataCy("overallCommentEditor").first().find("button[type=submit]").click()
+    cy.wait("@CreateOverallComment")
+
+    // click on modifyComment
+    cy.dataCy("overallComment").last().find("[data-cy=commentActions]").click()
     cy.dataCy("modifyComment").click()
 
     // modify, submit
@@ -277,7 +285,7 @@ describe("Submissions Review", () => {
     cy.dataCy("modifyOverallCommentEditor").find("button[type=submit]").click()
 
     // verify comment includes "This is a modified overall comment."
-    cy.dataCy("overallComment").first().contains("This is a modified overall comment")
+    cy.dataCy("overallComment").last().contains("This is a modified overall comment")
   })
 
   it("should allow overall comment replies to be modified", () => {
@@ -285,7 +293,14 @@ describe("Submissions Review", () => {
     cy.login({ email: "applicationadministrator@ccrproject.dev" })
     cy.visit("submission/review/100")
 
-    cy.dataCy("overallComment").last().find("[data-cy=showRepliesButton]").click()
+    // create new comment reply
+    cy.interceptGQLOperation("CreateOverallCommentReply")
+    cy.dataCy("overallComment").first().find("[data-cy=overallCommentReplyButton]").click()
+    cy.dataCy("overallCommentReplyEditor").first().type("This is a reply to an overall comment.")
+    cy.dataCy("overallCommentReplyEditor").first().find("button[type=submit]").click()
+    cy.wait("@CreateOverallCommentReply")
+
+    cy.dataCy("overallComment").first().find("[data-cy=showRepliesButton]").click()
     cy.dataCy("overallCommentReply").first().find("[data-cy=commentActions]").click()
     cy.dataCy("modifyComment").click()
 
@@ -303,7 +318,8 @@ describe("Submissions Review", () => {
     cy.visit("submission/review/100")
 
     cy.dataCy("toggleInlineCommentsButton").click()
-    cy.dataCy("inlineComment").last().find("[data-cy=commentActions]").click()
+
+    cy.dataCy("inlineComment").first().find("[data-cy=commentActions]").click()
     cy.dataCy("modifyComment").click()
 
     // modify, submit
@@ -312,7 +328,7 @@ describe("Submissions Review", () => {
     cy.dataCy("modifyInlineCommentEditor").find("button[type=submit]").click()
 
     // verify comment includes "This is a modified inline comment."
-    cy.dataCy("inlineComment").last().contains("This is a modified inline comment.")
+    cy.dataCy("inlineComment").first().contains("This is a modified inline comment.")
   })
 
   it("should allow inline comment replies to be modified", () => {
@@ -321,15 +337,37 @@ describe("Submissions Review", () => {
     cy.visit("submission/review/100")
 
     cy.dataCy("toggleInlineCommentsButton").click()
-    cy.dataCy("inlineComment").last().find("[data-cy=showRepliesButton]").click()
-    cy.dataCy("inlineCommentReply").last().find("[data-cy=commentActions]").click()
-    cy.dataCy("modifyComment").click()
+    cy.dataCy("inlineComment").eq(1).find("[data-cy=inlineCommentReplyButton]").click()
+
+    // create new inline comment reply
+    cy.interceptGQLOperation("CreateInlineCommentReply")
+    cy.dataCy("inlineCommentReplyEditor").type("This is a new inline comment reply.")
+    cy.dataCy("inlineCommentReplyEditor").find("button[type=submit]").click()
+    cy.wait("@CreateInlineCommentReply")
 
     // modify, submit
+    cy.dataCy("inlineComment").eq(1).find("[data-cy=showRepliesButton]").click()
+    cy.dataCy("inlineCommentReply").last().find("[data-cy=commentActions]").click()
+    cy.dataCy("modifyComment").click()
     cy.dataCy("modifyInlineCommentReplyEditor").type("This is a modified inline comment reply.")
     cy.dataCy("modifyInlineCommentReplyEditor").find("button[type=submit]").click()
 
     // verify comment includes "This is a modified inline comment reply."
     cy.dataCy("inlineCommentReply").last().contains("This is a modified inline comment reply.")
+  })
+
+  it("should not display comment modify options for comments that a user did not create", () => {
+    cy.task("resetDb")
+    cy.login({ email: "applicationadministrator@ccrproject.dev" })
+    cy.visit("submission/review/100")
+
+    // attempt to modify an overall comment
+    cy.dataCy("overallComment").first().find("[data-cy=commentActions]").click()
+    cy.dataCy("modifyComment").should("not.exist")
+
+    // attempt to modify an inline comment
+    cy.dataCy("toggleInlineCommentsButton").click()
+    cy.dataCy("inlineComment").eq(1).find("[data-cy=commentActions]").click()
+    cy.dataCy("modifyComment").should("not.exist")
   })
 })

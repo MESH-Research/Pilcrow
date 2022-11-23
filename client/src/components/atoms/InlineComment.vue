@@ -114,7 +114,7 @@
   </div>
 </template>
 <script setup>
-import { ref, computed, inject } from "vue"
+import { ref, computed, inject, provide } from "vue"
 import CommentHeader from "./CommentHeader.vue"
 import InlineCommentReply from "./InlineCommentReply.vue"
 import CommentEditor from "../forms/CommentEditor.vue"
@@ -137,6 +137,8 @@ const props = defineProps({
 })
 
 defineEmits(["quoteReplyTo", "replyTo"])
+
+provide("comment", props.comment)
 
 const hasReplies = computed(() => {
   return props.comment.replies.length > 0
