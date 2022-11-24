@@ -45,16 +45,15 @@ class ReviewerInvitationAccepted extends Notification implements ShouldQueue
     /**
      * Get the mail representation of the notification.
      *
-     * @param  mixed  $notifiable
      * @return \Illuminate\Notifications\Messages\MailMessage
      */
-    public function toMail($notifiable)
+    public function toMail()
     {
         $mail = new MailMessage();
-        $invitee_name = ($this->data['invitee']['name'] ?: $this->data['invitee']['username']);
-        $inviter_name = ($this->data['inviter']['name'] ?: $this->data['inviter']['username']);
         $mail->subject('A Reviewer Has Accepted an Invitation')
-            ->line($invitee_name . ' has accepted the invitation from ' . $inviter_name . ' to review a submission.')
+            ->line($this->data['invitee']['display_label'] . ' has accepted the invitation from '
+                . $this->data['inviter']['display_label'] . ' to review the submission, '
+                . $this->data['submission']['title'] . '.')
             ->action('Visit Submission', url('/submission/' . $this->data['submission']['id']));
 
         return $mail;
@@ -73,12 +72,10 @@ class ReviewerInvitationAccepted extends Notification implements ShouldQueue
                 'title' => $this->data['submission']['title'],
             ],
             'inviter' => [
-                'name' => $this->data['inviter']['name'],
-                'username' => $this->data['inviter']['username'],
+                'display_label' => $this->data['inviter']['display_label'],
             ],
             'invitee' => [
-                'name' => $this->data['invitee']['name'],
-                'username' => $this->data['invitee']['username'],
+                'display_label' => $this->data['invitee']['display_label'],
             ],
             'type' => 'submission.invitation.accepted',
         ];

@@ -19,7 +19,7 @@ class NotifyUsersAboutAcceptedReviewerInvitation
     public function handle(EventsReviewerInvitationAccepted $event)
     {
         // Notify all submission users that are not the invitee and not staged
-        $submission_users = $event->submission_invitation->submission->users->filter(function($value) use ($event) {
+        $submission_users = $event->submission_invitation->submission->users->filter(function ($value) use ($event) {
             return $value->email !== $event->submission_invitation->email && $value->staged !== 1;
         });
 
@@ -31,12 +31,10 @@ class NotifyUsersAboutAcceptedReviewerInvitation
                 'title' => $event->submission_invitation->submission->title,
             ],
             'inviter' => [
-                'name' => $event->submission_invitation->createdBy->name,
-                'username' => $event->submission_invitation->createdBy->username,
+                'display_label' => $event->submission_invitation->createdBy->displayLabel,
             ],
             'invitee' => [
-                'name' => $invitee->name,
-                'username' => $invitee->username,
+                'display_label' => $invitee->displayLabel,
             ],
             'message' => $event->submission_invitation->message,
             'token' => $event->submission_invitation->token,

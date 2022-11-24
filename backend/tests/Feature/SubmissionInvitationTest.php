@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Tests\Feature;
 
 use App\Models\Submission;
-use App\Models\SubmissionInvitation;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -35,8 +34,8 @@ class SubmissionInvitationTest extends TestCase
         $submission = Submission::factory()
             ->hasAttached($users, [], 'reviewers')
             ->create();
-        $second_user = $users->splice(1,1)->first();
-        $filtered = $submission->reviewers->filter(function($value) use ($second_user) {
+        $second_user = $users->splice(1, 1)->first();
+        $filtered = $submission->reviewers->filter(function ($value) use ($second_user) {
             return $value->email !== $second_user->email;
         });
         print_r($filtered->toArray());
