@@ -8,7 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class ReviewerInvitationAccepted extends Notification implements ShouldQueue
+class ReviewCoordinatorInvitationAccepted extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -50,9 +50,9 @@ class ReviewerInvitationAccepted extends Notification implements ShouldQueue
     public function toMail()
     {
         $mail = new MailMessage();
-        $mail->subject('A Reviewer Has Accepted an Invitation')
+        $mail->subject('A Review Coordinator Has Accepted an Invitation')
             ->line($this->data['invitee']['display_label'] . ' has accepted the invitation from '
-                . $this->data['inviter']['display_label'] . ' to review the submission, '
+                . $this->data['inviter']['display_label'] . ' to coordinate the review for submission, '
                 . $this->data['submission']['title'] . '.')
             ->action('Visit Submission', url('/submission/' . $this->data['submission']['id']));
 
@@ -77,7 +77,7 @@ class ReviewerInvitationAccepted extends Notification implements ShouldQueue
             'invitee' => [
                 'display_label' => $this->data['invitee']['display_label'],
             ],
-            'type' => 'submission.invitation.reviewer.accepted',
+            'type' => 'submission.invitation.review_coordinator.accepted',
         ];
     }
 }

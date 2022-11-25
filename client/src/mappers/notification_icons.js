@@ -15,7 +15,12 @@ const icons = flatten({
     archived: "inventory_2",
     deleted: "delete",
     invitation: {
-      accepted: "emoji_people",
+      review_coordinator: {
+        accepted: "emoji_people",
+      },
+      reviewer: {
+        accepted: "emoji_people",
+      },
     },
   },
 })

@@ -684,9 +684,17 @@ export default {
     },
     submission: {
       invitation: {
-        accepted: {
-          short:
-            "{data_invitee_display_label} has accepted the invitation from {data_inviter_display_label} to review {data_submission_title}",
+        review_coordinator: {
+          accepted: {
+            short:
+              "{data_invitee_display_label} has accepted the invitation from {data_inviter_display_label} to coordinate the review of {data_submission_title}",
+          },
+        },
+        reviewer: {
+          accepted: {
+            short:
+              "{data_invitee_display_label} has accepted the invitation from {data_inviter_display_label} to review {data_submission_title}",
+          },
         },
       },
       updated: {

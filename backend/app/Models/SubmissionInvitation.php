@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Events\ReviewCoordinatorInvitationAccepted;
 use App\Events\ReviewCoordinatorInvited;
 use App\Events\ReviewerInvitationAccepted;
 use App\Events\ReviewerInvited;
@@ -164,6 +165,9 @@ class SubmissionInvitation extends Model
 
         if ((string)$this->role_id === Role::REVIEWER_ROLE_ID) {
             ReviewerInvitationAccepted::dispatch($this);
+        }
+        if ((string)$this->role_id === Role::REVIEW_COORDINATOR_ROLE_ID) {
+            ReviewCoordinatorInvitationAccepted::dispatch($this);
         }
 
         return $this->submission;
