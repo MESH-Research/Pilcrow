@@ -192,7 +192,7 @@ class NotificationTest extends TestCase
         $invite = SubmissionInvitation::create([
             'submission_id' => $submission->id,
             'role_id' => Role::REVIEWER_ROLE_ID,
-            'email' => "bob@msu.edu",
+            'email' => 'bob@msu.edu',
         ]);
         $invite->inviteReviewer();
         $invite->acceptInvite();
@@ -218,7 +218,7 @@ class NotificationTest extends TestCase
         $invite = SubmissionInvitation::create([
             'submission_id' => $submission->id,
             'role_id' => Role::REVIEW_COORDINATOR_ROLE_ID,
-            'email' => "bob@msu.edu",
+            'email' => 'bob@msu.edu',
         ]);
         $invite->inviteReviewCoordinator();
         $invite->acceptInvite();
