@@ -2462,16 +2462,16 @@
         },
         {
             "name": "league/flysystem",
-            "version": "3.10.3",
+            "version": "3.10.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/flysystem.git",
-                "reference": "8013fb046c6a244b2b1b75cc95d732ed6bcdeb8a"
+                "reference": "a7790f3dd1b27af81d380e6b2afa77c16ab7e181"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/8013fb046c6a244b2b1b75cc95d732ed6bcdeb8a",
-                "reference": "8013fb046c6a244b2b1b75cc95d732ed6bcdeb8a",
+                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/a7790f3dd1b27af81d380e6b2afa77c16ab7e181",
+                "reference": "a7790f3dd1b27af81d380e6b2afa77c16ab7e181",
                 "shasum": ""
             },
             "require": {
@@ -2533,7 +2533,7 @@
             ],
             "support": {
                 "issues": "https://github.com/thephpleague/flysystem/issues",
-                "source": "https://github.com/thephpleague/flysystem/tree/3.10.3"
+                "source": "https://github.com/thephpleague/flysystem/tree/3.10.4"
             },
             "funding": [
                 {
@@ -2549,7 +2549,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-11-14T10:42:43+00:00"
+            "time": "2022-11-26T19:48:01+00:00"
         },
         {
             "name": "league/mime-type-detection",
@@ -3245,16 +3245,16 @@
         },
         {
             "name": "nuwave/lighthouse",
-            "version": "v5.64.1",
+            "version": "v5.67.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nuwave/lighthouse.git",
-                "reference": "0e5799e3ffb881ba366377901f16c31cc8d76ca6"
+                "reference": "453ee560d3345cbc0810a7344e06504f71cf7f76"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nuwave/lighthouse/zipball/0e5799e3ffb881ba366377901f16c31cc8d76ca6",
-                "reference": "0e5799e3ffb881ba366377901f16c31cc8d76ca6",
+                "url": "https://api.github.com/repos/nuwave/lighthouse/zipball/453ee560d3345cbc0810a7344e06504f71cf7f76",
+                "reference": "453ee560d3345cbc0810a7344e06504f71cf7f76",
                 "shasum": ""
             },
             "require": {
@@ -3369,7 +3369,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2022-11-02T14:08:54+00:00"
+            "time": "2022-11-21T20:45:00+00:00"
         },
         {
             "name": "olssonm/l5-zxcvbn",
