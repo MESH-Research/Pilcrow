@@ -1628,10 +1628,10 @@
     core-js "^3.6.5"
     core-js-compat "^3.6.5"
 
-"@quasar/extras@^1.15.5":
-  version "1.15.5"
-  resolved "https://registry.yarnpkg.com/@quasar/extras/-/extras-1.15.5.tgz#da427761c1c643c2cbe9dfa656817da54acb5686"
-  integrity sha512-JzKKx5/eKAip3X3bZUEJOOWT9NudqjF01gcce6rtyviko49OU4r+ekyJU3QQIKF8ZqnjZ+DpsVpMWBBZnO6hSQ==
+"@quasar/extras@^1.15.6":
+  version "1.15.6"
+  resolved "https://registry.yarnpkg.com/@quasar/extras/-/extras-1.15.6.tgz#0bbcd0df9d403355cf7c82a4f3d287f4e1e98b7c"
+  integrity sha512-lG3wrcz47c86N/j1ULZugmyVfwpmnsJpjtSWh+LhaFfe0g1kTMdAnxkWGKsa3ouZ4QBcnkrNan0kYSnKc3MiBg==
 
 "@quasar/fastclick@1.1.5":
   version "1.1.5"
@@ -1790,10 +1790,10 @@
   dependencies:
     prosemirror-state "^1.4.1"
 
-"@tiptap/extension-italic@^2.0.0-beta.202":
-  version "2.0.0-beta.202"
-  resolved "https://registry.yarnpkg.com/@tiptap/extension-italic/-/extension-italic-2.0.0-beta.202.tgz#0a991167dd06064bdf3c811d638d04cea9029206"
-  integrity sha512-vgSLy4KDp6AmnAHLHXe/nWeNbLnyUXxmf4U4+esebAV5Hu2F7LgceknFt9D8AGEtYUU+/fYKSeE2NGJgTQG9lA==
+"@tiptap/extension-italic@^2.0.0-beta.202", "@tiptap/extension-italic@^2.0.0-beta.203":
+  version "2.0.0-beta.203"
+  resolved "https://registry.yarnpkg.com/@tiptap/extension-italic/-/extension-italic-2.0.0-beta.203.tgz#dd9e4d3c00b80f1f546e38bd27445fba5110d3c4"
+  integrity sha512-7X/Z6V2DnziNfHhIoCLHI+EKQoaz0nyjPvNvs7wfSno6LTYUz33bXBpPF7gNZPyBJK/F/znC2Mg2l6XzcI7c+g==
 
 "@tiptap/extension-link@^2.0.0-beta.202":
   version "2.0.0-beta.202"
@@ -1809,10 +1809,10 @@
   resolved "https://registry.yarnpkg.com/@tiptap/extension-list-item/-/extension-list-item-2.0.0-beta.202.tgz#32bc4beacb0f692abfc8283760292a6354f070dc"
   integrity sha512-15yAsO+CCM8ievdX4oxg8kMBVFqhzVAw7pU6E8KL76kIwWCIIyVW6hU3VZdglyBVnAG0ws5/DaZ4VRFtVPRDvg==
 
-"@tiptap/extension-ordered-list@^2.0.0-beta.202":
-  version "2.0.0-beta.202"
-  resolved "https://registry.yarnpkg.com/@tiptap/extension-ordered-list/-/extension-ordered-list-2.0.0-beta.202.tgz#5b5987d3a1c98e579071e70485db2e82bf638ed9"
-  integrity sha512-PpJn8EtS8MLZ4NN9R3crmrivbjTMHjuSE2Ab3Y9TdeR9x9DIF23O/EkunnkPUiBUx6sNADprEWJIQesgpakrtw==
+"@tiptap/extension-ordered-list@^2.0.0-beta.202", "@tiptap/extension-ordered-list@^2.0.0-beta.204":
+  version "2.0.0-beta.204"
+  resolved "https://registry.yarnpkg.com/@tiptap/extension-ordered-list/-/extension-ordered-list-2.0.0-beta.204.tgz#ca1f98aea9fff881e6ca5e49a54c7fac32eabd81"
+  integrity sha512-5oySkWZq/Qf62Vde6KLGiW0pNnhIShKhvT1W796Hg4BxN6jvr9WT8iQQyrLNqth9ljo00wXd7V5P9qm9YWVmQw==
 
 "@tiptap/extension-paragraph@^2.0.0-beta.202":
   version "2.0.0-beta.202"
@@ -6687,9 +6687,9 @@ loader-runner@^4.2.0:
   integrity sha512-3R/1M+yS3j5ou80Me59j7F9IMs4PXs3VqRrm0TU3AbKPxlmpoY1TNscJV/oGJXo8qCatFGTfDbY6W6ipGOYXfg==
 
 loader-utils@^1.0.2, loader-utils@^1.2.3:
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/loader-utils/-/loader-utils-1.4.1.tgz#278ad7006660bccc4d2c0c1578e17c5c78d5c0e0"
-  integrity sha512-1Qo97Y2oKaU+Ro2xnDMR26g1BwMT29jNbem1EvcujW2jqt+j5COXyscjM7bLQkM9HaxI7pkWeW7gnI072yMI9Q==
+  version "1.4.2"
+  resolved "https://registry.yarnpkg.com/loader-utils/-/loader-utils-1.4.2.tgz#29a957f3a63973883eb684f10ffd3d151fec01a3"
+  integrity sha512-I5d00Pd/jwMD2QCduo657+YM/6L3KZu++pmX9VFncxaxvHcru9jx1lBaFft+r4Mt2jK0Yhp41XlRAihzPxHNCg==
   dependencies:
     big.js "^5.2.2"
     emojis-list "^3.0.0"
