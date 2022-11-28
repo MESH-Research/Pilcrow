@@ -53,7 +53,7 @@ class SubmissionPolicy
         $publication_id = $args['publication_id'];
         $publication = Publication::where('id', $publication_id)->firstOrFail();
 
-        return $publication->is_rejecting_submissions ?? true;
+        return $publication->is_accepting_submissions;
     }
 
     /**
