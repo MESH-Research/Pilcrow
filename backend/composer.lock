@@ -4509,16 +4509,16 @@
         },
         {
             "name": "spatie/laravel-settings",
-            "version": "2.5.0",
+            "version": "2.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/laravel-settings.git",
-                "reference": "bdf84fa4f1fd0196c389ebc996b7d1bc8be2f17e"
+                "reference": "62009ff9a1b562f07f065e7cae9cf2a7899f9686"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/laravel-settings/zipball/bdf84fa4f1fd0196c389ebc996b7d1bc8be2f17e",
-                "reference": "bdf84fa4f1fd0196c389ebc996b7d1bc8be2f17e",
+                "url": "https://api.github.com/repos/spatie/laravel-settings/zipball/62009ff9a1b562f07f065e7cae9cf2a7899f9686",
+                "reference": "62009ff9a1b562f07f065e7cae9cf2a7899f9686",
                 "shasum": ""
             },
             "require": {
@@ -4581,7 +4581,7 @@
             ],
             "support": {
                 "issues": "https://github.com/spatie/laravel-settings/issues",
-                "source": "https://github.com/spatie/laravel-settings/tree/2.5.0"
+                "source": "https://github.com/spatie/laravel-settings/tree/2.6.0"
             },
             "funding": [
                 {
@@ -4593,7 +4593,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-11-10T09:29:03+00:00"
+            "time": "2022-11-24T10:24:29+00:00"
         },
         {
             "name": "spatie/regex",
