@@ -71,7 +71,17 @@ export const UPDATE_USER = gql`
     }
   }
 `
-
+export const ACCEPT_SUBMISSION_INVITE = gql`
+  mutation AcceptSubmissionInvite($token: String!) {
+    acceptSubmissionInvite(token: $token) {
+      id
+      reviewers {
+        ...relatedUserFields
+      }
+    }
+  }
+  ${_RELATED_USER_FIELDS}
+`
 export const VERIFY_EMAIL = gql`
   mutation VerifyEmail($token: String!, $expires: String!) {
     verifyEmail(token: $token, expires: $expires) {
@@ -79,7 +89,6 @@ export const VERIFY_EMAIL = gql`
     }
   }
 `
-
 export const SEND_VERIFY_EMAIL = gql`
   mutation SendVerificationEmail($id: ID) {
     sendEmailVerification(id: $id) {
@@ -548,4 +557,163 @@ export const UPDATE_SUBMISSION_STATUS = gql`
       status_change_comment
     }
   }
+`
+
+export const INVITE_REVIEWER = gql`
+  mutation InviteReviewer($id: ID!, $email: String!, $message: String) {
+    inviteReviewer(
+      input: { submission_id: $id, email: $email, message: $message }
+    ) {
+      id
+      reviewers {
+        ...relatedUserFields
+      }
+    }
+  }
+  ${_RELATED_USER_FIELDS}
+`
+
+export const INVITE_REVIEW_COORDINATOR = gql`
+  mutation InviteReviewCoordinator(
+    $id: ID!
+    $email: String!
+    $message: String
+  ) {
+    inviteReviewCoordinator(
+      input: { submission_id: $id, email: $email, message: $message }
+    ) {
+      id
+      review_coordinators {
+        ...relatedUserFields
+      }
+    }
+  }
+  ${_RELATED_USER_FIELDS}
+`
+
+export const UPDATE_OVERALL_COMMENT = gql`
+  mutation UpdateOverallComment(
+    $submission_id: ID!
+    $comment_id: ID!
+    $content: String!
+  ) {
+    updateSubmission(
+      input: {
+        id: $submission_id
+        overall_comments: { update: { id: $comment_id, content: $content } }
+      }
+    ) {
+      id
+      created_by {
+        ...relatedUserFields
+      }
+      overall_comments {
+        ...commentFields
+        replies {
+          reply_to_id
+          ...commentFields
+        }
+      }
+    }
+  }
+  ${_COMMENT_FIELDS}
+  ${_RELATED_USER_FIELDS}
+`
+
+export const UPDATE_INLINE_COMMENT = gql`
+  mutation UpdateInlineComment(
+    $submission_id: ID!
+    $comment_id: ID!
+    $content: String!
+    $style_criteria: [ID!]
+  ) {
+    updateSubmission(
+      input: {
+        id: $submission_id
+        inline_comments: {
+          update: {
+            id: $comment_id
+            content: $content
+            style_criteria: $style_criteria
+          }
+        }
+      }
+    ) {
+      id
+      created_by {
+        ...relatedUserFields
+      }
+      inline_comments {
+        ...commentFields
+        style_criteria {
+          name
+          icon
+        }
+        replies {
+          reply_to_id
+          ...commentFields
+        }
+      }
+    }
+  }
+  ${_COMMENT_FIELDS}
+  ${_RELATED_USER_FIELDS}
+`
+
+export const UPDATE_INLINE_COMMENT_REPLY = gql`
+  mutation UpdateInlineCommentReply(
+    $submission_id: ID!
+    $comment_id: ID!
+    $content: String!
+  ) {
+    updateSubmission(
+      input: {
+        id: $submission_id
+        inline_comments: { update: { id: $comment_id, content: $content } }
+      }
+    ) {
+      id
+      created_by {
+        ...relatedUserFields
+      }
+      inline_comments {
+        ...commentFields
+        replies {
+          reply_to_id
+          ...commentFields
+        }
+      }
+    }
+  }
+  ${_COMMENT_FIELDS}
+  ${_RELATED_USER_FIELDS}
+`
+
+export const UPDATE_OVERALL_COMMENT_REPLY = gql`
+  mutation UpdateInlineCommentReply(
+    $submission_id: ID!
+    $comment_id: ID!
+    $content: String!
+  ) {
+    updateSubmission(
+      input: {
+        id: $submission_id
+        overall_comments: { update: { id: $comment_id, content: $content } }
+      }
+    ) {
+      id
+      created_by {
+        ...relatedUserFields
+      }
+      overall_comments {
+        ...commentFields
+        replies {
+          reply_to_id
+          ...commentFields
+        }
+      }
+    }
+  }
+  ${_COMMENT_FIELDS}
+  ${_RELATED_USER_FIELDS}
 `

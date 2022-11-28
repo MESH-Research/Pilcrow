@@ -31,7 +31,6 @@ const version_url = process.env.VERSION_URL
 const version_date = process.env.VERSION_DATE
 
 const parsedDate = version_date ? DateTime.fromISO(version_date) : undefined
-console.log(parsedDate)
 const version_age =
   parsedDate && !parsedDate.invalid
     ? timeAgo.format(parsedDate.toJSDate(), "long")
