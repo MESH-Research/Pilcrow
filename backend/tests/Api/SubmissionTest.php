@@ -271,7 +271,7 @@ class SubmissionTest extends ApiTestCase
      */
     public function testFileUpload()
     {
-        $publication = Publication::factory()->create();
+        $publication = Publication::factory()->create(['is_accepting_submissions' => true]);
         /**
          * @var User
          */
@@ -368,7 +368,6 @@ class SubmissionTest extends ApiTestCase
 
         $response = $this->multipartGraphQL($operations, $map, $file);
 
-        var_dump($response);
         $response
             ->assertJsonPath('errors.0.extensions.category', 'authorization');
     }
@@ -623,7 +622,7 @@ class SubmissionTest extends ApiTestCase
         $user = User::factory()->create();
         $this->actingAs($user);
 
-        $publication = Publication::factory()->create();
+        $publication = Publication::factory()->create(['is_accepting_submissions' => true]);
 
         $operations = [
             'operationName' => 'CreateSubmission',
