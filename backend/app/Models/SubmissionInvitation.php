@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Events\ReviewCoordinatorInvitationAccepted;
 use App\Events\ReviewCoordinatorInvited;
+use App\Events\ReviewerInvitationAccepted;
 use App\Events\ReviewerInvited;
 use App\Http\Traits\CreatedUpdatedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -24,6 +26,7 @@ class SubmissionInvitation extends Model
         'expiration',
         'accepted_at',
         'submission_id',
+        'role_id',
         'token',
     ];
 
@@ -49,6 +52,16 @@ class SubmissionInvitation extends Model
     public function submission(): BelongsTo
     {
         return $this->belongsTo(Submission::class, 'submission_id');
+    }
+
+    /**
+     * The role associated with the invitation
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function role(): BelongsTo
+    {
+        return $this->belongsTo(Role::class, 'role_id');
     }
 
     /**
@@ -149,6 +162,13 @@ class SubmissionInvitation extends Model
         $this->save();
         $user->staged = null;
         $user->save();
+
+        if ((string)$this->role_id === Role::REVIEWER_ROLE_ID) {
+            ReviewerInvitationAccepted::dispatch($this);
+        }
+        if ((string)$this->role_id === Role::REVIEW_COORDINATOR_ROLE_ID) {
+            ReviewCoordinatorInvitationAccepted::dispatch($this);
+        }
 
         return $this->submission;
     }

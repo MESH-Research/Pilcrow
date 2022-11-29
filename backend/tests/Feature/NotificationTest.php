@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
+use App\Models\Role;
 use App\Models\Submission;
+use App\Models\SubmissionInvitation;
 use App\Models\User;
 use App\Notifications\SubmissionStatusUpdated;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -171,5 +173,57 @@ class NotificationTest extends TestCase
             });
             $this->assertEquals(0, $user->unreadNotifications->count());
         });
+    }
+
+    /**
+     * @return void
+     */
+    public function testSubmissionUsersReceiveNotificationsUponAcceptedReviewerInvitations()
+    {
+        $this->beAppAdmin();
+        $submitter = User::factory()->create();
+        $reviewer = User::factory()->create();
+        $review_coordinator = User::factory()->create();
+        $submission = Submission::factory()
+            ->hasAttached($submitter, [], 'submitters')
+            ->hasAttached($reviewer, [], 'reviewers')
+            ->hasAttached($review_coordinator, [], 'reviewCoordinators')
+            ->create();
+        $invite = SubmissionInvitation::create([
+            'submission_id' => $submission->id,
+            'role_id' => Role::REVIEWER_ROLE_ID,
+            'email' => 'bob@msu.edu',
+        ]);
+        $invite->inviteReviewer();
+        $invite->acceptInvite();
+        $this->assertEquals(1, $submitter->notifications->count());
+        $this->assertEquals(1, $reviewer->notifications->count());
+        $this->assertEquals(1, $review_coordinator->notifications->count());
+    }
+
+    /**
+     * @return void
+     */
+    public function testSubmissionUsersReceiveNotificationsUponAcceptedReviewCoordinatorInvitations()
+    {
+        $this->beAppAdmin();
+        $submitter = User::factory()->create();
+        $reviewer = User::factory()->create();
+        $review_coordinator = User::factory()->create();
+        $submission = Submission::factory()
+            ->hasAttached($submitter, [], 'submitters')
+            ->hasAttached($reviewer, [], 'reviewers')
+            ->hasAttached($review_coordinator, [], 'reviewCoordinators')
+            ->create();
+        $invite = SubmissionInvitation::create([
+            'submission_id' => $submission->id,
+            'role_id' => Role::REVIEW_COORDINATOR_ROLE_ID,
+            'email' => 'bob@msu.edu',
+        ]);
+        $invite->inviteReviewCoordinator();
+        $invite->acceptInvite();
+        $this->assertEquals(1, $submitter->notifications->count());
+        $this->assertEquals(1, $reviewer->notifications->count());
+        $this->assertEquals(1, $review_coordinator->notifications->count());
     }
 }

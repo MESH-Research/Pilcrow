@@ -46,6 +46,12 @@ export const CURRENT_USER_NOTIFICATIONS = gql`
             submission {
               title
             }
+            invitee {
+              display_label
+            }
+            inviter {
+              display_label
+            }
             publication {
               name
             }

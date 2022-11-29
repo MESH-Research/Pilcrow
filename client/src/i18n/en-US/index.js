@@ -683,6 +683,20 @@ export default {
       },
     },
     submission: {
+      invitation: {
+        review_coordinator: {
+          accepted: {
+            short:
+              "{data_invitee_display_label} has accepted the invitation from {data_inviter_display_label} to coordinate the review of {data_submission_title}",
+          },
+        },
+        reviewer: {
+          accepted: {
+            short:
+              "{data_invitee_display_label} has accepted the invitation from {data_inviter_display_label} to review {data_submission_title}",
+          },
+        },
+      },
       updated: {
         short:
           "The status of {data_submission_title} has been updated to {data_submission_status_name}",

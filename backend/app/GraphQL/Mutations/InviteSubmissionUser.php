@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\GraphQL\Mutations;
 
+use App\Models\Role;
 use App\Models\Submission;
 use App\Models\SubmissionInvitation;
 
@@ -22,6 +23,7 @@ final class InviteSubmissionUser
         $submission = Submission::where('id', $args['submission_id'])->firstOrFail();
         $invite = SubmissionInvitation::create([
             'submission_id' => $submission->id,
+            'role_id' => Role::REVIEWER_ROLE_ID,
             'email' => $args['email'],
             'message' => $args['message'] ?? null,
         ]);
@@ -43,6 +45,7 @@ final class InviteSubmissionUser
         $submission = Submission::where('id', $args['submission_id'])->firstOrFail();
         $invite = SubmissionInvitation::create([
             'submission_id' => $submission->id,
+            'role_id' => Role::REVIEW_COORDINATOR_ROLE_ID,
             'email' => $args['email'],
             'message' => $args['message'] ?? null,
         ]);

@@ -3,6 +3,7 @@ A user account
 """
 type User {
     id: ID!
+    display_label: String
     name: String
     email: String!
     username: String!
