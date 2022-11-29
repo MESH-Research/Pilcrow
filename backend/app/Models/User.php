@@ -266,4 +266,15 @@ class User extends Authenticatable implements MustVerifyEmail
 
         return $username;
     }
+
+    /**
+     * The identifiable label of the user meant for public display,
+     * which prioritizes displaying the user's name over the username
+     *
+     * @return string
+     */
+    public function getDisplayLabelAttribute(): string
+    {
+        return $this->attributes['name'] ?: $this->attributes['username'];
+    }
 }
