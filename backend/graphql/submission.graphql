@@ -11,7 +11,8 @@ extend type Query {
 extend type Mutation {
     "Create a new submission under a publication"
     createSubmission(input: CreateSubmissionInput! @spread): Submission!
-        @create
+        @create 
+        @can(ability: "create", injectArgs: true)
 
     "Update an existing submission"
     updateSubmission(input: UpdateSubmissionInput! @spread): Submission!
