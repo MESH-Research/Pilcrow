@@ -21,8 +21,9 @@
           icon="settings"
           class="float-right"
           :to="{ name: 'publication:setup:basic', param: { id: id } }"
-          >Configure Publication</q-btn
         >
+          {{ $t("publication.configure") }}
+        </q-btn>
       </h2>
       <!--  eslint-disable vue/no-v-html -->
       <div
