@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2 class="q-px-lg">{{ $tc("publication.entity", 2) }}</h2>
+    <h2 class="q-px-lg">{{ $t("publication.entity", { count: 2 }) }}</h2>
     <section class="q-px-lg">
       <div v-if="!loading" class="column q-gutter-md items-center">
         <q-list

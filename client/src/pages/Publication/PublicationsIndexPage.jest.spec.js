@@ -40,7 +40,6 @@ describe("publications page mount", () => {
       },
       mocks: {
         $t: (t) => t,
-        $tc: (t) => t,
       },
     },
   })
