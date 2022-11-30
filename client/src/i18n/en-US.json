@@ -328,7 +328,8 @@
           "description": "Displayed to users when they start the create submission process.",
           "hint": "This is a good place to describe the submission and review process of your publication."
         }
-      }
+      },
+      "choose_block": "Choose Content Block"
     },
     "editors": {
       "heading": "Editors",

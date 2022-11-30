@@ -6,7 +6,7 @@
         v-model="pubV$.name.$model"
         :error="pubV$.name.$error ? true : null"
         outlined
-        label="New Publication Name"
+        :label="$t('publication.basic.fields.name.label')"
         data-cy="new_publication_input"
         dense
       >
@@ -27,7 +27,7 @@
           >
             <q-spinner v-if="loading" />
             <q-icon v-else name="add" />
-            Create
+            {{ $t("publication.create_button") }}
           </q-btn>
         </template>
       </q-input>
