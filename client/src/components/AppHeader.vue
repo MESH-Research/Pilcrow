@@ -20,7 +20,7 @@
           </template>
           <q-list
             role="navigation"
-            aria-label="Dropdown Navigation"
+            :aria-label="$t('header.account_dropdown_aria')"
             data-cy="headerUserMenu"
           >
             <q-item clickable data-cy="link_my_account" to="/account/profile">
@@ -35,9 +35,9 @@
               <q-separator />
               <q-item dense>
                 <q-item-section>
-                  <q-item-label class="text-bold"
-                    >Application Administration</q-item-label
-                  >
+                  <q-item-label class="text-bold">
+                    {{ $t("header.application_administration") }}
+                  </q-item-label>
                 </q-item-section>
               </q-item>
               <q-item to="/admin/users">
