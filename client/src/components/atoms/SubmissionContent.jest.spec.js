@@ -101,6 +101,7 @@ describe("SubmissionContent", () => {
           provide: {
             submission,
             activeComment,
+            commentDrawerOpen: true,
           },
         },
       }),
