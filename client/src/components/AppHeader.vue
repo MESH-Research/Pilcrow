@@ -2,22 +2,22 @@
   <input id="locale-switch" v-model="locale" type="hidden" />
   <q-header class="header" @keypress="toggleLocale">
     <q-toolbar class="header-toolbar">
-      <div class="q-pa-sm">
-        <h1 class="q-ma-none text-h4 site-title">
-          Collaborative Community Review
-        </h1>
-        <small class="site-subtitle">Submission Review System</small>
+      <div class="q-pa-sm row q-gutter-md items-center">
+        <q-img src="logo.png" style="width: 50px; background: white" />
+        <div class="column">
+          <h1 class="q-ma-none text-h4 site-title">Pilcrow</h1>
+          <small class="site-subtitle">Submission Review System</small>
+        </div>
       </div>
       <q-space />
 
       <template v-if="currentUser">
         <NotificationPopup />
-        <q-btn-dropdown
-          stretch
-          flat
-          data-cy="dropdown_username"
-          :label="currentUser.username"
-        >
+        <q-btn-dropdown stretch flat data-cy="dropdown_username">
+          <template #label>
+            <q-icon name="account_circle" class="lt-md" />
+            <span class="gt-sm">{{ currentUser.username }}</span>
+          </template>
           <q-list
             role="navigation"
             aria-label="Dropdown Navigation"
