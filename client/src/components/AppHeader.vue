@@ -17,7 +17,12 @@
 
       <template v-if="currentUser">
         <NotificationPopup />
-        <q-btn-dropdown stretch flat data-cy="dropdown_username">
+        <q-btn-dropdown
+          stretch
+          flat
+          data-cy="dropdown_username"
+          :aria-label="$t('header.account_btn_aria')"
+        >
           <template #label>
             <q-icon name="account_circle" class="lt-md" />
             <span class="gt-sm">{{ currentUser.username }}</span>
