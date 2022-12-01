@@ -4,9 +4,9 @@
     <q-toolbar class="header-toolbar">
       <div class="q-pa-sm row q-gutter-md items-center">
         <q-img
-          alt="Pilcrow logo"
-          src="logo.png"
-          style="width: 50px; background: white"
+          :alt="$t('header.logo_alt')"
+          src="logo-50x50.png"
+          style="width: 50px; height: 50px"
         />
         <div class="column">
           <h1 class="q-ma-none text-h4 site-title">Pilcrow</h1>
