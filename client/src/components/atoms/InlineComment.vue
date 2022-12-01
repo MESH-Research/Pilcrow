@@ -16,10 +16,21 @@
         :comment="comment"
         bg-color="#c9e5f8"
         @quote-reply-to="initiateQuoteReply"
+        @modify-comment="modifyComment(comment)"
       />
-      <q-card-section>
+      <q-card-section v-if="!isModifying">
         <!-- eslint-disable-next-line vue/no-v-html -->
         <div v-html="comment.content" />
+      </q-card-section>
+      <q-card-section v-else ref="modify_comment" class="q-pa-md q-pb-lg">
+        <comment-editor
+          comment-type="InlineComment"
+          data-cy="modifyInlineCommentEditor"
+          :comment="commentModify"
+          :is-modifying="isModifying"
+          @cancel="cancelReply"
+          @submit="submitReply"
+        />
       </q-card-section>
 
       <q-card-section
@@ -48,11 +59,11 @@
           @click="toggleThread"
         >
           <q-icon name="expand_less"></q-icon>
-          <span>Hide Replies</span>
+          <span>{{ $t("submissions.comment.toggle_replies.hide_reply") }}</span>
         </q-btn>
         <q-btn
           v-if="isCollapsed"
-          data-cy="collapseRepliesButton"
+          data-cy="showRepliesButton"
           aria-label="Show Replies"
           bordered
           color="secondary"
@@ -60,7 +71,7 @@
           @click="toggleThread"
         >
           <q-icon name="expand_more"></q-icon>
-          <span>Show Replies</span>
+          <span>{{ $t("submissions.comment.toggle_replies.show_reply") }}</span>
         </q-btn>
       </q-card-actions>
       <section v-if="!isCollapsed">
@@ -103,7 +114,7 @@
   </div>
 </template>
 <script setup>
-import { ref, computed, inject } from "vue"
+import { ref, computed, inject, provide } from "vue"
 import CommentHeader from "./CommentHeader.vue"
 import InlineCommentReply from "./InlineCommentReply.vue"
 import CommentEditor from "../forms/CommentEditor.vue"
@@ -112,6 +123,8 @@ const isCollapsed = ref(true)
 const isReplying = ref(false)
 const isQuoteReplying = ref(false)
 const commentReply = ref(null)
+const isModifying = ref(null)
+const commentModify = ref(null)
 
 function toggleThread() {
   isCollapsed.value = !isCollapsed.value
@@ -125,28 +138,41 @@ const props = defineProps({
 
 defineEmits(["quoteReplyTo", "replyTo"])
 
+provide("comment", props.comment)
+
 const hasReplies = computed(() => {
   return props.comment.replies.length > 0
 })
 
 function submitReply() {
   isReplying.value = false
+  isModifying.value = false
   isQuoteReplying.value = false
   commentReply.value = null
 }
 function cancelReply() {
   isReplying.value = false
+  isModifying.value = false
   isQuoteReplying.value = false
   commentReply.value = null
 }
 function initiateReply() {
   isReplying.value = true
+  isModifying.value = false
   isQuoteReplying.value = false
 }
 function initiateQuoteReply(comment) {
   isReplying.value = true
+  isModifying.value = false
   isQuoteReplying.value = true
   commentReply.value = comment
+}
+
+function modifyComment(comment) {
+  isReplying.value = false
+  isQuoteReplying.value = false
+  isModifying.value = true
+  commentModify.value = comment
 }
 
 const showReplyButton = computed(() => {

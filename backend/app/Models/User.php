@@ -10,6 +10,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Laravel\Sanctum\HasApiTokens;
 use Laravel\Scout\Searchable;
 use Spatie\Permission\Traits\HasRoles;
@@ -33,6 +35,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'email',
         'password',
         'profile_metadata',
+        'staged',
     ];
 
     /**
@@ -224,7 +227,54 @@ class User extends Authenticatable implements MustVerifyEmail
         if (is_array($role)) {
             return $submissions->wherePivotIn('role_id', $role)->exists();
         } else {
-            return $submissions->wherePivot('role_id', $role)->exists();
+            return $submissions->wherePivot('role_id', null, $role)->exists();
         }
+    }
+
+    /**
+     * Create a staged user based on a supplied email and
+     * assign a default username and password
+     *
+     * @param string $email
+     * @return \App\Models\User
+     */
+    public static function createStagedUser(string $email)
+    {
+        return User::create([
+            'username' => User::generateUniqueUsername($email),
+            'email' => $email,
+            'password' => Hash::make('peer-review!'),
+            'staged' => 1,
+        ]);
+    }
+
+    /**
+     * Generate a username from an email address and ensure it
+     * does not conflict with existing usernames in the application
+     * by appending random text to the username when necessary
+     *
+     * @param string $email
+     * @return String
+     */
+    public static function generateUniqueUsername(string $email)
+    {
+        $username = explode('@', $email)[0];
+        if (User::where('username', $username)->exists()) {
+            $unique = $username . '_' . Str::random(2) . random_int(0, 50);
+            $username = self::generateUniqueUsername($unique);
+        }
+
+        return $username;
+    }
+
+    /**
+     * The identifiable label of the user meant for public display,
+     * which prioritizes displaying the user's name over the username
+     *
+     * @return string
+     */
+    public function getDisplayLabelAttribute(): string
+    {
+        return $this->attributes['name'] ?: $this->attributes['username'];
     }
 }

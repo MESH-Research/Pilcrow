@@ -1,20 +1,29 @@
 <template>
   <q-select
+    :input-style="{ paddingLeft: '0px' }"
+    :label="$t(`submissions.invite_user.search.label`)"
+    :loading="loading"
     :model-value="props.modelValue"
     :options="options"
     bottom-slots
     hide-dropdown-icon
-    :label="$t(`submissions.invite_user.search.label`)"
+    :fill-input="!isUserSelected"
     outlined
     transition-hide="none"
     transition-show="none"
     use-input
-    :loading="loading"
-    @update:model-value="onSelectUpdate"
     @filter="filterFn"
+    @input-value="setInputValue"
+    @update:model-value="onSelectUpdate"
   >
     <template #prepend>
       <q-icon color="accent" name="search" />
+    </template>
+    <template #no-option>
+      <div class="text--grey q-mt-xs q-py-xs q-px-md">
+        <!-- eslint-disable-next-line vue/no-v-html -->
+        <span v-html="$t('submissions.invite_user.search.no_option')" />
+      </div>
     </template>
     <template #hint>
       <div class="text--grey q-mt-xs">
@@ -22,9 +31,11 @@
       </div>
     </template>
     <template #selected-item="scope">
-      <q-chip data-cy="selected_item" dense square>
-        {{ scope.opt.username }} ({{ scope.opt.email }})
-      </q-chip>
+      <div v-if="scope.opt.username && scope.opt.email">
+        <q-chip data-cy="selected_item" dense square class="q-ml-none">
+          {{ scope.opt.username }} ({{ scope.opt.email }})
+        </q-chip>
+      </div>
     </template>
     <template #option="scope">
       <q-item data-cy="options_item" v-bind="scope.itemProps">
@@ -52,10 +63,24 @@ const props = defineProps({
   modelValue: {
     default: null,
     validator: (prop) =>
-      prop === null || typeof prop === "object" || typeof prop === "function",
+      prop === null ||
+      typeof prop === "object" ||
+      typeof prop === "function" ||
+      typeof prop === "string",
   },
 })
 const emit = defineEmits(["update:modelValue"])
+
+const isUserSelected = computed(() => {
+  return typeof props.modelValue === "object" && props.modelValue !== null
+})
+
+function setInputValue(newValue) {
+  if (!isUserSelected.value) {
+    emit("update:modelValue", newValue)
+  }
+  return newValue
+}
 
 function onSelectUpdate(newValue) {
   emit("update:modelValue", newValue)

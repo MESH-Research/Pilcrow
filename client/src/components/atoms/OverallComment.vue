@@ -16,10 +16,21 @@
         :comment="comment"
         bg-color="#C9E5F8"
         @quote-reply-to="initiateQuoteReply"
+        @modify-comment="modifyComment(comment)"
       />
-      <q-card-section>
+      <q-card-section v-if="!isModifying">
         <!-- eslint-disable-next-line vue/no-v-html -->
         <div v-html="comment.content" />
+      </q-card-section>
+      <q-card-section v-else ref="modify_comment" class="q-pa-md q-pb-lg">
+        <comment-editor
+          comment-type="OverallComment"
+          data-cy="modifyOverallCommentEditor"
+          :comment="commentModify"
+          :is-modifying="isModifying"
+          @cancel="cancelReply"
+          @submit="submitReply"
+        />
       </q-card-section>
 
       <q-card-actions v-if="hasReplies" align="right" class="q-pa-md">
@@ -33,7 +44,7 @@
           @click="toggleThread"
         >
           <q-icon name="expand_less"></q-icon>
-          <span>Hide Replies</span>
+          <span>{{ $t("submissions.comment.toggle_replies.hide_reply") }}</span>
         </q-btn>
         <q-btn
           v-if="isCollapsed"
@@ -45,7 +56,7 @@
           @click="toggleThread"
         >
           <q-icon name="expand_more"></q-icon>
-          <span>Show Replies</span>
+          <span>{{ $t("submissions.comment.toggle_replies.show_reply") }}</span>
         </q-btn>
       </q-card-actions>
 
@@ -96,7 +107,7 @@
   </div>
 </template>
 <script setup>
-import { computed, inject, ref } from "vue"
+import { computed, inject, ref, provide } from "vue"
 import OverallCommentReply from "./OverallCommentReply.vue"
 import CommentEditor from "../forms/CommentEditor.vue"
 import CommentHeader from "./CommentHeader.vue"
@@ -105,6 +116,8 @@ const isCollapsed = ref(true)
 const isReplying = ref(false)
 const isQuoteReplying = ref(false)
 const commentReply = ref(null)
+const isModifying = ref(null)
+const commentModify = ref(null)
 
 function toggleThread() {
   isCollapsed.value = !isCollapsed.value
@@ -117,24 +130,37 @@ const props = defineProps({
   },
 })
 
+provide("comment", props.comment)
+
 function submitReply() {
   isReplying.value = false
+  isModifying.value = false
   isQuoteReplying.value = false
   commentReply.value = null
 }
 function cancelReply() {
   isReplying.value = false
+  isModifying.value = false
   isQuoteReplying.value = false
   commentReply.value = null
 }
 function initiateReply() {
   isReplying.value = true
+  isModifying.value = false
   isQuoteReplying.value = false
 }
 function initiateQuoteReply(comment) {
   isReplying.value = true
   isQuoteReplying.value = true
+  isModifying.value = false
   commentReply.value = comment
+}
+
+function modifyComment(comment) {
+  isReplying.value = false
+  isQuoteReplying.value = false
+  isModifying.value = true
+  commentModify.value = comment
 }
 
 const showReplyButton = computed(() => {

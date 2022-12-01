@@ -24,6 +24,7 @@ type Publication {
     publication_admins: [User!]! @belongsToMany(relation: "publicationAdmins")
     editors: [User!]! @belongsToMany(relation: "editors")
     is_publicly_visible: Boolean
+    is_accepting_submissions: Boolean
     style_criterias: [StyleCriteria!]! @hasMany(relation: "styleCriterias")
     my_role: PublicationRole @method(name: "getMyRole")
     effective_role: PublicationRole @method(name: "getEffectiveRole")
@@ -72,6 +73,7 @@ input UpdatePublicationInput {
     name: String
     description: String
     is_publicly_visible: Boolean
+    is_accepting_submissions: Boolean
     home_page_content: String
     new_submission_content: String
     style_criterias: UpdateStyleCriteriaHasMany

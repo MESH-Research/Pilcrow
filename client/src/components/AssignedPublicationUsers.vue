@@ -64,9 +64,6 @@ import { useMutation } from "@vue/apollo-composable"
 import {
   UPDATE_PUBLICATION_ADMINS,
   UPDATE_PUBLICATION_EDITORS,
-  UPDATE_SUBMISSION_REVIEWERS,
-  UPDATE_SUBMISSION_REVIEW_COORDINATORS,
-  UPDATE_SUBMISSION_SUBMITERS,
 } from "src/graphql/mutations"
 import { computed, ref } from "vue"
 import { useI18n } from "vue-i18n"
@@ -104,16 +101,9 @@ const tp$ = (key, ...args) => t(tPrefix(key), ...args)
 const { newStatusMessage } = useFeedbackMessages()
 
 const opts = { variables: { id: props.container.id } }
-const documents = {
-  submission: {
-    reviewers: UPDATE_SUBMISSION_REVIEWERS,
-    review_coordinators: UPDATE_SUBMISSION_REVIEW_COORDINATORS,
-    submitters: UPDATE_SUBMISSION_SUBMITERS,
-  },
-  publication: {
-    editors: UPDATE_PUBLICATION_EDITORS,
-    publication_admins: UPDATE_PUBLICATION_ADMINS,
-  },
+const mutations = {
+  editors: UPDATE_PUBLICATION_EDITORS,
+  publication_admins: UPDATE_PUBLICATION_ADMINS,
 }
 const users = computed(() => {
   return props.container[props.relationship]
@@ -126,10 +116,7 @@ const acceptMore = computed(() => {
   )
 })
 
-const { mutate } = useMutation(
-  documents[containerType.value][props.relationship],
-  opts
-)
+const { mutate } = useMutation(mutations[props.relationship], opts)
 
 async function handleSubmit() {
   if (!acceptMore.value) {
