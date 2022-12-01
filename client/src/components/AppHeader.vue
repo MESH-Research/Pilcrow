@@ -3,7 +3,11 @@
   <q-header class="header" @keypress="toggleLocale">
     <q-toolbar class="header-toolbar">
       <div class="q-pa-sm row q-gutter-md items-center">
-        <q-img src="logo.png" style="width: 50px; background: white" />
+        <q-img
+          alt="Pilcrow logo"
+          src="logo.png"
+          style="width: 50px; background: white"
+        />
         <div class="column">
           <h1 class="q-ma-none text-h4 site-title">Pilcrow</h1>
           <small class="site-subtitle">Submission Review System</small>
