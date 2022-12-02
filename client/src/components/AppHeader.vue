@@ -5,7 +5,7 @@
       <div class="q-pa-sm row q-gutter-md items-center">
         <q-img
           :alt="$t('header.logo_alt')"
-          src="logo-50x50.png"
+          src="logo-100x100.png"
           style="width: 50px; height: 50px"
         />
         <div class="column">
