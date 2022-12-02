@@ -2,11 +2,16 @@
   <input id="locale-switch" v-model="locale" type="hidden" />
   <q-header class="header" @keypress="toggleLocale">
     <q-toolbar class="header-toolbar">
-      <div class="q-pa-sm">
-        <h1 class="q-ma-none text-h4 site-title">
-          Collaborative Community Review
-        </h1>
-        <small class="site-subtitle">Submission Review System</small>
+      <div class="q-pa-sm row q-gutter-md items-center">
+        <q-img
+          :alt="$t('header.logo_alt')"
+          src="logo-100x100.png"
+          style="width: 50px; height: 50px"
+        />
+        <div class="column">
+          <h1 class="q-ma-none text-h4 site-title">Pilcrow</h1>
+          <small class="site-subtitle">Submission Review System</small>
+        </div>
       </div>
       <q-space />
 
@@ -16,11 +21,15 @@
           stretch
           flat
           data-cy="dropdown_username"
-          :label="currentUser.username"
+          :aria-label="$t('header.account_btn_aria')"
         >
+          <template #label>
+            <q-icon name="account_circle" class="lt-md" />
+            <span class="gt-sm">{{ currentUser.username }}</span>
+          </template>
           <q-list
             role="navigation"
-            aria-label="Dropdown Navigation"
+            :aria-label="$t('header.account_dropdown_aria')"
             data-cy="headerUserMenu"
           >
             <q-item clickable data-cy="link_my_account" to="/account/profile">
@@ -35,9 +44,9 @@
               <q-separator />
               <q-item dense>
                 <q-item-section>
-                  <q-item-label class="text-bold"
-                    >Application Administration</q-item-label
-                  >
+                  <q-item-label class="text-bold">
+                    {{ $t("header.application_administration") }}
+                  </q-item-label>
                 </q-item-section>
               </q-item>
               <q-item to="/admin/users">
