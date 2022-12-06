@@ -66,6 +66,13 @@ type Mutation {
         @guard
         @field(resolver: "App\\GraphQL\\Mutations\\VerifyEmail@verify")
 
+    resetPassword(
+        token: String!
+        expires: String!
+    ): User!
+        @guard
+        @field(resolver: "App\\GraphQL\\Mutations\\VerifyEmail@verify")
+
     "Mark a user notification as read"
     markNotificationRead(id: ID!): Notification!
         @field(

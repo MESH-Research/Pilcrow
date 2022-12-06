@@ -23,6 +23,10 @@ const routes = [
         component: () => import("pages/VerifyEmail.vue"),
       },
       {
+        path: "reset-password/:expires/:token",
+        component: () => import("pages/VerifyEmail.vue"),
+      },
+      {
         path: "dashboard/",
         component: () => import("pages/DashboardPage.vue"),
       },
