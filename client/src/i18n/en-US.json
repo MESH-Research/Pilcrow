@@ -313,9 +313,20 @@
           },
           "effect": {
             "true": "Anyone can find this publication.",
-            "false": "This publication will be hidden from search."
+            "false": "Publication will be hidden from search."
           },
           "hint": "Set to publicly visible to allow your publication to be discoverable."
+        },
+        "is_accepting_submissions": {
+          "options": {
+            "true": "Open",
+            "false": "Closed"
+          },
+          "effect": {
+            "true": "Publication is currently open to new submissions.",
+            "false": "Publication is currently closed to new submissions."
+          },
+          "hint": "Set to accept to allow submissions for the publication."
         }
       }
     },

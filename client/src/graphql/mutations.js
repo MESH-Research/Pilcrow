@@ -301,17 +301,20 @@ export const UPDATE_PUBLICATION_BASICS = gql`
     $id: ID!
     $name: String
     $is_publicly_visible: Boolean
+    $is_accepting_submissions: Boolean
   ) {
     updatePublication(
       publication: {
         id: $id
         name: $name
         is_publicly_visible: $is_publicly_visible
+        is_accepting_submissions: $is_accepting_submissions
       }
     ) {
       id
       name
       is_publicly_visible
+      is_accepting_submissions
     }
   }
 `
