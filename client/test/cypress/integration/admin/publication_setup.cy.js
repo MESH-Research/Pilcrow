@@ -185,6 +185,7 @@ describe("Publication Setup", () => {
 
     cy.dataCy('name_field').type(" Update")
     cy.dataCy('visibility_field').find('button:last').click()
+    cy.dataCy('allow_submissions_field').find('button:first').click()
     cy.dataCy('button_save').click()
     cy.dataCy('button_saved').contains('Saved')
     cy.injectAxe()
