@@ -13,7 +13,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Str;
 
 class SubmissionInvitation extends Model
 {
@@ -23,7 +22,6 @@ class SubmissionInvitation extends Model
     protected $fillable = [
         'email',
         'message',
-        'expiration',
         'accepted_at',
         'submission_id',
         'role_id',
@@ -31,17 +29,58 @@ class SubmissionInvitation extends Model
     ];
 
     /**
-     * Set a default token and expiration upon creation
+     * Set a default token upon creation
      *
      * @return void
      */
     protected static function booted()
     {
         static::created(function (SubmissionInvitation $invite) {
-            $invite->token = Str::uuid()->toString();
-            $invite->expiration = Carbon::now()->addDays(5)->toDateTimeString();
+            // $expires = (string)Carbon::now()->addHours(config('auth.invitations.expire', 48))->timestamp;
+            $expires = (string)Carbon::now()->subMinute()->timestamp;
+            $invite->token = static::makeToken($expires);
             $invite->save();
         });
+    }
+
+    /**
+     * Create a submission invitation token
+     *
+     * @return string
+     * @param int|float|string $expires
+     */
+    private function makeToken(string $expires)
+    {
+        return hash_hmac(
+            'sha256',
+            "{$this->getKey()}#{$this->email}#{$expires}",
+            config('app.key')
+        );
+    }
+
+    /**
+     * Return URL for invitation acceptance
+     *
+     * @return string
+     */
+    public function getInvitationAcceptanceUrl(): string
+    {
+        $expires = (string)Carbon::now()->addMinutes(Config::get('auth.verification.expire', 60))->timestamp;
+        $hash = $this->makeEmailVerificationHash($expires);
+
+        return url("verify-email/{$expires}/{$hash}");
+    }
+
+    /**
+     * Verify a submission invitation token
+     *
+     * @param string $token
+     * @param string $expires
+     * @return bool
+     */
+    public function verifyToken(string $token, string $expires): bool
+    {
+        return hash_equals($this->makeToken($expires), $token);
     }
 
     /**

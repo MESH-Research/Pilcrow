@@ -3,13 +3,18 @@ declare(strict_types=1);
 
 namespace App\GraphQL\Mutations;
 
+use App\Exceptions\ClientException;
 use App\Models\SubmissionInvitation;
+use Carbon\Carbon;
 
 final class AcceptSubmissionInvite
 {
     /**
-     * Based on a supplied submission invitation token, check that a submission
-     * invitation exists and then accept a submission invitation as the invited user
+     * Based on a supplied submission invitation token and expiration, check that:
+     * - a submission invitation for the supplied token exists
+     * - the submission invitation is not expired
+     * - the token is not invalid
+     * and then accept the submission invitation as the invited user
      *
      * @param  null  $_
      * @param  array{token: string}  $args
@@ -18,7 +23,12 @@ final class AcceptSubmissionInvite
     public function acceptInvite($_, $args)
     {
         $invite = SubmissionInvitation::where('token', $args['token'])->firstOrFail();
-
+        if (Carbon::now()->greaterThan($args['expires'])) {
+            throw new ClientException('Token Expired', 'invitationVerification', 'INVITATION_TOKEN_EXPIRED');
+        }
+        if (!$invite->verifyToken($args['token'], $args['expires'])) {
+            throw new ClientException('Invalid Token', 'invitationVerification', 'INVITATION_TOKEN_INVALID');
+        }
         return $invite->acceptInvite();
     }
 }
