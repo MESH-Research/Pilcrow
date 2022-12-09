@@ -7,7 +7,10 @@
     :class="banner_class"
   >
     <div>
-      {{ banner }} <a v-if="banner_link" :href="banner_link">More info</a>
+      {{ banner }}
+      <a v-if="banner_link" :href="banner_link">{{
+        $t("generic.more_info")
+      }}</a>
     </div>
     <template #action>
       <q-btn
@@ -17,7 +20,7 @@
         dense
         @click="dismissBanner"
       />
-      <q-tooltip>Dismiss for 1 week</q-tooltip>
+      <q-tooltip>{{ $t("app_banner_dismiss_tip") }}</q-tooltip>
     </template>
   </q-banner>
 </template>
