@@ -7,33 +7,47 @@
       label="Font"
       style="min-width: 150px"
     />
-    <div class="q-ml-md">
-      <q-btn
-        aria-label="Decrease Font Size"
-        round
-        flat
-        icon="remove_circle"
-        color="white"
-        text-color="grey-7"
-      />
-      <q-btn
-        aria-label="Increase Font Size"
-        round
-        flat
-        icon="add_circle"
-        color="white"
-        text-color="grey-7"
-      />
-      <q-btn
-        size="sm"
-        class="q-ml-md"
-        aria-label="Toggle Dark Mode"
-        round
-        :icon="darkMode ? `dark_mode` : `light_mode`"
-        color="white"
-        text-color="grey-7"
-        @click="toggleDarkMode()"
-      />
+    <div class="q-ml-md row items-center">
+      <div>
+        <q-btn
+          aria-label="Decrease Font Size"
+          data-cy="decrease_font"
+          round
+          flat
+          icon="remove_circle"
+          color="white"
+          :disable="fontSize === 1"
+          text-color="grey-7"
+          @click="decreaseFontSize()"
+        />
+        <q-tooltip>Decrease Font Size</q-tooltip>
+      </div>
+      <div>
+        <q-btn
+          aria-label="Increase Font Size"
+          data-cy="increase_font"
+          round
+          flat
+          icon="add_circle"
+          color="white"
+          text-color="grey-7"
+          @click="increaseFontSize()"
+        />
+        <q-tooltip>Increase Font Size</q-tooltip>
+      </div>
+      <div>
+        <q-btn
+          size="sm"
+          class="q-ml-md"
+          aria-label="Toggle Dark Mode"
+          round
+          :icon="darkMode ? `dark_mode` : `light_mode`"
+          color="white"
+          text-color="grey-7"
+          @click="toggleDarkMode()"
+        />
+        <q-tooltip>Toggle Dark Mode</q-tooltip>
+      </div>
     </div>
   </div>
   <article
@@ -53,7 +67,11 @@
       </q-btn>
     </bubble-menu>
     <div data-cy="highlight-click-handler" @click="highlightClickHandler">
-      <editor-content :editor="editor" />
+      <editor-content
+        :editor="editor"
+        data-cy="submission-content"
+        :style="`font-size:${fontSize}rem`"
+      />
     </div>
   </article>
 </template>
@@ -84,6 +102,15 @@ function toggleDarkMode() {
 }
 const fonts = ["Sans-serif", "Serif"]
 let selectedFont = ref("Sans-serif")
+let fontSize = ref(1)
+
+function increaseFontSize() {
+  fontSize.value += 0.05
+}
+
+function decreaseFontSize() {
+  fontSize.value -= 0.05
+}
 
 const findCommentFromId = (id) =>
   submission.value.inline_comments.find((c) => c.id === id)
