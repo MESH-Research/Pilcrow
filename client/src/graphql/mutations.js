@@ -72,8 +72,12 @@ export const UPDATE_USER = gql`
   }
 `
 export const ACCEPT_SUBMISSION_INVITE = gql`
-  mutation AcceptSubmissionInvite($token: String!) {
-    acceptSubmissionInvite(token: $token) {
+  mutation AcceptSubmissionInvite(
+    $uuid: String!
+    $token: String!
+    $expires: String!
+  ) {
+    acceptSubmissionInvite(uuid: $uuid, token: $token, expires: $expires) {
       id
       reviewers {
         ...relatedUserFields

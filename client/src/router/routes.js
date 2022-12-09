@@ -8,7 +8,7 @@ const routes = [
       { path: "login", component: () => import("pages/LoginPage.vue") },
       { path: "logout", component: () => import("src/pages/LogoutPage.vue") },
       {
-        path: "accept-invite/:token",
+        path: "accept-invite/:uuid/:expires/:token",
         component: () => import("pages/AcceptInvite.vue"),
       },
     ],

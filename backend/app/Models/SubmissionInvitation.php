@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class SubmissionInvitation extends Model
 {
@@ -25,20 +26,18 @@ class SubmissionInvitation extends Model
         'accepted_at',
         'submission_id',
         'role_id',
-        'token',
+        'uuid',
     ];
 
     /**
-     * Set a default token upon creation
+     * Set a default UUID upon creation
      *
      * @return void
      */
     protected static function booted()
     {
         static::created(function (SubmissionInvitation $invite) {
-            // $expires = (string)Carbon::now()->addHours(config('auth.invitations.expire', 48))->timestamp;
-            $expires = (string)Carbon::now()->subMinute()->timestamp;
-            $invite->token = static::makeToken($expires);
+            $invite->uuid = Str::uuid()->toString();
             $invite->save();
         });
     }
@@ -65,10 +64,10 @@ class SubmissionInvitation extends Model
      */
     public function getInvitationAcceptanceUrl(): string
     {
-        $expires = (string)Carbon::now()->addMinutes(Config::get('auth.verification.expire', 60))->timestamp;
-        $hash = $this->makeEmailVerificationHash($expires);
+        $expires = (string)Carbon::now()->addMinutes(config('auth.verification.expire', 60))->timestamp;
+        $hash = $this->makeToken($expires);
 
-        return url("verify-email/{$expires}/{$hash}");
+        return url("accept-invite/{$this->uuid}/{$expires}/{$hash}");
     }
 
     /**
