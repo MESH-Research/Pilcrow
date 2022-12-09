@@ -28,6 +28,12 @@ extend type Mutation {
             ]
         )
 
+    "Verify access to an invitation to a submission as the assigned role"
+    verifySubmissionInvite(uuid: String! token: String! expires: String!): Submission
+        @field(
+            resolver: "App\\GraphQL\\Mutations\\AcceptSubmissionInvite@acceptInvite"
+        )
+
     "Accept an invitation to a submission as the assigned role"
     acceptSubmissionInvite(uuid: String! token: String! expires: String!): Submission
         @field(

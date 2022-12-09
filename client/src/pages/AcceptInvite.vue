@@ -6,44 +6,46 @@
         <strong class="text-h3">{{ $t("loading") }}</strong>
       </div>
       <div v-if="status == 'success'" class="column flex-center">
-        <q-input
-          ref="nameInput"
-          outlined
-          :label="$t('helpers.OPTIONAL_FIELD', [$t('auth.fields.name')])"
-          autocomplete="name"
-          data-cy="name_field"
-          bottom-slots
-        />
-        <q-input
-          ref="emailInput"
-          outlined
-          disable
-          model-value=""
-          type="email"
-          :label="$t('auth.fields.email')"
-          autocomplete="username"
-          debounce="500"
-          bottom-slots
-          data-cy="email_field"
-        />
-        <q-input
-          ref="usernameInput"
-          model-value=""
-          outlined
-          :label="$t('auth.fields.username')"
-          autocomplete="nickname"
-          debounce="500"
-          data-cy="username_field"
-          bottom-slots
-        />
-        <new-password-input
-          ref="passwordInput"
-          outlined
-          :label="$t('auth.fields.password')"
-          :complexity="$v.password.notComplex.$response.complexity"
-          data-cy="password_field"
-        />
-
+        <q-form style="width: 400px">
+          <h1>Your Details</h1>
+          <q-input
+            ref="nameInput"
+            outlined
+            :label="$t('helpers.OPTIONAL_FIELD', [$t('auth.fields.name')])"
+            autocomplete="name"
+            data-cy="name_field"
+            bottom-slots
+          />
+          <q-input
+            ref="usernameInput"
+            model-value=""
+            outlined
+            :label="$t('auth.fields.username')"
+            autocomplete="nickname"
+            debounce="500"
+            data-cy="username_field"
+            bottom-slots
+          />
+          <q-input
+            ref="emailInput"
+            outlined
+            disable
+            model-value=""
+            type="email"
+            :label="$t('auth.fields.email')"
+            autocomplete="username"
+            debounce="500"
+            bottom-slots
+            data-cy="email_field"
+          />
+          <new-password-input
+            ref="passwordInput"
+            outlined
+            :label="$t('auth.fields.password')"
+            :complexity="$v.password.notComplex.$response.complexity"
+            data-cy="password_field"
+          />
+        </q-form>
         <q-icon color="positive" name="check_circle" size="2em" />
         <strong class="text-h3">{{
           $t("submissions.accept_invite.success.title")

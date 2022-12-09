@@ -40,7 +40,7 @@ class VerifyEmail
      * @param  null  $_
      * @param  array<string, mixed>  $args
      * @return \App\Model\User
-     */
+    */
     public function send($_, array $args)
     {
         $currentUser = Auth::user();

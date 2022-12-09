@@ -22,7 +22,7 @@
       <q-chip
         icon="help"
         dense
-        size="sm"
+        size="md"
         clickable
         :aria-label="$t('auth.aria.more_info_password')"
         aria-controls="password-field-analysis"
@@ -30,7 +30,6 @@
         tabindex="0"
         role="button"
         outline
-        class="col-3"
         @click="showDetails = !showDetails"
         @keydown.enter.space="showDetails = !showDetails"
       >
