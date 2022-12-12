@@ -15,7 +15,7 @@
     <template #action>
       <q-btn
         icon="close"
-        name="Dismiss for 1 week"
+        :aria-label="$t('app_banner_dismiss_tip')"
         flat
         dense
         @click="dismissBanner"
