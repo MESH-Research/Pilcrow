@@ -786,5 +786,9 @@
         "accept_as_final": "This submission is accepted as final."
       }
     }
-  }
+  },
+  "generic": {
+    "more_info": "More info"
+  },
+  "app_banner_dismiss_tip": "Dismiss for 1 week"
 }
