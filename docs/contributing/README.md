@@ -151,18 +151,21 @@ Preview builds cost hosting money. It's not a lot of money, but it adds up if a 
 
 Currently, `CCR-Droid` is not great about spelling out specific build errors.  If you run into a problem, mention `@wreality`. He can look up the error messages and help with debugging the build.
 
-## Staging Environment
+## Public Test Environments
 
-- [https://staging.ccrproject.dev](https://staging.ccrproject.dev): Automatically built from the `master` branch
-- [https://mailhog.ccrproject.dev](https://mailhog.ccrproject.dev): Email notifications from the staging environment are sent here, NOT to a real inbox.
+Two builds are automatically built in order to help testers and collaborators provide feedback on development features.
+
+- [https://staging.ccrproject.dev](https://staging.ccrproject.dev): Automatically built from the `master` branch.  This is the "bleeding edge" of development.
+- [https://release.ccrproject.dev](https://release.ccrproject.dev): Automatially built from the most recent versioned release. Releases happen after each development sprint (usually about once a month).
+- [https://mailhog.ccrproject.dev](https://mailhog.ccrproject.dev): Email notifications from both environments are sent here, NOT to a real inbox.
 
 ::: warning
-:warning: Data in the staging environment is **not permanent** and will be reset **every** time the code base is updated.
+:warning: Data in the test environments is **not permanent** and will be reset **every** time their code base is updated.
 :::
 
-### Staging Server User Login Information
+### User Login Information
 
-These users are permanent on the staging server, and will not be deleted. However, data associated with these users **may be reset at any time**.
+The users below are permanent on the test servers, and will not be deleted. However, data associated with these users **may be reset at any time**.
 
 Name | Username | Login email | Login Password
 :---- | :---- | :---- | :----

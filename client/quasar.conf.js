@@ -46,7 +46,13 @@ module.exports = configure(function () {
       directives: [],
 
       // Quasar plugins
-      plugins: ["Cookies", "Dialog", "SessionStorage", "Notify"],
+      plugins: [
+        "Cookies",
+        "Dialog",
+        "SessionStorage",
+        "LocalStorage",
+        "Notify",
+      ],
       config: { notify: { position: "top" } },
     },
 
@@ -64,6 +70,9 @@ module.exports = configure(function () {
         VERSION: process.env.VERSION ?? undefined,
         VERSION_URL: process.env.VERSION_URL ?? undefined,
         VERSION_DATE: process.env.VERSION_DATE ?? undefined,
+        APP_BANNER: process.env.APP_BANNER ?? undefined,
+        APP_BANNER_CLASS: process.env.APP_BANNER_CLASS ?? undefined,
+        APP_BANNER_LINK: process.env.APP_BANNER_LINK ?? undefined,
       },
     },
     // Full list of options: https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-devServer
