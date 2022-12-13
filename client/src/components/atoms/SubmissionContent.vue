@@ -106,7 +106,7 @@ function toggleDarkMode() {
 const fonts = [
   {
     label: "Sans-serif",
-    value: "Roboto, Sans-serif",
+    value: "Atkinson, Sans-serif",
   },
   {
     label: "Serif",
