@@ -70,7 +70,10 @@
       <editor-content
         :editor="editor"
         data-cy="submission-content"
-        :style="`font-size:${fontSize}rem`"
+        :style="{
+          'font-size': fontSize + 'rem',
+          'font-family': selectedFont.value,
+        }"
       />
     </div>
   </article>
@@ -100,16 +103,33 @@ let darkMode = ref(true)
 function toggleDarkMode() {
   darkMode.value = !darkMode.value
 }
-const fonts = ["Sans-serif", "Serif"]
+const fonts = [
+  {
+    label: "Sans-serif",
+    value: "Roboto, Sans-serif",
+  },
+  {
+    label: "Serif",
+    value: "Georgia, Serif",
+  },
+]
 let selectedFont = ref("Sans-serif")
 let fontSize = ref(1)
 
+let headingSizes = ref([2.125, 1.5, 1.25, 1, 0.75, 0.5])
+
 function increaseFontSize() {
   fontSize.value += 0.05
+  for (let index in headingSizes.value) {
+    headingSizes.value[index] += 0.05
+  }
 }
 
 function decreaseFontSize() {
   fontSize.value -= 0.05
+  for (let index in headingSizes.value) {
+    headingSizes.value[index] -= 0.05
+  }
 }
 
 const findCommentFromId = (id) =>
@@ -247,4 +267,25 @@ mark {
   color: #000;
   background-color: #bbe2e8;
 }
+
+.submission-content h1 {
+  font-size: (v-bind('headingSizes[0] + "rem"'));
+}
+.submission-content h2 {
+  font-size: (v-bind('headingSizes[1] + "rem"'));
+}
+.submission-content h3 {
+  font-size: (v-bind('headingSizes[2] + "rem"'));
+}
+.submission-content h4 {
+  font-size: (v-bind('headingSizes[3] + "rem"'));
+}
+.submission-content h5 {
+  font-size: (v-bind('headingSizes[4] + "rem"'));
+}
+.submission-content h6 {
+  font-size: (v-bind('headingSizes[5] + "rem"'));
+}
+
+// :style="`font-size:${fontSize}rem; font-family: ${selectedFont}`"
 </style>
