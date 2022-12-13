@@ -3,6 +3,38 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.21.0](https://github.com/MESH-Research/CCR/compare/v0.20.0...v0.21.0) (2022-12-12)
+
+
+### Features
+
+* **client:** add env vars to display an app banner ([#1688](https://github.com/MESH-Research/CCR/issues/1688)) ([f6fcab2](https://github.com/MESH-Research/CCR/commit/f6fcab2cf6408168539b838d5a22bb3b326a33ef))
+
+
+### Bug Fixes
+
+* **api,deps:** bump bensampo/laravel-enum in /backend ([#1678](https://github.com/MESH-Research/CCR/issues/1678)) ([0e0295e](https://github.com/MESH-Research/CCR/commit/0e0295edc365ca9712c3582aa19e3aa865e1e083))
+* **api,deps:** bump laravel/scout from 9.4.12 to 9.5.0 in /backend ([#1677](https://github.com/MESH-Research/CCR/issues/1677)) ([c5eb8f2](https://github.com/MESH-Research/CCR/commit/c5eb8f2add4ee42f95ce4744c006d41c0df19a0a))
+* **api,deps:** bump laravel/scout from 9.5.0 to 9.5.1 in /backend ([#1692](https://github.com/MESH-Research/CCR/issues/1692)) ([a89b5f5](https://github.com/MESH-Research/CCR/commit/a89b5f56add93419d2473cc564537e193f936614))
+* **api,deps:** bump nuwave/lighthouse from 5.67.0 to 5.68.0 in /backend ([#1666](https://github.com/MESH-Research/CCR/issues/1666)) ([7afefe9](https://github.com/MESH-Research/CCR/commit/7afefe9d11d29ed5a000ce7f1339bdf29845b4ad))
+* **api,deps:** bump nuwave/lighthouse from 5.68.0 to 5.68.1 in /backend ([#1681](https://github.com/MESH-Research/CCR/issues/1681)) ([6c8cf9a](https://github.com/MESH-Research/CCR/commit/6c8cf9ad1944bba6aa7e57d354057fcc67c1ccfc))
+* **app,deps:** bump @apollo/client from 3.7.1 to 3.7.2 in /client ([#1679](https://github.com/MESH-Research/CCR/issues/1679)) ([6cdb4bc](https://github.com/MESH-Research/CCR/commit/6cdb4bc03b967ac2a7b09426cdfc201db21225d5))
+* **app,deps:** bump @quasar/extras from 1.15.6 to 1.15.7 in /client ([#1671](https://github.com/MESH-Research/CCR/issues/1671)) ([fc901bf](https://github.com/MESH-Research/CCR/commit/fc901bf17c901962d47b0e73f452b158ac8fa585))
+* **app,deps:** bump @tiptap/extension-bold in /client ([#1672](https://github.com/MESH-Research/CCR/issues/1672)) ([bc4f901](https://github.com/MESH-Research/CCR/commit/bc4f901823d92a66f36cae029b4b054c993af1d9))
+* **app,deps:** bump @tiptap/extension-bold in /client ([#1684](https://github.com/MESH-Research/CCR/issues/1684)) ([811e1be](https://github.com/MESH-Research/CCR/commit/811e1be5e9c774717184782f6fc73416448ab58b))
+* **app,deps:** bump @tiptap/extension-bold in /client ([#1693](https://github.com/MESH-Research/CCR/issues/1693)) ([551d9b1](https://github.com/MESH-Research/CCR/commit/551d9b1a5cb2c30b25b23621ec91abc049f97847))
+* **app,deps:** bump @tiptap/extension-highlight in /client ([#1669](https://github.com/MESH-Research/CCR/issues/1669)) ([14985df](https://github.com/MESH-Research/CCR/commit/14985df7381f5a956b7fe46a96de76b99991ee45))
+* **app,deps:** bump @tiptap/extension-highlight in /client ([#1685](https://github.com/MESH-Research/CCR/issues/1685)) ([0ae7def](https://github.com/MESH-Research/CCR/commit/0ae7def6e4fa8fef2b3d56deeb3b0fe085442410))
+* **app,deps:** bump @tiptap/extension-highlight in /client ([#1694](https://github.com/MESH-Research/CCR/issues/1694)) ([a4e0b23](https://github.com/MESH-Research/CCR/commit/a4e0b2342ca9281b5dd5752cb60d379d208bd5e7))
+* **app,deps:** bump @tiptap/extension-italic in /client ([#1668](https://github.com/MESH-Research/CCR/issues/1668)) ([60cf78b](https://github.com/MESH-Research/CCR/commit/60cf78b027d290f21744aa2894f460a05384b034))
+* **app,deps:** bump @tiptap/extension-italic in /client ([#1683](https://github.com/MESH-Research/CCR/issues/1683)) ([2eef537](https://github.com/MESH-Research/CCR/commit/2eef537bca0c6cad8da0083686829679b8841361))
+* **app,deps:** bump @tiptap/extension-italic in /client ([#1698](https://github.com/MESH-Research/CCR/issues/1698)) ([4552583](https://github.com/MESH-Research/CCR/commit/4552583b27ff2b21e31c830bde3997165df5ba9a))
+* **app,deps:** bump @tiptap/extension-ordered-list in /client ([#1667](https://github.com/MESH-Research/CCR/issues/1667)) ([814b0be](https://github.com/MESH-Research/CCR/commit/814b0be80c558b4c9800dab2b6551d884fd961f7))
+* **app,deps:** bump @tiptap/extension-ordered-list in /client ([#1682](https://github.com/MESH-Research/CCR/issues/1682)) ([9c7c570](https://github.com/MESH-Research/CCR/commit/9c7c5701618f566f129bb10e0376f744e88ad102))
+* **app,deps:** bump @tiptap/extension-ordered-list in /client ([#1695](https://github.com/MESH-Research/CCR/issues/1695)) ([40ce642](https://github.com/MESH-Research/CCR/commit/40ce642ab5617d309c3fa66c3fd1108bcd118db3))
+* **app,deps:** bump axios from 1.1.3 to 1.2.1 in /client ([#1675](https://github.com/MESH-Research/CCR/issues/1675)) ([53e9ce0](https://github.com/MESH-Research/CCR/commit/53e9ce0964f71abda4371ed9a74895e04ba118a5))
+* **build:** fix missing args in dockerfile ([#1700](https://github.com/MESH-Research/CCR/issues/1700)) ([7689b10](https://github.com/MESH-Research/CCR/commit/7689b10d025df718e913afb4d865fefdc3c53738))
+
 ## [0.20.0](https://github.com/MESH-Research/CCR/compare/v0.19.0...v0.20.0) (2022-12-02)
 
 

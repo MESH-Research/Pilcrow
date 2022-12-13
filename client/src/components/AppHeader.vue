@@ -1,6 +1,7 @@
 <template>
   <input id="locale-switch" v-model="locale" type="hidden" />
   <q-header class="header" @keypress="toggleLocale">
+    <app-banner />
     <q-toolbar class="header-toolbar">
       <div class="q-pa-sm row q-gutter-md items-center">
         <q-img
@@ -117,10 +118,12 @@
 
 <script setup>
 import NotificationPopup from "src/components/molecules/NotificationPopup.vue"
+import AppBanner from "./AppBanner.vue"
 import { useCurrentUser } from "src/use/user"
 import { useI18n } from "vue-i18n"
 import { useMagicKeys } from "@vueuse/core"
 import { watchEffect } from "vue"
+
 defineProps({
   //Drawer status
   modelValue: {
