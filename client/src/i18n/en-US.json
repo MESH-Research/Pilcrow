@@ -103,7 +103,10 @@
     "submissions": "Submissions",
     "user_list": "All Users",
     "notification_button": "View Notifications",
-    "application_administration": "Application Administration"
+    "application_administration": "Application Administration",
+    "account_dropdown_aria": "User Account Dropdown",
+    "account_btn_aria": "User Account Dropdown Toggle",
+    "logo_alt": "Application Logo"
   },
   "account": {
     "failures": {
