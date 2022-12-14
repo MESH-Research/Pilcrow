@@ -106,7 +106,8 @@
     "application_administration": "Application Administration",
     "account_dropdown_aria": "User Account Dropdown",
     "account_btn_aria": "User Account Dropdown Toggle",
-    "logo_alt": "Application Logo"
+    "logo_alt": "Application Logo",
+    "nav_aria_label": "Application Sections"
   },
   "account": {
     "failures": {

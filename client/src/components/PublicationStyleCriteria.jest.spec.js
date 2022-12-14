@@ -93,6 +93,7 @@ describe("PublicationStyleCriteria", () => {
       .findComponent({ name: "QInput" })
       .setValue("Updated Criteria 1")
     await editItem.findComponent({ name: "QForm" }).trigger("submit")
+    await flushPromises()
     expect(updateCriteriaHandler).toHaveBeenCalledTimes(1)
     expect(updateCriteriaHandler).toHaveBeenCalledWith({
       description: "Description 1",
@@ -102,7 +103,6 @@ describe("PublicationStyleCriteria", () => {
       publication_id: "1",
     })
 
-    await flushPromises()
     expect(wrapper.findComponent({ name: "QForm" }).exists()).toBe(false)
   })
 
@@ -123,6 +123,8 @@ describe("PublicationStyleCriteria", () => {
       .findComponent({ name: "QInput" })
       .setValue("New Criteria 1")
     await addItemComponent.findComponent({ name: "QForm" }).trigger("submit")
+    await flushPromises()
+
     expect(createCriteriaHandler).toHaveBeenCalledTimes(1)
     expect(createCriteriaHandler).toHaveBeenCalledWith({
       description: "",
@@ -132,7 +134,6 @@ describe("PublicationStyleCriteria", () => {
       publication_id: "2",
     })
 
-    await flushPromises()
     expect(wrapper.findComponent({ name: "QForm" }).exists()).toBe(false)
   })
 

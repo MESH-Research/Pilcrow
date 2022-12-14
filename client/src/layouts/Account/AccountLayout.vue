@@ -16,7 +16,7 @@
             <collapse-menu :items="items" />
           </q-card-section>
           <q-card-section class="col-sm-12 col-xs-12 q-mt-md q-pa-none">
-            <q-list>
+            <q-list role="list">
               <q-item>
                 <q-item-section> Submissions Created </q-item-section>
                 <q-item-section avatar class="text-primary text-bold">

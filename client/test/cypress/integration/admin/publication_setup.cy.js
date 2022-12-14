@@ -1,7 +1,6 @@
 /// <reference types="Cypress" />
 /// <reference path="../../support/index.d.ts" />
 
-import "cypress-axe"
 import { a11yLogViolations } from '../../support/helpers'
 
 describe("Publication Setup", () => {

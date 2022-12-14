@@ -80,6 +80,7 @@ describe("ProfileMetadataForm", () => {
       expect(field).toBeTruthy()
       await field.setValue(testValue)
       await wrapper.findComponent({ name: "q-form" }).trigger("submit")
+      await flushPromises()
       expect(wrapper.emitted().submit).toBeDefined()
       expect(wrapper.emitted()?.save?.length).toBe(assertValid ? 1 : undefined)
     }
@@ -99,6 +100,7 @@ describe("ProfileMetadataForm", () => {
       expect(field).toBeTruthy()
       await field.setValue(testValue)
       await wrapper.findComponent({ name: "q-form" }).trigger("submit")
+      await flushPromises()
       expect(wrapper.emitted().submit).toBeDefined()
       expect(wrapper.emitted()?.save?.length).toBe(assertValid ? 1 : undefined)
     }

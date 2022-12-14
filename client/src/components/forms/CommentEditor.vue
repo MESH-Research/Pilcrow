@@ -353,6 +353,10 @@ const styleCriteria = ref(
     comment
   )
 )
+
+defineExpose({
+  hasStyleCriteria,
+})
 </script>
 <style>
 .comment-editor .ProseMirror {

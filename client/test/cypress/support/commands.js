@@ -188,3 +188,16 @@ Cypress.Commands.add("getVue", () => {
     cy.wrap($app.get(0).__vue__)
   })
 })
+//TODO: Remove this once the underlying issue is addressed in cypress or cypress axe.
+// We're just overriding the timeout.
+Cypress.Commands.overwrite("injectAxe", () => {
+    var fileName = typeof (require === null || require === void 0 ? void 0 : require.resolve) === 'function'
+        ? require.resolve('axe-core/axe.min.js')
+        : 'node_modules/axe-core/axe.min.js';
+    cy.readFile(fileName, { timeout: 20000}).then(function (source) {
+        return cy.window({ log: false }).then(function (window) {
+            window.eval(source);
+        });
+    });
+
+})

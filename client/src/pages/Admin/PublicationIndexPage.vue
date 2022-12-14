@@ -16,6 +16,7 @@
         separator
         data-cy="publications_list"
         class="full-width"
+        role="list"
       >
         <q-item v-for="publication in publications" :key="publication.id">
           <q-item-section class="q-pa-sm">
