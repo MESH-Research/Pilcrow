@@ -52,44 +52,48 @@ describe("submissions details page mount", () => {
   const submissionUsersData = {
     submitters: [
       {
+        __typename: "User",
         id: "1",
         name: "Jest Submitter 1",
         username: "jestSubmitter1",
         email: "jestsubmitter1@msu.edu",
+        staged: null,
       },
       {
+        __typename: "User",
         id: "5",
         name: "Jest Submitter 2",
         username: "jestSubmitter2",
         email: "jestsubmitter2@msu.edu",
+        staged: null,
       },
     ],
     reviewers: [
       {
+        __typename: "User",
         id: "2",
         name: "Jest Reviewer 1",
         username: "jestReviewer1",
         email: "jestreviewer1@msu.edu",
+        staged: null,
       },
       {
+        __typename: "User",
         id: "3",
-        name: "Jest Reviewer 2",
+        name: null,
         username: "jestReviewer2",
-        email: "jestreviewer2@msu.edu",
-      },
-      {
-        id: "4",
-        name: "Jest Reviewer 3 and Review Coordinator 1",
-        username: "jestReviewer3Coordinator1",
-        email: "jestreviewer3@msu.edu",
+        email: "jestReviewer2@msu.edu",
+        staged: true,
       },
     ],
     review_coordinators: [
       {
+        __typename: "User",
         id: "4",
-        name: "Jest Reviewer 3 and Review Coordinator 1",
-        username: "jestReviewer3Coordinator1",
-        email: "jestreviewer3@msu.edu",
+        name: "Review Coordinator 1",
+        username: "jestReviewCoordinator1",
+        email: "jestcoordinator1@msu.edu",
+        staged: null,
       },
     ],
   }
@@ -106,6 +110,7 @@ describe("submissions details page mount", () => {
       data: {
         submission: {
           id: 1,
+          effective_role: "review_coordinator",
           status: 0,
           __typename: "Submission",
           title: "This Submission",
@@ -141,7 +146,7 @@ describe("submissions details page mount", () => {
     const wrapper = await makeWrapper()
 
     const list = wrapper.find("[data-cy=reviewers_list]")
-    expect(list.findAll(".q-item")).toHaveLength(3)
+    expect(list.findAll(".q-item")).toHaveLength(2)
   })
 
   test("all assigned review coordinators appear within the assigned review coordinators list", async () => {
@@ -149,5 +154,12 @@ describe("submissions details page mount", () => {
     const wrapper = await makeWrapper()
     const list = wrapper.find('[data-cy="coordinators_list"]')
     expect(list.findAll(".q-item")).toHaveLength(1)
+  })
+
+  test("staged reviewers are visually indicated to be staged", async () => {
+    defaultApolloMock()
+    const wrapper = await makeWrapper()
+    const list = wrapper.find('[data-cy="reviewers_list"]')
+    expect(list.findAll('[data-cy="user_unconfirmed"]')).toHaveLength(1)
   })
 })

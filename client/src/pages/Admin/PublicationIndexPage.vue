@@ -1,8 +1,8 @@
 <template>
   <div>
-    <h2 class="q-pl-lg">Publication Administration</h2>
+    <h2 class="q-pl-lg">{{ $t("publication.admin_header") }}</h2>
     <q-expansion-item
-      label="Create New Publication"
+      :label="$t('publication.create_button')"
       switch-toggle-side
       header-class="light-grey"
       data-cy="create_pub_button"
@@ -16,6 +16,7 @@
         separator
         data-cy="publications_list"
         class="full-width"
+        role="list"
       >
         <q-item v-for="publication in publications" :key="publication.id">
           <q-item-section class="q-pa-sm">
@@ -32,15 +33,17 @@
                   name: 'publication:home',
                   params: { id: publication.id },
                 }"
-                aria-label="View Publication Page"
+                :aria-label="$t('publication.view_button_aria')"
               >
-                <q-tooltip :delay="500">View Publication</q-tooltip>
+                <q-tooltip :delay="500">
+                  {{ $t("publication.view_button") }}
+                </q-tooltip>
               </q-btn>
 
               <q-btn-dropdown
                 auto-close
                 class="dark-grey"
-                aria-label="Configure Publication"
+                :aria-label="$t('publication.configure')"
               >
                 <q-list>
                   <q-item :to="destRoute(publication.id, 'basic')">
@@ -78,7 +81,9 @@
                 </q-list>
                 <template #label>
                   <q-icon name="settings" />
-                  <q-tooltip :delay="500">Configure Publication</q-tooltip>
+                  <q-tooltip :delay="500">{{
+                    $t("publication.configure")
+                  }}</q-tooltip>
                 </template>
               </q-btn-dropdown>
             </q-btn-group>
@@ -93,7 +98,7 @@
         v-on="listeners"
       />
       <div v-else data-cy="no_publications_message">
-        No Publications Created
+        {{ $t("publications.empty") }}
       </div>
     </section>
   </div>

@@ -10,11 +10,10 @@
     <q-badge
       v-if="hasUnreadNotifications"
       ref="notification_indicator"
-      class="notification_indicator"
+      class="notification_indicator active"
       data-cy="notification_indicator"
       role="presentation"
       floating
-      color="light-blue-3"
       rounded
     />
 

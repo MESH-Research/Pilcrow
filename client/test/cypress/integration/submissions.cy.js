@@ -1,7 +1,6 @@
 /// <reference types="Cypress" />
 /// <reference path="../support/index.d.ts" />
 
-import "cypress-axe"
 import { a11yLogViolations } from '../support/helpers'
 import "cypress-file-upload"
 
@@ -180,6 +179,20 @@ describe("Submissions Page", () => {
     cy.dataCy("review").click()
     cy.url().should("include", "/submission/review")
     cy.dataCy("submussion_title")
+  })
+
+  it("should allow the submission in draft status be visible to the submitter", () => {
+    cy.task("resetDb")
+    cy.login({ email: "regularuser@ccrproject.dev" })
+    cy.visit("submissions")
+    cy.dataCy("submission_actions").eq(4).should('exist')
+  })
+
+  it("should remove the submission in draft status for users who are not associated with the submission", () => {
+    cy.task("resetDb")
+    cy.login({ email: "applicationadministrator@ccrproject.dev" })
+    cy.visit("submissions")
+    cy.dataCy("submission_actions").eq(4).should('not.exist')
   })
 
   it("should allow an application administrator to open and close a review", () => {

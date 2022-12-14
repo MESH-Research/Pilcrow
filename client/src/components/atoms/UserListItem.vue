@@ -1,5 +1,5 @@
 <template>
-  <q-item class="q-px-none">
+  <q-item class="q-px-none" role="listitem">
     <q-item-section top avatar>
       <avatar-image :user="user" rounded />
     </q-item-section>
@@ -17,13 +17,14 @@
     <q-item-section v-if="actions.length" side>
       <div class="text-grey-8 q-gutter-xs">
         <q-btn
+          v-if="user.staged"
           class="gt-xs"
           size="12px"
-          color="negative"
+          color="secondary"
           flat
           dense
-          :title="$t('user.unconfirmed.title')"
-          icon="warning_amber"
+          :title="$t('user.unconfirmed')"
+          icon="schedule"
           data-cy="user_unconfirmed"
           @click="unconfirmedVisibility = !unconfirmedVisibility"
         >
@@ -32,7 +33,7 @@
             anchor="top middle"
             self="center middle"
             class="text-subtitle2"
-            >{{ $t("user.unconfirmed.tooltip") }}</q-tooltip
+            >{{ $t("user.unconfirmed") }}</q-tooltip
           >
         </q-btn>
         <q-btn

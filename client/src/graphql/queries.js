@@ -46,6 +46,12 @@ export const CURRENT_USER_NOTIFICATIONS = gql`
             submission {
               title
             }
+            invitee {
+              display_label
+            }
+            inviter {
+              display_label
+            }
             publication {
               name
             }
@@ -240,6 +246,7 @@ export const GET_SUBMISSION_REVIEW = gql`
         to
         ...commentFields
         style_criteria {
+          id
           name
           icon
         }

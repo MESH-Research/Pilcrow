@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2 class="q-px-lg">Publications</h2>
+    <h2 class="q-px-lg">{{ $t("publication.entity", { count: 2 }) }}</h2>
     <section class="q-px-lg">
       <div v-if="!loading" class="column q-gutter-md items-center">
         <q-list
@@ -56,6 +56,5 @@ function strip(html) {
   const text = doc.body.textContent || ""
   return text.length < 200 ? text : text.substring(0, 200) + "..."
 }
-//TODO: Needs translation
 //TODO: Replace caption snippet with its own description field
 </script>

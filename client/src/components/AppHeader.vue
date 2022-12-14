@@ -1,12 +1,18 @@
 <template>
   <input id="locale-switch" v-model="locale" type="hidden" />
   <q-header class="header" @keypress="toggleLocale">
+    <app-banner />
     <q-toolbar class="header-toolbar">
-      <div class="q-pa-sm">
-        <h1 class="q-ma-none text-h4 site-title">
-          Collaborative Community Review
-        </h1>
-        <small class="site-subtitle">Submission Review System</small>
+      <div class="q-pa-sm row q-gutter-md items-center">
+        <q-img
+          :alt="$t('header.logo_alt')"
+          src="logo-100x100.png"
+          style="width: 50px; height: 50px"
+        />
+        <div class="column">
+          <h1 class="q-ma-none text-h4 site-title">Pilcrow</h1>
+          <small class="site-subtitle">Submission Review System</small>
+        </div>
       </div>
       <q-space />
 
@@ -16,11 +22,15 @@
           stretch
           flat
           data-cy="dropdown_username"
-          :label="currentUser.username"
+          :aria-label="$t('header.account_btn_aria')"
         >
+          <template #label>
+            <q-icon name="account_circle" class="lt-md" />
+            <span class="gt-sm">{{ currentUser.username }}</span>
+          </template>
           <q-list
             role="navigation"
-            aria-label="Dropdown Navigation"
+            :aria-label="$t('header.account_dropdown_aria')"
             data-cy="headerUserMenu"
           >
             <q-item clickable data-cy="link_my_account" to="/account/profile">
@@ -35,9 +45,9 @@
               <q-separator />
               <q-item dense>
                 <q-item-section>
-                  <q-item-label class="text-bold"
-                    >Application Administration</q-item-label
-                  >
+                  <q-item-label class="text-bold">
+                    {{ $t("header.application_administration") }}
+                  </q-item-label>
                 </q-item-section>
               </q-item>
               <q-item to="/admin/users">
@@ -76,8 +86,12 @@
       </template>
     </q-toolbar>
     <div class="header-nav">
-      <q-list class="row">
-        <q-item v-if="currentUser" to="/dashboard">
+      <q-list
+        class="row"
+        role="navigation"
+        :aria-label="$t('header.nav_aria_label')"
+      >
+        <q-item v-if="currentUser" role="link" to="/dashboard">
           <q-item-section side>
             <q-icon name="dashboard" />
           </q-item-section>
@@ -85,7 +99,7 @@
             {{ $t("header.dashboard") }}
           </q-item-section>
         </q-item>
-        <q-item to="/publications">
+        <q-item to="/publications" role="link">
           <q-item-section side>
             <q-icon name="collections_bookmark" />
           </q-item-section>
@@ -93,7 +107,7 @@
             {{ $t("header.publications") }}
           </q-item-section>
         </q-item>
-        <q-item data-cy="submissions_link" to="/submissions">
+        <q-item data-cy="submissions_link" to="/submissions" role="link">
           <q-item-section side>
             <q-icon name="content_copy" />
           </q-item-section>
@@ -108,10 +122,12 @@
 
 <script setup>
 import NotificationPopup from "src/components/molecules/NotificationPopup.vue"
+import AppBanner from "./AppBanner.vue"
 import { useCurrentUser } from "src/use/user"
 import { useI18n } from "vue-i18n"
 import { useMagicKeys } from "@vueuse/core"
 import { watchEffect } from "vue"
+
 defineProps({
   //Drawer status
   modelValue: {

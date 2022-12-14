@@ -3,6 +3,7 @@ A user account
 """
 type User {
     id: ID!
+    display_label: String
     name: String
     email: String!
     username: String!
@@ -14,4 +15,5 @@ type User {
     profile_metadata: ProfileMetadata
     submissions: [Submission]! @belongsToMany
     pivot: SubmissionUser
+    staged: Boolean
 }

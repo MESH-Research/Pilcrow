@@ -7,33 +7,47 @@
       label="Font"
       style="min-width: 150px"
     />
-    <div class="q-ml-md">
-      <q-btn
-        aria-label="Decrease Font Size"
-        round
-        flat
-        icon="remove_circle"
-        color="white"
-        text-color="grey-7"
-      />
-      <q-btn
-        aria-label="Increase Font Size"
-        round
-        flat
-        icon="add_circle"
-        color="white"
-        text-color="grey-7"
-      />
-      <q-btn
-        size="sm"
-        class="q-ml-md"
-        aria-label="Toggle Dark Mode"
-        round
-        :icon="darkMode ? `dark_mode` : `light_mode`"
-        color="white"
-        text-color="grey-7"
-        @click="toggleDarkMode()"
-      />
+    <div class="q-ml-md row items-center">
+      <div>
+        <q-btn
+          aria-label="Decrease Font Size"
+          data-cy="decrease_font"
+          round
+          flat
+          icon="remove_circle"
+          color="white"
+          :disable="fontSize === 1"
+          text-color="grey-7"
+          @click="decreaseFontSize()"
+        />
+        <q-tooltip>Decrease Font Size</q-tooltip>
+      </div>
+      <div>
+        <q-btn
+          aria-label="Increase Font Size"
+          data-cy="increase_font"
+          round
+          flat
+          icon="add_circle"
+          color="white"
+          text-color="grey-7"
+          @click="increaseFontSize()"
+        />
+        <q-tooltip>Increase Font Size</q-tooltip>
+      </div>
+      <div>
+        <q-btn
+          size="sm"
+          class="q-ml-md"
+          aria-label="Toggle Dark Mode"
+          round
+          :icon="darkMode ? `dark_mode` : `light_mode`"
+          color="white"
+          text-color="grey-7"
+          @click="toggleDarkMode()"
+        />
+        <q-tooltip>Toggle Dark Mode</q-tooltip>
+      </div>
     </div>
   </div>
   <article class="col-sm-9 submission-content">
@@ -69,7 +83,14 @@
       </q-btn>
     </bubble-menu>
     <div data-cy="highlight-click-handler" @click="highlightClickHandler">
-      <editor-content :editor="editor" />
+      <editor-content
+        :editor="editor"
+        data-cy="submission-content"
+        :style="{
+          'font-size': fontSize + 'rem',
+          'font-family': selectedFont.value,
+        }"
+      />
     </div>
   </article>
 </template>
@@ -102,8 +123,34 @@ let darkMode = ref(true)
 function toggleDarkMode() {
   darkMode.value = !darkMode.value
 }
-const fonts = ["Sans-serif", "Serif"]
+const fonts = [
+  {
+    label: "Sans-serif",
+    value: "Atkinson, Sans-serif",
+  },
+  {
+    label: "Serif",
+    value: "Georgia, Serif",
+  },
+]
 let selectedFont = ref("Sans-serif")
+let fontSize = ref(1)
+
+let headingSizes = ref([2.125, 1.5, 1.25, 1, 0.75, 0.5])
+
+function increaseFontSize() {
+  fontSize.value += 0.05
+  for (let index in headingSizes.value) {
+    headingSizes.value[index] += 0.05
+  }
+}
+
+function decreaseFontSize() {
+  fontSize.value -= 0.05
+  for (let index in headingSizes.value) {
+    headingSizes.value[index] -= 0.05
+  }
+}
 
 const findCommentFromId = (id) =>
   submission.value.inline_comments.find((c) => c.id === id)
@@ -241,4 +288,25 @@ function highlightClickHandler(event) {
   color: #000;
   background-color: #bbe2e8;
 }
+
+.submission-content h1 {
+  font-size: (v-bind('headingSizes[0] + "rem"'));
+}
+.submission-content h2 {
+  font-size: (v-bind('headingSizes[1] + "rem"'));
+}
+.submission-content h3 {
+  font-size: (v-bind('headingSizes[2] + "rem"'));
+}
+.submission-content h4 {
+  font-size: (v-bind('headingSizes[3] + "rem"'));
+}
+.submission-content h5 {
+  font-size: (v-bind('headingSizes[4] + "rem"'));
+}
+.submission-content h6 {
+  font-size: (v-bind('headingSizes[5] + "rem"'));
+}
+
+// :style="`font-size:${fontSize}rem; font-family: ${selectedFont}`"
 </style>

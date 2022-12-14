@@ -27,6 +27,8 @@ type NotificationData {
     body: String
     action: String
     url: String
+    invitee: User
+    inviter: User
     submission: Submission
     publication: Publication
 }

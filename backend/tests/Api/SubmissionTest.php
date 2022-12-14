@@ -271,7 +271,7 @@ class SubmissionTest extends ApiTestCase
      */
     public function testFileUpload()
     {
-        $publication = Publication::factory()->create();
+        $publication = Publication::factory()->create(['is_accepting_submissions' => true]);
         /**
          * @var User
          */
@@ -317,6 +317,59 @@ class SubmissionTest extends ApiTestCase
 
         $response
             ->assertJsonPath('data.createSubmission.title', 'Test Submission');
+    }
+
+    /**
+     * @return void
+     */
+    public function testSubmissionRejection()
+    {
+        $publication = Publication::factory()->create(['is_accepting_submissions' => false]);
+        /**
+         * @var User
+         */
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        $operations = [
+            'operationName' => 'CreateSubmission',
+            'query' => '
+                mutation CreateSubmission (
+                    $title: String!
+                    $publication_id: ID!
+                    $file_upload: [Upload!]
+                    $user_id: ID!
+                ) {
+                    createSubmission(
+                        input: {
+                            title: $title,
+                            publication_id: $publication_id,
+                            submitters: { connect: [$user_id] },
+                            files: { create: $file_upload }
+                        }
+                    ) {
+                        title
+                    }
+                }
+            ',
+            'variables' => [
+                'title' => '    Test Submission    ',
+                'publication_id' => $publication->id,
+                'user_id' => $user->id,
+                'file_upload' => null,
+            ],
+        ];
+        $map = [
+            '0' => ['variables.file_upload'],
+        ];
+        $file = [
+            '0' => UploadedFile::fake()->create('test.txt', 500),
+        ];
+
+        $response = $this->multipartGraphQL($operations, $map, $file);
+
+        $response
+            ->assertJsonPath('errors.0.extensions.category', 'authorization');
     }
 
     protected function executeSubmissionRoleAssignment(string $role, Submission $submission, User $user)
@@ -569,7 +622,7 @@ class SubmissionTest extends ApiTestCase
         $user = User::factory()->create();
         $this->actingAs($user);
 
-        $publication = Publication::factory()->create();
+        $publication = Publication::factory()->create(['is_accepting_submissions' => true]);
 
         $operations = [
             'operationName' => 'CreateSubmission',

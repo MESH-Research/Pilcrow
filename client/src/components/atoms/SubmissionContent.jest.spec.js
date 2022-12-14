@@ -101,6 +101,7 @@ describe("SubmissionContent", () => {
           provide: {
             submission,
             activeComment,
+            commentDrawerOpen: true,
           },
         },
       }),
@@ -122,5 +123,17 @@ describe("SubmissionContent", () => {
     expect(wrapper.vm.annotations.length).toBe(0)
     await wrapper.setProps({ highlightVisibility: true })
     expect(wrapper.vm.annotations.length).toBe(3)
+  })
+
+  test("font size of submission content can be changed", async () => {
+    const { wrapper } = makeTestArticle()
+    expect(wrapper.vm.fontSize).toBe(1)
+    await wrapper.find("[data-cy=increase_font]").trigger("click")
+    expect(wrapper.vm.fontSize).toBe(1.05)
+    await wrapper.find("[data-cy=decrease_font]").trigger("click")
+    expect(wrapper.vm.fontSize).toBe(1)
+    expect(wrapper.find("[data-cy=decrease_font]").classes("disabled")).toBe(
+      true
+    )
   })
 })

@@ -78,6 +78,9 @@ describe("CommentEditor", () => {
         },
         props: {
           commentType: "InlineComment",
+          comment: {
+            style_criteria: [],
+          },
         },
       }),
     }

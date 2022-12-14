@@ -1,9 +1,19 @@
 // app global css in Sass form
+@font-face
+  font-family: "Atkinson"
+  src: url(./fonts/Atkinson_Hyperlegible/AtkinsonHyperlegible-Regular.ttf)
+
+html
+    font-family: "Atkinson"
+
 .text--grey
     color: $dark-grey
 
 .accent
     background: $accent
+
+.active
+    background: $active
 
 .alert
     background-color: #eee
@@ -54,6 +64,9 @@ fieldset
 .highlight
     background: $highlight
 
+.blu-highlight
+    background: $blu-highlight
+
 .q-tab__label
     font-weight: 400
 
@@ -84,7 +97,7 @@ fieldset
     span
         font-weight: bold
     &.unread
-        background: $active
+        background: $blu-highlight
 a[target="_blank"]::after
     font-family: 'Material Icons'
     content: "open_in_new"

@@ -2,7 +2,7 @@
   <div>
     <div class="row justify-center items-start content-start q-pa-md">
       <q-card class="col-sm-3 col-xs-12 no-shadow no-border-radius">
-        <div class="row">
+        <div v-if="currentUser" class="row">
           <q-card-section
             class="col-sm-12 col-xs-12 flex flex-center avatar-profile-block q-mt-none"
           >
@@ -16,7 +16,7 @@
             <collapse-menu :items="items" />
           </q-card-section>
           <q-card-section class="col-sm-12 col-xs-12 q-mt-md q-pa-none">
-            <q-list>
+            <q-list role="list">
               <q-item>
                 <q-item-section> Submissions Created </q-item-section>
                 <q-item-section avatar class="text-primary text-bold">

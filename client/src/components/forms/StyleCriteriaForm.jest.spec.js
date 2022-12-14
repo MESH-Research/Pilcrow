@@ -58,18 +58,21 @@ describe("StyleCriteriaForm", () => {
 
     //Name required
     await form.trigger("submit")
+    await flushPromises()
     expect(nameInput.classes("q-field--error")).toBe(true)
     expect(nameInput.text()).toContain("errors.required")
 
     //Name shorter than 20 chars
     await nameInput.findComponent({ name: "QInput" }).setValue("a".repeat(30))
     await form.trigger("submit")
+    await flushPromises()
     expect(nameInput.classes("q-field--error")).toBe(true)
     expect(nameInput.text()).toContain("errors.maxLength")
 
     //No more errors
     await nameInput.findComponent({ name: "QInput" }).setValue("Test Name")
     await form.trigger("submit")
+    await flushPromises()
     expect(nameInput.classes("q-field--error")).toBe(false)
     expect(nameInput.text()).not.toContain("errors")
 
@@ -96,6 +99,7 @@ describe("StyleCriteriaForm", () => {
     //No more errors
     await descriptionInput.setValue("Some simple description")
     await form.trigger("submit")
+    await flushPromises()
     expect(descriptionInput.classes("error")).toBe(false)
 
     //Save event emitted with correct data
@@ -120,7 +124,7 @@ describe("StyleCriteriaForm", () => {
     await descriptionInput.setValue("Test Description")
 
     await form.trigger("submit")
-
+    await flushPromises()
     expect(wrapper.emitted("save")[0]).toEqual([
       {
         id: "1",
@@ -150,7 +154,7 @@ describe("StyleCriteriaForm", () => {
     okCallback("new-icon")
     await flushPromises()
     await wrapper.findComponent({ name: "QForm" }).trigger("submit")
-
+    await flushPromises()
     expect(wrapper.emitted("save")[0]).toEqual([
       {
         id: "1",
