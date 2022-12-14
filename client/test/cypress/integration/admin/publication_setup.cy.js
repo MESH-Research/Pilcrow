@@ -135,7 +135,7 @@ describe("Publication Setup", () => {
       cy.dataCy("button_save").click()
 
       //Wait for the form to go away
-      cy.get('form[data-cy="listItem"]:first').should('not.exist')
+      cy.get('form[.data-cy="listItem"]:first').should('not.exist')
       cy.dataCy("listItem").first().contains("Accessibility Update")
       cy.dataCy("listItem").first().contains("Updated description")
       cy.dataCy("listItem").first().contains(newIconName)
@@ -179,15 +179,23 @@ describe("Publication Setup", () => {
     cy.dataCy('listItem').should('have.length', 3)
   });
 
-  it("should allow editing basic settings", () => {
+  it.only("should allow editing basic settings", () => {
     cy.login({ email: "applicationadministrator@ccrproject.dev" })
     cy.visit("publication/1/setup/basic")
 
     cy.dataCy('name_field').type(" Update")
     cy.dataCy('visibility_field').find('button:last').click()
-    cy.dataCy('allow_submissions_field').find('button:first').click()
+    cy.dataCy('allow_submissions_field').find('button:last').should('have.attr', 'aria-pressed', 'false')
+    cy.dataCy('allow_submissions_field').find('button:first').should('have.attr', 'aria-pressed', 'true')
+    cy.dataCy('allow_submissions_field').find('button:last').click()
+    cy.dataCy('allow_submissions_field').find('button:last').should('have.attr', 'aria-pressed', 'true')
+    cy.dataCy('allow_submissions_field').find('button:first').should('have.attr', 'aria-pressed', 'false')
     cy.dataCy('button_save').click()
     cy.dataCy('button_saved').contains('Saved')
+    // verify the 2nd publication has is closed for submissions by default
+    cy.visit("publication/1/setup/basic")
+    cy.dataCy('allow_submissions_field').find('button:last').should('have.attr', 'aria-pressed', 'true')
+    cy.dataCy('allow_submissions_field').find('button:first').should('have.attr', 'aria-pressed', 'false')
     cy.injectAxe()
     cy.checkA11y(
       null,
