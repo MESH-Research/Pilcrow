@@ -86,8 +86,12 @@
       </template>
     </q-toolbar>
     <div class="header-nav">
-      <q-list class="row">
-        <q-item v-if="currentUser" to="/dashboard">
+      <q-list
+        class="row"
+        role="navigation"
+        :aria-label="$t('header.nav_aria_label')"
+      >
+        <q-item v-if="currentUser" role="link" to="/dashboard">
           <q-item-section side>
             <q-icon name="dashboard" />
           </q-item-section>
@@ -95,7 +99,7 @@
             {{ $t("header.dashboard") }}
           </q-item-section>
         </q-item>
-        <q-item to="/publications">
+        <q-item to="/publications" role="link">
           <q-item-section side>
             <q-icon name="collections_bookmark" />
           </q-item-section>
@@ -103,7 +107,7 @@
             {{ $t("header.publications") }}
           </q-item-section>
         </q-item>
-        <q-item data-cy="submissions_link" to="/submissions">
+        <q-item data-cy="submissions_link" to="/submissions" role="link">
           <q-item-section side>
             <q-icon name="content_copy" />
           </q-item-section>
