@@ -1,5 +1,5 @@
 <template>
-  <q-list separator :data-cy="dataCy">
+  <q-list :data-cy="dataCy" role="list">
     <user-list-item
       v-for="user in users"
       :key="user.id"
@@ -7,7 +7,6 @@
       :actions="actions"
       @action-click="bubble"
     />
-    <q-separator v-if="persistentSeparator" />
   </q-list>
 </template>
 
@@ -17,10 +16,6 @@ defineProps({
   users: {
     type: Array,
     required: true,
-  },
-  persistentSeparator: {
-    type: Boolean,
-    default: false,
   },
   actions: {
     type: Array,

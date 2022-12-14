@@ -1,7 +1,7 @@
 <template>
   <q-form @submit="onSave">
     <q-separator />
-    <q-item class="q-px-md q-py-lg">
+    <q-item class="q-px-md q-py-lg" role="">
       <q-item-section avatar top class="column content-center justify-start">
         <q-btn
           ref="icon-button"

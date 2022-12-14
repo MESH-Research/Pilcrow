@@ -1,7 +1,12 @@
 <template>
   <div>
-    <q-list bordered class="gt-xs">
-      <q-item v-for="(item, index) in items" :key="index" :to="item.url">
+    <q-list role="menubar" bordered class="gt-xs">
+      <q-item
+        v-for="(item, index) in items"
+        :key="index"
+        role="menuitem"
+        :to="item.url"
+      >
         <q-item-section v-if="item.icon" avatar
           ><q-icon :name="item.icon"
         /></q-item-section>

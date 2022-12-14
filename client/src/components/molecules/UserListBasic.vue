@@ -1,5 +1,5 @@
 <template>
-  <q-list bordered separator :data-cy="dataCy">
+  <q-list bordered :data-cy="dataCy" role="list">
     <user-list-basic-item
       v-for="(user, index) in users"
       :key="user.id"

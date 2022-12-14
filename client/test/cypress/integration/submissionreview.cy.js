@@ -1,7 +1,6 @@
 /// <reference types="Cypress" />
 /// <reference path="../support/index.d.ts" />
 
-import "cypress-axe"
 import { a11yLogViolations } from '../support/helpers'
 
 describe("Submissions Review", () => {
@@ -277,7 +276,12 @@ describe("Submissions Review", () => {
     cy.wait("@CreateOverallComment")
 
     // click on modifyComment
-    cy.dataCy("overallComment").last().find("[data-cy=commentActions]").click()
+    cy.dataCy("overallComment")
+      .should('have.length', 4)
+      .last()
+      .find("[data-cy=commentActions]")
+      .click()
+
     cy.dataCy("modifyComment").click()
 
     // modify, submit
