@@ -15,7 +15,7 @@
 
     <div v-if="!users.length" class="col">
       <q-card ref="card_no_users" flat>
-        <q-item class="text--grey q-pa-none">
+        <q-item class="text--grey q-pa-none" role="">
           {{ tp$("none") }}
         </q-item>
       </q-card>
@@ -45,7 +45,6 @@
       <user-list
         ref="userList"
         data-cy="user-list"
-        :persistent-separator="relationship === 'reviewers'"
         :users="users"
         :actions="
           mutable

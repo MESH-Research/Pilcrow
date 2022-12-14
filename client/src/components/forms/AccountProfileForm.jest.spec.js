@@ -3,6 +3,7 @@ import { mount } from "@vue/test-utils"
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-jest"
 import { ref as mockRef } from "vue"
 import { useFormState } from "src/use/forms"
+import flushPromises from "flush-promises"
 
 jest.mock("src/use/forms", () => ({
   ...jest.requireActual("src/use/forms"),
@@ -54,6 +55,7 @@ describe("AccountProfileForm", () => {
       .setValue("testemail@example.com")
 
     await wrapper.findComponent({ name: "q-form" }).trigger("submit")
+    await flushPromises()
     expect(wrapper.emitted("save")).toHaveLength(1)
   })
 })

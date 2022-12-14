@@ -1,5 +1,5 @@
 <template>
-  <q-item class="q-py-sm q-px-none">
+  <q-item class="q-py-sm q-px-none" role="">
     <q-item-section top avatar style="min-width: auto">
       <q-icon color="secondary" size="md" :name="criteria.icon" />
     </q-item-section>
