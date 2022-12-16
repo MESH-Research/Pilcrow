@@ -79,9 +79,10 @@
   </article>
 </template>
 <script setup>
-import { ref, inject, computed } from "vue"
+import { ref, inject, computed, watch } from "vue"
 import { Editor, EditorContent, BubbleMenu } from "@tiptap/vue-3"
 import Highlight from "@tiptap/extension-highlight"
+import { useQuasar } from "quasar"
 
 import StarterKit from "@tiptap/starter-kit"
 import AnnotationExtension from "src/tiptap/annotation-extension"
@@ -100,8 +101,18 @@ const activeComment = inject("activeComment")
 const contentRef = ref(null)
 
 let darkMode = ref(true)
+
+const $q = useQuasar()
+
+watch(
+  () => $q.dark.isActive,
+  (val) => {
+    console.log(val ? "On dark mode" : "On light mode")
+  }
+)
 function toggleDarkMode() {
   darkMode.value = !darkMode.value
+  $q.dark.toggle()
 }
 const fonts = [
   {
