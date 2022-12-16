@@ -29,15 +29,15 @@ extend type Mutation {
         )
 
     "Verify access to an invitation to a submission as the assigned role"
-    verifySubmissionInvite(uuid: String! token: String! expires: String!): Submission
+    verifySubmissionInvite(uuid: String! token: String! expires: String!): User
         @field(
-            resolver: "App\\GraphQL\\Mutations\\AcceptSubmissionInvite@acceptInvite"
+            resolver: "App\\GraphQL\\Mutations\\VerifySubmissionInvite@verify"
         )
 
     "Accept an invitation to a submission as the assigned role"
-    acceptSubmissionInvite(uuid: String! token: String! expires: String!): Submission
+    acceptSubmissionInvite(uuid: String! token: String! expires: String! user: AcceptSubmissionInviteInput @spread): User
         @field(
-            resolver: "App\\GraphQL\\Mutations\\AcceptSubmissionInvite@acceptInvite"
+            resolver: "App\\GraphQL\\Mutations\\AcceptSubmissionInvite@accept"
         )
 
     """
@@ -138,6 +138,12 @@ input CreateSubmissionInput @validator(class: "SubmissionInputValidator") {
     publication_id: ID!
     submitters: CreateSubmissionUserInput
     files: CreateSubmissionFilesHasMany @createSubmissionFiles
+}
+
+input AcceptSubmissionInviteInput {
+    name: String
+    username: String!
+    password: String!
 }
 
 input UpdateSubmissionInput {

@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 class SubmissionInvitation extends Model
@@ -64,7 +65,7 @@ class SubmissionInvitation extends Model
      */
     public function getInvitationAcceptanceUrl(): string
     {
-        $expires = (string)Carbon::now()->addMinutes(config('auth.verification.expire', 60))->timestamp;
+        $expires = (string)Carbon::now()->addHours(config('auth.verification.expire', 60))->timestamp;
         $hash = $this->makeToken($expires);
 
         return url("accept-invite/{$this->uuid}/{$expires}/{$hash}");
@@ -90,6 +91,16 @@ class SubmissionInvitation extends Model
     public function submission(): BelongsTo
     {
         return $this->belongsTo(Submission::class, 'submission_id');
+    }
+
+    /**
+     * The user that the invitation is for
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function invitee(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'email', 'email');
     }
 
     /**
@@ -183,23 +194,37 @@ class SubmissionInvitation extends Model
     }
 
     /**
-     * Set the submission invitation as accepted and unstage the invited user
+     * Update the user details of the invitee and set them as unstaged
      *
-     * @return \App\Models\Submission
+     * @return void
      */
-    public function acceptInvite(): Submission
+    private function updateInviteeDetails($details)
+    {
+        $this->invitee->name = $details['name'];
+        $this->invitee->username = $details['username'];
+        $this->invitee->password = Hash::make($details['password']);
+        $this->invitee->staged = null;
+        $this->invitee->save();
+    }
+
+     /**
+      * Set the submission invitation as accepted and update the invitee's details
+      *
+      * @param array $details
+      * @return \App\Models\User
+      */
+    public function acceptInvite(array $details): User
     {
         if ($this->accepted_at != null) {
             return $this->submission;
         }
-        $user = User::where('email', $this->email)->firstOrFail();
         $this->updated_by = Auth::user()
             ? Auth::user()->id
-            : $user->id;
+            : $this->invitee->id;
         $this->accepted_at = Carbon::now()->toDateTimeString();
         $this->save();
-        $user->staged = null;
-        $user->save();
+
+        $this->updateInviteeDetails($details);
 
         if ((string)$this->role_id === Role::REVIEWER_ROLE_ID) {
             ReviewerInvitationAccepted::dispatch($this);
@@ -208,6 +233,6 @@ class SubmissionInvitation extends Model
             ReviewCoordinatorInvitationAccepted::dispatch($this);
         }
 
-        return $this->submission;
+        return $this->invitee;
     }
 }

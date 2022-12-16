@@ -7,7 +7,7 @@
       </div>
       <div v-if="status == 'success'" class="column flex-center">
         <q-form style="width: 400px">
-          <h1>Your Details</h1>
+          <h1>{{ $t("submissions.accept_invite.update_details.title") }}</h1>
           <q-input
             ref="nameInput"
             outlined
@@ -46,27 +46,31 @@
             data-cy="password_field"
           />
         </q-form>
+      </div>
+      <div v-if="status == 'update_success'" class="column flex-center">
         <q-icon color="positive" name="check_circle" size="2em" />
         <strong class="text-h3">{{
-          $t("submissions.accept_invite.success.title")
+          $t("submissions.accept_invite.update_details.success.title")
         }}</strong>
-        <p>{{ $t("submissions.accept_invite.success.message") }}</p>
+        <p>
+          {{ $t("submissions.accept_invite.update_details.success.message") }}
+        </p>
         <q-btn
           class="q-mr-sm"
           color="accent"
           size="md"
           :label="$t('auth.login')"
-          :to="{
-            name: 'login',
-          }"
+          to="/login"
         />
       </div>
-      <div v-if="status == 'error'" class="column flex-center">
+      <div v-if="status == 'update_error'" class="column flex-center">
         <q-icon color="negative" name="error" size="2em" />
         <strong class="text-h3">{{
-          $t("submissions.accept_invite.failure.title")
+          $t("submissions.accept_invite.update_details.failure.title")
         }}</strong>
-        <p>{{ $t("submissions.accept_invite.failure.message") }}</p>
+        <p>
+          {{ $t("submissions.accept_invite.update_details.failure.message") }}
+        </p>
       </div>
     </section>
   </q-page>
@@ -74,7 +78,7 @@
 
 <script setup>
 import NewPasswordInput from "../components/forms/NewPasswordInput.vue"
-import { ACCEPT_SUBMISSION_INVITE } from "src/graphql/mutations"
+import { VERIFY_SUBMISSION_INVITE } from "src/graphql/mutations"
 import { ref, onMounted } from "vue"
 import { useMutation } from "@vue/apollo-composable"
 import { useRoute } from "vue-router"
@@ -84,7 +88,7 @@ const { $v } = useUserValidation()
 const status = ref("loading")
 const submission_id = ref(null)
 
-const { mutate: invite } = useMutation(ACCEPT_SUBMISSION_INVITE)
+const { mutate: invite } = useMutation(VERIFY_SUBMISSION_INVITE)
 const { params } = useRoute()
 
 onMounted(async () => {
@@ -92,7 +96,7 @@ onMounted(async () => {
 
   try {
     const result = await invite({ uuid, expires, token })
-    submission_id.value = result.data.acceptSubmissionInvite.id
+    submission_id.value = result.data.verifySubmissionInvite.id
     status.value = "success"
   } catch (error) {
     status.value = "error"
