@@ -5,8 +5,8 @@
         <q-spinner color="primary" size="2em" />
         <strong class="text-h3">{{ $t("loading") }}</strong>
       </div>
-      <div v-if="status == 'success'" class="column flex-center">
-        <q-form style="width: 400px">
+      <div v-if="status == 'verified'" class="column flex-center">
+        <q-form style="width: 400px" @submit="handleSubmit">
           <h1>{{ $t("submissions.accept_invite.update_details.title") }}</h1>
           <q-input
             ref="nameInput"
@@ -45,9 +45,21 @@
             :complexity="$v.password.notComplex.$response.complexity"
             data-cy="password_field"
           />
+          <q-card-actions class="q-py-lg">
+            <q-btn
+              unelevated
+              size="lg"
+              color="accent"
+              class="full-width text-white"
+              :label="
+                $t('submissions.accept_invite.update_details.update_action')
+              "
+              type="submit"
+            />
+          </q-card-actions>
         </q-form>
       </div>
-      <div v-if="status == 'update_success'" class="column flex-center">
+      <div v-if="status == 'accepted'" class="column flex-center">
         <q-icon color="positive" name="check_circle" size="2em" />
         <strong class="text-h3">{{
           $t("submissions.accept_invite.update_details.success.title")
@@ -78,7 +90,10 @@
 
 <script setup>
 import NewPasswordInput from "../components/forms/NewPasswordInput.vue"
-import { VERIFY_SUBMISSION_INVITE } from "src/graphql/mutations"
+import {
+  VERIFY_SUBMISSION_INVITE,
+  ACCEPT_SUBMISSION_INVITE,
+} from "src/graphql/mutations"
 import { ref, onMounted } from "vue"
 import { useMutation } from "@vue/apollo-composable"
 import { useRoute } from "vue-router"
@@ -88,18 +103,29 @@ const { $v } = useUserValidation()
 const status = ref("loading")
 const submission_id = ref(null)
 
-const { mutate: invite } = useMutation(VERIFY_SUBMISSION_INVITE)
+const { mutate: verify } = useMutation(VERIFY_SUBMISSION_INVITE)
+const { mutate: accept } = useMutation(ACCEPT_SUBMISSION_INVITE)
 const { params } = useRoute()
 
 onMounted(async () => {
   const { uuid, expires, token } = params
 
   try {
-    const result = await invite({ uuid, expires, token })
+    const result = await verify({ uuid, expires, token })
     submission_id.value = result.data.verifySubmissionInvite.id
-    status.value = "success"
+    status.value = "verified"
   } catch (error) {
     status.value = "error"
   }
 })
+async function handleSubmit() {
+  const { uuid, expires, token } = params
+  try {
+    const result = await accept({ uuid, expires, token })
+    submission_id.value = result.data.verifySubmissionInvite.id
+    status.value = "accepted"
+  } catch (error) {
+    status.value = "error"
+  }
+}
 </script>

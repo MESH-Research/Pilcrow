@@ -574,6 +574,7 @@
       },
       "update_details": {
         "title": "Your Details",
+        "update_action": "Accept Invitation",
         "success": {
           "title": "Success",
           "message": "You have updated your details and accepted the invitation to the submission.",
