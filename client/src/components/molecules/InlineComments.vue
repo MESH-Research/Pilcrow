@@ -20,6 +20,7 @@
         <q-btn
           ref="scroll_to_top_button"
           color="dark"
+          class="accent-dark"
           icon="arrow_upward"
           @click="scrollToTop"
         >

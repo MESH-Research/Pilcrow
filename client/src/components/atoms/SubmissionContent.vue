@@ -41,7 +41,7 @@
           class="q-ml-md"
           aria-label="Toggle Dark Mode"
           round
-          :icon="darkMode ? `dark_mode` : `light_mode`"
+          :icon="darkModeValue ? `dark_mode` : `light_mode`"
           color="white"
           text-color="grey-7"
           @click="toggleDarkMode()"
@@ -100,19 +100,24 @@ const activeComment = inject("activeComment")
 
 const contentRef = ref(null)
 
-let darkMode = ref(true)
+// const isItDark = $q.dark.isActive ?? true
+// let darkMode = ref($q.dark.isActive ?? true)
+// let darkMode = $q.dark.isActive
+let darkModeValue = true
 
 const $q = useQuasar()
-
+console.log($q.dark.isActive)
 watch(
   () => $q.dark.isActive,
-  (val) => {
-    console.log(val ? "On dark mode" : "On light mode")
+  (darkModeValue) => {
+    darkModeValue = $q.dark.isActive
   }
 )
+
 function toggleDarkMode() {
-  darkMode.value = !darkMode.value
+  // darkMode = !darkMode
   $q.dark.toggle()
+  console.log($q.dark)
 }
 const fonts = [
   {
