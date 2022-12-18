@@ -8,44 +8,51 @@
       <div v-if="status == 'verified'" class="column flex-center">
         <q-form style="width: 400px" @submit="handleSubmit">
           <h1>{{ $t("submissions.accept_invite.update_details.title") }}</h1>
-          <q-input
-            ref="nameInput"
-            outlined
-            :label="$t('helpers.OPTIONAL_FIELD', [$t('auth.fields.name')])"
-            autocomplete="name"
-            data-cy="name_field"
-            bottom-slots
-          />
-          <q-input
-            ref="usernameInput"
-            model-value=""
-            outlined
-            :label="$t('auth.fields.username')"
-            autocomplete="nickname"
-            debounce="500"
-            data-cy="username_field"
-            bottom-slots
-          />
-          <q-input
-            ref="emailInput"
-            outlined
-            disable
-            model-value=""
-            type="email"
-            :label="$t('auth.fields.email')"
-            autocomplete="username"
-            debounce="500"
-            bottom-slots
-            data-cy="email_field"
-          />
-          <new-password-input
-            ref="passwordInput"
-            outlined
-            :label="$t('auth.fields.password')"
-            :complexity="$v.password.notComplex.$response.complexity"
-            data-cy="password_field"
-          />
-          <q-card-actions class="q-py-lg">
+          <fieldset class="q-pb-lg q-px-none q-gutter-y-lg column">
+            <q-input
+              ref="nameInput"
+              v-model.trim="$v.name.$model"
+              outlined
+              :label="$t('helpers.OPTIONAL_FIELD', [$t('auth.fields.name')])"
+              autocomplete="name"
+              data-cy="name_field"
+              bottom-slots
+            />
+            <q-input
+              ref="usernameInput"
+              v-model.trim="$v.username.$model"
+              outlined
+              :label="$t('auth.fields.username')"
+              autocomplete="nickname"
+              debounce="500"
+              data-cy="username_field"
+              bottom-slots
+            />
+            <q-input
+              ref="emailInput"
+              v-model.trim="$v.email.$model"
+              outlined
+              disable
+              type="email"
+              :label="$t('auth.fields.email')"
+              autocomplete="username"
+              debounce="500"
+              bottom-slots
+              data-cy="email_field"
+            />
+            <new-password-input
+              ref="passwordInput"
+              v-model="$v.password.$model"
+              outlined
+              :label="$t('auth.fields.password')"
+              :complexity="$v.password.notComplex.$response.complexity"
+              data-cy="password_field"
+            />
+            <error-banner v-if="form_error">
+              {{ $t(form_error) }}
+            </error-banner>
+          </fieldset>
+          <q-card-actions class="q-py-lg q-px-none">
             <q-btn
               unelevated
               size="lg"
@@ -84,6 +91,15 @@
           {{ $t("submissions.accept_invite.update_details.failure.message") }}
         </p>
       </div>
+      <div v-if="status == 'verification_error'" class="column flex-center">
+        <q-icon color="negative" name="error" size="2em" />
+        <strong class="text-h3">{{
+          $t("submissions.accept_invite.update_details.failure.title")
+        }}</strong>
+        <p>
+          {{ $t(`submissions.accept_invite.verify.${verification_error}`) }}
+        </p>
+      </div>
     </section>
   </q-page>
 </template>
@@ -98,34 +114,48 @@ import { ref, onMounted } from "vue"
 import { useMutation } from "@vue/apollo-composable"
 import { useRoute } from "vue-router"
 import { useUserValidation } from "src/use/userValidation"
-const { $v } = useUserValidation()
+import ErrorBanner from "src/components/molecules/ErrorBanner.vue"
+// import { useLogin } from "src/use/user"
+// const { loginUser } = useLogin()
+const { $v, user } = useUserValidation()
 
 const status = ref("loading")
-const submission_id = ref(null)
 
 const { mutate: verify } = useMutation(VERIFY_SUBMISSION_INVITE)
 const { mutate: accept } = useMutation(ACCEPT_SUBMISSION_INVITE)
 const { params } = useRoute()
+let form_error = ref(null)
+let verification_error = ref(null)
 
 onMounted(async () => {
   const { uuid, expires, token } = params
 
   try {
-    const result = await verify({ uuid, expires, token })
-    submission_id.value = result.data.verifySubmissionInvite.id
+    const response = await verify({ uuid, expires, token })
+    Object.assign(user, response.data.verifySubmissionInvite)
     status.value = "verified"
   } catch (error) {
-    status.value = "error"
+    status.value = "verification_error"
+    verification_error.value = error.graphQLErrors[0].extensions.code
   }
 })
 async function handleSubmit() {
   const { uuid, expires, token } = params
+  if (!user.password) {
+    form_error.value = "auth.validation.password.required"
+    return
+  }
+
   try {
-    const result = await accept({ uuid, expires, token })
-    submission_id.value = result.data.verifySubmissionInvite.id
+    let name = user.name
+    let username = user.username
+    let password = user.password
+    await accept({ uuid, expires, token, name, username, password })
+    // await loginUser({ email: user.email, password: user.password })
     status.value = "accepted"
-  } catch (error) {
-    status.value = "error"
+  } catch (e) {
+    console.log(user, e)
+    status.value = "update_error"
   }
 }
 </script>
