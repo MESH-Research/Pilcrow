@@ -3,7 +3,7 @@
     "extends": [
         "config:base"
     ],
-    packageRules: [
+    "packageRules": [
         {
             "matchPaths": [".github/workflows/**"],
             "dependencyDashboardApproval": true
