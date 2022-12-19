@@ -5,7 +5,7 @@
     ],
     "packageRules": [
         {
-            "matchManagers": ["dockerfile", "dockerfile", "github-actions"],
+            "matchManagers": ["dockerfile", "docker-compose", "github-actions"],
             "dependencyDashboardApproval": true
         },
         {   
