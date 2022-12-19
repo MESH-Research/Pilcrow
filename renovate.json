@@ -1,0 +1,19 @@
+{
+    "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+    "extends": [
+        "config:base"
+    ],
+    "packageRules": [
+        {
+            "matchManagers": ["dockerfile", "docker-compose", "github-actions"],
+            "dependencyDashboardApproval": true
+        },
+        {   
+            "matchUpdateTypes": ["minor", "patch"],
+            "matchCurrentVersion": "!/^0/",
+            "automerge": true,
+            "automergeType": "branch"
+        }
+    ],
+    "assignees": ["wreality"]
+}

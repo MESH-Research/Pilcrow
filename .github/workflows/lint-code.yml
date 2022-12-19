@@ -16,7 +16,7 @@ name: "Style"
 #############################
 on:
   push:
-    branches: [development, master]
+    branches: [development, master, "renovate/**"]
   pull_request:
 
 ###############
