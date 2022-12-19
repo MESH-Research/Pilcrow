@@ -18,5 +18,6 @@
             "automerge": true,
             "automergeType": "branch"
         }
-    ]
+    ],
+    "assignees": ["wreality"]
 }
