@@ -2,9 +2,8 @@ name: "Test: E2E"
 
 on:
   push:
-    branches: [master, development]
+    branches: [master, development, "renovate/**"]
   pull_request:
-    branches: [master, development]
 jobs:
   build-client:
     runs-on: ubuntu-20.04
