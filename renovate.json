@@ -7,6 +7,16 @@
         {
             "matchPaths": [".github/workflows/**"],
             "dependencyDashboardApproval": true
+        },
+        {
+            "matchManagers": ["dockerfile", "dockerfile"],
+            "dependencyDashboardApproval": true
+        },
+        {   
+            "matchUpdateTypes": ["minor", "patch"],
+            "matchCurrentVersion": "!/^0/",
+            "automerge": true
+            "automergeType": "branch"
         }
     ]
 }
