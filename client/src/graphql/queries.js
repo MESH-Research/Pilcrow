@@ -273,6 +273,7 @@ export const GET_PUBLICATION = gql`
       id
       name
       is_publicly_visible
+      is_accepting_submissions
       effective_role
       home_page_content
       new_submission_content

@@ -2750,25 +2750,25 @@
   dependencies:
     vue-demi "^0.13.11"
 
-"@vueuse/core@^9.6.0":
-  version "9.6.0"
-  resolved "https://registry.yarnpkg.com/@vueuse/core/-/core-9.6.0.tgz#de1d4730849cdbe28a9ebcf6cad167a700919603"
-  integrity sha512-qGUcjKQXHgN+jqXEgpeZGoxdCbIDCdVPz3QiF1uyecVGbMuM63o96I1GjYx5zskKgRI0FKSNsVWM7rwrRMTf6A==
+"@vueuse/core@^9.7.0":
+  version "9.7.0"
+  resolved "https://registry.yarnpkg.com/@vueuse/core/-/core-9.7.0.tgz#5546ce8fbdca7a595671e7c05376c322b69268e6"
+  integrity sha512-/AGY/t7jJPxCyRoVTygNKoroTiCvRaaZIW+yeSlBCnI7QRpQ9cvXNTdNaSl3GvSyFbn83+XwZwEZvI1OpQfeGw==
   dependencies:
     "@types/web-bluetooth" "^0.0.16"
-    "@vueuse/metadata" "9.6.0"
-    "@vueuse/shared" "9.6.0"
+    "@vueuse/metadata" "9.7.0"
+    "@vueuse/shared" "9.7.0"
     vue-demi "*"
 
-"@vueuse/metadata@9.6.0":
-  version "9.6.0"
-  resolved "https://registry.yarnpkg.com/@vueuse/metadata/-/metadata-9.6.0.tgz#b0a73277538cebef5d477983f74fdd2aa21ce5f9"
-  integrity sha512-sIC8R+kWkIdpi5X2z2Gk8TRYzmczDwHRhEFfCu2P+XW2JdPoXrziqsGpDDsN7ykBx4ilwieS7JUIweVGhvZ93w==
+"@vueuse/metadata@9.7.0":
+  version "9.7.0"
+  resolved "https://registry.yarnpkg.com/@vueuse/metadata/-/metadata-9.7.0.tgz#0aeaaaba52d9cc9aa5b2ad2e129e5f6fbac2c44c"
+  integrity sha512-M7WsAgw28FNtTH0bzsGuHEtJOPJqPpyeHS6PHq+8UesLgNjZ9waMAntiUrgUQlxt09M4i2lH7y9sRi0jkfeXGA==
 
-"@vueuse/shared@9.6.0":
-  version "9.6.0"
-  resolved "https://registry.yarnpkg.com/@vueuse/shared/-/shared-9.6.0.tgz#ce2e0e8124c6bdb1e270fc213e334ccc71dcb951"
-  integrity sha512-/eDchxYYhkHnFyrb00t90UfjCx94kRHxc7J1GtBCqCG4HyPMX+krV9XJgVtWIsAMaxKVU4fC8NSUviG1JkwhUQ==
+"@vueuse/shared@9.7.0":
+  version "9.7.0"
+  resolved "https://registry.yarnpkg.com/@vueuse/shared/-/shared-9.7.0.tgz#bca8025dd248dd87e4726e78d46c4d3e523cb0c1"
+  integrity sha512-pwmt1y3TJ2s5KqWmkv9ZKEV59GwuZQZk8XLiU+hGswz0jej318ozbea9E4A/A50ksyM26swSFr7sZ9llNPsZHg==
   dependencies:
     vue-demi "*"
 
@@ -4273,10 +4273,10 @@ csstype@^2.6.8:
   resolved "https://registry.yarnpkg.com/csstype/-/csstype-2.6.19.tgz#feeb5aae89020bb389e1f63669a5ed490e391caa"
   integrity sha512-ZVxXaNy28/k3kJg0Fou5MiYpp88j7H9hLZp8PDC3jV0WFjfH5E9xHb56L0W59cPbKbcHXeP4qyT8PrHp8t6LcQ==
 
-cypress-axe@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/cypress-axe/-/cypress-axe-1.1.0.tgz#3cf0052be311c34815919fc9a1ade3d981b8fd0b"
-  integrity sha512-4LsLHdjtIRHdOeiiRMk+Yf04UQjpuQ20paOi1x71z8wnL/47n73DBJ9AEdLQkptlljtsDj+DgLtysl7BeCL4Hg==
+cypress-axe@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/cypress-axe/-/cypress-axe-1.2.0.tgz#224936a3346055f6c22636e645746cc903aaa947"
+  integrity sha512-mK7rxc8+e0IM519efgkzVBQRYLapy55TOVNbWZsbX3495xFzf8NnkMddUaHAGgAnF+kcyJU7zNPu3lTiOD58WQ==
 
 cypress-file-upload@^5.0.8:
   version "5.0.8"
@@ -8613,9 +8613,9 @@ qs@~6.5.2:
   integrity sha512-qxXIEh4pCGfHICj1mAJQ2/2XVZkjCDTcEgfoSQxc/fYivUZxTkk7L3bDBJSoNrEzXI17oUO5Dp07ktqE5KzczA==
 
 quasar@2:
-  version "2.10.2"
-  resolved "https://registry.yarnpkg.com/quasar/-/quasar-2.10.2.tgz#0a35d654a645d33fbe7dc537ea3be52917fa543d"
-  integrity sha512-y6suu0f2hJKrnFPHzx+p2EBVGzDF6xHaqYGkDIsMNkhxsrO9Qi2+dZCjq1J6+48EJiqPEOn8t9X/gT7yLSSnLw==
+  version "2.11.1"
+  resolved "https://registry.yarnpkg.com/quasar/-/quasar-2.11.1.tgz#061190368fe1d71b67e8fdbd6c485819247a031d"
+  integrity sha512-3whiJaOXbectd2R6Vfjr/vHKeY92zdDpx41zfZ5vrG+Yx16Q76euUQsdKlYr1PD7q33yvHvjegxuILgKJg5GqA==
 
 querystringify@^2.1.1:
   version "2.2.0"
