@@ -134,13 +134,23 @@ import { useUserValidation } from "src/use/userValidation"
 import ErrorBanner from "src/components/molecules/ErrorBanner.vue"
 // import { useLogin } from "src/use/user"
 // const { loginUser } = useLogin()
-const { $v, user } = useUserValidation()
+const { params } = useRoute()
+const { mutate: verify } = useMutation(VERIFY_SUBMISSION_INVITE)
+const { mutate: accept } = useMutation(ACCEPT_SUBMISSION_INVITE)
+
+const { $v, user, saveUser } = useUserValidation({
+  mutation: accept,
+  rules: (rules) => {
+    delete rules.email
+  },
+  variables: (form) => {
+    const { password, username, name } = form
+    return { password, username, name, ...params }
+  },
+})
 
 const status = ref("loading")
 
-const { mutate: verify } = useMutation(VERIFY_SUBMISSION_INVITE)
-const { mutate: accept } = useMutation(ACCEPT_SUBMISSION_INVITE)
-const { params } = useRoute()
 let form_error = ref(null)
 let verification_error = ref(null)
 
@@ -157,22 +167,11 @@ onMounted(async () => {
   }
 })
 async function handleSubmit() {
-  const { uuid, expires, token } = params
-  if (!user.password) {
-    form_error.value = "auth.validation.password.required"
-    return
-  }
-
+  form_error.value = ""
   try {
-    let name = user.name
-    let username = user.username
-    let password = user.password
-    await accept({ uuid, expires, token, name, username, password })
-    // await loginUser({ email: user.email, password: user.password })
-    status.value = "accepted"
+    await saveUser()
   } catch (e) {
-    console.log(user, e)
-    status.value = "update_error"
+    form_error.value = e.message
   }
 }
 </script>
