@@ -136,7 +136,7 @@ class SubmissionInvitationTest extends ApiTestCase
     /**
      * @return void
      */
-    public function testCanAcceptInvitation(): void
+    public function testCanAcceptAnInviteToASubmission(): void
     {
         $this->beAppAdmin();
         $submission = Submission::factory()->create();
