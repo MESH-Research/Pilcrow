@@ -1,7 +1,7 @@
 import { reactive } from "vue"
 import useVuelidate from "@vuelidate/core"
 import { required, email, helpers } from "@vuelidate/validators"
-import { CREATE_USER } from "src/graphql/mutations"
+import { CREATE_USER, ACCEPT_SUBMISSION_INVITE } from "src/graphql/mutations"
 import { useMutation } from "@vue/apollo-composable"
 import zxcvbn from "zxcvbn"
 import { applyExternalValidationErrors } from "src/use/validationHelpers"
@@ -45,6 +45,7 @@ export function useUserValidation() {
   const $v = useVuelidate(rules, form, { $externalResults: externalValidation })
 
   const { mutate } = useMutation(CREATE_USER)
+  const { mutate: accept } = useMutation(ACCEPT_SUBMISSION_INVITE)
 
   const saveUser = async () => {
     $v.value.$touch()
@@ -65,5 +66,24 @@ export function useUserValidation() {
     }
   }
 
-  return { $v, user: form, saveUser }
+  const updateUser = async () => {
+    $v.value.$touch()
+    if ($v.value.$invalid || $v.value.$error) {
+      throw Error("FORM_VALIDATION")
+    }
+    try {
+      const newUser = await accept(form)
+      return newUser
+    } catch (error) {
+      if (
+        applyExternalValidationErrors(form, externalValidation, error, "user.")
+      ) {
+        throw Error("FORM_VALIDATION")
+      } else {
+        throw Error("INTERNAL")
+      }
+    }
+  }
+
+  return { $v, user: form, saveUser, updateUser }
 }

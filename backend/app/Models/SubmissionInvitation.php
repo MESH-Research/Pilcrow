@@ -49,7 +49,7 @@ class SubmissionInvitation extends Model
      * @return string
      * @param int|float|string $expires
      */
-    private function makeToken(string $expires)
+    public function makeToken(string $expires)
     {
         return hash_hmac(
             'sha256',

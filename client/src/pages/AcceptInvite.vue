@@ -23,11 +23,19 @@
               v-model.trim="$v.username.$model"
               outlined
               :label="$t('auth.fields.username')"
+              :error="$v.username.$error"
               autocomplete="nickname"
               debounce="500"
               data-cy="username_field"
               bottom-slots
-            />
+            >
+              <template #error>
+                <error-field-renderer
+                  :errors="$v.username.$errors"
+                  prefix="auth.validation.username"
+                />
+              </template>
+            </q-input>
             <q-input
               ref="emailInput"
               v-model.trim="$v.email.$model"
@@ -45,13 +53,22 @@
               v-model="$v.password.$model"
               outlined
               :label="$t('auth.fields.password')"
+              :error="$v.password.$error"
               :complexity="$v.password.notComplex.$response.complexity"
               data-cy="password_field"
-            />
+            >
+              <template #error>
+                <error-field-renderer
+                  :errors="$v.password.$errors"
+                  prefix="auth.validation.password"
+                />
+              </template>
+            </new-password-input>
             <error-banner v-if="form_error">
               {{ $t(form_error) }}
             </error-banner>
           </fieldset>
+
           <q-card-actions class="q-py-lg q-px-none">
             <q-btn
               unelevated
@@ -135,8 +152,8 @@ onMounted(async () => {
     Object.assign(user, response.data.verifySubmissionInvite)
     status.value = "verified"
   } catch (error) {
-    status.value = "verification_error"
     verification_error.value = error.graphQLErrors[0].extensions.code
+    status.value = "verification_error"
   }
 })
 async function handleSubmit() {
