@@ -70,7 +70,7 @@ module.exports = {
         [
             "robots",
             {
-                host: "https://docs.ccrproject.dev/CCR",
+                host: "https://docs.pilcrowproject.dev/CCR",
                 disallowAll: true
             }
         ]

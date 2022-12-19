@@ -11,7 +11,7 @@ chance of keeping on top of things.
 
 ## Code of Conduct
 
-Help us keep CCR development open and inclusive. Please read and follow our [Code of Conduct](https://github.com/MESH-Research/CCR/blob/master/CODE_OF_CONDUCT.md).
+Help us keep Pilcrow development open and inclusive. Please read and follow our [Code of Conduct](https://github.com/MESH-Research/CCR/blob/master/CODE_OF_CONDUCT.md).
 
 ## Getting Started
 

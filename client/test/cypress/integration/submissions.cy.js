@@ -7,7 +7,7 @@ import "cypress-file-upload"
 describe("Submissions Page", () => {
   it("creates new submissions", () => {
     cy.task("resetDb")
-    cy.login({ email: "applicationadministrator@ccrproject.dev" })
+    cy.login({ email: "applicationadministrator@pilcrowproject.dev" })
     cy.visit("submissions")
     cy.injectAxe()
     cy.dataCy("new_submission_title_input")
@@ -16,7 +16,7 @@ describe("Submissions Page", () => {
       "Submission from Cypress{enter}"
     )
     cy.dataCy("new_submission_publication_input").click()
-    cy.get(".publication_options").contains("CCR Test Publication 1").click()
+    cy.get(".publication_options").contains("Pilcrow Test Publication 1").click()
     cy.dataCy("new_submission_file_upload_input").attachFile("test.txt")
     cy.dataCy("save_submission").click()
     cy.dataCy("submissions_list").contains("Submission from Cypress")
@@ -25,7 +25,7 @@ describe("Submissions Page", () => {
       .should("have.class", "bg-positive")
     cy.get(".q-notification--top-enter-active").should("not.exist")
     cy.dataCy("submission_link").contains("Submission from Cypress").click()
-    cy.dataCy("submitters_list").contains("applicationadministrator@ccrproject.dev")
+    cy.dataCy("submitters_list").contains("applicationadministrator@pilcrowproject.dev")
     cy.checkA11y(null, null, a11yLogViolations)
   })
 
@@ -34,7 +34,7 @@ describe("Submissions Page", () => {
     const name_520_characters =
       "1234567890".repeat(52)
     cy.task("resetDb")
-    cy.login({ email: "applicationadministrator@ccrproject.dev" })
+    cy.login({ email: "applicationadministrator@pilcrowproject.dev" })
     cy.visit("submissions")
     cy.dataCy("new_submission_title_input").type(
       name_520_characters + "{enter}"
@@ -47,7 +47,7 @@ describe("Submissions Page", () => {
 
   it("should allow an application administrator to accept a submission for review and permit reviewers access", () => {
     cy.task("resetDb")
-    cy.login({ email: "applicationadministrator@ccrproject.dev" })
+    cy.login({ email: "applicationadministrator@pilcrowproject.dev" })
     cy.visit("submissions")
 
     cy.interceptGQLOperation("UpdateSubmissionStatus")
@@ -60,14 +60,14 @@ describe("Submissions Page", () => {
     cy.dataCy("change_status_notify")
       .should("be.visible")
       .should("have.class", "bg-positive")
-    cy.login({ email: "reviewer@ccrproject.dev" })
+    cy.login({ email: "reviewer@pilcrowproject.dev" })
     cy.visit("submission/review/101")
     cy.url().should("not.include", "/error403")
   })
 
   it("should deny a reviewer from accepting a submission for review", () => {
     cy.task("resetDb")
-    cy.login({ email: "reviewer@ccrproject.dev" })
+    cy.login({ email: "reviewer@pilcrowproject.dev" })
     cy.visit("submissions")
 
     cy.interceptGQLOperation("UpdateSubmissionStatus")
@@ -87,7 +87,7 @@ describe("Submissions Page", () => {
 
   it("should deny a reviewer from rejecting a submission for review", () => {
     cy.task("resetDb")
-    cy.login({ email: "reviewer@ccrproject.dev" })
+    cy.login({ email: "reviewer@pilcrowproject.dev" })
     cy.visit("submissions")
 
     cy.interceptGQLOperation("UpdateSubmissionStatus")
@@ -107,7 +107,7 @@ describe("Submissions Page", () => {
 
   it("should deny a reviewer from changing the status of rejected submissions", () => {
     cy.task("resetDb")
-    cy.login({ email: "reviewer@ccrproject.dev" })
+    cy.login({ email: "reviewer@pilcrowproject.dev" })
     cy.visit("submissions")
     cy.dataCy("submission_actions").eq(2).click()
     cy.dataCy("change_status").should('have.class', 'disabled')
@@ -117,7 +117,7 @@ describe("Submissions Page", () => {
 
   it("should deny an application administrator from changing the status of rejected submissions", () => {
     cy.task("resetDb")
-    cy.login({ email: "applicationadministrator@ccrproject.dev" })
+    cy.login({ email: "applicationadministrator@pilcrowproject.dev" })
     cy.visit("submissions")
     cy.dataCy("submission_actions").eq(2).click()
     cy.dataCy("change_status").should('have.class', 'disabled')
@@ -127,7 +127,7 @@ describe("Submissions Page", () => {
 
   it("should deny a reviewer from accessing rejected submissions", () => {
     cy.task("resetDb")
-    cy.login({ email: "reviewer@ccrproject.dev" })
+    cy.login({ email: "reviewer@pilcrowproject.dev" })
     cy.visit("submissions")
     cy.dataCy("submission_actions").eq(2).click()
     cy.dataCy("review").should('have.class', 'disabled')
@@ -139,7 +139,7 @@ describe("Submissions Page", () => {
 
   it("should allow an application administrator to access rejected submissions", () => {
     cy.task("resetDb")
-    cy.login({ email: "applicationadministrator@ccrproject.dev" })
+    cy.login({ email: "applicationadministrator@pilcrowproject.dev" })
     cy.visit("submissions")
     cy.dataCy("submission_actions").eq(2).click()
     cy.dataCy("review").click()
@@ -149,7 +149,7 @@ describe("Submissions Page", () => {
 
   it("should deny a reviewer from changing the status of submissions requested for resubmission", () => {
     cy.task("resetDb")
-    cy.login({ email: "reviewer@ccrproject.dev" })
+    cy.login({ email: "reviewer@pilcrowproject.dev" })
     cy.visit("submissions")
     cy.dataCy("submission_actions").eq(3).click()
     cy.dataCy("change_status").should('have.class', 'disabled')
@@ -161,7 +161,7 @@ describe("Submissions Page", () => {
 
   it("should deny a reviewer from accessing submissions requested for resubmission", () => {
     cy.task("resetDb")
-    cy.login({ email: "reviewer@ccrproject.dev" })
+    cy.login({ email: "reviewer@pilcrowproject.dev" })
     cy.visit("submissions")
     cy.dataCy("submission_actions").eq(3).click()
     cy.dataCy("review").should('have.class', 'disabled')
@@ -173,7 +173,7 @@ describe("Submissions Page", () => {
 
   it("should allow an application administrator to access submissions requested for resubmission", () => {
     cy.task("resetDb")
-    cy.login({ email: "applicationadministrator@ccrproject.dev" })
+    cy.login({ email: "applicationadministrator@pilcrowproject.dev" })
     cy.visit("submissions")
     cy.dataCy("submission_actions").eq(3).click()
     cy.dataCy("review").click()
@@ -183,21 +183,21 @@ describe("Submissions Page", () => {
 
   it("should allow the submission in draft status be visible to the submitter", () => {
     cy.task("resetDb")
-    cy.login({ email: "regularuser@ccrproject.dev" })
+    cy.login({ email: "regularuser@pilcrowproject.dev" })
     cy.visit("submissions")
     cy.dataCy("submission_actions").eq(4).should('exist')
   })
 
   it("should remove the submission in draft status for users who are not associated with the submission", () => {
     cy.task("resetDb")
-    cy.login({ email: "applicationadministrator@ccrproject.dev" })
+    cy.login({ email: "applicationadministrator@pilcrowproject.dev" })
     cy.visit("submissions")
     cy.dataCy("submission_actions").eq(4).should('not.exist')
   })
 
   it("should allow an application administrator to open and close a review", () => {
     cy.task("resetDb")
-    cy.login({ email: "applicationadministrator@ccrproject.dev" })
+    cy.login({ email: "applicationadministrator@pilcrowproject.dev" })
     cy.visit("submissions")
 
     cy.interceptGQLOperation('UpdateSubmissionStatus')

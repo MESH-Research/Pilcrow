@@ -6,7 +6,7 @@ import { a11yLogViolations } from '../support/helpers'
 describe("Submission Details", () => {
   it("should assert the Submission Details page is accessible", () => {
     cy.task("resetDb")
-    cy.login({ email: "applicationadministrator@ccrproject.dev" })
+    cy.login({ email: "applicationadministrator@pilcrowproject.dev" })
     cy.visit("submission/100")
     cy.injectAxe()
     cy.dataCy("submitters_list")
@@ -15,7 +15,7 @@ describe("Submission Details", () => {
 
   it("should allow assignments of reviewers by application administrators", () => {
     cy.task("resetDb")
-    cy.login({ email: "applicationadministrator@ccrproject.dev" })
+    cy.login({ email: "applicationadministrator@pilcrowproject.dev" })
     cy.visit("submission/100")
     cy.interceptGQLOperation('UpdateSubmissionReviewers');
 
@@ -34,7 +34,7 @@ describe("Submission Details", () => {
 
   it("should allow assignments of reviewers by review coordinators", () => {
     cy.task("resetDb")
-    cy.login({ email: "reviewcoordinator@ccrproject.dev" })
+    cy.login({ email: "reviewcoordinator@pilcrowproject.dev" })
     cy.visit("submission/100")
     cy.interceptGQLOperation('UpdateSubmissionReviewers')
 
@@ -53,7 +53,7 @@ describe("Submission Details", () => {
 
   it("should allow removal and assignment of review coordinators by application administrators", () => {
     cy.task("resetDb")
-    cy.login({ email: "applicationadministrator@ccrproject.dev" })
+    cy.login({ email: "applicationadministrator@pilcrowproject.dev" })
     cy.visit("submission/100")
     cy.interceptGQLOperation("UpdateSubmissionReviewCoordinators")
 
@@ -80,7 +80,7 @@ describe("Submission Details", () => {
 
   it("should disallow assignments of duplicate reviewers", () => {
     cy.task("resetDb")
-    cy.login({ email: "applicationadministrator@ccrproject.dev" })
+    cy.login({ email: "applicationadministrator@pilcrowproject.dev" })
     cy.visit("submission/100")
     cy.interceptGQLOperation("UpdateSubmissionReviewers")
 
@@ -104,7 +104,7 @@ describe("Submission Details", () => {
 
   it("should show comments associated with status changes in the Activity section", () => {
     cy.task("resetDb")
-    cy.login({ email: "applicationadministrator@ccrproject.dev" })
+    cy.login({ email: "applicationadministrator@pilcrowproject.dev" })
     cy.visit("submissions")
 
     cy.interceptGQLOperation("UpdateSubmissionStatus");
@@ -132,21 +132,21 @@ describe("Submission Details", () => {
 
   it("should show the invitation form for a review coordinator", () => {
     cy.task("resetDb")
-    cy.login({ email: "reviewcoordinator@ccrproject.dev" })
+    cy.login({ email: "reviewcoordinator@pilcrowproject.dev" })
     cy.visit("/submission/100")
     cy.dataCy("invitation_form")
   });
 
   it("should hide the invitation form for a reviewer", () => {
     cy.task("resetDb")
-    cy.login({ email: "reviewer@ccrproject.dev" })
+    cy.login({ email: "reviewer@pilcrowproject.dev" })
     cy.visit("/submission/100")
     cy.dataCy("invitation_form").should("not.exist")
   });
 
   it("should allow review coordinators to invite unregistered reviewers", () => {
     cy.task("resetDb")
-    cy.login({ email: "reviewcoordinator@ccrproject.dev" })
+    cy.login({ email: "reviewcoordinator@pilcrowproject.dev" })
     cy.visit("submission/100")
     cy.interceptGQLOperation('InviteReviewer');
     cy.dataCy("reviewers_list").within(() => {
@@ -161,7 +161,7 @@ describe("Submission Details", () => {
 
   it("should disallow invitations for invalid emails", () => {
     cy.task("resetDb")
-    cy.login({ email: "reviewcoordinator@ccrproject.dev" })
+    cy.login({ email: "reviewcoordinator@pilcrowproject.dev" })
     cy.visit("submission/100")
     cy.interceptGQLOperation('InviteReviewer');
     cy.dataCy("reviewers_list").within(() => {

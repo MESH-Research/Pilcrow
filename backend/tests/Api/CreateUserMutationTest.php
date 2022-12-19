@@ -104,7 +104,7 @@ class CreateUserMutationTest extends ApiTestCase
             ['notanemail', 'validation'],
             ['', 'validation'],
             [null, 'graphql'],
-            ['dupeemail@ccrproject.dev', 'validation'],
+            ['dupeemail@pilcrowproject.dev', 'validation'],
             ['nodomain@example.com', 'validation'],
         ];
     }
@@ -117,7 +117,7 @@ class CreateUserMutationTest extends ApiTestCase
      */
     public function testEmailValidation(?string $email, $failure): void
     {
-        User::factory()->create(['email' => 'dupeemail@ccrproject.dev']);
+        User::factory()->create(['email' => 'dupeemail@pilcrowproject.dev']);
 
         $testUser = User::factory()->make(['email' => $email]);
         $response = $this->callEndpoint($testUser->makeVisible('password')->attributesToArray());

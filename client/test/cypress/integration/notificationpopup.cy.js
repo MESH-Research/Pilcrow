@@ -6,7 +6,7 @@ import "cypress-file-upload"
 describe("Notification Popup", () => {
   it("allows an individual notification to be marked as read", () => {
     cy.task("resetDb")
-    cy.login({ email: "regularuser@ccrproject.dev" })
+    cy.login({ email: "regularuser@pilcrowproject.dev" })
     cy.visit("/dashboard")
     cy.dataCy("dropdown_notificiations").click()
     cy.dataCy("notification_list_item").eq(0).should("have.class", "unread").click()
@@ -15,7 +15,7 @@ describe("Notification Popup", () => {
 
   it("allows multiple notifications to be marked as read", () => {
     cy.task("resetDb")
-    cy.login({ email: "applicationadministrator@ccrproject.dev" })
+    cy.login({ email: "applicationadministrator@pilcrowproject.dev" })
     cy.visit("/submission/review/100")
 
     cy.interceptGQLOperation("MarkAllNotificationsRead")
@@ -25,7 +25,7 @@ describe("Notification Popup", () => {
 
     cy.dataCy("dirtyYesChangeStatus").click()
     cy.wait('@UpdateSubmissionStatus')
-    cy.login({ email: "regularuser@ccrproject.dev" })
+    cy.login({ email: "regularuser@pilcrowproject.dev" })
     cy.visit("/dashboard")
     cy.dataCy("dropdown_notificiations").click()
     cy.dataCy("dismiss_all_notifications").click()

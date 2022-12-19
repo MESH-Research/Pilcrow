@@ -1,4 +1,4 @@
-# CCR Documentation
+# Pilcrow Documentation
 
 ## Testing / Development
 

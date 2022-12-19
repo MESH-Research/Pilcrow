@@ -4,11 +4,11 @@
 
 ### Getting Started
 
-CCR uses [Lando](https://lando.dev) to manage its development environment.
+Pilcrow uses [Lando](https://lando.dev) to manage its development environment.
 
 1. [Install Lando](https://docs.lando.dev/basics/installation.html)
 2. Clone this repository to your local machine: `git clone https://github.com/MESH-Research/CCR`
-3. Head into the CCR directory and run: `lando start`
+3. Head into the Pilcrow directory and run: `lando start`
 4. Coffee. Downloading. Building. Patience. Step 3 may take approximately three to fifteen minutes to complete.
 5. Migrate database: `lando artisan migrate`
 6. Once the bootstrapping process is finished, open a browser to <https://ccr.lndo.site/>
@@ -23,9 +23,9 @@ The stack is running `yarn dev` in the node container, so editing source files s
 * See [https://ccr.meshresearch.dev/contributing/wsl.html](https://ccr.meshresearch.dev/contributing/wsl.html) for additional notes on
   developer setup under Windows Subsystem for Linux (WSL)
 
-### CCR Wiki - <https://github.com/MESH-Research/CCR/wiki>
+### Pilcrow Wiki - <https://github.com/MESH-Research/CCR/wiki>
 
 * [An opinionated application](https://github.com/MESH-Research/CCR/wiki/An-Opinionated-Application)
-* [CCR Links](https://github.com/MESH-Research/CCR/wiki/CCR-Links)
+* [Pilcrow Links](https://github.com/MESH-Research/CCR/wiki/CCR-Links)
 * [Style Guide - in the Making](https://github.com/MESH-Research/CCR/wiki/Style-Guide---in-the-making)
 

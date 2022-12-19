@@ -6,7 +6,7 @@ import { a11yLogViolations } from '../support/helpers'
 describe("Dashboard", () => {
   beforeEach(() => {
     cy.task("resetDb")
-    cy.login({ email: "regularuser@ccrproject.dev" })
+    cy.login({ email: "regularuser@pilcrowproject.dev" })
   })
   it("should assert the page is accessible", () => {
     cy.visit("/dashboard")

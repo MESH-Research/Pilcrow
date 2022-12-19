@@ -1,7 +1,7 @@
 # Introduction
 
 ::: tip
-CCR is in the beginning phases of its development process. As such, much of this documentation is evolving quickly. Please check back frequently to see what has changed!
+Pilcrow is in the beginning phases of its development process. As such, much of this documentation is evolving quickly. Please check back frequently to see what has changed!
 :::
 
 ## Project Organization
@@ -36,11 +36,11 @@ If you're using Windows as a development environment, please refer to the docume
 :::
 
 ::: warning Minimum Version
-CCR requires Lando version &ge; 3.0.25
+Pilcrow requires Lando version &ge; 3.0.25
 :::
 
 1. [Download and Install Lando and its dependencies.](https://docs.lando.dev/basics/installation.html)
-2. Checkout the CCR repository on your local machine.
+2. Checkout the Pilcrow repository on your local machine.
 3. From the project root run, `lando start`.
 
 Lando will then download the appropriate containers and get everything spun up. Once everything is installed and running, you should see:
@@ -78,7 +78,7 @@ Lando has built-in tooling commands that allow a developer to run commands insid
 - `lando artisan`: Run Laravel's artisan command in the appserver container.
 - `lando composer`: Run composer in the appserver container.
 - `lando yarn`: Run yarn in the client container.
-- `lando mysql`: Start a MySQL client session (TIP: use `lando mysql laravel` to start with the CCR database selected).
+- `lando mysql`: Start a MySQL client session (TIP: use `lando mysql laravel` to start with the Pilcrow database selected).
 - `lando quasar`: Run the quasar cli inside the client container.
 - `lando extras`: Manage and install tools into `.lando.local.yml`.
 - `lando pandoc`: Run pandoc inside the appserver container
@@ -120,11 +120,11 @@ It can be helpful to deploy pull requests for team members or stakeholders to pr
 
 ### Creating a Preview Deployment
 
-To create a preview environment, add the `pr-preview` label to a pull request in the CCR GitHub repository that meets the following criteria:
+To create a preview environment, add the `pr-preview` label to a pull request in the Pilcrow GitHub repository that meets the following criteria:
 
 - Must be open (not closed, not merged)
 - Must be targeted to either `master` or `development` branches
-- Must be a branch on the CCR repo (forks aren't allowed).
+- Must be a branch on the Pilcrow repo (forks aren't allowed).
 - CI/CD checks must be passing (`CCR-Droid` will wait until checks fail or pass)
 
 If the pull request does not meet the above rules, `CCR-Droid` will comment on the pull request and remove the `pr-preview` label.  If the pull request meets the criteria, `CCR-Droid` will request the deployment for you.
@@ -137,7 +137,7 @@ After `CCR-Droid` creates the deployment, a link will appear above the checks se
 
 #### Mail
 
-Mailhog captures mail from preview deployments to prevent abuse.  Visit <https://mail.gh.ccrproject.dev> to access the Mailhog server and view any email sent by preview deployments.
+Mailhog captures mail from preview deployments to prevent abuse.  Visit <https://mail.gh.pilcrowproject.dev> to access the Mailhog server and view any email sent by preview deployments.
 
 ### Destroying a Preview Environment
 
@@ -155,9 +155,9 @@ Currently, `CCR-Droid` is not great about spelling out specific build errors.  I
 
 Two builds are automatically built in order to help testers and collaborators provide feedback on development features.
 
-- [https://staging.ccrproject.dev](https://staging.ccrproject.dev): Automatically built from the `master` branch.  This is the "bleeding edge" of development.
-- [https://release.ccrproject.dev](https://release.ccrproject.dev): Automatially built from the most recent versioned release. Releases happen after each development sprint (usually about once a month).
-- [https://mailhog.ccrproject.dev](https://mailhog.ccrproject.dev): Email notifications from both environments are sent here, NOT to a real inbox.
+- [https://staging.pilcrowproject.dev](https://staging.pilcrowproject.dev): Automatically built from the `master` branch.  This is the "bleeding edge" of development.
+- [https://release.pilcrowproject.dev](https://release.pilcrowproject.dev): Automatially built from the most recent versioned release. Releases happen after each development sprint (usually about once a month).
+- [https://mailhog.pilcrowproject.dev](https://mailhog.pilcrowproject.dev): Email notifications from both environments are sent here, NOT to a real inbox.
 
 ::: warning
 :warning: Data in the test environments is **not permanent** and will be reset **every** time their code base is updated.
@@ -169,12 +169,12 @@ The users below are permanent on the test servers, and will not be deleted. Howe
 
 Name | Username | Login email | Login Password
 :---- | :---- | :---- | :----
-Application Administrator | applicationAdminUser | applicationadministrator@ccrproject.dev | adminPassword!@#
-Publication Administrator | publicationAdministrator | publicationAdministrator@ccrproject.dev | publicationadminPassword!@#
-Publication Editor | publicationEditor | publicationEditor@ccrproject.dev | editorPassword!@#
-Review Coordinator for Submission | reviewCoordinator | reviewCoordinator@ccrproject.dev | coordinatorPassword!@#
-Reviewer for Submission | reviewer | reviewer@ccrproject.dev | reviewerPassword!@#
-Regular User | regularUser | regularuser@ccrproject.dev | regularPassword!@#
+Application Administrator | applicationAdminUser | applicationadministrator@pilcrowproject.dev | adminPassword!@#
+Publication Administrator | publicationAdministrator | publicationAdministrator@pilcrowproject.dev | publicationadminPassword!@#
+Publication Editor | publicationEditor | publicationEditor@pilcrowproject.dev | editorPassword!@#
+Review Coordinator for Submission | reviewCoordinator | reviewCoordinator@pilcrowproject.dev | coordinatorPassword!@#
+Reviewer for Submission | reviewer | reviewer@pilcrowproject.dev | reviewerPassword!@#
+Regular User | regularUser | regularuser@pilcrowproject.dev | regularPassword!@#
 
 Other users can be registered to the staging environment, but please note that these users and any data associated with them **may be wiped any time the code base is updated**.
 

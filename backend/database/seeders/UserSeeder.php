@@ -19,42 +19,42 @@ class UserSeeder extends Seeder
     {
         User::factory()->create([
             'username' => 'applicationAdminUser',
-            'email' => 'applicationadministrator@ccrproject.dev',
+            'email' => 'applicationadministrator@pilcrowproject.dev',
             'name' => 'Application Administrator',
             'password' => Hash::make('adminPassword!@#'),
         ])->assignRole(Role::APPLICATION_ADMINISTRATOR);
 
         User::factory()->create([
             'username' => 'publicationAdministrator',
-            'email' => 'publicationAdministrator@ccrproject.dev',
+            'email' => 'publicationAdministrator@pilcrowproject.dev',
             'name' => 'Publication Administrator',
             'password' => Hash::make('publicationadminPassword!@#'),
         ]);
 
         User::factory()->create([
             'username' => 'publicationEditor',
-            'email' => 'publicationEditor@ccrproject.dev',
+            'email' => 'publicationEditor@pilcrowproject.dev',
             'name' => 'Publication Editor',
             'password' => Hash::make('editorPassword!@#'),
         ]);
 
         User::factory()->create([
             'username' => 'reviewCoordinator',
-            'email' => 'reviewCoordinator@ccrproject.dev',
+            'email' => 'reviewCoordinator@pilcrowproject.dev',
             'name' => 'Review Coordinator for Submission',
             'password' => Hash::make('coordinatorPassword!@#'),
         ]);
 
         User::factory()->create([
             'username' => 'reviewer',
-            'email' => 'reviewer@ccrproject.dev',
+            'email' => 'reviewer@pilcrowproject.dev',
             'name' => 'Reviewer for Submission',
             'password' => Hash::make('reviewerPassword!@#'),
         ]);
 
         User::factory()->create([
             'username' => 'regularUser',
-            'email' => 'regularuser@ccrproject.dev',
+            'email' => 'regularuser@pilcrowproject.dev',
             'name' => 'Regular User',
             'password' => Hash::make('regularPassword!@#'),
         ]);
