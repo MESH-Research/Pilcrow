@@ -36,16 +36,20 @@
         <q-tooltip>Increase Font Size</q-tooltip>
       </div>
       <div>
-        <q-btn
-          size="sm"
-          class="q-ml-md"
-          aria-label="Toggle Dark Mode"
-          round
-          :icon="darkModeValue ? `dark_mode` : `light_mode`"
-          color="white"
-          text-color="grey-7"
+        <q-toggle
+          v-model="darkModeValue"
+          size="xl"
+          checked-icon="dark_mode"
+          color="grey-7"
+          unchecked-icon="light_mode"
           @click="toggleDarkMode()"
-        />
+        >
+          <template #default>
+            <div style="width: 100px">
+              {{ darkModeValue ? "Dark Mode" : "Light Mode" }}
+            </div>
+          </template>
+        </q-toggle>
         <q-tooltip>Toggle Dark Mode</q-tooltip>
       </div>
     </div>
@@ -103,14 +107,15 @@ const contentRef = ref(null)
 // const isItDark = $q.dark.isActive ?? true
 // let darkMode = ref($q.dark.isActive ?? true)
 // let darkMode = $q.dark.isActive
-let darkModeValue = true
+let darkModeValue = ref(false)
 
 const $q = useQuasar()
 console.log($q.dark.isActive)
 watch(
   () => $q.dark.isActive,
-  (darkModeValue) => {
-    darkModeValue = $q.dark.isActive
+  (val) => {
+    darkModeValue.value = $q.dark.isActive
+    console.log(val ? "On dark mode" : "On light mode", darkModeValue.value)
   }
 )
 
