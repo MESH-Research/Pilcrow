@@ -10,6 +10,10 @@
         data-cy="visibility_field"
         :v="v$.is_publicly_visible"
       />
+      <v-q-toggle-button
+        data-cy="allow_submissions_field"
+        :v="v$.is_accepting_submissions"
+      />
     </v-q-wrap>
     <form-actions @reset-click="resetForm" />
   </q-form>
@@ -38,8 +42,8 @@ const publication = toRef(props, "publication")
 
 const applyDefaults = (obj) => {
   return Object.assign(
-    { name: "", is_publicly_visible: false },
-    pick(obj ?? {}, ["name", "is_publicly_visible"])
+    { name: "", is_publicly_visible: false, is_accepting_submissions: false },
+    pick(obj ?? {}, ["name", "is_publicly_visible", "is_accepting_submissions"])
   )
 }
 
@@ -49,6 +53,9 @@ const rules = {
     maxLength: maxLength(256),
   },
   is_publicly_visible: {
+    boolean: (value) => typeof value === "boolean",
+  },
+  is_accepting_submissions: {
     boolean: (value) => typeof value === "boolean",
   },
 }
