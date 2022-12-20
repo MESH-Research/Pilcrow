@@ -140,7 +140,8 @@ input CreateSubmissionInput @validator(class: "SubmissionInputValidator") {
     files: CreateSubmissionFilesHasMany @createSubmissionFiles
 }
 
-input AcceptSubmissionInviteInput {
+input AcceptSubmissionInviteInput @validator(class: "SubmissionInvitationAcceptanceValidator") {
+    id: ID!
     name: String
     username: String!
     password: String!

@@ -216,7 +216,7 @@ class SubmissionInvitation extends Model
     public function acceptInvite(array $details): User
     {
         if ($this->accepted_at != null) {
-            return $this->submission;
+            return $this->invitee;
         }
         $this->updated_by = Auth::user()
             ? Auth::user()->id

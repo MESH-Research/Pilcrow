@@ -579,9 +579,12 @@
     },
     "accept_invite": {
       "verify": {
-        "INVITATION_ALREADY_ACCEPTED": "This invitation has already been accepted.",
-        "INVITATION_TOKEN_EXPIRED": "This invitation has expired.",
-        "INVITATION_TOKEN_INVALID": "The supplied token is invalid."
+        "failure": {
+          "title": "Error",
+          "INVITATION_ALREADY_ACCEPTED": "This invitation has already been accepted.",
+          "INVITATION_TOKEN_EXPIRED": "This invitation has expired.",
+          "INVITATION_TOKEN_INVALID": "The supplied token is invalid."
+        }
       },
       "update_details": {
         "title": "Your Details",

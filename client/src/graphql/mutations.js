@@ -91,6 +91,7 @@ export const ACCEPT_SUBMISSION_INVITE = gql`
     $token: String!
     $expires: String!
     $name: String
+    $id: ID!
     $username: String!
     $password: String!
   ) {
@@ -98,7 +99,7 @@ export const ACCEPT_SUBMISSION_INVITE = gql`
       uuid: $uuid
       token: $token
       expires: $expires
-      user: { name: $name, username: $username, password: $password }
+      user: { id: $id, name: $name, username: $username, password: $password }
     ) {
       id
       name

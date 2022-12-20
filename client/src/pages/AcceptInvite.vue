@@ -63,7 +63,7 @@
               </template>
             </new-password-input>
             <error-banner v-if="form_error">
-              {{ $t(form_error) }}
+              {{ $t(`auth.failures.${form_error}`) }}
             </error-banner>
           </fieldset>
 
@@ -109,10 +109,12 @@
       <div v-if="status == 'verification_error'" class="column flex-center">
         <q-icon color="negative" name="error" size="2em" />
         <strong class="text-h3">{{
-          $t("submissions.accept_invite.update_details.failure.title")
+          $t("submissions.accept_invite.verify.failure.title")
         }}</strong>
         <p>
-          {{ $t(`submissions.accept_invite.verify.${verification_error}`) }}
+          {{
+            $t(`submissions.accept_invite.verify.failure.${verification_error}`)
+          }}
         </p>
       </div>
     </section>
@@ -137,22 +139,22 @@ const { params } = useRoute()
 const { mutate: verify } = useMutation(VERIFY_SUBMISSION_INVITE)
 const { mutate: accept } = useMutation(ACCEPT_SUBMISSION_INVITE)
 
+const status = ref("loading")
+const id = ref(null)
+const email = ref("")
+
+let form_error = ref(null)
+let verification_error = ref(null)
+
 const { $v, user, saveUser } = useUserValidation({
   mutation: accept,
   rules: (rules) => {
     delete rules.email
   },
   variables: (form) => {
-    const { password, username, name } = form
-    return { password, username, name, ...params }
+    return { id, ...form, ...params }
   },
 })
-
-const status = ref("loading")
-
-let form_error = ref(null)
-let verification_error = ref(null)
-let email = ref("")
 
 onMounted(async () => {
   const { uuid, expires, token } = params
@@ -160,18 +162,22 @@ onMounted(async () => {
   try {
     const response = await verify({ uuid, expires, token })
     let data = response.data.verifySubmissionInvite
-    email.value = data.email
     Object.assign(user, data)
+    email.value = user.email
+    id.value = user.id
     status.value = "verified"
   } catch (error) {
     verification_error.value = error.graphQLErrors[0].extensions.code
     status.value = "verification_error"
   }
 })
+
 async function handleSubmit() {
+  status.value = "loading"
   form_error.value = ""
   try {
     await saveUser()
+    status.value = "accepted"
   } catch (e) {
     form_error.value = e.message
     console.log(e)
