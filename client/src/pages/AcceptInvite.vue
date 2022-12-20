@@ -38,13 +38,11 @@
             </q-input>
             <q-input
               ref="emailInput"
-              v-model.trim="$v.email.$model"
+              v-model.trim="email"
               outlined
               disable
               type="email"
               :label="$t('auth.fields.email')"
-              autocomplete="username"
-              debounce="500"
               bottom-slots
               data-cy="email_field"
             />
@@ -132,6 +130,7 @@ import { useMutation } from "@vue/apollo-composable"
 import { useRoute } from "vue-router"
 import { useUserValidation } from "src/use/userValidation"
 import ErrorBanner from "src/components/molecules/ErrorBanner.vue"
+import ErrorFieldRenderer from "src/components/molecules/ErrorFieldRenderer.vue"
 // import { useLogin } from "src/use/user"
 // const { loginUser } = useLogin()
 const { params } = useRoute()
@@ -153,13 +152,16 @@ const status = ref("loading")
 
 let form_error = ref(null)
 let verification_error = ref(null)
+let email = ref("")
 
 onMounted(async () => {
   const { uuid, expires, token } = params
 
   try {
     const response = await verify({ uuid, expires, token })
-    Object.assign(user, response.data.verifySubmissionInvite)
+    let data = response.data.verifySubmissionInvite
+    email.value = data.email
+    Object.assign(user, data)
     status.value = "verified"
   } catch (error) {
     verification_error.value = error.graphQLErrors[0].extensions.code
@@ -172,6 +174,7 @@ async function handleSubmit() {
     await saveUser()
   } catch (e) {
     form_error.value = e.message
+    console.log(e)
   }
 }
 </script>
