@@ -178,10 +178,10 @@ onMounted(async () => {
 })
 
 async function handleSubmit() {
-  status.value = "loading"
   form_error.value = ""
   try {
     await saveUser()
+    status.value = "loading"
     await loginUser({ email: user.email, password: user.password })
     status.value = "accepted"
   } catch (e) {
