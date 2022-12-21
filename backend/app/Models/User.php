@@ -243,7 +243,7 @@ class User extends Authenticatable implements MustVerifyEmail
         return User::create([
             'username' => User::generateUniqueUsername($email),
             'email' => $email,
-            'password' => Hash::make('peer-review!'),
+            'password' => Hash::make(bin2hex(random_bytes(30))),
             'staged' => 1,
         ]);
     }
