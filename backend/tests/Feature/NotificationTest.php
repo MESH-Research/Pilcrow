@@ -198,7 +198,7 @@ class NotificationTest extends TestCase
         $details = [
             'name' => '',
             'username' => 'bob',
-            'password' => 'rLT2ovkZkMby5UpwiQkFBeS9'
+            'password' => 'rLT2ovkZkMby5UpwiQkFBeS9',
         ];
         $invite->acceptInvite($details);
         $this->assertEquals(1, $submitter->notifications->count());
@@ -229,7 +229,7 @@ class NotificationTest extends TestCase
         $details = [
             'name' => '',
             'username' => 'bob',
-            'password' => 'aYUB1IYUadd38fl9mxAVv2'
+            'password' => 'aYUB1IYUadd38fl9mxAVv2',
         ];
         $invite->acceptInvite($details);
         $this->assertEquals(1, $submitter->notifications->count());
