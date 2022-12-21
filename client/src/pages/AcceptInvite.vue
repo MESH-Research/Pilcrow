@@ -93,8 +93,11 @@
           class="q-mr-sm"
           color="accent"
           size="md"
-          :label="$t('auth.login')"
-          to="/login"
+          :label="$t('submissions.accept_invite.update_details.success.action')"
+          :to="{
+            name: 'submission_details',
+            params: { id: cta_id },
+          }"
         />
       </div>
       <div v-if="status == 'update_error'" class="column flex-center">
@@ -123,6 +126,8 @@
 
 <script setup>
 import NewPasswordInput from "../components/forms/NewPasswordInput.vue"
+import ErrorBanner from "src/components/molecules/ErrorBanner.vue"
+import ErrorFieldRenderer from "src/components/molecules/ErrorFieldRenderer.vue"
 import {
   VERIFY_SUBMISSION_INVITE,
   ACCEPT_SUBMISSION_INVITE,
@@ -131,16 +136,15 @@ import { ref, onMounted } from "vue"
 import { useMutation } from "@vue/apollo-composable"
 import { useRoute } from "vue-router"
 import { useUserValidation } from "src/use/userValidation"
-import ErrorBanner from "src/components/molecules/ErrorBanner.vue"
-import ErrorFieldRenderer from "src/components/molecules/ErrorFieldRenderer.vue"
-// import { useLogin } from "src/use/user"
-// const { loginUser } = useLogin()
+import { useLogin } from "src/use/user"
+const { loginUser } = useLogin()
 const { params } = useRoute()
 const { mutate: verify } = useMutation(VERIFY_SUBMISSION_INVITE)
 const { mutate: accept } = useMutation(ACCEPT_SUBMISSION_INVITE)
 
 const status = ref("loading")
 const id = ref(null)
+const cta_id = ref(null)
 const email = ref("")
 
 let form_error = ref(null)
@@ -157,7 +161,7 @@ const { $v, user, saveUser } = useUserValidation({
 })
 
 onMounted(async () => {
-  const { uuid, expires, token } = params
+  const { uuid, expires, token, submission_id } = params
 
   try {
     const response = await verify({ uuid, expires, token })
@@ -165,6 +169,7 @@ onMounted(async () => {
     Object.assign(user, data)
     email.value = user.email
     id.value = user.id
+    cta_id.value = submission_id
     status.value = "verified"
   } catch (error) {
     verification_error.value = error.graphQLErrors[0].extensions.code
@@ -177,10 +182,10 @@ async function handleSubmit() {
   form_error.value = ""
   try {
     await saveUser()
+    await loginUser({ email: user.email, password: user.password })
     status.value = "accepted"
   } catch (e) {
     form_error.value = e.message
-    console.log(e)
   }
 }
 </script>

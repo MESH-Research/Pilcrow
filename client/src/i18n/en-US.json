@@ -592,7 +592,7 @@
         "success": {
           "title": "Success",
           "message": "You have updated your details and accepted the invitation to the submission.",
-          "action": "Login"
+          "action": "Visit Submission"
         },
         "failure": {
           "title": "Error",

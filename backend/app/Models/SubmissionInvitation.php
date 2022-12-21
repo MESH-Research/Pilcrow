@@ -68,7 +68,7 @@ class SubmissionInvitation extends Model
         $expires = (string)Carbon::now()->addHours(config('auth.verification.expire', 60))->timestamp;
         $hash = $this->makeToken($expires);
 
-        return url("accept-invite/{$this->uuid}/{$expires}/{$hash}");
+        return url("accept-invite/{$this->uuid}/{$expires}/{$hash}/{$this->submission_id}");
     }
 
     /**
