@@ -105,13 +105,29 @@ html
         font-feature-settings: 'liga'
         padding-left: 1px
 
+.text-dark-6
+  color: $dark-6 !important
+.bg-dark-6
+  background: $dark-6 !important
+
 body.body--dark
     background: $dark
 
 .body--dark
-    aside
-        background: $dark
+    aside, .comments
+        background: $dark !important
     .accent, .accent-dark, .bg-accent
         background: $accent-dark !important
+    .comment, .header-nav
+        background: $dark-1 !important
+    .aside-bar
+        background: $dark-primary !important
+    div[data-cy="styleCriteria"], .comment-header
+        background: $dark-4 !important
+    .review-header
+        background: $dark-5
+        color: white
+    .request-resubmission
+        background: $dark-6
 
 
