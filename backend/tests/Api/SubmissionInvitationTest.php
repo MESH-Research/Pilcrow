@@ -113,6 +113,7 @@ class SubmissionInvitationTest extends ApiTestCase
                 $uuid: String!
                 $token: String!
                 $expires: String!
+                $id: ID!
                 $name: String
                 $username: String!
                 $password: String!
@@ -121,7 +122,7 @@ class SubmissionInvitationTest extends ApiTestCase
                     uuid: $uuid
                     token: $token
                     expires: $expires
-                    user: { name: $name, username: $username, password: $password }
+                    user: { id: $id, name: $name, username: $username, password: $password }
                 ) {
                     id
                     name
@@ -153,6 +154,7 @@ class SubmissionInvitationTest extends ApiTestCase
             'uuid' => $invite->uuid,
             'token' => $token,
             'expires' => $expires,
+            'id' => $invite->invitee->id,
             'name' => '',
             'username' => 'MeshReviewer',
             'password' => 'ImTheMeshReviewerAndThisIsMyPassword!@#',
