@@ -205,12 +205,11 @@ class SubmissionInvitationTest extends ApiTestCase
             ],
             'invalid token' => [
                 'token' => hash_hmac(
-                        'sha256',
-                        "20000#email@msu.edu#1671768239",
-                        config('app.key')
-                    ),
+                    'sha256',
+                    '20000#email@msu.edu#1671768239',
+                    config('app.key')
+                ),
             ],
         ];
     }
-
 }
