@@ -9,6 +9,7 @@ use App\Models\SubmissionInvitation;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 use Tests\ApiTestCase;
 
 class SubmissionInvitationTest extends ApiTestCase
@@ -165,4 +166,51 @@ class SubmissionInvitationTest extends ApiTestCase
         $this->assertNotNull(Arr::get($response, 'data.acceptSubmissionInvite'));
         $this->assertNull(Arr::get($response, 'errors'));
     }
+
+    /**
+     * @return array
+     */
+    public function variablesProvider(): array
+    {
+        return [
+            'missing username' => [
+                'username' => '',
+            ],
+            'missing email' => [
+                'email' => '',
+            ],
+            'missing password' => [
+                'password' => '',
+            ],
+            'weak password' => [
+                'password' => 'password123',
+            ],
+            'missing expires' => [
+                'expires' => '',
+            ],
+            'expired' => [
+                'expires' => (string)Carbon::now()->subMinutes(30)->timestamp,
+            ],
+            'missing uuid' => [
+                'uuid' => '',
+            ],
+            'invalid uuid' => [
+                'uuid' => '1234567890',
+            ],
+            'incorrect uuid' => [
+                'uuid' => Str::uuid()->toString(),
+            ],
+            'missing token' => [
+                'token' => '',
+            ],
+            'invalid token' => [
+                'token' => hash_hmac(
+                        'sha256',
+                        "20000#email@msu.edu#1671768239",
+                        config('app.key')
+                    ),
+            ],
+        ];
+    }
+
 }
