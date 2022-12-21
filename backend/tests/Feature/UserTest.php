@@ -38,12 +38,4 @@ class UserTest extends TestCase
         $user = User::createStagedUser($this->faker->email());
         $this->assertEquals(1, $user->staged);
     }
-
-    /**
-     * @doesNotPerformAssertions
-     */
-    public function testFunction()
-    {
-        print_r(config('app.hello'));
-    }
 }

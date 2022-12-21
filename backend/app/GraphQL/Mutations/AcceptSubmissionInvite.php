@@ -24,6 +24,7 @@ final class AcceptSubmissionInvite
             'username' => $args['username'],
             'password' => $args['password'],
         ];
+
         return $invite->acceptInvite($user_details);
     }
 }

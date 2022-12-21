@@ -94,7 +94,7 @@ class SubmissionInvitation extends Model
     }
 
     /**
-     * The user that the invitation is for
+     * The user invited to the submission
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -104,7 +104,7 @@ class SubmissionInvitation extends Model
     }
 
     /**
-     * The role associated with the invitation
+     * The user role associated with the invitation
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -114,7 +114,7 @@ class SubmissionInvitation extends Model
     }
 
     /**
-     * User that created the submission invitation
+     * User that created the submission invitation (inviter)
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -196,6 +196,7 @@ class SubmissionInvitation extends Model
     /**
      * Update the user details of the invitee and set them as unstaged
      *
+     * @param array $details
      * @return void
      */
     private function updateInviteeDetails($details)
@@ -207,12 +208,12 @@ class SubmissionInvitation extends Model
         $this->invitee->save();
     }
 
-     /**
-      * Set the submission invitation as accepted and update the invitee's details
-      *
-      * @param array $details
-      * @return \App\Models\User
-      */
+    /**
+     * Set the submission invitation as accepted and update the invitee's details
+     *
+     * @param array $details
+     * @return \App\Models\User
+     */
     public function acceptInvite(array $details): User
     {
         if ($this->accepted_at != null) {

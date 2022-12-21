@@ -22,6 +22,7 @@ final class VerifySubmissionInvite
     public function verify($_, array $args): User
     {
         $invite = $this->processArgs($args);
+
         return $invite->invitee;
     }
 
@@ -53,7 +54,7 @@ final class VerifySubmissionInvite
         if (!$invite->verifyToken($args['token'], $args['expires'])) {
             throw new ClientException('Invalid Token', 'invitationVerification', 'INVITATION_TOKEN_INVALID');
         }
+
         return $invite;
     }
-
 }

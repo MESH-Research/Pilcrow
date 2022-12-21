@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Tests\Api;
 
 use App\Models\Role;
-use App\Models\User;
 use App\Models\Submission;
 use App\Models\SubmissionInvitation;
 use Carbon\Carbon;
@@ -154,9 +153,9 @@ class SubmissionInvitationTest extends ApiTestCase
             'uuid' => $invite->uuid,
             'token' => $token,
             'expires' => $expires,
-            'name' => "",
-            'username' => "MeshReviewer",
-            'password' => "ImTheMeshReviewerAndThisIsMyPassword!@#",
+            'name' => '',
+            'username' => 'MeshReviewer',
+            'password' => 'ImTheMeshReviewerAndThisIsMyPassword!@#',
         ];
 
         $response = $this->callAcceptSubmissionInvite($params);
