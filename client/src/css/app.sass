@@ -50,31 +50,13 @@ html
     fieldset
         border: none
 
-    .bg-dark-grey
-        background: $dark-grey
-
-    .dark-grey
-        color: $dark-grey
-
-    .light-grey
-        background: $light-grey
-
-    .xlight-grey
-        background: $xlight-grey
-
-    .highlight
-        background: $highlight
-
-    .blu-highlight
-        background: $blu-highlight
-
     .q-tab__label
         font-weight: 400
 
     .q-item.q-router-link--active,
     .q-item--active,
     .q-tab--active
-        color: #000
+        color: $dark
         font-weight: 500
         background-color: $active
 
@@ -105,10 +87,39 @@ html
         font-feature-settings: 'liga'
         padding-left: 1px
 
+// declare classes for custom colors
+
+.text-dark-grey
+    color: $dark-grey
+.bg-dark-grey
+    background: $dark-grey
+
+.text-blu-highlight
+    color: $blu-highlight
+.bg-blu-highlight
+    background: $blu-highlight
+
+.text-highlight
+    color: $highlight
+.bg-highlight
+    background: $highlight
+
+.text-xlight-grey
+    color: $xlight-grey
+.bg-xlight-grey
+    background: $xlight-grey
+
+.text-light-grey
+    color: $light-grey
+.bg-light-grey
+    background: $light-grey
+
 .text-dark-6
   color: $dark-6 !important
 .bg-dark-6
   background: $dark-6 !important
+
+// dark mode
 
 body.body--dark
     background: $dark !important
@@ -118,16 +129,20 @@ body.body--dark
         background: $dark !important
     .accent, .accent-dark, .bg-accent
         background: $accent-dark !important
-    .comment, .header-nav
+    .comment, .request-resubmission
         background: $dark-1 !important
+    .comment
+        box-shadow: none !important
     .aside-bar
         background: $dark-primary !important
     div[data-cy="styleCriteria"], .comment-header
         background: $dark-4 !important
     .review-header
-        background: $dark-5
         color: white
-    .request-resubmission
-        background: $dark-6
+        background: $dark-grey !important
+    button[data-cy="commentActions"]
+        color: #fff
+    span[data-cy="comment-highlight"]
+        color: $dark
 
 

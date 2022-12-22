@@ -244,7 +244,7 @@ function highlightClickHandler(event) {
 
 <style lang="scss">
 .comment-highlight {
-  background: #ddd;
+  background: #c9e5f8;
 }
 .comment-highlight.active {
   background: rgb(248, 219, 138);
