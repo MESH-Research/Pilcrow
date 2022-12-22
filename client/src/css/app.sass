@@ -133,6 +133,10 @@ body.body--dark
         background: $dark-1 !important
     .comment
         box-shadow: none !important
+    .q-card.active
+        border: 1px solid $highlight
+    .q-card.active .comment-header, .q-card.active button[data-cy="commentActions"]
+        color: $dark
     .aside-bar
         background: $dark-primary !important
     div[data-cy="styleCriteria"], .comment-header
