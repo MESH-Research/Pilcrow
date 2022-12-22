@@ -71,16 +71,42 @@ export const UPDATE_USER = gql`
     }
   }
 `
-export const ACCEPT_SUBMISSION_INVITE = gql`
-  mutation AcceptSubmissionInvite($token: String!) {
-    acceptSubmissionInvite(token: $token) {
+export const VERIFY_SUBMISSION_INVITE = gql`
+  mutation VerifySubmissionInvite(
+    $uuid: String!
+    $token: String!
+    $expires: String!
+  ) {
+    verifySubmissionInvite(uuid: $uuid, token: $token, expires: $expires) {
       id
-      reviewers {
-        ...relatedUserFields
-      }
+      name
+      email
+      username
     }
   }
-  ${_RELATED_USER_FIELDS}
+`
+export const ACCEPT_SUBMISSION_INVITE = gql`
+  mutation AcceptSubmissionInvite(
+    $uuid: String!
+    $token: String!
+    $expires: String!
+    $id: ID!
+    $name: String
+    $username: String!
+    $password: String!
+  ) {
+    acceptSubmissionInvite(
+      uuid: $uuid
+      token: $token
+      expires: $expires
+      user: { id: $id, name: $name, username: $username, password: $password }
+    ) {
+      id
+      name
+      email
+      username
+    }
+  }
 `
 export const VERIFY_EMAIL = gql`
   mutation VerifyEmail($token: String!, $expires: String!) {

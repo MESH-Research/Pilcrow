@@ -11,7 +11,7 @@ extend type Query {
 extend type Mutation {
     "Create a new submission under a publication"
     createSubmission(input: CreateSubmissionInput! @spread): Submission!
-        @create 
+        @create
         @can(ability: "create", injectArgs: true)
 
     "Update an existing submission"
@@ -28,10 +28,16 @@ extend type Mutation {
             ]
         )
 
-    "Accept an invitation to a submission as the assigned role"
-    acceptSubmissionInvite(token: String!): Submission
+    "Verify access to an invitation to a submission as the assigned role"
+    verifySubmissionInvite(uuid: String! token: String! expires: String!): User
         @field(
-            resolver: "App\\GraphQL\\Mutations\\AcceptSubmissionInvite@acceptInvite"
+            resolver: "App\\GraphQL\\Mutations\\VerifySubmissionInvite@verify"
+        )
+
+    "Accept an invitation to a submission as the assigned role"
+    acceptSubmissionInvite(uuid: String! token: String! expires: String! user: AcceptSubmissionInviteInput @spread): User
+        @field(
+            resolver: "App\\GraphQL\\Mutations\\AcceptSubmissionInvite@accept"
         )
 
     """
@@ -132,6 +138,13 @@ input CreateSubmissionInput @validator(class: "SubmissionInputValidator") {
     publication_id: ID!
     submitters: CreateSubmissionUserInput
     files: CreateSubmissionFilesHasMany @createSubmissionFiles
+}
+
+input AcceptSubmissionInviteInput @validator(class: "SubmissionInvitationAcceptanceValidator") {
+    id: ID!
+    name: String
+    username: String!
+    password: String!
 }
 
 input UpdateSubmissionInput {
