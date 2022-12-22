@@ -174,45 +174,98 @@ class SubmissionInvitationTest extends ApiTestCase
     {
         return [
             'missing username' => [
-                'username' => '',
-            ],
-            'missing email' => [
-                'email' => '',
+                [
+                    'username' => '',
+                ],
             ],
             'missing password' => [
-                'password' => '',
+                [
+                    'password' => '',
+                ],
             ],
             'weak password' => [
-                'password' => 'password123',
+                [
+                    'password' => 'password123',
+                ],
             ],
             'missing expires' => [
-                'expires' => '',
+                [
+                    'expires' => '',
+                ],
             ],
             'expired' => [
-                'expires' => (string)Carbon::now()->subMinutes(30)->timestamp,
+                [
+                    'expires' => (string)Carbon::now()->subMinutes(30)->timestamp,
+                ],
             ],
             'missing uuid' => [
-                'uuid' => '',
+                [
+                    'uuid' => '',
+                ],
             ],
             'invalid uuid' => [
-                'uuid' => '1234567890',
+                [
+                    'uuid' => '1234567890',
+                ],
             ],
             'incorrect uuid' => [
-                'uuid' => Str::uuid()->toString(),
+                [
+                    'uuid' => Str::uuid()->toString(),
+                ],
             ],
             'missing token' => [
-                'token' => '',
+                [
+                    'token' => '',
+                ],
             ],
             'invalid token' => [
-                'token' => '1234567890',
+                [
+                    'token' => '1234567890',
+                ],
             ],
             'incorrect token' => [
-                'token' => hash_hmac(
-                    'sha256',
-                    '20000#email@msu.edu#1671768239',
-                    config('app.key')
-                ),
+                [
+                    'token' => hash_hmac(
+                        'sha256',
+                        '20000#email@msu.edu#1671768239',
+                        'APP_KEY',
+                    ),
+                ],
             ],
         ];
+    }
+
+    /**
+     * @dataProvider variablesProvider
+     * @param array $variable
+     * @return void
+     */
+    public function testBadInputsForTheAcceptanceMutationResultInFailures(array $variable): void
+    {
+        $this->beAppAdmin();
+        $submission = Submission::factory()->create();
+        $invite = SubmissionInvitation::create([
+            'submission_id' => $submission->id,
+            'role_id' => Role::REVIEWER_ROLE_ID,
+            'email' => 'mesh@msu.edu',
+        ]);
+        $invite->inviteReviewer();
+
+        $expires = $variable['expires'] ?? (string)Carbon::now()->addMinutes(10)->timestamp;
+        $token = $variable['token'] ?? $invite->makeToken($expires);
+
+        $params = [
+            'uuid' => $variable['uuid'] ?? $invite->uuid,
+            'token' => $variable['token'] ?? $token,
+            'expires' => $variable['expires'] ?? $expires,
+            'id' => $variable['id'] ?? $invite->invitee->id,
+            'name' => '',
+            'username' => $variable['username'] ?? 'MeshReviewer',
+            'password' => $variable['password'] ?? 'ImTheMeshReviewerAndThisIsMyPassword!@#',
+        ];
+
+        $response = $this->callAcceptSubmissionInvite($params);
+
+        $this->assertNotNull(Arr::get($response, 'errors'));
     }
 }
