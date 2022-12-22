@@ -12,7 +12,6 @@
         <q-btn
           aria-label="Decrease Font Size"
           data-cy="decrease_font"
-          class="review-controls"
           round
           flat
           icon="remove_circle"
@@ -27,7 +26,6 @@
         <q-btn
           aria-label="Increase Font Size"
           data-cy="increase_font"
-          class="review-controls"
           round
           flat
           icon="add_circle"
@@ -41,7 +39,6 @@
         <q-toggle
           v-model="darkModeValue"
           size="xl"
-          class="review-controls"
           checked-icon="dark_mode"
           color="grey-7"
           unchecked-icon="light_mode"
