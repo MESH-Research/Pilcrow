@@ -27,7 +27,6 @@ class SubmissionInvitationTest extends TestCase
             'submission_id' => $submission->id,
             'role_id' => Role::REVIEWER_ROLE_ID,
         ]);
-        $this->assertEquals(36, strlen($invite->token));
-        $this->assertNotNull($invite->expiration);
+        $this->assertEquals(36, strlen($invite->uuid));
     }
 }

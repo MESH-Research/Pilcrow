@@ -27,7 +27,7 @@ export const rules = {
   },
 }
 
-export function useUserValidation() {
+export function useUserValidation(opts = {}) {
   const form = reactive({
     email: "",
     password: "",
@@ -42,17 +42,23 @@ export function useUserValidation() {
     username: [],
   })
 
+  const mutate = opts.mutation ?? useMutation(CREATE_USER).mutate
+  if (opts.rules && typeof opts.rules === "function") {
+    opts.rules(rules)
+  }
   const $v = useVuelidate(rules, form, { $externalResults: externalValidation })
-
-  const { mutate } = useMutation(CREATE_USER)
 
   const saveUser = async () => {
     $v.value.$touch()
     if ($v.value.$invalid || $v.value.$error) {
       throw Error("FORM_VALIDATION")
     }
+    const vars =
+      opts.variables && typeof opts.variables === "function"
+        ? opts.variables(form)
+        : form
     try {
-      const newUser = await mutate(form)
+      const newUser = await mutate(vars)
       return newUser
     } catch (error) {
       if (
