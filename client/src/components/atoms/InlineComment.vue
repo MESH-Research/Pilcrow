@@ -86,7 +86,11 @@
           @quote-reply-to="initiateQuoteReply"
         />
       </section>
-      <q-card-section v-if="isReplying" ref="comment_reply">
+      <q-card-section
+        v-if="isReplying"
+        ref="comment_reply"
+        data-cy="comment-reply"
+      >
         <q-separator class="q-mb-md" />
         <span class="text-h4 q-pl-sm">{{
           $t("submissions.comment.reply.title")

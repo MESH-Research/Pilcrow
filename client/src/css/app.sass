@@ -123,29 +123,33 @@ html
 
 body.body--dark
     background: $dark !important
+    .shadow-3
+        box-shadow: none
 
 .body--dark
     aside, .comments
         background: $dark !important
     .accent, .accent-dark, .bg-accent
         background: $accent-dark !important
-    .comment, .request-resubmission
+    .comment, .request-resubmission, .comment-editor-card, .inline-comment-form
         background: $dark-1 !important
-    .comment
+    .comment, .q-card
         box-shadow: none !important
+    div[contenteditable="true"], div[data-cy="styleCriteria"], .comment-header
+        background: $dark-grey !important
+    div[data-cy="criteria-icon"] i
+        color: $dark-primary !important
+    .q-icon.q-expansion-item__toggle-icon
+        color: $light-grey !important
     .q-card.active
         border: 1px solid $highlight
     .q-card.active .comment-header, .q-card.active button[data-cy="commentActions"]
         color: $dark
-    .aside-bar
-        background: $dark-primary !important
-    div[data-cy="styleCriteria"], .comment-header
-        background: $dark-4 !important
-    .review-header
+    .review-header, .comment-editor .ProseMirror p.is-editor-empty:first-child::before
         color: white
         background: $dark-grey !important
-    button[data-cy="commentActions"]
-        color: #fff
+    button[data-cy="commentActions"], .q-btn-group .q-btn-item
+        color: #fff !important
     span[data-cy="comment-highlight"]
         color: $dark
 

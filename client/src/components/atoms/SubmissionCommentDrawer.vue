@@ -10,7 +10,7 @@
       <div
         v-touch-pan.horizontal.prevent.mouse.preserveCursor="handlePan"
         style="width: 12px; cursor: col-resize"
-        class="bg-primary column items-center justify-center aside-bar"
+        class="bg-secondary column items-center justify-center aside-bar"
       >
         <q-icon name="fas fa-grip-lines-vertical" color="white" size="12px" />
       </div>
