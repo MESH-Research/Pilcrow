@@ -71,16 +71,42 @@ export const UPDATE_USER = gql`
     }
   }
 `
-export const ACCEPT_SUBMISSION_INVITE = gql`
-  mutation AcceptSubmissionInvite($token: String!) {
-    acceptSubmissionInvite(token: $token) {
+export const VERIFY_SUBMISSION_INVITE = gql`
+  mutation VerifySubmissionInvite(
+    $uuid: String!
+    $token: String!
+    $expires: String!
+  ) {
+    verifySubmissionInvite(uuid: $uuid, token: $token, expires: $expires) {
       id
-      reviewers {
-        ...relatedUserFields
-      }
+      name
+      email
+      username
     }
   }
-  ${_RELATED_USER_FIELDS}
+`
+export const ACCEPT_SUBMISSION_INVITE = gql`
+  mutation AcceptSubmissionInvite(
+    $uuid: String!
+    $token: String!
+    $expires: String!
+    $id: ID!
+    $name: String
+    $username: String!
+    $password: String!
+  ) {
+    acceptSubmissionInvite(
+      uuid: $uuid
+      token: $token
+      expires: $expires
+      user: { id: $id, name: $name, username: $username, password: $password }
+    ) {
+      id
+      name
+      email
+      username
+    }
+  }
 `
 export const VERIFY_EMAIL = gql`
   mutation VerifyEmail($token: String!, $expires: String!) {
@@ -301,17 +327,20 @@ export const UPDATE_PUBLICATION_BASICS = gql`
     $id: ID!
     $name: String
     $is_publicly_visible: Boolean
+    $is_accepting_submissions: Boolean
   ) {
     updatePublication(
       publication: {
         id: $id
         name: $name
         is_publicly_visible: $is_publicly_visible
+        is_accepting_submissions: $is_accepting_submissions
       }
     ) {
       id
       name
       is_publicly_visible
+      is_accepting_submissions
     }
   }
 `

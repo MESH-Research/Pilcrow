@@ -195,7 +195,12 @@ class NotificationTest extends TestCase
             'email' => 'bob@msu.edu',
         ]);
         $invite->inviteReviewer();
-        $invite->acceptInvite();
+        $details = [
+            'name' => '',
+            'username' => 'bob',
+            'password' => 'rLT2ovkZkMby5UpwiQkFBeS9',
+        ];
+        $invite->acceptInvite($details);
         $this->assertEquals(1, $submitter->notifications->count());
         $this->assertEquals(1, $reviewer->notifications->count());
         $this->assertEquals(1, $review_coordinator->notifications->count());
@@ -221,7 +226,12 @@ class NotificationTest extends TestCase
             'email' => 'bob@msu.edu',
         ]);
         $invite->inviteReviewCoordinator();
-        $invite->acceptInvite();
+        $details = [
+            'name' => '',
+            'username' => 'bob',
+            'password' => 'aYUB1IYUadd38fl9mxAVv2',
+        ];
+        $invite->acceptInvite($details);
         $this->assertEquals(1, $submitter->notifications->count());
         $this->assertEquals(1, $reviewer->notifications->count());
         $this->assertEquals(1, $review_coordinator->notifications->count());

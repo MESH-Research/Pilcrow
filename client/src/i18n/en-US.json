@@ -314,9 +314,20 @@
           },
           "effect": {
             "true": "Anyone can find this publication.",
-            "false": "This publication will be hidden from search."
+            "false": "Publication will be hidden from search."
           },
           "hint": "Set to publicly visible to allow your publication to be discoverable."
+        },
+        "is_accepting_submissions": {
+          "options": {
+            "true": "Open",
+            "false": "Closed"
+          },
+          "effect": {
+            "true": "Publication is currently open to new submissions.",
+            "false": "Publication is currently closed to new submissions."
+          },
+          "hint": "Set to accept to allow submissions for the publication."
         }
       }
     },
@@ -567,14 +578,26 @@
       }
     },
     "accept_invite": {
-      "success": {
-        "title": "Success",
-        "message": "You have accepted the invitation to the submission.",
-        "action": "Visit Submission"
+      "verify": {
+        "failure": {
+          "title": "Error",
+          "INVITATION_ALREADY_ACCEPTED": "This invitation has already been accepted.",
+          "INVITATION_TOKEN_EXPIRED": "This invitation has expired.",
+          "INVITATION_TOKEN_INVALID": "The supplied token is invalid."
+        }
       },
-      "failure": {
-        "title": "Error",
-        "message": "An error occurred while attempting to accept the invitation. Please contact your administrator."
+      "update_details": {
+        "title": "Your Details",
+        "update_action": "Accept Invitation",
+        "success": {
+          "title": "Success",
+          "message": "You have updated your details and accepted the invitation to the submission.",
+          "action": "Visit Submission"
+        },
+        "failure": {
+          "title": "Error",
+          "message": "An error occurred while attempting to accept the invitation. Please contact your administrator."
+        }
       }
     },
     "create": {

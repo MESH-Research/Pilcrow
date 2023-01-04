@@ -47,14 +47,14 @@ class InviteReviewer extends Notification implements ShouldQueue
     public function toMail()
     {
         $mail = new MailMessage();
-        $name = ($this->data['inviter']['name'] ?: $this->data['inviter']['username']);
+        $inviter = $this->data['inviter']['display_label'];
         $mail->subject('Invitation to Review')
-            ->line('You have been invited by ' . $name . ' to review a submission.')
+            ->line('You have been invited by ' . $inviter . ' to review a submission.')
             ->linesIf($this->data['message'], [
-                'Comment from ' . $name . ': ',
+                'Comment from ' . $inviter . ': ',
                 $this->data['message'],
             ])
-            ->action('Accept Invitation', url('/accept-invite/' . $this->data['token']));
+            ->action('Accept Invitation', $this->data['url']);
 
         return $mail;
     }
@@ -70,9 +70,8 @@ class InviteReviewer extends Notification implements ShouldQueue
             'submission' => [
                 'id' => $this->data['id'],
             ],
-            'user_by' => [
-                'name' => $this->data['user_by']['name'],
-                'username' => $this->data['user_by']['username'],
+            'inviter' => [
+                'display_label' => $this->data['inviter']['display_label'],
             ],
             'message' => $this->data['message'],
         ];

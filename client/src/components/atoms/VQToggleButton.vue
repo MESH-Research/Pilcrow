@@ -24,10 +24,7 @@
         <span v-else>{{ getTranslation("effect.false") }} </span>
       </div>
     </div>
-    <div
-      v-if="getTranslation('hint')"
-      class="q-field__bottom row items-start q-field__bottom--animated"
-    >
+    <div v-if="getTranslation('hint')" class="q-field__bottom row items-start">
       <div class="q-field__messages col">
         {{ getTranslation("hint") }}
       </div>

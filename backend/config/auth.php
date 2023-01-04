@@ -114,4 +114,19 @@ return [
 
     'password_timeout' => 10800,
 
+
+    /*
+    |--------------------------------------------------------------------------
+    | Invitations
+    |--------------------------------------------------------------------------
+    |
+    | This controls options related to invitations sent to new users.
+    |
+    | invitations.expire represents the number of hours an invitation will
+    | remain valid until the invitation is considered expired.
+    */
+
+    'invitations' => [
+        'expire' => 48,
+    ],
 ];

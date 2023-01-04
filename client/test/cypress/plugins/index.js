@@ -13,8 +13,13 @@
 // the project's config changing)
 
 // cypress/plugins/index.js
-const axios = require("axios")
-
+const axiosImport = require("axios")
+const https = require("https")
+const axios = axiosImport.create({
+  httpsAgent: new https.Agent({
+    rejectUnauthorized: false
+  })
+})
 module.exports = (on, config) => {
   on("task", {
     resetDb() {
