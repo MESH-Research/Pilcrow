@@ -127,7 +127,7 @@ body.body--dark
         box-shadow: none
 
 .body--dark
-    aside, .comments
+    aside, .comments, .header-toolbar
         background: $dark !important
     .accent, .accent-dark, .bg-accent
         background: $accent-dark !important
@@ -137,8 +137,14 @@ body.body--dark
         box-shadow: none !important
     div[contenteditable="true"], div[data-cy="styleCriteria"], .comment-header
         background: $dark-grey !important
-    div[data-cy="criteria-icon"] i
+    div[data-cy="criteria-icon"] i, .comment-widget
         color: $dark-primary !important
+    .header-nav, footer
+        background: $dark-secondary
+    .footer-text
+        color: white
+    .footer-text a
+        color: $dark-links
     .q-icon.q-expansion-item__toggle-icon
         color: $light-grey !important
     .q-card.active
