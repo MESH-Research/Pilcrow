@@ -1,7 +1,7 @@
 <template>
   <q-footer bordered class="light-grey text-black">
     <q-toolbar class="flex flex-center text-caption">
-      <div>
+      <div class="footer-text">
         Powered by
         <a href="https://github.com/MESH-Research/CCR"
           >Collaborative Community Review (CCR)</a
