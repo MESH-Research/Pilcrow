@@ -129,16 +129,20 @@ body.body--dark
 .body--dark
     aside, .comments, .header-toolbar
         background: $dark !important
+    .notifications-list, .notification-button-group, .notifications-container
+        background: $dark-2 !important
     .accent, .accent-dark, .bg-accent
         background: $accent-dark !important
     .comment, .request-resubmission, .comment-editor-card, .inline-comment-form
         background: $dark-1 !important
-    .comment, .q-card
+    .comment, .q-card, #notifications-wrapper
         box-shadow: none !important
     div[contenteditable="true"], div[data-cy="styleCriteria"], .comment-header
         background: $dark-grey !important
     div[data-cy="criteria-icon"] i, .comment-widget
         color: $dark-primary !important
+    .unread .q-badge, .notification_indicator
+        background: $dark-primary !important
     .header-nav, footer
         background: $dark-secondary
     .footer-text
