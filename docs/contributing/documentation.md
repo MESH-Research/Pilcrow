@@ -13,12 +13,12 @@ At the bottom of each page, you should find a link to "Edit this Page."  Follow 
 
 Github Actions powered by [Netlify](https://netlify.com) automatically build and deploy the documentation sites.  There are two automatic builds configured:
 
-- **<https://ccr.meshresearch.dev>**: Automatically built from the `master` branch.
-- **<https://development.ccr.meshresearch.dev>**: Automatically built from the `development` branch.
+- **<https://pilcrow.meshresearch.dev>**: Automatically built from the `master` branch.
+- **<https://development.pilcrow.meshresearch.dev>**: Automatically built from the `development` branch.
 
 ### Deploy Previews
 
-Any pull request that contains changes to documentation will have a preview build deployed.  These previews are a great way to share proposed documentation changes for feedback and review.  
+Any pull request that contains changes to documentation will have a preview build deployed.  These previews are a great way to share proposed documentation changes for feedback and review.
 
 Whenever a deploy preview build is triggered, the Netlify bot will comment on the pull request with a link to view the deployed documentation preview.
 
