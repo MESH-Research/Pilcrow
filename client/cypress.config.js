@@ -12,7 +12,7 @@ module.exports = defineConfig({
     setupNodeEvents(on, config) {
       return require("./test/cypress/plugins/index.js")(on, config)
     },
-    baseUrl: "https://ccr.lndo.site",
+    baseUrl: "https://pilcrow.lndo.site",
     specPattern: "test/cypress/integration/**/*.cy.{js,jsx,ts,tsx}",
     supportFile: "test/cypress/support/index.js",
   },

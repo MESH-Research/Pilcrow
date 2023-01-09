@@ -41,7 +41,7 @@ class NotificationTest extends TestCase
                 'name' => 'Test Publication from PHPUnit',
             ],
             'type' => 'submission.initially_submitted',
-            'action' => 'Visit CCR',
+            'action' => 'Visit Pilcrow',
             'url' => '/',
             'body' => 'A submission status has been updated.',
             'subject' => '',

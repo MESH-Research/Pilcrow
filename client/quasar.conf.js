@@ -81,7 +81,7 @@ module.exports = configure(function () {
       port: 8080,
       open: false,
       client: {
-        webSocketURL: "auto://ccr.lndo.site/ws",
+        webSocketURL: "auto://pilcrow.lndo.site/ws",
         progress: true,
       },
       historyApiFallback: {

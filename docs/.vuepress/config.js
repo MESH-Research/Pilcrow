@@ -1,7 +1,7 @@
 const { description } = require("../package");
 
 module.exports = {
-    title: "Collaborative Community Review",
+    title: "Pilcrow",
     head: [
         ["meta", { name: "theme-color", content: "#3eaf7c" }],
         ["meta", { name: "apple-mobile-web-app-capable", content: "yes" }],
@@ -12,7 +12,7 @@ module.exports = {
     ],
     base: process.env.BASE_URL || "/",
     themeConfig: {
-        repo: "https://github.com/MESH-Research/CCR",
+        repo: "https://github.com/MESH-Research/Pilcrow",
         branch: process.env.BRANCH,
         editLinks: true,
         docsDir: "docs",
@@ -70,7 +70,7 @@ module.exports = {
         [
             "robots",
             {
-                host: "https://docs.ccrproject.dev/CCR",
+                host: "https://pilcrow.meshresearch.dev",
                 disallowAll: true
             }
         ]

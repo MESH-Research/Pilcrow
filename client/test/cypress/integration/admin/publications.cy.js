@@ -6,7 +6,7 @@ import { a11yLogViolations } from '../../support/helpers'
 describe("Admin Publications", () => {
   beforeEach(() => {
     cy.task("resetDb")
-    cy.login({ email: "applicationadministrator@ccrproject.dev" })
+    cy.login({ email: "applicationadministrator@pilcrow.dev" })
     cy.visit("/admin/publications")
     cy.injectAxe()
   })

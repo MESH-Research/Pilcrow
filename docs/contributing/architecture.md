@@ -4,7 +4,7 @@
 
 ## Containers
 
-CCR uses a multi-container docker architecture. Three primary containers serve the application:
+Pilcrow uses a multi-container docker architecture. Three primary containers serve the application:
 
 - Proxy: An NGiNX container that proxies outside requests into the application.
 - Application: A PHP-FPM container that provides the backend GraphQL API
