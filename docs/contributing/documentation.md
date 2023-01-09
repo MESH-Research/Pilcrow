@@ -1,6 +1,6 @@
 # Documentation
 
-CCR's documentation (the site you're currently reading) is a [VuePress](https://vuepress.vuejs.org) site located in the `/docs` directory of the repo.  Our goal is to iterate the documentation as features that are added to the application.  All of the documentation files are [Markdown](https://www.markdownguide.org/getting-started/) with some minor Vue additions sprinkled in here and there.
+Pilcrow's documentation (the site you're currently reading) is a [VuePress](https://vuepress.vuejs.org) site located in the `/docs` directory of the repo.  Our goal is to iterate the documentation as features that are added to the application.  All of the documentation files are [Markdown](https://www.markdownguide.org/getting-started/) with some minor Vue additions sprinkled in here and there.
 
 ::: tip Help Pilcrow Grow
 ![edit this page screenshot](./images/edit_this_page.jpg)
@@ -28,4 +28,4 @@ Whenever a deploy preview build is triggered, the Netlify bot will comment on th
 
 It can be helpful to have a locally rendered version to see the results of your changes while editing documentation.  The `/docs` directory has its own [Lando](https://lando.dev) configuration file just for starting up a documentation development environment.
 
-Inside the `/docs` directory, run `lando start` to start the container and proxy.  Once everything is up and running, visit <https://docs.ccr.lndo.site> to view your documentation build.  The container uses a development server, so updates should happen automatically in the browser without requiring a refresh.
+Inside the `/docs` directory, run `lando start` to start the container and proxy.  Once everything is up and running, visit <https://docs.pilcrow.lndo.site> to view your documentation build.  The container uses a development server, so updates should happen automatically in the browser without requiring a refresh.

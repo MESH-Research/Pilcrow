@@ -7,7 +7,7 @@ actionLink: /install/
 ---
 # About
 
-Pilcrow is an open source web tool representing the values and intent of [Collaborative Community Review (CCR)](https://publicphilosophyjournal.org/overview/) as established by the [Public Philosophy Journal](https://publicphilosophyjournal.com). Pilcrow will provide a collaboration framework for the review of submissions intended for publication by journals, publications, bloggers, and more. Pilcrow will be used to satisfy the various needs of the peer review process for works in academic and public scholarship. Pilcrow is primarily funded through a grant by the Andrew Mellon Foundation.
+Pilcrow is an open source web tool representing the values and intent of [Collaborative Community Review (CCR)](https://publicphilosophyjournal.org/about-community-collaborative-review/) as established by the [Public Philosophy Journal](https://publicphilosophyjournal.com). Pilcrow will provide a collaboration framework for the review of submissions intended for publication by journals, publications, bloggers, and more. Pilcrow will be used to satisfy the various needs of the peer review process for works in academic and public scholarship. Pilcrow is primarily funded through a grant by the Andrew Mellon Foundation.
 
 ## Project Sponsors
 

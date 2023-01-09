@@ -11,7 +11,7 @@ majestic:
         scanner: false
     proxy:
       majestic:
-        - majestic.ccr.lndo.site:4000
+        - majestic.pilcrow.lndo.site:4000
 cypress:
   description: Install the cypress test runner and tooling command.
   template:
@@ -28,7 +28,7 @@ cypress:
         dir: /app/client
         cmd: yarn cypress
 mailhog:
-  description: Catch mail output from CCR with mailhog.
+  description: Catch mail output from Pilcrow with mailhog.
   template:
     services:
       mailhog:
@@ -37,4 +37,4 @@ mailhog:
           - appserver
     proxy:
       mailhog:
-        - mailhog.ccr.lndo.site
+        - mailhog.pilcrow.lndo.site

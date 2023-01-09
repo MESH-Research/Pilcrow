@@ -11,7 +11,7 @@ Pilcrow uses [Lando](https://lando.dev) to manage its development environment.
 3. Head into the Pilcrow directory and run: `lando start`
 4. Coffee. Downloading. Building. Patience. Step 3 may take approximately three to fifteen minutes to complete.
 5. Migrate database: `lando artisan migrate`
-6. Once the bootstrapping process is finished, open a browser to <https://ccr.lndo.site/>
+6. Once the bootstrapping process is finished, open a browser to <https://pilcrow.lndo.site/>
 
 The stack is running `yarn dev` in the node container, so editing source files should result in HMR / recompiling as needed.  PHP files are served with PHP-FPM and should not require restarting the container to load changes.
 
@@ -26,6 +26,6 @@ The stack is running `yarn dev` in the node container, so editing source files s
 ### Pilcrow Wiki - <https://github.com/MESH-Research/Pilcrow/wiki>
 
 * [An opinionated application](https://github.com/MESH-Research/Pilcrow/wiki/An-Opinionated-Application)
-* [Pilcrow Links](https://github.com/MESH-Research/Pilcrow/wiki/CCR-Links)
+* [Pilcrow Links](https://github.com/MESH-Research/Pilcrow/wiki/Pilcrow-Links)
 * [Style Guide - in the Making](https://github.com/MESH-Research/Pilcrow/wiki/Style-Guide---in-the-making)
 

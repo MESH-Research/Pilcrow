@@ -1,8 +1,8 @@
 {
-  "name": "ccr_client",
+  "name": "pilcrow_client",
   "version": "0.0.1",
   "description": "Pilcrow front-end application",
-  "productName": "CCR",
+  "productName": "Pilcrow Client",
   "author": "MESH-Research <mesh@msu.edu>",
   "private": true,
   "scripts": {

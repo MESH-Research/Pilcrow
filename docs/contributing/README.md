@@ -47,7 +47,7 @@ Lando will then download the appropriate containers and get everything spun up. 
 
 ![lando start container screenshot](./images/lando_screenshot.jpg)
 
-You can then open a browser to <https://ccr.lndo.site/> and view the project running on your local machine.
+You can then open a browser to <https://pilcrow.lndo.site/> and view the project running on your local machine.
 
 ### Database Migration and Seeding
 
@@ -69,7 +69,7 @@ The commands to migrate and seed will need to be ran each time a new migration o
 
 `lando artisan db:seed`
 
-Once seeding is complete, you can log in at <https://ccr.lndo.site/login> as any one of the sample users defined in `backend/database/seeders/UserSeeder.php` in the repository.
+Once seeding is complete, you can log in at <https://pilcrow.lndo.site/login> as any one of the sample users defined in `backend/database/seeders/UserSeeder.php` in the repository.
 
 ### Lando tooling commands
 
@@ -106,7 +106,7 @@ lando extras enable mailhog
 lando rebuild
 ```
 
-The MailHog interface will be available at <http://mailhog.ccr.lndo.site/> once the rebuild has finished.  CCR's development environment will automatically route outgoing mail to MailHog's SMTP interface.
+The MailHog interface will be available at <http://mailhog.pilcrow.lndo.site/> once the rebuild has finished.  Pilcrow's development environment will automatically route outgoing mail to MailHog's SMTP interface.
 
 
 ### Lando Tips and Tricks

@@ -40,7 +40,7 @@ class NotificationTest extends ApiTestCase
                 'name' => 'Test Publication from PHPUnit',
             ],
             'type' => 'submission.initially_submitted',
-            'action' => 'Visit CCR',
+            'action' => 'Visit Pilcrow',
             'url' => '/',
             'body' => 'A submission has been initially submitted.',
             'subject' => 'Submission Status Update',
