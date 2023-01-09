@@ -10,7 +10,7 @@ Most of the work of the project is handled on our [GitHub repo](https://github.c
 
 If you have a supported browser, you can install the [Zenhub browser extension](https://www.zenhub.com/extension). Once installed, you'll see a new tab in GitHub for our Zenhub board.
 
-![zenhub screenshot](./images/zenhub_screenshot.png)
+![Screenshot of the Zenhub tab on the GitHub repository for Pilcrow](./images/zenhub_screenshot.png)
 
 
 ### Team Members
@@ -47,7 +47,7 @@ Pilcrow requires Lando version &ge; 3.0.25
 
 Lando will then download the appropriate containers and get everything spun up. Once everything is installed and running, you should see:
 
-![lando start container screenshot](./images/lando_screenshot.png)
+![Screenshot of local URLs in command line standard output after starting Lando](./images/lando_screenshot.png)
 
 You can then open a browser to <https://pilcrow.lndo.site/> and view the project running on your local machine.
 
