@@ -16,6 +16,8 @@ Most of the work of the project is handled on our [GitHub repo](https://github.c
 
 <TeamList filter="core"/>
 
+#### Emeriti
+<TeamList filter="emeriti" />
 
 ## Code of Conduct
 
