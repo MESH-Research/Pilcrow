@@ -44,7 +44,10 @@ const commentRefs = ref([])
 const inline_comments_section = ref(null)
 
 const inline_comments = computed(() => {
-  const comments = [...submission.value?.inline_comments] ?? []
+  const comments = Array.isArray(submission.value?.inline_comments)
+    ? [...submission.value.inline_comments]
+    : []
+
   if (activeComment.value?.new === true) {
     comments.push(activeComment.value)
   }
