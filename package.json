@@ -25,5 +25,7 @@
     },
     "type": "module",
     "version": "0.21.0",
-    "dependencies": {}
+    "dependencies": {
+        "quasar-cli": "^0.17.26"
+    }
 }
