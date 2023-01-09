@@ -6,7 +6,7 @@ Pilcrow is in the beginning phases of its development process. As such, much of 
 
 ## Project Organization
 
-Most of the work of the project is handled on our [GitHub repo](https://github.com/MESH-Research/CCR). The core team operates using an agile model, and we organize our sprints using [ZenHub](https://www.zenhub.com/). It's highly advisable to install the [ZenHub browser extension](https://www.zenhub.com/sign-up#). Once installed, you'll see a new tab in GitHub for our ZenHub board.
+Most of the work of the project is handled on our [GitHub repo](https://github.com/MESH-Research/Pilcrow). The core team operates using an agile model, and we organize our sprints using [ZenHub](https://www.zenhub.com/). It's highly advisable to install the [ZenHub browser extension](https://www.zenhub.com/sign-up#). Once installed, you'll see a new tab in GitHub for our ZenHub board.
 
 ![zenhub screenshot](./images/zenhub_screenshot.jpg)
 
@@ -19,13 +19,13 @@ Most of the work of the project is handled on our [GitHub repo](https://github.c
 
 ## Code of Conduct
 
-All contributors to the project must agree to adhere to our project's [Code of Conduct](https://github.com/MESH-Research/CCR/blob/master/CODE_OF_CONDUCT.md)
+All contributors to the project must agree to adhere to our project's [Code of Conduct](https://github.com/MESH-Research/Pilcrow/blob/master/CODE_OF_CONDUCT.md)
 
 ::: tip In summary
 In the interest of fostering an open and welcoming environment, we as contributors and maintainers pledge to making participation in our project and our community a harassment-free experience for everyone, regardless of age, body size, disability, ethnicity, sex characteristics, gender identity and expression, level of experience, education, socio-economic status, nationality, personal appearance, race, religion, or sexual identity and orientation.
 :::
 
-The full text of our Code of Conduct is available in our repository: <https://github.com/MESH-Research/CCR/blob/master/CODE_OF_CONDUCT.md>
+The full text of our Code of Conduct is available in our repository: <https://github.com/MESH-Research/Pilcrow/blob/master/CODE_OF_CONDUCT.md>
 
 ## Development Environments
 

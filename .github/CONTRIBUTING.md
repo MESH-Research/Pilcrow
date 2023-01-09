@@ -2,7 +2,7 @@
 
 MESH-Research loves to welcome your contributions. There are several ways to help out:
 
-* Create an [issue](https://github.com/MESH-Research/CCR/issues) on GitHub, if you have found a bug
+* Create an [issue](https://github.com/MESH-Research/Pilcrow/issues) on GitHub, if you have found a bug
 * Write test cases for open bug issues
 * Write patches for open bug/feature issues, preferably with test cases included
 
@@ -11,16 +11,16 @@ chance of keeping on top of things.
 
 ## Code of Conduct
 
-Help us keep Pilcrow development open and inclusive. Please read and follow our [Code of Conduct](https://github.com/MESH-Research/CCR/blob/master/CODE_OF_CONDUCT.md).
+Help us keep Pilcrow development open and inclusive. Please read and follow our [Code of Conduct](https://github.com/MESH-Research/Pilcrow/blob/master/CODE_OF_CONDUCT.md).
 
 ## Getting Started
 
 * Make sure you have a [GitHub account](https://github.com/signup/free).
-* Submit an [issue](https://github.com/MESH-Research/CCR/issues), assuming one does not already exist.
+* Submit an [issue](https://github.com/MESH-Research/Pilcrow/issues), assuming one does not already exist.
   * Clearly describe the issue including steps to reproduce when it is a bug.
   * Make sure you fill in the earliest version that you know has the issue.
 * Fork the repository on GitHub.
-* Follow the steps in [README.md](https://github.com/MESH-Research/CCR/blob/master/README.md) to setup a development environment with [Lando](https://lando.dev).
+* Follow the steps in [README.md](https://github.com/MESH-Research/Pilcrow/blob/master/README.md) to setup a development environment with [Lando](https://lando.dev).
 
 ## Branches and Release Flow
 
@@ -102,5 +102,5 @@ If you've found a security related issue in CCR, please don't open an issue in g
 
 ## Additional Resources
 
-* [Existing issues](https://github.com/MESH-Research/ccr/issues)
+* [Existing issues](https://github.com/MESH-Research/Pilcrow/issues)
 * [GitHub pull request documentation](https://help.github.com/articles/creating-a-pull-request/)

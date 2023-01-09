@@ -12,7 +12,7 @@ module.exports = {
     ],
     base: process.env.BASE_URL || "/",
     themeConfig: {
-        repo: "https://github.com/MESH-Research/CCR",
+        repo: "https://github.com/MESH-Research/Pilcrow",
         branch: process.env.BRANCH,
         editLinks: true,
         docsDir: "docs",

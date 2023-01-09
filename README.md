@@ -7,7 +7,7 @@
 Pilcrow uses [Lando](https://lando.dev) to manage its development environment.
 
 1. [Install Lando](https://docs.lando.dev/basics/installation.html)
-2. Clone this repository to your local machine: `git clone https://github.com/MESH-Research/CCR`
+2. Clone this repository to your local machine: `git clone https://github.com/MESH-Research/Pilcrow`
 3. Head into the Pilcrow directory and run: `lando start`
 4. Coffee. Downloading. Building. Patience. Step 3 may take approximately three to fifteen minutes to complete.
 5. Migrate database: `lando artisan migrate`
@@ -23,9 +23,9 @@ The stack is running `yarn dev` in the node container, so editing source files s
 * See [https://pilcrow.meshresearch.dev/contributing/wsl.html](https://pilcrow.meshresearch.dev/contributing/wsl.html) for additional notes on
   developer setup under Windows Subsystem for Linux (WSL)
 
-### Pilcrow Wiki - <https://github.com/MESH-Research/CCR/wiki>
+### Pilcrow Wiki - <https://github.com/MESH-Research/Pilcrow/wiki>
 
-* [An opinionated application](https://github.com/MESH-Research/CCR/wiki/An-Opinionated-Application)
-* [Pilcrow Links](https://github.com/MESH-Research/CCR/wiki/CCR-Links)
-* [Style Guide - in the Making](https://github.com/MESH-Research/CCR/wiki/Style-Guide---in-the-making)
+* [An opinionated application](https://github.com/MESH-Research/Pilcrow/wiki/An-Opinionated-Application)
+* [Pilcrow Links](https://github.com/MESH-Research/Pilcrow/wiki/CCR-Links)
+* [Style Guide - in the Making](https://github.com/MESH-Research/Pilcrow/wiki/Style-Guide---in-the-making)
 
