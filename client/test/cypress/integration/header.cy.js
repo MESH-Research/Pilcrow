@@ -14,7 +14,7 @@ describe("Header", () => {
       cy.contains("Register").should("have.attr", "href", "/register")
     })
 
-    cy.login({ email: "regularuser@pilcrowproject.dev" })
+    cy.login({ email: "regularuser@pilcrow.dev" })
     cy.reload()
 
     cy.get("header").contains("regularUser").click()
@@ -38,7 +38,7 @@ describe("Header", () => {
   })
 
   it("should not logout when page changes are protected", () => {
-    cy.login({ email: "regularuser@pilcrowproject.dev" })
+    cy.login({ email: "regularuser@pilcrow.dev" })
     cy.visit("/account/metadata")
     cy.dataCy("facebook").type("myface")
 

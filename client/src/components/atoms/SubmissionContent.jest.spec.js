@@ -19,7 +19,7 @@ describe("SubmissionContent", () => {
           created_at: "2022-06-18T03:18:08.000000Z",
           created_by: {
             __typename: "User",
-            email: "jestuser@pilcrowproject.dev",
+            email: "jestuser@pilcrow.dev",
             id: "1",
             name: "Jest User",
             username: "jestUser",
@@ -27,7 +27,7 @@ describe("SubmissionContent", () => {
           updated_at: "2022-06-18T03:18:08.000000Z",
           updated_by: {
             __typename: "User",
-            email: "jestuser@pilcrowproject.dev",
+            email: "jestuser@pilcrow.dev",
             id: "1",
             name: "Jest User",
             username: "jestUser",
@@ -44,7 +44,7 @@ describe("SubmissionContent", () => {
           created_at: "2022-06-18T03:18:08.000000Z",
           created_by: {
             __typename: "User",
-            email: "jestuser@pilcrowproject.dev",
+            email: "jestuser@pilcrow.dev",
             id: "1",
             name: "Jest User",
             username: "jestUser",
@@ -52,7 +52,7 @@ describe("SubmissionContent", () => {
           updated_at: "2022-06-18T03:18:08.000000Z",
           updated_by: {
             __typename: "User",
-            email: "jestuser@pilcrowproject.dev",
+            email: "jestuser@pilcrow.dev",
             id: "1",
             name: "Jest User",
             username: "jestUser",
@@ -69,7 +69,7 @@ describe("SubmissionContent", () => {
           created_at: "2022-06-18T03:18:08.000000Z",
           created_by: {
             __typename: "User",
-            email: "jestuser@pilcrowproject.dev",
+            email: "jestuser@pilcrow.dev",
             id: "1",
             name: "Jest User",
             username: "jestUser",
@@ -77,7 +77,7 @@ describe("SubmissionContent", () => {
           updated_at: "2022-06-18T03:18:08.000000Z",
           updated_by: {
             __typename: "User",
-            email: "jestuser@pilcrowproject.dev",
+            email: "jestuser@pilcrow.dev",
             id: "1",
             name: "Jest User",
             username: "jestUser",

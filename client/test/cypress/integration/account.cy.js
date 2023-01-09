@@ -6,7 +6,7 @@ import { a11yLogViolations } from '../support/helpers'
 describe("Account", () => {
   beforeEach(() => {
     cy.task("resetDb")
-    cy.login({ email: "regularuser@pilcrowproject.dev" })
+    cy.login({ email: "regularuser@pilcrow.dev" })
     cy.visit("/account/profile")
   })
 
@@ -40,7 +40,7 @@ describe("Account", () => {
 
   // TODO: Uncomment once email updates work again
   // it('can update the email field', () => {
-  //   cy.dataCy('update_user_email').clear().type('updateduser@pilcrowproject.dev');
+  //   cy.dataCy('update_user_email').clear().type('updateduser@pilcrow.dev');
   //   cy.dataCy('update_user_button_save').click();
   //   cy.dataCy('update_user_notify').should('be.visible').should('have.class','bg-positive');
   // });

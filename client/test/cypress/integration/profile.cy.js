@@ -5,7 +5,7 @@
 describe("Profile", () => {
   beforeEach(() => {
     cy.task("resetDb")
-    cy.login({ email: "regularuser@pilcrowproject.dev" })
+    cy.login({ email: "regularuser@pilcrow.dev" })
     cy.visit("/account/metadata")
   })
 

@@ -28,7 +28,7 @@ describe("Overall Comments", () => {
                   created_at: "2022-06-02T08:18:09Z",
                   created_by: {
                     id: "2",
-                    email: "publicationadministrator@pilcrowproject.dev",
+                    email: "publicationadministrator@pilcrow.dev",
                     name: "Publication Administrator",
                   },
                   replies: [],
@@ -41,7 +41,7 @@ describe("Overall Comments", () => {
                   created_at: "2022-06-01T20:57:28Z",
                   created_by: {
                     id: "4",
-                    email: "reviewcoordinator@pilcrowproject.dev",
+                    email: "reviewcoordinator@pilcrow.dev",
                     name: "Review Coordinator for Submission",
                   },
                   replies: [
@@ -69,12 +69,12 @@ describe("Overall Comments", () => {
                   updated_at: "2022-06-02T10:38:18Z",
                   created_by: {
                     id: "1",
-                    email: "applicationadministrator@pilcrowproject.dev",
+                    email: "applicationadministrator@pilcrow.dev",
                     name: "Application Administrator",
                   },
                   updated_by: {
                     id: "1",
-                    email: "applicationadministrator@pilcrowproject.dev",
+                    email: "applicationadministrator@pilcrow.dev",
                     name: "Application Administrator",
                   },
                   replies: [
@@ -88,12 +88,12 @@ describe("Overall Comments", () => {
                       created_by: {
                         id: "4",
                         username: "reviewCoordinator",
-                        email: "reviewcoordinator@pilcrowproject.dev",
+                        email: "reviewcoordinator@pilcrow.dev",
                       },
                       updated_by: {
                         id: "4",
                         username: "reviewCoordinator",
-                        email: "reviewcoordinator@pilcrowproject.dev",
+                        email: "reviewcoordinator@pilcrow.dev",
                       },
                       reply_to_id: "4",
                     },
@@ -107,12 +107,12 @@ describe("Overall Comments", () => {
                       created_by: {
                         id: "3",
                         username: "publicationEditor",
-                        email: "publicationeditor@pilcrowproject.dev",
+                        email: "publicationeditor@pilcrow.dev",
                       },
                       updated_by: {
                         id: "3",
                         username: "publicationEditor",
-                        email: "publicationeditor@pilcrowproject.dev",
+                        email: "publicationeditor@pilcrow.dev",
                       },
                       reply_to_id: "5",
                     },
@@ -145,12 +145,12 @@ describe("Overall Comments", () => {
                       created_by: {
                         id: "1",
                         username: "applicationAdministrator",
-                        email: "applicationadministrator@pilcrowproject.dev",
+                        email: "applicationadministrator@pilcrow.dev",
                       },
                       updated_by: {
                         id: "1",
                         username: "applicationAdministrator",
-                        email: "applicationadministrator@pilcrowproject.dev",
+                        email: "applicationadministrator@pilcrow.dev",
                       },
                       reply_to_id: "5",
                     },
@@ -164,12 +164,12 @@ describe("Overall Comments", () => {
                       created_by: {
                         id: "3",
                         username: "publicationEditor",
-                        email: "publicationeditor@pilcrowproject.dev",
+                        email: "publicationeditor@pilcrow.dev",
                       },
                       updated_by: {
                         id: "3",
                         username: "publicationEditor",
-                        email: "publicationeditor@pilcrowproject.dev",
+                        email: "publicationeditor@pilcrow.dev",
                       },
                       reply_to_id: "6",
                     },
@@ -221,12 +221,12 @@ describe("Overall Comments", () => {
                       created_by: {
                         id: "5",
                         username: "regularUser",
-                        email: "regularuser@pilcrowproject.dev",
+                        email: "regularuser@pilcrow.dev",
                       },
                       updated_by: {
                         id: "5",
                         username: "regularUser",
-                        email: "regularuser@pilcrowproject.dev",
+                        email: "regularuser@pilcrow.dev",
                       },
                       reply_to_id: "11",
                     },

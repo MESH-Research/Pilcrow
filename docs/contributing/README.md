@@ -137,7 +137,7 @@ After `CCR-Droid` creates the deployment, a link will appear above the checks se
 
 #### Mail
 
-Mailhog captures mail from preview deployments to prevent abuse.  Visit <https://mail.gh.pilcrowproject.dev> to access the Mailhog server and view any email sent by preview deployments.
+Mailhog captures mail from preview deployments to prevent abuse.  Visit <https://mail.gh.pilcrow.dev> to access the Mailhog server and view any email sent by preview deployments.
 
 ### Destroying a Preview Environment
 
@@ -155,9 +155,9 @@ Currently, `CCR-Droid` is not great about spelling out specific build errors.  I
 
 Two builds are automatically built in order to help testers and collaborators provide feedback on development features.
 
-- [https://staging.pilcrowproject.dev](https://staging.pilcrowproject.dev): Automatically built from the `master` branch.  This is the "bleeding edge" of development.
-- [https://release.pilcrowproject.dev](https://release.pilcrowproject.dev): Automatially built from the most recent versioned release. Releases happen after each development sprint (usually about once a month).
-- [https://mailhog.pilcrowproject.dev](https://mailhog.pilcrowproject.dev): Email notifications from both environments are sent here, NOT to a real inbox.
+- [https://staging.pilcrow.dev](https://staging.pilcrow.dev): Automatically built from the `master` branch.  This is the "bleeding edge" of development.
+- [https://release.pilcrow.dev](https://release.pilcrow.dev): Automatially built from the most recent versioned release. Releases happen after each development sprint (usually about once a month).
+- [https://mailhog.pilcrow.dev](https://mailhog.pilcrow.dev): Email notifications from both environments are sent here, NOT to a real inbox.
 
 ::: warning
 :warning: Data in the test environments is **not permanent** and will be reset **every** time their code base is updated.
@@ -169,12 +169,12 @@ The users below are permanent on the test servers, and will not be deleted. Howe
 
 Name | Username | Login email | Login Password
 :---- | :---- | :---- | :----
-Application Administrator | applicationAdminUser | applicationadministrator@pilcrowproject.dev | adminPassword!@#
-Publication Administrator | publicationAdministrator | publicationAdministrator@pilcrowproject.dev | publicationadminPassword!@#
-Publication Editor | publicationEditor | publicationEditor@pilcrowproject.dev | editorPassword!@#
-Review Coordinator for Submission | reviewCoordinator | reviewCoordinator@pilcrowproject.dev | coordinatorPassword!@#
-Reviewer for Submission | reviewer | reviewer@pilcrowproject.dev | reviewerPassword!@#
-Regular User | regularUser | regularuser@pilcrowproject.dev | regularPassword!@#
+Application Administrator | applicationAdminUser | applicationadministrator@pilcrow.dev | adminPassword!@#
+Publication Administrator | publicationAdministrator | publicationAdministrator@pilcrow.dev | publicationadminPassword!@#
+Publication Editor | publicationEditor | publicationEditor@pilcrow.dev | editorPassword!@#
+Review Coordinator for Submission | reviewCoordinator | reviewCoordinator@pilcrow.dev | coordinatorPassword!@#
+Reviewer for Submission | reviewer | reviewer@pilcrow.dev | reviewerPassword!@#
+Regular User | regularUser | regularuser@pilcrow.dev | regularPassword!@#
 
 Other users can be registered to the staging environment, but please note that these users and any data associated with them **may be wiped any time the code base is updated**.
 
