@@ -23,7 +23,7 @@ class SettingsTest extends ApiTestCase
             }
         ');
 
-        $this->assertEquals('Collaborative Community Review', $response->json('data.generalSettings.site_name'));
+        $this->assertEquals('Pilcrow', $response->json('data.generalSettings.site_name'));
     }
 
     public function testSettingsCanBeSet()
