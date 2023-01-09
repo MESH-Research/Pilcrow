@@ -6,9 +6,11 @@ Pilcrow is in the beginning phases of its development process. As such, much of 
 
 ## Project Organization
 
-Most of the work of the project is handled on our [GitHub repo](https://github.com/MESH-Research/Pilcrow). The core team operates using an agile model, and we organize our sprints using [ZenHub](https://www.zenhub.com/). It's highly advisable to install the [ZenHub browser extension](https://www.zenhub.com/sign-up#). Once installed, you'll see a new tab in GitHub for our ZenHub board.
+Most of the work of the project is handled on our [GitHub repo](https://github.com/MESH-Research/Pilcrow). The core team operates using an agile model, and we organize our sprints using [Zenhub](https://www.zenhub.com/). To access our Zenhub board, you can [sign up or log in on Zenhub](https://www.zenhub.com/sign-up).
 
-![zenhub screenshot](./images/zenhub_screenshot.jpg)
+If you have a supported browser, you can install the [Zenhub browser extension](https://www.zenhub.com/extension). Once installed, you'll see a new tab in GitHub for our Zenhub board.
+
+![zenhub screenshot](./images/zenhub_screenshot.png)
 
 
 ### Team Members
@@ -45,7 +47,7 @@ Pilcrow requires Lando version &ge; 3.0.25
 
 Lando will then download the appropriate containers and get everything spun up. Once everything is installed and running, you should see:
 
-![lando start container screenshot](./images/lando_screenshot.jpg)
+![lando start container screenshot](./images/lando_screenshot.png)
 
 You can then open a browser to <https://pilcrow.lndo.site/> and view the project running on your local machine.
 
