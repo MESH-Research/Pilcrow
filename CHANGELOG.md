@@ -3,6 +3,38 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.22.0](https://github.com/MESH-Research/Pilcrow/compare/v0.21.0...v0.22.0) (2023-01-10)
+
+
+### Features
+
+* Add accept reject submissions toggle on publications settings page ([#1706](https://github.com/MESH-Research/Pilcrow/issues/1706)) ([b7dea49](https://github.com/MESH-Research/Pilcrow/commit/b7dea49da7ab44574839cfaf0399bf022c571123)), closes [#1656](https://github.com/MESH-Research/Pilcrow/issues/1656)
+* Enable changing of font and font size ([#1689](https://github.com/MESH-Research/Pilcrow/issues/1689)) ([3680022](https://github.com/MESH-Research/Pilcrow/commit/368002299f17e927cb433ec388b70db763d7f342))
+* Enable users to change their user details upon accepting an invitation ([#1729](https://github.com/MESH-Research/Pilcrow/issues/1729)) ([9b66a09](https://github.com/MESH-Research/Pilcrow/commit/9b66a090bf9c9eccd0d8e645ed325ab49d4f5e64))
+
+
+### Bug Fixes
+
+* **api,deps:** bump laravel/framework from 9.43.0 to 9.44.0 in /backend ([#1710](https://github.com/MESH-Research/Pilcrow/issues/1710)) ([72953b2](https://github.com/MESH-Research/Pilcrow/commit/72953b299061f9ddc3db57d21d2e53efee3406c4))
+* **api,deps:** bump laravel/scout from 9.5.1 to 9.6.0 in /backend ([#1711](https://github.com/MESH-Research/Pilcrow/issues/1711)) ([a4496da](https://github.com/MESH-Research/Pilcrow/commit/a4496daa8ba92360938e8e5bb75a90988a796ce6))
+* **api,deps:** bump nuwave/lighthouse from 5.68.1 to 5.69.0 in /backend ([#1702](https://github.com/MESH-Research/Pilcrow/issues/1702)) ([fda7a6c](https://github.com/MESH-Research/Pilcrow/commit/fda7a6c7389575d43dd565dc852ea44084e825eb))
+* **api,deps:** bump nuwave/lighthouse from 5.69.0 to 5.69.1 in /backend ([#1708](https://github.com/MESH-Research/Pilcrow/issues/1708)) ([4f62c3a](https://github.com/MESH-Research/Pilcrow/commit/4f62c3a13ccaa600dd31afba5b3e119feadcbcbe))
+* **app,deps:** add missing deps after tiptap upgrade ([563316f](https://github.com/MESH-Research/Pilcrow/commit/563316fbe69f666b2845bb3175073ce2d0432865))
+* **app,deps:** bump @quasar/extras from 1.15.7 to 1.15.8 in /client ([#1697](https://github.com/MESH-Research/Pilcrow/issues/1697)) ([ce1dda0](https://github.com/MESH-Research/Pilcrow/commit/ce1dda0ca7ea8262ef7d51dbd639c1aed0d3b9e0))
+* **app,deps:** bump @tiptap/extension-highlight in /client ([#1717](https://github.com/MESH-Research/Pilcrow/issues/1717)) ([e8628ba](https://github.com/MESH-Research/Pilcrow/commit/e8628ba5ef44f1283bdd0188f766c54258ce90ad))
+* **app,deps:** bump @tiptap/starter-kit in /client ([b8c5268](https://github.com/MESH-Research/Pilcrow/commit/b8c5268d7d50967fac026ab237c943f5e220fe9d))
+* **app,deps:** bump @tiptap/starter-kit in /client ([#1716](https://github.com/MESH-Research/Pilcrow/issues/1716)) ([700e65b](https://github.com/MESH-Research/Pilcrow/commit/700e65bacc0f27375f39f73667cf03acf82a5fed))
+* **app,deps:** bump @vueuse/core from 9.6.0 to 9.7.0 in /client ([#1719](https://github.com/MESH-Research/Pilcrow/issues/1719)) ([46d40d6](https://github.com/MESH-Research/Pilcrow/commit/46d40d6b0908bb7b3c25fc7a802e29e95aab0398))
+* **app,deps:** bump quasar from 2.10.2 to 2.11.1 in /client ([#1718](https://github.com/MESH-Research/Pilcrow/issues/1718)) ([1a7a7b9](https://github.com/MESH-Research/Pilcrow/commit/1a7a7b93c69eea66bb73c0c25d8ac7cba1a3973d))
+* **app,deps:** bump quasar from 2.8.3 to 2.10.2 in /client ([e43aeb2](https://github.com/MESH-Research/Pilcrow/commit/e43aeb2b0842cdf2dc06e16bb3d9f46d153ec4f5))
+* **app,deps:** bump vue from 3.2.43 to 3.2.45 in /client ([748da30](https://github.com/MESH-Research/Pilcrow/commit/748da303db003fce8dfdfdb0e64345e79f567603))
+* **app,test:** disable https cert check in cypress gui ([38f57d3](https://github.com/MESH-Research/Pilcrow/commit/38f57d39dde645d415641c40333d8443f4fad28a))
+* **client,deps:** update quasar-jest from 3.0.0-alpha.10 to 3.0.0-beta.5 ([be3cc66](https://github.com/MESH-Research/Pilcrow/commit/be3cc6664a6b84e6d635fbb619ebd92fcac02b6a))
+* **client:** address regressions from quasar upgrade ([86e6135](https://github.com/MESH-Research/Pilcrow/commit/86e613503ccb746b187a98f50bc6665011598353))
+* **client:** fix invalid type comparison ([cbd2712](https://github.com/MESH-Research/Pilcrow/commit/cbd2712dc034448d3212a8eeec4b31ebb509d47f))
+* **client:** fix unsafe optional chaining ([bfd5607](https://github.com/MESH-Research/Pilcrow/commit/bfd5607d39de3f5a8bdd8c07388174d377afb895))
+* **deps:** update dependency luxon to v3.2.1 [security] ([fca30ca](https://github.com/MESH-Research/Pilcrow/commit/fca30cad99ea835030e1ad9c5014971b0b9f07dd))
+
 ## [0.21.0](https://github.com/MESH-Research/Pilcrow/compare/v0.20.0...v0.21.0) (2022-12-12)
 
 
