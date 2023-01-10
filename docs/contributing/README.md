@@ -18,6 +18,8 @@ If you have a supported browser, you can install the [Zenhub browser extension](
 
 <TeamList filter="core"/>
 
+#### Emeriti
+<TeamList filter="emeriti" />
 
 ## Code of Conduct
 
