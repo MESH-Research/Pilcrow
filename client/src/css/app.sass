@@ -127,12 +127,16 @@ body.body--dark
         box-shadow: none
 
 .body--dark
+    a[data-cy="submission_link"]
+        color: $accent-dark !important
     aside, .comments, .header-toolbar
         background: $dark !important
     .notifications-list, .notification-button-group, .notifications-container
         background: $dark-2 !important
     .accent, .accent-dark, .bg-accent
         background: $accent-dark !important
+    .accent-dark-text
+        color: $accent-dark !important
     .comment, .request-resubmission, .comment-editor-card, .inline-comment-form
         background: $dark-1 !important
     .comment, .q-card, #notifications-wrapper
