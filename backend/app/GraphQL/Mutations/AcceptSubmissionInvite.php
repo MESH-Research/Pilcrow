@@ -3,22 +3,28 @@ declare(strict_types=1);
 
 namespace App\GraphQL\Mutations;
 
-use App\Models\SubmissionInvitation;
+use App\Models\User;
 
 final class AcceptSubmissionInvite
 {
     /**
-     * Based on a supplied submission invitation token, check that a submission
-     * invitation exists and then accept a submission invitation as the invited user
+     * Accept an invitation to a submission for an invitee and update their user details
      *
      * @param  null  $_
-     * @param  array{token: string}  $args
-     * @return \App\Models\Submission
+     * @param  array{uuid: string, token: string, expires:int|string, user:array}  $args
+     * @return \App\Models\User
+     * @throws \App\Exceptions\ClientException
      */
-    public function acceptInvite($_, $args)
+    public function accept($_, $args): User
     {
-        $invite = SubmissionInvitation::where('token', $args['token'])->firstOrFail();
+        $verify = new VerifySubmissionInvite();
+        $invite = $verify->processArgs($args);
+        $user_details = [
+            'name' => $args['name'],
+            'username' => $args['username'],
+            'password' => $args['password'],
+        ];
 
-        return $invite->acceptInvite();
+        return $invite->acceptInvite($user_details);
     }
 }

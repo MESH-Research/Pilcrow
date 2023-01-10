@@ -31,7 +31,7 @@ describe("InlineComments", () => {
                   created_at: "2022-06-01T03:53:17Z",
                   created_by: {
                     id: "2",
-                    email: "publicationadministrator@ccrproject.dev",
+                    email: "publicationadministrator@pilcrow.dev",
                     name: "Publication Administrator",
                   },
                   replies: [
@@ -44,7 +44,7 @@ describe("InlineComments", () => {
                       created_by: {
                         id: "1",
                         username: "applicationAdminUser",
-                        email: "applicationadministrator@ccrproject.dev",
+                        email: "applicationadministrator@pilcrow.dev",
                       },
                       reply_to_id: "1",
                     },
@@ -112,7 +112,7 @@ describe("InlineComments", () => {
                       created_by: {
                         id: "3",
                         username: "publicationEditor",
-                        email: "publicationeditor@ccrproject.dev",
+                        email: "publicationeditor@pilcrow.dev",
                       },
                       reply_to_id: "4",
                     },
@@ -125,7 +125,7 @@ describe("InlineComments", () => {
                       created_by: {
                         id: "4",
                         username: "reviewCoordinator",
-                        email: "reviewcoordinator@ccrproject.dev",
+                        email: "reviewcoordinator@pilcrow.dev",
                       },
                       reply_to_id: "5",
                     },
@@ -151,7 +151,7 @@ describe("InlineComments", () => {
                       created_by: {
                         id: "1",
                         username: "applicationAdminUser",
-                        email: "applicationadministrator@ccrproject.dev",
+                        email: "applicationadministrator@pilcrow.dev",
                       },
                       reply_to_id: "7",
                     },
@@ -164,7 +164,7 @@ describe("InlineComments", () => {
                       created_by: {
                         id: "1",
                         username: "applicationAdminUser",
-                        email: "applicationadministrator@ccrproject.dev",
+                        email: "applicationadministrator@pilcrow.dev",
                       },
                       reply_to_id: "4",
                     },
@@ -177,7 +177,7 @@ describe("InlineComments", () => {
                       created_by: {
                         id: "1",
                         username: "applicationAdminUser",
-                        email: "applicationadministrator@ccrproject.dev",
+                        email: "applicationadministrator@pilcrow.dev",
                       },
                       reply_to_id: "6",
                     },
@@ -190,7 +190,7 @@ describe("InlineComments", () => {
                       created_by: {
                         id: "1",
                         username: "applicationAdminUser",
-                        email: "applicationadministrator@ccrproject.dev",
+                        email: "applicationadministrator@pilcrow.dev",
                       },
                       reply_to_id: "5",
                     },
@@ -203,7 +203,7 @@ describe("InlineComments", () => {
                       created_by: {
                         id: "5",
                         username: "regularUser",
-                        email: "regularuser@ccrproject.dev",
+                        email: "regularuser@pilcrow.dev",
                       },
                       reply_to_id: "6",
                     },
@@ -216,7 +216,7 @@ describe("InlineComments", () => {
                       created_by: {
                         id: "4",
                         username: "reviewCoordinator",
-                        email: "reviewcoordinator@ccrproject.dev",
+                        email: "reviewcoordinator@pilcrow.dev",
                       },
                       reply_to_id: "7",
                     },
@@ -229,7 +229,7 @@ describe("InlineComments", () => {
                       created_by: {
                         id: "3",
                         username: "publicationEditor",
-                        email: "publicationeditor@ccrproject.dev",
+                        email: "publicationeditor@pilcrow.dev",
                       },
                       reply_to_id: "4",
                     },

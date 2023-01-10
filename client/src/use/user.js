@@ -101,7 +101,7 @@ export const useLogin = () => {
    * @returns User object on success, throws Error otherwise.
    */
   const loginUser = async (user) => {
-    if (typeof user !== undefined) {
+    if (typeof user !== "undefined") {
       Object.assign(credentials, user)
     }
     v$.value.$touch()

@@ -2,7 +2,7 @@
 
 ## Code Reviews
 
-The CCR project enforces a mandatory code review for every pull request on the project, including those from core developers and maintainers.  When you create a pull request, be sure to document in the pull request description:
+The Pilcrow project enforces a mandatory code review for every pull request on the project, including those from core developers and maintainers.  When you create a pull request, be sure to document in the pull request description:
 
 - What features/fixes the PR addresses
 - How to test the implementation
@@ -17,7 +17,7 @@ Reviews must be a good-faith effort on the part of both the reviewer and the sub
 
 ## Testing
 
-The full test suite of CCR consists of the following:
+The full test suite of Pilcrow consists of the following:
 
 * [Backend Unit Testing](#backend-unit-tests)
 * [Client Unit Testing](#client-unit-tests)
@@ -76,10 +76,10 @@ services:
     scanner: false
 proxy:
   test:
-    - majestic.ccr.lndo.site:4000
+    - majestic.pilcrow.lndo.site:4000
 ```
 
-Then, once you run `lando rebuild` the majestic interface will be available at <https://majestic.ccr.lndo.site>
+Then, once you run `lando rebuild` the majestic interface will be available at <https://majestic.pilcrow.lndo.site>
 
 ### Integration Tests (E2E)
 
@@ -179,7 +179,7 @@ Instructions for integrating eslint into VSCode can be found [in the eslint-plug
 {
   //...
   "eslint.format.enable": true, // Adds eslint to the formatter options in the right-click menu (Optional)
-  "eslint.packageManager": "yarn", // CCR uses yarn
+  "eslint.packageManager": "yarn", // Pilcrow uses yarn
   "eslint.workingDirectories": ["./client"], // Point the eslint plugin at the client directory
   "eslint.validate": [
     "javascript",

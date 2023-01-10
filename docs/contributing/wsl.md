@@ -1,6 +1,6 @@
 # WSL Developer Notes
 
-This pages has instructions and tips for developing CCR using
+This pages has instructions and tips for developing Pilcrow using
 the Windows Subsystem for Linux (WSL). This document only covers
 WSL aspects of the dev setup. Refer to the project README.md file
 for the complete dev setup steps.
@@ -21,17 +21,17 @@ for the complete dev setup steps.
   - `docker-ce` is a required as a dependancy for the lando package
 - Install the `lando` package for your distribution.
   - [https://docs.lando.dev/basics/installation.html](https://docs.lando.dev/basics/installation.html)
-- Proceed with the CCR setup (see the project README.md file)
-- Make sure that you put the CCR repo inside the WSL filesystem!
+- Proceed with the Pilcrow setup (see the project README.md file)
+- Make sure that you put the Pilcrow repo inside the WSL filesystem!
   - Accessing the Windows filesystem from WSL will slow things down considerably.
 
 
 ## Tips
-- VS Code will automatically sense Docker is running and will suggest some extensions
+- VS Code will automatically detect Docker is running and will suggest some extensions
 - If you're using VS Code, install the `Remote Development` extension from Microsoft
   to make it easier to edit files in WSL. This will install the following extensions
   - Remote Containers
   - Remote WSL
   - Remote SSH
-- To access CCR with VS Code under WSL, make sure to start VS code from WSL.
-  - `cd <CCR_HOME>; code .`
+- To access Pilcrow with VS Code under WSL, make sure to start VS code from WSL.
+  - `cd <PILROW_HOME>; code .`

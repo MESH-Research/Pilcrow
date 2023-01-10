@@ -12,6 +12,6 @@ class CreateGeneralSettings extends SettingsMigration
      */
     public function up(): void
     {
-        $this->migrator->add('general.site_name', 'Collaborative Community Review');
+        $this->migrator->add('general.site_name', 'Pilcrow');
     }
 }

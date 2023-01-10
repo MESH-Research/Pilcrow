@@ -1,4 +1,4 @@
-# CCR Documentation
+# Pilcrow Documentation
 
 ## Testing / Development
 
@@ -6,7 +6,7 @@ Our documentation is a [VuePress](https://vuepress.vuejs.org/) based static site
 
 1. Change directory to the `docs/` folder.
 2. Start the Lando environment: `lando start`
-3. Visit `https://docs.ccr.lndo.site` to preview the built documentation site.
+3. Visit `https://docs.pilcrow.lndo.site` to preview the built documentation site.
 
 The development server supports hot-reloading of most page and content changes.
 
@@ -20,4 +20,4 @@ The development server supports hot-reloading of most page and content changes.
 There are a few environment variables available to control the output of the built site:
 
 - `CURRENT_BRANCH`: Adds a badge to the page header to indicate the source/version of the documentation.
-- `BASE_URL`: The base URL of the hosted documentation version.  Note this should always start and end with a `/`.  e.g. `/CCR/`.
+- `BASE_URL`: The base URL of the hosted documentation version.  Note this should always start and end with a `/`.  e.g. `/Pilcrow/`.

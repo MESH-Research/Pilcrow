@@ -3,9 +3,7 @@
     <q-toolbar class="flex flex-center text-caption">
       <div class="footer-text">
         Powered by
-        <a href="https://github.com/MESH-Research/CCR"
-          >Collaborative Community Review (CCR)</a
-        >
+        <a href="https://github.com/MESH-Research/Pilcrow">Pilcrow</a>
         <span v-if="version">
           &nbsp;
           <component :is="version_url ? 'a' : 'span'" :href="version_url">

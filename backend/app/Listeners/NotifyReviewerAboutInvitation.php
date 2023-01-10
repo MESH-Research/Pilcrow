@@ -24,11 +24,10 @@ class NotifyReviewerAboutInvitation
                 'id' => $event->submission_invitation->id,
             ],
             'inviter' => [
-                'name' => $event->submission_invitation->createdBy->name,
-                'username' => $event->submission_invitation->createdBy->username,
+                'display_label' => $event->submission_invitation->createdBy->displayLabel,
             ],
             'message' => $event->submission_invitation->message,
-            'token' => $event->submission_invitation->token,
+            'url' => $event->submission_invitation->getInvitationAcceptanceUrl(),
         ];
         Notification::send($reviewer, new InviteReviewer($notification_data));
     }

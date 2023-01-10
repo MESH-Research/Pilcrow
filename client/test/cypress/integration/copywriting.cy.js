@@ -20,7 +20,7 @@ describe("Copywriting Screenshots", () => {
             cy.screenshot(name + ' (Keys)')
         }
         cy.task("resetDb")
-        cy.login({ email: "applicationadministrator@ccrproject.dev" })
+        cy.login({ email: "applicationadministrator@pilcrow.dev" })
         screenshotPath('/')
         screenshotPath('/login')
         screenshotPath('/register')

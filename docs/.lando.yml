@@ -12,4 +12,4 @@ tooling:
     cmd: yarn
 proxy:
   dev:
-    - docs.ccr.lndo.site:8080
+    - docs.pilcrow.lndo.site:8080

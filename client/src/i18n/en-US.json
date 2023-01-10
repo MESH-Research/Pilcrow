@@ -578,14 +578,26 @@
       }
     },
     "accept_invite": {
-      "success": {
-        "title": "Success",
-        "message": "You have accepted the invitation to the submission.",
-        "action": "Visit Submission"
+      "verify": {
+        "failure": {
+          "title": "Error",
+          "INVITATION_ALREADY_ACCEPTED": "This invitation has already been accepted.",
+          "INVITATION_TOKEN_EXPIRED": "This invitation has expired.",
+          "INVITATION_TOKEN_INVALID": "The supplied token is invalid."
+        }
       },
-      "failure": {
-        "title": "Error",
-        "message": "An error occurred while attempting to accept the invitation. Please contact your administrator."
+      "update_details": {
+        "title": "Your Details",
+        "update_action": "Accept Invitation",
+        "success": {
+          "title": "Success",
+          "message": "You have updated your details and accepted the invitation to the submission.",
+          "action": "Visit Submission"
+        },
+        "failure": {
+          "title": "Error",
+          "message": "An error occurred while attempting to accept the invitation. Please contact your administrator."
+        }
       }
     },
     "create": {
@@ -749,7 +761,7 @@
   "dialog": {
     "bypassStyleCriteria": {
       "line_1": "Style criteria are an important part of {link}.",
-      "line_1_linktext": "Collaborative Community Review",
+      "line_1_linktext": "Pilcrow",
       "line_2": "Are you sure you do not want to associate one with this comment?",
       "action_submit": "Post comment as is",
       "action_cancel": "Add style criteria"

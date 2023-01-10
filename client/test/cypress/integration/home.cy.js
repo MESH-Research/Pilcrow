@@ -14,7 +14,7 @@ describe("Landing", () => {
     cy.visit("/")
   })
   it("should assert that <title> is correct", () => {
-    cy.title().should("include", "CCR")
+    cy.title().should("include", "Pilcrow")
   })
 
   it("should assert home page is accessible", () => {
