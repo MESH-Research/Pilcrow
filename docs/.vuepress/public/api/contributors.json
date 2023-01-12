@@ -29,7 +29,7 @@
         "github": "Sruthin86",
         "title": "Core Developer",
         "pic": "https://avatars.githubusercontent.com/u/14964937?s=460&v=4",
-        "group": "core"
+        "group": "emeriti"
     },
     {
         "name": "Amaresh Joshi",
@@ -37,6 +37,22 @@
         "github": "amareshjoshi",
         "title": "Core Developer",
         "pic": "https://avatars.githubusercontent.com/u/12821935?s=460&v=4",
+        "group": "emeriti"
+    },
+    {
+        "name": "Shel Vilag",
+        "roles": ["Everything"],
+        "github": "vilagshe",
+        "title": "Core Developer",
+        "pic": "https://avatars.githubusercontent.com/u/108834493?v=4",
         "group": "core"
+    },
+    {
+        "name": "Stephanie Vasko",
+        "roles": ["UI/UX", "User Research"],
+        "pic": "https://avatars.githubusercontent.com/u/98352721?v=4",
+        "github": "stephanievaskomsu",
+        "group": "core",
+        "title": "UX Researcher"
     }
 ]

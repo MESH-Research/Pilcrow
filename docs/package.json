@@ -4,7 +4,7 @@
         "name": "MESH-Research",
         "email": "mesh@msu.edu"
     },
-    "repository": "https://github.com/MESH-Research/CCR",
+    "repository": "https://github.com/MESH-Research/Pilcrow",
     "scripts": {
         "dev": "vuepress dev .",
         "build": "vuepress build ."

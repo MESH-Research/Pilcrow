@@ -5,7 +5,7 @@
 describe("Profile", () => {
   beforeEach(() => {
     cy.task("resetDb")
-    cy.login({ email: "regularuser@ccrproject.dev" })
+    cy.login({ email: "regularuser@pilcrow.dev" })
     cy.visit("/account/metadata")
   })
 
@@ -28,7 +28,7 @@ describe("Profile", () => {
   })
 
   it("can add websites to the websites editable list and re-order them via clickable arrows", () => {
-    const site1 = "https://ccr.lndo.site"
+    const site1 = "https://pilcrow.lndo.site"
     const site2 = "https://yahoo.com"
     cy.dataCy("websites_list_control")
       .within(() => {

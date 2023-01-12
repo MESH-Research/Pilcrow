@@ -1,4 +1,4 @@
-name: ccr
+name: pilcrow
 recipe: laravel
 config:
   php: "8.0"
