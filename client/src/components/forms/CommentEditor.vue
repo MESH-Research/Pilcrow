@@ -60,12 +60,7 @@
         <q-btn type="submit" color="accent">
           {{ $t("guiElements.form.submit") }}
         </q-btn>
-        <q-btn
-          v-if="commentType !== 'OverallComment' && isModifying === false"
-          ref="cancel_button"
-          flat
-          @click="cancelHandler()"
-        >
+        <q-btn ref="cancel_button" flat @click="cancelHandler()">
           {{ $t("guiElements.form.cancel") }}
         </q-btn>
       </q-card-actions>
