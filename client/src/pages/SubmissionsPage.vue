@@ -174,7 +174,7 @@
                           class="items-center"
                           clickable
                           @click="
-                            confirmHandler('accept_for_review', submission.id)
+                            confirmHandler('submit_for_review', submission.id)
                           "
                           >{{
                             $t("submission.action.submit_for_review")
