@@ -135,30 +135,30 @@ body.body--dark
         color: $accent-dark !important
     .accent, .accent-dark, .bg-accent
         background: $accent-dark !important
-    .footer-text a
-        color: $dark-accent-text
+    .footer-text a, button[aria-label="Jump to referenced comment"], .dark-accent-text
+        color: $dark-accent-text !important
 
-    aside, .comments, .header-toolbar
+    aside, .comments, .header-toolbar, .notifications-list
         background: $dark !important
     .q-card.active .comment-header, .q-card.active button[data-cy="commentActions"], span[data-cy="comment-highlight"]
         color: $dark
 
-    .notifications-list, .notification-button-group, .notifications-container
+    .notification-button-group, .notifications-container .q-card, .notifications-list .unread
         background: $dark-2 !important
 
     .comment, .request-resubmission, .comment-editor-card, .inline-comment-form
         background: $dark-1 !important
 
-    .comment, .q-card, #notifications-wrapper
+    .comment, .q-card, #notifications-wrapper, button[data-cy="submission_actions"]::before
         box-shadow: none !important
 
     div[contenteditable="true"], div[data-cy="styleCriteria"], .comment-header
         background: $dark-grey !important
-    .review-header, .comment-editor .ProseMirror p.is-editor-empty:first-child::before
+    .review-header, .comment-editor .ProseMirror p.is-editor-empty:first-child::before, .q-router-link--exact-active
         color: white
         background: $dark-grey !important
 
-    div[data-cy="criteria-icon"] i, .comment-widget, .q-pagination__middle .q-btn[aria-current="false"], a.q-breadcrumbs__el.q-link, .q-item.q-router-link--active, .criteria-card .q-item__section--side .q-icon
+    div[data-cy="criteria-icon"] i, .comment-widget, .q-pagination__middle .q-btn[aria-current="false"], a.q-breadcrumbs__el.q-link, .q-item.q-router-link--active, .criteria-card .q-item__section--side .q-icon, .user-stats, .q-field--highlight, .q-field__control
         color: $dark-primary !important
     .unread .q-badge, .notification_indicator, .q-pagination__middle .q-btn[aria-current="true"]
         background: $dark-primary !important
@@ -166,11 +166,14 @@ body.body--dark
     .header-nav, footer
         background: $dark-secondary
 
-    .q-icon.q-expansion-item__toggle-icon
+    .q-icon.q-expansion-item__toggle-icon, .submission-content p:before
         color: $light-grey !important
 
     .q-card.active
         border: 1px solid $highlight
 
-    button[data-cy="commentActions"], .q-btn-group .q-btn-item, .footer-text, span.q-breadcrumbs__el.q-link
+    .profile-keywords
+        border: none
+
+    button[data-cy="commentActions"], .q-btn-group .q-btn-item, .footer-text, span.q-breadcrumbs__el.q-link, .q-router-link--exact-active div
         color: #fff !important
