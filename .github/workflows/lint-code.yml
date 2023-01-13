@@ -30,31 +30,21 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v2
-      - name: Cache Composer packages
-        id: composer-cache-root
-        uses: actions/cache@v2
+        uses: actions/checkout@v3
+      - name: Get composer cache directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+      - name: Cache dependencies
+        uses: actions/cache@v3
         with:
-          path: vendor
+          path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-composer-
-      - name: Cache Root Node packages
-        id: yarn-root-cache
-        uses: actions/cache@v2
+          restore-keys: ${{ runner.os }}-composer-
+      - uses: actions/setup-node@v3
         with:
-          path: node_modules
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
-      - name: Cache Client Node packages
-        id: yarn-client-cache
-        uses: actions/cache@v2
-        with:
-          path: client/node_modules
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
+          node-version: 14
+          cache: yarn
+          cache-dependency-path: yarn.lock
       - name: Install dependencies
         run: |
           yarn install
