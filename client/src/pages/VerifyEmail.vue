@@ -62,7 +62,8 @@ const { errorMessages, graphQLErrorCodes } = useGraphErrors()
 onMounted(async () => {
   const { token, expires } = params
 
-  if (await currentUser.value.email_verified_at) {
+  await currentUser
+  if (currentUser.value.email_verified_at) {
     status.value = "success"
     return
   }
