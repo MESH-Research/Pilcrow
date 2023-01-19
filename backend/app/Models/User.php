@@ -144,7 +144,7 @@ class User extends Authenticatable implements MustVerifyEmail
             'name',
             'email',
         ]);
-        unset($array['profile_metadata']);
+        unset($array['profile_metadata'], $array['email_verified_at'], $array['created_at'], $array['updated_at']);
 
         return $array;
     }
