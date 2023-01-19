@@ -139,11 +139,13 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function toSearchableArray()
     {
-        return $this->withoutRelations()->toArray([
+        $array = $this->withoutRelations()->toArray([
             'username',
             'name',
             'email',
         ]);
+        unset($array['profile_metadata']);
+        return $array;
     }
 
     /**
