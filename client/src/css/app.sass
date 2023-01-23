@@ -128,9 +128,12 @@ html
 body.body--dark
     background: $dark !important
 
-    .shadow-3,
     a[data-cy="configure_button"]:before
         box-shadow: none
+
+    .shadow-3,
+    .shadow-15
+      box-shadow: 0 8px 9px -5px $dark, 0 15px 22px 2px $dark, 0 6px 28px 5px $dark
 
     a[data-cy="submission_link"],
     .accent-dark-text,
@@ -223,3 +226,6 @@ body.body--dark
     span.q-breadcrumbs__el.q-link,
     .q-router-link--exact-active div
         color: #fff !important
+
+    .form-actions
+      background-color: $dark-2 !important
