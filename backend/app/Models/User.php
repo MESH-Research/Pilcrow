@@ -133,26 +133,21 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Get the indexable data array for the model. Currently:
-     *
-     *     username
-     *     name
-     *     email
-     *     email_verified_at
-     *     updated_at
-     *     created_at
-     *     id
+     * Get the indexable data array for the model
      *
      * @return array
      */
     public function toSearchableArray()
     {
-        $array = $this->toArray();
-
-        // Customize array...
-        unset($array['profile_metadata']);
-
-        return $array;
+        return $this
+            ->withoutRelations()
+            ->setVisible([
+                'id',
+                'username',
+                'name',
+                'email',
+            ])
+            ->toArray();
     }
 
     /**
