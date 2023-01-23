@@ -6,6 +6,68 @@
 html
     font-family: "Atkinson"
 
+.alert
+    background-color: #eee
+    border-radius: 4px
+    margin: 16px 0
+    padding: 16px 16px 16px 16px
+    font-size: 1em
+    border-width: 0 5px
+    border-style: solid
+    border-color: $dark-grey
+    letter-spacing: 0.5px
+
+    .alert-title
+        margin: -16px -16px 16px -16px
+        padding: 4px 8px
+        font-weight: bold
+        border-bottom: 1px solid
+
+.alert-success
+    .alert-title
+        font-weight: bold
+
+.alert-tip
+    .alert-title
+        font-weight: bold
+
+fieldset
+    border: none
+
+a[target="_blank"]::after
+    font-family: 'Material Icons'
+    content: "open_in_new"
+    font-feature-settings: 'liga'
+    padding-left: 1px
+
+.q-tab__label
+    font-weight: 400
+
+.q-item--active,
+.q-item.q-router-link--active,
+.q-tab--active .q-tab__label,
+.q-tab--active
+    font-weight: 500
+
+.q-list.notifications-list .q-item
+    .q-badge
+        position: absolute
+        left: 0
+        top: 50%
+        background: $primary
+        transform: translate(-50%, -50%)
+        height: 100%
+        padding: 4px
+        border-radius: 3px
+    span
+        font-weight: bold
+    &.unread
+        background: $blu-highlight
+
+// ----------
+// Light Mode
+// ----------
+
 .body--light
     .text--grey
         color: $dark-grey
@@ -16,28 +78,11 @@ html
     .active
         background: $active
 
-    .alert
-        background-color: #eee
-        border-radius: 4px
-        margin: 16px 0
-        padding: 16px 16px 16px 16px
-        font-size: 1em
-        border-width: 0 5px
-        border-style: solid
-        border-color: $dark-grey
-        letter-spacing: 0.5px
-        .alert-title
-            margin: -16px -16px 16px -16px
-            padding: 4px 8px
-            font-weight: bold
-            border-bottom: 1px solid
-
     .alert-tip
         background-color: $active
         border-color: $active
 
         .alert-title
-            font-weight: bold
             border-color: $secondary
 
     .alert-success
@@ -45,98 +90,39 @@ html
         border-color: $positive
 
         .alert-title
-            font-weight: bold
             border-color: $positive
-    fieldset
-        border: none
 
-    .q-tab__label
-        font-weight: 400
+    .footer-text
+        color: white
+
+        a
+          color: $accent-link
+
+    .q-page-sticky .form-actions
+        background-color: $grey-1 !important
 
     .q-item.q-router-link--active,
     .q-item--active,
     .q-tab--active
         color: $dark
-        font-weight: 500
         background-color: $active
 
-    .q-tab--active .q-tab__label
-        font-weight: 500
-
-    @media (prefers-reduced-motion)
-        *
-            transition: none !important
-
-    .q-list.notifications-list .q-item
-        .q-badge
-            position: absolute
-            left: 0
-            top: 50%
-            background: $primary
-            transform: translate(-50%, -50%)
-            height: 100%
-            padding: 4px
-            border-radius: 3px
-        span
-            font-weight: bold
-        &.unread
-            background: $blu-highlight
-    a[target="_blank"]::after
-        font-family: 'Material Icons'
-        content: "open_in_new"
-        font-feature-settings: 'liga'
-        padding-left: 1px
-
-    .footer-text
-        color: white
-    .footer-text a
-        color: $accent-link
-
-    .q-page-sticky .form-actions
-      background-color: $grey-1 !important
-// declare classes for custom colors
-
-.text-dark-grey
-    color: $dark-grey
-.bg-dark-grey
-    background: $dark-grey
-
-.text-blu-highlight
-    color: $blu-highlight
-.bg-blu-highlight
-    background: $blu-highlight
-
-.text-highlight
-    color: $highlight
-.bg-highlight
-    background: $highlight
-
-.text-xlight-grey
-    color: $xlight-grey
-.bg-xlight-grey
-    background: $xlight-grey
-
-.text-light-grey
-    color: $light-grey
-.bg-light-grey
-    background: $light-grey
-
-.text-dark-6
-    color: $dark-6 !important
-.bg-dark-6
-    background: $dark-6 !important
-
-// dark mode
+// ---------
+// Dark Mode
+// ---------
 
 body.body--dark
     background: $dark !important
+
+    a
+        color: #fff
 
     a[data-cy="configure_button"]:before
         box-shadow: none
 
     .shadow-3,
     .shadow-15
-      box-shadow: 0 8px 9px -5px $dark, 0 15px 22px 2px $dark, 0 6px 28px 5px $dark
+        box-shadow: 0 8px 9px -5px $dark, 0 15px 22px 2px $dark, 0 6px 28px 5px $dark
 
     a[data-cy="submission_link"],
     .accent-dark-text,
@@ -231,4 +217,42 @@ body.body--dark
         color: #fff !important
 
     .q-page-sticky .form-actions
-      background-color: $dark-2 !important
+        background-color: $dark-2 !important
+
+@media (prefers-reduced-motion)
+    *
+        transition: none !important
+
+// --------------------
+// Custom Color Classes
+// --------------------
+
+.text-dark-grey
+    color: $dark-grey
+.bg-dark-grey
+    background: $dark-grey
+
+.text-blu-highlight
+    color: $blu-highlight
+.bg-blu-highlight
+    background: $blu-highlight
+
+.text-highlight
+    color: $highlight
+.bg-highlight
+    background: $highlight
+
+.text-xlight-grey
+    color: $xlight-grey
+.bg-xlight-grey
+    background: $xlight-grey
+
+.text-light-grey
+    color: $light-grey
+.bg-light-grey
+    background: $light-grey
+
+.text-dark-6
+    color: $dark-6 !important
+.bg-dark-6
+    background: $dark-6 !important
