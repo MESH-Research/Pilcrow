@@ -6,9 +6,7 @@
   >
     <div
       class="form-actions"
-      :class="
-        sticky ? 'bg-grey-1 q-ma-sm q-pa-md rounded-borders shadow-15' : ''
-      "
+      :class="sticky ? 'q-ma-sm q-pa-md rounded-borders shadow-15' : ''"
     >
       <div class="q-gutter-md">
         <template v-if="$slots.default">
