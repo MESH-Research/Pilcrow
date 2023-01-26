@@ -438,6 +438,7 @@
   },
   "submission": {
     "action": {
+      "edit_title": "Edit Title",
       "submit_for_review": "Submit for Review",
       "accept_for_review": "Accept for Review",
       "request_resubmission": "Request Resubmission",

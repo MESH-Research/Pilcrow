@@ -12,7 +12,22 @@
         <q-breadcrumbs-el :label="$t('submissions.details_heading')" />
       </q-breadcrumbs>
     </nav>
-    <h2 class="q-pl-lg">{{ submission.title }}</h2>
+    <q-toolbar class="row items-center q-px-lg q-pt-md">
+      <h2>{{ submission.title }}</h2>
+      <q-btn
+        flat
+        icon="edit"
+        color="accent"
+        class="q-ml-sm"
+        size="sm"
+        padding="sm"
+        :aria-label="$t('submission.action.edit_title')"
+      >
+        <q-tooltip anchor="center right" self="center left">{{
+          $t("submission.action.edit_title")
+        }}</q-tooltip>
+      </q-btn>
+    </q-toolbar>
     <section>
       <q-banner class="light-grey">
         <div class="flex row items-center">
