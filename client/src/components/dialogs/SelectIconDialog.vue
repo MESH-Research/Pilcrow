@@ -6,6 +6,7 @@
           v-model="filter"
           :label="$t('publications.style_criteria.fields.icon.search')"
           icon="search"
+          filled
         />
         <q-icon-picker
           :model-value="props.icon"

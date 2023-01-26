@@ -169,8 +169,17 @@ body.body--dark
 
     div[contenteditable="true"],
     div[data-cy="styleCriteria"],
-    .comment-header
+    .comment-header,
+    .q-field__control
         background: $dark-grey !important
+
+    .q-field__control
+        .q-icon.text-accent
+            color: $dark-accent-text !important
+
+    .q-field--focused
+        .q-field__label
+            color: $active
 
     .review-header,
     .comment-editor .ProseMirror p.is-editor-empty:first-child::before,
@@ -186,8 +195,7 @@ body.body--dark
     .q-item.q-router-link--active,
     .criteria-card .q-item__section--side .q-icon,
     .user-stats,
-    .q-field--highlight,
-    .q-field__control
+    .q-field--highlight
         color: $dark-primary !important
 
     .unread .q-badge,
