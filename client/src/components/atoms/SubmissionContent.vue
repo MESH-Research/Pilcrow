@@ -101,28 +101,20 @@ const props = defineProps({
 const commentDrawerOpen = inject("commentDrawerOpen")
 const submission = inject("submission")
 const activeComment = inject("activeComment")
-
 const contentRef = ref(null)
-
-// const isItDark = $q.dark.isActive ?? true
-// let darkMode = ref($q.dark.isActive ?? true)
-// let darkMode = $q.dark.isActive
 let darkModeValue = ref(true)
 
 const $q = useQuasar()
-console.log($q.dark.isActive)
+
 watch(
   () => $q.dark.isActive,
-  (val) => {
+  () => {
     darkModeValue.value = $q.dark.isActive
-    console.log(val ? "On dark mode" : "On light mode", darkModeValue.value)
   }
 )
 
 function toggleDarkMode() {
-  // darkMode = !darkMode
   $q.dark.toggle()
-  console.log($q.dark)
 }
 const fonts = [
   {
