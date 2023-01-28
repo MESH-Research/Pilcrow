@@ -25,6 +25,7 @@ extend type Mutation {
                 "reviewers:updateReviewers"
                 "reviewCoordinators:updateReviewCoordinators"
                 "status:updateStatus"
+                "title:updateTitle"
             ]
         )
 
