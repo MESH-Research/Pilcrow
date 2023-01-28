@@ -210,6 +210,15 @@ export const CREATE_SUBMISSION_FILE = gql`
   }
 `
 
+export const UPDATE_SUBMISSION_TITLE = gql`
+  mutation UpdateSubmissionTitle($id: ID!, $title: String!) {
+    updateSubmission(input: { id: $id, title: $title }) {
+      id
+      title
+    }
+  }
+`
+
 export const UPDATE_SUBMISSION_REVIEWERS = gql`
   mutation UpdateSubmissionReviewers(
     $id: ID!
