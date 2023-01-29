@@ -15,10 +15,10 @@
     <q-toolbar class="row items-center q-px-lg q-pt-md">
       <h2>{{ submission.title }}</h2>
       <q-input
-        :model-value="submission.title"
+        v-model="draft_title"
         type="text"
         placeholder="New Submission Title"
-        @blur="updateTitle"
+        @blur="saveTitle"
       ></q-input>
       <q-btn
         flat
@@ -120,24 +120,31 @@ import { UPDATE_SUBMISSION_TITLE } from "src/graphql/mutations"
 import AssignedSubmissionUsers from "src/components/AssignedSubmissionUsers.vue"
 import { useQuery } from "@vue/apollo-composable"
 import { useMutation } from "@vue/apollo-composable"
-import { computed } from "vue"
+import { computed, ref } from "vue"
 import SubmissionAudit from "../components/SubmissionAudit.vue"
 const props = defineProps({
   id: {
     type: String,
     required: true,
   },
+  submission: {
+    type: Object,
+    default: () => {},
+  },
 })
 
+let draft_title = ref("")
 const { result } = useQuery(GET_SUBMISSION, { id: props.id })
 const submission = computed(() => {
-  return result.value?.submission ?? null
+  return (props.submission = result.value?.submission)
 })
+if (result.value?.submission) {
+  draft_title.value = submission.value?.title
+}
 
 const { mutate } = useMutation(UPDATE_SUBMISSION_TITLE)
-async function updateTitle(e) {
+async function saveTitle(e) {
   try {
-    console.log(e.target.value)
     await mutate({
       id: submission.value.id,
       title: e.target.value,
