@@ -1,7 +1,7 @@
 <template>
   <div ref="scrollTarget" />
   <q-card
-    class="q-ma-md q-pa-md bg-grey-1"
+    class="q-ma-md q-pa-md bg-grey-1 inline-comment-form"
     bordered
     style="border-color: rgb(82, 11, 189)"
   >

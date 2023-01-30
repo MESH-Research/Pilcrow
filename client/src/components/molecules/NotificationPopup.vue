@@ -49,7 +49,7 @@
             :class="{ unread: !item.read_at }"
           />
         </q-list>
-        <q-btn-group spread>
+        <q-btn-group class="notification-button-group" spread>
           <q-btn to="/feed">{{ $t("notifications.view_more") }}</q-btn>
           <q-btn data-cy="dismiss_all_notifications" @click="dismissAll">{{
             $t("notifications.dismiss_all")

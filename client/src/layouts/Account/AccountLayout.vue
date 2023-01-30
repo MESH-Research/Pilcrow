@@ -19,13 +19,19 @@
             <q-list role="list">
               <q-item>
                 <q-item-section> Submissions Created </q-item-section>
-                <q-item-section avatar class="text-primary text-bold">
+                <q-item-section
+                  avatar
+                  class="text-primary text-bold user-stats"
+                >
                   ??
                 </q-item-section>
               </q-item>
               <q-item>
                 <q-item-section> Submissions Reviewed </q-item-section>
-                <q-item-section avatar class="text-primary text-bold">
+                <q-item-section
+                  avatar
+                  class="text-primary text-bold user-stats"
+                >
                   ??
                 </q-item-section>
               </q-item>

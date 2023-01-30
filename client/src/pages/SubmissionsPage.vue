@@ -35,7 +35,11 @@
               data-cy="new_submission_file_upload_input"
             >
               <template #prepend>
-                <q-icon color="accent" name="attach_file" />
+                <q-icon
+                  color="accent"
+                  class="accent-dark-text"
+                  name="attach_file"
+                />
               </template>
             </q-file>
           </div>
