@@ -1,5 +1,5 @@
 <template>
-  <q-scroll-area class="fit col su-light-grey">
+  <q-scroll-area class="fit col xlight-grey">
     <section ref="inline_comments_section">
       <div class="q-pa-md">
         <span class="text-h3">{{
@@ -20,6 +20,7 @@
         <q-btn
           ref="scroll_to_top_button"
           color="dark"
+          class="accent-dark"
           icon="arrow_upward"
           @click="scrollToTop"
         >

@@ -7,6 +7,7 @@
           v-for="criteria in publication.style_criterias"
           :key="criteria.id"
           data-cy="listItem"
+          class="criteria-card"
           :criteria="criteria"
           :edit-id="editId"
           @edit="editItem(criteria.id)"

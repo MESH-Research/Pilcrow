@@ -36,16 +36,20 @@
         <q-tooltip>Increase Font Size</q-tooltip>
       </div>
       <div>
-        <q-btn
-          size="sm"
-          class="q-ml-md"
-          aria-label="Toggle Dark Mode"
-          round
-          :icon="darkMode ? `dark_mode` : `light_mode`"
-          color="white"
-          text-color="grey-7"
+        <q-toggle
+          v-model="darkModeValue"
+          size="xl"
+          checked-icon="dark_mode"
+          color="grey-7"
+          unchecked-icon="light_mode"
           @click="toggleDarkMode()"
-        />
+        >
+          <template #default>
+            <div style="width: 100px">
+              {{ darkModeValue ? "Dark Mode" : "Light Mode" }}
+            </div>
+          </template>
+        </q-toggle>
         <q-tooltip>Toggle Dark Mode</q-tooltip>
       </div>
     </div>
@@ -79,9 +83,10 @@
   </article>
 </template>
 <script setup>
-import { ref, inject, computed } from "vue"
+import { ref, inject, computed, watch } from "vue"
 import { Editor, EditorContent, BubbleMenu } from "@tiptap/vue-3"
 import Highlight from "@tiptap/extension-highlight"
+import { useQuasar } from "quasar"
 
 import StarterKit from "@tiptap/starter-kit"
 import AnnotationExtension from "src/tiptap/annotation-extension"
@@ -96,12 +101,20 @@ const props = defineProps({
 const commentDrawerOpen = inject("commentDrawerOpen")
 const submission = inject("submission")
 const activeComment = inject("activeComment")
-
 const contentRef = ref(null)
+let darkModeValue = ref(true)
 
-let darkMode = ref(true)
+const $q = useQuasar()
+
+watch(
+  () => $q.dark.isActive,
+  () => {
+    darkModeValue.value = $q.dark.isActive
+  }
+)
+
 function toggleDarkMode() {
-  darkMode.value = !darkMode.value
+  $q.dark.toggle()
 }
 const fonts = [
   {
@@ -220,10 +233,10 @@ function highlightClickHandler(event) {
 
 <style lang="scss">
 .comment-highlight {
-  background: #ddd;
+  background: #c9e5f8;
 }
 .comment-highlight.active {
-  background: rgb(248, 219, 138);
+  background: #f8db8b;
 }
 .comment-widget {
   display: inline-block;
