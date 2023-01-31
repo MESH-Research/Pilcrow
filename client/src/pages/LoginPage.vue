@@ -71,7 +71,9 @@
         <q-card-section class="text-center q-pa-sm">
           <p>
             Don't have an account?
-            <router-link to="/register"> Register. </router-link>
+            <router-link to="/register" class="dark-accent-text">
+              Register.
+            </router-link>
           </p>
         </q-card-section>
       </q-form>

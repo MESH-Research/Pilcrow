@@ -20,6 +20,7 @@
           data-cy="configure_button"
           icon="settings"
           class="float-right"
+          color="primary"
           :to="{ name: 'publication:setup:basic', param: { id: id } }"
         >
           {{ $t("publication.configure") }}

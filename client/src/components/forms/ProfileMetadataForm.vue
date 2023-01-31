@@ -159,7 +159,7 @@
         <template #header>
           {{ $t("account.profile.section_keywords") }}
         </template>
-        <fieldset class="col-12 q-col-gutter-sm">
+        <fieldset class="col-12 q-col-gutter-sm profile-keywords">
           <tag-list
             ref="interest_keywords"
             v-model="form.interest_keywords"
@@ -171,7 +171,7 @@
             {{ $t("account.profile.fields.interest_keyword.hint") }}
           </p>
         </fieldset>
-        <fieldset class="col-12 q-col-gutter-sm">
+        <fieldset class="col-12 q-col-gutter-sm profile-keywords">
           <tag-list
             ref="disinterest_keywords"
             v-model="form.disinterest_keywords"

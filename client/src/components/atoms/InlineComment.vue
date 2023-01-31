@@ -4,7 +4,7 @@
     <q-card
       square
       :class="{ active: isActive }"
-      class="bg-grey-1 shadow-2 q-mb-md"
+      class="bg-grey-1 shadow-2 q-mb-md comment"
       :aria-label="
         $t('submissions.comment.ariaLabel', {
           username: comment.created_by.username,
@@ -15,6 +15,7 @@
       <comment-header
         :comment="comment"
         bg-color="#c9e5f8"
+        class="comment-header"
         @quote-reply-to="initiateQuoteReply"
         @modify-comment="modifyComment(comment)"
       />
@@ -85,7 +86,11 @@
           @quote-reply-to="initiateQuoteReply"
         />
       </section>
-      <q-card-section v-if="isReplying" ref="comment_reply">
+      <q-card-section
+        v-if="isReplying"
+        ref="comment_reply"
+        data-cy="comment-reply"
+      >
         <q-separator class="q-mb-md" />
         <span class="text-h4 q-pl-sm">{{
           $t("submissions.comment.reply.title")
