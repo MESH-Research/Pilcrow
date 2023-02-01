@@ -6,6 +6,7 @@
         : `submission.activity_record.description_no_user`
     "
     tag="span"
+    scope="global"
   >
     <template #event>{{
       $t(`submission.activity_record.events.${audit.event}`)
@@ -38,6 +39,7 @@
     v-if="audit.event == 'updated' && audit.old_values.status != null"
     keypath="submission.activity_record.status_change"
     tag="span"
+    scope="global"
   >
     <template #previous_status>{{
       $t(`submission.status.${audit.old_values.status}`)

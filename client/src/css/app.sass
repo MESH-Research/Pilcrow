@@ -67,6 +67,11 @@ a[target="_blank"]::after
 .q-tooltip--style
     color: #fff
 
+.large-text-inputs
+    .q-field--labeled
+        .q-field__control
+            height: auto
+
 // ----------
 // Light Mode
 // ----------
@@ -175,6 +180,10 @@ body.body--dark
     .comment-header,
     .q-field__control
         background: $dark-grey !important
+
+    .q-field--borderless
+        .q-field__control
+            background: none !important
 
     .q-field__control
         .q-icon.text-accent

@@ -12,15 +12,17 @@
         <q-breadcrumbs-el :label="$t('submissions.details_heading')" />
       </q-breadcrumbs>
     </nav>
-    <q-toolbar class="row items-center q-px-lg q-pt-md">
-      <h2>{{ submission.title }}</h2>
-      <q-input
-        v-model="draft_title"
-        type="text"
-        placeholder="New Submission Title"
-        @blur="saveTitle"
-      ></q-input>
+    <q-toolbar class="row items-bottom q-px-lg q-pt-md">
+      <h2
+        v-if="!editing_title"
+        class="cursor-pointer"
+        title="Edit the Title"
+        @click="editTitle"
+      >
+        {{ submission.title }}
+      </h2>
       <q-btn
+        v-if="!editing_title"
         flat
         icon="edit"
         color="accent"
@@ -28,11 +30,39 @@
         size="sm"
         padding="sm"
         :aria-label="$t('submission.action.edit_title')"
+        @click="editTitle"
       >
         <q-tooltip anchor="center right" self="center left">{{
           $t("submission.action.edit_title")
         }}</q-tooltip>
       </q-btn>
+      <q-form
+        v-if="editing_title"
+        class="col large-text-inputs"
+        @submit.prevent="saveTitle"
+      >
+        <q-input
+          v-model="draft_title"
+          class="text-h2"
+          label="Set Submission Title"
+          input-class="q-py-xl"
+          outlined
+          placeholder="New Submission Title"
+        />
+        <div class="q-mt-sm">
+          <q-btn
+            type="submit"
+            label="Save"
+            color="positive"
+            :loading="submitting_title_edit"
+          >
+            <template #loading>
+              <q-spinner color="primary" />
+            </template>
+          </q-btn>
+          <q-btn label="Cancel" flat class="q-ml-sm" @click="cancelEditTitle" />
+        </div>
+      </q-form>
     </q-toolbar>
     <section>
       <q-banner class="light-grey">
@@ -120,35 +150,45 @@ import { UPDATE_SUBMISSION_TITLE } from "src/graphql/mutations"
 import AssignedSubmissionUsers from "src/components/AssignedSubmissionUsers.vue"
 import { useQuery } from "@vue/apollo-composable"
 import { useMutation } from "@vue/apollo-composable"
-import { computed, ref } from "vue"
+import { computed, ref, watchEffect } from "vue"
 import SubmissionAudit from "../components/SubmissionAudit.vue"
 const props = defineProps({
   id: {
     type: String,
     required: true,
   },
-  submission: {
-    type: Object,
-    default: () => {},
-  },
 })
 
-let draft_title = ref("")
+const draft_title = ref("")
 const { result } = useQuery(GET_SUBMISSION, { id: props.id })
 const submission = computed(() => {
-  return (props.submission = result.value?.submission)
+  return result.value?.submission
 })
-if (result.value?.submission) {
-  draft_title.value = submission.value?.title
-}
+
+watchEffect(() => {
+  if (submission.value) {
+    draft_title.value = submission.value.title
+  }
+})
 
 const { mutate } = useMutation(UPDATE_SUBMISSION_TITLE)
-async function saveTitle(e) {
+const editing_title = ref(false)
+const submitting_title_edit = ref(false)
+function editTitle() {
+  editing_title.value = true
+}
+function cancelEditTitle() {
+  editing_title.value = false
+}
+async function saveTitle() {
+  submitting_title_edit.value = true
   try {
     await mutate({
       id: submission.value.id,
-      title: e.target.value,
+      title: draft_title.value,
     })
+    editing_title.value = false
+    submitting_title_edit.value = false
   } catch (error) {
     console.log(error)
   }
