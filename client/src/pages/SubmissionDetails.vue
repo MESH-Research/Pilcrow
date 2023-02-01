@@ -12,7 +12,7 @@
         <q-breadcrumbs-el :label="$t('submissions.details_heading')" />
       </q-breadcrumbs>
     </nav>
-    <q-toolbar class="row items-bottom q-px-lg q-pt-md">
+    <section class="row no-wrap items-center q-px-lg q-pt-md">
       <h2
         v-if="!editing_title"
         class="cursor-pointer"
@@ -33,7 +33,7 @@
         @click="editTitle"
       >
         <q-tooltip anchor="center right" self="center left">{{
-          $t("submission.action.edit_title")
+          $t("submission.edit_title.tooltip")
         }}</q-tooltip>
       </q-btn>
       <q-form
@@ -43,16 +43,17 @@
       >
         <q-input
           v-model="draft_title"
+          autofocus
           class="text-h2"
-          label="Set Submission Title"
+          :label="$t(`submission.edit_title.set_title`)"
           input-class="q-py-xl"
           outlined
-          placeholder="New Submission Title"
+          :placeholder="$t(`submission.edit_title.placeholder`)"
         />
         <div class="q-mt-sm">
           <q-btn
             type="submit"
-            label="Save"
+            :label="$t(`buttons.save`)"
             color="positive"
             :loading="submitting_title_edit"
           >
@@ -60,10 +61,15 @@
               <q-spinner color="primary" />
             </template>
           </q-btn>
-          <q-btn label="Cancel" flat class="q-ml-sm" @click="cancelEditTitle" />
+          <q-btn
+            :label="$t(`guiElements.form.cancel`)"
+            flat
+            class="q-ml-sm"
+            @click="cancelEditTitle"
+          />
         </div>
       </q-form>
-    </q-toolbar>
+    </section>
     <section>
       <q-banner class="light-grey">
         <div class="flex row items-center">
@@ -152,6 +158,38 @@ import { useQuery } from "@vue/apollo-composable"
 import { useMutation } from "@vue/apollo-composable"
 import { computed, ref, watchEffect } from "vue"
 import SubmissionAudit from "../components/SubmissionAudit.vue"
+import { required, maxLength } from "@vuelidate/validators"
+import useVuelidate from "@vuelidate/core"
+import { useFeedbackMessages } from "src/use/guiElements"
+import { useI18n } from "vue-i18n"
+const { t } = useI18n()
+const { newStatusMessage } = useFeedbackMessages({
+  attrs: {
+    "data-cy": "create_submission_notify",
+  },
+})
+const draft_title = ref("")
+const rules = {
+  required,
+  maxLength: maxLength(512),
+}
+const newPubV$ = useVuelidate(rules, draft_title)
+function checkThatFormIsInvalid() {
+  let failureMessage = false
+
+  if (newPubV$.value.required.$invalid) {
+    failureMessage = "submissions.create.title.required"
+    draft_title.value = submission.value.title
+  } else if (newPubV$.value.maxLength.$invalid) {
+    failureMessage = "submissions.create.title.max_length"
+  }
+  if (failureMessage !== false) {
+    newStatusMessage("failure", t(failureMessage))
+    return true
+  }
+  return false
+}
+
 const props = defineProps({
   id: {
     type: String,
@@ -159,7 +197,6 @@ const props = defineProps({
   },
 })
 
-const draft_title = ref("")
 const { result } = useQuery(GET_SUBMISSION, { id: props.id })
 const submission = computed(() => {
   return result.value?.submission
@@ -182,6 +219,10 @@ function cancelEditTitle() {
 }
 async function saveTitle() {
   submitting_title_edit.value = true
+  if (checkThatFormIsInvalid()) {
+    submitting_title_edit.value = false
+    return false
+  }
   try {
     await mutate({
       id: submission.value.id,
