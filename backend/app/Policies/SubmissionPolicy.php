@@ -142,8 +142,8 @@ class SubmissionPolicy
     /**
      * Update submission status policy
      *
-     * @param User $user
-     * @param Submission $submission
+     * @param \App\Models\User $user
+     * @param \App\Models\Submission $submission
      * @return bool|\Illuminate\Auth\Access\Response
      */
     public function updateTitle(User $user, Submission $submission)

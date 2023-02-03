@@ -440,7 +440,8 @@
     "edit_title": {
       "tooltip": "Edit Title",
       "set_title": "Set Submission Title",
-      "placeholder": "New Submission Title"
+      "placeholder": "New Submission Title",
+      "unauthorized": "You are not authorized to edit this submission's title. Please contact your administrator."
     },
     "action": {
       "submit_for_review": "Submit for Review",

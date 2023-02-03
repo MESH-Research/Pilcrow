@@ -16,7 +16,7 @@
       <h2
         v-if="!editing_title"
         class="cursor-pointer"
-        title="Edit the Title"
+        :title="$t(`submission.edit_title.tooltip`)"
         @click="editTitle"
       >
         {{ submission.title }}
@@ -29,7 +29,7 @@
         class="q-ml-sm"
         size="sm"
         padding="sm"
-        :aria-label="$t('submission.action.edit_title')"
+        :aria-label="$t('submission.edit_title.tooltip')"
         @click="editTitle"
       >
         <q-tooltip anchor="center right" self="center left">{{
@@ -151,6 +151,7 @@
 </template>
 
 <script setup>
+import { useQuasar } from "quasar"
 import { GET_SUBMISSION } from "src/graphql/queries"
 import { UPDATE_SUBMISSION_TITLE } from "src/graphql/mutations"
 import AssignedSubmissionUsers from "src/components/AssignedSubmissionUsers.vue"
@@ -162,6 +163,7 @@ import { required, maxLength } from "@vuelidate/validators"
 import useVuelidate from "@vuelidate/core"
 import { useFeedbackMessages } from "src/use/guiElements"
 import { useI18n } from "vue-i18n"
+const { notify } = useQuasar()
 const { t } = useI18n()
 const { newStatusMessage } = useFeedbackMessages({
   attrs: {
@@ -228,10 +230,18 @@ async function saveTitle() {
       id: submission.value.id,
       title: draft_title.value,
     })
+  } catch (error) {
+    notify({
+      color: "negative",
+      message: t("submission.edit_title.unauthorized"),
+      icon: "error",
+      attrs: {
+        "data-cy": "edit_title_notify",
+      },
+    })
+  } finally {
     editing_title.value = false
     submitting_title_edit.value = false
-  } catch (error) {
-    console.log(error)
   }
 }
 </script>

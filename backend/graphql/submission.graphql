@@ -148,7 +148,7 @@ input AcceptSubmissionInviteInput @validator(class: "SubmissionInvitationAccepta
     password: String!
 }
 
-input UpdateSubmissionInput {
+input UpdateSubmissionInput @validator(class: "SubmissionUpdateInputValidator") {
     id: ID!
     title: String @trim
     status: SubmissionStatus

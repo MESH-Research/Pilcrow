@@ -896,13 +896,169 @@ class SubmissionTest extends ApiTestCase
     public function testSubmitterCannotUpdateSubmissionStatus(string $status)
     {
         /** @var User $reviewer */
-        $reviewer = User::factory()->create();
-        $this->actingAs($reviewer);
+        $submitter = User::factory()->create();
+        $this->actingAs($submitter);
 
         $submission = Submission::factory()
             ->for(Publication::factory()->create())
-            ->hasAttached($reviewer, [], 'reviewers')
+            ->hasAttached($submitter, [], 'submitters')
             ->create(['title' => 'Test submission']);
+
         $this->executeSubmissionStatusUpdateUnsuccessfully($submission, $status);
+    }
+
+    /**
+     * @return array
+     */
+    public function provideTitleEditData(): array
+    {
+        return [
+            'Empty Title' => [
+                'role' => Role::APPLICATION_ADMINISTRATOR,
+                'title' => '',
+                'passes' => false,
+                'category' => 'validation'
+            ],
+            'Title That Is Too Long ' => [
+                'role' => Role::APPLICATION_ADMINISTRATOR,
+                'title' => str_repeat('1234567890', 520),
+                'passes' => false,
+                'category' => 'validation'
+            ],
+            'As A Submitter' => [
+                'role' => Role::SUBMITTER,
+                'title' => 'My Newly Updated Submission Title',
+                'passes' => true,
+            ],
+            'As A Reviewer' => [
+                'role' => Role::REVIEWER,
+                'title' => 'My Newly Updated Submission Title',
+                'passes' => false,
+                'category' => 'authorization'
+            ],
+            'As A Review Coordinator' => [
+                'role' => Role::REVIEW_COORDINATOR,
+                'title' => 'My Newly Updated Submission Title',
+                'passes' => true,
+            ],
+            'As An Editor' => [
+                'role' => Role::EDITOR,
+                'title' => 'My Newly Updated Submission Title',
+                'passes' => true,
+            ],
+            'As A Publication Admin' => [
+                'role' => Role::PUBLICATION_ADMINISTRATOR,
+                'title' => 'My Newly Updated Submission Title',
+                'passes' => true,
+            ],
+            'As An Application Admin' => [
+                'role' => Role::APPLICATION_ADMINISTRATOR,
+                'title' => 'My Newly Updated Submission Title',
+                'passes' => true,
+            ],
+        ];
+    }
+
+    /**
+     * @param Submission $submission
+     * @param string $title
+     * @return void
+     */
+    protected function executeSubmissionTitleUpdateSuccessfully(Submission $submission, string $title)
+    {
+        $response = $this->graphQL(
+            'mutation UpdateSubmissionTitle ($submission_id: ID!, $title: String) {
+                updateSubmission(
+                    input: {
+                        id: $submission_id
+                        title: $title
+                    }
+                ) {
+                    id
+                    title
+                }
+            }',
+            [
+                'submission_id' => $submission->id,
+                'title' => $title,
+            ]
+        );
+        $expected_data = [
+            'updateSubmission' => [
+                'id' => (string)$submission->id,
+                'title' => $title,
+            ],
+        ];
+        $response->assertJsonPath('data', $expected_data);
+    }
+
+    /**
+     * @param Submission $submission
+     * @param string $title
+     * @param string $category The category of error
+     * @return void
+     */
+    protected function executeSubmissionTitleUpdateUnsuccessfully(Submission $submission, string $title, string $category)
+    {
+        $response = $this->graphQL(
+            'mutation UpdateSubmissionString ($submission_id: ID!, $title: String) {
+                updateSubmission(
+                    input: {
+                        id: $submission_id
+                        title: $title
+                    }
+                ) {
+                    id
+                    title
+                }
+            }',
+            [
+                'submission_id' => $submission->id,
+                'title' => $title,
+            ]
+        );
+        $response->assertJsonPath('errors.0.extensions.category', $category);
+    }
+
+    /**
+     * @dataProvider provideTitleEditData
+     * @return void
+     */
+    public function testSubmissionTitleUpdateByRole(string $role, string $title, bool $passes, string $category = null)
+    {
+        switch ($role) {
+            case Role::SUBMITTER:
+                $user = $this->beSubmitter();
+                $submission = $user->submissions->first();
+                break;
+            case Role::REVIEWER:
+                $user = $this->beReviewer();
+                $submission = $user->submissions->first();
+                break;
+            case Role::REVIEW_COORDINATOR:
+                $user = $this->beReviewCoordinator();
+                $submission = $user->submissions->first();
+                break;
+            case Role::EDITOR:
+                $user = $this->beEditor();
+                $submission = $user->publications->first()->submissions->first();
+                break;
+            case Role::PUBLICATION_ADMINISTRATOR:
+                $user = $this->bePubAdmin();
+                $submission = $user->publications->first()->submissions->first();
+                break;
+            case Role::APPLICATION_ADMINISTRATOR:
+                $user = $this->beAppAdmin();
+                $submission = Submission::factory()->create();
+                break;
+            default:
+                $user = User::factory()->create();
+                $submission = Submission::factory()->create();
+        }
+        if ($passes) {
+            $this->executeSubmissionTitleUpdateSuccessfully($submission, $title);
+        } else {
+            $this->executeSubmissionTitleUpdateUnsuccessfully($submission, $title, $category);
+        }
     }
 }
