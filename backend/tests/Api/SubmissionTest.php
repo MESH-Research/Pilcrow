@@ -917,13 +917,13 @@ class SubmissionTest extends ApiTestCase
                 'role' => Role::APPLICATION_ADMINISTRATOR,
                 'title' => '',
                 'passes' => false,
-                'category' => 'validation'
+                'category' => 'validation',
             ],
             'Title That Is Too Long ' => [
                 'role' => Role::APPLICATION_ADMINISTRATOR,
                 'title' => str_repeat('1234567890', 520),
                 'passes' => false,
-                'category' => 'validation'
+                'category' => 'validation',
             ],
             'As A Submitter' => [
                 'role' => Role::SUBMITTER,
@@ -934,7 +934,7 @@ class SubmissionTest extends ApiTestCase
                 'role' => Role::REVIEWER,
                 'title' => 'My Newly Updated Submission Title',
                 'passes' => false,
-                'category' => 'authorization'
+                'category' => 'authorization',
             ],
             'As A Review Coordinator' => [
                 'role' => Role::REVIEW_COORDINATOR,
@@ -1024,7 +1024,7 @@ class SubmissionTest extends ApiTestCase
      * @dataProvider provideTitleEditData
      * @return void
      */
-    public function testSubmissionTitleUpdateByRole(string $role, string $title, bool $passes, string $category = null)
+    public function testSubmissionTitleUpdateByRole(string $role, string $title, bool $passes, ?string $category = null)
     {
         switch ($role) {
             case Role::SUBMITTER:
