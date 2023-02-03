@@ -15,6 +15,7 @@
     <section class="row no-wrap items-center q-px-lg q-pt-md">
       <h2
         v-if="!editing_title"
+        data-cy="submission_title"
         class="cursor-pointer"
         :title="$t(`submission.edit_title.tooltip`)"
         @click="editTitle"
@@ -43,6 +44,7 @@
       >
         <q-input
           v-model="draft_title"
+          data-cy="submission_title_input"
           autofocus
           class="text-h2"
           :label="$t(`submission.edit_title.set_title`)"
