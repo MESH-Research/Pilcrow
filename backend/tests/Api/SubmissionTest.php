@@ -893,9 +893,9 @@ class SubmissionTest extends ApiTestCase
      * @dataProvider provideAllSubmissionStates
      * @return void
      */
-    public function testSubmitterCannotUpdateSubmissionStatus(string $status)
+    public function testSubmitterCanUpdateSubmissionStatusForDraftSubmissions(string $status)
     {
-        /** @var User $reviewer */
+        /** @var User $submitter */
         $submitter = User::factory()->create();
         $this->actingAs($submitter);
 
@@ -903,6 +903,27 @@ class SubmissionTest extends ApiTestCase
             ->for(Publication::factory()->create())
             ->hasAttached($submitter, [], 'submitters')
             ->create(['title' => 'Test submission']);
+
+        $this->executeSubmissionStatusUpdateSuccessfully($submission, $status);
+    }
+
+    /**
+     * @dataProvider provideAllSubmissionStates
+     * @return void
+     */
+    public function testSubmitterCannotUpdateSubmissionStatusForInitiallySubmittedSubmissions(string $status)
+    {
+        /** @var User $submitter */
+        $submitter = User::factory()->create();
+        $this->actingAs($submitter);
+
+        $submission = Submission::factory()
+            ->for(Publication::factory()->create())
+            ->hasAttached($submitter, [], 'submitters')
+            ->create([
+                'title' => 'Test submission',
+                'status' => Submission::INITIALLY_SUBMITTED,
+            ]);
 
         $this->executeSubmissionStatusUpdateUnsuccessfully($submission, $status);
     }

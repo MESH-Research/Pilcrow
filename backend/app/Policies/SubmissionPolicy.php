@@ -140,7 +140,7 @@ class SubmissionPolicy
     }
 
     /**
-     * Update submission status policy
+     * Update submission title policy
      *
      * @param \App\Models\User $user
      * @param \App\Models\Submission $submission
