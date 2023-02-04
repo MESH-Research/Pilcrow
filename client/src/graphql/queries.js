@@ -193,10 +193,12 @@ export const GET_SUBMISSION = gql`
           email
         }
         old_values {
+          title
           status
           status_change_comment
         }
         new_values {
+          title
           status
           status_change_comment
         }
