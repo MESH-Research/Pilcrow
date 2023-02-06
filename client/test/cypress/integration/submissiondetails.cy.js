@@ -173,4 +173,17 @@ describe("Submission Details", () => {
     cy.injectAxe()
     cy.checkA11y(null, null, a11yLogViolations)
   })
+
+  it.only("should allow a submitter to update the title", () => {
+    cy.task("resetDb")
+    cy.login({ email: "regularuser@pilcrow.dev" })
+    cy.visit("submission/100")
+    cy.interceptGQLOperation("UpdateSubmissionTitle")
+    cy.dataCy("submission_title").click()
+    cy.dataCy("submission_title_input").type('Hello World{enter}');
+    cy.wait("@UpdateSubmissionTitle")
+    cy.dataCy('submission_title').contains("Hello World")
+    cy.injectAxe()
+    cy.checkA11y(null, null, a11yLogViolations)
+  })
 })

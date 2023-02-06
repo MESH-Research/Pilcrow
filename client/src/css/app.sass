@@ -64,6 +64,14 @@ a[target="_blank"]::after
     &.unread
         background: $blu-highlight
 
+.q-tooltip--style
+    color: #fff
+
+.large-text-inputs
+    .q-field--labeled
+        .q-field__control
+            height: auto
+
 // ----------
 // Light Mode
 // ----------
@@ -173,9 +181,16 @@ body.body--dark
     .q-field__control
         background: $dark-grey !important
 
+    .q-field--borderless
+        .q-field__control
+            background: none !important
+
     .q-field__control
         .q-icon.text-accent
             color: $dark-accent-text !important
+
+    .q-btn.text-accent
+        color: $dark-accent-text !important
 
     .q-field--focused
         .q-field__label
@@ -185,7 +200,7 @@ body.body--dark
     .comment-editor .ProseMirror p.is-editor-empty:first-child::before,
     .optional-message .ProseMirror p.is-editor-empty:first-child::before,
     .q-router-link--exact-active
-        color: white
+        color: rgba(255, 255, 255, 0.7)
         background: $dark-grey !important
 
     div[data-cy="criteria-icon"] i,

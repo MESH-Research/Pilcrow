@@ -12,7 +12,9 @@
         <q-breadcrumbs-el :label="$t('submissions.details_heading')" />
       </q-breadcrumbs>
     </nav>
-    <h2 class="q-pl-lg">{{ submission.title }}</h2>
+    <section class="row no-wrap items-center q-px-lg q-pt-md">
+      <submission-title />
+    </section>
     <section>
       <q-banner class="light-grey">
         <div class="flex row items-center">
@@ -96,9 +98,11 @@
 <script setup>
 import { GET_SUBMISSION } from "src/graphql/queries"
 import AssignedSubmissionUsers from "src/components/AssignedSubmissionUsers.vue"
+import SubmissionTitle from "src/components/SubmissionTitle.vue"
 import { useQuery } from "@vue/apollo-composable"
-import { computed } from "vue"
+import { computed, provide } from "vue"
 import SubmissionAudit from "../components/SubmissionAudit.vue"
+
 const props = defineProps({
   id: {
     type: String,
@@ -108,6 +112,8 @@ const props = defineProps({
 
 const { result } = useQuery(GET_SUBMISSION, { id: props.id })
 const submission = computed(() => {
-  return result.value?.submission ?? null
+  return result.value?.submission
 })
+
+provide("submission", submission)
 </script>

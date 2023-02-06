@@ -6,7 +6,20 @@
         : `submission.activity_record.description_no_user`
     "
     tag="span"
+    scope="global"
   >
+    <template #object>
+      <template v-if="audit.old_values?.title != null">{{
+        $t(`submission.activity_record.object.title`)
+      }}</template>
+      <template v-if="audit.old_values?.status != null">{{
+        $t(`submission.activity_record.object.status`)
+      }}</template>
+      <template v-if="audit.event == 'created'">{{
+        $t(`submission.activity_record.object.submission`)
+      }}</template>
+    </template>
+
     <template #event>{{
       $t(`submission.activity_record.events.${audit.event}`)
     }}</template>
@@ -35,21 +48,35 @@
   </i18n-t>
 
   <i18n-t
+    v-if="audit.event == 'updated' && audit.old_values.title != null"
+    keypath="submission.activity_record.title_change"
+    tag="span"
+    scope="global"
+  >
+    <template #previous_title>{{ audit.old_values.title }}</template>
+    <template #current_title
+      ><b>{{ audit.new_values.title }}</b></template
+    >
+  </i18n-t>
+
+  <i18n-t
     v-if="audit.event == 'updated' && audit.old_values.status != null"
     keypath="submission.activity_record.status_change"
     tag="span"
+    scope="global"
   >
-    <template #previous_status>{{
-      $t(`submission.status.${audit.old_values.status}`)
-    }}</template>
-    <template #current_status>
-      <b>{{ $t(`submission.status.${audit.new_values.status}`) }}</b>
+    <template #previous_status
+      >{{ $t(`submission.status.${audit.old_values.status}`) }}
+    </template>
+    <template #current_status
+      ><b>{{ $t(`submission.status.${audit.new_values.status}`) }}</b>
     </template>
   </i18n-t>
   <p v-if="audit.new_values.status_change_comment != null">
     {{ $t("submission.activity_record.comment_title") }}:
     {{ audit.new_values.status_change_comment }}
   </p>
+
   <q-separator class="q-my-md" />
 </template>
 
