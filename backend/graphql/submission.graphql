@@ -25,6 +25,7 @@ extend type Mutation {
                 "reviewers:updateReviewers"
                 "reviewCoordinators:updateReviewCoordinators"
                 "status:updateStatus"
+                "title:updateTitle"
             ]
         )
 
@@ -147,7 +148,7 @@ input AcceptSubmissionInviteInput @validator(class: "SubmissionInvitationAccepta
     password: String!
 }
 
-input UpdateSubmissionInput {
+input UpdateSubmissionInput @validator {
     id: ID!
     title: String @trim
     status: SubmissionStatus

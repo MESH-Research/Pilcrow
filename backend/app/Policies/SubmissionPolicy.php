@@ -140,6 +140,30 @@ class SubmissionPolicy
     }
 
     /**
+     * Update submission title policy
+     *
+     * @param \App\Models\User $user
+     * @param \App\Models\Submission $submission
+     * @return bool|\Illuminate\Auth\Access\Response
+     */
+    public function updateTitle(User $user, Submission $submission)
+    {
+        if ($this->checkAdminRoles($user, $submission->publication_id)) {
+            return true;
+        }
+
+        if ($user->hasSubmissionRole([Role::REVIEW_COORDINATOR_ROLE_ID], $submission->id)) {
+            return true;
+        }
+
+        if ($user->hasSubmissionRole([Role::SUBMITTER_ROLE_ID], $submission->id)) {
+            return true;
+        }
+
+        return Response::deny('You do not have permission to update the status of this submission');
+    }
+
+    /**
      * View submission policy
      *
      * @param \App\Models\User $user
