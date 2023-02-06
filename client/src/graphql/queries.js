@@ -76,6 +76,7 @@ export const CURRENT_USER_SUBMISSIONS = gql`
         status
         my_role
         publication {
+          id
           my_role
         }
         pivot {
@@ -192,16 +193,19 @@ export const GET_SUBMISSION = gql`
           email
         }
         old_values {
+          title
           status
           status_change_comment
         }
         new_values {
+          title
           status
           status_change_comment
         }
         created_at
       }
       publication {
+        id
         name
         style_criterias {
           id
