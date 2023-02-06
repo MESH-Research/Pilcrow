@@ -101,6 +101,7 @@
     "menu_button_aria": "Show/hide navigation sidebar",
     "publications": "Publications",
     "submissions": "Submissions",
+    "reviews": "Reviews",
     "user_list": "All Users",
     "notification_button": "View Notifications",
     "application_administration": "Application Administration",
@@ -281,6 +282,9 @@
         }
       }
     }
+  },
+  "reviews": {
+    "page_title": "Reviews"
   },
   "publication": {
     "entity": "Publication | Publications",

@@ -115,6 +115,14 @@
             {{ $t("header.submissions") }}
           </q-item-section>
         </q-item>
+        <q-item data-cy="reviews_link" to="/reviews" role="link">
+          <q-item-section side>
+            <q-icon name="content_copy" />
+          </q-item-section>
+          <q-item-section>
+            {{ $t("header.reviews") }}
+          </q-item-section>
+        </q-item>
       </q-list>
     </div>
   </q-header>
