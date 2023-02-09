@@ -236,6 +236,7 @@ export const GET_SUBMISSION_REVIEW = gql`
         data
       }
       publication {
+        id
         style_criterias {
           id
           name

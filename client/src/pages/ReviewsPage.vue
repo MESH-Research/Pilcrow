@@ -5,19 +5,19 @@
       <section class="col-md-10 col-sm-11 col-xs-12">
         <submission-table
           :table-data="reviewer_reviews"
-          table-title="To Review"
-          table-byline="Reviews in which you're assigned as a <strong>reviewer</strong>"
-          type="reviews"
+          title="To Review"
+          byline="Reviews in which you're assigned as a <strong>reviewer</strong>"
+          table-type="reviews"
         />
       </section>
       <section class="col-md-10 col-sm-11 col-xs-12 q-mt-lg">
         <submission-table
           v-if="coordinator_reviews.length > 0"
           :table-data="coordinator_reviews"
-          table-title="To Coordinate"
-          table-byline="Reviews in which you're assigned as a
+          title="To Coordinate"
+          byline="Reviews in which you're assigned as a
         <strong>review coordinator</strong>"
-          type="reviews"
+          table-type="reviews"
         />
       </section>
     </div>
@@ -39,6 +39,7 @@ const reviewer_reviews = computed(() =>
     return (
       submission.status != "DRAFT" &&
       submission.status != "INITIALLY_SUBMITTED" &&
+      submission.status != "AWAITING_REVIEW" &&
       submission.my_role == "reviewer"
     )
   })
@@ -46,9 +47,7 @@ const reviewer_reviews = computed(() =>
 const coordinator_reviews = computed(() =>
   submissions.value.filter(function (submission) {
     return (
-      submission.status != "DRAFT" &&
-      submission.status != "INITIALLY_SUBMITTED" &&
-      submission.my_role == "review_coordinator"
+      submission.status != "DRAFT" && submission.my_role == "review_coordinator"
     )
   })
 )

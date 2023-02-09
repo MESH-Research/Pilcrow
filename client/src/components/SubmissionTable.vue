@@ -1,17 +1,25 @@
 <template>
-  <q-table bordered flat :columns="cols" :rows="tableData" row-key="id" dense>
+  <q-table
+    bordered
+    flat
+    square
+    :columns="cols"
+    :rows="tableData"
+    row-key="id"
+    dense
+  >
     <template #top>
       <div>
-        <h3 class="q-my-none">{{ tableTitle }}</h3>
+        <h3 class="q-my-none">{{ title }}</h3>
         <!-- eslint-disable-next-line vue/no-v-html -->
-        <p v-html="tableByline"></p>
+        <p v-html="byline"></p>
       </div>
     </template>
     <template #no-data>
       <div class="full-width row flex-center text--grey q-py-xl">
         <p class="text-h3">
-          There are no {{ type == "reviews" ? "reviews" : "submissions" }} for
-          you.
+          There are no
+          {{ tableType == "reviews" ? "reviews" : "submissions" }} for you.
         </p>
       </div>
     </template>
@@ -42,43 +50,32 @@
           {{ $t(`submission.status.${props.row.status}`) }}
         </q-td>
         <q-td key="actions" :props="props">
-          <q-btn flat icon="more_vert">
-            <q-menu anchor="bottom right" self="top right">
-              <q-item
-                clickable
-                :to="{
-                  name: 'submission_details',
-                  params: { id: props.row.id },
-                }"
-                ><q-item-section>Submission Details</q-item-section></q-item
-              >
-              <q-item clickable>
-                <q-item-section data-cy="change_status_item_section">
-                  <q-item-label> Change Status </q-item-label>
-                </q-item-section>
-              </q-item>
-            </q-menu>
-          </q-btn>
+          <submission-table-actions
+            :submission="props.row"
+            action-type="reviews"
+          />
         </q-td>
       </q-tr>
     </template>
   </q-table>
 </template>
 <script setup>
+import SubmissionTableActions from "./SubmissionTableActions.vue"
+
 defineProps({
   tableData: {
     type: Array,
     default: () => [],
   },
-  tableTitle: {
+  title: {
     type: String,
     default: "",
   },
-  tableByline: {
+  byline: {
     type: String,
     default: "",
   },
-  type: {
+  tableType: {
     type: String,
     default: "",
   },
