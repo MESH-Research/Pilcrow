@@ -73,15 +73,13 @@ export const CURRENT_USER_SUBMISSIONS = gql`
       }
       submissions {
         id
+        title
         status
         my_role
         publication {
           id
+          name
           my_role
-        }
-        pivot {
-          id
-          role_id
         }
       }
     }
