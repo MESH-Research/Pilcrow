@@ -5,18 +5,19 @@
       <section class="col-md-10 col-sm-11 col-xs-12">
         <submission-table
           :table-data="reviewer_reviews"
-          title="To Review"
-          byline="Reviews in which you're assigned as a <strong>reviewer</strong>"
+          title="submission_tables.reviewer.title"
+          byline="submission_tables.reviewer.byline"
+          no-data="submission_tables.no_reviews"
           table-type="reviews"
         />
       </section>
-      <section class="col-md-10 col-sm-11 col-xs-12 q-mt-lg">
+      <section class="col-md-10 col-sm-11 col-xs-12 q-mt-md">
         <submission-table
-          v-if="coordinator_reviews.length > 0"
+          v-if="coordinator_submission_length > 0"
           :table-data="coordinator_reviews"
-          title="To Coordinate"
-          byline="Reviews in which you're assigned as a
-        <strong>review coordinator</strong>"
+          title="submission_tables.coordinator.title"
+          byline="submission_tables.coordinator.byline"
+          no-data="submission_tables.no_reviews"
           table-type="reviews"
         />
       </section>

@@ -9,18 +9,29 @@
     dense
   >
     <template #top>
-      <div>
-        <h3 class="q-my-none">{{ title }}</h3>
-        <!-- eslint-disable-next-line vue/no-v-html -->
-        <p v-html="byline"></p>
+      <div class="row full-width justify-between q-pb-md">
+        <div class="column">
+          <h3 class="q-my-none">{{ $t(title) }}</h3>
+          <!-- eslint-disable-next-line vue/no-v-html -->
+          <p class="q-mb-none" v-html="$t(byline)"></p>
+        </div>
+        <div class="column">
+          <q-select
+            v-model="status_filter"
+            square
+            outlined
+            dense
+            label="Filter by Status"
+            :options="statuses"
+            style="width: 180px"
+            class="q-mt-md q-mr-xs"
+          />
+        </div>
       </div>
     </template>
     <template #no-data>
-      <div class="full-width row flex-center text--grey q-py-xl">
-        <p class="text-h3">
-          There are no
-          {{ tableType == "reviews" ? "reviews" : "submissions" }} for you.
-        </p>
+      <div class="full-width row flex-center text--grey q-py-lg">
+        <p class="text-h3">{{ $t(noData) }}</p>
       </div>
     </template>
     <template #body="props">
@@ -61,6 +72,9 @@
 </template>
 <script setup>
 import SubmissionTableActions from "./SubmissionTableActions.vue"
+import { useI18n } from "vue-i18n"
+import { ref } from "vue"
+const { t } = useI18n()
 
 defineProps({
   tableData: {
@@ -79,12 +93,18 @@ defineProps({
     type: String,
     default: "",
   },
+  noData: {
+    type: String,
+    default: "reviews.tables.no_data",
+  },
 })
+const statuses = ["Initially Submitted", "Under Review"]
+const status_filter = ref(null)
 const cols = [
   {
     name: "id",
     field: "id",
-    label: "Number",
+    label: t(`submission_tables.columns.number`),
     sortable: true,
     style: "width: 95px",
     align: "right",
@@ -92,14 +112,14 @@ const cols = [
   {
     name: "title",
     field: "title",
-    label: "Submission Title",
+    label: t(`submission_tables.columns.title`),
     sortable: true,
     align: "left",
   },
   {
     name: "publication",
     field: "publication",
-    label: "Publication Name",
+    label: t(`submission_tables.columns.publication`),
     sortable: true,
     align: "left",
     style: "width: 10%",
@@ -107,14 +127,14 @@ const cols = [
   {
     name: "status",
     field: "status",
-    label: "Status",
+    label: t(`submission_tables.columns.status`),
     sortable: true,
     align: "center",
   },
   {
     name: "actions",
     field: "actions",
-    label: "Actions",
+    label: t(`submission_tables.columns.actions`),
     sortable: false,
     style: "width: 100px",
     align: "center",

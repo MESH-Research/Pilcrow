@@ -286,6 +286,26 @@
   "reviews": {
     "page_title": "Reviews"
   },
+  "submission_tables": {
+    "columns": {
+      "number": "Number",
+      "title": "Submission Title",
+      "publication": "Publication Name",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "reviewer": {
+      "title": "To Review",
+      "byline": "Reviews in which you're assigned as a reviewer"
+    },
+    "coordinator": {
+      "title": "To Coordinate",
+      "byline": "Reviews in which you're assigned as a <strong>review coordinator</strong>"
+    },
+    "no_data": "There is no data.",
+    "no_reviews": "There are no reviews for you.",
+    "no_submissions": "There are no submissions for you."
+  },
   "publication": {
     "entity": "Publication | Publications",
     "configure": "Configure Publication",
