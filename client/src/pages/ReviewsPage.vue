@@ -13,7 +13,7 @@
       </section>
       <section class="col-md-10 col-sm-11 col-xs-12 q-mt-md">
         <submission-table
-          v-if="coordinator_submission_length > 0"
+          v-if="coordinator_reviews.length > 0"
           :table-data="coordinator_reviews"
           title="submission_tables.coordinator.title"
           byline="submission_tables.coordinator.byline"

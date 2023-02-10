@@ -6,6 +6,7 @@
     :columns="cols"
     :rows="tableData"
     row-key="id"
+    :filter="status_filter"
     dense
   >
     <template #top>
@@ -18,14 +19,28 @@
         <div class="column">
           <q-select
             v-model="status_filter"
+            clearable
             square
             outlined
             dense
             label="Filter by Status"
-            :options="statuses"
-            style="width: 180px"
+            :options="unique_statuses"
+            style="width: 240px"
             class="q-mt-md q-mr-xs"
-          />
+          >
+            <template #selected-item="scope">
+              {{ $t(`submission.status.${scope.opt}`) }}
+            </template>
+            <template #option="scope">
+              <q-item v-bind="scope.itemProps">
+                <q-item-section>
+                  <q-item-label>
+                    {{ $t(`submission.status.${scope.opt}`) }}
+                  </q-item-label>
+                </q-item-section>
+              </q-item>
+            </template>
+          </q-select>
         </div>
       </div>
     </template>
@@ -64,6 +79,7 @@
           <submission-table-actions
             :submission="props.row"
             action-type="reviews"
+            flat
           />
         </q-td>
       </q-tr>
@@ -73,10 +89,10 @@
 <script setup>
 import SubmissionTableActions from "./SubmissionTableActions.vue"
 import { useI18n } from "vue-i18n"
-import { ref } from "vue"
+import { ref, computed } from "vue"
 const { t } = useI18n()
 
-defineProps({
+const propsVar = defineProps({
   tableData: {
     type: Array,
     default: () => [],
@@ -98,8 +114,11 @@ defineProps({
     default: "reviews.tables.no_data",
   },
 })
-const statuses = ["Initially Submitted", "Under Review"]
 const status_filter = ref(null)
+const unique = (items) => [...new Set(items)]
+const unique_statuses = computed(() => {
+  return unique(propsVar.tableData.map((item) => item.status))
+})
 const cols = [
   {
     name: "id",

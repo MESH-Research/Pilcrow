@@ -296,7 +296,7 @@
     },
     "reviewer": {
       "title": "To Review",
-      "byline": "Reviews in which you're assigned as a reviewer"
+      "byline": "Reviews in which you're assigned as a <strong>reviewer</strong>"
     },
     "coordinator": {
       "title": "To Coordinate",
