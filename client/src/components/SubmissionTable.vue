@@ -23,7 +23,7 @@
             square
             outlined
             dense
-            label="Filter by Status"
+            :label="$t(`submission_tables.filter_label`)"
             :options="unique_statuses"
             style="width: 240px"
             class="q-mt-md q-mr-xs"
