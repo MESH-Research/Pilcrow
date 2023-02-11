@@ -76,6 +76,7 @@ export const CURRENT_USER_SUBMISSIONS = gql`
         title
         status
         my_role
+        effective_role
         publication {
           id
           name
