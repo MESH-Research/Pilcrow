@@ -110,10 +110,9 @@ describe("Reviews Page", () => {
     })
 
     const wrapper = await makeWrapper()
-    expect(
-      wrapper.findAllComponents({ name: "submission-table" })
-    ).toHaveLength(2)
-    CurrentUserSubmissions.mockClear()
+    expect(wrapper.findAllComponents({ name: "submission-table" }).length).toBe(
+      2
+    )
   })
 
   test("only one submission table appears for a user as a reviewer", async () => {
