@@ -6,18 +6,6 @@ import { createMockClient } from "mock-apollo-client"
 import { CURRENT_USER_SUBMISSIONS } from "src/graphql/queries"
 import flushPromises from "flush-promises"
 
-jest.mock("quasar", () => ({
-  ...jest.requireActual("quasar"),
-  useQuasar: () => ({
-    notify: jest.fn(),
-  }),
-}))
-jest.mock("vue-i18n", () => ({
-  useI18n: () => ({
-    t: (t) => t,
-  }),
-}))
-
 installQuasarPlugin()
 describe("Reviews Page", () => {
   const mockClient = createMockClient()
@@ -159,8 +147,8 @@ describe("Reviews Page", () => {
       },
     })
     const wrapper = await makeWrapper()
-    expect(
-      wrapper.findAllComponents({ name: "submission-table" })
-    ).toHaveLength(1)
+    expect(wrapper.findAllComponents({ name: "submission-table" }).length).toBe(
+      1
+    )
   })
 })

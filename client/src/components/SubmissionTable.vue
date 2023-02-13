@@ -50,7 +50,7 @@
       </div>
     </template>
     <template #body="props">
-      <q-tr key="id" :props="props">
+      <q-tr :props="props">
         <q-td key="id" :props="props">
           {{ props.row.id }}
         </q-td>
