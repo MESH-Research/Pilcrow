@@ -40,33 +40,38 @@ describe("Reviews Page", () => {
   const CurrentUserSubmissions = jest.fn()
   mockClient.setRequestHandler(CURRENT_USER_SUBMISSIONS, CurrentUserSubmissions)
 
-  test("all reviews appear within the list", async () => {
+  test("all submission tables appear for a user as a review coordinator", async () => {
     CurrentUserSubmissions.mockResolvedValue({
       data: {
-        submissions: {
-          paginatorInfo: {
-            __typename: "PaginatorInfo",
-            count: 5,
-            currentPage: 1,
-            lastPage: 1,
-            perPage: 10,
+        currentUser: {
+          id: 1000,
+          roles: {
+            name: "Application Administrator",
           },
-          data: [
+          submissions: [
             {
               id: "1",
               title: "Jest Submission 1",
               status: "INITIALLY_SUBMITTED",
               my_role: "submitter",
-              publication: { name: "Jest Publication" },
-              files: [],
+              effective_role: "submitter",
+              publication: {
+                id: "1",
+                name: "Jest Publication",
+                my_role: null,
+              },
             },
             {
               id: "2",
               title: "Jest Submission 2",
               status: "RESUBMISSION_REQUESTED",
               my_role: "reviewer",
-              publication: { name: "Jest Publication" },
-              files: [],
+              effective_role: "reviewer",
+              publication: {
+                id: "1",
+                name: "Jest Publication",
+                my_role: null,
+              },
             },
             {
               id: "3",
@@ -74,32 +79,88 @@ describe("Reviews Page", () => {
               status: "AWAITING_REVIEW",
               my_role: "review_coordinator",
               effective_role: "review_coordinator",
-              publication: { name: "Jest Publication" },
-              files: [],
+              publication: {
+                id: "1",
+                name: "Jest Publication",
+                my_role: null,
+              },
             },
             {
               id: "4",
               title: "Jest Submission 4",
               status: "REJECTED",
-              my_role: "",
+              my_role: "review_coordinator",
               effective_role: "review_coordinator",
-              publication: { name: "Jest Publication" },
-              files: [],
+              publication: {
+                id: "1",
+                name: "Jest Publication",
+                my_role: null,
+              },
             },
             {
               id: "5",
               title: "Jest Submission 5",
               status: "INITIALLY_SUBMITTED",
-              my_role: "",
-              effective_role: "",
-              publication: { name: "Jest Publication" },
-              files: [],
+              my_role: "reviewer",
+              effective_role: "reviewer",
+              publication: {
+                id: "1",
+                name: "Jest Publication",
+                my_role: null,
+              },
+            },
+          ],
+        },
+      },
+    })
+
+    const wrapper = await makeWrapper()
+    expect(
+      wrapper.findAllComponents({ name: "submission-table" })
+    ).toHaveLength(2)
+    CurrentUserSubmissions.mockClear()
+  })
+
+  test("only one submission table appears for a user as a reviewer", async () => {
+    CurrentUserSubmissions.mockResolvedValue({
+      data: {
+        currentUser: {
+          id: 1000,
+          roles: {
+            name: "Application Administrator",
+          },
+          submissions: [
+            {
+              id: "1",
+              title: "Jest Submission 1",
+              status: "INITIALLY_SUBMITTED",
+              my_role: "submitter",
+              effective_role: "submitter",
+              publication: {
+                id: "1",
+                name: "Jest Publication",
+                my_role: null,
+              },
+            },
+            {
+              id: "2",
+              title: "Jest Submission 2",
+              status: "RESUBMISSION_REQUESTED",
+              my_role: "reviewer",
+              effective_role: "reviewer",
+              publication: {
+                id: "1",
+                name: "Jest Publication",
+                my_role: null,
+              },
             },
           ],
         },
       },
     })
     const wrapper = await makeWrapper()
-    expect(wrapper.findAllComponents({ name: "q-item" })).toHaveLength(5)
+    expect(
+      wrapper.findAllComponents({ name: "submission-table" })
+    ).toHaveLength(1)
   })
 })
