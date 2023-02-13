@@ -6,17 +6,6 @@ import { createMockClient } from "mock-apollo-client"
 import { CURRENT_USER_SUBMISSIONS } from "src/graphql/queries"
 import flushPromises from "flush-promises"
 import { InMemoryCache } from "@apollo/client/core"
-jest.mock("quasar", () => ({
-  ...jest.requireActual("quasar"),
-  useQuasar: () => ({
-    notify: jest.fn(),
-  }),
-}))
-jest.mock("vue-i18n", () => ({
-  useI18n: () => ({
-    t: (t) => t,
-  }),
-}))
 
 installQuasarPlugin()
 describe("Reviews Page", () => {
@@ -46,7 +35,7 @@ describe("Reviews Page", () => {
   const CurrentUserSubmissions = jest.fn()
   mockClient.setRequestHandler(CURRENT_USER_SUBMISSIONS, CurrentUserSubmissions)
 
-  test("all submission tables appear for a user as a review coordinator", async () => {
+  test("two submission tables appear for a user as a review coordinator", async () => {
     CurrentUserSubmissions.mockResolvedValue({
       data: {
         currentUser: {
