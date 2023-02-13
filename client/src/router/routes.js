@@ -130,13 +130,37 @@ const routes = [
         component: () => import("src/pages/ReviewsPage.vue"),
       },
       {
+        name: "submission:create",
+        path: "/publication/:id/create",
+        props: true,
+        component: () => import("pages/SubmissionCreate.vue"),
+      },
+      {
         path: "/submissions",
         component: () => import("src/pages/SubmissionsPage.vue"),
       },
       {
         name: "submission_details",
-        path: "/submission/:id",
+        path: "/submission/:id/details",
         component: () => import("src/pages/SubmissionDetails.vue"),
+        meta: {
+          requiresSubmissionAccess: true,
+        },
+        props: true,
+      },
+      {
+        name: "submission:draft",
+        path: "/submission/:id",
+        component: () => import("src/pages/SubmissionDraft.vue"),
+        meta: {
+          requiresSubmissionAccess: true,
+        },
+        props: true,
+      },
+      {
+        name: "submission:content",
+        path: "/submission/:id/content",
+        component: () => import("src/pages/SubmissionContent.vue"),
         meta: {
           requiresSubmissionAccess: true,
         },
