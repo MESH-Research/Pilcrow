@@ -5,10 +5,28 @@ import { ApolloClients } from "@vue/apollo-composable"
 import { createMockClient } from "mock-apollo-client"
 import { CURRENT_USER_SUBMISSIONS } from "src/graphql/queries"
 import flushPromises from "flush-promises"
+import { InMemoryCache } from "@apollo/client/core"
+jest.mock("quasar", () => ({
+  ...jest.requireActual("quasar"),
+  useQuasar: () => ({
+    notify: jest.fn(),
+  }),
+}))
+jest.mock("vue-i18n", () => ({
+  useI18n: () => ({
+    t: (t) => t,
+  }),
+}))
 
 installQuasarPlugin()
 describe("Reviews Page", () => {
-  const mockClient = createMockClient()
+  const cache = new InMemoryCache({
+    addTypename: true,
+  })
+  const mockClient = createMockClient({
+    defaultOptions: { watchQuery: { fetchPolicy: "network-only" } },
+    cache,
+  })
   const makeWrapper = async () => {
     const wrapper = mount(ReviewsPage, {
       global: {
