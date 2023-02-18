@@ -70,9 +70,15 @@
         </q-card-actions>
         <q-card-section class="text-center q-pa-sm">
           <p>
-            Don't have an account?
+            {{ $t("auth.register_question") }}
             <router-link to="/register" class="dark-accent-text">
-              Register.
+              {{ $t("auth.register") }}
+            </router-link>
+          </p>
+          <p>
+            {{ $t("auth.password_forgot") }}
+            <router-link to="/reset-password" class="dark-accent-text">
+              {{ $t("auth.password_reset") }}
             </router-link>
           </p>
         </q-card-section>

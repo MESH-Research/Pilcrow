@@ -38,10 +38,13 @@
     "login": "Login",
     "logout": "Logout",
     "register": "Register",
+    "register_question": "Don't have an account?",
     "register_action": "Create Account",
     "register_login": "Return to Login",
     "login_help": "login",
     "password_help": "reset your password",
+    "password_reset": "Reset password",
+    "password_forgot": "Forgot password?",
     "fields": {
       "email": "Email",
       "name": "Name",
