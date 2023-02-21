@@ -11,6 +11,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 use Laravel\Sanctum\HasApiTokens;
 use Laravel\Scout\Searchable;
@@ -271,5 +272,17 @@ class User extends Authenticatable implements MustVerifyEmail
     public function getDisplayLabelAttribute(): string
     {
         return $this->attributes['name'] ?: $this->attributes['username'];
+    }
+
+    /**
+     * Send a request to the supplied email to reset the user's password
+     *
+     * @return void
+     */
+    public function sendPasswordResetLink($email)
+    {
+        return Password::sendResetLink(
+            $email
+        );
     }
 }
