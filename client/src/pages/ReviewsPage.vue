@@ -38,9 +38,7 @@ const submissions = computed(() => {
 const reviewer_reviews = computed(() =>
   submissions.value.filter(function (submission) {
     return (
-      submission.status != "DRAFT" &&
-      submission.status != "INITIALLY_SUBMITTED" &&
-      submission.status != "AWAITING_REVIEW" &&
+      ["DRAFT", "INITIALLY_SUBMITTED", "AWAITING_REVIEW"].includes(submission.status) === false &&
       submission.my_role == "reviewer"
     )
   })
