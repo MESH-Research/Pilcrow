@@ -101,6 +101,7 @@
     "menu_button_aria": "Show/hide navigation sidebar",
     "publications": "Publications",
     "submissions": "Submissions",
+    "reviews": "Reviews",
     "user_list": "All Users",
     "notification_button": "View Notifications",
     "application_administration": "Application Administration",
@@ -280,6 +281,37 @@
           }
         }
       }
+    }
+  },
+  "reviews": {
+    "page_title": "Reviews"
+  },
+  "submission_tables": {
+    "filter_label": "Filter by Status",
+    "columns": {
+      "number": "Number",
+      "title": "Submission Title",
+      "publication": "Publication Name",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "type": {
+      "submissions": {
+        "name": "Submissions",
+        "no_data": "There are no submissions for you."
+      },
+      "reviews": {
+        "name": "Reviews",
+        "no_data": "There are no reviews for you."
+      }
+    },
+    "reviewer": {
+      "title": "To Review",
+      "byline": "{type_name} in which you're assigned as a <strong>reviewer</strong>"
+    },
+    "coordinator": {
+      "title": "To Coordinate",
+      "byline": "{type_name} in which you're assigned as a <strong>review coordinator</strong>"
     }
   },
   "publication": {
