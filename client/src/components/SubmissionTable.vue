@@ -12,7 +12,9 @@
     <template #top>
       <div class="row full-width justify-between q-pb-md">
         <div class="column">
-          <h3 class="q-my-none">{{ $t(title) }}</h3>
+          <h3 class="q-my-none">
+            {{ $t(`submission_tables.${role}.title`) }}
+          </h3>
           <!-- eslint-disable-next-line vue/no-v-html -->
           <p class="q-mb-none" v-html="$t(byline)"></p>
         </div>
@@ -46,39 +48,41 @@
     </template>
     <template #no-data>
       <div class="full-width row flex-center text--grey q-py-lg">
-        <p class="text-h3">{{ $t(noData) }}</p>
+        <p class="text-h3">
+          {{ $t(`submission_tables.${tableType}.no_data`) }}
+        </p>
       </div>
     </template>
-    <template #body="props">
-      <q-tr :props="props">
-        <q-td key="id" :props="props">
+    <template #body="p">
+      <q-tr :props="p">
+        <q-td key="id" :props="p">
           {{ props.row.id }}
         </q-td>
-        <q-td key="title" :props="props">
+        <q-td key="title" :props="p">
           <router-link
             :to="{
               name: 'submission_review',
-              params: { id: props.row.id },
+              params: { id: p.row.id },
             }"
-            >{{ props.row.title }}
+            >{{ p.row.title }}
           </router-link>
         </q-td>
-        <q-td key="publication" :props="props">
+        <q-td key="publication" :props="p">
           <router-link
             :to="{
               name: 'publication:home',
-              params: { id: props.row.publication.id },
+              params: { id: p.row.publication.id },
             }"
-            >{{ props.row.publication.name }}
+            >{{ p.row.publication.name }}
           </router-link>
         </q-td>
-        <q-td key="status" :props="props">
-          {{ $t(`submission.status.${props.row.status}`) }}
+        <q-td key="status" :props="p">
+          {{ $t(`submission.status.${p.row.status}`) }}
         </q-td>
-        <q-td key="actions" :props="props">
+        <q-td key="actions" :props="p">
           <submission-table-actions
-            :submission="props.row"
-            action-type="reviews"
+            :submission="p.row"
+            :action-type="tableType"
             flat
           />
         </q-td>
@@ -92,33 +96,26 @@ import { useI18n } from "vue-i18n"
 import { ref, computed } from "vue"
 const { t } = useI18n()
 
-const propsVar = defineProps({
+const props = defineProps({
   tableData: {
     type: Array,
     default: () => [],
   },
-  title: {
-    type: String,
-    default: "",
-  },
-  byline: {
-    type: String,
-    default: "",
-  },
   tableType: {
     type: String,
-    default: "",
+    default: "submissions",
   },
-  noData: {
+  role: {
     type: String,
-    default: "reviews.tables.no_data",
+    default: "reviewer",
   },
 })
 const status_filter = ref(null)
 const unique = (items) => [...new Set(items)]
 const unique_statuses = computed(() => {
-  return unique(propsVar.tableData.map((item) => item.status))
+  return unique(props.tableData.map((item) => item.status))
 })
+const byline = `submission_tables.${props.role}.byline`
 const cols = [
   {
     name: "id",

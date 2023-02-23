@@ -287,12 +287,19 @@
     "page_title": "Reviews"
   },
   "submission_tables": {
+    "filter_label": "Filter by Status",
     "columns": {
       "number": "Number",
       "title": "Submission Title",
       "publication": "Publication Name",
       "status": "Status",
       "actions": "Actions"
+    },
+    "reviews": {
+      "no_data": "There are no reviews for you."
+    },
+    "submissions": {
+      "no_data": "There are no submissions for you."
     },
     "reviewer": {
       "title": "To Review",
@@ -301,11 +308,7 @@
     "coordinator": {
       "title": "To Coordinate",
       "byline": "Reviews in which you're assigned as a <strong>review coordinator</strong>"
-    },
-    "no_data": "There is no data.",
-    "no_reviews": "There are no reviews for you.",
-    "no_submissions": "There are no submissions for you.",
-    "filter_label": "Filter by Status"
+    }
   },
   "publication": {
     "entity": "Publication | Publications",

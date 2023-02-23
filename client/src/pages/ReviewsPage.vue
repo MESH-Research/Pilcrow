@@ -5,20 +5,16 @@
       <section class="col-md-10 col-sm-11 col-xs-12">
         <submission-table
           :table-data="reviewer_reviews"
-          title="submission_tables.reviewer.title"
-          byline="submission_tables.reviewer.byline"
-          no-data="submission_tables.no_reviews"
           table-type="reviews"
+          role="reviewer"
         />
       </section>
       <section class="col-md-10 col-sm-11 col-xs-12 q-mt-md">
         <submission-table
           v-if="coordinator_reviews.length > 0"
           :table-data="coordinator_reviews"
-          title="submission_tables.coordinator.title"
-          byline="submission_tables.coordinator.byline"
-          no-data="submission_tables.no_reviews"
           table-type="reviews"
+          role="coordinator"
         />
       </section>
     </div>
