@@ -92,15 +92,15 @@
         :aria-label="$t('header.nav_aria_label')"
       >
         <q-item v-if="currentUser" role="link" to="/dashboard">
-          <q-item-section side>
-            <q-icon name="dashboard" />
+          <q-item-section side class="gt-xs">
+            <q-icon class="gt-xs" name="dashboard" />
           </q-item-section>
           <q-item-section>
             {{ $t("header.dashboard") }}
           </q-item-section>
         </q-item>
         <q-item to="/publications" role="link">
-          <q-item-section side>
+          <q-item-section side class="gt-xs">
             <q-icon name="collections_bookmark" />
           </q-item-section>
           <q-item-section>
@@ -108,11 +108,19 @@
           </q-item-section>
         </q-item>
         <q-item data-cy="submissions_link" to="/submissions" role="link">
-          <q-item-section side>
+          <q-item-section side class="gt-xs">
             <q-icon name="content_copy" />
           </q-item-section>
           <q-item-section>
             {{ $t("header.submissions") }}
+          </q-item-section>
+        </q-item>
+        <q-item data-cy="reviews_link" to="/reviews" role="link">
+          <q-item-section side class="gt-xs">
+            <q-icon class="material-icons-outlined" name="rate_review" />
+          </q-item-section>
+          <q-item-section>
+            {{ $t("header.reviews") }}
           </q-item-section>
         </q-item>
       </q-list>
