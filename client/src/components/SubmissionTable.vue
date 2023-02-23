@@ -16,7 +16,7 @@
             {{ $t(`submission_tables.${role}.title`) }}
           </h3>
           <!-- eslint-disable-next-line vue/no-v-html -->
-          <p class="q-mb-none" v-html="$t(byline)"></p>
+          <p class="q-mb-none" v-html="$t(byline, byline_opts)"></p>
         </div>
         <div class="column">
           <q-select
@@ -49,7 +49,7 @@
     <template #no-data>
       <div class="full-width row flex-center text--grey q-py-lg">
         <p class="text-h3">
-          {{ $t(`submission_tables.${tableType}.no_data`) }}
+          {{ $t(`submission_tables.type.${tableType}.no_data`) }}
         </p>
       </div>
     </template>
@@ -116,6 +116,9 @@ const unique_statuses = computed(() => {
   return unique(props.tableData.map((item) => item.status))
 })
 const byline = `submission_tables.${props.role}.byline`
+const byline_opts = {
+  type_name: t(`submission_tables.type.${props.tableType}.name`),
+}
 const cols = [
   {
     name: "id",

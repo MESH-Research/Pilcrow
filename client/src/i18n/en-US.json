@@ -295,19 +295,23 @@
       "status": "Status",
       "actions": "Actions"
     },
-    "reviews": {
-      "no_data": "There are no reviews for you."
-    },
-    "submissions": {
-      "no_data": "There are no submissions for you."
+    "type": {
+      "submissions": {
+        "name": "Submissions",
+        "no_data": "There are no submissions for you."
+      },
+      "reviews": {
+        "name": "Reviews",
+        "no_data": "There are no reviews for you."
+      }
     },
     "reviewer": {
       "title": "To Review",
-      "byline": "Reviews in which you're assigned as a <strong>reviewer</strong>"
+      "byline": "{type_name} in which you're assigned as a <strong>reviewer</strong>"
     },
     "coordinator": {
       "title": "To Coordinate",
-      "byline": "Reviews in which you're assigned as a <strong>review coordinator</strong>"
+      "byline": "{type_name} in which you're assigned as a <strong>review coordinator</strong>"
     }
   },
   "publication": {

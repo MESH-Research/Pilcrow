@@ -3,11 +3,7 @@
     <h2 class="q-pl-lg">{{ $t(`reviews.page_title`) }}</h2>
     <div class="row q-col-gutter-lg q-pa-lg">
       <section class="col-md-10 col-sm-11 col-xs-12">
-        <submission-table
-          :table-data="reviewer_reviews"
-          table-type="reviews"
-          role="reviewer"
-        />
+        <submission-table :table-data="reviewer_reviews" table-type="reviews" />
       </section>
       <section class="col-md-10 col-sm-11 col-xs-12 q-mt-md">
         <submission-table
