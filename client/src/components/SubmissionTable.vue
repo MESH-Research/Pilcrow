@@ -56,7 +56,7 @@
     <template #body="p">
       <q-tr :props="p">
         <q-td key="id" :props="p">
-          {{ props.row.id }}
+          {{ p.row.id }}
         </q-td>
         <q-td key="title" :props="p">
           <router-link
