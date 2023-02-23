@@ -53,40 +53,41 @@
         </p>
       </div>
     </template>
-    <template #body="p">
-      <q-tr :props="p">
-        <q-td key="id" :props="p">
-          {{ p.row.id }}
-        </q-td>
-        <q-td key="title" :props="p">
-          <router-link
-            :to="{
-              name: 'submission_review',
-              params: { id: p.row.id },
-            }"
-            >{{ p.row.title }}
-          </router-link>
-        </q-td>
-        <q-td key="publication" :props="p">
-          <router-link
-            :to="{
-              name: 'publication:home',
-              params: { id: p.row.publication.id },
-            }"
-            >{{ p.row.publication.name }}
-          </router-link>
-        </q-td>
-        <q-td key="status" :props="p">
-          {{ $t(`submission.status.${p.row.status}`) }}
-        </q-td>
-        <q-td key="actions" :props="p">
-          <submission-table-actions
-            :submission="p.row"
-            :action-type="tableType"
-            flat
-          />
-        </q-td>
-      </q-tr>
+    <template #body-cell-title="p">
+      <q-td :props="p">
+        <router-link
+          :to="{
+            name: 'submission_review',
+            params: { id: p.row.id },
+          }"
+          >{{ p.row.title }}
+        </router-link>
+      </q-td>
+    </template>
+    <template #body-cell-publication="p">
+      <q-td :props="p">
+        <router-link
+          :to="{
+            name: 'publication:home',
+            params: { id: p.row.publication.id },
+          }"
+          >{{ p.row.publication.name }}
+        </router-link>
+      </q-td>
+    </template>
+    <template #body-cell-status="p">
+      <q-td :props="p">
+        {{ $t(`submission.status.${p.row.status}`) }}
+      </q-td>
+    </template>
+    <template #body-cell-actions="p">
+      <q-td :props="p">
+        <submission-table-actions
+          :submission="p.row"
+          :action-type="tableType"
+          flat
+        />
+      </q-td>
     </template>
   </q-table>
 </template>
