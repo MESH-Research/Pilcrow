@@ -109,7 +109,9 @@ function checkThatFormIsInvalid() {
   return false
 }
 
-const { mutate } = useMutation(UPDATE_SUBMISSION_TITLE)
+const { mutate } = useMutation(UPDATE_SUBMISSION_TITLE, {
+  refetchQueries: ["GetSubmission"],
+})
 const editing_title = ref(false)
 const submitting_title_edit = ref(false)
 

@@ -122,6 +122,10 @@ const routes = [
         props: true,
       },
       {
+        path: "/reviews",
+        component: () => import("src/pages/ReviewsPage.vue"),
+      },
+      {
         path: "/submissions",
         component: () => import("src/pages/SubmissionsPage.vue"),
       },

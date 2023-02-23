@@ -267,13 +267,23 @@ function highlightClickHandler(event) {
   display: block;
   font-family: Helvetica, Arial, san-serif;
   font-size: 1em;
-  margin-right: 10px;
+  left: 0;
+  margin-left: -80px;
   min-width: 50px;
   position: absolute;
-  right: 100%;
   text-align: right;
   top: 0;
   white-space: nowrap;
+}
+
+.submission-content blockquote p:before {
+  // This compensates for the extra padding, border, and margin on blockquotes
+  left: -28px;
+}
+
+.submission-content li p:before {
+  // This compensates for the extra inline padding on lists
+  left: -40px;
 }
 
 mark {

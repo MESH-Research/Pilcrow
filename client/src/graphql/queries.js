@@ -73,15 +73,14 @@ export const CURRENT_USER_SUBMISSIONS = gql`
       }
       submissions {
         id
+        title
         status
         my_role
+        effective_role
         publication {
           id
+          name
           my_role
-        }
-        pivot {
-          id
-          role_id
         }
       }
     }
@@ -238,6 +237,7 @@ export const GET_SUBMISSION_REVIEW = gql`
         data
       }
       publication {
+        id
         style_criterias {
           id
           name
