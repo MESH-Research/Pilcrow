@@ -45,6 +45,13 @@
             class="full-width text-white"
             :loading="status === 'submitting'"
           />
+          <q-btn
+            :label="$t(`guiElements.form.cancel`)"
+            flat
+            stretch
+            class="q-mt-md full-width text-white"
+            to="/login"
+          />
         </q-card-actions>
       </q-form>
     </q-card>

@@ -92,7 +92,7 @@
   },
   "reset_password": {
     "title": "Reset Password",
-    "byline": "Enter your email address to request a password reset.",
+    "byline": "Enter your email to request a password reset.",
     "submitted": {
       "title": "Submitted",
       "byline": "Check your email for the link to reset your password."
