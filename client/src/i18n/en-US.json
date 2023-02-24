@@ -90,7 +90,14 @@
       "UNKNOWN": "An unexpected error occurred."
     }
   },
-  "invitation": {},
+  "reset_password": {
+    "title": "Reset Password",
+    "byline": "Enter your email address to request a password reset.",
+    "submitted": {
+      "title": "Submitted",
+      "byline": "Check your email for the link to reset your password."
+    }
+  },
   "helpers": {
     "OPTIONAL_FIELD": "{0} (optional)",
     "REQUIRED_FIELD": "{0} is required."
