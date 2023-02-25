@@ -77,6 +77,12 @@ type Mutation {
         @field(
             resolver: "App\\GraphQL\\Mutations\\MarkNotificationRead@markAllAsRead"
         )
+
+    "Send a password reset email to a specified email address"
+    requestPasswordReset(email: String): Boolean
+        @field(
+            resolver: "App\\GraphQL\\Mutations\\ResetPassword@request"
+        )
 }
 
 "A date string with format `Y-m-d`, e.g. `2011-05-23`."

@@ -69,7 +69,8 @@
         "email": "Please enter a valid email address.",
         "EMAIL_IN_USE": "This email is already registered.",
         "EMAIL_NOT_VALID": "Please enter a valid email address.",
-        "EMAIL_IN_USE_HINT": "You might want to {loginAction} or {passwordAction}."
+        "EMAIL_IN_USE_HINT": "You might want to {loginAction} or {passwordAction}.",
+        "EMAIL_NOT_FOUND": "There is no user found with this email. Please verify that the specified email is correct."
       },
       "password": {
         "required": "Password is required",

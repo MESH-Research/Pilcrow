@@ -33,6 +33,11 @@
               </template>
             </q-input>
           </fieldset>
+          <ul v-if="status === 'error'" class="text-negative">
+            <li v-for="(message, index) in errorMessagesList" :key="index">
+              {{ message }}
+            </li>
+          </ul>
         </q-card-section>
         <q-card-actions>
           <q-btn
@@ -59,29 +64,47 @@
 </template>
 
 <script setup>
-import { reactive, ref } from "vue"
-import { useVuelidate } from "@vuelidate/core"
-import { required, email } from "@vuelidate/validators"
 import ErrorFieldRenderer from "src/components/molecules/ErrorFieldRenderer"
-const status = ref("")
+import { REQUEST_PASSWORD_RESET } from "src/graphql/mutations"
+import { email, required } from "@vuelidate/validators"
+import { reactive, ref } from "vue"
+import { useMutation } from "@vue/apollo-composable"
+// import { useRoute } from "vue-router"
+import { useVuelidate } from "@vuelidate/core"
+import { useGraphErrors } from "src/use/errors"
+
+const errorMessagesList = ref([])
 const address = reactive({
   email: "",
 })
+const { mutate } = useMutation(REQUEST_PASSWORD_RESET)
+// const { params, query } = useRoute()
+// const { token } = params
+const status = ref("")
 const rules = {
   email: {
     email,
     required,
   },
 }
+const { errorMessages, graphQLErrorCodes } = useGraphErrors()
 const v$ = useVuelidate(rules, address)
-
-const handleSubmit = function () {
+const handleSubmit = async function () {
   if (v$.value.email.$error) {
     return
   }
-  status.value = "submitting"
-  setTimeout(() => {
+  try {
+    status.value = "submitting"
+    await mutate({
+      email: address.email,
+    })
     status.value = "submitted"
-  }, 1000)
+  } catch (error) {
+    errorMessagesList.value = errorMessages(
+      graphQLErrorCodes(error),
+      "auth.validation.email"
+    )
+    status.value = "error"
+  }
 }
 </script>

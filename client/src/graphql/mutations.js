@@ -755,3 +755,9 @@ export const UPDATE_OVERALL_COMMENT_REPLY = gql`
   ${_COMMENT_FIELDS}
   ${_RELATED_USER_FIELDS}
 `
+
+export const REQUEST_PASSWORD_RESET = gql`
+  mutation RequestPasswordReset($email: String!) {
+    requestPasswordReset(email: $email)
+  }
+`
