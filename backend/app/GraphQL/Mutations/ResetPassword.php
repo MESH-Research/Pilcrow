@@ -27,4 +27,23 @@ final class ResetPassword
         $user->sendPasswordResetLink(['email' => $args['email']]);
         return true;
     }
+
+    /**
+     * Update a password from a password reset request"
+     *
+     * @param [type] $_
+     * @param array $args
+     * @return bool
+     */
+    public function reset($_, array $args)
+    {
+        try {
+            /** @var \App\Models\User **/
+            $user = User::where('email',$args['email'])->firstOrFail();
+        } catch (ModelNotFoundException $e) {
+            throw new ClientException('Not Found', 'requestPasswordReset', 'EMAIL_NOT_FOUND');
+        }
+        // TODO: Update password
+        return true;
+    }
 }

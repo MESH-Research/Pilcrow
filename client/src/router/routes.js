@@ -12,7 +12,11 @@ const routes = [
         component: () => import("pages/AcceptInvite.vue"),
       },
       {
-        path: "reset-password/:token?",
+        path: "request-password-reset",
+        component: () => import("src/pages/RequestPasswordReset.vue"),
+      },
+      {
+        path: "reset-password/:token",
         component: () => import("src/pages/ResetPassword.vue"),
       },
     ],

@@ -1,17 +1,8 @@
 <template>
-  <q-page v-if="status === 'updated'" class="column flex-center">
+  <q-page v-if="status === 'submitted'" class="column flex-center">
     <q-icon color="positive" name="check_circle" size="2em" />
-    <strong class="text-h3">{{ $t(`reset_password.updated.title`) }}</strong>
-    <p>{{ $t(`reset_password.updated.byline`) }}</p>
-    <q-btn
-      class="q-mr-sm"
-      color="accent"
-      size="md"
-      :label="$t('auth.login')"
-      :to="{
-        name: 'login',
-      }"
-    />
+    <strong class="text-h3">{{ $t(`reset_password.submitted.title`) }}</strong>
+    <p>{{ $t(`reset_password.submitted.byline`) }}</p>
   </q-page>
   <q-page v-else class="flex-center flex q-pa-md" data-cy="reset_page">
     <q-card style="width: 400px" square>
@@ -78,7 +69,6 @@ import { REQUEST_PASSWORD_RESET } from "src/graphql/mutations"
 import { email, required } from "@vuelidate/validators"
 import { reactive, ref } from "vue"
 import { useMutation } from "@vue/apollo-composable"
-// import { useRoute } from "vue-router"
 import { useVuelidate } from "@vuelidate/core"
 import { useGraphErrors } from "src/use/errors"
 
@@ -87,8 +77,6 @@ const address = reactive({
   email: "",
 })
 const { mutate: request } = useMutation(REQUEST_PASSWORD_RESET)
-// const { params, query } = useRoute()
-// const { token } = params
 const status = ref("")
 const rules = {
   email: {
