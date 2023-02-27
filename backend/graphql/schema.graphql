@@ -85,7 +85,7 @@ type Mutation {
         )
 
     "Update a password from a password reset request"
-    resetPassword(email: String!, password: String!, token: String!): User
+    resetPassword(input: ResetPasswordInput): User
         @field(
             resolver: "App\\GraphQL\\Mutations\\ResetPassword@reset"
         )
@@ -146,6 +146,15 @@ input UpdateUserInput @validator(class: "UserInputValidator") {
 
     "Metadata related to the profile of a user."
     profile_metadata: UpdateProfileMetadataInput
+}
+
+"""
+Input type for resetting a password from a password reset request email
+"""
+input ResetPasswordInput @validator {
+    email: String!
+    password: String!
+    token: String!
 }
 
 """

@@ -46,15 +46,15 @@ final class ResetPassword
     {
         try {
             /** @var \App\Models\User $user **/
-            $user = User::where('email', $args['email'])->firstOrFail();
+            $user = User::where('email', $args['input']['email'])->firstOrFail();
         } catch (ModelNotFoundException $e) {
             throw new ClientException('Not Found', 'resetPassword', 'EMAIL_NOT_FOUND');
         }
         $status = Password::reset(
             [
-                'email' => $args['email'],
-                'password' => $args['password'],
-                'token' => $args['token'],
+                'email' => $args['input']['email'],
+                'password' => $args['input']['password'],
+                'token' => $args['input']['token'],
             ],
             function (User $user, string $password) {
                 $user->forceFill([
