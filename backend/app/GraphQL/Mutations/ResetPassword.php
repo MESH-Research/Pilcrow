@@ -5,7 +5,6 @@ namespace App\GraphQL\Mutations;
 
 use App\Exceptions\ClientException;
 use App\Models\User;
-use Error;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Auth;
@@ -25,12 +24,14 @@ final class ResetPassword
     public function request($_, array $args)
     {
         try {
-            /** @var \App\Models\User **/
-            $user = User::where('email',$args['email'])->firstOrFail();
+            User::where('email', $args['email'])->firstOrFail();
         } catch (ModelNotFoundException $e) {
             throw new ClientException('Not Found', 'requestPasswordReset', 'EMAIL_NOT_FOUND');
         }
-        $user->sendPasswordResetLink(['email' => $args['email']]);
+        Password::sendResetLink(
+            ['email' => $args['email']]
+        );
+
         return true;
     }
 
@@ -44,8 +45,8 @@ final class ResetPassword
     public function reset($_, array $args)
     {
         try {
-            /** @var \App\Models\User **/
-            $user = User::where('email',$args['email'])->firstOrFail();
+            /** @var \App\Models\User $user **/
+            $user = User::where('email', $args['email'])->firstOrFail();
         } catch (ModelNotFoundException $e) {
             throw new ClientException('Not Found', 'resetPassword', 'EMAIL_NOT_FOUND');
         }
@@ -53,11 +54,11 @@ final class ResetPassword
             [
                 'email' => $args['email'],
                 'password' => $args['password'],
-                'token' => $args['token']
+                'token' => $args['token'],
             ],
             function (User $user, string $password) {
                 $user->forceFill([
-                    'password' => Hash::make($password)
+                    'password' => Hash::make($password),
                 ])->setRememberToken(Str::random(60));
                 $user->save();
                 event(new PasswordReset($user));
@@ -68,6 +69,7 @@ final class ResetPassword
         }
         $guard = Auth::guard('web');
         $guard->login($user);
+
         return $user;
     }
 }
