@@ -761,3 +761,12 @@ export const REQUEST_PASSWORD_RESET = gql`
     requestPasswordReset(email: $email)
   }
 `
+
+export const RESET_PASSWORD = gql`
+  mutation ResetPassword($email: String!, $password: String!, $token: String!) {
+    resetPassword(email: $email, password: $password, token: $token) {
+      id
+      email
+    }
+  }
+`

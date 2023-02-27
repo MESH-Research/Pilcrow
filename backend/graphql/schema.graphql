@@ -85,7 +85,7 @@ type Mutation {
         )
 
     "Update a password from a password reset request"
-    resetPassword(token: String!, password: String!, email: String!): Boolean
+    resetPassword(email: String!, password: String!, token: String!): User
         @field(
             resolver: "App\\GraphQL\\Mutations\\ResetPassword@reset"
         )

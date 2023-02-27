@@ -93,14 +93,20 @@
   },
   "reset_password": {
     "title": "Reset Password",
-    "byline": "Enter your email to request a password reset.",
+    "byline": "Enter your new password.",
+    "ERROR": "An error occurred while attempting to reset your password.",
+    "request": {
+      "title": "Request Password Reset",
+      "byline": "Enter your email to request a password reset."
+    },
     "submitted": {
       "title": "Submitted",
       "byline": "Check your email for the link to reset your password."
     },
     "updated": {
       "title": "Updated",
-      "byline": "Your password has been reset."
+      "byline": "Your password has been reset.",
+      "action": "Visit Dashboard"
     }
   },
   "helpers": {

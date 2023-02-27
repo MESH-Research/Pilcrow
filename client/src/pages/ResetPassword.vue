@@ -4,13 +4,12 @@
     <strong class="text-h3">{{ $t(`reset_password.updated.title`) }}</strong>
     <p>{{ $t(`reset_password.updated.byline`) }}</p>
     <q-btn
-      class="q-mr-sm"
+      :label="$t('reset_password.updated.action')"
+      class="q-mt-lg"
       color="accent"
+      icon="arrow_forward"
       size="md"
-      :label="$t('auth.login')"
-      :to="{
-        name: 'login',
-      }"
+      to="/dashboard"
     />
   </q-page>
   <q-page v-else class="flex-center flex q-pa-md" data-cy="reset_page">
@@ -24,23 +23,22 @@
         <q-card-section>
           <fieldset class="q-px-sm q-pt-md q-gutter-y-lg q-pb-lg">
             <p>{{ $t(`reset_password.byline`) }}</p>
-            <q-input
-              ref="username"
-              v-model="v$.email.$model"
-              :error="v$.email.$error"
-              :label="$t('auth.fields.email')"
-              autofocus
+            <new-password-input
+              ref="passwordInput"
+              v-model="$v.password.$model"
               outlined
-              data-cy="email_field"
-              autocomplete="username"
+              :label="$t('auth.fields.password')"
+              :error="$v.password.$error"
+              :complexity="$v.password.notComplex.$response.complexity"
+              data-cy="password_field"
             >
               <template #error>
                 <error-field-renderer
-                  :errors="v$.email.$errors"
-                  prefix="auth.validation.email"
+                  :errors="$v.password.$errors"
+                  prefix="auth.validation.password"
                 />
               </template>
-            </q-input>
+            </new-password-input>
           </fieldset>
           <ul v-if="status === 'error'" class="text-negative">
             <li v-for="(message, index) in errorMessagesList" :key="index">
@@ -57,14 +55,7 @@
             unelevated
             color="accent"
             class="full-width text-white"
-            :loading="status === 'submitting'"
-          />
-          <q-btn
-            :label="$t(`guiElements.form.cancel`)"
-            flat
-            stretch
-            class="q-mt-md full-width text-white"
-            to="/login"
+            :loading="status === 'updating'"
           />
         </q-card-actions>
       </q-form>
@@ -73,45 +64,41 @@
 </template>
 
 <script setup>
+import NewPasswordInput from "src/components/forms/NewPasswordInput.vue"
 import ErrorFieldRenderer from "src/components/molecules/ErrorFieldRenderer"
-import { REQUEST_PASSWORD_RESET } from "src/graphql/mutations"
-import { email, required } from "@vuelidate/validators"
-import { reactive, ref } from "vue"
+import { RESET_PASSWORD } from "src/graphql/mutations"
+import { CURRENT_USER } from "src/graphql/queries"
+import { ref } from "vue"
 import { useMutation } from "@vue/apollo-composable"
-// import { useRoute } from "vue-router"
-import { useVuelidate } from "@vuelidate/core"
+import { useRoute } from "vue-router"
 import { useGraphErrors } from "src/use/errors"
+import { useUserValidation } from "src/use/userValidation"
 
 const errorMessagesList = ref([])
-const address = reactive({
-  email: "",
+const { params, query } = useRoute()
+const { token } = params
+const { mutate: request } = useMutation(RESET_PASSWORD, {
+  refetchQueries: [{ query: CURRENT_USER }],
 })
-const { mutate: request } = useMutation(REQUEST_PASSWORD_RESET)
-// const { params, query } = useRoute()
-// const { token } = params
 const status = ref("")
-const rules = {
-  email: {
-    email,
-    required,
-  },
-}
 const { errorMessages, graphQLErrorCodes } = useGraphErrors()
-const v$ = useVuelidate(rules, address)
+const { $v } = useUserValidation()
 const handleSubmit = async function () {
-  if (v$.value.email.$error) {
+  if ($v.value.password.$error || $v.value.password.$model == "") {
     return
   }
   try {
-    status.value = "submitting"
+    status.value = "updating"
     await request({
-      email: address.email,
+      email: query.email,
+      password: $v.value.password.$model,
+      token: token,
     })
-    status.value = "submitted"
+    status.value = "updated"
   } catch (error) {
     errorMessagesList.value = errorMessages(
       graphQLErrorCodes(error),
-      "auth.validation.email"
+      "reset_password"
     )
     status.value = "error"
   }

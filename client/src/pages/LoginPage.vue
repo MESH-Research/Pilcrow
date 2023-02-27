@@ -77,7 +77,7 @@
           </p>
           <p>
             {{ $t("auth.password_forgot") }}
-            <router-link to="/reset-password" class="dark-accent-text">
+            <router-link to="/request-password-reset" class="dark-accent-text">
               {{ $t("auth.password_reset") }}
             </router-link>
           </p>

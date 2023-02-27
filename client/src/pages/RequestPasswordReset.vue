@@ -9,12 +9,12 @@
       <q-form @submit="handleSubmit()">
         <q-card-section class="accent q-py-xs">
           <h1 class="text-h4 text-white">
-            {{ $t(`reset_password.title`) }}
+            {{ $t(`reset_password.request.title`) }}
           </h1>
         </q-card-section>
         <q-card-section>
           <fieldset class="q-px-sm q-pt-md q-gutter-y-lg q-pb-lg">
-            <p>{{ $t(`reset_password.byline`) }}</p>
+            <p>{{ $t(`reset_password.request.byline`) }}</p>
             <q-input
               ref="username"
               v-model="v$.email.$model"
