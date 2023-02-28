@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
-// This route is unreachable in the deployed application (the front hands off the request to GraphQL).  
+// This route is unreachable in the deployed application (the front hands off the request to GraphQL).
 // This route is added to provide the the reverse routing to generate the URL in password reset emails.
 Route::get('/reset-password/{token}', function (string $token) {
     return view('auth.reset-password', ['token' => $token]);
