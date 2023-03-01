@@ -77,6 +77,18 @@ type Mutation {
         @field(
             resolver: "App\\GraphQL\\Mutations\\MarkNotificationRead@markAllAsRead"
         )
+
+    "Send a password reset email to a specified email address"
+    requestPasswordReset(email: String!): Boolean
+        @field(
+            resolver: "App\\GraphQL\\Mutations\\ResetPassword@request"
+        )
+
+    "Update a password from a password reset request"
+    resetPassword(input: ResetPasswordInput): User
+        @field(
+            resolver: "App\\GraphQL\\Mutations\\ResetPassword@reset"
+        )
 }
 
 "A date string with format `Y-m-d`, e.g. `2011-05-23`."
@@ -134,6 +146,15 @@ input UpdateUserInput @validator(class: "UserInputValidator") {
 
     "Metadata related to the profile of a user."
     profile_metadata: UpdateProfileMetadataInput
+}
+
+"""
+Input type for resetting a password from a password reset request email
+"""
+input ResetPasswordInput @validator {
+    email: String!
+    password: String!
+    token: String!
 }
 
 """

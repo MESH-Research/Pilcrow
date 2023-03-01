@@ -38,10 +38,13 @@
     "login": "Login",
     "logout": "Logout",
     "register": "Register",
+    "register_question": "Don't have an account?",
     "register_action": "Create Account",
     "register_login": "Return to Login",
     "login_help": "login",
     "password_help": "reset your password",
+    "password_reset": "Reset password",
+    "password_forgot": "Forgot password?",
     "fields": {
       "email": "Email",
       "name": "Name",
@@ -66,7 +69,8 @@
         "email": "Please enter a valid email address.",
         "EMAIL_IN_USE": "This email is already registered.",
         "EMAIL_NOT_VALID": "Please enter a valid email address.",
-        "EMAIL_IN_USE_HINT": "You might want to {loginAction} or {passwordAction}."
+        "EMAIL_IN_USE_HINT": "You might want to {loginAction} or {passwordAction}.",
+        "EMAIL_NOT_FOUND": "There is no user found with this email. Please verify that the specified email is correct."
       },
       "password": {
         "required": "Password is required",
@@ -87,7 +91,24 @@
       "UNKNOWN": "An unexpected error occurred."
     }
   },
-  "invitation": {},
+  "reset_password": {
+    "title": "Reset Password",
+    "byline": "Enter your new password.",
+    "ERROR": "An error occurred while attempting to reset your password.",
+    "request": {
+      "title": "Request Password Reset",
+      "byline": "Enter your email to request a password reset."
+    },
+    "submitted": {
+      "title": "Submitted",
+      "byline": "Check your email for the link to reset your password."
+    },
+    "updated": {
+      "title": "Updated",
+      "byline": "Your password has been reset.",
+      "action": "Visit Dashboard"
+    }
+  },
   "helpers": {
     "OPTIONAL_FIELD": "{0} (optional)",
     "REQUIRED_FIELD": "{0} is required."
