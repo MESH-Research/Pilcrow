@@ -85,13 +85,13 @@
         <q-btn :label="$t('auth.login')" to="/login" stretch flat />
       </template>
     </q-toolbar>
-    <div class="header-nav">
+    <div v-if="currentUser" class="header-nav">
       <q-list
         class="row"
         role="navigation"
         :aria-label="$t('header.nav_aria_label')"
       >
-        <q-item v-if="currentUser" role="link" to="/dashboard">
+        <q-item role="link" to="/dashboard">
           <q-item-section side class="gt-xs">
             <q-icon class="gt-xs" name="dashboard" />
           </q-item-section>
