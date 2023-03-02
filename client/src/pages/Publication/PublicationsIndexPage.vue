@@ -1,6 +1,14 @@
 <template>
   <div>
     <h2 class="q-px-lg">{{ $t("publication.entity", { count: 2 }) }}</h2>
+    <q-card>
+      <q-card-section>Test</q-card-section>
+      <q-card-actions>
+        <q-btn to="/account/metadata" icon="o_contact_page" padding="xs lg"
+          >Profile Details</q-btn
+        >
+      </q-card-actions>
+    </q-card>
     <section class="q-px-lg">
       <div v-if="!loading" class="column q-gutter-md items-center">
         <q-list
