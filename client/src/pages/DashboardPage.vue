@@ -1,10 +1,10 @@
 <template>
   <q-page data-cy="vueDashboard" class="q-pa-lg">
     <section
-      class="row wrap justify-start q-col-gutter-md items-stretch content-start"
+      class="row wrap justify-start q-col-gutter-md items-stretch content-start q-mb-md"
     >
       <div class="col-md-6 col-xs-12">
-        <q-card v-if="currentUser" flat bordered class="full-height">
+        <q-card v-if="currentUser" flat bordered square class="full-height">
           <q-card-section class="text-h4">
             <avatar-image
               :user="currentUser"
@@ -15,14 +15,18 @@
             Welcome<span v-if="currentUser.name">, {{ currentUser.name }}</span>
           </q-card-section>
           <q-separator />
-          <q-card-actions align="evenly">
-            <q-btn icon="o_settings" to="/account/profile"
+          <q-card-actions align="left">
+            <q-btn flat icon="o_settings" to="/account/profile"
               >Account Information</q-btn
             >
-            <q-btn icon="o_contact_page" to="/account/metadata" padding="xs md"
+            <q-btn
+              flat
+              icon="o_contact_page"
+              to="/account/metadata"
+              padding="xs md"
               >Profile Details</q-btn
             >
-            <q-btn icon="mdi-logout" @click="logout">Logout</q-btn>
+            <q-btn flat icon="mdi-logout" @click="logout">Logout</q-btn>
           </q-card-actions>
         </q-card>
       </div>
@@ -30,27 +34,85 @@
         <q-card
           flat
           bordered
+          square
           class="flex justify-center items-center full-height q-pa-md text-center"
         >
           <q-card-section class="text-h3">
             New to Pilcrow? Learn more in our
-            <a href="https://docs.pilcrow.lndo.site" class="text-accent"
+            <a href="https://docs.pilcrow.lndo.site" class="text-primary"
               >guide</a
             >.
           </q-card-section>
         </q-card>
       </div>
     </section>
-    <h1 class="text-h2">My Dashboard</h1>
+    <section class="row wrap q-gutter-y-md">
+      <div class="col-12">
+        <submission-table
+          :table-data="reviewer_reviews"
+          table-type="reviews"
+          role="reviewer"
+        />
+      </div>
+      <div class="col-12">
+        <submission-table
+          :table-data="coordinator_reviews"
+          table-type="reviews"
+          role="coordinator"
+          class="col-12"
+        />
+      </div>
+      <div class="col-12">
+        <submission-table
+          :table-data="submitter_submissions"
+          table-type="submissions"
+          role="submitter"
+          class="col-12"
+        />
+      </div>
+    </section>
   </q-page>
 </template>
 
 <script setup>
 import AvatarImage from "src/components/atoms/AvatarImage.vue"
 import { useCurrentUser, useLogout } from "src/use/user"
+import { useQuery } from "@vue/apollo-composable"
+import { CURRENT_USER_SUBMISSIONS } from "src/graphql/queries"
+import SubmissionTable from "src/components/SubmissionTable.vue"
+import { computed } from "vue"
 
 const { currentUser } = useCurrentUser()
 const { logoutUser: logout } = useLogout()
+const { result } = useQuery(CURRENT_USER_SUBMISSIONS)
+const submissions = computed(() => {
+  return result.value?.currentUser?.submissions ?? []
+})
+const reviewer_reviews = computed(() =>
+  submissions.value.filter(function (submission) {
+    return (
+      ["DRAFT", "INITIALLY_SUBMITTED", "AWAITING_REVIEW"].includes(
+        submission.status
+      ) === false && submission.my_role == "reviewer"
+    )
+  })
+)
+const coordinator_reviews = computed(() =>
+  submissions.value.filter(function (submission) {
+    return (
+      submission.status != "DRAFT" && submission.my_role == "review_coordinator"
+    )
+  })
+)
+const submitter_submissions = computed(() =>
+  submissions.value.filter(function (submission) {
+    return (
+      ["DRAFT", "INITIALLY_SUBMITTED", "AWAITING_REVIEW"].includes(
+        submission.status
+      ) === false && submission.my_role == "reviewer"
+    )
+  })
+)
 </script>
 
 <style lang="scss" scoped>
