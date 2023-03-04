@@ -333,6 +333,20 @@
     "coordinator": {
       "title": "To Coordinate",
       "byline": "{type_name} in which you're assigned as a <strong>review coordinator</strong>"
+    },
+    "dashboard": {
+      "reviewer": {
+        "title": "Reviews",
+        "byline": "{type_name} you are reviewing"
+      },
+      "coordinator": {
+        "title": "Review Management",
+        "byline": "{type_name} you are coordinating for reviewers"
+      },
+      "submitter": {
+        "title": "Submissions",
+        "byline": "{type_name} you have submitted for review"
+      }
     }
   },
   "publication": {

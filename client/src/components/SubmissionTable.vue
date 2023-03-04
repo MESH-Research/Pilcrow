@@ -1,6 +1,5 @@
 <template>
   <q-table
-    bordered
     flat
     square
     :columns="cols"
@@ -8,12 +7,13 @@
     row-key="id"
     :filter="status_filter"
     dense
+    class="submission-table"
   >
     <template #top>
       <div class="row full-width justify-between q-pb-md">
         <div class="column">
           <h3 class="q-my-none">
-            {{ $t(`submission_tables.${role}.title`) }}
+            {{ $t(title) }}
           </h3>
           <!-- eslint-disable-next-line vue/no-v-html -->
           <p class="q-mb-none" v-html="$t(byline, byline_opts)"></p>
@@ -106,6 +106,10 @@ const props = defineProps({
     type: String,
     default: "submissions",
   },
+  variation: {
+    type: String,
+    default: "",
+  },
   role: {
     type: String,
     default: "reviewer",
@@ -116,17 +120,23 @@ const unique = (items) => [...new Set(items)]
 const unique_statuses = computed(() => {
   return unique(props.tableData.map((item) => item.status))
 })
-const byline = `submission_tables.${props.role}.byline`
+const title = props.variation
+  ? `submission_tables.${props.variation}.${props.role}.title`
+  : `submission_tables.${props.role}.title`
+const byline = props.variation
+  ? `submission_tables.${props.variation}.${props.role}.byline`
+  : `submission_tables.${props.role}.byline`
 const byline_opts = {
   type_name: t(`submission_tables.type.${props.tableType}.name`),
 }
+console.log(byline_opts)
 const cols = [
   {
     name: "id",
     field: "id",
     label: t(`submission_tables.columns.number`),
     sortable: true,
-    style: "width: 95px",
+    style: "width: 85px",
     align: "right",
   },
   {
@@ -161,3 +171,22 @@ const cols = [
   },
 ]
 </script>
+
+<style lang="sass">
+.submission-table
+  th
+    border-width: 1px 0
+    &:first-child
+      border-left-width: 1px
+    &:last-child
+      border-right-width: 1px
+  tbody td
+    border-style: solid
+    &:first-child
+      border-left-width: 1px
+    &:last-child
+      border-right-width: 1px
+  .q-table__bottom
+    border-style: solid
+    border-width: 0 1px 1px
+</style>

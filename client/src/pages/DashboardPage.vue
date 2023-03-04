@@ -51,12 +51,14 @@
         <submission-table
           :table-data="reviewer_reviews"
           table-type="reviews"
+          variation="dashboard"
           role="reviewer"
         />
       </div>
       <div class="col-12">
         <submission-table
           :table-data="coordinator_reviews"
+          variation="dashboard"
           table-type="reviews"
           role="coordinator"
           class="col-12"
@@ -65,6 +67,7 @@
       <div class="col-12">
         <submission-table
           :table-data="submitter_submissions"
+          variation="dashboard"
           table-type="submissions"
           role="submitter"
           class="col-12"
