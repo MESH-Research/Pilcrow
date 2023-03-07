@@ -1,5 +1,5 @@
 <template>
-  <q-page data-cy="vueDashboard" class="q-pa-lg">
+  <article class="q-pa-lg">
     <section
       class="row wrap justify-start q-col-gutter-md items-stretch content-start q-mb-md"
     >
@@ -98,7 +98,7 @@
         />
       </div>
     </section>
-  </q-page>
+  </article>
 </template>
 
 <script setup>
