@@ -70,6 +70,7 @@
           table-type="submissions"
           variation="dashboard"
           role="reviewer"
+          data-cy="reviews_table"
         />
       </div>
       <div class="col-12">
@@ -79,6 +80,7 @@
           variation="dashboard"
           table-type="reviews"
           role="coordinator"
+          data-cy="coodinations_table"
         />
       </div>
       <div class="col-12">
@@ -88,6 +90,7 @@
           variation="dashboard"
           table-type="submissions"
           role="submitter"
+          data-cy="submissions_table"
         />
       </div>
     </section>

@@ -45,74 +45,28 @@ describe("Dashboard Page", () => {
   const CurrentUserSubmissions = jest.fn()
   mockClient.setRequestHandler(CURRENT_USER_SUBMISSIONS, CurrentUserSubmissions)
 
-  function getSubmissionData() {
+  function mockSubmission(id, status, role) {
+    return {
+      id: id,
+      title: "Pilcrow Test Submission for Jest",
+      status: status,
+      my_role: role,
+      effective_role: role,
+      publication: {
+        id: "1",
+        name: "Pilcrow Test Publication 1",
+        my_role: null,
+      },
+    }
+  }
+
+  function getData() {
     return {
       data: {
         currentUser: {
           id: "5",
           roles: [],
-          submissions: [
-            {
-              id: "100",
-              title: "Pilcrow Test Submission 1",
-              status: "UNDER_REVIEW",
-              my_role: "reviewer",
-              effective_role: "reviewer",
-              publication: {
-                id: "1",
-                name: "Pilcrow Test Publication 1",
-                my_role: null,
-              },
-            },
-            {
-              id: "101",
-              title: "Pilcrow Test Submission 2",
-              status: "INITIALLY_SUBMITTED",
-              my_role: "reviewer",
-              effective_role: "reviewer",
-              publication: {
-                id: "1",
-                name: "Pilcrow Test Publication 1",
-                my_role: null,
-              },
-            },
-            {
-              id: "102",
-              title: "Pilcrow Test Submission 3",
-              status: "REJECTED",
-              my_role: "reviewer",
-              effective_role: "reviewer",
-              publication: {
-                id: "1",
-                name: "Pilcrow Test Publication 1",
-                my_role: null,
-              },
-            },
-            {
-              id: "103",
-              title: "Pilcrow Test Submission 4",
-              status: "RESUBMISSION_REQUESTED",
-              my_role: "reviewer",
-              effective_role: "reviewer",
-              publication: {
-                id: "1",
-                name: "Pilcrow Test Publication 1",
-                my_role: null,
-              },
-            },
-            {
-              id: "104",
-              title: "Pilcrow Test Submission 5",
-              status: "AWAITING_REVIEW",
-              my_role: "reviewer",
-              effective_role: "reviewer",
-              publication: {
-                id: "1",
-                name: "Pilcrow Test Publication 1",
-                my_role: null,
-              },
-            },
-          ],
+          submissions: [],
         },
       },
     }
@@ -122,8 +76,46 @@ describe("Dashboard Page", () => {
     useCurrentUser.mockReturnValue({
       currentUser: ref({ id: 1 }),
     })
-    CurrentUserSubmissions.mockResolvedValue(getSubmissionData())
+    const mockData = getData()
+    mockData.data.currentUser.submissions.push(
+      mockSubmission("100", "UNDER_REVIEW", "submitter")
+    )
+    CurrentUserSubmissions.mockResolvedValue(mockData)
     const wrapper = await wrapperFactory()
     expect(wrapper).toBeTruthy()
+  })
+
+  test("the reviews table appears for a user with reviews", async () => {
+    useCurrentUser.mockReturnValue({
+      currentUser: ref({ id: 1 }),
+    })
+
+    const mockData = getData()
+    mockData.data.currentUser.submissions.push(
+      mockSubmission("100", "UNDER_REVIEW", "reviewer"),
+      mockSubmission("101", "UNDER_REVIEW", "reviewer"),
+      mockSubmission("102", "REJECTED", "reviewer")
+    )
+    CurrentUserSubmissions.mockResolvedValue(mockData)
+    const wrapper = await wrapperFactory()
+    expect(wrapper.findAll('[data-cy="reviews_table"]').length).toBe(1)
+    expect(wrapper.findAll('[data-cy="coordinations_table"]').length).toBe(0)
+    expect(wrapper.findAll('[data-cy="submissions_table"]').length).toBe(0)
+    expect(wrapper.findAllComponents({ name: "submission-table" }).length).toBe(
+      1
+    )
+  })
+
+  test("the reviews table does not appear for a user with no reviews", async () => {
+    useCurrentUser.mockReturnValue({
+      currentUser: ref({ id: 1 }),
+    })
+
+    const mockData = getData()
+    CurrentUserSubmissions.mockResolvedValue(mockData)
+    const wrapper = await wrapperFactory()
+    expect(wrapper.findAllComponents({ name: "submission-table" }).length).toBe(
+      0
+    )
   })
 })
