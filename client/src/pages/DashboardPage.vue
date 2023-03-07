@@ -12,11 +12,13 @@
               size="md"
               class="q-mr-md"
             />
-            <span>{{
-              $t(`dashboard.welcome_message`, {
-                label: currentUser.display_label,
-              })
-            }}</span>
+            <h2 class="text-h4" style="display: inline">
+              {{
+                $t(`dashboard.welcome_message`, {
+                  label: currentUser.display_label,
+                })
+              }}
+            </h2>
           </q-card-section>
           <q-separator />
           <q-card-actions
