@@ -1,5 +1,5 @@
 <template>
-  <article class="q-pa-lg">
+  <article data-cy="vueDashboard" class="q-pa-lg">
     <section
       class="row wrap justify-start q-col-gutter-md items-stretch content-start q-mb-md"
     >
