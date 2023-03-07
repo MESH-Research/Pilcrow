@@ -53,9 +53,11 @@
             >
               {{ $t(`dashboard.guide_call_to_action`) }}
               <template #link>
-                <a href="https://docs.pilcrow.lndo.site" class="text-primary">{{
-                  $t(`dashboard.guide`)
-                }}</a></template
+                <a
+                  href="https://pilcrow.meshresearch.dev/guide/"
+                  class="text-primary"
+                  >{{ $t(`dashboard.guide`) }}</a
+                ></template
               >
             </i18n-t>
           </q-card-section>
