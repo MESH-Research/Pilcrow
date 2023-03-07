@@ -30,7 +30,7 @@
             <q-btn flat icon="o_contact_page" to="/account/metadata">{{
               $t(`dashboard.profile_details`)
             }}</q-btn>
-            <q-btn flat icon="mdi-logout" @click="logout">{{
+            <q-btn flat icon="mdi-logout" to="/logout">{{
               $t(`auth.logout`)
             }}</q-btn>
           </q-card-actions>
@@ -96,14 +96,13 @@
 
 <script setup>
 import AvatarImage from "src/components/atoms/AvatarImage.vue"
-import { useCurrentUser, useLogout } from "src/use/user"
+import { useCurrentUser } from "src/use/user"
 import { useQuery } from "@vue/apollo-composable"
 import { CURRENT_USER_SUBMISSIONS } from "src/graphql/queries"
 import SubmissionTable from "src/components/SubmissionTable.vue"
 import { computed } from "vue"
 
 const { currentUser } = useCurrentUser()
-const { logoutUser: logout } = useLogout()
 const { result } = useQuery(CURRENT_USER_SUBMISSIONS)
 const submissions = computed(() => {
   return result.value?.currentUser?.submissions ?? []
