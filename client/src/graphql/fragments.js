@@ -27,6 +27,7 @@ export const _PROFILE_METADATA_FIELDS = gql`
 
 export const _CURRENT_USER_FIELDS = gql`
   fragment currentUserFields on User {
+    display_label
     username
     name
     email

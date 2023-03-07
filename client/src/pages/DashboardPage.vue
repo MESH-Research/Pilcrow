@@ -10,9 +10,13 @@
               :user="currentUser"
               rounded
               size="md"
-              class="q-mr-sm"
+              class="q-mr-md"
             />
-            Welcome<span v-if="currentUser.name">, {{ currentUser.name }}</span>
+            <span>{{
+              $t(`dashboard.welcome_message`, {
+                label: currentUser.display_label,
+              })
+            }}</span>
           </q-card-section>
           <q-separator />
           <q-card-actions
@@ -20,13 +24,15 @@
             :class="`${$q.screen.width < 600 ? 'q-pl-lg' : ''}`"
             :vertical="$q.screen.width < 600 ? true : false"
           >
-            <q-btn flat icon="o_settings" to="/account/profile"
-              >Account Information</q-btn
-            >
-            <q-btn flat icon="o_contact_page" to="/account/metadata"
-              >Profile Details</q-btn
-            >
-            <q-btn flat icon="mdi-logout" @click="logout">Logout</q-btn>
+            <q-btn flat icon="o_settings" to="/account/profile">{{
+              $t(`dashboard.account_info`)
+            }}</q-btn>
+            <q-btn flat icon="o_contact_page" to="/account/metadata">{{
+              $t(`dashboard.profile_details`)
+            }}</q-btn>
+            <q-btn flat icon="mdi-logout" @click="logout">{{
+              $t(`auth.logout`)
+            }}</q-btn>
           </q-card-actions>
         </q-card>
       </div>
@@ -38,15 +44,21 @@
           class="flex justify-center items-center full-height q-pa-md text-center"
         >
           <q-card-section class="text-h3">
-            <span :class="`${$q.screen.width < 1024 ? 'block' : ''}`"
-              >New to Pilcrow?</span
+            <span :class="`${$q.screen.width < 1024 ? 'block' : ''}`">{{
+              $t(`dashboard.guide_question`)
+            }}</span>
+            <i18n-t
+              keypath="dashboard.guide_call_to_action"
+              tag="span"
+              scope="global"
             >
-            <span>
-              Learn more in our
-              <a href="https://docs.pilcrow.lndo.site" class="text-primary"
-                >guide</a
-              >.
-            </span>
+              {{ $t(`dashboard.guide_call_to_action`) }}
+              <template #link>
+                <a href="https://docs.pilcrow.lndo.site" class="text-primary">{{
+                  $t(`dashboard.guide`)
+                }}</a></template
+              >
+            </i18n-t>
           </q-card-section>
         </q-card>
       </div>

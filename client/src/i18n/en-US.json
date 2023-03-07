@@ -304,6 +304,14 @@
       }
     }
   },
+  "dashboard": {
+    "welcome_message": "Welcome, {label}",
+    "account_info": "Account Information",
+    "profile_details": "Profile Details",
+    "guide": "guide",
+    "guide_question": "New to Pilcrow?",
+    "guide_call_to_action": "Learn more in our {link}."
+  },
   "reviews": {
     "page_title": "Reviews"
   },
