@@ -129,7 +129,6 @@ const byline = props.variation
 const byline_opts = {
   type_name: t(`submission_tables.type.${props.tableType}.name`),
 }
-console.log(byline_opts)
 const cols = [
   {
     name: "id",
@@ -187,6 +186,11 @@ const cols = [
     &:last-child
       border-right-width: 1px
   .q-table__bottom
+    border-color: rgba(0,0,0,0.12)
     border-style: solid
     border-width: 0 1px 1px
+
+.submission-table.q-table--dark
+  .q-table__bottom
+    border-color: rgba(255, 255, 255, 0.28)
 </style>

@@ -15,15 +15,15 @@
             Welcome<span v-if="currentUser.name">, {{ currentUser.name }}</span>
           </q-card-section>
           <q-separator />
-          <q-card-actions align="left">
+          <q-card-actions
+            :align="`${$q.screen.width < 600 ? 'left' : 'evenly'}`"
+            :class="`${$q.screen.width < 600 ? 'q-pl-lg' : ''}`"
+            :vertical="$q.screen.width < 600 ? true : false"
+          >
             <q-btn flat icon="o_settings" to="/account/profile"
               >Account Information</q-btn
             >
-            <q-btn
-              flat
-              icon="o_contact_page"
-              to="/account/metadata"
-              padding="xs md"
+            <q-btn flat icon="o_contact_page" to="/account/metadata"
               >Profile Details</q-btn
             >
             <q-btn flat icon="mdi-logout" @click="logout">Logout</q-btn>
@@ -38,10 +38,15 @@
           class="flex justify-center items-center full-height q-pa-md text-center"
         >
           <q-card-section class="text-h3">
-            New to Pilcrow? Learn more in our
-            <a href="https://docs.pilcrow.lndo.site" class="text-primary"
-              >guide</a
-            >.
+            <span :class="`${$q.screen.width < 1024 ? 'block' : ''}`"
+              >New to Pilcrow?</span
+            >
+            <span>
+              Learn more in our
+              <a href="https://docs.pilcrow.lndo.site" class="text-primary"
+                >guide</a
+              >.
+            </span>
           </q-card-section>
         </q-card>
       </div>
