@@ -54,28 +54,29 @@
     <section class="row wrap q-gutter-y-md">
       <div class="col-12">
         <submission-table
-          :table-data="reviewer_reviews"
-          table-type="reviews"
+          v-if="reviewer_submissions.length > 0"
+          :table-data="reviewer_submissions"
+          table-type="submissions"
           variation="dashboard"
           role="reviewer"
         />
       </div>
       <div class="col-12">
         <submission-table
+          v-if="coordinator_reviews.length > 0"
           :table-data="coordinator_reviews"
           variation="dashboard"
           table-type="reviews"
           role="coordinator"
-          class="col-12"
         />
       </div>
       <div class="col-12">
         <submission-table
+          v-if="submitter_submissions.length > 0"
           :table-data="submitter_submissions"
           variation="dashboard"
           table-type="submissions"
           role="submitter"
-          class="col-12"
         />
       </div>
     </section>
@@ -96,7 +97,7 @@ const { result } = useQuery(CURRENT_USER_SUBMISSIONS)
 const submissions = computed(() => {
   return result.value?.currentUser?.submissions ?? []
 })
-const reviewer_reviews = computed(() =>
+const reviewer_submissions = computed(() =>
   submissions.value.filter(function (submission) {
     return (
       ["DRAFT", "INITIALLY_SUBMITTED", "AWAITING_REVIEW"].includes(
@@ -114,11 +115,7 @@ const coordinator_reviews = computed(() =>
 )
 const submitter_submissions = computed(() =>
   submissions.value.filter(function (submission) {
-    return (
-      ["DRAFT", "INITIALLY_SUBMITTED", "AWAITING_REVIEW"].includes(
-        submission.status
-      ) === false && submission.my_role == "reviewer"
-    )
+    return submission.my_role == "submitter"
   })
 )
 </script>

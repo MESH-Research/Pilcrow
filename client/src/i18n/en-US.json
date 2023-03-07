@@ -340,7 +340,7 @@
         "byline": "{type_name} you are reviewing"
       },
       "coordinator": {
-        "title": "Review Management",
+        "title": "Review Coordination",
         "byline": "{type_name} you are coordinating for reviewers"
       },
       "submitter": {
