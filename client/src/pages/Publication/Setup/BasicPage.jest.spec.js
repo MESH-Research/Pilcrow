@@ -40,6 +40,7 @@ describe("BasicPage", () => {
           id: "1",
           name: "Test Name",
           is_publicly_available: false,
+          is_accepting_submissions: true,
         },
       },
     })
