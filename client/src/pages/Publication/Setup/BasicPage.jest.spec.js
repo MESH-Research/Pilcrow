@@ -39,8 +39,8 @@ describe("BasicPage", () => {
         publication: {
           id: "1",
           name: "Test Name",
-          is_publicly_available: false,
           is_accepting_submissions: true,
+          is_publicly_available: false,
         },
       },
     })
@@ -64,6 +64,7 @@ describe("BasicPage", () => {
     const newData = {
       name: "new name",
       is_publicly_visible: true,
+      is_accepting_submissions: true,
     }
 
     mutateHandler.mockResolvedValue({
