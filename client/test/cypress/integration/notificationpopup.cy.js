@@ -16,7 +16,7 @@ describe("Notification Popup", () => {
   it("allows multiple notifications to be marked as read", () => {
     cy.task("resetDb")
     cy.login({ email: "applicationadministrator@pilcrow.dev" })
-    cy.visit("/submission/review/100")
+    cy.visit("/submission/review/108")
 
     cy.interceptGQLOperation("MarkAllNotificationsRead")
     cy.interceptGQLOperation("UpdateSubmissionStatus")
