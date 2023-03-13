@@ -171,18 +171,6 @@
             {{ $t("account.profile.fields.interest_keyword.hint") }}
           </p>
         </fieldset>
-        <fieldset class="col-12 q-col-gutter-sm profile-keywords">
-          <tag-list
-            ref="disinterest_keywords"
-            v-model="form.disinterest_keywords"
-            data-cy="disinterest_keywords_control"
-            t="account.profile.fields.disinterest_keyword"
-            :rules="keyword_rules"
-          />
-          <p>
-            {{ $t("account.profile.fields.disinterest_keyword.hint") }}
-          </p>
-        </fieldset>
       </form-section>
 
       <form-actions @reset-click="resetForm" />
