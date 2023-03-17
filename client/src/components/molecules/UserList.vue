@@ -6,6 +6,7 @@
       :user="user"
       :actions="actions"
       @action-click="bubble"
+      @reinvite="reinviteUser"
     />
   </q-list>
 </template>
@@ -27,9 +28,12 @@ defineProps({
     default: "user_list",
   },
 })
-const emit = defineEmits(["actionClick"])
+const emit = defineEmits(["actionClick", "reinvite"])
 
 function bubble(eventData) {
   emit("actionClick", eventData)
+}
+function reinviteUser(eventData) {
+  emit("reinvite", eventData)
 }
 </script>

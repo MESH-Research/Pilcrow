@@ -19,8 +19,6 @@
         <q-btn
           v-if="user.staged"
           class="gt-xs"
-          size="12px"
-          color="secondary"
           flat
           dense
           :title="$t('user.unconfirmed')"
@@ -34,6 +32,18 @@
             self="center middle"
             class="text-subtitle2"
             >{{ $t("user.unconfirmed") }}</q-tooltip
+          >
+        </q-btn>
+        <q-btn
+          v-if="user.staged"
+          label="Reinvite"
+          @click="$emit('reinvite', { user })"
+        >
+          <q-tooltip
+            anchor="top middle"
+            self="center middle"
+            class="text-subtitle2"
+            >Resend an invitation to this unconfirmed user</q-tooltip
           >
         </q-btn>
         <q-btn
@@ -69,6 +79,6 @@ defineProps({
     default: () => [],
   },
 })
-defineEmits(["actionClick"])
+defineEmits(["actionClick", "reinvite"])
 const unconfirmedVisibility = ref(false)
 </script>

@@ -60,6 +60,7 @@
             : []
         "
         @action-click="handleUserListClick"
+        @reinvite="reinviteUser"
       />
     </div>
   </section>
@@ -235,6 +236,10 @@ async function assignUser() {
   } catch (error) {
     newStatusMessage("failure", tp$("assign.error"))
   }
+}
+
+async function reinviteUser({ user }) {
+  console.log("reinvite", user)
 }
 
 async function handleUserListClick({ user }) {
