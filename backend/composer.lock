@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c7b62cbcd00efc8830a4bfe5b930346b",
+    "content-hash": "34bc808c2af7bb8eb2029584434aebff",
     "packages": [
         {
             "name": "bensampo/laravel-enum",
@@ -1189,6 +1189,7 @@
                     "type": "github"
                 }
             ],
+            "abandoned": true,
             "time": "2022-02-23T14:53:22+00:00"
         },
         {
@@ -8019,6 +8020,7 @@
                 "issues": "https://github.com/mll-lab/laravel-graphql-playground/issues",
                 "source": "https://github.com/mll-lab/laravel-graphql-playground/tree/v2.6.0"
             },
+            "abandoned": true,
             "time": "2022-02-08T15:58:46+00:00"
         },
         {
@@ -9792,7 +9794,7 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=8.0 <8.2"
+        "php": "^8.1"
     },
     "platform-dev": [],
     "plugin-api-version": "2.3.0"

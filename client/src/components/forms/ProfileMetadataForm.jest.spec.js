@@ -90,7 +90,6 @@ describe("ProfileMetadataForm", () => {
     ["regex", "websites", ["http://localhost"], false],
     ["valid", "websites", ["http://mywebsite.com"], true],
     ["valid", "interest_keywords", ["keyword1", "keyword2"], true],
-    ["valid", "disinterest_keywords", ["keyword1", "keyword2"], true],
   ])(
     "array field rules %s (%s)",
     async (_, fieldRef, testValue, assertValid) => {
