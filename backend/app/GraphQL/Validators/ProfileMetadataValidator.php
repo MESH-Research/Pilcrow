@@ -30,9 +30,6 @@ class ProfileMetadataValidator extends Validator
             'interest_keywords.*' => [
                 'max:128',
             ],
-            'disinterest_keywords.*' => [
-                'max:128',
-            ],
             'biography' => [
                 'max:4096',
             ],

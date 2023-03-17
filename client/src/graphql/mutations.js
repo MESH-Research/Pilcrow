@@ -286,7 +286,6 @@ export const UPDATE_PROFILE_METADATA = gql`
     $id: ID!
     $affiliation: String
     $biography: String
-    $disinterest_keywords: [String!]
     $interest_keywords: [String!]
     $websites: [String!]
     $professional_title: String
@@ -300,7 +299,6 @@ export const UPDATE_PROFILE_METADATA = gql`
         profile_metadata: {
           affiliation: $affiliation
           biography: $biography
-          disinterest_keywords: $disinterest_keywords
           interest_keywords: $interest_keywords
           websites: $websites
           professional_title: $professional_title

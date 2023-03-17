@@ -8,7 +8,6 @@ type ProfileMetadata {
     specialization: String
     affiliation: String
     interest_keywords: [String]
-    disinterest_keywords: [String]
     biography: String
     websites: [String]
 }
