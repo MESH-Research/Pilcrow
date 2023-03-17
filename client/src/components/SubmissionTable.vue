@@ -143,6 +143,7 @@ const cols = [
     field: "title",
     label: t(`submission_tables.columns.title`),
     sortable: true,
+    style: "width: 30%",
     align: "left",
   },
   {
