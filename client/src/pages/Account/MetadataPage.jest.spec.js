@@ -54,7 +54,6 @@ describe("MetadataPage", () => {
       affiliation: "my affiliation",
       website: ["http://mywebsite.com"],
       interest_keywords: ["interest1", "interest2"],
-      disinterest_keywords: ["nointerst1"],
       social_media: {
         twitter: "my_twitter",
         instagram: "my_insta",

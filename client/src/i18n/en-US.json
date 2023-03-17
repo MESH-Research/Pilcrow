@@ -292,14 +292,6 @@
             "maxLength": "@:generic_validations.maxLength",
             "duplicate": "This keyword is already in the list."
           }
-        },
-        "disinterest_keyword": {
-          "label": "Disinterest Keyword",
-          "hint": "Disinterest keywords will be used to help filter suggestions for submissions that are not of interest to you.",
-          "errors": {
-            "maxLength": "@:generic_validations.maxLength",
-            "duplicate": "This keyword is already in the list."
-          }
         }
       }
     }
