@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "34bc808c2af7bb8eb2029584434aebff",
+    "content-hash": "44b993464d0fc798bbffd395d42d6562",
     "packages": [
         {
             "name": "bensampo/laravel-enum",
@@ -6320,20 +6320,20 @@
         },
         {
             "name": "symfony/process",
-            "version": "v6.0.11",
+            "version": "v6.2.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/process.git",
-                "reference": "44270a08ccb664143dede554ff1c00aaa2247a43"
+                "reference": "680e8a2ea6b3f87aecc07a6a65a203ae573d1902"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/process/zipball/44270a08ccb664143dede554ff1c00aaa2247a43",
-                "reference": "44270a08ccb664143dede554ff1c00aaa2247a43",
+                "url": "https://api.github.com/repos/symfony/process/zipball/680e8a2ea6b3f87aecc07a6a65a203ae573d1902",
+                "reference": "680e8a2ea6b3f87aecc07a6a65a203ae573d1902",
                 "shasum": ""
             },
             "require": {
-                "php": ">=8.0.2"
+                "php": ">=8.1"
             },
             "type": "library",
             "autoload": {
@@ -6361,7 +6361,7 @@
             "description": "Executes commands in sub-processes",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/process/tree/v6.0.11"
+                "source": "https://github.com/symfony/process/tree/v6.2.7"
             },
             "funding": [
                 {
@@ -6377,7 +6377,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-06-27T17:10:44+00:00"
+            "time": "2023-02-24T10:42:00+00:00"
         },
         {
             "name": "symfony/routing",
@@ -7311,16 +7311,16 @@
         },
         {
             "name": "ueberdosis/pandoc",
-            "version": "0.7.0",
+            "version": "0.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ueberdosis/pandoc.git",
-                "reference": "e68815e3b67299b38dde09c58a2d5671d38b0104"
+                "reference": "c5f16d52170e0622d6d3ef8350e08d0799809049"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ueberdosis/pandoc/zipball/e68815e3b67299b38dde09c58a2d5671d38b0104",
-                "reference": "e68815e3b67299b38dde09c58a2d5671d38b0104",
+                "url": "https://api.github.com/repos/ueberdosis/pandoc/zipball/c5f16d52170e0622d6d3ef8350e08d0799809049",
+                "reference": "c5f16d52170e0622d6d3ef8350e08d0799809049",
                 "shasum": ""
             },
             "require": {
@@ -7355,7 +7355,7 @@
             ],
             "support": {
                 "issues": "https://github.com/ueberdosis/pandoc/issues",
-                "source": "https://github.com/ueberdosis/pandoc/tree/0.7.0"
+                "source": "https://github.com/ueberdosis/pandoc/tree/0.9.0"
             },
             "funding": [
                 {
@@ -7363,7 +7363,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-03-02T19:37:59+00:00"
+            "time": "2023-02-28T08:00:44+00:00"
         },
         {
             "name": "vlucas/phpdotenv",
@@ -9794,7 +9794,7 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": "^8.1"
+        "php": "^8.1 <8.2.0"
     },
     "platform-dev": [],
     "plugin-api-version": "2.3.0"
