@@ -2085,17 +2085,16 @@
   integrity sha512-ay5c+SJ1vQOL5zpsr94jN15tCt0ytd7zPMM433pkhi9ZL0qqf1fZ+D0KzDs2z8N49rfArVpoo238V3ZChBh2sA==
 
 "@tiptap/extension-bold@^2.0.0-beta.207", "@tiptap/extension-bold@^2.0.0-beta.209":
-  version "2.0.0-beta.209"
-  resolved "https://registry.yarnpkg.com/@tiptap/extension-bold/-/extension-bold-2.0.0-beta.209.tgz#27268311f3fd53af8e658e2fd0d65f2e43130268"
-  integrity sha512-8jaoZSe55iwuEvwdM1mPhlgE+/tDyveECv0d1qogUcbPdIkhDQaNlIOmuH9Ftr465iIDthMjt4GB6AWi5tfsMg==
+  version "2.0.0-beta.220"
+  resolved "https://registry.yarnpkg.com/@tiptap/extension-bold/-/extension-bold-2.0.0-beta.220.tgz#f10468317fd5c63ebab68be907e33fb138a60ef9"
+  integrity sha512-KcEuKI85Drug/cCWbDy+HxhYrD+rLXHEBG10DmKPvgPpKHG/2wOau6LwUwyV4muWR8CR2mIO+mEc3yVBD8nNwQ==
 
 "@tiptap/extension-bubble-menu@^2.0.0-beta.204":
-  version "2.0.0-beta.204"
-  resolved "https://registry.yarnpkg.com/@tiptap/extension-bubble-menu/-/extension-bubble-menu-2.0.0-beta.204.tgz#481209921e360cfc53215f3539b7f9e9ba54356f"
-  integrity sha512-rDBId9MePh5vuxStCfBQTXMvRy2kaadl76xL5jscqpOlCRVJO77IEZLNI8I/zyguDKdClw1x/zdEXBcBV3YuZQ==
+  version "2.0.0-beta.220"
+  resolved "https://registry.yarnpkg.com/@tiptap/extension-bubble-menu/-/extension-bubble-menu-2.0.0-beta.220.tgz#3fea0c846f73a237f562fdce05671ef1fa025943"
+  integrity sha512-wthyec7s0vZlTSEAAZEgoFfx/1Arwg1zxDUrrE+YAost/Yn+w4xQksz/ts5Bx90iOk2qsJ+jzzttLRV17Ku7lA==
   dependencies:
-    prosemirror-state "^1.4.1"
-    prosemirror-view "^1.28.2"
+    lodash "^4.17.21"
     tippy.js "^6.3.7"
 
 "@tiptap/extension-bullet-list@^2.0.0-beta.209":
