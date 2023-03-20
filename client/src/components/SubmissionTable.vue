@@ -1,12 +1,12 @@
 <template>
   <q-table
+    :grid="$q.screen.width < 700"
     flat
     square
     :columns="cols"
     :rows="tableData"
     row-key="id"
     :filter="status_filter"
-    dense
     class="submission-table"
   >
     <template #top>
@@ -191,7 +191,12 @@ const cols = [
     border-style: solid
     border-width: 0 1px 1px
 
-.submission-table.q-table--dark
+.submission-table.q-table--grid
   .q-table__bottom
-    border-color: rgba(255, 255, 255, 0.28)
+    border-width: 0
+
+.body--dark
+  .submission-table
+    .q-table__bottom
+      border-color: rgba(255, 255, 255, 0.28)
 </style>
