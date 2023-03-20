@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 800">
+  <defs>
+    <style>
+      .cls-1, .cls-2, .cls-3 {
+        fill: #fff;
+      }
+
+      .cls-4 {
+        fill: #f8db8b;
+      }
+
+      .cls-5 {
+        letter-spacing: 0em;
+      }
+
+      .cls-6 {
+        fill: none;
+        stroke: #fff;
+        stroke-miterlimit: 10;
+      }
+
+      .cls-7 {
+        letter-spacing: 0em;
+      }
+
+      .cls-8 {
+        letter-spacing: 0em;
+      }
+
+      .cls-9 {
+        fill: #77beed;
+      }
+
+      .cls-10 {
+        fill: #ccd3e0;
+      }
+
+      .cls-11 {
+        letter-spacing: .01em;
+      }
+
+      .cls-12 {
+        letter-spacing: -.01em;
+      }
+
+      .cls-13 {
+        letter-spacing: 0em;
+      }
+
+      .cls-14 {
+        fill: #f3f4f7;
+      }
+
+      .cls-15 {
+        fill: #520bbd;
+      }
+
+      .cls-16 {
+        fill: #499ed7;
+      }
+
+      .cls-2 {
+        font-size: 32px;
+      }
+
+      .cls-2, .cls-3 {
+        font-family: MyriadPro-Regular, 'Myriad Pro';
+      }
+
+      .cls-3 {
+        font-size: 20px;
+      }
+
+      .cls-17 {
+        letter-spacing: -.02em;
+      }
+
+      .cls-18 {
+        letter-spacing: 0em;
+      }
+
+      .cls-19 {
+        fill: #f2c037;
+      }
+
+      .cls-20 {
+        fill: #d39e0d;
+      }
+
+      .cls-21 {
+        letter-spacing: 0em;
+      }
+
+      .cls-22 {
+        fill: #c9e5f8;
+      }
+    </style>
+  </defs>
+  <g id="Layer_1-2" data-name="Layer 1">
+    <rect class="cls-15" width="500" height="800"/>
+    <circle class="cls-1" cx="251.02" cy="120" r="20"/>
+    <text class="cls-2" transform="translate(48.98 129.39)"><tspan x="0" y="0">#FFFFFF</tspan></text>
+    <text class="cls-2" transform="translate(372.12 129.74)"><tspan x="0" y="0">9.81:1</tspan></text>
+    <circle class="cls-14" cx="251.02" cy="170.91" r="20"/>
+    <text class="cls-2" transform="translate(48.98 180.3)"><tspan x="0" y="0">#F3F4F7</tspan></text>
+    <text class="cls-2" transform="translate(372.11 180.3)"><tspan x="0" y="0">8.92:1</tspan></text>
+    <circle class="cls-22" cx="251.02" cy="221.82" r="20"/>
+    <text class="cls-2" transform="translate(48.98 231.21)"><tspan x="0" y="0">#C9E5F8</tspan></text>
+    <text class="cls-2" transform="translate(372.11 231.21)"><tspan x="0" y="0">7.49:1</tspan></text>
+    <circle class="cls-4" cx="251.02" cy="272.73" r="20"/>
+    <text class="cls-2" transform="translate(48.98 282.12)"><tspan x="0" y="0">#F8DB8B</tspan></text>
+    <text class="cls-2" transform="translate(372.12 282.12)"><tspan x="0" y="0">7.24:1</tspan></text>
+    <circle class="cls-10" cx="251.02" cy="323.64" r="20"/>
+    <text class="cls-2" transform="translate(48.98 333.03)"><tspan x="0" y="0">#</tspan><tspan class="cls-17" x="15.9" y="0">C</tspan><tspan x="33.79" y="0">CD3E0</tspan></text>
+    <text class="cls-2" transform="translate(372.12 333.03)"><tspan x="0" y="0">6.52:1</tspan></text>
+    <circle class="cls-19" cx="251.02" cy="374.55" r="20"/>
+    <text class="cls-2" transform="translate(48.98 383.94)"><tspan x="0" y="0">#F2C037</tspan></text>
+    <text class="cls-2" transform="translate(372.11 383.94)"><tspan x="0" y="0">5.78:1</tspan></text>
+    <circle class="cls-9" cx="251.02" cy="425.45" r="20"/>
+    <text class="cls-2" transform="translate(48.98 434.85)"><tspan x="0" y="0">#77BEED</tspan></text>
+    <text class="cls-2" transform="translate(372.12 434.85)"><tspan x="0" y="0">4.84:1</tspan></text>
+    <circle class="cls-20" cx="251.02" cy="476.36" r="20"/>
+    <text class="cls-2" transform="translate(48.98 485.76)"><tspan x="0" y="0">#D39E0D</tspan></text>
+    <text class="cls-2" transform="translate(372.12 485.76)"><tspan x="0" y="0">4.05:1</tspan></text>
+    <circle class="cls-16" cx="251.02" cy="527.27" r="20"/>
+    <text class="cls-2" transform="translate(48.98 536.66)"><tspan x="0" y="0">#2EA3F2</tspan></text>
+    <text class="cls-2" transform="translate(372.11 536.66)"><tspan x="0" y="0">3.57:1</tspan></text>
+    <text class="cls-2" transform="translate(189.43 59.42)"><tspan x="0" y="0">#520BBD</tspan></text>
+    <rect class="cls-6" x="37.5" y="727.66" width="425" height="45" rx="10" ry="10"/>
+    <text class="cls-3" transform="translate(72.67 756.03)"><tspan class="cls-18" x="0" y="0">C</tspan><tspan x="11.46" y="0">an use </tspan><tspan class="cls-12" x="69.64" y="0">f</tspan><tspan class="cls-5" x="75.22" y="0">or la</tspan><tspan class="cls-7" x="111.34" y="0">r</tspan><tspan x="117.72" y="0">ge </tspan><tspan class="cls-8" x="143.16" y="0">t</tspan><tspan class="cls-13" x="149.66" y="0">e</tspan><tspan class="cls-11" x="159.62" y="0">x</tspan><tspan x="169.14" y="0">t and UI eleme</tspan><tspan class="cls-21" x="289.68" y="0">n</tspan><tspan x="300.7" y="0">ts only</tspan></text>
+    <rect class="cls-6" x="37.5" y="504.77" width="425" height="45" rx="10" ry="10"/>
+    <rect class="cls-6" x="37.5" y="453.86" width="425" height="45" rx="10" ry="10"/>
+  </g>
+</svg>

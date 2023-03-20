@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 800">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: none;
+        stroke: #231f20;
+        stroke-miterlimit: 10;
+      }
+
+      .cls-2 {
+        font-size: 20px;
+      }
+
+      .cls-2, .cls-3 {
+        font-family: MyriadPro-Regular, 'Myriad Pro';
+      }
+
+      .cls-4 {
+        letter-spacing: 0em;
+      }
+
+      .cls-5 {
+        letter-spacing: 0em;
+      }
+
+      .cls-6 {
+        letter-spacing: 0em;
+      }
+
+      .cls-7 {
+        fill: #77beed;
+      }
+
+      .cls-8 {
+        fill: #23394e;
+      }
+
+      .cls-9 {
+        letter-spacing: .01em;
+      }
+
+      .cls-10 {
+        letter-spacing: -.01em;
+      }
+
+      .cls-11 {
+        fill: #2f5496;
+      }
+
+      .cls-12 {
+        letter-spacing: 0em;
+      }
+
+      .cls-13 {
+        fill: #520bbd;
+      }
+
+      .cls-14 {
+        letter-spacing: 0em;
+      }
+
+      .cls-3 {
+        font-size: 32px;
+      }
+
+      .cls-15 {
+        letter-spacing: 0em;
+      }
+
+      .cls-16 {
+        fill: #032c73;
+      }
+    </style>
+  </defs>
+  <g id="Layer_1-2" data-name="Layer 1">
+    <rect class="cls-7" width="500" height="800"/>
+    <text class="cls-3" transform="translate(191.59 59.39)"><tspan x="0" y="0">#77BEED</tspan></text>
+    <circle cx="250" cy="120" r="20"/>
+    <text class="cls-3" transform="translate(48.98 129.39)"><tspan x="0" y="0">#000000</tspan></text>
+    <text class="cls-3" transform="translate(355.7 129.74)"><tspan x="0" y="0">10.37:1</tspan></text>
+    <circle class="cls-16" cx="250" cy="170.91" r="20"/>
+    <text class="cls-3" transform="translate(48.98 180.3)"><tspan x="0" y="0">#032C73</tspan></text>
+    <text class="cls-3" transform="translate(372.11 180.3)"><tspan x="0" y="0">6.44:1</tspan></text>
+    <circle class="cls-8" cx="250" cy="221.82" r="20"/>
+    <text class="cls-3" transform="translate(48.98 231.21)"><tspan x="0" y="0">#23394E</tspan></text>
+    <text class="cls-3" transform="translate(372.11 231.21)"><tspan x="0" y="0">5.87:1</tspan></text>
+    <circle class="cls-13" cx="250" cy="272.73" r="20"/>
+    <text class="cls-3" transform="translate(48.98 282.12)"><tspan x="0" y="0">#520BBD</tspan></text>
+    <text class="cls-3" transform="translate(372.12 282.12)"><tspan x="0" y="0">4.84:1</tspan></text>
+    <circle class="cls-11" cx="250" cy="323.64" r="20"/>
+    <text class="cls-3" transform="translate(48.98 333.03)"><tspan x="0" y="0">#2F5496</tspan></text>
+    <text class="cls-3" transform="translate(372.12 333.03)"><tspan x="0" y="0">3.67:1</tspan></text>
+    <rect class="cls-1" x="37.5" y="301.14" width="425" height="45" rx="10" ry="10"/>
+    <rect class="cls-1" x="37.5" y="727.5" width="425" height="45" rx="10" ry="10"/>
+    <text class="cls-2" transform="translate(73.18 755.87)"><tspan class="cls-14" x="0" y="0">C</tspan><tspan x="11.46" y="0">an use </tspan><tspan class="cls-10" x="69.64" y="0">f</tspan><tspan class="cls-4" x="75.22" y="0">or la</tspan><tspan class="cls-5" x="111.34" y="0">r</tspan><tspan x="117.72" y="0">ge </tspan><tspan class="cls-6" x="143.16" y="0">t</tspan><tspan class="cls-12" x="149.66" y="0">e</tspan><tspan class="cls-9" x="159.62" y="0">x</tspan><tspan x="169.14" y="0">t and UI eleme</tspan><tspan class="cls-15" x="289.68" y="0">n</tspan><tspan x="300.7" y="0">ts only</tspan></text>
+  </g>
+</svg>
