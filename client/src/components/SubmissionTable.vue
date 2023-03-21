@@ -27,6 +27,7 @@
             outlined
             dense
             multiple
+            hide-selected
             :label="$t(`submission_tables.filter_label`)"
             :options="unique_statuses"
             style="width: 240px"
@@ -79,7 +80,7 @@
                 }"
                 >{{ p.row.publication.name }}
               </router-link>
-              <div>
+              <div class="col-grow text-right q-pl-md">
                 {{ $t(`submission.status.${p.row.status}`) }}
               </div>
             </div>
