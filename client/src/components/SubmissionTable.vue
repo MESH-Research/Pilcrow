@@ -1,12 +1,13 @@
 <template>
   <q-table
-    :grid="$q.screen.width < 700"
+    :grid="$q.screen.width < 770"
     flat
     square
     :columns="cols"
     :rows="tableData"
     row-key="id"
     :filter="status_filter"
+    :filter-method="filterStatuses"
     class="submission-table"
   >
     <template #top>
@@ -25,6 +26,7 @@
             square
             outlined
             dense
+            multiple
             :label="$t(`submission_tables.filter_label`)"
             :options="unique_statuses"
             style="width: 240px"
@@ -52,6 +54,46 @@
           {{ $t(`submission_tables.type.${tableType}.no_data`) }}
         </p>
       </div>
+    </template>
+    <template #item="p">
+      <q-card flat :props="p" class="full-width">
+        <q-card-section horizontal>
+          <q-card-section>
+            {{ p.row.id }}
+          </q-card-section>
+          <q-card-section class="full-width">
+            <div class="row justify-between">
+              <router-link
+                :to="{
+                  name: 'submission_review',
+                  params: { id: p.row.id },
+                }"
+                >{{ p.row.title }}
+              </router-link>
+            </div>
+            <div class="row justify-between">
+              <router-link
+                :to="{
+                  name: 'publication:home',
+                  params: { id: p.row.publication.id },
+                }"
+                >{{ p.row.publication.name }}
+              </router-link>
+              <div>
+                {{ $t(`submission.status.${p.row.status}`) }}
+              </div>
+            </div>
+          </q-card-section>
+          <q-card-section>
+            <submission-table-actions
+              :submission="p.row"
+              :action-type="tableType"
+              flat
+            />
+          </q-card-section>
+        </q-card-section>
+        <q-separator />
+      </q-card>
     </template>
     <template #body-cell-title="p">
       <q-td :props="p">
@@ -116,6 +158,9 @@ const props = defineProps({
   },
 })
 const status_filter = ref(null)
+const filterStatuses = (rows, terms) => {
+  return rows.filter((row) => terms.includes(row.status))
+}
 const unique = (items) => [...new Set(items)]
 const unique_statuses = computed(() => {
   return unique(props.tableData.map((item) => item.status))
