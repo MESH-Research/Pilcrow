@@ -17,8 +17,6 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->registerPolicies();
-
         VerifyEmail::$createUrlCallback = function ($notifiable) {
             return $notifiable->getEmailVerificationUrl();
         };
