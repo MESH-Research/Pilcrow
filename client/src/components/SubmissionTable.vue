@@ -1,30 +1,31 @@
 <template>
   <q-table
-    bordered
+    :grid="$q.screen.width < 770"
     flat
     square
     :columns="cols"
     :rows="tableData"
     row-key="id"
     :filter="status_filter"
-    dense
+    :filter-method="filterStatuses"
+    class="submission-table"
   >
     <template #top>
       <div class="row full-width justify-between q-pb-md">
         <div class="column">
           <h3 class="q-my-none">
-            {{ $t(`submission_tables.${role}.title`) }}
+            {{ $t(title) }}
           </h3>
           <!-- eslint-disable-next-line vue/no-v-html -->
           <p class="q-mb-none" v-html="$t(byline, byline_opts)"></p>
-        </div>
-        <div class="column">
           <q-select
             v-model="status_filter"
             clearable
             square
             outlined
             dense
+            multiple
+            hide-selected
             :label="$t(`submission_tables.filter_label`)"
             :options="unique_statuses"
             style="width: 240px"
@@ -52,6 +53,46 @@
           {{ $t(`submission_tables.type.${tableType}.no_data`) }}
         </p>
       </div>
+    </template>
+    <template #item="p">
+      <q-card flat :props="p" class="full-width">
+        <q-card-section horizontal>
+          <q-card-section>
+            {{ p.row.id }}
+          </q-card-section>
+          <q-card-section class="full-width">
+            <div class="row justify-between">
+              <router-link
+                :to="{
+                  name: 'submission_review',
+                  params: { id: p.row.id },
+                }"
+                >{{ p.row.title }}
+              </router-link>
+            </div>
+            <div class="row justify-between">
+              <router-link
+                :to="{
+                  name: 'publication:home',
+                  params: { id: p.row.publication.id },
+                }"
+                >{{ p.row.publication.name }}
+              </router-link>
+              <div class="col-grow text-right q-pl-md">
+                {{ $t(`submission.status.${p.row.status}`) }}
+              </div>
+            </div>
+          </q-card-section>
+          <q-card-section>
+            <submission-table-actions
+              :submission="p.row"
+              :action-type="tableType"
+              flat
+            />
+          </q-card-section>
+        </q-card-section>
+        <q-separator />
+      </q-card>
     </template>
     <template #body-cell-title="p">
       <q-td :props="p">
@@ -106,17 +147,29 @@ const props = defineProps({
     type: String,
     default: "submissions",
   },
+  variation: {
+    type: String,
+    default: "",
+  },
   role: {
     type: String,
     default: "reviewer",
   },
 })
 const status_filter = ref(null)
+const filterStatuses = (rows, terms) => {
+  return rows.filter((row) => terms.includes(row.status))
+}
 const unique = (items) => [...new Set(items)]
 const unique_statuses = computed(() => {
   return unique(props.tableData.map((item) => item.status))
 })
-const byline = `submission_tables.${props.role}.byline`
+const title = props.variation
+  ? `submission_tables.${props.variation}.${props.role}.title`
+  : `submission_tables.${props.role}.title`
+const byline = props.variation
+  ? `submission_tables.${props.variation}.${props.role}.byline`
+  : `submission_tables.${props.role}.byline`
 const byline_opts = {
   type_name: t(`submission_tables.type.${props.tableType}.name`),
 }
@@ -126,7 +179,7 @@ const cols = [
     field: "id",
     label: t(`submission_tables.columns.number`),
     sortable: true,
-    style: "width: 95px",
+    style: "width: 85px",
     align: "right",
   },
   {
@@ -134,6 +187,7 @@ const cols = [
     field: "title",
     label: t(`submission_tables.columns.title`),
     sortable: true,
+    style: "width: 30%",
     align: "left",
   },
   {
@@ -161,3 +215,32 @@ const cols = [
   },
 ]
 </script>
+
+<style lang="sass">
+.submission-table
+  th
+    border-width: 1px 0
+    &:first-child
+      border-left-width: 1px
+    &:last-child
+      border-right-width: 1px
+  tbody td
+    border-style: solid
+    &:first-child
+      border-left-width: 1px
+    &:last-child
+      border-right-width: 1px
+  .q-table__bottom
+    border-color: rgba(0,0,0,0.12)
+    border-style: solid
+    border-width: 0 1px 1px
+
+.submission-table.q-table--grid
+  .q-table__bottom
+    border-width: 0
+
+.body--dark
+  .submission-table
+    .q-table__bottom
+      border-color: rgba(255, 255, 255, 0.28)
+</style>
