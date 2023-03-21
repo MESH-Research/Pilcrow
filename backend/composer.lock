@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "44b993464d0fc798bbffd395d42d6562",
+    "content-hash": "f9a1d2df138712034576f446b27b82b6",
     "packages": [
         {
             "name": "bensampo/laravel-enum",
@@ -7525,25 +7525,25 @@
         },
         {
             "name": "watson/validating",
-            "version": "7.0.0",
+            "version": "8.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dwightwatson/validating.git",
-                "reference": "d93ec043fb2dc4cc569b63fbe95cb7231b4f788f"
+                "reference": "f86710b7ec093e2c0320a07006358b4396d4ed9b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dwightwatson/validating/zipball/d93ec043fb2dc4cc569b63fbe95cb7231b4f788f",
-                "reference": "d93ec043fb2dc4cc569b63fbe95cb7231b4f788f",
+                "url": "https://api.github.com/repos/dwightwatson/validating/zipball/f86710b7ec093e2c0320a07006358b4396d4ed9b",
+                "reference": "f86710b7ec093e2c0320a07006358b4396d4ed9b",
                 "shasum": ""
             },
             "require": {
-                "illuminate/contracts": "~8.0|~9.0",
-                "illuminate/database": "~8.0|~9.0",
-                "illuminate/events": "~8.0|~9.0",
-                "illuminate/support": "~8.0|~9.0",
-                "illuminate/validation": "~8.0|~9.0",
-                "php": "^8.0"
+                "illuminate/contracts": "~9.0|~10.0",
+                "illuminate/database": "~9.0|~10.0",
+                "illuminate/events": "~9.0|~10.0",
+                "illuminate/support": "~9.0|~10.0",
+                "illuminate/validation": "~9.0|~10.0",
+                "php": "^8.1"
             },
             "require-dev": {
                 "mockery/mockery": "^1.4.4",
@@ -7573,9 +7573,9 @@
             ],
             "support": {
                 "issues": "https://github.com/dwightwatson/validating/issues",
-                "source": "https://github.com/dwightwatson/validating/tree/7.0.0"
+                "source": "https://github.com/dwightwatson/validating/tree/8.0.0"
             },
-            "time": "2022-02-08T23:28:17+00:00"
+            "time": "2023-02-14T23:41:21+00:00"
         },
         {
             "name": "webmozart/assert",

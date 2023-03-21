@@ -26,7 +26,7 @@
         "spatie/laravel-settings": "^2.3",
         "teamtnt/laravel-scout-tntsearch-driver": "^12.0",
         "ueberdosis/pandoc": "^0.9.0",
-        "watson/validating": "^7.0"
+        "watson/validating": "^8.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
