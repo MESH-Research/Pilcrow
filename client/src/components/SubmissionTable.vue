@@ -18,8 +18,6 @@
           </h3>
           <!-- eslint-disable-next-line vue/no-v-html -->
           <p class="q-mb-none" v-html="$t(byline, byline_opts)"></p>
-        </div>
-        <div class="column">
           <q-select
             v-model="status_filter"
             clearable
