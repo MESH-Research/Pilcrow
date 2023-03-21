@@ -9,7 +9,7 @@
           src="logo-100x100.png"
           style="width: 50px; height: 50px"
         />
-        <div class="column">
+        <div v-if="$q.screen.width >= 400" class="column">
           <h1 class="q-ma-none text-h4 site-title">Pilcrow</h1>
           <small class="site-subtitle">Submission Review System</small>
         </div>
@@ -91,7 +91,11 @@
         role="navigation"
         :aria-label="$t('header.nav_aria_label')"
       >
-        <q-item role="link" to="/dashboard">
+        <q-item
+          role="link"
+          to="/dashboard"
+          :class="`${$q.screen.width < 500 ? 'q-px-sm' : ''}`"
+        >
           <q-item-section side class="gt-xs">
             <q-icon class="gt-xs" name="dashboard" />
           </q-item-section>
@@ -99,7 +103,11 @@
             {{ $t("header.dashboard") }}
           </q-item-section>
         </q-item>
-        <q-item to="/publications" role="link">
+        <q-item
+          to="/publications"
+          role="link"
+          :class="`${$q.screen.width < 500 ? 'q-px-sm' : ''}`"
+        >
           <q-item-section side class="gt-xs">
             <q-icon name="collections_bookmark" />
           </q-item-section>
@@ -107,7 +115,12 @@
             {{ $t("header.publications") }}
           </q-item-section>
         </q-item>
-        <q-item data-cy="submissions_link" to="/submissions" role="link">
+        <q-item
+          data-cy="submissions_link"
+          to="/submissions"
+          role="link"
+          :class="`${$q.screen.width < 500 ? 'q-px-sm' : ''}`"
+        >
           <q-item-section side class="gt-xs">
             <q-icon name="content_copy" />
           </q-item-section>
@@ -115,7 +128,12 @@
             {{ $t("header.submissions") }}
           </q-item-section>
         </q-item>
-        <q-item data-cy="reviews_link" to="/reviews" role="link">
+        <q-item
+          data-cy="reviews_link"
+          to="/reviews"
+          role="link"
+          :class="`${$q.screen.width < 500 ? 'q-px-sm' : ''}`"
+        >
           <q-item-section side class="gt-xs">
             <q-icon class="material-icons-outlined" name="rate_review" />
           </q-item-section>
