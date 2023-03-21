@@ -296,6 +296,14 @@
       }
     }
   },
+  "dashboard": {
+    "welcome_message": "Welcome, {label}",
+    "account_info": "Account Information",
+    "profile_details": "Profile Details",
+    "guide": "guide",
+    "guide_question": "New to Pilcrow?",
+    "guide_call_to_action": "Learn more in our {link}."
+  },
   "reviews": {
     "page_title": "Reviews"
   },
@@ -325,6 +333,20 @@
     "coordinator": {
       "title": "To Coordinate",
       "byline": "{type_name} in which you're assigned as a <strong>review coordinator</strong>"
+    },
+    "dashboard": {
+      "reviewer": {
+        "title": "Reviews",
+        "byline": "{type_name} you are reviewing"
+      },
+      "coordinator": {
+        "title": "Review Coordination",
+        "byline": "{type_name} you are coordinating for reviewers"
+      },
+      "submitter": {
+        "title": "Submissions",
+        "byline": "{type_name} you have submitted for review"
+      }
     }
   },
   "publication": {
