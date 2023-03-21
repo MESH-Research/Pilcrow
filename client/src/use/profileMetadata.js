@@ -76,7 +76,6 @@ export const profile_defaults = {
   affiliation: "",
   websites: [],
   interest_keywords: [],
-  disinterest_keywords: [],
   social_media: {
     google: "",
     twitter: "",
