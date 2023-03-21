@@ -32,7 +32,7 @@
         "fakerphp/faker": "^1.9.1",
         "mll-lab/laravel-graphql-playground": "^2.4",
         "mockery/mockery": "^1.4.2",
-        "nunomaduro/collision": "^6.0",
+        "nunomaduro/collision": "^7.0",
         "phpunit/phpunit": "^9.3.3"
     },
     "config": {
