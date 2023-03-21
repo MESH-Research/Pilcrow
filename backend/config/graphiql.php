@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 return [
     /*
@@ -8,14 +6,14 @@ return [
     | Route configuration
     |--------------------------------------------------------------------------
     |
-    | Set the URI at which the GraphQL Playground can be viewed
-    | and any additional configuration for the route.
+    | Set the URI at which the GraphiQL UI can be viewed,
+    | and add any additional configuration for the route.
     |
     */
 
     'route' => [
-        'uri' => '/graphql-playground',
-        'name' => 'graphql-playground',
+        'uri' => '/graphiql',
+        'name' => 'graphiql',
         'middleware' => ['web']
         // 'prefix' => '',
         // 'domain' => 'graphql.' . env('APP_DOMAIN', 'localhost'),
@@ -26,9 +24,9 @@ return [
     | Default GraphQL endpoint
     |--------------------------------------------------------------------------
     |
-    | The default endpoint that the Playground UI is set to.
+    | The default endpoint that the GraphiQL UI is set to.
     | It assumes you are running GraphQL on the same domain
-    | as GraphQL Playground, but can be set to any URL.
+    | as GraphiQL, but can be set to any URL.
     |
     */
 
@@ -36,14 +34,28 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Control Playground availability
+    | Subscription endpoint
     |--------------------------------------------------------------------------
     |
-    | Control if the playground is accessible at all.
+    | The default subscription endpoint the GraphiQL UI uses to connect to.
+    | Tries to connect to the `endpoint` value if `null` as ws://{{endpoint}}
+    |
+    | Example: `ws://your-endpoint` or `wss://your-endpoint`
+    |
+    */
+
+    'subscription-endpoint' => env('GRAPHIQL_SUBSCRIPTION_ENDPOINT', null),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Control GraphiQL availability
+    |--------------------------------------------------------------------------
+    |
+    | Control if the GraphiQL UI is accessible at all.
     | This allows you to disable it in certain environments,
     | for example you might not want it active in production.
     |
     */
 
-    'enabled' => env('GRAPHQL_PLAYGROUND_ENABLED', true),
+    'enabled' => env('GRAPHIQL_ENABLED', true),
 ];
