@@ -9,7 +9,6 @@ export const _PROFILE_METADATA_FIELDS = gql`
       affiliation
       websites
       interest_keywords
-      disinterest_keywords
       social_media {
         twitter
         instagram
@@ -27,6 +26,7 @@ export const _PROFILE_METADATA_FIELDS = gql`
 
 export const _CURRENT_USER_FIELDS = gql`
   fragment currentUserFields on User {
+    display_label
     username
     name
     email
