@@ -192,7 +192,7 @@ describe("Submissions Page", () => {
     cy.task("resetDb")
     cy.login({ email: "applicationadministrator@pilcrow.dev" })
     cy.visit("submissions")
-    cy.dataCy("submission_actions").eq(4).should('not.exist')
+    cy.dataCy("submissions_list").should('not.include.text', 'Pilcrow Test Submission 5')
   })
 
   it("should allow an application administrator to open and close a review", () => {
@@ -202,7 +202,7 @@ describe("Submissions Page", () => {
 
     cy.interceptGQLOperation('UpdateSubmissionStatus')
 
-    cy.dataCy("submission_actions").first().click()
+    cy.dataCy("submission_actions").eq(7).click()
     cy.dataCy("change_status").click()
     cy.dataCy("open_review").click()
 
@@ -211,6 +211,9 @@ describe("Submissions Page", () => {
     cy.dataCy("change_status_notify")
       .should("be.visible")
       .should("have.class", "bg-positive")
+    cy.dataCy("all_submissions_title").click()
+    cy.dataCy("submission_actions").eq(7).click()
+    cy.dataCy("change_status").click()
     cy.dataCy("accept_as_final")
     cy.dataCy("close_review").click()
 

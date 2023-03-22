@@ -64,7 +64,7 @@
         </q-form>
       </section>
       <section class="col-md-7 col-sm-6 col-xs-12">
-        <h3>All Submissions</h3>
+        <h3 data-cy="all_submissions_title">All Submissions</h3>
         <q-list
           v-if="submissions.length != 0"
           bordered
