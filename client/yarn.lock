@@ -2723,9 +2723,9 @@
     vue-demi "^0.13.1"
 
 "@vue/apollo-option@^4.0.0-alpha.20":
-  version "4.0.0-alpha.20"
-  resolved "https://registry.yarnpkg.com/@vue/apollo-option/-/apollo-option-4.0.0-alpha.20.tgz#469da22cd5925dc8d1b6089c087d0a89f39855ef"
-  integrity sha512-iCiv4rVc4yBWRVmQ5OoI7rfX5BfOEYLKM8jtNEia2Z7kuVIo5FKn/Wj3c5BUsu2Gly/j8UwYI42jIeZMXriOLw==
+  version "4.0.0-beta.4"
+  resolved "https://registry.yarnpkg.com/@vue/apollo-option/-/apollo-option-4.0.0-beta.4.tgz#b81a16327d98770c42b37cbed8fa0ff004a13afb"
+  integrity sha512-eGONgeLBzy4PqYytxF+5ivRGjLQ7TqUF/qVK3vi1xTdnW7+3Oy02cfDrxL8ErWUG/tNIaZF7Qm1N/HIvPfaxIg==
   dependencies:
     throttle-debounce "^3.0.1"
 
@@ -8569,9 +8569,9 @@ prettier-linter-helpers@^1.0.0:
     fast-diff "^1.1.2"
 
 prettier@^2.8.1:
-  version "2.8.4"
-  resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.8.4.tgz#34dd2595629bfbb79d344ac4a91ff948694463c3"
-  integrity sha512-vIS4Rlc2FNh0BySk3Wkd6xmwxB0FpOndW5fisM5H8hsZSxU2VWVB5CWIkIjWvrHjIhxk2g3bfMKM87zNTrZddw==
+  version "2.8.6"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.8.6.tgz#5c174b29befd507f14b83e3c19f83fdc0e974b71"
+  integrity sha512-mtuzdiBbHwPEgl7NxWlqOkithPyp4VN93V7VeHVWBF+ad3I5avc0RVDT4oImXQy9H/AqxA2NSQH8pSxHW6FYbQ==
 
 pretty-bytes@^5.6.0:
   version "5.6.0"
@@ -8837,9 +8837,9 @@ qs@~6.10.3:
     side-channel "^1.0.4"
 
 quasar@2:
-  version "2.11.1"
-  resolved "https://registry.yarnpkg.com/quasar/-/quasar-2.11.1.tgz#061190368fe1d71b67e8fdbd6c485819247a031d"
-  integrity sha512-3whiJaOXbectd2R6Vfjr/vHKeY92zdDpx41zfZ5vrG+Yx16Q76euUQsdKlYr1PD7q33yvHvjegxuILgKJg5GqA==
+  version "2.11.8"
+  resolved "https://registry.yarnpkg.com/quasar/-/quasar-2.11.8.tgz#2e4c8426fbb3938acf9b16edf17a8ac1722dbe65"
+  integrity sha512-JhwTnwNQ7YNTEq3SdhIOK0R32hEw/43gDiomYFDjVVXNF6WQdjlzgQr1N9AWGpXFzKRlJeIyhcskxZClj15EVg==
 
 querystringify@^2.1.1:
   version "2.2.0"
