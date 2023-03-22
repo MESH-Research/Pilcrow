@@ -9,32 +9,18 @@
   <article v-if="submission" class="q-pa-lg">
     <h2>Todo</h2>
     <div class="q-gutter-md">
-      <q-banner class="bg-primary text-white" inline-actions="">
-        <div>Update submssion details</div>
-        <div class="text-caption">
-          Update the title of your submission as well as enter your metadata,
-          etc, etc
-        </div>
-        <template #action>
-          <q-btn flat>Go</q-btn>
-        </template>
-      </q-banner>
-      <q-banner class="bg-primary text-white" inline-actions>
-        <div>Upload Submission Content</div>
-        <div class="text-caption">Upload or paste your submission content.</div>
-        <template #action>
-          <q-btn
-            flat
-            :to="{
-              name: 'submission:content',
-              params: { id: submission.id },
-            }"
-          >
-            Go
-          </q-btn>
-        </template>
-      </q-banner>
-      <q-banner class="bg-primary text-white" inline-actions>
+      <submission-draft-todo-item title="Update submission details">
+        Update the title of your submission as well as enter your metadata, etc,
+        etc
+      </submission-draft-todo-item>
+      <submission-draft-todo-item
+        title="Upload submission content"
+        @go-click="onGoToSubmissionContentClick"
+      >
+        Upload or paste your submission content.
+      </submission-draft-todo-item>
+
+      <q-banner class="bg-grey-3" inline-actions>
         <div>Invite Collaborators</div>
         <div class="text-caption">
           Invite collaborators to join the review process.
@@ -54,9 +40,10 @@
 </template>
 
 <script setup>
-import { GET_SUBMISSION } from "src/graphql/queries"
 import { useQuery } from "@vue/apollo-composable"
+import { GET_SUBMISSION } from "src/graphql/queries"
 import { computed } from "vue"
+import { useRouter } from "vue-router"
 
 const props = defineProps({
   id: {
@@ -66,4 +53,12 @@ const props = defineProps({
 })
 const { result } = useQuery(GET_SUBMISSION, props)
 const submission = computed(() => result.value?.submission)
+
+const { push } = useRouter()
+function onGoToSubmissionContentClick() {
+  push({
+    name: "submission:content",
+    params: { id: submission.value.id },
+  })
+}
 </script>
