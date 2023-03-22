@@ -1082,4 +1082,39 @@ class SubmissionTest extends ApiTestCase
             $this->executeSubmissionTitleUpdateUnsuccessfully($submission, $title, $category);
         }
     }
+
+    public function testSubmissionContentUpload()
+    {
+        $user = $this->beSubmitter();
+        $submission = $user->submissions->first();
+
+        $response = $this->graphQL(
+            'mutation UpdateSubmissionContent ($submission_id: ID!, $content: String!) {
+                updateSubmissionContent(
+                    input: {
+                        id: $submission_id
+                        content: $content
+                    }
+                ) {
+                    id
+                    content {
+                      data
+                    }
+                }
+            }',
+            [
+                'submission_id' => $submission->id,
+                'content' => 'Test submission content',
+            ]
+        );
+        $expected_data = [
+            'updateSubmissionContent' => [
+                'id' => (string)$submission->id,
+                'content' => [
+                    'data' => 'Test submission content',
+                ],
+            ],
+        ];
+        $response->assertJsonPath('data', $expected_data);
+    }
 }
