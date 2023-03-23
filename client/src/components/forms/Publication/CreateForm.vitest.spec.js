@@ -6,8 +6,10 @@ import { createMockClient } from "mock-apollo-client"
 import { CREATE_PUBLICATION } from "src/graphql/mutations"
 import CreateForm from "./CreateForm.vue"
 
-const mockNewStatus = jest.fn()
-jest.mock("src/use/guiElements", () => ({
+import { describe, expect, test, vi } from "vitest"
+
+const mockNewStatus = vi.fn()
+vi.mock("src/use/guiElements", () => ({
   useFeedbackMessages: () => ({
     newStatusMessage: mockNewStatus,
   }),
@@ -29,11 +31,11 @@ describe("CreateForm", () => {
     })
   }
 
-  const mutationHandler = jest.fn()
+  const mutationHandler = vi.fn()
   mockClient.setRequestHandler(CREATE_PUBLICATION, mutationHandler)
 
   test("publications can be created", async () => {
-    const warn = jest.spyOn(console, "warn").mockImplementation(() => {})
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {})
     const name = "New Jest Publication Name"
     mutationHandler.mockResolvedValue({
       data: {

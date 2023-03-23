@@ -2,6 +2,8 @@ import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-v
 import { mount } from "@vue/test-utils"
 import NewPasswordInput from "./NewPasswordInput.vue"
 
+import { describe, expect } from "vitest"
+
 installQuasarPlugin()
 describe("NewPasswordInput", () => {
   const wrapper = mount(NewPasswordInput, {

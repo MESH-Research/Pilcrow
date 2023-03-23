@@ -5,8 +5,11 @@ import en from "javascript-time-ago/locale/en.json"
 import { useCurrentUser } from "src/use/user"
 import { ref } from "vue"
 import SubmissionCommentSection from "./SubmissionCommentSection.vue"
-jest.mock("src/use/user", () => ({
-  useCurrentUser: jest.fn(),
+
+import { describe, expect, test, vi } from "vitest"
+
+vi.mock("src/use/user", () => ({
+  useCurrentUser: vi.fn(),
 }))
 
 installQuasarPlugin()

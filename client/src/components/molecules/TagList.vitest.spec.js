@@ -2,6 +2,8 @@ import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-v
 import { mount } from "@vue/test-utils"
 import TagList from "./TagList.vue"
 
+import { describe, expect, it } from "vitest"
+
 installQuasarPlugin()
 describe("TagList Component", () => {
   const factory = (modelValue, addProps = {}) => {

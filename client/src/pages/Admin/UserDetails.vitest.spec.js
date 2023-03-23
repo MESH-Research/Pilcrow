@@ -6,6 +6,8 @@ import { createMockClient } from "mock-apollo-client"
 import { GET_USER } from "src/graphql/queries"
 import UserDetails from "./UserDetails.vue"
 
+import { beforeEach, describe, expect, it, vi } from "vitest"
+
 installQuasarPlugin()
 describe("User Details page mount", () => {
   const mockClient = createMockClient()
@@ -29,11 +31,11 @@ describe("User Details page mount", () => {
     return wrapper
   }
 
-  const getUserHandler = jest.fn()
+  const getUserHandler = vi.fn()
   mockClient.setRequestHandler(GET_USER, getUserHandler)
 
   beforeEach(() => {
-    jest.resetAllMocks()
+    vi.resetAllMocks()
   })
 
   it("mounts without errors", async () => {

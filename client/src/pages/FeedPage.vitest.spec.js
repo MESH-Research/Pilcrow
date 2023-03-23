@@ -6,6 +6,8 @@ import { createMockClient } from "mock-apollo-client"
 import { CURRENT_USER_NOTIFICATIONS } from "src/graphql/queries"
 import FeedPage from "./FeedPage.vue"
 
+import { describe, expect, it, vi } from "vitest"
+
 installQuasarPlugin()
 describe("Nofitication Popup", () => {
   const wrapperFactory = (mocks = []) => {
@@ -50,14 +52,14 @@ describe("Nofitication Popup", () => {
 
   it("mounts without errors", () => {
     const { mockClient } = wrapperFactory()
-    const queryHandler = jest.fn().mockResolvedValue(getNotificationData(false))
+    const queryHandler = vi.fn().mockResolvedValue(getNotificationData(false))
     mockClient.setRequestHandler(CURRENT_USER_NOTIFICATIONS, queryHandler)
     expect(wrapperFactory().wrapper).toBeTruthy()
   })
 
   it("displays a default message for a user that has no notifications", async () => {
     const { wrapper, mockClient } = wrapperFactory()
-    const queryHandler = jest.fn().mockResolvedValue([])
+    const queryHandler = vi.fn().mockResolvedValue([])
     mockClient.setRequestHandler(CURRENT_USER_NOTIFICATIONS, queryHandler)
     await flushPromises()
     const message = wrapper.findComponent({ ref: "default_message" })
@@ -66,7 +68,7 @@ describe("Nofitication Popup", () => {
 
   it("does not display the default message for a user that has notifications", async () => {
     const { wrapper, mockClient } = wrapperFactory()
-    const queryHandler = jest.fn().mockResolvedValue(getNotificationData(true))
+    const queryHandler = vi.fn().mockResolvedValue(getNotificationData(true))
     mockClient.setRequestHandler(CURRENT_USER_NOTIFICATIONS, queryHandler)
     await flushPromises()
     expect(wrapper.findAllComponents({ ref: "default_message" })).toHaveLength(

@@ -1,6 +1,5 @@
 import {
-    installQuasarPlugin,
-    qLayoutInjections,
+  installQuasarPlugin
 } from "@quasar/quasar-app-extension-testing-unit-vitest"
 import { ApolloClients } from "@vue/apollo-composable"
 import { mount } from "@vue/test-utils"
@@ -8,19 +7,19 @@ import flushPromises from "flush-promises"
 import { omit } from "lodash"
 import { createMockClient } from "mock-apollo-client"
 import { CREATE_USER, LOGIN } from "src/graphql/mutations"
+import { describe, expect, it, test, vi } from 'vitest'
 import RegisterPage from "./RegisterPage.vue"
-
-jest.mock("quasar", () => ({
-  ...jest.requireActual("quasar"),
+vi.mock("quasar", () => ({
+  ...vi.requireActual("quasar"),
   SessionStorage: {
     remove: () => {},
     getItem: () => null,
   },
 }))
 
-jest.mock("vue-router", () => ({
+vi.mock("vue-router", () => ({
   useRouter: () => ({
-    push: jest.fn(),
+    push: vi.fn(),
   }),
 }))
 
@@ -37,7 +36,6 @@ describe("RegisterPage", () => {
       wrapper: mount(RegisterPage, {
         global: {
           provide: {
-            ...qLayoutInjections(),
             [ApolloClients]: { default: mockClient },
           },
           stubs: ["router-link", "i18n-t"],
@@ -65,14 +63,14 @@ describe("RegisterPage", () => {
       created_at: "nowish",
     }
 
-    const mutateHandler = jest
+    const mutateHandler = vi
       .fn()
       .mockResolvedValue({ data: { createUser: { id: 1, ...user } } })
 
     mockClient.setRequestHandler(CREATE_USER, mutateHandler)
     mockClient.setRequestHandler(
       LOGIN,
-      jest.fn().mockResolvedValue({
+      vi.fn().mockResolvedValue({
         data: { login: { id: 1, ...user } },
       })
     )

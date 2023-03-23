@@ -1,12 +1,17 @@
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
 import { mount } from "@vue/test-utils"
-import { provide } from "vue"
+import { beforeEach, describe, expect, test, vi } from 'vitest'
+import { provide } from 'vue'
 import VQWrap from "./VQWrap.vue"
 
-jest.mock("vue", () => ({
-  ...jest.requireActual("vue"),
-  provide: jest.fn(),
-}))
+vi.mock('vue', async  (importOriginal) => {
+  const vue = await importOriginal()
+  return {
+    ...vue,
+    provide: vi.fn()
+  }
+})
+
 
 installQuasarPlugin()
 describe("VQWrap", () => {
@@ -24,7 +29,7 @@ describe("VQWrap", () => {
   }
 
   beforeEach(() => {
-    jest.resetAllMocks()
+    vi.resetAllMocks()
   })
   test("able to mount", () => {
     const wrapper = makeWrapper()

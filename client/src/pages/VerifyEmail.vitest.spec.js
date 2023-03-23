@@ -1,6 +1,5 @@
 import {
-    installQuasarPlugin,
-    qLayoutInjections,
+  installQuasarPlugin,
 } from "@quasar/quasar-app-extension-testing-unit-vitest"
 import { ApolloClients } from "@vue/apollo-composable"
 import { mount } from "@vue/test-utils"
@@ -11,19 +10,17 @@ import { useCurrentUser } from "src/use/user"
 import { ref } from "vue"
 import { useRoute } from "vue-router"
 import VerifyEmailPage from "./VerifyEmail.vue"
-jest.mock("src/use/user", () => ({
-  useCurrentUser: jest.fn(),
+
+import { beforeEach, describe, expect, it, test, vi } from "vitest"
+
+vi.mock("src/use/user", () => ({
+  useCurrentUser: vi.fn(),
 }))
 
-jest.mock("vue-router", () => ({
-  useRoute: jest.fn(),
+vi.mock("vue-router", () => ({
+  useRoute: vi.fn(),
 }))
 
-jest.mock("vue-i18n", () => ({
-  useI18n: () => ({
-    t: (t) => t,
-  }),
-}))
 
 installQuasarPlugin()
 describe("VerifyEmailPage", () => {
@@ -32,7 +29,6 @@ describe("VerifyEmailPage", () => {
     const wrapper = mount(VerifyEmailPage, {
       global: {
         provide: {
-          ...qLayoutInjections(),
           [ApolloClients]: { default: mockClient },
         },
         mocks: {
@@ -44,11 +40,11 @@ describe("VerifyEmailPage", () => {
     await flushPromises()
     return wrapper
   }
-  const verifyHandler = jest.fn()
+  const verifyHandler = vi.fn()
   mockClient.setRequestHandler(VERIFY_EMAIL, verifyHandler)
 
   beforeEach(() => {
-    jest.resetAllMocks()
+    vi.resetAllMocks()
   })
 
   it("mounts without errors", async () => {
@@ -80,7 +76,7 @@ describe("VerifyEmailPage", () => {
 
   test("renders success", async () => {
     //Apollo throws error upon refetching the currentUser query (which is mocked out)
-    const warn = jest.spyOn(console, "warn").mockImplementation(() => {})
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {})
 
     verifyHandler.mockResolvedValue({
       data: { verifyEmail: { email_verified_at: "timestamp" } },

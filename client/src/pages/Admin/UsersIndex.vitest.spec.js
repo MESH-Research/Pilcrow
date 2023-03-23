@@ -6,9 +6,11 @@ import { createMockClient } from "mock-apollo-client"
 import { GET_USERS } from "../../graphql/queries"
 import UsersIndexPage from "./UsersIndex.vue"
 
-jest.mock("vue-router", () => ({
+import { describe, expect, it, test, vi } from "vitest"
+
+vi.mock("vue-router", () => ({
   useRouter: () => ({
-    push: jest.fn(),
+    push: vi.fn(),
   }),
 }))
 installQuasarPlugin()
@@ -32,7 +34,7 @@ describe("User Index page mount", () => {
     expect(wrapperFactory([])).toBeTruthy()
   })
   test("users are populated on the page", async () => {
-    const getUserHandler = jest.fn().mockResolvedValue({
+    const getUserHandler = vi.fn().mockResolvedValue({
       data: {
         userSearch: {
           data: [

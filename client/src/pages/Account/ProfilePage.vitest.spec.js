@@ -7,25 +7,34 @@ import { UPDATE_USER } from "src/graphql/mutations"
 import { CURRENT_USER } from "src/graphql/queries"
 import { ref as mockRef } from "vue"
 import ProfilePage from "./ProfilePage.vue"
-jest.mock("src/use/forms", () => ({
-  ...jest.requireActual("src/use/forms"),
-  useDirtyGuard: () => {},
-  useFormState: () => ({
-    dirty: mockRef(false),
-    saved: mockRef(false),
-    state: mockRef("idle"),
-    queryLoading: mockRef(false),
-    mutationLoading: mockRef(false),
-    errorMessage: mockRef(""),
-  }),
-}))
 
-jest.mock("quasar", () => ({
-  ...jest.requireActual("quasar"),
-  useQuasar: () => ({
-    notify: jest.fn(),
-  }),
-}))
+import { beforeEach, describe, expect, it, test, vi } from "vitest"
+
+vi.mock("src/use/forms", async (importOriginal) => {
+  const forms = await importOriginal()
+  return {
+    ...forms,
+    useDirtyGuard: () => { },
+    useFormState: () => ({
+      dirty: mockRef(false),
+      saved: mockRef(false),
+      state: mockRef("idle"),
+      queryLoading: mockRef(false),
+      mutationLoading: mockRef(false),
+      errorMessage: mockRef(""),
+    }),
+  }
+})
+
+vi.mock("quasar", async (importOriginal) => {
+  const quasar = await importOriginal()
+  return {
+    ...quasar,
+    useQuasar: () => ({
+      notify: vi.fn(),
+    }),
+  }
+})
 
 installQuasarPlugin()
 describe("Profile", () => {
@@ -47,7 +56,7 @@ describe("Profile", () => {
   }
 
   beforeEach(() => {
-    jest.resetAllMocks()
+    vi.resetAllMocks()
     requestHandler.mockResolvedValue({
       data: {
         currentUser: {
@@ -62,8 +71,8 @@ describe("Profile", () => {
     })
   })
 
-  const mutateHandler = jest.fn()
-  const requestHandler = jest.fn()
+  const mutateHandler = vi.fn()
+  const requestHandler = vi.fn()
   mockClient.setRequestHandler(UPDATE_USER, mutateHandler)
   mockClient.setRequestHandler(CURRENT_USER, requestHandler)
 
@@ -75,7 +84,7 @@ describe("Profile", () => {
   })
 
   beforeEach(() => {
-    jest.resetAllMocks()
+    vi.resetAllMocks()
   })
 
   it("mounts without errors", async () => {

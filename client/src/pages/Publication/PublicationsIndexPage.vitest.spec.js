@@ -6,11 +6,13 @@ import { createMockClient } from "mock-apollo-client"
 import { GET_PUBLICATIONS } from "src/graphql/queries"
 import PublicationsIndexPage from "./PublicationsIndexPage.vue"
 
+import { describe, expect, it, vi } from "vitest"
+
 installQuasarPlugin()
 describe("publications page mount", () => {
   const mockClient = createMockClient()
 
-  const getPubsHandler = jest.fn()
+  const getPubsHandler = vi.fn()
   mockClient.setRequestHandler(GET_PUBLICATIONS, getPubsHandler)
 
   getPubsHandler.mockResolvedValue({

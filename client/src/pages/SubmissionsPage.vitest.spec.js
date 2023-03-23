@@ -4,17 +4,13 @@ import { mount } from "@vue/test-utils"
 import flushPromises from "flush-promises"
 import { createMockClient } from "mock-apollo-client"
 import { GET_PUBLICATIONS, GET_SUBMISSIONS } from "src/graphql/queries"
+import { describe, expect, test, vi } from "vitest"
 import SubmissionsPage from "./SubmissionsPage.vue"
 
-jest.mock("quasar", () => ({
-  ...jest.requireActual("quasar"),
+vi.mock("quasar", () => ({
+  ...vi.requireActual("quasar"),
   useQuasar: () => ({
-    notify: jest.fn(),
-  }),
-}))
-jest.mock("vue-i18n", () => ({
-  useI18n: () => ({
-    t: (t) => t,
+    notify: vi.fn(),
   }),
 }))
 
@@ -37,9 +33,9 @@ describe("submissions page mount", () => {
     return wrapper
   }
 
-  const getSubsHandler = jest.fn()
+  const getSubsHandler = vi.fn()
   mockClient.setRequestHandler(GET_SUBMISSIONS, getSubsHandler)
-  const getPubsHandler = jest.fn()
+  const getPubsHandler = vi.fn()
   mockClient.setRequestHandler(GET_PUBLICATIONS, getPubsHandler)
 
   const mockPublications = () => {

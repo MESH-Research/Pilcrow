@@ -1,24 +1,25 @@
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
 import { mount } from "@vue/test-utils"
 import flushPromises from "flush-promises"
+import quasar from 'quasar'
+import { beforeEach, describe, expect, it, test, vi } from 'vitest'
 import { ref } from "vue"
 import CommentEditor from "./CommentEditor.vue"
 
-jest.mock("vue-i18n", () => ({
-  useI18n: () => ({
-    te: () => true,
-    t: (t) => t,
-  }),
-}))
+const mockDialog = vi.fn()
+vi.spyOn(quasar, 'useQuasar').mockImplementation(() => ({dialog: mockDialog}))
 
-const mockDialog = jest.fn()
-jest.mock("quasar", () => ({
-  ...jest.requireActual("quasar"),
-  useQuasar: () => ({
-    dialog: mockDialog,
-  }),
-}))
+// vi.mock("quasar", async (importOriginal) => {
+//   const quasar = await importOriginal()
+//   return {
+//     ...quasar,
+//     useQuasar: () => ({
+//       dialog: vi.fn(),
+//     }),
+//   }
+// })
 
+// const { dialog } = useQuasar()
 const styleCriteria = [
   {
     __typename: "StyleCriteria",
@@ -87,7 +88,7 @@ describe("CommentEditor", () => {
   }
 
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   test("able to mount", () => {

@@ -2,6 +2,8 @@ import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-v
 import { mount } from "@vue/test-utils"
 import CollapseToolbar from "./CollapseToolbar.vue"
 
+import { describe, expect, test } from "vitest"
+
 installQuasarPlugin()
 describe("CollapseToolbar", () => {
   const makeWrapper = (slotContent, props) => {

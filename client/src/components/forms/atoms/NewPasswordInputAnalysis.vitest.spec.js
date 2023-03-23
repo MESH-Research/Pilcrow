@@ -3,6 +3,8 @@ import { mount } from "@vue/test-utils"
 import { merge } from "lodash"
 import PasswordFieldAnalysis from "./NewPasswordInputAnalysis.vue"
 
+import { describe, expect } from "vitest"
+
 installQuasarPlugin()
 describe("NewPasswordInputAnalysis", () => {
   const mergeProps = (props = {}) => {

@@ -6,19 +6,17 @@ import { createMockClient } from "mock-apollo-client"
 import { SEND_VERIFY_EMAIL } from "src/graphql/mutations"
 import EmailVerificationSendButton from "./EmailVerificationSendButton.vue"
 
-jest.mock("quasar", () => ({
-  ...jest.requireActual("quasar"),
+import { beforeEach, describe, expect, it, vi } from "vitest"
+
+vi.mock("quasar", () => ({
+  ...vi.requireActual("quasar"),
   useQuasar: () => ({
-    notify: jest.fn(),
-  }),
-}))
-jest.mock("vue-i18n", () => ({
-  useI18n: () => ({
-    t: (t) => t,
+    notify: vi.fn(),
   }),
 }))
 
 installQuasarPlugin()
+
 describe("EmailVerificationSendButton", () => {
   const mockClient = createMockClient()
   const wrapper = mount(EmailVerificationSendButton, {
@@ -32,11 +30,11 @@ describe("EmailVerificationSendButton", () => {
     },
   })
 
-  const emailMutationHandler = jest.fn()
+  const emailMutationHandler = vi.fn()
   mockClient.setRequestHandler(SEND_VERIFY_EMAIL, emailMutationHandler)
 
   beforeEach(async () => {
-    jest.resetAllMocks()
+    vi.resetAllMocks()
   })
 
   it("mounts without errors", () => {

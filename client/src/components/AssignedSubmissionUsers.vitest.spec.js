@@ -3,16 +3,19 @@ import { ApolloClients } from "@vue/apollo-composable"
 import { mount } from "@vue/test-utils"
 import { createMockClient } from "mock-apollo-client"
 import {
-    UPDATE_SUBMISSION_REVIEWERS,
-    UPDATE_SUBMISSION_REVIEW_COORDINATORS,
-    UPDATE_SUBMISSION_SUBMITERS,
+  UPDATE_SUBMISSION_REVIEWERS,
+  UPDATE_SUBMISSION_REVIEW_COORDINATORS,
+  UPDATE_SUBMISSION_SUBMITERS,
 } from "src/graphql/mutations"
 import AssignedSubmissionUsers from "./AssignedSubmissionUsers.vue"
 
-jest.mock("quasar", () => ({
-  ...jest.requireActual("quasar"),
+import { beforeEach, describe, expect, test, vi } from 'vitest'
+
+
+vi.mock("quasar", () => ({
+  ...vi.requireActual("quasar"),
   useQuasar: () => ({
-    notify: jest.fn(),
+    notify: vi.fn(),
   }),
 }))
 
@@ -34,9 +37,9 @@ describe("AssignedSubmissionUsers", () => {
       props,
     })
   }
-  const reviewersMutation = jest.fn()
-  const coordinatorsMutation = jest.fn()
-  const submittersMutation = jest.fn()
+  const reviewersMutation = vi.fn()
+  const coordinatorsMutation = vi.fn()
+  const submittersMutation = vi.fn()
 
   mockClient.setRequestHandler(UPDATE_SUBMISSION_REVIEWERS, reviewersMutation)
   mockClient.setRequestHandler(
@@ -46,7 +49,7 @@ describe("AssignedSubmissionUsers", () => {
   mockClient.setRequestHandler(UPDATE_SUBMISSION_SUBMITERS, submittersMutation)
 
   beforeEach(() => {
-    jest.resetAllMocks()
+    vi.resetAllMocks()
   })
 
   test("shows role users", () => {

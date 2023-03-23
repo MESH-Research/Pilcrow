@@ -2,6 +2,8 @@ import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-v
 import { mount } from "@vue/test-utils"
 import AvatarImage from "./AvatarImage.vue"
 
+import { describe, expect, it } from "vitest"
+
 installQuasarPlugin()
 describe("AvatarImage Component", () => {
   const factory = (email) => {

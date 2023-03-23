@@ -5,27 +5,34 @@ import { useFormState } from "src/use/forms"
 import { ref as mockRef } from "vue"
 import StyleCriteriaForm from "./StyleCriteriaForm.vue"
 
-const mockDialog = jest.fn()
-jest.mock("quasar", () => ({
-  ...jest.requireActual("quasar"),
-  useQuasar: () => ({
-    dialog: mockDialog,
-  }),
-}))
+import { describe, expect, test, vi } from "vitest"
 
-jest.mock("src/use/forms", () => ({
-  ...jest.requireActual("src/use/forms"),
-  useDirtyGuard: () => {},
-  useFormState: () => ({
-    dirty: mockRef(false),
-    saved: mockRef(false),
-    state: mockRef("idle"),
-    queryLoading: mockRef(false),
-    mutationLoading: mockRef(false),
-    errorMessage: mockRef(""),
-    setError: jest.fn(),
-  }),
-}))
+const mockDialog = vi.fn()
+vi.mock("quasar", async (importOriginal) => {
+  return {
+    ...await importOriginal(),
+    useQuasar: () => ({
+      dialog: mockDialog,
+    }),
+  }
+})
+
+vi.mock("src/use/forms", async (importOriginal) => {
+  const forms = await importOriginal()
+  return {
+    ...forms,
+    useDirtyGuard: () => { },
+    useFormState: () => ({
+      dirty: mockRef(false),
+      saved: mockRef(false),
+      state: mockRef("idle"),
+      queryLoading: mockRef(false),
+      mutationLoading: mockRef(false),
+      errorMessage: mockRef(""),
+      setError: vi.fn(),
+    }),
+  }
+})
 
 installQuasarPlugin()
 describe("StyleCriteriaForm", () => {

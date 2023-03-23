@@ -1,37 +1,29 @@
-import { describe, expect, it } from "@jest/globals"
 import {
-    installQuasarPlugin,
-    qLayoutInjections,
+  installQuasarPlugin,
 } from "@quasar/quasar-app-extension-testing-unit-vitest"
 import { ApolloClients } from "@vue/apollo-composable"
 import { mount } from "@vue/test-utils"
 import flushPromises from "flush-promises"
 import { createMockClient } from "mock-apollo-client"
-import quasar from "quasar"
+import { SessionStorage } from "quasar"
 import { LOGIN } from "src/graphql/mutations"
+import { beforeEach, describe, expect, it, test, vi } from "vitest"
 import LoginPage from "./LoginPage.vue"
 
-jest.mock("quasar", () => ({
-  ...jest.requireActual("quasar"),
-  SessionStorage: {
-    remove: jest.fn(),
-    getItem: jest.fn(),
-  },
-}))
-jest.mock("vue-router", () => ({
+const mockSessionItem = vi.spyOn(SessionStorage, 'getItem').mockImplementation(() => vi.fn())
+vi.spyOn(SessionStorage, 'remove').mockImplementation(() => vi.fn())
+
+vi.mock("vue-router", () => ({
   useRouter: () => ({
-    push: jest.fn(),
+    push: vi.fn(),
   }),
 }))
-
-const mockSessionItem = jest.fn()
-quasar.SessionStorage.getItem = mockSessionItem
 
 installQuasarPlugin()
 
 describe("LoginPage", () => {
   beforeEach(() => {
-    jest.resetAllMocks()
+    vi.resetAllMocks()
   })
   const mockClient = createMockClient()
 
@@ -39,7 +31,6 @@ describe("LoginPage", () => {
     mount(LoginPage, {
       global: {
         provide: {
-          ...qLayoutInjections(),
           [ApolloClients]: { default: mockClient },
         },
         mocks: {
@@ -49,7 +40,7 @@ describe("LoginPage", () => {
       },
     })
 
-  const mutationHandler = jest.fn()
+  const mutationHandler = vi.fn()
 
   mockClient.setRequestHandler(LOGIN, mutationHandler)
 

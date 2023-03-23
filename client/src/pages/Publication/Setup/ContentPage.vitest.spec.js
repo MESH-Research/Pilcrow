@@ -7,18 +7,23 @@ import { UPDATE_PUBLICATION_CONTENT } from "src/graphql/mutations"
 import { ref as mockRef } from "vue"
 import ContentPage from "./ContentPage.vue"
 
-jest.mock("src/use/forms", () => ({
-  ...jest.requireActual("src/use/forms"),
-  useDirtyGuard: () => {},
-  useFormState: () => ({
-    dirty: mockRef(false),
-    saved: mockRef(false),
-    state: mockRef("idle"),
-    queryLoading: mockRef(false),
-    mutationLoading: mockRef(false),
-    errorMessage: mockRef(""),
-  }),
-}))
+import { beforeEach, describe, expect, test, vi } from "vitest"
+
+vi.mock("src/use/forms", async (importOriginal) => {
+  const forms = await importOriginal()
+  return {
+    ...forms,
+    useDirtyGuard: () => { },
+    useFormState: () => ({
+      dirty: mockRef(false),
+      saved: mockRef(false),
+      state: mockRef("idle"),
+      queryLoading: mockRef(false),
+      mutationLoading: mockRef(false),
+      errorMessage: mockRef(""),
+    }),
+  }
+})
 
 installQuasarPlugin()
 describe("BasicPage", () => {
@@ -46,11 +51,11 @@ describe("BasicPage", () => {
     return wrapper
   }
 
-  const mutateHandler = jest.fn()
+  const mutateHandler = vi.fn()
   mockClient.setRequestHandler(UPDATE_PUBLICATION_CONTENT, mutateHandler)
 
   beforeEach(() => {
-    jest.resetAllMocks()
+    vi.resetAllMocks()
   })
 
   test("able to mount", async () => {

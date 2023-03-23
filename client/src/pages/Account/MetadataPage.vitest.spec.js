@@ -8,18 +8,23 @@ import { CURRENT_USER_METADATA } from "src/graphql/queries"
 import { ref as mockRef } from "vue"
 import MetadataPage from "./MetadataPage.vue"
 
-jest.mock("src/use/forms", () => ({
-  ...jest.requireActual("src/use/forms"),
-  useDirtyGuard: () => {},
-  useFormState: () => ({
-    dirty: mockRef(false),
-    saved: mockRef(false),
-    state: mockRef("idle"),
-    queryLoading: mockRef(false),
-    mutationLoading: mockRef(false),
-    errorMessage: mockRef(""),
-  }),
-}))
+import { beforeEach, describe, expect, test, vi } from "vitest"
+
+vi.mock("src/use/forms", async (importOriginal) => {
+  const forms = await importOriginal()
+  return {
+    ...forms,
+    useDirtyGuard: () => { },
+    useFormState: () => ({
+      dirty: mockRef(false),
+      saved: mockRef(false),
+      state: mockRef("idle"),
+      queryLoading: mockRef(false),
+      mutationLoading: mockRef(false),
+      errorMessage: mockRef(""),
+    }),
+  }
+})
 
 installQuasarPlugin()
 describe("MetadataPage", () => {
@@ -40,8 +45,8 @@ describe("MetadataPage", () => {
     return wrapper
   }
 
-  const queryHandler = jest.fn()
-  const mutateHandler = jest.fn()
+  const queryHandler = vi.fn()
+  const mutateHandler = vi.fn()
   mockClient.setRequestHandler(CURRENT_USER_METADATA, queryHandler)
   mockClient.setRequestHandler(UPDATE_PROFILE_METADATA, mutateHandler)
 
@@ -69,7 +74,7 @@ describe("MetadataPage", () => {
   })
 
   beforeEach(() => {
-    jest.resetAllMocks()
+    vi.resetAllMocks()
   })
 
   test("able to mount", async () => {

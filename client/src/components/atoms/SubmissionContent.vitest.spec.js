@@ -3,6 +3,8 @@ import { mount } from "@vue/test-utils"
 import { ref } from "vue"
 import SubmissionContent from "./SubmissionContent.vue"
 
+import { describe, expect, test } from "vitest"
+
 installQuasarPlugin()
 
 describe("SubmissionContent", () => {

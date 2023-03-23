@@ -6,22 +6,20 @@ import { createMockClient } from "mock-apollo-client"
 import { GET_PUBLICATIONS } from "src/graphql/queries"
 import PublicationIndexPage from "./PublicationIndexPage.vue"
 
-jest.mock("quasar", () => ({
-  ...jest.requireActual("quasar"),
-  useQuasar: () => ({
-    notify: jest.fn(),
-  }),
-}))
+import { beforeEach, describe, expect, it, test, vi } from "vitest"
+vi.mock("quasar", async (importOriginal) => {
+  const quasar = await importOriginal()
+  return {
+    ...quasar,
+    useQuasar: () => ({
+      notify: vi.fn(),
+    }),
+  }
+})
 
-jest.mock("vue-router", () => ({
+vi.mock("vue-router", () => ({
   useRouter: () => ({
-    push: jest.fn(),
-  }),
-}))
-
-jest.mock("vue-i18n", () => ({
-  useI18n: () => ({
-    t: (t) => t,
+    push: vi.fn(),
   }),
 }))
 
@@ -41,14 +39,14 @@ describe("publications page mount", () => {
     })
 
   beforeEach(async () => {
-    jest.resetAllMocks()
+    vi.resetAllMocks()
   })
 
   it("mounts without errors", () => {
     const wrapper = makeWrapper()
     expect(wrapper).toBeTruthy()
   })
-  const getPubHandler = jest.fn()
+  const getPubHandler = vi.fn()
   mockClient.setRequestHandler(GET_PUBLICATIONS, getPubHandler)
 
   test("all existing publications appear within the list", async () => {

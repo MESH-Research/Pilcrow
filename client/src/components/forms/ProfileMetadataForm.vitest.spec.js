@@ -5,18 +5,23 @@ import { useFormState } from "src/use/forms"
 import { ref as mockRef } from "vue"
 import ProfileMetadataForm from "./ProfileMetadataForm.vue"
 
-jest.mock("src/use/forms", () => ({
-  ...jest.requireActual("src/use/forms"),
-  useDirtyGuard: () => {},
-  useFormState: () => ({
-    dirty: mockRef(false),
-    saved: mockRef(false),
-    state: mockRef("idle"),
-    queryLoading: mockRef(false),
-    mutationLoading: mockRef(false),
-    errorMessage: mockRef(""),
-  }),
-}))
+import { describe, expect, test, vi } from "vitest"
+
+vi.mock("src/use/forms", async (importOriginal) => {
+  const forms = await importOriginal()
+  return {
+    ...forms,
+    useDirtyGuard: () => { },
+    useFormState: () => ({
+      dirty: mockRef(false),
+      saved: mockRef(false),
+      state: mockRef("idle"),
+      queryLoading: mockRef(false),
+      mutationLoading: mockRef(false),
+      errorMessage: mockRef(""),
+    }),
+  }
+})
 
 installQuasarPlugin()
 describe("ProfileMetadataForm", () => {

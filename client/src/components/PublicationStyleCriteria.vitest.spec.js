@@ -4,11 +4,13 @@ import { mount } from "@vue/test-utils"
 import flushPromises from "flush-promises"
 import { createMockClient } from "mock-apollo-client"
 import {
-    CREATE_PUBLICATION_STYLE_CRITERIA,
-    DELETE_PUBLICATION_STYLE_CRITERIA,
-    UPDATE_PUBLICATION_STYLE_CRITERIA,
+  CREATE_PUBLICATION_STYLE_CRITERIA,
+  DELETE_PUBLICATION_STYLE_CRITERIA,
+  UPDATE_PUBLICATION_STYLE_CRITERIA,
 } from "src/graphql/mutations"
 import PublicationStyleCriteria from "./PublicationStyleCriteria.vue"
+
+import { beforeEach, describe, expect, test, vi } from "vitest"
 
 installQuasarPlugin()
 
@@ -31,25 +33,25 @@ describe("PublicationStyleCriteria", () => {
     })
   }
 
-  const updateCriteriaHandler = jest.fn()
+  const updateCriteriaHandler = vi.fn()
   mockClient.setRequestHandler(
     UPDATE_PUBLICATION_STYLE_CRITERIA,
     updateCriteriaHandler
   )
-  const createCriteriaHandler = jest.fn()
+  const createCriteriaHandler = vi.fn()
   mockClient.setRequestHandler(
     CREATE_PUBLICATION_STYLE_CRITERIA,
     createCriteriaHandler
   )
 
-  const deleteCriteriaHandler = jest.fn()
+  const deleteCriteriaHandler = vi.fn()
   mockClient.setRequestHandler(
     DELETE_PUBLICATION_STYLE_CRITERIA,
     deleteCriteriaHandler
   )
 
   beforeEach(() => {
-    jest.resetAllMocks()
+    vi.resetAllMocks()
   })
 
   test("able to mount", () => {

@@ -3,17 +3,11 @@ import { ApolloClients } from "@vue/apollo-composable"
 import { mount } from "@vue/test-utils"
 import { createMockClient } from "mock-apollo-client"
 import {
-    UPDATE_PUBLICATION_ADMINS,
-    UPDATE_PUBLICATION_EDITORS,
+  UPDATE_PUBLICATION_ADMINS,
+  UPDATE_PUBLICATION_EDITORS,
 } from "src/graphql/mutations"
+import { beforeEach, describe, expect, test, vi } from 'vitest'
 import AssignedPublicationUsers from "./AssignedPublicationUsers.vue"
-
-jest.mock("quasar", () => ({
-  ...jest.requireActual("quasar"),
-  useQuasar: () => ({
-    notify: jest.fn(),
-  }),
-}))
 
 installQuasarPlugin()
 describe("AssignedPublicationUsers", () => {
@@ -33,8 +27,8 @@ describe("AssignedPublicationUsers", () => {
       props,
     })
   }
-  const editorsMutation = jest.fn()
-  const publicationAdministratorsMutation = jest.fn()
+  const editorsMutation = vi.fn()
+  const publicationAdministratorsMutation = vi.fn()
 
   mockClient.setRequestHandler(UPDATE_PUBLICATION_EDITORS, editorsMutation)
   mockClient.setRequestHandler(
@@ -43,7 +37,7 @@ describe("AssignedPublicationUsers", () => {
   )
 
   beforeEach(() => {
-    jest.resetAllMocks()
+    vi.resetAllMocks()
   })
 
   test("shows role users", () => {

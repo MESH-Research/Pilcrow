@@ -5,21 +5,16 @@ import { mount } from "@vue/test-utils"
 import flushPromises from "flush-promises"
 import { createMockClient } from "mock-apollo-client"
 import { GET_SUBMISSION } from "src/graphql/queries"
+import { beforeEach, describe, expect, it, test, vi } from 'vitest'
 import SubmissionDetailsPage from "./SubmissionDetails.vue"
 
-jest.mock("quasar", () => ({
-  ...jest.requireActual("quasar"),
+vi.mock("quasar", () => ({
+  ...vi.requireActual("quasar"),
   useQuasar: () => ({
-    notify: jest.fn(),
+    notify: vi.fn(),
   }),
 }))
 
-jest.mock("vue-i18n", () => ({
-  useI18n: () => ({
-    t: (t) => t,
-    te: () => true,
-  }),
-}))
 
 installQuasarPlugin()
 
@@ -98,11 +93,11 @@ describe("submissions details page mount", () => {
     ],
   }
 
-  const GetSubHandler = jest.fn()
+  const GetSubHandler = vi.fn()
   mockClient.setRequestHandler(GET_SUBMISSION, GetSubHandler)
 
   beforeEach(() => {
-    jest.resetAllMocks()
+    vi.resetAllMocks()
   })
 
   const defaultApolloMock = () => {

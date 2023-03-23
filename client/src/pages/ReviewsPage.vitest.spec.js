@@ -5,7 +5,7 @@ import { mount } from "@vue/test-utils"
 import flushPromises from "flush-promises"
 import { createMockClient } from "mock-apollo-client"
 import { CURRENT_USER_SUBMISSIONS } from "src/graphql/queries"
-import { describe, test, vi } from 'vitest'
+import { describe, expect, test, vi } from "vitest"
 import ReviewsPage from "./ReviewsPage.vue"
 
 installQuasarPlugin()

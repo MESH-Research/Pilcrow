@@ -2,28 +2,25 @@ import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-v
 import { mount } from "@vue/test-utils"
 import { useVuelidate } from "@vuelidate/core"
 import { useFormState } from "src/use/forms"
+import { describe, expect, test, vi } from "vitest"
 import { ref as mockRef, nextTick, reactive } from "vue"
-import VQInput from "./VQInput"
+import VQInput from "./VQInput.vue"
 
-jest.mock("vue-i18n", () => ({
-  useI18n: () => ({
-    te: () => true,
-    t: (t) => t,
-  }),
-}))
-
-jest.mock("src/use/forms", () => ({
-  ...jest.requireActual("src/use/forms"),
-  useDirtyGuard: () => {},
-  useFormState: () => ({
-    dirty: mockRef(false),
-    saved: mockRef(false),
-    state: mockRef("idle"),
-    queryLoading: mockRef(false),
-    mutationLoading: mockRef(false),
-    errorMessage: mockRef(""),
-  }),
-}))
+vi.mock("src/use/forms", async (importOriginal) => {
+  const forms = await importOriginal()
+  return {
+    ...forms,
+    useDirtyGuard: () => { },
+    useFormState: () => ({
+      dirty: mockRef(false),
+      saved: mockRef(false),
+      state: mockRef("idle"),
+      queryLoading: mockRef(false),
+      mutationLoading: mockRef(false),
+      errorMessage: mockRef(""),
+    }),
+  }
+})
 
 installQuasarPlugin()
 const factory = (props, provide) => {
@@ -86,7 +83,7 @@ describe("VQInput", () => {
 
   test("uses provided update function", () => {
     const stub = reactive(vuelidateStub)
-    const updater = jest.fn()
+    const updater = vi.fn()
     const wrapper = factory({ v: stub }, { vqupdate: updater })
 
     const input = wrapper.find("input")

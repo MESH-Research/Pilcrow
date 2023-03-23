@@ -1,23 +1,28 @@
 import {
-    installQuasarPlugin,
-    qLayoutInjections,
+  installQuasarPlugin,
 } from "@quasar/quasar-app-extension-testing-unit-vitest"
 import { mount } from "@vue/test-utils"
 import { useFormState } from "src/use/forms"
 import { ref as mockRef, nextTick } from "vue"
 import FormActions from "./FormActions.vue"
 
-jest.mock("src/use/forms", () => ({
-  useDirtyGuard: () => {},
-  useFormState: () => ({
-    dirty: mockRef(false),
-    saved: mockRef(false),
-    state: mockRef("idle"),
-    queryLoading: mockRef(false),
-    mutationLoading: mockRef(false),
-    errorMessage: mockRef(""),
-  }),
-}))
+import { describe, expect, test, vi } from "vitest"
+
+vi.mock("src/use/forms", async (importOriginal) => {
+  const forms = await importOriginal()
+  return {
+    ...forms,
+    useDirtyGuard: () => { },
+    useFormState: () => ({
+      dirty: mockRef(false),
+      saved: mockRef(false),
+      state: mockRef("idle"),
+      queryLoading: mockRef(false),
+      mutationLoading: mockRef(false),
+      errorMessage: mockRef(""),
+    }),
+  }
+})
 
 installQuasarPlugin()
 describe("Formactions", () => {
@@ -25,7 +30,7 @@ describe("Formactions", () => {
     return mount(FormActions, {
       global: {
         provide: {
-          ...qLayoutInjections(),
+
           formState: useFormState(),
         },
         mocks: {
