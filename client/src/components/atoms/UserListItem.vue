@@ -18,38 +18,21 @@
       <div class="text-grey-8 q-gutter-xs">
         <q-btn
           v-if="user.staged"
-          class="gt-xs"
           flat
-          dense
-          :title="$t('user.unconfirmed')"
+          :label="$t(`submissions.reinvite.label`)"
           icon="schedule"
-          data-cy="user_unconfirmed"
-          @click="unconfirmedVisibility = !unconfirmedVisibility"
-        >
-          <q-tooltip
-            v-model="unconfirmedVisibility"
-            anchor="top middle"
-            self="center middle"
-            class="text-subtitle2"
-            >{{ $t("user.unconfirmed") }}</q-tooltip
-          >
-        </q-btn>
-        <q-btn
-          v-if="user.staged"
-          label="Reinvite"
           @click="$emit('reinvite', { user })"
         >
           <q-tooltip
             anchor="top middle"
             self="center middle"
             class="text-subtitle2"
-            >Resend an invitation to this unconfirmed user</q-tooltip
+            >{{ $t("submissions.reinvite.tooltip") }}</q-tooltip
           >
         </q-btn>
         <q-btn
           v-for="{ ariaLabel, icon, action, help, cyAttr } in actions"
           :key="icon"
-          class="gt-xs"
           size="12px"
           flat
           dense
@@ -67,7 +50,6 @@
 
 <script setup>
 import AvatarImage from "./AvatarImage.vue"
-import { ref } from "vue"
 defineProps({
   user: {
     type: Object,
@@ -80,5 +62,4 @@ defineProps({
   },
 })
 defineEmits(["actionClick", "reinvite"])
-const unconfirmedVisibility = ref(false)
 </script>

@@ -7,8 +7,7 @@
     "username": "Username",
     "password": "Password",
     "empty_name": "No display name",
-    "details_heading": "User Details",
-    "unconfirmed": "User not confirmed"
+    "details_heading": "User Details"
   },
   "role": {
     "self": "No roles | Role | Roles",
@@ -517,7 +516,8 @@
       "reject": "Reject",
       "accept_as_final": "Accept as Final",
       "open": "Open for Review",
-      "close": "Close for Review"
+      "close": "Close for Review",
+      "reinvite": "Reinvite"
     },
     "activity_section": {
       "title": "Activity",
@@ -645,6 +645,10 @@
           "RESUBMISSION_REQUESTED": "Submissions requested for resubmission cannot have their statuses changed."
         }
       }
+    },
+    "reinvite": {
+      "label": "Reinvite",
+      "tooltip": "The invitation has not yet been accepted. Reinvite this unconfirmed user."
     },
     "invite_user": {
       "message": {
@@ -844,6 +848,9 @@
       "line_2": "Are you sure you do not want to associate one with this comment?",
       "action_submit": "Post comment as is",
       "action_cancel": "Add style criteria"
+    },
+    "reinviteUser": {
+      "reinvited": "{data_email} has been reinvited as a {data_role}"
     },
     "confirmStatusChange": {
       "body": {

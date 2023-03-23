@@ -67,6 +67,7 @@
 </template>
 
 <script setup>
+import ReinviteUserDialog from "./dialogs/ReinviteUserDialog.vue"
 import FindUserSelect from "./forms/FindUserSelect.vue"
 import UserList from "./molecules/UserList.vue"
 import { useFeedbackMessages } from "src/use/guiElements"
@@ -83,13 +84,15 @@ import { useI18n } from "vue-i18n"
 import { useEditor, EditorContent } from "@tiptap/vue-3"
 import StarterKit from "@tiptap/starter-kit"
 import Placeholder from "@tiptap/extension-placeholder"
+import { useQuasar } from "quasar"
+const { dialog } = useQuasar()
 
 const props = defineProps({
   container: {
     type: Object,
     required: true,
   },
-  relationship: {
+  role: {
     type: String,
     required: true,
   },
@@ -112,7 +115,7 @@ const props = defineProps({
 const user = ref(null)
 const containerType = computed(() => props.container.__typename.toLowerCase())
 const { t, te } = useI18n()
-const tPrefix = (key) => `${containerType.value}.${props.relationship}.${key}`
+const tPrefix = (key) => `${containerType.value}.${props.role}.${key}`
 const tp$ = (key, ...args) => t(tPrefix(key), ...args)
 
 const { newStatusMessage } = useFeedbackMessages()
@@ -133,7 +136,7 @@ const mutations = {
   },
 }
 const setMutationType = computed(() => {
-  let type = mutations[props.relationship]
+  let type = mutations[props.role]
   if (typeof user.value === "string") {
     return type["invite"]
   }
@@ -142,7 +145,7 @@ const setMutationType = computed(() => {
 const { mutate } = useMutation(setMutationType, opts)
 
 const users = computed(() => {
-  return props.container[props.relationship]
+  return props.container[props.role]
 })
 
 const acceptMore = computed(() => {
@@ -239,7 +242,18 @@ async function assignUser() {
 }
 
 async function reinviteUser({ user }) {
-  console.log("reinvite", user)
+  await new Promise((resolve) => {
+    dirtyDialog(user)
+      .onOk(function () {
+        resolve(true)
+      })
+      .onCancel(function () {
+        resolve(false)
+      })
+  })
+  {
+    return
+  }
 }
 
 async function handleUserListClick({ user }) {
@@ -255,6 +269,16 @@ async function handleUserListClick({ user }) {
   } catch (error) {
     newStatusMessage("failure", tp$("unassign.error"))
   }
+}
+function dirtyDialog(user) {
+  return dialog({
+    component: ReinviteUserDialog,
+    componentProps: {
+      action: "reinvite",
+      email: user.email,
+      submissionId: "108",
+    },
+  })
 }
 </script>
 

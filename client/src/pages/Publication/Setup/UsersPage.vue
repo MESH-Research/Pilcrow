@@ -20,14 +20,14 @@
     <div class="column q-gutter-md">
       <assigned-publication-users
         data-cy="admins_list"
-        relationship="publication_admins"
+        role="publication_admins"
         :container="publication"
         mutable
       />
       <q-separator />
       <assigned-publication-users
         data-cy="editors_list"
-        relationship="editors"
+        role="editors"
         :container="publication"
         mutable
       />
