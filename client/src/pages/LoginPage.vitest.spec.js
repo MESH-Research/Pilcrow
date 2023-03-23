@@ -1,0 +1,91 @@
+import { describe, expect, it } from "@jest/globals"
+import {
+    installQuasarPlugin,
+    qLayoutInjections,
+} from "@quasar/quasar-app-extension-testing-unit-vitest"
+import { ApolloClients } from "@vue/apollo-composable"
+import { mount } from "@vue/test-utils"
+import flushPromises from "flush-promises"
+import { createMockClient } from "mock-apollo-client"
+import quasar from "quasar"
+import { LOGIN } from "src/graphql/mutations"
+import LoginPage from "./LoginPage.vue"
+
+jest.mock("quasar", () => ({
+  ...jest.requireActual("quasar"),
+  SessionStorage: {
+    remove: jest.fn(),
+    getItem: jest.fn(),
+  },
+}))
+jest.mock("vue-router", () => ({
+  useRouter: () => ({
+    push: jest.fn(),
+  }),
+}))
+
+const mockSessionItem = jest.fn()
+quasar.SessionStorage.getItem = mockSessionItem
+
+installQuasarPlugin()
+
+describe("LoginPage", () => {
+  beforeEach(() => {
+    jest.resetAllMocks()
+  })
+  const mockClient = createMockClient()
+
+  const wrapperFactory = () =>
+    mount(LoginPage, {
+      global: {
+        provide: {
+          ...qLayoutInjections(),
+          [ApolloClients]: { default: mockClient },
+        },
+        mocks: {
+          $t: (token) => token,
+        },
+        stubs: ["router-link"],
+      },
+    })
+
+  const mutationHandler = jest.fn()
+
+  mockClient.setRequestHandler(LOGIN, mutationHandler)
+
+  it("mounts without errors", () => {
+    const wrapper = wrapperFactory()
+    expect(wrapper).toBeTruthy()
+  })
+
+  test("login action attempts mutation", async () => {
+    const wrapper = wrapperFactory()
+    mutationHandler.mockResolvedValue({
+      data: { login: { id: 1 } },
+    })
+    wrapper.findComponent({ ref: "username" }).setValue("user@example.com")
+    wrapper.findComponent({ ref: "password" }).setValue("password")
+    await wrapper.findComponent({ ref: "submitBtn" }).trigger("submit")
+    await flushPromises()
+
+    expect(mutationHandler).toHaveBeenCalled()
+    expect(wrapper.vm.push).toHaveBeenCalledTimes(1)
+    expect(wrapper.vm.push).toHaveBeenCalledWith("/dashboard")
+  })
+
+  test("login redirects correctly", async () => {
+    mutationHandler.mockResolvedValue({
+      data: { login: { id: 1 } },
+    })
+    mockSessionItem.mockReturnValue("/test-result")
+    const wrapper = wrapperFactory()
+    wrapper.findComponent({ ref: "username" }).setValue("user@example.com")
+    wrapper.findComponent({ ref: "password" }).setValue("password")
+    await wrapper.findComponent({ ref: "submitBtn" }).trigger("submit")
+    await flushPromises()
+
+    expect(mutationHandler).toHaveBeenCalled()
+    expect(wrapper.vm.push).toHaveBeenCalledTimes(1)
+    expect(wrapper.vm.push).toHaveBeenCalledWith("/test-result")
+  })
+})
