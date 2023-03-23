@@ -4410,9 +4410,9 @@ csstype@^2.6.8:
   integrity sha512-Z1PhmomIfypOpoMjRQB70jfvy/wxT50qW08YXO5lMIJkrdq4yOTR+AW7FqutScmB9NkLwxo+jU+kZLbofZZq/w==
 
 cypress-axe@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/cypress-axe/-/cypress-axe-1.2.0.tgz#224936a3346055f6c22636e645746cc903aaa947"
-  integrity sha512-mK7rxc8+e0IM519efgkzVBQRYLapy55TOVNbWZsbX3495xFzf8NnkMddUaHAGgAnF+kcyJU7zNPu3lTiOD58WQ==
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/cypress-axe/-/cypress-axe-1.4.0.tgz#e67482bfe9e740796bf77c7823f19781a8a2faff"
+  integrity sha512-Ut7NKfzjyKm0BEbt2WxuKtLkIXmx6FD2j0RwdvO/Ykl7GmB/qRQkwbKLk3VP35+83hiIr8GKD04PDdrTK5BnyA==
 
 cypress-file-upload@^5.0.8:
   version "5.0.8"
