@@ -39,7 +39,7 @@ server {
         log_not_found off;
     }
 
-    location /graphql-playground {
+    location /graphiql {
         error_page 404 = @backend;
         log_not_found off;
     }

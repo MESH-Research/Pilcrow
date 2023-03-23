@@ -16,7 +16,7 @@ There are also a few other containers that only exist in the development environ
 - Docs: A development container for the documentation system.
 - Test: A container to serve the Majestic interface for running Jest unit tests.
 
-In a production environment, the application is compiled and served by the proxy container directly. The proxy container is the only public container in the stack. Requests for the `/graphql` or `/graphql-playground` (development mode only) are proxied to the [application server](#application-server). All other requests that are not for a static asset will return the compiled client's `index.html`.
+In a production environment, the application is compiled and served by the proxy container directly. The proxy container is the only public container in the stack. Requests for the `/graphql` or `/graphiql` (development mode only) are proxied to the [application server](#application-server). All other requests that are not for a static asset will return the compiled client's `index.html`.
 
 Note: Our Lando development environment proxies client requests to a client container running `quasar dev` to allow for hot module replacement (HMR).
 
