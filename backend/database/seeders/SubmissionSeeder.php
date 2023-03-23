@@ -21,15 +21,38 @@ class SubmissionSeeder extends Seeder
     {
         $this->callOnce(PublicationSeeder::class);
         $this->callOnce(UserSeeder::class);
+
         $this->createSubmission(100, 'Pilcrow Test Submission 1')
-            ->update(['status' => Submission::AWAITING_REVIEW, 'updated_by' => 1]);
-        $this->createSubmission(101, 'Pilcrow Test Submission 2');
+            ->update(['updated_by' => 1, 'status' => Submission::UNDER_REVIEW]);
+
+        $this->createSubmission(101, 'Pilcrow Test Submission 2')
+            ->update(['updated_by' => 6, 'status' => Submission::INITIALLY_SUBMITTED]);
+
         $this->createSubmission(102, 'Pilcrow Test Submission 3')
-            ->update(['status' => Submission::REJECTED, 'updated_by' => 1]);
+            ->update(['updated_by' => 3, 'status' => Submission::REJECTED]);
+
         $this->createSubmission(103, 'Pilcrow Test Submission 4')
-            ->update(['status' => Submission::RESUBMISSION_REQUESTED, 'updated_by' => 1]);
-        $this->createSubmission(104, 'Pilcrow Test Submission 5')
-            ->update(['status' => Submission::DRAFT, 'updated_by' => 1]);
+            ->update(['updated_by' => 3, 'status' => Submission::RESUBMISSION_REQUESTED]);
+
+        $this->createSubmission(104, 'Pilcrow Test Submission 5'); // DRAFT
+
+        $this->createSubmission(105, 'Pilcrow Test Submission 6')
+            ->update(['updated_by' => 3, 'status' => Submission::ACCEPTED_AS_FINAL]);
+
+        $this->createSubmission(106, 'Pilcrow Test Submission 7')
+            ->update(['updated_by' => 3, 'status' => Submission::EXPIRED]);
+
+        $this->createSubmission(107, 'Pilcrow Test Submission 8')
+            ->update(['updated_by' => 3, 'status' => Submission::AWAITING_DECISION]);
+
+        $this->createSubmission(108, 'Pilcrow Test Submission 9')
+            ->update(['updated_by' => 3, 'status' => Submission::AWAITING_REVIEW]);
+
+        $this->createSubmission(109, 'Pilcrow Test Submission 10')
+            ->update(['updated_by' => 1, 'status' => Submission::ARCHIVED]);
+
+        $this->createSubmission(110, 'Pilcrow Test Submission 11')
+            ->update(['updated_by' => 1, 'status' => Submission::DELETED]);
     }
 
     /**
@@ -46,9 +69,9 @@ class SubmissionSeeder extends Seeder
             'id' => $id,
             'title' => $title,
             'publication_id' => 1,
-            'created_by' => 1,
-            'updated_by' => 1,
-            'status' => Submission::INITIALLY_SUBMITTED,
+            'created_by' => 6,
+            'updated_by' => 6,
+            'status' => Submission::DRAFT,
             ...$data,
         ];
 
