@@ -61,6 +61,7 @@
     "cypress-file-upload": "^5.0.8",
     "eslint": "^8.10.0",
     "eslint-config-prettier": "^8.1.0",
+    "eslint-plugin-cypress": "^2.12.1",
     "eslint-plugin-vue": "^9.0.0",
     "flush-promises": "^1.0.2",
     "mock-apollo-client": "^1.2.1",
