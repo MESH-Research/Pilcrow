@@ -18,6 +18,6 @@ describe("AvatarImage Component", () => {
 
   it("returns a deterministic value", () => {
     const wrapper = factory("test@pilcrow.dev")
-    expect(wrapper.vm.avatarSrc).toBe("avatar-magenta.png")
+    expect(wrapper.vm.avatarSrc).toBe("/avatar-magenta.png")
   })
 })

@@ -6,7 +6,7 @@
       <div class="q-pa-sm row q-gutter-md items-center">
         <q-img
           :alt="$t('header.logo_alt')"
-          src="logo-100x100.png"
+          src="/logo-100x100.png"
           style="width: 50px; height: 50px"
         />
         <div v-if="$q.screen.width >= 400" class="column">
@@ -147,12 +147,12 @@
 </template>
 
 <script setup>
-import NotificationPopup from "src/components/molecules/NotificationPopup.vue"
-import AppBanner from "./AppBanner.vue"
-import { useCurrentUser } from "src/use/user"
-import { useI18n } from "vue-i18n"
 import { useMagicKeys } from "@vueuse/core"
+import NotificationPopup from "src/components/molecules/NotificationPopup.vue"
+import { useCurrentUser } from "src/use/user"
 import { watchEffect } from "vue"
+import { useI18n } from "vue-i18n"
+import AppBanner from "./AppBanner.vue"
 
 defineProps({
   //Drawer status
