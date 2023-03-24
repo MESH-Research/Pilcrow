@@ -23,15 +23,14 @@ vi.mock("src/use/forms", async (importOriginal) => {
     }),
   }
 })
-
+const formState = useFormState()
 installQuasarPlugin()
 describe("Formactions", () => {
   const factory = (props = {}) => {
     return mount(FormActions, {
       global: {
         provide: {
-
-          formState: useFormState(),
+          formState
         },
         mocks: {
           $t: (token) => token,
@@ -51,15 +50,15 @@ describe("Formactions", () => {
   test("hidden when form is idle", () => {
     const wrapper = factory()
     wrapper.vm.state = "idle"
-    expect(wrapper.findComponent({ name: "q-page-sticky" }).exists()).toBe(
+    expect(wrapper.findComponent('q-page-sticky').exists()).toBe(
       false
-    )
-  })
+      )
+    })
 
-  test("dirty form state", async () => {
-    const wrapper = factory()
-    wrapper.vm.state = "dirty"
-    await nextTick()
-    expect(wrapper.findComponent({ name: "q-page-sticky" }).exists()).toBe(true)
+    test("dirty form state", async () => {
+      const wrapper = factory()
+      formState.state.value = "dirty"
+      await nextTick()
+      expect(wrapper.findComponent('q-page-sticky').exists()).toBe(true)
   })
 })

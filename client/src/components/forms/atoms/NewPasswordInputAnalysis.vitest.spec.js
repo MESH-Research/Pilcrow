@@ -3,7 +3,7 @@ import { mount } from "@vue/test-utils"
 import { merge } from "lodash"
 import PasswordFieldAnalysis from "./NewPasswordInputAnalysis.vue"
 
-import { describe, expect } from "vitest"
+import { describe, expect, it } from "vitest"
 
 installQuasarPlugin()
 describe("NewPasswordInputAnalysis", () => {
@@ -25,7 +25,7 @@ describe("NewPasswordInputAnalysis", () => {
     )
   }
 
-  const wrapper = mount(PasswordFieldAnalysis, {
+  const factory = () => mount(PasswordFieldAnalysis, {
     global: {
       mocks: {
         $t: (token) => token,
@@ -35,10 +35,12 @@ describe("NewPasswordInputAnalysis", () => {
   })
 
   it("mounts without errors", () => {
+    const wrapper = factory()
     expect(wrapper).toBeTruthy()
   })
 
   it("correctly displays suggestions", async () => {
+    const wrapper = factory()
     expect(wrapper.findAllComponents(".suggestion").length).toBe(2)
     await wrapper.setProps(
       mergeProps({
@@ -54,6 +56,7 @@ describe("NewPasswordInputAnalysis", () => {
   })
 
   it("correctly displays warnings", async () => {
+    const wrapper = factory()
     expect(wrapper.vm.warning).toBe("warning_message")
 
     const warning = wrapper.findComponent(".warning")

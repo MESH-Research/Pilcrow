@@ -16,7 +16,7 @@ module.exports = {
 
   // Rules order is important, please avoid shuffling them
   extends: [
-    'plugin:vue/vue3-recommened',
+    'plugin:vue/vue3-recommended',
     'eslint:recommended',
     'prettier'
   ],

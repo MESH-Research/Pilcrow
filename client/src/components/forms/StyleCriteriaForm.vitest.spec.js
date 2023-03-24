@@ -1,6 +1,7 @@
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
 import { mount } from "@vue/test-utils"
 import flushPromises from "flush-promises"
+import { Dialog } from "quasar"
 import { useFormState } from "src/use/forms"
 import { ref as mockRef } from "vue"
 import StyleCriteriaForm from "./StyleCriteriaForm.vue"
@@ -34,14 +35,11 @@ vi.mock("src/use/forms", async (importOriginal) => {
   }
 })
 
-installQuasarPlugin()
+installQuasarPlugin({ plugins: { Dialog } })
 describe("StyleCriteriaForm", () => {
   const makeWrapper = (criteria) => {
     return mount(StyleCriteriaForm, {
       global: {
-        mocks: {
-          $t: (t) => t,
-        },
         provide: {
           formState: useFormState(),
         },

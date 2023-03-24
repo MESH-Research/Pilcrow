@@ -2,14 +2,14 @@ import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-v
 import { ApolloClients } from "@vue/apollo-composable"
 import { mount } from "@vue/test-utils"
 import { createMockClient } from "mock-apollo-client"
+import { Notify } from "quasar"
 import {
   UPDATE_SUBMISSION_REVIEWERS,
   UPDATE_SUBMISSION_REVIEW_COORDINATORS,
   UPDATE_SUBMISSION_SUBMITERS,
 } from "src/graphql/mutations"
-import AssignedSubmissionUsers from "./AssignedSubmissionUsers.vue"
-
 import { beforeEach, describe, expect, test, vi } from 'vitest'
+import AssignedSubmissionUsers from "./AssignedSubmissionUsers.vue"
 
 
 vi.mock("quasar", () => ({
@@ -19,7 +19,7 @@ vi.mock("quasar", () => ({
   }),
 }))
 
-installQuasarPlugin()
+installQuasarPlugin({ plugins: { Notify }})
 describe("AssignedSubmissionUsers", () => {
   const mockClient = createMockClient({
     defaultOptions: { watchQuery: { fetchPolicy: "network-only" } },

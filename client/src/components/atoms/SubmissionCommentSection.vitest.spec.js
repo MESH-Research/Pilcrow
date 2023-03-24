@@ -275,7 +275,7 @@ describe("Overall Comments", () => {
 
     // First Overall Comment
     expect(
-      overallComments.at(0).find("[data-cy=showRepliesButton").exists()
+      overallComments.at(0).find("[data-cy=showRepliesButton]").exists()
     ).toBe(false)
     expect(findReplies(overallComments.at(0))).toHaveLength(0)
 

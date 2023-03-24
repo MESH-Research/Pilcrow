@@ -6,23 +6,21 @@ import { describe, expect, it } from "vitest"
 
 installQuasarPlugin()
 describe("PasswordInputComponent", () => {
-  const wrapper = mount(PasswordInput, {
-    global: {
-      mocks: {
-        $t: (t) => t,
-      },
-    },
+  const factory = () => mount(PasswordInput, {
   })
 
   it("mounts without errors", () => {
+    const wrapper = factory()
     expect(wrapper).toBeTruthy()
   })
 
   it("uses input type password", () => {
+    const wrapper = factory()
     expect(wrapper.find("input").attributes("type")).toBe("password")
   })
 
   it("has correct aria attributes", () => {
+    const wrapper = factory()
     const i = wrapper.find("i")
     const iAttrs = i.attributes()
     expect(iAttrs.role).toBe("button")
@@ -34,6 +32,7 @@ describe("PasswordInputComponent", () => {
   })
 
   it("switches input type when visibility button clicked", async () => {
+    const wrapper = factory()
     await wrapper.findComponent({ name: "q-icon" }).trigger("click")
 
     expect(wrapper.find("input").attributes("type")).toBe("text")
@@ -41,6 +40,7 @@ describe("PasswordInputComponent", () => {
   })
 
   it("passes input event up the component tree", async () => {
+    const wrapper = factory()
     const input = wrapper.findComponent({ name: "q-input" })
 
     await input.setValue("test")
@@ -52,6 +52,7 @@ describe("PasswordInputComponent", () => {
   })
 
   it("has current-password autocomplete attr by default", () => {
+    const wrapper = factory()
     expect(wrapper.find("input").attributes("autocomplete")).toEqual(
       "current-password"
     )

@@ -141,11 +141,11 @@
 </template>
 
 <script>
+import useVuelidate from "@vuelidate/core"
+import ErrorFieldRenderer from "src/components/molecules/ErrorFieldRenderer.vue"
+import { reactive, ref } from "vue"
 import Draggable from "vuedraggable"
 import CollapseToolbar from "./CollapseToolbar.vue"
-import ErrorFieldRenderer from "src/components/molecules/ErrorFieldRenderer.vue"
-import { ref, reactive } from "vue"
-import useVuelidate from "@vuelidate/core"
 
 export default {
   name: "EditableList",

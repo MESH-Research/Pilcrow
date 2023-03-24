@@ -1,14 +1,13 @@
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
 import { ApolloClients } from "@vue/apollo-composable"
-import { mount } from "@vue/test-utils"
-import flushPromises from "flush-promises"
+import { config, flushPromises, mount } from "@vue/test-utils"
 import { createMockClient } from "mock-apollo-client"
 import { GET_PUBLICATIONS } from "src/graphql/queries"
 import PublicationsIndexPage from "./PublicationsIndexPage.vue"
 
 import { describe, expect, it, vi } from "vitest"
-
 installQuasarPlugin()
+
 describe("publications page mount", () => {
   const mockClient = createMockClient()
 
@@ -35,21 +34,21 @@ describe("publications page mount", () => {
     },
   })
 
-  const wrapper = mount(PublicationsIndexPage, {
+  const factory = () => mount(PublicationsIndexPage, {
     global: {
+      plugins: config.global.plugins,
       provide: {
+        ...config.global.provide,
         [ApolloClients]: { default: mockClient },
-      },
-      mocks: {
-        $t: (t) => t,
-      },
-    },
+      }
+    }
   })
 
   it("mounts without errors", async () => {
-    await flushPromises()
+    const wrapper = factory()
     expect(wrapper).toBeTruthy()
-    expect(wrapper.findAllComponents({ name: "q-item" })).toHaveLength(4)
+    await flushPromises()
     expect(getPubsHandler).toHaveBeenCalledWith({ page: 1 })
+    expect(wrapper.findAllComponents({ name: "q-item" })).toHaveLength(4)
   })
 })

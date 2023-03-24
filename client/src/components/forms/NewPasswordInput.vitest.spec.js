@@ -1,17 +1,14 @@
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
 import { mount } from "@vue/test-utils"
+import { Dark } from "quasar"
 import NewPasswordInput from "./NewPasswordInput.vue"
 
-import { describe, expect } from "vitest"
+import { describe, expect, it } from "vitest"
 
-installQuasarPlugin()
+installQuasarPlugin({plugins: {Dark}})
 describe("NewPasswordInput", () => {
-  const wrapper = mount(NewPasswordInput, {
-    global: {
-      mocks: {
-        $t: (t) => t,
-      },
-    },
+  const factory = () =>
+  mount(NewPasswordInput, {
     props: {
       complexity: {
         score: 2,
@@ -27,10 +24,13 @@ describe("NewPasswordInput", () => {
   })
 
   it("mounts without errors", () => {
+    const wrapper = factory()
     expect(wrapper).toBeTruthy()
   })
 
   it("passes input event up component tree", async () => {
+    const wrapper = factory()
+
     const input = wrapper.findComponent({ name: "q-input" })
 
     await input.setValue("test")
@@ -39,12 +39,15 @@ describe("NewPasswordInput", () => {
   })
 
   it("input has new-password auto-complete attr", () => {
+    const wrapper = factory()
     const input = wrapper.find("input")
 
     expect(input.attributes("autocomplete")).toEqual("new-password")
   })
 
   it("shows and hides details on click with correct aria", async () => {
+    const wrapper = factory()
+
     expect(wrapper.findAll(".password-details").length).toBe(0)
 
     const detailsChip = wrapper.findComponent({ name: "q-chip" })

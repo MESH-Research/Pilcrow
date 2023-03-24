@@ -24,7 +24,7 @@ export default {
         [h("q-list", {}, items)]
       )
     } else {
-      return h("div", {}, this.$slots.default())
+      return this.$slots.default()
     }
   },
 }

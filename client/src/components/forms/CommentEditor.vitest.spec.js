@@ -1,25 +1,20 @@
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
 import { mount } from "@vue/test-utils"
 import flushPromises from "flush-promises"
-import quasar from 'quasar'
+import { Dialog } from 'quasar'
 import { beforeEach, describe, expect, it, test, vi } from 'vitest'
 import { ref } from "vue"
 import CommentEditor from "./CommentEditor.vue"
 
 const mockDialog = vi.fn()
-vi.spyOn(quasar, 'useQuasar').mockImplementation(() => ({dialog: mockDialog}))
+vi.mock("quasar", async (importOriginal) => ({
+  ...await importOriginal(),
+  useQuasar: () => ({
+    dialog: mockDialog,
+  }),
+}))
 
-// vi.mock("quasar", async (importOriginal) => {
-//   const quasar = await importOriginal()
-//   return {
-//     ...quasar,
-//     useQuasar: () => ({
-//       dialog: vi.fn(),
-//     }),
-//   }
-// })
 
-// const { dialog } = useQuasar()
 const styleCriteria = [
   {
     __typename: "StyleCriteria",
@@ -54,21 +49,17 @@ const styleCriteria = [
   },
 ]
 
-installQuasarPlugin()
+installQuasarPlugin({ plugins: { Dialog } })
 describe("CommentEditor", () => {
   const dialogReturn = {
     onOk: () => dialogReturn,
     onCancel: () => dialogReturn,
   }
 
-  mockDialog.mockImplementation(() => dialogReturn)
   const wrapperFactory = () => {
     return {
       wrapper: mount(CommentEditor, {
         global: {
-          mocks: {
-            $t: (token) => token,
-          },
           provide: {
             submission: ref({
               publication: {
@@ -76,6 +67,7 @@ describe("CommentEditor", () => {
               },
             }),
           },
+          stubs: ['i18n-t']
         },
         props: {
           commentType: "InlineComment",
@@ -102,7 +94,9 @@ describe("CommentEditor", () => {
   })
 
   it("shows dialog if no criteria are selected", async () => {
+    mockDialog.mockImplementation(() => dialogReturn)
     const { wrapper } = wrapperFactory()
+
     await flushPromises()
     await wrapper.findComponent({ name: "QForm" }).trigger("submit")
     expect(mockDialog).toHaveBeenCalled()

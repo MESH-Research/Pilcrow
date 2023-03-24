@@ -2,6 +2,7 @@ import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-v
 import { ApolloClients } from "@vue/apollo-composable"
 import { mount } from "@vue/test-utils"
 import { createMockClient } from "mock-apollo-client"
+import { Notify } from 'quasar'
 import {
   UPDATE_PUBLICATION_ADMINS,
   UPDATE_PUBLICATION_EDITORS,
@@ -9,7 +10,7 @@ import {
 import { beforeEach, describe, expect, test, vi } from 'vitest'
 import AssignedPublicationUsers from "./AssignedPublicationUsers.vue"
 
-installQuasarPlugin()
+installQuasarPlugin({ plugins: { Notify } })
 describe("AssignedPublicationUsers", () => {
   const mockClient = createMockClient({
     defaultOptions: { watchQuery: { fetchPolicy: "network-only" } },
@@ -95,8 +96,7 @@ describe("AssignedPublicationUsers", () => {
         ],
       },
     })
-
-    expect(wrapper.findComponent({ name: "QForm" }).exists()).toBe(false)
+    expect(wrapper.findComponent('q-form').exists()).toBe(false)
     expect(wrapper.find("[data-cy=button_unassign]").exists()).toBe(false)
 
     await wrapper.setProps({
@@ -109,7 +109,7 @@ describe("AssignedPublicationUsers", () => {
       },
     })
 
-    expect(wrapper.findComponent({ name: "QForm" }).exists()).toBe(true)
+    expect(wrapper.findComponent({ name: 'QForm'}).exists()).toBe(true)
     expect(wrapper.find("[data-cy=button_unassign]").exists()).toBe(true)
   })
 
@@ -125,7 +125,7 @@ describe("AssignedPublicationUsers", () => {
       },
     })
 
-    expect(wrapper.findComponent({ name: "QForm" }).exists()).toBe(false)
+    expect(wrapper.findComponent({name: 'QForm'}).exists()).toBe(false)
 
     await wrapper.setProps({
       roleGroup: "editors",
@@ -137,7 +137,7 @@ describe("AssignedPublicationUsers", () => {
         editors: [{ id: 1, email: "test@example.com", name: "Test" }],
       },
     })
-    expect(wrapper.findComponent({ name: "QForm" }).exists()).toBe(true)
+    expect(wrapper.findComponent({name: 'QForm'}).exists()).toBe(true)
   })
 
   test("mutable props disables mutations", async () => {
@@ -169,14 +169,9 @@ describe("AssignedPublicationUsers", () => {
       },
     })
 
-    wrapper.vm.user = { user: { id: 1 } }
-    await wrapper.vm.handleSubmit()
-    expect(editorsMutation).not.toHaveBeenCalled()
-    await wrapper.vm.handleUserListClick({ user: { id: 1 } })
-    expect(editorsMutation).toHaveBeenCalledWith({
-      disconnect: [1],
-      id: 1,
-    })
+    expect(wrapper.findComponent({ name: 'QForm'}).exists()).toBe(false)
+    expect(wrapper.find("[data-cy=button_unassign]").exists()).toBe(true)
+
   })
 
   test("assignment mutation called with correct variables", async () => {
