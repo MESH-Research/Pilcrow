@@ -7,14 +7,14 @@
         </div>
         <div class="column justify-center q-my-sm q-mb-none">
           <p class="q-mb-none">
-            You are about to reinvite a user to this submission
+            {{ $t(`dialog.reinviteUser.${role}`, { email: email }) }}
           </p>
         </div>
       </q-card-section>
       <q-separator />
       <q-card-section>
         <div class="column items-center">
-          <p>Add an optional message with your invitation.</p>
+          <p>{{ $t(`dialog.reinviteUser.optional_message`) }}</p>
         </div>
         <q-input
           v-model="comment"
@@ -47,11 +47,14 @@
 <script setup>
 import { useDialogPluginComponent, useQuasar } from "quasar"
 import { useMutation } from "@vue/apollo-composable"
-import { INVITE_REVIEWER } from "src/graphql/mutations"
-import { ref } from "vue"
-import { useI18n } from "vue-i18n"
+import {
+  REINVITE_REVIEWER,
+  REINVITE_REVIEW_COORDINATOR,
+} from "src/graphql/mutations"
+import { computed, ref } from "vue"
+// import { useI18n } from "vue-i18n"
 
-const { t } = useI18n()
+// const { t } = useI18n()
 const { notify } = useQuasar()
 
 defineEmits([...useDialogPluginComponent.emits])
@@ -60,10 +63,13 @@ const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } =
   useDialogPluginComponent()
 
 const props = defineProps({
-  action: {
+  role: {
     type: String,
-    required: false,
-    default: null,
+    required: true,
+  },
+  email: {
+    type: String,
+    required: true,
   },
   submissionId: {
     type: String,
@@ -73,30 +79,36 @@ const props = defineProps({
 
 const comment = ref(null)
 
-const { mutate } = useMutation(INVITE_REVIEWER)
+const opts = { variables: { id: props.submissionId, email: props.email } }
+const mutations = {
+  reviewers: REINVITE_REVIEWER,
+  review_coordinators: REINVITE_REVIEW_COORDINATOR,
+}
+const setMutationType = computed(() => {
+  return mutations[props.role]
+})
+const { mutate } = useMutation(setMutationType, opts)
 
 async function reinviteUser() {
   try {
     await mutate({
-      id: String(props.submissionId),
-      email: "",
       message: comment.value,
     })
     notify({
       color: "positive",
-      message: t(`dialog.confirmStatusChange.statusChanged.${props.action}`),
+      message: "Success",
       icon: "done",
       attrs: {
-        "data-cy": "change_status_notify",
+        "data-cy": "reinvite_notify",
       },
     })
   } catch (error) {
     notify({
       color: "negative",
-      message: t("dialog.confirmStatusChange.unauthorized"),
+      message: "Failure",
       icon: "error",
       attrs: {
-        "data-cy": "change_status_notify",
+        "data-cy": "reinvite_notify",
       },
     })
   }

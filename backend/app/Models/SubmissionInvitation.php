@@ -236,4 +236,31 @@ class SubmissionInvitation extends Model
 
         return $this->invitee;
     }
+
+    /**
+     * Without staging a new user, resend an invitation to a previously
+     * invited review coordinator of a submisison and dispatch the
+     * ReviewCoordinatorInvited event
+     *
+     * @return \App\Models\Submission
+     */
+    public function reinviteReviewCoordinator(): Submission
+    {
+        ReviewCoordinatorInvited::dispatch($this);
+
+        return $this->submission;
+    }
+
+    /**
+     * Without staging a new user, resend an invitation to a previously
+     * invited reviewer of a submisison and dispatch the ReviewerInvited event
+     *
+     * @return \App\Models\Submission
+     */
+    public function reinviteReviewer(): Submission
+    {
+        ReviewerInvited::dispatch($this);
+
+        return $this->submission;
+    }
 }

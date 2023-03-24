@@ -15,7 +15,7 @@
 
     <div v-if="!users.length" class="col">
       <q-card ref="card_no_users" flat>
-        <q-item class="text--grey q-pa-none" role="">
+        <q-item class="text--grey q-pa-none">
           {{ tp$("none") }}
         </q-item>
       </q-card>
@@ -255,6 +255,16 @@ async function reinviteUser({ user }) {
     return
   }
 }
+function dirtyDialog(user) {
+  return dialog({
+    component: ReinviteUserDialog,
+    componentProps: {
+      role: props.role,
+      email: user.email,
+      submissionId: props.container.id,
+    },
+  })
+}
 
 async function handleUserListClick({ user }) {
   if (!props.mutable) return
@@ -269,16 +279,6 @@ async function handleUserListClick({ user }) {
   } catch (error) {
     newStatusMessage("failure", tp$("unassign.error"))
   }
-}
-function dirtyDialog(user) {
-  return dialog({
-    component: ReinviteUserDialog,
-    componentProps: {
-      action: "reinvite",
-      email: user.email,
-      submissionId: "108",
-    },
-  })
 }
 </script>
 

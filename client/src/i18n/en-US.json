@@ -850,7 +850,10 @@
       "action_cancel": "Add style criteria"
     },
     "reinviteUser": {
-      "reinvited": "{data_email} has been reinvited as a {data_role}"
+      "optional_message": "Add an optional message with your invitation.",
+      "reviewers": "You are about to reinvite {email} as a reviewer of this submission.",
+      "review_coordinators": "You are about to reinvite {email} as a review coordinator of this submission.",
+      "reinvited": "{email} has been reinvited as a {role}"
     },
     "confirmStatusChange": {
       "body": {
