@@ -2,9 +2,11 @@ import { mount } from "vue-composable-tester"
 import { useUserValidation } from "./userValidation"
 import { provide } from "vue"
 import { DefaultApolloClient } from "@vue/apollo-composable"
-import { createMockClient } from "mock-apollo-client"
+import { createMockClient } from "test/vitest/apolloClient"
 import { CREATE_USER } from "src/graphql/mutations"
 import flushPromises from "flush-promises"
+
+import { describe, test, expect, vi } from 'vitest'
 
 describe("test uservalidation composable", () => {
   const mountComposable = () => {
@@ -107,7 +109,7 @@ describe("test uservalidation composable", () => {
 
     mockClient.setRequestHandler(
       CREATE_USER,
-      jest.fn().mockResolvedValue(error)
+      vi.fn().mockResolvedValue(error)
     )
 
     await expect(saveUser()).rejects.toThrow("FORM_VALIDATION")
@@ -138,7 +140,7 @@ describe("test uservalidation composable", () => {
       email: "test@example.com",
     })
 
-    mockClient.setRequestHandler(CREATE_USER, jest.fn().mockRejectedValue({}))
+    mockClient.setRequestHandler(CREATE_USER, vi.fn().mockRejectedValue({}))
 
     await expect(saveUser()).rejects.toThrow("INTERNAL")
   })

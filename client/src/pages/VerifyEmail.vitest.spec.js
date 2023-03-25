@@ -4,7 +4,7 @@ import {
 import { ApolloClients } from "@vue/apollo-composable"
 import { mount } from "@vue/test-utils"
 import flushPromises from "flush-promises"
-import { createMockClient } from "mock-apollo-client"
+import { createMockClient } from "test/vitest/apolloClient"
 import { VERIFY_EMAIL } from "src/graphql/mutations"
 import { useCurrentUser } from "src/use/user"
 import { ref } from "vue"

@@ -5,7 +5,7 @@ import { ApolloClients } from "@vue/apollo-composable"
 import { mount } from "@vue/test-utils"
 import flushPromises from "flush-promises"
 import { omit } from "lodash"
-import { createMockClient } from "mock-apollo-client"
+import { createMockClient } from "test/vitest/apolloClient"
 import { CREATE_USER, LOGIN } from "src/graphql/mutations"
 import { describe, expect, it, test, vi } from 'vitest'
 import RegisterPage from "./RegisterPage.vue"

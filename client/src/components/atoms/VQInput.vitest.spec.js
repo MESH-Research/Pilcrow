@@ -3,36 +3,18 @@ import { mount } from "@vue/test-utils"
 import { useVuelidate } from "@vuelidate/core"
 import { useFormState } from "src/use/forms"
 import { describe, expect, test, vi } from "vitest"
-import { ref as mockRef, nextTick, reactive } from "vue"
+import { ref, nextTick, reactive } from "vue"
 import VQInput from "./VQInput.vue"
 
-vi.mock("src/use/forms", async (importOriginal) => {
-  const forms = await importOriginal()
-  return {
-    ...forms,
-    useDirtyGuard: () => { },
-    useFormState: () => ({
-      dirty: mockRef(false),
-      saved: mockRef(false),
-      state: mockRef("idle"),
-      queryLoading: mockRef(false),
-      mutationLoading: mockRef(false),
-      errorMessage: mockRef(""),
-    }),
-  }
-})
-
 installQuasarPlugin()
+
+const queryRef = ref(false)
 const factory = (props, provide) => {
   return mount(VQInput, {
     global: {
       provide: {
-        formState: useFormState(),
+        formState: useFormState({ loading: queryRef }, { loading: ref(false) }),
         ...provide,
-      },
-      mocks: {
-        $t: (token) => token,
-        $te: () => true,
       },
     },
     props: {
@@ -100,7 +82,7 @@ describe("VQInput", () => {
 
     expect(wrapper.findComponent({ name: "q-input" }).exists()).toBe(true)
 
-    wrapper.vm.formState = "loading"
+    queryRef.value = true
     await nextTick()
 
     expect(wrapper.findComponent({ name: "q-input" }).exists()).toBe(false)

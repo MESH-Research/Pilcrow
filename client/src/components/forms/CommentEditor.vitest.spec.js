@@ -1,18 +1,11 @@
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
 import { mount } from "@vue/test-utils"
 import flushPromises from "flush-promises"
-import { Dialog } from 'quasar'
+import { Dialog } from 'test/vitest/mockedPlugins'
 import { beforeEach, describe, expect, it, test, vi } from 'vitest'
 import { ref } from "vue"
 import CommentEditor from "./CommentEditor.vue"
 
-const mockDialog = vi.fn()
-vi.mock("quasar", async (importOriginal) => ({
-  ...await importOriginal(),
-  useQuasar: () => ({
-    dialog: mockDialog,
-  }),
-}))
 
 
 const styleCriteria = [
@@ -51,11 +44,6 @@ const styleCriteria = [
 
 installQuasarPlugin({ plugins: { Dialog } })
 describe("CommentEditor", () => {
-  const dialogReturn = {
-    onOk: () => dialogReturn,
-    onCancel: () => dialogReturn,
-  }
-
   const wrapperFactory = () => {
     return {
       wrapper: mount(CommentEditor, {
@@ -94,12 +82,12 @@ describe("CommentEditor", () => {
   })
 
   it("shows dialog if no criteria are selected", async () => {
-    mockDialog.mockImplementation(() => dialogReturn)
+
     const { wrapper } = wrapperFactory()
 
     await flushPromises()
     await wrapper.findComponent({ name: "QForm" }).trigger("submit")
-    expect(mockDialog).toHaveBeenCalled()
+    expect(Dialog.dialog).toHaveBeenCalled()
   })
 
   it("does not show dialog if critiera are selected", async () => {
@@ -111,7 +99,7 @@ describe("CommentEditor", () => {
       .trigger("click")
     expect(wrapper.vm.hasStyleCriteria).toBe(true)
     await wrapper.findComponent({ name: "QForm" }).trigger("submit")
-    expect(mockDialog).not.toHaveBeenCalled()
+    expect(Dialog.dialog).not.toHaveBeenCalled()
   })
 
   it("renders correct number of criteria controls", async () => {

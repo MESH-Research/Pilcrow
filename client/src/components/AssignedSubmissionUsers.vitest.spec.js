@@ -1,7 +1,7 @@
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
 import { ApolloClients } from "@vue/apollo-composable"
 import { mount } from "@vue/test-utils"
-import { createMockClient } from "mock-apollo-client"
+import { createMockClient } from "test/vitest/apolloClient"
 import { Notify } from "quasar"
 import {
   UPDATE_SUBMISSION_REVIEWERS,

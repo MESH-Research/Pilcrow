@@ -2,26 +2,10 @@ import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-v
 import { mount } from "@vue/test-utils"
 import flushPromises from "flush-promises"
 import { useFormState } from "src/use/forms"
-import { ref as mockRef } from "vue"
 import ProfileMetadataForm from "./ProfileMetadataForm.vue"
+import { ref } from 'vue'
 
-import { describe, expect, test, vi } from "vitest"
-
-vi.mock("src/use/forms", async (importOriginal) => {
-  const forms = await importOriginal()
-  return {
-    ...forms,
-    useDirtyGuard: () => { },
-    useFormState: () => ({
-      dirty: mockRef(false),
-      saved: mockRef(false),
-      state: mockRef("idle"),
-      queryLoading: mockRef(false),
-      mutationLoading: mockRef(false),
-      errorMessage: mockRef(""),
-    }),
-  }
-})
+import { describe, expect, test } from "vitest"
 
 installQuasarPlugin()
 describe("ProfileMetadataForm", () => {
@@ -32,7 +16,7 @@ describe("ProfileMetadataForm", () => {
           $t: (t) => t,
         },
         provide: {
-          formState: useFormState(),
+          formState: useFormState({ loading: ref(false) }, {loading: ref(false)}),
         },
       },
       props: {

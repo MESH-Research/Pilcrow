@@ -5,14 +5,10 @@ import EditableList from "./EditableList.vue"
 import { describe, expect, it, test } from "vitest"
 
 installQuasarPlugin()
+
 describe("EditableList Component", () => {
   const factory = (modelValue, addProps = {}) => {
     return mount(EditableList, {
-      global: {
-        mocks: {
-          $t: (token) => token,
-        },
-      },
       props: {
         modelValue,
         ...addProps,

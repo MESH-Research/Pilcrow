@@ -3,7 +3,7 @@ import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-v
 import { ApolloClients } from "@vue/apollo-composable"
 import { mount } from "@vue/test-utils"
 import flushPromises from "flush-promises"
-import { createMockClient } from "mock-apollo-client"
+import { createMockClient } from "test/vitest/apolloClient"
 import { GET_SUBMISSION } from "src/graphql/queries"
 import { beforeEach, describe, expect, it, test, vi } from 'vitest'
 import SubmissionDetailsPage from "./SubmissionDetails.vue"

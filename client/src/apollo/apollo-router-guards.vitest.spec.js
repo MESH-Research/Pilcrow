@@ -1,24 +1,13 @@
-import {
-  beforeEachRequiresAuth,
-  beforeEachRequiresRoles,
-} from "./apollo-router-guards"
-import * as Q from "quasar"
-
-jest.mock("quasar", () => ({
-  SessionStorage: {
-    set: jest.fn(),
-  },
-}))
-const setSession = Q.SessionStorage.set
+import { beforeEachRequiresAuth, beforeEachRequiresRoles } from './apollo-router-guards'
+import { vi, describe, it, expect, afterEach } from 'vitest'
 
 const apolloMock = {
-  query: jest.fn(),
+  query: vi.fn(),
 }
 
-describe("requiresAuth router hook", () => {
+describe("requiresAuth router hook", async () => {
   afterEach(() => {
     apolloMock.query.mockClear()
-    Q.SessionStorage.set.mockClear()
   })
 
   it("allows navigation when user is logged in", async () => {
@@ -34,7 +23,7 @@ describe("requiresAuth router hook", () => {
       },
     })
 
-    const next = jest.fn()
+    const next = vi.fn()
 
     await beforeEachRequiresAuth(apolloMock, to, undefined, next)
 
@@ -44,6 +33,8 @@ describe("requiresAuth router hook", () => {
   })
 
   it("redirects to login page when user is not logged in", async () => {
+    const setItem = vi.spyOn(window.sessionStorage, 'setItem')
+
     const to = {
       matched: [{ meta: { requiresAuth: true } }],
     }
@@ -54,14 +45,15 @@ describe("requiresAuth router hook", () => {
       },
     })
 
-    const next = jest.fn()
+    const next = vi.fn()
 
     await beforeEachRequiresAuth(apolloMock, to, undefined, next)
 
     expect(apolloMock.query).toHaveBeenCalled()
-    expect(setSession).toHaveBeenCalled()
     expect(next).toHaveBeenCalled()
     expect(next.mock.calls[0][0]).not.toBe(undefined)
+    expect(window.sessionStorage.setItem).toHaveBeenCalled()
+    setItem.mockReset()
   })
 
   it("allows navigation when route is missing the requiresAuth meta property", async () => {
@@ -69,7 +61,7 @@ describe("requiresAuth router hook", () => {
       matched: [{ meta: {} }],
     }
 
-    const next = jest.fn()
+    const next = vi.fn()
 
     await beforeEachRequiresAuth(apolloMock, to, undefined, next)
 
@@ -79,7 +71,7 @@ describe("requiresAuth router hook", () => {
   })
 })
 
-describe("requiresRoles router hook", () => {
+describe("requiresRoles router hook", async () => {
   afterEach(() => {
     apolloMock.query.mockClear()
   })
@@ -98,7 +90,7 @@ describe("requiresRoles router hook", () => {
       },
     })
 
-    const next = jest.fn()
+    const next = vi.fn()
 
     await beforeEachRequiresRoles(apolloMock, to, undefined, next)
 
@@ -121,7 +113,7 @@ describe("requiresRoles router hook", () => {
       },
     })
 
-    const next = jest.fn()
+    const next = vi.fn()
 
     await beforeEachRequiresRoles(apolloMock, to, undefined, next)
 
@@ -135,7 +127,7 @@ describe("requiresRoles router hook", () => {
       matched: [{ meta: {} }],
     }
 
-    const next = jest.fn()
+    const next = vi.fn()
 
     await beforeEachRequiresRoles(apolloMock, to, undefined, next)
 
@@ -167,7 +159,7 @@ describe("requiresRoles router hook", () => {
         },
       },
     })
-    const next = jest.fn()
+    const next = vi.fn()
     await beforeEachRequiresRoles(apolloMock, to, undefined, next)
 
     expect(apolloMock.query).toHaveBeenCalled()
@@ -194,7 +186,7 @@ describe("requiresRoles router hook", () => {
         },
       },
     })
-    const next = jest.fn()
+    const next = vi.fn()
     await beforeEachRequiresRoles(apolloMock, to, undefined, next)
 
     expect(apolloMock.query).toHaveBeenCalled()
@@ -224,7 +216,7 @@ describe("requiresRoles router hook", () => {
         },
       },
     })
-    const next = jest.fn()
+    const next = vi.fn()
     await beforeEachRequiresRoles(apolloMock, to, undefined, next)
 
     expect(apolloMock.query).toHaveBeenCalled()

@@ -1,39 +1,21 @@
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
-import { mount } from "@vue/test-utils"
-import flushPromises from "flush-promises"
+import { mount, flushPromises } from "@vue/test-utils"
 import { useFormState } from "src/use/forms"
-import { ref as mockRef } from "vue"
+import { ref } from "vue"
 import AccountProfileForm from "./AccountProfileForm.vue"
 
-import { describe, expect, test, vi } from 'vitest'
+import { describe, expect, test } from 'vitest'
 
 
-vi.mock("src/use/forms", async (importOriginal) => {
-  const forms = await importOriginal()
-  return {
-    ...forms,
-    useDirtyGuard: () => { },
-    useFormState: () => ({
-      dirty: mockRef(false),
-      saved: mockRef(false),
-      state: mockRef("idle"),
-      queryLoading: mockRef(false),
-      mutationLoading: mockRef(false),
-      errorMessage: mockRef(""),
-    }),
-  }
-})
+
 
 installQuasarPlugin()
 describe("AccountProfileForm", () => {
   const makeWrapper = () => {
     return mount(AccountProfileForm, {
       global: {
-        mocks: {
-          $t: (t) => t,
-        },
         provide: {
-          formState: useFormState(),
+          formState: useFormState({ loading: ref(false) }, { loading: ref(false) }),
         },
       },
       props: {

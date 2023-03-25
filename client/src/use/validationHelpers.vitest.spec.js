@@ -1,8 +1,10 @@
-import * as validationHelpers from "./validationHelpers"
-import { mount } from "vue-composable-tester"
-import { nextTick, provide, reactive } from "vue"
 import useVuelidate from "@vuelidate/core"
 import { required } from "@vuelidate/validators"
+import { nextTick, provide, reactive } from "vue"
+import { mount } from "vue-composable-tester"
+import * as validationHelpers from "./validationHelpers"
+
+import { describe, expect, test } from 'vitest'
 
 describe("test validation helpers", () => {
   test("getErrorMessageKey function", () => {

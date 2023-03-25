@@ -1,7 +1,7 @@
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
 import { ApolloClients } from "@vue/apollo-composable"
 import { config, flushPromises, mount } from "@vue/test-utils"
-import { createMockClient } from "mock-apollo-client"
+import { createMockClient } from "test/vitest/apolloClient"
 import { GET_PUBLICATIONS } from "src/graphql/queries"
 import PublicationsIndexPage from "./PublicationsIndexPage.vue"
 

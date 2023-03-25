@@ -2,20 +2,11 @@ import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-v
 import { ApolloClients } from "@vue/apollo-composable"
 import { mount } from "@vue/test-utils"
 import flushPromises from "flush-promises"
-import { createMockClient } from "mock-apollo-client"
+import { createMockClient } from "test/vitest/apolloClient"
 import { GET_PUBLICATIONS } from "src/graphql/queries"
 import PublicationIndexPage from "./PublicationIndexPage.vue"
-
+import { Notify } from 'quasar'
 import { beforeEach, describe, expect, it, test, vi } from "vitest"
-vi.mock("quasar", async (importOriginal) => {
-  const quasar = await importOriginal()
-  return {
-    ...quasar,
-    useQuasar: () => ({
-      notify: vi.fn(),
-    }),
-  }
-})
 
 vi.mock("vue-router", () => ({
   useRouter: () => ({
@@ -23,7 +14,7 @@ vi.mock("vue-router", () => ({
   }),
 }))
 
-installQuasarPlugin()
+installQuasarPlugin({ plugins: { Notify } })
 describe("publications page mount", () => {
   const mockClient = createMockClient()
   const makeWrapper = () =>
@@ -31,9 +22,6 @@ describe("publications page mount", () => {
       global: {
         provide: {
           [ApolloClients]: { default: mockClient },
-        },
-        mocks: {
-          $t: (t) => t,
         },
       },
     })

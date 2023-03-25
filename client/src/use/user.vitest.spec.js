@@ -1,25 +1,27 @@
 import { mount } from "vue-composable-tester"
-import { createMockClient } from "mock-apollo-client"
+import { createMockClient } from "test/vitest/apolloClient"
 import { useCurrentUser, useLogin } from "./user"
 import { DefaultApolloClient } from "@vue/apollo-composable"
 import { CURRENT_USER } from "src/graphql/queries"
 import { LOGIN } from "src/graphql/mutations"
 import { provide } from "vue"
-import * as Q from "quasar"
-
-jest.mock("quasar", () => ({
-  SessionStorage: {
-    remove: jest.fn(),
-    getItem: jest.fn(),
-  },
-}))
-const getItem = Q.SessionStorage.getItem
-
 import flushPromises from "flush-promises"
+
+import { describe, test, expect, vi } from 'vitest'
+
+vi.mock('quasar', async (importOriginal) => {
+  const original = await importOriginal()
+  const SessionStorage = await vi.importActual('test/vitest/mockedPlugins')
+
+  return {
+    ...original,
+    SessionStorage
+  }
+})
 
 describe("useCurrentUser composable", () => {
   const mountComposable = (mocks) => {
-    const mockClient = createMockClient()
+    const mockClient = createMockClient({connectToDevTools: false})
     mocks.forEach((m) => mockClient.setRequestHandler(...m))
     const { result } = mount(() => useCurrentUser(), {
       provider: () => {
@@ -33,7 +35,7 @@ describe("useCurrentUser composable", () => {
     const { result } = mountComposable([
       [
         CURRENT_USER,
-        jest.fn().mockResolvedValue({ data: { currentUser: null } }),
+        vi.fn().mockResolvedValue({ data: { currentUser: null } }),
       ],
     ])
 
@@ -50,6 +52,7 @@ describe("useCurrentUser composable", () => {
           id: 1,
           display_label: "Hello",
           name: "Hello",
+          display_label: '',
           email: "hello@example.com",
           username: "helloUser",
           email_verified_at: "2021-08-14 02:26:32",
@@ -60,7 +63,7 @@ describe("useCurrentUser composable", () => {
     }
 
     const { result } = mountComposable([
-      [CURRENT_USER, jest.fn().mockResolvedValue(response)],
+      [CURRENT_USER, vi.fn().mockResolvedValue(response)],
     ])
     await flushPromises()
     expect(result.currentUser.value).not.toBeNull()
@@ -71,7 +74,7 @@ describe("useCurrentUser composable", () => {
 
 describe("useLogin composable", () => {
   const mountComposable = () => {
-    const mockClient = createMockClient()
+    const mockClient = createMockClient({connectToDevTools: false})
     const { result } = mount(() => useLogin(), {
       provider: () => {
         provide(DefaultApolloClient, mockClient)
@@ -103,7 +106,7 @@ describe("useLogin composable", () => {
   test("throws exceptions", async () => {
     const { result, mockClient } = mountComposable()
 
-    const mutateHandler = jest.fn()
+    const mutateHandler = vi.fn()
 
     mutateHandler.mockResolvedValue({
       errors: [
@@ -150,14 +153,17 @@ describe("useLogin composable", () => {
   })
 
   test("fetches redirectUrl from session storage", () => {
-    getItem.mockReturnValue("/redirect")
+    const mock = vi.spyOn(window.sessionStorage, 'getItem')
+    mock.mockReturnValue("/redirect")
     let { result } = mountComposable()
 
     expect(result.redirectUrl).toEqual("/redirect")
 
-    getItem.mockReset().mockReturnValue(null)
-    ;({ result } = mountComposable())
+    mock.mockReset().mockReturnValue(null)
+
+    ({ result } = mountComposable())
 
     expect(result.redirectUrl).toEqual("/dashboard")
+
   })
 })

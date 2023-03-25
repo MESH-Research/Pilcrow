@@ -1,39 +1,13 @@
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
 import { mount } from "@vue/test-utils"
 import flushPromises from "flush-promises"
-import { Dialog } from "quasar"
+import { Dialog } from "test/vitest/mockedPlugins"
 import { useFormState } from "src/use/forms"
 import { ref as mockRef } from "vue"
 import StyleCriteriaForm from "./StyleCriteriaForm.vue"
 
 import { describe, expect, test, vi } from "vitest"
 
-const mockDialog = vi.fn()
-vi.mock("quasar", async (importOriginal) => {
-  return {
-    ...await importOriginal(),
-    useQuasar: () => ({
-      dialog: mockDialog,
-    }),
-  }
-})
-
-vi.mock("src/use/forms", async (importOriginal) => {
-  const forms = await importOriginal()
-  return {
-    ...forms,
-    useDirtyGuard: () => { },
-    useFormState: () => ({
-      dirty: mockRef(false),
-      saved: mockRef(false),
-      state: mockRef("idle"),
-      queryLoading: mockRef(false),
-      mutationLoading: mockRef(false),
-      errorMessage: mockRef(""),
-      setError: vi.fn(),
-    }),
-  }
-})
 
 installQuasarPlugin({ plugins: { Dialog } })
 describe("StyleCriteriaForm", () => {
@@ -41,7 +15,7 @@ describe("StyleCriteriaForm", () => {
     return mount(StyleCriteriaForm, {
       global: {
         provide: {
-          formState: useFormState(),
+          formState: useFormState({ loading: mockRef(false) }, { loading:  mockRef(false) }),
         },
         stubs: ["QEditor"],
       },
@@ -147,17 +121,11 @@ describe("StyleCriteriaForm", () => {
       description: "",
       icon: "initial_icon",
     })
-    let okCallback
-    const dialogReturn = {
-      onOk: (okCb) => {
-        okCallback = okCb
-        return dialogReturn
-      },
-    }
-    mockDialog.mockImplementation(() => dialogReturn)
+
+    Dialog.resolveOk('new-icon')
     await wrapper.findComponent({ ref: "icon-button" }).trigger("click")
-    okCallback("new-icon")
     await flushPromises()
+
     await wrapper.findComponent({ name: "QForm" }).trigger("submit")
     await flushPromises()
     expect(wrapper.emitted("save")[0]).toEqual([
@@ -178,19 +146,13 @@ describe("StyleCriteriaForm", () => {
       icon: "initial_icon",
     })
 
-    let okCallback
-    const dialogReturn = {
-      onOk: (okCb) => {
-        okCallback = okCb
-        return dialogReturn
-      },
-    }
-
-    mockDialog.mockImplementation(() => dialogReturn)
+    Dialog.resolveCancel()
     await wrapper.findComponent({ ref: "button_delete" }).trigger("click")
-    expect(mockDialog).toHaveBeenCalled()
+    expect(Dialog.dialog).toHaveBeenCalledTimes(1)
     expect(wrapper.emitted("delete")).toBeUndefined()
-    okCallback()
+
+    Dialog.resolveOk()
+    await wrapper.findComponent({ ref: "button_delete" }).trigger("click")
     expect(wrapper.emitted("delete")).toHaveLength(1)
     expect(wrapper.emitted("delete")[0][0].id).toEqual("1")
   })
