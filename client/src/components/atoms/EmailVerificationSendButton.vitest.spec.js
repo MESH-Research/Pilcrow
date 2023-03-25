@@ -32,12 +32,10 @@ describe("EmailVerificationSendButton", () => {
     emailMutationHandler.mockResolvedValue({
       data: { sendEmailVerification: { email: "test@example.com" } },
     })
-    console.log(wrapper.text())
     expect(wrapper.text()).toMatch(/resend_button$/)
 
     await wrapper.trigger("click")
     await flushPromises()
-    console.log(wrapper.text())
     expect(wrapper.text()).toMatch(/resend_button_success$/)
     expect(emailMutationHandler).toHaveBeenCalled()
   })

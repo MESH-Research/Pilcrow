@@ -88,7 +88,6 @@ describe("PublicationStyleCriteria", () => {
     await items().at(0).findComponent('[data-cy="editBtn"]').trigger("click")
 
     const editItem = items().at(0)
-    console.log(editItem.html())
     expect(editItem.findComponent({ name: "QForm" }).exists()).toBe(true)
 
     await editItem
