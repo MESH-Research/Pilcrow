@@ -7,7 +7,12 @@
         </div>
         <div class="column justify-center q-my-sm q-mb-none">
           <p class="q-mb-none">
-            {{ $t(`dialog.reinviteUser.${role}`, { email: email }) }}
+            {{
+              $t(`dialog.reinviteUser.description`, {
+                email: email,
+                role: $t(`role.${role}`, 1),
+              })
+            }}
           </p>
         </div>
       </q-card-section>
