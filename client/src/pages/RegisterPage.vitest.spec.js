@@ -2,8 +2,7 @@ import {
   installQuasarPlugin
 } from "@quasar/quasar-app-extension-testing-unit-vitest"
 import { ApolloClients } from "@vue/apollo-composable"
-import { mount } from "@vue/test-utils"
-import flushPromises from "flush-promises"
+import { mount, flushPromises } from "@vue/test-utils"
 import { omit } from "lodash"
 import { createMockClient } from "test/vitest/apolloClient"
 import { CREATE_USER, LOGIN } from "src/graphql/mutations"

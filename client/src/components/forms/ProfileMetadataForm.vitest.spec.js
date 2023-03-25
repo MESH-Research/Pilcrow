@@ -1,6 +1,5 @@
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
-import { mount } from "@vue/test-utils"
-import flushPromises from "flush-promises"
+import { mount, flushPromises } from "@vue/test-utils"
 import { useFormState } from "src/use/forms"
 import ProfileMetadataForm from "./ProfileMetadataForm.vue"
 import { ref } from 'vue'

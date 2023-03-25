@@ -1,6 +1,5 @@
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
-import { mount } from "@vue/test-utils"
-import flushPromises from "flush-promises"
+import { mount, flushPromises } from "@vue/test-utils"
 import { Dialog } from 'test/vitest/mockedPlugins'
 import { beforeEach, describe, expect, it, test, vi } from 'vitest'
 import { ref } from "vue"

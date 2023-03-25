@@ -4,7 +4,7 @@ import { provide } from "vue"
 import { DefaultApolloClient } from "@vue/apollo-composable"
 import { createMockClient } from "test/vitest/apolloClient"
 import { CREATE_USER } from "src/graphql/mutations"
-import flushPromises from "flush-promises"
+import { flushPromises } from "@vue/test-utils"
 
 import { describe, test, expect, vi } from 'vitest'
 

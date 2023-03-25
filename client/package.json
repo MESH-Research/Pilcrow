@@ -64,7 +64,6 @@
     "eslint-plugin-cypress": "^2.12.1",
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-vue": "^9.0.0",
-    "flush-promises": "^1.0.2",
     "mock-apollo-client": "^1.2.1",
     "postcss": "^8.4.14",
     "prettier": "^2.5.1",

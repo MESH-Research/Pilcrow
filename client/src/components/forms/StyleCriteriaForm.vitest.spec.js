@@ -1,12 +1,11 @@
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
-import { mount } from "@vue/test-utils"
-import flushPromises from "flush-promises"
+import { mount, flushPromises } from "@vue/test-utils"
 import { Dialog } from "test/vitest/mockedPlugins"
 import { useFormState } from "src/use/forms"
-import { ref as mockRef } from "vue"
+import { ref } from "vue"
 import StyleCriteriaForm from "./StyleCriteriaForm.vue"
 
-import { describe, expect, test, vi } from "vitest"
+import { describe, expect, test } from "vitest"
 
 
 installQuasarPlugin({ plugins: { Dialog } })
@@ -15,7 +14,7 @@ describe("StyleCriteriaForm", () => {
     return mount(StyleCriteriaForm, {
       global: {
         provide: {
-          formState: useFormState({ loading: mockRef(false) }, { loading:  mockRef(false) }),
+          formState: useFormState({ loading: ref(false) }, { loading:  ref(false) }),
         },
         stubs: ["QEditor"],
       },

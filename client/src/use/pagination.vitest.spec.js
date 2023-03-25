@@ -4,7 +4,7 @@ import { usePagination } from "./pagination"
 import { DefaultApolloClient } from "@vue/apollo-composable"
 import { provide } from "vue"
 import { GET_PUBLICATIONS } from "src/graphql/queries"
-import flushPromises from "flush-promises"
+import { flushPromises } from '@vue/test-utils'
 import { isRef } from "vue"
 
 import { describe, expect, test, vi, beforeEach } from 'vitest'

@@ -5,7 +5,7 @@ import { DefaultApolloClient } from "@vue/apollo-composable"
 import { CURRENT_USER } from "src/graphql/queries"
 import { LOGIN } from "src/graphql/mutations"
 import { provide } from "vue"
-import flushPromises from "flush-promises"
+import { flushPromises } from "@vue/test-utils"
 
 import { describe, test, expect, vi } from 'vitest'
 

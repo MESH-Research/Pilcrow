@@ -1,7 +1,6 @@
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
 import { ApolloClients } from "@vue/apollo-composable"
-import { mount } from "@vue/test-utils"
-import flushPromises from "flush-promises"
+import { mount, flushPromises } from "@vue/test-utils"
 import { createMockClient } from "test/vitest/apolloClient"
 import { UPDATE_PROFILE_METADATA } from "src/graphql/mutations"
 import { CURRENT_USER_METADATA } from "src/graphql/queries"
