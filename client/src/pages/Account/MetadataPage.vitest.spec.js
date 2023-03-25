@@ -34,9 +34,6 @@ describe("MetadataPage", () => {
         provide: {
           [ApolloClients]: { default: mockClient },
         },
-        mocks: {
-          $t: (t) => t,
-        },
         stubs: ["profile-metadata-form"],
       },
     })

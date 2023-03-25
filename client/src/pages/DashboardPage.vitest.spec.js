@@ -30,9 +30,6 @@ describe("Dashboard Page", () => {
           [ApolloClients]: { default: mockClient },
         },
         stubs: ["router-link", "i18n-t"],
-        mocks: {
-          $t: (t) => t,
-        },
       },
     })
     await flushPromises()

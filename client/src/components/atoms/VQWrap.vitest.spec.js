@@ -17,11 +17,6 @@ installQuasarPlugin()
 describe("VQWrap", () => {
   const makeWrapper = (props) => {
     return mount(VQWrap, {
-      global: {
-        mocks: {
-          $t: (t) => t,
-        },
-      },
       props: {
         ...props,
       },

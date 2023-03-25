@@ -11,9 +11,6 @@ describe("ProfileMetadataForm", () => {
   const makeWrapper = (props = {}) => {
     return mount(ProfileMetadataForm, {
       global: {
-        mocks: {
-          $t: (t) => t,
-        },
         provide: {
           formState: useFormState({ loading: ref(false) }, {loading: ref(false)}),
         },

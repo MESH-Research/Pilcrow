@@ -21,9 +21,6 @@ describe("PublicationStyleCriteria", () => {
         provide: {
           [ApolloClients]: { default: mockClient },
         },
-        mocks: {
-          $t: (t) => t,
-        },
         stubs: ["QEditor"],
       },
       props: {

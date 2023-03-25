@@ -97,9 +97,6 @@ describe("SubmissionContent", () => {
       activeComment,
       wrapper: mount(SubmissionContent, {
         global: {
-          mocks: {
-            $t: (t) => t,
-          },
           provide: {
             submission,
             activeComment,

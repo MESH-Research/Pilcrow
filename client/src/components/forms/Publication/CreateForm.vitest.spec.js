@@ -20,9 +20,6 @@ describe("CreateForm", () => {
   const makeWrapper = () => {
     return mount(CreateForm, {
       global: {
-        mocks: {
-          $t: (t) => t,
-        },
         provide: {
           [ApolloClients]: { default: mockClient },
         },

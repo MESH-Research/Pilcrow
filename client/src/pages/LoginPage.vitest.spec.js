@@ -32,9 +32,6 @@ describe("LoginPage", () => {
         provide: {
           [ApolloClients]: { default: mockClient },
         },
-        mocks: {
-          $t: (token) => token,
-        },
         stubs: ["router-link"],
       },
     })

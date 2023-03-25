@@ -30,9 +30,6 @@ describe("VerifyEmailPage", () => {
         provide: {
           [ApolloClients]: { default: mockClient },
         },
-        mocks: {
-          $t: (t) => t,
-        },
         stubs: ["router-link"],
       },
     })

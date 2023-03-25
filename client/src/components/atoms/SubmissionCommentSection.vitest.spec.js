@@ -239,9 +239,6 @@ describe("Overall Comments", () => {
             }),
             activeComment: ref(),
           },
-          mocks: {
-            $t: (token) => token,
-          },
           stubs: ["router-link", "CommentEditor"],
         },
       }),

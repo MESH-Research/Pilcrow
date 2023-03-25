@@ -27,9 +27,6 @@ describe("AssignedSubmissionUsers", () => {
   const makeWrapper = (props) => {
     return mount(AssignedSubmissionUsers, {
       global: {
-        mocks: {
-          $t: (t) => t,
-        },
         provide: {
           [ApolloClients]: { default: mockClient },
         },

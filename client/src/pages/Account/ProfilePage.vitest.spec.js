@@ -43,11 +43,7 @@ describe("Profile", () => {
       global: {
         provide: {
           [ApolloClients]: { default: mockClient },
-        },
-        mocks: {
-          $t: (t) => t,
-          stubs: ["router-link"],
-        },
+        }
       },
     })
     await flushPromises()

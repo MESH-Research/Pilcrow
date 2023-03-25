@@ -23,9 +23,6 @@ describe("submissions page mount", () => {
           [ApolloClients]: { default: mockClient },
         },
         stubs: ["router-link"],
-        mocks: {
-          $t: (token) => token,
-        },
       },
     })
     await flushPromises()

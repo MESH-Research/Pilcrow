@@ -23,9 +23,6 @@ describe("Reviews Page", () => {
           [ApolloClients]: { default: mockClient },
         },
         stubs: ["router-link"],
-        mocks: {
-          $t: (token) => token,
-        },
       },
     })
     await flushPromises()

@@ -34,9 +34,6 @@ describe("BasicPage", () => {
         provide: {
           [ApolloClients]: { default: mockClient },
         },
-        mocks: {
-          $t: (t) => t,
-        },
         stubs: ["update-basic-form"],
       },
       props: {

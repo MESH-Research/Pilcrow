@@ -8,11 +8,6 @@ installQuasarPlugin()
 describe("CollapseToolbar", () => {
   const makeWrapper = (slotContent, props) => {
     return mount(CollapseToolbar, {
-      global: {
-        mocks: {
-          $t: (t) => t,
-        },
-      },
       slots: {
         default: slotContent,
       },

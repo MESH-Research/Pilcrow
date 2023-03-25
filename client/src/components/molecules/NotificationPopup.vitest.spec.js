@@ -22,9 +22,6 @@ describe("Nofitication Popup", () => {
           provide: {
             [ApolloClients]: { default: mockClient },
           },
-          mocks: {
-            $t: (t) => t,
-          },
         },
       }),
       mockClient,

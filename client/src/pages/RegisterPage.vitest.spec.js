@@ -38,9 +38,6 @@ describe("RegisterPage", () => {
             [ApolloClients]: { default: mockClient },
           },
           stubs: ["router-link", "i18n-t"],
-          mocks: {
-            $t: (token) => token,
-          },
         },
       }),
       mockClient,

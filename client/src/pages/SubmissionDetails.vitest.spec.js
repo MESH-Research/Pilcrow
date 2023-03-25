@@ -31,9 +31,6 @@ describe("submissions details page mount", () => {
         provide: {
           [ApolloClients]: { default: mockClient },
         },
-        mocks: {
-          $t: (t) => t,
-        },
       },
       props: {
         id: "1",

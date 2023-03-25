@@ -16,10 +16,6 @@ describe("User Details page mount", () => {
         provide: {
           [ApolloClients]: { default: mockClient },
         },
-        mocks: {
-          $t: (t) => t,
-          $tc: (t) => t,
-        },
         stubs: ["router-link"],
       },
       props: {

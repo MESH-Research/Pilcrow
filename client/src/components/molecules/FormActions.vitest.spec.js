@@ -32,9 +32,6 @@ describe("Formactions", () => {
         provide: {
           formState
         },
-        mocks: {
-          $t: (token) => token,
-        },
       },
       propsData: {
         ...props,

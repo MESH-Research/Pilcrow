@@ -26,11 +26,6 @@ describe("NewPasswordInputAnalysis", () => {
   }
 
   const factory = () => mount(PasswordFieldAnalysis, {
-    global: {
-      mocks: {
-        $t: (token) => token,
-      },
-    },
     props: mergeProps(),
   })
 

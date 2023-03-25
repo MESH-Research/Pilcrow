@@ -8,11 +8,6 @@ installQuasarPlugin()
 describe("TagList Component", () => {
   const factory = (modelValue, addProps = {}) => {
     return mount(TagList, {
-      global: {
-        mocks: {
-          $t: (token) => token,
-        },
-      },
       props: {
         modelValue,
         ...addProps,
