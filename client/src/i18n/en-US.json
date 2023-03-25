@@ -11,7 +11,9 @@
   },
   "role": {
     "self": "No roles | Role | Roles",
-    "no_roles_assigned": "No Roles Assigned"
+    "no_roles_assigned": "No Roles Assigned",
+    "reviewers": "no reviewer | reviewer | reviewers",
+    "review_coordinator": "no review coordinator | review coordinator | review coordinators"
   },
   "buttons": {
     "more_info": "More Info",
@@ -853,7 +855,8 @@
       "optional_message": "Add an optional message with your invitation.",
       "reviewers": "You are about to reinvite {email} as a reviewer of this submission.",
       "review_coordinators": "You are about to reinvite {email} as a review coordinator of this submission.",
-      "reinvited": "{email} has been reinvited as a {role}"
+      "success": "{email} has been reinvited as a {role}.",
+      "failure": "An error occurred while attempting to reinvite {email}."
     },
     "confirmStatusChange": {
       "body": {

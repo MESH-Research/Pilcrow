@@ -52,9 +52,9 @@ import {
   REINVITE_REVIEW_COORDINATOR,
 } from "src/graphql/mutations"
 import { computed, ref } from "vue"
-// import { useI18n } from "vue-i18n"
+import { useI18n } from "vue-i18n"
 
-// const { t } = useI18n()
+const { t } = useI18n()
 const { notify } = useQuasar()
 
 defineEmits([...useDialogPluginComponent.emits])
@@ -96,7 +96,10 @@ async function reinviteUser() {
     })
     notify({
       color: "positive",
-      message: "Success",
+      message: t(`dialog.reinviteUser.success`, {
+        email: props.email,
+        role: t(`role.${props.role}`, 1),
+      }),
       icon: "done",
       attrs: {
         "data-cy": "reinvite_notify",
@@ -105,7 +108,9 @@ async function reinviteUser() {
   } catch (error) {
     notify({
       color: "negative",
-      message: "Failure",
+      message: t(`dialog.reinviteUser.failure`, {
+        email: props.email,
+      }),
       icon: "error",
       attrs: {
         "data-cy": "reinvite_notify",
