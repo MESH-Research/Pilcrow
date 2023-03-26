@@ -2754,9 +2754,9 @@
     vue-demi "^0.13.11"
 
 "@vuelidate/validators@^2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@vuelidate/validators/-/validators-2.0.0.tgz#1ddd86c6c81b2cfbb5720961e951cc53ec0a80be"
-  integrity sha512-fQQcmDWfz7pyH5/JPi0Ng2GEgNK1pUHn/Z/j5rG/Q+HwhgIXvJblTPcZwKOj1ABL7V4UVuGKECvZCDHNGOwdrg==
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@vuelidate/validators/-/validators-2.0.1.tgz#b7d3be967cdf913cc411169f13e0557470138382"
+  integrity sha512-rlu14xo+r36ri2VMY6kLLgzIc3RKEIEKiyq/Nwvft3h8izt6jcBqOlDPkQL1d9qxn9mr2nVBcNlMBFMDrHpp/A==
   dependencies:
     vue-demi "^0.13.11"
 
