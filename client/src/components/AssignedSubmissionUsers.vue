@@ -92,7 +92,7 @@ const props = defineProps({
     type: Object,
     required: true,
   },
-  role: {
+  roleGroup: {
     type: String,
     required: true,
   },
@@ -115,7 +115,7 @@ const props = defineProps({
 const user = ref(null)
 const containerType = computed(() => props.container.__typename.toLowerCase())
 const { t, te } = useI18n()
-const tPrefix = (key) => `${containerType.value}.${props.role}.${key}`
+const tPrefix = (key) => `${containerType.value}.${props.roleGroup}.${key}`
 const tp$ = (key, ...args) => t(tPrefix(key), ...args)
 
 const { newStatusMessage } = useFeedbackMessages()
@@ -136,7 +136,7 @@ const mutations = {
   },
 }
 const setMutationType = computed(() => {
-  let type = mutations[props.role]
+  let type = mutations[props.roleGroup]
   if (typeof user.value === "string") {
     return type["invite"]
   }
@@ -145,7 +145,7 @@ const setMutationType = computed(() => {
 const { mutate } = useMutation(setMutationType, opts)
 
 const users = computed(() => {
-  return props.container[props.role]
+  return props.container[props.roleGroup]
 })
 
 const acceptMore = computed(() => {
@@ -259,7 +259,7 @@ function dirtyDialog(user) {
   return dialog({
     component: ReinviteUserDialog,
     componentProps: {
-      role: props.role,
+      roleGroup: props.roleGroup,
       email: user.email,
       submissionId: props.container.id,
     },

@@ -21,6 +21,7 @@
           flat
           :label="$t(`submissions.reinvite.label`)"
           icon="schedule"
+          data-cy="user_unconfirmed"
           @click="$emit('reinvite', { user })"
         >
           <q-tooltip

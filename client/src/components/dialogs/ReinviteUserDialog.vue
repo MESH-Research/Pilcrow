@@ -10,7 +10,7 @@
             {{
               $t(`dialog.reinviteUser.description`, {
                 email: email,
-                role: $t(`role.${role}`, 1),
+                role: $t(`role.${roleGroup}`, 1),
               })
             }}
           </p>
@@ -68,7 +68,7 @@ const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } =
   useDialogPluginComponent()
 
 const props = defineProps({
-  role: {
+  roleGroup: {
     type: String,
     required: true,
   },
@@ -90,7 +90,7 @@ const mutations = {
   review_coordinators: REINVITE_REVIEW_COORDINATOR,
 }
 const setMutationType = computed(() => {
-  return mutations[props.role]
+  return mutations[props.roleGroup]
 })
 const { mutate } = useMutation(setMutationType, opts)
 
@@ -103,7 +103,7 @@ async function reinviteUser() {
       color: "positive",
       message: t(`dialog.reinviteUser.success`, {
         email: props.email,
-        role: t(`role.${props.role}`, 1),
+        role: t(`role.${props.roleGroup}`, 1),
       }),
       icon: "done",
       attrs: {

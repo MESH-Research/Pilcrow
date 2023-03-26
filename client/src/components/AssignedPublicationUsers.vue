@@ -72,7 +72,7 @@ const props = defineProps({
     type: Object,
     required: true,
   },
-  role: {
+  roleGroup: {
     type: String,
     required: true,
   },
@@ -95,7 +95,7 @@ const props = defineProps({
 const user = ref(null)
 const containerType = computed(() => props.container.__typename.toLowerCase())
 const { t, te } = useI18n()
-const tPrefix = (key) => `${containerType.value}.${props.role}.${key}`
+const tPrefix = (key) => `${containerType.value}.${props.roleGroup}.${key}`
 const tp$ = (key, ...args) => t(tPrefix(key), ...args)
 
 const { newStatusMessage } = useFeedbackMessages()
@@ -106,7 +106,7 @@ const mutations = {
   publication_admins: UPDATE_PUBLICATION_ADMINS,
 }
 const users = computed(() => {
-  return props.container[props.role]
+  return props.container[props.roleGroup]
 })
 
 const acceptMore = computed(() => {
@@ -116,7 +116,7 @@ const acceptMore = computed(() => {
   )
 })
 
-const { mutate } = useMutation(mutations[props.role], opts)
+const { mutate } = useMutation(mutations[props.roleGroup], opts)
 
 async function handleSubmit() {
   if (!acceptMore.value) {
