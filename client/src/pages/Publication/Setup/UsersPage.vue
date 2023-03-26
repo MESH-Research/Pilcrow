@@ -9,10 +9,10 @@
       v-if="publication.publication_admins.length === 0"
       inline-actions
       rounded
-      class="highlight text-black"
+      class="highlight"
     >
       <template #avatar>
-        <q-icon name="tips_and_updates" />
+        <q-icon name="tips_and_updates" size="sm" />
       </template>
       This publication has no publication administrators assigned and can only
       be administered by application admins.

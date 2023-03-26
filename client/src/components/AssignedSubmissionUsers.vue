@@ -15,9 +15,9 @@
 
     <div v-if="!users.length" class="col">
       <q-card ref="card_no_users" flat>
-        <q-item class="text--grey q-pa-none">
+        <q-card-section class="text--grey q-pa-none">
           {{ tp$("none") }}
-        </q-item>
+        </q-card-section>
       </q-card>
     </div>
 

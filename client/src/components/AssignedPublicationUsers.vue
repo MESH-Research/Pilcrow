@@ -26,15 +26,15 @@
       />
     </div>
     <div v-else class="col">
-      <q-card ref="card_no_users" bordered flat>
-        <q-item class="text--grey">
-          <q-item-section avatar>
-            <q-icon color="accent" name="o_do_disturb_on" />
-          </q-item-section>
-          <q-item-section>
+      <q-card ref="card_no_users" class="text--grey" bordered flat>
+        <q-card-section horizontal>
+          <q-card-section>
+            <q-icon color="accent" name="o_do_disturb_on" size="sm" />
+          </q-card-section>
+          <q-card-section>
             {{ tp$("none") }}
-          </q-item-section>
-        </q-item>
+          </q-card-section>
+        </q-card-section>
       </q-card>
     </div>
 
