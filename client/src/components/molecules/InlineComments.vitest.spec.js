@@ -1,7 +1,5 @@
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
 import { mount } from "@vue/test-utils"
-import TimeAgo from "javascript-time-ago"
-import en from "javascript-time-ago/locale/en.json"
 import { useCurrentUser } from "src/use/user"
 import { ref } from "vue"
 import InlineComments from "./InlineComments.vue"
@@ -14,7 +12,6 @@ vi.mock("src/use/user", () => ({
 
 installQuasarPlugin()
 describe("InlineComments", () => {
-  TimeAgo.addDefaultLocale(en)
   const wrapperFactory = () => {
     return {
       wrapper: mount(InlineComments, {

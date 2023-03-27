@@ -81,7 +81,7 @@
 </template>
 
 <script setup>
-import TimeAgo from "javascript-time-ago"
+import { useTimeAgo } from "src/use/timeAgo"
 import { DateTime } from "luxon"
 import { computed } from "vue"
 const props = defineProps({
@@ -90,7 +90,7 @@ const props = defineProps({
     required: true,
   },
 })
-const timeAgo = new TimeAgo("en-US")
+const timeAgo = useTimeAgo()
 const createdDate = computed(() => {
   return DateTime.fromISO(props.audit.created_at)
 })
