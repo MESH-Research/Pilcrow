@@ -3,8 +3,19 @@ import { config } from "@vue/test-utils"
 import { cloneDeep } from "lodash"
 import { beforeAll, afterAll, vi } from "vitest"
 import { ApolloClients } from "@vue/apollo-composable"
+import { InMemoryCache } from "@apollo/client/core"
 
-const createMockClient = (opts) => createClient({ ...opts, connectToDevTools: false })
+const cache = new InMemoryCache({
+  addTypename: true,
+})
+
+const createMockClient = (opts) => createClient({
+  ...opts,
+  connectToDevTools: false,
+  defaultOptions: { watchQuery: { fetchPolicy: "network-only" } },
+  cache
+})
+
 export { createMockClient }
 
 export function installApolloClient(opts) {

@@ -11,9 +11,8 @@ import AssignedPublicationUsers from "./AssignedPublicationUsers.vue"
 import { beforeEach, describe, expect, test, vi } from 'vitest'
 
 installQuasarPlugin({ plugins: { Notify } })
-const mockClient = installApolloClient({
-  defaultOptions: { watchQuery: { fetchPolicy: "network-only" } },
-});
+const mockClient = installApolloClient();
+
 describe("AssignedPublicationUsers", () => {
   const makeWrapper = (props) => {
     return mount(AssignedPublicationUsers, {

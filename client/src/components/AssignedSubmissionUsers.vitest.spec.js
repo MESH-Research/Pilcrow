@@ -19,9 +19,8 @@ vi.mock("quasar", () => ({
 }))
 
 installQuasarPlugin({ plugins: { Notify } })
-const mockClient = installApolloClient({
-  defaultOptions: { watchQuery: { fetchPolicy: "network-only" } },
-})
+const mockClient = installApolloClient()
+
 describe("AssignedSubmissionUsers", () => {
 
   const makeWrapper = (props) => {

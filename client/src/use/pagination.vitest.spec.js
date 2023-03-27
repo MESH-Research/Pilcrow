@@ -10,9 +10,7 @@ import { isRef } from "vue"
 import { describe, expect, test, vi, beforeEach } from 'vitest'
 
 describe("usePagination composable", () => {
-  const mockClient = createMockClient({
-    defaultOptions: { watchQuery: { fetchPolicy: "network-only" } },
-  })
+  const mockClient = createMockClient()
   const mountComposable = async (options) => {
     const { result } = mount(() => usePagination(GET_PUBLICATIONS, options), {
       provider: () => {

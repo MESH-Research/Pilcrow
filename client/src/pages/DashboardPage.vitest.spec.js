@@ -13,9 +13,7 @@ vi.mock("src/use/user", () => ({
 }))
 
 installQuasarPlugin()
-const mockClient = installApolloClient({
-  defaultOptions: { watchQuery: { fetchPolicy: "network-only" } },
-})
+const mockClient = installApolloClient()
 
 describe("Dashboard Page", () => {
   const CurrentUserSubmissions = vi.fn()
