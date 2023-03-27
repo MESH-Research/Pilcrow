@@ -53,7 +53,7 @@ import { useTimeAgo } from "src/use/timeAgo"
 import { DateTime } from "luxon"
 import { computed } from "vue"
 
-const timeAgo = new useTimeAgo()
+const timeAgo = useTimeAgo()
 const props = defineProps({
   comment: {
     type: Object,

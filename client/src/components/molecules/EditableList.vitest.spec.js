@@ -1,6 +1,7 @@
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
 import { mount } from "@vue/test-utils"
 import EditableList from "./EditableList.vue"
+import { QList } from 'quasar'
 
 import { describe, expect, it, test } from "vitest"
 
@@ -9,6 +10,9 @@ installQuasarPlugin()
 describe("EditableList Component", () => {
   const factory = (modelValue, addProps = {}) => {
     return mount(EditableList, {
+      global: {
+        components: { QList }
+      },
       props: {
         modelValue,
         ...addProps,

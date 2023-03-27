@@ -3,6 +3,7 @@ import { mount, flushPromises } from "@vue/test-utils"
 import { useFormState } from "src/use/forms"
 import ProfileMetadataForm from "./ProfileMetadataForm.vue"
 import { ref } from 'vue'
+import { QList } from 'quasar'
 
 import { describe, expect, test, vi } from "vitest"
 
@@ -15,8 +16,9 @@ describe("ProfileMetadataForm", () => {
     return mount(ProfileMetadataForm, {
       global: {
         provide: {
-          formState: useFormState({ loading: ref(false) }, {loading: ref(false)}),
+          formState: useFormState({ loading: ref(false) }, { loading: ref(false) }),
         },
+        components: { QList }
       },
       props: {
         profileMetadata: {},

@@ -140,7 +140,7 @@ describe("PublicationStyleCriteria", () => {
       ],
     })
     const items = () => wrapper.findAllComponents('[data-cy="listItem"]')
-    await items().at(0).findComponent('[data-cy="editBtn').trigger("click")
+    await items().at(0).findComponent('[data-cy="editBtn"]').trigger("click")
     await items().at(0).vm.$emit("delete", { id: "1" })
 
     expect(deleteCriteriaHandler).toHaveBeenCalledTimes(1)

@@ -2,7 +2,7 @@
   <div>
     <draggable
       v-if="modelValue.length"
-      tag="q-list"
+      tag="QList"
       :list="modelValue"
       handle=".handle"
       ghost-class="ghost"
@@ -140,155 +140,141 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import useVuelidate from "@vuelidate/core"
 import ErrorFieldRenderer from "src/components/molecules/ErrorFieldRenderer.vue"
 import { reactive, ref } from "vue"
 import Draggable from "vuedraggable"
 import CollapseToolbar from "./CollapseToolbar.vue"
 
-export default {
-  name: "EditableList",
-  components: { Draggable, CollapseToolbar, ErrorFieldRenderer },
-  props: {
-    /**
-     * Model property for list of items.
-     */
-    modelValue: {
-      type: Array,
-      default: () => [],
-    },
-    /**
-     * Icon to prepend to input
-     */
-    inputIcon: {
-      type: String,
-      default: "",
-    },
-    /**
-     * Vuelidate valdiation rules to apply to new and edited items
-     */
-    rules: {
-      type: Object,
-      default: () => {},
-    },
-    /**
-     * Translation root to use for label, hint, etc.
-     */
-    t: {
-      type: String,
-      default: "lists",
-    },
-    /**
-     * Set true to allow duplicates items in list.
-     */
-    allowDuplicates: {
-      type: Boolean,
-      default: false,
-    },
+const props = defineProps({
+  /**
+   * Model property for list of items.
+   */
+  modelValue: {
+    type: Array,
+    default: () => [],
   },
-  emits: ["update:modelValue"],
-  setup(props, { emit }) {
-    const itemUnderEdit = ref(false)
-
-    const form = reactive({
-      addItemValue: "",
-      editItemValue: "",
-    })
-
-    const noNewDuplicate = (value) => !props.modelValue.includes(value)
-    const noExistingDuplicate = (value) => {
-      const otherEntries = [
-        ...props.modelValue.slice(0, itemUnderEdit.value),
-        ...props.modelValue.slice(itemUnderEdit.value + 1),
-      ]
-      return !otherEntries.includes(value)
-    }
-    const noopRule = () => true
-    const vRules = {
-      addItemValue: {
-        ...props.rules,
-        duplicate: props.allowDuplicates ? noopRule : noNewDuplicate,
-      },
-      editItemValue: {
-        ...props.rules,
-        duplicate: props.allowDuplicates ? noopRule : noExistingDuplicate,
-      },
-    }
-    const v$ = useVuelidate(vRules, form)
-
-    function addItem() {
-      if (!form.addItemValue.length) {
-        return
-      }
-      if (v$.value.addItemValue.$invalid) {
-        return false
-      }
-
-      emit("update:modelValue", [...props.modelValue, form.addItemValue])
-      form.addItemValue = ""
-    }
-    function deleteItem(index) {
-      /**
-       * Emits input event on update of model value.
-       */
-      emit("update:modelValue", [
-        ...props.modelValue.slice(0, index),
-        ...props.modelValue.slice(index + 1),
-      ])
-    }
-    function editItem(index) {
-      if (form.editItemValue !== false) {
-        saveEdit()
-      }
-      form.editItemValue = props.modelValue[index]
-      itemUnderEdit.value = index
-    }
-    function saveEdit() {
-      const index = itemUnderEdit.value
-      if (v$.value.editItemValue.$error) {
-        return
-      }
-      if (
-        index !== false &&
-        index < props.modelValue.length &&
-        form.editItemValue.length &&
-        !v$.value.editItemValue.$error
-      ) {
-        emit("update:modelValue", [
-          ...props.modelValue.slice(0, index),
-          form.editItemValue,
-          ...props.modelValue.slice(index + 1),
-        ])
-      }
-      itemUnderEdit.value = false
-      form.editItemValue = ""
-    }
-    function reorderItem(index, dir) {
-      const newIndex = index + dir
-      if (newIndex === props.modelValue.length || newIndex < 0) {
-        return
-      }
-      const startIndex = newIndex > index ? index : newIndex
-      const values = props.modelValue.slice(startIndex, startIndex + 2)
-      values.reverse()
-      emit("update:modelValue", [
-        ...props.modelValue.slice(0, startIndex),
-        ...values,
-        ...props.modelValue.slice(startIndex + 2),
-      ])
-    }
-
-    return {
-      reorderItem,
-      saveEdit,
-      editItem,
-      deleteItem,
-      addItem,
-      v$,
-      itemUnderEdit,
-    }
+  /**
+   * Icon to prepend to input
+   */
+  inputIcon: {
+    type: String,
+    default: "",
   },
+  /**
+   * Vuelidate valdiation rules to apply to new and edited items
+   */
+  rules: {
+    type: Object,
+    default: () => {},
+  },
+  /**
+   * Translation root to use for label, hint, etc.
+   */
+  t: {
+    type: String,
+    default: "lists",
+  },
+  /**
+   * Set true to allow duplicates items in list.
+   */
+  allowDuplicates: {
+    type: Boolean,
+    default: false,
+  },
+})
+
+const emit = defineEmits(["update:modelValue"])
+
+const itemUnderEdit = ref(false)
+
+const form = reactive({
+  addItemValue: "",
+  editItemValue: "",
+})
+
+const noNewDuplicate = (value) => !props.modelValue.includes(value)
+const noExistingDuplicate = (value) => {
+  const otherEntries = [
+    ...props.modelValue.slice(0, itemUnderEdit.value),
+    ...props.modelValue.slice(itemUnderEdit.value + 1),
+  ]
+  return !otherEntries.includes(value)
+}
+const noopRule = () => true
+const vRules = {
+  addItemValue: {
+    ...props.rules,
+    duplicate: props.allowDuplicates ? noopRule : noNewDuplicate,
+  },
+  editItemValue: {
+    ...props.rules,
+    duplicate: props.allowDuplicates ? noopRule : noExistingDuplicate,
+  },
+}
+const v$ = useVuelidate(vRules, form)
+
+function addItem() {
+  if (!form.addItemValue.length) {
+    return
+  }
+  if (v$.value.addItemValue.$invalid) {
+    return false
+  }
+
+  emit("update:modelValue", [...props.modelValue, form.addItemValue])
+  form.addItemValue = ""
+}
+function deleteItem(index) {
+  /**
+   * Emits input event on update of model value.
+   */
+  emit("update:modelValue", [
+    ...props.modelValue.slice(0, index),
+    ...props.modelValue.slice(index + 1),
+  ])
+}
+function editItem(index) {
+  if (form.editItemValue !== false) {
+    saveEdit()
+  }
+  form.editItemValue = props.modelValue[index]
+  itemUnderEdit.value = index
+}
+function saveEdit() {
+  const index = itemUnderEdit.value
+  if (v$.value.editItemValue.$error) {
+    return
+  }
+  if (
+    index !== false &&
+    index < props.modelValue.length &&
+    form.editItemValue.length &&
+    !v$.value.editItemValue.$error
+  ) {
+    emit("update:modelValue", [
+      ...props.modelValue.slice(0, index),
+      form.editItemValue,
+      ...props.modelValue.slice(index + 1),
+    ])
+  }
+  itemUnderEdit.value = false
+  form.editItemValue = ""
+}
+function reorderItem(index, dir) {
+  const newIndex = index + dir
+  if (newIndex === props.modelValue.length || newIndex < 0) {
+    return
+  }
+  const startIndex = newIndex > index ? index : newIndex
+  const values = props.modelValue.slice(startIndex, startIndex + 2)
+  values.reverse()
+  emit("update:modelValue", [
+    ...props.modelValue.slice(0, startIndex),
+    ...values,
+    ...props.modelValue.slice(startIndex + 2),
+  ])
 }
 </script>
 

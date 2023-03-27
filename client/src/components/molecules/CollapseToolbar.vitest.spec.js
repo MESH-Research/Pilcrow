@@ -26,7 +26,7 @@ describe("CollapseToolbar", () => {
 
   test("transparent wrapper when not collapsed", () => {
     const wrapper = makeWrapper(defaultContent, {})
-    const items = wrapper.findAll("div")
+    const items = wrapper.findAll(".btn-1, .btn-2")
     expect(items).toHaveLength(2)
     expect(items[0].classes()).toContain("btn-1")
   })

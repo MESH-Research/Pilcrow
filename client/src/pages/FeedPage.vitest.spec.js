@@ -19,19 +19,20 @@ describe("Nofitication Popup", () => {
     userNotificationsHandler.mockClear()
   })
 
-  function getNotificationData(readStatus) {
+  function getNotificationData(readStatus, data) {
     return {
       data: {
         currentUser: {
           id: 1,
           notifications: {
             paginatorInfo: {
+              __typename: "PaginatorInfo",
               count: 1,
               currentPage: 1,
               lastPage: 1,
               perPage: 10,
             },
-            data: [
+            data: data ?? [
               {
                 id: "df91c4c0-3cf2-409d-a305-9a6005149c86",
                 type: "AppNotificationsSubmissionStatusUpdated",
@@ -55,8 +56,8 @@ describe("Nofitication Popup", () => {
                   }
                 },
                 read_at: readStatus ? "2021-12-31 12:15:15" : null,
-                created_at: "2021-12-13 20:13:05",
-                updated_at: "2021-12-15 16:31:18",
+                created_at: "2021-12-13T20:13:05.000",
+                updated_at: "2021-12-15T16:31:18.000",
               }
             ],
           },
@@ -68,12 +69,12 @@ describe("Nofitication Popup", () => {
   it("mounts without errors", () => {
     userNotificationsHandler.mockResolvedValue(getNotificationData(false))
     const wrapper = wrapperFactory()
-    console.log(wrapper.html())
+
     expect(wrapper).toBeTruthy()
   })
 
   it("displays a default message for a user that has no notifications", async () => {
-    userNotificationsHandler.mockResolvedValue([])
+    userNotificationsHandler.mockResolvedValue(true, [])
 
     const wrapper = wrapperFactory()
     const message = wrapper.findComponent({ ref: "default_message" })
