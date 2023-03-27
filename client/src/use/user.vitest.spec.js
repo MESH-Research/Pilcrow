@@ -52,7 +52,6 @@ describe("useCurrentUser composable", () => {
           id: 1,
           display_label: "Hello",
           name: "Hello",
-          display_label: '',
           email: "hello@example.com",
           username: "helloUser",
           email_verified_at: "2021-08-14 02:26:32",
