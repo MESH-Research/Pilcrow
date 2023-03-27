@@ -15,7 +15,7 @@
       </q-item-label>
     </q-item-section>
     <q-item-section v-if="actions.length" side>
-      <div class="text-grey-8 q-gutter-xs">
+      <div class="q-gutter-xs">
         <q-btn
           v-if="user.staged"
           flat
