@@ -1924,9 +1924,9 @@
     core-js-compat "^3.6.5"
 
 "@quasar/extras@^1.15.8":
-  version "1.15.11"
-  resolved "https://registry.yarnpkg.com/@quasar/extras/-/extras-1.15.11.tgz#a54d60b14446b850a1e5fccab3f381a2e447a73f"
-  integrity sha512-EEXL10EJQmL9jNs5fp0Kd/nyonG8hTODolj+qpYNPG3qEEoy3txr05Pdmp9qJYaXIzP9rOS9FGhFe9Mnq6MBBg==
+  version "1.16.0"
+  resolved "https://registry.yarnpkg.com/@quasar/extras/-/extras-1.16.0.tgz#9451b1a756e8a688018f284f8ab2b5aff75ea309"
+  integrity sha512-5Q9UkTKC+H4bTLkz1/nLOcnA+b39psIIej5jqeFov61Ob+3rcBePfgTPN0/7nhZwlzanrzdHP9nF0wpdEefmhQ==
 
 "@quasar/fastclick@1.1.5":
   version "1.1.5"
@@ -2747,16 +2747,16 @@
     tsconfig "^7.0.0"
 
 "@vuelidate/core@^2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@vuelidate/core/-/core-2.0.0.tgz#dfe73ba3f997646e07bd4da4f327fe53c29782cb"
-  integrity sha512-xIFgdQlScO0aaSZ0wTGPJh8YcTMNAj5veI8yPgiAyxOT+GV7vNQFiU1vpYWCL4cklkkhYvRRSC2OEX7YOZNmPQ==
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@vuelidate/core/-/core-2.0.1.tgz#65aace31377accecf3b13dc404101437d4142644"
+  integrity sha512-seBfM7ZtQ+NzXEdJpwLPgX/GlY+R10VI3FSoXyEJH7p4kKcz06f5oloh2EDozCJVMxP0Um/FFcfjBCn8CtGNOQ==
   dependencies:
     vue-demi "^0.13.11"
 
 "@vuelidate/validators@^2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@vuelidate/validators/-/validators-2.0.0.tgz#1ddd86c6c81b2cfbb5720961e951cc53ec0a80be"
-  integrity sha512-fQQcmDWfz7pyH5/JPi0Ng2GEgNK1pUHn/Z/j5rG/Q+HwhgIXvJblTPcZwKOj1ABL7V4UVuGKECvZCDHNGOwdrg==
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@vuelidate/validators/-/validators-2.0.1.tgz#b7d3be967cdf913cc411169f13e0557470138382"
+  integrity sha512-rlu14xo+r36ri2VMY6kLLgzIc3RKEIEKiyq/Nwvft3h8izt6jcBqOlDPkQL1d9qxn9mr2nVBcNlMBFMDrHpp/A==
   dependencies:
     vue-demi "^0.13.11"
 
