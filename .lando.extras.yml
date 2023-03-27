@@ -1,17 +1,3 @@
-majestic:
-  description: Create container to proxy Majestic Jest UI.
-  template:
-    services:
-      majestic:
-        type: node:14
-        build:
-          - cd client && yarn
-        port: 4000
-        command: "cd client && yarn test:unit:ui"
-        scanner: false
-    proxy:
-      majestic:
-        - majestic.pilcrow.lndo.site:4000
 cypress:
   description: Install the cypress test runner and tooling command.
   template:
