@@ -4,9 +4,12 @@ import { useFormState } from "src/use/forms"
 import ProfileMetadataForm from "./ProfileMetadataForm.vue"
 import { ref } from 'vue'
 
-import { describe, expect, test } from "vitest"
+import { describe, expect, test, vi } from "vitest"
+
+vi.mock('vue-router');
 
 installQuasarPlugin()
+
 describe("ProfileMetadataForm", () => {
   const makeWrapper = (props = {}) => {
     return mount(ProfileMetadataForm, {

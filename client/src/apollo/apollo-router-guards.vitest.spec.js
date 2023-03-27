@@ -51,7 +51,8 @@ describe("requiresAuth router hook", async () => {
 
     expect(apolloMock.query).toHaveBeenCalled()
     expect(next).toHaveBeenCalled()
-    expect(next.mock.calls[0][0]).toBeUndefined()
+    expect(next.mock.calls[0][0]).toBe("/login")
+
     expect(window.sessionStorage.setItem).toHaveBeenCalled()
     setItem.mockReset()
   })
@@ -119,7 +120,7 @@ describe("requiresRoles router hook", async () => {
 
     expect(apolloMock.query).toHaveBeenCalled()
     expect(next).toHaveBeenCalled()
-    expect(next.mock.calls[0][0]).toBeUndefined()
+    expect(next.mock.calls[0][0]).toStrictEqual({ name: "error403" })
   })
 
   it("allows navigation when requiresRoles meta property is not present", async () => {
@@ -191,7 +192,7 @@ describe("requiresRoles router hook", async () => {
 
     expect(apolloMock.query).toHaveBeenCalled()
     expect(next).toHaveBeenCalled()
-    expect(next.mock.calls[0][0]).toBeUndefined()
+    expect(next.mock.calls[0][0]).toStrictEqual({ name: "error403" })
   })
 
   it("allows navigation if user has all required roles", async () => {

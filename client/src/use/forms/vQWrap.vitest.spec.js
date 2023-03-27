@@ -20,7 +20,8 @@ describe("useVQWrap composable", () => {
       return {
         ...useVQWrap(validator, path)
       }
-    }
+    },
+    render() { return '' }
   })
 
   test("without vqwrap provides present", () => {
