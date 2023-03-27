@@ -1,13 +1,11 @@
-import { InMemoryCache } from "@apollo/client/core"
 import {
   installQuasarPlugin,
 } from "@quasar/quasar-app-extension-testing-unit-vitest"
-import { ApolloClients } from "@vue/apollo-composable"
 import { mount, flushPromises } from "@vue/test-utils"
-import { createMockClient } from "test/vitest/apolloClient"
+import {  installApolloClient } from "test/vitest/utils"
 import { CURRENT_USER_SUBMISSIONS } from "src/graphql/queries"
 import { useCurrentUser } from "src/use/user"
-import { describe, expect, it, test, vi } from 'vitest'
+import { describe, expect, it, test, vi, afterEach } from 'vitest'
 import { ref } from "vue"
 import DashboardPage from "./DashboardPage.vue"
 vi.mock("src/use/user", () => ({
@@ -15,20 +13,21 @@ vi.mock("src/use/user", () => ({
 }))
 
 installQuasarPlugin()
+const mockClient = installApolloClient({
+  defaultOptions: { watchQuery: { fetchPolicy: "network-only" } },
+})
+
 describe("Dashboard Page", () => {
-  const cache = new InMemoryCache({
-    addTypename: true,
+  const CurrentUserSubmissions = vi.fn()
+  mockClient.setRequestHandler(CURRENT_USER_SUBMISSIONS, CurrentUserSubmissions)
+
+  afterEach(() => {
+    CurrentUserSubmissions.mockClear()
   })
-  const mockClient = createMockClient({
-    defaultOptions: { watchQuery: { fetchPolicy: "network-only" } },
-    cache,
-  })
+
   const wrapperFactory = async () => {
     const wrapper = mount(DashboardPage, {
       global: {
-        provide: {
-          [ApolloClients]: { default: mockClient },
-        },
         stubs: ["router-link", "i18n-t"],
       },
     })
@@ -36,8 +35,6 @@ describe("Dashboard Page", () => {
     return wrapper
   }
 
-  const CurrentUserSubmissions = vi.fn()
-  mockClient.setRequestHandler(CURRENT_USER_SUBMISSIONS, CurrentUserSubmissions)
 
   function mockSubmission(id, status, role) {
     return {

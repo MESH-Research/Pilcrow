@@ -1,27 +1,22 @@
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
-import { ApolloClients } from "@vue/apollo-composable"
 import { mount } from "@vue/test-utils"
-import { createMockClient } from "test/vitest/apolloClient"
+import { installApolloClient } from "test/vitest/utils"
 import { Notify } from 'quasar'
 import {
   UPDATE_PUBLICATION_ADMINS,
   UPDATE_PUBLICATION_EDITORS,
 } from "src/graphql/mutations"
-import { beforeEach, describe, expect, test, vi } from 'vitest'
 import AssignedPublicationUsers from "./AssignedPublicationUsers.vue"
 
+import { beforeEach, describe, expect, test, vi } from 'vitest'
+
 installQuasarPlugin({ plugins: { Notify } })
+const mockClient = installApolloClient({
+  defaultOptions: { watchQuery: { fetchPolicy: "network-only" } },
+});
 describe("AssignedPublicationUsers", () => {
-  const mockClient = createMockClient({
-    defaultOptions: { watchQuery: { fetchPolicy: "network-only" } },
-  })
   const makeWrapper = (props) => {
     return mount(AssignedPublicationUsers, {
-      global: {
-        provide: {
-          [ApolloClients]: { default: mockClient },
-        },
-      },
       props,
     })
   }

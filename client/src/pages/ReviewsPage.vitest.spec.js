@@ -1,36 +1,29 @@
-import { InMemoryCache } from "@apollo/client/core"
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
-import { ApolloClients } from "@vue/apollo-composable"
-import { mount, flushPromises } from "@vue/test-utils"
-import { createMockClient } from "test/vitest/apolloClient"
+import { mount } from "@vue/test-utils"
+import { installApolloClient } from "test/vitest/utils"
 import { CURRENT_USER_SUBMISSIONS } from "src/graphql/queries"
-import { describe, expect, test, vi } from "vitest"
 import ReviewsPage from "./ReviewsPage.vue"
 
+import { describe, expect, test, vi, afterEach } from "vitest"
+
 installQuasarPlugin()
+const mockClient = installApolloClient({
+  defaultOptions: { watchQuery: { fetchPolicy: "network-only" } },
+})
+
 describe("Reviews Page", () => {
-  const cache = new InMemoryCache({
-    addTypename: true,
+  const makeWrapper = () => mount(ReviewsPage, {
+    global: {
+      stubs: ["router-link"],
+    },
   })
-  const mockClient = createMockClient({
-    defaultOptions: { watchQuery: { fetchPolicy: "network-only" } },
-    cache,
-  })
-  const makeWrapper = async () => {
-    const wrapper = mount(ReviewsPage, {
-      global: {
-        provide: {
-          [ApolloClients]: { default: mockClient },
-        },
-        stubs: ["router-link"],
-      },
-    })
-    await flushPromises()
-    return wrapper
-  }
 
   const CurrentUserSubmissions = vi.fn()
   mockClient.setRequestHandler(CURRENT_USER_SUBMISSIONS, CurrentUserSubmissions)
+
+  afterEach(() => {
+    CurrentUserSubmissions.mockClear()
+  })
 
   test("two submission tables appear for a user as a review coordinator", async () => {
     CurrentUserSubmissions.mockResolvedValue({
@@ -106,7 +99,8 @@ describe("Reviews Page", () => {
       },
     })
 
-    const wrapper = await makeWrapper()
+    const wrapper = makeWrapper()
+    console.log(wrapper.html())
     expect(wrapper.findAllComponents({ name: "submission-table" }).length).toBe(
       2
     )
@@ -149,7 +143,7 @@ describe("Reviews Page", () => {
         },
       },
     })
-    const wrapper = await makeWrapper()
+    const wrapper = makeWrapper()
     expect(wrapper.findAllComponents({ name: "submission-table" }).length).toBe(
       1
     )

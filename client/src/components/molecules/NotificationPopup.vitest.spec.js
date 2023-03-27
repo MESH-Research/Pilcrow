@@ -1,32 +1,23 @@
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
-import { ApolloClients } from "@vue/apollo-composable"
 import { mount, flushPromises } from "@vue/test-utils"
-import { createMockClient } from "test/vitest/apolloClient"
+import { installApolloClient } from "test/vitest/utils"
 import { CURRENT_USER_NOTIFICATIONS } from "src/graphql/queries"
 import NotificationPopup from "./NotificationPopup.vue"
 
-import { describe, expect, it, vi } from "vitest"
+import { describe, expect, it, vi, afterEach } from "vitest"
 
 installQuasarPlugin()
+const mockClient = installApolloClient()
+
 describe("Nofitication Popup", () => {
-  const wrapperFactory = (mocks = []) => {
-    const mockClient = createMockClient()
+  const wrapperFactory = () => mount(NotificationPopup)
+  const userNotificationsHandler = vi.fn()
+  mockClient.setRequestHandler(CURRENT_USER_NOTIFICATIONS, userNotificationsHandler)
 
-    mocks?.forEach((mock) => {
-      mockClient.setRequestHandler(...mock)
-    })
+  afterEach(() => {
+    userNotificationsHandler.mockReset()
+  })
 
-    return {
-      wrapper: mount(NotificationPopup, {
-        global: {
-          provide: {
-            [ApolloClients]: { default: mockClient },
-          },
-        },
-      }),
-      mockClient,
-    }
-  }
 
   function getNotificationData(readStatus) {
     const data = [
@@ -47,42 +38,43 @@ describe("Nofitication Popup", () => {
   }
 
   it("mounts without errors", () => {
-    const { mockClient } = wrapperFactory()
-    const queryHandler = vi.fn().mockResolvedValue(getNotificationData(false))
-    mockClient.setRequestHandler(CURRENT_USER_NOTIFICATIONS, queryHandler)
-    expect(wrapperFactory().wrapper).toBeTruthy()
+
+    userNotificationsHandler.mockResolvedValue(getNotificationData(false))
+
+    const wrapper = wrapperFactory()
+    expect(wrapper).toBeTruthy()
   })
 
   it("displays an indicator for a user that has unread notifications", async () => {
-    const { wrapper, mockClient } = wrapperFactory()
-    const queryHandler = vi.fn().mockResolvedValue(getNotificationData(false))
-    mockClient.setRequestHandler(CURRENT_USER_NOTIFICATIONS, queryHandler)
+    userNotificationsHandler.mockResolvedValue(getNotificationData(false))
+
+    const wrapper = wrapperFactory()
     const indicator = wrapper.findComponent({ ref: "notification_indicator" })
     expect(indicator).toBeTruthy()
   })
 
   it("displays no indicator for a user that has no unread notifications", async () => {
-    const { wrapper, mockClient } = wrapperFactory()
-    const queryHandler = vi.fn().mockResolvedValue(getNotificationData(true))
-    mockClient.setRequestHandler(CURRENT_USER_NOTIFICATIONS, queryHandler)
+    const wrapper = wrapperFactory()
+    userNotificationsHandler.mockResolvedValue(getNotificationData(true))
+
     expect(
       wrapper.findAllComponents({ ref: "notification_indicator" })
     ).toHaveLength(0)
   })
 
   it("displays no indicator for a user that has no notifications", async () => {
-    const { wrapper, mockClient } = wrapperFactory()
-    const queryHandler = vi.fn().mockResolvedValue([])
-    mockClient.setRequestHandler(CURRENT_USER_NOTIFICATIONS, queryHandler)
+    const wrapper = wrapperFactory()
+    userNotificationsHandler.mockResolvedValue([])
+
     expect(
       wrapper.findAllComponents({ ref: "notification_indicator" })
     ).toHaveLength(0)
   })
 
   it("provides a default message for a user that has no notifications", async () => {
-    const { wrapper, mockClient } = wrapperFactory()
-    const queryHandler = vi.fn().mockResolvedValue([])
-    mockClient.setRequestHandler(CURRENT_USER_NOTIFICATIONS, queryHandler)
+    const wrapper = wrapperFactory()
+    userNotificationsHandler.mockResolvedValue([])
+
     wrapper.vm.isExpanded = true
     await flushPromises()
     const message = wrapper.findComponent({ ref: "default_message" })
@@ -90,9 +82,9 @@ describe("Nofitication Popup", () => {
   })
 
   it("doesn't provide a default message for a user that has notifications", async () => {
-    const { wrapper, mockClient } = wrapperFactory()
-    const queryHandler = vi.fn().mockResolvedValue(getNotificationData(true))
-    mockClient.setRequestHandler(CURRENT_USER_NOTIFICATIONS, queryHandler)
+    const wrapper = wrapperFactory()
+    userNotificationsHandler.mockResolvedValue(getNotificationData(true))
+
     wrapper.vm.isExpanded = true
     await flushPromises()
     expect(wrapper.findAllComponents({ ref: "default_message" })).toHaveLength(

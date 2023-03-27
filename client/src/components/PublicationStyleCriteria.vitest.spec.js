@@ -1,7 +1,7 @@
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
 import { ApolloClients } from "@vue/apollo-composable"
 import { mount, flushPromises } from "@vue/test-utils"
-import { createMockClient } from "test/vitest/apolloClient"
+import { installApolloClient } from "test/vitest/utils"
 import {
   CREATE_PUBLICATION_STYLE_CRITERIA,
   DELETE_PUBLICATION_STYLE_CRITERIA,
@@ -12,15 +12,12 @@ import PublicationStyleCriteria from "./PublicationStyleCriteria.vue"
 import { beforeEach, describe, expect, test, vi } from "vitest"
 
 installQuasarPlugin()
+const mockClient = installApolloClient()
 
 describe("PublicationStyleCriteria", () => {
-  const mockClient = createMockClient()
   const makeWrapper = (publication) => {
     return mount(PublicationStyleCriteria, {
       global: {
-        provide: {
-          [ApolloClients]: { default: mockClient },
-        },
         stubs: ["QEditor"],
       },
       props: {

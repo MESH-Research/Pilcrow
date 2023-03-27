@@ -1,7 +1,6 @@
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
-import { ApolloClients } from "@vue/apollo-composable"
 import { mount, flushPromises } from "@vue/test-utils"
-import { createMockClient } from "test/vitest/apolloClient"
+import { installApolloClient } from "test/vitest/utils"
 import { GET_PUBLICATIONS } from "src/graphql/queries"
 import PublicationIndexPage from "./PublicationIndexPage.vue"
 import { Notify } from 'quasar'
@@ -14,16 +13,10 @@ vi.mock("vue-router", () => ({
 }))
 
 installQuasarPlugin({ plugins: { Notify } })
+const mockClient = installApolloClient()
+
 describe("publications page mount", () => {
-  const mockClient = createMockClient()
-  const makeWrapper = () =>
-    mount(PublicationIndexPage, {
-      global: {
-        provide: {
-          [ApolloClients]: { default: mockClient },
-        },
-      },
-    })
+  const makeWrapper = () => mount(PublicationIndexPage)
 
   beforeEach(async () => {
     vi.resetAllMocks()

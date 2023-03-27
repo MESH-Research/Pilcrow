@@ -2,7 +2,7 @@ import { mount } from "vue-composable-tester"
 import { useUserValidation } from "./userValidation"
 import { provide } from "vue"
 import { DefaultApolloClient } from "@vue/apollo-composable"
-import { createMockClient } from "test/vitest/apolloClient"
+import { createMockClient } from "test/vitest/utils"
 import { CREATE_USER } from "src/graphql/mutations"
 import { flushPromises } from "@vue/test-utils"
 

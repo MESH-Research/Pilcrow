@@ -1,7 +1,6 @@
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
-import { ApolloClients } from "@vue/apollo-composable"
 import { mount, flushPromises } from "@vue/test-utils"
-import { createMockClient } from "test/vitest/apolloClient"
+import { installApolloClient } from "test/vitest/utils"
 import { UPDATE_PUBLICATION_BASICS } from "src/graphql/mutations"
 import { ref as mockRef } from "vue"
 import BasicPage from "./BasicPage.vue"
@@ -26,14 +25,12 @@ vi.mock("src/use/forms", async (importOriginal) => {
 })
 
 installQuasarPlugin()
+const mockClient = installApolloClient()
+
 describe("BasicPage", () => {
-  const mockClient = createMockClient()
   const makeWrapper = async () => {
     const wrapper = mount(BasicPage, {
       global: {
-        provide: {
-          [ApolloClients]: { default: mockClient },
-        },
         stubs: ["update-basic-form"],
       },
       props: {

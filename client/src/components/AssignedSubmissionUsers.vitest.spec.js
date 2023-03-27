@@ -1,7 +1,6 @@
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
-import { ApolloClients } from "@vue/apollo-composable"
 import { mount } from "@vue/test-utils"
-import { createMockClient } from "test/vitest/apolloClient"
+import { installApolloClient } from "test/vitest/utils"
 import { Notify } from "quasar"
 import {
   UPDATE_SUBMISSION_REVIEWERS,
@@ -19,18 +18,14 @@ vi.mock("quasar", () => ({
   }),
 }))
 
-installQuasarPlugin({ plugins: { Notify }})
+installQuasarPlugin({ plugins: { Notify } })
+const mockClient = installApolloClient({
+  defaultOptions: { watchQuery: { fetchPolicy: "network-only" } },
+})
 describe("AssignedSubmissionUsers", () => {
-  const mockClient = createMockClient({
-    defaultOptions: { watchQuery: { fetchPolicy: "network-only" } },
-  })
+
   const makeWrapper = (props) => {
     return mount(AssignedSubmissionUsers, {
-      global: {
-        provide: {
-          [ApolloClients]: { default: mockClient },
-        },
-      },
       props,
     })
   }

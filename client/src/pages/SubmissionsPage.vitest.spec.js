@@ -1,10 +1,10 @@
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
-import { ApolloClients } from "@vue/apollo-composable"
 import { mount, flushPromises } from "@vue/test-utils"
-import { createMockClient } from "test/vitest/apolloClient"
+import { installApolloClient } from "test/vitest/utils"
 import { GET_PUBLICATIONS, GET_SUBMISSIONS } from "src/graphql/queries"
-import { describe, expect, test, vi } from "vitest"
 import SubmissionsPage from "./SubmissionsPage.vue"
+
+import { describe, expect, test, vi } from "vitest"
 
 vi.mock("quasar", () => ({
   ...vi.requireActual("quasar"),
@@ -14,14 +14,13 @@ vi.mock("quasar", () => ({
 }))
 
 installQuasarPlugin()
+const mockClient = installApolloClient()
+
 describe("submissions page mount", () => {
-  const mockClient = createMockClient()
+
   const makeWrapper = async () => {
     const wrapper = mount(SubmissionsPage, {
       global: {
-        provide: {
-          [ApolloClients]: { default: mockClient },
-        },
         stubs: ["router-link"],
       },
     })

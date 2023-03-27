@@ -1,21 +1,18 @@
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
-import { ApolloClients } from "@vue/apollo-composable"
 import { mount, flushPromises } from "@vue/test-utils"
-import { createMockClient } from "test/vitest/apolloClient"
+import { installApolloClient } from "test/vitest/utils"
 import { GET_USER } from "src/graphql/queries"
 import UserDetails from "./UserDetails.vue"
 
 import { beforeEach, describe, expect, it, vi } from "vitest"
 
 installQuasarPlugin()
+const mockClient = installApolloClient()
+
 describe("User Details page mount", () => {
-  const mockClient = createMockClient()
   const wrapperFactory = async (id) => {
     const wrapper = mount(UserDetails, {
       global: {
-        provide: {
-          [ApolloClients]: { default: mockClient },
-        },
         stubs: ["router-link"],
       },
       props: {

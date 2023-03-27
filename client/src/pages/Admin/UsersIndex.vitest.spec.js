@@ -1,7 +1,6 @@
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
-import { ApolloClients } from "@vue/apollo-composable"
 import { mount, flushPromises } from "@vue/test-utils"
-import { createMockClient } from "test/vitest/apolloClient"
+import { installApolloClient } from "test/vitest/utils"
 import { GET_USERS } from "../../graphql/queries"
 import UsersIndexPage from "./UsersIndex.vue"
 
@@ -12,57 +11,53 @@ vi.mock("vue-router", () => ({
     push: vi.fn(),
   }),
 }))
+
 installQuasarPlugin()
-const wrapperFactory = (mocks) => {
-  const mockClient = createMockClient()
+const mockClient = installApolloClient()
 
-  mocks?.forEach((mock) => {
-    mockClient.setRequestHandler(...mock)
-  })
 
-  return mount(UsersIndexPage, {
-    global: {
-      provide: {
-        [ApolloClients]: { default: mockClient },
-      },
-    },
-  })
-}
 describe("User Index page mount", () => {
+
+  const wrapperFactory = () => mount(UsersIndexPage)
+
   it("mounts without errors", () => {
     expect(wrapperFactory([])).toBeTruthy()
   })
   test("users are populated on the page", async () => {
-    const getUserHandler = vi.fn().mockResolvedValue({
-      data: {
-        userSearch: {
-          data: [
-            {
-              id: "1",
-              name: "test1",
-              email: "test1@msu.edu",
-              username: "test1",
+    const handler = mockClient
+      .getRequestHandler(GET_USERS)
+      .mockResolvedValue({
+        data: {
+          userSearch: {
+            data: [
+              {
+                id: "1",
+                name: "test1",
+                email: "test1@msu.edu",
+                username: "test1",
+              },
+              {
+                id: "2",
+                name: "test2",
+                email: "test2@msu.edu",
+                username: "test2",
+              },
+            ],
+            paginatorInfo: {
+              __typename: "PaginatorInfo",
+              count: 2,
+              currentPage: 1,
+              lastPage: 1,
+              perPage: 10,
             },
-            {
-              id: "2",
-              name: "test2",
-              email: "test2@msu.edu",
-              username: "test2",
-            },
-          ],
-          paginatorInfo: {
-            __typename: "PaginatorInfo",
-            count: 2,
-            currentPage: 1,
-            lastPage: 1,
-            perPage: 10,
           },
         },
-      },
-    })
-    const wrapper = wrapperFactory([[GET_USERS, getUserHandler]])
+      })
+
+
+    const wrapper = wrapperFactory()
     await flushPromises()
-    expect(getUserHandler).toHaveBeenCalledWith({ page: 1 })
+    expect(handler).toHaveBeenCalledWith({ page: 1 })
 
     const list = wrapper.findComponent({ ref: "user_list_basic" })
     expect(list.findAllComponents({ name: "q-item" })).toHaveLength(2)

@@ -1,7 +1,7 @@
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
 import { ApolloClients } from "@vue/apollo-composable"
 import { mount, flushPromises } from "@vue/test-utils"
-import { createMockClient } from "test/vitest/apolloClient"
+import { createMockClient, installApolloClient } from "test/vitest/utils"
 import { UPDATE_USER } from "src/graphql/mutations"
 import { CURRENT_USER } from "src/graphql/queries"
 import { ref as mockRef } from "vue"
@@ -36,16 +36,12 @@ vi.mock("quasar", async (importOriginal) => {
 })
 
 installQuasarPlugin()
+const mockClient = installApolloClient()
+
 describe("Profile", () => {
-  const mockClient = createMockClient()
+
   const makeWrapper = async () => {
-    const wrapper = mount(ProfilePage, {
-      global: {
-        provide: {
-          [ApolloClients]: { default: mockClient },
-        }
-      },
-    })
+    const wrapper = mount(ProfilePage)
     await flushPromises()
     return wrapper
   }

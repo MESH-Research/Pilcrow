@@ -1,5 +1,5 @@
 import { mount } from "vue-composable-tester"
-import { createMockClient } from "test/vitest/apolloClient"
+import { createMockClient } from "test/vitest/utils"
 import { usePagination } from "./pagination"
 import { DefaultApolloClient } from "@vue/apollo-composable"
 import { provide } from "vue"

@@ -1,5 +1,5 @@
 import { mount } from "vue-composable-tester"
-import { createMockClient } from "test/vitest/apolloClient"
+import { createMockClient } from "test/vitest/utils"
 import { useCurrentUser, useLogin } from "./user"
 import { DefaultApolloClient } from "@vue/apollo-composable"
 import { CURRENT_USER } from "src/graphql/queries"

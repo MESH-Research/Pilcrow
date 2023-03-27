@@ -1,7 +1,6 @@
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
-import { ApolloClients } from "@vue/apollo-composable"
 import { mount, flushPromises } from "@vue/test-utils"
-import { createMockClient } from "test/vitest/apolloClient"
+import { installApolloClient } from "test/vitest/utils"
 import { UPDATE_PROFILE_METADATA } from "src/graphql/mutations"
 import { CURRENT_USER_METADATA } from "src/graphql/queries"
 import { ref as mockRef } from "vue"
@@ -26,14 +25,12 @@ vi.mock("src/use/forms", async (importOriginal) => {
 })
 
 installQuasarPlugin()
+const mockClient = installApolloClient()
+
 describe("MetadataPage", () => {
-  const mockClient = createMockClient()
   const makeWrapper = async () => {
     const wrapper = mount(MetadataPage, {
       global: {
-        provide: {
-          [ApolloClients]: { default: mockClient },
-        },
         stubs: ["profile-metadata-form"],
       },
     })

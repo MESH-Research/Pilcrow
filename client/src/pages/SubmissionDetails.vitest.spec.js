@@ -1,10 +1,8 @@
-import { InMemoryCache } from "@apollo/client/core"
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
-import { ApolloClients } from "@vue/apollo-composable"
 import { mount, flushPromises } from "@vue/test-utils"
-import { createMockClient } from "test/vitest/apolloClient"
+import { installApolloClient } from "test/vitest/utils"
 import { GET_SUBMISSION } from "src/graphql/queries"
-import { beforeEach, describe, expect, it, test, vi } from 'vitest'
+import { beforeEach, describe, expect, test, vi } from 'vitest'
 import SubmissionDetailsPage from "./SubmissionDetails.vue"
 
 vi.mock("quasar", () => ({
@@ -16,22 +14,17 @@ vi.mock("quasar", () => ({
 
 
 installQuasarPlugin()
+const mockClient = installApolloClient({
+  defaultOptions: { watchQuery: { fetchPolicy: "network-only" } },
+})
 
 describe("submissions details page mount", () => {
-  const cache = new InMemoryCache({
-    addTypename: true,
+  beforeEach(() => {
+    mockClient.mockReset()
   })
-  const mockClient = createMockClient({
-    defaultOptions: { watchQuery: { fetchPolicy: "network-only" } },
-    cache,
-  })
+
   const makeWrapper = async () => {
     const wrapper = mount(SubmissionDetailsPage, {
-      global: {
-        provide: {
-          [ApolloClients]: { default: mockClient },
-        },
-      },
       props: {
         id: "1",
       },
@@ -89,46 +82,42 @@ describe("submissions details page mount", () => {
     ],
   }
 
-  const GetSubHandler = vi.fn()
-  mockClient.setRequestHandler(GET_SUBMISSION, GetSubHandler)
-
-  beforeEach(() => {
-    vi.resetAllMocks()
-  })
-
-  const defaultApolloMock = () => {
-    GetSubHandler.mockResolvedValue({
-      data: {
-        submission: {
-          id: 1,
-          effective_role: "review_coordinator",
-          status: 0,
-          __typename: "Submission",
-          title: "This Submission",
-          publication: {
+  const defaultApolloMock = () =>
+    mockClient
+      .getRequestHandler(GET_SUBMISSION)
+      .mockResolvedValue({
+        data: {
+          submission: {
             id: 1,
-            name: "Jest Publication",
-            style_criterias: [],
+            effective_role: "review_coordinator",
+            status: 0,
+            __typename: "Submission",
+            title: "This Submission",
+            publication: {
+              id: 1,
+              name: "Jest Publication",
+              style_criterias: [],
+            },
+            audits: [],
+            ...submissionUsersData,
           },
-          audits: [],
-          ...submissionUsersData,
         },
-      },
     })
-  }
 
-  it("mounts without errors", async () => {
-    defaultApolloMock()
+  test("component mounts without errors", async () => {
+    const handler = defaultApolloMock()
     const wrapper = await makeWrapper()
-    expect(GetSubHandler).toHaveBeenCalledWith({ id: "1" })
+    console.log(wrapper.html())
+    expect(handler).toHaveBeenCalledWith({ id: "1" })
     expect(wrapper).toBeTruthy()
   })
 
   test("all assigned submitters appear within the assigned submitters list", async () => {
-    defaultApolloMock()
+    const handler = defaultApolloMock()
     const wrapper = await makeWrapper()
 
-    const list = wrapper.find("[data-cy=submitters_list]")
+    const list = wrapper.find("[data-cy='submitters_list']")
+    expect(handler).toHaveBeenCalledWith({ id: "1" })
     expect(list.findAll(".q-item")).toHaveLength(2)
   })
 

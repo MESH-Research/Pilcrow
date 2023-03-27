@@ -1,9 +1,8 @@
 import {
   installQuasarPlugin,
 } from "@quasar/quasar-app-extension-testing-unit-vitest"
-import { ApolloClients } from "@vue/apollo-composable"
 import { mount, flushPromises } from "@vue/test-utils"
-import { createMockClient } from "test/vitest/apolloClient"
+import { installApolloClient } from "test/vitest/utils"
 import { VERIFY_EMAIL } from "src/graphql/mutations"
 import { useCurrentUser } from "src/use/user"
 import { ref } from "vue"
@@ -22,14 +21,13 @@ vi.mock("vue-router", () => ({
 
 
 installQuasarPlugin()
+const mockClient = installApolloClient()
+
 describe("VerifyEmailPage", () => {
-  const mockClient = createMockClient()
+
   const createWrapper = async () => {
     const wrapper = mount(VerifyEmailPage, {
       global: {
-        provide: {
-          [ApolloClients]: { default: mockClient },
-        },
         stubs: ["router-link"],
       },
     })

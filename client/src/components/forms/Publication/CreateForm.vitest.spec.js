@@ -1,7 +1,6 @@
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
-import { ApolloClients } from "@vue/apollo-composable"
 import { mount, flushPromises } from "@vue/test-utils"
-import { createMockClient } from "test/vitest/apolloClient"
+import { installApolloClient } from "test/vitest/utils"
 import { CREATE_PUBLICATION } from "src/graphql/mutations"
 import CreateForm from "./CreateForm.vue"
 
@@ -15,17 +14,10 @@ vi.mock("src/use/guiElements", () => ({
 }))
 
 installQuasarPlugin()
+const mockClient = installApolloClient()
+
 describe("CreateForm", () => {
-  const mockClient = createMockClient()
-  const makeWrapper = () => {
-    return mount(CreateForm, {
-      global: {
-        provide: {
-          [ApolloClients]: { default: mockClient },
-        },
-      },
-    })
-  }
+  const makeWrapper = () => mount(CreateForm)
 
   const mutationHandler = vi.fn()
   mockClient.setRequestHandler(CREATE_PUBLICATION, mutationHandler)

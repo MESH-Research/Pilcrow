@@ -1,32 +1,23 @@
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
-import { ApolloClients } from "@vue/apollo-composable"
-import { mount, flushPromises } from "@vue/test-utils"
-import { createMockClient } from "test/vitest/apolloClient"
+import { mount } from "@vue/test-utils"
+import { installApolloClient } from "test/vitest/utils"
 import { CURRENT_USER_NOTIFICATIONS } from "src/graphql/queries"
 import FeedPage from "./FeedPage.vue"
 
-import { describe, expect, it, vi } from "vitest"
+import { afterEach, describe, expect, it, vi } from "vitest"
 
 installQuasarPlugin()
+const mockClient = installApolloClient()
+
 describe("Nofitication Popup", () => {
-  const wrapperFactory = (mocks = []) => {
-    const mockClient = createMockClient()
+  const wrapperFactory = () => mount(FeedPage)
 
-    mocks?.forEach((mock) => {
-      mockClient.setRequestHandler(...mock)
-    })
+  const userNotificationsHandler = vi.fn()
+  mockClient.setRequestHandler(CURRENT_USER_NOTIFICATIONS, userNotificationsHandler)
 
-    return {
-      wrapper: mount(FeedPage, {
-        global: {
-          provide: {
-            [ApolloClients]: { default: mockClient },
-          },
-        },
-      }),
-      mockClient,
-    }
-  }
+  afterEach(() => {
+    userNotificationsHandler.mockClear()
+  })
 
   function getNotificationData(readStatus) {
     const data = [
@@ -47,26 +38,22 @@ describe("Nofitication Popup", () => {
   }
 
   it("mounts without errors", () => {
-    const { mockClient } = wrapperFactory()
-    const queryHandler = vi.fn().mockResolvedValue(getNotificationData(false))
-    mockClient.setRequestHandler(CURRENT_USER_NOTIFICATIONS, queryHandler)
-    expect(wrapperFactory().wrapper).toBeTruthy()
+    userNotificationsHandler.mockResolvedValue(getNotificationData(false))
+    expect(wrapperFactory()).toBeTruthy()
   })
 
   it("displays a default message for a user that has no notifications", async () => {
-    const { wrapper, mockClient } = wrapperFactory()
-    const queryHandler = vi.fn().mockResolvedValue([])
-    mockClient.setRequestHandler(CURRENT_USER_NOTIFICATIONS, queryHandler)
-    await flushPromises()
+    userNotificationsHandler.mockResolvedValue([])
+
+    const wrapper = wrapperFactory()
     const message = wrapper.findComponent({ ref: "default_message" })
     expect(message.text()).toContain("notifications.none")
   })
 
   it("does not display the default message for a user that has notifications", async () => {
-    const { wrapper, mockClient } = wrapperFactory()
-    const queryHandler = vi.fn().mockResolvedValue(getNotificationData(true))
-    mockClient.setRequestHandler(CURRENT_USER_NOTIFICATIONS, queryHandler)
-    await flushPromises()
+    userNotificationsHandler.mockResolvedValue(getNotificationData(true))
+
+    const wrapper = wrapperFactory()
     expect(wrapper.findAllComponents({ ref: "default_message" })).toHaveLength(
       0
     )
