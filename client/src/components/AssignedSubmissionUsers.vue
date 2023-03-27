@@ -15,9 +15,9 @@
 
     <div v-if="!users.length" class="col">
       <q-card ref="card_no_users" flat>
-        <q-item class="text--grey q-pa-none" role="">
+        <q-card-section class="text--grey q-pa-none">
           {{ tp$("none") }}
-        </q-item>
+        </q-card-section>
       </q-card>
     </div>
 
@@ -60,12 +60,14 @@
             : []
         "
         @action-click="handleUserListClick"
+        @reinvite="reinviteUser"
       />
     </div>
   </section>
 </template>
 
 <script setup>
+import ReinviteUserDialog from "./dialogs/ReinviteUserDialog.vue"
 import FindUserSelect from "./forms/FindUserSelect.vue"
 import UserList from "./molecules/UserList.vue"
 import { useFeedbackMessages } from "src/use/guiElements"
@@ -82,13 +84,15 @@ import { useI18n } from "vue-i18n"
 import { useEditor, EditorContent } from "@tiptap/vue-3"
 import StarterKit from "@tiptap/starter-kit"
 import Placeholder from "@tiptap/extension-placeholder"
+import { useQuasar } from "quasar"
+const { dialog } = useQuasar()
 
 const props = defineProps({
   container: {
     type: Object,
     required: true,
   },
-  relationship: {
+  roleGroup: {
     type: String,
     required: true,
   },
@@ -111,7 +115,7 @@ const props = defineProps({
 const user = ref(null)
 const containerType = computed(() => props.container.__typename.toLowerCase())
 const { t, te } = useI18n()
-const tPrefix = (key) => `${containerType.value}.${props.relationship}.${key}`
+const tPrefix = (key) => `${containerType.value}.${props.roleGroup}.${key}`
 const tp$ = (key, ...args) => t(tPrefix(key), ...args)
 
 const { newStatusMessage } = useFeedbackMessages()
@@ -132,7 +136,7 @@ const mutations = {
   },
 }
 const setMutationType = computed(() => {
-  let type = mutations[props.relationship]
+  let type = mutations[props.roleGroup]
   if (typeof user.value === "string") {
     return type["invite"]
   }
@@ -141,7 +145,7 @@ const setMutationType = computed(() => {
 const { mutate } = useMutation(setMutationType, opts)
 
 const users = computed(() => {
-  return props.container[props.relationship]
+  return props.container[props.roleGroup]
 })
 
 const acceptMore = computed(() => {
@@ -235,6 +239,31 @@ async function assignUser() {
   } catch (error) {
     newStatusMessage("failure", tp$("assign.error"))
   }
+}
+
+async function reinviteUser({ user }) {
+  await new Promise((resolve) => {
+    dirtyDialog(user)
+      .onOk(function () {
+        resolve(true)
+      })
+      .onCancel(function () {
+        resolve(false)
+      })
+  })
+  {
+    return
+  }
+}
+function dirtyDialog(user) {
+  return dialog({
+    component: ReinviteUserDialog,
+    componentProps: {
+      roleGroup: props.roleGroup,
+      email: user.email,
+      submissionId: props.container.id,
+    },
+  })
 }
 
 async function handleUserListClick({ user }) {

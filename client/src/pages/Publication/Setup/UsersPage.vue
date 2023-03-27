@@ -9,10 +9,10 @@
       v-if="publication.publication_admins.length === 0"
       inline-actions
       rounded
-      class="highlight text-black"
+      class="highlight"
     >
       <template #avatar>
-        <q-icon name="tips_and_updates" />
+        <q-icon name="tips_and_updates" size="sm" />
       </template>
       This publication has no publication administrators assigned and can only
       be administered by application admins.
@@ -20,14 +20,14 @@
     <div class="column q-gutter-md">
       <assigned-publication-users
         data-cy="admins_list"
-        relationship="publication_admins"
+        role-group="publication_admins"
         :container="publication"
         mutable
       />
       <q-separator />
       <assigned-publication-users
         data-cy="editors_list"
-        relationship="editors"
+        role-group="editors"
         :container="publication"
         mutable
       />

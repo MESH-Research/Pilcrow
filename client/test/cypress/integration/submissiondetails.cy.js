@@ -174,6 +174,25 @@ describe("Submission Details", () => {
     cy.checkA11y(null, null, a11yLogViolations)
   })
 
+  it("should allow review coordinators to reinvite reviewers", () => {
+    cy.task("resetDb")
+    cy.login({ email: "reviewcoordinator@pilcrow.dev" })
+    cy.visit("submission/100")
+    cy.interceptGQLOperation('InviteReviewer');
+    cy.dataCy("reviewers_list").within(() => {
+      cy.userSearch('input_user', 'scholarlystranger@gmail.com')
+      cy.dataCy('button-assign').click();
+    })
+    cy.wait("@InviteReviewer")
+    cy.dataCy('user_unconfirmed').click();
+    cy.dataCy('dirtyYesReinviteUser').click();
+    cy.dataCy('reinvite_notify')
+      .should("be.visible")
+      .should("have.class", "bg-positive")
+    cy.injectAxe()
+    cy.checkA11y(null, null, a11yLogViolations)
+  })
+
   it.only("should allow a submitter to update the title", () => {
     cy.task("resetDb")
     cy.login({ email: "regularuser@pilcrow.dev" })
