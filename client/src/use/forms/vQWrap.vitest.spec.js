@@ -31,7 +31,7 @@ describe("useVQWrap composable", () => {
 
     wrapper.vm.model = "new Value"
     expect(wrapper.emitted().vqupdate).toHaveLength(1)
-    expect(wrapper.emitted().vqupdate[0][1]).toEqual("new Value")
+    expect(wrapper.emitted().vqupdate[0][1]).toBe("new Value")
   })
 
   test("update function provider", () => {
@@ -77,48 +77,3 @@ describe("useVQWrap composable", () => {
     expect(wrapper.vm.getTranslation("error")).toBe("localPath.error")
   })
 })
-
-// describe("useGraphQLValidation composable", () => {
-//   const error = ref({
-//     graphQLErrors: [
-//       {
-//         message: "Validation failed for the field [updateUser].",
-//         extensions: {
-//           validation: {
-//             "user.username": ["USERNAME_IN_USE"],
-//           },
-//           category: "validation",
-//         },
-//         locations: [
-//           {
-//             line: 2,
-//             column: 3,
-//           },
-//         ],
-//         path: ["updateUser"],
-//       },
-//       {
-//         message: "Something else happened",
-//       },
-//     ],
-//     clientErrors: [],
-//     networkError: null,
-//     message: "Validation failed for the field [updateUser].",
-//   })
-
-//   test("correctly extracts only validation errors", () => {
-//     const { result } = mount(() => useGraphQLValidation(error))
-
-//     const { hasValidationErrors, validationErrors } = result
-
-//     expect(hasValidationErrors.value).toBe(true)
-//     expect(validationErrors.value).toEqual({
-//       user: { username: ["USERNAME_IN_USE"] },
-//     })
-
-//     error.value = {}
-
-//     expect(hasValidationErrors.value).toBe(false)
-//     expect(validationErrors.value).toEqual({})
-//   })
-// })

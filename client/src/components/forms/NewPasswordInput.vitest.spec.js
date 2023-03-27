@@ -42,7 +42,7 @@ describe("NewPasswordInput", () => {
     const wrapper = factory()
     const input = wrapper.find("input")
 
-    expect(input.attributes("autocomplete")).toEqual("new-password")
+    expect(input.attributes("autocomplete")).toBe("new-password")
   })
 
   it("shows and hides details on click with correct aria", async () => {
@@ -51,10 +51,10 @@ describe("NewPasswordInput", () => {
     expect(wrapper.findAll(".password-details").length).toBe(0)
 
     const detailsChip = wrapper.findComponent({ name: "q-chip" })
-    expect(detailsChip.attributes("aria-expanded")).toEqual("false")
+    expect(detailsChip.attributes("aria-expanded")).toBe("false")
     expect(detailsChip.attributes("aria-controls").length).toBeGreaterThan(0)
     await detailsChip.trigger("click")
-    expect(detailsChip.attributes("aria-expanded")).toEqual("true")
+    expect(detailsChip.attributes("aria-expanded")).toBe("true")
     expect(wrapper.findAll(".password-details").length).toBe(1)
   })
 })

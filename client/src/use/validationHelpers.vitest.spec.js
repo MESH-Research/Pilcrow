@@ -14,10 +14,10 @@ describe("test validation helpers", () => {
         $validator: "$externalResults",
         $message: "externalMessage",
       })
-    ).toEqual("externalMessage")
+    ).toBe("externalMessage")
     expect(
       getErrorMessageKey({ $validator: "required", $message: "messgage" })
-    ).toEqual("required")
+    ).toBe("required")
   })
 
   test("hasErrorKeyFunction", () => {

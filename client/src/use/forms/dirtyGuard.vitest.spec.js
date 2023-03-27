@@ -45,7 +45,7 @@ describe("useDirtyGuard composable", () => {
     onBeforeRouteLeave.mockImplementation((cb) => callback = cb)
 
     mount(factory(dirty))
-    expect(callback()).resolves.toBe(true)
+    expect(await callback()).toBe(true)
   })
 
   test("Shows dialog appropriately and correctly responds to user feedback", async () => {

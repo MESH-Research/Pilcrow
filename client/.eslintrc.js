@@ -18,10 +18,11 @@ module.exports = {
   extends: [
     'plugin:vue/vue3-recommended',
     'eslint:recommended',
-    'prettier'
+    'prettier',
+    'plugin:vitest/recommended'
   ],
 
-  plugins: ['vue'],
+  plugins: ['vue', 'vitest', 'prettier'],
   globals: {
     ga: 'readonly', // Google Analytics
     cordova: 'readonly',

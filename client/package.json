@@ -63,6 +63,7 @@
     "eslint-config-prettier": "^8.1.0",
     "eslint-plugin-cypress": "^2.12.1",
     "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-vitest": "^0.0.57",
     "eslint-plugin-vue": "^9.0.0",
     "mock-apollo-client": "^1.2.1",
     "postcss": "^8.4.14",

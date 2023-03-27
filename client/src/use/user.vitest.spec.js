@@ -157,13 +157,13 @@ describe("useLogin composable", () => {
     mock.mockReturnValue("/redirect")
     let { result } = mountComposable()
 
-    expect(result.redirectUrl).toEqual("/redirect")
+    expect(result.redirectUrl).toBe("/redirect")
 
     mock.mockReset().mockReturnValue(null)
 
     ({ result } = mountComposable())
 
-    expect(result.redirectUrl).toEqual("/dashboard")
+    expect(result.redirectUrl).toBe("/dashboard")
 
   })
 })

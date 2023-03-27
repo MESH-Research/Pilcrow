@@ -114,10 +114,10 @@ describe("test uservalidation composable", () => {
 
     await expect(saveUser()).rejects.toThrow("FORM_VALIDATION")
 
-    expect($v.value.username.$externalResults[0].$message).toEqual(
+    expect($v.value.username.$externalResults[0].$message).toBe(
       "USERNAME_IN_USE"
     )
-    expect($v.value.email.$externalResults[0].$message).toEqual("EMAIL_IN_USE")
+    expect($v.value.email.$externalResults[0].$message).toBe("EMAIL_IN_USE")
 
     user.username = "anotherusername"
     await flushPromises()

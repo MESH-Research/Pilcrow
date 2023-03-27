@@ -53,7 +53,7 @@ describe("PasswordInputComponent", () => {
 
   it("has current-password autocomplete attr by default", () => {
     const wrapper = factory()
-    expect(wrapper.find("input").attributes("autocomplete")).toEqual(
+    expect(wrapper.find("input").attributes("autocomplete")).toBe(
       "current-password"
     )
   })

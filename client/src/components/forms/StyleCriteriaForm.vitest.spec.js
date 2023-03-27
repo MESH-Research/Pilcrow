@@ -153,6 +153,6 @@ describe("StyleCriteriaForm", () => {
     Dialog.resolveOk()
     await wrapper.findComponent({ ref: "button_delete" }).trigger("click")
     expect(wrapper.emitted("delete")).toHaveLength(1)
-    expect(wrapper.emitted("delete")[0][0].id).toEqual("1")
+    expect(wrapper.emitted("delete")[0][0].id).toBe("1")
   })
 })

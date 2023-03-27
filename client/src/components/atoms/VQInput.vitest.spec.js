@@ -40,7 +40,7 @@ describe("VQInput", () => {
     const event = wrapper.emitted("vqupdate")[0]
 
     expect(event[0]).toEqual(v$.value.field)
-    expect(event[1]).toEqual("tstvalue")
+    expect(event[1]).toBe("tstvalue")
   })
 
   test("prefixes translations", () => {
@@ -49,8 +49,8 @@ describe("VQInput", () => {
     const wrapper = factory({ v: v$.value.field, t: "field" })
     const qinput = wrapper.findComponent({ name: "q-input" })
 
-    expect(qinput.props("hint")).toEqual("field.hint")
-    expect(qinput.props("label")).toEqual("field.label")
+    expect(qinput.props("hint")).toBe("field.hint")
+    expect(qinput.props("label")).toBe("field.label")
   })
 
   test("prefixes translations using provided prefix", () => {
@@ -59,8 +59,8 @@ describe("VQInput", () => {
 
     const qinput = wrapper.findComponent({ name: "q-input" })
 
-    expect(qinput.props("hint")).toEqual("myPrefix.field.hint")
-    expect(qinput.props("label")).toEqual("myPrefix.field.label")
+    expect(qinput.props("hint")).toBe("myPrefix.field.hint")
+    expect(qinput.props("label")).toBe("myPrefix.field.label")
   })
 
   test("uses provided update function", () => {
