@@ -48,6 +48,7 @@ describe("useCurrentUser composable", () => {
         currentUser: {
           __typename: "User",
           id: 1,
+          display_label: "Hello",
           name: "Hello",
           email: "hello@example.com",
           username: "helloUser",

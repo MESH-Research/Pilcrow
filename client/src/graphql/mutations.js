@@ -627,6 +627,38 @@ export const INVITE_REVIEW_COORDINATOR = gql`
   ${_RELATED_USER_FIELDS}
 `
 
+export const REINVITE_REVIEWER = gql`
+  mutation ReinviteReviewer($id: ID!, $email: String!, $message: String) {
+    reinviteReviewer(
+      input: { submission_id: $id, email: $email, message: $message }
+    ) {
+      id
+      reviewers {
+        ...relatedUserFields
+      }
+    }
+  }
+  ${_RELATED_USER_FIELDS}
+`
+
+export const REINVITE_REVIEW_COORDINATOR = gql`
+  mutation ReinviteReviewCoordinator(
+    $id: ID!
+    $email: String!
+    $message: String
+  ) {
+    reinviteReviewCoordinator(
+      input: { submission_id: $id, email: $email, message: $message }
+    ) {
+      id
+      review_coordinators {
+        ...relatedUserFields
+      }
+    }
+  }
+  ${_RELATED_USER_FIELDS}
+`
+
 export const UPDATE_OVERALL_COMMENT = gql`
   mutation UpdateOverallComment(
     $submission_id: ID!

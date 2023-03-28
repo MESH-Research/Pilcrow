@@ -50,7 +50,7 @@
         <div class="col-12 col-xs-8 col-sm-5 col-md-3">
           <assigned-submission-users
             data-cy="submitters_list"
-            relationship="submitters"
+            role-group="submitters"
             :container="submission"
           />
         </div>
@@ -62,8 +62,8 @@
           class="col-12 col-xs-8 col-sm-5 col-md-3"
         >
           <assigned-submission-users
-            relationship="review_coordinators"
             data-cy="coordinators_list"
+            role-group="review_coordinators"
             :container="submission"
             mutable
             :max-users="1"
@@ -74,7 +74,7 @@
         <div class="col-12 col-xs-8 col-sm-10 col-md-6">
           <assigned-submission-users
             data-cy="reviewers_list"
-            relationship="reviewers"
+            role-group="reviewers"
             :container="submission"
             mutable
           />

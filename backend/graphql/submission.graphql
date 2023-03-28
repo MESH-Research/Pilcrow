@@ -42,7 +42,7 @@ extend type Mutation {
         )
 
     """
-    Create a staged user, attach them as a reviewer to a submisison,
+    Create a staged user, assign them as a reviewer of a submisison,
     and send them an email notification inviting them to accept the assignment"
     """
     inviteReviewer(
@@ -53,7 +53,10 @@ extend type Mutation {
             resolver: "App\\GraphQL\\Mutations\\InviteSubmissionUser@inviteReviewer"
         )
 
-    "Stage a user as a review coordinator of a submission"
+    """
+    Create a staged user, assign them as a review coordinator of a submisison,
+    and send them an email notification inviting them to accept the assignment
+    """
     inviteReviewCoordinator(
         input: inviteSubmissionUserInput @spread
     ): Submission
@@ -61,9 +64,37 @@ extend type Mutation {
         @field(
             resolver: "App\\GraphQL\\Mutations\\InviteSubmissionUser@inviteReviewCoordinator"
         )
+
+    """
+    Resend an email notification inviting a staged reviewer to accept the assignment
+    """
+    reinviteReviewer(
+        input: reinviteSubmissionUserInput @spread
+    ): Submission
+        @can(ability: "invite", find: "submission_id")
+        @field(
+            resolver: "App\\GraphQL\\Mutations\\ReinviteSubmissionUser@reinviteReviewer"
+        )
+
+    """
+    Resend an email notification inviting a staged review coordinator to accept the assignment
+    """
+    reinviteReviewCoordinator(
+        input: reinviteSubmissionUserInput @spread
+    ): Submission
+        @can(ability: "invite", find: "submission_id")
+        @field(
+            resolver: "App\\GraphQL\\Mutations\\ReinviteSubmissionUser@reinviteReviewCoordinator"
+        )
 }
 
 input inviteSubmissionUserInput @validator(class: "SubmissionInvitationValidator") {
+    submission_id: ID!
+    email: String!
+    message: String
+}
+
+input reinviteSubmissionUserInput @validator(class: "SubmissionReinvitationValidator") {
     submission_id: ID!
     email: String!
     message: String

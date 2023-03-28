@@ -26,15 +26,15 @@
       />
     </div>
     <div v-else class="col">
-      <q-card ref="card_no_users" bordered flat>
-        <q-item class="text--grey">
-          <q-item-section avatar>
-            <q-icon color="accent" name="o_do_disturb_on" />
-          </q-item-section>
-          <q-item-section>
+      <q-card ref="card_no_users" class="text--grey" bordered flat>
+        <q-card-section horizontal>
+          <q-card-section>
+            <q-icon color="accent" name="o_do_disturb_on" size="sm" />
+          </q-card-section>
+          <q-card-section>
             {{ tp$("none") }}
-          </q-item-section>
-        </q-item>
+          </q-card-section>
+        </q-card-section>
       </q-card>
     </div>
 
@@ -72,7 +72,7 @@ const props = defineProps({
     type: Object,
     required: true,
   },
-  relationship: {
+  roleGroup: {
     type: String,
     required: true,
   },
@@ -95,7 +95,7 @@ const props = defineProps({
 const user = ref(null)
 const containerType = computed(() => props.container.__typename.toLowerCase())
 const { t, te } = useI18n()
-const tPrefix = (key) => `${containerType.value}.${props.relationship}.${key}`
+const tPrefix = (key) => `${containerType.value}.${props.roleGroup}.${key}`
 const tp$ = (key, ...args) => t(tPrefix(key), ...args)
 
 const { newStatusMessage } = useFeedbackMessages()
@@ -106,7 +106,7 @@ const mutations = {
   publication_admins: UPDATE_PUBLICATION_ADMINS,
 }
 const users = computed(() => {
-  return props.container[props.relationship]
+  return props.container[props.roleGroup]
 })
 
 const acceptMore = computed(() => {
@@ -116,7 +116,7 @@ const acceptMore = computed(() => {
   )
 })
 
-const { mutate } = useMutation(mutations[props.relationship], opts)
+const { mutate } = useMutation(mutations[props.roleGroup], opts)
 
 async function handleSubmit() {
   if (!acceptMore.value) {

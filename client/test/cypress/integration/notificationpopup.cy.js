@@ -17,17 +17,14 @@ describe("Notification Popup", () => {
     cy.task("resetDb")
     cy.login({ email: "applicationadministrator@pilcrow.dev" })
     cy.visit("/submission/review/108")
-
-    cy.interceptGQLOperation("MarkAllNotificationsRead")
     cy.interceptGQLOperation("UpdateSubmissionStatus")
-
     cy.dataCy("open_for_review").click()
-
     cy.dataCy("dirtyYesChangeStatus").click()
     cy.wait('@UpdateSubmissionStatus')
     cy.login({ email: "regularuser@pilcrow.dev" })
-    cy.visit("/dashboard")
+    cy.visit("/")
     cy.dataCy("dropdown_notificiations").click()
+    cy.interceptGQLOperation("MarkAllNotificationsRead")
     cy.dataCy("dismiss_all_notifications").click()
     cy.wait("@MarkAllNotificationsRead")
     cy.dataCy("notification_list_item").eq(0).should("not.have.class", "unread")

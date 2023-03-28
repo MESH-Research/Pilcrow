@@ -46,9 +46,9 @@ describe("AssignedPublicationUsers", () => {
     jest.resetAllMocks()
   })
 
-  test("shows relationship users", () => {
+  test("shows role users", () => {
     const wrapper = makeWrapper({
-      relationship: "editors",
+      roleGroup: "editors",
       container: {
         __typename: "Publication",
         id: 1,
@@ -64,7 +64,7 @@ describe("AssignedPublicationUsers", () => {
 
   test("shows empty card if no users", async () => {
     const wrapper = makeWrapper({
-      relationship: "editors",
+      roleGroup: "editors",
       container: {
         __typename: "Publication",
         id: 1,
@@ -74,7 +74,7 @@ describe("AssignedPublicationUsers", () => {
     expect(wrapper.findComponent({ ref: "card_no_users" }).exists()).toBe(true)
 
     await wrapper.setProps({
-      relationship: "editors",
+      roleGroup: "editors",
       container: {
         __typename: "Publication",
         id: 1,
@@ -87,7 +87,7 @@ describe("AssignedPublicationUsers", () => {
 
   test("mutable prop hides mutation controls", async () => {
     const wrapper = makeWrapper({
-      relationship: "editors",
+      roleGroup: "editors",
       container: {
         __typename: "Publication",
         id: 1,
@@ -106,7 +106,7 @@ describe("AssignedPublicationUsers", () => {
     expect(wrapper.find("[data-cy=button_unassign]").exists()).toBe(false)
 
     await wrapper.setProps({
-      relationship: "editors",
+      roleGroup: "editors",
       mutable: true,
       container: {
         __typename: "Publication",
@@ -121,7 +121,7 @@ describe("AssignedPublicationUsers", () => {
 
   test("maxUsers prop hides assign controls", async () => {
     const wrapper = makeWrapper({
-      relationship: "editors",
+      roleGroup: "editors",
       mutable: true,
       maxUsers: 1,
       container: {
@@ -134,7 +134,7 @@ describe("AssignedPublicationUsers", () => {
     expect(wrapper.findComponent({ name: "QForm" }).exists()).toBe(false)
 
     await wrapper.setProps({
-      relationship: "editors",
+      roleGroup: "editors",
       mutable: true,
       maxUsers: 2,
       container: {
@@ -148,7 +148,7 @@ describe("AssignedPublicationUsers", () => {
 
   test("mutable props disables mutations", async () => {
     const wrapper = makeWrapper({
-      relationship: "editors",
+      roleGroup: "editors",
       container: {
         __typename: "Publication",
         id: 1,
@@ -165,7 +165,7 @@ describe("AssignedPublicationUsers", () => {
 
   test("maxUsers prop disables assignment mutations, unassign still allowed", async () => {
     const wrapper = makeWrapper({
-      relationship: "editors",
+      roleGroup: "editors",
       mutable: true,
       maxUsers: 1,
       container: {
@@ -187,7 +187,7 @@ describe("AssignedPublicationUsers", () => {
 
   test("assignment mutation called with correct variables", async () => {
     const wrapper = makeWrapper({
-      relationship: "editors",
+      roleGroup: "editors",
       mutable: true,
       container: {
         __typename: "Publication",
@@ -206,16 +206,16 @@ describe("AssignedPublicationUsers", () => {
   test.each([
     ["editors", editorsMutation],
     ["publication_admins", publicationAdministratorsMutation],
-  ])("Calls %s mutation", async (relationship, mock) => {
+  ])("Calls %s mutation", async (roleGroup, mock) => {
     const props = {
-      relationship,
+      roleGroup,
       mutable: true,
       container: {
         id: 1,
         __typename: "Publication",
       },
     }
-    props.container[relationship] = [
+    props.container[roleGroup] = [
       { id: 1, username: "Test", email: "test@example.com" },
     ]
     const wrapper = makeWrapper(props)
