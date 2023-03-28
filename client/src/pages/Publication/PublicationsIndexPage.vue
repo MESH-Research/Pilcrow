@@ -32,6 +32,9 @@
           v-on="listeners"
         />
       </div>
+      <div v-else class="spinner">
+        <div>test</div>
+      </div>
     </section>
   </div>
 </template>

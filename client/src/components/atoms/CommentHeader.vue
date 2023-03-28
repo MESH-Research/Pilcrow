@@ -49,11 +49,11 @@
 <script setup>
 import AvatarImage from "./AvatarImage.vue"
 import CommentActions from "./CommentActions.vue"
-import TimeAgo from "javascript-time-ago"
+import { useTimeAgo } from "src/use/timeAgo"
 import { DateTime } from "luxon"
 import { computed } from "vue"
 
-const timeAgo = new TimeAgo("en-US")
+const timeAgo = useTimeAgo()
 const props = defineProps({
   comment: {
     type: Object,

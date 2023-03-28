@@ -20,10 +20,10 @@
 </template>
 
 <script setup>
-import { GET_USERS } from "src/graphql/queries"
 import { useQuery } from "@vue/apollo-composable"
+import UserListBasic from "src/components/molecules/UserListBasic.vue"
+import { GET_USERS } from "src/graphql/queries"
 import { computed, ref } from "vue"
-import UserListBasic from "src/components/molecules/UserListBasic"
 import { useRouter } from "vue-router"
 const currentPage = ref(1)
 

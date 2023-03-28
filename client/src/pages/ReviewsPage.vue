@@ -18,29 +18,29 @@
 </template>
 
 <script setup>
-import { CURRENT_USER_SUBMISSIONS } from "src/graphql/queries"
-import { useQuery } from "@vue/apollo-composable"
-import { computed } from "vue"
-import SubmissionTable from "src/components/SubmissionTable.vue"
+import { useQuery } from "@vue/apollo-composable";
+import SubmissionTable from "src/components/SubmissionTable.vue";
+import { CURRENT_USER_SUBMISSIONS } from "src/graphql/queries";
+import { computed } from "vue";
 
-const { result } = useQuery(CURRENT_USER_SUBMISSIONS)
+const { result } = useQuery(CURRENT_USER_SUBMISSIONS);
 const submissions = computed(() => {
-  return result.value?.currentUser?.submissions ?? []
-})
+  return result.value?.currentUser?.submissions ?? [];
+});
 const reviewer_reviews = computed(() =>
   submissions.value.filter(function (submission) {
     return (
       ["DRAFT", "INITIALLY_SUBMITTED", "AWAITING_REVIEW"].includes(
         submission.status
       ) === false && submission.my_role == "reviewer"
-    )
+    );
   })
-)
+);
 const coordinator_reviews = computed(() =>
   submissions.value.filter(function (submission) {
     return (
       submission.status != "DRAFT" && submission.my_role == "review_coordinator"
-    )
+    );
   })
-)
+);
 </script>
