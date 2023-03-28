@@ -1924,9 +1924,9 @@
     core-js-compat "^3.6.5"
 
 "@quasar/extras@^1.15.8":
-  version "1.16.0"
-  resolved "https://registry.yarnpkg.com/@quasar/extras/-/extras-1.16.0.tgz#9451b1a756e8a688018f284f8ab2b5aff75ea309"
-  integrity sha512-5Q9UkTKC+H4bTLkz1/nLOcnA+b39psIIej5jqeFov61Ob+3rcBePfgTPN0/7nhZwlzanrzdHP9nF0wpdEefmhQ==
+  version "1.16.1"
+  resolved "https://registry.yarnpkg.com/@quasar/extras/-/extras-1.16.1.tgz#1be607c200c8426497b7a6de21056edb28ef122a"
+  integrity sha512-bRnWSC469Qogw0ceDVd0yTQVBQjyhV6L10EMixXK1dpOs9tWGKRVgyyGZ5DEBkDgyn4BeRuV5s5e9VrQdQPsOg==
 
 "@quasar/fastclick@1.1.5":
   version "1.1.5"
