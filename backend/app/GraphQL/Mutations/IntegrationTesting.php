@@ -90,7 +90,11 @@ class IntegrationTesting
           '--no-create-info',
           DB::getConfig('database'),
         ]);
-        $output = preg_replace('/LOCK TABLES (`[a-z_]+`) WRITE;/', 'TRUNCATE $1; LOCK TABLES $1 WRITE;', $result->output());
+        $output = preg_replace(
+            '/LOCK TABLES (`[a-z_]+`) WRITE;/',
+            'TRUNCATE $1; LOCK TABLES $1 WRITE;',
+            $result->output()
+        );
         file_put_contents(base_path() . '/reset.sql', $output);
 
         return $result->exitCode() === 0;
@@ -108,16 +112,16 @@ class IntegrationTesting
         $result = Process
         ::path(base_path())
         ->run([
-          'mysql',
-          '-h',
-          DB::getConfig('host'),
-          '-u',
-          DB::getConfig('username'),
-          '-p' . DB::getConfig('password'),
-          DB::getConfig('database'),
-          '-e',
-          'source reset.sql',
-        ]);
+            'mysql',
+            '-h',
+            DB::getConfig('host'),
+            '-u',
+            DB::getConfig('username'),
+            '-p' . DB::getConfig('password'),
+            DB::getConfig('database'),
+            '-e',
+            'source reset.sql',
+          ]);
 
         return $result->exitCode() === 0;
     }
