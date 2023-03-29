@@ -60,6 +60,8 @@ jobs:
           ini-values: opcache.enable_cli=1
       - name: Setup MySql 5.7
         uses: shogo82148/actions-setup-mysql@v1
+        env:
+          ImageOS: ubuntu20
         with:
           mysql-version: "5.7"
       - name: Create Laravel Database
