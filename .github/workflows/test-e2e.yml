@@ -30,7 +30,7 @@ jobs:
           retention-days: 1
   playwright:
     runs-on: ubuntu-20.04
-    name: 'Playwright Tests - ${{ matrix.project }} - Shard ${{ matrix.shardIndex }} of ${{ matrix.shardTotal }}'
+    name: "Playwright Tests - ${{ matrix.project }} - Shard ${{ matrix.shardIndex }} of ${{ matrix.shardTotal }}"
     container:
       image: mcr.microsoft.com/playwright:v1.32.0-focal
     needs: ["build-client"]
@@ -104,13 +104,14 @@ jobs:
           yarn global add @quasar/cli
           quasar serve --port 8080 --proxy ../client/proxy.js --history &
       - uses: actions/setup-node@v3
-        with: node-version: 18
+        with:
+          node-version: 18
       - working-directory: ./playwright
         run: yarn install --frozen-lockfile
       - working-directory: ./playwright
         run: yarn playwright install --with-deps
       - working-directory: ./playwright
-        run:   yarn playwright test --project=${{ matrix.project }} --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
+        run: yarn playwright test --project=${{ matrix.project }} --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
       - uses: actions/upload-artifact@v3
         if: always()
         with:
