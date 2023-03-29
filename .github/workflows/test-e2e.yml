@@ -31,8 +31,8 @@ jobs:
   playwright:
     runs-on: ubuntu-20.04
     name: "playwright - ${{ matrix.project }} - Shard ${{ matrix.shardIndex }} of ${{ matrix.shardTotal }}"
-      container:
-        image: mcr.microsoft.com/playwright:v1.32.0-focal
+    container:
+      image: mcr.microsoft.com/playwright:v1.32.0-focal
     needs: ["build-client"]
     strategy:
       fail-fast: false
