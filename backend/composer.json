@@ -28,18 +28,23 @@
         "watson/validating": "^8.0"
     },
     "require-dev": {
+        "cakephp/cakephp-codesniffer": "^5.1",
+        "dealerdirect/phpcodesniffer-composer-installer": "^1.0",
         "fakerphp/faker": "^1.9.1",
         "mll-lab/laravel-graphiql": "^1.2",
         "mockery/mockery": "^1.4.2",
         "nunomaduro/collision": "^7.0",
-        "phpunit/phpunit": "^10.0"
+        "phpunit/phpunit": "^10.0",
+        "sirbrillig/phpcs-variable-analysis": "^2.11",
+        "squizlabs/php_codesniffer": "^3.7"
     },
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
         "sort-packages": true,
         "allow-plugins": {
-            "composer/package-versions-deprecated": true
+            "composer/package-versions-deprecated": true,
+            "dealerdirect/phpcodesniffer-composer-installer": true
         }
     },
     "extra": {
@@ -62,6 +67,12 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "scripts": {
+        "lint": [
+            "vendor/bin/phpcs"
+        ],
+        "lint-fix": [
+            "vendor/bin/phpcbf"
+        ],
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover --ansi"
