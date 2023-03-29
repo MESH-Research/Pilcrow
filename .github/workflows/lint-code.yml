@@ -4,7 +4,7 @@
 ## Linter GitHub Actions ##
 ###########################
 ###########################
-name: "Style"
+name: "Lint/Style"
 
 #
 # Documentation:
@@ -25,7 +25,7 @@ on:
 jobs:
   all:
     # Name the Job
-    name: Lint/Style Checking
+    name: Check all
     # Set the agent to run on
     runs-on: ubuntu-20.04
     steps:

@@ -28,7 +28,7 @@
         "watson/validating": "^8.0"
     },
     "require-dev": {
-        "cakephp/cakephp-codesniffer": "^5.1",
+        "cakephp/cakephp-codesniffer": "^4.2",
         "dealerdirect/phpcodesniffer-composer-installer": "^1.0",
         "fakerphp/faker": "^1.9.1",
         "mll-lab/laravel-graphiql": "^1.2",
