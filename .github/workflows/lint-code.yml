@@ -48,7 +48,7 @@ jobs:
       - name: Install dependencies
         run: |
           yarn install
-          composer install
+          cd backend && composer install
           cd client && yarn install
       - name: Check markdown
         run: yarn lint:md

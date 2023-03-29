@@ -22,7 +22,6 @@ services:
     scanner: false
   appserver:
     build:
-      - composer install
       - cd /app/backend && composer install
       - bash /app/.lando/no_env_setup.sh
     build_as_root:
