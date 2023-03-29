@@ -60,6 +60,14 @@ extend type Mutation {
         @field(
             resolver: "App\\GraphQL\\Mutations\\IntegrationTesting@forceLogin"
         )
+
+    resetDb: Boolean!
+        @field(resolver: "App\\GraphQL\\Mutations\\IntegrationTesting@resetDb")
+
+    setupResetDb: Boolean!
+        @field(
+            resolver: "App\\GraphQL\\Mutations\\IntegrationTesting@setupResetDb"
+        )
 }
 
 """
