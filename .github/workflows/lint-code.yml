@@ -56,10 +56,15 @@ jobs:
           yarn install
           cd backend && composer install
           cd ../client && yarn install
+          cd ../playwright && yarn install
       - name: Check markdown
         run: yarn lint:md
       - name: Check PHP
         working-directory: ./backend
         run: composer lint
-      - name: Check Javascript
-        run: cd client && yarn lint
+      - name: Check Client/JS
+        working-directory: ./client
+        run: yarn lint
+      - name: Check Playwright/JS
+        working-directory: ./playwright
+        run: yarn lint

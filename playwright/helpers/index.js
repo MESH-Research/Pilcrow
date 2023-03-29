@@ -1,2 +1,2 @@
-export * from './axe';
-export * from './database';
+export * from "./axe"
+export * from "./database"
