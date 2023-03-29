@@ -450,16 +450,15 @@
   integrity sha512-uE1VRU/doQzXsfsZ/JqsbSbXeZYTJnyQkSfHYA2ZYhbEM2XqDEsYkgcmZEJgunUZJpERf+3ZTfTpqaHq29iMMg==
 
 "@tiptap/extension-bold@^2.0.0-beta.220":
-  version "2.0.0-beta.220"
-  resolved "https://registry.yarnpkg.com/@tiptap/extension-bold/-/extension-bold-2.0.0-beta.220.tgz#f10468317fd5c63ebab68be907e33fb138a60ef9"
-  integrity sha512-KcEuKI85Drug/cCWbDy+HxhYrD+rLXHEBG10DmKPvgPpKHG/2wOau6LwUwyV4muWR8CR2mIO+mEc3yVBD8nNwQ==
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@tiptap/extension-bold/-/extension-bold-2.0.0.tgz#5a60c71b32c5ecf1401268b438179187e51b00e5"
+  integrity sha512-sXnpWcOb0W8fezz+2DpgIz9IhJ1UtzaG7VygDTHIqgALLVwaAwDY/Diunp2RvFflRjpEb8Z7x/Q2VS/yW+g2hA==
 
 "@tiptap/extension-bubble-menu@^2.0.0-beta.220":
-  version "2.0.0-beta.220"
-  resolved "https://registry.yarnpkg.com/@tiptap/extension-bubble-menu/-/extension-bubble-menu-2.0.0-beta.220.tgz#3fea0c846f73a237f562fdce05671ef1fa025943"
-  integrity sha512-wthyec7s0vZlTSEAAZEgoFfx/1Arwg1zxDUrrE+YAost/Yn+w4xQksz/ts5Bx90iOk2qsJ+jzzttLRV17Ku7lA==
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@tiptap/extension-bubble-menu/-/extension-bubble-menu-2.0.0.tgz#f5e1d48d3df3f348c86c25d4d0375691049c8ec5"
+  integrity sha512-duJPnNA6r5rmgA/s8TqpUi0gWvcIm/2NWflMq+8OcFzIUCoTWpoaiSPiO0LHkfqJzbH0tpTCR9TGo0P7oUglQg==
   dependencies:
-    lodash "^4.17.21"
     tippy.js "^6.3.7"
 
 "@tiptap/extension-bullet-list@^2.0.0-beta.220":
