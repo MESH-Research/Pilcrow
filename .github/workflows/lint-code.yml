@@ -55,7 +55,7 @@ jobs:
         run: |
           yarn install
           cd backend && composer install
-          cd client && yarn install
+          cd ../client && yarn install
       - name: Check markdown
         run: yarn lint:md
       - name: Check PHP

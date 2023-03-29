@@ -30,7 +30,7 @@ jobs:
           retention-days: 1
   playwright:
     runs-on: ubuntu-20.04
-    name: "Playwright Tests - ${{ matrix.project }} - Shard ${{ matrix.shardIndex }} of ${{ matrix.shardTotal }}"
+    name: "playwright - ${{ matrix.project }} - Shard ${{ matrix.shardIndex }} of ${{ matrix.shardTotal }}"
     #   container:
     #     image: mcr.microsoft.com/playwright:v1.32.0-focal
     needs: ["build-client"]
