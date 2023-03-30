@@ -509,29 +509,29 @@
   integrity sha512-7mrHRj++UaZ26C2Gjwb0WKWAzpiKb8TOYkVC2uMaCwaNhLDXpFEwZ7RtJRSTNBHkIGnMO46BH8Z0qlkFMmk9Jw==
 
 "@tiptap/extension-highlight@^2.0.0-beta.220":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@tiptap/extension-highlight/-/extension-highlight-2.0.0.tgz#b9b644cb50749e83a21ee7fccdcdab7814e9f070"
-  integrity sha512-2EbfBMmWRQj06LaG2cwncmKNQJzxrquSubVVK7wmrVOTm7oCbgCiofYZ3Fv0vE9qNowKUnPsd1oza7m5x2FAeA==
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@tiptap/extension-highlight/-/extension-highlight-2.0.1.tgz#4783485f3d79f74d06de932b7aa9af15bef9b3ef"
+  integrity sha512-k9rJnAGzjXWQSN3RqSVPQfsbtFAgZu2AnwSFH2VQ2Ea7oiAUOaD7Qcqrs0PLo/CxLEuWPAbULNngXUXZVseMBA==
 
 "@tiptap/extension-history@^2.0.0-beta.220":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@tiptap/extension-history/-/extension-history-2.0.0.tgz#4fcd3116bea28beea5bd98e39daf3ffad7a0fa4e"
-  integrity sha512-vu73HQ6ilFS70F55ob+VhcSZxQtd91xrlr9J/7nXGgxF+T1XHOhnPIEkcrlHQGon1l0oxW+6Pb6QNi2wGWywmg==
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@tiptap/extension-history/-/extension-history-2.0.1.tgz#61b59459edbc51c01b91b77d30c6cd8203434144"
+  integrity sha512-nT4XbZUEyi+xSnwIeG+JqfHmWhF+amCwYsr7oYM/oa/BFDGaRHaNIrS3D+DpzjRrKguuLDxyhZkJEu1K2Rjsqw==
 
 "@tiptap/extension-horizontal-rule@^2.0.0-beta.220":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@tiptap/extension-horizontal-rule/-/extension-horizontal-rule-2.0.0.tgz#65d498e7d6905af10d15f0fc31c9b9d8efc863b0"
-  integrity sha512-rhBgbU5+whoJ6aiBlo+Ra7cJejyaG26OOq5+jm6lHuUCiVLoRbzbg+LDLxuZOO/gSBjCVRoTyzK2I+XqDEH8lw==
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@tiptap/extension-horizontal-rule/-/extension-horizontal-rule-2.0.1.tgz#f13349569cfb6bdc909099601e426de3194b7429"
+  integrity sha512-JNgu0ioOBhn3Djn8vd41y3DrqeEfWMLIWNRVO81OqQRvWZhpRwIUuDoRrzR45wxjymq9flc+iz7zuFW1kszpQA==
 
 "@tiptap/extension-italic@^2.0.0-beta.220":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@tiptap/extension-italic/-/extension-italic-2.0.0.tgz#decaa87a10c3f398e06d576b48c52d54e3f6441c"
-  integrity sha512-WkLACXCKTddSWBucnrrzSesigZvN6S7inuHFhCgJ+OIHBExmQCfBdIJYV5Xjj59jaKyMkjAMQmraGNZOD3cagA==
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@tiptap/extension-italic/-/extension-italic-2.0.1.tgz#ce27086ac8a7056f7354c117e173f65d31bc2985"
+  integrity sha512-lVIyKa3qjqD4rUKSzVghkS5xonJ8k+msvy5Sr5xd6duwEBOk7e0oKtXmdn7B1VBH64i/U3Cx0QRgDlEyukvV2Q==
 
 "@tiptap/extension-link@^2.0.0-beta.220":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@tiptap/extension-link/-/extension-link-2.0.0.tgz#e1ec64aa43680b10571f309366799e9c670a8f4d"
-  integrity sha512-qKNrMHZU3BI3jGETHQeWhoEpU/eRnS1WQvQO4rk6iL2xjO5WG94CjIXJzpYdQwzHkot2e3TeQmfuVqbwAmTgYw==
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@tiptap/extension-link/-/extension-link-2.0.1.tgz#6c1cca4ab0a6d4ab9d71b74f17a811dbb17426f3"
+  integrity sha512-C1m5UJEiRvuqTthGcSVGcg3+vMZLC1tELmxuA+YdHti3ZfZi1hAZc4dwWzOp6RcXdEljmHCCXOs6G5WQH1mReQ==
   dependencies:
     linkifyjs "^4.1.0"
 
