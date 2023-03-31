@@ -1,14 +1,11 @@
 import { expect, test } from "@playwright/test"
-import { resetDb } from "../helpers"
-
-test.use({ storageState: ".auth/regularUser.json" })
+import { login, resetDb } from "../helpers"
 
 test("Notification popup", async ({ browser, baseURL }) => {
     await resetDb(baseURL)
-    const regularContext = await browser.newContext({
-        storageState: ".auth/regularUser.json",
-    })
+    const regularContext = await browser.newContext()
     const regularPage = await regularContext.newPage()
+    await login(regularPage, "regularuser@pilcrow.dev")
     await regularPage.goto("/dashboard")
     await regularPage.getByTestId("dropdown_notificiations").click()
     await expect(
@@ -19,11 +16,10 @@ test("Notification popup", async ({ browser, baseURL }) => {
         regularPage.getByTestId("notification_list_item").first()
     ).not.toHaveClass(/unread/)
 
-    const adminContext = await browser.newContext({
-        storageState: ".auth/applicationAdmin.json",
-    })
+    const adminContext = await browser.newContext()
     const adminPage = await adminContext.newPage()
 
+    await login(adminPage, "applicationadministrator@pilcrow.dev")
     await adminPage.goto("/submission/review/108")
     await adminPage.getByTestId("open_for_review").click()
     await adminPage.getByTestId("dirtyYesChangeStatus").click()

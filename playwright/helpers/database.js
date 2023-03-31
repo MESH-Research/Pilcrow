@@ -7,10 +7,10 @@ const axios = axiosImport.create({
     }),
 })
 
-export function resetDb(baseUrl) {
+export function resetDb(baseURL) {
     return new Promise((resolve, reject) => {
         axios({
-            url: `${baseUrl}graphql`,
+            url: `${baseURL}graphql`,
             method: "POST",
             data: {
                 query: "mutation { resetDb }",
@@ -31,10 +31,10 @@ export function resetDb(baseUrl) {
     })
 }
 
-export function setupResetDb(baseUrl) {
+export function setupResetDb(baseURL) {
     return new Promise((resolve, reject) => {
         axios({
-            url: `${baseUrl}graphql`,
+            url: `${baseURL}graphql`,
             method: "POST",
             data: {
                 query: "mutation { setupResetDb }",
