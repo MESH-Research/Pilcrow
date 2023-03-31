@@ -1016,9 +1016,9 @@
     "@vue/server-renderer" "^3.0.1"
 
 "@vuelidate/core@^2.0.0":
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/@vuelidate/core/-/core-2.0.1.tgz#65aace31377accecf3b13dc404101437d4142644"
-  integrity sha512-seBfM7ZtQ+NzXEdJpwLPgX/GlY+R10VI3FSoXyEJH7p4kKcz06f5oloh2EDozCJVMxP0Um/FFcfjBCn8CtGNOQ==
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/@vuelidate/core/-/core-2.0.2.tgz#e874afc830ccc5295e83a0c0a0f0621e084348c9"
+  integrity sha512-aG1OZWv6xVws3ljyKy/pyxq1rdZZ2ryj+FEREcC9d4GP4qOvNHHZUl/NQxa0Bck3Ooc0RfXU8vwCA9piRoWy6w==
   dependencies:
     vue-demi "^0.13.11"
 
