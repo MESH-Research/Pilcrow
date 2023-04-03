@@ -211,7 +211,7 @@ describe("Submissions Page", () => {
     cy.dataCy("change_status_notify")
       .should("be.visible")
       .should("have.class", "bg-positive")
-    cy.dataCy("all_submissions_title").click()
+    cy.dataCy("submissions_title").click()
     cy.dataCy("submission_actions").eq(7).click()
     cy.dataCy("change_status").click()
     cy.dataCy("accept_as_final")
