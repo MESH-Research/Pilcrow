@@ -36,8 +36,8 @@
       <q-btn-dropdown
         label="Options"
         flat
-        menu-anchor="bottom middle"
-        menu-self="top middle"
+        menu-anchor="bottom right"
+        menu-self="top right"
       >
         <div v-if="submission.status == 'DRAFT'">
           <q-btn
