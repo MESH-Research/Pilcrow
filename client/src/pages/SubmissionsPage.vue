@@ -3,8 +3,8 @@
     <h2 class="q-pl-lg" data-cy="submissions_title">
       {{ $t(`submissions.heading`) }}
     </h2>
-    <div class="row q-col-gutter-lg q-pa-lg">
-      <section class="col-12">
+    <section class="row q-col-gutter-lg q-pa-lg">
+      <div class="col-12">
         <div v-if="subsLoading" class="q-pa-lg">
           {{ $t("loading") }}
         </div>
@@ -18,8 +18,19 @@
             data-cy="submissions_table"
           />
         </div>
-      </section>
-    </div>
+      </div>
+    </section>
+    <section class="q-pa-lg">
+      <div class="row">
+        <h3>New Comments</h3>
+      </div>
+      <div class="row q-col-gutter-lg">
+        <div class="col-3"><comment-preview :comment="sampleComment" /></div>
+        <div class="col-3"><comment-preview :comment="sampleComment" /></div>
+        <div class="col-3"><comment-preview :comment="sampleComment" /></div>
+        <div class="col-3"><comment-preview :comment="sampleComment" /></div>
+      </div>
+    </section>
   </article>
 </template>
 
@@ -29,6 +40,7 @@ import { useCurrentUser } from "src/use/user"
 import { computed } from "vue"
 import { useQuery } from "@vue/apollo-composable"
 import SubmissionTable from "src/components/SubmissionTable.vue"
+import CommentPreview from "src/components/atoms/CommentPreview.vue"
 
 const { currentUser } = useCurrentUser()
 const { result, loading: subsLoading } = useQuery(CURRENT_USER_SUBMISSIONS)
@@ -40,5 +52,12 @@ const submitter_submissions = computed(() =>
     return submission.my_role == "submitter"
   })
 )
-
+const sampleComment = {
+  created_at: "2022-06-05T01:57:20Z",
+  created_by: {
+    username: "Hello",
+  },
+  replies: [],
+  content: "Lorem Ipsum",
+}
 </script>
