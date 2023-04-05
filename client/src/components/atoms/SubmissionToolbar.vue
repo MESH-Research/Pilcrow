@@ -121,7 +121,6 @@
         </q-btn-group>
       </q-btn-dropdown>
 
-      <q-space></q-space>
       <q-btn
         :aria-label="$t('submission.toolbar.toggle_annotation_highlights')"
         dense
