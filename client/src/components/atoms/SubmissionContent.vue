@@ -66,7 +66,12 @@
       :tippy-options="{ duration: 100 }"
       :should-show="bubbleMenuVisibility"
     >
-      <q-btn color="white" text-color="primary" @click="addComment">
+      <q-btn
+        color="white"
+        text-color="primary"
+        aria-label="Add Inline Comment"
+        @click="addComment"
+      >
         <q-icon name="add_comment" />
       </q-btn>
     </bubble-menu>

@@ -1,4 +1,5 @@
 export async function login(page, email) {
+    const URL = page.url()
     await page.goto("/")
     const response = await page.evaluate(async (email) => {
         /* eslint-env browser */
@@ -24,5 +25,6 @@ export async function login(page, email) {
             }),
         })
     }, email)
+    await page.goto(URL)
     return response
 }
