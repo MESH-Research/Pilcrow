@@ -51,13 +51,13 @@
           </q-btn>
         </div>
         <q-btn-group
-          flat
-          square
           v-else-if="
             submission.status != 'AWAITING_REVIEW' &&
             submission.status != 'REJECTED' &&
             submission.status != 'RESUBMISSION_REQUESTED'
           "
+          flat
+          square
           data-cy="decision_options"
           class="column"
         >
