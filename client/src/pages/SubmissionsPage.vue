@@ -22,11 +22,14 @@
     </section>
     <section class="q-pa-lg">
       <div class="row">
-        <h3>Newest Comments</h3>
+        <h3>Latest Comments</h3>
       </div>
       <div class="row q-col-gutter-lg">
         <div v-for="comment in inline_comments" :key="comment.id" class="col-3">
-          <comment-preview :comment="comment" />
+          <comment-preview
+            class="flex full-height"
+            :comment="comment"
+          />
         </div>
       </div>
     </section>
@@ -53,14 +56,16 @@ const submitter_submissions = computed(() =>
 )
 const inline_comments = computed(() => {
   const comments = submitter_submissions.value.map((submission) => {
-    return submission.inline_comments.map(
-      (comment) => ({
-        ...comment, submission_title: submission.title
-      })
-    )
+    return submission.inline_comments.map((comment) => ({
+      ...comment,
+      submission_title: submission.title,
+    }))
   })
-  return comments.flat().sort((a, b) => {
-    return a.updated_at - b.updated_at
-  }).reverse()
+  return comments
+    .flat()
+    .sort((a, b) => {
+      return a.updated_at - b.updated_at
+    })
+    .reverse()
 })
 </script>

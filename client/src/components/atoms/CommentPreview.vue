@@ -2,24 +2,28 @@
   <div data-cy="previewComment">
     <q-card
       square
-      class="bg-grey-1 shadow-2 q-mb-md comment"
+      class="bg-grey-1 shadow-2 q-mb-md comment full-height"
       :aria-label="
         $t('submissions.comment.ariaLabel', {
           display_label: comment.created_by.display_label,
         })
       "
     >
-    <q-card-section>
-      {{ comment.submission_title }}
-    </q-card-section>
+      <q-card-section>
+        {{ comment.submission_title }}
+      </q-card-section>
       <comment-preview-header
         :comment="comment"
         bg-color="#C9E5F8"
         class="comment-header"
       />
       <q-card-section>
-        <!-- eslint-disable-next-line vue/no-v-html -->
-        <div v-html="comment.content" />
+        <!-- eslint-disable vue/no-v-html -->
+        <div
+          style="overflow: hidden; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical;"
+          v-html="comment.content"
+        />
+        <!-- eslint-enable vue/no-v-html -->
       </q-card-section>
 
       <q-card-actions align="right" class="q-pa-md">
@@ -34,7 +38,6 @@
           <span>View Comment</span>
         </q-btn>
       </q-card-actions>
-
     </q-card>
   </div>
 </template>
