@@ -1,15 +1,15 @@
 <template>
   <q-card-section class="q-py-xs" :style="style">
     <div class="row no-wrap justify-between">
-      <div class="row items-center">
+      <div class="row items-center no-wrap col-grow">
         <avatar-image :user="comment.created_by" round size="30px" />
-        <div class="text-h4 q-pl-sm">{{ comment.created_by.display_label }}</div>
+        <div class="text-h4 q-pl-sm ellipsis">{{ comment.created_by.display_label }}</div>
       </div>
       <div class="row items-center">
         <div
           v-if="comment.updated_at != comment.created_at"
           data-cy="timestampUpdated"
-          class="text-caption"
+          class="text-caption text-no-wrap"
           :aria-label="
             $t('submissions.comment.dateLabelUpdated', {
               date: relativeUpdatedTime,
@@ -27,7 +27,7 @@
         <div
           v-else
           data-cy="timestampCreated"
-          class="text-caption"
+          class="text-caption text-no-wrap"
           :aria-label="
             $t('submissions.comment.dateLabel', { date: relativeCreatedTime })
           "
