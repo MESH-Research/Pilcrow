@@ -22,13 +22,12 @@
     </section>
     <section class="q-pa-lg">
       <div class="row">
-        <h3>New Comments</h3>
+        <h3>Newest Comments</h3>
       </div>
       <div class="row q-col-gutter-lg">
-        <div class="col-3"><comment-preview :comment="sampleComment" /></div>
-        <div class="col-3"><comment-preview :comment="sampleComment" /></div>
-        <div class="col-3"><comment-preview :comment="sampleComment" /></div>
-        <div class="col-3"><comment-preview :comment="sampleComment" /></div>
+        <div v-for="comment in inline_comments" :key="comment.id" class="col-3">
+          <comment-preview :comment="comment" />
+        </div>
       </div>
     </section>
   </article>
@@ -52,12 +51,16 @@ const submitter_submissions = computed(() =>
     return submission.my_role == "submitter"
   })
 )
-const sampleComment = {
-  created_at: "2022-06-05T01:57:20Z",
-  created_by: {
-    username: "Hello",
-  },
-  replies: [],
-  content: "Lorem Ipsum",
-}
+const inline_comments = computed(() => {
+  const comments = submitter_submissions.value.map((submission) => {
+    return submission.inline_comments.map(
+      (comment) => ({
+        ...comment, submission_title: submission.title
+      })
+    )
+  })
+  return comments.flat().sort((a, b) => {
+    return a.updated_at - b.updated_at
+  }).reverse()
+})
 </script>

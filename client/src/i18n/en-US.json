@@ -711,6 +711,9 @@
       }
     },
     "inline_comments_heading": "Inline Comments",
+    "comment_preview": {
+      "ariaLabel": "Comment Preview. Author {display_label}."
+    },
     "comment": {
       "ariaLabel": "Comment. Author {username}. {replies} replies.",
       "dateLabel": "Created {date}",

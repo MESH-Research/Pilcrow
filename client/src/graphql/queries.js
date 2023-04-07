@@ -77,6 +77,38 @@ export const CURRENT_USER_SUBMISSIONS = gql`
         status
         my_role
         effective_role
+        inline_comments {
+          id
+          content
+          created_by {
+            id
+            display_label
+            email
+          }
+          updated_by{
+            id
+            display_label
+            email
+          }
+          created_at
+          updated_at
+        }
+        overall_comments {
+          id
+          content
+          created_by{
+            id
+            display_label
+            email
+          }
+          updated_by{
+            id
+            display_label
+            email
+          }
+          created_at
+          updated_at
+        }
         publication {
           id
           name

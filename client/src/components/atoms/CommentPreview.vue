@@ -5,12 +5,14 @@
       class="bg-grey-1 shadow-2 q-mb-md comment"
       :aria-label="
         $t('submissions.comment.ariaLabel', {
-          username: comment.created_by.username,
-          replies: comment.replies.length,
+          display_label: comment.created_by.display_label,
         })
       "
     >
-      <comment-header
+    <q-card-section>
+      {{ comment.submission_title }}
+    </q-card-section>
+      <comment-preview-header
         :comment="comment"
         bg-color="#C9E5F8"
         class="comment-header"
@@ -38,7 +40,7 @@
 </template>
 
 <script setup>
-import CommentHeader from "./CommentHeader.vue"
+import CommentPreviewHeader from "./CommentPreviewHeader.vue"
 
 defineProps({
   comment: {
