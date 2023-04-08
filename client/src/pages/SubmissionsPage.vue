@@ -25,9 +25,9 @@
         <h3>Latest Comments</h3>
       </div>
       <div class="row q-col-gutter-lg">
-        <div v-for="comment in inline_comments" :key="comment.id" class="col-3">
+        <div v-for="comment in inline_comments" :key="comment.id" class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
           <comment-preview
-            class="flex full-height"
+            class="flex fit"
             :comment="comment"
           />
         </div>

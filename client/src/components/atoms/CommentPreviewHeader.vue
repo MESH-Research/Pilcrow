@@ -1,42 +1,47 @@
 <template>
   <q-card-section class="q-py-xs" :style="style">
-    <div class="row no-wrap justify-between">
-      <div class="row items-center no-wrap col-grow">
-        <avatar-image :user="comment.created_by" round size="30px" />
-        <div class="text-h4 q-pl-sm ellipsis">{{ comment.created_by.display_label }}</div>
+    <div class="row no-wrap items-center">
+      <div class="row no-wrap items-center q-pr-sm" style="min-width: 0">
+        <avatar-image
+          :user="comment.created_by"
+          round
+          size="30px"
+          class="q-mr-sm"
+        />
+        <div class="text-h4 ellipsis">
+          {{ comment.created_by.display_label }}
+        </div>
       </div>
-      <div class="row items-center">
-        <div
-          v-if="comment.updated_at != comment.created_at"
-          data-cy="timestampUpdated"
-          class="text-caption text-no-wrap"
-          :aria-label="
-            $t('submissions.comment.dateLabelUpdated', {
-              date: relativeUpdatedTime,
-            })
-          "
-        >
-          <q-tooltip
-            >{{ createdDate.toFormat("LLL dd yyyy hh:mm a") }} <br />
-            {{ $t("submissions.comment.updatedLabel") }}
-            {{ updatedDate.toFormat("LLL dd yyyy hh:mm a") }}
-          </q-tooltip>
+      <div
+        v-if="comment.updated_at != comment.created_at"
+        data-cy="timestampUpdated"
+        class="text-caption"
+        :aria-label="
+          $t('submissions.comment.dateLabelUpdated', {
+            date: relativeUpdatedTime,
+          })
+        "
+      >
+        <q-tooltip
+          >{{ createdDate.toFormat("LLL dd yyyy hh:mm a") }} <br />
           {{ $t("submissions.comment.updatedLabel") }}
-          {{ relativeUpdatedTime }}
-        </div>
-        <div
-          v-else
-          data-cy="timestampCreated"
-          class="text-caption text-no-wrap"
-          :aria-label="
-            $t('submissions.comment.dateLabel', { date: relativeCreatedTime })
-          "
-        >
-          <q-tooltip>
-            {{ createdDate.toFormat("LLL dd yyyy hh:mm a") }}
-          </q-tooltip>
-          {{ relativeCreatedTime }}
-        </div>
+          {{ updatedDate.toFormat("LLL dd yyyy hh:mm a") }}
+        </q-tooltip>
+        {{ $t("submissions.comment.updatedLabel") }}
+        {{ relativeUpdatedTime }}
+      </div>
+      <div
+        v-else
+        data-cy="timestampCreated"
+        class="text-caption text-no-wrap"
+        :aria-label="
+          $t('submissions.comment.dateLabel', { date: relativeCreatedTime })
+        "
+      >
+        <q-tooltip>
+          {{ createdDate.toFormat("LLL dd yyyy hh:mm a") }}
+        </q-tooltip>
+        {{ relativeCreatedTime }}
       </div>
     </div>
   </q-card-section>
