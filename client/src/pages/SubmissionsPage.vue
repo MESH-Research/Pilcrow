@@ -71,8 +71,11 @@ const latest_comments = computed(() => {
       .flat()
     return inline.concat(overall)
   })
-  return comments.flat().sort((a, b) => {
-    return new Date(b.updated_at) - new Date(a.updated_at)
-  })
+  return comments
+    .flat()
+    .sort((a, b) => {
+      return new Date(b.updated_at) - new Date(a.updated_at)
+    })
+    .slice(0, 4)
 })
 </script>
