@@ -25,11 +25,12 @@
         <h3>Latest Comments</h3>
       </div>
       <div class="row q-col-gutter-lg">
-        <div v-for="comment in latest_comments" :key="comment.id" class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
-          <comment-preview
-            class="flex fit"
-            :comment="comment"
-          />
+        <div
+          v-for="comment in latest_comments"
+          :key="comment.id"
+          class="col-lg-3 col-md-4 col-sm-6 col-xs-12"
+        >
+          <comment-preview class="flex fit" :comment="comment" />
         </div>
       </div>
     </section>
@@ -55,22 +56,23 @@ const submitter_submissions = computed(() =>
   })
 )
 const latest_comments = computed(() => {
-  const comments = submitter_submissions.value.map((submission) => {
-    const inline = submission.inline_comments.map((comment) => ({
-      ...comment,
-      submission_title: submission.title,
-    })).flat()
-    const overall = submission.overall_comments.map((comment) => ({
-      ...comment,
-      submission_title: submission.title,
-    })).flat()
+  let comments = submitter_submissions.value.map((submission) => {
+    const inline = submission.inline_comments
+      .map((comment) => ({
+        ...comment,
+        submission_title: submission.title,
+      }))
+      .flat()
+    const overall = submission.overall_comments
+      .map((comment) => ({
+        ...comment,
+        submission_title: submission.title,
+      }))
+      .flat()
     return inline.concat(overall)
   })
-  return comments
-    .flat()
-    .sort((a, b) => {
-      return a.updated_at - b.updated_at
-    })
-    .reverse()
+  return comments.flat().sort((a, b) => {
+    return new Date(b.updated_at) - new Date(a.updated_at)
+  })
 })
 </script>
