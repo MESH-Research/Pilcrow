@@ -20,16 +20,22 @@
         />
         <q-card-section>
           <!-- eslint-disable vue/no-v-html -->
-          <div
-            style="
-              overflow: hidden;
-              display: -webkit-box;
-              -webkit-line-clamp: 4;
-              -webkit-box-orient: vertical;
-            "
-            v-html="comment.content"
-          />
+          <div class="comment-preview" v-html="comment.content" />
           <!-- eslint-enable vue/no-v-html -->
+        </q-card-section>
+        <q-card-section
+          v-if="comment.style_criteria?.length"
+          class="q-mx-sm q-mb-sm q-pa-none"
+        >
+          <q-chip
+            v-for="criteria in comment.style_criteria"
+            :key="criteria.id"
+            size="16px"
+            :icon="criteria.icon"
+            data-cy="styleCriteria"
+          >
+            {{ criteria.name }}
+          </q-chip>
         </q-card-section>
       </div>
       <q-card-actions align="right" class="q-pa-md full-width self-end">
@@ -62,3 +68,12 @@ function viewComment() {
   console.log(`View Comment`)
 }
 </script>
+
+<style scoped>
+.comment-preview {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+}
+</style>

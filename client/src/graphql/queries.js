@@ -92,6 +92,11 @@ export const CURRENT_USER_SUBMISSIONS = gql`
           }
           created_at
           updated_at
+          style_criteria {
+            id
+            name
+            icon
+          }
         }
         overall_comments {
           id

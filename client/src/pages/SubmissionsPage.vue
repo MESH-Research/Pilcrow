@@ -25,7 +25,7 @@
         <h3>Latest Comments</h3>
       </div>
       <div class="row q-col-gutter-lg">
-        <div v-for="comment in inline_comments" :key="comment.id" class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+        <div v-for="comment in latest_comments" :key="comment.id" class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
           <comment-preview
             class="flex fit"
             :comment="comment"
@@ -54,12 +54,17 @@ const submitter_submissions = computed(() =>
     return submission.my_role == "submitter"
   })
 )
-const inline_comments = computed(() => {
+const latest_comments = computed(() => {
   const comments = submitter_submissions.value.map((submission) => {
-    return submission.inline_comments.map((comment) => ({
+    const inline = submission.inline_comments.map((comment) => ({
       ...comment,
       submission_title: submission.title,
-    }))
+    })).flat()
+    const overall = submission.overall_comments.map((comment) => ({
+      ...comment,
+      submission_title: submission.title,
+    })).flat()
+    return inline.concat(overall)
   })
   return comments
     .flat()
