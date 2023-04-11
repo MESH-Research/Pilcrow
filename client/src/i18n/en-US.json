@@ -562,7 +562,8 @@
     "toolbar": {
       "back": "Back to Submission Details",
       "toggle_inline_comments": "Toggle Inline Comments",
-      "toggle_annotation_highlights": "Toggle Highlights"
+      "toggle_annotation_highlights": "Toggle Highlights",
+      "status_options": "Status Options"
     },
     "review_coordinators": {
       "heading": "Review Coordinator",

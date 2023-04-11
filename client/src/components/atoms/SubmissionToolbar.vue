@@ -34,10 +34,11 @@
       </q-toolbar-title>
 
       <q-btn-dropdown
-        label="Options"
+        :label="$t(`submission.toolbar.status_options`)"
         flat
         menu-anchor="bottom right"
         menu-self="top right"
+        data-cy="status-dropdown"
       >
         <div v-if="submission.status == 'DRAFT'">
           <q-btn
@@ -59,7 +60,7 @@
           flat
           square
           data-cy="decision_options"
-          class="column"
+          class="column q-pa-sm"
         >
           <q-btn
             v-if="submission.status == 'INITIALLY_SUBMITTED'"
@@ -99,16 +100,6 @@
           </q-btn>
 
           <q-btn
-            v-if="submission.status == 'AWAITING_REVIEW'"
-            data-cy="open_for_review"
-            rounded
-            color="black"
-            :label="$t(`submission.action.open`)"
-            class=""
-            @click="confirmHandler('open')"
-          >
-          </q-btn>
-          <q-btn
             v-if="submission.status == 'UNDER_REVIEW'"
             data-cy="close_for_review"
             rounded
@@ -116,6 +107,24 @@
             :label="$t(`submission.action.close`)"
             class=""
             @click="confirmHandler('close')"
+          >
+          </q-btn>
+        </q-btn-group>
+
+        <q-btn-group
+          v-if="submission.status == 'AWAITING_REVIEW'"
+          flat
+          square
+          class="column q-pa-sm"
+        >
+          <q-btn
+            v-if="submission.status == 'AWAITING_REVIEW'"
+            data-cy="open_for_review"
+            rounded
+            color="black"
+            :label="$t(`submission.action.open`)"
+            class=""
+            @click="confirmHandler('open')"
           >
           </q-btn>
         </q-btn-group>
