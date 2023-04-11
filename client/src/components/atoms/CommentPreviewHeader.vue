@@ -1,14 +1,14 @@
 <template>
   <q-card-section class="q-py-xs" :style="style">
-    <div class="row no-wrap items-center">
-      <div class="row no-wrap items-center q-pr-sm" style="min-width: 0">
-        <avatar-image
+    <div class="row items-center">
+      <avatar-image
           :user="comment.created_by"
           round
           size="30px"
           class="q-mr-sm"
         />
-        <div class="text-h4 ellipsis">
+      <div class="row items-center q-pr-sm" style="flex: 1; min-width: 0">
+        <div class="text-h4 ellipsis" :title="comment.created_by.display_label">
           {{ comment.created_by.display_label }}
         </div>
       </div>
