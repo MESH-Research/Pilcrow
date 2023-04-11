@@ -25,7 +25,7 @@
             }}</q-btn>
           </div>
         </div>
-        <q-list class="notifications-list">
+        <q-list v-if="notificationItems.length" class="notifications-list">
           <notification-list-item
             v-for="(item, index) in notificationItems"
             :key="index"

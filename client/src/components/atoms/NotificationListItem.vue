@@ -29,12 +29,12 @@ import { computed } from "vue"
 import { Screen } from "quasar"
 import { flatten } from "flat"
 import iconMapper from "src/mappers/notification_icons"
-import TimeAgo from "javascript-time-ago"
+import { useTimeAgo } from "src/use/timeAgo"
 import { useMutation } from "@vue/apollo-composable"
 import { MARK_NOTIFICATION_READ } from "src/graphql/mutations"
 import { DateTime } from "luxon"
 
-const timeAgo = new TimeAgo("en-US")
+const timeAgo = useTimeAgo()
 /**
  * Q-Item based component for displaying notification items.
  *

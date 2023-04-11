@@ -64,7 +64,7 @@
 </template>
 
 <script setup>
-import ErrorFieldRenderer from "src/components/molecules/ErrorFieldRenderer"
+import ErrorFieldRenderer from "src/components/molecules/ErrorFieldRenderer.vue"
 import { REQUEST_PASSWORD_RESET } from "src/graphql/mutations"
 import { email, required } from "@vuelidate/validators"
 import { reactive, ref } from "vue"

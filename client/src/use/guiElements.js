@@ -32,6 +32,7 @@ export function useFeedbackMessages(overrideDefaults = {}) {
    */
   function newMessage(message, opts) {
     const options = Object.assign({ message, ...opts }, defaultOptions)
+
     notify(options)
   }
 

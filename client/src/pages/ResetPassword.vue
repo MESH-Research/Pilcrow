@@ -65,7 +65,7 @@
 
 <script setup>
 import NewPasswordInput from "src/components/forms/NewPasswordInput.vue"
-import ErrorFieldRenderer from "src/components/molecules/ErrorFieldRenderer"
+import ErrorFieldRenderer from "src/components/molecules/ErrorFieldRenderer.vue"
 import { RESET_PASSWORD } from "src/graphql/mutations"
 import { CURRENT_USER } from "src/graphql/queries"
 import { ref } from "vue"

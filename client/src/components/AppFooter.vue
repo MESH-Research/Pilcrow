@@ -19,10 +19,10 @@
 </template>
 
 <script setup>
-import TimeAgo from "javascript-time-ago"
+import { useTimeAgo } from "src/use/timeAgo"
 import { DateTime } from "luxon"
 
-const timeAgo = new TimeAgo("en-US")
+const timeAgo = useTimeAgo()
 
 const version = process.env.VERSION
 const version_url = process.env.VERSION_URL
