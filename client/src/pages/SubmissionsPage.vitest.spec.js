@@ -193,14 +193,14 @@ describe("Submissions Page", () => {
                     id: "5",
                     display_label: "Reviewer for Submission",
                     username: "reviewer",
-                    email: "reviewer@pilcrow.dev"
+                    email: "reviewer@pilcrow.dev",
                   },
                   created_at: "2023-03-27T08:21:44.000000Z",
                   updated_by: {
                     id: "5",
                     display_label: "Reviewer for Submission",
                     username: "reviewer",
-                    email: "reviewer@pilcrow.dev"
+                    email: "reviewer@pilcrow.dev",
                   },
                   updated_at: "2023-03-27T08:21:44.000000Z",
                 },
@@ -249,14 +249,14 @@ describe("Submissions Page", () => {
                     id: "5",
                     display_label: "Reviewer for Submission",
                     username: "reviewer",
-                    email: "reviewer@pilcrow.dev"
+                    email: "reviewer@pilcrow.dev",
                   },
                   created_at: "2023-04-09T02:25:03.000000Z",
                   updated_by: {
                     id: "5",
                     display_label: "Reviewer for Submission",
                     username: "reviewer",
-                    email: "reviewer@pilcrow.dev"
+                    email: "reviewer@pilcrow.dev",
                   },
                   updated_at: "2023-04-09T02:25:03.000000Z",
                 },
@@ -287,14 +287,14 @@ describe("Submissions Page", () => {
                     id: "5",
                     display_label: "Reviewer for Submission",
                     username: "reviewer",
-                    email: "reviewer@pilcrow.dev"
+                    email: "reviewer@pilcrow.dev",
                   },
                   created_at: "2023-04-07T05:25:03.000000Z",
                   updated_by: {
                     id: "5",
                     display_label: "Reviewer for Submission",
                     username: "reviewer",
-                    email: "reviewer@pilcrow.dev"
+                    email: "reviewer@pilcrow.dev",
                   },
                   updated_at: "2023-04-08T05:25:03.000000Z",
                 },
