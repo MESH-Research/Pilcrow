@@ -47,7 +47,7 @@
           text-color="white"
           @click="viewComment"
         >
-          <span>{{ $t(`submissions.actions.view_comment`) }}</span>
+          <span>{{ $t(`submissions.action.view_comment`) }}</span>
         </q-btn>
       </q-card-actions>
     </q-card>
