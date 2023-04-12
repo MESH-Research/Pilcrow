@@ -1,7 +1,6 @@
 extend type Submission {
     inline_comments: [InlineComment!]! @hasMany(relation: "inlineComments")
     overall_comments: [OverallComment!]! @hasMany(relation: "overallComments")
-    comments: [CommentUnion!]!
 }
 
 """
@@ -125,7 +124,3 @@ interface Comment {
     created_at: DateTimeUtc!
     updated_at: DateTimeUtc!
 }
-"""
-A union of overall and inline comments
-"""
-union CommentUnion = InlineComment | OverallComment
