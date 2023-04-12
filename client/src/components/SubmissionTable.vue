@@ -60,7 +60,7 @@
           <q-card-section>
             {{ p.row.id }}
           </q-card-section>
-          <q-card-section class="full-width">
+          <q-card-section class="full-width" data-cy="submission_link_mobile">
             <div class="row justify-between">
               <router-link
                 :to="{
@@ -95,7 +95,7 @@
       </q-card>
     </template>
     <template #body-cell-title="p">
-      <q-td :props="p">
+      <q-td :props="p" data-cy="submission_link_desktop">
         <router-link
           :to="{
             name: 'submission_review',
