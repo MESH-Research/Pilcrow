@@ -22,7 +22,7 @@
     </section>
     <section class="q-pa-lg">
       <div class="row">
-        <h3>Latest Comments</h3>
+        <h3>{{ $t(`submissions.latest_comments_heading`) }}</h3>
       </div>
       <div class="row q-col-gutter-lg">
         <div
