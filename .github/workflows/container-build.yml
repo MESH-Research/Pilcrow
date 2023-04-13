@@ -30,7 +30,7 @@ jobs:
           context: client
           # Note: tags has to be all lower-case
           tags: |
-            ghcr.io/mesh-research/pilcrow/web:${GITHUB_SHA}
+            ghcr.io/mesh-research/pilcrow/web:${{ GITHUB_SHA }}
           # build on feature branches, push only on main branch
           push: true
       - name: Image digest
@@ -60,7 +60,7 @@ jobs:
           context: backend
           # Note: tags has to be all lower-case
           tags: |
-            ghcr.io/mesh-research/pilcrow/fpm:${GITHUB_SHA}
+            ghcr.io/mesh-research/pilcrow/fpm:${{ GITHUB_SHA }}
           # build on feature branches, push only on main branch
           push: true
       - name: Image digest
@@ -87,11 +87,11 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: backend
-          build-args:
-            COMPOSER_NO_DEV: 0
+          build-args: |
+            COMPOSER_NO_DEV=0
           # Note: tags has to be all lower-case
           tags: |
-            ghcr.io/mesh-research/pilcrow/fpm-dev:${GITHUB_SHA}
+            ghcr.io/mesh-research/pilcrow/fpm-dev:${{ GITHUB_SHA }}
           # build on feature branches, push only on main branch
           push: true
       - name: Image digest
