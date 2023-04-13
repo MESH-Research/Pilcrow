@@ -16,7 +16,7 @@
           params: { id: props.submission.id },
         }"
       />
-      <q-toolbar-title class="q-pt-xs q-pb-sm">
+      <q-toolbar-title class="q-pt-xs q-pb-sm col-grow">
         <div>
           <h1 data-cy="submussion_title" class="text-h3 q-ma-none">
             {{ submission.title }}
@@ -32,84 +32,104 @@
           </q-chip>
         </div>
       </q-toolbar-title>
-      <div v-if="submission.status == 'DRAFT'">
-        <q-btn
-          data-cy="initially_submit"
-          rounded
-          color="positive"
-          :label="$t(`submission.action.submit_for_review`)"
-          class="q-ml-md"
-          @click="confirmHandler('submit_for_review')"
-        >
-        </q-btn>
-      </div>
-      <div
-        v-else-if="
-          submission.status != 'AWAITING_REVIEW' &&
-          submission.status != 'REJECTED' &&
-          submission.status != 'RESUBMISSION_REQUESTED'
-        "
-        data-cy="decision_options"
-      >
-        <q-btn
-          v-if="submission.status == 'INITIALLY_SUBMITTED'"
-          data-cy="accept_for_review"
-          rounded
-          color="positive"
-          :label="$t(`submission.action.accept_for_review`)"
-          class="q-ml-md"
-          @click="confirmHandler('accept_for_review')"
-        >
-        </q-btn>
 
-        <q-btn
-          v-if="submission.status != 'INITIALLY_SUBMITTED'"
-          data-cy="accept_as_final"
-          rounded
-          color="positive"
-          :label="$t(`submission.action.accept_as_final`)"
-          class="q-ml-md"
-          @click="confirmHandler('accept_as_final')"
-        >
-        </q-btn>
-        <q-btn
-          rounded
-          :label="$t(`submission.action.request_resubmission`)"
-          class="q-ml-md text-white request-resubmission"
-          color="dark-grey"
-          @click="confirmHandler('request_resubmission')"
-        >
-        </q-btn>
-        <q-btn
-          rounded
-          color="negative"
-          :label="$t(`submission.action.reject`)"
-          class="q-ml-md"
-          @click="confirmHandler('reject')"
-        >
-        </q-btn>
-      </div>
-      <q-btn
-        v-if="submission.status == 'AWAITING_REVIEW'"
-        data-cy="open_for_review"
-        rounded
-        color="black"
-        :label="$t(`submission.action.open`)"
-        class="q-ml-md"
-        @click="confirmHandler('open')"
+      <q-btn-dropdown
+        :label="$t(`submission.toolbar.status_options`)"
+        flat
+        menu-anchor="bottom right"
+        menu-self="top right"
+        data-cy="status-dropdown"
       >
-      </q-btn>
-      <q-btn
-        v-if="submission.status == 'UNDER_REVIEW'"
-        data-cy="close_for_review"
-        rounded
-        color="black"
-        :label="$t(`submission.action.close`)"
-        class="q-ml-md"
-        @click="confirmHandler('close')"
-      >
-      </q-btn>
-      <q-space></q-space>
+        <div v-if="submission.status == 'DRAFT'">
+          <q-btn
+            data-cy="initially_submit"
+            rounded
+            color="positive"
+            :label="$t(`submission.action.submit_for_review`)"
+            class="q-ml-md"
+            @click="confirmHandler('submit_for_review')"
+          >
+          </q-btn>
+        </div>
+        <q-btn-group
+          v-else-if="
+            submission.status != 'AWAITING_REVIEW' &&
+            submission.status != 'REJECTED' &&
+            submission.status != 'RESUBMISSION_REQUESTED'
+          "
+          flat
+          square
+          data-cy="decision_options"
+          class="column q-pa-sm"
+        >
+          <q-btn
+            v-if="submission.status == 'INITIALLY_SUBMITTED'"
+            data-cy="accept_for_review"
+            color="positive"
+            :label="$t(`submission.action.accept_for_review`)"
+            class=""
+            @click="confirmHandler('accept_for_review')"
+          >
+          </q-btn>
+
+          <q-btn
+            v-if="submission.status != 'INITIALLY_SUBMITTED'"
+            data-cy="accept_as_final"
+            rounded
+            color="positive"
+            :label="$t(`submission.action.accept_as_final`)"
+            class=""
+            @click="confirmHandler('accept_as_final')"
+          >
+          </q-btn>
+          <q-btn
+            rounded
+            :label="$t(`submission.action.request_resubmission`)"
+            class="text-white request-resubmission"
+            color="dark-grey"
+            @click="confirmHandler('request_resubmission')"
+          >
+          </q-btn>
+          <q-btn
+            rounded
+            color="negative"
+            :label="$t(`submission.action.reject`)"
+            class=""
+            @click="confirmHandler('reject')"
+          >
+          </q-btn>
+
+          <q-btn
+            v-if="submission.status == 'UNDER_REVIEW'"
+            data-cy="close_for_review"
+            rounded
+            color="black"
+            :label="$t(`submission.action.close`)"
+            class=""
+            @click="confirmHandler('close')"
+          >
+          </q-btn>
+        </q-btn-group>
+
+        <q-btn-group
+          v-if="submission.status == 'AWAITING_REVIEW'"
+          flat
+          square
+          class="column q-pa-sm"
+        >
+          <q-btn
+            v-if="submission.status == 'AWAITING_REVIEW'"
+            data-cy="open_for_review"
+            rounded
+            color="black"
+            :label="$t(`submission.action.open`)"
+            class=""
+            @click="confirmHandler('open')"
+          >
+          </q-btn>
+        </q-btn-group>
+      </q-btn-dropdown>
+
       <q-btn
         :aria-label="$t('submission.toolbar.toggle_annotation_highlights')"
         dense
