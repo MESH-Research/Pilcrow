@@ -16,7 +16,7 @@ jobs:
       - name: Setup Environment (PR)
         if: ${{ github.event_name == 'pull_request' }}
         run: |
-          echo "COMMIT_SHA=${{ env.COMMIT_SHA }}" >> ${GITHUB_ENV}
+          echo "COMMIT_SHA=${{ env.GITHUB_REF }}" >> ${GITHUB_ENV}
       - name: Setup Environment (Push)
         if: ${{ github.event_name == 'push' }}
         run: |
@@ -38,7 +38,7 @@ jobs:
           context: client
           # Note: tags has to be all lower-case
           tags: |
-            ghcr.io/mesh-research/pilcrow/web:${{ env.COMMIT_SHA }}
+            ghcr.io/mesh-research/pilcrow/web:${{ env.GITHUB_REF }}
           # build on feature branches, push only on main branch
           push: true
       - name: Image digest
@@ -52,7 +52,7 @@ jobs:
       - name: Setup Environment (PR)
         if: ${{ github.event_name == 'pull_request' }}
         run: |
-          echo "COMMIT_SHA=${{ env.COMMIT_SHA }}" >> ${GITHUB_ENV}
+          echo "COMMIT_SHA=${{ env.GITHUB_REF }}" >> ${GITHUB_ENV}
       - name: Setup Environment (Push)
         if: ${{ github.event_name == 'push' }}
         run: |
@@ -75,7 +75,7 @@ jobs:
           context: backend
           # Note: tags has to be all lower-case
           tags: |
-            ghcr.io/mesh-research/pilcrow/fpm:${{ env.COMMIT_SHA }}
+            ghcr.io/mesh-research/pilcrow/fpm:${{ env.GITHUB_REF }}
           # build on feature branches, push only on main branch
           push: true
       - name: Image digest
@@ -89,7 +89,7 @@ jobs:
       - name: Setup Environment (PR)
         if: ${{ github.event_name == 'pull_request' }}
         run: |
-          echo "COMMIT_SHA=${{ env.COMMIT_SHA }}" >> ${GITHUB_ENV}
+          echo "COMMIT_SHA=${{ env.GITHUB_REF }}" >> ${GITHUB_ENV}
       - name: Setup Environment (Push)
         if: ${{ github.event_name == 'push' }}
         run: |
@@ -113,7 +113,7 @@ jobs:
             COMPOSER_NO_DEV=0
           # Note: tags has to be all lower-case
           tags: |
-            ghcr.io/mesh-research/pilcrow/fpm-dev:${{ env.COMMIT_SHA }}
+            ghcr.io/mesh-research/pilcrow/fpm-dev:${{ env.GITHUB_REF }}
           # build on feature branches, push only on main branch
           push: true
       - name: Image digest
