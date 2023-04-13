@@ -2,16 +2,16 @@
   <div data-cy="previewComment">
     <q-card
       square
-      class="bg-grey-1 shadow-2 q-mb-md comment full-height flex content-between"
+      class="bg-grey-1 shadow-2 q-mb-md comment fit flex content-between"
       :aria-label="
         $t('submissions.comment_preview.ariaLabel', {
           display_label: comment.created_by.display_label,
         })
       "
     >
-      <div>
+      <div class="full-width">
         <q-card-section>
-          {{ comment.submission_title }}
+          {{ comment.submission.title }}
         </q-card-section>
         <comment-preview-header
           :comment="comment"
@@ -40,15 +40,16 @@
       </div>
       <q-card-actions align="right" class="q-pa-md full-width self-end">
         <q-btn
-          aria-label="View Comment"
           data-cy="viewCommentButton"
           bordered
           color="secondary"
           text-color="white"
-          @click="viewComment"
-        >
-          <span>{{ $t(`submissions.action.view_comment`) }}</span>
-        </q-btn>
+          :to="{
+            name: 'submission_review',
+            params: { id: comment.submission.id },
+          }"
+          :label="$t(`submissions.action.go_to_review`)"
+        />
       </q-card-actions>
     </q-card>
   </div>
@@ -63,17 +64,15 @@ defineProps({
     required: true,
   },
 })
-
-function viewComment() {
-  console.log(`View Comment`)
-}
 </script>
 
-<style scoped>
-.comment-preview {
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 4;
-  -webkit-box-orient: vertical;
-}
+<style lang="sass" scoped>
+.comment-preview
+  overflow: hidden
+  display: -webkit-box
+  -webkit-line-clamp: 4
+  -webkit-box-orient: vertical
+  &::v-deep
+    p
+      margin: 0
 </style>

@@ -351,8 +351,8 @@
     },
     "submissions": {
       "submitter": {
-        "title": "All Submissions",
-        "byline": "{type_name} you have submitted for review"
+        "title": "Your Submissions",
+        "byline": "Submissions you have submitted for review"
       }
     }
   },
@@ -643,9 +643,10 @@
     "none": "No Submissions Created",
     "details_heading": "Submission Details",
     "latest_comments_heading": "Latest Comments",
+    "no_comments": "There are no comments for you.",
     "action": {
       "toggle_label": "Toggle Submission Actions",
-      "view_comment": "View Comment",
+      "go_to_review": "Go To Review",
       "review": {
         "name": "Review Submission",
         "no_access": "Reviewers can only access submissions in reviewable states"

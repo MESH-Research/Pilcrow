@@ -187,31 +187,6 @@ export const GET_PUBLICATIONS = gql`
   ${_PAGINATION_FIELDS}
 `
 
-export const GET_SUBMISSIONS = gql`
-  query GetSubmissions($page: Int) {
-    submissions(page: $page) {
-      paginatorInfo {
-        ...paginationFields
-      }
-      data {
-        id
-        title
-        status
-        my_role
-        effective_role
-        publication {
-          name
-        }
-        files {
-          id
-          file_upload
-        }
-      }
-    }
-  }
-  ${_PAGINATION_FIELDS}
-`
-
 export const GET_SUBMISSION = gql`
   query GetSubmission($id: ID!) {
     submission(id: $id) {

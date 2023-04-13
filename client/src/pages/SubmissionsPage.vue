@@ -4,7 +4,6 @@
       {{ $t(`submissions.heading`) }}
     </h2>
     <section class="row q-col-gutter-lg q-pa-lg">
-      <div class="col-12">
         <div v-if="subsLoading" class="q-pa-lg">
           {{ $t("loading") }}
         </div>
@@ -18,13 +17,19 @@
             data-cy="submissions_table"
           />
         </div>
-      </div>
     </section>
     <section class="q-pa-lg">
-      <div class="row">
+      <div class="row q-px-md">
         <h3>{{ $t(`submissions.latest_comments_heading`) }}</h3>
       </div>
-      <div class="row q-col-gutter-lg">
+      <div v-if="latest_comments.length == 0" :class="$q.screen.width < 770 ? `q-pa-md` : ``">
+        <q-card flat bordered square class="q-pa-lg text-center">
+          <p class="text-h3">
+            {{ $t(`submissions.no_comments`) }}
+          </p>
+        </q-card>
+      </div>
+      <div v-else class="row q-col-gutter-lg">
         <div
           v-for="comment in latest_comments"
           :key="comment.id"
@@ -60,13 +65,19 @@ const latest_comments = computed(() => {
     const inline = submission.inline_comments
       .map((comment) => ({
         ...comment,
-        submission_title: submission.title,
+        submission: {
+          id: submission.id,
+          title: submission.title,
+        }
       }))
       .flat()
     const overall = submission.overall_comments
       .map((comment) => ({
         ...comment,
-        submission_title: submission.title,
+        submission: {
+          id: submission.id,
+          title: submission.title,
+        }
       }))
       .flat()
     return inline.concat(overall)

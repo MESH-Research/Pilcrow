@@ -42,6 +42,8 @@ describe("Reviews Page", () => {
                   name: "Jest Publication",
                   my_role: null,
                 },
+                inline_comments: [],
+                overall_comments: [],
               },
               {
                 id: "2",
@@ -54,6 +56,8 @@ describe("Reviews Page", () => {
                   name: "Jest Publication",
                   my_role: null,
                 },
+                inline_comments: [],
+                overall_comments: [],
               },
               {
                 id: "3",
@@ -66,6 +70,8 @@ describe("Reviews Page", () => {
                   name: "Jest Publication",
                   my_role: null,
                 },
+                inline_comments: [],
+                overall_comments: [],
               },
               {
                 id: "4",
@@ -78,6 +84,8 @@ describe("Reviews Page", () => {
                   name: "Jest Publication",
                   my_role: null,
                 },
+                inline_comments: [],
+                overall_comments: [],
               },
               {
                 id: "5",
@@ -90,6 +98,8 @@ describe("Reviews Page", () => {
                   name: "Jest Publication",
                   my_role: null,
                 },
+                inline_comments: [],
+                overall_comments: [],
               },
             ],
           },
@@ -126,6 +136,8 @@ describe("Reviews Page", () => {
                   name: "Jest Publication",
                   my_role: null,
                 },
+                inline_comments: [],
+                overall_comments: [],
               },
               {
                 id: "2",
@@ -138,6 +150,8 @@ describe("Reviews Page", () => {
                   name: "Jest Publication",
                   my_role: null,
                 },
+                inline_comments: [],
+                overall_comments: [],
               },
             ],
           },
