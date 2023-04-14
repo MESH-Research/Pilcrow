@@ -130,7 +130,9 @@
     "account_dropdown_aria": "User Account Dropdown",
     "account_btn_aria": "User Account Dropdown Toggle",
     "logo_alt": "Application Logo",
-    "nav_aria_label": "Application Sections"
+    "nav_aria_label": "Application Sections",
+    "site_title": "Pilcrow",
+    "site_subtitle": "Submission Review System"
   },
   "account": {
     "failures": {

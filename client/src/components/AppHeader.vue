@@ -10,8 +10,10 @@
           style="width: 50px; height: 50px"
         />
         <div v-if="$q.screen.width >= 400" class="column">
-          <h1 class="q-ma-none text-h4 site-title">Pilcrow</h1>
-          <small class="site-subtitle">Submission Review System</small>
+          <h1 class="q-ma-none text-h4 site-title">
+            {{ $t("header.site_title") }}
+          </h1>
+          <small class="site-subtitle">{{ $t("header.site_subtitle") }}</small>
         </div>
       </div>
       <q-space />
