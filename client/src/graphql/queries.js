@@ -97,6 +97,22 @@ export const CURRENT_USER_SUBMISSIONS = gql`
             name
             icon
           }
+          replies {
+            id
+            content
+            created_by {
+              id
+              display_label
+              email
+            }
+            updated_by{
+              id
+              display_label
+              email
+            }
+            created_at
+            updated_at
+          }
         }
         overall_comments {
           id
@@ -113,6 +129,22 @@ export const CURRENT_USER_SUBMISSIONS = gql`
           }
           created_at
           updated_at
+          replies {
+            id
+            content
+            created_by {
+              id
+              display_label
+              email
+            }
+            updated_by{
+              id
+              display_label
+              email
+            }
+            created_at
+            updated_at
+          }
         }
         publication {
           id

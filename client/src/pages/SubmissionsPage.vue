@@ -62,25 +62,49 @@ const submitter_submissions = computed(() =>
 )
 const latest_comments = computed(() => {
   let comments = submitter_submissions.value.map((submission) => {
+    const inline_replies = []
     const inline = submission.inline_comments
-      .map((comment) => ({
-        ...comment,
-        submission: {
-          id: submission.id,
-          title: submission.title,
+      .map((comment) => {
+        comment.replies.map((reply) => {
+          inline_replies.push({
+            ...reply,
+            submission: {
+              id: submission.id,
+              title: submission.title,
+            },
+          })
+        })
+        return {
+          ...comment,
+          submission: {
+            id: submission.id,
+            title: submission.title,
+          }
         }
-      }))
+      })
       .flat()
+    const overall_replies = []
     const overall = submission.overall_comments
-      .map((comment) => ({
-        ...comment,
-        submission: {
-          id: submission.id,
-          title: submission.title,
+      .map((comment) => {
+        comment.replies.map((reply) => {
+          overall_replies.push({
+            ...reply,
+            submission: {
+              id: submission.id,
+              title: submission.title,
+            },
+          })
+        })
+        return {
+          ...comment,
+          submission: {
+            id: submission.id,
+            title: submission.title,
+          }
         }
-      }))
+      })
       .flat()
-    return inline.concat(overall)
+    return [].concat.apply(inline, inline_replies, overall, overall_replies)
   })
   return comments
     .flat()
