@@ -18,14 +18,14 @@ jobs:
         id: context
         run: |
           if [$PACKAGE == 'web']; then
-              echo "context=client" >> $GITHUB_OUTPUT"
+              echo "context=client" >> $GITHUB_OUTPUT
           else
-              echo "context=backend" >> $GITHUB_OUTPUT"
+              echo "context=backend" >> $GITHUB_OUTPUT
           fi
           if [[ "$PACKAGE" == *"dev"* ]]; then
-              echo "dev=1" >> $GITHUB_OUTPUT"
+              echo "dev=1" >> $GITHUB_OUTPUT
           else
-              echo "dev=0" >> $GITHUB_OUTPUT"
+              echo "dev=0" >> $GITHUB_OUTPUT
           fi
         env:
           PACKAGE: ${{ matrix.package }}
