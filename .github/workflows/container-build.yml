@@ -36,7 +36,6 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          output: type=docker,dest=/tmp/image.tar
           images: |
             pilcrow/${{ matrix.package }}
             ghcr.io/mesh-research/pilcrow/${{ matrix.package }}
@@ -52,7 +51,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build image and push to GitHub Container Registry
+      - name: Build image.
         uses: docker/build-push-action@v4
         with:
           context: ${{ steps.context.outputs.context }}
@@ -61,7 +60,15 @@ jobs:
             COMPOSER_NO_DEV=${{ steps.context.outputs.nodev }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+      - name: Push Image
+        uses: docker/build-push-action@v4
+        with:
+          context: ${{ steps.context.outputs.context }}
           push: true
+          build-args: |
+            COMPOSER_NO_DEV=${{ steps.context.outputs.nodev }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
       - name: Upload artifact
