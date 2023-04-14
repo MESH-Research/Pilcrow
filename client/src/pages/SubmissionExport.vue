@@ -3,7 +3,7 @@
     {{ $t("loading") }}
   </div>
   <article v-else class="q-pa-lg">
-    <h2>Submission Export</h2>
+    <h2 class="q-my-none">Export</h2>
     <h3>{{ submission.title }}</h3>
     <p>
       This page allows you to export this submission as a HTML file. This
