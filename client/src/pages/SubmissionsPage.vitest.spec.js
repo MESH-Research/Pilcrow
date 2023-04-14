@@ -162,6 +162,7 @@ describe("Submissions Page", () => {
                     email: "applicationadministrator@pilcrow.dev",
                   },
                   updated_at: "2023-03-24T02:01:00.000000Z",
+                  replies: []
                 },
                 {
                   id: "2",
@@ -183,6 +184,7 @@ describe("Submissions Page", () => {
                     email: "publicationEditor@pilcrow.dev",
                   },
                   updated_at: "2023-03-25T05:27:07.000000Z",
+                  replies: []
                 },
               ],
               overall_comments: [
@@ -203,6 +205,7 @@ describe("Submissions Page", () => {
                     email: "reviewer@pilcrow.dev",
                   },
                   updated_at: "2023-03-27T08:21:44.000000Z",
+                  replies: []
                 },
               ],
             },
@@ -234,6 +237,7 @@ describe("Submissions Page", () => {
                     email: "publicationEditor@pilcrow.dev",
                   },
                   updated_at: "2023-04-08T02:01:03.000000Z",
+                  replies: []
                 },
                 {
                   id: "4",
@@ -259,6 +263,7 @@ describe("Submissions Page", () => {
                     email: "reviewer@pilcrow.dev",
                   },
                   updated_at: "2023-04-09T02:25:03.000000Z",
+                  replies: []
                 },
               ],
               overall_comments: [
@@ -279,6 +284,7 @@ describe("Submissions Page", () => {
                     email: "applicationadministrator@pilcrow.dev",
                   },
                   updated_at: "2023-04-10T07:12:35.000000Z",
+                  replies: []
                 },
                 {
                   id: "3",
@@ -297,6 +303,7 @@ describe("Submissions Page", () => {
                     email: "reviewer@pilcrow.dev",
                   },
                   updated_at: "2023-04-08T05:25:03.000000Z",
+                  replies: []
                 },
               ],
             },

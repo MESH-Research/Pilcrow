@@ -104,7 +104,7 @@ const latest_comments = computed(() => {
         }
       })
       .flat()
-    return [].concat.apply(inline, inline_replies, overall, overall_replies)
+    return [].concat.apply([], [inline, inline_replies, overall, overall_replies])
   })
   return comments
     .flat()
