@@ -22,7 +22,7 @@ jobs:
           else
               echo "context=backend" >> $GITHUB_OUTPUT
           fi
-        if [[ "$PACKAGE" == *"dev"* ]]; then
+          if [[ "$PACKAGE" == *"dev"* ]]; then
               echo "nodev=0" >> $GITHUB_OUTPUT
           else
               echo "nodev=1" >> $GITHUB_OUTPUT
