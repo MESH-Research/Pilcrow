@@ -4,11 +4,11 @@
     <app-banner />
     <q-toolbar class="header-toolbar">
       <div class="q-pa-sm row q-gutter-md items-center">
-        <q-img
+        <a href="/"><q-img
           :alt="$t('header.logo_alt')"
           src="/logo-100x100.png"
           style="width: 50px; height: 50px"
-        />
+        /></a>
         <div v-if="$q.screen.width >= 400" class="column">
           <h1 class="q-ma-none text-h4 site-title">
             {{ $t("header.site_title") }}
