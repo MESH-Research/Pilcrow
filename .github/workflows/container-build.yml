@@ -17,7 +17,7 @@ jobs:
       - name: Context
         id: context
         run: |
-          if [ "$PACKAGE" == "web"]; then
+          if [ "$PACKAGE" = "web" ]; then
               echo "context=client" >> $GITHUB_OUTPUT
           else
               echo "context=backend" >> $GITHUB_OUTPUT
