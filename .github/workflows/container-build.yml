@@ -37,7 +37,6 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: |
-            pilcrow/${{ matrix.package }}
             ghcr.io/mesh-research/pilcrow/${{ matrix.package }}
           tags: |
             type=ref,event=branch
