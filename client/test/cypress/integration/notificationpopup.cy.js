@@ -18,6 +18,7 @@ describe("Notification Popup", () => {
     cy.login({ email: "applicationadministrator@pilcrow.dev" })
     cy.visit("/submission/review/108")
     cy.interceptGQLOperation("UpdateSubmissionStatus")
+    cy.dataCy("status-dropdown").click()
     cy.dataCy("open_for_review").click()
     cy.dataCy("dirtyYesChangeStatus").click()
     cy.wait('@UpdateSubmissionStatus')
