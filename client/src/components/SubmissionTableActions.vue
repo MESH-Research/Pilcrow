@@ -132,6 +132,19 @@
           </q-item>
         </q-menu>
       </q-item>
+      <q-item
+        clickable
+        :to="{
+          name: 'submission_export',
+          params: { id: submission.id },
+        }"
+      >
+        <q-item-section>
+          <q-item-label>
+            Export Submission
+          </q-item-label>
+        </q-item-section>
+      </q-item>
     </q-menu>
   </q-btn>
 </template>

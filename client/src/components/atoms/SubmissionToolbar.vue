@@ -129,7 +129,22 @@
           </q-btn>
         </q-btn-group>
       </q-btn-dropdown>
-
+      <q-btn
+        :aria-label="`Export Submission`"
+        icon="exit_to_app"
+        dense
+        flat
+        round
+        style="color: rgba(255,255,255,0.7)"
+        :to="{
+          name: 'submission_export',
+          params: { id: submission.id },
+        }"
+        >
+        <q-tooltip>
+          Export Submission
+        </q-tooltip>
+      </q-btn>
       <q-btn
         :aria-label="$t('submission.toolbar.toggle_annotation_highlights')"
         dense

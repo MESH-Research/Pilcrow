@@ -2,19 +2,42 @@
   <div v-if="!submission" class="q-pa-lg">
     {{ $t("loading") }}
   </div>
-  <article v-else class="q-pa-lg">
-    <h2 class="q-my-none">Export</h2>
-    <h3>{{ submission.title }}</h3>
-    <p>
-      This page allows you to export this submission as a HTML file. This
-      submission's file contents will download automatically to your device.
-    </p>
-    <q-btn label="Download" color="accent" @click="crap()"/>
-  </article>
+  <div v-else>
+    <nav class="q-px-lg q-pt-md q-gutter-sm">
+      <q-breadcrumbs>
+        <q-breadcrumbs-el
+          :label="$t('header.submissions', 2)"
+          to="/submissions"
+        />
+        <q-breadcrumbs-el
+          :label="$t('submissions.details_heading')"
+          :to="{
+            name: 'submission_details',
+            params: { id: submission.id },
+          }"
+        />
+        <q-breadcrumbs-el label="Export" />
+      </q-breadcrumbs>
+    </nav>
+    <article class="q-pa-lg">
+      <h2 class="q-my-none">Export</h2>
+      <h3>{{ submission.title }}</h3>
+      <p>
+        This page allows you to export this submission as a HTML file. This
+        submission's file contents will download automatically to your device.
+      </p>
+      <q-btn
+        label="Download"
+        color="accent"
+        icon="file_download"
+        @click="download()"
+      />
+    </article>
+  </div>
 </template>
 <script setup>
 import { computed } from "vue"
-import { GET_SUBMISSION} from "src/graphql/queries"
+import { GET_SUBMISSION } from "src/graphql/queries"
 import { useQuery } from "@vue/apollo-composable"
 const { result } = useQuery(GET_SUBMISSION, { id: props.id })
 const submission = computed(() => {
@@ -26,4 +49,7 @@ const props = defineProps({
     required: true,
   },
 })
+function download() {
+  console.log("download")
+}
 </script>
