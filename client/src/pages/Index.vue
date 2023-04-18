@@ -1,55 +1,47 @@
 <template>
   <q-layout>
     <q-page-container>
-      <q-page>
+      <q-page class="q-pa-md">
         <q-img
           :alt="$t('header.logo_alt')"
           src="/logo.png"
-          style="width: 500px; aspect-ratio: 1;"
+          style="width: 400px; aspect-ratio: 1"
+          class="col-s-12 q-ma-lg"
         ></q-img>
-        <h1>
-          Cultivating openness, collaboration, and communtiy in peer review.
-        </h1>
-        <p>
-          Pilcrow is an application that facilitates the peer review process for
-          scholarly communications. It is founded on creating supportive
-          experiences for authors, reviewers, and editors and provides an
-          environment for a peer review practice with transparency,
-          collegiality, and ongoing developmemtal conversations.
-        </p>
-        <p>On Pilcrow, editorial teams can:</p>
-        <q-list tag="ul">
-          <q-item tag="li"
-            >Move a piece of scholarship from submission through peer
-            review,</q-item
-          >
-          <q-item tag="li">Export submissions for publication.</q-item>
-          <q-item tag="li"
-            >Invite, manage, and correspond with authors and reviewers.</q-item
-          >
-        </q-list>
-        <p>
-          Pilcrow is a collaboration between
-          <a href="https://www.meshresearch.net">Mesh Research</a> and the
-          <a href="https://publicphilosophyjournal.org"
-            >Public Philosophy Journal</a
-          >
-          at Michigan State University. The project is supported by the Andrew
-          W. Mellon Foundation (Grant #G-1910-07239).
-        </p>
-        <p>
-          Pilcrow is an open source project. Documentation can be found at
-          <a href="https://ccr.meshresearch.dev/"
-            >https://ccr.meshresearch.dev/</a
-          >
-        </p>
+        <div class="">
+          <h1>{{ $t(`home.h1`) }}</h1>
+          <p>{{ $t(`home.value_statement`) }}</p>
+          <p>{{ $t(`home.editorial_statement.statement`) }}</p>
+          <q-list tag="ul">
+            <q-item tag="li">{{
+              $t(`home.editorial_statement.peer_review`)
+            }}</q-item>
+            <q-item tag="li">{{
+              $t(`home.editorial_statement.export`)
+            }}</q-item>
+            <q-item tag="li">{{
+              $t(`home.editorial_statement.invite`)
+            }}</q-item>
+          </q-list>
+          <p>{{ $t(`home.grant_statement.statement`) }}</p>
+          <i18n path="home.open_source.statement" tag="p">
+            <template v-slot:pilcrow_docs>
+              <a href="https://ccr.meshresearch.dev">{{
+                $t(`home.open_source.pilcrow_link`)
+              }}</a>
+            </template>
+          </i18n>
+        </div>
       </q-page>
     </q-page-container>
   </q-layout>
 </template>
 
 <script>
+import i18n from "src/i18n"
+
 export default {
   name: "PageIndex",
+  components: { i18n },
 }
 </script>
