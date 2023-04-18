@@ -77,6 +77,75 @@ export const CURRENT_USER_SUBMISSIONS = gql`
         status
         my_role
         effective_role
+        inline_comments {
+          id
+          content
+          created_by {
+            id
+            display_label
+            email
+          }
+          updated_by{
+            id
+            display_label
+            email
+          }
+          created_at
+          updated_at
+          style_criteria {
+            id
+            name
+            icon
+          }
+          replies {
+            id
+            content
+            created_by {
+              id
+              display_label
+              email
+            }
+            updated_by{
+              id
+              display_label
+              email
+            }
+            created_at
+            updated_at
+          }
+        }
+        overall_comments {
+          id
+          content
+          created_by{
+            id
+            display_label
+            email
+          }
+          updated_by{
+            id
+            display_label
+            email
+          }
+          created_at
+          updated_at
+          replies {
+            id
+            content
+            created_by {
+              id
+              display_label
+              email
+            }
+            updated_by{
+              id
+              display_label
+              email
+            }
+            created_at
+            updated_at
+          }
+        }
         publication {
           id
           name
@@ -144,31 +213,6 @@ export const GET_PUBLICATIONS = gql`
         id
         name
         home_page_content
-      }
-    }
-  }
-  ${_PAGINATION_FIELDS}
-`
-
-export const GET_SUBMISSIONS = gql`
-  query GetSubmissions($page: Int) {
-    submissions(page: $page) {
-      paginatorInfo {
-        ...paginationFields
-      }
-      data {
-        id
-        title
-        status
-        my_role
-        effective_role
-        publication {
-          name
-        }
-        files {
-          id
-          file_upload
-        }
       }
     }
   }
