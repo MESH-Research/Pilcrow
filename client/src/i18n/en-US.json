@@ -314,8 +314,7 @@
       "ppj_link": "Public Philosophy Journal"
     },
     "open_source": {
-      "statement": "Pilcrow is an open source project. Documentation can be found at {pilcrow_docs}",
-      "pilcrow_link": "https://ccr.meshresearch.dev"
+      "statement": "Pilcrow is an open source project. Documentation can be found at {pilcrow_docs}"
     }
   },
   "dashboard": {
