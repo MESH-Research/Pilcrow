@@ -19,6 +19,7 @@
           <!-- eslint-disable-next-line vue/no-v-html -->
           <p class="q-mb-none" v-html="$t(byline, byline_opts)"></p>
           <q-select
+            v-if="tableData.length"
             v-model="status_filter"
             clearable
             square
@@ -48,7 +49,12 @@
       </div>
     </template>
     <template #no-data>
-      <div class="full-width row flex-center text--grey q-py-lg">
+      <q-card v-if="$q.screen.width < 770" flat bordered square class="q-pa-lg text-center full-width">
+        <p class="text-h3">
+          {{ $t(`submission_tables.type.${tableType}.no_data`) }}
+        </p>
+      </q-card>
+      <div v-else class="full-width row flex-center text--grey q-py-lg">
         <p class="text-h3">
           {{ $t(`submission_tables.type.${tableType}.no_data`) }}
         </p>
@@ -60,7 +66,7 @@
           <q-card-section>
             {{ p.row.id }}
           </q-card-section>
-          <q-card-section class="full-width">
+          <q-card-section class="full-width" data-cy="submission_link_mobile">
             <div class="row justify-between">
               <router-link
                 :to="{
@@ -95,7 +101,7 @@
       </q-card>
     </template>
     <template #body-cell-title="p">
-      <q-td :props="p">
+      <q-td :props="p" data-cy="submission_link_desktop">
         <router-link
           :to="{
             name: 'submission_review',

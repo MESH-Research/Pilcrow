@@ -46,6 +46,8 @@ describe("Dashboard Page", () => {
         name: "Pilcrow Test Publication 1",
         my_role: null,
       },
+      inline_comments: [],
+      overall_comments: [],
     }
   }
 

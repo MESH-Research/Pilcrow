@@ -82,6 +82,74 @@ export const CURRENT_USER_SUBMISSIONS = gql`
         }
         submitters {
           ...relatedUserFields
+        inline_comments {
+          id
+          content
+          created_by {
+            id
+            display_label
+            email
+          }
+          updated_by{
+            id
+            display_label
+            email
+          }
+          created_at
+          updated_at
+          style_criteria {
+            id
+            name
+            icon
+          }
+          replies {
+            id
+            content
+            created_by {
+              id
+              display_label
+              email
+            }
+            updated_by{
+              id
+              display_label
+              email
+            }
+            created_at
+            updated_at
+          }
+        }
+        overall_comments {
+          id
+          content
+          created_by{
+            id
+            display_label
+            email
+          }
+          updated_by{
+            id
+            display_label
+            email
+          }
+          created_at
+          updated_at
+          replies {
+            id
+            content
+            created_by {
+              id
+              display_label
+              email
+            }
+            updated_by{
+              id
+              display_label
+              email
+            }
+            created_at
+            updated_at
+          }
         }
         publication {
           id
