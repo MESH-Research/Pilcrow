@@ -22,11 +22,13 @@
     <article class="q-pa-lg">
       <h2 class="q-my-none">Export</h2>
       <h3>{{ submission.title }}</h3>
+      <p>This page allows you to export this submission as HTML.</p>
       <p>
-        This page allows you to export this submission as a HTML file. This
-        submission's file contents will download automatically to your device.
+        The file contents will download directly to your
+        device in this format.
       </p>
       <q-btn
+        class="q-mt-lg"
         label="Download"
         color="accent"
         icon="file_download"
