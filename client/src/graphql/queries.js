@@ -82,6 +82,7 @@ export const CURRENT_USER_SUBMISSIONS = gql`
         }
         submitters {
           ...relatedUserFields
+        }
         inline_comments {
           id
           content
