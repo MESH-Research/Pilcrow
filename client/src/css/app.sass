@@ -125,12 +125,8 @@ body.body--dark
     a
         color: #fff
 
-    a[data-cy="configure_button"]:before
-        box-shadow: none
-
-    .shadow-3,
-    .shadow-15
-        box-shadow: 0 8px 9px -5px $dark, 0 15px 22px 2px $dark, 0 6px 28px 5px $dark
+    [class*= "shadow-"]
+        box-shadow: inherit
 
     a[data-cy="submission_link"],
     .accent-dark-text,
