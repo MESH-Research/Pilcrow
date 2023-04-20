@@ -77,14 +77,27 @@ export const CURRENT_USER_SUBMISSIONS = gql`
         status
         my_role
         effective_role
+        review_coordinators {
+          ...relatedUserFields
+        }
+        submitters {
+          ...relatedUserFields
+        }
         publication {
           id
           name
           my_role
+          editors {
+            ...relatedUserFields
+          }
+          publication_admins {
+            ...relatedUserFields
+          }
         }
       }
     }
   }
+  ${_RELATED_USER_FIELDS}
 `
 
 export const GET_USERS = gql`
@@ -162,8 +175,23 @@ export const GET_SUBMISSIONS = gql`
         status
         my_role
         effective_role
+        submitters {
+          ...relatedUserFields
+        }
+        reviewers {
+          ...relatedUserFields
+        }
+        review_coordinators {
+          ...relatedUserFields
+        }
         publication {
           name
+          editors {
+            ...relatedUserFields
+          }
+          publication_admins {
+            ...relatedUserFields
+          }
         }
         files {
           id
@@ -173,6 +201,7 @@ export const GET_SUBMISSIONS = gql`
     }
   }
   ${_PAGINATION_FIELDS}
+  ${_RELATED_USER_FIELDS}
 `
 
 export const GET_SUBMISSION = gql`
@@ -212,14 +241,20 @@ export const GET_SUBMISSION = gql`
           description
           icon
         }
+        editors {
+          ...relatedUserFields
+        }
+        publication_admins {
+          ...relatedUserFields
+        }
+      }
+      submitters {
+        ...relatedUserFields
       }
       reviewers {
         ...relatedUserFields
       }
       review_coordinators {
-        ...relatedUserFields
-      }
-      submitters {
         ...relatedUserFields
       }
     }
@@ -244,6 +279,12 @@ export const GET_SUBMISSION_REVIEW = gql`
           description
           icon
         }
+        editors {
+          ...relatedUserFields
+        }
+        publication_admins {
+          ...relatedUserFields
+        }
       }
       inline_comments {
         from
@@ -265,6 +306,15 @@ export const GET_SUBMISSION_REVIEW = gql`
           ...commentFields
           reply_to_id
         }
+      }
+      reviewers {
+        ...relatedUserFields
+      }
+      review_coordinators {
+        ...relatedUserFields
+      }
+      submitters {
+        ...relatedUserFields
       }
     }
   }

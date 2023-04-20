@@ -80,13 +80,10 @@
           />
         </div>
       </div>
-    </section>
-    <section class="q-pa-lg">
-      <div class="flex row items-center">
-        <submission-export-button
-          :submission="submission"
-        />
-      </div>
+      <submission-export-button
+        class="q-mt-xl"
+        :submission="submission"
+      />
     </section>
     <section class="q-pa-lg" data-cy="activity_section">
       <h3>{{ $t("submission.activity_section.title") }}</h3>

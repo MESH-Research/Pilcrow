@@ -130,20 +130,20 @@
         </q-btn-group>
       </q-btn-dropdown>
       <q-btn
+        v-if="isExportVisible"
         :aria-label="`Export Submission`"
+        :disable="!isExportEnabled"
         icon="exit_to_app"
         dense
         flat
         round
-        style="color: rgba(255,255,255,0.7)"
+        style="color: rgba(255, 255, 255, 0.7)"
         :to="{
           name: 'submission_export',
           params: { id: submission.id },
         }"
-        >
-        <q-tooltip>
-          Export Submission
-        </q-tooltip>
+      >
+        <q-tooltip> Export Submission </q-tooltip>
       </q-btn>
       <q-btn
         :aria-label="$t('submission.toolbar.toggle_annotation_highlights')"
@@ -176,8 +176,13 @@
 <script setup>
 import ConfirmStatusChangeDialog from "../dialogs/ConfirmStatusChangeDialog.vue"
 import { useQuasar } from "quasar"
+import { useSubmissionExport } from "src/use/guiElements.js"
+import { ref } from "vue"
 
 const { dialog } = useQuasar()
+
+const submissionRef = ref(props.submission)
+const { isExportVisible, isExportEnabled } = useSubmissionExport(submissionRef.value)
 
 const props = defineProps({
   // Drawer status
@@ -227,4 +232,5 @@ function dirtyDialog(action) {
     },
   })
 }
+
 </script>

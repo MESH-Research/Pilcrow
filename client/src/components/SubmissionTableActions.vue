@@ -133,6 +133,8 @@
         </q-menu>
       </q-item>
       <q-item
+        v-if="isExportVisible"
+        :disable="!isExportEnabled"
         clickable
         :to="{
           name: 'submission_export',
@@ -153,7 +155,12 @@
 import ConfirmStatusChangeDialog from "../components/dialogs/ConfirmStatusChangeDialog.vue"
 import { useQuasar } from "quasar"
 import { computed } from "vue"
+import { useSubmissionExport } from "src/use/guiElements.js"
+import { ref } from "vue"
 const { dialog } = useQuasar()
+
+const submissionRef = ref(props.submission)
+const { isExportVisible, isExportEnabled } = useSubmissionExport(submissionRef.value)
 
 const props = defineProps({
   submission: {
