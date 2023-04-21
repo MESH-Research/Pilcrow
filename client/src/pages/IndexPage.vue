@@ -1,5 +1,5 @@
 <template>
-  <q-layout>
+  <q-layout data-cy="vueIndex">
     <q-page-container>
       <q-page class="q-pa-md">
         <div class="row items-center justify-center">
