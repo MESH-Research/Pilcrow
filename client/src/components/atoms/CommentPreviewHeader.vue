@@ -43,17 +43,12 @@
         </q-tooltip>
         {{ relativeCreatedTime }}
       </div>
-      <comment-actions
-        @quote-reply-to="$emit('quoteReplyTo')"
-        @modify-comment="$emit('modifyComment')"
-      />
     </div>
   </q-card-section>
 </template>
 
 <script setup>
 import AvatarImage from "./AvatarImage.vue"
-import CommentActions from "./CommentActions.vue"
 import { useTimeAgo } from "src/use/timeAgo"
 import { DateTime } from "luxon"
 import { computed } from "vue"
@@ -70,7 +65,6 @@ const props = defineProps({
     default: null,
   },
 })
-defineEmits(["quoteReplyTo", "modifyComment"])
 const style = computed(() => {
   const style = {}
   if (props.bgColor) {

@@ -368,6 +368,12 @@
         "title": "Submissions",
         "byline": "{type_name} you have submitted for review"
       }
+    },
+    "submissions": {
+      "submitter": {
+        "title": "Your Submissions",
+        "byline": "Submissions you have submitted for review"
+      }
     }
   },
   "publication": {
@@ -654,9 +660,14 @@
     }
   },
   "submissions": {
+    "heading": "Submissions",
+    "none": "No Submissions Created",
     "details_heading": "Submission Details",
+    "latest_comments_heading": "Latest Comments",
+    "no_comments": "There are no comments for you.",
     "action": {
       "toggle_label": "Toggle Submission Actions",
+      "go_to_review": "Go To Review",
       "review": {
         "name": "Review Submission",
         "no_access": "Reviewers can only access submissions in reviewable states"
@@ -724,6 +735,9 @@
       }
     },
     "inline_comments_heading": "Inline Comments",
+    "comment_preview": {
+      "ariaLabel": "Comment Preview. Author {display_label}."
+    },
     "comment": {
       "ariaLabel": "Comment. Author {username}. {replies} replies.",
       "dateLabel": "Created {date}",
