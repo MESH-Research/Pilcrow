@@ -33,7 +33,7 @@
               <template #ppj_url>
                 <a
                   href="https://publicphilosophyjournal.org"
-                  class="hy-link"
+                  class="text-primary"
                   >{{ $t(`home.grant_statement.ppj_link`) }}</a
                 >
               </template>
