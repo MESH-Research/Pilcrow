@@ -135,6 +135,7 @@
       <q-item
         v-if="isExportVisible"
         :disable="!isExportEnabled"
+        data-cy="export_submission"
         clickable
         :to="{
           name: 'submission_export',

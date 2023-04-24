@@ -56,9 +56,18 @@ describe("Submissions Page", () => {
               status: "INITIALLY_SUBMITTED",
               my_role: "submitter",
               effective_role: "submitter",
-              publication: { id: 1, name: "Jest Publication", my_role: "" },
+              publication: {
+                id: 1,
+                name: "Jest Publication",
+                my_role: "",
+                editors: [],
+                publication_admins: [],
+              },
               inline_comments: [],
               overall_comments: [],
+              submitters: [],
+              reviewers: [],
+              review_coordinators: [],
             },
             {
               id: "2",
@@ -66,9 +75,20 @@ describe("Submissions Page", () => {
               status: "RESUBMISSION_REQUESTED",
               my_role: "reviewer",
               effective_role: "reviewer",
-              publication: { id: 1, name: "Jest Publication", my_role: "" },
+              publication: {
+                id: 1,
+                name: "Jest Publication",
+                my_role: "",
+                editors: [],
+                publication_admins: [],
+              },
               inline_comments: [],
               overall_comments: [],
+              submitters: [],
+              reviewers: [],
+              review_coordinators: [],
+              editors: [],
+              publication_admins: [],
             },
             {
               id: "3",
@@ -76,9 +96,18 @@ describe("Submissions Page", () => {
               status: "AWAITING_REVIEW",
               my_role: "review_coordinator",
               effective_role: "review_coordinator",
-              publication: { id: 1, name: "Jest Publication", my_role: "" },
+              publication: {
+                id: 1,
+                name: "Jest Publication",
+                my_role: "",
+                editors: [],
+                publication_admins: [],
+              },
               inline_comments: [],
               overall_comments: [],
+              submitters: [],
+              reviewers: [],
+              review_coordinators: [],
             },
             {
               id: "4",
@@ -86,9 +115,18 @@ describe("Submissions Page", () => {
               status: "REJECTED",
               my_role: "",
               effective_role: "review_coordinator",
-              publication: { id: 1, name: "Jest Publication", my_role: "" },
+              publication: {
+                id: 1,
+                name: "Jest Publication",
+                my_role: "",
+                editors: [],
+                publication_admins: [],
+              },
               inline_comments: [],
               overall_comments: [],
+              submitters: [],
+              reviewers: [],
+              review_coordinators: [],
             },
             {
               id: "5",
@@ -96,9 +134,18 @@ describe("Submissions Page", () => {
               status: "INITIALLY_SUBMITTED",
               my_role: "",
               effective_role: "",
-              publication: { id: 1, name: "Jest Publication", my_role: "" },
+              publication: {
+                id: 1,
+                name: "Jest Publication",
+                my_role: "",
+                editors: [],
+                publication_admins: [],
+              },
               inline_comments: [],
               overall_comments: [],
+              submitters: [],
+              reviewers: [],
+              review_coordinators: [],
             },
             {
               id: "6",
@@ -106,9 +153,18 @@ describe("Submissions Page", () => {
               status: "INITIALLY_SUBMITTED",
               my_role: "submitter",
               effective_role: "submitter",
-              publication: { id: 1, name: "Jest Publication", my_role: "" },
+              publication: {
+                id: 1,
+                name: "Jest Publication",
+                my_role: "",
+                editors: [],
+                publication_admins: [],
+              },
               inline_comments: [],
               overall_comments: [],
+              submitters: [],
+              reviewers: [],
+              review_coordinators: [],
             },
           ],
         },
@@ -139,7 +195,13 @@ describe("Submissions Page", () => {
               status: "INITIALLY_SUBMITTED",
               my_role: "submitter",
               effective_role: "submitter",
-              publication: { id: 1, name: "Jest Publication", my_role: "" },
+              publication: {
+                id: 1,
+                name: "Jest Publication",
+                my_role: "",
+                editors: [],
+                publication_admins: [],
+              },
               inline_comments: [
                 {
                   id: "1",
@@ -162,7 +224,7 @@ describe("Submissions Page", () => {
                     email: "applicationadministrator@pilcrow.dev",
                   },
                   updated_at: "2023-03-24T02:01:00.000000Z",
-                  replies: []
+                  replies: [],
                 },
                 {
                   id: "2",
@@ -184,7 +246,7 @@ describe("Submissions Page", () => {
                     email: "publicationEditor@pilcrow.dev",
                   },
                   updated_at: "2023-03-25T05:27:07.000000Z",
-                  replies: []
+                  replies: [],
                 },
               ],
               overall_comments: [
@@ -205,9 +267,12 @@ describe("Submissions Page", () => {
                     email: "reviewer@pilcrow.dev",
                   },
                   updated_at: "2023-03-27T08:21:44.000000Z",
-                  replies: []
+                  replies: [],
                 },
               ],
+              submitters: [],
+              reviewers: [],
+              review_coordinators: [],
             },
             {
               id: "2",
@@ -215,7 +280,13 @@ describe("Submissions Page", () => {
               status: "RESUBMISSION_REQUESTED",
               my_role: "reviewer",
               effective_role: "reviewer",
-              publication: { id: 1, name: "Jest Publication", my_role: "" },
+              publication: {
+                id: 1,
+                name: "Jest Publication",
+                my_role: "",
+                editors: [],
+                publication_admins: [],
+              },
               inline_comments: [
                 {
                   id: "3",
@@ -237,7 +308,7 @@ describe("Submissions Page", () => {
                     email: "publicationEditor@pilcrow.dev",
                   },
                   updated_at: "2023-04-08T02:01:03.000000Z",
-                  replies: []
+                  replies: [],
                 },
                 {
                   id: "4",
@@ -263,7 +334,7 @@ describe("Submissions Page", () => {
                     email: "reviewer@pilcrow.dev",
                   },
                   updated_at: "2023-04-09T02:25:03.000000Z",
-                  replies: []
+                  replies: [],
                 },
               ],
               overall_comments: [
@@ -284,7 +355,7 @@ describe("Submissions Page", () => {
                     email: "applicationadministrator@pilcrow.dev",
                   },
                   updated_at: "2023-04-10T07:12:35.000000Z",
-                  replies: []
+                  replies: [],
                 },
                 {
                   id: "3",
@@ -303,9 +374,12 @@ describe("Submissions Page", () => {
                     email: "reviewer@pilcrow.dev",
                   },
                   updated_at: "2023-04-08T05:25:03.000000Z",
-                  replies: []
+                  replies: [],
                 },
               ],
+              submitters: [],
+              reviewers: [],
+              review_coordinators: [],
             },
           ],
         },
@@ -315,5 +389,145 @@ describe("Submissions Page", () => {
     expect(wrapper.findAllComponents({ name: "comment-preview" }).length).toBe(
       3
     )
+  })
+
+  test("enables access to the Submission Export page under the correct conditions", async () => {
+    useCurrentUser.mockReturnValue({
+      currentUser: ref({ id: 1 }),
+    })
+
+    CurrentUserSubmissions.mockResolvedValue({
+      data: {
+        currentUser: {
+          id: 1000,
+          roles: [],
+          submissions: [
+            {
+              id: "1",
+              title: "Jest Submission 1",
+              status: "INITIALLY_SUBMITTED",
+              my_role: "submitter",
+              effective_role: "submitter",
+              publication: {
+                id: 1,
+                name: "Jest Publication",
+                my_role: "",
+                editors: [],
+                publication_admins: [],
+              },
+              inline_comments: [],
+              overall_comments: [],
+              submitters: [],
+              reviewers: [],
+              review_coordinators: [],
+            },
+            {
+              id: "2",
+              title: "Jest Submission 2",
+              status: "RESUBMISSION_REQUESTED",
+              my_role: "reviewer",
+              effective_role: "reviewer",
+              publication: {
+                id: 1,
+                name: "Jest Publication",
+                my_role: "",
+                editors: [],
+                publication_admins: [],
+              },
+              inline_comments: [],
+              overall_comments: [],
+              submitters: [],
+              reviewers: [],
+              review_coordinators: [],
+              editors: [],
+              publication_admins: [],
+            },
+            {
+              id: "3",
+              title: "Jest Submission 3",
+              status: "AWAITING_REVIEW",
+              my_role: "review_coordinator",
+              effective_role: "review_coordinator",
+              publication: {
+                id: 1,
+                name: "Jest Publication",
+                my_role: "",
+                editors: [],
+                publication_admins: [],
+              },
+              inline_comments: [],
+              overall_comments: [],
+              submitters: [],
+              reviewers: [],
+              review_coordinators: [],
+            },
+            {
+              id: "4",
+              title: "Jest Submission 4",
+              status: "REJECTED",
+              my_role: "",
+              effective_role: "review_coordinator",
+              publication: {
+                id: 1,
+                name: "Jest Publication",
+                my_role: "",
+                editors: [],
+                publication_admins: [],
+              },
+              inline_comments: [],
+              overall_comments: [],
+              submitters: [],
+              reviewers: [],
+              review_coordinators: [],
+            },
+            {
+              id: "5",
+              title: "Jest Submission 5",
+              status: "INITIALLY_SUBMITTED",
+              my_role: "",
+              effective_role: "",
+              publication: {
+                id: 1,
+                name: "Jest Publication",
+                my_role: "",
+                editors: [],
+                publication_admins: [],
+              },
+              inline_comments: [],
+              overall_comments: [],
+              submitters: [],
+              reviewers: [],
+              review_coordinators: [],
+            },
+            {
+              id: "6",
+              title: "Jest Submission 6",
+              status: "INITIALLY_SUBMITTED",
+              my_role: "submitter",
+              effective_role: "submitter",
+              publication: {
+                id: 1,
+                name: "Jest Publication",
+                my_role: "",
+                editors: [],
+                publication_admins: [],
+              },
+              inline_comments: [],
+              overall_comments: [],
+              submitters: [],
+              reviewers: [],
+              review_coordinators: [],
+            },
+          ],
+        },
+      },
+    })
+    const wrapper = await wrapperFactory()
+    wrapper
+      .findAllComponents("[data-cy=submission_actions]")
+      .at(0)
+      .trigger("click")
+    console.log(wrapper.html())
+    expect(wrapper.findAll(".q-item").length).toBe(2)
   })
 })
