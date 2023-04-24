@@ -1,15 +1,15 @@
 <template>
   <q-layout data-cy="vueIndex">
     <q-page-container>
-      <q-page class="q-pa-md">
+      <q-page >
         <div class="row items-center justify-center">
           <q-img
             :alt="$t('header.logo_alt')"
             src="/logo.png"
             style="width: 400px; aspect-ratio: 1"
-            class="gt-md q-ma-md col-xs-12 col-sm-6 col-grow"
+            class="gt-md col-xs-12 col-sm-6 col-grow"
           ></q-img>
-          <div class="q-ma-md col-xs-8 col-sm-10 col-md-6">
+          <div class="col-xs-8 col-sm-10 col-md-6">
             <h1>{{ $t(`home.h1`) }}</h1>
             <p>{{ $t(`home.value_statement`) }}</p>
             <p>{{ $t(`home.editorial_statement.statement`) }}</p>
