@@ -3,19 +3,23 @@
   <q-header class="header" @keypress="toggleLocale">
     <app-banner />
     <q-toolbar class="header-toolbar">
-      <div class="q-pa-sm row q-gutter-md items-center">
-        <a href="/"><q-img
+      <router-link
+        to="/"
+        class="q-pa-sm row q-gutter-md items-center text-white"
+        style="text-decoration: unset"
+      >
+        <q-img
           :alt="$t('header.logo_alt')"
           src="/logo-100x100.png"
           style="width: 50px; height: 50px"
-        /></a>
-        <div v-if="$q.screen.width >= 400" class="column">
+        />
+        <div v-if="$q.screen.width >= 430" class="column">
           <h1 class="q-ma-none text-h4 site-title">
             {{ $t("header.site_title") }}
           </h1>
           <small class="site-subtitle">{{ $t("header.site_subtitle") }}</small>
         </div>
-      </div>
+      </router-link>
       <q-space />
 
       <template v-if="currentUser">
