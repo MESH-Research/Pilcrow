@@ -41,7 +41,7 @@
 
             <i18n-t keypath="home.open_source.statement" tag="p">
               <template #pilcrow_docs>
-                <a href="https://ccr.meshresearch.dev" class="hy-link"
+                <a href="https://ccr.meshresearch.dev" class="text-primary"
                   >https://ccr.meshresearch.dev</a
                 >
               </template>
