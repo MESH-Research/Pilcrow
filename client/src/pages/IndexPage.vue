@@ -7,7 +7,7 @@
             :alt="$t('header.logo_alt')"
             src="/logo.png"
             style="width: 400px; aspect-ratio: 1"
-            class="gt-md col-xs-12 col-sm-6 col-grow q-mr-md"
+            class="gt-md col-xs-12 col-sm-6 col-grow q-mr-lg"
           ></q-img>
           <div class="col-10 col-md-6">
             <h1>{{ $t(`home.h1`) }}</h1>
