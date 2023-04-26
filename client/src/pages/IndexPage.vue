@@ -9,7 +9,7 @@
             style="width: 400px; aspect-ratio: 1"
             class="gt-md col-xs-12 col-sm-6 col-grow"
           ></q-img>
-          <div class="col-xs-8 col-sm-10 col-md-6">
+          <div class="col-10 col-md-6">
             <h1>{{ $t(`home.h1`) }}</h1>
             <p>{{ $t(`home.value_statement`) }}</p>
             <p>{{ $t(`home.editorial_statement.statement`) }}</p>
