@@ -3,6 +3,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.23.0](https://github.com/MESH-Research/Pilcrow/compare/v0.22.3...v0.23.0) (2023-04-26)
+
+
+### Features
+
+* Add helpful reminders for todo lists ([#1818](https://github.com/MESH-Research/Pilcrow/issues/1818)) ([39b5f38](https://github.com/MESH-Research/Pilcrow/commit/39b5f3853f355030634e66669d2db35d3df12fda))
+
 ## [0.22.3](https://github.com/MESH-Research/Pilcrow/compare/v0.22.2...v0.22.3) (2023-04-26)
 
 

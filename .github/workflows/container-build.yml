@@ -1,0 +1,90 @@
+name: "Docker"
+
+on:
+  push:
+    branches: [master, development, "renovate/**"]
+  pull_request:
+jobs:
+  build-containers:
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        package: [fpm, web, fpm-dev]
+    name: "Build"
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Context
+        id: context
+        run: |
+          if [ "$PACKAGE" = "web" ]; then
+              echo "context=client" >> $GITHUB_OUTPUT
+          else
+              echo "context=backend" >> $GITHUB_OUTPUT
+          fi
+          if [[ "$PACKAGE" == *"dev"* ]]; then
+              echo "nodev=0" >> $GITHUB_OUTPUT
+          else
+              echo "nodev=1" >> $GITHUB_OUTPUT
+          fi
+        env:
+          PACKAGE: ${{ matrix.package }}
+      - name: Find Tag
+        id: tagger
+        run: |
+          echo "version=$(git describe --tags)" >> $GITHUB_OUTPUT
+          echo "url=https://github.com/MESH-Research/CCR/commits/${GITHUB_SHA} >> $GITHUB_OUTPUT
+          echo "date=$(git show -s --format=%cI ${GITHUB_SHA}) >> $GITHUB_OUTPUT
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v2
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: |
+            ghcr.io/mesh-research/pilcrow/${{ matrix.package }}
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=sha,enable=true
+      - name: Login to Github Packages
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build image.
+        uses: docker/build-push-action@v4
+        with:
+          context: ${{ steps.context.outputs.context }}
+          outputs: type=docker,dest=/tmp/image.tar
+          build-args: |
+            COMPOSER_NO_DEV=${{ steps.context.outputs.nodev }}
+            VERSION=${{ steps.tagger.outputs.version }}
+            VERSION_DATE=${{ steps.tagger.outputs.date}}
+            VERSION_URL=${{ steps.tagger.outputs.url }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+      - name: Push Image
+        uses: docker/build-push-action@v4
+        with:
+          context: ${{ steps.context.outputs.context }}
+          push: true
+          build-args: |
+            COMPOSER_NO_DEV=${{ steps.context.outputs.nodev }}
+            VERSION=${{ steps.tagger.outputs.version }}
+            VERSION_DATE=${{ steps.tagger.outputs.date}}
+            VERSION_URL=${{ steps.tagger.outputs.url }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+      - name: Image digest
+        run: echo ${{ steps.docker_build.outputs.digest }}
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ matrix.package }}
+          path: /tmp/image.tar

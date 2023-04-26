@@ -36,7 +36,7 @@ server {
     error_page 404 /index.html;
 
     location @backend {
-        fastcgi_pass phpfpm:9000;
+        fastcgi_pass ${FPM_HOST};
         fastcgi_index index.php;
         include fastcgi_params;
         fastcgi_param SCRIPT_FILENAME /var/www/html/public/index.php;

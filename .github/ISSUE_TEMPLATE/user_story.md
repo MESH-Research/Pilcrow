@@ -20,6 +20,8 @@ assignees: ""
 
 ### To Do / Acceptance Criteria
 
+<!-- Will documentation need to be written or updated? -->
+<!-- Will testing need to be added or updated? -->
 - [ ]
 
 ### Review Checklist
