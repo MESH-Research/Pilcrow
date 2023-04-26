@@ -130,7 +130,9 @@
     "account_dropdown_aria": "User Account Dropdown",
     "account_btn_aria": "User Account Dropdown Toggle",
     "logo_alt": "Application Logo",
-    "nav_aria_label": "Application Sections"
+    "nav_aria_label": "Application Sections",
+    "site_title": "Pilcrow",
+    "site_subtitle": "Submission Review System"
   },
   "account": {
     "failures": {
@@ -295,6 +297,24 @@
           }
         }
       }
+    }
+  },
+  "home": {
+    "h1": "Cultivating openness, collaboration, and communtiy in peer review.",
+    "value_statement": "Pilcrow is an application that facilitates the peer review process for scholarly communications. It is founded on creating supportive experiences for authors, reviewers, and editors and provides an environment for a peer review practice with transparency, collegiality, and ongoing developmental conversations.",
+    "editorial_statement": {
+      "statement": "On Pilcrow, editorial teams can:",
+      "peer_review": "Move a piece of scholarship from submission through peer review,",
+      "export": "Export submissions for publication.",
+      "invite": "Invite, manage, and correspond with authors and reviewers."
+    },
+    "grant_statement": {
+      "statement": "Pilcrow is a collaboration between {mesh_url} and the {ppj_url} at Michigan State University. The project is supported by the Andrew W. Mellon Foundation (Grant #G-1910-07239).",
+      "mesh_link": "Mesh Research",
+      "ppj_link": "Public Philosophy Journal"
+    },
+    "open_source": {
+      "statement": "Pilcrow is an open source project. Documentation can be found at {pilcrow_docs}"
     }
   },
   "dashboard": {
