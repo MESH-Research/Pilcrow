@@ -26,14 +26,14 @@
             </q-list>
             <i18n-t keypath="home.grant_statement.statement" tag="p">
               <template #mesh_url>
-                <a href="https://www.meshresearch.net" class="hy-link">{{
+                <a href="https://www.meshresearch.net" class="text-primary">{{
                   $t(`home.grant_statement.mesh_link`)
                 }}</a>
               </template>
               <template #ppj_url>
                 <a
                   href="https://publicphilosophyjournal.org"
-                  class="hy-link"
+                  class="text-primary"
                   >{{ $t(`home.grant_statement.ppj_link`) }}</a
                 >
               </template>
