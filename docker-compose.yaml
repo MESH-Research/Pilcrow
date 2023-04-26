@@ -4,7 +4,6 @@ services:
     environment:
       FPM_HOST: phpfpm:9000
     build:
-      image: ghcr.io/mesh-research/pilcrow/web:latest
       context: ./client
       dockerfile: Dockerfile
     depends_on:
@@ -18,7 +17,6 @@ services:
     environment:
       WAIT_HOSTS: mysql:3306
     build:
-      image: ghcr.io/mesh-research/pilcrow/fpm:latest
       context: ./backend
       dockerfile: Dockerfile
     depends_on:
