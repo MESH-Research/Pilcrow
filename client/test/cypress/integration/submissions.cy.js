@@ -52,6 +52,6 @@ describe("Submissions Page", () => {
     cy.dataCy("export_submission").should("exist")
     // Deleted
     cy.dataCy("submission_actions").eq(10).click()
-    cy.dataCy("export_submission").should("exist")
+    cy.dataCy("export_submission").should("not.exist")
   })
 })

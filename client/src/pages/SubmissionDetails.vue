@@ -82,6 +82,7 @@
       </div>
       <submission-export-button
         class="q-mt-xl"
+        data-cy="submission_export_btn"
         :submission="submission"
       />
     </section>

@@ -131,6 +131,7 @@
       </q-btn-dropdown>
       <q-btn
         v-if="isExportVisible"
+        data-cy="submission_export_btn"
         :aria-label="`Export Submission`"
         :disable="!isExportEnabled"
         icon="exit_to_app"

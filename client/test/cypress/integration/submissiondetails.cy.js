@@ -205,4 +205,15 @@ describe("Submission Details", () => {
     cy.injectAxe()
     cy.checkA11y(null, null, a11yLogViolations)
   })
+
+  it("enables access to the Submission Export page under the correct conditions", () => {
+    cy.task("resetDb")
+    cy.login({ email: "regularuser@pilcrow.dev" })
+    // Under Review
+    cy.visit("submission/100")
+    cy.dataCy("submission_export_btn").should("not.exist")
+    // Rejected
+    cy.visit("submission/102")
+    cy.dataCy("submission_export_btn").should("exist")
+  })
 })

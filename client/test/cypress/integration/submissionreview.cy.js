@@ -381,4 +381,15 @@ describe("Submissions Review", () => {
     cy.dataCy("inlineComment").eq(1).find("[data-cy=commentActions]").click()
     cy.dataCy("modifyComment").should("not.exist")
   })
+
+  it("enables access to the Submission Export page under the correct conditions", () => {
+    cy.task("resetDb")
+    cy.login({ email: "regularuser@pilcrow.dev" })
+    // Under Review
+    cy.visit("submission/review/100")
+    cy.dataCy("submission_export_btn").should("not.exist")
+    // Rejected
+    cy.visit("submission/review/102")
+    cy.dataCy("submission_export_btn").should("exist")
+  })
 })
