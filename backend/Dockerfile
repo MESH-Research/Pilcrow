@@ -1,5 +1,7 @@
 FROM php:8.1-fpm
-
+ARG VERSION
+ARG VERSION_URL
+ARG VERSION_DATE
 ARG PHP_EXTS="bcmath pdo_mysql pcntl zip"
 ARG PHP_PECL_EXTS="redis"
 ARG COMPOSER_NO_DEV="1"
