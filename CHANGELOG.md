@@ -3,6 +3,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.22.3](https://github.com/MESH-Research/Pilcrow/compare/v0.22.2...v0.22.3) (2023-04-26)
+
+
+### Bug Fixes
+
+* **deps:** update dependency laravel/framework to v10.9.0 ([5a1c415](https://github.com/MESH-Research/Pilcrow/commit/5a1c415e02964717ee4892ce43657033e1599d99))
+* **deps:** update dependency laravel/sanctum to v3.2.3 ([e201f2f](https://github.com/MESH-Research/Pilcrow/commit/e201f2fa3f2be479e72bd42d5964363b32a85d2e))
+
 ### [0.22.2](https://github.com/MESH-Research/Pilcrow/compare/v0.22.1...v0.22.2) (2023-04-25)
 
 
