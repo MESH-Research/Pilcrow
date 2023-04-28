@@ -280,6 +280,9 @@ export const GET_SUBMISSION = gql`
       title
       status
       effective_role
+      content {
+        data
+      }
       audits {
         id
         event

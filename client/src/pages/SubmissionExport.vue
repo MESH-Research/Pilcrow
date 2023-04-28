@@ -53,5 +53,6 @@ const props = defineProps({
 })
 function download() {
   console.log("download")
+  console.log(submission.value.content.data)
 }
 </script>
