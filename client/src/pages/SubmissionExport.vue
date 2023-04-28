@@ -28,12 +28,15 @@
         device in this format.
       </p>
       <q-btn
+        v-if="submission"
         class="q-mt-lg"
         label="Download"
         color="accent"
         icon="file_download"
-        @click="download()"
+        :href="blob"
+        :download="`submission_${submission.id}.html`"
       />
+      <q-spinner v-else />
     </article>
   </div>
 </template>
@@ -51,8 +54,5 @@ const props = defineProps({
     required: true,
   },
 })
-function download() {
-  console.log("download")
-  console.log(submission.value.content.data)
-}
+const blob = computed(() => URL.createObjectURL(new Blob([submission.value.content.data], { type: "text/html"})))
 </script>
