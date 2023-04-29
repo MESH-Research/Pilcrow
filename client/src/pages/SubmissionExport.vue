@@ -20,17 +20,14 @@
       </q-breadcrumbs>
     </nav>
     <article class="q-pa-lg">
-      <h2 class="q-my-none">Export</h2>
+      <h2 class="q-my-none">{{ $t(`export.title`) }}</h2>
       <h3>{{ submission.title }}</h3>
-      <p>This page allows you to export this submission as HTML.</p>
-      <p>
-        The file contents will download directly to your
-        device in this format.
-      </p>
+      <p>{{ $t(`export.description`) }}</p>
+      <p>{{ $t(`export.download.description`) }}</p>
       <q-btn
         v-if="submission"
         class="q-mt-lg"
-        label="Download"
+        :label="$t(`export.download.title`)"
         color="accent"
         icon="file_download"
         :href="blob"

@@ -2,7 +2,7 @@
   <q-btn
     v-if="isExportVisible"
     :disable="!isExportEnabled"
-    label="Export Submission"
+    :label="$t(`export.call_to_action`)"
     color="accent"
     icon="exit_to_app"
     :to="{

@@ -144,7 +144,7 @@
       >
         <q-item-section>
           <q-item-label>
-            Export Submission
+            {{ $t(`export.call_to_action`) }}
           </q-item-label>
         </q-item-section>
       </q-item>

@@ -132,7 +132,7 @@
       <q-btn
         v-if="isExportVisible"
         data-cy="submission_export_btn"
-        :aria-label="`Export Submission`"
+        :aria-label="$t(`export.call_to_action`)"
         :disable="!isExportEnabled"
         icon="exit_to_app"
         dense
@@ -144,7 +144,7 @@
           params: { id: submission.id },
         }"
       >
-        <q-tooltip> Export Submission </q-tooltip>
+        <q-tooltip> {{ $t(`export.call_to_action`) }} </q-tooltip>
       </q-btn>
       <q-btn
         :aria-label="$t('submission.toolbar.toggle_annotation_highlights')"
