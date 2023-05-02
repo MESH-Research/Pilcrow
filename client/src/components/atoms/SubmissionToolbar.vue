@@ -129,11 +129,25 @@
           </q-btn>
         </q-btn-group>
       </q-btn-dropdown>
+      <q-icon
+        v-if="isDisabledByState || isDisabledByRole"
+        name="exit_to_app"
+        size="sm"
+        color="disabled"
+        class="q-ma-xs cursor-not-allowed"
+        style="color: rgba(255, 255, 255, 0.5)"
+      >
+        <q-tooltip v-if="isDisabledByState" class="text-body1">{{
+          $t(`export.disabled.by_state`)
+        }}</q-tooltip>
+        <q-tooltip v-else-if="isDisabledByRole" class="text-body1">{{
+          $t(`export.disabled.by_role`)
+        }}</q-tooltip>
+      </q-icon>
       <q-btn
-        v-if="isExportVisible"
+        v-else
         data-cy="submission_export_btn"
         :aria-label="$t(`export.call_to_action`)"
-        :disable="!isExportEnabled"
         icon="exit_to_app"
         dense
         flat
@@ -144,7 +158,7 @@
           params: { id: submission.id },
         }"
       >
-        <q-tooltip> {{ $t(`export.call_to_action`) }} </q-tooltip>
+        <q-tooltip>{{ $t(`export.call_to_action`) }}</q-tooltip>
       </q-btn>
       <q-btn
         :aria-label="$t('submission.toolbar.toggle_annotation_highlights')"
@@ -154,7 +168,7 @@
         icon="power_input"
         @click="toggleAnnotationHighlights"
       >
-        <q-tooltip>{{
+        <q-tooltip class="text-body1 text-center" max-width="100px">{{
           $t("submission.toolbar.toggle_annotation_highlights")
         }}</q-tooltip>
       </q-btn>
@@ -167,7 +181,7 @@
         data-cy="toggleInlineCommentsButton"
         @click="toggleCommentDrawer"
       >
-        <q-tooltip>{{
+        <q-tooltip class="text-body1 text-center" max-width="100px">{{
           $t("submission.toolbar.toggle_inline_comments")
         }}</q-tooltip>
       </q-btn>
@@ -183,7 +197,9 @@ import { ref } from "vue"
 const { dialog } = useQuasar()
 
 const submissionRef = ref(props.submission)
-const { isExportVisible, isExportEnabled } = useSubmissionExport(submissionRef.value)
+const { isDisabledByRole, isDisabledByState } = useSubmissionExport(
+  submissionRef.value
+)
 
 const props = defineProps({
   // Drawer status
@@ -233,5 +249,4 @@ function dirtyDialog(action) {
     },
   })
 }
-
 </script>

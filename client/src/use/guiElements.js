@@ -71,8 +71,8 @@ export function useSubmissionExport(submission) {
     "ARCHIVED",
     "EXPIRED",
   ]
-  const isExportEnabled = computed(() => {
-    return (
+  const isDisabledByRole = computed(() => {
+    return !(
       isAppAdmin.value ||
       isPublicationAdmin(submission.publication) ||
       isEditor(submission.publication) ||
@@ -80,9 +80,9 @@ export function useSubmissionExport(submission) {
       isSubmitter(submission)
     )
   })
-  const isExportVisible = computed(() => {
-    return exportVisibleStates.includes(submission.status)
+  const isDisabledByState = computed(() => {
+    return !exportVisibleStates.includes(submission.status)
   })
 
-  return { isExportEnabled, isExportVisible }
+  return { isDisabledByRole, isDisabledByState }
 }

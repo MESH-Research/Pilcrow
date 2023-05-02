@@ -769,6 +769,10 @@
     "download": {
       "title": "Download (html)",
       "description": "The file contents will download directly to your device in this format."
+    },
+    "disabled": {
+      "by_role": "You do not have permission to export this submission.",
+      "by_state": "Export will be available when review is completed."
     }
   },
   "failures": {

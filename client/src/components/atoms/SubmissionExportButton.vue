@@ -1,7 +1,20 @@
 <template>
   <q-btn
-    v-if="isExportVisible"
-    :disable="!isExportEnabled"
+    v-if="isDisabledByRole || isDisabledByState"
+    :label="$t(`export.call_to_action`)"
+    color="grey-8"
+    icon="exit_to_app"
+    style="opacity: 0.7"
+  >
+    <q-tooltip v-if="isDisabledByState" class="text-body1">{{
+      $t(`export.disabled.by_state`)
+    }}</q-tooltip>
+    <q-tooltip v-else-if="isDisabledByRole" class="text-body1">{{
+      $t(`export.disabled.by_role`)
+    }}</q-tooltip>
+  </q-btn>
+  <q-btn
+    v-else
     :label="$t(`export.call_to_action`)"
     color="accent"
     icon="exit_to_app"
@@ -21,5 +34,7 @@ const props = defineProps({
   },
 })
 const submissionRef = ref(props.submission)
-const { isExportVisible, isExportEnabled } = useSubmissionExport(submissionRef.value)
+const { isDisabledByRole, isDisabledByState } = useSubmissionExport(
+  submissionRef.value
+)
 </script>

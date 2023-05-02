@@ -133,8 +133,7 @@
         </q-menu>
       </q-item>
       <q-item
-        v-if="isExportVisible"
-        :disable="!isExportEnabled"
+        :disable="isDisabledByRole || isDisabledByState"
         data-cy="export_submission"
         clickable
         :to="{
@@ -147,6 +146,26 @@
             {{ $t(`export.call_to_action`) }}
           </q-item-label>
         </q-item-section>
+        <q-tooltip
+          v-if="isDisabledByState"
+          anchor="top middle"
+          self="bottom middle"
+          :offset="[10, 10]"
+          class="text-body1"
+          data-cy="cannot_export_submission_tooltip"
+        >
+          {{ $t(`export.disabled.by_state`) }}
+        </q-tooltip>
+        <q-tooltip
+          v-else-if="isDisabledByRole"
+          anchor="top middle"
+          self="bottom middle"
+          :offset="[10, 10]"
+          class="text-body1"
+          data-cy="cannot_export_submission_tooltip"
+        >
+          {{ $t(`export.disabled.by_role`) }}
+        </q-tooltip>
       </q-item>
     </q-menu>
   </q-btn>
@@ -161,7 +180,7 @@ import { ref } from "vue"
 const { dialog } = useQuasar()
 
 const submissionRef = ref(props.submission)
-const { isExportVisible, isExportEnabled } = useSubmissionExport(submissionRef.value)
+const { isDisabledByRole, isDisabledByState } = useSubmissionExport(submissionRef.value)
 
 const props = defineProps({
   submission: {
