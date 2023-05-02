@@ -158,7 +158,7 @@
           params: { id: submission.id },
         }"
       >
-        <q-tooltip>{{ $t(`export.call_to_action`) }}</q-tooltip>
+        <q-tooltip class="text-body1">{{ $t(`export.call_to_action`) }}</q-tooltip>
       </q-btn>
       <q-btn
         :aria-label="$t('submission.toolbar.toggle_annotation_highlights')"

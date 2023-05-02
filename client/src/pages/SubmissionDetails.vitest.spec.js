@@ -1,8 +1,10 @@
+import { GET_SUBMISSION } from "src/graphql/queries"
+import { beforeEach, describe, expect, test, vi } from "vitest"
+import { installApolloClient } from "test/vitest/utils"
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
 import { mount, flushPromises } from "@vue/test-utils"
-import { installApolloClient } from "test/vitest/utils"
-import { GET_SUBMISSION } from "src/graphql/queries"
-import { beforeEach, describe, expect, test, vi } from 'vitest'
+import { useCurrentUser } from "src/use/user"
+import { ref } from "vue"
 import SubmissionDetailsPage from "./SubmissionDetails.vue"
 
 vi.mock("quasar", () => ({
@@ -10,6 +12,10 @@ vi.mock("quasar", () => ({
   useQuasar: () => ({
     notify: vi.fn(),
   }),
+}))
+
+vi.mock("src/use/user", () => ({
+  useCurrentUser: vi.fn(),
 }))
 
 installQuasarPlugin()
@@ -20,7 +26,8 @@ describe("submissions details page mount", () => {
     mockClient.mockReset()
   })
 
-  const makeWrapper = () => mount(SubmissionDetailsPage, {
+  const makeWrapper = () =>
+    mount(SubmissionDetailsPage, {
       props: {
         id: "1",
       },
@@ -86,28 +93,45 @@ describe("submissions details page mount", () => {
   }
 
   const defaultApolloMock = () =>
-    mockClient
-      .getRequestHandler(GET_SUBMISSION)
-      .mockResolvedValue({
-        data: {
-          submission: {
-            id: 1,
-            effective_role: "review_coordinator",
-            status: 0,
-            __typename: "Submission",
-            title: "This Submission",
-            publication: {
-              id: 1,
-              name: "Jest Publication",
-              style_criterias: [],
-            },
-            audits: [],
-            ...submissionUsersData,
+    mockClient.getRequestHandler(GET_SUBMISSION).mockResolvedValue({
+      data: {
+        submission: {
+          __typename: "Submission",
+          id: 1,
+          title: "This Submission",
+          status: 0,
+          effective_role: "review_coordinator",
+          content: {
+            data: "",
           },
+          audits: [],
+          publication: {
+            id: 1,
+            name: "Jest Publication",
+            style_criterias: [],
+            editors: [],
+            publication_admins: [],
+          },
+          ...submissionUsersData,
         },
+      },
     })
 
-  test("component mounts without errors", async () => {
+  test.only("component mounts without errors", async () => {
+    useCurrentUser.mockReturnValue({
+      currentUser: ref({
+        __typename: "User",
+        id: 1,
+        display_label: "Hello",
+        name: "Hello",
+        email: "hello@example.com",
+        username: "helloUser",
+        email_verified_at: "2021-08-14 02:26:32",
+        roles: [{
+          name: "Application Administrator"
+        }],
+      }),
+    })
     const handler = defaultApolloMock()
     const wrapper = await makeWrapper()
     await flushPromises()
@@ -117,6 +141,17 @@ describe("submissions details page mount", () => {
   })
 
   test("all assigned submitters appear within the assigned submitters list", async () => {
+    useCurrentUser.mockReturnValue({
+      currentUser: ref({
+        id: "1",
+        display_label: "",
+        username: "",
+        name: "",
+        email: "",
+        email_verified_at: "",
+        roles: [],
+      }),
+    })
     const handler = defaultApolloMock()
     const wrapper = await makeWrapper()
     await flushPromises()
@@ -127,6 +162,17 @@ describe("submissions details page mount", () => {
   })
 
   test("all assigned reviewers appear within the assigned reviewers list", async () => {
+    useCurrentUser.mockReturnValue({
+      currentUser: ref({
+        id: "1",
+        display_label: "",
+        username: "",
+        name: "",
+        email: "",
+        email_verified_at: "",
+        roles: [],
+      }),
+    })
     defaultApolloMock()
     const wrapper = await makeWrapper()
     await flushPromises()
@@ -136,6 +182,17 @@ describe("submissions details page mount", () => {
   })
 
   test("all assigned review coordinators appear within the assigned review coordinators list", async () => {
+    useCurrentUser.mockReturnValue({
+      currentUser: ref({
+        id: "1",
+        display_label: "",
+        username: "",
+        name: "",
+        email: "",
+        email_verified_at: "",
+        roles: [],
+      }),
+    })
     defaultApolloMock()
     const wrapper = await makeWrapper()
     await flushPromises()
@@ -145,6 +202,17 @@ describe("submissions details page mount", () => {
   })
 
   test("staged reviewers are visually indicated to be staged", async () => {
+    useCurrentUser.mockReturnValue({
+      currentUser: ref({
+        id: "1",
+        display_label: "",
+        username: "",
+        name: "",
+        email: "",
+        email_verified_at: "",
+        roles: [],
+      }),
+    })
     defaultApolloMock()
     const wrapper = await makeWrapper()
     await flushPromises()
