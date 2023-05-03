@@ -26,15 +26,15 @@
 </template>
 <script setup>
 import { useSubmissionExport } from "src/use/guiElements.js"
-import { ref } from "vue"
+import { toRef } from "vue"
 const props = defineProps({
   submission: {
     type: Object,
     default: () => {},
   },
 })
-const submissionRef = ref(props.submission)
+const submissionRef = toRef(props, 'submission')
 const { isDisabledByRole, isDisabledByState } = useSubmissionExport(
-  submissionRef.value
+  submissionRef
 )
 </script>
