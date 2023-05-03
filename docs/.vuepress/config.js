@@ -50,7 +50,7 @@ module.exports = {
                 {
                     title: "Contributing",
                     sidebarDepth: 2,
-                    children: ["", "architecture", "testing", "i18n", "documentation", "wsl"]
+                    children: ["", "architecture", "testing", "copyediting", "documentation", "wsl"]
                 }
             ]
         }
