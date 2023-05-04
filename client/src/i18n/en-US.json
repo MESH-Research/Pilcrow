@@ -354,7 +354,8 @@
     },
     "coordinator": {
       "title": "To Coordinate",
-      "byline": "{type_name} in which you're assigned as a <strong>review coordinator</strong>"
+      "byline": "{type_name} in which you're assigned as a <strong>review coordinator</strong>",
+      "tooltip": "{type_name} with a status of Draft, Initially Submitted, or Awaiting Review will not appear here."
     },
     "dashboard": {
       "reviewer": {
