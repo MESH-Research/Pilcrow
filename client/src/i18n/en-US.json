@@ -349,7 +349,8 @@
     },
     "reviewer": {
       "title": "To Review",
-      "byline": "{type_name} in which you're assigned as a <strong>reviewer</strong>"
+      "byline": "{type_name} in which you're assigned as a <strong>reviewer</strong>",
+      "tooltip": "{type_name} with a status of Draft, Initially Submitted, or Awaiting Review will not appear here."
     },
     "coordinator": {
       "title": "To Coordinate",

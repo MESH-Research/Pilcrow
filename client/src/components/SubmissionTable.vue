@@ -15,9 +15,14 @@
         <div class="column">
           <h3 class="q-my-none">
             {{ $t(title) }}
+            <q-icon name="info">
+              <q-tooltip>{{ $t(tooltip, byline_opts) }}</q-tooltip>
+            </q-icon>
           </h3>
+
           <!-- eslint-disable-next-line vue/no-v-html -->
           <p class="q-mb-none" v-html="$t(byline, byline_opts)"></p>
+
           <q-select
             v-if="tableData.length"
             v-model="status_filter"
@@ -49,7 +54,13 @@
       </div>
     </template>
     <template #no-data>
-      <q-card v-if="$q.screen.width < 770" flat bordered square class="q-pa-lg text-center full-width">
+      <q-card
+        v-if="$q.screen.width < 770"
+        flat
+        bordered
+        square
+        class="q-pa-lg text-center full-width"
+      >
         <p class="text-h3">
           {{ $t(`submission_tables.type.${tableType}.no_data`) }}
         </p>
@@ -176,6 +187,9 @@ const title = props.variation
 const byline = props.variation
   ? `submission_tables.${props.variation}.${props.role}.byline`
   : `submission_tables.${props.role}.byline`
+const tooltip = props.variation
+  ? `submission_tables.${props.variation}.${props.role}.tooltip`
+  : `submission_tables.${props.role}.tooltip`
 const byline_opts = {
   type_name: t(`submission_tables.type.${props.tableType}.name`),
 }
