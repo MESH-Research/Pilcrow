@@ -7542,16 +7542,16 @@
         },
         {
             "name": "watson/validating",
-            "version": "8.0.0",
+            "version": "8.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dwightwatson/validating.git",
-                "reference": "f86710b7ec093e2c0320a07006358b4396d4ed9b"
+                "reference": "41f3ca6734bd5c6b3059142b2177b21600f4ad6c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dwightwatson/validating/zipball/f86710b7ec093e2c0320a07006358b4396d4ed9b",
-                "reference": "f86710b7ec093e2c0320a07006358b4396d4ed9b",
+                "url": "https://api.github.com/repos/dwightwatson/validating/zipball/41f3ca6734bd5c6b3059142b2177b21600f4ad6c",
+                "reference": "41f3ca6734bd5c6b3059142b2177b21600f4ad6c",
                 "shasum": ""
             },
             "require": {
@@ -7590,9 +7590,9 @@
             ],
             "support": {
                 "issues": "https://github.com/dwightwatson/validating/issues",
-                "source": "https://github.com/dwightwatson/validating/tree/8.0.0"
+                "source": "https://github.com/dwightwatson/validating/tree/8.1.0"
             },
-            "time": "2023-02-14T23:41:21+00:00"
+            "time": "2023-05-03T22:18:57+00:00"
         },
         {
             "name": "webmozart/assert",
