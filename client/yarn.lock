@@ -3,9 +3,9 @@
 
 
 "@apollo/client@^3.7.2":
-  version "3.7.13"
-  resolved "https://registry.yarnpkg.com/@apollo/client/-/client-3.7.13.tgz#2cd3508d8030f7cb0c3d357dc3f57b5cf8390c66"
-  integrity sha512-wi63WnO2mhb6uHGB/8x1qIOL4ZtZocrxdHS0VBQ9KwBDkwoP/TdVVgZ29J2WkiAPmJ0SK07ju4R2AjHor1gPxQ==
+  version "3.7.14"
+  resolved "https://registry.yarnpkg.com/@apollo/client/-/client-3.7.14.tgz#40ef90390e6690e94917457cd82bdeb29e8b6af9"
+  integrity sha512-BRvdkwq5PAXBkjXjboO12uksDm3nrZEqDi4xF97Fk3Mnaa0zDOEfJa7hoKTY9b9KA1EkeWv9BL3i7hSd4SfGBg==
   dependencies:
     "@graphql-typed-document-node/core" "^3.1.1"
     "@wry/context" "^0.7.0"
@@ -1047,16 +1047,16 @@
     vue-demi "*"
 
 "@wry/context@^0.7.0":
-  version "0.7.0"
-  resolved "https://registry.yarnpkg.com/@wry/context/-/context-0.7.0.tgz#be88e22c0ddf62aeb0ae9f95c3d90932c619a5c8"
-  integrity sha512-LcDAiYWRtwAoSOArfk7cuYvFXytxfVrdX7yxoUmK7pPITLk5jYh2F8knCwS7LjgYL8u1eidPlKKV6Ikqq0ODqQ==
+  version "0.7.1"
+  resolved "https://registry.yarnpkg.com/@wry/context/-/context-0.7.1.tgz#d56c955ac81bf5ee4647aeaf76306cbf891818fd"
+  integrity sha512-nEWMz5t7VPcQU7aMImt9ReZgv18ZJREIH03YpFLGtGLj91Ulf0YROhYVc5J/hUaHXL2NuwRJdZvq+piNLN23kA==
   dependencies:
     tslib "^2.3.0"
 
 "@wry/equality@^0.5.0":
-  version "0.5.3"
-  resolved "https://registry.yarnpkg.com/@wry/equality/-/equality-0.5.3.tgz#fafebc69561aa2d40340da89fa7dc4b1f6fb7831"
-  integrity sha512-avR+UXdSrsF2v8vIqIgmeTY0UR91UT+IyablCyKe/uk22uOJ8fusKZnH9JH9e1/EtLeNJBtagNmL3eJdnOV53g==
+  version "0.5.4"
+  resolved "https://registry.yarnpkg.com/@wry/equality/-/equality-0.5.4.tgz#8226040d92ae7f806efff21281ae073551b2d3d6"
+  integrity sha512-sKmePi7fqeg0CstdHWH+EAkd3s0EoghUmIlwVpM46M1KCgmWPh1mrQr2k1RG3GXuVKFkOu840N+o107Yw4PjJA==
   dependencies:
     tslib "^2.3.0"
 
