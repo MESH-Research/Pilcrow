@@ -3,7 +3,7 @@ import { mount, flushPromises } from "@vue/test-utils"
 import { installApolloClient } from "test/vitest/utils"
 import { CURRENT_USER_SUBMISSIONS } from "src/graphql/queries"
 import { useCurrentUser } from "src/use/user"
-import { describe, expect, test, vi, afterEach } from "vitest"
+import { beforeEach, afterEach, describe, expect, test, vi } from "vitest"
 import { ref } from "vue"
 import SubmissionsPage from "./SubmissionsPage.vue"
 vi.mock("src/use/user", () => ({
@@ -16,6 +16,22 @@ const mockClient = installApolloClient()
 describe("Submissions Page", () => {
   const CurrentUserSubmissions = vi.fn()
   mockClient.setRequestHandler(CURRENT_USER_SUBMISSIONS, CurrentUserSubmissions)
+
+  beforeEach(async () => {
+    useCurrentUser.mockReturnValue({
+      currentUser: ref({
+        id: 1,
+        roles: [{
+          name: "Application Administrator"
+        }],
+       }),
+      isAppAdmin: ref(true),
+      isSubmitter: () => true,
+      isReviewCoordinator: () => false,
+      isEditor: () => false,
+      isPublicationAdmin: () => false,
+    })
+  })
 
   afterEach(() => {
     CurrentUserSubmissions.mockClear()
@@ -32,18 +48,11 @@ describe("Submissions Page", () => {
   }
 
   test("able to mount", async () => {
-    useCurrentUser.mockReturnValue({
-      currentUser: ref({ id: 1 }),
-    })
     const wrapper = await wrapperFactory()
     expect(wrapper).toBeTruthy()
   })
 
   test("all expected submissions appear", async () => {
-    useCurrentUser.mockReturnValue({
-      currentUser: ref({ id: 1 }),
-    })
-
     CurrentUserSubmissions.mockResolvedValue({
       data: {
         currentUser: {
@@ -180,9 +189,6 @@ describe("Submissions Page", () => {
   })
 
   test("comment previews appear within the latest comments section", async () => {
-    useCurrentUser.mockReturnValue({
-      currentUser: ref({ id: 1 }),
-    })
     CurrentUserSubmissions.mockResolvedValue({
       data: {
         currentUser: {

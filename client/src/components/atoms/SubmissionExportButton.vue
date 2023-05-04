@@ -33,8 +33,7 @@ const props = defineProps({
     default: () => {},
   },
 })
-const submissionRef = toRef(props, 'submission')
-const { isDisabledByRole, isDisabledByState } = useSubmissionExport(
-  submissionRef
-)
+const submissionRef = toRef(props, "submission")
+const { isDisabledByRole, isDisabledByState } =
+  useSubmissionExport(submissionRef)
 </script>

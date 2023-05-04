@@ -180,7 +180,8 @@ import { ref } from "vue"
 const { dialog } = useQuasar()
 
 const submissionRef = ref(props.submission)
-const { isDisabledByRole, isDisabledByState } = useSubmissionExport(submissionRef.value)
+const { isDisabledByRole, isDisabledByState } =
+  useSubmissionExport(submissionRef)
 
 const props = defineProps({
   submission: {

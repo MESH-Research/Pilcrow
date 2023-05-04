@@ -136,7 +136,7 @@
         size="sm"
         color="disabled"
         class="q-ma-xs cursor-not-allowed"
-        style="opacity:0.5"
+        style="opacity: 0.5"
       >
         <q-tooltip v-if="isDisabledByState" class="text-body1">{{
           $t(`export.disabled.by_state`)
@@ -158,7 +158,9 @@
           params: { id: submission.id },
         }"
       >
-        <q-tooltip class="text-body1">{{ $t(`export.call_to_action`) }}</q-tooltip>
+        <q-tooltip class="text-body1">{{
+          $t(`export.call_to_action`)
+        }}</q-tooltip>
       </q-btn>
       <q-btn
         :aria-label="$t('submission.toolbar.toggle_annotation_highlights')"
@@ -197,9 +199,8 @@ import { ref } from "vue"
 const { dialog } = useQuasar()
 
 const submissionRef = ref(props.submission)
-const { isDisabledByRole, isDisabledByState } = useSubmissionExport(
-  submissionRef.value
-)
+const { isDisabledByRole, isDisabledByState } =
+  useSubmissionExport(submissionRef)
 
 const props = defineProps({
   // Drawer status
