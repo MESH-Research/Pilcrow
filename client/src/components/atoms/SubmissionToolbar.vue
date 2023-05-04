@@ -131,11 +131,12 @@
       </q-btn-dropdown>
       <q-icon
         v-if="isDisabledByState || isDisabledByRole"
+        data-cy="submission_export_btn"
         name="exit_to_app"
         size="sm"
         color="disabled"
         class="q-ma-xs cursor-not-allowed"
-        style="color: rgba(255, 255, 255, 0.5)"
+        style="opacity:0.5"
       >
         <q-tooltip v-if="isDisabledByState" class="text-body1">{{
           $t(`export.disabled.by_state`)
@@ -152,7 +153,6 @@
         dense
         flat
         round
-        style="color: rgba(255, 255, 255, 0.7)"
         :to="{
           name: 'submission_export',
           params: { id: submission.id },

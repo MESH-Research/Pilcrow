@@ -2,9 +2,9 @@
   <q-btn
     v-if="isDisabledByRole || isDisabledByState"
     :label="$t(`export.call_to_action`)"
-    color="grey-8"
+    color="grey-7"
     icon="exit_to_app"
-    style="opacity: 0.7"
+    class="cursor-not-allowed"
   >
     <q-tooltip v-if="isDisabledByState" class="text-body1">{{
       $t(`export.disabled.by_state`)

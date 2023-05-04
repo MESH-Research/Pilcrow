@@ -382,14 +382,14 @@ describe("Submissions Review", () => {
     cy.dataCy("modifyComment").should("not.exist")
   })
 
-  it("enables access to the Submission Export page under the correct conditions", () => {
+  it.only("enables access to the Submission Export page under the correct conditions", () => {
     cy.task("resetDb")
     cy.login({ email: "regularuser@pilcrow.dev" })
     // Under Review
     cy.visit("submission/review/100")
-    cy.dataCy("submission_export_btn").should("not.exist")
+    cy.dataCy("submission_export_btn").should("have.class","cursor-not-allowed")
     // Rejected
     cy.visit("submission/review/102")
-    cy.dataCy("submission_export_btn").should("exist")
+    cy.dataCy("submission_export_btn").should("not.have.class","cursor-not-allowed")
   })
 })

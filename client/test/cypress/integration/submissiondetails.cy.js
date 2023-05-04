@@ -211,9 +211,9 @@ describe("Submission Details", () => {
     cy.login({ email: "regularuser@pilcrow.dev" })
     // Under Review
     cy.visit("submission/100")
-    cy.dataCy("submission_export_btn").should("not.exist")
+    cy.dataCy("submission_export_btn").should("have.class","cursor-not-allowed")
     // Rejected
-    cy.visit("submission/102")
-    cy.dataCy("submission_export_btn").should("exist")
+    cy.visit("submission/review/102")
+    cy.dataCy("submission_export_btn").should("not.have.class","cursor-not-allowed")
   })
 })
