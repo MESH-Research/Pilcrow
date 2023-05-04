@@ -24,6 +24,7 @@ const mockClient = installApolloClient()
 describe("submissions details page mount", () => {
   beforeEach(() => {
     mockClient.mockReset()
+    useCurrentUser.mockReturnValue(useCurrentUserValue)
   })
 
   const makeWrapper = () =>
@@ -117,21 +118,27 @@ describe("submissions details page mount", () => {
       },
     })
 
+  const useCurrentUserValue = {
+    currentUser: ref({
+      __typename: "User",
+      id: 1,
+      display_label: "Hello",
+      name: "Hello",
+      email: "hello@example.com",
+      username: "helloUser",
+      email_verified_at: "2021-08-14 02:26:32",
+      roles: [{
+        name: "Application Administrator"
+      }],
+    }),
+    isAppAdmin: ref(true),
+    isSubmitter: () => true,
+    isReviewCoordinator: () => false,
+    isEditor: () => false,
+    isPublicationAdmin: () => false,
+  }
+
   test.only("component mounts without errors", async () => {
-    useCurrentUser.mockReturnValue({
-      currentUser: ref({
-        __typename: "User",
-        id: 1,
-        display_label: "Hello",
-        name: "Hello",
-        email: "hello@example.com",
-        username: "helloUser",
-        email_verified_at: "2021-08-14 02:26:32",
-        roles: [{
-          name: "Application Administrator"
-        }],
-      }),
-    })
     const handler = defaultApolloMock()
     const wrapper = await makeWrapper()
     await flushPromises()
@@ -141,17 +148,6 @@ describe("submissions details page mount", () => {
   })
 
   test("all assigned submitters appear within the assigned submitters list", async () => {
-    useCurrentUser.mockReturnValue({
-      currentUser: ref({
-        id: "1",
-        display_label: "",
-        username: "",
-        name: "",
-        email: "",
-        email_verified_at: "",
-        roles: [],
-      }),
-    })
     const handler = defaultApolloMock()
     const wrapper = await makeWrapper()
     await flushPromises()
@@ -162,17 +158,6 @@ describe("submissions details page mount", () => {
   })
 
   test("all assigned reviewers appear within the assigned reviewers list", async () => {
-    useCurrentUser.mockReturnValue({
-      currentUser: ref({
-        id: "1",
-        display_label: "",
-        username: "",
-        name: "",
-        email: "",
-        email_verified_at: "",
-        roles: [],
-      }),
-    })
     defaultApolloMock()
     const wrapper = await makeWrapper()
     await flushPromises()
@@ -182,17 +167,6 @@ describe("submissions details page mount", () => {
   })
 
   test("all assigned review coordinators appear within the assigned review coordinators list", async () => {
-    useCurrentUser.mockReturnValue({
-      currentUser: ref({
-        id: "1",
-        display_label: "",
-        username: "",
-        name: "",
-        email: "",
-        email_verified_at: "",
-        roles: [],
-      }),
-    })
     defaultApolloMock()
     const wrapper = await makeWrapper()
     await flushPromises()
@@ -202,17 +176,6 @@ describe("submissions details page mount", () => {
   })
 
   test("staged reviewers are visually indicated to be staged", async () => {
-    useCurrentUser.mockReturnValue({
-      currentUser: ref({
-        id: "1",
-        display_label: "",
-        username: "",
-        name: "",
-        email: "",
-        email_verified_at: "",
-        roles: [],
-      }),
-    })
     defaultApolloMock()
     const wrapper = await makeWrapper()
     await flushPromises()
