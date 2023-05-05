@@ -360,11 +360,13 @@
     "dashboard": {
       "reviewer": {
         "title": "Reviews",
-        "byline": "{type_name} you are reviewing"
+        "byline": "{type_name} you are reviewing",
+        "tooltip": "{type_name} with a status of Draft, Initially Submitted, or Awaiting Review will not appear here."
       },
       "coordinator": {
         "title": "Review Coordination",
-        "byline": "{type_name} you are coordinating for reviewers"
+        "byline": "{type_name} you are coordinating for reviewers",
+        "tooltip": "{type_name} with a status of Draft, Initially Submitted, or Awaiting Review will not appear here."
       },
       "submitter": {
         "title": "Submissions",
@@ -374,7 +376,8 @@
     "submissions": {
       "submitter": {
         "title": "Your Submissions",
-        "byline": "Submissions you have submitted for review"
+        "byline": "Submissions you have submitted for review",
+        "tooltip": "{type_name} with a status of Draft, Initially Submitted, or Awaiting Review will not appear here."
       }
     }
   },
