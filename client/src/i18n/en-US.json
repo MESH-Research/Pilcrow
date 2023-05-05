@@ -371,7 +371,7 @@
       "submitter": {
         "title": "Submissions",
         "byline": "{type_name} you have submitted for review",
-        "tooltip": "{type_name} with a status of Draft will not appear here."
+        "tooltip": "The submissions of others will not appear here."
       }
     },
     "submissions": {
