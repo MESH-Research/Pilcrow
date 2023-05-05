@@ -382,7 +382,7 @@ describe("Submissions Review", () => {
     cy.dataCy("modifyComment").should("not.exist")
   })
 
-  it.only("enables access to the Submission Export page under the correct conditions", () => {
+  it("enables access to the Submission Export page under the correct conditions", () => {
     cy.task("resetDb")
     cy.login({ email: "regularuser@pilcrow.dev" })
     // Under Review

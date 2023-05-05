@@ -193,7 +193,7 @@ describe("Submission Details", () => {
     cy.checkA11y(null, null, a11yLogViolations)
   })
 
-  it.only("should allow a submitter to update the title", () => {
+  it("should allow a submitter to update the title", () => {
     cy.task("resetDb")
     cy.login({ email: "regularuser@pilcrow.dev" })
     cy.visit("submission/100")

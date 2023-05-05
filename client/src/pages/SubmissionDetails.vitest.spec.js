@@ -22,10 +22,6 @@ installQuasarPlugin()
 const mockClient = installApolloClient()
 
 describe("submissions details page mount", () => {
-  beforeEach(() => {
-    mockClient.mockReset()
-    useCurrentUser.mockReturnValue(useCurrentUserValue)
-  })
 
   const makeWrapper = () =>
     mount(SubmissionDetailsPage, {
@@ -138,7 +134,12 @@ describe("submissions details page mount", () => {
     isPublicationAdmin: () => false,
   }
 
-  test.only("component mounts without errors", async () => {
+  beforeEach(() => {
+    mockClient.mockReset()
+    useCurrentUser.mockReturnValue(useCurrentUserValue)
+  })
+
+  test("component mounts without errors", async () => {
     const handler = defaultApolloMock()
     const wrapper = await makeWrapper()
     await flushPromises()

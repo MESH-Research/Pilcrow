@@ -2,7 +2,7 @@
   <q-btn
     v-if="isDisabledByRole || isDisabledByState"
     :label="$t(`export.call_to_action`)"
-    color="grey-7"
+    color="grey-8"
     icon="exit_to_app"
     class="cursor-not-allowed"
   >
