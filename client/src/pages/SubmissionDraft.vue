@@ -41,6 +41,7 @@
 
 <script setup>
 import { useQuery } from "@vue/apollo-composable"
+import SubmissionDraftTodoItem from "src/components/SubmissionDraftTodoItem.vue"
 import { GET_SUBMISSION } from "src/graphql/queries"
 import { computed } from "vue"
 import { useRouter } from "vue-router"
