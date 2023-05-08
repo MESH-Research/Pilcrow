@@ -349,30 +349,36 @@
     },
     "reviewer": {
       "title": "To Review",
-      "byline": "{type_name} in which you're assigned as a <strong>reviewer</strong>"
+      "byline": "{type_name} in which you're assigned as a <strong>reviewer</strong>",
+      "tooltip": "{type_name} with a status of Draft, Initially Submitted, or Awaiting Review will not appear here."
     },
     "coordinator": {
       "title": "To Coordinate",
-      "byline": "{type_name} in which you're assigned as a <strong>review coordinator</strong>"
+      "byline": "{type_name} in which you're assigned as a <strong>review coordinator</strong>",
+      "tooltip": "{type_name} with a status of Draft, Initially Submitted, or Awaiting Review will not appear here."
     },
     "dashboard": {
       "reviewer": {
         "title": "Reviews",
-        "byline": "{type_name} you are reviewing"
+        "byline": "{type_name} you are reviewing",
+        "tooltip": "{type_name} with a status of Draft, Initially Submitted, or Awaiting Review will not appear here."
       },
       "coordinator": {
         "title": "Review Coordination",
-        "byline": "{type_name} you are coordinating for reviewers"
+        "byline": "{type_name} you are coordinating for reviewers",
+        "tooltip": "{type_name} with a status of Draft will not appear here."
       },
       "submitter": {
         "title": "Submissions",
-        "byline": "{type_name} you have submitted for review"
+        "byline": "{type_name} you have submitted for review",
+        "tooltip": "The submissions of others will not appear here."
       }
     },
     "submissions": {
       "submitter": {
         "title": "Your Submissions",
-        "byline": "Submissions you have submitted for review"
+        "byline": "Submissions you have submitted for review",
+        "tooltip": "The submissions of others will not appear here."
       }
     }
   },
