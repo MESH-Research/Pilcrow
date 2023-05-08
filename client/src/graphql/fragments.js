@@ -40,6 +40,7 @@ export const _CURRENT_USER_FIELDS = gql`
 export const _RELATED_USER_FIELDS = gql`
   fragment relatedUserFields on User {
     id
+    display_label
     username
     name
     email
