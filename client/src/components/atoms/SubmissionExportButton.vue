@@ -1,6 +1,11 @@
 <template>
   <div v-if="isDisabledByRole || isDisabledByState">
-    <q-btn disabled :label="$t(`export.call_to_action`)" icon="exit_to_app">
+    <q-btn
+      disabled
+      :label="$t(`export.call_to_action`)"
+      icon="exit_to_app"
+      data-cy="submission_export_btn"
+    >
     </q-btn>
     <q-icon name="info" size="sm" class="q-ml-sm">
       <q-tooltip v-if="isDisabledByState" class="text-body1">{{

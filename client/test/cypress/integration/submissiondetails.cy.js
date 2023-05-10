@@ -105,13 +105,12 @@ describe("Submission Details", () => {
   it("should show comments associated with status changes in the Activity section", () => {
     cy.task("resetDb")
     cy.login({ email: "applicationadministrator@pilcrow.dev" })
-    cy.visit("submissions")
+    cy.visit("submission/review/108")
 
     cy.interceptGQLOperation("UpdateSubmissionStatus");
 
-    cy.dataCy("submission_actions").first().click()
-    cy.dataCy("change_status").click()
-    cy.dataCy("open_review").click()
+    cy.dataCy("status-dropdown").click()
+    cy.dataCy("open_for_review").click()
     cy.dataCy("status_change_comment").type("first comment from admin")
     cy.dataCy("dirtyYesChangeStatus").click()
     cy.wait("@UpdateSubmissionStatus")
@@ -120,12 +119,12 @@ describe("Submission Details", () => {
       .should("be.visible")
       .should("have.class", "bg-positive")
 
-    cy.dataCy("close_review").click()
+    cy.dataCy("close_for_review").click()
     cy.dataCy("status_change_comment").type("second comment from admin")
     cy.dataCy("dirtyYesChangeStatus").click()
     cy.wait("@UpdateSubmissionStatus")
 
-    cy.visit("/submission/100")
+    cy.visit("/submission/108")
     cy.dataCy("activity_section").contains("first comment from admin")
     cy.dataCy("activity_section").contains("second comment from admin")
   });
@@ -211,9 +210,9 @@ describe("Submission Details", () => {
     cy.login({ email: "regularuser@pilcrow.dev" })
     // Under Review
     cy.visit("submission/100")
-    cy.dataCy("submission_export_btn").should("have.class","cursor-not-allowed")
+    cy.dataCy("submission_export_btn").should("be.disabled")
     // Rejected
     cy.visit("submission/review/102")
-    cy.dataCy("submission_export_btn").should("not.have.class","cursor-not-allowed")
+    cy.dataCy("submission_export_btn").should("not.be.disabled")
   })
 })
