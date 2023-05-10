@@ -1,18 +1,16 @@
 <template>
-  <q-btn
-    v-if="isDisabledByRole || isDisabledByState"
-    :label="$t(`export.call_to_action`)"
-    color="grey-8"
-    icon="exit_to_app"
-    class="cursor-not-allowed"
-  >
-    <q-tooltip v-if="isDisabledByState" class="text-body1">{{
-      $t(`export.disabled.by_state`)
-    }}</q-tooltip>
-    <q-tooltip v-else-if="isDisabledByRole" class="text-body1">{{
-      $t(`export.disabled.by_role`)
-    }}</q-tooltip>
-  </q-btn>
+  <div v-if="isDisabledByRole || isDisabledByState">
+    <q-btn disabled :label="$t(`export.call_to_action`)" icon="exit_to_app">
+    </q-btn>
+    <q-icon name="info" size="sm" class="q-ml-sm">
+      <q-tooltip v-if="isDisabledByState" class="text-body1">{{
+        $t(`export.disabled.by_state`)
+      }}</q-tooltip>
+      <q-tooltip v-else-if="isDisabledByRole" class="text-body1">{{
+        $t(`export.disabled.by_role`)
+      }}</q-tooltip>
+    </q-icon>
+  </div>
   <q-btn
     v-else
     :label="$t(`export.call_to_action`)"
