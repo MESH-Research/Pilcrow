@@ -1,5 +1,5 @@
 <template>
-  <q-banner class="bg-grey-3" inline-actions>
+  <q-banner inline-actions>
     <div>{{ title }}</div>
     <div class="text-caption">
       <slot />

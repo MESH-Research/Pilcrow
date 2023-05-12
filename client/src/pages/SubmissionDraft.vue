@@ -9,18 +9,19 @@
   <article v-if="submission" class="q-pa-lg">
     <h2>Todo</h2>
     <div class="q-gutter-md">
-      <submission-draft-todo-item title="Update submission details">
+      <!-- TODO: Develop metadata updating -->
+      <!-- <submission-draft-todo-item title="Update submission details">
         Update the title of your submission as well as enter your metadata, etc,
         etc
-      </submission-draft-todo-item>
+      </submission-draft-todo-item> -->
       <submission-draft-todo-item
         title="Upload submission content"
         @go-click="onGoToSubmissionContentClick"
       >
         Upload or paste your submission content.
       </submission-draft-todo-item>
-
-      <q-banner class="bg-grey-3" inline-actions>
+      <!-- TODO: Develop collaborator inviting -->
+      <!-- <q-banner class="bg-grey-3" inline-actions>
         <div>Invite Collaborators</div>
         <div class="text-caption">
           Invite collaborators to join the review process.
@@ -29,7 +30,7 @@
           <q-btn flat>Skip</q-btn>
           <q-btn flat> Go </q-btn>
         </template>
-      </q-banner>
+      </q-banner> -->
     </div>
     <div>
       <h2>Submit for Review</h2>

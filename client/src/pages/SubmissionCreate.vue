@@ -23,28 +23,46 @@
         v-else-if="publication.is_accepting_submissions"
         class="q-gutter-md"
       >
-        <!--  eslint-disable vue/no-v-html -->
-        <div
-          data-cy="publication_home_content"
-          class="content"
-          v-html="publication.new_submission_content"
-        />
-        <!--  eslint-enable vue/no-v-html -->
-        <q-form @submit="createSubmission()">
-          <div class="q-gutter-md column q-pl-none q-pr-md">
-            <q-input
-              v-model="submission_title"
-              outlined
-              label="Enter Submission Title"
-              data-cy="new_submission_title_input"
-            />
+        <q-form @submit="handleSubmit()">
+          <q-input
+            v-model="v$.title.$model"
+            :error="v$.title.$error"
+            outlined
+            label="Enter Submission Title"
+            data-cy="new_submission_title_input"
+          >
+            <template #error>
+              <error-field-renderer
+                :errors="v$.title.$errors"
+                prefix="submissions.create.title"
+              />
+            </template>
+          </q-input>
+          <!--  eslint-disable vue/no-v-html -->
+          <div
+            data-cy="publication_home_content"
+            class="q-mt-md"
+            v-html="publication.new_submission_content"
+          />
+          <!--  eslint-enable vue/no-v-html -->
+          <q-field
+            v-model="v$.acknowledgement.$model"
+            borderless
+            :error="v$.acknowledgement.$error"
+            style="padding-right: 12px"
+          >
             <q-checkbox
-              v-model="submission_agree"
+              v-model="v$.acknowledgement.$model"
               label="I have read and understand the submission guidelines and review process for this publication."
             />
-          </div>
+            <template #error
+              ><div class="q-pt-none">
+                {{ $t(`submissions.create.acknowledgement.required`) }}
+              </div></template
+            >
+          </q-field>
           <q-btn
-            class="accent text-white q-mt-lg"
+            class="accent text-white q-mt-xl"
             type="submit"
             :disable="saving"
             :loading="saving"
@@ -75,36 +93,33 @@
 </template>
 
 <script setup>
-import { useQuery, useMutation } from "@vue/apollo-composable"
-import { computed, ref } from "vue"
+import { useQuery } from "@vue/apollo-composable"
+import { computed } from "vue"
 import { GET_PUBLICATION } from "src/graphql/queries"
-import { CREATE_SUBMISSION_DRAFT } from "src/graphql/mutations"
+import { useSubmissionCreation } from "src/use/submission"
+import ErrorFieldRenderer from "src/components/molecules/ErrorFieldRenderer.vue"
 import { useRouter } from "vue-router"
+const { push } = useRouter()
 const props = defineProps({
   id: {
     type: String,
     required: true,
   },
 })
+const { createSubmission, v$, saving } = useSubmissionCreation()
 
 const { result } = useQuery(GET_PUBLICATION, props)
-
 const publication = computed(() => result.value?.publication)
 
-const submission_title = ref("")
-const submission_agree = ref(false)
-
-const { mutate, saving } = useMutation(CREATE_SUBMISSION_DRAFT)
-const { push } = useRouter()
-
-async function createSubmission() {
-  const mutationResult = await mutate({
-    title: submission_title.value,
-    publication_id: props.id,
-  })
-  const submissionId = mutationResult?.data?.createSubmissionDraft?.id
-  if (submissionId !== null) {
-    push({ name: "submission:draft", params: { id: submissionId } })
+async function handleSubmit() {
+  try {
+    const mutationResult = await createSubmission(publication)
+    const submissionId = mutationResult?.data?.createSubmissionDraft?.id
+    if (submissionId !== null) {
+      push({ name: "submission:draft", params: { id: submissionId } })
+    }
+  } catch (e) {
+    console.log(e)
   }
 }
 </script>

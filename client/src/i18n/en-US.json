@@ -728,7 +728,10 @@
       "failure": "An error occurred while attempting to create the submission.",
       "title": {
         "required": "A title is required to create a submission.",
-        "max_length": "The maximum length has been exceeded for the title."
+        "maxLength": "The maximum length has been exceeded for the title."
+      },
+      "acknowledgement": {
+        "required": "You must acknowledge you have read and understand the guidelines."
       },
       "publication_id": {
         "required": "A publication must be associated with a submission."

@@ -4,25 +4,41 @@
       {{ $t(`submissions.heading`) }}
     </h2>
     <section class="row q-col-gutter-lg q-pa-lg">
-        <div v-if="subsLoading" class="q-pa-lg">
-          {{ $t("loading") }}
-        </div>
+      <div v-if="subsLoading" class="q-pa-lg">
+        {{ $t("loading") }}
+      </div>
 
-        <div v-else-if="currentUser" class="col-12">
-          <submission-table
-            :table-data="submitter_submissions"
-            variation="submissions"
-            table-type="submissions"
-            role="submitter"
-            data-cy="submissions_table"
-          />
-        </div>
+      <div v-else-if="currentUser" class="col-12">
+        <submission-table
+          :table-data="submitter_submissions"
+          variation="submissions"
+          table-type="submissions"
+          role="submitter"
+          data-cy="submissions_table"
+        />
+      </div>
+    </section>
+    <section class="q-px-lg">
+      <div class="row q-px-md">
+        <h3>New Submission</h3>
+      </div>
+      <q-card flat bordered square class="q-pa-lg">
+        <p>Looking to submit a new submission?</p>
+        <p class="q-mb-none">
+          Visit your publication's home page from the
+          <router-link to="/publications">Publications page</router-link> and
+          click the "Submit a work" button.
+        </p>
+      </q-card>
     </section>
     <section class="q-pa-lg">
       <div class="row q-px-md">
         <h3>{{ $t(`submissions.latest_comments_heading`) }}</h3>
       </div>
-      <div v-if="latest_comments.length == 0" :class="$q.screen.width < 770 ? `q-pa-md` : ``">
+      <div
+        v-if="latest_comments.length == 0"
+        :class="$q.screen.width < 770 ? `q-pa-md` : ``"
+      >
         <q-card flat bordered square class="q-pa-lg text-center">
           <p class="text-h3">
             {{ $t(`submissions.no_comments`) }}
@@ -79,7 +95,7 @@ const latest_comments = computed(() => {
           submission: {
             id: submission.id,
             title: submission.title,
-          }
+          },
         }
       })
       .flat()
@@ -100,11 +116,14 @@ const latest_comments = computed(() => {
           submission: {
             id: submission.id,
             title: submission.title,
-          }
+          },
         }
       })
       .flat()
-    return [].concat.apply([], [inline, inline_replies, overall, overall_replies])
+    return [].concat.apply(
+      [],
+      [inline, inline_replies, overall, overall_replies]
+    )
   })
   return comments
     .flat()
