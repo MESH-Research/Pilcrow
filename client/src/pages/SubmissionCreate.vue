@@ -97,29 +97,32 @@ import { useQuery } from "@vue/apollo-composable"
 import { computed } from "vue"
 import { GET_PUBLICATION } from "src/graphql/queries"
 import { useSubmissionCreation } from "src/use/submission"
-import ErrorFieldRenderer from "src/components/molecules/ErrorFieldRenderer.vue"
 import { useRouter } from "vue-router"
-const { push } = useRouter()
+import { useI18n } from "vue-i18n"
+import { useFeedbackMessages } from "src/use/guiElements"
+import ErrorFieldRenderer from "src/components/molecules/ErrorFieldRenderer.vue"
 const props = defineProps({
   id: {
     type: String,
     required: true,
   },
 })
+const { push } = useRouter()
+const { t } = useI18n()
+const { newStatusMessage } = useFeedbackMessages()
 const { createSubmission, v$, saving } = useSubmissionCreation()
-
 const { result } = useQuery(GET_PUBLICATION, props)
 const publication = computed(() => result.value?.publication)
-
 async function handleSubmit() {
   try {
+    await createSubmission(publication)
     const mutationResult = await createSubmission(publication)
     const submissionId = mutationResult?.data?.createSubmissionDraft?.id
     if (submissionId !== null) {
       push({ name: "submission:draft", params: { id: submissionId } })
     }
   } catch (e) {
-    console.log(e)
+    newStatusMessage("failure", t("submissions.create.failure"))
   }
 }
 </script>

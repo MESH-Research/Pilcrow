@@ -24,16 +24,13 @@ export const useSubmissionCreation = () => {
   const v$ = useVuelidate(rules, submission)
   const createSubmission = async (publication) => {
     v$.value.$touch()
-    console.log(1)
     if (v$.value.$invalid) {
       throw Error("FORM_VALIDATION")
     }
-    console.log(2)
     const mutationResult = await mutate({
       title: submission.title,
       publication_id: publication.value.id,
     })
-    console.log(3)
     return mutationResult
   }
 
