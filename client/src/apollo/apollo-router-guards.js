@@ -124,6 +124,89 @@ export async function beforeEachRequiresReviewAccess(
   }
 }
 
+export async function beforeEachRequiresExportAccess(
+  apolloClient,
+  to,
+  _,
+  next
+) {
+  if (to.matched.some((record) => record.meta.requiresExportAccess)) {
+    let access = false
+    const submissionId = to.params.id
+    const user = await apolloClient
+      .query({
+        query: CURRENT_USER_SUBMISSIONS,
+      })
+      .then(({ data: { currentUser } }) => currentUser)
+
+    const submission = user.submissions.filter((submission) => {
+      return submission.id == submissionId
+    })
+    console.log(`Hello World`)
+
+    if (submission.length) {
+      const s = submission[0]
+
+      // Allow those who are assigned to the submission
+      if (
+        ["review_coordinator", "submitter"].some(
+          (role) => role === s.my_role
+        )
+      ) {
+        console.log(1)
+        access = true
+      }
+
+      // Deny Reviewers
+      if ("reviewer" === s.my_role) {
+        console.log(2)
+        access = false
+      }
+
+      // Deny when the submission is not in an exportable state
+      const exportableStates = new Set([
+        "REJECTED",
+        "RESUBMISSION_REQUESTED",
+        "ACCEPTED_AS_FINAL",
+        "ARCHIVED",
+        "EXPIRED",
+      ])
+      if (!exportableStates.has(s.status)) {
+        console.log(3)
+        access = false
+      }
+
+      // Allow Publication Administrators and Editors
+      if (
+        ["publication_admin", "editor"].some(
+          (role) => role === s.publication.my_role
+        )
+      ) {
+        console.log(4)
+        access = true
+      }
+    }
+
+    // Allow Application Administrators
+    if (user.roles.length > 0) {
+      if (
+        user.roles.some((role) => role.name === "Application Administrator")
+      ) {
+        console.log(5)
+        access = true
+      }
+    }
+
+    if (!access) {
+      next({ name: "error403" })
+    } else {
+      next()
+    }
+  } else {
+    next()
+  }
+}
+
 export async function beforeEachRequiresRoles(apolloClient, to, _, next) {
   if (to.matched.some((record) => record.meta.requiresRoles)) {
     const requiredRoles = to.matched
