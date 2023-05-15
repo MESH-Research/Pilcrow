@@ -9,7 +9,7 @@
     v-model="model"
     :error="v.$error"
     :label="getTranslation('label')"
-    :hint="getTranslation('hint')"
+    :hint="te(getTranslationKey('hint')) ? getTranslation('hint') : null"
     outlined
     @clear="clearInput"
   >
@@ -34,6 +34,7 @@ export default {
 import { inject, ref } from "vue"
 import ErrorFieldRenderer from "src/components/molecules/ErrorFieldRenderer.vue"
 import { useVQWrap } from "src/use/forms"
+import { useI18n } from "vue-i18n"
 /**
  * Transparent wrapper for q-input that handles validation and translation by convention.
  *
@@ -64,6 +65,8 @@ defineEmits(["vqupdate"])
 const input = ref(null)
 
 const { getTranslation, getTranslationKey, model } = useVQWrap(props.v, props.t)
+
+const { te } = useI18n()
 
 function clearInput() {
   input.value.blur()
