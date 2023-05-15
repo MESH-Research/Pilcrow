@@ -23,6 +23,7 @@
           :v="v$.name"
           t="publications.style_criteria.fields.name"
           data-cy="name-input"
+          hide-hint
           @vqupdate="updateModel"
         />
         <q-editor
