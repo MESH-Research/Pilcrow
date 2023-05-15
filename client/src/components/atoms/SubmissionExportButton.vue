@@ -33,7 +33,7 @@ import { toRef } from "vue"
 const props = defineProps({
   submission: {
     type: Object,
-    default: () => {},
+    required: true,
   },
 })
 const submissionRef = toRef(props, "submission")
