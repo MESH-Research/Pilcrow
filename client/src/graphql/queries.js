@@ -379,13 +379,13 @@ export const GET_SUBMISSION_REVIEW = gql`
           reply_to_id
         }
       }
+      submitters {
+        ...relatedUserFields
+      }
       reviewers {
         ...relatedUserFields
       }
       review_coordinators {
-        ...relatedUserFields
-      }
-      submitters {
         ...relatedUserFields
       }
     }
