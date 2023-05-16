@@ -132,6 +132,41 @@
           </q-item>
         </q-menu>
       </q-item>
+      <q-item
+        :disable="isDisabledByRole || isDisabledByState"
+        data-cy="export_submission"
+        clickable
+        :to="{
+          name: 'submission_export',
+          params: { id: submission.id },
+        }"
+      >
+        <q-item-section>
+          <q-item-label>
+            {{ $t(`export.call_to_action`) }}
+          </q-item-label>
+        </q-item-section>
+        <q-tooltip
+          v-if="isDisabledByRole"
+          anchor="top middle"
+          self="bottom middle"
+          :offset="[10, 10]"
+          class="text-body1"
+          data-cy="cannot_export_submission_tooltip"
+        >
+          {{ $t(`export.disabled.by_role`) }}
+        </q-tooltip>
+        <q-tooltip
+          v-else-if="isDisabledByState"
+          anchor="top middle"
+          self="bottom middle"
+          :offset="[10, 10]"
+          class="text-body1"
+          data-cy="cannot_export_submission_tooltip"
+        >
+          {{ $t(`export.disabled.by_state`) }}
+        </q-tooltip>
+      </q-item>
     </q-menu>
   </q-btn>
 </template>
@@ -140,7 +175,13 @@
 import ConfirmStatusChangeDialog from "../components/dialogs/ConfirmStatusChangeDialog.vue"
 import { useQuasar } from "quasar"
 import { computed } from "vue"
+import { useSubmissionExport } from "src/use/guiElements.js"
+import { ref } from "vue"
 const { dialog } = useQuasar()
+
+const submissionRef = ref(props.submission)
+const { isDisabledByRole, isDisabledByState } =
+  useSubmissionExport(submissionRef)
 
 const props = defineProps({
   submission: {

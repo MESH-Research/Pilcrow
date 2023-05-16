@@ -175,6 +175,15 @@ const routes = [
         },
         props: true,
       },
+      {
+        name: "submission_export",
+        path: "/submission/export/:id",
+        component: () => import("src/pages/SubmissionExport.vue"),
+        meta: {
+          requiresExportAccess: true,
+        },
+        props: true,
+      },
     ],
   },
   {

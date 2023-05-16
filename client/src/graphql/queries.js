@@ -77,6 +77,12 @@ export const CURRENT_USER_SUBMISSIONS = gql`
         status
         my_role
         effective_role
+        review_coordinators {
+          ...relatedUserFields
+        }
+        submitters {
+          ...relatedUserFields
+        }
         inline_comments {
           id
           content
@@ -150,10 +156,17 @@ export const CURRENT_USER_SUBMISSIONS = gql`
           id
           name
           my_role
+          editors {
+            ...relatedUserFields
+          }
+          publication_admins {
+            ...relatedUserFields
+          }
         }
       }
     }
   }
+  ${_RELATED_USER_FIELDS}
 `
 
 export const GET_USERS = gql`
@@ -219,6 +232,47 @@ export const GET_PUBLICATIONS = gql`
   ${_PAGINATION_FIELDS}
 `
 
+export const GET_SUBMISSIONS = gql`
+  query GetSubmissions($page: Int) {
+    submissions(page: $page) {
+      paginatorInfo {
+        ...paginationFields
+      }
+      data {
+        id
+        title
+        status
+        my_role
+        effective_role
+        submitters {
+          ...relatedUserFields
+        }
+        reviewers {
+          ...relatedUserFields
+        }
+        review_coordinators {
+          ...relatedUserFields
+        }
+        publication {
+          name
+          editors {
+            ...relatedUserFields
+          }
+          publication_admins {
+            ...relatedUserFields
+          }
+        }
+        files {
+          id
+          file_upload
+        }
+      }
+    }
+  }
+  ${_PAGINATION_FIELDS}
+  ${_RELATED_USER_FIELDS}
+`
+
 export const GET_SUBMISSION = gql`
   query GetSubmission($id: ID!) {
     submission(id: $id) {
@@ -226,6 +280,9 @@ export const GET_SUBMISSION = gql`
       title
       status
       effective_role
+      content {
+        data
+      }
       audits {
         id
         event
@@ -256,14 +313,20 @@ export const GET_SUBMISSION = gql`
           description
           icon
         }
+        editors {
+          ...relatedUserFields
+        }
+        publication_admins {
+          ...relatedUserFields
+        }
+      }
+      submitters {
+        ...relatedUserFields
       }
       reviewers {
         ...relatedUserFields
       }
       review_coordinators {
-        ...relatedUserFields
-      }
-      submitters {
         ...relatedUserFields
       }
     }
@@ -288,6 +351,12 @@ export const GET_SUBMISSION_REVIEW = gql`
           description
           icon
         }
+        editors {
+          ...relatedUserFields
+        }
+        publication_admins {
+          ...relatedUserFields
+        }
       }
       inline_comments {
         from
@@ -309,6 +378,15 @@ export const GET_SUBMISSION_REVIEW = gql`
           ...commentFields
           reply_to_id
         }
+      }
+      submitters {
+        ...relatedUserFields
+      }
+      reviewers {
+        ...relatedUserFields
+      }
+      review_coordinators {
+        ...relatedUserFields
       }
     }
   }
