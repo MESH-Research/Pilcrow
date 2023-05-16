@@ -1,5 +1,7 @@
+import { computed } from "vue"
 import { useQuasar } from "quasar"
 import { useI18n } from "vue-i18n"
+import { useCurrentUser } from "./user"
 
 /**
  * Display feedback messages to the user using the Quasar notify plugin.
@@ -51,4 +53,42 @@ export function useFeedbackMessages(overrideDefaults = {}) {
   }
 
   return { newMessage, newStatusMessage }
+}
+
+export function useSubmissionExport(submission) {
+  const {
+    isAppAdmin,
+    isPublicationAdmin,
+    isEditor,
+    isReviewCoordinator,
+    isSubmitter,
+  } = useCurrentUser()
+
+  const exportVisibleStates = [
+    "REJECTED",
+    "RESUBMISSION_REQUESTED",
+    "ACCEPTED_AS_FINAL",
+    "ARCHIVED",
+    "EXPIRED",
+  ]
+  const isDisabledByRole = computed(() => {
+    if (!submission.value) {
+      return true
+    }
+    return !(
+      isAppAdmin.value ||
+      isPublicationAdmin(submission.value.publication) ||
+      isEditor(submission.value.publication) ||
+      isReviewCoordinator(submission.value) ||
+      isSubmitter(submission.value)
+    )
+  })
+  const isDisabledByState = computed(() => {
+    if (!submission.value) {
+      return true
+    }
+    return !exportVisibleStates.includes(submission.value.status)
+  })
+
+  return { isDisabledByRole, isDisabledByState }
 }

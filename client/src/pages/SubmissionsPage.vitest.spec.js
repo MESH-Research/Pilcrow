@@ -3,7 +3,7 @@ import { mount, flushPromises } from "@vue/test-utils"
 import { installApolloClient } from "test/vitest/utils"
 import { CURRENT_USER_SUBMISSIONS } from "src/graphql/queries"
 import { useCurrentUser } from "src/use/user"
-import { describe, expect, test, vi, afterEach } from "vitest"
+import { beforeEach, afterEach, describe, expect, test, vi } from "vitest"
 import { ref } from "vue"
 import SubmissionsPage from "./SubmissionsPage.vue"
 vi.mock("src/use/user", () => ({
@@ -16,6 +16,22 @@ const mockClient = installApolloClient()
 describe("Submissions Page", () => {
   const CurrentUserSubmissions = vi.fn()
   mockClient.setRequestHandler(CURRENT_USER_SUBMISSIONS, CurrentUserSubmissions)
+
+  beforeEach(async () => {
+    useCurrentUser.mockReturnValue({
+      currentUser: ref({
+        id: 1,
+        roles: [{
+          name: "Application Administrator"
+        }],
+       }),
+      isAppAdmin: ref(true),
+      isSubmitter: () => true,
+      isReviewCoordinator: () => false,
+      isEditor: () => false,
+      isPublicationAdmin: () => false,
+    })
+  })
 
   afterEach(() => {
     CurrentUserSubmissions.mockClear()
@@ -32,18 +48,11 @@ describe("Submissions Page", () => {
   }
 
   test("able to mount", async () => {
-    useCurrentUser.mockReturnValue({
-      currentUser: ref({ id: 1 }),
-    })
     const wrapper = await wrapperFactory()
     expect(wrapper).toBeTruthy()
   })
 
   test("all expected submissions appear", async () => {
-    useCurrentUser.mockReturnValue({
-      currentUser: ref({ id: 1 }),
-    })
-
     CurrentUserSubmissions.mockResolvedValue({
       data: {
         currentUser: {
@@ -56,9 +65,18 @@ describe("Submissions Page", () => {
               status: "INITIALLY_SUBMITTED",
               my_role: "submitter",
               effective_role: "submitter",
-              publication: { id: 1, name: "Jest Publication", my_role: "" },
+              publication: {
+                id: 1,
+                name: "Jest Publication",
+                my_role: "",
+                editors: [],
+                publication_admins: [],
+              },
               inline_comments: [],
               overall_comments: [],
+              submitters: [],
+              reviewers: [],
+              review_coordinators: [],
             },
             {
               id: "2",
@@ -66,9 +84,20 @@ describe("Submissions Page", () => {
               status: "RESUBMISSION_REQUESTED",
               my_role: "reviewer",
               effective_role: "reviewer",
-              publication: { id: 1, name: "Jest Publication", my_role: "" },
+              publication: {
+                id: 1,
+                name: "Jest Publication",
+                my_role: "",
+                editors: [],
+                publication_admins: [],
+              },
               inline_comments: [],
               overall_comments: [],
+              submitters: [],
+              reviewers: [],
+              review_coordinators: [],
+              editors: [],
+              publication_admins: [],
             },
             {
               id: "3",
@@ -76,9 +105,18 @@ describe("Submissions Page", () => {
               status: "AWAITING_REVIEW",
               my_role: "review_coordinator",
               effective_role: "review_coordinator",
-              publication: { id: 1, name: "Jest Publication", my_role: "" },
+              publication: {
+                id: 1,
+                name: "Jest Publication",
+                my_role: "",
+                editors: [],
+                publication_admins: [],
+              },
               inline_comments: [],
               overall_comments: [],
+              submitters: [],
+              reviewers: [],
+              review_coordinators: [],
             },
             {
               id: "4",
@@ -86,9 +124,18 @@ describe("Submissions Page", () => {
               status: "REJECTED",
               my_role: "",
               effective_role: "review_coordinator",
-              publication: { id: 1, name: "Jest Publication", my_role: "" },
+              publication: {
+                id: 1,
+                name: "Jest Publication",
+                my_role: "",
+                editors: [],
+                publication_admins: [],
+              },
               inline_comments: [],
               overall_comments: [],
+              submitters: [],
+              reviewers: [],
+              review_coordinators: [],
             },
             {
               id: "5",
@@ -96,9 +143,18 @@ describe("Submissions Page", () => {
               status: "INITIALLY_SUBMITTED",
               my_role: "",
               effective_role: "",
-              publication: { id: 1, name: "Jest Publication", my_role: "" },
+              publication: {
+                id: 1,
+                name: "Jest Publication",
+                my_role: "",
+                editors: [],
+                publication_admins: [],
+              },
               inline_comments: [],
               overall_comments: [],
+              submitters: [],
+              reviewers: [],
+              review_coordinators: [],
             },
             {
               id: "6",
@@ -106,9 +162,18 @@ describe("Submissions Page", () => {
               status: "INITIALLY_SUBMITTED",
               my_role: "submitter",
               effective_role: "submitter",
-              publication: { id: 1, name: "Jest Publication", my_role: "" },
+              publication: {
+                id: 1,
+                name: "Jest Publication",
+                my_role: "",
+                editors: [],
+                publication_admins: [],
+              },
               inline_comments: [],
               overall_comments: [],
+              submitters: [],
+              reviewers: [],
+              review_coordinators: [],
             },
           ],
         },
@@ -124,9 +189,6 @@ describe("Submissions Page", () => {
   })
 
   test("comment previews appear within the latest comments section", async () => {
-    useCurrentUser.mockReturnValue({
-      currentUser: ref({ id: 1 }),
-    })
     CurrentUserSubmissions.mockResolvedValue({
       data: {
         currentUser: {
@@ -139,7 +201,13 @@ describe("Submissions Page", () => {
               status: "INITIALLY_SUBMITTED",
               my_role: "submitter",
               effective_role: "submitter",
-              publication: { id: 1, name: "Jest Publication", my_role: "" },
+              publication: {
+                id: 1,
+                name: "Jest Publication",
+                my_role: "",
+                editors: [],
+                publication_admins: [],
+              },
               inline_comments: [
                 {
                   id: "1",
@@ -162,7 +230,7 @@ describe("Submissions Page", () => {
                     email: "applicationadministrator@pilcrow.dev",
                   },
                   updated_at: "2023-03-24T02:01:00.000000Z",
-                  replies: []
+                  replies: [],
                 },
                 {
                   id: "2",
@@ -184,7 +252,7 @@ describe("Submissions Page", () => {
                     email: "publicationEditor@pilcrow.dev",
                   },
                   updated_at: "2023-03-25T05:27:07.000000Z",
-                  replies: []
+                  replies: [],
                 },
               ],
               overall_comments: [
@@ -205,9 +273,12 @@ describe("Submissions Page", () => {
                     email: "reviewer@pilcrow.dev",
                   },
                   updated_at: "2023-03-27T08:21:44.000000Z",
-                  replies: []
+                  replies: [],
                 },
               ],
+              submitters: [],
+              reviewers: [],
+              review_coordinators: [],
             },
             {
               id: "2",
@@ -215,7 +286,13 @@ describe("Submissions Page", () => {
               status: "RESUBMISSION_REQUESTED",
               my_role: "reviewer",
               effective_role: "reviewer",
-              publication: { id: 1, name: "Jest Publication", my_role: "" },
+              publication: {
+                id: 1,
+                name: "Jest Publication",
+                my_role: "",
+                editors: [],
+                publication_admins: [],
+              },
               inline_comments: [
                 {
                   id: "3",
@@ -237,7 +314,7 @@ describe("Submissions Page", () => {
                     email: "publicationEditor@pilcrow.dev",
                   },
                   updated_at: "2023-04-08T02:01:03.000000Z",
-                  replies: []
+                  replies: [],
                 },
                 {
                   id: "4",
@@ -263,7 +340,7 @@ describe("Submissions Page", () => {
                     email: "reviewer@pilcrow.dev",
                   },
                   updated_at: "2023-04-09T02:25:03.000000Z",
-                  replies: []
+                  replies: [],
                 },
               ],
               overall_comments: [
@@ -284,7 +361,7 @@ describe("Submissions Page", () => {
                     email: "applicationadministrator@pilcrow.dev",
                   },
                   updated_at: "2023-04-10T07:12:35.000000Z",
-                  replies: []
+                  replies: [],
                 },
                 {
                   id: "3",
@@ -303,9 +380,12 @@ describe("Submissions Page", () => {
                     email: "reviewer@pilcrow.dev",
                   },
                   updated_at: "2023-04-08T05:25:03.000000Z",
-                  replies: []
+                  replies: [],
                 },
               ],
+              submitters: [],
+              reviewers: [],
+              review_coordinators: [],
             },
           ],
         },
