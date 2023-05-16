@@ -1,8 +1,10 @@
+import { GET_SUBMISSION } from "src/graphql/queries"
+import { beforeEach, describe, expect, test, vi } from "vitest"
+import { installApolloClient } from "test/vitest/utils"
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
 import { mount, flushPromises } from "@vue/test-utils"
-import { installApolloClient } from "test/vitest/utils"
-import { GET_SUBMISSION } from "src/graphql/queries"
-import { beforeEach, describe, expect, test, vi } from 'vitest'
+import { useCurrentUser } from "src/use/user"
+import { ref } from "vue"
 import SubmissionDetailsPage from "./SubmissionDetails.vue"
 
 vi.mock("quasar", () => ({
@@ -12,15 +14,17 @@ vi.mock("quasar", () => ({
   }),
 }))
 
+vi.mock("src/use/user", () => ({
+  useCurrentUser: vi.fn(),
+}))
+
 installQuasarPlugin()
 const mockClient = installApolloClient()
 
 describe("submissions details page mount", () => {
-  beforeEach(() => {
-    mockClient.mockReset()
-  })
 
-  const makeWrapper = () => mount(SubmissionDetailsPage, {
+  const makeWrapper = () =>
+    mount(SubmissionDetailsPage, {
       props: {
         id: "1",
       },
@@ -86,26 +90,54 @@ describe("submissions details page mount", () => {
   }
 
   const defaultApolloMock = () =>
-    mockClient
-      .getRequestHandler(GET_SUBMISSION)
-      .mockResolvedValue({
-        data: {
-          submission: {
-            id: 1,
-            effective_role: "review_coordinator",
-            status: 0,
-            __typename: "Submission",
-            title: "This Submission",
-            publication: {
-              id: 1,
-              name: "Jest Publication",
-              style_criterias: [],
-            },
-            audits: [],
-            ...submissionUsersData,
+    mockClient.getRequestHandler(GET_SUBMISSION).mockResolvedValue({
+      data: {
+        submission: {
+          __typename: "Submission",
+          id: 1,
+          title: "This Submission",
+          status: 0,
+          effective_role: "review_coordinator",
+          content: {
+            data: "",
           },
+          audits: [],
+          publication: {
+            id: 1,
+            name: "Jest Publication",
+            style_criterias: [],
+            editors: [],
+            publication_admins: [],
+          },
+          ...submissionUsersData,
         },
+      },
     })
+
+  const useCurrentUserValue = {
+    currentUser: ref({
+      __typename: "User",
+      id: 1,
+      display_label: "Hello",
+      name: "Hello",
+      email: "hello@example.com",
+      username: "helloUser",
+      email_verified_at: "2021-08-14 02:26:32",
+      roles: [{
+        name: "Application Administrator"
+      }],
+    }),
+    isAppAdmin: ref(true),
+    isSubmitter: () => true,
+    isReviewCoordinator: () => false,
+    isEditor: () => false,
+    isPublicationAdmin: () => false,
+  }
+
+  beforeEach(() => {
+    mockClient.mockReset()
+    useCurrentUser.mockReturnValue(useCurrentUserValue)
+  })
 
   test("component mounts without errors", async () => {
     const handler = defaultApolloMock()

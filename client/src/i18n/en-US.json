@@ -768,6 +768,19 @@
       "scroll_to_top": "Scroll to top"
     }
   },
+  "export": {
+    "title": "Export",
+    "call_to_action": "Export Submission",
+    "description": "This page allows you to export this submission as HTML.",
+    "download": {
+      "title": "Download (html)",
+      "description": "The file contents will download directly to your device in this format."
+    },
+    "disabled": {
+      "by_role": "You do not have permission to export this submission.",
+      "by_state": "Export will be available when review is completed."
+    }
+  },
   "failures": {
     "UNKNOWN_ERROR": "An unknown error has occurred.",
     "FORBIDDEN_ROUTE": "You don't have permission to access that page."

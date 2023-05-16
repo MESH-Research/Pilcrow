@@ -129,7 +129,39 @@
           </q-btn>
         </q-btn-group>
       </q-btn-dropdown>
-
+      <q-icon
+        v-if="isDisabledByRole || isDisabledByState"
+        data-cy="submission_export_btn"
+        name="exit_to_app"
+        size="sm"
+        color="disabled"
+        class="q-ma-xs cursor-not-allowed"
+        style="opacity: 0.5"
+      >
+        <q-tooltip v-if="isDisabledByRole" class="text-body1">{{
+          $t(`export.disabled.by_role`)
+        }}</q-tooltip>
+        <q-tooltip v-else-if="isDisabledByState" class="text-body1">{{
+          $t(`export.disabled.by_state`)
+        }}</q-tooltip>
+      </q-icon>
+      <q-btn
+        v-else
+        data-cy="submission_export_btn"
+        :aria-label="$t(`export.call_to_action`)"
+        icon="exit_to_app"
+        dense
+        flat
+        round
+        :to="{
+          name: 'submission_export',
+          params: { id: submission.id },
+        }"
+      >
+        <q-tooltip class="text-body1">{{
+          $t(`export.call_to_action`)
+        }}</q-tooltip>
+      </q-btn>
       <q-btn
         :aria-label="$t('submission.toolbar.toggle_annotation_highlights')"
         dense
@@ -138,7 +170,7 @@
         icon="power_input"
         @click="toggleAnnotationHighlights"
       >
-        <q-tooltip>{{
+        <q-tooltip class="text-body1 text-center" max-width="100px">{{
           $t("submission.toolbar.toggle_annotation_highlights")
         }}</q-tooltip>
       </q-btn>
@@ -151,7 +183,7 @@
         data-cy="toggleInlineCommentsButton"
         @click="toggleCommentDrawer"
       >
-        <q-tooltip>{{
+        <q-tooltip class="text-body1 text-center" max-width="100px">{{
           $t("submission.toolbar.toggle_inline_comments")
         }}</q-tooltip>
       </q-btn>
@@ -161,8 +193,14 @@
 <script setup>
 import ConfirmStatusChangeDialog from "../dialogs/ConfirmStatusChangeDialog.vue"
 import { useQuasar } from "quasar"
+import { useSubmissionExport } from "src/use/guiElements.js"
+import { ref } from "vue"
 
 const { dialog } = useQuasar()
+
+const submissionRef = ref(props.submission)
+const { isDisabledByRole, isDisabledByState } =
+  useSubmissionExport(submissionRef)
 
 const props = defineProps({
   // Drawer status
