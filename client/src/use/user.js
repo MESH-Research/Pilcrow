@@ -43,6 +43,27 @@ export function useCurrentUser() {
     return query.result.value?.currentUser.roles.map(({ name }) => name) ?? []
   })
 
+  const isSubmitter = (submission) => {
+    return submission?.submitters?.some((o) => {
+      return o.id == currentUser.value.id
+    })
+  }
+  const isReviewCoordinator = (submission) => {
+    return submission?.review_coordinators?.some((o) => {
+      return o.id == currentUser.value.id
+    })
+  }
+  const isEditor = (publication) => {
+    return publication?.editors?.some((o) => {
+      return o.id == currentUser.value.id
+    })
+  }
+  const isPublicationAdmin = (publication) => {
+    return publication?.publication_admins?.some((o) => {
+      return o.id == currentUser.value.id
+    })
+  }
+
   return {
     currentUser,
     currentUserQuery: query,
@@ -50,6 +71,10 @@ export function useCurrentUser() {
     roles,
     abilities,
     isAppAdmin,
+    isSubmitter,
+    isReviewCoordinator,
+    isEditor,
+    isPublicationAdmin,
   }
 }
 
