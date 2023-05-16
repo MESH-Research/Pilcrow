@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bc89ca90fb3967c1a8f83149516bfe69",
+    "content-hash": "28e6cdb90c2b2e1b8d8f2a26ab71e700",
     "packages": [
         {
             "name": "bensampo/laravel-enum",
@@ -7912,16 +7912,16 @@
         },
         {
             "name": "mll-lab/laravel-graphiql",
-            "version": "v1.2.2",
+            "version": "v2.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mll-lab/laravel-graphiql.git",
-                "reference": "0c20cd7e7321f59fc63b51ea3f31c21c1b4ea74c"
+                "reference": "8a6c63f5c8d7dc43bae126d63d32c034a06fd14e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mll-lab/laravel-graphiql/zipball/0c20cd7e7321f59fc63b51ea3f31c21c1b4ea74c",
-                "reference": "0c20cd7e7321f59fc63b51ea3f31c21c1b4ea74c",
+                "url": "https://api.github.com/repos/mll-lab/laravel-graphiql/zipball/8a6c63f5c8d7dc43bae126d63d32c034a06fd14e",
+                "reference": "8a6c63f5c8d7dc43bae126d63d32c034a06fd14e",
                 "shasum": ""
             },
             "require": {
@@ -7972,9 +7972,9 @@
             ],
             "support": {
                 "issues": "https://github.com/mll-lab/laravel-graphiql/issues",
-                "source": "https://github.com/mll-lab/laravel-graphiql/tree/v1.2.2"
+                "source": "https://github.com/mll-lab/laravel-graphiql/tree/v2.0.2"
             },
-            "time": "2023-04-04T15:41:13+00:00"
+            "time": "2023-04-24T12:53:40+00:00"
         },
         {
             "name": "mockery/mockery",
