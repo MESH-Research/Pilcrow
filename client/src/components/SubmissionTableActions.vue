@@ -147,17 +147,7 @@
           </q-item-label>
         </q-item-section>
         <q-tooltip
-          v-if="isDisabledByState"
-          anchor="top middle"
-          self="bottom middle"
-          :offset="[10, 10]"
-          class="text-body1"
-          data-cy="cannot_export_submission_tooltip"
-        >
-          {{ $t(`export.disabled.by_state`) }}
-        </q-tooltip>
-        <q-tooltip
-          v-else-if="isDisabledByRole"
+          v-if="isDisabledByRole"
           anchor="top middle"
           self="bottom middle"
           :offset="[10, 10]"
@@ -165,6 +155,16 @@
           data-cy="cannot_export_submission_tooltip"
         >
           {{ $t(`export.disabled.by_role`) }}
+        </q-tooltip>
+        <q-tooltip
+          v-else-if="isDisabledByState"
+          anchor="top middle"
+          self="bottom middle"
+          :offset="[10, 10]"
+          class="text-body1"
+          data-cy="cannot_export_submission_tooltip"
+        >
+          {{ $t(`export.disabled.by_state`) }}
         </q-tooltip>
       </q-item>
     </q-menu>

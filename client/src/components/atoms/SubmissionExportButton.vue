@@ -8,11 +8,11 @@
     >
     </q-btn>
     <q-icon name="info" size="sm" class="q-ml-sm">
-      <q-tooltip v-if="isDisabledByState" class="text-body1">{{
-        $t(`export.disabled.by_state`)
-      }}</q-tooltip>
-      <q-tooltip v-else-if="isDisabledByRole" class="text-body1">{{
+      <q-tooltip v-if="isDisabledByRole" class="text-body1">{{
         $t(`export.disabled.by_role`)
+      }}</q-tooltip>
+      <q-tooltip v-else-if="isDisabledByState" class="text-body1">{{
+        $t(`export.disabled.by_state`)
       }}</q-tooltip>
     </q-icon>
   </div>

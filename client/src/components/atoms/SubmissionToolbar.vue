@@ -130,7 +130,7 @@
         </q-btn-group>
       </q-btn-dropdown>
       <q-icon
-        v-if="isDisabledByState || isDisabledByRole"
+        v-if="isDisabledByRole || isDisabledByState"
         data-cy="submission_export_btn"
         name="exit_to_app"
         size="sm"
@@ -138,11 +138,11 @@
         class="q-ma-xs cursor-not-allowed"
         style="opacity: 0.5"
       >
-        <q-tooltip v-if="isDisabledByState" class="text-body1">{{
-          $t(`export.disabled.by_state`)
-        }}</q-tooltip>
-        <q-tooltip v-else-if="isDisabledByRole" class="text-body1">{{
+        <q-tooltip v-if="isDisabledByRole" class="text-body1">{{
           $t(`export.disabled.by_role`)
+        }}</q-tooltip>
+        <q-tooltip v-else-if="isDisabledByState" class="text-body1">{{
+          $t(`export.disabled.by_state`)
         }}</q-tooltip>
       </q-icon>
       <q-btn
