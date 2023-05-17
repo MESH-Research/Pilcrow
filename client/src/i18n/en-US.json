@@ -311,7 +311,7 @@
     },
     "grant_statement": {
       "statement": "Pilcrow is a collaboration between {mesh_url} and the {ppj_url} at Michigan State University. The project is supported by the Andrew W. Mellon Foundation (Grant #G-1910-07239).",
-      "mesh_link": "MESH Research",
+      "mesh_link": "Mesh Research",
       "ppj_link": "Public Philosophy Journal"
     },
     "open_source": {
