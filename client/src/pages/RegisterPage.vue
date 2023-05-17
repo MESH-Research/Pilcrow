@@ -115,7 +115,7 @@
         </q-card-actions>
         <q-card-section class="text-center q-pa-sm">
           <p>
-            <router-link to="/login">
+            <router-link to="/login" class="dark-accent-text">
               {{ $t("auth.register_login") }}
             </router-link>
           </p>
