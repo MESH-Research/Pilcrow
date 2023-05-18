@@ -31,7 +31,7 @@
     "edit": "Edit {0}",
     "save": "Save",
     "add": "Add",
-    "new": "Add {0}",
+    "new": "Add {0}.",
     "label": "Item"
   },
   "auth": {
@@ -58,8 +58,8 @@
       "summary": "Your password scores {score} out of 4.  If would likely take <strong>{crack_time}</strong> for a bot to guess your password."
     },
     "aria": {
-      "more_info_password": "Show password complexity details.",
-      "show_password": "Show password."
+      "more_info_password": "Show password complexity details",
+      "show_password": "Show password"
     },
     "validation": {
       "username": {
@@ -530,8 +530,8 @@
         },
         "icon": {
           "tooltip": "Click to change icon.",
-          "ariaLabel": "Change icon.",
-          "search": "Search icons."
+          "ariaLabel": "Change icon",
+          "search": "Search icons"
         }
       }
     },
@@ -661,7 +661,7 @@
         "label": "Add Submitter"
       },
       "unassign_button": {
-        "ariaLabel": "Unassign Submitterr",
+        "ariaLabel": "Unassign Submitter",
         "help": "Remove Submitter"
       }
     }
@@ -743,10 +743,10 @@
     },
     "inline_comments_heading": "Inline Comments",
     "comment_preview": {
-      "ariaLabel": "Comment Preview. Author {display_label}."
+      "ariaLabel": "Comment Preview. Author {display_label}"
     },
     "comment": {
-      "ariaLabel": "Comment. Author {username}. {replies} replies.",
+      "ariaLabel": "Comment. Author {username}. {replies} replies",
       "dateLabel": "Created {date}",
       "dateLabelUpdated": "Updated {date}",
       "updatedLabel": "Updated",
@@ -755,8 +755,8 @@
         "hide_reply": "Hide Replies"
       },
       "reply": {
-        "ariaLabel": "Comment Reply.  Author {username}.",
-        "referenceButtonAria": "Jump to referenced comment.",
+        "ariaLabel": "Comment Reply.  Author {username}",
+        "referenceButtonAria": "Jump to referenced comment",
         "title": "Your Reply"
       },
       "actions_btn_aria": "Comment Actions",
@@ -766,7 +766,7 @@
         "share": "Share"
       },
       "placeholder": "Add a comment …",
-      "scroll_to_top": "Scroll to top."
+      "scroll_to_top": "Scroll to top"
     }
   },
   "export": {
@@ -903,8 +903,8 @@
       "line_1": "Style criteria are an important part of {link}.",
       "line_1_linktext": "Pilcrow",
       "line_2": "Are you sure you do not want to associate one with this comment?",
-      "action_submit": "Post comment as is.",
-      "action_cancel": "Add style criteria."
+      "action_submit": "Post comment as is",
+      "action_cancel": "Add style criteria"
     },
     "reinviteUser": {
       "description": "You are about to reinvite {email} as a {role} of this submission.",
