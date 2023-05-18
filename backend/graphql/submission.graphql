@@ -10,9 +10,6 @@ extend type Query {
 
 extend type Mutation {
     "Create a new submission under a publication"
-    createSubmission(input: CreateSubmissionInput! @spread): Submission!
-        @create
-        @can(ability: "create", injectArgs: true)
     createSubmissionDraft(
         input: CreateSubmissionDraftInput! @spread
     ): Submission! @create @can(ability: "create", injectArgs: true)
@@ -189,6 +186,7 @@ input CreateSubmissionInput @validator(class: "SubmissionInputValidator") {
 input CreateSubmissionDraftInput {
     title: String! @trim
     publication_id: ID!
+    submitters: CreateSubmissionUserInput
 }
 
 input AcceptSubmissionInviteInput

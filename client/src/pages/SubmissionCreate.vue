@@ -115,7 +115,6 @@ const { result } = useQuery(GET_PUBLICATION, props)
 const publication = computed(() => result.value?.publication)
 async function handleSubmit() {
   try {
-    await createSubmission(publication)
     const mutationResult = await createSubmission(publication)
     const submissionId = mutationResult?.data?.createSubmissionDraft?.id
     if (submissionId !== null) {

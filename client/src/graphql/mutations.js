@@ -174,9 +174,17 @@ export const UPDATE_PUBLICATION_ADMINS = gql`
   ${_RELATED_USER_FIELDS}
 `
 export const CREATE_SUBMISSION_DRAFT = gql`
-  mutation CreateSubmissionDraft($title: String!, $publication_id: ID!) {
+  mutation CreateSubmissionDraft(
+    $title: String!
+    $publication_id: ID!
+    $submitter_user_id: ID!
+  ) {
     createSubmissionDraft(
-      input: { title: $title, publication_id: $publication_id }
+      input: {
+        title: $title
+        publication_id: $publication_id
+        submitters: { connect: [$submitter_user_id] }
+      }
     ) {
       id
     }

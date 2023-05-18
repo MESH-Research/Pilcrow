@@ -1,4 +1,5 @@
 import { useMutation } from "@vue/apollo-composable"
+import { useCurrentUser } from "./user"
 import { reactive } from "vue"
 import useVuelidate from "@vuelidate/core"
 import { required, maxLength } from "@vuelidate/validators"
@@ -21,6 +22,7 @@ export const useSubmissionCreation = () => {
       isTrue
     }
   }
+  const { currentUser } = useCurrentUser()
   const v$ = useVuelidate(rules, submission)
   const createSubmission = async (publication) => {
     v$.value.$touch()
@@ -30,6 +32,7 @@ export const useSubmissionCreation = () => {
     const mutationResult = await mutate({
       title: submission.title,
       publication_id: publication.value.id,
+      submitter_user_id: currentUser.value.id,
     })
     return mutationResult
   }
