@@ -890,9 +890,9 @@
     pretty-format "^27.5.1"
 
 "@vue/apollo-composable@^4.0.0-beta.1":
-  version "4.0.0-beta.4"
-  resolved "https://registry.yarnpkg.com/@vue/apollo-composable/-/apollo-composable-4.0.0-beta.4.tgz#a93cbccfdcf9558ada0161294b42f77bee5e6a0b"
-  integrity sha512-lErWL+9LGfWfdfrSYY3DQB/A8Asqs46MiKwmgKeKSj7fe01tx0UpH43aiwMGj+VgEzBZ9AfqEa/Bxf0Nff/NNw==
+  version "4.0.0-beta.5"
+  resolved "https://registry.yarnpkg.com/@vue/apollo-composable/-/apollo-composable-4.0.0-beta.5.tgz#f01644061f96c51cbd8e3a4ab0a98cdd2a6a2a3e"
+  integrity sha512-PDi/LpCJrY0m1YSRIv38n1q5WGUu8T0BzbFFNjUJ3nHdElyqvDJCnazRtasyvXB16i0+4rMQhpmf/xgkRgFePA==
   dependencies:
     throttle-debounce "^3.0.1"
     ts-essentials "^9.1.2"
@@ -4946,9 +4946,9 @@ tr46@~0.0.3:
   integrity sha512-N3WMsuqV66lT30CrXNbEjx4GEwlow3v6rr4mCcv6prnfwhS01rkgyFdjPNBYd9br7LpXV1+Emh01fHnq2Gdgrw==
 
 ts-essentials@^9.1.2:
-  version "9.3.1"
-  resolved "https://registry.yarnpkg.com/ts-essentials/-/ts-essentials-9.3.1.tgz#f2d1e1584ef53c0251012258338421d7cf78a4d0"
-  integrity sha512-9CChSvQMyVRo29Vb1A2jbs+LKo3d/bAf+ndSaX0T8cEiy/HChVaRN/HY5DqUryZ8hZ6uol9bEgCnGmnDbwBR9Q==
+  version "9.3.2"
+  resolved "https://registry.yarnpkg.com/ts-essentials/-/ts-essentials-9.3.2.tgz#5f4ae6d24e20d042a033316c0592dbb51d1b273f"
+  integrity sha512-JxKJzuWqH1MmH4ZFHtJzGEhkfN3QvVR3C3w+4BIoWeoY68UVVoA2Np/Bca9z0IPSErVCWhv439aT0We4Dks8kQ==
 
 ts-interface-checker@^0.1.9:
   version "0.1.13"
