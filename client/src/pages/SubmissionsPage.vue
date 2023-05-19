@@ -23,7 +23,7 @@
         <h3>New Submission</h3>
       </div>
       <q-card flat bordered square class="q-pa-lg">
-        <p>Looking to submit a new submission?</p>
+        <p>Looking to submit a new submission for review?</p>
         <p class="q-mb-none">
           Visit your publication's home page from the
           <router-link to="/publications">Publications page</router-link> and
