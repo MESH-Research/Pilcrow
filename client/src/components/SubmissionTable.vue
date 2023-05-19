@@ -23,7 +23,7 @@
           </h3>
 
           <!-- eslint-disable-next-line vue/no-v-html -->
-          <p class="q-mb-none" v-html="$t(byline, byline_opts)"></p>
+          <p class="q-mb-none text-body1" v-html="$t(byline, byline_opts)"></p>
 
           <q-select
             v-if="tableData.length"
