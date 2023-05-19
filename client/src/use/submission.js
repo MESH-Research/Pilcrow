@@ -6,10 +6,12 @@ import { required, maxLength } from "@vuelidate/validators"
 import { CREATE_SUBMISSION_DRAFT } from "src/graphql/mutations"
 
 export const useSubmissionCreation = () => {
-  const { mutate, saving } = useMutation(CREATE_SUBMISSION_DRAFT)
+  const { mutate, saving } = useMutation(CREATE_SUBMISSION_DRAFT, {
+    refetchQueries: ["currentUserSubmissions"],
+  })
   const submission = reactive({
     title: "",
-    acknowledgement: false
+    acknowledgement: false,
   })
   const isTrue = (value) => value === true
 
@@ -19,8 +21,8 @@ export const useSubmissionCreation = () => {
       maxLength: maxLength(512),
     },
     acknowledgement: {
-      isTrue
-    }
+      isTrue,
+    },
   }
   const { currentUser } = useCurrentUser()
   const v$ = useVuelidate(rules, submission)
