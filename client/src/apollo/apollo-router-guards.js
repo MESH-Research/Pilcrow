@@ -19,6 +19,41 @@ export async function beforeEachRequiresAuth(apolloClient, to, _, next) {
   }
 }
 
+export async function beforeEachRequiresDraftAccess(apolloClient, to, _, next) {
+  if (to.matched.some((record) => record.meta.requiresDraftAccess)) {
+    let access = false
+    const submissionId = to.params.id
+    const user = await apolloClient
+      .query({
+        query: CURRENT_USER_SUBMISSIONS,
+      })
+      .then(({ data: { currentUser } }) => currentUser)
+
+    const submission = user.submissions.filter((submission) => {
+      return submission.id == submissionId
+    })
+
+    if (submission.length) {
+      const s = submission[0]
+
+      // Only allow submnitters access when the submission is in a draft state
+      if (
+        ["submitter"].some((role) => role === s.my_role) &&
+        s.status === "DRAFT"
+      ) {
+        access = true
+      }
+    }
+    if (!access) {
+      next({ name: "error403" })
+    } else {
+      next()
+    }
+  } else {
+    next()
+  }
+}
+
 export async function beforeEachRequiresSubmissionAccess(
   apolloClient,
   to,
@@ -149,9 +184,7 @@ export async function beforeEachRequiresExportAccess(
 
       // Allow those who are assigned to the submission
       if (
-        ["review_coordinator", "submitter"].some(
-          (role) => role === s.my_role
-        )
+        ["review_coordinator", "submitter"].some((role) => role === s.my_role)
       ) {
         console.log(1)
         access = true
