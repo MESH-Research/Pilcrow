@@ -21,7 +21,7 @@
       />
       <q-card-section v-if="!isModifying">
         <!-- eslint-disable-next-line vue/no-v-html -->
-        <div v-html="comment.content" />
+        <div v-html="comment.content" class="text-body1"/>
       </q-card-section>
       <q-card-section v-else ref="modify_comment" class="q-pa-md q-pb-lg">
         <comment-editor
