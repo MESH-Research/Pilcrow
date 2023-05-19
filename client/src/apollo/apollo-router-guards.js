@@ -177,7 +177,6 @@ export async function beforeEachRequiresExportAccess(
     const submission = user.submissions.filter((submission) => {
       return submission.id == submissionId
     })
-    console.log(`Hello World`)
 
     if (submission.length) {
       const s = submission[0]
@@ -186,13 +185,11 @@ export async function beforeEachRequiresExportAccess(
       if (
         ["review_coordinator", "submitter"].some((role) => role === s.my_role)
       ) {
-        console.log(1)
         access = true
       }
 
       // Deny Reviewers
       if ("reviewer" === s.my_role) {
-        console.log(2)
         access = false
       }
 
@@ -205,7 +202,6 @@ export async function beforeEachRequiresExportAccess(
         "EXPIRED",
       ])
       if (!exportableStates.has(s.status)) {
-        console.log(3)
         access = false
       }
 
@@ -215,7 +211,6 @@ export async function beforeEachRequiresExportAccess(
           (role) => role === s.publication.my_role
         )
       ) {
-        console.log(4)
         access = true
       }
     }
@@ -225,7 +220,6 @@ export async function beforeEachRequiresExportAccess(
       if (
         user.roles.some((role) => role.name === "Application Administrator")
       ) {
-        console.log(5)
         access = true
       }
     }
