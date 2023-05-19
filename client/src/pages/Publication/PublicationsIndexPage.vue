@@ -12,7 +12,7 @@
           <q-item
             v-for="publication in publications"
             :key="publication.id"
-            class="q-py-md"
+            class="q-py-md text-body1"
             :to="destRoute(publication.id)"
           >
             <q-item-section>
