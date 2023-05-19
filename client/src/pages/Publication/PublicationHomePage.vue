@@ -29,7 +29,7 @@
       <!--  eslint-disable vue/no-v-html -->
       <div
         data-cy="publication_home_content"
-        class="content"
+        class="content text-body1"
         v-html="publication.home_page_content"
       />
       <!--  eslint-enable vue/no-v-html -->
