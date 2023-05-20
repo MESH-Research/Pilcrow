@@ -36,7 +36,7 @@ export async function beforeEachRequiresDraftAccess(apolloClient, to, _, next) {
     if (submission.length) {
       const s = submission[0]
 
-      // Only allow submnitters access when the submission is in a draft state
+      // Only allow submitters access when the submission is a draft
       if (
         ["submitter"].some((role) => role === s.my_role) &&
         s.status === "DRAFT"

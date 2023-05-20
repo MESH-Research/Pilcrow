@@ -7,8 +7,9 @@ import { CREATE_SUBMISSION_DRAFT } from "src/graphql/mutations"
 
 export const useSubmissionCreation = () => {
   const { mutate, saving } = useMutation(CREATE_SUBMISSION_DRAFT, {
-    refetchQueries: ["currentUserSubmissions"],
+    refetchQueries: ["CurrentUserSubmissions"],
   })
+
   const submission = reactive({
     title: "",
     acknowledgement: false,
