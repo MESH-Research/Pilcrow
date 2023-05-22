@@ -35,16 +35,18 @@
     <div>
       <h2>Submit for Review</h2>
       <div>Everything ready to go?</div>
-      <q-btn class="q-mt-lg" color="primary">Submit for Review</q-btn>
+      <q-btn class="q-mt-lg" color="primary" @click="confirmHandler('submit_for_review')">Submit for Review</q-btn>
     </div>
   </article>
 </template>
 
 <script setup>
-import { useQuery } from "@vue/apollo-composable"
+import ConfirmStatusChangeDialog from "src/components/dialogs/ConfirmStatusChangeDialog.vue"
 import SubmissionDraftTodoItem from "src/components/SubmissionDraftTodoItem.vue"
 import { GET_SUBMISSION } from "src/graphql/queries"
 import { computed } from "vue"
+import { useQuasar } from "quasar"
+import { useQuery } from "@vue/apollo-composable"
 import { useRouter } from "vue-router"
 
 const props = defineProps({
@@ -53,6 +55,7 @@ const props = defineProps({
     required: true,
   },
 })
+const { dialog } = useQuasar()
 const { result } = useQuery(GET_SUBMISSION, props)
 const submission = computed(() => result.value?.submission)
 
@@ -61,6 +64,29 @@ function onGoToSubmissionContentClick() {
   push({
     name: "submission:content",
     params: { id: submission.value.id },
+  })
+}
+async function confirmHandler(action) {
+  await new Promise((resolve) => {
+    dirtyDialog(action)
+      .onOk(function () {
+        resolve(true)
+      })
+      .onCancel(function () {
+        resolve(false)
+      })
+  })
+  {
+    return
+  }
+}
+function dirtyDialog(action) {
+  return dialog({
+    component: ConfirmStatusChangeDialog,
+    componentProps: {
+      action: action,
+      submissionId: props.id,
+    },
   })
 }
 </script>
