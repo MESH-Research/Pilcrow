@@ -427,7 +427,7 @@
             "true": "Publication is currently open to new submissions.",
             "false": "Publication is currently closed to new submissions."
           },
-          "hint": "Set to accept to allow submissions for the publication."
+          "hint": "Set to open to allow submissions for the publication."
         }
       }
     },
