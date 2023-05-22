@@ -1,8 +1,8 @@
 <template>
   <nav class="q-px-lg q-pt-md q-gutter-sm">
     <q-breadcrumbs>
-      <q-breadcrumbs-el label="My Submissions" />
-      <q-breadcrumbs-el :label="submission?.publication?.name ?? ''" />
+      <q-breadcrumbs-el label="Publications" />
+      <q-breadcrumbs-el :label="submission?.publication?.name ?? 'Publication'" />
       <q-breadcrumbs-el> {{ submission?.title ?? "" }} Draft </q-breadcrumbs-el>
     </q-breadcrumbs>
   </nav>
@@ -35,7 +35,7 @@
     <div>
       <h2>Submit for Review</h2>
       <div>Everything ready to go?</div>
-      <q-btn color="primary">Submit for Review</q-btn>
+      <q-btn class="q-mt-lg" color="primary">Submit for Review</q-btn>
     </div>
   </article>
 </template>

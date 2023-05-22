@@ -1,7 +1,7 @@
 <template>
   <nav class="q-px-lg q-pt-md q-gutter-sm">
     <q-breadcrumbs>
-      <q-breadcrumbs-el label="My Submissions" />
+      <q-breadcrumbs-el label="Publications" />
       <q-breadcrumbs-el :label="submission?.publication?.name ?? ''" />
       <q-breadcrumbs-el
         :to="{
