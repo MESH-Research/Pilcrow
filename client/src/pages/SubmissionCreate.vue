@@ -17,77 +17,80 @@
         <q-breadcrumbs-el label="Submit a Work" />
       </q-breadcrumbs>
     </nav>
-    <div class="q-pa-lg">
-      <article v-if="!publication">Loading...</article>
-      <article
-        v-else-if="publication.is_accepting_submissions"
-        class="q-gutter-md"
-      >
-        <q-form @submit="handleSubmit()">
-          <q-input
-            v-model="v$.title.$model"
-            :error="v$.title.$error"
-            outlined
-            label="Enter Submission Title"
-            data-cy="new_submission_title_input"
-          >
-            <template #error>
-              <error-field-renderer
-                :errors="v$.title.$errors"
-                prefix="submissions.create.title"
+    <div class="row flex-center q-pa-lg">
+      <div class="col-lg-5 col-md-6 col-sm-8 col-xs-12">
+        <article v-if="!publication">Loading...</article>
+        <article
+          v-else-if="publication.is_accepting_submissions"
+          class="q-gutter-md q-pa-lg"
+        >
+          <h2 class="text-h3 q-mt-lg">Submit a Work</h2>
+          <q-form @submit="handleSubmit()">
+            <q-input
+              v-model="v$.title.$model"
+              :error="v$.title.$error"
+              outlined
+              label="Enter Submission Title"
+              data-cy="new_submission_title_input"
+            >
+              <template #error>
+                <error-field-renderer
+                  :errors="v$.title.$errors"
+                  prefix="submissions.create.title"
+                />
+              </template>
+            </q-input>
+            <!--  eslint-disable vue/no-v-html -->
+            <div
+              data-cy="publication_home_content"
+              class="q-mt-md"
+              v-html="publication.new_submission_content"
+            />
+            <!--  eslint-enable vue/no-v-html -->
+            <q-field
+              v-model="v$.acknowledgement.$model"
+              borderless
+              :error="v$.acknowledgement.$error"
+              style="padding-right: 12px"
+            >
+              <q-checkbox
+                v-model="v$.acknowledgement.$model"
+                label="I have read and understand the submission guidelines and review process for this publication."
+              />
+              <template #error
+                ><div class="q-pt-none">
+                  {{ $t(`submissions.create.acknowledgement.required`) }}
+                </div></template
+              >
+            </q-field>
+            <q-btn
+              class="accent text-white q-mt-xl"
+              type="submit"
+              :disable="saving"
+              :loading="saving"
+              data-cy="save_submission"
+            >
+              Next
+            </q-btn>
+          </q-form>
+        </article>
+        <article v-else class="q-px-lg">
+          <q-banner class="bg-primary">
+            This publication is currently not accepting submissions.
+            <template #action>
+              <q-btn
+                flat
+                color="white"
+                label="Return to Publication Home Page"
+                :to="{
+                  name: 'publication:home',
+                  params: { id: publication.id },
+                }"
               />
             </template>
-          </q-input>
-          <!--  eslint-disable vue/no-v-html -->
-          <div
-            data-cy="publication_home_content"
-            class="q-mt-md"
-            v-html="publication.new_submission_content"
-          />
-          <!--  eslint-enable vue/no-v-html -->
-          <q-field
-            v-model="v$.acknowledgement.$model"
-            borderless
-            :error="v$.acknowledgement.$error"
-            style="padding-right: 12px"
-          >
-            <q-checkbox
-              v-model="v$.acknowledgement.$model"
-              label="I have read and understand the submission guidelines and review process for this publication."
-            />
-            <template #error
-              ><div class="q-pt-none">
-                {{ $t(`submissions.create.acknowledgement.required`) }}
-              </div></template
-            >
-          </q-field>
-          <q-btn
-            class="accent text-white q-mt-xl"
-            type="submit"
-            :disable="saving"
-            :loading="saving"
-            data-cy="save_submission"
-          >
-            Next
-          </q-btn>
-        </q-form>
-      </article>
-      <article v-else class="q-px-lg">
-        <q-banner class="bg-primary">
-          This publication is currently not accepting submissions.
-          <template #action>
-            <q-btn
-              flat
-              color="white"
-              label="Return to Publication Home Page"
-              :to="{
-                name: 'publication:home',
-                params: { id: publication.id },
-              }"
-            />
-          </template>
-        </q-banner>
-      </article>
+          </q-banner>
+        </article>
+      </div>
     </div>
   </div>
 </template>

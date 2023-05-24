@@ -1,27 +1,56 @@
 <template>
-  <nav class="q-px-lg q-pt-md q-gutter-sm">
-    <q-breadcrumbs>
-      <q-breadcrumbs-el label="Publications" />
-      <q-breadcrumbs-el :label="submission?.publication?.name ?? 'Publication'" />
-      <q-breadcrumbs-el> {{ submission?.title ?? "" }} Draft </q-breadcrumbs-el>
-    </q-breadcrumbs>
-  </nav>
-  <article v-if="submission" class="q-pa-lg">
-    <h2>Todo</h2>
-    <div class="q-gutter-md">
-      <!-- TODO: Develop metadata updating -->
-      <!-- <submission-draft-todo-item title="Update submission details">
+  <article v-if="loading" class="q-pa-lg">
+    <q-spinner color="primary" />
+  </article>
+  <div v-else>
+    <nav class="q-px-lg q-pt-md q-gutter-sm">
+      <q-breadcrumbs>
+        <q-breadcrumbs-el label="Publications" />
+        <q-breadcrumbs-el
+          :label="submission?.publication?.name ?? 'Publication'"
+        />
+        <q-breadcrumbs-el>
+          {{ submission?.title ?? "" }} Draft
+        </q-breadcrumbs-el>
+      </q-breadcrumbs>
+    </nav>
+    <div class="row flex-center q-pa-lg">
+      <div class="col-lg-5 col-md-6 col-sm-8 col-xs-12">
+        <article
+          v-if="submission.status === 'INITIALLY_SUBMITTED'"
+          class="q-pa-lg"
+        >
+          <p>This submission has been submitted for review.</p>
+          <q-btn
+            class="q-mr-sm"
+            color="accent"
+            size="md"
+            :label="
+              $t('submissions.accept_invite.update_details.success.action')
+            "
+            :to="{
+              name: 'submission_details',
+              params: { id: cta_id },
+            }"
+          />
+        </article>
+        <article v-else class="q-pa-lg">
+          <h2>Todo</h2>
+          <div class="q-gutter-md">
+            <!-- TODO: Develop metadata updating -->
+            <!-- <submission-draft-todo-item title="Update submission details">
         Update the title of your submission as well as enter your metadata, etc,
         etc
       </submission-draft-todo-item> -->
-      <submission-draft-todo-item
-        title="Upload submission content"
-        @go-click="onGoToSubmissionContentClick"
-      >
-        Upload or paste your submission content.
-      </submission-draft-todo-item>
-      <!-- TODO: Develop collaborator inviting -->
-      <!-- <q-banner class="bg-grey-3" inline-actions>
+            <submission-draft-todo-item
+              v-model:done="submission.content"
+              title="Upload submission content"
+              @go-click="onGoToSubmissionContentClick"
+            >
+              Upload or paste your submission content.
+            </submission-draft-todo-item>
+            <!-- TODO: Develop collaborator inviting -->
+            <!-- <q-banner class="bg-grey-3" inline-actions>
         <div>Invite Collaborators</div>
         <div class="text-caption">
           Invite collaborators to join the review process.
@@ -31,13 +60,21 @@
           <q-btn flat> Go </q-btn>
         </template>
       </q-banner> -->
+          </div>
+          <div>
+            <h2>Submit for Review</h2>
+            <div>Everything ready to go?</div>
+            <q-btn
+              class="q-mt-lg"
+              color="primary"
+              @click="confirmHandler('submit_for_review')"
+              >Submit for Review</q-btn
+            >
+          </div>
+        </article>
+      </div>
     </div>
-    <div>
-      <h2>Submit for Review</h2>
-      <div>Everything ready to go?</div>
-      <q-btn class="q-mt-lg" color="primary" @click="confirmHandler('submit_for_review')">Submit for Review</q-btn>
-    </div>
-  </article>
+  </div>
 </template>
 
 <script setup>
@@ -56,7 +93,7 @@ const props = defineProps({
   },
 })
 const { dialog } = useQuasar()
-const { result } = useQuery(GET_SUBMISSION, props)
+const { result, loading } = useQuery(GET_SUBMISSION, props)
 const submission = computed(() => result.value?.submission)
 
 const { push } = useRouter()
@@ -70,9 +107,11 @@ async function confirmHandler(action) {
   await new Promise((resolve) => {
     dirtyDialog(action)
       .onOk(function () {
+        console.log("ok")
         resolve(true)
       })
       .onCancel(function () {
+        console.log("cancel")
         resolve(false)
       })
   })

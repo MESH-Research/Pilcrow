@@ -5,10 +5,11 @@
       <slot />
     </div>
     <template #action>
-      <q-btn flat @click="$emit('goClick')">Go</q-btn>
+      <q-btn v-if="!done" flat @click="$emit('goClick')">Go</q-btn>
       <q-btn v-if="$props.skipable" flat @click="$emit('skipClick')">
         Skip
       </q-btn>
+      <q-btn v-if="done" flat color="positive">Done</q-btn>
     </template>
   </q-banner>
 </template>

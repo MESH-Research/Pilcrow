@@ -15,6 +15,9 @@
           <q-item-label v-if="actionType == 'reviews'">
             {{ $t("submissions.details_heading") }}
           </q-item-label>
+          <q-item-label v-else-if="submission.status === 'DRAFT'">
+            Draft Submission
+          </q-item-label>
           <q-item-label v-else>
             {{ $t("submissions.action.review.name") }}
           </q-item-label>
@@ -202,6 +205,12 @@ const destination_to = computed(() => {
   if (props.actionType == "reviews") {
     to = {
       name: "submission_details",
+      params: { id: props.submission.id },
+    }
+  }
+  if (props.submission.status === "DRAFT") {
+    to = {
+      name: "submission:draft",
       params: { id: props.submission.id },
     }
   }
