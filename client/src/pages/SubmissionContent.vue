@@ -1,24 +1,35 @@
 <template>
   <nav class="q-px-lg q-pt-md q-gutter-sm">
     <q-breadcrumbs>
-      <q-breadcrumbs-el label="Publications" />
-      <q-breadcrumbs-el :label="submission?.publication?.name ?? ''" />
+      <q-breadcrumbs-el :label="$t('header.publications')" />
+      <q-breadcrumbs-el
+        :label="
+          submission?.publication?.name ?? $t(`publications.term`, { count: 1 })
+        "
+      />
       <q-breadcrumbs-el
         :to="{
           name: 'submission:draft',
-          params: { id: props.id },
+          params: { id: submission?.id },
         }"
       >
-        {{ submission?.title ?? "" }} Draft
+        {{
+          $t(`submissions.create.draft_title`, {
+            submission_title:
+              submission?.title ?? $t(`submissions.term`, { count: 1 }),
+          })
+        }}
       </q-breadcrumbs-el>
-      <q-breadcrumbs-el>Upload New Content</q-breadcrumbs-el>
+      <q-breadcrumbs-el>{{
+        $t(`submissions.content.heading`)
+      }}</q-breadcrumbs-el>
     </q-breadcrumbs>
   </nav>
   <div class="row flex-center q-pa-lg">
-    <div class="col-lg-5 col-md-6 col-sm-8 col-xs-12">
+    <div class="col-lg-5 col-md-6 col-sm-10 col-xs-12">
       <article class="q-pa-lg">
         <div v-if="status !== 'paste_success'" class="q-gutter-md">
-          <h2 class="text-h3">Upload New Content</h2>
+          <h2 class="text-h3">{{ $t(`submissions.content.heading`) }}</h2>
           <q-banner
             v-if="updateMethod === 'upload' || updateMethod == ''"
             class="bg-primary text-white"
@@ -30,12 +41,18 @@
                 v-model="updateMethod"
                 color="secondary"
                 val="upload"
-                label="Upload Document (Coming soon!)"
+                :label="$t(`submissions.content.upload.label`)"
               />
             </div>
-            <div class="text-caption">Supported file types, etc, etc</div>
+            <div class="text-caption">
+              {{ $t(`submissions.content.upload.caption`) }}
+            </div>
             <template v-if="updateMethod !== ''" #action>
-              <q-btn flat @click.stop="clearMethod">Back</q-btn>
+              <q-btn
+                flat
+                :label="$t(`submissions.content.back_btn_label`)"
+                @click.stop="clearMethod"
+              />
             </template>
           </q-banner>
           <q-banner
@@ -48,34 +65,45 @@
               v-model="updateMethod"
               color="secondary"
               val="paste"
-              label="Paste Content"
+              :label="$t(`submissions.content.paste.label`)"
             />
+            <div class="text-caption">
+              {{ $t(`submissions.content.paste.caption`) }}
+            </div>
             <template v-if="updateMethod !== ''" #action>
-              <q-btn flat @click.stop="clearMethod">Back</q-btn>
+              <q-btn
+                flat
+                :label="$t(`submissions.content.back_btn_label`)"
+                @click.stop="clearMethod"
+              />
             </template>
           </q-banner>
-          <div v-if="updateMethod == 'paste'" class="q-gutter-sm">
+          <div v-if="updateMethod == 'paste'">
             <q-editor v-model="pasteContent" min-height="5rem" />
-            <q-btn color="primary" @click="submitPaste">Update Content</q-btn>
+            <q-btn
+              color="primary"
+              class="q-mt-md"
+              :label="$t(`submissions.content.submit.btn_label`)"
+              @click="submitPaste"
+            />
           </div>
           <div v-if="status === 'paste_error'">
             <q-banner class="bg-negative text-white">
-              <div>
-                An error occurred while attempting to submit your update
-              </div>
-              <div class="text-caption">Please try again later</div>
+              {{ $t(`submissions.content.submit.error`) }}
             </q-banner>
           </div>
         </div>
         <div v-else class="column text-center flex-center q-px-lg">
           <q-icon color="positive" name="check_circle" size="2em" />
-          <strong class="text-h3"> Success </strong>
-          <p>The content for your submission has been updated successfully.</p>
+          <strong class="text-h3">{{
+            $t(`submissions.content.submit.success.title`)
+          }}</strong>
+          <p>{{ $t(`submissions.content.submit.success.message`) }}</p>
           <q-btn
             class="q-mr-sm"
             color="accent"
             size="md"
-            :label="`Return to Draft`"
+            :label="$t(`submissions.content.submit.success.btn_label`)"
             :to="{
               name: 'submission:draft',
               params: { id: props.id },

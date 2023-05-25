@@ -14,23 +14,27 @@
             params: { id: publication.id },
           }"
         />
-        <q-breadcrumbs-el label="Submit a Work" />
+        <q-breadcrumbs-el :label="t(`submissions.create.heading`)" />
       </q-breadcrumbs>
     </nav>
     <div class="row flex-center q-pa-lg">
       <div class="col-lg-5 col-md-6 col-sm-8 col-xs-12">
-        <article v-if="!publication">Loading...</article>
+        <article v-if="!publication">
+          <q-spinner color="primary" />
+        </article>
         <article
           v-else-if="publication.is_accepting_submissions"
           class="q-gutter-md q-pa-lg"
         >
-          <h2 class="text-h3 q-mt-lg">Submit a Work</h2>
+          <h2 class="text-h3 q-mt-lg">
+            {{ $t(`submissions.create.heading`) }}
+          </h2>
           <q-form @submit="handleSubmit()">
             <q-input
               v-model="v$.title.$model"
               :error="v$.title.$error"
               outlined
-              label="Enter Submission Title"
+              :label="t(`submissions.create.title.label`)"
               data-cy="new_submission_title_input"
             >
               <template #error>
@@ -55,7 +59,7 @@
             >
               <q-checkbox
                 v-model="v$.acknowledgement.$model"
-                label="I have read and understand the submission guidelines and review process for this publication."
+                :label="t(`submissions.create.acknowledgement.label`)"
               />
               <template #error
                 ><div class="q-pt-none">
@@ -69,19 +73,20 @@
               :disable="saving"
               :loading="saving"
               data-cy="save_submission"
+              >{{ $t(`submissions.create.next.btn_label`) }}</q-btn
             >
-              Next
-            </q-btn>
           </q-form>
         </article>
         <article v-else class="q-px-lg">
           <q-banner class="bg-primary">
-            This publication is currently not accepting submissions.
+            {{ $t(`submissions.create.not_accepting.message`) }}
             <template #action>
               <q-btn
                 flat
                 color="white"
-                label="Return to Publication Home Page"
+                :label="
+                  $t(`submissions.create.publication_not_accepting.btn_label`)
+                "
                 :to="{
                   name: 'publication:home',
                   params: { id: publication.id },

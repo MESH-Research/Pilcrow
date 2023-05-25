@@ -500,6 +500,7 @@
     "view_button": "View Publication"
   },
   "publications": {
+    "term": "No Publications | Publication | Publications",
     "details": "Publication Details",
     "create": {
       "success": "Publication successfully created.",
@@ -666,6 +667,7 @@
     }
   },
   "submissions": {
+    "term": "No Submissions | Submission | Submissions",
     "heading": "Submissions",
     "none": "No Submissions Created",
     "details_heading": "Submission Details",
@@ -724,24 +726,72 @@
       }
     },
     "create": {
-      "success": "Submission successfully created.",
+      "heading": "Submit a Work",
+      "success": "This submission has been submitted for review.",
       "failure": "An error occurred while attempting to create the submission.",
       "title": {
+        "label": "Enter Submission Title",
         "required": "A title is required to create a submission.",
         "maxLength": "The maximum length has been exceeded for the title."
       },
       "acknowledgement": {
+        "label": "I have read and understand the submission guidelines and review process for this publication.",
         "required": "You must acknowledge you have read and understand the guidelines."
       },
       "publication_id": {
         "required": "A publication must be associated with a submission."
+      },
+      "next": {
+        "btn_label": "Next"
       },
       "submitter_user_id": {
         "required": "A user must be associated with a submission as a submitter."
       },
       "file_upload": {
         "required": "A file must be uploaded with a submission."
+      },
+      "publication_not_accepting": {
+        "message": "This publication is currently not accepting submissions.",
+        "btn_label": "Return to Publication Home Page"
+      },
+      "draft_title": "{submission_title} Draft",
+      "todo": {
+        "heading": "Todo",
+        "content": {
+          "title": "Submission Content",
+          "description": "Add your content to your submission."
+        },
+        "btn_label": {
+          "go": "Go",
+          "skip": "Skip",
+          "done": "Done"
+        }
+      },
+      "submit": {
+        "description": "Your submission is saved and you can come back to work on it any time.  When you've completed the above items, click \"Submit for Review\" below to kick off the review process!",
+        "btn_label": "Submit for Review"
       }
+    },
+    "content": {
+      "heading": "Submission Content",
+      "upload": {
+        "label": "Upload (Coming soon!)",
+        "caption": "Upload a supported file to be imported as my content."
+      },
+      "paste": {
+        "label": "Enter Text",
+        "caption": "Copy/paste or enter text content directly into an input."
+      },
+      "submit": {
+        "btn_label": "Update Content",
+        "error": "An error occurred while attempting to update the content of your submission. Please try again later.",
+        "success": {
+          "title": "Success",
+          "message":"The content for your submission has been updated successfully.",
+          "btn_label": "Return to Draft"
+        }
+      },
+      "back_btn_label": "Back"
     },
     "inline_comments_heading": "Inline Comments",
     "comment_preview": {
