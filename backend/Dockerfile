@@ -39,3 +39,6 @@ RUN composer install --prefer-dist --no-plugins
 
 #CREATE STORAGE DIRECTORIES
 RUN mkdir -p storage/framework/cache storage/framework/sessions storage/framework/views
+
+#FIX PERMISSIONS
+RUN chmod +x artisan
