@@ -17,7 +17,7 @@
           <h1 class="q-ma-none text-h4 site-title">
             {{ $t("header.site_title") }}
           </h1>
-          <small class="site-subtitle">{{ $t("header.site_subtitle") }}</small>
+          <small class="site-subtitle text-body1">{{ $t("header.site_subtitle") }}</small>
         </div>
       </router-link>
       <q-space />
@@ -39,7 +39,12 @@
             :aria-label="$t('header.account_dropdown_aria')"
             data-cy="headerUserMenu"
           >
-            <q-item clickable data-cy="link_my_account" to="/account/profile">
+            <q-item
+              clickable
+              data-cy="link_my_account"
+              to="/account/profile"
+              class="text-body1"
+            >
               <q-item-section avatar>
                 <q-icon name="account_circle" />
               </q-item-section>
@@ -51,12 +56,12 @@
               <q-separator />
               <q-item dense>
                 <q-item-section>
-                  <q-item-label class="text-bold">
+                  <q-item-label class="text-bold text-body1">
                     {{ $t("header.application_administration") }}
                   </q-item-label>
                 </q-item-section>
               </q-item>
-              <q-item to="/admin/users">
+              <q-item to="/admin/users" class="text-body1">
                 <q-item-section avatar>
                   <q-icon name="groups" />
                 </q-item-section>
@@ -64,7 +69,10 @@
                   {{ $t("header.user_list") }}
                 </q-item-section>
               </q-item>
-              <q-item :to="{ name: 'admin:publication:index' }">
+              <q-item
+                :to="{ name: 'admin:publication:index' }"
+                class="text-body1"
+              >
                 <q-item-section avatar>
                   <q-icon name="collections_bookmark" />
                 </q-item-section>
@@ -74,7 +82,7 @@
               </q-item>
             </div>
             <q-separator />
-            <q-item to="/logout">
+            <q-item to="/logout" class="text-body1">
               <q-item-section avatar>
                 <q-icon name="mdi-logout" />
               </q-item-section>
@@ -93,7 +101,7 @@
     </q-toolbar>
     <div v-if="currentUser" class="header-nav">
       <q-list
-        class="row"
+        class="row text-body1"
         role="navigation"
         :aria-label="$t('header.nav_aria_label')"
       >
