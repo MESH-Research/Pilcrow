@@ -8,7 +8,6 @@ use App\Models\Role;
 use App\Models\Submission;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Str;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\ApiTestCase;
@@ -266,58 +265,59 @@ class SubmissionTest extends ApiTestCase
         $response->assertJsonPath('data', $expected_data);
     }
 
-    /**
-     * @return void
-     */
-    public function testFileUpload()
-    {
-        $publication = Publication::factory()->create(['is_accepting_submissions' => true]);
-        /**
-         * @var User
-         */
-        $user = User::factory()->create();
-        $this->actingAs($user);
+    /** TODO: Refactor this for updating a submission with a file after the submission is initially created */
+    // /**
+    //  * @return void
+    //  */
+    // public function testFileUpload()
+    // {
+    //     $publication = Publication::factory()->create(['is_accepting_submissions' => true]);
+    //     /**
+    //      * @var User
+    //      */
+    //     $user = User::factory()->create();
+    //     $this->actingAs($user);
 
-        $operations = [
-            'operationName' => 'CreateSubmission',
-            'query' => '
-                mutation CreateSubmission (
-                    $title: String!
-                    $publication_id: ID!
-                    $file_upload: [Upload!]
-                    $user_id: ID!
-                ) {
-                    createSubmission(
-                        input: {
-                            title: $title,
-                            publication_id: $publication_id,
-                            submitters: { connect: [$user_id] },
-                            files: { create: $file_upload }
-                        }
-                    ) {
-                        title
-                    }
-                }
-            ',
-            'variables' => [
-                'title' => '    Test Submission    ',
-                'publication_id' => $publication->id,
-                'user_id' => $user->id,
-                'file_upload' => null,
-            ],
-        ];
-        $map = [
-            '0' => ['variables.file_upload'],
-        ];
-        $file = [
-            '0' => UploadedFile::fake()->create('test.txt', 500),
-        ];
+    //     $operations = [
+    //         'operationName' => 'CreateSubmission',
+    //         'query' => '
+    //             mutation CreateSubmissionDraft (
+    //                 $title: String!
+    //                 $publication_id: ID!
+    //                 $file_upload: [Upload!]
+    //                 $user_id: ID!
+    //             ) {
+    //                 createSubmissionDraft(
+    //                     input: {
+    //                         title: $title,
+    //                         publication_id: $publication_id,
+    //                         submitters: { connect: [$user_id] },
+    //                         files: { create: $file_upload }
+    //                     }
+    //                 ) {
+    //                     title
+    //                 }
+    //             }
+    //         ',
+    //         'variables' => [
+    //             'title' => '    Test Submission    ',
+    //             'publication_id' => $publication->id,
+    //             'user_id' => $user->id,
+    //             'file_upload' => null,
+    //         ],
+    //     ];
+    //     $map = [
+    //         '0' => ['variables.file_upload'],
+    //     ];
+    //     $file = [
+    //         '0' => UploadedFile::fake()->create('test.txt', 500),
+    //     ];
 
-        $response = $this->multipartGraphQL($operations, $map, $file);
+    //     $response = $this->multipartGraphQL($operations, $map, $file);
 
-        $response
-            ->assertJsonPath('data.createSubmission.title', 'Test Submission');
-    }
+    //     $response
+    //         ->assertJsonPath('data.createSubmissionDraft.title', 'Test Submission');
+    // }
 
     /**
      * @return void
@@ -331,42 +331,28 @@ class SubmissionTest extends ApiTestCase
         $user = User::factory()->create();
         $this->actingAs($user);
 
-        $operations = [
-            'operationName' => 'CreateSubmission',
-            'query' => '
-                mutation CreateSubmission (
-                    $title: String!
-                    $publication_id: ID!
-                    $file_upload: [Upload!]
-                    $user_id: ID!
-                ) {
-                    createSubmission(
-                        input: {
-                            title: $title,
-                            publication_id: $publication_id,
-                            submitters: { connect: [$user_id] },
-                            files: { create: $file_upload }
-                        }
-                    ) {
-                        title
+        $response = $this->graphQL(
+            'mutation CreateSubmissionDraft (
+                $title: String!
+                $publication_id: ID!
+                $user_id: ID!
+            ) {
+                createSubmissionDraft(
+                    input: {
+                        title: $title,
+                        publication_id: $publication_id,
+                        submitters: { connect: [$user_id] },
                     }
+                ) {
+                    title
                 }
-            ',
-            'variables' => [
+            }',
+            [
                 'title' => '    Test Submission    ',
                 'publication_id' => $publication->id,
                 'user_id' => $user->id,
-                'file_upload' => null,
             ],
-        ];
-        $map = [
-            '0' => ['variables.file_upload'],
-        ];
-        $file = [
-            '0' => UploadedFile::fake()->create('test.txt', 500),
-        ];
-
-        $response = $this->multipartGraphQL($operations, $map, $file);
+        );
 
         $response
             ->assertJsonPath('errors.0.extensions.category', 'authorization');
@@ -617,28 +603,23 @@ class SubmissionTest extends ApiTestCase
 
     public function testCreatedByFieldIsSet()
     {
-        //TODO: Once file uploads are no longer required at initial submission creation, remove file upload portion of this test.
         /** @var User $user */
         $user = User::factory()->create();
         $this->actingAs($user);
 
         $publication = Publication::factory()->create(['is_accepting_submissions' => true]);
 
-        $operations = [
-            'operationName' => 'CreateSubmission',
-            'query' => '
-                mutation CreateSubmission (
+        $response = $this->graphQL(
+                'mutation CreateSubmissionDraft (
                     $title: String!
                     $publication_id: ID!
-                    $file_upload: [Upload!]
                     $user_id: ID!
                 ) {
-                    createSubmission(
+                    createSubmissionDraft(
                         input: {
                             title: $title,
                             publication_id: $publication_id,
                             submitters: { connect: [$user_id] },
-                            files: { create: $file_upload }
                         }
                     ) {
                         title
@@ -651,26 +632,17 @@ class SubmissionTest extends ApiTestCase
                     }
                 }
             ',
-            'variables' => [
+            [
                 'title' => '    Test Submission    ',
                 'publication_id' => $publication->id,
                 'user_id' => $user->id,
-                'file_upload' => null,
             ],
-        ];
-        $map = [
-            '0' => ['variables.file_upload'],
-        ];
-        $file = [
-            '0' => UploadedFile::fake()->create('test.txt', 500),
-        ];
-
-        $response = $this->multipartGraphQL($operations, $map, $file);
+        );
 
         $response
-            ->assertJsonPath('data.createSubmission.created_by.id', (string)$user->id);
+            ->assertJsonPath('data.createSubmissionDraft.created_by.id', (string)$user->id);
         $response
-            ->assertJsonPath('data.createSubmission.updated_by.id', (string)$user->id);
+            ->assertJsonPath('data.createSubmissionDraft.updated_by.id', (string)$user->id);
     }
 
     public function testUpdatedByFieldIsSet()

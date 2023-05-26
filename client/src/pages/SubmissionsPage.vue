@@ -26,20 +26,18 @@
         <p>
           {{ $t(`submissions.new.description`) }}
 
-        <q-icon name="info">
-          <q-tooltip class="q-pa-none">
-            <q-card class="bg-grey-8 text-body1 q-pa-md">
-              <strong>{{ $t(`submissions.new.tooltip.question`) }}</strong>
-              <p>{{ $t(`submissions.new.tooltip.answer`) }}</p>
-              <ul class="q-ma-none">
-                <li>{{ $t(`submissions.new.tooltip.reason_1`) }}</li>
-                <li>{{ $t(`submissions.new.tooltip.reason_2`) }}</li>
-              </ul>
-
-            </q-card>
-
-          </q-tooltip>
-        </q-icon>
+          <q-icon name="info">
+            <q-tooltip class="q-pa-none">
+              <q-card class="bg-grey-8 text-body1 q-pa-md">
+                <strong>{{ $t(`submissions.new.tooltip.question`) }}</strong>
+                <p>{{ $t(`submissions.new.tooltip.answer`) }}</p>
+                <ul class="q-ma-none">
+                  <li>{{ $t(`submissions.new.tooltip.reason_1`) }}</li>
+                  <li>{{ $t(`submissions.new.tooltip.reason_2`) }}</li>
+                </ul>
+              </q-card>
+            </q-tooltip>
+          </q-icon>
         </p>
         <div style="max-width: 500px">
           <q-select
@@ -47,6 +45,7 @@
             outlined
             :options="pubsOptions"
             label="Publication"
+            data-cy="publications_select"
           />
         </div>
         <q-btn

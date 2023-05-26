@@ -5,12 +5,12 @@ import "cypress-file-upload";
 import { a11yLogViolations } from '../support/helpers';
 
 describe('Submission creation', () => {
-  it("creates draft submissions", () => {
+  it("directs users to a publication's form to create draft submissions", () => {
     cy.task("resetDb")
     cy.login({ email: "applicationadministrator@pilcrow.dev" })
     cy.visit("submissions")
     cy.injectAxe()
-    cy.dataCy("new_submission_title_input")
+    cy.dataCy("publications_select")
     cy.checkA11y(null, null, a11yLogViolations)
     cy.dataCy("new_submission_title_input").type(
       "Submission from Cypress{enter}"
