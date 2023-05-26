@@ -79,7 +79,7 @@
         </article>
         <article v-else class="q-px-lg">
           <q-banner class="bg-primary">
-            {{ $t(`submissions.create.not_accepting.message`) }}
+            {{ $t(`submissions.create.publication_not_accepting.message`) }}
             <template #action>
               <q-btn
                 flat

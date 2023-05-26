@@ -676,6 +676,7 @@
     "action": {
       "toggle_label": "Toggle Submission Actions",
       "go_to_review": "Go To Review",
+      "draft": "Draft Submission",
       "review": {
         "name": "Review Submission",
         "no_access": "Reviewers can only access submissions in reviewable states"
@@ -723,6 +724,16 @@
           "title": "Error",
           "message": "An error occurred while attempting to accept the invitation. Please contact your administrator."
         }
+      }
+    },
+    "new": {
+      "heading": "New Submission",
+      "description": "Looking to submit a new submission for review? Select a publication to submit your submission.",
+      "tooltip": {
+        "question": "Why can't I find my publication?",
+        "answer": "A publication may not appear here if the publication is:",
+        "reason_1": "not accepting submissions at this time",
+        "reason_2": "not publicly visible"
       }
     },
     "create": {

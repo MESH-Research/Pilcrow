@@ -16,7 +16,7 @@
             {{ $t("submissions.details_heading") }}
           </q-item-label>
           <q-item-label v-else-if="submission.status === 'DRAFT'">
-            Draft Submission
+            {{ $t("submissions.action.draft") }}
           </q-item-label>
           <q-item-label v-else>
             {{ $t("submissions.action.review.name") }}
