@@ -5,7 +5,7 @@
     <q-toolbar class="header-toolbar">
       <router-link
         to="/"
-        class="q-pa-sm row q-gutter-md items-center text-white"
+        class="q-pa-sm row q-gutter-md items-center text-white text-body1"
         style="text-decoration: unset"
       >
         <q-img
