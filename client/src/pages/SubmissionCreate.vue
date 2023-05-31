@@ -26,9 +26,12 @@
           v-else-if="publication.is_accepting_submissions"
           class="q-gutter-md q-pa-lg"
         >
-          <h2 class="text-h3 q-mt-lg">
+          <h2 class="text-h3 q-mt-lg q-mb-none">
             {{ $t(`submissions.create.heading`) }}
           </h2>
+          <p class="q-mt-none q-mb-lg" data-cy="submission_create_subheading">
+            {{ publication.name }}
+          </p>
           <q-form @submit="handleSubmit()">
             <q-input
               v-model="v$.title.$model"

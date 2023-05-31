@@ -30,6 +30,10 @@ Cypress.Commands.add("qSelectItems", (value) => {
     })
 })
 
+Cypress.Commands.add("qSelect", (dataCyId) => {
+  return cy.dataCy(dataCyId).closest('.q-select');
+});
+
 Cypress.Commands.add("userSearch", (dataCy, searchTerm) => {
   cy.intercept("/graphql", (req) => {
     let operation;

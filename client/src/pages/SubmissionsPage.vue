@@ -57,6 +57,7 @@
             name: 'submission:create',
             params: { id: selectedPublication.value },
           }"
+          data-cy="submit_work_btn"
         />
       </q-card>
     </section>
