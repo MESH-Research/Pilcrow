@@ -32,7 +32,7 @@
           <p class="q-mt-none q-mb-lg" data-cy="submission_create_subheading">
             {{ publication.name }}
           </p>
-          <q-form @submit="handleSubmit()">
+          <q-form data-cy="create_submission_form" @submit="handleSubmit()">
             <q-input
               v-model="v$.title.$model"
               :error="v$.title.$error"
@@ -63,6 +63,7 @@
               <q-checkbox
                 v-model="v$.acknowledgement.$model"
                 :label="t(`submissions.create.acknowledgement.label`)"
+                data-cy="acknowledgement_checkbox"
               />
               <template #error
                 ><div class="q-pt-none">
@@ -75,7 +76,7 @@
               type="submit"
               :disable="saving"
               :loading="saving"
-              data-cy="save_submission"
+              data-cy="create_submission_btn"
               >{{ $t(`submissions.create.next.btn_label`) }}</q-btn
             >
           </q-form>
@@ -120,7 +121,11 @@ const props = defineProps({
 })
 const { push } = useRouter()
 const { t } = useI18n()
-const { newStatusMessage } = useFeedbackMessages()
+const { newStatusMessage } = useFeedbackMessages({
+  attrs: {
+    "data-cy": "submission_create_notify",
+  },
+})
 const { createSubmission, v$, saving } = useSubmissionCreation()
 const { result } = useQuery(GET_PUBLICATION, props)
 const publication = computed(() => result.value?.publication)

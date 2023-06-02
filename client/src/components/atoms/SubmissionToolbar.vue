@@ -18,7 +18,7 @@
       />
       <q-toolbar-title class="q-pt-xs q-pb-sm col-grow">
         <div>
-          <h1 data-cy="submussion_title" class="text-h3 q-ma-none">
+          <h1 data-cy="submission_title" class="text-h3 q-ma-none">
             {{ submission.title }}
           </h1>
           <q-chip

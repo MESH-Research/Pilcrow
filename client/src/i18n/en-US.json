@@ -677,12 +677,16 @@
       "toggle_label": "Toggle Submission Actions",
       "go_to_review": "Go To Review",
       "draft": "Draft Submission",
+      "view_details": {
+        "label": "View Submission Details",
+        "no_access": "Reviewers can only view the details of submissions in reviewable states"
+      },
       "review": {
-        "name": "Review Submission",
-        "no_access": "Reviewers can only access submissions in reviewable states"
+        "label": "Review",
+        "no_access": "Reviewers can only review submissions in reviewable states"
       },
       "change_status": {
-        "name": "Change Status",
+        "label": "Change Status",
         "no_access": {
           "REJECTED": "Rejected submissions cannot have their statuses changed.",
           "RESUBMISSION_REQUESTED": "Submissions requested for resubmission cannot have their statuses changed."

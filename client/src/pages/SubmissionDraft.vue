@@ -40,7 +40,7 @@
           />
         </article>
         <article v-else class="q-pa-lg">
-          <h1 data-cy="submussion_title" class="text-h2 q-ma-none">
+          <h1 data-cy="submission_title" class="text-h2 q-ma-none">
             {{ submission.title }}
           </h1>
           <q-chip>

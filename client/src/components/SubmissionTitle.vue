@@ -88,7 +88,7 @@ const rules = {
 
 const { newStatusMessage } = useFeedbackMessages({
   attrs: {
-    "data-cy": "create_submission_notify",
+    "data-cy": "submission_title_notify",
   },
 })
 
