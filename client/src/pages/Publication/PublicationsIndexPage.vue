@@ -19,7 +19,7 @@
               <q-item-label>
                 {{ publication.name }}
               </q-item-label>
-              <q-item-label caption>
+              <q-item-label caption class="text-body1">
                 {{ strip(publication.home_page_content) }}
               </q-item-label>
             </q-item-section>
