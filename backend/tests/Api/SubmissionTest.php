@@ -610,7 +610,7 @@ class SubmissionTest extends ApiTestCase
         $publication = Publication::factory()->create(['is_accepting_submissions' => true]);
 
         $response = $this->graphQL(
-                'mutation CreateSubmissionDraft (
+            'mutation CreateSubmissionDraft (
                     $title: String!
                     $publication_id: ID!
                     $user_id: ID!
