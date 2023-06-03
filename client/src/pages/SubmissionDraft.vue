@@ -35,7 +35,7 @@
             "
             :to="{
               name: 'submission_details',
-              params: { id: cta_id },
+              params: { id: submission.id },
             }"
           />
         </article>

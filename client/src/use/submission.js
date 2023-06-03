@@ -36,6 +36,8 @@ export const useSubmissionCreation = () => {
       title: submission.title,
       publication_id: publication.value.id,
       submitter_user_id: currentUser.value.id,
+    }, {
+      refetchQueries: ["CurrentUserSubmissions"],
     })
     return mutationResult
   }

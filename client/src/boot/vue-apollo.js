@@ -37,6 +37,7 @@ export default boot(async ({ app, router }) => {
         ],
       },
     }),
+    connectToDevTools: true
   })
 
   /**

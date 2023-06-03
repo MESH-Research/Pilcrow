@@ -134,7 +134,6 @@ const submission = computed(() => result.value?.submission)
 let status = ref("incomplete")
 const emit = defineEmits(["update:contentUploaded"])
 function setContentUploaded() {
-  console.log(`emit true`)
   emit("update:contentUploaded", true)
 }
 
