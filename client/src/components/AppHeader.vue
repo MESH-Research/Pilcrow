@@ -17,7 +17,9 @@
           <h1 class="q-ma-none text-h4 site-title">
             {{ $t("header.site_title") }}
           </h1>
-          <small class="site-subtitle text-body1">{{ $t("header.site_subtitle") }}</small>
+          <small class="site-subtitle text-body1">{{
+            $t("header.site_subtitle")
+          }}</small>
         </div>
       </router-link>
       <q-space />
@@ -94,9 +96,21 @@
         </q-btn-dropdown>
       </template>
       <template v-else>
-        <q-btn :label="$t('auth.register')" to="/register" stretch flat />
+        <q-btn
+          :label="$t('auth.register')"
+          to="/register"
+          stretch
+          flat
+          class="text-body1"
+        />
         <q-separator vertical dark />
-        <q-btn :label="$t('auth.login')" to="/login" stretch flat />
+        <q-btn
+          :label="$t('auth.login')"
+          to="/login"
+          stretch
+          flat
+          class="text-body1"
+        />
       </template>
     </q-toolbar>
     <div v-if="currentUser" class="header-nav">
