@@ -168,7 +168,7 @@ const routes = [
       },
       {
         name: "submission_review",
-        path: "/submission/review/:id",
+        path: "/submission/:id/review",
         component: () => import("src/pages/SubmissionReview.vue"),
         meta: {
           requiresReviewAccess: true,

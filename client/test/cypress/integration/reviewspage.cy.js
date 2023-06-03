@@ -17,7 +17,7 @@ describe("Reviews Page", () => {
       .should("be.visible")
       .should("have.class", "bg-positive")
     cy.login({ email: "reviewer@pilcrow.dev" })
-    cy.visit("submission/review/101")
+    cy.visit("submission/101/review")
     cy.url().should("not.include", "/error403")
   })
 
@@ -39,7 +39,7 @@ describe("Reviews Page", () => {
     cy.dataCy("submission_details_link").click()
     cy.url().should("include", "/submission/102/details")
     cy.dataCy("submission_review_btn").click()
-    cy.url().should("include", "/submission/review/102")
+    cy.url().should("include", "/submission/102/review")
     cy.dataCy("submission_title")
   })
 
@@ -76,7 +76,7 @@ describe("Reviews Page", () => {
     cy.dataCy("change_status_notify")
       .should("be.visible")
       .should("have.class", "bg-negative")
-    cy.visit("submission/review/101")
+    cy.visit("submission/101/review")
     cy.url().should("include", "/error403")
   })
 
@@ -98,7 +98,7 @@ describe("Reviews Page", () => {
     cy.dataCy("submission_review_link").should('have.class', 'disabled')
     cy.dataCy("submission_review_link").trigger('mouseenter')
     cy.dataCy("cannot_access_submission_tooltip")
-    cy.visit("submission/review/102")
+    cy.visit("submission/102/review")
     cy.url().should("include", "/error403")
   })
 
@@ -122,7 +122,7 @@ describe("Reviews Page", () => {
     cy.dataCy("submission_review_link").should('have.class', 'disabled')
     cy.dataCy("submission_review_link").trigger('mouseenter')
     cy.dataCy("cannot_access_submission_tooltip")
-    cy.visit("submission/review/103")
+    cy.visit("submission/103/review")
     cy.url().should("include", "/error403")
   })
 })
