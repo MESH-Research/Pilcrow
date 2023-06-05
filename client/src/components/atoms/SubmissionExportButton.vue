@@ -22,7 +22,7 @@
     color="accent"
     icon="exit_to_app"
     :to="{
-      name: 'submission_export',
+      name: 'submission:export',
       params: { id: submission.id },
     }"
   />

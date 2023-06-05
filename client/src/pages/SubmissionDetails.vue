@@ -38,7 +38,7 @@
             size="lg"
             :label="$t('submission.action.review')"
             :to="{
-              name: 'submission_review',
+              name: 'submission:review',
               params: { id: props.id },
             }"
           />

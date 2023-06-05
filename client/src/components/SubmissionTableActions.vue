@@ -27,7 +27,7 @@
         :disable="cannotAccessSubmission(submission)"
         data-cy="submission_review_link"
         :to="{
-          name: 'submission_review',
+          name: 'submission:review',
           params: { id: props.submission.id },
         }"
       >
@@ -52,7 +52,7 @@
         :disable="cannotAccessSubmission(submission)"
         data-cy="submission_details_link"
         :to="{
-          name: 'submission_details',
+          name: 'submission:details',
           params: { id: props.submission.id },
         }"
       >
@@ -180,7 +180,7 @@
         data-cy="export_submission"
         clickable
         :to="{
-          name: 'submission_export',
+          name: 'submission:export',
           params: { id: submission.id },
         }"
       >

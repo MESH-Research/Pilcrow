@@ -95,7 +95,7 @@
           size="md"
           :label="$t('submissions.accept_invite.update_details.success.action')"
           :to="{
-            name: 'submission_details',
+            name: 'submission:details',
             params: { id: cta_id },
           }"
         />

@@ -84,7 +84,7 @@
               <router-link
                 v-if="p.row.status !== 'DRAFT'"
                 :to="{
-                  name: 'submission_review',
+                  name: 'submission:review',
                   params: { id: p.row.id },
                 }"
                 >{{ p.row.title }}
@@ -127,7 +127,7 @@
         <router-link
           v-if="p.row.status !== 'DRAFT'"
           :to="{
-            name: 'submission_review',
+            name: 'submission:review',
             params: { id: p.row.id },
           }"
           >{{ p.row.title }}

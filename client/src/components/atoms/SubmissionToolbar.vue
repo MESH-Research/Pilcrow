@@ -12,7 +12,7 @@
         round
         icon="arrow_back_ios_new"
         :to="{
-          name: 'submission_details',
+          name: 'submission:details',
           params: { id: props.submission.id },
         }"
       />
@@ -154,7 +154,7 @@
         flat
         round
         :to="{
-          name: 'submission_export',
+          name: 'submission:export',
           params: { id: submission.id },
         }"
       >

@@ -12,7 +12,7 @@
         <q-breadcrumbs-el
           :label="$t('submissions.details_heading')"
           :to="{
-            name: 'submission_details',
+            name: 'submission:details',
             params: { id: submission.id },
           }"
         />
