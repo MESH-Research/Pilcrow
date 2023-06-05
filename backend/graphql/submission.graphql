@@ -176,7 +176,7 @@ enum SubmissionStatus {
 """
 Input type for creating a new submission via the createSubmissionDraft mutation
 """
-input CreateSubmissionDraftInput {
+input CreateSubmissionDraftInput @validator(class: "SubmissionDraftInputValidator") {
     title: String! @trim
     publication_id: ID!
     submitters: CreateSubmissionUserInput

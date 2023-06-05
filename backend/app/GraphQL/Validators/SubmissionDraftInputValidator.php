@@ -5,7 +5,7 @@ namespace App\GraphQL\Validators;
 
 use Nuwave\Lighthouse\Validation\Validator;
 
-class SubmissionInputValidator extends Validator
+class SubmissionDraftInputValidator extends Validator
 {
     /**
      * Return the validation rules.
@@ -25,9 +25,6 @@ class SubmissionInputValidator extends Validator
                 'integer',
             ],
             'submitters' => [
-                'required',
-            ],
-            'files' => [
                 'required',
             ],
         ];
