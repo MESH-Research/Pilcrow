@@ -152,9 +152,6 @@ const routes = [
         name: "submission:draft",
         path: "/submission/:id",
         component: () => import("src/pages/SubmissionDraft.vue"),
-        meta: {
-          requiresDraftAccess: true,
-        },
         props: true,
       },
       {
