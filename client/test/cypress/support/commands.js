@@ -18,6 +18,10 @@ Cypress.Commands.add(
   }
 )
 
+Cypress.Commands.add("qSelect", (dataCyId) => {
+  return cy.dataCy(dataCyId).closest('.q-select');
+});
+
 Cypress.Commands.add("qSelectItems", (value) => {
   return cy.get(`[data-cy=${value}]`)
     .then((input) => {

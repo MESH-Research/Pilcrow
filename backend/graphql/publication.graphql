@@ -5,6 +5,7 @@ extend type Query {
     "Return all publications"
     publications(
         is_publicly_visible: Boolean @scope(name: "IsPubliclyVisible")
+        is_accepting_submissions: Boolean @scope(name: "IsAcceptingSubmissions")
     ): [Publication!]!
         @paginate(defaultCount: 10)
         @can(ability: "view", query: true)

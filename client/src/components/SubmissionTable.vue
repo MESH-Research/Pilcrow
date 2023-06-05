@@ -82,8 +82,17 @@
           <q-card-section class="full-width" data-cy="submission_link_mobile">
             <div class="row justify-between">
               <router-link
+                v-if="p.row.status !== 'DRAFT'"
                 :to="{
-                  name: 'submission_review',
+                  name: 'submission:review',
+                  params: { id: p.row.id },
+                }"
+                >{{ p.row.title }}
+              </router-link>
+              <router-link
+                v-else
+                :to="{
+                  name: 'submission:draft',
                   params: { id: p.row.id },
                 }"
                 >{{ p.row.title }}
@@ -116,8 +125,17 @@
     <template #body-cell-title="p">
       <q-td :props="p" data-cy="submission_link_desktop">
         <router-link
+          v-if="p.row.status !== 'DRAFT'"
           :to="{
-            name: 'submission_review',
+            name: 'submission:review',
+            params: { id: p.row.id },
+          }"
+          >{{ p.row.title }}
+        </router-link>
+        <router-link
+          v-else
+          :to="{
+            name: 'submission:draft',
             params: { id: p.row.id },
           }"
           >{{ p.row.title }}
