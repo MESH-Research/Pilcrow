@@ -29,7 +29,9 @@
     <div class="col-lg-5 col-md-6 col-sm-10 col-xs-12">
       <article class="q-pa-lg">
         <div v-if="status !== 'paste_success'" class="q-gutter-md">
-          <h2 class="text-h3">{{ $t(`submissions.content.heading`) }}</h2>
+          <h2 class="text-h3" data-cy="submission_content_title">
+            {{ $t(`submissions.content.heading`) }}
+          </h2>
           <q-banner
             v-if="updateMethod === 'upload' || updateMethod == ''"
             class="bg-primary text-white"
