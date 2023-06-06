@@ -19,6 +19,41 @@ export async function beforeEachRequiresAuth(apolloClient, to, _, next) {
   }
 }
 
+export async function beforeEachRequiresDraftAccess(apolloClient, to, _, next) {
+  if (to.matched.some((record) => record.meta.requiresDraftAccess)) {
+    let access = false
+    const submissionId = to.params.id
+    const user = await apolloClient
+      .query({
+        query: CURRENT_USER_SUBMISSIONS,
+      })
+      .then(({ data: { currentUser } }) => currentUser)
+
+    const submission = user.submissions.filter((submission) => {
+      return submission.id == submissionId
+    })
+
+    if (submission.length) {
+      const s = submission[0]
+
+      // Only allow submitters access when the submission is a draft
+      if (
+        ["submitter"].some((role) => role === s.my_role) &&
+        s.status === "DRAFT"
+      ) {
+        access = true
+      }
+    }
+    if (!access) {
+      next({ name: "error403" })
+    } else {
+      next()
+    }
+  } else {
+    next()
+  }
+}
+
 export async function beforeEachRequiresSubmissionAccess(
   apolloClient,
   to,
@@ -142,24 +177,19 @@ export async function beforeEachRequiresExportAccess(
     const submission = user.submissions.filter((submission) => {
       return submission.id == submissionId
     })
-    console.log(`Hello World`)
 
     if (submission.length) {
       const s = submission[0]
 
       // Allow those who are assigned to the submission
       if (
-        ["review_coordinator", "submitter"].some(
-          (role) => role === s.my_role
-        )
+        ["review_coordinator", "submitter"].some((role) => role === s.my_role)
       ) {
-        console.log(1)
         access = true
       }
 
       // Deny Reviewers
       if ("reviewer" === s.my_role) {
-        console.log(2)
         access = false
       }
 
@@ -172,7 +202,6 @@ export async function beforeEachRequiresExportAccess(
         "EXPIRED",
       ])
       if (!exportableStates.has(s.status)) {
-        console.log(3)
         access = false
       }
 
@@ -182,7 +211,6 @@ export async function beforeEachRequiresExportAccess(
           (role) => role === s.publication.my_role
         )
       ) {
-        console.log(4)
         access = true
       }
     }
@@ -192,7 +220,6 @@ export async function beforeEachRequiresExportAccess(
       if (
         user.roles.some((role) => role.name === "Application Administrator")
       ) {
-        console.log(5)
         access = true
       }
     }

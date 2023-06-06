@@ -19,7 +19,7 @@ class UserSeeder extends Seeder
     {
         User::factory()->create([
             'username' => 'applicationAdminUser',
-            'email' => 'applicationadministrator@pilcrow.dev',
+            'email' => 'applicationAdministrator@pilcrow.dev',
             'name' => 'Application Administrator',
             'password' => Hash::make('adminPassword!@#'),
         ])->assignRole(Role::APPLICATION_ADMINISTRATOR);

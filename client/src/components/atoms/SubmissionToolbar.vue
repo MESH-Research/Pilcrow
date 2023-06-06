@@ -12,13 +12,13 @@
         round
         icon="arrow_back_ios_new"
         :to="{
-          name: 'submission_details',
+          name: 'submission:details',
           params: { id: props.submission.id },
         }"
       />
       <q-toolbar-title class="q-pt-xs q-pb-sm col-grow">
         <div>
-          <h1 data-cy="submussion_title" class="text-h3 q-ma-none">
+          <h1 data-cy="submission_title" class="text-h3 q-ma-none">
             {{ submission.title }}
           </h1>
           <q-chip
@@ -154,7 +154,7 @@
         flat
         round
         :to="{
-          name: 'submission_export',
+          name: 'submission:export',
           params: { id: submission.id },
         }"
       >

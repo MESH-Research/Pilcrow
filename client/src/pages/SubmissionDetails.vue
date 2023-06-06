@@ -36,9 +36,9 @@
             class="q-mr-sm"
             color="accent"
             size="lg"
-            :label="$t('submissions.action.review.name')"
+            :label="$t('submission.action.review')"
             :to="{
-              name: 'submission_review',
+              name: 'submission:review',
               params: { id: props.id },
             }"
           />

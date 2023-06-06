@@ -35,7 +35,7 @@ class OverallCommentSeeder extends Seeder
     protected function create($submissionId, $replies = 0)
     {
         $userIds = User::all()->pluck('id');
-        $userId = $userIds->random();
+        $userId = $userIds->except(1)->random(); // Ensure that the comment is not created by the application admin
 
         $parent = OverallComment::factory()->create([
             'submission_id' => $submissionId,
