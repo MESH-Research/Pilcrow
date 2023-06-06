@@ -10,9 +10,9 @@ extend type Query {
 
 extend type Mutation {
     "Create a new submission under a publication"
-    createSubmission(input: CreateSubmissionInput! @spread): Submission!
-        @create
-        @can(ability: "create", injectArgs: true)
+    createSubmissionDraft(
+        input: CreateSubmissionDraftInput! @spread
+    ): Submission! @create @can(ability: "create", injectArgs: true)
 
     "Update an existing submission"
     updateSubmission(input: UpdateSubmissionInput! @spread): Submission!
@@ -28,15 +28,27 @@ extend type Mutation {
                 "title:updateTitle"
             ]
         )
+    updateSubmissionContent(
+        input: UpdateSubmissionContent! @spread
+    ): Submission! @can(ability: "update", find: "id")
 
     "Verify access to an invitation to a submission as the assigned role"
-    verifySubmissionInvite(uuid: String! token: String! expires: String!): User
+    verifySubmissionInvite(
+        uuid: String!
+        token: String!
+        expires: String!
+    ): User
         @field(
             resolver: "App\\GraphQL\\Mutations\\VerifySubmissionInvite@verify"
         )
 
     "Accept an invitation to a submission as the assigned role"
-    acceptSubmissionInvite(uuid: String! token: String! expires: String! user: AcceptSubmissionInviteInput @spread): User
+    acceptSubmissionInvite(
+        uuid: String!
+        token: String!
+        expires: String!
+        user: AcceptSubmissionInviteInput @spread
+    ): User
         @field(
             resolver: "App\\GraphQL\\Mutations\\AcceptSubmissionInvite@accept"
         )
@@ -45,9 +57,7 @@ extend type Mutation {
     Create a staged user, assign them as a reviewer of a submisison,
     and send them an email notification inviting them to accept the assignment"
     """
-    inviteReviewer(
-        input: inviteSubmissionUserInput @spread
-    ): Submission
+    inviteReviewer(input: inviteSubmissionUserInput @spread): Submission
         @can(ability: "invite", find: "submission_id")
         @field(
             resolver: "App\\GraphQL\\Mutations\\InviteSubmissionUser@inviteReviewer"
@@ -88,7 +98,8 @@ extend type Mutation {
         )
 }
 
-input inviteSubmissionUserInput @validator(class: "SubmissionInvitationValidator") {
+input inviteSubmissionUserInput
+    @validator(class: "SubmissionInvitationValidator") {
     submission_id: ID!
     email: String!
     message: String
@@ -163,16 +174,16 @@ enum SubmissionStatus {
 }
 
 """
-Input type for creating a new submission via the createSubmission mutation
+Input type for creating a new submission via the createSubmissionDraft mutation
 """
-input CreateSubmissionInput @validator(class: "SubmissionInputValidator") {
+input CreateSubmissionDraftInput @validator(class: "SubmissionDraftInputValidator") {
     title: String! @trim
     publication_id: ID!
     submitters: CreateSubmissionUserInput
-    files: CreateSubmissionFilesHasMany @createSubmissionFiles
 }
 
-input AcceptSubmissionInviteInput @validator(class: "SubmissionInvitationAcceptanceValidator") {
+input AcceptSubmissionInviteInput
+    @validator(class: "SubmissionInvitationAcceptanceValidator") {
     id: ID!
     name: String
     username: String!
@@ -188,6 +199,11 @@ input UpdateSubmissionInput @validator {
     review_coordinators: UpdateSubmissionUserInput
         @rename(attribute: "reviewCoordinators")
     submitters: UpdateSubmissionUserInput
+}
+
+input UpdateSubmissionContent @validator {
+    id: ID!
+    content: String!
 }
 
 input CreateSubmissionUserInput {

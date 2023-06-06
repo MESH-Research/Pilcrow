@@ -1,21 +1,57 @@
 /// <reference types="Cypress" />
 /// <reference path="../support/index.d.ts" />
 
-import { a11yLogViolations } from '../support/helpers'
-import "cypress-file-upload"
+import { a11yLogViolations } from '../support/helpers';
 
 describe("Submissions Page", () => {
-  beforeEach(() => {
+
+  it("should assert the page is accessible", () => {
     cy.task("resetDb")
     cy.login({ email: "regularuser@pilcrow.dev" })
-  })
-  it("should assert the page is accessible", () => {
     cy.visit("/submissions")
     cy.injectAxe()
     cy.dataCy("submissions_title")
     cy.checkA11y(null, null, a11yLogViolations)
   })
-  it("enables access to the Submission Export page under the correct conditions", () => {
+
+  it("directs users to a publication's submission creation form", () => {
+    cy.task("resetDb")
+    cy.login({ email: "applicationadministrator@pilcrow.dev" })
+    cy.visit("submissions")
+    cy.injectAxe()
+    cy.interceptGQLOperation("GetPublications")
+    cy.wait("@GetPublications")
+    cy.qSelect("publications_select").click()
+    cy.qSelectItems("publications_select").eq(0).click()
+    cy.dataCy("submit_work_btn").click()
+    cy.checkA11y(null, null, a11yLogViolations)
+    cy.dataCy("submission_create_subheading").contains("Pilcrow Test Publication 1")
+  })
+
+  it("should make the submission in draft status invisible to reviewers", () => {
+    cy.task("resetDb")
+    cy.login({ email: "reviewer@pilcrow.dev" })
+    cy.visit("submissions")
+    cy.dataCy("submissions_table").should('not.include.text', 'Draft')
+  })
+
+  it("should make the submission in draft status invisible to review coordinators", () => {
+    cy.task("resetDb")
+    cy.login({ email: "reviewcoordinator@pilcrow.dev" })
+    cy.visit("submissions")
+    cy.dataCy("submissions_table").should('not.include.text', 'Draft')
+  })
+
+  it("should make the submission in draft status invisible to editors", () => {
+    cy.task("resetDb")
+    cy.login({ email: "publicationeditor@pilcrow.dev" })
+    cy.visit("submissions")
+    cy.dataCy("submissions_table").should('not.include.text', 'Draft')
+  })
+
+  it("enables access to the Submission Export page for submissionss according to their status", () => {
+    cy.task("resetDb")
+    cy.login({ email: "regularuser@pilcrow.dev" })
     cy.visit("/submissions")
     // Show All Records
     cy.dataCy("submissions_table").contains("Records per page").next().click()

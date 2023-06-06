@@ -64,8 +64,9 @@ export const CURRENT_USER_NOTIFICATIONS = gql`
   }
   ${_PAGINATION_FIELDS}
 `
+
 export const CURRENT_USER_SUBMISSIONS = gql`
-  query CurrentUserSubmission {
+  query CurrentUserSubmissions {
     currentUser {
       id
       roles {
@@ -91,7 +92,7 @@ export const CURRENT_USER_SUBMISSIONS = gql`
             display_label
             email
           }
-          updated_by{
+          updated_by {
             id
             display_label
             email
@@ -111,7 +112,7 @@ export const CURRENT_USER_SUBMISSIONS = gql`
               display_label
               email
             }
-            updated_by{
+            updated_by {
               id
               display_label
               email
@@ -123,12 +124,12 @@ export const CURRENT_USER_SUBMISSIONS = gql`
         overall_comments {
           id
           content
-          created_by{
+          created_by {
             id
             display_label
             email
           }
-          updated_by{
+          updated_by {
             id
             display_label
             email
@@ -143,7 +144,7 @@ export const CURRENT_USER_SUBMISSIONS = gql`
               display_label
               email
             }
-            updated_by{
+            updated_by {
               id
               display_label
               email
@@ -217,8 +218,18 @@ export const SEARCH_USERS = gql`
 `
 
 export const GET_PUBLICATIONS = gql`
-  query GetPublications($page: Int) {
-    publications(page: $page) {
+  query GetPublications(
+    $page: Int
+    $first: Int
+    $is_publicly_visible: Boolean
+    $is_accepting_submissions: Boolean
+  ) {
+    publications(
+      page: $page
+      first: $first
+      is_publicly_visible: $is_publicly_visible
+      is_accepting_submissions: $is_accepting_submissions
+    ) {
       paginatorInfo {
         ...paginationFields
       }

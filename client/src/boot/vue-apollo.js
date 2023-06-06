@@ -3,6 +3,7 @@ import { ApolloClient, InMemoryCache, ApolloLink } from "@apollo/client/core"
 import {
   beforeEachRequiresAuth,
   beforeEachRequiresRoles,
+  beforeEachRequiresDraftAccess,
   beforeEachRequiresSubmissionAccess,
   beforeEachRequiresReviewAccess,
   beforeEachRequiresExportAccess,
@@ -36,6 +37,7 @@ export default boot(async ({ app, router }) => {
         ],
       },
     }),
+    connectToDevTools: true
   })
 
   /**
@@ -50,6 +52,13 @@ export default boot(async ({ app, router }) => {
    */
   router.beforeEach(async (to, from, next) =>
     beforeEachRequiresRoles(apolloClient, to, from, next)
+  )
+
+  /**
+   * Check routes for requiresDraftAccess meta field.
+   */
+  router.beforeEach(async (to, from, next) =>
+    beforeEachRequiresDraftAccess(apolloClient, to, from, next)
   )
 
   /**
