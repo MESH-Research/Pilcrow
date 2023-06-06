@@ -340,38 +340,36 @@
     },
     "type": {
       "submissions": {
-        "name": "Submissions",
         "no_data": "There are no submissions for you."
       },
       "reviews": {
-        "name": "Reviews",
         "no_data": "There are no reviews for you."
       }
     },
     "reviewer": {
       "title": "To Review",
-      "byline": "{type_name} in which you're assigned as a <strong>reviewer</strong>",
-      "tooltip": "{type_name} with a status of Draft, Initially Submitted, or Awaiting Review will not appear here."
+      "byline": "Reviews in which you're assigned as a <strong>reviewer</strong>",
+      "tooltip": "Reviews with a status of Draft, Initially Submitted, or Awaiting Review will not appear here."
     },
     "coordinator": {
       "title": "To Coordinate",
-      "byline": "{type_name} in which you're assigned as a <strong>review coordinator</strong>",
-      "tooltip": "{type_name} with a status of Draft, Initially Submitted, or Awaiting Review will not appear here."
+      "byline": "Reviews in which you're assigned as a <strong>review coordinator</strong>",
+      "tooltip": "Reviews with a status of Draft, Initially Submitted, or Awaiting Review will not appear here."
     },
     "dashboard": {
       "reviewer": {
         "title": "Reviews",
-        "byline": "{type_name} you are reviewing",
-        "tooltip": "{type_name} with a status of Draft, Initially Submitted, or Awaiting Review will not appear here."
+        "byline": "Reviews you are reviewing",
+        "tooltip": "Reviews with a status of Draft, Initially Submitted, or Awaiting Review will not appear here."
       },
       "coordinator": {
         "title": "Review Coordination",
-        "byline": "{type_name} you are review coordinating",
-        "tooltip": "{type_name} with a status of Draft will not appear here."
+        "byline": "Reviews you are review coordinating",
+        "tooltip": "Reviews with a status of Draft will not appear here."
       },
       "submitter": {
         "title": "Submissions",
-        "byline": "{type_name} you have submitted for review",
+        "byline": "Submissions you have submitted for review",
         "tooltip": "The submissions of others will not appear here."
       }
     },
