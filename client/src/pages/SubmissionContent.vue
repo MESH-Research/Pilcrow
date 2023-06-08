@@ -80,6 +80,25 @@
               />
             </template>
           </q-banner>
+          <div v-if="updateMethod == 'upload'">
+            <q-file
+              v-model="uploadFile"
+              clearable
+              filled
+              color="accent"
+              :label="$t(`submissions.content.upload.file_picker_label`)"
+            >
+              <template #prepend>
+                <q-icon name="attach_file" />
+              </template>
+            </q-file>
+            <q-btn
+              color="primary"
+              class="q-mt-md"
+              :label="$t(`submissions.content.submit.btn_label`)"
+              @click="submitUpload"
+            />
+          </div>
           <div v-if="updateMethod == 'paste'">
             <q-editor v-model="pasteContent" min-height="5rem" />
             <q-btn
@@ -131,6 +150,7 @@ const props = defineProps({
 
 const updateMethod = ref("")
 const pasteContent = ref("")
+const uploadFile = ref(null)
 const { result } = useQuery(GET_SUBMISSION, props)
 const submission = computed(() => result.value?.submission)
 let status = ref("incomplete")
@@ -141,6 +161,7 @@ function setContentUploaded() {
 
 function clearMethod() {
   updateMethod.value = ""
+  uploadFile.value = null
 }
 
 function setMethod(value) {
