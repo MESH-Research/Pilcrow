@@ -84,7 +84,7 @@
             <q-file
               v-model="uploadFile"
               clearable
-              filled
+              outlined
               color="accent"
               :label="$t(`submissions.content.upload.file_picker_label`)"
             >
