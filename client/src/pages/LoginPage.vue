@@ -68,7 +68,7 @@
             type="submit"
           />
         </q-card-actions>
-        <q-card-section class="text-center q-pa-sm">
+        <q-card-section class="text-center q-pa-sm text-body1">
           <p>
             {{ $t("auth.register_question") }}
             <router-link to="/register" class="dark-accent-text">
