@@ -9,6 +9,7 @@
         :label="$t('publication.basic.fields.name.label')"
         data-cy="new_publication_input"
         dense
+        class="text-body1"
       >
         <template #error>
           <ErrorFieldRenderer
