@@ -35,7 +35,7 @@
                 }"
                 :aria-label="$t('publication.view_button_aria')"
               >
-                <q-tooltip :delay="500">
+                <q-tooltip :delay="500" class="text-body1">
                   {{ $t("publication.view_button") }}
                 </q-tooltip>
               </q-btn>
@@ -81,7 +81,7 @@
                 </q-list>
                 <template #label>
                   <q-icon name="settings" />
-                  <q-tooltip :delay="500">{{
+                  <q-tooltip :delay="500" class="text-body1">{{
                     $t("publication.configure")
                   }}</q-tooltip>
                 </template>
