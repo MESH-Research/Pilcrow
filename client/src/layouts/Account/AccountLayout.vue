@@ -4,18 +4,18 @@
       <q-card class="col-sm-3 col-xs-12 no-shadow no-border-radius">
         <div v-if="currentUser" class="row">
           <q-card-section
-            class="col-sm-12 col-xs-12 flex flex-center avatar-profile-block q-mt-none"
+            class="col-sm-12 col-xs-12 flex flex-center avatar-profile-block q-mt-none text-body1"
           >
             <avatar-block
               avatar-size="80px"
               :user="currentUser"
-              class="text-center"
+              class="text-body1"
             />
           </q-card-section>
-          <q-card-section class="col-sm-12 col-xs-12 q-mt-md q-pa-none">
+          <q-card-section class="col-sm-12 col-xs-12 q-mt-md q-pa-none text-body1">
             <collapse-menu :items="items" />
           </q-card-section>
-          <q-card-section class="col-sm-12 col-xs-12 q-mt-md q-pa-none">
+          <q-card-section class="col-sm-12 col-xs-12 q-mt-md q-pa-none text-body1">
             <q-list role="list">
               <q-item>
                 <q-item-section> Submissions Created </q-item-section>
