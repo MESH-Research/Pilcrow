@@ -6,6 +6,7 @@
         ref="user_list_basic"
         :users="users"
         action="goToUserDetail"
+        class="text-body1"
         @action-click="handleUserListBasicClick"
       />
 
