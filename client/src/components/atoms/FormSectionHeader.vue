@@ -16,6 +16,6 @@ const props = defineProps({
   },
 })
 const headerClass = computed(() => {
-  return props.firstSection ? "text-h4" : "text-subtitle2"
+  return props.firstSection ? "text-h4" : "text-body1"
 })
 </script>
