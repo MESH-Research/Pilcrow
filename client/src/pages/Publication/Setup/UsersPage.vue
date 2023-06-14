@@ -1,5 +1,5 @@
 <template>
-  <article class="q-px-md">
+  <article class="q-px-md text-body1">
     <h2>Users</h2>
     <p>
       Assigned users have special permissions on your publication. A user cannot
@@ -17,7 +17,7 @@
       This publication has no publication administrators assigned and can only
       be administered by application admins.
     </q-banner>
-    <div class="column q-gutter-md">
+    <div class="column q-gutter-md q-mb-lg">
       <assigned-publication-users
         data-cy="admins_list"
         role-group="publication_admins"
