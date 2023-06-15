@@ -28,7 +28,10 @@
   <div class="row flex-center q-pa-lg">
     <div class="col-lg-5 col-md-6 col-sm-10 col-xs-12">
       <article class="q-pa-lg">
-        <div v-if="status !== 'paste_success'" class="q-gutter-md">
+        <div
+          v-if="status !== 'paste_success' && status !== 'upload_success'"
+          class="q-gutter-md"
+        >
           <h2 class="text-h3" data-cy="submission_content_title">
             {{ $t(`submissions.content.heading`) }}
           </h2>
@@ -99,6 +102,11 @@
               @click="submitUpload"
             />
           </div>
+          <div v-if="status === 'upload_error'">
+            <q-banner class="bg-negative text-white">
+              {{ $t(`submissions.content.submit.error`) }}
+            </q-banner>
+          </div>
           <div v-if="updateMethod == 'paste'">
             <q-editor v-model="pasteContent" min-height="5rem" />
             <q-btn
@@ -138,6 +146,10 @@
 
 <script setup>
 import { GET_SUBMISSION } from "src/graphql/queries"
+import {
+  UPDATE_SUBMISSION_CONTENT,
+  UPDATE_SUBMISSION_CONTENT_WITH_FILE,
+} from "src/graphql/mutations"
 import { useQuery, useMutation } from "@vue/apollo-composable"
 import { computed, ref } from "vue"
 
@@ -154,46 +166,49 @@ const uploadFile = ref(null)
 const { result } = useQuery(GET_SUBMISSION, props)
 const submission = computed(() => result.value?.submission)
 let status = ref("incomplete")
-const emit = defineEmits(["update:contentUploaded"])
-function setContentUploaded() {
-  emit("update:contentUploaded", true)
-}
 
 function clearMethod() {
+  status.value = "incomplete"
   updateMethod.value = ""
   uploadFile.value = null
 }
 
 function setMethod(value) {
-  if (updateMethod.value === "") {
-    updateMethod.value = value
-  }
+  updateMethod.value = value
 }
-
-const { mutate } = useMutation(UPDATE_CONTENT)
+const { mutate: updateContent } = useMutation(UPDATE_SUBMISSION_CONTENT)
 async function submitPaste() {
   try {
-    await mutate({ id: props.id, content: pasteContent.value })
+    await updateContent({ id: props.id, content: pasteContent.value })
     status.value = "paste_success"
-    setContentUploaded()
   } catch (error) {
     console.log(error)
     status.value = "paste_error"
   }
 }
-</script>
 
-<script>
-import { gql } from "graphql-tag"
-
-const UPDATE_CONTENT = gql`
-  mutation UpdateSubmissionContent($id: ID!, $content: String!) {
-    updateSubmissionContent(input: { content: $content, id: $id }) {
-      id
-      content {
-        data
-      }
-    }
+const uploadOpts = {
+  variables: {
+    submission_id: props.id,
+    file_upload: uploadFile.value,
+  },
+  context: {
+    hasUpload: true,
+  },
+}
+const { mutate: updateContentWithFile } = useMutation(
+  UPDATE_SUBMISSION_CONTENT_WITH_FILE,
+  uploadOpts
+)
+async function submitUpload() {
+  try {
+    uploadOpts.variables.file_upload = uploadFile.value
+    console.log(uploadOpts)
+    await updateContentWithFile()
+    status.value = "upload_success"
+  } catch (error) {
+    console.log(error)
+    status.value = "upload_error"
   }
-`
+}
 </script>

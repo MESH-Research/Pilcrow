@@ -28,9 +28,19 @@ extend type Mutation {
                 "title:updateTitle"
             ]
         )
+
+    "Update the content of a submission"
     updateSubmissionContent(
         input: UpdateSubmissionContent! @spread
     ): Submission! @can(ability: "update", find: "id")
+
+    "Update the content of a submission with a file upload"
+    updateSubmissionContentWithFile(
+        input: CreateSubmissionFileInput! @spread
+    ): Submission! @can(ability: "update", find: "id")
+        @field(
+            resolver: "App\\GraphQL\\Mutations\\updateSubmissionContentWithFile"
+        )
 
     "Verify access to an invitation to a submission as the assigned role"
     verifySubmissionInvite(

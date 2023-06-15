@@ -5,7 +5,7 @@ namespace App\GraphQL\Mutations;
 
 use App\Models\SubmissionFile;
 
-class CreateSubmissionFile
+class UpdateSubmissionContentWithFile
 {
     /**
      * Upload a file, store it on the server, and return the newly created record's data.
