@@ -3,13 +3,14 @@
     <q-skeleton type="QInput" class="q-mb-md" />
   </div>
   <div v-else>
-    <div class="row items-center justify-start q-gutter-x-md">
+    <div class="row items-center justify-start q-gutter-x-md text-body1">
       <div>
         <q-btn-toggle
           v-bind="$attrs"
           ref="toggle"
           v-model="model"
           toggle-color="primary"
+          class="text-body1"
           :options="[
             { label: getTranslation('options.true'), value: true },
             { label: getTranslation('options.false'), value: false },
