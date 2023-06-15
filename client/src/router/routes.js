@@ -134,8 +134,14 @@ const routes = [
         component: () => import("src/pages/SubmissionsPage.vue"),
       },
       {
-        name: "submission_details",
-        path: "/submission/:id",
+        name: "submission:create",
+        path: "/publication/:id/create",
+        props: true,
+        component: () => import("pages/SubmissionCreate.vue"),
+      },
+      {
+        name: "submission:details",
+        path: "/submission/:id/details",
         component: () => import("src/pages/SubmissionDetails.vue"),
         meta: {
           requiresSubmissionAccess: true,
@@ -143,8 +149,23 @@ const routes = [
         props: true,
       },
       {
-        name: "submission_review",
-        path: "/submission/review/:id",
+        name: "submission:draft",
+        path: "/submission/:id/draft",
+        component: () => import("src/pages/SubmissionDraft.vue"),
+        props: true,
+      },
+      {
+        name: "submission:content",
+        path: "/submission/:id/content",
+        component: () => import("src/pages/SubmissionContent.vue"),
+        meta: {
+          requiresSubmissionAccess: true,
+        },
+        props: true,
+      },
+      {
+        name: "submission:review",
+        path: "/submission/:id/review",
         component: () => import("src/pages/SubmissionReview.vue"),
         meta: {
           requiresReviewAccess: true,
@@ -152,8 +173,8 @@ const routes = [
         props: true,
       },
       {
-        name: "submission_export",
-        path: "/submission/export/:id",
+        name: "submission:export",
+        path: "/submission/:id/export",
         component: () => import("src/pages/SubmissionExport.vue"),
         meta: {
           requiresExportAccess: true,

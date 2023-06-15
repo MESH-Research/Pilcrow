@@ -54,7 +54,7 @@ class ReviewCoordinatorInvitationAccepted extends Notification implements Should
             ->line($this->data['invitee']['display_label'] . ' has accepted the invitation from '
                 . $this->data['inviter']['display_label'] . ' to coordinate the review for submission, '
                 . $this->data['submission']['title'] . '.')
-            ->action('Visit Submission', url('/submission/' . $this->data['submission']['id']));
+            ->action('Visit Submission', url('/submission/' . $this->data['submission']['id'] . '/details'));
 
         return $mail;
     }

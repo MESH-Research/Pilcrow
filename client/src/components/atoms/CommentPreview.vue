@@ -45,7 +45,7 @@
           color="secondary"
           text-color="white"
           :to="{
-            name: 'submission_review',
+            name: 'submission:review',
             params: { id: comment.submission.id },
           }"
           :label="$t(`submissions.action.go_to_review`)"

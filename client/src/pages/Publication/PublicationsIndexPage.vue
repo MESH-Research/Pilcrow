@@ -33,7 +33,7 @@
         />
       </div>
       <div v-else class="spinner">
-        <div>test</div>
+        <q-spinner color="primary" />
       </div>
     </section>
   </div>

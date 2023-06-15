@@ -1,22 +1,39 @@
 <template>
   <q-btn
     data-cy="submission_actions"
-    aria-label="{{$t(submissions.action.toggle_label)}}"
+    :aria-label="$t(`submissions.action.toggle_label`)"
   >
     <q-icon name="more_vert" />
     <q-menu anchor="bottom right" self="top right">
       <q-item
+        v-if="submission.status === 'DRAFT'"
         clickable
         :disable="cannotAccessSubmission(submission)"
-        data-cy="review"
-        :to="destination_to"
+        data-cy="submission_draft_link"
+        :to="{
+          name: 'submission:draft',
+          params: { id: props.submission.id },
+        }"
       >
         <q-item-section>
-          <q-item-label v-if="actionType == 'reviews'">
-            {{ $t("submissions.details_heading") }}
+          <q-item-label>
+            {{ $t("submissions.action.draft") }}
           </q-item-label>
-          <q-item-label v-else>
-            {{ $t("submissions.action.review.name") }}
+        </q-item-section>
+      </q-item>
+      <q-item
+        v-if="submission.status !== 'DRAFT'"
+        clickable
+        :disable="cannotAccessSubmission(submission)"
+        data-cy="submission_review_link"
+        :to="{
+          name: 'submission:review',
+          params: { id: props.submission.id },
+        }"
+      >
+        <q-item-section>
+          <q-item-label>
+            {{ $t("submissions.action.review.label") }}
           </q-item-label>
         </q-item-section>
         <q-tooltip
@@ -30,6 +47,31 @@
         </q-tooltip>
       </q-item>
       <q-item
+        v-if="submission.status !== 'DRAFT'"
+        clickable
+        :disable="cannotAccessSubmission(submission)"
+        data-cy="submission_details_link"
+        :to="{
+          name: 'submission:details',
+          params: { id: props.submission.id },
+        }"
+      >
+        <q-item-section>
+          <q-item-label>
+            {{ $t("submissions.action.view_details.label") }}
+          </q-item-label>
+        </q-item-section>
+        <q-tooltip
+          v-if="cannotAccessSubmission(submission)"
+          anchor="top middle"
+          self="bottom middle"
+          class="text-body1"
+          data-cy="cannot_access_submission_tooltip"
+        >
+          {{ $t("submissions.action.view_details.no_access") }}
+        </q-tooltip>
+      </q-item>
+      <q-item
         data-cy="change_status"
         clickable
         :disable="
@@ -39,7 +81,7 @@
       >
         <q-item-section data-cy="change_status_item_section">
           <q-item-label>
-            {{ $t("submissions.action.change_status.name") }}
+            {{ $t("submissions.action.change_status.label") }}
           </q-item-label>
         </q-item-section>
         <q-tooltip
@@ -107,6 +149,7 @@
               >{{ $t("submission.action.request_resubmission") }}</q-item
             >
             <q-item
+              data-cy="reject"
               class="items-center"
               clickable
               @click="confirmHandler('reject', submission.id)"
@@ -137,7 +180,7 @@
         data-cy="export_submission"
         clickable
         :to="{
-          name: 'submission_export',
+          name: 'submission:export',
           params: { id: submission.id },
         }"
       >
@@ -174,7 +217,6 @@
 <script setup>
 import ConfirmStatusChangeDialog from "../components/dialogs/ConfirmStatusChangeDialog.vue"
 import { useQuasar } from "quasar"
-import { computed } from "vue"
 import { useSubmissionExport } from "src/use/guiElements.js"
 import { ref } from "vue"
 const { dialog } = useQuasar()
@@ -192,20 +234,6 @@ const props = defineProps({
     type: String,
     default: "",
   },
-})
-
-const destination_to = computed(() => {
-  let to = {
-    name: "submission_review",
-    params: { id: props.submission.id },
-  }
-  if (props.actionType == "reviews") {
-    to = {
-      name: "submission_details",
-      params: { id: props.submission.id },
-    }
-  }
-  return to
 })
 function cannotAccessSubmission(submission) {
   const nonreviewableStates = new Set([

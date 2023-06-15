@@ -129,7 +129,7 @@ th.text-right, th.text-left, th.text-center, .q-table tbody td, .q-table__bottom
 body.body--dark
     background: $dark !important
 
-    a
+    a, .q-field__messages
         color: #fff
 
     [class*= "shadow-"]
@@ -257,6 +257,16 @@ body.body--dark
             color: $dark-primary !important
         .q-icon.text-red
             color: $negative !important
+
+    .q-field__control
+        color: #fff
+
+    .q-field--error .q-field__bottom,
+    .text-negative
+        color: #d7419a !important
+
+    .text-negative .q-field__label
+        color: #ff6e9f !important
 
 @media (prefers-reduced-motion)
     *
