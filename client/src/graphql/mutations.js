@@ -227,7 +227,7 @@ export const UPDATE_SUBMISSION_CONTENT = gql`
 `
 
 export const UPDATE_SUBMISSION_CONTENT_WITH_FILE = gql`
-  mutation updateSubmissionContentWithFile($submission_id: ID!, $file_upload: Upload!) {
+  mutation UpdateSubmissionContentWithFile($submission_id: ID!, $file_upload: Upload!) {
     updateSubmissionContentWithFile(
       input: { submission_id: $submission_id, file_upload: $file_upload }
     ) {
