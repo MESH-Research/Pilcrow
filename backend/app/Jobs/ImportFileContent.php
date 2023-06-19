@@ -68,16 +68,17 @@ class ImportFileContent implements ShouldQueue
         try {
             $content->submission_id = $this->file->submission_id;
             $content->submission_file_id = $this->file->id;
-            print_r(storage_path());
-            $content->data = Pandoc::
-                inputFile(storage_path('app/' . $this->file->file_upload))
-                ->to('html')
-                ->run();
+            $content->data = "Hello World";
+            // $content->data = Pandoc::
+            //     inputFile(storage_path('app/' . $this->file->file_upload))
+            //     ->to('html')
+            //     ->run();
             if (empty($content->data)) {
                 throw new EmptyContentOnImport();
             }
             $content->save();
         } catch (\Exception $e) {
+            print_r($e);
             $this->file->import_status = SubmissionFileImportStatus::Failure;
             $this->file->error_message = 'Exception: ' . get_class($e) . ' (' . $e->getMessage() . ')';
             $this->file->save();

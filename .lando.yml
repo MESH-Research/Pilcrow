@@ -21,6 +21,9 @@ services:
     command: cd /app/client && yarn dev
     scanner: false
   appserver:
+    overrides:
+      environment:
+        PHP_MEMORY_LIMIT: 2G
     build:
       - composer install
       - cd /app/backend && composer install
