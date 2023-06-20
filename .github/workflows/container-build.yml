@@ -73,7 +73,7 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: ${{ steps.context.outputs.context }}
-          push: true
+          push: ${{ github.event_name != 'pull_request' && !contains(github.ref_name, 'renovate') }}
           build-args: |
             COMPOSER_NO_DEV=${{ steps.context.outputs.nodev }}
             VERSION=${{ steps.tagger.outputs.version }}
