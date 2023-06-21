@@ -32,7 +32,10 @@ import { computed } from "vue"
 
 const { result } = useQuery(CURRENT_USER_SUBMISSIONS)
 const submissions = computed(() => {
-  return result.value?.currentUser?.submissions ?? []
+  let r = result.value?.currentUser?.submissions ?? []
+  return r.sort((a, b) => {
+    return new Date(b.created_at) - new Date(a.created_at)
+  })
 })
 const reviewer_reviews = computed(() =>
   submissions.value.filter(function (submission) {
