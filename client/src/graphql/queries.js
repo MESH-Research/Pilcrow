@@ -76,6 +76,7 @@ export const CURRENT_USER_SUBMISSIONS = gql`
         id
         title
         status
+        created_at
         my_role
         effective_role
         review_coordinators {
