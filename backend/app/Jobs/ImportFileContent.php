@@ -78,7 +78,6 @@ class ImportFileContent implements ShouldQueue
             }
             $content->save();
         } catch (\Exception $e) {
-            print_r($e);
             $this->file->import_status = SubmissionFileImportStatus::Failure;
             $this->file->error_message = 'Exception: ' . get_class($e) . ' (' . $e->getMessage() . ')';
             $this->file->save();
