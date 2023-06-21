@@ -8,6 +8,8 @@ use App\Models\Role;
 use App\Models\Submission;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Str;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\ApiTestCase;
@@ -265,59 +267,60 @@ class SubmissionTest extends ApiTestCase
         $response->assertJsonPath('data', $expected_data);
     }
 
-    /** TODO: Refactor this for updating a submission with a file after the submission is initially created */
-    // /**
-    //  * @return void
-    //  */
-    // public function testFileUpload()
-    // {
-    //     $publication = Publication::factory()->create(['is_accepting_submissions' => true]);
-    //     /**
-    //      * @var User
-    //      */
-    //     $user = User::factory()->create();
-    //     $this->actingAs($user);
+    /**
+     * @return void
+     */
+    public function testFileUpload(): void
+    {
+        Event::fake();
+        $publication = Publication::factory()->create(['is_accepting_submissions' => true]);
+        $user = User::factory()->create();
+        $submission = Submission::factory()
+            ->hasAttached($user, [], 'submitters')
+            ->for($publication)
+            ->create();
+        $this->actingAs($user);
 
-    //     $operations = [
-    //         'operationName' => 'CreateSubmission',
-    //         'query' => '
-    //             mutation CreateSubmissionDraft (
-    //                 $title: String!
-    //                 $publication_id: ID!
-    //                 $file_upload: [Upload!]
-    //                 $user_id: ID!
-    //             ) {
-    //                 createSubmissionDraft(
-    //                     input: {
-    //                         title: $title,
-    //                         publication_id: $publication_id,
-    //                         submitters: { connect: [$user_id] },
-    //                         files: { create: $file_upload }
-    //                     }
-    //                 ) {
-    //                     title
-    //                 }
-    //             }
-    //         ',
-    //         'variables' => [
-    //             'title' => '    Test Submission    ',
-    //             'publication_id' => $publication->id,
-    //             'user_id' => $user->id,
-    //             'file_upload' => null,
-    //         ],
-    //     ];
-    //     $map = [
-    //         '0' => ['variables.file_upload'],
-    //     ];
-    //     $file = [
-    //         '0' => UploadedFile::fake()->create('test.txt', 500),
-    //     ];
+        $operations = [
+            'operationName' => 'UpdateSubmissionContentWithFile',
+            'query' => '
+                mutation UpdateSubmissionContentWithFile (
+                    $submission_id: ID!
+                    $file_upload: [Upload!]
+                ) {
+                    updateSubmissionContentWithFile(
+                        input: {
+                            submission_id: $submission_id,
+                            file_upload: $file_upload
+                        }
+                    ) {
+                        id
+                    }
+                }
+            ',
+            'variables' => [
+                'submission_id' => $submission->id,
+                'file_upload' => null,
+            ],
+        ];
+        $map = [
+            '0' => ['variables.file_upload'],
+        ];
+        $file = [
+            '0' => UploadedFile::fake()->create('test.txt', 500),
+        ];
 
-    //     $response = $this->multipartGraphQL($operations, $map, $file);
+        $response = $this->multipartGraphQL($operations, $map, $file);
+        ob_end_clean();
+        print_r("Hello World");
+        print_r($response->decodeResponseJson());
+        ob_start();
 
-    //     $response
-    //         ->assertJsonPath('data.createSubmissionDraft.title', 'Test Submission');
-    // }
+        // $response->assertJsonPath('data.createSubmissionDraft.title', 'Test Submission');
+
+        // Event::assertDispatched(ImportFileContent::class);
+        $this->assertIsInt($submission->id);
+    }
 
     /**
      * @return void
