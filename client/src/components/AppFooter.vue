@@ -2,7 +2,7 @@
   <q-footer bordered class="light-grey text-black">
     <q-toolbar class="flex flex-center text-caption">
       <div class="footer-text">
-        Powered by
+        <span>{{ $t(`footer.footer_text`) }}</span>
         <a href="https://github.com/MESH-Research/Pilcrow">Pilcrow</a>
         <span v-if="version">
           &nbsp;

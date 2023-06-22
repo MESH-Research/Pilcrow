@@ -134,6 +134,9 @@
     "site_title": "Pilcrow",
     "site_subtitle": "Submission Review System"
   },
+  "footer": {
+    "footer_text": "Powered by {link}"
+  },
   "account": {
     "failures": {
       "VERIFY_TOKEN_INVALID": "This verification link is not valid for your account.",
@@ -157,6 +160,8 @@
     },
     "header": "My Account",
     "preview_link": "Preview Public Profile",
+    "submissions_reviewed": "Submissions Reviewed",
+    "submissions_created": "Submissions Created",
     "sections": {
       "basic": "Basic Information",
       "security": "Security and Passwords",
@@ -198,6 +203,8 @@
       }
     },
     "profile": {
+      "account_information": "Account Information",
+      "update_password": "Update Password",
       "section_details": "Profile Details",
       "section_personal": "Personal Details",
       "section_biography": "Biography",
