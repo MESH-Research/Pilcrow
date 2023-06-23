@@ -182,7 +182,6 @@ async function submitPaste() {
     await updateContent({ id: props.id, content: pasteContent.value })
     status.value = "paste_success"
   } catch (error) {
-    console.log(error)
     status.value = "paste_error"
   }
 }
@@ -203,11 +202,9 @@ const { mutate: updateContentWithFile } = useMutation(
 async function submitUpload() {
   try {
     uploadOpts.variables.file_upload = uploadFile.value
-    console.log(uploadOpts)
     await updateContentWithFile()
     status.value = "upload_success"
   } catch (error) {
-    console.log(error)
     status.value = "upload_error"
   }
 }
