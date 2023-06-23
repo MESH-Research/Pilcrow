@@ -272,7 +272,7 @@ class SubmissionTest extends ApiTestCase
      */
     public function testFileUpload(): void
     {
-        Event::fake();
+        // ```
         $publication = Publication::factory()->create(['is_accepting_submissions' => true]);
         $user = User::factory()->create();
         $submission = Submission::factory()
@@ -286,7 +286,7 @@ class SubmissionTest extends ApiTestCase
             'query' => '
                 mutation UpdateSubmissionContentWithFile (
                     $submission_id: ID!
-                    $file_upload: [Upload!]
+                    $file_upload: Upload!
                 ) {
                     updateSubmissionContentWithFile(
                         input: {
@@ -311,15 +311,7 @@ class SubmissionTest extends ApiTestCase
         ];
 
         $response = $this->multipartGraphQL($operations, $map, $file);
-        ob_end_clean();
-        print_r("Hello World");
-        print_r($response->decodeResponseJson());
-        ob_start();
-
-        // $response->assertJsonPath('data.createSubmissionDraft.title', 'Test Submission');
-
-        // Event::assertDispatched(ImportFileContent::class);
-        $this->assertIsInt($submission->id);
+        $response->assertJsonPath('data.updateSubmissionContentWithFile.id', (string)$submission->id);
     }
 
     /**

@@ -4,12 +4,12 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Enums\SubmissionFileImportStatus;
-use App\Jobs\ImportFileContent;
+// use App\Jobs\ImportFileContent;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Support\Facades\Event;
-use OwenIt\Auditing\Events\AuditCustom;
+// use Illuminate\Support\Facades\Event;
+// use OwenIt\Auditing\Events\AuditCustom;
 
 class SubmissionFile extends Model
 {
@@ -44,6 +44,7 @@ class SubmissionFile extends Model
      */
     protected static function booted()
     {
+        // TODO: Uncomment when jobs are enabled
         // static::created(function (SubmissionFile $file) {
         //     $submission = $file->submission;
         //     $submission->auditEvent = 'contentUpload';
@@ -51,10 +52,10 @@ class SubmissionFile extends Model
         //     $submission->auditCustomNew = [
         //         'submission_file_id' => $file->id,
         //     ];
-
         //     Event::dispatch(AuditCustom::class, [$submission]);
         // });
 
+        // TODO: Uncomment when jobs are enabled
         // static::created(function (SubmissionFile $file) {
         //     //Test files start with /tmp so skip them for now.
         //     $fileName = (string)$file->file_upload;

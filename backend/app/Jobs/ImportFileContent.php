@@ -68,7 +68,7 @@ class ImportFileContent implements ShouldQueue
         try {
             $content->submission_id = $this->file->submission_id;
             $content->submission_file_id = $this->file->id;
-            $content->data =  Pandoc::
+            $content->data = Pandoc::
                 inputFile(storage_path('app/' . $this->file->file_upload))
                 ->to('html')
                 ->run();
@@ -81,6 +81,7 @@ class ImportFileContent implements ShouldQueue
             $this->file->error_message = 'Exception: ' . get_class($e) . ' (' . $e->getMessage() . ')';
             $this->file->save();
             $this->fail($e);
+
             return;
         }
         $this->file->import_status = SubmissionFileImportStatus::Success();

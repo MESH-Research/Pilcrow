@@ -20,7 +20,7 @@ class UpdateSubmissionContentWithFile
      * @return \App\Models\Submission
      * @throws GraphQL\Error\Error
      */
-    public function __invoke($_, array $args): ?Submission
+    public function update($_, array $args): ?Submission
     {
         // @var \Illuminate\Http\UploadedFile $file_upload
         $file_upload = $args['file_upload'];
@@ -38,7 +38,7 @@ class UpdateSubmissionContentWithFile
 
         try {
             $content->data = Pandoc::
-                inputFile(storage_path($file->file_upload))
+                inputFile(storage_path('app/' . $file->file_upload))
                 ->to('html')
                 ->run();
         } catch (\Exception) {
