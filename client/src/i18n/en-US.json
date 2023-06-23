@@ -561,7 +561,7 @@
     },
     "activity_record": {
       "description": "{object} {event} by {user} {datetime} ",
-      "description_no_user": "{event} {datetime} ",
+      "description_no_user": "{object} {event} {datetime} ",
       "title_change": "from \"{previous_title}\" to {current_title}",
       "status_change": "from {previous_status} to {current_status}",
       "comment_title": "Comment",
@@ -573,7 +573,8 @@
       "object": {
         "title": "Title",
         "status": "Status",
-        "submission": "Submission"
+        "submission": "Submission",
+        "content": "Content"
       }
     },
     "status": {

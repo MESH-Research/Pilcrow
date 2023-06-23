@@ -8,7 +8,6 @@ use App\Models\Submission;
 use App\Models\SubmissionContent;
 use App\Models\SubmissionFile;
 use GraphQL\Error\Error;
-use Illuminate\Support\Facades\Event;
 use Pandoc\Facades\Pandoc;
 
 class UpdateSubmissionContentWithFile
@@ -58,13 +57,6 @@ class UpdateSubmissionContentWithFile
             throw new Error('Unable to save content');
         }
 
-        $submission = $file->submission;
-        $submission->auditEvent = 'contentUpload';
-        $submission->isCustomEvent = true;
-        $submission->auditCustomNew = [
-            'submission_file_id' => $file->id,
-        ];
-        Event::dispatch(AuditCustom::class, [$submission]);
         $submission->content_id = $content->id;
 
         if (!$submission->save()) {

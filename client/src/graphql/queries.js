@@ -308,11 +308,13 @@ export const GET_SUBMISSION = gql`
           title
           status
           status_change_comment
+          content_id
         }
         new_values {
           title
           status
           status_change_comment
+          content_id
         }
         created_at
       }
