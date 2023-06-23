@@ -44,14 +44,14 @@
             v-model="selectedPublication"
             outlined
             :options="pubsOptions"
-            label="Publication"
+            :label="$t(`submissions.create.publication_dropdown`)"
             data-cy="publications_select"
           />
         </div>
         <q-btn
           v-if="selectedPublication"
           color="primary"
-          label="Submit a Work"
+          :label="$t(`submissions.create.heading`)"
           class="q-mt-md"
           :to="{
             name: 'submission:create',

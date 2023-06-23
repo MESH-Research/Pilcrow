@@ -750,6 +750,7 @@
     },
     "create": {
       "heading": "Submit a Work",
+      "publication_dropdown": "Publication",
       "success": "This submission has been submitted for review.",
       "failure": "An error occurred while attempting to create the submission.",
       "title": {
@@ -810,13 +811,17 @@
         "error": "An error occurred while attempting to update the content of your submission. Please try again later.",
         "success": {
           "title": "Success",
-          "message":"The content for your submission has been updated successfully.",
+          "message": "The content for your submission has been updated successfully.",
           "btn_label": "Return to Draft"
         }
       },
       "back_btn_label": "Back"
     },
     "inline_comments_heading": "Inline Comments",
+    "overall_comments": {
+      "heading": "Overall Comments",
+      "editor_heading": "Add your overall comment"
+    },
     "comment_preview": {
       "ariaLabel": "Comment Preview. Author {display_label}."
     },
@@ -826,6 +831,7 @@
       "dateLabelUpdated": "Updated {date}",
       "updatedLabel": "Updated",
       "toggle_replies": {
+        "reply": "Reply",
         "show_reply": "Show Replies",
         "hide_reply": "Hide Replies"
       },
