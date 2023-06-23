@@ -54,16 +54,18 @@
 import AvatarBlock from "src/components/molecules/AvatarBlock.vue"
 import CollapseMenu from "src/components/molecules/CollapseMenu.vue"
 import { useCurrentUser } from "src/use/user"
+import { useI18n } from "vue-i18n"
+const { t } = useI18n() 
 
 const items = [
   {
     icon: "account_circle",
-    label: "Account Information",
+    label: t(`account.profile.account_information`),
     url: "/account/profile",
   },
   {
     icon: "contact_page",
-    label: "Profile Details",
+    label: t(`account.profile.section_details`),
     url: "/account/metadata",
   },
 ]
