@@ -68,11 +68,10 @@ class ImportFileContent implements ShouldQueue
         try {
             $content->submission_id = $this->file->submission_id;
             $content->submission_file_id = $this->file->id;
-            $content->data = "Hello World";
-            // $content->data = Pandoc::
-            //     inputFile(storage_path('app/' . $this->file->file_upload))
-            //     ->to('html')
-            //     ->run();
+            $content->data =  Pandoc::
+                inputFile(storage_path('app/' . $this->file->file_upload))
+                ->to('html')
+                ->run();
             if (empty($content->data)) {
                 throw new EmptyContentOnImport();
             }

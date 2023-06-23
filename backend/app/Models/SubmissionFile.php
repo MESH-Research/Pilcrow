@@ -44,23 +44,23 @@ class SubmissionFile extends Model
      */
     protected static function booted()
     {
-        static::created(function (SubmissionFile $file) {
-            $submission = $file->submission;
-            $submission->auditEvent = 'contentUpload';
-            $submission->isCustomEvent = true;
-            $submission->auditCustomNew = [
-                'submission_file_id' => $file->id,
-            ];
+        // static::created(function (SubmissionFile $file) {
+        //     $submission = $file->submission;
+        //     $submission->auditEvent = 'contentUpload';
+        //     $submission->isCustomEvent = true;
+        //     $submission->auditCustomNew = [
+        //         'submission_file_id' => $file->id,
+        //     ];
 
-            Event::dispatch(AuditCustom::class, [$submission]);
-        });
+        //     Event::dispatch(AuditCustom::class, [$submission]);
+        // });
 
-        static::created(function (SubmissionFile $file) {
-            //Test files start with /tmp so skip them for now.
-            $fileName = (string)$file->file_upload;
-            $user = auth()->user();
-            ImportFileContent::dispatchIf(preg_match('%^/tmp/%', $fileName) == 0, $file, $user);
-        });
+        // static::created(function (SubmissionFile $file) {
+        //     //Test files start with /tmp so skip them for now.
+        //     $fileName = (string)$file->file_upload;
+        //     $user = auth()->user();
+        //     ImportFileContent::dispatchIf(preg_match('%^/tmp/%', $fileName) == 0, $file, $user);
+        // });
     }
 
     /**
