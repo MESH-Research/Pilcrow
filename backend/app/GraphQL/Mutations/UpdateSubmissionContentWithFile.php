@@ -9,11 +9,12 @@ use App\Models\SubmissionContent;
 use App\Models\SubmissionFile;
 use GraphQL\Error\Error;
 use Illuminate\Support\Facades\Event;
+use Pandoc\Facades\Pandoc;
 
 class UpdateSubmissionContentWithFile
 {
     /**
-     * Upload a file, store it on the server, and return the newly created record's data.
+     * Upload a file, use Pandoc to convert its contents to HTML, and store the HTML in the database
      *
      * @param  mixed  $_
      * @param  array<string, mixed>  $args
@@ -32,19 +33,17 @@ class UpdateSubmissionContentWithFile
 
         $file = SubmissionFile::create([
             'submission_id' => $args['submission_id'],
-            'file_upload' => $file_upload->storePublicly('app/uploads'),
+            'file_upload' => $file_upload->storePublicly('uploads'),
             'content_id' => $content->id,
         ]);
 
         try {
-            $content->data = (new \Pandoc\Pandoc)
-                ->from('markdown')
-                ->input('# Hello World')
+            $content->data = Pandoc::
+                inputFile(storage_path($file->file_upload))
                 ->to('html')
                 ->run();
-        } catch (Error $e) {
-            print_r("Hello Error");
-            throw new Error($e->getMessage());
+        } catch (\Exception) {
+            throw new Error('Unable to convert file');
         }
 
         $file->import_status = SubmissionFileImportStatus::Success();
@@ -59,7 +58,6 @@ class UpdateSubmissionContentWithFile
             throw new Error('Unable to save content');
         }
 
-        // Update Submission
         $submission = $file->submission;
         $submission->auditEvent = 'contentUpload';
         $submission->isCustomEvent = true;
