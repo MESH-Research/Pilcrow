@@ -100,7 +100,7 @@
           data-cy="overallCommentReplyButton"
           bordered
           color="accent"
-          label="Reply"
+          :label="$t(`submissions.comment.toggle_replies.reply`)"
           @click="initiateReply()"
         />
       </q-card-actions>
