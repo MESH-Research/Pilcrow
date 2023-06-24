@@ -39,6 +39,7 @@ class UpdateSubmissionContentWithFile
         try {
             $content->data = Pandoc::
                 inputFile(storage_path('app/' . $file->file_upload))
+                ->noStandalone()
                 ->to('html')
                 ->run();
         } catch (\Exception) {
