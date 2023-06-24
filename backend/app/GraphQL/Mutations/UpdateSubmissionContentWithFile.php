@@ -18,7 +18,7 @@ class UpdateSubmissionContentWithFile
      * @param  mixed  $_
      * @param  array<string, mixed>  $args
      * @return \App\Models\Submission
-     * @throws GraphQL\Error\Error
+     * @throws \App\GraphQL\Mutations\GraphQL\Error\Error
      */
     public function update($_, array $args): ?Submission
     {

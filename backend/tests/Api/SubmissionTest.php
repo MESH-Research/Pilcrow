@@ -9,7 +9,6 @@ use App\Models\Submission;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Str;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\ApiTestCase;
