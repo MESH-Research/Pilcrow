@@ -37,6 +37,7 @@
           </h2>
           <q-banner
             v-if="updateMethod === 'upload' || updateMethod == ''"
+            data-cy="upload_option"
             class="bg-primary text-white"
             inline-actions
             @click="setMethod('upload')"
@@ -62,6 +63,7 @@
           </q-banner>
           <q-banner
             v-if="updateMethod === 'paste' || updateMethod == ''"
+            data-cy="paste_option"
             class="bg-primary text-white"
             inline-actions
             @click="setMethod('paste')"
@@ -86,6 +88,7 @@
           <div v-if="updateMethod == 'upload'">
             <q-file
               v-model="uploadFile"
+              data-cy="file_picker"
               clearable
               outlined
               color="accent"
@@ -96,6 +99,7 @@
               </template>
             </q-file>
             <q-btn
+              data-cy="submit_upload_btn"
               color="primary"
               class="q-mt-md"
               :label="$t(`submissions.content.submit.btn_label`)"
@@ -108,8 +112,13 @@
             </q-banner>
           </div>
           <div v-if="updateMethod == 'paste'">
-            <q-editor v-model="pasteContent" min-height="5rem" />
+            <q-editor
+              v-model="pasteContent"
+              data-cy="content_editor"
+              min-height="5rem"
+            />
             <q-btn
+              data-cy="submit_paste_btn"
               color="primary"
               class="q-mt-md"
               :label="$t(`submissions.content.submit.btn_label`)"
@@ -129,6 +138,7 @@
           }}</strong>
           <p>{{ $t(`submissions.content.submit.success.message`) }}</p>
           <q-btn
+            data-cy="content_submit_success_btn"
             class="q-mr-sm"
             color="accent"
             size="md"
