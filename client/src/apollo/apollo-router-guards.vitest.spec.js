@@ -5,7 +5,7 @@ const apolloMock = {
   query: vi.fn(),
 }
 
-describe("requiresAuth router hook", async () => {
+describe("requiresAuth router hook", () => {
   afterEach(() => {
     apolloMock.query.mockClear()
   })
@@ -72,7 +72,7 @@ describe("requiresAuth router hook", async () => {
   })
 })
 
-describe("requiresRoles router hook", async () => {
+describe("requiresRoles router hook", () => {
   afterEach(() => {
     apolloMock.query.mockClear()
   })
