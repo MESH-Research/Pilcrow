@@ -84,10 +84,10 @@ describe("Submissions Page", () => {
     cy.contains("Awaiting Review").parent("tr").find("submission_actions").click()
     cy.dataCy("export_submission").should("have.class","disabled")
     // Archived
-    cy.containl("Archived").parent("tr").find("submission_actions").click()
+    cy.contains("Archived").parent("tr").find("submission_actions").click()
     cy.dataCy("export_submission").should("not.have.class","disabled")
     // Deleted
-    cy.containl("Deleted").parent("tr").find("submission_actions").click()
+    cy.contains("Deleted").parent("tr").find("submission_actions").click()
     cy.dataCy("export_submission").should("have.class","disabled")
   })
 })
