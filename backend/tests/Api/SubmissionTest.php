@@ -1080,7 +1080,7 @@ class SubmissionTest extends ApiTestCase
             'updateSubmissionContent' => [
                 'id' => (string)$submission->id,
                 'content' => [
-                    'data' => 'Test submission content',
+                    'data' => '<p>Test submission content</p>',
                 ],
             ],
         ];

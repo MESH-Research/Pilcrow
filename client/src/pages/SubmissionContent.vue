@@ -32,9 +32,9 @@
           v-if="status !== 'paste_success' && status !== 'upload_success'"
           class="q-gutter-md"
         >
-          <h2 class="text-h3" data-cy="submission_content_title">
+          <h1 class="text-h3" data-cy="submission_content_title">
             {{ $t(`submissions.content.heading`) }}
-          </h2>
+          </h1>
           <q-banner
             v-if="updateMethod === 'upload' || updateMethod == ''"
             data-cy="upload_option"
