@@ -84,7 +84,7 @@
           variation="dashboard"
           table-type="reviews"
           role="coordinator"
-          data-cy="coodinations_table"
+          data-cy="coordinator_table"
         />
       </div>
       <div class="col-12">

@@ -57,37 +57,37 @@ describe("Submissions Page", () => {
     cy.dataCy("submissions_table").contains("Records per page").next().click()
     cy.get("[role='listbox']").contains("All").click()
     // Under Review
-    cy.dataCy("submission_actions").first().click()
+    cy.contains("Under Review").parent("tr").find("submission_actions").click()
     cy.dataCy("export_submission").should("have.class","disabled")
     // Initially Submitted
-    cy.dataCy("submission_actions").eq(1).click()
+    cy.contains("Initially Submitted").parent("tr").find("submission_actions").click()
     cy.dataCy("export_submission").should("have.class","disabled")
     // Rejected
-    cy.dataCy("submission_actions").eq(2).click()
+    cy.contains("Rejected").parent("tr").find("submission_actions").click()
     cy.dataCy("export_submission").should("not.have.class","disabled")
     // Resubmission Requested
-    cy.dataCy("submission_actions").eq(3).click()
+    cy.contains("Resubmission Requested").parent("tr").find("submission_actions").click()
     cy.dataCy("export_submission").should("not.have.class","disabled")
     // Draft
-    cy.dataCy("submission_actions").eq(4).click()
+    cy.contains("Draft").parent("tr").find("submission_actions").click()
     cy.dataCy("export_submission").should("have.class","disabled")
     // Accepted as Final
-    cy.dataCy("submission_actions").eq(5).click()
+    cy.contains("Accepted as Final").parent("tr").find("submission_actions").click()
     cy.dataCy("export_submission").should("not.have.class","disabled")
     // Expired
-    cy.dataCy("submission_actions").eq(6).click()
+    cy.contains("Expired").parent("tr").find("submission_actions").click()
     cy.dataCy("export_submission").should("not.have.class","disabled")
     // Awaiting Decision
-    cy.dataCy("submission_actions").eq(7).click()
+    cy.contains("Awaiting Decision").parent("tr").find("submission_actions").click()
     cy.dataCy("export_submission").should("have.class","disabled")
     // Awaiting Review
-    cy.dataCy("submission_actions").eq(8).click()
+    cy.contains("Awaiting Review").parent("tr").find("submission_actions").click()
     cy.dataCy("export_submission").should("have.class","disabled")
     // Archived
-    cy.dataCy("submission_actions").eq(9).click()
+    cy.containl("Archived").parent("tr").find("submission_actions").click()
     cy.dataCy("export_submission").should("not.have.class","disabled")
     // Deleted
-    cy.dataCy("submission_actions").eq(10).click()
+    cy.containl("Deleted").parent("tr").find("submission_actions").click()
     cy.dataCy("export_submission").should("have.class","disabled")
   })
 })

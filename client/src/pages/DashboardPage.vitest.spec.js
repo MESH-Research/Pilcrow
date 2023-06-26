@@ -95,7 +95,7 @@ describe("Dashboard Page", () => {
     CurrentUserSubmissions.mockResolvedValue(mockData)
     const wrapper = await wrapperFactory()
     expect(wrapper.findAll('[data-cy="reviews_table"]').length).toBe(1)
-    expect(wrapper.findAll('[data-cy="coordinations_table"]').length).toBe(0)
+    expect(wrapper.findAll('[data-cy="coordinator_table"]').length).toBe(0)
     expect(wrapper.findAll('[data-cy="submissions_table"]').length).toBe(0)
     expect(wrapper.findAllComponents({ name: "submission-table" }).length).toBe(
       1
