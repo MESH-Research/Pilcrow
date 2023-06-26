@@ -72,6 +72,10 @@ jobs:
           php-version: "8.1"
           coverage: none
           ini-values: opcache.enable_cli=1
+      - name: Install pandoc
+        run: |
+          wget https://github.com/jgm/pandoc/releases/download/2.18/pandoc-2.18-1-${build}.deb -O /tmp/pandoc.deb && \
+          dpkg -i /tmp/pandoc.deb
       - name: Setup MySql 5.7
         uses: shogo82148/actions-setup-mysql@v1
         with:

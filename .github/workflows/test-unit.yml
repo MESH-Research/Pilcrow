@@ -44,7 +44,10 @@ jobs:
         run: |
           sudo systemctl start mysql.service
           mysql -uroot -proot -e "CREATE schema $DB_DATABASE;"
-
+      - name: Install pandoc
+        run: |
+          wget https://github.com/jgm/pandoc/releases/download/2.18/pandoc-2.18-1-${build}.deb -O /tmp/pandoc.deb && \
+          dpkg -i /tmp/pandoc.deb
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress --no-suggest
 
