@@ -1,5 +1,5 @@
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import { beforeEachRequiresAuth, beforeEachRequiresRoles } from './apollo-router-guards'
-import { vi, describe, it, expect, afterEach } from 'vitest'
 
 const apolloMock = {
   query: vi.fn(),
