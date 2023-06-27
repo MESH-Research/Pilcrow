@@ -1,7 +1,7 @@
 <template>
   <section class="comments">
     <div class="comments-wrapper">
-      <h3 class="text-h1">Overall Comments</h3>
+      <h2 class="text-h1">Overall Comments</h2>
       <overall-comment
         v-for="comment in overall_comments"
         :key="comment.id"
