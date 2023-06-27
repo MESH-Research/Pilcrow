@@ -882,6 +882,10 @@
         "short": "{user_username} has replied to your comment on {object_name}"
       }
     },
+    "feed_page": {
+      "heading": "My Notifications",
+      "filter": "Filter"
+    },
     "submission": {
       "invitation": {
         "review_coordinator": {
