@@ -1025,6 +1025,11 @@
         "close": "This submission is closed for review.",
         "accept_as_final": "This submission is accepted as final."
       }
+    },
+    "discardChanges": {
+      "body": "Are you sure you want to discard your changes?",
+      "keep_changes": "Keep Changes",
+      "discard": "Discard"
     }
   },
   "generic": {
