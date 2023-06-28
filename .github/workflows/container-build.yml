@@ -90,7 +90,6 @@ jobs:
     defaults:
       run:
         shell: bash
-        working-directory: backend
     steps:
       - name: Download artifact
         uses: actions/download-artifact@v3
