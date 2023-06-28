@@ -865,7 +865,16 @@
   },
   "failures": {
     "UNKNOWN_ERROR": "An unknown error has occurred.",
-    "FORBIDDEN_ROUTE": "You don't have permission to access that page."
+    "FORBIDDEN_ROUTE": "You don't have permission to access that page.",
+    "error_not_found": {
+      "404": "404",
+      "text": "Oops. Nothing here..."
+    },
+    "error_404": {
+      "text": "Sorry, nothing here... (404)",
+      "back": "Go Back",
+      "home": "Go Home"
+    }
   },
   "general_failure": "Oops, there was an error.",
   "loading": "Loading...",
