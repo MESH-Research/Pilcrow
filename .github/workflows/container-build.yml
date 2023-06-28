@@ -59,7 +59,7 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: ${{ steps.context.outputs.context }}
-          outputs: type=docker,dest=/tmp/image.tar
+          outputs: type=docker,dest=/tmp/${{ matrix.package }}.tar
           build-args: |
             COMPOSER_NO_DEV=${{ steps.context.outputs.nodev }}
             VERSION=${{ steps.tagger.outputs.version }}
