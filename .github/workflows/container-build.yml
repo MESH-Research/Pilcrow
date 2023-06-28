@@ -108,3 +108,44 @@ jobs:
         run: |
           sudo systemctl start mysql.service
           mysql -uroot -proot -e "CREATE schema $DB_DATABASE;"
+  lint-php:
+    name: PHP Lint
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+      - name: Install dependencies
+        run: composer install
+      - name: Check PHP
+        run: composer lint
+  lint-js:
+    name: JS Lint
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: yarn
+          cache-dependency-path: yarn.lock
+      - name: Install dependencies
+        run: |
+          cd client && yarn install
+      - name: Check JS
+        run: cd client && yarn lint
+  lint-md:
+    name: MD Lint
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: yarn
+          cache-dependency-path: yarn.lock
+      - name: Install dependencies
+        run: yarn install
+      - name: Check MD
+        run: yarn lint:md
