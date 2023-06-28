@@ -29,7 +29,7 @@
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
-        "mll-lab/laravel-graphiql": "^1.2",
+        "mll-lab/laravel-graphiql": "^3.0",
         "mockery/mockery": "^1.4.2",
         "nunomaduro/collision": "^7.0",
         "phpunit/phpunit": "^10.0"
