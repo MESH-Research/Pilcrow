@@ -8,7 +8,7 @@ concurrency:
 
 jobs:
   build-fpm-dev:
-    name: "Backend-Dev"
+    name: "Backend"
     uses: ./.github/workflows/container-build.yml
     with:
       package: fpm-dev
@@ -18,7 +18,7 @@ jobs:
     with:
       package: web
   client-unit-test:
-    name: "Client Unit Test"
+    name: "Client / Unit Test"
     needs: [build-web]
     runs-on: ubuntu-20.04
     steps:
@@ -35,7 +35,7 @@ jobs:
       # - name: Jest Unit Tests
       #   run: yarn test:unit:ci
   backend-unit-test:
-    name: Backend Unit Test
+    name: Backend / Unit Test
     needs: [build-fpm-dev]
     runs-on: ubuntu-20.04
     env:
@@ -68,7 +68,7 @@ jobs:
   e2e:
     name: "E2E Test"
     runs-on: ubuntu-20.04
-    needs: []
+    needs: [backend-unit-test, client-unit-test]
     steps:
       - name: Download Backend Image
         uses: actions/download-artifact@v3
