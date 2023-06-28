@@ -1,0 +1,90 @@
+name: CI
+on:
+  pull_request:
+
+concurrency:
+  group: tests-${{ format('{0}-{1}', github.head_ref || github.run_number, github.job) }}
+  cancel-in-progress: true
+
+jobs:
+  build-fpm-dev:
+    name: "Build FPM-DEV"
+    uses: ./.github/workflows/container-build.yml
+    with:
+      package: fpm-dev
+  build-web:
+    name: "Build WEB"
+    uses: ./.github/workflows/container-build.yml
+    with:
+      package: web
+  phpunit:
+    runs-on: ubuntu-20.04
+    env:
+      DB_CONNECTION: mysql
+      DB_HOST: localhost
+      DB_PORT: 3306
+      DB_DATABASE: homestead
+      DB_USERNAME: root
+      DB_PASSWORD: root
+      APP_ENV: testing
+      APP_DEBUG: true
+      APP_KEY: base64:J6SHqWBtKA18a8eCxIWziMSPuJqJRPuqy0GdX75P+rM=
+    needs: [build-fpm-dev]
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: fpm-dev
+          path: /tmp
+      - name: Load image
+        run: |
+          docker load --input /tmp/fpm-dev.tar
+          docker image ls -a
+      - name: Setup Mysql
+        run: |
+          sudo systemctl start mysql.service
+          mysql -uroot -proot -e "CREATE schema $DB_DATABASE;"
+  lint-php:
+    name: PHP Lint
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+      - name: Install dependencies
+        run: composer install
+      - name: Check PHP
+        run: composer lint
+  lint-js:
+    name: JS Lint
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: yarn
+          cache-dependency-path: yarn.lock
+      - name: Install dependencies
+        run: |
+          cd client && yarn install
+      - name: Check JS
+        run: cd client && yarn lint
+  lint-md:
+    name: MD Lint
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: yarn
+          cache-dependency-path: yarn.lock
+      - name: Install dependencies
+        run: yarn install
+      - name: Check MD
+        run: yarn lint:md
