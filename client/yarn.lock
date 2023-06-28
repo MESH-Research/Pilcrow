@@ -386,14 +386,14 @@
     vite-tsconfig-paths "^3.5.0"
 
 "@quasar/quasar-ui-qiconpicker@^2.0.6":
-  version "2.0.6"
-  resolved "https://registry.yarnpkg.com/@quasar/quasar-ui-qiconpicker/-/quasar-ui-qiconpicker-2.0.6.tgz#f00d756b9fe873bfbd673b7e07790bccf98285d3"
-  integrity sha512-4H27tC89v/BlZHyFcdqdNGAvogkE6/QjVL3yLioF8DSCU+lx4tW85iC2FVmjn67le2PBq2+3YCYTBJpWMRWRQQ==
+  version "2.0.7"
+  resolved "https://registry.yarnpkg.com/@quasar/quasar-ui-qiconpicker/-/quasar-ui-qiconpicker-2.0.7.tgz#f0d884eda7154f9a3c3a68586b27b41fe5ff90c9"
+  integrity sha512-i4mfuO4uW5DVZ378T7ZW6egbbemQ7h284Rxyi81crIgRe+HzrwFDriQbhNrsSfm5jFGTsmIEcHDEVJks/2Whxw==
 
 "@quasar/render-ssr-error@^1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@quasar/render-ssr-error/-/render-ssr-error-1.0.1.tgz#5400b51c1bc55f4ee7bfb62ecb6f7c7d0f88ce7f"
-  integrity sha512-4Shxl079hew/yZnIsDtWpRD8enOmqMjMu/s2bkGN0QBvlsRkpWv9pwOz5geJXZxBa17q1S4txvByBxkhPfhWaQ==
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@quasar/render-ssr-error/-/render-ssr-error-1.0.2.tgz#92abb0d61cfdfbf51c2ec3cc2e4aadbf1c79f04f"
+  integrity sha512-Y0wyqYHVxc1IOBH6pRiKMSWDqO1mwQu11Zo8rw4cBdclPOQqFb7f65UuRbk5LfbqlXV2hYvklNcy0SBAOiAQnw==
   dependencies:
     stack-trace "^1.0.0-pre2"
 
