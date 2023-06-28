@@ -1,5 +1,11 @@
+name: DEV
 on:
   pull_request:
+
+concurrency:
+  group: tests-${{ format('{0}-{1}', github.head_ref || github.run_number, github.job) }}
+  cancel-in-progress: true
+
 jobs:
   build:
     runs-on: ubuntu-20.04
@@ -66,7 +72,7 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
       - name: Image digest
-        run: echo ${{ steps.docker_build.outputs.digest }}
+        run: echo ${{ steps.meta.outputs.digest }}
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
