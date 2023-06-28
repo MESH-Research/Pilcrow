@@ -870,6 +870,7 @@
       "404": "404",
       "text": "Oops. Nothing here..."
     },
+    "error_403": "Oops, you don't have permission to view this page.",
     "error_404": {
       "text": "Sorry, nothing here... (404)",
       "back": "Go Back",
