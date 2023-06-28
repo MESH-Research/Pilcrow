@@ -400,7 +400,7 @@
       "criteria": "Style Criteria",
       "content": "Page Content",
       "problems": {
-        "no_admins": "This publication has no users assigned to administer it.",
+        "no_admins": "This publication has no publication administrators assigned and can only be administered by application admins.",
         "no_criteria": "Setup style criteria for your publication."
       }
     },
@@ -454,6 +454,7 @@
       },
       "choose_block": "Choose Content Block"
     },
+    "users": "Assigned users have special permissions on your publication. A user cannot be both an admin and a editor at the same time.",
     "editors": {
       "heading": "Editors",
       "description": "Editors can perform any action on a submission, including assigning review coordinators.  They do not have access to the publication setup pages and cannot change publication settings.",

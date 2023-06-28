@@ -1,9 +1,8 @@
 <template>
   <article class="q-px-md">
-    <h2>Users</h2>
+    <h2>{{ $t("publication.setup_pages.users") }}</h2>
     <p>
-      Assigned users have special permissions on your publication. A user cannot
-      be both an admin and a editor at the same time.
+      {{ $t("publication.users") }}
     </p>
     <q-banner
       v-if="publication.publication_admins.length === 0"
@@ -14,10 +13,9 @@
       <template #avatar>
         <q-icon name="tips_and_updates" size="sm" />
       </template>
-      This publication has no publication administrators assigned and can only
-      be administered by application admins.
+      {{ $t("publication.setup_pages.problems.no_admin") }}
     </q-banner>
-    <div class="column q-gutter-md">
+    <div class="column q-gutter-md q-mb-md">
       <assigned-publication-users
         data-cy="admins_list"
         role-group="publication_admins"
