@@ -392,11 +392,11 @@
   "publication": {
     "entity": "Publication | Publications",
     "configure": "Configure Publication",
-    "assign": "Assign",
     "setup_pages": {
       "breadcrumb_heading": "Setup",
       "basic": "Basic Settings",
       "users": "Users",
+      "assign": "Assign",
       "criteria": "Style Criteria",
       "content": "Page Content",
       "problems": {
