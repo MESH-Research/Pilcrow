@@ -45,7 +45,7 @@
             :ripple="{ center: true }"
             color="accent"
             data-cy="button-assign"
-            label="Assign"
+            :label="$t(`publications.assign`)"
             type="submit"
             stretch
             @click="handleSubmit"

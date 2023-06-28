@@ -509,6 +509,7 @@
   "publications": {
     "term": "No Publications | Publication | Publications",
     "details": "Publication Details",
+    "assign": "Assign",
     "create": {
       "success": "Publication successfully created.",
       "failure": "An error occurred while attempting to create the publication."
