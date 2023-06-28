@@ -392,6 +392,7 @@
   "publication": {
     "entity": "Publication | Publications",
     "configure": "Configure Publication",
+    "assign": "Assign",
     "setup_pages": {
       "breadcrumb_heading": "Setup",
       "basic": "Basic Settings",
@@ -509,7 +510,6 @@
   "publications": {
     "term": "No Publications | Publication | Publications",
     "details": "Publication Details",
-    "assign": "Assign",
     "create": {
       "success": "Publication successfully created.",
       "failure": "An error occurred while attempting to create the publication."
