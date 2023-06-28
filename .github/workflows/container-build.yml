@@ -1,11 +1,9 @@
-name: "Docker"
+name: "Build and Test"
 
 on:
-  push:
-    branches: [master, development, "renovate/**"]
   pull_request:
 jobs:
-  build-containers:
+  build:
     runs-on: ubuntu-20.04
     strategy:
       matrix:
@@ -69,22 +67,41 @@ jobs:
             VERSION_URL=${{ steps.tagger.outputs.url }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-      - name: Push Image
-        uses: docker/build-push-action@v4
-        with:
-          context: ${{ steps.context.outputs.context }}
-          push: ${{ github.event_name != 'pull_request' && !contains(github.ref_name, 'renovate') }}
-          build-args: |
-            COMPOSER_NO_DEV=${{ steps.context.outputs.nodev }}
-            VERSION=${{ steps.tagger.outputs.version }}
-            VERSION_DATE=${{ steps.tagger.outputs.date}}
-            VERSION_URL=${{ steps.tagger.outputs.url }}
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.package }}
-          path: /tmp/image.tar
+          path: /tmp/${{matrix.package}}.tar
+  phpunit:
+    runs-on: ubuntu-20.04
+    env:
+      DB_CONNECTION: mysql
+      DB_HOST: localhost
+      DB_PORT: 3306
+      DB_DATABASE: homestead
+      DB_USERNAME: root
+      DB_PASSWORD: root
+      APP_ENV: testing
+      APP_DEBUG: true
+      APP_KEY: base64:J6SHqWBtKA18a8eCxIWziMSPuJqJRPuqy0GdX75P+rM=
+    needs: [build]
+    defaults:
+      run:
+        shell: bash
+        working-directory: backend
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: fpm-dev
+          path: /tmp
+      - name: Load image
+        run: |
+          docker load --input /tmp/fpm-dev.tar
+          docker image ls -a
+      - name: Setup Mysql
+        run: |
+          sudo systemctl start mysql.service
+          mysql -uroot -proot -e "CREATE schema $DB_DATABASE;"
