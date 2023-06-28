@@ -113,7 +113,7 @@ const { currentUser } = useCurrentUser()
 const { result } = useQuery(CURRENT_USER_SUBMISSIONS)
 const submissions = computed(() => {
   let s = result.value?.currentUser?.submissions ?? []
-  return s.sort((a, b) => {
+  return [...s].sort((a, b) => {
     return new Date(b.created_at) - new Date(a.created_at)
   })
 })
