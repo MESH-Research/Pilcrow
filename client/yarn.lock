@@ -910,9 +910,9 @@
     pretty-format "^27.5.1"
 
 "@vue/apollo-composable@^4.0.0-beta.1":
-  version "4.0.0-beta.5"
-  resolved "https://registry.yarnpkg.com/@vue/apollo-composable/-/apollo-composable-4.0.0-beta.5.tgz#f01644061f96c51cbd8e3a4ab0a98cdd2a6a2a3e"
-  integrity sha512-PDi/LpCJrY0m1YSRIv38n1q5WGUu8T0BzbFFNjUJ3nHdElyqvDJCnazRtasyvXB16i0+4rMQhpmf/xgkRgFePA==
+  version "4.0.0-beta.7"
+  resolved "https://registry.yarnpkg.com/@vue/apollo-composable/-/apollo-composable-4.0.0-beta.7.tgz#91ced8eeda2331a5de39b3715d109744d6e83fd4"
+  integrity sha512-BCKK9xAH67e033Q715nzhGwn9PlnTACb+840qQQjSa1YFwjeiDufPpJ/GGqaLGqJgTm+wgpIljA/H+MYDFhe6g==
   dependencies:
     throttle-debounce "^3.0.1"
     ts-essentials "^9.1.2"
