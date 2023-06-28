@@ -68,7 +68,7 @@ jobs:
   e2e:
     name: "E2E Test"
     runs-on: ubuntu-20.04
-    needs: [backend-unit-test, client-unit-test]
+    needs: [build-fpm-dev, build-web]
     steps:
       - name: Download Backend Image
         uses: actions/download-artifact@v3
