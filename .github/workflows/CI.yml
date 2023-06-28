@@ -17,7 +17,8 @@ jobs:
     uses: ./.github/workflows/container-build.yml
     with:
       package: web
-  vitest:
+  client-unit-test:
+    name: "Client Unit Test"
     needs: [build-web]
     runs-on: ubuntu-20.04
     steps:
@@ -33,7 +34,9 @@ jobs:
 
       # - name: Jest Unit Tests
       #   run: yarn test:unit:ci
-  phpunit:
+  backend-unit-test:
+    name: Backend Unit Test
+    needs: [build-fpm-dev]
     runs-on: ubuntu-20.04
     env:
       DB_CONNECTION: mysql
@@ -45,7 +48,6 @@ jobs:
       APP_ENV: testing
       APP_DEBUG: true
       APP_KEY: base64:J6SHqWBtKA18a8eCxIWziMSPuJqJRPuqy0GdX75P+rM=
-    needs: [build-fpm-dev]
     defaults:
       run:
         shell: bash
@@ -64,9 +66,9 @@ jobs:
           sudo systemctl start mysql.service
           mysql -uroot -proot -e "CREATE schema $DB_DATABASE;"
   e2e:
-    name: "E2E"
+    name: "E2E Test"
     runs-on: ubuntu-20.04
-    needs: [build-web, build-fpm-dev]
+    needs: []
     steps:
       - name: Download Backend Image
         uses: actions/download-artifact@v3
