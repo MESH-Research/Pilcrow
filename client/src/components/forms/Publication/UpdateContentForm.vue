@@ -5,7 +5,7 @@
       data-cy="content_block_select"
       filled
       :options="options"
-      label="Choose Content Block"
+      :label=$t(`publication.basic.choose_block`)
     >
       <template #option="scope">
         <q-item v-bind="scope.itemProps">
