@@ -43,6 +43,7 @@
     "register_question": "Don't have an account?",
     "register_action": "Create Account",
     "register_login": "Return to Login",
+    "register_statement": "It only takes a minute to create an account and join our community of scholars.",
     "login_help": "login",
     "password_help": "reset your password",
     "password_reset": "Reset password",

@@ -10,8 +10,7 @@
 
         <q-card-section>
           <p>
-            It only takes a minute to create an account and join our community
-            of scholars.
+            {{ $t("auth.register_statement") }}
           </p>
           <fieldset class="q-px-sm q-pb-lg q-gutter-y-lg column">
             <q-input
