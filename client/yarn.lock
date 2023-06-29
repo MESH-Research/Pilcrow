@@ -4300,9 +4300,9 @@ qs@~6.10.3:
     side-channel "^1.0.4"
 
 quasar@^2.6.0:
-  version "2.12.0"
-  resolved "https://registry.yarnpkg.com/quasar/-/quasar-2.12.0.tgz#f145ad2b677a0925ea9ca6a3b44b5502be1cbd87"
-  integrity sha512-B8xoeOWNs/Iv7M+FGRvXGYI1qDnJH8AtIb7RiP+zMfMkBcEp+6HJHU/9ODPemC4yteDjO+HPX2f7OhNZKgsPIw==
+  version "2.12.1"
+  resolved "https://registry.yarnpkg.com/quasar/-/quasar-2.12.1.tgz#566b14e2fcb9177f14051345e6316791d8083d77"
+  integrity sha512-d7uPATVP2dpoLCSwwtwNiJhkCklLFlonYw4QyZG8khuMEO7ENjzkU+DKoOY+esjLmkbOXbDlhrE69tdxvrHr0g==
 
 queue-microtask@^1.2.2:
   version "1.2.3"
