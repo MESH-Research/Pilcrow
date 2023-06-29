@@ -683,6 +683,14 @@
     "details_heading": "Submission Details",
     "latest_comments_heading": "Latest Comments",
     "no_comments": "There are no comments for you.",
+    "style_controls": {
+      "font": "Font",
+      "decrease": "Decrease Font Size",
+      "increase": "Increase Font Size",
+      "toggle_dark": "Toggle Dark Mode",
+      "dark": "Dark Mode",
+      "light": "Light Mode"
+    },
     "action": {
       "toggle_label": "Toggle Submission Actions",
       "go_to_review": "Go To Review",
