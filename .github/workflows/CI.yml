@@ -13,14 +13,19 @@ concurrency:
 jobs:
   build-fpm:
     name: "Backend"
-    uses: ./.github/workflows/do-build-container.yml
-    with:
-      package: fpm
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: ./.github/actions/build-image
+        with:
+          package: fpm
+
   build-web:
     name: "Client"
-    uses: ./.github/workflows/do-build-container.yml
-    with:
-      package: web
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: ./.github/actions/build-image
+        with:
+          package: web
   client-unit-test:
     name: "Client / Unit Test"
     runs-on: ubuntu-20.04
@@ -92,12 +97,37 @@ jobs:
     name: "Publish (Master Only)"
     runs-on: ubuntu-20.04
     needs: [e2e, backend-unit-test, client-unit-test]
-    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    strategy:
+      matrix:
+        package: [fpm, web]
+    if: github.event_name == 'pull' && github.ref == 'refs/heads/master'
     steps:
+      - uses: actions/checkout@v3
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: |
+            ghcr.io/mesh-research/pilcrow/${{ matrix.package }}
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=sha,enable=true
+      - name: Login to Github Packages
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
       - uses: ./github/actions/load-image
         with:
-          name: fpm
-      - uses: ./.github/actions/load-image
+          name: ${{ matrix.package }}
+      - uses: ./.github/actions/build-image
         with:
-          name: web
+          package: ${{ matrix.package }}
+          push: true
+          tag: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
 
