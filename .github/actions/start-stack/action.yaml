@@ -1,4 +1,4 @@
-name: "Start Docker Compose stack"
+name: "Start Testing Stack"
 description: "Start the default testing stack."
 runs:
     using: "composite"
