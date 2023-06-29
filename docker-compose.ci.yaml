@@ -1,0 +1,19 @@
+version: '3'
+services:
+  client:
+    image: ghcr.io/mesh-research/pilcrow/web:build
+  phpfpm:
+    image: ghcr.io/mesh-research/pilcrow/fpm-dev:build
+    environment:
+      DB_DATABASE: pilcrow
+      DB_HOST: mysql
+      DB_USERNAME: pilcrow
+      DB_PASSWORD: pilcrow
+      APP_HOSTNAME: localhost
+      APP_ENV: testing
+      APP_DEBUG: true
+  mysql:
+    environment:
+      MYSQL_DATABASE: pilcrow
+      MYSQL_USER: pilcrow
+      MYSQL_PASSWORD: pilcrow

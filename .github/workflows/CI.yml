@@ -22,49 +22,41 @@ jobs:
     needs: [build-web]
     runs-on: ubuntu-20.04
     steps:
-      - name: Download artifact
-        uses: actions/download-artifact@v3
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
-          name: web
-          path: /tmp
-      - name: Load image
-        run: |
-          docker load --input /tmp/web.tar
-          docker image ls -a
-
-      # - name: Jest Unit Tests
-      #   run: yarn test:unit:ci
+          node-version: 16
+          cache: yarn
+          cache-dependency-path: client/yarn.lock
+      - run: cd client && yarn install
+      - run: cd client && yarn test:unit:ci
   backend-unit-test:
     name: Backend / Unit Test
     needs: [build-fpm-dev]
     runs-on: ubuntu-20.04
-    env:
-      DB_CONNECTION: mysql
-      DB_HOST: localhost
-      DB_PORT: 3306
-      DB_DATABASE: homestead
-      DB_USERNAME: root
-      DB_PASSWORD: root
-      APP_ENV: testing
-      APP_DEBUG: true
-      APP_KEY: base64:J6SHqWBtKA18a8eCxIWziMSPuJqJRPuqy0GdX75P+rM=
     defaults:
       run:
         shell: bash
     steps:
-      - name: Download artifact
-        uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v3
         with:
           name: fpm-dev
           path: /tmp
-      - name: Load image
-        run: |
+      - run: |
           docker load --input /tmp/fpm-dev.tar
-          docker image ls -a
-      - name: Setup Mysql
-        run: |
           sudo systemctl start mysql.service
-          mysql -uroot -proot -e "CREATE schema $DB_DATABASE;"
+          mysql -uroot -proot -e "CREATE schema pilcrow;"
+      - uses: addnab/docker-run-action@v3
+        with:
+          options: >-
+            -e DB_DATABASE=pilcrow
+            -e DB_HOST=localhost
+            -e DB_USERNAME=root
+            -e DB_PASSWORD=root
+          image: pilcrow/fpm-dev:latest
+          run: |
+            ./artisan migrate:fresh --seed
+            ./artisan test"
   e2e:
     name: "E2E Test"
     runs-on: ubuntu-20.04
