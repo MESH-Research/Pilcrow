@@ -12,6 +12,8 @@ services:
       APP_HOSTNAME: localhost
       APP_ENV: testing
       APP_DEBUG: true
+      MAIL_FROM_ADDRESS: noreply@pilcrow.dev
+      MAIL_FROM_NAME: "CITester"
   mysql:
     environment:
       MYSQL_DATABASE: pilcrow
