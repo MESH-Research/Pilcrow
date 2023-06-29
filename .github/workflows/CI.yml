@@ -11,21 +11,16 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build-fpm:
-    name: "Backend"
+  build-images:
+    name: "Build"
+    strategy:
+      matrix:
+        package: [fpm, web]
     runs-on: ubuntu-20.04
     steps:
       - uses: ./.github/actions/build-image
         with:
-          package: fpm
-
-  build-web:
-    name: "Client"
-    runs-on: ubuntu-20.04
-    steps:
-      - uses: ./.github/actions/build-image
-        with:
-          package: web
+          package: ${{ matrix.package }}
   client-unit-test:
     name: "Client / Unit Test"
     runs-on: ubuntu-20.04
@@ -40,7 +35,7 @@ jobs:
       - run: cd client && yarn test:unit:ci
   backend-unit-test:
     name: Backend / Unit Test
-    needs: [build-fpm, build-web]
+    needs: [build-images]
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
@@ -49,7 +44,7 @@ jobs:
       - run: docker compose down
   e2e:
     name: "E2E Test"
-    needs: [build-fpm, build-web]
+    needs: [build-images]
     uses: ./.github/workflows/do-test-e2e.yml
     secrets: inherit
   lint-php:
