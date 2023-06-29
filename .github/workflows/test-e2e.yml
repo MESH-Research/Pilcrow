@@ -32,7 +32,7 @@ jobs:
       - name: Load images
         run: |
           docker load --input /tmp/fpm.tar
-          docker load --input /tmp/web.tar"
+          docker load --input /tmp/web.tar
       - name: API Startup
         run: |
           cp docker-compose.ci.yml docker-compose.override.yml
