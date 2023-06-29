@@ -3,9 +3,9 @@ on:
   workflow_call:
     inputs:
       package:
-        type: string
-        description: "Package to build"
+        description: "package to build"
         required: true
+        type: string
 
 jobs:
   build:
@@ -14,21 +14,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      - name: Context
-        id: context
-        run: |
-          if [ "$PACKAGE" = "web" ]; then
-              echo "context=client" >> $GITHUB_OUTPUT
-          else
-              echo "context=backend" >> $GITHUB_OUTPUT
-          fi
-          if [[ "$PACKAGE" == *"dev"* ]]; then
-              echo "nodev=0" >> $GITHUB_OUTPUT
-          else
-              echo "nodev=1" >> $GITHUB_OUTPUT
-          fi
-        env:
-          PACKAGE: ${{ inputs.package }}
       - name: Find Tag
         id: tagger
         run: |
@@ -39,10 +24,9 @@ jobs:
       - id: build
         uses: docker/build-push-action@v4
         with:
-          context: ${{ steps.context.outputs.context }}
+          context: ${{ fromJSON('{"fpm":"backend","web":"client"}')[inputs.package] || inputs.package }}
           outputs: type=docker,dest=/tmp/${{ inputs.package }}.tar
           build-args: |
-            COMPOSER_NO_DEV=${{ steps.context.outputs.nodev }}
             VERSION=${{ steps.tagger.outputs.version }}
             VERSION_DATE=${{ steps.tagger.outputs.date}}
             VERSION_URL=${{ steps.tagger.outputs.url }}

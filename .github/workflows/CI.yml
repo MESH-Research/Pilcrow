@@ -53,8 +53,11 @@ jobs:
             -e DB_HOST=localhost
             -e DB_USERNAME=root
             -e DB_PASSWORD=root
+            -e APP_ENV=testing
+            -e APP_HOSTNAME=localhost
           image: pilcrow/fpm-dev:latest
           run: |
+            composer install
             ./artisan migrate:fresh --seed
             ./artisan test"
   e2e:
