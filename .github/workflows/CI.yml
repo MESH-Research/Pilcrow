@@ -46,20 +46,17 @@ jobs:
           docker load --input /tmp/fpm.tar
           sudo systemctl start mysql.service
           mysql -uroot -proot -e "CREATE schema pilcrow;"
-      - uses: addnab/docker-run-action@v3
-        with:
-          options: >
-            -e DB_DATABASE=pilcrow
-            -e DB_HOST=localhost
-            -e DB_USERNAME=root
-            -e DB_PASSWORD=root
-            -e APP_ENV=testing
-            -e APP_HOSTNAME=localhost
-          image: pilcrow/fpm:latest
-          run: |
-            composer install
-            ./artisan migrate:fresh --seed
-            ./artisan test"
+      - run: |
+          docker run --rm -t \
+              -e DB_DATABASE=pilcrow \
+              -e DB_HOST=localhost \
+              -e DB_USERNAME=root \
+              -e DB_PASSWORD=root \
+              -e APP_ENV=testing \
+              -e APP_HOSTNAME=localhost \
+              pilcrow/fpm:latest \
+              bash -c "composer install &&  ./artisan migrate:fresh --seed &&  ./artisan test"
+
   e2e:
     name: "E2E Test"
     needs: [build-fpm, build-web]
