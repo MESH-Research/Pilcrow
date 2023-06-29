@@ -15,3 +15,4 @@ runs:
         - run: |
               docker load --input /tmp/${{ inputs.name }}.tar
               docker load --input /tmp/web.tar
+          shell: bash

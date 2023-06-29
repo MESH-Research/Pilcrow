@@ -34,6 +34,7 @@ jobs:
     needs: [build-fpm, build-web]
     runs-on: ubuntu-20.04
     steps:
+      - uses: actions/checkout@v3
       - uses: ./.github/actions/start-stack
       - run: docker compose exec -T phpfpm ./artisan test
   e2e:
@@ -85,9 +86,10 @@ jobs:
   publish:
     name: "Publish (Master Only)"
     runs-on: ubuntu-20.04
+    needs: [e2e, backend-unit-test, client-unit-test]
     if: github.event_name == 'push' && github.ref == 'refs/heads/master'
     steps:
-      - uses: ./.github/actions/load-image
+      - uses: ./github/actions/load-image
         with:
           name: fpm
       - uses: ./.github/actions/load-image

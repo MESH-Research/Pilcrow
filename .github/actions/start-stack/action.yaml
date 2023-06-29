@@ -16,3 +16,4 @@ runs:
               docker-compose up -d
               docker compose exec -T phpfpm composer install
               docker compose exec -T phpfpm bash -c "/wait && ./artisan migrate:fresh --seed"
+          shell: bash
