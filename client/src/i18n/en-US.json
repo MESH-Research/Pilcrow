@@ -22,7 +22,8 @@
     "save": "Save",
     "saving": "Saving",
     "saved": "Saved",
-    "discard_changes": "Discard Changes"
+    "discard_changes": "Discard Changes",
+    "delete": "Delete"
   },
   "lists": {
     "move_up": "Move {0} Up",
