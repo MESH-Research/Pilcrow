@@ -32,7 +32,7 @@ jobs:
       - run: cd client && yarn test:unit:ci
   backend-unit-test:
     name: Backend / Unit Test
-    needs: [build-fpm]
+    needs: [build-fpm, build-web]
     runs-on: ubuntu-20.04
     defaults:
       run:
@@ -42,20 +42,21 @@ jobs:
         with:
           name: fpm
           path: /tmp
+      - uses: actions/download-artifact@v3
+        with:
+          name: web
+          path: /tmp
       - run: |
           docker load --input /tmp/fpm.tar
-          sudo systemctl start mysql.service
-          mysql -uroot -proot -e "CREATE schema pilcrow;"
+          docker load --input /tmp/web.tar
       - run: |
-          docker run --rm -t \
-              -e DB_DATABASE=pilcrow \
-              -e DB_HOST=localhost \
-              -e DB_USERNAME=root \
-              -e DB_PASSWORD=root \
-              -e APP_ENV=testing \
-              -e APP_HOSTNAME=localhost \
-              pilcrow/fpm:latest \
-              bash -c "composer install &&  ./artisan migrate:fresh --seed &&  ./artisan test"
+          cp backend/.env.example .env
+          cp docker-compose.ci.yaml docker-compose.overrides.yaml
+          docker-compose up -d
+          docker compose exec -T phpfpm composer install
+          docker compose exec -T phpfpm bash -c "/wait && ./artisan migrate:fresh --seed"
+          docker compose exec -T phpfpm ./artisan test
+
 
   e2e:
     name: "E2E Test"
