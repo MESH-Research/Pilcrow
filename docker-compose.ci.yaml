@@ -1,9 +1,9 @@
 version: '3'
 services:
   client:
-    image: ghcr.io/mesh-research/pilcrow/web:build
+    image: pilcrow/web:latest
   phpfpm:
-    image: ghcr.io/mesh-research/pilcrow/fpm-dev:build
+    image: pilcrow/fpm:latest
     environment:
       DB_DATABASE: pilcrow
       DB_HOST: mysql
