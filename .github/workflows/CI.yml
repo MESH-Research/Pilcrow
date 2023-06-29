@@ -40,10 +40,10 @@ jobs:
     steps:
       - uses: actions/download-artifact@v3
         with:
-          name: fpm-dev
+          name: fpm
           path: /tmp
       - run: |
-          docker load --input /tmp/fpm-dev.tar
+          docker load --input /tmp/fpm.tar
           sudo systemctl start mysql.service
           mysql -uroot -proot -e "CREATE schema pilcrow;"
       - uses: addnab/docker-run-action@v3
@@ -55,7 +55,7 @@ jobs:
             -e DB_PASSWORD=root
             -e APP_ENV=testing
             -e APP_HOSTNAME=localhost
-          image: pilcrow/fpm-dev:latest
+          image: pilcrow/fpm:latest
           run: |
             composer install
             ./artisan migrate:fresh --seed
