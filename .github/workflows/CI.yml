@@ -9,12 +9,12 @@ concurrency:
 jobs:
   build-fpm:
     name: "Backend"
-    uses: ./.github/workflows/container-build.yml
+    uses: ./.github/workflows/do-build-container.yml
     with:
       package: fpm
   build-web:
     name: "Client"
-    uses: ./.github/workflows/container-build.yml
+    uses: ./.github/workflows/do-build-container.yml
     with:
       package: web
   client-unit-test:
@@ -34,35 +34,13 @@ jobs:
     name: Backend / Unit Test
     needs: [build-fpm, build-web]
     runs-on: ubuntu-20.04
-    defaults:
-      run:
-        shell: bash
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/download-artifact@v3
-        with:
-          name: fpm
-          path: /tmp
-      - uses: actions/download-artifact@v3
-        with:
-          name: web
-          path: /tmp
-      - run: |
-          docker load --input /tmp/fpm.tar
-          docker load --input /tmp/web.tar
-      - run: |
-          cp backend/.env.example .env
-          cp docker-compose.ci.yaml docker-compose.overrides.yaml
-          docker-compose up -d
-          docker compose exec -T phpfpm composer install
-          docker compose exec -T phpfpm bash -c "/wait && ./artisan migrate:fresh --seed"
-          docker compose exec -T phpfpm ./artisan test
-
-
+      - uses: ./.github/actions/start-stack
+      - run: docker compose exec -T phpfpm ./artisan test
   e2e:
     name: "E2E Test"
     needs: [build-fpm, build-web]
-    uses: ./.github/workflows/test-e2e.yml
+    uses: ./.github/workflows/do-test-e2e.yml
     secrets: inherit
   lint-php:
     name: PHP Lint
