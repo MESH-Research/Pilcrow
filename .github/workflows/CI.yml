@@ -64,6 +64,7 @@ jobs:
     name: "E2E Test"
     needs: [build-fpm, build-web]
     uses: ./.github/workflows/test-e2e.yml
+    secrets: inherit
   lint-php:
     name: PHP Lint
     runs-on: ubuntu-20.04

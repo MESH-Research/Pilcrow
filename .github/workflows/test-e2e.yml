@@ -1,9 +1,6 @@
 name: "Test: E2E"
 on:
   workflow_call:
-    secrets:
-      - CYPRESS_RECORD_KEY
-      - PROJECT_ID
 jobs:
   cypress:
     runs-on: ubuntu-20.04
