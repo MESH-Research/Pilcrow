@@ -63,7 +63,7 @@
             size="lg"
             color="accent"
             class="full-width text-white"
-            label="Login"
+            :label="$t(`auth.login`)"
             :loading="loading"
             type="submit"
           />
