@@ -95,7 +95,7 @@ jobs:
     strategy:
       matrix:
         package: [fpm, web]
-    if: github.event_name == 'pull' && github.ref == 'refs/heads/master'
+    # if: github.event_name == 'pull' && github.ref == 'refs/heads/master'
     steps:
       - uses: actions/checkout@v3
       - name: Docker meta
