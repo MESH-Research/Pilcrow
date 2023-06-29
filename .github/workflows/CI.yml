@@ -19,7 +19,6 @@ jobs:
       package: web
   client-unit-test:
     name: "Client / Unit Test"
-    needs: [build-web]
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
@@ -83,3 +82,15 @@ jobs:
         run: yarn install
       - name: Check MD
         run: yarn lint:md
+  publish:
+    name: "Publish (Master Only)"
+    runs-on: ubuntu-20.04
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    steps:
+      - uses: ./.github/actions/load-image
+        with:
+          name: fpm
+      - uses: ./.github/actions/load-image
+        with:
+          name: web
+

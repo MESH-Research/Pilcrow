@@ -1,23 +1,18 @@
 name: "Start Docker Compose stack"
 description: "Start the default testing stack."
 runs:
-  using: "composite"
-  steps:
-    - uses: actions/checkout@v3
-    - uses: actions/download-artifact@v3
-      with:
-        name: fpm
-        path: /tmp
-    - uses: actions/download-artifact@v3
-      with:
-        name: web
-        path: /tmp
-    - run: |
-        docker load --input /tmp/fpm.tar
-        docker load --input /tmp/web.tar
-    - run: |
-        cp backend/.env.example .env
-        cp docker-compose.ci.yaml docker-compose.overrides.yaml
-        docker-compose up -d
-        docker compose exec -T phpfpm composer install
-        docker compose exec -T phpfpm bash -c "/wait && ./artisan migrate:fresh --seed"
+    using: "composite"
+    steps:
+        - uses: actions/checkout@v3
+        - uses: ./.github/actions/load-image
+          with:
+              name: fpm
+        - uses: ./.github/actions/load-image
+          with:
+              name: web
+        - run: |
+              cp backend/.env.example .env
+              cp docker-compose.ci.yaml docker-compose.overrides.yaml
+              docker-compose up -d
+              docker compose exec -T phpfpm composer install
+              docker compose exec -T phpfpm bash -c "/wait && ./artisan migrate:fresh --seed"

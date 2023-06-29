@@ -1,0 +1,17 @@
+name: "Load Image Artifact"
+inputs:
+    name:
+        description: "The name of the artifact to load."
+        required: true
+        default: "fpm"
+runs:
+    using: "composite"
+    steps:
+        - uses: actions/checkout@v3
+        - uses: actions/download-artifact@v3
+          with:
+              name: ${{ inputs.name }}}
+              path: /tmp
+        - run: |
+              docker load --input /tmp/${{ inputs.name }}.tar
+              docker load --input /tmp/web.tar
