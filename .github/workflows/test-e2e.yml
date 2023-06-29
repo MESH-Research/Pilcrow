@@ -35,6 +35,7 @@ jobs:
           docker load --input /tmp/web.tar
       - name: API Startup
         run: |
+          cp backend/.env.example .env
           cp docker-compose.ci.yaml docker-compose.override.yaml
           docker compose up -d
           docker compose exec -T phpfpm composer install
