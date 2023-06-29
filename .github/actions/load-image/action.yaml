@@ -14,5 +14,4 @@ runs:
               path: /tmp
         - run: |
               docker load --input /tmp/${{ inputs.name }}.tar
-              docker ls
           shell: bash
