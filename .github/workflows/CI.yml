@@ -48,7 +48,7 @@ jobs:
           mysql -uroot -proot -e "CREATE schema pilcrow;"
       - uses: addnab/docker-run-action@v3
         with:
-          options: >-
+          options: >
             -e DB_DATABASE=pilcrow
             -e DB_HOST=localhost
             -e DB_USERNAME=root
