@@ -41,6 +41,7 @@ jobs:
           wait-on: "http://localhost:8888"
           config: baseUrl=http://localhost:8888
           tag: ${{ github.event_name }}
+      - run: docker compose down
       - name: Upload Screenshots
         uses: actions/upload-artifact@v3
         with:

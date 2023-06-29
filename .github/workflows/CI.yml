@@ -37,6 +37,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/start-stack
       - run: docker compose exec -T phpfpm ./artisan test
+      - run: docker compose down
   e2e:
     name: "E2E Test"
     needs: [build-fpm, build-web]
