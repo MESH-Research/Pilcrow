@@ -3,7 +3,7 @@ services:
   client:
     image: pilcrow/web:latest
     ports:
-      - 8888:888
+      - 8888:8888
   phpfpm:
     image: pilcrow/fpm:latest
     environment:
