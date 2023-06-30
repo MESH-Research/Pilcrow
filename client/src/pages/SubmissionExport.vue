@@ -22,8 +22,8 @@
     <article class="q-pa-lg">
       <h2 class="q-my-none">{{ $t(`export.title`) }}</h2>
       <h3>{{ submission.title }}</h3>
-      <p>{{ $t(`export.description`) }}</p>
-      <p>{{ $t(`export.download.description`) }}</p>
+      <p class="text-body1">{{ $t(`export.description`) }}</p>
+      <p class="text-body1">{{ $t(`export.download.description`) }}</p>
       <q-btn
         v-if="submission"
         class="q-mt-lg"
