@@ -34,7 +34,7 @@ runs:
           uses: docker/build-push-action@v4
           with:
               context: ${{ fromJSON('{"fpm":"backend","web":"client"}')[inputs.package] || inputs.package }}
-              outputs: ${{ inputs.push && [] || format('{0}{1}{2}', 'type=docker,dest=/tmp/', inputs.package, '.tar') }}
+              outputs: ${{ inputs.push && fromJSON('[]') || format('{0}{1}{2}', 'type=docker,dest=/tmp/', inputs.package, '.tar') }}
               push: ${{ inputs.push }}
               build-args: |
                   VERSION=${{ steps.tagger.outputs.version }}
