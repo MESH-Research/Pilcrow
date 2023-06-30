@@ -4,10 +4,11 @@ import { reactive } from "vue"
 import useVuelidate from "@vuelidate/core"
 import { required, maxLength } from "@vuelidate/validators"
 import { CREATE_SUBMISSION_DRAFT } from "src/graphql/mutations"
-import { CURRENT_USER_SUBMISSIONS } from "src/graphql/queries"
 
 export const useSubmissionCreation = () => {
-  const { mutate, saving } = useMutation(CREATE_SUBMISSION_DRAFT)
+  const { mutate, saving } = useMutation(CREATE_SUBMISSION_DRAFT, {
+    refetchQueries: ["CurrentUserSubmissions"],
+  })
 
   const submission = reactive({
     title: "",
@@ -36,7 +37,7 @@ export const useSubmissionCreation = () => {
       publication_id: publication.value.id,
       submitter_user_id: currentUser.value.id,
     }, {
-      refetchQueries: [{ query: CURRENT_USER_SUBMISSIONS }],
+      refetchQueries: ["CurrentUserSubmissions"],
     })
     return mutationResult
   }
