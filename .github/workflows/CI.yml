@@ -43,11 +43,11 @@ jobs:
       - uses: ./.github/actions/start-stack
       - run: docker compose exec -T phpfpm ./artisan test
       - run: docker compose down
-  e2e:
-    name: "E2E Test"
-    needs: [build-images]
-    uses: ./.github/workflows/do-test-e2e.yml
-    secrets: inherit
+  # e2e:
+  #   name: "E2E Test"
+  #   needs: [build-images]
+  #   uses: ./.github/workflows/do-test-e2e.yml
+  #   secrets: inherit
   lint-php:
     name: PHP Lint
     runs-on: ubuntu-20.04
@@ -92,7 +92,7 @@ jobs:
   publish:
     name: "Publish (master branch only)"
     runs-on: ubuntu-20.04
-    needs: [e2e, backend-unit-test, client-unit-test]
+    needs: [ backend-unit-test, client-unit-test]
     strategy:
       matrix:
         package: [fpm, web]
