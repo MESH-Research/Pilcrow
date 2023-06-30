@@ -10,7 +10,7 @@
     <div class="q-ml-md row items-center">
       <div>
         <q-btn
-          aria-label="Decrease Font Size"
+          :aria-label="$t(`submissions.style_controls.decrease`)"
           data-cy="decrease_font"
           round
           flat
@@ -24,7 +24,7 @@
       </div>
       <div>
         <q-btn
-          aria-label="Increase Font Size"
+        :aria-label="$t(`submissions.style_controls.increase`)"
           data-cy="increase_font"
           round
           flat
