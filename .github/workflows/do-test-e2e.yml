@@ -2,9 +2,9 @@ name: "Test: E2E"
 on:
   workflow_call:
 jobs:
-  cypress:
+  playwright:
     runs-on: ubuntu-20.04
-    name: "Cypress.io"
+    name: "Playwright"
     strategy:
       # when one test fails, DO NOT cancel the other
       # containers, because this will kill Cypress processes
@@ -12,39 +12,31 @@ jobs:
       # https://github.com/cypress-io/github-action/issues/48
       fail-fast: false
       matrix:
-        # run 3 copies of the current job in parallel
-        containers: [1, 2, 3, 4]
+        shardIndex: [1, 2, 3, 4]
+        shardTotal: [4]
+    defaults:
+      run:
+        working-directory: playwright
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
           node-version: "16"
       - uses: ./.github/actions/start-stack
-      - run: cd client && yarn install
-      - name: Cypress Run
-        uses: cypress-io/github-action@v3
+      - run: yarn install && npx playwright install --with-deps
+      - run: npx playwright test --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
         env:
-          ELECTRON_EXTRA_LAUNCH_ARGS: "--force-prefers-reduced-motion"
-          CYPRESS_defaultCommandTimeout: 10000
-          # pass the Dashboard record key as an environment variable
-          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
-          # pass GitHub token to allow accurately detecting a build vs a re-run build
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # pass the project ID from the secrets through environment variable
-          CYPRESS_PROJECT_ID: ${{ secrets.PROJECT_ID }}
-          CYPRESS_RETRIES: 3
-        with:
-          record: true
-          parallel: true
-          group: "github-actions"
-          working-directory: ./client
-          wait-on: "http://localhost:8888"
-          config: baseUrl=http://localhost:8888
-          tag: ${{ github.event_name }}
+          PLAYWRIGHT_TEST_BASE_URL: http://localhost:8888
       - run: docker compose down
       - name: Upload Screenshots
         uses: actions/upload-artifact@v3
         with:
           name: screenshots
-          path: "client/test/cypress/screenshots"
+          path: "playwright/screenshots"
           retention-days: 14
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30
