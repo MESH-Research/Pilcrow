@@ -117,13 +117,13 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - uses: ./github/actions/load-image
+      - uses: ./.github/actions/load-image
         with:
           name: ${{ matrix.package }}
       - uses: ./.github/actions/build-image
         with:
           package: ${{ matrix.package }}
           push: true
-          tag: ${{ steps.meta.outputs.tags }}
+          tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
