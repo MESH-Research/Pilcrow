@@ -24,7 +24,8 @@ jobs:
           node-version: "16"
       - uses: ./.github/actions/start-stack
       - run: yarn install && npx playwright install --with-deps
-      - run: npx playwright test --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
+      - name: Run Playwright
+        run: npx playwright test --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
         env:
           PLAYWRIGHT_TEST_BASE_URL: http://localhost:8888
       - run: docker compose down
