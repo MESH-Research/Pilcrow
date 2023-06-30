@@ -67,6 +67,7 @@
             :container="submission"
             mutable
             :max-users="1"
+            class="text-body1"
           />
         </div>
       </div>
@@ -76,6 +77,7 @@
             data-cy="reviewers_list"
             role-group="reviewers"
             :container="submission"
+            class="text-body1"
             mutable
           />
         </div>
@@ -85,7 +87,7 @@
         :submission="submission"
       />
     </section>
-    <section class="q-pa-lg" data-cy="activity_section">
+    <section class="q-pa-lg text-body1" data-cy="activity_section">
       <h3>{{ $t("submission.activity_section.title") }}</h3>
       <p v-if="submission.audits.length == 0">
         {{ $t("submission.activity_section.no_activity") }}
