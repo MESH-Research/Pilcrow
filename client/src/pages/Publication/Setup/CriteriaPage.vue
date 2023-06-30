@@ -1,5 +1,5 @@
 <template>
-  <article class="q-px-md">
+  <article class="q-px-md text-body1">
     <h2>Style Criteria</h2>
     <p>
       Style criteria are a core component of the Collaborative Review Process.
