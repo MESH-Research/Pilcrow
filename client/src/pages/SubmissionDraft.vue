@@ -60,7 +60,7 @@
               :title="$t(`submissions.create.todo.content.title`)"
               @go-click="onGoToSubmissionContentClick"
             >
-              <p class="q-ma-none">
+              <p class="q-ma-none text-body1">
                 {{ $t(`submissions.create.todo.content.description`) }}
               </p>
             </submission-draft-todo-item>
@@ -76,7 +76,7 @@
               </template>
             </q-banner> -->
           </section>
-          <section class="q-mt-lg">
+          <section class="q-mt-lg text-body1">
             <p>{{ $t(`submissions.create.submit.description`) }}</p>
             <q-btn
               class="q-mt-lg"
