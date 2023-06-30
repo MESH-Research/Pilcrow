@@ -8,7 +8,6 @@ inputs:
         description: "tags to apply to the image"
         required: false
         type: string
-        defauit: pilcrow/${{ inputs.package}}:latest
     labels:
         description: "labels to apply to the image"
         required: false
@@ -41,7 +40,7 @@ runs:
                   VERSION=${{ steps.tagger.outputs.version }}
                   VERSION_DATE=${{ steps.tagger.outputs.date}}
                   VERSION_URL=${{ steps.tagger.outputs.url }}
-              tags: ${{ inputs.tags }}
+              tags: ${{ inputs.tags && inputs.tags || 'pilcrow/' + inputs.package + ':latest' }}
               labels: ${{ inputs.labels }}
         - name: Upload artifact
           uses: actions/upload-artifact@v3
