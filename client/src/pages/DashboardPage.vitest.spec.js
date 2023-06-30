@@ -45,7 +45,14 @@ describe("Dashboard Page", () => {
         id: "1",
         name: "Pilcrow Test Publication 1",
         my_role: null,
+        editors: [],
+        publication_admins: [],
       },
+      inline_comments: [],
+      overall_comments: [],
+      submitters: [],
+      reviewers: [],
+      review_coordinators: [],
     }
   }
 

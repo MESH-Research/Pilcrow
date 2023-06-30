@@ -6,6 +6,6 @@ module.exports = {
       url: "http://pilcrow.lndo.site/graphql"
     },
     // Files processed by the extension
-    includes: ["src/**/*.vue", "src/**/*.js"]
+    includes: ["src/**/*.vue", "src/**/*.js"],
   }
 };

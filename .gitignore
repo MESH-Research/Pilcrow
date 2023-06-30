@@ -43,3 +43,4 @@ node_modules/
 backend/vendor/**/*
 /vendor/
 /backend/storage/
+docker-compose.override.y*ml

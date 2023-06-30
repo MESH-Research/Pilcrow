@@ -41,7 +41,7 @@ class NotifyUsersAboutUpdatedSubmissionStatus
                 'name' => $publication->name,
             ],
             'type' => 'submission.updated',
-            'url' => url('/submission/' . $event->submission->id),
+            'url' => url('/submission/' . $event->submission->id . '/details'),
             'action' => 'View Submission',
         ];
         $actions = [

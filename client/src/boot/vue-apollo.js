@@ -3,8 +3,10 @@ import { ApolloClient, InMemoryCache, ApolloLink } from "@apollo/client/core"
 import {
   beforeEachRequiresAuth,
   beforeEachRequiresRoles,
+  beforeEachRequiresDraftAccess,
   beforeEachRequiresSubmissionAccess,
   beforeEachRequiresReviewAccess,
+  beforeEachRequiresExportAccess,
 } from "src/apollo/apollo-router-guards"
 import { withXsrfLink, expiredTokenLink } from "src/apollo/apollo-links.js"
 import { createApolloProvider } from "@vue/apollo-option"
@@ -35,6 +37,7 @@ export default boot(async ({ app, router }) => {
         ],
       },
     }),
+    connectToDevTools: true
   })
 
   /**
@@ -52,6 +55,13 @@ export default boot(async ({ app, router }) => {
   )
 
   /**
+   * Check routes for requiresDraftAccess meta field.
+   */
+  router.beforeEach(async (to, from, next) =>
+    beforeEachRequiresDraftAccess(apolloClient, to, from, next)
+  )
+
+  /**
    * Check routes for requiresSubmissionAccess meta field.
    */
   router.beforeEach(async (to, from, next) =>
@@ -63,6 +73,13 @@ export default boot(async ({ app, router }) => {
    */
   router.beforeEach(async (to, from, next) =>
     beforeEachRequiresReviewAccess(apolloClient, to, from, next)
+  )
+
+  /**
+   * Check routes for requiresExportAccess meta field.
+   */
+  router.beforeEach(async (to, from, next) =>
+    beforeEachRequiresExportAccess(apolloClient, to, from, next)
   )
 
   const apolloClients = {

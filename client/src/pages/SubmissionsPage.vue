@@ -1,231 +1,180 @@
 <template>
   <article>
-    <h2 class="q-pl-lg">Submissions</h2>
-    <div class="row q-col-gutter-lg q-pa-lg">
-      <section
-        class="col-md-5 col-sm-6 col-xs-12"
-        data-cy="create_new_submission_form"
-      >
-        <h3>Create New Submission</h3>
-        <q-form @submit="createNewSubmission()">
-          <div class="q-gutter-md column q-pl-none q-pr-md">
-            <q-input
-              v-model="new_submission.title"
-              outlined
-              label="Enter Submission Title"
-              data-cy="new_submission_title_input"
-            />
-            <q-select
-              v-model="new_submission.publication_id"
-              outlined
-              :options="publications"
-              option-label="name"
-              option-value="id"
-              emit-value
-              map-options
-              label="For Publication"
-              popup-content-class="publication_options"
-              data-cy="new_submission_publication_input"
-            />
-            <q-file
-              v-model="new_submission.file_upload"
-              outlined
-              label="Upload File"
-              multiple
-              data-cy="new_submission_file_upload_input"
-            >
-              <template #prepend>
-                <q-icon
-                  color="accent"
-                  class="accent-dark-text"
-                  name="attach_file"
-                />
-              </template>
-            </q-file>
-          </div>
-          <q-banner
-            v-if="try_catch_error"
-            dense
-            rounded
-            background-color="negative"
-            class="form-error text-white text-center q-mt-xs"
-            data-cy="banner_form_error"
-          >
-            {{ $t(`submissions.create.failure`) }}
-          </q-banner>
-          <q-btn
-            :disabled="is_submitting"
-            class="accent text-white q-mt-lg"
-            type="submit"
-            data-cy="save_submission"
-          >
-            Save
-          </q-btn>
-        </q-form>
-      </section>
-      <section class="col-md-7 col-sm-6 col-xs-12">
-        <h3 data-cy="all_submissions_title">All Submissions</h3>
-        <q-list
-          v-if="submissions.length != 0"
-          bordered
-          separator
-          data-cy="submissions_list"
-        >
-          <q-item
-            v-for="submission in submissions"
-            :key="submission.id"
-            class="row justify-between"
-          >
-            <q-item-section>
-              <router-link
-                data-cy="submission_link"
-                :to="{
-                  name: 'submission_details',
-                  params: { id: submission.id },
-                }"
-              >
-                <q-item-label>{{ submission.title }}</q-item-label>
-              </router-link>
-              <q-item-label caption>
-                for {{ submission.publication.name }}
+    <h2 class="q-pl-lg" data-cy="submissions_title">
+      {{ $t(`submissions.heading`) }}
+    </h2>
+    <section class="row q-col-gutter-lg q-pa-lg">
+      <div v-if="subsLoading" class="q-pa-lg">
+        {{ $t("loading") }}
+      </div>
 
-                <!-- <ul v-if="submission.files.length > 0">
-                    <li v-for="file in submission.files" :key="file.id">
-                      <a :href="file.file_upload" download>
-                        {{ file.file_upload }}
-                      </a>
-                    </li>
-                  </ul> -->
-              </q-item-label>
-            </q-item-section>
-            <div class="q-gutter-sm submission-options">
-              <submission-table-actions :submission="submission" />
-            </div>
-          </q-item>
-        </q-list>
-        <div v-if="subsLoading" class="q-pa-lg">
-          {{ $t("loading") }}
+      <div v-else-if="currentUser" class="col-12">
+        <submission-table
+          :table-data="submitter_submissions"
+          variation="submissions"
+          table-type="submissions"
+          role="submitter"
+          data-cy="submissions_table"
+        />
+      </div>
+    </section>
+    <section class="q-px-lg">
+      <div class="row q-px-md">
+        <h3>{{ $t(`submissions.new.heading`) }}</h3>
+      </div>
+      <q-card flat bordered square class="q-pa-lg">
+        <p>
+          {{ $t(`submissions.new.description`) }}
+
+          <q-icon name="info">
+            <q-tooltip class="q-pa-none">
+              <q-card class="bg-grey-8 text-body1 q-pa-md">
+                <strong>{{ $t(`submissions.new.tooltip.question`) }}</strong>
+                <p>{{ $t(`submissions.new.tooltip.answer`) }}</p>
+                <ul class="q-ma-none">
+                  <li>{{ $t(`submissions.new.tooltip.reason_1`) }}</li>
+                  <li>{{ $t(`submissions.new.tooltip.reason_2`) }}</li>
+                </ul>
+              </q-card>
+            </q-tooltip>
+          </q-icon>
+        </p>
+        <div style="max-width: 500px">
+          <q-select
+            v-model="selectedPublication"
+            outlined
+            :options="pubsOptions"
+            label="Publication"
+            data-cy="publications_select"
+          />
         </div>
+        <q-btn
+          v-if="selectedPublication"
+          color="primary"
+          label="Submit a Work"
+          class="q-mt-md"
+          :to="{
+            name: 'submission:create',
+            params: { id: selectedPublication.value },
+          }"
+          data-cy="submit_work_btn"
+        />
+      </q-card>
+    </section>
+    <section class="q-pa-lg">
+      <div class="row q-px-md">
+        <h3>{{ $t(`submissions.latest_comments_heading`) }}</h3>
+      </div>
+      <div
+        v-if="latest_comments.length == 0"
+        :class="$q.screen.width < 770 ? `q-pa-md` : ``"
+      >
+        <q-card flat bordered square class="q-pa-lg text-center">
+          <p class="text-h3">
+            {{ $t(`submissions.no_comments`) }}
+          </p>
+        </q-card>
+      </div>
+      <div v-else class="row q-col-gutter-lg">
         <div
-          v-else-if="submissions.length == 0"
-          data-cy="no_submissions_message"
+          v-for="comment in latest_comments"
+          :key="comment.id"
+          class="col-lg-3 col-md-4 col-sm-6 col-xs-12"
         >
-          No Submissions Created
+          <comment-preview class="flex fit" :comment="comment" />
         </div>
-      </section>
-    </div>
+      </div>
+    </section>
   </article>
 </template>
 
 <script setup>
-import { GET_PUBLICATIONS, GET_SUBMISSIONS } from "src/graphql/queries"
-import { CREATE_SUBMISSION } from "src/graphql/mutations"
-import { required, maxLength } from "@vuelidate/validators"
+import { CURRENT_USER_SUBMISSIONS } from "src/graphql/queries"
+import { GET_PUBLICATIONS } from "src/graphql/queries"
 import { useCurrentUser } from "src/use/user"
-import { useFeedbackMessages } from "src/use/guiElements"
-import { useI18n } from "vue-i18n"
-import { ref, reactive, computed } from "vue"
-import { useQuery, useMutation } from "@vue/apollo-composable"
-import useVuelidate from "@vuelidate/core"
-import SubmissionTableActions from "../components/SubmissionTableActions.vue"
+import { computed, ref } from "vue"
+import { useQuery } from "@vue/apollo-composable"
+import SubmissionTable from "src/components/SubmissionTable.vue"
+import CommentPreview from "src/components/atoms/CommentPreview.vue"
 
 const { currentUser } = useCurrentUser()
-
-function includeDraftSubmissions(submission) {
-  return (
-    (submission.my_role == "submitter" && submission.status == "DRAFT") ||
-    submission.status !== "DRAFT"
-  )
-}
-
-const is_submitting = ref(false)
-const try_catch_error = ref(false)
-const new_submission = reactive({
-  title: "",
-  publication_id: null,
-  submitter_user_id: null,
-  file_upload: [],
-})
-
-//TODO: Implement validation rules a little more DRYly
-const rules = {
-  title: { required, maxLength: maxLength(512) },
-  publication_id: { required },
-  submitter_user_id: { required },
-  file_upload: { required },
-}
-
-const newPubV$ = useVuelidate(rules, new_submission)
-
-const { result: subsResult, loading: subsLoading } = useQuery(GET_SUBMISSIONS)
-
+const { result, loading: subsLoading } = useQuery(CURRENT_USER_SUBMISSIONS)
 const submissions = computed(() => {
-  return (
-    subsResult.value?.submissions.data.filter((submission) =>
-      includeDraftSubmissions(submission)
-    ) ?? []
-  )
+  return result.value?.currentUser?.submissions ?? []
 })
-
-const { result: pubsResult } = useQuery(GET_PUBLICATIONS)
-const publications = computed(() => {
-  return pubsResult.value?.publications.data ?? []
+const { result: pubsResult } = useQuery(GET_PUBLICATIONS, {
+  is_publicly_visible: true,
+  is_accepting_submissions: true,
+  first: 50000,
 })
-const { t } = useI18n()
-const { newStatusMessage } = useFeedbackMessages({
-  attrs: {
-    "data-cy": "create_submission_notify",
-  },
+const selectedPublication = ref(null)
+const pubsOptions = computed(() => {
+  return pubsResult.value?.publications?.data.map((pub) => {
+    return {
+      label: pub.name,
+      value: pub.id,
+    }
+  })
 })
-
-function checkThatFormIsInvalid() {
-  let failureMessage = false
-  if (newPubV$.value.title.maxLength.$invalid) {
-    failureMessage = "submissions.create.title.max_length"
-  } else if (newPubV$.value.title.required.$invalid) {
-    failureMessage = "submissions.create.title.required"
-  } else if (newPubV$.value.publication_id.required.$invalid) {
-    failureMessage = "submissions.create.publication_id.required"
-  } else if (newPubV$.value.submitter_user_id.required.$invalid) {
-    failureMessage = "submissions.create.submitter_user_id.required"
-  } else if (newPubV$.value.file_upload.required.$invalid) {
-    failureMessage = "submissions.create.file_upload.required"
-  }
-
-  if (failureMessage !== false) {
-    newStatusMessage("failure", t(failureMessage))
-    return true
-  }
-  return false
-}
-
-const { mutate: createMutate } = useMutation(CREATE_SUBMISSION, {
-  context: {
-    hasUpload: true,
-  },
-  refetchQueries: ["GetSubmissions", "currentUserNotifications"],
+const submitter_submissions = computed(() =>
+  submissions.value.filter(function (submission) {
+    return submission.my_role == "submitter"
+  })
+)
+const latest_comments = computed(() => {
+  let comments = submitter_submissions.value.map((submission) => {
+    const inline_replies = []
+    const inline = submission.inline_comments
+      .map((comment) => {
+        comment.replies.map((reply) => {
+          inline_replies.push({
+            ...reply,
+            submission: {
+              id: submission.id,
+              title: submission.title,
+            },
+          })
+        })
+        return {
+          ...comment,
+          submission: {
+            id: submission.id,
+            title: submission.title,
+          },
+        }
+      })
+      .flat()
+    const overall_replies = []
+    const overall = submission.overall_comments
+      .map((comment) => {
+        comment.replies.map((reply) => {
+          overall_replies.push({
+            ...reply,
+            submission: {
+              id: submission.id,
+              title: submission.title,
+            },
+          })
+        })
+        return {
+          ...comment,
+          submission: {
+            id: submission.id,
+            title: submission.title,
+          },
+        }
+      })
+      .flat()
+    return [].concat.apply(
+      [],
+      [inline, inline_replies, overall, overall_replies]
+    )
+  })
+  return comments
+    .flat()
+    .sort((a, b) => {
+      return new Date(b.updated_at) - new Date(a.updated_at)
+    })
+    .slice(0, 4)
 })
-
-async function createNewSubmission() {
-  is_submitting.value = true
-  try_catch_error.value = false
-  new_submission.submitter_user_id = currentUser.value.id
-  if (checkThatFormIsInvalid()) {
-    is_submitting.value = false
-    return false
-  }
-  try {
-    await createMutate({ ...new_submission })
-    newStatusMessage("success", t("submissions.create.success"))
-    resetForm()
-    is_submitting.value = false
-  } catch (error) {
-    try_catch_error.value = true
-    is_submitting.value = false
-  }
-
-  function resetForm() {
-    Object.assign(new_submission, { title: "", file_upload: [] })
-  }
-}
 </script>

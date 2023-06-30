@@ -122,15 +122,11 @@ a[target="_blank"]::after
 body.body--dark
     background: $dark !important
 
-    a
+    a, .q-field__messages
         color: #fff
 
-    a[data-cy="configure_button"]:before
-        box-shadow: none
-
-    .shadow-3,
-    .shadow-15
-        box-shadow: 0 8px 9px -5px $dark, 0 15px 22px 2px $dark, 0 6px 28px 5px $dark
+    [class*= "shadow-"]
+        box-shadow: inherit
 
     a[data-cy="submission_link"],
     .accent-dark-text,
@@ -254,6 +250,16 @@ body.body--dark
             color: $dark-primary !important
         .q-icon.text-red
             color: $negative !important
+
+    .q-field__control
+        color: #fff
+
+    .q-field--error .q-field__bottom,
+    .text-negative
+        color: #d7419a !important
+
+    .text-negative .q-field__label
+        color: #ff6e9f !important
 
 @media (prefers-reduced-motion)
     *

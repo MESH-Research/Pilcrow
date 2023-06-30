@@ -36,9 +36,9 @@
             class="q-mr-sm"
             color="accent"
             size="lg"
-            :label="$t('submissions.action.review.name')"
+            :label="$t('submission.action.review')"
             :to="{
-              name: 'submission_review',
+              name: 'submission:review',
               params: { id: props.id },
             }"
           />
@@ -80,6 +80,10 @@
           />
         </div>
       </div>
+      <submission-export-button
+        class="q-mt-xl"
+        :submission="submission"
+      />
     </section>
     <section class="q-pa-lg" data-cy="activity_section">
       <h3>{{ $t("submission.activity_section.title") }}</h3>
@@ -96,12 +100,13 @@
 </template>
 
 <script setup>
-import { GET_SUBMISSION } from "src/graphql/queries"
 import AssignedSubmissionUsers from "src/components/AssignedSubmissionUsers.vue"
-import SubmissionTitle from "src/components/SubmissionTitle.vue"
-import { useQuery } from "@vue/apollo-composable"
-import { computed, provide } from "vue"
 import SubmissionAudit from "../components/SubmissionAudit.vue"
+import SubmissionTitle from "src/components/SubmissionTitle.vue"
+import SubmissionExportButton from "src/components/atoms/SubmissionExportButton.vue"
+import { GET_SUBMISSION } from "src/graphql/queries"
+import { computed, provide } from "vue"
+import { useQuery } from "@vue/apollo-composable"
 
 const props = defineProps({
   id: {
