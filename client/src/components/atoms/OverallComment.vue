@@ -37,7 +37,7 @@
       <q-card-actions v-if="hasReplies" align="right" class="q-pa-md">
         <q-btn
           v-if="!isCollapsed"
-          aria-label="Hide Replies"
+          :aria-label="$t(`submissions.comment.toggle_replies.hide_reply`)"
           data-cy="hideRepliesButton"
           bordered
           color="secondary"
@@ -49,7 +49,7 @@
         </q-btn>
         <q-btn
           v-if="isCollapsed"
-          aria-label="Show Replies"
+          :aria-label="$t(`submissions.comment.toggle_replies.show_reply`)"
           data-cy="showRepliesButton"
           bordered
           color="secondary"
