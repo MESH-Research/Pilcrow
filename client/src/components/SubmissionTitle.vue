@@ -19,7 +19,7 @@
     :aria-label="$t('submission.edit_title.tooltip')"
     @click="editTitle"
   >
-    <q-tooltip anchor="center right" self="center left">{{
+    <q-tooltip anchor="center right" class="text-body1" self="center left">{{
       $t("submission.edit_title.tooltip")
     }}</q-tooltip>
   </q-btn>
