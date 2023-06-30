@@ -11,17 +11,6 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build-images:
-    name: "Build"
-    strategy:
-      matrix:
-        package: [fpm, web]
-    runs-on: ubuntu-20.04
-    steps:
-      - uses: actions/checkout@v3
-      - uses: ./.github/actions/build-image
-        with:
-          package: ${{ matrix.package }}
   client-unit-test:
     name: "Client / Unit Test"
     runs-on: ubuntu-20.04
@@ -34,6 +23,17 @@ jobs:
           cache-dependency-path: client/yarn.lock
       - run: cd client && yarn install
       - run: cd client && yarn test:unit:ci
+  build-images:
+    name: "Build"
+    strategy:
+      matrix:
+        package: [fpm, web]
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/build-image
+        with:
+          package: ${{ matrix.package }}
   backend-unit-test:
     name: Backend / Unit Test
     needs: [build-images]
@@ -90,13 +90,13 @@ jobs:
       - name: Check MD
         run: yarn lint:md
   publish:
-    name: "Publish (Master Only)"
+    name: "Publish (master branch only)"
     runs-on: ubuntu-20.04
     needs: [e2e, backend-unit-test, client-unit-test]
     strategy:
       matrix:
         package: [fpm, web]
-    # if: github.event_name == 'pull'  && github.ref == 'refs/heads/master'
+    if: github.event_name == 'pull'  && github.ref == 'refs/heads/master'
     steps:
       - uses: actions/checkout@v3
       - name: Docker meta
