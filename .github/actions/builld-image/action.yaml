@@ -1,5 +1,4 @@
 name: Build
-
 inputs:
     package:
         description: "package to build"
