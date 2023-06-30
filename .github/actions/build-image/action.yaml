@@ -3,20 +3,15 @@ inputs:
     package:
         description: "package to build"
         required: true
-        type: string
     tags:
         description: "tags to apply to the image"
         required: false
-        type: string
     labels:
         description: "labels to apply to the image"
         required: false
-        type: string
     push:
         description: "push the image to the registry"
         required: false
-        type: boolean
-        default: false
 runs:
     using: "composite"
     steps:
@@ -34,8 +29,8 @@ runs:
           uses: docker/build-push-action@v4
           with:
               context: ${{ fromJSON('{"fpm":"backend","web":"client"}')[inputs.package] || inputs.package }}
-              outputs: ${{ (inputs.push == false) && format('{0}{1}{2}', 'type=docker,dest=/tmp/', inputs.package, '.tar') || '' }}
-              push: ${{ inputs.push }}
+              outputs: ${{ (!inputs.push) && format('{0}{1}{2}', 'type=docker,dest=/tmp/', inputs.package, '.tar') || '' }}
+              push: ${{ inputs.push && true || false }}
               build-args: |
                   VERSION=${{ steps.tagger.outputs.version }}
                   VERSION_DATE=${{ steps.tagger.outputs.date}}
