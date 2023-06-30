@@ -79,7 +79,7 @@
         <div
           v-for="comment in latest_comments"
           :key="comment.id"
-          class="col-lg-3 col-md-4 col-sm-6 col-xs-12"
+          class="col-lg-3 col-md-4 col-sm-6 col-xs-12 text-body1"
         >
           <comment-preview class="flex fit" :comment="comment" />
         </div>
