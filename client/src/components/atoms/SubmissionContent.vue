@@ -31,6 +31,7 @@
           icon="add_circle"
           color="white"
           text-color="grey-7"
+          class="text-body1"
           @click="increaseFontSize()"
         />
         <q-tooltip>Increase Font Size</q-tooltip>
