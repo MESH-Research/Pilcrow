@@ -9,7 +9,7 @@
             text-color="white"
           />
         </div>
-        <div class="column justify-center q-my-sm q-mb-none">
+        <div class="column justify-center q-my-sm q-mb-none text-body1">
           <p class="q-mb-none">
             <i18n-t
               :keypath="`dialog.confirmStatusChange.body.${props.action}`"
@@ -21,7 +21,7 @@
       </q-card-section>
       <q-separator />
       <q-card-section>
-        <div class="column items-center">
+        <div class="column items-center text-body1">
           <p>
             <i18n-t
               :keypath="`dialog.confirmStatusChange.comment`"
