@@ -159,7 +159,7 @@
         <template #header>
           {{ $t("account.profile.section_keywords") }}
         </template>
-        <fieldset class="col-12 q-col-gutter-sm profile-keywords">
+        <fieldset class="col-12 q-col-gutter-sm profile-keywords text-body1">
           <tag-list
             ref="interest_keywords"
             v-model="form.interest_keywords"
