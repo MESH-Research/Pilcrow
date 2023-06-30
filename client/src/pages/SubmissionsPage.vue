@@ -22,7 +22,7 @@
       <div class="row q-px-md">
         <h3>{{ $t(`submissions.new.heading`) }}</h3>
       </div>
-      <q-card flat bordered square class="q-pa-lg">
+      <q-card flat bordered square class="q-pa-lg text-body1">
         <p>
           {{ $t(`submissions.new.description`) }}
 
