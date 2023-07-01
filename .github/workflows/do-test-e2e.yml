@@ -27,7 +27,7 @@ jobs:
       - name: Run Playwright
         run: npx playwright test --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
         env:
-          BASEURL: http://localhost:8888
+          BASEURL: http://localhost:8888/
       - run: docker compose down
       - name: Upload Screenshots
         uses: actions/upload-artifact@v3
