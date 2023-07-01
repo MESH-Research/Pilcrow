@@ -26,7 +26,7 @@ module.exports = defineConfig({
     globalSetup: require.resolve("./global-setup.js"),
     use: {
         /* Base URL to use in actions like `await page.goto('/')`. */
-        baseURL: "https://pilcrow.lndo.site/",
+        baseURL: `${process.env.BASEURL || "https://pilcrow.lndo.site/"}`,
 
         /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
         trace: "on-first-retry",
