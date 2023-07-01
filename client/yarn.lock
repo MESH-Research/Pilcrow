@@ -4302,9 +4302,9 @@ qs@~6.10.3:
     side-channel "^1.0.4"
 
 quasar@^2.6.0:
-  version "2.12.1"
-  resolved "https://registry.yarnpkg.com/quasar/-/quasar-2.12.1.tgz#566b14e2fcb9177f14051345e6316791d8083d77"
-  integrity sha512-d7uPATVP2dpoLCSwwtwNiJhkCklLFlonYw4QyZG8khuMEO7ENjzkU+DKoOY+esjLmkbOXbDlhrE69tdxvrHr0g==
+  version "2.12.2"
+  resolved "https://registry.yarnpkg.com/quasar/-/quasar-2.12.2.tgz#f45923259449afb224afbac16f1e5c4a660c3f84"
+  integrity sha512-UB+J1cN6b9FrRphUuMvW1Pt1uaOPH2XJMAZagQlYzVUmltKCXQ0sby+ANgGRYa8w/tsekMySmN9QvkQ3+hYv/g==
 
 queue-microtask@^1.2.2:
   version "1.2.3"
