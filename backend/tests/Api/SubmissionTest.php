@@ -326,7 +326,7 @@ class SubmissionTest extends ApiTestCase
     {
         $publication = Publication::factory()->create(['is_accepting_submissions' => false]);
         /**
-         * @var User
+         * @var User $user
          */
         $user = User::factory()->create();
         $this->actingAs($user);
