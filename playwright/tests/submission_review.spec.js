@@ -6,7 +6,7 @@ test("submission review reviewer actions", async ({ page, baseURL }) => {
 
     await login(page, "reviewer@pilcrow.dev")
 
-    await page.goto("/submission/review/100")
+    await page.goto("/submission/100/review")
 
     const { violations } = await defaultAxeScan(page).analyze()
     expect(violations).toHaveLength(0)
@@ -234,12 +234,12 @@ test("submission review reviewer actions", async ({ page, baseURL }) => {
     )
 
     //* Should deny a reviewer access when a submission is not accepted for review
-    await page.goto("/submission/review/101")
+    await page.goto("/submission/101/review")
     await expect(page).toHaveURL("/error403")
 
     //* Should not allow editing of comments the user did not create
     await login(page, "applicationadministrator@pilcrow.dev")
-    await page.goto("submission/review/100")
+    await page.goto("submission/100/review")
 
     await page
         .getByTestId("overallComment")
@@ -261,9 +261,9 @@ test("submission review other user actions", async ({ page, baseURL }) => {
     await login(page, "regularuser@pilcrow.dev")
 
     //* Submission in draft status can be submitted for review
-    await page.goto("submission/review/104")
+    await page.goto("submission/104/review")
     await expect(page.getByTestId("submission_status")).toHaveText(/Draft/)
-
+    await page.getByTestId("status-dropdown").click()
     await page.getByTestId("initially_submit").click()
     await page.getByTestId("dirtyYesChangeStatus").click()
 })

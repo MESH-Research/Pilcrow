@@ -20,7 +20,9 @@ test("Notification popup", async ({ browser, baseURL }) => {
     const adminPage = await adminContext.newPage()
 
     await login(adminPage, "applicationadministrator@pilcrow.dev")
-    await adminPage.goto("/submission/review/108")
+    await adminPage.goto("/submission/108/review")
+
+    await adminPage.getByTestId("status-dropdown").click()
     await adminPage.getByTestId("open_for_review").click()
     await adminPage.getByTestId("dirtyYesChangeStatus").click()
     await expect(adminPage.getByRole("alert")).toHaveClass(/bg-positive/)

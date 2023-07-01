@@ -55,10 +55,10 @@ test("Make copyrighting screenshots", async ({ page, baseURL }) => {
     await screenshotPath("/admin/user/1", "[data-cy=role_item]")
     await screenshotPath("/admin/publications", "[data-cy=publications_list]")
     await screenshotPath("/publication/1", "[data-cy=publication_home_content]")
-    await screenshotPath("/submissions", "[data-cy=submissions_list]")
-    await screenshotPath("/submission/100", "[data-cy=reviewers_list]")
+    await screenshotPath("/submissions", "[data-cy=submissions_table]")
+    await screenshotPath("/submission/100/details", "[data-cy=reviewers_list]")
     await screenshotPath(
-        "/submission/review/100",
+        "/submission/100/review",
         "[data-cy=submission_review_layout]"
     )
 })

@@ -4,7 +4,7 @@ import { defaultAxeScan, login, resetDb } from "../helpers"
 test("submission creation", async ({ page, baseURL }) => {
     await resetDb(baseURL)
     await login(page, "applicationadministrator@pilcrow.dev")
-    await page.goto("submissions")
+    await page.goto("publication/1/create")
 
     const { violations } = await defaultAxeScan(page).analyze()
     expect(violations).toHaveLength(0)
@@ -12,14 +12,9 @@ test("submission creation", async ({ page, baseURL }) => {
     await page
         .getByTestId("new_submission_title_input")
         .fill("Submission from Cypress")
-    await page.getByTestId("new_submission_publication_input").click()
-    await page
-        .getByRole("option", { name: "Pilcrow Test Publication 1" })
-        .click()
-    await page
-        .getByTestId("new_submission_file_upload_input")
-        .setInputFiles("fixtures/test.txt")
-    await page.getByTestId("save_submission").click()
+
+    await page.getByTestId("create_submission_btn").click()
+
     await expect(page.getByTestId("submissions_list")).toHaveText(
         /Submission from Cypress/
     )
@@ -56,7 +51,7 @@ test("submission creation", async ({ page, baseURL }) => {
 test("submission management", async ({ page, baseURL }) => {
     await resetDb(baseURL)
     await login(page, "applicationadministrator@pilcrow.dev")
-    await page.goto("submission/review/101")
+    await page.goto("submission/101/review")
 
     await expect(page.getByTestId("submission_status")).toHaveText(
         /Initially Submitted/
