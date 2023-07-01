@@ -10,14 +10,10 @@ on:
       - wreality/gha-concurrency
 
 concurrency:
-  group: tests-${{ format('{0}-{1}',  github.head_ref || github.run_number, github.job) }}
+  group: ${{ github.workflow }}-${{ format('{0}',  github.head_ref || github.ref_name) }}
   cancel-in-progress: true
 
 jobs:
-  concurrency:
-    runs-on: ubuntu-20.04
-    steps:
-      - run: echo ${{ toJSON(github)}}
   client-unit-test:
     name: "Client / Unit Test"
     runs-on: ubuntu-20.04
