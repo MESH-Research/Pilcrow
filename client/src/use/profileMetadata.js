@@ -4,13 +4,13 @@ import { weburl_regex } from "src/utils/regex-weburl"
 import { watch } from "vue"
 export const social_regex = {
   facebook: {
-    url: /^(?:https?:)?\/\/(?:www\.)?(?:facebook|fb)\.com\/(?<profile>(?![A-z]+\.php)(?!marketplace|gaming|watch|me|messages|help|search|groups)[A-z0-9_\-.]+)\/?/,
-    valid: /^(?<profile>[A-z0-9_\-.]+)$/,
+    url: /^(?:https?:)?\/\/(?:www\.)?(?:facebook|fb)\.com\/(?<profile>(?![A-Za-z]+\.php)(?!marketplace|gaming|watch|me|messages|help|search|groups)[A-Za-z0-9_\-.]+)\/?/,
+    valid: /^(?<profile>[A-Za-z0-9_\-.]+)$/,
   },
 
   twitter: {
-    url: /(?:https?:)?\/\/(?:[A-z]+\.)?twitter\.com\/@?(?!home|share|privacy|tos)(?<username>[A-z0-9_]+)\/?/,
-    valid: /^[A-z0-9_]+$/,
+    url: /(?:https?:)?\/\/(?:[A-Za-z]+\.)?twitter\.com\/@?(?!home|share|privacy|tos)(?<username>[A-Za-z0-9_]+)\/?/,
+    valid: /^[A-Za-z0-9_]+$/,
   },
   instagram: {
     url: /^(?:https?:)?\/\/(?:www\.)?(?:instagram\.com|instagr\.am)\/(?<username>[A-Za-z0-9_](?:(?:[A-Za-z0-9_]|(?:\.(?!\.))){0,28}(?:[A-Za-z0-9_]))?$)$/,
