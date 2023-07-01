@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Hash;
 
 class UxSeeder extends Seeder
 {
-    public $numTesters = 6;
+    public $numTesters = 10;
 
     /**
      * Run the database seeds for UX testing instances.  This seeder is not
