@@ -14,8 +14,6 @@ jobs:
       matrix:
         shardIndex: [1, 2, 3, 4, 5, 6]
         shardTotal: [6]
-    container:
-      image: mcr.microsoft.com/playwright:v1.35.1-jammy
     defaults:
       run:
         working-directory: playwright
@@ -25,7 +23,7 @@ jobs:
         with:
           node-version: "18"
       - uses: ./.github/actions/start-stack
-      - run: yarn install
+      - run: yarn install && yarn playwright install --with-deps
       - name: Run Playwright
         run: yarn playwright test --project chromium --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
         env:
