@@ -25,7 +25,7 @@ jobs:
       - uses: ./.github/actions/start-stack
       - run: yarn install && yarn playwright install --with-deps
       - name: Run Playwright
-        run: yarn playwright test --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
+        run: yarn playwright test --project chromium --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
         env:
           BASEURL: http://localhost:8888/
       - run: docker compose down
