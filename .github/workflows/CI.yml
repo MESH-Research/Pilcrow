@@ -1,17 +1,22 @@
 name: CI
 on:
   pull_request:
+    branches-ignore:
+      - renovate/*
   push:
     branches:
       - master
       - renovate/*
-      - wreality/gha-concurrency
 
 concurrency:
-  group: ci-${{ github.sha }}
+  group: tests-${{ format('{0}-{1}', github.head_ref || github.run_number, github.job) }}
   cancel-in-progress: true
 
 jobs:
+  concurrency:
+    runs-on: ubuntu-20.04
+    steps:
+      - run: echo ${{ toJSON(github)}}
   client-unit-test:
     name: "Client / Unit Test"
     runs-on: ubuntu-20.04
