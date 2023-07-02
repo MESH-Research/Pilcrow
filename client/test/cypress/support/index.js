@@ -20,10 +20,10 @@ import "./commands"
 const resizeObserverLoopError = "ResizeObserver loop limit exceeded"
 
 Cypress.on("uncaught:exception", (err) => {
-  // if (err.message.includes(resizeObserverLoopError)) {
-  //   // returning false here prevents Cypress from
-  //   // failing the test
-  //   return false
-  // }
+  if (err.message.includes(resizeObserverLoopError)) {
+    // returning false here prevents Cypress from
+    // failing the test
+    return false
+  }
   return false
 })
