@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Mews\Purifier\Casts\CleanHtml;
 
 class SubmissionContent extends Model
 {
@@ -27,6 +28,10 @@ class SubmissionContent extends Model
     protected $fillable = [
         'data',
         'submission_id',
+    ];
+
+    protected $casts = [
+        'data' => CleanHtml::class,
     ];
 
     /**

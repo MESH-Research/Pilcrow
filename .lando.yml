@@ -1,7 +1,7 @@
 name: pilcrow
 recipe: laravel
 config:
-  php: "8.1"
+  php: "8.2"
   composer_version: 2
   composer: []
   webroot: backend/public

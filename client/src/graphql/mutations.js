@@ -215,14 +215,26 @@ export const CREATE_SUBMISSION = gql`
   }
 `
 
-export const CREATE_SUBMISSION_FILE = gql`
-  mutation CreateSubmissionFile($submission_id: ID!, $file_upload: Upload!) {
-    createSubmissionFile(
+export const UPDATE_SUBMISSION_CONTENT = gql`
+  mutation UpdateSubmissionContent($id: ID!, $content: String!) {
+    updateSubmissionContent(input: { content: $content, id: $id }) {
+      id
+      content {
+        data
+      }
+    }
+  }
+`
+
+export const UPDATE_SUBMISSION_CONTENT_WITH_FILE = gql`
+  mutation UpdateSubmissionContentWithFile($submission_id: ID!, $file_upload: Upload!) {
+    updateSubmissionContentWithFile(
       input: { submission_id: $submission_id, file_upload: $file_upload }
     ) {
       id
-      submission_id
-      file_upload
+      content {
+        data
+      }
     }
   }
 `
