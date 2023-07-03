@@ -28,12 +28,16 @@
   <div class="row flex-center q-pa-lg">
     <div class="col-lg-5 col-md-6 col-sm-10 col-xs-12">
       <article class="q-pa-lg">
-        <div v-if="status !== 'paste_success'" class="q-gutter-md">
-          <h2 class="text-h3" data-cy="submission_content_title">
+        <div
+          v-if="status !== 'paste_success' && status !== 'upload_success'"
+          class="q-gutter-md"
+        >
+          <h1 class="text-h3" data-cy="submission_content_title">
             {{ $t(`submissions.content.heading`) }}
-          </h2>
+          </h1>
           <q-banner
             v-if="updateMethod === 'upload' || updateMethod == ''"
+            data-cy="upload_option"
             class="bg-primary text-white"
             inline-actions
             @click="setMethod('upload')"
@@ -59,6 +63,7 @@
           </q-banner>
           <q-banner
             v-if="updateMethod === 'paste' || updateMethod == ''"
+            data-cy="paste_option"
             class="bg-primary text-white"
             inline-actions
             @click="setMethod('paste')"
@@ -80,9 +85,40 @@
               />
             </template>
           </q-banner>
-          <div v-if="updateMethod == 'paste'">
-            <q-editor v-model="pasteContent" min-height="5rem" />
+          <div v-if="updateMethod == 'upload'">
+            <q-file
+              v-model="uploadFile"
+              data-cy="file_picker"
+              clearable
+              outlined
+              color="accent"
+              :label="$t(`submissions.content.upload.file_picker_label`)"
+            >
+              <template #prepend>
+                <q-icon name="attach_file" />
+              </template>
+            </q-file>
             <q-btn
+              data-cy="submit_upload_btn"
+              color="primary"
+              class="q-mt-md"
+              :label="$t(`submissions.content.submit.btn_label`)"
+              @click="submitUpload"
+            />
+          </div>
+          <div v-if="status === 'upload_error'">
+            <q-banner class="bg-negative text-white">
+              {{ $t(`submissions.content.submit.error`) }}
+            </q-banner>
+          </div>
+          <div v-if="updateMethod == 'paste'">
+            <q-editor
+              v-model="pasteContent"
+              data-cy="content_editor"
+              min-height="5rem"
+            />
+            <q-btn
+              data-cy="submit_paste_btn"
               color="primary"
               class="q-mt-md"
               :label="$t(`submissions.content.submit.btn_label`)"
@@ -102,6 +138,7 @@
           }}</strong>
           <p>{{ $t(`submissions.content.submit.success.message`) }}</p>
           <q-btn
+            data-cy="content_submit_success_btn"
             class="q-mr-sm"
             color="accent"
             size="md"
@@ -119,6 +156,10 @@
 
 <script setup>
 import { GET_SUBMISSION } from "src/graphql/queries"
+import {
+  UPDATE_SUBMISSION_CONTENT,
+  UPDATE_SUBMISSION_CONTENT_WITH_FILE,
+} from "src/graphql/mutations"
 import { useQuery, useMutation } from "@vue/apollo-composable"
 import { computed, ref } from "vue"
 
@@ -131,48 +172,50 @@ const props = defineProps({
 
 const updateMethod = ref("")
 const pasteContent = ref("")
+const uploadFile = ref(null)
 const { result } = useQuery(GET_SUBMISSION, props)
 const submission = computed(() => result.value?.submission)
 let status = ref("incomplete")
-const emit = defineEmits(["update:contentUploaded"])
-function setContentUploaded() {
-  emit("update:contentUploaded", true)
-}
 
 function clearMethod() {
+  status.value = "incomplete"
   updateMethod.value = ""
+  uploadFile.value = null
 }
 
 function setMethod(value) {
-  if (updateMethod.value === "") {
-    updateMethod.value = value
-  }
+  updateMethod.value = value
 }
-
-const { mutate } = useMutation(UPDATE_CONTENT)
+const { mutate: updateContent } = useMutation(UPDATE_SUBMISSION_CONTENT)
 async function submitPaste() {
   try {
-    await mutate({ id: props.id, content: pasteContent.value })
+    await updateContent({ id: props.id, content: pasteContent.value })
     status.value = "paste_success"
-    setContentUploaded()
   } catch (error) {
-    console.log(error)
     status.value = "paste_error"
   }
 }
-</script>
 
-<script>
-import { gql } from "graphql-tag"
-
-const UPDATE_CONTENT = gql`
-  mutation UpdateSubmissionContent($id: ID!, $content: String!) {
-    updateSubmissionContent(input: { content: $content, id: $id }) {
-      id
-      content {
-        data
-      }
-    }
+const uploadOpts = {
+  variables: {
+    submission_id: props.id,
+    file_upload: uploadFile.value,
+  },
+  context: {
+    hasUpload: true,
+  },
+}
+const { mutate: updateContentWithFile } = useMutation(
+  UPDATE_SUBMISSION_CONTENT_WITH_FILE,
+  uploadOpts
+)
+async function submitUpload() {
+  try {
+    uploadOpts.variables.file_upload = uploadFile.value
+    await updateContentWithFile()
+    status.value = "upload_success"
+  } catch (error) {
+    status.value = "upload_error"
   }
-`
+}
 </script>

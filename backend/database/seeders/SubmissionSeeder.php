@@ -34,7 +34,7 @@ class SubmissionSeeder extends Seeder
         $this->createSubmission(103, 'Pilcrow Test Submission 4')
             ->update(['updated_by' => 3, 'status' => Submission::RESUBMISSION_REQUESTED]);
 
-        $this->createSubmission(104, 'Pilcrow Test Submission 5'); // DRAFT
+        $this->createSubmission(104, 'Pilcrow Test Submission 5', false); // DRAFT
 
         $this->createSubmission(105, 'Pilcrow Test Submission 6')
             ->update(['updated_by' => 3, 'status' => Submission::ACCEPTED_AS_FINAL]);
@@ -60,10 +60,11 @@ class SubmissionSeeder extends Seeder
      *
      * @param int $id
      * @param string $title
+     * @param bool $content
      * @param array $data
      * @return \Database\Seeders\App\Models\Submission
      */
-    protected function createSubmission(int $id, string $title, array $data = []): Submission
+    protected function createSubmission(int $id, string $title, bool $content = true, array $data = []): Submission
     {
         $dataWithDefaults = [
             'id' => $id,
@@ -75,26 +76,48 @@ class SubmissionSeeder extends Seeder
             ...$data,
         ];
 
-        $submission = Submission::factory()
-            ->hasAttached(
-                User::firstWhere('username', 'regularUser'),
-                [],
-                'submitters'
-            )
-            ->hasAttached(
-                User::firstWhere('username', 'reviewCoordinator'),
-                [],
-                'reviewCoordinators'
-            )
-            ->hasAttached(
-                User::firstWhere('username', 'reviewer'),
-                [],
-                'reviewers'
-            )
-            ->has(SubmissionContent::factory()->count(3), 'contentHistory')
-            ->create($dataWithDefaults);
-        $submission->updated_by = 2;
-        $submission->content()->associate($submission->contentHistory->last())->save();
+        if ($content) {
+            $submission = Submission::factory()
+                ->hasAttached(
+                    User::firstWhere('username', 'regularUser'),
+                    [],
+                    'submitters'
+                )
+                ->hasAttached(
+                    User::firstWhere('username', 'reviewCoordinator'),
+                    [],
+                    'reviewCoordinators'
+                )
+                ->hasAttached(
+                    User::firstWhere('username', 'reviewer'),
+                    [],
+                    'reviewers'
+                )
+                ->has(SubmissionContent::factory()->count(3), 'contentHistory')
+                ->create($dataWithDefaults);
+            $submission->updated_by = 2;
+            $submission->content()->associate($submission->contentHistory->last());
+        } else {
+            $submission = Submission::factory()
+                ->hasAttached(
+                    User::firstWhere('username', 'regularUser'),
+                    [],
+                    'submitters'
+                )
+                ->hasAttached(
+                    User::firstWhere('username', 'reviewCoordinator'),
+                    [],
+                    'reviewCoordinators'
+                )
+                ->hasAttached(
+                    User::firstWhere('username', 'reviewer'),
+                    [],
+                    'reviewers'
+                )
+                ->create($dataWithDefaults);
+            $submission->updated_by = 2;
+        }
+        $submission->save();
 
         return $submission;
     }

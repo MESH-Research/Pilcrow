@@ -62,6 +62,7 @@ describe("Submissions Page", () => {
             {
               id: "1",
               title: "Jest Submission 1",
+              created_at: "2023-06-27T08:21:44.000000Z",
               status: "INITIALLY_SUBMITTED",
               my_role: "submitter",
               effective_role: "submitter",
@@ -81,6 +82,7 @@ describe("Submissions Page", () => {
             {
               id: "2",
               title: "Jest Submission 2",
+              created_at: "2023-06-26T08:21:44.000000Z",
               status: "RESUBMISSION_REQUESTED",
               my_role: "reviewer",
               effective_role: "reviewer",
@@ -102,6 +104,7 @@ describe("Submissions Page", () => {
             {
               id: "3",
               title: "Jest Submission 3",
+              created_at: "2023-06-25T08:21:44.000000Z",
               status: "AWAITING_REVIEW",
               my_role: "review_coordinator",
               effective_role: "review_coordinator",
@@ -121,6 +124,7 @@ describe("Submissions Page", () => {
             {
               id: "4",
               title: "Jest Submission 4",
+              created_at: "2023-06-24T08:21:44.000000Z",
               status: "REJECTED",
               my_role: "",
               effective_role: "review_coordinator",
@@ -140,6 +144,7 @@ describe("Submissions Page", () => {
             {
               id: "5",
               title: "Jest Submission 5",
+              created_at: "2023-06-23T08:21:44.000000Z",
               status: "INITIALLY_SUBMITTED",
               my_role: "",
               effective_role: "",
@@ -159,6 +164,7 @@ describe("Submissions Page", () => {
             {
               id: "6",
               title: "Jest Submission 6",
+              created_at: "2023-06-22T08:21:44.000000Z",
               status: "INITIALLY_SUBMITTED",
               my_role: "submitter",
               effective_role: "submitter",
@@ -198,6 +204,7 @@ describe("Submissions Page", () => {
             {
               id: "1",
               title: "Jest Submission 1",
+              created_at: "2023-01-27T08:21:44.000000Z",
               status: "INITIALLY_SUBMITTED",
               my_role: "submitter",
               effective_role: "submitter",
@@ -283,6 +290,7 @@ describe("Submissions Page", () => {
             {
               id: "2",
               title: "Jest Submission 2",
+              created_at: "2023-01-26T08:21:44.000000Z",
               status: "RESUBMISSION_REQUESTED",
               my_role: "reviewer",
               effective_role: "reviewer",
