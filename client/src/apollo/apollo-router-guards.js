@@ -29,9 +29,11 @@ export async function beforeEachRequiresDraftAccess(apolloClient, to, _, next) {
         fetchPolicy: "network-only",
       })
       .then(({ data: { currentUser } }) => currentUser)
+
     const submission = user.submissions.filter((submission) => {
       return submission.id == submissionId
     })
+
     if (submission.length) {
       const s = submission[0]
 
