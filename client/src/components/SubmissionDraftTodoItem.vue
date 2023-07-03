@@ -7,6 +7,7 @@
       </div>
       <template #avatar>
         <q-icon
+          data-cy="todo_icon"
           class="material-icons-outlined"
           :name="icon.name"
           :color="icon.color"
@@ -15,6 +16,7 @@
       <template #action>
         <q-btn
           v-if="!done"
+          data-cy="todo_go_btn"
           :label="$t(`submissions.create.todo.btn_label.go`)"
           @click="$emit('goClick')"
         />
@@ -26,6 +28,7 @@
         />
         <q-btn
           v-if="done"
+          data-cy="todo_done_btn"
           flat
           :label="$t(`submissions.create.todo.btn_label.done`)"
           @click="$emit('goClick')"

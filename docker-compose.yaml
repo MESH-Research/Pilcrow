@@ -22,7 +22,7 @@ services:
     depends_on:
       - mysql
   mysql:
-    image: mysql:5.7.40
+    image: mysql:5.7.42
     tty: true
     environment:
       MYSQL_DATABASE: ${DB_DATABASE}
