@@ -26,20 +26,18 @@ export async function beforeEachRequiresDraftAccess(apolloClient, to, _, next) {
     const user = await apolloClient
       .query({
         query: CURRENT_USER_SUBMISSIONS,
+        fetchPolicy: "network-only",
       })
       .then(({ data: { currentUser } }) => currentUser)
-
     const submission = user.submissions.filter((submission) => {
       return submission.id == submissionId
     })
-
     if (submission.length) {
       const s = submission[0]
 
-      // Only allow submitters access when the submission is a draft
+      // Only allow submitters access
       if (
-        ["submitter"].some((role) => role === s.my_role) &&
-        s.status === "DRAFT"
+        ["submitter"].some((role) => role === s.my_role)
       ) {
         access = true
       }
