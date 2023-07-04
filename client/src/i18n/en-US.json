@@ -137,6 +137,7 @@
     "site_subtitle": "Submission Review System"
   },
   "footer": {
+    "site_title": "Pilcrow",
     "footer_text": "Powered by {link}"
   },
   "account": {
