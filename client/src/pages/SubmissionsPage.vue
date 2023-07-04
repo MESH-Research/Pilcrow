@@ -100,7 +100,10 @@ import CommentPreview from "src/components/atoms/CommentPreview.vue"
 const { currentUser } = useCurrentUser()
 const { result, loading: subsLoading } = useQuery(CURRENT_USER_SUBMISSIONS)
 const submissions = computed(() => {
-  return result.value?.currentUser?.submissions ?? []
+  let s = result.value?.currentUser?.submissions ?? []
+  return [...s].sort((a, b) => {
+    return new Date(b.created_at) - new Date(a.created_at)
+  })
 })
 const { result: pubsResult } = useQuery(GET_PUBLICATIONS, {
   is_publicly_visible: true,

@@ -1,0 +1,19 @@
+name: Auto approve
+
+on:
+  workflow_dispatch:
+    inputs:
+      pullRequestNumber:
+        description: Pull request number to auto-approve
+        required: false
+
+jobs:
+  auto-approve:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - uses: hmarr/auto-approve-action@v3
+        with:
+          pull-request-number: ${{ github.event.inputs.pullRequestNumber }}
+          review-message: "${{ github.triggering_actor }} triggered an approval of this PR via workflow."

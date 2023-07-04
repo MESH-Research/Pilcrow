@@ -22,4 +22,5 @@ type SubmissionAuditValues {
     title: String
     status: SubmissionStatus
     status_change_comment: String
+    content_id: ID
 }

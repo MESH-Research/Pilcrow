@@ -72,7 +72,7 @@
           <p>
             {{ $t("auth.register_question") }}
             <router-link to="/register" class="dark-accent-text">
-              {{ $t("auth.register") }}
+              {{ $t("auth.register_link") }}
             </router-link>
           </p>
           <p>

@@ -3,9 +3,6 @@
 
 import { a11yLogViolations } from "../support/helpers"
 
-// TODO: Uncomment when file upload is made functional again
-//import "cypress-file-upload";
-
 describe("Submission Create Page", () => {
   it("prevents submission creation when fields are invalid", () => {
     const name_520_characters = "1234567890".repeat(52)
@@ -63,5 +60,4 @@ describe("Submission Create Page", () => {
     cy.dataCy("create_submission_btn").click()
     cy.dataCy("submission_title").contains("Test Submission")
   })
-
 })
