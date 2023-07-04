@@ -8024,16 +8024,16 @@
         },
         {
             "name": "mll-lab/laravel-graphiql",
-            "version": "v3.0.2",
+            "version": "v3.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mll-lab/laravel-graphiql.git",
-                "reference": "8e4a6d6a70abe1ab696f5299e3b3c04a643f9d9d"
+                "reference": "54d7dbe5376ab87a6ea83be11b1431d0af9e2f6c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mll-lab/laravel-graphiql/zipball/8e4a6d6a70abe1ab696f5299e3b3c04a643f9d9d",
-                "reference": "8e4a6d6a70abe1ab696f5299e3b3c04a643f9d9d",
+                "url": "https://api.github.com/repos/mll-lab/laravel-graphiql/zipball/54d7dbe5376ab87a6ea83be11b1431d0af9e2f6c",
+                "reference": "54d7dbe5376ab87a6ea83be11b1431d0af9e2f6c",
                 "shasum": ""
             },
             "require": {
@@ -8084,9 +8084,9 @@
             ],
             "support": {
                 "issues": "https://github.com/mll-lab/laravel-graphiql/issues",
-                "source": "https://github.com/mll-lab/laravel-graphiql/tree/v3.0.2"
+                "source": "https://github.com/mll-lab/laravel-graphiql/tree/v3.1.0"
             },
-            "time": "2023-06-26T07:04:16+00:00"
+            "time": "2023-07-04T13:58:40+00:00"
         },
         {
             "name": "mockery/mockery",
