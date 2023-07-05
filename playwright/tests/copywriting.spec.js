@@ -12,7 +12,7 @@ test("Make copyrighting screenshots", async ({ page, baseURL }) => {
     async function screenshotPath(url, waitOn) {
         await page.goto(url)
         //eslint-disable-next-line
-        if (waitOn) await expect.soft(page.locator(waitOn)).toBeVisible()
+    if (waitOn) await expect.soft(page.locator(waitOn)).toBeVisible()
 
         const name = url.replace(/\//g, "#")
 
@@ -57,8 +57,24 @@ test("Make copyrighting screenshots", async ({ page, baseURL }) => {
     await screenshotPath("/publication/1", "[data-cy=publication_home_content]")
     await screenshotPath("/submissions", "[data-cy=submissions_table]")
     await screenshotPath("/submission/100/details", "[data-cy=reviewers_list]")
+    await screenshotPath("/submission/100/details", "[data-cy=reviewers_list]")
     await screenshotPath(
         "/submission/100/review",
         "[data-cy=submission_review_layout]"
+    )
+    await screenshotPath(
+        "/submission/100/review",
+        "[data-cy=submission_review_layout]"
+    )
+    await screenshotPath(
+        "/publication/1/create",
+        "[data-cy=submission_create_subheading]"
+    )
+    await login(page, "regularuser@pilcrow.dev")
+
+    await screenshotPath("/submission/104/draft", "[data-cy=submission_title]")
+    await screenshotPath(
+        "/submission/104/content",
+        "[data-cy=submission_content_title]"
     )
 })

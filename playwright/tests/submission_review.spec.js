@@ -261,9 +261,8 @@ test("submission review other user actions", async ({ page, baseURL }) => {
     await login(page, "regularuser@pilcrow.dev")
 
     //* Submission in draft status can be submitted for review
-    await page.goto("submission/104/review")
-    await expect(page.getByTestId("submission_status")).toHaveText(/Draft/)
-    await page.getByTestId("status-dropdown").click()
-    await page.getByTestId("initially_submit").click()
+    await page.goto("submission/104/draft")
+    await page.getByRole("button", { name: "Submit for Review" }).click()
     await page.getByTestId("dirtyYesChangeStatus").click()
+    await page.getByRole("link", { name: "Visit Submission" }).click()
 })
