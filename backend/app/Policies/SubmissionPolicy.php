@@ -74,7 +74,7 @@ class SubmissionPolicy
             return true;
         }
 
-        return Response::deny('NO_PERMISSION');
+        return Response::deny('UNAUTHORIZED');
     }
 
     /**
@@ -95,7 +95,7 @@ class SubmissionPolicy
             return true;
         }
 
-        return Response::deny('NO_PERMISSION');
+        return Response::deny('UNAUTHORIZED');
     }
 
     /**
@@ -111,7 +111,7 @@ class SubmissionPolicy
             return true;
         }
 
-        return Response::deny('NO_PERMISSION');
+        return Response::deny('UNAUTHORIZED');
     }
 
     /**
@@ -138,7 +138,7 @@ class SubmissionPolicy
             return true;
         }
 
-        return Response::deny('NO_PERMISSION');
+        return Response::deny('UNAUTHORIZED');
     }
 
     /**
@@ -162,7 +162,7 @@ class SubmissionPolicy
             return true;
         }
 
-        return Response::deny('NO_PERMISSION');
+        return Response::deny('UNAUTHORIZED');
     }
 
     /**
@@ -184,7 +184,7 @@ class SubmissionPolicy
             return true;
         }
 
-        return Response::deny('NO_PERMISSION');
+        return Response::deny('UNAUTHORIZED');
     }
 
     /**
@@ -206,7 +206,7 @@ class SubmissionPolicy
             return true;
         }
 
-        return Response::deny('NO_PERMISSION');
+        return Response::deny('UNAUTHORIZED');
     }
 
     /**

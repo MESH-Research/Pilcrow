@@ -149,7 +149,7 @@ class SubmissionTest extends ApiTestCase
              [ 'id' => $submission->id ]
          );
 
-         $response->assertJsonPath('errors.0.message', 'NO_PERMISSION');
+         $response->assertJsonPath('errors.0.message', 'UNAUTHORIZED');
     }
 
     public function testGuestsCannotViewSubmission()
@@ -471,7 +471,7 @@ class SubmissionTest extends ApiTestCase
 
         $response = $this->executeSubmissionRoleAssignment($role, $submission, $user);
 
-        $response->assertJsonPath('errors.0.message', 'NO_PERMISSION');
+        $response->assertJsonPath('errors.0.message', 'UNAUTHORIZED');
     }
 
     public function reviewCoordinatorAssignableRolesProvider()
@@ -505,7 +505,7 @@ class SubmissionTest extends ApiTestCase
         if ($allowed) {
             $response->assertJsonPath('data.updateSubmission.' . $role . '.0.id', (string)$user->id);
         } else {
-            $response->assertJsonPath('errors.0.message', 'NO_PERMISSION');
+            $response->assertJsonPath('errors.0.message', 'UNAUTHORIZED');
         }
     }
 
@@ -528,7 +528,7 @@ class SubmissionTest extends ApiTestCase
 
         $response = $this->executeSubmissionRoleAssignMent($role, $submission, $user);
 
-        $response->assertJsonPath('errors.0.message', 'NO_PERMISSION');
+        $response->assertJsonPath('errors.0.message', 'UNAUTHORIZED');
     }
 
     /**
@@ -729,7 +729,7 @@ class SubmissionTest extends ApiTestCase
                 'status' => $status,
             ]
         );
-        $response->assertJsonPath('errors.0.message', 'NO_PERMISSION');
+        $response->assertJsonPath('errors.0.message', 'UNAUTHORIZED');
     }
 
     /**
@@ -924,7 +924,7 @@ class SubmissionTest extends ApiTestCase
                 'role' => Role::REVIEWER,
                 'title' => 'My Newly Updated Submission Title',
                 'passes' => false,
-                'message' => 'NO_PERMISSION',
+                'message' => 'UNAUTHORIZED',
             ],
             'As A Review Coordinator' => [
                 'role' => Role::REVIEW_COORDINATOR,
