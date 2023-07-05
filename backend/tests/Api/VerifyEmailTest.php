@@ -186,7 +186,7 @@ class VerifyEmailTest extends ApiTestCase
         $response = $this->callSendVerifyEmailEndpoint(['id' => $testUser->id]);
 
         Notification::assertNotSentTo([$testUser], VerifyEmail::class);
-        $response->assertGraphQLErrorCategory('authentication');
+        $response->assertJsonPath('errors.0.extensions.category', 'authentication');
     }
 
     /**

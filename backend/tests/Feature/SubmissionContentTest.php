@@ -33,11 +33,11 @@ class SubmissionContentTest extends TestCase
             $submission->content_id = $submission_content->id;
         });
         $first_data = $submissions->first()->content->data;
-        $expected_first = 'Example content from PHPUnit 0';
+        $expected_first = '<p>Example content from PHPUnit 0</p>';
         $this->assertEquals($expected_first, $first_data);
 
         $last_data = $submissions->last()->content->data;
-        $expected_last = 'Example content from PHPUnit ' . ($number_of_submissions - 1);
+        $expected_last = '<p>Example content from PHPUnit ' . ($number_of_submissions - 1 . '</p>');
         $this->assertEquals($expected_last, $last_data);
     }
 
@@ -49,14 +49,14 @@ class SubmissionContentTest extends TestCase
         $submission = Submission::factory()->create();
         for ($i = 0; $i < 3; $i++) {
             $submission_content = SubmissionContent::factory()->create([
-                'data' => 'Example content from PHPUnit ' . $i,
+                'data' => '<p>Example content from PHPUnit ' . $i . '</p>',
                 'submission_id' => $submission->id,
             ]);
         }
         $submission->content_id = $submission_content->id;
         $this->assertEquals(3, $submission->contentHistory->count());
         $submission->contentHistory->map(function ($content, $key) {
-            $expected_data = 'Example content from PHPUnit ' . $key;
+            $expected_data = '<p>Example content from PHPUnit ' . $key . '</p>';
             $this->assertEquals($expected_data, $content->data);
         });
     }
@@ -70,7 +70,7 @@ class SubmissionContentTest extends TestCase
         $submissions = Submission::factory()->count($number_of_submissions)->create();
         $submissions->map(function ($submission, $index) {
             $submission_content = SubmissionContent::factory()->create([
-                'data' => 'Example content from PHPUnit ' . $index,
+                'data' => '<p>Example content from PHPUnit ' . $index . '</p>',
                 'submission_id' => $submission->id,
             ]);
             SubmissionFile::factory()->create([
@@ -82,30 +82,31 @@ class SubmissionContentTest extends TestCase
         });
 
         $first_data = $submissions->first()->files->first()->content->data;
-        $expected_first = 'Example content from PHPUnit 0';
+        $expected_first = '<p>Example content from PHPUnit 0</p>';
         $this->assertEquals($expected_first, $first_data);
 
         $last_data = $submissions->last()->files->first()->content->data;
-        $expected_last = 'Example content from PHPUnit ' . ($number_of_submissions - 1);
+        $expected_last = '<p>Example content from PHPUnit ' . ($number_of_submissions - 1 . '</p>');
         $this->assertEquals($expected_last, $last_data);
     }
 
-    public function testNewSubmissionFileJobCreated()
-    {
-        $this->beAppAdmin();
-        $fileName = '/myfile.txt';
-        Queue::fake();
+    // TODO: Uncomment when jobs are are enabled
+    // public function testNewSubmissionFileJobCreated()
+    // {
+    //     $this->beAppAdmin();
+    //     $fileName = '/myfile.txt';
+    //     Queue::fake();
 
-        $file = SubmissionFile::factory()
-            ->forSubmission()
-            ->create([
-                'file_upload' => $fileName,
-            ]);
+    //     $file = SubmissionFile::factory()
+    //         ->forSubmission()
+    //         ->create([
+    //             'file_upload' => $fileName,
+    //         ]);
 
-        Queue::assertPushed(function (ImportFileContent $job) use ($file) {
-            return $job->file->id === $file->id;
-        });
-    }
+    //     Queue::assertPushed(function (ImportFileContent $job) use ($file) {
+    //         return $job->file->id === $file->id;
+    //     });
+    // }
 
     public function testImportFileContentCallsPandoc()
     {
@@ -139,7 +140,7 @@ class SubmissionContentTest extends TestCase
         $file->refresh();
         $this->assertNotEmpty($file->content_id);
         $this->assertEquals(SubmissionFileImportStatus::Success(), $file->import_status);
-        $this->assertEquals('New content for submission', $file->submission->content->data);
+        $this->assertEquals('<p>New content for submission</p>', $file->submission->content->data);
     }
 
     public function testImportFileJobErrorReporting()

@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\GraphQL\Directives;
 
-use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use Illuminate\Support\Arr;
 use Nuwave\Lighthouse\Auth\CanDirective;
@@ -78,41 +77,34 @@ GRAPHQL;
      * Check nested input fields for policies
      *
      * @param \Nuwave\Lighthouse\Schema\Values\FieldValue $fieldValue
-     * @param \Closure $next
-     * @return \Nuwave\Lighthouse\Schema\Values\FieldValue
+     * @return void
      */
-    public function handleField(FieldValue $fieldValue, Closure $next): FieldValue
+    public function handleField(FieldValue $fieldValue): void
     {
-        $previousResolver = $fieldValue->getResolver();
         $apply = $this->directiveArgValue('apply');
-
-        $fieldValue->setResolver(
-            function (
-                $root,
-                array $args,
-                GraphQLContext $context,
-                ResolveInfo $resolveInfo
-            ) use (
-                $previousResolver,
-                $apply
-            ) {
-                foreach ($apply as $applyField) {
+        $fieldValue->wrapResolver(fn (callable $resolver): \Closure => function (
+            mixed $root,
+            array $args,
+            GraphQLContext $context,
+            ResolveInfo $resolveInfo
+        ) use (
+            $resolver,
+            $apply
+        ) {
+              foreach ($apply as $applyField) {
                     [$fieldToCheck, $ability] = explode(':', $applyField);
                     $argValue = Arr::get($args, $fieldToCheck);
                     if ($argValue !== null) {
                         $gate = $this->gate->forUser($context->user());
                         $checkArguments = $this->buildCheckArguments($args);
 
-                        foreach ($this->modelsToCheck($resolveInfo->argumentSet, $args) as $model) {
+                        foreach ($this->modelsToCheck($root, $args, $context, $resolveInfo) as $model) {
                             $this->authorize($gate, $ability, $model, $checkArguments);
                         }
                     }
-                }
+              }
 
-                return $previousResolver($root, $args, $context, $resolveInfo);
-            }
-        );
-
-        return $next($fieldValue);
+                return $resolver($root, $args, $context, $resolveInfo);
+        });
     }
 }
