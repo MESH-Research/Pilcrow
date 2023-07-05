@@ -100,7 +100,8 @@ class SubmissionInvitationTest extends ApiTestCase
               'message' => '',
             ]
         );
-        $response->assertJsonPath('errors.0.extensions.category', 'validation');
+        $responseMessage = $response->json('errors.0.message');
+        $this->assertStringStartsWith('Validation failed', $responseMessage);
     }
 
     /**

@@ -275,7 +275,7 @@ class SubmissionCommentTest extends ApiTestCase
         if ($is_valid) {
             $response->assertJsonPath('data', $expected);
         } else {
-            $response->assertGraphQLErrorCategory('validation');
+            $this->assertStringStartsWith('Validation failed', $response->json('errors.0.message'));
         }
     }
 
@@ -371,7 +371,7 @@ class SubmissionCommentTest extends ApiTestCase
                 ],
             ]);
         } else {
-            $response->assertGraphQLErrorCategory('validation');
+            $this->assertStringStartsWith('Validation failed', $response->json('errors.0.message'));
         }
     }
 
@@ -416,7 +416,7 @@ class SubmissionCommentTest extends ApiTestCase
                 ],
             ]);
         } else {
-            $response->assertGraphQLErrorCategory('validation');
+            $this->assertStringStartsWith('Validation failed', $response->json('errors.0.message'));
         }
     }
 
@@ -489,7 +489,7 @@ class SubmissionCommentTest extends ApiTestCase
                 ],
             ]);
         } else {
-            $response->assertGraphQLErrorCategory('validation');
+            $this->assertStringStartsWith('Validation failed', $response->json('errors.0.message'));
         }
     }
 

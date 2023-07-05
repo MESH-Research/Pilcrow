@@ -40,7 +40,7 @@ class CreateUserMutationTest extends ApiTestCase
         return [
             ['', false],
             [null, false],
-            [str_repeat('*', 255), 'validation'],
+            [str_repeat('*', 255), '/^Validation failed/'],
         ];
     }
 
@@ -55,7 +55,7 @@ class CreateUserMutationTest extends ApiTestCase
         $response = $this->callEndpoint($testUser->makeVisible('password')->attributesToArray());
 
         if ($failure) {
-            $response->assertGraphQLErrorCategory($failure);
+            $this->assertStringStartsWith('Validation failed', $response->json('errors.0.message'));
         } else {
             $response->assertJsonPath('data.createUser.name', $name);
         }
@@ -67,10 +67,10 @@ class CreateUserMutationTest extends ApiTestCase
     public function usernameValidationProvider(): array
     {
         return [
-            ['', 'validation'],
-            [null, 'graphql'],
+            ['', '/must not be null/'],
+            [null, '/must not be null/'],
             ['mytestuser', false],
-            ['duplicateUser', 'validation'],
+            ['duplicateUser', '/^Validation failed/'],
         ];
     }
 
@@ -88,7 +88,7 @@ class CreateUserMutationTest extends ApiTestCase
         $response = $this->callEndpoint($testUser->makeVisible('password')->attributesToArray());
 
         if ($failure) {
-            $response->assertGraphQLErrorCategory($failure);
+            $this->assertMatchesRegularExpression($failure, $response->json('errors.0.message'));
         } else {
             $response->assertJsonPath('data.createUser.username', $username);
         }
@@ -101,11 +101,11 @@ class CreateUserMutationTest extends ApiTestCase
     {
         return [
             ['adamsb@msu.edu', false],
-            ['notanemail', 'validation'],
-            ['', 'validation'],
-            [null, 'graphql'],
-            ['dupeemail@pilcrow.dev', 'validation'],
-            ['nodomain@example.com', 'validation'],
+            ['notanemail', '/^Validation failed/'],
+            ['', '/must not be null/'],
+            [null, '/must not be null/'],
+            ['dupeemail@pilcrow.dev', '/^Validation failed/'],
+            ['nodomain@example.com', '/^Validation failed/'],
         ];
     }
 
@@ -123,7 +123,7 @@ class CreateUserMutationTest extends ApiTestCase
         $response = $this->callEndpoint($testUser->makeVisible('password')->attributesToArray());
 
         if ($failure) {
-            $response->assertGraphQLErrorCategory($failure);
+            $this->assertMatchesRegularExpression($failure, $response->json('errors.0.message'));
         } else {
             $response->assertJsonPath('data.createUser.email', $email);
         }
@@ -135,10 +135,10 @@ class CreateUserMutationTest extends ApiTestCase
     public function passwordValidationProvider(): array
     {
         return [
-            ['password', 'validation'],
-            ['', 'validation'],
-            ['qwerty', 'validation'],
-            [null, 'graphql'],
+            ['password', '/^Validation failed/'],
+            ['', '/must not be null/'],
+            ['qwerty', '/^Validation failed/'],
+            [null, '/must not be null/'],
             ['coob!DrijAr5oc', false],
         ];
     }
@@ -155,7 +155,7 @@ class CreateUserMutationTest extends ApiTestCase
         $response = $this->callEndpoint($testUser->makeVisible('password')->attributesToArray());
 
         if ($failure) {
-            $response->assertGraphQLErrorCategory($failure);
+            $this->assertMatchesRegularExpression($failure, $response->json('errors.0.message'));
         } else {
             $response->assertGraphQLValidationPasses();
         }
