@@ -162,6 +162,7 @@ return [
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
         Laravel\Scout\ScoutServiceProvider::class,
+        Nuwave\Lighthouse\Scout\ScoutServiceProvider::class,
 
         /*
          * Package Service Providers...

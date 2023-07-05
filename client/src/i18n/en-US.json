@@ -89,7 +89,7 @@
       "INTERNAL": "An unexpected error has occurred. Please try again later.",
       "LOGIN_FORM_VALIDATION": "Please correct the errors above and try again.",
       "FAILURE_IDENTITY_NOT_FOUND": "Username and/or password is incorrect.",
-      "CREDENTIALS_INVALID": "Username and password combination is incorrect.",
+      "INVALID_CREDENTIALS": "Username and password combination is incorrect.",
       "FAILURE_CREDENTIALS_MISSING": "No credentials supplied.",
       "FAILURE_OTHER": "Unknown error while logging in.",
       "UNKNOWN": "An unexpected error occurred."

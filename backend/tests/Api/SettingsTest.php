@@ -72,7 +72,7 @@ class SettingsTest extends ApiTestCase
             }
         ', ['site_name' => 'new title']);
 
-        $error = $response->json('errors.0.extensions.category');
-        $this->assertEquals('authorization', $error);
+        $error = $response->json('errors.0.message');
+        $this->assertEquals('This action is unauthorized.', $error);
     }
 }
