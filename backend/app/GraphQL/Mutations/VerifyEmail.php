@@ -19,6 +19,9 @@ class VerifyEmail
      */
     public function verify($_, array $args)
     {
+        /**
+         * @var \App\Models\User $user
+         */
         $user = Auth::user();
         $now = Carbon::now()->timestamp;
         if ($now > $args['expires']) {
@@ -43,9 +46,15 @@ class VerifyEmail
      */
     public function send($_, array $args)
     {
+        /**
+         * @var \App\Models\User $currentUser
+         */
         $currentUser = Auth::user();
         $userId = $args['id'] ?? Auth::user()->id;
 
+        /**
+         * @var \App\Models\User $user
+         */
         $user = User::find($userId);
 
         if (!$user) {
