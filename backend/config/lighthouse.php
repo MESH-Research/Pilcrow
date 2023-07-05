@@ -30,13 +30,10 @@ return [
          */
         'middleware' => [
             \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
-
-            \Nuwave\Lighthouse\Support\Http\Middleware\AcceptJson::class,
-
+            \Nuwave\Lighthouse\Http\Middleware\AcceptJson::class,
             // Logs in a user if they are authenticated. In contrast to Laravel's 'auth'
             // middleware, this delegates auth and permission checks to the field level.
-            \Nuwave\Lighthouse\Support\Http\Middleware\AttemptAuthentication::class,
-
+            \Nuwave\Lighthouse\Http\Middleware\AttemptAuthentication::class,
             // Logs every incoming GraphQL query.
             // \Nuwave\Lighthouse\Support\Http\Middleware\LogGraphQLQueries::class,
         ],
@@ -60,7 +57,7 @@ return [
     |
     */
 
-    'guard' => 'sanctum',
+    'guards' => ['sanctum'],
 
     /*
     |--------------------------------------------------------------------------
@@ -200,178 +197,5 @@ return [
     */
 
     'orderBy' => 'field',
-
-    /*
-    |--------------------------------------------------------------------------
-    | Debug
-    |--------------------------------------------------------------------------
-    |
-    | Control the debug level as described in http://webonyx.github.io/graphql-php/error-handling/
-    | Debugging is only applied if the global Laravel debug config is set to true.
-    |
-    */
-
-    'debug' => env('LIGHTHOUSE_DEBUG', \GraphQL\Error\DebugFlag::INCLUDE_DEBUG_MESSAGE | \GraphQL\Error\DebugFlag::INCLUDE_TRACE),
-
-    /*
-    |--------------------------------------------------------------------------
-    | Error Handlers
-    |--------------------------------------------------------------------------
-    |
-    | Register error handlers that receive the Errors that occur during execution
-    | and handle them. You may use this to log, filter or format the errors.
-    | The classes must implement \Nuwave\Lighthouse\Execution\ErrorHandler
-    |
-    */
-
-    'error_handlers' => [
-        \Nuwave\Lighthouse\Execution\ExtensionErrorHandler::class,
-        \Nuwave\Lighthouse\Execution\ReportingErrorHandler::class,
-    ],
-
-    /*
-    |--------------------------------------------------------------------------
-    | Global ID
-    |--------------------------------------------------------------------------
-    |
-    | The name that is used for the global id field on the Node interface.
-    | When creating a Relay compliant server, this must be named "id".
-    |
-    */
-
-    'global_id_field' => 'id',
-
-    /*
-    |--------------------------------------------------------------------------
-    | Batched Queries
-    |--------------------------------------------------------------------------
-    |
-    | GraphQL query batching means sending multiple queries to the server in one request,
-    | You may set this flag to either process or deny batched queries.
-    |
-    */
-
-    'batched_queries' => true,
-
-    /*
-    |--------------------------------------------------------------------------
-    | Transactional Mutations
-    |--------------------------------------------------------------------------
-    |
-    | If set to true, mutations such as @create or @update will be
-    | wrapped in a transaction to ensure atomicity.
-    |
-    */
-
-    'transactional_mutations' => true,
-
-    /*
-    |--------------------------------------------------------------------------
-    | Mass Assignment Protection
-    |--------------------------------------------------------------------------
-    |
-    | If set to true, mutations will use forceFill() over fill() when populating
-    | a model with arguments in mutation directives. Since GraphQL constrains
-    | allowed inputs by design, mass assignment protection is not needed.
-    |
-    | Will default to true in v5.
-    |
-    */
-
-    'force_fill' => false,
-
-    /*
-    |--------------------------------------------------------------------------
-    | Batchload Relations
-    |--------------------------------------------------------------------------
-    |
-    | If set to true, relations marked with directives like @hasMany or @belongsTo
-    | will be optimized by combining the queries through the BatchLoader.
-    |
-    */
-
-    'batchload_relations' => true,
-
-    /*
-    |--------------------------------------------------------------------------
-    | GraphQL Subscriptions
-    |--------------------------------------------------------------------------
-    |
-    | Here you can define GraphQL subscription "broadcasters" and "storage" drivers
-    | as well their required configuration options.
-    |
-    */
-
-    'subscriptions' => [
-        /*
-         * Determines if broadcasts should be queued by default.
-         */
-        'queue_broadcasts' => env('LIGHTHOUSE_QUEUE_BROADCASTS', true),
-
-        /*
-         * Determines the queue to use for broadcasting queue jobs.
-         */
-        'broadcasts_queue_name' => env('LIGHTHOUSE_BROADCASTS_QUEUE_NAME', null),
-
-        /*
-         * Default subscription storage.
-         *
-         * Any Laravel supported cache driver options are available here.
-         */
-        'storage' => env('LIGHTHOUSE_SUBSCRIPTION_STORAGE', 'redis'),
-
-        /*
-         * Default subscription storage time to live in seconds.
-         *
-         * Indicates how long a subscription can be active before it's automatically removed from storage.
-         * Setting this to `null` means the subscriptions are stored forever. This may cause
-         * stale subscriptions to linger indefinitely in case cleanup fails for any reason.
-         */
-        'storage_ttl' => env('LIGHTHOUSE_SUBSCRIPTION_STORAGE_TTL', null),
-
-        /*
-         * Default subscription broadcaster.
-         */
-        'broadcaster' => env('LIGHTHOUSE_BROADCASTER', 'pusher'),
-
-        /*
-         * Subscription broadcasting drivers with config options.
-         */
-        'broadcasters' => [
-            'log' => [
-                'driver' => 'log',
-            ],
-            'pusher' => [
-                'driver' => 'pusher',
-                'routes' => \Nuwave\Lighthouse\Subscriptions\SubscriptionRouter::class.'@pusher',
-                'connection' => 'pusher',
-            ],
-        ],
-    ],
-
-    /*
-    |--------------------------------------------------------------------------
-    | Defer
-    |--------------------------------------------------------------------------
-    |
-    | Configuration for the experimental @defer directive support.
-    |
-    */
-
-    'defer' => [
-        /*
-         * Maximum number of nested fields that can be deferred in one query.
-         * Once reached, remaining fields will be resolved synchronously.
-         * 0 means unlimited.
-         */
-        'max_nested_fields' => 0,
-
-        /*
-         * Maximum execution time for deferred queries in milliseconds.
-         * Once reached, remaining fields will be resolved synchronously.
-         * 0 means unlimited.
-         */
-        'max_execution_ms' => 0,
-    ],
 
 ];

@@ -149,7 +149,7 @@ class SubmissionTest extends ApiTestCase
              [ 'id' => $submission->id ]
          );
 
-         $response->assertJsonPath('errors.0.extensions.category', 'authorization');
+         $response->assertJsonPath('errors.0.message', 'UNAUTHORIZED');
     }
 
     public function testGuestsCannotViewSubmission()
@@ -167,7 +167,7 @@ class SubmissionTest extends ApiTestCase
              [ 'id' => $submission->id ]
          );
 
-         $response->assertJsonPath('errors.0.extensions.category', 'authorization');
+         $response->assertJsonPath('errors.0.message', 'This action is unauthorized.');
     }
 
     /**
@@ -352,7 +352,7 @@ class SubmissionTest extends ApiTestCase
         );
 
         $response
-            ->assertJsonPath('errors.0.extensions.category', 'authorization');
+            ->assertJsonPath('errors.0.message', 'This action is unauthorized.');
     }
 
     protected function executeSubmissionRoleAssignment(string $role, Submission $submission, User $user)
@@ -471,7 +471,7 @@ class SubmissionTest extends ApiTestCase
 
         $response = $this->executeSubmissionRoleAssignment($role, $submission, $user);
 
-        $response->assertJsonPath('errors.0.extensions.category', 'authorization');
+        $response->assertJsonPath('errors.0.message', 'UNAUTHORIZED');
     }
 
     public function reviewCoordinatorAssignableRolesProvider()
@@ -505,7 +505,7 @@ class SubmissionTest extends ApiTestCase
         if ($allowed) {
             $response->assertJsonPath('data.updateSubmission.' . $role . '.0.id', (string)$user->id);
         } else {
-            $response->assertJsonPath('errors.0.extensions.category', 'authorization');
+            $response->assertJsonPath('errors.0.message', 'UNAUTHORIZED');
         }
     }
 
@@ -528,7 +528,7 @@ class SubmissionTest extends ApiTestCase
 
         $response = $this->executeSubmissionRoleAssignMent($role, $submission, $user);
 
-        $response->assertJsonPath('errors.0.extensions.category', 'authorization');
+        $response->assertJsonPath('errors.0.message', 'UNAUTHORIZED');
     }
 
     /**
@@ -729,7 +729,7 @@ class SubmissionTest extends ApiTestCase
                 'status' => $status,
             ]
         );
-        $response->assertJsonPath('errors.0.extensions.category', 'authorization');
+        $response->assertJsonPath('errors.0.message', 'UNAUTHORIZED');
     }
 
     /**
@@ -907,13 +907,13 @@ class SubmissionTest extends ApiTestCase
                 'role' => Role::APPLICATION_ADMINISTRATOR,
                 'title' => '',
                 'passes' => false,
-                'category' => 'validation',
+                'message' => 'validation',
             ],
             'Title That Is Too Long ' => [
                 'role' => Role::APPLICATION_ADMINISTRATOR,
                 'title' => str_repeat('1234567890', 520),
                 'passes' => false,
-                'category' => 'validation',
+                'message' => 'validation',
             ],
             'As A Submitter' => [
                 'role' => Role::SUBMITTER,
@@ -924,7 +924,7 @@ class SubmissionTest extends ApiTestCase
                 'role' => Role::REVIEWER,
                 'title' => 'My Newly Updated Submission Title',
                 'passes' => false,
-                'category' => 'authorization',
+                'message' => 'UNAUTHORIZED',
             ],
             'As A Review Coordinator' => [
                 'role' => Role::REVIEW_COORDINATOR,
@@ -985,10 +985,10 @@ class SubmissionTest extends ApiTestCase
     /**
      * @param Submission $submission
      * @param string $title
-     * @param string $category The category of error
+     * @param string $message The message of error
      * @return void
      */
-    protected function executeSubmissionTitleUpdateUnsuccessfully(Submission $submission, string $title, string $category)
+    protected function executeSubmissionTitleUpdateUnsuccessfully(Submission $submission, string $title, string $message)
     {
         $response = $this->graphQL(
             'mutation UpdateSubmissionString ($submission_id: ID!, $title: String) {
@@ -1007,14 +1007,15 @@ class SubmissionTest extends ApiTestCase
                 'title' => $title,
             ]
         );
-        $response->assertJsonPath('errors.0.extensions.category', $category);
+        $responseMessage = $response->json('errors.0.message');
+        $this->assertStringContainsStringIgnoringCase($message, $responseMessage);
     }
 
     /**
      * @dataProvider provideTitleEditData
      * @return void
      */
-    public function testSubmissionTitleUpdateByRole(string $role, string $title, bool $passes, ?string $category = null)
+    public function testSubmissionTitleUpdateByRole(string $role, string $title, bool $passes, ?string $message = null)
     {
         switch ($role) {
             case Role::SUBMITTER:
@@ -1048,7 +1049,7 @@ class SubmissionTest extends ApiTestCase
         if ($passes) {
             $this->executeSubmissionTitleUpdateSuccessfully($submission, $title);
         } else {
-            $this->executeSubmissionTitleUpdateUnsuccessfully($submission, $title, $category);
+            $this->executeSubmissionTitleUpdateUnsuccessfully($submission, $title, $message);
         }
     }
 
