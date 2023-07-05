@@ -3,26 +3,17 @@ declare(strict_types=1);
 
 namespace App\Exceptions;
 
-use Exception;
-use Nuwave\Lighthouse\Exceptions\RendersErrorsExtensions;
+use GraphQL\Error\ClientAware;
+use GraphQL\Error\ProvidesExtensions;
 
-class ClientException extends Exception implements RendersErrorsExtensions
+class ClientException extends \Exception implements ClientAware, ProvidesExtensions
 {
-    public $clientCode;
-    public $category;
-
-    /**
-     * Construct a client safe exception.
-     *
-     * @param string $message Human readable error message.
-     * @param string $category Application category.
-     * @param string $clientCode Token for client code to match on for error message generation.
-     */
-    public function __construct(string $message, ?string $category = null, string $clientCode)
-    {
-        $this->category = $category ?? 'unknown';
-        $this->clientCode = $clientCode ?? 'UNKNOWN';
-        parent::__construct($message);
+    public function __construct(
+      $message,
+      protected string $category = 'unknown',
+      protected string $clientCode = 'UNKNOWN'
+    ) {
+      parent::__construct($message);
     }
 
     /**
@@ -37,28 +28,15 @@ class ClientException extends Exception implements RendersErrorsExtensions
     }
 
     /**
-     * Returns string describing a category of the error.
+     * Return extensions for error messsage.
      *
-     * Value "graphql" is reserved for errors produced by query parsing or validation, do not use it.
-     *
-     * @api
-     * @return string
+     * @return array|null
      */
-    public function getCategory(): string
+    public function getExtensions(): ?array
     {
-        return $this->category;
-    }
-
-    /**
-     * Return the content that is put in the "extensions" part
-     * of the returned error.
-     *
-     * @return array
-     */
-    public function extensionsContent(): array
-    {
-        return [
-            'code' => strtoupper($this->clientCode),
-        ];
+      return [
+        'code' => $this->clientCode,
+        'category' => $this->category
+      ];
     }
 }

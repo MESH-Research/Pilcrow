@@ -14,15 +14,16 @@ use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
 
 class GateDirective extends BaseDirective implements FieldMiddleware
 {
-    /**
+
+
+  /**
      * Directive constructor
      *
      * @param \Illuminate\Contracts\Auth\Access\Gate $gate Inject gate contract
      */
-    public function __construct(Gate $gate)
-    {
-        $this->gate = $gate;
-    }
+    public function __construct(
+      protected Gate $gate
+    ) {}
 
     /**
      * Wrap around the final field resolver.
@@ -31,13 +32,11 @@ class GateDirective extends BaseDirective implements FieldMiddleware
      * @param  \Closure  $next
      * @return \Nuwave\Lighthouse\Schema\Values\FieldValue
      */
-    public function handleField(FieldValue $fieldValue, Closure $next): FieldValue
+    public function handleField(FieldValue $fieldValue): void
     {
-        $previousResolver = $fieldValue->getResolver();
-
         $ability = $this->directiveArgValue('ability');
 
-        $fieldValue->setResolver(
+        $fieldValue->wrapResolver(fn (callable $resolver): \Closure =>
             function (
                 $root,
                 array $args,
@@ -45,7 +44,7 @@ class GateDirective extends BaseDirective implements FieldMiddleware
                 ResolveInfo $resolveInfo
             ) use (
                 $ability,
-                $previousResolver
+                $resolver
             ) {
                 $gate = $this->gate->forUser($context->user());
 
@@ -55,11 +54,9 @@ class GateDirective extends BaseDirective implements FieldMiddleware
                     throw new AuthorizationException($response->message(), $response->code());
                 }
 
-                return $previousResolver($root, $args, $context, $resolveInfo);
+                return $resolver($root, $args, $context, $resolveInfo);
             }
         );
-
-        return $next($fieldValue);
     }
 
     /**

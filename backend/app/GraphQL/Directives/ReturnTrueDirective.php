@@ -36,10 +36,10 @@ SDL;
      * @param \Nuwave\Lighthouse\Schema\Values\FieldValue $fieldValue
      * @return \Nuwave\Lighthouse\Schema\Values\FieldValue
      */
-    public function resolveField(FieldValue $fieldValue): FieldValue
+    public function resolveField(FieldValue $fieldValue): callable
     {
-        return $fieldValue->setResolver(function () {
-            return true;
-        });
+      return function () {
+        return true;
+        };
     }
 }

@@ -74,7 +74,7 @@ class SubmissionPolicy
             return true;
         }
 
-        return Response::deny('You do not have permission to edit submitters for this submission');
+        return Response::deny("NO_PERMISSION");
     }
 
     /**
@@ -95,7 +95,7 @@ class SubmissionPolicy
             return true;
         }
 
-        return Response::deny('You do not have permission to update reviewers for this submission');
+        return Response::deny("NO_PERMISSION");
     }
 
     /**
@@ -110,6 +110,7 @@ class SubmissionPolicy
         if ($this->checkAdminRoles($user, $submission->publication_id)) {
             return true;
         }
+        return Response::deny("NO_PERMISSION");
     }
 
     /**
@@ -136,7 +137,7 @@ class SubmissionPolicy
             return true;
         }
 
-        return Response::deny('You do not have permission to update the status of this submission');
+        return Response::deny("NO_PERMISSION");
     }
 
     /**
@@ -160,7 +161,7 @@ class SubmissionPolicy
             return true;
         }
 
-        return Response::deny('You do not have permission to update the status of this submission');
+        return Response::deny("NO_PERMISSION");
     }
 
     /**
@@ -182,7 +183,7 @@ class SubmissionPolicy
             return true;
         }
 
-        return Response::deny('You do not have permission to view this submission');
+        return Response::deny("NO_PERMISSION");
     }
 
     /**
@@ -204,7 +205,7 @@ class SubmissionPolicy
             return true;
         }
 
-        return Response::deny('You do not have permission to update this submission');
+        return Response::deny("NO_PERMISSION");
     }
 
     /**
