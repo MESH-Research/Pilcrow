@@ -40,5 +40,5 @@ jobs:
         if: always()
         with:
           name: playwright-report-${{ matrix.shardIndex }}
-          path: playwright/playwright-report/
+          path: playwright/playwright-report/x`
           retention-days: 30
