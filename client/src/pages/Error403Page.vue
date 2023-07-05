@@ -3,11 +3,11 @@
     <p>
       <q-icon name="lock" style="font-size: 30vmin" color="negative" />
     </p>
-    <p class="text-faded">Oops, you don't have permission to view this page.</p>
+    <p class="text-faded">{{ $t("failures.error_403") }}</p>
 
     <q-btn
       color="secondary"
-      label="Go back"
+      :label="$t(`failures.error_404.back`)"
       class="q-my-sm"
       icon="arrow_back"
       @click="goBack()"
@@ -16,7 +16,7 @@
     <q-btn
       color="secondary"
       to="/"
-      label="Go Home"
+      :label="$t(`failures.error_404.home`)"
       class="q-my-sm"
       icon="home"
     />

@@ -4,13 +4,13 @@
       v-model="selectedFont"
       outlined
       :options="fonts"
-      label="Font"
+      :label="$t(`submissions.style_controls.font`)"
       style="min-width: 150px"
     />
     <div class="q-ml-md row items-center">
       <div>
         <q-btn
-          aria-label="Decrease Font Size"
+          :aria-label="$t(`submissions.style_controls.decrease`)"
           data-cy="decrease_font"
           round
           flat
@@ -20,11 +20,11 @@
           text-color="grey-7"
           @click="decreaseFontSize()"
         />
-        <q-tooltip>Decrease Font Size</q-tooltip>
+        <q-tooltip>{{ $t("submissions.style_controls.decrease") }}</q-tooltip>
       </div>
       <div>
         <q-btn
-          aria-label="Increase Font Size"
+        :aria-label="$t(`submissions.style_controls.increase`)"
           data-cy="increase_font"
           round
           flat
@@ -33,7 +33,7 @@
           text-color="grey-7"
           @click="increaseFontSize()"
         />
-        <q-tooltip>Increase Font Size</q-tooltip>
+        <q-tooltip>{{ $t("submissions.style_controls.increase") }}</q-tooltip>
       </div>
       <div>
         <q-toggle
@@ -46,11 +46,17 @@
         >
           <template #default>
             <div style="width: 100px">
-              {{ darkModeValue ? "Dark Mode" : "Light Mode" }}
+              {{
+                darkModeValue
+                  ? $t("submissions.style_controls.dark")
+                  : $t("submissions.style_controls.light")
+              }}
             </div>
           </template>
         </q-toggle>
-        <q-tooltip>Toggle Dark Mode</q-tooltip>
+        <q-tooltip>{{
+          $t("submissions.style_controls.toggle_dark")
+        }}</q-tooltip>
       </div>
     </div>
   </div>

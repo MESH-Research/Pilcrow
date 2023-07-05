@@ -9,7 +9,7 @@
           color="secondary"
           :icon="v$.icon.$model"
           dense
-          aria-label="$t('publications.style_criteria.fields.icon.ariaLabel')"
+          :aria-label="$t('publications.style_criteria.fields.icon.ariaLabel')"
           @click="editIcon"
         >
           <q-tooltip
@@ -58,7 +58,7 @@
             ref="button_delete"
             data-cy="button-delete"
             color="negative"
-            label="Delete"
+            :label="$t(`buttons.delete`)"
             @click="onDelete"
           />
 
