@@ -19,7 +19,7 @@ test("Submission Details", async ({ page, baseURL }) => {
         .getByRole("listitem")
 
     //Check that app admins can assign and remove reviewers
-    await reviewerInput.fill("application ad")
+    await reviewerInput.fill("application")
     await page.getByTestId("options_item").click()
     await page.getByTestId("button-assign").click()
 
