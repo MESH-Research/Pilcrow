@@ -233,7 +233,6 @@ test("submission lists", async ({ page, baseURL }) => {
     await page.goto("submissions")
 
     await page.getByTestId("publications_select").click()
-    await page.getByTestId("publications_select").click()
     await page
         .getByRole("option", { name: "Pilcrow Test Publication 1" })
         .click()
