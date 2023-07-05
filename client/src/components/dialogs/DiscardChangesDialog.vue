@@ -4,21 +4,21 @@
       <q-card-section class="row items-center">
         <q-avatar icon="mdi-file-undo" color="primary" text-color="white" />
         <span class="q-ml-sm"
-          >Are you sure you want to discard your changes?</span
+          >{{ $t(`dialog.discardChanges.body`) }}</span
         >
       </q-card-section>
 
       <q-card-actions align="right">
         <q-btn
           flat
-          label="Keep Changes"
+          :label="$t(`dialog.discardChanges.keep_changes`)"
           color="primary"
           data-cy="dirtyKeepChanges"
           @click="onDialogCancel"
         />
         <q-btn
           flat
-          label="Discard"
+          :label="$t(`dialog.discardChanges.discard`)"
           color="negative"
           data-cy="dirtyDiscardChanges"
           @click="onDialogOK"
