@@ -3,7 +3,7 @@
     <q-card style="width: 400px" square>
       <q-form @submit="handleSubmit()">
         <q-card-section class="accent q-pa-sm">
-          <h1 class="text-h5 text-white">Login</h1>
+          <h1 class="text-h5 text-white">{{ $t(`auth.login`) }}</h1>
         </q-card-section>
         <q-card-section class="q-pa-lg">
           <fieldset class="q-px-sm q-pt-md q-gutter-y-lg q-pb-lg">
@@ -63,7 +63,7 @@
             size="lg"
             color="accent"
             class="full-width text-white"
-            label="Login"
+            :label="$t(`auth.login`)"
             :loading="loading"
             type="submit"
           />

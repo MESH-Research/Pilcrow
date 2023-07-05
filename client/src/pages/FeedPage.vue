@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="row">
-      <h2 class="q-pl-lg">My Notifications</h2>
+      <h2 class="q-pl-lg">{{ $t("notifications.feed_page.heading") }}</h2>
     </div>
     <div class="row justify-center">
       <div class="col-md-8 q-pa-sm">
@@ -9,7 +9,7 @@
           <q-select
             v-model="filterMode"
             :options="filterModes"
-            label="Filter"
+            :label="$t(`notifications.feed_page.filter`)"
             dense
             clearable
             outlined

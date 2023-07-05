@@ -53,7 +53,7 @@
         <q-btn
           v-if="!isCollapsed"
           data-cy="collapseRepliesButton"
-          aria-label="Hide Replies"
+          :aria-label="$t(`submissions.comment.toggle_replies.hide_reply`)"
           bordered
           color="secondary"
           text-color="white"
@@ -65,7 +65,7 @@
         <q-btn
           v-if="isCollapsed"
           data-cy="showRepliesButton"
-          aria-label="Show Replies"
+          :aria-label="$t(`submissions.comment.toggle_replies.show_reply`)"
           bordered
           color="secondary"
           text-color="white"
@@ -111,7 +111,7 @@
           data-cy="inlineCommentReplyButton"
           bordered
           color="accent"
-          label="Reply"
+          :label="$t(`submissions.comment.toggle_replies.reply`)"
           @click="initiateReply"
         />
       </q-card-actions>
