@@ -19,11 +19,16 @@ class InvalidCredentials extends \Exception implements ClientAware, ProvidesExte
         return true;
     }
 
+    /**
+     * Return error message extensions
+     *
+     * @return array|null
+     */
     public function getExtensions(): ?array
     {
-      return   [
+        return [
         'code' => 'INVALID_CREDENTIALS',
-        'category' => 'authentication'
-      ];
+        'category' => 'authentication',
+        ];
     }
 }

@@ -371,7 +371,7 @@ class SubmissionCommentTest extends ApiTestCase
                 ],
             ]);
         } else {
-          $this->assertStringStartsWith('Validation failed', $response->json('errors.0.message'));
+            $this->assertStringStartsWith('Validation failed', $response->json('errors.0.message'));
         }
     }
 
@@ -416,7 +416,7 @@ class SubmissionCommentTest extends ApiTestCase
                 ],
             ]);
         } else {
-          $this->assertStringStartsWith('Validation failed', $response->json('errors.0.message'));
+            $this->assertStringStartsWith('Validation failed', $response->json('errors.0.message'));
         }
     }
 
@@ -489,7 +489,7 @@ class SubmissionCommentTest extends ApiTestCase
                 ],
             ]);
         } else {
-          $this->assertStringStartsWith('Validation failed', $response->json('errors.0.message'));
+            $this->assertStringStartsWith('Validation failed', $response->json('errors.0.message'));
         }
     }
 

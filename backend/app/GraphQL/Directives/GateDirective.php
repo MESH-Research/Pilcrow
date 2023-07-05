@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\GraphQL\Directives;
 
-use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use Illuminate\Contracts\Auth\Access\Gate;
 use Nuwave\Lighthouse\Exceptions\AuthorizationException;
@@ -14,23 +13,21 @@ use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
 
 class GateDirective extends BaseDirective implements FieldMiddleware
 {
-
-
-  /**
+    /**
      * Directive constructor
      *
      * @param \Illuminate\Contracts\Auth\Access\Gate $gate Inject gate contract
      */
     public function __construct(
-      protected Gate $gate
-    ) {}
+        protected Gate $gate
+    ) {
+    }
 
     /**
      * Wrap around the final field resolver.
      *
      * @param  \Nuwave\Lighthouse\Schema\Values\FieldValue  $fieldValue
-     * @param  \Closure  $next
-     * @return \Nuwave\Lighthouse\Schema\Values\FieldValue
+     * @return void
      */
     public function handleField(FieldValue $fieldValue): void
     {
@@ -55,8 +52,7 @@ class GateDirective extends BaseDirective implements FieldMiddleware
                 }
 
                 return $resolver($root, $args, $context, $resolveInfo);
-            }
-        );
+            });
     }
 
     /**

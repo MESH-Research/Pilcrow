@@ -8,12 +8,19 @@ use GraphQL\Error\ProvidesExtensions;
 
 class ClientException extends \Exception implements ClientAware, ProvidesExtensions
 {
+    /**
+     * Construct a client exception
+     *
+     * @param string $message
+     * @param string $category
+     * @param string $clientCode
+     */
     public function __construct(
-      $message,
-      protected string $category = 'unknown',
-      protected string $clientCode = 'UNKNOWN'
+        string $message,
+        protected string $category = 'unknown',
+        protected string $clientCode = 'UNKNOWN'
     ) {
-      parent::__construct($message);
+        parent::__construct($message);
     }
 
     /**
@@ -34,9 +41,9 @@ class ClientException extends \Exception implements ClientAware, ProvidesExtensi
      */
     public function getExtensions(): ?array
     {
-      return [
+        return [
         'code' => $this->clientCode,
-        'category' => $this->category
-      ];
+        'category' => $this->category,
+        ];
     }
 }

@@ -74,7 +74,7 @@ class SubmissionPolicy
             return true;
         }
 
-        return Response::deny("NO_PERMISSION");
+        return Response::deny('NO_PERMISSION');
     }
 
     /**
@@ -95,7 +95,7 @@ class SubmissionPolicy
             return true;
         }
 
-        return Response::deny("NO_PERMISSION");
+        return Response::deny('NO_PERMISSION');
     }
 
     /**
@@ -110,7 +110,8 @@ class SubmissionPolicy
         if ($this->checkAdminRoles($user, $submission->publication_id)) {
             return true;
         }
-        return Response::deny("NO_PERMISSION");
+
+        return Response::deny('NO_PERMISSION');
     }
 
     /**
@@ -137,7 +138,7 @@ class SubmissionPolicy
             return true;
         }
 
-        return Response::deny("NO_PERMISSION");
+        return Response::deny('NO_PERMISSION');
     }
 
     /**
@@ -161,7 +162,7 @@ class SubmissionPolicy
             return true;
         }
 
-        return Response::deny("NO_PERMISSION");
+        return Response::deny('NO_PERMISSION');
     }
 
     /**
@@ -183,7 +184,7 @@ class SubmissionPolicy
             return true;
         }
 
-        return Response::deny("NO_PERMISSION");
+        return Response::deny('NO_PERMISSION');
     }
 
     /**
@@ -205,7 +206,7 @@ class SubmissionPolicy
             return true;
         }
 
-        return Response::deny("NO_PERMISSION");
+        return Response::deny('NO_PERMISSION');
     }
 
     /**

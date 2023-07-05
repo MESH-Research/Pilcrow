@@ -88,7 +88,7 @@ class CreateUserMutationTest extends ApiTestCase
         $response = $this->callEndpoint($testUser->makeVisible('password')->attributesToArray());
 
         if ($failure) {
-          $this->assertMatchesRegularExpression($failure, $response->json('errors.0.message'));
+            $this->assertMatchesRegularExpression($failure, $response->json('errors.0.message'));
         } else {
             $response->assertJsonPath('data.createUser.username', $username);
         }
@@ -123,7 +123,7 @@ class CreateUserMutationTest extends ApiTestCase
         $response = $this->callEndpoint($testUser->makeVisible('password')->attributesToArray());
 
         if ($failure) {
-           $this->assertMatchesRegularExpression($failure, $response->json('errors.0.message'));
+            $this->assertMatchesRegularExpression($failure, $response->json('errors.0.message'));
         } else {
             $response->assertJsonPath('data.createUser.email', $email);
         }

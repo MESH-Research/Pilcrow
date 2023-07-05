@@ -33,13 +33,13 @@ SDL;
     /**
      * Resolve fields to true.
      *
-     * @param \Nuwave\Lighthouse\Schema\Values\FieldValue $fieldValue
-     * @return \Nuwave\Lighthouse\Schema\Values\FieldValue
+     * @param \Nuwave\Lighthouse\Schema\Values\FieldValue $_
+     * @return callable
      */
-    public function resolveField(FieldValue $fieldValue): callable
+    public function resolveField(FieldValue $_): callable
     {
-      return function () {
-        return true;
+        return function () {
+            return true;
         };
     }
 }
