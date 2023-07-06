@@ -1,7 +1,7 @@
 <template>
   <section class="comments">
     <div class="comments-wrapper">
-      <h2 class="text-h1">Overall Comments</h2>
+      <h2 class="text-h1">{{ $t("submissions.overall_comments.heading") }}</h2>
       <overall-comment
         v-for="comment in overall_comments"
         :key="comment.id"
@@ -9,7 +9,7 @@
         :comment="comment"
       />
       <q-card class="q-my-md q-pa-md bg-grey-1 comment-editor-card">
-        <h3 class="text-h3 q-mt-none">Add Your Overall Comment</h3>
+        <h3 class="text-h3 q-mt-none">{{ $t("submissions.overall_comments.editor_heading") }}</h3>
         <comment-editor
           comment-type="OverallComment"
           data-cy="overallCommentEditor"

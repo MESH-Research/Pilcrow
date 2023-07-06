@@ -1,6 +1,6 @@
 <template>
   <article class="q-px-md">
-    <h2>General Settings</h2>
+    <h2>{{ $t("publication.setup_pages.basic") }}</h2>
     <UpdateBasicForm ref="form" :publication="publication" @save="save" />
   </article>
 </template>

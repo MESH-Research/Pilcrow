@@ -22,7 +22,8 @@
     "save": "Save",
     "saving": "Saving",
     "saved": "Saved",
-    "discard_changes": "Discard Changes"
+    "discard_changes": "Discard Changes",
+    "delete": "Delete"
   },
   "lists": {
     "move_up": "Move {0} Up",
@@ -43,6 +44,7 @@
     "register_question": "Don't have an account?",
     "register_action": "Create Account",
     "register_login": "Return to Login.",
+    "register_statement": "It only takes a minute to create an account and join our community of scholars.",
     "login_help": "login",
     "password_help": "reset your password",
     "password_reset": "Reset password.",
@@ -135,6 +137,10 @@
     "site_title": "Pilcrow",
     "site_subtitle": "Submission Review System"
   },
+  "footer": {
+    "site_title": "Pilcrow",
+    "footer_text": "Powered by {link}"
+  },
   "account": {
     "failures": {
       "VERIFY_TOKEN_INVALID": "This verification link is not valid for your account.",
@@ -158,6 +164,8 @@
     },
     "header": "My Account",
     "preview_link": "Preview Public Profile",
+    "submissions_reviewed": "Submissions Reviewed",
+    "submissions_created": "Submissions Created",
     "sections": {
       "basic": "Basic Information",
       "security": "Security and Passwords",
@@ -199,6 +207,8 @@
       }
     },
     "profile": {
+      "account_information": "Account Information",
+      "update_password": "Update Password",
       "section_details": "Profile Details",
       "section_personal": "Personal Details",
       "section_biography": "Biography",
@@ -388,6 +398,7 @@
       "breadcrumb_heading": "Setup",
       "basic": "Basic Settings",
       "users": "Users",
+      "assign": "Assign",
       "criteria": "Style Criteria",
       "content": "Page Content",
       "problems": {
@@ -445,6 +456,7 @@
       },
       "choose_block": "Choose Content Block"
     },
+    "users": "Assigned users have special permissions on your publication. A user cannot be both an admin and a editor at the same time.",
     "editors": {
       "heading": "Editors",
       "description": "Editors can perform any action on a submission, including assigning review coordinators. They do not have access to the publication setup pages and cannot change publication settings.",
@@ -507,6 +519,9 @@
     },
     "style_criteria": {
       "heading": "Style Criteria",
+      "body_1": "Style criteria are a core component of the Collaborative Community Review process. Your users will associate their comments with one or more of the style criteria you define below. This helps keep the conversation about a submission aligned with your publication's core values and focused on moving a submission through the review process.",
+      "body_2": "You can define up to six style critera and your reviewers are able to select mulitple criteria when creating a comment. Reviewers are able to bypass the style criteria selection after confirming that their comment doesn't fit any of the options presented.",
+      "create": "Create style criteria to help your reviewers.",
       "edit_button": "Edit",
       "delete_confirm": "Are you sure you want to delete {name}?",
       "delete_header": "Confirm Delete Criteria",
@@ -674,6 +689,14 @@
     "details_heading": "Submission Details",
     "latest_comments_heading": "Latest Comments",
     "no_comments": "There are no comments for you.",
+    "style_controls": {
+      "font": "Font",
+      "decrease": "Decrease Font Size",
+      "increase": "Increase Font Size",
+      "toggle_dark": "Toggle Dark Mode",
+      "dark": "Dark Mode",
+      "light": "Light Mode"
+    },
     "action": {
       "toggle_label": "Toggle Submission Actions",
       "go_to_review": "Go To Review",
@@ -743,6 +766,7 @@
     },
     "create": {
       "heading": "Submit a Work",
+      "publication_dropdown": "Publication",
       "success": "This submission has been submitted for review.",
       "failure": "An error occurred while attempting to create the submission.",
       "title": {
@@ -811,6 +835,10 @@
       "back_btn_label": "Back"
     },
     "inline_comments_heading": "Inline Comments",
+    "overall_comments": {
+      "heading": "Overall Comments",
+      "editor_heading": "Add your overall comment"
+    },
     "comment_preview": {
       "ariaLabel": "Comment Preview. Author {display_label}"
     },
@@ -820,6 +848,7 @@
       "dateLabelUpdated": "Updated {date}",
       "updatedLabel": "Updated",
       "toggle_replies": {
+        "reply": "Reply",
         "show_reply": "Show Replies",
         "hide_reply": "Hide Replies"
       },
@@ -853,7 +882,17 @@
   },
   "failures": {
     "UNKNOWN_ERROR": "An unknown error has occurred.",
-    "FORBIDDEN_ROUTE": "You don't have permission to access that page."
+    "FORBIDDEN_ROUTE": "You don't have permission to access that page.",
+    "error_not_found": {
+      "404": "404",
+      "text": "Oops. Nothing here..."
+    },
+    "error_403": "Oops, you don't have permission to view this page.",
+    "error_404": {
+      "text": "Sorry, nothing here... (404)",
+      "back": "Go Back",
+      "home": "Go Home"
+    }
   },
   "general_failure": "Oops, there was an error.",
   "loading": "Loading...",
@@ -869,6 +908,10 @@
       "commentReplied": {
         "short": "{user_username} has replied to your comment on {object_name}."
       }
+    },
+    "feed_page": {
+      "heading": "My Notifications",
+      "filter": "Filter"
     },
     "submission": {
       "invitation": {
@@ -1013,6 +1056,11 @@
         "close": "This submission is closed for review.",
         "accept_as_final": "This submission is accepted as final."
       }
+    },
+    "discardChanges": {
+      "body": "Are you sure you want to discard your changes?",
+      "keep_changes": "Keep Changes",
+      "discard": "Discard"
     }
   },
   "generic": {
