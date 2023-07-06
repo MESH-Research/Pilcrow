@@ -15,6 +15,9 @@
       <template v-if="audit.old_values?.status != null">
         {{ $t(`submission.activity_record.object.status`) }}
       </template>
+      <template v-if="audit.new_values?.content_id != null">
+        {{ $t(`submission.activity_record.object.content`) }}
+      </template>
       <template v-if="audit.event == 'created'">
         {{ $t(`submission.activity_record.object.submission`) }}
       </template>
@@ -49,7 +52,7 @@
   </i18n-t>
 
   <i18n-t
-    v-if="audit.event == 'updated' && audit.old_values.title != null"
+    v-if="audit.event == 'updated' && audit.old_values?.title != null"
     keypath="submission.activity_record.title_change"
     tag="span"
     scope="global"
@@ -63,7 +66,7 @@
   </i18n-t>
 
   <i18n-t
-    v-if="audit.event == 'updated' && audit.old_values.status != null"
+    v-if="audit.event == 'updated' && audit.old_values?.status != null"
     keypath="submission.activity_record.status_change"
     tag="span"
     scope="global"

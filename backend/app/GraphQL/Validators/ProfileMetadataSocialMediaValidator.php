@@ -21,18 +21,22 @@ class ProfileMetadataSocialMediaValidator extends Validator
             'twitter' => [
                 'max:128',
                 'regex:/^[A-z0-9_]+$/',
+                'nullable',
             ],
             'facebook' => [
                 'max:128',
                 'regex:/^[A-z0-9_\-.]+$/',
+                'nullable',
             ],
             'instagram' => [
                 'max:128',
                 'regex:/^[A-Za-z0-9_](?:(?:[A-Za-z0-9_]|(?:\.(?!\.))){0,28}(?:[A-Za-z0-9_]))?$/',
+                'nullable',
             ],
             'linkedin' => [
                 'max:128',
                 'regex:/^[\w\-_À-ÿ%]+$/',
+                'nullable',
             ],
         ];
     }

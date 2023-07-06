@@ -8,6 +8,7 @@ use App\Models\Role;
 use App\Models\Submission;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Str;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\ApiTestCase;
@@ -148,7 +149,7 @@ class SubmissionTest extends ApiTestCase
              [ 'id' => $submission->id ]
          );
 
-         $response->assertJsonPath('errors.0.extensions.category', 'authorization');
+         $response->assertJsonPath('errors.0.message', 'UNAUTHORIZED');
     }
 
     public function testGuestsCannotViewSubmission()
@@ -166,7 +167,7 @@ class SubmissionTest extends ApiTestCase
              [ 'id' => $submission->id ]
          );
 
-         $response->assertJsonPath('errors.0.extensions.category', 'authorization');
+         $response->assertJsonPath('errors.0.message', 'This action is unauthorized.');
     }
 
     /**
@@ -265,59 +266,55 @@ class SubmissionTest extends ApiTestCase
         $response->assertJsonPath('data', $expected_data);
     }
 
-    /** TODO: Refactor this for updating a submission with a file after the submission is initially created */
-    // /**
-    //  * @return void
-    //  */
-    // public function testFileUpload()
-    // {
-    //     $publication = Publication::factory()->create(['is_accepting_submissions' => true]);
-    //     /**
-    //      * @var User
-    //      */
-    //     $user = User::factory()->create();
-    //     $this->actingAs($user);
+    /**
+     * @return void
+     */
+    public function testFileUpload(): void
+    {
+        $publication = Publication::factory()->create(['is_accepting_submissions' => true]);
+        $user = User::factory()->create();
+        $submission = Submission::factory()
+            ->hasAttached($user, [], 'submitters')
+            ->for($publication)
+            ->create();
+        $this->actingAs($user);
 
-    //     $operations = [
-    //         'operationName' => 'CreateSubmission',
-    //         'query' => '
-    //             mutation CreateSubmissionDraft (
-    //                 $title: String!
-    //                 $publication_id: ID!
-    //                 $file_upload: [Upload!]
-    //                 $user_id: ID!
-    //             ) {
-    //                 createSubmissionDraft(
-    //                     input: {
-    //                         title: $title,
-    //                         publication_id: $publication_id,
-    //                         submitters: { connect: [$user_id] },
-    //                         files: { create: $file_upload }
-    //                     }
-    //                 ) {
-    //                     title
-    //                 }
-    //             }
-    //         ',
-    //         'variables' => [
-    //             'title' => '    Test Submission    ',
-    //             'publication_id' => $publication->id,
-    //             'user_id' => $user->id,
-    //             'file_upload' => null,
-    //         ],
-    //     ];
-    //     $map = [
-    //         '0' => ['variables.file_upload'],
-    //     ];
-    //     $file = [
-    //         '0' => UploadedFile::fake()->create('test.txt', 500),
-    //     ];
+        $operations = [
+            'operationName' => 'UpdateSubmissionContentWithFile',
+            'query' => '
+                mutation UpdateSubmissionContentWithFile (
+                    $submission_id: ID!
+                    $file_upload: Upload!
+                ) {
+                    updateSubmissionContentWithFile(
+                        input: {
+                            submission_id: $submission_id,
+                            file_upload: $file_upload
+                        }
+                    ) {
+                        id
+                        content {
+                            data
+                        }
+                    }
+                }
+            ',
+            'variables' => [
+                'submission_id' => $submission->id,
+                'file_upload' => null,
+            ],
+        ];
+        $map = [
+            '0' => ['variables.file_upload'],
+        ];
+        $file = [
+            '0' => UploadedFile::fake()->create('test.txt', 'File contents'),
+        ];
 
-    //     $response = $this->multipartGraphQL($operations, $map, $file);
-
-    //     $response
-    //         ->assertJsonPath('data.createSubmissionDraft.title', 'Test Submission');
-    // }
+        $response = $this->multipartGraphQL($operations, $map, $file);
+        $response->assertJsonPath('data.updateSubmissionContentWithFile.id', (string)$submission->id);
+        $response->assertJsonPath('data.updateSubmissionContentWithFile.content.data', "<p>File contents</p>\n");
+    }
 
     /**
      * @return void
@@ -326,7 +323,7 @@ class SubmissionTest extends ApiTestCase
     {
         $publication = Publication::factory()->create(['is_accepting_submissions' => false]);
         /**
-         * @var User
+         * @var User $user
          */
         $user = User::factory()->create();
         $this->actingAs($user);
@@ -355,7 +352,7 @@ class SubmissionTest extends ApiTestCase
         );
 
         $response
-            ->assertJsonPath('errors.0.extensions.category', 'authorization');
+            ->assertJsonPath('errors.0.message', 'This action is unauthorized.');
     }
 
     protected function executeSubmissionRoleAssignment(string $role, Submission $submission, User $user)
@@ -474,7 +471,7 @@ class SubmissionTest extends ApiTestCase
 
         $response = $this->executeSubmissionRoleAssignment($role, $submission, $user);
 
-        $response->assertJsonPath('errors.0.extensions.category', 'authorization');
+        $response->assertJsonPath('errors.0.message', 'UNAUTHORIZED');
     }
 
     public function reviewCoordinatorAssignableRolesProvider()
@@ -508,7 +505,7 @@ class SubmissionTest extends ApiTestCase
         if ($allowed) {
             $response->assertJsonPath('data.updateSubmission.' . $role . '.0.id', (string)$user->id);
         } else {
-            $response->assertJsonPath('errors.0.extensions.category', 'authorization');
+            $response->assertJsonPath('errors.0.message', 'UNAUTHORIZED');
         }
     }
 
@@ -531,7 +528,7 @@ class SubmissionTest extends ApiTestCase
 
         $response = $this->executeSubmissionRoleAssignMent($role, $submission, $user);
 
-        $response->assertJsonPath('errors.0.extensions.category', 'authorization');
+        $response->assertJsonPath('errors.0.message', 'UNAUTHORIZED');
     }
 
     /**
@@ -732,7 +729,7 @@ class SubmissionTest extends ApiTestCase
                 'status' => $status,
             ]
         );
-        $response->assertJsonPath('errors.0.extensions.category', 'authorization');
+        $response->assertJsonPath('errors.0.message', 'UNAUTHORIZED');
     }
 
     /**
@@ -910,13 +907,13 @@ class SubmissionTest extends ApiTestCase
                 'role' => Role::APPLICATION_ADMINISTRATOR,
                 'title' => '',
                 'passes' => false,
-                'category' => 'validation',
+                'message' => 'validation',
             ],
             'Title That Is Too Long ' => [
                 'role' => Role::APPLICATION_ADMINISTRATOR,
                 'title' => str_repeat('1234567890', 520),
                 'passes' => false,
-                'category' => 'validation',
+                'message' => 'validation',
             ],
             'As A Submitter' => [
                 'role' => Role::SUBMITTER,
@@ -927,7 +924,7 @@ class SubmissionTest extends ApiTestCase
                 'role' => Role::REVIEWER,
                 'title' => 'My Newly Updated Submission Title',
                 'passes' => false,
-                'category' => 'authorization',
+                'message' => 'UNAUTHORIZED',
             ],
             'As A Review Coordinator' => [
                 'role' => Role::REVIEW_COORDINATOR,
@@ -988,10 +985,10 @@ class SubmissionTest extends ApiTestCase
     /**
      * @param Submission $submission
      * @param string $title
-     * @param string $category The category of error
+     * @param string $message The message of error
      * @return void
      */
-    protected function executeSubmissionTitleUpdateUnsuccessfully(Submission $submission, string $title, string $category)
+    protected function executeSubmissionTitleUpdateUnsuccessfully(Submission $submission, string $title, string $message)
     {
         $response = $this->graphQL(
             'mutation UpdateSubmissionString ($submission_id: ID!, $title: String) {
@@ -1010,14 +1007,15 @@ class SubmissionTest extends ApiTestCase
                 'title' => $title,
             ]
         );
-        $response->assertJsonPath('errors.0.extensions.category', $category);
+        $responseMessage = $response->json('errors.0.message');
+        $this->assertStringContainsStringIgnoringCase($message, $responseMessage);
     }
 
     /**
      * @dataProvider provideTitleEditData
      * @return void
      */
-    public function testSubmissionTitleUpdateByRole(string $role, string $title, bool $passes, ?string $category = null)
+    public function testSubmissionTitleUpdateByRole(string $role, string $title, bool $passes, ?string $message = null)
     {
         switch ($role) {
             case Role::SUBMITTER:
@@ -1051,7 +1049,7 @@ class SubmissionTest extends ApiTestCase
         if ($passes) {
             $this->executeSubmissionTitleUpdateSuccessfully($submission, $title);
         } else {
-            $this->executeSubmissionTitleUpdateUnsuccessfully($submission, $title, $category);
+            $this->executeSubmissionTitleUpdateUnsuccessfully($submission, $title, $message);
         }
     }
 
@@ -1083,7 +1081,7 @@ class SubmissionTest extends ApiTestCase
             'updateSubmissionContent' => [
                 'id' => (string)$submission->id,
                 'content' => [
-                    'data' => 'Test submission content',
+                    'data' => '<p>Test submission content</p>',
                 ],
             ],
         ];

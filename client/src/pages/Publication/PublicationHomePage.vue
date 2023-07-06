@@ -12,7 +12,7 @@
     {{ $t("loading") }}
   </div>
   <article v-else class="q-px-lg">
-    <div class="row">
+    <div class="row q-mb-md">
       <h2 class="col-sm-12" data-cy="publication_details_heading">
         {{ publication.name }}
         <q-btn
@@ -38,7 +38,7 @@
         v-if="publication.is_accepting_submissions"
         color="primary"
         :to="{ name: 'submission:create', params: { id: publication.id } }"
-        >Submit a Work</q-btn
+        >{{ $t("submissions.create.heading") }}</q-btn
       >
     </div>
   </article>

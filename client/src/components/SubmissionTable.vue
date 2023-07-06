@@ -17,13 +17,13 @@
             {{ $t(title) }}
             <q-icon name="info">
               <q-tooltip class="text-body1">{{
-                $t(tooltip, byline_opts)
+                $t(tooltip)
               }}</q-tooltip>
             </q-icon>
           </h3>
 
           <!-- eslint-disable-next-line vue/no-v-html -->
-          <p class="q-mb-none text-body1" v-html="$t(byline, byline_opts)"></p>
+          <p class="q-mb-none text-body1" v-html="$t(byline)"></p>
 
           <q-select
             v-if="tableData.length"
@@ -210,9 +210,6 @@ const byline = props.variation
 const tooltip = props.variation
   ? `submission_tables.${props.variation}.${props.role}.tooltip`
   : `submission_tables.${props.role}.tooltip`
-const byline_opts = {
-  type_name: t(`submission_tables.type.${props.tableType}.name`),
-}
 const cols = [
   {
     name: "id",

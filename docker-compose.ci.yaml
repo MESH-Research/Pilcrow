@@ -1,0 +1,27 @@
+version: '3'
+services:
+  client:
+    image: pilcrow/web:latest
+    ports:
+      - 8888:8888
+  phpfpm:
+    image: pilcrow/fpm:latest
+    environment:
+      DB_DATABASE: pilcrow
+      DB_HOST: mysql
+      DB_USERNAME: pilcrow
+      DB_PASSWORD: pilcrow
+      APP_HOSTNAME: localhost:8888
+      APP_ENV: testing
+      APP_DEBUG: true
+      MAIL_FROM_ADDRESS: noreply@pilcrow.dev
+      MAIL_FROM_NAME: "CITester"
+      MAIL_MAILER: log
+      APP_URL: http://localhost:8888
+      APP_KEY: base64:J6SHqWBtKA18a8eCxIWziMSPuJqJRPuqy0GdX75P+rM=
+
+  mysql:
+    environment:
+      MYSQL_DATABASE: pilcrow
+      MYSQL_USER: pilcrow
+      MYSQL_PASSWORD: pilcrow

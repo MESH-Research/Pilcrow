@@ -18,7 +18,7 @@
           <q-card-section class="col-sm-12 col-xs-12 q-mt-md q-pa-none text-body1">
             <q-list role="list">
               <q-item>
-                <q-item-section> Submissions Created </q-item-section>
+                <q-item-section> {{ $t(`account.submissions_created`) }} </q-item-section>
                 <q-item-section
                   avatar
                   class="text-primary text-bold user-stats"
@@ -27,7 +27,7 @@
                 </q-item-section>
               </q-item>
               <q-item>
-                <q-item-section> Submissions Reviewed </q-item-section>
+                <q-item-section> {{ $t(`account.submissions_reviewed`) }} </q-item-section>
                 <q-item-section
                   avatar
                   class="text-primary text-bold user-stats"
@@ -37,7 +37,7 @@
               </q-item>
               <q-item clickable class="light-grey">
                 <q-item-section avatar><q-icon name="launch" /></q-item-section>
-                <q-item-section> Preview Public Profile </q-item-section>
+                <q-item-section> {{ $t(`account.preview_link`) }} </q-item-section>
               </q-item>
             </q-list>
           </q-card-section>
@@ -54,16 +54,18 @@
 import AvatarBlock from "src/components/molecules/AvatarBlock.vue"
 import CollapseMenu from "src/components/molecules/CollapseMenu.vue"
 import { useCurrentUser } from "src/use/user"
+import { useI18n } from "vue-i18n"
+const { t } = useI18n() 
 
 const items = [
   {
     icon: "account_circle",
-    label: "Account Information",
+    label: t(`account.profile.account_information`),
     url: "/account/profile",
   },
   {
     icon: "contact_page",
-    label: "Profile Details",
+    label: t(`account.profile.section_details`),
     url: "/account/metadata",
   },
 ]

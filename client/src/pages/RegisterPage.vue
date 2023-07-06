@@ -10,8 +10,7 @@
 
         <q-card-section>
           <p>
-            It only takes a minute to create an account and join our community
-            of scholars.
+            {{ $t("auth.register_statement") }}
           </p>
           <fieldset class="q-px-sm q-pb-lg q-gutter-y-lg column">
             <q-input
@@ -115,7 +114,7 @@
         </q-card-actions>
         <q-card-section class="text-center q-pa-sm">
           <p>
-            <router-link to="/login">
+            <router-link to="/login" class="dark-accent-text">
               {{ $t("auth.register_login") }}
             </router-link>
           </p>

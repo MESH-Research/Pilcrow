@@ -2,8 +2,8 @@
   <q-footer bordered class="light-grey text-black">
     <q-toolbar class="flex flex-center text-caption">
       <div class="footer-text text-body1">
-        Powered by
-        <a href="https://github.com/MESH-Research/Pilcrow">Pilcrow</a>
+        <span>{{ $t(`footer.footer_text`) }}</span>
+        <a href="https://github.com/MESH-Research/Pilcrow">{{ $t(`footer.site_title`) }}</a>
         <span v-if="version">
           &nbsp;
           <component :is="version_url ? 'a' : 'span'" :href="version_url">

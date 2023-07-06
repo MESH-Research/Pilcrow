@@ -16,7 +16,7 @@
             params: { id: submission.id },
           }"
         />
-        <q-breadcrumbs-el label="Export" />
+        <q-breadcrumbs-el :label="$t(`export.title`)" />
       </q-breadcrumbs>
     </nav>
     <article class="q-pa-lg">
