@@ -3325,16 +3325,16 @@
         },
         {
             "name": "nuwave/lighthouse",
-            "version": "v6.12.0",
+            "version": "v6.13.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nuwave/lighthouse.git",
-                "reference": "36142e61f8b1f279e56c8ddd40a09bfa337c53f5"
+                "reference": "6e2da17f7401a7d285d29043f56857be61f19420"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nuwave/lighthouse/zipball/36142e61f8b1f279e56c8ddd40a09bfa337c53f5",
-                "reference": "36142e61f8b1f279e56c8ddd40a09bfa337c53f5",
+                "url": "https://api.github.com/repos/nuwave/lighthouse/zipball/6e2da17f7401a7d285d29043f56857be61f19420",
+                "reference": "6e2da17f7401a7d285d29043f56857be61f19420",
                 "shasum": ""
             },
             "require": {
@@ -3451,7 +3451,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2023-06-26T07:36:45+00:00"
+            "time": "2023-07-05T22:00:39+00:00"
         },
         {
             "name": "olssonm/l5-zxcvbn",
