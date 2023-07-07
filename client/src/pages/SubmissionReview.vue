@@ -1,7 +1,24 @@
 <template>
   <div data-cy="submission_review_page">
-    <div v-if="!submission" class="q-pa-lg">
+    <div v-if="loading" class="q-pa-lg">
       {{ $t("loading") }}
+    </div>
+    <div
+      v-else-if="!submission?.content && submission?.status === 'DRAFT'"
+      class="q-pa-xl items-center column content-center text-center"
+    >
+      <p style="max-width: 20rem">
+        This submission must be submitted for review before it can be reviewed.
+      </p>
+      <q-btn
+        :label="$t(`submissions.action.draft`)"
+        color="primary"
+        class="q-mt-md"
+        :to="{
+          name: 'submission:draft',
+          params: { id: submission.id },
+        }"
+      />
     </div>
     <article v-else>
       <q-layout
@@ -45,7 +62,7 @@ const props = defineProps({
     required: true,
   },
 })
-const { result } = useQuery(GET_SUBMISSION_REVIEW, { id: props.id })
+const { loading, result } = useQuery(GET_SUBMISSION_REVIEW, { id: props.id })
 const submission = computed(() => {
   return result.value?.submission
 })
