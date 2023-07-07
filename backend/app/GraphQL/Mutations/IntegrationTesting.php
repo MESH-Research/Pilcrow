@@ -7,14 +7,16 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Process;
 
 class IntegrationTesting
 {
     /**
      * Run the supplied artisan command.
      *
-     * @param  null  $_
-     * @param  array<string, mixed>  $args
+     * @param null  $_
+     * @param array<string, mixed>  $args
      * @return string
      */
     public function artisan($_, array $args): string
@@ -64,6 +66,64 @@ class IntegrationTesting
             ->login($user);
 
         return $user;
+    }
+
+    /**
+     * Export the database to a file for easier importing later during testing.
+     *
+     * @param null $_
+     * @param array<string, string> $__
+     * @return bool
+     */
+    public function setupResetDb($_, array $__): bool
+    {
+        Artisan::call('migrate:fresh', ['--seed' => true]);
+        $result = Process
+        ::path(base_path())
+        ->run([
+          'mysqldump',
+          '-h',
+          DB::getConfig('host'),
+          '-u',
+          DB::getConfig('username'),
+          '-p' . DB::getConfig('password'),
+          '--no-create-info',
+          DB::getConfig('database'),
+        ]);
+        $output = preg_replace(
+            '/LOCK TABLES (`[a-z_]+`) WRITE;/',
+            'TRUNCATE $1; LOCK TABLES $1 WRITE;',
+            $result->output()
+        );
+        file_put_contents(base_path() . '/reset.sql', $output);
+
+        return $result->exitCode() === 0;
+    }
+
+    /**
+     * Reset the database to a freshly migrated state using a saved SQL file.
+     *
+     * @param null $_
+     * @param array<string, string> $__
+     * @return bool
+     */
+    public function resetDb($_, array $__): bool
+    {
+        $result = Process
+        ::path(base_path())
+        ->run([
+            'mysql',
+            '-h',
+            DB::getConfig('host'),
+            '-u',
+            DB::getConfig('username'),
+            '-p' . DB::getConfig('password'),
+            DB::getConfig('database'),
+            '-e',
+            'source reset.sql',
+          ]);
+
+        return $result->exitCode() === 0;
     }
 
     /**

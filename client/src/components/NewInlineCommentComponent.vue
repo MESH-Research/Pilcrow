@@ -4,6 +4,7 @@
     class="q-ma-md q-pa-md bg-grey-1 inline-comment-form"
     bordered
     style="border-color: rgb(82, 11, 189)"
+    data-cy="InlineCommentForm"
   >
     <comment-editor
       v-bind="props"

@@ -23,7 +23,7 @@
           <q-btn
             :disabled="saveDisabled"
             :class="saveClassList"
-            :data-cy="saveCyAttr"
+            data-cy="button_save"
             type="submit"
             :flat="flat"
           >
@@ -71,14 +71,7 @@ const saveClassList = computed(() => {
   }
   return classes[state.value] ?? "bg-grey-3"
 })
-const saveCyAttr = computed(() => {
-  return (
-    {
-      saving: "button_saving",
-      saved: "button_saved",
-    }[state.value] ?? "button_save"
-  )
-})
+
 const saveText = computed(() => {
   return (
     {

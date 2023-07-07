@@ -10,7 +10,7 @@
         />
         <q-icon-picker
           :model-value="props.icon"
-          icon-set="material-icons"
+          :icons="IconSet.icons"
           style="height: 300px"
           :filter="filter"
           @update:model-value="onSave"
@@ -21,7 +21,9 @@
 </template>
 
 <script setup>
-import { QIconPicker } from "@quasar/quasar-ui-qiconpicker"
+import "@quasar/quasar-ui-qiconpicker/src/index.sass"
+import IconSet from "@quasar/quasar-ui-qiconpicker/src/components/icon-set/material-icons"
+import { QIconPicker } from "@quasar/quasar-ui-qiconpicker/dist/index.esm.js"
 import { useDialogPluginComponent } from "quasar"
 import { ref } from "vue"
 
@@ -42,5 +44,3 @@ function onSave(icon) {
   onDialogOK(icon)
 }
 </script>
-
-<style src="@quasar/quasar-ui-qiconpicker/dist/index.css"></style>
