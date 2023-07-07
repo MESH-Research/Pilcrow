@@ -54,9 +54,8 @@
             {{ $t("notifications.view_more") }}
           </q-btn>
           <q-btn data-cy="dismiss_all_notifications" @click="dismissAll">
-          {{
-            $t("notifications.dismiss_all")
-          }}</q-btn>
+            {{ $t("notifications.dismiss_all") }}</q-btn
+          >
         </q-btn-group>
       </div>
     </q-popup-proxy>
@@ -91,7 +90,7 @@ const { mutate: markAllNotificationsRead } = useMutation(
   MARK_ALL_NOTIFICATIONS_READ,
   {
     refetchQueries: ["currentUserNotifications"],
-  }
+  },
 )
 const dismissAll = async () => {
   await markAllNotificationsRead()

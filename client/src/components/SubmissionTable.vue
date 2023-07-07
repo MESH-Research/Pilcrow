@@ -16,9 +16,7 @@
           <h3 class="q-my-none">
             {{ $t(title) }}
             <q-icon name="info">
-              <q-tooltip>{{
-                $t(tooltip)
-              }}</q-tooltip>
+              <q-tooltip>{{ $t(tooltip) }}</q-tooltip>
             </q-icon>
           </h3>
 

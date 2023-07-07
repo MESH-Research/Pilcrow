@@ -122,7 +122,7 @@ const pubsOptions = computed(() => {
 const submitter_submissions = computed(() =>
   submissions.value.filter(function (submission) {
     return submission.my_role == "submitter"
-  })
+  }),
 )
 const latest_comments = computed(() => {
   let comments = submitter_submissions.value.map((submission) => {
@@ -170,7 +170,7 @@ const latest_comments = computed(() => {
       .flat()
     return [].concat.apply(
       [],
-      [inline, inline_replies, overall, overall_replies]
+      [inline, inline_replies, overall, overall_replies],
     )
   })
   return comments

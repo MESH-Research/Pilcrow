@@ -20,9 +20,7 @@
           text-color="grey-7"
           @click="decreaseFontSize()"
         />
-        <q-tooltip>{{
-          $t("submissions.style_controls.decrease")
-        }}</q-tooltip>
+        <q-tooltip>{{ $t("submissions.style_controls.decrease") }}</q-tooltip>
       </div>
       <div>
         <q-btn
@@ -35,9 +33,7 @@
           text-color="grey-7"
           @click="increaseFontSize()"
         />
-        <q-tooltip>{{
-          $t("submissions.style_controls.increase")
-        }}</q-tooltip>
+        <q-tooltip>{{ $t("submissions.style_controls.increase") }}</q-tooltip>
       </div>
       <div>
         <q-toggle

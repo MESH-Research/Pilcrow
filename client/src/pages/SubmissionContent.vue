@@ -207,7 +207,7 @@ const uploadOpts = {
 }
 const { mutate: updateContentWithFile } = useMutation(
   UPDATE_SUBMISSION_CONTENT_WITH_FILE,
-  uploadOpts
+  uploadOpts,
 )
 async function submitUpload() {
   try {
