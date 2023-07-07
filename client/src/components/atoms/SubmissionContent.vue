@@ -20,11 +20,13 @@
           text-color="grey-7"
           @click="decreaseFontSize()"
         />
-        <q-tooltip>{{ $t("submissions.style_controls.decrease") }}</q-tooltip>
+        <q-tooltip class="text-body1">{{
+          $t("submissions.style_controls.decrease")
+        }}</q-tooltip>
       </div>
       <div>
         <q-btn
-        :aria-label="$t(`submissions.style_controls.increase`)"
+          :aria-label="$t(`submissions.style_controls.increase`)"
           data-cy="increase_font"
           round
           flat
@@ -34,7 +36,9 @@
           class="text-body1"
           @click="increaseFontSize()"
         />
-        <q-tooltip>{{ $t("submissions.style_controls.increase") }}</q-tooltip>
+        <q-tooltip class="text-body1">{{
+          $t("submissions.style_controls.increase")
+        }}</q-tooltip>
       </div>
       <div>
         <q-toggle
@@ -46,7 +50,7 @@
           @click="toggleDarkMode()"
         >
           <template #default>
-            <div style="width: 100px">
+            <div style="width: 100px" class="text-body1">
               {{
                 darkModeValue
                   ? $t("submissions.style_controls.dark")
@@ -55,7 +59,7 @@
             </div>
           </template>
         </q-toggle>
-        <q-tooltip>{{
+        <q-tooltip class="text-body1">{{
           $t("submissions.style_controls.toggle_dark")
         }}</q-tooltip>
       </div>
@@ -117,7 +121,7 @@ watch(
   () => $q.dark.isActive,
   () => {
     darkModeValue.value = $q.dark.isActive
-  }
+  },
 )
 
 function toggleDarkMode() {
@@ -195,7 +199,7 @@ const annotations = computed(() =>
         active: id === activeComment.value?.id,
         click: onAnnotationClick,
       }))
-    : []
+    : [],
 )
 
 const editor = new Editor({

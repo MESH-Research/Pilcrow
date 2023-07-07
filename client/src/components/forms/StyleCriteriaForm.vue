@@ -12,7 +12,7 @@
           :aria-label="$t('publications.style_criteria.fields.icon.ariaLabel')"
           @click="editIcon"
         >
-          <q-tooltip
+          <q-tooltip class="text-body1"
             >{{ $t("publications.style_criteria.fields.icon.tooltip") }}
           </q-tooltip>
         </q-btn>
