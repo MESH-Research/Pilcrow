@@ -3,7 +3,7 @@
     <q-card style="width: 400px" square>
       <q-form @submit="handleSubmit()">
         <q-card-section class="accent q-pa-sm">
-          <h1 class="text-h5 text-white text-body1">{{ $t(`auth.login`) }}</h1>
+          <h1 class="text-h5 text-white">{{ $t(`auth.login`) }}</h1>
         </q-card-section>
         <q-card-section class="q-pa-lg">
           <fieldset class="q-px-sm q-pt-md q-gutter-y-lg q-pb-lg">
@@ -68,7 +68,7 @@
             type="submit"
           />
         </q-card-actions>
-        <q-card-section class="text-center q-pa-sm text-body1">
+        <q-card-section class="text-center q-pa-sm">
           <p>
             {{ $t("auth.register_question") }}
             <router-link to="/register" class="dark-accent-text">

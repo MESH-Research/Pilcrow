@@ -7,10 +7,9 @@
           ref="usernameInput"
           :v="v$.username"
           data-cy="update_user_username"
-          class="text-body1"
         />
-        <v-q-input ref="nameInput" :v="v$.name" data-cy="update_user_name" class="text-body1" />
-        <v-q-input ref="emailInput" :v="v$.email" data-cy="update_user_email" class="text-body1" />
+        <v-q-input ref="nameInput" :v="v$.name" data-cy="update_user_name" />
+        <v-q-input ref="emailInput" :v="v$.email" data-cy="update_user_email" />
       </form-section>
       <form-section>
         <template #header>{{ $t(`account.profile.update_password`) }}</template>
@@ -18,7 +17,6 @@
           ref="passwordInput"
           data-cy="update_user_password"
           :v="v$.password"
-          class="text-body1"
         >
         </VNewPasswordInput>
       </form-section>

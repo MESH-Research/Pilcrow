@@ -29,7 +29,7 @@
           <h2 class="text-h3 q-mt-lg q-mb-none">
             {{ $t(`submissions.create.heading`) }}
           </h2>
-          <p class="q-mt-none q-mb-lg text-body1" data-cy="submission_create_subheading">
+          <p class="q-mt-none q-mb-lg" data-cy="submission_create_subheading">
             {{ publication.name }}
           </p>
           <q-form data-cy="create_submission_form" @submit="handleSubmit()">
@@ -50,7 +50,7 @@
             <!--  eslint-disable vue/no-v-html -->
             <div
               data-cy="publication_home_content"
-              class="q-mt-md text-body1"
+              class="q-mt-md"
               v-html="publication.new_submission_content"
             />
             <!--  eslint-enable vue/no-v-html -->
@@ -64,7 +64,6 @@
                 v-model="v$.acknowledgement.$model"
                 :label="t(`submissions.create.acknowledgement.label`)"
                 data-cy="acknowledgement_checkbox"
-                class="text-body1"
               />
               <template #error
                 ><div class="q-pt-none">

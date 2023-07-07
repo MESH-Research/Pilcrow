@@ -7,7 +7,6 @@
       :actions="actions"
       @action-click="bubble"
       @reinvite="reinviteUser"
-      class="text-body1"
     />
   </q-list>
 </template>

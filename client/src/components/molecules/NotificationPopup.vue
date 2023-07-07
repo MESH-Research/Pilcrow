@@ -32,7 +32,7 @@
           flat
           square
         >
-          <p class="q-mb-none text-body1">{{ $t("notifications.none") }}</p>
+          <p class="q-mb-none">{{ $t("notifications.none") }}</p>
         </q-card>
         <q-list
           role="navigation"
@@ -50,10 +50,10 @@
           />
         </q-list>
         <q-btn-group class="notification-button-group" spread>
-          <q-btn to="/feed" class="text-body1">
+          <q-btn to="/feed">
             {{ $t("notifications.view_more") }}
           </q-btn>
-          <q-btn data-cy="dismiss_all_notifications" @click="dismissAll" class="text-body1">
+          <q-btn data-cy="dismiss_all_notifications" @click="dismissAll">
           {{
             $t("notifications.dismiss_all")
           }}</q-btn>

@@ -22,13 +22,13 @@
       <div class="row q-px-md">
         <h3>{{ $t(`submissions.new.heading`) }}</h3>
       </div>
-      <q-card flat bordered square class="q-pa-lg text-body1">
+      <q-card flat bordered square class="q-pa-lg">
         <p>
           {{ $t(`submissions.new.description`) }}
 
           <q-icon name="info">
             <q-tooltip class="q-pa-none">
-              <q-card class="bg-grey-8 text-body1 q-pa-md">
+              <q-card class="bg-grey-8 q-pa-md">
                 <strong>{{ $t(`submissions.new.tooltip.question`) }}</strong>
                 <p>{{ $t(`submissions.new.tooltip.answer`) }}</p>
                 <ul class="q-ma-none">
@@ -79,7 +79,7 @@
         <div
           v-for="comment in latest_comments"
           :key="comment.id"
-          class="col-lg-3 col-md-4 col-sm-6 col-xs-12 text-body1"
+          class="col-lg-3 col-md-4 col-sm-6 col-xs-12"
         >
           <comment-preview class="flex fit" :comment="comment" />
         </div>

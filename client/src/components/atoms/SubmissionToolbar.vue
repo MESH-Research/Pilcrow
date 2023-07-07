@@ -138,10 +138,10 @@
         class="q-ma-xs cursor-not-allowed"
         style="opacity: 0.5"
       >
-        <q-tooltip v-if="isDisabledByRole" class="text-body1">{{
+        <q-tooltip v-if="isDisabledByRole">{{
           $t(`export.disabled.by_role`)
         }}</q-tooltip>
-        <q-tooltip v-else-if="isDisabledByState" class="text-body1">{{
+        <q-tooltip v-else-if="isDisabledByState">{{
           $t(`export.disabled.by_state`)
         }}</q-tooltip>
       </q-icon>
@@ -158,7 +158,7 @@
           params: { id: submission.id },
         }"
       >
-        <q-tooltip class="text-body1">{{
+        <q-tooltip>{{
           $t(`export.call_to_action`)
         }}</q-tooltip>
       </q-btn>
@@ -170,7 +170,7 @@
         icon="power_input"
         @click="toggleAnnotationHighlights"
       >
-        <q-tooltip class="text-body1 text-center" max-width="100px">{{
+        <q-tooltip class="text-center" max-width="100px">{{
           $t("submission.toolbar.toggle_annotation_highlights")
         }}</q-tooltip>
       </q-btn>
@@ -183,7 +183,7 @@
         data-cy="toggleInlineCommentsButton"
         @click="toggleCommentDrawer"
       >
-        <q-tooltip class="text-body1 text-center" max-width="100px">{{
+        <q-tooltip class="text-center" max-width="100px">{{
           $t("submission.toolbar.toggle_inline_comments")
         }}</q-tooltip>
       </q-btn>

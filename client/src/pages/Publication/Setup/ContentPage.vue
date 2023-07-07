@@ -1,5 +1,5 @@
 <template>
-  <article class="q-px-md text-body1">
+  <article class="q-px-md">
     <h2>Page Content</h2>
     <p>Customize blocks of text displayed to your publication's users.</p>
     <UpdateContentForm ref="form" :publication="publication" @save="save" />

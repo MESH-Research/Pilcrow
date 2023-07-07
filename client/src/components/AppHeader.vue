@@ -5,7 +5,7 @@
     <q-toolbar class="header-toolbar">
       <router-link
         to="/"
-        class="q-pa-sm row q-gutter-md items-center text-white text-body1"
+        class="q-pa-sm row q-gutter-md items-center text-white"
         style="text-decoration: unset"
       >
         <q-img
@@ -17,7 +17,7 @@
           <h1 class="q-ma-none text-h4 site-title">
             {{ $t("header.site_title") }}
           </h1>
-          <small class="site-subtitle text-body1">{{
+          <small class="site-subtitle">{{
             $t("header.site_subtitle")
           }}</small>
         </div>
@@ -45,7 +45,6 @@
               clickable
               data-cy="link_my_account"
               to="/account/profile"
-              class="text-body1"
             >
               <q-item-section avatar>
                 <q-icon name="account_circle" />
@@ -58,12 +57,12 @@
               <q-separator />
               <q-item dense>
                 <q-item-section>
-                  <q-item-label class="text-bold text-body1">
+                  <q-item-label class="text-bold">
                     {{ $t("header.application_administration") }}
                   </q-item-label>
                 </q-item-section>
               </q-item>
-              <q-item to="/admin/users" class="text-body1">
+              <q-item to="/admin/users">
                 <q-item-section avatar>
                   <q-icon name="groups" />
                 </q-item-section>
@@ -73,7 +72,6 @@
               </q-item>
               <q-item
                 :to="{ name: 'admin:publication:index' }"
-                class="text-body1"
               >
                 <q-item-section avatar>
                   <q-icon name="collections_bookmark" />
@@ -84,7 +82,7 @@
               </q-item>
             </div>
             <q-separator />
-            <q-item to="/logout" class="text-body1">
+            <q-item to="/logout">
               <q-item-section avatar>
                 <q-icon name="mdi-logout" />
               </q-item-section>
@@ -101,7 +99,6 @@
           to="/register"
           stretch
           flat
-          class="text-body1"
         />
         <q-separator vertical dark />
         <q-btn
@@ -109,13 +106,12 @@
           to="/login"
           stretch
           flat
-          class="text-body1"
         />
       </template>
     </q-toolbar>
     <div v-if="currentUser" class="header-nav">
       <q-list
-        class="row text-body1"
+        class="row"
         role="navigation"
         :aria-label="$t('header.nav_aria_label')"
       >

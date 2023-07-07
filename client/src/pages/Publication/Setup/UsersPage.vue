@@ -1,5 +1,5 @@
 <template>
-  <article class="q-px-md text-body1">
+  <article class="q-px-md">
     <h2>{{ $t("publication.setup_pages.users") }}</h2>
     <p>
       {{ $t("publication.users") }}

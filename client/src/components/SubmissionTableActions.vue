@@ -40,7 +40,6 @@
           v-if="cannotAccessSubmission(submission)"
           anchor="top middle"
           self="bottom middle"
-          class="text-body1"
           data-cy="cannot_access_submission_tooltip"
         >
           {{ $t("submissions.action.review.no_access") }}

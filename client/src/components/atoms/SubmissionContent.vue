@@ -20,7 +20,7 @@
           text-color="grey-7"
           @click="decreaseFontSize()"
         />
-        <q-tooltip class="text-body1">{{
+        <q-tooltip>{{
           $t("submissions.style_controls.decrease")
         }}</q-tooltip>
       </div>
@@ -33,10 +33,9 @@
           icon="add_circle"
           color="white"
           text-color="grey-7"
-          class="text-body1"
           @click="increaseFontSize()"
         />
-        <q-tooltip class="text-body1">{{
+        <q-tooltip>{{
           $t("submissions.style_controls.increase")
         }}</q-tooltip>
       </div>
@@ -50,7 +49,7 @@
           @click="toggleDarkMode()"
         >
           <template #default>
-            <div style="width: 100px" class="text-body1">
+            <div style="width: 100px">
               {{
                 darkModeValue
                   ? $t("submissions.style_controls.dark")
@@ -59,7 +58,7 @@
             </div>
           </template>
         </q-toggle>
-        <q-tooltip class="text-body1">{{
+        <q-tooltip>{{
           $t("submissions.style_controls.toggle_dark")
         }}</q-tooltip>
       </div>

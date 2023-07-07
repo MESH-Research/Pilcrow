@@ -14,7 +14,7 @@
         {{ user.username }}
       </h2>
     </div>
-    <div class="row q-pa-lg q-col-gutter-lg text-body1">
+    <div class="row q-pa-lg q-col-gutter-lg">
       <section class="col-sm-2 col-xs-12">
         <div class="row justify-center">
           <q-item-section

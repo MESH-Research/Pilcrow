@@ -4,18 +4,17 @@
       <q-card class="col-sm-3 col-xs-12 no-shadow no-border-radius">
         <div v-if="currentUser" class="row">
           <q-card-section
-            class="col-sm-12 col-xs-12 flex flex-center avatar-profile-block q-mt-none text-body1"
+            class="col-sm-12 col-xs-12 flex flex-center avatar-profile-block q-mt-none"
           >
             <avatar-block
               avatar-size="80px"
               :user="currentUser"
-              class="text-body1"
             />
           </q-card-section>
-          <q-card-section class="col-sm-12 col-xs-12 q-mt-md q-pa-none text-body1">
+          <q-card-section class="col-sm-12 col-xs-12 q-mt-md q-pa-none">
             <collapse-menu :items="items" />
           </q-card-section>
-          <q-card-section class="col-sm-12 col-xs-12 q-mt-md q-pa-none text-body1">
+          <q-card-section class="col-sm-12 col-xs-12 q-mt-md q-pa-none">
             <q-list role="list">
               <q-item>
                 <q-item-section> {{ $t(`account.submissions_created`) }} </q-item-section>
@@ -55,7 +54,7 @@ import AvatarBlock from "src/components/molecules/AvatarBlock.vue"
 import CollapseMenu from "src/components/molecules/CollapseMenu.vue"
 import { useCurrentUser } from "src/use/user"
 import { useI18n } from "vue-i18n"
-const { t } = useI18n() 
+const { t } = useI18n()
 
 const items = [
   {

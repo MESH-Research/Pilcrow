@@ -16,14 +16,14 @@
           <h3 class="q-my-none">
             {{ $t(title) }}
             <q-icon name="info">
-              <q-tooltip class="text-body1">{{
+              <q-tooltip>{{
                 $t(tooltip)
               }}</q-tooltip>
             </q-icon>
           </h3>
 
           <!-- eslint-disable-next-line vue/no-v-html -->
-          <p class="q-mb-none text-body1" v-html="$t(byline)"></p>
+          <p class="q-mb-none" v-html="$t(byline)"></p>
 
           <q-select
             v-if="tableData.length"

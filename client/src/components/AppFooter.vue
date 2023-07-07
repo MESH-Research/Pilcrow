@@ -1,7 +1,7 @@
 <template>
   <q-footer bordered class="light-grey text-black">
     <q-toolbar class="flex flex-center text-caption">
-      <div class="footer-text text-body1">
+      <div class="footer-text">
         <span>{{ $t(`footer.footer_text`) }}</span>
         <a href="https://github.com/MESH-Research/Pilcrow">{{ $t(`footer.site_title`) }}</a>
         <span v-if="version">

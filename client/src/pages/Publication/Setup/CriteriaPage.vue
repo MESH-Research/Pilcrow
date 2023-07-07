@@ -1,5 +1,5 @@
 <template>
-  <article class="q-px-md text-body1">
+  <article class="q-px-md">
     <h2>{{ $t("publications.style_criteria.heading") }}</h2>
     <p>{{ $t("publications.style_criteria.body_1") }}</p>
     <p>{{ $t("publications.style_criteria.body_2") }}</p>
