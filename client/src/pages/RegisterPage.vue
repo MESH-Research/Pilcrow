@@ -3,7 +3,7 @@
     <q-card style="width: 400px">
       <q-form autofocus @submit="handleSubmit">
         <q-card-section class="accent">
-          <h1 class="text-h5 text-white q-my-xs">
+          <h1 class="text-h4 text-white q-my-xs">
             {{ $t("auth.register") }}
           </h1>
         </q-card-section>

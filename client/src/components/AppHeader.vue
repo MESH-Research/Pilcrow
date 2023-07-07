@@ -17,7 +17,7 @@
           <h1 class="q-ma-none text-h4 site-title">
             {{ $t("header.site_title") }}
           </h1>
-          <small class="site-subtitle">{{
+          <small class="site-subtitle text-body1">{{
             $t("header.site_subtitle")
           }}</small>
         </div>
