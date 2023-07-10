@@ -6,11 +6,7 @@
           <q-card-section
             class="col-sm-12 col-xs-12 flex flex-center avatar-profile-block q-mt-none"
           >
-            <avatar-block
-              avatar-size="80px"
-              :user="currentUser"
-              class="text-center"
-            />
+            <avatar-block avatar-size="80px" :user="currentUser" />
           </q-card-section>
           <q-card-section class="col-sm-12 col-xs-12 q-mt-md q-pa-none">
             <collapse-menu :items="items" />
@@ -18,7 +14,9 @@
           <q-card-section class="col-sm-12 col-xs-12 q-mt-md q-pa-none">
             <q-list role="list">
               <q-item>
-                <q-item-section> {{ $t(`account.submissions_created`) }} </q-item-section>
+                <q-item-section>
+                  {{ $t(`account.submissions_created`) }}
+                </q-item-section>
                 <q-item-section
                   avatar
                   class="text-primary text-bold user-stats"
@@ -27,7 +25,9 @@
                 </q-item-section>
               </q-item>
               <q-item>
-                <q-item-section> {{ $t(`account.submissions_reviewed`) }} </q-item-section>
+                <q-item-section>
+                  {{ $t(`account.submissions_reviewed`) }}
+                </q-item-section>
                 <q-item-section
                   avatar
                   class="text-primary text-bold user-stats"
@@ -37,7 +37,9 @@
               </q-item>
               <q-item clickable class="light-grey">
                 <q-item-section avatar><q-icon name="launch" /></q-item-section>
-                <q-item-section> {{ $t(`account.preview_link`) }} </q-item-section>
+                <q-item-section>
+                  {{ $t(`account.preview_link`) }}
+                </q-item-section>
               </q-item>
             </q-list>
           </q-card-section>
@@ -55,7 +57,7 @@ import AvatarBlock from "src/components/molecules/AvatarBlock.vue"
 import CollapseMenu from "src/components/molecules/CollapseMenu.vue"
 import { useCurrentUser } from "src/use/user"
 import { useI18n } from "vue-i18n"
-const { t } = useI18n() 
+const { t } = useI18n()
 
 const items = [
   {

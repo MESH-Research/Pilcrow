@@ -24,7 +24,7 @@
       </div>
       <div>
         <q-btn
-        :aria-label="$t(`submissions.style_controls.increase`)"
+          :aria-label="$t(`submissions.style_controls.increase`)"
           data-cy="increase_font"
           round
           flat
@@ -116,7 +116,7 @@ watch(
   () => $q.dark.isActive,
   () => {
     darkModeValue.value = $q.dark.isActive
-  }
+  },
 )
 
 function toggleDarkMode() {
@@ -194,7 +194,7 @@ const annotations = computed(() =>
         active: id === activeComment.value?.id,
         click: onAnnotationClick,
       }))
-    : []
+    : [],
 )
 
 const editor = new Editor({

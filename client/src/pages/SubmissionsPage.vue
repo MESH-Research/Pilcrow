@@ -28,7 +28,7 @@
 
           <q-icon name="info">
             <q-tooltip class="q-pa-none">
-              <q-card class="bg-grey-8 text-body1 q-pa-md">
+              <q-card class="bg-grey-8 q-pa-md">
                 <strong>{{ $t(`submissions.new.tooltip.question`) }}</strong>
                 <p>{{ $t(`submissions.new.tooltip.answer`) }}</p>
                 <ul class="q-ma-none">
@@ -122,7 +122,7 @@ const pubsOptions = computed(() => {
 const submitter_submissions = computed(() =>
   submissions.value.filter(function (submission) {
     return submission.my_role == "submitter"
-  })
+  }),
 )
 const latest_comments = computed(() => {
   let comments = submitter_submissions.value.map((submission) => {
@@ -170,7 +170,7 @@ const latest_comments = computed(() => {
       .flat()
     return [].concat.apply(
       [],
-      [inline, inline_replies, overall, overall_replies]
+      [inline, inline_replies, overall, overall_replies],
     )
   })
   return comments

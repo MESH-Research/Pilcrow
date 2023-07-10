@@ -15,7 +15,7 @@
       </template>
       {{ $t("publication.setup_pages.problems.no_admin") }}
     </q-banner>
-    <div class="column q-gutter-md q-mb-md">
+    <div class="column q-gutter-md q-mb-lg">
       <assigned-publication-users
         data-cy="admins_list"
         role-group="publication_admins"
