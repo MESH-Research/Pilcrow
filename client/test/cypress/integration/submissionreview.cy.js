@@ -233,25 +233,25 @@ describe("Submissions Review", () => {
     cy.dataCy("decision_options")
   })
 
-  it("should display the Draft status and the option to submit for review when a submission is in Draft status", () => {
+  it("should display an explanation and redirect button for a draft submission with no content", () => {
     cy.task("resetDb")
     cy.login({ email: "regularuser@pilcrow.dev" })
     cy.visit("submission/104/review")
-    cy.dataCy("submission_status").contains("Draft")
-    cy.dataCy("status-dropdown").click()
-    cy.dataCy("initially_submit").contains("Submit for Review")
+    cy.dataCy("explanation")
+    cy.dataCy("draft_btn").click()
+    cy.url().should("include", "/submission/104/draft")
   })
 
-  it("should be able to submit a submission in draft status to review and allow reviewers to access the submission", () => {
+  it("should be able to submit for review a draft submission with content and allow reviewers to access the submission", () => {
     cy.task("resetDb")
     cy.login({ email: "regularuser@pilcrow.dev" })
-    cy.visit("submission/104/review")
+    cy.visit("submission/111/review")
     cy.dataCy("status-dropdown").click()
     cy.dataCy("initially_submit").click()
     cy.dataCy("dirtyYesChangeStatus").click()
 
     cy.login({ email: "reviewer@pilcrow.dev" })
-    cy.visit("submission/104/review")
+    cy.visit("submission/111/review")
     cy.url().should("not.include", "/error403")
   })
 
