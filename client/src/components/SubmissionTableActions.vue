@@ -40,7 +40,6 @@
           v-if="cannotAccessSubmission(submission)"
           anchor="top middle"
           self="bottom middle"
-          class="text-body1"
           data-cy="cannot_access_submission_tooltip"
         >
           {{ $t("submissions.action.review.no_access") }}
@@ -65,7 +64,6 @@
           v-if="cannotAccessSubmission(submission)"
           anchor="top middle"
           self="bottom middle"
-          class="text-body1"
           data-cy="cannot_access_submission_tooltip"
         >
           {{ $t("submissions.action.view_details.no_access") }}
@@ -92,12 +90,11 @@
           anchor="top middle"
           self="bottom middle"
           :offset="[10, 10]"
-          class="text-body1"
           data-cy="cannot_change_submission_status_tooltip"
         >
           {{
             $t(
-              `submissions.action.change_status.no_access.${submission.status}`
+              `submissions.action.change_status.no_access.${submission.status}`,
             )
           }}
         </q-tooltip>
@@ -194,7 +191,6 @@
           anchor="top middle"
           self="bottom middle"
           :offset="[10, 10]"
-          class="text-body1"
           data-cy="cannot_export_submission_tooltip"
         >
           {{ $t(`export.disabled.by_role`) }}
@@ -204,7 +200,6 @@
           anchor="top middle"
           self="bottom middle"
           :offset="[10, 10]"
-          class="text-body1"
           data-cy="cannot_export_submission_tooltip"
         >
           {{ $t(`export.disabled.by_state`) }}

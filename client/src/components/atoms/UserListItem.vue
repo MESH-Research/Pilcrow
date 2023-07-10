@@ -27,7 +27,6 @@
           <q-tooltip
             anchor="top middle"
             self="center middle"
-            class="text-subtitle2"
             >{{ $t("submissions.reinvite.tooltip") }}</q-tooltip
           >
         </q-btn>

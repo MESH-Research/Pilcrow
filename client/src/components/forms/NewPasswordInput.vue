@@ -106,9 +106,6 @@ const score = computed(() => {
 .q-field--with-bottom
   padding-bottom: 40px
 
-.password-details
-  font-size: 12px
-
 .q-chip
   margin: 0
 
