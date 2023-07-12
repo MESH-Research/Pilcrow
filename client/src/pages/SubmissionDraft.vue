@@ -79,11 +79,17 @@
           <section class="q-mt-lg">
             <p>{{ $t(`submissions.create.submit.description`) }}</p>
             <q-btn
-              :disabled="draft.content.required.$invalid"
+              v-if="draft.content.required.$invalid"
+              disabled
               class="q-mt-lg"
-              :color="!draft.content.required.$invalid ? 'primary' : ''"
               :label="$t(`submissions.create.submit.btn_label`)"
               @click="confirmHandler('submit_for_review')"
+            />
+            <q-btn
+              v-else
+              class="q-mt-lg"
+              color="primary"
+              :label="$t(`submissions.create.submit.btn_label`)"
             />
           </section>
         </article>
