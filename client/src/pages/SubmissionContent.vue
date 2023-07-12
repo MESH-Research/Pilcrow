@@ -38,19 +38,18 @@
           <q-banner
             v-if="updateMethod === 'upload' || updateMethod == ''"
             data-cy="upload_option"
-            class="bg-primary text-white"
+            class="bg-primary text-white cursor-pointer"
             inline-actions
             @click="setMethod('upload')"
           >
-            <div>
-              <q-radio
-                v-model="updateMethod"
-                color="secondary"
-                val="upload"
-                :label="$t(`submissions.content.upload.label`)"
-              />
-            </div>
-            <div class="text-caption">
+            <q-radio
+              v-model="updateMethod"
+              class="text-bold"
+              color="secondary"
+              val="upload"
+              :label="$t(`submissions.content.upload.label`)"
+            />
+            <div class="text-caption" style="padding: 0 0 0.5em 2.5em; margin-top:-0.4em">
               {{ $t(`submissions.content.upload.caption`) }}
             </div>
             <template v-if="updateMethod !== ''" #action>
@@ -64,17 +63,18 @@
           <q-banner
             v-if="updateMethod === 'paste' || updateMethod == ''"
             data-cy="paste_option"
-            class="bg-primary text-white"
+            class="bg-primary text-white cursor-pointer"
             inline-actions
             @click="setMethod('paste')"
           >
             <q-radio
               v-model="updateMethod"
+              class="text-bold"
               color="secondary"
               val="paste"
               :label="$t(`submissions.content.paste.label`)"
             />
-            <div class="text-caption">
+            <div class="text-caption" style="padding: 0 0 0.5em 2.5em; margin-top:-0.4em">
               {{ $t(`submissions.content.paste.caption`) }}
             </div>
             <template v-if="updateMethod !== ''" #action>
