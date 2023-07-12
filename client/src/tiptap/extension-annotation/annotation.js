@@ -1,7 +1,7 @@
-import { watch } from "vue"
-import { AnnotationPluginKey, AnnotationPlugin } from "./AnnotationPlugin"
 import { Extension } from "@tiptap/vue-3"
-export default Extension.create({
+import { watch } from "vue"
+import { AnnotationPlugin, AnnotationPluginKey } from "./plugin"
+export const Annotation =  Extension.create({
   name: "annotation",
 
   priority: 1000,
