@@ -330,7 +330,6 @@ class SubmissionCommentTest extends ApiTestCase
             $fragment[] = "$input: $$camelName";
             $variables[$camelName] = $variable ? $$camelName : null;
         }
-        print_r(implode("\n", $fragment));
 
         $graphQL =
             /** @lang GraphQL */
@@ -574,6 +573,7 @@ class SubmissionCommentTest extends ApiTestCase
         $this->rethrowGraphQLErrors();
         $user = $this->beSubmitter();
         $submission = $user->submissions->first();
+        $this->expectException(Error::class);
         $this->graphQL(
             'mutation AddInlineComment ($submission_id: ID!) {
                 updateSubmission(
@@ -581,6 +581,7 @@ class SubmissionCommentTest extends ApiTestCase
                         id: $submission_id,
                         inline_comments: {create: [{content:"Hello World", reply_to_id: null, parent_id: null}]}
                     }
+                ) {
                     id
                 }
             }',
@@ -588,6 +589,7 @@ class SubmissionCommentTest extends ApiTestCase
                 'submission_id' => $submission->id,
             ]
         );
+    }
 
     /**
      * @return void
