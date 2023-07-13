@@ -579,7 +579,7 @@ class SubmissionCommentTest extends ApiTestCase
                 updateSubmission(
                     input: {
                         id: $submission_id,
-                        inline_comments: {create: [{content:"Hello World", reply_to_id: null, parent_id: null}]}
+                        inline_comments: {create: [{content:"Hello World", reply_to_id: null, parent_id: null, from: 120, to: 130 }]}
                     }
                 ) {
                     id
