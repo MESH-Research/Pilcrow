@@ -8,6 +8,7 @@ use App\Models\OverallComment;
 use App\Models\StyleCriteria;
 use App\Models\Submission;
 use App\Models\User;
+use GraphQL\Error\Error;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
 use Tests\ApiTestCase;
@@ -330,7 +331,6 @@ class SubmissionCommentTest extends ApiTestCase
             $variables[$camelName] = $variable ? $$camelName : null;
         }
         print_r(implode("\n", $fragment));
-        print_r("\n");
 
         $graphQL =
             /** @lang GraphQL */
@@ -569,22 +569,19 @@ class SubmissionCommentTest extends ApiTestCase
     /**
      * @return void
      */
-    public function testSubmissionOutOfReviewRejectsNewComments(): void
+    public function testSubmissionOutOfReviewRejectsNewInlineComments(): void
     {
+        $this->rethrowGraphQLErrors();
         $user = $this->beSubmitter();
         $submission = $user->submissions->first();
-        $response = $this->graphQL(
+        $this->graphQL(
             'mutation AddInlineComment ($submission_id: ID!) {
                 updateSubmission(
                     input: {
                         id: $submission_id,
                         inline_comments: {create: [{content:"Hello World", reply_to_id: null, parent_id: null}]}
                     }
-                ) {
                     id
-                    inline_comments {
-                        id
-                    }
                 }
             }',
             [
@@ -592,15 +589,48 @@ class SubmissionCommentTest extends ApiTestCase
             ]
         );
 
-        $expected_data = [
+    /**
+     * @return void
+     */
+    public function testSubmissionUnderReviewAcceptsNewInlineComments(): void
+    {
+        $this->rethrowGraphQLErrors();
+        $user = $this->beSubmitter();
+        $submission = $user->submissions->first();
+        $submission->status = Submission::UNDER_REVIEW;
+        $submission->save();
+        $response = $this->graphQL(
+            'mutation AddInlineComment ($submission_id: ID!) {
+                updateSubmission(
+                    input: {
+                        id: $submission_id,
+                        inline_comments: {create: [{content:"Hello World", reply_to_id: null, parent_id: null, from: 120, to: 130 }]}
+                    }
+                ) {
+                    id
+                    inline_comments {
+                        content
+                        from
+                        to
+                    }
+                }
+            }',
+            [
+                'submission_id' => $submission->id,
+            ]
+        );
+        $expected = [
             'updateSubmission' => [
                 'id' => (string)$submission->id,
+                'inline_comments' => [
+                    [
+                        'content' => 'Hello World',
+                        'from' => 120,
+                        'to' => 130,
+                    ],
+                ],
             ],
         ];
-
-        $this->assertStringStartsWith('Validation failed', $response->json('errors.0.message'));
-        print_r($response);
-        // $response->assertJsonPath('data', $expected_data);
-        // $response->assertServerError();
+        $response->assertJsonPath('data', $expected);
     }
 }
