@@ -17,15 +17,16 @@ class SubmissionCommentTest extends ApiTestCase
     use RefreshDatabase;
 
     /**
+     * @param int $status (default: Submission::UNDER_REVIEW)
      * @return Submission
      */
-    private function createSubmission()
+    private function createSubmission($status = Submission::UNDER_REVIEW)
     {
         $user = User::factory()->create();
 
         return Submission::factory()
             ->hasAttached($user, [], 'submitters')
-            ->create();
+            ->create(['status' => $status]);
     }
 
     /**
@@ -328,6 +329,8 @@ class SubmissionCommentTest extends ApiTestCase
             $fragment[] = "$input: $$camelName";
             $variables[$camelName] = $variable ? $$camelName : null;
         }
+        print_r(implode("\n", $fragment));
+        print_r("\n");
 
         $graphQL =
             /** @lang GraphQL */
@@ -561,5 +564,43 @@ class SubmissionCommentTest extends ApiTestCase
             ],
         ];
         $response->assertJsonPath('data', $expected);
+    }
+
+    /**
+     * @return void
+     */
+    public function testSubmissionOutOfReviewRejectsNewComments(): void
+    {
+        $user = $this->beSubmitter();
+        $submission = $user->submissions->first();
+        $response = $this->graphQL(
+            'mutation AddInlineComment ($submission_id: ID!) {
+                updateSubmission(
+                    input: {
+                        id: $submission_id,
+                        inline_comments: {create: [{content:"Hello World", reply_to_id: null, parent_id: null}]}
+                    }
+                ) {
+                    id
+                    inline_comments {
+                        id
+                    }
+                }
+            }',
+            [
+                'submission_id' => $submission->id,
+            ]
+        );
+
+        $expected_data = [
+            'updateSubmission' => [
+                'id' => (string)$submission->id,
+            ],
+        ];
+
+        $this->assertStringStartsWith('Validation failed', $response->json('errors.0.message'));
+        print_r($response);
+        // $response->assertJsonPath('data', $expected_data);
+        // $response->assertServerError();
     }
 }

@@ -80,8 +80,8 @@ input InlineCommentHasManyInput {
     create: [CreateInlineCommentInput!]
         @rules(
             apply: [
-                "App\\Rules\\InlineCommentIdValidity"
                 "App\\Rules\\SubmissionIsReviewable"
+                "App\\Rules\\InlineCommentIdValidity"
             ]
         )
     update: [UpdateInlineCommentInput!]
