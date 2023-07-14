@@ -316,7 +316,8 @@ class SubmissionTest extends ApiTestCase
         $response->assertJsonPath('data.updateSubmissionContentWithFile.content.data', "<p>File contents</p>\n");
     }
 
-    public function testEndnoteImport() {
+    public function testEndnoteImport()
+    {
         $stubPath = __DIR__ . '/../stubs/footnote_test.docx';
         $upload = new UploadedFile($stubPath, 'footnote_test.docx', null, null, true);
 
@@ -357,7 +358,7 @@ class SubmissionTest extends ApiTestCase
             '0' => ['variables.file_upload'],
         ];
         $file = [
-            '0' => $upload
+            '0' => $upload,
         ];
         $expected = <<<END
         <p>This is some text<a href="#fn1" id="fnref1" role="doc-noteref">1</a></p>

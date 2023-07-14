@@ -5,13 +5,10 @@ namespace Tests\Feature;
 
 use App\Enums\SubmissionFileImportStatus;
 use App\Jobs\ImportFileContent;
-use App\Models\Publication;
 use App\Models\Submission;
 use App\Models\SubmissionContent;
 use App\Models\SubmissionFile;
-use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Queue;
 use Mockery;
 use Pandoc\Facades\Pandoc;
@@ -44,7 +41,8 @@ class SubmissionContentTest extends TestCase
         $this->assertEquals($expected_last, $last_data);
     }
 
-    public function testPurifierPassesEndnotes() {
+    public function testPurifierPassesEndnotes()
+    {
         $content = <<<END
             <p>Small endnote test<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
             <p>Another note<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a></p>
@@ -63,7 +61,7 @@ class SubmissionContentTest extends TestCase
         $submission = Submission::factory()->create();
         $submissionContent = SubmissionContent::factory()->create([
             'submission_id' => $submission->id,
-            'data' => $content
+            'data' => $content,
         ]);
         $expected = <<<END
             <p>Small endnote test<a href="#fn1" id="fnref1" role="doc-noteref">1</a></p>
