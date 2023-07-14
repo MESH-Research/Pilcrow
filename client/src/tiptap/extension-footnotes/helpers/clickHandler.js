@@ -19,16 +19,20 @@ export function clickHandler(options) {
         }
 
         const attrs = getAttributes(view.state, options.type.name)
-        const link = (event.target)?.closest('a')
+        const link = (event.target)
 
         const href = link?.href ?? attrs.href
+
+        if (!href || !link) {
+          return false
+        }
         if (href.indexOf('#') === -1) {
           return false;
         }
         const targetEl = document.getElementById(href.split('#')[1])
         const scrollTarget = getScrollTarget(link)
-        console.log(targetEl, scrollTarget, href.split('#'))
         const offsetTop = getOffsetTop(targetEl)
+        //TODO: This is an arbitrary number that works for now, but should be calculated based on the height of the toolbar once we refactor the layout.
         if (targetEl && scrollTarget) {
           setVerticalScrollPosition(scrollTarget, offsetTop - 195, 250)
         }
