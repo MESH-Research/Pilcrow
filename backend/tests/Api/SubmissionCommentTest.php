@@ -574,6 +574,7 @@ class SubmissionCommentTest extends ApiTestCase
         $user = $this->beSubmitter();
         $submission = $user->submissions->first();
         $this->expectException(Error::class);
+        $this->expectExceptionMessage('Validation failed for the field [updateSubmission].');
         $this->graphQL(
             'mutation AddInlineComment ($submission_id: ID!) {
                 updateSubmission(
@@ -629,6 +630,74 @@ class SubmissionCommentTest extends ApiTestCase
                         'content' => 'Hello World',
                         'from' => 120,
                         'to' => 130,
+                    ],
+                ],
+            ],
+        ];
+        $response->assertJsonPath('data', $expected);
+    }
+
+    /**
+     * @return void
+     */
+    public function testSubmissionOutOfReviewRejectsNewOverallComments(): void
+    {
+        $this->rethrowGraphQLErrors();
+        $user = $this->beSubmitter();
+        $submission = $user->submissions->first();
+        $this->expectException(Error::class);
+        $this->expectExceptionMessage('Validation failed for the field [updateSubmission].');
+        $this->graphQL(
+            'mutation AddOverallComment ($submission_id: ID!) {
+                updateSubmission(
+                    input: {
+                        id: $submission_id,
+                        overall_comments: {create: [{content:"Hello World", reply_to_id: null, parent_id: null }]}
+                    }
+                ) {
+                    id
+                }
+            }',
+            [
+                'submission_id' => $submission->id,
+            ]
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function testSubmissionUnderReviewAcceptsNewOverallComments(): void
+    {
+        $this->rethrowGraphQLErrors();
+        $user = $this->beSubmitter();
+        $submission = $user->submissions->first();
+        $submission->status = Submission::UNDER_REVIEW;
+        $submission->save();
+        $response = $this->graphQL(
+            'mutation AddOverallComment ($submission_id: ID!) {
+                updateSubmission(
+                    input: {
+                        id: $submission_id,
+                        overall_comments: {create: [{content:"Hello World", reply_to_id: null, parent_id: null }]}
+                    }
+                ) {
+                    id
+                    overall_comments {
+                        content
+                    }
+                }
+            }',
+            [
+                'submission_id' => $submission->id,
+            ]
+        );
+        $expected = [
+            'updateSubmission' => [
+                'id' => (string)$submission->id,
+                'overall_comments' => [
+                    [
+                        'content' => 'Hello World',
                     ],
                 ],
             ],
