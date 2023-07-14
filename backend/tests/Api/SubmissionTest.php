@@ -316,6 +316,67 @@ class SubmissionTest extends ApiTestCase
         $response->assertJsonPath('data.updateSubmissionContentWithFile.content.data', "<p>File contents</p>\n");
     }
 
+    public function testEndnoteImport() {
+        $stubPath = __DIR__ . '/../stubs/footnote_test.docx';
+        $upload = new UploadedFile($stubPath, 'footnote_test.docx', null, null, true);
+
+        $publication = Publication::factory()->create(['is_accepting_submissions' => true]);
+        $user = User::factory()->create();
+        $submission = Submission::factory()
+            ->hasAttached($user, [], 'submitters')
+            ->for($publication)
+            ->create();
+        $this->actingAs($user);
+
+        $operations = [
+            'operationName' => 'UpdateSubmissionContentWithFile',
+            'query' => '
+                mutation UpdateSubmissionContentWithFile (
+                    $submission_id: ID!
+                    $file_upload: Upload!
+                ) {
+                    updateSubmissionContentWithFile(
+                        input: {
+                            submission_id: $submission_id,
+                            file_upload: $file_upload
+                        }
+                    ) {
+                        id
+                        content {
+                            data
+                        }
+                    }
+                }
+            ',
+            'variables' => [
+                'submission_id' => $submission->id,
+                'file_upload' => null,
+            ],
+        ];
+        $map = [
+            '0' => ['variables.file_upload'],
+        ];
+        $file = [
+            '0' => $upload
+        ];
+        $expected = <<<END
+        <p>This is some text<a href="#fn1" id="fnref1" role="doc-noteref">1</a></p>
+        <p>This is some more text<a href="#fn2" id="fnref2" role="doc-noteref">2</a></p>
+        <section role="doc-endnotes">
+        <hr>
+        <ol>
+        <li id="fn1"><p>This text belongs here<a href="#fnref1" role="doc-backlink">↩︎</a></p></li>
+        <li id="fn2"><p>Another footnote<a href="#fnref2" role="doc-backlink">↩︎</a></p></li>
+        </ol>
+        </section>
+
+        END;
+
+        $response = $this->multipartGraphQL($operations, $map, $file);
+
+        $response->assertJsonPath('data.updateSubmissionContentWithFile.content.data', $expected);
+    }
+
     /**
      * @return void
      */
