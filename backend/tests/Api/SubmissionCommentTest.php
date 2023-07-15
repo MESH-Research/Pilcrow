@@ -8,7 +8,6 @@ use App\Models\OverallComment;
 use App\Models\StyleCriteria;
 use App\Models\Submission;
 use App\Models\User;
-use GraphQL\Error\Error;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
 use Tests\ApiTestCase;
