@@ -34,7 +34,7 @@ class SubmissionSeeder extends Seeder
         $this->createSubmission(103, 'Pilcrow Test Submission 4')
             ->update(['updated_by' => 3, 'status' => Submission::RESUBMISSION_REQUESTED]);
 
-        $this->createSubmission(104, 'Pilcrow Test Submission 5', false); // DRAFT
+        $this->createSubmission(104, 'Pilcrow Test Submission 5', false); // DRAFT without content
 
         $this->createSubmission(105, 'Pilcrow Test Submission 6')
             ->update(['updated_by' => 3, 'status' => Submission::ACCEPTED_AS_FINAL]);
@@ -53,6 +53,8 @@ class SubmissionSeeder extends Seeder
 
         $this->createSubmission(110, 'Pilcrow Test Submission 11')
             ->update(['updated_by' => 1, 'status' => Submission::DELETED]);
+
+        $this->createSubmission(111, 'Pilcrow Test Submission 12'); // DRAFT with content
     }
 
     /**

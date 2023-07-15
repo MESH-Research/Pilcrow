@@ -688,6 +688,7 @@
     "none": "No Submissions Created",
     "details_heading": "Submission Details",
     "latest_comments_heading": "Latest Comments",
+    "draft_with_no_content": "This submission draft must have content before it can be reviewed.",
     "no_comments": "There are no comments for you.",
     "style_controls": {
       "font": "Font",
@@ -808,7 +809,7 @@
         }
       },
       "submit": {
-        "description": "Your submission is saved and you can come back to work on it any time.  When you've completed the above items, click \"Submit for Review\" below to kick off the review process!",
+        "description": "Your submission is saved and you can come back to work on it any time.  When you've completed the above items, you'll be able to click \"Submit for Review\" below to kick off the review process!",
         "btn_label": "Submit for Review"
       }
     },
@@ -816,12 +817,12 @@
       "heading": "Submission Content",
       "upload": {
         "label": "Upload",
-        "caption": "Upload a supported file to be imported as my content.",
+        "caption": "Select a supported file to be imported.",
         "file_picker_label": "Select File"
       },
       "paste": {
         "label": "Enter Text",
-        "caption": "Copy/paste or enter text content directly into an input."
+        "caption": "Copy/paste or enter text content directly."
       },
       "submit": {
         "btn_label": "Update Content",
