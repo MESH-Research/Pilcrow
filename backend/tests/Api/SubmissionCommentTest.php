@@ -570,11 +570,8 @@ class SubmissionCommentTest extends ApiTestCase
      */
     public function testSubmissionOutOfReviewRejectsNewInlineComments(): void
     {
-        $this->rethrowGraphQLErrors();
         $user = $this->beSubmitter();
         $submission = $user->submissions->first();
-        $this->expectException(Error::class);
-        $this->expectExceptionMessage('Validation failed for the field [updateSubmission].');
         $this->graphQL(
             'mutation AddInlineComment ($submission_id: ID!) {
                 updateSubmission(
@@ -589,6 +586,11 @@ class SubmissionCommentTest extends ApiTestCase
             [
                 'submission_id' => $submission->id,
             ]
+        )
+        ->assertGraphQLErrorMessage('Validation failed for the field [updateSubmission].')
+        ->assertGraphQLValidationError(
+            'input.inline_comments.create.0',
+            'The submission is not in a reviewable state.'
         );
     }
 
@@ -597,7 +599,6 @@ class SubmissionCommentTest extends ApiTestCase
      */
     public function testSubmissionUnderReviewAcceptsNewInlineComments(): void
     {
-        $this->rethrowGraphQLErrors();
         $user = $this->beSubmitter();
         $submission = $user->submissions->first();
         $submission->status = Submission::UNDER_REVIEW;
@@ -642,11 +643,8 @@ class SubmissionCommentTest extends ApiTestCase
      */
     public function testSubmissionOutOfReviewRejectsNewOverallComments(): void
     {
-        $this->rethrowGraphQLErrors();
         $user = $this->beSubmitter();
         $submission = $user->submissions->first();
-        $this->expectException(Error::class);
-        $this->expectExceptionMessage('Validation failed for the field [updateSubmission].');
         $this->graphQL(
             'mutation AddOverallComment ($submission_id: ID!) {
                 updateSubmission(
@@ -661,6 +659,11 @@ class SubmissionCommentTest extends ApiTestCase
             [
                 'submission_id' => $submission->id,
             ]
+        )
+        ->assertGraphQLErrorMessage('Validation failed for the field [updateSubmission].')
+        ->assertGraphQLValidationError(
+            'input.overall_comments.create.0',
+            'The submission is not in a reviewable state.'
         );
     }
 
@@ -669,7 +672,6 @@ class SubmissionCommentTest extends ApiTestCase
      */
     public function testSubmissionUnderReviewAcceptsNewOverallComments(): void
     {
-        $this->rethrowGraphQLErrors();
         $user = $this->beSubmitter();
         $submission = $user->submissions->first();
         $submission->status = Submission::UNDER_REVIEW;
