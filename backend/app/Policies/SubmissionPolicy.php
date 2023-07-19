@@ -179,7 +179,6 @@ class SubmissionPolicy
         }
 
         //Check that the user has any role on the submission
-
         if ($user->hasSubmissionRole('*', $submission->id)) {
             return true;
         }
@@ -201,7 +200,6 @@ class SubmissionPolicy
         }
 
         //Check that the user has any role on the submission
-
         if ($user->hasSubmissionRole('*', $submission->id)) {
             return true;
         }
