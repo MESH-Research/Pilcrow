@@ -59,7 +59,7 @@ class SubmissionSeeder extends Seeder
 
         $this->createSubmission(111, 'Pilcrow Test Submission 12'); // DRAFT with content
 
-        $this->createSubmissionWithUpload(112, 'Practicing Public Scholarship')
+        $this->createSubmissionWithUpload(112, 'Endnote Test')
             ->update(['updated_by' => 1, 'status' => Submission::UNDER_REVIEW]);
     }
 
@@ -150,9 +150,9 @@ class SubmissionSeeder extends Seeder
             ...$data,
         ];
 
-        $file_upload_path = 'test/practicing-public-scholarship.docx';
+        $stubPath = '/stubs/footnote_test.docx';
         $content = Pandoc::
-                inputFile(storage_path('app/' . $file_upload_path))
+                inputFile(__DIR__ . '/../../tests' . $stubPath)
                 ->to('html')
                 ->run();
 
@@ -180,7 +180,7 @@ class SubmissionSeeder extends Seeder
         ]);
 
         $submission_file = SubmissionFile::factory()->create([
-            'file_upload' => $file_upload_path,
+            'file_upload' => $stubPath,
             'submission_id' => $submission->id,
             'content_id' => $submission_content->id,
         ]);
