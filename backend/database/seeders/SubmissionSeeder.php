@@ -133,7 +133,7 @@ class SubmissionSeeder extends Seeder
     /**
      * Create a submission with a file upload
      *
-     * @param integer $id
+     * @param int $id
      * @param string $title
      * @param array $data
      * @return \Database\Seeders\App\Models\Submission
