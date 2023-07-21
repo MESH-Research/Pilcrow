@@ -150,7 +150,7 @@ class SubmissionSeeder extends Seeder
             ...$data,
         ];
 
-        $stubPath = '/stubs/footnote_test.docx';
+        $stubPath = '/stubs/footnote_test_with_lorem_ipsum.docx';
         $content = Pandoc::
                 inputFile(__DIR__ . '/../../tests' . $stubPath)
                 ->to('html')
