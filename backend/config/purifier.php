@@ -20,11 +20,27 @@ return [
     'settings'      => [
         'default' => [
             'HTML.Doctype'             => 'HTML 4.01 Transitional',
-            'HTML.Allowed'             => 'div,b,strong,i,em,u,a[href|title],ul,ol,li,p[style],br,span[style],img[width|height|alt|src]',
+            'HTML.Allowed'             => 'div,b,strong,i,em,u,a[href|title|id|role],ul,ol,li[id],p[style],br,span[style],img[width|height|alt|src],section[role],hr',
             'CSS.AllowedProperties'    => 'font,font-size,font-weight,font-style,font-family,text-decoration,padding-left,color,background-color,text-align',
             'AutoFormat.AutoParagraph' => true,
             'AutoFormat.RemoveEmpty'   => true,
+            'Attr.EnableID' => true,
         ],
+        'custom_definition' => [
+          'id'  => 'html5-definitions',
+          'rev' => 1,
+          'debug' => false,
+      ],
+      'custom_attributes' => [
+          ['a', 'target', 'Enum#_blank,_self,_target,_top'],
+          ['a', 'role', 'Text'],
+          ['section', 'role', 'Text'],
+      ],
+      'custom_elements' => [
+          ['u', 'Inline', 'Inline', 'Common'],
+          ['section', 'Block', 'Flow', 'Common'],
+
+      ],
         //Admin fields are separated out here b/c we'll likely want to grant admins more leeway in terms of tags/styles in HTML fields
         'admin_fields' => [
             'HTML.Allowed'             => 'div,a[href|title],b,u,i,ul,ol,li,br,p,h2,h3,h4,h5',
@@ -32,3 +48,4 @@ return [
         ]
     ]
 ];
+

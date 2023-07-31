@@ -392,4 +392,30 @@ describe("Submissions Review", () => {
     cy.visit("submission/102/review")
     cy.dataCy("submission_export_btn").should("not.have.class","cursor-not-allowed")
   })
+
+  it("scrolls when clicking on a footnote reference", () => {
+    cy.task("resetDb")
+    cy.login({ email: "applicationadministrator@pilcrow.dev" })
+    cy.visit("submission/112/review")
+    cy.injectAxe()
+    cy.get("#fnref1").should((footnote) => {
+      let scrollY = footnote[0].getBoundingClientRect().top
+      // The position of the view should start above the first reference
+      expect(scrollY).to.be.greaterThan(-1)
+    })
+    cy.get("#fnref1").click()
+    cy.get("#fnref1").should((footnote) => {
+      let scrollY = footnote[0].getBoundingClientRect().top
+      // Now that the reference was clicked, the view should be below the first reference
+      expect(scrollY).to.be.lessThan(0)
+    })
+    cy.get("a[href='#fnref1']").click()
+    cy.get("#fnref1").should((footnote) => {
+      let scrollY = footnote[0].getBoundingClientRect().top
+      // Now that the footnote was clicked, the view should be above the first reference
+      expect(scrollY).to.be.greaterThan(-1)
+    })
+    cy.checkA11y(null, null, a11yLogViolations)
+  })
+
 })
