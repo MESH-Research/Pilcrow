@@ -83,13 +83,13 @@
               disabled
               class="q-mt-lg"
               :label="$t(`submissions.create.submit.btn_label`)"
-              @click="confirmHandler('submit_for_review')"
             />
             <q-btn
               v-else
               class="q-mt-lg"
               color="primary"
               :label="$t(`submissions.create.submit.btn_label`)"
+              @click="confirmHandler('submit_for_review')"
             />
           </section>
         </article>

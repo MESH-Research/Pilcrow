@@ -106,18 +106,14 @@
 </template>
 
 <script setup>
-import { ref, inject, computed, watch } from "vue"
-import { Editor, EditorContent, BubbleMenu } from "@tiptap/vue-3"
-import Highlight from "@tiptap/extension-highlight"
-import { useQuasar } from "quasar"
-
-import StarterKit from "@tiptap/starter-kit"
 import SampleSubmissionContent from "./SampleSubmissionContent.vue"
-import SampleSubmissionContentGrouped from "./SampleSubmissionContentGrouped.vue"
-import SampleSubmissionContentCriteria from "./SampleSubmissionContentCriteria.vue"
 import SampleSubmissionContentAvatars from "./SampleSubmissionContentAvatars.vue"
-import AnnotationExtension from "src/tiptap/annotation-extension"
-
+import SampleSubmissionContentCriteria from "./SampleSubmissionContentCriteria.vue"
+import SampleSubmissionContentGrouped from "./SampleSubmissionContentGrouped.vue"
+import SubmissionContentKit from "src/tiptap/extension-submission-content-kit"
+import { BubbleMenu, Editor, EditorContent } from "@tiptap/vue-3"
+import { computed, inject, ref, watch } from "vue"
+import { useQuasar } from "quasar"
 const props = defineProps({
   highlightVisibility: {
     type: Boolean,
@@ -221,11 +217,7 @@ const annotations = computed(() =>
 const editor = new Editor({
   editable: false,
   content: submission.value.content.data,
-  extensions: [
-    StarterKit,
-    Highlight,
-    AnnotationExtension.configure({ annotations }),
-  ],
+  extensions: [SubmissionContentKit.configure({ annotation: { annotations } })],
 })
 
 function bubbleMenuVisibility({ state }) {
@@ -288,7 +280,7 @@ function highlightClickHandler(event) {
   position: relative;
 }
 
-.submission-content p:before {
+.submission-content div.ProseMirror > p:before {
   color: #555;
   content: "¶ " counter(paragraph_counter);
   counter-increment: paragraph_counter;
@@ -318,6 +310,11 @@ function highlightClickHandler(event) {
 mark {
   color: #000;
   background-color: #bbe2e8;
+}
+.submission-content a[role="doc-noteref"] {
+  /* Superscript */
+  vertical-align: super;
+  text-decoration: none;
 }
 
 .submission-content h1 {
