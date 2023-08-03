@@ -2692,7 +2692,7 @@
         },
         {
             "name": "mews/purifier",
-            "version": "3.4.0",
+            "version": "3.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mewebstudio/Purifier.git",
@@ -2764,7 +2764,7 @@
             ],
             "support": {
                 "issues": "https://github.com/mewebstudio/Purifier/issues",
-                "source": "https://github.com/mewebstudio/Purifier/tree/3.4.0"
+                "source": "https://github.com/mewebstudio/Purifier/tree/3.4.1"
             },
             "time": "2023-03-14T08:28:28+00:00"
         },
