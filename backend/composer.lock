@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "bensampo/laravel-enum",
-            "version": "v6.4.1",
+            "version": "v6.6.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/BenSampo/laravel-enum.git",
-                "reference": "0e48455d59c7ad043be01ef6aef9db3da15e59b2"
+                "reference": "85db3d402f8b4687e31f72fb1cc2f78cc71ec565"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/BenSampo/laravel-enum/zipball/0e48455d59c7ad043be01ef6aef9db3da15e59b2",
-                "reference": "0e48455d59c7ad043be01ef6aef9db3da15e59b2",
+                "url": "https://api.github.com/repos/BenSampo/laravel-enum/zipball/85db3d402f8b4687e31f72fb1cc2f78cc71ec565",
+                "reference": "85db3d402f8b4687e31f72fb1cc2f78cc71ec565",
                 "shasum": ""
             },
             "require": {
@@ -33,12 +33,14 @@
                 "ergebnis/composer-normalize": "^2.28.3",
                 "mll-lab/php-cs-fixer-config": "^5.4",
                 "mockery/mockery": "^1.5",
-                "nunomaduro/larastan": "^2.1.12",
+                "nunomaduro/larastan": "^2.6.3",
                 "orchestra/testbench": "^7.6.1 || ^8",
                 "phpstan/phpstan": "^1.8.2",
                 "phpstan/phpstan-mockery": "^1.1",
                 "phpstan/phpstan-phpunit": "^1.1.1",
-                "phpunit/phpunit": "^9.5.21"
+                "phpunit/phpunit": "^9.5.21 || ^10",
+                "rector/rector": "^0.17.6",
+                "symplify/rule-doc-generator": "^11"
             },
             "type": "library",
             "extra": {
@@ -85,7 +87,7 @@
             ],
             "support": {
                 "issues": "https://github.com/BenSampo/laravel-enum/issues",
-                "source": "https://github.com/BenSampo/laravel-enum/tree/v6.4.1"
+                "source": "https://github.com/BenSampo/laravel-enum/tree/v6.6.2"
             },
             "funding": [
                 {
@@ -93,7 +95,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-07-10T18:42:50+00:00"
+            "time": "2023-08-03T15:22:44+00:00"
         },
         {
             "name": "bjeavons/zxcvbn-php",
@@ -5314,16 +5316,16 @@
         },
         {
             "name": "symfony/finder",
-            "version": "v6.3.0",
+            "version": "v6.3.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/finder.git",
-                "reference": "d9b01ba073c44cef617c7907ce2419f8d00d75e2"
+                "reference": "9915db259f67d21eefee768c1abcf1cc61b1fc9e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/finder/zipball/d9b01ba073c44cef617c7907ce2419f8d00d75e2",
-                "reference": "d9b01ba073c44cef617c7907ce2419f8d00d75e2",
+                "url": "https://api.github.com/repos/symfony/finder/zipball/9915db259f67d21eefee768c1abcf1cc61b1fc9e",
+                "reference": "9915db259f67d21eefee768c1abcf1cc61b1fc9e",
                 "shasum": ""
             },
             "require": {
@@ -5358,7 +5360,7 @@
             "description": "Finds files and directories via an intuitive fluent interface",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/finder/tree/v6.3.0"
+                "source": "https://github.com/symfony/finder/tree/v6.3.3"
             },
             "funding": [
                 {
@@ -5374,7 +5376,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-04-02T01:25:41+00:00"
+            "time": "2023-07-31T08:31:44+00:00"
         },
         {
             "name": "symfony/http-foundation",
