@@ -13,7 +13,7 @@ assignees: ''
 
 **Review Checklist**
 
-Delete items that are not applicable
+(Delete items that are not applicable)
 
 * Necessary backend unit testing has been added
 * Necessary frontend unit testing has been added
@@ -22,7 +22,7 @@ Delete items that are not applicable
 
 **Accessibility Checklist**
 
-Delete items that are not applicable
+(Delete items that are not applicable)
 
 * No new color contrast issues are introduced
 * Changed text has a font size of at least 16px
