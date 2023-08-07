@@ -2,7 +2,7 @@
 name: Simplified
 about: Describe something the needs to be worked on
 title: ''
-labels: ['needs-refinement']
+labels: "\U0001F9F9 needs-refinement"
 assignees: ''
 
 ---
