@@ -69,7 +69,7 @@ const saveClassList = computed(() => {
     saved: "bg-positive text-white",
     dirty: "bg-accent text-white",
   }
-  return classes[state.value] ?? "bg-grey-3"
+  return classes[state.value] ?? "bg-grey-8 text-white"
 })
 const saveCyAttr = computed(() => {
   return (
