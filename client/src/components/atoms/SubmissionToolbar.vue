@@ -51,11 +51,13 @@
           >
           </q-btn>
         </div>
+        
         <q-btn-group
           v-else-if="
             submission.status != 'AWAITING_REVIEW' &&
             submission.status != 'REJECTED' &&
-            submission.status != 'RESUBMISSION_REQUESTED'
+            submission.status != 'RESUBMISSION_REQUESTED' &&
+            submission.status != 'ACCEPTED_AS_FINAL'
           "
           flat
           square
@@ -71,7 +73,6 @@
             @click="confirmHandler('accept_for_review')"
           >
           </q-btn>
-
           <q-btn
             v-if="submission.status != 'INITIALLY_SUBMITTED'"
             data-cy="accept_as_final"
@@ -98,7 +99,6 @@
             @click="confirmHandler('reject')"
           >
           </q-btn>
-
           <q-btn
             v-if="submission.status == 'UNDER_REVIEW'"
             data-cy="close_for_review"
@@ -128,6 +128,35 @@
           >
           </q-btn>
         </q-btn-group>
+
+        <q-btn-group
+          v-if="submission.status == 'ACCEPTED_AS_FINAL'"
+          flat
+          square
+          class="column q-pa-sm"
+        >
+          <q-btn
+            v-if="submission.status == 'ACCEPTED_AS_FINAL'"
+            data-cy=""
+            rounded
+            color="dark-grey"
+            :label="$t(`submission.action.archive`)"
+            class=""
+            @click="confirmHandler('archive')"
+          >
+          </q-btn>
+          <q-btn
+            v-if="submission.status == 'ACCEPTED_AS_FINAL'"
+            data-cy=""
+            rounded
+            color="negative"
+            :label="$t(`submission.action.delete`)"
+            class=""
+            @click="confirmHandler('delete')"
+          >
+          </q-btn>
+        </q-btn-group>
+
       </q-btn-dropdown>
       <q-icon
         v-if="isDisabledByRole || isDisabledByState"

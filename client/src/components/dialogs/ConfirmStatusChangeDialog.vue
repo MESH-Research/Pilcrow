@@ -102,6 +102,8 @@ const icons = {
   open: "grading",
   close: "grading",
   accept_as_final: "done",
+  archive: "archive",
+  delete: "delete"
 }
 
 const colors = {
@@ -112,6 +114,8 @@ const colors = {
   open: "black",
   close: "black",
   accept_as_final: "positive",
+  archive: "dark-grey",
+  delete: "negative"
 }
 const comment = ref(null)
 
