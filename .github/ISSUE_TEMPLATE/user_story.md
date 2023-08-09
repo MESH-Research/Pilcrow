@@ -1,9 +1,10 @@
 ---
 name: User Story
 about: Template for User Stories
-title: ""
-labels: ""
-assignees: ""
+title: ''
+labels: ''
+assignees: ''
+
 ---
 
 ### Problem/Why
