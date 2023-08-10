@@ -79,6 +79,13 @@
           <section class="q-mt-lg">
             <p>{{ $t(`submissions.create.submit.description`) }}</p>
             <q-btn
+              v-if="draft.content.required.$invalid"
+              disabled
+              class="q-mt-lg"
+              :label="$t(`submissions.create.submit.btn_label`)"
+            />
+            <q-btn
+              v-else
               class="q-mt-lg"
               color="primary"
               :label="$t(`submissions.create.submit.btn_label`)"
@@ -99,6 +106,8 @@ import { computed } from "vue"
 import { useQuasar } from "quasar"
 import { useQuery } from "@vue/apollo-composable"
 import { useRouter } from "vue-router"
+import { useVuelidate } from "@vuelidate/core"
+import { required } from "@vuelidate/validators"
 
 const props = defineProps({
   id: {
@@ -109,7 +118,6 @@ const props = defineProps({
 const { dialog } = useQuasar()
 const { result, loading } = useQuery(GET_SUBMISSION, props)
 const submission = computed(() => result.value?.submission)
-
 const { push } = useRouter()
 function onGoToSubmissionContentClick() {
   push({
@@ -117,6 +125,12 @@ function onGoToSubmissionContentClick() {
     params: { id: submission.value.id },
   })
 }
+const rules = {
+  content: {
+    required
+  }
+}
+const draft = useVuelidate(rules, submission)
 async function confirmHandler(action) {
   await new Promise((resolve) => {
     dirtyDialog(action)

@@ -233,25 +233,25 @@ describe("Submissions Review", () => {
     cy.dataCy("decision_options")
   })
 
-  it("should display the Draft status and the option to submit for review when a submission is in Draft status", () => {
+  it("should display an explanation and redirect button for a draft submission with no content", () => {
     cy.task("resetDb")
     cy.login({ email: "regularuser@pilcrow.dev" })
     cy.visit("submission/104/review")
-    cy.dataCy("submission_status").contains("Draft")
-    cy.dataCy("status-dropdown").click()
-    cy.dataCy("initially_submit").contains("Submit for Review")
+    cy.dataCy("explanation")
+    cy.dataCy("draft_btn").click()
+    cy.url().should("include", "/submission/104/draft")
   })
 
-  it("should be able to submit a submission in draft status to review and allow reviewers to access the submission", () => {
+  it("should be able to submit for review a draft submission with content and allow reviewers to access the submission", () => {
     cy.task("resetDb")
     cy.login({ email: "regularuser@pilcrow.dev" })
-    cy.visit("submission/104/review")
+    cy.visit("submission/111/review")
     cy.dataCy("status-dropdown").click()
     cy.dataCy("initially_submit").click()
     cy.dataCy("dirtyYesChangeStatus").click()
 
     cy.login({ email: "reviewer@pilcrow.dev" })
-    cy.visit("submission/104/review")
+    cy.visit("submission/111/review")
     cy.url().should("not.include", "/error403")
   })
 
@@ -392,4 +392,30 @@ describe("Submissions Review", () => {
     cy.visit("submission/102/review")
     cy.dataCy("submission_export_btn").should("not.have.class","cursor-not-allowed")
   })
+
+  it("scrolls when clicking on a footnote reference", () => {
+    cy.task("resetDb")
+    cy.login({ email: "applicationadministrator@pilcrow.dev" })
+    cy.visit("submission/112/review")
+    cy.injectAxe()
+    cy.get("#fnref1").should((footnote) => {
+      let scrollY = footnote[0].getBoundingClientRect().top
+      // The position of the view should start above the first reference
+      expect(scrollY).to.be.greaterThan(-1)
+    })
+    cy.get("#fnref1").click()
+    cy.get("#fnref1").should((footnote) => {
+      let scrollY = footnote[0].getBoundingClientRect().top
+      // Now that the reference was clicked, the view should be below the first reference
+      expect(scrollY).to.be.lessThan(0)
+    })
+    cy.get("a[href='#fnref1']").click()
+    cy.get("#fnref1").should((footnote) => {
+      let scrollY = footnote[0].getBoundingClientRect().top
+      // Now that the footnote was clicked, the view should be above the first reference
+      expect(scrollY).to.be.greaterThan(-1)
+    })
+    cy.checkA11y(null, null, a11yLogViolations)
+  })
+
 })

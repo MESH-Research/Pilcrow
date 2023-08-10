@@ -17,6 +17,7 @@
         <q-btn
           v-if="!done"
           data-cy="todo_go_btn"
+          color="primary"
           :label="$t(`submissions.create.todo.btn_label.go`)"
           @click="$emit('goClick')"
         />

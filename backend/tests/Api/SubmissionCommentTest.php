@@ -17,15 +17,16 @@ class SubmissionCommentTest extends ApiTestCase
     use RefreshDatabase;
 
     /**
+     * @param int $status (default: Submission::UNDER_REVIEW)
      * @return Submission
      */
-    private function createSubmission()
+    private function createSubmission($status = Submission::UNDER_REVIEW)
     {
         $user = User::factory()->create();
 
         return Submission::factory()
             ->hasAttached($user, [], 'submitters')
-            ->create();
+            ->create(['status' => $status]);
     }
 
     /**
@@ -556,6 +557,148 @@ class SubmissionCommentTest extends ApiTestCase
                         ],
                         'from' => 120,
                         'to' => 130,
+                    ],
+                ],
+            ],
+        ];
+        $response->assertJsonPath('data', $expected);
+    }
+
+    /**
+     * @return void
+     */
+    public function testSubmissionOutOfReviewRejectsNewInlineComments(): void
+    {
+        $user = $this->beSubmitter();
+        $submission = $user->submissions->first();
+        $this->graphQL(
+            'mutation AddInlineComment ($submission_id: ID!) {
+                updateSubmission(
+                    input: {
+                        id: $submission_id,
+                        inline_comments: {create: [{content:"Hello World", reply_to_id: null, parent_id: null, from: 120, to: 130 }]}
+                    }
+                ) {
+                    id
+                }
+            }',
+            [
+                'submission_id' => $submission->id,
+            ]
+        )
+        ->assertGraphQLErrorMessage('Validation failed for the field [updateSubmission].')
+        ->assertGraphQLValidationError(
+            'input.inline_comments.create.0',
+            'The submission is not in a reviewable state.'
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function testSubmissionUnderReviewAcceptsNewInlineComments(): void
+    {
+        $user = $this->beSubmitter();
+        $submission = $user->submissions->first();
+        $submission->status = Submission::UNDER_REVIEW;
+        $submission->save();
+        $response = $this->graphQL(
+            'mutation AddInlineComment ($submission_id: ID!) {
+                updateSubmission(
+                    input: {
+                        id: $submission_id,
+                        inline_comments: {create: [{content:"Hello World", reply_to_id: null, parent_id: null, from: 120, to: 130 }]}
+                    }
+                ) {
+                    id
+                    inline_comments {
+                        content
+                        from
+                        to
+                    }
+                }
+            }',
+            [
+                'submission_id' => $submission->id,
+            ]
+        );
+        $expected = [
+            'updateSubmission' => [
+                'id' => (string)$submission->id,
+                'inline_comments' => [
+                    [
+                        'content' => 'Hello World',
+                        'from' => 120,
+                        'to' => 130,
+                    ],
+                ],
+            ],
+        ];
+        $response->assertJsonPath('data', $expected);
+    }
+
+    /**
+     * @return void
+     */
+    public function testSubmissionOutOfReviewRejectsNewOverallComments(): void
+    {
+        $user = $this->beSubmitter();
+        $submission = $user->submissions->first();
+        $this->graphQL(
+            'mutation AddOverallComment ($submission_id: ID!) {
+                updateSubmission(
+                    input: {
+                        id: $submission_id,
+                        overall_comments: {create: [{content:"Hello World", reply_to_id: null, parent_id: null }]}
+                    }
+                ) {
+                    id
+                }
+            }',
+            [
+                'submission_id' => $submission->id,
+            ]
+        )
+        ->assertGraphQLErrorMessage('Validation failed for the field [updateSubmission].')
+        ->assertGraphQLValidationError(
+            'input.overall_comments.create.0',
+            'The submission is not in a reviewable state.'
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function testSubmissionUnderReviewAcceptsNewOverallComments(): void
+    {
+        $user = $this->beSubmitter();
+        $submission = $user->submissions->first();
+        $submission->status = Submission::UNDER_REVIEW;
+        $submission->save();
+        $response = $this->graphQL(
+            'mutation AddOverallComment ($submission_id: ID!) {
+                updateSubmission(
+                    input: {
+                        id: $submission_id,
+                        overall_comments: {create: [{content:"Hello World", reply_to_id: null, parent_id: null }]}
+                    }
+                ) {
+                    id
+                    overall_comments {
+                        content
+                    }
+                }
+            }',
+            [
+                'submission_id' => $submission->id,
+            ]
+        );
+        $expected = [
+            'updateSubmission' => [
+                'id' => (string)$submission->id,
+                'overall_comments' => [
+                    [
+                        'content' => 'Hello World',
                     ],
                 ],
             ],

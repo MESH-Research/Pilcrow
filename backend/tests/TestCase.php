@@ -143,7 +143,7 @@ abstract class TestCase extends BaseTestCase
         }
 
         foreach ($json['errors'] as $index => $error) {
-            unset($json['errors'][$index]['trace']);
+            unset($json['errors'][$index]['extensions']['trace']);
         }
 
         return $json;

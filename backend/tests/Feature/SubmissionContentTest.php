@@ -41,6 +41,46 @@ class SubmissionContentTest extends TestCase
         $this->assertEquals($expected_last, $last_data);
     }
 
+    public function testPurifierPassesEndnotes()
+    {
+        $content = <<<END
+            <p>Small endnote test<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
+            <p>Another note<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a></p>
+            <section class="footnotes footnotes-end-of-document" role="doc-endnotes">
+                <hr />
+                <ol>
+                    <li id="fn1" role="doc-endnote">
+                        <p>Footnote 1<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p>
+                    </li>
+                    <li id="fn2" role="doc-endnote">
+                        <p>Endnote 1<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p>
+                    </li>
+            </ol>
+            </section>
+            END;
+        $submission = Submission::factory()->create();
+        $submissionContent = SubmissionContent::factory()->create([
+            'submission_id' => $submission->id,
+            'data' => $content,
+        ]);
+        $expected = <<<END
+            <p>Small endnote test<a href="#fn1" id="fnref1" role="doc-noteref">1</a></p>
+            <p>Another note<a href="#fn2" id="fnref2" role="doc-noteref">2</a></p>
+            <section role="doc-endnotes">
+                <hr>
+                <ol>
+                    <li id="fn1">
+                        <p>Footnote 1<a href="#fnref1" role="doc-backlink">↩︎</a></p>
+                    </li>
+                    <li id="fn2">
+                        <p>Endnote 1<a href="#fnref2" role="doc-backlink">↩︎</a></p>
+                    </li>
+            </ol>
+            </section>
+            END;
+        $this->assertEquals($expected, $submissionContent->data);
+    }
+
     /**
      * @return void
      */
