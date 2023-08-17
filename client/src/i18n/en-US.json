@@ -39,6 +39,7 @@
     "loginRequired": "Please login to access that page.",
     "login": "Login",
     "logout": "Logout",
+    "logging_out": "Logging Out...",
     "register": "Register",
     "register_link": "Register.",
     "register_question": "Don't have an account?",
