@@ -46,7 +46,15 @@
                 <q-icon name="account_circle" />
               </q-item-section>
               <q-item-section>
-                {{ $t("header.account_link") }}
+                {{ $t("header.login_and_password") }}
+              </q-item-section>
+            </q-item>
+            <q-item clickable to="/account/metadata">
+              <q-item-section avatar>
+                <q-icon name="contact_page" />
+              </q-item-section>
+              <q-item-section>
+                {{ $t("header.profile") }}
               </q-item-section>
             </q-item>
             <div v-if="isAppAdmin">

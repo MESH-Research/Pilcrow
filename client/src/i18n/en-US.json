@@ -122,7 +122,8 @@
     "maxLength": "The maximum length has been exceeded."
   },
   "header": {
-    "account_link": "My Account",
+    "login_and_password": "Login and Password",
+    "profile": "Profile",
     "dashboard": "Dashboard",
     "menu_button_aria": "Show/hide navigation sidebar",
     "publications": "Publications",
