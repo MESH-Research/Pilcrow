@@ -62,7 +62,7 @@ const { t } = useI18n()
 const items = [
   {
     icon: "account_circle",
-    label: t(`account.profile.account_information`),
+    label: t(`account.profile.login_and_password`),
     url: "/account/profile",
   },
   {

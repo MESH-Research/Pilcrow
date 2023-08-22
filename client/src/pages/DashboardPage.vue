@@ -27,7 +27,7 @@
             :vertical="$q.screen.width < 600 ? true : false"
           >
             <q-btn flat icon="o_settings" to="/account/profile">{{
-              $t(`dashboard.account_info`)
+              $t(`dashboard.login_and_password`)
             }}</q-btn>
             <q-btn flat icon="o_contact_page" to="/account/metadata">{{
               $t(`dashboard.profile_details`)
