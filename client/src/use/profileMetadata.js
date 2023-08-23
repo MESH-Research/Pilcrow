@@ -60,7 +60,6 @@ export const rules = {
     },
   },
   academic_profiles: {
-    academia_edu_id: { maxLength: maxLength(128) },
     humanities_commons: { maxLength: maxLength(128) },
     orcid: { maxLength: maxLength(128) },
   },
@@ -85,7 +84,6 @@ export const profile_defaults = {
   },
   academic_profiles: {
     orcid_id: "",
-    academia_edu_id: "",
     humanities_commons: "",
   },
 }

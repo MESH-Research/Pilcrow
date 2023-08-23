@@ -126,19 +126,6 @@
             />
           </template>
         </v-q-input>
-        <v-q-input
-          ref="academia_edu_id"
-          :v="v$.academic_profiles.academia_edu_id"
-          class="col-md-6 col-12"
-        >
-          <template #prepend>
-            <img
-              style="height: 1em; display: inline-block"
-              src="brand-images/academia_edu.png"
-              role="presentation"
-            />
-          </template>
-        </v-q-input>
       </form-section>
 
       <form-section>

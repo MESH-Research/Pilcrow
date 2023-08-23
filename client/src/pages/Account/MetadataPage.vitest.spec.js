@@ -61,7 +61,6 @@ describe("MetadataPage", () => {
       academic_profiles: {
         humanities_commons: "",
         orcid_id: "",
-        academia_edu_id: "",
       },
     },
   })

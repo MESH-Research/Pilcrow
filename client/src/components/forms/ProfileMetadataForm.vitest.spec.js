@@ -55,8 +55,6 @@ describe("ProfileMetadataForm", () => {
     ["maxlength", "linkedin", "1".repeat(129), false],
     ["valid", "orcid", "myprofile", true],
     ["maxlength", "orcid", "1".repeat(129), false],
-    ["valid", "academia_edu_id", "myprofile", true],
-    ["maxlength", "academia_edu_id", "1".repeat(129), false],
     ["valid", "humanities_commons", "myprofile", true],
     ["maxlength", "humanities_commons", "1".repeat(129), false],
   ])(

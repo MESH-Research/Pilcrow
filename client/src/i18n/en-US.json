@@ -273,12 +273,6 @@
           "maxLength": "@:generic_validations.maxLength"
         },
         "academic_profiles": {
-          "academia_edu_id": {
-            "label": "Academia.edu",
-            "errors": {
-              "maxLength": "@:generic_validations.maxLength"
-            }
-          },
           "humanities_commons": {
             "label": "Humanities Commons",
             "errors": {

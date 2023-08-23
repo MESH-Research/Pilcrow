@@ -18,7 +18,6 @@ export const _PROFILE_METADATA_FIELDS = gql`
       academic_profiles {
         humanities_commons
         orcid_id
-        academia_edu_id
       }
     }
   }

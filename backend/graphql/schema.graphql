@@ -182,7 +182,6 @@ input UpdateSocialMediaInput
 
 input UpdateAcademicProfilesInput
     @validator(class: "ProfileMetadataAcademicProfilesValidator") {
-    academia_edu_id: String
     humanities_commons: String
     orcid_id: String
 }
