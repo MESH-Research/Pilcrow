@@ -9,13 +9,13 @@ describe("Profile", () => {
     cy.visit("/account/metadata")
   })
 
-  it("can update professional title", () => {
-    const value = "Updated Professional Title"
-    cy.dataCy("professional_title").type(value)
+  it("can update position title", () => {
+    const value = "Updated position Title"
+    cy.dataCy("position_title").type(value)
     cy.dataCy("button_save").click()
     cy.dataCy("button_saved").contains("Saved")
     cy.reload()
-    cy.dataCy("professional_title").should("have.value", value)
+    cy.dataCy("position_title").should("have.value", value)
   })
 
   it("can update facebook username", () => {

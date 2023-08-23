@@ -4,7 +4,7 @@ export const _PROFILE_METADATA_FIELDS = gql`
   fragment profileMetadata on User {
     profile_metadata {
       biography
-      professional_title
+      position_title
       specialization
       affiliation
       websites

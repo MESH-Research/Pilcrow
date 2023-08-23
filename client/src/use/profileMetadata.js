@@ -37,7 +37,7 @@ const validWebsites = (value) =>
     : true
 
 export const rules = {
-  professional_title: { maxLength: maxLength(256) },
+  position_title: { maxLength: maxLength(256) },
   specialization: { maxLength: maxLength(256) },
   affiliation: { maxLength: maxLength(256) },
   biography: { maxLength: maxLength(4096) },
@@ -71,7 +71,7 @@ export const rules = {
 
 export const profile_defaults = {
   biography: "",
-  professional_title: "",
+  position_title: "",
   specialization: "",
   affiliation: "",
   websites: [],

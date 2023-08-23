@@ -33,8 +33,8 @@ describe("ProfileMetadataForm", () => {
   })
 
   test.concurrent.each([
-    ["maxLength", "professionalTitle", "1".repeat(257), false],
-    ["valid", "professionalTitle", "a reasonable valid", true],
+    ["maxLength", "positionTitle", "1".repeat(257), false],
+    ["valid", "positionTitle", "a reasonable valid", true],
     ["maxLength", "specialization", "1".repeat(257), false],
     ["valid", "specialization", "a reasonable valid", true],
     ["maxLength", "affiliation", "1".repeat(257), false],

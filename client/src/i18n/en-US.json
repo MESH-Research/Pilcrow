@@ -218,8 +218,8 @@
       "section_websites": "Websites",
       "section_keywords": "Keywords",
       "fields": {
-        "professional_title": {
-          "label": "Professional Title",
+        "position_title": {
+          "label": "Position Title",
           "errors": {
             "maxLength": "@:generic_validations.maxLength"
           }

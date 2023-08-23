@@ -27,7 +27,7 @@ describe("Copywriting Screenshots", () => {
         screenshotPath('/dashboard')
         screenshotPath("/publications", "[data-cy=publications_list]")
         screenshotPath("/account/profile", "[data-cy=update_user_email]")
-        screenshotPath("/account/metadata", "[data-cy=professional_title]")
+        screenshotPath("/account/metadata", "[data-cy=position_title]")
         screenshotPath("/publication/1/setup/basic", "[data-cy=visibility_field]")
         screenshotPath("/publication/1/setup/users", "[data-cy=editors_list]")
         screenshotPath("/publication/1/setup/content", "[data-cy=content_block_select]")

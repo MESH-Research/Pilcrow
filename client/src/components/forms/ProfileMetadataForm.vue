@@ -5,9 +5,9 @@
         <template #header>{{ $t("account.profile.section_details") }}</template>
 
         <v-q-input
-          ref="professionalTitle"
-          :v="v$.professional_title"
-          data-cy="professional_title"
+          ref="positionTitle"
+          :v="v$.position_title"
+          data-cy="position_title"
         />
         <v-q-input ref="specialization" :v="v$.specialization" />
         <v-q-input ref="affiliation" :v="v$.affiliation" />

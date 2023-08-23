@@ -317,7 +317,7 @@ export const UPDATE_PROFILE_METADATA = gql`
     $biography: String
     $interest_keywords: [String!]
     $websites: [String!]
-    $professional_title: String
+    $position_title: String
     $specialization: String
     $social_media: UpdateSocialMediaInput
     $academic_profiles: UpdateAcademicProfilesInput
@@ -330,7 +330,7 @@ export const UPDATE_PROFILE_METADATA = gql`
           biography: $biography
           interest_keywords: $interest_keywords
           websites: $websites
-          professional_title: $professional_title
+          position_title: $position_title
           specialization: $specialization
           social_media: $social_media
           academic_profiles: $academic_profiles

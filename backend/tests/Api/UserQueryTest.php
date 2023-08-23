@@ -31,7 +31,7 @@ class UserQueryTest extends ApiTestCase
                         'instagram' => 'regularuser',
                         'linkedin' => 'regularuser',
                     ],
-                    'professional_title' => 'Regular User',
+                    'position_title' => 'Regular User',
                     'specialization' => 'Regular',
                     'affiliation' => 'Regular Users',
                     'interest_keywords' => [
@@ -78,7 +78,7 @@ class UserQueryTest extends ApiTestCase
                             instagram
                             linkedin
                         }
-                        professional_title
+                        position_title
                         specialization
                         affiliation
                         interest_keywords

@@ -47,7 +47,7 @@ describe("MetadataPage", () => {
     id: 1,
     profile_metadata: {
       biography: "my bio",
-      professional_title: "my title",
+      position_title: "my title",
       specialization: "my specialization",
       affiliation: "my affiliation",
       website: ["http://mywebsite.com"],
