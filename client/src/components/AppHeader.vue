@@ -41,12 +41,20 @@
             :aria-label="$t('header.account_dropdown_aria')"
             data-cy="headerUserMenu"
           >
-            <q-item clickable data-cy="link_my_account" to="/account/profile">
+            <q-item clickable to="/account/metadata">
               <q-item-section avatar>
                 <q-icon name="account_circle" />
               </q-item-section>
               <q-item-section>
-                {{ $t("header.account_link") }}
+                {{ $t("header.profile") }}
+              </q-item-section>
+            </q-item>
+            <q-item clickable data-cy="link_my_account" to="/account/profile">
+              <q-item-section avatar>
+                <q-icon name="o_settings" />
+              </q-item-section>
+              <q-item-section>
+                {{ $t("header.login_and_password") }}
               </q-item-section>
             </q-item>
             <div v-if="isAppAdmin">
