@@ -26,10 +26,10 @@
             :class="`${$q.screen.width < 600 ? 'q-pl-lg' : ''}`"
             :vertical="$q.screen.width < 600 ? true : false"
           >
-            <q-btn flat icon="account_circle" to="/account/metadata">{{
+            <q-btn flat icon="account_circle" to="/account/profile">{{
               $t(`dashboard.profile`)
             }}</q-btn>
-            <q-btn flat icon="o_settings" to="/account/profile">{{
+            <q-btn flat icon="o_settings" to="/account/login">{{
               $t(`dashboard.login_and_password`)
             }}</q-btn>
             <q-btn flat icon="mdi-logout" to="/logout">{{

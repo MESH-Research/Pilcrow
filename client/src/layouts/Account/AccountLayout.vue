@@ -31,12 +31,12 @@ const items = [
   {
     icon: "account_circle",
     label: t(`account.profile.section_details`),
-    url: "/account/metadata",
+    url: "/account/profile",
   },
   {
     icon: "o_settings",
     label: t(`account.profile.login_and_password`),
-    url: "/account/profile",
+    url: "/account/login",
   },
 ]
 

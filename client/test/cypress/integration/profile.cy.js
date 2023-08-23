@@ -6,7 +6,7 @@ describe("Profile", () => {
   beforeEach(() => {
     cy.task("resetDb")
     cy.login({ email: "regularuser@pilcrow.dev" })
-    cy.visit("/account/metadata")
+    cy.visit("/account/profile")
   })
 
   it("can update position title", () => {
