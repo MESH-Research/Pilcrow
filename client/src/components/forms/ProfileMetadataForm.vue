@@ -108,7 +108,7 @@
           <template #prepend>
             <img
               style="height: 1em; display: inline-block"
-              src="brand-images/humcommons.png"
+              src="/brand-images/humcommons.png"
               role="presentation"
             />
           </template>
@@ -121,7 +121,7 @@
           <template #prepend>
             <img
               style="height: 1em; display: inline-block"
-              src="brand-images/orcid.png"
+              src="/brand-images/orcid.png"
               role="presentation"
             />
           </template>
