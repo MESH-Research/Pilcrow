@@ -92,7 +92,7 @@ class StyleCriteriaTest extends TestCase
      * @param string $expected
      * @return void
      */
-    public function testStyleCritieraDescriptionFieldIsPurified($testHtml, $expected)
+    public function testStyleCriteriaDescriptionFieldIsPurified($testHtml, $expected)
     {
         $criteria = StyleCriteria::factory()->make([
         'description' => $testHtml,
