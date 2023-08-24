@@ -30,12 +30,12 @@ const { t } = useI18n()
 const items = [
   {
     icon: "account_circle",
-    label: t(`account.profile.section_details`),
+    label: t(`profile.page_title`),
     url: "/account/profile",
   },
   {
     icon: "o_settings",
-    label: t(`account.profile.login_and_password`),
+    label: t(`login_and_password.page_title`),
     url: "/account/login",
   },
 ]

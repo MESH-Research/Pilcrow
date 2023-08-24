@@ -2,7 +2,16 @@
   <q-form data-cy="vueAccount" @submit="save()">
     <v-q-wrap t-prefix="account.profile.fields" @vqupdate="updateInput">
       <form-section :first-section="true">
-        <template #header>{{ $t("account.profile.section_details") }}</template>
+        <template #header>
+          {{ $t("account.profile.section_profile") }}
+        </template>
+
+        <v-q-input
+          ref="usernameInput"
+          :v="v$.username"
+          data-cy="update_user_username"
+        />
+        <v-q-input ref="nameInput" :v="v$.name" data-cy="update_user_name" />
 
         <v-q-input
           ref="positionTitle"

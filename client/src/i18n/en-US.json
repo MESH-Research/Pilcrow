@@ -122,8 +122,6 @@
     "maxLength": "The maximum length has been exceeded."
   },
   "header": {
-    "login_and_password": "Login and Password",
-    "profile": "Profile",
     "dashboard": "Dashboard",
     "menu_button_aria": "Show/hide navigation sidebar",
     "publications": "Publications",
@@ -142,6 +140,12 @@
   "footer": {
     "site_title": "Pilcrow",
     "footer_text": "Powered by {link}"
+  },
+  "profile": {
+    "page_title": "Profile"
+  },
+  "login_and_password": {
+    "page_title": "Login and Password"
   },
   "account": {
     "failures": {
@@ -175,21 +179,6 @@
     },
     "account": {
       "fields": {
-        "username": {
-          "label": "Username",
-          "hint": "Your username is your primary identity on this site.",
-          "errors": {
-            "maxLength": "@:generic_validations.maxLength",
-            "USERNAME_IN_USE": "Sorry, this username is already in use."
-          }
-        },
-        "name": {
-          "label": "Name",
-          "hint": "(Optional) Your name will often substitute appearances of your username on this site.  Honorifics accepted.",
-          "errors": {
-            "maxLength": "@:generic_validation.maxLength"
-          }
-        },
         "email": {
           "label": "Email Address",
           "hint": "Updating your email address will require you to re-verify your account.",
@@ -208,9 +197,10 @@
       }
     },
     "profile": {
-      "login_and_password": "Login and Password",
+      "heading": "Profile",
+      "update_email": "Update Email",
       "update_password": "Update Password",
-      "section_details": "Profile",
+      "section_profile": "Profile",
       "section_personal": "Personal Details",
       "section_biography": "Biography",
       "section_social_media": "Social Media Profiles",
@@ -218,6 +208,21 @@
       "section_websites": "Websites",
       "section_keywords": "Keywords",
       "fields": {
+        "username": {
+          "label": "Username",
+          "hint": "Your username is your primary identity on this site.",
+          "errors": {
+            "maxLength": "@:generic_validations.maxLength",
+            "USERNAME_IN_USE": "Sorry, this username is already in use."
+          }
+        },
+        "name": {
+          "label": "Name",
+          "hint": "(Optional) Your name will often substitute appearances of your username on this site.  Honorifics accepted.",
+          "errors": {
+            "maxLength": "@:generic_validation.maxLength"
+          }
+        },
         "position_title": {
           "label": "Position Title",
           "errors": {
@@ -325,8 +330,6 @@
   },
   "dashboard": {
     "welcome_message": "Welcome, {label}",
-    "login_and_password": "Login and Password",
-    "profile": "Profile",
     "guide": "guide",
     "guide_question": "New to Pilcrow?",
     "guide_call_to_action": "Learn more in our {link}."

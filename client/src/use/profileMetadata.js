@@ -1,5 +1,5 @@
 import { maxLength } from "@vuelidate/validators"
-import { helpers } from "@vuelidate/validators"
+import { required, helpers } from "@vuelidate/validators"
 import { weburl_regex } from "src/utils/regex-weburl"
 import { watch } from "vue"
 export const social_regex = {
@@ -37,6 +37,10 @@ const validWebsites = (value) =>
     : true
 
 export const rules = {
+  username: {
+    required,
+  },
+  name: {},
   position_title: { maxLength: maxLength(256) },
   specialization: { maxLength: maxLength(256) },
   affiliation: { maxLength: maxLength(256) },
@@ -69,6 +73,8 @@ export const rules = {
 }
 
 export const profile_defaults = {
+  username: "",
+  name: "",
   biography: "",
   position_title: "",
   specialization: "",
