@@ -51,8 +51,8 @@
         <q-btn
           v-if="selectedPublication"
           color="primary"
-          :label="$t(`submissions.create.heading`)"
-          class="q-mt-md"
+          :label="$t(`submissions.new.action`)"
+          class="q-mt-lg"
           :to="{
             name: 'submission:create',
             params: { id: selectedPublication.value },
