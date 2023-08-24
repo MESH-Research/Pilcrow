@@ -10,7 +10,7 @@
         />
         <q-icon-picker
           :model-value="props.icon"
-          icon-set="material-icons"
+          :icons="materialIcons.icons"
           style="height: 300px"
           :filter="filter"
           @update:model-value="onSave"
@@ -23,6 +23,7 @@
 <script setup>
 import { QIconPicker } from "@quasar/quasar-ui-qiconpicker"
 import { useDialogPluginComponent } from "quasar"
+import materialIcons from '@quasar/quasar-ui-qiconpicker/src/components/icon-set/material-icons'
 import { ref } from "vue"
 
 const filter = ref("")
