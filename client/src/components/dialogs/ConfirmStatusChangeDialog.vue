@@ -92,6 +92,8 @@ const statuses = {
   open: "UNDER_REVIEW",
   accept_as_final: "ACCEPTED_AS_FINAL",
   close: "AWAITING_DECISION",
+  archive: "ARCHIVED",
+  delete: "DELETED"
 }
 
 const icons = {
