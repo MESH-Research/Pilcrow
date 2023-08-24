@@ -38,11 +38,6 @@ const items = [
     label: t(`account.profile.login_and_password`),
     url: "/account/login",
   },
-  {
-    icon: "o_settings",
-    label: t(`account.profile.login_and_password`),
-    url: "/account/profile",
-  },
 ]
 
 const { currentUser } = useCurrentUser()
