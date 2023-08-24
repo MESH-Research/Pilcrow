@@ -3,11 +3,11 @@
 
 import { a11yLogViolations } from '../support/helpers'
 
-describe("Account", () => {
+describe("Login and Password", () => {
   beforeEach(() => {
     cy.task("resetDb")
     cy.login({ email: "regularuser@pilcrow.dev" })
-    cy.visit("/account/profile")
+    cy.visit("/account/login")
   })
 
   it("can update the name field", () => {

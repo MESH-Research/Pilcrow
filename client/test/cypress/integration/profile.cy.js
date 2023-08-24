@@ -1,7 +1,6 @@
 /// <reference types="Cypress" />
 /// <reference path="../support/index.d.ts" />
 
-
 describe("Profile", () => {
   beforeEach(() => {
     cy.task("resetDb")
