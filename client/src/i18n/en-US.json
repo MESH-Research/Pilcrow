@@ -764,10 +764,11 @@
         "answer": "A publication may not appear here if the publication is:",
         "reason_1": "not accepting submissions at this time",
         "reason_2": "not publicly visible"
-      }
+      },
+      "action": "Submit New Submission"
     },
     "create": {
-      "heading": "Submit a Work",
+      "heading": "Create Submission",
       "publication_dropdown": "Publication",
       "success": "This submission has been submitted for review.",
       "failure": "An error occurred while attempting to create the submission.",
