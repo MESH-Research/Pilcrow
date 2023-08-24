@@ -4,7 +4,7 @@ import { installApolloClient } from "test/vitest/utils"
 import { UPDATE_USER } from "src/graphql/mutations"
 import { CURRENT_USER } from "src/graphql/queries"
 import { ref as mockRef } from "vue"
-import LoginPage from "./LoginPage.vue"
+import LoginAndPassword from "./LoginAndPassword.vue"
 
 import { beforeEach, describe, expect, it, test, vi } from "vitest"
 
@@ -37,10 +37,10 @@ vi.mock("quasar", async (importOriginal) => {
 installQuasarPlugin()
 const mockClient = installApolloClient()
 
-describe("Login", () => {
+describe("Login And Password", () => {
 
   const makeWrapper = async () => {
-    const wrapper = mount(LoginPage)
+    const wrapper = mount(LoginAndPassword)
     await flushPromises()
     return wrapper
   }
