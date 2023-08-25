@@ -37,8 +37,9 @@
       <q-btn
         v-if="publication.is_accepting_submissions"
         color="primary"
+        class="q-mt-lg"
         :to="{ name: 'submission:create', params: { id: publication.id } }"
-        >{{ $t("submissions.create.heading") }}</q-btn
+        >{{ $t("submissions.new.action") }}</q-btn
       >
     </div>
   </article>
