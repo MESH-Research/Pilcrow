@@ -15,11 +15,11 @@
 
         <v-q-input
           ref="positionTitle"
-          :v="v$.position_title"
+          :v="v$.profile_metadata.position_title"
           data-cy="position_title"
         />
-        <v-q-input ref="specialization" :v="v$.specialization" />
-        <v-q-input ref="affiliation" :v="v$.affiliation" />
+        <v-q-input ref="specialization" :v="v$.profile_metadata.specialization" />
+        <v-q-input ref="affiliation" :v="v$.profile_metadata.affiliation" />
       </form-section>
 
       <form-section>
@@ -27,8 +27,8 @@
           {{ $t("account.profile.section_biography") }}
         </template>
 
-        <v-q-input ref="biography" :v="v$.biography" type="textarea" counter>
-          <template #counter> {{ form.biography.length }}/4096 </template>
+        <v-q-input ref="biography" :v="v$.profile_metadata.biography" type="textarea" counter>
+          <template #counter> {{ form.profile_metadata.biography.length }}/4096 </template>
         </v-q-input>
       </form-section>
 
@@ -38,7 +38,7 @@
         </template>
         <v-q-input
           ref="facebook"
-          :v="v$.social_media.facebook"
+          :v="v$.profile_metadata.social_media.facebook"
           data-cy="facebook"
           prefix="https://fb.com/"
           class="col-md-6 col-12"
@@ -49,14 +49,14 @@
               role="presentation"
               name="fab fa-facebook"
               :class="{
-                'brand-active': v$.social_media.facebook.$model.length,
+                'brand-active': v$.profile_metadata.social_media.facebook.$model.length,
               }"
             />
           </template>
         </v-q-input>
         <v-q-input
           ref="twitter"
-          :v="v$.social_media.twitter"
+          :v="v$.profile_metadata.social_media.twitter"
           prefix="https://twitter.com/@"
           class="col-md-6 col-12"
           clearable
@@ -64,14 +64,14 @@
           <template #prepend>
             <q-icon
               role="presentation"
-              :class="{ 'brand-active': v$.social_media.twitter.$model.length }"
+              :class="{ 'brand-active': v$.profile_metadata.social_media.twitter.$model.length }"
               name="fab fa-twitter"
             />
           </template>
         </v-q-input>
         <v-q-input
           ref="instagram"
-          :v="v$.social_media.instagram"
+          :v="v$.profile_metadata.social_media.instagram"
           prefix="https://instagram.com/"
           class="col-md-6 col-12"
           clearable
@@ -81,14 +81,14 @@
               name="fab fa-instagram-square"
               role="presentation"
               :class="{
-                'brand-active': v$.social_media.instagram.$model.length,
+                'brand-active': v$.profile_metadata.social_media.instagram.$model.length,
               }"
             />
           </template>
         </v-q-input>
         <v-q-input
           ref="linkedin"
-          :v="v$.social_media.linkedin"
+          :v="v$.profile_metadata.social_media.linkedin"
           prefix="https://linkedin.com/in/"
           class="col-md-6 col-12"
           clearable
@@ -98,7 +98,7 @@
               name="fab fa-linkedin"
               role="presentation"
               :class="{
-                'brand-active': v$.social_media.linkedin.$model.length,
+                'brand-active': v$.profile_metadata.social_media.linkedin.$model.length,
               }"
             />
           </template>
@@ -111,7 +111,7 @@
         </template>
         <v-q-input
           ref="humanities_commons"
-          :v="v$.academic_profiles.humanities_commons"
+          :v="v$.profile_metadata.academic_profiles.humanities_commons"
           class="col-md-6 col-12"
         >
           <template #prepend>
@@ -124,7 +124,7 @@
         </v-q-input>
         <v-q-input
           ref="orcid"
-          :v="v$.academic_profiles.orcid"
+          :v="v$.profile_metadata.academic_profiles.orcid"
           class="col-md-6 col-12"
         >
           <template #prepend>
@@ -144,7 +144,7 @@
 
         <editable-list
           ref="websites"
-          v-model="form.websites"
+          v-model="form.profile_metadata.websites"
           t="account.profile.fields.website"
           data-cy="websites_list_control"
           class="q-gutter-md"
@@ -158,7 +158,7 @@
         <fieldset class="col-12 q-col-gutter-sm profile-keywords">
           <tag-list
             ref="interest_keywords"
-            v-model="form.interest_keywords"
+            v-model="form.profile_metadata.interest_keywords"
             t="account.profile.fields.interest_keyword"
             data-cy="interest_keywords_control"
             :rules="keyword_rules"

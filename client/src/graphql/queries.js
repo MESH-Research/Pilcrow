@@ -22,6 +22,8 @@ export const CURRENT_USER_METADATA = gql`
   query CurrentUserMetadata {
     currentUser {
       id
+      username
+      name
       ...profileMetadata
     }
   }

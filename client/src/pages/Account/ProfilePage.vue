@@ -22,7 +22,7 @@ const formState = useFormState(metadataQuery, metadataMutation)
 provide("formState", formState)
 
 const profileMetadata = computed(() => {
-  return metadataQuery.result.value?.currentUser.profile_metadata ?? {}
+  return metadataQuery.result.value?.currentUser ?? {}
 })
 
 const currentUserId = computed(() => {
