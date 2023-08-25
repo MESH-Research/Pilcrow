@@ -122,7 +122,8 @@
     "maxLength": "The maximum length has been exceeded."
   },
   "header": {
-    "account_link": "My Account",
+    "login_and_password": "Login and Password",
+    "profile": "Profile",
     "dashboard": "Dashboard",
     "menu_button_aria": "Show/hide navigation sidebar",
     "publications": "Publications",
@@ -163,7 +164,6 @@
       "update_form_internal": "Error processing result. Please try again later.",
       "unknown": "An unexpected error occurred while updating."
     },
-    "header": "My Account",
     "preview_link": "Preview Public Profile",
     "submissions_reviewed": "Submissions Reviewed",
     "submissions_created": "Submissions Created",
@@ -208,9 +208,9 @@
       }
     },
     "profile": {
-      "account_information": "Account Information",
+      "login_and_password": "Login and Password",
       "update_password": "Update Password",
-      "section_details": "Profile Details",
+      "section_details": "Profile",
       "section_personal": "Personal Details",
       "section_biography": "Biography",
       "section_social_media": "Social Media Profiles",
@@ -331,8 +331,8 @@
   },
   "dashboard": {
     "welcome_message": "Welcome, {label}",
-    "account_info": "Account Information",
-    "profile_details": "Profile Details",
+    "login_and_password": "Login and Password",
+    "profile": "Profile",
     "guide": "guide",
     "guide_question": "New to Pilcrow?",
     "guide_call_to_action": "Learn more in our {link}."
@@ -764,10 +764,11 @@
         "answer": "A publication may not appear here if the publication is:",
         "reason_1": "not accepting submissions at this time",
         "reason_2": "not publicly visible"
-      }
+      },
+      "action": "Submit New Submission"
     },
     "create": {
-      "heading": "Submit a Work",
+      "heading": "Create Submission",
       "publication_dropdown": "Publication",
       "success": "This submission has been submitted for review.",
       "failure": "An error occurred while attempting to create the submission.",
