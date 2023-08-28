@@ -85,6 +85,7 @@
         </q-item-section>
         <q-tooltip
           v-if="
+            submission.status == 'DELETED' ||
             submission.status == 'REJECTED' ||
             submission.status == 'RESUBMISSION_REQUESTED'
           "

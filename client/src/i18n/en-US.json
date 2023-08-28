@@ -716,6 +716,7 @@
       "change_status": {
         "label": "Change Status",
         "no_access": {
+          "DELETED": "Deleted submissions cannot have their statuses changed.",
           "REJECTED": "Rejected submissions cannot have their statuses changed.",
           "RESUBMISSION_REQUESTED": "Submissions requested for resubmission cannot have their statuses changed."
         }
