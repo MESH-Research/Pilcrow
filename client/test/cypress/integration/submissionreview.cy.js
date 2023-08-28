@@ -418,6 +418,16 @@ describe("Submissions Review", () => {
     cy.checkA11y(null, null, a11yLogViolations)
   })
 
+  it.only("shows the correct status change options for submissions marked as ACCEPTED_AS_FINAL", () => {
+    cy.task("resetDb")
+    cy.login({ email: "reviewcoordinator@pilcrow.dev" })
+    cy.visit("submission/105/review")
+    cy.dataCy("submission_status").contains("Accepted as Final")
+    cy.dataCy("status-dropdown").click()
+    cy.dataCy("archive")
+    cy.dataCy("delete")
+  })
+
   it("allows the status of a submission in ACCEPTED_AS_FINAL status to be changed to ARCHIVED and that status options are visible", () => {
     cy.task("resetDb")
     cy.login({ email: "reviewcoordinator@pilcrow.dev" })
