@@ -92,6 +92,8 @@ const statuses = {
   open: "UNDER_REVIEW",
   accept_as_final: "ACCEPTED_AS_FINAL",
   close: "AWAITING_DECISION",
+  archive: "ARCHIVED",
+  delete: "DELETED"
 }
 
 const icons = {
@@ -102,6 +104,8 @@ const icons = {
   open: "grading",
   close: "grading",
   accept_as_final: "done",
+  archive: "archive",
+  delete: "delete"
 }
 
 const colors = {
@@ -112,6 +116,8 @@ const colors = {
   open: "black",
   close: "black",
   accept_as_final: "positive",
+  archive: "dark-grey",
+  delete: "negative"
 }
 const comment = ref(null)
 

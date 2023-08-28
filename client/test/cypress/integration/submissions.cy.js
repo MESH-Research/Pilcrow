@@ -90,4 +90,42 @@ describe("Submissions Page", () => {
     cy.contains("Deleted").parent("tr").findCy("submission_actions").click()
     cy.dataCy("export_submission").should("have.class","disabled")
   })
+
+  it("enables the correct submission options are visible for submissions marked as ACCEPTED_AS_FINAL", () => {
+    cy.task("resetDb")
+    cy.login({ email: "regularuser@pilcrow.dev" })
+    cy.visit("submissions")
+    // Show All Records
+    cy.dataCy("submissions_table").contains("Records per page").next().click()
+    cy.get("[role='listbox']").contains("All").click()
+
+    cy.contains("Accepted as Final").parent("tr").findCy("submission_actions").click()
+    cy.dataCy("change_status").click()
+    cy.dataCy("archive")
+  })
+
+  it("enables the correct submission options are visible for submissions marked as ARCHIVED", () => {
+    cy.task("resetDb")
+    cy.login({ email: "regularuser@pilcrow.dev" })
+    cy.visit("submissions")
+    // Show All Records
+    cy.dataCy("submissions_table").contains("Records per page").next().click()
+    cy.get("[role='listbox']").contains("All").click()
+
+    cy.contains("Archived").parent("tr").findCy("submission_actions").click()
+    cy.dataCy("change_status").click()
+    cy.dataCy("delete")
+  })
+
+  it("enables the correct submission options are visible for submissions marked as ARCHIVED", () => {
+    cy.task("resetDb")
+    cy.login({ email: "regularuser@pilcrow.dev" })
+    cy.visit("submissions")
+    // Show All Records
+    cy.dataCy("submissions_table").contains("Records per page").next().click()
+    cy.get("[role='listbox']").contains("All").click()
+
+    cy.contains("Deleted").parent("tr").findCy("submission_actions").click()
+    cy.dataCy("change_status").should("have.class","disabled")
+  })
 })

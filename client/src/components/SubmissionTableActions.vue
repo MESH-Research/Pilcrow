@@ -74,7 +74,8 @@
         clickable
         :disable="
           submission.status == 'REJECTED' ||
-          submission.status == 'RESUBMISSION_REQUESTED'
+          submission.status == 'RESUBMISSION_REQUESTED' ||
+          submission.status == 'DELETED'
         "
       >
         <q-item-section data-cy="change_status_item_section">
@@ -84,6 +85,7 @@
         </q-item-section>
         <q-tooltip
           v-if="
+            submission.status == 'DELETED' ||
             submission.status == 'REJECTED' ||
             submission.status == 'RESUBMISSION_REQUESTED'
           "
@@ -120,7 +122,8 @@
             v-else-if="
               submission.status != 'AWAITING_REVIEW' &&
               submission.status != 'REJECTED' &&
-              submission.status != 'RESUBMISSION_REQUESTED'
+              submission.status != 'RESUBMISSION_REQUESTED' &&
+              submission.status != 'DELETED'
             "
           >
             <q-item
@@ -132,7 +135,11 @@
               >{{ $t("submission.action.accept_for_review") }}</q-item
             >
             <q-item
-              v-if="submission.status != 'INITIALLY_SUBMITTED'"
+              v-if="
+                submission.status != 'INITIALLY_SUBMITTED' &&
+                submission.status != 'ACCEPTED_AS_FINAL' &&
+                submission.status != 'ARCHIVED'
+              "
               data-cy="accept_as_final"
               class="items-center"
               clickable
@@ -140,17 +147,44 @@
               >{{ $t("submission.action.accept_as_final") }}</q-item
             >
             <q-item
+              v-if="
+                submission.status != 'ACCEPTED_AS_FINAL' &&
+                submission.status != 'ARCHIVED'
+              "
               class="items-center"
               clickable
               @click="confirmHandler('request_resubmission', submission.id)"
               >{{ $t("submission.action.request_resubmission") }}</q-item
             >
             <q-item
+              v-if="
+                submission.status != 'ACCEPTED_AS_FINAL' &&
+                submission.status != 'ARCHIVED'
+              "
               data-cy="reject"
               class="items-center"
               clickable
               @click="confirmHandler('reject', submission.id)"
               >{{ $t("submission.action.reject") }}
+            </q-item>
+            <q-item
+              v-if="submission.status == 'ACCEPTED_AS_FINAL'"
+              data-cy="archive"
+              class="items-center"
+              clickable
+              @click="confirmHandler('archive', submission.id)"
+              >{{ $t("submission.action.archive") }}
+            </q-item>
+            <q-item
+              v-if="
+                submission.status == 'ACCEPTED_AS_FINAL' ||
+                submission.status == 'ARCHIVED'
+              "
+              data-cy="delete"
+              class="items-center"
+              clickable
+              @click="confirmHandler('delete', submission.id)"
+              >{{ $t("submission.action.delete") }}
             </q-item>
           </div>
           <q-separator />
