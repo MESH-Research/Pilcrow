@@ -433,7 +433,7 @@ describe("Submissions Review", () => {
     cy.dataCy("delete")
   })
 
-  it.only("allows the status of a submission in ACCEPTED_AS_FINAL status to be changed to DELETED and that status options are NOT visible", () => {
+  it("allows the status of a submission in ACCEPTED_AS_FINAL status to be changed to DELETED and that status options are NOT visible", () => {
     cy.task("resetDb")
     cy.login({ email: "reviewcoordinator@pilcrow.dev" })
     cy.visit("submission/105/review")
