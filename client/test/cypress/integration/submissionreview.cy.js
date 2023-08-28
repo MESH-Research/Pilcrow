@@ -418,7 +418,7 @@ describe("Submissions Review", () => {
     cy.checkA11y(null, null, a11yLogViolations)
   })
 
-  it.only("shows the correct status change options for submissions marked as ACCEPTED_AS_FINAL", () => {
+  it("shows the correct status change options for submissions marked as ACCEPTED_AS_FINAL", () => {
     cy.task("resetDb")
     cy.login({ email: "reviewcoordinator@pilcrow.dev" })
     cy.visit("submission/105/review")
