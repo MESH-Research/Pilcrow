@@ -57,7 +57,8 @@
             submission.status != 'AWAITING_REVIEW' &&
             submission.status != 'REJECTED' &&
             submission.status != 'RESUBMISSION_REQUESTED' &&
-            submission.status != 'ACCEPTED_AS_FINAL'
+            submission.status != 'ACCEPTED_AS_FINAL' &&
+            submission.status != 'ARCHIVED'
           "
           flat
           square
@@ -130,14 +131,16 @@
         </q-btn-group>
 
         <q-btn-group
-          v-if="submission.status == 'ACCEPTED_AS_FINAL'"
+          v-if="
+          submission.status == 'ACCEPTED_AS_FINAL'
+          "
           flat
           square
           class="column q-pa-sm"
         >
           <q-btn
             v-if="submission.status == 'ACCEPTED_AS_FINAL'"
-            data-cy=""
+            data-cy="archive"
             rounded
             color="dark-grey"
             :label="$t(`submission.action.archive`)"
@@ -147,7 +150,25 @@
           </q-btn>
           <q-btn
             v-if="submission.status == 'ACCEPTED_AS_FINAL'"
-            data-cy=""
+            data-cy="delete"
+            rounded
+            color="negative"
+            :label="$t(`submission.action.delete`)"
+            class=""
+            @click="confirmHandler('delete')"
+          >
+          </q-btn>
+        </q-btn-group>
+
+        <q-btn-group
+          v-if="submission.status == 'ARCHIVED'"
+          flat
+          square
+          class="column q-pa-sm"
+        >
+          <q-btn
+            v-if="submission.status == 'ARCHIVED'"
+            data-cy="delete"
             rounded
             color="negative"
             :label="$t(`submission.action.delete`)"
