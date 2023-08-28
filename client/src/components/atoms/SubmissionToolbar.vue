@@ -134,6 +134,7 @@
           v-if="
           submission.status == 'ACCEPTED_AS_FINAL'
           "
+          data-cy="decision_options"
           flat
           square
           class="column q-pa-sm"
@@ -162,6 +163,7 @@
 
         <q-btn-group
           v-if="submission.status == 'ARCHIVED'"
+          data-cy="decision_options"
           flat
           square
           class="column q-pa-sm"
