@@ -223,88 +223,90 @@
             "maxLength": "@:generic_validation.maxLength"
           }
         },
-        "position_title": {
-          "label": "Position Title",
-          "errors": {
+        "profile_metadata": {
+          "position_title": {
+            "label": "Position Title",
+            "errors": {
+              "maxLength": "@:generic_validations.maxLength"
+            }
+          },
+          "specialization": {
+            "label": "Specialization",
+            "hint": "Area of expertise, specialization, or research focus.",
+            "errors": {
+              "maxLength": "@:generic_validations.maxLength"
+            }
+          },
+          "affiliation": {
+            "label": "Affiliation",
+            "hint": "Institutional, group, or organization affiliation.",
+            "errors": {
+              "maxLength": "@:generic_validations.maxLength"
+            }
+          },
+          "social_media": {
+            "twitter": {
+              "label": "Twitter",
+              "errors": {
+                "valid": "Please enter a valid Twitter handle.",
+                "maxLength": "@:generic_validations.maxLength"
+              }
+            },
+            "instagram": {
+              "label": "Instagram",
+              "errors": {
+                "valid": "Please enter a valid Instagram username.",
+                "maxLength": "@:generic_validations.maxLength"
+              }
+            },
+            "linkedin": {
+              "label": "LinkedIn",
+              "errors": {
+                "valid": "Please enter a valid LinkedIn permalink.",
+                "maxLength": "@:generic_validations.maxLength"
+              }
+            },
+            "facebook": {
+              "label": "Facebook",
+              "errors": {
+                "valid": "Please enter a valid Facebook profile name.",
+                "maxLength": "@:generic_validations.maxLength"
+              }
+            }
+          },
+          "biography": {
+            "label": "Biography",
             "maxLength": "@:generic_validations.maxLength"
-          }
-        },
-        "specialization": {
-          "label": "Specialization",
-          "hint": "Area of expertise, specialization, or research focus.",
-          "errors": {
-            "maxLength": "@:generic_validations.maxLength"
-          }
-        },
-        "affiliation": {
-          "label": "Affiliation",
-          "hint": "Institutional, group, or organization affiliation.",
-          "errors": {
-            "maxLength": "@:generic_validations.maxLength"
-          }
-        },
-        "social_media": {
-          "twitter": {
-            "label": "Twitter",
-            "errors": {
-              "valid": "Please enter a valid Twitter handle.",
-              "maxLength": "@:generic_validations.maxLength"
+          },
+          "academic_profiles": {
+            "humanities_commons": {
+              "label": "Humanities Commons",
+              "errors": {
+                "maxLength": "@:generic_validations.maxLength"
+              }
+            },
+            "orcid": {
+              "label": "ORCID",
+              "errors": {
+                "maxLength": "@:generic_validations.maxLength"
+              }
             }
           },
-          "instagram": {
-            "label": "Instagram",
+          "websites": {
+            "label": "Websites",
             "errors": {
-              "valid": "Please enter a valid Instagram username.",
-              "maxLength": "@:generic_validations.maxLength"
+              "maxLength": "@:generic_validations.maxLength",
+              "valid": "Please enter a valid URL.",
+              "duplicate": "This URL is already in the list."
             }
           },
-          "linkedin": {
-            "label": "LinkedIn",
+          "interest_keywords": {
+            "label": "Interest Keyword",
+            "hint": "Interest keywords will be used to help provide suggestions for submissions which may be of interest to you.",
             "errors": {
-              "valid": "Please enter a valid LinkedIn permalink.",
-              "maxLength": "@:generic_validations.maxLength"
+              "maxLength": "@:generic_validations.maxLength",
+              "duplicate": "This keyword is already in the list."
             }
-          },
-          "facebook": {
-            "label": "Facebook",
-            "errors": {
-              "valid": "Please enter a valid Facebook profile name.",
-              "maxLength": "@:generic_validations.maxLength"
-            }
-          }
-        },
-        "biography": {
-          "label": "Biography",
-          "maxLength": "@:generic_validations.maxLength"
-        },
-        "academic_profiles": {
-          "humanities_commons": {
-            "label": "Humanities Commons",
-            "errors": {
-              "maxLength": "@:generic_validations.maxLength"
-            }
-          },
-          "orcid": {
-            "label": "ORCID",
-            "errors": {
-              "maxLength": "@:generic_validations.maxLength"
-            }
-          }
-        },
-        "website": {
-          "label": "Website",
-          "errors": {
-            "maxLength": "@:generic_validations.maxLength",
-            "valid": "Please enter a valid URL.",
-            "duplicate": "This URL is already in the list."
-          }
-        },
-        "interest_keyword": {
-          "label": "Interest Keyword",
-          "hint": "Interest keywords will be used to help provide suggestions for submissions which may be of interest to you.",
-          "errors": {
-            "maxLength": "@:generic_validations.maxLength",
-            "duplicate": "This keyword is already in the list."
           }
         }
       }

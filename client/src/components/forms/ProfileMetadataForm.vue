@@ -145,7 +145,7 @@
         <editable-list
           ref="websites"
           v-model="form.profile_metadata.websites"
-          t="account.profile.fields.website"
+          t="account.profile.fields.profile_metadata.websites"
           data-cy="websites_list_control"
           class="q-gutter-md"
           :rules="website_rules"
@@ -159,12 +159,12 @@
           <tag-list
             ref="interest_keywords"
             v-model="form.profile_metadata.interest_keywords"
-            t="account.profile.fields.interest_keyword"
+            t="account.profile.fields.profile_metadata.interest_keywords"
             data-cy="interest_keywords_control"
             :rules="keyword_rules"
           />
           <p>
-            {{ $t("account.profile.fields.interest_keyword.hint") }}
+            {{ $t("account.profile.fields.profile_metadata.interest_keywords.hint") }}
           </p>
         </fieldset>
       </form-section>
