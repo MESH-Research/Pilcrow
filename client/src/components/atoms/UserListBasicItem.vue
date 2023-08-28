@@ -19,10 +19,6 @@
         {{ user.email }}
       </q-item-label>
     </q-item-section>
-
-    <q-item-section side top>
-      <q-item-label caption> meta </q-item-label>
-    </q-item-section>
   </q-item>
 </template>
 
