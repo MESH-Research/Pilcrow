@@ -418,7 +418,7 @@ describe("Submissions Review", () => {
     cy.checkA11y(null, null, a11yLogViolations)
   })
 
-  it("allows the status of a submission in ACCEPTED_AS_FINAL status to be changed to ARCHIVED and that status options ", () => {
+  it("allows the status of a submission in ACCEPTED_AS_FINAL status to be changed to ARCHIVED and that status options are visible", () => {
     cy.task("resetDb")
     cy.login({ email: "reviewcoordinator@pilcrow.dev" })
     cy.visit("submission/105/review")
@@ -431,5 +431,18 @@ describe("Submissions Review", () => {
     cy.dataCy("status-dropdown").click()
     cy.dataCy("decision_options").click()
     cy.dataCy("delete")
+  })
+
+  it.only("allows the status of a submission in ACCEPTED_AS_FINAL status to be changed to DELETED and that status options are NOT visible", () => {
+    cy.task("resetDb")
+    cy.login({ email: "reviewcoordinator@pilcrow.dev" })
+    cy.visit("submission/105/review")
+    cy.dataCy("submission_status").contains("Accepted as Final")
+    cy.dataCy("status-dropdown").click()
+    cy.dataCy("delete").click()
+    cy.dataCy("dirtyYesChangeStatus").click()
+    cy.visit("submission/105/review")
+    cy.dataCy("submission_status").contains("Deleted")
+    cy.dataCy("status-dropdown").should('not.exist')
   })
 })

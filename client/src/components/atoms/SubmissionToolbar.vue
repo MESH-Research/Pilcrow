@@ -34,6 +34,7 @@
       </q-toolbar-title>
 
       <q-btn-dropdown
+        v-if="submission.status != 'DELETED'"
         :label="$t(`submission.toolbar.status_options`)"
         flat
         menu-anchor="bottom right"
