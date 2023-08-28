@@ -1,5 +1,4 @@
 <template>
-  <div>
     <h2 class="q-pl-lg">All Users</h2>
     <div v-if="users.length">
       <user-list-basic
@@ -16,7 +15,6 @@
         :max="lastPage"
       />
     </div>
-  </div>
 </template>
 
 <script setup>
