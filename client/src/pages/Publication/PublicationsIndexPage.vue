@@ -1,42 +1,41 @@
+
 <template>
-  <div>
-    <h2 class="q-px-lg">{{ $t("publication.entity", { count: 2 }) }}</h2>
-    <section class="q-px-lg">
-      <div v-if="!loading" class="column q-gutter-md items-center">
-        <q-list
-          v-if="publications.length !== 0"
-          class="full-width"
-          separator
-          data-cy="publications_list"
+  <h2 class="q-px-lg">{{ $t("publication.entity", { count: 2 }) }}</h2>
+  <section>
+    <div v-if="!loading" class="column items-center">
+      <q-list
+        v-if="publications.length !== 0"
+        class="full-width"
+        separator
+        data-cy="publications_list"
+      >
+        <q-item
+          v-for="publication in publications"
+          :key="publication.id"
+          class="q-px-lg"
+          :to="destRoute(publication.id)"
         >
-          <q-item
-            v-for="publication in publications"
-            :key="publication.id"
-            class="q-py-md"
-            :to="destRoute(publication.id)"
-          >
-            <q-item-section>
-              <q-item-label>
-                {{ publication.name }}
-              </q-item-label>
-              <q-item-label caption>
-                {{ strip(publication.home_page_content) }}
-              </q-item-label>
-            </q-item-section>
-          </q-item>
-        </q-list>
-        <q-pagination
-          v-if="paginatorInfo"
-          v-bind="binds"
-          class="col"
-          v-on="listeners"
-        />
-      </div>
-      <div v-else class="spinner">
-        <q-spinner color="primary" />
-      </div>
-    </section>
-  </div>
+          <q-item-section>
+            <q-item-label>
+              {{ publication.name }}
+            </q-item-label>
+            <q-item-label caption>
+              {{ strip(publication.home_page_content) }}
+            </q-item-label>
+          </q-item-section>
+        </q-item>
+      </q-list>
+      <q-pagination
+        v-if="paginatorInfo"
+        v-bind="binds"
+        class="q-pa-lg"
+        v-on="listeners"
+      />
+    </div>
+    <div v-else class="spinner">
+      <q-spinner color="primary" />
+    </div>
+  </section>
 </template>
 
 <script setup>
