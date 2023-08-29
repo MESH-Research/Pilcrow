@@ -315,31 +315,15 @@ export const UPDATE_PROFILE_METADATA = gql`
     $id: ID!
     $username: String
     $name: String
-    $affiliation: String
-    $biography: String
-    $interest_keywords: [String!]
-    $websites: [String!]
-    $position_title: String
-    $specialization: String
-    $social_media: UpdateSocialMediaInput
-    $academic_profiles: UpdateAcademicProfilesInput
+    $profile_metadata: UpdateProfileMetadataInput
   ) {
     updateUser(
       user: {
         id: $id
         username: $username
         name: $name
-        profile_metadata: {
-          affiliation: $affiliation
-          biography: $biography
-          interest_keywords: $interest_keywords
-          websites: $websites
-          position_title: $position_title
-          specialization: $specialization
-          social_media: $social_media
-          academic_profiles: $academic_profiles
+        profile_metadata: $profile_metadata
         }
-      }
     ) {
       id
       ...profileMetadata
