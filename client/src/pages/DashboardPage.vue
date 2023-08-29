@@ -27,10 +27,10 @@
             :vertical="$q.screen.width < 600 ? true : false"
           >
             <q-btn flat icon="account_circle" to="/account/profile">{{
-              $t(`dashboard.profile`)
+              $t(`profile.page_title`)
             }}</q-btn>
             <q-btn flat icon="o_settings" to="/account/login">{{
-              $t(`dashboard.login_and_password`)
+              $t(`login_and_password.page_title`)
             }}</q-btn>
             <q-btn flat icon="mdi-logout" to="/logout">{{
               $t(`auth.logout`)
