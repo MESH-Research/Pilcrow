@@ -937,11 +937,11 @@
     vue-demi "^0.14.6"
 
 "@vue/apollo-option@^4.0.0-alpha.20":
-  version "4.0.0-beta.5"
-  resolved "https://registry.yarnpkg.com/@vue/apollo-option/-/apollo-option-4.0.0-beta.5.tgz#5dd6aa147bb5ca8c1006876211f4a27ccb120102"
-  integrity sha512-1bDkF8yzhQ2Hm0CQLve20L4ynIrsxlUilqg1ufcr17IQLlIsjY+fbBfzAljD8dH2iuyRrul/FtTHOeg3tC05PQ==
+  version "4.0.0-beta.9"
+  resolved "https://registry.yarnpkg.com/@vue/apollo-option/-/apollo-option-4.0.0-beta.9.tgz#56209e4e75acda342f4100fa5683dc8dc0265673"
+  integrity sha512-hxWk9vfYFmw/CwlGm0afcCcREWxxmTUpiLad1xpaxpYC0UMqXDJEXz7WU5G0e5KdRi0/HFr1EBkqVN1UyzhsiQ==
   dependencies:
-    throttle-debounce "^3.0.1"
+    throttle-debounce "^5.0.0"
 
 "@vue/compiler-core@3.3.4":
   version "3.3.4"
