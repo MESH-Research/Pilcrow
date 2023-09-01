@@ -89,9 +89,7 @@ describe("Reviews Page", () => {
       .parent("tr")
       .findCy("submission_actions")
       .click()
-    cy.dataCy("change_status").should("have.class", "disabled")
-    cy.dataCy("change_status_item_section").trigger("mouseenter")
-    cy.dataCy("cannot_change_submission_status_tooltip")
+    cy.dataCy("change_status").should("not.exist")
   })
 
   it("should deny a reviewer from changing the status of rejected submissions", () => {
@@ -101,9 +99,7 @@ describe("Reviews Page", () => {
     cy.dataCy("reviewer_table").contains("Records per page").next().click()
     cy.get("[role='listbox']").contains("All").click()
     cy.contains("Rejected").parent("tr").findCy("submission_actions").click()
-    cy.dataCy("change_status").should("have.class", "disabled")
-    cy.dataCy("change_status_item_section").trigger("mouseenter")
-    cy.dataCy("cannot_change_submission_status_tooltip")
+    cy.dataCy("change_status").should("not.exist")
   })
 
   it("should deny a reviewer from accessing rejected submissions", () => {
@@ -130,11 +126,7 @@ describe("Reviews Page", () => {
       .parent("tr")
       .findCy("submission_actions")
       .click()
-    cy.dataCy("change_status").should("have.class", "disabled")
-    cy.dataCy("change_status_item_section").trigger("mouseenter")
-    cy.dataCy("cannot_change_submission_status_tooltip")
-    cy.dataCy("change_status_item_section").trigger("click")
-    cy.dataCy("change_status_dropdown").should("not.be.visible")
+    cy.dataCy("change_status").should("not.exist")
   })
 
   it("should deny a reviewer from accessing submissions requested for resubmission", () => {
