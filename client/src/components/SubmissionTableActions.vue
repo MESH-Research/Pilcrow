@@ -70,7 +70,7 @@
         </q-tooltip>
       </q-item>
       <q-item
-        v-if="!statusChangingDisabledByRole && !statusChangingDisabledByState"
+        v-if="!statusChangingDisabledByRole"
         data-cy="change_status"
         clickable
         :disable="statusChangingDisabledByState"
@@ -81,7 +81,7 @@
           </q-item-label>
         </q-item-section>
         <q-tooltip
-          v-if="submission.status == 'RESUBMISSION_REQUESTED'"
+          v-if="statusChangingDisabledByState"
           anchor="top middle"
           self="bottom middle"
           :offset="[10, 10]"

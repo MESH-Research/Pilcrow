@@ -66,6 +66,8 @@ export function useStatusChangeControls(submission) {
   })
 
   const statusChangingDisabledStates = [
+    "REJECTED",
+    "RESUBMISSION_REQUESTED",
     "DELETED"
   ]
 
