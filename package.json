@@ -24,6 +24,6 @@
         "header": "<!-- markdownlint-disable MD024 MD001 -->\n# Changelog\n\nAll notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.\n"
     },
     "type": "module",
-    "version": "0.25.0",
+    "version": "0.26.0",
     "dependencies": {}
 }
