@@ -8,7 +8,7 @@
     ],
     "license": "MIT",
     "require": {
-        "php": "<8.2.10",
+        "php": "<8.2.11",
         "bensampo/laravel-enum": "^6.3",
         "doctrine/dbal": "^3.0",
         "guzzlehttp/guzzle": "^7.0.1",

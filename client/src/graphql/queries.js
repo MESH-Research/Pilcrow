@@ -84,6 +84,9 @@ export const CURRENT_USER_SUBMISSIONS = gql`
         review_coordinators {
           ...relatedUserFields
         }
+        reviewers {
+          ...relatedUserFields
+        }
         submitters {
           ...relatedUserFields
         }

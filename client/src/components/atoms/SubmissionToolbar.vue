@@ -34,7 +34,7 @@
       </q-toolbar-title>
 
       <q-btn-dropdown
-        v-if="submission.status != 'DELETED'"
+        v-if="!statusChangingDisabledByRole && !statusChangingDisabledByState"
         :label="$t(`submission.toolbar.status_options`)"
         flat
         menu-anchor="bottom right"
@@ -52,7 +52,7 @@
           >
           </q-btn>
         </div>
-        
+
         <q-btn-group
           v-else-if="
             submission.status != 'AWAITING_REVIEW' &&
@@ -132,9 +132,7 @@
         </q-btn-group>
 
         <q-btn-group
-          v-if="
-          submission.status == 'ACCEPTED_AS_FINAL'
-          "
+          v-if="submission.status == 'ACCEPTED_AS_FINAL'"
           data-cy="decision_options"
           flat
           square
@@ -180,7 +178,6 @@
           >
           </q-btn>
         </q-btn-group>
-
       </q-btn-dropdown>
       <q-icon
         v-if="isDisabledByRole || isDisabledByState"
@@ -244,7 +241,10 @@
 <script setup>
 import ConfirmStatusChangeDialog from "../dialogs/ConfirmStatusChangeDialog.vue"
 import { useQuasar } from "quasar"
-import { useSubmissionExport } from "src/use/guiElements.js"
+import {
+  useSubmissionExport,
+  useStatusChangeControls,
+} from "src/use/guiElements.js"
 import { ref } from "vue"
 
 const { dialog } = useQuasar()
@@ -252,6 +252,8 @@ const { dialog } = useQuasar()
 const submissionRef = ref(props.submission)
 const { isDisabledByRole, isDisabledByState } =
   useSubmissionExport(submissionRef)
+const { statusChangingDisabledByRole, statusChangingDisabledByState } =
+  useStatusChangeControls(submissionRef)
 
 const props = defineProps({
   // Drawer status

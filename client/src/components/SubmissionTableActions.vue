@@ -70,13 +70,10 @@
         </q-tooltip>
       </q-item>
       <q-item
+        v-if="!statusChangingDisabledByRole"
         data-cy="change_status"
         clickable
-        :disable="
-          submission.status == 'REJECTED' ||
-          submission.status == 'RESUBMISSION_REQUESTED' ||
-          submission.status == 'DELETED'
-        "
+        :disable="statusChangingDisabledByState"
       >
         <q-item-section data-cy="change_status_item_section">
           <q-item-label>
@@ -84,11 +81,7 @@
           </q-item-label>
         </q-item-section>
         <q-tooltip
-          v-if="
-            submission.status == 'DELETED' ||
-            submission.status == 'REJECTED' ||
-            submission.status == 'RESUBMISSION_REQUESTED'
-          "
+          v-if="statusChangingDisabledByState"
           anchor="top middle"
           self="bottom middle"
           :offset="[10, 10]"
@@ -246,13 +239,18 @@
 <script setup>
 import ConfirmStatusChangeDialog from "../components/dialogs/ConfirmStatusChangeDialog.vue"
 import { useQuasar } from "quasar"
-import { useSubmissionExport } from "src/use/guiElements.js"
+import {
+  useSubmissionExport,
+  useStatusChangeControls,
+} from "src/use/guiElements.js"
 import { ref } from "vue"
 const { dialog } = useQuasar()
 
 const submissionRef = ref(props.submission)
 const { isDisabledByRole, isDisabledByState } =
   useSubmissionExport(submissionRef)
+const { statusChangingDisabledByRole, statusChangingDisabledByState } =
+  useStatusChangeControls(submissionRef)
 
 const props = defineProps({
   submission: {
@@ -264,6 +262,7 @@ const props = defineProps({
     default: "",
   },
 })
+
 function cannotAccessSubmission(submission) {
   const nonreviewableStates = new Set([
     "DRAFT",
