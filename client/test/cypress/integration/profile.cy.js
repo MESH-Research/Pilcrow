@@ -8,6 +8,20 @@ describe("Profile", () => {
     cy.visit("/account/profile")
   })
 
+  it("can update the name field", () => {
+    cy.dataCy("update_user_name").clear().type("Updated User")
+    cy.dataCy("button_save").click()
+    cy.reload()
+    cy.dataCy("avatar_name").contains("Updated User")
+  })
+
+  it("can update the username field", () => {
+    cy.dataCy("update_user_username").clear().type("updatedUser")
+    cy.dataCy("button_save").click()
+    cy.reload()
+    cy.dataCy("avatar_username").contains("updatedUser")
+  })
+
   it("can update position title", () => {
     const value = "Updated position Title"
     cy.dataCy("position_title").type(value)
