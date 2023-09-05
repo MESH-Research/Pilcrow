@@ -55,6 +55,34 @@ export function useFeedbackMessages(overrideDefaults = {}) {
   return { newMessage, newStatusMessage }
 }
 
+export function useStatusChangeControls(submission) {
+  const { isReviewer } = useCurrentUser()
+
+  const statusChangingDisabledByRole = computed(() => {
+    if (!submission.value) {
+      return true
+    }
+    return isReviewer(submission.value)
+  })
+
+  const statusChangingDisabledStates = [
+    "REJECTED",
+    "RESUBMISSION_REQUESTED",
+    "DELETED"
+  ]
+
+  const statusChangingDisabledByState = computed(() => {
+    if (!submission.value) {
+      return true
+    }
+    return statusChangingDisabledStates.includes(submission.value.status)
+  })
+
+  return {
+    statusChangingDisabledByRole, statusChangingDisabledByState
+  }
+}
+
 export function useSubmissionExport(submission) {
   const {
     isAppAdmin,
