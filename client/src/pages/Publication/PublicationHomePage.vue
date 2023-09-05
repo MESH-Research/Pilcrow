@@ -33,9 +33,9 @@
         v-html="publication.home_page_content"
       />
       <!--  eslint-enable vue/no-v-html -->
-
+    </div>
+    <div v-if="publication.is_accepting_submissions" class="row q-mb-md">
       <q-btn
-        v-if="publication.is_accepting_submissions"
         color="primary"
         class="q-mt-lg"
         :to="{ name: 'submission:create', params: { id: publication.id } }"
