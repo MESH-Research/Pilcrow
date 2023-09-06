@@ -45,6 +45,8 @@ describe("ProfilePage", () => {
 
   const profileData = () => ({
     id: 1,
+    username: 'testusername',
+    name: "Test Name",
     profile_metadata: {
       biography: "my bio",
       position_title: "my title",

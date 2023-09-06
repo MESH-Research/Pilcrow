@@ -34,7 +34,6 @@ const { mutate: saveProfile } = metadataMutation
 function save(form) {
   const { saved, errorMessage } = formState
   saved.value = false
-  console.log(formState)
   saveProfile({ id: currentUserId.value, ...form })
     .then(() => {
       saved.value = true

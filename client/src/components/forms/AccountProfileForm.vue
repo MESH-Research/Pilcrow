@@ -28,7 +28,7 @@ import VNewPasswordInput from "./VNewPasswordInput.vue"
 import { useVuelidate } from "@vuelidate/core"
 import { reactive, watchEffect, watch, inject, computed, ref } from "vue"
 import { isEqual, pick } from "lodash"
-import { rules } from "src/use/userValidation"
+import { updateUserRules as rules } from "src/use/userValidation"
 const props = defineProps({
   accountProfile: {
     required: true,
@@ -47,7 +47,7 @@ watch(
   () => props.graphqlValidation,
   (newValue) => {
     $externalResults.value = newValue.user ?? []
-  }
+  },
 )
 
 const emit = defineEmits(["save"])

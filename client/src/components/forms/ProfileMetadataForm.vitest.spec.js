@@ -21,7 +21,10 @@ describe("ProfileMetadataForm", () => {
         components: { QList }
       },
       props: {
-        profileMetadata: {},
+        profileMetadata: {
+          username: 'testusername',
+          name: 'Test Name',
+        },
         ...props,
       },
     })
