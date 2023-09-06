@@ -71,7 +71,7 @@ class PublicationFactory extends Factory
     private function makeNewSubmissionContent()
     {
         return "<p>This is an example of content from the publication that's displayed to users when " .
-            "they start the creation process for a new submission. This gives the publication an opportunity " .
-            "to brief the user with guidelines and expectations for the peer review process. </p>";
+            'they start the creation process for a new submission. This gives the publication an opportunity ' .
+            'to brief the user with guidelines and expectations for the peer review process. </p>';
     }
 }
