@@ -48,6 +48,11 @@ export function useCurrentUser() {
       return o.id == currentUser.value.id
     })
   }
+  const isReviewer = (submission) => {
+    return submission?.reviewers?.some((o) => {
+      return o.id == currentUser.value.id
+    })
+  }
   const isReviewCoordinator = (submission) => {
     return submission?.review_coordinators?.some((o) => {
       return o.id == currentUser.value.id
@@ -72,6 +77,7 @@ export function useCurrentUser() {
     abilities,
     isAppAdmin,
     isSubmitter,
+    isReviewer,
     isReviewCoordinator,
     isEditor,
     isPublicationAdmin,

@@ -418,6 +418,13 @@ describe("Submissions Review", () => {
     cy.checkA11y(null, null, a11yLogViolations)
   })
 
+  it("does not show status changing options for reviewers", () => {
+    cy.task("resetDb")
+    cy.login({ email: "reviewer@pilcrow.dev" })
+    cy.visit("submission/108/review")
+    cy.dataCy("status-dropdown").should("not.exist")
+  })
+
   it("shows the correct status change options for submissions marked as ACCEPTED_AS_FINAL", () => {
     cy.task("resetDb")
     cy.login({ email: "reviewcoordinator@pilcrow.dev" })

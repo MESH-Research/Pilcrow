@@ -937,11 +937,11 @@
     vue-demi "^0.14.6"
 
 "@vue/apollo-option@^4.0.0-alpha.20":
-  version "4.0.0-beta.5"
-  resolved "https://registry.yarnpkg.com/@vue/apollo-option/-/apollo-option-4.0.0-beta.5.tgz#5dd6aa147bb5ca8c1006876211f4a27ccb120102"
-  integrity sha512-1bDkF8yzhQ2Hm0CQLve20L4ynIrsxlUilqg1ufcr17IQLlIsjY+fbBfzAljD8dH2iuyRrul/FtTHOeg3tC05PQ==
+  version "4.0.0-beta.9"
+  resolved "https://registry.yarnpkg.com/@vue/apollo-option/-/apollo-option-4.0.0-beta.9.tgz#56209e4e75acda342f4100fa5683dc8dc0265673"
+  integrity sha512-hxWk9vfYFmw/CwlGm0afcCcREWxxmTUpiLad1xpaxpYC0UMqXDJEXz7WU5G0e5KdRi0/HFr1EBkqVN1UyzhsiQ==
   dependencies:
-    throttle-debounce "^3.0.1"
+    throttle-debounce "^5.0.0"
 
 "@vue/compiler-core@3.3.4":
   version "3.3.4"
@@ -1823,9 +1823,9 @@ csstype@^3.1.1:
   integrity sha512-I7K1Uu0MBPzaFKg4nI5Q7Vs2t+3gWWW648spaF+Rg7pI9ds18Ugn+lvg4SHczUdKlHI5LWBXyqfS8+DufyBsgQ==
 
 cypress-axe@^1.4.0:
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/cypress-axe/-/cypress-axe-1.4.0.tgz#e67482bfe9e740796bf77c7823f19781a8a2faff"
-  integrity sha512-Ut7NKfzjyKm0BEbt2WxuKtLkIXmx6FD2j0RwdvO/Ykl7GmB/qRQkwbKLk3VP35+83hiIr8GKD04PDdrTK5BnyA==
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/cypress-axe/-/cypress-axe-1.5.0.tgz#95082734583da77b51ce9b7784e14a442016c7a1"
+  integrity sha512-Hy/owCjfj+25KMsecvDgo4fC/781ccL+e8p+UUYoadGVM2ogZF9XIKbiM6KI8Y3cEaSreymdD6ZzccbI2bY0lQ==
 
 cypress-file-upload@^5.0.8:
   version "5.0.8"
@@ -4035,9 +4035,9 @@ prettier-linter-helpers@^1.0.0:
     fast-diff "^1.1.2"
 
 prettier@^3.0.0:
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/prettier/-/prettier-3.0.2.tgz#78fcecd6d870551aa5547437cdae39d4701dca5b"
-  integrity sha512-o2YR9qtniXvwEZlOKbveKfDQVyqxbEIWn48Z8m3ZJjBjcCmUy3xZGIv+7AkaeuaTr6yPXJjwv07ZWlsWbEy1rQ==
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-3.0.3.tgz#432a51f7ba422d1469096c0fdc28e235db8f9643"
+  integrity sha512-L/4pUDMxcNa8R/EthV08Zt42WBO4h1rarVtK0K+QJG0X187OLo7l699jWw0GKuwzkPQ//jMFA/8Xm6Fh3J/DAg==
 
 pretty-bytes@^5.6.0:
   version "5.6.0"
@@ -4282,9 +4282,9 @@ qs@~6.10.3:
     side-channel "^1.0.4"
 
 quasar@^2.6.0:
-  version "2.12.5"
-  resolved "https://registry.yarnpkg.com/quasar/-/quasar-2.12.5.tgz#f5e907500dad613cc5787d89ba2c57f4f4efe80a"
-  integrity sha512-YPG9O+bRq3imN53EGKPyM6rUdx+IGxrs4Q1AljeA4JQh0FibWyPzM44hxFpO8JQiuWAJ5e5wZXhsyeyFyb4a2w==
+  version "2.12.6"
+  resolved "https://registry.yarnpkg.com/quasar/-/quasar-2.12.6.tgz#5fcd92c1e0c33427b626c425d0dd0aaa706e48c1"
+  integrity sha512-C4rDMzRu+onIP+4f8WrXUJYqMZ7KsZZewU5zjxCPHQqDVKAWNbfqePN/4ME42PZ3u5C26J9eLLW32rc/vEXXfg==
 
 querystringify@^2.1.1:
   version "2.2.0"
