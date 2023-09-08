@@ -767,7 +767,7 @@
         "reason_1": "not accepting submissions at this time",
         "reason_2": "not publicly visible"
       },
-      "action": "Submit New Submission"
+      "action": "Create New Submission"
     },
     "create": {
       "heading": "Create Submission",
