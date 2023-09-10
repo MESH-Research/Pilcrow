@@ -30,7 +30,7 @@
               $t(`profile.page_title`)
             }}</q-btn>
             <q-btn flat icon="o_settings" to="/account/login">{{
-              $t(`login_and_password.page_title`)
+              $t(`settings.page_title`)
             }}</q-btn>
             <q-btn flat icon="mdi-logout" to="/logout">{{
               $t(`auth.logout`)

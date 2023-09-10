@@ -144,8 +144,8 @@
   "profile": {
     "page_title": "Profile"
   },
-  "login_and_password": {
-    "page_title": "Login and Password"
+  "settings": {
+    "page_title": "Settings"
   },
   "account": {
     "failures": {

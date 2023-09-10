@@ -54,7 +54,7 @@
                 <q-icon name="o_settings" />
               </q-item-section>
               <q-item-section>
-                {{ $t("login_and_password.page_title") }}
+                {{ $t("settings.page_title") }}
               </q-item-section>
             </q-item>
             <div v-if="isAppAdmin">

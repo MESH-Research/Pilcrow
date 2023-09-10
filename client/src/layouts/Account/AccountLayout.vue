@@ -35,7 +35,7 @@ const items = [
   },
   {
     icon: "o_settings",
-    label: t(`login_and_password.page_title`),
+    label: t(`settings.page_title`),
     url: "/account/login",
   },
 ]
