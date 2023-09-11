@@ -738,17 +738,13 @@ class SubmissionCommentTest extends ApiTestCase
                 'comment_id' => $inline_comment->id,
             ]
         )
-        ->assertGraphQLErrorMessage('Validation failed for the field [updateSubmission].')
-        ->assertGraphQLValidationError(
-            'input.inline_comments.update.0',
-            'You may not modify the comments of others.'
-        );
+        ->assertGraphQLErrorMessage('UNAUTHORIZED');
     }
 
     /**
      * @return void
      */
-    public function usersCannotModifyTheOverallCommentsOfOthers()
+    public function testUsersCannotModifyTheOverallCommentsOfOthers()
     {
         $this->beAppAdmin();
         $submission = $this->createSubmissionWithOverallComment();
@@ -774,10 +770,6 @@ class SubmissionCommentTest extends ApiTestCase
                 'comment_id' => $overall_comment->id,
             ]
         )
-        ->assertGraphQLErrorMessage('Validation failed for the field [updateSubmission].')
-        ->assertGraphQLValidationError(
-            'input.overall_comments.update.0',
-            'You may not modify the comments of others.'
-        );
+        ->assertGraphQLErrorMessage('UNAUTHORIZED');
     }
 }

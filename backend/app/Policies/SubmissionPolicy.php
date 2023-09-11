@@ -234,13 +234,16 @@ class SubmissionPolicy
      */
     public function updateInlineComments(User $user, Submission $_, $args)
     {
-        $comment_id = $args['inlineComments']['update'][0]['id'];
-        $inline_comment = InlineComment::where('id', $comment_id)->firstOrFail();
-        if ($inline_comment->created_by === $user->id) {
-            return true;
-        }
+        if (isset($args['inlineComments']['update'])) {
+            $comment_id = $args['inlineComments']['update'][0]['id'];
+            $inline_comment = InlineComment::where('id', $comment_id)->firstOrFail();
+            if ($inline_comment->created_by === $user->id) {
+                return true;
+            }
 
-        return Response::deny('UNAUTHORIZED');
+            return Response::deny('UNAUTHORIZED');
+        }
+        return true;
     }
 
     /**
@@ -252,12 +255,15 @@ class SubmissionPolicy
      */
     public function updateOverallComments(User $user, Submission $_, $args)
     {
-        $comment_id = $args['overallComments']['update'][0]['id'];
-        $overall_comment = OverallComment::where('id', $comment_id)->firstOrFail();
-        if ($overall_comment->created_by === $user->id) {
-            return true;
-        }
+        if (isset($args['overallComments']['update'])) {
+            $comment_id = $args['overallComments']['update'][0]['id'];
+            $overall_comment = OverallComment::where('id', $comment_id)->firstOrFail();
+            if ($overall_comment->created_by === $user->id) {
+                return true;
+            }
 
-        return Response::deny('UNAUTHORIZED');
+            return Response::deny('UNAUTHORIZED');
+        }
+        return true;
     }
 }
