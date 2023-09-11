@@ -27,12 +27,6 @@ describe("Settings page", () => {
     cy.dataCy("update_user_notify")
       .should("be.visible")
       .should("have.class", "bg-positive")
-  })
-
-  it("should assert the page is accessible", () => {
-    cy.injectAxe()
-    //Wait for the page to be loaded.
-    cy.dataCy("vueAccount")
     cy.checkA11y(null, null, a11yLogViolations)
   })
 })
