@@ -85,11 +85,6 @@ input InlineCommentHasManyInput {
             ]
         )
     update: [UpdateInlineCommentInput!]
-        @rules(
-            apply: [
-                "App\\Rules\\IsInlineCommentAuthor"
-            ]
-        )
 }
 
 input CreateInlineCommentInput {
@@ -118,11 +113,6 @@ input OverallCommentHasManyInput {
             ]
         )
     update: [UpdateOverallCommentInput!]
-        @rules(
-            apply: [
-                "App\\Rules\\IsOverallCommentAuthor"
-            ]
-        )
 }
 
 input CreateOverallCommentInput {

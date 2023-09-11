@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\Policies;
 
+use App\Models\InlineComment;
+use App\Models\OverallComment;
 use App\Models\Publication;
 use App\Models\Role;
 use App\Models\Submission;
@@ -221,5 +223,41 @@ class SubmissionPolicy
         }
 
         return Response::deny('You do not have permission to invite users to this submission.');
+    }
+
+    /**
+     * Update the inline comments of a submission
+     *
+     * @param \App\Models\User $user
+     * @param \App\Models\Submission $submission
+     * @return bool|\Illuminate\Auth\Access\Response
+     */
+    public function updateInlineComments(User $user, Submission $_, $args)
+    {
+        $comment_id = $args['inlineComments']['update'][0]['id'];
+        $inline_comment = InlineComment::where('id', $comment_id)->firstOrFail();
+        if ($inline_comment->created_by === $user->id) {
+            return true;
+        }
+
+        return Response::deny('UNAUTHORIZED');
+    }
+
+    /**
+     * Update the overall comments of a submission
+     *
+     * @param \App\Models\User $user
+     * @param \App\Models\Submission $submission
+     * @return bool|\Illuminate\Auth\Access\Response
+     */
+    public function updateOverallComments(User $user, Submission $_, $args)
+    {
+        $comment_id = $args['overallComments']['update'][0]['id'];
+        $overall_comment = OverallComment::where('id', $comment_id)->firstOrFail();
+        if ($overall_comment->created_by === $user->id) {
+            return true;
+        }
+
+        return Response::deny('UNAUTHORIZED');
     }
 }
