@@ -36,7 +36,7 @@ const items = [
   {
     icon: "o_settings",
     label: t(`settings.page_title`),
-    url: "/account/login",
+    url: "/account/settings",
   },
 ]
 

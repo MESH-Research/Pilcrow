@@ -29,7 +29,7 @@
             <q-btn flat icon="account_circle" to="/account/profile">{{
               $t(`profile.page_title`)
             }}</q-btn>
-            <q-btn flat icon="o_settings" to="/account/login">{{
+            <q-btn flat icon="o_settings" to="/account/settings">{{
               $t(`settings.page_title`)
             }}</q-btn>
             <q-btn flat icon="mdi-logout" to="/logout">{{

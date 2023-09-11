@@ -43,8 +43,8 @@ const routes = [
             component: () => import("src/pages/Account/ProfilePage.vue"),
           },
           {
-            path: "login",
-            component: () => import("src/pages/Account/LoginAndPassword.vue"),
+            path: "settings",
+            component: () => import("src/pages/Account/SettingsPage.vue"),
           },
         ],
       },

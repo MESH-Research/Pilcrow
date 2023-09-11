@@ -20,7 +20,7 @@ describe("Header", () => {
     cy.get("header").contains("regularUser").click()
 
     cy.dataCy("headerUserMenu").within(() => {
-      cy.contains("Login and Password").should("have.attr", "href", "/account/login")
+      cy.contains("Settings").should("have.attr", "href", "/account/settings")
       cy.contains("Logout").click()
     })
 

@@ -49,7 +49,7 @@
                 {{ $t("profile.page_title") }}
               </q-item-section>
             </q-item>
-            <q-item clickable data-cy="link_my_account" to="/account/login">
+            <q-item clickable data-cy="link_my_account" to="/account/settings">
               <q-item-section avatar>
                 <q-icon name="o_settings" />
               </q-item-section>
