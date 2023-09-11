@@ -229,7 +229,8 @@ class SubmissionPolicy
      * Update the inline comments of a submission
      *
      * @param \App\Models\User $user
-     * @param \App\Models\Submission $submission
+     * @param \App\Models\Submission $_
+     * @param array $args
      * @return bool|\Illuminate\Auth\Access\Response
      */
     public function updateInlineComments(User $user, Submission $_, $args)
@@ -243,6 +244,7 @@ class SubmissionPolicy
 
             return Response::deny('UNAUTHORIZED');
         }
+
         return true;
     }
 
@@ -250,7 +252,8 @@ class SubmissionPolicy
      * Update the overall comments of a submission
      *
      * @param \App\Models\User $user
-     * @param \App\Models\Submission $submission
+     * @param \App\Models\Submission $_
+     * @param array $args
      * @return bool|\Illuminate\Auth\Access\Response
      */
     public function updateOverallComments(User $user, Submission $_, $args)
@@ -264,6 +267,7 @@ class SubmissionPolicy
 
             return Response::deny('UNAUTHORIZED');
         }
+
         return true;
     }
 }
