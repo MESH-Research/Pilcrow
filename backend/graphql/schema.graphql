@@ -182,7 +182,6 @@ input UpdateSocialMediaInput
 
 input UpdateAcademicProfilesInput
     @validator(class: "ProfileMetadataAcademicProfilesValidator") {
-    academia_edu_id: String
     humanities_commons: String
     orcid_id: String
 }
@@ -193,7 +192,7 @@ Input type for adding profile metadata for a user
 input UpdateProfileMetadataInput @validator(class: "ProfileMetadataValidator") {
     social_media: UpdateSocialMediaInput
     academic_profiles: UpdateAcademicProfilesInput
-    professional_title: String
+    position_title: String
     specialization: String
     affiliation: String
     interest_keywords: [String]

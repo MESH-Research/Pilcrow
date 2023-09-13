@@ -43,8 +43,8 @@ const routes = [
             component: () => import("src/pages/Account/ProfilePage.vue"),
           },
           {
-            path: "metadata",
-            component: () => import("src/pages/Account/MetadataPage.vue"),
+            path: "settings",
+            component: () => import("src/pages/Account/SettingsPage.vue"),
           },
         ],
       },

@@ -48,11 +48,14 @@ class SubmissionCommentTest extends ApiTestCase
 
     /**
      * @param int $count
+     * @param User|null $user
      * @return Submission
      */
-    private function createSubmissionWithInlineComment($count = 1)
+    private function createSubmissionWithInlineComment($count = 1, $user = null)
     {
-        $user = User::factory()->create();
+        if ($user === null) {
+            $user = User::factory()->create();
+        }
         $submission = $this->createSubmission();
         $style_criteria = $this->createStyleCriteria($submission->publication->id);
         InlineComment::factory()->count($count)->create([
@@ -203,7 +206,7 @@ class SubmissionCommentTest extends ApiTestCase
     /**
      * @return array
      */
-    public function commentCreationProvider(): array
+    public static function commentCreationProvider(): array
     {
         return [
             'parent_id missing and reply_to_id missing' => [true, ''],
@@ -283,7 +286,7 @@ class SubmissionCommentTest extends ApiTestCase
     /**
      * @return array
      */
-    public function commentReplyCreationProvider(): array
+    public static function commentReplyCreationProvider(): array
     {
         return [
             'parent_id with a value and reply_to_id with a value' =>
@@ -499,9 +502,9 @@ class SubmissionCommentTest extends ApiTestCase
      */
     public function testUpdateInlineComment()
     {
-        $this->beAppAdmin();
-        $submission = $this->createSubmissionWithInlineComment();
-        $inline_comment = $submission->inlineComments()->first();
+        $admin = $this->beAppAdmin();
+        $submission = $this->createSubmissionWithInlineComment(1, $admin);
+        $inline_comment = $submission->inlineComments->first();
         $criteria_1 = $this->createStyleCriteria($submission->publication->id);
         $criteria_2 = $this->createStyleCriteria($submission->publication->id);
         $response = $this->graphQL(
@@ -704,5 +707,69 @@ class SubmissionCommentTest extends ApiTestCase
             ],
         ];
         $response->assertJsonPath('data', $expected);
+    }
+
+    /**
+     * @return void
+     */
+    public function testUsersCannotModifyTheInlineCommentsOfOthers(): void
+    {
+        $this->beAppAdmin();
+        $submission = $this->createSubmissionWithInlineComment();
+        $inline_comment = $submission->inlineComments->first();
+        $this->graphQL(
+            'mutation UpdateOthersInlineComment ($submission_id: ID! $comment_id: ID!) {
+                updateSubmission(
+                    input: {
+                        id: $submission_id,
+                        inline_comments: {
+                            update: {
+                                id: $comment_id
+                                content: "This update should not work."
+                            }
+                        }
+                    }
+                ) {
+                    id
+                }
+            }',
+            [
+                'submission_id' => $submission->id,
+                'comment_id' => $inline_comment->id,
+            ]
+        )
+        ->assertGraphQLErrorMessage('UNAUTHORIZED');
+    }
+
+    /**
+     * @return void
+     */
+    public function testUsersCannotModifyTheOverallCommentsOfOthers()
+    {
+        $this->beAppAdmin();
+        $submission = $this->createSubmissionWithOverallComment();
+        $overall_comment = $submission->overallComments->first();
+        $this->graphQL(
+            'mutation UpdateOthersOverallComment ($submission_id: ID! $comment_id: ID!) {
+                updateSubmission(
+                    input: {
+                        id: $submission_id,
+                        overall_comments: {
+                            update: {
+                                id: $comment_id
+                                content: "This update should not work."
+                            }
+                        }
+                    }
+                ) {
+                    id
+                }
+            }',
+            [
+                'submission_id' => $submission->id,
+                'comment_id' => $overall_comment->id,
+            ]
+        )
+        ->assertGraphQLErrorMessage('UNAUTHORIZED');
     }
 }

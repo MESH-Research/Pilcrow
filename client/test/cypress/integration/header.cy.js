@@ -20,7 +20,7 @@ describe("Header", () => {
     cy.get("header").contains("regularUser").click()
 
     cy.dataCy("headerUserMenu").within(() => {
-      cy.contains("Login and Password").should("have.attr", "href", "/account/profile")
+      cy.contains("Settings").should("have.attr", "href", "/account/settings")
       cy.contains("Logout").click()
     })
 
@@ -39,7 +39,7 @@ describe("Header", () => {
 
   it("should not logout when page changes are protected", () => {
     cy.login({ email: "regularuser@pilcrow.dev" })
-    cy.visit("/account/metadata")
+    cy.visit("/account/profile")
     cy.dataCy("facebook").type("myface")
 
     cy.get("header").within(() => {
@@ -51,7 +51,7 @@ describe("Header", () => {
     })
     cy.dataCy('dirtyKeepChanges').click()
 
-    cy.url().should('include', '/account/metadata')
+    cy.url().should('include', '/account/profile')
 
     cy.dataCy("headerUserMenu").within(() => {
       cy.contains("Logout").click()
