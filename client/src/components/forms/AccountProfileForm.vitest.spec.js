@@ -29,14 +29,8 @@ describe("AccountProfileForm", () => {
     expect(wrapper).toBeTruthy()
     //Validation rules are tested as part userValidation, we only need to confirm that password can be empty.
 
-    wrapper
-      .findComponent({ ref: "usernameInput" })
-      .findComponent({ name: "q-input" })
-      .setValue("testuser")
-    wrapper
-      .findComponent({ ref: "nameInput" })
-      .findComponent({ name: "q-input" })
-      .setValue("Test User")
+
+
     wrapper
       .findComponent({ ref: "emailInput" })
       .findComponent({ name: "q-input" })

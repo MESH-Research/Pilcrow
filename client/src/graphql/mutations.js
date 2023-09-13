@@ -313,29 +313,17 @@ export const UPDATE_SUBMISSION_SUBMITERS = gql`
 export const UPDATE_PROFILE_METADATA = gql`
   mutation UpdateProfileMetaData(
     $id: ID!
-    $affiliation: String
-    $biography: String
-    $interest_keywords: [String!]
-    $websites: [String!]
-    $professional_title: String
-    $specialization: String
-    $social_media: UpdateSocialMediaInput
-    $academic_profiles: UpdateAcademicProfilesInput
+    $username: String
+    $name: String
+    $profile_metadata: UpdateProfileMetadataInput
   ) {
     updateUser(
       user: {
         id: $id
-        profile_metadata: {
-          affiliation: $affiliation
-          biography: $biography
-          interest_keywords: $interest_keywords
-          websites: $websites
-          professional_title: $professional_title
-          specialization: $specialization
-          social_media: $social_media
-          academic_profiles: $academic_profiles
+        username: $username
+        name: $name
+        profile_metadata: $profile_metadata
         }
-      }
     ) {
       id
       ...profileMetadata

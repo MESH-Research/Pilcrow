@@ -37,7 +37,7 @@
     <div v-if="publication.is_accepting_submissions" class="row q-mb-md">
       <q-btn
         color="primary"
-        class="q-mt-lg"
+        class="q-my-lg"
         :to="{ name: 'submission:create', params: { id: publication.id } }"
         >{{ $t("submissions.new.action") }}</q-btn
       >

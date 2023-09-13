@@ -18,7 +18,7 @@ class ProfileMetadataValidator extends Validator
     public function rules(): array
     {
         return [
-            'professional_title' => [
+            'position_title' => [
                 'max:256',
             ],
             'specialization' => [
