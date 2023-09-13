@@ -4,7 +4,7 @@ export const _PROFILE_METADATA_FIELDS = gql`
   fragment profileMetadata on User {
     profile_metadata {
       biography
-      professional_title
+      position_title
       specialization
       affiliation
       websites
@@ -18,7 +18,6 @@ export const _PROFILE_METADATA_FIELDS = gql`
       academic_profiles {
         humanities_commons
         orcid_id
-        academia_edu_id
       }
     }
   }

@@ -1,12 +1,12 @@
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
 import { mount, flushPromises } from "@vue/test-utils"
 import { installApolloClient } from "test/vitest/utils"
-import { UPDATE_USER } from "src/graphql/mutations"
-import { CURRENT_USER } from "src/graphql/queries"
+import { UPDATE_PROFILE_METADATA } from "src/graphql/mutations"
+import { CURRENT_USER_METADATA } from "src/graphql/queries"
 import { ref as mockRef } from "vue"
 import ProfilePage from "./ProfilePage.vue"
 
-import { beforeEach, describe, expect, it, test, vi } from "vitest"
+import { beforeEach, describe, expect, test, vi } from "vitest"
 
 vi.mock("src/use/forms", async (importOriginal) => {
   const forms = await importOriginal()
@@ -24,90 +24,88 @@ vi.mock("src/use/forms", async (importOriginal) => {
   }
 })
 
-vi.mock("quasar", async (importOriginal) => {
-  const quasar = await importOriginal()
-  return {
-    ...quasar,
-    useQuasar: () => ({
-      notify: vi.fn(),
-    }),
-  }
-})
-
 installQuasarPlugin()
 const mockClient = installApolloClient()
 
-describe("Profile", () => {
-
+describe("ProfilePage", () => {
   const makeWrapper = async () => {
-    const wrapper = mount(ProfilePage)
+    const wrapper = mount(ProfilePage, {
+      global: {
+        stubs: ["profile-metadata-form"],
+      },
+    })
     await flushPromises()
     return wrapper
   }
 
-  beforeEach(() => {
-    vi.resetAllMocks()
-    requestHandler.mockResolvedValue({
-      data: {
-        currentUser: {
-          id: 1,
-          username: "test",
-          name: "TestDoe",
-          email: "test@example.com",
-          email_verified_at: null,
-          roles: [],
-        },
-      },
-    })
-  })
-
+  const queryHandler = vi.fn()
   const mutateHandler = vi.fn()
-  const requestHandler = vi.fn()
-  mockClient.setRequestHandler(UPDATE_USER, mutateHandler)
-  mockClient.setRequestHandler(CURRENT_USER, requestHandler)
+  mockClient.setRequestHandler(CURRENT_USER_METADATA, queryHandler)
+  mockClient.setRequestHandler(UPDATE_PROFILE_METADATA, mutateHandler)
 
-  const accountData = () => ({
+  const profileData = () => ({
     id: 1,
-    username: "username1",
-    name: "Test User",
-    email: "testemail@example.com",
+    username: 'testusername',
+    name: "Test Name",
+    profile_metadata: {
+      biography: "my bio",
+      position_title: "my title",
+      specialization: "my specialization",
+      affiliation: "my affiliation",
+      website: ["http://mywebsite.com"],
+      interest_keywords: ["interest1", "interest2"],
+      social_media: {
+        twitter: "my_twitter",
+        instagram: "my_insta",
+        facebook: "my_facebook",
+        linked_in: "my_linkedin",
+      },
+      academic_profiles: {
+        humanities_commons: "",
+        orcid_id: "",
+      },
+    },
   })
 
   beforeEach(() => {
     vi.resetAllMocks()
   })
 
-  it("mounts without errors", async () => {
+  test("able to mount", async () => {
     const wrapper = await makeWrapper()
     expect(wrapper).toBeTruthy()
   })
 
-  test("saves account data", async () => {
-    const initialData = accountData()
-    const newData = accountData()
-    newData.username = "Tester User"
+  test("saves profile metadata", async () => {
+    const initialData = profileData()
 
-    requestHandler.mockResolvedValue({ data: { currentUser: initialData } })
-    mutateHandler.mockResolvedValue({
-      data: { updateUser: { ...newData, updated_at: "soonish" } },
-    })
+    const newData = profileData()
+    newData.profile_metadata.biography = "new biography"
+
+    queryHandler.mockResolvedValue({ data: { currentUser: initialData } })
+    mutateHandler.mockResolvedValue({ data: { updateUser: newData } })
+
     const wrapper = await makeWrapper()
-    await wrapper.findComponent({ ref: "form" }).vm.$emit("save", newData)
+    await wrapper
+      .findComponent({ ref: "form" })
+      .vm.$emit("save", newData.profile_metadata)
 
-    expect(requestHandler).toHaveBeenCalledTimes(1)
+    expect(queryHandler).toHaveBeenCalledTimes(1)
     expect(mutateHandler).toHaveBeenCalledWith({
-      ...newData,
+      id: newData.id,
+      ...newData.profile_metadata,
     })
   })
 
   test("sets error on failure", async () => {
-    const formData = accountData()
-    requestHandler.mockResolvedValue({ data: { currentUser: formData } })
+    const pData = profileData()
+    queryHandler.mockResolvedValue({ data: { currentUser: pData } })
     mutateHandler.mockRejectedValue({})
 
     const wrapper = await makeWrapper()
-
-    await wrapper.findComponent({ ref: "form" }).vm.$emit("save", formData)
+    await wrapper
+      .findComponent({ ref: "form" })
+      .vm.$emit("save", pData.profile_metadata)
     await flushPromises()
 
     expect(wrapper.vm.formState.errorMessage.value).not.toBe("")
