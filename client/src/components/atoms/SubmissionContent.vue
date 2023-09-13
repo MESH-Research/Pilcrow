@@ -104,9 +104,9 @@ const commentDrawerOpen = inject("commentDrawerOpen")
 const submission = inject("submission")
 const activeComment = inject("activeComment")
 const contentRef = ref(null)
-let darkModeValue = ref(true)
 
 const $q = useQuasar()
+let darkModeValue = ref($q.dark.isActive)
 
 watch(
   () => $q.dark.isActive,
