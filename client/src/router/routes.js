@@ -176,6 +176,15 @@ const routes = [
         props: true,
       },
       {
+        name: "submission:preview",
+        path: "/submission/:id/preview",
+        component: () => import("src/pages/SubmissionPreview.vue"),
+        meta: {
+          requiresReviewAccess: true,
+        },
+        props: true,
+      },
+      {
         name: "submission:export",
         path: "/submission/:id/export",
         component: () => import("src/pages/SubmissionExport.vue"),

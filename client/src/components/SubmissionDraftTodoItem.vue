@@ -5,14 +5,6 @@
       <div class="text-caption">
         <slot />
       </div>
-      <template #avatar>
-        <q-icon
-          data-cy="todo_icon"
-          class="material-icons-outlined"
-          :name="icon.name"
-          :color="icon.color"
-        />
-      </template>
       <template #action>
         <q-btn
           v-if="!done"
@@ -31,7 +23,7 @@
           v-if="done"
           data-cy="todo_done_btn"
           flat
-          :label="$t(`submissions.create.todo.btn_label.done`)"
+          :label="$t(`submissions.create.todo.btn_label.view_edit`)"
           @click="$emit('goClick')"
         />
       </template>
@@ -40,8 +32,8 @@
 </template>
 
 <script setup>
-import { computed, defineProps, defineEmits } from "vue"
-const props = defineProps({
+import { defineProps, defineEmits } from "vue"
+defineProps({
   title: {
     type: String,
     required: true,
@@ -58,22 +50,6 @@ const props = defineProps({
   },
 })
 defineEmits(["goClick", "skipClick"])
-
-const icon = computed(() => {
-  let n = "check_box_outline_blank"
-  let c = ""
-  if (props.skipable) {
-    n = "skip_next"
-  }
-  if (props.done) {
-    n = "check_box"
-    c = "positive"
-  }
-  return {
-    name: n,
-    color: c,
-  }
-})
 </script>
 
 <style scoped></style>

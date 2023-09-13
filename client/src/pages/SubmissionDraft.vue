@@ -120,10 +120,17 @@ const { result, loading } = useQuery(GET_SUBMISSION, props)
 const submission = computed(() => result.value?.submission)
 const { push } = useRouter()
 function onGoToSubmissionContentClick() {
-  push({
-    name: "submission:content",
-    params: { id: submission.value.id },
-  })
+  if (submission.value.content) {
+    push({
+      name: "submission:preview",
+      params: { id: submission.value.id },
+    })
+  } else {
+    push({
+      name: "submission:content",
+      params: { id: submission.value.id },
+    })
+  }
 }
 const rules = {
   content: {

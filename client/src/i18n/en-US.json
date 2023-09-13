@@ -802,7 +802,7 @@
       },
       "draft_title": "{submission_title} Draft",
       "todo": {
-        "heading": "Todo",
+        "heading": "To-Do",
         "content": {
           "title": "Submission Content",
           "description": "Add your content to your submission."
@@ -810,7 +810,7 @@
         "btn_label": {
           "go": "Go",
           "skip": "Skip",
-          "done": "Done"
+          "view_edit": "View/Edit"
         }
       },
       "submit": {
