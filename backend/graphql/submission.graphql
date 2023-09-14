@@ -26,7 +26,10 @@ extend type Mutation {
                 "reviewCoordinators:updateReviewCoordinators"
                 "status:updateStatus"
                 "title:updateTitle"
+                "inlineComments:updateInlineComments"
+                "overallComments:updateOverallComments"
             ]
+            injectArgs: true
         )
 
     "Update the content of a submission"

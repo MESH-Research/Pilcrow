@@ -21,7 +21,10 @@ describe("ProfileMetadataForm", () => {
         components: { QList }
       },
       props: {
-        profileMetadata: {},
+        profileMetadata: {
+          username: 'testusername',
+          name: 'Test Name',
+        },
         ...props,
       },
     })
@@ -33,8 +36,8 @@ describe("ProfileMetadataForm", () => {
   })
 
   test.concurrent.each([
-    ["maxLength", "professionalTitle", "1".repeat(257), false],
-    ["valid", "professionalTitle", "a reasonable valid", true],
+    ["maxLength", "positionTitle", "1".repeat(257), false],
+    ["valid", "positionTitle", "a reasonable valid", true],
     ["maxLength", "specialization", "1".repeat(257), false],
     ["valid", "specialization", "a reasonable valid", true],
     ["maxLength", "affiliation", "1".repeat(257), false],
@@ -55,8 +58,6 @@ describe("ProfileMetadataForm", () => {
     ["maxlength", "linkedin", "1".repeat(129), false],
     ["valid", "orcid", "myprofile", true],
     ["maxlength", "orcid", "1".repeat(129), false],
-    ["valid", "academia_edu_id", "myprofile", true],
-    ["maxlength", "academia_edu_id", "1".repeat(129), false],
     ["valid", "humanities_commons", "myprofile", true],
     ["maxlength", "humanities_commons", "1".repeat(129), false],
   ])(

@@ -1,21 +1,34 @@
 /// <reference types="Cypress" />
 /// <reference path="../support/index.d.ts" />
 
-
 describe("Profile", () => {
   beforeEach(() => {
     cy.task("resetDb")
     cy.login({ email: "regularuser@pilcrow.dev" })
-    cy.visit("/account/metadata")
+    cy.visit("/account/profile")
   })
 
-  it("can update professional title", () => {
-    const value = "Updated Professional Title"
-    cy.dataCy("professional_title").type(value)
+  it("can update the name field", () => {
+    cy.dataCy("update_user_name").clear().type("Updated User")
+    cy.dataCy("button_save").click()
+    cy.reload()
+    cy.dataCy("avatar_name").contains("Updated User")
+  })
+
+  it("can update the username field", () => {
+    cy.dataCy("update_user_username").clear().type("updatedUser")
+    cy.dataCy("button_save").click()
+    cy.reload()
+    cy.dataCy("avatar_username").contains("updatedUser")
+  })
+
+  it("can update position title", () => {
+    const value = "Updated position Title"
+    cy.dataCy("position_title").type(value)
     cy.dataCy("button_save").click()
     cy.dataCy("button_saved").contains("Saved")
     cy.reload()
-    cy.dataCy("professional_title").should("have.value", value)
+    cy.dataCy("position_title").should("have.value", value)
   })
 
   it("can update facebook username", () => {
