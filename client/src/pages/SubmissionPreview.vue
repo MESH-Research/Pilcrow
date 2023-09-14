@@ -8,7 +8,7 @@
       class="q-pa-xl items-center column content-center text-center"
     >
       <p style="max-width: 20rem" data-cy="explanation">
-        {{ $t('submissions.draft_with_no_content') }}
+        {{ $t("submissions.draft_with_no_content") }}
       </p>
       <q-btn
         data-cy="draft_btn"
@@ -23,23 +23,33 @@
     </div>
     <article v-else>
       <q-layout
-        data-cy="submission_review_layout"
+        data-cy="submission_preview_layout"
         view="hHh lpR fFr"
         container
         style="min-height: calc(100vh - 70px)"
       >
-        <submission-preview-toolbar
-          :id="id"
-          :submission="submission"
-        />
+        <submission-preview-toolbar :id="id" :submission="submission" />
 
         <q-page-container>
           <q-banner inline-actions class="bg-positive text-white text-center">
-          You are previewing this submission.
+            You are previewing this submission.
           </q-banner>
           <submission-content />
         </q-page-container>
       </q-layout>
+      <q-page-sticky position="bottom" :offset="[0, 18]">
+        <q-btn
+          fab
+          color="primary"
+          label="Update Content"
+          label-class="text-uppercase"
+          square
+          :to="{
+            name: 'submission:content',
+            params: { id: id },
+          }"
+        />
+      </q-page-sticky>
 
       <div class="row q-col-gutter-lg q-pa-lg"></div>
     </article>
@@ -63,6 +73,8 @@ const submission = computed(() => {
   return result.value?.submission
 })
 provide("submission", submission)
+provide("commentDrawerOpen", null)
+provide("activeComment", null)
 </script>
 
 <style lang="sass" scoped>
