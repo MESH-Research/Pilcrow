@@ -58,6 +58,32 @@
           $t("submissions.style_controls.toggle_dark")
         }}</q-tooltip>
       </div>
+      <div>
+        <q-btn
+          :aria-label="$t(`submissions.style_controls.view_overall`)"
+          data-cy="view_overall_comments"
+          round
+          flat
+          icon="visibility"
+          color="white"
+          text-color="grey-7"
+          @click="scrollToOverallComments()"
+        />
+        <q-tooltip>{{ $t("submissions.style_controls.view_overall") }}</q-tooltip>
+      </div>
+      <div>
+        <q-btn
+          :aria-label="$t(`submissions.style_controls.new_overall`)"
+          data-cy="new_overall_comment"
+          round
+          flat
+          icon="add_comment"
+          color="white"
+          text-color="grey-7"
+          @click="addNewOverallComment()"
+        />
+        <q-tooltip>{{ $t("submissions.style_controls.new_overall") }}</q-tooltip>
+      </div>
     </div>
   </div>
   <article
@@ -118,6 +144,18 @@ watch(
 function toggleDarkMode() {
   $q.dark.toggle()
 }
+
+// let overallComments =ref()
+
+function scrollToOverallComments() {
+  // overallComments.value.scrollIntoView({ behavior: "smooth" });
+  console.log('scrollToOverallComments')
+}
+
+function addNewOverallComment() {
+  console.log('addNewOverallComment')
+}
+
 const fonts = [
   {
     label: "Sans-serif",
