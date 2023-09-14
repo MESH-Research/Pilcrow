@@ -1,68 +1,47 @@
 <template>
-  <div>
-    <account-profile-form
-      ref="form"
-      :account-profile="currentUser"
-      :graphql-validation="validationErrors"
-      @save="updateUser"
-    />
-  </div>
+  <profile-metadata-form
+    ref="form"
+    :profile-metadata="profileMetadata"
+    @save="save"
+  />
 </template>
 
 <script setup>
-import AccountProfileForm from "src/components/forms/AccountProfileForm.vue"
-import { UPDATE_USER } from "src/graphql/mutations"
-import { useCurrentUser } from "src/use/user"
-import { useFeedbackMessages } from "src/use/guiElements"
-import { useMutation } from "@vue/apollo-composable"
-import { useI18n } from "vue-i18n"
-import {
-  useFormState,
-  useDirtyGuard,
-  useGraphQLValidation,
-} from "src/use/forms"
-import { provide } from "vue"
+//Import components
+import ProfileMetadataForm from "src/components/forms/ProfileMetadataForm.vue"
+import { computed, provide } from "vue"
+import { useMutation, useQuery } from "@vue/apollo-composable"
+import { CURRENT_USER_METADATA } from "src/graphql/queries"
+import { UPDATE_PROFILE_METADATA } from "src/graphql/mutations"
+import { useFormState } from "src/use/forms"
 
-const { currentUserQuery, currentUser } = useCurrentUser()
+const metadataQuery = useQuery(CURRENT_USER_METADATA)
+const metadataMutation = useMutation(UPDATE_PROFILE_METADATA)
 
-const updateUserMutation = useMutation(UPDATE_USER)
-
-const { mutate, error } = updateUserMutation
-const { validationErrors, hasValidationErrors } = useGraphQLValidation(error)
-
-const formState = useFormState(currentUserQuery, updateUserMutation)
+const formState = useFormState(metadataQuery, metadataMutation)
 provide("formState", formState)
 
-useDirtyGuard(formState.dirty)
-
-const { saved, errorMessage } = formState
-
-const { t } = useI18n()
-const { newStatusMessage } = useFeedbackMessages({
-  attrs: {
-    "data-cy": "update_user_notify",
-  },
+const profileMetadata = computed(() => {
+  return metadataQuery.result.value?.currentUser ?? {}
 })
 
-async function updateUser(newValues) {
-  errorMessage.value = ""
+const currentUserId = computed(() => {
+  return metadataQuery.result.value?.currentUser.id
+})
+
+const { mutate: saveProfile } = metadataMutation
+
+function save(form) {
+  const { saved, errorMessage } = formState
   saved.value = false
-  const vars = { id: currentUser.value.id, ...newValues }
-
-  if ((vars?.password?.length ?? 0) === 0) {
-    delete vars.password
-  }
-
-  try {
-    await mutate(vars)
-    newStatusMessage("success", t("account.update.success"))
-    saved.value = true
-  } catch (error) {
-    if (hasValidationErrors.value) {
-      errorMessage.value = "Unable to save.  Check form for errors."
-    } else {
-      errorMessage.value = "update_form_internal"
-    }
-  }
+  saveProfile({ id: currentUserId.value, ...form })
+    .then(() => {
+      saved.value = true
+      errorMessage.value = ""
+    })
+    .catch(() => {
+      saved.value = false
+      errorMessage.value = "Unable to save profile."
+    })
 }
 </script>

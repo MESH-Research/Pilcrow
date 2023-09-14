@@ -11,38 +11,6 @@
           <q-card-section class="col-sm-12 col-xs-12 q-mt-md q-pa-none">
             <collapse-menu :items="items" />
           </q-card-section>
-          <q-card-section class="col-sm-12 col-xs-12 q-mt-md q-pa-none">
-            <q-list role="list">
-              <q-item>
-                <q-item-section>
-                  {{ $t(`account.submissions_created`) }}
-                </q-item-section>
-                <q-item-section
-                  avatar
-                  class="text-primary text-bold user-stats"
-                >
-                  ??
-                </q-item-section>
-              </q-item>
-              <q-item>
-                <q-item-section>
-                  {{ $t(`account.submissions_reviewed`) }}
-                </q-item-section>
-                <q-item-section
-                  avatar
-                  class="text-primary text-bold user-stats"
-                >
-                  ??
-                </q-item-section>
-              </q-item>
-              <q-item clickable class="light-grey">
-                <q-item-section avatar><q-icon name="launch" /></q-item-section>
-                <q-item-section>
-                  {{ $t(`account.preview_link`) }}
-                </q-item-section>
-              </q-item>
-            </q-list>
-          </q-card-section>
         </div>
       </q-card>
       <q-card class="col-sm-9 col-xs-12 no-shadow outline no-border-radius">
@@ -62,13 +30,13 @@ const { t } = useI18n()
 const items = [
   {
     icon: "account_circle",
-    label: t(`account.profile.section_details`),
-    url: "/account/metadata",
+    label: t(`profile.page_title`),
+    url: "/account/profile",
   },
   {
     icon: "o_settings",
-    label: t(`account.profile.login_and_password`),
-    url: "/account/profile",
+    label: t(`settings.page_title`),
+    url: "/account/settings",
   },
 ]
 
