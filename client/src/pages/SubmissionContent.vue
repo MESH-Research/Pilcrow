@@ -27,7 +27,7 @@
   </nav>
   <div class="row flex-center q-pa-md">
     <div class="col-lg-6 col-md-7 col-sm-9 col-xs-12">
-      <article class="q-pa-sm">
+      <article class="q-py-lg q-px-sm">
         <div
           v-if="status !== 'paste_success' && status !== 'upload_success'"
           class="q-gutter-md"
@@ -119,9 +119,9 @@
           </div>
           <div v-if="updateMethod == 'paste'">
             <q-editor
-              v-model="pasteContent"
+              v-model="submissionContent"
               data-cy="content_editor"
-              min-height="5rem"
+              min-height="10rem"
             />
             <q-btn
               data-cy="submit_paste_btn"
@@ -143,6 +143,7 @@
             $t(`submissions.content.submit.success.title`)
           }}</strong>
           <p>{{ $t(`submissions.content.submit.success.message`) }}</p>
+          <div>
           <q-btn
             data-cy="content_submit_success_btn"
             class="q-mr-sm"
@@ -154,6 +155,14 @@
               params: { id: props.id },
             }"
           />
+          <q-btn
+            color="primary"
+            label="Preview Submission"
+            :to="{
+              name: 'submission:preview',
+              params: { id: props.id },
+            }"
+          /></div>
         </div>
       </article>
     </div>
@@ -167,7 +176,7 @@ import {
   UPDATE_SUBMISSION_CONTENT_WITH_FILE,
 } from "src/graphql/mutations"
 import { useQuery, useMutation } from "@vue/apollo-composable"
-import { computed, ref } from "vue"
+import { watchEffect, computed, ref } from "vue"
 
 const props = defineProps({
   id: {
@@ -180,10 +189,14 @@ const updateMethod = ref("")
 const uploadFile = ref(null)
 const { result } = useQuery(GET_SUBMISSION, props)
 const submission = computed(() => result.value?.submission)
+const submissionContent = ref("")
+watchEffect(() => {
+  if (submission.value?.content.data) {
+    submissionContent.value = submission.value.content.data
+  }
+})
+
 let status = ref("incomplete")
-const pasteContent = computed(() =>
-  submission.value?.content.data ? ref(submission.value?.content.data) : ref(""),
-)
 
 const uploadRadioLabel = computed(() =>
   submission.value?.content
@@ -221,7 +234,7 @@ function setMethod(value) {
 const { mutate: updateContent } = useMutation(UPDATE_SUBMISSION_CONTENT)
 async function submitPaste() {
   try {
-    await updateContent({ id: props.id, content: pasteContent.value })
+    await updateContent({ id: props.id, content: submissionContent.value })
     status.value = "paste_success"
   } catch (error) {
     status.value = "paste_error"

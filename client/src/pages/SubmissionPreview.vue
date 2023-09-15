@@ -34,7 +34,7 @@
           <q-banner inline-actions class="bg-positive text-white text-center">
             You are previewing this submission.
           </q-banner>
-          <submission-content />
+          <submission-content :annotation-enabled="false" :highlight-visibility="false" />
           <div class="flex justify-center q-mb-xl">
           <q-btn
             color="primary"
