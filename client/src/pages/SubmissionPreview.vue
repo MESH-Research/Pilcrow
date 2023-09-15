@@ -35,21 +35,18 @@
             You are previewing this submission.
           </q-banner>
           <submission-content />
+          <div class="flex justify-center q-mb-xl">
+          <q-btn
+            color="primary"
+            label="Update Content"
+            square
+            :to="{
+              name: 'submission:content',
+              params: { id: id },
+            }"
+          /></div>
         </q-page-container>
       </q-layout>
-      <q-page-sticky position="bottom" :offset="[0, 18]">
-        <q-btn
-          fab
-          color="primary"
-          label="Update Content"
-          label-class="text-uppercase"
-          square
-          :to="{
-            name: 'submission:content',
-            params: { id: id },
-          }"
-        />
-      </q-page-sticky>
 
       <div class="row q-col-gutter-lg q-pa-lg"></div>
     </article>

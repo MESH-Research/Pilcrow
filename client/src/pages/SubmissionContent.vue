@@ -25,9 +25,9 @@
       }}</q-breadcrumbs-el>
     </q-breadcrumbs>
   </nav>
-  <div class="row flex-center q-pa-lg">
-    <div class="col-lg-5 col-md-6 col-sm-10 col-xs-12">
-      <article class="q-pa-lg">
+  <div class="row flex-center q-pa-md">
+    <div class="col-lg-6 col-md-7 col-sm-9 col-xs-12">
+      <article class="q-pa-sm">
         <div
           v-if="status !== 'paste_success' && status !== 'upload_success'"
           class="q-gutter-md"
@@ -47,10 +47,13 @@
               class="text-bold"
               color="secondary"
               val="upload"
-              :label="$t(`submissions.content.upload.label`)"
+              :label="$t(uploadRadioLabel)"
             />
-            <div class="text-caption" style="padding: 0 0 0.5em 2.5em; margin-top:-0.4em">
-              {{ $t(`submissions.content.upload.caption`) }}
+            <div
+              class="text-caption"
+              style="padding: 0 0 0.5em 2.5em; margin-top: -0.4em"
+            >
+              {{ $t(uploadRadioCaption) }}
             </div>
             <template v-if="updateMethod !== ''" #action>
               <q-btn
@@ -72,10 +75,13 @@
               class="text-bold"
               color="secondary"
               val="paste"
-              :label="$t(`submissions.content.paste.label`)"
+              :label="$t(textRadioLabel)"
             />
-            <div class="text-caption" style="padding: 0 0 0.5em 2.5em; margin-top:-0.4em">
-              {{ $t(`submissions.content.paste.caption`) }}
+            <div
+              class="text-caption"
+              style="padding: 0 0 0.5em 2.5em; margin-top: -0.4em"
+            >
+              {{ $t(textRadioCaption) }}
             </div>
             <template v-if="updateMethod !== ''" #action>
               <q-btn
@@ -92,7 +98,7 @@
               clearable
               outlined
               color="accent"
-              :label="$t(`submissions.content.upload.file_picker_label`)"
+              :label="$t(`file_picker_label`)"
             >
               <template #prepend>
                 <q-icon name="attach_file" />
@@ -171,11 +177,37 @@ const props = defineProps({
 })
 
 const updateMethod = ref("")
-const pasteContent = ref("")
 const uploadFile = ref(null)
 const { result } = useQuery(GET_SUBMISSION, props)
 const submission = computed(() => result.value?.submission)
 let status = ref("incomplete")
+const pasteContent = computed(() =>
+  submission.value?.content.data ? ref(submission.value?.content.data) : ref(""),
+)
+
+const uploadRadioLabel = computed(() =>
+  submission.value?.content
+    ? `submissions.content.reupload.label`
+    : `submissions.content.upload.label`,
+)
+
+const uploadRadioCaption = computed(() =>
+  submission.value?.content
+    ? `submissions.content.reupload.caption`
+    : `submissions.content.upload.caption`,
+)
+
+const textRadioLabel = computed(() =>
+  submission.value?.content
+    ? `submissions.content.edit.label`
+    : `submissions.content.paste.label`,
+)
+
+const textRadioCaption = computed(() =>
+  submission.value?.content
+    ? `submissions.content.edit.caption`
+    : `submissions.content.paste.caption`,
+)
 
 function clearMethod() {
   status.value = "incomplete"

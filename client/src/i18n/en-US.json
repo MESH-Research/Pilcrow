@@ -15,6 +15,7 @@
     "reviewers": "no reviewer | reviewer | reviewers",
     "review_coordinators": "no review coordinator | review coordinator | review coordinators"
   },
+  "file_picker_label": "Select File",
   "buttons": {
     "more_info": "More Info",
     "dashboard": "Dashboard",
@@ -801,7 +802,6 @@
       },
       "draft_title": "{submission_title} Draft",
       "todo": {
-        "heading": "To-Do",
         "content": {
           "title": "Submission Content",
           "description": "Add your content to your submission."
@@ -819,10 +819,17 @@
     },
     "content": {
       "heading": "Submission Content",
+      "reupload": {
+        "label": "Re-upload",
+        "caption": "Select a new file to be imported."
+      },
       "upload": {
         "label": "Upload",
-        "caption": "Select a supported file to be imported.",
-        "file_picker_label": "Select File"
+        "caption": "Select a supported file to be imported."
+      },
+      "edit": {
+        "label": "Edit Text",
+        "caption": "Copy/paste or modify text content directly."
       },
       "paste": {
         "label": "Enter Text",

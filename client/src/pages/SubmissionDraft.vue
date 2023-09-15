@@ -22,9 +22,9 @@
         </q-breadcrumbs-el>
       </q-breadcrumbs>
     </nav>
-    <div class="row flex-center q-pa-lg">
-      <div class="col-lg-5 col-md-6 col-sm-8 col-xs-12">
-        <article v-if="submission.status !== 'DRAFT'" class="q-pa-lg">
+    <div class="row flex-center q-pa-md">
+      <div class="col-lg-6 col-md-7 col-sm-9 col-xs-12">
+        <article v-if="submission.status !== 'DRAFT'" class="q-pa-md">
           <p>{{ $t(`submissions.create.success`) }}</p>
           <q-btn
             class="q-mr-sm"
@@ -39,17 +39,14 @@
             }"
           />
         </article>
-        <article v-else class="q-pa-lg">
+        <article v-else class="q-py-lg q-px-sm">
           <h1 data-cy="submission_title" class="text-h2 q-ma-none">
             {{ submission.title }}
           </h1>
           <q-chip>
             {{ $t(`submission.status.${submission.status}`) }}
           </q-chip>
-          <h2 class="text-h3 q-mb-lg">
-            {{ $t(`submissions.create.todo.heading`) }}
-          </h2>
-          <section class="q-gutter-md">
+          <section class="q-gutter-md q-mt-lg">
             <!-- TODO: Develop metadata updating -->
             <!-- <submission-draft-todo-item title="Update submission details">
               Update the title of your submission as well as enter your

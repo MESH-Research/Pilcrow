@@ -41,10 +41,6 @@
 </template>
 <script setup>
 const props = defineProps({
-  highlightVisibility: {
-    type: Boolean,
-    default: true,
-  },
   submission: {
     type: Object,
     default: null,
