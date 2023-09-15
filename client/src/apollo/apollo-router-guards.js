@@ -88,6 +88,81 @@ export async function beforeEachRequiresSubmissionAccess(
   }
 }
 
+export async function beforeEachRequiresPreviewAccess(
+  apolloClient,
+  to,
+  _,
+  next
+) {
+  if (to.matched.some((record) => record.meta.requiresPreviewAccess)) {
+    let access = false
+    const submissionId = to.params.id
+    const user = await apolloClient
+      .query({
+        query: CURRENT_USER_SUBMISSIONS,
+      })
+      .then(({ data: { currentUser } }) => currentUser)
+
+    const submission = user.submissions.filter((submission) => {
+      return submission.id == submissionId
+    })
+
+    if (submission.length) {
+      const s = submission[0]
+
+      // Redirect when the submission is in a non-previewable state
+      const previewableStates = new Set([
+        "DRAFT",
+        "INITIALLY_SUBMITTED",
+        "ACCEPTED_FOR_REVIEW",
+      ])
+      if (!previewableStates.has(s.status)) {
+        next({ name: "submission:review", id: submissionId })
+      }
+
+      // Allow Submitters and Review Coordinators
+      if (
+        ["submitter", "review_coordinator"].some(
+          (role) => role === s.my_role
+        )
+      ) {
+        access = true
+      }
+
+      // Deny Reviewers
+      if ("reviewer" === s.my_role) {
+        access = false
+      }
+
+      // Allow Publication Administrators and Editors
+      if (
+        ["publication_admin", "editor"].some(
+          (role) => role === s.publication.my_role
+        )
+      ) {
+        access = true
+      }
+    }
+
+    // Allow Application Administrators
+    if (user.roles.length > 0) {
+      if (
+        user.roles.some((role) => role.name === "Application Administrator")
+      ) {
+        access = true
+      }
+    }
+
+    if (!access) {
+      next({ name: "error403" })
+    } else {
+      next()
+    }
+  } else {
+    next()
+  }
+}
+
 export async function beforeEachRequiresReviewAccess(
   apolloClient,
   to,

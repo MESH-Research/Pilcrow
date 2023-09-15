@@ -560,6 +560,7 @@
       "unauthorized": "You are not authorized to edit this submission's title. Please contact your administrator."
     },
     "action": {
+      "preview": "Preview Submission",
       "review": "Review Submission",
       "submit_for_review": "Submit for Review",
       "accept_for_review": "Accept for Review",

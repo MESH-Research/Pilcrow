@@ -180,7 +180,7 @@ const routes = [
         path: "/submission/:id/preview",
         component: () => import("src/pages/SubmissionPreview.vue"),
         meta: {
-          requiresReviewAccess: true,
+          requiresPreviewAccess: true,
         },
         props: true,
       },

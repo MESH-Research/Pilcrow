@@ -48,9 +48,8 @@
           </q-chip>
           <section class="q-gutter-md q-mt-lg">
             <!-- TODO: Develop metadata updating -->
-            <!-- <submission-draft-todo-item title="Update submission details">
-              Update the title of your submission as well as enter your
-              metadata, etc, etc
+            <!-- <submission-draft-todo-item title="Submission Information">
+              Add metadata associated with your submission.
             </submission-draft-todo-item> -->
             <submission-draft-todo-item
               :done="submission.content !== null"
@@ -62,16 +61,9 @@
               </p>
             </submission-draft-todo-item>
             <!-- TODO: Develop collaborator inviting -->
-            <!-- <q-banner inline-actions>
-              <div>Invite Collaborators</div>
-              <div class="text-caption">
-                Invite collaborators to join the review process.
-              </div>
-              <template #action>
-                <q-btn flat>Skip</q-btn>
-                <q-btn flat> Go </q-btn>
-              </template>
-            </q-banner> -->
+            <!-- <submission-draft-todo-item title="Invite Collaborators">
+              Invite collaborators to join the review process.
+            </submission-draft-todo-item> -->
           </section>
           <section class="q-mt-lg">
             <p>{{ $t(`submissions.create.submit.description`) }}</p>
@@ -131,8 +123,8 @@ function onGoToSubmissionContentClick() {
 }
 const rules = {
   content: {
-    required
-  }
+    required,
+  },
 }
 const draft = useVuelidate(rules, submission)
 async function confirmHandler(action) {

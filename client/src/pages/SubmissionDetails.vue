@@ -25,7 +25,7 @@
           <q-chip
             class="q-ml-md"
             icon="radio_button_checked"
-            color="primary"
+            color="secondary"
             text-color="white"
           >
             {{ $t(`submission.status.${submission.status}`) }}
@@ -36,9 +36,9 @@
             class="q-mr-sm"
             color="accent"
             size="lg"
-            :label="$t('submission.action.review')"
+            :label="$t(viewBtnLabel)"
             :to="{
-              name: 'submission:review',
+              name: viewBtnDestination,
               params: { id: props.id },
             }"
           />
@@ -80,10 +80,7 @@
           />
         </div>
       </div>
-      <submission-export-button
-        class="q-mt-xl"
-        :submission="submission"
-      />
+      <submission-export-button class="q-mt-xl" :submission="submission" />
     </section>
     <section class="q-pa-lg" data-cy="activity_section">
       <h3>{{ $t("submission.activity_section.title") }}</h3>
@@ -105,7 +102,7 @@ import SubmissionAudit from "../components/SubmissionAudit.vue"
 import SubmissionTitle from "src/components/SubmissionTitle.vue"
 import SubmissionExportButton from "src/components/atoms/SubmissionExportButton.vue"
 import { GET_SUBMISSION } from "src/graphql/queries"
-import { computed, provide } from "vue"
+import { computed, provide, watchEffect } from "vue"
 import { useQuery } from "@vue/apollo-composable"
 
 const props = defineProps({
@@ -118,6 +115,21 @@ const props = defineProps({
 const { result } = useQuery(GET_SUBMISSION, { id: props.id })
 const submission = computed(() => {
   return result.value?.submission
+})
+
+let viewBtnLabel = "submission.action.review"
+let viewBtnDestination = "submission:review"
+
+watchEffect(() => {
+  const previewableStates = new Set([
+    "DRAFT",
+    "INITIALLY_SUBMITTED",
+    "ACCEPTED_FOR_REVIEW",
+  ])
+  if (previewableStates.has(submission.value?.status)) {
+    viewBtnLabel = "submission.action.preview"
+    viewBtnDestination = "submission:preview"
+  }
 })
 
 provide("submission", submission)
