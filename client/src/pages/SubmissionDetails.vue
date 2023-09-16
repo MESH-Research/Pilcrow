@@ -36,9 +36,9 @@
             class="q-mr-sm"
             color="accent"
             size="lg"
-            :label="$t(viewBtnLabel)"
+            :label="$t(`submission.action.${viewType}`)"
             :to="{
-              name: viewBtnDestination,
+              name: `submission:${viewType}`,
               params: { id: props.id },
             }"
           />
@@ -117,18 +117,14 @@ const submission = computed(() => {
   return result.value?.submission
 })
 
-let viewBtnLabel = "submission.action.review"
-let viewBtnDestination = "submission:review"
+let viewType = "review"
 
 watchEffect(() => {
-  const previewableStates = new Set([
-    "DRAFT",
-    "INITIALLY_SUBMITTED",
-    "ACCEPTED_FOR_REVIEW",
-  ])
-  if (previewableStates.has(submission.value?.status)) {
-    viewBtnLabel = "submission.action.preview"
-    viewBtnDestination = "submission:preview"
+  const status = submission.value?.status
+  if (status === "DRAFT") {
+    viewType = "preview"
+  } else if (status === "INITIALLY_SUBMITTED") {
+    viewType = "view"
   }
 })
 

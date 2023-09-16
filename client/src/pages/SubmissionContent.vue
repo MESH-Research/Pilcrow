@@ -29,7 +29,7 @@
     <div class="col-lg-6 col-md-7 col-sm-9 col-xs-12">
       <article class="q-py-lg q-px-sm">
         <div
-          v-if="status !== 'paste_success' && status !== 'upload_success'"
+          v-if="formStatus !== 'enter_success' && formStatus !== 'upload_success'"
           class="q-gutter-md"
         >
           <h1 class="text-h3" data-cy="submission_content_title">
@@ -47,13 +47,13 @@
               class="text-bold"
               color="secondary"
               val="upload"
-              :label="$t(uploadRadioLabel)"
+              :label="$t(`submissions.content.upload.label`)"
             />
             <div
               class="text-caption"
               style="padding: 0 0 0.5em 2.5em; margin-top: -0.4em"
             >
-              {{ $t(uploadRadioCaption) }}
+              {{ $t(`submissions.content.upload.caption`) }}
             </div>
             <template v-if="updateMethod !== ''" #action>
               <q-btn
@@ -64,24 +64,24 @@
             </template>
           </q-banner>
           <q-banner
-            v-if="updateMethod === 'paste' || updateMethod == ''"
-            data-cy="paste_option"
+            v-if="updateMethod === 'enter' || updateMethod == ''"
+            data-cy="enter_option"
             class="bg-primary text-white cursor-pointer"
             inline-actions
-            @click="setMethod('paste')"
+            @click="setMethod('enter')"
           >
             <q-radio
               v-model="updateMethod"
               class="text-bold"
               color="secondary"
-              val="paste"
-              :label="$t(textRadioLabel)"
+              val="enter"
+              :label="$t(`submissions.content.${enterTextType}.label`)"
             />
             <div
               class="text-caption"
               style="padding: 0 0 0.5em 2.5em; margin-top: -0.4em"
             >
-              {{ $t(textRadioCaption) }}
+              {{ $t(`submissions.content.${enterTextType}.caption`) }}
             </div>
             <template v-if="updateMethod !== ''" #action>
               <q-btn
@@ -112,7 +112,7 @@
               @click="submitUpload"
             />
           </div>
-          <div v-if="status === 'upload_error'">
+          <div v-if="formStatus === 'upload_error'">
             <q-banner class="bg-negative text-white">
               {{ $t(`submissions.content.submit.error`) }}
             </q-banner>
@@ -131,7 +131,7 @@
               @click="submitPaste"
             />
           </div>
-          <div v-if="status === 'paste_error'">
+          <div v-if="formStatus === 'paste_error'">
             <q-banner class="bg-negative text-white">
               {{ $t(`submissions.content.submit.error`) }}
             </q-banner>
@@ -190,40 +190,20 @@ const uploadFile = ref(null)
 const { result } = useQuery(GET_SUBMISSION, props)
 const submission = computed(() => result.value?.submission)
 const submissionContent = ref("")
+const formStatus = ref("incomplete")
+
+let enterTextType = 'enter'
+
 watchEffect(() => {
   if (submission.value?.content.data) {
     submissionContent.value = submission.value.content.data
+    enterTextType = 'edit'
   }
 })
 
-let status = ref("incomplete")
-
-const uploadRadioLabel = computed(() =>
-  submission.value?.content
-    ? `submissions.content.reupload.label`
-    : `submissions.content.upload.label`,
-)
-
-const uploadRadioCaption = computed(() =>
-  submission.value?.content
-    ? `submissions.content.reupload.caption`
-    : `submissions.content.upload.caption`,
-)
-
-const textRadioLabel = computed(() =>
-  submission.value?.content
-    ? `submissions.content.edit.label`
-    : `submissions.content.paste.label`,
-)
-
-const textRadioCaption = computed(() =>
-  submission.value?.content
-    ? `submissions.content.edit.caption`
-    : `submissions.content.paste.caption`,
-)
 
 function clearMethod() {
-  status.value = "incomplete"
+  formStatus.value = "incomplete"
   updateMethod.value = ""
   uploadFile.value = null
 }
@@ -235,9 +215,9 @@ const { mutate: updateContent } = useMutation(UPDATE_SUBMISSION_CONTENT)
 async function submitPaste() {
   try {
     await updateContent({ id: props.id, content: submissionContent.value })
-    status.value = "paste_success"
+    formStatus.value = "paste_success"
   } catch (error) {
-    status.value = "paste_error"
+    formStatus.value = "paste_error"
   }
 }
 
@@ -258,9 +238,9 @@ async function submitUpload() {
   try {
     uploadOpts.variables.file_upload = uploadFile.value
     await updateContentWithFile()
-    status.value = "upload_success"
+    formStatus.value = "upload_success"
   } catch (error) {
-    status.value = "upload_error"
+    formStatus.value = "upload_error"
   }
 }
 </script>

@@ -24,7 +24,10 @@
     </nav>
     <div class="row flex-center q-pa-md">
       <div class="col-lg-6 col-md-7 col-sm-9 col-xs-12">
-        <article v-if="submission.status !== 'DRAFT'" class="q-pa-md">
+        <article
+          v-if="submission.status !== 'DRAFT'"
+          class="text-center q-py-lg q-px-sm"
+        >
           <p>{{ $t(`submissions.create.success`) }}</p>
           <q-btn
             class="q-mr-sm"

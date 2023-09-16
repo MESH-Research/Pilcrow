@@ -38,9 +38,7 @@ export async function beforeEachRequiresDraftAccess(apolloClient, to, _, next) {
       const s = submission[0]
 
       // Only allow submitters access
-      if (
-        ["submitter"].some((role) => role === s.my_role)
-      ) {
+      if (["submitter"].some((role) => role === s.my_role)) {
         access = true
       }
     }
@@ -58,7 +56,7 @@ export async function beforeEachRequiresSubmissionAccess(
   apolloClient,
   to,
   _,
-  next
+  next,
 ) {
   if (to.matched.some((record) => record.meta.requiresSubmissionAccess)) {
     const submissionId = to.params.id
@@ -71,7 +69,7 @@ export async function beforeEachRequiresSubmissionAccess(
           data: {
             currentUser: { submissions },
           },
-        }) => submissions.filter((submission) => submission.id == submissionId)
+        }) => submissions.filter((submission) => submission.id == submissionId),
       )
     if (submissions.length === 0) {
       to.meta.requiresRoles = [
@@ -92,7 +90,7 @@ export async function beforeEachRequiresPreviewAccess(
   apolloClient,
   to,
   _,
-  next
+  next,
 ) {
   if (to.matched.some((record) => record.meta.requiresPreviewAccess)) {
     let access = false
@@ -110,21 +108,15 @@ export async function beforeEachRequiresPreviewAccess(
     if (submission.length) {
       const s = submission[0]
 
-      // Redirect when the submission is in a non-previewable state
-      const previewableStates = new Set([
-        "DRAFT",
-        "INITIALLY_SUBMITTED",
-        "ACCEPTED_FOR_REVIEW",
-      ])
-      if (!previewableStates.has(s.status)) {
-        next({ name: "submission:review", id: submissionId })
+      // Redirect when the submission is not a Draft
+      if (s.status !== "DRAFT") {
+        next({ name: "submission:view", params: { id: s.id } })
+        return false
       }
 
       // Allow Submitters and Review Coordinators
       if (
-        ["submitter", "review_coordinator"].some(
-          (role) => role === s.my_role
-        )
+        ["submitter", "review_coordinator"].some((role) => role === s.my_role)
       ) {
         access = true
       }
@@ -137,7 +129,7 @@ export async function beforeEachRequiresPreviewAccess(
       // Allow Publication Administrators and Editors
       if (
         ["publication_admin", "editor"].some(
-          (role) => role === s.publication.my_role
+          (role) => role === s.publication.my_role,
         )
       ) {
         access = true
@@ -167,7 +159,7 @@ export async function beforeEachRequiresReviewAccess(
   apolloClient,
   to,
   _,
-  next
+  next,
 ) {
   if (to.matched.some((record) => record.meta.requiresReviewAccess)) {
     let access = false
@@ -188,7 +180,7 @@ export async function beforeEachRequiresReviewAccess(
       // Allow those who are assigned to the submission
       if (
         ["review_coordinator", "reviewer", "submitter"].some(
-          (role) => role === s.my_role
+          (role) => role === s.my_role,
         )
       ) {
         access = true
@@ -208,7 +200,7 @@ export async function beforeEachRequiresReviewAccess(
       // Allow Publication Administrators and Editors
       if (
         ["publication_admin", "editor"].some(
-          (role) => role === s.publication.my_role
+          (role) => role === s.publication.my_role,
         )
       ) {
         access = true
@@ -238,7 +230,7 @@ export async function beforeEachRequiresExportAccess(
   apolloClient,
   to,
   _,
-  next
+  next,
 ) {
   if (to.matched.some((record) => record.meta.requiresExportAccess)) {
     let access = false
@@ -283,7 +275,7 @@ export async function beforeEachRequiresExportAccess(
       // Allow Publication Administrators and Editors
       if (
         ["publication_admin", "editor"].some(
-          (role) => role === s.publication.my_role
+          (role) => role === s.publication.my_role,
         )
       ) {
         access = true
@@ -324,7 +316,7 @@ export async function beforeEachRequiresRoles(apolloClient, to, _, next) {
           data: {
             currentUser: { roles },
           },
-        }) => roles.map((r) => r.name)
+        }) => roles.map((r) => r.name),
       )
     if (!roles.some((role) => requiredRoles.includes(role))) {
       next({ name: "error403" })

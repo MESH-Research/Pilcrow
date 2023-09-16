@@ -561,6 +561,7 @@
     },
     "action": {
       "preview": "Preview Submission",
+      "view": "View Submission",
       "review": "Review Submission",
       "submit_for_review": "Submit for Review",
       "accept_for_review": "Accept for Review",
@@ -820,10 +821,6 @@
     },
     "content": {
       "heading": "Submission Content",
-      "reupload": {
-        "label": "Re-upload",
-        "caption": "Select a new file to be imported."
-      },
       "upload": {
         "label": "Upload",
         "caption": "Select a supported file to be imported."
@@ -832,7 +829,7 @@
         "label": "Edit Text",
         "caption": "Copy/paste or modify text content directly."
       },
-      "paste": {
+      "enter": {
         "label": "Enter Text",
         "caption": "Copy/paste or enter text content directly."
       },
