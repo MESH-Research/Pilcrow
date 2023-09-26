@@ -21,6 +21,7 @@
         />
         <q-btn
           v-if="done"
+          data-cy="todo_preview_btn"
           color="accent"
           :label="$t(`submissions.create.todo.btn_label.preview`)"
           class="q-mr-sm"
@@ -28,7 +29,7 @@
         />
         <q-btn
           v-if="done"
-          data-cy="todo_done_btn"
+          data-cy="todo_content_btn"
           flat
           :label="$t(`submissions.create.todo.btn_label.edit`)"
           @click="$emit('contentClick')"

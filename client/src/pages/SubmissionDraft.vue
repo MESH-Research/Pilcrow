@@ -79,6 +79,7 @@
             />
             <q-btn
               v-else
+              data-cy="submit_for_review_btn"
               class="q-mt-lg"
               color="primary"
               :label="$t(`submissions.create.submit.btn_label`)"
