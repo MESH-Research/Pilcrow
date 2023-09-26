@@ -51,8 +51,9 @@ describe("Submission Draft Page", () => {
     cy.visit("submission/111/draft")
     cy.dataCy("submit_for_review_btn").click()
     cy.dataCy("dirtyYesChangeStatus").click()
+    cy.dataCy("visit_submission_btn").click()
 
-    cy.login({ email: "editor@pilcrow.dev" })
+    cy.login({ email: "publicationeditor@pilcrow.dev" })
     cy.visit("submission/111/view")
     cy.url().should("not.include", "/error403")
   })

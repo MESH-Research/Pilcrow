@@ -30,6 +30,7 @@
         >
           <p>{{ $t(`submissions.create.success`) }}</p>
           <q-btn
+            data-cy="visit_submission_btn"
             class="q-mr-sm"
             color="accent"
             size="md"
