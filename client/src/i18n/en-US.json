@@ -572,7 +572,8 @@
       "close": "Close for Review",
       "reinvite": "Reinvite",
       "archive": "Archive Submission",
-      "delete": "Delete Submission"
+      "delete": "Delete Submission",
+      "edit_content": "Edit Content"
     },
     "activity_section": {
       "title": "Activity",
@@ -811,7 +812,8 @@
         "btn_label": {
           "go": "Go",
           "skip": "Skip",
-          "view_edit": "View/Edit"
+          "preview": "Preview",
+          "edit": "Edit"
         }
       },
       "submit": {
@@ -825,13 +827,17 @@
         "label": "Upload",
         "caption": "Select a supported file to be imported."
       },
-      "edit": {
-        "label": "Edit Text",
-        "caption": "Copy/paste or modify text content directly."
+      "upload_update": {
+        "label": "Upload",
+        "caption": "Select a supported file to replace the existing text content."
       },
       "enter": {
         "label": "Enter Text",
         "caption": "Copy/paste or enter text content directly."
+      },
+      "enter_update": {
+        "label": "Edit Text",
+        "caption": "Copy/paste or modify text content directly."
       },
       "submit": {
         "btn_label": "Update Content",

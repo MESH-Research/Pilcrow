@@ -8,7 +8,7 @@
         round
         icon="arrow_back_ios_new"
         :to="{
-          name: 'submission:draft',
+          name: 'submission:details',
           params: { id: props.submission.id },
         }"
       />
@@ -28,14 +28,6 @@
           </q-chip>
         </div>
       </q-toolbar-title>
-      <q-btn
-        color="primary"
-        :to="{
-          name: 'submission:content',
-          params: { id: submission.id },
-        }"
-        >{{ $t(`submission.action.edit_content`) }}</q-btn
-      >
     </q-toolbar>
   </q-header>
 </template>

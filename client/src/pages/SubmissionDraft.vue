@@ -57,7 +57,8 @@
             <submission-draft-todo-item
               :done="submission.content !== null"
               :title="$t(`submissions.create.todo.content.title`)"
-              @go-click="onGoToSubmissionContentClick"
+              @preview-click="onGoToSubmissionPreviewClick"
+              @content-click="onGoToSubmissionContentClick"
             >
               <p class="q-ma-none">
                 {{ $t(`submissions.create.todo.content.description`) }}
@@ -111,18 +112,17 @@ const { dialog } = useQuasar()
 const { result, loading } = useQuery(GET_SUBMISSION, props)
 const submission = computed(() => result.value?.submission)
 const { push } = useRouter()
+function onGoToSubmissionPreviewClick() {
+  push({
+    name: "submission:preview",
+    params: { id: submission.value.id },
+  })
+}
 function onGoToSubmissionContentClick() {
-  if (submission.value.content) {
-    push({
-      name: "submission:preview",
-      params: { id: submission.value.id },
-    })
-  } else {
-    push({
-      name: "submission:content",
-      params: { id: submission.value.id },
-    })
-  }
+  push({
+    name: "submission:content",
+    params: { id: submission.value.id },
+  })
 }
 const rules = {
   content: {

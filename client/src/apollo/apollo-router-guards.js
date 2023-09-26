@@ -177,6 +177,18 @@ export async function beforeEachRequiresReviewAccess(
     if (submission.length) {
       const s = submission[0]
 
+      // Redirect when the submission is a Draft
+      if (s.status === "DRAFT") {
+        next({ name: "submission:preview", params: { id: s.id } })
+        return false
+      }
+
+      // Redirect when the submission is Initially Submitted
+      if (s.status === "INITIALLY_SUBMITTED") {
+        next({ name: "submission:view", params: { id: s.id } })
+        return false
+      }
+
       // Allow those who are assigned to the submission
       if (
         ["review_coordinator", "reviewer", "submitter"].some(

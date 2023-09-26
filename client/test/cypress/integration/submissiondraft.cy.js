@@ -11,9 +11,9 @@ describe("Submission Draft Page", () => {
     cy.visit("/submission/104/draft")
     cy.injectAxe()
     cy.dataCy("todo_go_btn").click();
-    cy.dataCy("paste_option").click();
+    cy.dataCy("enter_text_option").click();
     cy.dataCy("content_editor").type("Hello World");
-    cy.dataCy("submit_paste_btn").click();
+    cy.dataCy("submit_entered_text_btn").click();
     cy.dataCy("content_submit_success_btn").click();
     cy.dataCy("todo_done_btn").eq(0).contains("Done")
     cy.dataCy("todo_icon").eq(0).should("have.class", "text-positive")

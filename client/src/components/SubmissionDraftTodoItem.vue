@@ -11,7 +11,7 @@
           data-cy="todo_go_btn"
           color="primary"
           :label="$t(`submissions.create.todo.btn_label.go`)"
-          @click="$emit('goClick')"
+          @click="$emit('contentClick')"
         />
         <q-btn
           v-if="$props.skipable"
@@ -21,10 +21,17 @@
         />
         <q-btn
           v-if="done"
+          color="accent"
+          :label="$t(`submissions.create.todo.btn_label.preview`)"
+          class="q-mr-sm"
+          @click="$emit('previewClick')"
+        />
+        <q-btn
+          v-if="done"
           data-cy="todo_done_btn"
           flat
-          :label="$t(`submissions.create.todo.btn_label.view_edit`)"
-          @click="$emit('goClick')"
+          :label="$t(`submissions.create.todo.btn_label.edit`)"
+          @click="$emit('contentClick')"
         />
       </template>
     </q-banner>
@@ -49,7 +56,7 @@ defineProps({
     default: false,
   },
 })
-defineEmits(["goClick", "skipClick"])
+defineEmits(["contentClick", "previewClick", "skipClick"])
 </script>
 
 <style scoped></style>

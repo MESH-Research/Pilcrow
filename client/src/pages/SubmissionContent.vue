@@ -29,7 +29,7 @@
     <div class="col-lg-6 col-md-7 col-sm-9 col-xs-12">
       <article class="q-py-lg q-px-sm">
         <div
-          v-if="formStatus !== 'enter_success' && formStatus !== 'upload_success'"
+          v-if="formStatus !== 'enter_text_success' && formStatus !== 'upload_success'"
           class="q-gutter-md"
         >
           <h1 class="text-h3" data-cy="submission_content_title">
@@ -47,13 +47,13 @@
               class="text-bold"
               color="secondary"
               val="upload"
-              :label="$t(`submissions.content.upload.label`)"
+              :label="$t(`submissions.content.upload${updateModifier}.label`)"
             />
             <div
               class="text-caption"
               style="padding: 0 0 0.5em 2.5em; margin-top: -0.4em"
             >
-              {{ $t(`submissions.content.upload.caption`) }}
+              {{ $t(`submissions.content.upload${updateModifier}.caption`) }}
             </div>
             <template v-if="updateMethod !== ''" #action>
               <q-btn
@@ -65,7 +65,7 @@
           </q-banner>
           <q-banner
             v-if="updateMethod === 'enter' || updateMethod == ''"
-            data-cy="enter_option"
+            data-cy="enter_text_option"
             class="bg-primary text-white cursor-pointer"
             inline-actions
             @click="setMethod('enter')"
@@ -75,13 +75,13 @@
               class="text-bold"
               color="secondary"
               val="enter"
-              :label="$t(`submissions.content.${enterTextType}.label`)"
+              :label="$t(`submissions.content.enter${updateModifier}.label`)"
             />
             <div
               class="text-caption"
               style="padding: 0 0 0.5em 2.5em; margin-top: -0.4em"
             >
-              {{ $t(`submissions.content.${enterTextType}.caption`) }}
+              {{ $t(`submissions.content.enter${updateModifier}.caption`) }}
             </div>
             <template v-if="updateMethod !== ''" #action>
               <q-btn
@@ -117,21 +117,21 @@
               {{ $t(`submissions.content.submit.error`) }}
             </q-banner>
           </div>
-          <div v-if="updateMethod == 'paste'">
+          <div v-if="updateMethod == 'enter'">
             <q-editor
               v-model="submissionContent"
               data-cy="content_editor"
               min-height="10rem"
             />
             <q-btn
-              data-cy="submit_paste_btn"
+              data-cy="submit_entered_text_btn"
               color="primary"
               class="q-mt-md"
               :label="$t(`submissions.content.submit.btn_label`)"
-              @click="submitPaste"
+              @click="submitEnteredText"
             />
           </div>
-          <div v-if="formStatus === 'paste_error'">
+          <div v-if="formStatus === 'submit_error'">
             <q-banner class="bg-negative text-white">
               {{ $t(`submissions.content.submit.error`) }}
             </q-banner>
@@ -191,16 +191,14 @@ const { result } = useQuery(GET_SUBMISSION, props)
 const submission = computed(() => result.value?.submission)
 const submissionContent = ref("")
 const formStatus = ref("incomplete")
-
-let enterTextType = 'enter'
+const updateModifier = ref("")
 
 watchEffect(() => {
-  if (submission.value?.content.data) {
+  if (submission.value?.content?.data) {
     submissionContent.value = submission.value.content.data
-    enterTextType = 'edit'
+    updateModifier.value = '_update'
   }
 })
-
 
 function clearMethod() {
   formStatus.value = "incomplete"
@@ -211,13 +209,14 @@ function clearMethod() {
 function setMethod(value) {
   updateMethod.value = value
 }
+
 const { mutate: updateContent } = useMutation(UPDATE_SUBMISSION_CONTENT)
-async function submitPaste() {
+async function submitEnteredText() {
   try {
     await updateContent({ id: props.id, content: submissionContent.value })
-    formStatus.value = "paste_success"
+    formStatus.value = "enter_text_success"
   } catch (error) {
-    formStatus.value = "paste_error"
+    formStatus.value = "enter_text_error"
   }
 }
 

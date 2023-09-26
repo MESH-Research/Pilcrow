@@ -28,23 +28,10 @@
         container
         style="min-height: calc(100vh - 70px)"
       >
-        <submission-preview-toolbar :id="id" :submission="submission" />
+        <submission-view-toolbar :id="id" :submission="submission" />
 
         <q-page-container>
-          <q-banner inline-actions class="bg-positive text-white text-center">
-            You are previewing this submission.
-          </q-banner>
           <submission-content :annotation-enabled="false" :highlight-visibility="false" />
-          <div class="flex justify-center q-mb-xl">
-          <q-btn
-            color="primary"
-            :label="$t(`submission.action.edit_content`)"
-            square
-            :to="{
-              name: 'submission:content',
-              params: { id: id },
-            }"
-          /></div>
         </q-page-container>
       </q-layout>
 
@@ -55,7 +42,7 @@
 
 <script setup>
 import SubmissionContent from "src/components/atoms/SubmissionContent.vue"
-import SubmissionPreviewToolbar from "src/components/atoms/SubmissionPreviewToolbar.vue"
+import SubmissionViewToolbar from "src/components/atoms/SubmissionViewToolbar.vue"
 import { provide, computed } from "vue"
 import { GET_SUBMISSION_REVIEW } from "src/graphql/queries"
 import { useQuery } from "@vue/apollo-composable"
