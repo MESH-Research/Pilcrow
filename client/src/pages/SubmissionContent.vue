@@ -157,7 +157,7 @@
           />
           <q-btn
             color="primary"
-            label="Preview Submission"
+            :label="$t(`submission.action.preview`)"
             :to="{
               name: 'submission:preview',
               params: { id: props.id },
@@ -185,10 +185,10 @@ const props = defineProps({
   },
 })
 
-const updateMethod = ref("")
-const uploadFile = ref(null)
 const { result } = useQuery(GET_SUBMISSION, props)
 const submission = computed(() => result.value?.submission)
+const updateMethod = ref("")
+const uploadFile = ref(null)
 const submissionContent = ref("")
 const formStatus = ref("incomplete")
 const updateModifier = ref("")

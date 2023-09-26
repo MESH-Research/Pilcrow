@@ -102,7 +102,7 @@ import SubmissionAudit from "../components/SubmissionAudit.vue"
 import SubmissionTitle from "src/components/SubmissionTitle.vue"
 import SubmissionExportButton from "src/components/atoms/SubmissionExportButton.vue"
 import { GET_SUBMISSION } from "src/graphql/queries"
-import { computed, provide, watchEffect } from "vue"
+import { computed, provide, watchEffect, ref } from "vue"
 import { useQuery } from "@vue/apollo-composable"
 
 const props = defineProps({
@@ -117,14 +117,14 @@ const submission = computed(() => {
   return result.value?.submission
 })
 
-let viewType = "review"
+let viewType = ref("review")
 
 watchEffect(() => {
   const status = submission.value?.status
   if (status === "DRAFT") {
-    viewType = "preview"
+    viewType.value = "preview"
   } else if (status === "INITIALLY_SUBMITTED") {
-    viewType = "view"
+    viewType.value = "view"
   }
 })
 

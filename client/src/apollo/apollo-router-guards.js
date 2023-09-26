@@ -155,6 +155,89 @@ export async function beforeEachRequiresPreviewAccess(
   }
 }
 
+export async function beforeEachRequiresViewAccess(
+  apolloClient,
+  to,
+  _,
+  next,
+) {
+  if (to.matched.some((record) => record.meta.requiresViewAccess)) {
+    let access = false
+    const submissionId = to.params.id
+    const user = await apolloClient
+      .query({
+        query: CURRENT_USER_SUBMISSIONS,
+      })
+      .then(({ data: { currentUser } }) => currentUser)
+
+    const submission = user.submissions.filter((submission) => {
+      return submission.id == submissionId
+    })
+
+    if (submission.length) {
+      const s = submission[0]
+
+      // Redirect when the submission is a Draft
+      if (s.status === "DRAFT") {
+        next({ name: "submission:preview", params: { id: s.id } })
+        return false
+      }
+
+      // Redirect when the submission is not Initially Submitted
+      if (s.status !== "INITIALLY_SUBMITTED") {
+        next({ name: "submission:review", params: { id: s.id } })
+        return false
+      }
+
+      // Allow those who are assigned to the submission
+      if (
+        ["review_coordinator", "reviewer", "submitter"].some(
+          (role) => role === s.my_role,
+        )
+      ) {
+        access = true
+      }
+
+      // Deny Reviewers when the submission is in a nonreviewable state
+      const nonreviewableStates = new Set([
+        "DRAFT",
+        "INITIALLY_SUBMITTED",
+        "REJECTED",
+        "RESUBMISSION_REQUESTED",
+      ])
+      if ("reviewer" === s.my_role && nonreviewableStates.has(s.status)) {
+        access = false
+      }
+
+      // Allow Publication Administrators and Editors
+      if (
+        ["publication_admin", "editor"].some(
+          (role) => role === s.publication.my_role,
+        )
+      ) {
+        access = true
+      }
+    }
+
+    // Allow Application Administrators
+    if (user.roles.length > 0) {
+      if (
+        user.roles.some((role) => role.name === "Application Administrator")
+      ) {
+        access = true
+      }
+    }
+
+    if (!access) {
+      next({ name: "error403" })
+    } else {
+      next()
+    }
+  } else {
+    next()
+  }
+}
+
 export async function beforeEachRequiresReviewAccess(
   apolloClient,
   to,
