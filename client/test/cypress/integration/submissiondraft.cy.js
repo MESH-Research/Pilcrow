@@ -37,7 +37,7 @@ describe("Submission Draft Page", () => {
 
   it("should allow a submitter to preview a draft submission before submitting it for review", () => {
     cy.task("resetDb")
-    cy.login({ email: "regularuser@pilcrow.dev" })
+    cy.login({ email: "regularuser@meshresearch.net" })
     cy.visit("submission/111/draft")
     cy.dataCy("todo_preview_btn").click()
     cy.url().should("include", "/111/preview")
@@ -47,13 +47,13 @@ describe("Submission Draft Page", () => {
 
   it("should be able to submit for review a draft submission and allow editors to access the submission", () => {
     cy.task("resetDb")
-    cy.login({ email: "regularuser@pilcrow.dev" })
+    cy.login({ email: "regularuser@meshresearch.net" })
     cy.visit("submission/111/draft")
     cy.dataCy("submit_for_review_btn").click()
     cy.dataCy("dirtyYesChangeStatus").click()
     cy.dataCy("visit_submission_btn").click()
 
-    cy.login({ email: "publicationeditor@pilcrow.dev" })
+    cy.login({ email: "publicationeditor@meshresearch.net" })
     cy.visit("submission/111/view")
     cy.url().should("not.include", "/error403")
   })
