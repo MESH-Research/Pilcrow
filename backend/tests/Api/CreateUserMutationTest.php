@@ -64,7 +64,7 @@ class CreateUserMutationTest extends ApiTestCase
     /**
      * @return array
      */
-    public function usernameValidationProvider(): array
+    public static function usernameValidationProvider(): array
     {
         return [
             ['', '/must not be null/'],
@@ -97,14 +97,14 @@ class CreateUserMutationTest extends ApiTestCase
     /**
      * @return array
      */
-    public function emailValidationProvider(): array
+    public static function emailValidationProvider(): array
     {
         return [
             ['adamsb@msu.edu', false],
             ['notanemail', '/^Validation failed/'],
             ['', '/must not be null/'],
             [null, '/must not be null/'],
-            ['dupeemail@pilcrow.dev', '/^Validation failed/'],
+            ['dupeemail@meshresearch.net', '/^Validation failed/'],
             ['nodomain@example.com', '/^Validation failed/'],
         ];
     }
@@ -117,7 +117,7 @@ class CreateUserMutationTest extends ApiTestCase
      */
     public function testEmailValidation(?string $email, $failure): void
     {
-        User::factory()->create(['email' => 'dupeemail@pilcrow.dev']);
+        User::factory()->create(['email' => 'dupeemail@meshresearch.net']);
 
         $testUser = User::factory()->make(['email' => $email]);
         $response = $this->callEndpoint($testUser->makeVisible('password')->attributesToArray());
@@ -132,7 +132,7 @@ class CreateUserMutationTest extends ApiTestCase
     /**
      * @return array
      */
-    public function passwordValidationProvider(): array
+    public static function passwordValidationProvider(): array
     {
         return [
             ['password', '/^Validation failed/'],

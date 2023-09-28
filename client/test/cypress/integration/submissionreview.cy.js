@@ -6,7 +6,7 @@ import { a11yLogViolations } from '../support/helpers'
 describe("Submissions Review", () => {
   it("should assert the Submission Review page is accessible", () => {
     cy.task("resetDb")
-    cy.login({ email: "applicationadministrator@pilcrow.dev" })
+    cy.login({ email: "applicationadministrator@meshresearch.net" })
     cy.visit("submission/100/review")
     cy.injectAxe()
     cy.dataCy("submission_review_layout")
@@ -16,7 +16,7 @@ describe("Submissions Review", () => {
   //TODO: Refactor with text selection etc.
 /*   it("should display style criteria from the database in the inline comment editor", () => {
     cy.task("resetDb")
-    cy.login({ email: "applicationadministrator@pilcrow.dev" })
+    cy.login({ email: "applicationadministrator@meshresearch.net" })
     cy.visit("submission/100/review")
     cy.dataCy("toggleInlineCommentsButton").click()
 
@@ -52,7 +52,7 @@ describe("Submissions Review", () => {
 
   it("should allow a reviewer to submit overall comments", () => {
     cy.task("resetDb")
-    cy.login({ email: "reviewer@pilcrow.dev" })
+    cy.login({ email: "reviewer@meshresearch.net" })
     cy.visit("submission/100/review")
 
     cy.interceptGQLOperation('CreateOverallComment')
@@ -74,7 +74,7 @@ describe("Submissions Review", () => {
 
   it("should allow a reviewer to submit overall comment replies", () => {
     cy.task("resetDb")
-    cy.login({ email: "reviewer@pilcrow.dev" })
+    cy.login({ email: "reviewer@meshresearch.net" })
     cy.visit("submission/100/review")
 
     cy.interceptGQLOperation("CreateOverallCommentReply")
@@ -98,7 +98,7 @@ describe("Submissions Review", () => {
 
   it("should allow a reviewer to submit replies to overall comment replies", () => {
     cy.task("resetDb")
-    cy.login({ email: "reviewer@pilcrow.dev" })
+    cy.login({ email: "reviewer@meshresearch.net" })
     cy.visit("submission/100/review")
 
     cy.interceptGQLOperation("CreateOverallCommentReply")
@@ -120,7 +120,7 @@ describe("Submissions Review", () => {
 
   it("should allow a reviewer to submit inline comment replies", () => {
     cy.task("resetDb")
-    cy.login({ email: "reviewer@pilcrow.dev" })
+    cy.login({ email: "reviewer@meshresearch.net" })
     cy.visit("submission/100/review")
 
     cy.interceptGQLOperation("CreateInlineCommentReply")
@@ -147,7 +147,7 @@ describe("Submissions Review", () => {
   //TODO: Refactor this test with text selection and all that jazz.
 /*   it("should allow a reviewer to submit replies to inline comment replies", () => {
     cy.task("resetDb")
-    cy.login({ email: "reviewer@pilcrow.dev" })
+    cy.login({ email: "reviewer@meshresearch.net" })
     cy.visit("submission/100/review")
     cy.dataCy("toggleInlineCommentsButton").click()
     cy.dataCy("inlineCommentReply").last().find("[data-cy=inlineCommentReplyButton]").click()
@@ -168,7 +168,7 @@ describe("Submissions Review", () => {
 
   it("should make inline comments active upon clicks to their corresponding bubble widgets", () => {
     cy.task("resetDb")
-    cy.login({ email: "reviewer@pilcrow.dev" })
+    cy.login({ email: "reviewer@meshresearch.net" })
     cy.visit("submission/100/review")
     cy.dataCy("comment-widget").should('have.length', 3)
     cy.dataCy("comment-widget").each((_, index) => {
@@ -182,7 +182,7 @@ describe("Submissions Review", () => {
 
   it("should make inline comments active upon clicks to their corresponding highlights", () => {
     cy.task("resetDb")
-    cy.login({ email: "reviewer@pilcrow.dev" })
+    cy.login({ email: "reviewer@meshresearch.net" })
     cy.visit("submission/100/review")
     cy.dataCy("comment-highlight").each((_, index) => {
       cy.get(".fullscreen.q-drawer__backdrop:not('.hidden')").should('not.exist')
@@ -195,28 +195,28 @@ describe("Submissions Review", () => {
 
   it("should deny a reviewer access to a submission's contents before it is accepted for review", () => {
     cy.task("resetDb")
-    cy.login({ email: "reviewer@pilcrow.dev" })
+    cy.login({ email: "reviewer@meshresearch.net" })
     cy.visit("submission/101/review")
     cy.url().should("include", "/error403")
   })
 
   it("should allow an application administrator to accept a submission for review and permit reviewers access", () => {
     cy.task("resetDb")
-    cy.login({ email: "applicationadministrator@pilcrow.dev" })
+    cy.login({ email: "applicationadministrator@meshresearch.net" })
     cy.visit("submission/101/review")
     cy.dataCy("submission_status").contains("Initially Submitted")
     cy.dataCy("status-dropdown").click()
     cy.dataCy("accept_for_review").click()
     cy.dataCy("dirtyYesChangeStatus").click()
     cy.dataCy("submission_status").contains("Awaiting Review")
-    cy.login({ email: "reviewer@pilcrow.dev" })
+    cy.login({ email: "reviewer@meshresearch.net" })
     cy.visit("submission/101/review")
     cy.url().should("not.include", "/error403")
   })
 
   it("should allow an application administrator to open a review, close a review, and that final decision options are visible", () => {
     cy.task("resetDb")
-    cy.login({ email: "applicationadministrator@pilcrow.dev" })
+    cy.login({ email: "applicationadministrator@meshresearch.net" })
     cy.visit("submission/108/review")
     cy.dataCy("submission_status").contains("Awaiting Review")
     cy.dataCy("status-dropdown").click()
@@ -235,7 +235,7 @@ describe("Submissions Review", () => {
 
   it("should display an explanation and redirect button for a draft submission with no content", () => {
     cy.task("resetDb")
-    cy.login({ email: "regularuser@pilcrow.dev" })
+    cy.login({ email: "regularuser@meshresearch.net" })
     cy.visit("submission/104/review")
     cy.dataCy("explanation")
     cy.dataCy("draft_btn").click()
@@ -244,20 +244,20 @@ describe("Submissions Review", () => {
 
   it("should be able to submit for review a draft submission with content and allow reviewers to access the submission", () => {
     cy.task("resetDb")
-    cy.login({ email: "regularuser@pilcrow.dev" })
+    cy.login({ email: "regularuser@meshresearch.net" })
     cy.visit("submission/111/review")
     cy.dataCy("status-dropdown").click()
     cy.dataCy("initially_submit").click()
     cy.dataCy("dirtyYesChangeStatus").click()
 
-    cy.login({ email: "reviewer@pilcrow.dev" })
+    cy.login({ email: "reviewer@meshresearch.net" })
     cy.visit("submission/111/review")
     cy.url().should("not.include", "/error403")
   })
 
   it("should not display the decision options for rejected submissions", () => {
     cy.task("resetDb")
-    cy.login({ email: "applicationadministrator@pilcrow.dev" })
+    cy.login({ email: "applicationadministrator@meshresearch.net" })
     cy.visit("submission/102/review")
     cy.dataCy("submission_status").contains("Rejected")
     cy.dataCy("decision_options").should('not.exist');
@@ -265,7 +265,7 @@ describe("Submissions Review", () => {
 
   it("should not display the decision options for submissions requested for resubmission", () => {
     cy.task("resetDb")
-    cy.login({ email: "applicationadministrator@pilcrow.dev" })
+    cy.login({ email: "applicationadministrator@meshresearch.net" })
     cy.visit("submission/103/review")
     cy.dataCy("submission_status").contains("Resubmission Requested")
     cy.dataCy("decision_options").should('not.exist');
@@ -273,7 +273,7 @@ describe("Submissions Review", () => {
 
   it("should allow overall comments to be modified", () => {
     cy.task("resetDb")
-    cy.login({ email: "applicationadministrator@pilcrow.dev" })
+    cy.login({ email: "applicationadministrator@meshresearch.net" })
     cy.visit("submission/100/review")
 
     // create new overall comment
@@ -301,7 +301,7 @@ describe("Submissions Review", () => {
 
   it("should allow overall comment replies to be modified", () => {
     cy.task("resetDb")
-    cy.login({ email: "applicationadministrator@pilcrow.dev" })
+    cy.login({ email: "applicationadministrator@meshresearch.net" })
     cy.visit("submission/100/review")
 
     // create new comment reply
@@ -325,7 +325,7 @@ describe("Submissions Review", () => {
 
   it("should allow inline comments to be modified", () => {
     cy.task("resetDb")
-    cy.login({ email: "applicationadministrator@pilcrow.dev" })
+    cy.login({ email: "applicationadministrator@meshresearch.net" })
     cy.visit("submission/100/review")
 
     cy.dataCy("toggleInlineCommentsButton").click()
@@ -344,7 +344,7 @@ describe("Submissions Review", () => {
 
   it("should allow inline comment replies to be modified", () => {
     cy.task("resetDb")
-    cy.login({ email: "applicationadministrator@pilcrow.dev" })
+    cy.login({ email: "applicationadministrator@meshresearch.net" })
     cy.visit("submission/100/review")
 
     cy.dataCy("toggleInlineCommentsButton").click()
@@ -369,7 +369,7 @@ describe("Submissions Review", () => {
 
   it("should not display comment modify options for comments that a user did not create", () => {
     cy.task("resetDb")
-    cy.login({ email: "applicationadministrator@pilcrow.dev" })
+    cy.login({ email: "applicationadministrator@meshresearch.net" })
     cy.visit("submission/100/review")
 
     // attempt to modify an overall comment from a random user
@@ -384,7 +384,7 @@ describe("Submissions Review", () => {
 
   it("enables access to the Submission Export page under the correct conditions", () => {
     cy.task("resetDb")
-    cy.login({ email: "regularuser@pilcrow.dev" })
+    cy.login({ email: "regularuser@meshresearch.net" })
     // Under Review
     cy.visit("submission/100/review")
     cy.dataCy("submission_export_btn").should("have.class","cursor-not-allowed")
@@ -395,7 +395,7 @@ describe("Submissions Review", () => {
 
   it("scrolls when clicking on a footnote reference", () => {
     cy.task("resetDb")
-    cy.login({ email: "applicationadministrator@pilcrow.dev" })
+    cy.login({ email: "applicationadministrator@meshresearch.net" })
     cy.visit("submission/112/review")
     cy.injectAxe()
     cy.get("#fnref1").should((footnote) => {
@@ -420,14 +420,14 @@ describe("Submissions Review", () => {
 
   it("does not show status changing options for reviewers", () => {
     cy.task("resetDb")
-    cy.login({ email: "reviewer@pilcrow.dev" })
+    cy.login({ email: "reviewer@meshresearch.net" })
     cy.visit("submission/108/review")
     cy.dataCy("status-dropdown").should("not.exist")
   })
 
   it("shows the correct status change options for submissions marked as ACCEPTED_AS_FINAL", () => {
     cy.task("resetDb")
-    cy.login({ email: "reviewcoordinator@pilcrow.dev" })
+    cy.login({ email: "reviewcoordinator@meshresearch.net" })
     cy.visit("submission/105/review")
     cy.dataCy("submission_status").contains("Accepted as Final")
     cy.dataCy("status-dropdown").click()
@@ -437,7 +437,7 @@ describe("Submissions Review", () => {
 
   it("allows the status of a submission in ACCEPTED_AS_FINAL status to be changed to ARCHIVED and that status options are visible", () => {
     cy.task("resetDb")
-    cy.login({ email: "reviewcoordinator@pilcrow.dev" })
+    cy.login({ email: "reviewcoordinator@meshresearch.net" })
     cy.visit("submission/105/review")
     cy.dataCy("submission_status").contains("Accepted as Final")
     cy.dataCy("status-dropdown").click()
@@ -452,7 +452,7 @@ describe("Submissions Review", () => {
 
   it("allows the status of a submission in ACCEPTED_AS_FINAL status to be changed to DELETED and that status options are NOT visible", () => {
     cy.task("resetDb")
-    cy.login({ email: "reviewcoordinator@pilcrow.dev" })
+    cy.login({ email: "reviewcoordinator@meshresearch.net" })
     cy.visit("submission/105/review")
     cy.dataCy("submission_status").contains("Accepted as Final")
     cy.dataCy("status-dropdown").click()

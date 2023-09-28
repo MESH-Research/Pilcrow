@@ -6,13 +6,13 @@ import { a11yLogViolations } from "../support/helpers"
 describe("Settings page", () => {
   beforeEach(() => {
     cy.task("resetDb")
-    cy.login({ email: "regularuser@pilcrow.dev" })
+    cy.login({ email: "regularuser@meshresearch.net" })
     cy.visit("/account/settings")
   })
 
   it("can update the email field", () => {
     cy.injectAxe()
-    cy.dataCy("update_user_email").clear().type("updateduser@pilcrow.dev")
+    cy.dataCy("update_user_email").clear().type("updateduser@meshresearch.net")
     cy.dataCy("button_save").click()
     cy.dataCy("update_user_notify")
       .should("be.visible")
