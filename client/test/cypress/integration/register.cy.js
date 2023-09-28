@@ -27,7 +27,7 @@ describe("Register", () => {
 
       //Email success
       cy.dataCy("email_field")
-        .type("@pilcrow.dev{enter}")
+        .type("@meshresearch.net{enter}")
         .parents("label")
         .should("not.have.class", "q-field--error")
 
@@ -74,12 +74,12 @@ describe("Register", () => {
       //Email must be unique
       cy.dataCy("email_field")
         .clear()
-        .type("regularuser@pilcrow.dev{enter}")
+        .type("regularuser@meshresearch.net{enter}")
         .parents("label")
         .should("have.class", "q-field--error")
         .contains("already registered")
 
-      cy.dataCy("email_field").clear().type("newvalidemail@pilcrow.dev")
+      cy.dataCy("email_field").clear().type("newvalidemail@meshresearch.net")
 
       cy.get('[type="submit"]').click()
       cy.url().should("include", "/dashboard")
@@ -91,7 +91,7 @@ describe("Register", () => {
     cy.injectAxe()
     cy.get(".q-form").within(() => {
       cy.dataCy("username_field").type("newUserName")
-      cy.dataCy("email_field").type("newEmail@pilcrow.dev")
+      cy.dataCy("email_field").type("newEmail@meshresearch.net")
       cy.dataCy("password_field").type("password_field!@#12{enter}")
     })
 

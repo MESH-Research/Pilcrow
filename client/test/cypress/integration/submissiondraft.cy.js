@@ -7,7 +7,7 @@ import "cypress-file-upload";
 describe("Submission Draft Page", () => {
   it("allows content to be added from a text input", () => {
     cy.task("resetDb")
-    cy.login({ email: "regularuser@pilcrow.dev" })
+    cy.login({ email: "regularuser@meshresearch.net" })
     cy.visit("/submission/104/draft")
     cy.injectAxe()
     cy.dataCy("todo_go_btn").click();
@@ -22,7 +22,7 @@ describe("Submission Draft Page", () => {
 
   it("allows content to be added from a file upload", () => {
     cy.task("resetDb")
-    cy.login({ email: "regularuser@pilcrow.dev" })
+    cy.login({ email: "regularuser@meshresearch.net" })
     cy.visit("/submission/104/draft")
     cy.injectAxe()
     cy.dataCy("todo_go_btn").click();

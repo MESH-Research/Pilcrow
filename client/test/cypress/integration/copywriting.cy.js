@@ -20,7 +20,7 @@ describe("Copywriting Screenshots", () => {
             cy.screenshot(name + ' (Keys)')
         }
         cy.task("resetDb")
-        cy.login({ email: "applicationadministrator@pilcrow.dev" })
+        cy.login({ email: "applicationadministrator@meshresearch.net" })
         screenshotPath('/')
         screenshotPath('/login')
         screenshotPath('/register')
@@ -42,7 +42,7 @@ describe("Copywriting Screenshots", () => {
         screenshotPath("/submission/100/review", "[data-cy=submission_review_layout]")
         screenshotPath("/submission/100/review", "[data-cy=submission_review_layout]")
         screenshotPath("/publication/1/create", "[data-cy=submission_create_subheading]")
-        cy.login({ email: "regularuser@pilcrow.dev" })
+        cy.login({ email: "regularuser@meshresearch.net" })
         screenshotPath("/submission/104/draft", "[data-cy=submission_title]")
         screenshotPath("/submission/104/content", "[data-cy=submission_content_title]")
     })

@@ -7,7 +7,7 @@ describe("Submission Create Page", () => {
   it("prevents submission creation when fields are invalid", () => {
     const name_520_characters = "1234567890".repeat(52)
     cy.task("resetDb")
-    cy.login({ email: "applicationadministrator@pilcrow.dev" })
+    cy.login({ email: "applicationadministrator@meshresearch.net" })
     cy.visit("/publication/1/create")
     cy.injectAxe()
 
@@ -52,7 +52,7 @@ describe("Submission Create Page", () => {
 
   it("allows submission creation", () => {
     cy.task("resetDb")
-    cy.login({ email: "applicationadministrator@pilcrow.dev" })
+    cy.login({ email: "applicationadministrator@meshresearch.net" })
     cy.visit("/publication/1/create")
     cy.injectAxe()
     cy.dataCy("new_submission_title_input").type("Test Submission")
