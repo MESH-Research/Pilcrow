@@ -66,7 +66,7 @@ export const rules = {
     },
     academic_profiles: {
       humanities_commons: { maxLength: maxLength(128) },
-      orcid: { maxLength: maxLength(128) },
+      orcid_id: { maxLength: maxLength(128) },
     },
     websites: {
       validWebsites,
