@@ -11,7 +11,7 @@ describe("login page", () => {
 
   it("allows a user to login", () => {
     cy.get(".q-form").within(() => {
-      cy.dataCy("email_field").type("regularuser@pilcrow.dev")
+      cy.dataCy("email_field").type("regularuser@meshresearch.net")
       cy.dataCy("password_field").type("regularPassword!@#")
       cy.get(".q-card__actions").contains("Login").click()
       cy.url().should("include", "/dashboard")
@@ -24,7 +24,7 @@ describe("login page", () => {
         .type("{enter}")
         .parents("label")
         .should("have.class", "q-field--error")
-      cy.dataCy("email_field").type("regularuser@pilcrow.dev{enter}")
+      cy.dataCy("email_field").type("regularuser@meshresearch.net{enter}")
 
       cy.dataCy("password_field")
         .parents("label")
@@ -43,7 +43,7 @@ describe("login page", () => {
     cy.get('[role="alert"]').contains("login to access that page")
 
     cy.get(".q-form").within(() => {
-      cy.dataCy("email_field").type("regularuser@pilcrow.dev")
+      cy.dataCy("email_field").type("regularuser@meshresearch.net")
       cy.dataCy("password_field").type("regularPassword!@#{enter}")
       cy.url().should("include", "/account/profile")
     })

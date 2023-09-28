@@ -123,8 +123,8 @@
           </template>
         </v-q-input>
         <v-q-input
-          ref="orcid"
-          :v="v$.profile_metadata.academic_profiles.orcid"
+          ref="orcid_id"
+          :v="v$.profile_metadata.academic_profiles.orcid_id"
           class="col-md-6 col-12"
         >
           <template #prepend>

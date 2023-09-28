@@ -7,7 +7,7 @@ describe("Submissions Page", () => {
 
   it("should assert the page is accessible", () => {
     cy.task("resetDb")
-    cy.login({ email: "regularuser@pilcrow.dev" })
+    cy.login({ email: "regularuser@meshresearch.net" })
     cy.visit("/submissions")
     cy.injectAxe()
     cy.dataCy("submissions_title")
@@ -16,7 +16,7 @@ describe("Submissions Page", () => {
 
   it("directs users to a publication's submission creation form", () => {
     cy.task("resetDb")
-    cy.login({ email: "applicationadministrator@pilcrow.dev" })
+    cy.login({ email: "applicationadministrator@meshresearch.net" })
     cy.visit("submissions")
     cy.injectAxe()
     cy.interceptGQLOperation("GetPublications")
@@ -30,28 +30,28 @@ describe("Submissions Page", () => {
 
   it("should make the submission in draft status invisible to reviewers", () => {
     cy.task("resetDb")
-    cy.login({ email: "reviewer@pilcrow.dev" })
+    cy.login({ email: "reviewer@meshresearch.net" })
     cy.visit("submissions")
     cy.dataCy("submissions_table").should('not.include.text', 'Draft')
   })
 
   it("should make the submission in draft status invisible to review coordinators", () => {
     cy.task("resetDb")
-    cy.login({ email: "reviewcoordinator@pilcrow.dev" })
+    cy.login({ email: "reviewcoordinator@meshresearch.net" })
     cy.visit("submissions")
     cy.dataCy("submissions_table").should('not.include.text', 'Draft')
   })
 
   it("should make the submission in draft status invisible to editors", () => {
     cy.task("resetDb")
-    cy.login({ email: "publicationeditor@pilcrow.dev" })
+    cy.login({ email: "publicationeditor@meshresearch.net" })
     cy.visit("submissions")
     cy.dataCy("submissions_table").should('not.include.text', 'Draft')
   })
 
   it("enables access to the Submission Export page for submissionss according to their status", () => {
     cy.task("resetDb")
-    cy.login({ email: "regularuser@pilcrow.dev" })
+    cy.login({ email: "regularuser@meshresearch.net" })
     cy.visit("/submissions")
     // Show All Records
     cy.dataCy("submissions_table").contains("Records per page").next().click()
@@ -93,7 +93,7 @@ describe("Submissions Page", () => {
 
   it("enables the correct submission options are visible for submissions marked as ACCEPTED_AS_FINAL", () => {
     cy.task("resetDb")
-    cy.login({ email: "regularuser@pilcrow.dev" })
+    cy.login({ email: "regularuser@meshresearch.net" })
     cy.visit("submissions")
     // Show All Records
     cy.dataCy("submissions_table").contains("Records per page").next().click()
@@ -106,7 +106,7 @@ describe("Submissions Page", () => {
 
   it("enables the correct submission options are visible for submissions marked as ARCHIVED", () => {
     cy.task("resetDb")
-    cy.login({ email: "regularuser@pilcrow.dev" })
+    cy.login({ email: "regularuser@meshresearch.net" })
     cy.visit("submissions")
     // Show All Records
     cy.dataCy("submissions_table").contains("Records per page").next().click()
@@ -119,7 +119,7 @@ describe("Submissions Page", () => {
 
   it("enables the correct submission options are visible for submissions marked as ARCHIVED", () => {
     cy.task("resetDb")
-    cy.login({ email: "regularuser@pilcrow.dev" })
+    cy.login({ email: "regularuser@meshresearch.net" })
     cy.visit("submissions")
     // Show All Records
     cy.dataCy("submissions_table").contains("Records per page").next().click()

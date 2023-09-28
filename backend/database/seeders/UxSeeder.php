@@ -24,7 +24,7 @@ class UxSeeder extends Seeder
         foreach (range(1, $this->numTesters) as $testerNumber) {
             $user = User::factory()->create([
               'username' => "tester{$testerNumber}",
-              'email' => "tester{$testerNumber}@pilcrow.dev",
+              'email' => "tester{$testerNumber}@meshresearch.net",
               'name' => "UX Tester {$testerNumber}",
               'password' => Hash::make('pilcrowRocks!@#'),
             ]);

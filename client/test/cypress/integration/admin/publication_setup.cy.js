@@ -9,19 +9,19 @@ describe("Publication Setup", () => {
   })
 
   it("allows access based on role", () => {
-    cy.login({ email: "publicationadministrator@pilcrow.dev" })
+    cy.login({ email: "publicationadministrator@meshresearch.net" })
     cy.visit("/publication/1/setup/basic")
     cy.url().should("not.include", "/error403")
   })
 
   it("restricts access based on role", () => {
-    cy.login({ email: "publicationadministrator@pilcrow.dev" })
+    cy.login({ email: "publicationadministrator@meshresearch.net" })
     cy.visit("/publication/2/setup/basic")
     cy.url().should("include", "/error403")
   })
 
   it("should assert the Publication Details page is accessible", () => {
-    cy.login({ email: "applicationadministrator@pilcrow.dev" })
+    cy.login({ email: "applicationadministrator@meshresearch.net" })
     cy.visit("/publication/1")
     cy.injectAxe()
     cy.dataCy("publication_details_heading")
@@ -29,7 +29,7 @@ describe("Publication Setup", () => {
   })
 
   it("should show and hide the configuration button", () => {
-    cy.login({ email: "publicationadministrator@pilcrow.dev" })
+    cy.login({ email: "publicationadministrator@meshresearch.net" })
     cy.visit("publication/1")
     cy.dataCy('configure_button')
     cy.visit("publication/2")
@@ -37,7 +37,7 @@ describe("Publication Setup", () => {
   })
 
   it("should allow assignment of administrators by application administrators", () => {
-    cy.login({ email: "applicationadministrator@pilcrow.dev" })
+    cy.login({ email: "applicationadministrator@meshresearch.net" })
     cy.visit("publication/1/setup/users")
     cy.interceptGQLOperation('UpdatePublicationAdmins')
 
@@ -56,7 +56,7 @@ describe("Publication Setup", () => {
 
 
   it("should allow assignment of editors by application administrators", () => {
-    cy.login({ email: "applicationadministrator@pilcrow.dev" })
+    cy.login({ email: "applicationadministrator@meshresearch.net" })
     cy.visit("publication/1/setup/users")
     cy.interceptGQLOperation('UpdatePublicationEditors')
 
@@ -74,7 +74,7 @@ describe("Publication Setup", () => {
   })
 
   it("should allow removal of admins by application administrators", () => {
-    cy.login({ email: "applicationadministrator@pilcrow.dev" })
+    cy.login({ email: "applicationadministrator@meshresearch.net" })
     cy.visit("publication/1/setup/users")
 
     cy.intercept("/graphql").as("graphql")
@@ -92,7 +92,7 @@ describe("Publication Setup", () => {
 
 
   it("should allow removal of editors by application administrators", () => {
-    cy.login({ email: "applicationadministrator@pilcrow.dev" })
+    cy.login({ email: "applicationadministrator@meshresearch.net" })
     cy.visit("publication/1/setup/users")
 
     cy.interceptGQLOperation("UpdatePublicationEditors")
@@ -108,7 +108,7 @@ describe("Publication Setup", () => {
   })
 
   it("should allow editing of style criteria", () => {
-    cy.login({ email: "applicationadministrator@pilcrow.dev" })
+    cy.login({ email: "applicationadministrator@meshresearch.net" })
     cy.visit("publication/1/setup/criteria")
     cy.injectAxe()
 
@@ -142,7 +142,7 @@ describe("Publication Setup", () => {
   })
 
   it("should allow adding a style criteria", () => {
-    cy.login({ email: "applicationadministrator@pilcrow.dev" })
+    cy.login({ email: "applicationadministrator@meshresearch.net" })
     cy.visit("publication/1/setup/criteria")
 
     //Check existing number of items:
@@ -165,7 +165,7 @@ describe("Publication Setup", () => {
   })
 
   it("should allow deleting a style criteria", () => {
-    cy.login({ email: "applicationadministrator@pilcrow.dev" })
+    cy.login({ email: "applicationadministrator@meshresearch.net" })
     cy.visit("publication/1/setup/criteria")
     //Check existing number of items:
     cy.dataCy('listItem').should('have.length', 4)
@@ -179,7 +179,7 @@ describe("Publication Setup", () => {
   });
 
   it.only("should allow editing basic settings", () => {
-    cy.login({ email: "applicationadministrator@pilcrow.dev" })
+    cy.login({ email: "applicationadministrator@meshresearch.net" })
     cy.visit("publication/1/setup/basic")
 
     cy.dataCy('name_field').type(" Update")
@@ -204,7 +204,7 @@ describe("Publication Setup", () => {
   })
 
   it("should allow editing content blocks", () => {
-    cy.login({ email: "applicationadministrator@pilcrow.dev" })
+    cy.login({ email: "applicationadministrator@meshresearch.net" })
     cy.visit("publication/1/setup/content")
 
     cy.dataCy('content_block_select').click()
