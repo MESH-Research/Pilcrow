@@ -285,8 +285,8 @@
                 "maxLength": "@:generic_validations.maxLength"
               }
             },
-            "orcid": {
-              "label": "ORCID",
+            "orcid_id": {
+              "label": "ORCID iD",
               "errors": {
                 "maxLength": "@:generic_validations.maxLength"
               }

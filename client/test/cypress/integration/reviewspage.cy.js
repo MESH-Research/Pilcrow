@@ -4,7 +4,7 @@
 describe("Reviews Page", () => {
   it("should allow a review coordinator to accept a submission for review and permit reviewers access", () => {
     cy.task("resetDb")
-    cy.login({ email: "reviewcoordinator@pilcrow.dev" })
+    cy.login({ email: "reviewcoordinator@meshresearch.net" })
     cy.visit("reviews")
     cy.dataCy("coordinator_table").contains("Records per page").next().click()
     cy.get("[role='listbox']").contains("All").click()
@@ -20,14 +20,14 @@ describe("Reviews Page", () => {
     cy.dataCy("change_status_notify")
       .should("be.visible")
       .should("have.class", "bg-positive")
-    cy.login({ email: "reviewer@pilcrow.dev" })
+    cy.login({ email: "reviewer@meshresearch.net" })
     cy.visit("submission/101/review")
     cy.url().should("not.include", "/error403")
   })
 
   it("should deny a review coordinator from changing the status of rejected submissions", () => {
     cy.task("resetDb")
-    cy.login({ email: "reviewcoordinator@pilcrow.dev" })
+    cy.login({ email: "reviewcoordinator@meshresearch.net" })
     cy.visit("reviews")
     cy.dataCy("coordinator_table").contains("Records per page").next().click()
     cy.get("[role='listbox']").contains("All").click()
@@ -39,7 +39,7 @@ describe("Reviews Page", () => {
 
   it("should allow a review coordinator to access rejected submissions", () => {
     cy.task("resetDb")
-    cy.login({ email: "reviewcoordinator@pilcrow.dev" })
+    cy.login({ email: "reviewcoordinator@meshresearch.net" })
     cy.visit("reviews")
     cy.dataCy("coordinator_table").contains("Records per page").next().click()
     cy.get("[role='listbox']").contains("All").click()
@@ -53,7 +53,7 @@ describe("Reviews Page", () => {
 
   it("should allow a review coordinator to access submissions requested for resubmission", () => {
     cy.task("resetDb")
-    cy.login({ email: "reviewcoordinator@pilcrow.dev" })
+    cy.login({ email: "reviewcoordinator@meshresearch.net" })
     cy.visit("reviews")
     cy.dataCy("coordinator_table").contains("Records per page").next().click()
     cy.get("[role='listbox']").contains("All").click()
@@ -68,7 +68,7 @@ describe("Reviews Page", () => {
 
   it("should deny a reviewer from accepting a submission for review", () => {
     cy.task("resetDb")
-    cy.login({ email: "reviewer@pilcrow.dev" })
+    cy.login({ email: "reviewer@meshresearch.net" })
     cy.visit("reviews")
     cy.dataCy("reviewer_table").contains("Records per page").next().click()
     cy.get("[role='listbox']").contains("All").click()
@@ -80,7 +80,7 @@ describe("Reviews Page", () => {
 
   it("should deny a reviewer from rejecting a submission for review", () => {
     cy.task("resetDb")
-    cy.login({ email: "reviewer@pilcrow.dev" })
+    cy.login({ email: "reviewer@meshresearch.net" })
     cy.visit("reviews")
     cy.interceptGQLOperation("UpdateSubmissionStatus")
     cy.dataCy("reviewer_table").contains("Records per page").next().click()
@@ -94,7 +94,7 @@ describe("Reviews Page", () => {
 
   it("should deny a reviewer from changing the status of rejected submissions", () => {
     cy.task("resetDb")
-    cy.login({ email: "reviewer@pilcrow.dev" })
+    cy.login({ email: "reviewer@meshresearch.net" })
     cy.visit("reviews")
     cy.dataCy("reviewer_table").contains("Records per page").next().click()
     cy.get("[role='listbox']").contains("All").click()
@@ -104,7 +104,7 @@ describe("Reviews Page", () => {
 
   it("should deny a reviewer from accessing rejected submissions", () => {
     cy.task("resetDb")
-    cy.login({ email: "reviewer@pilcrow.dev" })
+    cy.login({ email: "reviewer@meshresearch.net" })
     cy.visit("reviews")
     cy.dataCy("reviewer_table").contains("Records per page").next().click()
     cy.get("[role='listbox']").contains("All").click()
@@ -118,7 +118,7 @@ describe("Reviews Page", () => {
 
   it("should deny a reviewer from changing the status of submissions requested for resubmission", () => {
     cy.task("resetDb")
-    cy.login({ email: "reviewer@pilcrow.dev" })
+    cy.login({ email: "reviewer@meshresearch.net" })
     cy.visit("reviews")
     cy.dataCy("reviewer_table").contains("Records per page").next().click()
     cy.get("[role='listbox']").contains("All").click()
@@ -131,7 +131,7 @@ describe("Reviews Page", () => {
 
   it("should deny a reviewer from accessing submissions requested for resubmission", () => {
     cy.task("resetDb")
-    cy.login({ email: "reviewer@pilcrow.dev" })
+    cy.login({ email: "reviewer@meshresearch.net" })
     cy.visit("reviews")
     cy.dataCy("reviewer_table").contains("Records per page").next().click()
     cy.get("[role='listbox']").contains("All").click()
