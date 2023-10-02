@@ -5,6 +5,8 @@ import {
   beforeEachRequiresRoles,
   beforeEachRequiresDraftAccess,
   beforeEachRequiresSubmissionAccess,
+  beforeEachRequiresPreviewAccess,
+  beforeEachRequiresViewAccess,
   beforeEachRequiresReviewAccess,
   beforeEachRequiresExportAccess,
 } from "src/apollo/apollo-router-guards"
@@ -66,6 +68,20 @@ export default boot(async ({ app, router }) => {
    */
   router.beforeEach(async (to, from, next) =>
     beforeEachRequiresSubmissionAccess(apolloClient, to, from, next)
+  )
+
+  /**
+   * Check routes for requiresPreviewAccess meta field.
+   */
+  router.beforeEach(async (to, from, next) =>
+    beforeEachRequiresPreviewAccess(apolloClient, to, from, next)
+  )
+
+  /**
+   * Check routes for requiresViewAccess meta field.
+   */
+  router.beforeEach(async (to, from, next) =>
+    beforeEachRequiresViewAccess(apolloClient, to, from, next)
   )
 
   /**

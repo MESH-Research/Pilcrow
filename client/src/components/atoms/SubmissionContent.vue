@@ -94,6 +94,10 @@ import { useQuasar } from "quasar"
 import SubmissionContentKit from "src/tiptap/extension-submission-content-kit"
 import { computed, inject, ref, watch } from "vue"
 const props = defineProps({
+  annotationEnabled: {
+    type: Boolean,
+    default: true,
+  },
   highlightVisibility: {
     type: Boolean,
     default: true,
@@ -200,6 +204,9 @@ const editor = new Editor({
 })
 
 function bubbleMenuVisibility({ state }) {
+  if (!props.annotationEnabled) {
+    return false
+  }
   return !state.selection.empty
 }
 

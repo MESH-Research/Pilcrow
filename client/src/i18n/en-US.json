@@ -15,6 +15,7 @@
     "reviewers": "no reviewer | reviewer | reviewers",
     "review_coordinators": "no review coordinator | review coordinator | review coordinators"
   },
+  "file_picker_label": "Select File",
   "buttons": {
     "more_info": "More Info",
     "dashboard": "Dashboard",
@@ -559,6 +560,8 @@
       "unauthorized": "You are not authorized to edit this submission's title. Please contact your administrator."
     },
     "action": {
+      "preview": "Preview Submission",
+      "view": "View Submission",
       "review": "Review Submission",
       "submit_for_review": "Submit for Review",
       "accept_for_review": "Accept for Review",
@@ -569,7 +572,8 @@
       "close": "Close for Review",
       "reinvite": "Reinvite",
       "archive": "Archive Submission",
-      "delete": "Delete Submission"
+      "delete": "Delete Submission",
+      "edit_content": "Edit Content"
     },
     "activity_section": {
       "title": "Activity",
@@ -801,7 +805,6 @@
       },
       "draft_title": "{submission_title} Draft",
       "todo": {
-        "heading": "Todo",
         "content": {
           "title": "Submission Content",
           "description": "Add your content to your submission."
@@ -809,7 +812,8 @@
         "btn_label": {
           "go": "Go",
           "skip": "Skip",
-          "done": "Done"
+          "preview": "Preview",
+          "edit": "Edit"
         }
       },
       "submit": {
@@ -821,12 +825,19 @@
       "heading": "Submission Content",
       "upload": {
         "label": "Upload",
-        "caption": "Select a supported file to be imported.",
-        "file_picker_label": "Select File"
+        "caption": "Select a supported file to be imported."
       },
-      "paste": {
+      "upload_update": {
+        "label": "Upload",
+        "caption": "Select a supported file to replace the existing text content."
+      },
+      "enter": {
         "label": "Enter Text",
         "caption": "Copy/paste or enter text content directly."
+      },
+      "enter_update": {
+        "label": "Edit Text",
+        "caption": "Copy/paste or modify text content directly."
       },
       "submit": {
         "btn_label": "Update Content",
