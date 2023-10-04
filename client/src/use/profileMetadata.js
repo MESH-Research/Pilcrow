@@ -1,6 +1,5 @@
 import { maxLength } from "@vuelidate/validators"
 import { required, helpers } from "@vuelidate/validators"
-import { weburl_regex } from "src/utils/regex-weburl"
 import { watch } from "vue"
 export const social_regex = {
   facebook: {
@@ -23,17 +22,22 @@ export const social_regex = {
   },
 }
 
+const regex_for_websites = new RegExp(
+  "(([\\w]+:)?\\/\\/)?(([\\d\\w]|%[a-fA-F\\d]{2,2})+(:([\\d\\w]|%[a-fA-f\\d]{2,2})+)?@)?([\\d\\w][-\\d\\w]{0,253}[\\d\\w]?\\.)+[\\w]{2,4}(:[\\d]+)?(\\/([-+_~.\\d\\w]|%[a-fA-f\\d]{2,2})*)*(\\?(&?([-+_~.\\d\\w]|%[a-fA-f\\d]{2,2})=?)*)?(#([-+_~.\\d\\w]|%[a-fA-f\\d]{2,2})*)?"
+)
+
 export const website_rules = {
-  maxLength: maxLength(128),
-  valid: helpers.regex(weburl_regex),
+  maxLength: maxLength(512),
+  valid: helpers.regex(regex_for_websites),
 }
+
 export const keyword_rules = {
   maxLength: maxLength(128),
 }
 
 const validWebsites = (value) =>
   Array.isArray(value)
-    ? value.every((v) => v.match(weburl_regex) !== null)
+    ? value.every((v) => v.match(regex_for_websites) !== null)
     : true
 
 export const rules = {
@@ -71,13 +75,13 @@ export const rules = {
     websites: {
       validWebsites,
     },
-  }
+  },
 }
 
 export const profile_defaults = {
   username: "",
   name: "",
-  profile_metadata : {
+  profile_metadata: {
     biography: "",
     position_title: "",
     specialization: "",
@@ -95,7 +99,7 @@ export const profile_defaults = {
       orcid_id: "",
       humanities_commons: "",
     },
-  }
+  },
 }
 
 export function useSocialFieldWatchers(form) {
@@ -106,7 +110,7 @@ export function useSocialFieldWatchers(form) {
       if (matches && matches.groups.profile) {
         form.profile_metadata.social_media.facebook = matches.groups.profile
       }
-    }
+    },
   )
   watch(
     () => form.profile_metadata.social_media.twitter,
@@ -115,7 +119,7 @@ export function useSocialFieldWatchers(form) {
       if (matches && matches.groups.username) {
         form.profile_metadata.social_media.twitter = matches.groups.username
       }
-    }
+    },
   )
   watch(
     () => form.profile_metadata.social_media.instagram,
@@ -124,7 +128,7 @@ export function useSocialFieldWatchers(form) {
       if (matches && matches.groups.username) {
         form.profile_metadata.social_media.instagram = matches.groups.username
       }
-    }
+    },
   )
   watch(
     () => form.profile_metadata.social_media.linkedin,
@@ -133,7 +137,7 @@ export function useSocialFieldWatchers(form) {
       if (matches && matches.groups.permalink) {
         form.profile_metadata.social_media.linkedin = matches.groups.permalink
       }
-    }
+    },
   )
 }
 
