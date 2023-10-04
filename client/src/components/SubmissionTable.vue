@@ -82,15 +82,7 @@
               <router-link
                 v-if="p.row.status !== 'DRAFT'"
                 :to="{
-                  name: 'submission:review',
-                  params: { id: p.row.id },
-                }"
-                >{{ p.row.title }}
-              </router-link>
-              <router-link
-                v-else
-                :to="{
-                  name: 'submission:draft',
+                  name: submissionLinkName(p.row),
                   params: { id: p.row.id },
                 }"
                 >{{ p.row.title }}
@@ -123,17 +115,8 @@
     <template #body-cell-title="p">
       <q-td :props="p" data-cy="submission_link_desktop">
         <router-link
-          v-if="p.row.status !== 'DRAFT'"
           :to="{
-            name: 'submission:review',
-            params: { id: p.row.id },
-          }"
-          >{{ p.row.title }}
-        </router-link>
-        <router-link
-          v-else
-          :to="{
-            name: 'submission:draft',
+            name: submissionLinkName(p.row),
             params: { id: p.row.id },
           }"
           >{{ p.row.title }}
@@ -208,6 +191,9 @@ const byline = props.variation
 const tooltip = props.variation
   ? `submission_tables.${props.variation}.${props.role}.tooltip`
   : `submission_tables.${props.role}.tooltip`
+const submissionLinkName = (submission) => {
+  return (submission.status === "DRAFT") ? "submission:draft" : "submission:review"
+}
 const cols = [
   {
     name: "id",

@@ -5,21 +5,13 @@
       <div class="text-caption">
         <slot />
       </div>
-      <template #avatar>
-        <q-icon
-          data-cy="todo_icon"
-          class="material-icons-outlined"
-          :name="icon.name"
-          :color="icon.color"
-        />
-      </template>
       <template #action>
         <q-btn
           v-if="!done"
           data-cy="todo_go_btn"
           color="primary"
           :label="$t(`submissions.create.todo.btn_label.go`)"
-          @click="$emit('goClick')"
+          @click="$emit('contentClick')"
         />
         <q-btn
           v-if="$props.skipable"
@@ -29,10 +21,18 @@
         />
         <q-btn
           v-if="done"
-          data-cy="todo_done_btn"
+          data-cy="todo_preview_btn"
+          color="accent"
+          :label="$t(`submissions.create.todo.btn_label.preview`)"
+          class="q-mr-sm"
+          @click="$emit('previewClick')"
+        />
+        <q-btn
+          v-if="done"
+          data-cy="todo_content_btn"
           flat
-          :label="$t(`submissions.create.todo.btn_label.done`)"
-          @click="$emit('goClick')"
+          :label="$t(`submissions.create.todo.btn_label.edit`)"
+          @click="$emit('contentClick')"
         />
       </template>
     </q-banner>
@@ -40,8 +40,8 @@
 </template>
 
 <script setup>
-import { computed, defineProps, defineEmits } from "vue"
-const props = defineProps({
+import { defineProps, defineEmits } from "vue"
+defineProps({
   title: {
     type: String,
     required: true,
@@ -57,23 +57,7 @@ const props = defineProps({
     default: false,
   },
 })
-defineEmits(["goClick", "skipClick"])
-
-const icon = computed(() => {
-  let n = "check_box_outline_blank"
-  let c = ""
-  if (props.skipable) {
-    n = "skip_next"
-  }
-  if (props.done) {
-    n = "check_box"
-    c = "positive"
-  }
-  return {
-    name: n,
-    color: c,
-  }
-})
+defineEmits(["contentClick", "previewClick", "skipClick"])
 </script>
 
 <style scoped></style>
