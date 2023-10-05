@@ -378,14 +378,14 @@
     webpack-merge "^5.8.0"
 
 "@quasar/extras@^1.15.8":
-  version "1.16.6"
-  resolved "https://registry.yarnpkg.com/@quasar/extras/-/extras-1.16.6.tgz#6b79d3c01785793c10543c93f21653e26539a740"
-  integrity sha512-yHvp2Z73LuS29fhjE+dSzUvEKGCuTTy+WGIsAYxbnhBVW2rTYlYmFQfGdOPdzNreHZh+G/1D56n0Q6ClZxJHKg==
+  version "1.16.7"
+  resolved "https://registry.yarnpkg.com/@quasar/extras/-/extras-1.16.7.tgz#9416689f2e55f594f1135383c35b9ab03875c522"
+  integrity sha512-nYF3gVE/si1YJ/D4qmAiHGwxoJIDCvTT8NI6ZmbTMPrur4J8xBKhfhfhyLoQ4k2jJZP6Rx0rUcB71FBNC2C8vQ==
 
 "@quasar/quasar-app-extension-testing-unit-vitest@^0.3.0":
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/@quasar/quasar-app-extension-testing-unit-vitest/-/quasar-app-extension-testing-unit-vitest-0.3.0.tgz#8572f43aed2bfe9c5a33e2a31dfdcd75b832714c"
-  integrity sha512-SBGP+LaKKBHoIR3YjXd9+4Wiq9WAha87iQEGnkvpuB3Q/pHYm42ncooBSGOEhh3j2lKg7FbRupS9z71+LD+j/w==
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/@quasar/quasar-app-extension-testing-unit-vitest/-/quasar-app-extension-testing-unit-vitest-0.3.1.tgz#24f7955479cddc6b7ba37810f7913e1d4aae84b5"
+  integrity sha512-rD0Rmv5w6Z2SVpL8Sjd1aeucE9aLhPLybpi6oi03NNgZLkNuBOmm/A2YNX7l6WUU/3B7AVJNVW/C3T5YD5UGGw==
   dependencies:
     happy-dom "^8.9.0"
     lodash-es "^4.17.21"
