@@ -12,7 +12,8 @@ describe("Settings page", () => {
 
   it("can update the email field", () => {
     cy.injectAxe()
-    cy.dataCy("update_user_email").clear().type("updateduser@meshresearch.net")
+    cy.dataCy("update_user_email").clear()
+    cy.dataCy("update_user_email").type("updateduser@meshresearch.net")
     cy.dataCy("button_save").click()
     cy.dataCy("update_user_notify")
       .should("be.visible")
@@ -22,7 +23,8 @@ describe("Settings page", () => {
 
   it("can update the password field", () => {
     cy.injectAxe()
-    cy.dataCy("update_user_password").clear().type("XMYeygtC7TuxgER4")
+    cy.dataCy("update_user_password").clear()
+    cy.dataCy("update_user_password").type("XMYeygtC7TuxgER4")
     cy.dataCy("button_save").click()
     cy.dataCy("update_user_notify")
       .should("be.visible")
