@@ -22,6 +22,7 @@ describe("login page", () => {
     cy.get(".q-form").within(() => {
       cy.dataCy("email_field")
         .type("{enter}")
+      cy.dataCy("email_field")
         .parents("label")
         .should("have.class", "q-field--error")
       cy.dataCy("email_field").type("regularuser@meshresearch.net{enter}")
