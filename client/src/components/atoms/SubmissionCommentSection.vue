@@ -13,6 +13,7 @@
         <comment-editor
           comment-type="OverallComment"
           data-cy="overallCommentEditor"
+          ref="scrollAddNewOverallComment"
         />
       </q-card>
     </div>
@@ -72,6 +73,13 @@ watch(
   },
   { deep: false }
 )
+
+function handleScroll(Svalue) {
+    const Svalue = scrollOverallComments.value
+    const Starget = getScrollTarget(Svalue)
+    console.log(Svalue, Starget)
+  setVerticalScrollPosition(Starget, 0, 250)
+}
 </script>
 
 <style lang="sass" scoped>

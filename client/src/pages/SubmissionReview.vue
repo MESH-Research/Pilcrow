@@ -38,9 +38,11 @@
         <q-page-container>
           <submission-content
             v-model:highlightVisibility="highlightVisibility"
+            @scroll-to-overall-comments="handleScroll"
           />
           <q-separator class="page-seperator" />
-          <submission-comment-section />
+          <div ref="scrollOverallComments">Hello World!</div>
+          <submission-comment-section/>
         </q-page-container>
       </q-layout>
 
@@ -57,6 +59,9 @@ import SubmissionToolbar from "src/components/atoms/SubmissionToolbar.vue"
 import { ref, provide, computed } from "vue"
 import { GET_SUBMISSION_REVIEW } from "src/graphql/queries"
 import { useQuery } from "@vue/apollo-composable"
+import { scroll } from "quasar"
+const { getScrollTarget, setVerticalScrollPosition } = scroll
+
 const props = defineProps({
   id: {
     type: String,
@@ -72,6 +77,16 @@ const commentDrawerOpen = ref(false)
 provide("submission", submission)
 provide("activeComment", ref(null))
 provide("commentDrawerOpen", commentDrawerOpen)
+
+const scrollOverallComments = ref(null)
+
+function handleScroll() {
+    const Svalue = scrollOverallComments.value
+    const Starget = getScrollTarget(Svalue)
+    console.log(Svalue, Starget)
+  setVerticalScrollPosition(Starget, 0, 250)
+}
+
 </script>
 
 <style lang="sass" scoped>

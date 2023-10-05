@@ -145,15 +145,21 @@ function toggleDarkMode() {
   $q.dark.toggle()
 }
 
-// let overallComments =ref()
+// How to reference sibling atom?
+// let overallComments =ref(scrollOverallComments)
+
+const emit = defineEmits([
+  "scrollToOverallComments"
+])
 
 function scrollToOverallComments() {
-  // overallComments.value.scrollIntoView({ behavior: "smooth" });
-  console.log('scrollToOverallComments')
+  emit("scrollToOverallComments")
+  console.log("test scroll")
 }
 
 function addNewOverallComment() {
-  console.log('addNewOverallComment')
+  // scroll to text editor for new overall comment
+  // activate cursor in overall comment editor
 }
 
 const fonts = [
