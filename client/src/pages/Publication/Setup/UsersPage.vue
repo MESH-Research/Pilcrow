@@ -13,7 +13,7 @@
       <template #avatar>
         <q-icon name="tips_and_updates" size="sm" />
       </template>
-      {{ $t("publication.setup_pages.problems.no_admin") }}
+      {{ $t("publication.setup_pages.problems.no_admins") }}
     </q-banner>
     <div class="column q-gutter-md q-mb-lg">
       <assigned-publication-users
