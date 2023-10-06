@@ -21,19 +21,20 @@ runs:
           uses: docker/metadata-action@v4
           with:
             images: |
+              pilcrow/fpm:latest
               ghcr.io/${{ github.repository_owner }}/pilcrow/fpm
             tags: |
               type=ref,event=pr
               type=semver,pattern={{version}}
               type=semver,pattern={{major}}.{{minor}}
               type=sha,enable=${{ github.event_name == 'push' }}
-              type=raw,value=pilcrow/fpm:latest
             bake-target: fpm
         - name: Docker meta (WEB)
           id: docker-meta-web
           uses: docker/metadata-action@v4
           with:
             images: |
+              pilcrow/web:latest
               ghcr.io/${{ github.repository_owner }}/pilcrow/web
             tags: |
               type=ref,event=pr
