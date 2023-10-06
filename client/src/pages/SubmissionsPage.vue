@@ -27,15 +27,15 @@
           {{ $t(`submissions.new.description`) }}
 
           <q-icon name="info">
-            <q-tooltip class="q-pa-none">
-              <q-card class="bg-grey-8 q-pa-md">
+            <q-tooltip class="q-pa-md">
+              <div>
                 <strong>{{ $t(`submissions.new.tooltip.question`) }}</strong>
                 <p>{{ $t(`submissions.new.tooltip.answer`) }}</p>
                 <ul class="q-ma-none">
                   <li>{{ $t(`submissions.new.tooltip.reason_1`) }}</li>
                   <li>{{ $t(`submissions.new.tooltip.reason_2`) }}</li>
                 </ul>
-              </q-card>
+              </div>
             </q-tooltip>
           </q-icon>
         </p>

@@ -136,12 +136,12 @@ The users below are permanent on the test servers, and will not be deleted. Howe
 
 Name | Username | Login email | Login Password
 :---- | :---- | :---- | :----
-Application Administrator | applicationAdminUser | `applicationadministrator@pilcrow.dev` | `adminPassword!@#`
-Publication Administrator | publicationAdministrator | `publicationAdministrator@pilcrow.dev` | `publicationadminPassword!@#`
-Publication Editor | publicationEditor | `publicationEditor@pilcrow.dev` | `editorPassword!@#`
-Review Coordinator for Submission | reviewCoordinator | `reviewCoordinator@pilcrow.dev` | `coordinatorPassword!@#`
-Reviewer for Submission | reviewer | `reviewer@pilcrow.dev` | `reviewerPassword!@#`
-Regular User | regularUser | `regularuser@pilcrow.dev` | `regularPassword!@#`
+Application Administrator | applicationAdminUser | `applicationadministrator@meshresearch.net` | `adminPassword!@#`
+Publication Administrator | publicationAdministrator | `publicationAdministrator@meshresearch.net` | `publicationadminPassword!@#`
+Publication Editor | publicationEditor | `publicationEditor@meshresearch.net` | `editorPassword!@#`
+Review Coordinator for Submission | reviewCoordinator | `reviewCoordinator@meshresearch.net` | `coordinatorPassword!@#`
+Reviewer for Submission | reviewer | `reviewer@meshresearch.net` | `reviewerPassword!@#`
+Regular User | regularUser | `regularuser@meshresearch.net` | `regularPassword!@#`
 
 Other users can be registered to the staging environment, but please note that these users and any data associated with them **may be wiped any time the code base is updated**.
 

@@ -21,9 +21,6 @@ class ProfileMetadataAcademicProfilesValidator extends Validator
             'humanities_commons' => [
                 'max:128',
             ],
-            'academia_edu_id' => [
-                'max:128',
-            ],
         ];
     }
 }

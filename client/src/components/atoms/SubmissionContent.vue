@@ -120,6 +120,10 @@ import { useQuasar } from "quasar"
 import SubmissionContentKit from "src/tiptap/extension-submission-content-kit"
 import { computed, inject, ref, watch } from "vue"
 const props = defineProps({
+  annotationEnabled: {
+    type: Boolean,
+    default: true,
+  },
   highlightVisibility: {
     type: Boolean,
     default: true,
@@ -130,9 +134,9 @@ const commentDrawerOpen = inject("commentDrawerOpen")
 const submission = inject("submission")
 const activeComment = inject("activeComment")
 const contentRef = ref(null)
-let darkModeValue = ref(true)
 
 const $q = useQuasar()
+let darkModeValue = ref($q.dark.isActive)
 
 watch(
   () => $q.dark.isActive,
@@ -244,6 +248,9 @@ const editor = new Editor({
 })
 
 function bubbleMenuVisibility({ state }) {
+  if (!props.annotationEnabled) {
+    return false
+  }
   return !state.selection.empty
 }
 

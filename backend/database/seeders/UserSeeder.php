@@ -19,42 +19,42 @@ class UserSeeder extends Seeder
     {
         User::factory()->create([
             'username' => 'applicationAdminUser',
-            'email' => 'applicationAdministrator@pilcrow.dev',
+            'email' => 'applicationAdministrator@meshresearch.net',
             'name' => 'Application Administrator',
             'password' => Hash::make('adminPassword!@#'),
         ])->assignRole(Role::APPLICATION_ADMINISTRATOR);
 
         User::factory()->create([
             'username' => 'publicationAdministrator',
-            'email' => 'publicationAdministrator@pilcrow.dev',
+            'email' => 'publicationAdministrator@meshresearch.net',
             'name' => 'Publication Administrator',
             'password' => Hash::make('publicationadminPassword!@#'),
         ]);
 
         User::factory()->create([
             'username' => 'publicationEditor',
-            'email' => 'publicationEditor@pilcrow.dev',
+            'email' => 'publicationEditor@meshresearch.net',
             'name' => 'Publication Editor',
             'password' => Hash::make('editorPassword!@#'),
         ]);
 
         User::factory()->create([
             'username' => 'reviewCoordinator',
-            'email' => 'reviewCoordinator@pilcrow.dev',
+            'email' => 'reviewCoordinator@meshresearch.net',
             'name' => 'Review Coordinator for Submission',
             'password' => Hash::make('coordinatorPassword!@#'),
         ]);
 
         User::factory()->create([
             'username' => 'reviewer',
-            'email' => 'reviewer@pilcrow.dev',
+            'email' => 'reviewer@meshresearch.net',
             'name' => 'Reviewer for Submission',
             'password' => Hash::make('reviewerPassword!@#'),
         ]);
 
         User::factory()->create([
             'username' => 'regularUser',
-            'email' => 'regularuser@pilcrow.dev',
+            'email' => 'regularuser@meshresearch.net',
             'name' => 'Regular User',
             'password' => Hash::make('regularPassword!@#'),
         ]);

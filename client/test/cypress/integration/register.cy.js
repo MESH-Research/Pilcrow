@@ -14,20 +14,24 @@ describe("Register", () => {
       //Email is required
       cy.dataCy("email_field")
         .type("{enter}")
+      cy.dataCy("email_field")
         .parents("label")
         .should("have.class", "q-field--error")
 
       //Email must be valid
       cy.dataCy("email_field")
         .clear()
+      cy.dataCy("email_field")
         .type("pilcrowproject{enter}")
+      cy.dataCy("email_field")
         .parents("label")
         .should("have.class", "q-field--error")
         .contains("a valid email")
 
       //Email success
       cy.dataCy("email_field")
-        .type("@pilcrow.dev{enter}")
+        .type("@meshresearch.net{enter}")
+      cy.dataCy("email_field")
         .parents("label")
         .should("not.have.class", "q-field--error")
 
@@ -40,6 +44,7 @@ describe("Register", () => {
       //Username success
       cy.dataCy("username_field")
         .type("newUser{enter}")
+      cy.dataCy("username_field")
         .parents("label")
         .should("not.have.class", "q-field--error")
 
@@ -52,6 +57,7 @@ describe("Register", () => {
       //Password must be complex
       cy.dataCy("password_field")
         .type("password")
+      cy.dataCy("password_field")
         .parents("label")
         .should("have.class", "q-field--error")
         .contains("be more complex")
@@ -59,13 +65,16 @@ describe("Register", () => {
       //Password success
       cy.dataCy("password_field")
         .type("!@#$#@password")
+      cy.dataCy("password_field")
         .parents("label")
         .should("not.have.class", "q-field--error")
 
       //Username must be unique
       cy.dataCy("username_field")
         .clear()
+      cy.dataCy("username_field")
         .type("regularUser{enter}")
+      cy.dataCy("username_field")
         .parents("label")
         .should("have.class", "q-field--error")
         .contains("is not available")
@@ -74,12 +83,17 @@ describe("Register", () => {
       //Email must be unique
       cy.dataCy("email_field")
         .clear()
-        .type("regularuser@pilcrow.dev{enter}")
+      cy.dataCy("email_field")
+        .type("regularuser@meshresearch.net{enter}")
+      cy.dataCy("email_field")
         .parents("label")
         .should("have.class", "q-field--error")
         .contains("already registered")
 
-      cy.dataCy("email_field").clear().type("newvalidemail@pilcrow.dev")
+      cy.dataCy("email_field")
+        .clear()
+      cy.dataCy("email_field")
+        .type("newvalidemail@meshresearch.net")
 
       cy.get('[type="submit"]').click()
       cy.url().should("include", "/dashboard")
@@ -91,7 +105,7 @@ describe("Register", () => {
     cy.injectAxe()
     cy.get(".q-form").within(() => {
       cy.dataCy("username_field").type("newUserName")
-      cy.dataCy("email_field").type("newEmail@pilcrow.dev")
+      cy.dataCy("email_field").type("newEmail@meshresearch.net")
       cy.dataCy("password_field").type("password_field!@#12{enter}")
     })
 

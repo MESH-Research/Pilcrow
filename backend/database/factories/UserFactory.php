@@ -42,7 +42,7 @@ class UserFactory extends Factory
     {
         return $this->state(function () {
             return [
-                'email' => $this->faker->unique()->userName . '@pilcrow.dev',
+                'email' => $this->faker->unique()->userName . '@meshresearch.net',
             ];
         });
     }

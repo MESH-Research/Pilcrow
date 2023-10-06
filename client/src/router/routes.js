@@ -43,8 +43,8 @@ const routes = [
             component: () => import("src/pages/Account/ProfilePage.vue"),
           },
           {
-            path: "metadata",
-            component: () => import("src/pages/Account/MetadataPage.vue"),
+            path: "settings",
+            component: () => import("src/pages/Account/SettingsPage.vue"),
           },
         ],
       },
@@ -163,6 +163,24 @@ const routes = [
         component: () => import("src/pages/SubmissionContent.vue"),
         meta: {
           requiresSubmissionAccess: true,
+        },
+        props: true,
+      },
+      {
+        name: "submission:preview",
+        path: "/submission/:id/preview",
+        component: () => import("src/pages/SubmissionPreview.vue"),
+        meta: {
+          requiresPreviewAccess: true,
+        },
+        props: true,
+      },
+      {
+        name: "submission:view",
+        path: "/submission/:id/view",
+        component: () => import("src/pages/SubmissionView.vue"),
+        meta: {
+          requiresViewAccess: true,
         },
         props: true,
       },

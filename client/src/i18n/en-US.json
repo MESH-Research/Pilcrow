@@ -15,6 +15,7 @@
     "reviewers": "no reviewer | reviewer | reviewers",
     "review_coordinators": "no review coordinator | review coordinator | review coordinators"
   },
+  "file_picker_label": "Select File",
   "buttons": {
     "more_info": "More Info",
     "dashboard": "Dashboard",
@@ -122,8 +123,6 @@
     "maxLength": "The maximum length has been exceeded."
   },
   "header": {
-    "login_and_password": "Login and Password",
-    "profile": "Profile",
     "dashboard": "Dashboard",
     "menu_button_aria": "Show/hide navigation sidebar",
     "publications": "Publications",
@@ -142,6 +141,12 @@
   "footer": {
     "site_title": "Pilcrow",
     "footer_text": "Powered by {link}"
+  },
+  "profile": {
+    "page_title": "Profile"
+  },
+  "settings": {
+    "page_title": "Settings"
   },
   "account": {
     "failures": {
@@ -175,21 +180,6 @@
     },
     "account": {
       "fields": {
-        "username": {
-          "label": "Username",
-          "hint": "Your username is your primary identity on this site.",
-          "errors": {
-            "maxLength": "@:generic_validations.maxLength",
-            "USERNAME_IN_USE": "Sorry, this username is already in use."
-          }
-        },
-        "name": {
-          "label": "Name",
-          "hint": "(Optional) Your name will often substitute appearances of your username on this site.  Honorifics accepted.",
-          "errors": {
-            "maxLength": "@:generic_validation.maxLength"
-          }
-        },
         "email": {
           "label": "Email Address",
           "hint": "Updating your email address will require you to re-verify your account.",
@@ -208,9 +198,10 @@
       }
     },
     "profile": {
-      "login_and_password": "Login and Password",
+      "heading": "Profile",
+      "update_email": "Update Email",
       "update_password": "Update Password",
-      "section_details": "Profile",
+      "section_profile": "Profile",
       "section_personal": "Personal Details",
       "section_biography": "Biography",
       "section_social_media": "Social Media Profiles",
@@ -218,94 +209,105 @@
       "section_websites": "Websites",
       "section_keywords": "Keywords",
       "fields": {
-        "professional_title": {
-          "label": "Professional Title",
-          "errors": {
-            "maxLength": "@:generic_validations.maxLength"
-          }
-        },
-        "specialization": {
-          "label": "Specialization",
-          "hint": "Area of expertise, specialization, or research focus.",
-          "errors": {
-            "maxLength": "@:generic_validations.maxLength"
-          }
-        },
-        "affiliation": {
-          "label": "Affiliation",
-          "hint": "Institutional, group, or organization affiliation.",
-          "errors": {
-            "maxLength": "@:generic_validations.maxLength"
-          }
-        },
-        "social_media": {
-          "twitter": {
-            "label": "Twitter",
-            "errors": {
-              "valid": "Please enter a valid Twitter handle.",
-              "maxLength": "@:generic_validations.maxLength"
-            }
-          },
-          "instagram": {
-            "label": "Instagram",
-            "errors": {
-              "valid": "Please enter a valid Instagram username.",
-              "maxLength": "@:generic_validations.maxLength"
-            }
-          },
-          "linkedin": {
-            "label": "LinkedIn",
-            "errors": {
-              "valid": "Please enter a valid LinkedIn permalink.",
-              "maxLength": "@:generic_validations.maxLength"
-            }
-          },
-          "facebook": {
-            "label": "Facebook",
-            "errors": {
-              "valid": "Please enter a valid Facebook profile name.",
-              "maxLength": "@:generic_validations.maxLength"
-            }
-          }
-        },
-        "biography": {
-          "label": "Biography",
-          "maxLength": "@:generic_validations.maxLength"
-        },
-        "academic_profiles": {
-          "academia_edu_id": {
-            "label": "Academia.edu",
-            "errors": {
-              "maxLength": "@:generic_validations.maxLength"
-            }
-          },
-          "humanities_commons": {
-            "label": "Humanities Commons",
-            "errors": {
-              "maxLength": "@:generic_validations.maxLength"
-            }
-          },
-          "orcid": {
-            "label": "ORCID",
-            "errors": {
-              "maxLength": "@:generic_validations.maxLength"
-            }
-          }
-        },
-        "website": {
-          "label": "Website",
+        "username": {
+          "label": "Username",
+          "hint": "Your username is your primary identity on this site.",
           "errors": {
             "maxLength": "@:generic_validations.maxLength",
-            "valid": "Please enter a valid URL.",
-            "duplicate": "This URL is already in the list."
+            "USERNAME_IN_USE": "Sorry, this username is already in use."
           }
         },
-        "interest_keyword": {
-          "label": "Interest Keyword",
-          "hint": "Interest keywords will be used to help provide suggestions for submissions which may be of interest to you.",
+        "name": {
+          "label": "Name",
+          "hint": "(Optional) Your name will often substitute appearances of your username on this site.  Honorifics accepted.",
           "errors": {
-            "maxLength": "@:generic_validations.maxLength",
-            "duplicate": "This keyword is already in the list."
+            "maxLength": "@:generic_validation.maxLength"
+          }
+        },
+        "profile_metadata": {
+          "position_title": {
+            "label": "Position Title",
+            "errors": {
+              "maxLength": "@:generic_validations.maxLength"
+            }
+          },
+          "specialization": {
+            "label": "Specialization",
+            "hint": "Area of expertise, specialization, or research focus.",
+            "errors": {
+              "maxLength": "@:generic_validations.maxLength"
+            }
+          },
+          "affiliation": {
+            "label": "Affiliation",
+            "hint": "Institutional, group, or organization affiliation.",
+            "errors": {
+              "maxLength": "@:generic_validations.maxLength"
+            }
+          },
+          "social_media": {
+            "twitter": {
+              "label": "Twitter",
+              "errors": {
+                "valid": "Please enter a valid Twitter handle.",
+                "maxLength": "@:generic_validations.maxLength"
+              }
+            },
+            "instagram": {
+              "label": "Instagram",
+              "errors": {
+                "valid": "Please enter a valid Instagram username.",
+                "maxLength": "@:generic_validations.maxLength"
+              }
+            },
+            "linkedin": {
+              "label": "LinkedIn",
+              "errors": {
+                "valid": "Please enter a valid LinkedIn permalink.",
+                "maxLength": "@:generic_validations.maxLength"
+              }
+            },
+            "facebook": {
+              "label": "Facebook",
+              "errors": {
+                "valid": "Please enter a valid Facebook profile name.",
+                "maxLength": "@:generic_validations.maxLength"
+              }
+            }
+          },
+          "biography": {
+            "label": "Biography",
+            "maxLength": "@:generic_validations.maxLength"
+          },
+          "academic_profiles": {
+            "humanities_commons": {
+              "label": "Humanities Commons",
+              "errors": {
+                "maxLength": "@:generic_validations.maxLength"
+              }
+            },
+            "orcid_id": {
+              "label": "ORCID iD",
+              "errors": {
+                "maxLength": "@:generic_validations.maxLength"
+              }
+            }
+          },
+          "websites": {
+            "label": "Websites",
+            "errors": {
+              "maxLength": "@:generic_validations.maxLength",
+              "valid": "Please enter a valid URL.",
+              "duplicate": "This URL is already in the list."
+            }
+          },
+          "interest_keywords": {
+            "label": "Interest Keyword",
+            "hint": "Interest keywords will be used to help provide suggestions for submissions which may be of interest to you.",
+            "errors": {
+              "maxLength": "@:generic_validations.maxLength",
+              "duplicate": "This keyword is already in the list."
+            }
           }
         }
       }
@@ -331,8 +333,6 @@
   },
   "dashboard": {
     "welcome_message": "Welcome, {label}",
-    "login_and_password": "Login and Password",
-    "profile": "Profile",
     "guide": "guide",
     "guide_question": "New to Pilcrow?",
     "guide_call_to_action": "Learn more in our {link}."
@@ -560,6 +560,8 @@
       "unauthorized": "You are not authorized to edit this submission's title. Please contact your administrator."
     },
     "action": {
+      "preview": "Preview Submission",
+      "view": "View Submission",
       "review": "Review Submission",
       "submit_for_review": "Submit for Review",
       "accept_for_review": "Accept for Review",
@@ -570,7 +572,8 @@
       "close": "Close for Review",
       "reinvite": "Reinvite",
       "archive": "Archive Submission",
-      "delete": "Delete Submission"
+      "delete": "Delete Submission",
+      "edit_content": "Edit Content"
     },
     "activity_section": {
       "title": "Activity",
@@ -770,7 +773,7 @@
         "reason_1": "not accepting submissions at this time",
         "reason_2": "not publicly visible"
       },
-      "action": "Submit New Submission"
+      "action": "Create New Submission"
     },
     "create": {
       "heading": "Create Submission",
@@ -804,7 +807,6 @@
       },
       "draft_title": "{submission_title} Draft",
       "todo": {
-        "heading": "Todo",
         "content": {
           "title": "Submission Content",
           "description": "Add your content to your submission."
@@ -812,7 +814,8 @@
         "btn_label": {
           "go": "Go",
           "skip": "Skip",
-          "done": "Done"
+          "preview": "Preview",
+          "edit": "Edit"
         }
       },
       "submit": {
@@ -824,12 +827,19 @@
       "heading": "Submission Content",
       "upload": {
         "label": "Upload",
-        "caption": "Select a supported file to be imported.",
-        "file_picker_label": "Select File"
+        "caption": "Select a supported file to be imported."
       },
-      "paste": {
+      "upload_update": {
+        "label": "Upload",
+        "caption": "Select a supported file to replace the existing text content."
+      },
+      "enter": {
         "label": "Enter Text",
         "caption": "Copy/paste or enter text content directly."
+      },
+      "enter_update": {
+        "label": "Edit Text",
+        "caption": "Copy/paste or modify text content directly."
       },
       "submit": {
         "btn_label": "Update Content",

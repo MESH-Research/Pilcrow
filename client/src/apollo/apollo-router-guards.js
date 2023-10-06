@@ -38,9 +38,7 @@ export async function beforeEachRequiresDraftAccess(apolloClient, to, _, next) {
       const s = submission[0]
 
       // Only allow submitters access
-      if (
-        ["submitter"].some((role) => role === s.my_role)
-      ) {
+      if (["submitter"].some((role) => role === s.my_role)) {
         access = true
       }
     }
@@ -58,7 +56,7 @@ export async function beforeEachRequiresSubmissionAccess(
   apolloClient,
   to,
   _,
-  next
+  next,
 ) {
   if (to.matched.some((record) => record.meta.requiresSubmissionAccess)) {
     const submissionId = to.params.id
@@ -71,7 +69,7 @@ export async function beforeEachRequiresSubmissionAccess(
           data: {
             currentUser: { submissions },
           },
-        }) => submissions.filter((submission) => submission.id == submissionId)
+        }) => submissions.filter((submission) => submission.id == submissionId),
       )
     if (submissions.length === 0) {
       to.meta.requiresRoles = [
@@ -88,13 +86,13 @@ export async function beforeEachRequiresSubmissionAccess(
   }
 }
 
-export async function beforeEachRequiresReviewAccess(
+export async function beforeEachRequiresPreviewAccess(
   apolloClient,
   to,
   _,
-  next
+  next,
 ) {
-  if (to.matched.some((record) => record.meta.requiresReviewAccess)) {
+  if (to.matched.some((record) => record.meta.requiresPreviewAccess)) {
     let access = false
     const submissionId = to.params.id
     const user = await apolloClient
@@ -110,10 +108,91 @@ export async function beforeEachRequiresReviewAccess(
     if (submission.length) {
       const s = submission[0]
 
+      // Redirect when the submission is not a Draft
+      if (s.status !== "DRAFT") {
+        next({ name: "submission:view", params: { id: s.id } })
+        return false
+      }
+
+      // Allow Submitters and Review Coordinators
+      if (
+        ["submitter", "review_coordinator"].some((role) => role === s.my_role)
+      ) {
+        access = true
+      }
+
+      // Deny Reviewers
+      if ("reviewer" === s.my_role) {
+        access = false
+      }
+
+      // Allow Publication Administrators and Editors
+      if (
+        ["publication_admin", "editor"].some(
+          (role) => role === s.publication.my_role,
+        )
+      ) {
+        access = true
+      }
+    }
+
+    // Allow Application Administrators
+    if (user.roles.length > 0) {
+      if (
+        user.roles.some((role) => role.name === "Application Administrator")
+      ) {
+        access = true
+      }
+    }
+
+    if (!access) {
+      next({ name: "error403" })
+    } else {
+      next()
+    }
+  } else {
+    next()
+  }
+}
+
+export async function beforeEachRequiresViewAccess(
+  apolloClient,
+  to,
+  _,
+  next,
+) {
+  if (to.matched.some((record) => record.meta.requiresViewAccess)) {
+    let access = false
+    const submissionId = to.params.id
+    const user = await apolloClient
+      .query({
+        query: CURRENT_USER_SUBMISSIONS,
+      })
+      .then(({ data: { currentUser } }) => currentUser)
+
+    const submission = user.submissions.filter((submission) => {
+      return submission.id == submissionId
+    })
+
+    if (submission.length) {
+      const s = submission[0]
+
+      // Redirect when the submission is a Draft
+      if (s.status === "DRAFT") {
+        next({ name: "submission:preview", params: { id: s.id } })
+        return false
+      }
+
+      // Redirect when the submission is not Initially Submitted
+      if (s.status !== "INITIALLY_SUBMITTED") {
+        next({ name: "submission:review", params: { id: s.id } })
+        return false
+      }
+
       // Allow those who are assigned to the submission
       if (
         ["review_coordinator", "reviewer", "submitter"].some(
-          (role) => role === s.my_role
+          (role) => role === s.my_role,
         )
       ) {
         access = true
@@ -133,7 +212,90 @@ export async function beforeEachRequiresReviewAccess(
       // Allow Publication Administrators and Editors
       if (
         ["publication_admin", "editor"].some(
-          (role) => role === s.publication.my_role
+          (role) => role === s.publication.my_role,
+        )
+      ) {
+        access = true
+      }
+    }
+
+    // Allow Application Administrators
+    if (user.roles.length > 0) {
+      if (
+        user.roles.some((role) => role.name === "Application Administrator")
+      ) {
+        access = true
+      }
+    }
+
+    if (!access) {
+      next({ name: "error403" })
+    } else {
+      next()
+    }
+  } else {
+    next()
+  }
+}
+
+export async function beforeEachRequiresReviewAccess(
+  apolloClient,
+  to,
+  _,
+  next,
+) {
+  if (to.matched.some((record) => record.meta.requiresReviewAccess)) {
+    let access = false
+    const submissionId = to.params.id
+    const user = await apolloClient
+      .query({
+        query: CURRENT_USER_SUBMISSIONS,
+      })
+      .then(({ data: { currentUser } }) => currentUser)
+
+    const submission = user.submissions.filter((submission) => {
+      return submission.id == submissionId
+    })
+
+    if (submission.length) {
+      const s = submission[0]
+
+      // Redirect when the submission is a Draft
+      if (s.status === "DRAFT") {
+        next({ name: "submission:preview", params: { id: s.id } })
+        return false
+      }
+
+      // Redirect when the submission is Initially Submitted
+      if (s.status === "INITIALLY_SUBMITTED") {
+        next({ name: "submission:view", params: { id: s.id } })
+        return false
+      }
+
+      // Allow those who are assigned to the submission
+      if (
+        ["review_coordinator", "reviewer", "submitter"].some(
+          (role) => role === s.my_role,
+        )
+      ) {
+        access = true
+      }
+
+      // Deny Reviewers when the submission is in a nonreviewable state
+      const nonreviewableStates = new Set([
+        "DRAFT",
+        "INITIALLY_SUBMITTED",
+        "REJECTED",
+        "RESUBMISSION_REQUESTED",
+      ])
+      if ("reviewer" === s.my_role && nonreviewableStates.has(s.status)) {
+        access = false
+      }
+
+      // Allow Publication Administrators and Editors
+      if (
+        ["publication_admin", "editor"].some(
+          (role) => role === s.publication.my_role,
         )
       ) {
         access = true
@@ -163,7 +325,7 @@ export async function beforeEachRequiresExportAccess(
   apolloClient,
   to,
   _,
-  next
+  next,
 ) {
   if (to.matched.some((record) => record.meta.requiresExportAccess)) {
     let access = false
@@ -208,7 +370,7 @@ export async function beforeEachRequiresExportAccess(
       // Allow Publication Administrators and Editors
       if (
         ["publication_admin", "editor"].some(
-          (role) => role === s.publication.my_role
+          (role) => role === s.publication.my_role,
         )
       ) {
         access = true
@@ -249,7 +411,7 @@ export async function beforeEachRequiresRoles(apolloClient, to, _, next) {
           data: {
             currentUser: { roles },
           },
-        }) => roles.map((r) => r.name)
+        }) => roles.map((r) => r.name),
       )
     if (!roles.some((role) => requiredRoles.includes(role))) {
       next({ name: "error403" })

@@ -25,7 +25,7 @@
           <q-chip
             class="q-ml-md"
             icon="radio_button_checked"
-            color="primary"
+            color="secondary"
             text-color="white"
           >
             {{ $t(`submission.status.${submission.status}`) }}
@@ -36,9 +36,9 @@
             class="q-mr-sm"
             color="accent"
             size="lg"
-            :label="$t('submission.action.review')"
+            :label="$t(`submission.action.${viewType}`)"
             :to="{
-              name: 'submission:review',
+              name: `submission:${viewType}`,
               params: { id: props.id },
             }"
           />
@@ -80,10 +80,7 @@
           />
         </div>
       </div>
-      <submission-export-button
-        class="q-mt-xl"
-        :submission="submission"
-      />
+      <submission-export-button class="q-mt-xl" :submission="submission" />
     </section>
     <section class="q-pa-lg" data-cy="activity_section">
       <h3>{{ $t("submission.activity_section.title") }}</h3>
@@ -105,7 +102,7 @@ import SubmissionAudit from "../components/SubmissionAudit.vue"
 import SubmissionTitle from "src/components/SubmissionTitle.vue"
 import SubmissionExportButton from "src/components/atoms/SubmissionExportButton.vue"
 import { GET_SUBMISSION } from "src/graphql/queries"
-import { computed, provide } from "vue"
+import { computed, provide, watchEffect, ref } from "vue"
 import { useQuery } from "@vue/apollo-composable"
 
 const props = defineProps({
@@ -118,6 +115,17 @@ const props = defineProps({
 const { result } = useQuery(GET_SUBMISSION, { id: props.id })
 const submission = computed(() => {
   return result.value?.submission
+})
+
+let viewType = ref("review")
+
+watchEffect(() => {
+  const status = submission.value?.status
+  if (status === "DRAFT") {
+    viewType.value = "preview"
+  } else if (status === "INITIALLY_SUBMITTED") {
+    viewType.value = "view"
+  }
 })
 
 provide("submission", submission)

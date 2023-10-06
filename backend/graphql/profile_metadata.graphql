@@ -4,7 +4,7 @@ Profile metadata of a user
 type ProfileMetadata {
     social_media: SocialMedia
     academic_profiles: AcademicProfiles
-    professional_title: String
+    position_title: String
     specialization: String
     affiliation: String
     interest_keywords: [String]
