@@ -7,6 +7,7 @@ target "fpm" {
 
 target "fpm-ci" {
   inherits =  ["fpm", "_ci"]
+  tags = ["pilcrow/fpm:latest"]
   output = ["type=docker,dest=/tmp/fpm.tar"]
 }
 
@@ -18,6 +19,7 @@ target "web" {
 
 target "web-ci" {
   inherits = ["web", "_ci"]
+  tags = ["pilcrow/fpm:latest"]
   output = ["type=docker,dest=/tmp/web.tar"]
 }
 
