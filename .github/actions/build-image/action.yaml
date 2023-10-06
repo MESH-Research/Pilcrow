@@ -44,7 +44,7 @@ runs:
           uses: docker/bake-action@v4
           with:
             pull: true
-            target: ${{ inputs.target }}
+            targets: ${{ inputs.target }}
             files: |
               ./docker-bake.hcl
               ${{ steps.docker-meta-fpm.outputs.bake-file }}
