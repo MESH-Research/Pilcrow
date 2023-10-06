@@ -215,7 +215,7 @@ class NotificationTest extends ApiTestCase
     /**
      * @return array
      */
-    public function provideAllSubmissionStates()
+    public static function submissionStatesProvider()
     {
         return [
             'INITIALLY_SUBMITTED' => [ 1 ],
@@ -234,7 +234,7 @@ class NotificationTest extends ApiTestCase
     }
 
     /**
-     * @dataProvider provideAllSubmissionStates
+     * @dataProvider submissionStatesProvider
      * @param int $state
      * @return void
      */

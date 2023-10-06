@@ -128,7 +128,7 @@ class VerifyEmailTest extends ApiTestCase
     /**
      * @return array
      */
-    public function dataResendVerificationToSelf(): array
+    public static function dataResendVerificationToSelf(): array
     {
         return [
             ['1'],

@@ -62,7 +62,7 @@ class SubmissionInvitationTest extends ApiTestCase
     /**
      * @return array
      */
-    public function provideInvalidEmails(): array
+    public static function invalidEmailsProvider(): array
     {
         return [
             'no domain' => ['invalidemail'],
@@ -72,7 +72,7 @@ class SubmissionInvitationTest extends ApiTestCase
     }
 
     /**
-     * @dataProvider provideInvalidEmails
+     * @dataProvider invalidEmailsProvider
      * @return void
      */
     public function testInvalidEmailsCannotBeProvidedInAnInvitation(string $email)
@@ -171,7 +171,7 @@ class SubmissionInvitationTest extends ApiTestCase
     /**
      * @return array
      */
-    public function variablesProvider(): array
+    public static function variablesProvider(): array
     {
         return [
             'missing username' => [

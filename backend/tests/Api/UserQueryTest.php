@@ -14,7 +14,7 @@ class UserQueryTest extends ApiTestCase
     /**
      * @return array
      */
-    public function profileMetadataProvider(): array
+    public static function profileMetadataProvider(): array
     {
         return [
             [
@@ -102,7 +102,7 @@ class UserQueryTest extends ApiTestCase
     /**
      * @return array
      */
-    public function searchUserTermsProvider(): array
+    public static function searchUserTermsProvider(): array
     {
         return [
             ['name','abcdef'],
