@@ -13,5 +13,6 @@ runs:
               name: ${{ inputs.name }}
               path: /tmp
         - run: |
-              docker load --input /tmp/${{ inputs.name }}.tar
+              docker load --input /tmp/fpm.tar
+              docker load --input /tmp/web.tar
           shell: bash

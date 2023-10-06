@@ -1,16 +1,7 @@
 name: Build
 inputs:
-    package:
+    target:
         description: "package to build"
-        required: true
-    tags:
-        description: "tags to apply to the image"
-        required: false
-    labels:
-        description: "labels to apply to the image"
-        required: false
-    push:
-        description: "push the image to the registry"
         required: false
 runs:
     using: "composite"
@@ -25,12 +16,39 @@ runs:
               echo "url=https://github.com/MESH-Research/CCR/commits/${GITHUB_SHA}" >> $GITHUB_OUTPUT
               echo "date=$(git show -s --format=%cI ${GITHUB_SHA})" >> $GITHUB_OUTPUT
         - uses: docker/setup-buildx-action@v2
-        - uses: actions/cache@v3
+        - name: Docker meta (FPM)
+          id: docker-meta-fpm
+          uses: docker/metadata-action@v4
           with:
-              path: /tmp/.buildx-cache
-              key: ${{ runner.os }}-buildx-${{ inputs.package }}-${{ github.sha }}
-              restore-keys: |
-                  ${{ runner.os }}-buildx-${{ inputs.package }}
+            images: |
+              ghcr.io/${{ github.repository_owner }}/pilcrow/fpm
+            tags: |
+              type=ref,event=pr
+              type=semver,pattern={{version}}
+              type=semver,pattern={{major}}.{{minor}}
+              type=sha,enable=${{ github.event_name == 'push' }}
+            bake-target: fpm
+        - name: Docker meta (WEB)
+          id: docker-meta-web
+          uses: docker/metadata-action@v4
+          with:
+            images: |
+              ghcr.io/${{ github.repository_owner }}/pilcrow/web
+            tags: |
+              type=ref,event=pr
+              type=semver,pattern={{version}}
+              type=semver,pattern={{major}}.{{minor}}
+              type=sha,enable=${{ github.event_name == 'push' }}
+            bake-target: web
+        - name: Build and push
+          uses: docker/bake-action@v4
+          with:
+            pull: true
+            target: ${{ inputs.target }}
+            files: |
+              ./docker-bake.hcl
+              ${{ steps.docker-meta-fpm.outputs.bake-file }}
+              ${{ steps.docker-meta-web.outputs.bake-file }}
         - id: build
           uses: docker/build-push-action@v4
           with:
@@ -51,7 +69,7 @@ runs:
         - name: Move cache
           shell: bash
           run: |
-              rm -rf /tmp/.buildx-cache
+              rm -rf /tmp/.buildx-cache`
               mv /tmp/.buildx-cache-new /tmp/.buildx-cache
         - name: Upload artifact
           if:  ${{ !inputs.push }}
