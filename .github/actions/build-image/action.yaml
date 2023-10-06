@@ -49,31 +49,9 @@ runs:
               ./docker-bake.hcl
               ${{ steps.docker-meta-fpm.outputs.bake-file }}
               ${{ steps.docker-meta-web.outputs.bake-file }}
-        - id: build
-          uses: docker/build-push-action@v4
-          with:
-              context: ${{ fromJSON('{"fpm":"backend","web":"client"}')[inputs.package] || inputs.package }}
-              outputs: ${{ (!inputs.push) && format('{0}{1}{2}', 'type=docker,dest=/tmp/', inputs.package, '.tar') || '' }}
-              push: ${{ inputs.push && true || false }}
-              build-args: |
-                  VERSION=${{ steps.tagger.outputs.version }}
-                  VERSION_DATE=${{ steps.tagger.outputs.date}}
-                  VERSION_URL=${{ steps.tagger.outputs.url }}
-              tags: ${{ inputs.tags && inputs.tags || format('{0}{1}{2}', 'pilcrow/', inputs.package, ':latest') }}
-              labels: ${{ inputs.labels }}
-              cache-from: type=local,src=/tmp/.buildx-cache
-              cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
-        # Temp fix
-        # https://github.com/docker/build-push-action/issues/252
-        # https://github.com/moby/buildkit/issues/1896
-        - name: Move cache
-          shell: bash
-          run: |
-              rm -rf /tmp/.buildx-cache`
-              mv /tmp/.buildx-cache-new /tmp/.buildx-cache
         - name: Upload artifact
-          if:  ${{ !inputs.push }}
+          if:  ${{ inputs.target == 'ci' }}
           uses: actions/upload-artifact@v3
           with:
-              name: ${{ inputs.package }}
-              path: /tmp/${{ inputs.package }}.tar
+              name: Docker Images
+              path: /tmp/*.tar
