@@ -242,19 +242,6 @@ describe("Submissions Review", () => {
     cy.url().should("include", "/submission/104/draft")
   })
 
-  it("should be able to submit for review a draft submission with content and allow reviewers to access the submission", () => {
-    cy.task("resetDb")
-    cy.login({ email: "regularuser@meshresearch.net" })
-    cy.visit("submission/111/review")
-    cy.dataCy("status-dropdown").click()
-    cy.dataCy("initially_submit").click()
-    cy.dataCy("dirtyYesChangeStatus").click()
-
-    cy.login({ email: "reviewer@meshresearch.net" })
-    cy.visit("submission/111/review")
-    cy.url().should("not.include", "/error403")
-  })
-
   it("should not display the decision options for rejected submissions", () => {
     cy.task("resetDb")
     cy.login({ email: "applicationadministrator@meshresearch.net" })

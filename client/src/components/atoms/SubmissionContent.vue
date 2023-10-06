@@ -115,6 +115,10 @@ import { BubbleMenu, Editor, EditorContent } from "@tiptap/vue-3"
 import { computed, inject, ref, watch } from "vue"
 import { useQuasar } from "quasar"
 const props = defineProps({
+  annotationEnabled: {
+    type: Boolean,
+    default: true,
+  },
   highlightVisibility: {
     type: Boolean,
     default: true,
@@ -221,6 +225,9 @@ const editor = new Editor({
 })
 
 function bubbleMenuVisibility({ state }) {
+  if (!props.annotationEnabled) {
+    return false
+  }
   return !state.selection.empty
 }
 

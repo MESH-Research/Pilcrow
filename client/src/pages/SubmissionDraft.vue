@@ -22,11 +22,15 @@
         </q-breadcrumbs-el>
       </q-breadcrumbs>
     </nav>
-    <div class="row flex-center q-pa-lg">
-      <div class="col-lg-5 col-md-6 col-sm-8 col-xs-12">
-        <article v-if="submission.status !== 'DRAFT'" class="q-pa-lg">
+    <div class="row flex-center q-pa-md">
+      <div class="col-lg-6 col-md-7 col-sm-9 col-xs-12">
+        <article
+          v-if="submission.status !== 'DRAFT'"
+          class="text-center q-py-lg q-px-sm"
+        >
           <p>{{ $t(`submissions.create.success`) }}</p>
           <q-btn
+            data-cy="visit_submission_btn"
             class="q-mr-sm"
             color="accent"
             size="md"
@@ -39,42 +43,32 @@
             }"
           />
         </article>
-        <article v-else class="q-pa-lg">
+        <article v-else class="q-py-lg q-px-sm">
           <h1 data-cy="submission_title" class="text-h2 q-ma-none">
             {{ submission.title }}
           </h1>
           <q-chip>
             {{ $t(`submission.status.${submission.status}`) }}
           </q-chip>
-          <h2 class="text-h3 q-mb-lg">
-            {{ $t(`submissions.create.todo.heading`) }}
-          </h2>
-          <section class="q-gutter-md">
+          <section class="q-gutter-md q-mt-lg">
             <!-- TODO: Develop metadata updating -->
-            <!-- <submission-draft-todo-item title="Update submission details">
-              Update the title of your submission as well as enter your
-              metadata, etc, etc
+            <!-- <submission-draft-todo-item title="Submission Information">
+              Add metadata associated with your submission.
             </submission-draft-todo-item> -->
             <submission-draft-todo-item
               :done="submission.content !== null"
               :title="$t(`submissions.create.todo.content.title`)"
-              @go-click="onGoToSubmissionContentClick"
+              @preview-click="onGoToSubmissionPreviewClick"
+              @content-click="onGoToSubmissionContentClick"
             >
               <p class="q-ma-none">
                 {{ $t(`submissions.create.todo.content.description`) }}
               </p>
             </submission-draft-todo-item>
             <!-- TODO: Develop collaborator inviting -->
-            <!-- <q-banner inline-actions>
-              <div>Invite Collaborators</div>
-              <div class="text-caption">
-                Invite collaborators to join the review process.
-              </div>
-              <template #action>
-                <q-btn flat>Skip</q-btn>
-                <q-btn flat> Go </q-btn>
-              </template>
-            </q-banner> -->
+            <!-- <submission-draft-todo-item title="Invite Collaborators">
+              Invite collaborators to join the review process.
+            </submission-draft-todo-item> -->
           </section>
           <section class="q-mt-lg">
             <p>{{ $t(`submissions.create.submit.description`) }}</p>
@@ -86,6 +80,7 @@
             />
             <q-btn
               v-else
+              data-cy="submit_for_review_btn"
               class="q-mt-lg"
               color="primary"
               :label="$t(`submissions.create.submit.btn_label`)"
@@ -119,6 +114,12 @@ const { dialog } = useQuasar()
 const { result, loading } = useQuery(GET_SUBMISSION, props)
 const submission = computed(() => result.value?.submission)
 const { push } = useRouter()
+function onGoToSubmissionPreviewClick() {
+  push({
+    name: "submission:preview",
+    params: { id: submission.value.id },
+  })
+}
 function onGoToSubmissionContentClick() {
   push({
     name: "submission:content",
@@ -127,8 +128,8 @@ function onGoToSubmissionContentClick() {
 }
 const rules = {
   content: {
-    required
-  }
+    required,
+  },
 }
 const draft = useVuelidate(rules, submission)
 async function confirmHandler(action) {

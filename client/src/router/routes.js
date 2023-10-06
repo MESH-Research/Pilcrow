@@ -167,6 +167,24 @@ const routes = [
         props: true,
       },
       {
+        name: "submission:preview",
+        path: "/submission/:id/preview",
+        component: () => import("src/pages/SubmissionPreview.vue"),
+        meta: {
+          requiresPreviewAccess: true,
+        },
+        props: true,
+      },
+      {
+        name: "submission:view",
+        path: "/submission/:id/view",
+        component: () => import("src/pages/SubmissionView.vue"),
+        meta: {
+          requiresViewAccess: true,
+        },
+        props: true,
+      },
+      {
         name: "submission:review",
         path: "/submission/:id/review",
         component: () => import("src/pages/SubmissionReview.vue"),
