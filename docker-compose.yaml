@@ -3,9 +3,6 @@ services:
   client:
     environment:
       FPM_HOST: phpfpm:9000
-    build:
-      context: ./client
-      dockerfile: Dockerfile
     depends_on:
       - phpfpm
       - mysql
@@ -16,9 +13,6 @@ services:
       - .env
     environment:
       WAIT_HOSTS: mysql:3306
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
     depends_on:
       - mysql
   mysql:
