@@ -1,13 +1,29 @@
+variable "VERSION" {
+  default = "source"
+}
+
+variable "VERSION_URL" {
+  default = ""
+}
+
+variable "VERSION_DATE" {
+  default = ""
+}
+
 target "fpm" {
   inherits =  ["_defaults"]
   context = "backend"
   tags = ["pilcrow/fpm:latest"]
-
+  args = {
+    VERSION = var.VERSION
+    VERSION_URL = var.VERSION_URL
+    VERSION_DATE = var.VERSION_DATE
+  }
 }
 
 target "fpm-ci" {
   inherits =  ["fpm", "_ci"]
-  tags = ["pilcrow/fpm:latest"]
+  tags = ["ci.local/pilcrow/fpm:latest"]
   output = ["type=docker,dest=/tmp/fpm.tar"]
 }
 
@@ -15,11 +31,16 @@ target "web" {
   inherits =  ["_defaults"]
   context = "client"
   tags = ["pilcrow/web:latest"]
+  args = {
+    VERSION = var.VERSION
+    VERSION_URL = var.VERSION_URL
+    VERSION_DATE = var.VERSION_DATE
+  }
 }
 
 target "web-ci" {
   inherits = ["web", "_ci"]
-  tags = ["pilcrow/fpm:latest"]
+  tags = ["ci.local/pilcrow/fpm:latest"]
   output = ["type=docker,dest=/tmp/web.tar"]
 }
 
