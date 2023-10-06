@@ -1,10 +1,13 @@
 FROM php:8.2.11-fpm
 ARG VERSION
+ENV VERSION=${VERSION}
 ARG VERSION_URL
+ENV VERSION_URL=${VERSION_URL}
 ARG VERSION_DATE
+ENV VERSION_DATE=${VERSION_DATE}
+
 ARG PHP_EXTS="bcmath pdo_mysql pcntl zip"
 ARG PHP_PECL_EXTS="redis"
-ARG COMPOSER_NO_DEV="1"
 RUN  apt update && apt install -y openssl ca-certificates libzip-dev libaio1 libncurses6 libnuma1 libxml2-dev git \
   && docker-php-ext-install -j$(nproc) ${PHP_EXTS} \
   && pecl install ${PHP_PECL_EXTS} \
