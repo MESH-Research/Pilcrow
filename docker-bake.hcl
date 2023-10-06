@@ -54,6 +54,7 @@ target "web-release" {
 
 target "_release" {
   platforms = ["linux/amd64", "linux/arm64", "linux/arm/v7"]
+  output = ["type=image,push=true"]
 }
 
 
@@ -76,5 +77,5 @@ group "ci" {
 
 group "release" {
   targets = ["fpm-release", "web-release"]
-  output = ["type=image,push=true"]
+
 }

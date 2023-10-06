@@ -16,7 +16,8 @@ runs:
               echo "VERSION=$(git describe --tags)" >> ${GITHUB_ENV}
               echo "VERSION_URL=https://github.com/MESH-Research/CCR/commits/${GITHUB_SHA}" >> ${GITHUB_ENV}
               echo "VERSION_DATE=$(git show -s --format=%cI ${GITHUB_SHA})" >> ${GITHUB_ENV}
-        - uses: docker/setup-buildx-action@v2
+        - uses: docker/setup-qemu-action@v3
+        - uses: docker/setup-buildx-action@v3
         - name: Docker meta (FPM)
           id: docker-meta-fpm
           uses: docker/metadata-action@v4
@@ -40,7 +41,6 @@ runs:
               type=semver,pattern={{version}}
               type=semver,pattern={{major}}.{{minor}}
               type=sha,enable=${{ github.event_name == 'push' }}
-              type=raw,value=pilcrow/web:latest
             bake-target: web
         - name: Build and push
           uses: docker/bake-action@v4
