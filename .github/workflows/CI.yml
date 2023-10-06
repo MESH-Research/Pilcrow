@@ -93,10 +93,6 @@ jobs:
     name: "Publish (master branch only)"
     runs-on: ubuntu-20.04
     needs: [e2e, backend-unit-test, client-unit-test]
-    strategy:
-      matrix:
-        package: [fpm, web]
-    if: github.event_name == 'push'  && github.ref == 'refs/heads/master'
     steps:
       - uses: actions/checkout@v3
       - name: Login to Github Packages
