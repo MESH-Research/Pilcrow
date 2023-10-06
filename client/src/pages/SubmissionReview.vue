@@ -84,7 +84,7 @@ function handleScroll() {
     const Svalue = scrollOverallComments.value
     const Starget = getScrollTarget(Svalue)
     console.log(Svalue, Starget)
-  setVerticalScrollPosition(Starget, 0, 250)
+  setVerticalScrollPosition(Starget, Svalue.offsetTop, 250)
 }
 
 </script>

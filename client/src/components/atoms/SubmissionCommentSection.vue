@@ -11,9 +11,9 @@
       <q-card class="q-my-md q-pa-md bg-grey-1 comment-editor-card">
         <h3 class="text-h3 q-mt-none">{{ $t("submissions.overall_comments.editor_heading") }}</h3>
         <comment-editor
+          ref="scrollAddNewOverallComment"
           comment-type="OverallComment"
           data-cy="overallCommentEditor"
-          ref="scrollAddNewOverallComment"
         />
       </q-card>
     </div>
@@ -73,13 +73,6 @@ watch(
   },
   { deep: false }
 )
-
-function handleScroll(Svalue) {
-    const Svalue = scrollOverallComments.value
-    const Starget = getScrollTarget(Svalue)
-    console.log(Svalue, Starget)
-  setVerticalScrollPosition(Starget, 0, 250)
-}
 </script>
 
 <style lang="sass" scoped>
