@@ -62,8 +62,8 @@ target "_defaults" {
 }
 
 target "_ci" {
-#  cache-to = ["type=gha,mode=max"]
-#  cache-from = ["type=gha"]
+  cache-to = ["type=gha,mode=max"]
+  cache-from = ["type=gha"]
 }
 
 group "default" {
