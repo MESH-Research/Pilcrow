@@ -41,7 +41,7 @@
             @scroll-to-overall-comments="handleScroll"
           />
           <q-separator class="page-seperator" />
-          <div ref="scrollOverallComments">Hello World!</div>
+          <div ref="scrollOverallComments"></div>
           <submission-comment-section/>
         </q-page-container>
       </q-layout>
