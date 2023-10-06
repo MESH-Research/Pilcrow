@@ -32,9 +32,9 @@ target "web" {
   context = "client"
   tags = ["pilcrow/web:latest"]
   args = {
-    VERSION = var.VERSION
-    VERSION_URL = var.VERSION_URL
-    VERSION_DATE = var.VERSION_DATE
+    VERSION = "${VERSION}"
+    VERSION_URL = "${VERSION_URL}"
+    VERSION_DATE = "${VERSION_DATE}"
   }
 }
 
