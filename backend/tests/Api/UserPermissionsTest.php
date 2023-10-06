@@ -73,7 +73,7 @@ class UserPermissionsTest extends ApiTestCase
     /**
      * @return array
      */
-    public function permissionsByRoleProvider()
+    public static function permissionsByRoleProvider()
     {
         return [
             [
