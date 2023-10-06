@@ -40,7 +40,7 @@ target "web" {
 
 target "web-ci" {
   inherits = ["web", "_ci"]
-  tags = ["ci.local/pilcrow/fpm:latest"]
+  tags = ["ci.local/pilcrow/web:latest"]
   output = ["type=docker,dest=/tmp/web.tar"]
 }
 
