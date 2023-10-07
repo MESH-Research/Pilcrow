@@ -1,4 +1,4 @@
-FROM node:16-alpine as build-stage
+FROM --platform=$BUILDPLATFORM node:16-alpine as build-stage
 WORKDIR /app
 COPY . ./
 
