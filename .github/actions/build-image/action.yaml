@@ -28,7 +28,7 @@ runs:
               type=semver,pattern={{version}}
               type=semver,pattern={{major}}.{{minor}}
               type=sha,enable=${{ github.event_name == 'push' }}
-            label: |
+            labels: |
               org.opencontainers.image.description=Pilcrow FPM Container Image version: ${{ env.VERSION }}@${{env.VERSIONDATE }} (${{ env.VERSION_URL }})
             bake-target: fpm
         - name: Docker meta (WEB)
@@ -43,7 +43,7 @@ runs:
               type=semver,pattern={{major}}.{{minor}}
               type=sha,enable=${{ github.event_name == 'push' }}
             bake-target: web
-          label: |
+          labels: |
               org.opencontainers.image.description=Pilcrow WEB (Proxy/Nginx) Container Image version: ${{ env.VERSION }}@${{env.VERSIONDATE }} (${{ env.VERSION_URL }})
         - name: Build and push
           uses: docker/bake-action@v4
