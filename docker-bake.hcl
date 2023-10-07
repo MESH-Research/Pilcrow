@@ -50,10 +50,10 @@ target "fpm-release" {
 
 target "web-release" {
   inherits = ["web", "_release"]
+  platforms = ["linux/amd64", "linux/arm64"]
 }
 
 target "_release" {
-#  platforms = ["linux/amd64", "linux/arm64", "linux/arm/v7"]
   output = ["type=image,push=true"]
 }
 
