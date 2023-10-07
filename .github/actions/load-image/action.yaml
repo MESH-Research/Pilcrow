@@ -8,6 +8,6 @@ runs:
               name: Docker Images
               path: /tmp
         - run: |
-              docker load --input /tmp/fpm.tar.gz
-              docker load --input /tmp/web.tar.gz
+              docker load --input /tmp/fpm.tar
+              docker load --input /tmp/web.tar
           shell: bash

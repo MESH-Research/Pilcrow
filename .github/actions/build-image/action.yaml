@@ -54,14 +54,14 @@ runs:
               ./docker-bake.hcl
               ${{ steps.docker-meta-fpm.outputs.bake-file }}
               ${{ steps.docker-meta-web.outputs.bake-file }}
-        - run: |
-            gzip -c /tmp/web.tar > /tmp/web.tar.gz
-            gzip -c /tmp/fpm.tar > /tmp/fpm.tar.gz
-          shell: bash
-          if: ${{ inputs.target == 'ci' }}
+        # - run: |
+        #     gzip -c /tmp/web.tar > /tmp/web.tar.gz
+        #     gzip -c /tmp/fpm.tar > /tmp/fpm.tar.gz
+        #   shell: bash
+        #   if: ${{ inputs.target == 'ci' }}
         - name: Upload artifact
           if:  ${{ inputs.target == 'ci' }}
           uses: actions/upload-artifact@v3
           with:
               name: Docker Images
-              path: /tmp/*.tar.gz
+              path: /tmp/*.tar
