@@ -6,6 +6,8 @@ on:
     branches:
       - master
       - renovate/*
+    tags:
+      - "v*"
 
 concurrency:
   group: tests-${{ format('{0}-{1}', github.head_ref || github.run_number, github.job) }}
@@ -26,15 +28,12 @@ jobs:
       - run: cd client && yarn test:unit:ci
   build-images:
     name: "Build"
-    strategy:
-      matrix:
-        package: [fpm, web]
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/build-image
         with:
-          package: ${{ matrix.package }}
+          target: ci
   backend-unit-test:
     name: Backend / Unit Test
     needs: [build-images]
@@ -94,36 +93,14 @@ jobs:
     name: "Publish (master branch only)"
     runs-on: ubuntu-20.04
     needs: [e2e, backend-unit-test, client-unit-test]
-    strategy:
-      matrix:
-        package: [fpm, web]
-    if: github.event_name == 'push'  && github.ref == 'refs/heads/master'
     steps:
       - uses: actions/checkout@v3
-      - name: Docker meta
-        id: meta
-        uses: docker/metadata-action@v4
-        with:
-          images: |
-            ghcr.io/mesh-research/pilcrow/${{ matrix.package }}
-          tags: |
-            type=ref,event=branch
-            type=ref,event=pr
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=sha,enable=true
       - name: Login to Github Packages
         uses: docker/login-action@v2
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - uses: ./.github/actions/load-image
-        with:
-          name: ${{ matrix.package }}
       - uses: ./.github/actions/build-image
         with:
-          package: ${{ matrix.package }}
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          target: release

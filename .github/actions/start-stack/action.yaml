@@ -5,15 +5,10 @@ runs:
     steps:
         - uses: actions/checkout@v3
         - uses: ./.github/actions/load-image
-          with:
-              name: fpm
-        - uses: ./.github/actions/load-image
-          with:
-              name: web
         - run: |
               cp backend/.env.example .env
               cp docker-compose.ci.yaml docker-compose.override.yaml
-              docker compose up -d
-              docker compose exec -T phpfpm composer install
+              docker compose up -d --quiet-pull
+              docker compose exec -T phpfpm composer install --quiet
               docker compose exec -T phpfpm bash -c "/wait && ./artisan migrate:fresh --seed"
           shell: bash
