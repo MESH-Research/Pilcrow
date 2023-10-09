@@ -76,7 +76,7 @@ class SubmissionTest extends ApiTestCase
     }
 
     /**
-     * @dataProvider allSubmissionRoles
+     * @dataProvider submissionRolesProvider
      * @return void
      */
     public function testAllSubmissionRolesCanViewSubmission($role)
@@ -445,7 +445,7 @@ class SubmissionTest extends ApiTestCase
     /**
      * @return array
      */
-    public function allSubmissionRoles(): array
+    public static function submissionRolesProvider(): array
     {
         return [
             //Role
@@ -456,7 +456,7 @@ class SubmissionTest extends ApiTestCase
     }
 
     /**
-     * @dataProvider allSubmissionRoles
+     * @dataProvider submissionRolesProvider
      * @return void
      */
     public function testApplicationAdminCanUpdateAnyUserRole($role)
@@ -482,7 +482,7 @@ class SubmissionTest extends ApiTestCase
     }
 
     /**
-     * @dataProvider allSubmissionRoles
+     * @dataProvider submissionRolesProvider
      * @return void
      */
     public function testPublicationAdminsCanUpdateTheirOwnSubmissionsRoles($role)
@@ -512,7 +512,7 @@ class SubmissionTest extends ApiTestCase
     }
 
     /**
-     * @dataProvider allSubmissionRoles
+     * @dataProvider submissionRolesProvider
      * @return void
      */
     public function testPublicationAdminsCannotUpdateOtherPublicationSubmissions($role)
@@ -536,7 +536,7 @@ class SubmissionTest extends ApiTestCase
         $response->assertJsonPath('errors.0.message', 'UNAUTHORIZED');
     }
 
-    public function reviewCoordinatorAssignableRolesProvider()
+    public static function reviewCoordinatorAssignableRolesProvider()
     {
         return [
             'review_coordinators' => ['review_coordinators', false],
@@ -572,7 +572,7 @@ class SubmissionTest extends ApiTestCase
     }
 
     /**
-     * @dataProvider allSubmissionRoles
+     * @dataProvider submissionRolesProvider
      * @return void
      */
     public function testReviewersCannotAssignRoles($role)
@@ -594,7 +594,7 @@ class SubmissionTest extends ApiTestCase
     }
 
     /**
-     * @dataProvider allSubmissionRoles
+     * @dataProvider submissionRolesProvider
      * @param string $role
      * @return void
      */
@@ -797,7 +797,7 @@ class SubmissionTest extends ApiTestCase
     /**
      * @return array
      */
-    public function provideAllSubmissionStates(): array
+    public static function submissionStatesProvider(): array
     {
         return [
             'Initially Submitted' => [
@@ -840,7 +840,7 @@ class SubmissionTest extends ApiTestCase
     }
 
     /**
-     * @dataProvider provideAllSubmissionStates
+     * @dataProvider submissionStatesProvider
      * @return void
      */
     public function testApplicationAdminCanUpdateSubmissionStatus(string $status)
@@ -851,7 +851,7 @@ class SubmissionTest extends ApiTestCase
     }
 
     /**
-     * @dataProvider provideAllSubmissionStates
+     * @dataProvider submissionStatesProvider
      * @return void
      */
     public function testPublicationAdminCanUpdateSubmissionStatus(string $status)
@@ -869,7 +869,7 @@ class SubmissionTest extends ApiTestCase
     }
 
     /**
-     * @dataProvider provideAllSubmissionStates
+     * @dataProvider submissionStatesProvider
      * @return void
      */
     public function testEditorCanUpdateSubmissionStatus(string $status)
@@ -887,7 +887,7 @@ class SubmissionTest extends ApiTestCase
     }
 
     /**
-     * @dataProvider provideAllSubmissionStates
+     * @dataProvider submissionStatesProvider
      * @return void
      */
     public function testReviewCoordinatorCanUpdateSubmissionStatus(string $status)
@@ -904,7 +904,7 @@ class SubmissionTest extends ApiTestCase
     }
 
     /**
-     * @dataProvider provideAllSubmissionStates
+     * @dataProvider submissionStatesProvider
      * @return void
      */
     public function testReviewerCannotUpdateSubmissionStatus(string $status)
@@ -921,7 +921,7 @@ class SubmissionTest extends ApiTestCase
     }
 
     /**
-     * @dataProvider provideAllSubmissionStates
+     * @dataProvider submissionStatesProvider
      * @return void
      */
     public function testSubmitterCanUpdateSubmissionStatusForDraftSubmissions(string $status)
@@ -939,7 +939,7 @@ class SubmissionTest extends ApiTestCase
     }
 
     /**
-     * @dataProvider provideAllSubmissionStates
+     * @dataProvider submissionStatesProvider
      * @return void
      */
     public function testSubmitterCannotUpdateSubmissionStatusForInitiallySubmittedSubmissions(string $status)
@@ -962,7 +962,7 @@ class SubmissionTest extends ApiTestCase
     /**
      * @return array
      */
-    public function provideTitleEditData(): array
+    public static function titleEditDataProvider(): array
     {
         return [
             'Empty Title' => [
@@ -1074,7 +1074,7 @@ class SubmissionTest extends ApiTestCase
     }
 
     /**
-     * @dataProvider provideTitleEditData
+     * @dataProvider titleEditDataProvider
      * @return void
      */
     public function testSubmissionTitleUpdateByRole(string $role, string $title, bool $passes, ?string $message = null)
