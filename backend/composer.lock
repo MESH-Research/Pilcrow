@@ -3387,16 +3387,16 @@
         },
         {
             "name": "nuwave/lighthouse",
-            "version": "v6.17.0",
+            "version": "v6.22.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nuwave/lighthouse.git",
-                "reference": "00d80dd73b419e9e89fd85675bb1177fe7ee8357"
+                "reference": "99b6fe5e137c34cd0c4e07b4cf057843062dd088"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nuwave/lighthouse/zipball/00d80dd73b419e9e89fd85675bb1177fe7ee8357",
-                "reference": "00d80dd73b419e9e89fd85675bb1177fe7ee8357",
+                "url": "https://api.github.com/repos/nuwave/lighthouse/zipball/99b6fe5e137c34cd0c4e07b4cf057843062dd088",
+                "reference": "99b6fe5e137c34cd0c4e07b4cf057843062dd088",
                 "shasum": ""
             },
             "require": {
@@ -3425,6 +3425,7 @@
                 "laravel/framework": "^9 || ^10",
                 "laravel/legacy-factories": "^1.1.1",
                 "laravel/lumen-framework": "^9 || ^10 || dev-master",
+                "laravel/pennant": "^1",
                 "laravel/scout": "^8 || ^9 || ^10",
                 "mattiasgeniar/phpunit-query-count-assertions": "^1.1",
                 "mll-lab/graphql-php-scalars": "^6",
@@ -3446,6 +3447,7 @@
             },
             "suggest": {
                 "bensampo/laravel-enum": "Convenient enum definitions that can easily be registered in your Schema",
+                "laravel/pennant": "Required for the @feature directive",
                 "laravel/scout": "Required for the @search directive",
                 "mll-lab/graphql-php-scalars": "Useful scalar types, required for @whereConditions",
                 "mll-lab/laravel-graphiql": "A graphical interactive in-browser GraphQL IDE - integrated with Laravel",
@@ -3513,7 +3515,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2023-08-29T08:12:53+00:00"
+            "time": "2023-10-06T13:05:06+00:00"
         },
         {
             "name": "olssonm/l5-zxcvbn",
@@ -7951,16 +7953,16 @@
         },
         {
             "name": "webonyx/graphql-php",
-            "version": "v15.6.3",
+            "version": "v15.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webonyx/graphql-php.git",
-                "reference": "3f045a4626d179ea6462e1a11744619860b55eb8"
+                "reference": "44ff70977ee020c0b24bfdfaf947be56943de505"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webonyx/graphql-php/zipball/3f045a4626d179ea6462e1a11744619860b55eb8",
-                "reference": "3f045a4626d179ea6462e1a11744619860b55eb8",
+                "url": "https://api.github.com/repos/webonyx/graphql-php/zipball/44ff70977ee020c0b24bfdfaf947be56943de505",
+                "reference": "44ff70977ee020c0b24bfdfaf947be56943de505",
                 "shasum": ""
             },
             "require": {
@@ -7973,11 +7975,12 @@
                 "amphp/http-server": "^2.1",
                 "dms/phpunit-arraysubset-asserts": "dev-master",
                 "ergebnis/composer-normalize": "^2.28",
+                "friendsofphp/php-cs-fixer": "3.30.0",
                 "mll-lab/php-cs-fixer-config": "^5",
                 "nyholm/psr7": "^1.5",
                 "phpbench/phpbench": "^1.2",
                 "phpstan/extension-installer": "^1.1",
-                "phpstan/phpstan": "1.10.32",
+                "phpstan/phpstan": "1.10.37",
                 "phpstan/phpstan-phpunit": "1.3.14",
                 "phpstan/phpstan-strict-rules": "1.5.1",
                 "phpunit/phpunit": "^9.5 || ^10",
@@ -8012,7 +8015,7 @@
             ],
             "support": {
                 "issues": "https://github.com/webonyx/graphql-php/issues",
-                "source": "https://github.com/webonyx/graphql-php/tree/v15.6.3"
+                "source": "https://github.com/webonyx/graphql-php/tree/v15.7.0"
             },
             "funding": [
                 {
@@ -8020,7 +8023,7 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2023-09-01T08:13:33+00:00"
+            "time": "2023-10-04T09:10:34+00:00"
         }
     ],
     "packages-dev": [
