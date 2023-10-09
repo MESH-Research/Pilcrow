@@ -24,15 +24,16 @@ export const social_regex = {
   },
 }
 
-// const regex_for_websites = new RegExp(
-//   "(([\\w]+:)?\\/\\/)?(([\\d\\w]|%[a-fA-F\\d]{2,2})+(:([\\d\\w]|%[a-fA-f\\d]{2,2})+)?@)?([\\d\\w][-\\d\\w]+[\\d\\w]?\\.)+[\\w]{2,4}(:[\\d]+)?(\\/([-+_~.\\d\\w]|%[a-fA-f\\d]{2,2})*)*(\\?(&?([-+_~.\\d\\w]|%[a-fA-f\\d]{2,2})=?)*)?(#([-+_~.\\d\\w]|%[a-fA-f\\d]{2,2})*)?",
-// )
-
-const isValidUrl = (value) => validator.isURL(value)
+const isValidUrl = (value) => {
+  if (value === "") {
+    return true
+  }
+  return validator.isURL(value)
+}
 
 export const website_rules = {
   maxLength: maxLength(512),
-  valid: helpers.unwrap(isValidUrl)
+  valid: helpers.unwrap(isValidUrl),
 }
 
 export const keyword_rules = {
@@ -40,9 +41,7 @@ export const keyword_rules = {
 }
 
 const validWebsites = (value) =>
-  Array.isArray(value)
-    ? value.every((v) => validator.isURL(v))
-    : true
+  Array.isArray(value) ? value.every((v) => validator.isURL(v)) : true
 
 export const rules = {
   username: {
