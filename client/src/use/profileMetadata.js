@@ -25,9 +25,6 @@ export const social_regex = {
 }
 
 const isValidUrl = (value) => {
-  if (value === "") {
-    return true
-  }
   return validator.isURL(value)
 }
 

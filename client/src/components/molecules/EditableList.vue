@@ -110,7 +110,7 @@
     <q-input
       v-model="v$.addItemValue.$model"
       :label="$t('lists.new', [$t(`${t}.label`)])"
-      :error="v$.addItemValue.$error"
+      :error="(!v$.addItemValue.$model) ? false : v$.addItemValue.$error"
       outlined
       data-cy="input_field"
       @keydown.enter.prevent="addItem"
