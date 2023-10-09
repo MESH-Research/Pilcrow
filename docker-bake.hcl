@@ -46,11 +46,13 @@ target "web-ci" {
 
 target "fpm-release" {
   inherits = ["fpm", "_release"]
+  output = ["type=image,push=true,annotation.org.opencontainers.image.description=Pilcrow FPM Container Image version: ${{ env.VERSION }}@${{env.VERSIONDATE }} (${{ env.VERSION_URL }})"]
 }
 
 target "web-release" {
   inherits = ["web", "_release"]
   platforms = ["linux/amd64", "linux/arm64"]
+  output = ["type=image,push=true,annotation.org.opencontainers.image.description=Pilcrow WEB Container Image version: ${{ env.VERSION }}@${{env.VERSIONDATE }} (${{ env.VERSION_URL }})"]
 }
 
 target "_release" {
@@ -63,8 +65,8 @@ target "_defaults" {
 }
 
 target "_ci" {
-#  cache-to = ["type=gha,mode=max"]
-#  cache-from = ["type=gha"]
+  cache-to = ["type=gha,mode=max"]
+  cache-from = ["type=gha"]
 }
 
 group "default" {
