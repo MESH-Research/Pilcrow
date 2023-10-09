@@ -1,11 +1,13 @@
 FROM --platform=$BUILDPLATFORM node:16-alpine as build-stage
 WORKDIR /app
-COPY . ./
 
 ARG VERSION
 ARG VERSION_URL
 ARG VERSION_DATE
-RUN yarn && yarn build
+COPY package.json yarn.lock ./
+RUN yarn
+COPY . .
+RUN yarn build
 
 FROM nginx:latest
 
