@@ -28,7 +28,7 @@ jobs:
       - run: cd client && yarn test:unit:ci
   build-images:
     name: "Build"
-    runs-on: self-hosted
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/build-image
@@ -91,7 +91,7 @@ jobs:
         run: yarn lint:md
   publish:
     name: "Publish (master branch only)"
-    runs-on: self-hosted
+    runs-on: ubuntu-20.04
     needs: [e2e, backend-unit-test, client-unit-test]
     steps:
       - uses: actions/checkout@v3
