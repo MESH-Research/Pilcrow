@@ -17,7 +17,7 @@ class PublicationTest extends ApiTestCase
     /**
      * @return array
      */
-    public function publicationContentMutationProvider(): array
+    public static function publicationContentMutationProvider(): array
     {
         return [
             [
@@ -100,7 +100,7 @@ class PublicationTest extends ApiTestCase
     /**
      * @return array
      */
-    public function publicationContentUpdateProvider(): array
+    public static function publicationContentUpdateProvider(): array
     {
         return [
             [
@@ -251,7 +251,7 @@ class PublicationTest extends ApiTestCase
     /**
      * @return array
      */
-    public function publicationMutationProvider(): array
+    public static function publicationMutationProvider(): array
     {
         return [
             'Generic publication data' => [
@@ -282,7 +282,7 @@ class PublicationTest extends ApiTestCase
     /**
      * @return array
      */
-    public function publicationAcceptSubmissionsUpdateProvider(): array
+    public static function publicationAcceptSubmissionsUpdateProvider(): array
     {
         return [
             'Publication Administrator Can Update Setting to Accept Submissions' => [
@@ -470,7 +470,7 @@ class PublicationTest extends ApiTestCase
         );
     }
 
-    public function allPublicationRoles(): array
+    public static function publicationRolesProvider(): array
     {
         return [
             'publication_admins' => ['publication_admins'],
@@ -479,7 +479,7 @@ class PublicationTest extends ApiTestCase
     }
 
     /**
-     * @dataProvider allPublicationRoles
+     * @dataProvider publicationRolesProvider
      * @param string $role
      * @return void
      */
@@ -499,7 +499,7 @@ class PublicationTest extends ApiTestCase
     }
 
     /**
-     * @dataProvider allPublicationRoles
+     * @dataProvider publicationRolesProvider
      * @param string $role
      * @return void
      */
@@ -522,7 +522,7 @@ class PublicationTest extends ApiTestCase
     }
 
     /**
-     * @dataProvider allPublicationRoles
+     * @dataProvider publicationRolesProvider
      * @param string $role
      * @return void
      */
@@ -545,7 +545,7 @@ class PublicationTest extends ApiTestCase
     }
 
     /**
-     * @dataProvider allPublicationRoles
+     * @dataProvider publicationRolesProvider
      * @param string $role
      * @return void
      */
@@ -590,7 +590,7 @@ class PublicationTest extends ApiTestCase
             ->assertJsonPath('data.publication.effective_role', 'publication_admin');
     }
 
-    public function provideCanUpdatePublicationStyleCriteriaRoles(): array
+    public static function rolesThatCanUpdatePublicationStyleCriteriaProvider(): array
     {
         return [
             'publicationAdmin' => ['publicationAdmins', true],
@@ -599,7 +599,7 @@ class PublicationTest extends ApiTestCase
     }
 
     /**
-     * @dataProvider provideCanUpdatePublicationStyleCriteriaRoles
+     * @dataProvider rolesThatCanUpdatePublicationStyleCriteriaProvider
      * @return void
      */
     public function testCanUpdatePublicationStyleCriteria(string $role, bool $allowed)

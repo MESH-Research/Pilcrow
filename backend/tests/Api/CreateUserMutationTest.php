@@ -35,7 +35,7 @@ class CreateUserMutationTest extends ApiTestCase
     /**
      * @return array
      */
-    public function nameValidationProvider(): array
+    public static function nameValidationProvider(): array
     {
         return [
             ['', false],

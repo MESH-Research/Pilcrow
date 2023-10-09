@@ -70,7 +70,7 @@ class StyleCriteriaTest extends TestCase
      *
      * @return array
      */
-    public function adminFieldHtml()
+    public static function adminFieldHtmlProvider()
     {
         return [
             ['<b>Bold</b><i>Italic</i><u>Underline</u>','<b>Bold</b><i>Italic</i><u>Underline</u>'],
@@ -87,12 +87,12 @@ class StyleCriteriaTest extends TestCase
     }
 
     /**
-     * @dataProvider adminFieldHtml
+     * @dataProvider adminFieldHtmlProvider
      * @param string $testHtml
      * @param string $expected
      * @return void
      */
-    public function testStyleCritieraDescriptionFieldIsPurified($testHtml, $expected)
+    public function testStyleCriteriaDescriptionFieldIsPurified($testHtml, $expected)
     {
         $criteria = StyleCriteria::factory()->make([
         'description' => $testHtml,
