@@ -3,6 +3,7 @@ inputs:
     target:
         description: "package to build"
         required: false
+        default: "default"
 outputs:
     version:
         description: "Version of the package that was built"
@@ -23,10 +24,11 @@ runs:
         - uses: docker/setup-buildx-action@v3
         - name: Docker meta (FPM)
           id: docker-meta-fpm
-          uses: docker/metadata-action@v4
+          uses: docker/metadata-action@v5
           with:
+
             images: |
-              ghcr.io/${{ github.repository }}/fpm
+              ghcr.io/${{ github.repository }}/${{ inputs.target == 'default' && 'cache/'}}fpm
             tags: |
               type=ref,event=pr,enable=${{ inputs.target == 'release' }}
               type=edge,enable=${{ inputs.target == 'release' }}
@@ -36,10 +38,10 @@ runs:
             bake-target: fpm
         - name: Docker meta (WEB)
           id: docker-meta-web
-          uses: docker/metadata-action@v4
+          uses: docker/metadata-action@v5
           with:
             images: |
-              ghcr.io/${{ github.repository }}/web
+              ghcr.io/${{ github.repository }}/${{ inputs.target == 'default' && 'cache/'}}web
             tags: |
               type=ref,event=pr,enable=${{ inputs.target == 'release' }}
               type=edge,enable=${{ inputs.target == 'release' }}
