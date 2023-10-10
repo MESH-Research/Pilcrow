@@ -59,3 +59,4 @@ runs:
           id: version
           run: |
               echo "version=${{ steps.docker-meta-fpm.outputs.version }}" >> "$GITHUB_OUTPUT"
+          shell: bash
