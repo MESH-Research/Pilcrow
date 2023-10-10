@@ -50,7 +50,6 @@ runs:
         - name: Build and push
           uses: docker/bake-action@v4
           with:
-            pull: true
             targets: ${{ inputs.target }}
             files: |
               ./docker-bake.hcl
