@@ -26,27 +26,25 @@ runs:
           id: docker-meta-fpm
           uses: docker/metadata-action@v5
           with:
-
             images: |
-              ghcr.io/${{ github.repository }}/${{ inputs.target == 'default' && 'cache/'}}fpm
+              ghcr.io/${{ github.repository }}/${{ (inputs.target == 'default' && 'cache/') || ''}}fpm
             tags: |
-              type=ref,event=pr,enable=${{ inputs.target == 'release' }}
-              type=edge,enable=${{ inputs.target == 'release' }}
-              type=semver,pattern={{version}},enable=${{ inputs.target == 'release' }}
-              type=semver,pattern={{major}}.{{minor}},enable=${{ inputs.target == 'release' }}
-              type=sha
+              type=edge
+              type=semver,pattern={{version}}
+              type=semver,pattern={{major}}.{{minor}}
+              type=sha,enable=${{ inputs.target == 'default'}}
             bake-target: fpm
         - name: Docker meta (WEB)
           id: docker-meta-web
           uses: docker/metadata-action@v5
           with:
             images: |
-              ghcr.io/${{ github.repository }}/${{ inputs.target == 'default' && 'cache/'}}web
+              ghcr.io/${{ github.repository }}//${{ (inputs.target == 'default' && 'cache/') || ''}}web
             tags: |
-              type=ref,event=pr,enable=${{ inputs.target == 'release' }}
-              type=edge,enable=${{ inputs.target == 'release' }}
-              type=semver,pattern={{version}},enable=${{ inputs.target == 'release' }}
-              type=semver,pattern={{major}}.{{minor}},enable=${{ inputs.target == 'release' }}
+              type=ref,event=pr
+              type=edge
+              type=semver,pattern={{version}}
+              type=semver,pattern={{major}}.{{minor}}
               type=sha
             bake-target: web
         - name: Build and push
