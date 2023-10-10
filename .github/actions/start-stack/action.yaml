@@ -15,6 +15,6 @@ runs:
               docker compose exec -T phpfpm composer install --quiet
               docker compose exec -T phpfpm bash -c "/wait && ./artisan migrate:fresh --seed"
           env:
-            TAG: ${{ inputs.version}}
+            TAG: ${{ inputs.version }}
           shell: bash
 
