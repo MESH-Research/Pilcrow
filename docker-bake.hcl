@@ -15,77 +15,47 @@ variable "GITHUB_REF_NAME" {
 }
 
 target "fpm" {
-  inherits =  ["_defaults"]
   context = "backend"
-  tags = ["pilcrow/fpm:latest"]
   args = {
     VERSION = "${VERSION}"
     VERSION_URL = "${VERSION_URL}"
     VERSION_DATE = "${VERSION_DATE}"
   }
+  labels = {
+    "org.opencontainers.image.description" = "Pilcrow FPM Container Image version: ${ VERSION }@${VERSION_DATE } (${ VERSION_URL })"
+  }
+
 }
 
-target "fpm-ci" {
-  inherits =  ["fpm", "_ci"]
-  tags = ["ci.local/pilcrow/fpm:latest"]
-  output = ["type=docker,dest=/tmp/fpm.tar"]
-  cache-to = ["type=gha,mode=max,scope=${GITHUB_REF_NAME}-fpm"]
-  cache-from = ["type=gha,scope=${GITHUB_REF_NAME}-fpm"]
-}
 
 target "web" {
-  inherits =  ["_defaults"]
   context = "client"
-  tags = ["pilcrow/web:latest"]
   args = {
     VERSION = "${VERSION}"
     VERSION_URL = "${VERSION_URL}"
     VERSION_DATE = "${VERSION_DATE}"
   }
+  labels = {
+    "org.opencontainers.image.description" = "Pilcrow WEB Container Image version: ${ VERSION }@${VERSION_DATE } (${ VERSION_URL })"
+  }
 }
 
-target "web-ci" {
-  inherits = ["web", "_ci"]
-  tags = ["ci.local/pilcrow/web:latest"]
-  cache-to = ["type=gha,mode=max,scope=${GITHUB_REF_NAME}-web"]
-  cache-from = ["type=gha,scope=${GITHUB_REF_NAME}-web"]
-  output = ["type=docker,dest=/tmp/web.tar"]
-}
 
 target "fpm-release" {
-  inherits = ["fpm", "_release"]
-  output = ["type=image,push=true,annotation.org.opencontainers.image.description=Pilcrow FPM Container Image version: ${ VERSION }@${VERSION_DATE } (${ VERSION_URL })"]
-  cache-from = ["type=gha,scope=${GITHUB_REF_NAME}-fpm"]
+  inherits = ["fpm"]
+  output = ["type=image,push=true,annotation-index.org.opencontainers.image.description=Pilcrow FPM Container Image version: ${ VERSION }@${VERSION_DATE } (${ VERSION_URL })"]
 }
 
 target "web-release" {
-  inherits = ["web", "_release"]
+  inherits = ["web"]
   platforms = ["linux/amd64", "linux/arm64"]
-  output = ["type=image,push=true,annotation.org.opencontainers.image.description=Pilcrow WEB Container Image version: ${ VERSION }@${VERSION_DATE } (${ VERSION_URL })"]
-  cache-from = ["type=gha,scope=${GITHUB_REF_NAME}-web"]
-}
-
-target "_release" {
-  output = ["type=image,push=true"]
-}
-
-
-target "_defaults" {
-  dockerfile = "Dockerfile"
-}
-
-target "_ci" {
-  cache-to = ["type=gha,mode=max"]
-  cache-from = ["type=gha"]
+  output = ["type=image,push=true,annotation-index.org.opencontainers.image.description=Pilcrow WEB Container Image version: ${ VERSION }@${VERSION_DATE } (${ VERSION_URL })"]
 }
 
 group "default" {
   targets = ["fpm", "web"]
 }
 
-group "ci" {
-  targets = ["fpm-ci", "web-ci"]
-}
 
 group "release" {
   targets = ["fpm-release", "web-release"]

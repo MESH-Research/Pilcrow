@@ -1,14 +1,20 @@
 name: "Start Testing Stack"
+inputs:
+  version:
+    description: "The image version to use."
+    required: true
 description: "Start the default testing stack."
 runs:
     using: "composite"
     steps:
         - uses: actions/checkout@v3
-        - uses: ./.github/actions/load-image
         - run: |
               cp backend/.env.example .env
               cp docker-compose.ci.yaml docker-compose.override.yaml
               docker compose up -d --quiet-pull
               docker compose exec -T phpfpm composer install --quiet
               docker compose exec -T phpfpm bash -c "/wait && ./artisan migrate:fresh --seed"
+          env:
+            TAG: ${{ inputs.version}}
           shell: bash
+

@@ -32,8 +32,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/build-image
-        with:
-          target: ci
   backend-unit-test:
     name: Backend / Unit Test
     needs: [build-images]
@@ -41,6 +39,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/start-stack
+        with:
+          version: ${{ needs.build-images.outputs.version }}
       - run: docker compose exec -T phpfpm ./artisan test
       - run: docker compose down
   e2e:
@@ -48,6 +48,8 @@ jobs:
     needs: [build-images]
     uses: ./.github/workflows/do-test-e2e.yml
     secrets: inherit
+    with:
+      version: ${{ needs.build-images.outputs.version }}
   lint-php:
     name: PHP Lint
     runs-on: ubuntu-20.04
