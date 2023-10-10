@@ -44,6 +44,9 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
+      - run: |
+          echo "REQUESTING VERSION: ${{ needs.build-images.outputs.version}}"
+        shell: bash
       - uses: ./.github/actions/start-stack
         with:
           version: ${{ needs.build-images.outputs.version }}
