@@ -9,6 +9,7 @@ runs:
     steps:
         - uses: actions/checkout@v3
         - run: |
+              echo "STARTING STACK VERSION: $TAG"
               cp backend/.env.example .env
               cp docker-compose.ci.yaml docker-compose.override.yaml
               docker compose up -d --quiet-pull
