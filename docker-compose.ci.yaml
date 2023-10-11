@@ -1,6 +1,5 @@
 version: '3'
 services:
-  client:
   phpfpm:
     depends_on:
       - mysql
