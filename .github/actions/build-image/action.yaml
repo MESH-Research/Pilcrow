@@ -39,13 +39,12 @@ runs:
           uses: docker/metadata-action@v5
           with:
             images: |
-              ghcr.io/${{ github.repository }}//${{ (inputs.target == 'default' && 'cache/') || ''}}web
+              ghcr.io/${{ github.repository }}/${{ (inputs.target == 'default' && 'cache/') || ''}}web
             tags: |
-              type=ref,event=pr
               type=edge
               type=semver,pattern={{version}}
               type=semver,pattern={{major}}.{{minor}}
-              type=sha
+              type=sha,enable=${{ inputs.target == 'default'}}
             bake-target: web
         - name: Build and push
           uses: docker/bake-action@v4
