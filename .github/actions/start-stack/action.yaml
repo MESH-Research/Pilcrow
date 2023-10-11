@@ -10,7 +10,7 @@ runs:
         - uses: actions/checkout@v3
         - run: |
               echo "STARTING STACK VERSION: $TAG"
-              cp .env.example .env
+              cp ci.env .env
               cp docker-compose.ci.yaml docker-compose.override.yaml
               docker compose up -d --quiet-pull
               docker compose exec -T phpfpm composer install --quiet
