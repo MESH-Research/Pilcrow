@@ -21,6 +21,8 @@ services:
       - mysql
 
   mysql:
+    image: mysql:5.7.42
+    tty: true
     environment:
       MYSQL_DATABASE: pilcrow
       MYSQL_USER: pilcrow
