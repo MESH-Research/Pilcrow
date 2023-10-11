@@ -39,6 +39,7 @@ runs:
             bake-target: fpm
         - run: |
             echo "tags=$( wc -l <<< \"${{ steps.docker-meta-fpm.outputs.tags }}\" )"
+          shell: bash
         - name: Docker meta (WEB)
           id: docker-meta-web
           uses: docker/metadata-action@v5
