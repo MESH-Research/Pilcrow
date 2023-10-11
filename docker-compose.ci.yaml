@@ -1,12 +1,9 @@
 version: '3'
 services:
   client:
-    ports:
-      - 8888:8888
   phpfpm:
     depends_on:
       - mysql
-
   mysql:
     image: mysql:5.7.42
     tty: true
