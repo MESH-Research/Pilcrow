@@ -31,6 +31,7 @@ jobs:
     runs-on: ubuntu-20.04
     outputs:
       version: ${{ steps.build-image.outputs.version }}
+      tags: ${{ steps.build-image.outputs.tags }}
     steps:
       - uses: actions/checkout@v3
       - name: Login to Github Packages
@@ -106,7 +107,8 @@ jobs:
   publish:
     name: "Publish (master branch only)"
     runs-on: ubuntu-20.04
-    needs: [e2e, backend-unit-test, client-unit-test]
+    needs: [build-images, e2e, backend-unit-test, client-unit-test]
+    if: needs.build-images.outputs.tags > 1
     steps:
       - uses: actions/checkout@v3
       - name: Login to Github Packages

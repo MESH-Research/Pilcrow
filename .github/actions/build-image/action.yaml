@@ -10,7 +10,7 @@ outputs:
         value: ${{ steps.docker-meta-fpm.outputs.version }}
     tags:
         description: "Number of tags that would be pushed"
-        value: ${{ steps.docker-meta-fpm.outputs.tags }}
+        value: ${{ steps.count-tags.outputs.tags }}
 runs:
     using: "composite"
     steps:
@@ -38,8 +38,9 @@ runs:
               type=sha,enable=${{ inputs.target == 'default'}}
             bake-target: fpm
         - run: |
-            echo "tags=$( wc -l <<< \"${{ steps.docker-meta-fpm.outputs.tags }}\" )"
+            echo "tags=$( wc -l <<< \"${{ steps.docker-meta-fpm.outputs.tags }}\" )" >> "$GITHUB_OUTPUT"
           shell: bash
+          id: count-tags
         - name: Docker meta (WEB)
           id: docker-meta-web
           uses: docker/metadata-action@v5
