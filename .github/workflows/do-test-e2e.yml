@@ -1,6 +1,11 @@
 name: "Test: E2E"
 on:
   workflow_call:
+    inputs:
+      version:
+        description: "Version of the stack to test"
+        required: true
+        type: string
 jobs:
   cypress:
     runs-on: ubuntu-20.04
@@ -20,6 +25,8 @@ jobs:
         with:
           node-version: "16"
       - uses: ./.github/actions/start-stack
+        with:
+          version: ${{ inputs.version }}
       - run: cd client && yarn install
       - name: Cypress Run
         uses: cypress-io/github-action@v3
