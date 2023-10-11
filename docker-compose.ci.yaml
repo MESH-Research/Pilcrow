@@ -17,6 +17,8 @@ services:
       MAIL_MAILER: log
       APP_URL: http://localhost:8888
       APP_KEY: base64:J6SHqWBtKA18a8eCxIWziMSPuJqJRPuqy0GdX75P+rM=
+  depends_on:
+    - mysql
 
   mysql:
     environment:

@@ -66,6 +66,9 @@ jobs:
   lint-php:
     name: PHP Lint
     runs-on: ubuntu-20.04
+    defaults:
+      run:
+        working-directory: ./backend
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
@@ -76,6 +79,9 @@ jobs:
   lint-js:
     name: JS Lint
     runs-on: ubuntu-20.04
+    defaults:
+      run:
+        working-directory: ./client
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
@@ -83,12 +89,11 @@ jobs:
         with:
           node-version: 16
           cache: yarn
-          cache-dependency-path: yarn.lock
+          cache-dependency-path: client/yarn.lock
       - name: Install dependencies
-        run: |
-          cd client && yarn install
+        run: yarn
       - name: Check JS
-        run: cd client && yarn lint
+        run: yarn lint
   lint-md:
     name: MD Lint
     runs-on: ubuntu-20.04
