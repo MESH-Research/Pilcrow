@@ -241,7 +241,6 @@ function updateInput(validator, newValue) {
 
 function save() {
   v$.value.$touch()
-  console.log('save', v$.value.$errors)
   if (v$.value.$invalid) {
     errorMessage.value = "Oops, check form above for errors"
   } else {

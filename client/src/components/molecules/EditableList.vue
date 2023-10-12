@@ -143,7 +143,7 @@
 <script setup>
 import useVuelidate from "@vuelidate/core"
 import ErrorFieldRenderer from "src/components/molecules/ErrorFieldRenderer.vue"
-import { reactive, ref, watch } from "vue"
+import { reactive, ref } from "vue"
 import Draggable from "vuedraggable"
 import CollapseToolbar from "./CollapseToolbar.vue"
 
@@ -214,19 +214,12 @@ const vRules = {
   },
 }
 const v$ = useVuelidate(vRules, form)
-watch(
-  () => props.modelValue,
-  () => {
-  console.log('watch', v$.value)
-  }
-)
 
 function addItem() {
-  console.log(form, v$.value)
   if (!form.addItemValue.length) {
     return
   }
-  if (v$.value.addItemValue.$invalid && form.editItemValue.length) {
+  if (v$.value.addItemValue.$invalid) {
     return false
   }
 

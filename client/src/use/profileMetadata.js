@@ -24,13 +24,13 @@ export const social_regex = {
   },
 }
 
-const isValidUrl = (value) => {
-    return validator.isURL(value)
+const checkUrl = (value) => {
+  return !value ? validator.isURL(value) : true
 }
 
 export const website_rules = {
   maxLength: maxLength(512),
-  valid: isValidUrl,
+  valid: helpers.unwrap(checkUrl),
 }
 
 export const keyword_rules = {
@@ -38,8 +38,7 @@ export const keyword_rules = {
 }
 
 const validWebsites = (value) => {
-  console.log('validWebsites', value)
-  return Array.isArray(value) ? value.every((v) => isValidUrl(v)) : true
+  return Array.isArray(value) ? value.every((v) => checkUrl(v)) : true
 }
 
 export const rules = {
