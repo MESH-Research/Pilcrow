@@ -25,7 +25,8 @@ export const social_regex = {
 }
 
 const checkUrl = (value) => {
-  return !value ? validator.isURL(value) : true
+  console.log('checkUrl', value, validator.isURL(value))
+  return !value === "" ? validator.isURL(value) : true
 }
 
 export const website_rules = {
