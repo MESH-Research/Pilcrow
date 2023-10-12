@@ -25,13 +25,18 @@ export const social_regex = {
 }
 
 const checkUrl = (value) => {
-  console.log('checkUrl', value, validator.isURL(value))
-  return !value === "" ? validator.isURL(value) : true
+  if (value === "") {
+    // After the user adds a website, this code prevents Vuelidate from making
+    // the subsequent empty website input invalidate the form, causing an
+    // error message to mistakenly appear, and prevents submitting the form.
+    return true
+  }
+  return validator.isURL(value)
 }
 
 export const website_rules = {
   maxLength: maxLength(512),
-  valid: helpers.unwrap(checkUrl),
+  valid: checkUrl,
 }
 
 export const keyword_rules = {
