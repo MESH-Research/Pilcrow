@@ -48,7 +48,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
-      - name: Buid Info
+      - name: Build Info
         run: |
           echo "VERSION: ${{ needs.build-images.outputs.version}}"
           echo "TAGS: ${{ needs.build-images.outputs.tags}}"

@@ -40,7 +40,7 @@ runs:
         - run: |
             echo "tags=$( wc -l <<< "$DOCKER_METADATA_OUTPUT_TAGS" )" >> "$GITHUB_OUTPUT"
           shell: bash
-          nane: Count Tags
+          name: Count Tags
           id: count-tags
         - name: Docker meta (WEB)
           id: docker-meta-web
