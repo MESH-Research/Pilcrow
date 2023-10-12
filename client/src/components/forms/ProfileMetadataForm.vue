@@ -1,6 +1,7 @@
 <template>
   <q-form data-cy="vueAccount" @submit="save()">
     <v-q-wrap t-prefix="account.profile.fields" @vqupdate="updateInput">
+      <div style="height:0.001rem; overflow:hidden;">
       <form-section :first-section="true">
         <template #header>
           {{ $t("account.profile.section_profile") }}
@@ -136,7 +137,7 @@
           </template>
         </v-q-input>
       </form-section>
-
+</div>
       <form-section>
         <template #header>
           {{ $t("account.profile.section_websites") }}
@@ -175,7 +176,6 @@
 </template>
 
 <script setup>
-//Import components
 import EditableList from "src/components/molecules/EditableList.vue"
 import VQInput from "src/components/atoms/VQInput.vue"
 import VQWrap from "src/components/atoms/VQWrap.vue"
@@ -241,7 +241,7 @@ function updateInput(validator, newValue) {
 
 function save() {
   v$.value.$touch()
-
+  console.log('save', v$.value.$errors)
   if (v$.value.$invalid) {
     errorMessage.value = "Oops, check form above for errors"
   } else {

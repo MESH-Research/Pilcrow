@@ -25,20 +25,22 @@ export const social_regex = {
 }
 
 const isValidUrl = (value) => {
-  return validator.isURL(value)
+    return validator.isURL(value)
 }
 
 export const website_rules = {
   maxLength: maxLength(512),
-  valid: helpers.unwrap(isValidUrl),
+  valid: isValidUrl,
 }
 
 export const keyword_rules = {
   maxLength: maxLength(128),
 }
 
-const validWebsites = (value) =>
-  Array.isArray(value) ? value.every((v) => validator.isURL(v)) : true
+const validWebsites = (value) => {
+  console.log('validWebsites', value)
+  return Array.isArray(value) ? value.every((v) => isValidUrl(v)) : true
+}
 
 export const rules = {
   username: {

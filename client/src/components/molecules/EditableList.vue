@@ -110,7 +110,7 @@
     <q-input
       v-model="v$.addItemValue.$model"
       :label="$t('lists.new', [$t(`${t}.label`)])"
-      :error="(!v$.addItemValue.$model) ? false : v$.addItemValue.$error"
+      :error="v$.addItemValue.$error"
       outlined
       data-cy="input_field"
       @keydown.enter.prevent="addItem"
@@ -143,7 +143,7 @@
 <script setup>
 import useVuelidate from "@vuelidate/core"
 import ErrorFieldRenderer from "src/components/molecules/ErrorFieldRenderer.vue"
-import { reactive, ref } from "vue"
+import { reactive, ref, watch } from "vue"
 import Draggable from "vuedraggable"
 import CollapseToolbar from "./CollapseToolbar.vue"
 
@@ -214,12 +214,19 @@ const vRules = {
   },
 }
 const v$ = useVuelidate(vRules, form)
+watch(
+  () => props.modelValue,
+  () => {
+  console.log('watch', v$.value)
+  }
+)
 
 function addItem() {
+  console.log(form, v$.value)
   if (!form.addItemValue.length) {
     return
   }
-  if (v$.value.addItemValue.$invalid) {
+  if (v$.value.addItemValue.$invalid && form.editItemValue.length) {
     return false
   }
 
