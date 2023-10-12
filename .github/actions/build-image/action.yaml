@@ -38,8 +38,9 @@ runs:
               type=sha,enable=${{ inputs.target == 'default'}}
             bake-target: fpm
         - run: |
-            echo "tags=$( wc -l <<< \"${{ steps.docker-meta-fpm.outputs.tags }}\" )" >> "$GITHUB_OUTPUT"
+            echo "tags=$( wc -l <<< "$DOCKER_METADATA_OUTPUT_TAGS" )" >> "$GITHUB_OUTPUT"
           shell: bash
+          name: Count Tags
           id: count-tags
         - name: Docker meta (WEB)
           id: docker-meta-web
