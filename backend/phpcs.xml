@@ -18,13 +18,13 @@
         </properties>
     </rule>
 
-    <file>backend/app</file>
-    <file>backend/config</file>
-    <file>backend/public</file>
-    <file>backend/resources</file>
-    <file>backend/routes</file>
-    <file>backend/tests</file>
-    <file>backend/database</file>
+    <file>app</file>
+    <file>config</file>
+    <file>public</file>
+    <file>resources</file>
+    <file>routes</file>
+    <file>tests</file>
+    <file>database</file>
 
     <exclude-pattern>*/cache/*</exclude-pattern>
     <exclude-pattern>*/*.js</exclude-pattern>

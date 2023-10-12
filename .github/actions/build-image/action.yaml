@@ -3,6 +3,14 @@ inputs:
     target:
         description: "package to build"
         required: false
+        default: "default"
+outputs:
+    version:
+        description: "Version of the package that was built"
+        value: ${{ steps.docker-meta-fpm.outputs.version }}
+    tags:
+        description: "Number of tags that would be pushed"
+        value: ${{ steps.count-tags.outputs.tags }}
 runs:
     using: "composite"
     steps:
@@ -14,54 +22,43 @@ runs:
           run: |
               git fetch --prune --unshallow
               echo "VERSION=$(git describe --tags)" >> ${GITHUB_ENV}
-              echo "VERSION_URL=https://github.com/MESH-Research/CCR/commits/${GITHUB_SHA}" >> ${GITHUB_ENV}
+              echo "VERSION_URL=https://github.com/MESH-Research/Pilcrow/commits/${GITHUB_SHA}" >> ${GITHUB_ENV}
               echo "VERSION_DATE=$(git show -s --format=%cI ${GITHUB_SHA})" >> ${GITHUB_ENV}
         - uses: docker/setup-buildx-action@v3
         - name: Docker meta (FPM)
           id: docker-meta-fpm
-          uses: docker/metadata-action@v4
+          uses: docker/metadata-action@v5
           with:
             images: |
-              ghcr.io/${{ github.repository_owner }}/pilcrow/fpm
+              ghcr.io/${{ github.repository }}/${{ (inputs.target == 'default' && 'cache/') || ''}}fpm
             tags: |
-              type=ref,event=pr
+              type=edge
               type=semver,pattern={{version}}
               type=semver,pattern={{major}}.{{minor}}
-              type=sha,enable=${{ github.event_name == 'push' }}
-            labels: |
-              org.opencontainers.image.description=Pilcrow FPM Container Image version: ${{ env.VERSION }}@${{env.VERSIONDATE }} (${{ env.VERSION_URL }})
+              type=sha,enable=${{ inputs.target == 'default'}}
             bake-target: fpm
+        - run: |
+            echo "tags=$( wc -l <<< \"${{ steps.docker-meta-fpm.outputs.tags }}\" )" >> "$GITHUB_OUTPUT"
+          shell: bash
+          id: count-tags
         - name: Docker meta (WEB)
           id: docker-meta-web
-          uses: docker/metadata-action@v4
+          uses: docker/metadata-action@v5
           with:
             images: |
-              ghcr.io/${{ github.repository_owner }}/pilcrow/web
+              ghcr.io/${{ github.repository }}/${{ (inputs.target == 'default' && 'cache/') || ''}}web
             tags: |
-              type=ref,event=pr
+              type=edge
               type=semver,pattern={{version}}
               type=semver,pattern={{major}}.{{minor}}
-              type=sha,enable=${{ github.event_name == 'push' }}
+              type=sha,enable=${{ inputs.target == 'default'}}
             bake-target: web
-            labels: |
-              org.opencontainers.image.description=Pilcrow WEB (Proxy/Nginx) Container Image version: ${{ env.VERSION }}@${{env.VERSIONDATE }} (${{ env.VERSION_URL }})
         - name: Build and push
           uses: docker/bake-action@v4
+          if: ${{ steps.docker-meta-fpm.outputs.tags != ''}}
           with:
-            pull: true
             targets: ${{ inputs.target }}
             files: |
               ./docker-bake.hcl
               ${{ steps.docker-meta-fpm.outputs.bake-file }}
               ${{ steps.docker-meta-web.outputs.bake-file }}
-        # - run: |
-        #     gzip -c /tmp/web.tar > /tmp/web.tar.gz
-        #     gzip -c /tmp/fpm.tar > /tmp/fpm.tar.gz
-        #   shell: bash
-        #   if: ${{ inputs.target == 'ci' }}
-        - name: Upload artifact
-          if:  ${{ inputs.target == 'ci' }}
-          uses: actions/upload-artifact@v3
-          with:
-              name: Docker Images
-              path: /tmp/*.tar
