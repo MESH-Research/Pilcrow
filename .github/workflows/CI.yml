@@ -154,7 +154,7 @@ jobs:
             -f ref=${{ github.sha }} \
             -f environment="{}" \
             -F transient_environment=true \
-            -F auto_merge=false \
+            -F auto_merge=true \
             -F production_environment=false \
             -f payload="{\"version\": \"${{ needs.build-images.outputs.version }}\"}"'
         shell: bash
