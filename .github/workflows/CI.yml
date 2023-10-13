@@ -144,10 +144,9 @@ jobs:
       - run: sudo apt install -y jq parallel
         shell: bash
       - run: |
-          ENVIRONS=$(gh api /repos/{owner}/{repo}/environments | jq -r ' .environments | .[] | .name ' |  parallel 'gh api /repositories/215870675/environments/{}/variables/TAG | jq "{environment: "\"{}\"", tag: .value}"' | jq  -s) ; echo $ENVIRONS ;
-          JSTAG=$(echo $TAGS | jq -R '.' | jq -s -c) ; echo $JSTAG ;
-          MATCHED=$(echo $ENVS | jq -r --argjson tags ${JSTAG} '.[] | .tag as $tag | select([$tags[] | test($tag)] | any) | .environment' ) ; echo $MATCHED ;
-          echo "MATCHED=${MATCHED}" >> $GITHUB_ENV
+          ENVIRONS=$(gh api /repos/{owner}/{repo}/environments | jq -r ' .environments | .[] | .name ' |  parallel 'gh api /repositories/215870675/environments/{}/variables/TAG | jq "{environment: "\"{}\"", tag: .value}"' | jq  -s) ; echo $ENVIRONS
+          JSTAG=$(echo $TAGS | jq -R '.' | jq -s -c) ; echo $JSTAG
+          echo MATCHED=$(echo $ENVIRONS | jq -r --argjson tags ${JSTAG} '.[] | .tag as $tag | select([$tags[] | test($tag)] | any) | .environment' ) >> $GITHUB_ENV
         shell: bash
       - run: |
           echo $MATCHED | parallel \
