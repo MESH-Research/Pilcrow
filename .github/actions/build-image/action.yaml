@@ -8,9 +8,12 @@ outputs:
     version:
         description: "Version of the package that was built"
         value: ${{ steps.docker-meta-fpm.outputs.version }}
-    tags:
+    tag_count:
         description: "Number of tags that would be pushed"
         value: ${{ steps.count-tags.outputs.tags }}
+    tags:
+        description: "List of tags"
+        value: ${{ steps.docker-meta-fpm.outputs.tags}}
 runs:
     using: "composite"
     steps:
