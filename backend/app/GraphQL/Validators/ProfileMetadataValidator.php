@@ -36,7 +36,7 @@ class ProfileMetadataValidator extends Validator
             ],
             'websites.*' => [
                 'max:512',
-                new ValidUrl
+                new ValidUrl(),
             ],
         ];
     }
