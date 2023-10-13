@@ -156,5 +156,5 @@ jobs:
             -F transient_environment=true \
             -F auto_merge=false \
             -F production_environment=false \
-            -f payload="{\"version\": \"${{ needs.build-images.outputs.version }}\"}"''
+            -f payload="{\"version\": \"${{ needs.build-images.outputs.version }}\"}"'
         shell: bash
