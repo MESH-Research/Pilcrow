@@ -75,12 +75,6 @@ class SubmissionTest extends ApiTestCase
                         ->etc())));
     }
 
-    public function testUrl(): void {
-        $value = 'http://google.com';
-        $r = filter_var($value, FILTER_VALIDATE_URL);
-        print_r($r);
-    }
-
     /**
      * @dataProvider submissionRolesProvider
      * @return void
