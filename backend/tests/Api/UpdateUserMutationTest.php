@@ -16,85 +16,90 @@ class UpdateUserMutationTest extends ApiTestCase
      */
     public static function urlProvider()
     {
+        $invalid = 'The URL is invalid';
         return [
-            'null' => [null,'/Syntax Error/'],
-            'empty' => [''],
-            'msu' => ['msu',false],
-            'msu.' => ['msu.',false],
-            'msu.edu' => ['msu.edu',true],
-            'msu.edu/' => ['msu.edu/',true],
-            'www' => ['www',false],
-            'www.' => ['www.',false],
-            'www.msu' => ['www.msu',false],
-            'www.msu.' => ['www.msu.',false],
-            'www.msu.e' => ['www.msu.e',false],
-            'www.msu.ed' => ['www.msu.ed',false],
-            'www.msu.edu' => ['www.msu.edu',true],
-            'www.msu.edu/' => ['www.msu.edu/',true],
-            'http' => ['http',false],
-            'http:' => ['http:',false],
-            'http:/' => ['http:/',false],
-            'http://' => ['http://',false],
-            'http://msu' => ['http://msu',true],
-            'http://msu.' => ['http://msu.',true],
-            'http://msu.e' => ['http://msu.e',false],
-            'http://msu.ed' => ['http://msu.ed',false],
-            'http://msu.edu' => ['http://msu.edu',true],
-            'http://msu.edu/' => ['http://msu.edu/',true],
-            'go-gle.co' => ['go-gle.co',true],
-            'console.log("hi")' => ['console.log("hi")',false],
-            "<script>alert('hi')</script>google.com/" => ["<script>alert('hi')</script>google.com/",false],
-            "<script>alert('hi')</script>google.com/about" => ["<script>alert('hi')</script>google.com/about",false],
-            "<script>alert('hi')</script>google.com" => ["<script>alert('hi')</script>google.com",false],
-            "<script>alert('hi')</script>http://google.com" => ["<script>alert('hi')</script>http://google.com",false],
-            "<script>alert('hi')</script>http://google.com/" => ["<script>alert('hi')</script>http://google.com/",false],
-            "<script>alert('hi')</script>http://google.com/about" => ["<script>alert('hi')</script>http://google.com/about",false],
-            "<script>alert('hi')</script>https://google.com" => ["<script>alert('hi')</script>https://google.com",false],
-            "<script>alert('hi')</script>https://google.com/" => ["<script>alert('hi')</script>https://google.com/",false],
-            "<script>alert('hi')</script>https://google.com/about" => ["<script>alert('hi')</script>https://google.com/about",false],
-            "javascript:alert('hi')" => ["javascript:alert('hi')",false],
-            'google.<script>alert("Hello World")</script>' => ['google.<script>alert("Hello World")</script>',false],
-            'eval()' => ['eval()',false],
-            'Function()' => ['Function()',false],
-            'setTimeout()' => ['setTimeout()',false],
-            'setInterval()' => ['setInterval()',false],
-            'setImmediate()' => ['setImmediate()',false],
-            'execCommand()' => ['execCommand()',false],
-            'execScript()' => ['execScript()',false],
-            'msSetImmediate()' => ['msSetImmediate()',false],
-            'range.createContextualFragment()' => ['range.createContextualFragment()',false],
-            'crypto.generateCRMFRequest()' => ['crypto.generateCRMFRequest()',false],
+            'null' => [null,'The URL must not be null.'],
+            'empty' => ['','The URL must not be empty.'],
+            'msu' => ['msu',$invalid],
+            'msu.' => ['msu.',$invalid],
+            'msu.edu' => ['msu.edu'],
+            'msu.edu/' => ['msu.edu/'],
+            'www' => ['www',$invalid],
+            'www.' => ['www.',$invalid],
+            'www.msu' => ['www.msu',$invalid],
+            'www.msu.' => ['www.msu.',$invalid],
+            'www.msu.e' => ['www.msu.e',$invalid],
+            'www.msu.ed' => ['www.msu.ed',$invalid],
+            'www.msu.edu' => ['www.msu.edu'],
+            'www.msu.edu/' => ['www.msu.edu/'],
+            'http' => ['http',$invalid],
+            'http:' => ['http:',$invalid],
+            'http:/' => ['http:/',$invalid],
+            'http://' => ['http://',$invalid],
+            'http://msu' => ['http://msu'],
+            'http://msu.' => ['http://msu.'],
+            'http://msu.e' => ['http://msu.e'],
+            'http://msu.ed' => ['http://msu.ed'],
+            'http://msu.edu' => ['http://msu.edu'],
+            'http://msu.edu/' => ['http://msu.edu/'],
+            'https://cal.msu.edu' => ['https://cal.msu.edu/'],
+            'go-gle.co' => ['go-gle.co'],
+            'console.log("hi")' => ['console.log("hi")',$invalid],
+            "<script>alert('hi')</script>google.com/" => ["<script>alert('hi')</script>google.com/",$invalid],
+            "<script>alert('hi')</script>google.com/about" => ["<script>alert('hi')</script>google.com/about",$invalid],
+            "<script>alert('hi')</script>google.com" => ["<script>alert('hi')</script>google.com",$invalid],
+            "<script>alert('hi')</script>http://google.com" => ["<script>alert('hi')</script>http://google.com",$invalid],
+            "<script>alert('hi')</script>http://google.com/" => ["<script>alert('hi')</script>http://google.com/",$invalid],
+            "<script>alert('hi')</script>http://google.com/about" => ["<script>alert('hi')</script>http://google.com/about",$invalid],
+            "<script>alert('hi')</script>https://google.com" => ["<script>alert('hi')</script>https://google.com",$invalid],
+            "<script>alert('hi')</script>https://google.com/" => ["<script>alert('hi')</script>https://google.com/",$invalid],
+            "<script>alert('hi')</script>https://google.com/about" => ["<script>alert('hi')</script>https://google.com/about",$invalid],
+            "javascript:alert('hi')" => ["javascript:alert('hi')",$invalid],
+            'google.<script>alert("Hello World")</script>' => ['google.<script>alert("Hello World")</script>',$invalid],
+            'eval()' => ['eval()',$invalid],
+            'Function()' => ['Function()',$invalid],
+            'setTimeout()' => ['setTimeout()',$invalid],
+            'setInterval()' => ['setInterval()',$invalid],
+            'setImmediate()' => ['setImmediate()',$invalid],
+            'execCommand()' => ['execCommand()',$invalid],
+            'execScript()' => ['execScript()',$invalid],
+            'msSetImmediate()' => ['msSetImmediate()',$invalid],
+            'range.createContextualFragment()' => ['range.createContextualFragment()',$invalid],
+            'crypto.generateCRMFRequest()' => ['crypto.generateCRMFRequest()',$invalid],
         ];
     }
 
     /**
      * @dataProvider urlProvider
      * @param mixed $url
-     * @param bool $passes
-     * @param string $message
+     * @param string $error_message (optional)
      * @return void
      */
-    public function testUrl(mixed $url, bool $passes, string $message = ''): void
+    public function testUrl(mixed $url, string $error_message = ''): void
     {
         $user = User::factory()->create([
             'email' => 'brandnew@gmail.com',
             'username' => 'testusername',
         ]);
 
+        /** @var User $user */
+        $this->actingAs($user);
+
         $response = $this->graphQL(
-            'mutation updateUserWebsites ($id: ID!, $url: String!){
+            'mutation updateUserWebsites ($id: ID!, $url: String){
                 updateUser(
                     user: {
                         id: $id,
                         profile_metadata: {
                             websites: [$url]
-                  }
+                        }
+                    }
+                ) {
+                    id
+                    profile_metadata {
+                        websites
+                    }
                 }
-            ) {
-              id
-              profile_metadata {
-                websites
-              }
             }',
             [
                 'id' => $user->id,
@@ -102,10 +107,15 @@ class UpdateUserMutationTest extends ApiTestCase
             ]
         );
 
-        if ($passes) {
-            $response->assertJsonPath('data.updateUser.profile_metadata.websites[0]', $url);
+        if ($error_message) {
+            $response
+                ->assertGraphQLErrorMessage('Validation failed for the field [updateUser].')
+                ->assertGraphQLValidationError(
+                    'user.profile_metadata.websites.0',
+                    $error_message
+                );
         } else {
-            $response->assertJsonStructure(['errors' => [['message']]]);
+            $response->assertJsonPath('data.updateUser.profile_metadata.websites.0', $url);
         }
     }
 

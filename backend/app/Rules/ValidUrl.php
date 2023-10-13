@@ -18,8 +18,14 @@ class ValidUrl implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
+        if (is_null($value)) {
+            $fail('The URL must not be null.');
+        }
         if (!is_string($value)) {
             $fail('The URL must be a string.');
+        }
+        if (empty($value)) {
+            $fail('The URL must not be empty.');
         }
 
         // Source: https://gist.github.com/gruber/8891611
@@ -44,7 +50,7 @@ class ValidUrl implements ValidationRule
         |tt|tv|tw|tz|ua|ug|uk|us|uy|uz|va|vc|ve|vg|vi|vn|vu|wf|ws|ye|yt|yu|za|zm|zw)\b/?(?!@)))~
         EOD;
 
-        if (!preg_match($regex, $value)) {
+        if (!is_null($value) && !preg_match($regex, $value)) {
             $fail('The URL is invalid');
         }
     }
