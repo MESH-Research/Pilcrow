@@ -146,7 +146,7 @@ jobs:
       - run: |
           ENVIRONS=$(gh api /repos/{owner}/{repo}/environments | jq ' .environments | .[] | .name ' | tr -d '"' |  parallel 'gh api /repositories/215870675/environments/{}/variables/TAG | jq "{environment: "\"{}\"", tag: .value}"' | jq  -s)
           JSTAG=$(echo $TAGS | jq -R '.' | jq -s)
-          MATCHED=$(echo $ENVS | jq --argjson tags ${JSTAG} '.[] | .tag as $tag | select([$tags[] | test($tag)] | any) | .environment | tr -d '"')
+          MATCHED=$(echo $ENVS | jq --argjson tags ${JSTAG} '.[] | .tag as $tag | select([$tags[] | test($tag)] | any) | .environment' | tr -d '"')
           echo "matched=${MATCHED}" >> $GITHUB_ENV
         shell: bash
       - run: |
