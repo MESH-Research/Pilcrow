@@ -140,6 +140,7 @@ jobs:
     runs-on: ubuntu-20.04
     needs: [build-images]
     steps:
+      - uses: actions/checkout@v3
       - run: sudo apt install -y jq parallel
         shell: bash
       - run: |
