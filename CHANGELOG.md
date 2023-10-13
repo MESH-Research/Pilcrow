@@ -3,6 +3,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.27.1](https://github.com/MESH-Research/Pilcrow/compare/v0.27.0...v0.27.1) (2023-10-13)
+
+
+### Bug Fixes
+
+* **deps:** update dependency doctrine/dbal to v3.7.1 ([d485dfd](https://github.com/MESH-Research/Pilcrow/commit/d485dfd42c812b3d21fe5a4af99c260588482c25))
+* **deps:** update dependency laravel/framework to v10.27.0 ([1af11d2](https://github.com/MESH-Research/Pilcrow/commit/1af11d2f3918aa58411fc4a4d05c13bcb256fd31))
+* **deps:** update dependency laravel/framework to v10.28.0 ([2df0cb7](https://github.com/MESH-Research/Pilcrow/commit/2df0cb7a7eafd6bfaf66ece0223abb5e38ca136d))
+* **deps:** update dependency laravel/scout to v10.5.0 ([e664923](https://github.com/MESH-Research/Pilcrow/commit/e664923422cc4615c61f869702f4f8bd7d3b8f3f))
+* **deps:** update dependency nuwave/lighthouse to v6.22.0 ([0746907](https://github.com/MESH-Research/Pilcrow/commit/074690715d05065b9693db61e01804f889071218))
+* **deps:** update tiptap monorepo to v2.1.12 ([464e03f](https://github.com/MESH-Research/Pilcrow/commit/464e03fc7e108cce3cb690ceb9ae4a24f039c22d))
+
 ## [0.27.0](https://github.com/MESH-Research/Pilcrow/compare/v0.26.0...v0.27.0) (2023-10-09)
 
 
