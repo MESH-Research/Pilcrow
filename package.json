@@ -3,27 +3,17 @@
         "chalk": "^5.2.0",
         "columnify": "^1.5.4",
         "commander": "^11.0.0",
-        "conventional-changelog-cli": "^4.0.0",
         "cypress-file-upload": "^5.0.8",
         "dedent-js": "^1.0.1",
-        "markdownlint-cli": "^0.35.0",
-        "standard-version": "^9.5.0",
+        "markdownlint-cli": "^0.37.0",
         "yaml-js": "^0.3.1",
         "yesno": "^0.4.0"
     },
     "scripts": {
         "test": "cd backend && lando artisan test && cd ../client && lando yarn test:unit --run && lando cypress install && lando cypress run",
-        "lint:md": "markdownlint '.*/**/*.md' '**/*.md' -p .gitignore",
-        "release": "standard-version",
-        "release:minor": "standard-version --release-as minor",
-        "release:patch": "standard-version --release-as patch",
-        "release:major": "standard-version --release-as major",
-        "release:details": "conventional-changelog -n ./scripts/ccr-custom-changelog/release.cjs -r 2"
-    },
-    "standard-version": {
-        "header": "<!-- markdownlint-disable MD024 MD001 -->\n# Changelog\n\nAll notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.\n"
+        "lint:md": "markdownlint '.*/**/*.md' '**/*.md' -p .gitignore"
     },
     "type": "module",
-    "version": "0.26.0",
+    "version": "0.27.1",
     "dependencies": {}
 }

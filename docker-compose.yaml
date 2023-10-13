@@ -3,31 +3,21 @@ services:
   client:
     environment:
       FPM_HOST: phpfpm:9000
+    image: ghcr.io/mesh-research/pilcrow/cache/web:${TAG:-latest}
     build:
       context: ./client
       dockerfile: Dockerfile
     depends_on:
       - phpfpm
       - mysql
-    expose:
-      - 8888
+    ports:
+      - ${PORT:-80}:8888
   phpfpm:
     env_file:
       - .env
     environment:
-      WAIT_HOSTS: mysql:3306
+      WAIT_HOSTS: ${DB_HOST}:${DB_PORT}
+    image: ghcr.io/mesh-research/pilcrow/cache/fpm:${TAG:-latest}
     build:
       context: ./backend
       dockerfile: Dockerfile
-    depends_on:
-      - mysql
-  mysql:
-    image: mysql:5.7.42
-    tty: true
-    environment:
-      MYSQL_DATABASE: ${DB_DATABASE}
-      MYSQL_USER: ${DB_USERNAME}
-      MYSQL_PASSWORD: ${DB_PASSWORD}
-      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
-      SERVICE_TAGS: dev
-      SERVICE_NAME: mysql
