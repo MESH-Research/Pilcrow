@@ -150,11 +150,11 @@ jobs:
         shell: bash
       - run: |
           echo $MATCHED | parallel \
-          gh api /repos/{owner}/{repo}/deployments \
+          'gh api /repos/{owner}/{repo}/deployments \
             -f ref=${{ github.sha }} \
             -f environment="{}" \
-            -f transient_environment=true \
-            -f auto_merge=false \
-            -f production_environment=false \
-            -f payload="{\"version\": \"${{ needs.build-images.outputs.version }}\"}"
+            -F transient_environment=true \
+            -F auto_merge=false \
+            -F production_environment=false \
+            -f payload="{\"version\": \"${{ needs.build-images.outputs.version }}\"}"''
         shell: bash
