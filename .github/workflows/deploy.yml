@@ -1,0 +1,13 @@
+name: deploy to production
+on:
+  deployment:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.deployment.environment }}
+    steps:
+      - name: Deploy
+        run: |
+          echo ${{ github.event.deployment.payload}}
+        shell: bash

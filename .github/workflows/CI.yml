@@ -32,6 +32,7 @@ jobs:
     outputs:
       version: ${{ steps.build-image.outputs.version }}
       tags: ${{ steps.build-image.outputs.tags }}
+      tag_count: ${{ steps.build-image.outputs.tag_count }}}
     steps:
       - uses: actions/checkout@v3
       - name: Login to Github Packages
@@ -42,6 +43,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       - uses: ./.github/actions/build-image
         id: build-image
+        name: Build Image
   backend-unit-test:
     name: Backend / Unit Test
     needs: [build-images]
@@ -58,7 +60,9 @@ jobs:
         with:
           version: ${{ needs.build-images.outputs.version }}
       - run: docker compose exec -T phpfpm ./artisan test
+        name: Run Unit Test
       - run: docker compose down
+        name: Stop Stack
   e2e:
     name: "E2E Test"
     needs: [build-images]
@@ -116,7 +120,7 @@ jobs:
     name: "Publish (master branch only)"
     runs-on: ubuntu-20.04
     needs: [build-images, e2e, backend-unit-test, client-unit-test]
-    if: needs.build-images.outputs.tags > 1
+    if: needs.build-images.outputs.tag_count > 1
     steps:
       - uses: actions/checkout@v3
       - name: Login to Github Packages
@@ -128,3 +132,29 @@ jobs:
       - uses: ./.github/actions/build-image
         with:
           target: release
+  staging:
+    env:
+      TAGS: ${{ needs.build-images.outputs.tags }}
+      GH_TOKEN: ${{ secrets.REPO_TOKEN }}
+    name: "Trigger Deployment"
+    runs-on: ubuntu-20.04
+    needs: [build-images]
+    steps:
+      - run: sudo apt install -y jq parallel
+        shell: bash
+      - run: |
+          ENVIRONS=$(gh api /repos/{owner}/{repo}/environments | jq ' .environments | .[] | .name ' | tr -d '"' |  parallel 'gh api /repositories/215870675/environments/{}/variables/TAG | jq "{environment: "\"{}\"", tag: .value}"' | jq  -s)
+          JSTAG=$(echo $TAGS | jq -R '.' | jq -s)
+          MATCHED=$(echo $ENVS | jq --argjson tags ${JSTAG} '.[] | .tag as $tag | select([$tags[] | test($tag)] | any) | .environment | tr -d '"')
+          echo "matched=${MATCHED}" >> $GITHUB_ENV
+        shell: bash
+      - run: |
+          echo $matched | parallel \
+          gh api /repos/{owner}/{repo}/deployments \
+            -f ref=${{ github.sha }} \
+            -f environment="{}" \
+            -f transient_environment=true \
+            -f auto_merge=false \
+            -f production_environment=false \
+            -f payload="{\"version\": \"${{ needs.build-images.outputs.version }}\"}"
+        shell: bash
