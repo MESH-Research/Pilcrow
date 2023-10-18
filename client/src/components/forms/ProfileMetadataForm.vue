@@ -1,7 +1,6 @@
 <template>
   <q-form data-cy="vueAccount" @submit="save()">
     <v-q-wrap t-prefix="account.profile.fields" @vqupdate="updateInput">
-      <div style="height:0.001rem; overflow:hidden;">
       <form-section :first-section="true">
         <template #header>
           {{ $t("account.profile.section_profile") }}
@@ -137,7 +136,6 @@
           </template>
         </v-q-input>
       </form-section>
-</div>
       <form-section>
         <template #header>
           {{ $t("account.profile.section_websites") }}
