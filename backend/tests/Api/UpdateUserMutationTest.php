@@ -18,8 +18,8 @@ class UpdateUserMutationTest extends ApiTestCase
     {
         $invalid = 'The URL is invalid';
         return [
-            'null' => [null,'The URL must not be null.'],
-            'empty' => ['','The URL must not be empty.'],
+            'null' => [null,'The user.profile_metadata.websites.0 field must have a value.'],
+            'empty' => ['','The user.profile_metadata.websites.0 field must have a value.'],
             'msu' => ['msu',$invalid],
             'msu.' => ['msu.',$invalid],
             'msu.edu' => ['msu.edu'],
@@ -45,15 +45,15 @@ class UpdateUserMutationTest extends ApiTestCase
             'https://cal.msu.edu' => ['https://cal.msu.edu/'],
             'go-gle.co' => ['go-gle.co'],
             'console.log("hi")' => ['console.log("hi")',$invalid],
-            "<script>alert('hi')</script>google.com/" => ["<script>alert('hi')</script>google.com/",$invalid],
-            "<script>alert('hi')</script>google.com/about" => ["<script>alert('hi')</script>google.com/about",$invalid],
-            "<script>alert('hi')</script>google.com" => ["<script>alert('hi')</script>google.com",$invalid],
-            "<script>alert('hi')</script>http://google.com" => ["<script>alert('hi')</script>http://google.com",$invalid],
-            "<script>alert('hi')</script>http://google.com/" => ["<script>alert('hi')</script>http://google.com/",$invalid],
-            "<script>alert('hi')</script>http://google.com/about" => ["<script>alert('hi')</script>http://google.com/about",$invalid],
-            "<script>alert('hi')</script>https://google.com" => ["<script>alert('hi')</script>https://google.com",$invalid],
-            "<script>alert('hi')</script>https://google.com/" => ["<script>alert('hi')</script>https://google.com/",$invalid],
-            "<script>alert('hi')</script>https://google.com/about" => ["<script>alert('hi')</script>https://google.com/about",$invalid],
+            "<script>alert('hi')</script>google.com/" => ["<script>alert('hi')</script>google.com/",'',"google.com/"],
+            "<script>alert('hi')</script>google.com/about" => ["<script>alert('hi')</script>google.com/about",'',"google.com/about"],
+            "<script>alert('hi')</script>google.com" => ["<script>alert('hi')</script>google.com",'',"google.com"],
+            "<script>alert('hi')</script>http://google.com" => ["<script>alert('hi')</script>http://google.com",'',"http://google.com"],
+            "<script>alert('hi')</script>http://google.com/" => ["<script>alert('hi')</script>http://google.com/",'',"http://google.com/"],
+            "<script>alert('hi')</script>http://google.com/about" => ["<script>alert('hi')</script>http://google.com/about",'',"http://google.com/about"],
+            "<script>alert('hi')</script>https://google.com" => ["<script>alert('hi')</script>https://google.com",'',"https://google.com"],
+            "<script>alert('hi')</script>https://google.com/" => ["<script>alert('hi')</script>https://google.com/",'',"https://google.com/"],
+            "<script>alert('hi')</script>https://google.com/about" => ["<script>alert('hi')</script>https://google.com/about",'',"https://google.com/about"],
             "javascript:alert('hi')" => ["javascript:alert('hi')",$invalid],
             'google.<script>alert("Hello World")</script>' => ['google.<script>alert("Hello World")</script>',$invalid],
             'eval()' => ['eval()',$invalid],
@@ -73,9 +73,10 @@ class UpdateUserMutationTest extends ApiTestCase
      * @dataProvider urlProvider
      * @param mixed $url
      * @param string $error_message (optional)
+     * @param string $sanitized (optional)
      * @return void
      */
-    public function testUrl(mixed $url, string $error_message = ''): void
+    public function testUrl(mixed $url, string $error_message = '', string $sanitized = ''): void
     {
         $user = User::factory()->create([
             'email' => 'brandnew@gmail.com',
@@ -115,6 +116,9 @@ class UpdateUserMutationTest extends ApiTestCase
                     $error_message
                 );
         } else {
+            if ($sanitized) {
+                $url = $sanitized;
+            }
             $response->assertJsonPath('data.updateUser.profile_metadata.websites.0', $url);
         }
     }

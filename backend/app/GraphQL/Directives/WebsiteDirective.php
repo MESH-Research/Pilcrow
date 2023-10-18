@@ -20,10 +20,13 @@ GRAPHQL;
     /**
      * Sanitize a value for a supplied website.
      *
-     * @param  string  $argumentValue
+     * @param mixed $argumentValue
      */
-    public function sanitize($argumentValue): string
+    public function sanitize($argumentValue): mixed
     {
+        if (is_null($argumentValue)) {
+            return $argumentValue;
+        }
         // Remove spaces
         $no_spaces = preg_replace('/\s/', '', $argumentValue);
         // Remove non-breaking spaces
