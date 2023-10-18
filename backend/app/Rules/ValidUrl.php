@@ -19,22 +19,6 @@ class ValidUrl implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        print_r('---');
-
-        print_r($value);
-
-        print_r('---');
-
-        if (is_null($value)) {
-            $fail('The URL must not be null.');
-        }
-        if (!is_string($value)) {
-            $fail('The URL must be a string.');
-        }
-        if (empty($value)) {
-            $fail('The URL must not be empty.');
-        }
-
         // Source: https://gist.github.com/gruber/8891611
         $regex = <<<EOD
         ~(?i)\b((?:https?:(?:/{1,3}|[a-z0-9%])|[a-z0-9.\-]+[.](?:com|net|org|edu|gov|mil|aero|asia|biz|cat|coop|info|int
@@ -57,7 +41,7 @@ class ValidUrl implements ValidationRule
         |tt|tv|tw|tz|ua|ug|uk|us|uy|uz|va|vc|ve|vg|vi|vn|vu|wf|ws|ye|yt|yu|za|zm|zw)\b/?(?!@)))~
         EOD;
 
-        if (!is_null($value) && !preg_match($regex, $value)) {
+        if (!preg_match($regex, $value)) {
             $fail('The URL is invalid');
         }
     }
