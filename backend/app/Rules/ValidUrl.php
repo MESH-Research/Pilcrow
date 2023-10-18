@@ -8,6 +8,7 @@ use Illuminate\Contracts\Validation\ValidationRule;
 
 class ValidUrl implements ValidationRule
 {
+
     /**
      * Run the validation rule.
      *
@@ -18,6 +19,12 @@ class ValidUrl implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
+        print_r('---');
+
+        print_r($value);
+
+        print_r('---');
+
         if (is_null($value)) {
             $fail('The URL must not be null.');
         }

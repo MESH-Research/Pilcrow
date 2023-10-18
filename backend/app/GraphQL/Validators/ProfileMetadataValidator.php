@@ -6,7 +6,6 @@ declare(strict_types=1);
 
 namespace App\GraphQL\Validators;
 
-use App\Rules\ValidUrl;
 use Nuwave\Lighthouse\Validation\Validator;
 
 class ProfileMetadataValidator extends Validator
@@ -36,7 +35,6 @@ class ProfileMetadataValidator extends Validator
             ],
             'websites.*' => [
                 'max:512',
-                new ValidUrl(),
             ],
         ];
     }

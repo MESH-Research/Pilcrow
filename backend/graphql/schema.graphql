@@ -202,4 +202,10 @@ input UpdateProfileMetadataInput @validator(class: "ProfileMetadataValidator") {
     interest_keywords: [String]
     biography: String
     websites: [String]
+        @website
+        @rules(
+            apply: [
+                "App\\Rules\\ValidUrl"
+            ]
+        )
 }
