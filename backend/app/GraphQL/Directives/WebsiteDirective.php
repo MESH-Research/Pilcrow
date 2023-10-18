@@ -23,6 +23,7 @@ GRAPHQL;
      */
     public function sanitize($argumentValue): string
     {
+        // TODO: Use HTML Purifier
         return strip_tags($argumentValue);
     }
 }
