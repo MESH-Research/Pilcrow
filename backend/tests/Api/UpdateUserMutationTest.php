@@ -17,6 +17,7 @@ class UpdateUserMutationTest extends ApiTestCase
     public static function urlProvider()
     {
         $invalid = 'The URL is invalid';
+
         return [
             'null' => [null,'The user.profile_metadata.websites.0 field must have a value.'],
             'empty' => ['','The user.profile_metadata.websites.0 field must have a value.'],
@@ -45,15 +46,15 @@ class UpdateUserMutationTest extends ApiTestCase
             'https://cal.msu.edu' => ['https://cal.msu.edu/'],
             'go-gle.co' => ['go-gle.co'],
             'console.log("hi")' => ['console.log("hi")',$invalid],
-            "<script>alert('hi')</script>google.com/" => ["<script>alert('hi')</script>google.com/",'',"google.com/"],
-            "<script>alert('hi')</script>google.com/about" => ["<script>alert('hi')</script>google.com/about",'',"google.com/about"],
-            "<script>alert('hi')</script>google.com" => ["<script>alert('hi')</script>google.com",'',"google.com"],
-            "<script>alert('hi')</script>http://google.com" => ["<script>alert('hi')</script>http://google.com",'',"http://google.com"],
-            "<script>alert('hi')</script>http://google.com/" => ["<script>alert('hi')</script>http://google.com/",'',"http://google.com/"],
-            "<script>alert('hi')</script>http://google.com/about" => ["<script>alert('hi')</script>http://google.com/about",'',"http://google.com/about"],
-            "<script>alert('hi')</script>https://google.com" => ["<script>alert('hi')</script>https://google.com",'',"https://google.com"],
-            "<script>alert('hi')</script>https://google.com/" => ["<script>alert('hi')</script>https://google.com/",'',"https://google.com/"],
-            "<script>alert('hi')</script>https://google.com/about" => ["<script>alert('hi')</script>https://google.com/about",'',"https://google.com/about"],
+            "<script>alert('hi')</script>google.com/" => ["<script>alert('hi')</script>google.com/",'','google.com/'],
+            "<script>alert('hi')</script>google.com/about" => ["<script>alert('hi')</script>google.com/about",'','google.com/about'],
+            "<script>alert('hi')</script>google.com" => ["<script>alert('hi')</script>google.com",'','google.com'],
+            "<script>alert('hi')</script>http://google.com" => ["<script>alert('hi')</script>http://google.com",'','http://google.com'],
+            "<script>alert('hi')</script>http://google.com/" => ["<script>alert('hi')</script>http://google.com/",'','http://google.com/'],
+            "<script>alert('hi')</script>http://google.com/about" => ["<script>alert('hi')</script>http://google.com/about",'','http://google.com/about'],
+            "<script>alert('hi')</script>https://google.com" => ["<script>alert('hi')</script>https://google.com",'','https://google.com'],
+            "<script>alert('hi')</script>https://google.com/" => ["<script>alert('hi')</script>https://google.com/",'','https://google.com/'],
+            "<script>alert('hi')</script>https://google.com/about" => ["<script>alert('hi')</script>https://google.com/about",'','https://google.com/about'],
             "javascript:alert('hi')" => ["javascript:alert('hi')",$invalid],
             'google.<script>alert("Hello World")</script>' => ['google.<script>alert("Hello World")</script>',$invalid],
             'eval()' => ['eval()',$invalid],

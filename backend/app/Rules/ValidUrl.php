@@ -8,7 +8,6 @@ use Illuminate\Contracts\Validation\ValidationRule;
 
 class ValidUrl implements ValidationRule
 {
-
     /**
      * Run the validation rule.
      *
