@@ -1,5 +1,7 @@
 name: pilcrow
 recipe: laravel
+env_file:
+  - .env
 config:
   php: "8.2"
   composer_version: 2
@@ -22,7 +24,6 @@ services:
     scanner: false
   appserver:
     build:
-      - composer install
       - cd /app/backend && composer install
       - bash /app/.lando/no_env_setup.sh
     build_as_root:

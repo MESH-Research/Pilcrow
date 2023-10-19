@@ -28,6 +28,14 @@ type Query {
 
     "Return a permission by ID"
     permission(id: ID @eq): Permission @find
+
+    versionInfo: VersionInfo
+}
+
+type VersionInfo {
+    version: String
+    version_url: String
+    version_date: String
 }
 
 type Mutation {
@@ -80,15 +88,11 @@ type Mutation {
 
     "Send a password reset email to a specified email address"
     requestPasswordReset(email: String!): Boolean
-        @field(
-            resolver: "App\\GraphQL\\Mutations\\ResetPassword@request"
-        )
+        @field(resolver: "App\\GraphQL\\Mutations\\ResetPassword@request")
 
     "Update a password from a password reset request"
     resetPassword(input: ResetPasswordInput): User
-        @field(
-            resolver: "App\\GraphQL\\Mutations\\ResetPassword@reset"
-        )
+        @field(resolver: "App\\GraphQL\\Mutations\\ResetPassword@reset")
 }
 
 "A date string with format `Y-m-d`, e.g. `2011-05-23`."
