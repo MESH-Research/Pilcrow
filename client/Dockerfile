@@ -1,4 +1,4 @@
-FROM --platform=$BUILDPLATFORM node:16-alpine as build-stage
+FROM --platform=$BUILDPLATFORM node:18-alpine as build-stage
 WORKDIR /app
 
 ARG VERSION
