@@ -14,6 +14,19 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  environments:
+    env:
+      GH_TOKEN: ${{ secrets.REPO_TOKEN }}
+    name: "Environments"
+    runs-on: ubuntu-20.04
+    outputs:
+      environments: ${{ steps.matches.outputs.environments }}
+    steps:
+      - uses: actions/checkout@v3
+      - run: |
+          echo environments=$(gh api /repos/{owner}/{repo}/environments -q  '[ .environments | .[] | .name ] ' ) >> $GITHUB_OUTPUT
+        shell: bash
+        id: matches
   client-unit-test:
     name: "Client / Unit Test"
     runs-on: ubuntu-20.04
@@ -32,6 +45,7 @@ jobs:
     outputs:
       version: ${{ steps.build-image.outputs.version }}
       tags: ${{ steps.build-image.outputs.tags }}
+      tag_count: ${{ steps.build-image.outputs.tag_count }}
     steps:
       - uses: actions/checkout@v3
       - name: Login to Github Packages
@@ -42,6 +56,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       - uses: ./.github/actions/build-image
         id: build-image
+        name: Build Image
   backend-unit-test:
     name: Backend / Unit Test
     needs: [build-images]
@@ -52,13 +67,16 @@ jobs:
         run: |
           echo "VERSION: ${{ needs.build-images.outputs.version}}"
           echo "TAGS: ${{ needs.build-images.outputs.tags}}"
+          echo "COUNT: ${{ needs.build-images.outputs.tag_count}}"
         shell: bash
       - name: Start Stack
         uses: ./.github/actions/start-stack
         with:
           version: ${{ needs.build-images.outputs.version }}
       - run: docker compose exec -T phpfpm ./artisan test
+        name: Run Unit Test
       - run: docker compose down
+        name: Stop Stack
   e2e:
     name: "E2E Test"
     needs: [build-images]
@@ -115,8 +133,8 @@ jobs:
   publish:
     name: "Publish (master branch only)"
     runs-on: ubuntu-20.04
-    needs: [build-images, e2e, backend-unit-test, client-unit-test]
-    if: needs.build-images.outputs.tags > 1
+    needs: [build-images, backend-unit-test, client-unit-test, e2e]
+    if: needs.build-images.outputs.tag_count > 1
     steps:
       - uses: actions/checkout@v3
       - name: Login to Github Packages
@@ -128,3 +146,21 @@ jobs:
       - uses: ./.github/actions/build-image
         with:
           target: release
+  deployments:
+    runs-on: ubuntu-20.04
+    needs:
+      - environments
+      - publish
+    name: "Deploy"
+    environment:
+      name:  ${{ matrix.environment }}
+      url: ${{ vars.URL }}
+    strategy:
+      fail-fast: false
+      matrix:
+        environment: ${{ fromJson(needs.environments.outputs.environments) }}
+    steps:
+      - uses: actions/checkout@v3
+      - run: |
+          curl -X POST -H 'Authorization: Bearer ${{ secrets.DEPLOY_KEY}}' ${{ secrets.DEPLOY_URL }}
+        shell: bash
