@@ -249,12 +249,6 @@ import { ref } from "vue"
 
 const { dialog } = useQuasar()
 
-const submissionRef = ref(props.submission)
-const { isDisabledByRole, isDisabledByState } =
-  useSubmissionExport(submissionRef)
-const { statusChangingDisabledByRole, statusChangingDisabledByState } =
-  useStatusChangeControls(submissionRef)
-
 const props = defineProps({
   // Drawer status
   commentDrawerOpen: {
@@ -270,6 +264,12 @@ const props = defineProps({
     default: null,
   },
 })
+
+const submissionRef = ref(props.submission)
+const { isDisabledByRole, isDisabledByState } =
+  useSubmissionExport(submissionRef)
+const { statusChangingDisabledByRole, statusChangingDisabledByState } =
+  useStatusChangeControls(submissionRef)
 const emit = defineEmits([
   "update:commentDrawerOpen",
   "update:highlightVisibility",
