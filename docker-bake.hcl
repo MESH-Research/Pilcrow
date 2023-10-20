@@ -25,8 +25,8 @@ target "fpm" {
     "org.opencontainers.image.description" = "Pilcrow FPM Container Image version: ${ VERSION }@${VERSION_DATE } (${ VERSION_URL })"
   }
   output = ["type=image,push=true,annotation-index.org.opencontainers.image.description=Pilcrow FPM Container Image version: ${ VERSION }@${VERSION_DATE } (${ VERSION_URL })"]
-  cache_from = ["type=registry,ref=ghcr.io/mesh-research/pilcrow/cache/fpm-${VERSION}:cache"]
-  cache_to = ["type=registry,ref=ghcr.io/mesh-research/pilcrow/cache/fpm-${VERSION}:cache"]
+  cache_from = ["type=registry,ref=ghcr.io/mesh-research/pilcrow/cache/fpm:cache"]
+  cache_to = ["type=registry,ref=ghcr.io/mesh-research/pilcrow/cache/fpm:cache"]
 
 }
 
@@ -42,8 +42,8 @@ target "web" {
     "org.opencontainers.image.description" = "Pilcrow WEB Container Image version: ${ VERSION }@${VERSION_DATE } (${ VERSION_URL })"
   }
   output = ["type=image,push=true,annotation-index.org.opencontainers.image.description=Pilcrow WEB Container Image version: ${ VERSION }@${VERSION_DATE } (${ VERSION_URL })"]
-  cache_from = ["type=registry,ref=ghcr.io/mesh-research/pilcrow/cache/web-${VERSION}:cache"]
-  cache_to = ["type=registry,ref=ghcr.io/mesh-research/pilcrow/cache/web-${VERSION}:cache"]
+  cache_from = ["type=registry,ref=ghcr.io/mesh-research/pilcrow/cache/web:cache"]
+  cache_to = ["type=registry,ref=ghcr.io/mesh-research/pilcrow/cache/web:cache"]
 
 }
 
