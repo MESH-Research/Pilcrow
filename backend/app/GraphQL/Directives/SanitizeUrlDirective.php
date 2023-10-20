@@ -8,7 +8,7 @@ use Nuwave\Lighthouse\Schema\Directives\BaseDirective;
 use Nuwave\Lighthouse\Support\Contracts\ArgDirective;
 use Nuwave\Lighthouse\Support\Contracts\ArgSanitizerDirective;
 
-final class WebsiteDirective extends BaseDirective implements ArgSanitizerDirective, ArgDirective
+final class SanitizeUrlDirective extends BaseDirective implements ArgSanitizerDirective, ArgDirective
 {
     /**
      * @return string
@@ -17,7 +17,7 @@ final class WebsiteDirective extends BaseDirective implements ArgSanitizerDirect
     {
         //phpcs:disable
         return /** @lang GraphQL */ <<<'GRAPHQL'
-directive @website on ARGUMENT_DEFINITION | INPUT_FIELD_DEFINITION
+directive @sanitizeUrl on ARGUMENT_DEFINITION | INPUT_FIELD_DEFINITION
 GRAPHQL;
         //phpcs:enable
     }
