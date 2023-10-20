@@ -1,0 +1,29 @@
+{
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "commitType": "docs",
+  "commitConvention": "angular",
+  "contributors": [
+    {
+      "login": "wreality",
+      "name": "Brian Adams",
+      "avatar_url": "https://avatars.githubusercontent.com/u/463159?v=4",
+      "profile": "https://github.com/wreality",
+      "contributions": [
+        "code",
+        "mentoring",
+        "infra",
+        "review"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "skipCi": true,
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "projectName": "Pilcrow",
+  "projectOwner": "MESH-Research"
+}
