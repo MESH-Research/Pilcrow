@@ -1,4 +1,7 @@
 # Pilcrow
+<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
+<!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 ## Development
 
@@ -29,3 +32,25 @@ The stack is running `yarn dev` in the node container, so editing source files s
 * [Pilcrow Links](https://github.com/MESH-Research/Pilcrow/wiki/Pilcrow-Links)
 * [Style Guide - in the Making](https://github.com/MESH-Research/Pilcrow/wiki/Style-Guide---in-the-making)
 
+
+## Contributors ✨
+
+Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<table>
+  <tbody>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/wreality"><img src="https://avatars.githubusercontent.com/u/463159?v=4?s=100" width="100px;" alt="Brian Adams"/><br /><sub><b>Brian Adams</b></sub></a><br /><a href="https://github.com/MESH-Research/Pilcrow/commits?author=wreality" title="Code">💻</a> <a href="#mentoring-wreality" title="Mentoring">🧑‍🏫</a> <a href="#infra-wreality" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="https://github.com/MESH-Research/Pilcrow/pulls?q=is%3Apr+reviewed-by%3Awreality" title="Reviewed Pull Requests">👀</a></td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
