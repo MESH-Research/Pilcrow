@@ -17,10 +17,11 @@ class UpdateUserMutationTest extends ApiTestCase
     public static function urlProvider()
     {
         $invalid = 'The URL is invalid';
+        $missing = 'The user.profile_metadata.websites.0 field must have a value.';
 
         return [
-            'null' => [null,'The user.profile_metadata.websites.0 field must have a value.'],
-            'empty' => ['','The user.profile_metadata.websites.0 field must have a value.'],
+            'null' => [null,$missing],
+            'empty' => ['',$missing],
             'msu' => ['msu',$invalid],
             'msu.' => ['msu.',$invalid],
             'msu.edu' => ['msu.edu'],
