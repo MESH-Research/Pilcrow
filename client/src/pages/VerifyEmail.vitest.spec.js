@@ -91,7 +91,10 @@ describe("VerifyEmailPage", () => {
     )
     expect(warn).toHaveBeenCalledTimes(1)
     expect(warn).toHaveBeenCalledWith(
-      expect.stringContaining('Unknown query named "currentUser"')
+      expect.stringContaining('message%22%3A33%2C%22')
+    )
+    expect(warn).toHaveBeenCalledWith(
+      expect.stringContaining('currentUser')
     )
   })
 
