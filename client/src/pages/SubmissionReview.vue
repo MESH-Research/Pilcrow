@@ -39,13 +39,13 @@
           <submission-content
             v-model:highlightVisibility="highlightVisibility"
             @scroll-to-overall-comments="handleScroll"
+            @scroll-to-new-overall-comment="handleNewScroll"
           />
           <q-separator class="page-seperator" />
           <div ref="scrollOverallComments"></div>
           <submission-comment-section
-            @scroll-new-overall-comment="handleNewScroll"
           />
-          <div ref="scrollNewOverallComment"></div>
+          <div ref="scrollTESTNewOverallComment"></div>
         </q-page-container>
       </q-layout>
 
@@ -82,7 +82,7 @@ provide("activeComment", ref(null))
 provide("commentDrawerOpen", commentDrawerOpen)
 
 const scrollOverallComments = ref(null)
-const scrollNewOverallComment = ref(null)
+const scrollTESTNewOverallComment = ref(null)
 
 function handleScroll() {
   const scrollValue = scrollOverallComments.value
@@ -92,7 +92,7 @@ function handleScroll() {
 }
 
 function handleNewScroll() {
-  const scrollValue = scrollNewOverallComment.value
+  const scrollValue = scrollTESTNewOverallComment.value
   const scrollTarget = getScrollTarget(scrollValue)
   console.log("new scroll", scrollValue, scrollTarget)
   setVerticalScrollPosition(scrollTarget, scrollValue.offsetTop, 250)
