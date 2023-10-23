@@ -1,5 +1,10 @@
 <template>
-  <q-banner inline-actions dense class="bg-warning text-black">
+  <q-banner
+    inline-actions
+    dense
+    :class="$q.dark.isActive ? 'bg-dark-warning' : 'bg-warning'"
+    class="text-black"
+  >
     <template #avatar>
       <q-icon name="email" size="lg" />
     </template>
