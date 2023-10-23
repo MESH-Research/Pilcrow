@@ -16,7 +16,7 @@ services:
       database: .lando/mysql.cnf
   client:
     port: false
-    type: node:16
+    type: node:18
     build:
       - yarn
       - cd /app/client && yarn

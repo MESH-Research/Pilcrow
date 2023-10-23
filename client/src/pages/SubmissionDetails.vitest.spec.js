@@ -7,18 +7,11 @@ import { useCurrentUser } from "src/use/user"
 import { ref } from "vue"
 import SubmissionDetailsPage from "./SubmissionDetails.vue"
 
-vi.mock("quasar", () => ({
-  ...vi.requireActual("quasar"),
-  useQuasar: () => ({
-    notify: vi.fn(),
-  }),
-}))
-
 vi.mock("src/use/user", () => ({
   useCurrentUser: vi.fn(),
 }))
 
-installQuasarPlugin()
+installQuasarPlugin({ plugins: { Notify: vi.fn() }})
 const mockClient = installApolloClient()
 
 describe("submissions details page mount", () => {

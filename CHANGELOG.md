@@ -3,6 +3,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.27.2](https://github.com/MESH-Research/Pilcrow/compare/v0.27.1...v0.27.2) (2023-10-20)
+
+
+### Bug Fixes
+
+* **deps:** update dependency quasar to v2.13.0 ([10e22e9](https://github.com/MESH-Research/Pilcrow/commit/10e22e93ce4b1401cd3ba2e2e21861386096daa8))
+
 ## [0.27.1](https://github.com/MESH-Research/Pilcrow/compare/v0.27.0...v0.27.1) (2023-10-13)
 
 

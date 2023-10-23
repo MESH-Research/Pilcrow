@@ -10,14 +10,6 @@ import {
 import { beforeEach, describe, expect, test, vi } from 'vitest'
 import AssignedSubmissionUsers from "./AssignedSubmissionUsers.vue"
 
-
-vi.mock("quasar", () => ({
-  ...vi.requireActual("quasar"),
-  useQuasar: () => ({
-    notify: vi.fn(),
-  }),
-}))
-
 installQuasarPlugin({ plugins: { Notify } })
 const mockClient = installApolloClient()
 
