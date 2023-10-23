@@ -1,5 +1,5 @@
 <template>
-  <q-banner inline-actions dense class="bg-warning">
+  <q-banner inline-actions dense class="bg-warning text-black">
     <template #avatar>
       <q-icon name="email" size="lg" />
     </template>

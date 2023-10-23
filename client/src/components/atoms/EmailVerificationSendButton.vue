@@ -2,7 +2,6 @@
   <q-btn
     :loading="status == 'loading'"
     :color="btnColor"
-    class="text-black"
     v-bind="{ ...$props, ...$attrs }"
     @click="send"
   >
@@ -33,7 +32,7 @@ const btnColor = computed(() => {
   if (status.value == "success") {
     return "positive"
   }
-  return null
+  return "primary"
 })
 
 const { mutate: sendEmail } = useMutation(SEND_VERIFY_EMAIL)
