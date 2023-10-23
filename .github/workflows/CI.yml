@@ -15,17 +15,17 @@ concurrency:
 
 jobs:
   environments:
-    env:
-      GH_TOKEN: ${{ secrets.REPO_TOKEN }}
     name: "Environments"
+    needs:
+      - build-images
     runs-on: ubuntu-20.04
     outputs:
       environments: ${{ steps.matches.outputs.environments }}
     steps:
-      - uses: actions/checkout@v3
-      - run: |
-          echo environments=$(gh api /repos/{owner}/{repo}/environments -q  '[ .environments | .[] | .name ] ' ) >> $GITHUB_OUTPUT
-        shell: bash
+      - uses: wreality/filtered-env@v1.0.0
+        with:
+          tags: ${{ needs.build-images.outputs.tags}}
+          token: ${{ secrets.REPO_TOKEN }}
         id: matches
   client-unit-test:
     name: "Client / Unit Test"

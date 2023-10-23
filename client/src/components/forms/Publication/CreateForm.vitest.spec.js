@@ -40,7 +40,10 @@ describe("CreateForm", () => {
     await flushPromises()
     expect(warn).toHaveBeenCalledTimes(1)
     expect(warn).toHaveBeenCalledWith(
-      expect.stringContaining('Unknown query named "GetPublications"')
+      expect.stringContaining('message%22%3A33%2C%22')
+    )
+    expect(warn).toHaveBeenCalledWith(
+      expect.stringContaining('GetPublications')
     )
     expect(mutationHandler).toHaveBeenCalledWith(
       expect.objectContaining({ name })

@@ -11,12 +11,7 @@ import { describe, test, expect, vi } from 'vitest'
 
 vi.mock('quasar', async (importOriginal) => {
   const original = await importOriginal()
-  const SessionStorage = await vi.importActual('test/vitest/mockedPlugins')
-
-  return {
-    ...original,
-    SessionStorage
-  }
+  return original
 })
 
 describe("useCurrentUser composable", () => {
