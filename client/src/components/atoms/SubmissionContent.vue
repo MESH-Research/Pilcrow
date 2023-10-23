@@ -80,7 +80,7 @@
           icon="add_comment"
           color="white"
           text-color="grey-7"
-          @click="addNewOverallComment()"
+          @click="scrollNewOverallComment()"
         />
         <q-tooltip>{{ $t("submissions.style_controls.new_overall") }}</q-tooltip>
       </div>
@@ -150,18 +150,17 @@ function toggleDarkMode() {
 }
 
 const emit = defineEmits([
-  "scrollToOverallComments"
-  // "scrollNewOverallComment"
+  "scrollToOverallComments",
+  "scrollNewOverallComment"
 ])
 
 function scrollToOverallComments() {
-  emit("addNewOverallComment")
+  emit("scrollToOverallComments")
 }
 
-function addNewOverallComment() {
-  // scroll to text editor for new overall comment
-  // emit("addNewOverallComment")
-  // activate cursor in overall comment editor
+function scrollNewOverallComment() {
+  emit("scrollNewOverallComment")
+  console.log("emitting scrollNewOverallComment")
 }
 
 const fonts = [

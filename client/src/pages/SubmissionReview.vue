@@ -8,7 +8,7 @@
       class="q-pa-xl items-center column content-center text-center"
     >
       <p style="max-width: 20rem" data-cy="explanation">
-        {{ $t('submissions.draft_with_no_content') }}
+        {{ $t("submissions.draft_with_no_content") }}
       </p>
       <q-btn
         data-cy="draft_btn"
@@ -42,7 +42,10 @@
           />
           <q-separator class="page-seperator" />
           <div ref="scrollOverallComments"></div>
-          <submission-comment-section/>
+          <submission-comment-section
+            @scroll-new-overall-comment="handleNewScroll"
+          />
+          <div ref="scrollNewOverallComment"></div>
         </q-page-container>
       </q-layout>
 
@@ -79,14 +82,21 @@ provide("activeComment", ref(null))
 provide("commentDrawerOpen", commentDrawerOpen)
 
 const scrollOverallComments = ref(null)
+const scrollNewOverallComment = ref(null)
 
 function handleScroll() {
-    const Svalue = scrollOverallComments.value
-    const Starget = getScrollTarget(Svalue)
-    console.log(Svalue, Starget)
-  setVerticalScrollPosition(Starget, Svalue.offsetTop, 250)
+  const scrollValue = scrollOverallComments.value
+  const scrollTarget = getScrollTarget(scrollValue)
+  console.log("scroll", scrollValue, scrollTarget)
+  setVerticalScrollPosition(scrollTarget, scrollValue.offsetTop, 250)
 }
 
+function handleNewScroll() {
+  const scrollValue = scrollNewOverallComment.value
+  const scrollTarget = getScrollTarget(scrollValue)
+  console.log("new scroll", scrollValue, scrollTarget)
+  setVerticalScrollPosition(scrollTarget, scrollValue.offsetTop, 250)
+}
 </script>
 
 <style lang="sass" scoped>
