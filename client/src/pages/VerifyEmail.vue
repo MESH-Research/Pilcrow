@@ -1,44 +1,44 @@
 <template>
   <q-page class="verify-page">
-    <q-card style="width: 600px">
-      <q-card-section horizontal>
-        <q-card-section
-          class="card-icon flex-center flex"
-          :class="status == 'failure' ? 'error' : ''"
-        >
-          <q-spinner-hourglass v-if="status == 'loading'" size="3em" />
-          <q-icon v-else-if="status == 'success'" name="email" />
-          <q-icon v-else name="error" />
-        </q-card-section>
-        <q-card-section class="col-grow q-pb-none">
-          <div v-if="status == 'loading'">Loading...</div>
-          <div v-else>
-            <div v-if="status == 'success'">
-              {{ $t("account.email_verify.verification_success") }}
-            </div>
-            <div v-else>
-              {{ $t("general_failure") }}
-              <ul class="errors">
-                <li v-for="(message, index) in errorMessagesList" :key="index">
-                  {{ message }}
-                </li>
-              </ul>
-            </div>
-          </div>
-          <q-card-actions align="right">
-            <email-verification-send-button
-              v-if="status == 'failure'"
-              flat
-              no-color
-            />
-            <q-btn flat to="/dashboard">
-              <q-icon name="arrow_forward" />
-              {{ $t("buttons.dashboard") }}
-            </q-btn>
-          </q-card-actions>
-        </q-card-section>
-      </q-card-section>
-    </q-card>
+    <section class="q-pa-lg">
+      <div v-if="status == 'loading'" class="column flex-center">
+        <q-spinner color="primary" size="2em" />
+        <strong class="text-h3">{{ $t("loading") }}</strong>
+      </div>
+      <div v-if="status === 'success'" class="column flex-center">
+        <q-card rounded class="bg-primary q-pa-md q-ma-md">
+          <q-icon color="white" name="email" size="2em" />
+        </q-card>
+        <p>
+          {{ $t("account.email_verify.verification_success") }}
+        </p>
+        <q-btn
+          class="q-mr-sm"
+          color="accent"
+          icon="arrow_forward"
+          size="md"
+          :label="$t('buttons.dashboard')"
+          :to="{
+            name: 'dashboard',
+            params: { id: cta_id },
+          }"
+        />
+      </div>
+      <div v-if="status == 'failure'" class="column flex-center">
+        <q-card rounded class="bg-negative q-pa-md q-ma-md">
+          <q-icon color="white" name="error" size="2em" />
+        </q-card>
+        <p>
+          {{ $t("general_failure") }}
+        </p>
+        <ul class="q-mb-xl">
+          <li v-for="(message, index) in errorMessagesList" :key="index">
+            {{ message }}
+          </li>
+        </ul>
+        <email-verification-send-button color="accent" text-color="white" />
+      </div>
+    </section>
   </q-page>
 </template>
 
@@ -73,29 +73,9 @@ onMounted(async () => {
   } catch (error) {
     errorMessagesList.value = errorMessages(
       graphQLErrorCodes(error),
-      "account.failures"
+      "account.failures",
     )
     status.value = "failure"
   }
 })
 </script>
-
-<style lang="scss">
-.verify-page {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  padding-top: 3em;
-
-  .card-icon {
-    &.error {
-      background-color: $red;
-    }
-    background-color: $primary;
-    color: white;
-    .q-icon {
-      font-size: 3em;
-    }
-  }
-}
-</style>
