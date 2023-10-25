@@ -14,6 +14,14 @@ variable "GITHUB_REF_NAME" {
   default = ""
 }
 
+variable "FPM_CACHE_FROM" {
+  default = ""
+}
+
+variable "FPM_CACHE_TO" {
+  default = ""
+}
+
 target "fpm" {
   context = "backend"
   args = {
@@ -25,8 +33,8 @@ target "fpm" {
     "org.opencontainers.image.description" = "Pilcrow FPM Container Image version: ${ VERSION }@${VERSION_DATE } (${ VERSION_URL })"
   }
   output = ["type=image,push=true,annotation-index.org.opencontainers.image.description=Pilcrow FPM Container Image version: ${ VERSION }@${VERSION_DATE } (${ VERSION_URL })"]
-  cache_from = [${FPM_CACHE_FROM-}]
-  cache_to = [${FPM_CACHE_TO-}]
+  cache_from = "${FPM_CACHE_FROM}"
+  cache_to = "${FPM_CACHE_TO}"
 
 }
 
@@ -42,8 +50,8 @@ target "web" {
     "org.opencontainers.image.description" = "Pilcrow WEB Container Image version: ${ VERSION }@${VERSION_DATE } (${ VERSION_URL })"
   }
   output = ["type=image,push=true,annotation-index.org.opencontainers.image.description=Pilcrow WEB Container Image version: ${ VERSION }@${VERSION_DATE } (${ VERSION_URL })"]
-  cache_from = [${WEB_CACHE_FROM-}]
-  cache_to = [${WEB_CACHE_TO-}]
+  cache_from = "${WEB_CACHE_FROM}"
+  cache_to = "${WEB_CACHE_TO}"
 
 }
 
