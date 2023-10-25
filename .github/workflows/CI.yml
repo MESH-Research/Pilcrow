@@ -34,7 +34,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: 20
           cache: yarn
           cache-dependency-path: client/yarn.lock
       - run: cd client && yarn install
@@ -108,7 +108,7 @@ jobs:
         uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: 20
           cache: yarn
           cache-dependency-path: client/yarn.lock
       - name: Install dependencies
@@ -123,7 +123,7 @@ jobs:
         uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: 20
           cache: yarn
           cache-dependency-path: yarn.lock
       - name: Install dependencies
