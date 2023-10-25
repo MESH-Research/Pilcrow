@@ -31,7 +31,7 @@
         <p>
           {{ $t("general_failure") }}
         </p>
-        <ul class="q-mb-xl">
+        <ul class="q-mb-xl" data-cy="errors">
           <li v-for="(message, index) in errorMessagesList" :key="index">
             {{ message }}
           </li>
