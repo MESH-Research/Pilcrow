@@ -3,9 +3,9 @@ cypress:
   template:
     services:
       cypress:
-        type: node:18
+        type: node:20
         overrides:
-          image: "cypress/base:18"
+          image: "cypress/base:20"
           environment:
             ELECTRON_EXTRA_LAUNCH_ARGS: "--force-prefers-reduced-motion"
     tooling:
