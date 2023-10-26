@@ -8,7 +8,6 @@ export const _PROFILE_METADATA_FIELDS = gql`
       specialization
       affiliation
       websites
-      interest_keywords
       social_media {
         twitter
         instagram

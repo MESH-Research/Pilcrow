@@ -33,10 +33,6 @@ class UserQueryTest extends ApiTestCase
                     'position_title' => 'Regular User',
                     'specialization' => 'Regular',
                     'affiliation' => 'Regular Users',
-                    'interest_keywords' => [
-                        'regular',
-                        'user',
-                    ],
                     'biography' => 'I am a regular user.',
                     'websites' => [
                         'https://github.com',
@@ -79,7 +75,6 @@ class UserQueryTest extends ApiTestCase
                         position_title
                         specialization
                         affiliation
-                        interest_keywords
                         biography
                         websites
                     }
