@@ -1,6 +1,4 @@
-import {
-  installQuasarPlugin,
-} from "@quasar/quasar-app-extension-testing-unit-vitest"
+import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
 import { mount, flushPromises } from "@vue/test-utils"
 import { installApolloClient } from "test/vitest/utils"
 import { VERIFY_EMAIL } from "src/graphql/mutations"
@@ -19,12 +17,10 @@ vi.mock("vue-router", () => ({
   useRoute: vi.fn(),
 }))
 
-
 installQuasarPlugin()
 const mockClient = installApolloClient()
 
 describe("VerifyEmailPage", () => {
-
   const createWrapper = async () => {
     const wrapper = mount(VerifyEmailPage, {
       global: {
@@ -64,7 +60,7 @@ describe("VerifyEmailPage", () => {
     const wrapper = await createWrapper()
     expect(wrapper.vm.status).toBe("success")
     expect(wrapper.text()).toContain(
-      "account.email_verify.verification_success"
+      "account.email_verify.verification_success",
     )
   })
 
@@ -75,7 +71,6 @@ describe("VerifyEmailPage", () => {
     verifyHandler.mockResolvedValue({
       data: { verifyEmail: { email_verified_at: "timestamp" } },
     })
-
     useRoute.mockReturnValue({
       params: { token: "", expires: "" },
     })
@@ -83,19 +78,16 @@ describe("VerifyEmailPage", () => {
       currentUser: ref({ email_verified_at: null }),
     })
     const wrapper = await createWrapper()
-
     expect(verifyHandler).toHaveBeenCalledWith({ token: "", expires: "" })
     expect(wrapper.vm.status).toBe("success")
     expect(wrapper.text()).toContain(
-      "account.email_verify.verification_success"
+      "account.email_verify.verification_success",
     )
     expect(warn).toHaveBeenCalledTimes(1)
     expect(warn).toHaveBeenCalledWith(
-      expect.stringContaining('message%22%3A33%2C%22')
+      expect.stringContaining("message%22%3A33%2C%22"),
     )
-    expect(warn).toHaveBeenCalledWith(
-      expect.stringContaining('currentUser')
-    )
+    expect(warn).toHaveBeenCalledWith(expect.stringContaining("currentUser"))
   })
 
   it("renders errors", async () => {
@@ -106,20 +98,15 @@ describe("VerifyEmailPage", () => {
         },
       ],
     })
-
     useRoute.mockReturnValue({
       params: { token: "", expires: "" },
     })
-
     useCurrentUser.mockReturnValue({
       currentUser: ref({ email_verified_at: null }),
     })
-
     const wrapper = await createWrapper()
-
     expect(wrapper.vm.status).toBe("failure")
-    const errorUl = wrapper.find("ul.errors")
-
+    const errorUl = wrapper.find("ul[data-cy=errors")
     expect(errorUl.text()).toContain("TEST_ERROR_CODE")
   })
 })

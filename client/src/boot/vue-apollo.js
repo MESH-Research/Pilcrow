@@ -14,7 +14,7 @@ import { withXsrfLink, expiredTokenLink } from "src/apollo/apollo-links.js"
 import { createApolloProvider } from "@vue/apollo-option"
 
 import { ApolloClients } from "@vue/apollo-composable"
-import { createUploadLink } from "apollo-upload-client"
+import createUploadLink from "apollo-upload-client/createUploadLink.mjs"
 import { BatchHttpLink } from "@apollo/client/link/batch-http"
 
 const httpOptions = {

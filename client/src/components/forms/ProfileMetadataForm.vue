@@ -136,7 +136,6 @@
           </template>
         </v-q-input>
       </form-section>
-
       <form-section>
         <template #header>
           {{ $t("account.profile.section_websites") }}
@@ -175,7 +174,6 @@
 </template>
 
 <script setup>
-//Import components
 import EditableList from "src/components/molecules/EditableList.vue"
 import VQInput from "src/components/atoms/VQInput.vue"
 import VQWrap from "src/components/atoms/VQWrap.vue"
@@ -241,7 +239,6 @@ function updateInput(validator, newValue) {
 
 function save() {
   v$.value.$touch()
-
   if (v$.value.$invalid) {
     errorMessage.value = "Oops, check form above for errors"
   } else {
