@@ -59,16 +59,4 @@ describe("Profile", () => {
         cy.dataCy("edit_input_0").should("have.value", site2)
       })
   })
-
-  it("can add interest keywords", () => {
-    cy.dataCy("interest_keywords_control")
-      .within(() => {
-        const word1 = "manuscript"
-        const word2 = "video"
-        cy.dataCy("input_field").type(word1 + "{enter}")
-        cy.dataCy("input_field").type(word2 + "{enter}")
-        cy.dataCy("tag_list").contains(word1)
-        cy.dataCy("tag_list").contains(word2)
-      })
-  })
 })

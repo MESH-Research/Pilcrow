@@ -207,7 +207,6 @@
       "section_social_media": "Social Media Profiles",
       "section_academic_profiles": "Academic Profiles",
       "section_websites": "Websites",
-      "section_keywords": "Keywords",
       "fields": {
         "username": {
           "label": "Username",
@@ -299,14 +298,6 @@
               "maxLength": "@:generic_validations.maxLength",
               "valid": "Please enter a valid URL.",
               "duplicate": "This URL is already in the list."
-            }
-          },
-          "interest_keywords": {
-            "label": "Interest Keyword",
-            "hint": "Interest keywords will be used to help provide suggestions for submissions which may be of interest to you.",
-            "errors": {
-              "maxLength": "@:generic_validations.maxLength",
-              "duplicate": "This keyword is already in the list."
             }
           }
         }
