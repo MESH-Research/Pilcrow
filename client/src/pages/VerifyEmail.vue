@@ -5,7 +5,7 @@
         <q-spinner color="primary" size="2em" />
         <strong class="text-h3">{{ $t("loading") }}</strong>
       </div>
-      <div v-if="status === 'success'" class="column flex-center">
+      <div v-else-if="status === 'success'" class="column flex-center">
         <q-card rounded class="bg-primary q-pa-md q-ma-md">
           <q-icon color="white" name="email" size="2em" />
         </q-card>
@@ -23,7 +23,7 @@
           }"
         />
       </div>
-      <div v-if="status == 'failure'" class="column flex-center">
+      <div v-else-if="status == 'failure'" class="column flex-center">
         <q-card rounded class="bg-negative q-pa-md q-ma-md">
           <q-icon color="white" name="error" size="2em" />
         </q-card>
