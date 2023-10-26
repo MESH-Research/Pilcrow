@@ -71,7 +71,6 @@ describe("VerifyEmailPage", () => {
     verifyHandler.mockResolvedValue({
       data: { verifyEmail: { email_verified_at: "timestamp" } },
     })
-
     useRoute.mockReturnValue({
       params: { token: "", expires: "" },
     })
@@ -79,13 +78,12 @@ describe("VerifyEmailPage", () => {
       currentUser: ref({ email_verified_at: null }),
     })
     const wrapper = await createWrapper()
-
     expect(verifyHandler).toHaveBeenCalledWith({ token: "", expires: "" })
     expect(wrapper.vm.status).toBe("success")
     expect(wrapper.text()).toContain(
       "account.email_verify.verification_success",
     )
-    expect(warn).toHaveBeenCalledTimes(1)
+    expect(warn).toHaveBeenCalledTimes(2)
     expect(warn).toHaveBeenCalledWith(
       expect.stringContaining("message%22%3A33%2C%22"),
     )

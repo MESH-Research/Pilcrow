@@ -20,7 +20,6 @@
           :label="$t('buttons.dashboard')"
           :to="{
             name: 'dashboard',
-            params: { id: cta_id },
           }"
         />
       </div>
