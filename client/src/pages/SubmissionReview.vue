@@ -45,7 +45,7 @@
           <div ref="scrollOverallComments"></div>
           <submission-comment-section
           />
-          <div ref="scrollTESTNewOverallComment"></div>
+          <div ref="scrollAddNewOverallComment"></div>
         </q-page-container>
       </q-layout>
 
@@ -92,10 +92,11 @@ function handleScroll() {
 }
 
 function handleNewScroll() {
-  const scrollValue = scrollTESTNewOverallComment.value
+  const scrollValue = scrollAddNewOverallComment.value
   const scrollTarget = getScrollTarget(scrollValue)
   console.log("new scroll", scrollValue, scrollTarget)
   setVerticalScrollPosition(scrollTarget, scrollValue.offsetTop, 250)
+  scrollValue.focus()
 }
 </script>
 
