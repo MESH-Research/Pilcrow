@@ -18,14 +18,14 @@ jobs:
   environments:
     name: "Environments"
     needs:
-      - build-images
+      - publish
     runs-on: ubuntu-20.04
     outputs:
       environments: ${{ steps.matches.outputs.environments }}
     steps:
       - uses: wreality/filtered-env@v1.0.0
         with:
-          tags: ${{ needs.build-images.outputs.tags}}
+          tags: ${{ needs.publish.outputs.tags}}
           token: ${{ secrets.REPO_TOKEN }}
         id: matches
   client-unit-test:
@@ -45,8 +45,6 @@ jobs:
     runs-on: ubuntu-20.04
     outputs:
       version: ${{ steps.build-image.outputs.version }}
-      tags: ${{ steps.build-image.outputs.tags }}
-      tag_count: ${{ steps.build-image.outputs.tag_count }}
     steps:
       - uses: actions/checkout@v3
       - name: Login to Github Packages
@@ -64,12 +62,6 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
-      - name: Build Info
-        run: |
-          echo "VERSION: ${{ needs.build-images.outputs.version}}"
-          echo "TAGS: ${{ needs.build-images.outputs.tags}}"
-          echo "COUNT: ${{ needs.build-images.outputs.tag_count}}"
-        shell: bash
       - name: Start Stack
         uses: ./.github/actions/start-stack
         with:
@@ -134,8 +126,10 @@ jobs:
   publish:
     name: "Publish (master branch only)"
     runs-on: ubuntu-20.04
-    needs: [build-images, backend-unit-test, client-unit-test, e2e]
-    if: needs.build-images.outputs.tag_count > 1
+    needs: [backend-unit-test, client-unit-test, e2e]
+    if: github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/v')
+    outputs:
+      tags: ${{ steps.build-image.outputs.tags }}
     steps:
       - uses: actions/checkout@v3
       - name: Login to Github Packages
@@ -145,6 +139,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - uses: ./.github/actions/build-image
+        id: build-image
         with:
           target: release
   deployments:

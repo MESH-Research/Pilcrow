@@ -8,9 +8,6 @@ outputs:
     version:
         description: "Version of the package that was built"
         value: ${{ steps.docker-meta-fpm.outputs.version }}
-    tag_count:
-        description: "Number of tags that would be pushed"
-        value: ${{ steps.count-tags.outputs.tags }}
     tags:
         description: "List of tags"
         value: ${{ steps.docker-meta-fpm.outputs.tags}}
@@ -19,11 +16,12 @@ runs:
     steps:
         - name: Checkout code
           uses: actions/checkout@v3
+          with:
+            fetch-depth: 0
         - name: Set version strings
           id: tagger
           shell: bash
           run: |
-              git fetch --prune --unshallow
               VERSION=$(git describe --tags)
               VERSION_URL=https://github.com/MESH-Research/Pilcrow/commits/${GITHUB_SHA}
               VERSION_DATE=$(git show -s --format=%cI ${GITHUB_SHA})
@@ -50,11 +48,6 @@ runs:
               type=semver,pattern={{major}}.{{minor}}
               type=sha,enable=${{ inputs.target == 'default'}}
             bake-target: fpm
-        - run: |
-            echo "tags=$( wc -l <<< "$DOCKER_METADATA_OUTPUT_TAGS" )" >> "$GITHUB_OUTPUT"
-          shell: bash
-          name: Count Tags
-          id: count-tags
         - name: Docker meta (WEB)
           id: docker-meta-web
           uses: docker/metadata-action@v5
