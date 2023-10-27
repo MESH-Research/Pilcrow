@@ -53,7 +53,6 @@ describe("ProfilePage", () => {
       specialization: "my specialization",
       affiliation: "my affiliation",
       website: ["http://mywebsite.com"],
-      interest_keywords: ["interest1", "interest2"],
       social_media: {
         twitter: "my_twitter",
         instagram: "my_insta",

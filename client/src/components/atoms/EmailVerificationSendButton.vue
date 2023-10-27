@@ -2,7 +2,7 @@
   <q-btn
     :loading="status == 'loading'"
     :color="btnColor"
-    class="text-black"
+    :text-color="status == 'success' ? 'white' : 'black'"
     v-bind="{ ...$props, ...$attrs }"
     @click="send"
   >
@@ -28,12 +28,16 @@ import { useQuasar } from "quasar"
 import { useGraphErrors } from "src/use/errors"
 import { useI18n } from "vue-i18n"
 
+const $q = useQuasar()
 const status = ref(null)
 const btnColor = computed(() => {
   if (status.value == "success") {
     return "positive"
   }
-  return null
+  if ($q.dark.isActive) {
+    return "warning"
+  }
+  return "highlight"
 })
 
 const { mutate: sendEmail } = useMutation(SEND_VERIFY_EMAIL)

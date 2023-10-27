@@ -246,12 +246,6 @@ import {
 import { ref } from "vue"
 const { dialog } = useQuasar()
 
-const submissionRef = ref(props.submission)
-const { isDisabledByRole, isDisabledByState } =
-  useSubmissionExport(submissionRef)
-const { statusChangingDisabledByRole, statusChangingDisabledByState } =
-  useStatusChangeControls(submissionRef)
-
 const props = defineProps({
   submission: {
     type: Object,
@@ -262,6 +256,12 @@ const props = defineProps({
     default: "",
   },
 })
+
+const submissionRef = ref(props.submission)
+const { isDisabledByRole, isDisabledByState } =
+  useSubmissionExport(submissionRef)
+const { statusChangingDisabledByRole, statusChangingDisabledByState } =
+  useStatusChangeControls(submissionRef)
 
 function cannotAccessSubmission(submission) {
   const nonreviewableStates = new Set([

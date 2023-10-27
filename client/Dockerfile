@@ -1,9 +1,6 @@
-FROM --platform=$BUILDPLATFORM node:18-alpine as build-stage
+FROM --platform=$BUILDPLATFORM node:20-alpine as build-stage
 WORKDIR /app
 
-ARG VERSION
-ARG VERSION_URL
-ARG VERSION_DATE
 COPY package.json yarn.lock ./
 RUN yarn
 COPY . .

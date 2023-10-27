@@ -199,7 +199,6 @@ input UpdateProfileMetadataInput @validator(class: "ProfileMetadataValidator") {
     position_title: String
     specialization: String
     affiliation: String
-    interest_keywords: [String]
     biography: String
-    websites: [String]
+    websites: [String] @sanitizeUrl
 }
