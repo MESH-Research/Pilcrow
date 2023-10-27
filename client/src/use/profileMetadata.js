@@ -39,10 +39,6 @@ export const website_rules = {
   valid: checkUrl,
 }
 
-export const keyword_rules = {
-  maxLength: maxLength(128),
-}
-
 const validWebsites = (value) => {
   return Array.isArray(value) ? value.every((v) => checkUrl(v)) : true
 }
@@ -94,7 +90,6 @@ export const profile_defaults = {
     specialization: "",
     affiliation: "",
     websites: [],
-    interest_keywords: [],
     social_media: {
       google: "",
       twitter: "",
@@ -153,6 +148,5 @@ export default {
   social_regex,
   profile_defaults,
   website_rules,
-  keyword_rules,
   useSocialFieldWatchers,
 }
