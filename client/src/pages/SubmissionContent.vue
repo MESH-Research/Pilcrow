@@ -29,7 +29,10 @@
     <div class="col-lg-6 col-md-7 col-sm-9 col-xs-12">
       <article class="q-py-lg q-px-sm">
         <div
-          v-if="formStatus !== 'enter_text_success' && formStatus !== 'upload_success'"
+          v-if="
+            formStatus !== 'enter_text_success' &&
+            formStatus !== 'upload_success'
+          "
           class="q-gutter-md"
         >
           <h1 class="text-h3" data-cy="submission_content_title">
@@ -122,6 +125,19 @@
               v-model="submissionContent"
               data-cy="content_editor"
               min-height="10rem"
+              :toolbar="[
+                [
+                  {
+                    label: $q.lang.editor.formatting,
+                    icon: $q.iconSet.editor.formatting,
+                    list: 'no-icons',
+                    options: ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'],
+                  },
+                ],
+                ['bold', 'italic', 'underline'],
+                ['link', 'unordered', 'ordered', 'outdent', 'indent'],
+                ['undo', 'redo'],
+              ]"
             />
             <q-btn
               data-cy="submit_entered_text_btn"
@@ -144,25 +160,26 @@
           }}</strong>
           <p>{{ $t(`submissions.content.submit.success.message`) }}</p>
           <div>
-          <q-btn
-            data-cy="content_submit_success_btn"
-            class="q-mr-sm"
-            color="accent"
-            size="md"
-            :label="$t(`submissions.content.submit.success.btn_label`)"
-            :to="{
-              name: 'submission:draft',
-              params: { id: props.id },
-            }"
-          />
-          <q-btn
-            color="primary"
-            :label="$t(`submission.action.preview`)"
-            :to="{
-              name: 'submission:preview',
-              params: { id: props.id },
-            }"
-          /></div>
+            <q-btn
+              data-cy="content_submit_success_btn"
+              class="q-mr-sm"
+              color="accent"
+              size="md"
+              :label="$t(`submissions.content.submit.success.btn_label`)"
+              :to="{
+                name: 'submission:draft',
+                params: { id: props.id },
+              }"
+            />
+            <q-btn
+              color="primary"
+              :label="$t(`submission.action.preview`)"
+              :to="{
+                name: 'submission:preview',
+                params: { id: props.id },
+              }"
+            />
+          </div>
         </div>
       </article>
     </div>
@@ -196,7 +213,7 @@ const updateModifier = ref("")
 watchEffect(() => {
   if (submission.value?.content?.data) {
     submissionContent.value = submission.value.content.data
-    updateModifier.value = '_update'
+    updateModifier.value = "_update"
   }
 })
 

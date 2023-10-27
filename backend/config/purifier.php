@@ -20,7 +20,7 @@ return [
     'settings'      => [
         'default' => [
             'HTML.Doctype'             => 'HTML 4.01 Transitional',
-            'HTML.Allowed'             => 'div,b,strong,i,em,u,a[href|title|id|role],ul,ol,li[id],p[style],br,span[style],img[width|height|alt|src],section[role],hr',
+            'HTML.Allowed'             => 'div,b,strong,i,em,u,a[href|title|id|role],ul,ol,li[id],p[style],br,span[style],img[width|height|alt|src],section[role],hr,h1,h2,h3,h4,h5,h6',
             'CSS.AllowedProperties'    => 'font,font-size,font-weight,font-style,font-family,text-decoration,padding-left,color,background-color,text-align',
             'AutoFormat.AutoParagraph' => true,
             'AutoFormat.RemoveEmpty'   => true,
