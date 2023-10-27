@@ -17,6 +17,7 @@ concurrency:
 jobs:
   environments:
     name: "Environments"
+    if: github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/v')
     needs:
       - build-images
     runs-on: ubuntu-20.04
