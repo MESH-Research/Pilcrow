@@ -67,9 +67,17 @@
       </div>
     </section>
     <section class="row wrap q-gutter-y-md">
-      <div class="col-12">
+      <div v-if="app_admin_submissions.length > 0" class="col-12">
         <submission-table
-          v-if="reviewer_submissions.length > 0"
+          :table-data="app_admin_submissions"
+          table-type="submissions"
+          variation="dashboard"
+          role="app_admin"
+          data-cy="app_admin_table"
+        />
+      </div>
+      <div v-if="reviewer_submissions.length > 0" class="col-12" >
+        <submission-table
           :table-data="reviewer_submissions"
           table-type="submissions"
           variation="dashboard"
@@ -105,18 +113,28 @@
 import AvatarImage from "src/components/atoms/AvatarImage.vue"
 import { useCurrentUser } from "src/use/user"
 import { useQuery } from "@vue/apollo-composable"
-import { CURRENT_USER_SUBMISSIONS } from "src/graphql/queries"
+import { CURRENT_USER_SUBMISSIONS, GET_SUBMISSIONS } from "src/graphql/queries"
 import SubmissionTable from "src/components/SubmissionTable.vue"
 import { computed } from "vue"
 
 const { currentUser } = useCurrentUser()
 const { result } = useQuery(CURRENT_USER_SUBMISSIONS)
+const { result: all_results } = useQuery(GET_SUBMISSIONS, {page: 1})
 const submissions = computed(() => {
   let s = result.value?.currentUser?.submissions ?? []
   return [...s].sort((a, b) => {
     return new Date(b.created_at) - new Date(a.created_at)
   })
 })
+const all_submissions = computed(() => {
+  let s = all_results.value?.submissions.data ?? []
+  return [...s].sort((a, b) => {
+    return new Date(b.created_at) - new Date(a.created_at)
+  })
+})
+const app_admin_submissions = computed(() => all_submissions.value)
+// const app_admin_submissions = computed(() => [])
+
 const reviewer_submissions = computed(() =>
   submissions.value.filter(function (submission) {
     return (

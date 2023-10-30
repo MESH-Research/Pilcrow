@@ -364,6 +364,11 @@
         "byline": "Reviews you are reviewing",
         "tooltip": "Reviews with a status of Draft, Initially Submitted, or Awaiting Review will not appear here."
       },
+      "app_admin": {
+        "title": "Application Administration",
+        "byline": "All submissions in the application",
+        "tooltip": "All submissions in the application will appear here regardless of status."
+      },
       "coordinator": {
         "title": "Review Coordination",
         "byline": "Reviews you are review coordinating",

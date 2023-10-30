@@ -271,6 +271,7 @@ export const GET_SUBMISSIONS = gql`
           ...relatedUserFields
         }
         publication {
+          id
           name
           editors {
             ...relatedUserFields
@@ -278,10 +279,6 @@ export const GET_SUBMISSIONS = gql`
           publication_admins {
             ...relatedUserFields
           }
-        }
-        files {
-          id
-          file_upload
         }
       }
     }
