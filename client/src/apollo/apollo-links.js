@@ -9,7 +9,7 @@ const fetchXsrfToken = async () => {
   return fetch("/sanctum/csrf-cookie", {
     credentials: "same-origin",
   }).then(async (response) => {
-    //Read response text (even though its empty) to prevent Chrome from thinking there's an error b/c no one read the (empty) response body.
+    //Read response text (even though its empty) to prevent the browser from thinking there's an error b/c no one read the (empty) response body.
     await response.text()
     const xsrfToken = cookieXsrfToken()
     return xsrfToken
