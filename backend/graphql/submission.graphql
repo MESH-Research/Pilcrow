@@ -5,7 +5,7 @@ extend type Query {
     submission(id: ID @eq): Submission @find @can(ability: "view", find: "id")
 
     "Return all submissions"
-    submissions: [Submission!]! @paginate(defaultCount: 100)
+    submissions: [Submission!] @can(ability: "view", query: true) @paginate(defaultCount: 100)
 }
 
 extend type Mutation {
