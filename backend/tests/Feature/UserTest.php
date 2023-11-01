@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
+use App\Models\Publication;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -12,6 +13,22 @@ class UserTest extends TestCase
 {
     use WithFaker;
     use RefreshDatabase;
+
+    public function testHighestRole()
+    {
+        /* @var User $user */
+        $user = User::factory()->create();
+        $publication = Publication::factory()->create();
+        $publication->editors()->save($user);
+
+        $publication2 = Publication::factory()->create();
+        $publication2->publicationAdmins()->save($user);
+
+        $publication = Publication::factory()->create();
+        $publication->editors()->save($user);
+
+        print_r($user->getHighestPrivilegedRole());
+    }
 
     /**
      * @return void

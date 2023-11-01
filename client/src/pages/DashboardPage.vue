@@ -67,9 +67,9 @@
       </div>
     </section>
     <section class="row wrap q-gutter-y-md">
-      <div v-if="app_admin_submissions.length > 0" class="col-12">
+      <div v-if="all_submissions.length > 0" class="col-12">
         <submission-table
-          :table-data="app_admin_submissions"
+          :table-data="all_submissions"
           table-type="submissions"
           variation="dashboard"
           role="app_admin"
@@ -132,9 +132,6 @@ const all_submissions = computed(() => {
     return new Date(b.created_at) - new Date(a.created_at)
   })
 })
-const app_admin_submissions = computed(() => all_submissions.value)
-// const app_admin_submissions = computed(() => [])
-
 const reviewer_submissions = computed(() =>
   submissions.value.filter(function (submission) {
     return (
