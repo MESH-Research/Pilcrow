@@ -11,10 +11,19 @@ type User {
     updated_at: DateTime
     email_verified_at: DateTime
     roles: [Role!]! @belongsToMany
-    highest_privileged_role: SubmissionUserRoles @method(name: "getMyRole")
+    highest_privileged_role: UserRoles @method(name: "getHighestPrivilegedRole")
     permissions: [Permission!] @belongsToMany
     profile_metadata: ProfileMetadata
     submissions: [Submission]! @belongsToMany
     pivot: SubmissionUser
     staged: Boolean
+}
+
+enum UserRoles {
+    submitter @enum(value: 6)
+    reviewer @enum(value: 5)
+    review_coordinator @enum(value: 4)
+    editor @enum(value: 3)
+    publication_admin @enum(value: 2)
+    application_admin @enum(value: 1)
 }
