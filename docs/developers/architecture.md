@@ -26,16 +26,16 @@ we've decided to defer implementing SSR and directly ship compiled assets via th
 :::
 
 ## Application Server (API)
+
 <a id="application-server"></a>
-<CaptionImage href="https://laravel.com" :src="$withBase('/logos/laravel.jpg')" caption="Laravel" />
-<CaptionImage href="https://lighthouse-php.com" :src="$withBase('/logos/lighthouse.png')" caption="Lighthouse" />
+<CaptionImage href="https://laravel.com" src="/logos/laravel.jpg" caption="Laravel" />
+<CaptionImage href="https://lighthouse-php.com" src="/logos/lighthouse.png" caption="Lighthouse" />
 
 The backend API portion of the stack is a [Laravel](https://laravel.com) application with [Lighthouse](https://lighthouse-php.com) providing GraphQL server functionality. Laravel Sanctum provides authentication.
 
 ## Client (Quasar/Vue)
-
-<CaptionImage href="https://quasar.dev" :src="$withBase('/logos/quasar.png')" caption="Quasar" />
-<CaptionImage href="https://vuejs.org" :src="$withBase('/logos/vue.png')" caption="Vue" />
-<CaptionImage href="https://apollographql.com" :src="$withBase('/logos/apollo.png')" caption="ApolloClient" />
+<CaptionImage href="https://quasar.dev" src="/logos/quasar.png" caption="Quasar" />
+<CaptionImage href="https://vuejs.org" src="/logos/vue.png" caption="Vue" />
+<CaptionImage href="https://apollographql.com" src="/logos/apollo.png" caption="ApolloClient" />
 
 The frontend client application is a [Quasar/Vue](https://quasar.dev) application. Interaction with the backend API is via [ApolloClient](https://apollographql.com).

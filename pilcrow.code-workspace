@@ -22,13 +22,21 @@
         }
     ],
     "settings": {
+        "[markdown]": {
+            "editor.rulers": [80, 120],
+            "editor.wordWrap": "wordWrapColumn",
+            "editor.wordWrapColumn": 120,
+            "editor.quickSuggestions": {
+                "other": "on",
+                "comments": "off",
+                "strings": "off"
+            }
+        },
         "git.ignoreLimitWarning": true,
         "githubIssues.issueBranchTitle": "${user}/issue${issueNumber}-${sanitizedIssueTitle}",
         "githubIssues.useBranchForIssues": "prompt",
         "githubPullRequests.defaultMergeMethod": "squash",
         "githubPullRequests.focusedMode": true,
-        "bookmarks.label.suggestion": "useWhenSelected",
-        "bookmarks.sideBar.expanded": true,
         "i18n-ally.enabledFrameworks": ["vue"],
         "i18n-ally.keystyle": "nested",
         "i18n-ally.extract.autoDetect": true,

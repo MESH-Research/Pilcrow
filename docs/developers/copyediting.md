@@ -8,14 +8,14 @@ If you are interested in contributing translations, [please reach out to the tea
 
 ### English (en-US)
 
-If you have a GitHub account with writing access to [the GitHub repository](https://github.com/MESH-Research/Pilcrow), you may directly update the American English file (`en-US.json`) by following the instructions below. Otherwise, you can reach out to the [project team](README.md#team-members) to request writing access.
+If you have a GitHub account with writing access to [the GitHub repository](https://github.com/MESH-Research/Pilcrow), you may directly update the American English file (`en-US.json`) by following the instructions below. Otherwise, you can reach out to the [project team](index.md#team-members) to request writing access.
 
 1. Visit the translation file on GitHub located at [client/src/i18n/en-US.json](https://github.com/MESH-Research/Pilcrow/blob/master/client/src/i18n/en-US.json).
 2. Click the "Edit this file" button in the upper-right of the page.
 
       <img alt="Screenshot of the Edit this file button on GitHub appearing after the 'Raw' buttons and before the 'Open symbols panel' button" src="./images/edit_button_location.png" style="width:400px">
 
-3. Make your modifications directly to the translation text within the browser. Use the instructions for [screenshots](/contributing/copyediting.md#screenshots) below for assistance.
+3. Make your modifications directly to the translation text within the browser. Use the instructions for [screenshots](/developers/copyediting.md#screenshots) below for assistance.
 4. Once finished, click the "Commit changes" button in the upper-right of the page.
 
       <img alt="Screenshot of the green Commit changes button on GitHub" src="./images/commit_changes_button.png" style="width:400px">
