@@ -1,6 +1,6 @@
 # Documentation
 
-Pilcrow's documentation (the site you're currently reading) is a [VuePress](https://vuepress.vuejs.org) site located in the `/docs` directory of the repo.  Our goal is to iterate the documentation as features that are added to the application.  All of the documentation files are [Markdown](https://www.markdownguide.org/getting-started/) with some minor Vue additions sprinkled in here and there.
+Pilcrow's documentation (the site you're currently reading) is a [Vitepress](https://vitepress.dev) site located in the `/docs` directory of the repo.  Our goal is to iterate the documentation as features that are added to the application.  All of the documentation files are [Markdown](https://www.markdownguide.org/getting-started/) with some minor Vue additions sprinkled in here and there.
 
 ::: tip Help Pilcrow Grow
 ![edit this page screenshot](./images/edit_this_page.jpg)
@@ -10,11 +10,9 @@ Improving documentation is a great way to help Pilcrow that doesn't require prog
 At the bottom of each page, you should find a link to "Edit this Page."  Follow this link straight to the GitHub editing interface!
 :::
 ## Automated Builds
-
-Github Actions powered by [Netlify](https://netlify.com) automatically build and deploy the documentation sites.  There are two automatic builds configured:
+Github Actions powered by [Netlify](https://netlify.com) automatically build and deploy the documentation sites.
 
 - **<https://pilcrow.meshresearch.dev>**: Automatically built from the `master` branch.
-- **<https://development.pilcrow.meshresearch.dev>**: Automatically built from the `development` branch.
 
 ### Deploy Previews
 
