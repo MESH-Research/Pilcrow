@@ -72,8 +72,8 @@
           :table-data="all_submissions"
           table-type="submissions"
           variation="dashboard"
-          role="app_admin"
-          data-cy="app_admin_table"
+          :role="currentUser.highest_privileged_role"
+          :data-cy="`${currentUser.highest_privileged_role}_table`"
         />
       </div>
       <div v-if="reviewer_submissions.length > 0" class="col-12" >
@@ -85,19 +85,17 @@
           data-cy="reviews_table"
         />
       </div>
-      <div class="col-12">
+      <div v-if="coordinator_reviews.length > 0" class="col-12">
         <submission-table
-          v-if="coordinator_reviews.length > 0"
           :table-data="coordinator_reviews"
           variation="dashboard"
           table-type="reviews"
-          role="coordinator"
+          role="review_coordinator"
           data-cy="coordinator_table"
         />
       </div>
-      <div class="col-12">
+      <div v-if="submitter_submissions.length > 0" class="col-12">
         <submission-table
-          v-if="submitter_submissions.length > 0"
           :table-data="submitter_submissions"
           variation="dashboard"
           table-type="submissions"
