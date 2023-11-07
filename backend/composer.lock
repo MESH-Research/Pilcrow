@@ -4744,16 +4744,16 @@
         },
         {
             "name": "spatie/laravel-permission",
-            "version": "6.0.0",
+            "version": "6.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/laravel-permission.git",
-                "reference": "095821962f8f287f0ce1d6265fc7aa7070dacf12"
+                "reference": "9e83ebe5084689a31263581e1fa821270957b8e6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/laravel-permission/zipball/095821962f8f287f0ce1d6265fc7aa7070dacf12",
-                "reference": "095821962f8f287f0ce1d6265fc7aa7070dacf12",
+                "url": "https://api.github.com/repos/spatie/laravel-permission/zipball/9e83ebe5084689a31263581e1fa821270957b8e6",
+                "reference": "9e83ebe5084689a31263581e1fa821270957b8e6",
                 "shasum": ""
             },
             "require": {
@@ -4814,7 +4814,7 @@
             ],
             "support": {
                 "issues": "https://github.com/spatie/laravel-permission/issues",
-                "source": "https://github.com/spatie/laravel-permission/tree/6.0.0"
+                "source": "https://github.com/spatie/laravel-permission/tree/6.0.1"
             },
             "funding": [
                 {
@@ -4822,7 +4822,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-10-25T05:25:50+00:00"
+            "time": "2023-11-06T19:27:13+00:00"
         },
         {
             "name": "spatie/laravel-settings",
