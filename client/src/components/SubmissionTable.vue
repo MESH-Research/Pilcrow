@@ -20,8 +20,16 @@
             </q-icon>
           </h3>
 
-          <!-- eslint-disable-next-line vue/no-v-html -->
-          <p class="q-mb-none" v-html="$t(byline)"></p>
+          <i18n-t
+            :keypath="byline"
+            class="q-mb-none"
+            tag="p"
+            scope="global"
+          >
+            <template #role>
+              <strong>{{ $t(`role.${role}s`,1) }}</strong>
+            </template>
+          </i18n-t>
 
           <q-select
             v-if="tableData.length"

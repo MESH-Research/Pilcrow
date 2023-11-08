@@ -116,16 +116,16 @@ import SubmissionTable from "src/components/SubmissionTable.vue"
 import { computed } from "vue"
 
 const { currentUser } = useCurrentUser()
-const { result } = useQuery(CURRENT_USER_SUBMISSIONS)
-const { result: all_results } = useQuery(GET_SUBMISSIONS, {page: 1})
-const submissions = computed(() => {
-  let s = result.value?.currentUser?.submissions ?? []
+const { result: all_submissions_result } = useQuery(GET_SUBMISSIONS, {page: 1})
+const all_submissions = computed(() => {
+  let s = all_submissions_result.value?.submissions.data ?? []
   return [...s].sort((a, b) => {
     return new Date(b.created_at) - new Date(a.created_at)
   })
 })
-const all_submissions = computed(() => {
-  let s = all_results.value?.submissions.data ?? []
+const { result } = useQuery(CURRENT_USER_SUBMISSIONS)
+const submissions = computed(() => {
+  let s = result.value?.currentUser?.submissions ?? []
   return [...s].sort((a, b) => {
     return new Date(b.created_at) - new Date(a.created_at)
   })

@@ -3,15 +3,24 @@
     <h2 class="q-pl-lg" data-cy="submissions_title">
       {{ $t(`submissions.heading`) }}
     </h2>
+    <section v-if="all_submissions.length > 0" class="row q-col-gutter-lg q-pa-lg">
+      <div class="col-12">
+      <submission-table
+        :data-cy="`${currentUser.highest_privileged_role}_table`"
+        :table-data="all_submissions"
+        variation="submissions_page"
+        table-type="submissions"
+        :role="currentUser.highest_privileged_role"
+      /></div>
+    </section>
     <section class="row q-col-gutter-lg q-pa-lg">
       <div v-if="subsLoading" class="q-pa-lg">
         {{ $t("loading") }}
       </div>
-
       <div v-else-if="currentUser" class="col-12">
         <submission-table
           :table-data="submitter_submissions"
-          variation="submissions"
+          variation="submissions_page"
           table-type="submissions"
           role="submitter"
           data-cy="submissions_table"
@@ -89,15 +98,22 @@
 </template>
 
 <script setup>
-import { CURRENT_USER_SUBMISSIONS } from "src/graphql/queries"
-import { GET_PUBLICATIONS } from "src/graphql/queries"
 import { useCurrentUser } from "src/use/user"
+import { CURRENT_USER_SUBMISSIONS, GET_SUBMISSIONS } from "src/graphql/queries"
+import { GET_PUBLICATIONS } from "src/graphql/queries"
 import { computed, ref } from "vue"
 import { useQuery } from "@vue/apollo-composable"
 import SubmissionTable from "src/components/SubmissionTable.vue"
 import CommentPreview from "src/components/atoms/CommentPreview.vue"
 
 const { currentUser } = useCurrentUser()
+const { result: all_submissions_result } = useQuery(GET_SUBMISSIONS, {page: 1})
+const all_submissions = computed(() => {
+  let s = all_submissions_result.value?.submissions.data ?? []
+  return [...s].sort((a, b) => {
+    return new Date(b.created_at) - new Date(a.created_at)
+  })
+})
 const { result, loading: subsLoading } = useQuery(CURRENT_USER_SUBMISSIONS)
 const submissions = computed(() => {
   let s = result.value?.currentUser?.submissions ?? []
