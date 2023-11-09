@@ -143,7 +143,8 @@ describe("Reviews Page", () => {
     ["reviewer", 1],
     ["submitter", 1],
   ])("when the user's role is %s", (role_name, expected) => {
-    test(`${expected} submission tables appear`, async () => {
+    const grammar = expected == 1 ? "table appears" : "tables appear"
+    test(`${expected} submission ${grammar}`, async () => {
       mockClient
         .getRequestHandler(GET_SUBMISSIONS)
         .mockResolvedValue(mockGetSubmissions(role_name))
