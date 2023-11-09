@@ -40,7 +40,7 @@ describe("Submissions Page", () => {
   const wrapperFactory = async () => {
     const wrapper = mount(SubmissionsPage, {
       global: {
-        stubs: ["router-link"],
+        stubs: ["router-link", "i18n-t"],
       },
     })
     await flushPromises()

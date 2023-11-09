@@ -357,7 +357,7 @@
       "byline": "Reviews in which you're assigned as a {role}",
       "tooltip": "Reviews with a status of Draft, Initially Submitted, or Awaiting Review will not appear here."
     },
-    "coordinator": {
+    "review_coordinator": {
       "title": "To Coordinate",
       "byline": "Reviews in which you're assigned as a {role}",
       "tooltip": "Reviews with a status of Draft, Initially Submitted, or Awaiting Review will not appear here."
