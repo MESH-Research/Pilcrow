@@ -1,12 +1,11 @@
-import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
+import ReviewsPage from "./ReviewsPage.vue"
+import { CURRENT_USER_SUBMISSIONS, GET_SUBMISSIONS } from "src/graphql/queries"
+import { afterEach, describe, expect, test, vi } from "vitest"
 import { flushPromises, mount } from "@vue/test-utils"
 import { installApolloClient } from "test/vitest/utils"
-import { CURRENT_USER_SUBMISSIONS, GET_SUBMISSIONS } from "src/graphql/queries"
+import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
 import { ref } from "vue"
 import { useCurrentUser } from "src/use/user"
-import ReviewsPage from "./ReviewsPage.vue"
-
-import { describe, expect, test, vi, afterEach } from "vitest"
 
 vi.mock("src/use/user", () => ({
   useCurrentUser: vi.fn(),
@@ -20,6 +19,8 @@ installQuasarPlugin()
 const mockClient = installApolloClient()
 
 describe("Reviews Page", () => {
+  const CurrentUserSubmissions = vi.fn()
+  mockClient.setRequestHandler(CURRENT_USER_SUBMISSIONS, CurrentUserSubmissions)
   const makeWrapper = () =>
     mount(ReviewsPage, {
       global: {
