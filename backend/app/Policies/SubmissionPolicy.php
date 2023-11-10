@@ -204,8 +204,6 @@ class SubmissionPolicy
         return Response::deny('UNAUTHORIZED');
     }
 
-
-
     /**
      * Update Submission Policy
      *

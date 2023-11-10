@@ -19,35 +19,36 @@ class UserTest extends TestCase
     /**
      * @return array
      */
-    public static function rolesAndExpectationsProvider() {
+    public static function rolesAndExpectationsProvider()
+    {
         return [
             'admin' => [
                 'role_ids' => [1,2,3,4,5,6],
-                'expected' => 1
+                'expected' => 1,
             ],
             'pub admin' => [
                 'role_ids' => [2,3,4,5,6],
-                'expected' => 2
+                'expected' => 2,
             ],
             'editor' => [
                 'role_ids' => [3,4,5,6],
-                'expected' => 3
+                'expected' => 3,
             ],
             'review coordinator' => [
                 'role_ids' => [4,5,6],
-                'expected' => 4
+                'expected' => 4,
             ],
             'reviewer' => [
                 'role_ids' => [5,6],
-                'expected' => 5
+                'expected' => 5,
             ],
             'submitter' => [
                 'role_ids' => [6],
-                'expected' => 6
+                'expected' => 6,
             ],
             'nothing' => [
                 'role_ids' => [],
-                'expected' => null
+                'expected' => null,
             ],
         ];
     }
@@ -88,28 +89,28 @@ class UserTest extends TestCase
      */
     public function testHighestPrivilegedRole($role_ids, $expected)
     {
-        /* @var User $user */
+        /** @var User $user */
         $user = User::factory()->create();
 
-        if (in_array(1,$role_ids)) {
+        if (in_array(1, $role_ids)) {
             $user->assignRole(Role::APPLICATION_ADMINISTRATOR);
         }
-        if (in_array(2,$role_ids)) {
+        if (in_array(2, $role_ids)) {
             $this->assignPublicationRole($user, 'publicationAdmins');
         }
-        if (in_array(3,$role_ids)) {
+        if (in_array(3, $role_ids)) {
             $this->assignPublicationRole($user, 'editors');
         }
-        if (in_array(4,$role_ids)) {
+        if (in_array(4, $role_ids)) {
             $this->assignSubmissionRole($user, 'reviewCoordinators');
         }
-        if (in_array(5,$role_ids)) {
+        if (in_array(5, $role_ids)) {
             $this->assignSubmissionRole($user, 'reviewers');
         }
-        if (in_array(6,$role_ids)) {
+        if (in_array(6, $role_ids)) {
             $this->assignSubmissionRole($user, 'submitters');
         }
-        $this->assertEquals($user->getHighestPrivilegedRole(),$expected);
+        $this->assertEquals($user->getHighestPrivilegedRole(), $expected);
     }
 
     /**

@@ -191,11 +191,12 @@ class User extends Authenticatable implements MustVerifyEmail
             return (int)Role::APPLICATION_ADMINISTRATOR_ROLE_ID;
         }
         if ($this->publications->isNotEmpty()) {
-            return PublicationUser::where('user_id',$this->id)->get(['role_id'])->sort()->first()->role_id;
+            return PublicationUser::where('user_id', $this->id)->get(['role_id'])->sort()->first()->role_id;
         }
         if ($this->submissions->isNotEmpty()) {
-            return SubmissionUser::where('user_id',$this->id)->get(['role_id'])->sort()->first()->role_id;
+            return SubmissionUser::where('user_id', $this->id)->get(['role_id'])->sort()->first()->role_id;
         }
+
         return null;
     }
 
