@@ -1,19 +1,13 @@
 import ReviewsPage from "./ReviewsPage.vue"
 import { CURRENT_USER_SUBMISSIONS, GET_SUBMISSIONS } from "src/graphql/queries"
 import { afterEach, describe, expect, test, vi } from "vitest"
-import { flushPromises, mount } from "@vue/test-utils"
 import { installApolloClient } from "test/vitest/utils"
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
-import { ref } from "vue"
-import { useCurrentUser } from "src/use/user"
+import { mount, flushPromises } from "@vue/test-utils"
 
 vi.mock("src/use/user", () => ({
   useCurrentUser: vi.fn(),
 }))
-
-useCurrentUser.mockReturnValue({
-  currentUser: ref({ id: 1 }),
-})
 
 installQuasarPlugin()
 const mockClient = installApolloClient()
@@ -34,7 +28,7 @@ describe("Reviews Page", () => {
 
   function mockSubmission(role_name) {
     const submission_my_role = {
-      application_admin: null,
+      application_admin: "submitter",
       publication_admin: null,
       editor: null,
       review_coordinator: "review_coordinator",
