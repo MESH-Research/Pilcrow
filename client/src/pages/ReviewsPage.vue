@@ -12,7 +12,10 @@
         />
       </div>
     </section>
-    <section v-if="coordinator_reviews.length > 0" class="row q-col-gutter-lg q-pa-lg">
+    <section
+      v-if="coordinator_reviews.length > 0"
+      class="row q-col-gutter-lg q-pa-lg"
+    >
       <div class="col-12">
         <submission-table
           data-cy="coordinator_table"
@@ -53,11 +56,7 @@ const all_submissions = computed(() => {
 })
 const all_reviews = computed(() =>
   all_submissions.value.filter(function (submission) {
-    return (
-      ["DRAFT"].includes(
-        submission.status,
-      ) === false
-    )
+    return ["DRAFT"].includes(submission.status) === false
   }),
 )
 const { result } = useQuery(CURRENT_USER_SUBMISSIONS)
