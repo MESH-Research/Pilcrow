@@ -194,7 +194,7 @@ class User extends Authenticatable implements MustVerifyEmail
             return PublicationUser::where('user_id', $this->id)->min('role_id');
         }
         if ($this->submissions->isNotEmpty()) {
-            return SubmissionUser::where('user_id', $this->id)->get(['role_id'])->sort()->first()->role_id;
+            return SubmissionUser::where('user_id', $this->id)->min('role_id');
         }
 
         return null;
