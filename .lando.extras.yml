@@ -5,7 +5,7 @@ cypress:
       cypress:
         type: node:18
         overrides:
-          image: "cypress/base:18"
+          image: "cypress/base:18.16.1"
           environment:
             ELECTRON_EXTRA_LAUNCH_ARGS: "--force-prefers-reduced-motion"
     tooling:
