@@ -160,7 +160,6 @@ function scrollToOverallComments() {
 
 function scrollNewOverallComment() {
   emit("scrollToNewOverallComment")
-  console.log("emitting scrollToNewOverallComment")
 }
 
 const fonts = [

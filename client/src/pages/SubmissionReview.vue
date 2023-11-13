@@ -82,21 +82,19 @@ provide("activeComment", ref(null))
 provide("commentDrawerOpen", commentDrawerOpen)
 
 const scrollOverallComments = ref(null)
-const scrollTESTNewOverallComment = ref(null)
+const scrollAddNewOverallComment = ref(null)
 
 function handleScroll() {
   const scrollValue = scrollOverallComments.value
   const scrollTarget = getScrollTarget(scrollValue)
-  console.log("scroll", scrollValue, scrollTarget)
   setVerticalScrollPosition(scrollTarget, scrollValue.offsetTop, 250)
 }
 
 function handleNewScroll() {
   const scrollValue = scrollAddNewOverallComment.value
   const scrollTarget = getScrollTarget(scrollValue)
-  console.log("new scroll", scrollValue, scrollTarget)
   setVerticalScrollPosition(scrollTarget, scrollValue.offsetTop, 250)
-  scrollValue.focus()
+  scrollValue
 }
 </script>
 
