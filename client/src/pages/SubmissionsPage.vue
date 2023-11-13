@@ -109,10 +109,7 @@ import CommentPreview from "src/components/atoms/CommentPreview.vue"
 const { currentUser } = useCurrentUser()
 const { result: all_submissions_result } = useQuery(GET_SUBMISSIONS, {page: 1})
 const all_submissions = computed(() => {
-  let s = all_submissions_result.value?.submissions.data ?? []
-  return [...s].sort((a, b) => {
-    return new Date(b.created_at) - new Date(a.created_at)
-  })
+  return all_submissions_result.value?.submissions.data ?? []
 })
 const { result, loading: subsLoading } = useQuery(CURRENT_USER_SUBMISSIONS)
 const submissions = computed(() => {

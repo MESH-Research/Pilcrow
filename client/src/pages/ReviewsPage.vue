@@ -49,10 +49,7 @@ const { result: all_submissions_result } = useQuery(GET_SUBMISSIONS, {
   page: 1,
 })
 const all_submissions = computed(() => {
-  let s = all_submissions_result.value?.submissions.data ?? []
-  return [...s].sort((a, b) => {
-    return new Date(b.created_at) - new Date(a.created_at)
-  })
+  return all_submissions_result.value?.submissions.data ?? []
 })
 const all_reviews = computed(() =>
   all_submissions.value.filter(function (submission) {
