@@ -7,7 +7,7 @@ MESH-Research loves to welcome your contributions. There are several ways to hel
 * Write patches for open bug/feature issues, preferably with test cases included
 
 There are a few guidelines that we need contributors to follow so that we have a
-chance of keeping on top of things.
+chance of keeping on top of things.  Check out the [detailed contributor documentation](https://pilcrow.meshresearch.dev/developers/) hosted on the docs site as well.
 
 ## Code of Conduct
 
@@ -24,24 +24,16 @@ Help us keep Pilcrow development open and inclusive. Please read and follow our 
 
 ## Branches and Release Flow
 
-* The `development` branch is our bleeding edge.
+* The `master` branch is our bleeding edge.
   * All commits on this branch will follow [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/#summary) (CC)
   * Pull requests:
     * The PR may be rebased if all its commits follow Conventional Commits guidelines and there is a need of additional detail for CHANGELOG generation or release versioning.
     * Otherwise, the PR should be squashed and merged if its commits can be squashed into a single commit.
-* The `master` branch is our production release branch.
-  * All commits on this branch will follow [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/#summary) (CC)
 
 ## Making Changes
 
 * Create a topic branch from where you want to base your work.
-  * This is usually the development branch.
-  * Only target the master branch if you are certain your fix must be on that
-    branch.
-  * To quickly create a topic branch based on development; `git branch
-    development/my_contribution development` then checkout the new branch with `git
-    checkout development/my_contribution`. Better avoid working directly on the
-    `development` branch, to avoid conflicts if you pull in updates from origin.
+  * This is usually the `master` branch.
 * Make commits of logical units.
 * Check for unnecessary whitespace with `git diff --check` before committing.
 * Use descriptive commit messages and reference the #issue number (see [Commit Messages](#commit-messages) below).
@@ -50,7 +42,7 @@ Help us keep Pilcrow development open and inclusive. Please read and follow our 
 
 ## Commit Messages
 
-Commit messages on `development` and `master` branches must follow [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/#summary). Contributors are encouraged to use them as well, but maintainers will happily fix things up when merging pull requests if needed.
+Commit messages on `master` branches must follow [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/#summary). Contributors are encouraged to use them as well, but maintainers will happily fix things up when merging pull requests if needed.
 
 The Conventional Commits specification is a lightweight convention on top of commit messages. It provides an easy set of rules for creating an explicit commit history; which makes it easier to write automated tools on top of. This convention dovetails with SemVer, by describing the features, fixes, and breaking changes made in commit messages.
 
@@ -70,35 +62,6 @@ Making use of [tooling which supports Conventional Commits](https://www.conventi
 * Squash extraneous commits to the appropriate logical portions.
 * Submit a pull request to the repository, with the correct target branch.
 
-## Test cases and linting / styles
-
-### Backend
-
-To run tests:
-
-    composer run-script test
-
-To run the sniffs for CakePHP coding standards:
-
-    composer run-script cs-check
-
-It is also possible to fix many standards violations:
-
-    composer run-script cs-fix
-
-### Frontend
-
-To run tests:
-
-Test harnesses aren't current configured.  We'll update this when they are.
-
-To run linter/style checker:
-
-    yarn run lint
-
-## Reporting a Security Issue
-
-If you've found a security related issue in Pilcrow, please don't open an issue in GitHub. Instead contact Mesh Research at <mesh@msu.edu>.
 
 ## Additional Resources
 
