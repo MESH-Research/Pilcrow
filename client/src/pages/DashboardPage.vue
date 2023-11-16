@@ -67,9 +67,17 @@
       </div>
     </section>
     <section class="row wrap q-gutter-y-md">
-      <div class="col-12">
+      <div v-if="all_submissions.length > 0" class="col-12">
         <submission-table
-          v-if="reviewer_submissions.length > 0"
+          :table-data="all_submissions"
+          table-type="submissions"
+          variation="dashboard"
+          :role="currentUser.highest_privileged_role"
+          :data-cy="`${currentUser.highest_privileged_role}_table`"
+        />
+      </div>
+      <div v-if="reviewer_submissions.length > 0" class="col-12" >
+        <submission-table
           :table-data="reviewer_submissions"
           table-type="submissions"
           variation="dashboard"
@@ -77,19 +85,17 @@
           data-cy="reviews_table"
         />
       </div>
-      <div class="col-12">
+      <div v-if="coordinator_reviews.length > 0" class="col-12">
         <submission-table
-          v-if="coordinator_reviews.length > 0"
           :table-data="coordinator_reviews"
           variation="dashboard"
           table-type="reviews"
-          role="coordinator"
+          role="review_coordinator"
           data-cy="coordinator_table"
         />
       </div>
-      <div class="col-12">
+      <div v-if="submitter_submissions.length > 0" class="col-12">
         <submission-table
-          v-if="submitter_submissions.length > 0"
           :table-data="submitter_submissions"
           variation="dashboard"
           table-type="submissions"
@@ -105,11 +111,15 @@
 import AvatarImage from "src/components/atoms/AvatarImage.vue"
 import { useCurrentUser } from "src/use/user"
 import { useQuery } from "@vue/apollo-composable"
-import { CURRENT_USER_SUBMISSIONS } from "src/graphql/queries"
+import { CURRENT_USER_SUBMISSIONS, GET_SUBMISSIONS } from "src/graphql/queries"
 import SubmissionTable from "src/components/SubmissionTable.vue"
 import { computed } from "vue"
 
 const { currentUser } = useCurrentUser()
+const { result: all_submissions_result } = useQuery(GET_SUBMISSIONS, {page: 1})
+const all_submissions = computed(() => {
+  return all_submissions_result.value?.submissions.data ?? []
+})
 const { result } = useQuery(CURRENT_USER_SUBMISSIONS)
 const submissions = computed(() => {
   let s = result.value?.currentUser?.submissions ?? []

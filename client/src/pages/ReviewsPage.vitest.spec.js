@@ -1,207 +1,172 @@
-import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
+import ReviewsPage from "./ReviewsPage.vue"
+import { CURRENT_USER_SUBMISSIONS, GET_SUBMISSIONS } from "src/graphql/queries"
+import { afterEach, beforeEach, describe, expect, test, vi } from "vitest"
 import { flushPromises, mount } from "@vue/test-utils"
 import { installApolloClient } from "test/vitest/utils"
-import { CURRENT_USER_SUBMISSIONS } from "src/graphql/queries"
-import ReviewsPage from "./ReviewsPage.vue"
+import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
+import { ref } from "vue"
+import { useCurrentUser } from "src/use/user"
 
-import { describe, expect, test, vi, afterEach } from "vitest"
+vi.mock("src/use/user", () => ({
+  useCurrentUser: vi.fn(),
+}))
 
 installQuasarPlugin()
 const mockClient = installApolloClient()
 
 describe("Reviews Page", () => {
-  const makeWrapper = () => mount(ReviewsPage, {
-    global: {
-      stubs: ["router-link"],
-    },
+  const CurrentUserSubmissions = vi.fn()
+  mockClient.setRequestHandler(CURRENT_USER_SUBMISSIONS, CurrentUserSubmissions)
+  const GetSubmissions = vi.fn()
+  mockClient.setRequestHandler(GET_SUBMISSIONS, GetSubmissions)
+  const makeWrapper = () =>
+    mount(ReviewsPage, {
+      global: {
+        stubs: ["router-link", "i18n-t"],
+      },
+    })
+
+  beforeEach(async () => {
+    useCurrentUser.mockReturnValue({
+      currentUser: ref({
+        id: 2000,
+        roles: [],
+      }),
+    })
   })
 
   afterEach(() => {
     vi.clearAllMocks()
   })
 
-  test("two submission tables appear for a user as a review coordinator", async () => {
-    mockClient
-      .getRequestHandler(CURRENT_USER_SUBMISSIONS)
-      .mockResolvedValue({
-        data: {
-          currentUser: {
-            id: 1000,
-            roles: {
-              name: "Application Administrator",
-            },
-            submissions: [
-              {
-                id: "1",
-                title: "Jest Submission 1",
-                created_at: "2023-06-27T08:21:44.000000Z",
-                status: "INITIALLY_SUBMITTED",
-                my_role: "submitter",
-                effective_role: "submitter",
-                publication: {
-                  id: "1",
-                  name: "Jest Publication",
-                  my_role: null,
-                  editors: [],
-                  publication_admins: [],
-                },
-                inline_comments: [],
-                overall_comments: [],
-                submitters: [],
-                reviewers: [],
-                review_coordinators: [],
-              },
-              {
-                id: "2",
-                title: "Jest Submission 2",
-                created_at: "2023-06-26T08:21:44.000000Z",
-                status: "RESUBMISSION_REQUESTED",
-                my_role: "reviewer",
-                effective_role: "reviewer",
-                publication: {
-                  id: "1",
-                  name: "Jest Publication",
-                  my_role: null,
-                  editors: [],
-                  publication_admins: [],
-                },
-                inline_comments: [],
-                overall_comments: [],
-                submitters: [],
-                reviewers: [],
-                review_coordinators: [],
-              },
-              {
-                id: "3",
-                title: "Jest Submission 3",
-                created_at: "2023-06-25T08:21:44.000000Z",
-                status: "AWAITING_REVIEW",
-                my_role: "review_coordinator",
-                effective_role: "review_coordinator",
-                publication: {
-                  id: "1",
-                  name: "Jest Publication",
-                  my_role: null,
-                  editors: [],
-                  publication_admins: [],
-                },
-                inline_comments: [],
-                overall_comments: [],
-                submitters: [],
-                reviewers: [],
-                review_coordinators: [],
-              },
-              {
-                id: "4",
-                title: "Jest Submission 4",
-                created_at: "2023-06-24T08:21:44.000000Z",
-                status: "REJECTED",
-                my_role: "review_coordinator",
-                effective_role: "review_coordinator",
-                publication: {
-                  id: "1",
-                  name: "Jest Publication",
-                  my_role: null,
-                  editors: [],
-                  publication_admins: [],
-                },
-                inline_comments: [],
-                overall_comments: [],
-                submitters: [],
-                reviewers: [],
-                review_coordinators: [],
-              },
-              {
-                id: "5",
-                title: "Jest Submission 5",
-                created_at: "2023-06-23T08:21:44.000000Z",
-                status: "INITIALLY_SUBMITTED",
-                my_role: "reviewer",
-                effective_role: "reviewer",
-                publication: {
-                  id: "1",
-                  name: "Jest Publication",
-                  my_role: null,
-                  editors: [],
-                  publication_admins: [],
-                },
-                inline_comments: [],
-                overall_comments: [],
-                submitters: [],
-                reviewers: [],
-                review_coordinators: [],
-              },
-            ],
-          },
+  function mockSubmission(id, role_name) {
+    const submission_my_role = {
+      application_admin: null,
+      publication_admin: null,
+      editor: null,
+      review_coordinator: "review_coordinator",
+      reviewer: "reviewer",
+      submitter: "submitter",
+    }
+    const submission_effective_role = {
+      application_admin: "review_coordinator",
+      publication_admin: "review_coordinator",
+      editor: "review_coordinator",
+      review_coordinator: "review_coordinator",
+      reviewer: "reviewer",
+      submitter: "submitter",
+    }
+    const publication_my_role = {
+      application_admin: null,
+      publication_admin: "publication_admin",
+      editor: "editor",
+      review_coordinator: null,
+      reviewer: null,
+      submitter: null,
+    }
+    return {
+      __typename: "Submission",
+      id: id,
+      title: `Jest Submission ${id}`,
+      created_at: "2023-11-09T18:51:10.000000Z",
+      status: "UNDER_REVIEW",
+      my_role: submission_my_role[role_name],
+      effective_role: submission_effective_role[role_name],
+      publication: {
+        id: id + 100,
+        name: "Jest Publication",
+        my_role: publication_my_role[role_name],
+        editors: [],
+        publication_admins: [],
+      },
+      inline_comments: [],
+      overall_comments: [],
+      submitters: [],
+      reviewers: [],
+      review_coordinators: [],
+    }
+  }
+  function mockGetSubmissions(role_name) {
+    const paginator = {
+      __typename: "PaginatorInfo",
+      count: 1,
+      currentPage: 1,
+      lastPage: 1,
+      perPage: 10,
+    }
+    const paginator_data = {
+      application_admin: paginator,
+      publication_admin: paginator,
+      editor: paginator,
+      review_coordinator: [],
+      reviewer: [],
+      submitter: [],
+    }
+    const submission_records = [mockSubmission(400, role_name)]
+    const submissions_data = {
+      application_admin: submission_records,
+      publication_admin: submission_records,
+      editor: submission_records,
+      review_coordinator: [],
+      reviewer: [],
+      submitter: [],
+    }
+    return {
+      data: {
+        submissions: {
+          __typename: "SubmissionPaginator",
+          paginatorInfo: paginator_data[role_name],
+          data: submissions_data[role_name],
         },
-      })
-
-    const wrapper = makeWrapper()
-    await flushPromises()
-
-    expect(wrapper.findAllComponents({ name: "submission-table" }).length).toBe(
-      2
-    )
-  })
-
-  test("only one submission table appears for a user as a reviewer", async () => {
-    mockClient
-      .getRequestHandler(CURRENT_USER_SUBMISSIONS)
-      .mockResolvedValue({
-        data: {
-          currentUser: {
-            id: 1000,
-            roles: {
-              name: "Application Administrator",
-            },
-            submissions: [
-              {
-                id: "1",
-                title: "Jest Submission 1",
-                created_at: "2023-06-27T08:21:44.000000Z",
-                status: "INITIALLY_SUBMITTED",
-                my_role: "submitter",
-                effective_role: "submitter",
-                publication: {
-                  id: "1",
-                  name: "Jest Publication",
-                  my_role: null,
-                  editors: [],
-                  publication_admins: [],
-                },
-                inline_comments: [],
-                overall_comments: [],
-                submitters: [],
-                reviewers: [],
-                review_coordinators: [],
-              },
-              {
-                id: "2",
-                title: "Jest Submission 2",
-                created_at: "2023-06-26T08:21:44.000000Z",
-                status: "RESUBMISSION_REQUESTED",
-                my_role: "reviewer",
-                effective_role: "reviewer",
-                publication: {
-                  id: "1",
-                  name: "Jest Publication",
-                  my_role: null,
-                  editors: [],
-                  publication_admins: [],
-                },
-                inline_comments: [],
-                overall_comments: [],
-                submitters: [],
-                reviewers: [],
-                review_coordinators: [],
-              },
-            ],
-          },
+      },
+    }
+  }
+  function mockCurrentUserSubmissions(role_name) {
+    const submission_records = [mockSubmission(500, role_name)]
+    const submissions_data = {
+      application_admin: submission_records,
+      publication_admin: submission_records,
+      editor: submission_records,
+      review_coordinator: submission_records,
+      reviewer: submission_records,
+      submitter: [],
+    }
+    return {
+      data: {
+        currentUser: {
+          id: 2000,
+          roles:
+            role_name == "application_admin"
+              ? [{ name: "Application Administrator" }]
+              : [],
+          highest_privileged_role: role_name,
+          submissions: submissions_data[role_name],
         },
-      })
-    const wrapper = makeWrapper()
-    expect(wrapper.findAllComponents({ name: "submission-table" }).length).toBe(
-      1
-    )
+      },
+    }
+  }
+
+  describe.each([
+    ["application_admin", 2],
+    ["publication_admin", 2],
+    ["editor", 2],
+    ["review_coordinator", 2],
+    ["reviewer", 1],
+    ["submitter", 1],
+  ])("when the user's role is %s", (role_name, expected) => {
+    const grammar = expected == 1 ? "table appears" : "tables appear"
+    test(`${expected} submission ${grammar}`, async () => {
+      GetSubmissions.mockResolvedValue(mockGetSubmissions(role_name))
+
+      CurrentUserSubmissions.mockResolvedValue(
+        mockCurrentUserSubmissions(role_name),
+      )
+
+      const wrapper = makeWrapper()
+      await flushPromises()
+      expect(
+        wrapper.findAllComponents({ name: "submission-table" }).length,
+      ).toBe(expected)
+    })
   })
 })
