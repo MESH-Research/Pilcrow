@@ -273,6 +273,7 @@ export const GET_SUBMISSIONS = gql`
         publication {
           id
           name
+          my_role
           editors {
             ...relatedUserFields
           }

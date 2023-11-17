@@ -1,5 +1,5 @@
 import { SessionStorage } from "quasar"
-import { CURRENT_USER, CURRENT_USER_SUBMISSIONS } from "src/graphql/queries"
+import { CURRENT_USER, CURRENT_USER_SUBMISSIONS, GET_SUBMISSIONS } from "src/graphql/queries"
 
 export async function beforeEachRequiresAuth(apolloClient, to, _, next) {
   if (to.matched.some((record) => record.meta.requiresAuth)) {
@@ -125,8 +125,18 @@ export async function beforeEachRequiresPreviewAccess(
       if ("reviewer" === s.my_role) {
         access = false
       }
+    }
 
-      // Allow Publication Administrators and Editors
+    const all_submissions = await apolloClient
+      .query({
+        query: GET_SUBMISSIONS,
+        fetchPolicy: "network-only",
+      })
+      .then(({ data: { submissions: { data } } }) => data)
+
+    // Allow Publication Administrators and Editors
+    const s = all_submissions.find((s) => s.id == submissionId)
+    if (s) {
       if (
         ["publication_admin", "editor"].some(
           (role) => role === s.publication.my_role,
@@ -208,8 +218,18 @@ export async function beforeEachRequiresViewAccess(
       if ("reviewer" === s.my_role && nonreviewableStates.has(s.status)) {
         access = false
       }
+    }
 
-      // Allow Publication Administrators and Editors
+    const all_submissions = await apolloClient
+      .query({
+        query: GET_SUBMISSIONS,
+        fetchPolicy: "network-only",
+      })
+      .then(({ data: { submissions: { data } } }) => data)
+
+    // Allow Publication Administrators and Editors
+    const s = all_submissions.find((s) => s.id == submissionId)
+    if (s) {
       if (
         ["publication_admin", "editor"].some(
           (role) => role === s.publication.my_role,
@@ -250,6 +270,7 @@ export async function beforeEachRequiresReviewAccess(
     const user = await apolloClient
       .query({
         query: CURRENT_USER_SUBMISSIONS,
+        fetchPolicy: "network-only",
       })
       .then(({ data: { currentUser } }) => currentUser)
 
@@ -283,8 +304,6 @@ export async function beforeEachRequiresReviewAccess(
 
       // Deny Reviewers when the submission is in a nonreviewable state
       const nonreviewableStates = new Set([
-        "DRAFT",
-        "INITIALLY_SUBMITTED",
         "REJECTED",
         "RESUBMISSION_REQUESTED",
       ])
@@ -292,7 +311,18 @@ export async function beforeEachRequiresReviewAccess(
         access = false
       }
 
-      // Allow Publication Administrators and Editors
+    }
+
+    const all_submissions = await apolloClient
+      .query({
+        query: GET_SUBMISSIONS,
+        fetchPolicy: "network-only",
+      })
+      .then(({ data: { submissions: { data } } }) => data)
+
+    // Allow Publication Administrators and Editors
+    const s = all_submissions.find((s) => s.id == submissionId)
+    if (s) {
       if (
         ["publication_admin", "editor"].some(
           (role) => role === s.publication.my_role,
