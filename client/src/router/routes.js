@@ -162,7 +162,7 @@ const routes = [
         path: "/submission/:id/content",
         component: () => import("src/pages/SubmissionContent.vue"),
         meta: {
-          requiresSubmissionAccess: true,
+          requiresPreviewAccess: true,
         },
         props: true,
       },

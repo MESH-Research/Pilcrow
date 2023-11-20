@@ -199,7 +199,6 @@ const byline = props.variation
 const tooltip = props.variation
   ? `submission_tables.${props.variation}.${props.role}.tooltip`
   : `submission_tables.${props.role}.tooltip`
-console.log(props.role)
 const submissionLinkName = (submission) => {
   if (props.role !== "submitter" && submission.status === "DRAFT") {
     return "submission:preview"

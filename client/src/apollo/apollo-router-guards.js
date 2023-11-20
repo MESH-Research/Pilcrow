@@ -1,6 +1,27 @@
 import { SessionStorage } from "quasar"
 import { CURRENT_USER, CURRENT_USER_SUBMISSIONS, GET_SUBMISSIONS } from "src/graphql/queries"
 
+async function isPubAdminOrEditor(apolloClient, submissionId) {
+  const all_submissions = await apolloClient
+    .query({
+      query: GET_SUBMISSIONS,
+      fetchPolicy: "network-only",
+    })
+    .then(({ data: { submissions: { data } } }) => data)
+
+  const s = all_submissions.find((s) => s.id == submissionId)
+  if (s.length > 0) {
+    if (
+      ["publication_admin", "editor"].some(
+        (role) => role === s.publication.my_role,
+      )
+    ) {
+      return true
+    }
+  }
+  return false
+}
+
 export async function beforeEachRequiresAuth(apolloClient, to, _, next) {
   if (to.matched.some((record) => record.meta.requiresAuth)) {
     const user = await apolloClient
@@ -71,6 +92,8 @@ export async function beforeEachRequiresSubmissionAccess(
           },
         }) => submissions.filter((submission) => submission.id == submissionId),
       )
+
+    // TODO: Clean this up
     if (submissions.length === 0) {
       to.meta.requiresRoles = [
         "Editor",
@@ -78,6 +101,7 @@ export async function beforeEachRequiresSubmissionAccess(
         "Application Administrator",
       ]
       beforeEachRequiresRoles(apolloClient, to, _, next)
+      console.log("Hello World")
     } else {
       next()
     }
@@ -127,27 +151,8 @@ export async function beforeEachRequiresPreviewAccess(
       }
     }
 
-    const all_submissions = await apolloClient
-      .query({
-        query: GET_SUBMISSIONS,
-        fetchPolicy: "network-only",
-      })
-      .then(({ data: { submissions: { data } } }) => data)
-
-    // Allow Publication Administrators and Editors
-    const s = all_submissions.find((s) => s.id == submissionId)
-    if (s) {
-      if (
-        ["publication_admin", "editor"].some(
-          (role) => role === s.publication.my_role,
-        )
-      ) {
-        access = true
-      }
-    }
-
     // Allow Application Administrators
-    if (user.roles.length > 0) {
+    if (!access && user.roles.length > 0) {
       if (
         user.roles.some((role) => role.name === "Application Administrator")
       ) {
@@ -210,8 +215,6 @@ export async function beforeEachRequiresViewAccess(
 
       // Deny Reviewers when the submission is in a nonreviewable state
       const nonreviewableStates = new Set([
-        "DRAFT",
-        "INITIALLY_SUBMITTED",
         "REJECTED",
         "RESUBMISSION_REQUESTED",
       ])
@@ -220,27 +223,15 @@ export async function beforeEachRequiresViewAccess(
       }
     }
 
-    const all_submissions = await apolloClient
-      .query({
-        query: GET_SUBMISSIONS,
-        fetchPolicy: "network-only",
-      })
-      .then(({ data: { submissions: { data } } }) => data)
-
     // Allow Publication Administrators and Editors
-    const s = all_submissions.find((s) => s.id == submissionId)
-    if (s) {
-      if (
-        ["publication_admin", "editor"].some(
-          (role) => role === s.publication.my_role,
-        )
-      ) {
+    if (!access) {
+      if (isPubAdminOrEditor(apolloClient, submissionId)) {
         access = true
       }
     }
 
     // Allow Application Administrators
-    if (user.roles.length > 0) {
+    if (!access && user.roles.length > 0) {
       if (
         user.roles.some((role) => role.name === "Application Administrator")
       ) {
@@ -310,30 +301,17 @@ export async function beforeEachRequiresReviewAccess(
       if ("reviewer" === s.my_role && nonreviewableStates.has(s.status)) {
         access = false
       }
-
     }
 
-    const all_submissions = await apolloClient
-      .query({
-        query: GET_SUBMISSIONS,
-        fetchPolicy: "network-only",
-      })
-      .then(({ data: { submissions: { data } } }) => data)
-
     // Allow Publication Administrators and Editors
-    const s = all_submissions.find((s) => s.id == submissionId)
-    if (s) {
-      if (
-        ["publication_admin", "editor"].some(
-          (role) => role === s.publication.my_role,
-        )
-      ) {
+    if (!access) {
+      if (isPubAdminOrEditor(apolloClient, submissionId)) {
         access = true
       }
     }
 
     // Allow Application Administrators
-    if (user.roles.length > 0) {
+    if (!access && user.roles.length > 0) {
       if (
         user.roles.some((role) => role.name === "Application Administrator")
       ) {
@@ -396,13 +374,11 @@ export async function beforeEachRequiresExportAccess(
       if (!exportableStates.has(s.status)) {
         access = false
       }
+    }
 
-      // Allow Publication Administrators and Editors
-      if (
-        ["publication_admin", "editor"].some(
-          (role) => role === s.publication.my_role,
-        )
-      ) {
+    // Allow Publication Administrators and Editors
+    if (!access) {
+      if (isPubAdminOrEditor(apolloClient, submissionId)) {
         access = true
       }
     }
@@ -427,11 +403,14 @@ export async function beforeEachRequiresExportAccess(
 }
 
 export async function beforeEachRequiresRoles(apolloClient, to, _, next) {
+  console.log("Hello World 2")
   if (to.matched.some((record) => record.meta.requiresRoles)) {
+  console.log("Hello World 3")
     const requiredRoles = to.matched
       .filter((record) => record.meta.requiresRoles)
       .map((record) => record.meta.requiresRoles)
       .flat(2)
+    console.log(requiredRoles)
     const roles = await apolloClient
       .query({
         query: CURRENT_USER,
@@ -446,9 +425,11 @@ export async function beforeEachRequiresRoles(apolloClient, to, _, next) {
     if (!roles.some((role) => requiredRoles.includes(role))) {
       next({ name: "error403" })
     } else {
+    console.log("Hello World 4")
       next()
     }
   } else {
+    console.log("Hello World 5")
     next()
   }
 }
