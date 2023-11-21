@@ -18,9 +18,7 @@
           icon="arrow_forward"
           size="md"
           :label="$t('buttons.dashboard')"
-          :to="{
-            name: 'dashboard',
-          }"
+          to="/dashboard"
         />
       </div>
       <div v-else-if="status == 'failure'" class="column flex-center">
