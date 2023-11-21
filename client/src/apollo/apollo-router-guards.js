@@ -71,7 +71,7 @@ export async function beforeEachRequiresSubmissionAccess(
         "Publication Administrator",
         "Application Administrator",
       ]
-      beforeEachRequiresRoles(apolloClient, to, _, next)
+      beforeEachRequiresAppAdmin(apolloClient, to, _, next)
     } else {
       next()
     }
@@ -413,25 +413,20 @@ export async function beforeEachRequiresExportAccess(
   }
 }
 
-export async function beforeEachRequiresRoles(apolloClient, to, _, next) {
-  if (to.matched.some((record) => record.meta.requiresRoles)) {
-    const requiredRoles = to.matched
-      .filter((record) => record.meta.requiresRoles)
-      .map((record) => record.meta.requiresRoles)
-      .flat(2)
-    console.log(requiredRoles)
-    const roles = await apolloClient
+export async function beforeEachRequiresAppAdmin(apolloClient, to, _, next) {
+  if (to.matched.some((record) => record.meta.requiresAppAdmin)) {
+    let access = false
+    const highest_privileged_role = await apolloClient
       .query({
         query: CURRENT_USER,
       })
-      .then(
-        ({
-          data: {
-            currentUser: { roles },
-          },
-        }) => roles.map((r) => r.name),
-      )
-    if (!roles.some((role) => requiredRoles.includes(role))) {
+      .then(({ data: { currentUser } }) => currentUser.highest_privileged_role)
+
+    if (highest_privileged_role == "application_admin") {
+      access = true
+    }
+
+    if (!access) {
       next({ name: "error403" })
     } else {
       next()
