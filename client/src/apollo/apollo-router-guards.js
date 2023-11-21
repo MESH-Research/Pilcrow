@@ -1,23 +1,27 @@
 import { SessionStorage } from "quasar"
-import { CURRENT_USER, CURRENT_USER_SUBMISSIONS, GET_SUBMISSIONS } from "src/graphql/queries"
+import { checkRole } from "src/use/user"
+import {
+  CURRENT_USER,
+  GET_SUBMISSION,
+  CURRENT_USER_SUBMISSIONS,
+} from "src/graphql/queries"
+
+const { isEditor, isPublicationAdmin } = checkRole()
 
 async function isPubAdminOrEditor(apolloClient, submissionId) {
-  const all_submissions = await apolloClient
+  const submission = await apolloClient
     .query({
-      query: GET_SUBMISSIONS,
-      fetchPolicy: "network-only",
+      query: GET_SUBMISSION,
+      variables: { id: submissionId },
     })
-    .then(({ data: { submissions: { data } } }) => data)
+    .then(({ data: { submission } }) => submission)
 
-  const s = all_submissions.find((s) => s.id == submissionId)
-  if (s.length > 0) {
-    if (
-      ["publication_admin", "editor"].some(
-        (role) => role === s.publication.my_role,
-      )
-    ) {
-      return true
-    }
+  await submission
+  if (
+    isPublicationAdmin(submission.publication) ||
+    isEditor(submission.publication)
+  ) {
+    return true
   }
   return false
 }
@@ -32,39 +36,6 @@ export async function beforeEachRequiresAuth(apolloClient, to, _, next) {
     if (!user) {
       SessionStorage.set("loginRedirect", to.fullPath)
       next("/login")
-    } else {
-      next()
-    }
-  } else {
-    next()
-  }
-}
-
-export async function beforeEachRequiresDraftAccess(apolloClient, to, _, next) {
-  if (to.matched.some((record) => record.meta.requiresDraftAccess)) {
-    let access = false
-    const submissionId = to.params.id
-    const user = await apolloClient
-      .query({
-        query: CURRENT_USER_SUBMISSIONS,
-        fetchPolicy: "network-only",
-      })
-      .then(({ data: { currentUser } }) => currentUser)
-
-    const submission = user.submissions.filter((submission) => {
-      return submission.id == submissionId
-    })
-
-    if (submission.length) {
-      const s = submission[0]
-
-      // Only allow submitters access
-      if (["submitter"].some((role) => role === s.my_role)) {
-        access = true
-      }
-    }
-    if (!access) {
-      next({ name: "error403" })
     } else {
       next()
     }
@@ -101,7 +72,39 @@ export async function beforeEachRequiresSubmissionAccess(
         "Application Administrator",
       ]
       beforeEachRequiresRoles(apolloClient, to, _, next)
-      console.log("Hello World")
+    } else {
+      next()
+    }
+  } else {
+    next()
+  }
+}
+
+export async function beforeEachRequiresDraftAccess(apolloClient, to, _, next) {
+  if (to.matched.some((record) => record.meta.requiresDraftAccess)) {
+    let access = false
+    const submissionId = to.params.id
+    const user = await apolloClient
+      .query({
+        query: CURRENT_USER_SUBMISSIONS,
+        fetchPolicy: "network-only",
+      })
+      .then(({ data: { currentUser } }) => currentUser)
+
+    const submission = user.submissions.filter((submission) => {
+      return submission.id == submissionId
+    })
+
+    if (submission.length) {
+      const s = submission[0]
+
+      // Only allow submitters access
+      if (["submitter"].some((role) => role === s.my_role)) {
+        access = true
+      }
+    }
+    if (!access) {
+      next({ name: "error403" })
     } else {
       next()
     }
@@ -170,20 +173,16 @@ export async function beforeEachRequiresPreviewAccess(
   }
 }
 
-export async function beforeEachRequiresViewAccess(
-  apolloClient,
-  to,
-  _,
-  next,
-) {
+export async function beforeEachRequiresViewAccess(apolloClient, to, _, next) {
   if (to.matched.some((record) => record.meta.requiresViewAccess)) {
     let access = false
     const submissionId = to.params.id
-    const user = await apolloClient
-      .query({
-        query: CURRENT_USER_SUBMISSIONS,
-      })
-      .then(({ data: { currentUser } }) => currentUser)
+    const user = async () =>
+      await apolloClient
+        .query({
+          query: CURRENT_USER_SUBMISSIONS,
+        })
+        .then(({ data: { currentUser } }) => currentUser)
 
     const submission = user.submissions.filter((submission) => {
       return submission.id == submissionId
@@ -225,8 +224,12 @@ export async function beforeEachRequiresViewAccess(
 
     // Allow Publication Administrators and Editors
     if (!access) {
-      if (isPubAdminOrEditor(apolloClient, submissionId)) {
-        access = true
+      try {
+        access = await isPubAdminOrEditor(apolloClient, submissionId).then(
+          (result) => result,
+        )
+      } catch (error) {
+        access = false
       }
     }
 
@@ -305,8 +308,12 @@ export async function beforeEachRequiresReviewAccess(
 
     // Allow Publication Administrators and Editors
     if (!access) {
-      if (isPubAdminOrEditor(apolloClient, submissionId)) {
-        access = true
+      try {
+        access = await isPubAdminOrEditor(apolloClient, submissionId).then(
+          (result) => result,
+        )
+      } catch (error) {
+        access = false
       }
     }
 
@@ -378,13 +385,17 @@ export async function beforeEachRequiresExportAccess(
 
     // Allow Publication Administrators and Editors
     if (!access) {
-      if (isPubAdminOrEditor(apolloClient, submissionId)) {
-        access = true
+      try {
+        access = await isPubAdminOrEditor(apolloClient, submissionId).then(
+          (result) => result,
+        )
+      } catch (error) {
+        access = false
       }
     }
 
     // Allow Application Administrators
-    if (user.roles.length > 0) {
+    if (!access && user.roles.length > 0) {
       if (
         user.roles.some((role) => role.name === "Application Administrator")
       ) {
@@ -403,9 +414,7 @@ export async function beforeEachRequiresExportAccess(
 }
 
 export async function beforeEachRequiresRoles(apolloClient, to, _, next) {
-  console.log("Hello World 2")
   if (to.matched.some((record) => record.meta.requiresRoles)) {
-  console.log("Hello World 3")
     const requiredRoles = to.matched
       .filter((record) => record.meta.requiresRoles)
       .map((record) => record.meta.requiresRoles)
@@ -425,11 +434,9 @@ export async function beforeEachRequiresRoles(apolloClient, to, _, next) {
     if (!roles.some((role) => requiredRoles.includes(role))) {
       next({ name: "error403" })
     } else {
-    console.log("Hello World 4")
       next()
     }
   } else {
-    console.log("Hello World 5")
     next()
   }
 }

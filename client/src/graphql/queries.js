@@ -330,6 +330,7 @@ export const GET_SUBMISSION = gql`
           description
           icon
         }
+        my_role
         editors {
           ...relatedUserFields
         }
