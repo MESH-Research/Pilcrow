@@ -51,27 +51,59 @@ export async function beforeEachRequiresSubmissionAccess(
   next,
 ) {
   if (to.matched.some((record) => record.meta.requiresSubmissionAccess)) {
+    let access = false
     const submissionId = to.params.id
-    const submissions = await apolloClient
+    const user = await apolloClient
       .query({
         query: CURRENT_USER_SUBMISSIONS,
       })
-      .then(
-        ({
-          data: {
-            currentUser: { submissions },
-          },
-        }) => submissions.filter((submission) => submission.id == submissionId),
-      )
+      .then(({ data: { currentUser } }) => currentUser)
 
-    // TODO: Clean this up
-    if (submissions.length === 0) {
-      to.meta.requiresRoles = [
-        "Editor",
-        "Publication Administrator",
-        "Application Administrator",
-      ]
-      beforeEachRequiresAppAdmin(apolloClient, to, _, next)
+    const submission = user.submissions.filter((submission) => {
+      return submission.id == submissionId
+    })
+
+    if (submission.length) {
+      const s = submission[0]
+
+      // Redirect when the submission is a Draft
+      if (s.status === "DRAFT") {
+        next({ name: "submission:draft", params: { id: s.id } })
+        return false
+      }
+
+      // Allow those who are assigned to the submission
+      if (
+        ["review_coordinator", "reviewer", "submitter"].some(
+          (role) => role === s.my_role,
+        )
+      ) {
+        access = true
+      }
+    }
+
+    // Allow Publication Administrators and Editors
+    if (!access) {
+      try {
+        access = await isPubAdminOrEditor(apolloClient, submissionId).then(
+          (result) => result,
+        )
+      } catch (error) {
+        access = false
+      }
+    }
+
+    // Allow Application Administrators
+    if (!access && user.roles.length > 0) {
+      if (
+        user.roles.some((role) => role.name === "Application Administrator")
+      ) {
+        access = true
+      }
+    }
+
+    if (!access) {
+      next({ name: "error403" })
     } else {
       next()
     }
@@ -177,12 +209,11 @@ export async function beforeEachRequiresViewAccess(apolloClient, to, _, next) {
   if (to.matched.some((record) => record.meta.requiresViewAccess)) {
     let access = false
     const submissionId = to.params.id
-    const user = async () =>
-      await apolloClient
-        .query({
-          query: CURRENT_USER_SUBMISSIONS,
-        })
-        .then(({ data: { currentUser } }) => currentUser)
+    const user = await apolloClient
+      .query({
+        query: CURRENT_USER_SUBMISSIONS,
+      })
+      .then(({ data: { currentUser } }) => currentUser)
 
     const submission = user.submissions.filter((submission) => {
       return submission.id == submissionId
