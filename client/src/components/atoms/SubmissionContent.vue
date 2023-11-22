@@ -151,7 +151,7 @@ function toggleDarkMode() {
 
 const emit = defineEmits([
   "scrollToOverallComments",
-  "scrollToNewOverallComment"
+  "scrollAddNewOverallComment"
 ])
 
 function scrollToOverallComments() {
@@ -159,7 +159,7 @@ function scrollToOverallComments() {
 }
 
 function scrollNewOverallComment() {
-  emit("scrollToNewOverallComment")
+  emit("scrollAddNewOverallComment")
 }
 
 const fonts = [

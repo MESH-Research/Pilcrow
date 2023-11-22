@@ -39,7 +39,7 @@
           <submission-content
             v-model:highlightVisibility="highlightVisibility"
             @scroll-to-overall-comments="handleScroll"
-            @scroll-to-new-overall-comment="handleNewScroll"
+            @scroll-add-new-overall-comment="handleNewScroll"
           />
           <q-separator class="page-seperator" />
           <div ref="scrollOverallComments"></div>

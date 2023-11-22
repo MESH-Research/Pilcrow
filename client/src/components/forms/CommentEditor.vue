@@ -9,8 +9,12 @@
           v-bind="button"
         />
       </q-btn-group>
-      <div class="comment-editor">
-        <editor-content data-cy="comment-editor" :editor="editor" />
+      <div class="comment-editor" @focus-editor="focusOnEditor">
+        <editor-content
+          data-cy="comment-editor"
+          :editor="editor"
+          ref="focusEditor"
+        />
       </div>
       <div v-if="commentType === 'InlineComment'" class="q-py-md">
         <q-list>
@@ -160,11 +164,11 @@ const editor = useEditor({
   ],
 })
 const commentType = computed(
-  () => props.commentType ?? props.comment.__typename
+  () => props.commentType ?? props.comment.__typename,
 )
 
 const isReply = computed(() =>
-  ["OverallCommentReply", "InlineCommentReply"].includes(commentType.value)
+  ["OverallCommentReply", "InlineCommentReply"].includes(commentType.value),
 )
 const commentEditorButtons = ref([
   {
@@ -245,7 +249,7 @@ const { mutate: createComment } = useMutation(mutations[commentType.value])
 const selectedCriteria = computed(() =>
   styleCriteria.value
     .filter((criteria) => criteria.selected)
-    .map((criteria) => criteria.id)
+    .map((criteria) => criteria.id),
 )
 const hasStyleCriteria = computed(() => selectedCriteria.value.length > 0)
 async function submitHandler() {
@@ -345,9 +349,20 @@ const styleCriteria = ref(
       ...c,
       selected: isCriteriaSelected(c, comment),
     }),
-    comment
-  )
+    comment,
+  ),
 )
+
+const focusEditor = ref(null)
+
+function focusOnEditor() {
+  console.log(focusEditor.value)
+}
+
+// onMounted(() => {
+//   focusEditor.value.focus()
+// })
+
 
 defineExpose({
   hasStyleCriteria,
