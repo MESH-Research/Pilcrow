@@ -111,6 +111,7 @@ export const ACCEPT_SUBMISSION_INVITE = gql`
 export const VERIFY_EMAIL = gql`
   mutation VerifyEmail($token: String!, $expires: String!) {
     verifyEmail(token: $token, expires: $expires) {
+      id
       email_verified_at
     }
   }
