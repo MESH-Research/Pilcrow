@@ -200,7 +200,14 @@ const tooltip = props.variation
   ? `submission_tables.${props.variation}.${props.role}.tooltip`
   : `submission_tables.${props.role}.tooltip`
 const submissionLinkName = (submission) => {
-  return (submission.status === "DRAFT") ? "submission:draft" : "submission:review"
+  if (props.role !== "submitter" && submission.status === "DRAFT") {
+    return "submission:preview"
+  } else if (submission.status === "INITIALLY_SUBMITTED") {
+    return "submission:view"
+  } else if (submission.status === "DRAFT") {
+    return "submission:draft"
+  }
+  return "submission:review"
 }
 const cols = [
   {

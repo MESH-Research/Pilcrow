@@ -98,6 +98,7 @@ describe("submissions details page mount", () => {
           publication: {
             id: 1,
             name: "Jest Publication",
+            my_role: null,
             style_criterias: [],
             editors: [],
             publication_admins: [],

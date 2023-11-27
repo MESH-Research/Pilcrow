@@ -273,6 +273,7 @@ export const GET_SUBMISSIONS = gql`
         publication {
           id
           name
+          my_role
           editors {
             ...relatedUserFields
           }
@@ -329,6 +330,7 @@ export const GET_SUBMISSION = gql`
           description
           icon
         }
+        my_role
         editors {
           ...relatedUserFields
         }
