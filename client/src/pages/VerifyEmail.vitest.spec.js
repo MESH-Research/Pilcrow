@@ -65,9 +65,6 @@ describe("VerifyEmailPage", () => {
   })
 
   test("renders success", async () => {
-    //Apollo throws error upon refetching the currentUser query (which is mocked out)
-    const warn = vi.spyOn(console, "warn").mockImplementation(() => {})
-
     verifyHandler.mockResolvedValue({
       data: { verifyEmail: { email_verified_at: "timestamp" } },
     })
@@ -83,11 +80,6 @@ describe("VerifyEmailPage", () => {
     expect(wrapper.text()).toContain(
       "account.email_verify.verification_success",
     )
-    expect(warn).toHaveBeenCalledTimes(1)
-    expect(warn).toHaveBeenCalledWith(
-      expect.stringContaining("message%22%3A33%2C%22"),
-    )
-    expect(warn).toHaveBeenCalledWith(expect.stringContaining("currentUser"))
   })
 
   it("renders errors", async () => {
