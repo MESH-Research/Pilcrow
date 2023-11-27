@@ -17,7 +17,10 @@ async function isPubAdminOrEditor(apolloClient, submissionId) {
     .then(({ data: { submission } }) => submission)
 
   await submission
-  return isPublicationAdmin(submission.publication) || isEditor(submission.publication)
+  return (
+    isPublicationAdmin(submission.publication) ||
+    isEditor(submission.publication)
+  )
 }
 
 export async function beforeEachRequiresAuth(apolloClient, to, _, next) {
