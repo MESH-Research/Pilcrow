@@ -18,9 +18,7 @@
           icon="arrow_forward"
           size="md"
           :label="$t('buttons.dashboard')"
-          :to="{
-            name: 'dashboard',
-          }"
+          to="/dashboard"
         />
       </div>
       <div v-else-if="status == 'failure'" class="column flex-center">
@@ -52,10 +50,7 @@ import { useGraphErrors } from "src/use/errors"
 const status = ref("loading")
 const errorMessagesList = ref([])
 const { currentUser } = useCurrentUser()
-
-const { mutate: verifyEmail } = useMutation(VERIFY_EMAIL, {
-  refetchQueries: ["currentUser"],
-})
+const { mutate: verifyEmail } = useMutation(VERIFY_EMAIL)
 const { params } = useRoute()
 const { errorMessages, graphQLErrorCodes } = useGraphErrors()
 onMounted(async () => {

@@ -50,6 +50,7 @@ describe("useCurrentUser composable", () => {
           email: "hello@example.com",
           username: "helloUser",
           email_verified_at: "2021-08-14 02:26:32",
+          highest_privileged_role: "tester",
           roles: [{ name: "tester" }],
           abilities: [{ name: "doStuff" }],
         },

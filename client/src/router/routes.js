@@ -98,7 +98,9 @@ const routes = [
       {
         path: "/admin/users",
         component: () => import("pages/Admin/UsersIndex.vue"),
-        meta: { requiresRoles: ["Application Administrator"] },
+        meta: {
+          requiresAppAdmin: true,
+        },
       },
       {
         name: "user_details",
@@ -111,7 +113,7 @@ const routes = [
         name: "admin:publication:index",
         component: () => import("src/pages/Admin/PublicationIndexPage.vue"),
         meta: {
-          requiresRoles: ["Application Administrator"],
+          requiresAppAdmin: true,
         },
       },
       {
@@ -162,7 +164,7 @@ const routes = [
         path: "/submission/:id/content",
         component: () => import("src/pages/SubmissionContent.vue"),
         meta: {
-          requiresSubmissionAccess: true,
+          requiresPreviewAccess: true,
         },
         props: true,
       },
