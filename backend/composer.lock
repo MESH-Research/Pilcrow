@@ -1772,21 +1772,21 @@
         },
         {
             "name": "laragraph/utils",
-            "version": "v2.0.2",
+            "version": "v2.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laragraph/utils.git",
-                "reference": "36340c62ed90bdd1a44de168e199bbc799618cb8"
+                "reference": "a1de91340f934b7dbb5540ed5854e2ecde18e3a2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laragraph/utils/zipball/36340c62ed90bdd1a44de168e199bbc799618cb8",
-                "reference": "36340c62ed90bdd1a44de168e199bbc799618cb8",
+                "url": "https://api.github.com/repos/laragraph/utils/zipball/a1de91340f934b7dbb5540ed5854e2ecde18e3a2",
+                "reference": "a1de91340f934b7dbb5540ed5854e2ecde18e3a2",
                 "shasum": ""
             },
             "require": {
-                "illuminate/contracts": "5.6.* || 5.7.* || 5.8.* || ^6 || ^7 || ^8 || ^9 || ^10",
-                "illuminate/http": "5.6.* || 5.7.* || 5.8.* || ^6 || ^7 || ^8 || ^9 || ^10",
+                "illuminate/contracts": "~5.6.0 || ~5.7.0 || ~5.8.0 || ^6 || ^7 || ^8 || ^9 || ^10",
+                "illuminate/http": "~5.6.0 || ~5.7.0 || ~5.8.0 || ^6 || ^7 || ^8 || ^9 || ^10",
                 "php": "^7.2 || ^8",
                 "thecodingmachine/safe": "^1.1 || ^2",
                 "webonyx/graphql-php": "^0.13.2 || ^14 || ^15"
@@ -1795,7 +1795,7 @@
                 "ergebnis/composer-normalize": "^2.11",
                 "jangregor/phpstan-prophecy": "^1",
                 "mll-lab/php-cs-fixer-config": "^4.4",
-                "orchestra/testbench": "3.6.* || 3.7.* || 3.8.* || 3.9.* || ^4 || ^5 || ^6 || ^7 || ^8",
+                "orchestra/testbench": "~3.6.0 || ~3.7.0 || ~3.8.0 || ~3.9.0 || ^4 || ^5 || ^6 || ^7 || ^8",
                 "phpstan/extension-installer": "^1",
                 "phpstan/phpstan": "^1",
                 "phpstan/phpstan-deprecation-rules": "^1",
@@ -1826,7 +1826,7 @@
                 "issues": "https://github.com/laragraph/utils/issues",
                 "source": "https://github.com/laragraph/utils"
             },
-            "time": "2023-05-16T12:51:35+00:00"
+            "time": "2023-11-30T16:05:38+00:00"
         },
         {
             "name": "laravel/framework",
@@ -3389,16 +3389,16 @@
         },
         {
             "name": "nuwave/lighthouse",
-            "version": "v6.23.0",
+            "version": "v6.24.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nuwave/lighthouse.git",
-                "reference": "cd01eef79fdc9ea682c556bc839e646d2fd2704a"
+                "reference": "eff2593130bc23dc6286c1a8f216b20fcd440d43"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nuwave/lighthouse/zipball/cd01eef79fdc9ea682c556bc839e646d2fd2704a",
-                "reference": "cd01eef79fdc9ea682c556bc839e646d2fd2704a",
+                "url": "https://api.github.com/repos/nuwave/lighthouse/zipball/eff2593130bc23dc6286c1a8f216b20fcd440d43",
+                "reference": "eff2593130bc23dc6286c1a8f216b20fcd440d43",
                 "shasum": ""
             },
             "require": {
@@ -3517,7 +3517,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2023-11-27T14:36:29+00:00"
+            "time": "2023-11-30T14:04:52+00:00"
         },
         {
             "name": "olssonm/l5-zxcvbn",
