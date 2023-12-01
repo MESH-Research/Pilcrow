@@ -30,6 +30,14 @@ type Query {
     permission(id: ID @eq): Permission @find
 
     versionInfo: VersionInfo
+
+    identityProviders: [IdentityProvider]
+}
+
+type IdentityProvider {
+    name: String!
+    label: String!
+    icon: String
 }
 
 type VersionInfo {
