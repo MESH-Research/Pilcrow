@@ -175,15 +175,33 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * @return \App\Models\Role
+     * Return the highest privileged role ID for the user in the following order:
+     * 1. Application Administrator
+     * 2. Publication Administrator
+     * 3. Editor
+     * 4. Review Coordinator
+     * 5. Reviewer
+     * 6. Submitter
+     *
+     * @return int|null
      */
-    public function getHighestPrivilegedRole()
+    public function getHighestPrivilegedRole(): int|null
     {
-        return $this->roles->sortBy('id')->first();
+        if ($this->hasRole(Role::APPLICATION_ADMINISTRATOR)) {
+            return (int)Role::APPLICATION_ADMINISTRATOR_ROLE_ID;
+        }
+        if ($this->publications->isNotEmpty()) {
+            return PublicationUser::where('user_id', $this->id)->min('role_id');
+        }
+        if ($this->submissions->isNotEmpty()) {
+            return SubmissionUser::where('user_id', $this->id)->min('role_id');
+        }
+
+        return null;
     }
 
     /**
-     * Check if user has given publication role
+     * Check if user has a role for a publication
      *
      * @param int | array $role Role id to check, use * to check for any role.
      * @param int $publicationId Publication to check for role on

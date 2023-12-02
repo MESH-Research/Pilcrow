@@ -1,18 +1,21 @@
 {
+    "name": "pilcrow-docs",
+    "version": "0.27.2",
+    "description": "Documentation site for Pilcrow",
     "main": "index.js",
-    "authors": {
-        "name": "MESH-Research",
-        "email": "mesh@msu.edu"
-    },
-    "repository": "https://github.com/MESH-Research/Pilcrow",
-    "scripts": {
-        "dev": "vuepress dev .",
-        "build": "vuepress build ."
-    },
+    "license": "MIT",
+    "private": true,
     "devDependencies": {
-        "@vuepress/plugin-back-to-top": "^1.9.1",
-        "vuepress": "^1.9.1",
-        "vuepress-plugin-medium-zoom": "^1.1.9",
-        "vuepress-plugin-robots": "^1.0.1"
+        "@types/node": "^20.8.9",
+        "all-contributors-cli": "^6.26.1",
+        "vitepress": "^1.0.0-rc.24",
+        "vitepress-plugin-search": "^1.0.4-alpha.20",
+        "vue": "^3.3.7"
+    },
+    "scripts": {
+        "docs:dev": "vitepress dev",
+        "docs:build": "vitepress build",
+        "docs:preview": "vitepress preview",
+        "all-contributors": "echo Use root all-contributors package to manage contributors!"
     }
 }

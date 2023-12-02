@@ -1,15 +1,18 @@
 name: docs
 services:
   dev:
-    type: node:14
+    type: node:18
     build:
       - yarn
-    port: 8080
-    command: yarn dev
+    port: 5173
+    ssl: true
+    command: yarn docs:dev --host
 tooling:
   yarn:
     service: dev
     cmd: yarn
 proxy:
   dev:
-    - docs.pilcrow.lndo.site:8080
+    - hostname: docs.pilcrow.lndo.site
+      port: 5173
+      ssl: true

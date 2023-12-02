@@ -1,0 +1,188 @@
+{
+    "projectName": "pilcrow",
+    "projectOwner": "mesh-research",
+    "repoType": "github",
+    "repoHost": "https://github.com",
+    "badgeTemplate": "[![All Contributors](https://img.shields.io/badge/all_contributors-<%= contributors.length %>-orange.svg?style=for-the-badge)](https://pilcrow.meshresearch.dev/developers/)",
+    "files": [
+        "README.md"
+    ],
+    "types": {
+        "doc": {
+            "symbol": "📖",
+            "description": "Documentation",
+            "link": "<%= options.repoHost || 'https://github.com' %>/<%= options.projectOwner %>/<%= options.projectName %>/commits?author=<%= contributor.login %>&path=docs%2F"
+        }
+    },
+    "imageSize": 100,
+    "commit": false,
+    "commitConvention": "angular",
+    "contributors": [
+        {
+            "login": "wreality",
+            "name": "Brian Adams",
+            "avatar_url": "https://avatars.githubusercontent.com/u/463159?v=4",
+            "profile": "https://github.com/wreality",
+            "contributions": [
+                "code",
+                "review",
+                "infra",
+                "doc"
+            ],
+            "title": "Tech Lead & Core Developer",
+            "group": "core"
+        },
+        {
+            "name": "Kelly Sattler",
+            "title": "Team Lead & Scrum Master",
+            "contributions": [
+                "projectManagement",
+                "review",
+                "content",
+                "ideas",
+                "talk"
+            ],
+            "profile": "https://github.com/sattler9",
+            "login": "sattler9",
+            "group": "core"
+        },
+        {
+            "name": "Grant Eben",
+            "roles": [
+                "Everything"
+            ],
+            "contributions": [
+                "code",
+                "review",
+                "a11y",
+                "doc",
+                "design"
+            ],
+            "login": "gmeben",
+            "title": "Core Developer",
+            "group": "core",
+            "profile": "https://github.com/sattler9"
+        },
+        {
+            "name": "Sruthin Gaddam",
+            "contributions": [
+                "code",
+                "design",
+                "review",
+                "a11y",
+                "talk"
+            ],
+            "login": "Sruthin86",
+            "title": "Core Developer",
+            "group": "emeriti",
+            "profile": "https://github.com/sruthin86"
+        },
+        {
+            "name": "Amaresh Joshi",
+            "contributions": [
+                "code",
+                "review",
+                "bug",
+                "research",
+                "ideas"
+            ],
+            "login": "amareshjoshi",
+            "title": "Core Developer",
+            "group": "emeriti",
+            "profile": "https://github.com/amareshjoshi"
+        },
+        {
+            "name": "Shel Vilag",
+            "contributions": [
+                "code",
+                "design",
+                "review",
+                "a11y",
+                "doc",
+                "content"
+            ],
+            "login": "vilagshe",
+            "title": "Core Developer",
+            "group": "core",
+            "profile": "https://github.com/vialgshe"
+        },
+        {
+            "name": "Stephanie Vasko",
+            "contributions": [
+                "design",
+                "userTesting",
+                "content",
+                "ideas",
+                "research"
+            ],
+            "login": "stephanievaskomsu",
+            "group": "extended",
+            "title": "UX Researcher",
+            "profile": "https://github.com/stephanievaskomsu"
+        },
+        {
+            "name": "Scott Schopieray",
+            "contributions": [
+                "fundingFinding",
+                "bug",
+                "ideas",
+                "research",
+                "promotion"
+            ],
+            "login": "schopie1",
+            "group": "extended",
+            "title": "Assc Director / MESH-Research",
+            "profile": "https://github.com/schopie1"
+        },
+        {
+            "name": "Kathleen Fitzpatrick",
+            "contributions": [
+                "fundingFinding",
+                "ideas",
+                "research",
+                "promotion"
+            ],
+            "login": "kfitz",
+            "group": "extended",
+            "title": "Director / MESH-Research",
+            "profile": "https://github.com/kfitz"
+        },
+        {
+            "login": "cplong",
+            "name": "Chris Long",
+            "avatar_url": "https://avatars.githubusercontent.com/u/2446974?v=4",
+            "profile": "https://github.com/cplong",
+            "group": "extended",
+            "title": "Principal Investigator",
+            "contributions": [
+                "ideas",
+                "fundingFinding",
+                "research",
+                "promotion"
+            ]
+        },
+        {
+            "login": "shelbybrew",
+            "name": "Shelby Brewer",
+            "title": "Editor / Public Philosophy Journal",
+            "avatar_url": "https://avatars.githubusercontent.com/u/132350717?v=4",
+            "profile": "https://github.com/shelbybrew",
+            "contributions": [
+                "content",
+                "ideas"
+            ],
+            "group": "extended"
+        },
+        {
+            "login": "jackei1989",
+            "name": "Jabbar Mohammadi",
+            "avatar_url": "https://avatars.githubusercontent.com/u/24768340?v=4",
+            "profile": "https://github.com/jackei1989",
+            "contributions": [
+                "code"
+            ]
+        }
+    ],
+    "contributorsPerLine": 7,
+    "linkToUsage": false
+}

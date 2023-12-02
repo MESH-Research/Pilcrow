@@ -12,8 +12,12 @@
   "role": {
     "self": "No roles | Role | Roles",
     "no_roles_assigned": "No Roles Assigned",
+    "submitters": "no submitter | submitter | submitters",
     "reviewers": "no reviewer | reviewer | reviewers",
-    "review_coordinators": "no review coordinator | review coordinator | review coordinators"
+    "review_coordinators": "no review coordinator | review coordinator | review coordinators",
+    "editors": "no editor | editor | editors",
+    "publication_admins": "no admin | publication administrator | publication adminstrators",
+    "application_admins": "no admin | application administrator | application adminstrators"
   },
   "file_picker_label": "Select File",
   "buttons": {
@@ -350,24 +354,39 @@
     },
     "reviewer": {
       "title": "To Review",
-      "byline": "Reviews in which you're assigned as a <strong>reviewer</strong>",
+      "byline": "Reviews in which you're assigned as a {role}",
       "tooltip": "Reviews with a status of Draft, Initially Submitted, or Awaiting Review will not appear here."
     },
-    "coordinator": {
+    "review_coordinator": {
       "title": "To Coordinate",
-      "byline": "Reviews in which you're assigned as a <strong>review coordinator</strong>",
+      "byline": "Reviews in which you're assigned as a {role}",
       "tooltip": "Reviews with a status of Draft, Initially Submitted, or Awaiting Review will not appear here."
     },
     "dashboard": {
+      "application_admin": {
+        "title": "Application Administration",
+        "byline": "All submissions in the application",
+        "tooltip": "All submissions in the application will appear here regardless of their status."
+      },
+      "publication_admin": {
+        "title": "Publication Administration",
+        "byline": "All submissions in your publications",
+        "tooltip": "All submissions of others in your publications will appear here regardless of their status."
+      },
+      "editor": {
+        "title": "Publication Management",
+        "byline": "All submissions in your publications",
+        "tooltip": "All submissions of others in your publications will appear here regardless of their status."
+      },
+      "review_coordinator": {
+        "title": "Review Coordination",
+        "byline": "Reviews you are review coordinating",
+        "tooltip": "Reviews with a status of Draft will not appear here."
+      },
       "reviewer": {
         "title": "Reviews",
         "byline": "Reviews you are reviewing",
         "tooltip": "Reviews with a status of Draft, Initially Submitted, or Awaiting Review will not appear here."
-      },
-      "coordinator": {
-        "title": "Review Coordination",
-        "byline": "Reviews you are review coordinating",
-        "tooltip": "Reviews with a status of Draft will not appear here."
       },
       "submitter": {
         "title": "Submissions",
@@ -375,10 +394,67 @@
         "tooltip": "The submissions of others will not appear here."
       }
     },
-    "submissions": {
+    "submissions_page": {
+      "application_admin": {
+        "title": "Application Administration",
+        "byline": "All submissions in the application",
+        "tooltip": "All submissions in the application will appear here regardless of their status."
+      },
+      "publication_admin": {
+        "title": "Publication Administration",
+        "byline": "All submissions in your publications",
+        "tooltip": "All submissions by others in your publications will appear here regardless of their status."
+      },
+      "editor": {
+        "title": "Publication Management",
+        "byline": "All submissions in your publications",
+        "tooltip": "All submissions by others in your publications will appear here regardless of their status."
+      },
+      "review_coordinator": {
+        "title": "Review Coordination",
+        "byline": "Submissions you are review coordinating",
+        "tooltip": "Submissions with a status of Draft will not appear here."
+      },
+      "reviewer": {
+        "title": "Reviews",
+        "byline": "Submissions you are reviewing",
+        "tooltip": "Submissions with a status of Draft, Initially Submitted, or Awaiting Review will not appear here."
+      },
       "submitter": {
         "title": "Your Submissions",
         "byline": "Submissions you have submitted for review.",
+        "tooltip": "The submissions of others will not appear here."
+      }
+    },
+    "reviews_page": {
+      "application_admin": {
+        "title": "Application Administration",
+        "byline": "All reviews in the application",
+        "tooltip": "All reviews in the application will appear here regardless of their status."
+      },
+      "publication_admin": {
+        "title": "Publication Administration",
+        "byline": "All reviews in your publications",
+        "tooltip": "The reviews of others with a status of Draft will not appear here."
+      },
+      "editor": {
+        "title": "Publication Management",
+        "byline": "All reviews in your publications",
+        "tooltip": "The reviews of others with a status of Draft will not appear here."
+      },
+      "review_coordinator": {
+        "title": "Review Coordination",
+        "byline": "Reviews you are review coordinating",
+        "tooltip": "Reviews with a status of Draft will not appear here."
+      },
+      "reviewer": {
+        "title": "Reviews",
+        "byline": "Reviews you are reviewing",
+        "tooltip": "Reviews with a status of Draft, Initially Submitted, or Awaiting Review will not appear here."
+      },
+      "submitter": {
+        "title": "Reviews",
+        "byline": "Your submissions under review",
         "tooltip": "The submissions of others will not appear here."
       }
     }

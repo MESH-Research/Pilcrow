@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { beforeEachRequiresAuth, beforeEachRequiresRoles } from './apollo-router-guards'
+import { beforeEachRequiresAuth, beforeEachRequiresAppAdmin } from './apollo-router-guards'
 
 const apolloMock = {
   query: vi.fn(),
@@ -72,156 +72,69 @@ describe("requiresAuth router hook", () => {
   })
 })
 
-describe("requiresRoles router hook", () => {
+describe("requiresAppAdmin router hook", () => {
   afterEach(() => {
     apolloMock.query.mockClear()
   })
 
-  it("allows navigation when user has required role", async () => {
+  it("allows navigation when user is an Application Administrator", async () => {
     const to = {
-      matched: [{ meta: { requiresRoles: ["Application Admin"] } }],
+      matched: [{ meta: { requiresAppAdmin: true } }],
     }
 
     apolloMock.query.mockResolvedValue({
       data: {
         currentUser: {
           id: 1,
-          roles: [{ name: "Application Admin" }],
+          highest_privileged_role: "application_admin",
         },
       },
     })
 
     const next = vi.fn()
 
-    await beforeEachRequiresRoles(apolloMock, to, undefined, next)
+    await beforeEachRequiresAppAdmin(apolloMock, to, undefined, next)
 
     expect(apolloMock.query).toHaveBeenCalled()
     expect(next).toHaveBeenCalled()
     expect(next.mock.calls[0][0]).toBeUndefined()
   })
 
-  it("redirects to error403 when user does not have required role", async () => {
+  it("redirects to error403 when user is not an Application Administrator", async () => {
     const to = {
-      matched: [{ meta: { requiresRoles: ["Application Administrator"] } }],
+      matched: [{ meta: { requiresAppAdmin: true } }],
     }
 
     apolloMock.query.mockResolvedValue({
       data: {
         currentUser: {
           id: 1,
-          roles: [],
+          highest_privileged_role: null
         },
       },
     })
 
     const next = vi.fn()
 
-    await beforeEachRequiresRoles(apolloMock, to, undefined, next)
+    await beforeEachRequiresAppAdmin(apolloMock, to, undefined, next)
 
     expect(apolloMock.query).toHaveBeenCalled()
     expect(next).toHaveBeenCalled()
     expect(next.mock.calls[0][0]).toStrictEqual({ name: "error403" })
   })
 
-  it("allows navigation when requiresRoles meta property is not present", async () => {
+  it("allows navigation when requiresAppAdmin meta property is not present", async () => {
     const to = {
       matched: [{ meta: {} }],
     }
 
     const next = vi.fn()
 
-    await beforeEachRequiresRoles(apolloMock, to, undefined, next)
+    await beforeEachRequiresAppAdmin(apolloMock, to, undefined, next)
 
     expect(apolloMock.query).not.toHaveBeenCalled()
     expect(next).toHaveBeenCalled()
     expect(next.mock.calls[0][0]).toBeUndefined()
   })
 
-  it("allows navigation when user has one of the required roles", async () => {
-    const to = {
-      matched: [
-        {
-          meta: {
-            requiresRoles: [
-              "Application Administrator",
-              "Publication Administrator",
-              "Editor",
-            ],
-          },
-        },
-      ],
-    }
-
-    apolloMock.query.mockResolvedValue({
-      data: {
-        currentUser: {
-          id: 1,
-          roles: [{ name: "Application Administrator" }],
-        },
-      },
-    })
-    const next = vi.fn()
-    await beforeEachRequiresRoles(apolloMock, to, undefined, next)
-
-    expect(apolloMock.query).toHaveBeenCalled()
-    expect(next).toHaveBeenCalled()
-    expect(next.mock.calls[0][0]).toBeUndefined()
-  })
-
-  it("redirects to error403 page when user does not have any required roles", async () => {
-    const to = {
-      matched: [
-        {
-          meta: {
-            requiresRoles: ["Application Administrator", "testExtraRole"],
-          },
-        },
-      ],
-    }
-
-    apolloMock.query.mockResolvedValue({
-      data: {
-        currentUser: {
-          id: 1,
-          roles: [{ name: "Submitter" }],
-        },
-      },
-    })
-    const next = vi.fn()
-    await beforeEachRequiresRoles(apolloMock, to, undefined, next)
-
-    expect(apolloMock.query).toHaveBeenCalled()
-    expect(next).toHaveBeenCalled()
-    expect(next.mock.calls[0][0]).toStrictEqual({ name: "error403" })
-  })
-
-  it("allows navigation if user has all required roles", async () => {
-    const to = {
-      matched: [
-        {
-          meta: {
-            requiresRoles: ["Application Administrator", "testExtraRole"],
-          },
-        },
-      ],
-    }
-
-    apolloMock.query.mockResolvedValue({
-      data: {
-        currentUser: {
-          id: 1,
-          roles: [
-            { name: "Application Administrator" },
-            { name: "testExtraRole" },
-          ],
-        },
-      },
-    })
-    const next = vi.fn()
-    await beforeEachRequiresRoles(apolloMock, to, undefined, next)
-
-    expect(apolloMock.query).toHaveBeenCalled()
-    expect(next).toHaveBeenCalled()
-    expect(next.mock.calls[0][0]).toBeUndefined()
-  })
 })

@@ -32,6 +32,7 @@ export const _CURRENT_USER_FIELDS = gql`
     roles {
       name
     }
+    highest_privileged_role
   }
 `
 
