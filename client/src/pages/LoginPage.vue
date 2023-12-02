@@ -28,7 +28,7 @@
                 />
               </template>
             </q-input>
-
+            {{ providers }}
             <password-input
               ref="password"
               v-model="v$.password.$model"
@@ -91,11 +91,18 @@
 import PasswordInput from "src/components/forms/PasswordInput.vue"
 import ErrorBanner from "src/components/molecules/ErrorBanner.vue"
 import ErrorFieldRenderer from "src/components/molecules/ErrorFieldRenderer.vue"
-import { ref } from "vue"
+import { useQuery } from "@vue/apollo-composable"
+import { GET_IDENTITY_PROVIDERS } from "src/graphql/queries"
+import { ref, computed } from "vue"
 import { useLogin } from "src/use/user"
 import { useRouter } from "vue-router"
 
 const error = ref("")
+
+const { result } = useQuery(GET_IDENTITY_PROVIDERS)
+const providers = computed(() => {
+  return result.value?.identityProviders
+})
 
 const { loginUser, loading, v$, redirectUrl } = useLogin()
 const { push } = useRouter()

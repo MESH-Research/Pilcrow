@@ -437,3 +437,13 @@ export const GET_PUBLICATION = gql`
   }
   ${_RELATED_USER_FIELDS}
 `
+
+export const GET_IDENTITY_PROVIDERS = gql`
+  query GetIdentityProviders {
+    identityProviders {
+      name
+      label
+      icon
+    }
+  }
+`
