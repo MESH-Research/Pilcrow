@@ -41,8 +41,9 @@
     "label": "Item"
   },
   "auth": {
-    "loginRequired": "Please login to access that page.",
+    "loginRequired": "Please log in to access that page.",
     "login": "Login",
+    "log_in": "Log In",
     "logout": "Logout",
     "logging_out": "Logging Out...",
     "register": "Register",
