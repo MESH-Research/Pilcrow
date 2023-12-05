@@ -44,6 +44,7 @@
     "loginRequired": "Please log in to access that page.",
     "login": "Login",
     "log_in": "Log In",
+    "log_in_external": "Log in with {provider}",
     "logout": "Logout",
     "logging_out": "Logging Out...",
     "register": "Register",

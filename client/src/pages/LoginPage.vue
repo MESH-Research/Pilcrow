@@ -3,14 +3,14 @@
     <div v-if="loading_providers">
       <q-spinner color="primary" />
     </div>
-    <div v-else style="width: 400px" class="q-px-lg">
+    <section v-else style="width: 400px" class="q-px-lg q-mx-lg">
       <q-card square>
         <q-form @submit="handleSubmit()">
-          <q-card-section class="accent q-pa-sm">
-            <h1 class="text-h4 text-white q-ma-none">{{ $t(`auth.login`) }}</h1>
+          <q-card-section class="accent">
+            <h1 class="text-h4 text-white q-my-xs">{{ $t(`auth.login`) }}</h1>
           </q-card-section>
           <q-card-section>
-            <fieldset class="q-gutter-y-lg">
+            <fieldset class="q-gutter-y-lg q-pt-lg">
               <error-banner v-if="redirectUrl != '/dashboard'">
                 {{ $t(`auth.loginRequired`) }}
               </error-banner>
@@ -49,15 +49,17 @@
                 </template>
               </password-input>
             </fieldset>
-            <error-banner
-              v-if="error"
-              :data-error="error"
-              data-cy="authFailureMessages"
-            >
-              {{ $t(`auth.failures.${error}`) }}
-            </error-banner>
+            <div class="q-px-md">
+              <error-banner
+                v-if="error"
+                :data-error="error"
+                data-cy="authFailureMessages"
+              >
+                {{ $t(`auth.failures.${error}`) }}
+              </error-banner>
+            </div>
           </q-card-section>
-          <q-card>
+          <q-card flat class="q-px-sm">
             <q-card-actions class="q-px-lg q-pb-lg">
               <q-btn
                 id="submitBtn"
@@ -73,8 +75,6 @@
             </q-card-actions>
           </q-card>
         </q-form>
-      </q-card>
-      <q-card>
         <q-card-section class="text-center q-pa-sm">
           <p>
             {{ $t("auth.register_question") }}
@@ -90,11 +90,16 @@
           </p>
         </q-card-section>
       </q-card>
-    </div>
-    <q-separator v-if="providers.length > 0" vertical />
-    <div v-if="providers.length > 0" style="width: 400px">
+    </section>
+    <q-separator
+      v-if="providers.length > 0 && $q.screen.width > 942"
+      vertical
+      class="q-my-xl"
+    >Or</q-separator>
+    <section v-if="providers.length > 0" style="width: 400px" class="q-mx-lg">
       <q-card
         flat
+        square
         class="q-px-lg q-pt-sm q-pb-lg q-mt-md q-gutter-y-md primary"
       >
         <q-btn
@@ -106,11 +111,15 @@
         >
           <template #default>
             <q-icon role="presentation" :name="`fab fa-${provider.icon}`" />
-            <span class="q-pl-md"> Log in with {{ provider.label }} </span>
+            <span class="q-pl-md">{{
+              $t("auth.log_in_external", {
+                provider: provider.label,
+              })
+            }}</span>
           </template>
         </q-btn>
       </q-card>
-    </div>
+    </section>
   </q-page>
 </template>
 
