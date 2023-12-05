@@ -96,11 +96,11 @@
       vertical
       class="q-my-xl"
     >Or</q-separator>
-    <section v-if="providers.length > 0" style="width: 400px" class="q-mx-lg">
+    <section v-if="providers.length > 0" style="width: 400px" class="q-mx-md">
       <q-card
         flat
         square
-        class="q-px-lg q-pt-sm q-pb-lg q-mt-md q-gutter-y-md primary"
+        class="q-px-md q-pt-sm q-pb-lg q-mt-md q-gutter-y-md primary"
       >
         <q-btn
           v-for="provider in providers"
