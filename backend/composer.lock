@@ -4826,16 +4826,16 @@
         },
         {
             "name": "spatie/laravel-settings",
-            "version": "3.2.2",
+            "version": "3.2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/laravel-settings.git",
-                "reference": "ee792dac46e630eb59faf33aa7fe19f720912c5c"
+                "reference": "2cca592b32ddce15b32ef1ef652d346416d2da03"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/laravel-settings/zipball/ee792dac46e630eb59faf33aa7fe19f720912c5c",
-                "reference": "ee792dac46e630eb59faf33aa7fe19f720912c5c",
+                "url": "https://api.github.com/repos/spatie/laravel-settings/zipball/2cca592b32ddce15b32ef1ef652d346416d2da03",
+                "reference": "2cca592b32ddce15b32ef1ef652d346416d2da03",
                 "shasum": ""
             },
             "require": {
@@ -4897,7 +4897,7 @@
             ],
             "support": {
                 "issues": "https://github.com/spatie/laravel-settings/issues",
-                "source": "https://github.com/spatie/laravel-settings/tree/3.2.2"
+                "source": "https://github.com/spatie/laravel-settings/tree/3.2.3"
             },
             "funding": [
                 {
@@ -4909,7 +4909,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-12-01T15:17:39+00:00"
+            "time": "2023-12-04T11:38:23+00:00"
         },
         {
             "name": "spatie/regex",
