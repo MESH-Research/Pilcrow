@@ -1,6 +1,9 @@
 <template>
   <q-page class="flex-center flex q-pa-md" data-cy="vueLogin">
-    <div style="width: 400px" class="q-px-lg">
+    <div v-if="loading_providers">
+      <q-spinner color="primary" />
+    </div>
+    <div v-else style="width: 400px" class="q-px-lg">
       <q-card square>
         <q-form @submit="handleSubmit()">
           <q-card-section class="accent q-pa-sm">
@@ -89,8 +92,11 @@
       </q-card>
     </div>
     <q-separator v-if="providers.length > 0" vertical />
-    <div v-if="providers.length > 0" style="width:400px">
-      <q-card flat class="q-px-lg q-pt-sm q-pb-lg q-mt-md q-gutter-y-md primary">
+    <div v-if="providers.length > 0" style="width: 400px">
+      <q-card
+        flat
+        class="q-px-lg q-pt-sm q-pb-lg q-mt-md q-gutter-y-md primary"
+      >
         <q-btn
           v-for="provider in providers"
           :key="provider.name"
@@ -104,7 +110,6 @@
           </template>
         </q-btn>
       </q-card>
-
     </div>
   </q-page>
 </template>
@@ -121,9 +126,9 @@ import { useRouter } from "vue-router"
 
 const error = ref("")
 
-const { result } = useQuery(GET_IDENTITY_PROVIDERS)
+const { loading: loading_providers, result } = useQuery(GET_IDENTITY_PROVIDERS)
 const providers = computed(() => {
-  return result.value?.identityProviders
+  return result.value?.identityProviders ?? []
 })
 
 const { loginUser, loading, v$, redirectUrl } = useLogin()
