@@ -57,5 +57,5 @@ Pilcrow welcomes and recognizes the contributions of all contributors to our pro
 
 * [An opinionated application](https://github.com/MESH-Research/Pilcrow/wiki/An-Opinionated-Application)
 * [Pilcrow Links](https://github.com/MESH-Research/Pilcrow/wiki/Pilcrow-Links)
-* [Style Guide - in the Making](https://github.com/MESH-Research/Pilcrow/wiki/Style-Guide---in-the-making)
+* [Style Guide](https://github.com/MESH-Research/Pilcrow/wiki/Style-Guide)
 
