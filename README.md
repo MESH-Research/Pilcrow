@@ -48,7 +48,7 @@ To read more about the CCR process, [visit the Public Philosophy Journal's page 
 Instructions for deploying Pilcrow on your own server can be found in [our documentation](https://pilcrow.meshresearch.dev/install/)
 
 ## Contributing
-See our [contribution documentation](https://pilcrow.meshresearch.dev/developers/#contributor-workflow) for help getting started with a Pilcrow development environment. Feel free to reach out to the core team via [Github Discussions](https://github.com/mesh-research/pilcrow/discussions)
+See our [contribution documentation](https://pilcrow.meshresearch.dev/developers/#contributor-workflow) for help getting started with a Pilcrow development environment. Feel free to reach out to the core team via [GitHub Discussions](https://github.com/mesh-research/pilcrow/discussions)
 
 Pilcrow welcomes and recognizes the contributions of all contributors to our project, not just code.  You can see the [full list of contributors](https://pilcrow.meshresearch.dev/developers/team) on our documentation site.
 
