@@ -4,9 +4,9 @@
       <q-spinner color="primary" />
     </div>
     <section v-else style="width: 400px" class="q-px-lg q-mx-lg">
-      <q-card square>
+      <q-card square class="dark-mode-only-card">
         <q-form @submit="handleSubmit()">
-          <q-card-section class="accent">
+          <q-card-section class="bg-primary">
             <h1 class="text-h4 text-white q-my-xs">{{ $t(`auth.login`) }}</h1>
           </q-card-section>
           <q-card-section>
@@ -59,21 +59,19 @@
               </error-banner>
             </div>
           </q-card-section>
-          <q-card flat class="q-px-sm">
             <q-card-actions class="q-px-lg q-pb-lg">
               <q-btn
                 id="submitBtn"
                 ref="submitBtn"
                 unelevated
                 size="lg"
-                color="accent"
+                color="primary"
                 class="full-width text-white"
                 :label="$t(`auth.log_in`)"
                 :loading="loading"
                 type="submit"
               />
             </q-card-actions>
-          </q-card>
         </q-form>
         <q-card-section class="text-center q-pa-sm">
           <p>
@@ -91,23 +89,19 @@
         </q-card-section>
       </q-card>
     </section>
-    <q-separator
-      v-if="providers.length > 0 && $q.screen.width > 942"
-      vertical
-      class="q-my-xl"
-    >Or</q-separator>
     <section v-if="providers.length > 0" style="width: 400px" class="q-mx-md">
       <q-card
         flat
         square
-        class="q-px-md q-pt-sm q-pb-lg q-mt-md q-gutter-y-md primary"
+        class="q-px-md q-pt-sm q-pb-lg q-mt-md q-gutter-y-lg primary"
       >
         <q-btn
           v-for="provider in providers"
           :key="provider.name"
+          align="left"
+          flat
           class="full-width"
-          color="primary"
-          size="md"
+          size="lg"
         >
           <template #default>
             <q-icon role="presentation" :name="`fab fa-${provider.icon}`" />
