@@ -190,6 +190,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         App\Providers\FakerServiceProvider::class,
 
+        \SocialiteProviders\Manager\ServiceProvider::class,
     ],
 
     /*

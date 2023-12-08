@@ -102,6 +102,7 @@
           flat
           class="full-width"
           size="lg"
+          @click="handleLoginOrcid()"
         >
           <template #default>
             <q-icon role="presentation" :name="`fab fa-${provider.icon}`" />
@@ -121,8 +122,9 @@
 import PasswordInput from "src/components/forms/PasswordInput.vue"
 import ErrorBanner from "src/components/molecules/ErrorBanner.vue"
 import ErrorFieldRenderer from "src/components/molecules/ErrorFieldRenderer.vue"
-import { useQuery } from "@vue/apollo-composable"
+import { useQuery, useMutation } from "@vue/apollo-composable"
 import { GET_IDENTITY_PROVIDERS } from "src/graphql/queries"
+import { LOGIN_ORCID } from "src/graphql/mutations"
 import { ref, computed } from "vue"
 import { useLogin } from "src/use/user"
 import { useRouter } from "vue-router"
@@ -130,6 +132,7 @@ import { useRouter } from "vue-router"
 const error = ref("")
 
 const { loading: loading_providers, result } = useQuery(GET_IDENTITY_PROVIDERS)
+const { mutate: loginOrcid } = useMutation(LOGIN_ORCID)
 const providers = computed(() => {
   return result.value?.identityProviders ?? []
 })
@@ -140,6 +143,16 @@ const handleSubmit = async () => {
   try {
     await loginUser()
     push(redirectUrl)
+  } catch (e) {
+    error.value = e.message
+  }
+}
+
+const handleLoginOrcid = async () => {
+  console.log("Hello World")
+  try {
+    const a = loginOrcid()
+    console.log(a)
   } catch (e) {
     error.value = e.message
   }

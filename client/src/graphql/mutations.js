@@ -820,3 +820,9 @@ export const RESET_PASSWORD = gql`
     }
   }
 `
+
+export const LOGIN_ORCID = gql`
+  mutation LoginOrcid {
+    loginOrcid
+  }
+`
