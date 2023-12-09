@@ -344,9 +344,9 @@
   integrity sha512-pL0RXRHuuGLhvs7ayX/SAHph1hrDPXOM5anyYUQXWJEENxw3nfHkzv8FfVlEVcLyKPAEgDRkd6RKZq2SMqS/yg==
 
 "@types/flexsearch@^0.7.3":
-  version "0.7.5"
-  resolved "https://registry.yarnpkg.com/@types/flexsearch/-/flexsearch-0.7.5.tgz#23827f2bacbc0cec386acc5f0383586a9202ad20"
-  integrity sha512-V5mwscpl/4UQXSeoJXAbkBDYhbSdhLXKEJTmLBdOZjOkEpWqb/gGaKxIs27n/sozeeOy7rhLtJ9BxPXDgVkhUA==
+  version "0.7.6"
+  resolved "https://registry.yarnpkg.com/@types/flexsearch/-/flexsearch-0.7.6.tgz#240c11d16825c56833ec0c66eb1de3ea0e162a49"
+  integrity sha512-H5IXcRn96/gaDmo+rDl2aJuIJsob8dgOXDqf8K0t8rWZd1AFNaaspmRsElESiU+EWE33qfbFPgI0OC/B1g9FCA==
 
 "@types/hast@^3.0.0":
   version "3.0.3"
@@ -1406,9 +1406,9 @@ vite@^5.0.2:
     fsevents "~2.3.3"
 
 vitepress-plugin-search@^1.0.4-alpha.20:
-  version "1.0.4-alpha.20"
-  resolved "https://registry.yarnpkg.com/vitepress-plugin-search/-/vitepress-plugin-search-1.0.4-alpha.20.tgz#237501107b5e94cf0f33e081e25099e1e48cc4b2"
-  integrity sha512-zG+ev9pw1Mg7htABlFCNXb8XwnKN+qfTKw+vU0Ers6RIrABx+45EAAFBoaL1mEpl1FRFn1o/dQ7F4b8GP6HdGQ==
+  version "1.0.4-alpha.21"
+  resolved "https://registry.yarnpkg.com/vitepress-plugin-search/-/vitepress-plugin-search-1.0.4-alpha.21.tgz#5fbd951304ac627593d4e675853a221c8f56742c"
+  integrity sha512-UBkvbQtr3U8EpVWyuyd4FXAbx5I7GkKIGgObaM3BFIHCpLEjJrRZoifFQBdjZ7sZGM2OrjrgjA0W8gWKAiZ3qA==
   dependencies:
     "@types/flexsearch" "^0.7.3"
     "@types/markdown-it" "^12.2.3"
