@@ -2,7 +2,7 @@ import { boot } from "quasar/wrappers"
 import { ApolloClient, InMemoryCache, ApolloLink } from "@apollo/client/core"
 import {
   beforeEachRequiresAuth,
-  beforeEachRequiresRoles,
+  beforeEachRequiresAppAdmin,
   beforeEachRequiresDraftAccess,
   beforeEachRequiresSubmissionAccess,
   beforeEachRequiresPreviewAccess,
@@ -53,7 +53,7 @@ export default boot(async ({ app, router }) => {
    * Check routes for requiresRoles meta field.
    */
   router.beforeEach(async (to, from, next) =>
-    beforeEachRequiresRoles(apolloClient, to, from, next)
+    beforeEachRequiresAppAdmin(apolloClient, to, from, next)
   )
 
   /**

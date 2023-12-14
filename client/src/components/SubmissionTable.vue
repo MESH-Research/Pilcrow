@@ -20,8 +20,16 @@
             </q-icon>
           </h3>
 
-          <!-- eslint-disable-next-line vue/no-v-html -->
-          <p class="q-mb-none" v-html="$t(byline)"></p>
+          <i18n-t
+            :keypath="byline"
+            class="q-mb-none"
+            tag="p"
+            scope="global"
+          >
+            <template #role>
+              <strong>{{ $t(`role.${role}s`,1) }}</strong>
+            </template>
+          </i18n-t>
 
           <q-select
             v-if="tableData.length"
@@ -192,7 +200,14 @@ const tooltip = props.variation
   ? `submission_tables.${props.variation}.${props.role}.tooltip`
   : `submission_tables.${props.role}.tooltip`
 const submissionLinkName = (submission) => {
-  return (submission.status === "DRAFT") ? "submission:draft" : "submission:review"
+  if (props.role !== "submitter" && submission.status === "DRAFT") {
+    return "submission:preview"
+  } else if (submission.status === "INITIALLY_SUBMITTED") {
+    return "submission:view"
+  } else if (submission.status === "DRAFT") {
+    return "submission:draft"
+  }
+  return "submission:review"
 }
 const cols = [
   {

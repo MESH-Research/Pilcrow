@@ -59,14 +59,22 @@ export function useCurrentUser() {
     })
   }
   const isEditor = (publication) => {
-    return publication?.editors?.some((o) => {
+    const byList = publication?.editors?.some((o) => {
       return o.id == currentUser.value.id
     })
+    if (byList) {
+      return true
+    }
+    return publication?.my_role == "editor"
   }
   const isPublicationAdmin = (publication) => {
-    return publication?.publication_admins?.some((o) => {
+    const byList = publication?.publication_admins?.some((o) => {
       return o.id == currentUser.value.id
     })
+    if (byList) {
+      return true
+    }
+    return publication?.my_role == "publication_admin"
   }
 
   return {
@@ -81,6 +89,63 @@ export function useCurrentUser() {
     isReviewCoordinator,
     isEditor,
     isPublicationAdmin,
+  }
+}
+
+export function checkRole(currentUser = null) {
+  const isSubmitter = (submission) => {
+    return submission?.submitters?.some((o) => {
+      return o.id == currentUser.value.id
+    })
+  }
+  const isReviewer = (submission) => {
+    return submission?.reviewers?.some((o) => {
+      return o.id == currentUser.value.id
+    })
+  }
+  const isReviewCoordinator = (submission) => {
+    return submission?.review_coordinators?.some((o) => {
+      return o.id == currentUser.value.id
+    })
+  }
+  const isEditor = (publication) => {
+    if (currentUser) {
+      const byList = publication?.editors?.some((o) => {
+        return o.id == currentUser.value.id
+      })
+      if (byList) {
+        return true
+      }
+    }
+    return publication?.my_role == "editor"
+  }
+  const isPublicationAdmin = (publication) => {
+    if (currentUser) {
+      const byList = publication?.publication_admins?.some((o) => {
+        return o.id == currentUser.value.id
+      })
+      if (byList) {
+        return true
+      }
+    }
+    return (
+      publication?.my_role == "publication_admin" ||
+      publication?.effective_role == "publication_admin"
+    )
+  }
+
+  const isApplicationAdmin = (user) => {
+    const roles = user.roles.map(({ name }) => name) ?? []
+    return !!roles.value.includes("Application Administrator")
+  }
+
+  return {
+    isSubmitter,
+    isReviewer,
+    isReviewCoordinator,
+    isEditor,
+    isPublicationAdmin,
+    isApplicationAdmin,
   }
 }
 

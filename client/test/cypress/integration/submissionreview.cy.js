@@ -193,11 +193,11 @@ describe("Submissions Review", () => {
     })
   })
 
-  it("should deny a reviewer access to a submission's contents before it is accepted for review", () => {
+  it("should allow a reviewer access to a submission's contents before it is accepted for review", () => {
     cy.task("resetDb")
     cy.login({ email: "reviewer@meshresearch.net" })
     cy.visit("submission/101/review")
-    cy.url().should("include", "/error403")
+    cy.url().should("not.include", "/error403")
   })
 
   it("should allow an application administrator to accept a submission for review and permit reviewers access", () => {

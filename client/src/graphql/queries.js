@@ -271,17 +271,15 @@ export const GET_SUBMISSIONS = gql`
           ...relatedUserFields
         }
         publication {
+          id
           name
+          my_role
           editors {
             ...relatedUserFields
           }
           publication_admins {
             ...relatedUserFields
           }
-        }
-        files {
-          id
-          file_upload
         }
       }
     }
@@ -332,6 +330,7 @@ export const GET_SUBMISSION = gql`
           description
           icon
         }
+        my_role
         editors {
           ...relatedUserFields
         }
