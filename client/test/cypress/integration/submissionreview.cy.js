@@ -449,4 +449,28 @@ describe("Submissions Review", () => {
     cy.dataCy("submission_status").contains("Deleted")
     cy.dataCy("status-dropdown").should('not.exist')
   })
+
+  // REMOVE ONLY !!
+  it.only("scrolls when clicking on 'View Overall Comments'", () => {
+    cy.task("resetDb")
+    cy.login({email: "reviewcoordinator@meshresearch.net"})
+    cy.visit("submission/100/review")
+    // get initial scroll position
+    console.log('test')
+    // cy.window().its('scrollY')
+    // get scroll position -- of button? of overall comment section?
+    // let scrollY = .getBoundingClientRect().top
+    // click to scroll
+    cy.dataCy("view_overall_comments").click()
+    // check scroll position of ?? 
+    // expect(scrollY).to.be.lessThan(0)
+  })
+
+  it("scrolls when clicking on 'Add New Overall Comment'", () => {
+    cy.task("resetDb")
+    cy.login({email: "reviewcoordinator@meshresearch.net"})
+    cy.visit("submission/100/review")
+    cy.dataCy("new_overall_comment").click()
+
+  })
 })
