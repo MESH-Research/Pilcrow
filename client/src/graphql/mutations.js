@@ -228,7 +228,10 @@ export const UPDATE_SUBMISSION_CONTENT = gql`
 `
 
 export const UPDATE_SUBMISSION_CONTENT_WITH_FILE = gql`
-  mutation UpdateSubmissionContentWithFile($submission_id: ID!, $file_upload: Upload!) {
+  mutation UpdateSubmissionContentWithFile(
+    $submission_id: ID!
+    $file_upload: Upload!
+  ) {
     updateSubmissionContentWithFile(
       input: { submission_id: $submission_id, file_upload: $file_upload }
     ) {
@@ -324,7 +327,7 @@ export const UPDATE_PROFILE_METADATA = gql`
         username: $username
         name: $name
         profile_metadata: $profile_metadata
-        }
+      }
     ) {
       id
       ...profileMetadata
@@ -775,6 +778,38 @@ export const UPDATE_INLINE_COMMENT_REPLY = gql`
   ${_RELATED_USER_FIELDS}
 `
 
+export const DELETE_INLINE_COMMENT = gql`
+  mutation DeleteInlineComment(
+    $submission_id: ID!
+    $comment_id: ID!
+  ) {
+    updateSubmission(
+      input: {
+        id: $submission_id
+        inline_comments: { delete: { id: $comment_id } }
+      }
+    ) {
+      id
+      created_by {
+        ...relatedUserFields
+      }
+      inline_comments {
+        ...commentFields
+        style_criteria {
+          name
+          icon
+        }
+        replies {
+          reply_to_id
+          ...commentFields
+        }
+      }
+    }
+  }
+  ${_COMMENT_FIELDS}
+  ${_RELATED_USER_FIELDS}
+`
+
 export const UPDATE_OVERALL_COMMENT_REPLY = gql`
   mutation UpdateInlineCommentReply(
     $submission_id: ID!
@@ -785,6 +820,34 @@ export const UPDATE_OVERALL_COMMENT_REPLY = gql`
       input: {
         id: $submission_id
         overall_comments: { update: { id: $comment_id, content: $content } }
+      }
+    ) {
+      id
+      created_by {
+        ...relatedUserFields
+      }
+      overall_comments {
+        ...commentFields
+        replies {
+          reply_to_id
+          ...commentFields
+        }
+      }
+    }
+  }
+  ${_COMMENT_FIELDS}
+  ${_RELATED_USER_FIELDS}
+`
+
+export const DELETE_OVERALL_COMMENT = gql`
+  mutation DeleteOverallComment(
+    $submission_id: ID!
+    $comment_id: ID!
+  ) {
+    updateSubmission(
+      input: {
+        id: $submission_id
+        overall_comments: { delete: $comment_id } }
       }
     ) {
       id

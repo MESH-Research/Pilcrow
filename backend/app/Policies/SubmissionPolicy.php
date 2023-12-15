@@ -242,7 +242,7 @@ class SubmissionPolicy
     }
 
     /**
-     * Update the inline comments of a submission
+     * Update or delete the inline comments of a submission
      *
      * @param \App\Models\User $user
      * @param \App\Models\Submission $_
@@ -251,8 +251,8 @@ class SubmissionPolicy
      */
     public function updateInlineComments(User $user, Submission $_, $args)
     {
-        if (isset($args['inlineComments']['update'])) {
-            $comment_id = $args['inlineComments']['update'][0]['id'];
+        if (isset($args['inlineComments']['update']) || isset($args['inlineComments']['delete'])) {
+            $comment_id = $args['inlineComments']['update'][0]['id'] ?: $args['inlineComments']['update']['id'];
             $inline_comment = InlineComment::where('id', $comment_id)->firstOrFail();
             if ($inline_comment->created_by === $user->id) {
                 return true;
@@ -265,7 +265,7 @@ class SubmissionPolicy
     }
 
     /**
-     * Update the overall comments of a submission
+     * Update or delete the overall comments of a submission
      *
      * @param \App\Models\User $user
      * @param \App\Models\Submission $_
@@ -274,8 +274,8 @@ class SubmissionPolicy
      */
     public function updateOverallComments(User $user, Submission $_, $args)
     {
-        if (isset($args['overallComments']['update'])) {
-            $comment_id = $args['overallComments']['update'][0]['id'];
+        if (isset($args['overallComments']['update']) || isset($args['overallComments']['delete'])) {
+            $comment_id = $args['overallComments']['update'][0]['id'] ?: $args['overallComments']['delete']['id'];
             $overall_comment = OverallComment::where('id', $comment_id)->firstOrFail();
             if ($overall_comment->created_by === $user->id) {
                 return true;

@@ -944,7 +944,8 @@
       "actions": {
         "quote_reply": "Quote Reply",
         "modify": "Modify",
-        "share": "Share"
+        "share": "Share",
+        "delete": "Delete"
       },
       "placeholder": "Add a comment …",
       "scroll_to_top": "Scroll to top"
