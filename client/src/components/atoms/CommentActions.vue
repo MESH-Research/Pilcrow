@@ -27,9 +27,9 @@
             }}</q-item-section>
           </q-item>
           <q-item clickable>
-            <q-item-section
-              >{{ $t("submissions.comment.actions.delete") }}
-            </q-item-section>
+            <q-item-section>{{
+              $t("submissions.comment.actions.delete")
+            }}</q-item-section>
           </q-item>
         </q-list>
       </q-menu>
