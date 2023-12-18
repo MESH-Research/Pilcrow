@@ -252,7 +252,7 @@ class SubmissionPolicy
     public function updateInlineComments(User $user, Submission $_, $args)
     {
         if (isset($args['inlineComments']['update']) || isset($args['inlineComments']['delete'])) {
-            $comment_id = $args['inlineComments']['update'][0]['id'] ?: $args['inlineComments']['update']['id'];
+            $comment_id = $args['inlineComments']['update'][0]['id'] ?: $args['inlineComments']['delete']['id'];
             $inline_comment = InlineComment::where('id', $comment_id)->firstOrFail();
             if ($inline_comment->created_by === $user->id) {
                 return true;

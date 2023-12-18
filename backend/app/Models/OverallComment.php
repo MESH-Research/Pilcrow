@@ -7,11 +7,13 @@ use App\Http\Traits\CreatedUpdatedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class OverallComment extends BaseModel
 {
     use HasFactory;
     use CreatedUpdatedBy;
+    use SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
