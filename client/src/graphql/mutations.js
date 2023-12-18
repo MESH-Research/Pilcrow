@@ -786,7 +786,7 @@ export const DELETE_INLINE_COMMENT = gql`
     updateSubmission(
       input: {
         id: $submission_id
-        inline_comments: { delete: { id: $comment_id } }
+        inline_comments: { delete: $comment_id }
       }
     ) {
       id
@@ -847,7 +847,7 @@ export const DELETE_OVERALL_COMMENT = gql`
     updateSubmission(
       input: {
         id: $submission_id
-        overall_comments: { delete: $comment_id } }
+        overall_comments: { delete: $comment_id }
       }
     ) {
       id
