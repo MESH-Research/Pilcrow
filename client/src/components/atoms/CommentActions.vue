@@ -17,7 +17,7 @@
             }}</q-item-section></q-item
           >
           <q-item
-            v-if="checkCommentCreatedBy == false"
+            v-if="createdByCurrentUser"
             data-cy="modifyComment"
             clickable
             @click="$emit('modifyComment')"
@@ -26,7 +26,7 @@
               $t("submissions.comment.actions.modify")
             }}</q-item-section>
           </q-item>
-          <q-item clickable>
+          <q-item v-if="createdByCurrentUser" data-cy="deleteComment" clickable>
             <q-item-section>{{
               $t("submissions.comment.actions.delete")
             }}</q-item-section>
@@ -47,13 +47,7 @@ const comment = inject("comment")
 
 defineEmits(["quoteReplyTo", "modifyComment"])
 
-const checkCommentCreatedBy = computed(() => {
-  const userToCheck = currentUser.value.id
-  const commentCreatedBy = comment.created_by.id
-  if (userToCheck == commentCreatedBy) {
-    return false
-  } else {
-    return true
-  }
+const createdByCurrentUser = computed(() => {
+  return currentUser.value.id == comment.created_by.id
 })
 </script>

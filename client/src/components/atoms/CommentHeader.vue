@@ -1,11 +1,20 @@
 <template>
-  <q-card-section v-if="comment.deleted_at != null">
-    <div class="row items-center">
-    {{
-      $t("submissions.comment.dateLabelDeleted", {
-        date: relativeDeletedTime,
-      })
-    }}
+  <q-card-section
+    v-if="comment.deleted_at != null"
+    class="q-py-sm"
+    :style="style"
+  >
+    <div class="row items-center justify-end">
+      <span>
+        {{
+          $t("submissions.comment.dateLabelDeleted", {
+            date: relativeDeletedTime,
+          })
+        }}
+        <q-tooltip>
+          {{ deletedDate.toFormat("LLL dd yyyy hh:mm a") }}
+        </q-tooltip>
+      </span>
     </div>
   </q-card-section>
   <q-card-section v-else class="q-py-xs" :style="style">

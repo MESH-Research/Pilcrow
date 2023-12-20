@@ -87,7 +87,7 @@ input InlineCommentHasManyInput {
             ]
         )
     update: [UpdateInlineCommentInput!]
-    delete: ID!
+    delete: ID
 }
 
 input CreateInlineCommentInput {
@@ -116,7 +116,7 @@ input OverallCommentHasManyInput {
             ]
         )
     update: [UpdateOverallCommentInput!]
-    delete: ID!
+    delete: ID
 }
 
 input CreateOverallCommentInput {
