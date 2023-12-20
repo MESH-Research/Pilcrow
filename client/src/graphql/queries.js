@@ -376,7 +376,8 @@ export const GET_SUBMISSION_REVIEW = gql`
           ...relatedUserFields
         }
       }
-      inline_comments {
+      inline_comments(trashed: WITH) {
+        deleted_at
         from
         to
         ...commentFields

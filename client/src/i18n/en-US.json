@@ -928,6 +928,7 @@
     "comment": {
       "ariaLabel": "Comment. Author {username}. {replies} replies",
       "dateLabel": "Created {date}",
+      "dateLabelDeleted": "Deleted {date}",
       "dateLabelUpdated": "Updated {date}",
       "updatedLabel": "Updated",
       "toggle_replies": {

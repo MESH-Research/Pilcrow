@@ -1,6 +1,6 @@
 extend type Submission {
-    inline_comments: [InlineComment!]! @hasMany(relation: "inlineComments")
-    overall_comments: [OverallComment!]! @hasMany(relation: "overallComments")
+    inline_comments: [InlineComment!]! @hasMany(relation: "inlineComments") @softDeletes
+    overall_comments: [OverallComment!]! @hasMany(relation: "overallComments") @softDeletes
 }
 
 """
@@ -13,6 +13,7 @@ type InlineComment implements Comment {
     updated_by: User! @belongsTo(relation: "updatedBy")
     created_at: DateTimeUtc!
     updated_at: DateTimeUtc!
+    deleted_at: DateTimeUtc
     replies: [InlineCommentReply!] @hasMany
     style_criteria: [InlineCommentStyleCriteria!]
     from: Int
@@ -38,6 +39,7 @@ type InlineCommentReply implements Comment {
     updated_by: User! @belongsTo(relation: "updatedBy")
     created_at: DateTimeUtc!
     updated_at: DateTimeUtc!
+    deleted_at: DateTimeUtc
     parent_id: ID!
     reply_to_id: ID!
 }

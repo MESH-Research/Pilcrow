@@ -1,5 +1,14 @@
 <template>
-  <q-card-section class="q-py-xs" :style="style">
+  <q-card-section v-if="comment.deleted_at != null">
+    <div class="row items-center">
+    {{
+      $t("submissions.comment.dateLabelDeleted", {
+        date: relativeDeletedTime,
+      })
+    }}
+    </div>
+  </q-card-section>
+  <q-card-section v-else class="q-py-xs" :style="style">
     <div class="row items-center">
       <avatar-image
         :user="comment.created_by"
@@ -98,6 +107,18 @@ const updatedDate = computed(() => {
 const relativeUpdatedTime = computed(() => {
   return updatedDate.value
     ? timeAgo.format(updatedDate.value.toJSDate(), "long")
+    : ""
+})
+
+const deletedDate = computed(() => {
+  return props.comment?.deleted_at
+    ? DateTime.fromISO(props.comment.deleted_at)
+    : undefined
+})
+
+const relativeDeletedTime = computed(() => {
+  return deletedDate.value
+    ? timeAgo.format(deletedDate.value.toJSDate(), "long")
     : ""
 })
 </script>

@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Http\Traits\CreatedUpdatedBy;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -55,7 +56,7 @@ class InlineComment extends BaseModel
     }
 
     /**
-     * The creator of the inline comment
+      * The creator of the inline comment
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -72,5 +73,37 @@ class InlineComment extends BaseModel
     public function updatedBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'updated_by');
+    }
+
+    /**
+     * @return Attribute
+     */
+    protected function username(): Attribute
+    {
+        return Attribute::make(
+            get: fn (int $value) => $this->trashed() ? "" : $value,
+        );
+    }
+
+    /**
+     * @return Attribute
+     */
+    protected function content(): Attribute
+    {
+        return Attribute::make(
+            get: fn (string $value) => $this->trashed() ? 'This comment has been deleted' : $value,
+        );
+    }
+
+    /**
+     * @return Attribute
+     */
+    public function styleCriteria(): Attribute
+    {
+        return Attribute::make(
+            get: function(mixed $value, array $attributes) {
+                return $this->trashed() ? [] : json_decode($attributes['style_criteria']);
+            }
+        );
     }
 }
