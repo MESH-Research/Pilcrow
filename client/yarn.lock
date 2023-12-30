@@ -863,9 +863,9 @@
   integrity sha512-zuVdFrMJiuCDQUMCzQaD6KL28MjnqqN8XnAqiEq9PNm/hCPTSGfrXCOfwj1ow4LFb/tNymJPwsNbVePc1xFqrQ==
 
 "@vitejs/plugin-vue@^2.2.0", "@vitejs/plugin-vue@^4.0.0":
-  version "4.6.0"
-  resolved "https://registry.yarnpkg.com/@vitejs/plugin-vue/-/plugin-vue-4.6.0.tgz#6e1011303f8224e04d339756f1fa398ba79fc0b3"
-  integrity sha512-XHuyFdAikWRmHuAd89FOyUGIjrBU5KlxJtyi2hVeR9ySGFxQwE0bl5xAQju/ArMq5azdBivY4d+D2yPKwoYWUg==
+  version "4.6.1"
+  resolved "https://registry.yarnpkg.com/@vitejs/plugin-vue/-/plugin-vue-4.6.1.tgz#ab4ba6a451d07eb7427d687dbb08fc6a864ad871"
+  integrity sha512-4JG1b1SPQpviIXkp4cwUaHluU0KCgjLprdyYaw4cq6OkJzqFXuao5CefsOaftcRpw8rlMQVwmHEurK+1zIzTlA==
 
 "@vitest/expect@0.34.6":
   version "0.34.6"
