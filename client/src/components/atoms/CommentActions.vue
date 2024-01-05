@@ -26,7 +26,12 @@
               $t("submissions.comment.actions.modify")
             }}</q-item-section>
           </q-item>
-          <q-item v-if="createdByCurrentUser" data-cy="deleteComment" clickable>
+          <q-item
+            v-if="createdByCurrentUser"
+            data-cy="deleteComment"
+            clickable
+            @click="deleteHandler()"
+          >
             <q-item-section>{{
               $t("submissions.comment.actions.delete")
             }}</q-item-section>
@@ -43,11 +48,25 @@ import { useCurrentUser } from "src/use/user"
 
 const { currentUser } = useCurrentUser()
 
+// import { useQuasar } from "quasar"
+// const { dialog } = useQuasar()
+
 const comment = inject("comment")
 
-defineEmits(["quoteReplyTo", "modifyComment"])
+const emit = defineEmits(["quoteReplyTo", "modifyComment", "deleteComment"])
 
 const createdByCurrentUser = computed(() => {
   return currentUser.value.id == comment.created_by.id
 })
+
+async function deleteHandler() {
+  emit("deleteComment")
+  // dialog({
+  //   component: ConfirmStatusChangeDialog,
+  //   componentProps: {
+  //     action: action,
+  //     submissionId: props.submission.id,
+  //   },
+  // })
+}
 </script>

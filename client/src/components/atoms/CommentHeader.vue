@@ -64,6 +64,7 @@
       <comment-actions
         @quote-reply-to="$emit('quoteReplyTo')"
         @modify-comment="$emit('modifyComment')"
+        @delete-comment="$emit('deleteComment')"
       />
     </div>
   </q-card-section>
@@ -88,7 +89,7 @@ const props = defineProps({
     default: null,
   },
 })
-defineEmits(["quoteReplyTo", "modifyComment"])
+defineEmits(["quoteReplyTo", "modifyComment", "deleteComment"])
 const style = computed(() => {
   const style = {}
   if (props.bgColor) {

@@ -52,11 +52,16 @@ class InlineComment extends BaseModel
      */
     public function replies(): HasMany
     {
-        return $this->hasMany(InlineComment::class, 'parent_id');
+        $thread_replies = $this->hasMany(InlineComment::class, 'parent_id');
+        if ($thread_replies->count() > 0) {
+            return $thread_replies;
+        } else {
+            return $this->hasMany(InlineComment::class, 'reply_to_id');
+        }
     }
 
     /**
-      * The creator of the inline comment
+     * The creator of the inline comment
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -76,17 +81,17 @@ class InlineComment extends BaseModel
     }
 
     /**
-     * @return Attribute
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
      */
     protected function username(): Attribute
     {
         return Attribute::make(
-            get: fn (int $value) => $this->trashed() ? "" : $value,
+            get: fn (int $value) => $this->trashed() ? '' : $value,
         );
     }
 
     /**
-     * @return Attribute
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
      */
     protected function content(): Attribute
     {
@@ -96,12 +101,12 @@ class InlineComment extends BaseModel
     }
 
     /**
-     * @return Attribute
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
      */
     public function styleCriteria(): Attribute
     {
         return Attribute::make(
-            get: function(mixed $value, array $attributes) {
+            get: function (mixed $value, array $attributes) {
                 return $this->trashed() ? [] : json_decode($attributes['style_criteria']);
             }
         );

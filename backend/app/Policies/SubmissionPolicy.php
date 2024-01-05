@@ -242,7 +242,7 @@ class SubmissionPolicy
     }
 
     /**
-     * Update or delete the inline comments of a submission
+     * Update the inline comments of a submission
      *
      * @param \App\Models\User $user
      * @param \App\Models\Submission $_
@@ -251,8 +251,8 @@ class SubmissionPolicy
      */
     public function updateInlineComments(User $user, Submission $_, $args)
     {
-        if (isset($args['inlineComments']['update']) || isset($args['inlineComments']['delete'])) {
-            $comment_id = $args['inlineComments']['update'][0]['id'] ?: $args['inlineComments']['delete']['id'];
+        if (isset($args['inlineComments']['update'])) {
+            $comment_id = $args['inlineComments']['update'][0]['id'];
             $inline_comment = InlineComment::where('id', $comment_id)->firstOrFail();
             if ($inline_comment->created_by === $user->id) {
                 return true;
@@ -261,6 +261,27 @@ class SubmissionPolicy
             return Response::deny('UNAUTHORIZED');
         }
 
+        return true;
+    }
+
+    /**
+     * Delete the inline comments of a submission
+     *
+     * @param \App\Models\User $user
+     * @param \App\Models\Submission $_
+     * @param  array {submission_id: string, comment_id:string}  $args
+     * @return bool|\Illuminate\Auth\Access\Response
+     */
+    public function deleteInlineComment(User $user, Submission $_, array $args)
+    {
+        if (isset($args['deleteInlineComment'])) {
+            $comment_id = $args['deleteInlineComment']['comment_id'];
+            $inline_comment = InlineComment::findOrFail($comment_id);
+            if ($inline_comment->created_by === $user->id) {
+                return true;
+            }
+            return Response::deny('UNAUTHORIZED');
+        }
         return true;
     }
 

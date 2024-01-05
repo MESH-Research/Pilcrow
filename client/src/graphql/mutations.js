@@ -779,15 +779,9 @@ export const UPDATE_INLINE_COMMENT_REPLY = gql`
 `
 
 export const DELETE_INLINE_COMMENT = gql`
-  mutation DeleteInlineComment(
-    $submission_id: ID!
-    $comment_id: ID!
-  ) {
-    updateSubmission(
-      input: {
-        id: $submission_id
-        inline_comments: { delete: $comment_id }
-      }
+  mutation DeleteInlineComment($submission_id: ID!, $comment_id: ID!) {
+    deleteInlineComment(
+      input: { submission_id: $submission_id, comment_id: $comment_id }
     ) {
       id
       created_by {
@@ -840,15 +834,9 @@ export const UPDATE_OVERALL_COMMENT_REPLY = gql`
 `
 
 export const DELETE_OVERALL_COMMENT = gql`
-  mutation DeleteOverallComment(
-    $submission_id: ID!
-    $comment_id: ID!
-  ) {
+  mutation DeleteOverallComment($submission_id: ID!, $comment_id: ID!) {
     updateSubmission(
-      input: {
-        id: $submission_id
-        overall_comments: { delete: $comment_id }
-      }
+      input: { id: $submission_id, overall_comments: { delete: $comment_id } }
     ) {
       id
       created_by {
