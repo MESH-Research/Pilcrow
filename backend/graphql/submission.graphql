@@ -5,7 +5,10 @@ extend type Query {
     submission(id: ID @eq): Submission @find @can(ability: "view", find: "id")
 
     "Return all submissions"
-    submissions: [Submission!] @can(ability: "viewAll", query: true) @paginate(defaultCount: 100) @orderBy(column: "created_at", direction: DESC)
+    submissions: [Submission!]
+        @can(ability: "viewAll", query: true)
+        @paginate(defaultCount: 100)
+        @orderBy(column: "created_at", direction: DESC)
 }
 
 extend type Mutation {
@@ -33,12 +36,13 @@ extend type Mutation {
         )
 
     "Delete an inline comment of a submission"
-    deleteInlineComment(
-        input: DeleteInlineCommentInput! @spread
-    ): Submission! @canFind(ability: "deleteInlineComment", find: "submission_id")
-        @field(
-            resolver: "App\\GraphQL\\Mutations\\DeleteInlineComment@delete"
+    deleteInlineComment(input: DeleteInlineCommentInput! @spread): Submission!
+        @argPolicy(
+            find: "submission_id"
+            apply: ["comment_id:deleteInlineComment"]
+            injectArgs: true
         )
+        @field(resolver: "App\\GraphQL\\Mutations\\DeleteInlineComment@delete")
 
     "Update the content of a submission"
     updateSubmissionContent(
@@ -48,7 +52,8 @@ extend type Mutation {
     "Update the content of a submission with a file upload"
     updateSubmissionContentWithFile(
         input: CreateSubmissionFileInput! @spread
-    ): Submission! @can(ability: "update", find: "submission_id")
+    ): Submission!
+        @can(ability: "update", find: "submission_id")
         @field(
             resolver: "App\\GraphQL\\Mutations\\UpdateSubmissionContentWithFile@update"
         )
@@ -99,9 +104,7 @@ extend type Mutation {
     """
     Resend an email notification inviting a staged reviewer to accept the assignment
     """
-    reinviteReviewer(
-        input: reinviteSubmissionUserInput @spread
-    ): Submission
+    reinviteReviewer(input: reinviteSubmissionUserInput @spread): Submission
         @can(ability: "invite", find: "submission_id")
         @field(
             resolver: "App\\GraphQL\\Mutations\\ReinviteSubmissionUser@reinviteReviewer"
@@ -126,7 +129,8 @@ input inviteSubmissionUserInput
     message: String
 }
 
-input reinviteSubmissionUserInput @validator(class: "SubmissionReinvitationValidator") {
+input reinviteSubmissionUserInput
+    @validator(class: "SubmissionReinvitationValidator") {
     submission_id: ID!
     email: String!
     message: String
@@ -202,7 +206,8 @@ input DeleteInlineCommentInput {
 """
 Input type for creating a new submission via the createSubmissionDraft mutation
 """
-input CreateSubmissionDraftInput @validator(class: "SubmissionDraftInputValidator") {
+input CreateSubmissionDraftInput
+    @validator(class: "SubmissionDraftInputValidator") {
     title: String! @trim
     publication_id: ID!
     submitters: CreateSubmissionUserInput
