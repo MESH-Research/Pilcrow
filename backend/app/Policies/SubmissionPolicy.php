@@ -274,15 +274,13 @@ class SubmissionPolicy
      */
     public function deleteInlineComment(User $user, Submission $_, array $args)
     {
-        if (isset($args['deleteInlineComment'])) {
-            $comment_id = $args['deleteInlineComment']['comment_id'];
-            $inline_comment = InlineComment::findOrFail($comment_id);
+        if (isset($args['comment_id'])) {
+            $inline_comment = InlineComment::findOrFail($args['comment_id']);
             if ($inline_comment->created_by === $user->id) {
                 return true;
             }
-            return Response::deny('UNAUTHORIZED');
         }
-        return true;
+        return Response::deny('UNAUTHORIZED');
     }
 
     /**

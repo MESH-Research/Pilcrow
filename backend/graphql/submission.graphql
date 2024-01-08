@@ -38,8 +38,8 @@ extend type Mutation {
     "Delete an inline comment of a submission"
     deleteInlineComment(input: DeleteInlineCommentInput! @spread): Submission!
         @argPolicy(
-            find: "submission_id"
             apply: ["comment_id:deleteInlineComment"]
+            find: "submission_id"
             injectArgs: true
         )
         @field(resolver: "App\\GraphQL\\Mutations\\DeleteInlineComment@delete")
