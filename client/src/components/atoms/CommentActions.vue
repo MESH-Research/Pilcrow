@@ -45,11 +45,11 @@
 <script setup>
 import { inject, computed } from "vue"
 import { useCurrentUser } from "src/use/user"
+import ConfirmCommentDeletion from "../dialogs/ConfirmCommentDeletion.vue";
+import { useQuasar } from "quasar"
+const { dialog } = useQuasar()
 
 const { currentUser } = useCurrentUser()
-
-// import { useQuasar } from "quasar"
-// const { dialog } = useQuasar()
 
 const comment = inject("comment")
 
@@ -61,12 +61,11 @@ const createdByCurrentUser = computed(() => {
 
 async function deleteHandler() {
   emit("deleteComment")
-  // dialog({
-  //   component: ConfirmStatusChangeDialog,
-  //   componentProps: {
-  //     action: action,
-  //     submissionId: props.submission.id,
-  //   },
-  // })
+  dialog({
+    component: ConfirmCommentDeletion,
+    componentProps: {
+      comment: comment.content,
+    },
+  })
 }
 </script>
