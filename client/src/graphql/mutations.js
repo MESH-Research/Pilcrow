@@ -542,7 +542,7 @@ export const CREATE_INLINE_COMMENT = gql`
       }
     ) {
       id
-      inline_comments {
+      inline_comments(trashed: WITH) {
         style_criteria {
           name
           icon
@@ -580,7 +580,7 @@ export const CREATE_INLINE_COMMENT_REPLY = gql`
       }
     ) {
       id
-      inline_comments {
+      inline_comments(trashed: WITH) {
         style_criteria {
           name
           icon
@@ -732,7 +732,7 @@ export const UPDATE_INLINE_COMMENT = gql`
       created_by {
         ...relatedUserFields
       }
-      inline_comments {
+      inline_comments(trashed: WITH) {
         ...commentFields
         style_criteria {
           name
@@ -765,7 +765,7 @@ export const UPDATE_INLINE_COMMENT_REPLY = gql`
       created_by {
         ...relatedUserFields
       }
-      inline_comments {
+      inline_comments(trashed: WITH) {
         ...commentFields
         replies {
           reply_to_id
@@ -787,7 +787,7 @@ export const DELETE_INLINE_COMMENT = gql`
       created_by {
         ...relatedUserFields
       }
-      inline_comments {
+      inline_comments(trashed: WITH) {
         ...commentFields
         style_criteria {
           name
