@@ -456,14 +456,11 @@ describe("Submissions Review", () => {
     cy.login({email: "reviewcoordinator@meshresearch.net"})
     cy.visit("submission/100/review")
     // get initial scroll position
-    console.log('test')
-    // cy.window().its('scrollY')
-    // get scroll position -- of button? of overall comment section?
-    // let scrollY = .getBoundingClientRect().top
+    cy.window().its('scrollY')
     // click to scroll
     cy.dataCy("view_overall_comments").click()
-    // check scroll position of ?? 
-    // expect(scrollY).to.be.lessThan(0)
+    // check scroll position
+    cy.window().its('scrollY').should('not.equal', 0)
   })
 
   it("scrolls when clicking on 'Add New Overall Comment'", () => {
