@@ -795,6 +795,7 @@ export const DELETE_INLINE_COMMENT = gql`
         }
         replies {
           reply_to_id
+          parent_id
           ...commentFields
         }
       }

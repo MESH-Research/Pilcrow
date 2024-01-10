@@ -52,6 +52,7 @@ const { dialog } = useQuasar()
 const { currentUser } = useCurrentUser()
 
 const comment = inject("comment")
+const submission = inject("submission")
 
 const emit = defineEmits(["quoteReplyTo", "modifyComment", "deleteComment"])
 
@@ -64,7 +65,8 @@ async function deleteHandler() {
   dialog({
     component: ConfirmCommentDeletion,
     componentProps: {
-      comment: comment.content,
+      comment: comment,
+      submissionId: submission.value.id,
     },
   })
 }
