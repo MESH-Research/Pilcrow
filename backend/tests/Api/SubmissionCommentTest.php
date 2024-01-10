@@ -772,4 +772,53 @@ class SubmissionCommentTest extends ApiTestCase
         )
         ->assertGraphQLErrorMessage('UNAUTHORIZED');
     }
+
+    public function testUsersCanDeleteTheirOwnInlineComments()
+    {
+        $admin = $this->beAppAdmin();
+        $submission = $this->createSubmissionWithInlineComment(1, $admin);
+        $count_before_deletion = $submission->inlineComments()->count();
+        $inline_comment = $submission->inlineComments->first();
+        $response = $this->graphQL(
+            'mutation DeleteInlineComment ($submission_id: ID! $comment_id: ID!) {
+                deleteInlineComment(
+                    input: {
+                        submission_id: $submission_id,
+                        comment_id: $comment_id
+                    }
+                ) {
+                    id
+                    inline_comments(trashed: WITH) {
+                        id
+                        content
+                        style_criteria {
+                            name
+                        }
+                    }
+                }
+            }',
+            [
+                'submission_id' => $submission->id,
+                'comment_id' => $inline_comment->id,
+            ]
+        );
+        $expected_data = [
+            'deleteInlineComment' => [
+                'id' => (string)$submission->id,
+                'inline_comments' => [
+                    '0' => [
+                        'id' => (string)$inline_comment->id,
+                        'content' => 'This comment has been deleted',
+                        'style_criteria' => [],
+                    ]
+                ]
+            ]
+        ];
+        $this->assertSoftDeleted($inline_comment);
+        $count_after_deletion = $submission->inlineComments()->count();
+        $this->assertEquals($count_before_deletion, 1);
+        $this->assertEquals($count_after_deletion, 0);
+        $response->assertJsonPath('data', $expected_data);
+    }
+
 }
