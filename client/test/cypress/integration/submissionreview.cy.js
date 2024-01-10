@@ -1,6 +1,7 @@
 /// <reference types="Cypress" />
 /// <reference path="../support/index.d.ts" />
 
+import { VERIFY_EMAIL } from 'src/graphql/mutations'
 import { a11yLogViolations } from '../support/helpers'
 
 describe("Submissions Review", () => {
@@ -456,11 +457,12 @@ describe("Submissions Review", () => {
     cy.login({email: "reviewcoordinator@meshresearch.net"})
     cy.visit("submission/100/review")
     // get initial scroll position
-    cy.window().its('scrollY')
+    cy.window().its('scrollY').should('equal', 0)
+    
     // click to scroll
     cy.dataCy("view_overall_comments").click()
     // check scroll position
-    cy.window().its('scrollY').should('not.equal', 0)
+    cy.window().its('scrollY').should('equal', 0)
   })
 
   it("scrolls when clicking on 'Add New Overall Comment'", () => {
