@@ -54,6 +54,7 @@ type OverallComment implements Comment {
     created_at: DateTimeUtc!
     updated_by: User! @belongsTo(relation: "updatedBy")
     updated_at: DateTimeUtc!
+    deleted_at: DateTimeUtc
     replies: [OverallCommentReply!] @hasMany
 }
 
@@ -67,6 +68,7 @@ type OverallCommentReply implements Comment {
     updated_by: User! @belongsTo(relation: "updatedBy")
     created_at: DateTimeUtc!
     updated_at: DateTimeUtc!
+    deleted_at: DateTimeUtc
     parent_id: ID!
     reply_to_id: ID!
 }
@@ -135,4 +137,5 @@ interface Comment {
     updated_by: User!
     created_at: DateTimeUtc!
     updated_at: DateTimeUtc!
+    deleted_at: DateTimeUtc
 }
