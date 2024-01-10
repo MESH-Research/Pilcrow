@@ -11,8 +11,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 final readonly class DeleteInlineComment
 {
     /**
-     * Delete an inline comment of a submission
-     * Force delete if it has replies; soft delete otherwise
+     * Soft delete an inline comment of a submission
      *
      * @param null $_
      * @param  array{id: string}  $args
@@ -27,11 +26,7 @@ final readonly class DeleteInlineComment
             throw new ClientException('Not Found', 'deleteInlineComment', 'COMMENT_NOT_FOUND');
         }
         try {
-            if ($inline_comment->replies->count() == 0) {
-                $inline_comment->forceDelete();
-            } else {
-                $inline_comment->delete();
-            }
+            $inline_comment->delete();
 
             return $inline_comment->submission;
         } catch (\Exception $e) {

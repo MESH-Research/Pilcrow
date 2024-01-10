@@ -52,7 +52,9 @@ const inline_comments = computed(() => {
   if (activeComment.value?.new === true) {
     comments.push(activeComment.value)
   }
-  return comments.sort((a, b) => {
+  return comments.filter((c) => {
+    return c.deleted_at === null || c.replies.length > 0
+  }).sort((a, b) => {
     return a.from - b.from
   })
 })

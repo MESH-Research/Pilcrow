@@ -11,8 +11,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 final readonly class DeleteOverallComment
 {
     /**
-     * Delete an overall comment of a submission
-     * Force delete if it has replies; soft delete otherwise
+     * Soft delete an overall comment of a submission
      *
      * @param null $_
      * @param  array{id: string}  $args
@@ -27,11 +26,7 @@ final readonly class DeleteOverallComment
             throw new ClientException('Not Found', 'deleteOverallComment', 'COMMENT_NOT_FOUND');
         }
         try {
-            if ($overall_comment->replies->count() == 0) {
-                $overall_comment->forceDelete();
-            } else {
-                $overall_comment->delete();
-            }
+            $overall_comment->delete();
 
             return $overall_comment->submission;
         } catch (\Exception $e) {

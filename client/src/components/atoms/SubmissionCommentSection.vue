@@ -9,7 +9,9 @@
         :comment="comment"
       />
       <q-card class="q-my-md q-pa-md bg-grey-1 comment-editor-card">
-        <h3 class="text-h3 q-mt-none">{{ $t("submissions.overall_comments.editor_heading") }}</h3>
+        <h3 class="text-h3 q-mt-none">
+          {{ $t("submissions.overall_comments.editor_heading") }}
+        </h3>
         <comment-editor
           comment-type="OverallComment"
           data-cy="overallCommentEditor"
@@ -30,7 +32,10 @@ const submission = inject("submission")
 const activeComment = inject("activeComment")
 
 const overall_comments = computed(() => {
-  return submission.value?.overall_comments ?? []
+  const comments = submission.value?.overall_comments ?? []
+  return comments.filter((c) => {
+    return c.deleted_at === null || c.replies.length > 0
+  })
 })
 const commentRefs = ref([])
 watch(
@@ -47,7 +52,7 @@ watch(
         }
         if (commentRef.replyIds.includes(newValue.id)) {
           const reply = commentRef.replyRefs.find(
-            (r) => r.comment.id === newValue.id
+            (r) => r.comment.id === newValue.id,
           )
           scrollTarget = reply.scrollTarget
           break
@@ -70,7 +75,7 @@ watch(
       setVerticalScrollPosition(target, offset - 64, 250)
     })
   },
-  { deep: false }
+  { deep: false },
 )
 </script>
 
