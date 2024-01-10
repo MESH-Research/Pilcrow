@@ -8,8 +8,12 @@
         <span class="q-ml-sm">{{ $t(`dialog.deleteComment.body`) }}</span>
       </q-card-section>
       <q-card-section>
-        <!-- eslint-disable-next-line vue/no-v-html -->
-        <blockquote class="q-mt-none" v-html="props.comment.content"></blockquote>
+        <!-- eslint-disable vue/no-v-html -->
+        <blockquote
+          class="q-mt-none"
+          v-html="props.comment.content"
+        ></blockquote>
+        <!--  eslint-enable vue/no-v-html -->
       </q-card-section>
 
       <q-card-actions align="right">
@@ -34,14 +38,11 @@
 <script setup>
 import { useDialogPluginComponent, useQuasar } from "quasar"
 import { useMutation } from "@vue/apollo-composable"
-import { DELETE_INLINE_COMMENT } from "src/graphql/mutations"
+import {
+  DELETE_INLINE_COMMENT,
+  DELETE_OVERALL_COMMENT,
+} from "src/graphql/mutations"
 import { useI18n } from "vue-i18n"
-
-const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } =
-  useDialogPluginComponent()
-const { mutate } = useMutation(DELETE_INLINE_COMMENT)
-const { notify } = useQuasar()
-const { t } = useI18n()
 
 const props = defineProps({
   comment: {
@@ -54,13 +55,28 @@ const props = defineProps({
     required: true,
   },
 })
+const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } =
+  useDialogPluginComponent()
+
+const mutation =
+  props.comment.__typename == "InlineComment"
+    ? DELETE_INLINE_COMMENT
+    : DELETE_OVERALL_COMMENT
+const { mutate } = useMutation(mutation)
+const { notify } = useQuasar()
+const { t } = useI18n()
 
 async function deleteComment() {
   try {
-    await mutate({
-      comment_id: String(props.comment.id),
-      submission_id: String(props.submissionId)
-    })
+    await mutate(
+      {
+        comment_id: String(props.comment.id),
+        submission_id: String(props.submissionId),
+      },
+      {
+        refetchQueries: ["GetSubmissionReview"],
+      },
+    )
   } catch (error) {
     notify({
       color: "negative",

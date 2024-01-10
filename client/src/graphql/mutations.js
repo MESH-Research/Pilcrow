@@ -836,17 +836,18 @@ export const UPDATE_OVERALL_COMMENT_REPLY = gql`
 
 export const DELETE_OVERALL_COMMENT = gql`
   mutation DeleteOverallComment($submission_id: ID!, $comment_id: ID!) {
-    updateSubmission(
-      input: { id: $submission_id, overall_comments: { delete: $comment_id } }
+    deleteOverallComment(
+      input: { submission_id: $submission_id, comment_id: $comment_id }
     ) {
       id
       created_by {
         ...relatedUserFields
       }
-      overall_comments {
+      overall_comments(trashed: WITH) {
         ...commentFields
         replies {
           reply_to_id
+          parent_id
           ...commentFields
         }
       }

@@ -36,13 +36,22 @@ extend type Mutation {
         )
 
     "Delete an inline comment of a submission"
-    deleteInlineComment(input: DeleteInlineCommentInput! @spread): Submission!
+    deleteInlineComment(input: DeleteCommentInput! @spread): Submission!
         @argPolicy(
             apply: ["comment_id:deleteInlineComment"]
             find: "submission_id"
             injectArgs: true
         )
         @field(resolver: "App\\GraphQL\\Mutations\\DeleteInlineComment@delete")
+
+    "Delete an overall comment of a submission"
+    deleteOverallComment(input: DeleteCommentInput! @spread): Submission!
+        @argPolicy(
+            apply: ["comment_id:deleteOverallComment"]
+            find: "submission_id"
+            injectArgs: true
+        )
+        @field(resolver: "App\\GraphQL\\Mutations\\DeleteOverallComment@delete")
 
     "Update the content of a submission"
     updateSubmissionContent(
@@ -198,7 +207,7 @@ enum SubmissionStatus {
     DELETED @enum(value: 12)
 }
 
-input DeleteInlineCommentInput {
+input DeleteCommentInput {
     submission_id: ID!
     comment_id: ID!
 }

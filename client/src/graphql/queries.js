@@ -90,7 +90,7 @@ export const CURRENT_USER_SUBMISSIONS = gql`
         submitters {
           ...relatedUserFields
         }
-        inline_comments {
+        inline_comments(trashed: WITH) {
           id
           content
           created_by {
@@ -127,7 +127,7 @@ export const CURRENT_USER_SUBMISSIONS = gql`
             updated_at
           }
         }
-        overall_comments {
+        overall_comments(trashed: WITH) {
           id
           content
           created_by {
@@ -391,7 +391,7 @@ export const GET_SUBMISSION_REVIEW = gql`
           reply_to_id
         }
       }
-      overall_comments {
+      overall_comments(trashed: WITH) {
         ...commentFields
         replies {
           ...commentFields
