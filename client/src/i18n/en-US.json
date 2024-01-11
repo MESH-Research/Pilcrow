@@ -886,7 +886,7 @@
         }
       },
       "submit": {
-        "description": "Your submission is saved and you can come back to work on it any time.  When you've completed the above items, you'll be able to click \"Submit for Review\" below to kick off the review process!",
+        "description": "Your submission has been created and you can come back to work on it any time.  When you've completed the above items, you'll be able to click \"Submit for Review\" below to kick off the review process!",
         "btn_label": "Submit for Review"
       }
     },
