@@ -178,7 +178,7 @@ describe("Publication Setup", () => {
     cy.dataCy('listItem').should('have.length', 3)
   });
 
-  it.only("should allow editing basic settings", () => {
+  it("should allow editing basic settings", () => {
     cy.login({ email: "applicationadministrator@meshresearch.net" })
     cy.visit("publication/1/setup/basic")
 

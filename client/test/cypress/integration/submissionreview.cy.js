@@ -461,7 +461,7 @@ describe("Submissions Review", () => {
     cy.dataCy("inlineComment").first().contains("This comment has been deleted").click()
   })
 
-  it.only("allows an overall comment to be deleted by its author", () => {
+  it("allows an overall comment to be deleted by its author", () => {
     cy.task("resetDb")
     cy.login({ email: "applicationadministrator@meshresearch.net" })
     cy.visit("submission/100/review")
