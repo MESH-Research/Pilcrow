@@ -23,6 +23,7 @@ class OverallCommentSeeder extends Seeder
         $this->create(100);
         $this->create(100, 1);
         $this->create(100, 8);
+        $this->create(100, 1, 1);
     }
 
     /**
@@ -30,12 +31,15 @@ class OverallCommentSeeder extends Seeder
      *
      * @param int $submissionId
      * @param int $replies
+     * @param int $userId
      * @return void
      */
-    protected function create($submissionId, $replies = 0)
+    protected function create($submissionId, $replies = 0, $userId = null)
     {
         $userIds = User::all()->pluck('id');
-        $userId = $userIds->except(1)->random(); // Ensure that the comment is not created by the application admin
+        if ($userId === null) {
+            $userId = $userIds->except(1)->random(); // Ensure that the comment is not created by the application admin
+        }
 
         $parent = OverallComment::factory()->create([
             'submission_id' => $submissionId,

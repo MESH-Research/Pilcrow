@@ -449,4 +449,25 @@ describe("Submissions Review", () => {
     cy.dataCy("submission_status").contains("Deleted")
     cy.dataCy("status-dropdown").should('not.exist')
   })
+
+  it("allows an inline comment to be deleted by its author", () => {
+    cy.task("resetDb")
+    cy.login({ email: "applicationadministrator@meshresearch.net" })
+    cy.visit("submission/100/review")
+    cy.dataCy("toggleInlineCommentsButton").click()
+    cy.dataCy("inlineComment").first().find("[data-cy=commentActions]").click()
+    cy.dataCy("deleteComment").click()
+    cy.dataCy("dirtyDelete").click()
+    cy.dataCy("inlineComment").first().contains("This comment has been deleted").click()
+  })
+
+  it.only("allows an overall comment to be deleted by its author", () => {
+    cy.task("resetDb")
+    cy.login({ email: "applicationadministrator@meshresearch.net" })
+    cy.visit("submission/100/review")
+    cy.dataCy("overallComment").last().find("[data-cy=commentActions]").click()
+    cy.dataCy("deleteComment").click()
+    cy.dataCy("dirtyDelete").click()
+    cy.dataCy("overallComment").last().contains("This comment has been deleted").click()
+  })
 })
