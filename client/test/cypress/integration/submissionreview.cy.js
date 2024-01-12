@@ -457,12 +457,21 @@ describe("Submissions Review", () => {
     cy.login({email: "reviewcoordinator@meshresearch.net"})
     cy.visit("submission/100/review")
     // get initial scroll position
-    cy.window().its('scrollY').should('equal', 0)
-    
+    cy.get("[data-cy='new_overall_comment']").should(() => {
+      let scrollY = element.getBoundingClientRect().top
+      // expect to be (> 0) (= 0) (< 0) ?
+      expect(scrollY).to.be.greaterThan(0)
+    })
+
     // click to scroll
     cy.dataCy("view_overall_comments").click()
+    
     // check scroll position
-    cy.window().its('scrollY').should('equal', 0)
+    cy.get("[data-cy='new_overall_comment']").should(() => {
+      let scrollY = element.getBoundingClientRect().top
+      // expect to be (> 0) (= 0) (< 0) ?
+      expect(scrollY).to.be.greaterThan(0)
+    })
   })
 
   it("scrolls when clicking on 'Add New Overall Comment'", () => {
