@@ -14,7 +14,7 @@ type InlineComment implements Comment {
     created_at: DateTimeUtc!
     updated_at: DateTimeUtc!
     deleted_at: DateTimeUtc
-    replies: [InlineCommentReply!] @hasMany
+    replies: [InlineCommentReply!] @hasMany @softDeletes
     style_criteria: [InlineCommentStyleCriteria!]
     from: Int
     to: Int
@@ -55,7 +55,7 @@ type OverallComment implements Comment {
     updated_by: User! @belongsTo(relation: "updatedBy")
     updated_at: DateTimeUtc!
     deleted_at: DateTimeUtc
-    replies: [OverallCommentReply!] @hasMany
+    replies: [OverallCommentReply!] @hasMany @softDeletes
 }
 
 """
