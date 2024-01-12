@@ -54,7 +54,8 @@ class OverallCommentSeeder extends Seeder
             $comments = collect([$parent]);
 
             for ($i = 0; $i < $replies; $i++) {
-                $comments->push($this->createCommentReply(false, $userIds->except(1)->random(), $parent, $comments->random()));
+                $reply = $this->createCommentReply(false, $userIds->except(1)->random(), $parent, $comments->random());
+                $comments->push($reply);
             }
         }
     }
