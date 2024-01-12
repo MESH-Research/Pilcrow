@@ -38,7 +38,9 @@ class OverallCommentSeeder extends Seeder
     {
         $userIds = User::all()->pluck('id');
         if ($userId === null) {
-            $userId = $userIds->except(1)->random(); // Ensure that the comment is not created by the application admin
+            // Ensure that the comment is not created by the application
+            // admin to prevent the admin replying to their own comment
+            $userId = $userIds->except(1)->random();
         }
 
         $parent = OverallComment::factory()->create([
@@ -52,7 +54,7 @@ class OverallCommentSeeder extends Seeder
             $comments = collect([$parent]);
 
             for ($i = 0; $i < $replies; $i++) {
-                $comments->push($this->createCommentReply(false, $userIds->random(), $parent, $comments->random()));
+                $comments->push($this->createCommentReply(false, $userIds->except(1)->random(), $parent, $comments->random()));
             }
         }
     }

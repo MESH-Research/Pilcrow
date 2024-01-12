@@ -473,9 +473,9 @@ export const CREATE_OVERALL_COMMENT = gql`
       }
     ) {
       id
-      overall_comments {
+      overall_comments(trashed: WITH) {
         ...commentFields
-        replies {
+        replies(trashed: WITH) {
           ...commentFields
           reply_to_id
         }
@@ -507,9 +507,9 @@ export const CREATE_OVERALL_COMMENT_REPLY = gql`
       }
     ) {
       id
-      overall_comments {
+      overall_comments(trashed: WITH) {
         ...commentFields
-        replies {
+        replies(trashed: WITH) {
           reply_to_id
           ...commentFields
         }
@@ -548,7 +548,7 @@ export const CREATE_INLINE_COMMENT = gql`
           icon
         }
         ...commentFields
-        replies {
+        replies(trashed: WITH) {
           reply_to_id
           ...commentFields
         }
@@ -586,7 +586,7 @@ export const CREATE_INLINE_COMMENT_REPLY = gql`
           icon
         }
         ...commentFields
-        replies {
+        replies(trashed: WITH) {
           reply_to_id
           ...commentFields
         }
@@ -696,9 +696,9 @@ export const UPDATE_OVERALL_COMMENT = gql`
       created_by {
         ...relatedUserFields
       }
-      overall_comments {
+      overall_comments(trashed: WITH) {
         ...commentFields
-        replies {
+        replies(trashed: WITH) {
           reply_to_id
           ...commentFields
         }
@@ -738,7 +738,7 @@ export const UPDATE_INLINE_COMMENT = gql`
           name
           icon
         }
-        replies {
+        replies(trashed: WITH) {
           reply_to_id
           ...commentFields
         }
@@ -767,7 +767,7 @@ export const UPDATE_INLINE_COMMENT_REPLY = gql`
       }
       inline_comments(trashed: WITH) {
         ...commentFields
-        replies {
+        replies(trashed: WITH) {
           reply_to_id
           ...commentFields
         }
@@ -793,7 +793,7 @@ export const DELETE_INLINE_COMMENT = gql`
           name
           icon
         }
-        replies {
+        replies(trashed: WITH) {
           reply_to_id
           parent_id
           ...commentFields
@@ -821,9 +821,9 @@ export const UPDATE_OVERALL_COMMENT_REPLY = gql`
       created_by {
         ...relatedUserFields
       }
-      overall_comments {
+      overall_comments(trashed: WITH) {
         ...commentFields
-        replies {
+        replies(trashed: WITH) {
           reply_to_id
           ...commentFields
         }
@@ -845,7 +845,7 @@ export const DELETE_OVERALL_COMMENT = gql`
       }
       overall_comments(trashed: WITH) {
         ...commentFields
-        replies {
+        replies(trashed: WITH) {
           reply_to_id
           parent_id
           ...commentFields

@@ -64,11 +64,11 @@ describe("Submissions Review", () => {
     cy.dataCy("overallCommentEditor").find("button[type=submit]").click()
 
     cy.wait("@CreateOverallComment")
-    //   3 overall comment parents already exist from database seeding
+    //   4 overall comment parents already exist from database seeding
     // + 0 disallowed empty overall comment creation attempt
     // + 1 newly created overall comment
-    // = 4
-    cy.dataCy("overallComment").should('have.length', 4)
+    // = 5
+    cy.dataCy("overallComment").should('have.length', 5)
     cy.dataCy("overallComment").last().contains("This is an overall comment.")
   })
 
@@ -87,7 +87,7 @@ describe("Submissions Review", () => {
 
     cy.dataCy("overallCommentReplyEditor").first().find("button[type=submit]").click()
     cy.wait("@CreateOverallCommentReply")
-    //   0 overall comment replies already exist from database seeding
+    //   0 replies to the first overall comment already exist from database seeding
     // + 0 disallowed empty overall comment reply creation attempt
     // + 1 newly created overall comment reply
     // = 1
@@ -102,20 +102,20 @@ describe("Submissions Review", () => {
     cy.visit("submission/100/review")
 
     cy.interceptGQLOperation("CreateOverallCommentReply")
-    cy.dataCy("overallComment").last().find("[data-cy=showRepliesButton]").click()
-    cy.dataCy("overallCommentReply").last().find("[data-cy=commentActions]").click()
+    cy.dataCy("overallComment").eq(2).find("[data-cy=showRepliesButton]").click()
+    cy.dataCy("overallCommentReply").eq(2).find("[data-cy=commentActions]").click()
     cy.dataCy("quoteReply").click()
-    cy.dataCy("overallCommentReplyEditor").last().type("This is a reply to an overall comment reply.")
+    cy.dataCy("overallCommentReplyEditor").eq(2).type("This is a reply to an overall comment reply.")
     // Create a reply to an overall comment reply
 
-    cy.dataCy("overallCommentReplyEditor").last().find("button[type=submit]").click()
+    cy.dataCy("overallCommentReplyEditor").eq(2).find("button[type=submit]").click()
     cy.wait("@CreateOverallCommentReply")
     //   8 overall comment replies are already visible in this thread from database seeding
     // + 0 disallowed empty overall comment reply creation attempt
     // + 1 newly created overall comment reply
     // = 9
     cy.dataCy("overallCommentReply").should('have.length', 9)
-    cy.dataCy("overallCommentReply").last().contains("This is a reply to an overall comment reply.")
+    cy.dataCy("overallCommentReply").eq(2).contains("This is a reply to an overall comment reply.")
   })
 
   it("should allow a reviewer to submit inline comment replies", () => {
