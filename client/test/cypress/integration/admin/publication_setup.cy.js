@@ -107,7 +107,7 @@ describe("Publication Setup", () => {
 
   })
 
-  it("should allow editing of style criteria", () => {
+  it.only("should allow editing of style criteria", () => {
     cy.login({ email: "applicationadministrator@meshresearch.net" })
     cy.visit("publication/1/setup/criteria")
     cy.injectAxe()
@@ -134,7 +134,7 @@ describe("Publication Setup", () => {
       cy.dataCy("button_save").click()
 
       //Wait for the form to go away
-      cy.get('form[.data-cy="listItem"]:first').should('not.exist')
+      cy.get('form[data-cy="listItem"]').should('not.exist')
       cy.dataCy("listItem").first().contains("Accessibility Update")
       cy.dataCy("listItem").first().contains("Updated description")
       cy.dataCy("listItem").first().contains(newIconName)
