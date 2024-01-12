@@ -819,9 +819,9 @@ class SubmissionCommentTest extends ApiTestCase
                         'id' => (string)$inline_comment->id,
                         'content' => 'This comment has been deleted',
                         'style_criteria' => [],
-                    ]
-                ]
-            ]
+                    ],
+                ],
+            ],
         ];
         $this->assertSoftDeleted($inline_comment);
         $count_after_deletion = $submission->inlineComments()->count();
@@ -866,9 +866,9 @@ class SubmissionCommentTest extends ApiTestCase
                     '0' => [
                         'id' => (string)$overall_comment->id,
                         'content' => 'This comment has been deleted',
-                    ]
-                ]
-            ]
+                    ],
+                ],
+            ],
         ];
         $this->assertSoftDeleted($overall_comment);
         $count_after_deletion = $submission->overallComments()->count();
@@ -1005,11 +1005,11 @@ class SubmissionCommentTest extends ApiTestCase
                             '0' => [
                                 'id' => (string)$reply->id,
                                 'content' => 'This comment has been deleted',
-                            ]
-                        ]
-                    ]
-                ]
-            ]
+                            ],
+                        ],
+                    ],
+                ],
+            ],
         ];
         $this->assertSoftDeleted($reply);
         $count_after_deletion = $submission->inlineComments()->count();
@@ -1073,11 +1073,11 @@ class SubmissionCommentTest extends ApiTestCase
                             '0' => [
                                 'id' => (string)$reply->id,
                                 'content' => 'This comment has been deleted',
-                            ]
-                        ]
-                    ]
-                ]
-            ]
+                            ],
+                        ],
+                    ],
+                ],
+            ],
         ];
         $this->assertSoftDeleted($reply);
         $count_after_deletion = $submission->overallComments()->count();

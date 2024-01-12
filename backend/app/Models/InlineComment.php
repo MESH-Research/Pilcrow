@@ -110,6 +110,7 @@ class InlineComment extends BaseModel
                 if ($this->reply_to_id) {
                     return [];
                 }
+
                 return $this->trashed() ? [] : json_decode($attributes['style_criteria']);
             }
         );

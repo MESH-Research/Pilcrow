@@ -280,6 +280,7 @@ class SubmissionPolicy
                 return true;
             }
         }
+
         return Response::deny('UNAUTHORIZED');
     }
 
@@ -322,6 +323,7 @@ class SubmissionPolicy
                 return true;
             }
         }
+
         return Response::deny('UNAUTHORIZED');
     }
 }
