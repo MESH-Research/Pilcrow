@@ -242,7 +242,7 @@ class SubmissionPolicy
     }
 
     /**
-     * Update the inline comment of a submission
+     * Update an inline comment of a submission
      *
      * @param \App\Models\User $user
      * @param \App\Models\Submission $_
@@ -265,7 +265,7 @@ class SubmissionPolicy
     }
 
     /**
-     * Delete the inline comment of a submission
+     * Delete an inline comment of a submission
      *
      * @param \App\Models\User $user
      * @param \App\Models\Submission $_
@@ -285,7 +285,7 @@ class SubmissionPolicy
     }
 
     /**
-     * Update or delete the overall comments of a submission
+     * Update an overall comment of a submission
      *
      * @param \App\Models\User $user
      * @param \App\Models\Submission $_
@@ -308,7 +308,7 @@ class SubmissionPolicy
     }
 
     /**
-     * Delete the overall comment of a submission
+     * Delete an overall comment of a submission
      *
      * @param \App\Models\User $user
      * @param \App\Models\Submission $_

@@ -510,14 +510,16 @@ export const CREATE_OVERALL_COMMENT_REPLY = gql`
       overall_comments(trashed: WITH) {
         ...commentFields
         replies(trashed: WITH) {
-          reply_to_id
           ...commentFields
+          parent_id
+          reply_to_id
         }
       }
     }
   }
   ${_COMMENT_FIELDS}
 `
+
 export const CREATE_INLINE_COMMENT = gql`
   mutation CreateInlineCommentReply(
     $submission_id: ID!
@@ -549,8 +551,8 @@ export const CREATE_INLINE_COMMENT = gql`
         }
         ...commentFields
         replies(trashed: WITH) {
-          reply_to_id
           ...commentFields
+          reply_to_id
         }
       }
     }
@@ -587,8 +589,9 @@ export const CREATE_INLINE_COMMENT_REPLY = gql`
         }
         ...commentFields
         replies(trashed: WITH) {
-          reply_to_id
           ...commentFields
+          parent_id
+          reply_to_id
         }
       }
     }
@@ -824,8 +827,9 @@ export const UPDATE_OVERALL_COMMENT_REPLY = gql`
       overall_comments(trashed: WITH) {
         ...commentFields
         replies(trashed: WITH) {
-          reply_to_id
           ...commentFields
+          reply_to_id
+          parent_id
         }
       }
     }

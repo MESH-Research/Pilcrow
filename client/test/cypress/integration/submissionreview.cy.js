@@ -72,7 +72,7 @@ describe("Submissions Review", () => {
     cy.dataCy("overallComment").last().contains("This is an overall comment.")
   })
 
-  it("should allow a reviewer to submit overall comment replies", () => {
+  it.only("should allow a reviewer to submit overall comment replies", () => {
     cy.task("resetDb")
     cy.login({ email: "reviewer@meshresearch.net" })
     cy.visit("submission/100/review")

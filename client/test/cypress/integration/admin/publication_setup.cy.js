@@ -107,7 +107,7 @@ describe("Publication Setup", () => {
 
   })
 
-  it.only("should allow editing of style criteria", () => {
+  it("should allow editing of style criteria", () => {
     cy.login({ email: "applicationadministrator@meshresearch.net" })
     cy.visit("publication/1/setup/criteria")
     cy.injectAxe()

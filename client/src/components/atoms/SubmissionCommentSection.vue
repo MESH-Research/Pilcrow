@@ -34,7 +34,7 @@ const activeComment = inject("activeComment")
 const overall_comments = computed(() => {
   const comments = submission.value?.overall_comments ?? []
   return comments.filter((c) => {
-    return c.deleted_at === null || c.replies.length > 0
+    return c.deleted_at === null || c.replies?.length > 0
   })
 })
 const commentRefs = ref([])
