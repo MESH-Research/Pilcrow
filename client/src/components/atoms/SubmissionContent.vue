@@ -225,6 +225,8 @@ function addComment() {
     from,
     to,
     parent_id: null,
+    reply_to_id: null,
+    deleted_at: null,
     id: "new",
   }
 }

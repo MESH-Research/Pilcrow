@@ -18,7 +18,7 @@
         class="comment-header"
         @quote-reply-to="initiateQuoteReply"
         @modify-comment="modifyComment(comment)"
-        @delete-comment="deleteComment(comment)"
+        @delete-comment="deleteComment"
       />
       <q-card-section v-if="!isModifying">
         <!-- eslint-disable-next-line vue/no-v-html -->
