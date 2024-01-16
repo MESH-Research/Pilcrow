@@ -258,7 +258,7 @@ describe("Submissions Review", () => {
     cy.dataCy("decision_options").should('not.exist');
   })
 
-  it.only("should allow overall comments to be modified", () => {
+  it("should allow overall comments to be modified", () => {
     cy.task("resetDb")
     cy.login({ email: "applicationadministrator@meshresearch.net" })
     cy.visit("submission/100/review")
