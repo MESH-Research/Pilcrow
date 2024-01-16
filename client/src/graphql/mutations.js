@@ -477,6 +477,7 @@ export const CREATE_OVERALL_COMMENT = gql`
         ...commentFields
         replies(trashed: WITH) {
           ...commentFields
+          parent_id
           reply_to_id
         }
       }
@@ -552,6 +553,7 @@ export const CREATE_INLINE_COMMENT = gql`
         ...commentFields
         replies(trashed: WITH) {
           ...commentFields
+          parent_id
           reply_to_id
         }
       }

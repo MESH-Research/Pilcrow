@@ -386,15 +386,17 @@ export const GET_SUBMISSION_REVIEW = gql`
           name
           icon
         }
-        replies {
+        replies(trashed: WITH) {
           ...commentFields
+          parent_id
           reply_to_id
         }
       }
       overall_comments(trashed: WITH) {
         ...commentFields
-        replies {
+        replies(trashed: WITH) {
           ...commentFields
+          parent_id
           reply_to_id
         }
       }
