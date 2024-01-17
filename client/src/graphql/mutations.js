@@ -228,7 +228,10 @@ export const UPDATE_SUBMISSION_CONTENT = gql`
 `
 
 export const UPDATE_SUBMISSION_CONTENT_WITH_FILE = gql`
-  mutation UpdateSubmissionContentWithFile($submission_id: ID!, $file_upload: Upload!) {
+  mutation UpdateSubmissionContentWithFile(
+    $submission_id: ID!
+    $file_upload: Upload!
+  ) {
     updateSubmissionContentWithFile(
       input: { submission_id: $submission_id, file_upload: $file_upload }
     ) {
@@ -324,7 +327,7 @@ export const UPDATE_PROFILE_METADATA = gql`
         username: $username
         name: $name
         profile_metadata: $profile_metadata
-        }
+      }
     ) {
       id
       ...profileMetadata
@@ -470,10 +473,11 @@ export const CREATE_OVERALL_COMMENT = gql`
       }
     ) {
       id
-      overall_comments {
+      overall_comments(trashed: WITH) {
         ...commentFields
-        replies {
+        replies(trashed: WITH) {
           ...commentFields
+          parent_id
           reply_to_id
         }
       }
@@ -504,17 +508,19 @@ export const CREATE_OVERALL_COMMENT_REPLY = gql`
       }
     ) {
       id
-      overall_comments {
+      overall_comments(trashed: WITH) {
         ...commentFields
-        replies {
-          reply_to_id
+        replies(trashed: WITH) {
           ...commentFields
+          parent_id
+          reply_to_id
         }
       }
     }
   }
   ${_COMMENT_FIELDS}
 `
+
 export const CREATE_INLINE_COMMENT = gql`
   mutation CreateInlineCommentReply(
     $submission_id: ID!
@@ -539,15 +545,16 @@ export const CREATE_INLINE_COMMENT = gql`
       }
     ) {
       id
-      inline_comments {
+      inline_comments(trashed: WITH) {
         style_criteria {
           name
           icon
         }
         ...commentFields
-        replies {
-          reply_to_id
+        replies(trashed: WITH) {
           ...commentFields
+          parent_id
+          reply_to_id
         }
       }
     }
@@ -577,15 +584,16 @@ export const CREATE_INLINE_COMMENT_REPLY = gql`
       }
     ) {
       id
-      inline_comments {
+      inline_comments(trashed: WITH) {
         style_criteria {
           name
           icon
         }
         ...commentFields
-        replies {
-          reply_to_id
+        replies(trashed: WITH) {
           ...commentFields
+          parent_id
+          reply_to_id
         }
       }
     }
@@ -693,9 +701,9 @@ export const UPDATE_OVERALL_COMMENT = gql`
       created_by {
         ...relatedUserFields
       }
-      overall_comments {
+      overall_comments(trashed: WITH) {
         ...commentFields
-        replies {
+        replies(trashed: WITH) {
           reply_to_id
           ...commentFields
         }
@@ -729,13 +737,13 @@ export const UPDATE_INLINE_COMMENT = gql`
       created_by {
         ...relatedUserFields
       }
-      inline_comments {
+      inline_comments(trashed: WITH) {
         ...commentFields
         style_criteria {
           name
           icon
         }
-        replies {
+        replies(trashed: WITH) {
           reply_to_id
           ...commentFields
         }
@@ -762,10 +770,37 @@ export const UPDATE_INLINE_COMMENT_REPLY = gql`
       created_by {
         ...relatedUserFields
       }
-      inline_comments {
+      inline_comments(trashed: WITH) {
         ...commentFields
-        replies {
+        replies(trashed: WITH) {
           reply_to_id
+          ...commentFields
+        }
+      }
+    }
+  }
+  ${_COMMENT_FIELDS}
+  ${_RELATED_USER_FIELDS}
+`
+
+export const DELETE_INLINE_COMMENT = gql`
+  mutation DeleteInlineComment($submission_id: ID!, $comment_id: ID!) {
+    deleteInlineComment(
+      input: { submission_id: $submission_id, comment_id: $comment_id }
+    ) {
+      id
+      created_by {
+        ...relatedUserFields
+      }
+      inline_comments(trashed: WITH) {
+        ...commentFields
+        style_criteria {
+          name
+          icon
+        }
+        replies(trashed: WITH) {
+          reply_to_id
+          parent_id
           ...commentFields
         }
       }
@@ -791,10 +826,34 @@ export const UPDATE_OVERALL_COMMENT_REPLY = gql`
       created_by {
         ...relatedUserFields
       }
-      overall_comments {
+      overall_comments(trashed: WITH) {
         ...commentFields
-        replies {
+        replies(trashed: WITH) {
+          ...commentFields
           reply_to_id
+          parent_id
+        }
+      }
+    }
+  }
+  ${_COMMENT_FIELDS}
+  ${_RELATED_USER_FIELDS}
+`
+
+export const DELETE_OVERALL_COMMENT = gql`
+  mutation DeleteOverallComment($submission_id: ID!, $comment_id: ID!) {
+    deleteOverallComment(
+      input: { submission_id: $submission_id, comment_id: $comment_id }
+    ) {
+      id
+      created_by {
+        ...relatedUserFields
+      }
+      overall_comments(trashed: WITH) {
+        ...commentFields
+        replies(trashed: WITH) {
+          reply_to_id
+          parent_id
           ...commentFields
         }
       }

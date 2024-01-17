@@ -1,5 +1,23 @@
 <template>
-  <q-card-section class="q-py-xs" :style="style">
+  <q-card-section
+    v-if="comment.deleted_at != null"
+    class="q-py-sm"
+    :style="style"
+  >
+    <div class="row items-center justify-end">
+      <span>
+        {{
+          $t("submissions.comment.dateLabelDeleted", {
+            date: relativeDeletedTime,
+          })
+        }}
+        <q-tooltip>
+          {{ deletedDate.toFormat("LLL dd yyyy hh:mm a") }}
+        </q-tooltip>
+      </span>
+    </div>
+  </q-card-section>
+  <q-card-section v-else class="q-py-xs" :style="style">
     <div class="row items-center">
       <avatar-image
         :user="comment.created_by"
@@ -46,6 +64,7 @@
       <comment-actions
         @quote-reply-to="$emit('quoteReplyTo')"
         @modify-comment="$emit('modifyComment')"
+        @delete-comment="$emit('deleteComment')"
       />
     </div>
   </q-card-section>
@@ -70,7 +89,7 @@ const props = defineProps({
     default: null,
   },
 })
-defineEmits(["quoteReplyTo", "modifyComment"])
+defineEmits(["quoteReplyTo", "modifyComment", "deleteComment"])
 const style = computed(() => {
   const style = {}
   if (props.bgColor) {
@@ -98,6 +117,18 @@ const updatedDate = computed(() => {
 const relativeUpdatedTime = computed(() => {
   return updatedDate.value
     ? timeAgo.format(updatedDate.value.toJSDate(), "long")
+    : ""
+})
+
+const deletedDate = computed(() => {
+  return props.comment?.deleted_at
+    ? DateTime.fromISO(props.comment.deleted_at)
+    : undefined
+})
+
+const relativeDeletedTime = computed(() => {
+  return deletedDate.value
+    ? timeAgo.format(deletedDate.value.toJSDate(), "long")
     : ""
 })
 </script>

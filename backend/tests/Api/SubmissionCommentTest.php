@@ -8,12 +8,15 @@ use App\Models\OverallComment;
 use App\Models\StyleCriteria;
 use App\Models\Submission;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Str;
 use Tests\ApiTestCase;
 
 class SubmissionCommentTest extends ApiTestCase
 {
+    use WithFaker;
     use RefreshDatabase;
 
     /**
@@ -48,7 +51,7 @@ class SubmissionCommentTest extends ApiTestCase
 
     /**
      * @param int $count
-     * @param User|null $user
+     * @param User|null $user (optional)
      * @return Submission
      */
     private function createSubmissionWithInlineComment($count = 1, $user = null)
@@ -71,11 +74,14 @@ class SubmissionCommentTest extends ApiTestCase
 
     /**
      * @param int $count
+     * @param User|null $user (optional)
      * @return Submission
      */
-    private function createSubmissionWithOverallComment($count = 1)
+    private function createSubmissionWithOverallComment($count = 1, $user = null)
     {
-        $user = User::factory()->create();
+        if ($user === null) {
+            $user = User::factory()->create();
+        }
         $submission = $this->createSubmission();
         OverallComment::factory()->count($count)->create([
             'submission_id' => $submission->id,
@@ -771,5 +777,312 @@ class SubmissionCommentTest extends ApiTestCase
             ]
         )
         ->assertGraphQLErrorMessage('UNAUTHORIZED');
+    }
+
+    /**
+     * @return void
+     */
+    public function testUsersCanDeleteTheirOwnInlineComments()
+    {
+        $admin = $this->beAppAdmin();
+        $submission = $this->createSubmissionWithInlineComment(1, $admin);
+        $count_before_deletion = $submission->inlineComments()->count();
+        $inline_comment = $submission->inlineComments->first();
+        $response = $this->graphQL(
+            'mutation DeleteInlineComment ($submission_id: ID! $comment_id: ID!) {
+                deleteInlineComment(
+                    input: {
+                        submission_id: $submission_id,
+                        comment_id: $comment_id
+                    }
+                ) {
+                    id
+                    inline_comments(trashed: WITH) {
+                        id
+                        content
+                        style_criteria {
+                            name
+                        }
+                    }
+                }
+            }',
+            [
+                'submission_id' => $submission->id,
+                'comment_id' => $inline_comment->id,
+            ]
+        );
+        $expected_data = [
+            'deleteInlineComment' => [
+                'id' => (string)$submission->id,
+                'inline_comments' => [
+                    '0' => [
+                        'id' => (string)$inline_comment->id,
+                        'content' => 'This comment has been deleted',
+                        'style_criteria' => [],
+                    ],
+                ],
+            ],
+        ];
+        $this->assertSoftDeleted($inline_comment);
+        $count_after_deletion = $submission->inlineComments()->count();
+        $this->assertEquals($count_before_deletion, 1);
+        $this->assertEquals($count_after_deletion, 0);
+        $response->assertJsonPath('data', $expected_data);
+    }
+
+    /**
+     * @return void
+     */
+    public function testUsersCanDeleteTheirOwnOverallComments()
+    {
+        $admin = $this->beAppAdmin();
+        $submission = $this->createSubmissionWithOverallComment(1, $admin);
+        $count_before_deletion = $submission->overallComments()->count();
+        $overall_comment = $submission->overallComments->first();
+        $response = $this->graphQL(
+            'mutation DeleteOverallComment ($submission_id: ID! $comment_id: ID!) {
+                deleteOverallComment(
+                    input: {
+                        submission_id: $submission_id,
+                        comment_id: $comment_id
+                    }
+                ) {
+                    id
+                    overall_comments(trashed: WITH) {
+                        id
+                        content
+                    }
+                }
+            }',
+            [
+                'submission_id' => $submission->id,
+                'comment_id' => $overall_comment->id,
+            ]
+        );
+        $expected_data = [
+            'deleteOverallComment' => [
+                'id' => (string)$submission->id,
+                'overall_comments' => [
+                    '0' => [
+                        'id' => (string)$overall_comment->id,
+                        'content' => 'This comment has been deleted',
+                    ],
+                ],
+            ],
+        ];
+        $this->assertSoftDeleted($overall_comment);
+        $count_after_deletion = $submission->overallComments()->count();
+        $this->assertEquals($count_before_deletion, 1);
+        $this->assertEquals($count_after_deletion, 0);
+        $response->assertJsonPath('data', $expected_data);
+    }
+
+    /**
+     * @return void
+     */
+    public function testUsersCannotDeleteTheInlineCommentsOfOthers(): void
+    {
+        $this->beAppAdmin();
+        $submission = $this->createSubmissionWithInlineComment();
+        $inline_comment = $submission->inlineComments->first();
+        $this->graphQL(
+            'mutation DeleteInlineComment ($submission_id: ID! $comment_id: ID!) {
+                deleteInlineComment(
+                    input: {
+                        submission_id: $submission_id,
+                        comment_id: $comment_id
+                    }
+                ) {
+                    id
+                    inline_comments(trashed: WITH) {
+                        id
+                        content
+                        style_criteria {
+                            name
+                        }
+                    }
+                }
+            }',
+            [
+                'submission_id' => $submission->id,
+                'comment_id' => $inline_comment->id,
+            ]
+        )
+        ->assertGraphQLErrorMessage('UNAUTHORIZED');
+    }
+
+    /**
+     * @return void
+     */
+    public function testUsersCannotDeleteTheOverallCommentsOfOthers(): void
+    {
+        $this->beAppAdmin();
+        $submission = $this->createSubmissionWithOverallComment();
+        $overall_comment = $submission->overallComments->first();
+        $this->graphQL(
+            'mutation DeleteOverallComment ($submission_id: ID! $comment_id: ID!) {
+                deleteOverallComment(
+                    input: {
+                        submission_id: $submission_id,
+                        comment_id: $comment_id
+                    }
+                ) {
+                    id
+                    overall_comments(trashed: WITH) {
+                        id
+                        content
+                    }
+                }
+            }',
+            [
+                'submission_id' => $submission->id,
+                'comment_id' => $overall_comment->id,
+            ]
+        )
+        ->assertGraphQLErrorMessage('UNAUTHORIZED');
+    }
+
+    /**
+     * @return void
+     */
+    public function testDeleteInlineCommentReply()
+    {
+        $admin = $this->beAppAdmin();
+        $submission = $this->createSubmissionWithInlineComment();
+        $inline_comment = $submission->inlineComments()->first();
+        $time = Carbon::parse($inline_comment->created_at);
+        $datetime = $this->faker->dateTimeBetween($time, Carbon::now());
+        $reply = InlineComment::factory()->create([
+            'submission_id' => $submission->id,
+            'parent_id' => $inline_comment->id,
+            'reply_to_id' => $inline_comment->id,
+            'created_at' => $datetime,
+            'updated_at' => $datetime,
+            'created_by' => $admin->id,
+            'updated_by' => $admin->id,
+        ]);
+        $count_before_deletion = $submission->inlineComments()->count();
+        $response = $this->graphQL(
+            'mutation DeleteInlineComment ($submission_id: ID! $comment_id: ID!) {
+                deleteInlineComment(
+                    input: {
+                        submission_id: $submission_id,
+                        comment_id: $comment_id
+                    }
+                ) {
+                    id
+                    inline_comments {
+                        id
+                        content
+                        style_criteria {
+                            name
+                        }
+                        replies(trashed: WITH) {
+                            id
+                            content
+                        }
+                    }
+                }
+            }',
+            [
+                'submission_id' => $submission->id,
+                'comment_id' => $reply->id,
+            ]
+        );
+        $expected_data = [
+            'deleteInlineComment' => [
+                'id' => (string)$submission->id,
+                'inline_comments' => [
+                    '0' => [
+                        'id' => (string)$inline_comment->id,
+                        'content' => 'This is some content for an inline comment created by PHPUnit.',
+                        'style_criteria' => [
+                            '0' => [
+                                'name' => 'PHPUnit Criteria',
+                            ],
+                        ],
+                        'replies' => [
+                            '0' => [
+                                'id' => (string)$reply->id,
+                                'content' => 'This comment has been deleted',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+        $this->assertSoftDeleted($reply);
+        $count_after_deletion = $submission->inlineComments()->count();
+        $this->assertEquals($count_before_deletion, 1);
+        $this->assertEquals($count_after_deletion, 1);
+        $response->assertJsonPath('data', $expected_data);
+    }
+
+    /**
+     * @return void
+     */
+    public function testDeleteOverallCommentReply()
+    {
+        $admin = $this->beAppAdmin();
+        $submission = $this->createSubmissionWithOverallComment();
+        $overall_comment = $submission->overallComments()->first();
+        $time = Carbon::parse($overall_comment->created_at);
+        $datetime = $this->faker->dateTimeBetween($time, Carbon::now());
+        $reply = OverallComment::factory()->create([
+            'submission_id' => $submission->id,
+            'parent_id' => $overall_comment->id,
+            'reply_to_id' => $overall_comment->id,
+            'created_at' => $datetime,
+            'updated_at' => $datetime,
+            'created_by' => $admin->id,
+            'updated_by' => $admin->id,
+        ]);
+        $count_before_deletion = $submission->overallComments()->count();
+        $response = $this->graphQL(
+            'mutation DeleteOverallComment ($submission_id: ID! $comment_id: ID!) {
+                deleteOverallComment(
+                    input: {
+                        submission_id: $submission_id,
+                        comment_id: $comment_id
+                    }
+                ) {
+                    id
+                    overall_comments {
+                        id
+                        content
+                        replies(trashed: WITH) {
+                            id
+                            content
+                        }
+                    }
+                }
+            }',
+            [
+                'submission_id' => $submission->id,
+                'comment_id' => $reply->id,
+            ]
+        );
+        $expected_data = [
+            'deleteOverallComment' => [
+                'id' => (string)$submission->id,
+                'overall_comments' => [
+                    '0' => [
+                        'id' => (string)$overall_comment->id,
+                        'content' => 'This is some content for an overall comment created by PHPUnit.',
+                        'replies' => [
+                            '0' => [
+                                'id' => (string)$reply->id,
+                                'content' => 'This comment has been deleted',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+        $this->assertSoftDeleted($reply);
+        $count_after_deletion = $submission->overallComments()->count();
+        $this->assertEquals($count_before_deletion, 1);
+        $this->assertEquals($count_after_deletion, 1);
+        $response->assertJsonPath('data', $expected_data);
     }
 }

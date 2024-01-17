@@ -187,13 +187,17 @@ const onAnnotationClick = (context, { target }) => {
 const inlineComments = computed(() => submission.value?.inline_comments ?? [])
 const annotations = computed(() =>
   props.highlightVisibility
-    ? inlineComments.value.map(({ from, to, id }) => ({
+    ? inlineComments.value.map(({ from, to, id, deleted_at }) => deleted_at == null ? ({
         from,
         to,
         context: { id },
         active: id === activeComment.value?.id,
         click: onAnnotationClick,
-      }))
+      }) : {
+        context: { id },
+        active: id === activeComment.value?.id,
+        click: () => false,
+      })
     : [],
 )
 
@@ -221,6 +225,8 @@ function addComment() {
     from,
     to,
     parent_id: null,
+    reply_to_id: null,
+    deleted_at: null,
     id: "new",
   }
 }
