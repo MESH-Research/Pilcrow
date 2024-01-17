@@ -18,6 +18,7 @@
         class="comment-header"
         @quote-reply-to="initiateQuoteReply"
         @modify-comment="modifyComment(comment)"
+        @delete-comment="deleteComment"
       />
       <q-card-section v-if="!isModifying">
         <!-- eslint-disable-next-line vue/no-v-html -->
@@ -162,6 +163,13 @@ function modifyComment(comment) {
   isQuoteReplying.value = false
   isModifying.value = true
   commentModify.value = comment
+}
+
+function deleteComment() {
+  isModifying.value = false
+  isQuoteReplying.value = false
+  isReplying.value = false
+  commentReply.value = null
 }
 
 const showReplyButton = computed(() => {
