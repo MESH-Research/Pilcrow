@@ -59,7 +59,7 @@ const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } =
   useDialogPluginComponent()
 
 const mutation =
-  props.comment.__typename == "InlineComment"
+  props.comment.__typename.startsWith("InlineComment")
     ? DELETE_INLINE_COMMENT
     : DELETE_OVERALL_COMMENT
 const { mutate } = useMutation(mutation)
