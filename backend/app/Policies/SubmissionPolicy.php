@@ -242,7 +242,7 @@ class SubmissionPolicy
     }
 
     /**
-     * Update the inline comments of a submission
+     * Update an inline comment of a submission
      *
      * @param \App\Models\User $user
      * @param \App\Models\Submission $_
@@ -265,7 +265,27 @@ class SubmissionPolicy
     }
 
     /**
-     * Update the overall comments of a submission
+     * Delete an inline comment of a submission
+     *
+     * @param \App\Models\User $user
+     * @param \App\Models\Submission $_
+     * @param  array {submission_id: string, comment_id:string}  $args
+     * @return bool|\Illuminate\Auth\Access\Response
+     */
+    public function deleteInlineComment(User $user, Submission $_, array $args)
+    {
+        if (isset($args['comment_id'])) {
+            $inline_comment = InlineComment::findOrFail($args['comment_id']);
+            if ($inline_comment->created_by === $user->id) {
+                return true;
+            }
+        }
+
+        return Response::deny('UNAUTHORIZED');
+    }
+
+    /**
+     * Update an overall comment of a submission
      *
      * @param \App\Models\User $user
      * @param \App\Models\Submission $_
@@ -285,5 +305,25 @@ class SubmissionPolicy
         }
 
         return true;
+    }
+
+    /**
+     * Delete an overall comment of a submission
+     *
+     * @param \App\Models\User $user
+     * @param \App\Models\Submission $_
+     * @param  array {submission_id: string, comment_id:string}  $args
+     * @return bool|\Illuminate\Auth\Access\Response
+     */
+    public function deleteOverallComment(User $user, Submission $_, array $args)
+    {
+        if (isset($args['comment_id'])) {
+            $overall_comment = OverallComment::findOrFail($args['comment_id']);
+            if ($overall_comment->created_by === $user->id) {
+                return true;
+            }
+        }
+
+        return Response::deny('UNAUTHORIZED');
     }
 }
