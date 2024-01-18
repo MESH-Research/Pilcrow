@@ -134,7 +134,7 @@ describe("Publication Setup", () => {
       cy.dataCy("button_save").click()
 
       //Wait for the form to go away
-      cy.get('form[.data-cy="listItem"]:first').should('not.exist')
+      cy.get('form[data-cy="listItem"]').should('not.exist')
       cy.dataCy("listItem").first().contains("Accessibility Update")
       cy.dataCy("listItem").first().contains("Updated description")
       cy.dataCy("listItem").first().contains(newIconName)
@@ -178,7 +178,7 @@ describe("Publication Setup", () => {
     cy.dataCy('listItem').should('have.length', 3)
   });
 
-  it.only("should allow editing basic settings", () => {
+  it("should allow editing basic settings", () => {
     cy.login({ email: "applicationadministrator@meshresearch.net" })
     cy.visit("publication/1/setup/basic")
 

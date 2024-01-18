@@ -29,6 +29,7 @@ describe("InlineComments", () => {
                   content:
                     "Excepturi consectetur autem temporibus modi. Ipsum unde reiciendis ipsa quidem. Nihil nisi sint ut et.",
                   created_at: "2022-06-01T03:53:17Z",
+                  deleted_at: null,
                   created_by: {
                     id: "2",
                     email: "publicationadministrator@meshresearch.net",
@@ -41,6 +42,7 @@ describe("InlineComments", () => {
                       content:
                         "Sed ullam culpa dolore ea qui. Enim voluptatem eos voluptas et est.",
                       created_at: "2022-06-02T03:53:17Z",
+                      deleted_at: null,
                       created_by: {
                         id: "1",
                         username: "applicationAdminUser",
@@ -64,6 +66,7 @@ describe("InlineComments", () => {
                   content:
                     "Iure itaque non illo et. Et assumenda quasi doloribus natus vitae. Cupiditate aut exercitationem rerum quidem iusto occaecati saepe.",
                   created_at: "2022-05-30T19:20:59Z",
+                  deleted_at: null,
                   created_by: {
                     id: "6",
                     email: "gracie91@example.net",
@@ -97,6 +100,7 @@ describe("InlineComments", () => {
                   content:
                     "Quia ea numquam delectus sapiente in molestiae. Omnis placeat impedit doloribus atque. Beatae est repellat officia magnam molestiae similique.",
                   created_at: "2022-05-31T16:28:10Z",
+                  deleted_at: null,
                   created_by: {
                     id: "7",
                     email: "hessel.russell@example.net",
@@ -109,6 +113,7 @@ describe("InlineComments", () => {
                       content:
                         "Repudiandae voluptatem voluptatum in quia quos. Molestiae molestias fugit distinctio sed deserunt culpa itaque. Autem quo accusantium autem eaque autem.",
                       created_at: "2022-06-01T16:28:10Z",
+                      deleted_at: null,
                       created_by: {
                         id: "3",
                         username: "publicationEditor",
@@ -122,6 +127,7 @@ describe("InlineComments", () => {
                       content:
                         "Voluptatem earum deleniti non possimus et libero. Illo a quia est perferendis libero ipsa.",
                       created_at: "2022-06-02T16:28:10Z",
+                      deleted_at: null,
                       created_by: {
                         id: "4",
                         username: "reviewCoordinator",
@@ -135,6 +141,7 @@ describe("InlineComments", () => {
                       content:
                         "Id temporibus quia ut placeat at qui nemo. Dolorum numquam consequatur amet repellat veniam enim aliquam.",
                       created_at: "2022-06-01T16:28:10Z",
+                      deleted_at: null,
                       created_by: {
                         id: "7",
                         username: "rschoen",
@@ -148,6 +155,7 @@ describe("InlineComments", () => {
                       content:
                         "Autem blanditiis labore ducimus rerum assumenda. Quam deleniti nesciunt voluptas aut alias. Magni est ut ea rerum.",
                       created_at: "2022-06-02T16:28:10Z",
+                      deleted_at: null,
                       created_by: {
                         id: "1",
                         username: "applicationAdminUser",
@@ -161,6 +169,7 @@ describe("InlineComments", () => {
                       content:
                         "Et velit hic voluptate illo praesentium dicta. Dolores repudiandae qui non et consequatur et et autem. Laudantium qui sint accusantium soluta facilis esse ut.",
                       created_at: "2022-06-01T16:28:10Z",
+                      deleted_at: null,
                       created_by: {
                         id: "1",
                         username: "applicationAdminUser",
@@ -174,6 +183,7 @@ describe("InlineComments", () => {
                       content:
                         "Odit ut nihil similique accusamus a et deleniti quam. Non voluptates quis ipsa voluptatem. Voluptas reprehenderit id aut ab officia facere.",
                       created_at: "2022-06-03T16:28:10Z",
+                      deleted_at: null,
                       created_by: {
                         id: "1",
                         username: "applicationAdminUser",
@@ -187,6 +197,7 @@ describe("InlineComments", () => {
                       content:
                         "Et aut voluptates alias dicta ut quis. Illum dolore occaecati quia ut excepturi autem. Rem ratione molestias perspiciatis est.",
                       created_at: "2022-06-02T16:28:10Z",
+                      deleted_at: null,
                       created_by: {
                         id: "1",
                         username: "applicationAdminUser",
@@ -200,6 +211,7 @@ describe("InlineComments", () => {
                       content:
                         "Rerum est aut ratione expedita vitae earum. Vel aliquid eum quia corporis quidem nisi enim consequatur.",
                       created_at: "2022-06-03T16:28:10Z",
+                      deleted_at: null,
                       created_by: {
                         id: "5",
                         username: "regularUser",
@@ -213,6 +225,7 @@ describe("InlineComments", () => {
                       content:
                         "Aut est unde dolores assumenda. Cum consectetur corrupti quaerat vel ab ea hic. Quasi repellat dolor ducimus omnis.",
                       created_at: "2022-06-02T16:28:10Z",
+                      deleted_at: null,
                       created_by: {
                         id: "4",
                         username: "reviewCoordinator",
@@ -226,6 +239,7 @@ describe("InlineComments", () => {
                       content:
                         "Porro minima et laboriosam non. Perspiciatis quis doloremque ut saepe neque.",
                       created_at: "2022-06-01T16:28:10Z",
+                      deleted_at: null,
                       created_by: {
                         id: "3",
                         username: "publicationEditor",

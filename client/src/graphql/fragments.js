@@ -62,6 +62,7 @@ export const _COMMENT_FIELDS = gql`
     content
     created_at
     updated_at
+    deleted_at
     updated_by {
       ...relatedUserFields
     }

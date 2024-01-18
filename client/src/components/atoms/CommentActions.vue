@@ -17,7 +17,7 @@
             }}</q-item-section></q-item
           >
           <q-item
-            v-if="checkCommentCreatedBy == false"
+            v-if="createdByCurrentUser"
             data-cy="modifyComment"
             clickable
             @click="$emit('modifyComment')"
@@ -26,9 +26,14 @@
               $t("submissions.comment.actions.modify")
             }}</q-item-section>
           </q-item>
-          <q-item clickable>
+          <q-item
+            v-if="createdByCurrentUser"
+            data-cy="deleteComment"
+            clickable
+            @click="deleteHandler()"
+          >
             <q-item-section>{{
-              $t("submissions.comment.actions.share")
+              $t("submissions.comment.actions.delete")
             }}</q-item-section>
           </q-item>
         </q-list>
@@ -40,20 +45,29 @@
 <script setup>
 import { inject, computed } from "vue"
 import { useCurrentUser } from "src/use/user"
+import ConfirmCommentDeletion from "../dialogs/ConfirmCommentDeletion.vue";
+import { useQuasar } from "quasar"
+const { dialog } = useQuasar()
 
 const { currentUser } = useCurrentUser()
 
 const comment = inject("comment")
+const submission = inject("submission")
 
-defineEmits(["quoteReplyTo", "modifyComment"])
+const emit = defineEmits(["quoteReplyTo", "modifyComment", "deleteComment"])
 
-const checkCommentCreatedBy = computed(() => {
-  const userToCheck = currentUser.value.id
-  const commentCreatedBy = comment.created_by.id
-  if (userToCheck == commentCreatedBy) {
-    return false
-  } else {
-    return true
-  }
+const createdByCurrentUser = computed(() => {
+  return currentUser.value.id == comment.created_by.id
 })
+
+async function deleteHandler() {
+  emit("deleteComment")
+  dialog({
+    component: ConfirmCommentDeletion,
+    componentProps: {
+      comment: comment,
+      submissionId: submission.value.id,
+    },
+  })
+}
 </script>

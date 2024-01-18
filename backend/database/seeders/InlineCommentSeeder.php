@@ -72,13 +72,14 @@ class InlineCommentSeeder extends Seeder
             // Seed inline comment replies
             $comments = collect([$parent]);
             for ($i = 0; $i < $opts['replies']; $i++) {
-                $comments->push($this->createCommentReply(true, $userIds->random(), $parent, $comments->random()));
+                $reply = $this->createCommentReply($submissionId, $userIds->random(), $parent, $comments->random());
+                $comments->push($reply);
             }
         }
     }
 
     /**
-     * @param bool $submissionId
+     * @param int $submissionId
      * @param \App\Models\User $userId
      * @param \App\Models\InlineComment|\App\Models\OverallComment $parent
      * @param \App\Models\InlineComment|\App\Models\OverallComment $reply_to

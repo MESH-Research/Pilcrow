@@ -4,14 +4,17 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Http\Traits\CreatedUpdatedBy;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class InlineComment extends BaseModel
 {
     use HasFactory;
     use CreatedUpdatedBy;
+    use SoftDeletes;
 
     protected $casts = [
         'style_criteria' => 'json',
@@ -49,7 +52,12 @@ class InlineComment extends BaseModel
      */
     public function replies(): HasMany
     {
-        return $this->hasMany(InlineComment::class, 'parent_id');
+        $thread_replies = $this->hasMany(InlineComment::class, 'parent_id');
+        if ($thread_replies->count() > 0) {
+            return $thread_replies;
+        } else {
+            return $this->hasMany(InlineComment::class, 'reply_to_id');
+        }
     }
 
     /**
@@ -70,5 +78,41 @@ class InlineComment extends BaseModel
     public function updatedBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'updated_by');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     */
+    protected function username(): Attribute
+    {
+        return Attribute::make(
+            get: fn (int $value) => $this->trashed() ? '' : $value,
+        );
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     */
+    protected function content(): Attribute
+    {
+        return Attribute::make(
+            get: fn (string $value) => $this->trashed() ? 'This comment has been deleted' : $value,
+        );
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     */
+    public function styleCriteria(): Attribute
+    {
+        return Attribute::make(
+            get: function (mixed $value, array $attributes) {
+                if ($this->reply_to_id) {
+                    return [];
+                }
+
+                return $this->trashed() ? [] : json_decode($attributes['style_criteria']);
+            }
+        );
     }
 }

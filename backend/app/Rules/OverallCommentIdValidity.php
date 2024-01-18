@@ -90,7 +90,7 @@ class OverallCommentIdValidity implements Rule, DataAwareRule
                 !is_null($data['reply_to_id'])
             ) {
                 try {
-                    $this->parent = OverallComment::where('id', $data['parent_id'])->firstOrFail();
+                    $this->parent = OverallComment::withTrashed()->where('id', $data['parent_id'])->firstOrFail();
                 } catch (Exception $error) {
                     $this->error_message = $error->getMessage();
 
