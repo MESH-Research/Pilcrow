@@ -49,7 +49,7 @@ watch(
         }
         if (commentRef.replyIds.includes(newValue.id)) {
           const reply = commentRef.replyRefs.find(
-            (r) => r.comment.id === newValue.id,
+            (r) => r.comment.id === newValue.id
           )
           scrollTarget = reply.scrollTarget
           break
@@ -72,7 +72,7 @@ watch(
       setVerticalScrollPosition(target, offset - 64, 250)
     })
   },
-  { deep: false },
+  { deep: false }
 )
 </script>
 

@@ -1,7 +1,6 @@
 /// <reference types="Cypress" />
 /// <reference path="../support/index.d.ts" />
 
-import { VERIFY_EMAIL } from 'src/graphql/mutations'
 import { a11yLogViolations } from '../support/helpers'
 
 describe("Submissions Review", () => {
@@ -457,9 +456,8 @@ describe("Submissions Review", () => {
     cy.login({email: "reviewcoordinator@meshresearch.net"})
     cy.visit("submission/100/review")
     // get initial scroll position
-    cy.get("[data-cy='new_overall_comment']").should(() => {
-      let scrollY = element.getBoundingClientRect().top
-      // expect to be (> 0) (= 0) (< 0) ?
+    cy.dataCy("view_overall_comments").should((element) => {
+      let scrollY = element[0].getBoundingClientRect().top
       expect(scrollY).to.be.greaterThan(0)
     })
 
@@ -467,10 +465,9 @@ describe("Submissions Review", () => {
     cy.dataCy("view_overall_comments").click()
     
     // check scroll position
-    cy.get("[data-cy='new_overall_comment']").should(() => {
-      let scrollY = element.getBoundingClientRect().top
-      // expect to be (> 0) (= 0) (< 0) ?
-      expect(scrollY).to.be.greaterThan(0)
+    cy.dataCy("view_overall_comments").should((element) => {
+      let scrollY = element[0].getBoundingClientRect().top
+      expect(scrollY).to.be.lessThan(0)
     })
   })
 
@@ -478,7 +475,20 @@ describe("Submissions Review", () => {
     cy.task("resetDb")
     cy.login({email: "reviewcoordinator@meshresearch.net"})
     cy.visit("submission/100/review")
+    // get initial scroll position
+    cy.dataCy("new_overall_comment").should((element) => {
+      let scrollY = element[0].getBoundingClientRect().top
+      expect(scrollY).to.be.greaterThan(0)
+    })
+
+    // click to scroll
     cy.dataCy("new_overall_comment").click()
+    
+    // check scroll position
+    cy.dataCy("new_overall_comment").should((element) => {
+      let scrollY = element[0].getBoundingClientRect().top
+      expect(scrollY).to.be.lessThan(0)
+    })
 
   })
 })
