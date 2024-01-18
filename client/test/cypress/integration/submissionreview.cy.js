@@ -471,8 +471,7 @@ describe("Submissions Review", () => {
     cy.dataCy("overallComment").last().contains("This comment has been deleted").click()
   })
 
-  // REMOVE ONLY !!
-  it.only("scrolls when clicking on 'View Overall Comments'", () => {
+  it("scrolls when clicking on 'View Overall Comments'", () => {
     cy.task("resetDb")
     cy.login({email: "reviewcoordinator@meshresearch.net"})
     cy.visit("submission/100/review")
