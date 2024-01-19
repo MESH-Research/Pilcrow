@@ -58,6 +58,7 @@
             >
               {{ $t(`submissions.content.upload${updateModifier}.caption`) }}
             </div>
+
             <template v-if="updateMethod !== ''" #action>
               <q-btn
                 flat
@@ -95,6 +96,28 @@
             </template>
           </q-banner>
           <div v-if="updateMethod == 'upload'">
+            <q-card class="q-pa-md" flat>
+              <q-list>
+                <q-item clickable>
+                  <q-item-section avatar>
+                    <q-icon color="primary" name="description" />
+                  </q-item-section>
+
+                  <q-item-section>
+                    <q-item-label>{{
+                      $t(
+                        `submissions.content.upload${updateModifier}.file_caption`,
+                      )
+                    }}</q-item-label>
+                    <q-item-label caption>{{
+                      $t(
+                        `submissions.content.upload${updateModifier}.file_types`,
+                      )
+                    }}</q-item-label>
+                  </q-item-section>
+                </q-item>
+              </q-list>
+            </q-card>
             <q-file
               v-model="uploadFile"
               data-cy="file_picker"
