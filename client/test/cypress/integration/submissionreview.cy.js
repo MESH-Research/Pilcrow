@@ -470,4 +470,45 @@ describe("Submissions Review", () => {
     cy.dataCy("dirtyDelete").click()
     cy.dataCy("overallComment").last().contains("This comment has been deleted").click()
   })
+
+  it("scrolls when clicking on 'View Overall Comments'", () => {
+    cy.task("resetDb")
+    cy.login({email: "reviewcoordinator@meshresearch.net"})
+    cy.visit("submission/100/review")
+    // get initial scroll position
+    cy.dataCy("view_overall_comments").should((element) => {
+      let scrollY = element[0].getBoundingClientRect().top
+      expect(scrollY).to.be.greaterThan(0)
+    })
+
+    // click to scroll
+    cy.dataCy("view_overall_comments").click()
+    
+    // check scroll position
+    cy.dataCy("view_overall_comments").should((element) => {
+      let scrollY = element[0].getBoundingClientRect().top
+      expect(scrollY).to.be.lessThan(0)
+    })
+  })
+
+  it("scrolls when clicking on 'Add New Overall Comment'", () => {
+    cy.task("resetDb")
+    cy.login({email: "reviewcoordinator@meshresearch.net"})
+    cy.visit("submission/100/review")
+    // get initial scroll position
+    cy.dataCy("new_overall_comment").should((element) => {
+      let scrollY = element[0].getBoundingClientRect().top
+      expect(scrollY).to.be.greaterThan(0)
+    })
+
+    // click to scroll
+    cy.dataCy("new_overall_comment").click()
+    
+    // check scroll position
+    cy.dataCy("new_overall_comment").should((element) => {
+      let scrollY = element[0].getBoundingClientRect().top
+      expect(scrollY).to.be.lessThan(0)
+    })
+
+  })
 })
