@@ -892,11 +892,15 @@
       "heading": "Submission Content",
       "upload": {
         "label": "Upload",
-        "caption": "Select a supported file to be imported."
+        "caption": "Select a supported file to be imported.",
+        "file_caption": "Accepted file types: ",
+        "file_types": ".csv, .docbook, .docx, .epub, .html, .latex, .md, .odt, .rtf"
       },
       "upload_update": {
         "label": "Upload",
-        "caption": "Select a supported file to replace the existing text content."
+        "caption": "Select a supported file to replace the existing text content.",
+        "file_caption": "Accepted file types: ",
+        "file_types": ".csv, .docbook, .docx, .epub, .html, .latex, .md, .odt, .rtf"
       },
       "enter": {
         "label": "Enter Text",
