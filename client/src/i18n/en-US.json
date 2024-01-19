@@ -771,7 +771,9 @@
       "increase": "Increase Font Size",
       "toggle_dark": "Toggle Dark Mode",
       "dark": "Dark Mode",
-      "light": "Light Mode"
+      "light": "Light Mode",
+      "view_overall": "View Overall Comments",
+      "new_overall": "Add New Overall Comment"
     },
     "action": {
       "toggle_label": "Toggle Submission Actions",
