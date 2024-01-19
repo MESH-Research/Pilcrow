@@ -353,17 +353,6 @@ const styleCriteria = ref(
   )
 )
 
-const focusEditor = ref(null)
-
-function focusOnEditor() {
-  console.log(focusEditor.value)
-}
-
-// onMounted(() => {
-//   focusEditor.value.focus()
-// })
-
-
 defineExpose({
   hasStyleCriteria,
 })
