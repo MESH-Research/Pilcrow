@@ -896,7 +896,7 @@
         "label": "Upload",
         "caption": "Select a supported file to be imported.",
         "file_caption": "Accepted file types: ",
-        "file_types": ".csv, .docbook, .docx, .epub, .html, .latex, .md, .odt, .rtf"
+        "file_types": ".csv, .docbook, .docx, .epub, .html, .latex, .md, .odt, .rtf, .txt"
       },
       "upload_update": {
         "label": "Upload",
