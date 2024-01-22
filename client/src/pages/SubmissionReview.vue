@@ -8,7 +8,7 @@
       class="q-pa-xl items-center column content-center text-center"
     >
       <p style="max-width: 20rem" data-cy="explanation">
-        {{ $t('submissions.draft_with_no_content') }}
+        {{ $t("submissions.draft_with_no_content") }}
       </p>
       <q-btn
         data-cy="draft_btn"
@@ -38,9 +38,14 @@
         <q-page-container>
           <submission-content
             v-model:highlightVisibility="highlightVisibility"
+            @scroll-to-overall-comments="handleScroll"
+            @scroll-add-new-overall-comment="handleNewScroll"
           />
           <q-separator class="page-seperator" />
-          <submission-comment-section />
+          <div ref="scrollOverallComments"></div>
+          <submission-comment-section
+          />
+          <div ref="scrollAddNewOverallComment"></div>
         </q-page-container>
       </q-layout>
 
@@ -57,6 +62,9 @@ import SubmissionToolbar from "src/components/atoms/SubmissionToolbar.vue"
 import { ref, provide, computed } from "vue"
 import { GET_SUBMISSION_REVIEW } from "src/graphql/queries"
 import { useQuery } from "@vue/apollo-composable"
+import { scroll } from "quasar"
+const { getScrollTarget, setVerticalScrollPosition } = scroll
+
 const props = defineProps({
   id: {
     type: String,
@@ -72,6 +80,22 @@ const commentDrawerOpen = ref(false)
 provide("submission", submission)
 provide("activeComment", ref(null))
 provide("commentDrawerOpen", commentDrawerOpen)
+
+const scrollOverallComments = ref(null)
+const scrollAddNewOverallComment = ref(null)
+
+function handleScroll() {
+  const scrollValue = scrollOverallComments.value
+  const scrollTarget = getScrollTarget(scrollValue)
+  setVerticalScrollPosition(scrollTarget, scrollValue.offsetTop, 250)
+}
+
+function handleNewScroll() {
+  const scrollValue = scrollAddNewOverallComment.value
+  const scrollTarget = getScrollTarget(scrollValue)
+  setVerticalScrollPosition(scrollTarget, scrollValue.offsetTop, 250)
+  scrollValue
+}
 </script>
 
 <style lang="sass" scoped>

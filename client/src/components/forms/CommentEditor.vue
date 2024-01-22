@@ -9,8 +9,12 @@
           v-bind="button"
         />
       </q-btn-group>
-      <div class="comment-editor">
-        <editor-content data-cy="comment-editor" :editor="editor" />
+      <div class="comment-editor" @focus-editor="focusOnEditor">
+        <editor-content
+          data-cy="comment-editor"
+          :editor="editor"
+          ref="focusEditor"
+        />
       </div>
       <div v-if="commentType === 'InlineComment'" class="q-py-md">
         <q-list>
