@@ -98,7 +98,7 @@
           <div v-if="updateMethod == 'upload'">
             <q-card class="q-pa-md" flat>
               <q-list>
-                <q-item clickable>
+                <q-item>
                   <q-item-section avatar>
                     <q-icon color="primary" name="description" />
                   </q-item-section>
