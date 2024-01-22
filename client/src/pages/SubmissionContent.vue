@@ -106,12 +106,12 @@
                   <q-item-section>
                     <q-item-label>{{
                       $t(
-                        `submissions.content.upload${updateModifier}.file_caption`,
+                        `submissions.content.support.file_caption`,
                       )
                     }}</q-item-label>
                     <q-item-label caption>{{
                       $t(
-                        `submissions.content.upload${updateModifier}.file_types`,
+                        `submissions.content.support.file_types`,
                       )
                     }}</q-item-label>
                   </q-item-section>
