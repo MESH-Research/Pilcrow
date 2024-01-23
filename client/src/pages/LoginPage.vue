@@ -137,6 +137,7 @@ const providers = computed(() => {
   return result.value?.identityProviders ?? []
 })
 
+
 const { loginUser, loading, v$, redirectUrl } = useLogin()
 const { push } = useRouter()
 const handleSubmit = async () => {
@@ -149,10 +150,9 @@ const handleSubmit = async () => {
 }
 
 const handleLoginOrcid = async () => {
-  console.log("Hello World")
   try {
-    const a = loginOrcid()
-    console.log(a)
+    const result = await loginOrcid()
+    window.location.href = result.data.loginOrcid
   } catch (e) {
     error.value = e.message
   }
