@@ -15,6 +15,6 @@ final readonly class LoginOrcid
      */
     public function __invoke(null $_, array $args): string
     {
-        return Socialite::driver('orcid')->redirect()->getTargetUrl();
+        return Socialite::driver('orcid')->setScopes(['/authenticate'])->redirect()->getTargetUrl();
     }
 }
