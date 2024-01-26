@@ -15,9 +15,14 @@ final readonly class LoginOrcidCallback
      */
     public function __invoke(null $_, array $args)
     {
-        $driver = Socialite::driver('orcid');
-        $response = $driver->getAccessTokenResponse($args['code']);
-        $user = $driver->getUserByToken($response['access_token']);
-        print_r($user);
+        try {
+            /** @var $driver AbstractProvider */
+            $driver = Socialite::driver('orcid');
+            $response = $driver->getAccessTokenResponse($args['code']);
+            $user = $driver->userFromToken($response['access_token']);
+            print_r($user);
+        } catch (\Exception $e) {
+            throw $e;
+        }
     }
 }
