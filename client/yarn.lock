@@ -1328,9 +1328,9 @@ axe-core@^4.6.3:
   integrity sha512-d5ZQHPSPkF9Tw+yfyDcRoUOc4g/8UloJJe5J8m4L5+c7AtDdjDLRxew/knnI4CxvtdxEUVgWz4x3OIQUIFiMfw==
 
 axios@^1.3.4:
-  version "1.6.6"
-  resolved "https://registry.yarnpkg.com/axios/-/axios-1.6.6.tgz#878db45401d91fe9e53aed8ac962ed93bde8dd1c"
-  integrity sha512-XZLZDFfXKM9U/Y/B4nNynfCRUqNyVZ4sBC/n9GDRCkq9vd2mIvKjKKsbIh1WPmHmNbg6ND7cTBY3Y2+u1G3/2Q==
+  version "1.6.7"
+  resolved "https://registry.yarnpkg.com/axios/-/axios-1.6.7.tgz#7b48c2e27c96f9c68a2f8f31e2ab19f59b06b0a7"
+  integrity sha512-/hDJGff6/c7u0hDkvkGxR/oy6CbCs8ziCsC7SqmhjfozqiJGc8Z11wrv9z9lYfY4K8l+H9TpjcMDX0xOZmx+RA==
   dependencies:
     follow-redirects "^1.15.4"
     form-data "^4.0.0"
@@ -4165,9 +4165,9 @@ qs@6.11.0:
     side-channel "^1.0.4"
 
 quasar@^2.6.0:
-  version "2.14.2"
-  resolved "https://registry.yarnpkg.com/quasar/-/quasar-2.14.2.tgz#794d8434eb449549fc8455aaec9bc14b71a57c98"
-  integrity sha512-f5KliWtM5BEuFsDU4yvuP+dlVIWZNrGu5VpWFsxzjpoykcP4B2HIOUiCl3mx2NCqERHd4Ts0aeioRkt9TTeExA==
+  version "2.14.3"
+  resolved "https://registry.yarnpkg.com/quasar/-/quasar-2.14.3.tgz#0956f6bcdc9ce5a76728e1d7b235e9ce963f1d89"
+  integrity sha512-7WzbtZxykLn2ic5oNpepZ2ZjDVpmxyVD4KC9rWe+Ia+4Er61svGr4jOuttN+Ok7IerLSCmKIRyjQMgasF60rFA==
 
 querystringify@^2.1.1:
   version "2.2.0"
