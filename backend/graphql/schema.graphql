@@ -52,6 +52,8 @@ type Mutation {
 
     loginOrcid: String!
 
+    loginOrcidCallback(code: String!): String
+
     "Log out from the current session, showing the user one last time."
     logout: User @guard
 

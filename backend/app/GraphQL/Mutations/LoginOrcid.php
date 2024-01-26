@@ -10,7 +10,7 @@ final readonly class LoginOrcid
      * https://github.com/SocialiteProviders/Orcid
      *
      * @param null $_
-     * @param  array{}  $args
+     * @param array{} $args
      * @return string
      */
     public function __invoke(null $_, array $args): string
