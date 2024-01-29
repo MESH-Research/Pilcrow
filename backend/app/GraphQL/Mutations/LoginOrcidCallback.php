@@ -1,4 +1,5 @@
-<?php declare(strict_types=1);
+<?php
+declare(strict_types=1);
 
 namespace App\GraphQL\Mutations;
 
@@ -7,8 +8,7 @@ use Laravel\Socialite\Facades\Socialite;
 final readonly class LoginOrcidCallback
 {
     /**
-     * https://laravel.com/docs/master/socialite#routing
-     *
+     * @link https://laravel.com/docs/master/socialite#routing
      * @param null $_
      * @param array{} $args
      * @return void
@@ -16,10 +16,11 @@ final readonly class LoginOrcidCallback
     public function __invoke(null $_, array $args)
     {
         try {
-            /** @var $driver AbstractProvider */
+            /** @var \App\GraphQL\Mutations\AbstractProvider $driver */
             $driver = Socialite::driver('orcid');
             $response = $driver->getAccessTokenResponse($args['code']);
-            $user = $driver->userFromToken($response['access_token']);
+            $user = $driver->userFromToken($response);
+
             print_r($user);
         } catch (\Exception $e) {
             throw $e;

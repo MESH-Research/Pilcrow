@@ -1,4 +1,5 @@
-<?php declare(strict_types=1);
+<?php
+declare(strict_types=1);
 
 namespace App\GraphQL\Mutations;
 
@@ -7,14 +8,16 @@ use Laravel\Socialite\Facades\Socialite;
 final readonly class LoginOrcid
 {
     /**
-     * https://github.com/SocialiteProviders/Orcid
-     *
+     * @link https://github.com/SocialiteProviders/Orcid
      * @param null $_
-     * @param array{} $args
+     * @param array{} $_args
      * @return string
      */
-    public function __invoke(null $_, array $args): string
+    public function __invoke(null $_, array $_args): string
     {
-        return Socialite::driver('orcid')->setScopes(['/authenticate'])->redirect()->getTargetUrl();
+        /** @var \App\GraphQL\Mutations\AbstractProvider $driver */
+        $driver = Socialite::driver('orcid');
+
+        return $driver->setScopes(['/authenticate'])->redirect()->getTargetUrl();
     }
 }

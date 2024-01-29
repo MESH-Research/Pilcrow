@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->string('orcid_id')->unique()->nullable();
-            // Allow passwords to by empty
+            // Allow passwords to by empty for users that register via external provider
             $table->string('password')->nullable()->change();
         });
     }
