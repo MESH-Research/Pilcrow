@@ -8,9 +8,9 @@ final readonly class IdentityProviders
     /**
      * @param null $_
      * @param array $_args
-     * @return string
+     * @return array
      */
-    public function __invoke(null $_, array $_args): string
+    public function __invoke(null $_, array $_args): array
     {
         $providers = env('IDENTITY_PROVIDERS');
 
