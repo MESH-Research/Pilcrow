@@ -12,7 +12,6 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 use Laravel\Sanctum\HasApiTokens;
 use Laravel\Scout\Searchable;
 use Spatie\Permission\Traits\HasRoles;
@@ -282,13 +281,38 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public static function generateUniqueUsername(string $email)
     {
-        $username = explode('@', $email)[0];
+        if ($email === '') {
+            $username = 'user';
+        } else {
+            $username = explode('@', $email)[0];
+        }
         if (User::where('username', $username)->exists()) {
-            $unique = $username . '_' . Str::random(2) . random_int(0, 50);
+            $unique = $username . '_'
+                . self::generateString(random_int(1, 2))
+                . str_replace(['0','1'], '2', (string)random_int(0, 50))
+                . self::generateString(random_int(1, 2));
             $username = self::generateUniqueUsername($unique);
         }
 
         return $username;
+    }
+
+    /**
+     * Generate a string of random and non-similar-looking characters
+     *
+     * @param int $length
+     * @return string
+     */
+    private static function generateString($length = 1): string
+    {
+        $string = '';
+        $no_similar_chars = '23456789abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ';
+        for ($i = 0; $i < $length; $i++) {
+            $random_int = rand(0, strlen($no_similar_chars) - 1);
+            $string .= $no_similar_chars[$random_int];
+        }
+
+        return $string;
     }
 
     /**
