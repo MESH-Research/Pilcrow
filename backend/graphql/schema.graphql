@@ -46,13 +46,30 @@ type VersionInfo {
     version_date: String
 }
 
+type LoginOrcidResponse {
+    register: Boolean
+    user: ProviderUser
+    provider: Provider
+}
+
+type ProviderUser {
+    name: String
+    username: String
+    email: String
+}
+
+type Provider {
+    name: String!
+    id: String!
+}
+
 type Mutation {
     "Log in to a new session and get the user."
     login(email: String!, password: String!): User!
 
     loginOrcid: String!
 
-    loginOrcidCallback(code: String!): String
+    loginOrcidCallback(code: String!): LoginOrcidResponse
 
     "Log out from the current session, showing the user one last time."
     logout: User @guard

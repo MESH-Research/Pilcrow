@@ -10,6 +10,7 @@
 </template>
 
 <script setup>
+import { onMounted } from "vue"
 import { useRoute } from "vue-router"
 import { useMutation } from "@vue/apollo-composable"
 import { LOGIN_ORCID_CALLBACK } from "src/graphql/mutations"
@@ -18,5 +19,13 @@ const code = route.query.code
 const { mutate: handleCallback } = useMutation(LOGIN_ORCID_CALLBACK, {
   variables: { code: code },
 })
-handleCallback()
+
+onMounted(async () => {
+  try {
+    const response = await handleCallback()
+    console.log(response)
+  } catch (error) {
+    console.error(error)
+  }
+})
 </script>

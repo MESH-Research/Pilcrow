@@ -888,6 +888,17 @@ export const LOGIN_ORCID = gql`
 
 export const LOGIN_ORCID_CALLBACK = gql`
   mutation LoginOrcidCallback($code: String!) {
-    loginOrcidCallback(code: $code)
+    loginOrcidCallback(code: $code) {
+      register
+      user {
+        name
+        username
+        email
+      }
+      provider {
+        name
+        id
+      }
+    }
   }
 `

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('password')->nullable()->change();
         });
 
-        Schema::create('users_external_identity_providers', function (Blueprint $table) {
+        Schema::create('external_identity_providers', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained();
             $table->string('provider_name');
@@ -36,6 +36,6 @@ return new class extends Migration
             $table->string('password')->change();
         });
 
-        Schema::drop('users_external_identity_providers');
+        Schema::drop('external_identity_providers');
     }
 };

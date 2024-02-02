@@ -5,7 +5,6 @@ namespace App\GraphQL\Mutations;
 
 use App\Models\ExternalIdentityProvider;
 use App\Models\User;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
 
@@ -15,7 +14,7 @@ final readonly class LoginOrcidCallback
      * @link https://laravel.com/docs/master/socialite#routing
      * @param null $_
      * @param array{} $args
-     * @return \App\Models\User
+     * @return array
      */
     public function __invoke(null $_, array $args)
     {
@@ -24,6 +23,7 @@ final readonly class LoginOrcidCallback
             $driver = Socialite::driver('orcid');
             $response = $driver->getAccessTokenResponse($args['code']);
             $socialiteUser = $driver->userFromToken($response);
+            print_r("Hello World 1");
             $provider = ExternalIdentityProvider::where('provider_name', 'orcid')
                 ->where('provider_id', $socialiteUser->getId())
                 ->first();
@@ -32,91 +32,95 @@ final readonly class LoginOrcidCallback
             } elseif (!empty($socialiteUser->getEmail())) {
                 $user = User::where('email', $socialiteUser->getEmail())->first();
                 if ($user) {
-                    $this->handleMatchedEmail($socialiteUser, $user);
+                    return $this->handleMatchedEmail($socialiteUser, $user);
                 } else {
-                    $this->handleUnmatchedEmail($socialiteUser);
+                    return $this->handleUnmatchedEmail($socialiteUser);
                 }
             } else {
-                $this->handleNoEmailNoProviderId($socialiteUser);
+                return $this->handleNoEmailNoMatchedProvider($socialiteUser);
             }
-        } catch (\Exception) {
-            return redirect('/login');
+        } catch (\Exception $e) {
+            print_r($e->getMessage());
+            // return redirect('/login');
         }
     }
 
     /**
      * @param \Laravel\Socialite\Two\User $socialiteUser
-     * @return \App\Models\User
+     * @return array
      */
-    private function handleNoEmailNoProviderId($socialiteUser)
+    private function handleNoEmailNoMatchedProvider($socialiteUser): array
     {
-        $user = User::create([
+        $user = [
+            'name' => $socialiteUser->getName(),
             'username' => User::generateUniqueUsername($socialiteUser->getName()),
             'email' => null,
-            'email_verified_at' => Carbon::now(),
-        ]);
-
-        return $this->authenticateUser($user);
+        ];
+        $provider = [
+            'name' => 'orcid',
+            'id' => $socialiteUser->getId(),
+        ];
+        return [
+            'register' => true,
+            'user' => $user,
+            'provider' => $provider,
+        ];
     }
 
     /**
      * @param \Laravel\Socialite\Two\User $socialiteUser
-     * @return \App\Models\User
+     * @return array
      */
-    private function handleUnmatchedEmail($socialiteUser)
+    private function handleUnmatchedEmail($socialiteUser): array
     {
-        $user = User::create([
+        $user = [
+            'name' => $socialiteUser->getName(),
             'username' => User::generateUniqueUsername($socialiteUser->getEmail()),
             'email' => $socialiteUser->getEmail(),
-            'email_verified_at' => Carbon::now(),
-        ]);
-        ExternalIdentityProvider::create([
-            'provider_name' => 'orcid',
-            'provider_id' => $socialiteUser->getId(),
-            'user_id' => $user->id,
-        ]);
-
-        return $this->authenticateUser($user);
+        ];
+        $provider = [
+            'name' => 'orcid',
+            'id' => $socialiteUser->getId(),
+        ];
+        return [
+            'register' => true,
+            'user' => $user,
+            'provider' => $provider
+        ];
     }
 
     /**
      * @param \Laravel\Socialite\Two\User $socialiteUser
      * @param \App\Models\User $user
-     * @return \App\Models\User
+     * @return array
      */
-    private function handleMatchedEmail($socialiteUser, $user): User
+    private function handleMatchedEmail($socialiteUser, $user): array
     {
         ExternalIdentityProvider::create([
             'provider_name' => 'orcid',
             'provider_id' => $socialiteUser->getId(),
             'user_id' => $user->id,
         ]);
-
-        return $this->authenticateUser($user);
+        Auth::login($user);
+        return [
+            'register' => false,
+            'user' => null,
+            'provider' => null
+        ];
     }
 
     /**
      * @param \App\Models\ExternalIdentityProvider $provider
-     * @return \App\Models\User
+     * @return array
      */
-    private function handleMatchedProviderId(ExternalIdentityProvider $provider): User
+    private function handleMatchedProviderId(ExternalIdentityProvider $provider): array
     {
         $user = User::find($provider->user_id)->first();
-
-        return $this->authenticateUser($user);
-    }
-
-    /**
-     * @todo use supplied user in authentiction
-     * @param \App\Models\User $user
-     * @return \App\Models\User
-     */
-    private function authenticateUser($user): User
-    {
-        print_r($user);
-        $guard = Auth::guard('web');
-        $guardUser = $guard->user();
-
-        return $guardUser;
+        Auth::login($user);
+        return [
+            'register' => false,
+            'user' => null,
+            'provider' => null
+        ];
     }
 }
