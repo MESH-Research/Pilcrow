@@ -5,6 +5,7 @@ namespace App\GraphQL\Mutations;
 
 use App\Models\ExternalIdentityProvider;
 use App\Models\User;
+use GraphQL\Error\Error;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
 
@@ -23,7 +24,6 @@ final readonly class LoginOrcidCallback
             $driver = Socialite::driver('orcid');
             $response = $driver->getAccessTokenResponse($args['code']);
             $socialiteUser = $driver->userFromToken($response);
-            print_r("Hello World 1");
             $provider = ExternalIdentityProvider::where('provider_name', 'orcid')
                 ->where('provider_id', $socialiteUser->getId())
                 ->first();
@@ -40,8 +40,7 @@ final readonly class LoginOrcidCallback
                 return $this->handleNoEmailNoMatchedProvider($socialiteUser);
             }
         } catch (\Exception $e) {
-            print_r($e->getMessage());
-            // return redirect('/login');
+            throw new Error($e->getMessage());
         }
     }
 
@@ -61,7 +60,7 @@ final readonly class LoginOrcidCallback
             'id' => $socialiteUser->getId(),
         ];
         return [
-            'register' => true,
+            'status' => 'register',
             'user' => $user,
             'provider' => $provider,
         ];
@@ -83,7 +82,7 @@ final readonly class LoginOrcidCallback
             'id' => $socialiteUser->getId(),
         ];
         return [
-            'register' => true,
+            'status' => 'register',
             'user' => $user,
             'provider' => $provider
         ];
@@ -103,7 +102,7 @@ final readonly class LoginOrcidCallback
         ]);
         Auth::login($user);
         return [
-            'register' => false,
+            'status' => 'auth',
             'user' => null,
             'provider' => null
         ];
@@ -118,7 +117,7 @@ final readonly class LoginOrcidCallback
         $user = User::find($provider->user_id)->first();
         Auth::login($user);
         return [
-            'register' => false,
+            'status' => 'auth',
             'user' => null,
             'provider' => null
         ];

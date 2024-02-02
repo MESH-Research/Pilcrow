@@ -1,0 +1,32 @@
+extend type Query {
+    identityProviders: [IdentityProvider]
+}
+
+extend type Mutation {
+    loginOrcid: String!
+
+    loginOrcidCallback(code: String!): LoginOrcidResponse
+}
+
+type IdentityProvider {
+    name: String!
+    label: String!
+    icon: String
+}
+
+type LoginOrcidResponse {
+    status: String
+    user: ProviderUser
+    provider: Provider
+}
+
+type ProviderUser {
+    name: String
+    username: String
+    email: String
+}
+
+type Provider {
+    name: String!
+    id: String!
+}
