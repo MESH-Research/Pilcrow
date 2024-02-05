@@ -6,6 +6,20 @@ extend type Mutation {
     loginOrcid: String!
 
     loginOrcidCallback(code: String!): LoginOrcidResponse
+
+    createProviderId(
+        provider_name: String!
+        provider_id: String!
+        user_id: String!
+    ): ExternalIdentityProvider
+        @create
+}
+
+type ExternalIdentityProvider {
+    id: ID!
+    provider_name: String!
+    provider_id: String!
+    user_id: String!
 }
 
 type IdentityProvider {

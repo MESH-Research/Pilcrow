@@ -902,3 +902,12 @@ export const LOGIN_ORCID_CALLBACK = gql`
     }
   }
 `
+
+export const CREATE_EXTERNAL_IDENTITY_PROVIDER_ID = gql`
+  mutation CreateExternalIdentityProviderId($name: String!) {
+    createProviderId(name: $name) {
+      id
+      name
+    }
+  }
+`

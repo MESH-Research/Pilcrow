@@ -166,7 +166,6 @@ onMounted(async () => {
   try {
     const response = await verify({ uuid, expires, token })
     let data = response.data.verifySubmissionInvite
-    console.log(data)
     Object.assign(user, data)
     email.value = user.email
     id.value = user.id

@@ -41,6 +41,11 @@
     "label": "Item"
   },
   "auth": {
+    "oauth": {
+      "register": {
+        "title": "Continue Registration"
+      }
+    },
     "loginRequired": "Please log in to access that page.",
     "login": "Login",
     "log_in": "Log In",

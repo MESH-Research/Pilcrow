@@ -51,8 +51,8 @@ final readonly class LoginOrcidCallback
     private function handleNoEmailNoMatchedProvider($socialiteUser): array
     {
         $user = [
-            'name' => $socialiteUser->getName(),
-            'username' => User::generateUniqueUsername($socialiteUser->getName()),
+            'name' => trim($socialiteUser->getName()),
+            'username' => trim(User::generateUniqueUsername($socialiteUser->getName())),
             'email' => null,
         ];
         $provider = [
@@ -73,8 +73,8 @@ final readonly class LoginOrcidCallback
     private function handleUnmatchedEmail($socialiteUser): array
     {
         $user = [
-            'name' => $socialiteUser->getName(),
-            'username' => User::generateUniqueUsername($socialiteUser->getEmail()),
+            'name' => trim($socialiteUser->getName()),
+            'username' => trim(User::generateUniqueUsername($socialiteUser->getEmail())),
             'email' => $socialiteUser->getEmail(),
         ];
         $provider = [
