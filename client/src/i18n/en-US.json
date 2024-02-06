@@ -44,6 +44,9 @@
     "oauth": {
       "register": {
         "title": "Continue Registration"
+      },
+      "submit": {
+        "btn_label": "Start Using Pilcrow"
       }
     },
     "loginRequired": "Please log in to access that page.",

@@ -29,7 +29,7 @@ type IdentityProvider {
 }
 
 type LoginOrcidResponse {
-    status: String
+    action: String
     user: ProviderUser
     provider: Provider
 }

@@ -60,7 +60,7 @@ final readonly class LoginOrcidCallback
             'id' => $socialiteUser->getId(),
         ];
         return [
-            'status' => 'register',
+            'action' => 'register',
             'user' => $user,
             'provider' => $provider,
         ];
@@ -82,7 +82,7 @@ final readonly class LoginOrcidCallback
             'id' => $socialiteUser->getId(),
         ];
         return [
-            'status' => 'register',
+            'action' => 'register',
             'user' => $user,
             'provider' => $provider
         ];
@@ -102,7 +102,7 @@ final readonly class LoginOrcidCallback
         ]);
         Auth::login($user);
         return [
-            'status' => 'auth',
+            'action' => 'auth',
             'user' => null,
             'provider' => null
         ];
@@ -117,7 +117,7 @@ final readonly class LoginOrcidCallback
         $user = User::find($provider->user_id)->first();
         Auth::login($user);
         return [
-            'status' => 'auth',
+            'action' => 'auth',
             'user' => null,
             'provider' => null
         ];

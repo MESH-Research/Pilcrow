@@ -889,7 +889,7 @@ export const LOGIN_ORCID = gql`
 export const LOGIN_ORCID_CALLBACK = gql`
   mutation LoginOrcidCallback($code: String!) {
     loginOrcidCallback(code: $code) {
-      status
+      action
       user {
         name
         username
@@ -904,10 +904,18 @@ export const LOGIN_ORCID_CALLBACK = gql`
 `
 
 export const CREATE_EXTERNAL_IDENTITY_PROVIDER_ID = gql`
-  mutation CreateExternalIdentityProviderId($name: String!) {
-    createProviderId(name: $name) {
+  mutation CreateExternalIdentityProviderId(
+    $provider_name: String!
+    $provider_id: String!
+    $user_id: ID!
+  ) {
+    createProviderId(
+      provider_name: $provider_name
+      provider_id: $provider_id
+      user_id: $user_id
+    ) {
       id
-      name
+      user_id
     }
   }
 `
