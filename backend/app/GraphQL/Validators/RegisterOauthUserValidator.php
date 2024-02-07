@@ -43,12 +43,12 @@ class RegisterOauthUserValidator extends Validator
             $this->prefixArrayKeys('username.', [
                 'unique' => 'USERNAME_IN_USE',
                 'filled' => 'USERNAME_EMPTY',
-                ]),
+            ]),
             $this->prefixArrayKeys('email.', [
                 'unique' => 'EMAIL_IN_USE',
                 'email' => 'EMAIL_NOT_VALID',
                 'filled' => 'EMAIL_EMPTY',
-                ]),
+            ]),
         );
     }
 

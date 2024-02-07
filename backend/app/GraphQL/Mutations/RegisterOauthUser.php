@@ -22,7 +22,6 @@ final readonly class RegisterOauthUser
                 'name' => $args['input']['user']['name'],
                 'username' => $args['input']['user']['username'],
                 'email' => $args['input']['user']['email'],
-                'password' => ''
             ]);
 
             ExternalIdentityProvider::create([
@@ -39,5 +38,5 @@ final readonly class RegisterOauthUser
             throw new Error($e->getMessage());
         }
     }
-
 }
+

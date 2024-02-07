@@ -54,8 +54,7 @@
               </template>
             </q-input>
             <error-banner v-if="form_error">
-              {{ form_error }}
-              <!-- {{ $t(`auth.failures.${form_error}`) }} -->
+              {{ $t(`auth.failures.${form_error}`) }}
             </error-banner>
           </fieldset>
 
@@ -83,7 +82,7 @@
 
 <script setup>
 import { ref, onMounted } from "vue"
-import { useRoute } from "vue-router"
+import { useRoute, useRouter } from "vue-router"
 import { useMutation } from "@vue/apollo-composable"
 import { useUserValidation  } from "src/use/userValidation"
 import {
@@ -93,6 +92,7 @@ import {
 import ErrorBanner from "src/components/molecules/ErrorBanner.vue"
 import ErrorFieldRenderer from "src/components/molecules/ErrorFieldRenderer.vue"
 
+const { push } = useRouter()
 const route = useRoute()
 const code = route.query.code
 const { mutate: handleCallback } = useMutation(LOGIN_ORCID_CALLBACK, {
@@ -126,39 +126,26 @@ onMounted(async () => {
     provider.value = data.provider
     Object.assign(user, data.user)
     status.value = 'loaded'
-    console.log(data)
   } catch (error) {
     console.error(error)
   }
 })
 
 async function handleRegister() {
-  console.log("handleRegister", $v.value.name.$model, $v.value.username.$model, $v.value.email.$model, provider.value.provider_id)
   form_error.value = ""
   try {
-    // status.value = "loading"
-    const a = await registerOauthUser({
+    status.value = "loading"
+    await registerOauthUser({
       user_name: $v.value.name.$model,
       user_username: $v.value.username.$model,
       user_email: $v.value.email.$model,
       provider_name: provider.value.provider_name,
       provider_id: provider.value.provider_id
     })
-    console.log("a", a)
-    // const user = await saveUser()
-    //
-    // if (action.value == 'register') {
-    //   await createIdentityProvider({
-    //     provider_name: provider_id.value,
-    //     provider_id: provider_name.value,
-    //     user_id: user.id,
-    //   })
-    // }
-    // authenticate user
-    // await loginUser({ email: user.email, password: user.password })
+    push('/dashboard')
 
   } catch (e) {
-    // status.value = "error"
+    status.value = "error"
     form_error.value = e.message
     console.error(e)
   }

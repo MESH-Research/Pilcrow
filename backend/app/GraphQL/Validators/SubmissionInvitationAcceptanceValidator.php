@@ -42,7 +42,7 @@ class SubmissionInvitationAcceptanceValidator extends Validator
             $this->prefixArrayKeys('username.', [
                 'unique' => 'USERNAME_IN_USE',
                 'filled' => 'USERNAME_EMPTY',
-                ]),
+            ]),
             $this->prefixArrayKeys('password.', [
                 'zxcvbn' => 'PASSWORD_NOT_COMPLEX',
                 'filled' => 'PASSWORD_EMPTY',
