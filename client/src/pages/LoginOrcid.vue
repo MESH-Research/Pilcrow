@@ -6,7 +6,7 @@
         <strong class="text-h3">{{ $t("loading") }}</strong>
       </div>
       <div v-else-if="action == 'register'" class="column flex-center">
-        <q-form style="width: 400px" @submit="handleSubmit">
+        <q-form style="width: 400px" @submit="handleRegister">
           <h1>{{ $t("auth.oauth.register.title") }}</h1>
           <fieldset class="q-pb-lg q-px-none q-gutter-y-lg column">
             <q-input
@@ -38,7 +38,7 @@
             </q-input>
             <q-input
               ref="emailInput"
-              v-model.trim="email"
+              v-model.trim="$v.email.$model"
               outlined
               type="email"
               :label="$t('auth.fields.email')"
@@ -76,10 +76,10 @@
 import { ref, onMounted } from "vue"
 import { useRoute, useRouter } from "vue-router"
 import { useMutation } from "@vue/apollo-composable"
-import { useUserValidation } from "src/use/userValidation"
+import { useUserValidation  } from "src/use/userValidation"
 import {
   LOGIN_ORCID_CALLBACK,
-  CREATE_EXTERNAL_IDENTITY_PROVIDER_ID,
+  REGISTER_OAUTH_USER,
 } from "src/graphql/mutations"
 import ErrorBanner from "src/components/molecules/ErrorBanner.vue"
 import ErrorFieldRenderer from "src/components/molecules/ErrorFieldRenderer.vue"
@@ -90,21 +90,18 @@ const code = route.query.code
 const { mutate: handleCallback } = useMutation(LOGIN_ORCID_CALLBACK, {
   variables: { code: code },
 })
-const { mutate: createIdentityProvider } = useMutation(
-  CREATE_EXTERNAL_IDENTITY_PROVIDER_ID
+const { mutate: registerOauthUser } = useMutation(
+  REGISTER_OAUTH_USER
 )
+const id = ref(null)
 let form_error = ref(null)
 let action = ref(null)
-const id = ref(null)
-const email = ref("")
-let provider_id = ref(null)
-let provider_name = ref(null)
-// const { mutate: finish_oauth } = useMutation(ACCEPT_SUBMISSION_INVITE)
 let status = ref("loading")
-const { $v, user, saveUser } = useUserValidation({
-  // mutation: finish_oauth,
+const provider = ref(null)
+const { $v, user } = useUserValidation({
+  mutation: registerOauthUser,
   rules: (rules) => {
-    delete rules.email
+    delete rules.password.required
   },
   variables: (form) => {
     return { id, ...form }
@@ -116,6 +113,7 @@ onMounted(async () => {
     const response = await handleCallback()
     const data = response.data.loginOrcidCallback
     action.value = data.action
+    provider.value = data.provider
     Object.assign(user, data.user)
     status.value = 'loaded'
     console.log(data)
@@ -124,25 +122,30 @@ onMounted(async () => {
   }
 })
 
-async function handleSubmit() {
+async function handleRegister() {
+  console.log("handleRegister")
   form_error.value = ""
   try {
     status.value = "loading"
-    const user = await saveUser()
+    console.log(user, provider.value)
+    console.log(push)
+    const a = await registerOauthUser()
+    console.log("a", a)
+    // const user = await saveUser()
     //
-    if (action.value == 'register') {
-      await createIdentityProvider({
-        provider_name: provider_id.value,
-        provider_id: provider_name.value,
-        user_id: user.id,
-      })
-    }
+    // if (action.value == 'register') {
+    //   await createIdentityProvider({
+    //     provider_name: provider_id.value,
+    //     provider_id: provider_name.value,
+    //     user_id: user.id,
+    //   })
+    // }
     // authenticate user
     // await loginUser({ email: user.email, password: user.password })
-
-    push("/dashboard")
+    // push("/dashboard")
 
   } catch (e) {
+    status.value = "error"
     form_error.value = e.message
   }
 }

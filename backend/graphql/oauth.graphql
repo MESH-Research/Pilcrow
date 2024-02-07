@@ -1,5 +1,5 @@
 extend type Query {
-    identityProviders: [IdentityProvider]
+    identityProviders: [IdentityProviderButton]
 }
 
 extend type Mutation {
@@ -7,40 +7,48 @@ extend type Mutation {
 
     loginOrcidCallback(code: String!): LoginOrcidResponse
 
-    createProviderId(
-        provider_name: String!
-        provider_id: String!
-        user_id: String!
-    ): ExternalIdentityProvider
-        @create
+    registerOauthUser(
+        input: RegisterOauthUserInput
+    ): User
+        @validator(class: "RegisterOauthUserValidator")
+        @field(
+            resolver: "App\\GraphQL\\Mutations\\RegisterOauthUser@register"
+        )
 }
 
-type ExternalIdentityProvider {
-    id: ID!
-    provider_name: String!
-    provider_id: String!
-    user_id: String!
-}
-
-type IdentityProvider {
+""" Types """
+type IdentityProviderButton {
     name: String!
     label: String!
     icon: String
 }
-
 type LoginOrcidResponse {
     action: String
     user: ProviderUser
     provider: Provider
 }
-
 type ProviderUser {
     name: String
     username: String
     email: String
 }
-
 type Provider {
-    name: String!
-    id: String!
+    provider_name: String!
+    provider_id: String!
+    user_id: ID
+}
+
+""" Inputs """
+input RegisterOauthUserInput {
+    user: ProviderUserInput
+    provider: ProviderInput
+}
+input ProviderUserInput {
+    name: String
+    username: String!
+    email: String!
+}
+input ProviderInput {
+    provider_name: String!
+    provider_id: String!
 }

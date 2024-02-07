@@ -56,8 +56,8 @@ final readonly class LoginOrcidCallback
             'email' => null,
         ];
         $provider = [
-            'name' => 'orcid',
-            'id' => $socialiteUser->getId(),
+            'provider_name' => 'orcid',
+            'provider_id' => $socialiteUser->getId(),
         ];
         return [
             'action' => 'register',
@@ -78,8 +78,8 @@ final readonly class LoginOrcidCallback
             'email' => $socialiteUser->getEmail(),
         ];
         $provider = [
-            'name' => 'orcid',
-            'id' => $socialiteUser->getId(),
+            'provider_name' => 'orcid',
+            'provider_id' => $socialiteUser->getId(),
         ];
         return [
             'action' => 'register',

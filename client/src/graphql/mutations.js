@@ -896,26 +896,24 @@ export const LOGIN_ORCID_CALLBACK = gql`
         email
       }
       provider {
-        name
-        id
+        provider_name
+        provider_id
       }
     }
   }
 `
 
-export const CREATE_EXTERNAL_IDENTITY_PROVIDER_ID = gql`
-  mutation CreateExternalIdentityProviderId(
-    $provider_name: String!
-    $provider_id: String!
-    $user_id: ID!
+export const REGISTER_OAUTH_USER = gql`
+  mutation RegisterOauthUser(
+    $input: RegisterOauthUserInput
   ) {
-    createProviderId(
-      provider_name: $provider_name
-      provider_id: $provider_id
-      user_id: $user_id
+    registerOauthUser(
+      input: $input
     ) {
       id
-      user_id
+      name
+      username
+      email
     }
   }
 `
