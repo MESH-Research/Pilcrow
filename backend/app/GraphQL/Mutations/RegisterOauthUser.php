@@ -18,16 +18,16 @@ final readonly class RegisterOauthUser
     public function register(null $_, array $args)
     {
         try {
-
             $user = User::create([
-                'name' => $args['user']['name'],
-                'email' => $args['user']['email'],
+                'name' => $args['input']['user']['name'],
+                'username' => $args['input']['user']['username'],
+                'email' => $args['input']['user']['email'],
                 'password' => ''
             ]);
 
             ExternalIdentityProvider::create([
-                'provider_name' => $args['provider']['name'],
-                'provider_id' => $args['provider']['id'],
+                'provider_name' => $args['input']['provider']['provider_name'],
+                'provider_id' => $args['input']['provider']['provider_id'],
                 'user_id' => $user->id,
             ]);
 

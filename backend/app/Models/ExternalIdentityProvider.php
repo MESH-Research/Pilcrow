@@ -12,6 +12,17 @@ class ExternalIdentityProvider extends Model
     use HasFactory;
 
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'provider_id',
+        'provider_name',
+        'user_id'
+    ];
+
+    /**
      * User that this external identity provider belongs to
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

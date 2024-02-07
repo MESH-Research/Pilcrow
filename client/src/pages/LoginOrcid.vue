@@ -42,11 +42,20 @@
               outlined
               type="email"
               :label="$t('auth.fields.email')"
-              bottom-slots
+              :error="$v.email.$error"
               data-cy="email_field"
-            />
+              bottom-slots
+            >
+              <template #error>
+                <error-field-renderer
+                  :errors="$v.email.$errors"
+                  prefix="auth.validation.email"
+                />
+              </template>
+            </q-input>
             <error-banner v-if="form_error">
-              {{ $t(`auth.failures.${form_error}`) }}
+              {{ form_error }}
+              <!-- {{ $t(`auth.failures.${form_error}`) }} -->
             </error-banner>
           </fieldset>
 
@@ -74,7 +83,7 @@
 
 <script setup>
 import { ref, onMounted } from "vue"
-import { useRoute, useRouter } from "vue-router"
+import { useRoute } from "vue-router"
 import { useMutation } from "@vue/apollo-composable"
 import { useUserValidation  } from "src/use/userValidation"
 import {
@@ -84,15 +93,16 @@ import {
 import ErrorBanner from "src/components/molecules/ErrorBanner.vue"
 import ErrorFieldRenderer from "src/components/molecules/ErrorFieldRenderer.vue"
 
-const { push } = useRouter()
 const route = useRoute()
 const code = route.query.code
 const { mutate: handleCallback } = useMutation(LOGIN_ORCID_CALLBACK, {
   variables: { code: code },
 })
 const { mutate: registerOauthUser } = useMutation(
-  REGISTER_OAUTH_USER
+  REGISTER_OAUTH_USER, {
+  }
 )
+
 const id = ref(null)
 let form_error = ref(null)
 let action = ref(null)
@@ -123,13 +133,17 @@ onMounted(async () => {
 })
 
 async function handleRegister() {
-  console.log("handleRegister")
+  console.log("handleRegister", $v.value.name.$model, $v.value.username.$model, $v.value.email.$model, provider.value.provider_id)
   form_error.value = ""
   try {
-    status.value = "loading"
-    console.log(user, provider.value)
-    console.log(push)
-    const a = await registerOauthUser()
+    // status.value = "loading"
+    const a = await registerOauthUser({
+      user_name: $v.value.name.$model,
+      user_username: $v.value.username.$model,
+      user_email: $v.value.email.$model,
+      provider_name: provider.value.provider_name,
+      provider_id: provider.value.provider_id
+    })
     console.log("a", a)
     // const user = await saveUser()
     //
@@ -142,11 +156,11 @@ async function handleRegister() {
     // }
     // authenticate user
     // await loginUser({ email: user.email, password: user.password })
-    // push("/dashboard")
 
   } catch (e) {
-    status.value = "error"
+    // status.value = "error"
     form_error.value = e.message
+    console.error(e)
   }
 }
 </script>

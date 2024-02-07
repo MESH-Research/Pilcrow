@@ -130,13 +130,11 @@ import { useLogin } from "src/use/user"
 import { useRouter } from "vue-router"
 
 const error = ref("")
-
 const { loading: loading_providers, result } = useQuery(GET_IDENTITY_PROVIDERS)
 const { mutate: loginOrcid } = useMutation(LOGIN_ORCID)
 const providers = computed(() => {
   return result.value?.identityProviders ?? []
 })
-
 
 const { loginUser, loading, v$, redirectUrl } = useLogin()
 const { push } = useRouter()
