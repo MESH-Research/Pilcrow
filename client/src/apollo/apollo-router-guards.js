@@ -32,7 +32,7 @@ export async function beforeEachRequiresAuth(apolloClient, to, _, next) {
       .then(({ data: { currentUser } }) => currentUser)
     if (!user) {
       SessionStorage.set("loginRedirect", to.fullPath)
-      next("/login")
+      next("/aslkjdjflk;anlknoi")
     } else {
       next()
     }

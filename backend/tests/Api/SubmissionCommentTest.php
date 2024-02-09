@@ -238,7 +238,7 @@ class SubmissionCommentTest extends ApiTestCase
                     id: $submission_id
                     inline_comments: {
                         create: [{
-                            content: "Hello World"
+                            content: "Test Content"
                             style_criteria: [' . $criteria_1->id . ', ' . $criteria_2->id . ']
                             ' . $fragment . '
                             from: 100
@@ -265,7 +265,7 @@ class SubmissionCommentTest extends ApiTestCase
             'updateSubmission' => [
                 'inline_comments' => [
                     [
-                        'content' => 'Hello World',
+                        'content' => 'Test Content',
                         'style_criteria' => [
                             '0' => [
                                 'name' => $criteria_1->name,
@@ -521,7 +521,7 @@ class SubmissionCommentTest extends ApiTestCase
                         update: [
                             {
                                 id: $commentId
-                                content: "Hello World Updated"
+                                content: "Test Content"
                                 style_criteria: [' . $criteria_1->id . ', ' . $criteria_2->id . ']
                                 from: 120
                                 to: 130
@@ -553,7 +553,7 @@ class SubmissionCommentTest extends ApiTestCase
                 'inline_comments' => [
                     [
                         'id' => (string)$inline_comment->id,
-                        'content' => 'Hello World Updated',
+                        'content' => 'Test Content Updated',
                         'style_criteria' => [
                             '0' => [
                                 'name' => $criteria_1->name,
@@ -585,7 +585,7 @@ class SubmissionCommentTest extends ApiTestCase
                 updateSubmission(
                     input: {
                         id: $submission_id,
-                        inline_comments: {create: [{content:"Hello World", reply_to_id: null, parent_id: null, from: 120, to: 130 }]}
+                        inline_comments: {create: [{content:"Test Content", reply_to_id: null, parent_id: null, from: 120, to: 130 }]}
                     }
                 ) {
                     id
@@ -616,7 +616,7 @@ class SubmissionCommentTest extends ApiTestCase
                 updateSubmission(
                     input: {
                         id: $submission_id,
-                        inline_comments: {create: [{content:"Hello World", reply_to_id: null, parent_id: null, from: 120, to: 130 }]}
+                        inline_comments: {create: [{content:"Test Content", reply_to_id: null, parent_id: null, from: 120, to: 130 }]}
                     }
                 ) {
                     id
@@ -636,7 +636,7 @@ class SubmissionCommentTest extends ApiTestCase
                 'id' => (string)$submission->id,
                 'inline_comments' => [
                     [
-                        'content' => 'Hello World',
+                        'content' => 'Test Content',
                         'from' => 120,
                         'to' => 130,
                     ],
@@ -658,7 +658,7 @@ class SubmissionCommentTest extends ApiTestCase
                 updateSubmission(
                     input: {
                         id: $submission_id,
-                        overall_comments: {create: [{content:"Hello World", reply_to_id: null, parent_id: null }]}
+                        overall_comments: {create: [{content:"Test Content", reply_to_id: null, parent_id: null }]}
                     }
                 ) {
                     id
@@ -689,7 +689,7 @@ class SubmissionCommentTest extends ApiTestCase
                 updateSubmission(
                     input: {
                         id: $submission_id,
-                        overall_comments: {create: [{content:"Hello World", reply_to_id: null, parent_id: null }]}
+                        overall_comments: {create: [{content:"Test Content", reply_to_id: null, parent_id: null }]}
                     }
                 ) {
                     id
@@ -707,7 +707,7 @@ class SubmissionCommentTest extends ApiTestCase
                 'id' => (string)$submission->id,
                 'overall_comments' => [
                     [
-                        'content' => 'Hello World',
+                        'content' => 'Test Content',
                     ],
                 ],
             ],

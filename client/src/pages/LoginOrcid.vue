@@ -70,12 +70,6 @@
           </q-card-actions>
         </q-form>
       </div>
-      <div v-else-if="action == 'auth'">
-        <p>Time to auth</p>
-      </div>
-      <div v-else>
-        <p>Whoops</p>
-      </div>
     </section>
   </q-page>
 </template>
@@ -84,7 +78,8 @@
 import { ref, onMounted } from "vue"
 import { useRoute, useRouter } from "vue-router"
 import { useMutation } from "@vue/apollo-composable"
-import { useUserValidation  } from "src/use/userValidation"
+import { useUserValidation } from "src/use/userValidation"
+import { CURRENT_USER } from "src/graphql/queries"
 import {
   LOGIN_ORCID_CALLBACK,
   REGISTER_OAUTH_USER,
@@ -98,10 +93,7 @@ const code = route.query.code
 const { mutate: handleCallback } = useMutation(LOGIN_ORCID_CALLBACK, {
   variables: { code: code },
 })
-const { mutate: registerOauthUser } = useMutation(
-  REGISTER_OAUTH_USER, {
-  }
-)
+const { mutate: registerOauthUser } = useMutation(REGISTER_OAUTH_USER)
 
 const id = ref(null)
 let form_error = ref(null)
@@ -120,30 +112,40 @@ const { $v, user } = useUserValidation({
 
 onMounted(async () => {
   try {
-    const response = await handleCallback()
+    const response = await handleCallback({
+      refetchQueries: [{ query: CURRENT_USER }],
+    })
     const data = response.data.loginOrcidCallback
     action.value = data.action
     provider.value = data.provider
     Object.assign(user, data.user)
-    status.value = 'loaded'
+    status.value = "loaded"
+    if (action.value === "auth") {
+      console.log("Redirect")
+      push({ path: "/dashboard/" })
+    }
   } catch (error) {
     console.error(error)
   }
 })
 
 async function handleRegister() {
-  form_error.value = ""
   try {
+    console.log("Hello World")
+    form_error.value = ""
     status.value = "loading"
-    await registerOauthUser({
+    const a = await registerOauthUser({
       user_name: $v.value.name.$model,
       user_username: $v.value.username.$model,
       user_email: $v.value.email.$model,
       provider_name: provider.value.provider_name,
-      provider_id: provider.value.provider_id
+      provider_id: provider.value.provider_id,
+    }, {
+      refetchQueries: [{ query: CURRENT_USER }],
     })
-    push('/dashboard')
-
+    console.log("a", a)
+    push({ path: "/dashboard/" })
+    console.log("b")
   } catch (e) {
     status.value = "error"
     form_error.value = e.message

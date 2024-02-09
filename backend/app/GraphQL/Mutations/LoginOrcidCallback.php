@@ -100,7 +100,7 @@ final readonly class LoginOrcidCallback
             'provider_id' => $socialiteUser->getId(),
             'user_id' => $user->id,
         ]);
-        Auth::login($user);
+        $user = Auth::guard('web')->loginUsingId($user);
         return [
             'action' => 'auth',
             'user' => null,
@@ -114,12 +114,12 @@ final readonly class LoginOrcidCallback
      */
     private function handleMatchedProviderId(ExternalIdentityProvider $provider): array
     {
-        $user = User::find($provider->user_id)->first();
-        Auth::login($user);
+        $user = $provider->user;
+        Auth::guard('web')->login($user);
         return [
             'action' => 'auth',
             'user' => null,
-            'provider' => null
+            'provider' => null,
         ];
     }
 }

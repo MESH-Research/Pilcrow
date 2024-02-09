@@ -198,9 +198,9 @@ describe("Submission Details", () => {
     cy.visit("submission/100/details")
     cy.interceptGQLOperation("UpdateSubmissionTitle")
     cy.dataCy("submission_title").click()
-    cy.dataCy("submission_title_input").type('Hello World{enter}');
+    cy.dataCy("submission_title_input").type('Test Input{enter}');
     cy.wait("@UpdateSubmissionTitle")
-    cy.dataCy('submission_title').contains("Hello World")
+    cy.dataCy('submission_title').contains("Test Input")
     cy.injectAxe()
     cy.checkA11y(null, null, a11yLogViolations)
   })
