@@ -5,6 +5,11 @@
         <q-spinner color="primary" size="2em" />
         <strong class="text-h3">{{ $t("loading") }}</strong>
       </div>
+      <div v-if="status == 'error'" class="column flex-center">
+        <error-banner>
+          {{ errorMessage }}
+        </error-banner>
+      </div>
       <div v-else-if="action == 'register'" class="column flex-center">
         <q-form style="width: 400px" @submit="handleRegister">
           <h1>{{ $t("auth.oauth.register.title") }}</h1>
@@ -99,6 +104,7 @@ const id = ref(null)
 let form_error = ref(null)
 let action = ref(null)
 let status = ref("loading")
+let errorMessage = ref(null)
 const provider = ref(null)
 const { $v, user } = useUserValidation({
   mutation: registerOauthUser,
@@ -110,9 +116,7 @@ const { $v, user } = useUserValidation({
   },
 })
 
-
 function handleRedirect() {
-
   const { result, error, refetch } = useQuery(CURRENT_USER, {
     fetchPolicy: "network-only",
   })
@@ -127,6 +131,8 @@ function handleRedirect() {
   })
   watch(error, (errorData) => {
     if (errorData) {
+      status.value = "error"
+      errorMessage.value = errorData
       console.error("Error in redirect", errorData)
       clearInterval(pollInterval)
     }

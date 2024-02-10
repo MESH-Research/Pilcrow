@@ -356,7 +356,7 @@
     },
     "type": {
       "submissions": {
-        "no_data": "There are no submissions for you."
+        "no_data": "You have not submitted any submissions."
       },
       "reviews": {
         "no_data": "There are no reviews for you."
