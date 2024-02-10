@@ -5,7 +5,6 @@ namespace App\GraphQL\Mutations;
 
 use App\Models\ExternalIdentityProvider;
 use App\Models\User;
-use Exception;
 use GraphQL\Error\Error;
 use Illuminate\Support\Facades\Auth;
 

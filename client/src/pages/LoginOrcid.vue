@@ -75,9 +75,9 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue"
+import { ref, onMounted, watch } from "vue"
 import { useRoute, useRouter } from "vue-router"
-import { useMutation } from "@vue/apollo-composable"
+import { useMutation, useQuery } from "@vue/apollo-composable"
 import { useUserValidation } from "src/use/userValidation"
 import { CURRENT_USER } from "src/graphql/queries"
 import {
@@ -110,21 +110,45 @@ const { $v, user } = useUserValidation({
   },
 })
 
+
+function handleRedirect() {
+
+  const { result, error, refetch } = useQuery(CURRENT_USER, {
+    fetchPolicy: "network-only",
+  })
+  const pollInterval = setInterval(() => {
+    refetch()
+  }, 500)
+
+  watch(result, (resultData) => {
+    console.log("Polled Data", resultData)
+    clearInterval(pollInterval)
+    push({ path: "/dashboard/" })
+  })
+  watch(error, (errorData) => {
+    if (errorData) {
+      console.error("Error in redirect", errorData)
+      clearInterval(pollInterval)
+    }
+  })
+}
+
 onMounted(async () => {
   try {
-    const response = await handleCallback({
-      refetchQueries: [{ query: CURRENT_USER }],
-    })
-    const data = response.data.loginOrcidCallback
-    action.value = data.action
-    provider.value = data.provider
-    Object.assign(user, data.user)
-    status.value = "loaded"
-    if (action.value === "auth") {
-      console.log("Redirect")
-      push({ path: "/dashboard/" })
-    }
+    await handleCallback()
+      .then((response) => {
+        const data = response.data.loginOrcidCallback
+        action.value = data.action
+        provider.value = data.provider
+        Object.assign(user, data.user)
+      })
+      .then(handleRedirect())
+      .catch((error) => {
+        console.log("Error in callback catch")
+        console.error(error)
+      })
   } catch (error) {
+    console.log("Error in try catch")
     console.error(error)
   }
 })
@@ -140,8 +164,6 @@ async function handleRegister() {
       user_email: $v.value.email.$model,
       provider_name: provider.value.provider_name,
       provider_id: provider.value.provider_id,
-    }, {
-      refetchQueries: [{ query: CURRENT_USER }],
     })
     console.log("a", a)
     push({ path: "/dashboard/" })
