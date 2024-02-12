@@ -1,14 +1,16 @@
 <template>
   <q-page>
     <section class="q-pa-lg">
+      <div v-if="errorMessage" class="column flex-center">
+        <div style="max-width: 400px">
+          <error-banner>
+            {{ errorMessage }}
+          </error-banner>
+        </div>
+      </div>
       <div v-if="status == 'loading'" class="column flex-center">
         <q-spinner color="primary" size="2em" />
         <strong class="text-h3">{{ $t("loading") }}</strong>
-      </div>
-      <div v-if="status == 'error'" class="column flex-center">
-        <error-banner>
-          {{ errorMessage }}
-        </error-banner>
       </div>
       <div v-else-if="action == 'register'" class="column flex-center">
         <q-form style="width: 400px" @submit="handleRegister">
@@ -115,17 +117,16 @@ const { $v, user } = useUserValidation({
     return { id, ...form }
   },
 })
+const { result, error, refetch } = useQuery(CURRENT_USER, {
+  fetchPolicy: "network-only",
+})
 
 function handleRedirect() {
-  const { result, error, refetch } = useQuery(CURRENT_USER, {
-    fetchPolicy: "network-only",
-  })
   const pollInterval = setInterval(() => {
     refetch()
   }, 500)
 
-  watch(result, (resultData) => {
-    console.log("Polled Data", resultData)
+  watch(result, () => {
     clearInterval(pollInterval)
     push({ path: "/dashboard/" })
   })
@@ -138,6 +139,11 @@ function handleRedirect() {
     }
   })
 }
+function logError(error, message = "") {
+  status.value = "error"
+  errorMessage.value = error
+  console.error(message, error)
+}
 
 onMounted(async () => {
   try {
@@ -147,37 +153,41 @@ onMounted(async () => {
         action.value = data.action
         provider.value = data.provider
         Object.assign(user, data.user)
+        status.value = "loaded"
       })
-      .then(handleRedirect())
+      .then((e) => {
+        logError(e)
+        if (action.value == "auth") {
+          handleRedirect()
+        }
+      })
       .catch((error) => {
-        console.log("Error in callback catch")
-        console.error(error)
+        logError(error, "Error in callback catch")
       })
   } catch (error) {
-    console.log("Error in try catch")
-    console.error(error)
+    logError(error, "Error in callback try catch")
   }
 })
 
 async function handleRegister() {
   try {
-    console.log("Hello World")
     form_error.value = ""
     status.value = "loading"
-    const a = await registerOauthUser({
+    await registerOauthUser({
       user_name: $v.value.name.$model,
       user_username: $v.value.username.$model,
       user_email: $v.value.email.$model,
       provider_name: provider.value.provider_name,
       provider_id: provider.value.provider_id,
     })
-    console.log("a", a)
-    push({ path: "/dashboard/" })
-    console.log("b")
+      .then(handleRedirect())
+      .catch((error) => {
+        form_error.value = error.message
+        logError(error, "Error in register catch")
+      })
   } catch (e) {
-    status.value = "error"
     form_error.value = e.message
-    console.error(e)
+    logError(e, "Error in register try catch")
   }
 }
 </script>
