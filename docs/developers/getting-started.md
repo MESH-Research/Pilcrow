@@ -94,8 +94,45 @@ $ lando artisan migrate
 # Use this command to update your existing database with any new migrations.
 ```
 
+## External Identity Providers (Optional)
 
+Pilcrow supports the registration and authentication of user accounts with external identity providers via `SocialiteProviders`.  Keep in mind, you will need to register redirect URLs with any providers you intend to allow users to use on your instance of Pilcrow.
 
+### Enable Provider Buttons
+
+To have login buttons appear on the `/login` page for certain providers, add JSON objects representing those providers to the `IDENTITY_PROVIDERS` array in `/backend/.env`. Each object should have the following attributes:
+
+* `name` - The unique identifier of the provider not displayed on the client
+* `label` - The label of the provider displayed on the client
+* `icon` (optional) - The Font Awesome icon of the provider displayed on the client <https://fontawesome.com/icons>
+
+Example: `{"name":"","label":"","icon":""}`
+
+An instance of Pilcrow that supports Google and ORCID external identity authentication/registration would have an `IDENTITY_PROVIDERS` variable that looks like this:
+
+```php
+IDENTITY_PROVIDERS='[{"name":"orcid","label":"ORCID","icon":"orcid"},{"name":"google","label":"Google","icon":"google"}]'
+```
+
+### Register Redirect URLs
+
+Register a "redirect URL" with the provider(s) you intend to allow users to use on your instance of Pilcrow. Once you have a redirect URL registered with that provider, update `/backend/.env` with information pertaining to that provider.
+
+* `CLIENT_ID`
+* `CLIENT_SECRET`
+* `REDIRECT_URL`
+* `ENVIRONMENT`
+
+#### ORCID
+
+Documentation from ORCID for registering a redirect URL: <https://info.orcid.org/documentation/api-tutorials/api-tutorial-get-and-authenticated-orcid-id/#h-register-your-redirect-urls>
+
+```php
+ORCID_CLIENT_ID=$YourOrcidClientID
+ORCID_CLIENT_SECRET=$YourOrcidClientSecret
+ORCID_REDIRECT_URL=$YourOrcidRedirectURL
+ORCID_ENVIRONMENT="production"
+```
 
 ## WSL Developer Notes {#wsl-notes}
 
