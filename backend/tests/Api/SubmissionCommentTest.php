@@ -553,7 +553,7 @@ class SubmissionCommentTest extends ApiTestCase
                 'inline_comments' => [
                     [
                         'id' => (string)$inline_comment->id,
-                        'content' => 'Test Content Updated',
+                        'content' => 'Test Content',
                         'style_criteria' => [
                             '0' => [
                                 'name' => $criteria_1->name,
