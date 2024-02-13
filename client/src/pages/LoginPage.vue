@@ -1,6 +1,6 @@
 <template>
   <q-page class="flex-center flex q-pa-md" data-cy="vueLogin">
-    <div v-if="loading_providers">
+    <div v-if="loadingProviders">
       <q-spinner color="primary" />
     </div>
     <section v-else style="width: 400px" class="q-px-lg q-mx-lg">
@@ -130,10 +130,10 @@ import { useLogin } from "src/use/user"
 import { useRouter } from "vue-router"
 
 const error = ref("")
-const { loading: loading_providers, result } = useQuery(GET_IDENTITY_PROVIDERS)
+const { loading: loadingProviders, result: resultProviders } = useQuery(GET_IDENTITY_PROVIDERS)
 const { mutate: loginOrcid } = useMutation(LOGIN_ORCID)
 const providers = computed(() => {
-  return result.value?.identityProviders ?? []
+  return resultProviders.value?.identityProviders ?? []
 })
 
 const { loginUser, loading, v$, redirectUrl } = useLogin()

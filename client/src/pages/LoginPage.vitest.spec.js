@@ -1,15 +1,16 @@
-import {
-  installQuasarPlugin,
-} from "@quasar/quasar-app-extension-testing-unit-vitest"
+import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
 import { mount, flushPromises } from "@vue/test-utils"
 import { installApolloClient } from "test/vitest/utils"
 import { SessionStorage } from "quasar"
-import { LOGIN } from "src/graphql/mutations"
-import { beforeEach, describe, expect, it, test, vi } from "vitest"
+import { LOGIN, LOGIN_ORCID } from "src/graphql/mutations"
+import { GET_IDENTITY_PROVIDERS } from "src/graphql/queries"
+import { afterEach, beforeEach, describe, expect, it, test, vi } from "vitest"
 import LoginPage from "./LoginPage.vue"
 
-const mockSessionItem = vi.spyOn(SessionStorage, 'getItem').mockImplementation(() => vi.fn())
-vi.spyOn(SessionStorage, 'remove').mockImplementation(() => vi.fn())
+const mockSessionItem = vi
+  .spyOn(SessionStorage, "getItem")
+  .mockImplementation(() => vi.fn())
+vi.spyOn(SessionStorage, "remove").mockImplementation(() => vi.fn())
 
 vi.mock("vue-router", () => ({
   useRouter: () => ({
@@ -21,9 +22,32 @@ installQuasarPlugin()
 const mockClient = installApolloClient()
 
 describe("LoginPage", () => {
+  const loginOrcid = vi.fn()
+  const identityProviders = vi.fn()
+  mockClient.setRequestHandler(GET_IDENTITY_PROVIDERS, identityProviders)
+  mockClient.setRequestHandler(LOGIN_ORCID, loginOrcid)
+  const providersData = {
+    data: {
+      identityProviders: [
+        {
+          name: "orcid",
+          label: "ORCID",
+          icon: "orcid",
+          __typename: "IdentityProviderButton",
+        },
+      ],
+    },
+  }
+
   beforeEach(() => {
     vi.resetAllMocks()
+    identityProviders.mockResolvedValue(providersData)
   })
+
+  afterEach(() => {
+    identityProviders.mockClear()
+  })
+
   const wrapperFactory = () =>
     mount(LoginPage, {
       global: {
@@ -31,14 +55,13 @@ describe("LoginPage", () => {
       },
     })
 
-
   it("mounts without errors", () => {
     const wrapper = wrapperFactory()
     expect(wrapper).toBeTruthy()
   })
 
   test("login action attempts mutation", async () => {
-    const wrapper = wrapperFactory()
+    const wrapper = await wrapperFactory()
     const handler = mockClient.getRequestHandler(LOGIN)
     handler.mockResolvedValue({
       data: { login: { id: 1 } },
