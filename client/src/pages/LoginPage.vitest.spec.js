@@ -2,9 +2,8 @@ import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-v
 import { mount, flushPromises } from "@vue/test-utils"
 import { installApolloClient } from "test/vitest/utils"
 import { SessionStorage } from "quasar"
-import { LOGIN, LOGIN_ORCID } from "src/graphql/mutations"
-import { GET_IDENTITY_PROVIDERS } from "src/graphql/queries"
-import { afterEach, beforeEach, describe, expect, it, test, vi } from "vitest"
+import { LOGIN } from "src/graphql/mutations"
+import { beforeEach, describe, expect, it, test, vi } from "vitest"
 import LoginPage from "./LoginPage.vue"
 
 const mockSessionItem = vi
@@ -22,30 +21,9 @@ installQuasarPlugin()
 const mockClient = installApolloClient()
 
 describe("LoginPage", () => {
-  const loginOrcid = vi.fn()
-  const identityProviders = vi.fn()
-  mockClient.setRequestHandler(GET_IDENTITY_PROVIDERS, identityProviders)
-  mockClient.setRequestHandler(LOGIN_ORCID, loginOrcid)
-  const providersData = {
-    data: {
-      identityProviders: [
-        {
-          name: "orcid",
-          label: "ORCID",
-          icon: "orcid",
-          __typename: "IdentityProviderButton",
-        },
-      ],
-    },
-  }
 
   beforeEach(() => {
     vi.resetAllMocks()
-    identityProviders.mockResolvedValue(providersData)
-  })
-
-  afterEach(() => {
-    identityProviders.mockClear()
   })
 
   const wrapperFactory = () =>

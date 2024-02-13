@@ -1,9 +1,6 @@
 <template>
   <q-page class="flex-center flex q-pa-md" data-cy="vueLogin">
-    <div v-if="loadingProviders">
-      <q-spinner color="primary" />
-    </div>
-    <section v-else style="width: 400px" class="q-px-lg q-mx-lg">
+    <section style="width: 400px" class="q-px-lg q-mx-lg">
       <q-card square class="dark-mode-only-card">
         <q-form @submit="handleSubmit()">
           <q-card-section class="bg-primary">
@@ -130,7 +127,7 @@ import { useLogin } from "src/use/user"
 import { useRouter } from "vue-router"
 
 const error = ref("")
-const { loading: loadingProviders, result: resultProviders } = useQuery(GET_IDENTITY_PROVIDERS)
+const { result: resultProviders } = useQuery(GET_IDENTITY_PROVIDERS)
 const { mutate: loginOrcid } = useMutation(LOGIN_ORCID)
 const providers = computed(() => {
   return resultProviders.value?.identityProviders ?? []
