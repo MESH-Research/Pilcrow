@@ -127,8 +127,9 @@ function handleRedirect() {
   }, 500)
 
   watch(status, () => {
-    if (status.value == "error")
-    clearInterval(pollInterval)
+    if (status.value == "error") {
+      clearInterval(pollInterval)
+    }
   })
   watch(result, () => {
     clearInterval(pollInterval)
@@ -175,6 +176,7 @@ onMounted(async () => {
 
 async function handleRegister() {
   try {
+    errorMessage.value = ""
     form_error.value = ""
     status.value = "loading"
     await registerOauthUser({
