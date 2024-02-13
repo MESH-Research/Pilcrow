@@ -126,6 +126,10 @@ function handleRedirect() {
     refetch()
   }, 500)
 
+  watch(status, () => {
+    if (status.value == "error")
+    clearInterval(pollInterval)
+  })
   watch(result, () => {
     clearInterval(pollInterval)
     push({ path: "/dashboard/" })
