@@ -1,13 +1,6 @@
 <template>
   <q-page>
     <section class="q-pa-lg">
-      <div v-if="errorMessage" class="column flex-center">
-        <div style="max-width: 400px">
-          <error-banner>
-            {{ errorMessage }}
-          </error-banner>
-        </div>
-      </div>
       <div v-if="status == 'loading'" class="column flex-center">
         <q-spinner color="primary" size="2em" />
         <strong class="text-h3">{{ $t("loading") }}</strong>
@@ -24,7 +17,14 @@
               autocomplete="name"
               data-cy="name_field"
               bottom-slots
-            />
+            >
+              <template #error>
+                <error-field-renderer
+                  :errors="$v.name.$errors"
+                  prefix="auth.validation.name"
+                />
+              </template>
+            </q-input>
             <q-input
               ref="usernameInput"
               v-model.trim="$v.username.$model"
@@ -58,6 +58,27 @@
                   :errors="$v.email.$errors"
                   prefix="auth.validation.email"
                 />
+
+                <i18n-t
+                  v-if="hasErrorKey('email', 'EMAIL_IN_USE')"
+                  keypath="auth.validation.email.EMAIL_IN_USE_HINT"
+                  tag="div"
+                  style="line-height: 1.3"
+                >
+                  <template #loginAction>
+                    <router-link to="/login">
+                      {{ $t("auth.login_help") }}
+                    </router-link>
+                  </template>
+                  <template #passwordAction>
+                    <router-link to="/reset-password">
+                      {{ $t("auth.password_help") }}
+                    </router-link>
+                  </template>
+                  <template #break>
+                    <br />
+                  </template>
+                </i18n-t>
               </template>
             </q-input>
             <error-banner v-if="form_error">
@@ -73,9 +94,14 @@
               class="full-width text-white"
               :label="$t('auth.oauth.submit.btn_label')"
               type="submit"
+              :disable="status == 'submitting'"
             />
           </q-card-actions>
         </q-form>
+      </div>
+      <div v-if="status == 'submitting'" class="column flex-center">
+        <q-spinner color="primary" size="2em" />
+        <strong class="text-h3">{{ $t("loading") }}</strong>
       </div>
     </section>
   </q-page>
@@ -86,6 +112,7 @@ import { ref, onMounted, watch } from "vue"
 import { useRoute, useRouter } from "vue-router"
 import { useMutation, useQuery } from "@vue/apollo-composable"
 import { useUserValidation } from "src/use/userValidation"
+import { useHasErrorKey } from "src/use/validationHelpers"
 import { CURRENT_USER } from "src/graphql/queries"
 import {
   LOGIN_ORCID_CALLBACK,
@@ -106,7 +133,6 @@ const id = ref(null)
 let form_error = ref(null)
 let action = ref(null)
 let status = ref("loading")
-let errorMessage = ref(null)
 const provider = ref(null)
 const { $v, user } = useUserValidation({
   mutation: registerOauthUser,
@@ -117,6 +143,7 @@ const { $v, user } = useUserValidation({
     return { id, ...form }
   },
 })
+const hasErrorKey = useHasErrorKey($v)
 const { result, error, refetch } = useQuery(CURRENT_USER, {
   fetchPolicy: "network-only",
 })
@@ -124,7 +151,7 @@ const { result, error, refetch } = useQuery(CURRENT_USER, {
 function handleRedirect() {
   const pollInterval = setInterval(() => {
     refetch()
-  }, 500)
+  }, 1000)
 
   watch(status, () => {
     if (status.value == "error") {
@@ -137,17 +164,10 @@ function handleRedirect() {
   })
   watch(error, (errorData) => {
     if (errorData) {
-      status.value = "error"
-      errorMessage.value = errorData
-      console.error("Error in redirect", errorData)
+      logError(errorData, "Error in redirect")
       clearInterval(pollInterval)
     }
   })
-}
-function logError(error, message = "") {
-  status.value = "error"
-  errorMessage.value = error
-  console.error(message, error)
 }
 
 onMounted(async () => {
@@ -160,8 +180,7 @@ onMounted(async () => {
         Object.assign(user, data.user)
         status.value = "loaded"
       })
-      .then((e) => {
-        logError(e)
+      .then(() => {
         if (action.value == "auth") {
           handleRedirect()
         }
@@ -176,9 +195,12 @@ onMounted(async () => {
 
 async function handleRegister() {
   try {
-    errorMessage.value = ""
+    $v.value.$touch()
+    if ($v.value.$invalid || $v.value.$error) {
+      throw Error("FORM_VALIDATION")
+    }
+    status.value = "submitting"
     form_error.value = ""
-    status.value = "loading"
     await registerOauthUser({
       user_name: $v.value.name.$model,
       user_username: $v.value.username.$model,
@@ -194,6 +216,15 @@ async function handleRegister() {
   } catch (e) {
     form_error.value = e.message
     logError(e, "Error in register try catch")
+  }
+}
+
+function logError(error, message = "") {
+  status.value = "error"
+  console.error(message)
+  form_error.value = error.message
+  if (error) {
+    console.error(error)
   }
 }
 </script>

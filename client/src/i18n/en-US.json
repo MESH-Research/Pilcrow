@@ -80,6 +80,9 @@
       "show_password": "Show password"
     },
     "validation": {
+      "name": {
+        "NAME_LENGTH_EXCEEDED": "Name is too long."
+      },
       "username": {
         "required": "Username is required.",
         "USERNAME_IN_USE": "Sorry, this username is not available."
