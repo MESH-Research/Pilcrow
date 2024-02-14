@@ -3,6 +3,7 @@ import { mount, flushPromises } from "@vue/test-utils"
 import { installApolloClient } from "test/vitest/utils"
 import { SessionStorage } from "quasar"
 import { LOGIN } from "src/graphql/mutations"
+import { GET_IDENTITY_PROVIDERS } from "src/graphql/queries"
 import { beforeEach, describe, expect, it, test, vi } from "vitest"
 import LoginPage from "./LoginPage.vue"
 
@@ -22,8 +23,24 @@ const mockClient = installApolloClient()
 
 describe("LoginPage", () => {
 
+  const identityProviders = vi.fn()
+  mockClient.setRequestHandler(GET_IDENTITY_PROVIDERS, identityProviders)
+  const providersData = {
+    data: {
+      identityProviders: [
+        {
+          name: "orcid",
+          label: "ORCID",
+          icon: "orcid",
+          __typename: "IdentityProviderButton",
+        },
+      ],
+    },
+  }
+
   beforeEach(() => {
     vi.resetAllMocks()
+    identityProviders.mockResolvedValue(providersData)
   })
 
   const wrapperFactory = () =>
@@ -39,14 +56,15 @@ describe("LoginPage", () => {
   })
 
   test("login action attempts mutation", async () => {
-    const wrapper = await wrapperFactory()
+    const wrapper = wrapperFactory()
     const handler = mockClient.getRequestHandler(LOGIN)
     handler.mockResolvedValue({
       data: { login: { id: 1 } },
     })
+    await flushPromises()
     wrapper.findComponent({ ref: "username" }).setValue("user@example.com")
     wrapper.findComponent({ ref: "password" }).setValue("password")
-    await wrapper.findComponent({ ref: "submitBtn" }).trigger("submit")
+    wrapper.findComponent({ ref: "submitBtn" }).trigger("submit")
     await flushPromises()
 
     expect(handler).toHaveBeenCalled()
@@ -61,11 +79,11 @@ describe("LoginPage", () => {
     })
     mockSessionItem.mockReturnValue("/test-result")
     const wrapper = wrapperFactory()
-
+    await flushPromises()
     wrapper.findComponent({ ref: "username" }).setValue("user@example.com")
     wrapper.findComponent({ ref: "password" }).setValue("password")
 
-    await wrapper.findComponent({ ref: "submitBtn" }).trigger("submit")
+    wrapper.findComponent({ ref: "submitBtn" }).trigger("submit")
     await flushPromises()
 
     expect(handler).toHaveBeenCalled()
