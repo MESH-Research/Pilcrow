@@ -101,25 +101,25 @@
       </div>
       <div v-if="status == 'submitting'" class="column flex-center">
         <q-spinner color="primary" size="2em" />
-        <strong class="text-h3">{{ $t("loading") }}</strong>
       </div>
     </section>
   </q-page>
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from "vue"
-import { useRoute, useRouter } from "vue-router"
-import { useMutation, useQuery } from "@vue/apollo-composable"
-import { useUserValidation } from "src/use/userValidation"
+import ErrorBanner from "src/components/molecules/ErrorBanner.vue"
+import ErrorFieldRenderer from "src/components/molecules/ErrorFieldRenderer.vue"
+import { applyExternalValidationErrors } from "src/use/validationHelpers"
+import { ref, onMounted, watch, reactive } from "vue"
 import { useHasErrorKey } from "src/use/validationHelpers"
+import { useMutation, useQuery } from "@vue/apollo-composable"
+import { useRoute, useRouter } from "vue-router"
+import { useUserValidation } from "src/use/userValidation"
 import { CURRENT_USER } from "src/graphql/queries"
 import {
   LOGIN_ORCID_CALLBACK,
   REGISTER_OAUTH_USER,
 } from "src/graphql/mutations"
-import ErrorBanner from "src/components/molecules/ErrorBanner.vue"
-import ErrorFieldRenderer from "src/components/molecules/ErrorFieldRenderer.vue"
 
 const { push } = useRouter()
 const route = useRoute()
@@ -164,7 +164,7 @@ function handleRedirect() {
   })
   watch(error, (errorData) => {
     if (errorData) {
-      logError(errorData, "Error in redirect")
+      handleError("UH")
       clearInterval(pollInterval)
     }
   })
@@ -185,19 +185,22 @@ onMounted(async () => {
           handleRedirect()
         }
       })
-      .catch((error) => {
-        logError(error, "Error in callback catch")
-      })
-  } catch (error) {
-    logError(error, "Error in callback try catch")
+  } catch (e) {
+    handleError("HELLO 1")
   }
+})
+
+const externalValidation = reactive({
+  name: [],
+  username: [],
+  email: [],
 })
 
 async function handleRegister() {
   try {
     $v.value.$touch()
     if ($v.value.$invalid || $v.value.$error) {
-      throw Error("FORM_VALIDATION")
+      handleError("FORM_VALIDATION")
     }
     status.value = "submitting"
     form_error.value = ""
@@ -209,22 +212,21 @@ async function handleRegister() {
       provider_id: provider.value.provider_id,
     })
       .then(handleRedirect())
-      .catch((error) => {
-        form_error.value = error.message
-        logError(error, "Error in register catch")
-      })
   } catch (e) {
-    form_error.value = e.message
-    logError(e, "Error in register try catch")
+    if (
+      applyExternalValidationErrors(user, externalValidation, e, "user.")
+    ) {
+      handleError("FORM_VALIDATION")
+    } else {
+      handleError("INTERNAL")
+    }
   }
 }
 
-function logError(error, message = "") {
+function handleError(message = null) {
   status.value = "error"
-  console.error(message)
-  form_error.value = error.message
-  if (error) {
-    console.error(error)
+  if (message) {
+    form_error.value = message
   }
 }
 </script>
