@@ -15,6 +15,7 @@
               outlined
               :label="$t('helpers.OPTIONAL_FIELD', [$t('auth.fields.name')])"
               autocomplete="name"
+              :error="$v.name.$error"
               data-cy="name_field"
               bottom-slots
             >
@@ -129,7 +130,6 @@ const { mutate: handleCallback } = useMutation(LOGIN_ORCID_CALLBACK, {
 })
 const { mutate: registerOauthUser } = useMutation(REGISTER_OAUTH_USER)
 
-const id = ref(null)
 let form_error = ref(null)
 let action = ref(null)
 let status = ref("loading")
@@ -138,10 +138,7 @@ const { $v, user } = useUserValidation({
   mutation: registerOauthUser,
   rules: (rules) => {
     delete rules.password.required
-  },
-  variables: (form) => {
-    return { id, ...form }
-  },
+  }
 })
 const hasErrorKey = useHasErrorKey($v)
 const { result, error, refetch } = useQuery(CURRENT_USER, {
@@ -153,19 +150,19 @@ function handleRedirect() {
     refetch()
   }, 1000)
 
+  watch(result, () => {
+    clearInterval(pollInterval)
+    push({ path: "/dashboard/" })
+  })
   watch(status, () => {
     if (status.value == "error") {
       clearInterval(pollInterval)
     }
   })
-  watch(result, () => {
-    clearInterval(pollInterval)
-    push({ path: "/dashboard/" })
-  })
   watch(error, (errorData) => {
     if (errorData) {
-      handleError("UH")
       clearInterval(pollInterval)
+      handleError("INTERNAL")
     }
   })
 }
@@ -186,7 +183,7 @@ onMounted(async () => {
         }
       })
   } catch (e) {
-    handleError("HELLO 1")
+      handleError("INTERNAL")
   }
 })
 
@@ -223,10 +220,8 @@ async function handleRegister() {
   }
 }
 
-function handleError(message = null) {
+function handleError(message) {
   status.value = "error"
-  if (message) {
-    form_error.value = message
-  }
+  form_error.value = message
 }
 </script>

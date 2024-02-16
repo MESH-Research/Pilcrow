@@ -19,9 +19,17 @@
               outlined
               :label="$t('helpers.OPTIONAL_FIELD', [$t('auth.fields.name')])"
               autocomplete="name"
+              :error="$v.name.$error"
               data-cy="name_field"
               bottom-slots
-            />
+            >
+              <template #error>
+                <error-field-renderer
+                  :errors="$v.name.$errors"
+                  prefix="auth.validation.name"
+                />
+              </template>
+            </q-input>
             <q-input
               ref="emailInput"
               v-model="$v.email.$model"
