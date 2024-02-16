@@ -110,8 +110,7 @@
 <script setup>
 import ErrorBanner from "src/components/molecules/ErrorBanner.vue"
 import ErrorFieldRenderer from "src/components/molecules/ErrorFieldRenderer.vue"
-import { applyExternalValidationErrors } from "src/use/validationHelpers"
-import { ref, onMounted, watch, reactive } from "vue"
+import { ref, onMounted, watch } from "vue"
 import { useHasErrorKey } from "src/use/validationHelpers"
 import { useMutation, useQuery } from "@vue/apollo-composable"
 import { useRoute, useRouter } from "vue-router"
@@ -134,11 +133,21 @@ let form_error = ref(null)
 let action = ref(null)
 let status = ref("loading")
 const provider = ref(null)
-const { $v, user } = useUserValidation({
+const { $v, user, saveUser } = useUserValidation({
   mutation: registerOauthUser,
   rules: (rules) => {
     delete rules.password.required
   },
+  variables: (form) => {
+    return {
+      name: form.name,
+      username: form.username,
+      email: form.email,
+      provider_name: provider.value.provider_name,
+      provider_id: provider.value.provider_id,
+    }
+  },
+  validation_key: "input.user.",
 })
 const hasErrorKey = useHasErrorKey($v)
 const { result, error, refetch } = useQuery(CURRENT_USER, {
@@ -187,33 +196,13 @@ onMounted(async () => {
   }
 })
 
-const externalValidation = reactive({
-  name: [],
-  username: [],
-  email: [],
-})
-
 async function handleRegister() {
+  status.value = "submitting"
+  form_error.value = ""
   try {
-    $v.value.$touch()
-    if ($v.value.$invalid || $v.value.$error) {
-      handleError("FORM_VALIDATION")
-    }
-    status.value = "submitting"
-    form_error.value = ""
-    await registerOauthUser({
-      user_name: $v.value.name.$model,
-      user_username: $v.value.username.$model,
-      user_email: $v.value.email.$model,
-      provider_name: provider.value.provider_name,
-      provider_id: provider.value.provider_id,
-    }).then(handleRedirect())
+    await saveUser().then(handleRedirect())
   } catch (e) {
-    if (applyExternalValidationErrors(user, externalValidation, e, "user.")) {
-      handleError("FORM_VALIDATION")
-    } else {
-      handleError("INTERNAL")
-    }
+    handleError(e.message)
   }
 }
 
