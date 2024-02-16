@@ -118,15 +118,15 @@ import { useRoute, useRouter } from "vue-router"
 import { useUserValidation } from "src/use/userValidation"
 import { CURRENT_USER } from "src/graphql/queries"
 import {
-  LOGIN_ORCID_CALLBACK,
+  LOGIN_OAUTH_CALLBACK,
   REGISTER_OAUTH_USER,
 } from "src/graphql/mutations"
 
 const { push } = useRouter()
 const route = useRoute()
 const code = route.query.code
-const { mutate: handleCallback } = useMutation(LOGIN_ORCID_CALLBACK, {
-  variables: { code: code },
+const { mutate: handleCallback } = useMutation(LOGIN_OAUTH_CALLBACK, {
+  variables: { provider_name: "orcid", code: code },
 })
 const { mutate: registerOauthUser } = useMutation(REGISTER_OAUTH_USER)
 
@@ -138,7 +138,7 @@ const { $v, user } = useUserValidation({
   mutation: registerOauthUser,
   rules: (rules) => {
     delete rules.password.required
-  }
+  },
 })
 const hasErrorKey = useHasErrorKey($v)
 const { result, error, refetch } = useQuery(CURRENT_USER, {
@@ -171,7 +171,7 @@ onMounted(async () => {
   try {
     await handleCallback()
       .then((response) => {
-        const data = response.data.loginOrcidCallback
+        const data = response.data.loginOauthCallback
         action.value = data.action
         provider.value = data.provider
         Object.assign(user, data.user)
@@ -183,7 +183,7 @@ onMounted(async () => {
         }
       })
   } catch (e) {
-      handleError("INTERNAL")
+    handleError("INTERNAL")
   }
 })
 
@@ -207,12 +207,9 @@ async function handleRegister() {
       user_email: $v.value.email.$model,
       provider_name: provider.value.provider_name,
       provider_id: provider.value.provider_id,
-    })
-      .then(handleRedirect())
+    }).then(handleRedirect())
   } catch (e) {
-    if (
-      applyExternalValidationErrors(user, externalValidation, e, "user.")
-    ) {
+    if (applyExternalValidationErrors(user, externalValidation, e, "user.")) {
       handleError("FORM_VALIDATION")
     } else {
       handleError("INTERNAL")

@@ -9,8 +9,10 @@ use GraphQL\Error\Error;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
 
-final readonly class LoginOrcidCallback
+final readonly class LoginOauthCallback
 {
+    private string $provider_name;
+
     /**
      * @link https://laravel.com/docs/master/socialite#routing
      * @param null $_
@@ -20,11 +22,12 @@ final readonly class LoginOrcidCallback
     public function __invoke(null $_, array $args)
     {
         try {
+            $this->provider_name = $args['provider_name'];
             /** @var \App\GraphQL\Mutations\AbstractProvider $driver */
-            $driver = Socialite::driver('orcid');
+            $driver = Socialite::driver($this->provider_name);
             $response = $driver->getAccessTokenResponse($args['code']);
             $socialiteUser = $driver->userFromToken($response);
-            $provider = ExternalIdentityProvider::where('provider_name', 'orcid')
+            $provider = ExternalIdentityProvider::where('provider_name', $this->provider_name)
                 ->where('provider_id', $socialiteUser->getId())
                 ->first();
             if ($provider) {
@@ -56,7 +59,7 @@ final readonly class LoginOrcidCallback
             'email' => null,
         ];
         $provider = [
-            'provider_name' => 'orcid',
+            'provider_name' => $this->provider_name,
             'provider_id' => $socialiteUser->getId(),
         ];
         return [
@@ -78,7 +81,7 @@ final readonly class LoginOrcidCallback
             'email' => $socialiteUser->getEmail(),
         ];
         $provider = [
-            'provider_name' => 'orcid',
+            'provider_name' => $this->provider_name,
             'provider_id' => $socialiteUser->getId(),
         ];
         return [
@@ -96,7 +99,7 @@ final readonly class LoginOrcidCallback
     private function handleMatchedEmail($socialiteUser, $user): array
     {
         ExternalIdentityProvider::create([
-            'provider_name' => 'orcid',
+            'provider_name' => $this->provider_name,
             'provider_id' => $socialiteUser->getId(),
             'user_id' => $user->id,
         ]);

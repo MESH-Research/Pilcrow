@@ -4,9 +4,11 @@ extend type Query {
 
 extend type Mutation {
     loginOrcid: String!
-
-    loginOrcidCallback(code: String!): LoginOrcidResponse
-
+    loginGoogle: String!
+    loginOauthCallback(
+        provider_name: String!
+        code: String!
+    ): LoginOauthResponse
     registerOauthUser(input: RegisterOauthUserInput): User
         @field(resolver: "App\\GraphQL\\Mutations\\RegisterOauthUser@register")
 }
@@ -22,7 +24,7 @@ type IdentityProviderButton {
 """
 A response from an external identity provider
 """
-type LoginOrcidResponse {
+type LoginOauthResponse {
     action: String
     user: ProviderUser
     provider: Provider
@@ -51,7 +53,7 @@ input RegisterOauthUserInput {
     user: ProviderUserInput
     provider: ProviderInput
 }
-input ProviderUserInput @validator(class: "RegisterOauthUserValidator"){
+input ProviderUserInput @validator(class: "RegisterOauthUserValidator") {
     name: String
     username: String
     email: String

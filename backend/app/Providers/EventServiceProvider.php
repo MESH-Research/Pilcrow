@@ -44,6 +44,7 @@ class EventServiceProvider extends ServiceProvider
             NotifyUsersAboutAcceptedReviewCoordinatorInvitation::class,
         ],
         SocialiteWasCalled::class => [
+            'SocialiteProviders\\Google\\GoogleExtendSocialite@handle',
             'SocialiteProviders\Orcid\OrcidExtendSocialite@handle'
         ],
     ];

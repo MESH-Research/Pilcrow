@@ -35,5 +35,11 @@ return [
         'client_secret' => env('ORCID_CLIENT_SECRET'),
         'redirect' => env('ORCID_REDIRECT_URL'),
         'environment' => env('ORCID_ENVIRONMENT'),
-    ]
+    ],
+
+    'google' => [
+        'client_id' => env('GOOGLE_CLIENT_ID'),
+        'client_secret' => env('GOOGLE_CLIENT_SECRET'),
+        'redirect' => env('GOOGLE_CALLBACK_URL'),
+    ],
 ];

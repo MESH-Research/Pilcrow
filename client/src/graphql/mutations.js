@@ -886,9 +886,15 @@ export const LOGIN_ORCID = gql`
   }
 `
 
-export const LOGIN_ORCID_CALLBACK = gql`
-  mutation LoginOrcidCallback($code: String!) {
-    loginOrcidCallback(code: $code) {
+export const LOGIN_GOOGLE = gql`
+  mutation LoginGoogle {
+    loginGoogle
+  }
+`
+
+export const LOGIN_OAUTH_CALLBACK = gql`
+  mutation LoginOauthCallback($provider_name: String!, $code: String!) {
+    loginOauthCallback(provider_name: $provider_name, code: $code) {
       action
       user {
         name
@@ -913,15 +919,8 @@ export const REGISTER_OAUTH_USER = gql`
   ) {
     registerOauthUser(
       input: {
-        user: {
-          name: $user_name
-          username: $user_username
-          email: $user_email
-        }
-        provider: {
-          provider_name: $provider_name
-          provider_id: $provider_id
-        }
+        user: { name: $user_name, username: $user_username, email: $user_email }
+        provider: { provider_name: $provider_name, provider_id: $provider_id }
       }
     ) {
       id

@@ -22,6 +22,7 @@
         "nuwave/lighthouse": "^6.0",
         "olssonm/l5-zxcvbn": "^5.1",
         "owen-it/laravel-auditing": "^13.5",
+        "socialiteproviders/google": "^4.1",
         "socialiteproviders/orcid": "dev-master#9a61194",
         "spatie/laravel-permission": "^6.0",
         "spatie/laravel-settings": "^3.0",
