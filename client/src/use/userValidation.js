@@ -48,6 +48,7 @@ export function useUserValidation(opts = {}) {
   })
 
   const mutate = opts.mutation ?? useMutation(CREATE_USER).mutate
+
   if (opts.rules && typeof opts.rules === "function") {
     opts.rules(rules)
   }
@@ -62,12 +63,13 @@ export function useUserValidation(opts = {}) {
       opts.variables && typeof opts.variables === "function"
         ? opts.variables(form)
         : form
+    const validation_key = opts.validation_key ?? "user."
     try {
       const newUser = await mutate(vars)
       return newUser
     } catch (error) {
       if (
-        applyExternalValidationErrors(form, externalValidation, error, "user.")
+        applyExternalValidationErrors(form, externalValidation, error, validation_key)
       ) {
         throw Error("FORM_VALIDATION")
       } else {

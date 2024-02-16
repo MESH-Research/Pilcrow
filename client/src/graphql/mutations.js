@@ -905,18 +905,18 @@ export const LOGIN_ORCID_CALLBACK = gql`
 
 export const REGISTER_OAUTH_USER = gql`
   mutation RegisterOauthUser(
-    $user_name: String
-    $user_username: String
-    $user_email: String
+    $name: String
+    $username: String
+    $email: String
     $provider_name: String!
     $provider_id: String!
   ) {
     registerOauthUser(
       input: {
         user: {
-          name: $user_name
-          username: $user_username
-          email: $user_email
+          name: $name
+          username: $username
+          email: $email
         }
         provider: {
           provider_name: $provider_name
