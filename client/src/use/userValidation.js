@@ -1,6 +1,6 @@
 import { reactive } from "vue"
 import useVuelidate from "@vuelidate/core"
-import { required, email, helpers } from "@vuelidate/validators"
+import { required, email, helpers, maxLength } from "@vuelidate/validators"
 import { CREATE_USER } from "src/graphql/mutations"
 import { useMutation } from "@vue/apollo-composable"
 import zxcvbn from "zxcvbn"
@@ -8,7 +8,9 @@ import { applyExternalValidationErrors } from "src/use/validationHelpers"
 import { omit } from "lodash"
 
 export const rules = {
-  name: {},
+  name: {
+    maxLength: maxLength(256)
+  },
   email: {
     required,
     email,

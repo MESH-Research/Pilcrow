@@ -81,6 +81,7 @@
     },
     "validation": {
       "name": {
+        "maxLength": "Name is too long.",
         "NAME_LENGTH_EXCEEDED": "Name is too long."
       },
       "username": {
