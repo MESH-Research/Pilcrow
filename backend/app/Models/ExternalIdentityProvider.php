@@ -19,7 +19,7 @@ class ExternalIdentityProvider extends Model
     protected $fillable = [
         'provider_id',
         'provider_name',
-        'user_id'
+        'user_id',
     ];
 
     /**

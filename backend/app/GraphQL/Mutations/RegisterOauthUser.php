@@ -33,11 +33,9 @@ final readonly class RegisterOauthUser
             Auth::guard('web')->login($user);
 
             return $user;
-
         } catch (\Exception $e) {
             report($e);
             throw new Error($e->getMessage());
         }
     }
 }
-

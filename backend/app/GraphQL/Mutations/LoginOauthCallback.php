@@ -62,6 +62,7 @@ final readonly class LoginOauthCallback
             'provider_name' => $this->provider_name,
             'provider_id' => $socialiteUser->getId(),
         ];
+
         return [
             'action' => 'register',
             'user' => $user,
@@ -84,10 +85,11 @@ final readonly class LoginOauthCallback
             'provider_name' => $this->provider_name,
             'provider_id' => $socialiteUser->getId(),
         ];
+
         return [
             'action' => 'register',
             'user' => $user,
-            'provider' => $provider
+            'provider' => $provider,
         ];
     }
 
@@ -104,10 +106,11 @@ final readonly class LoginOauthCallback
             'user_id' => $user->id,
         ]);
         $user = Auth::guard('web')->loginUsingId($user);
+
         return [
             'action' => 'auth',
             'user' => null,
-            'provider' => null
+            'provider' => null,
         ];
     }
 
@@ -119,6 +122,7 @@ final readonly class LoginOauthCallback
     {
         $user = $provider->user;
         Auth::guard('web')->login($user);
+
         return [
             'action' => 'auth',
             'user' => null,
