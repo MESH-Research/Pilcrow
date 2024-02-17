@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            // Allow emails and passwords to be empty for users that register via external identity provider
+            // Allow passwords to be empty for users that register via external identity provider
             $table->string('password')->nullable()->change();
         });
 

@@ -14,7 +14,7 @@ extend type Mutation {
 }
 
 """
-A button that apepars on the Login page for a supported external identity provider"
+A button that apepars on the Login page for a supported external identity provider
 """
 type IdentityProviderButton {
     name: String!
