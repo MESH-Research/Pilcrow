@@ -13,7 +13,7 @@ describe("login page", () => {
     cy.get(".q-form").within(() => {
       cy.dataCy("email_field").type("regularuser@meshresearch.net")
       cy.dataCy("password_field").type("regularPassword!@#")
-      cy.get(".q-card__actions").contains("Log in").click()
+      cy.get(".q-card__actions").contains("Log In").click()
       cy.url().should("include", "/dashboard")
     })
   })
