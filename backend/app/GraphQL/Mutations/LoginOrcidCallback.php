@@ -59,6 +59,7 @@ final readonly class LoginOrcidCallback
             'provider_name' => 'orcid',
             'provider_id' => $socialiteUser->getId(),
         ];
+
         return [
             'action' => 'register',
             'user' => $user,
@@ -81,10 +82,11 @@ final readonly class LoginOrcidCallback
             'provider_name' => 'orcid',
             'provider_id' => $socialiteUser->getId(),
         ];
+
         return [
             'action' => 'register',
             'user' => $user,
-            'provider' => $provider
+            'provider' => $provider,
         ];
     }
 
@@ -101,10 +103,11 @@ final readonly class LoginOrcidCallback
             'user_id' => $user->id,
         ]);
         $user = Auth::guard('web')->loginUsingId($user);
+
         return [
             'action' => 'auth',
             'user' => null,
-            'provider' => null
+            'provider' => null,
         ];
     }
 
@@ -116,6 +119,7 @@ final readonly class LoginOrcidCallback
     {
         $user = $provider->user;
         Auth::guard('web')->login($user);
+
         return [
             'action' => 'auth',
             'user' => null,
