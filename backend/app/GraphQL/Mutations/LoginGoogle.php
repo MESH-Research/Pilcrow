@@ -19,6 +19,5 @@ final readonly class LoginGoogle
         $driver = Socialite::driver('google');
 
         return $driver->redirect()->getTargetUrl();
-        // Socialite::driver('google')->redirect();
     }
 }
