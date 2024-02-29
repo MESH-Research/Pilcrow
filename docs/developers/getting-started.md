@@ -143,6 +143,8 @@ GOOGLE_CLIENT_ID=$YourGoogleClientId
 GOOGLE_CLIENT_SECRET=$YourGoogleClientSecret
 GOOGLE_REDIRECT_URL="${APP_URL}/auth/redirect/google"
 
+## WSL Developer Notes {#wsl-notes}
+
 This pages has instructions and tips for developing Pilcrow using
 the Windows Subsystem for Linux (WSL).
 
