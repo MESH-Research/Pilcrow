@@ -142,6 +142,7 @@ Documentation from Google for establishing an application for OAuth and register
 GOOGLE_CLIENT_ID=$YourGoogleClientId
 GOOGLE_CLIENT_SECRET=$YourGoogleClientSecret
 GOOGLE_REDIRECT_URL="${APP_URL}/auth/redirect/google"
+```
 
 ## WSL Developer Notes {#wsl-notes}
 
