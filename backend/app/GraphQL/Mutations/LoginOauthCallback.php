@@ -26,7 +26,6 @@ final readonly class LoginOauthCallback
             /** @var \App\GraphQL\Mutations\AbstractProvider $driver */
             $driver = Socialite::driver($this->provider_name);
             $response = $driver->getAccessTokenResponse($args['code']);
-            $socialiteUser = $driver->userFromToken($response);
             if ($this->provider_name == 'google') {
                 $socialiteUser = $driver->userFromToken($response['access_token']);
             } else {
