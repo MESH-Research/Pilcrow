@@ -130,11 +130,18 @@ Documentation from ORCID for registering a redirect URL: <https://info.orcid.org
 ```php
 ORCID_CLIENT_ID=$YourOrcidClientID
 ORCID_CLIENT_SECRET=$YourOrcidClientSecret
-ORCID_REDIRECT_URL=$YourOrcidRedirectURL
+ORCID_REDIRECT_URL="${APP_URL}/auth/redirect/orcid"
 ORCID_ENVIRONMENT="production"
 ```
 
-## WSL Developer Notes {#wsl-notes}
+#### Google
+
+Documentation from Google for establishing an application for OAuth and registering a redirect URL: <https://support.google.com/cloud/answer/6158849?hl=en>
+
+```php
+GOOGLE_CLIENT_ID=$YourGoogleClientId
+GOOGLE_CLIENT_SECRET=$YourGoogleClientSecret
+GOOGLE_REDIRECT_URL="${APP_URL}/auth/redirect/google"
 
 This pages has instructions and tips for developing Pilcrow using
 the Windows Subsystem for Linux (WSL).
