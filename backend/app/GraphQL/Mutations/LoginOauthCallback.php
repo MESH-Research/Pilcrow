@@ -5,7 +5,7 @@ namespace App\GraphQL\Mutations;
 
 use App\Models\ExternalIdentityProvider;
 use App\Models\User;
-use GraphQL\Error\Error;
+use Error;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
 
@@ -27,6 +27,11 @@ final readonly class LoginOauthCallback
             $driver = Socialite::driver($this->provider_name);
             $response = $driver->getAccessTokenResponse($args['code']);
             $socialiteUser = $driver->userFromToken($response);
+            if ($this->provider_name == 'google') {
+                $socialiteUser = $driver->userFromToken($response['access_token']);
+            } else {
+                $socialiteUser = $driver->userFromToken($response);
+            }
             $provider = ExternalIdentityProvider::where('provider_name', $this->provider_name)
                 ->where('provider_id', $socialiteUser->getId())
                 ->first();
