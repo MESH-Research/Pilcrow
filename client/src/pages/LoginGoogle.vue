@@ -5,6 +5,11 @@
         <q-spinner color="primary" size="2em" />
         <strong class="text-h3">{{ $t("loading") }}</strong>
       </div>
+      <div v-if="status == 'redirect_error'" class="column flex-center">
+        <error-banner>
+          {{ $t(`auth.failures.INTERNAL`) }}
+        </error-banner>
+      </div>
       <div v-else-if="action == 'register'" class="column flex-center">
         <q-form style="width: 400px" @submit="handleRegister">
           <h1>{{ $t("auth.oauth.register.title") }}</h1>
@@ -192,7 +197,7 @@ onMounted(async () => {
         }
       })
   } catch (e) {
-    handleError("INTERNAL")
+    status.value = "redirect_error"
   }
 })
 
