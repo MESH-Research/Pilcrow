@@ -136,7 +136,7 @@ ORCID_ENVIRONMENT="production"
 
 #### Google
 
-Documentation from Google for establishing an application for OAuth and registering a redirect URL: <https://support.google.com/cloud/answer/6158849?hl=en>
+Documentation from Google for establishing a Google Cloud application for OAuth and registering a redirect URL (or an "Authorized Redirect URI"): <https://support.google.com/cloud/answer/6158849?hl=en>
 
 ```php
 GOOGLE_CLIENT_ID=$YourGoogleClientId
