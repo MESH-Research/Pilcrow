@@ -942,6 +942,10 @@
         "show_reply": "Show Replies",
         "hide_reply": "Hide Replies"
       },
+      "reference": {
+        "in_reply_to": "In reply to {username}",
+        "go_to_highlight": "Go to highlight"
+      },
       "reply": {
         "ariaLabel": "Comment Reply.  Author {username}",
         "referenceButtonAria": "Jump to referenced comment",

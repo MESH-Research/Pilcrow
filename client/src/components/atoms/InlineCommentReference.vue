@@ -1,28 +1,17 @@
 <template>
-  <q-card-section v-if="referencedComment" class="q-pa-none">
+  <q-card-section class="q-pa-sm">
     <q-btn
       dense
       flat
       icon="subdirectory_arrow_right"
       color="accent"
-      class="q-pl-sm q-ml-md"
+      class="q-px-sm q-ml-sm"
       no-caps
       :aria-label="$t('submissions.comment.reply.referenceButtonAria')"
       @click="setActive"
     >
-      <avatar-image
-        :user="referencedComment.created_by"
-        round
-        size="15px"
-        class="q-mr-sm"
-      />
-
       <div>
-        {{
-          $t("submissions.comment.reference.in_reply_to", {
-            username: referencedComment.created_by.username,
-          })
-        }}
+        {{ $t("submissions.comment.reference.go_to_highlight") }}
       </div>
     </q-btn>
   </q-card-section>
@@ -30,23 +19,16 @@
 
 <script setup>
 import { computed, inject, nextTick } from "vue"
-import AvatarImage from "./AvatarImage.vue"
 
 const props = defineProps({
   comment: {
     type: Object,
     required: true,
   },
-  replies: {
-    type: Array,
-    required: true,
-  },
 })
 
 const referencedComment = computed(() => {
   return props.comment.reply_to_id
-    ? props.replies.find((e) => e.id === props.comment.reply_to_id)
-    : null
 })
 const activeComment = inject("activeComment")
 
