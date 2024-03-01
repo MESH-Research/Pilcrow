@@ -1,20 +1,15 @@
 <template>
-  <q-card-section class="q-pa-sm">
-    <q-btn
-      dense
-      flat
-      icon="subdirectory_arrow_right"
-      color="accent"
-      class="q-px-sm q-ml-sm"
-      no-caps
-      :aria-label="$t('submissions.comment.reply.referenceButtonAria')"
-      @click="setActive"
-    >
-      <div>
-        {{ $t("submissions.comment.reference.go_to_highlight") }}
-      </div>
-    </q-btn>
-  </q-card-section>
+  <q-btn
+    dense
+    flat
+    color="primary"
+    class="q-mr-xs"
+    no-caps
+    @click="setActive"
+  >
+    <q-icon size="xs" name="mode_comment"></q-icon>
+    <q-tooltip>{{ $t(`submissions.comment.reference.go_to_highlight`) }}</q-tooltip>
+  </q-btn>
 </template>
 
 <script setup>

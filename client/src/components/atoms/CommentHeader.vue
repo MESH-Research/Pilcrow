@@ -17,8 +17,9 @@
       </span>
     </div>
   </q-card-section>
-  <q-card-section v-else class="q-py-xs" :style="style">
+  <q-card-section v-else :class="comment.__typename == 'InlineComment' ? 'q-py-xs q-pl-xs' : 'q-py-xs'" :style="style">
     <div class="row items-center">
+      <inline-comment-reference v-if="comment.__typename == 'InlineComment'" :comment="comment" />
       <avatar-image
         :user="comment.created_by"
         round
@@ -73,6 +74,7 @@
 <script setup>
 import AvatarImage from "./AvatarImage.vue"
 import CommentActions from "./CommentActions.vue"
+import InlineCommentReference from "./InlineCommentReference.vue"
 import { useTimeAgo } from "src/use/timeAgo"
 import { DateTime } from "luxon"
 import { computed } from "vue"

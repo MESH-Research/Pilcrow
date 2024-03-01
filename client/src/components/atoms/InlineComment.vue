@@ -20,7 +20,6 @@
         @modify-comment="modifyComment(comment)"
         @delete-comment="deleteComment"
       />
-      <inline-comment-reference :comment="comment" />
       <q-card-section v-if="!isModifying">
         <!-- eslint-disable-next-line vue/no-v-html -->
         <div v-html="comment.content" />
@@ -117,6 +116,7 @@
           @click="initiateReply"
         />
       </q-card-actions>
+
     </q-card>
   </div>
 </template>
@@ -125,7 +125,6 @@ import { ref, computed, inject, provide } from "vue"
 import CommentHeader from "./CommentHeader.vue"
 import InlineCommentReply from "./InlineCommentReply.vue"
 import CommentEditor from "../forms/CommentEditor.vue"
-import InlineCommentReference from "./InlineCommentReference.vue"
 
 const isCollapsed = ref(true)
 const isReplying = ref(false)

@@ -944,7 +944,7 @@
       },
       "reference": {
         "in_reply_to": "In reply to {username}",
-        "go_to_highlight": "Go to highlight"
+        "go_to_highlight": "Go to Highlight"
       },
       "reply": {
         "ariaLabel": "Comment Reply.  Author {username}",
