@@ -1,5 +1,6 @@
 <template>
   <q-btn
+    :aria-label="$t(`submissions.comment.reference.go_to_highlight`)"
     dense
     flat
     color="primary"
@@ -13,7 +14,7 @@
 </template>
 
 <script setup>
-import { computed, inject, nextTick } from "vue"
+import { inject, nextTick } from "vue"
 
 const props = defineProps({
   comment: {
@@ -22,9 +23,6 @@ const props = defineProps({
   },
 })
 
-const referencedComment = computed(() => {
-  return props.comment.reply_to_id
-})
 const activeComment = inject("activeComment")
 
 function setActive() {
@@ -32,7 +30,7 @@ function setActive() {
   //TODO: Do this in a more elegant way.
   activeComment.value = null
   nextTick(() => {
-    activeComment.value = referencedComment.value
+    activeComment.value = props.comment
   })
 }
 </script>

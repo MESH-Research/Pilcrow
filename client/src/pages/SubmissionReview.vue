@@ -96,6 +96,7 @@ function handleNewScroll() {
   setVerticalScrollPosition(scrollTarget, scrollValue.offsetTop, 250)
   scrollValue
 }
+
 </script>
 
 <style lang="sass" scoped>

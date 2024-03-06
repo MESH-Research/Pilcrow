@@ -118,7 +118,10 @@
 import { BubbleMenu, Editor, EditorContent } from "@tiptap/vue-3"
 import { useQuasar } from "quasar"
 import SubmissionContentKit from "src/tiptap/extension-submission-content-kit"
-import { computed, inject, ref, watch } from "vue"
+import { computed, inject, ref, watch, nextTick } from "vue"
+import { scroll } from "quasar"
+const { getScrollTarget, setVerticalScrollPosition } = scroll
+
 const props = defineProps({
   annotationEnabled: {
     type: Boolean,
@@ -280,6 +283,39 @@ function highlightClickHandler(event) {
   commentDrawerOpen.value = true
   activeComment.value = findCommentFromId(id)
 }
+
+watch(
+  activeComment,
+  (newValue) => {
+    if (!newValue) return
+    if (!newValue.__typename.startsWith("InlineComment")) return
+    nextTick(() => {
+      let scrollTarget = null
+      scrollTarget = contentRef.value.querySelector(
+        `button[data-comment="${newValue.id}"]`
+      )
+      if (!scrollTarget) return
+      const getOffsetTop = function (element) {
+        if (!element) return 0
+        return getOffsetTop(element.offsetParent) + element.offsetTop
+      }
+      const primaryNavHeight = 70
+      const secondaryNavHeight = 48
+      const tertiaryNavHeight = 75
+      const negativeSpaceAdjustment = 14
+      const offset =
+        getOffsetTop(scrollTarget) -
+        primaryNavHeight -
+        secondaryNavHeight -
+        tertiaryNavHeight -
+        negativeSpaceAdjustment
+      const target = getScrollTarget(scrollTarget)
+      setVerticalScrollPosition(target, offset, 250)
+    })
+  },
+  { deep: false }
+)
+
 </script>
 
 <style lang="scss">
