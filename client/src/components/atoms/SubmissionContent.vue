@@ -69,7 +69,9 @@
           text-color="grey-7"
           @click="scrollToOverallComments()"
         />
-        <q-tooltip>{{ $t("submissions.style_controls.view_overall") }}</q-tooltip>
+        <q-tooltip>{{
+          $t("submissions.style_controls.view_overall")
+        }}</q-tooltip>
       </div>
       <div>
         <q-btn
@@ -82,7 +84,9 @@
           text-color="grey-7"
           @click="scrollNewOverallComment()"
         />
-        <q-tooltip>{{ $t("submissions.style_controls.new_overall") }}</q-tooltip>
+        <q-tooltip>{{
+          $t("submissions.style_controls.new_overall")
+        }}</q-tooltip>
       </div>
     </div>
   </div>
@@ -154,7 +158,7 @@ function toggleDarkMode() {
 
 const emit = defineEmits([
   "scrollToOverallComments",
-  "scrollAddNewOverallComment"
+  "scrollAddNewOverallComment",
 ])
 
 function scrollToOverallComments() {
@@ -230,17 +234,21 @@ const onAnnotationClick = (context, { target }) => {
 const inlineComments = computed(() => submission.value?.inline_comments ?? [])
 const annotations = computed(() =>
   props.highlightVisibility
-    ? inlineComments.value.map(({ from, to, id, deleted_at }) => deleted_at == null ? ({
-        from,
-        to,
-        context: { id },
-        active: id === activeComment.value?.id,
-        click: onAnnotationClick,
-      }) : {
-        context: { id },
-        active: id === activeComment.value?.id,
-        click: () => false,
-      })
+    ? inlineComments.value.map(({ from, to, id, deleted_at }) =>
+        deleted_at == null
+          ? {
+              from,
+              to,
+              context: { id },
+              active: id === activeComment.value?.id,
+              click: onAnnotationClick,
+            }
+          : {
+              context: { id },
+              active: id === activeComment.value?.id,
+              click: () => false,
+            },
+      )
     : [],
 )
 
@@ -292,13 +300,15 @@ watch(
     nextTick(() => {
       let scrollTarget = null
       scrollTarget = contentRef.value.querySelector(
-        `button[data-comment="${newValue.id}"]`
+        `button[data-comment="${newValue.id}"]`,
       )
       if (!scrollTarget) return
       const getOffsetTop = function (element) {
         if (!element) return 0
         return getOffsetTop(element.offsetParent) + element.offsetTop
       }
+      const getOffset = scrollTarget.getBoundingClientRect().top
+      if (getOffset > 200 && getOffset < 500) return
       const primaryNavHeight = 70
       const secondaryNavHeight = 48
       const tertiaryNavHeight = 75
@@ -313,9 +323,8 @@ watch(
       setVerticalScrollPosition(target, offset, 250)
     })
   },
-  { deep: false }
+  { deep: false },
 )
-
 </script>
 
 <style lang="scss">
