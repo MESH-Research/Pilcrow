@@ -116,7 +116,6 @@
           @click="initiateReply"
         />
       </q-card-actions>
-
     </q-card>
   </div>
 </template>
