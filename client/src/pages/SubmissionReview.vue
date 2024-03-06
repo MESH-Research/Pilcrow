@@ -43,8 +43,7 @@
           />
           <q-separator class="page-seperator" />
           <div ref="scrollOverallComments"></div>
-          <submission-comment-section
-          />
+          <submission-comment-section />
           <div ref="scrollAddNewOverallComment"></div>
         </q-page-container>
       </q-layout>
@@ -96,7 +95,6 @@ function handleNewScroll() {
   setVerticalScrollPosition(scrollTarget, scrollValue.offsetTop, 250)
   scrollValue
 }
-
 </script>
 
 <style lang="sass" scoped>
