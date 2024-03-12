@@ -60,7 +60,6 @@
 </template>
 
 <script setup>
-import { useQuasar } from "quasar"
 import { UPDATE_SUBMISSION_TITLE } from "src/graphql/mutations"
 import { useMutation } from "@vue/apollo-composable"
 import { ref, watchEffect, inject } from "vue"
@@ -71,6 +70,7 @@ import useVuelidate from "@vuelidate/core"
 
 const submission = inject("submission")
 const draft_title = ref("")
+const newPubV$ = useVuelidate(rules, draft_title)
 
 watchEffect(() => {
   if (submission.value) {
@@ -78,7 +78,6 @@ watchEffect(() => {
   }
 })
 
-const { notify } = useQuasar()
 const { t } = useI18n()
 
 const rules = {
@@ -92,7 +91,6 @@ const { newStatusMessage } = useFeedbackMessages({
   },
 })
 
-const newPubV$ = useVuelidate(rules, draft_title)
 function checkThatFormIsInvalid() {
   let failureMessage = false
 
@@ -133,14 +131,7 @@ async function saveTitle() {
       title: draft_title.value,
     })
   } catch (error) {
-    notify({
-      color: "negative",
-      message: t("submission.edit_title.unauthorized"),
-      icon: "error",
-      attrs: {
-        "data-cy": "edit_title_notify",
-      },
-    })
+    newStatusMessage("failure", t("submission.edit_title.unauthorized"))
   } finally {
     editing_title.value = false
     submitting_title_edit.value = false
