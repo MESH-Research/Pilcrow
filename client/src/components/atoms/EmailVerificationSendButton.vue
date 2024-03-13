@@ -27,6 +27,7 @@ import { useMutation } from "@vue/apollo-composable"
 import { useQuasar } from "quasar"
 import { useGraphErrors } from "src/use/errors"
 import { useI18n } from "vue-i18n"
+import { useFeedbackMessages } from "src/use/guiElements"
 
 const $q = useQuasar()
 const status = ref(null)
@@ -41,9 +42,14 @@ const btnColor = computed(() => {
 })
 
 const { mutate: sendEmail } = useMutation(SEND_VERIFY_EMAIL)
-const { notify } = useQuasar()
 const { errorMessages, graphQLErrorCodes } = useGraphErrors()
 const { t } = useI18n()
+const { newStatusMessage } = useFeedbackMessages({
+  attrs: {
+    "data-cy": "email_verification_notify",
+    icon: "email"
+  },
+})
 
 async function send() {
   status.value = "loading"
@@ -51,29 +57,26 @@ async function send() {
     const result = await sendEmail()
     const email = result.data.sendEmailVerification.email
     status.value = "success"
-    notify({
-      color: "positive",
-      message: t("account.email_verify.send_success_notify", {
+    newStatusMessage(
+      "success",
+      t("account.email_verify.send_success_notify", {
         email,
       }),
-      icon: "email",
-      html: true,
-    })
+    )
   } catch (error) {
     const errorMessagesList = errorMessages(
       graphQLErrorCodes(error),
-      "account.failures"
+      "account.failures",
     )
     if (!errorMessagesList.length) {
       errorMessagesList.push(t("failures.UNKNOWN_ERROR"))
     }
-    notify({
-      color: "negative",
-      message: t("account.email_verify.send_failure_notify", {
+    newStatusMessage(
+      "failure",
+      t("account.email_verify.send_failure_notify", {
         errors: errorMessagesList.join(", "),
       }),
-      icon: "error",
-    })
+    )
     status.value = null
   }
 }
