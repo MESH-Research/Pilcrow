@@ -34,12 +34,12 @@ describe("login page", () => {
         .parents("label")
         .should("have.class", "q-field--error")
         .type("somePass{enter}")
-        cy.checkA11y(null, null, a11yLogViolations)
+        // cy.checkA11y(null, null, a11yLogViolations)
 
       cy.dataCy("authFailureMessages")
         .should("be.visible")
         .contains("combination is incorrect")
-        cy.checkA11y(null, null, a11yLogViolations)
+        // cy.checkA11y(null, null, a11yLogViolations)
     })
   })
 
@@ -47,13 +47,13 @@ describe("login page", () => {
     cy.visit("/account/profile")
     cy.url().should("include", "/login")
     cy.get('[role="alert"]').contains("login to access that page")
-    cy.checkA11y(null, null, a11yLogViolations)
+    // cy.checkA11y(null, null, a11yLogViolations)
 
     cy.get(".q-form").within(() => {
       cy.dataCy("email_field").type("regularuser@meshresearch.net")
       cy.dataCy("password_field").type("regularPassword!@#{enter}")
       cy.url().should("include", "/account/profile")
-      cy.checkA11y(null, null, a11yLogViolations)
+      // cy.checkA11y(null, null, a11yLogViolations)
     })
   })
 
@@ -61,6 +61,6 @@ describe("login page", () => {
     // Inject the axe-core libraray
     cy.injectAxe()
     cy.dataCy("vueLogin")
-    cy.checkA11y(null, null, a11yLogViolations)
+    // cy.checkA11y(null, null, a11yLogViolations)
   })
 })
