@@ -3,6 +3,53 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.29.0](https://github.com/MESH-Research/Pilcrow/compare/v0.28.0...v0.29.0) (2024-03-13)
+
+
+### Features
+
+* Add comment deletion ([#2049](https://github.com/MESH-Research/Pilcrow/issues/2049)) ([77ff42d](https://github.com/MESH-Research/Pilcrow/commit/77ff42d0ee5bc2e475b04d0c4fa488a370f6e512)), closes [#1034](https://github.com/MESH-Research/Pilcrow/issues/1034)
+* add list of accepted document types ([#2059](https://github.com/MESH-Research/Pilcrow/issues/2059)) ([40d5251](https://github.com/MESH-Research/Pilcrow/commit/40d5251e33cc3284fba26e58499ad185520deae2)), closes [#2046](https://github.com/MESH-Research/Pilcrow/issues/2046)
+* scroll to overall comments ([#2057](https://github.com/MESH-Research/Pilcrow/issues/2057)) ([e30e749](https://github.com/MESH-Research/Pilcrow/commit/e30e7499539160c3a5c29f513c093f983733f8cd)), closes [#1926](https://github.com/MESH-Research/Pilcrow/issues/1926)
+
+
+### Bug Fixes
+
+* Correct links in README.md ([#2036](https://github.com/MESH-Research/Pilcrow/issues/2036)) ([bdd2369](https://github.com/MESH-Research/Pilcrow/commit/bdd2369749229a13b58fc0fff8fef30d65aa590f))
+* **deps:** update dependency @apollo/client to v3.8.10 ([6e716ca](https://github.com/MESH-Research/Pilcrow/commit/6e716ca3fc0e8728ee02f8fad9cecb9e44407d74))
+* **deps:** update dependency @apollo/client to v3.8.9 ([be518cd](https://github.com/MESH-Research/Pilcrow/commit/be518cd13b2ded9b3d837e0a51d83ef326cd8855))
+* **deps:** update dependency @apollo/client to v3.9.2 ([fa23d8c](https://github.com/MESH-Research/Pilcrow/commit/fa23d8c2aaf35b1006aece1066197d504231d4a6))
+* **deps:** update dependency @vue/apollo-composable to v4.0.0 ([919eb03](https://github.com/MESH-Research/Pilcrow/commit/919eb0355efb75d172a46c78efbc3b71ca1134d0))
+* **deps:** update dependency @vue/apollo-composable to v4.0.1 ([5ff0cfb](https://github.com/MESH-Research/Pilcrow/commit/5ff0cfbb56f41b16001645d0188fb3655636c3ec))
+* **deps:** update dependency @vue/apollo-option to v4.0.0 ([698a2f4](https://github.com/MESH-Research/Pilcrow/commit/698a2f4667ee9c1b90838b93b7a8979c10caafc1))
+* **deps:** update dependency @vueuse/core to v10.7.0 ([758869d](https://github.com/MESH-Research/Pilcrow/commit/758869d0fa4f880e73634cc54be746a144a90920))
+* **deps:** update dependency @vueuse/core to v10.7.1 ([b00a0e9](https://github.com/MESH-Research/Pilcrow/commit/b00a0e94a1426e186232353ed83fb53fc5a2b15a))
+* **deps:** update dependency @vueuse/core to v10.7.2 ([0e8c86b](https://github.com/MESH-Research/Pilcrow/commit/0e8c86be180d1d5b2db36778b1ac5c81ac1785da))
+* **deps:** update dependency core-js to v3.34.0 ([08b0857](https://github.com/MESH-Research/Pilcrow/commit/08b0857efac0b0ed41cdfa8096c9a16acc75e69c))
+* **deps:** update dependency core-js to v3.35.0 ([0b463e7](https://github.com/MESH-Research/Pilcrow/commit/0b463e77ced9bac7d17e5ae675031d6ffcdb2a9a))
+* **deps:** update dependency core-js to v3.35.1 ([c32eb33](https://github.com/MESH-Research/Pilcrow/commit/c32eb333712980be41993ee60a731b370e4ffe9a))
+* **deps:** update dependency guzzlehttp/guzzle to v7.8.1 ([9b4128b](https://github.com/MESH-Research/Pilcrow/commit/9b4128be2900c934284ea75d97a1263202c7deb9))
+* **deps:** update dependency laravel/framework to v10.35.0 ([a7d09cc](https://github.com/MESH-Research/Pilcrow/commit/a7d09ccfd55355a1ba8aaff9772f6ecb6a0bd110))
+* **deps:** update dependency laravel/framework to v10.37.1 ([c84500d](https://github.com/MESH-Research/Pilcrow/commit/c84500db7035ec529b4ad92e3e08d6b377b72697))
+* **deps:** update dependency laravel/scout to v10.6.0 ([68a34bc](https://github.com/MESH-Research/Pilcrow/commit/68a34bcdbb37b0d0a2c7bd730f10c8eeaf1c2980))
+* **deps:** update dependency laravel/scout to v10.6.1 ([cd83865](https://github.com/MESH-Research/Pilcrow/commit/cd83865e1c655b82727c0be1851cbe29d2c8f95a))
+* **deps:** update dependency nuwave/lighthouse to v6.25.0 ([5076eda](https://github.com/MESH-Research/Pilcrow/commit/5076eda9b4e40f65527356222475b20ebccde2cb))
+* **deps:** update dependency nuwave/lighthouse to v6.26.0 ([6e4036d](https://github.com/MESH-Research/Pilcrow/commit/6e4036d5977ec90c10d50515e87dbe33689e98fc))
+* **deps:** update dependency nuwave/lighthouse to v6.28.0 ([fff885e](https://github.com/MESH-Research/Pilcrow/commit/fff885e353e1f47e3adac3d1f04df0eff6cab19d))
+* **deps:** update dependency quasar to v2.14.2 ([d42dd7a](https://github.com/MESH-Research/Pilcrow/commit/d42dd7a12c592bba7e5a79e84e7c6cbb9f17b222))
+* **deps:** update dependency quasar to v2.14.3 ([aed994e](https://github.com/MESH-Research/Pilcrow/commit/aed994e720e6b1b7e69ab4fc7e67a2a9befa4bb6))
+* **deps:** update dependency spatie/laravel-permission to v6.2.0 ([abeec08](https://github.com/MESH-Research/Pilcrow/commit/abeec08ff3d15de225779f9d1f556cf13648066b))
+* **deps:** update dependency spatie/laravel-settings to v3.2.2 ([8cf649d](https://github.com/MESH-Research/Pilcrow/commit/8cf649d1d1800861a86c9a42803de3585f3cd5b8))
+* **deps:** update dependency spatie/laravel-settings to v3.2.3 ([c16adf5](https://github.com/MESH-Research/Pilcrow/commit/c16adf585663a08b8804c708e8a6e885d3920629))
+* **deps:** update dependency vue-i18n to v9.9.0 ([65c0b99](https://github.com/MESH-Research/Pilcrow/commit/65c0b999435472aa3ccb17bb203c463b58aec870))
+* **deps:** update dependency vue-i18n to v9.9.1 ([3b217f1](https://github.com/MESH-Research/Pilcrow/commit/3b217f193ee5f3b86ea26567c7f8cb0c2e95d283))
+* **deps:** update tiptap monorepo to v2.1.15 ([22f7745](https://github.com/MESH-Research/Pilcrow/commit/22f77455605115dc7c32e2ee0c5ea01a7483d797))
+* **deps:** update tiptap monorepo to v2.1.16 ([ce4bacc](https://github.com/MESH-Research/Pilcrow/commit/ce4bacc8c6195e1dad74d5b15247ef4db8539872))
+* **deps:** update tiptap monorepo to v2.2.0 ([a02d801](https://github.com/MESH-Research/Pilcrow/commit/a02d801af355447b959f1e26bc5ff50ba71e9833))
+* **deps:** update tiptap monorepo to v2.2.1 ([827ea1a](https://github.com/MESH-Research/Pilcrow/commit/827ea1a2a70a760535d748d153796615766a3b74))
+* fix contrast issue on active comment menu ([#2080](https://github.com/MESH-Research/Pilcrow/issues/2080)) ([5161589](https://github.com/MESH-Research/Pilcrow/commit/5161589c922c7dedfd740a7433a31cd43380f167)), closes [#2056](https://github.com/MESH-Research/Pilcrow/issues/2056)
+* modify text on draft submission page ([#2048](https://github.com/MESH-Research/Pilcrow/issues/2048)) ([3a88656](https://github.com/MESH-Research/Pilcrow/commit/3a88656cd20892b252191c21f7ef44e0eddeb185)), closes [#2047](https://github.com/MESH-Research/Pilcrow/issues/2047)
+
 ## [0.28.0](https://github.com/MESH-Research/Pilcrow/compare/v0.27.2...v0.28.0) (2023-12-01)
 
 
