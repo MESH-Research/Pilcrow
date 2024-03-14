@@ -70,7 +70,6 @@ import useVuelidate from "@vuelidate/core"
 
 const submission = inject("submission")
 const draft_title = ref("")
-const newPubV$ = useVuelidate(rules, draft_title)
 
 watchEffect(() => {
   if (submission.value) {
@@ -84,6 +83,7 @@ const rules = {
   required,
   maxLength: maxLength(512),
 }
+const newPubV$ = useVuelidate(rules, draft_title)
 
 const { newStatusMessage } = useFeedbackMessages({
   attrs: {
