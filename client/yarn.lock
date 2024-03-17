@@ -5189,9 +5189,9 @@ vue-i18n@^9.2.2:
     "@vue/devtools-api" "^6.5.0"
 
 vue-router-mock@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/vue-router-mock/-/vue-router-mock-1.0.0.tgz#d61a3efe9b457384cd7eee7a4fb1e52d85c1e1fd"
-  integrity sha512-j65lh+jhEuEM7sWAz/eenNsEV0VrRXFreNxtIGgLApZkM2h7orImvHSLJ3LhbUa2sJnTtjuy8otSrvoTsdGVYw==
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/vue-router-mock/-/vue-router-mock-1.1.0.tgz#9e31bf261f9c37d2f944a7d441fcc1be51fc5a46"
+  integrity sha512-RhKhxkiZh2zB2eRkzfcCILQQ0ZUc0tk7CE2ZC1PGJYi5GOU+2QQAGHtTCgb8V4B/OPm9ws+X5Q9SQB5vyTXxBQ==
 
 vue-router@^4.0.0:
   version "4.2.5"
