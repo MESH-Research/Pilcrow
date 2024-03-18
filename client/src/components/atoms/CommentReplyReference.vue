@@ -17,7 +17,13 @@
         class="q-mr-sm"
       />
 
-      <div>In reply to {{ referencedComment.created_by.username }}</div>
+      <div>
+        {{
+          $t("submissions.comment.reference.in_reply_to", {
+            username: referencedComment.created_by.username,
+          })
+        }}
+      </div>
     </q-btn>
   </q-card-section>
 </template>
