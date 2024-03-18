@@ -1,10 +1,8 @@
 extend type Query {
-    identityProviders: [IdentityProviderButton]
+    identityProviders: [IdentityProvider]
 }
 
 extend type Mutation {
-    loginOrcid: String!
-    loginGoogle: String!
     loginOauthCallback(
         provider_name: String!
         code: String!
@@ -16,10 +14,11 @@ extend type Mutation {
 """
 A button that apepars on the Login page for a supported external identity provider
 """
-type IdentityProviderButton {
+type IdentityProvider {
     name: String!
+    login_url: String!
     label: String!
-    icon: String
+    icon: String!
 }
 """
 A response from an external identity provider

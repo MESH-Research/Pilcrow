@@ -445,6 +445,7 @@ export const GET_IDENTITY_PROVIDERS = gql`
   query GetIdentityProviders {
     identityProviders {
       name
+      login_url
       label
       icon
     }

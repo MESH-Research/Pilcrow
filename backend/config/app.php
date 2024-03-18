@@ -245,4 +245,9 @@ return [
 
     ],
 
+    'external_oauth_providers' => [
+      'google' => \App\OauthAdapters\GoogleAdapter::class,
+      'orcid' => \App\OauthAdapters\OrcidAdapter::class,
+    ],
+
 ];

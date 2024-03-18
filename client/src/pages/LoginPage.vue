@@ -122,17 +122,16 @@
 import PasswordInput from "src/components/forms/PasswordInput.vue"
 import ErrorBanner from "src/components/molecules/ErrorBanner.vue"
 import ErrorFieldRenderer from "src/components/molecules/ErrorFieldRenderer.vue"
-import { useQuery, useMutation } from "@vue/apollo-composable"
+import { useQuery } from "@vue/apollo-composable"
 import { GET_IDENTITY_PROVIDERS } from "src/graphql/queries"
-import { LOGIN_ORCID, LOGIN_GOOGLE } from "src/graphql/mutations"
 import { ref, computed } from "vue"
 import { useLogin } from "src/use/user"
 import { useRouter } from "vue-router"
 
 const error = ref("")
-const { loading: loadingProviders, result: resultProviders } = useQuery(GET_IDENTITY_PROVIDERS)
-const { mutate: loginOrcid } = useMutation(LOGIN_ORCID)
-const { mutate: loginGoogle } = useMutation(LOGIN_GOOGLE)
+const { loading: loadingProviders, result: resultProviders } = useQuery(
+  GET_IDENTITY_PROVIDERS,
+)
 const providers = computed(() => {
   return resultProviders.value?.identityProviders ?? []
 })
@@ -147,21 +146,11 @@ const handleSubmit = async () => {
   }
 }
 
-const providerMapper = {
-  'orcid': {
-    mutation: loginOrcid,
-    href: `loginOrcid`
-  },
-  'google': {
-    mutation: loginGoogle,
-    href: `loginGoogle`
-  }
-}
-
-const handleProviderBtnClick = async (provider_name) => {
+const handleProviderBtnClick = (provider_name) => {
   try {
-    const result = await providerMapper[provider_name].mutation()
-    window.location.href = result.data[`${providerMapper[provider_name].href}`]
+    window.location.href = providers.value.find(
+      (p) => p.name === provider_name,
+    ).login_url
   } catch (e) {
     error.value = e.message
   }

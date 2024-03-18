@@ -23,20 +23,27 @@ final readonly class LoginOauthCallback
     {
         try {
             $this->provider_name = $args['provider_name'];
-            /** @var \App\GraphQL\Mutations\AbstractProvider $driver */
-            $driver = Socialite::driver($this->provider_name);
-            $response = $driver->getAccessTokenResponse($args['code']);
-            if ($this->provider_name == 'google') {
-                $socialiteUser = $driver->userFromToken($response['access_token']);
-            } else {
-                $socialiteUser = $driver->userFromToken($response);
+
+            $providers = config('app.external_oauth_providers');
+
+            if (!in_array($this->provider_name, $providers)) {
+                throw new Error('Invalid provider.');
             }
-            $provider = ExternalIdentityProvider::where('provider_name', $this->provider_name)
+
+            $adapter = $providers[$this->provider_name];
+            $adapter::getDriver();
+
+            $socialiteUser = $adapter::getUserFromToken($args['code']);
+
+            $providerEntity = ExternalIdentityProvider::where('provider_name', $this->provider_name)
                 ->where('provider_id', $socialiteUser->getId())
                 ->first();
-            if ($provider) {
-                return $this->handleMatchedProviderId($provider);
-            } elseif (!empty($socialiteUser->getEmail())) {
+
+            if ($providerEntity) {
+                return $this->handleMatchedProviderId($providerEntity);
+            }
+
+            if (!empty($socialiteUser->getEmail())) {
                 $user = User::where('email', $socialiteUser->getEmail())->first();
                 if ($user) {
                     return $this->handleMatchedEmail($socialiteUser, $user);

@@ -880,18 +880,6 @@ export const RESET_PASSWORD = gql`
   }
 `
 
-export const LOGIN_ORCID = gql`
-  mutation LoginOrcid {
-    loginOrcid
-  }
-`
-
-export const LOGIN_GOOGLE = gql`
-  mutation LoginGoogle {
-    loginGoogle
-  }
-`
-
 export const LOGIN_OAUTH_CALLBACK = gql`
   mutation LoginOauthCallback($provider_name: String!, $code: String!) {
     loginOauthCallback(provider_name: $provider_name, code: $code) {
