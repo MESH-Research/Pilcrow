@@ -20,7 +20,7 @@ class OrcidAdapter extends BaseAdapter
 
   public static function isEnabled(): bool
   {
-    return config('orcid.client_id') && config('orcid.client_secret') && config('orcid.redirect');
+    return config('services.orcid.client_id') && config('services.orcid.client_secret') && config('services.orcid.redirect');
   }
 
    public static function getLoginUrl(): string
