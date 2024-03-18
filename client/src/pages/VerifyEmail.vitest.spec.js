@@ -66,7 +66,7 @@ describe("VerifyEmailPage", () => {
 
   test("renders success", async () => {
     verifyHandler.mockResolvedValue({
-      data: { verifyEmail: { email_verified_at: "timestamp" } },
+      data: { verifyEmail: { id: 1, email_verified_at: "timestamp" } },
     })
     useRoute.mockReturnValue({
       params: { token: "", expires: "" },
