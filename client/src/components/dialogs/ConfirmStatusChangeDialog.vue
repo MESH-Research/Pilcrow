@@ -58,14 +58,14 @@
 </template>
 
 <script setup>
-import { useDialogPluginComponent, useQuasar } from "quasar"
+import { useDialogPluginComponent } from "quasar"
 import { useMutation } from "@vue/apollo-composable"
 import { UPDATE_SUBMISSION_STATUS } from "src/graphql/mutations"
 import { ref } from "vue"
 import { useI18n } from "vue-i18n"
+import { useFeedbackMessages } from "src/use/guiElements"
 
 const { t } = useI18n()
-const { notify } = useQuasar()
 
 defineEmits([...useDialogPluginComponent.emits])
 
@@ -122,6 +122,11 @@ const colors = {
 const comment = ref(null)
 
 const { mutate } = useMutation(UPDATE_SUBMISSION_STATUS)
+const { newStatusMessage } = useFeedbackMessages({
+  attrs: {
+    "data-cy": "change_status_notify",
+  }
+})
 
 async function updateStatus() {
   try {
@@ -130,23 +135,9 @@ async function updateStatus() {
       status: statuses[props.action],
       status_change_comment: comment.value,
     })
-    notify({
-      color: "positive",
-      message: t(`dialog.confirmStatusChange.statusChanged.${props.action}`),
-      icon: "done",
-      attrs: {
-        "data-cy": "change_status_notify",
-      },
-    })
+    newStatusMessage("success", t(`dialog.confirmStatusChange.statusChanged.${props.action}`))
   } catch (error) {
-    notify({
-      color: "negative",
-      message: t("dialog.confirmStatusChange.unauthorized"),
-      icon: "error",
-      attrs: {
-        "data-cy": "change_status_notify",
-      },
-    })
+    newStatusMessage("failure", t("dialog.confirmStatusChange.unauthorized"))
   }
 }
 </script>

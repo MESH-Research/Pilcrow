@@ -1149,7 +1149,9 @@
         "request_resubmission": "A resubmission is requested for this submission.",
         "open": "This submission is now under review.",
         "close": "This submission is closed for review.",
-        "accept_as_final": "This submission is accepted as final."
+        "accept_as_final": "This submission is accepted as final.",
+        "delete": "This submission is now deleted.",
+        "archive": "This submission is now archived."
       }
     },
     "discardChanges": {
