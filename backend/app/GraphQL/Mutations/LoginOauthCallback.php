@@ -7,7 +7,6 @@ use App\Models\ExternalIdentityProvider;
 use App\Models\User;
 use Error;
 use Illuminate\Support\Facades\Auth;
-use Laravel\Socialite\Facades\Socialite;
 
 final readonly class LoginOauthCallback
 {

@@ -14,22 +14,20 @@ final readonly class IdentityProviders
      */
     public function __invoke(null $_, array $_args): Collection
     {
-      $providers = config('app.external_oauth_providers');
+        $providers = config('app.external_oauth_providers');
 
+        $availableProviders = new Collection($providers);
 
-      $availableProviders = new Collection($providers);
-
-        return  $availableProviders->filter(function($adapter) {
-          return $adapter::isEnabled();
+        return $availableProviders->filter(function ($adapter) {
+            return $adapter::isEnabled();
         })
-          ->map(function($adapter, $name) {
-          return [
+          ->map(function ($adapter, $name) {
+            return [
             'name' => $name,
             'login_url' => $adapter::getLoginUrl(),
             'label' => $adapter::getLabel(),
-            'icon' => $adapter::getIcon()
-          ];
-        });
-
+            'icon' => $adapter::getIcon(),
+            ];
+          });
     }
 }
