@@ -100,28 +100,11 @@ Pilcrow supports the registration and authentication of user accounts with exter
 
 ### Enable Provider Buttons
 
-To have login buttons appear on the `/login` page for certain providers, add JSON objects representing those providers to the `IDENTITY_PROVIDERS` array in `/backend/.env`. Each object should have the following attributes:
-
-* `name` - The unique identifier of the provider not displayed on the client
-* `label` - The label of the provider displayed on the client
-* `icon` (optional) - The Font Awesome icon of the provider displayed on the client <https://fontawesome.com/icons>
-
-Example: `{"name":"","label":"","icon":""}`
-
-An instance of Pilcrow that supports Google and ORCID external identity authentication/registration would have an `IDENTITY_PROVIDERS` variable that looks like this:
-
-```php
-IDENTITY_PROVIDERS='[{"name":"orcid","label":"ORCID","icon":"orcid"},{"name":"google","label":"Google","icon":"google"}]'
-```
+Login buttons for external identity providers will appear on the Login page (`/login` ) after adding values for the environment variables related to external providers in the environment file (`/backend/.env`). Currently, ORCID and Google are supported. Users will be able to both register and authenticate with these providers using these buttons.
 
 ### Register Redirect URLs
 
 Register a "redirect URL" with the provider(s) you intend to allow users to use on your instance of Pilcrow. Once you have a redirect URL registered with that provider, update `/backend/.env` with information pertaining to that provider.
-
-* `CLIENT_ID`
-* `CLIENT_SECRET`
-* `REDIRECT_URL`
-* `ENVIRONMENT`
 
 #### ORCID
 
@@ -141,7 +124,7 @@ Documentation from Google for establishing a Google Cloud application for OAuth 
 ```php
 GOOGLE_CLIENT_ID=$YourGoogleClientId
 GOOGLE_CLIENT_SECRET=$YourGoogleClientSecret
-GOOGLE_REDIRECT_URL="${APP_URL}/auth/redirect/google"
+GOOGLE_REDIRECT_URI="${APP_URL}/auth/redirect/google"
 ```
 
 ## WSL Developer Notes {#wsl-notes}
