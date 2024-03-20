@@ -40,7 +40,7 @@ class GoogleAdapter extends BaseAdapter
      */
     public static function getLabel(): string
     {
-        return 'google';
+        return 'Google';
     }
 
     /**

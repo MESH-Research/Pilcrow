@@ -53,7 +53,7 @@ class OrcidAdapter extends BaseAdapter
      */
     public static function getLabel(): string
     {
-        return 'orcid';
+        return 'ORCID';
     }
 
     /**
