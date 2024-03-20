@@ -20,14 +20,13 @@ final readonly class IdentityProviders
 
         return $availableProviders->filter(function ($adapter) {
             return $adapter::isEnabled();
-        })
-          ->map(function ($adapter, $name) {
+        })->map(function ($adapter, $name) {
             return [
-            'name' => $name,
-            'login_url' => $adapter::getLoginUrl(),
-            'label' => $adapter::getLabel(),
-            'icon' => $adapter::getIcon(),
+                'name' => $name,
+                'login_url' => $adapter::getLoginUrl(),
+                'label' => $adapter::getLabel(),
+                'icon' => $adapter::getIcon(),
             ];
-          });
+        });
     }
 }
