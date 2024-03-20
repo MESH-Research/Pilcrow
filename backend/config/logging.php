@@ -17,7 +17,7 @@ return [
     |
     */
 
-    'default' => env('LOG_CHANNEL', 'stack'),
+    'default' => env('LOG_CHANNEL', 'errorLog'),
 
     /*
     |--------------------------------------------------------------------------
@@ -76,6 +76,7 @@ return [
             'driver' => 'monolog',
             'handler' => StreamHandler::class,
             'formatter' => env('LOG_STDERR_FORMATTER'),
+            'path' => storage_path('logs/error.log'),
             'with' => [
                 'stream' => 'php://stderr',
             ],
@@ -88,6 +89,7 @@ return [
 
         'errorlog' => [
             'driver' => 'errorlog',
+            'path' => storage_path('logs/error.log'),
             'level' => env('LOG_LEVEL', 'debug'),
         ],
 

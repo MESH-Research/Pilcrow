@@ -11,7 +11,7 @@ describe("SubmissionContent", () => {
   const makeTestArticle = () => {
     const submission = ref({
       content: {
-        data: "Hello world",
+        data: "Test article content",
       },
       inline_comments: [
         {

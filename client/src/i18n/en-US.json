@@ -41,8 +41,18 @@
     "label": "Item"
   },
   "auth": {
-    "loginRequired": "Please login to access that page.",
+    "oauth": {
+      "register": {
+        "title": "Continue Registration"
+      },
+      "submit": {
+        "btn_label": "Start Using Pilcrow"
+      }
+    },
+    "loginRequired": "Please log in to access that page.",
     "login": "Login",
+    "log_in": "Log In",
+    "log_in_external": "Log in with {provider}",
     "logout": "Logout",
     "logging_out": "Logging Out...",
     "register": "Register",
@@ -70,6 +80,10 @@
       "show_password": "Show password"
     },
     "validation": {
+      "name": {
+        "maxLength": "Name is too long.",
+        "NAME_LENGTH_EXCEEDED": "Name is too long."
+      },
       "username": {
         "required": "Username is required.",
         "USERNAME_IN_USE": "Sorry, this username is not available."
@@ -346,7 +360,7 @@
     },
     "type": {
       "submissions": {
-        "no_data": "There are no submissions for you."
+        "no_data": "You have not submitted any submissions."
       },
       "reviews": {
         "no_data": "There are no reviews for you."
