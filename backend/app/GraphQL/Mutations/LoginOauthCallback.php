@@ -22,10 +22,12 @@ final readonly class LoginOauthCallback
     {
         try {
             $this->provider_name = $args['provider_name'];
+            // print_r($args['provider_name'] . "\n");
+            // print_r('---');
 
             $providers = config('app.external_oauth_providers');
 
-            if (!in_array($this->provider_name, $providers)) {
+            if (!array_key_exists($this->provider_name, $providers)) {
                 throw new Error('Invalid provider.');
             }
 
