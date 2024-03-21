@@ -602,7 +602,7 @@
     "style_criteria": {
       "heading": "Style Criteria",
       "body_1": "Style criteria are a core component of the Collaborative Community Review process. Your users will associate their comments with one or more of the style criteria you define below. This helps keep the conversation about a submission aligned with your publication's core values and focused on moving a submission through the review process.",
-      "body_2": "You can define up to six style critera and your reviewers are able to select mulitple criteria when creating a comment. Reviewers are able to bypass the style criteria selection after confirming that their comment doesn't fit any of the options presented.",
+      "body_2": "You can define up to six style criteria and your reviewers are able to select multiple criteria when creating a comment. Reviewers are able to bypass the style criteria selection after confirming that their comment doesn't fit any of the options presented.",
       "create": "Create style criteria to help your reviewers.",
       "edit_button": "Edit",
       "delete_confirm": "Are you sure you want to delete {name}?",
