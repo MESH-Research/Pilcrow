@@ -31,6 +31,7 @@ describe("LoginPage", () => {
         {
           name: "orcid",
           label: "ORCID",
+          login_url: "",
           icon: "orcid",
           __typename: "IdentityProviderButton",
         },
