@@ -49,7 +49,7 @@
   },
   "devDependencies": {
     "@quasar/app-vite": "^1.0.0",
-    "@quasar/quasar-app-extension-testing-unit-vitest": "^0.4.0",
+    "@quasar/quasar-app-extension-testing-unit-vitest": "^1.0.0",
     "@vitest/ui": "^1.0.0",
     "@vue/test-utils": "^2.0.0",
     "autoprefixer": "^10.4.2",
