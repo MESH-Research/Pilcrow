@@ -11,9 +11,9 @@
       </q-btn-group>
       <div class="comment-editor" @focus-editor="focusOnEditor">
         <editor-content
+          ref="focusEditor"
           data-cy="comment-editor"
           :editor="editor"
-          ref="focusEditor"
         />
       </div>
       <div v-if="commentType === 'InlineComment'" class="q-py-md">

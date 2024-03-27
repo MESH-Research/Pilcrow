@@ -12,7 +12,7 @@ describe("Submission Draft Page", () => {
     cy.injectAxe()
     cy.dataCy("todo_go_btn").click();
     cy.dataCy("enter_text_option").click();
-    cy.dataCy("content_editor").type("Hello World");
+    cy.dataCy("content_editor").type("Test Content");
     cy.dataCy("submit_entered_text_btn").click();
     cy.dataCy("content_submit_success_btn").click();
     cy.dataCy("todo_preview_btn").eq(0).contains("Preview")

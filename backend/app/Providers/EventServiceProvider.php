@@ -15,6 +15,7 @@ use App\Listeners\NotifyUsersAboutUpdatedSubmissionStatus;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
+use SocialiteProviders\Manager\SocialiteWasCalled;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -41,6 +42,10 @@ class EventServiceProvider extends ServiceProvider
         ],
         ReviewCoordinatorInvitationAccepted::class => [
             NotifyUsersAboutAcceptedReviewCoordinatorInvitation::class,
+        ],
+        SocialiteWasCalled::class => [
+            'SocialiteProviders\Google\GoogleExtendSocialite@handle',
+            'SocialiteProviders\Orcid\OrcidExtendSocialite@handle'
         ],
     ];
 

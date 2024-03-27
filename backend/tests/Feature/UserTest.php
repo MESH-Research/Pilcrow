@@ -138,4 +138,20 @@ class UserTest extends TestCase
         $user = User::createStagedUser($this->faker->email());
         $this->assertEquals(1, $user->staged);
     }
+
+    /**
+     * @return void
+     */
+    public function testUniqueUsernameGenerationWithNoEmail()
+    {
+        $username1 = User::generateUniqueUsername('');
+        User::factory()->create([
+            'email' => 'testEmail@msu.edu',
+            'username' => $username1,
+        ]);
+        $username2 = User::generateUniqueUsername('');
+        $this->assertNotEmpty($username1);
+        $this->assertNotEmpty($username2);
+        $this->assertNotEquals($username1, $username2);
+    }
 }

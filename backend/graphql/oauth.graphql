@@ -1,0 +1,63 @@
+extend type Query {
+    identityProviders: [IdentityProvider]
+}
+
+extend type Mutation {
+    loginOauthCallback(
+        provider_name: String!
+        code: String!
+    ): LoginOauthResponse
+    registerOauthUser(input: RegisterOauthUserInput): User
+        @field(resolver: "App\\GraphQL\\Mutations\\RegisterOauthUser@register")
+}
+
+"""
+A button that apepars on the Login page for a supported external identity provider
+"""
+type IdentityProvider {
+    name: String!
+    login_url: String!
+    label: String!
+    icon: String!
+}
+"""
+A response from an external identity provider
+"""
+type LoginOauthResponse {
+    action: String
+    user: ProviderUser
+    provider: Provider
+}
+"""
+The user within the response from an external identity provider
+"""
+type ProviderUser {
+    name: String
+    username: String
+    email: String
+}
+"""
+The provider within the response from an external identity provider
+"""
+type Provider {
+    provider_name: String!
+    provider_id: String!
+    user_id: ID!
+}
+
+"""
+Inputs
+"""
+input RegisterOauthUserInput {
+    user: ProviderUserInput
+    provider: ProviderInput
+}
+input ProviderUserInput @validator(class: "RegisterOauthUserValidator") {
+    name: String
+    username: String
+    email: String
+}
+input ProviderInput {
+    provider_name: String!
+    provider_id: String!
+}

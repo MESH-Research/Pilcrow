@@ -69,7 +69,9 @@
           text-color="grey-7"
           @click="scrollToOverallComments()"
         />
-        <q-tooltip>{{ $t("submissions.style_controls.view_overall") }}</q-tooltip>
+        <q-tooltip>{{
+          $t("submissions.style_controls.view_overall")
+        }}</q-tooltip>
       </div>
       <div>
         <q-btn
@@ -82,7 +84,9 @@
           text-color="grey-7"
           @click="scrollNewOverallComment()"
         />
-        <q-tooltip>{{ $t("submissions.style_controls.new_overall") }}</q-tooltip>
+        <q-tooltip>{{
+          $t("submissions.style_controls.new_overall")
+        }}</q-tooltip>
       </div>
     </div>
   </div>
@@ -138,8 +142,11 @@ import SampleSubmissionContentCriteria from "./SampleSubmissionContentCriteria.v
 import SampleSubmissionContentGrouped from "./SampleSubmissionContentGrouped.vue"
 import SubmissionContentKit from "src/tiptap/extension-submission-content-kit"
 import { BubbleMenu, Editor, EditorContent } from "@tiptap/vue-3"
-import { computed, inject, ref, watch } from "vue"
+import { computed, inject, ref, watch, nextTick } from "vue"
 import { useQuasar } from "quasar"
+import { scroll } from "quasar"
+const { getScrollTarget, setVerticalScrollPosition } = scroll
+
 const props = defineProps({
   annotationEnabled: {
     type: Boolean,
@@ -172,7 +179,7 @@ function toggleDarkMode() {
 
 const emit = defineEmits([
   "scrollToOverallComments",
-  "scrollAddNewOverallComment"
+  "scrollAddNewOverallComment",
 ])
 
 function scrollToOverallComments() {
@@ -248,17 +255,21 @@ const onAnnotationClick = (context, { target }) => {
 const inlineComments = computed(() => submission.value?.inline_comments ?? [])
 const annotations = computed(() =>
   props.highlightVisibility
-    ? inlineComments.value.map(({ from, to, id, deleted_at }) => deleted_at == null ? ({
-        from,
-        to,
-        context: { id },
-        active: id === activeComment.value?.id,
-        click: onAnnotationClick,
-      }) : {
-        context: { id },
-        active: id === activeComment.value?.id,
-        click: () => false,
-      })
+    ? inlineComments.value.map(({ from, to, id, deleted_at }) =>
+        deleted_at == null
+          ? {
+              from,
+              to,
+              context: { id },
+              active: id === activeComment.value?.id,
+              click: onAnnotationClick,
+            }
+          : {
+              context: { id },
+              active: id === activeComment.value?.id,
+              click: () => false,
+            },
+      )
     : [],
 )
 
@@ -301,6 +312,40 @@ function highlightClickHandler(event) {
   commentDrawerOpen.value = true
   activeComment.value = findCommentFromId(id)
 }
+
+watch(
+  activeComment,
+  (newValue) => {
+    if (!newValue) return
+    if (!newValue.__typename.startsWith("InlineComment")) return
+    nextTick(() => {
+      let scrollTarget = null
+      scrollTarget = contentRef.value.querySelector(
+        `button[data-comment="${newValue.id}"]`,
+      )
+      if (!scrollTarget) return
+      const getOffsetTop = function (element) {
+        if (!element) return 0
+        return getOffsetTop(element.offsetParent) + element.offsetTop
+      }
+      const getOffset = scrollTarget.getBoundingClientRect().top
+      if (getOffset > 200 && getOffset < 500) return
+      const primaryNavHeight = 70
+      const secondaryNavHeight = 48
+      const tertiaryNavHeight = 75
+      const negativeSpaceAdjustment = 14
+      const offset =
+        getOffsetTop(scrollTarget) -
+        primaryNavHeight -
+        secondaryNavHeight -
+        tertiaryNavHeight -
+        negativeSpaceAdjustment
+      const target = getScrollTarget(scrollTarget)
+      setVerticalScrollPosition(target, offset, 250)
+    })
+  },
+  { deep: false },
+)
 </script>
 
 <style lang="scss">
