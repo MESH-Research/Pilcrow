@@ -3833,30 +3833,30 @@
         },
         {
             "name": "owen-it/laravel-auditing",
-            "version": "v13.5.1",
+            "version": "v13.6.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/owen-it/laravel-auditing.git",
-                "reference": "8b9c5bd7d6e79ed63376a86b1861ab1606215801"
+                "reference": "27e1b3121a6b34f9635d2dbe84c13ca11ed2bee0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/owen-it/laravel-auditing/zipball/8b9c5bd7d6e79ed63376a86b1861ab1606215801",
-                "reference": "8b9c5bd7d6e79ed63376a86b1861ab1606215801",
+                "url": "https://api.github.com/repos/owen-it/laravel-auditing/zipball/27e1b3121a6b34f9635d2dbe84c13ca11ed2bee0",
+                "reference": "27e1b3121a6b34f9635d2dbe84c13ca11ed2bee0",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
-                "illuminate/console": "^7.0|^8.0|^9.0|^10.0",
-                "illuminate/database": "^7.0|^8.0|^9.0|^10.0",
-                "illuminate/filesystem": "^7.0|^8.0|^9.0|^10.0",
+                "illuminate/console": "^7.0|^8.0|^9.0|^10.0|^11.0",
+                "illuminate/database": "^7.0|^8.0|^9.0|^10.0|^11.0",
+                "illuminate/filesystem": "^7.0|^8.0|^9.0|^10.0|^11.0",
                 "php": "^7.3|^8.0"
             },
             "require-dev": {
                 "laravel/legacy-factories": "*",
                 "mockery/mockery": "^1.0",
-                "orchestra/testbench": "^5.0|^6.0|^7.0|^8.0",
-                "phpunit/phpunit": "^9.0"
+                "orchestra/testbench": "^5.0|^6.0|^7.0|^8.0|^9.0",
+                "phpunit/phpunit": "^9.6|^10.5|^11.0"
             },
             "suggest": {
                 "irazasyed/larasupport": "Needed to publish the package configuration in Lumen"
@@ -3896,7 +3896,7 @@
                 }
             ],
             "description": "Audit changes of your Eloquent models in Laravel/Lumen",
-            "homepage": "http://laravel-auditing.com",
+            "homepage": "https://laravel-auditing.com",
             "keywords": [
                 "Accountability",
                 "Audit",
@@ -3917,7 +3917,7 @@
                 "issues": "https://github.com/owen-it/laravel-auditing/issues",
                 "source": "https://github.com/owen-it/laravel-auditing"
             },
-            "time": "2023-06-19T14:51:52+00:00"
+            "time": "2024-03-14T13:42:22+00:00"
         },
         {
             "name": "phpdocumentor/reflection-common",
