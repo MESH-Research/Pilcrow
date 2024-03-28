@@ -23,7 +23,7 @@
         "olssonm/l5-zxcvbn": "^5.1",
         "owen-it/laravel-auditing": "^13.5",
         "socialiteproviders/google": "^4.1",
-        "socialiteproviders/orcid": "dev-master#9a61194",
+        "socialiteproviders/orcid": "^5.1.0",
         "spatie/laravel-permission": "^6.0",
         "spatie/laravel-settings": "^3.0",
         "teamtnt/laravel-scout-tntsearch-driver": "^14.0",

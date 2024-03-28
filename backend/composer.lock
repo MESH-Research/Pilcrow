@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e2c1200a4a4b432fe07fa803168b5b5b",
+    "content-hash": "a6b4c3cf0838afa901128d84fc2bae28",
     "packages": [
         {
             "name": "bensampo/laravel-enum",
@@ -5093,16 +5093,16 @@
         },
         {
             "name": "socialiteproviders/orcid",
-            "version": "dev-master",
+            "version": "5.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/SocialiteProviders/Orcid.git",
-                "reference": "9a61194"
+                "reference": "9a61194bd23394b851ef6d879991ebc284cd74d8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/SocialiteProviders/Orcid/zipball/9a61194",
-                "reference": "9a61194",
+                "url": "https://api.github.com/repos/SocialiteProviders/Orcid/zipball/9a61194bd23394b851ef6d879991ebc284cd74d8",
+                "reference": "9a61194bd23394b851ef6d879991ebc284cd74d8",
                 "shasum": ""
             },
             "require": {
@@ -5110,7 +5110,6 @@
                 "php": "^8.0",
                 "socialiteproviders/manager": "^4.4"
             },
-            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -5140,7 +5139,7 @@
                 "issues": "https://github.com/socialiteproviders/providers/issues",
                 "source": "https://github.com/socialiteproviders/providers"
             },
-            "time": "2024-02-13T06:51:57+00:00"
+            "time": "2024-02-01T18:57:00+00:00"
         },
         {
             "name": "spatie/laravel-permission",
@@ -10741,9 +10740,7 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {
-        "socialiteproviders/orcid": 20
-    },
+    "stability-flags": [],
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
