@@ -377,9 +377,9 @@
     webpack-merge "^5.8.0"
 
 "@quasar/extras@^1.15.8":
-  version "1.16.9"
-  resolved "https://registry.yarnpkg.com/@quasar/extras/-/extras-1.16.9.tgz#6cdf9d34862e6f58009443a2d1e34b84a5e73ad0"
-  integrity sha512-SlOhwzXyPQHWgQIS2ncyDdYdksCJvUYNtgsDQqzAKEG3r3d/ejOxvThle79HTK3Q6HB+gQWFG21Ux00Osr5XSw==
+  version "1.16.10"
+  resolved "https://registry.yarnpkg.com/@quasar/extras/-/extras-1.16.10.tgz#2179241f5e03098865fd0e0a2fa1f3809c3d0670"
+  integrity sha512-Gmj36x2eeXhbdJmEXdQ8QiM+AL7PLpVW8O8OpiMx6z1ch/Fqy2ZycTaTNtrEw0IWlKDlUULg+S4DltMqdwSXZQ==
 
 "@quasar/quasar-app-extension-testing-unit-vitest@^1.0.0":
   version "1.0.0"
