@@ -355,8 +355,7 @@
       "number": "Number",
       "title": "Submission Title",
       "submitted_by": "Submitted By",
-      "submitted_on": "Submitted On",
-      "created_at": "Created",
+      "submitted_at": "Submitted",
       "publication": "Publication Name",
       "status": "Status",
       "actions": "Actions"

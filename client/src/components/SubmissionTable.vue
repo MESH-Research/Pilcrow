@@ -91,7 +91,7 @@
                   >{{ p.row.title }}
                 </router-link>
                 <p class="q-ma-none">{{ generateSubmitterList(p.row.submitters) }}</p>
-                <p class="q-ma-none">{{ relativeTime(p.row.created_at).value }}</p>
+                <p class="q-ma-none">{{ relativeTime(p.row.submitted_at).value }}</p>
               </div>
             </div>
             <div class="row justify-between">
@@ -132,8 +132,8 @@
     <template #body-cell-submitters="p">
       <q-td :props="p"><span>{{ generateSubmitterList(p.row.submitters) }}</span></q-td>
     </template>
-    <template #body-cell-created="p">
-      <q-td :props="p"><span>{{ relativeTime(p.row.created_at).value }}</span></q-td>
+    <template #body-cell-submitted="p">
+      <q-td :props="p"><span>{{ relativeTime(p.row.submitted_at).value }}</span></q-td>
     </template>
     <template #body-cell-publication="p">
       <q-td :props="p">
@@ -239,9 +239,9 @@ const cols = [
     align: "left",
   },
   {
-    name: "created",
-    field: "created_at",
-    label: t(`submission_tables.columns.created_at`),
+    name: "submitted",
+    field: "submitted_at",
+    label: t(`submission_tables.columns.submitted_at`),
     sortable: true,
     align: "left",
   },
