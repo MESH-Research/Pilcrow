@@ -260,6 +260,7 @@ export const GET_SUBMISSIONS = gql`
         title
         status
         my_role
+        created_at
         effective_role
         submitters {
           ...relatedUserFields

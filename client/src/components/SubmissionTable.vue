@@ -20,14 +20,9 @@
             </q-icon>
           </h3>
 
-          <i18n-t
-            :keypath="byline"
-            class="q-mb-none"
-            tag="p"
-            scope="global"
-          >
+          <i18n-t :keypath="byline" class="q-mb-none" tag="p" scope="global">
             <template #role>
-              <strong>{{ $t(`role.${role}s`,1) }}</strong>
+              <strong>{{ $t(`role.${role}s`, 1) }}</strong>
             </template>
           </i18n-t>
 
@@ -86,15 +81,18 @@
             {{ p.row.id }}
           </q-card-section>
           <q-card-section class="full-width" data-cy="submission_link_mobile">
-            <div class="row justify-between">
-              <router-link
-                v-if="p.row.status !== 'DRAFT'"
-                :to="{
-                  name: submissionLinkName(p.row),
-                  params: { id: p.row.id },
-                }"
-                >{{ p.row.title }}
-              </router-link>
+            <div class="row">
+              <div class="col">
+                <router-link
+                  :to="{
+                    name: submissionLinkName(p.row),
+                    params: { id: p.row.id },
+                  }"
+                  >{{ p.row.title }}
+                </router-link>
+                <p class="q-ma-none">{{ generateSubmitterList(p.row.submitters) }}</p>
+                <p class="q-ma-none">{{ relativeTime(p.row.created_at).value }}</p>
+              </div>
             </div>
             <div class="row justify-between">
               <router-link
@@ -131,6 +129,12 @@
         </router-link>
       </q-td>
     </template>
+    <template #body-cell-submitters="p">
+      <q-td :props="p"><span>{{ generateSubmitterList(p.row.submitters) }}</span></q-td>
+    </template>
+    <template #body-cell-created="p">
+      <q-td :props="p"><span>{{ relativeTime(p.row.created_at).value }}</span></q-td>
+    </template>
     <template #body-cell-publication="p">
       <q-td :props="p">
         <router-link
@@ -162,6 +166,7 @@
 import SubmissionTableActions from "./SubmissionTableActions.vue"
 import { useI18n } from "vue-i18n"
 import { ref, computed } from "vue"
+import { relativeTime } from "src/use/timeAgo"
 const { t } = useI18n()
 
 const props = defineProps({
@@ -227,6 +232,20 @@ const cols = [
     align: "left",
   },
   {
+    name: "submitters",
+    field: "submitters",
+    label: t(`submission_tables.columns.submitted_by`),
+    sortable: true,
+    align: "left",
+  },
+  {
+    name: "created",
+    field: "created_at",
+    label: t(`submission_tables.columns.created_at`),
+    sortable: true,
+    align: "left",
+  },
+  {
     name: "publication",
     field: "publication",
     label: t(`submission_tables.columns.publication`),
@@ -250,6 +269,10 @@ const cols = [
     align: "center",
   },
 ]
+function generateSubmitterList(submitters) {
+  return submitters.map((submitter) => submitter.display_label).join(", ")
+}
+
 </script>
 
 <style lang="sass">
