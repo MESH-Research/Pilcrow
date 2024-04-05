@@ -3752,27 +3752,26 @@
         },
         {
             "name": "olssonm/l5-zxcvbn",
-            "version": "v5.1",
+            "version": "v5.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/olssonm/laravel-zxcvbn.git",
-                "reference": "e03d3915c5cbcd10e2be05319a3c64348ea1fa3b"
+                "reference": "bcbecd5baec9bac3e67cb7c6f7c63e3733559864"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/olssonm/laravel-zxcvbn/zipball/e03d3915c5cbcd10e2be05319a3c64348ea1fa3b",
-                "reference": "e03d3915c5cbcd10e2be05319a3c64348ea1fa3b",
+                "url": "https://api.github.com/repos/olssonm/laravel-zxcvbn/zipball/bcbecd5baec9bac3e67cb7c6f7c63e3733559864",
+                "reference": "bcbecd5baec9bac3e67cb7c6f7c63e3733559864",
                 "shasum": ""
             },
             "require": {
                 "bjeavons/zxcvbn-php": "^1.2",
-                "illuminate/support": "^7.0|^8.0|^9.0|^10.0",
+                "illuminate/support": "^7.0|^8.0|^9.0|^10.0|^11.0",
                 "php": "^7.4|^8.0"
             },
             "require-dev": {
                 "orchestra/testbench": ">=4.0",
-                "pestphp/pest": "^1.22",
-                "phpunit/phpunit": "^8.0|^9.0",
+                "pestphp/pest": "^1.22|^2.0",
                 "squizlabs/php_codesniffer": "^3.7"
             },
             "type": "library",
@@ -3815,7 +3814,7 @@
             ],
             "support": {
                 "issues": "https://github.com/olssonm/laravel-zxcvbn/issues",
-                "source": "https://github.com/olssonm/laravel-zxcvbn/tree/v5.1"
+                "source": "https://github.com/olssonm/laravel-zxcvbn/tree/v5.2"
             },
             "funding": [
                 {
@@ -3827,7 +3826,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-02-15T07:50:56+00:00"
+            "time": "2024-04-04T06:33:33+00:00"
         },
         {
             "name": "owen-it/laravel-auditing",
