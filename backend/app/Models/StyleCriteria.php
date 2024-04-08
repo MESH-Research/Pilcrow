@@ -24,7 +24,7 @@ class StyleCriteria extends BaseModel
     ];
 
     protected $rules = [
-        'name' => 'required|max:80',
+        'name' => 'required|max:50',
         'publication_id' => 'required|style_criteria_count',
         'description' => 'max:4096',
         'icon' => 'max:50',

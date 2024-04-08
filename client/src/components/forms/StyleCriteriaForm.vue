@@ -101,7 +101,7 @@ const state = reactive({
 const rules = {
   name: {
     required,
-    maxLength: maxLength(80),
+    maxLength: maxLength(50),
   },
   description: {
     maxLength: maxLength(4096),

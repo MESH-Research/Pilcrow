@@ -18,7 +18,7 @@ class StyleCriteriaTest extends TestCase
     {
         $styleCriteria = $this->makeTestCriteria();
 
-        $styleCriteria->name = str_repeat('a', 81);
+        $styleCriteria->name = str_repeat('a', 51);
 
         $this->assertTrue($styleCriteria->isInvalid());
         $this->assertCount(1, $styleCriteria->getErrors()->get('name'));
