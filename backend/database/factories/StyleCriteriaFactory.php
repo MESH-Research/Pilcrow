@@ -23,9 +23,9 @@ class StyleCriteriaFactory extends Factory
     public function definition()
     {
         $name = $this->faker->streetName;
-        //Occasionally streetName is longer than the validatable length for this field (20 chars).
-        if (mb_strlen($name) > 20) {
-            $name = substr($name, 0, 20);
+        //Occasionally streetName is longer than the validatable length for this field (80 chars).
+        if (mb_strlen($name) > 80) {
+            $name = substr($name, 0, 80);
         }
 
         return [

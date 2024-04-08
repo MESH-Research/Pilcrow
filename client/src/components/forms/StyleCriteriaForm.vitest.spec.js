@@ -40,8 +40,8 @@ describe("StyleCriteriaForm", () => {
     expect(nameInput.classes("q-field--error")).toBe(true)
     expect(nameInput.text()).toContain("errors.required")
 
-    //Name shorter than 20 chars
-    await nameInput.findComponent({ name: "QInput" }).setValue("a".repeat(30))
+    //Name shorter than 80 chars
+    await nameInput.findComponent({ name: "QInput" }).setValue("a".repeat(90))
     await form.trigger("submit")
     await flushPromises()
     expect(nameInput.classes("q-field--error")).toBe(true)
