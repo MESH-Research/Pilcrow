@@ -354,6 +354,8 @@
     "columns": {
       "number": "Number",
       "title": "Submission Title",
+      "submitted_by": "Submitted By",
+      "submitted_at": "Submitted",
       "publication": "Publication Name",
       "status": "Status",
       "actions": "Actions"

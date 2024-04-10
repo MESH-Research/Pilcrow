@@ -61,6 +61,7 @@ describe("Dashboard Page", () => {
       id: id,
       title: "Pilcrow Test Submission for Jest",
       created_at: "2023-06-27T08:21:44.000000Z",
+      submitted_at: "2023-06-27T13:09:53.000000Z",
       status: status,
       my_role: submission_my_role[role],
       effective_role: submission_effective_role[role],
