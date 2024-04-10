@@ -69,6 +69,7 @@ describe("Reviews Page", () => {
       id: id,
       title: `Jest Submission ${id}`,
       created_at: "2023-11-09T18:51:10.000000Z",
+      submitted_at: "2023-11-20T10:30:00.000000Z",
       status: "UNDER_REVIEW",
       my_role: submission_my_role[role_name],
       effective_role: submission_effective_role[role_name],
