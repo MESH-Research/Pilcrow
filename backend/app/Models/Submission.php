@@ -65,6 +65,7 @@ class Submission extends Model implements Auditable
      */
     protected $appends = [
         'status_name',
+        'submitted_at',
     ];
 
     /**
@@ -202,6 +203,19 @@ class Submission extends Model implements Auditable
     public function updatedBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'updated_by');
+    }
+
+    /**
+     * Datetime the submission was submitted
+     *
+     * @return null|string
+     */
+    public function getSubmittedAtAttribute()
+    {
+        return $this->audits()
+            ->where('event', 'updated')
+            ->where('old_values', 'like', '%"status":0%')
+            ->where('new_values', 'like', '%"status":1%')->first()->created_at ?? null;
     }
 
     /**
