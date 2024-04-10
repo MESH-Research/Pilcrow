@@ -616,7 +616,7 @@
         "name": {
           "label": "Name",
           "errors": {
-            "maxLength": "Name cannot be longer than 20 characters.",
+            "maxLength": "Name cannot be longer than 50 characters.",
             "required": "Name is required."
           }
         },
