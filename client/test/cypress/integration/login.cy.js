@@ -12,8 +12,8 @@ describe("login page", () => {
 
   it("allows a user to login", () => {
     cy.get(".q-form").within(() => {
-      cy.checkA11y(null, null, a11yLogViolations)
       cy.dataCy("email_field").type("regularuser@meshresearch.net")
+      cy.checkA11y(null, null, a11yLogViolations)
       cy.dataCy("password_field").type("regularPassword!@#")
       cy.get(".q-card__actions").contains("Login").click()
       cy.url().should("include", "/dashboard")
@@ -47,7 +47,6 @@ describe("login page", () => {
   it("redirects to login when requesting a protected page", () => {
     cy.visit("/account/profile")
     cy.url().should("include", "/login")
-    // cy.checkA11y(null, null, a11yLogViolations)
     cy.get('[role="alert"]').contains("login to access that page")
 
     cy.get(".q-form").within(() => {
