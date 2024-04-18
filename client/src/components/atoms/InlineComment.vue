@@ -112,7 +112,7 @@
           data-cy="inlineCommentReplyButton"
           bordered
           color="accent"
-          :label="$t(`submissions.comment.toggle_replies.reply`)"
+          :label="$t(`submissions.comment.reply_btn`)"
           @click="initiateReply"
         />
       </q-card-actions>
