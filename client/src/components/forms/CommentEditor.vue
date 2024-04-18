@@ -61,12 +61,18 @@
         </q-list>
       </div>
       <q-card-actions class="q-mt-md q-pa-none" align="between">
-        <q-btn type="submit" color="accent">
-          {{ $t("guiElements.form.submit") }}
-        </q-btn>
-        <q-btn ref="cancel_button" flat @click="cancelHandler()">
-          {{ $t("guiElements.form.cancel") }}
-        </q-btn>
+        <q-btn
+          type="submit"
+          color="accent"
+          :label="$t(`guiElements.form.submit`)"
+        />
+        <q-btn
+          v-if="commentType != `OverallComment`"
+          ref="cancel_button"
+          flat
+          :label="$t(`guiElements.form.cancel`)"
+          @click="cancelHandler()"
+        />
       </q-card-actions>
     </q-card>
   </q-form>
@@ -164,11 +170,11 @@ const editor = useEditor({
   ],
 })
 const commentType = computed(
-  () => props.commentType ?? props.comment.__typename
+  () => props.commentType ?? props.comment.__typename,
 )
 
 const isReply = computed(() =>
-  ["OverallCommentReply", "InlineCommentReply"].includes(commentType.value)
+  ["OverallCommentReply", "InlineCommentReply"].includes(commentType.value),
 )
 const commentEditorButtons = ref([
   {
@@ -249,7 +255,7 @@ const { mutate: createComment } = useMutation(mutations[commentType.value])
 const selectedCriteria = computed(() =>
   styleCriteria.value
     .filter((criteria) => criteria.selected)
-    .map((criteria) => criteria.id)
+    .map((criteria) => criteria.id),
 )
 const hasStyleCriteria = computed(() => selectedCriteria.value.length > 0)
 async function submitHandler() {
@@ -349,8 +355,8 @@ const styleCriteria = ref(
       ...c,
       selected: isCriteriaSelected(c, comment),
     }),
-    comment
-  )
+    comment,
+  ),
 )
 
 defineExpose({
