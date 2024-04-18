@@ -955,8 +955,8 @@
       "updatedLabel": "Updated",
       "toggle_replies": {
         "reply": "Reply",
-        "show_reply": "Show Replies",
-        "hide_reply": "Hide Replies"
+        "show_reply": "No Replies | Show {count} Reply | Show {count} Replies",
+        "hide_reply": "No Replies | Hide {count} Reply | Hide {count} Replies"
       },
       "reference": {
         "in_reply_to": "In reply to {username}",

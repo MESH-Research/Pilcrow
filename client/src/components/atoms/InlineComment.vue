@@ -54,26 +54,26 @@
         <q-btn
           v-if="!isCollapsed"
           data-cy="collapseRepliesButton"
-          :aria-label="$t(`submissions.comment.toggle_replies.hide_reply`)"
+          :aria-label="$t(`submissions.comment.toggle_replies.hide_reply`, comment.replies.length)"
           bordered
           color="secondary"
           text-color="white"
           @click="toggleThread"
         >
           <q-icon name="expand_less"></q-icon>
-          <span>{{ $t("submissions.comment.toggle_replies.hide_reply") }}</span>
+          <span>{{ $t("submissions.comment.toggle_replies.hide_reply", comment.replies.length) }}</span>
         </q-btn>
         <q-btn
           v-if="isCollapsed"
           data-cy="showRepliesButton"
-          :aria-label="$t(`submissions.comment.toggle_replies.show_reply`)"
+          :aria-label="$t(`submissions.comment.toggle_replies.show_reply`, comment.replies.length)"
           bordered
           color="secondary"
           text-color="white"
           @click="toggleThread"
         >
           <q-icon name="expand_more"></q-icon>
-          <span>{{ $t("submissions.comment.toggle_replies.show_reply") }}</span>
+          <span>{{ $t("submissions.comment.toggle_replies.show_reply", comment.replies.length) }}</span>
         </q-btn>
       </q-card-actions>
       <section v-if="!isCollapsed">
