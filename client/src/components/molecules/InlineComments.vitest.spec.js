@@ -313,6 +313,9 @@ describe("InlineComments", () => {
     expect(items.at(1).find("[data-cy=showRepliesButton]").exists()).toBe(false)
 
     await items.at(2).find('[data-cy="showRepliesButton"]').trigger("click")
+    expect(items.at(2).find('[data-cy="hideRepliesButton"]').text()).toContain(
+      "submissions.comment.toggle_replies.hide_reply",
+    )
     expect(findReplies(items.at(2))).toHaveLength(10)
   })
 })
