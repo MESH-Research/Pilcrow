@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Tests\Api;
@@ -39,12 +40,12 @@ class SubmissionCommentTest extends ApiTestCase
     private function createStyleCriteria($id)
     {
         $criteria = StyleCriteria::factory()
-        ->create([
-            'name' => 'PHPUnit Criteria',
-            'publication_id' => $id,
-            'description' => 'This is a test style criteria created by PHPUnit',
-            'icon' => 'php',
-        ]);
+            ->create([
+                'name' => 'PHPUnit Criteria',
+                'publication_id' => $id,
+                'description' => 'This is a test style criteria created by PHPUnit',
+                'icon' => 'php',
+            ]);
 
         return $criteria;
     }
@@ -117,7 +118,7 @@ class SubmissionCommentTest extends ApiTestCase
                     }
                 }
             }',
-            [ 'id' => $submission->id ]
+            ['id' => $submission->id]
         );
         $expected_data = [
             'submission' => [
@@ -179,7 +180,7 @@ class SubmissionCommentTest extends ApiTestCase
                     }
                 }
             }',
-            [ 'id' => $submission->id ]
+            ['id' => $submission->id]
         );
         $expected_data = [
             'submission' => [
@@ -252,6 +253,7 @@ class SubmissionCommentTest extends ApiTestCase
                             name
                             icon
                         }
+                        read_at
                         from
                         to
                     }
@@ -276,6 +278,7 @@ class SubmissionCommentTest extends ApiTestCase
                                 'icon' => $criteria_2->icon,
                             ],
                         ],
+                        'read_at' => null,
                         'from' => 100,
                         'to' => 110,
                     ],
@@ -296,19 +299,19 @@ class SubmissionCommentTest extends ApiTestCase
     {
         return [
             'parent_id with a value and reply_to_id with a value' =>
-                [true, ['parent_id' => true, 'reply_to_id' => true]],
+            [true, ['parent_id' => true, 'reply_to_id' => true]],
             'parent_id with a value and reply_to_id missing' =>
-                [false, ['parent_id' => true]],
+            [false, ['parent_id' => true]],
             'parent_id null and reply_to_id missing' =>
-                [false, ['parent_id' => null]],
+            [false, ['parent_id' => null]],
             'parent_id null and reply_to_id with a value' =>
-                [false, ['parent_id' => null, 'reply_to_id' => true]],
+            [false, ['parent_id' => null, 'reply_to_id' => true]],
             'parent_id with a value and reply_to_id null' =>
-                [false, ['parent_id' => true, 'reply_to_id' => null]],
+            [false, ['parent_id' => true, 'reply_to_id' => null]],
             'parent_id missing and reply_to_id null' =>
-                [false, [ 'reply_to_id' => null]],
+            [false, ['reply_to_id' => null]],
             'parent_id missing and reply_to_id with a value' =>
-                [false, ['reply_to_id' => true]],
+            [false, ['reply_to_id' => true]],
         ];
     }
 
@@ -412,6 +415,7 @@ class SubmissionCommentTest extends ApiTestCase
                 }) {
                     overall_comments {
                         content
+                        read_at
                     }
                 }
             }',
@@ -423,6 +427,7 @@ class SubmissionCommentTest extends ApiTestCase
             $response->assertJsonPath('data.updateSubmission.overall_comments', [
                 [
                     'content' => 'New Overall Comment',
+                    'read_at' => null,
                 ],
             ]);
         } else {
@@ -595,11 +600,11 @@ class SubmissionCommentTest extends ApiTestCase
                 'submission_id' => $submission->id,
             ]
         )
-        ->assertGraphQLErrorMessage('Validation failed for the field [updateSubmission].')
-        ->assertGraphQLValidationError(
-            'input.inline_comments.create.0',
-            'The submission is not in a reviewable state.'
-        );
+            ->assertGraphQLErrorMessage('Validation failed for the field [updateSubmission].')
+            ->assertGraphQLValidationError(
+                'input.inline_comments.create.0',
+                'The submission is not in a reviewable state.'
+            );
     }
 
     /**
@@ -668,11 +673,11 @@ class SubmissionCommentTest extends ApiTestCase
                 'submission_id' => $submission->id,
             ]
         )
-        ->assertGraphQLErrorMessage('Validation failed for the field [updateSubmission].')
-        ->assertGraphQLValidationError(
-            'input.overall_comments.create.0',
-            'The submission is not in a reviewable state.'
-        );
+            ->assertGraphQLErrorMessage('Validation failed for the field [updateSubmission].')
+            ->assertGraphQLValidationError(
+                'input.overall_comments.create.0',
+                'The submission is not in a reviewable state.'
+            );
     }
 
     /**
@@ -744,7 +749,7 @@ class SubmissionCommentTest extends ApiTestCase
                 'comment_id' => $inline_comment->id,
             ]
         )
-        ->assertGraphQLErrorMessage('UNAUTHORIZED');
+            ->assertGraphQLErrorMessage('UNAUTHORIZED');
     }
 
     /**
@@ -776,7 +781,7 @@ class SubmissionCommentTest extends ApiTestCase
                 'comment_id' => $overall_comment->id,
             ]
         )
-        ->assertGraphQLErrorMessage('UNAUTHORIZED');
+            ->assertGraphQLErrorMessage('UNAUTHORIZED');
     }
 
     /**
@@ -908,7 +913,7 @@ class SubmissionCommentTest extends ApiTestCase
                 'comment_id' => $inline_comment->id,
             ]
         )
-        ->assertGraphQLErrorMessage('UNAUTHORIZED');
+            ->assertGraphQLErrorMessage('UNAUTHORIZED');
     }
 
     /**
@@ -939,7 +944,7 @@ class SubmissionCommentTest extends ApiTestCase
                 'comment_id' => $overall_comment->id,
             ]
         )
-        ->assertGraphQLErrorMessage('UNAUTHORIZED');
+            ->assertGraphQLErrorMessage('UNAUTHORIZED');
     }
 
     /**
@@ -1085,4 +1090,6 @@ class SubmissionCommentTest extends ApiTestCase
         $this->assertEquals($count_after_deletion, 1);
         $response->assertJsonPath('data', $expected_data);
     }
+
+    //TODO: Add tests for marking comments as read.
 }
