@@ -8,6 +8,12 @@ describe("Register", () => {
     cy.visit("/register")
   })
 
+  it("should assert the Register page is accessible by default", () => {
+    cy.injectAxe()
+    cy.dataCy("password_field")
+    cy.checkA11y(null, null, a11yLogViolations)
+  })
+
   it("validates fields", () => {
     cy.task("resetDb")
     cy.injectAxe()
@@ -129,16 +135,5 @@ describe("Register", () => {
     })
 
     cy.url().should("include", "/dashboard")
-  })
-
-  it("should assert the My Dashboard page is accessible", () => {
-    // Inject the axe-core libraray
-    cy.injectAxe()
-    cy.dataCy("vueRegister")
-    cy.checkA11y(null, {
-      rules: {
-        "autocomplete-valid": { enabled: false },
-      },
-    }, a11yLogViolations)
   })
 })
