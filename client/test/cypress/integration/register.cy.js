@@ -15,7 +15,6 @@ describe("Register", () => {
   })
 
   it("validates fields", () => {
-    cy.task("resetDb")
     cy.injectAxe()
     cy.get(".q-form").within(() => {
       //Email is required
@@ -50,8 +49,7 @@ describe("Register", () => {
         .parents("label")
         .should("have.class", "q-field--error")
         .contains("is required")
-      // contrast error
-      // cy.checkA11y(null, null, a11yLogViolations)
+      cy.checkA11y(null, null, a11yLogViolations)
 
       //Username success
       cy.dataCy("username_field")
@@ -59,16 +57,14 @@ describe("Register", () => {
       cy.dataCy("username_field")
         .parents("label")
         .should("not.have.class", "q-field--error")
-      // contrast error
-      // cy.checkA11y(null, null, a11yLogViolations)
+      cy.checkA11y(null, null, a11yLogViolations)
 
       //Password is required
       cy.dataCy("password_field")
         .parents("label")
         .should("have.class", "q-field--error")
         .contains("is required")
-      // contrast error
-      // cy.checkA11y(null, null, a11yLogViolations)
+      cy.checkA11y(null, null, a11yLogViolations)
 
       //Password must be complex
       cy.dataCy("password_field")
@@ -77,8 +73,7 @@ describe("Register", () => {
         .parents("label")
         .should("have.class", "q-field--error")
         .contains("be more complex")
-      // Contrast error
-      // cy.checkA11y(null, null, a11yLogViolations)
+      cy.checkA11y(null, null, a11yLogViolations)
 
       //Password success
       cy.dataCy("password_field")
@@ -86,8 +81,7 @@ describe("Register", () => {
       cy.dataCy("password_field")
         .parents("label")
         .should("not.have.class", "q-field--error")
-      // contrast error
-      // cy.checkA11y(null, null, a11yLogViolations)
+      cy.checkA11y(null, null, a11yLogViolations)
 
       //Username must be unique
       cy.dataCy("username_field")
@@ -99,8 +93,7 @@ describe("Register", () => {
         .should("have.class", "q-field--error")
         .contains("is not available")
       cy.dataCy("username_field").type("brandnewusername")
-      // contrast error
-      // cy.checkA11y(null, null, a11yLogViolations)
+      cy.checkA11y(null, null, a11yLogViolations)
 
       //Email must be unique
       cy.dataCy("email_field")
