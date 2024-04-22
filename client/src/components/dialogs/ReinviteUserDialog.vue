@@ -50,7 +50,7 @@
 </template>
 
 <script setup>
-import { useDialogPluginComponent, useQuasar } from "quasar"
+import { useDialogPluginComponent } from "quasar"
 import { useMutation } from "@vue/apollo-composable"
 import {
   REINVITE_REVIEWER,
@@ -58,9 +58,14 @@ import {
 } from "src/graphql/mutations"
 import { computed, ref } from "vue"
 import { useI18n } from "vue-i18n"
+import { useFeedbackMessages } from "src/use/guiElements"
 
 const { t } = useI18n()
-const { notify } = useQuasar()
+const { newStatusMessage } = useFeedbackMessages({
+  attrs: {
+    "data-cy": "reinvite_notify",
+  },
+})
 
 defineEmits([...useDialogPluginComponent.emits])
 
@@ -99,28 +104,20 @@ async function reinviteUser() {
     await mutate({
       message: comment.value,
     })
-    notify({
-      color: "positive",
-      message: t(`dialog.reinviteUser.success`, {
+    newStatusMessage(
+      "success",
+      t(`dialog.reinviteUser.success`, {
         email: props.email,
         role: t(`role.${props.roleGroup}`, 1),
       }),
-      icon: "done",
-      attrs: {
-        "data-cy": "reinvite_notify",
-      },
-    })
+    )
   } catch (error) {
-    notify({
-      color: "negative",
-      message: t(`dialog.reinviteUser.failure`, {
+    newStatusMessage(
+      "failure",
+      t(`dialog.reinviteUser.failure`, {
         email: props.email,
       }),
-      icon: "error",
-      attrs: {
-        "data-cy": "reinvite_notify",
-      },
-    })
+    )
   }
 }
 </script>

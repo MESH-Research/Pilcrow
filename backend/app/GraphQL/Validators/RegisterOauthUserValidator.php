@@ -6,7 +6,7 @@ namespace App\GraphQL\Validators;
 use Illuminate\Validation\Rule;
 use Nuwave\Lighthouse\Validation\Validator;
 
-class SubmissionInvitationAcceptanceValidator extends Validator
+class RegisterOauthUserValidator extends Validator
 {
     /**
      * Return the validation rules.
@@ -23,8 +23,9 @@ class SubmissionInvitationAcceptanceValidator extends Validator
                 Rule::unique('users', 'username')->ignore($this->arg('id'), 'id'),
                 'filled',
             ],
-            'password' => [
-                'zxcvbn:3',
+            'email' => [
+                Rule::unique('users', 'email')->ignore($this->arg('id'), 'id'),
+                'email:rfc,dns',
                 'filled',
             ],
         ];
@@ -43,10 +44,11 @@ class SubmissionInvitationAcceptanceValidator extends Validator
                 'unique' => 'USERNAME_IN_USE',
                 'filled' => 'USERNAME_EMPTY',
             ]),
-            $this->prefixArrayKeys('password.', [
-                'zxcvbn' => 'PASSWORD_NOT_COMPLEX',
-                'filled' => 'PASSWORD_EMPTY',
-            ])
+            $this->prefixArrayKeys('email.', [
+                'unique' => 'EMAIL_IN_USE',
+                'email' => 'EMAIL_NOT_VALID',
+                'filled' => 'EMAIL_EMPTY',
+            ]),
         );
     }
 

@@ -94,8 +94,38 @@ $ lando artisan migrate
 # Use this command to update your existing database with any new migrations.
 ```
 
+## External Identity Providers (Optional)
 
+Pilcrow supports the registration and authentication of user accounts with external identity providers via `SocialiteProviders`.  Keep in mind, you will need to register redirect URLs with any providers you intend to allow users to use on your instance of Pilcrow.
 
+### Enable Provider Buttons
+
+Login buttons for external identity providers will appear on the Login page (`/login` ) after adding values for the environment variables related to external providers in the environment file (`/backend/.env`). Currently, ORCID and Google are supported. Users will be able to both register and authenticate with these providers using these buttons.
+
+### Register Redirect URLs
+
+Register a "redirect URL" with the provider(s) you intend to allow users to use on your instance of Pilcrow. Once you have a redirect URL registered with that provider, update `/backend/.env` with information pertaining to that provider.
+
+#### ORCID
+
+Documentation from ORCID for registering a redirect URL: <https://info.orcid.org/documentation/api-tutorials/api-tutorial-get-and-authenticated-orcid-id/#h-register-your-redirect-urls>
+
+```php
+ORCID_CLIENT_ID=$YourOrcidClientID
+ORCID_CLIENT_SECRET=$YourOrcidClientSecret
+ORCID_REDIRECT_URL="${APP_URL}/auth/redirect/orcid"
+ORCID_ENVIRONMENT="production"
+```
+
+#### Google
+
+Documentation from Google for establishing a Google Cloud application for OAuth and registering a redirect URL (or an "Authorized Redirect URI"): <https://support.google.com/cloud/answer/6158849?hl=en>
+
+```php
+GOOGLE_CLIENT_ID=$YourGoogleClientId
+GOOGLE_CLIENT_SECRET=$YourGoogleClientSecret
+GOOGLE_REDIRECT_URI="${APP_URL}/auth/redirect/google"
+```
 
 ## WSL Developer Notes {#wsl-notes}
 

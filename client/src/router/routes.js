@@ -6,6 +6,8 @@ const routes = [
       { path: "", component: () => import("src/pages/IndexPage.vue") },
       { path: "register", component: () => import("pages/RegisterPage.vue") },
       { path: "login", component: () => import("pages/LoginPage.vue") },
+      { path: "auth/redirect/orcid", component: () => import("pages/LoginOrcid.vue") },
+      { path: "auth/redirect/google", component: () => import("pages/LoginGoogle.vue") },
       { path: "logout", component: () => import("src/pages/LogoutPage.vue") },
       {
         path: "accept-invite/:uuid/:expires/:token/:submission_id",

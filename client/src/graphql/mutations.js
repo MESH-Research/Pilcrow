@@ -879,3 +879,49 @@ export const RESET_PASSWORD = gql`
     }
   }
 `
+
+export const LOGIN_OAUTH_CALLBACK = gql`
+  mutation LoginOauthCallback($provider_name: String!, $code: String!) {
+    loginOauthCallback(provider_name: $provider_name, code: $code) {
+      action
+      user {
+        name
+        username
+        email
+      }
+      provider {
+        provider_name
+        provider_id
+      }
+    }
+  }
+`
+
+export const REGISTER_OAUTH_USER = gql`
+  mutation RegisterOauthUser(
+    $name: String
+    $username: String
+    $email: String
+    $provider_name: String!
+    $provider_id: String!
+  ) {
+    registerOauthUser(
+      input: {
+        user: {
+          name: $name
+          username: $username
+          email: $email
+        }
+        provider: {
+          provider_name: $provider_name
+          provider_id: $provider_id
+        }
+      }
+    ) {
+      id
+      name
+      username
+      email
+    }
+  }
+`

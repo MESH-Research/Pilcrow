@@ -36,13 +36,14 @@
 </template>
 
 <script setup>
-import { useDialogPluginComponent, useQuasar } from "quasar"
+import { useDialogPluginComponent } from "quasar"
 import { useMutation } from "@vue/apollo-composable"
 import {
   DELETE_INLINE_COMMENT,
   DELETE_OVERALL_COMMENT,
 } from "src/graphql/mutations"
 import { useI18n } from "vue-i18n"
+import { useFeedbackMessages } from "src/use/guiElements"
 
 const props = defineProps({
   comment: {
@@ -63,8 +64,12 @@ const mutation =
     ? DELETE_INLINE_COMMENT
     : DELETE_OVERALL_COMMENT
 const { mutate } = useMutation(mutation)
-const { notify } = useQuasar()
 const { t } = useI18n()
+const { newStatusMessage } = useFeedbackMessages({
+  attrs: {
+    "data-cy": "delete_comment_notify",
+  }
+})
 
 async function deleteComment() {
   try {
@@ -78,14 +83,7 @@ async function deleteComment() {
       },
     )
   } catch (error) {
-    notify({
-      color: "negative",
-      message: t("dialog.deleteComment.failure"),
-      icon: "error",
-      attrs: {
-        "data-cy": "delete_comment_notify",
-      },
-    })
+    newStatusMessage("failure", t("dialog.deleteComment.failure"))
   }
 }
 

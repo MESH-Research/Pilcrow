@@ -57,7 +57,7 @@ class UpdateUserMutationTest extends ApiTestCase
             "<script>alert('hi')</script>https://google.com/" => ["<script>alert('hi')</script>https://google.com/",'','https://google.com/'],
             "<script>alert('hi')</script>https://google.com/about" => ["<script>alert('hi')</script>https://google.com/about",'','https://google.com/about'],
             "javascript:alert('hi')" => ["javascript:alert('hi')",$invalid],
-            'google.<script>alert("Hello World")</script>' => ['google.<script>alert("Hello World")</script>',$invalid],
+            'google.<script>alert("Test Alert")</script>' => ['google.<script>alert("Test Alert")</script>',$invalid],
             'eval()' => ['eval()',$invalid],
             'Function()' => ['Function()',$invalid],
             'setTimeout()' => ['setTimeout()',$invalid],

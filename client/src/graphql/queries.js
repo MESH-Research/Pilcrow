@@ -79,6 +79,7 @@ export const CURRENT_USER_SUBMISSIONS = gql`
         title
         status
         created_at
+        submitted_at
         my_role
         effective_role
         review_coordinators {
@@ -260,6 +261,8 @@ export const GET_SUBMISSIONS = gql`
         title
         status
         my_role
+        created_at
+        submitted_at
         effective_role
         submitters {
           ...relatedUserFields
@@ -439,4 +442,15 @@ export const GET_PUBLICATION = gql`
     }
   }
   ${_RELATED_USER_FIELDS}
+`
+
+export const GET_IDENTITY_PROVIDERS = gql`
+  query GetIdentityProviders {
+    identityProviders {
+      name
+      login_url
+      label
+      icon
+    }
+  }
 `

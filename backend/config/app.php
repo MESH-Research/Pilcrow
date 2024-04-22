@@ -190,6 +190,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         App\Providers\FakerServiceProvider::class,
 
+        \SocialiteProviders\Manager\ServiceProvider::class,
     ],
 
     /*
@@ -242,6 +243,11 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
 
+    ],
+
+    'external_oauth_providers' => [
+      'google' => \App\OauthAdapters\GoogleAdapter::class,
+      'orcid' => \App\OauthAdapters\OrcidAdapter::class,
     ],
 
 ];
