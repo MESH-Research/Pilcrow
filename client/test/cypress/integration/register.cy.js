@@ -1,7 +1,7 @@
 /// <reference types="Cypress" />
 /// <reference path="../support/index.d.ts" />
 
-import { a11yLogViolations } from '../support/helpers'
+import { a11yLogViolations } from "../support/helpers"
 
 describe("Register", () => {
   beforeEach(() => {
@@ -18,18 +18,15 @@ describe("Register", () => {
     cy.injectAxe()
     cy.get(".q-form").within(() => {
       //Email is required
-      cy.dataCy("email_field")
-        .type("{enter}")
+      cy.dataCy("email_field").type("{enter}")
       cy.dataCy("email_field")
         .parents("label")
         .should("have.class", "q-field--error")
       cy.checkA11y(null, null, a11yLogViolations)
 
       //Email must be valid
-      cy.dataCy("email_field")
-        .clear()
-      cy.dataCy("email_field")
-        .type("pilcrowproject{enter}")
+      cy.dataCy("email_field").clear()
+      cy.dataCy("email_field").type("pilcrowproject{enter}")
       cy.dataCy("email_field")
         .parents("label")
         .should("have.class", "q-field--error")
@@ -37,8 +34,7 @@ describe("Register", () => {
       cy.checkA11y(null, null, a11yLogViolations)
 
       //Email success
-      cy.dataCy("email_field")
-        .type("@meshresearch.net{enter}")
+      cy.dataCy("email_field").type("@meshresearch.net{enter}")
       cy.dataCy("email_field")
         .parents("label")
         .should("not.have.class", "q-field--error")
@@ -52,8 +48,7 @@ describe("Register", () => {
       cy.checkA11y(null, null, a11yLogViolations)
 
       //Username success
-      cy.dataCy("username_field")
-        .type("newUser{enter}")
+      cy.dataCy("username_field").type("newUser{enter}")
       cy.dataCy("username_field")
         .parents("label")
         .should("not.have.class", "q-field--error")
@@ -67,8 +62,7 @@ describe("Register", () => {
       cy.checkA11y(null, null, a11yLogViolations)
 
       //Password must be complex
-      cy.dataCy("password_field")
-        .type("password")
+      cy.dataCy("password_field").type("password")
       cy.dataCy("password_field")
         .parents("label")
         .should("have.class", "q-field--error")
@@ -76,18 +70,15 @@ describe("Register", () => {
       cy.checkA11y(null, null, a11yLogViolations)
 
       //Password success
-      cy.dataCy("password_field")
-        .type("!@#$#@password")
+      cy.dataCy("password_field").type("!@#$#@password")
       cy.dataCy("password_field")
         .parents("label")
         .should("not.have.class", "q-field--error")
       cy.checkA11y(null, null, a11yLogViolations)
 
       //Username must be unique
-      cy.dataCy("username_field")
-        .clear()
-      cy.dataCy("username_field")
-        .type("regularUser{enter}")
+      cy.dataCy("username_field").clear()
+      cy.dataCy("username_field").type("regularUser{enter}")
       cy.dataCy("username_field")
         .parents("label")
         .should("have.class", "q-field--error")
@@ -96,20 +87,16 @@ describe("Register", () => {
       cy.checkA11y(null, null, a11yLogViolations)
 
       //Email must be unique
-      cy.dataCy("email_field")
-        .clear()
-      cy.dataCy("email_field")
-        .type("regularuser@meshresearch.net{enter}")
+      cy.dataCy("email_field").clear()
+      cy.dataCy("email_field").type("regularuser@meshresearch.net{enter}")
       cy.dataCy("email_field")
         .parents("label")
         .should("have.class", "q-field--error")
         .contains("already registered")
       cy.checkA11y(null, null, a11yLogViolations)
 
-      cy.dataCy("email_field")
-        .clear()
-      cy.dataCy("email_field")
-        .type("newvalidemail@meshresearch.net")
+      cy.dataCy("email_field").clear()
+      cy.dataCy("email_field").type("newvalidemail@meshresearch.net")
 
       cy.get('[type="submit"]').click()
       cy.url().should("include", "/dashboard")
@@ -126,7 +113,6 @@ describe("Register", () => {
       cy.dataCy("password_field").type("password_field!@#12{enter}")
       cy.checkA11y(null, null, a11yLogViolations)
     })
-
     cy.url().should("include", "/dashboard")
   })
 })
