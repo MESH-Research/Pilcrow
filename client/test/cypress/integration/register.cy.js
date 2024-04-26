@@ -8,7 +8,7 @@ describe("Register", () => {
     cy.visit("/register")
   })
 
-  it("should assert the Register page is accessible by default", () => {
+  it("should assert the page is accessible on initial render", () => {
     cy.injectAxe()
     cy.dataCy("password_field")
     cy.checkA11y(null, null, a11yLogViolations)
