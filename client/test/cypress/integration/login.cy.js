@@ -41,12 +41,12 @@ describe("login page", () => {
         .parents("label")
         .should("have.class", "q-field--error")
         .type("somePass{enter}")
-        cy.checkA11y(null, null, a11yLogViolations)
+      cy.checkA11y(null, null, a11yLogViolations)
 
       cy.dataCy("authFailureMessages")
         .should("be.visible")
         .contains("combination is incorrect")
-        cy.checkA11y(null, null, a11yLogViolations)
+      cy.checkA11y(null, null, a11yLogViolations)
     })
   })
 
