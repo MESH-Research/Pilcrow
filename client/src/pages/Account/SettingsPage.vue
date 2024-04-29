@@ -1,12 +1,11 @@
 <template>
-  <div>
-    <account-profile-form
-      ref="form"
-      :account-profile="currentUser"
-      :graphql-validation="validationErrors"
-      @save="updateUser"
-    />
-  </div>
+  <h1 class="text-h2 q-pl-md" data-cy="page_heading">{{ $t("settings.page_title") }}</h1>
+  <account-profile-form
+    ref="form"
+    :account-profile="currentUser"
+    :graphql-validation="validationErrors"
+    @save="updateUser"
+  />
 </template>
 
 <script setup>
