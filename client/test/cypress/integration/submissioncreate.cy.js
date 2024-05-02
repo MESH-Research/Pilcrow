@@ -21,6 +21,7 @@ describe("Submission Create Page", () => {
     cy.dataCy("create_submission_form").contains(
       "The maximum length has been exceeded for the title"
     )
+    cy.checkA11y(null, null, a11yLogViolations)
 
     // Title must not be empty
     cy.dataCy("new_submission_title_input").clear()
@@ -31,6 +32,7 @@ describe("Submission Create Page", () => {
     cy.dataCy("create_submission_form").contains(
       "A title is required to create a submission."
     )
+    cy.checkA11y(null, null, a11yLogViolations)
 
     // Acknowledgement must be checked
     cy.dataCy("new_submission_title_input").type("Test Submission")
@@ -42,6 +44,7 @@ describe("Submission Create Page", () => {
     cy.dataCy("create_submission_form").contains(
       "You must acknowledge you have read and understand the guidelines."
     )
+    cy.checkA11y(null, null, a11yLogViolations)
 
     // Confirm Notify notification is visible
     cy.dataCy("submission_create_notify")
@@ -59,5 +62,6 @@ describe("Submission Create Page", () => {
     cy.dataCy("acknowledgement_checkbox").click()
     cy.dataCy("create_submission_btn").click()
     cy.dataCy("submission_title").contains("Test Submission")
+    cy.checkA11y(null, null, a11yLogViolations)
   })
 })

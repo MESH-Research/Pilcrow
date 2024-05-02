@@ -37,7 +37,7 @@
       </div>
       <div>
         <q-toggle
-          v-model="darkModeValue"
+          v-model="darkModeStatus"
           size="xl"
           checked-icon="dark_mode"
           color="grey-7"
@@ -47,7 +47,7 @@
           <template #default>
             <div style="width: 100px">
               {{
-                darkModeValue
+                darkModeStatus
                   ? $t("submissions.style_controls.dark")
                   : $t("submissions.style_controls.light")
               }}
@@ -120,11 +120,13 @@
 </template>
 <script setup>
 import { BubbleMenu, Editor, EditorContent } from "@tiptap/vue-3"
-import { useQuasar } from "quasar"
 import SubmissionContentKit from "src/tiptap/extension-submission-content-kit"
 import { computed, inject, ref, watch, nextTick } from "vue"
 import { scroll } from "quasar"
+import { useDarkMode } from "src/use/guiElements"
+
 const { getScrollTarget, setVerticalScrollPosition } = scroll
+const { darkModeStatus, toggleDarkMode } = useDarkMode()
 
 const props = defineProps({
   annotationEnabled: {
@@ -141,20 +143,6 @@ const commentDrawerOpen = inject("commentDrawerOpen")
 const submission = inject("submission")
 const activeComment = inject("activeComment")
 const contentRef = ref(null)
-
-const $q = useQuasar()
-let darkModeValue = ref($q.dark.isActive)
-
-watch(
-  () => $q.dark.isActive,
-  () => {
-    darkModeValue.value = $q.dark.isActive
-  },
-)
-
-function toggleDarkMode() {
-  $q.dark.toggle()
-}
 
 const emit = defineEmits([
   "scrollToOverallComments",

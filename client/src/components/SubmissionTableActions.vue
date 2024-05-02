@@ -7,6 +7,7 @@
     <q-menu anchor="bottom right" self="top right">
       <q-item
         v-if="submission.status === 'DRAFT'"
+        role="menuitem"
         clickable
         :disable="cannotAccessSubmission(submission)"
         data-cy="submission_draft_link"
@@ -23,6 +24,7 @@
       </q-item>
       <q-item
         v-if="submission.status !== 'DRAFT'"
+        role="menuitem"
         clickable
         :disable="cannotAccessSubmission(submission)"
         data-cy="submission_review_link"
@@ -47,6 +49,7 @@
       </q-item>
       <q-item
         v-if="submission.status !== 'DRAFT'"
+        role="menuitem"
         clickable
         :disable="cannotAccessSubmission(submission)"
         data-cy="submission_details_link"
@@ -71,6 +74,7 @@
       </q-item>
       <q-item
         v-if="!statusChangingDisabledByRole"
+        role="menuitem"
         data-cy="change_status"
         clickable
         :disable="statusChangingDisabledByState"
@@ -104,6 +108,7 @@
         >
           <div v-if="submission.status == 'DRAFT'">
             <q-item
+              role="menuitem"
               data-cy="initially_submit"
               class="items-center"
               clickable
@@ -121,6 +126,7 @@
           >
             <q-item
               v-if="submission.status == 'INITIALLY_SUBMITTED'"
+              role="menuitem"
               data-cy="accept_for_review"
               class="items-center"
               clickable
@@ -144,6 +150,7 @@
                 submission.status != 'ACCEPTED_AS_FINAL' &&
                 submission.status != 'ARCHIVED'
               "
+              role="menuitem"
               class="items-center"
               clickable
               @click="confirmHandler('request_resubmission', submission.id)"
@@ -154,6 +161,7 @@
                 submission.status != 'ACCEPTED_AS_FINAL' &&
                 submission.status != 'ARCHIVED'
               "
+              role="menuitem"
               data-cy="reject"
               class="items-center"
               clickable
@@ -162,6 +170,7 @@
             </q-item>
             <q-item
               v-if="submission.status == 'ACCEPTED_AS_FINAL'"
+              role="menuitem"
               data-cy="archive"
               class="items-center"
               clickable
@@ -173,6 +182,7 @@
                 submission.status == 'ACCEPTED_AS_FINAL' ||
                 submission.status == 'ARCHIVED'
               "
+              role="menuitem"
               data-cy="delete"
               class="items-center"
               clickable
@@ -183,6 +193,7 @@
           <q-separator />
           <q-item
             v-if="submission.status == 'AWAITING_REVIEW'"
+            role="menuitem"
             data-cy="open_review"
             class="items-center"
             clickable
@@ -191,6 +202,7 @@
           </q-item>
           <q-item
             v-if="submission.status == 'UNDER_REVIEW'"
+            role="menuitem"
             data-cy="close_review"
             class="items-center"
             clickable
@@ -200,6 +212,7 @@
         </q-menu>
       </q-item>
       <q-item
+        role="menuitem"
         :disable="isDisabledByRole || isDisabledByState"
         data-cy="export_submission"
         clickable

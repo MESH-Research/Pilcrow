@@ -1,10 +1,10 @@
 /// <reference types="Cypress" />
 /// <reference path="../support/index.d.ts" />
 
-import { a11yLogViolations } from '../support/helpers'
+import { a11yLogViolations } from "../support/helpers"
 
 describe("Submission Details", () => {
-  it("should assert the Submission Details page is accessible", () => {
+  it("should assert the Submission Details page is accessible on initial render", () => {
     cy.task("resetDb")
     cy.login({ email: "applicationadministrator@meshresearch.net" })
     cy.visit("submission/100/details")
@@ -17,17 +17,16 @@ describe("Submission Details", () => {
     cy.task("resetDb")
     cy.login({ email: "applicationadministrator@meshresearch.net" })
     cy.visit("submission/100/details")
-    cy.interceptGQLOperation('UpdateSubmissionReviewers');
-
+    cy.interceptGQLOperation("UpdateSubmissionReviewers")
     cy.dataCy("reviewers_list").within(() => {
-      cy.userSearch('input_user', 'applicationAd')
-      cy.qSelectItems('input_user').eq(0).click()
-      cy.dataCy('button-assign').click();
+      cy.userSearch("input_user", "applicationAd")
+      cy.qSelectItems("input_user").eq(0).click()
+      cy.dataCy("button-assign").click()
     })
-
     cy.wait("@UpdateSubmissionReviewers")
-    cy.dataCy("reviewers_list").find(".q-list").contains("Application Administrator")
-
+    cy.dataCy("reviewers_list")
+      .find(".q-list")
+      .contains("Application Administrator")
     cy.injectAxe()
     cy.checkA11y(null, null, a11yLogViolations)
   })
@@ -36,17 +35,16 @@ describe("Submission Details", () => {
     cy.task("resetDb")
     cy.login({ email: "reviewcoordinator@meshresearch.net" })
     cy.visit("submission/100/details")
-    cy.interceptGQLOperation('UpdateSubmissionReviewers')
-
+    cy.interceptGQLOperation("UpdateSubmissionReviewers")
     cy.dataCy("reviewers_list").within(() => {
-      cy.userSearch('input_user', 'applicationAd')
-      cy.qSelectItems('input_user').eq(0).click()
-      cy.dataCy('button-assign').click()
+      cy.userSearch("input_user", "applicationAd")
+      cy.qSelectItems("input_user").eq(0).click()
+      cy.dataCy("button-assign").click()
     })
-
     cy.wait("@UpdateSubmissionReviewers")
-    cy.dataCy("reviewers_list").find(".q-list").contains("Application Administrator")
-
+    cy.dataCy("reviewers_list")
+      .find(".q-list")
+      .contains("Application Administrator")
     cy.injectAxe()
     cy.checkA11y(null, null, a11yLogViolations)
   })
@@ -56,23 +54,22 @@ describe("Submission Details", () => {
     cy.login({ email: "applicationadministrator@meshresearch.net" })
     cy.visit("submission/100/details")
     cy.interceptGQLOperation("UpdateSubmissionReviewCoordinators")
-
     cy.dataCy("coordinators_list")
-        .find('.q-list')
-        .eq(0)
-        .find("[data-cy=button_unassign]")
-        .click();
+      .find(".q-list")
+      .eq(0)
+      .find("[data-cy=button_unassign]")
+      .click()
     cy.wait("@UpdateSubmissionReviewCoordinators")
-
     cy.dataCy("coordinators_list").find(".q-list").should("not.exist")
-
     cy.dataCy("coordinators_list").within(() => {
-      cy.userSearch('input_user', "applicationAd")
-      cy.qSelectItems('input_user').eq(0).click()
-      cy.dataCy('button-assign').click();
+      cy.userSearch("input_user", "applicationAd")
+      cy.qSelectItems("input_user").eq(0).click()
+      cy.dataCy("button-assign").click()
     })
     cy.wait("@UpdateSubmissionReviewCoordinators")
-    cy.dataCy("coordinators_list").find('.q-list').contains("Application Administrator")
+    cy.dataCy("coordinators_list")
+      .find(".q-list")
+      .contains("Application Administrator")
 
     cy.injectAxe()
     cy.checkA11y(null, null, a11yLogViolations)
@@ -83,74 +80,67 @@ describe("Submission Details", () => {
     cy.login({ email: "applicationadministrator@meshresearch.net" })
     cy.visit("submission/100/details")
     cy.interceptGQLOperation("UpdateSubmissionReviewers")
-
-    cy.dataCy('reviewers_list').within(() => {
-      cy.userSearch('input_user', 'applicationAd')
-      cy.qSelectItems('input_user').eq(0).click()
-      cy.dataCy('button-assign').click()
+    cy.dataCy("reviewers_list").within(() => {
+      cy.userSearch("input_user", "applicationAd")
+      cy.qSelectItems("input_user").eq(0).click()
+      cy.dataCy("button-assign").click()
     })
     cy.wait("@UpdateSubmissionReviewers")
-
-    cy.dataCy('reviewers_list').within(() => {
-      cy.userSearch('input_user', 'applicationAd')
-      cy.qSelectItems('input_user').eq(0).click()
-      cy.dataCy('button-assign').click()
+    cy.dataCy("reviewers_list").within(() => {
+      cy.userSearch("input_user", "applicationAd")
+      cy.qSelectItems("input_user").eq(0).click()
+      cy.dataCy("button-assign").click()
     })
     cy.wait("@UpdateSubmissionReviewers")
-
-    cy.dataCy('reviewers_list').find('.q-item').should('have.length', 2)
-
+    cy.dataCy("reviewers_list").find(".q-item").should("have.length", 2)
+    cy.injectAxe()
+    cy.checkA11y(null, null, a11yLogViolations)
   })
 
   it("should show comments associated with status changes in the Activity section", () => {
     cy.task("resetDb")
     cy.login({ email: "applicationadministrator@meshresearch.net" })
     cy.visit("submission/108/review")
-
-    cy.interceptGQLOperation("UpdateSubmissionStatus");
-
+    cy.interceptGQLOperation("UpdateSubmissionStatus")
     cy.dataCy("status-dropdown").click()
     cy.dataCy("open_for_review").click()
     cy.dataCy("status_change_comment").type("first comment from admin")
     cy.dataCy("dirtyYesChangeStatus").click()
     cy.wait("@UpdateSubmissionStatus")
-
     cy.dataCy("change_status_notify")
       .should("be.visible")
       .should("have.class", "bg-positive")
-
     cy.dataCy("close_for_review").click()
     cy.dataCy("status_change_comment").type("second comment from admin")
     cy.dataCy("dirtyYesChangeStatus").click()
     cy.wait("@UpdateSubmissionStatus")
-
     cy.visit("/submission/108/details")
     cy.dataCy("activity_section").contains("first comment from admin")
     cy.dataCy("activity_section").contains("second comment from admin")
-  });
+  })
 
   it("should show the invitation form for a review coordinator", () => {
     cy.task("resetDb")
     cy.login({ email: "reviewcoordinator@meshresearch.net" })
     cy.visit("/submission/100/details")
     cy.dataCy("invitation_form")
-  });
+  })
 
   it("should hide the invitation form for a reviewer", () => {
     cy.task("resetDb")
     cy.login({ email: "reviewer@meshresearch.net" })
     cy.visit("/submission/100/details")
     cy.dataCy("invitation_form").should("not.exist")
-  });
+  })
 
   it("should allow review coordinators to invite unregistered reviewers", () => {
     cy.task("resetDb")
     cy.login({ email: "reviewcoordinator@meshresearch.net" })
     cy.visit("submission/100/details")
-    cy.interceptGQLOperation('InviteReviewer');
+    cy.interceptGQLOperation("InviteReviewer")
     cy.dataCy("reviewers_list").within(() => {
-      cy.userSearch('input_user', 'scholarlystranger@gmail.com')
-      cy.dataCy('button-assign').click();
+      cy.userSearch("input_user", "scholarlystranger@gmail.com")
+      cy.dataCy("button-assign").click()
     })
     cy.wait("@InviteReviewer")
     cy.dataCy("reviewers_list").find(".q-list").contains("stranger")
@@ -162,13 +152,13 @@ describe("Submission Details", () => {
     cy.task("resetDb")
     cy.login({ email: "reviewcoordinator@meshresearch.net" })
     cy.visit("submission/100/details")
-    cy.interceptGQLOperation('InviteReviewer');
+    cy.interceptGQLOperation("InviteReviewer")
     cy.dataCy("reviewers_list").within(() => {
-      cy.userSearch('input_user', 'invalidemail')
-      cy.dataCy('button-assign').click();
+      cy.userSearch("input_user", "invalidemail")
+      cy.dataCy("button-assign").click()
     })
     cy.wait("@InviteReviewer")
-    cy.dataCy('reviewers_list').find('.q-item').should('have.length', 1)
+    cy.dataCy("reviewers_list").find(".q-item").should("have.length", 1)
     cy.injectAxe()
     cy.checkA11y(null, null, a11yLogViolations)
   })
@@ -177,15 +167,15 @@ describe("Submission Details", () => {
     cy.task("resetDb")
     cy.login({ email: "reviewcoordinator@meshresearch.net" })
     cy.visit("submission/100/details")
-    cy.interceptGQLOperation('InviteReviewer');
+    cy.interceptGQLOperation("InviteReviewer")
     cy.dataCy("reviewers_list").within(() => {
-      cy.userSearch('input_user', 'scholarlystranger@gmail.com')
-      cy.dataCy('button-assign').click();
+      cy.userSearch("input_user", "scholarlystranger@gmail.com")
+      cy.dataCy("button-assign").click()
     })
     cy.wait("@InviteReviewer")
-    cy.dataCy('user_unconfirmed').click();
-    cy.dataCy('dirtyYesReinviteUser').click();
-    cy.dataCy('reinvite_notify')
+    cy.dataCy("user_unconfirmed").click()
+    cy.dataCy("dirtyYesReinviteUser").click()
+    cy.dataCy("reinvite_notify")
       .should("be.visible")
       .should("have.class", "bg-positive")
     cy.injectAxe()
@@ -198,9 +188,9 @@ describe("Submission Details", () => {
     cy.visit("submission/100/details")
     cy.interceptGQLOperation("UpdateSubmissionTitle")
     cy.dataCy("submission_title").click()
-    cy.dataCy("submission_title_input").type('Test Input{enter}');
+    cy.dataCy("submission_title_input").type("Test Input{enter}")
     cy.wait("@UpdateSubmissionTitle")
-    cy.dataCy('submission_title').contains("Test Input")
+    cy.dataCy("submission_title").contains("Test Input")
     cy.injectAxe()
     cy.checkA11y(null, null, a11yLogViolations)
   })
