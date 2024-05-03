@@ -136,11 +136,13 @@
 </template>
 
 <script setup>
+import SampleSubmissionContent from "./SampleSubmissionContent.vue"
+import SampleSubmissionContentAvatars from "./SampleSubmissionContentAvatars.vue"
+import SampleSubmissionContentCriteria from "./SampleSubmissionContentCriteria.vue"
+import SampleSubmissionContentGrouped from "./SampleSubmissionContentGrouped.vue"
 import { BubbleMenu, Editor, EditorContent } from "@tiptap/vue-3"
 import SubmissionContentKit from "src/tiptap/extension-submission-content-kit"
-import { BubbleMenu, Editor, EditorContent } from "@tiptap/vue-3"
 import { computed, inject, ref, watch, nextTick } from "vue"
-import { useQuasar } from "quasar"
 import { scroll } from "quasar"
 import { useDarkMode } from "src/use/guiElements"
 
