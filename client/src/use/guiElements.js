@@ -1,7 +1,22 @@
-import { computed } from "vue"
+import { computed, ref, watch } from "vue"
 import { useQuasar } from "quasar"
 import { useI18n } from "vue-i18n"
 import { useCurrentUser } from "./user"
+
+export function useDarkMode() {
+  const $q = useQuasar()
+  const darkModeStatus = ref($q.dark.isActive)
+  watch(
+    () => $q.dark.isActive,
+    () => {
+      darkModeStatus.value = $q.dark.isActive
+    },
+  )
+  function toggleDarkMode() {
+    $q.dark.toggle()
+  }
+  return { darkModeStatus, toggleDarkMode }
+}
 
 /**
  * Display feedback messages to the user using the Quasar notify plugin.
@@ -68,7 +83,7 @@ export function useStatusChangeControls(submission) {
   const statusChangingDisabledStates = [
     "REJECTED",
     "RESUBMISSION_REQUESTED",
-    "DELETED"
+    "DELETED",
   ]
 
   const statusChangingDisabledByState = computed(() => {
@@ -79,7 +94,8 @@ export function useStatusChangeControls(submission) {
   })
 
   return {
-    statusChangingDisabledByRole, statusChangingDisabledByState
+    statusChangingDisabledByRole,
+    statusChangingDisabledByState,
   }
 }
 
