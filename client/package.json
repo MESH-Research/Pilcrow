@@ -58,7 +58,7 @@
     "cypress": "^13.0.0",
     "cypress-axe": "^1.4.0",
     "cypress-file-upload": "^5.0.8",
-    "eslint": "^8.10.0",
+    "eslint": "^9.0.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-cypress": "^2.12.1",
     "eslint-plugin-prettier": "^5.0.0",
