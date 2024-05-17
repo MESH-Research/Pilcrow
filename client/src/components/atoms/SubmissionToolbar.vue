@@ -33,6 +33,8 @@
         </div>
       </q-toolbar-title>
 
+      <status-change-dropdown :submission="submission" />
+
       <q-btn-dropdown
         v-if="!statusChangingDisabledByRole && !statusChangingDisabledByState"
         :label="$t(`submission.toolbar.status_options`)"
@@ -41,17 +43,21 @@
         menu-self="top right"
         data-cy="status-dropdown"
       >
-        <div v-if="submission.status == 'DRAFT'">
+        <q-btn-group
+          v-if="submission.status == 'DRAFT'"
+          flat
+          square
+          class="column q-pa-sm"
+        >
           <q-btn
             data-cy="initially_submit"
-            rounded
             color="positive"
             :label="$t(`submission.action.submit_for_review`)"
-            class="q-ml-md"
+            class=""
             @click="confirmHandler('submit_for_review')"
           >
           </q-btn>
-        </div>
+        </q-btn-group>
 
         <q-btn-group
           v-else-if="
@@ -83,8 +89,7 @@
             :label="$t(`submission.action.accept_as_final`)"
             class=""
             @click="confirmHandler('accept_as_final')"
-          >
-          </q-btn>
+          ></q-btn>
           <q-btn
             rounded
             :label="$t(`submission.action.request_resubmission`)"
@@ -240,6 +245,7 @@
 </template>
 <script setup>
 import ConfirmStatusChangeDialog from "../dialogs/ConfirmStatusChangeDialog.vue"
+import StatusChangeDropdown from "./StatusChangeDropdown.vue"
 import { useQuasar } from "quasar"
 import {
   useSubmissionExport,

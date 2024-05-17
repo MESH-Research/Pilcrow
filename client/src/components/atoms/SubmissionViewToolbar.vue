@@ -28,10 +28,12 @@
           </q-chip>
         </div>
       </q-toolbar-title>
+      <status-change-dropdown :submission="submission" />
     </q-toolbar>
   </q-header>
 </template>
 <script setup>
+import StatusChangeDropdown from "./StatusChangeDropdown.vue"
 const props = defineProps({
   submission: {
     type: Object,
