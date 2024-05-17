@@ -109,8 +109,8 @@ export function useStatusChangeControls(submission) {
       nextStates: [
         "UNDER_REVIEW",
         "ACCEPTED_AS_FINAL",
-        "REJECTED",
         "RESUBMISSION_REQUESTED",
+        "REJECTED",
       ],
     },
     AWAITING_REVIEW: {
@@ -179,7 +179,7 @@ export function useStatusChangeControls(submission) {
       color: "",
       class: "",
       dataCy: "",
-      nextStates: [],
+      nextStates: ["ACCEPTED_AS_FINAL", "RESUBMISSION_REQUESTED", "REJECTED"],
     },
   }
 
