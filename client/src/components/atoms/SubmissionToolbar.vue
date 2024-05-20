@@ -33,7 +33,7 @@
         </div>
       </q-toolbar-title>
 
-      <status-change-dropdown :submission="submission" />
+      <status-change-dropdown :submission />
 
       <q-btn-dropdown
         v-if="!statusChangingDisabledByRole && !statusChangingDisabledByState"

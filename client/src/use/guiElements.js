@@ -93,6 +93,21 @@ export function useStatusChangeControls(submission) {
     return statusChangingDisabledStates.includes(submission.value.status)
   })
 
+  // const nextStates = {
+  //   "INITIALLY_SUBMITTED": [
+  //       "UNDER_REVIEW",
+  //       "ACCEPTED_AS_FINAL",
+  //       "RESUBMISSION_REQUESTED",
+  //       "REJECTED",
+  //     },
+  //   "UNDER_REVIEW",
+  //   "ACCEPTED_AS_FINAL",
+  //   "RESUBMISSION_REQUESTED",
+  //   "REJECTED",
+  //   "ARCHIVED",
+  //   "DELETED",
+  // ]
+
   const states = {
     DRAFT: {
       action: null,

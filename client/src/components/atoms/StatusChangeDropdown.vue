@@ -7,20 +7,12 @@
     menu-self="top right"
     data-cy="status-dropdown"
   >
-    <q-btn v-if="nextStates.length == 0"> No options available </q-btn>
-    <q-btn-group
-      v-else
-      flat
-      square
-      class="column q-pa-sm"
-      data-cy="decision_options"
-    >
+    <q-btn-group flat square class="column q-pa-sm" data-cy="decision_options">
       <q-btn
         v-for="(state, index) in nextStates"
         :key="index"
-        :next-states
-        :data-cy="states[state].dataCy ?? ''"
-        :color="states[state].color ?? ''"
+        :data-cy="states[state].dataCy"
+        :color="states[state].color"
         :label="$t(`submission.action.${states[state].action}`)"
         :class="states[state].class"
         @click="
@@ -34,7 +26,7 @@
 import ConfirmStatusChangeDialog from "../dialogs/ConfirmStatusChangeDialog.vue"
 import { useQuasar } from "quasar"
 import { useStatusChangeControls } from "src/use/guiElements.js"
-import { computed, ref } from "vue"
+import { computed, toRef } from "vue"
 
 const { dialog } = useQuasar()
 
@@ -45,7 +37,7 @@ const props = defineProps({
   },
 })
 
-const submissionRef = ref(props.submission)
+const submissionRef = toRef(props, "submission")
 const { statusChangingDisabledByRole, statusChangingDisabledByState, states } =
   useStatusChangeControls(submissionRef)
 
