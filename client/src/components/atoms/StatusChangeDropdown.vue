@@ -9,7 +9,7 @@
   >
     <q-btn-group flat square class="column q-pa-sm" data-cy="decision_options">
       <q-btn
-        v-for="(state, index) in nextStates"
+        v-for="(state, index) in nextStates[submissionRef.status]"
         :key="index"
         :data-cy="states[state].dataCy"
         :color="states[state].color"
@@ -26,7 +26,7 @@
 import ConfirmStatusChangeDialog from "../dialogs/ConfirmStatusChangeDialog.vue"
 import { useQuasar } from "quasar"
 import { useStatusChangeControls } from "src/use/guiElements.js"
-import { computed, toRef } from "vue"
+import { toRef } from "vue"
 
 const { dialog } = useQuasar()
 
@@ -38,12 +38,8 @@ const props = defineProps({
 })
 
 const submissionRef = toRef(props, "submission")
-const { statusChangingDisabledByRole, statusChangingDisabledByState, states } =
+const { statusChangingDisabledByRole, statusChangingDisabledByState, states, nextStates } =
   useStatusChangeControls(submissionRef)
-
-const nextStates = computed(() => {
-  return states[`${submissionRef.value.status}`].nextStates
-})
 
 async function confirmHandler(action) {
   await new Promise((resolve) => {

@@ -93,20 +93,33 @@ export function useStatusChangeControls(submission) {
     return statusChangingDisabledStates.includes(submission.value.status)
   })
 
-  // const nextStates = {
-  //   "INITIALLY_SUBMITTED": [
-  //       "UNDER_REVIEW",
-  //       "ACCEPTED_AS_FINAL",
-  //       "RESUBMISSION_REQUESTED",
-  //       "REJECTED",
-  //     },
-  //   "UNDER_REVIEW",
-  //   "ACCEPTED_AS_FINAL",
-  //   "RESUBMISSION_REQUESTED",
-  //   "REJECTED",
-  //   "ARCHIVED",
-  //   "DELETED",
-  // ]
+  const nextStates = {
+    DRAFT: ["INITIALLY_SUBMITTED"],
+    INITIALLY_SUBMITTED: [
+      "UNDER_REVIEW",
+      "ACCEPTED_AS_FINAL",
+      "RESUBMISSION_REQUESTED",
+      "REJECTED",
+    ],
+    AWAITING_REVIEW: ["UNDER_REVIEW"],
+    UNDER_REVIEW: [
+      "ACCEPTED_AS_FINAL",
+      "RESUBMISSION_REQUESTED",
+      "REJECTED",
+      "AWAITING_DECISION",
+    ],
+    AWAITING_DECISION: [
+      "ACCEPTED_AS_FINAL",
+      "RESUBMISSION_REQUESTED",
+      "REJECTED",
+    ],
+    ACCEPTED_AS_FINAL: ["ARCHIVED", "DELETED"],
+    RESUBMISSION_REQUESTED: ["ARCHIVED", "DELETED"],
+    REJECTED: ["ARCHIVED", "DELETED"],
+    ARCHIVED: ["DELETED"],
+    DELETED: [],
+    EXPIRED: ["ACCEPTED_AS_FINAL", "RESUBMISSION_REQUESTED", "REJECTED"],
+  }
 
   const states = {
     DRAFT: {
@@ -114,92 +127,72 @@ export function useStatusChangeControls(submission) {
       color: "",
       class: "",
       dataCy: "",
-      nextStates: ["INITIALLY_SUBMITTED"],
     },
     INITIALLY_SUBMITTED: {
       action: "submit_for_review",
       color: "positive",
       class: "",
       dataCy: "initially_submit",
-      nextStates: [
-        "UNDER_REVIEW",
-        "ACCEPTED_AS_FINAL",
-        "RESUBMISSION_REQUESTED",
-        "REJECTED",
-      ],
     },
     AWAITING_REVIEW: {
       action: "accept_for_review",
       color: "positive",
       class: "",
       dataCy: "",
-      nextStates: ["UNDER_REVIEW"],
     },
     UNDER_REVIEW: {
       action: "open",
       color: "",
       class: "",
       dataCy: "",
-      nextStates: [
-        "ACCEPTED_AS_FINAL",
-        "RESUBMISSION_REQUESTED",
-        "REJECTED",
-        "AWAITING_DECISION",
-      ],
     },
     AWAITING_DECISION: {
       action: "close",
       color: "black",
       class: "",
       dataCy: "close_for_review",
-      nextStates: ["ACCEPTED_AS_FINAL", "RESUBMISSION_REQUESTED", "REJECTED"],
     },
     ACCEPTED_AS_FINAL: {
       action: "accept_as_final",
       color: "positive",
       class: "",
       dataCy: "accept_as_final",
-      nextStates: ["ARCHIVED", "DELETED"],
     },
     ARCHIVED: {
       action: "archive",
       color: "dark-grey",
       class: "",
       dataCy: "archive",
-      nextStates: ["DELETED"],
     },
     DELETED: {
       action: "delete",
       color: "negative",
       class: "",
       dataCy: "delete",
-      nextStates: [],
     },
     REJECTED: {
       action: "reject",
       color: "negative",
       class: "",
       dataCy: "",
-      nextStates: ["ARCHIVED", "DELETED"],
     },
     RESUBMISSION_REQUESTED: {
       action: "request_resubmission",
       color: "dark-grey",
       class: "text-white request-resubmission",
       dataCy: "",
-      nextStates: ["ARCHIVED", "DELETED"],
     },
     EXPIRED: {
       action: null,
       color: "",
       class: "",
       dataCy: "",
-      nextStates: ["ACCEPTED_AS_FINAL", "RESUBMISSION_REQUESTED", "REJECTED"],
     },
   }
 
   return {
     states,
+    nextStates,
     statusChangingDisabledByRole,
     statusChangingDisabledByState,
   }
