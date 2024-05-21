@@ -135,10 +135,10 @@ export function useStatusChangeControls(submission) {
       dataCy: "initially_submit",
     },
     AWAITING_REVIEW: {
-      action: "accept_for_review",
+      action: "open",
       color: "positive",
       class: "",
-      dataCy: "",
+      dataCy: "open_for_review",
     },
     UNDER_REVIEW: {
       action: "open",
