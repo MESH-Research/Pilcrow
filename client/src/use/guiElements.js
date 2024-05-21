@@ -121,7 +121,7 @@ export function useStatusChangeControls(submission) {
     EXPIRED: ["ACCEPTED_AS_FINAL", "RESUBMISSION_REQUESTED", "REJECTED"],
   }
 
-  const states = {
+  const stateButtons = {
     DRAFT: {
       action: null,
       color: "",
@@ -191,7 +191,7 @@ export function useStatusChangeControls(submission) {
   }
 
   return {
-    states,
+    stateButtons,
     nextStates,
     statusChangingDisabledByRole,
     statusChangingDisabledByState,

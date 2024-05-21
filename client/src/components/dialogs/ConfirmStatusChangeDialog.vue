@@ -14,6 +14,7 @@
             <i18n-t
               :keypath="`dialog.confirmStatusChange.body.${props.action}`"
               tag="span"
+              scope="global"
             >
             </i18n-t>
           </p>
@@ -26,6 +27,7 @@
             <i18n-t
               :keypath="`dialog.confirmStatusChange.comment`"
               tag="span"
+              scope="global"
             />
           </p>
         </div>
@@ -64,6 +66,7 @@ import { UPDATE_SUBMISSION_STATUS } from "src/graphql/mutations"
 import { ref } from "vue"
 import { useI18n } from "vue-i18n"
 import { useFeedbackMessages } from "src/use/guiElements"
+import { useRouter } from "vue-router"
 
 const { t } = useI18n()
 
@@ -79,6 +82,10 @@ const props = defineProps({
     default: null,
   },
   submissionId: {
+    type: String,
+    required: true,
+  },
+  currentStatus: {
     type: String,
     required: true,
   },
@@ -127,6 +134,7 @@ const { newStatusMessage } = useFeedbackMessages({
     "data-cy": "change_status_notify",
   }
 })
+const { push } = useRouter()
 
 async function updateStatus() {
   try {
@@ -135,6 +143,12 @@ async function updateStatus() {
       status: statuses[props.action],
       status_change_comment: comment.value,
     })
+    if (props.currentStatus == 'DRAFT') {
+      push({ path: `/submission/${props.submissionId}/view/` })
+    }
+    if (props.currentStatus == 'INITIALLY_SUBMITTED') {
+      push({ path: `/submission/${props.submissionId}/review/` })
+    }
     newStatusMessage("success", t(`dialog.confirmStatusChange.statusChanged.${props.action}`))
   } catch (error) {
     newStatusMessage("failure", t("dialog.confirmStatusChange.unauthorized"))

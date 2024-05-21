@@ -11,12 +11,12 @@
       <q-btn
         v-for="(state, index) in nextStates[submissionRef.status]"
         :key="index"
-        :data-cy="states[state].dataCy"
-        :color="states[state].color"
-        :label="$t(`submission.action.${states[state].action}`)"
-        :class="states[state].class"
+        :data-cy="stateButtons[state].dataCy"
+        :color="stateButtons[state].color"
+        :label="$t(`submission.action.${stateButtons[state].action}`)"
+        :class="stateButtons[state].class"
         @click="
-          states[state].action ? confirmHandler(states[state].action) : () => {}
+          stateButtons[state].action ? confirmHandler(stateButtons[state].action) : () => {}
         "
       ></q-btn>
     </q-btn-group>
@@ -38,7 +38,7 @@ const props = defineProps({
 })
 
 const submissionRef = toRef(props, "submission")
-const { statusChangingDisabledByRole, statusChangingDisabledByState, states, nextStates } =
+const { statusChangingDisabledByRole, statusChangingDisabledByState, stateButtons, nextStates } =
   useStatusChangeControls(submissionRef)
 
 async function confirmHandler(action) {
@@ -61,6 +61,7 @@ function dirtyDialog(action) {
     componentProps: {
       action: action,
       submissionId: props.submission.id,
+      currentStatus: props.submission.status,
     },
   })
 }
