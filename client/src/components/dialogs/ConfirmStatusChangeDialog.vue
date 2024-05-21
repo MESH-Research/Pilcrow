@@ -100,7 +100,7 @@ const statuses = {
   accept_as_final: "ACCEPTED_AS_FINAL",
   close: "AWAITING_DECISION",
   archive: "ARCHIVED",
-  delete: "DELETED"
+  delete: "DELETED",
 }
 
 const icons = {
@@ -112,7 +112,7 @@ const icons = {
   close: "grading",
   accept_as_final: "done",
   archive: "archive",
-  delete: "delete"
+  delete: "delete",
 }
 
 const colors = {
@@ -124,7 +124,7 @@ const colors = {
   close: "black",
   accept_as_final: "positive",
   archive: "dark-grey",
-  delete: "negative"
+  delete: "negative",
 }
 const comment = ref(null)
 
@@ -132,7 +132,7 @@ const { mutate } = useMutation(UPDATE_SUBMISSION_STATUS)
 const { newStatusMessage } = useFeedbackMessages({
   attrs: {
     "data-cy": "change_status_notify",
-  }
+  },
 })
 const { push } = useRouter()
 
@@ -142,14 +142,18 @@ async function updateStatus() {
       id: String(props.submissionId),
       status: statuses[props.action],
       status_change_comment: comment.value,
+    }).then(() => {
+      if (props.currentStatus == "DRAFT") {
+        push({ path: `/submission/${props.submissionId}/view/` })
+      }
+      if (props.currentStatus == "INITIALLY_SUBMITTED") {
+        push({ path: `/submission/${props.submissionId}/review/` })
+      }
     })
-    if (props.currentStatus == 'DRAFT') {
-      push({ path: `/submission/${props.submissionId}/view/` })
-    }
-    if (props.currentStatus == 'INITIALLY_SUBMITTED') {
-      push({ path: `/submission/${props.submissionId}/review/` })
-    }
-    newStatusMessage("success", t(`dialog.confirmStatusChange.statusChanged.${props.action}`))
+    newStatusMessage(
+      "success",
+      t(`dialog.confirmStatusChange.statusChanged.${props.action}`),
+    )
   } catch (error) {
     newStatusMessage("failure", t("dialog.confirmStatusChange.unauthorized"))
   }

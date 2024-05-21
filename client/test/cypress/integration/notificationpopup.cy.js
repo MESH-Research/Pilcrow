@@ -16,7 +16,7 @@ describe("Notification Popup", () => {
   it("allows multiple notifications to be marked as read", () => {
     cy.task("resetDb")
     cy.login({ email: "applicationadministrator@meshresearch.net" })
-    cy.visit("/submission/108/review")
+    cy.visit("/submission/101/review")
     cy.interceptGQLOperation("UpdateSubmissionStatus")
     cy.dataCy("status-dropdown").click()
     cy.dataCy("open_for_review").click()

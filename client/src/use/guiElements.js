@@ -142,9 +142,9 @@ export function useStatusChangeControls(submission) {
     },
     UNDER_REVIEW: {
       action: "open",
-      color: "",
+      color: "black",
       class: "",
-      dataCy: "",
+      dataCy: "open_for_review",
     },
     AWAITING_DECISION: {
       action: "close",
