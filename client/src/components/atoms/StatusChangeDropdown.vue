@@ -9,14 +9,13 @@
   >
     <q-btn-group flat square class="column q-pa-sm" data-cy="decision_options">
       <q-btn
-        v-for="(state, index) in nextStates[submissionRef.status]"
-        :key="index"
-        :data-cy="stateButtons[state].dataCy"
-        :color="stateButtons[state].color"
-        :label="$t(`submission.action.${stateButtons[state].action}`)"
-        :class="stateButtons[state].class"
+        v-for="state in nextStates[submissionRef.status]"
+        :key="state"
+        v-bind="submissionStateButtons[state].attrs"
+        :label="$t(`submission.action.${submissionStateButtons[state].action}`)"
         @click="
-          stateButtons[state].action ? confirmHandler(stateButtons[state].action) : () => {}
+          submissionStateButtons[state].action &&
+            confirmHandler(submissionStateButtons[state].action)
         "
       ></q-btn>
     </q-btn-group>
@@ -25,7 +24,10 @@
 <script setup>
 import ConfirmStatusChangeDialog from "../dialogs/ConfirmStatusChangeDialog.vue"
 import { useQuasar } from "quasar"
-import { useStatusChangeControls } from "src/use/guiElements.js"
+import {
+  useStatusChangeControls,
+  submissionStateButtons,
+} from "src/use/guiElements.js"
 import { toRef } from "vue"
 
 const { dialog } = useQuasar()
@@ -38,8 +40,11 @@ const props = defineProps({
 })
 
 const submissionRef = toRef(props, "submission")
-const { statusChangingDisabledByRole, statusChangingDisabledByState, stateButtons, nextStates } =
-  useStatusChangeControls(submissionRef)
+const {
+  statusChangingDisabledByRole,
+  statusChangingDisabledByState,
+  nextStates,
+} = useStatusChangeControls(submissionRef)
 
 async function confirmHandler(action) {
   await new Promise((resolve) => {

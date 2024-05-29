@@ -4,8 +4,8 @@
       <q-card-section class="row no-wrap">
         <div class="q-pa-sm q-pr-md column">
           <q-avatar
-            :icon="icons[props.action]"
-            :color="colors[props.action]"
+            :icon="state.icon"
+            :color="state.attrs.color"
             text-color="white"
           />
         </div>
@@ -63,9 +63,12 @@
 import { useDialogPluginComponent } from "quasar"
 import { useMutation } from "@vue/apollo-composable"
 import { UPDATE_SUBMISSION_STATUS } from "src/graphql/mutations"
-import { ref } from "vue"
+import { computed, ref } from "vue"
 import { useI18n } from "vue-i18n"
-import { useFeedbackMessages } from "src/use/guiElements"
+import {
+  useFeedbackMessages,
+  submissionStateButtons,
+} from "src/use/guiElements"
 import { useRouter } from "vue-router"
 
 const { t } = useI18n()
@@ -90,42 +93,19 @@ const props = defineProps({
     required: true,
   },
 })
+const state = computed(() => {
+  const match = Object.entries(submissionStateButtons).find(
+    ([, value]) => value.action === props.action,
+  )
+  if (match === undefined) {
+    return {}
+  }
+  return {
+    ...match[1],
+    status: match[0],
+  }
+})
 
-const statuses = {
-  submit_for_review: "INITIALLY_SUBMITTED",
-  accept_for_review: "AWAITING_REVIEW",
-  reject: "REJECTED",
-  request_resubmission: "RESUBMISSION_REQUESTED",
-  open: "UNDER_REVIEW",
-  accept_as_final: "ACCEPTED_AS_FINAL",
-  close: "AWAITING_DECISION",
-  archive: "ARCHIVED",
-  delete: "DELETED",
-}
-
-const icons = {
-  submit_for_review: "edit_document",
-  accept_for_review: "done",
-  reject: "do_not_disturb",
-  request_resubmission: "refresh",
-  open: "grading",
-  close: "grading",
-  accept_as_final: "done",
-  archive: "archive",
-  delete: "delete",
-}
-
-const colors = {
-  submit_for_review: "positive",
-  accept_for_review: "positive",
-  reject: "negative",
-  request_resubmission: "dark-grey",
-  open: "black",
-  close: "black",
-  accept_as_final: "positive",
-  archive: "dark-grey",
-  delete: "negative",
-}
 const comment = ref(null)
 
 const { mutate } = useMutation(UPDATE_SUBMISSION_STATUS)
@@ -140,7 +120,7 @@ async function updateStatus() {
   try {
     await mutate({
       id: String(props.submissionId),
-      status: statuses[props.action],
+      status: state.value.status,
       status_change_comment: comment.value,
     }).then(() => {
       if (props.currentStatus == "DRAFT") {

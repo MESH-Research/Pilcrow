@@ -70,6 +70,107 @@ export function useFeedbackMessages(overrideDefaults = {}) {
   return { newMessage, newStatusMessage }
 }
 
+export const submissionStateButtons = {
+  DRAFT: {
+    action: null,
+    attrs: {
+      color: "",
+      class: "",
+      dataCy: "",
+    },
+  },
+  INITIALLY_SUBMITTED: {
+    action: "submit_for_review",
+    attrs: {
+      color: "positive",
+      class: "",
+      dataCy: "initially_submit",
+    },
+    icon: "edit_document",
+  },
+  AWAITING_REVIEW: {
+    action: "accept_for_review",
+    attrs: {
+      color: "positive",
+      class: "",
+      dataCy: "open_for_review",
+    },
+    icon: "done",
+  },
+  UNDER_REVIEW: {
+    action: "open",
+    attrs: {
+      color: "black",
+      class: "",
+      dataCy: "open_for_review",
+    },
+    icon: "grading",
+  },
+  AWAITING_DECISION: {
+    action: "close",
+    attrs: {
+      color: "black",
+      class: "",
+      dataCy: "close_for_review",
+    },
+    icon: "grading",
+  },
+  ACCEPTED_AS_FINAL: {
+    action: "accept_as_final",
+    attrs: {
+      color: "positive",
+      class: "",
+      dataCy: "accept_as_final",
+    },
+    icon: "done",
+  },
+  ARCHIVED: {
+    action: "archive",
+    attrs: {
+      color: "dark-grey",
+      class: "",
+      dataCy: "archive",
+    },
+    icon: "archive",
+  },
+  DELETED: {
+    action: "delete",
+    attrs: {
+      color: "negative",
+      class: "",
+      dataCy: "delete",
+    },
+    icon: "delete",
+  },
+  REJECTED: {
+    action: "reject",
+    attrs: {
+      color: "negative",
+      class: "",
+      dataCy: "",
+    },
+    icon: "do_not_disturb",
+  },
+  RESUBMISSION_REQUESTED: {
+    action: "request_resubmission",
+    attrs: {
+      color: "dark-grey",
+      class: "text-white request-resubmission",
+      dataCy: "",
+    },
+    icon: "refresh",
+  },
+  EXPIRED: {
+    action: null,
+    attrs: {
+      color: "",
+      class: "",
+      dataCy: "",
+    },
+    icon: "",
+  },
+}
+
 export function useStatusChangeControls(submission) {
   const { isReviewer } = useCurrentUser()
 
@@ -121,77 +222,7 @@ export function useStatusChangeControls(submission) {
     EXPIRED: ["ACCEPTED_AS_FINAL", "RESUBMISSION_REQUESTED", "REJECTED"],
   }
 
-  const stateButtons = {
-    DRAFT: {
-      action: null,
-      color: "",
-      class: "",
-      dataCy: "",
-    },
-    INITIALLY_SUBMITTED: {
-      action: "submit_for_review",
-      color: "positive",
-      class: "",
-      dataCy: "initially_submit",
-    },
-    AWAITING_REVIEW: {
-      action: "open",
-      color: "positive",
-      class: "",
-      dataCy: "open_for_review",
-    },
-    UNDER_REVIEW: {
-      action: "open",
-      color: "black",
-      class: "",
-      dataCy: "open_for_review",
-    },
-    AWAITING_DECISION: {
-      action: "close",
-      color: "black",
-      class: "",
-      dataCy: "close_for_review",
-    },
-    ACCEPTED_AS_FINAL: {
-      action: "accept_as_final",
-      color: "positive",
-      class: "",
-      dataCy: "accept_as_final",
-    },
-    ARCHIVED: {
-      action: "archive",
-      color: "dark-grey",
-      class: "",
-      dataCy: "archive",
-    },
-    DELETED: {
-      action: "delete",
-      color: "negative",
-      class: "",
-      dataCy: "delete",
-    },
-    REJECTED: {
-      action: "reject",
-      color: "negative",
-      class: "",
-      dataCy: "",
-    },
-    RESUBMISSION_REQUESTED: {
-      action: "request_resubmission",
-      color: "dark-grey",
-      class: "text-white request-resubmission",
-      dataCy: "",
-    },
-    EXPIRED: {
-      action: null,
-      color: "",
-      class: "",
-      dataCy: "",
-    },
-  }
-
   return {
-    stateButtons,
     nextStates,
     statusChangingDisabledByRole,
     statusChangingDisabledByState,
