@@ -102,7 +102,7 @@ export const submissionStateButtons = {
     attrs: {
       color: "black",
       class: "",
-      "data-y": "open_for_review",
+      "data-cy": "open_for_review",
     },
     icon: "grading",
   },
