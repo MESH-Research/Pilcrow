@@ -76,7 +76,7 @@ export const submissionStateButtons = {
     attrs: {
       color: "",
       class: "",
-      dataCy: "",
+      "data-cy": "",
     },
   },
   INITIALLY_SUBMITTED: {
@@ -84,7 +84,7 @@ export const submissionStateButtons = {
     attrs: {
       color: "positive",
       class: "",
-      dataCy: "initially_submit",
+      "data-cy": "initially_submit",
     },
     icon: "edit_document",
   },
@@ -93,7 +93,7 @@ export const submissionStateButtons = {
     attrs: {
       color: "positive",
       class: "",
-      dataCy: "open_for_review",
+      "data-cy": "open_for_review",
     },
     icon: "done",
   },
@@ -102,7 +102,7 @@ export const submissionStateButtons = {
     attrs: {
       color: "black",
       class: "",
-      dataCy: "open_for_review",
+      "data-y": "open_for_review",
     },
     icon: "grading",
   },
@@ -111,7 +111,7 @@ export const submissionStateButtons = {
     attrs: {
       color: "black",
       class: "",
-      dataCy: "close_for_review",
+      "data-cy": "close_for_review",
     },
     icon: "grading",
   },
@@ -120,7 +120,7 @@ export const submissionStateButtons = {
     attrs: {
       color: "positive",
       class: "",
-      dataCy: "accept_as_final",
+      "data-cy": "accept_as_final",
     },
     icon: "done",
   },
@@ -129,7 +129,7 @@ export const submissionStateButtons = {
     attrs: {
       color: "dark-grey",
       class: "",
-      dataCy: "archive",
+      "data-cy": "archive",
     },
     icon: "archive",
   },
@@ -138,7 +138,7 @@ export const submissionStateButtons = {
     attrs: {
       color: "negative",
       class: "",
-      dataCy: "delete",
+      "data-cy": "delete",
     },
     icon: "delete",
   },
@@ -147,7 +147,7 @@ export const submissionStateButtons = {
     attrs: {
       color: "negative",
       class: "",
-      dataCy: "",
+      "data-cy": "",
     },
     icon: "do_not_disturb",
   },
@@ -156,7 +156,7 @@ export const submissionStateButtons = {
     attrs: {
       color: "dark-grey",
       class: "text-white request-resubmission",
-      dataCy: "",
+      "data-cy": "",
     },
     icon: "refresh",
   },
@@ -165,7 +165,7 @@ export const submissionStateButtons = {
     attrs: {
       color: "",
       class: "",
-      dataCy: "",
+      "data-cy": "",
     },
     icon: "",
   },
