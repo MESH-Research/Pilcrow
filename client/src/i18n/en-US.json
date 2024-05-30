@@ -643,6 +643,7 @@
       "unauthorized": "You are not authorized to edit this submission's title. Please contact your administrator."
     },
     "action": {
+      "no_status_options": "No Options Available",
       "preview": "Preview Submission",
       "view": "View Submission",
       "review": "Review Submission",
