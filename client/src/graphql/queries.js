@@ -228,12 +228,14 @@ export const GET_PUBLICATIONS = gql`
   query GetPublications(
     $page: Int
     $first: Int
+    $search: String
     $is_publicly_visible: Boolean
     $is_accepting_submissions: Boolean
   ) {
     publications(
       page: $page
       first: $first
+      search: $search
       is_publicly_visible: $is_publicly_visible
       is_accepting_submissions: $is_accepting_submissions
     ) {

@@ -1190,14 +1190,5 @@
   "generic": {
     "more_info": "More info"
   },
-  "app_banner_dismiss_tip": "Dismiss for 1 week",
-  "admin": {
-    "users": {
-      "headers": {
-        "name": "Name",
-        "username": "Username",
-        "email": "Email"
-      }
-    }
-  }
+  "app_banner_dismiss_tip": "Dismiss for 1 week"
 }
