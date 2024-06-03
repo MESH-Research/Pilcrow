@@ -178,8 +178,8 @@ export const CURRENT_USER_SUBMISSIONS = gql`
 `
 
 export const GET_USERS = gql`
-  query GetUsers($page: Int) {
-    userSearch(page: $page) {
+  query GetUsers($page: Int, $search: String, $first: Int) {
+    users(page: $page, search: $search, first: $first) {
       paginatorInfo {
         ...paginationFields
       }
