@@ -1,22 +1,15 @@
 <?php
 
-declare(strict_types=1);
-
-namespace Database\Seeders;
-
 use App\Models\Permission;
 use App\Models\Role;
-use Illuminate\Database\Seeder;
+use Illuminate\Database\Migrations\Migration;
 
-class RoleSeeder extends Seeder
+return new class extends Migration
 {
     /**
-     * Run the role seeder.
-     *
-     * @deprecated Permission seeding is done via migration. This seeder is only useful for development (maybe).
-     * @return void
+     * Run the migrations.
      */
-    public function run()
+    public function up(): void
     {
         $roles = Role::getArrayOfAllRoleNames();
         foreach ($roles as $key => $role) {
@@ -66,4 +59,12 @@ class RoleSeeder extends Seeder
         Permission::create(['name' => Permission::UPDATE_SITE_SETTINGS])
             ->assignRole(Role::APPLICATION_ADMINISTRATOR);
     }
-}
+
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+    }
+};
