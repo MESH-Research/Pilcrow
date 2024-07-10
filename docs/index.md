@@ -10,6 +10,9 @@ hero:
   tagline: "Collaborative Community Review"
   actions:
     - theme: brand
+      text: Guide
+      link: /guide/
+    - theme: alt
       text: Installation
       link: /install/
     - theme: alt
