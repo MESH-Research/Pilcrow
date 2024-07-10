@@ -1,36 +1,63 @@
 <?php
-
 declare(strict_types=1);
 
 namespace App\GraphQL\Mutations;
 
+use App\Models\Submission;
+
 final readonly class CommentStatusMutator
 {
-    /** @param  array{}  $args */
-    public function inline(null $_, array $args)
+    /**
+     * Validate supplied arguments and return the comments to be marked as read.
+     *
+     * @param string $type
+     * @param string $submission_id
+     * @param array{int} $comment_ids
+     * @return Collection<InlineComment|OverallComment>
+     */
+    private function validateArgs($type, $submission_id, $comment_ids)
     {
-        $submissionId = $args['submission_id'];
-        $comments = $args['comment_ids'];
-
-        if (!$submissionId || empty($comments)) {
-            throw new \Exception('Invalid submission or comment IDs provided');
+        if (!$submission_id) {
+            throw new \Exception('Submission ID required');
         }
-
-        //TODO: Validate that all the supplied comment ids are valid and belong to the supplied submission
-        //TODO: Call markRead with the comment type and comment ids
+        if (empty($commentIds)) {
+            throw new \Exception('Comment ID(s) required');
+        }
+        if ($type === 'inline') {
+            $comments = Submission::find($submission_id)->inlineComments();
+        } else {
+            $comments = Submission::find($submission_id)->overallComments();
+        }
+        $comments->map(function ($comment) use ($comment_ids) {
+            if (!in_array($comment->id, $comment_ids)) {
+                throw new \Exception('Invalid comment ID');
+            }
+        });
+        return $comments;
     }
 
-    public function overall(null $_, array $args)
+    /**
+     * @param array{} $args
+     * @return Collection<InlineComment>
+     */
+    public function inlineRead(null $_, array $args)
     {
-        $submissionId = $args['submission_id'];
-        $comments = $args['comment_ids'];
+        $comments = $this->validateArgs('inline', $args['submission_id'], $args['comment_ids']);
+        return $comments->map(function ($comment) {
+            $comment->markRead();
+        });
+    }
 
-        if (!$submissionId || empty($comments)) {
-            throw new \Exception('Invalid submission or comment IDs provided');
-        }
-
-        //TODO: Validate that all the supplied comment ids are valid and belong to the supplied submission
-        //TODO: Call markRead with the comment type and comment ids
+    /**
+     * @param array{} $args
+     * @return Collection<OverallComment>
+     */
+    public function overallRead(null $_, array $args)
+    {
+        $comments = $this->validateArgs('overall', $args['submission_id'], $args['comment_ids']);
+        return $comments->map(function ($comment) {
+            $comment->markRead();
+        });
     }
 
     public function markRead($commentType, $commentIds)
