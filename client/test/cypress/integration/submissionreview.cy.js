@@ -206,9 +206,9 @@ describe("Submissions Review", () => {
     cy.visit("submission/101/review")
     cy.dataCy("submission_status").contains("Initially Submitted")
     cy.dataCy("status-dropdown").click()
-    cy.dataCy("accept_for_review").click()
+    cy.dataCy("open_for_review").click()
     cy.dataCy("dirtyYesChangeStatus").click()
-    cy.dataCy("submission_status").contains("Awaiting Review")
+    cy.dataCy("submission_status").contains("Under Review")
     cy.login({ email: "reviewer@meshresearch.net" })
     cy.visit("submission/101/review")
     cy.url().should("not.include", "/error403")
@@ -483,7 +483,7 @@ describe("Submissions Review", () => {
 
     // click to scroll
     cy.dataCy("view_overall_comments").click()
-    
+
     // check scroll position
     cy.dataCy("view_overall_comments").should((element) => {
       let scrollY = element[0].getBoundingClientRect().top
@@ -503,7 +503,7 @@ describe("Submissions Review", () => {
 
     // click to scroll
     cy.dataCy("new_overall_comment").click()
-    
+
     // check scroll position
     cy.dataCy("new_overall_comment").should((element) => {
       let scrollY = element[0].getBoundingClientRect().top

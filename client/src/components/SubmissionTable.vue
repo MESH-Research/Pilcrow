@@ -9,6 +9,7 @@
     :filter="status_filter"
     :filter-method="filterStatuses"
     class="submission-table"
+    :color="(darkModeStatus) ? `white` : `black`"
   >
     <template #top>
       <div class="row full-width justify-between q-pb-md">
@@ -167,7 +168,10 @@ import SubmissionTableActions from "./SubmissionTableActions.vue"
 import { useI18n } from "vue-i18n"
 import { ref, computed } from "vue"
 import { relativeTime } from "src/use/timeAgo"
+import { useDarkMode } from "src/use/guiElements"
+
 const { t } = useI18n()
+const { darkModeStatus } = useDarkMode()
 
 const props = defineProps({
   tableData: {

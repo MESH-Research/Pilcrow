@@ -1,5 +1,5 @@
 <template>
-  <q-page class="flex-center flex q-pa-md" data-cy="vueLogin">
+  <q-page class="flex-center flex q-pa-md">
     <div v-if="loadingProviders">
       <q-spinner color="primary" />
     </div>

@@ -152,6 +152,7 @@ function dirtyDialog(action) {
     componentProps: {
       action: action,
       submissionId: props.id,
+      currentStatus: submission.value.status,
     },
   })
 }

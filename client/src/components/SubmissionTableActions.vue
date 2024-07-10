@@ -7,6 +7,7 @@
     <q-menu anchor="bottom right" self="top right">
       <q-item
         v-if="submission.status === 'DRAFT'"
+        role="menuitem"
         clickable
         :disable="cannotAccessSubmission(submission)"
         data-cy="submission_draft_link"
@@ -23,6 +24,7 @@
       </q-item>
       <q-item
         v-if="submission.status !== 'DRAFT'"
+        role="menuitem"
         clickable
         :disable="cannotAccessSubmission(submission)"
         data-cy="submission_review_link"
@@ -47,6 +49,7 @@
       </q-item>
       <q-item
         v-if="submission.status !== 'DRAFT'"
+        role="menuitem"
         clickable
         :disable="cannotAccessSubmission(submission)"
         data-cy="submission_details_link"
@@ -71,6 +74,7 @@
       </q-item>
       <q-item
         v-if="!statusChangingDisabledByRole"
+        role="menuitem"
         data-cy="change_status"
         clickable
         :disable="statusChangingDisabledByState"
@@ -104,10 +108,11 @@
         >
           <div v-if="submission.status == 'DRAFT'">
             <q-item
+              role="menuitem"
               data-cy="initially_submit"
               class="items-center"
               clickable
-              @click="confirmHandler('submit_for_review', submission.id)"
+              @click="confirmHandler('submit_for_review', submission)"
               >{{ $t("submission.action.submit_for_review") }}</q-item
             >
           </div>
@@ -121,10 +126,11 @@
           >
             <q-item
               v-if="submission.status == 'INITIALLY_SUBMITTED'"
+              role="menuitem"
               data-cy="accept_for_review"
               class="items-center"
               clickable
-              @click="confirmHandler('accept_for_review', submission.id)"
+              @click="confirmHandler('accept_for_review', submission)"
               >{{ $t("submission.action.accept_for_review") }}</q-item
             >
             <q-item
@@ -136,7 +142,7 @@
               data-cy="accept_as_final"
               class="items-center"
               clickable
-              @click="confirmHandler('accept_as_final', submission.id)"
+              @click="confirmHandler('accept_as_final', submission)"
               >{{ $t("submission.action.accept_as_final") }}</q-item
             >
             <q-item
@@ -144,9 +150,10 @@
                 submission.status != 'ACCEPTED_AS_FINAL' &&
                 submission.status != 'ARCHIVED'
               "
+              role="menuitem"
               class="items-center"
               clickable
-              @click="confirmHandler('request_resubmission', submission.id)"
+              @click="confirmHandler('request_resubmission', submission)"
               >{{ $t("submission.action.request_resubmission") }}</q-item
             >
             <q-item
@@ -154,18 +161,20 @@
                 submission.status != 'ACCEPTED_AS_FINAL' &&
                 submission.status != 'ARCHIVED'
               "
+              role="menuitem"
               data-cy="reject"
               class="items-center"
               clickable
-              @click="confirmHandler('reject', submission.id)"
+              @click="confirmHandler('reject', submission)"
               >{{ $t("submission.action.reject") }}
             </q-item>
             <q-item
               v-if="submission.status == 'ACCEPTED_AS_FINAL'"
+              role="menuitem"
               data-cy="archive"
               class="items-center"
               clickable
-              @click="confirmHandler('archive', submission.id)"
+              @click="confirmHandler('archive', submission)"
               >{{ $t("submission.action.archive") }}
             </q-item>
             <q-item
@@ -173,33 +182,37 @@
                 submission.status == 'ACCEPTED_AS_FINAL' ||
                 submission.status == 'ARCHIVED'
               "
+              role="menuitem"
               data-cy="delete"
               class="items-center"
               clickable
-              @click="confirmHandler('delete', submission.id)"
+              @click="confirmHandler('delete', submission)"
               >{{ $t("submission.action.delete") }}
             </q-item>
           </div>
           <q-separator />
           <q-item
             v-if="submission.status == 'AWAITING_REVIEW'"
+            role="menuitem"
             data-cy="open_review"
             class="items-center"
             clickable
-            @click="confirmHandler('open', submission.id)"
+            @click="confirmHandler('open', submission)"
             >{{ $t("submission.action.open") }}
           </q-item>
           <q-item
             v-if="submission.status == 'UNDER_REVIEW'"
+            role="menuitem"
             data-cy="close_review"
             class="items-center"
             clickable
-            @click="confirmHandler('close', submission.id)"
+            @click="confirmHandler('close', submission)"
             >{{ $t("submission.action.close") }}
           </q-item>
         </q-menu>
       </q-item>
       <q-item
+        role="menuitem"
         :disable="isDisabledByRole || isDisabledByState"
         data-cy="export_submission"
         clickable
@@ -276,9 +289,9 @@ function cannotAccessSubmission(submission) {
     submission.effective_role == "reviewer"
   )
 }
-async function confirmHandler(action, id) {
+async function confirmHandler(action, submission) {
   await new Promise((resolve) => {
-    dirtyDialog(action, id)
+    dirtyDialog(action, submission)
       .onOk(function () {
         resolve(true)
       })
@@ -290,12 +303,13 @@ async function confirmHandler(action, id) {
     return
   }
 }
-function dirtyDialog(action, id) {
+function dirtyDialog(action, submission) {
   return dialog({
     component: ConfirmStatusChangeDialog,
     componentProps: {
       action: action,
-      submissionId: id,
+      submissionId: submission.id,
+      currentStatus: submission.status,
     },
   })
 }

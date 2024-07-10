@@ -1,11 +1,23 @@
 /// <reference types="Cypress" />
 /// <reference path="../support/index.d.ts" />
 
+import { a11yLogViolations } from "../support/helpers"
+
 describe("Profile", () => {
   beforeEach(() => {
     cy.task("resetDb")
     cy.login({ email: "regularuser@meshresearch.net" })
     cy.visit("/account/profile")
+  })
+
+  it.only("should assert that Profile and Settings are accessible on initial render", () => {
+    cy.injectAxe()
+    cy.dataCy("page_heading")
+    cy.checkA11y(null, null, a11yLogViolations)
+    cy.visit("/account/settings")
+    cy.injectAxe()
+    cy.dataCy("page_heading")
+    cy.checkA11y(null, null, a11yLogViolations)
   })
 
   it("can update the name field", () => {
@@ -45,18 +57,16 @@ describe("Profile", () => {
   it("can add websites to the websites editable list and re-order them via clickable arrows", () => {
     const site1 = "https://pilcrow.lndo.site"
     const site2 = "https://yahoo.com"
-    cy.dataCy("websites_list_control")
-      .within(() => {
-        cy.dataCy("input_field").type(site1 + "{enter}")
-        cy.dataCy("input_field").type(site2 + "{enter}")
-        cy.dataCy("arrow_upward_1").click()
-      })
+    cy.dataCy("websites_list_control").within(() => {
+      cy.dataCy("input_field").type(site1 + "{enter}")
+      cy.dataCy("input_field").type(site2 + "{enter}")
+      cy.dataCy("arrow_upward_1").click()
+    })
     cy.dataCy("button_save").click()
     cy.dataCy("button_saved").contains("Saved")
-    cy.dataCy("websites_list_control")
-      .within(() => {
-        cy.dataCy("edit_btn_0").click()
-        cy.dataCy("edit_input_0").should("have.value", site2)
-      })
+    cy.dataCy("websites_list_control").within(() => {
+      cy.dataCy("edit_btn_0").click()
+      cy.dataCy("edit_input_0").should("have.value", site2)
+    })
   })
 })
