@@ -1,10 +1,8 @@
 <?php
-
 declare(strict_types=1);
 
 namespace Tests\Feature;
 
-use App\Models\CommentStatus;
 use App\Models\InlineComment;
 use App\Models\OverallComment;
 use App\Models\StyleCriteria;

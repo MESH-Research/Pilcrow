@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace App\Models;
@@ -18,6 +17,7 @@ class OverallComment extends BaseModel
     use CreatedUpdatedBy;
     use SoftDeletes;
     use ReadStatus;
+
     /**
      * The attributes that are mass assignable.
      *

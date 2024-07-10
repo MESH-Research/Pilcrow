@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Models\Traits;
 
@@ -8,11 +9,17 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 trait ReadStatus
 {
-    public function read_status(): HasOne
+    /**
+     * Returns the associated CommentStatus record
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function readStatus(): HasOne
     {
-        return $this->hasOne(CommentStatus::class, 'comment_id')->where('type', static::class)->where('user_id', auth()->id());
+        return $this->hasOne(CommentStatus::class, 'comment_id')
+        ->where('type', static::class)
+        ->where('user_id', auth()->id());
     }
-
 
     /**
      * Set a value for the read status of a comment.
@@ -22,7 +29,7 @@ trait ReadStatus
     public function readAt(): Attribute
     {
         return Attribute::make(
-            get: function (mixed $value, array $attributes) {
+            get: function () {
                 return $this->read_status ? $this->read_status->created_at : null;
             },
             set: function () {
@@ -31,6 +38,12 @@ trait ReadStatus
         );
     }
 
+    /**
+     * Create a CommentStatus for this
+     *
+     * @param \App\Models\Traits\User $user
+     * @return void
+     */
     public function markRead($user = null)
     {
         if (!$user) {
@@ -40,9 +53,9 @@ trait ReadStatus
             throw new \Exception('Unable to save read status. No user logged in.');
         }
         CommentStatus::create([
-            "comment_id" => $this->id,
-            "user_id" => $user->id,
-            "type" => static::class,
+            'comment_id' => $this->id,
+            'user_id' => $user->id,
+            'type' => static::class,
 
         ])->save();
     }

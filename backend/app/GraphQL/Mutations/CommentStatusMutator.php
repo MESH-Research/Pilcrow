@@ -13,7 +13,7 @@ final readonly class CommentStatusMutator
      * @param string $type
      * @param string $submission_id
      * @param array{int} $comment_ids
-     * @return Collection<InlineComment|OverallComment>
+     * @return \App\GraphQL\Mutations\Collection<\App\GraphQL\Mutations\InlineComment|\App\GraphQL\Mutations\OverallComment>
      */
     private function validateArgs($type, $submission_id, $comment_ids)
     {
@@ -33,34 +33,42 @@ final readonly class CommentStatusMutator
                 throw new \Exception('Invalid comment ID');
             }
         });
+
         return $comments;
     }
 
     /**
+     * @param null $_
      * @param array{} $args
-     * @return Collection<InlineComment>
+     * @return \App\GraphQL\Mutations\Collection<\App\GraphQL\Mutations\InlineComment>
      */
     public function inlineRead(null $_, array $args)
     {
         $comments = $this->validateArgs('inline', $args['submission_id'], $args['comment_ids']);
+
         return $comments->map(function ($comment) {
             $comment->markRead();
         });
     }
 
     /**
+     * @param null $_
      * @param array{} $args
-     * @return Collection<OverallComment>
+     * @return \App\GraphQL\Mutations\Collection<\App\GraphQL\Mutations\OverallComment>
      */
     public function overallRead(null $_, array $args)
     {
         $comments = $this->validateArgs('overall', $args['submission_id'], $args['comment_ids']);
+
         return $comments->map(function ($comment) {
             $comment->markRead();
         });
     }
 
-    public function markRead($commentType, $commentIds)
+    /**
+     * @return void
+     */
+    public function markRead()
     {
         //TODO: Create new CommentStatus records for each comment id (if they don't already exist)
         //TODO: Return the number of comments statuses created.
