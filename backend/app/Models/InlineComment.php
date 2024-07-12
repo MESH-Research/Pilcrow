@@ -32,6 +32,7 @@ class InlineComment extends BaseModel
         'content',
         'style_criteria',
         'parent_id',
+        'read_at',
         'reply_to_id',
         'from',
         'to',

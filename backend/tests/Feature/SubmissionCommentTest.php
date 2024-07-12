@@ -118,10 +118,10 @@ class SubmissionCommentTest extends TestCase
     {
         $this->actingAs(User::factory()->create());
         $submission = $this->createSubmissionWithInlineComment();
-        $submission->inlineComments->first()->readAt = true;
+        $comment = $submission->inlineComments->first();
+        $comment->read_at = true;
         $submission->save();
-
-        $this->assertInstanceOf(Carbon::class, $submission->inlineComments->first()->readAt);
+        $this->assertInstanceOf(Carbon::class, $comment->readAt);
     }
 
     public function testInlineCommentThrowsOnReadSetWithoutUser()
@@ -144,7 +144,6 @@ class SubmissionCommentTest extends TestCase
         $submission = $this->createSubmissionWithOverallComment();
         $submission->overallComments->first()->readAt = true;
         $submission->save();
-
         $this->assertInstanceOf(Carbon::class, $submission->overallComments->first()->readAt);
     }
 

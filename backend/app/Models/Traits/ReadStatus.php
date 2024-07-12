@@ -17,8 +17,8 @@ trait ReadStatus
     public function readStatus(): HasOne
     {
         return $this->hasOne(CommentStatus::class, 'comment_id')
-        ->where('type', static::class)
-        ->where('user_id', auth()->id());
+            ->where('type', static::class)
+            ->where('user_id', auth()->id());
     }
 
     /**
@@ -30,7 +30,7 @@ trait ReadStatus
     {
         return Attribute::make(
             get: function () {
-                return $this->read_status ? $this->read_status->created_at : null;
+                return $this->readStatus ? $this->readStatus->created_at : null;
             },
             set: function () {
                 $this->markRead();
@@ -56,7 +56,6 @@ trait ReadStatus
             'comment_id' => $this->id,
             'user_id' => $user->id,
             'type' => static::class,
-
-        ])->save();
+        ]);
     }
 }
