@@ -24,17 +24,16 @@ final readonly class CommentStatusMutator
             throw new \Exception('Comment ID(s) required');
         }
         if ($type === 'inline') {
-            $comments = Submission::find($submission_id)->inlineComments;
+            $comments = Submission::find($submission_id)->inlineCommentsWithReplies;
         } else {
-            $comments = Submission::find($submission_id)->overallComments;
+            $comments = Submission::find($submission_id)->overallCommentsWithReplies;
         }
-        $comments->map(function ($comment) use ($comment_ids) {
-            if (!in_array($comment->id, $comment_ids)) {
-                throw new \Exception('Invalid comment ID');
-            }
-        });
+        $matchingComments = $comments->whereIn('id', $comment_ids);
+        if ($matchingComments->isEmpty()) {
+            throw new \Exception('Invalid comment ID');
+        }
 
-        return $comments;
+        return $matchingComments;
     }
 
     /**
@@ -45,7 +44,6 @@ final readonly class CommentStatusMutator
     public function inlineRead(null $_, array $args)
     {
         $comments = $this->validateArgs('inline', $args['input']['submission_id'], $args['input']['comment_ids']);
-
         $comments->map(function ($comment) {
             $comment->markRead();
         });
@@ -60,7 +58,6 @@ final readonly class CommentStatusMutator
     public function overallRead(null $_, array $args)
     {
         $comments = $this->validateArgs('overall', $args['input']['submission_id'], $args['input']['comment_ids']);
-
         $comments->map(function ($comment) {
             $comment->markRead();
         });
