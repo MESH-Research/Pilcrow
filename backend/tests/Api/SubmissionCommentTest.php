@@ -1090,5 +1090,173 @@ class SubmissionCommentTest extends ApiTestCase
         $response->assertJsonPath('data', $expected_data);
     }
 
-    //TODO: Add tests for marking comments as read.
+    /**
+     * @return void
+     */
+    public function testInlineCommentCanBeMarkedRead()
+    {
+        $this->beAppAdmin();
+        $submission = $this->createSubmissionWithInlineComment();
+        $inline_comment = $submission->inlineComments()->first();
+        $inline_comment->markRead();
+        $read_status = $inline_comment->readAt->format('Y-m-d\TH:i:s.u\Z');
+        $response = $this->graphQL(
+            'mutation MarkInlineCommentsRead($submission_id: ID!, $comment_ids: [ID!]!) {
+                markInlineCommentsRead (
+                    input: {
+                        submission_id: $submission_id, comment_ids: $comment_ids
+                    }
+                ) {
+                    id
+                    read_at
+                }
+            }',
+            [
+                'submission_id' => $submission->id,
+                'comment_ids' => [$inline_comment->id]
+            ]
+        );
+        $expected_data = [
+            'markInlineCommentsRead' => [
+                '0' => [
+                    'id' => (string)$inline_comment->id,
+                    'read_at' => $read_status
+                ],
+            ],
+        ];
+        $response->assertJsonPath('data', $expected_data);
+    }
+
+    /**
+     * @return void
+     */
+    public function testOverallCommentCanBeMarkedRead()
+    {
+        $this->beAppAdmin();
+        $submission = $this->createSubmissionWithOverallComment();
+        $overall_comment = $submission->overallComments()->first();
+        $overall_comment->markRead();
+        $read_status = $overall_comment->readAt->format('Y-m-d\TH:i:s.u\Z');
+        $response = $this->graphQL(
+            'mutation MarkOverallCommentsRead($submission_id: ID!, $comment_ids: [ID!]!) {
+                markOverallCommentsRead (
+                    input: {
+                        submission_id: $submission_id, comment_ids: $comment_ids
+                    }
+                ) {
+                    id
+                    read_at
+                }
+            }',
+            [
+                'submission_id' => $submission->id,
+                'comment_ids' => [$overall_comment->id]
+            ]
+        );
+        $expected_data = [
+            'markOverallCommentsRead' => [
+                '0' => [
+                    'id' => (string)$overall_comment->id,
+                    'read_at' => $read_status
+                ],
+            ],
+        ];
+        $response->assertJsonPath('data', $expected_data);
+    }
+
+
+    /**
+     * @return array
+     */
+    public static function commentReadStatusProvider(): array
+    {
+        return [
+            'read' => [ true ],
+            'unread' => [ false ],
+        ];
+    }
+
+    /**
+     * @dataProvider commentReadStatusProvider
+     * @param boolean $is_read
+     * @return void
+     */
+    public function testInlineCommentReadStatusCanBeQueried(bool $is_read)
+    {
+        $this->beAppAdmin();
+        $submission = $this->createSubmissionWithInlineComment();
+        $inline_comment = $submission->inlineComments()->first();
+        if ($is_read) {
+            $inline_comment->read_at = true;
+            $read_status = $inline_comment->readAt->format('Y-m-d\TH:i:s.u\Z');
+        } else {
+            $read_status = null;
+        }
+        $response = $this->graphQL(
+            'query GetSubmission($id: ID!) {
+                submission (id: $id) {
+                    id
+                    inline_comments {
+                        id
+                        read_at
+                    }
+                }
+            }',
+            ['id' => $submission->id]
+        );
+        $expected_data = [
+            'submission' => [
+                'id' => (string)$submission->id,
+                'inline_comments' => [
+                    '0' => [
+                        'id' => (string)$inline_comment->id,
+                        'read_at' => $read_status
+                    ],
+                ],
+            ],
+        ];
+        $response->assertJsonPath('data', $expected_data);
+    }
+
+    /**
+     * @dataProvider commentReadStatusProvider
+     * @param boolean $is_read
+     * @return void
+     */
+    public function testOverallCommentReadStatusCanBeQueried(bool $is_read)
+    {
+        $this->beAppAdmin();
+        $submission = $this->createSubmissionWithOverallComment();
+        $overall_comment = $submission->overallComments()->first();
+        if ($is_read) {
+            $overall_comment->read_at = true;
+            $read_status = $overall_comment->readAt->format('Y-m-d\TH:i:s.u\Z');
+        } else {
+            $read_status = null;
+        }
+        $response = $this->graphQL(
+            'query GetSubmission($id: ID!) {
+                submission (id: $id) {
+                    id
+                    overall_comments {
+                        id
+                        read_at
+                    }
+                }
+            }',
+            ['id' => $submission->id]
+        );
+        $expected_data = [
+            'submission' => [
+                'id' => (string)$submission->id,
+                'overall_comments' => [
+                    '0' => [
+                        'id' => (string)$overall_comment->id,
+                        'read_at' => $read_status
+                    ],
+                ],
+            ],
+        ];
+        $response->assertJsonPath('data', $expected_data);
+    }
 }
