@@ -20,13 +20,13 @@ final readonly class CommentStatusMutator
         if (!$submission_id) {
             throw new \Exception('Submission ID required');
         }
-        if (empty($commentIds)) {
+        if (empty($comment_ids)) {
             throw new \Exception('Comment ID(s) required');
         }
         if ($type === 'inline') {
-            $comments = Submission::find($submission_id)->inlineComments();
+            $comments = Submission::find($submission_id)->inlineComments;
         } else {
-            $comments = Submission::find($submission_id)->overallComments();
+            $comments = Submission::find($submission_id)->overallComments;
         }
         $comments->map(function ($comment) use ($comment_ids) {
             if (!in_array($comment->id, $comment_ids)) {
@@ -44,11 +44,12 @@ final readonly class CommentStatusMutator
      */
     public function inlineRead(null $_, array $args)
     {
-        $comments = $this->validateArgs('inline', $args['submission_id'], $args['comment_ids']);
+        $comments = $this->validateArgs('inline', $args['input']['submission_id'], $args['input']['comment_ids']);
 
-        return $comments->map(function ($comment) {
+        $comments->map(function ($comment) {
             $comment->markRead();
         });
+        return $comments;
     }
 
     /**
@@ -58,11 +59,12 @@ final readonly class CommentStatusMutator
      */
     public function overallRead(null $_, array $args)
     {
-        $comments = $this->validateArgs('overall', $args['submission_id'], $args['comment_ids']);
+        $comments = $this->validateArgs('overall', $args['input']['submission_id'], $args['input']['comment_ids']);
 
-        return $comments->map(function ($comment) {
+        $comments->map(function ($comment) {
             $comment->markRead();
         });
+        return $comments;
     }
 
     /**

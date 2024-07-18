@@ -52,8 +52,9 @@ trait ReadStatus
         if (!$user) {
             throw new \Exception('Unable to save read status. No user logged in.');
         }
+
         CommentStatus::create([
-            'comment_id' => $this->id,
+            'comment_id' => $this->attributes['id'],
             'user_id' => $user->id,
             'type' => static::class,
         ]);
