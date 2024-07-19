@@ -8,7 +8,8 @@
     no-caps
     @click="setActive"
   >
-    <q-icon size="xs" name="mode_comment"></q-icon>
+    <q-icon v-if="comment.read_at !== null" size="xs" name="mode_comment"></q-icon>
+    <q-icon v-else size="xs" name="new_releases" color="primary"></q-icon>
     <q-tooltip>{{ $t(`submissions.comment.reference.go_to_highlight`) }}</q-tooltip>
   </q-btn>
 </template>

@@ -17,9 +17,15 @@
       </span>
     </div>
   </q-card-section>
-  <q-card-section v-else :class="comment.__typename == 'InlineComment' ? 'q-py-xs q-pl-xs' : 'q-py-xs'" :style="style">
+  <q-card-section
+    v-else
+    class="q-py-xs q-pl-xs"
+    :style="style"
+  >
     <div class="row items-center">
-      <inline-comment-reference v-if="comment.__typename == 'InlineComment'" :comment="comment" />
+      <inline-comment-reference
+        :comment="comment"
+      />
       <avatar-image
         :user="comment.created_by"
         round
