@@ -1096,10 +1096,11 @@ class SubmissionCommentTest extends ApiTestCase
     public function testInlineCommentCanBeMarkedRead()
     {
         $this->beAppAdmin();
-        $submission = $this->createSubmissionWithInlineComment();
-        $inline_comment = $submission->inlineComments()->first();
-        $inline_comment->markRead();
-        $read_status = $inline_comment->readAt->format('Y-m-d\TH:i:s.u\Z');
+        $submission = $this->createSubmissionWithInlineComment(3);
+        $inline_comment_1 = $submission->inlineComments->first();
+        $inline_comment_3 = $submission->inlineComments->slice(2,1)->first();
+        $inline_comment_1->markRead();
+        $inline_comment_3->markRead();
         $response = $this->graphQL(
             'mutation MarkInlineCommentsRead($submission_id: ID!, $comment_ids: [ID!]!) {
                 markInlineCommentsRead (
@@ -1113,14 +1114,18 @@ class SubmissionCommentTest extends ApiTestCase
             }',
             [
                 'submission_id' => $submission->id,
-                'comment_ids' => [$inline_comment->id]
+                'comment_ids' => [$inline_comment_1->id, $inline_comment_3->id]
             ]
         );
         $expected_data = [
             'markInlineCommentsRead' => [
                 '0' => [
-                    'id' => (string)$inline_comment->id,
-                    'read_at' => $read_status
+                    'id' => (string)$inline_comment_1->id,
+                    'read_at' => $inline_comment_1->readAt->format('Y-m-d\TH:i:s.u\Z')
+                ],
+                '1' => [
+                    'id' => (string)$inline_comment_3->id,
+                    'read_at' => $inline_comment_3->readAt->format('Y-m-d\TH:i:s.u\Z')
                 ],
             ],
         ];
@@ -1134,9 +1139,12 @@ class SubmissionCommentTest extends ApiTestCase
     {
         $this->beAppAdmin();
         $submission = $this->createSubmissionWithOverallComment();
-        $overall_comment = $submission->overallComments()->first();
-        $overall_comment->markRead();
-        $read_status = $overall_comment->readAt->format('Y-m-d\TH:i:s.u\Z');
+        $overall_comment_1 = $submission->overallComments()->first();
+        $overall_comment_3 = $submission->overallComments()->slice(2,1)->first();
+        $overall_comment_1->markRead();
+        $overall_comment_3->markRead();
+        $read_status_1 = $overall_comment_1->readAt->format('Y-m-d\TH:i:s.u\Z');
+        $read_status_3 = $overall_comment_3->readAt->format('Y-m-d\TH:i:s.u\Z');
         $response = $this->graphQL(
             'mutation MarkOverallCommentsRead($submission_id: ID!, $comment_ids: [ID!]!) {
                 markOverallCommentsRead (
@@ -1150,14 +1158,18 @@ class SubmissionCommentTest extends ApiTestCase
             }',
             [
                 'submission_id' => $submission->id,
-                'comment_ids' => [$overall_comment->id]
+                'comment_ids' => [$overall_comment_1->id, $overall_comment_3->id]
             ]
         );
         $expected_data = [
             'markOverallCommentsRead' => [
                 '0' => [
-                    'id' => (string)$overall_comment->id,
-                    'read_at' => $read_status
+                    'id' => (string)$overall_comment_1->id,
+                    'read_at' => $read_status_1
+                ],
+                '1' => [
+                    'id' => (string)$overall_comment_3->id,
+                    'read_at' => $read_status_3
                 ],
             ],
         ];
