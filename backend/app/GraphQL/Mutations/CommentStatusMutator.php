@@ -63,13 +63,4 @@ final readonly class CommentStatusMutator
         });
         return $comments;
     }
-
-    /**
-     * @return void
-     */
-    public function markRead()
-    {
-        //TODO: Create new CommentStatus records for each comment id (if they don't already exist)
-        //TODO: Return the number of comments statuses created.
-    }
 }
