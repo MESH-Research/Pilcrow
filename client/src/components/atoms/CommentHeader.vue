@@ -23,7 +23,7 @@
     :style="style"
   >
     <div class="row items-center">
-      <inline-comment-reference
+      <comment-reference
         :comment="comment"
       />
       <avatar-image
@@ -80,7 +80,7 @@
 <script setup>
 import AvatarImage from "./AvatarImage.vue"
 import CommentActions from "./CommentActions.vue"
-import InlineCommentReference from "./InlineCommentReference.vue"
+import CommentReference from "./CommentReference.vue"
 import { useTimeAgo } from "src/use/timeAgo"
 import { DateTime } from "luxon"
 import { computed } from "vue"
