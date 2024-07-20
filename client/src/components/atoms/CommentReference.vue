@@ -3,7 +3,6 @@
     :aria-label="$t(`submissions.comment.reference.go_to_highlight`)"
     dense
     flat
-    color="primary"
     class="q-mr-xs"
     no-caps
     @click="setActive"
@@ -18,7 +17,7 @@
       v-else
       size="xs"
       :name="unread_name[props.comment.__typename]"
-      color="warning"
+      :color="activeComment?.id == comment.id ? `primary` : `warning`"
     ></q-icon>
     <q-tooltip>{{
       $t(`submissions.comment.reference.go_to_highlight`)

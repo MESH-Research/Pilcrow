@@ -100,9 +100,7 @@ function modifyComment(comment) {
 
 <style lang="sass" scoped>
 div.active
-  box-shadow: inset 0 0 5px 2px #F8DB8B, 0 1px 5px rgba(0, 0, 0, 0.2), 0 2px 2px rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12)
-  > .q-card__section:first-child
-    background-color: #F8DB8B !important
+  box-shadow: inset 0 0 0 1px #F8DB8B
 
 div :deep(blockquote)
   border-left: 4px solid #888888

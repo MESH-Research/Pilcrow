@@ -2,7 +2,6 @@
   <q-card-section
     v-if="comment.deleted_at != null"
     class="q-py-sm"
-    :style="style"
   >
     <div class="row items-center justify-end">
       <span>
@@ -20,7 +19,6 @@
   <q-card-section
     v-else
     class="q-py-xs q-pl-xs"
-    :style="style"
   >
     <div class="row items-center">
       <comment-reference
@@ -91,21 +89,8 @@ const props = defineProps({
     type: Object,
     required: true,
   },
-  bgColor: {
-    type: String,
-    required: false,
-    default: null,
-  },
 })
 defineEmits(["quoteReplyTo", "modifyComment", "deleteComment"])
-const style = computed(() => {
-  const style = {}
-  if (props.bgColor) {
-    style.backgroundColor = props.bgColor
-  }
-
-  return style
-})
 const createdDate = computed(() => {
   return DateTime.fromISO(props.comment.created_at)
 })

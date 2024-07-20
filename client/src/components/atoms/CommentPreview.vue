@@ -15,7 +15,6 @@
         </q-card-section>
         <comment-preview-header
           :comment="comment"
-          bg-color="#C9E5F8"
           class="comment-header full-width"
         />
         <q-card-section>

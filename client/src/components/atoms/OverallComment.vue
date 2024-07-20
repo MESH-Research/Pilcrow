@@ -14,7 +14,6 @@
     >
       <comment-header
         :comment="comment"
-        bg-color="#C9E5F8"
         class="comment-header"
         @quote-reply-to="initiateQuoteReply"
         @modify-comment="modifyComment(comment)"

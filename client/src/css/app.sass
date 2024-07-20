@@ -99,6 +99,11 @@ th.text-right,
 .text-body2 // Font sizes less than 16px are not allowed
     font-size: $typography-font-size
 
+.comment-header
+    background-color: #c9e5f8
+
+.q-card.active > .q-card__section:first-child
+    background: $highlight
 
 // ----------
 // Light Mode
@@ -212,7 +217,7 @@ body.body--dark
     div[data-cy="styleCriteria"],
     .comment-header,
     .q-field__control
-        background: $dark-grey !important
+        background: $dark-grey
 
     .q-field--borderless
         .q-field__control
