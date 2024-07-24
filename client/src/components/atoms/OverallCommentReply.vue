@@ -14,6 +14,7 @@
     <comment-header
       data-cy="CommentHeader"
       :comment="comment"
+      :class="{ 'unread-comment': comment.read_at !== null }"
       class="q-pt-sm"
       @quote-reply-to="$emit('quoteReplyTo', comment)"
       @modify-comment="modifyComment(comment)"

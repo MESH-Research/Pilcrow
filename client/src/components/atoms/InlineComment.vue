@@ -14,6 +14,7 @@
     >
       <comment-header
         :comment="comment"
+        :class="{ 'unread-comment': comment.read_at !== null }"
         class="comment-header"
         @quote-reply-to="initiateQuoteReply"
         @modify-comment="modifyComment(comment)"

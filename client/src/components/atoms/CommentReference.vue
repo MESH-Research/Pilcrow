@@ -17,7 +17,7 @@
       v-else
       size="xs"
       :name="unread_name[props.comment.__typename]"
-      :color="activeComment?.id == comment.id ? `primary` : `warning`"
+      :color="activeComment?.id == comment.id ? `primary` : `unread-comment`"
     ></q-icon>
     <q-tooltip>{{
       $t(`submissions.comment.reference.go_to_highlight`)
