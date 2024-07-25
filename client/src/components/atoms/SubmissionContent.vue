@@ -121,12 +121,15 @@
 <script setup>
 import { BubbleMenu, Editor, EditorContent } from "@tiptap/vue-3"
 import SubmissionContentKit from "src/tiptap/extension-submission-content-kit"
+import { MARK_INLINE_COMMENTS_READ } from "src/graphql/mutations"
 import { computed, inject, ref, watch, nextTick } from "vue"
 import { scroll } from "quasar"
+import { useMutation } from "@vue/apollo-composable"
 import { useDarkMode } from "src/use/guiElements"
 
 const { getScrollTarget, setVerticalScrollPosition } = scroll
 const { darkModeStatus, toggleDarkMode } = useDarkMode()
+const { mutate } = useMutation(MARK_INLINE_COMMENTS_READ)
 
 const props = defineProps({
   annotationEnabled: {
@@ -285,6 +288,12 @@ watch(
   (newValue) => {
     if (!newValue) return
     if (!newValue.__typename.startsWith("InlineComment")) return
+    (async () => {
+      await mutate({
+        submission_id: submission.value.id,
+        comment_ids: [parseInt(newValue.id)],
+      })
+    })()
     nextTick(() => {
       let scrollTarget = null
       scrollTarget = contentRef.value.querySelector(

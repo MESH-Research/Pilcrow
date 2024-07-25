@@ -10,23 +10,29 @@
     <q-icon
       v-if="comment.read_at === null"
       size="xs"
-      :name="read_name[props.comment.__typename]"
-      color="primary"
+      :name="unread_name[props.comment.__typename]"
+      :color="activeComment?.id == comment.id ? `primary` : `unread-comment`"
     ></q-icon>
     <q-icon
       v-else
       size="xs"
-      :name="unread_name[props.comment.__typename]"
-      :color="activeComment?.id == comment.id ? `primary` : `unread-comment`"
+      :name="read_name[props.comment.__typename]"
+      color="primary"
     ></q-icon>
-    <q-tooltip>{{
-      $t(`submissions.comment.reference.go_to_highlight`)
-    }}</q-tooltip>
+    <q-tooltip
+      v-if="
+        props.comment.read_at === null ||
+        props.comment.__typename === 'InlineComment'
+      "
+      >{{ toolTipContent() }}</q-tooltip
+    >
   </q-btn>
 </template>
 
 <script setup>
 import { inject, nextTick } from "vue"
+import { useI18n } from "vue-i18n"
+const { t } = useI18n()
 
 const props = defineProps({
   comment: {
@@ -50,6 +56,21 @@ const read_name = {
 }
 
 const activeComment = inject("activeComment")
+
+function toolTipContent() {
+  let content = ""
+  if (
+    props.comment.read_at === null &&
+    props.comment.__typename === "InlineComment"
+  ) {
+    content = t(`submissions.comment.reference.mark_read_and_go_to_highlight`)
+  } else if (props.comment.read_at === null) {
+    content = t(`submissions.comment.reference.mark_read`)
+  } else if (props.comment.__typename === "InlineComment") {
+    content = t(`submissions.comment.reference.go_to_highlight`)
+  }
+  return content
+}
 
 function setActive() {
   //Null the active comment first to trigger the scroll watcher
