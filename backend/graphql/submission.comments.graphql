@@ -138,7 +138,10 @@ input UpdateOverallCommentInput {
     content: String
 }
 
-interface Comment {
+interface Comment
+    @interface(
+        resolveType: "App\\GraphQL\\Interfaces\\Comment@resolveType"
+    ) {
     id: ID!
     content: String!
     created_by: User!
@@ -150,11 +153,15 @@ interface Comment {
 }
 
 extend type Mutation @guard {
-    markInlineCommentsRead(input: MarkInlineCommentsReadInput!): [InlineComment]!
+    markInlineCommentsRead(
+        input: MarkInlineCommentsReadInput!
+    ): [Comment]!
         @field(
             resolver: "App\\GraphQL\\Mutations\\CommentStatusMutator@inlineRead"
         )
-    markOverallCommentsRead(input: MarkOverallCommentsReadInput!): [OverallComment]!
+    markOverallCommentsRead(
+        input: MarkOverallCommentsReadInput!
+    ): [Comment]!
         @field(
             resolver: "App\\GraphQL\\Mutations\\CommentStatusMutator@overallRead"
         )
