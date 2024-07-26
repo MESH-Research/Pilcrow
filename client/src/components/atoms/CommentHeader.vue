@@ -19,7 +19,7 @@
   <q-card-section
     v-else
     :class="{ 'unread-comment': comment.read_at == null }"
-    class="q-py-xs q-pl-xs heloo"
+    class="q-py-xs q-pl-xs"
   >
     <div class="row items-center">
       <comment-reference
