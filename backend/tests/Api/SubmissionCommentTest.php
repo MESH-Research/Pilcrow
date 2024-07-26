@@ -1138,9 +1138,9 @@ class SubmissionCommentTest extends ApiTestCase
     public function testOverallCommentCanBeMarkedRead()
     {
         $this->beAppAdmin();
-        $submission = $this->createSubmissionWithOverallComment();
-        $overall_comment_1 = $submission->overallComments()->first();
-        $overall_comment_3 = $submission->overallComments()->slice(2,1)->first();
+        $submission = $this->createSubmissionWithOverallComment(3);
+        $overall_comment_1 = $submission->overallComments->first();
+        $overall_comment_3 = $submission->overallComments->slice(2,1)->first();
         $overall_comment_1->markRead();
         $overall_comment_3->markRead();
         $read_status_1 = $overall_comment_1->readAt->format('Y-m-d\TH:i:s.u\Z');
@@ -1239,7 +1239,7 @@ class SubmissionCommentTest extends ApiTestCase
     {
         $this->beAppAdmin();
         $submission = $this->createSubmissionWithOverallComment();
-        $overall_comment = $submission->overallComments()->first();
+        $overall_comment = $submission->overallComments->first();
         if ($is_read) {
             $overall_comment->read_at = true;
             $read_status = $overall_comment->readAt->format('Y-m-d\TH:i:s.u\Z');

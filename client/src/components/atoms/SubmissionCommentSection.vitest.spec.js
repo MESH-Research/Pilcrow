@@ -35,6 +35,7 @@ describe("Overall Comments", () => {
                     email: "publicationadministrator@meshresearch.net",
                     name: "Publication Administrator",
                   },
+                  read_at: null,
                   replies: [],
                 },
                 {
@@ -49,6 +50,7 @@ describe("Overall Comments", () => {
                     email: "reviewcoordinator@meshresearch.net",
                     name: "Review Coordinator for Submission",
                   },
+                  read_at: "2024-07-01T12:00:00.000000Z",
                   replies: [
                     {
                       id: "3",
@@ -63,6 +65,7 @@ describe("Overall Comments", () => {
                         email: "powlowski.eliza@example.org",
                       },
                       reply_to_id: "2",
+                      read_at: null,
                     },
                   ],
                 },
@@ -84,6 +87,7 @@ describe("Overall Comments", () => {
                     email: "applicationadministrator@meshresearch.net",
                     name: "Application Administrator",
                   },
+                  read_at: null,
                   replies: [
                     {
                       id: "5",
@@ -104,6 +108,7 @@ describe("Overall Comments", () => {
                         email: "reviewcoordinator@meshresearch.net",
                       },
                       reply_to_id: "4",
+                      read_at: null,
                     },
                     {
                       id: "6",
@@ -124,6 +129,7 @@ describe("Overall Comments", () => {
                         email: "publicationeditor@meshresearch.net",
                       },
                       reply_to_id: "5",
+                      read_at: null,
                     },
                     {
                       id: "7",
@@ -144,6 +150,7 @@ describe("Overall Comments", () => {
                         email: "powlowski.eliza@example.org",
                       },
                       reply_to_id: "6",
+                      read_at: null,
                     },
                     {
                       id: "8",
@@ -164,6 +171,7 @@ describe("Overall Comments", () => {
                         email: "applicationadministrator@meshresearch.net",
                       },
                       reply_to_id: "5",
+                      read_at: null,
                     },
                     {
                       id: "9",
@@ -184,6 +192,7 @@ describe("Overall Comments", () => {
                         email: "publicationeditor@meshresearch.net",
                       },
                       reply_to_id: "6",
+                      read_at: null,
                     },
                     {
                       id: "10",
@@ -204,6 +213,7 @@ describe("Overall Comments", () => {
                         email: "powlowski.eliza@example.org",
                       },
                       reply_to_id: "4",
+                      read_at: null,
                     },
                     {
                       id: "11",
@@ -224,6 +234,7 @@ describe("Overall Comments", () => {
                         email: "olson.noe@example.com",
                       },
                       reply_to_id: "10",
+                      read_at: null,
                     },
                     {
                       id: "12",
@@ -244,6 +255,7 @@ describe("Overall Comments", () => {
                         email: "regularuser@meshresearch.net",
                       },
                       reply_to_id: "11",
+                      read_at: null,
                     },
                   ],
                 },
@@ -326,6 +338,20 @@ describe("Overall Comments", () => {
     )
     expect(
       overallCommentReplies.at(3).find('[data-cy="timestampUpdated"]').exists(),
+    ).toBe(true)
+  })
+
+  test("unread overall comments appear unread", async () => {
+    const { wrapper } = wrapperFactory()
+    const items = wrapper.findAllComponents('[data-cy="overallComment"]')
+    expect(
+      items.at(0).find('[data-cy="commentHeader"]').classes("unread-comment"),
+    ).toBe(true)
+    expect(
+      items.at(1).find('[data-cy="commentHeader"]').classes("unread-comment"),
+    ).toBe(false)
+    expect(
+      items.at(2).find('[data-cy="commentHeader"]').classes("unread-comment"),
     ).toBe(true)
   })
 })

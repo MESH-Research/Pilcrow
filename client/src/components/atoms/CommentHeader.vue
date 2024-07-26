@@ -18,6 +18,7 @@
   </q-card-section>
   <q-card-section
     v-else
+    data-cy="commentHeader"
     :class="{ 'unread-comment': comment.read_at == null }"
     class="q-py-xs q-pl-xs"
   >
