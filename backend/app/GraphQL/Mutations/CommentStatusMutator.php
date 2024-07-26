@@ -47,6 +47,7 @@ final readonly class CommentStatusMutator
         $comments->map(function ($comment) {
             $comment->markRead();
         });
+
         return $comments;
     }
 
@@ -61,6 +62,7 @@ final readonly class CommentStatusMutator
         $comments->map(function ($comment) {
             $comment->markRead();
         });
+
         return $comments;
     }
 }

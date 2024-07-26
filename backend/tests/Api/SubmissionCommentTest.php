@@ -1098,7 +1098,7 @@ class SubmissionCommentTest extends ApiTestCase
         $this->beAppAdmin();
         $submission = $this->createSubmissionWithInlineComment(3);
         $inline_comment_1 = $submission->inlineComments->first();
-        $inline_comment_3 = $submission->inlineComments->slice(2,1)->first();
+        $inline_comment_3 = $submission->inlineComments->slice(2, 1)->first();
         $inline_comment_1->markRead();
         $inline_comment_3->markRead();
         $response = $this->graphQL(
@@ -1114,18 +1114,18 @@ class SubmissionCommentTest extends ApiTestCase
             }',
             [
                 'submission_id' => $submission->id,
-                'comment_ids' => [$inline_comment_1->id, $inline_comment_3->id]
+                'comment_ids' => [$inline_comment_1->id, $inline_comment_3->id],
             ]
         );
         $expected_data = [
             'markInlineCommentsRead' => [
                 '0' => [
                     'id' => (string)$inline_comment_1->id,
-                    'read_at' => $inline_comment_1->readAt->format('Y-m-d\TH:i:s.u\Z')
+                    'read_at' => $inline_comment_1->readAt->format('Y-m-d\TH:i:s.u\Z'),
                 ],
                 '1' => [
                     'id' => (string)$inline_comment_3->id,
-                    'read_at' => $inline_comment_3->readAt->format('Y-m-d\TH:i:s.u\Z')
+                    'read_at' => $inline_comment_3->readAt->format('Y-m-d\TH:i:s.u\Z'),
                 ],
             ],
         ];
@@ -1140,7 +1140,7 @@ class SubmissionCommentTest extends ApiTestCase
         $this->beAppAdmin();
         $submission = $this->createSubmissionWithOverallComment(3);
         $overall_comment_1 = $submission->overallComments->first();
-        $overall_comment_3 = $submission->overallComments->slice(2,1)->first();
+        $overall_comment_3 = $submission->overallComments->slice(2, 1)->first();
         $overall_comment_1->markRead();
         $overall_comment_3->markRead();
         $read_status_1 = $overall_comment_1->readAt->format('Y-m-d\TH:i:s.u\Z');
@@ -1158,24 +1158,23 @@ class SubmissionCommentTest extends ApiTestCase
             }',
             [
                 'submission_id' => $submission->id,
-                'comment_ids' => [$overall_comment_1->id, $overall_comment_3->id]
+                'comment_ids' => [$overall_comment_1->id, $overall_comment_3->id],
             ]
         );
         $expected_data = [
             'markOverallCommentsRead' => [
                 '0' => [
                     'id' => (string)$overall_comment_1->id,
-                    'read_at' => $read_status_1
+                    'read_at' => $read_status_1,
                 ],
                 '1' => [
                     'id' => (string)$overall_comment_3->id,
-                    'read_at' => $read_status_3
+                    'read_at' => $read_status_3,
                 ],
             ],
         ];
         $response->assertJsonPath('data', $expected_data);
     }
-
 
     /**
      * @return array
@@ -1190,7 +1189,7 @@ class SubmissionCommentTest extends ApiTestCase
 
     /**
      * @dataProvider commentReadStatusProvider
-     * @param boolean $is_read
+     * @param bool $is_read
      * @return void
      */
     public function testInlineCommentReadStatusCanBeQueried(bool $is_read)
@@ -1222,7 +1221,7 @@ class SubmissionCommentTest extends ApiTestCase
                 'inline_comments' => [
                     '0' => [
                         'id' => (string)$inline_comment->id,
-                        'read_at' => $read_status
+                        'read_at' => $read_status,
                     ],
                 ],
             ],
@@ -1232,7 +1231,7 @@ class SubmissionCommentTest extends ApiTestCase
 
     /**
      * @dataProvider commentReadStatusProvider
-     * @param boolean $is_read
+     * @param bool $is_read
      * @return void
      */
     public function testOverallCommentReadStatusCanBeQueried(bool $is_read)
@@ -1264,7 +1263,7 @@ class SubmissionCommentTest extends ApiTestCase
                 'overall_comments' => [
                     '0' => [
                         'id' => (string)$overall_comment->id,
-                        'read_at' => $read_status
+                        'read_at' => $read_status,
                     ],
                 ],
             ],
