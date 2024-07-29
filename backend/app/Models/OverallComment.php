@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Http\Traits\CreatedUpdatedBy;
+use App\Models\Traits\ReadStatus;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -15,6 +16,7 @@ class OverallComment extends BaseModel
     use HasFactory;
     use CreatedUpdatedBy;
     use SoftDeletes;
+    use ReadStatus;
 
     /**
      * The attributes that are mass assignable.

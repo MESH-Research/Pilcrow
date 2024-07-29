@@ -166,6 +166,16 @@ class Submission extends Model implements Auditable
     }
 
     /**
+     * Inline comments and their replies that belong to the submission
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function inlineCommentsWithReplies(): HasMany
+    {
+        return $this->hasMany(InlineComment::class);
+    }
+
+    /**
      * Overall comments that belong to the submission
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -173,6 +183,16 @@ class Submission extends Model implements Auditable
     public function overallComments(): HasMany
     {
         return $this->hasMany(OverallComment::class)->whereNull('parent_id');
+    }
+
+    /**
+     * Overall comments and their replies that belong to the submission
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function overallCommentsWithReplies(): HasMany
+    {
+        return $this->hasMany(OverallComment::class);
     }
 
     /**

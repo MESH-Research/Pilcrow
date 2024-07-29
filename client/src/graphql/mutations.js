@@ -907,21 +907,70 @@ export const REGISTER_OAUTH_USER = gql`
   ) {
     registerOauthUser(
       input: {
-        user: {
-          name: $name
-          username: $username
-          email: $email
-        }
-        provider: {
-          provider_name: $provider_name
-          provider_id: $provider_id
-        }
+        user: { name: $name, username: $username, email: $email }
+        provider: { provider_name: $provider_name, provider_id: $provider_id }
       }
     ) {
       id
       name
       username
       email
+    }
+  }
+`
+
+export const MARK_OVERALL_COMMENTS_READ = gql`
+  mutation MarkOverallCommentsRead($submission_id: ID!, $comment_ids: [ID!]!) {
+    markOverallCommentsRead(input:
+      {
+        submission_id: $submission_id,
+        comment_ids: $comment_ids
+      }
+    ) {
+      id
+      read_at
+    }
+  }
+`
+
+export const MARK_OVERALL_COMMENT_REPLIES_READ = gql`
+  mutation MarkOverallCommentRepliesRead($submission_id: ID!, $comment_ids: [ID!]!) {
+    markOverallCommentRepliesRead(input:
+      {
+        submission_id: $submission_id,
+        comment_ids: $comment_ids
+      }
+    ) {
+      id
+      read_at
+    }
+  }
+`
+
+export const MARK_INLINE_COMMENTS_READ = gql`
+  mutation MarkInlineCommentsRead($submission_id: ID!, $comment_ids: [ID!]!) {
+    markInlineCommentsRead(input:
+      {
+        submission_id: $submission_id,
+        comment_ids: $comment_ids
+      }
+    ) {
+      id
+      read_at
+    }
+  }
+`
+
+export const MARK_INLINE_COMMENT_REPLIES_READ = gql`
+  mutation MarkInlineCommentRepliesRead($submission_id: ID!, $comment_ids: [ID!]!) {
+    markInlineCommentRepliesRead(input:
+      {
+        submission_id: $submission_id,
+        comment_ids: $comment_ids
+      }
+    ) {
+      id
+      read_at
     }
   }
 `

@@ -24,9 +24,16 @@
 <script setup>
 import CommentEditor from "src/components/forms/CommentEditor.vue"
 import OverallComment from "src/components/atoms/OverallComment.vue"
+import {
+  MARK_OVERALL_COMMENTS_READ,
+  MARK_OVERALL_COMMENT_REPLIES_READ,
+} from "src/graphql/mutations"
 import { computed, inject, nextTick, ref, watch } from "vue"
+import { useMutation } from "@vue/apollo-composable"
 import { scroll } from "quasar"
 const { getScrollTarget, setVerticalScrollPosition } = scroll
+const { mutate: markRead } = useMutation(MARK_OVERALL_COMMENTS_READ)
+const { mutate: markReplyRead } = useMutation(MARK_OVERALL_COMMENT_REPLIES_READ)
 
 const submission = inject("submission")
 const activeComment = inject("activeComment")
@@ -38,11 +45,25 @@ const overall_comments = computed(() => {
   })
 })
 const commentRefs = ref([])
+
 watch(
   activeComment,
   (newValue) => {
     if (!newValue) return
-    if (newValue.__typename !== "OverallCommentReply") return
+    if (!newValue.__typename.startsWith("OverallComment")) return
+    ;(async () => {
+      if (newValue.__typename === "OverallComment") {
+        await markRead({
+          submission_id: submission.value.id,
+          comment_ids: [parseInt(newValue.id)],
+        })
+      } else {
+        await markReplyRead({
+          submission_id: submission.value.id,
+          comment_ids: [parseInt(newValue.id)],
+        })
+      }
+    })()
     nextTick(() => {
       let scrollTarget = null
       for (const commentRef of commentRefs.value) {

@@ -39,12 +39,12 @@ class SubmissionCommentTest extends ApiTestCase
     private function createStyleCriteria($id)
     {
         $criteria = StyleCriteria::factory()
-        ->create([
-            'name' => 'PHPUnit Criteria',
-            'publication_id' => $id,
-            'description' => 'This is a test style criteria created by PHPUnit',
-            'icon' => 'php',
-        ]);
+            ->create([
+                'name' => 'PHPUnit Criteria',
+                'publication_id' => $id,
+                'description' => 'This is a test style criteria created by PHPUnit',
+                'icon' => 'php',
+            ]);
 
         return $criteria;
     }
@@ -117,7 +117,7 @@ class SubmissionCommentTest extends ApiTestCase
                     }
                 }
             }',
-            [ 'id' => $submission->id ]
+            ['id' => $submission->id]
         );
         $expected_data = [
             'submission' => [
@@ -179,7 +179,7 @@ class SubmissionCommentTest extends ApiTestCase
                     }
                 }
             }',
-            [ 'id' => $submission->id ]
+            ['id' => $submission->id]
         );
         $expected_data = [
             'submission' => [
@@ -252,6 +252,7 @@ class SubmissionCommentTest extends ApiTestCase
                             name
                             icon
                         }
+                        read_at
                         from
                         to
                     }
@@ -276,6 +277,7 @@ class SubmissionCommentTest extends ApiTestCase
                                 'icon' => $criteria_2->icon,
                             ],
                         ],
+                        'read_at' => null,
                         'from' => 100,
                         'to' => 110,
                     ],
@@ -296,19 +298,19 @@ class SubmissionCommentTest extends ApiTestCase
     {
         return [
             'parent_id with a value and reply_to_id with a value' =>
-                [true, ['parent_id' => true, 'reply_to_id' => true]],
+            [true, ['parent_id' => true, 'reply_to_id' => true]],
             'parent_id with a value and reply_to_id missing' =>
-                [false, ['parent_id' => true]],
+            [false, ['parent_id' => true]],
             'parent_id null and reply_to_id missing' =>
-                [false, ['parent_id' => null]],
+            [false, ['parent_id' => null]],
             'parent_id null and reply_to_id with a value' =>
-                [false, ['parent_id' => null, 'reply_to_id' => true]],
+            [false, ['parent_id' => null, 'reply_to_id' => true]],
             'parent_id with a value and reply_to_id null' =>
-                [false, ['parent_id' => true, 'reply_to_id' => null]],
+            [false, ['parent_id' => true, 'reply_to_id' => null]],
             'parent_id missing and reply_to_id null' =>
-                [false, [ 'reply_to_id' => null]],
+            [false, ['reply_to_id' => null]],
             'parent_id missing and reply_to_id with a value' =>
-                [false, ['reply_to_id' => true]],
+            [false, ['reply_to_id' => true]],
         ];
     }
 
@@ -412,6 +414,7 @@ class SubmissionCommentTest extends ApiTestCase
                 }) {
                     overall_comments {
                         content
+                        read_at
                     }
                 }
             }',
@@ -423,6 +426,7 @@ class SubmissionCommentTest extends ApiTestCase
             $response->assertJsonPath('data.updateSubmission.overall_comments', [
                 [
                     'content' => 'New Overall Comment',
+                    'read_at' => null,
                 ],
             ]);
         } else {
@@ -595,11 +599,11 @@ class SubmissionCommentTest extends ApiTestCase
                 'submission_id' => $submission->id,
             ]
         )
-        ->assertGraphQLErrorMessage('Validation failed for the field [updateSubmission].')
-        ->assertGraphQLValidationError(
-            'input.inline_comments.create.0',
-            'The submission is not in a reviewable state.'
-        );
+            ->assertGraphQLErrorMessage('Validation failed for the field [updateSubmission].')
+            ->assertGraphQLValidationError(
+                'input.inline_comments.create.0',
+                'The submission is not in a reviewable state.'
+            );
     }
 
     /**
@@ -668,11 +672,11 @@ class SubmissionCommentTest extends ApiTestCase
                 'submission_id' => $submission->id,
             ]
         )
-        ->assertGraphQLErrorMessage('Validation failed for the field [updateSubmission].')
-        ->assertGraphQLValidationError(
-            'input.overall_comments.create.0',
-            'The submission is not in a reviewable state.'
-        );
+            ->assertGraphQLErrorMessage('Validation failed for the field [updateSubmission].')
+            ->assertGraphQLValidationError(
+                'input.overall_comments.create.0',
+                'The submission is not in a reviewable state.'
+            );
     }
 
     /**
@@ -744,7 +748,7 @@ class SubmissionCommentTest extends ApiTestCase
                 'comment_id' => $inline_comment->id,
             ]
         )
-        ->assertGraphQLErrorMessage('UNAUTHORIZED');
+            ->assertGraphQLErrorMessage('UNAUTHORIZED');
     }
 
     /**
@@ -776,7 +780,7 @@ class SubmissionCommentTest extends ApiTestCase
                 'comment_id' => $overall_comment->id,
             ]
         )
-        ->assertGraphQLErrorMessage('UNAUTHORIZED');
+            ->assertGraphQLErrorMessage('UNAUTHORIZED');
     }
 
     /**
@@ -908,7 +912,7 @@ class SubmissionCommentTest extends ApiTestCase
                 'comment_id' => $inline_comment->id,
             ]
         )
-        ->assertGraphQLErrorMessage('UNAUTHORIZED');
+            ->assertGraphQLErrorMessage('UNAUTHORIZED');
     }
 
     /**
@@ -939,7 +943,7 @@ class SubmissionCommentTest extends ApiTestCase
                 'comment_id' => $overall_comment->id,
             ]
         )
-        ->assertGraphQLErrorMessage('UNAUTHORIZED');
+            ->assertGraphQLErrorMessage('UNAUTHORIZED');
     }
 
     /**
@@ -1083,6 +1087,187 @@ class SubmissionCommentTest extends ApiTestCase
         $count_after_deletion = $submission->overallComments()->count();
         $this->assertEquals($count_before_deletion, 1);
         $this->assertEquals($count_after_deletion, 1);
+        $response->assertJsonPath('data', $expected_data);
+    }
+
+    /**
+     * @return void
+     */
+    public function testInlineCommentCanBeMarkedRead()
+    {
+        $this->beAppAdmin();
+        $submission = $this->createSubmissionWithInlineComment(3);
+        $inline_comment_1 = $submission->inlineComments->first();
+        $inline_comment_3 = $submission->inlineComments->slice(2, 1)->first();
+        $inline_comment_1->markRead();
+        $inline_comment_3->markRead();
+        $response = $this->graphQL(
+            'mutation MarkInlineCommentsRead($submission_id: ID!, $comment_ids: [ID!]!) {
+                markInlineCommentsRead (
+                    input: {
+                        submission_id: $submission_id, comment_ids: $comment_ids
+                    }
+                ) {
+                    id
+                    read_at
+                }
+            }',
+            [
+                'submission_id' => $submission->id,
+                'comment_ids' => [$inline_comment_1->id, $inline_comment_3->id],
+            ]
+        );
+        $expected_data = [
+            'markInlineCommentsRead' => [
+                '0' => [
+                    'id' => (string)$inline_comment_1->id,
+                    'read_at' => $inline_comment_1->readAt->format('Y-m-d\TH:i:s.u\Z'),
+                ],
+                '1' => [
+                    'id' => (string)$inline_comment_3->id,
+                    'read_at' => $inline_comment_3->readAt->format('Y-m-d\TH:i:s.u\Z'),
+                ],
+            ],
+        ];
+        $response->assertJsonPath('data', $expected_data);
+    }
+
+    /**
+     * @return void
+     */
+    public function testOverallCommentCanBeMarkedRead()
+    {
+        $this->beAppAdmin();
+        $submission = $this->createSubmissionWithOverallComment(3);
+        $overall_comment_1 = $submission->overallComments->first();
+        $overall_comment_3 = $submission->overallComments->slice(2, 1)->first();
+        $overall_comment_1->markRead();
+        $overall_comment_3->markRead();
+        $read_status_1 = $overall_comment_1->readAt->format('Y-m-d\TH:i:s.u\Z');
+        $read_status_3 = $overall_comment_3->readAt->format('Y-m-d\TH:i:s.u\Z');
+        $response = $this->graphQL(
+            'mutation MarkOverallCommentsRead($submission_id: ID!, $comment_ids: [ID!]!) {
+                markOverallCommentsRead (
+                    input: {
+                        submission_id: $submission_id, comment_ids: $comment_ids
+                    }
+                ) {
+                    id
+                    read_at
+                }
+            }',
+            [
+                'submission_id' => $submission->id,
+                'comment_ids' => [$overall_comment_1->id, $overall_comment_3->id],
+            ]
+        );
+        $expected_data = [
+            'markOverallCommentsRead' => [
+                '0' => [
+                    'id' => (string)$overall_comment_1->id,
+                    'read_at' => $read_status_1,
+                ],
+                '1' => [
+                    'id' => (string)$overall_comment_3->id,
+                    'read_at' => $read_status_3,
+                ],
+            ],
+        ];
+        $response->assertJsonPath('data', $expected_data);
+    }
+
+    /**
+     * @return array
+     */
+    public static function commentReadStatusProvider(): array
+    {
+        return [
+            'read' => [ true ],
+            'unread' => [ false ],
+        ];
+    }
+
+    /**
+     * @dataProvider commentReadStatusProvider
+     * @param bool $is_read
+     * @return void
+     */
+    public function testInlineCommentReadStatusCanBeQueried(bool $is_read)
+    {
+        $this->beAppAdmin();
+        $submission = $this->createSubmissionWithInlineComment();
+        $inline_comment = $submission->inlineComments()->first();
+        if ($is_read) {
+            $inline_comment->read_at = true;
+            $read_status = $inline_comment->readAt->format('Y-m-d\TH:i:s.u\Z');
+        } else {
+            $read_status = null;
+        }
+        $response = $this->graphQL(
+            'query GetSubmission($id: ID!) {
+                submission (id: $id) {
+                    id
+                    inline_comments {
+                        id
+                        read_at
+                    }
+                }
+            }',
+            ['id' => $submission->id]
+        );
+        $expected_data = [
+            'submission' => [
+                'id' => (string)$submission->id,
+                'inline_comments' => [
+                    '0' => [
+                        'id' => (string)$inline_comment->id,
+                        'read_at' => $read_status,
+                    ],
+                ],
+            ],
+        ];
+        $response->assertJsonPath('data', $expected_data);
+    }
+
+    /**
+     * @dataProvider commentReadStatusProvider
+     * @param bool $is_read
+     * @return void
+     */
+    public function testOverallCommentReadStatusCanBeQueried(bool $is_read)
+    {
+        $this->beAppAdmin();
+        $submission = $this->createSubmissionWithOverallComment();
+        $overall_comment = $submission->overallComments->first();
+        if ($is_read) {
+            $overall_comment->read_at = true;
+            $read_status = $overall_comment->readAt->format('Y-m-d\TH:i:s.u\Z');
+        } else {
+            $read_status = null;
+        }
+        $response = $this->graphQL(
+            'query GetSubmission($id: ID!) {
+                submission (id: $id) {
+                    id
+                    overall_comments {
+                        id
+                        read_at
+                    }
+                }
+            }',
+            ['id' => $submission->id]
+        );
+        $expected_data = [
+            'submission' => [
+                'id' => (string)$submission->id,
+                'overall_comments' => [
+                    '0' => [
+                        'id' => (string)$overall_comment->id,
+                        'read_at' => $read_status,
+                    ],
+                ],
+            ],
+        ];
         $response->assertJsonPath('data', $expected_data);
     }
 }

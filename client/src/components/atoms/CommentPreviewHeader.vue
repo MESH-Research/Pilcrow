@@ -1,5 +1,5 @@
 <template>
-  <q-card-section class="q-py-xs" :style="style">
+  <q-card-section class="q-py-xs">
     <div class="row items-center">
       <avatar-image
         :user="comment.created_by"
@@ -59,19 +59,6 @@ const props = defineProps({
     type: Object,
     required: true,
   },
-  bgColor: {
-    type: String,
-    required: false,
-    default: null,
-  },
-})
-const style = computed(() => {
-  const style = {}
-  if (props.bgColor) {
-    style.backgroundColor = props.bgColor
-  }
-
-  return style
 })
 const createdDate = computed(() => {
   return DateTime.fromISO(props.comment.created_at)
