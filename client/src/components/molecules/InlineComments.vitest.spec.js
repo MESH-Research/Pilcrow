@@ -35,6 +35,7 @@ describe("InlineComments", () => {
                     email: "publicationadministrator@meshresearch.net",
                     name: "Publication Administrator",
                   },
+                  read_at: null,
                   replies: [
                     {
                       id: "2",
@@ -49,6 +50,7 @@ describe("InlineComments", () => {
                         email: "applicationadministrator@meshresearch.net",
                       },
                       reply_to_id: "1",
+                      read_at: null,
                     },
                   ],
                   style_criteria: [
@@ -72,6 +74,7 @@ describe("InlineComments", () => {
                     email: "gracie91@example.net",
                     name: "Alessandra Kohler",
                   },
+                  read_at: "2024-07-01T12:00:00.000000Z",
                   replies: [],
                   style_criteria: [
                     {
@@ -106,6 +109,7 @@ describe("InlineComments", () => {
                     email: "hessel.russell@example.net",
                     name: "Mayra Kuhic",
                   },
+                  read_at: null,
                   replies: [
                     {
                       id: "5",
@@ -120,6 +124,7 @@ describe("InlineComments", () => {
                         email: "publicationeditor@meshresearch.net",
                       },
                       reply_to_id: "4",
+                      read_at: null,
                     },
                     {
                       id: "6",
@@ -134,6 +139,7 @@ describe("InlineComments", () => {
                         email: "reviewcoordinator@meshresearch.net",
                       },
                       reply_to_id: "5",
+                      read_at: null,
                     },
                     {
                       id: "7",
@@ -148,6 +154,7 @@ describe("InlineComments", () => {
                         email: "hessel.russell@example.net",
                       },
                       reply_to_id: "4",
+                      read_at: null,
                     },
                     {
                       id: "8",
@@ -162,6 +169,7 @@ describe("InlineComments", () => {
                         email: "applicationadministrator@meshresearch.net",
                       },
                       reply_to_id: "7",
+                      read_at: null,
                     },
                     {
                       id: "9",
@@ -176,6 +184,7 @@ describe("InlineComments", () => {
                         email: "applicationadministrator@meshresearch.net",
                       },
                       reply_to_id: "4",
+                      read_at: null,
                     },
                     {
                       id: "10",
@@ -190,6 +199,7 @@ describe("InlineComments", () => {
                         email: "applicationadministrator@meshresearch.net",
                       },
                       reply_to_id: "6",
+                      read_at: null,
                     },
                     {
                       id: "11",
@@ -204,6 +214,7 @@ describe("InlineComments", () => {
                         email: "applicationadministrator@meshresearch.net",
                       },
                       reply_to_id: "5",
+                      read_at: null,
                     },
                     {
                       id: "12",
@@ -218,6 +229,7 @@ describe("InlineComments", () => {
                         email: "regularuser@meshresearch.net",
                       },
                       reply_to_id: "6",
+                      read_at: null,
                     },
                     {
                       id: "13",
@@ -232,6 +244,7 @@ describe("InlineComments", () => {
                         email: "reviewcoordinator@meshresearch.net",
                       },
                       reply_to_id: "7",
+                      read_at: null,
                     },
                     {
                       id: "14",
@@ -246,6 +259,7 @@ describe("InlineComments", () => {
                         email: "publicationeditor@meshresearch.net",
                       },
                       reply_to_id: "4",
+                      read_at: null,
                     },
                   ],
                   style_criteria: [
@@ -317,5 +331,16 @@ describe("InlineComments", () => {
       "submissions.comment.toggle_replies.hide_reply",
     )
     expect(findReplies(items.at(2))).toHaveLength(10)
+  })
+
+  test("unread inline comments appear unread", async () => {
+    const { wrapper } = wrapperFactory()
+    const items = wrapper.findAllComponents('[data-cy="inlineComment"]')
+    expect(
+      items.at(0).find('[data-cy="commentHeader"]').classes("unread-comment"),
+    ).toBe(true)
+    expect(
+      items.at(1).find('[data-cy="commentHeader"]').classes("unread-comment"),
+    ).toBe(false)
   })
 })

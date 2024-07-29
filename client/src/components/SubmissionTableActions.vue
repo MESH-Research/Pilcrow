@@ -112,7 +112,7 @@
               data-cy="initially_submit"
               class="items-center"
               clickable
-              @click="confirmHandler('submit_for_review', submission.id)"
+              @click="confirmHandler('submit_for_review', submission)"
               >{{ $t("submission.action.submit_for_review") }}</q-item
             >
           </div>
@@ -130,7 +130,7 @@
               data-cy="accept_for_review"
               class="items-center"
               clickable
-              @click="confirmHandler('accept_for_review', submission.id)"
+              @click="confirmHandler('accept_for_review', submission)"
               >{{ $t("submission.action.accept_for_review") }}</q-item
             >
             <q-item
@@ -142,7 +142,7 @@
               data-cy="accept_as_final"
               class="items-center"
               clickable
-              @click="confirmHandler('accept_as_final', submission.id)"
+              @click="confirmHandler('accept_as_final', submission)"
               >{{ $t("submission.action.accept_as_final") }}</q-item
             >
             <q-item
@@ -153,7 +153,7 @@
               role="menuitem"
               class="items-center"
               clickable
-              @click="confirmHandler('request_resubmission', submission.id)"
+              @click="confirmHandler('request_resubmission', submission)"
               >{{ $t("submission.action.request_resubmission") }}</q-item
             >
             <q-item
@@ -165,7 +165,7 @@
               data-cy="reject"
               class="items-center"
               clickable
-              @click="confirmHandler('reject', submission.id)"
+              @click="confirmHandler('reject', submission)"
               >{{ $t("submission.action.reject") }}
             </q-item>
             <q-item
@@ -174,7 +174,7 @@
               data-cy="archive"
               class="items-center"
               clickable
-              @click="confirmHandler('archive', submission.id)"
+              @click="confirmHandler('archive', submission)"
               >{{ $t("submission.action.archive") }}
             </q-item>
             <q-item
@@ -186,7 +186,7 @@
               data-cy="delete"
               class="items-center"
               clickable
-              @click="confirmHandler('delete', submission.id)"
+              @click="confirmHandler('delete', submission)"
               >{{ $t("submission.action.delete") }}
             </q-item>
           </div>
@@ -197,7 +197,7 @@
             data-cy="open_review"
             class="items-center"
             clickable
-            @click="confirmHandler('open', submission.id)"
+            @click="confirmHandler('open', submission)"
             >{{ $t("submission.action.open") }}
           </q-item>
           <q-item
@@ -206,7 +206,7 @@
             data-cy="close_review"
             class="items-center"
             clickable
-            @click="confirmHandler('close', submission.id)"
+            @click="confirmHandler('close', submission)"
             >{{ $t("submission.action.close") }}
           </q-item>
         </q-menu>
@@ -289,9 +289,9 @@ function cannotAccessSubmission(submission) {
     submission.effective_role == "reviewer"
   )
 }
-async function confirmHandler(action, id) {
+async function confirmHandler(action, submission) {
   await new Promise((resolve) => {
-    dirtyDialog(action, id)
+    dirtyDialog(action, submission)
       .onOk(function () {
         resolve(true)
       })
@@ -303,12 +303,13 @@ async function confirmHandler(action, id) {
     return
   }
 }
-function dirtyDialog(action, id) {
+function dirtyDialog(action, submission) {
   return dialog({
     component: ConfirmStatusChangeDialog,
     componentProps: {
       action: action,
-      submissionId: id,
+      submissionId: submission.id,
+      currentStatus: submission.status,
     },
   })
 }

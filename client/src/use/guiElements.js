@@ -70,6 +70,107 @@ export function useFeedbackMessages(overrideDefaults = {}) {
   return { newMessage, newStatusMessage }
 }
 
+export const submissionStateButtons = {
+  DRAFT: {
+    action: null,
+    attrs: {
+      color: "",
+      class: "",
+      "data-cy": "",
+    },
+  },
+  INITIALLY_SUBMITTED: {
+    action: "submit_for_review",
+    attrs: {
+      color: "positive",
+      class: "",
+      "data-cy": "initially_submit",
+    },
+    icon: "edit_document",
+  },
+  AWAITING_REVIEW: {
+    action: "accept_for_review",
+    attrs: {
+      color: "positive",
+      class: "",
+      "data-cy": "open_for_review",
+    },
+    icon: "done",
+  },
+  UNDER_REVIEW: {
+    action: "open",
+    attrs: {
+      color: "black",
+      class: "",
+      "data-cy": "open_for_review",
+    },
+    icon: "grading",
+  },
+  AWAITING_DECISION: {
+    action: "close",
+    attrs: {
+      color: "black",
+      class: "",
+      "data-cy": "close_for_review",
+    },
+    icon: "grading",
+  },
+  ACCEPTED_AS_FINAL: {
+    action: "accept_as_final",
+    attrs: {
+      color: "positive",
+      class: "",
+      "data-cy": "accept_as_final",
+    },
+    icon: "done",
+  },
+  ARCHIVED: {
+    action: "archive",
+    attrs: {
+      color: "dark-grey",
+      class: "",
+      "data-cy": "archive",
+    },
+    icon: "archive",
+  },
+  DELETED: {
+    action: "delete",
+    attrs: {
+      color: "negative",
+      class: "",
+      "data-cy": "delete",
+    },
+    icon: "delete",
+  },
+  REJECTED: {
+    action: "reject",
+    attrs: {
+      color: "negative",
+      class: "",
+      "data-cy": "",
+    },
+    icon: "do_not_disturb",
+  },
+  RESUBMISSION_REQUESTED: {
+    action: "request_resubmission",
+    attrs: {
+      color: "dark-grey",
+      class: "text-white request-resubmission",
+      "data-cy": "",
+    },
+    icon: "refresh",
+  },
+  EXPIRED: {
+    action: null,
+    attrs: {
+      color: "",
+      class: "",
+      "data-cy": "",
+    },
+    icon: "",
+  },
+}
+
 export function useStatusChangeControls(submission) {
   const { isReviewer } = useCurrentUser()
 
@@ -93,7 +194,36 @@ export function useStatusChangeControls(submission) {
     return statusChangingDisabledStates.includes(submission.value.status)
   })
 
+  const nextStates = {
+    DRAFT: ["INITIALLY_SUBMITTED"],
+    INITIALLY_SUBMITTED: [
+      "UNDER_REVIEW",
+      "ACCEPTED_AS_FINAL",
+      "RESUBMISSION_REQUESTED",
+      "REJECTED",
+    ],
+    AWAITING_REVIEW: ["UNDER_REVIEW"],
+    UNDER_REVIEW: [
+      "ACCEPTED_AS_FINAL",
+      "RESUBMISSION_REQUESTED",
+      "REJECTED",
+      "AWAITING_DECISION",
+    ],
+    AWAITING_DECISION: [
+      "ACCEPTED_AS_FINAL",
+      "RESUBMISSION_REQUESTED",
+      "REJECTED",
+    ],
+    ACCEPTED_AS_FINAL: ["ARCHIVED", "DELETED"],
+    RESUBMISSION_REQUESTED: ["ARCHIVED", "DELETED"],
+    REJECTED: ["ARCHIVED", "DELETED"],
+    ARCHIVED: ["DELETED"],
+    DELETED: [],
+    EXPIRED: ["ACCEPTED_AS_FINAL", "RESUBMISSION_REQUESTED", "REJECTED"],
+  }
+
   return {
+    nextStates,
     statusChangingDisabledByRole,
     statusChangingDisabledByState,
   }
