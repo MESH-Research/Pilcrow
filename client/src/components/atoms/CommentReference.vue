@@ -74,7 +74,7 @@ function toolTipContent() {
 
 function setActive() {
   //Null the active comment first to trigger the scroll watcher
-  //TODO: Do this in a more elegant way.
+  //TODO: Fix active comment updates needing nextTick (reactivity)
   activeComment.value = null
   nextTick(() => {
     activeComment.value = props.comment
