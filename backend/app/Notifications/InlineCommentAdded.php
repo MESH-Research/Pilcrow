@@ -7,7 +7,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
 
-class NotifyUsersAboutNewlyAddedInlineComments extends Notification implements ShouldQueue
+class InlineCommentAdded extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -33,7 +33,7 @@ class NotifyUsersAboutNewlyAddedInlineComments extends Notification implements S
      *
      * @return array<int, string>
      */
-    public function via(object $notifiable): array
+    public function via(): array
     {
         return ['database'];
     }
@@ -43,7 +43,7 @@ class NotifyUsersAboutNewlyAddedInlineComments extends Notification implements S
      *
      * @return array<string, mixed>
      */
-    public function toArray(object $notifiable): array
+    public function toArray(): array
     {
         return [
             'submission' => [
