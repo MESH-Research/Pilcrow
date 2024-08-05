@@ -19,6 +19,7 @@
         "laravel/tinker": "^2.8",
         "mews/purifier": "^3.4",
         "mll-lab/graphql-php-scalars": "^6.0",
+        "novu/novu-laravel": "^1.3",
         "nuwave/lighthouse": "^6.0",
         "olssonm/l5-zxcvbn": "^5.1",
         "owen-it/laravel-auditing": "^13.5",
