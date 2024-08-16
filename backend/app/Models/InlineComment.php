@@ -5,6 +5,7 @@ namespace App\Models;
 
 use App\Http\Traits\CreatedUpdatedBy;
 use App\Models\Traits\ReadStatus;
+use App\Notifications\Novu\InlineCommentAdded;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -37,6 +38,17 @@ class InlineComment extends BaseModel
         'from',
         'to',
     ];
+
+    /**
+     * @return void
+     */
+    protected static function boot()
+    {
+        parent::boot();
+        static::created(function ($inlineComment) {
+            new InlineCommentAdded($inlineComment);
+        });
+    }
 
     /**
      * The submission that owns the inline comment
