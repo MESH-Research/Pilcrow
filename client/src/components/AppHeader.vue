@@ -26,7 +26,10 @@
 
       <template v-if="currentUser">
         <NotificationPopup />
-        <NotificationCenterComponent/>
+        <NotificationCenterComponent
+          :application-identifier="applicationIdentifier"
+          backend-url="http://api:3000/v1/"
+        />
         <q-btn-dropdown
           stretch
           flat
@@ -170,7 +173,8 @@ import { useCurrentUser } from "src/use/user"
 import { watchEffect } from "vue"
 import { useI18n } from "vue-i18n"
 import AppBanner from "./AppBanner.vue"
-import { NotificationCenterComponent } from "@novu/notification-center-vue"
+
+const applicationIdentifier = process.env.NOVU_APPLICATION_IDENTIFIER
 
 defineProps({
   //Drawer status
