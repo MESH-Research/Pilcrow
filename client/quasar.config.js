@@ -1,5 +1,7 @@
 /* eslint-env node */
 
+require('dotenv').config()
+
 /*
  * This file runs in a Node context (it's NOT transpiled by Babel), so use only
  * the ES6 features that are supported by your Node version. https://node.green/
@@ -62,8 +64,8 @@ module.exports = configure(function (/* ctx */) {
         APP_BANNER: process.env.APP_BANNER ?? undefined,
         APP_BANNER_CLASS: process.env.APP_BANNER_CLASS ?? undefined,
         APP_BANNER_LINK: process.env.APP_BANNER_LINK ?? undefined,
-        NOVU_API_KEY: process.env.NOVU_API_KEY ?? undefined,
-        NOVU_BASE_API_URL: process.env.NOVU_BASE_API_URL ?? undefined,
+        NOVU_APPLICATION_IDENTIFIER: process.env.VUE_APP_NOVU_APPLICATION_IDENTIFIER ?? undefined,
+        NOVU_BASE_API_URL: process.env.VUE_APP_NOVU_BASE_API_URL ?? undefined,
       },
       // vueRouterBase,
       // vueDevtools,

@@ -27,8 +27,10 @@
       <template v-if="currentUser">
         <NotificationPopup />
         <NotificationCenterComponent
+          :subscriber-id="currentUser.id"
           :application-identifier="applicationIdentifier"
-          backend-url="http://api:3000/v1/"
+          :backend-url="novuApiUrl"
+          :session-loaded="sessionLoaded"
         />
         <q-btn-dropdown
           stretch
@@ -175,6 +177,10 @@ import { useI18n } from "vue-i18n"
 import AppBanner from "./AppBanner.vue"
 
 const applicationIdentifier = process.env.NOVU_APPLICATION_IDENTIFIER
+const novuApiUrl = process.env.NOVU_BASE_API_URL
+const sessionLoaded = () => {
+  console.log("Notification Center session loaded successfully!")
+}
 
 defineProps({
   //Drawer status

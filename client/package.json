@@ -18,7 +18,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.7.2",
-    "@novu/notification-center-vue": "^2.0.0-canary.0",
+    "@novu/notification-center-vue": "0.24.1",
     "@quasar/extras": "^1.15.8",
     "@quasar/quasar-ui-qiconpicker": "^2.0.6",
     "@tiptap/extension-highlight": "^2.0.3",
@@ -59,6 +59,7 @@
     "cypress": "^13.0.0",
     "cypress-axe": "^1.4.0",
     "cypress-file-upload": "^5.0.8",
+    "dotenv": "^16.4.5",
     "eslint": "^8.10.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-cypress": "^2.12.1",
