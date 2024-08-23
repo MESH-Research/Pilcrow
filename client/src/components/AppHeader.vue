@@ -31,6 +31,7 @@
           :application-identifier="applicationIdentifier"
           :backend-url="novuApiUrl"
           :session-loaded="sessionLoaded"
+          :action-clicked="handleActionClick"
         />
         <q-btn-dropdown
           stretch
@@ -175,11 +176,19 @@ import { useCurrentUser } from "src/use/user"
 import { watchEffect } from "vue"
 import { useI18n } from "vue-i18n"
 import AppBanner from "./AppBanner.vue"
+import { useRouter } from "vue-router"
 
+const { push } = useRouter()
 const applicationIdentifier = process.env.NOVU_APPLICATION_IDENTIFIER
 const novuApiUrl = process.env.NOVU_BASE_API_URL
 const sessionLoaded = () => {
   console.log("Notification Center session loaded successfully!")
+}
+const handleActionClick = (_, __, notification) => {
+  const url = notification?.cta.data.url
+  if (url) {
+    push(url)
+  }
 }
 
 defineProps({
