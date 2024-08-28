@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Events\InlineCommentAdded;
 use App\Http\Traits\CreatedUpdatedBy;
 use App\Models\Traits\ReadStatus;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -37,6 +38,18 @@ class InlineComment extends BaseModel
         'from',
         'to',
     ];
+
+    /**
+     * @return void
+     */
+    protected static function boot()
+    {
+        parent::boot();
+        static::created(function ($inlineComment) {
+            InlineCommentAdded::dispatch($inlineComment);
+        });
+    }
+
 
     /**
      * The submission that owns the inline comment

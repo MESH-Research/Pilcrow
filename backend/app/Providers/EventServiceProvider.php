@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Events\InlineCommentAdded;
 use App\Events\ReviewCoordinatorInvitationAccepted;
 use App\Events\ReviewCoordinatorInvited;
 use App\Events\ReviewerInvited;
@@ -11,6 +12,7 @@ use App\Listeners\NotifyReviewCoordinatorAboutInvitation;
 use App\Listeners\NotifyReviewerAboutInvitation;
 use App\Listeners\NotifyUsersAboutAcceptedReviewCoordinatorInvitation;
 use App\Listeners\NotifyUsersAboutAcceptedReviewerInvitation;
+use App\Listeners\NotifyUsersAboutNewInlineComment;
 use App\Listeners\NotifyUsersAboutUpdatedSubmissionStatus;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -46,6 +48,9 @@ class EventServiceProvider extends ServiceProvider
         SocialiteWasCalled::class => [
             'SocialiteProviders\Google\GoogleExtendSocialite@handle',
             'SocialiteProviders\Orcid\OrcidExtendSocialite@handle'
+        ],
+        InlineCommentAdded::class => [
+            NotifyUsersAboutNewInlineComment::class,
         ],
     ];
 

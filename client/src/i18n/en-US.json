@@ -1028,6 +1028,11 @@
       "filter": "Filter"
     },
     "submission": {
+      "inline_comment": {
+        "added": {
+          "short": "{data_commentor_display_label} added a new inline comment to {data_submission_title}"
+        }
+      },
       "invitation": {
         "review_coordinator": {
           "accepted": {
