@@ -13,7 +13,7 @@ use App\Listeners\NotifyReviewCoordinatorAboutInvitation;
 use App\Listeners\NotifyReviewerAboutInvitation;
 use App\Listeners\NotifyUsersAboutAcceptedReviewCoordinatorInvitation;
 use App\Listeners\NotifyUsersAboutAcceptedReviewerInvitation;
-use App\Listeners\NotifyUsersAboutNewInlineComment;
+use App\Listeners\NotifyUsersAboutInlineComment;
 use App\Listeners\NotifyUsersAboutInlineCommentReply;
 use App\Listeners\NotifyUsersAboutUpdatedSubmissionStatus;
 use Illuminate\Auth\Events\Registered;
@@ -52,7 +52,7 @@ class EventServiceProvider extends ServiceProvider
             'SocialiteProviders\Orcid\OrcidExtendSocialite@handle'
         ],
         InlineCommentAdded::class => [
-            NotifyUsersAboutNewInlineComment::class,
+            NotifyUsersAboutInlineComment::class,
         ],
         InlineCommentReplyAdded::class => [
             NotifyUsersAboutInlineCommentReply::class,

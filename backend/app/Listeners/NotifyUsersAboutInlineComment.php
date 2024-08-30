@@ -9,7 +9,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Notification;
 
-class NotifyUsersAboutNewInlineComment extends Notification implements ShouldQueue
+class NotifyUsersAboutInlineComment extends Notification implements ShouldQueue
 {
     use Queueable;
 
