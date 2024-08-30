@@ -17,6 +17,9 @@ const icons = flatten({
     inline_comment: {
       added: "chat_bubble",
     },
+    inline_comment_reply: {
+      added: "chat_bubble",
+    },
     overall_comment: {
       added: "chat",
     },

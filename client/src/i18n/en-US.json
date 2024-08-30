@@ -1033,6 +1033,11 @@
           "short": "{data_commentor_display_label} added a new inline comment to {data_submission_title}"
         }
       },
+      "inline_comment_reply": {
+        "added": {
+          "short": "{data_commentor_display_label} replied to an inline comment for {data_submission_title}"
+        }
+      },
       "invitation": {
         "review_coordinator": {
           "accepted": {
