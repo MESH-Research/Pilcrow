@@ -4,12 +4,14 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Events\InlineCommentAdded;
+use App\Events\InlineCommentReplyAdded;
 use App\Http\Traits\CreatedUpdatedBy;
 use App\Models\Traits\ReadStatus;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class InlineComment extends BaseModel
@@ -46,10 +48,13 @@ class InlineComment extends BaseModel
     {
         parent::boot();
         static::created(function ($inlineComment) {
-            InlineCommentAdded::dispatch($inlineComment);
+            if ($inlineComment->parent_id) {
+                InlineCommentReplyAdded::dispatch($inlineComment);
+            } else {
+                InlineCommentAdded::dispatch($inlineComment);
+            }
         });
     }
-
 
     /**
      * The submission that owns the inline comment
@@ -77,6 +82,29 @@ class InlineComment extends BaseModel
     }
 
     /**
+     * All commentors involved in the inline comment thread:
+     * - anyone who has replied to the parent inline comment or its replies
+     * - does not include the creator of the parent inline comment
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
+     */
+    public function commentors(): HasManyThrough
+    {
+      // Get the parent inline comment
+        $parentComment = $this->parent_id ? $this->parent : $this;
+
+      // Get all users who have replied to the parent inline comment
+        return $this->hasManyThrough(
+            User::class,
+            InlineComment::class,
+            'parent_id', // Foreign key on InlineComment table
+            'id', // Foreign key on User table
+            'id', // Local key on this table
+            'created_by' // Local key on InlineComment table
+        )->where('parent_id', $parentComment->id);
+    }
+
+    /**
      * The creator of the inline comment
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -94,6 +122,16 @@ class InlineComment extends BaseModel
     public function updatedBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'updated_by');
+    }
+
+    /**
+     * The parent inline comment of this inline comment reply
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function parent(): BelongsTo
+    {
+        return $this->belongsTo(InlineComment::class, 'parent_id');
     }
 
     /**

@@ -4,10 +4,10 @@ declare(strict_types=1);
 namespace App\Listeners;
 
 use App\Events\InlineCommentAdded as EventsInlineCommentAdded;
+use App\Notifications\InlineCommentAdded;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Notification;
-use App\Notifications\InlineCommentAdded;
 
 class NotifyUsersAboutNewInlineComment extends Notification implements ShouldQueue
 {
@@ -15,6 +15,9 @@ class NotifyUsersAboutNewInlineComment extends Notification implements ShouldQue
 
     /**
      * Handle the event.
+     *
+     * @param \App\Events\EventsInlineCommentAdded $event
+     * @return void
      */
     public function handle(EventsInlineCommentAdded $event): void
     {

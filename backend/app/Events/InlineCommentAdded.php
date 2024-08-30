@@ -11,7 +11,9 @@ use Illuminate\Queue\SerializesModels;
 
 class InlineCommentAdded
 {
-    use Dispatchable, InteractsWithSockets, SerializesModels;
+    use Dispatchable;
+    use InteractsWithSockets;
+    use SerializesModels;
 
     /**
      * @var \App\Models\InlineComment $inline_comment

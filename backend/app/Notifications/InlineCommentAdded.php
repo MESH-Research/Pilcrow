@@ -18,6 +18,9 @@ class InlineCommentAdded extends Notification implements ShouldQueue
 
     /**
      * Create a new notification instance.
+     *
+     * @param array $inline_comment
+     * @return void
      */
     public function __construct($inline_comment)
     {
@@ -40,7 +43,7 @@ class InlineCommentAdded extends Notification implements ShouldQueue
      *
      * @return array<string, mixed>
      */
-    public function toArray(object $notifiable): array
+    public function toArray(): array
     {
         return [
             'submission' => [
