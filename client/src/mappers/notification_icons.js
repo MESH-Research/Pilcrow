@@ -23,6 +23,9 @@ const icons = flatten({
     overall_comment: {
       added: "chat",
     },
+    overall_comment_reply: {
+      added: "chat",
+    },
     invitation: {
       review_coordinator: {
         accepted: "emoji_people",

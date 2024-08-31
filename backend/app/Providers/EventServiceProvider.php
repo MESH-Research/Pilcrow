@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Events\OverallCommentAdded;
+use App\Events\OverallCommentReplyAdded;
 use App\Events\InlineCommentAdded;
 use App\Events\InlineCommentReplyAdded;
 use App\Events\ReviewCoordinatorInvitationAccepted;
@@ -15,6 +17,8 @@ use App\Listeners\NotifyUsersAboutAcceptedReviewCoordinatorInvitation;
 use App\Listeners\NotifyUsersAboutAcceptedReviewerInvitation;
 use App\Listeners\NotifyUsersAboutInlineComment;
 use App\Listeners\NotifyUsersAboutInlineCommentReply;
+use App\Listeners\NotifyUsersAboutOverallComment;
+use App\Listeners\NotifyUsersAboutOverallCommentReply;
 use App\Listeners\NotifyUsersAboutUpdatedSubmissionStatus;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -56,6 +60,12 @@ class EventServiceProvider extends ServiceProvider
         ],
         InlineCommentReplyAdded::class => [
             NotifyUsersAboutInlineCommentReply::class,
+        ],
+        OverallCommentAdded::class => [
+            NotifyUsersAboutOverallComment::class,
+        ],
+        OverallCommentReplyAdded::class => [
+            NotifyUsersAboutOverallCommentReply::class,
         ],
     ];
 

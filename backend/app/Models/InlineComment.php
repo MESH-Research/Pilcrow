@@ -90,10 +90,9 @@ class InlineComment extends BaseModel
      */
     public function commentors(): HasManyThrough
     {
-      // Get the parent inline comment
         $parentComment = $this->parent_id ? $this->parent : $this;
 
-      // Get all users who have replied to the parent inline comment
+        // Get all users who have replied to the parent inline comment
         return $this->hasManyThrough(
             User::class,
             InlineComment::class,
