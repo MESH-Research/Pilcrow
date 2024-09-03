@@ -1,20 +1,20 @@
 <?php
 declare(strict_types=1);
 
-namespace Tests\Feature;
+namespace Tests\Feature\Notifications;
 
-use App\Models\Role;
 use App\Models\Submission;
-use App\Models\SubmissionInvitation;
 use App\Models\User;
 use App\Notifications\SubmissionStatusUpdated;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
+use Tests\TestFactory;
 
-class NotificationTest extends TestCase
+class SubmissionStatusUpdatesTest extends TestCase
 {
     use RefreshDatabase;
+    use TestFactory;
 
     /**
      * @param User $user
@@ -173,122 +173,5 @@ class NotificationTest extends TestCase
             });
             $this->assertEquals(0, $user->unreadNotifications->count());
         });
-    }
-
-    /**
-     * @return void
-     */
-    public function testSubmissionUsersReceiveNotificationsUponAcceptedReviewerInvitations()
-    {
-        $this->beAppAdmin();
-        $submitter = User::factory()->create();
-        $reviewer = User::factory()->create();
-        $review_coordinator = User::factory()->create();
-        $submission = Submission::factory()
-            ->hasAttached($submitter, [], 'submitters')
-            ->hasAttached($reviewer, [], 'reviewers')
-            ->hasAttached($review_coordinator, [], 'reviewCoordinators')
-            ->create();
-        $invite = SubmissionInvitation::create([
-            'submission_id' => $submission->id,
-            'role_id' => Role::REVIEWER_ROLE_ID,
-            'email' => 'bob@msu.edu',
-        ]);
-        $invite->inviteReviewer();
-        $details = [
-            'name' => '',
-            'username' => 'bob',
-            'password' => 'rLT2ovkZkMby5UpwiQkFBeS9',
-        ];
-        $invite->acceptInvite($details);
-        $this->assertEquals(1, $submitter->notifications->count());
-        $this->assertEquals(1, $reviewer->notifications->count());
-        $this->assertEquals(1, $review_coordinator->notifications->count());
-    }
-
-    /**
-     * @return void
-     */
-    public function testSubmissionUsersReceiveNotificationsUponAcceptedReviewCoordinatorInvitations()
-    {
-        $this->beAppAdmin();
-        $submitter = User::factory()->create();
-        $reviewer = User::factory()->create();
-        $review_coordinator = User::factory()->create();
-        $submission = Submission::factory()
-            ->hasAttached($submitter, [], 'submitters')
-            ->hasAttached($reviewer, [], 'reviewers')
-            ->hasAttached($review_coordinator, [], 'reviewCoordinators')
-            ->create();
-        $invite = SubmissionInvitation::create([
-            'submission_id' => $submission->id,
-            'role_id' => Role::REVIEW_COORDINATOR_ROLE_ID,
-            'email' => 'bob@msu.edu',
-        ]);
-        $invite->inviteReviewCoordinator();
-        $details = [
-            'name' => '',
-            'username' => 'bob',
-            'password' => 'aYUB1IYUadd38fl9mxAVv2',
-        ];
-        $invite->acceptInvite($details);
-        $this->assertEquals(1, $submitter->notifications->count());
-        $this->assertEquals(1, $reviewer->notifications->count());
-        $this->assertEquals(1, $review_coordinator->notifications->count());
-    }
-
-    /**
-     * @return void
-     */
-    public function testUsersReceiveNotificationsForInlineComments()
-    {
-        $submission = $this->createSubmissionWithInlineComment(4);
-        $comment = $submission->inlineComments->first();
-        $comment2 = $submission->inlineComments->splice(2, 1)->first();
-        $reviewer1 = User::factory()->create();
-        $reviewer2 = User::factory()->create();
-        $reviewer3 = User::factory()->create();
-        $submission->reviewers()->attach([$reviewer1->id, $reviewer2->id, $reviewer3->id]);
-        InlineComment::factory()->create([
-            'submission_id' => $submission->id,
-            'content' => 'This is some content for an inline comment created by PHPUnit.',
-            'created_by' => $reviewer1->id,
-            'updated_by' => $reviewer1->id,
-            'style_criteria' => [],
-            'parent_id' => $comment->id,
-            'reply_to_id' => $comment->id,
-        ]);
-        InlineComment::factory()->create([
-            'submission_id' => $submission->id,
-            'content' => 'This is some content for an inline comment created by PHPUnit.',
-            'created_by' => $reviewer2->id,
-            'updated_by' => $reviewer2->id,
-            'style_criteria' => [],
-            'parent_id' => $comment2->id,
-            'reply_to_id' => $comment2->id,
-        ]);
-        $c6 = InlineComment::factory()->create([
-            'submission_id' => $submission->id,
-            'content' => 'This is some content for an inline comment created by PHPUnit.',
-            'created_by' => $reviewer3->id,
-            'updated_by' => $reviewer3->id,
-            'style_criteria' => [],
-            'parent_id' => $comment2->id,
-            'reply_to_id' => $comment2->id,
-        ]);
-        InlineComment::factory()->create([
-            'submission_id' => $submission->id,
-            'content' => 'This is some content for an inline comment created by PHPUnit.',
-            'created_by' => $reviewer2->id,
-            'updated_by' => $reviewer2->id,
-            'style_criteria' => [],
-            'parent_id' => $comment2->id,
-            'reply_to_id' => $c6->id,
-        ]);
-
-        $comments = $submission->inlineCommentsWithReplies;
-        $data = $comments->splice(2, 1)->first()->commentors->unique()->toArray();
-
-        print_r($data);
     }
 }
