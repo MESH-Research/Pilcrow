@@ -104,14 +104,15 @@ trait TestFactory
             $users->push(
                 User::factory()->create([
                     'username' => $this->faker->unique()->userName,
-                    'email' => $this->faker->unique()->safeEmail
+                    'email' => $this->faker->unique()->safeEmail,
                 ])
             );
         }
-        $submission->reviewers()->attach([$users->slice(0,1)->first()->id]);
-        $submission->reviewCoordinators()->attach([$users->slice(1,1)->first()->id]);
-        $submission->publication->editors()->attach([$users->slice(2,1)->first()->id]);
-        $submission->publication->publicationAdmins()->attach([$users->slice(3,1)->first()->id]);
+        $submission->reviewers()->attach([$users->slice(0, 1)->first()->id]);
+        $submission->reviewCoordinators()->attach([$users->slice(1, 1)->first()->id]);
+        $submission->publication->editors()->attach([$users->slice(2, 1)->first()->id]);
+        $submission->publication->publicationAdmins()->attach([$users->slice(3, 1)->first()->id]);
+
         return $submission;
     }
 }

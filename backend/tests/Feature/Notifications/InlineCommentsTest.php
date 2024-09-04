@@ -31,6 +31,15 @@ class InlineCommentsTest extends TestCase
         ]);
 
         // Make comments
+        InlineComment::factory()->create([
+            'submission_id' => $submission->id,
+            'content' => 'This is some content for an inline comment created by PHPUnit.',
+            'created_by' => $commentor_elsewhere->id,
+            'updated_by' => $commentor_elsewhere->id,
+            'style_criteria' => [],
+            'parent_id' => null,
+            'reply_to_id' => null,
+        ]);
         $comment_parent = InlineComment::factory()->create([
             'submission_id' => $submission->id,
             'content' => 'This is some content for an inline comment created by PHPUnit.',
@@ -58,15 +67,6 @@ class InlineCommentsTest extends TestCase
             'parent_id' => $comment_parent->id,
             'reply_to_id' => $comment_reply->id,
         ]);
-        InlineComment::factory()->create([
-            'submission_id' => $submission->id,
-            'content' => 'This is some content for an inline comment created by PHPUnit.',
-            'created_by' => $commentor_elsewhere->id,
-            'updated_by' => $commentor_elsewhere->id,
-            'style_criteria' => [],
-            'parent_id' => null,
-            'reply_to_id' => null,
-        ]);
 
         return $submission;
     }
@@ -91,17 +91,17 @@ class InlineCommentsTest extends TestCase
         $this->assertEquals(0, $this->getInlineCommentReplyNotificationCount($reviewer1));
 
         // Inline Commentor
-        $reviewer2 = $submission->reviewers()->get()->slice(1,1)->first();
+        $reviewer2 = $submission->reviewers()->get()->slice(1, 1)->first();
         $this->assertEquals(0, $this->getInlineCommentNotificationCount($reviewer2));
         $this->assertEquals(2, $this->getInlineCommentReplyNotificationCount($reviewer2));
 
         // Inline Comment Replier
-        $reviewer3 = $submission->reviewers()->get()->slice(2,1)->first();
+        $reviewer3 = $submission->reviewers()->get()->slice(2, 1)->first();
         $this->assertEquals(0, $this->getInlineCommentNotificationCount($reviewer3));
         $this->assertEquals(1, $this->getInlineCommentReplyNotificationCount($reviewer3));
 
         // Inline Comment Reply Replier
-        $reviewer4 = $submission->reviewers()->get()->slice(3,1)->first();
+        $reviewer4 = $submission->reviewers()->get()->slice(3, 1)->first();
         $this->assertEquals(0, $this->getInlineCommentNotificationCount($reviewer4));
         $this->assertEquals(0, $this->getInlineCommentReplyNotificationCount($reviewer4));
 
@@ -118,6 +118,7 @@ class InlineCommentsTest extends TestCase
     private function getInlineCommentNotificationCount($user)
     {
         $type = 'App\Notifications\InlineCommentAdded';
+
         return $user->notifications()->where('type', $type)->get()->count();
     }
 
@@ -128,7 +129,7 @@ class InlineCommentsTest extends TestCase
     private function getInlineCommentReplyNotificationCount($user)
     {
         $type = 'App\Notifications\InlineCommentReplyAdded';
+
         return $user->notifications()->where('type', $type)->get()->count();
     }
-
 }
