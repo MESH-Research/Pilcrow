@@ -84,4 +84,21 @@ trait TestFactory
 
         return $submission;
     }
+
+    /**
+     * Create a submission with users that have all submission-relative and publication-relative roles.
+     * Does not include Application Administrator role.
+     *
+     * @return Submission
+     */
+    protected function createSubmissionWithAllRoles(): Submission
+    {
+        $submission = $this->createSubmission();
+        $submission->submitters->first();
+        $submission->reviewers()->attach([User::factory()->create()->id]);
+        $submission->reviewCoordinators()->attach([User::factory()->create()->id]);
+        $submission->publication->editors()->attach([User::factory()->create()->id]);
+        $submission->publication->publicationAdmins()->attach([User::factory()->create()->id]);
+        return $submission;
+    }
 }
