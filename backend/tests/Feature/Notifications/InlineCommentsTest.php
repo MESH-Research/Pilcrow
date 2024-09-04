@@ -81,31 +81,37 @@ class InlineCommentsTest extends TestCase
         $this->assertEquals(4, $comments->count());
 
         // Submitter
+        // Gets all notifications
         $submitter = $submission->submitters()->first();
         $this->assertEquals(2, $this->getInlineCommentNotificationCount($submitter));
         $this->assertEquals(2, $this->getInlineCommentReplyNotificationCount($submitter));
 
         // Uninvolved First Reviewer
+        // Gets no notifications
         $reviewer1 = $submission->reviewers()->first();
         $this->assertEquals(0, $this->getInlineCommentNotificationCount($reviewer1));
         $this->assertEquals(0, $this->getInlineCommentReplyNotificationCount($reviewer1));
 
         // Inline Commentor
+        // Gets notifications for all replies
         $reviewer2 = $submission->reviewers()->get()->slice(1, 1)->first();
         $this->assertEquals(0, $this->getInlineCommentNotificationCount($reviewer2));
         $this->assertEquals(2, $this->getInlineCommentReplyNotificationCount($reviewer2));
 
         // Inline Comment Replier
+        // Gets notification for reply to reply
         $reviewer3 = $submission->reviewers()->get()->slice(2, 1)->first();
         $this->assertEquals(0, $this->getInlineCommentNotificationCount($reviewer3));
         $this->assertEquals(1, $this->getInlineCommentReplyNotificationCount($reviewer3));
 
         // Inline Comment Reply Replier
+        // Gets no notifications
         $reviewer4 = $submission->reviewers()->get()->slice(3, 1)->first();
         $this->assertEquals(0, $this->getInlineCommentNotificationCount($reviewer4));
         $this->assertEquals(0, $this->getInlineCommentReplyNotificationCount($reviewer4));
 
         // Separate Inline Commentor
+        // Gets no notifications
         $reviewer5 = $submission->reviewers()->first();
         $this->assertEquals(0, $this->getInlineCommentNotificationCount($reviewer5));
         $this->assertEquals(0, $this->getInlineCommentReplyNotificationCount($reviewer5));
