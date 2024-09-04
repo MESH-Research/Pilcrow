@@ -22,8 +22,8 @@ class NotifyUsersAboutInlineComment extends Notification implements ShouldQueue
     public function handle(EventsInlineCommentAdded $event): void
     {
         $submission = $event->inline_comment->submission;
-        $submitters = $submission->submitters;
-        $review_coordinators = $submission->review_coordinators;
+        $submitters = $submission->submitters()->get();
+        $review_coordinators = $submission->reviewCoordinators()->get();
         $notification_data = [
             'submission' => [
                 'id' => $submission->id,
@@ -34,8 +34,13 @@ class NotifyUsersAboutInlineComment extends Notification implements ShouldQueue
             ],
             'type' => 'submission.inline_comment.added',
         ];
+        $recipients = $submitters
+            ->merge($review_coordinators)
+            ->unique()
+            ->filter(function ($user) use ($event) {
+                return $user->id !== $event->inline_comment->createdBy->id;
+            });
 
-        Notification::send($submitters, new InlineCommentAdded($notification_data));
-        Notification::send($review_coordinators, new InlineCommentAdded($notification_data));
+        Notification::send($recipients, new InlineCommentAdded($notification_data));
     }
 }

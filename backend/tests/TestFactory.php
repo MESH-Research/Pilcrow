@@ -8,9 +8,12 @@ use App\Models\OverallComment;
 use App\Models\StyleCriteria;
 use App\Models\Submission;
 use App\Models\User;
+use Illuminate\Foundation\Testing\WithFaker;
 
 trait TestFactory
 {
+    use WithFaker;
+
     /**
      * @param int $status (default: Submission::UNDER_REVIEW)
      * @return Submission
@@ -95,10 +98,20 @@ trait TestFactory
     {
         $submission = $this->createSubmission();
         $submission->submitters->first();
-        $submission->reviewers()->attach([User::factory()->create()->id]);
-        $submission->reviewCoordinators()->attach([User::factory()->create()->id]);
-        $submission->publication->editors()->attach([User::factory()->create()->id]);
-        $submission->publication->publicationAdmins()->attach([User::factory()->create()->id]);
+
+        $users = collect();
+        for ($i = 0; $i < 4; $i++) {
+            $users->push(
+                User::factory()->create([
+                    'username' => $this->faker->unique()->userName,
+                    'email' => $this->faker->unique()->safeEmail
+                ])
+            );
+        }
+        $submission->reviewers()->attach([$users->slice(0,1)->first()->id]);
+        $submission->reviewCoordinators()->attach([$users->slice(1,1)->first()->id]);
+        $submission->publication->editors()->attach([$users->slice(2,1)->first()->id]);
+        $submission->publication->publicationAdmins()->attach([$users->slice(3,1)->first()->id]);
         return $submission;
     }
 }

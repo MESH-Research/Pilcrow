@@ -42,7 +42,7 @@ class InlineCommentsTest extends TestCase
         ]);
         $comment_reply = InlineComment::factory()->create([
             'submission_id' => $submission->id,
-            'content' => 'This is some content for an inline comment created by PHPUnit.',
+            'content' => 'This is some content for an inline comment reply created by PHPUnit.',
             'created_by' => $commentor_reply->id,
             'updated_by' => $commentor_reply->id,
             'style_criteria' => [],
@@ -51,7 +51,7 @@ class InlineCommentsTest extends TestCase
         ]);
         InlineComment::factory()->create([
             'submission_id' => $submission->id,
-            'content' => 'This is some content for an inline comment created by PHPUnit.',
+            'content' => 'This is some content for an inline comment reply to a reply created by PHPUnit.',
             'created_by' => $commentor_reply_to_reply->id,
             'updated_by' => $commentor_reply_to_reply->id,
             'style_criteria' => [],
@@ -79,80 +79,56 @@ class InlineCommentsTest extends TestCase
         $submission = $this->createSubmissionWithInlineCommentThread();
         $comments = $submission->inlineCommentsWithReplies();
         $this->assertEquals(4, $comments->count());
-        $submission->submitters()->first()->notifications->map(function ($notification, int $key) use ($submission) {
-            switch ($key) {
-                case 0:
-                    $this->assertInlineComment($notification, $submission);
-                    break;
-                case 1:
-                    $this->assertInlineCommentReply($notification, $submission);
-                    break;
-                case 2:
-                    $this->assertInlineCommentReply($notification, $submission);
-                    break;
-                case 3:
-                    $this->assertInlineComment($notification, $submission);
-                    break;
-            }
-        });
-        $submission->reviewers()->first()->notifications->map(function ($notification, int $key) use ($submission) {
-            switch ($key) {
-                case 0: // Reply to inline comment
-                    $this->assertInlineCommentReply($notification, $submission);
-                    break;
-                case 1: // Reply to reply of inline comment
-                    $this->assertInlineCommentReply($notification, $submission);
-                    break;
-            }
-        });
-        $submission->reviewCoordinators()->first()->notifications->map(function ($notification, int $key) use ($submission) {
-            switch ($key) {
-                case 0:
-                    $this->assertInlineComment($notification, $submission);
-                    break;
-                case 1:
-                    $this->assertInlineCommentReply($notification, $submission);
-                    break;
-                case 2:
-                    $this->assertInlineCommentReply($notification, $submission);
-                    break;
-                case 3:
-                    $this->assertInlineComment($notification, $submission);
-                    break;
-            }
-        });
+
+        // Submitter
+        $submitter = $submission->submitters()->first();
+        $this->assertEquals(2, $this->getInlineCommentNotificationCount($submitter));
+        $this->assertEquals(2, $this->getInlineCommentReplyNotificationCount($submitter));
+
+        // Uninvolved First Reviewer
+        $reviewer1 = $submission->reviewers()->first();
+        $this->assertEquals(0, $this->getInlineCommentNotificationCount($reviewer1));
+        $this->assertEquals(0, $this->getInlineCommentReplyNotificationCount($reviewer1));
+
+        // Inline Commentor
+        $reviewer2 = $submission->reviewers()->get()->slice(1,1)->first();
+        $this->assertEquals(0, $this->getInlineCommentNotificationCount($reviewer2));
+        $this->assertEquals(2, $this->getInlineCommentReplyNotificationCount($reviewer2));
+
+        // Inline Comment Replier
+        $reviewer3 = $submission->reviewers()->get()->slice(2,1)->first();
+        $this->assertEquals(0, $this->getInlineCommentNotificationCount($reviewer3));
+        $this->assertEquals(1, $this->getInlineCommentReplyNotificationCount($reviewer3));
+
+        // Inline Comment Reply Replier
+        $reviewer4 = $submission->reviewers()->get()->slice(3,1)->first();
+        $this->assertEquals(0, $this->getInlineCommentNotificationCount($reviewer4));
+        $this->assertEquals(0, $this->getInlineCommentReplyNotificationCount($reviewer4));
+
+        // Separate Inline Commentor
+        $reviewer5 = $submission->reviewers()->first();
+        $this->assertEquals(0, $this->getInlineCommentNotificationCount($reviewer5));
+        $this->assertEquals(0, $this->getInlineCommentReplyNotificationCount($reviewer5));
     }
 
     /**
-     * @return void
+     * @param User $user
+     * @return int
      */
-    private function assertInlineComment($notification, $submission)
+    private function getInlineCommentNotificationCount($user)
     {
-        try {
-            $this->assertEquals("App\Notifications\InlineCommentAdded", $notification->type);
-            $this->assertEquals($notification->data['type'], 'submission.inline_comment.added');
-            $this->assertEquals($notification->data['submission']['id'], $submission->id);
-        } catch (\Exception $e) {
-            print_r(User::where('id', $notification->notifiable_id)->first()->toArray());
-            print_r('Should be an inline comment');
-            print_r($notification->toArray());
-        }
+        $type = 'App\Notifications\InlineCommentAdded';
+        return $user->notifications()->where('type', $type)->get()->count();
     }
 
     /**
-     * @return void
+     * @param User $user
+     * @return int
      */
-    private function assertInlineCommentReply($notification, $submission)
+    private function getInlineCommentReplyNotificationCount($user)
     {
-        try {
-            $this->assertEquals("App\Notifications\InlineCommentReplyAdded", $notification->type);
-            $this->assertEquals($notification->data['type'], 'submission.inline_comment_reply.added');
-            $this->assertEquals($notification->data['submission']['id'], $submission->id);
-        } catch (\Exception $e) {
-            print_r(User::where('id', $notification->notifiable_id)->first()->toArray());
-            print_r('Should be a reply');
-            print_r($notification->toArray());
-        }
+        $type = 'App\Notifications\InlineCommentReplyAdded';
+        return $user->notifications()->where('type', $type)->get()->count();
     }
 
 }
