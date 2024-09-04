@@ -31,12 +31,12 @@ class InvitationsTest extends TestCase
         $invite = SubmissionInvitation::create([
             'submission_id' => $submission->id,
             'role_id' => Role::REVIEWER_ROLE_ID,
-            'email' => 'bob@msu.edu',
+            'email' => 'bob1@msu.edu',
         ]);
         $invite->inviteReviewer();
         $details = [
             'name' => '',
-            'username' => 'bob',
+            'username' => 'bob1',
             'password' => 'rLT2ovkZkMby5UpwiQkFBeS9',
         ];
         $invite->acceptInvite($details);
@@ -62,12 +62,12 @@ class InvitationsTest extends TestCase
         $invite = SubmissionInvitation::create([
             'submission_id' => $submission->id,
             'role_id' => Role::REVIEW_COORDINATOR_ROLE_ID,
-            'email' => 'bob@msu.edu',
+            'email' => 'bob2@msu.edu',
         ]);
         $invite->inviteReviewCoordinator();
         $details = [
             'name' => '',
-            'username' => 'bob',
+            'username' => 'bob2',
             'password' => 'aYUB1IYUadd38fl9mxAVv2',
         ];
         $invite->acceptInvite($details);
