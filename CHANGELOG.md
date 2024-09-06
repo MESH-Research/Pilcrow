@@ -3,6 +3,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.31.0](https://github.com/MESH-Research/Pilcrow/compare/0.30.0...v0.31.0) (2024-07-29)
+
+
+### Features
+
+* Add 'Mark Read' Functionality for Comments ([#2122](https://github.com/MESH-Research/Pilcrow/issues/2122)) ([3b52088](https://github.com/MESH-Research/Pilcrow/commit/3b52088c2883d70a80d4c03cdce753d873d64a25)), closes [#2071](https://github.com/MESH-Research/Pilcrow/issues/2071)
+* Submit Submission from Preview Page ([#2118](https://github.com/MESH-Research/Pilcrow/issues/2118)) ([330f7ae](https://github.com/MESH-Research/Pilcrow/commit/330f7ae8963fbdf9eb24f77cbe3428d6f533fbb9)), closes [#2078](https://github.com/MESH-Research/Pilcrow/issues/2078)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @apollo/client to v3.10.3 ([606a44e](https://github.com/MESH-Research/Pilcrow/commit/606a44e6159b508d5f2af7a803e61c8100916df7))
+* **deps:** update dependency laravel/framework to v10.48.10 ([b5d7a96](https://github.com/MESH-Research/Pilcrow/commit/b5d7a9691bf412f3902a3016b40d476051dded48))
+* **deps:** update dependency nuwave/lighthouse to v6.36.3 ([c13047e](https://github.com/MESH-Research/Pilcrow/commit/c13047e463e276568e238e077366219d672fd3a6))
+* **deps:** update tiptap monorepo to v2.3.2 ([198d069](https://github.com/MESH-Research/Pilcrow/commit/198d06960605699f4557fe0b481b42dbc8baf4d2))
+* move permission creation to a migration. ([#2120](https://github.com/MESH-Research/Pilcrow/issues/2120)) ([bc6feac](https://github.com/MESH-Research/Pilcrow/commit/bc6feac14cb6c7a9252ab135409cb404ccf68452))
+
 ## [0.30.0](https://github.com/MESH-Research/Pilcrow/compare/v0.29.0...v0.30.0) (2024-05-02)
 
 
