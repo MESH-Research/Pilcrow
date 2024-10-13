@@ -407,16 +407,16 @@
     webpack-merge "^5.8.0"
 
 "@quasar/extras@^1.15.8":
-  version "1.16.11"
-  resolved "https://registry.yarnpkg.com/@quasar/extras/-/extras-1.16.11.tgz#84b1efb9097a6e58c3ebfdd5da83ac658056a35c"
-  integrity sha512-sbTBHOA+Hi7ah0P6qSm+xfRXqwJ94ct3NKA3Lkq3iNPYuHD7VXbSWtP2eA7Cu9Fd0WjVoPbngf6yFGg46U3IfQ==
+  version "1.16.12"
+  resolved "https://registry.yarnpkg.com/@quasar/extras/-/extras-1.16.12.tgz#2dac82eac8bb6b069a677d2817e479261d51f234"
+  integrity sha512-hLlb3Buxo38Xg/2w0BTkz98RBh/VH8apZ2r6Fl8YpPgrVQ0diHyN/BVTvIOk5Kch2y38L2kvwOIddsB2UcCuIg==
 
 "@quasar/quasar-app-extension-testing-unit-vitest@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@quasar/quasar-app-extension-testing-unit-vitest/-/quasar-app-extension-testing-unit-vitest-1.0.0.tgz#7c3a5603dae4dd10a89e81d06591b438b5b134a1"
-  integrity sha512-nXvwPUyZEnCCUZSjYmwXL6Gl8R4jDtqv7cpMcm2hwxryF7SQlK8FwBtOnjWdN/CEfelFG+UAowz3OHuN+ZoB6A==
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@quasar/quasar-app-extension-testing-unit-vitest/-/quasar-app-extension-testing-unit-vitest-1.1.0.tgz#d7c602ecc0db0925e05a8b174b832d4f2766a798"
+  integrity sha512-9HZUjBx/TF4Un2Alcgz4GDVZbZtSth2De7Q2KIfqFNc3IwpYtzg9XQNYDDialQS+KTe7qTKxH31ohjrvY+HCVw==
   dependencies:
-    happy-dom "^13.6.2"
+    happy-dom "^15.0.0"
     lodash-es "^4.17.21"
     vite-jsconfig-paths "^2.0.1"
     vite-tsconfig-paths "^4.3.1"
@@ -3001,10 +3001,10 @@ graphql@^16.6.0:
   resolved "https://registry.yarnpkg.com/graphql/-/graphql-16.8.1.tgz#1930a965bef1170603702acdb68aedd3f3cf6f07"
   integrity sha512-59LZHPdGZVh695Ud9lRzPBVTtlX9ZCV150Er2W43ro37wVof0ctenSaskPPjN7lVTIN8mSZt8PHUNKZuNQUuxw==
 
-happy-dom@^13.6.2:
-  version "13.10.1"
-  resolved "https://registry.yarnpkg.com/happy-dom/-/happy-dom-13.10.1.tgz#bfaf147704055e7c2feb4069adc899a838588307"
-  integrity sha512-9GZLEFvQL5EgfJX2zcBgu1nsPUn98JF/EiJnSfQbdxI6YEQGqpd09lXXxOmYonRBIEFz9JlGCOiPflDzgS1p8w==
+happy-dom@^15.0.0:
+  version "15.7.4"
+  resolved "https://registry.yarnpkg.com/happy-dom/-/happy-dom-15.7.4.tgz#05aade59c1d307336001b7004c76dfc6a829f220"
+  integrity sha512-r1vadDYGMtsHAAsqhDuk4IpPvr6N8MGKy5ntBo7tSdim+pWDxus2PNqOcOt8LuDZ4t3KJHE+gCuzupcx/GKnyQ==
   dependencies:
     entities "^4.5.0"
     webidl-conversions "^7.0.0"
