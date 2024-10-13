@@ -3897,16 +3897,16 @@
         },
         {
             "name": "owen-it/laravel-auditing",
-            "version": "v13.6.5",
+            "version": "v13.6.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/owen-it/laravel-auditing.git",
-                "reference": "27e1b3121a6b34f9635d2dbe84c13ca11ed2bee0"
+                "reference": "28ecd2d5cc05c3619f99af42611877f54371af20"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/owen-it/laravel-auditing/zipball/27e1b3121a6b34f9635d2dbe84c13ca11ed2bee0",
-                "reference": "27e1b3121a6b34f9635d2dbe84c13ca11ed2bee0",
+                "url": "https://api.github.com/repos/owen-it/laravel-auditing/zipball/28ecd2d5cc05c3619f99af42611877f54371af20",
+                "reference": "28ecd2d5cc05c3619f99af42611877f54371af20",
                 "shasum": ""
             },
             "require": {
@@ -3981,7 +3981,7 @@
                 "issues": "https://github.com/owen-it/laravel-auditing/issues",
                 "source": "https://github.com/owen-it/laravel-auditing"
             },
-            "time": "2024-03-14T13:42:22+00:00"
+            "time": "2024-06-26T20:56:28+00:00"
         },
         {
             "name": "paragonie/constant_time_encoding",
