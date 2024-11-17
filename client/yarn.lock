@@ -1044,9 +1044,9 @@
     vue-demi "^0.14.6"
 
 "@vue/apollo-option@^4.0.0-alpha.20":
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/@vue/apollo-option/-/apollo-option-4.0.0.tgz#4fbbb7b1b17961e500ae439a90f7c2c8d82e8928"
-  integrity sha512-rZf4bLNldV9egADp3UhC2O4qmmn6L3vF/RwRJse8lgtpGFrov9qtZxl/rRg0+9UtZeOTFwTovnQo7J7C7FP3Ow==
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/@vue/apollo-option/-/apollo-option-4.2.0.tgz#c81dd22198680953063276a83a4ebcb1baf9bd93"
+  integrity sha512-JYqtSY+dHoOM10o2L+EVY+nDxsmT9lb1Z3Z7VBzBQ3f0np+A1TFldZw9gYNbSS6QYgyGw376+Z/EtOqJ9JoaZw==
   dependencies:
     throttle-debounce "^5.0.0"
 
