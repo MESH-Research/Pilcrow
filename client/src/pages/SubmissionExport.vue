@@ -41,7 +41,6 @@
 import { computed } from "vue"
 import { GET_SUBMISSION } from "src/graphql/queries"
 import { useQuery } from "@vue/apollo-composable"
-const { result } = useQuery(GET_SUBMISSION, { id: props.id })
 const submission = computed(() => {
   return result.value?.submission
 })
@@ -51,5 +50,6 @@ const props = defineProps({
     required: true,
   },
 })
+const { result } = useQuery(GET_SUBMISSION, { id: props.id })
 const blob = computed(() => URL.createObjectURL(new Blob([submission.value.content.data], { type: "text/html"})))
 </script>
