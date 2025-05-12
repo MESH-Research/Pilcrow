@@ -50,7 +50,7 @@ jobs:
           tag: ${{ github.event_name }}
       - run: docker compose down
       - name: Upload Screenshots
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: screenshots
           path: "client/test/cypress/screenshots"
