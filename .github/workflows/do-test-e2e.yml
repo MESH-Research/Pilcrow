@@ -8,7 +8,7 @@ on:
         type: string
 jobs:
   cypress:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     name: "Cypress.io"
     strategy:
       # when one test fails, DO NOT cancel the other
