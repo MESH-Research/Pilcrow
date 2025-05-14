@@ -52,7 +52,6 @@ jobs:
       - name: Upload Screenshots
         uses: actions/upload-artifact@v4
         with:
-          path: "./client/test/cypress/screenshots"
-          pattern: screenshots-*
-          merge-multiple: true
+          path: ./client/test/cypress/screenshots
+          name: screenshots-${{ matrix.containers }}
           retention-days: 14
