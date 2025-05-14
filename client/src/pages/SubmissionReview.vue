@@ -30,14 +30,14 @@
       >
         <submission-toolbar
           :id="id"
-          v-model:commentDrawerOpen="commentDrawerOpen"
-          v-model:highlightVisibility="highlightVisibility"
+          v-model:comment-drawer-open="commentDrawerOpen"
+          v-model:highlight-visibility="highlightVisibility"
           :submission="submission"
         />
-        <submission-comment-drawer v-model:drawerOpen="commentDrawerOpen" />
+        <submission-comment-drawer v-model:drawer-open="commentDrawerOpen" />
         <q-page-container>
           <submission-content
-            v-model:highlightVisibility="highlightVisibility"
+            v-model:highlight-visibility="highlightVisibility"
             @scroll-to-overall-comments="handleScroll"
             @scroll-add-new-overall-comment="handleNewScroll"
           />
