@@ -53,5 +53,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: screenshots
-          path: "client/test/cypress/screenshots"
+          path: "./client/test/cypress/screenshots"
           retention-days: 14
