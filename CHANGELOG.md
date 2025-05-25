@@ -3,6 +3,36 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.31.1](https://github.com/MESH-Research/Pilcrow/compare/v0.31.0...v0.31.1) (2025-05-25)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @quasar/extras to v1.16.12 ([3e67f0e](https://github.com/MESH-Research/Pilcrow/commit/3e67f0e16a2e88a570c45776d98cacd8f99d82ad))
+* **deps:** update dependency @quasar/extras to v1.16.13 ([fb9cffd](https://github.com/MESH-Research/Pilcrow/commit/fb9cffd8c2a3748b8e1578a622b93e3656f8cb4b))
+* **deps:** update dependency @quasar/extras to v1.16.15 ([0c27383](https://github.com/MESH-Research/Pilcrow/commit/0c27383e0552ef343360b3f345c20c50f56d0ad6))
+* **deps:** update dependency @quasar/extras to v1.16.17 ([89d68e9](https://github.com/MESH-Research/Pilcrow/commit/89d68e9db1f1fb5ce6ea2d233dd7fea8e3bcc54b))
+* **deps:** update dependency @quasar/extras to v1.17.0 ([f485350](https://github.com/MESH-Research/Pilcrow/commit/f485350bead77a5acb0a02ba70798bbb5af327f2))
+* **deps:** update dependency @vue/apollo-composable to v4.2.1 ([1794acf](https://github.com/MESH-Research/Pilcrow/commit/1794acf4aad3baff6199202673d5c2fbc93af609))
+* **deps:** update dependency @vue/apollo-composable to v4.2.2 ([#2144](https://github.com/MESH-Research/Pilcrow/issues/2144)) ([5196cb3](https://github.com/MESH-Research/Pilcrow/commit/5196cb33f1355de7f415c59e859a3a343cb2824d))
+* **deps:** update dependency @vue/apollo-option to v4.2.0 ([78e8428](https://github.com/MESH-Research/Pilcrow/commit/78e8428e4e26ca829884e9fdf63084faa75e5843))
+* **deps:** update dependency @vue/apollo-option to v4.2.2 ([9782938](https://github.com/MESH-Research/Pilcrow/commit/9782938ba2fc087d15b4c0a10e991a8a5ebb2546))
+* **deps:** update dependency @vueuse/core to v10.11.1 ([90db7bc](https://github.com/MESH-Research/Pilcrow/commit/90db7bca519096be3d3a7988bd333bc0b87bcf92))
+* **deps:** update dependency bensampo/laravel-enum to v6.11.1 ([69daf77](https://github.com/MESH-Research/Pilcrow/commit/69daf77215f1efbbb0eb0fefabb9c17ecf6916ae))
+* **deps:** update dependency core-js to v3.42.0 ([2ed515f](https://github.com/MESH-Research/Pilcrow/commit/2ed515f6318032295d4229da667b7f0f530f7b0a))
+* **deps:** update dependency graphql to v16.11.0 ([d538d50](https://github.com/MESH-Research/Pilcrow/commit/d538d5016bd9fac550f3d5e16137274c7a36e440))
+* **deps:** update dependency javascript-time-ago to v2.5.11 ([88ab5fe](https://github.com/MESH-Research/Pilcrow/commit/88ab5fe49bfaa20d5f2979e75a8c8f97f502f08b))
+* **deps:** update dependency laravel/framework to v10.48.22 ([35940ba](https://github.com/MESH-Research/Pilcrow/commit/35940ba03a5dc2ba48bf2e462c77fa9a1a0a1a62))
+* **deps:** update dependency laravel/framework to v10.48.23 [security] ([aa6cc28](https://github.com/MESH-Research/Pilcrow/commit/aa6cc28e4e0500ecc3416493623234f7691f9af8))
+* **deps:** update dependency luxon to v3.6.1 ([6039377](https://github.com/MESH-Research/Pilcrow/commit/6039377ba170bb5a6124bddb6b2febf87dabaaa5))
+* **deps:** update dependency owen-it/laravel-auditing to v13.6.8 ([d7f01cf](https://github.com/MESH-Research/Pilcrow/commit/d7f01cfa72d01d715c28f2ccfcb9b279b04dc498))
+* **deps:** update dependency validator to v13.15.0 ([fbae48f](https://github.com/MESH-Research/Pilcrow/commit/fbae48f3bea729be8f1d1e0d7640fd7c4e0d5834))
+* **deps:** update dependency vue to v3.5.14 ([4057ea5](https://github.com/MESH-Research/Pilcrow/commit/4057ea5893aad729bb152b55bcadfeba2c2d5bdb))
+* **deps:** update dependency vue-i18n to v9.14.2 [security] ([feb460e](https://github.com/MESH-Research/Pilcrow/commit/feb460eeb059e4cc0b8b72fc2d7963c6aa486e0a))
+* **deps:** update dependency vue-i18n to v9.14.3 [security] ([#2140](https://github.com/MESH-Research/Pilcrow/issues/2140)) ([dda0199](https://github.com/MESH-Research/Pilcrow/commit/dda0199e4591e75667968b8af0266168d1695653))
+* **deps:** update dependency vue-router to v4.5.1 ([05dd3e1](https://github.com/MESH-Research/Pilcrow/commit/05dd3e1a4b3ed28d4f3d321cedd39fe5c174878c))
+* Use of prop before initialization ([17e7d20](https://github.com/MESH-Research/Pilcrow/commit/17e7d20fa97bd9929e400555d8d6537b1b68d5ea))
+
 ## [0.31.0](https://github.com/MESH-Research/Pilcrow/compare/0.30.0...v0.31.0) (2024-07-29)
 
 
