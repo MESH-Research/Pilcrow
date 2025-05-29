@@ -12,28 +12,28 @@ server {
     add_header          X-Frame-Options SAMEORIGIN;
     add_header          X-XSS-Protection "1; mode=block";
 
-    index index.html;
-
     charset utf-8;
 
     location /graphql {
-        error_page 404 = @backend;
         log_not_found off;
+        try_files /dev/null @backend;
     }
 
     location /sanctum/csrf-cookie {
-        error_page 404 = @backend;
         log_not_found off;
+        try_files /dev/null @backend;
+    }
+
+    location = / {
+      try_files /dev/null @backend;
     }
 
     location / {
-        try_files $uri $uri/ /index.html;
+      try_files $uri =404;
     }
 
     location = /favicon.ico { access_log off; log_not_found off; }
     location = /robots.txt  { access_log off; log_not_found off; }
-
-    error_page 404 /index.html;
 
     location @backend {
         fastcgi_pass ${FPM_HOST};

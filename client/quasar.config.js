@@ -52,10 +52,19 @@ module.exports = configure(function (/* ctx */) {
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#build
     build: {
       target: {
-        browser: [ 'es2019', 'edge88', 'firefox78', 'chrome87', 'safari13.1' ],
+        browser: ['es2019', 'edge88', 'firefox78', 'chrome87', 'safari13.1'],
         node: 'node20'
       },
-
+      extendViteConf(viteConf) {
+        viteConf.experimental = viteConf.experimental || {};
+        viteConf.experimental.renderBuiltUrl = function (filename, { hostId, hostType, type }) {
+          if (hostType === 'js') {
+            return { runtime: `window.__toCdnUrl(${JSON.stringify(filename)})` }
+          } else {
+            return { relative: true }
+          }
+        }
+      },
       vueRouterMode: 'history', // available values: 'hash', 'history'
       env: {
         VERSION: process.env.VERSION ?? undefined,
@@ -86,6 +95,7 @@ module.exports = configure(function (/* ctx */) {
       // vitePlugins: [
       //   [ 'package-name', { ..options.. } ]
       // ]
+      useFilenameHashes: false,
     },
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#devServer
@@ -94,8 +104,13 @@ module.exports = configure(function (/* ctx */) {
       port: 8080,
       https: false,
       hmr: {
-        clientPort: 443
-      }
+        clientPort: 443,
+        path: '/__hmr',
+      },
+      allowedHosts: [
+        'localhost',
+        'pilcrow.lndo.site',
+      ]
 
     },
 

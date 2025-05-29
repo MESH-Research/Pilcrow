@@ -1,23 +1,21 @@
-version: '3'
 services:
-  client:
-    environment:
-      FPM_HOST: phpfpm:9000
-    image: ghcr.io/mesh-research/pilcrow/cache/web:${TAG:-latest}
-    build:
-      context: ./client
-      dockerfile: Dockerfile
-    depends_on:
-      - phpfpm
-      - mysql
-    ports:
-      - ${PORT:-80}:8888
-  phpfpm:
-    env_file:
-      - .env
-    environment:
-      WAIT_HOSTS: ${DB_HOST}:${DB_PORT}
-    image: ghcr.io/mesh-research/pilcrow/cache/fpm:${TAG:-latest}
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
+    client:
+        environment:
+            FPM_HOST: phpfpm:9000
+        image: ghcr.io/mesh-research/pilcrow/cache/web:${TAG:-latest}
+        build:
+            context: ./client
+            dockerfile: Dockerfile
+        depends_on:
+            - phpfpm
+        ports:
+            - ${PORT:-80}:8888
+    phpfpm:
+        env_file:
+            - .env
+        environment:
+            WAIT_HOSTS: ${DB_HOST}:${DB_PORT}
+        image: ghcr.io/mesh-research/pilcrow/cache/fpm:${TAG:-latest}
+        build:
+            context: ./backend
+            dockerfile: Dockerfile

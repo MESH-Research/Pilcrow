@@ -89,6 +89,10 @@ export default defineConfig({
                                     text: "Redis",
                                     link: "/install/recipes/redis",
                                 },
+                                {
+                                    text: "Content Delivery Network",
+                                    link: '/install/recipes/cdn'
+                                }
                             ],
                         },
                     ],
