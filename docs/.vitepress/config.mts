@@ -91,7 +91,7 @@ export default defineConfig({
                                 },
                                 {
                                     text: "Content Delivery Network",
-                                    link: '/install/recipes/cdn'
+                                    link: '/install/recipes/cdn/'
                                 }
                             ],
                         },

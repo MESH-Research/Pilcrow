@@ -7,7 +7,7 @@ Serving front-end assets (JavaScript bundles, CSS files, and default images) fro
 Pilcrow will rewrite asset requests to point to the CDN server.
 
 ::: warning NOTE
-Configuring a CDN is not for the faint of heart.  CORS promblems, crossorigin issues and cache busting are all things that have to be addressed for a production deployment.  For most self-hosted deployments, configuring a CDN is almost certainly not worth the effort.
+Configuring a CDN is not for the faint of heart.  CORS problems, crossorigin issues and cache busting are all things that have to be addressed for a production deployment.  For most self-hosted deployments, configuring a CDN is almost certainly not worth the effort.
 :::
 
 ## Configure CDN
