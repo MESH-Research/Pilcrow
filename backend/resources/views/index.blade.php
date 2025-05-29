@@ -17,7 +17,6 @@
   <script type="text/javascript">
     @if (config('app.cdn_base'))
       window.__toCdnUrl =  function (filename) {
-           console.log(filename);
             return "{{ config('app.cdn_base') }}/" + filename;
       }
     @else
