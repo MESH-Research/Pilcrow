@@ -57,7 +57,7 @@ module.exports = configure(function (/* ctx */) {
       },
       extendViteConf(viteConf) {
         viteConf.experimental = viteConf.experimental || {};
-        viteConf.experimental.renderBuiltUrl = function (filename, { hostId, hostType, type }) {
+        viteConf.experimental.renderBuiltUrl = function (filename, { hostType }) {
           if (hostType === 'js') {
             return { runtime: `window.__toCdnUrl(${JSON.stringify(filename)})` }
           } else {
