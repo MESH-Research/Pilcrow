@@ -1,5 +1,5 @@
 apiVersion: v2
-name: pilcrow-helm
+name: pilcrow
 description: A Helm chart for Kubernetes
 
 # A chart can be either an 'application' or a 'library' chart.
@@ -17,8 +17,22 @@ type: application
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
 version: 0.1.0
 
+maintainers:
+    - name: Brian Adams
+      email: adamsb@msu.edu
+      url: https://meshresearch.net/
+
 # This is the version number of the application being deployed. This version number should be
 # incremented each time you make changes to the application. Versions are not expected to
 # follow Semantic Versioning. They should reflect the version the application is using.
 # It is recommended to use it with quotes.
-appVersion: "1.16.0"
+appVersion: "0.31.0"
+dependencies:
+    - name: mysql
+      version: 12.3.5
+      repository: oci://registry-1.docker.io/bitnamicharts
+      condition: mysql.enabled
+    - name: redis
+      version: 21.1.10
+      repository: oci://registry-1.docker.io/bitnamicharts
+      condition: redis.enabled

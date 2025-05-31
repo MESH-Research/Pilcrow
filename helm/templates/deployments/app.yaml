@@ -1,0 +1,113 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "pilcrow.fullname" . }}
+  labels:
+    {{- include "pilcrow.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "pilcrow.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+        cm-checksum/app-nginx: {{ include "pilcrow.shaSumTemplate" (list $ . "/configmaps/app-nginx.yaml") | quote }}
+        cm-checksum/app: {{ include "pilcrow.shaSumTemplate" (list $ . "/configmaps/app.yaml") | quote }}
+      {{- with .Values.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "pilcrow.labels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "pilcrow.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: web
+          env:
+          - name: FPM_HOST
+            value: $upstream
+          securityContext:
+            {{- toYaml .Values.web.securityContext | nindent 12 }}
+          image: "{{ .Values.image.webRepository }}:{{- .Values.image.tag | default .Chart.AppVersion -}}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
+          livenessProbe:
+            {{- toYaml .Values.web.livenessProbe | nindent 12 }}
+          readinessProbe:
+            {{- toYaml .Values.web.readinessProbe | nindent 12 }}
+          resources:
+            {{- toYaml .Values.web.resources | nindent 12 }}
+          volumeMounts:
+            - name: nginx-config
+              mountPath: /etc/nginx/nginx.conf
+              subPath: nginx.conf
+          {{- with .Values.web.extraVolumeMounts }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+        - name: fpm
+          securityContext:
+            {{- toYaml .Values.fpm.securityContext | nindent 12 }}
+          image: "{{ .Values.image.fpmRepository }}:{{- .Values.image.tag | default .Chart.AppVersion -}}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          envFrom:
+          - configMapRef:
+              name: {{ include "pilcrow.fullname" . }}
+          env:
+          - name: APP_KEY
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "pilcrow.appKeySecretName" . | quote }}
+                key: {{ include "pilcrow.appKeySecretKey" . | quote }}
+          - name: DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "pilcrow.mysql.secretName" . | quote }}
+                key: {{ include "pilcrow.mysql.passwordKey" . | quote }}
+          - name: REDIS_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "pilcrow.redis.secretName" . | quote }}
+                key: {{ include "pilcrow.redis.passwordKey" . | quote }}
+          livenessProbe:
+            {{- toYaml .Values.fpm.livenessProbe | nindent 12 }}
+          readinessProbe:
+            {{- toYaml .Values.fpm.readinessProbe | nindent 12 }}
+          resources:
+            {{- toYaml .Values.fpm.resources | nindent 12 }}
+          {{- with .Values.fpm.extraVolumeMounts }}
+          volumeMounts:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+      volumes:
+        - name: nginx-config
+          configMap:
+            name: {{ include "pilcrow.fullname" . }}-nginx
+      {{- with .Values.extraVolumes }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

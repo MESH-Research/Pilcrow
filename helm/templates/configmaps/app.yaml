@@ -1,0 +1,15 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: {{ include "pilcrow.fullname" . }}
+  labels:
+    {{- include "pilcrow.labels" . | nindent 4 }}
+data:
+    CDN_BASE: {{ include "pilcrow.cdnBaseUrl" . | quote }}
+    DB_HOST: {{ include "pilcrow.mysql.host" . | quote }}
+    DB_PORT: {{ include "pilcrow.mysql.port" . | quote }}
+    DB_USERNAME: {{ include "pilcrow.mysql.user" . | quote }}
+    DB_DATABASE: {{ include "pilcrow.mysql.database" . | quote }}
+    REDIS_HOST: {{ include "pilcrow.redis.host" . | quote }}
+    REDIS_PORT: {{ include "pilcrow.redis.port" . | quote }}
+    LOG_CHANNEL: {{ .Values.pilcrow.logChannel | quote }}
