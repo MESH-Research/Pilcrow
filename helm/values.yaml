@@ -98,7 +98,13 @@ web:
     securityContext: {}
     resources: {}
     livenessProbe:
-
+        httpGet:
+            path: /healthz
+            port: http
+    readinessProbe:
+        httpGet:
+            path: /
+            port: http
         # httpGet:
         #     path: /healthz
         #     port: http
@@ -106,7 +112,6 @@ web:
         # timeoutSeconds: 1
         # periodSeconds: 15
         # failureThreshold: 3
-    readinessProbe:
 
         # httpGet:
         #     path: /
@@ -116,12 +121,14 @@ fpm:
     securityContext: {}
     resources: {}
     livenessProbe:
-
-        # httpGet:
-        #     path: /
-        #     port: http
+        exec:
+            command:
+                - php-fpm-healthcheck
+                - --listen-queue=10
     readinessProbe:
-
+        exec:
+            command:
+                - php-fpm-healthcheck
         # httpGet:
         #     path: /
         #     port: http

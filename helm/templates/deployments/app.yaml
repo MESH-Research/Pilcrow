@@ -14,7 +14,7 @@ spec:
   template:
     metadata:
       annotations:
-        cm-checksum/app-nginx: {{ include "pilcrow.shaSumTemplate" (list $ . "/configmaps/app-nginx.yaml") | quote }}
+        cm-checksum/app-nginx: {{ include "pilcrow.shaSumTemplate" (list $ . "/configmaps/app-files.yaml") | quote }}
         cm-checksum/app: {{ include "pilcrow.shaSumTemplate" (list $ . "/configmaps/app.yaml") | quote }}
       {{- with .Values.podAnnotations }}
         {{- toYaml . | nindent 8 }}
@@ -52,7 +52,7 @@ spec:
           resources:
             {{- toYaml .Values.web.resources | nindent 12 }}
           volumeMounts:
-            - name: nginx-config
+            - name: extra-files
               mountPath: /etc/nginx/nginx.conf
               subPath: nginx.conf
           {{- with .Values.web.extraVolumeMounts }}
@@ -93,9 +93,9 @@ spec:
             {{- toYaml . | nindent 12 }}
           {{- end }}
       volumes:
-        - name: nginx-config
+        - name: extra-files
           configMap:
-            name: {{ include "pilcrow.fullname" . }}-nginx
+            name: {{ include "pilcrow.fullname" . }}-files
       {{- with .Values.extraVolumes }}
         {{- toYaml . | nindent 8 }}
       {{- end }}

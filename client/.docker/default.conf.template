@@ -30,6 +30,10 @@ server {
         try_files $uri $uri/ /index.html;
     }
 
+    location /healthz {
+      return 200 'no-content';
+    }
+
     location = /favicon.ico { access_log off; log_not_found off; }
     location = /robots.txt  { access_log off; log_not_found off; }
 
