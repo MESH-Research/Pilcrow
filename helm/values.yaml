@@ -3,142 +3,145 @@
 # Declare variables to be passed into your templates.
 
 mysql:
-    # -- Use the MySQL subchart deployment. Set to false to use an external MySQL connection.
-    # @section -- Database Configuration
-    enabled: true
-    auth:
-        database: "pilcrow"
-    primary:
-        resourcePreset: "nano"
+  # -- Use the MySQL subchart deployment. Set to false to use an external MySQL connection.
+  # @section -- Database Configuration
+  enabled: true
+  auth:
+    database: "pilcrow"
+  primary:
+    resourcePreset: "nano"
 
 pilcrow:
-    # -- The log channel to use for the application. Logs are output to stderr by default.
-    # @section -- Application Configuration
-    logChannel: stderr
+  # -- The log channel to use for the application. Logs are output to stderr by default.
+  # @section -- Application Configuration
+  logChannel: stderr
 
-    appUrl: http://localhost:8888
-    # -- CDN Support (Available from v0.32 onwards)
-    # @section -- Application Configuration
-    cdn:
-        # -- Enable CDN support. If enabled, the baseUrl must be set.
-        # @section -- Application Configuration
-        enabled: false
-        # -- The base URL for the CDN. This is used to serve static assets.
-        # @section -- Application Configuration
-        baseUrl:
+  sessionDriver: redis
+  cacheDriver: redis
 
-    appKey:
-        # -- The key used to sign cookies and other data.  Will be generated if not set.
-        # @section -- Application Configuration
-        value:
-        # -- The secret which has the app key.
-        # @section -- Application Configuration
-        secret:
-            # name:
-            # key: "app-key"
+  appUrl: http://localhost:8888
+  # -- CDN Support (Available from v0.32 onwards)
+  # @section -- Application Configuration
+  cdn:
+    # -- Enable CDN support. If enabled, the baseUrl must be set.
+    # @section -- Application Configuration
+    enabled: false
+    # -- The base URL for the CDN. This is used to serve static assets.
+    # @section -- Application Configuration
+    baseUrl:
+
+  appKey:
+    # -- The key used to sign cookies and other data.  Will be generated if not set.
+    # @section -- Application Configuration
+    value:
+    # -- The secret which has the app key.
+    # @section -- Application Configuration
+    secret:
+      # name:
+      # key: "app-key"
 
 externalMysql:
-    # -- External MYSQL hostname or IP address
-    # @section -- Database Configuration
-    host:
-    # -- External MYSQL port
-    # @section -- Database Configuration
-    port: 3306
+  # -- External MYSQL hostname or IP address
+  # @section -- Database Configuration
+  host:
+  # -- External MYSQL port
+  # @section -- Database Configuration
+  port: 3306
 
-    # -- Database name
-    # @section -- Database Configuration
-    database: "pilcrow"
+  # -- Database name
+  # @section -- Database Configuration
+  database: "pilcrow"
 
-    # -- Specify the MySQL user.
-    # @section -- Database Configuration
-    user:
-    # -- Specify the MySQL password.
-    # @section -- Database Configuration
-    password:
-    # -- Secret containing the MySQL credentials (ignores assword)
-    # @section -- Database Configuration
-    secret:
-        # name:
-        # key: "mysql-root-password"
+  # -- Specify the MySQL user.
+  # @section -- Database Configuration
+  user:
+  # -- Specify the MySQL password.
+  # @section -- Database Configuration
+  password:
+  # -- Secret containing the MySQL credentials (ignores assword)
+  # @section -- Database Configuration
+  secret:
+    # name:
+    # key: "mysql-root-password"
 
 redis:
-    # -- Use the Redis subchart deployment. Set to false to use an external Redis connection.
-    # @section -- Advanced Configuration
-    enabled: true
-    # @ignore
-    architecture: "standalone"
+  # -- Use the Redis subchart deployment. Set to false to use an external Redis connection.
+  # @section -- Advanced Configuration
+  enabled: true
+  # @ignore
+  architecture: "standalone"
 
 externalRedis:
-    # -- External Redis hostname or IP address
-    # @section -- Advanced Configuration
-    host:
-    # -- External Redis port
-    # @section -- Advanced Configuration
-    port: 6379
-    # -- Specify the redis passowrd.
-    # @section -- Advanced Configuration
-    password:
-    # -- Specify the details of the secret containing the Redis credentials. (ignores password)
-    # @section -- Advanced Configuration
-    secret:
-        # name:
-        # key: "password"
+  # -- External Redis hostname or IP address
+  # @section -- Advanced Configuration
+  host:
+  # -- External Redis port
+  # @section -- Advanced Configuration
+  port: 6379
+  # -- Specify the redis passowrd.
+  # @section -- Advanced Configuration
+  password:
+  # -- Specify the details of the secret containing the Redis credentials. (ignores password)
+  # @section -- Advanced Configuration
+  secret:
+    # name:
+    # key: "password"
 
 replicaCount: 1
 
 image:
-    webRepository: ghcr.io/mesh-research/pilcrow/web
-    fpmRepository: ghcr.io/mesh-research/pilcrow/fpm
-    pullPolicy: IfNotPresent
-    # Overrides the image tag whose default is the chart appVersion.
-    tag: ""
+  webRepository: ghcr.io/mesh-research/pilcrow/web
+  fpmRepository: ghcr.io/mesh-research/pilcrow/fpm
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
 
 web:
-    extraVolumeMounts: []
-    securityContext: {}
-    resources: {}
-    livenessProbe:
-        httpGet:
-            path: /healthz
-            port: http
-    readinessProbe:
-        httpGet:
-            path: /
-            port: http
-        # httpGet:
-        #     path: /healthz
-        #     port: http
-        # initialDelaySeconds: 15
-        # timeoutSeconds: 1
-        # periodSeconds: 15
-        # failureThreshold: 3
+  extraVolumeMounts: []
+  securityContext: {}
+  resources: {}
+  livenessProbe:
+    httpGet:
+      path: /healthz
+      port: http
+  readinessProbe:
+    httpGet:
+      path: /
+      port: http
+    # httpGet:
+    #     path: /healthz
+    #     port: http
+    # initialDelaySeconds: 15
+    # timeoutSeconds: 1
+    # periodSeconds: 15
+    # failureThreshold: 3
 
-        # httpGet:
-        #     path: /
-        #     port: http
+    # httpGet:
+    #     path: /
+    #     port: http
 fpm:
-    extraVolumeMounts: []
-    securityContext: {}
-    resources: {}
-    livenessProbe:
-        exec:
-            command:
-                - php-fpm-healthcheck
-                - --listen-queue=10
-    readinessProbe:
-        exec:
-            command:
-                - php-fpm-healthcheck
-        # httpGet:
-        #     path: /
-        #     port: http
+  extraVolumeMounts: []
+  securityContext: {}
+  resources: {}
+  livenessProbe:
+    exec:
+      command:
+        - php-fpm-healthcheck
+        - --listen-queue=10
+  readinessProbe:
+    exec:
+      command:
+        - php-fpm-healthcheck
+    # httpGet:
+    #     path: /
+    #     port: http
 
 autoscaling:
-    enabled: false
-    minReplicas: 1
-    maxReplicas: 100
-    targetCPUUtilizationPercentage: 80
-    # targetMemoryUtilizationPercentage: 80
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
 
 extraVolumes: []
 
@@ -147,36 +150,36 @@ tolerations: []
 affinity: {}
 
 service:
-    type: ClusterIP
-    port: 8888
+  type: ClusterIP
+  port: 8888
 
 ingress:
-    enabled: true
-    className:
-    hosts:
-        - host:
-          paths:
-              - path: /
-                pathType: ImplementationSpecific
-    tls: []
-    #  - secretName: chart-example-tls
-    #    hosts:
-    #      - chart-example.local
+  enabled: true
+  className:
+  hosts:
+    - host:
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
 
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
 serviceAccount:
-    # Specifies whether a service account should be created
-    create: true
-    # Automatically mount a ServiceAccount's API credentials?
-    automount: true
-    # Annotations to add to the service account
-    annotations: {}
-    # The name of the service account to use.
-    # If not set and create is true, a name is generated using the fullname template
-    name: ""
+  # Specifies whether a service account should be created
+  create: true
+  # Automatically mount a ServiceAccount's API credentials?
+  automount: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
 
 podAnnotations: {}
 podLabels: {} # Additional volumes on the output Deployment definition.
