@@ -46,10 +46,20 @@ spec:
             - name: http
               containerPort: {{ .Values.service.port }}
               protocol: TCP
+          {{- if .Values.web.livenessProbe.enabled }}
           livenessProbe:
-            {{- toYaml .Values.web.livenessProbe | nindent 12 }}
+            {{- include "common.tplvalues.render" (dict "value" (omit .Values.web.livenessProbe "enabled") "context" $) | nindent 12 }}
+            httpGet:
+              path: /healthz
+              port: http
+          {{- end }}
+          {{- if .Values.web.livenessProbe.enabled }}
           readinessProbe:
-            {{- toYaml .Values.web.readinessProbe | nindent 12 }}
+            {{- include "common.tplvalues.render" (dict "value" (omit .Values.web.readinessProbe "enabled") "context" $) | nindent 12 }}
+            httpGet:
+              path: /
+              port: http
+          {{- end }}
           resources:
             {{- toYaml .Values.web.resources | nindent 12 }}
           volumeMounts:
@@ -65,10 +75,21 @@ spec:
           image: "{{ .Values.image.fpmRepository }}:{{- .Values.image.tag | default .Chart.AppVersion -}}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           {{- include "pilcrow.fpmEnv" . | nindent 10 }}
+          {{- if .Values.fpm.livenessProbe.enabled }}
           livenessProbe:
-            {{- toYaml .Values.fpm.livenessProbe | nindent 12 }}
+            {{- include "common.tplvalues.render" (dict "value" (omit .Values.fpm.livenessProbe "enabled") "context" $) | nindent 12 }}
+            exec:
+              command:
+                - php-fpm-healthcheck
+                - --listen-queue=10
+          {{- end }}
+          {{- if .Values.fpm.livenessProbe.enabled }}
           readinessProbe:
-            {{- toYaml .Values.fpm.readinessProbe | nindent 12 }}
+            {{- include "common.tplvalues.render" (dict "value" (omit .Values.fpm.readinessProbe "enabled") "context" $) | nindent 12 }}
+            exec:
+              command:
+                - php-fpm-healthcheck
+          {{- end }}
           resources:
             {{- toYaml .Values.fpm.resources | nindent 12 }}
           volumeMounts:

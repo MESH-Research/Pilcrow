@@ -64,13 +64,32 @@ Create the name of the service account to use
 
 
 {{/*
+Renders a value that contains template perhaps with scope if the scope is present.
+Usage:
+{{ include "common.tplvalues.render" ( dict "value" .Values.path.to.the.Value "context" $ ) }}
+{{ include "common.tplvalues.render" ( dict "value" .Values.path.to.the.Value "context" $ "scope" $app ) }}
+*/}}
+{{- define "common.tplvalues.render" -}}
+{{- $value := typeIs "string" .value | ternary .value (.value | toYaml) }}
+{{- if contains "{{" (toJson .value) }}
+  {{- if .scope }}
+      {{- tpl (cat "{{- with $.RelativeScope -}}" $value "{{- end }}") (merge (dict "RelativeScope" .scope) .context) }}
+  {{- else }}
+    {{- tpl $value .context }}
+  {{- end }}
+{{- else }}
+    {{- $value }}
+{{- end }}
+{{- end -}}
+
+{{/*
 Return the hostname of the Mysql services
 */}}
 {{- define "pilcrow.mysql.host" -}}
   {{ if .Values.mysql.enabled }}
     {{- printf "%s" (include "mysql.primary.fullname" .Subcharts.mysql) }}
   {{- else -}}
-    {{- printf "%s" (tpl .Values.externalMysql.host $) -}}
+    {{- include "common.tplvalues.render" (dict "value" .Values.pilcrow.mysql.host "context" $) -}}
   {{- end -}}
 {{- end -}}
 
@@ -81,7 +100,7 @@ Return the port of the Mysql services
   {{- if .Values.mysql.enabled -}}
     3306
   {{- else -}}
-    {{- printf "%s" (tpl (.Values.externalMysql.port | toString) $) -}}
+    {{- include "common.tplvalues.render" (dict "value" .Values.pilcrow.mysql.port "context" $) -}}
   {{- end -}}
 {{- end -}}
 
@@ -92,8 +111,8 @@ Return the name of the MySQL secret to use
 {{- define "pilcrow.mysql.secretName" -}}
     {{- if .Values.mysql.enabled -}}
         {{- printf "%s" (include "mysql.secretName" .Subcharts.mysql) -}}
-    {{- else if .Values.externalMysql.secret -}}
-        {{- printf "%s" (tpl .Values.externalMysql.secret.name $) -}}
+    {{- else if .Values.pilcrow.mysql.secret.name -}}
+        {{- include "common.tplvalues.render" (dict "value" .Values.pilcrow.mysql.secret.name "context" $) -}}
     {{- else -}}
         {{- printf "%s-mysql" (include "pilcrow.fullname" .) -}}
     {{- end -}}
@@ -105,8 +124,8 @@ Return the key for the MySQL password in the secret
 {{- define "pilcrow.mysql.passwordKey" -}}
     {{- if .Values.mysql.enabled -}}
         mysql-root-password
-    {{- else if .Values.externalMysql.secret -}}
-        {{- printf "%s" (tpl .Values.externalMysql.secret.key $) -}}
+    {{- else if .Values.pilcrow.mysql.secret.key -}}
+      {{- include "common.tplvalues.render" (dict "value" .Values.pilcrow.mysql.secret.key "context" $) -}}
     {{- else -}}
         MYSQL_PASSWORD
     {{- end -}}
@@ -117,9 +136,9 @@ Return the name of the MySQL database to use
 */}}
 {{- define "pilcrow.mysql.database" -}}
     {{- if .Values.mysql.enabled -}}
-        {{- .Values.mysql.auth.database -}}
+      {{- .Values.mysql.auth.database -}}
     {{- else -}}
-        {{- printf "%s" (tpl .Values.externalMysql.database $) -}}
+      {{- include "common.tplvalues.render" (dict "value" .Values.pilcrow.mysql.database "context" $) -}}
     {{- end -}}
 {{- end -}}
 
@@ -130,7 +149,7 @@ Return the name of the mysql user to use
     {{- if .Values.mysql.enabled -}}
         root
     {{- else -}}
-        {{- printf "%s" (tpl .Values.externalMysql.user $) -}}
+        {{- include "common.tplvalues.render" (dict "value" .Values.pilcrow.mysql.user "context" $) -}}
     {{- end -}}
 {{- end -}}
 
@@ -141,7 +160,7 @@ Return the hostname of the Redis service
   {{- if .Values.redis.enabled -}}
     {{- printf "%s-master" (include "common.names.fullname" .Subcharts.redis) -}}
   {{- else -}}
-    {{- printf "%s" (tpl .Values.externalRedis.host $) -}}
+    {{- include "common.tplvalues.render" (dict "value" .Value.pilcrow.redis.host "context" $) -}}
   {{- end -}}
 {{- end -}}
 
@@ -152,7 +171,7 @@ Return the port of the Redis service
   {{- if .Values.redis.enabled -}}
     6379
   {{- else -}}
-    {{- printf "%s" (tpl (.Values.externalRedis.port | toString) $) -}}
+    {{- include "common.tplvalues.render" (dict "value" (.Values.pilcrow.redis.port | toString) "context" $ ) -}}
   {{- end -}}
 {{- end -}}
 
@@ -162,8 +181,8 @@ Return the name of the Redis secret to use
 {{- define "pilcrow.redis.secretName" -}}
     {{- if .Values.redis.enabled -}}
         {{- printf "%s" (include "redis.secretName" .Subcharts.redis) -}}
-    {{- else if .Values.externalRedis.secret -}}
-        {{- printf "%s" (tpl .Values.externalRedis.secret.name $) -}}
+    {{- else if .Values.pilcrow.redis.secret.name -}}
+        {{- include "common.tplvalues.render" (dict "value" .Values.pilcrow.redis.secret.name "context" $) -}}
     {{- else -}}
         {{- printf "%s-redis" (include "pilcrow.fullname" .) -}}
     {{- end -}}
@@ -175,8 +194,8 @@ Return the key for the Redis password in the secret
 {{- define "pilcrow.redis.passwordKey" -}}
 {{- if .Values.redis.enabled -}}
     {{- printf "%s" (include "redis.secretPasswordKey" .Subcharts.redis) -}}
-{{- else if .Values.externalRedis.secret -}}
-    {{- printf "%s" (tpl .Values.externalRedis.secret.key $) -}}
+{{- else if .Values.pilcrow.redis.secret.key -}}
+    {{- include "common.tplvalues.render" (dict "value" .Values.pilrow.redis.secret.key "context" $) -}}
 {{- else -}}
     redis-password
 {{- end -}}
@@ -187,7 +206,7 @@ Return the key for the Redis password in the secret
 Return true if a MySQL secret should be created for external MySQL
 */}}
 {{- define "pilcrow.mysql.createSecret" -}}
-{{- if and (not .Values.mysql.enabled) (not .Values.externalMysql.secret) }}
+{{- if and (not .Values.mysql.enabled) (not .Values.pilcrow.mysql.secret) }}
   {{- true -}}
 {{- end -}}
 {{- end -}}
@@ -196,7 +215,7 @@ Return true if a MySQL secret should be created for external MySQL
 Return true if a Redis secret should be created for external Redis
 */}}
 {{- define "pilcrow.redis.createSecret" -}}
-{{- if and (not .Values.redis.enabled) (not .Values.externalRedis.secret) }}
+{{- if and (not .Values.redis.enabled) (not .Values.pilcrow.redis.secret) }}
   {{- true -}}
 {{- end -}}
 {{- end -}}
@@ -218,7 +237,7 @@ Return or generate the appKey
 {{- if and (not .Values.pilcrow.appKey.secret) (not .Values.pilcrow.appKey.value) -}}
     {{ randAlphaNum 32 }}
 {{- else if .Values.pilcrow.appKey.value -}}
-  {{- printf "%s" (tpl .Values.pilcrow.appKey.value $) -}}
+  {{- include "common.tplvaluesrender" (dict "value" .Values.pilcrow.appKey.value "context" $) -}}
 {{- end -}}
 {{- end -}}
 
@@ -228,7 +247,7 @@ Return the name of the appKey secret
 */}}
 {{- define "pilcrow.appKeySecretName" -}}
 {{- if .Values.pilcrow.appKey.secret -}}
-  {{- printf "%s" (tpl .Values.pilcrow.appKey.secret.name $) -}}
+  {{- include "common.tplvaluesrender" (dict "value" .Values.pilcrow.appKey.secret.name "context" $) -}}
 {{- else -}}
   {{- printf "%s-appkey" (include "pilcrow.fullname" .) -}}
 {{- end -}}
@@ -240,7 +259,7 @@ Return the key fo the appKey in the secret
 */}}
 {{- define "pilcrow.appKeySecretKey" -}}
 {{- if .Values.pilcrow.appKey.secret -}}
-  {{- printf "%s" (tpl .Values.pilcrow.appKey.secret.key $) -}}
+  {{- include "common.tplvaluesrender" (dict "value" .Values.pilcrow.appKey.secret.key "context" $) -}}
 {{- else -}}
   {{- "appKey" -}}
 {{- end -}}
@@ -251,7 +270,7 @@ Return the cdn base url or null if the cdn is not enabled
 */}}
 {{- define "pilcrow.cdnBaseUrl" -}}
 {{- if .Values.pilcrow.cdn.enabled -}}
-  {{- printf "%s" (tpl .Values.pilcrow.cdn.baseUrl $) -}}
+  {{- include "common.tplvaluesrender" (dict "value" .Values.pilcrow.cdn.baseUrl "context" $) -}}
 {{- end -}}
 {{- end -}}
 
