@@ -1,4 +1,19 @@
-1. Get the application URL by running these commands:
+Pilcrow Helm Chart Deployment
+
+Migrations have been applied and you should be good to go!
+
+Support/Help Options:
+ - Documentation: https://latest.docs.pilcrow.dev/
+ - Github: https://github.com/mesh-research/pilcrow
+
+1. Deployment Details
+  - Release Name: {{ .Release.Name }}
+  - Namespace: {{ .Release.Namespace }}
+  - Chart Name: {{ .Chart.Name }}
+  - Chart Version: {{ .Chart.Version }}
+  = App Version: {{ .Chart.AppVersion }}
+
+2. Get the application URL by running these commands:
 {{- if .Values.ingress.enabled }}
 {{- range $host := .Values.ingress.hosts }}
   {{- range .paths }}
