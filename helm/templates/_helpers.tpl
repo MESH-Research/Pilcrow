@@ -266,3 +266,29 @@ Return the shasums of each of the app configmaps and secrets
 {{- include (print $.Template.BasePath $template) . | sha256sum -}}
 {{- end -}}
 {{- end -}}
+
+
+{{/*
+Return the configuration of the fpm container
+*/}}
+{{- define "pilcrow.fpmEnv" -}}
+envFrom:
+- configMapRef:
+    name: {{ include "pilcrow.fullname" . }}
+env:
+  - name: APP_KEY
+    valueFrom:
+      secretKeyRef:
+        name: {{ include "pilcrow.appKeySecretName" . | quote }}
+        key: {{ include "pilcrow.appKeySecretKey" . | quote }}
+  - name: DB_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: {{ include "pilcrow.mysql.secretName" . | quote }}
+        key: {{ include "pilcrow.mysql.passwordKey" . | quote }}
+  - name: REDIS_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: {{ include "pilcrow.redis.secretName" . | quote }}
+        key: {{ include "pilcrow.redis.passwordKey" . | quote }}
+{{- end -}}

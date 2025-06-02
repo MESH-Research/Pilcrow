@@ -1,25 +1,20 @@
 kind: ConfigMap
 apiVersion: v1
 metadata:
-  name: { { include "pilcrow.fullname" . } }
-  labels: { { - include "pilcrow.labels" . | nindent 4 } }
+  name: {{ include "pilcrow.fullname" . }}
+  labels: {{- include "pilcrow.labels" . | nindent 4 }}
 data:
-  CDN_BASE: { { include "pilcrow.cdnBaseUrl" . | quote } }
-  DB_HOST: { { include "pilcrow.mysql.host" . | quote } }
-  DB_PORT: { { include "pilcrow.mysql.port" . | quote } }
-  DB_USERNAME: { { include "pilcrow.mysql.user" . | quote } }
-  DB_DATABASE: { { include "pilcrow.mysql.database" . | quote } }
-  REDIS_HOST: { { include "pilcrow.redis.host" . | quote } }
-  REDIS_PORT: { { include "pilcrow.redis.port" . | quote } }
+  CDN_BASE: {{ include "pilcrow.cdnBaseUrl" . | quote }}
+  DB_HOST: {{ include "pilcrow.mysql.host" . | quote }}
+  DB_PORT: {{ include "pilcrow.mysql.port" . | quote }}
+  DB_USERNAME: {{ include "pilcrow.mysql.user" . | quote }}
+  DB_DATABASE: {{ include "pilcrow.mysql.database" . | quote }}
+  REDIS_HOST: {{ include "pilcrow.redis.host" . | quote }}
+  REDIS_PORT: {{ include "pilcrow.redis.port" . | quote }}
   SESSION_DRIVER:
-    { { .Values.pilcrow.sessionDriver | default "redis" | quote } }
+    {{ .Values.pilcrow.sessionDriver | default "redis" | quote }}
   SESSION_CONNECTION:
-    { { .Values.pilcrow.sessionConnection | default "session" | quote } }
-  CACHE_DRIVER: { { .Values.pilcrow.cacheDriver | default "redis" | quote } }
-  LOG_CHANNEL: { { .Values.pilcrow.logChannel | default "stderr" | quote } }
-  APP_URL:
-    {
-      {
-        required "appUrl is required: Provide a fully-qualified url" .Values.pilcrow.appUrl | quote,
-      },
-    }
+    {{ .Values.pilcrow.sessionConnection | default "session" | quote }}
+  CACHE_DRIVER: {{ .Values.pilcrow.cacheDriver | default "redis" | quote }}
+  LOG_CHANNEL: {{ .Values.pilcrow.logChannel | default "stderr" | quote }}
+  APP_URL: {{ required "appUrl is required: Provide a fully-qualified url" .Values.pilcrow.appUrl | quote }}

@@ -32,6 +32,7 @@ spec:
       serviceAccountName: {{ include "pilcrow.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+
       containers:
         - name: web
           env:
@@ -63,39 +64,42 @@ spec:
             {{- toYaml .Values.fpm.securityContext | nindent 12 }}
           image: "{{ .Values.image.fpmRepository }}:{{- .Values.image.tag | default .Chart.AppVersion -}}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          envFrom:
-          - configMapRef:
-              name: {{ include "pilcrow.fullname" . }}
-          env:
-          - name: APP_KEY
-            valueFrom:
-              secretKeyRef:
-                name: {{ include "pilcrow.appKeySecretName" . | quote }}
-                key: {{ include "pilcrow.appKeySecretKey" . | quote }}
-          - name: DB_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: {{ include "pilcrow.mysql.secretName" . | quote }}
-                key: {{ include "pilcrow.mysql.passwordKey" . | quote }}
-          - name: REDIS_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: {{ include "pilcrow.redis.secretName" . | quote }}
-                key: {{ include "pilcrow.redis.passwordKey" . | quote }}
+          {{- include "pilcrow.fpmEnv" . | nindent 10 }}
           livenessProbe:
             {{- toYaml .Values.fpm.livenessProbe | nindent 12 }}
           readinessProbe:
             {{- toYaml .Values.fpm.readinessProbe | nindent 12 }}
           resources:
             {{- toYaml .Values.fpm.resources | nindent 12 }}
-          {{- with .Values.fpm.extraVolumeMounts }}
           volumeMounts:
+            - name: framework-cache
+              mountPath: /var/www/html/storage/framework
+          {{- with .Values.fpm.extraVolumeMounts }}
             {{- toYaml . | nindent 12 }}
           {{- end }}
+      initContainers:
+        - name: prime
+          image: "{{ .Values.image.fpmRepository }}:{{- .Values.image.tag | default .Chart.AppVersion -}}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- include "pilcrow.fpmEnv" . | nindent 10 }}
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              mkdir -p /var/www/html/storage/framework/views &&
+              ./artisan config:cache &&
+              ./artisan settings:discover &&
+              ./artisan view:cache
+          volumeMounts:
+            - name: framework-cache
+              mountPath: /var/www/html/storage/framework
       volumes:
         - name: extra-files
           configMap:
             name: {{ include "pilcrow.fullname" . }}-files
+        - name: framework-cache
+          emptyDir:
+            medium: Memory
+            sizeLimit: 100Mi
       {{- with .Values.extraVolumes }}
         {{- toYaml . | nindent 8 }}
       {{- end }}
