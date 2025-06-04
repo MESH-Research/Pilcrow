@@ -1,5 +1,5 @@
 apiVersion: v2
-name: pilcrow
+name: pilcrow-helm
 description: A Helm chart for Kubernetes
 
 # A chart can be either an 'application' or a 'library' chart.
@@ -18,7 +18,7 @@ type: application
 version: 0.2.0
 
 maintainers:
-  - name: Brian Adams
+  - name: wreality
     email: adamsb@msu.edu
     url: https://meshresearch.net/
 

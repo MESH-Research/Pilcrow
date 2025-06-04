@@ -56,14 +56,64 @@ pilcrow:
     ## @param pilcrow.mysql.user [string] The username to use for the MySQL connection.
     ##
     user:
-    ## @param pilcrow.mysql.password [string] The password to use for the MySQL connection.
-    ##
     password:
-    ## @param pilcrow.mysql.secret [object] The details of the secret containing the MySQL credentials. (ignores password)
-    ##
-    secret:
-      # name:
-      # key: "mysql-root-password"
+      ## @param pilcrow.mysql.password.value [string] The password to use for the MySQL connection.
+      ##
+      value:
+      ## @param pilcrow.mysql.password.secret [object] The details of the secret containing the MySQL credentials. (ignores password)
+      ##
+      secret:
+        # name:
+        # key: "mysql-root-password"
+  ## @section Mail Configuration
+  ## @descriptionStart
+  ## Pilcrow sends emails as part of its notification system as well as for user registration and password reset.
+  ## @descriptionEnd
+  mail:
+    from:
+      ## @param pilcrow.mail.from.address The email address to use as the "from" address for emails sent by Pilcrow.
+      ##
+      address:
+      ## @param pilcrow.mail.from.name The name to use as the "from" name for emails sent by Pilcrow.
+      ##
+      name:
+    ## @param pilcrow.mail.driver The mail driver to use
+    driver: smtp
+    smtp:
+      ## @param pilcrow.mail.smtp.host [string] The hostname or IP address of the SMTP server.
+      ##
+      host:
+      ## @param pilcrow.mail.smtp.port The port of the SMTP server.
+      ##
+      port: 587
+      ## @param pilcrow.mail.smtp.username [string] The username to use for the SMTP connection.
+      ##
+      username:
+      ## @param pilcrow.mail.smtp.password [string] The password to use for the SMTP connection.
+      ##
+      password:
+      ## @param pilcrow.mail.smtp.secret [object] The details of the secret containing the SMTP credentials. (ignores password)
+      ##
+      secret:
+        # name:
+        # key: "smtp-password"
+      ## @param pilcrow.mail.smtp.encryption The encryption to use for the SMTP connection. (tls, ssl, or empty for none)
+      encryption: tls
+    ses:
+      ## @param pilcrow.mail.ses.region [string] The AWS region for the SES service.
+      ##
+      region:
+      ## @param pilcrow.mail.ses.accessKeyId [string] The AWS access key ID for the SES service.
+      ##
+      accessKeyId:
+      ## @param pilcrow.mail.ses.secretAccessKey [string] The AWS secret access key for the SES service.
+      ##
+      secretAccessKey:
+      ## @param pilcrow.mail.ses.secret [object] The details of the secret containing the SES credentials. (ignores accessKeyId and secretAccessKey)
+      ##
+      secret:
+        # name:
+        # key: "ses-secret-key"
 
   ## @section Redis Configuration
   ## @descriptionStart
@@ -82,14 +132,15 @@ pilcrow:
     ## @param pilcrow.redis.port The port of the Redis server.
     ##
     port: 6379
-    ## @param pilcrow.redis.password [string] The password to use for the Redis connection.
-    ##
     password:
-    ## @param pilcrow.redis.secret [object] The details of the secret containing the Redis credentials. (ignores password)
-    ##
-    secret:
-      # name:
-      # key: "password"
+      ## @param pilcrow.redis.password.value [string] The password to use for the Redis connection.
+      ##
+      value:
+      ## @param pilcrow.redis.password.secret [object] The details of the secret containing the Redis credentials. (ignores password)
+      ##
+      secret:
+        # name:
+        # key: "password"
 
   ## @section Advanced Configuration
   ## @descriptionStart
