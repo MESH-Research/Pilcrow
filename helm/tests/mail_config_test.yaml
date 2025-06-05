@@ -1,0 +1,139 @@
+suite: Mail Config
+values:
+  - values/mail.yaml
+templates:
+  - deployments/app.yaml
+  - configmaps/*
+  - secrets/*
+tests:
+  - it: should set default secret if a smtp password is supplied
+    template: deployments/app.yaml
+    values:
+      - values/mail-smtp.yaml
+    set:
+      pilcrow:
+        mail:
+          smtp:
+            password:
+              value: test-smtp-password
+              secret:
+                name: ""
+                key: ""
+
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[1].env
+          any: true
+          content:
+            name: MAIL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: RELEASE-NAME-pilcrow-helm-secrets
+                key: MAIL_PASSWORD
+  - it: should use an exsisting secret if provided
+    template: deployments/app.yaml
+    values:
+      - values/mail-smtp.yaml
+    set:
+      pilcrow:
+        mail:
+          smtp:
+            password:
+              secret:
+                name: existing-smtp-secret
+                key: CUSTOM_SMTP_PASSWORD
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[1].env
+          any: true
+          content:
+            name: MAIL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: existing-smtp-secret
+                key: CUSTOM_SMTP_PASSWORD
+  - it: should require a valid mail driver
+    template: deployments/app.yaml
+    set:
+      pilcrow:
+        mail:
+          driver: invalid-driver
+    asserts:
+      - failedTemplate: {}
+  - it: should require a from name
+    template: deployments/app.yaml
+    set:
+      pilcrow:
+        mail:
+          from:
+            name: ""
+    asserts:
+      - failedTemplate: {}
+  - it: should require a from address
+    template: deployments/app.yaml
+    set:
+      pilcrow:
+        mail:
+          from:
+            address: ""
+    asserts:
+      - failedTemplate: {}
+  - it: should require a smtp host if using smtp driver
+    template: deployments/app.yaml
+    values:
+      - values/mail-smtp.yaml
+    set:
+      pilcrow:
+        mail:
+          smtp:
+            host: ""
+    asserts:
+      - failedTemplate: {}
+  - it: should require a smtp username if using smtp driver
+    template: deployments/app.yaml
+    values:
+      - values/mail-smtp.yaml
+    set:
+      pilcrow:
+        mail:
+          smtp:
+            username: ""
+    asserts:
+      - failedTemplate: {}
+  - it: should require a accessKeyId if using ses driver
+    template: deployments/app.yaml
+    values:
+      - values/mail-ses.yaml
+    set:
+      pilcrow:
+        mail:
+          ses:
+            accessKeyId: ""
+    asserts:
+      - failedTemplate: {}
+  - it: should successfully configure smtp settings
+    values:
+      - values/mail-smtp.yaml
+    template: configmaps/app.yaml
+    asserts:
+      - isSubset:
+          path: data
+          content:
+            MAIL_HOST: smtp.example.com
+            MAIL_PORT: "587"
+            MAIL_USERNAME: test
+            MAIL_MAILER: smtp
+  - it: should successfully configure ses settings
+    values:
+      - values/mail-ses.yaml
+    template: configmaps/app.yaml
+    asserts:
+      - isSubset:
+          path: data
+          content:
+            MAIL_MAILER: ses
+            AWS_ACCESS_KEY_ID: test
+      - notExists:
+          path: data.AWS_SESSION_TOKEN
+      - notExists:
+          path: data.AWS_DEFAULT_REGION

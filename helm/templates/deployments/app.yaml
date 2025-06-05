@@ -1,0 +1,138 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "pilcrow.fullname" . }}
+  labels:
+    {{- include "pilcrow.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "pilcrow.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+        cm-checksum/app-nginx: {{ include "pilcrow.shaSumTemplate" (list $ . "/configmaps/app-files.yaml") | quote }}
+        cm-checksum/app: {{ include "pilcrow.shaSumTemplate" (list $ . "/configmaps/app.yaml") | quote }}
+      {{- with .Values.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "pilcrow.labels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "pilcrow.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+
+      containers:
+        - name: web
+          env:
+          - name: FPM_HOST
+            value: $upstream
+          securityContext:
+            {{- toYaml .Values.web.securityContext | nindent 12 }}
+          image: "{{ .Values.image.webRepository }}:{{- .Values.image.tag | default .Chart.AppVersion -}}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
+          {{- if .Values.web.livenessProbe.enabled }}
+          livenessProbe:
+            {{- include "common.tplvalues.render" (dict "value" (omit .Values.web.livenessProbe "enabled") "context" $) | nindent 12 }}
+            httpGet:
+              path: /healthz
+              port: http
+          {{- end }}
+          {{- if .Values.web.livenessProbe.enabled }}
+          readinessProbe:
+            {{- include "common.tplvalues.render" (dict "value" (omit .Values.web.readinessProbe "enabled") "context" $) | nindent 12 }}
+            httpGet:
+              path: /
+              port: http
+          {{- end }}
+          resources:
+            {{- toYaml .Values.web.resources | nindent 12 }}
+          volumeMounts:
+            - name: extra-files
+              mountPath: /etc/nginx/nginx.conf
+              subPath: nginx.conf
+          {{- with .Values.web.extraVolumeMounts }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+        - name: fpm
+          securityContext:
+            {{- toYaml .Values.fpm.securityContext | nindent 12 }}
+          image: "{{ .Values.image.fpmRepository }}:{{- .Values.image.tag | default .Chart.AppVersion -}}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- include "pilcrow.fpmEnv" . | nindent 10 }}
+          {{- if .Values.fpm.livenessProbe.enabled }}
+          livenessProbe:
+            {{- include "common.tplvalues.render" (dict "value" (omit .Values.fpm.livenessProbe "enabled") "context" $) | nindent 12 }}
+            exec:
+              command:
+                - php-fpm-healthcheck
+                - --listen-queue=10
+          {{- end }}
+          {{- if .Values.fpm.livenessProbe.enabled }}
+          readinessProbe:
+            {{- include "common.tplvalues.render" (dict "value" (omit .Values.fpm.readinessProbe "enabled") "context" $) | nindent 12 }}
+            exec:
+              command:
+                - php-fpm-healthcheck
+          {{- end }}
+          resources:
+            {{- toYaml .Values.fpm.resources | nindent 12 }}
+          volumeMounts:
+            - name: framework-cache
+              mountPath: /var/www/html/storage/framework
+          {{- with .Values.fpm.extraVolumeMounts }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+      initContainers:
+        - name: prime
+          image: "{{ .Values.image.fpmRepository }}:{{- .Values.image.tag | default .Chart.AppVersion -}}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- include "pilcrow.fpmEnv" . | nindent 10 }}
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              mkdir -p /var/www/html/storage/framework/views &&
+              ./artisan config:cache &&
+              ./artisan settings:discover &&
+              ./artisan view:cache
+          volumeMounts:
+            - name: framework-cache
+              mountPath: /var/www/html/storage/framework
+      volumes:
+        - name: extra-files
+          configMap:
+            name: {{ include "pilcrow.fullname" . }}-files
+        - name: framework-cache
+          emptyDir:
+            medium: Memory
+            sizeLimit: 1Mi
+      {{- with .Values.extraVolumes }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
