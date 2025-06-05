@@ -3,7 +3,7 @@
     "packages": {
         ".": {
             "release-type": "node",
-            "exclude-paths": ["helm"]
+            "exclude-paths": ["helm", ".github", ".lando"]
         },
         "helm": {
             "package-name": "pilcrow-helm",
