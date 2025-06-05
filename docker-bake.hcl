@@ -1,76 +1,76 @@
 variable "VERSION" {
-  default = "source"
+    default = "source"
 }
 
 variable "VERSION_URL" {
-  default = ""
+    default = ""
 }
 
 variable "VERSION_DATE" {
-  default = ""
+    default = ""
 }
 
 variable "GITHUB_REF_NAME" {
-  default = ""
+    default = ""
 }
 
 variable "WEB_CACHE_FROM" {
-  default = ""
+    default = ""
 }
 
 variable "WEB_CACHE_TO" {
-  default = ""
+    default = ""
 }
 
 variable "FPM_CACHE_FROM" {
-  default = ""
+    default = ""
 }
 
 variable "FPM_CACHE_TO" {
-  default = ""
+    default = ""
 }
 
 target "fpm" {
-  context = "backend"
+    context = "backend"
 
-  labels = {
-    "org.opencontainers.image.description" = "Pilcrow FPM Container Image version: ${ VERSION }@${VERSION_DATE } (${ VERSION_URL })"
-  }
-  output = ["type=image,push=true,annotation-index.org.opencontainers.image.description=Pilcrow FPM Container Image version: ${ VERSION }@${VERSION_DATE } (${ VERSION_URL })"]
-  cache-from = ["${FPM_CACHE_FROM}", "type=registry,ref=ghcr.io/mesh-research/pilcrow/fpm:edge"]
-  cache-to = ["${FPM_CACHE_TO}"]
-
+    labels = {
+        "org.opencontainers.image.description" = "Pilcrow FPM Container Image version: ${ VERSION }@${VERSION_DATE } (${ VERSION_URL })"
+    }
+    output = ["type=image,push=true,annotation-index.org.opencontainers.image.description=Pilcrow FPM Container Image version: ${ VERSION }@${VERSION_DATE } (${ VERSION_URL })"]
+    cache-from = ["${FPM_CACHE_FROM}", "type=registry,ref=ghcr.io/mesh-research/pilcrow/fpm:edge"]
+    cache-to = ["${FPM_CACHE_TO}"]
+    tags = [ "wreality/pilcrow-fpm-debug:latest" ]
 }
 
 
 target "web" {
-  context = "client"
+    context = "client"
 
-  labels = {
-    "org.opencontainers.image.description" = "Pilcrow WEB Container Image version: ${ VERSION }@${VERSION_DATE } (${ VERSION_URL })"
-  }
-  output = ["type=image,push=true,annotation-index.org.opencontainers.image.description=Pilcrow WEB Container Image version: ${ VERSION }@${VERSION_DATE } (${ VERSION_URL })"]
-  cache-from = ["${WEB_CACHE_FROM}", "type=registry,ref=ghcr.io/mesh-research/pilcrow/web:edge"]
-  cache-to = ["${WEB_CACHE_TO}"]
-
+    labels = {
+        "org.opencontainers.image.description" = "Pilcrow WEB Container Image version: ${ VERSION }@${VERSION_DATE } (${ VERSION_URL })"
+    }
+    output = ["type=image,push=true,annotation-index.org.opencontainers.image.description=Pilcrow WEB Container Image version: ${ VERSION }@${VERSION_DATE } (${ VERSION_URL })"]
+    cache-from = ["${WEB_CACHE_FROM}", "type=registry,ref=ghcr.io/mesh-research/pilcrow/web:edge"]
+    cache-to = ["${WEB_CACHE_TO}"]
+    tags = [ "wreality/pilcrow-web-debug:latest" ]
 }
 
 
 target "fpm-release" {
-  inherits = ["fpm"]
+    inherits = ["fpm"]
 }
 
 target "web-release" {
-  inherits = ["web"]
-  platforms = ["linux/amd64", "linux/arm64"]
+    inherits = ["web"]
+    platforms = ["linux/amd64", "linux/arm64"]
 }
 
 group "default" {
-  targets = ["fpm", "web"]
+    targets = ["fpm", "web"]
 }
 
 
 group "release" {
-  targets = ["fpm-release", "web-release"]
+    targets = ["fpm-release", "web-release"]
 
 }
