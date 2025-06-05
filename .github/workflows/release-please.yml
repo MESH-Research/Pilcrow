@@ -19,7 +19,7 @@ jobs:
       - name: Setup Helm
         uses: azure/setup-helm@v4.3.0
       - if: ${{ steps.release.outputs.helm--release_created }}
-        uses: bsord/helm-push@4.2.0
+        uses: bsord/helm-push@v4.2.0
         with:
           useOCIRegistry: true
           registry-url: oci://ghcr.io/${{ github.repository }}
