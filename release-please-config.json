@@ -1,0 +1,13 @@
+{
+    "separate-pull-requests": true,
+    "packages": {
+        ".": {
+            "release-type": "node",
+            "exclude-paths": ["helm"]
+        },
+        "helm": {
+            "package-name": "pilcrow-helm",
+            "release-type": "helm"
+        }
+    }
+}
