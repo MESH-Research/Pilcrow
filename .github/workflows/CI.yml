@@ -146,7 +146,6 @@ jobs:
         id: build-image
         with:
           target: release
-
   deployments:
     runs-on: ubuntu-24.04
     needs:

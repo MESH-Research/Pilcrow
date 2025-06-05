@@ -39,7 +39,6 @@ target "fpm" {
     output = ["type=image,push=true,annotation-index.org.opencontainers.image.description=Pilcrow FPM Container Image version: ${ VERSION }@${VERSION_DATE } (${ VERSION_URL })"]
     cache-from = ["${FPM_CACHE_FROM}", "type=registry,ref=ghcr.io/mesh-research/pilcrow/fpm:edge"]
     cache-to = ["${FPM_CACHE_TO}"]
-    tags = [ "wreality/pilcrow-fpm-debug:latest" ]
 }
 
 
