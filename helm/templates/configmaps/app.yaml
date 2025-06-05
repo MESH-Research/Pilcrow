@@ -11,10 +11,8 @@ data:
   DB_DATABASE: {{ include "pilcrow.mysql.database" . | quote }}
   REDIS_HOST: {{ include "pilcrow.redis.host" . | required "pilcrow.redis.host: field is required" | quote }}
   REDIS_PORT: {{ .Values.pilcrow.redis.port | default 6379 | quote }}
-  SESSION_DRIVER:
-    {{ .Values.pilcrow.sessionDriver | default "redis" | quote }}
-  SESSION_CONNECTION:
-    {{ .Values.pilcrow.sessionConnection | default "session" | quote }}
+  SESSION_DRIVER: {{ .Values.pilcrow.sessionDriver | default "redis" | quote }}
+  SESSION_CONNECTION: {{ .Values.pilcrow.sessionConnection | default "session" | quote }}
   CACHE_DRIVER: {{ .Values.pilcrow.cacheDriver | default "redis" | quote }}
   LOG_CHANNEL: {{ .Values.pilcrow.logChannel | default "stderr" | quote }}
   APP_URL: {{ required "appUrl is required: Provide a fully-qualified url" .Values.pilcrow.appUrl | quote }}
@@ -28,14 +26,16 @@ data:
   MAIL_USERNAME: {{ required "mailUsername is required: Provide a mail username" .username | quote }}
   MAIL_ENCRYPTION: {{ .encryption | default "tls" | quote }}
   {{ end }}
-  {{ else if eq .Values.pilcrow.mail.driver "ses" }}
+  {{ else if (eq .Values.pilcrow.mail.driver "ses") }}
   {{ with .Values.pilcrow.mail.ses }}
   AWS_ACCESS_KEY_ID: {{ required "awsAccessKeyId is required: Provide an AWS access key ID" .accessKeyId | quote }}
-  AWS_REGION: {{ .region | quote }}
-  {{ if .token }}
-  AWS_SESSION_TOKEN: {{ .token | quote }}
-  {{ end }}
-  {{ end }}
+  {{- with .region }}
+  AWS_DEFAULT_REGION: {{ . | quote }}
+  {{- end -}}
+  {{- with .token }}
+  AWS_SESSION_TOKEN: {{ . | quote }}
+  {{- end -}}
+  {{- end -}}
   {{ else }}
   {{ fail "Unsupported mail driver: " .Values.pilcrow.mail.driver | quote }}
   {{ end }}

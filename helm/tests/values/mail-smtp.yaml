@@ -1,0 +1,10 @@
+pilcrow:
+  mail:
+    driver: smtp
+    smtp:
+      username: "test"
+      host: smtp.example.com
+      password:
+        secret:
+          name: "existing-smtp-password-secret"
+          key: "that-one"

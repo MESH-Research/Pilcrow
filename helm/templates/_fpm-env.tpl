@@ -7,7 +7,7 @@ envFrom:
 - configMapRef:
     name: {{ include "pilcrow.fullname" . }}
 env:
-  {{- include "pilcrow.secrets.valueFrom" (list "APP_KEY" .Values.pilcrow.appKey $) | nindent 2 }}
+{{- /* These two vars could be external services or could be subcharts */ -}}
   - name: DB_PASSWORD
     valueFrom:
       secretKeyRef:
@@ -17,10 +17,12 @@ env:
       secretKeyRef:
         {{- include "pilcrow.redis.secret" . | nindent 8 }}
 
-{{if (eq .Values.pilcrow.mail.driver "smtp") }}
+{{- /* Add env vars that are  */ -}}
+{{- include "pilcrow.secrets.valueFrom" (list "APP_KEY" .Values.pilcrow.appKey $) | nindent 2 }}
+{{ if (eq .Values.pilcrow.mail.driver "smtp") }}
 {{- include "pilcrow.secrets.valueFrom" (list "MAIL_PASSWORD" .Values.pilcrow.mail.smtp.password $) | nindent 2}}
 {{ else if (eq .Values.pilcrow.mail.driver "ses") }}
-    {{ include "pilcrow.secrets.valueFrom" (list "AWS_SECRET_ACCESS_KEY" .Values.pilcrow.mail.ses.password $) }}
-  {{- end -}}
+{{ include "pilcrow.secrets.valueFrom" (list "AWS_SECRET_ACCESS_KEY" .Values.pilcrow.mail.ses.secretAccessKey $) | nindent 2 }}
+{{- end -}}
 
 {{- end -}}
