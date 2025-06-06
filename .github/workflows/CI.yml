@@ -56,6 +56,8 @@ jobs:
       - uses: ./.github/actions/build-image
         id: build-image
         name: Build Image
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
   backend-unit-test:
     name: Backend / Unit Test
     needs: [build-images]
@@ -146,6 +148,8 @@ jobs:
         id: build-image
         with:
           target: release
+          token: ${{ secrets.REPO_TOKEN }}
+
   deployments:
     runs-on: ubuntu-24.04
     needs:

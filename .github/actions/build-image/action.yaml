@@ -1,9 +1,12 @@
 name: Build
+description: "Builds the Docker images for Pilcrow"
 inputs:
     target:
         description: "package to build"
         required: false
         default: "default"
+    token:
+        description: "GitHub token to use for authentication"
 outputs:
     version:
         description: "Version of the package that was built"
@@ -17,7 +20,7 @@ runs:
         - name: Checkout code
           uses: actions/checkout@v3
           with:
-            fetch-depth: 0
+              fetch-depth: 0
         - name: Set version strings
           id: tagger
           shell: bash
@@ -40,45 +43,73 @@ runs:
           id: docker-meta-fpm
           uses: docker/metadata-action@v5
           with:
-            images: |
-              ghcr.io/${{ github.repository }}/${{ (inputs.target == 'default' && 'cache/') || ''}}fpm
-            tags: |
-              type=edge
-              type=semver,pattern={{version}}
-              type=semver,pattern={{major}}.{{minor}}
-              type=sha,enable=${{ inputs.target == 'default'}}
-            bake-target: fpm
+              images: |
+                  ghcr.io/${{ github.repository }}/${{ (inputs.target == 'default' && 'cache/') || ''}}fpm
+              tags: |
+                  type=edge
+                  type=semver,pattern={{version}}
+                  type=semver,pattern={{major}}.{{minor}}
+                  type=sha,enable=${{ inputs.target == 'default'}}
+              bake-target: fpm
         - name: Docker meta (WEB)
           id: docker-meta-web
           uses: docker/metadata-action@v5
           with:
-            images: |
-              ghcr.io/${{ env.REPO }}/${{ (inputs.target == 'default' && 'cache/') || ''}}web
-            tags: |
-              type=edge
-              type=semver,pattern={{version}}
-              type=semver,pattern={{major}}.{{minor}}
-              type=sha,enable=${{ inputs.target == 'default'}}
-            bake-target: web
+              images: |
+                  ghcr.io/${{ env.REPO }}/${{ (inputs.target == 'default' && 'cache/') || ''}}web
+              tags: |
+                  type=edge
+                  type=semver,pattern={{version}}
+                  type=semver,pattern={{major}}.{{minor}}
+                  type=sha,enable=${{ inputs.target == 'default'}}
+              bake-target: web
         - uses: int128/docker-build-cache-config-action@v1
           id: cache-web
           with:
-            image: ghcr.io/${{ env.REPO }}/cache/web
+              image: ghcr.io/${{ env.REPO }}/cache/web
         - uses: int128/docker-build-cache-config-action@v1
           id: cache-fpm
           with:
-            image: ghcr.io/${{ env.REPO }}/cache/fpm
+              image: ghcr.io/${{ env.REPO }}/cache/fpm
         - name: Build and push
-          uses: docker/bake-action@v4
+          id: docker-bake
+          uses: docker/bake-action@v6.8.0
           if: ${{ steps.docker-meta-fpm.outputs.tags != ''}}
           env:
-            FPM_CACHE_FROM: ${{ steps.cache-fpm.outputs.cache-from }}
-            FPM_CACHE_TO: ${{ steps.cache-fpm.outputs.cache-to }}
-            WEB_CACHE_FROM: ${{ steps.cache-web.outputs.cache-from }}
-            WEB_CACHE_TO: ${{ steps.cache-web.outputs.cache-to }}
+              FPM_CACHE_FROM: ${{ steps.cache-fpm.outputs.cache-from }}
+              FPM_CACHE_TO: ${{ steps.cache-fpm.outputs.cache-to }}
+              WEB_CACHE_FROM: ${{ steps.cache-web.outputs.cache-from }}
+              WEB_CACHE_TO: ${{ steps.cache-web.outputs.cache-to }}
           with:
-            targets: ${{ inputs.target }}
-            files: |
-              ./docker-bake.hcl
-              ${{ steps.docker-meta-fpm.outputs.bake-file }}
-              ${{ steps.docker-meta-web.outputs.bake-file }}
+              source: .
+              targets: ${{ inputs.target }}
+              allow: fs.write=*
+              files: |
+                  ./docker-bake.hcl
+                  ${{ steps.docker-meta-fpm.outputs.bake-file }}
+                  ${{ steps.docker-meta-web.outputs.bake-file }}
+
+        - name: tgz Frontend Assets
+          shell: bash
+          run: |
+              echo "::group::Compress frontend assets"
+              tar -czvf frontend-bundle.tar.gz \
+                -C /tmp/webbuild/var/www/html .
+              echo "::endgroup::"
+        - name: Upload Frontend Assets
+          uses: actions/upload-artifact@v4
+          with:
+              name: frontend-bundle
+              path: /tmp/webbuild/var/www/html/
+        - name: Publish Frontend Bundle
+          uses: oras-project/setup-oras@v1
+        - shell: bash
+          env:
+              OWNER: ${{ github.repository_owner }}
+              METADATA: ${{ steps.docker-bake.outputs.metadata }}
+          run: |
+              echo ${{ inputs.token }} | oras login --username wreality --password-stdin ghcr.io
+              image="$(echo $METADATA | jq -r '.web."image.name"')"
+              oras attach $image \
+                --artifact-type application/vnd.mesh.frontend-bundle.v1+tar \
+                frontend-bundle.tar.gz
