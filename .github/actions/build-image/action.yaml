@@ -100,8 +100,10 @@ runs:
         - name: Publish Frontend Bundle
           uses: oras-project/setup-oras@v1
         - shell: bash
+          env:
+              OWNER: ${{ github.repository_owner }}
           run: |
               echo ${{ inputs.token }} | oras login --username wreality --password-stdin ghcr.io
-              oras attach ghcr.io/${{ github.repository_owner }}/pilcrow%2fweb:${{ steps.docker-meta-web.outputs.version }} \
+              oras attach ghcr.io/${OWNER,,}/pilcrow%2fweb:${{ steps.docker-meta-web.outputs.version }} \
                 --artifact-type application/vnd.mesh.frontend-bundle.v1+tar \
                 frontend-bundle.tar.gz
