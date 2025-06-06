@@ -72,6 +72,7 @@ runs:
           with:
               image: ghcr.io/${{ env.REPO }}/cache/fpm
         - name: Build and push
+          id: docker-bake
           uses: docker/bake-action@v6.8.0
           if: ${{ steps.docker-meta-fpm.outputs.tags != ''}}
           env:
@@ -87,6 +88,13 @@ runs:
                   ./docker-bake.hcl
                   ${{ steps.docker-meta-fpm.outputs.bake-file }}
                   ${{ steps.docker-meta-web.outputs.bake-file }}
+        - name: Get image from metadata
+          id: docker-meta-web
+          shell: bash
+          run: |
+              touch metadata.json
+              echo '${{ steps.docker-bake.outputs.metadata }}' > metadata.json
+              echo IMAGE_NAME=$(cat metadata.json | jq '.web."image.name"') >> "$GITHUB_OUTPUT"
         - name: tgz Frontend Assets
           shell: bash
           run: |
@@ -104,6 +112,6 @@ runs:
               OWNER: ${{ github.repository_owner }}
           run: |
               echo ${{ inputs.token }} | oras login --username wreality --password-stdin ghcr.io
-              oras attach ghcr.io/${OWNER,,}/pilcrow%2fweb:${{ steps.docker-meta-web.outputs.version }} \
+              oras attach $IMAGE_NAME \
                 --artifact-type application/vnd.mesh.frontend-bundle.v1+tar \
                 frontend-bundle.tar.gz
