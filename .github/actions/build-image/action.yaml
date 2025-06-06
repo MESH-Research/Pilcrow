@@ -92,8 +92,10 @@ runs:
         - name: tgz Frontend Assets
           shell: bash
           run: |
-              tar -czf frontend-bundle.tar.gz \
+              echo "::group::Compress frontend assets""
+              tar -czvf frontend-bundle.tar.gz \
                 -C /tmp/webbuild/var/www/html .
+              echo "::endgroup::"
         - name: Upload Frontend Assets
           uses: actions/upload-artifact@v4
           with:
@@ -108,6 +110,6 @@ runs:
           run: |
               echo ${{ inputs.token }} | oras login --username wreality --password-stdin ghcr.io
               image=$(echo $METADATA | jq -r '.web."image.name"') \
-              oras attach "$image" \
+              oras attach $image \
                 --artifact-type application/vnd.mesh.frontend-bundle.v1+tar \
                 frontend-bundle.tar.gz
