@@ -111,6 +111,6 @@ runs:
               OWNER: ${{ github.repository_owner }}
           run: |
               echo ${{ inputs.token }} | oras login --username wreality --password-stdin ghcr.io
-              oras attach $IMAGE_NAME \
+              oras attach ${{ env.IMAGE_NAME }} \
                 --artifact-type application/vnd.mesh.frontend-bundle.v1+tar \
                 frontend-bundle.tar.gz
