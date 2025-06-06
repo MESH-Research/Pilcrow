@@ -15,6 +15,7 @@ end_of_line = crlf
 
 [*.yml]
 indent_size = 2
+indent_style = space
 
 [*.twig]
 insert_final_newline = false

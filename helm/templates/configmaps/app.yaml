@@ -1,0 +1,41 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: {{ include "pilcrow.fullname" . }}
+  labels: {{- include "pilcrow.labels" . | nindent 4 }}
+data:
+  CDN_BASE: {{ include "pilcrow.cdnBaseUrl" . | quote }}
+  DB_HOST: {{ include "pilcrow.mysql.host" . | required "pilcrow.mysql.host: field is required" | quote }}
+  DB_PORT: {{ .Values.pilcrow.mysql.port | default 3306 | quote }}
+  DB_USERNAME: {{ include "pilcrow.mysql.user" . | quote }}
+  DB_DATABASE: {{ include "pilcrow.mysql.database" . | quote }}
+  REDIS_HOST: {{ include "pilcrow.redis.host" . | required "pilcrow.redis.host: field is required" | quote }}
+  REDIS_PORT: {{ .Values.pilcrow.redis.port | default 6379 | quote }}
+  SESSION_DRIVER: {{ .Values.pilcrow.sessionDriver | default "redis" | quote }}
+  SESSION_CONNECTION: {{ .Values.pilcrow.sessionConnection | default "session" | quote }}
+  CACHE_DRIVER: {{ .Values.pilcrow.cacheDriver | default "redis" | quote }}
+  LOG_CHANNEL: {{ .Values.pilcrow.logChannel | default "stderr" | quote }}
+  APP_URL: {{ required "appUrl is required: Provide a fully-qualified url" .Values.pilcrow.appUrl | quote }}
+  MAIL_MAILER: {{ .Values.pilcrow.mail.driver | default "smtp" | quote }}
+  MAIL_FROM_NAME: {{ required "mailFromName is required: Provide a mail from name" .Values.pilcrow.mail.from.name | quote }}
+  MAIL_FROM_ADDRESS: {{ required "mailFromAddress is required: Provide a mail from address" .Values.pilcrow.mail.from.address | quote }}
+  {{ if eq .Values.pilcrow.mail.driver "smtp" }}
+  {{ with .Values.pilcrow.mail.smtp }}
+  MAIL_HOST: {{ required "mailHost is required: Provide a mail host" .host | quote }}
+  MAIL_PORT: {{ required "mailPort is required: Provide a mail port" .port | quote }}
+  MAIL_USERNAME: {{ required "mailUsername is required: Provide a mail username" .username | quote }}
+  MAIL_ENCRYPTION: {{ .encryption | default "tls" | quote }}
+  {{ end }}
+  {{ else if (eq .Values.pilcrow.mail.driver "ses") }}
+  {{ with .Values.pilcrow.mail.ses }}
+  AWS_ACCESS_KEY_ID: {{ required "awsAccessKeyId is required: Provide an AWS access key ID" .accessKeyId | quote }}
+  {{- with .region }}
+  AWS_DEFAULT_REGION: {{ . | quote }}
+  {{- end -}}
+  {{- with .token }}
+  AWS_SESSION_TOKEN: {{ . | quote }}
+  {{- end -}}
+  {{- end -}}
+  {{ else }}
+  {{ fail "Unsupported mail driver: " .Values.pilcrow.mail.driver | quote }}
+  {{ end }}

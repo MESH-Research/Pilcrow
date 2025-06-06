@@ -7,8 +7,30 @@ jobs:
   release-please:
     runs-on: ubuntu-24.04
     steps:
-      - uses: google-github-actions/release-please-action@v3
+      - uses: googleapis/release-please-action@v4
+        id: release
         with:
-          release-type: node
-          package-name: pilcrow
           token: ${{ secrets.REPO_TOKEN }}
+      - uses: actions/checkout@v4
+        if: ${{ steps.release.outputs.releases_created }}
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.REPO_TOKEN }}
+      - if: ${{ steps.release.outputs.helm--release_created }}
+        uses: wreality/helm-push@v1
+        with:
+          useOCIRegistry: true
+          registry-url: oci://ghcr.io/${{ github.repository_owner }}
+          username: ${{ github.actor }}
+          access-token: ${{ secrets.REPO_TOKEN }}
+          update-dependencies: true
+          chart-folder: helm
+      - name: Update appVersion in helm chart
+        if: ${{ steps.release.outputs.release_created }}
+        run: |
+          sed -i "s|appVersion: .*|appVersion: ${{ steps.release.outputs.version }}|" helm/Chart.yaml
+          git config --global user.name "Brian Adams"
+          git config --global user.email "adamsb@msu.edu"
+          git add helm/Chart.yaml
+          git commit -m "fix(helm): Update to appVersion ${{ steps.release.outputs.version }}"
+          git push
