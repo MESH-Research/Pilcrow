@@ -88,13 +88,7 @@ runs:
                   ./docker-bake.hcl
                   ${{ steps.docker-meta-fpm.outputs.bake-file }}
                   ${{ steps.docker-meta-web.outputs.bake-file }}
-        - name: Get image from metadata
-          shell: bash
-          run: |
-              touch metadata.json
-              echo '${{ steps.docker-bake.outputs.metadata }}' > metadata.json
-              image=$(cat metadata.json | jq -r '.web."image.name"') \
-              echo IMAGE_NAME=$image >> "$GITHUB_OUTPUT"
+
         - name: tgz Frontend Assets
           shell: bash
           run: |
@@ -111,6 +105,10 @@ runs:
           env:
               OWNER: ${{ github.repository_owner }}
           run: |
+              touch metadata.json
+              echo '${{ steps.docker-bake.outputs.metadata }}' > metadata.json
+              image=$(cat metadata.json | jq -r '.web."image.name"') \
+              echo "IMAGE_NAME=${image}" >> "$GITHUB_ENV"
               echo ${{ inputs.token }} | oras login --username wreality --password-stdin ghcr.io
               oras attach ${{ env.IMAGE_NAME }} \
                 --artifact-type application/vnd.mesh.frontend-bundle.v1+tar \
