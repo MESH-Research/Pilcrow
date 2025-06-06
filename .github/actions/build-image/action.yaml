@@ -89,7 +89,6 @@ runs:
                   ${{ steps.docker-meta-fpm.outputs.bake-file }}
                   ${{ steps.docker-meta-web.outputs.bake-file }}
         - name: Get image from metadata
-          id: docker-meta-web
           shell: bash
           run: |
               touch metadata.json
