@@ -93,11 +93,12 @@ runs:
           run: |
               touch metadata.json
               echo '${{ steps.docker-bake.outputs.metadata }}' > metadata.json
-              echo IMAGE_NAME=$(cat metadata.json | jq '.web."image.name"') >> "$GITHUB_OUTPUT"
+              image=$(cat metadata.json | jq -r '.fpm."image.name"')
+              echo IMAGE_NAME=$image >> "$GITHUB_OUTPUT"
         - name: tgz Frontend Assets
           shell: bash
           run: |
-              tar -czvf frontend-bundle.tar.gz \
+              tar -czf frontend-bundle.tar.gz \
                 -C /tmp/webbuild/var/www/html .
         - name: Upload Frontend Assets
           uses: actions/upload-artifact@v4
