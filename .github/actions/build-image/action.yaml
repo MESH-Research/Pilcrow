@@ -92,7 +92,7 @@ runs:
         - name: tgz Frontend Assets
           shell: bash
           run: |
-              echo "::group::Compress frontend assets""
+              echo "::group::Compress frontend assets"
               tar -czvf frontend-bundle.tar.gz \
                 -C /tmp/webbuild/var/www/html .
               echo "::endgroup::"
