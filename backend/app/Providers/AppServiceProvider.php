@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
 use Nuwave\Lighthouse\Events\BuildSchemaString;
 use Nuwave\Lighthouse\Schema\Source\SchemaStitcher;
+use Illuminate\Support\Facades\Blade;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -44,5 +45,13 @@ class AppServiceProvider extends ServiceProvider
         Validator::extend('style_criteria_count', StyleCriteriaCount::class . '@checkCount', 'Style criteria limit reached for this publication.');
         //Force https for generated URLs
         URL::forceScheme('https');
+
+        Blade::directive('cdn_url', function ($expression) {
+
+            if (config('app.cdn_base')) {
+                return "<?php echo config('app.cdn_base') . '/' . ($expression); ?>";
+            }
+            return "<?php echo $expression; ?>";
+        });
     }
 }

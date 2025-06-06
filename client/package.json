@@ -9,6 +9,7 @@
     "lint": "eslint --ext .js,.vue ./",
     "format": "prettier --write \"**/*.{js,vue,scss,html,md,json}\" --ignore-path .gitignore",
     "test": "echo \"See package.json => scripts for available tests.\" && exit 0",
+    "push:cdn": "f() { s3cmd del $1 --recursive --force && s3cmd put -rP --no-mime-magic --guess-mime-type ./dist/spa/ $1;}; f",
     "dev": "quasar dev",
     "build": "quasar build",
     "client:test": "vitest run",

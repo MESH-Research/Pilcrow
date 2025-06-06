@@ -5,7 +5,7 @@
         <div class="row items-center justify-center">
           <q-img
             :alt="$t('header.logo_alt')"
-            src="/logo.png"
+            src="/logo/logo.png"
             style="width: 400px; aspect-ratio: 1"
             class="gt-md col-xs-12 col-sm-6 col-grow q-mr-lg"
           ></q-img>
