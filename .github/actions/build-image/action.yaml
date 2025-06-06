@@ -106,10 +106,8 @@ runs:
               OWNER: ${{ github.repository_owner }}
               METADATA: ${{ steps.docker-bake.outputs.metadata }}
           run: |
-              touch metadata.json
-              echo '${{ steps.docker-bake.outputs.metadata }}' > metadata.json
-              image=$(echo $METADATA | jq -r '.web."image.name"') \
               echo ${{ inputs.token }} | oras login --username wreality --password-stdin ghcr.io
-              oras attach "https://$image" \
+              image=$(echo $METADATA | jq -r '.web."image.name"') \
+              oras attach "$image" \
                 --artifact-type application/vnd.mesh.frontend-bundle.v1+tar \
                 frontend-bundle.tar.gz
