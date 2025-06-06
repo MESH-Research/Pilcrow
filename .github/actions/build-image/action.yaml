@@ -93,7 +93,7 @@ runs:
           run: |
               touch metadata.json
               echo '${{ steps.docker-bake.outputs.metadata }}' > metadata.json
-              image=$(cat metadata.json | jq -r '.fpm."image.name"')
+              image=$(cat metadata.json | jq -r '.web."image.name"') \
               echo IMAGE_NAME=$image >> "$GITHUB_OUTPUT"
         - name: tgz Frontend Assets
           shell: bash
