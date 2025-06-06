@@ -109,7 +109,7 @@ runs:
               METADATA: ${{ steps.docker-bake.outputs.metadata }}
           run: |
               echo ${{ inputs.token }} | oras login --username wreality --password-stdin ghcr.io
-              image=$(echo $METADATA | jq -r '.web."image.name"') \
+              echo $METADATA | jq -r '.web."image.name"'
               oras attach $image \
                 --artifact-type application/vnd.mesh.frontend-bundle.v1+tar \
                 frontend-bundle.tar.gz
