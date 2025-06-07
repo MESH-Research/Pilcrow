@@ -110,6 +110,7 @@ runs:
           run: |
               echo ${{ inputs.token }} | oras login --username wreality --password-stdin ghcr.io
               image="$(echo $METADATA | jq -r '.web."image.name"')"
+              image="${image%,*}"
               oras attach $image \
                 --artifact-type application/vnd.mesh.frontend-bundle.v1+tar \
                 frontend-bundle.tar.gz
