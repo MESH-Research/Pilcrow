@@ -137,5 +137,6 @@ runs:
       run: |
         echo ${{ inputs.token }} | oras login --username wreality --password-stdin ghcr.io
         oras attach $WEB_IMAGE \
+        --disable-path-validation \
         --artifact-type application/vnd.mesh.frontend-bundle.v1+tgz \
         ${{ steps.frontend-bundle.outputs.bundle_file }}
