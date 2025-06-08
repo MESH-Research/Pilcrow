@@ -43,7 +43,7 @@ runs:
         echo "VERSION_DATE=${VERSION_DATE}" >> "$GITHUB_ENV"
         echo "REPO=${REPO}" >> "$GITHUB_ENV"
         echo "DOCKER_IMAGE_CACHE=${DOCKER_IMAGE_CACHE}" >> "$GITHUB_ENV"
-        echo "CI_TMP_DIR=${CI_TMP_DIR}" >> "GUTHUB_ENV"
+        echo "CI_TMP_DIR=${CI_TMP_DIR}" >> "$GITHUB_ENV"
         if [ "${{ inputs.target }}" == "release" ]; then
             echo "IMAGE_BASE=ghcr.io/${REPO}/__service__" >> "$GITHUB_ENV"
         else
