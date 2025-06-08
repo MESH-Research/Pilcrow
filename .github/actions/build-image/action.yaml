@@ -71,8 +71,8 @@ runs:
           shell: bash
           id: cp-bake-files
           run: |
-              $BAKEDIR = $RUNNER_TEMP/pilcrow-bake
-              echo "directory=${BAKEDIR}/" >> $GITHUB_OUTPUT
+              BAKEDIR=${RUNNER_TEMP}/pilcrow-bake
+              echo "directory=${BAKEDIR}/" >> "$GITHUB_OUTPUT"
               mkdir -p $BAKEDIR
               cp ./docker-bake.hcl \
               ${{ steps.docker-cache.outputs.bake-file }} \
