@@ -112,12 +112,15 @@ runs:
         echo "WEB_IMAGE=${WEB_IMAGE%,*}" >> "$GITHUB_ENV"
         echo "FPM_IMAGE=${FPM_IMAGE%,*}" >> "$GITHUB_ENV"
     - name: Compress & Tar Frontend Assets
+      id: frontend-bundle
       if: ${{ steps.docker-meta.outputs.tags != ''}}
       shell: bash
       run: |
         echo "::group::Compress frontend assets"
-        tar -czvf $RUNNER_TEMP/frontend-bundle.tar.gz \
+        FRONTEND_BUNDLE="$RUNNER_TEMP/frontend-bundle.tar.gz"
+        tar -czvf $FRONTEND_BUNDLE \
           -C $CI_TMP_DIR/var/www/html .
+        echo "bundle_file=$FRONTEND_BUNDLE" >> "$GITHUB_OUTPUT"
         echo "::endgroup::"
     - name: Upload Frontend Bundle as Github Artifact
       if: ${{ steps.docker-meta.outputs.tags != ''}}
@@ -134,5 +137,5 @@ runs:
       run: |
         echo ${{ inputs.token }} | oras login --username wreality --password-stdin ghcr.io
         oras attach $WEB_IMAGE \
-        --artifact-type application/vnd.mesh.frontend-bundle.v1+tar \
-        $RUNNER_TEMP/frontend-bundle.tar.gzs
+        --artifact-type application/vnd.mesh.frontend-bundle.v1+tgz \
+        ${{ steps.frontend-bundle.outputs.bundle_file }}
