@@ -124,7 +124,7 @@ runs:
       uses: actions/upload-artifact@v4
       with:
         name: frontend-bundle
-        path: $CI_TMP_DIR/var/www/html/
+        path: ${{ env.CI_TMP_DIR }}/var/www/html/
     - name: Setup ORAS
       if: ${{ steps.docker-meta.outputs.tags != ''}}
       uses: oras-project/setup-oras@v1
@@ -135,4 +135,4 @@ runs:
         echo ${{ inputs.token }} | oras login --username wreality --password-stdin ghcr.io
         oras attach $WEB_IMAGE \
         --artifact-type application/vnd.mesh.frontend-bundle.v1+tar \
-        frontend-bundle.tar.gz
+        $RUNNER_TEMP/frontend-bundle.tar.gzs
