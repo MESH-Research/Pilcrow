@@ -1,127 +1,138 @@
 name: Build
 description: "Builds the Docker images for Pilcrow"
 inputs:
-    target:
-        description: "package to build"
-        required: false
-        default: "ci"
-    token:
-        description: "GitHub token to use for authentication"
+  target:
+    description: "package to build"
+    required: false
+    default: "ci"
+  token:
+    description: "GitHub token to use for authentication"
 outputs:
-    version:
-        description: "Version of the package that was built"
-        value: ${{ steps.docker-meta.outputs.version }}
-    tags:
-        description: "List of tags"
-        value: ${{ steps.docker-meta.outputs.tags}}
+  version:
+    description: "Version of the package that was built"
+    value: ${{ steps.docker-meta.outputs.version }}
+  web_image:
+    description: "Web image name that was built"
+    value: ${{ env.WEB_IMAGE }}
+  fpm_image:
+    description: "FPM image name that was built"
+    value: ${{ env.FPM_IMAGE }}
+  tags:
+    description: "List of tags"
+    value: ${{ steps.docker-meta.outputs.tags}}
 runs:
-    using: "composite"
-    steps:
-        - name: Checkout code
-          uses: actions/checkout@v3
-          with:
-              fetch-depth: 0
-        - name: Pre-build setup
-          id: tagger
-          shell: bash
-          run: |
-              VERSION=$(git describe --tags)
-              VERSION_URL=https://github.com/${GITHUB_REPOSITORY}/commits/${GITHUB_SHA}
-              VERSION_DATE=$(git show -s --format=%cI ${GITHUB_SHA})
-              REPO=${GITHUB_REPOSITORY,,}
-              CI_TMP_DIR=${RUNNER_TEMP}/web
-              mkdir -p $CI_TMP_DIR
-              DOCKER_IMAGE_CACHE=ghcr.io/${REPO}/cache/__service__
-              echo "VERSION=${VERSION}" >> "$GITHUB_ENV"
-              echo "VERSION_URL=${VERSION_URL}" >> "$GITHUB_ENV"
-              echo "VERSION_DATE=${VERSION_DATE}" >> "$GITHUB_ENV"
-              echo "REPO=${REPO}" >> "$GITHUB_ENV"
-              echo "DOCKER_IMAGE_CACHE=${DOCKER_IMAGE_CACHE}" >> "$GITHUB_ENV"
-              echo "WEB_TMP_OUTPUT=${WEB_TMP_OUTPUT}" >> "GUTHUB_ENV"
-              if [ "${{ inputs.target }}" == "release" ]; then
-                  echo "IMAGE_BASE=ghcr.io/${REPO}/__service__" >> "$GITHUB_ENV"
-              else
-                  echo "IMAGE_BASE=${DOCKER_IMAGE_CACHE}" >> "$GITHUB_ENV"
-              fi
-        - name: Replace version string in source files
-          shell: bash
-          run: |
-              sed -i "s|env('VERSION', '')|env('VERSION', '${VERSION}')|" backend/config/app.php
-              sed -i "s|env('VERSION_URL', '')|env('VERSION_URL', '${VERSION_URL}')|" backend/config/app.php
-              sed -i "s|env('VERSION_DATE', '')|env('VERSION_DATE', '${VERSION_DATE}')|" backend/config/app.php
-              sed -i "s|process.env.VERSION_DATE|'${VERSION_DATE}'|" client/src/components/AppFooter.vue
-              sed -i "s|process.env.VERSION_URL|'${VERSION_URL}'|" client/src/components/AppFooter.vue
-              sed -i "s|process.env.VERSION|'${VERSION}'|" client/src/components/AppFooter.vue
-        - uses: docker/setup-buildx-action@v3
-        - name: Docker Meta
-          id: docker-meta
-          uses: docker/metadata-action@v5
-          with:
-              images: ${{ env.IMAGE_BASE }}
-              tags: |
-                  type=edge
-                  type=semver,pattern={{version}}
-                  type=semver,pattern={{major}}.{{minor}}
-                  type=sha,enable=${{ inputs.target == 'ci'}}
-        - uses: int128/docker-build-cache-config-action@v1
-          id: docker-cache
-          with:
-              image: ${{ env.DOCKER_IMAGE_CACHE }}
-        - name: Consolidate Docker Bake Files
-          shell: bash
-          id: cp-bake-files
-          run: |
-              BAKEDIR=${RUNNER_TEMP}/pilcrow-bake
-              echo "directory=${BAKEDIR}/" >> "$GITHUB_OUTPUT"
-              mkdir -p $BAKEDIR
-              cp ./docker-bake.hcl \
-              ${{ steps.docker-cache.outputs.bake-file }} \
-              ${{ steps.docker-meta.outputs.bake-file }} \
-              $BAKEDIR
-        - name: Upload Docker Bake Files
-          uses: actions/upload-artifact@v4
-          with:
-              name: docker-cache-bake-file
-              path: ${{ steps.cp-bake-files.outputs.directory }}
-        - name: Build and push
-          id: docker-bake
-          uses: docker/bake-action@v6.8.0
-          if: ${{ steps.docker-meta.outputs.tags != ''}}
-          with:
-              source: .
-              targets: ${{ inputs.target }}
-              allow: fs.write=*
-              files: |
-                  ./docker-bake.hcl
-                  ${{ steps.docker-meta.outputs.bake-file }}
-                  ${{ steps.docker-cache.outputs.bake-file }}
-        - name: Compress & Tar Frontend Assets
-          if: ${{ steps.docker-meta.outputs.tags != ''}}
-          shell: bash
-          run: |
-              echo "::group::Compress frontend assets"
-              tar -czvf $RUNNER_TEMP/frontend-bundle.tar.gz \
-                -C $CI_TMP_DIR/var/www/html .
-              echo "::endgroup::"
-        - name: Upload Frontend Bundle as Github Artifact
-          if: ${{ steps.docker-meta.outputs.tags != ''}}
-          uses: actions/upload-artifact@v4
-          with:
-              name: frontend-bundle
-              path: $CI_TMP_DIR/var/www/html/
-        - name: Setup ORAS
-          if: ${{ steps.docker-meta.outputs.tags != ''}}
-          uses: oras-project/setup-oras@v1
-        - shell: bash
-          name: Attach Frontend Bundle to Docker Image
-          if: ${{ steps.docker-meta.outputs.tags != ''}}
-          env:
-              OWNER: ${{ github.repository_owner }}
-              METADATA: ${{ steps.docker-bake.outputs.metadata }}
-          run: |
-              echo ${{ inputs.token }} | oras login --username wreality --password-stdin ghcr.io
-              image="$(echo $METADATA | jq -r 'to_entries[] | select(.key|endswith("web")).value."image.name"')"
-              image="${image%,*}"
-              oras attach $image \
-                --artifact-type application/vnd.mesh.frontend-bundle.v1+tar \
-                frontend-bundle.tar.gz
+  using: "composite"
+  steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    - name: Pre-build setup
+      id: tagger
+      shell: bash
+      run: |
+        VERSION=$(git describe --tags)
+        VERSION_URL=https://github.com/${GITHUB_REPOSITORY}/commits/${GITHUB_SHA}
+        VERSION_DATE=$(git show -s --format=%cI ${GITHUB_SHA})
+        REPO=${GITHUB_REPOSITORY,,}
+        CI_TMP_DIR=${RUNNER_TEMP}/web
+        mkdir -p $CI_TMP_DIR
+        DOCKER_IMAGE_CACHE=ghcr.io/${REPO}/cache/__service__
+        echo "VERSION=${VERSION}" >> "$GITHUB_ENV"
+        echo "VERSION_URL=${VERSION_URL}" >> "$GITHUB_ENV"
+        echo "VERSION_DATE=${VERSION_DATE}" >> "$GITHUB_ENV"
+        echo "REPO=${REPO}" >> "$GITHUB_ENV"
+        echo "DOCKER_IMAGE_CACHE=${DOCKER_IMAGE_CACHE}" >> "$GITHUB_ENV"
+        echo "CI_TMP_DIR=${CI_TMP_DIR}" >> "GUTHUB_ENV"
+        if [ "${{ inputs.target }}" == "release" ]; then
+            echo "IMAGE_BASE=ghcr.io/${REPO}/__service__" >> "$GITHUB_ENV"
+        else
+            echo "IMAGE_BASE=${DOCKER_IMAGE_CACHE}" >> "$GITHUB_ENV"
+        fi
+    - name: Replace version string in source files
+      shell: bash
+      run: |
+        sed -i "s|env('VERSION', '')|env('VERSION', '${VERSION}')|" backend/config/app.php
+        sed -i "s|env('VERSION_URL', '')|env('VERSION_URL', '${VERSION_URL}')|" backend/config/app.php
+        sed -i "s|env('VERSION_DATE', '')|env('VERSION_DATE', '${VERSION_DATE}')|" backend/config/app.php
+        sed -i "s|process.env.VERSION_DATE|'${VERSION_DATE}'|" client/src/components/AppFooter.vue
+        sed -i "s|process.env.VERSION_URL|'${VERSION_URL}'|" client/src/components/AppFooter.vue
+        sed -i "s|process.env.VERSION|'${VERSION}'|" client/src/components/AppFooter.vue
+    - uses: docker/setup-buildx-action@v3
+    - name: Docker Meta
+      id: docker-meta
+      uses: docker/metadata-action@v5
+      with:
+        images: ${{ env.IMAGE_BASE }}
+        tags: |
+          type=edge
+          type=semver,pattern={{version}}
+          type=semver,pattern={{major}}.{{minor}}
+          type=sha,enable=${{ inputs.target == 'ci'}}
+    - uses: int128/docker-build-cache-config-action@v1
+      id: docker-cache
+      with:
+        image: ${{ env.DOCKER_IMAGE_CACHE }}
+    - name: Consolidate Docker Bake Files
+      shell: bash
+      id: cp-bake-files
+      run: |
+        BAKEDIR=${RUNNER_TEMP}/pilcrow-bake
+        echo "directory=${BAKEDIR}/" >> "$GITHUB_OUTPUT"
+        mkdir -p $BAKEDIR
+        cp ./docker-bake.hcl \
+        ${{ steps.docker-cache.outputs.bake-file }} \
+        ${{ steps.docker-meta.outputs.bake-file }} \
+        $BAKEDIR
+    - name: Upload Docker Bake Files
+      uses: actions/upload-artifact@v4
+      with:
+        name: docker-cache-bake-file
+        path: ${{ steps.cp-bake-files.outputs.directory }}
+    - name: Build and push
+      id: docker-bake
+      uses: docker/bake-action@v6.8.0
+      if: ${{ steps.docker-meta.outputs.tags != ''}}
+      with:
+        source: .
+        targets: ${{ inputs.target }}
+        allow: fs.write=*
+        files: |
+          ./docker-bake.hcl
+          ${{ steps.docker-meta.outputs.bake-file }}
+          ${{ steps.docker-cache.outputs.bake-file }}
+    - name: Extract Image Registry/Tags from Metadata
+      id: extract-image
+      env:
+        METADATA: ${{ steps.docker-bake.outputs.metadata }}
+      shell: bash
+      run: |
+        WEB_IMAGE="$(echo $METADATA | jq -r 'to_entries[] | select(.key|endswith("web")).value."image.name"')"
+        FPM_IMAGE="$(echo $METADATA | jq -r 'to_entries[] | select(.key|endswith("fpm")).value."image.name"')"
+        echo "WEB_IMAGE=${WEB_IMAGE%,*}" >> "$GITHUB_ENV"
+        echo "FPM_IMAGE=${FPM_IMAGE%,*}" >> $GITHUB_ENV"
+    - name: Compress & Tar Frontend Assets
+      if: ${{ steps.docker-meta.outputs.tags != ''}}
+      shell: bash
+      run: |
+        echo "::group::Compress frontend assets"
+        tar -czvf $RUNNER_TEMP/frontend-bundle.tar.gz \
+          -C $CI_TMP_DIR/var/www/html .
+        echo "::endgroup::"
+    - name: Upload Frontend Bundle as Github Artifact
+      if: ${{ steps.docker-meta.outputs.tags != ''}}
+      uses: actions/upload-artifact@v4
+      with:
+        name: frontend-bundle
+        path: $CI_TMP_DIR/var/www/html/
+    - name: Setup ORAS
+      if: ${{ steps.docker-meta.outputs.tags != ''}}
+      uses: oras-project/setup-oras@v1
+    - shell: bash
+      name: Attach Frontend Bundle to Docker Image
+      if: ${{ steps.docker-meta.outputs.tags != ''}}
+      run: |
+        echo ${{ inputs.token }} | oras login --username wreality --password-stdin ghcr.io
+        oras attach $WEB_IMAGE \
+        --artifact-type application/vnd.mesh.frontend-bundle.v1+tar \
+        frontend-bundle.tar.gz
