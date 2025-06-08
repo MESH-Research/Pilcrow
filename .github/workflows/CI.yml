@@ -26,7 +26,7 @@ jobs:
       - uses: wreality/filtered-env@v1.0.0
         with:
           tags: ${{ needs.publish.outputs.tags}}
-          token: ${{ secrets.REPO_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN}}
         id: matches
   client-unit-test:
     name: "Client / Unit Test"

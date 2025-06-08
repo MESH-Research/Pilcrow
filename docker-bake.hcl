@@ -2,73 +2,92 @@ variable "VERSION" {
     default = "source"
 }
 
-variable "VERSION_URL" {
-    default = ""
-}
-
-variable "VERSION_DATE" {
-    default = ""
-}
-
-variable "GITHUB_REF_NAME" {
-    default = ""
-}
-
-variable "WEB_CACHE_FROM" {
-    default = ""
-}
-
-variable "WEB_CACHE_TO" {
-    default = ""
-}
-
-variable "FPM_CACHE_FROM" {
-    default = ""
-}
-
-variable "FPM_CACHE_TO" {
-    default = ""
+variable "CI_TMP_DIR" {
+    default = "/tmp/webbuild"
 }
 
 target "fpm" {
     context = "backend"
-
     labels = {
-        "org.opencontainers.image.description" = "Pilcrow FPM Container Image version: ${ VERSION }@${VERSION_DATE } (${ VERSION_URL })"
+        for k, v in target.default-labels.labels : k => replace(v, "__service__", "fpm")
     }
-    output = ["type=image,push=true,annotation-index.org.opencontainers.image.description=Pilcrow FPM Container Image version: ${ VERSION }@${VERSION_DATE } (${ VERSION_URL })"]
-    cache-from = ["${FPM_CACHE_FROM}", "type=registry,ref=ghcr.io/mesh-research/pilcrow/fpm:edge"]
-    cache-to = ["${FPM_CACHE_TO}"]
 }
 
 
 target "web" {
     context = "client"
-
     labels = {
-        "org.opencontainers.image.description" = "Pilcrow WEB Container Image version: ${ VERSION }@${VERSION_DATE } (${ VERSION_URL })"
+        for k, v in target.default-labels.labels : k => replace(v, "__service__", "web")
     }
-    output = ["type=image,push=true,annotation-index.org.opencontainers.image.description=Pilcrow WEB Container Image version: ${ VERSION }@${VERSION_DATE } (${ VERSION_URL })", "type=local,dest=/tmp/webbuild"]
-    cache-from = ["${WEB_CACHE_FROM}", "type=registry,ref=ghcr.io/mesh-research/pilcrow/web:edge"]
-    cache-to = ["${WEB_CACHE_TO}"]
 }
 
+target "default-labels" {
+    labels = {
+        "net.mesh-research.pilcrow.service" = "__service__"
+        "net.mesh-research.pilcrow.version" = "${VERSION}"
 
-target "fpm-release" {
-    inherits = ["fpm"]
-}
-
-target "web-release" {
-    inherits = ["web"]
-    platforms = ["linux/amd64", "linux/arm64"]
+    }
 }
 
 group "default" {
     targets = ["fpm", "web"]
 }
 
+target "ci" {
+    matrix = {
+        item = [
+            {
+                tgt = "fpm"
+                output = ["type=image,push=true"]
+            },
+            {
+                tgt = "web"
+                output = ["type=image,push=true", "type=local,dest=${CI_TMP_DIR}"]
+            }
+        ]
+    }
+    name = "ci-${item.tgt}"
+    inherits = [item.tgt]
 
-group "release" {
-    targets = ["fpm-release", "web-release"]
+    #Metadata action supllies us the tags to use.
+    tags = [for tag in target.docker-metadata-action.tags : replace(tag, "__service__", item.tgt)]
 
+    #Merge labels from metadata action and default-labels
+    #Replace __service__ with the target name
+    labels = merge(
+        { for k,v in target.docker-metadata-action.labels :
+            k => replace(v, "__service__", item.tgt)
+        },
+        { for k,v  in target.default-labels.labels :
+            k => replace(v, "__service__", item.tgt)
+        }
+    )
+
+    #Set cache-from and cache-to based on the cache-config action
+    #Replace __service__ with the target name
+    cache-from = [ for v in target.docker-build-cache-config-action.cache-from : cacheReplace(v, item.tgt)]
+    cache-to = [ for v in target.docker-build-cache-config-action.cache-to : cacheReplace(v, item.tgt)]
+
+    output = item.output
+}
+target "docker-metadata-action" {}
+
+target "docker-build-cache-config-action" {}
+
+target "release" {
+    matrix = {
+        tgt = ["fpm", "web"]
+    }
+    name = "release-${tgt}"
+    inherits = ["ci-${tgt}"]
+
+    #For release targets, we want to build multi-platform images.
+    platforms = ["linux/amd64", "linux/arm64"]
+}
+
+function "cacheReplace" {
+    params = [config, service]
+    result = {
+        for k, v in config : k => replace(v, "__service__", service)
+    }
 }
