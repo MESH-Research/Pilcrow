@@ -110,7 +110,7 @@ runs:
         WEB_IMAGE="$(echo $METADATA | jq -r 'to_entries[] | select(.key|endswith("web")).value."image.name"')"
         FPM_IMAGE="$(echo $METADATA | jq -r 'to_entries[] | select(.key|endswith("fpm")).value."image.name"')"
         echo "WEB_IMAGE=${WEB_IMAGE%,*}" >> "$GITHUB_ENV"
-        echo "FPM_IMAGE=${FPM_IMAGE%,*}" >> $GITHUB_ENV"
+        echo "FPM_IMAGE=${FPM_IMAGE%,*}" >> "$GITHUB_ENV"
     - name: Compress & Tar Frontend Assets
       if: ${{ steps.docker-meta.outputs.tags != ''}}
       shell: bash
