@@ -62,7 +62,7 @@ runs:
                   type=edge
                   type=semver,pattern={{version}}
                   type=semver,pattern={{major}}.{{minor}}
-                  type=sha,enable=${{ inputs.target == 'default'}}
+                  type=sha,enable=${{ inputs.target == 'ci'}}
         - uses: int128/docker-build-cache-config-action@v1
           id: docker-cache
           with:
