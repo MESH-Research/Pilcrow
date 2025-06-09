@@ -2,6 +2,7 @@ FROM php:8.2.11-fpm
 ARG TARGETARCH
 ARG PHP_EXTS="bcmath pdo_mysql pcntl zip"
 ARG PHP_PECL_EXTS="redis"
+
 RUN  apt update && apt install -y openssl ca-certificates libzip-dev libaio1 libncurses6 libnuma1 libxml2-dev git libfcgi-bin \
   && docker-php-ext-install -j$(nproc) ${PHP_EXTS} \
   && pecl install ${PHP_PECL_EXTS} \
@@ -16,6 +17,7 @@ RUN chmod +x /wait
 
 ADD https://raw.githubusercontent.com/renatomefi/php-fpm-healthcheck/master/php-fpm-healthcheck /usr/local/bin/
 RUN chmod 0755 /usr/local/bin/php-fpm-healthcheck
+
 
 RUN curl --silent --show-error -L https://github.com/jgm/pandoc/releases/download/2.18/pandoc-2.18-1-${TARGETARCH}.deb -o /tmp/pandoc.deb && \
   dpkg -i /tmp/pandoc.deb && \
@@ -33,6 +35,9 @@ WORKDIR /var/www/html
 USER www-data:www-data
 COPY --chown=www-data composer.json composer.lock ./
 
+#Make storage directories
+RUN mkdir -p storage/framework/cache storage/framework/sessions storage/framework/views
+
 #Install dependencies with dev if dev arg is true
 
 RUN composer install --no-scripts --no-autoloader --prefer-dist --no-dev
@@ -41,7 +46,6 @@ RUN composer install --prefer-dist --no-plugins
 
 
 #CREATE STORAGE DIRECTORIES
-RUN mkdir -p storage/framework/cache storage/framework/sessions storage/framework/views
 
 #FIX PERMISSIONS
 RUN chmod +x artisan scripts/docker/reseed.sh

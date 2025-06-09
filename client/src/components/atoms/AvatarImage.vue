@@ -44,7 +44,7 @@ export default {
       }
       const number = Math.abs(stringToInt(this.user.email)) % colors.length
 
-      return `/avatar-${colors[number]}.png`
+      return `/avatar/avatar-${colors[number]}.png`
     },
   },
 }
