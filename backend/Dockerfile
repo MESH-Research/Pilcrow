@@ -57,6 +57,6 @@ RUN chmod +x artisan scripts/docker/reseed.sh
 #Copy version changes last to limit cache busting
 COPY --chown=www-data config/pilcrow.php config/pilcrow.php
 #Mint Version into Image
-RUN sed -i "s/env('VERSION', '')/env('VERSION', '${VERSION}')/g" config/pilcrow.php && \
-    sed -i "s/env('VERSION_URL', '')/env('VERSION_URL', '${VERSION_URL}')/g" config/pilcrow.php && \
-    sed -i "s/env('VERSION_DATE', '')/env('VERSION_DATE', '${VERSION_DATE}')/g" config/pilcrow.php
+RUN sed -i "s#env('VERSION', '')#env('VERSION', '${VERSION}')#g" config/pilcrow.php && \
+    sed -i "s#env('VERSION_URL', '')#env('VERSION_URL', '${VERSION_URL}')#g" config/pilcrow.php && \
+    sed -i "s#env('VERSION_DATE', '')#env('VERSION_DATE', '${VERSION_DATE}')#g" config/pilcrow.php
