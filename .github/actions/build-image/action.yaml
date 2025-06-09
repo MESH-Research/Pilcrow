@@ -31,7 +31,7 @@ runs:
       id: tagger
       shell: bash
       run: |
-        VERSION=$(git describe --tags)
+        VERSION=$(git describe --tags --match "v*")
         VERSION_URL=https://github.com/${GITHUB_REPOSITORY}/commits/${GITHUB_SHA}
         VERSION_DATE=$(git show -s --format=%cI ${GITHUB_SHA})
         REPO=${GITHUB_REPOSITORY,,}
