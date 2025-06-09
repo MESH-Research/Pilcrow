@@ -1,0 +1,19 @@
+name: Run Helm Tests
+on:
+  pull_request:
+    paths:
+      - "helm/**"
+  push:
+    branches:
+      - master
+    paths:
+      - "helm/**"
+jobs:
+  helm-tests:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: d3adb5/helm-unittest-action@v2
+      - run: |
+          helm dependency update helm
+          helm unittest helm

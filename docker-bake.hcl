@@ -76,13 +76,20 @@ target "docker-build-cache-config-action" {}
 
 target "release" {
     matrix = {
-        tgt = ["fpm", "web"]
+        item = [ {
+            tgt= "fpm"
+            platforms = ["linux/amd64"]
+        },
+        {
+            tgt = "web"
+            platforms = ["linux/amd64", "linux/arm64"]
+        }]
     }
-    name = "release-${tgt}"
-    inherits = ["ci-${tgt}"]
+    name = "release-${item.tgt}"
+    inherits = ["ci-${item.tgt}"]
 
     #For release targets, we want to build multi-platform images.
-    platforms = ["linux/amd64", "linux/arm64"]
+    platforms = item.platforms
 }
 
 function "cacheReplace" {
