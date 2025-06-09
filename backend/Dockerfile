@@ -1,5 +1,5 @@
 FROM php:8.2.11-fpm
-
+ARG TARGETARCH
 ARG PHP_EXTS="bcmath pdo_mysql pcntl zip"
 ARG PHP_PECL_EXTS="redis"
 
@@ -18,15 +18,16 @@ RUN chmod +x /wait
 ADD https://raw.githubusercontent.com/renatomefi/php-fpm-healthcheck/master/php-fpm-healthcheck /usr/local/bin/
 RUN chmod 0755 /usr/local/bin/php-fpm-healthcheck
 
-RUN curl --silent --show-error -L https://github.com/jgm/pandoc/releases/download/2.18/pandoc-2.18-1-amd64.deb -o /tmp/pandoc.deb && \
-    dpkg -i /tmp/pandoc.deb && \
-    rm /tmp/pandoc.deb
+
+RUN curl --silent --show-error -L https://github.com/jgm/pandoc/releases/download/2.18/pandoc-2.18-1-${TARGETARCH}.deb -o /tmp/pandoc.deb && \
+  dpkg -i /tmp/pandoc.deb && \
+  rm /tmp/pandoc.deb
 
 RUN cd /tmp && \
-    curl --silent --show-error -L https://downloads.mysql.com/archives/get/p/23/file/{mysql-common,mysql-community-client}_5.7.29-1debian10_amd64.deb -O && \
-    dpkg -i /tmp/mysql-common_5.7.29-1debian10_amd64.deb && \
-    dpkg -i /tmp/mysql-community-client_5.7.29-1debian10_amd64.deb && \
-    rm -rf /tmp/mysql*
+  curl --silent --show-error -L https://downloads.mysql.com/archives/get/p/23/file/{mysql-common,mysql-community-client}_5.7.29-1debian10_${TARGETARCH}.deb -O && \
+  dpkg -i /tmp/mysql-common_5.7.29-1debian10_${TARGETARCH}.deb && \
+  dpkg -i /tmp/mysql-community-client_5.7.29-1debian10_${TARGETARCH}.deb && \
+  rm -rf /tmp/mysql*
 
 RUN set -xe && echo "pm.status_path = /status" >> /usr/local/etc/php-fpm.d/zz-docker.conf
 

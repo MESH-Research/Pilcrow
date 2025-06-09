@@ -17,6 +17,11 @@ end_of_line = crlf
 indent_size = 2
 indent_style = space
 
+
+[*.yaml]
+indent_size = 2
+indent_style = space
+
 [*.twig]
 insert_final_newline = false
 

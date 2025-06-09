@@ -1,13 +1,17 @@
 name: CI
 on:
   pull_request:
+    paths-ignore:
+      - "helm/**"
+      - ".release-please-manifest.json"
   merge_group:
   push:
     branches:
       - master
       - renovate/*
-    tags:
-      - "v*"
+    paths-ignore:
+      - "helm/**"
+      - ".release-please-manifest.json"
 permissions:
   packages: write
 concurrency:
@@ -15,19 +19,6 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  environments:
-    name: "Environments"
-    needs:
-      - publish
-    runs-on: ubuntu-24.04
-    outputs:
-      environments: ${{ steps.matches.outputs.environments }}
-    steps:
-      - uses: wreality/filtered-env@v1.0.0
-        with:
-          tags: ${{ needs.publish.outputs.tags}}
-          token: ${{ secrets.REPO_TOKEN }}
-        id: matches
   client-unit-test:
     name: "Client / Unit Test"
     runs-on: ubuntu-24.04
@@ -46,7 +37,10 @@ jobs:
     outputs:
       version: ${{ steps.build-image.outputs.version }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
       - name: Login to Github Packages
         uses: docker/login-action@v2
         with:
@@ -56,6 +50,8 @@ jobs:
       - uses: ./.github/actions/build-image
         id: build-image
         name: Build Image
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
   backend-unit-test:
     name: Backend / Unit Test
     needs: [build-images]
@@ -127,40 +123,3 @@ jobs:
         run: yarn install
       - name: Check MD
         run: yarn lint:md
-  publish:
-    name: "Publish (master branch only)"
-    runs-on: ubuntu-24.04
-    needs: [backend-unit-test, client-unit-test, e2e]
-    if: github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/v')
-    outputs:
-      tags: ${{ steps.build-image.outputs.tags }}
-    steps:
-      - uses: actions/checkout@v3
-      - name: Login to Github Packages
-        uses: docker/login-action@v2
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-      - uses: ./.github/actions/build-image
-        id: build-image
-        with:
-          target: release
-  deployments:
-    runs-on: ubuntu-24.04
-    needs:
-      - environments
-      - publish
-    name: "Deploy"
-    environment:
-      name: ${{ matrix.environment }}
-      url: ${{ vars.URL }}
-    strategy:
-      fail-fast: false
-      matrix:
-        environment: ${{ fromJson(needs.environments.outputs.environments) }}
-    steps:
-      - uses: actions/checkout@v3
-      - run: |
-          curl -X POST -H 'Authorization: Bearer ${{ secrets.DEPLOY_KEY}}' ${{ secrets.DEPLOY_URL }}
-        shell: bash
