@@ -49,15 +49,6 @@ runs:
         else
             echo "IMAGE_BASE=${DOCKER_IMAGE_CACHE}" >> "$GITHUB_ENV"
         fi
-    - name: Replace version string in source files
-      shell: bash
-      run: |
-        sed -i "s|env('VERSION', '')|env('VERSION', '${VERSION}')|" backend/config/app.php
-        sed -i "s|env('VERSION_URL', '')|env('VERSION_URL', '${VERSION_URL}')|" backend/config/app.php
-        sed -i "s|env('VERSION_DATE', '')|env('VERSION_DATE', '${VERSION_DATE}')|" backend/config/app.php
-        sed -i "s|process.env.VERSION_DATE|'${VERSION_DATE}'|" client/src/components/AppFooter.vue
-        sed -i "s|process.env.VERSION_URL|'${VERSION_URL}'|" client/src/components/AppFooter.vue
-        sed -i "s|process.env.VERSION|'${VERSION}'|" client/src/components/AppFooter.vue
     - uses: docker/setup-buildx-action@v3
     - name: Docker Meta
       id: docker-meta

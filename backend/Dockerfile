@@ -1,4 +1,7 @@
 FROM php:8.2.11-fpm
+ARG VERSION
+ARG VERSION_URL
+ARG VERSION_DATE
 ARG TARGETARCH
 ARG PHP_EXTS="bcmath pdo_mysql pcntl zip"
 ARG PHP_PECL_EXTS="redis"
@@ -41,11 +44,19 @@ RUN mkdir -p storage/framework/cache storage/framework/sessions storage/framewor
 #Install dependencies with dev if dev arg is true
 
 RUN composer install --no-scripts --no-autoloader --prefer-dist --no-dev
-COPY --chown=www-data  . .
+COPY --chown=www-data . .
 RUN composer install --prefer-dist --no-plugins
 
 
 #CREATE STORAGE DIRECTORIES
+RUN mkdir -p storage/framework/cache storage/framework/sessions storage/framework/views
 
 #FIX PERMISSIONS
 RUN chmod +x artisan scripts/docker/reseed.sh
+
+#Copy version changes last to limit cache busting
+COPY --chown=www-data config/pilcrow.php config/pilcrow.php
+#Mint Version into Image
+RUN sed -i "s/env('VERSION', '')/env('VERSION', '${VERSION}')/g" config/pilcrow.php && \
+    sed -i "s/env('VERSION_URL', '')/env('VERSION_URL', '${VERSION_URL}')/g" config/pilcrow.php && \
+    sed -i "s/env('VERSION_DATE', '')/env('VERSION_DATE', '${VERSION_DATE}')/g" config/pilcrow.php

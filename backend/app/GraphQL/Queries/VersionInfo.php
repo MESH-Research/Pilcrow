@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\GraphQL\Queries;
@@ -15,9 +16,9 @@ final class VersionInfo
     public function __invoke(null $_, array $__)
     {
         return [
-          'version' => config('app.version'),
-          'version_url' => config('app.version_url'),
-          'version_date' => config('app.version_date'),
+            'version' => config('pilcrow.version', ''),
+            'version_url' => config('pilcrow.version_url', ''),
+            'version_date' => config('pilcrow.version_date', ''),
         ];
     }
 }
