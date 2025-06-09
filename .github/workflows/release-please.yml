@@ -7,6 +7,9 @@ jobs:
   release-please:
     runs-on: ubuntu-24.04
     steps:
+      - shell: bash
+        run: |
+          echo "REPO=${GITHUB_REPOSITORY,,}" >> "$GITHUB_ENV"
       - uses: googleapis/release-please-action@v4
         id: release
         with:
@@ -20,7 +23,7 @@ jobs:
         uses: wreality/helm-push@v1
         with:
           useOCIRegistry: true
-          registry-url: oci://ghcr.io/${{ github.repository_owner }}
+          registry-url: oci://ghcr.io/${{ env.REPO }}
           username: ${{ github.actor }}
           access-token: ${{ secrets.REPO_TOKEN }}
           update-dependencies: true
