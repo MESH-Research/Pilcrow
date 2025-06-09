@@ -20,13 +20,13 @@ outputs:
   tags:
     description: "List of tags"
     value: ${{ steps.docker-meta.outputs.tags}}
+  frontend_bundle:
+    description: "Path to the frontend bundle"
+    value: ${{ steps.frontend-bundle.outputs.bundle_file }}
+
 runs:
   using: "composite"
   steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
-      with:
-        fetch-depth: 0
     - name: Pre-build setup
       id: tagger
       shell: bash
@@ -109,31 +109,37 @@ runs:
       run: |
         WEB_IMAGE="$(echo $METADATA | jq -r 'to_entries[] | select(.key|endswith("web")).value."image.name"')"
         FPM_IMAGE="$(echo $METADATA | jq -r 'to_entries[] | select(.key|endswith("fpm")).value."image.name"')"
-        echo "WEB_IMAGE=${WEB_IMAGE%,*}" >> "$GITHUB_ENV"
-        echo "FPM_IMAGE=${FPM_IMAGE%,*}" >> "$GITHUB_ENV"
+        echo "WEB_IMAGE=${WEB_IMAGE%%,*}" >> "$GITHUB_ENV"
+        echo "FPM_IMAGE=${FPM_IMAGE%%,*}" >> "$GITHUB_ENV"
     - name: Compress & Tar Frontend Assets
       id: frontend-bundle
-      if: ${{ steps.docker-meta.outputs.tags != ''}}
+      if: ${{ env.WEB_IMAGE != '' }}
       shell: bash
       run: |
         echo "::group::Compress frontend assets"
         FRONTEND_BUNDLE="$RUNNER_TEMP/frontend-bundle.tar.gz"
+        if [ "${{ inputs.target }}" == "release" ]; then
+          ASSETS_PATH="${{ env.CI_TMP_DIR }}/linux_amd64/var/www/html"
+        else
+          ASSETS_PATH="${{ env.CI_TMP_DIR }}/var/www/html"
+        fi
         tar -czvf $FRONTEND_BUNDLE \
-          -C $CI_TMP_DIR/var/www/html .
+          -C $ASSETS_PATH .
         echo "bundle_file=$FRONTEND_BUNDLE" >> "$GITHUB_OUTPUT"
+        echo "assets_path=$ASSETS_PATH" >> "$GITHUB_OUTPUT"
         echo "::endgroup::"
     - name: Upload Frontend Bundle as Github Artifact
-      if: ${{ steps.docker-meta.outputs.tags != ''}}
       uses: actions/upload-artifact@v4
+      if: ${{ env.WEB_IMAGE != '' }}
       with:
         name: frontend-bundle
-        path: ${{ env.CI_TMP_DIR }}/var/www/html/
+        path: ${{ steps.frontend-bundle.outputs.assets_path }}
     - name: Setup ORAS
-      if: ${{ steps.docker-meta.outputs.tags != ''}}
+      if: ${{ env.WEB_IMAGE != '' }}
       uses: oras-project/setup-oras@v1
     - shell: bash
       name: Attach Frontend Bundle to Docker Image
-      if: ${{ steps.docker-meta.outputs.tags != ''}}
+      if: ${{ env.WEB_IMAGE != '' }}
       run: |
         echo ${{ inputs.token }} | oras login --username wreality --password-stdin ghcr.io
         oras attach $WEB_IMAGE \

@@ -7,27 +7,15 @@ jobs:
   release-please:
     runs-on: ubuntu-24.04
     steps:
-      - shell: bash
-        run: |
-          echo "REPO=${GITHUB_REPOSITORY,,}" >> "$GITHUB_ENV"
       - uses: googleapis/release-please-action@v4
         id: release
         with:
           token: ${{ secrets.REPO_TOKEN }}
-      - uses: actions/checkout@v4
-        if: ${{ steps.release.outputs.releases_created }}
+      - name: Checkout Repository
+        if: ${{ steps.release.outputs.release_created }}
+        uses: actions/checkout@v4
         with:
-          fetch-depth: 0
           token: ${{ secrets.REPO_TOKEN }}
-      - if: ${{ steps.release.outputs.helm--release_created }}
-        uses: wreality/helm-push@v1
-        with:
-          useOCIRegistry: true
-          registry-url: oci://ghcr.io/${{ env.REPO }}
-          username: ${{ github.actor }}
-          access-token: ${{ secrets.REPO_TOKEN }}
-          update-dependencies: true
-          chart-folder: helm
       - name: Update appVersion in helm chart
         if: ${{ steps.release.outputs.release_created }}
         run: |
