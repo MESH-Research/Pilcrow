@@ -13,28 +13,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Laravel'),
-
-    /*
-    |--------------------------------------------------------------------------
-    | CDN Base URL
-    |--------------------------------------------------------------------------
-    |
-    | If you are using a CDN to serve your assets, you can specify the base
-    | URL here. This will be used to generate URLs for static assets.
-    |
-    */
-
-    'cdn_base' => rtrim(env('CDN_BASE', ''), '/'),
-
-    /*
-    |--------------------------------------------------------------------------
-    | Version Strings
-    |--------------------------------------------------------------------------
-    */
-    'version' => env('VERSION', ''),
-    'version_url' => env('VERSION_URL', ''),
-    'version_date' => env('VERSION_DATE', ''),
+    'name' => env('APP_NAME', 'Pilcrow'),
 
     /*
     |--------------------------------------------------------------------------
@@ -258,8 +237,8 @@ return [
     ],
 
     'external_oauth_providers' => [
-      'google' => \App\OauthAdapters\GoogleAdapter::class,
-      'orcid' => \App\OauthAdapters\OrcidAdapter::class,
+        'google' => \App\OauthAdapters\GoogleAdapter::class,
+        'orcid' => \App\OauthAdapters\OrcidAdapter::class,
     ],
 
 ];

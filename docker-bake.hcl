@@ -1,5 +1,13 @@
 variable "VERSION" {
-    default = "source"
+    default = ""
+}
+
+variable "VERSION_URL" {
+    default = ""
+}
+
+variable "VERSION_DATE" {
+    default = ""
 }
 
 variable "CI_TMP_DIR" {
@@ -8,6 +16,11 @@ variable "CI_TMP_DIR" {
 
 target "fpm" {
     context = "backend"
+    args = {
+        VERSION = VERSION
+        VERSION_URL = VERSION_URL
+        VERSION_DATE = VERSION_DATE
+    }
     labels = {
         for k, v in target.default-labels.labels : k => replace(v, "__service__", "fpm")
     }
@@ -16,6 +29,11 @@ target "fpm" {
 
 target "web" {
     context = "client"
+    args = {
+        VERSION = VERSION
+        VERSION_URL = VERSION_URL
+        VERSION_DATE = VERSION_DATE
+    }
     labels = {
         for k, v in target.default-labels.labels : k => replace(v, "__service__", "web")
     }
