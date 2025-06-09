@@ -87,7 +87,7 @@ runs:
     - name: Upload Docker Bake Files
       uses: actions/upload-artifact@v4
       with:
-        name: docker-cache-bake-file
+        name: docker-bake-src
         path: ${{ steps.cp-bake-files.outputs.directory }}
     - name: Build and push
       id: docker-bake
