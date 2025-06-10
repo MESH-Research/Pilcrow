@@ -3,6 +3,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.32.0](https://github.com/MESH-Research/Pilcrow/compare/v0.31.1...v0.32.0) (2025-06-10)
+
+
+### Features
+
+* support hosting frontend files on a CDN. ([#2151](https://github.com/MESH-Research/Pilcrow/issues/2151)) ([9842dec](https://github.com/MESH-Research/Pilcrow/commit/9842dec6ec9978f7977328cf2ae5d0ed1a4831cf))
+
 ## [0.31.1](https://github.com/MESH-Research/Pilcrow/compare/v0.31.0...v0.31.1) (2025-06-05)
 
 
