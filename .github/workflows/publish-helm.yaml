@@ -5,6 +5,7 @@ on:
       - "pilcrow-helm-v*"
 permissions:
   packages: write
+  contents: write
 concurrency:
   group: helmpub-${{ format('{0}-{1}', github.ref_name || github.run_number, github.job) }}
   cancel-in-progress: true
@@ -20,11 +21,11 @@ jobs:
           useOCIRegistry: true
           registry-url: oci://ghcr.io/${{ env.REPO }}
           username: ${{ github.actor }}
-          access-token: ${{ secrets.REPO_TOKEN }}
+          access-token: ${{ secrets.GITHUB_TOKEN }}
           update-dependencies: true
           chart-folder: helm
       - name: Attach helm chart to release
         run: |
           gh release upload ${{ github.ref_name }} ${{ github.workspace }}/${{ steps.helm-push.outputs.chart-package }}
         env:
-          GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

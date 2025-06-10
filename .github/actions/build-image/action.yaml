@@ -132,7 +132,7 @@ runs:
       name: Attach Frontend Bundle to Docker Image
       if: ${{ env.WEB_IMAGE != '' }}
       run: |
-        echo ${{ inputs.token }} | oras login --username wreality --password-stdin ghcr.io
+        oras login --username "${{ github.actor }}" --password "${{ inputs.token }}" ghcr.io
         oras attach $WEB_IMAGE \
         --disable-path-validation \
         --artifact-type application/vnd.mesh.frontend-bundle.v1+tgz \

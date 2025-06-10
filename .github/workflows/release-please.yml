@@ -7,21 +7,31 @@ jobs:
   release-please:
     runs-on: ubuntu-24.04
     steps:
+      - name: Generate Token
+        id: token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
       - uses: googleapis/release-please-action@v4
         id: release
         with:
-          token: ${{ secrets.REPO_TOKEN }}
+          token: ${{ steps.token.outputs.token }}
       - name: Checkout Repository
         if: ${{ steps.release.outputs.release_created }}
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.REPO_TOKEN }}
+          token: ${{ steps.token.outputs.token }}
       - name: Update appVersion in helm chart
         if: ${{ steps.release.outputs.release_created }}
+        env:
+          COMMIT_USER: "github-actions[bot]"
+          COMMIT_EMAIL: "41898282+github-actions[bot]@users.noreply.github.com"
+          COMMIT_MESSAGE: "feat(helm): Update chart to appVersion ${{ steps.release.outputs.version }}"
         run: |
           sed -i "s|appVersion: .*|appVersion: ${{ steps.release.outputs.version }}|" helm/Chart.yaml
-          git config --global user.name "Brian Adams"
-          git config --global user.email "adamsb@msu.edu"
+          git config --global user.name "${COMMIT_USER}"
+          git config --global user.email "${COMMIT_EMAIL}"
           git add helm/Chart.yaml
-          git commit -m "fix(helm): Update to appVersion ${{ steps.release.outputs.version }}"
+          git commit -m "${COMMIT_MESSAGE}"
           git push
