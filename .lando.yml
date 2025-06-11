@@ -3,7 +3,7 @@ recipe: laravel
 env_file:
   - .env
 config:
-  php: "8.2"
+  php: "8.4"
   composer_version: 2
   composer: []
   webroot: backend/public
@@ -23,6 +23,8 @@ services:
     command: cd /app/client && yarn dev
     scanner: false
   appserver:
+    environments:
+      MYSQL_OPT_SSL_VERIFY_SERVER_CERT: "0"
     build:
       - cd /app/backend && composer install
       - bash /app/.lando/no_env_setup.sh
