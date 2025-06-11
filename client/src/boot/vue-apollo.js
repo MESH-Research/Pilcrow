@@ -1,4 +1,4 @@
-import { boot } from "quasar/wrappers"
+import { defineBoot } from "#q-app/wrappers"
 import { ApolloClient, InMemoryCache, ApolloLink } from "@apollo/client/core"
 import {
   beforeEachRequiresAuth,
@@ -23,10 +23,10 @@ const httpOptions = {
 const httpLink = ApolloLink.split(
   (operation) => operation.getContext().hasUpload,
   createUploadLink(httpOptions),
-  new BatchHttpLink(httpOptions)
+  new BatchHttpLink(httpOptions),
 )
 
-export default boot(async ({ app, router }) => {
+export default defineBoot(async ({ app, router }) => {
   const apolloClient = new ApolloClient({
     link: ApolloLink.from([expiredTokenLink, withXsrfLink, httpLink]),
     cache: new InMemoryCache({
@@ -39,63 +39,63 @@ export default boot(async ({ app, router }) => {
         ],
       },
     }),
-    connectToDevTools: true
+    connectToDevTools: true,
   })
 
   /**
    * Check routes for requiresAuth meta field.
    */
   router.beforeEach(async (to, from, next) =>
-    beforeEachRequiresAuth(apolloClient, to, from, next)
+    beforeEachRequiresAuth(apolloClient, to, from, next),
   )
 
   /**
    * Check routes for requiresRoles meta field.
    */
   router.beforeEach(async (to, from, next) =>
-    beforeEachRequiresAppAdmin(apolloClient, to, from, next)
+    beforeEachRequiresAppAdmin(apolloClient, to, from, next),
   )
 
   /**
    * Check routes for requiresDraftAccess meta field.
    */
   router.beforeEach(async (to, from, next) =>
-    beforeEachRequiresDraftAccess(apolloClient, to, from, next)
+    beforeEachRequiresDraftAccess(apolloClient, to, from, next),
   )
 
   /**
    * Check routes for requiresSubmissionAccess meta field.
    */
   router.beforeEach(async (to, from, next) =>
-    beforeEachRequiresSubmissionAccess(apolloClient, to, from, next)
+    beforeEachRequiresSubmissionAccess(apolloClient, to, from, next),
   )
 
   /**
    * Check routes for requiresPreviewAccess meta field.
    */
   router.beforeEach(async (to, from, next) =>
-    beforeEachRequiresPreviewAccess(apolloClient, to, from, next)
+    beforeEachRequiresPreviewAccess(apolloClient, to, from, next),
   )
 
   /**
    * Check routes for requiresViewAccess meta field.
    */
   router.beforeEach(async (to, from, next) =>
-    beforeEachRequiresViewAccess(apolloClient, to, from, next)
+    beforeEachRequiresViewAccess(apolloClient, to, from, next),
   )
 
   /**
    * Check routes for requiresReviewAccess meta field.
    */
   router.beforeEach(async (to, from, next) =>
-    beforeEachRequiresReviewAccess(apolloClient, to, from, next)
+    beforeEachRequiresReviewAccess(apolloClient, to, from, next),
   )
 
   /**
    * Check routes for requiresExportAccess meta field.
    */
   router.beforeEach(async (to, from, next) =>
-    beforeEachRequiresExportAccess(apolloClient, to, from, next)
+    beforeEachRequiresExportAccess(apolloClient, to, from, next),
   )
 
   const apolloClients = {

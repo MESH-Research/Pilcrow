@@ -1,7 +1,7 @@
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
 import { flushPromises, mount } from "@vue/test-utils"
-import { UPDATE_PUBLICATION_CONTENT } from "src/graphql/mutations"
-import { installApolloClient } from "test/vitest/utils"
+import { UPDATE_PUBLICATION_CONTENT } from "/src/graphql/mutations"
+import { installApolloClient } from "app/test/vitest/utils"
 import { ref as mockRef } from "vue"
 import ContentPage from "./ContentPage.vue"
 
@@ -11,7 +11,7 @@ vi.mock("src/use/forms", async (importOriginal) => {
   const forms = await importOriginal()
   return {
     ...forms,
-    useDirtyGuard: () => { },
+    useDirtyGuard: () => {},
     useFormState: () => ({
       dirty: mockRef(false),
       saved: mockRef(false),
