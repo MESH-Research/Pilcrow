@@ -1,7 +1,7 @@
 import { quasar, transformAssetUrls } from "@quasar/vite-plugin"
 import vue from "@vitejs/plugin-vue"
 import { resolve } from "path"
-import jsconfigPaths from "vite-jsconfig-paths"
+import tsconfigPaths from "vite-tsconfig-paths"
 import { defineConfig } from "vitest/config"
 
 // https://vitejs.dev/config/
@@ -23,7 +23,7 @@ export default defineConfig({
     quasar({
       sassVariables: "src/quasar-variables.scss",
     }),
-    jsconfigPaths(),
+    tsconfigPaths(),
   ],
   resolve: {
     alias: {
