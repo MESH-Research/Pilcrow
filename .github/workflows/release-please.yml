@@ -22,12 +22,17 @@ jobs:
         uses: actions/checkout@v4
         with:
           token: ${{ steps.token.outputs.token }}
+      - name: Get GitHub App User ID
+        id: get-user-id
+        run: echo "user-id=$(gh api "/users/${{ steps.token.outputs.app-slug }}[bot]" --jq .id)" >> "$GITHUB_OUTPUT"
+        env:
+          GH_TOKEN: ${{ steps.token.outputs.token }}
       - name: Update appVersion in helm chart
         if: ${{ steps.release.outputs.release_created }}
         env:
-          COMMIT_USER: "github-actions[bot]"
-          COMMIT_EMAIL: "41898282+github-actions[bot]@users.noreply.github.com"
-          COMMIT_MESSAGE: "feat(helm): Update chart to appVersion ${{ steps.release.outputs.version }}"
+          COMMIT_USER: ${{ steps.token.outputs.app-slug }}[bot]
+          COMMIT_EMAIL: ${{ steps.get-user-id.outputs.user-id }}+${{ steps.token.outputs.app-slug }}[bot]@users.noreply.github.com
+          COMMIT_MESSAGE: "feat(helm): :pushpin: Update chart to appVersion ${{ steps.release.outputs.version }}"
         run: |
           sed -i "s|appVersion: .*|appVersion: ${{ steps.release.outputs.version }}|" helm/Chart.yaml
           git config --global user.name "${COMMIT_USER}"
