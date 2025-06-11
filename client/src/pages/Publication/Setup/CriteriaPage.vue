@@ -23,7 +23,7 @@ import PublicationStyleCriteria from "src/components/PublicationStyleCriteria.vu
 defineProps({
   publication: {
     type: Object,
-    required: true,
-  },
+    required: true
+  }
 })
 </script>

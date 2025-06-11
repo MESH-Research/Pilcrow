@@ -2,7 +2,6 @@
   <q-form data-cy="vueAccount" @submit="save()">
     <v-q-wrap t-prefix="account.profile.fields" @vqupdate="updateInput">
       <form-section :first-section="true">
-
         <v-q-input
           ref="usernameInput"
           :v="v$.username"
@@ -57,7 +56,7 @@
               name="fab fa-facebook"
               :class="{
                 'brand-active':
-                  v$.profile_metadata.social_media.facebook.$model.length,
+                  v$.profile_metadata.social_media.facebook.$model.length
               }"
             />
           </template>
@@ -74,7 +73,7 @@
               role="presentation"
               :class="{
                 'brand-active':
-                  v$.profile_metadata.social_media.twitter.$model.length,
+                  v$.profile_metadata.social_media.twitter.$model.length
               }"
               name="fab fa-twitter"
             />
@@ -93,7 +92,7 @@
               role="presentation"
               :class="{
                 'brand-active':
-                  v$.profile_metadata.social_media.instagram.$model.length,
+                  v$.profile_metadata.social_media.instagram.$model.length
               }"
             />
           </template>
@@ -111,7 +110,7 @@
               role="presentation"
               :class="{
                 'brand-active':
-                  v$.profile_metadata.social_media.linkedin.$model.length,
+                  v$.profile_metadata.social_media.linkedin.$model.length
               }"
             />
           </template>
@@ -182,7 +181,7 @@ import {
   rules,
   profile_defaults,
   website_rules,
-  useSocialFieldWatchers,
+  useSocialFieldWatchers
 } from "src/use/profileMetadata"
 import { useDirtyGuard } from "src/use/forms"
 import { isEqual } from "lodash"
@@ -192,8 +191,8 @@ const props = defineProps({
   profileMetadata: {
     required: true,
     validator: (v) =>
-      v === null || typeof v === "object" || typeof v === "undefined",
-  },
+      v === null || typeof v === "object" || typeof v === "undefined"
+  }
 })
 
 const emit = defineEmits(["save"])

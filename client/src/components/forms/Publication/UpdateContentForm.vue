@@ -49,12 +49,12 @@
               label: $q.lang.editor.formatting,
               icon: $q.iconSet.editor.formatting,
               list: 'no-icons',
-              options: ['p', 'h2', 'h3', 'h4', 'h5', 'h6'],
-            },
+              options: ['p', 'h2', 'h3', 'h4', 'h5', 'h6']
+            }
           ],
           ['bold', 'italic', 'underline'],
           ['link', 'unordered', 'ordered', 'outdent', 'indent'],
-          ['undo', 'redo'],
+          ['undo', 'redo']
         ]"
       />
     </div>
@@ -74,8 +74,8 @@ import useVuelidate from "@vuelidate/core"
 const props = defineProps({
   publication: {
     required: true,
-    validator: (v) => v === null || typeof v === "object",
-  },
+    validator: (v) => v === null || typeof v === "object"
+  }
 })
 const emit = defineEmits(["save"])
 const itemUnderEdit = ref(null)
@@ -85,14 +85,14 @@ const options = ["home_page_content", "new_submission_content"]
 const applyDefaults = (obj) => {
   return {
     content: obj[itemUnderEdit.value] ?? "",
-    field: itemUnderEdit.value,
+    field: itemUnderEdit.value
   }
 }
 
 const rules = {
   content: {
-    maxLength: maxLength(4096),
-  },
+    maxLength: maxLength(4096)
+  }
 }
 
 const original = computed(() => applyDefaults(publication.value))

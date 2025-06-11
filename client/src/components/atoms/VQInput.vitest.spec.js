@@ -14,19 +14,19 @@ const factory = (props, provide) => {
     global: {
       provide: {
         formState: useFormState({ loading: queryRef }, { loading: ref(false) }),
-        ...provide,
-      },
+        ...provide
+      }
     },
     props: {
-      ...props,
-    },
+      ...props
+    }
   })
 }
 
 const vuelidateStub = {
   $model: "",
   $path: "field",
-  $error: false,
+  $error: false
 }
 
 describe("VQInput", () => {

@@ -5,7 +5,7 @@ import { Notify } from "quasar"
 import {
   UPDATE_SUBMISSION_REVIEWERS,
   UPDATE_SUBMISSION_REVIEW_COORDINATORS,
-  UPDATE_SUBMISSION_SUBMITERS,
+  UPDATE_SUBMISSION_SUBMITERS
 } from "src/graphql/mutations"
 import { beforeEach, describe, expect, test, vi } from "vitest"
 import AssignedSubmissionUsers from "./AssignedSubmissionUsers.vue"
@@ -16,7 +16,7 @@ const mockClient = installApolloClient()
 describe("AssignedSubmissionUsers", () => {
   const makeWrapper = (props) => {
     return mount(AssignedSubmissionUsers, {
-      props,
+      props
     })
   }
   const reviewersMutation = vi.fn()
@@ -26,7 +26,7 @@ describe("AssignedSubmissionUsers", () => {
   mockClient.setRequestHandler(UPDATE_SUBMISSION_REVIEWERS, reviewersMutation)
   mockClient.setRequestHandler(
     UPDATE_SUBMISSION_REVIEW_COORDINATORS,
-    coordinatorsMutation,
+    coordinatorsMutation
   )
   mockClient.setRequestHandler(UPDATE_SUBMISSION_SUBMITERS, submittersMutation)
 
@@ -43,9 +43,9 @@ describe("AssignedSubmissionUsers", () => {
         effective_role: "review_coordinator",
         reviewers: [
           { id: 1, email: "test@example.com", name: "TestUser" },
-          { id: 2, email: "test2@example.com", name: "TestUser2" },
-        ],
-      },
+          { id: 2, email: "test2@example.com", name: "TestUser2" }
+        ]
+      }
     })
     expect(wrapper).toBeTruthy()
     expect(wrapper.findAll(".q-item")).toHaveLength(2)
@@ -58,8 +58,8 @@ describe("AssignedSubmissionUsers", () => {
         __typename: "Submission",
         id: 1,
         effective_role: "review_coordinator",
-        reviewers: [],
-      },
+        reviewers: []
+      }
     })
     expect(wrapper.findComponent({ ref: "card_no_users" }).exists()).toBe(true)
 
@@ -69,8 +69,8 @@ describe("AssignedSubmissionUsers", () => {
         __typename: "Submission",
         id: 1,
         effective_role: "review_coordinator",
-        reviewers: [{ id: 1, email: "test@example.com", name: "TestUser" }],
-      },
+        reviewers: [{ id: 1, email: "test@example.com", name: "TestUser" }]
+      }
     })
     expect(wrapper.findComponent({ ref: "card_no_users" }).exists()).toBe(false)
     expect(wrapper.findAll(".q-item")).toHaveLength(1)
@@ -83,8 +83,8 @@ describe("AssignedSubmissionUsers", () => {
         __typename: "Submission",
         id: 1,
         effective_role: "review_coordinator",
-        reviewers: [{ id: 1, email: "test@example.com", name: "Test" }],
-      },
+        reviewers: [{ id: 1, email: "test@example.com", name: "Test" }]
+      }
     })
 
     expect(wrapper.findComponent({ name: "QForm" }).exists()).toBe(false)
@@ -97,8 +97,8 @@ describe("AssignedSubmissionUsers", () => {
         __typename: "Submission",
         id: 1,
         effective_role: "review_coordinator",
-        reviewers: [{ id: 1, email: "test@example.com", name: "Test" }],
-      },
+        reviewers: [{ id: 1, email: "test@example.com", name: "Test" }]
+      }
     })
 
     expect(wrapper.findComponent({ name: "QForm" }).exists()).toBe(true)
@@ -114,8 +114,8 @@ describe("AssignedSubmissionUsers", () => {
         __typename: "Submission",
         id: 1,
         effective_role: "review_coordinator",
-        reviewers: [{ id: 1, email: "test@example.com", name: "Test" }],
-      },
+        reviewers: [{ id: 1, email: "test@example.com", name: "Test" }]
+      }
     })
 
     expect(wrapper.findComponent({ name: "QForm" }).exists()).toBe(false)
@@ -128,8 +128,8 @@ describe("AssignedSubmissionUsers", () => {
         __typename: "Submission",
         id: 1,
         effective_role: "review_coordinator",
-        reviewers: [{ id: 1, email: "test@example.com", name: "Test" }],
-      },
+        reviewers: [{ id: 1, email: "test@example.com", name: "Test" }]
+      }
     })
     expect(wrapper.findComponent({ name: "QForm" }).exists()).toBe(true)
   })
@@ -141,8 +141,8 @@ describe("AssignedSubmissionUsers", () => {
         __typename: "Submission",
         id: 1,
         effective_role: "review_coordinator",
-        reviewers: [{ id: 1, email: "test@example.com", name: "Test" }],
-      },
+        reviewers: [{ id: 1, email: "test@example.com", name: "Test" }]
+      }
     })
 
     wrapper.vm.user = { user: { id: 1 } }
@@ -161,8 +161,8 @@ describe("AssignedSubmissionUsers", () => {
         __typename: "Submission",
         id: 1,
         effective_role: "review_coordinator",
-        reviewers: [{ id: 1, email: "test@example.com", name: "Test" }],
-      },
+        reviewers: [{ id: 1, email: "test@example.com", name: "Test" }]
+      }
     })
 
     wrapper.vm.user = { user: { id: 1 } }
@@ -171,7 +171,7 @@ describe("AssignedSubmissionUsers", () => {
     await wrapper.vm.handleUserListClick({ user: { id: 1 } })
     expect(reviewersMutation).toHaveBeenCalledWith({
       disconnect: [1],
-      id: 1,
+      id: 1
     })
   })
 
@@ -183,21 +183,21 @@ describe("AssignedSubmissionUsers", () => {
         __typename: "Submission",
         id: 1,
         effective_role: "review_coordinator",
-        reviewers: [{ id: 1, email: "test@example.com", name: "Test" }],
-      },
+        reviewers: [{ id: 1, email: "test@example.com", name: "Test" }]
+      }
     })
     wrapper.vm.user = { id: 1 }
     await wrapper.vm.handleSubmit()
     expect(reviewersMutation).toHaveBeenCalledWith({
       connect: [1],
-      id: 1,
+      id: 1
     })
   })
 
   test.each([
     ["reviewers", reviewersMutation],
     ["review_coordinators", coordinatorsMutation],
-    ["submitters", submittersMutation],
+    ["submitters", submittersMutation]
   ])("Calls %s mutation", async (roleGroup, mock) => {
     const props = {
       roleGroup,
@@ -205,11 +205,11 @@ describe("AssignedSubmissionUsers", () => {
       container: {
         id: 1,
         effective_role: "review_coordinator",
-        __typename: "Submission",
-      },
+        __typename: "Submission"
+      }
     }
     props.container[roleGroup] = [
-      { id: 1, username: "Test", email: "test@example.com" },
+      { id: 1, username: "Test", email: "test@example.com" }
     ]
     const wrapper = makeWrapper(props)
 

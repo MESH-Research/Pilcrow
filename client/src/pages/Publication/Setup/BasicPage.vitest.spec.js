@@ -19,8 +19,8 @@ vi.mock("src/use/forms", async (importOriginal) => {
       queryLoading: mockRef(false),
       mutationLoading: mockRef(false),
       errorMessage: mockRef(""),
-      mutationError: mockRef({}),
-    }),
+      mutationError: mockRef({})
+    })
   }
 })
 
@@ -31,16 +31,16 @@ describe("BasicPage", () => {
   const makeWrapper = async () => {
     const wrapper = mount(BasicPage, {
       global: {
-        stubs: ["update-basic-form"],
+        stubs: ["update-basic-form"]
       },
       props: {
         publication: {
           id: "1",
           name: "Test Name",
           is_publicly_available: false,
-          is_accepting_submissions: true,
-        },
-      },
+          is_accepting_submissions: true
+        }
+      }
     })
     await flushPromises()
     return wrapper
@@ -62,11 +62,11 @@ describe("BasicPage", () => {
     const newData = {
       name: "new name",
       is_publicly_visible: true,
-      is_accepting_submissions: true,
+      is_accepting_submissions: true
     }
 
     mutateHandler.mockResolvedValue({
-      data: { updatePublication: { id: "1", ...newData } },
+      data: { updatePublication: { id: "1", ...newData } }
     })
 
     const wrapper = await makeWrapper()
@@ -74,7 +74,7 @@ describe("BasicPage", () => {
 
     expect(mutateHandler).toHaveBeenCalledWith({
       id: "1",
-      ...newData,
+      ...newData
     })
   })
 

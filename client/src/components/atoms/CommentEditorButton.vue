@@ -23,23 +23,23 @@
 const props = defineProps({
   isActive: {
     type: Boolean,
-    default: false,
+    default: false
   },
   isDisabled: {
     type: Boolean,
-    default: false,
+    default: false
   },
   clickHandler: {
     type: Function,
-    default: () => {},
+    default: () => {}
   },
   tooltipText: {
     type: String,
-    default: "",
+    default: ""
   },
   iconName: {
     type: String,
-    default: "",
-  },
+    default: ""
+  }
 })
 </script>

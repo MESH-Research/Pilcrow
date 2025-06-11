@@ -1,7 +1,7 @@
 <template>
   <q-layout data-cy="vueIndex">
     <q-page-container>
-      <q-page >
+      <q-page>
         <div class="row items-center justify-center">
           <q-img
             :alt="$t('header.logo_alt')"

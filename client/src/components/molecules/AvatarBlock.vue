@@ -18,12 +18,12 @@ export default {
   props: {
     user: {
       type: Object,
-      required: true,
+      required: true
     },
     avatarSize: {
       type: String,
-      default: "",
-    },
-  },
+      default: ""
+    }
+  }
 }
 </script>

@@ -19,8 +19,8 @@ vi.mock("src/use/forms", async (importOriginal) => {
       state: mockRef("idle"),
       queryLoading: mockRef(false),
       mutationLoading: mockRef(false),
-      errorMessage: mockRef(""),
-    }),
+      errorMessage: mockRef("")
+    })
   }
 })
 
@@ -31,8 +31,8 @@ describe("ProfilePage", () => {
   const makeWrapper = async () => {
     const wrapper = mount(ProfilePage, {
       global: {
-        stubs: ["profile-metadata-form"],
-      },
+        stubs: ["profile-metadata-form"]
+      }
     })
     await flushPromises()
     return wrapper
@@ -57,13 +57,13 @@ describe("ProfilePage", () => {
         twitter: "my_twitter",
         instagram: "my_insta",
         facebook: "my_facebook",
-        linked_in: "my_linkedin",
+        linked_in: "my_linkedin"
       },
       academic_profiles: {
         humanities_commons: "",
-        orcid_id: "",
-      },
-    },
+        orcid_id: ""
+      }
+    }
   })
 
   beforeEach(() => {
@@ -92,7 +92,7 @@ describe("ProfilePage", () => {
     expect(queryHandler).toHaveBeenCalledTimes(1)
     expect(mutateHandler).toHaveBeenCalledWith({
       id: newData.id,
-      ...newData.profile_metadata,
+      ...newData.profile_metadata
     })
   })
 

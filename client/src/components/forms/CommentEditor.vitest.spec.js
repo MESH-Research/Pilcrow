@@ -11,7 +11,7 @@ const styleCriteria = [
     id: 1,
     name: "Relevance",
     description: `Timely and responsive to an issue that concerns a specific public community.`,
-    icon: "close_fullscreen",
+    icon: "close_fullscreen"
   },
   {
     __typename: "StyleCriteria",
@@ -20,14 +20,14 @@ const styleCriteria = [
     description: `Connects with the public at large and resonates with specific, publicly engaged individuals and organizations.
        This usually requires unpacking technical terms, linking to source and related materials, providing transcripts
        for audio and video, and providing alt-text for images.`,
-    icon: "accessibility",
+    icon: "accessibility"
   },
   {
     __typename: "StyleCriteria",
     id: 3,
     name: "Coherence",
     description: `Compelling and well-ordered according to the genre of the piece.`,
-    icon: "psychology",
+    icon: "psychology"
   },
   {
     __typename: "StyleCriteria",
@@ -35,8 +35,8 @@ const styleCriteria = [
     name: "Scholarly Dialogue",
     description: `Cites and considers related discussions either within or outside of the academy, whether encountered in
         peer-reviewed literature or other media such as blogs, magazines, podcasts, galleries, or listservs.`,
-    icon: "question_answer",
-  },
+    icon: "question_answer"
+  }
 ]
 
 installQuasarPlugin({ plugins: { Dialog } })
@@ -48,19 +48,19 @@ describe("CommentEditor", () => {
           provide: {
             submission: ref({
               publication: {
-                style_criterias: styleCriteria,
-              },
-            }),
+                style_criterias: styleCriteria
+              }
+            })
           },
-          stubs: ["i18n-t"],
+          stubs: ["i18n-t"]
         },
         props: {
           commentType: "InlineComment",
           comment: {
-            style_criteria: [],
-          },
-        },
-      }),
+            style_criteria: []
+          }
+        }
+      })
     }
   }
 
@@ -102,7 +102,7 @@ describe("CommentEditor", () => {
     const { wrapper } = wrapperFactory()
     await flushPromises()
     expect(
-      wrapper.findAllComponents('[data-cy="criteria-toggle"]').length,
+      wrapper.findAllComponents('[data-cy="criteria-toggle"]').length
     ).toBe(4)
   })
 

@@ -23,7 +23,7 @@
 <script setup>
 import { QIconPicker } from "@quasar/quasar-ui-qiconpicker"
 import { useDialogPluginComponent } from "quasar"
-import materialIcons from '@quasar/quasar-ui-qiconpicker/src/components/icon-set/material-icons'
+import materialIcons from "@quasar/quasar-ui-qiconpicker/src/components/icon-set/material-icons"
 import { ref } from "vue"
 
 const filter = ref("")
@@ -31,8 +31,8 @@ const props = defineProps({
   icon: {
     type: String,
     default: "",
-    required: false,
-  },
+    required: false
+  }
 })
 
 defineEmits([...useDialogPluginComponent.emits])

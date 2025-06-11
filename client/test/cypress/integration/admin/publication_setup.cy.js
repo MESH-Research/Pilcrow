@@ -105,10 +105,10 @@ describe("Publication Setup", () => {
     cy.dataCy("editBtn").first().click()
     cy.checkA11y(
       {
-        exclude: [['[data-cy="description-input"']], //TODO: Restore this check once quasar #13275 is closed
+        exclude: [['[data-cy="description-input"']] //TODO: Restore this check once quasar #13275 is closed
       },
       null,
-      a11yLogViolations,
+      a11yLogViolations
     )
     //Edit the criteria
     cy.dataCy("name-input").type(" Update")
@@ -126,7 +126,7 @@ describe("Publication Setup", () => {
         cy.dataCy("listItem").first().contains("Accessibility Update")
         cy.dataCy("listItem").first().contains("Updated description")
         cy.dataCy("listItem").first().contains(newIconName)
-      },
+      }
     )
   })
 
@@ -204,10 +204,10 @@ describe("Publication Setup", () => {
     cy.injectAxe()
     cy.checkA11y(
       {
-        exclude: [['[data-cy="content_field"']], //TODO: Restore this check once quasar #13275 is closed
+        exclude: [['[data-cy="content_field"']] //TODO: Restore this check once quasar #13275 is closed
       },
       null,
-      a11yLogViolations,
+      a11yLogViolations
     )
     cy.dataCy("content_field").type("More description.")
     cy.dataCy("button_save").click()

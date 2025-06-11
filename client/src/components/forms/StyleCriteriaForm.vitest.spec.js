@@ -15,14 +15,14 @@ describe("StyleCriteriaForm", () => {
         provide: {
           formState: useFormState(
             { loading: ref(false) },
-            { loading: ref(false) },
-          ),
+            { loading: ref(false) }
+          )
         },
-        stubs: ["QEditor"],
+        stubs: ["QEditor"]
       },
       props: {
-        criteria,
-      },
+        criteria
+      }
     })
   }
 
@@ -59,7 +59,7 @@ describe("StyleCriteriaForm", () => {
     //Save event emitted with correct data
     expect(wrapper.emitted("save")).toHaveLength(1)
     expect(wrapper.emitted("save")[0]).toEqual([
-      { id: "", name: "Test Name", description: "", icon: "task_alt" },
+      { id: "", name: "Test Name", description: "", icon: "task_alt" }
     ])
   })
 
@@ -72,7 +72,7 @@ describe("StyleCriteriaForm", () => {
     await descriptionInput.setValue("a".repeat(4097))
     await form.trigger("submit")
     expect(wrapper.find("[data-cy='description-errors']").text()).toContain(
-      "errors.maxLength",
+      "errors.maxLength"
     )
     expect(descriptionInput.classes("error")).toBe(true)
 
@@ -89,8 +89,8 @@ describe("StyleCriteriaForm", () => {
         id: "",
         name: "Test Name",
         description: "Some simple description",
-        icon: "task_alt",
-      },
+        icon: "task_alt"
+      }
     ])
   })
 
@@ -110,8 +110,8 @@ describe("StyleCriteriaForm", () => {
         id: "1",
         name: "Test Name",
         description: "Test Description",
-        icon: "task_alt",
-      },
+        icon: "task_alt"
+      }
     ])
   })
 
@@ -120,7 +120,7 @@ describe("StyleCriteriaForm", () => {
       id: "1",
       name: "Test Name",
       description: "",
-      icon: "initial_icon",
+      icon: "initial_icon"
     })
 
     Dialog.resolveOk("new-icon")
@@ -134,8 +134,8 @@ describe("StyleCriteriaForm", () => {
         id: "1",
         name: "Test Name",
         description: "",
-        icon: "new-icon",
-      },
+        icon: "new-icon"
+      }
     ])
   })
 
@@ -144,7 +144,7 @@ describe("StyleCriteriaForm", () => {
       id: "1",
       name: "TestName",
       description: "",
-      icon: "initial_icon",
+      icon: "initial_icon"
     })
 
     Dialog.resolveCancel()

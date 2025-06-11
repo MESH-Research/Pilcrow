@@ -40,7 +40,7 @@ import { useDialogPluginComponent } from "quasar"
 import { useMutation } from "@vue/apollo-composable"
 import {
   DELETE_INLINE_COMMENT,
-  DELETE_OVERALL_COMMENT,
+  DELETE_OVERALL_COMMENT
 } from "src/graphql/mutations"
 import { useI18n } from "vue-i18n"
 import { useFeedbackMessages } from "src/use/guiElements"
@@ -49,25 +49,24 @@ const props = defineProps({
   comment: {
     type: Object,
     default: () => {},
-    required: false,
+    required: false
   },
   submissionId: {
     type: String,
-    required: true,
-  },
+    required: true
+  }
 })
 const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } =
   useDialogPluginComponent()
 
-const mutation =
-  props.comment.__typename.startsWith("InlineComment")
-    ? DELETE_INLINE_COMMENT
-    : DELETE_OVERALL_COMMENT
+const mutation = props.comment.__typename.startsWith("InlineComment")
+  ? DELETE_INLINE_COMMENT
+  : DELETE_OVERALL_COMMENT
 const { mutate } = useMutation(mutation)
 const { t } = useI18n()
 const { newStatusMessage } = useFeedbackMessages({
   attrs: {
-    "data-cy": "delete_comment_notify",
+    "data-cy": "delete_comment_notify"
   }
 })
 
@@ -76,11 +75,11 @@ async function deleteComment() {
     await mutate(
       {
         comment_id: String(props.comment.id),
-        submission_id: String(props.submissionId),
+        submission_id: String(props.submissionId)
       },
       {
-        refetchQueries: ["GetSubmissionReview"],
-      },
+        refetchQueries: ["GetSubmissionReview"]
+      }
     )
   } catch (error) {
     newStatusMessage("failure", t("dialog.deleteComment.failure"))

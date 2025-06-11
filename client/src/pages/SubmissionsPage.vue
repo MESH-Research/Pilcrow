@@ -3,15 +3,19 @@
     <h2 class="q-pl-lg" data-cy="submissions_title">
       {{ $t(`submissions.heading`) }}
     </h2>
-    <section v-if="all_submissions.length > 0" class="row q-col-gutter-lg q-pa-lg">
+    <section
+      v-if="all_submissions.length > 0"
+      class="row q-col-gutter-lg q-pa-lg"
+    >
       <div class="col-12">
-      <submission-table
-        :data-cy="`${currentUser.highest_privileged_role}_table`"
-        :table-data="all_submissions"
-        variation="submissions_page"
-        table-type="submissions"
-        :role="currentUser.highest_privileged_role"
-      /></div>
+        <submission-table
+          :data-cy="`${currentUser.highest_privileged_role}_table`"
+          :table-data="all_submissions"
+          variation="submissions_page"
+          table-type="submissions"
+          :role="currentUser.highest_privileged_role"
+        />
+      </div>
     </section>
     <section class="row q-col-gutter-lg q-pa-lg">
       <div v-if="subsLoading" class="q-pa-lg">
@@ -64,7 +68,7 @@
           class="q-mt-lg"
           :to="{
             name: 'submission:create',
-            params: { id: selectedPublication.value },
+            params: { id: selectedPublication.value }
           }"
           data-cy="submit_work_btn"
         />
@@ -107,7 +111,9 @@ import SubmissionTable from "src/components/SubmissionTable.vue"
 import CommentPreview from "src/components/atoms/CommentPreview.vue"
 
 const { currentUser } = useCurrentUser()
-const { result: all_submissions_result } = useQuery(GET_SUBMISSIONS, {page: 1})
+const { result: all_submissions_result } = useQuery(GET_SUBMISSIONS, {
+  page: 1
+})
 const all_submissions = computed(() => {
   return all_submissions_result.value?.submissions.data ?? []
 })
@@ -121,21 +127,21 @@ const submissions = computed(() => {
 const { result: pubsResult } = useQuery(GET_PUBLICATIONS, {
   is_publicly_visible: true,
   is_accepting_submissions: true,
-  first: 50000,
+  first: 50000
 })
 const selectedPublication = ref(null)
 const pubsOptions = computed(() => {
   return pubsResult.value?.publications?.data.map((pub) => {
     return {
       label: pub.name,
-      value: pub.id,
+      value: pub.id
     }
   })
 })
 const submitter_submissions = computed(() =>
   submissions.value.filter(function (submission) {
     return submission.my_role == "submitter"
-  }),
+  })
 )
 const latest_comments = computed(() => {
   let comments = submitter_submissions.value.map((submission) => {
@@ -147,16 +153,16 @@ const latest_comments = computed(() => {
             ...reply,
             submission: {
               id: submission.id,
-              title: submission.title,
-            },
+              title: submission.title
+            }
           })
         })
         return {
           ...comment,
           submission: {
             id: submission.id,
-            title: submission.title,
-          },
+            title: submission.title
+          }
         }
       })
       .flat()
@@ -168,22 +174,22 @@ const latest_comments = computed(() => {
             ...reply,
             submission: {
               id: submission.id,
-              title: submission.title,
-            },
+              title: submission.title
+            }
           })
         })
         return {
           ...comment,
           submission: {
             id: submission.id,
-            title: submission.title,
-          },
+            title: submission.title
+          }
         }
       })
       .flat()
     return [].concat.apply(
       [],
-      [inline, inline_replies, overall, overall_replies],
+      [inline, inline_replies, overall, overall_replies]
     )
   })
   return comments

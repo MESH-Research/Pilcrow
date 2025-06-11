@@ -1,13 +1,10 @@
 <template>
-  <q-card-section
-    v-if="comment.deleted_at != null"
-    class="q-py-sm"
-  >
+  <q-card-section v-if="comment.deleted_at != null" class="q-py-sm">
     <div class="row items-center justify-end">
       <span>
         {{
           $t("submissions.comment.dateLabelDeleted", {
-            date: relativeDeletedTime,
+            date: relativeDeletedTime
           })
         }}
         <q-tooltip>
@@ -23,9 +20,7 @@
     class="q-py-xs q-pl-xs"
   >
     <div class="row items-center">
-      <comment-reference
-        :comment="comment"
-      />
+      <comment-reference :comment="comment" />
       <avatar-image
         :user="comment.created_by"
         round
@@ -43,7 +38,7 @@
         class="text-caption"
         :aria-label="
           $t('submissions.comment.dateLabelUpdated', {
-            date: relativeUpdatedTime,
+            date: relativeUpdatedTime
           })
         "
       >
@@ -89,8 +84,8 @@ const timeAgo = useTimeAgo()
 const props = defineProps({
   comment: {
     type: Object,
-    required: true,
-  },
+    required: true
+  }
 })
 defineEmits(["quoteReplyTo", "modifyComment", "deleteComment"])
 const createdDate = computed(() => {

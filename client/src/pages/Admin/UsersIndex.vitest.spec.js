@@ -8,8 +8,8 @@ import { describe, expect, it, test, vi } from "vitest"
 
 vi.mock("vue-router", () => ({
   useRouter: () => ({
-    push: vi.fn(),
-  }),
+    push: vi.fn()
+  })
 }))
 
 installQuasarPlugin()
@@ -30,24 +30,24 @@ describe("User Index page mount", () => {
               id: "1",
               name: "test1",
               email: "test1@msu.edu",
-              username: "test1",
+              username: "test1"
             },
             {
               id: "2",
               name: "test2",
               email: "test2@msu.edu",
-              username: "test2",
-            },
+              username: "test2"
+            }
           ],
           paginatorInfo: {
             __typename: "PaginatorInfo",
             count: 2,
             currentPage: 1,
             lastPage: 1,
-            perPage: 10,
-          },
-        },
-      },
+            perPage: 10
+          }
+        }
+      }
     })
 
     const wrapper = wrapperFactory()

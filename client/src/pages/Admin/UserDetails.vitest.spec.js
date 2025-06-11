@@ -13,11 +13,11 @@ describe("User Details page mount", () => {
   const wrapperFactory = async (id) => {
     const wrapper = mount(UserDetails, {
       global: {
-        stubs: ["router-link"],
+        stubs: ["router-link"]
       },
       props: {
-        id,
-      },
+        id
+      }
     })
     await flushPromises()
     return wrapper
@@ -48,9 +48,9 @@ describe("User Details page mount", () => {
           username: "Username",
           email: "email",
           name: "Regular User",
-          roles: [],
-        },
-      },
+          roles: []
+        }
+      }
     })
 
     const wrapper = await wrapperFactory("1")
@@ -66,11 +66,11 @@ describe("User Details page mount", () => {
           email: "email",
           roles: [
             {
-              name: "Application Administrator",
-            },
-          ],
-        },
-      },
+              name: "Application Administrator"
+            }
+          ]
+        }
+      }
     })
 
     const wrapper = await wrapperFactory("2")
@@ -86,9 +86,9 @@ describe("User Details page mount", () => {
           name: null,
           email: "email",
           username: "userWithNoName",
-          roles: [],
-        },
-      },
+          roles: []
+        }
+      }
     })
     const wrapper = await wrapperFactory("3")
     expect(wrapper).toBeTruthy()

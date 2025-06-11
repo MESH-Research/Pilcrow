@@ -4,7 +4,7 @@ import { nextTick, provide, reactive } from "vue"
 import { mount } from "vue-composable-tester"
 import * as validationHelpers from "./validationHelpers"
 
-import { describe, expect, test } from 'vitest'
+import { describe, expect, test } from "vitest"
 
 describe("test validation helpers", () => {
   test("getErrorMessageKey function", () => {
@@ -12,7 +12,7 @@ describe("test validation helpers", () => {
     expect(
       getErrorMessageKey({
         $validator: "$externalResults",
-        $message: "externalMessage",
+        $message: "externalMessage"
       })
     ).toBe("externalMessage")
     expect(
@@ -42,7 +42,7 @@ describe("test composables", () => {
       return {
         hasErrorKey: validationHelpers.useHasErrorKey($v),
         $v,
-        fields,
+        fields
       }
     })
     await result.$v.value.$touch()
@@ -82,11 +82,11 @@ describe("applyExternalValidationErrors composition helper", () => {
           {
             extensions: {
               validation: {
-                "user.one": ["error1", "error2"],
-              },
-            },
-          },
-        ],
+                "user.one": ["error1", "error2"]
+              }
+            }
+          }
+        ]
       },
       /^user\./
     )
@@ -105,10 +105,10 @@ describe("applyExternalValidationErrors composition helper", () => {
       graphQLErrors: [
         {
           extentions: {
-            authentication: "Failed",
-          },
-        },
-      ],
+            authentication: "Failed"
+          }
+        }
+      ]
     })
 
     expect(returnValue).toBe(false)
@@ -124,18 +124,18 @@ describe("applyExternalValidationErrors composition helper", () => {
         {
           extensions: {
             validation: {
-              one: ["error1", "error2"],
-            },
-          },
+              one: ["error1", "error2"]
+            }
+          }
         },
         {
           extensions: {
             validation: {
-              two: ["error1"],
-            },
-          },
-        },
-      ],
+              two: ["error1"]
+            }
+          }
+        }
+      ]
     })
 
     expect(returnValue).toBe(true)
@@ -150,16 +150,16 @@ describe("applyExternalValidationErrors composition helper", () => {
         {
           extensions: {
             validation: {
-              one: ["error1", "error2"],
-            },
-          },
+              one: ["error1", "error2"]
+            }
+          }
         },
         {
           extentions: {
-            authentication: "Failed",
-          },
-        },
-      ],
+            authentication: "Failed"
+          }
+        }
+      ]
     })
 
     expect(returnValue).toBe(true)

@@ -8,7 +8,7 @@ import { ref } from "vue"
 import { useCurrentUser } from "src/use/user"
 
 vi.mock("src/use/user", () => ({
-  useCurrentUser: vi.fn(),
+  useCurrentUser: vi.fn()
 }))
 
 installQuasarPlugin()
@@ -25,8 +25,8 @@ describe("Dashboard Page", () => {
   const wrapperFactory = async () => {
     const wrapper = mount(DashboardPage, {
       global: {
-        stubs: ["router-link", "i18n-t"],
-      },
+        stubs: ["router-link", "i18n-t"]
+      }
     })
     await flushPromises()
     return wrapper
@@ -39,7 +39,7 @@ describe("Dashboard Page", () => {
       editor: null,
       review_coordinator: "review_coordinator",
       reviewer: "reviewer",
-      submitter: "submitter",
+      submitter: "submitter"
     }
     const submission_effective_role = {
       application_admin: "review_coordinator",
@@ -47,7 +47,7 @@ describe("Dashboard Page", () => {
       editor: "review_coordinator",
       review_coordinator: "review_coordinator",
       reviewer: "reviewer",
-      submitter: "submitter",
+      submitter: "submitter"
     }
     const publication_my_role = {
       application_admin: null,
@@ -55,7 +55,7 @@ describe("Dashboard Page", () => {
       editor: "editor",
       review_coordinator: null,
       reviewer: null,
-      submitter: null,
+      submitter: null
     }
     return {
       id: id,
@@ -70,13 +70,13 @@ describe("Dashboard Page", () => {
         name: "Pilcrow Test Publication 1",
         my_role: publication_my_role[role],
         editors: [],
-        publication_admins: [],
+        publication_admins: []
       },
       inline_comments: [],
       overall_comments: [],
       submitters: [],
       reviewers: [],
-      review_coordinators: [],
+      review_coordinators: []
     }
   }
 
@@ -86,19 +86,19 @@ describe("Dashboard Page", () => {
         currentUser: {
           id: "5",
           roles: [],
-          submissions: [],
-        },
-      },
+          submissions: []
+        }
+      }
     }
   }
 
   it("mounts without errors", async () => {
     useCurrentUser.mockReturnValue({
-      currentUser: ref({ id: 1 }),
+      currentUser: ref({ id: 1 })
     })
     const mockData = getData()
     mockData.data.currentUser.submissions.push(
-      mockSubmission("100", "UNDER_REVIEW", "submitter"),
+      mockSubmission("100", "UNDER_REVIEW", "submitter")
     )
     CurrentUserSubmissions.mockResolvedValue(mockData)
     const wrapper = await wrapperFactory()
@@ -107,14 +107,14 @@ describe("Dashboard Page", () => {
 
   test("the reviews table appears for a user with reviews", async () => {
     useCurrentUser.mockReturnValue({
-      currentUser: ref({ id: 1 }),
+      currentUser: ref({ id: 1 })
     })
 
     const mockData = getData()
     mockData.data.currentUser.submissions.push(
       mockSubmission("100", "UNDER_REVIEW", "reviewer"),
       mockSubmission("101", "UNDER_REVIEW", "reviewer"),
-      mockSubmission("102", "REJECTED", "reviewer"),
+      mockSubmission("102", "REJECTED", "reviewer")
     )
     CurrentUserSubmissions.mockResolvedValue(mockData)
     const wrapper = await wrapperFactory()
@@ -122,20 +122,20 @@ describe("Dashboard Page", () => {
     expect(wrapper.findAll('[data-cy="coordinator_table"]').length).toBe(0)
     expect(wrapper.findAll('[data-cy="submissions_table"]').length).toBe(0)
     expect(wrapper.findAllComponents({ name: "submission-table" }).length).toBe(
-      1,
+      1
     )
   })
 
   test("the reviews table does not appear for a user with no reviews", async () => {
     useCurrentUser.mockReturnValue({
-      currentUser: ref({ id: 1 }),
+      currentUser: ref({ id: 1 })
     })
 
     const mockData = getData()
     CurrentUserSubmissions.mockResolvedValue(mockData)
     const wrapper = await wrapperFactory()
     expect(wrapper.findAllComponents({ name: "submission-table" }).length).toBe(
-      0,
+      0
     )
   })
 
@@ -144,7 +144,7 @@ describe("Dashboard Page", () => {
       count: 1,
       currentPage: 1,
       lastPage: 1,
-      perPage: 10,
+      perPage: 10
     }
     const paginator_data = {
       application_admin: paginator,
@@ -152,10 +152,10 @@ describe("Dashboard Page", () => {
       editor: paginator,
       review_coordinator: [],
       reviewer: [],
-      submitter: [],
+      submitter: []
     }
     const submission_records = [
-      mockSubmission("1000", "UNDER_REVIEW", role_name),
+      mockSubmission("1000", "UNDER_REVIEW", role_name)
     ]
     const submissions_data = {
       application_admin: submission_records,
@@ -163,15 +163,15 @@ describe("Dashboard Page", () => {
       editor: submission_records,
       review_coordinator: [],
       reviewer: [],
-      submitter: [],
+      submitter: []
     }
     return {
       data: {
         submissions: {
           paginatorInfo: paginator_data[role_name],
-          data: submissions_data[role_name],
-        },
-      },
+          data: submissions_data[role_name]
+        }
+      }
     }
   }
   function mockCurrentUserSubmissions(role_name) {
@@ -184,9 +184,9 @@ describe("Dashboard Page", () => {
               ? [{ name: "Application Administrator" }]
               : [],
           highest_privileged_role: role_name,
-          submissions: [mockSubmission("1000", "UNDER_REVIEW", role_name)],
-        },
-      },
+          submissions: [mockSubmission("1000", "UNDER_REVIEW", role_name)]
+        }
+      }
     }
   }
 
@@ -196,7 +196,7 @@ describe("Dashboard Page", () => {
     ["editor"],
     ["review_coordinator"],
     ["reviewer"],
-    ["submitter"],
+    ["submitter"]
   ])("a submission table appears", (role_name) => {
     test(`when the user's role is ${role_name}`, async () => {
       mockClient
@@ -204,12 +204,12 @@ describe("Dashboard Page", () => {
         .mockResolvedValue(mockGetSubmissions(role_name))
 
       CurrentUserSubmissions.mockResolvedValue(
-        mockCurrentUserSubmissions(role_name),
+        mockCurrentUserSubmissions(role_name)
       )
       const wrapper = await wrapperFactory()
       await flushPromises()
       expect(
-        wrapper.findAllComponents({ name: "submission-table" }).length,
+        wrapper.findAllComponents({ name: "submission-table" }).length
       ).toBe(1)
     })
   })

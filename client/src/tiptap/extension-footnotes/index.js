@@ -1,5 +1,5 @@
-import { Footnotes } from './footnotes'
+import { Footnotes } from "./footnotes"
 
-export * from './footnotes'
+export * from "./footnotes"
 
 export default Footnotes

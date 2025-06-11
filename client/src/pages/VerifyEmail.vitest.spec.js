@@ -10,11 +10,11 @@ import VerifyEmailPage from "./VerifyEmail.vue"
 import { beforeEach, describe, expect, it, test, vi } from "vitest"
 
 vi.mock("src/use/user", () => ({
-  useCurrentUser: vi.fn(),
+  useCurrentUser: vi.fn()
 }))
 
 vi.mock("vue-router", () => ({
-  useRoute: vi.fn(),
+  useRoute: vi.fn()
 }))
 
 installQuasarPlugin()
@@ -24,8 +24,8 @@ describe("VerifyEmailPage", () => {
   const createWrapper = async () => {
     const wrapper = mount(VerifyEmailPage, {
       global: {
-        stubs: ["router-link"],
-      },
+        stubs: ["router-link"]
+      }
     })
     await flushPromises()
     return wrapper
@@ -39,10 +39,10 @@ describe("VerifyEmailPage", () => {
 
   it("mounts without errors", async () => {
     useRoute.mockReturnValue({
-      params: { token: "", expires: "" },
+      params: { token: "", expires: "" }
     })
     useCurrentUser.mockReturnValue({
-      currentUser: ref({ email_verified_at: null }),
+      currentUser: ref({ email_verified_at: null })
     })
     const wrapper = await createWrapper()
 
@@ -51,34 +51,34 @@ describe("VerifyEmailPage", () => {
 
   test("renders success immediately if email is already verified", async () => {
     useRoute.mockReturnValue({
-      params: { token: "", expires: "" },
+      params: { token: "", expires: "" }
     })
 
     useCurrentUser.mockReturnValue({
-      currentUser: ref({ email_verified_at: "some value" }),
+      currentUser: ref({ email_verified_at: "some value" })
     })
     const wrapper = await createWrapper()
     expect(wrapper.vm.status).toBe("success")
     expect(wrapper.text()).toContain(
-      "account.email_verify.verification_success",
+      "account.email_verify.verification_success"
     )
   })
 
   test("renders success", async () => {
     verifyHandler.mockResolvedValue({
-      data: { verifyEmail: { id: 1, email_verified_at: "timestamp" } },
+      data: { verifyEmail: { id: 1, email_verified_at: "timestamp" } }
     })
     useRoute.mockReturnValue({
-      params: { token: "", expires: "" },
+      params: { token: "", expires: "" }
     })
     useCurrentUser.mockReturnValue({
-      currentUser: ref({ email_verified_at: null }),
+      currentUser: ref({ email_verified_at: null })
     })
     const wrapper = await createWrapper()
     expect(verifyHandler).toHaveBeenCalledWith({ token: "", expires: "" })
     expect(wrapper.vm.status).toBe("success")
     expect(wrapper.text()).toContain(
-      "account.email_verify.verification_success",
+      "account.email_verify.verification_success"
     )
   })
 
@@ -86,15 +86,15 @@ describe("VerifyEmailPage", () => {
     verifyHandler.mockResolvedValue({
       errors: [
         {
-          extensions: { code: "TEST_ERROR_CODE" },
-        },
-      ],
+          extensions: { code: "TEST_ERROR_CODE" }
+        }
+      ]
     })
     useRoute.mockReturnValue({
-      params: { token: "", expires: "" },
+      params: { token: "", expires: "" }
     })
     useCurrentUser.mockReturnValue({
-      currentUser: ref({ email_verified_at: null }),
+      currentUser: ref({ email_verified_at: null })
     })
     const wrapper = await createWrapper()
     expect(wrapper.vm.status).toBe("failure")

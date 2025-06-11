@@ -48,7 +48,7 @@ const { newStatusMessage } = useFeedbackMessages({
   attrs: {
     "data-cy": "email_verification_notify",
     icon: "email"
-  },
+  }
 })
 
 async function send() {
@@ -60,13 +60,13 @@ async function send() {
     newStatusMessage(
       "success",
       t("account.email_verify.send_success_notify", {
-        email,
-      }),
+        email
+      })
     )
   } catch (error) {
     const errorMessagesList = errorMessages(
       graphQLErrorCodes(error),
-      "account.failures",
+      "account.failures"
     )
     if (!errorMessagesList.length) {
       errorMessagesList.push(t("failures.UNKNOWN_ERROR"))
@@ -74,8 +74,8 @@ async function send() {
     newStatusMessage(
       "failure",
       t("account.email_verify.send_failure_notify", {
-        errors: errorMessagesList.join(", "),
-      }),
+        errors: errorMessagesList.join(", ")
+      })
     )
     status.value = null
   }

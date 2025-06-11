@@ -14,8 +14,8 @@ vi.spyOn(SessionStorage, "remove").mockImplementation(() => vi.fn())
 
 vi.mock("vue-router", () => ({
   useRouter: () => ({
-    push: vi.fn(),
-  }),
+    push: vi.fn()
+  })
 }))
 
 installQuasarPlugin()
@@ -32,10 +32,10 @@ describe("LoginPage", () => {
           label: "ORCID",
           login_url: "",
           icon: "orcid",
-          __typename: "IdentityProviderButton",
-        },
-      ],
-    },
+          __typename: "IdentityProviderButton"
+        }
+      ]
+    }
   }
 
   beforeEach(() => {
@@ -46,8 +46,8 @@ describe("LoginPage", () => {
   const wrapperFactory = () =>
     mount(LoginPage, {
       global: {
-        stubs: ["router-link"],
-      },
+        stubs: ["router-link"]
+      }
     })
 
   it("mounts without errors", () => {
@@ -59,7 +59,7 @@ describe("LoginPage", () => {
     const wrapper = wrapperFactory()
     const handler = mockClient.getRequestHandler(LOGIN)
     handler.mockResolvedValue({
-      data: { login: { id: 1 } },
+      data: { login: { id: 1 } }
     })
     await flushPromises()
     wrapper.findComponent({ ref: "username" }).setValue("user@example.com")
@@ -75,7 +75,7 @@ describe("LoginPage", () => {
   test("login redirects correctly", async () => {
     const handler = mockClient.getRequestHandler(LOGIN)
     handler.mockResolvedValue({
-      data: { login: { id: 1 } },
+      data: { login: { id: 1 } }
     })
     mockSessionItem.mockReturnValue("/test-result")
     const wrapper = wrapperFactory()

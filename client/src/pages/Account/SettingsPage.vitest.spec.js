@@ -19,8 +19,8 @@ vi.mock("src/use/forms", async (importOriginal) => {
       state: mockRef("idle"),
       queryLoading: mockRef(false),
       mutationLoading: mockRef(false),
-      errorMessage: mockRef(""),
-    }),
+      errorMessage: mockRef("")
+    })
   }
 })
 
@@ -29,8 +29,8 @@ vi.mock("quasar", async (importOriginal) => {
   return {
     ...quasar,
     useQuasar: () => ({
-      notify: vi.fn(),
-    }),
+      notify: vi.fn()
+    })
   }
 })
 
@@ -54,9 +54,9 @@ describe("Settings page", () => {
           name: "TestDoe",
           email: "test@example.com",
           email_verified_at: null,
-          roles: [],
-        },
-      },
+          roles: []
+        }
+      }
     })
   })
 
@@ -69,7 +69,7 @@ describe("Settings page", () => {
     id: 1,
     username: "username1",
     name: "Test User",
-    email: "testemail@example.com",
+    email: "testemail@example.com"
   })
 
   beforeEach(() => {
@@ -88,14 +88,14 @@ describe("Settings page", () => {
 
     requestHandler.mockResolvedValue({ data: { currentUser: initialData } })
     mutateHandler.mockResolvedValue({
-      data: { updateUser: { ...newData, updated_at: "soonish" } },
+      data: { updateUser: { ...newData, updated_at: "soonish" } }
     })
     const wrapper = await makeWrapper()
     await wrapper.findComponent({ ref: "form" }).vm.$emit("save", newData)
 
     expect(requestHandler).toHaveBeenCalledTimes(1)
     expect(mutateHandler).toHaveBeenCalledWith({
-      ...newData,
+      ...newData
     })
   })
 

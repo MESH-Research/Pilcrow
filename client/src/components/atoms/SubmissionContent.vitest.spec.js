@@ -11,7 +11,7 @@ describe("SubmissionContent", () => {
   const makeTestArticle = () => {
     const submission = ref({
       content: {
-        data: "Test article content",
+        data: "Test article content"
       },
       inline_comments: [
         {
@@ -24,7 +24,7 @@ describe("SubmissionContent", () => {
             email: "jestuser@meshresearch.net",
             id: "1",
             name: "Jest User",
-            username: "jestUser",
+            username: "jestUser"
           },
           updated_at: "2022-06-18T03:18:08.000000Z",
           updated_by: {
@@ -32,12 +32,12 @@ describe("SubmissionContent", () => {
             email: "jestuser@meshresearch.net",
             id: "1",
             name: "Jest User",
-            username: "jestUser",
+            username: "jestUser"
           },
           replies: [],
           style_criteria: [],
           from: 1,
-          to: 2,
+          to: 2
         },
         {
           __typename: "InlineComment",
@@ -49,7 +49,7 @@ describe("SubmissionContent", () => {
             email: "jestuser@meshresearch.net",
             id: "1",
             name: "Jest User",
-            username: "jestUser",
+            username: "jestUser"
           },
           updated_at: "2022-06-18T03:18:08.000000Z",
           updated_by: {
@@ -57,12 +57,12 @@ describe("SubmissionContent", () => {
             email: "jestuser@meshresearch.net",
             id: "1",
             name: "Jest User",
-            username: "jestUser",
+            username: "jestUser"
           },
           replies: [],
           style_criteria: [],
           from: 4,
-          to: 5,
+          to: 5
         },
         {
           __typename: "InlineComment",
@@ -74,7 +74,7 @@ describe("SubmissionContent", () => {
             email: "jestuser@meshresearch.net",
             id: "1",
             name: "Jest User",
-            username: "jestUser",
+            username: "jestUser"
           },
           updated_at: "2022-06-18T03:18:08.000000Z",
           updated_by: {
@@ -82,14 +82,14 @@ describe("SubmissionContent", () => {
             email: "jestuser@meshresearch.net",
             id: "1",
             name: "Jest User",
-            username: "jestUser",
+            username: "jestUser"
           },
           replies: [],
           style_criteria: [],
           from: 8,
-          to: 10,
-        },
-      ],
+          to: 10
+        }
+      ]
     })
     const activeComment = ref(null)
     return {
@@ -100,13 +100,13 @@ describe("SubmissionContent", () => {
           provide: {
             submission,
             activeComment,
-            commentDrawerOpen: true,
-          },
-        },
+            commentDrawerOpen: true
+          }
+        }
       }),
       props: {
-        highlightVisibility: true,
-      },
+        highlightVisibility: true
+      }
     }
   }
 

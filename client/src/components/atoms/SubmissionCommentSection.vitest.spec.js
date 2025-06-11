@@ -9,7 +9,7 @@ import SubmissionCommentSection from "./SubmissionCommentSection.vue"
 import { describe, expect, test, vi } from "vitest"
 
 vi.mock("src/use/user", () => ({
-  useCurrentUser: vi.fn(),
+  useCurrentUser: vi.fn()
 }))
 
 installQuasarPlugin()
@@ -33,10 +33,10 @@ describe("Overall Comments", () => {
                   created_by: {
                     id: "2",
                     email: "publicationadministrator@meshresearch.net",
-                    name: "Publication Administrator",
+                    name: "Publication Administrator"
                   },
                   read_at: null,
-                  replies: [],
+                  replies: []
                 },
                 {
                   id: "2",
@@ -48,7 +48,7 @@ describe("Overall Comments", () => {
                   created_by: {
                     id: "4",
                     email: "reviewcoordinator@meshresearch.net",
-                    name: "Review Coordinator for Submission",
+                    name: "Review Coordinator for Submission"
                   },
                   read_at: "2024-07-01T12:00:00.000000Z",
                   replies: [
@@ -62,12 +62,12 @@ describe("Overall Comments", () => {
                       created_by: {
                         id: "6",
                         username: "akihn",
-                        email: "powlowski.eliza@example.org",
+                        email: "powlowski.eliza@example.org"
                       },
                       reply_to_id: "2",
-                      read_at: null,
-                    },
-                  ],
+                      read_at: null
+                    }
+                  ]
                 },
                 {
                   id: "4",
@@ -80,12 +80,12 @@ describe("Overall Comments", () => {
                   created_by: {
                     id: "1",
                     email: "applicationadministrator@meshresearch.net",
-                    name: "Application Administrator",
+                    name: "Application Administrator"
                   },
                   updated_by: {
                     id: "1",
                     email: "applicationadministrator@meshresearch.net",
-                    name: "Application Administrator",
+                    name: "Application Administrator"
                   },
                   read_at: null,
                   replies: [
@@ -100,15 +100,15 @@ describe("Overall Comments", () => {
                       created_by: {
                         id: "4",
                         username: "reviewCoordinator",
-                        email: "reviewcoordinator@meshresearch.net",
+                        email: "reviewcoordinator@meshresearch.net"
                       },
                       updated_by: {
                         id: "4",
                         username: "reviewCoordinator",
-                        email: "reviewcoordinator@meshresearch.net",
+                        email: "reviewcoordinator@meshresearch.net"
                       },
                       reply_to_id: "4",
-                      read_at: null,
+                      read_at: null
                     },
                     {
                       id: "6",
@@ -121,15 +121,15 @@ describe("Overall Comments", () => {
                       created_by: {
                         id: "3",
                         username: "publicationEditor",
-                        email: "publicationeditor@meshresearch.net",
+                        email: "publicationeditor@meshresearch.net"
                       },
                       updated_by: {
                         id: "3",
                         username: "publicationEditor",
-                        email: "publicationeditor@meshresearch.net",
+                        email: "publicationeditor@meshresearch.net"
                       },
                       reply_to_id: "5",
-                      read_at: null,
+                      read_at: null
                     },
                     {
                       id: "7",
@@ -142,15 +142,15 @@ describe("Overall Comments", () => {
                       created_by: {
                         id: "6",
                         username: "akihn",
-                        email: "powlowski.eliza@example.org",
+                        email: "powlowski.eliza@example.org"
                       },
                       updated_by: {
                         id: "6",
                         username: "akihn",
-                        email: "powlowski.eliza@example.org",
+                        email: "powlowski.eliza@example.org"
                       },
                       reply_to_id: "6",
-                      read_at: null,
+                      read_at: null
                     },
                     {
                       id: "8",
@@ -163,15 +163,15 @@ describe("Overall Comments", () => {
                       created_by: {
                         id: "1",
                         username: "applicationAdministrator",
-                        email: "applicationadministrator@meshresearch.net",
+                        email: "applicationadministrator@meshresearch.net"
                       },
                       updated_by: {
                         id: "1",
                         username: "applicationAdministrator",
-                        email: "applicationadministrator@meshresearch.net",
+                        email: "applicationadministrator@meshresearch.net"
                       },
                       reply_to_id: "5",
-                      read_at: null,
+                      read_at: null
                     },
                     {
                       id: "9",
@@ -184,15 +184,15 @@ describe("Overall Comments", () => {
                       created_by: {
                         id: "3",
                         username: "publicationEditor",
-                        email: "publicationeditor@meshresearch.net",
+                        email: "publicationeditor@meshresearch.net"
                       },
                       updated_by: {
                         id: "3",
                         username: "publicationEditor",
-                        email: "publicationeditor@meshresearch.net",
+                        email: "publicationeditor@meshresearch.net"
                       },
                       reply_to_id: "6",
-                      read_at: null,
+                      read_at: null
                     },
                     {
                       id: "10",
@@ -205,15 +205,15 @@ describe("Overall Comments", () => {
                       created_by: {
                         id: "6",
                         username: "akihn",
-                        email: "powlowski.eliza@example.org",
+                        email: "powlowski.eliza@example.org"
                       },
                       updated_by: {
                         id: "6",
                         username: "akihn",
-                        email: "powlowski.eliza@example.org",
+                        email: "powlowski.eliza@example.org"
                       },
                       reply_to_id: "4",
-                      read_at: null,
+                      read_at: null
                     },
                     {
                       id: "11",
@@ -226,15 +226,15 @@ describe("Overall Comments", () => {
                       created_by: {
                         id: "7",
                         username: "dickens.octavia",
-                        email: "olson.noe@example.com",
+                        email: "olson.noe@example.com"
                       },
                       updated_by: {
                         id: "7",
                         username: "dickens.octavia",
-                        email: "olson.noe@example.com",
+                        email: "olson.noe@example.com"
                       },
                       reply_to_id: "10",
-                      read_at: null,
+                      read_at: null
                     },
                     {
                       id: "12",
@@ -247,31 +247,31 @@ describe("Overall Comments", () => {
                       created_by: {
                         id: "5",
                         username: "regularUser",
-                        email: "regularuser@meshresearch.net",
+                        email: "regularuser@meshresearch.net"
                       },
                       updated_by: {
                         id: "5",
                         username: "regularUser",
-                        email: "regularuser@meshresearch.net",
+                        email: "regularuser@meshresearch.net"
                       },
                       reply_to_id: "11",
-                      read_at: null,
-                    },
-                  ],
-                },
-              ],
+                      read_at: null
+                    }
+                  ]
+                }
+              ]
             }),
-            activeComment: ref(),
+            activeComment: ref()
           },
-          stubs: ["router-link", "CommentEditor"],
-        },
-      }),
+          stubs: ["router-link", "CommentEditor"]
+        }
+      })
     }
   }
 
   test("able to mount", () => {
     useCurrentUser.mockReturnValue({
-      currentUser: ref({ id: 1 }),
+      currentUser: ref({ id: 1 })
     })
     const { wrapper } = wrapperFactory()
     expect(wrapper).toBeTruthy()
@@ -279,7 +279,7 @@ describe("Overall Comments", () => {
 
   test("expected number of overall comments appear", () => {
     useCurrentUser.mockReturnValue({
-      currentUser: ref({ id: 1 }),
+      currentUser: ref({ id: 1 })
     })
     const { wrapper } = wrapperFactory()
     const items = wrapper.findAllComponents('[data-cy="overallComment"]')
@@ -288,7 +288,7 @@ describe("Overall Comments", () => {
 
   test("expected number of overall comment replies appear", async () => {
     useCurrentUser.mockReturnValue({
-      currentUser: ref({ id: 1 }),
+      currentUser: ref({ id: 1 })
     })
     const { wrapper } = wrapperFactory()
     const overallComments = wrapper.findAll('[data-cy="overallComment"]')
@@ -296,7 +296,7 @@ describe("Overall Comments", () => {
 
     // First Overall Comment
     expect(
-      overallComments.at(0).find("[data-cy=showRepliesButton]").exists(),
+      overallComments.at(0).find("[data-cy=showRepliesButton]").exists()
     ).toBe(false)
     expect(findReplies(overallComments.at(0))).toHaveLength(0)
 
@@ -306,7 +306,7 @@ describe("Overall Comments", () => {
       .find('[data-cy="showRepliesButton"]')
       .trigger("click")
     expect(
-      overallComments.at(1).find('[data-cy="hideRepliesButton"]').text(),
+      overallComments.at(1).find('[data-cy="hideRepliesButton"]').text()
     ).toContain("submissions.comment.toggle_replies.hide_reply")
     expect(findReplies(overallComments.at(1))).toHaveLength(1)
 
@@ -324,7 +324,7 @@ describe("Overall Comments", () => {
   })
   test("expected timestamp is shown for created and updated overall comment replies", async () => {
     useCurrentUser.mockReturnValue({
-      currentUser: ref({ id: 1 }),
+      currentUser: ref({ id: 1 })
     })
     const { wrapper } = wrapperFactory()
 
@@ -334,10 +334,10 @@ describe("Overall Comments", () => {
       .find('[data-cy="showRepliesButton"]')
       .trigger("click")
     const overallCommentReplies = wrapper.findAll(
-      '[data-cy="overallCommentReply"]',
+      '[data-cy="overallCommentReply"]'
     )
     expect(
-      overallCommentReplies.at(3).find('[data-cy="timestampUpdated"]').exists(),
+      overallCommentReplies.at(3).find('[data-cy="timestampUpdated"]').exists()
     ).toBe(true)
   })
 
@@ -345,13 +345,13 @@ describe("Overall Comments", () => {
     const { wrapper } = wrapperFactory()
     const items = wrapper.findAllComponents('[data-cy="overallComment"]')
     expect(
-      items.at(0).find('[data-cy="commentHeader"]').classes("unread-comment"),
+      items.at(0).find('[data-cy="commentHeader"]').classes("unread-comment")
     ).toBe(true)
     expect(
-      items.at(1).find('[data-cy="commentHeader"]').classes("unread-comment"),
+      items.at(1).find('[data-cy="commentHeader"]').classes("unread-comment")
     ).toBe(false)
     expect(
-      items.at(2).find('[data-cy="commentHeader"]').classes("unread-comment"),
+      items.at(2).find('[data-cy="commentHeader"]').classes("unread-comment")
     ).toBe(true)
   })
 })

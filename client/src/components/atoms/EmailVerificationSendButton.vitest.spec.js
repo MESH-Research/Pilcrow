@@ -27,7 +27,7 @@ describe("EmailVerificationSendButton", () => {
     const wrapper = factory()
     const handler = mockClient.getRequestHandler(SEND_VERIFY_EMAIL)
     handler.mockResolvedValue({
-      data: { sendEmailVerification: { email: "test@example.com" } },
+      data: { sendEmailVerification: { email: "test@example.com" } }
     })
     expect(wrapper.text()).toMatch(/resend_button$/)
 

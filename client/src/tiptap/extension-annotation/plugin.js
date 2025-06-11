@@ -12,9 +12,9 @@ function getDecorations(doc, annotations) {
         "data-context-id": a.context.id,
         "data-cy": "comment-highlight",
         dataset: { comment: a.context.id },
-        style: "cursor: pointer",
+        style: "cursor: pointer"
       }),
-      Decoration.widget(a.from, commentWidget(a)),
+      Decoration.widget(a.from, commentWidget(a))
     ])
     .reduce((a, c) => [...a, ...c], [])
 
@@ -46,12 +46,12 @@ export const AnnotationPlugin = () =>
           return getDecorations(transaction.doc, action.annotations)
         }
         return state
-      },
+      }
     },
 
     props: {
       decorations(state) {
         return this.getState(state)
-      },
-    },
+      }
+    }
   })

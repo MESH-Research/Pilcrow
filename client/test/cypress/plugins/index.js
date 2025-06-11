@@ -16,8 +16,8 @@ const axiosImport = require("axios")
 const https = require("https")
 const axios = axiosImport.create({
   httpsAgent: new https.Agent({
-    rejectUnauthorized: false,
-  }),
+    rejectUnauthorized: false
+  })
 })
 module.exports = (on, config) => {
   on("task", {
@@ -28,11 +28,11 @@ module.exports = (on, config) => {
           method: "POST",
           data: {
             query:
-              'mutation { artisanCommand(command: "migrate:fresh" parameters: [{key: "--seed" value: "true"}])}',
-          },
+              'mutation { artisanCommand(command: "migrate:fresh" parameters: [{key: "--seed" value: "true"}])}'
+          }
         }).then((response) => {
           const {
-            data: { data, errors },
+            data: { data, errors }
           } = response
           if (!data) {
             console.log(response)
@@ -44,7 +44,7 @@ module.exports = (on, config) => {
           resolve(data.artisanCommand)
         })
       })
-    },
+    }
   })
 
   on("task", {
@@ -57,7 +57,7 @@ module.exports = (on, config) => {
       console.table(message)
 
       return null
-    },
+    }
   })
 
   on("before:browser:launch", (browser = {}, launchOptions) => {

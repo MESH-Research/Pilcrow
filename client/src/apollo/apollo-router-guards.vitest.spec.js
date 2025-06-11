@@ -1,8 +1,11 @@
-import { afterEach, describe, expect, it, vi } from 'vitest'
-import { beforeEachRequiresAuth, beforeEachRequiresAppAdmin } from './apollo-router-guards'
+import { afterEach, describe, expect, it, vi } from "vitest"
+import {
+  beforeEachRequiresAuth,
+  beforeEachRequiresAppAdmin
+} from "./apollo-router-guards"
 
 const apolloMock = {
-  query: vi.fn(),
+  query: vi.fn()
 }
 
 describe("requiresAuth router hook", () => {
@@ -12,15 +15,15 @@ describe("requiresAuth router hook", () => {
 
   it("allows navigation when user is logged in", async () => {
     const to = {
-      matched: [{ meta: { requiresAuth: true } }],
+      matched: [{ meta: { requiresAuth: true } }]
     }
 
     apolloMock.query.mockResolvedValue({
       data: {
         currentUser: {
-          id: 1,
-        },
-      },
+          id: 1
+        }
+      }
     })
 
     const next = vi.fn()
@@ -33,16 +36,16 @@ describe("requiresAuth router hook", () => {
   })
 
   it("redirects to login page when user is not logged in", async () => {
-    const setItem = vi.spyOn(window.sessionStorage, 'setItem')
+    const setItem = vi.spyOn(window.sessionStorage, "setItem")
 
     const to = {
-      matched: [{ meta: { requiresAuth: true } }],
+      matched: [{ meta: { requiresAuth: true } }]
     }
 
     apolloMock.query.mockResolvedValue({
       data: {
-        currentUser: null,
-      },
+        currentUser: null
+      }
     })
 
     const next = vi.fn()
@@ -59,7 +62,7 @@ describe("requiresAuth router hook", () => {
 
   it("allows navigation when route is missing the requiresAuth meta property", async () => {
     const to = {
-      matched: [{ meta: {} }],
+      matched: [{ meta: {} }]
     }
 
     const next = vi.fn()
@@ -79,16 +82,16 @@ describe("requiresAppAdmin router hook", () => {
 
   it("allows navigation when user is an Application Administrator", async () => {
     const to = {
-      matched: [{ meta: { requiresAppAdmin: true } }],
+      matched: [{ meta: { requiresAppAdmin: true } }]
     }
 
     apolloMock.query.mockResolvedValue({
       data: {
         currentUser: {
           id: 1,
-          highest_privileged_role: "application_admin",
-        },
-      },
+          highest_privileged_role: "application_admin"
+        }
+      }
     })
 
     const next = vi.fn()
@@ -102,7 +105,7 @@ describe("requiresAppAdmin router hook", () => {
 
   it("redirects to error403 when user is not an Application Administrator", async () => {
     const to = {
-      matched: [{ meta: { requiresAppAdmin: true } }],
+      matched: [{ meta: { requiresAppAdmin: true } }]
     }
 
     apolloMock.query.mockResolvedValue({
@@ -110,8 +113,8 @@ describe("requiresAppAdmin router hook", () => {
         currentUser: {
           id: 1,
           highest_privileged_role: null
-        },
-      },
+        }
+      }
     })
 
     const next = vi.fn()
@@ -125,7 +128,7 @@ describe("requiresAppAdmin router hook", () => {
 
   it("allows navigation when requiresAppAdmin meta property is not present", async () => {
     const to = {
-      matched: [{ meta: {} }],
+      matched: [{ meta: {} }]
     }
 
     const next = vi.fn()
@@ -136,5 +139,4 @@ describe("requiresAppAdmin router hook", () => {
     expect(next).toHaveBeenCalled()
     expect(next.mock.calls[0][0]).toBeUndefined()
   })
-
 })

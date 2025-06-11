@@ -8,8 +8,8 @@ import RegisterPage from "./RegisterPage.vue"
 
 vi.mock("vue-router", () => ({
   useRouter: () => ({
-    push: vi.fn(),
-  }),
+    push: vi.fn()
+  })
 }))
 
 installQuasarPlugin()
@@ -19,8 +19,8 @@ describe("RegisterPage", () => {
   const wrapperFactory = () =>
     mount(RegisterPage, {
       global: {
-        stubs: ["router-link", "i18n-t"],
-      },
+        stubs: ["router-link", "i18n-t"]
+      }
     })
 
   const createUserHandler = vi.fn()
@@ -41,14 +41,14 @@ describe("RegisterPage", () => {
       password: "albancub4Grac&",
       name: "Joe Doe",
       email: "test@example.com",
-      created_at: "nowish",
+      created_at: "nowish"
     }
 
     createUserHandler.mockResolvedValue({
-      data: { createUser: { id: 1, ...user } },
+      data: { createUser: { id: 1, ...user } }
     })
     loginHandler.mockResolvedValue({
-      data: { login: { id: 1, ...user } },
+      data: { login: { id: 1, ...user } }
     })
 
     await wrapper.findComponent({ ref: "nameInput" }).setValue(user.name)
@@ -66,7 +66,7 @@ describe("RegisterPage", () => {
 
     expect(wrapper.vm.formErrorMsg).toBeFalsy()
     expect(createUserHandler).toHaveBeenCalledWith(
-      expect.objectContaining(omit(user, "created_at")),
+      expect.objectContaining(omit(user, "created_at"))
     )
   })
 })

@@ -4,7 +4,7 @@ import { installApolloClient } from "app/test/vitest/utils"
 import {
   CREATE_PUBLICATION_STYLE_CRITERIA,
   DELETE_PUBLICATION_STYLE_CRITERIA,
-  UPDATE_PUBLICATION_STYLE_CRITERIA,
+  UPDATE_PUBLICATION_STYLE_CRITERIA
 } from "src/graphql/mutations"
 import PublicationStyleCriteria from "./PublicationStyleCriteria.vue"
 
@@ -17,29 +17,29 @@ describe("PublicationStyleCriteria", () => {
   const makeWrapper = (publication) => {
     return mount(PublicationStyleCriteria, {
       global: {
-        stubs: ["QEditor"],
+        stubs: ["QEditor"]
       },
       props: {
-        publication,
-      },
+        publication
+      }
     })
   }
 
   const updateCriteriaHandler = vi.fn()
   mockClient.setRequestHandler(
     UPDATE_PUBLICATION_STYLE_CRITERIA,
-    updateCriteriaHandler,
+    updateCriteriaHandler
   )
   const createCriteriaHandler = vi.fn()
   mockClient.setRequestHandler(
     CREATE_PUBLICATION_STYLE_CRITERIA,
-    createCriteriaHandler,
+    createCriteriaHandler
   )
 
   const deleteCriteriaHandler = vi.fn()
   mockClient.setRequestHandler(
     DELETE_PUBLICATION_STYLE_CRITERIA,
-    deleteCriteriaHandler,
+    deleteCriteriaHandler
   )
 
   beforeEach(() => {
@@ -56,8 +56,8 @@ describe("PublicationStyleCriteria", () => {
       id: "1",
       style_criterias: [
         { id: "1", name: "Criteria 1", description: "Description 1" },
-        { id: "2", name: "Criteria 2", description: "Description 2" },
-      ],
+        { id: "2", name: "Criteria 2", description: "Description 2" }
+      ]
     })
 
     const items = wrapper.findAllComponents('[data-cy="listItem"]')
@@ -68,14 +68,14 @@ describe("PublicationStyleCriteria", () => {
 
   test("able to edit item", async () => {
     updateCriteriaHandler.mockResolvedValue({
-      data: { updatePublication: { id: "1", style_criterias: [] } },
+      data: { updatePublication: { id: "1", style_criterias: [] } }
     })
     const wrapper = makeWrapper({
       id: "1",
       style_criterias: [
         { id: "1", name: "Criteria 1", description: "Description 1" },
-        { id: "2", name: "Criteria 2", description: "Description 2" },
-      ],
+        { id: "2", name: "Criteria 2", description: "Description 2" }
+      ]
     })
     const items = () => wrapper.findAllComponents('[data-cy="listItem"]')
     await items().at(0).findComponent('[data-cy="editBtn"]').trigger("click")
@@ -94,7 +94,7 @@ describe("PublicationStyleCriteria", () => {
       icon: "task_alt",
       id: "1",
       name: "Updated Criteria 1",
-      publication_id: "1",
+      publication_id: "1"
     })
 
     expect(wrapper.findComponent({ name: "QForm" }).exists()).toBe(false)
@@ -102,11 +102,11 @@ describe("PublicationStyleCriteria", () => {
 
   test("able to add item", async () => {
     createCriteriaHandler.mockResolvedValue({
-      data: { updatePublication: { id: "1", style_criterias: [] } },
+      data: { updatePublication: { id: "1", style_criterias: [] } }
     })
     const wrapper = makeWrapper({
       id: "2",
-      style_criterias: [],
+      style_criterias: []
     })
 
     await wrapper.findComponent({ ref: "addBtn" }).trigger("click")
@@ -125,7 +125,7 @@ describe("PublicationStyleCriteria", () => {
       icon: "task_alt",
       id: "",
       name: "New Criteria 1",
-      publication_id: "2",
+      publication_id: "2"
     })
 
     expect(wrapper.findComponent({ name: "QForm" }).exists()).toBe(false)
@@ -136,8 +136,8 @@ describe("PublicationStyleCriteria", () => {
       id: "1",
       style_criterias: [
         { id: "1", name: "Criteria 1", description: "Description 1" },
-        { id: "2", name: "Criteria 2", description: "Description 2" },
-      ],
+        { id: "2", name: "Criteria 2", description: "Description 2" }
+      ]
     })
     const items = () => wrapper.findAllComponents('[data-cy="listItem"]')
     await items().at(0).findComponent('[data-cy="editBtn"]').trigger("click")
@@ -146,7 +146,7 @@ describe("PublicationStyleCriteria", () => {
     expect(deleteCriteriaHandler).toHaveBeenCalledTimes(1)
     expect(deleteCriteriaHandler).toHaveBeenCalledWith({
       id: "1",
-      publication_id: "1",
+      publication_id: "1"
     })
   })
 })

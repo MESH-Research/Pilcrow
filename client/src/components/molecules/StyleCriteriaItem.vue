@@ -27,13 +27,13 @@
 defineProps({
   criteria: {
     type: Object,
-    required: true,
+    required: true
   },
   editId: {
     type: String,
     default: null,
-    required: false,
-  },
+    required: false
+  }
 })
 
 defineEmits(["edit"])

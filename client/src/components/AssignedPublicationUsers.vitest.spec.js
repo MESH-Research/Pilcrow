@@ -4,7 +4,7 @@ import { installApolloClient } from "app/test/vitest/utils"
 import { Notify } from "quasar"
 import {
   UPDATE_PUBLICATION_ADMINS,
-  UPDATE_PUBLICATION_EDITORS,
+  UPDATE_PUBLICATION_EDITORS
 } from "src/graphql/mutations"
 import AssignedPublicationUsers from "./AssignedPublicationUsers.vue"
 
@@ -16,7 +16,7 @@ const mockClient = installApolloClient()
 describe("AssignedPublicationUsers", () => {
   const makeWrapper = (props) => {
     return mount(AssignedPublicationUsers, {
-      props,
+      props
     })
   }
   const editorsMutation = vi.fn()
@@ -25,7 +25,7 @@ describe("AssignedPublicationUsers", () => {
   mockClient.setRequestHandler(UPDATE_PUBLICATION_EDITORS, editorsMutation)
   mockClient.setRequestHandler(
     UPDATE_PUBLICATION_ADMINS,
-    publicationAdministratorsMutation,
+    publicationAdministratorsMutation
   )
 
   beforeEach(() => {
@@ -40,9 +40,9 @@ describe("AssignedPublicationUsers", () => {
         id: 1,
         editors: [
           { id: 1, email: "test@example.com", name: "TestUser" },
-          { id: 2, email: "test2@example.com", name: "TestUser2" },
-        ],
-      },
+          { id: 2, email: "test2@example.com", name: "TestUser2" }
+        ]
+      }
     })
     expect(wrapper).toBeTruthy()
     expect(wrapper.findAll(".q-item")).toHaveLength(2)
@@ -54,8 +54,8 @@ describe("AssignedPublicationUsers", () => {
       container: {
         __typename: "Publication",
         id: 1,
-        editors: [],
-      },
+        editors: []
+      }
     })
     expect(wrapper.findComponent({ ref: "card_no_users" }).exists()).toBe(true)
 
@@ -64,8 +64,8 @@ describe("AssignedPublicationUsers", () => {
       container: {
         __typename: "Publication",
         id: 1,
-        editors: [{ id: 1, email: "test@example.com", name: "TestUser" }],
-      },
+        editors: [{ id: 1, email: "test@example.com", name: "TestUser" }]
+      }
     })
     expect(wrapper.findComponent({ ref: "card_no_users" }).exists()).toBe(false)
     expect(wrapper.findAll(".q-item")).toHaveLength(1)
@@ -82,10 +82,10 @@ describe("AssignedPublicationUsers", () => {
             __typename: "User",
             id: 1,
             email: "test@example.com",
-            name: "Test",
-          },
-        ],
-      },
+            name: "Test"
+          }
+        ]
+      }
     })
     expect(wrapper.findComponent("q-form").exists()).toBe(false)
     expect(wrapper.find("[data-cy=button_unassign]").exists()).toBe(false)
@@ -96,8 +96,8 @@ describe("AssignedPublicationUsers", () => {
       container: {
         __typename: "Publication",
         id: 1,
-        editors: [{ id: 1, email: "test@example.com", name: "Test" }],
-      },
+        editors: [{ id: 1, email: "test@example.com", name: "Test" }]
+      }
     })
 
     expect(wrapper.findComponent({ name: "QForm" }).exists()).toBe(true)
@@ -112,8 +112,8 @@ describe("AssignedPublicationUsers", () => {
       container: {
         __typename: "Publication",
         id: 1,
-        editors: [{ id: 1, email: "test@example.com", name: "Test" }],
-      },
+        editors: [{ id: 1, email: "test@example.com", name: "Test" }]
+      }
     })
 
     expect(wrapper.findComponent({ name: "QForm" }).exists()).toBe(false)
@@ -125,8 +125,8 @@ describe("AssignedPublicationUsers", () => {
       container: {
         __typename: "Publication",
         id: 1,
-        editors: [{ id: 1, email: "test@example.com", name: "Test" }],
-      },
+        editors: [{ id: 1, email: "test@example.com", name: "Test" }]
+      }
     })
     expect(wrapper.findComponent({ name: "QForm" }).exists()).toBe(true)
   })
@@ -137,8 +137,8 @@ describe("AssignedPublicationUsers", () => {
       container: {
         __typename: "Publication",
         id: 1,
-        editors: [{ id: 1, email: "test@example.com", name: "Test" }],
-      },
+        editors: [{ id: 1, email: "test@example.com", name: "Test" }]
+      }
     })
 
     wrapper.vm.user = { user: { id: 1 } }
@@ -156,8 +156,8 @@ describe("AssignedPublicationUsers", () => {
       container: {
         __typename: "Publications",
         id: 1,
-        editors: [{ id: 1, email: "test@example.com", name: "Test" }],
-      },
+        editors: [{ id: 1, email: "test@example.com", name: "Test" }]
+      }
     })
 
     expect(wrapper.findComponent({ name: "QForm" }).exists()).toBe(false)
@@ -171,31 +171,31 @@ describe("AssignedPublicationUsers", () => {
       container: {
         __typename: "Publication",
         id: 1,
-        editors: [{ id: 1, email: "test@example.com", name: "Test" }],
-      },
+        editors: [{ id: 1, email: "test@example.com", name: "Test" }]
+      }
     })
     wrapper.vm.user = { id: 1 }
     await wrapper.vm.handleSubmit()
     expect(editorsMutation).toHaveBeenCalledWith({
       connect: [1],
-      id: 1,
+      id: 1
     })
   })
 
   test.each([
     ["editors", editorsMutation],
-    ["publication_admins", publicationAdministratorsMutation],
+    ["publication_admins", publicationAdministratorsMutation]
   ])("Calls %s mutation", async (roleGroup, mock) => {
     const props = {
       roleGroup,
       mutable: true,
       container: {
         id: 1,
-        __typename: "Publication",
-      },
+        __typename: "Publication"
+      }
     }
     props.container[roleGroup] = [
-      { id: 1, username: "Test", email: "test@example.com" },
+      { id: 1, username: "Test", email: "test@example.com" }
     ]
     const wrapper = makeWrapper(props)
 

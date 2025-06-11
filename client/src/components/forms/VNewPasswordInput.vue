@@ -65,7 +65,7 @@
 <script>
 import { defineComponent } from "vue"
 export default defineComponent({
-  inheritAttrs: false,
+  inheritAttrs: false
 })
 </script>
 
@@ -80,12 +80,12 @@ import { useVQWrap } from "src/use/forms"
 const props = defineProps({
   v: {
     type: Object,
-    required: true,
+    required: true
   },
   t: {
     type: [String, Boolean],
-    default: false,
-  },
+    default: false
+  }
 })
 
 defineEmits(["vqupdate"])

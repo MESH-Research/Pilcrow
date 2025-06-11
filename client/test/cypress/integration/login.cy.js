@@ -1,7 +1,7 @@
 /// <reference types="Cypress" />
 /// <reference path="../support/index.d.ts" />
 
-import { a11yLogViolations } from '../support/helpers'
+import { a11yLogViolations } from "../support/helpers"
 
 describe("login page", () => {
   beforeEach(() => {
@@ -29,8 +29,7 @@ describe("login page", () => {
     cy.task("resetDb")
     cy.injectAxe()
     cy.get(".q-form").within(() => {
-      cy.dataCy("email_field")
-        .type("{enter}")
+      cy.dataCy("email_field").type("{enter}")
       cy.dataCy("email_field")
         .parents("label")
         .should("have.class", "q-field--error")

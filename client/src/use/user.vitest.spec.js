@@ -21,17 +21,14 @@ describe("useCurrentUser composable", () => {
     const { result } = mount(() => useCurrentUser(), {
       provider: () => {
         provide(DefaultApolloClient, mockClient)
-      },
+      }
     })
     return { mockClient, result }
   }
 
   test("when a user is not logged in", async () => {
     const { result } = mountComposable([
-      [
-        CURRENT_USER,
-        vi.fn().mockResolvedValue({ data: { currentUser: null } }),
-      ],
+      [CURRENT_USER, vi.fn().mockResolvedValue({ data: { currentUser: null } })]
     ])
 
     await flushPromises()
@@ -52,13 +49,13 @@ describe("useCurrentUser composable", () => {
           email_verified_at: "2021-08-14 02:26:32",
           highest_privileged_role: "tester",
           roles: [{ name: "tester" }],
-          abilities: [{ name: "doStuff" }],
-        },
-      },
+          abilities: [{ name: "doStuff" }]
+        }
+      }
     }
 
     const { result } = mountComposable([
-      [CURRENT_USER, vi.fn().mockResolvedValue(response)],
+      [CURRENT_USER, vi.fn().mockResolvedValue(response)]
     ])
     await flushPromises()
     expect(result.currentUser.value).not.toBeNull()
@@ -73,7 +70,7 @@ describe("useLogin composable", () => {
     const { result } = mount(() => useLogin(), {
       provider: () => {
         provide(DefaultApolloClient, mockClient)
-      },
+      }
     })
     return { mockClient, result }
   }
@@ -109,10 +106,10 @@ describe("useLogin composable", () => {
           message: "Invalid credentials supplied",
           extensions: {
             code: "CREDENTIALS_INVALID",
-            category: "authentication",
-          },
-        },
-      ],
+            category: "authentication"
+          }
+        }
+      ]
     })
     mockClient.setRequestHandler(LOGIN, mutateHandler)
 
@@ -131,17 +128,17 @@ describe("useLogin composable", () => {
           message: "Invalid credentials supplied",
           extensions: {
             code: "CREDENTIALS_INVALID",
-            category: "authentication",
-          },
+            category: "authentication"
+          }
         },
         {
           message: "Invalid credentials supplied",
           extensions: {
             code: "ANOTHER_ERROR",
-            category: "authentication",
-          },
-        },
-      ],
+            category: "authentication"
+          }
+        }
+      ]
     })
 
     await expect(result.loginUser()).rejects.toThrow("MULTIPLE_ERROR_CODES")

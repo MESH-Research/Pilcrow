@@ -8,7 +8,7 @@ import {
   beforeEachRequiresPreviewAccess,
   beforeEachRequiresViewAccess,
   beforeEachRequiresReviewAccess,
-  beforeEachRequiresExportAccess,
+  beforeEachRequiresExportAccess
 } from "src/apollo/apollo-router-guards"
 import { withXsrfLink, expiredTokenLink } from "src/apollo/apollo-links.js"
 import { createApolloProvider } from "@vue/apollo-option"
@@ -18,12 +18,12 @@ import createUploadLink from "apollo-upload-client/createUploadLink.mjs"
 import { BatchHttpLink } from "@apollo/client/link/batch-http"
 
 const httpOptions = {
-  uri: "/graphql",
+  uri: "/graphql"
 }
 const httpLink = ApolloLink.split(
   (operation) => operation.getContext().hasUpload,
   createUploadLink(httpOptions),
-  new BatchHttpLink(httpOptions),
+  new BatchHttpLink(httpOptions)
 )
 
 export default defineBoot(async ({ app, router }) => {
@@ -35,71 +35,71 @@ export default defineBoot(async ({ app, router }) => {
           "InlineComment",
           "InlineCommentReply",
           "OverallComment",
-          "OverallCommentReply",
-        ],
-      },
+          "OverallCommentReply"
+        ]
+      }
     }),
-    connectToDevTools: true,
+    connectToDevTools: true
   })
 
   /**
    * Check routes for requiresAuth meta field.
    */
   router.beforeEach(async (to, from, next) =>
-    beforeEachRequiresAuth(apolloClient, to, from, next),
+    beforeEachRequiresAuth(apolloClient, to, from, next)
   )
 
   /**
    * Check routes for requiresRoles meta field.
    */
   router.beforeEach(async (to, from, next) =>
-    beforeEachRequiresAppAdmin(apolloClient, to, from, next),
+    beforeEachRequiresAppAdmin(apolloClient, to, from, next)
   )
 
   /**
    * Check routes for requiresDraftAccess meta field.
    */
   router.beforeEach(async (to, from, next) =>
-    beforeEachRequiresDraftAccess(apolloClient, to, from, next),
+    beforeEachRequiresDraftAccess(apolloClient, to, from, next)
   )
 
   /**
    * Check routes for requiresSubmissionAccess meta field.
    */
   router.beforeEach(async (to, from, next) =>
-    beforeEachRequiresSubmissionAccess(apolloClient, to, from, next),
+    beforeEachRequiresSubmissionAccess(apolloClient, to, from, next)
   )
 
   /**
    * Check routes for requiresPreviewAccess meta field.
    */
   router.beforeEach(async (to, from, next) =>
-    beforeEachRequiresPreviewAccess(apolloClient, to, from, next),
+    beforeEachRequiresPreviewAccess(apolloClient, to, from, next)
   )
 
   /**
    * Check routes for requiresViewAccess meta field.
    */
   router.beforeEach(async (to, from, next) =>
-    beforeEachRequiresViewAccess(apolloClient, to, from, next),
+    beforeEachRequiresViewAccess(apolloClient, to, from, next)
   )
 
   /**
    * Check routes for requiresReviewAccess meta field.
    */
   router.beforeEach(async (to, from, next) =>
-    beforeEachRequiresReviewAccess(apolloClient, to, from, next),
+    beforeEachRequiresReviewAccess(apolloClient, to, from, next)
   )
 
   /**
    * Check routes for requiresExportAccess meta field.
    */
   router.beforeEach(async (to, from, next) =>
-    beforeEachRequiresExportAccess(apolloClient, to, from, next),
+    beforeEachRequiresExportAccess(apolloClient, to, from, next)
   )
 
   const apolloClients = {
-    default: apolloClient,
+    default: apolloClient
   }
   const apolloProvider = createApolloProvider(apolloClients)
   app.provide(ApolloClients, apolloClients) // Provide for composition api

@@ -3,9 +3,7 @@
     <q-card>
       <q-card-section class="row items-center">
         <q-avatar icon="mdi-file-undo" color="primary" text-color="white" />
-        <span class="q-ml-sm"
-          >{{ $t(`dialog.discardChanges.body`) }}</span
-        >
+        <span class="q-ml-sm">{{ $t(`dialog.discardChanges.body`) }}</span>
       </q-card-section>
 
       <q-card-actions align="right">

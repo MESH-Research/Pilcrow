@@ -13,7 +13,7 @@ vi.mock("vue-router", async (importOriginal) => {
   const onBeforeRouteLeave = vi.fn()
   return {
     ...original,
-    onBeforeRouteLeave,
+    onBeforeRouteLeave
   }
 })
 
@@ -22,7 +22,7 @@ vi.mock("vue", async (importOriginal) => {
   const onUnmounted = vi.fn()
   return {
     ...original,
-    onUnmounted,
+    onUnmounted
   }
 })
 
@@ -34,7 +34,7 @@ describe("useDirtyGuard composable", () => {
       setup() {
         useDirtyGuard(dirtyRef)
       },
-      render: () => h("div"),
+      render: () => h("div")
     })
 
   test("allows a clean navigation to continue", async () => {
@@ -77,7 +77,7 @@ describe("useDirtyGuard composable", () => {
     })
     window.removeEventListener = vi.fn()
     const mockEvent = {
-      preventDefault: vi.fn(),
+      preventDefault: vi.fn()
     }
     let unmountCb
     onUnmounted.mockImplementation((cb) => (unmountCb = cb))
@@ -87,7 +87,7 @@ describe("useDirtyGuard composable", () => {
     expect(window.addEventListener).toHaveBeenCalledTimes(1)
     expect(window.addEventListener).toHaveBeenCalledWith(
       "beforeunload",
-      expect.any(Function),
+      expect.any(Function)
     )
 
     //Test event callback if not dirty
@@ -104,7 +104,7 @@ describe("useDirtyGuard composable", () => {
     expect(window.removeEventListener).toHaveBeenCalledTimes(1)
     expect(window.removeEventListener).toHaveBeenCalledWith(
       "beforeunload",
-      callBackFn,
+      callBackFn
     )
   })
 })

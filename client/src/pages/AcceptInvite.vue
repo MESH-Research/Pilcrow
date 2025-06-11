@@ -96,7 +96,7 @@
           :label="$t('submissions.accept_invite.update_details.success.action')"
           :to="{
             name: 'submission:details',
-            params: { id: cta_id },
+            params: { id: cta_id }
           }"
         />
       </div>
@@ -130,7 +130,7 @@ import ErrorBanner from "src/components/molecules/ErrorBanner.vue"
 import ErrorFieldRenderer from "src/components/molecules/ErrorFieldRenderer.vue"
 import {
   VERIFY_SUBMISSION_INVITE,
-  ACCEPT_SUBMISSION_INVITE,
+  ACCEPT_SUBMISSION_INVITE
 } from "src/graphql/mutations"
 import { ref, onMounted } from "vue"
 import { useMutation } from "@vue/apollo-composable"
@@ -157,7 +157,7 @@ const { $v, user, saveUser } = useUserValidation({
   },
   variables: (form) => {
     return { id, ...form, ...params }
-  },
+  }
 })
 
 onMounted(async () => {

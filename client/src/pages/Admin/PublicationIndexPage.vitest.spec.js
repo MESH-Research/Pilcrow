@@ -8,8 +8,8 @@ import { beforeEach, describe, expect, it, test, vi } from "vitest"
 
 vi.mock("vue-router", () => ({
   useRouter: () => ({
-    push: vi.fn(),
-  }),
+    push: vi.fn()
+  })
 }))
 
 installQuasarPlugin({ plugins: { Notify } })
@@ -37,33 +37,33 @@ describe("publications page mount", () => {
             {
               id: "1",
               name: "Sample Jest Publication 1",
-              home_page_content: "",
+              home_page_content: ""
             },
             {
               id: "2",
               name: "Sample Jest Publication 2",
-              home_page_content: "",
+              home_page_content: ""
             },
             {
               id: "3",
               name: "Sample Jest Publication 3",
-              home_page_content: "",
+              home_page_content: ""
             },
             {
               id: "4",
               name: "Sample Jest Publication 4",
-              home_page_content: "",
-            },
+              home_page_content: ""
+            }
           ],
           paginatorInfo: {
             __typename: "PaginatorInfo",
             count: 4,
             currentPage: 1,
             lastPage: 1,
-            perPage: 10,
-          },
-        },
-      },
+            perPage: 10
+          }
+        }
+      }
     })
     const wrapper = makeWrapper()
     await flushPromises()

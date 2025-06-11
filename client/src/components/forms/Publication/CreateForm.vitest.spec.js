@@ -9,8 +9,8 @@ import { describe, expect, test, vi } from "vitest"
 const mockNewStatus = vi.fn()
 vi.mock("src/use/guiElements", () => ({
   useFeedbackMessages: () => ({
-    newStatusMessage: mockNewStatus,
-  }),
+    newStatusMessage: mockNewStatus
+  })
 }))
 
 installQuasarPlugin()
@@ -29,9 +29,9 @@ describe("CreateForm", () => {
       data: {
         createPublication: {
           id: 1,
-          name,
-        },
-      },
+          name
+        }
+      }
     })
     const wrapper = makeWrapper()
     wrapper.trigger("create")
@@ -40,13 +40,13 @@ describe("CreateForm", () => {
     await flushPromises()
     expect(warn).toHaveBeenCalledTimes(1)
     expect(warn).toHaveBeenCalledWith(
-      expect.stringContaining(encodeURIComponent('"message":35')),
+      expect.stringContaining(encodeURIComponent('"message":35'))
     )
     expect(warn).toHaveBeenCalledWith(
-      expect.stringContaining("GetPublications"),
+      expect.stringContaining("GetPublications")
     )
     expect(mutationHandler).toHaveBeenCalledWith(
-      expect.objectContaining({ name }),
+      expect.objectContaining({ name })
     )
     expect(mockNewStatus).toHaveBeenCalledWith("success", expect.any(String))
   })
