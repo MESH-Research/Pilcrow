@@ -17,7 +17,7 @@
     "test:unit:ui": "vitest --ui",
     "test:unit": "vitest",
     "test:unit:ci": "vitest run",
-    "postinstall": "quasar prepare"
+    "postinstall": "node -e \"process.env.NO_POSTINSTALL===1&&process.exit(1)\" || quasar prepare"
   },
   "dependencies": {
     "@apollo/client": "^3.7.2",

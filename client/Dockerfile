@@ -1,4 +1,4 @@
-FROM --platform=$BUILDPLATFORM node:20-alpine as build-stage
+FROM --platform=$BUILDPLATFORM node:20-alpine AS build-stage
 ARG VERSION
 ARG VERSION_URL
 ARG VERSION_DATE
@@ -6,9 +6,9 @@ ARG VERSION_DATE
 WORKDIR /app
 
 COPY package.json yarn.lock ./
-RUN yarn
+RUN NO_POSTINSTALL=1 yarn
 COPY . .
-RUN yarn build
+RUN yarn quasar prepare && yarn build
 
 FROM nginx:latest
 

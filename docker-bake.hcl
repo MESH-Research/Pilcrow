@@ -88,7 +88,10 @@ target "ci" {
 
     output = item.output
 }
-target "docker-metadata-action" {}
+target "docker-metadata-action" {
+    tags = []
+    labels = {}
+}
 
 target "docker-build-cache-config-action" {}
 
