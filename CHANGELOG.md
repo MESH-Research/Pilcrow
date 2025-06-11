@@ -3,6 +3,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.32.1](https://github.com/MESH-Research/Pilcrow/compare/v0.32.0...v0.32.1) (2025-06-11)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @apollo/client to v3.13.8 ([#2148](https://github.com/MESH-Research/Pilcrow/issues/2148)) ([efeaa93](https://github.com/MESH-Research/Pilcrow/commit/efeaa9336fc04cc70e0c07aa5918bc98c032b88d))
+* **deps:** update dependency quasar to v2.18.1 ([#2149](https://github.com/MESH-Research/Pilcrow/issues/2149)) ([feb3763](https://github.com/MESH-Research/Pilcrow/commit/feb3763234194a86d6178e176872397b1174247d))
+* **deps:** update tiptap monorepo to v2.14.0 ([#2150](https://github.com/MESH-Research/Pilcrow/issues/2150)) ([f7c5a7c](https://github.com/MESH-Research/Pilcrow/commit/f7c5a7c77dfaab06ca4b603d6605007474f9ff25))
+
 ## [0.32.0](https://github.com/MESH-Research/Pilcrow/compare/v0.31.1...v0.32.0) (2025-06-10)
 
 
