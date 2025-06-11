@@ -1,6 +1,6 @@
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
 import { mount, flushPromises } from "@vue/test-utils"
-import { installApolloClient } from "test/vitest/utils"
+import { installApolloClient } from "app/test/vitest/utils"
 import { SessionStorage } from "quasar"
 import { LOGIN } from "src/graphql/mutations"
 import { GET_IDENTITY_PROVIDERS } from "src/graphql/queries"
@@ -22,7 +22,6 @@ installQuasarPlugin()
 const mockClient = installApolloClient()
 
 describe("LoginPage", () => {
-
   const identityProviders = vi.fn()
   mockClient.setRequestHandler(GET_IDENTITY_PROVIDERS, identityProviders)
   const providersData = {

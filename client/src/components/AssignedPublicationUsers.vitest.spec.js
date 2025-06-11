@@ -1,17 +1,17 @@
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
 import { mount } from "@vue/test-utils"
-import { installApolloClient } from "test/vitest/utils"
-import { Notify } from 'quasar'
+import { installApolloClient } from "app/test/vitest/utils"
+import { Notify } from "quasar"
 import {
   UPDATE_PUBLICATION_ADMINS,
   UPDATE_PUBLICATION_EDITORS,
 } from "src/graphql/mutations"
 import AssignedPublicationUsers from "./AssignedPublicationUsers.vue"
 
-import { beforeEach, describe, expect, test, vi } from 'vitest'
+import { beforeEach, describe, expect, test, vi } from "vitest"
 
 installQuasarPlugin({ plugins: { Notify } })
-const mockClient = installApolloClient();
+const mockClient = installApolloClient()
 
 describe("AssignedPublicationUsers", () => {
   const makeWrapper = (props) => {
@@ -25,7 +25,7 @@ describe("AssignedPublicationUsers", () => {
   mockClient.setRequestHandler(UPDATE_PUBLICATION_EDITORS, editorsMutation)
   mockClient.setRequestHandler(
     UPDATE_PUBLICATION_ADMINS,
-    publicationAdministratorsMutation
+    publicationAdministratorsMutation,
   )
 
   beforeEach(() => {
@@ -87,7 +87,7 @@ describe("AssignedPublicationUsers", () => {
         ],
       },
     })
-    expect(wrapper.findComponent('q-form').exists()).toBe(false)
+    expect(wrapper.findComponent("q-form").exists()).toBe(false)
     expect(wrapper.find("[data-cy=button_unassign]").exists()).toBe(false)
 
     await wrapper.setProps({
@@ -100,7 +100,7 @@ describe("AssignedPublicationUsers", () => {
       },
     })
 
-    expect(wrapper.findComponent({ name: 'QForm'}).exists()).toBe(true)
+    expect(wrapper.findComponent({ name: "QForm" }).exists()).toBe(true)
     expect(wrapper.find("[data-cy=button_unassign]").exists()).toBe(true)
   })
 
@@ -116,7 +116,7 @@ describe("AssignedPublicationUsers", () => {
       },
     })
 
-    expect(wrapper.findComponent({name: 'QForm'}).exists()).toBe(false)
+    expect(wrapper.findComponent({ name: "QForm" }).exists()).toBe(false)
 
     await wrapper.setProps({
       roleGroup: "editors",
@@ -128,7 +128,7 @@ describe("AssignedPublicationUsers", () => {
         editors: [{ id: 1, email: "test@example.com", name: "Test" }],
       },
     })
-    expect(wrapper.findComponent({name: 'QForm'}).exists()).toBe(true)
+    expect(wrapper.findComponent({ name: "QForm" }).exists()).toBe(true)
   })
 
   test("mutable props disables mutations", async () => {
@@ -160,9 +160,8 @@ describe("AssignedPublicationUsers", () => {
       },
     })
 
-    expect(wrapper.findComponent({ name: 'QForm'}).exists()).toBe(false)
+    expect(wrapper.findComponent({ name: "QForm" }).exists()).toBe(false)
     expect(wrapper.find("[data-cy=button_unassign]").exists()).toBe(true)
-
   })
 
   test("assignment mutation called with correct variables", async () => {

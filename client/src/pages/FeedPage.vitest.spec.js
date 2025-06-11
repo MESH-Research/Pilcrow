@@ -1,6 +1,6 @@
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
 import { mount } from "@vue/test-utils"
-import { installApolloClient } from "test/vitest/utils"
+import { installApolloClient } from "app/test/vitest/utils"
 import { CURRENT_USER_NOTIFICATIONS } from "src/graphql/queries"
 import FeedPage from "./FeedPage.vue"
 
@@ -13,7 +13,10 @@ describe("Nofitication Popup", () => {
   const wrapperFactory = () => mount(FeedPage)
 
   const userNotificationsHandler = vi.fn()
-  mockClient.setRequestHandler(CURRENT_USER_NOTIFICATIONS, userNotificationsHandler)
+  mockClient.setRequestHandler(
+    CURRENT_USER_NOTIFICATIONS,
+    userNotificationsHandler,
+  )
 
   afterEach(() => {
     userNotificationsHandler.mockClear()
@@ -41,28 +44,32 @@ describe("Nofitication Popup", () => {
                 data: {
                   submission: {
                     id: 9999,
-                    title: "A Modest Proposal"
+                    title: "A Modest Proposal",
                   },
                   publication: {
                     id: 9999,
-                    name: "Test Publication from Tinker"
+                    name: "Test Publication from Tinker",
                   },
-                  user: { "id": 9999, "username": "Test User from Tinker" }, "type": "submission.awaiting_review", "body": "A submission status has been accepted for review.", "action": "Visit Pilcrow", "url": "/",
+                  user: { id: 9999, username: "Test User from Tinker" },
+                  type: "submission.awaiting_review",
+                  body: "A submission status has been accepted for review.",
+                  action: "Visit Pilcrow",
+                  url: "/",
                   invitee: {
                     display_label: "Test User",
                   },
                   inviter: {
                     display_label: "Test User",
-                  }
+                  },
                 },
                 read_at: readStatus ? "2021-12-31 12:15:15" : null,
                 created_at: "2021-12-13T20:13:05.000",
                 updated_at: "2021-12-15T16:31:18.000",
-              }
+              },
             ],
           },
-        }
-      }
+        },
+      },
     }
   }
 
@@ -74,7 +81,7 @@ describe("Nofitication Popup", () => {
   })
 
   it("displays a default message for a user that has no notifications", async () => {
-    userNotificationsHandler.mockResolvedValue(true, [])
+    userNotificationsHandler.mockResolvedValue(getNotificationData(true, []))
 
     const wrapper = wrapperFactory()
     const message = wrapper.findComponent({ ref: "default_message" })
@@ -86,7 +93,7 @@ describe("Nofitication Popup", () => {
 
     const wrapper = wrapperFactory()
     expect(wrapper.findAllComponents({ ref: "default_message" })).toHaveLength(
-      0
+      0,
     )
   })
 })

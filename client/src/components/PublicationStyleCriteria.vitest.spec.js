@@ -1,6 +1,6 @@
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
 import { mount, flushPromises } from "@vue/test-utils"
-import { installApolloClient } from "test/vitest/utils"
+import { installApolloClient } from "app/test/vitest/utils"
 import {
   CREATE_PUBLICATION_STYLE_CRITERIA,
   DELETE_PUBLICATION_STYLE_CRITERIA,
@@ -28,18 +28,18 @@ describe("PublicationStyleCriteria", () => {
   const updateCriteriaHandler = vi.fn()
   mockClient.setRequestHandler(
     UPDATE_PUBLICATION_STYLE_CRITERIA,
-    updateCriteriaHandler
+    updateCriteriaHandler,
   )
   const createCriteriaHandler = vi.fn()
   mockClient.setRequestHandler(
     CREATE_PUBLICATION_STYLE_CRITERIA,
-    createCriteriaHandler
+    createCriteriaHandler,
   )
 
   const deleteCriteriaHandler = vi.fn()
   mockClient.setRequestHandler(
     DELETE_PUBLICATION_STYLE_CRITERIA,
-    deleteCriteriaHandler
+    deleteCriteriaHandler,
   )
 
   beforeEach(() => {

@@ -2,7 +2,7 @@ import SubmissionsPage from "./SubmissionsPage.vue"
 import { CURRENT_USER_SUBMISSIONS, GET_SUBMISSIONS } from "src/graphql/queries"
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest"
 import { flushPromises, mount } from "@vue/test-utils"
-import { installApolloClient } from "test/vitest/utils"
+import { installApolloClient } from "app/test/vitest/utils"
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
 import { ref } from "vue"
 import { useCurrentUser } from "src/use/user"
@@ -22,10 +22,12 @@ describe("Submissions Page", () => {
     useCurrentUser.mockReturnValue({
       currentUser: ref({
         id: 1,
-        roles: [{
-          name: "Application Administrator"
-        }],
-       }),
+        roles: [
+          {
+            name: "Application Administrator",
+          },
+        ],
+      }),
       isAppAdmin: ref(true),
       isSubmitter: () => true,
       isReviewCoordinator: () => false,
@@ -194,10 +196,10 @@ describe("Submissions Page", () => {
     })
     const wrapper = await wrapperFactory()
     expect(wrapper.findAllComponents({ name: "submission-table" }).length).toBe(
-      1
+      1,
     )
     expect(wrapper.findAll('[data-cy="submission_link_desktop"]').length).toBe(
-      2
+      2,
     )
   })
 
@@ -413,7 +415,7 @@ describe("Submissions Page", () => {
     })
     const wrapper = await wrapperFactory()
     expect(wrapper.findAllComponents({ name: "comment-preview" }).length).toBe(
-      3
+      3,
     )
   })
 
@@ -537,7 +539,7 @@ describe("Submissions Page", () => {
         .mockResolvedValue(mockGetSubmissions(role_name))
 
       CurrentUserSubmissions.mockResolvedValue(
-        mockCurrentUserSubmissions(role_name)
+        mockCurrentUserSubmissions(role_name),
       )
       const wrapper = await wrapperFactory()
       await flushPromises()

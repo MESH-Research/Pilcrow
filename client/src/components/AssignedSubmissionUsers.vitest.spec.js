@@ -1,20 +1,19 @@
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
 import { mount } from "@vue/test-utils"
-import { installApolloClient } from "test/vitest/utils"
+import { installApolloClient } from "app/test/vitest/utils"
 import { Notify } from "quasar"
 import {
   UPDATE_SUBMISSION_REVIEWERS,
   UPDATE_SUBMISSION_REVIEW_COORDINATORS,
   UPDATE_SUBMISSION_SUBMITERS,
 } from "src/graphql/mutations"
-import { beforeEach, describe, expect, test, vi } from 'vitest'
+import { beforeEach, describe, expect, test, vi } from "vitest"
 import AssignedSubmissionUsers from "./AssignedSubmissionUsers.vue"
 
 installQuasarPlugin({ plugins: { Notify } })
 const mockClient = installApolloClient()
 
 describe("AssignedSubmissionUsers", () => {
-
   const makeWrapper = (props) => {
     return mount(AssignedSubmissionUsers, {
       props,
@@ -27,7 +26,7 @@ describe("AssignedSubmissionUsers", () => {
   mockClient.setRequestHandler(UPDATE_SUBMISSION_REVIEWERS, reviewersMutation)
   mockClient.setRequestHandler(
     UPDATE_SUBMISSION_REVIEW_COORDINATORS,
-    coordinatorsMutation
+    coordinatorsMutation,
   )
   mockClient.setRequestHandler(UPDATE_SUBMISSION_SUBMITERS, submittersMutation)
 

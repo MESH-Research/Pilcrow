@@ -1,6 +1,6 @@
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
 import { mount, flushPromises } from "@vue/test-utils"
-import { installApolloClient } from "test/vitest/utils"
+import { installApolloClient } from "app/test/vitest/utils"
 import { UPDATE_USER } from "src/graphql/mutations"
 import { CURRENT_USER } from "src/graphql/queries"
 import { ref as mockRef } from "vue"
@@ -12,7 +12,7 @@ vi.mock("src/use/forms", async (importOriginal) => {
   const forms = await importOriginal()
   return {
     ...forms,
-    useDirtyGuard: () => { },
+    useDirtyGuard: () => {},
     useFormState: () => ({
       dirty: mockRef(false),
       saved: mockRef(false),
@@ -38,7 +38,6 @@ installQuasarPlugin()
 const mockClient = installApolloClient()
 
 describe("Settings page", () => {
-
   const makeWrapper = async () => {
     const wrapper = mount(SettingsPage)
     await flushPromises()

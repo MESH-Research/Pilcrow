@@ -1,13 +1,13 @@
 import { mount } from "vue-composable-tester"
-import { createMockClient } from "test/vitest/utils"
+import { createMockClient } from "app/test/vitest/utils"
 import { usePagination } from "./pagination"
 import { DefaultApolloClient } from "@vue/apollo-composable"
 import { provide } from "vue"
 import { GET_PUBLICATIONS } from "src/graphql/queries"
-import { flushPromises } from '@vue/test-utils'
+import { flushPromises } from "@vue/test-utils"
 import { isRef } from "vue"
 
-import { describe, expect, test, vi, beforeEach } from 'vitest'
+import { describe, expect, test, vi, beforeEach } from "vitest"
 
 describe("usePagination composable", () => {
   const mockClient = createMockClient()

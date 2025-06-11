@@ -1,6 +1,6 @@
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
 import { mount, flushPromises } from "@vue/test-utils"
-import { installApolloClient } from "test/vitest/utils"
+import { installApolloClient } from "app/test/vitest/utils"
 import { VERIFY_EMAIL } from "src/graphql/mutations"
 import { useCurrentUser } from "src/use/user"
 import { ref } from "vue"

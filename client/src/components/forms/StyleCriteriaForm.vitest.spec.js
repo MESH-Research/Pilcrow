@@ -1,12 +1,11 @@
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
 import { mount, flushPromises } from "@vue/test-utils"
-import { Dialog } from "test/vitest/mockedPlugins"
+import { Dialog } from "app/test/vitest/mockedPlugins"
 import { useFormState } from "src/use/forms"
 import { ref } from "vue"
 import StyleCriteriaForm from "./StyleCriteriaForm.vue"
 
 import { describe, expect, test } from "vitest"
-
 
 installQuasarPlugin({ plugins: { Dialog } })
 describe("StyleCriteriaForm", () => {
@@ -14,7 +13,10 @@ describe("StyleCriteriaForm", () => {
     return mount(StyleCriteriaForm, {
       global: {
         provide: {
-          formState: useFormState({ loading: ref(false) }, { loading:  ref(false) }),
+          formState: useFormState(
+            { loading: ref(false) },
+            { loading: ref(false) },
+          ),
         },
         stubs: ["QEditor"],
       },
@@ -70,7 +72,7 @@ describe("StyleCriteriaForm", () => {
     await descriptionInput.setValue("a".repeat(4097))
     await form.trigger("submit")
     expect(wrapper.find("[data-cy='description-errors']").text()).toContain(
-      "errors.maxLength"
+      "errors.maxLength",
     )
     expect(descriptionInput.classes("error")).toBe(true)
 
@@ -121,7 +123,7 @@ describe("StyleCriteriaForm", () => {
       icon: "initial_icon",
     })
 
-    Dialog.resolveOk('new-icon')
+    Dialog.resolveOk("new-icon")
     await wrapper.findComponent({ ref: "icon-button" }).trigger("click")
     await flushPromises()
 

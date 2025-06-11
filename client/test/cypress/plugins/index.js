@@ -1,4 +1,3 @@
-/* eslint-env node */
 // ***********************************************************
 // This example plugins/index.js can be used to load plugins
 //
@@ -17,8 +16,8 @@ const axiosImport = require("axios")
 const https = require("https")
 const axios = axiosImport.create({
   httpsAgent: new https.Agent({
-    rejectUnauthorized: false
-  })
+    rejectUnauthorized: false,
+  }),
 })
 module.exports = (on, config) => {
   on("task", {
@@ -48,7 +47,7 @@ module.exports = (on, config) => {
     },
   })
 
-  on('task', {
+  on("task", {
     log(message) {
       console.log(message)
 
@@ -58,7 +57,7 @@ module.exports = (on, config) => {
       console.table(message)
 
       return null
-    }
+    },
   })
 
   on("before:browser:launch", (browser = {}, launchOptions) => {

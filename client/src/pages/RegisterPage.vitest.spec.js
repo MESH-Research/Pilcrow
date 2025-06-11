@@ -1,11 +1,9 @@
-import {
-  installQuasarPlugin
-} from "@quasar/quasar-app-extension-testing-unit-vitest"
+import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
 import { mount, flushPromises } from "@vue/test-utils"
 import { omit } from "lodash"
-import { installApolloClient } from "test/vitest/utils"
+import { installApolloClient } from "app/test/vitest/utils"
 import { CREATE_USER, LOGIN } from "src/graphql/mutations"
-import { describe, expect, it, vi } from 'vitest'
+import { describe, expect, it, vi } from "vitest"
 import RegisterPage from "./RegisterPage.vue"
 
 vi.mock("vue-router", () => ({
@@ -18,18 +16,18 @@ installQuasarPlugin()
 const mockClient = installApolloClient()
 
 describe("RegisterPage", () => {
-  const wrapperFactory = () => mount(RegisterPage, {
-    global: {
-      stubs: ["router-link", "i18n-t"],
-    },
-  })
+  const wrapperFactory = () =>
+    mount(RegisterPage, {
+      global: {
+        stubs: ["router-link", "i18n-t"],
+      },
+    })
 
   const createUserHandler = vi.fn()
   mockClient.setRequestHandler(CREATE_USER, createUserHandler)
 
   const loginHandler = vi.fn()
   mockClient.setRequestHandler(LOGIN, loginHandler)
-
 
   it("mounts without errors", () => {
     expect(wrapperFactory()).toBeTruthy()
@@ -46,11 +44,12 @@ describe("RegisterPage", () => {
       created_at: "nowish",
     }
 
-    createUserHandler.mockResolvedValue({ data: { createUser: { id: 1, ...user } } })
+    createUserHandler.mockResolvedValue({
+      data: { createUser: { id: 1, ...user } },
+    })
     loginHandler.mockResolvedValue({
       data: { login: { id: 1, ...user } },
     })
-
 
     await wrapper.findComponent({ ref: "nameInput" }).setValue(user.name)
     await wrapper.findComponent({ ref: "emailInput" }).setValue(user.email)
@@ -67,7 +66,7 @@ describe("RegisterPage", () => {
 
     expect(wrapper.vm.formErrorMsg).toBeFalsy()
     expect(createUserHandler).toHaveBeenCalledWith(
-      expect.objectContaining(omit(user, "created_at"))
+      expect.objectContaining(omit(user, "created_at")),
     )
   })
 })

@@ -1,5 +1,5 @@
 import { mount } from "vue-composable-tester"
-import { createMockClient } from "test/vitest/utils"
+import { createMockClient } from "app/test/vitest/utils"
 import { useCurrentUser, useLogin } from "./user"
 import { DefaultApolloClient } from "@vue/apollo-composable"
 import { CURRENT_USER } from "src/graphql/queries"
@@ -7,16 +7,16 @@ import { LOGIN } from "src/graphql/mutations"
 import { provide } from "vue"
 import { flushPromises } from "@vue/test-utils"
 
-import { describe, test, expect, vi } from 'vitest'
+import { describe, test, expect, vi } from "vitest"
 
-vi.mock('quasar', async (importOriginal) => {
+vi.mock("quasar", async (importOriginal) => {
   const original = await importOriginal()
   return original
 })
 
 describe("useCurrentUser composable", () => {
   const mountComposable = (mocks) => {
-    const mockClient = createMockClient({connectToDevTools: false})
+    const mockClient = createMockClient({ connectToDevTools: false })
     mocks.forEach((m) => mockClient.setRequestHandler(...m))
     const { result } = mount(() => useCurrentUser(), {
       provider: () => {
@@ -69,7 +69,7 @@ describe("useCurrentUser composable", () => {
 
 describe("useLogin composable", () => {
   const mountComposable = () => {
-    const mockClient = createMockClient({connectToDevTools: false})
+    const mockClient = createMockClient({ connectToDevTools: false })
     const { result } = mount(() => useLogin(), {
       provider: () => {
         provide(DefaultApolloClient, mockClient)
@@ -148,17 +148,14 @@ describe("useLogin composable", () => {
   })
 
   test("fetches redirectUrl from session storage", () => {
-    const mock = vi.spyOn(window.sessionStorage, 'getItem')
+    const mock = vi.spyOn(window.sessionStorage, "getItem")
     mock.mockReturnValue("/redirect")
     let { result } = mountComposable()
 
     expect(result.redirectUrl).toBe("/redirect")
 
-    mock.mockReset().mockReturnValue(null)
-
-    ({ result } = mountComposable())
+    mock.mockReset().mockReturnValue(null)(({ result } = mountComposable()))
 
     expect(result.redirectUrl).toBe("/dashboard")
-
   })
 })

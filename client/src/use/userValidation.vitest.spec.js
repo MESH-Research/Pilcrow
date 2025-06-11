@@ -2,11 +2,11 @@ import { mount } from "vue-composable-tester"
 import { useUserValidation } from "./userValidation"
 import { provide } from "vue"
 import { DefaultApolloClient } from "@vue/apollo-composable"
-import { createMockClient } from "test/vitest/utils"
+import { createMockClient } from "app/test/vitest/utils"
 import { CREATE_USER } from "src/graphql/mutations"
 import { flushPromises } from "@vue/test-utils"
 
-import { describe, test, expect, vi } from 'vitest'
+import { describe, test, expect, vi } from "vitest"
 
 describe("test uservalidation composable", () => {
   const mountComposable = () => {
@@ -107,15 +107,12 @@ describe("test uservalidation composable", () => {
       ],
     }
 
-    mockClient.setRequestHandler(
-      CREATE_USER,
-      vi.fn().mockResolvedValue(error)
-    )
+    mockClient.setRequestHandler(CREATE_USER, vi.fn().mockResolvedValue(error))
 
     await expect(saveUser()).rejects.toThrow("FORM_VALIDATION")
 
     expect($v.value.username.$externalResults[0].$message).toBe(
-      "USERNAME_IN_USE"
+      "USERNAME_IN_USE",
     )
     expect($v.value.email.$externalResults[0].$message).toBe("EMAIL_IN_USE")
 

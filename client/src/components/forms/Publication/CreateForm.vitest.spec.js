@@ -1,6 +1,6 @@
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
 import { mount, flushPromises } from "@vue/test-utils"
-import { installApolloClient } from "test/vitest/utils"
+import { installApolloClient } from "app/test/vitest/utils"
 import { CREATE_PUBLICATION } from "src/graphql/mutations"
 import CreateForm from "./CreateForm.vue"
 
@@ -40,13 +40,13 @@ describe("CreateForm", () => {
     await flushPromises()
     expect(warn).toHaveBeenCalledTimes(1)
     expect(warn).toHaveBeenCalledWith(
-      expect.stringContaining('message%22%3A33%2C%22')
+      expect.stringContaining(encodeURIComponent('"message":35')),
     )
     expect(warn).toHaveBeenCalledWith(
-      expect.stringContaining('GetPublications')
+      expect.stringContaining("GetPublications"),
     )
     expect(mutationHandler).toHaveBeenCalledWith(
-      expect.objectContaining({ name })
+      expect.objectContaining({ name }),
     )
     expect(mockNewStatus).toHaveBeenCalledWith("success", expect.any(String))
   })

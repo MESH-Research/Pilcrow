@@ -1,6 +1,6 @@
 import { GET_SUBMISSION } from "src/graphql/queries"
 import { beforeEach, describe, expect, test, vi } from "vitest"
-import { installApolloClient } from "test/vitest/utils"
+import { installApolloClient } from "app/test/vitest/utils"
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
 import { mount, flushPromises } from "@vue/test-utils"
 import { useCurrentUser } from "src/use/user"
@@ -11,11 +11,10 @@ vi.mock("src/use/user", () => ({
   useCurrentUser: vi.fn(),
 }))
 
-installQuasarPlugin({ plugins: { Notify: vi.fn() }})
+installQuasarPlugin({ plugins: { Notify: vi.fn() } })
 const mockClient = installApolloClient()
 
 describe("submissions details page mount", () => {
-
   const makeWrapper = () =>
     mount(SubmissionDetailsPage, {
       props: {
@@ -117,9 +116,11 @@ describe("submissions details page mount", () => {
       email: "hello@example.com",
       username: "helloUser",
       email_verified_at: "2021-08-14 02:26:32",
-      roles: [{
-        name: "Application Administrator"
-      }],
+      roles: [
+        {
+          name: "Application Administrator",
+        },
+      ],
     }),
     isAppAdmin: ref(true),
     isSubmitter: () => true,

@@ -1,11 +1,9 @@
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
 import { mount, flushPromises } from "@vue/test-utils"
-import { Dialog } from 'test/vitest/mockedPlugins'
-import { beforeEach, describe, expect, it, test, vi } from 'vitest'
+import { Dialog } from "app/test/vitest/mockedPlugins"
+import { beforeEach, describe, expect, it, test, vi } from "vitest"
 import { ref } from "vue"
 import CommentEditor from "./CommentEditor.vue"
-
-
 
 const styleCriteria = [
   {
@@ -54,7 +52,7 @@ describe("CommentEditor", () => {
               },
             }),
           },
-          stubs: ['i18n-t']
+          stubs: ["i18n-t"],
         },
         props: {
           commentType: "InlineComment",
@@ -81,7 +79,6 @@ describe("CommentEditor", () => {
   })
 
   it("shows dialog if no criteria are selected", async () => {
-
     const { wrapper } = wrapperFactory()
 
     await flushPromises()
@@ -105,7 +102,7 @@ describe("CommentEditor", () => {
     const { wrapper } = wrapperFactory()
     await flushPromises()
     expect(
-      wrapper.findAllComponents('[data-cy="criteria-toggle"]').length
+      wrapper.findAllComponents('[data-cy="criteria-toggle"]').length,
     ).toBe(4)
   })
 
