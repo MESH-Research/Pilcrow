@@ -20,9 +20,9 @@ export default {
 
   data() {
     return {
-      leftDrawerOpen: false,
+      leftDrawerOpen: false
     }
-  },
+  }
 }
 </script>
 

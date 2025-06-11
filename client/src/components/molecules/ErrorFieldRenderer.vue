@@ -13,17 +13,17 @@ export default {
   props: {
     errors: {
       type: Array,
-      required: true,
+      required: true
     },
     prefix: {
       type: String,
       required: false,
-      default: "",
-    },
+      default: ""
+    }
   },
   setup() {
     return { getErrorMessageKey }
-  },
+  }
 }
 </script>
 

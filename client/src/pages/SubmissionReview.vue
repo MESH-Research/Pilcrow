@@ -17,7 +17,7 @@
         class="q-mt-md"
         :to="{
           name: 'submission:draft',
-          params: { id: submission.id },
+          params: { id: submission.id }
         }"
       />
     </div>
@@ -67,8 +67,8 @@ const { getScrollTarget, setVerticalScrollPosition } = scroll
 const props = defineProps({
   id: {
     type: String,
-    required: true,
-  },
+    required: true
+  }
 })
 const { loading, result } = useQuery(GET_SUBMISSION_REVIEW, { id: props.id })
 const submission = computed(() => {

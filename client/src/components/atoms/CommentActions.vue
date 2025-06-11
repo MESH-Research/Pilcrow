@@ -45,7 +45,7 @@
 <script setup>
 import { inject, computed } from "vue"
 import { useCurrentUser } from "src/use/user"
-import ConfirmCommentDeletion from "../dialogs/ConfirmCommentDeletion.vue";
+import ConfirmCommentDeletion from "../dialogs/ConfirmCommentDeletion.vue"
 import { useQuasar } from "quasar"
 const { dialog } = useQuasar()
 
@@ -66,8 +66,8 @@ async function deleteHandler() {
     component: ConfirmCommentDeletion,
     componentProps: {
       comment: comment,
-      submissionId: submission.value.id,
-    },
+      submissionId: submission.value.id
+    }
   })
 }
 </script>

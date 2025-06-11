@@ -174,8 +174,8 @@ defineProps({
   //Drawer status
   modelValue: {
     type: Boolean,
-    default: null,
-  },
+    default: null
+  }
 })
 
 const { currentUser, isAppAdmin } = useCurrentUser()

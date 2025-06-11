@@ -44,7 +44,7 @@ import { useFormState } from "src/use/forms"
 import {
   UPDATE_PUBLICATION_STYLE_CRITERIA,
   CREATE_PUBLICATION_STYLE_CRITERIA,
-  DELETE_PUBLICATION_STYLE_CRITERIA,
+  DELETE_PUBLICATION_STYLE_CRITERIA
 } from "src/graphql/mutations"
 import { useMutation } from "@vue/apollo-composable"
 import { useI18n } from "vue-i18n"
@@ -55,13 +55,13 @@ const editId = ref(null)
 const props = defineProps({
   publication: {
     type: Object,
-    required: true,
-  },
+    required: true
+  }
 })
 const publication = toRef(props, "publication")
 
 const variables = {
-  publication_id: publication.value.id,
+  publication_id: publication.value.id
 }
 const { loading: updateLoading, mutate: updateCriteria } = useMutation(
   UPDATE_PUBLICATION_STYLE_CRITERIA,

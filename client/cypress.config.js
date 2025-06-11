@@ -14,6 +14,6 @@ module.exports = defineConfig({
     },
     baseUrl: "https://pilcrow.lndo.site",
     specPattern: "test/cypress/integration/**/*.cy.{js,jsx,ts,tsx}",
-    supportFile: "test/cypress/support/index.js",
-  },
+    supportFile: "test/cypress/support/index.js"
+  }
 })

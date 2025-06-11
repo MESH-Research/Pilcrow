@@ -67,7 +67,7 @@ import { computed, ref } from "vue"
 import { useI18n } from "vue-i18n"
 import {
   useFeedbackMessages,
-  submissionStateButtons,
+  submissionStateButtons
 } from "src/use/guiElements"
 import { useRouter } from "vue-router"
 
@@ -82,27 +82,27 @@ const props = defineProps({
   action: {
     type: String,
     required: false,
-    default: null,
+    default: null
   },
   submissionId: {
     type: String,
-    required: true,
+    required: true
   },
   currentStatus: {
     type: String,
-    required: true,
-  },
+    required: true
+  }
 })
 const state = computed(() => {
   const match = Object.entries(submissionStateButtons).find(
-    ([, value]) => value.action === props.action,
+    ([, value]) => value.action === props.action
   )
   if (match === undefined) {
     return {}
   }
   return {
     ...match[1],
-    status: match[0],
+    status: match[0]
   }
 })
 
@@ -111,8 +111,8 @@ const comment = ref(null)
 const { mutate } = useMutation(UPDATE_SUBMISSION_STATUS)
 const { newStatusMessage } = useFeedbackMessages({
   attrs: {
-    "data-cy": "change_status_notify",
-  },
+    "data-cy": "change_status_notify"
+  }
 })
 const { push } = useRouter()
 
@@ -121,7 +121,7 @@ async function updateStatus() {
     await mutate({
       id: String(props.submissionId),
       status: state.value.status,
-      status_change_comment: comment.value,
+      status_change_comment: comment.value
     }).then(() => {
       if (props.currentStatus == "DRAFT") {
         push({ path: `/submission/${props.submissionId}/view/` })
@@ -132,7 +132,7 @@ async function updateStatus() {
     })
     newStatusMessage(
       "success",
-      t(`dialog.confirmStatusChange.statusChanged.${props.action}`),
+      t(`dialog.confirmStatusChange.statusChanged.${props.action}`)
     )
   } catch (error) {
     newStatusMessage("failure", t("dialog.confirmStatusChange.unauthorized"))

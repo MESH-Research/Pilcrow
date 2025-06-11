@@ -96,7 +96,7 @@ import {
   UPDATE_OVERALL_COMMENT,
   UPDATE_INLINE_COMMENT,
   UPDATE_INLINE_COMMENT_REPLY,
-  UPDATE_OVERALL_COMMENT_REPLY,
+  UPDATE_OVERALL_COMMENT_REPLY
 } from "src/graphql/mutations"
 import { useI18n } from "vue-i18n"
 import { uniqueId } from "lodash"
@@ -104,7 +104,7 @@ import { uniqueId } from "lodash"
 const { dialog } = useQuasar()
 function dirtyDialog() {
   return dialog({
-    component: BypassStyleCriteriaDialogVue,
+    component: BypassStyleCriteriaDialogVue
   })
 }
 const uuid = uniqueId()
@@ -113,29 +113,29 @@ const props = defineProps({
   commentType: {
     type: String,
     required: false,
-    default: null,
+    default: null
   },
   parent: {
     type: Object,
-    default: () => {},
+    default: () => {}
   },
   isQuoteReplying: {
     type: Boolean,
-    default: false,
+    default: false
   },
   isModifying: {
     type: Boolean,
-    default: false,
+    default: false
   },
   replyTo: {
     type: Object,
-    default: () => {},
+    default: () => {}
   },
   comment: {
     type: Object,
     required: false,
-    default: () => {},
-  },
+    default: () => {}
+  }
 })
 
 const defaultContent = computed(() => {
@@ -159,22 +159,22 @@ const editor = useEditor({
       hardbreak: false,
       heading: false,
       horizontalrule: false,
-      strike: false,
+      strike: false
     }),
     Link.configure({
-      openOnClick: false,
+      openOnClick: false
     }),
     Placeholder.configure({
-      placeholder: t("submissions.comment.placeholder"),
-    }),
-  ],
+      placeholder: t("submissions.comment.placeholder")
+    })
+  ]
 })
 const commentType = computed(
-  () => props.commentType ?? props.comment.__typename,
+  () => props.commentType ?? props.comment.__typename
 )
 
 const isReply = computed(() =>
-  ["OverallCommentReply", "InlineCommentReply"].includes(commentType.value),
+  ["OverallCommentReply", "InlineCommentReply"].includes(commentType.value)
 )
 const commentEditorButtons = ref([
   {
@@ -182,28 +182,28 @@ const commentEditorButtons = ref([
     isActive: computed(() => editor.value.isActive("bold")),
     clickHandler: () => editor.value.chain().focus().toggleBold().run(),
     tooltipText: t("guiElements.button.bold.tooltipText"),
-    iconName: "format_bold",
+    iconName: "format_bold"
   },
   {
     ariaLabel: t("guiElements.button.italic.ariaLabel"),
     isActive: computed(() => editor.value.isActive("italic")),
     clickHandler: () => editor.value.chain().focus().toggleItalic().run(),
     tooltipText: t("guiElements.button.italic.tooltipText"),
-    iconName: "format_italic",
+    iconName: "format_italic"
   },
   {
     ariaLabel: t("guiElements.button.bulletedList.ariaLabel"),
     isActive: computed(() => editor.value.isActive("bulletList")),
     clickHandler: () => editor.value.chain().focus().toggleBulletList().run(),
     tooltipText: t("guiElements.button.bulletedList.tooltipText"),
-    iconName: "list",
+    iconName: "list"
   },
   {
     ariaLabel: t("guiElements.button.numberedList.ariaLabel"),
     isActive: computed(() => editor.value.isActive("orderedList")),
     clickHandler: () => editor.value.chain().focus().toggleOrderedList().run(),
     tooltipText: t("guiElements.button.numberedList.tooltipText"),
-    iconName: "format_list_numbered",
+    iconName: "format_list_numbered"
   },
   {
     ariaLabel: t("guiElements.button.indent.ariaLabel"),
@@ -211,7 +211,7 @@ const commentEditorButtons = ref([
     clickHandler: () =>
       editor.value.chain().focus().sinkListItem("listItem").run(),
     tooltipText: t("guiElements.button.indent.tooltipText"),
-    iconName: "format_indent_increase",
+    iconName: "format_indent_increase"
   },
   {
     ariaLabel: t("guiElements.button.unindent.ariaLabel"),
@@ -219,43 +219,43 @@ const commentEditorButtons = ref([
     clickHandler: () =>
       editor.value.chain().focus().liftListItem("listItem").run(),
     tooltipText: t("guiElements.button.unindent.tooltipText"),
-    iconName: "format_indent_decrease",
+    iconName: "format_indent_decrease"
   },
   {
     ariaLabel: t("guiElements.button.link.ariaLabel"),
     isActive: computed(() => editor.value.isActive("link")),
     clickHandler: () => setLink(),
     tooltipText: t("guiElements.button.link.tooltipText"),
-    iconName: "insert_link",
+    iconName: "insert_link"
   },
   {
     ariaLabel: t("guiElements.button.unlink.ariaLabel"),
     isActive: computed(() => editor.value.isActive("link")),
     clickHandler: () => editor.value.chain().focus().unsetLink().run(),
     tooltipText: t("guiElements.button.unlink.tooltipText"),
-    iconName: "link_off",
-  },
+    iconName: "link_off"
+  }
 ])
 const submission = inject("submission")
 let mutations = {
   InlineComment: CREATE_INLINE_COMMENT,
   InlineCommentReply: CREATE_INLINE_COMMENT_REPLY,
   OverallComment: CREATE_OVERALL_COMMENT,
-  OverallCommentReply: CREATE_OVERALL_COMMENT_REPLY,
+  OverallCommentReply: CREATE_OVERALL_COMMENT_REPLY
 }
 if (props.isModifying) {
   mutations = {
     InlineComment: UPDATE_INLINE_COMMENT,
     InlineCommentReply: UPDATE_INLINE_COMMENT_REPLY,
     OverallComment: UPDATE_OVERALL_COMMENT,
-    OverallCommentReply: UPDATE_OVERALL_COMMENT_REPLY,
+    OverallCommentReply: UPDATE_OVERALL_COMMENT_REPLY
   }
 }
 const { mutate: createComment } = useMutation(mutations[commentType.value])
 const selectedCriteria = computed(() =>
   styleCriteria.value
     .filter((criteria) => criteria.selected)
-    .map((criteria) => criteria.id),
+    .map((criteria) => criteria.id)
 )
 const hasStyleCriteria = computed(() => selectedCriteria.value.length > 0)
 async function submitHandler() {
@@ -280,7 +280,7 @@ async function submitHandler() {
   try {
     const args = {
       submission_id: submission.value.id,
-      content: editor.value.getHTML(),
+      content: editor.value.getHTML()
     }
     if (commentType.value === "InlineComment") {
       args.style_criteria = selectedCriteria.value
@@ -295,7 +295,7 @@ async function submitHandler() {
       args.comment_id = props.comment.id
     }
     await createComment({
-      ...args,
+      ...args
     })
       .then(() => {
         editor.value.commands.clearContent(true)
@@ -353,14 +353,14 @@ const styleCriteria = ref(
   submission.value.publication.style_criterias.map(
     (c) => ({
       ...c,
-      selected: isCriteriaSelected(c, comment),
+      selected: isCriteriaSelected(c, comment)
     }),
-    comment,
-  ),
+    comment
+  )
 )
 
 defineExpose({
-  hasStyleCriteria,
+  hasStyleCriteria
 })
 </script>
 <style>

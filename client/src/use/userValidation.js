@@ -13,10 +13,10 @@ export const rules = {
   },
   email: {
     required,
-    email,
+    email
   },
   username: {
-    required,
+    required
   },
   password: {
     required,
@@ -24,27 +24,27 @@ export const rules = {
       const complexity = zxcvbn(value)
       return {
         complexity,
-        $valid: !helpers.req(value) || complexity.score >= 3,
+        $valid: !helpers.req(value) || complexity.score >= 3
       }
-    },
-  },
+    }
+  }
 }
 
-export const updateUserRules = omit(rules, ['name', 'username'])
+export const updateUserRules = omit(rules, ["name", "username"])
 
 export function useUserValidation(opts = {}) {
   const form = reactive({
     email: "",
     password: "",
     name: "",
-    username: "",
+    username: ""
   })
 
   const externalValidation = reactive({
     email: [],
     password: [],
     name: [],
-    username: [],
+    username: []
   })
 
   const mutate = opts.mutation ?? useMutation(CREATE_USER).mutate
@@ -69,7 +69,12 @@ export function useUserValidation(opts = {}) {
       return newUser
     } catch (error) {
       if (
-        applyExternalValidationErrors(form, externalValidation, error, validation_key)
+        applyExternalValidationErrors(
+          form,
+          externalValidation,
+          error,
+          validation_key
+        )
       ) {
         throw Error("FORM_VALIDATION")
       } else {

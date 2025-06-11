@@ -78,7 +78,7 @@ const errorMessagesList = ref([])
 const { params, query } = useRoute()
 const { token } = params
 const { mutate: request } = useMutation(RESET_PASSWORD, {
-  refetchQueries: [{ query: CURRENT_USER }],
+  refetchQueries: [{ query: CURRENT_USER }]
 })
 const status = ref("")
 const { errorMessages, graphQLErrorCodes } = useGraphErrors()
@@ -92,7 +92,7 @@ const handleSubmit = async function () {
     await request({
       email: query.email,
       password: $v.value.password.$model,
-      token: token,
+      token: token
     })
     status.value = "updated"
   } catch (error) {

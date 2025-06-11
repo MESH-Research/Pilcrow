@@ -1,8 +1,5 @@
 {
   "@quasar/testing-unit-vitest": {
-    "options": [
-      "scripts",
-      "ui"
-    ]
+    "options": ["scripts", "ui"]
   }
 }

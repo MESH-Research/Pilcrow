@@ -4,18 +4,21 @@
 import { a11yLogViolations } from "../support/helpers"
 
 describe("Reviews Page", () => {
-
   it("should assert the page is accessible on initial render", () => {
     cy.task("resetDb")
     cy.login({ email: "reviewcoordinator@meshresearch.net" })
     cy.visit("reviews")
     cy.dataCy("submission_link_desktop")
-    cy.injectAxe();
-    cy.checkA11y(null, {
-      rules: {
-        "button-name": { enabled: false }, // TODO: restore this rule once Quasar #17148 is closed
+    cy.injectAxe()
+    cy.checkA11y(
+      null,
+      {
+        rules: {
+          "button-name": { enabled: false } // TODO: restore this rule once Quasar #17148 is closed
+        }
       },
-    }, a11yLogViolations)
+      a11yLogViolations
+    )
   })
 
   it("should allow a review coordinator to accept a submission for review and permit reviewers access", () => {

@@ -1,7 +1,7 @@
 /// <reference types="Cypress" />
 /// <reference path="../support/index.d.ts" />
 
-import { a11yLogViolations } from '../support/helpers'
+import { a11yLogViolations } from "../support/helpers"
 
 describe("Submissions Review", () => {
   it("should assert the Submission Review page is accessible", () => {
@@ -14,7 +14,7 @@ describe("Submissions Review", () => {
   })
 
   //TODO: Refactor with text selection etc.
-/*   it("should display style criteria from the database in the inline comment editor", () => {
+  /*   it("should display style criteria from the database in the inline comment editor", () => {
     cy.task("resetDb")
     cy.login({ email: "applicationadministrator@meshresearch.net" })
     cy.visit("submission/100/review")
@@ -55,7 +55,7 @@ describe("Submissions Review", () => {
     cy.login({ email: "reviewer@meshresearch.net" })
     cy.visit("submission/100/review")
 
-    cy.interceptGQLOperation('CreateOverallComment')
+    cy.interceptGQLOperation("CreateOverallComment")
 
     // Attempt to create an empty overall comment
     cy.dataCy("overallCommentEditor").find("button[type=submit]").click()
@@ -68,7 +68,7 @@ describe("Submissions Review", () => {
     // + 0 disallowed empty overall comment creation attempt
     // + 1 newly created overall comment
     // = 5
-    cy.dataCy("overallComment").should('have.length', 5)
+    cy.dataCy("overallComment").should("have.length", 5)
     cy.dataCy("overallComment").last().contains("This is an overall comment.")
   })
 
@@ -79,21 +79,42 @@ describe("Submissions Review", () => {
 
     cy.interceptGQLOperation("CreateOverallCommentReply")
 
-    cy.dataCy("overallComment").first().find("[data-cy=overallCommentReplyButton]").click()
+    cy.dataCy("overallComment")
+      .first()
+      .find("[data-cy=overallCommentReplyButton]")
+      .click()
     // Attempt to create an empty overall comment reply
-    cy.dataCy("overallCommentReplyEditor").first().find("button[type=submit]").click()
+    cy.dataCy("overallCommentReplyEditor")
+      .first()
+      .find("button[type=submit]")
+      .click()
     // Create an overall comment reply
-    cy.dataCy("overallCommentReplyEditor").first().type("This is a reply to an overall comment.")
+    cy.dataCy("overallCommentReplyEditor")
+      .first()
+      .type("This is a reply to an overall comment.")
 
-    cy.dataCy("overallCommentReplyEditor").first().find("button[type=submit]").click()
+    cy.dataCy("overallCommentReplyEditor")
+      .first()
+      .find("button[type=submit]")
+      .click()
     cy.wait("@CreateOverallCommentReply")
     //   0 replies to the first overall comment already exist from database seeding
     // + 0 disallowed empty overall comment reply creation attempt
     // + 1 newly created overall comment reply
     // = 1
-    cy.dataCy("overallComment").first().find("[data-cy=showRepliesButton]").click()
-    cy.dataCy("overallComment").first().find("[data-cy=overallCommentReply]").should('have.length', 1)
-    cy.dataCy("overallComment").first().find("[data-cy=overallCommentReply]").first().contains("This is a reply to an overall comment.")
+    cy.dataCy("overallComment")
+      .first()
+      .find("[data-cy=showRepliesButton]")
+      .click()
+    cy.dataCy("overallComment")
+      .first()
+      .find("[data-cy=overallCommentReply]")
+      .should("have.length", 1)
+    cy.dataCy("overallComment")
+      .first()
+      .find("[data-cy=overallCommentReply]")
+      .first()
+      .contains("This is a reply to an overall comment.")
   })
 
   it("should allow a reviewer to submit replies to overall comment replies", () => {
@@ -102,20 +123,33 @@ describe("Submissions Review", () => {
     cy.visit("submission/100/review")
 
     cy.interceptGQLOperation("CreateOverallCommentReply")
-    cy.dataCy("overallComment").eq(2).find("[data-cy=showRepliesButton]").click()
-    cy.dataCy("overallCommentReply").eq(2).find("[data-cy=commentActions]").click()
+    cy.dataCy("overallComment")
+      .eq(2)
+      .find("[data-cy=showRepliesButton]")
+      .click()
+    cy.dataCy("overallCommentReply")
+      .eq(2)
+      .find("[data-cy=commentActions]")
+      .click()
     cy.dataCy("quoteReply").click()
-    cy.dataCy("overallCommentReplyEditor").eq(0).type("This is a reply to an overall comment reply.")
+    cy.dataCy("overallCommentReplyEditor")
+      .eq(0)
+      .type("This is a reply to an overall comment reply.")
     // Create a reply to an overall comment reply
 
-    cy.dataCy("overallCommentReplyEditor").eq(0).find("button[type=submit]").click()
+    cy.dataCy("overallCommentReplyEditor")
+      .eq(0)
+      .find("button[type=submit]")
+      .click()
     cy.wait("@CreateOverallCommentReply")
     //   8 overall comment replies are already visible in this thread from database seeding
     // + 0 disallowed empty overall comment reply creation attempt
     // + 1 newly created overall comment reply
     // = 9
-    cy.dataCy("overallCommentReply").should('have.length', 9)
-    cy.dataCy("overallCommentReply").last().contains("This is a reply to an overall comment reply.")
+    cy.dataCy("overallCommentReply").should("have.length", 9)
+    cy.dataCy("overallCommentReply")
+      .last()
+      .contains("This is a reply to an overall comment reply.")
   })
 
   it("should allow a reviewer to submit inline comment replies", () => {
@@ -129,23 +163,33 @@ describe("Submissions Review", () => {
     cy.dataCy("inlineComment")
       .first()
       .within((el) => {
-        cy.wrap(el).findCy('showRepliesButton').click()
-        cy.wrap(el).findCy('inlineCommentReplyButton').click()
-        cy.dataCy("inlineCommentReplyEditor").type("This is an inline comment reply.")
-        cy.dataCy('inlineCommentReplyEditor').find('button[type=submit]').click()
-
+        cy.wrap(el).findCy("showRepliesButton").click()
+        cy.wrap(el).findCy("inlineCommentReplyButton").click()
+        cy.dataCy("inlineCommentReplyEditor").type(
+          "This is an inline comment reply."
+        )
+        cy.dataCy("inlineCommentReplyEditor")
+          .find("button[type=submit]")
+          .click()
       })
     cy.wait("@CreateInlineCommentReply")
     //   1 inline comment reply already exists on the first inline comment from database seeding
     // + 0 disallowed empty inline comment reply creation attempt
     // + 1 newly created inline comment reply on the first inline comment
     // = 2
-    cy.dataCy("inlineComment").first().find("[data-cy=inlineCommentReply]").should('have.length', 2)
-    cy.dataCy("inlineComment").first().find("[data-cy=inlineCommentReply]").last().contains("This is an inline comment reply.")
+    cy.dataCy("inlineComment")
+      .first()
+      .find("[data-cy=inlineCommentReply]")
+      .should("have.length", 2)
+    cy.dataCy("inlineComment")
+      .first()
+      .find("[data-cy=inlineCommentReply]")
+      .last()
+      .contains("This is an inline comment reply.")
   })
 
   //TODO: Refactor this test with text selection and all that jazz.
-/*   it("should allow a reviewer to submit replies to inline comment replies", () => {
+  /*   it("should allow a reviewer to submit replies to inline comment replies", () => {
     cy.task("resetDb")
     cy.login({ email: "reviewer@meshresearch.net" })
     cy.visit("submission/100/review")
@@ -170,11 +214,16 @@ describe("Submissions Review", () => {
     cy.task("resetDb")
     cy.login({ email: "reviewer@meshresearch.net" })
     cy.visit("submission/100/review")
-    cy.dataCy("comment-widget").should('have.length', 3)
+    cy.dataCy("comment-widget").should("have.length", 3)
     cy.dataCy("comment-widget").each((_, index) => {
-      cy.get(".fullscreen.q-drawer__backdrop:not('.hidden')").should('not.exist')
+      cy.get(".fullscreen.q-drawer__backdrop:not('.hidden')").should(
+        "not.exist"
+      )
       cy.dataCy("comment-widget").eq(index).click()
-      cy.dataCy("inlineComment").eq(index).find('> .q-card').should('have.class', 'active')
+      cy.dataCy("inlineComment")
+        .eq(index)
+        .find("> .q-card")
+        .should("have.class", "active")
       //TODO: Redesign so comment drawer toggle is not hidden when the drawer is visible at small screen sizes.
       cy.get(".fullscreen.q-drawer__backdrop:not('.hidden')").click()
     })
@@ -185,9 +234,13 @@ describe("Submissions Review", () => {
     cy.login({ email: "reviewer@meshresearch.net" })
     cy.visit("submission/100/review")
     cy.dataCy("comment-highlight").each((_, index) => {
-      cy.get(".fullscreen.q-drawer__backdrop:not('.hidden')").should('not.exist')
+      cy.get(".fullscreen.q-drawer__backdrop:not('.hidden')").should(
+        "not.exist"
+      )
       cy.dataCy("comment-highlight").eq(index).click()
-      cy.dataCy("inlineComment").find('> .q-card.active').should('have.length', 1)
+      cy.dataCy("inlineComment")
+        .find("> .q-card.active")
+        .should("have.length", 1)
       //TODO: Redesign so comment drawer toggle is not hidden when the drawer is visible at small screen sizes.
       cy.get(".fullscreen.q-drawer__backdrop:not('.hidden')").click()
     })
@@ -247,7 +300,7 @@ describe("Submissions Review", () => {
     cy.login({ email: "applicationadministrator@meshresearch.net" })
     cy.visit("submission/102/review")
     cy.dataCy("submission_status").contains("Rejected")
-    cy.dataCy("decision_options").should('not.exist');
+    cy.dataCy("decision_options").should("not.exist")
   })
 
   it("should not display the decision options for submissions requested for resubmission", () => {
@@ -255,7 +308,7 @@ describe("Submissions Review", () => {
     cy.login({ email: "applicationadministrator@meshresearch.net" })
     cy.visit("submission/103/review")
     cy.dataCy("submission_status").contains("Resubmission Requested")
-    cy.dataCy("decision_options").should('not.exist');
+    cy.dataCy("decision_options").should("not.exist")
   })
 
   it("should allow overall comments to be modified", () => {
@@ -264,14 +317,17 @@ describe("Submissions Review", () => {
     cy.visit("submission/100/review")
 
     // create new overall comment
-    cy.interceptGQLOperation('CreateOverallComment')
+    cy.interceptGQLOperation("CreateOverallComment")
     cy.dataCy("overallCommentEditor").type("This is an overall comment.")
-    cy.dataCy("overallCommentEditor").first().find("button[type=submit]").click()
+    cy.dataCy("overallCommentEditor")
+      .first()
+      .find("button[type=submit]")
+      .click()
     cy.wait("@CreateOverallComment")
 
     // click on modifyComment
     cy.dataCy("overallComment")
-      .should('have.length', 5)
+      .should("have.length", 5)
       .last()
       .find("[data-cy=commentActions]")
       .click()
@@ -279,11 +335,15 @@ describe("Submissions Review", () => {
     cy.dataCy("modifyComment").click()
 
     // modify, submit
-    cy.dataCy("modifyOverallCommentEditor").type("This is a modified overall comment.")
+    cy.dataCy("modifyOverallCommentEditor").type(
+      "This is a modified overall comment."
+    )
     cy.dataCy("modifyOverallCommentEditor").find("button[type=submit]").click()
 
     // verify comment includes "This is a modified overall comment."
-    cy.dataCy("overallComment").last().contains("This is a modified overall comment")
+    cy.dataCy("overallComment")
+      .last()
+      .contains("This is a modified overall comment")
   })
 
   it("should allow overall comment replies to be modified", () => {
@@ -293,21 +353,41 @@ describe("Submissions Review", () => {
 
     // create new comment reply
     cy.interceptGQLOperation("CreateOverallCommentReply")
-    cy.dataCy("overallComment").first().find("[data-cy=overallCommentReplyButton]").click()
-    cy.dataCy("overallCommentReplyEditor").first().type("This is a reply to an overall comment.")
-    cy.dataCy("overallCommentReplyEditor").first().find("button[type=submit]").click()
+    cy.dataCy("overallComment")
+      .first()
+      .find("[data-cy=overallCommentReplyButton]")
+      .click()
+    cy.dataCy("overallCommentReplyEditor")
+      .first()
+      .type("This is a reply to an overall comment.")
+    cy.dataCy("overallCommentReplyEditor")
+      .first()
+      .find("button[type=submit]")
+      .click()
     cy.wait("@CreateOverallCommentReply")
 
-    cy.dataCy("overallComment").first().find("[data-cy=showRepliesButton]").click()
-    cy.dataCy("overallCommentReply").first().find("[data-cy=commentActions]").click()
+    cy.dataCy("overallComment")
+      .first()
+      .find("[data-cy=showRepliesButton]")
+      .click()
+    cy.dataCy("overallCommentReply")
+      .first()
+      .find("[data-cy=commentActions]")
+      .click()
     cy.dataCy("modifyComment").click()
 
     // modify, submit
-    cy.dataCy("modifyOverallCommentReplyEditor").type("This is a modified overall comment reply.")
-    cy.dataCy("modifyOverallCommentReplyEditor").find("button[type=submit]").click()
+    cy.dataCy("modifyOverallCommentReplyEditor").type(
+      "This is a modified overall comment reply."
+    )
+    cy.dataCy("modifyOverallCommentReplyEditor")
+      .find("button[type=submit]")
+      .click()
 
     // verify comment includes "This is a modified overall comment reply."
-    cy.dataCy("overallCommentReply").first().contains("This is a modified overall comment reply.")
+    cy.dataCy("overallCommentReply")
+      .first()
+      .contains("This is a modified overall comment reply.")
   })
 
   it("should allow inline comments to be modified", () => {
@@ -321,12 +401,16 @@ describe("Submissions Review", () => {
     cy.dataCy("modifyComment").click()
 
     // modify, submit
-    cy.dataCy("comment-editor").first().type("This is a modified inline comment.")
+    cy.dataCy("comment-editor")
+      .first()
+      .type("This is a modified inline comment.")
     cy.dataCy("criteria-item").last().click()
     cy.dataCy("modifyInlineCommentEditor").find("button[type=submit]").click()
 
     // verify comment includes "This is a modified inline comment."
-    cy.dataCy("inlineComment").first().contains("This is a modified inline comment.")
+    cy.dataCy("inlineComment")
+      .first()
+      .contains("This is a modified inline comment.")
   })
 
   it("should allow inline comment replies to be modified", () => {
@@ -335,23 +419,37 @@ describe("Submissions Review", () => {
     cy.visit("submission/100/review")
 
     cy.dataCy("toggleInlineCommentsButton").click()
-    cy.dataCy("inlineComment").eq(1).find("[data-cy=inlineCommentReplyButton]").click()
+    cy.dataCy("inlineComment")
+      .eq(1)
+      .find("[data-cy=inlineCommentReplyButton]")
+      .click()
 
     // create new inline comment reply
     cy.interceptGQLOperation("CreateInlineCommentReply")
-    cy.dataCy("inlineCommentReplyEditor").type("This is a new inline comment reply.")
+    cy.dataCy("inlineCommentReplyEditor").type(
+      "This is a new inline comment reply."
+    )
     cy.dataCy("inlineCommentReplyEditor").find("button[type=submit]").click()
     cy.wait("@CreateInlineCommentReply")
 
     // modify, submit
     cy.dataCy("inlineComment").eq(1).find("[data-cy=showRepliesButton]").click()
-    cy.dataCy("inlineCommentReply").last().find("[data-cy=commentActions]").click()
+    cy.dataCy("inlineCommentReply")
+      .last()
+      .find("[data-cy=commentActions]")
+      .click()
     cy.dataCy("modifyComment").click()
-    cy.dataCy("modifyInlineCommentReplyEditor").type("This is a modified inline comment reply.")
-    cy.dataCy("modifyInlineCommentReplyEditor").find("button[type=submit]").click()
+    cy.dataCy("modifyInlineCommentReplyEditor").type(
+      "This is a modified inline comment reply."
+    )
+    cy.dataCy("modifyInlineCommentReplyEditor")
+      .find("button[type=submit]")
+      .click()
 
     // verify comment includes "This is a modified inline comment reply."
-    cy.dataCy("inlineCommentReply").last().contains("This is a modified inline comment reply.")
+    cy.dataCy("inlineCommentReply")
+      .last()
+      .contains("This is a modified inline comment reply.")
   })
 
   it("should not display comment modify options for comments that a user did not create", () => {
@@ -374,10 +472,16 @@ describe("Submissions Review", () => {
     cy.login({ email: "regularuser@meshresearch.net" })
     // Under Review
     cy.visit("submission/100/review")
-    cy.dataCy("submission_export_btn").should("have.class","cursor-not-allowed")
+    cy.dataCy("submission_export_btn").should(
+      "have.class",
+      "cursor-not-allowed"
+    )
     // Rejected
     cy.visit("submission/102/review")
-    cy.dataCy("submission_export_btn").should("not.have.class","cursor-not-allowed")
+    cy.dataCy("submission_export_btn").should(
+      "not.have.class",
+      "cursor-not-allowed"
+    )
   })
 
   it("scrolls when clicking on a footnote reference", () => {
@@ -447,7 +551,7 @@ describe("Submissions Review", () => {
     cy.dataCy("dirtyYesChangeStatus").click()
     cy.visit("submission/105/review")
     cy.dataCy("submission_status").contains("Deleted")
-    cy.dataCy("status-dropdown").should('not.exist')
+    cy.dataCy("status-dropdown").should("not.exist")
   })
 
   it("allows an inline comment to be deleted by its author", () => {
@@ -458,7 +562,10 @@ describe("Submissions Review", () => {
     cy.dataCy("inlineComment").first().find("[data-cy=commentActions]").click()
     cy.dataCy("deleteComment").click()
     cy.dataCy("dirtyDelete").click()
-    cy.dataCy("inlineComment").first().contains("This comment has been deleted").click()
+    cy.dataCy("inlineComment")
+      .first()
+      .contains("This comment has been deleted")
+      .click()
   })
 
   it("allows an overall comment to be deleted by its author", () => {
@@ -468,12 +575,15 @@ describe("Submissions Review", () => {
     cy.dataCy("overallComment").last().find("[data-cy=commentActions]").click()
     cy.dataCy("deleteComment").click()
     cy.dataCy("dirtyDelete").click()
-    cy.dataCy("overallComment").last().contains("This comment has been deleted").click()
+    cy.dataCy("overallComment")
+      .last()
+      .contains("This comment has been deleted")
+      .click()
   })
 
   it("scrolls when clicking on 'View Overall Comments'", () => {
     cy.task("resetDb")
-    cy.login({email: "reviewcoordinator@meshresearch.net"})
+    cy.login({ email: "reviewcoordinator@meshresearch.net" })
     cy.visit("submission/100/review")
     // get initial scroll position
     cy.dataCy("view_overall_comments").should((element) => {
@@ -493,7 +603,7 @@ describe("Submissions Review", () => {
 
   it("scrolls when clicking on 'Add New Overall Comment'", () => {
     cy.task("resetDb")
-    cy.login({email: "reviewcoordinator@meshresearch.net"})
+    cy.login({ email: "reviewcoordinator@meshresearch.net" })
     cy.visit("submission/100/review")
     // get initial scroll position
     cy.dataCy("new_overall_comment").should((element) => {
@@ -509,6 +619,5 @@ describe("Submissions Review", () => {
       let scrollY = element[0].getBoundingClientRect().top
       expect(scrollY).to.be.lessThan(0)
     })
-
   })
 })

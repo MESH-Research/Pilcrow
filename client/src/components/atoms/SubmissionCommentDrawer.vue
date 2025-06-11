@@ -27,15 +27,15 @@ const props = defineProps({
   drawerOpen: {
     type: Boolean,
     required: false,
-    default: false,
-  },
+    default: false
+  }
 })
 
 const emit = defineEmits(["update:drawerOpen"])
 
 const drawerOpen = computed({
   get: () => props.drawerOpen,
-  set: (value) => emit("update:drawerOpen", value),
+  set: (value) => emit("update:drawerOpen", value)
 })
 
 const drawerWidth = ref(440)

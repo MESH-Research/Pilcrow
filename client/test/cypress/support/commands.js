@@ -11,11 +11,11 @@ Cypress.Commands.add("dataCy", (value) => {
 Cypress.Commands.add(
   "findCy",
   {
-    prevSubject: true,
+    prevSubject: true
   },
   (subject, value) => {
     return subject.find(`[data-cy=${value}]`)
-  },
+  }
 )
 
 Cypress.Commands.add("qSelect", (dataCyId) => {
@@ -104,12 +104,12 @@ Cypress.Commands.add("login", ({ email }) => {
         method: "POST",
         url: "/graphql",
         body: {
-          query: `mutation { forceLogin(email: "${email}") {username, email, id, name}}`,
+          query: `mutation { forceLogin(email: "${email}") {username, email, id, name}}`
         },
         headers: {
           origin: Cypress.config().baseUrl,
-          "X-XSRF-TOKEN": token,
-        },
+          "X-XSRF-TOKEN": token
+        }
       })
       .then((response) => {
         expect(response.status).to.eq(200)
@@ -133,8 +133,8 @@ Cypress.Commands.add("logout", () => {
         body: { query: `mutation { logout() }` },
         headers: {
           origin: Cypress.config().baseUrl,
-          "X-XSRF-TOKEN": token,
-        },
+          "X-XSRF-TOKEN": token
+        }
       })
       .then((response) => {
         expect(response.body.errors).toBeUndefined()
@@ -153,8 +153,8 @@ Cypress.Commands.add("xsrfToken", () => {
     .request({
       url: "/sanctum/csrf-cookie",
       headers: {
-        origin: Cypress.config().baseUrl,
-      },
+        origin: Cypress.config().baseUrl
+      }
     })
     .then((response) => {
       const cookie = response.headers["set-cookie"]

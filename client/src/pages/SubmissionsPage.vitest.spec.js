@@ -2,13 +2,13 @@ import SubmissionsPage from "./SubmissionsPage.vue"
 import { CURRENT_USER_SUBMISSIONS, GET_SUBMISSIONS } from "src/graphql/queries"
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest"
 import { flushPromises, mount } from "@vue/test-utils"
-import { installApolloClient } from "test/vitest/utils"
+import { installApolloClient } from "app/test/vitest/utils"
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
 import { ref } from "vue"
 import { useCurrentUser } from "src/use/user"
 
 vi.mock("src/use/user", () => ({
-  useCurrentUser: vi.fn(),
+  useCurrentUser: vi.fn()
 }))
 
 installQuasarPlugin()
@@ -22,15 +22,17 @@ describe("Submissions Page", () => {
     useCurrentUser.mockReturnValue({
       currentUser: ref({
         id: 1,
-        roles: [{
-          name: "Application Administrator"
-        }],
-       }),
+        roles: [
+          {
+            name: "Application Administrator"
+          }
+        ]
+      }),
       isAppAdmin: ref(true),
       isSubmitter: () => true,
       isReviewCoordinator: () => false,
       isEditor: () => false,
-      isPublicationAdmin: () => false,
+      isPublicationAdmin: () => false
     })
   })
 
@@ -41,8 +43,8 @@ describe("Submissions Page", () => {
   const wrapperFactory = async () => {
     const wrapper = mount(SubmissionsPage, {
       global: {
-        stubs: ["router-link", "i18n-t"],
-      },
+        stubs: ["router-link", "i18n-t"]
+      }
     })
     await flushPromises()
     return wrapper
@@ -73,13 +75,13 @@ describe("Submissions Page", () => {
                 name: "Jest Publication",
                 my_role: "",
                 editors: [],
-                publication_admins: [],
+                publication_admins: []
               },
               inline_comments: [],
               overall_comments: [],
               submitters: [],
               reviewers: [],
-              review_coordinators: [],
+              review_coordinators: []
             },
             {
               id: "2",
@@ -94,7 +96,7 @@ describe("Submissions Page", () => {
                 name: "Jest Publication",
                 my_role: "",
                 editors: [],
-                publication_admins: [],
+                publication_admins: []
               },
               inline_comments: [],
               overall_comments: [],
@@ -102,7 +104,7 @@ describe("Submissions Page", () => {
               reviewers: [],
               review_coordinators: [],
               editors: [],
-              publication_admins: [],
+              publication_admins: []
             },
             {
               id: "3",
@@ -117,13 +119,13 @@ describe("Submissions Page", () => {
                 name: "Jest Publication",
                 my_role: "",
                 editors: [],
-                publication_admins: [],
+                publication_admins: []
               },
               inline_comments: [],
               overall_comments: [],
               submitters: [],
               reviewers: [],
-              review_coordinators: [],
+              review_coordinators: []
             },
             {
               id: "4",
@@ -138,13 +140,13 @@ describe("Submissions Page", () => {
                 name: "Jest Publication",
                 my_role: "",
                 editors: [],
-                publication_admins: [],
+                publication_admins: []
               },
               inline_comments: [],
               overall_comments: [],
               submitters: [],
               reviewers: [],
-              review_coordinators: [],
+              review_coordinators: []
             },
             {
               id: "5",
@@ -159,13 +161,13 @@ describe("Submissions Page", () => {
                 name: "Jest Publication",
                 my_role: "",
                 editors: [],
-                publication_admins: [],
+                publication_admins: []
               },
               inline_comments: [],
               overall_comments: [],
               submitters: [],
               reviewers: [],
-              review_coordinators: [],
+              review_coordinators: []
             },
             {
               id: "6",
@@ -180,17 +182,17 @@ describe("Submissions Page", () => {
                 name: "Jest Publication",
                 my_role: "",
                 editors: [],
-                publication_admins: [],
+                publication_admins: []
               },
               inline_comments: [],
               overall_comments: [],
               submitters: [],
               reviewers: [],
-              review_coordinators: [],
-            },
-          ],
-        },
-      },
+              review_coordinators: []
+            }
+          ]
+        }
+      }
     })
     const wrapper = await wrapperFactory()
     expect(wrapper.findAllComponents({ name: "submission-table" }).length).toBe(
@@ -221,7 +223,7 @@ describe("Submissions Page", () => {
                 name: "Jest Publication",
                 my_role: "",
                 editors: [],
-                publication_admins: [],
+                publication_admins: []
               },
               inline_comments: [
                 {
@@ -229,13 +231,13 @@ describe("Submissions Page", () => {
                   content: "Jest Inline Comment 1",
                   style_criteria: [
                     { id: 1, name: "Jest Style Criteria", icon: "home" },
-                    { id: 2, name: "Jest Style Criteria", icon: "search" },
+                    { id: 2, name: "Jest Style Criteria", icon: "search" }
                   ],
                   created_by: {
                     id: "1",
                     display_label: "Application Administrator",
                     username: "applicationAdminUser",
-                    email: "applicationadministrator@meshresearch.net",
+                    email: "applicationadministrator@meshresearch.net"
                   },
                   created_at: "2023-03-24T02:01:00.000000Z",
                   submitted_at: "2023-06-27T08:30:10.000000Z",
@@ -243,22 +245,22 @@ describe("Submissions Page", () => {
                     id: "1",
                     display_label: "Application Administrator",
                     username: "applicationAdminUser",
-                    email: "applicationadministrator@meshresearch.net",
+                    email: "applicationadministrator@meshresearch.net"
                   },
                   updated_at: "2023-03-24T02:01:00.000000Z",
-                  replies: [],
+                  replies: []
                 },
                 {
                   id: "2",
                   content: "Jest Inline Comment 2",
                   style_criteria: [
-                    { id: 6, name: "Jest Style Criteria", icon: "info" },
+                    { id: 6, name: "Jest Style Criteria", icon: "info" }
                   ],
                   created_by: {
                     id: "3",
                     display_label: "Publication Editor",
                     username: "publicationEditor",
-                    email: "publicationEditor@meshresearch.net",
+                    email: "publicationEditor@meshresearch.net"
                   },
                   created_at: "2023-03-25T05:27:07.000000Z",
                   submitted_at: "2023-06-27T08:30:10.000000Z",
@@ -266,11 +268,11 @@ describe("Submissions Page", () => {
                     id: "3",
                     display_label: "Publication Editor",
                     username: "publicationEditor",
-                    email: "publicationEditor@meshresearch.net",
+                    email: "publicationEditor@meshresearch.net"
                   },
                   updated_at: "2023-03-25T05:27:07.000000Z",
-                  replies: [],
-                },
+                  replies: []
+                }
               ],
               overall_comments: [
                 {
@@ -280,7 +282,7 @@ describe("Submissions Page", () => {
                     id: "5",
                     display_label: "Reviewer for Submission",
                     username: "reviewer",
-                    email: "reviewer@meshresearch.net",
+                    email: "reviewer@meshresearch.net"
                   },
                   created_at: "2023-03-27T08:21:44.000000Z",
                   submitted_at: "2023-06-27T08:30:10.000000Z",
@@ -288,15 +290,15 @@ describe("Submissions Page", () => {
                     id: "5",
                     display_label: "Reviewer for Submission",
                     username: "reviewer",
-                    email: "reviewer@meshresearch.net",
+                    email: "reviewer@meshresearch.net"
                   },
                   updated_at: "2023-03-27T08:21:44.000000Z",
-                  replies: [],
-                },
+                  replies: []
+                }
               ],
               submitters: [],
               reviewers: [],
-              review_coordinators: [],
+              review_coordinators: []
             },
             {
               id: "2",
@@ -311,30 +313,30 @@ describe("Submissions Page", () => {
                 name: "Jest Publication",
                 my_role: "",
                 editors: [],
-                publication_admins: [],
+                publication_admins: []
               },
               inline_comments: [
                 {
                   id: "3",
                   content: "Jest Inline Comment 3",
                   style_criteria: [
-                    { id: 12, name: "Jest Style Criteria", icon: "visibility" },
+                    { id: 12, name: "Jest Style Criteria", icon: "visibility" }
                   ],
                   created_by: {
                     id: "3",
                     display_label: "Publication Editor",
                     username: "publicationEditor",
-                    email: "publicationEditor@meshresearch.net",
+                    email: "publicationEditor@meshresearch.net"
                   },
                   created_at: "2023-04-08T02:01:03.000000Z",
                   updated_by: {
                     id: "3",
                     display_label: "Publication Editor",
                     username: "publicationEditor",
-                    email: "publicationEditor@meshresearch.net",
+                    email: "publicationEditor@meshresearch.net"
                   },
                   updated_at: "2023-04-08T02:01:03.000000Z",
-                  replies: [],
+                  replies: []
                 },
                 {
                   id: "4",
@@ -343,25 +345,25 @@ describe("Submissions Page", () => {
                     {
                       id: 16,
                       name: "Jest Style Criteria",
-                      icon: "description",
-                    },
+                      icon: "description"
+                    }
                   ],
                   created_by: {
                     id: "5",
                     display_label: "Reviewer for Submission",
                     username: "reviewer",
-                    email: "reviewer@meshresearch.net",
+                    email: "reviewer@meshresearch.net"
                   },
                   created_at: "2023-04-09T02:25:03.000000Z",
                   updated_by: {
                     id: "5",
                     display_label: "Reviewer for Submission",
                     username: "reviewer",
-                    email: "reviewer@meshresearch.net",
+                    email: "reviewer@meshresearch.net"
                   },
                   updated_at: "2023-04-09T02:25:03.000000Z",
-                  replies: [],
-                },
+                  replies: []
+                }
               ],
               overall_comments: [
                 {
@@ -371,17 +373,17 @@ describe("Submissions Page", () => {
                     id: "1",
                     display_label: "Application Administrator",
                     username: "applicationAdminUser",
-                    email: "applicationadministrator@meshresearch.net",
+                    email: "applicationadministrator@meshresearch.net"
                   },
                   created_at: "2023-04-10T07:12:35.000000Z",
                   updated_by: {
                     id: "1",
                     display_label: "Application Administrator",
                     username: "applicationAdminUser",
-                    email: "applicationadministrator@meshresearch.net",
+                    email: "applicationadministrator@meshresearch.net"
                   },
                   updated_at: "2023-04-10T07:12:35.000000Z",
-                  replies: [],
+                  replies: []
                 },
                 {
                   id: "3",
@@ -390,26 +392,26 @@ describe("Submissions Page", () => {
                     id: "5",
                     display_label: "Reviewer for Submission",
                     username: "reviewer",
-                    email: "reviewer@meshresearch.net",
+                    email: "reviewer@meshresearch.net"
                   },
                   created_at: "2023-04-07T05:25:03.000000Z",
                   updated_by: {
                     id: "5",
                     display_label: "Reviewer for Submission",
                     username: "reviewer",
-                    email: "reviewer@meshresearch.net",
+                    email: "reviewer@meshresearch.net"
                   },
                   updated_at: "2023-04-08T05:25:03.000000Z",
-                  replies: [],
-                },
+                  replies: []
+                }
               ],
               submitters: [],
               reviewers: [],
-              review_coordinators: [],
-            },
-          ],
-        },
-      },
+              review_coordinators: []
+            }
+          ]
+        }
+      }
     })
     const wrapper = await wrapperFactory()
     expect(wrapper.findAllComponents({ name: "comment-preview" }).length).toBe(
@@ -424,7 +426,7 @@ describe("Submissions Page", () => {
       editor: null,
       review_coordinator: "review_coordinator",
       reviewer: "reviewer",
-      submitter: "submitter",
+      submitter: "submitter"
     }
     const submission_effective_role = {
       application_admin: "review_coordinator",
@@ -432,7 +434,7 @@ describe("Submissions Page", () => {
       editor: "review_coordinator",
       review_coordinator: "review_coordinator",
       reviewer: "reviewer",
-      submitter: "submitter",
+      submitter: "submitter"
     }
     const publication_my_role = {
       application_admin: null,
@@ -440,7 +442,7 @@ describe("Submissions Page", () => {
       editor: "editor",
       review_coordinator: null,
       reviewer: null,
-      submitter: null,
+      submitter: null
     }
     return {
       id: "1001",
@@ -455,13 +457,13 @@ describe("Submissions Page", () => {
         name: "Jest Publication",
         my_role: publication_my_role[role_name],
         editors: [],
-        publication_admins: [],
+        publication_admins: []
       },
       inline_comments: [],
       overall_comments: [],
       submitters: [],
       reviewers: [],
-      review_coordinators: [],
+      review_coordinators: []
     }
   }
   function mockGetSubmissions(role_name) {
@@ -469,7 +471,7 @@ describe("Submissions Page", () => {
       count: 1,
       currentPage: 1,
       lastPage: 1,
-      perPage: 10,
+      perPage: 10
     }
     const paginator_data = {
       application_admin: paginator,
@@ -477,7 +479,7 @@ describe("Submissions Page", () => {
       editor: paginator,
       review_coordinator: [],
       reviewer: [],
-      submitter: [],
+      submitter: []
     }
     const submission_records = [mockSubmission(role_name)]
     const submissions_data = {
@@ -486,15 +488,15 @@ describe("Submissions Page", () => {
       editor: submission_records,
       review_coordinator: [],
       reviewer: [],
-      submitter: [],
+      submitter: []
     }
     return {
       data: {
         submissions: {
           paginatorInfo: paginator_data[role_name],
-          data: submissions_data[role_name],
-        },
-      },
+          data: submissions_data[role_name]
+        }
+      }
     }
   }
   function mockCurrentUserSubmissions(role_name) {
@@ -505,7 +507,7 @@ describe("Submissions Page", () => {
       editor: submission_records,
       review_coordinator: submission_records,
       reviewer: submission_records,
-      submitter: [],
+      submitter: []
     }
     return {
       data: {
@@ -516,9 +518,9 @@ describe("Submissions Page", () => {
               ? [{ name: "Application Administrator" }]
               : [],
           highest_privileged_role: role_name,
-          submissions: submissions_data[role_name],
-        },
-      },
+          submissions: submissions_data[role_name]
+        }
+      }
     }
   }
 
@@ -528,7 +530,7 @@ describe("Submissions Page", () => {
     ["editor", 2],
     ["review_coordinator", 1],
     ["reviewer", 1],
-    ["submitter", 1],
+    ["submitter", 1]
   ])("when the user's role is %s", (role_name, expected) => {
     const grammar = expected == 1 ? "table appears" : "tables appear"
     test(`${expected} submission ${grammar}`, async () => {
@@ -542,7 +544,7 @@ describe("Submissions Page", () => {
       const wrapper = await wrapperFactory()
       await flushPromises()
       expect(
-        wrapper.findAllComponents({ name: "submission-table" }).length,
+        wrapper.findAllComponents({ name: "submission-table" }).length
       ).toBe(expected)
     })
   })

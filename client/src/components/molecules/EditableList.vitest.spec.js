@@ -1,7 +1,7 @@
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
 import { mount } from "@vue/test-utils"
 import EditableList from "./EditableList.vue"
-import { QList } from 'quasar'
+import { QList } from "quasar"
 
 import { describe, expect, it, test } from "vitest"
 
@@ -15,8 +15,8 @@ describe("EditableList Component", () => {
       },
       props: {
         modelValue,
-        ...addProps,
-      },
+        ...addProps
+      }
     })
   }
 
@@ -52,7 +52,7 @@ describe("EditableList Component", () => {
     expect(wrapper.emitted("update:modelValue")[1][0]).toHaveLength(2)
     expect(wrapper.emitted("update:modelValue")[1][0]).toEqual([
       "item",
-      "another new item",
+      "another new item"
     ])
   })
 
@@ -130,7 +130,7 @@ describe("EditableList Component", () => {
       "a",
       "b",
       "c",
-      "a",
+      "a"
     ])
   })
 })

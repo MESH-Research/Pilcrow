@@ -10,8 +10,8 @@ describe("TagList Component", () => {
     return mount(TagList, {
       props: {
         modelValue,
-        ...addProps,
-      },
+        ...addProps
+      }
     })
   }
 
@@ -43,7 +43,7 @@ describe("TagList Component", () => {
     expect(wrapper.emitted("update:modelValue")[1][0]).toHaveLength(2)
     expect(wrapper.emitted("update:modelValue")[1][0]).toEqual([
       "item",
-      "another new item",
+      "another new item"
     ])
   })
 
@@ -82,7 +82,7 @@ describe("TagList Component", () => {
       "a",
       "b",
       "c",
-      "a",
+      "a"
     ])
   })
 })

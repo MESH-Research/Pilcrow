@@ -1,9 +1,6 @@
-import {
-  useGraphQLValidation,
-} from "./graphQLValidation"
-import { describe, test, expect } from 'vitest'
-import { ref } from 'vue'
-
+import { useGraphQLValidation } from "./graphQLValidation"
+import { describe, test, expect } from "vitest"
+import { ref } from "vue"
 
 describe("useGraphQLValidation composable", () => {
   const error = ref({
@@ -12,25 +9,25 @@ describe("useGraphQLValidation composable", () => {
         message: "Validation failed for the field [updateUser].",
         extensions: {
           validation: {
-            "user.username": ["USERNAME_IN_USE"],
+            "user.username": ["USERNAME_IN_USE"]
           },
-          category: "validation",
+          category: "validation"
         },
         locations: [
           {
             line: 2,
-            column: 3,
-          },
+            column: 3
+          }
         ],
-        path: ["updateUser"],
+        path: ["updateUser"]
       },
       {
-        message: "Something else happened",
-      },
+        message: "Something else happened"
+      }
     ],
     clientErrors: [],
     networkError: null,
-    message: "Validation failed for the field [updateUser].",
+    message: "Validation failed for the field [updateUser]."
   })
 
   test("correctly extracts only validation errors", () => {
@@ -40,7 +37,7 @@ describe("useGraphQLValidation composable", () => {
 
     expect(hasValidationErrors.value).toBe(true)
     expect(validationErrors.value).toEqual({
-      user: { username: ["USERNAME_IN_USE"] },
+      user: { username: ["USERNAME_IN_USE"] }
     })
 
     error.value = {}

@@ -18,7 +18,7 @@ export default defineConfig(function (/* ctx */) {
       // exclude = [],
       // rawOptions = {},
       warnings: true,
-      errors: true,
+      errors: true
     },
 
     // https://v2.quasar.dev/quasar-cli/prefetch-feature
@@ -44,20 +44,20 @@ export default defineConfig(function (/* ctx */) {
 
       "roboto-font", // optional, you are not bound to it
       "material-icons", // optional, you are not bound to it
-      "material-icons-outlined",
+      "material-icons-outlined"
     ],
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#build
     build: {
       target: {
         browser: ["es2019", "edge88", "firefox78", "chrome87", "safari13.1"],
-        node: "node20",
+        node: "node20"
       },
       extendViteConf(viteConf) {
         viteConf.experimental = viteConf.experimental || {}
         viteConf.experimental.renderBuiltUrl = function (
           filename,
-          { hostType },
+          { hostType }
         ) {
           if (hostType === "js") {
             return { runtime: `window.__toCdnUrl(${JSON.stringify(filename)})` }
@@ -73,7 +73,7 @@ export default defineConfig(function (/* ctx */) {
         VERSION_DATE: process.env.VERSION_DATE ?? undefined,
         APP_BANNER: process.env.APP_BANNER ?? undefined,
         APP_BANNER_CLASS: process.env.APP_BANNER_CLASS ?? undefined,
-        APP_BANNER_LINK: process.env.APP_BANNER_LINK ?? undefined,
+        APP_BANNER_LINK: process.env.APP_BANNER_LINK ?? undefined
       },
       // vueRouterBase,
       // vueDevtools,
@@ -102,13 +102,13 @@ export default defineConfig(function (/* ctx */) {
             eslint: {
               lintCommand:
                 'eslint -c ./eslint.config.js "./src*/**/*.{js,mjs,cjs,vue}"',
-              useFlatConfig: true,
-            },
+              useFlatConfig: true
+            }
           },
-          { server: false },
-        ],
+          { server: false }
+        ]
       ],
-      useFilenameHashes: false,
+      useFilenameHashes: false
     },
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#devServer
@@ -118,9 +118,9 @@ export default defineConfig(function (/* ctx */) {
       https: false,
       hmr: {
         clientPort: 443,
-        path: "/__hmr",
+        path: "/__hmr"
       },
-      allowedHosts: ["localhost", "pilcrow.lndo.site"],
+      allowedHosts: ["localhost", "pilcrow.lndo.site"]
     },
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#framework
@@ -133,13 +133,7 @@ export default defineConfig(function (/* ctx */) {
       // directives: [],
 
       // Quasar plugins
-      plugins: [
-        "Cookies",
-        "Dialog",
-        "SessionStorage",
-        "LocalStorage",
-        "Notify",
-      ],
+      plugins: ["Cookies", "Dialog", "SessionStorage", "LocalStorage", "Notify"]
     },
 
     // animations: 'all', // --- includes all animations
@@ -175,8 +169,8 @@ export default defineConfig(function (/* ctx */) {
       // (gets superseded if process.env.PORT is specified at runtime)
 
       middlewares: [
-        "render", // keep this as last one
-      ],
+        "render" // keep this as last one
+      ]
     },
 
     // https://v2.quasar.dev/quasar-cli/developing-pwa/configuring-pwa
@@ -185,7 +179,7 @@ export default defineConfig(function (/* ctx */) {
       injectPwaMetaTags: true,
       swFilename: "sw.js",
       manifestFilename: "manifest.json",
-      useCredentialsForManifestTag: false,
+      useCredentialsForManifestTag: false
       // useFilenameHashes: true,
       // extendGenerateSWOptions (cfg) {}
       // extendInjectManifestOptions (cfg) {},
@@ -200,7 +194,7 @@ export default defineConfig(function (/* ctx */) {
 
     // Full list of options: https://v2.quasar.dev/quasar-cli/developing-capacitor-apps/configuring-capacitor
     capacitor: {
-      hideSplashscreen: true,
+      hideSplashscreen: true
     },
 
     // Full list of options: https://v2.quasar.dev/quasar-cli/developing-electron-apps/configuring-electron
@@ -226,16 +220,16 @@ export default defineConfig(function (/* ctx */) {
       builder: {
         // https://www.electron.build/configuration/configuration
 
-        appId: "pilcrow-client",
-      },
+        appId: "pilcrow-client"
+      }
     },
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/developing-browser-extensions/configuring-bex
     bex: {
-      contentScripts: ["my-content-script"],
+      contentScripts: ["my-content-script"]
 
       // extendBexScriptsConf (esbuildConf) {}
       // extendBexManifestJson (json) {}
-    },
+    }
   }
 })

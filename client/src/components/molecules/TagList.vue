@@ -53,34 +53,34 @@ export default {
      */
     t: {
       type: String,
-      default: "lists",
+      default: "lists"
     },
     /**
      * Model value, list of items
      */
     modelValue: {
       type: Array,
-      default: () => [],
+      default: () => []
     },
     /**
      * Vuelidate rules to apply to new and edited items.
      */
     rules: {
       type: Object,
-      default: () => {},
+      default: () => {}
     },
     /**
      * Set true to allow duplicate items to be added to the list.
      */
     allowDuplicates: {
       type: Boolean,
-      default: false,
-    },
+      default: false
+    }
   },
   emits: ["update:modelValue"],
   setup(props, { emit }) {
     const form = reactive({
-      addValue: "",
+      addValue: ""
     })
 
     const noNewDuplicate = (value) => !props.modelValue.includes(value)
@@ -88,8 +88,8 @@ export default {
     const vRules = {
       addValue: {
         ...props.rules,
-        duplicate: props.allowDuplicates ? noopRule : noNewDuplicate,
-      },
+        duplicate: props.allowDuplicates ? noopRule : noNewDuplicate
+      }
     }
 
     const v$ = useVuelidate(vRules, form)
@@ -100,7 +100,7 @@ export default {
        */
       emit("update:modelValue", [
         ...props.modelValue.slice(0, index),
-        ...props.modelValue.slice(index + 1),
+        ...props.modelValue.slice(index + 1)
       ])
     }
 
@@ -116,6 +116,6 @@ export default {
     }
 
     return { remove, addItem, v$ }
-  },
+  }
 }
 </script>

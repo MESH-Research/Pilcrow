@@ -7,7 +7,7 @@
 // ** This file is an example of how to write Cypress tests, you can safely delete it **
 
 // This test will pass when run against a clean Quasar project
-import { a11yLogViolations } from '../support/helpers'
+import { a11yLogViolations } from "../support/helpers"
 
 describe("Landing", () => {
   beforeEach(() => {

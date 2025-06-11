@@ -10,9 +10,9 @@ describe("AvatarImage Component", () => {
     return mount(AvatarImage, {
       props: {
         user: {
-          email,
-        },
-      },
+          email
+        }
+      }
     })
   }
 

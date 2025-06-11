@@ -74,7 +74,7 @@ const currentPage = ref(1)
 const popupProxy = ref(null)
 const isExpanded = ref(false)
 const { result } = useQuery(CURRENT_USER_NOTIFICATIONS, {
-  page: currentPage,
+  page: currentPage
 })
 
 const notificationItems = computed(() => {
@@ -89,8 +89,8 @@ const hasUnreadNotifications = computed(() => {
 const { mutate: markAllNotificationsRead } = useMutation(
   MARK_ALL_NOTIFICATIONS_READ,
   {
-    refetchQueries: ["currentUserNotifications"],
-  },
+    refetchQueries: ["currentUserNotifications"]
+  }
 )
 const dismissAll = async () => {
   await markAllNotificationsRead()

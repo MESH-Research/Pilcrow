@@ -8,7 +8,7 @@
       :aria-label="
         $t('submissions.comment.ariaLabel', {
           username: comment.created_by.username,
-          replies: comment.replies.length,
+          replies: comment.replies.length
         })
       "
     >
@@ -53,26 +53,46 @@
         <q-btn
           v-if="!isCollapsed"
           data-cy="hideRepliesButton"
-          :aria-label="$t(`submissions.comment.toggle_replies.hide_reply`, comment.replies.length)"
+          :aria-label="
+            $t(
+              `submissions.comment.toggle_replies.hide_reply`,
+              comment.replies.length
+            )
+          "
           bordered
           color="secondary"
           text-color="white"
           @click="toggleThread"
         >
           <q-icon name="expand_less"></q-icon>
-          <span>{{ $t("submissions.comment.toggle_replies.hide_reply", comment.replies.length) }}</span>
+          <span>{{
+            $t(
+              "submissions.comment.toggle_replies.hide_reply",
+              comment.replies.length
+            )
+          }}</span>
         </q-btn>
         <q-btn
           v-if="isCollapsed"
           data-cy="showRepliesButton"
-          :aria-label="$t(`submissions.comment.toggle_replies.show_reply`, comment.replies.length)"
+          :aria-label="
+            $t(
+              `submissions.comment.toggle_replies.show_reply`,
+              comment.replies.length
+            )
+          "
           bordered
           color="secondary"
           text-color="white"
           @click="toggleThread"
         >
           <q-icon name="expand_more"></q-icon>
-          <span>{{ $t("submissions.comment.toggle_replies.show_reply", comment.replies.length) }}</span>
+          <span>{{
+            $t(
+              "submissions.comment.toggle_replies.show_reply",
+              comment.replies.length
+            )
+          }}</span>
         </q-btn>
       </q-card-actions>
       <section v-if="!isCollapsed">
@@ -137,8 +157,8 @@ function toggleThread() {
 const props = defineProps({
   comment: {
     type: Object,
-    required: true,
-  },
+    required: true
+  }
 })
 
 defineEmits(["quoteReplyTo", "replyTo"])
@@ -207,6 +227,6 @@ defineExpose({
   scrollTarget,
   replyRefs,
   comment: props.comment,
-  replyIds: props.comment.replies.map((c) => c.id),
+  replyIds: props.comment.replies.map((c) => c.id)
 })
 </script>

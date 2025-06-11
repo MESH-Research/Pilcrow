@@ -31,7 +31,7 @@
                 class="dark-grey"
                 :to="{
                   name: 'publication:home',
-                  params: { id: publication.id },
+                  params: { id: publication.id }
                 }"
                 :aria-label="$t('publication.view_button_aria')"
               >
@@ -111,7 +111,7 @@ import CreateForm from "src/components/forms/Publication/CreateForm.vue"
 import { useRouter } from "vue-router"
 const destRoute = (id, page) => ({
   name: `publication:setup:${page}`,
-  params: { id },
+  params: { id }
 })
 
 const pageTitleKey = (page) => `publication.setup_pages.${page}`
@@ -121,14 +121,14 @@ const {
   listeners,
   data: publications,
   paginatorInfo,
-  query: { loading },
+  query: { loading }
 } = pubsPaginator
 
 const { push } = useRouter()
 function publicationCreated(publication) {
   push({
     name: "publication:setup:basic",
-    params: { id: publication.id },
+    params: { id: publication.id }
   })
 }
 </script>

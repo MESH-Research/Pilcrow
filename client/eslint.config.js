@@ -4,7 +4,7 @@ import pluginVue from "eslint-plugin-vue"
 import pluginQuasar from "@quasar/app-vite/eslint"
 import lodash from "lodash"
 // the following is optional, if you want prettier too:
-import prettierSkipFormatting from "@vue/eslint-config-prettier/skip-formatting"
+import prettierSkipFormatting from "@vue/eslint-config-prettier"
 import pluginCypress from "eslint-plugin-cypress"
 const { merge } = lodash
 const config = [
@@ -17,7 +17,7 @@ const config = [
      *
      * ESLint requires "ignores" key to be the only one in this object
      */
-    ignores: ["*.ts"],
+    ignores: ["*.ts"]
   },
   ...pluginQuasar.configs.recommended(),
   ...pluginVue.configs["flat/recommended"],
@@ -48,8 +48,8 @@ const config = [
         cordova: "readonly",
         Capacitor: "readonly",
         chrome: "readonly", // BEX related
-        browser: "readonly", // BEX related
-      },
+        browser: "readonly" // BEX related
+      }
     },
 
     // add your custom rules here
@@ -57,21 +57,21 @@ const config = [
       "prefer-promise-reject-errors": "off",
       "no-unused-vars": ["error", { caughtErrors: "none" }],
       // allow debugger during development only
-      "no-debugger": process.env.NODE_ENV === "production" ? "error" : "off",
-    },
+      "no-debugger": process.env.NODE_ENV === "production" ? "error" : "off"
+    }
   },
   {
     files: [
       "test/vitest/**/*.{js,mjs,cjs,ts,mts,cts}",
-      "src*/**/*.vitest.spec.{js,mjs,cjs}",
+      "src*/**/*.vitest.spec.{js,mjs,cjs}"
     ],
     ...js.configs.recommended,
 
     languageOptions: {
       globals: {
-        ...globals.browser,
-      },
-    },
+        ...globals.browser
+      }
+    }
 
     // vitest currently doesn't work well with non typescript projects
     // so we'll use the recommended config until something changes
@@ -96,28 +96,28 @@ const config = [
       languageOptions: {
         sourceType: "commonjs",
         globals: {
-          ...globals.node,
-        },
-      },
-    }),
+          ...globals.node
+        }
+      }
+    })
   },
   {
     files: ["test/cypress/support/**/*.{js,mjs,cjs}"],
     ...merge(pluginCypress.configs.recommended, {
       languageOptions: {
-        sourceType: "module",
-      },
-    }),
+        sourceType: "module"
+      }
+    })
   },
   {
     files: ["src-pwa/custom-service-worker.js"],
     languageOptions: {
       globals: {
-        ...globals.serviceworker,
-      },
-    },
+        ...globals.serviceworker
+      }
+    }
   },
 
-  prettierSkipFormatting, // optional, if you want prettier
+  prettierSkipFormatting // optional, if you want prettier
 ]
 export default config

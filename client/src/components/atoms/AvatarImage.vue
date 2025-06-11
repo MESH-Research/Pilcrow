@@ -23,8 +23,8 @@ export default {
   props: {
     user: {
       type: Object,
-      required: true,
-    },
+      required: true
+    }
   },
   computed: {
     avatarSrc() {
@@ -37,7 +37,7 @@ export default {
         "pine",
         "purple",
         "red",
-        "yellow",
+        "yellow"
       ]
       if (!this.user.email) {
         return ""
@@ -45,8 +45,8 @@ export default {
       const number = Math.abs(stringToInt(this.user.email)) % colors.length
 
       return `/avatar/avatar-${colors[number]}.png`
-    },
-  },
+    }
+  }
 }
 </script>
 
@@ -54,7 +54,9 @@ export default {
 .q-avatar::before {
   border-radius: 50%;
   bottom: 0;
-  box-shadow: 0 0 0 0.05rem #777, 0 0 0 0.1rem #fff;
+  box-shadow:
+    0 0 0 0.05rem #777,
+    0 0 0 0.1rem #fff;
   content: "";
   display: block;
   left: 0;

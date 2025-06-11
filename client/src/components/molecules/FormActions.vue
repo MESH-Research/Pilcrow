@@ -56,18 +56,18 @@ defineEmits(["resetClick"])
 const props = defineProps({
   sticky: {
     type: Boolean,
-    default: true,
+    default: true
   },
   flat: {
     type: Boolean,
-    default: false,
-  },
+    default: false
+  }
 })
 
 const saveClassList = computed(() => {
   const classes = {
     saved: "bg-positive text-white",
-    dirty: "bg-accent text-white",
+    dirty: "bg-accent text-white"
   }
   return classes[state.value] ?? "bg-grey-8 text-white"
 })
@@ -75,7 +75,7 @@ const saveCyAttr = computed(() => {
   return (
     {
       saving: "button_saving",
-      saved: "button_saved",
+      saved: "button_saved"
     }[state.value] ?? "button_save"
   )
 })
@@ -83,7 +83,7 @@ const saveText = computed(() => {
   return (
     {
       saving: "buttons.saving",
-      saved: "buttons.saved",
+      saved: "buttons.saved"
     }[state.value] ?? "buttons.save"
   )
 })
@@ -92,7 +92,7 @@ const saveDisabled = computed(() => {
     {
       saved: false,
       dirty: false,
-      error: false,
+      error: false
     }[state.value] ?? true
   )
 })
@@ -100,7 +100,7 @@ const saveIcon = computed(() => {
   return (
     {
       saved: "check",
-      saving: "spinner",
+      saving: "spinner"
     }[state.value] ?? ""
   )
 })
@@ -109,7 +109,7 @@ const resetDisabled = computed(() => {
   return (
     {
       dirty: false,
-      error: false,
+      error: false
     }[state.value] ?? true
   )
 })
@@ -120,7 +120,7 @@ const visible = computed(() => {
   return (
     {
       idle: false,
-      loading: false,
+      loading: false
     }[state.value] ?? true
   )
 })

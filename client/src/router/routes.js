@@ -6,22 +6,28 @@ const routes = [
       { path: "", component: () => import("src/pages/IndexPage.vue") },
       { path: "register", component: () => import("pages/RegisterPage.vue") },
       { path: "login", component: () => import("pages/LoginPage.vue") },
-      { path: "auth/redirect/orcid", component: () => import("pages/LoginOrcid.vue") },
-      { path: "auth/redirect/google", component: () => import("pages/LoginGoogle.vue") },
+      {
+        path: "auth/redirect/orcid",
+        component: () => import("pages/LoginOrcid.vue")
+      },
+      {
+        path: "auth/redirect/google",
+        component: () => import("pages/LoginGoogle.vue")
+      },
       { path: "logout", component: () => import("src/pages/LogoutPage.vue") },
       {
         path: "accept-invite/:uuid/:expires/:token/:submission_id",
-        component: () => import("pages/AcceptInvite.vue"),
+        component: () => import("pages/AcceptInvite.vue")
       },
       {
         path: "request-password-reset",
-        component: () => import("src/pages/RequestPasswordReset.vue"),
+        component: () => import("src/pages/RequestPasswordReset.vue")
       },
       {
         path: "reset-password/:token",
-        component: () => import("src/pages/ResetPassword.vue"),
-      },
-    ],
+        component: () => import("src/pages/ResetPassword.vue")
+      }
+    ]
   },
   {
     path: "/",
@@ -30,11 +36,11 @@ const routes = [
     children: [
       {
         path: "verify-email/:expires/:token",
-        component: () => import("pages/VerifyEmail.vue"),
+        component: () => import("pages/VerifyEmail.vue")
       },
       {
         path: "dashboard/",
-        component: () => import("pages/DashboardPage.vue"),
+        component: () => import("pages/DashboardPage.vue")
       },
       {
         path: "account/",
@@ -42,13 +48,13 @@ const routes = [
         children: [
           {
             path: "profile",
-            component: () => import("src/pages/Account/ProfilePage.vue"),
+            component: () => import("src/pages/Account/ProfilePage.vue")
           },
           {
             path: "settings",
-            component: () => import("src/pages/Account/SettingsPage.vue"),
-          },
-        ],
+            component: () => import("src/pages/Account/SettingsPage.vue")
+          }
+        ]
       },
       {
         path: "publication/:id/setup/",
@@ -59,98 +65,96 @@ const routes = [
             name: "publication:setup:basic",
             path: "basic",
             meta: {
-              name: "Basic",
+              name: "Basic"
             },
-            component: () =>
-              import("src/pages/Publication/Setup/BasicPage.vue"),
+            component: () => import("src/pages/Publication/Setup/BasicPage.vue")
           },
           {
             name: "publication:setup:users",
             path: "users",
             meta: {
-              name: "Users",
+              name: "Users"
             },
-            component: () =>
-              import("src/pages/Publication/Setup/UsersPage.vue"),
+            component: () => import("src/pages/Publication/Setup/UsersPage.vue")
           },
           {
             name: "publication:setup:content",
             path: "content",
             meta: {
-              name: "Page Content",
+              name: "Page Content"
             },
             component: () =>
-              import("src/pages/Publication/Setup/ContentPage.vue"),
+              import("src/pages/Publication/Setup/ContentPage.vue")
           },
           {
             name: "publication:setup:criteria",
             meta: {
-              name: "Style Criteria",
+              name: "Style Criteria"
             },
             path: "criteria",
             component: () =>
-              import("src/pages/Publication/Setup/CriteriaPage.vue"),
-          },
-        ],
+              import("src/pages/Publication/Setup/CriteriaPage.vue")
+          }
+        ]
       },
       {
         path: "feed/",
-        component: () => import("src/pages/FeedPage.vue"),
+        component: () => import("src/pages/FeedPage.vue")
       },
       {
         path: "/admin/users",
         component: () => import("pages/Admin/UsersIndex.vue"),
         meta: {
-          requiresAppAdmin: true,
-        },
+          requiresAppAdmin: true
+        }
       },
       {
         name: "user_details",
         path: "/admin/user/:id",
         props: true,
-        component: () => import("pages/Admin/UserDetails.vue"),
+        component: () => import("pages/Admin/UserDetails.vue")
       },
       {
         path: "/admin/publications",
         name: "admin:publication:index",
         component: () => import("src/pages/Admin/PublicationIndexPage.vue"),
         meta: {
-          requiresAppAdmin: true,
-        },
+          requiresAppAdmin: true
+        }
       },
       {
         path: "/publications",
         name: "publication:index",
-        component: () => import("pages/Publication/PublicationsIndexPage.vue"),
+        component: () => import("pages/Publication/PublicationsIndexPage.vue")
       },
       {
         name: "publication:home",
         path: "/publication/:id",
         component: () => import("pages/Publication/PublicationHomePage.vue"),
-        props: true,
+        props: true
       },
       {
         path: "/reviews",
-        component: () => import("src/pages/ReviewsPage.vue"),
+        component: () => import("src/pages/ReviewsPage.vue")
       },
       {
         path: "/submissions",
-        component: () => import("src/pages/SubmissionsPage.vue"),
+        component: () => import("src/pages/SubmissionsPage.vue")
       },
       {
         name: "submission:create",
         path: "/publication/:id/create",
         props: true,
-        component: () => import("pages/SubmissionCreate.vue"),
+        component: () => import("pages/SubmissionCreate.vue")
       },
       {
         name: "submission:details",
         path: "/submission/:id/details",
         component: () => import("src/pages/SubmissionDetails.vue"),
         meta: {
-          requiresSubmissionAccess: true,
+          requiresSubmissionAccess: true
         },
-        props: true,
+        props: true
       },
       {
         name: "submission:draft",
@@ -158,68 +162,68 @@ const routes = [
         component: () => import("src/pages/SubmissionDraft.vue"),
         props: true,
         meta: {
-          requiresDraftAccess: true,
-        },
+          requiresDraftAccess: true
+        }
       },
       {
         name: "submission:content",
         path: "/submission/:id/content",
         component: () => import("src/pages/SubmissionContent.vue"),
         meta: {
-          requiresPreviewAccess: true,
+          requiresPreviewAccess: true
         },
-        props: true,
+        props: true
       },
       {
         name: "submission:preview",
         path: "/submission/:id/preview",
         component: () => import("src/pages/SubmissionPreview.vue"),
         meta: {
-          requiresPreviewAccess: true,
+          requiresPreviewAccess: true
         },
-        props: true,
+        props: true
       },
       {
         name: "submission:view",
         path: "/submission/:id/view",
         component: () => import("src/pages/SubmissionView.vue"),
         meta: {
-          requiresViewAccess: true,
+          requiresViewAccess: true
         },
-        props: true,
+        props: true
       },
       {
         name: "submission:review",
         path: "/submission/:id/review",
         component: () => import("src/pages/SubmissionReview.vue"),
         meta: {
-          requiresReviewAccess: true,
+          requiresReviewAccess: true
         },
-        props: true,
+        props: true
       },
       {
         name: "submission:export",
         path: "/submission/:id/export",
         component: () => import("src/pages/SubmissionExport.vue"),
         meta: {
-          requiresExportAccess: true,
+          requiresExportAccess: true
         },
-        props: true,
-      },
-    ],
+        props: true
+      }
+    ]
   },
   {
     path: "/error403",
     name: "error403",
-    component: () => import("src/pages/Error403Page.vue"),
-  },
+    component: () => import("src/pages/Error403Page.vue")
+  }
 ]
 
 // Always leave this as last one
 
 routes.push({
   path: "/:catchAll(.*)*",
-  component: () => import("src/pages/Error404Page.vue"),
+  component: () => import("src/pages/Error404Page.vue")
 })
 
 export default routes

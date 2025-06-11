@@ -1,13 +1,13 @@
 import { mount } from "vue-composable-tester"
-import { createMockClient } from "test/vitest/utils"
+import { createMockClient } from "app/test/vitest/utils"
 import { usePagination } from "./pagination"
 import { DefaultApolloClient } from "@vue/apollo-composable"
 import { provide } from "vue"
 import { GET_PUBLICATIONS } from "src/graphql/queries"
-import { flushPromises } from '@vue/test-utils'
+import { flushPromises } from "@vue/test-utils"
 import { isRef } from "vue"
 
-import { describe, expect, test, vi, beforeEach } from 'vitest'
+import { describe, expect, test, vi, beforeEach } from "vitest"
 
 describe("usePagination composable", () => {
   const mockClient = createMockClient()
@@ -15,7 +15,7 @@ describe("usePagination composable", () => {
     const { result } = mount(() => usePagination(GET_PUBLICATIONS, options), {
       provider: () => {
         provide(DefaultApolloClient, mockClient)
-      },
+      }
     })
     await flushPromises()
     return result
@@ -32,7 +32,7 @@ describe("usePagination composable", () => {
     const returnData = [
       ...Array(5)
         .fill(0)
-        .map((_, v) => ({ id: v, name: `Pub ${v}`, home_page_content: "" })),
+        .map((_, v) => ({ id: v, name: `Pub ${v}`, home_page_content: "" }))
     ]
 
     const mockResponseData = (data = []) => ({
@@ -43,11 +43,11 @@ describe("usePagination composable", () => {
             count: data.length,
             currentPage: 1,
             lastPage: 1,
-            perPage: 10,
+            perPage: 10
           },
-          data,
-        },
-      },
+          data
+        }
+      }
     })
 
     queryMock.mockResolvedValue(mockResponseData(returnData))
@@ -76,11 +76,11 @@ describe("usePagination composable", () => {
             count: 0,
             currentPage: 1,
             lastPage: 1,
-            perPage: 10,
+            perPage: 10
           },
-          data: [],
-        },
-      },
+          data: []
+        }
+      }
     })
 
     await mountComposable({ variables: { page: 2 } })
@@ -97,11 +97,11 @@ describe("usePagination composable", () => {
             count: 0,
             currentPage: 1,
             lastPage: 4,
-            perPage: 10,
+            perPage: 10
           },
-          data: [],
-        },
-      },
+          data: []
+        }
+      }
     })
 
     const result = await mountComposable()

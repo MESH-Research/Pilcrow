@@ -2,7 +2,7 @@
 /// <reference path="../support/index.d.ts" />
 
 import { a11yLogViolations } from "../support/helpers"
-import "cypress-file-upload";
+import "cypress-file-upload"
 
 describe("Submission Draft Page", () => {
   it("allows content to be added from a text input", () => {
@@ -10,11 +10,11 @@ describe("Submission Draft Page", () => {
     cy.login({ email: "regularuser@meshresearch.net" })
     cy.visit("/submission/104/draft")
     cy.injectAxe()
-    cy.dataCy("todo_go_btn").click();
-    cy.dataCy("enter_text_option").click();
-    cy.dataCy("content_editor").type("Test Content");
-    cy.dataCy("submit_entered_text_btn").click();
-    cy.dataCy("content_submit_success_btn").click();
+    cy.dataCy("todo_go_btn").click()
+    cy.dataCy("enter_text_option").click()
+    cy.dataCy("content_editor").type("Test Content")
+    cy.dataCy("submit_entered_text_btn").click()
+    cy.dataCy("content_submit_success_btn").click()
     cy.dataCy("todo_preview_btn").eq(0).contains("Preview")
     cy.dataCy("todo_content_btn").eq(0).contains("Edit")
     cy.checkA11y(null, null, a11yLogViolations)
@@ -25,11 +25,11 @@ describe("Submission Draft Page", () => {
     cy.login({ email: "regularuser@meshresearch.net" })
     cy.visit("/submission/104/draft")
     cy.injectAxe()
-    cy.dataCy("todo_go_btn").click();
-    cy.dataCy("upload_option").click();
-    cy.dataCy('file_picker').attachFile('test.txt');
-    cy.dataCy("submit_upload_btn").click();
-    cy.dataCy("content_submit_success_btn").click();
+    cy.dataCy("todo_go_btn").click()
+    cy.dataCy("upload_option").click()
+    cy.dataCy("file_picker").attachFile("test.txt")
+    cy.dataCy("submit_upload_btn").click()
+    cy.dataCy("content_submit_success_btn").click()
     cy.dataCy("todo_preview_btn").eq(0).contains("Preview")
     cy.dataCy("todo_content_btn").eq(0).contains("Edit")
     cy.checkA11y(null, null, a11yLogViolations)
@@ -52,7 +52,7 @@ describe("Submission Draft Page", () => {
     cy.dataCy("submit_for_review_btn").click()
     cy.interceptGQLOperation("UpdateSubmissionStatus")
     cy.dataCy("dirtyYesChangeStatus").click()
-    cy.wait('@UpdateSubmissionStatus')
+    cy.wait("@UpdateSubmissionStatus")
     cy.dataCy("visit_submission_btn").click()
 
     cy.login({ email: "publicationeditor@meshresearch.net" })
