@@ -44,9 +44,9 @@ RUN mkdir -p storage/framework/cache storage/framework/sessions storage/framewor
 
 #Install dependencies with dev if dev arg is true
 
-RUN --mount=type=cache,target=/tmp/composer composer install --no-scripts --no-autoloader --prefer-dist --no-dev
+RUN --mount=type=cache,target=/tmp/composer,uid=www-data,gid=www-data composer install --no-scripts --no-autoloader --prefer-dist --no-dev
 COPY --chown=www-data . .
-RUN --mount=type=cache,target=/tmp/composer composer install --prefer-dist --no-plugins
+RUN --mount=type=cache,target=/tmp/composer,uid=www-data,gid=www-data composer install --prefer-dist --no-plugins
 
 
 #CREATE STORAGE DIRECTORIES
