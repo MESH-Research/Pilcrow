@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Models;
@@ -13,6 +14,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\HasApiTokens;
+use Laravel\Scout\Attributes\SearchUsingPrefix;
 use Laravel\Scout\Searchable;
 use Spatie\Permission\Traits\HasRoles;
 
@@ -137,17 +139,15 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * @return array
      */
+    #[SearchUsingPrefix(['email', 'username', 'email', 'id'])]
     public function toSearchableArray()
     {
-        return $this
-            ->withoutRelations()
-            ->setVisible([
-                'id',
-                'username',
-                'name',
-                'email',
-            ])
-            ->toArray();
+        return [
+            'id' => (int) $this->id,
+            'name' => $this->name,
+            'username' => $this->username,
+            'email' => $this->email,
+        ];
     }
 
     /**
@@ -289,7 +289,7 @@ class User extends Authenticatable implements MustVerifyEmail
         if (User::where('username', $username)->exists()) {
             $unique = $username . '_'
                 . self::generateString(random_int(1, 2))
-                . str_replace(['0','1'], '2', (string)random_int(0, 50))
+                . str_replace(['0', '1'], '2', (string)random_int(0, 50))
                 . self::generateString(random_int(1, 2));
             $username = self::generateUniqueUsername($unique);
         }

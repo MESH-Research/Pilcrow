@@ -13,7 +13,7 @@
         "guzzlehttp/guzzle": "^7.0.1",
         "laravel/framework": "^11.0",
         "laravel/sanctum": "^4.0",
-        "laravel/scout": "^10.0",
+        "laravel/scout": "^10.14",
         "laravel/socialite": "^5.11",
         "laravel/tinker": "^2.8",
         "mews/purifier": "^3.4",
@@ -25,7 +25,7 @@
         "socialiteproviders/orcid": "dev-master#9a61194",
         "spatie/laravel-permission": "^6.0",
         "spatie/laravel-settings": "^3.0",
-        "teamtnt/laravel-scout-tntsearch-driver": "^14.0",
+        "teamtnt/laravel-scout-tntsearch-driver": "^15.0",
         "ueberdosis/pandoc": "^0.9.0",
         "watson/validating": "^8.0",
         "ezyang/htmlpurifier": "4.18.0 as 4.16.0"

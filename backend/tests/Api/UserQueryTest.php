@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Tests\Api;
@@ -80,7 +81,7 @@ class UserQueryTest extends ApiTestCase
                     }
                 }
             }',
-            [ 'id' => $user->id ]
+            ['id' => $user->id]
         );
         $response->assertJson([
             'data' => [
@@ -100,15 +101,51 @@ class UserQueryTest extends ApiTestCase
     public static function searchUserTermsProvider(): array
     {
         return [
-            ['name','abcdef'],
-            ['email','ghijkl@gmail.com'],
-            ['username','mnopqr'],
-            ['all', 'aaaaaaaaaaaaaa'],
-            ['all', '<html>'],
-            ['all', null],
-            ['all', '12345'],
-            ['all', 12345],
-            ['all', ''],
+            [
+                'searchTerm' => 'abcdef',
+                'shouldFind' => "ghijkl@gmail.com",
+                'count' => 1,
+            ],
+            [
+                'searchTerm' => 'ghijkl@gmail.com',
+                'shouldFind' => "ghijkl@gmail.com",
+                'count' => 1,
+            ],
+            [
+                'searchTerm' => 'mnopqr',
+                'shouldFind' => "ghijkl@gmail.com",
+                'count' => 1
+            ],
+            [
+                'searchTerm' => 'aaaaaaaaaaaaaa',
+                'shouldFind' => null,
+                'count' => 0
+            ],
+            [
+                'searchTerm' => '<html>',
+                'shouldFind' => null,
+                'count' => 0
+            ],
+            [
+                'searchTerm' => null,
+                'shouldFind' => null,
+                'count' => 10
+            ],
+            [
+                'searchTerm' => '12345',
+                'shouldFind' => null,
+                'count' => 0
+            ],
+            [
+                'searchTerm' => 12345,
+                'shouldFind' => null,
+                'count' => 0
+            ],
+            [
+                'searchTerm' => '',
+                'shouldFind' => null,
+                'count' => 10
+            ],
         ];
     }
 
@@ -116,9 +153,9 @@ class UserQueryTest extends ApiTestCase
      * @dataProvider searchUserTermsProvider
      * @return void
      */
-    public function testThatAUserCanBeSearchedBySearchTerms(string $property_name, mixed $search_term): void
+    public function testThatAUserCanBeSearchedBySearchTerms(mixed $searchTerm = null, ?string $shouldFind = null, int $count = 0): void
     {
-        User::factory()->count(20)->create();
+        User::factory()->createManyQuietly(20);
         User::factory()->create([
             'name' => 'abcdef',
             'email' => 'ghijkl@gmail.com',
@@ -135,31 +172,22 @@ class UserQueryTest extends ApiTestCase
                     }
                 }
             }',
-            [ 'search_term' => (string)$search_term ]
+            ['search_term' => (string)$searchTerm]
         );
 
-        if ($property_name == 'all') {
-            $response->assertJson([
-                'data' => [
-                    'userSearch' => [
-                        'data' => [ ],
-                    ],
-                ],
-            ]);
-        } else {
-            $response->assertJson([
-                'data' => [
-                    'userSearch' => [
-                        'data' => [
-                            [
-                                'name' => 'abcdef',
-                                'email' => 'ghijkl@gmail.com',
-                                'username' => 'mnopqr',
-                            ],
-                        ],
-                    ],
-                ],
-            ]);
+        $data = $response->json('data.userSearch.data');
+        $collection = collect($data);
+
+        if ($shouldFind !== null) {
+            $this->assertTrue(
+                $collection->contains('email', $shouldFind),
+                "Search term '{$searchTerm}' should return user with email '{$shouldFind}', but returned: " . $collection->implode('email', ', ')
+            );
         }
+        $this->assertCount(
+            $count,
+            $data,
+            "Search term '{$searchTerm}' should return {$count} results, but returned " . count($data)
+        );
     }
 }
