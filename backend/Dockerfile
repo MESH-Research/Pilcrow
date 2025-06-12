@@ -1,5 +1,6 @@
+FROM composer:2.8.9 AS composer
 FROM php:8.4.8-fpm
-ARG VERSION
+ARG COMPOSER_VERSION=composer:2.8.9
 ARG VERSION_URL
 ARG VERSION_DATE
 ARG TARGETARCH
@@ -14,7 +15,7 @@ RUN  apt update && apt install -y openssl ca-certificates libzip-dev libaio1 lib
   && apt purge libxml2-dev libzip-dev -y \
   && rm -rf /var/lib/apt/lists/*
 
-COPY --from=composer:2.5.5 /usr/bin/composer /usr/bin/composer
+COPY --from=composer /usr/bin/composer /usr/bin/composer
 
 ADD https://github.com/ufoscout/docker-compose-wait/releases/download/2.7.3/wait /wait
 RUN chmod +x /wait
