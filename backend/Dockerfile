@@ -5,6 +5,7 @@ ARG VERSION_DATE
 ARG TARGETARCH
 ARG PHP_EXTS="bcmath pdo_mysql pcntl zip"
 ARG PHP_PECL_EXTS="redis"
+ENV COMPOSER_HOME=/tmp/composer
 
 RUN  apt update && apt install -y openssl ca-certificates libzip-dev libaio1 libncurses6 libnuma1 libxml2-dev git libfcgi-bin \
   && docker-php-ext-install -j$(nproc) ${PHP_EXTS} \
@@ -43,9 +44,9 @@ RUN mkdir -p storage/framework/cache storage/framework/sessions storage/framewor
 
 #Install dependencies with dev if dev arg is true
 
-RUN composer install --no-scripts --no-autoloader --prefer-dist --no-dev
+RUN --mount=type=cache,target=/tmp/composer composer install --no-scripts --no-autoloader --prefer-dist --no-dev
 COPY --chown=www-data . .
-RUN composer install --prefer-dist --no-plugins
+RUN --mount=type=cache,target=/tmp/composer composer install --prefer-dist --no-plugins
 
 
 #CREATE STORAGE DIRECTORIES
