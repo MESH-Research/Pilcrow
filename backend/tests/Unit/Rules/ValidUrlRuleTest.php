@@ -5,6 +5,7 @@ namespace Tests\Unit\Rules;
 use App\Rules\ValidUrl;
 use Illuminate\Support\Facades\Validator;
 use Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class ValidUrlRuleTest extends TestCase
 {
@@ -69,9 +70,7 @@ class ValidUrlRuleTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider passingUrls
-     */
+    #[DataProvider('passingUrls')]
     public function testPassesForValidUrls($value): void
     {
         $rule = new ValidUrl();
@@ -84,9 +83,7 @@ class ValidUrlRuleTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider invalidUrls
-     */
+    #[DataProvider('invalidUrls')]
     public function testFailsForInvalidUrls($value): void
     {
         $rule = new ValidUrl();

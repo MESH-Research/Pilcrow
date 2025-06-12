@@ -1,10 +1,12 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Tests\Feature;
 
 use App\Models\StyleCriteria;
 use Illuminate\Support\Str;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class StyleCriteriaTest extends TestCase
@@ -73,7 +75,7 @@ class StyleCriteriaTest extends TestCase
     public static function adminFieldHtmlProvider()
     {
         return [
-            ['<b>Bold</b><i>Italic</i><u>Underline</u>','<b>Bold</b><i>Italic</i><u>Underline</u>'],
+            ['<b>Bold</b><i>Italic</i><u>Underline</u>', '<b>Bold</b><i>Italic</i><u>Underline</u>'],
             ['<DIV><BR />Some text</DIV>', '<div><br />Some text</div>'],
             ['<script src="somewhere"/>', ''],
             ['<script>alert(10)</script>', ''],
@@ -87,15 +89,15 @@ class StyleCriteriaTest extends TestCase
     }
 
     /**
-     * @dataProvider adminFieldHtmlProvider
      * @param string $testHtml
      * @param string $expected
      * @return void
      */
+    #[DataProvider('adminFieldHtmlProvider')]
     public function testStyleCriteriaDescriptionFieldIsPurified($testHtml, $expected)
     {
         $criteria = StyleCriteria::factory()->make([
-        'description' => $testHtml,
+            'description' => $testHtml,
         ]);
 
         $this->assertEquals($expected, $criteria->description);

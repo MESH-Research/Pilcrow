@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Tests\Api;
@@ -9,6 +10,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\ApiTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class PublicationTest extends ApiTestCase
 {
@@ -180,10 +182,7 @@ class PublicationTest extends ApiTestCase
         ];
     }
 
-    /**
-     * @dataProvider publicationContentMutationProvider
-     * @return void
-     */
+    #[DataProvider('publicationContentMutationProvider')]
     public function testContentCreation(mixed $publication_data, mixed $expected_data): void
     {
         $this->beAppAdmin();
@@ -209,10 +208,7 @@ class PublicationTest extends ApiTestCase
         $this->assertSame($json['data'] ?? null, $expected_data);
     }
 
-    /**
-     * @dataProvider publicationContentUpdateProvider
-     * @return void
-     */
+    #[DataProvider('publicationContentUpdateProvider')]
     public function testContentUpdate(mixed $publication_data, mixed $expected_data): void
     {
         $this->beAppAdmin();
@@ -286,21 +282,25 @@ class PublicationTest extends ApiTestCase
     {
         return [
             'Publication Administrator Can Update Setting to Accept Submissions' => [
-                'publicationAdmins', true, true,
+                'publicationAdmins',
+                true,
+                true,
             ],
             'Publication Administrator Can Update Setting to Reject Submissions' => [
-                'publicationAdmins', false, false,
+                'publicationAdmins',
+                false,
+                false,
             ],
         ];
     }
 
     /**
-     * @dataProvider publicationAcceptSubmissionsUpdateProvider
      * @param string $role
      * @param bool $update_value
      * @param bool $expected_value
      * @return void
      */
+    #[DataProvider('publicationAcceptSubmissionsUpdateProvider')]
     public function testUserCanUpdateAcceptSubmissionsSetting(string $role, bool $update_value, bool $expected_value): void
     {
         /** @var User $user */
@@ -308,8 +308,8 @@ class PublicationTest extends ApiTestCase
         $this->actingAs($user);
 
         $publication = Publication::factory()
-         ->hasAttached($user, [], $role)
-         ->create();
+            ->hasAttached($user, [], $role)
+            ->create();
 
         $response = $this->graphQL(
             'mutation UpdatePublication($pubId: ID!, $isAcceptingSubmissions: Boolean) {
@@ -323,19 +323,19 @@ class PublicationTest extends ApiTestCase
              }
          }',
             [
-             'pubId' => $publication->id,
-             'isAcceptingSubmissions' => $update_value,
+                'pubId' => $publication->id,
+                'isAcceptingSubmissions' => $update_value,
             ]
         );
         $response->assertJsonPath('data.updatePublication.is_accepting_submissions', $expected_value);
     }
 
     /**
-     * @dataProvider publicationMutationProvider
      * @param mixed $data
      * @param mixed $expected Data
      * @return void
      */
+    #[DataProvider('publicationMutationProvider')]
     public function testCreation(mixed $data, mixed $expectedData): void
     {
         $this->beAppAdmin();
@@ -383,7 +383,7 @@ class PublicationTest extends ApiTestCase
                     name
                 }
             }',
-            [ 'id' => $publication->id ]
+            ['id' => $publication->id]
         );
         $expected_data = [
             'publication' => [
@@ -479,10 +479,10 @@ class PublicationTest extends ApiTestCase
     }
 
     /**
-     * @dataProvider publicationRolesProvider
      * @param string $role
      * @return void
      */
+    #[DataProvider('publicationRolesProvider')]
     public function testApplicationAdminCanAssignAnyRole(string $role): void
     {
         $this->beAppAdmin();
@@ -494,15 +494,15 @@ class PublicationTest extends ApiTestCase
         $response = $this->executePublicationRoleAssignment($role, $publication, $user);
 
         $response->assertJsonPath("data.updatePublication.$role", [
-            [ 'id' => (string)$user->id],
+            ['id' => (string)$user->id],
         ]);
     }
 
     /**
-     * @dataProvider publicationRolesProvider
      * @param string $role
      * @return void
      */
+    #[DataProvider('publicationRolesProvider')]
     public function testPublicationAdminsCanAssignAnyRole(string $role): void
     {
         /** @var User $admin */
@@ -522,10 +522,10 @@ class PublicationTest extends ApiTestCase
     }
 
     /**
-     * @dataProvider publicationRolesProvider
      * @param string $role
      * @return void
      */
+    #[DataProvider('publicationRolesProvider')]
     public function testEditorsCannotAssignAnyRole(string $role): void
     {
         /** @var User $editor */
@@ -545,10 +545,10 @@ class PublicationTest extends ApiTestCase
     }
 
     /**
-     * @dataProvider publicationRolesProvider
      * @param string $role
      * @return void
      */
+    #[DataProvider('publicationRolesProvider')]
     public function testMyRoleFields(string $role): void
     {
         /** @var User $user */
@@ -590,7 +590,10 @@ class PublicationTest extends ApiTestCase
             ->assertJsonPath('data.publication.effective_role', 'publication_admin');
     }
 
-    public static function rolesThatCanUpdatePublicationStyleCriteriaProvider(): array
+    /**
+     * @return array
+     */
+    public static function publicationStyleCriteriaUpdateRoles(): array
     {
         return [
             'publicationAdmin' => ['publicationAdmins', true],
@@ -599,9 +602,9 @@ class PublicationTest extends ApiTestCase
     }
 
     /**
-     * @dataProvider rolesThatCanUpdatePublicationStyleCriteriaProvider
      * @return void
      */
+    #[DataProvider('publicationStyleCriteriaUpdateRoles')]
     public function testCanUpdatePublicationStyleCriteria(string $role, bool $allowed)
     {
         /** @var User $user */
@@ -757,8 +760,8 @@ class PublicationTest extends ApiTestCase
 
             ]
         );
-        $response->assertJson(fn (AssertableJson $json) =>
-            $json->has('data.updatePublication.style_criterias', 1)
+        $response->assertJson(fn(AssertableJson $json) =>
+        $json->has('data.updatePublication.style_criterias', 1)
             ->etc());
     }
 
@@ -795,8 +798,8 @@ class PublicationTest extends ApiTestCase
                 ],
             ]
         );
-        $response->assertJson(fn (AssertableJson $json) =>
-            $json->has('errors', 1));
+        $response->assertJson(fn(AssertableJson $json) =>
+        $json->has('errors', 1));
     }
 
     public function testCannotAddTooManyStyleCriteria()
@@ -840,8 +843,8 @@ class PublicationTest extends ApiTestCase
                 ],
             ]
         );
-        $response->assertJson(fn (AssertableJson $json) =>
-            $json->has('errors', 1)
+        $response->assertJson(fn(AssertableJson $json) =>
+        $json->has('errors', 1)
             ->etc());
     }
 
@@ -882,8 +885,8 @@ class PublicationTest extends ApiTestCase
                 ],
             ]
         );
-        $response->assertJson(fn (AssertableJson $json) =>
-            $json->where('data.updatePublication.style_criterias.0.name', 'one')
+        $response->assertJson(fn(AssertableJson $json) =>
+        $json->where('data.updatePublication.style_criterias.0.name', 'one')
             ->etc());
     }
 }

@@ -1,10 +1,12 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Tests\Api;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\ApiTestCase;
 
 class CreateUserMutationTest extends ApiTestCase
@@ -45,10 +47,10 @@ class CreateUserMutationTest extends ApiTestCase
     }
 
     /**
-     * @dataProvider nameValidationProvider
      * @param string $name Name value to test
      * @param mixed $failure Expected failure category or false if no failure expected
      */
+    #[DataProvider('nameValidationProvider')]
     public function nameValidation(?string $name, $failure): void
     {
         $testUser = User::factory()->realEmailDomain()->make(['name' => $name]);
@@ -75,11 +77,11 @@ class CreateUserMutationTest extends ApiTestCase
     }
 
     /**
-     * @dataProvider usernameValidationProvider
      * @param string $username Username value to test
      * @param mixed $failure Expected failure category or false if no failure expected
      * @return void
      */
+    #[DataProvider('usernameValidationProvider')]
     public function testUsernameValidation(?string $username, $failure): void
     {
         User::factory()->create(['username' => 'duplicateUser']);
@@ -110,11 +112,11 @@ class CreateUserMutationTest extends ApiTestCase
     }
 
     /**
-     * @dataProvider emailValidationProvider
      * @param string $email Email value to test
      * @param mixed $failure Expected failure category or false if no failure expected
      * @return void
      */
+    #[DataProvider('emailValidationProvider')]
     public function testEmailValidation(?string $email, $failure): void
     {
         User::factory()->create(['email' => 'dupeemail@meshresearch.net']);
@@ -144,11 +146,11 @@ class CreateUserMutationTest extends ApiTestCase
     }
 
     /**
-     * @dataProvider passwordValidationProvider
      * @param string $password Password value to test
      * @param mixed $failure Expected failure category or false if no failure expected
      * @return void
      */
+    #[DataProvider('passwordValidationProvider')]
     public function testPasswordValidation(?string $password, $failure): void
     {
         $testUser = User::factory()->realEmailDomain()->make(['password' => $password]);

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Tests\Api;
@@ -8,6 +9,7 @@ use App\Models\Role;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Nuwave\Lighthouse\Testing\MakesGraphQLRequests;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\ApiTestCase;
 
 class UserPermissionsTest extends ApiTestCase
@@ -207,7 +209,7 @@ class UserPermissionsTest extends ApiTestCase
                         0 => [
                             'id' => Role::REVIEW_COORDINATOR_ROLE_ID,
                             'name' => Role::REVIEW_COORDINATOR,
-                            'permissions' => [ ],
+                            'permissions' => [],
                         ],
                     ],
                 ],
@@ -219,7 +221,7 @@ class UserPermissionsTest extends ApiTestCase
                         0 => [
                             'id' => Role::REVIEWER_ROLE_ID,
                             'name' => Role::REVIEWER,
-                            'permissions' => [ ],
+                            'permissions' => [],
                         ],
                     ],
                 ],
@@ -231,7 +233,7 @@ class UserPermissionsTest extends ApiTestCase
                         0 => [
                             'id' => Role::SUBMITTER_ROLE_ID,
                             'name' => Role::SUBMITTER,
-                            'permissions' => [ ],
+                            'permissions' => [],
                         ],
                     ],
                 ],
@@ -240,9 +242,9 @@ class UserPermissionsTest extends ApiTestCase
     }
 
     /**
-     * @dataProvider permissionsByRoleProvider
      * @return void
      */
+    #[DataProvider('permissionsByRoleProvider')]
     public function testPermissionsByRoleAreQueryableFromGraphqlEndpoint($role, $expected_array)
     {
         $user = User::factory()->create();

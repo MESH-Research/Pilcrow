@@ -7,6 +7,7 @@ namespace Tests\Api;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\ApiTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class UserQueryTest extends ApiTestCase
 {
@@ -44,9 +45,9 @@ class UserQueryTest extends ApiTestCase
     }
 
     /**
-     * @dataProvider profileMetadataProvider
      * @return void
      */
+    #[DataProvider('profileMetadataProvider')]
     public function testThatUserDetailsCanBeQueried(array $profile_metadata): void
     {
         $user = User::factory()->create([
@@ -150,9 +151,12 @@ class UserQueryTest extends ApiTestCase
     }
 
     /**
-     * @dataProvider searchUserTermsProvider
+     * @param mixed $searchTerm
+     * @param string|null $shouldFind
+     * @param int $count
      * @return void
      */
+    #[DataProvider('searchUserTermsProvider')]
     public function testSearchingForUsers(mixed $searchTerm = null, ?string $shouldFind = null, int $count = 0): void
     {
         User::factory()->createManyQuietly(20);
