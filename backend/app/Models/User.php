@@ -139,7 +139,7 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * @return array
      */
-    #[SearchUsingPrefix(['email', 'username', 'email', 'id'])]
+    #[SearchUsingPrefix(['email', 'username', 'name', 'id'])]
     public function toSearchableArray()
     {
         return [

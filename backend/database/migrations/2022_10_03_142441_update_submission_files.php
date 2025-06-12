@@ -15,7 +15,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('submission_files', function (Blueprint $table) {
-            $table->unsignedTinyInteger('import_status')->default(SubmissionFileImportStatus::Pending);
+            $table->unsignedTinyInteger('import_status')->default(SubmissionFileImportStatus::Pending->value);
             $table->text('error_message')->nullable();
         });
 
