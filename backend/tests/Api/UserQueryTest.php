@@ -153,7 +153,7 @@ class UserQueryTest extends ApiTestCase
      * @dataProvider searchUserTermsProvider
      * @return void
      */
-    public function testThatAUserCanBeSearchedBySearchTerms(mixed $searchTerm = null, ?string $shouldFind = null, int $count = 0): void
+    public function testSearchingForUsers(mixed $searchTerm = null, ?string $shouldFind = null, int $count = 0): void
     {
         User::factory()->createManyQuietly(20);
         User::factory()->create([

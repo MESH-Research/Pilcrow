@@ -6,9 +6,6 @@ use App\Rules\ValidUrl;
 use Illuminate\Support\Facades\Validator;
 use Tests\TestCase;
 
-use Symfony\Component\Console\Formatter\OutputFormatter;
-use Symfony\Component\Console\Output\Output;
-
 class ValidUrlRuleTest extends TestCase
 {
 
