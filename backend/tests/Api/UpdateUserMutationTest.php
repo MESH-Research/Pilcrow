@@ -6,6 +6,7 @@ namespace Tests\Api;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\ApiTestCase;
 
 class UpdateUserMutationTest extends ApiTestCase
@@ -30,12 +31,11 @@ class UpdateUserMutationTest extends ApiTestCase
         ];
     }
     /**
-     * @dataProvider urlProvider
+     * @param bool $valid
      * @param mixed $url
-     * @param string $error_message (optional)
-     * @param string $sanitized (optional)
      * @return void
      */
+    #[DataProvider('urlProvider')]
     public function testWebsitesFieldIsValidated(bool $valid, string $url): void
     {
         $user = User::factory()->create([
