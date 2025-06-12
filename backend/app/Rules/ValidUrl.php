@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Rules;
@@ -8,6 +9,9 @@ use Illuminate\Contracts\Validation\ValidationRule;
 
 class ValidUrl implements ValidationRule
 {
+
+    public $implicit = true;
+
     /**
      * Run the validation rule.
      *
@@ -20,7 +24,7 @@ class ValidUrl implements ValidationRule
     {
         // Source: https://gist.github.com/gruber/8891611
         $regex = <<<EOD
-        ~(?i)\b((?:https?:(?:/{1,3}|[a-z0-9%])|[a-z0-9.\-]+[.](?:com|net|org|edu|gov|mil|aero|asia|biz|cat|coop|info|int
+        ~^(?i)\b((?:https?:(?:/{1,3}|[a-z0-9%])|[a-z0-9.\-]+[.](?:com|net|org|edu|gov|mil|aero|asia|biz|cat|coop|info|int
         |jobs|mobi|museum|name|post|pro|tel|travel|xxx|ac|ad|ae|af|ag|ai|al|am|an|ao|aq|ar|as|at|au|aw|ax|az|ba|bb|bd|be
         |bf|bg|bh|bi|bj|bm|bn|bo|br|bs|bt|bv|bw|by|bz|ca|cc|cd|cf|cg|ch|ci|ck|cl|cm|cn|co|cr|cs|cu|cv|cx|cy|cz|dd|de|dj|
         dk|dm|do|dz|ec|ee|eg|eh|er|es|et|eu|fi|fj|fk|fm|fo|fr|ga|gb|gd|ge|gf|gg|gh|gi|gl|gm|gn|gp|gq|gr|gs|gt|gu|gw|gy|h
@@ -40,8 +44,14 @@ class ValidUrl implements ValidationRule
         |tt|tv|tw|tz|ua|ug|uk|us|uy|uz|va|vc|ve|vg|vi|vn|vu|wf|ws|ye|yt|yu|za|zm|zw)\b/?(?!@)))~
         EOD;
 
+        if (empty($value)) {
+            $fail('The URL is invalid');
+            return;
+        }
+
         if (!preg_match($regex, $value)) {
             $fail('The URL is invalid');
+            return;
         }
     }
 }

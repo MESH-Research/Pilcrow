@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Enums;
 
-use BenSampo\Enum\Enum;
-
 /**
  * @method static static Pending()
  * @method static static Processing()
@@ -13,11 +11,11 @@ use BenSampo\Enum\Enum;
  * @method static static Failure()
  * @method static static Cancelled()
  */
-final class SubmissionFileImportStatus extends Enum
+enum SubmissionFileImportStatus: int
 {
-    const Pending = 0;
-    const Processing = 1;
-    const Success = 2;
-    const Failure = 3;
-    const Cancelled = 4;
+    case Pending = 0;
+    case Processing = 1;
+    case Success = 2;
+    case Failure = 3;
+    case Cancelled = 4;
 }

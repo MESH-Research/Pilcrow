@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Jobs;
@@ -58,18 +59,17 @@ class ImportFileContent implements ShouldQueue
     {
         //Fetch file from DB to ensure it hasn't already been processed or cancelled
         $this->file->refresh();
-        if ($this->file->import_status->isNot(SubmissionFileImportStatus::Pending)) {
+        if ($this->file->import_status  !== SubmissionFileImportStatus::Pending) {
             return;
         }
-        $this->file->import_status = SubmissionFileImportStatus::Processing();
+        $this->file->import_status = SubmissionFileImportStatus::Processing;
         $this->file->save();
 
         $content = new SubmissionContent();
         try {
             $content->submission_id = $this->file->submission_id;
             $content->submission_file_id = $this->file->id;
-            $content->data = Pandoc::
-                inputFile(storage_path('app/' . $this->file->file_upload))
+            $content->data = Pandoc::inputFile(storage_path('app/' . $this->file->file_upload))
                 ->to('html')
                 ->run();
             if (empty($content->data)) {
@@ -84,7 +84,7 @@ class ImportFileContent implements ShouldQueue
 
             return;
         }
-        $this->file->import_status = SubmissionFileImportStatus::Success();
+        $this->file->import_status = SubmissionFileImportStatus::Success;
         $this->file->content_id = $content->id;
         $this->file->save();
 
