@@ -89,7 +89,7 @@
     },
     "repositories": [
         {
-            "type": "git",
+            "type": "vcs",
             "url": "https://github.com/ezyang/htmlpurifier.git"
         }
     ]
