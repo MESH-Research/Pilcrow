@@ -23,13 +23,14 @@ services:
     command: cd /app/client && yarn dev
     scanner: false
   appserver:
-    environments:
-      MYSQL_OPT_SSL_VERIFY_SERVER_CERT: "0"
     build:
       - cd /app/backend && composer install
       - bash /app/.lando/no_env_setup.sh
     build_as_root:
       - bash /app/.lando/install-pandoc.sh
+    overrides:
+      volumes:
+        - ./.lando/my.cnf:/etc/mysql/conf.d/my.cnf
 tooling:
   pandoc:
     service: appserver
