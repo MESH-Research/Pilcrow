@@ -593,7 +593,7 @@ class PublicationTest extends ApiTestCase
     /**
      * @return array
      */
-    public static function publicationStyleCriteraUpdateRoles(): array
+    public static function publicationStyleCriteriaUpdateRoles(): array
     {
         return [
             'publicationAdmin' => ['publicationAdmins', true],
@@ -604,7 +604,7 @@ class PublicationTest extends ApiTestCase
     /**
      * @return void
      */
-    #[DataProvider('publicationStyleCriteraUpdateRoles')]
+    #[DataProvider('publicationStyleCriteriaUpdateRoles')]
     public function testCanUpdatePublicationStyleCriteria(string $role, bool $allowed)
     {
         /** @var User $user */
