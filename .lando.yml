@@ -3,7 +3,7 @@ recipe: laravel
 env_file:
   - .env
 config:
-  php: "8.2"
+  php: "8.4"
   composer_version: 2
   composer: []
   webroot: backend/public
@@ -28,6 +28,9 @@ services:
       - bash /app/.lando/no_env_setup.sh
     build_as_root:
       - bash /app/.lando/install-pandoc.sh
+    overrides:
+      volumes:
+        - ./.lando/my.cnf:/etc/mysql/conf.d/my.cnf
 tooling:
   pandoc:
     service: appserver
