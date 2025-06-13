@@ -16,7 +16,7 @@ RUN sed -i 's#"version": ""#"version": "${VERSION}"#g' /app/dist/spa/version.jso
     sed -i 's#"versionDate": ""#"versionDate": "${VERSION_DATE}"#g' /app/dist/spa/version.json && \
     sed -r \
       -e 's/^ ║\s+([A-Za-z0-9\.\/\(\)\ -]+)║([A-Za-z0-9\. ]+)║([A-Za-z0-9\. -]+)║$/| \1 | \2 | \3 |/' \
-      -e 's/^ ╔.*$/\n#### Output Files \n /'  \
+      -e 's/^ ╔.*$/\n<details> \n<summary>Output Files<\/summary> \n /'  \
       -e 's/^ [╟].*$/| ------ | ------ | ------ |/g' \
       -e '/^ ╚.*$/d' \
       -e '4i ```' \
@@ -25,9 +25,9 @@ RUN sed -i 's#"version": ""#"version": "${VERSION}"#g' /app/dist/spa/version.jso
       -e '15i | ---- | ----- | ' \
       -e '/^ Build succeeded$/a\ \n| Arg | Value |\n| ---- | ----- |' \
       -e '/^ Build succeeded$/{n;N;d;}' \
-      -e 's/^ ([a-zA-Z\ \/@-]+)\.\.\.\.* ([A-Za-z0-9\.|\/]+)$/| \1 | \2 | /' \
+      -e 's/^ ([a-zA-Z\ \/@-]+)\.\.\.\.* ([A-Za-z0-9\.|\/]+)$/| \1 | `\2` | /' \
       -e '/^ =.*$/d' \
-      -e 's/^ ╠.*$/\n#### Total Sizes \n\n| Files | Size | /' \
+      -e 's/^ ╠.*$/<\/details>\n\n#### Total Sizes \n\n| Files | Size | - |/' \
       output.txt > output.md
 
 RUN tar -czvf /app/dist/frontend-bundle.tgz -C /app/dist/spa .
