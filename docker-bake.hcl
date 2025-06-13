@@ -10,10 +10,6 @@ variable "VERSION_DATE" {
     default = ""
 }
 
-variable "CI_TMP_DIR" {
-    default = "/tmp/webbuild"
-}
-
 target "fpm" {
     context = "backend"
     args = {
@@ -39,6 +35,17 @@ target "web" {
     }
 }
 
+target "web-bundle" {
+    context = "client"
+    target = "bundle"
+    args = {
+        VERSION = VERSION
+        VERSION_URL = VERSION_URL
+        VERSION_DATE = VERSION_DATE
+    }
+    platforms = ["local"]
+}
+
 target "default-labels" {
     labels = {
         "net.mesh-research.pilcrow.service" = "__service__"
@@ -60,7 +67,11 @@ target "ci" {
             },
             {
                 tgt = "web"
-                output = ["type=image,push=true", "type=local,dest=${CI_TMP_DIR}"]
+                output = ["type=image,push=true"]
+            },
+            {
+                tgt = "web-bundle"
+                output = ["build/bundle"]
             }
         ]
     }
@@ -104,6 +115,10 @@ target "release" {
         {
             tgt = "web"
             platforms = ["linux/amd64", "linux/arm64"]
+        },
+        {
+            tgt = "web-bundle"
+            platforms = ["local"]
         }]
     }
     name = "release-${item.tgt}"

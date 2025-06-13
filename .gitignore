@@ -49,3 +49,4 @@ backend/_lighthouse_ide_helper.php
 backend/programmatic-types.graphql
 backend/schema-directives.graphql
 helm/redis-commander.yaml
+build/

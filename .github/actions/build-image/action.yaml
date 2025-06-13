@@ -35,7 +35,6 @@ runs:
         VERSION_URL=https://github.com/${GITHUB_REPOSITORY}/commits/${GITHUB_SHA}
         VERSION_DATE=$(git show -s --format=%cI ${GITHUB_SHA})
         REPO=${GITHUB_REPOSITORY,,}
-        CI_TMP_DIR=${RUNNER_TEMP}/web
         mkdir -p $CI_TMP_DIR
         DOCKER_IMAGE_CACHE=ghcr.io/${REPO}/cache/__service__
         echo "VERSION=${VERSION}" >> "$GITHUB_ENV"
@@ -43,7 +42,6 @@ runs:
         echo "VERSION_DATE=${VERSION_DATE}" >> "$GITHUB_ENV"
         echo "REPO=${REPO}" >> "$GITHUB_ENV"
         echo "DOCKER_IMAGE_CACHE=${DOCKER_IMAGE_CACHE}" >> "$GITHUB_ENV"
-        echo "CI_TMP_DIR=${CI_TMP_DIR}" >> "$GITHUB_ENV"
         if [ "${{ inputs.target }}" == "release" ]; then
             echo "IMAGE_BASE=ghcr.io/${REPO}/__service__" >> "$GITHUB_ENV"
         else
@@ -102,29 +100,12 @@ runs:
         FPM_IMAGE="$(echo $METADATA | jq -r 'to_entries[] | select(.key|endswith("fpm")).value."image.name"')"
         echo "WEB_IMAGE=${WEB_IMAGE%%,*}" >> "$GITHUB_ENV"
         echo "FPM_IMAGE=${FPM_IMAGE%%,*}" >> "$GITHUB_ENV"
-    - name: Compress & Tar Frontend Assets
-      id: frontend-bundle
-      if: ${{ env.WEB_IMAGE != '' }}
-      shell: bash
-      run: |
-        echo "::group::Compress frontend assets"
-        FRONTEND_BUNDLE="$RUNNER_TEMP/frontend-bundle.tar.gz"
-        if [ "${{ inputs.target }}" == "release" ]; then
-          ASSETS_PATH="${{ env.CI_TMP_DIR }}/linux_amd64/var/www/html"
-        else
-          ASSETS_PATH="${{ env.CI_TMP_DIR }}/var/www/html"
-        fi
-        tar -czvf $FRONTEND_BUNDLE \
-          -C $ASSETS_PATH .
-        echo "bundle_file=$FRONTEND_BUNDLE" >> "$GITHUB_OUTPUT"
-        echo "assets_path=$ASSETS_PATH" >> "$GITHUB_OUTPUT"
-        echo "::endgroup::"
     - name: Upload Frontend Bundle as Github Artifact
       uses: actions/upload-artifact@v4
       if: ${{ env.WEB_IMAGE != '' }}
       with:
         name: frontend-bundle
-        path: ${{ steps.frontend-bundle.outputs.assets_path }}
+        path: build/bundle/spa/
     - name: Setup ORAS
       if: ${{ env.WEB_IMAGE != '' }}
       uses: oras-project/setup-oras@v1
@@ -136,4 +117,4 @@ runs:
         oras attach $WEB_IMAGE \
         --disable-path-validation \
         --artifact-type application/vnd.mesh.frontend-bundle.v1+tgz \
-        ${{ steps.frontend-bundle.outputs.bundle_file }}
+        build/bundle/frontend-bundle.tgz
