@@ -8,7 +8,8 @@ WORKDIR /app
 COPY package.json yarn.lock ./
 RUN NO_POSTINSTALL=1 yarn
 COPY . .
-RUN yarn quasar prepare && yarn build
+RUN yarn quasar prepare && \
+    yarn quasar build > >(tee output.txt) 2> >(tee errors.txt)
 
 RUN sed -i 's#"version": ""#"version": "${VERSION}"#g' /app/dist/spa/version.json && \
     sed -i 's#"versionUrl": ""#"versionUrl": "${VERSION_URL}"#g' /app/dist/spa/version.json && \
@@ -18,6 +19,7 @@ RUN tar -czvf /app/dist/frontend-bundle.tgz -C /app/dist/spa .
 
 FROM scratch AS bundle
 COPY --from=build-stage /app/dist /
+COPY --from=build-stage /app/output.txt /app/errors.txt /
 
 
 FROM nginx:latest
