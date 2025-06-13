@@ -27,7 +27,7 @@ RUN sed -i 's#"version": ""#"version": "${VERSION}"#g' /app/dist/spa/version.jso
       -e '/^ Build succeeded$/{n;N;d;}' \
       -e 's/^ ([a-zA-Z\ \/@-]+)\.\.\.\.* ([A-Za-z0-9\.|\/]+)$/| \1 | `\2` | /' \
       -e '/^ =.*$/d' \
-      -e 's/^ ╠.*$/<\/details>\n\n#### Total Sizes \n\n| Files | Size | - |/' \
+      -e 's/^ ╠.*$/<\/details>\n\n#### Total Sizes \n\n| Files | Size | - |\n| ----- | ----- | ----- |/' \
       output.txt > output.md
 
 RUN tar -czvf /app/dist/frontend-bundle.tgz -C /app/dist/spa .

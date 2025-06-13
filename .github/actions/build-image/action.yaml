@@ -114,7 +114,7 @@ runs:
       run: |
         echo '## Quasar Build Summary' >> "$GITHUB_STEP_SUMMARY"
         if [[ -s ${ERRORS_FILE} ]]; then
-          echo "> [!IMPORTANT]" > "$GITHUB_STEP_SUMMARY"
+          echo "> [!WARNING]" > "$GITHUB_STEP_SUMMARY"
           echo "> Quasar wrote to stderr during the build process." >> "$GITHUB_STEP_SUMMARY"
           echo '### Output from STDERR' >> "$GITHUB_STEP_SUMMARY"
           cat ${ERRORS_FILE} | ansi2html --no-header >> "$GITHUB_STEP_SUMMARY"
