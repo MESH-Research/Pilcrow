@@ -112,14 +112,14 @@ runs:
         OUTPUT_FILE: build/bundle/output.md
       shell: bash
       run: |
-        echo "## Quasar Build Summary" >> "$GITHUB_STEP_SUMMARY"
+        echo '## Quasar Build Summary' >> "$GITHUB_STEP_SUMMARY"
         if [[ -s ${ERRORS_FILE} ]]; then
           echo "> [!IMPORTANT]" > "$GITHUB_STEP_SUMMARY"
           echo "> Quasar wrote to stderr during the build process." >> "$GITHUB_STEP_SUMMARY"
           echo '### Output from STDERR' >> "$GITHUB_STEP_SUMMARY"
           cat ${ERRORS_FILE} | ansi2html --no-header >> "$GITHUB_STEP_SUMMARY"
         fi
-        echo '### Output from STDOUT' >> "$GITHUB_STEP_SUMMARY""
+        echo '### Output from STDOUT' >> "$GITHUB_STEP_SUMMARY"
         cat ${OUTPUT_FILE} >> "$GITHUB_STEP_SUMMARY"
 
     - name: Setup ORAS
