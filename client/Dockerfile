@@ -13,13 +13,20 @@ RUN yarn quasar prepare && \
 
 RUN sed -i 's#"version": ""#"version": "${VERSION}"#g' /app/dist/spa/version.json && \
     sed -i 's#"versionUrl": ""#"versionUrl": "${VERSION_URL}"#g' /app/dist/spa/version.json && \
-    sed -i 's#"versionDate": ""#"versionDate": "${VERSION_DATE}"#g' /app/dist/spa/version.json
+    sed -i 's#"versionDate": ""#"versionDate": "${VERSION_DATE}"#g' /app/dist/spa/version.json && \
+    sed -r \
+      -e 's/^ ║\s+([A-Za-z0-9\.\/\(\)\ -]+)║([A-Za-z0-9\. ]+)║([A-Za-z0-9\. -]+)║$/| \1 | \2 | \3 |/' \
+      -e 's/^ ╔.*$/\n#### Output Files \n /' \
+      -e 's/^ [╟].*$/| ------ | ------ | ------ |/g' \
+      -e '/^ ╚.*$/d' \
+      -e 's/^ ╠.*$/\n#### Total Sizes \n/' \
+      output.txt > output.md
 
 RUN tar -czvf /app/dist/frontend-bundle.tgz -C /app/dist/spa .
 
 FROM scratch AS bundle
 COPY --from=build-stage /app/dist /
-COPY --from=build-stage /app/output.txt /app/errors.txt /
+COPY --from=build-stage /app/output.txt /app/errors.txt /app/output.md /
 
 
 FROM nginx:latest
