@@ -35,7 +35,6 @@ runs:
         VERSION_URL=https://github.com/${GITHUB_REPOSITORY}/commits/${GITHUB_SHA}
         VERSION_DATE=$(git show -s --format=%cI ${GITHUB_SHA})
         REPO=${GITHUB_REPOSITORY,,}
-        mkdir -p $CI_TMP_DIR
         DOCKER_IMAGE_CACHE=ghcr.io/${REPO}/cache/__service__
         echo "VERSION=${VERSION}" >> "$GITHUB_ENV"
         echo "VERSION_URL=${VERSION_URL}" >> "$GITHUB_ENV"
