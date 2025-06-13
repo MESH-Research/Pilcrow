@@ -3,6 +3,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.33.0](https://github.com/MESH-Research/Pilcrow/compare/v0.32.1...v0.33.0) (2025-06-13)
+
+
+### Features
+
+* **api:** upgrade laravel framework to version 11 ([#2165](https://github.com/MESH-Research/Pilcrow/issues/2165)) ([d6c3dd2](https://github.com/MESH-Research/Pilcrow/commit/d6c3dd2cae5ab6727fe9bfd59ec39cb7ece0cc2c))
+* **deps:** upgrade laravel to version 12.x ([#2167](https://github.com/MESH-Research/Pilcrow/issues/2167)) ([03562d3](https://github.com/MESH-Research/Pilcrow/commit/03562d3c7aab53ce80d437bfd81d5115acdc9d86))
+
 ## [0.32.1](https://github.com/MESH-Research/Pilcrow/compare/v0.32.0...v0.32.1) (2025-06-11)
 
 
