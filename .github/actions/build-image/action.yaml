@@ -114,9 +114,9 @@ runs:
         if [[ -s ${ERRORS_FILE} ]]; then
           echo "> [!IMPORTANT]" > "$GITHUB_STEP_SUMMARY"
           echo "> Quasar Wrote to stderr during the build process." >> "$GITHUB_STEP_SUMMARY"
-          echo "```" >> "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
           cat ${ERRORS_FILE} >> "$GITHUB_STEP_SUMMARY"
-          echo "```" >> "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
         fi
         echo "### Quasar Build Output" >> "$GITHUB_STEP_SUMMARY"
         cat ${OUTPUT_FILE}" >> "$GITHUB_STEP_SUMMARY"
