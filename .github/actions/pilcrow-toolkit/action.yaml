@@ -5,14 +5,12 @@ inputs:
   token:
     description: "GitHub token to use for authentication"
     required: true
-    default: ${{ env.GITHUB_TOKEN }}
   target:
     description: "Docker Bake Target"
     required: false
   docker-metadata:
     description: "Docker metadata from bake action"
     required: false
-    default: ${{ env.DOCKER_METADATA_OUTPUT_JSON}}
   command:
     description: "Command to run in the Docker container"
     required: false
