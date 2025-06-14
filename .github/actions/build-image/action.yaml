@@ -114,7 +114,7 @@ runs:
       run: |
         WEB_IMAGE="$(echo $METADATA | jq -r 'to_entries[] | select(.key|endswith("web")).value."image.name"')"
         FPM_IMAGE="$(echo $METADATA | jq -r 'to_entries[] | select(.key|endswith("fpm")).value."image.name"')"
-        BUNDLE_EXISTS="$(if [[ ! -d "${BUNDLE_PATH}" ]]; then  && echo "${BUNDLE_PATH}"; else echo "")"
+        BUNDLE_EXISTS="$(if [[ ! -d "${BUNDLE_PATH}" ]]; then echo "${BUNDLE_PATH}"; else echo "")"
         echo "web-image=${WEB_IMAGE}" >> "$GITHUB_OUTPUT"
         echo "fpm-image=${FPM_IMAGE}" >> "$GITHUB_OUTPUT"
         echo "bundle-path=${BUNDLE_EXISTS}" >> "$GITHUB_OUTPUT"
