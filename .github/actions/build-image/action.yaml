@@ -109,26 +109,28 @@ runs:
       id: docker-output-metadata
       env:
         METADATA: ${{ steps.docker-bake.outputs.metadata }}
+        BUNDLE_PATH: build/web/bundle
       shell: bash
       run: |
         WEB_IMAGE="$(echo $METADATA | jq -r 'to_entries[] | select(.key|endswith("web")).value."image.name"')"
         FPM_IMAGE="$(echo $METADATA | jq -r 'to_entries[] | select(.key|endswith("fpm")).value."image.name"')"
+        BUNDLE_EXISTS="$([[ ! -d "${BUNDLE_PATH}" ]] && echo "${BUNDLE_PATH}" || echo "")]])"
         echo "web-image=${WEB_IMAGE}" >> "$GITHUB_OUTPUT"
         echo "fpm-image=${FPM_IMAGE}" >> "$GITHUB_OUTPUT"
+        echo "bundle-path=${BUNDLE_EXISTS}" >> "$GITHUB_OUTPUT"
     - name: Upload Frontend Bundle as Github Artifact
       uses: actions/upload-artifact@v4
+      if: ${{ steps.docker-output-metadata.outputs.bundle-path != '' }}
       with:
         name: frontend-bundle
-        path: build/web/bundle/spa/
+        path: ${{steps.docker-output-metadata.outputs.bundle-path}}/spa/
+        if-no-files-found: warn
     - name: Output Quasar Build Summary
+      if: ${{ steps.docker-output-metadata.outputs.bundle-path != '' }}
       env:
-        OUTPUT_PATH: build/web/bundle
+        OUTPUT_PATH: ${{ steps.docker-output-metadata.outputs.bundle-path }}
       shell: bash
       run: |
-        if [[ ! -d "${OUTPUT_PATH}" ]]; then
-          echo "No bundle directory found in ${OUTPUT_PATH}, skipping frontend bundle creation upload."]]
-          exit 0
-        fi
         echo '## Quasar Build Summary' >> "$GITHUB_STEP_SUMMARY"
         ERROR_FILE="${OUTPUT_PATH}/errors.txt"
         if [[ -s "${ERROR_FILE}" ]]; then
@@ -141,11 +143,11 @@ runs:
         cat "${OUTPUT_PATH}/output.md" >> "$GITHUB_STEP_SUMMARY"
     - shell: bash
       name: Attach Frontend Bundle to Docker Image
-      if: ${{ steps.docker-output-metadata.outputs.web-image != '' }}
+      if: ${{ steps.docker-output-metadata.outputs.web-image != '' && steps.docker-output-metadata.outputs.bundle-path != '' }}
       env:
         WEB_IMAGE: ${{ steps.docker-output-metadata.outputs.web-image }}
+        ARTIFACT_PATH: ${{ steps.docker-output-metadata.outputs.bundle-path }}/frontend-bundle.tgz
         ARTIFACT_TYPE: application/vnd.mesh.frontend-bundle.v1+tgz
-        ARTIFACT_PATH: build/web/bundle/frontend-bundle.tgz
       run: |
         oras login --username "${{ github.actor }}" --password "${{ inputs.token }}" ghcr.io
         oras attach $WEB_IMAGE \
