@@ -5,7 +5,7 @@ inputs:
   token:
     description: "GitHub token to use for authentication"
     required: true
-    default: ${{ secrets.GITHUB_TOKEN }}
+    default: ${{ env.GITHUB_TOKEN }}
   target:
     description: "Docker Bake Target"
     required: false
