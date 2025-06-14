@@ -1,0 +1,40 @@
+#!/bin/bash
+
+if [[ -z "${ARTIFACT_PARENT}" ]]; then
+
+    if [[ -z "${DOCKER_METADATA}" ]]; then
+        echo "Docker metadata is not set."
+        exit 0
+    fi
+
+    WEB_IMAGE="$(echo $DOCKER_METADATA | jq -r 'to_entries[] | select(.key|endswith("web")).value."image.name"')"
+
+    if [[ -z "${WEB_IMAGE}" ]]; then
+        echo "Web image not found in metadata."
+        exit 0
+    fi
+fi
+
+if [[ -z "${ARTIFACT_PATH}" ]]; then
+    BUNDLE_PATH=build/bundle/frontend-bundle.tgz
+    if [[ ! -d "${BUNDLE_PATH}" ]]; then
+        echo "Bundle path ${BUNDLE_PATH} does not exist."
+        exit 0
+    fi
+    ARTIFACT_PATH="${BUNDLE_PATH}"
+fi
+
+if [[ ! -r "${ARTIFACT_PATH}" ]]; then
+    echo "Artifact path ${ARTIFACT_PATH} does not exist or is not readable."
+    exit 0
+fi
+
+$ORAS_ACTOR="${ORAS_ACTOR:-$GITHUB_ACTOR}"
+$ORAS_TOKEN="${GITHUB_TOKEN}"
+$ARTIFACT_TYPE="${ARTIFACT_TYPE:-application/vnd.pilcrow.toolkit.bundle.v1+json}"
+
+oras login --username "${ORAS_ACTOR}" --password "${{ ORAS_TOKEN }}" ghcr.io
+oras attach "${ARTIFACT_PARENT} \
+    --disable-path-validation \
+    --artifact-type ${ARTIFACT_TYPE} \
+        "${ARTIFACT_PATH}"

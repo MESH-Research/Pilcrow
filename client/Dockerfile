@@ -3,6 +3,9 @@ ARG NODE_VERSION=20
 ARG VERSION
 ARG VERSION_URL
 ARG VERSION_DATE
+ARG STDOUT_FILE=output.txt
+ARG STDERR_FILE=errors.txt
+ARG STEP_SUMMARY_FILE=output.md
 FROM --platform=$BUILDPLATFORM node:${NODE_VERSION}-alpine AS base
 
 WORKDIR /app
@@ -21,8 +24,20 @@ RUN --mount=type=cache,target=/usr/local/share/.cache/yarn/v6 \
 
 RUN sed -i 's#"version": ""#"version": "${VERSION}"#g' /app/dist/spa/version.json && \
     sed -i 's#"versionUrl": ""#"versionUrl": "${VERSION_URL}"#g' /app/dist/spa/version.json && \
-    sed -i 's#"versionDate": ""#"versionDate": "${VERSION_DATE}"#g' /app/dist/spa/version.json && \
-    sed -r \
+    sed -i 's#"versionDate": ""#"versionDate": "${VERSION_DATE}"#g' /app/dist/spa/version.json
+
+# Generate a summary of the build step in markdown.
+RUN >>EOC
+    echo "## Quasar Build Summary" > "${STEP_SUMMARY_FILE}" && \
+
+    if [[ -s "${STDERR_FILE}" ]]; then
+      echo "| :warning:     | The build wrote to stderr during execution.  Check below for errors/warnings. |" >> "${STEP_SUMMARY_FILE}"
+      echo "|---------------|:------------------------------------------------------------------------------|" >> "${STEP_SUMMARY_FILE}"
+      echo "### STDERR Output" >> "${STEP_SUMMARY_FILE}"
+      cat "${STDERR_FILE}" | aha --no-header >> "${STEP_SUMMARY_FILE}"
+    fi
+    echo "### STDOUT Output" >> "${STEP_SUMMARY_FILE}"
+      sed -r \
       -e 's/^ ║\s+([A-Za-z0-9\.\/\(\)\ -]+)║([A-Za-z0-9\. ]+)║([A-Za-z0-9\. -]+)║$/| \1 | \2 | \3 |/' \
       -e 's/^ ╔.*$/\n<details> \n<summary>Output Files<\/summary> \n /'  \
       -e 's/^ [╟].*$/| ------ | ------ | ------ |/g' \
@@ -36,7 +51,8 @@ RUN sed -i 's#"version": ""#"version": "${VERSION}"#g' /app/dist/spa/version.jso
       -e 's/^ ([a-zA-Z\ \/@-]+)\.\.\.\.* ([A-Za-z0-9\.|\/]+)$/| \1 | `\2` | /' \
       -e '/^ =.*$/d' \
       -e 's/^ ╠.*$/<\/details>\n\n#### Total Sizes \n\n| Files | Size | - |\n| ----- | ----- | ----- |/' \
-      output.txt > output.md
+      "${STDOUT_FILE}" >> "${STEP_SUMMARY_FILE}"
+EOC
 
 RUN tar -czvf /app/dist/frontend-bundle.tgz -C /app/dist/spa .
 

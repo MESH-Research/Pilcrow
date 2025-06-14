@@ -90,54 +90,26 @@ runs:
           ./docker-bake.hcl
           ${{ steps.docker-input-metadata.outputs.bake-file }}
           ${{ steps.docker-registry-cache.outputs.bake-file }}
-    - name: Extract Image Registry/Tags from Metadata
-      id: docker-output-metadata
-      env:
-        METADATA: ${{ steps.docker-bake.outputs.metadata }}
-        BUNDLE_PATH: build/web/bundle
-      shell: bash
+    - shell: bash
       run: |
-        WEB_IMAGE="$(echo $METADATA | jq -r 'to_entries[] | select(.key|endswith("web")).value."image.name"')"
-        FPM_IMAGE="$(echo $METADATA | jq -r 'to_entries[] | select(.key|endswith("fpm")).value."image.name"')"
-        BUNDLE_EXISTS="$(if [[ -d "${BUNDLE_PATH}" ]]; then echo "${BUNDLE_PATH}"; else echo ""; fi)"
-        echo "web-image=${WEB_IMAGE}" >> "$GITHUB_OUTPUT"
-        echo "fpm-image=${FPM_IMAGE}" >> "$GITHUB_OUTPUT"
-        echo "bundle-path=${BUNDLE_EXISTS}" >> "$GITHUB_OUTPUT"
+        echo "${{ steps.docker-bake.outputs.metadata }}" > metadata-output.json }}
+    - uses: actions/upload-artifact@v4
+      if: ${{ inputs.target == 'ci' }}
+      with:
+        name: docker-metadata-${{ inputs.target }}
+        path: metadata-output.json
+    - name: Parse Docker Metadata Output
+      id: docker-meta-output
+      uses: ./.github/actions/pilcrow-toolkit
     - name: Upload Frontend Bundle as Github Artifact
       uses: actions/upload-artifact@v4
-      if: ${{ steps.docker-output-metadata.outputs.bundle-path != '' }}
+      if: ${{ steps.docker-meta.outputs.bundle-path != '' }}
       with:
         name: frontend-bundle
-        path: ${{steps.docker-output-metadata.outputs.bundle-path}}/spa/
+        path: ${{steps.docker-meta-output.outputs.bundle-path}}/spa/
         if-no-files-found: warn
-    - name: Output Quasar Build Summary
-      if: ${{ steps.docker-output-metadata.outputs.bundle-path != '' }}
-      env:
-        OUTPUT_PATH: ${{ steps.docker-output-metadata.outputs.bundle-path }}
-      shell: bash
+    - name: Attach Frontend Bundle to Docker Image
+      uses: ./.github/actions/pilcrow-toolkit
+      with:
+        command: attach-frontend-bundle
       run: |
-        echo '## Quasar Build Summary' >> "$GITHUB_STEP_SUMMARY"
-        ERROR_FILE="${OUTPUT_PATH}/errors.txt"
-        if [[ -s "${ERROR_FILE}" ]]; then
-          echo "> [!WARNING]" > "$GITHUB_STEP_SUMMARY"
-          echo "> Quasar wrote to stderr during the build process." >> "$GITHUB_STEP_SUMMARY"
-          echo '### Output from STDERR' >> "$GITHUB_STEP_SUMMARY"
-          cat "${ERROR_FILE}" | ansi2html --no-header >> "$GITHUB_STEP_SUMMARY"
-        fi
-        echo '### Output from STDOUT' >> "$GITHUB_STEP_SUMMARY"
-        cat "${OUTPUT_PATH}/output.md" >> "$GITHUB_STEP_SUMMARY"
-    - name: Setup ORAS
-      uses: oras-project/setup-oras@v1
-    - shell: bash
-      name: Attach Frontend Bundle to Docker Image
-      if: ${{ steps.docker-output-metadata.outputs.web-image != '' && steps.docker-output-metadata.outputs.bundle-path != '' }}
-      env:
-        WEB_IMAGE: ${{ steps.docker-output-metadata.outputs.web-image }}
-        ARTIFACT_PATH: ${{ steps.docker-output-metadata.outputs.bundle-path }}/frontend-bundle.tgz
-        ARTIFACT_TYPE: application/vnd.mesh.frontend-bundle.v1+tgz
-      run: |
-        oras login --username "${{ github.actor }}" --password "${{ inputs.token }}" ghcr.io
-        oras attach $WEB_IMAGE \
-        --disable-path-validation \
-        --artifact-type ${ARTIFACT_TYPE} \
-        "${ARTIFACT_PATH}"

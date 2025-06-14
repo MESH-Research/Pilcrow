@@ -5,10 +5,25 @@ inputs:
   token:
     description: "GitHub token to use for authentication"
     required: true
+    default: ${{ secrets.GITHUB_TOKEN }}
   target:
     description: "Docker Bake Target"
+    required: false
+  docker-metadata:
+    description: "Docker metadata from bake action"
+    required: false
+    default: ${{ env.DOCKER_METADATA_OUTPUT_JSON}}
   command:
     description: "Command to run in the Docker container"
+    required: false
+  artifact-type:
+    description: "Type of artifact to upload to ORAS"
+    required: false
+  artifact-name:
+    description: "Name of the artifact to upload to ORAS"
+    required: false
+  artifact-parent:
+    description: "Parent entity for the artifact to be attached to."
     required: false
 runs:
   using: "docker"
@@ -17,3 +32,8 @@ runs:
     - ${{ inputs.command }}
   env:
     TARGET: ${{ inputs.target }}
+    DOCKER_METADATA: ${{ inputs.docker-metadata }}
+    GITHUB_TOKEN: ${{ inputs.token }}
+    ARTIFACT_TYPE: ${{ inputs.artifact-type }}
+    ARTIFACT_NAME: ${{ inputs.artifact-name }}
+    ARTIFACT_PARENT: ${{ inputs.artifact-parent }}
