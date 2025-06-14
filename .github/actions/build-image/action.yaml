@@ -141,6 +141,8 @@ runs:
         fi
         echo '### Output from STDOUT' >> "$GITHUB_STEP_SUMMARY"
         cat "${OUTPUT_PATH}/output.md" >> "$GITHUB_STEP_SUMMARY"
+    - name: Setup ORAS
+      uses: oras-project/setup-oras@v1
     - shell: bash
       name: Attach Frontend Bundle to Docker Image
       if: ${{ steps.docker-output-metadata.outputs.web-image != '' && steps.docker-output-metadata.outputs.bundle-path != '' }}
