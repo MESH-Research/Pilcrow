@@ -7,16 +7,16 @@ FROM --platform=$BUILDPLATFORM node:${NODE_VERSION}-alpine AS base
 
 WORKDIR /app
 COPY package.json yarn.lock ./
-RUN --mount=type=cache,target=/usr/local/share/.cache/yarn/v6,id=yarn \
+RUN --mount=type=cache,target=/usr/local/share/.cache/yarn/v6 \
     NO_POSTINSTALL=1 \
     yarn --frozen-lockfile
 COPY . .
-RUN --mount=type=cache,target=/usr/local/share/.cache/yarn/v6,id=yarn \
+RUN --mount=type=cache,target=/usr/local/share/.cache/yarn/v6 \
     yarn quasar prepare
 
 FROM base AS build-stage
 
-RUN --mount=type=cache,target=/usr/local/share/.cache/yarn/v6,id=yarn \
+RUN --mount=type=cache,target=/usr/local/share/.cache/yarn/v6 \
     yarn quasar build > >(tee output.txt) 2> >(tee errors.txt)
 
 RUN sed -i 's#"version": ""#"version": "${VERSION}"#g' /app/dist/spa/version.json && \
@@ -46,7 +46,7 @@ COPY --from=build-stage /app/dist /app/output.txt /app/errors.txt /app/output.md
 
 FROM base AS unit-test
 
-RUN --mount=type=cache,target=/usr/local/share/.cache/yarn/v6,id=yarn \
+RUN --mount=type=cache,target=/usr/local/share/.cache/yarn/v6 \
     yarn test:unit:ci \
       --reporter=basic \
       --reporter=github-actions \

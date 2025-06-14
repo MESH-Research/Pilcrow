@@ -48,8 +48,24 @@ runs:
         fi
         sudo apt install -y colorized-logs
     - uses: docker/setup-buildx-action@v3
+      id: buildx
+    - name: Cache
+      uses: actions/cache@v3
+      id: docker-yarn-cache
+      with:
+        path: |
+          yarn-v6-cache
+        key: cache-${{ hashFiles('client/package.json', 'client/yarn.lock') }}
+    - name: inject cache into docker
+      uses: reproducible-containers/buildkit-cache-dance@v3.1.0
+      with:
+        cache-map: |
+          {
+            "yarn-v6-cache": "/usr/local/share/.cache/yarn/v6",
+          }
+        skip-extraction: ${{ steps.docker-yarn-cache.outputs.cache-hit }}
     - name: Docker Meta
-      id: docker-meta
+      id: docker-input-metadata
       uses: docker/metadata-action@v5
       with:
         images: ${{ env.IMAGE_BASE }}
@@ -59,7 +75,7 @@ runs:
           type=semver,pattern={{major}}.{{minor}}
           type=sha,enable=${{ inputs.target == 'ci'}}
     - uses: int128/docker-build-cache-config-action@v1
-      id: docker-cache
+      id: docker-registry-cache
       with:
         image: ${{ env.DOCKER_IMAGE_CACHE }}
     - name: Consolidate Docker Bake Files
@@ -67,70 +83,72 @@ runs:
       id: cp-bake-files
       run: |
         BAKEDIR=${RUNNER_TEMP}/pilcrow-bake
-        echo "directory=${BAKEDIR}/" >> "$GITHUB_OUTPUT"
+        echo "path=${BAKEDIR}/" >> "$GITHUB_OUTPUT"
         mkdir -p $BAKEDIR
         cp ./docker-bake.hcl \
-        ${{ steps.docker-cache.outputs.bake-file }} \
-        ${{ steps.docker-meta.outputs.bake-file }} \
+        ${{ steps.docker-registry-cache.outputs.bake-file }} \
+        ${{ steps.docker-input-metadata.outputs.bake-file }} \
         $BAKEDIR
     - name: Upload Docker Bake Files
       uses: actions/upload-artifact@v4
       with:
         name: docker-bake-src
-        path: ${{ steps.cp-bake-files.outputs.directory }}
+        path: ${{ steps.cp-bake-files.outputs.path }}
     - name: Build and push
       id: docker-bake
       uses: docker/bake-action@v6.8.0
-      if: ${{ steps.docker-meta.outputs.tags != ''}}
       with:
         source: .
         targets: ${{ inputs.target }}
         allow: fs.write=*
         files: |
           ./docker-bake.hcl
-          ${{ steps.docker-meta.outputs.bake-file }}
-          ${{ steps.docker-cache.outputs.bake-file }}
+          ${{ steps.docker-input-metadata.outputs.bake-file }}
+          ${{ steps.docker-registry-cache.outputs.bake-file }}
     - name: Extract Image Registry/Tags from Metadata
-      id: extract-image
+      id: docker-output-metadata
       env:
         METADATA: ${{ steps.docker-bake.outputs.metadata }}
       shell: bash
       run: |
         WEB_IMAGE="$(echo $METADATA | jq -r 'to_entries[] | select(.key|endswith("web")).value."image.name"')"
         FPM_IMAGE="$(echo $METADATA | jq -r 'to_entries[] | select(.key|endswith("fpm")).value."image.name"')"
-        echo "WEB_IMAGE=${WEB_IMAGE%%,*}" >> "$GITHUB_ENV"
-        echo "FPM_IMAGE=${FPM_IMAGE%%,*}" >> "$GITHUB_ENV"
+        echo "web-image=${WEB_IMAGE}" >> "$GITHUB_OUTPUT"
+        echo "fpm-image=${FPM_IMAGE}" >> "$GITHUB_OUTPUT"
     - name: Upload Frontend Bundle as Github Artifact
       uses: actions/upload-artifact@v4
-      if: ${{ env.WEB_IMAGE != '' }}
       with:
         name: frontend-bundle
-        path: build/bundle/spa/
+        path: build/web/bundle/spa/
     - name: Output Quasar Build Summary
       env:
-        ERRORS_FILE: build/bundle/errors.txt
-        OUTPUT_FILE: build/bundle/output.md
+        OUTPUT_PATH: build/web/bundle
       shell: bash
       run: |
+        if [[ ! -d "${OUTPUT_PATH}" ]]; then
+          echo "No bundle directory found in ${OUTPUT_PATH}, skipping frontend bundle creation upload."]]
+          exit 0
+        fi
         echo '## Quasar Build Summary' >> "$GITHUB_STEP_SUMMARY"
-        if [[ -s ${ERRORS_FILE} ]]; then
+        ERROR_FILE="${OUTPUT_PATH}/errors.txt"
+        if [[ -s "${ERROR_FILE}" ]]; then
           echo "> [!WARNING]" > "$GITHUB_STEP_SUMMARY"
           echo "> Quasar wrote to stderr during the build process." >> "$GITHUB_STEP_SUMMARY"
           echo '### Output from STDERR' >> "$GITHUB_STEP_SUMMARY"
-          cat ${ERRORS_FILE} | ansi2html --no-header >> "$GITHUB_STEP_SUMMARY"
+          cat "${ERROR_FILE}" | ansi2html --no-header >> "$GITHUB_STEP_SUMMARY"
         fi
         echo '### Output from STDOUT' >> "$GITHUB_STEP_SUMMARY"
-        cat ${OUTPUT_FILE} >> "$GITHUB_STEP_SUMMARY"
-
-    - name: Setup ORAS
-      if: ${{ env.WEB_IMAGE != '' }}
-      uses: oras-project/setup-oras@v1
+        cat "${OUTPUT_PATH}/output.md" >> "$GITHUB_STEP_SUMMARY"
     - shell: bash
       name: Attach Frontend Bundle to Docker Image
-      if: ${{ env.WEB_IMAGE != '' }}
+      if: ${{ steps.docker-output-metadata.outputs.web-image != '' }}
+      env:
+        WEB_IMAGE: ${{ steps.docker-output-metadata.outputs.web-image }}
+        ARTIFACT_TYPE: application/vnd.mesh.frontend-bundle.v1+tgz
+        ARTIFACT_PATH: build/web/bundle/frontend-bundle.tgz
       run: |
         oras login --username "${{ github.actor }}" --password "${{ inputs.token }}" ghcr.io
         oras attach $WEB_IMAGE \
         --disable-path-validation \
-        --artifact-type application/vnd.mesh.frontend-bundle.v1+tgz \
-        build/bundle/frontend-bundle.tgz
+        --artifact-type ${ARTIFACT_TYPE} \
+        "${ARTIFACT_PATH}"
