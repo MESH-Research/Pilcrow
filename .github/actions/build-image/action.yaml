@@ -112,4 +112,3 @@ runs:
       uses: ./.github/actions/pilcrow-toolkit
       with:
         command: attach-frontend-bundle
-      run: |
