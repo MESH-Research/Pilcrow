@@ -11,8 +11,13 @@ FROM alpine:3.10
 
 COPY --from=builder /usr/local/bin/aha /usr/local/bin/aha
 
+RUN apk add --no-cache \
+    git \
+    bash \
+    jq
+
 # Copies your code file from your action repository to the filesystem path `/` of the container
-COPY . .
+COPY entrypoint.sh commands /
 
 # Code file to execute when the docker container starts up (`entrypoint.sh`)
 ENTRYPOINT ["/entrypoint.sh"]
