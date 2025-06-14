@@ -27,26 +27,11 @@ outputs:
 runs:
   using: "composite"
   steps:
-    - name: Pre-build setup
-      id: tagger
-      shell: bash
-      run: |
-        VERSION=$(git describe --tags --match "v*")
-        VERSION_URL=https://github.com/${GITHUB_REPOSITORY}/commits/${GITHUB_SHA}
-        VERSION_DATE=$(git show -s --format=%cI ${GITHUB_SHA})
-        REPO=${GITHUB_REPOSITORY,,}
-        DOCKER_IMAGE_CACHE=ghcr.io/${REPO}/cache/__service__
-        echo "VERSION=${VERSION}" >> "$GITHUB_ENV"
-        echo "VERSION_URL=${VERSION_URL}" >> "$GITHUB_ENV"
-        echo "VERSION_DATE=${VERSION_DATE}" >> "$GITHUB_ENV"
-        echo "REPO=${REPO}" >> "$GITHUB_ENV"
-        echo "DOCKER_IMAGE_CACHE=${DOCKER_IMAGE_CACHE}" >> "$GITHUB_ENV"
-        if [ "${{ inputs.target }}" == "release" ]; then
-            echo "IMAGE_BASE=ghcr.io/${REPO}/__service__" >> "$GITHUB_ENV"
-        else
-            echo "IMAGE_BASE=${DOCKER_IMAGE_CACHE}" >> "$GITHUB_ENV"
-        fi
-        sudo apt install -y colorized-logs
+    - uses: ./.github/actions/pilcrow-toolkit
+      id: setup
+      with:
+        target: ${{ inputs.target }}
+        command: setup.sh
     - uses: docker/setup-buildx-action@v3
       id: buildx
     - name: Cache
@@ -68,7 +53,7 @@ runs:
       id: docker-input-metadata
       uses: docker/metadata-action@v5
       with:
-        images: ${{ env.IMAGE_BASE }}
+        images: ${{ steps.setup.outputs.image-template }}
         tags: |
           type=edge
           type=semver,pattern={{version}}
@@ -77,7 +62,7 @@ runs:
     - uses: int128/docker-build-cache-config-action@v1
       id: docker-registry-cache
       with:
-        image: ${{ env.DOCKER_IMAGE_CACHE }}
+        image: ${{ steps.setup.outputs.docker-registry-cache }}
     - name: Consolidate Docker Bake Files
       shell: bash
       id: cp-bake-files

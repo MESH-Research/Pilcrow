@@ -1,0 +1,17 @@
+name: pilcrow-toolkit
+description: |
+  Toolkit for Pilcrow CI and CD workflows
+inputs:
+  token:
+    description: "GitHub token to use for authentication"
+    required: true
+  target:
+    description: "Docker Bake Target"
+  command:
+    description: "Command to run in the Docker container"
+    required: false
+runs:
+  using: "docker"
+  image: "Dockerfile"
+  env:
+    TARGET: ${{ inputs.target }}
