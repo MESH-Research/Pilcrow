@@ -55,13 +55,13 @@ runs:
       with:
         path: |
           yarn-v6-cache
-        key: cache-${{ hashFiles('client/package.json', 'client/yarn.lock') }}
+        key: cache-yarn-${{ hashFiles('client/package.json', 'client/yarn.lock') }}
     - name: inject cache into docker
       uses: reproducible-containers/buildkit-cache-dance@v3.1.0
       with:
         cache-map: |
           {
-            "yarn-v6-cache": "/usr/local/share/.cache/yarn/v6",
+            "yarn-v6-cache": "/usr/local/share/.cache/yarn/v6"
           }
         skip-extraction: ${{ steps.docker-yarn-cache.outputs.cache-hit }}
     - name: Docker Meta
