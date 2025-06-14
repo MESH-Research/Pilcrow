@@ -1,14 +1,22 @@
-FROM --platform=$BUILDPLATFORM node:20-alpine AS build-stage
+ARG NGINX_VERSION=1.27.5-bookworm
+ARG NODE_VERSION=20
 ARG VERSION
 ARG VERSION_URL
 ARG VERSION_DATE
+FROM --platform=$BUILDPLATFORM node:${NODE_VERSION}-alpine AS base
 
 WORKDIR /app
-
 COPY package.json yarn.lock ./
-RUN NO_POSTINSTALL=1 yarn
+RUN --mount=type=cache,target=/usr/local/share/.cache/yarn/v6,id=yarn \
+    NO_POSTINSTALL=1 \
+    yarn --frozen-lockfile
 COPY . .
-RUN yarn quasar prepare && \
+RUN --mount=type=cache,target=/usr/local/share/.cache/yarn/v6,id=yarn \
+    yarn quasar prepare
+
+FROM base AS build-stage
+
+RUN --mount=type=cache,target=/usr/local/share/.cache/yarn/v6,id=yarn \
     yarn quasar build > >(tee output.txt) 2> >(tee errors.txt)
 
 RUN sed -i 's#"version": ""#"version": "${VERSION}"#g' /app/dist/spa/version.json && \
@@ -33,11 +41,21 @@ RUN sed -i 's#"version": ""#"version": "${VERSION}"#g' /app/dist/spa/version.jso
 RUN tar -czvf /app/dist/frontend-bundle.tgz -C /app/dist/spa .
 
 FROM scratch AS bundle
-COPY --from=build-stage /app/dist /
-COPY --from=build-stage /app/output.txt /app/errors.txt /app/output.md /
+COPY --from=build-stage /app/dist /app/output.txt /app/errors.txt /app/output.md /
 
 
-FROM nginx:latest
+FROM base AS unit-test
+
+RUN --mount=type=cache,target=/usr/local/share/.cache/yarn/v6,id=yarn \
+    yarn test:unit:ci \
+      --reporter=basic \
+      --reporter=github-actions \
+      > >(tee /output.txt) 2> >(tee /errors.txt)
+
+FROM scratch AS test-results
+COPY --from=unit-test /output.txt /errors.txt /
+
+FROM nginx:${NGINX_VERSION} AS nginx
 
 COPY --from=build-stage /app/dist/spa /var/www/html
 COPY .docker/default.conf.template /etc/nginx/templates/default.conf.template

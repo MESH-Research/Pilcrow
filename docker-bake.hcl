@@ -35,6 +35,20 @@ target "web" {
     }
 }
 
+target "web-test" {
+    inherits = ["web"]
+    target = "unit-test"
+    platforms = [ "local" ]
+    output = ["type=cacheonly"]
+}
+
+target "web-test-results" {
+    inherits = ["web"]
+    target = "test-results"
+    platforms = ["local"]
+    output = ["build/web/test-results"]
+}
+
 target "web-bundle" {
     context = "client"
     target = "bundle"
@@ -71,7 +85,7 @@ target "ci" {
             },
             {
                 tgt = "web-bundle"
-                output = ["build/bundle"]
+                output = ["build/web/bundle"]
             }
         ]
     }
