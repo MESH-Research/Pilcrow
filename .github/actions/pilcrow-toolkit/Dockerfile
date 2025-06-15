@@ -23,7 +23,7 @@ RUN apk add --no-cache \
     jq
 
 RUN curl -Lo oras.tgz "https://github.com/oras-project/oras/releases/download/v${ORAS_VERSION}/oras_${ORAS_VERSION}_${TARGETOS}_${TARGETARCH}.tar.gz" && \
-    tar -zxf oras.tgz oras && \
+    tar -xvf oras.tgz oras && \
     mv oras /usr/local/bin/ && \
     rm -rf oras.tgz
 
