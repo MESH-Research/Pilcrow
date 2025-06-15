@@ -60,10 +60,6 @@ EOC
 
 RUN --mount=type=cache,target=/tmp/output tar -czvf /tmp/output/frontend-bundle.tgz -C /app/dist/spa .
 
-FROM scratch AS bundle
-COPY --from=build-stage --mount=type=cache,target=/tmp/output /tmp/output /
-
-
 FROM base AS unit-test
 
 RUN --mount=type=cache,target=/usr/local/share/.cache/yarn/v6 \

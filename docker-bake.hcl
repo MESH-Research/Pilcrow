@@ -82,10 +82,6 @@ target "ci" {
             {
                 tgt = "web"
                 output = ["type=image,push=true"]
-            },
-            {
-                tgt = "web-bundle"
-                output = ["build/web/bundle"]
             }
         ]
     }
