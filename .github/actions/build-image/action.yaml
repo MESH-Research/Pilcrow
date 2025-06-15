@@ -92,7 +92,7 @@ runs:
           ${{ steps.docker-registry-cache.outputs.bake-file }}
     - shell: bash
       run: |
-        echo "${{ steps.docker-bake.outputs.metadata }}" > metadata-output.json }}
+        echo "${{ steps.docker-bake.outputs.metadata }}" > metadata-output.json
     - uses: actions/upload-artifact@v4
       if: ${{ inputs.target == 'ci' }}
       with:
@@ -101,6 +101,9 @@ runs:
     - name: Parse Docker Metadata Output
       id: docker-meta-output
       uses: ./.github/actions/pilcrow-toolkit
+      with:
+        command: parse-docker-metadata
+        docker-metadata: ${{ steps.docker-bake.outputs.metadata }}
     - name: Upload Frontend Bundle as Github Artifact
       uses: actions/upload-artifact@v4
       if: ${{ steps.docker-meta.outputs.bundle-path != '' }}
@@ -112,3 +115,4 @@ runs:
       uses: ./.github/actions/pilcrow-toolkit
       with:
         command: attach-frontend-bundle
+        docker-metadata: ${{ steps.docker-bake.outputs.metadata }}
