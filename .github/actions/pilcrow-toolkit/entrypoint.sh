@@ -1,7 +1,7 @@
 #!/bin/sh
 
 COMMAND="/commands/$1"
-
+git config --global --add safe.directory $(pwd)
 set -e
 
 if [  ! -f "${COMMAND}" ]; then

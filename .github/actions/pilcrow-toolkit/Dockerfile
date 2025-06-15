@@ -29,8 +29,6 @@ RUN curl -Lo oras.tar.gz https://github.com/oras-project/oras/releases/download/
 
 WORKDIR /github/workspace
 
-RUN git config --global --add safe.directory /github/workspace
-
 # Copies your code file from your action repository to the filesystem path `/` of the container
 COPY entrypoint.sh /
 
