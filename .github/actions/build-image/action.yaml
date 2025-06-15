@@ -114,5 +114,5 @@ runs:
     - name: Attach Frontend Bundle to Docker Image
       uses: ./.github/actions/pilcrow-toolkit
       with:
-        command: attach-frontend-bundle
+        command: oras-attach-frontend-bundle
         docker-metadata: ${{ steps.docker-bake.outputs.metadata }}
