@@ -1,9 +1,6 @@
 ARG GCC_VERSION=15.1.0
-ARG ORAS_VERSION=1.2.2
-ARG TARGETOS
-ARG TARGETARCH
-
 FROM gcc:${GCC_VERSION} AS builder
+
 
 WORKDIR /src
 
@@ -13,6 +10,9 @@ RUN make && make install
 
 
 FROM node:22-alpine
+ARG ORAS_VERSION=1.2.2
+ARG TARGETOS
+ARG TARGETARCH
 
 COPY --from=builder /usr/local/bin/aha /usr/local/bin/aha
 
