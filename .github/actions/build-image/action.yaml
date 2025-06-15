@@ -118,7 +118,7 @@ runs:
         echo "${{ steps.docker-bake.outputs.metadata }}" > metadata-output.json
         docker buildx build -f ${SCRATCH}/Dancefile.extract --tag output:extract --load ${SCRATCH}
         docker rm -f cache-container && docker create -ti --name cache-container output:extract
-        docker cp -L cache-container:/var/dance-cache %{{SCRATCH}}/dance-cache
+        docker cp -L cache-container:/var/dance-cache ${SCRATCH}/dance-cache
         ls -la $SCRATCH/dance-cache
 
     - uses: actions/upload-artifact@v4
