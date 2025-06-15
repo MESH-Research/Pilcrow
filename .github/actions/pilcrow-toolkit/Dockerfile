@@ -22,10 +22,10 @@ RUN apk add --no-cache \
     bash \
     jq
 
-RUN curl -Lo oras.tgz "https://github.com/oras-project/oras/releases/download/v${ORAS_VERSION}/oras_${ORAS_VERSION}_${TARGETOS}_${TARGETARCH}.tar.gz" && \
-    tar -xvf oras.tgz oras && \
+RUN curl -Lo oras.tar.gz "https://github.com/oras-project/oras/releases/download/v${ORAS_VERSION}/oras_${ORAS_VERSION}_${TARGETOS}_${TARGETARCH}.tar.gz" && \
+    tar -xvf oras.tar.gz oras && \
     mv oras /usr/local/bin/ && \
-    rm -rf oras.tgz
+    rm -rf oras.tar.gz
 
 WORKDIR /
 # Copies your code file from your action repository to the filesystem path `/` of the container
