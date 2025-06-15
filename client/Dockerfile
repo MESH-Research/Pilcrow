@@ -28,8 +28,7 @@ RUN sed -i 's#"version": ""#"version": "${VERSION}"#g' /app/dist/spa/version.jso
 
 # Generate a summary of the build step in markdown.
 RUN >>EOC
-    echo "## Quasar Build Summary" > "${STEP_SUMMARY_FILE}" && \
-
+    echo "## Quasar Build Summary" > "${STEP_SUMMARY_FILE}"
     if [[ -s "${STDERR_FILE}" ]]; then
       echo "| :warning:     | The build wrote to stderr during execution.  Check below for errors/warnings. |" >> "${STEP_SUMMARY_FILE}"
       echo "|---------------|:------------------------------------------------------------------------------|" >> "${STEP_SUMMARY_FILE}"
@@ -37,7 +36,7 @@ RUN >>EOC
       cat "${STDERR_FILE}" | aha --no-header >> "${STEP_SUMMARY_FILE}"
     fi
     echo "### STDOUT Output" >> "${STEP_SUMMARY_FILE}"
-      sed -r \
+    sed -r \
       -e 's/^ ║\s+([A-Za-z0-9\.\/\(\)\ -]+)║([A-Za-z0-9\. ]+)║([A-Za-z0-9\. -]+)║$/| \1 | \2 | \3 |/' \
       -e 's/^ ╔.*$/\n<details> \n<summary>Output Files<\/summary> \n /'  \
       -e 's/^ [╟].*$/| ------ | ------ | ------ |/g' \
