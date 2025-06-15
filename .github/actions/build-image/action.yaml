@@ -7,6 +7,10 @@ inputs:
     default: "ci"
   token:
     description: "GitHub token to use for authentication"
+  push:
+    description: "Push the built images to the registry"
+    required: false
+    default: "true"
 outputs:
   version:
     description: "Version of the package that was built"
@@ -68,6 +72,7 @@ runs:
     - name: Consolidate Docker Bake Files
       shell: bash
       id: cp-bake-files
+      if: ${{ runner.debug == 1}}
       run: |
         BAKEDIR=${RUNNER_TEMP}/pilcrow-bake
         echo "path=${BAKEDIR}/" >> "$GITHUB_OUTPUT"
@@ -78,12 +83,15 @@ runs:
         $BAKEDIR
     - name: Upload Docker Bake Files
       uses: actions/upload-artifact@v4
+      if: ${{ runner.debug == 1 }}
       with:
         name: docker-bake-src-${{ inputs.target }}
         path: ${{ steps.cp-bake-files.outputs.path }}
-    - name: Build and push
+    - name: Execute Docker Bake
       id: docker-bake
       uses: docker/bake-action@v6.8.0
+      env:
+        PUSH: ${{ inputs.push }}
       with:
         source: .
         targets: ${{ inputs.target }}
@@ -113,7 +121,7 @@ runs:
         ls -la $SCRATCH/dance-cache
 
     - uses: actions/upload-artifact@v4
-      if: ${{ inputs.target == 'ci' }}
+      if: ${{ runner.debug == 1 }}
       with:
         name: docker-metadata-${{ inputs.target }}
         path: metadata-output.json

@@ -10,6 +10,10 @@ variable "VERSION_DATE" {
     default = ""
 }
 
+variable "PUSH" {
+    default = false
+}
+
 target "fpm" {
     context = "backend"
     args = {
@@ -77,11 +81,11 @@ target "ci" {
         item = [
             {
                 tgt = "fpm"
-                output = ["type=image,push=true"]
+                output = ["type=image,push=${PUSH}"]
             },
             {
                 tgt = "web"
-                output = ["type=image,push=true"]
+                output = ["type=image,push=${PUSH}"]
             }
         ]
     }
