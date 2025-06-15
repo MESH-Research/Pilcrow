@@ -58,10 +58,10 @@ EOC
 
 
 
-RUN --mount=type=cache,target=/tmp/output tar -czvf /app/dist/frontend-bundle.tgz -C /app/dist/spa .
+RUN --mount=type=cache,target=/tmp/output tar -czvf /tmp/output/frontend-bundle.tgz -C /app/dist/spa .
 
 FROM scratch AS bundle
-COPY --from=build-stage /app/dist /app/output.txt /app/errors.txt /app/output.md /
+COPY --from=build-stage --mount=type=cache,target=/tmp/output /tmp/output /
 
 
 FROM base AS unit-test
