@@ -41,6 +41,8 @@ runs:
         path: |
           ${RUNNER_TEMP}/yarn-cache
         key: cache-yarn-${{ hashFiles('client/package.json', 'client/yarn.lock') }}
+        restore-keys: |
+          cache-yarn-
     - name: inject cache into docker
       uses: reproducible-containers/buildkit-cache-dance@v3.1.0
       with:
