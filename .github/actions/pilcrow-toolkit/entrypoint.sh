@@ -1,14 +1,21 @@
-#!/bin/bash
+#!/bin/sh
 
-CMD="commands/$1"
+COMMAND="/commands/$1"
 
 set -e
 
-if [ ! -x "$CMD" ]; then
+if [  ! -f "${COMMAND}" ]; then
+    COMMAND_LIST=$(ls -1 /commands | tr '\n' ' ')
+
     echo "Unknown command: ${1}"
-    echo "Available commands: $(ls commands/)"
+    echo "Available commands: ${COMMAND_LIST}"
+    exit 1
+fi
+
+if [ ! -x "${COMMAND}" ]; then
+    echo "Command ${COMMAND} is not executable."
     exit 1
 fi
 
 shift
-exec $CMD ${@}
+exec $COMMAND ${@}
