@@ -22,7 +22,7 @@ ARG STEP_SUMMARY_FILE=${OUTPUT_PATH}/output.md
 
 
 RUN
-  --mount=type=cache,target=/tmp/output
+  --mount=type=cache,target=/tmp/output \
   --mount=type=cache,target=/usr/local/share/.cache/yarn/v6 \
     yarn quasar build > >(tee ${STDOUT_FILE}) 2> >(tee ${STDERR_FILE})
 
