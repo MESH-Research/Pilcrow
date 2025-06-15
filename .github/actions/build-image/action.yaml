@@ -94,7 +94,24 @@ runs:
           ${{ steps.docker-registry-cache.outputs.bake-file }}
     - shell: bash
       run: |
+        SCRATCH=${RUNNER_TEMP}/scratch
+        CONTAINER_TARGET=/tmp/output
+        date --iso=ns | tee ${SCRATCH}/buildstamp
+        cat > ${SCRATCH}/Dancefile.extract <<EOF
+        FROM busybox:1
+        COPY buildstamp buildstamp
+        RUN --mount=type=cache,target=${CONTAINER_TARGET} \
+            mkdir -p /var/dance-cache/ \
+            && cp -p -R ${CONTAINER_TARGET}/. /var/dance-cache/ || true
+        EOF
+        cat ${SCRATCH}/Dancefile.extract
+
         echo "${{ steps.docker-bake.outputs.metadata }}" > metadata-output.json
+        docker buildx build -f ${SCRATCH}/Dancefile.extract --tag output:extract --load ${SCRATCH}
+        docker rm -f cache-container && docker create -ti --name cache-container output:extract
+        docker cp -L cache-container:/var/dance-cache - | tar -H posix -x -C ${{ inputs.scratch-dir }}
+        ls -la $SCRATCH/dance-cache
+
     - uses: actions/upload-artifact@v4
       if: ${{ inputs.target == 'ci' }}
       with:

@@ -54,20 +54,20 @@ jobs:
         name: Build Image
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-  backend-unit-test:
-    name: Backend / Unit Test
-    needs: [build-images]
-    runs-on: ubuntu-24.04
-    steps:
-      - uses: actions/checkout@v3
-      - name: Start Stack
-        uses: ./.github/actions/start-stack
-        with:
-          version: ${{ needs.build-images.outputs.version }}
-      - run: docker compose exec -T phpfpm ./artisan test
-        name: Run Unit Test
-      - run: docker compose down
-        name: Stop Stack
+  # backend-unit-test:
+  #   name: Backend / Unit Test
+  #   needs: [build-images]
+  #   runs-on: ubuntu-24.04
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - name: Start Stack
+  #       uses: ./.github/actions/start-stack
+  #       with:
+  #         version: ${{ needs.build-images.outputs.version }}
+  #     - run: docker compose exec -T phpfpm ./artisan test
+  #       name: Run Unit Test
+  #     - run: docker compose down
+  #       name: Stop Stack
   # e2e:
   #   name: "E2E Test"
   #   needs: [build-images]

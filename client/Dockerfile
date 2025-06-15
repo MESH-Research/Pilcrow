@@ -3,31 +3,35 @@ ARG NODE_VERSION=20
 ARG VERSION
 ARG VERSION_URL
 ARG VERSION_DATE
-ARG STDOUT_FILE=output.txt
-ARG STDERR_FILE=errors.txt
-ARG STEP_SUMMARY_FILE=output.md
 FROM --platform=$BUILDPLATFORM node:${NODE_VERSION}-alpine AS base
 
 WORKDIR /app
 COPY package.json yarn.lock ./
 RUN --mount=type=cache,target=/usr/local/share/.cache/yarn/v6 \
-    NO_POSTINSTALL=1 \
-    yarn --frozen-lockfile
+NO_POSTINSTALL=1 \
+yarn --frozen-lockfile
 COPY . .
 RUN --mount=type=cache,target=/usr/local/share/.cache/yarn/v6 \
-    yarn quasar prepare
+yarn quasar prepare
 
 FROM base AS build-stage
+ARG OUTPUT_PATH=/tmp/output
+ARG STDOUT_FILE=${OUTPUT_PATH}/output.txt
+ARG STDERR_FILE=${OUTPUT_PATH}errors.txt
+ARG STEP_SUMMARY_FILE=${OUTPUT_PATH}/output.md
 
-RUN --mount=type=cache,target=/usr/local/share/.cache/yarn/v6 \
-    yarn quasar build > >(tee output.txt) 2> >(tee errors.txt)
+
+RUN
+  --mount=type=cache,target=/tmp/output
+  --mount=type=cache,target=/usr/local/share/.cache/yarn/v6 \
+    yarn quasar build > >(tee ${STDOUT_FILE}) 2> >(tee ${STDERR_FILE})
 
 RUN sed -i 's#"version": ""#"version": "${VERSION}"#g' /app/dist/spa/version.json && \
     sed -i 's#"versionUrl": ""#"versionUrl": "${VERSION_URL}"#g' /app/dist/spa/version.json && \
     sed -i 's#"versionDate": ""#"versionDate": "${VERSION_DATE}"#g' /app/dist/spa/version.json
 
 # Generate a summary of the build step in markdown.
-RUN <<EOC
+RUN --mount=type=cache,target=/tmp/output <<EOC
     echo "## Quasar Build Summary" > "${STEP_SUMMARY_FILE}"
     if [[ -s "${STDERR_FILE}" ]]; then
       echo "| :warning:     | The build wrote to stderr during execution.  Check below for errors/warnings. |" >> "${STEP_SUMMARY_FILE}"
@@ -53,7 +57,9 @@ RUN <<EOC
       "${STDOUT_FILE}" >> "${STEP_SUMMARY_FILE}"
 EOC
 
-RUN tar -czvf /app/dist/frontend-bundle.tgz -C /app/dist/spa .
+
+
+RUN --mount=type=cache,target=/tmp/output tar -czvf /app/dist/frontend-bundle.tgz -C /app/dist/spa .
 
 FROM scratch AS bundle
 COPY --from=build-stage /app/dist /app/output.txt /app/errors.txt /app/output.md /
