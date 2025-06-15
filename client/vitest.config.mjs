@@ -13,22 +13,22 @@ export default defineConfig({
       // Matches vitest tests in any subfolder of 'src' or into 'test/vitest/__tests__'
       // Matches all files with extension 'js', 'jsx', 'ts' and 'tsx'
       "src/**/*.vitest.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}",
-      "test/vitest/__tests__/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}",
-    ],
+      "test/vitest/__tests__/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}"
+    ]
   },
   plugins: [
     vue({
-      template: { transformAssetUrls },
+      template: { transformAssetUrls }
     }),
     quasar({
-      sassVariables: "src/quasar-variables.scss",
+      sassVariables: "src/quasar-variables.scss"
     }),
-    tsconfigPaths(),
+    tsconfigPaths()
   ],
   resolve: {
     alias: {
       src: resolve(__dirname, "src"),
-      app: resolve(__dirname, "./"),
-    },
-  },
+      app: resolve(__dirname, "./")
+    }
+  }
 })

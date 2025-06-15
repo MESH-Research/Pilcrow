@@ -1,0 +1,11 @@
+#!/bin/bash
+
+
+BUNDLE_EXISTS="$(if [[ -d "${BUNDLE_PATH}" ]]; then echo "${BUNDLE_PATH}"; else echo ""; fi)"
+echo "web-image=${WEB_IMAGE}" >> "$GITHUB_OUTPUT"
+echo "fpm-image=${FPM_IMAGE}" >> "$GITHUB_OUTPUT"
+echo "bundle-path=${BUNDLE_EXISTS}" >> "$GITHUB_OUTPUT"
+
+if [ "${BUNDLE_EXISTS}" != "" ]; then
+    cat "${BUNDLE_EXISTS}/output.md" >> "$GITHUB_STEP_SUMMARY"
+fi
