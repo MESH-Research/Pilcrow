@@ -10,7 +10,7 @@ ARG PHP_EXTS="bcmath pdo_mysql pcntl zip"
 ARG PHP_PECL_EXTS="redis"
 ENV COMPOSER_HOME=/tmp/composer
 
-RUN  apt update && apt install -y openssl ca-certificates libzip-dev libaio1 libncurses6 libnuma1 libxml2-dev git libfcgi-bin sqlite3 \
+RUN  apt update && apt install -y openssl ca-certificates bash libzip-dev libaio1 libncurses6 libnuma1 libxml2-dev git libfcgi-bin sqlite3 \
   && docker-php-ext-install -j$(nproc) ${PHP_EXTS} \
   && pecl install ${PHP_PECL_EXTS} \
   && docker-php-ext-enable ${PHP_PECL_EXTS} \
