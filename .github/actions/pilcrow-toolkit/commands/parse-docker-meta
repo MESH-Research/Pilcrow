@@ -27,7 +27,7 @@ docker buildx build -f ${SCRATCH}/Dancefile.extract --tag output:extract --load 
 echo "Creating Cache Extractor"
 docker rm -f cache-container && docker create -ti --name cache-container output:extract
 echo "Copying Cache from Extractor"
-docker cp -L cache-container:/var/dance-cache ${CACHE_OUTPUT}/
+docker cp -L cache-container:/var/dance-cache/ ${CACHE_OUTPUT}/
 echo "$(ls -1 ${CACHE_OUTPUT}/ | wc -l) files copied from the cache extractor."
 ls -la ${CACHE_OUTPUT}/
 
@@ -42,9 +42,9 @@ fi
 if [[ -r "${CACHE_OUTPUT}/output.md" ]]; then
     echo "Writing markdown step summary."
     cat "${CACHE_OUTPUT}/output.md" >> "$GITHUB_OUTPUT"
-else if [[ -r "${CACHE_OUTPUT}/output.txt" ]]; then
+elif [[ -r "${CACHE_OUTPUT}/output.txt" ]]; then
     echo "Writing text to step output."
     cat "${CACHE_OUTPUT}/output.txt" >> "$GITHUB_OUTPUT"
-else
+else;
     echo "No output file found in cache."
 fi
