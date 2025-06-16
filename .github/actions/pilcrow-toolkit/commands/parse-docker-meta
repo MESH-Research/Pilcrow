@@ -1,11 +1,50 @@
 #!/bin/bash
+WEB_IMAGE="$(echo $DOCKER_METADATA | jq -r 'to_entries[] | select(.key|endswith("web")).value."image.name"')"
 
+# Check if anything was written to the output cache directory during the bake command.
+SCRATCH=/tmp/scratch
+CACHE_OUTPUT=/github/home/scratch
+CONTAINER_TARGET=/tmp/output
 
-BUNDLE_EXISTS="$(if [[ -d "${BUNDLE_PATH}" ]]; then echo "${BUNDLE_PATH}"; else echo ""; fi)"
-echo "web-image=${WEB_IMAGE}" >> "$GITHUB_OUTPUT"
-echo "fpm-image=${FPM_IMAGE}" >> "$GITHUB_OUTPUT"
-echo "bundle-path=${BUNDLE_EXISTS}" >> "$GITHUB_OUTPUT"
+mkdir -p ${SCRATCH}
+mkdir -p ${CACHE_OUTPUT}
 
-if [ "${BUNDLE_EXISTS}" != "" ]; then
-    cat "${BUNDLE_EXISTS}/output.md" >> "$GITHUB_STEP_SUMMARY"
+date --iso=ns | tee ${SCRATCH}/buildstamp
+
+cat > ${SCRATCH}/Dancefile.extract <<EOF
+FROM busybox:1
+COPY buildstamp buildstamp
+RUN --mount=type=cache,target=${CONTAINER_TARGET} \
+    mkdir -p /var/dance-cache/ \
+    && cp -p -R ${CONTAINER_TARGET}/. /var/dance-cache/ || true
+EOF
+echo "-------- Dancefile.extract --------"
+cat ${SCRATCH}/Dancefile.extract
+echo "-----------------------------------"
+echo
+echo "Building Cache Extractor"
+docker buildx build -f ${SCRATCH}/Dancefile.extract --tag output:extract --load ${SCRATCH}
+echo "Creating Cache Extractor"
+docker rm -f cache-container && docker create -ti --name cache-container output:extract
+echo "Copying Cache from Extractor"
+docker cp -L cache-container:/var/dance-cache ${CACHE_OUTPUT}/
+echo "$(ls -1 ${CACHE_OUTPUT}/ | wc -l) files copied from the cache extractor."
+ls -la ${CACHE_OUTPUT}/
+
+FRONTEND_BUNDLE="${CACHE_OUTPUT}/frontend-bundle.tar.gz"
+if [[ -r "$FRONTEND_BUNDLE" ]]; then
+    echo "artifact found in cache: $FRONTEND_BUNDLE"
+    echo "frontend-bundle=scratch/frontend-bundle.tar.gz" >> "$GITHUB_OUTPUT"
+    echo "frontendBundle=${FRONTEND_BUNDLE}" >> "$GITHUB_STATE"
+    echo "frontendImage=${WEB_IMAGE}" >> "$GITHUB_STATE"
+fi
+
+if [[ -r "${CACHE_OUTPUT}/output.md" ]]; then
+    echo "Writing markdown step summary."
+    cat "${CACHE_OUTPUT}/output.md" >> "$GITHUB_OUTPUT"
+else if [[ -r "${CACHE_OUTPUT}/output.txt" ]]; then
+    echo "Writing text to step output."
+    cat "${CACHE_OUTPUT}/output.txt" >> "$GITHUB_OUTPUT"
+else
+    echo "No output file found in cache."
 fi

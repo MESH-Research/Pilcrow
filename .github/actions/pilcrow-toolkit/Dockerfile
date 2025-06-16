@@ -17,6 +17,7 @@ ARG TARGETARCH
 COPY --from=builder /usr/local/bin/aha /usr/local/bin/aha
 
 RUN apk add --no-cache \
+    docker-cli \
     curl \
     git \
     bash \

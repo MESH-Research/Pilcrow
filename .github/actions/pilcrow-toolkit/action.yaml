@@ -14,16 +14,8 @@ inputs:
   command:
     description: "Command to run in the Docker container"
     required: false
-  artifact-type:
-    description: "Type of artifact to upload to ORAS"
-    required: false
-  artifact-name:
-    description: "Name of the artifact to upload to ORAS"
-    required: false
-  artifact-parent:
-    description: "Parent entity for the artifact to be attached to."
-    required: false
 runs:
+  post-entrypoint: "entrypoit.sh post"
   using: "docker"
   image: "Dockerfile"
   args:
@@ -32,6 +24,3 @@ runs:
     TARGET: ${{ inputs.target }}
     DOCKER_METADATA: ${{ inputs.docker-metadata }}
     GITHUB_TOKEN: ${{ inputs.token }}
-    ARTIFACT_TYPE: ${{ inputs.artifact-type }}
-    ARTIFACT_NAME: ${{ inputs.artifact-name }}
-    ARTIFACT_PARENT: ${{ inputs.artifact-parent }}

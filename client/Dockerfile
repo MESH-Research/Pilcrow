@@ -17,7 +17,7 @@ yarn quasar prepare
 FROM base AS build-stage
 ARG OUTPUT_PATH=/tmp/output
 ARG STDOUT_FILE=${OUTPUT_PATH}/output.txt
-ARG STDERR_FILE=${OUTPUT_PATH}errors.txt
+ARG STDERR_FILE=${OUTPUT_PATH}/errors.txt
 ARG STEP_SUMMARY_FILE=${OUTPUT_PATH}/output.md
 
 
