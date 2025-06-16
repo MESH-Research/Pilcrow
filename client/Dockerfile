@@ -22,8 +22,8 @@ ARG STEP_SUMMARY_FILE=${OUTPUT_PATH}/output.md
 
 
 RUN --mount=type=cache,target=/tmp/output \
-  --mount=type=cache,target=/usr/local/share/.cache/yarn/v6 && \
-    mkdir -p ${OUTPUT_PATH} && \
+    --mount=type=cache,target=/usr/local/share/.cache/yarn/v6 && \
+    mkdir -p "${OUTPUT_PATH}" && \
     yarn quasar build > >(tee ${STDOUT_FILE}) 2> >(tee ${STDERR_FILE})
 
 RUN sed -i 's#"version": ""#"version": "${VERSION}"#g' /app/dist/spa/version.json && \
