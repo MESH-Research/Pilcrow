@@ -9,14 +9,14 @@ ARG TARGETARCH
 ARG PHP_EXTS="bcmath pdo_mysql pcntl zip"
 ARG PHP_PECL_EXTS="redis"
 ENV COMPOSER_HOME=/tmp/composer
-
 RUN  apt update && apt install -y openssl ca-certificates bash libzip-dev libaio1 libncurses6 libnuma1 libxml2-dev git libfcgi-bin sqlite3 \
-  && docker-php-ext-install -j$(nproc) ${PHP_EXTS} \
-  && pecl install ${PHP_PECL_EXTS} \
-  && docker-php-ext-enable ${PHP_PECL_EXTS} \
-  && apt purge libxml2-dev libzip-dev -y \
-  && rm -rf /var/lib/apt/lists/*
+&& docker-php-ext-install -j$(nproc) ${PHP_EXTS} \
+&& pecl install ${PHP_PECL_EXTS} \
+&& docker-php-ext-enable ${PHP_PECL_EXTS} \
+&& apt purge libxml2-dev libzip-dev -y \
+&& rm -rf /var/lib/apt/lists/*
 
+SHELL ["/bin/bash", "-c"]
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 
 ADD https://github.com/ufoscout/docker-compose-wait/releases/download/2.7.3/wait /wait
@@ -66,7 +66,7 @@ ARG OUTPUT_PATH=/tmp/output/fpm-unit-test
 ARG STDOUT_FILE=${OUTPUT_PATH}/output.txt
 ARG STDERR_FILE=${OUTPUT_PATH}/errors.txt
 
-SHELL ["bin/bash", "-c"]
+
 RUN --mount=type=cache,target=/tmp/output \
     ls -la /tmp/output && \
     mkdir -p "${OUTPUT_PATH}"
@@ -82,7 +82,6 @@ ARG OUTPUT_PATH=/tmp/output/fpm-lint
 ARG STDOUT_FILE=${OUTPUT_PATH}/output.txt
 ARG STDERR_FILE=${OUTPUT_PATH}/errors.txt
 
-SHELL ["bin/bash", "-c"]
 RUN --mount=type=cache,target=/tmp/output \
     ls -la /tmp/output && \
     mkdir -p "${OUTPUT_PATH}"
