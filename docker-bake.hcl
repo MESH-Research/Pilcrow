@@ -53,11 +53,11 @@ target "web-lint" {
     output = ["type=cacheonly"]
 }
 
-target "web-test-results" {
+target "web-test" {
     inherits = ["web"]
-    target = "test-results"
+    target = "unit-test"
     platforms = ["local"]
-    output = ["build/web/test-results"]
+    output = ["type=cacheonly"]
 }
 
 target "web-bundle" {

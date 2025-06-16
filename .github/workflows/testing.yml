@@ -31,7 +31,7 @@ jobs:
         id: build-image
         name: Run Unit Tests
         with:
-          target: "web-test-results"
+          target: "web-test"
 
   build-images:
     name: "Build"
