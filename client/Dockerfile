@@ -12,7 +12,7 @@ NO_POSTINSTALL=1 \
 yarn --frozen-lockfile
 COPY . .
 RUN --mount=type=cache,target=/usr/local/share/.cache/yarn/v6 \
-yarn quasar prepare
+yarn quasar prepare  && echo "Invalidate the cache."
 
 FROM base AS build-stage
 ARG OUTPUT_PATH=/tmp/output
