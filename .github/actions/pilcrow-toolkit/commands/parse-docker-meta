@@ -16,7 +16,8 @@ FROM busybox:1
 COPY buildstamp buildstamp
 RUN --mount=type=cache,target=${CONTAINER_TARGET} \
     mkdir -p /var/dance-cache/ \
-    && cp -p -R ${CONTAINER_TARGET}/. /var/dance-cache/ || true
+    && cp -p -R ${CONTAINER_TARGET}/. /var/dance-cache/ \
+    && ls -la /var/dance-cache/ || true
 EOF
 echo "-------- Dancefile.extract --------"
 cat ${SCRATCH}/Dancefile.extract
