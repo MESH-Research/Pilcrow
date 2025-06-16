@@ -45,6 +45,6 @@ if [[ -r "${CACHE_OUTPUT}/output.md" ]]; then
 elif [[ -r "${CACHE_OUTPUT}/output.txt" ]]; then
     echo "Writing text to step output."
     cat "${CACHE_OUTPUT}/output.txt" >> "$GITHUB_OUTPUT"
-else;
+else
     echo "No output file found in cache."
 fi
