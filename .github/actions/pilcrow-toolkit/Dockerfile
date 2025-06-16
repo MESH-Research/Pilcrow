@@ -9,7 +9,7 @@ ADD https://github.com/theZiz/aha.git .
 RUN make && make install
 
 
-FROM node:22-alpine
+FROM node:22-slim
 ARG ORAS_VERSION=1.2.2
 ARG TARGETOS
 ARG TARGETARCH
