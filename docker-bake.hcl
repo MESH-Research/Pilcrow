@@ -46,6 +46,13 @@ target "web-test" {
     output = ["type=cacheonly"]
 }
 
+target "web-lint" {
+    inherits = ["web"]
+    target = "lint"
+    platforms = [ "local" ]
+    output = ["type=cacheonly"]
+}
+
 target "web-test-results" {
     inherits = ["web"]
     target = "test-results"

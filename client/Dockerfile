@@ -75,8 +75,17 @@ RUN --mount=type=cache,target=/usr/local/share/.cache/yarn/v6 \
       > >(tee ${STDOUT_FILE}) \
       2> >(tee ${STDERR_FILE})
 
-FROM scratch AS test-results
-COPY --from=unit-test /output.txt /errors.txt /
+FROM base AS lint
+ARG OUTPUT_PATH=/tmp/output
+ARG STDOUT_FILE=${OUTPUT_PATH}/output.txt
+ARG STDERR_FILE=${OUTPUT_PATH}/errors.txt
+
+RUN --mount=type=cache,target=/usr/local/share/.cache/yarn/v6 \
+    --mount=type=cache,target=/tmp/output \
+    yarn lint \
+      > >(tee ${STDOUT_FILE}) \
+      2> >(tee ${STDERR_FILE})
+
 
 FROM nginx:${NGINX_VERSION} AS nginx
 
