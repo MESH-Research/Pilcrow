@@ -15,7 +15,7 @@ inputs:
     description: "Command to run in the Docker container"
     required: false
 runs:
-  post-entrypoint: "entrypoit.sh post"
+  post-entrypoint: "entrypoint.sh post"
   using: "docker"
   image: "Dockerfile"
   args:
