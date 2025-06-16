@@ -9,30 +9,29 @@ ADD https://github.com/theZiz/aha.git .
 RUN make && make install
 
 
-FROM node:22-slim
+FROM docker:dind
 ARG ORAS_VERSION=1.2.2
 ARG TARGETOS
 ARG TARGETARCH
 
 COPY --from=builder /usr/local/bin/aha /usr/local/bin/aha
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    docker-ce-cli \
+RUN apk add --no-cache \
     curl \
     git \
-    jq \
-    && rm -rf /var/lib/apt/lists/*
+    bash \
+    coreutils \
+    jq
 
 RUN curl -Lo oras.tar.gz https://github.com/oras-project/oras/releases/download/v${ORAS_VERSION}/oras_${ORAS_VERSION}_${TARGETOS}_${TARGETARCH}.tar.gz && \
     tar -zxvf oras.tar.gz oras && \
     mv oras /usr/local/bin/ && \
     rm -rf oras.tar.gz
 
-
-    # Copies your code file from your action repository to the filesystem path `/` of the container
+# Copies your code file from your action repository to the filesystem path `/` of the container
 COPY entrypoint.sh post.sh /
 
 COPY commands /commands/
 
-    # Code file to execute when the docker container starts up (`entrypoint.sh`)
+# Code file to execute when the docker container starts up (`entrypoint.sh`)
 ENTRYPOINT ["/entrypoint.sh"]
