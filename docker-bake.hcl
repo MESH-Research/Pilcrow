@@ -53,6 +53,20 @@ target "web-lint" {
     output = ["type=cacheonly"]
 }
 
+target "fpm-test" {
+    inherits = ["fpm"]
+    target = "unit-test"
+    platforms = ["local"]
+    output = ["type=cacheonly"]
+}
+
+target "fpm-lint" {
+    inherits = ["fpm"]
+    target = "lint"
+    platforms = ["local"]
+    output = ["type=cacheonly"]
+}
+
 target "web-test" {
     inherits = ["web"]
     target = "unit-test"

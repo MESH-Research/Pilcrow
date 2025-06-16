@@ -55,20 +55,17 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           push: false
-  # backend-unit-test:
-  #   name: Backend / Unit Test
-  #   needs: [build-images]
-  #   runs-on: ubuntu-24.04
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #     - name: Start Stack
-  #       uses: ./.github/actions/start-stack
-  #       with:
-  #         version: ${{ needs.build-images.outputs.version }}
-  #     - run: docker compose exec -T phpfpm ./artisan test
-  #       name: Run Unit Test
-  #     - run: docker compose down
-  #       name: Stop Stack
+  backend-unit-test:
+    name: Backend / Unit Test
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+      - uses: ./.github/actions/build-image
+        with:
+          target: "web-test"
   # e2e:
   #   name: "E2E Test"
   #   needs: [build-images]
@@ -79,18 +76,15 @@ jobs:
   lint-php:
     name: PHP Lint
     runs-on: ubuntu-24.04
-    defaults:
-      run:
-        working-directory: ./backend
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
         with:
-          php-version: "8.2"
-      - name: Install dependencies
-        run: composer install
+          fetch-depth: 0
+          fetch-tags: true
+      - uses: ./.github/actions/build-image
+        with:
+          target: "web-lint"
       - name: Check PHP
         run: composer lint
   lint-js:

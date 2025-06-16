@@ -1,6 +1,7 @@
 ARG COMPOSER_VERSION=2.8.9
+ARG PHP_VERSION=8.4.8
 FROM composer:${COMPOSER_VERSION} AS composer
-FROM php:8.4.8-fpm
+FROM php:${PHP_VERSION}-fpm AS base
 ARG VERSION
 ARG VERSION_URL
 ARG VERSION_DATE
@@ -46,16 +47,11 @@ RUN mkdir -p storage/framework/cache storage/framework/sessions storage/framewor
 
 #Install dependencies with dev if dev arg is true
 
-RUN --mount=type=cache,target=/tmp/composer,uid=33,gid=33 composer install --no-scripts --no-autoloader --prefer-dist --no-dev
+RUN composer install --no-scripts --no-autoloader --prefer-dist --no-dev
 COPY --chown=www-data . .
-RUN --mount=type=cache,target=/tmp/composer,uid=33,gid=33 composer install --prefer-dist --no-plugins
-
-
-#CREATE STORAGE DIRECTORIES
-RUN mkdir -p storage/framework/cache storage/framework/sessions storage/framework/views
+RUN composer install --prefer-dist --no-plugins
 
 #FIX PERMISSIONS
-RUN chmod +x artisan scripts/docker/reseed.sh
 
 #Copy version changes last to limit cache busting
 COPY --chown=www-data config/pilcrow.php config/pilcrow.php
@@ -63,3 +59,20 @@ COPY --chown=www-data config/pilcrow.php config/pilcrow.php
 RUN sed -i "s#env('VERSION', '')#env('VERSION', '${VERSION}')#g" config/pilcrow.php && \
     sed -i "s#env('VERSION_URL', '')#env('VERSION_URL', '${VERSION_URL}')#g" config/pilcrow.php && \
     sed -i "s#env('VERSION_DATE', '')#env('VERSION_DATE', '${VERSION_DATE}')#g" config/pilcrow.php
+
+FROM base AS unit-test
+
+# Install SQLite3 for unit tests
+
+RUN apt-get update && apt-get install -y sqlite3 libsqlite3-dev && \
+    docker-php-ext-install pdo_sqlite && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN DB_CONNECTION=sqlite \
+    APP_ENV=local \
+    APP_DEBUG=true \
+    ./artisan test
+
+FROM base AS lint
+
+RUN vendor/bin/phpcs
