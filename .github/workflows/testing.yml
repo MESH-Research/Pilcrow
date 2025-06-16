@@ -65,7 +65,7 @@ jobs:
           fetch-tags: true
       - uses: ./.github/actions/build-image
         with:
-          target: "web-test"
+          target: "fpm-test"
   # e2e:
   #   name: "E2E Test"
   #   needs: [build-images]
@@ -78,15 +78,13 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
           fetch-tags: true
       - uses: ./.github/actions/build-image
         with:
-          target: "web-lint"
-      - name: Check PHP
-        run: composer lint
+          target: "fpm-lint"
   lint-js:
     name: JS Lint
     runs-on: ubuntu-24.04
