@@ -104,7 +104,7 @@ runs:
       run: |
         mkdir -p ${RUNNER_TEMP}/docker-cache
         date --iso=ns > ${RUNNER_TEMP}/docker-cache/buildstamp
-        docker buildx build -f ./github/Dockerfile.cache-exporter --tag output:extract --load ${RUNNER_TEMP}/docker-cache
+        docker buildx build -f ./.github/Dockerfile.cache-exporter --tag output:extract --load ${RUNNER_TEMP}/docker-cache
         echo "Creating Cache Extractor"
         docker rm -f cache-container && docker create -ti --name cache-container output:extract
         echo "Copying Cache from Extractor"
