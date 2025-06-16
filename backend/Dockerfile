@@ -45,8 +45,6 @@ COPY --chown=www-data composer.json composer.lock ./
 #Make storage directories
 RUN mkdir -p storage/framework/cache storage/framework/sessions storage/framework/views
 
-#Install dependencies with dev if dev arg is true
-
 RUN composer install --no-scripts --no-autoloader --prefer-dist --no-dev
 COPY --chown=www-data . .
 RUN composer install --prefer-dist --no-plugins
@@ -57,6 +55,7 @@ COPY --chown=www-data config/pilcrow.php config/pilcrow.php
 RUN sed -i "s#env('VERSION', '')#env('VERSION', '${VERSION}')#g" config/pilcrow.php && \
     sed -i "s#env('VERSION_URL', '')#env('VERSION_URL', '${VERSION_URL}')#g" config/pilcrow.php && \
     sed -i "s#env('VERSION_DATE', '')#env('VERSION_DATE', '${VERSION_DATE}')#g" config/pilcrow.php
+FROM base
 
 FROM base AS unit-test
 ARG OUTPUT_PATH=/tmp/output/fpm-unit-test
