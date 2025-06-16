@@ -15,7 +15,7 @@ RUN --mount=type=cache,target=/usr/local/share/.cache/yarn/v6 \
 yarn quasar prepare
 
 FROM base AS build-stage
-ARG OUTPUT_PATH=/tmp/output
+ARG OUTPUT_PATH=/tmp/output/web-build
 ARG STDOUT_FILE=${OUTPUT_PATH}/output.txt
 ARG STDERR_FILE=${OUTPUT_PATH}/errors.txt
 ARG STEP_SUMMARY_FILE=${OUTPUT_PATH}/output.md

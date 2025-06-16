@@ -41,8 +41,9 @@ WEB_IMAGE="$(echo $DOCKER_METADATA | jq -r 'to_entries[] | select(.key|endswith(
 
 # Check if anything was written to the output cache directory during the bake command.
 CACHE_OUTPUT=.output-cache
-FRONTEND_BUNDLE="frontend-bundle.tar.gz"
+FRONTEND_BUNDLE="web-build/frontend-bundle.tar.gz"
 BUNDLE_PATH="${CACHE_OUTPUT}/${FRONTEND_BUNDLE}"
+
 if [[ -r "$BUNDLE_PATH" ]]; then
     echo "artifact found in cache: $FRONTEND_BUNDLE"
     echo "frontendImage=${WEB_IMAGE}"    >> "$GITHUB_STATE"
@@ -50,12 +51,30 @@ if [[ -r "$BUNDLE_PATH" ]]; then
     echo "frontend-bundle=${BUNDLE_PATH}" > "$GITHUB_OUTPUT"
 fi
 
-if [[ -r "${CACHE_OUTPUT}/output.md" ]]; then
-    echo "Writing markdown step summary."
-    cat "${CACHE_OUTPUT}/output.md" >> "$GITHUB_STEP_SUMMARY"
-elif [[ -r "${CACHE_OUTPUT}/output.txt" ]]; then
-    echo "Writing text to step output."
-    cat "${CACHE_OUTPUT}/output.txt" >> "$GITHUB_STEP_SUMMARY"
-else
-    echo "No output file found in cache."
-fi
+# Loop through any directories in CACHE_OUTPUT
+for dir in "${CACHE_OUTPUT}"/*; do
+    if [[ -d "$dir" ]]; then
+        echo "Found directory in cache: $dir"
+        if [[ -r "${dir}/output.md" ]]; then
+            echo "Writing markdown step summary."
+            cat "${$dir}/output.md" >> "$GITHUB_STEP_SUMMARY"
+        else
+            if [[ -s "${$dir}/errors.txt" ]]; then
+                echo "<details><summary>STDERR Output</summary>" >> "$GITHUB_STEP_SUMMARY"
+                echo '```' >> "$GITHUB_STEP_SUMMARY"
+                cat "${$dir}/errors.txt" >> "$GITHUB_STEP_SUMMARY"
+                echo '```' >> "$GITHUB_STEP_SUMMARY"
+                echo "</details>" >> "$GITHUB_STEP_SUMMARY"
+            fi
+            if [[ -s "${$dir}/output.txt" ]]; then
+                echo "<details><summary>STDOUT Output</summary>" >> "$GITHUB_STEP_SUMMARY"
+                echo '```' >> "$GITHUB_STEP_SUMMARY"
+                cat "${$dir}/output.txt" >> "$GITHUB_STEP_SUMMARY"
+                echo '```' >> "$GITHUB_STEP_SUMMARY"
+                echo "</details>" >> "$GITHUB_STEP_SUMMARY"
+            fi
+
+        fi
+
+    fi
+done

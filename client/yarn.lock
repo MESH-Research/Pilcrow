@@ -97,6 +97,11 @@
     debug "^3.1.0"
     lodash.once "^4.1.1"
 
+"@d2t/vitest-ctrf-json-reporter@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@d2t/vitest-ctrf-json-reporter/-/vitest-ctrf-json-reporter-1.1.0.tgz#9f859078c0cc6e6a5cb6fcc691623f6f51f6b6d9"
+  integrity sha512-ruWeL04k/V1SUsK3NLE1tBuR0XCCHIpS3JCtPF5LpHt1IZZPxScLzYurZ7JD5berpmVUKkh89noxPsg5N7LV4w==
+
 "@esbuild/aix-ppc64@0.21.5":
   version "0.21.5"
   resolved "https://registry.yarnpkg.com/@esbuild/aix-ppc64/-/aix-ppc64-0.21.5.tgz#c7184a326533fcdf1b8ee0733e21c713b975575f"

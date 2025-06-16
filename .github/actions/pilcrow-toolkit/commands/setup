@@ -18,7 +18,6 @@ echo "source.version-url=${VERSION_URL}" >> "$GITHUB_OUTPUT"
 echo "source.version-date=${VERSION_DATE}" >> "$GITHUB_OUTPUT"
 echo "repository=${GITHUB_REPOSITORY,,}" >> "$GITHUB_OUTPUT"
 echo "docker-registry-cache=${DOCKER_REGISTRY_CACHE}" >> "$GITHUB_OUTPUT"
-echo "orasToken=${GITHUB_TOKEN}" >> "$GITHUB_STATE"
 
 if [ "${TARGET}" == "release" ]; then
     echo "image-template=ghcr.io/${REPO}/__service__" >> "$GITHUB_ENV"
