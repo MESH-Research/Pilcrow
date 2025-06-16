@@ -37,6 +37,7 @@ RUN cd /tmp && \
   rm -rf /tmp/mysql*
 
 RUN set -xe && echo "pm.status_path = /status" >> /usr/local/etc/php-fpm.d/zz-docker.conf
+RUN --mount=type=cache,target=/tmp/output chmod 0777 /tmp/output
 
 WORKDIR /var/www/html
 USER www-data:www-data
