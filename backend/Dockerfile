@@ -10,7 +10,7 @@ ARG PHP_EXTS="bcmath pdo_mysql pcntl zip"
 ARG PHP_PECL_EXTS="redis"
 ENV COMPOSER_HOME=/tmp/composer
 
-RUN  apt update && apt install -y openssl ca-certificates libzip-dev libaio1 libncurses6 libnuma1 libxml2-dev git libfcgi-bin \
+RUN  apt update && apt install -y openssl ca-certificates libzip-dev libaio1 libncurses6 libnuma1 libxml2-dev git libfcgi-bin sqlite3 \
   && docker-php-ext-install -j$(nproc) ${PHP_EXTS} \
   && pecl install ${PHP_PECL_EXTS} \
   && docker-php-ext-enable ${PHP_PECL_EXTS} \
@@ -51,8 +51,6 @@ RUN composer install --no-scripts --no-autoloader --prefer-dist --no-dev
 COPY --chown=www-data . .
 RUN composer install --prefer-dist --no-plugins
 
-#FIX PERMISSIONS
-
 #Copy version changes last to limit cache busting
 COPY --chown=www-data config/pilcrow.php config/pilcrow.php
 #Mint Version into Image
@@ -64,12 +62,6 @@ FROM base AS unit-test
 ARG OUTPUT_PATH=/tmp/output/fpm-unit-test
 ARG STDOUT_FILE=${OUTPUT_PATH}/output.txt
 ARG STDERR_FILE=${OUTPUT_PATH}/errors.txt
-
-# Install SQLite3 for unit tests
-
-RUN apt-get update && apt-get install -y sqlite3 libsqlite3-dev && \
-    docker-php-ext-install pdo_sqlite && \
-    rm -rf /var/lib/apt/lists/*
 
 RUN DB_CONNECTION=sqlite \
     APP_ENV=local \
