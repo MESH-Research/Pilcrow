@@ -10,6 +10,10 @@ variable "VERSION_DATE" {
     default = ""
 }
 
+variable "PUSH" {
+    default = false
+}
+
 target "fpm" {
     context = "backend"
     args = {
@@ -33,6 +37,20 @@ target "web" {
     labels = {
         for k, v in target.default-labels.labels : k => replace(v, "__service__", "web")
     }
+}
+
+target "web-test" {
+    inherits = ["web"]
+    target = "unit-test"
+    platforms = [ "local" ]
+    output = ["type=cacheonly"]
+}
+
+target "web-test-results" {
+    inherits = ["web"]
+    target = "test-results"
+    platforms = ["local"]
+    output = ["build/web/test-results"]
 }
 
 target "web-bundle" {
@@ -63,15 +81,11 @@ target "ci" {
         item = [
             {
                 tgt = "fpm"
-                output = ["type=image,push=true"]
+                output = ["type=image,push=${PUSH}"]
             },
             {
                 tgt = "web"
-                output = ["type=image,push=true"]
-            },
-            {
-                tgt = "web-bundle"
-                output = ["build/bundle"]
+                output = ["type=image,push=${PUSH}"]
             }
         ]
     }
