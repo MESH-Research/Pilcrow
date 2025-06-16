@@ -31,7 +31,7 @@ RUN curl -Lo oras.tar.gz https://github.com/oras-project/oras/releases/download/
 WORKDIR /github/workspace
 
 # Copies your code file from your action repository to the filesystem path `/` of the container
-COPY entrypoint.sh /
+COPY entrypoint.sh post.sh /
 
 COPY commands /commands/
 
