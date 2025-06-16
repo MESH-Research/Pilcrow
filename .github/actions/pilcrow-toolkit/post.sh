@@ -1,4 +1,6 @@
 #!/bin/bash
+git config --global --add safe.directory $(pwd)
+set -e
 
 if [[ -z "${STATE_frontendBundle}" ]]; then
     echo "No frontend bundle to upload."
