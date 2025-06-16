@@ -57,7 +57,7 @@ for dir in "${CACHE_OUTPUT}"/*; do
         echo "Found directory in cache: $dir"
         if [[ -r "${dir}/output.md" ]]; then
             echo "Writing markdown step summary."
-            cat "${$dir}/output.md" >> "$GITHUB_STEP_SUMMARY"
+            cat "${dir}/output.md" >> "$GITHUB_STEP_SUMMARY"
         else
             if [[ -s "${dir}/errors.txt" ]]; then
                 echo "<details><summary>STDERR Output</summary>" >> "$GITHUB_STEP_SUMMARY"

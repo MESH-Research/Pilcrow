@@ -60,6 +60,7 @@ FROM base AS fpm
 
 FROM base AS unit-test
 ENV DB_CONNECTION=sqlite
+ENV DB_DATABASE=/tmp/database.sqlite
 ENV APP_ENV=local
 ENV APP_DEBUG=true
 ARG OUTPUT_PATH=/tmp/output/fpm-unit-test
@@ -68,7 +69,7 @@ ARG STDERR_FILE=${OUTPUT_PATH}/errors.txt
 
 
 RUN --mount=type=cache,target=/tmp/output \
-    ls -la /tmp/output && \
+    touch /tmp/database.sqlite && \
     mkdir -p "${OUTPUT_PATH}"
 
 RUN --mount=type=cache,target=/tmp/output \
@@ -83,7 +84,6 @@ ARG STDOUT_FILE=${OUTPUT_PATH}/output.txt
 ARG STDERR_FILE=${OUTPUT_PATH}/errors.txt
 
 RUN --mount=type=cache,target=/tmp/output \
-    ls -la /tmp/output && \
     mkdir -p "${OUTPUT_PATH}"
 
 RUN --mount=type=cache,target=/tmp/output \
