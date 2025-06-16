@@ -74,11 +74,18 @@ RUN apt-get update && apt-get install -y sqlite3 libsqlite3-dev && \
 RUN DB_CONNECTION=sqlite \
     APP_ENV=local \
     APP_DEBUG=true \
-    ./artisan test
+    ./artisan test \
     > >(tee ${STDOUT_FILE}) \
     2> >(tee ${STDERR_FILE})
 
 
 FROM base AS lint
+ARG OUTPUT_PATH=/tmp/output/fpm-lint
+ARG STDOUT_FILE=${OUTPUT_PATH}/output.txt
+ARG STDERR_FILE=${OUTPUT_PATH}/errors.txt
 
-RUN vendor/bin/phpcs
+RUN --mount=type=cache,target=/tmp/output/ \
+    mkkdir -p "${OUTPUT_PATH}" && \
+    ./vendor/bin/phpcs \
+    > >(tee ${STDOUT_FILE}) \
+    2> >(tee ${STDERR_FILE})
