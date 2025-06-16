@@ -102,13 +102,13 @@ runs:
           ${{ steps.docker-registry-cache.outputs.bake-file }}
     - shell: bash
       run: |
-        mkdir -p ${RUNNER_TEMP}/docker-cache
-        date --iso=ns > ${RUNNER_TEMP}/docker-cache/buildstamp
-        docker buildx build -f ./.github/Dockerfile.cache-exporter --tag output:extract --load ${RUNNER_TEMP}/docker-cache
+        mkdir -p /tmp/docker-cache
+        date --iso=ns > /tmp/docker-cache/buildstamp
+        docker buildx build -f ./.github/Dockerfile.cache-exporter --tag output:extract --load /tmp/docker-cache
         echo "Creating Cache Extractor"
         docker rm -f cache-container && docker create -ti --name cache-container output:extract
         echo "Copying Cache from Extractor"
-        docker cp -L cache-container:/var/output-cache ${HOME}
+        docker cp -L cache-container:/var/.output-cache ./
 
     - uses: actions/upload-artifact@v4
       if: ${{ runner.debug == 1 }}
@@ -126,5 +126,5 @@ runs:
       if: ${{ steps.parse-docker-meta.outputs.frontend-bundle }}
       with:
         name: frontend-bundle
-        path: ${HOME}/output-cache/${{ steps.parse-docker-meta.outputs.frontendBundle }}
+        path: ${{ steps.parse-docker-meta.outputs.frontend-bundle }}
         if-no-files-found: warn

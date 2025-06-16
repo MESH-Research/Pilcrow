@@ -2,13 +2,13 @@
 WEB_IMAGE="$(echo $DOCKER_METADATA | jq -r 'to_entries[] | select(.key|endswith("web")).value."image.name"')"
 
 # Check if anything was written to the output cache directory during the bake command.
-CACHE_OUTPUT=/github/home/output-cache
+CACHE_OUTPUT=.output-cache
 FRONTEND_BUNDLE="frontend-bundle.tar.gz"
 BUNDLE_PATH="${CACHE_OUTPUT}/${FRONTEND_BUNDLE}"
 if [[ -r "$BUNDLE_PATH" ]]; then
     echo "artifact found in cache: $FRONTEND_BUNDLE"
     echo "frontendBundle=${BUNDLE_PATH}" >> "$GITHUB_STATE"
-    echo "frontend-bundle=FRONTEND_BUNDLE" >> "$GITHUB_OUTPUT"
+    echo "frontend-bundle=${BUNDLE_PATH}" >> "$GITHUB_OUTPUT"
     echo "frontendImage=${WEB_IMAGE}" >> "$GITHUB_STATE"
 fi
 
