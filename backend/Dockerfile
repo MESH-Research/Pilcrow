@@ -64,6 +64,7 @@ ARG STDOUT_FILE=${OUTPUT_PATH}/output.txt
 ARG STDERR_FILE=${OUTPUT_PATH}/errors.txt
 
 RUN --mount=type=cache,target=/tmp/output \
+    ls -la "${OUTPUT_PATH}" && \
     mkdir -p "${OUTPUT_PATH}"
 
 RUN --mount=type=cache,target=/tmp/output \
@@ -81,6 +82,7 @@ ARG STDOUT_FILE=${OUTPUT_PATH}/output.txt
 ARG STDERR_FILE=${OUTPUT_PATH}/errors.txt
 
 RUN --mount=type=cache,target=/tmp/output \
+    ls -la "${OUTPUT_PATH}" && \
     mkdir -p "${OUTPUT_PATH}"
 
 RUN --mount=type=cache,target=/tmp/output \
