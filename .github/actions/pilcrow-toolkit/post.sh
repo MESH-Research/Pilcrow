@@ -19,9 +19,9 @@ if [[ ! -r "${ARTIFACT_PATH}" ]]; then
     exit 0
 fi
 
-$ORAS_ACTOR="${ORAS_ACTOR:-$GITHUB_ACTOR}"
-$ORAS_TOKEN="${STATE_orasToken:-$GITHUB_TOKEN}"
-$ARTIFACT_TYPE="${ARTIFACT_TYPE:-application/vnd.pilcrow.toolkit.bundle.v1+json}"
+ORAS_ACTOR="${ORAS_ACTOR:-$GITHUB_ACTOR}"
+ORAS_TOKEN="${STATE_orasToken:-$GITHUB_TOKEN}"
+ARTIFACT_TYPE="${ARTIFACT_TYPE:-application/vnd.pilcrow.toolkit.bundle.v1+json}"
 
 docker manifest inspect "${ARTIFACT_PARENT}" > /dev/null 2>&1
 if [[ $? -ne 0 ]]; then
