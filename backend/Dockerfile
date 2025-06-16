@@ -61,6 +61,9 @@ RUN sed -i "s#env('VERSION', '')#env('VERSION', '${VERSION}')#g" config/pilcrow.
     sed -i "s#env('VERSION_DATE', '')#env('VERSION_DATE', '${VERSION_DATE}')#g" config/pilcrow.php
 
 FROM base AS unit-test
+ARG OUTPUT_PATH=/tmp/output/fpm-unit-test
+ARG STDOUT_FILE=${OUTPUT_PATH}/output.txt
+ARG STDERR_FILE=${OUTPUT_PATH}/errors.txt
 
 # Install SQLite3 for unit tests
 
@@ -72,6 +75,9 @@ RUN DB_CONNECTION=sqlite \
     APP_ENV=local \
     APP_DEBUG=true \
     ./artisan test
+    > >(tee ${STDOUT_FILE}) \
+    2> >(tee ${STDERR_FILE})
+
 
 FROM base AS lint
 

@@ -65,11 +65,12 @@ FROM scratch AS bundle
 COPY --from=build-stage /app/dist/spa/ /dist/spa/
 
 FROM base AS unit-test
-ARG OUTPUT_PATH=/tmp/output
+ARG OUTPUT_PATH=/tmp/output/web-unit
 ARG STDOUT_FILE=${OUTPUT_PATH}/output.txt
 ARG STDERR_FILE=${OUTPUT_PATH}/errors.txt
 RUN --mount=type=cache,target=/usr/local/share/.cache/yarn/v6 \
     --mount=type=cache,target=/tmp/output \
+    mkdir -p "${OUTPUT_PATH}" && \
     yarn test:unit:ci \
       --reporter=basic \
       --reporter=github-actions \
@@ -77,12 +78,13 @@ RUN --mount=type=cache,target=/usr/local/share/.cache/yarn/v6 \
       2> >(tee ${STDERR_FILE})
 
 FROM base AS lint
-ARG OUTPUT_PATH=/tmp/output
+ARG OUTPUT_PATH=/tmp/web-lint/output
 ARG STDOUT_FILE=${OUTPUT_PATH}/output.txt
 ARG STDERR_FILE=${OUTPUT_PATH}/errors.txt
 
 RUN --mount=type=cache,target=/usr/local/share/.cache/yarn/v6 \
     --mount=type=cache,target=/tmp/output \
+    mkdir -p "${OUTPUT_PATH}" && \
     yarn lint \
       > >(tee ${STDOUT_FILE}) \
       2> >(tee ${STDERR_FILE})
