@@ -16,7 +16,6 @@ RUN  apt update && apt install -y openssl ca-certificates bash libzip-dev libaio
 && apt purge libxml2-dev libzip-dev -y \
 && rm -rf /var/lib/apt/lists/*
 
-SHELL ["/bin/bash", "-c"]
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 
 ADD https://github.com/ufoscout/docker-compose-wait/releases/download/2.7.3/wait /wait
@@ -27,14 +26,14 @@ RUN chmod 0755 /usr/local/bin/php-fpm-healthcheck
 
 
 RUN curl --silent --show-error -L https://github.com/jgm/pandoc/releases/download/2.18/pandoc-2.18-1-${TARGETARCH}.deb -o /tmp/pandoc.deb && \
-  dpkg -i /tmp/pandoc.deb && \
-  rm /tmp/pandoc.deb
+dpkg -i /tmp/pandoc.deb && \
+rm /tmp/pandoc.deb
 
 RUN cd /tmp && \
-  curl --silent --show-error -L https://downloads.mysql.com/archives/get/p/23/file/{mysql-common,mysql-community-client}_5.7.29-1debian10_${TARGETARCH}.deb -O && \
-  dpkg -i /tmp/mysql-common_5.7.29-1debian10_${TARGETARCH}.deb && \
-  dpkg -i /tmp/mysql-community-client_5.7.29-1debian10_${TARGETARCH}.deb && \
-  rm -rf /tmp/mysql*
+curl --silent --show-error -L https://downloads.mysql.com/archives/get/p/23/file/{mysql-common,mysql-community-client}_5.7.29-1debian10_${TARGETARCH}.deb -O && \
+dpkg -i /tmp/mysql-common_5.7.29-1debian10_${TARGETARCH}.deb && \
+dpkg -i /tmp/mysql-community-client_5.7.29-1debian10_${TARGETARCH}.deb && \
+rm -rf /tmp/mysql*
 
 RUN set -xe && echo "pm.status_path = /status" >> /usr/local/etc/php-fpm.d/zz-docker.conf
 RUN --mount=type=cache,target=/tmp/output chmod 0777 /tmp/output
@@ -54,8 +53,9 @@ RUN composer install --prefer-dist --no-plugins
 COPY --chown=www-data config/pilcrow.php config/pilcrow.php
 #Mint Version into Image
 RUN sed -i "s#env('VERSION', '')#env('VERSION', '${VERSION}')#g" config/pilcrow.php && \
-    sed -i "s#env('VERSION_URL', '')#env('VERSION_URL', '${VERSION_URL}')#g" config/pilcrow.php && \
-    sed -i "s#env('VERSION_DATE', '')#env('VERSION_DATE', '${VERSION_DATE}')#g" config/pilcrow.php
+sed -i "s#env('VERSION_URL', '')#env('VERSION_URL', '${VERSION_URL}')#g" config/pilcrow.php && \
+sed -i "s#env('VERSION_DATE', '')#env('VERSION_DATE', '${VERSION_DATE}')#g" config/pilcrow.php
+SHELL ["/bin/bash", "-c"]
 FROM base AS fpm
 
 FROM base AS unit-test
