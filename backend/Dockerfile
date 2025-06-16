@@ -63,7 +63,11 @@ ARG OUTPUT_PATH=/tmp/output/fpm-unit-test
 ARG STDOUT_FILE=${OUTPUT_PATH}/output.txt
 ARG STDERR_FILE=${OUTPUT_PATH}/errors.txt
 
-RUN DB_CONNECTION=sqlite \
+RUN --mount=type=cache,target=/tmp/output \
+    mkdir -p "${OUTPUT_PATH}"
+
+RUN --mount=type=cache,target=/tmp/output \
+    DB_CONNECTION=sqlite \
     APP_ENV=local \
     APP_DEBUG=true \
     ./artisan test \
@@ -76,8 +80,10 @@ ARG OUTPUT_PATH=/tmp/output/fpm-lint
 ARG STDOUT_FILE=${OUTPUT_PATH}/output.txt
 ARG STDERR_FILE=${OUTPUT_PATH}/errors.txt
 
-RUN --mount=type=cache,target=/tmp/output/ \
-    mkkdir -p "${OUTPUT_PATH}" && \
+RUN --mount=type=cache,target=/tmp/output \
+    mkdir -p "${OUTPUT_PATH}"
+
+RUN --mount=type=cache,target=/tmp/output \
     ./vendor/bin/phpcs \
     > >(tee ${STDOUT_FILE}) \
     2> >(tee ${STDERR_FILE})
