@@ -58,7 +58,7 @@ EOC
 
 
 
-RUN --mount=type=cache,target=/tmp/output tar -czvf /tmp/output/frontend-bundle.tgz -C /app/dist/spa .
+RUN --mount=type=cache,target=/tmp/output tar -czvf /tmp/output/frontend-bundle.tar.gz -C /app/dist/spa .
 
 FROM scratch AS bundle
 COPY --from=build-stage /app/dist/spa/ /dist/spa/
