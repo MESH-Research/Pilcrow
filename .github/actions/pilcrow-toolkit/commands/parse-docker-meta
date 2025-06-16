@@ -7,9 +7,9 @@ FRONTEND_BUNDLE="frontend-bundle.tar.gz"
 BUNDLE_PATH="${CACHE_OUTPUT}/${FRONTEND_BUNDLE}"
 if [[ -r "$BUNDLE_PATH" ]]; then
     echo "artifact found in cache: $FRONTEND_BUNDLE"
-    echo "frontendBundle=${BUNDLE_PATH}" > "$GITHUB_STATE"
+    echo "frontendImage=${WEB_IMAGE}"    >> "$GITHUB_STATE"
+    echo "frontendBundle=${BUNDLE_PATH}" >> "$GITHUB_STATE"
     echo "frontend-bundle=${BUNDLE_PATH}" > "$GITHUB_OUTPUT"
-    echo "frontendImage=${WEB_IMAGE}" > "$GITHUB_STATE"
 fi
 
 if [[ -r "${CACHE_OUTPUT}/output.md" ]]; then
