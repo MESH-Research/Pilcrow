@@ -16,6 +16,7 @@ variable "PUSH" {
 
 target "fpm" {
     context = "backend"
+    target = "fpm"
     args = {
         VERSION = VERSION
         VERSION_URL = VERSION_URL
