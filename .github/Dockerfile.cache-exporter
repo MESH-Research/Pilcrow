@@ -2,5 +2,5 @@ FROM busybox:1
 COPY buildstamp buildstamp
 RUN --mount=type=cache,target=/tmp/output \
     mkdir -p /var/output-cache/ \
-    && cp -p -R ${CONTAINER_TARGET}/. /var/output-cache/ \
+    && cp -p -R /tmp/output/. /var/output-cache/ \
     && ls -la /var/output-cache/ && ls -la /tmp/output || true
