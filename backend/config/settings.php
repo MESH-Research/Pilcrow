@@ -62,16 +62,14 @@ return [
     'global_casts' => [
         DateTimeInterface::class => Spatie\LaravelSettings\SettingsCasts\DateTimeInterfaceCast::class,
         DateTimeZone::class => Spatie\LaravelSettings\SettingsCasts\DateTimeZoneCast::class,
-        Spatie\DataTransferObject\DataTransferObject::class => Spatie\LaravelSettings\SettingsCasts\DtoCast::class,
+        Spatie\LaravelData\Data::class => Spatie\LaravelSettings\SettingsCasts\DataCast::class
     ],
 
     /*
      * The package will look for settings in these paths and automatically
      * register them.
      */
-    'auto_discover_settings' => [
-        app()->path(),
-    ],
+    'auto_discover_settings' => [],
 
     /*
      * Automatically discovered settings classes can be cached so they don't

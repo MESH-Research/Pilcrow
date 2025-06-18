@@ -14,6 +14,10 @@ variable "PUSH" {
     default = false
 }
 
+variable "BUILDSTAMP" {
+    default = ""
+}
+
 target "fpm" {
     context = "backend"
     target = "fpm"
@@ -59,6 +63,9 @@ target "fpm-test" {
     target = "unit-test"
     platforms = ["local"]
     output = ["type=cacheonly"]
+    args = {
+        BUILDSTAMP = BUILDSTAMP
+    }
 }
 
 target "fpm-lint" {

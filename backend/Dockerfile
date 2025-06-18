@@ -1,45 +1,41 @@
 ARG COMPOSER_VERSION=2.8.9
 ARG PHP_VERSION=8.4.8
+
 FROM composer:${COMPOSER_VERSION} AS composer
 FROM php:${PHP_VERSION}-fpm AS base
-ARG VERSION
-ARG VERSION_URL
-ARG VERSION_DATE
+
 ARG TARGETARCH
+
+ARG PANDOC_VERSION=2.18
+ARG COMPOSE_WAIT_VERSION=2.7.3
 ARG PHP_EXTS="bcmath pdo_mysql pcntl zip"
 ARG PHP_PECL_EXTS="redis"
+ARG APT_PACKAGES="openssl ca-certificates bash libzip-dev libaio1 libncurses6 libnuma1 libxml2-dev git libfcgi-bin sqlite3 default-mysql-client"
 ENV COMPOSER_HOME=/tmp/composer
-RUN  apt update && apt install -y openssl ca-certificates bash libzip-dev libaio1 libncurses6 libnuma1 libxml2-dev git libfcgi-bin sqlite3 \
-&& docker-php-ext-install -j$(nproc) ${PHP_EXTS} \
-&& pecl install ${PHP_PECL_EXTS} \
-&& docker-php-ext-enable ${PHP_PECL_EXTS} \
-&& apt purge libxml2-dev libzip-dev -y \
-&& rm -rf /var/lib/apt/lists/*
 
+RUN  apt update && apt install -y ${APT_PACKAGES} \
+    && docker-php-ext-install -j$(nproc) ${PHP_EXTS} \
+    && pecl install ${PHP_PECL_EXTS} \
+    && docker-php-ext-enable ${PHP_PECL_EXTS} \
+    && apt purge libxml2-dev libzip-dev -y \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN curl -Lo /wait https://github.com/ufoscout/docker-compose-wait/releases/download/${COMPOSE_WAIT_VERSION}/wait \
+    && chmod 0755 /wait \
+    && curl -Lo /usr/local/bin/php-fpm-healthcheck https://raw.githubusercontent.com/renatomefi/php-fpm-healthcheck/master/php-fpm-healthcheck \
+    && chmod 0755 /usr/local/bin/php-fpm-healthcheck \
+    && curl --silent --show-error -L https://github.com/jgm/pandoc/releases/download/${PANDOC_VERSION}/pandoc-${PANDOC_VERSION}-1-${TARGETARCH}.deb -o /tmp/pandoc.deb \
+    && dpkg -i /tmp/pandoc.deb \
+    && rm /tmp/pandoc.deb
+
+RUN echo "pm.status_path = /status" >> /usr/local/etc/php-fpm.d/zz-docker.conf \
+    && cp ${PHP_INI_DIR}/php.ini-production ${PHP_INI_DIR}/php.ini
+
+RUN --mount=type=cache,target=/tmp/output chmod 0777 /tmp/output
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 
-ADD https://github.com/ufoscout/docker-compose-wait/releases/download/2.7.3/wait /wait
-RUN chmod +x /wait
-
-ADD https://raw.githubusercontent.com/renatomefi/php-fpm-healthcheck/master/php-fpm-healthcheck /usr/local/bin/
-RUN chmod 0755 /usr/local/bin/php-fpm-healthcheck
-
-
-RUN curl --silent --show-error -L https://github.com/jgm/pandoc/releases/download/2.18/pandoc-2.18-1-${TARGETARCH}.deb -o /tmp/pandoc.deb && \
-dpkg -i /tmp/pandoc.deb && \
-rm /tmp/pandoc.deb
-
-RUN cd /tmp && \
-curl --silent --show-error -L https://downloads.mysql.com/archives/get/p/23/file/{mysql-common,mysql-community-client}_5.7.29-1debian10_${TARGETARCH}.deb -O && \
-dpkg -i /tmp/mysql-common_5.7.29-1debian10_${TARGETARCH}.deb && \
-dpkg -i /tmp/mysql-community-client_5.7.29-1debian10_${TARGETARCH}.deb && \
-rm -rf /tmp/mysql*
-
-RUN set -xe && echo "pm.status_path = /status" >> /usr/local/etc/php-fpm.d/zz-docker.conf
-RUN --mount=type=cache,target=/tmp/output chmod 0777 /tmp/output
-
 WORKDIR /var/www/html
-USER www-data:www-data
+USER www-data
 COPY --chown=www-data composer.json composer.lock ./
 
 #Make storage directories
@@ -49,34 +45,51 @@ RUN composer install --no-scripts --no-autoloader --prefer-dist --no-dev
 COPY --chown=www-data . .
 RUN composer install --prefer-dist --no-plugins
 
-#Copy version changes last to limit cache busting
-COPY --chown=www-data config/pilcrow.php config/pilcrow.php
-#Mint Version into Image
-RUN sed -i "s#env('VERSION', '')#env('VERSION', '${VERSION}')#g" config/pilcrow.php && \
-sed -i "s#env('VERSION_URL', '')#env('VERSION_URL', '${VERSION_URL}')#g" config/pilcrow.php && \
-sed -i "s#env('VERSION_DATE', '')#env('VERSION_DATE', '${VERSION_DATE}')#g" config/pilcrow.php
+#Mint version into image last to limit cache busting
+ARG VERSION
+ARG VERSION_URL
+ARG VERSION_DATE
+RUN sed -i "s#env('VERSION', '')#env('VERSION', '${VERSION}')#g" config/pilcrow.php \
+    && sed -i "s#env('VERSION_URL', '')#env('VERSION_URL', '${VERSION_URL}')#g" config/pilcrow.php \
+    && sed -i "s#env('VERSION_DATE', '')#env('VERSION_DATE', '${VERSION_DATE}')#g" config/pilcrow.php
+
 SHELL ["/bin/bash", "-c"]
 FROM base AS fpm
 
+
 FROM base AS unit-test
+
 ENV DB_CONNECTION=sqlite
-ENV DB_DATABASE=/tmp/database.sqlite
+ENV DB_DATABASE=":memory:"
 ENV APP_ENV=local
 ENV APP_DEBUG=true
+
 ARG OUTPUT_PATH=/tmp/output/fpm-unit-test
 ARG STDOUT_FILE=${OUTPUT_PATH}/output.txt
 ARG STDERR_FILE=${OUTPUT_PATH}/errors.txt
 
+# Switch to php-development.ini
+USER root
+RUN cp ${PHP_INI_DIR}/php.ini-development ${PHP_INI_DIR}/php.ini \
+    && echo "error_reporting=E_ALL ^ (E_DEPRECATED | E_STRICT)" >> ${PHP_INI_DIR}/conf.d/errors.conf \
+    && curl -Lo /usr/local/bin/mysql2sqlite https://raw.githubusercontent.com/mysql2sqlite/mysql2sqlite/refs/heads/master/mysql2sqlite \
+    && chmod +x /usr/local/bin/mysql2sqlite
+
+# Re-run composer install to add dev dependencies
+USER www-data
+RUN composer install --prefer-dist
+
+# Supply a random/cache busting timestamp to prevent caching of the test run.
+ARG BUILDSTAMP
+
+RUN mysql2sqlite database/schema/mysql-schema.sql > database/schema/sqlite-schema.sql
 
 RUN --mount=type=cache,target=/tmp/output \
-    touch /tmp/database.sqlite && \
-    mkdir -p "${OUTPUT_PATH}"
-
-RUN --mount=type=cache,target=/tmp/output \
+    mkdir -p "${OUTPUT_PATH}" && \
+    touch ${DB_DATABASE} && \
     ./artisan test \
     > >(tee ${STDOUT_FILE}) \
     2> >(tee ${STDERR_FILE})
-
 
 FROM base AS lint
 ARG OUTPUT_PATH=/tmp/output/fpm-lint
@@ -87,6 +100,7 @@ RUN --mount=type=cache,target=/tmp/output \
     mkdir -p "${OUTPUT_PATH}"
 
 RUN --mount=type=cache,target=/tmp/output \
-    ./vendor/bin/phpcs \
+    composer install --prefer-dist && \
+    composer lint \
     > >(tee ${STDOUT_FILE}) \
     2> >(tee ${STDERR_FILE})

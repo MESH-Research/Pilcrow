@@ -7,10 +7,14 @@ namespace Tests\Feature;
 use App\Models\StyleCriteria;
 use Illuminate\Support\Str;
 use PHPUnit\Framework\Attributes\DataProvider;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class StyleCriteriaTest extends TestCase
 {
+
+    use RefreshDatabase;
+
     protected function makeTestCriteria()
     {
         return StyleCriteria::factory()->makeOne(['publication_id' => Str::uuid()]);
