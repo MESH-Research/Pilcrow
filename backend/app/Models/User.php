@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace App\Models;
@@ -143,7 +142,7 @@ class User extends Authenticatable implements MustVerifyEmail
     public function toSearchableArray()
     {
         return [
-            'id' => (int) $this->id,
+            'id' => (int)$this->id,
             'name' => $this->name,
             'username' => $this->username,
             'email' => $this->email,

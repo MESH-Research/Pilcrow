@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace App\Rules;
@@ -9,7 +8,6 @@ use Illuminate\Contracts\Validation\ValidationRule;
 
 class ValidUrl implements ValidationRule
 {
-
     public $implicit = true;
 
     /**
@@ -23,6 +21,7 @@ class ValidUrl implements ValidationRule
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         // Source: https://gist.github.com/gruber/8891611
+        // phpcs:disable Generic.Files.LineLength.TooLong
         $regex = <<<EOD
         ~^(?i)\b((?:https?:(?:/{1,3}|[a-z0-9%])|[a-z0-9.\-]+[.](?:com|net|org|edu|gov|mil|aero|asia|biz|cat|coop|info|int
         |jobs|mobi|museum|name|post|pro|tel|travel|xxx|ac|ad|ae|af|ag|ai|al|am|an|ao|aq|ar|as|at|au|aw|ax|az|ba|bb|bd|be
@@ -43,14 +42,17 @@ class ValidUrl implements ValidationRule
         u|rw|sa|sb|sc|sd|se|sg|sh|si|sj|Ja|sk|sl|sm|sn|so|sr|ss|st|su|sv|sx|sy|sz|tc|td|tf|tg|th|tj|tk|tl|tm|tn|to|tp|tr
         |tt|tv|tw|tz|ua|ug|uk|us|uy|uz|va|vc|ve|vg|vi|vn|vu|wf|ws|ye|yt|yu|za|zm|zw)\b/?(?!@)))~
         EOD;
+        // phpcs:enable Generic.Files.LineLength.TooLong
 
         if (empty($value)) {
             $fail('The URL is invalid');
+
             return;
         }
 
         if (!preg_match($regex, $value)) {
             $fail('The URL is invalid');
+
             return;
         }
     }
