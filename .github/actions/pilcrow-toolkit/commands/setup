@@ -1,4 +1,4 @@
-d#!/bin/bash
+#!/bin/bash
 if [ "${POST_ENTRYPOINT}" == "true" ]; then
     # Check if anything was written to the output cache directory during the bake command.
     CACHE_OUTPUT=.output-cache
