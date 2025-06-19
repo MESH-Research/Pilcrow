@@ -84,6 +84,10 @@ RUN composer install --prefer-dist
 ARG BUILDSTAMP
 
 RUN mysql2sqlite database/schema/mysql-schema.sql > database/schema/sqlite-schema.sql
+RUN ./artisan about \
+    && ./artisan config:show cache \
+    && ./artisan config:show session \
+    && ./artisan config:show database
 
 RUN --mount=type=cache,target=/tmp/output \
     mkdir -p "${OUTPUT_PATH}" && \
