@@ -87,7 +87,8 @@ RUN mysql2sqlite database/schema/mysql-schema.sql > database/schema/sqlite-schem
 RUN ./artisan about \
     && ./artisan config:show cache \
     && ./artisan config:show session \
-    && ./artisan config:show database
+    && ./artisan config:show database \
+    && ./artisan lighthouse:cache
 
 RUN --mount=type=cache,target=/tmp/output \
     mkdir -p "${OUTPUT_PATH}" && \
