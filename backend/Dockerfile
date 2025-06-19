@@ -22,6 +22,8 @@ RUN  apt update && apt install -y ${APT_PACKAGES} \
 
 RUN curl -Lo /wait https://github.com/ufoscout/docker-compose-wait/releases/download/${COMPOSE_WAIT_VERSION}/wait \
     && chmod 0755 /wait \
+    && curl -Lo /usr/local/bin/mysql2sqlite https://raw.githubusercontent.com/mysql2sqlite/mysql2sqlite/refs/heads/master/mysql2sqlite \
+    && chmod +x /usr/local/bin/mysql2sqlite \
     && curl -Lo /usr/local/bin/php-fpm-healthcheck https://raw.githubusercontent.com/renatomefi/php-fpm-healthcheck/master/php-fpm-healthcheck \
     && chmod 0755 /usr/local/bin/php-fpm-healthcheck \
     && curl --silent --show-error -L https://github.com/jgm/pandoc/releases/download/${PANDOC_VERSION}/pandoc-${PANDOC_VERSION}-1-${TARGETARCH}.deb -o /tmp/pandoc.deb \
@@ -71,9 +73,8 @@ ARG STDERR_FILE=${OUTPUT_PATH}/errors.txt
 
 # Switch to php-development.ini
 USER root
-RUN cp ${PHP_INI_DIR}/php.ini-development ${PHP_INI_DIR}/php.ini \
-    && curl -Lo /usr/local/bin/mysql2sqlite https://raw.githubusercontent.com/mysql2sqlite/mysql2sqlite/refs/heads/master/mysql2sqlite \
-    && chmod +x /usr/local/bin/mysql2sqlite
+RUN rm ${PHP_INI_DIR}/php.ini
+
 
 # Re-run composer install to add dev dependencies
 USER www-data
