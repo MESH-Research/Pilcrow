@@ -3,32 +3,32 @@ if [ "${POST_ENTRYPOINT}" == "true" ]; then
     # Check if anything was written to the output cache directory during the bake command.
     CACHE_OUTPUT=.output-cache
     for dir in "${CACHE_OUTPUT}"/*; do
-    if [[ -d "$dir" ]]; then
-        echo "Found directory in cache: $dir"
-        if [[ -r "${dir}/output.md" ]]; then
-            echo "Writing markdown step summary."
-            cat "${dir}/output.md" >> "$GITHUB_STEP_SUMMARY"
-        else
-            if [[ -s "${dir}/errors.txt" ]]; then
-                echo "<details><summary>STDERR Output</summary>" >> "$GITHUB_STEP_SUMMARY"
-                echo '```' >> "$GITHUB_STEP_SUMMARY"
-                aha --no-header "${dir}/errors.txt" >> "$GITHUB_STEP_SUMMARY"
-                echo '```' >> "$GITHUB_STEP_SUMMARY"
-                echo "</details>" >> "$GITHUB_STEP_SUMMARY"
-                echo "" >> "$GITHUB_STEP_SUMMARY"
-            fi
-            if [[ -s "${dir}/output.txt" ]]; then
-                echo "<details><summary>STDOUT Output</summary>" >> "$GITHUB_STEP_SUMMARY"
-                echo '```' >> "$GITHUB_STEP_SUMMARY"
-                aha --no-header  "${dir}/output.txt" >> "$GITHUB_STEP_SUMMARY"
-                echo '```' >> "$GITHUB_STEP_SUMMARY"
-                echo "</details>" >> "$GITHUB_STEP_SUMMARY"
+        if [[ -d "$dir" ]]; then
+            echo "Found directory in cache: $dir"
+            if [[ -r "${dir}/output.md" ]]; then
+                echo "Writing markdown step summary."
+                cat "${dir}/output.md" >> "$GITHUB_STEP_SUMMARY"
+            else
+                if [[ -s "${dir}/errors.txt" ]]; then
+                    echo "<details><summary>STDERR Output</summary>" >> "$GITHUB_STEP_SUMMARY"
+                    echo '```' >> "$GITHUB_STEP_SUMMARY"
+                    aha --no-header "${dir}/errors.txt" >> "$GITHUB_STEP_SUMMARY"
+                    echo '```' >> "$GITHUB_STEP_SUMMARY"
+                    echo "</details>" >> "$GITHUB_STEP_SUMMARY"
+                    echo "" >> "$GITHUB_STEP_SUMMARY"
+                fi
+                if [[ -s "${dir}/output.txt" ]]; then
+                    echo "<details><summary>STDOUT Output</summary>" >> "$GITHUB_STEP_SUMMARY"
+                    echo '```' >> "$GITHUB_STEP_SUMMARY"
+                    aha --no-header  "${dir}/output.txt" >> "$GITHUB_STEP_SUMMARY"
+                    echo '```' >> "$GITHUB_STEP_SUMMARY"
+                    echo "</details>" >> "$GITHUB_STEP_SUMMARY"
+                fi
+
             fi
 
         fi
-
-    fi
-done
+    done
 
 fi
 
