@@ -64,7 +64,7 @@ FROM base AS unit-test
 
 ENV DB_CONNECTION=sqlite
 ENV DB_DATABASE="database/database.sqlite"
-ENV APP_ENV=local
+ENV APP_ENV=testing
 ENV APP_DEBUG=true
 
 ARG OUTPUT_PATH=/tmp/output/fpm-unit-test
