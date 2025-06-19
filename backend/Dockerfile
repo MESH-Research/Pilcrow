@@ -29,7 +29,8 @@ RUN curl -Lo /wait https://github.com/ufoscout/docker-compose-wait/releases/down
     && rm /tmp/pandoc.deb
 
 RUN echo "pm.status_path = /status" >> /usr/local/etc/php-fpm.d/zz-docker.conf \
-    && cp ${PHP_INI_DIR}/php.ini-production ${PHP_INI_DIR}/php.ini
+    && cp ${PHP_INI_DIR}/php.ini-production ${PHP_INI_DIR}/php.ini \
+    && echo "error_reporting=E_ALL ^ (E_DEPRECATED | E_STRICT)" >> ${PHP_INI_DIR}/conf.d/errors.ini
 
 RUN --mount=type=cache,target=/tmp/output chmod 0777 /tmp/output
 COPY --from=composer /usr/bin/composer /usr/bin/composer
@@ -71,7 +72,6 @@ ARG STDERR_FILE=${OUTPUT_PATH}/errors.txt
 # Switch to php-development.ini
 USER root
 RUN cp ${PHP_INI_DIR}/php.ini-development ${PHP_INI_DIR}/php.ini \
-    && echo "error_reporting=E_ALL ^ (E_DEPRECATED | E_STRICT)" >> ${PHP_INI_DIR}/conf.d/errors.conf \
     && curl -Lo /usr/local/bin/mysql2sqlite https://raw.githubusercontent.com/mysql2sqlite/mysql2sqlite/refs/heads/master/mysql2sqlite \
     && chmod +x /usr/local/bin/mysql2sqlite
 
