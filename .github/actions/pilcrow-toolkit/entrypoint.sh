@@ -1,5 +1,5 @@
 #!/bin/sh
-
+export CACHE_OUTPUT=.output-cache
 COMMAND="/commands/$1"
 git config --global --add safe.directory $(pwd)
 set -e

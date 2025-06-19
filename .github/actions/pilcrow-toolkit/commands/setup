@@ -1,8 +1,13 @@
 #!/bin/bash
 if [ "${POST_ENTRYPOINT}" == "true" ]; then
     # Check if anything was written to the output cache directory during the bake command.
-    CACHE_OUTPUT=.output-cache
-    for dir in "${CACHE_OUTPUT}"/*; do
+
+    OUTPUT_DIRS=$(find .  -maxdepth 1 -mindepth 1 -type d)
+    if [[ -z ${OUTPUT_DIRS} ]]; then
+        echo "No output directories found in ${CACHE_OUTPUT}."
+        exit 0
+    fi
+    for dir in "${OUTPUT_DIRS}"; do
         if [[ -d "$dir" ]]; then
             echo "Found directory in cache: $dir"
             if [[ -r "${dir}/output.md" ]]; then
