@@ -73,7 +73,8 @@ ARG STDERR_FILE=${OUTPUT_PATH}/errors.txt
 
 # Switch to php-development.ini
 USER root
-RUN rm ${PHP_INI_DIR}/php.ini
+RUN cp ${PHP_INI_DIR}/php.ini-development ${PHP_INI_DIR}/php.ini && \
+    echo "memory_limit=256M" >> ${PHP_INI_DIR}/conf.d/memory.ini
 
 
 # Re-run composer install to add dev dependencies
@@ -84,11 +85,6 @@ RUN composer install --prefer-dist
 ARG BUILDSTAMP
 
 RUN mysql2sqlite database/schema/mysql-schema.sql > database/schema/sqlite-schema.sql
-RUN ./artisan about \
-    && ./artisan config:show cache \
-    && ./artisan config:show session \
-    && ./artisan config:show database \
-    && ./artisan lighthouse:cache
 
 RUN --mount=type=cache,target=/tmp/output \
     mkdir -p "${OUTPUT_PATH}" && \
