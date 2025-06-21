@@ -67,7 +67,7 @@ echo "repository=${GITHUB_REPOSITORY,,}" >> "$GITHUB_OUTPUT"
 echo "docker-registry-cache=${DOCKER_REGISTRY_CACHE}" >> "$GITHUB_OUTPUT"
 echo "buildstamp=$(date --iso=ns)" >> "$GITHUB_OUTPUT"
 if [ "${TARGET}" == "release" ]; then
-    echo "image-template=ghcr.io/${REPO}/__service__" >> "$GITHUB_ENV"
+    echo "image-template=ghcr.io/${REPO}/__service__" >> "$GITHUB_OUTPUT"
 else
-    echo "image-template=${DOCKER_REGISTRY_CACHE}" >> "$GITHUB_ENV"
+    echo "image-template=${DOCKER_REGISTRY_CACHE}" >> "$GITHUB_OUTPUT"
 fi
