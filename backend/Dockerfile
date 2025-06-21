@@ -82,7 +82,7 @@ USER root
 RUN cp ${PHP_INI_DIR}/php.ini-development ${PHP_INI_DIR}/php.ini
 # Setup the output directory
 RUN --mount=type=cache,target=/tmp/output \
-    mkdir -p "${OUTPUT_PATH}" && \
+    mkdir -p "${OUTPUT_PATH}"
 
 # Re-run composer install to add dev dependencies
 USER www-data
