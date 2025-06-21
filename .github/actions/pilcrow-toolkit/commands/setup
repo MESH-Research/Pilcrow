@@ -8,6 +8,17 @@ if [[ "$POST_ENTRYPOINT" == "true" ]]; then
         exit 0
     fi
     file $(which aha)
+    aha --help
+    if [[ $? -ne 0 ]]; then
+        echo "Path to 'aha' command is not executable or not found."
+        echo "Error: 'aha' command not found. Please install 'aha' to format the output."
+    fi
+    aha=$(which aha)
+    $aha --help
+    if [[ $? -ne 0 ]]; then
+        echo "ABSOLUTE PATH to 'aha' command is not executable or not found."
+        echo "Error: 'aha' command not found. Please install 'aha' to format the output."
+    fi
     for dir in "${OUTPUT_DIRS}"; do
         echo "Checking directory: $dir"
         if [[ -d "$dir" ]]; then

@@ -14,7 +14,7 @@ ARG ORAS_VERSION=1.2.2
 ARG TARGETOS
 ARG TARGETARCH
 
-COPY --from=builder /usr/local/bin/aha /usr/local/bin/aha
+COPY --from=builder /src/aha /usr/local/bin/aha
 
 RUN apk add --no-cache \
     curl \
