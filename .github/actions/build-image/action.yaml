@@ -14,19 +14,13 @@ inputs:
 outputs:
   version:
     description: "Version of the package that was built"
-    value: ${{ steps.docker-meta.outputs.version }}
-  web_image:
-    description: "Web image name that was built"
-    value: ${{ env.WEB_IMAGE }}
-  fpm_image:
-    description: "FPM image name that was built"
-    value: ${{ env.FPM_IMAGE }}
+    value: ${{ steps.parse-docker-meta.outputs.version }}
   tags:
     description: "List of tags"
-    value: ${{ steps.docker-meta.outputs.tags}}
-  frontend_bundle:
+    value: ${{ steps.docker-input-metadata.outputs.tags}}
+  frontend-bundle:
     description: "Path to the frontend bundle"
-    value: ${{ steps.frontend-bundle.outputs.bundle_file }}
+    value: ${{ steps.parse-docker-meta.outputs.frontend-bundle }}
 
 runs:
   using: "composite"
@@ -92,12 +86,12 @@ runs:
       id: docker-bake
       uses: docker/bake-action@v6.8.0
       env:
-        PUSH: ${{ inputs.push }}
         BUILDSTAMP: ${{ steps.setup.outputs.buildstamp }}
         VERSION: ${{ steps.setup.outputs.version }}
         VERSION_URL: ${{ steps.setup.outputs.version-url }}
         VERSION_DATE: ${{ steps.setup.outputs.version-date }}
       with:
+        push: ${{ inputs.push }}
         source: .
         targets: ${{ inputs.target }}
         allow: fs.write=*

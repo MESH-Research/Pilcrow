@@ -87,7 +87,7 @@ jobs:
         name: Build Image
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          push: false
+          push: true
   backend-unit-test:
     name: Backend / Unit Test
     runs-on: ubuntu-24.04
@@ -101,13 +101,13 @@ jobs:
       - uses: ./.github/actions/build-image
         with:
           target: "fpm-test-ci"
-  # e2e:
-  #   name: "E2E Test"
-  #   needs: [build-images]
-  #   uses: ./.github/workflows/do-test-e2e.yml
-  #   secrets: inherit
-  #   with:
-  #     version: ${{ needs.build-images.outputs.version }}
+  e2e:
+    name: "E2E Test"
+    needs: [build-images]
+    uses: ./.github/workflows/do-test-e2e.yml
+    secrets: inherit
+    with:
+      version: ${{ needs.build-images.outputs.version }}
   lint-php:
     name: PHP Lint
     runs-on: ubuntu-24.04
