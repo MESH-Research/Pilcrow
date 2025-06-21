@@ -69,6 +69,7 @@ runs:
       id: docker-registry-cache
       with:
         image: ${{ steps.setup.outputs.docker-registry-cache }}
+        pull-request-cache: true
     - name: Consolidate Docker Bake Files
       shell: bash
       id: cp-bake-files
