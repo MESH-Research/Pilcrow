@@ -11,6 +11,7 @@ if [[ "$POST_ENTRYPOINT" == "true" ]]; then
         echo "Checking directory: $dir"
         if [[ -d "$dir" ]]; then
             echo "Found directory in cache: $dir"
+            ls -la "$dir"
             if [[ -r "${dir}/output.md" ]]; then
                 echo "Writing markdown step summary."
                 cat "${dir}/output.md" >> "$GITHUB_STEP_SUMMARY"
