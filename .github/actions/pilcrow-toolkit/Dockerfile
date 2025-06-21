@@ -21,6 +21,7 @@ RUN apk add --no-cache \
     git \
     bash \
     coreutils \
+    file \
     jq
 
 RUN curl -Lo oras.tar.gz https://github.com/oras-project/oras/releases/download/v${ORAS_VERSION}/oras_${ORAS_VERSION}_${TARGETOS}_${TARGETARCH}.tar.gz && \
