@@ -84,7 +84,7 @@ RUN cp ${PHP_INI_DIR}/php.ini-development ${PHP_INI_DIR}/php.ini
 RUN --mount=type=cache,target=/tmp/output \
     mkdir -p "${OUTPUT_PATH}" && \
 
-    # Re-run composer install to add dev dependencies
+# Re-run composer install to add dev dependencies
 USER www-data
 RUN --mount=type=cache,target=/tmp/composer \
     composer install --prefer-dist
