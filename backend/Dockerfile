@@ -109,7 +109,7 @@ ARG OUTPUT_PATH=/tmp/output/fpm-lint
 ARG STDOUT_FILE=${OUTPUT_PATH}/stdout.txt
 ARG STDERR_FILE=${OUTPUT_PATH}/stderr.txt
 
-user root
+USER root
 RUN --mount=type=cache,target=/tmp/output \
     mkdir -p "${OUTPUT_PATH}" && \
     chmod -R 0777 "${OUTPUT_PATH}"
