@@ -9,7 +9,7 @@ ADD https://github.com/theZiz/aha.git .
 RUN make && make install
 
 
-FROM docker:dind
+FROM alpine:3.20
 ARG ORAS_VERSION=1.2.2
 ARG TARGETOS
 ARG TARGETARCH
