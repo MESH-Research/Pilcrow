@@ -91,8 +91,8 @@ RUN --mount=type=cache,target=/tmp/composer \
 ARG BUILDSTAMP
 ARG LIGHTHOUSE_CACHE_ENABLE=false
 
-RUN mysql2sqlite database/schema/mysql-schema.sql > database/schema/sqlite-schema.sql \
-    && rm bootstrap/cache/lighthouse-schema.php
+RUN mysql2sqlite database/schema/mysql-schema.sql > database/schema/sqlite-schema.sql
+#    && rm bootstrap/cache/lighthouse-schema.php
 
 RUN --mount=type=cache,target=/tmp/output \
     mkdir -p "${OUTPUT_PATH}" && \
