@@ -74,14 +74,17 @@ ENV DB_DATABASE="database/database.sqlite"
 ENV APP_ENV=testing
 
 ARG OUTPUT_PATH=/tmp/output/fpm-unit-test
-ARG STDOUT_FILE=${OUTPUT_PATH}/output.txt
-ARG STDERR_FILE=${OUTPUT_PATH}/errors.txt
+ARG STDOUT_FILE=${OUTPUT_PATH}/stdout.txt
+ARG STDERR_FILE=${OUTPUT_PATH}/stderr.txt
 
 # Switch to php-development.ini
 USER root
 RUN cp ${PHP_INI_DIR}/php.ini-development ${PHP_INI_DIR}/php.ini
+# Setup the output directory
+RUN --mount=type=cache,target=/tmp/output \
+    mkdir -p "${OUTPUT_PATH}" && \
 
-# Re-run composer install to add dev dependencies
+    # Re-run composer install to add dev dependencies
 USER www-data
 RUN --mount=type=cache,target=/tmp/composer \
     composer install --prefer-dist
@@ -90,26 +93,28 @@ RUN --mount=type=cache,target=/tmp/composer \
 ARG BUILDSTAMP
 
 RUN mysql2sqlite database/schema/mysql-schema.sql > database/schema/sqlite-schema.sql
-#    && rm bootstrap/cache/lighthouse-schema.php
 
 RUN --mount=type=cache,target=/tmp/output \
     mkdir -p "${OUTPUT_PATH}" && \
     touch .env && \
     touch ${DB_DATABASE} && \
-#    ./artisan lighthouse:cache && \
     ./artisan config:show cache && \
     ./artisan test \
     > >(tee ${STDOUT_FILE}) \
     2> >(tee ${STDERR_FILE})
 
 FROM base AS lint
+
 ARG OUTPUT_PATH=/tmp/output/fpm-lint
-ARG STDOUT_FILE=${OUTPUT_PATH}/output.txt
-ARG STDERR_FILE=${OUTPUT_PATH}/errors.txt
+ARG STDOUT_FILE=${OUTPUT_PATH}/stdout.txt
+ARG STDERR_FILE=${OUTPUT_PATH}/stderr.txt
 
+user root
 RUN --mount=type=cache,target=/tmp/output \
-    mkdir -p "${OUTPUT_PATH}"
+    mkdir -p "${OUTPUT_PATH}" && \
+    chmod -R 0777 "${OUTPUT_PATH}"
 
+USER www-data
 RUN --mount=type=cache,target=/tmp/output \
     composer install --prefer-dist && \
     composer lint \
