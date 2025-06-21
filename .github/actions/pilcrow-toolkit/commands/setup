@@ -19,7 +19,7 @@ if [[ "$POST_ENTRYPOINT" == "true" ]]; then
                     echo "Writing errors to step summary: $dir"
                     echo "<details><summary>STDERR Output</summary>" >> "$GITHUB_STEP_SUMMARY"
                     echo '```' >> "$GITHUB_STEP_SUMMARY"
-                    aha --no-header -f "${dir}/errors.txt" >> "$GITHUB_STEP_SUMMARY"
+                    cat "${dir}/errors.txt | aha --no-header >> "$GITHUB_STEP_SUMMARY"
                     echo '```' >> "$GITHUB_STEP_SUMMARY"
                     echo "</details>" >> "$GITHUB_STEP_SUMMARY"
                     echo "" >> "$GITHUB_STEP_SUMMARY"
@@ -28,7 +28,7 @@ if [[ "$POST_ENTRYPOINT" == "true" ]]; then
                     echo "Writing stdout to step summary: $dir"
                     echo "<details><summary>STDOUT Output</summary>" >> "$GITHUB_STEP_SUMMARY"
                     echo '```' >> "$GITHUB_STEP_SUMMARY"
-                    aha --no-header -f "${dir}/output.txt" >> "$GITHUB_STEP_SUMMARY"
+                    cat ${dir}/output.txt | aha --no-header >> "$GITHUB_STEP_SUMMARY"
                     echo '```' >> "$GITHUB_STEP_SUMMARY"
                     echo "</details>" >> "$GITHUB_STEP_SUMMARY"
                 fi
