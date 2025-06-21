@@ -49,9 +49,9 @@ VERSION_DATE=$(git show -s --format=%cI ${GITHUB_SHA})
 REPO=${GITHUB_REPOSITORY,,}
 DOCKER_REGISTRY_CACHE=ghcr.io/${REPO}/cache/__service__
 
-echo "source.version=${VERSION}" >> "$GITHUB_OUTPUT"
-echo "source.version-url=${VERSION_URL}" >> "$GITHUB_OUTPUT"
-echo "source.version-date=${VERSION_DATE}" >> "$GITHUB_OUTPUT"
+echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+echo "version-url=${VERSION_URL}" >> "$GITHUB_OUTPUT"
+echo "version-date=${VERSION_DATE}" >> "$GITHUB_OUTPUT"
 echo "repository=${GITHUB_REPOSITORY,,}" >> "$GITHUB_OUTPUT"
 echo "docker-registry-cache=${DOCKER_REGISTRY_CACHE}" >> "$GITHUB_OUTPUT"
 echo "buildstamp=$(date --iso=ns)" >> "$GITHUB_OUTPUT"

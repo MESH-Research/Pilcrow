@@ -93,9 +93,9 @@ runs:
       env:
         PUSH: ${{ inputs.push }}
         BUILDSTAMP: ${{ steps.setup.outputs.buildstamp }}
-        VERSION: ${{ steps.setup.outputs.source.version }}
-        VERSION_URL: ${{ steps.setup.outputs.source.version-url }}
-        VERSION_DATE: ${{ steps.setup.outputs.source.version-date }}
+        VERSION: ${{ steps.setup.outputs.version }}
+        VERSION_URL: ${{ steps.setup.outputs.version-url }}
+        VERSION_DATE: ${{ steps.setup.outputs.version-date }}
       with:
         source: .
         targets: ${{ inputs.target }}
