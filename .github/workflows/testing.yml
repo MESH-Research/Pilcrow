@@ -35,14 +35,16 @@ jobs:
           filters: |
             php:
               - 'backend/**'
-              - '*.php'
+              - '**/*.php'
             client:
               - 'client/**'
+              - '!**/*.md'
             api:
               - 'backend/**'
+              - '!**/*.md'
             js:
               - 'client/**'
-              - '*.js'
+              - '**/*.js'
             md:
               - '**/*.md'
   client-unit-test:
