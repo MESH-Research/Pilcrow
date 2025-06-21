@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace Tests\Api;
@@ -9,8 +8,8 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
 use Illuminate\Testing\Fluent\AssertableJson;
-use Tests\ApiTestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
+use Tests\ApiTestCase;
 
 class PublicationTest extends ApiTestCase
 {

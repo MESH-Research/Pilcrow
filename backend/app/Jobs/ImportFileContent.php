@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace App\Jobs;
@@ -59,7 +58,7 @@ class ImportFileContent implements ShouldQueue
     {
         //Fetch file from DB to ensure it hasn't already been processed or cancelled
         $this->file->refresh();
-        if ($this->file->import_status  !== SubmissionFileImportStatus::Pending) {
+        if ($this->file->import_status !== SubmissionFileImportStatus::Pending) {
             return;
         }
         $this->file->import_status = SubmissionFileImportStatus::Processing;

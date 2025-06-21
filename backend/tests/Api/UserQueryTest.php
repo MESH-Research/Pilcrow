@@ -1,13 +1,12 @@
 <?php
-
 declare(strict_types=1);
 
 namespace Tests\Api;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\ApiTestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
+use Tests\ApiTestCase;
 
 class UserQueryTest extends ApiTestCase
 {
@@ -104,48 +103,48 @@ class UserQueryTest extends ApiTestCase
         return [
             [
                 'searchTerm' => 'abcdef',
-                'shouldFind' => "ghijkl@gmail.com",
+                'shouldFind' => 'ghijkl@gmail.com',
                 'count' => 1,
             ],
             [
                 'searchTerm' => 'ghijkl@gmail.com',
-                'shouldFind' => "ghijkl@gmail.com",
+                'shouldFind' => 'ghijkl@gmail.com',
                 'count' => 1,
             ],
             [
                 'searchTerm' => 'mnopqr',
-                'shouldFind' => "ghijkl@gmail.com",
-                'count' => 1
+                'shouldFind' => 'ghijkl@gmail.com',
+                'count' => 1,
             ],
             [
                 'searchTerm' => 'aaaaaaaaaaaaaa',
                 'shouldFind' => null,
-                'count' => 0
+                'count' => 0,
             ],
             [
                 'searchTerm' => '<html>',
                 'shouldFind' => null,
-                'count' => 0
+                'count' => 0,
             ],
             [
                 'searchTerm' => null,
                 'shouldFind' => null,
-                'count' => 10
+                'count' => 10,
             ],
             [
                 'searchTerm' => '12345',
                 'shouldFind' => null,
-                'count' => 0
+                'count' => 0,
             ],
             [
                 'searchTerm' => 12345,
                 'shouldFind' => null,
-                'count' => 0
+                'count' => 0,
             ],
             [
                 'searchTerm' => '',
                 'shouldFind' => null,
-                'count' => 10
+                'count' => 10,
             ],
         ];
     }

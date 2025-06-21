@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace Tests\Api;
@@ -27,9 +26,10 @@ class UpdateUserMutationTest extends ApiTestCase
             '<script> tag in URL' => [
                 'valid' => false,
                 'url' => '<script>alert("hi")</script>https://www.msu.edu',
-            ]
+            ],
         ];
     }
+
     /**
      * @param bool $valid
      * @param mixed $url

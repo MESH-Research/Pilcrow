@@ -1,15 +1,15 @@
 <?php
+declare(strict_types=1);
 
 namespace Tests\Unit\Rules;
 
 use App\Rules\ValidUrl;
 use Illuminate\Support\Facades\Validator;
-use Tests\TestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
+use Tests\TestCase;
 
 class ValidUrlRuleTest extends TestCase
 {
-
     public static function passingUrls()
     {
         return [
