@@ -88,9 +88,6 @@ jobs:
   lint-js:
     name: JS Lint
     runs-on: ubuntu-24.04
-    defaults:
-      run:
-        working-directory: ./client
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
