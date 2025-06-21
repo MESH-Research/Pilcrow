@@ -65,7 +65,7 @@ jobs:
           fetch-tags: true
       - uses: ./.github/actions/build-image
         with:
-          target: "fpm-test"
+          target: "fpm-test-ci"
   # e2e:
   #   name: "E2E Test"
   #   needs: [build-images]
@@ -84,7 +84,7 @@ jobs:
           fetch-tags: true
       - uses: ./.github/actions/build-image
         with:
-          target: "fpm-lint"
+          target: "fpm-lint-ci"
   lint-js:
     name: JS Lint
     runs-on: ubuntu-24.04
@@ -96,7 +96,7 @@ jobs:
           fetch-tags: true
       - uses: ./.github/actions/build-image
         with:
-          target: "web-lint"
+          target: "web-lint-ci"
   lint-md:
     name: MD Lint
     runs-on: ubuntu-24.04

@@ -44,6 +44,16 @@ target "web" {
     }
 }
 
+target "ci-targets" {
+    matrix = {
+        tgt = ["web-test", "web-lint", "fpm-test", "fpm-lint"]
+    }
+    name = "${tgt}-ci"
+    inherits = [tgt]
+    cache-from = [ for v in target.docker-build-cache-config-action.cache-from : cacheReplace(v, tgt)]
+    cache-to = [ for v in target.docker-build-cache-config-action.cache-to : cacheReplace(v, tgt)]
+}
+
 target "web-test" {
     inherits = ["web"]
     target = "unit-test"
