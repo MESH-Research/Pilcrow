@@ -7,6 +7,7 @@ if [[ "$POST_ENTRYPOINT" == "true" ]]; then
         echo "No output directories found in ${CACHE_OUTPUT}."
         exit 0
     fi
+    file $(which aha)
     for dir in "${OUTPUT_DIRS}"; do
         echo "Checking directory: $dir"
         if [[ -d "$dir" ]]; then
