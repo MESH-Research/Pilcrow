@@ -18,9 +18,9 @@ function summary {
 }
 
 function txt {
-    aha=$(which aha) --no-header
+    aha=$(which aha)
     echo '```' >> "$GITHUB_STEP_SUMMARY"
-    cat "$1" | $aha >> "$GITHUB_STEP_SUMMARY"
+    cat "$1" | $aha --no-header >> "$GITHUB_STEP_SUMMARY"
     echo '```' >> "$GITHUB_STEP_SUMMARY"
 }
 
