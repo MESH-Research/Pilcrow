@@ -16,6 +16,7 @@ if [[ "$POST_ENTRYPOINT" == "true" ]]; then
                 cat "${dir}/output.md" >> "$GITHUB_STEP_SUMMARY"
             else
                 if [[ -s "${dir}/errors.txt" ]]; then
+                    echo "Writing errors to step summary: $dir"
                     echo "<details><summary>STDERR Output</summary>" >> "$GITHUB_STEP_SUMMARY"
                     echo '```' >> "$GITHUB_STEP_SUMMARY"
                     aha --no-header "${dir}/errors.txt" >> "$GITHUB_STEP_SUMMARY"
@@ -24,6 +25,7 @@ if [[ "$POST_ENTRYPOINT" == "true" ]]; then
                     echo "" >> "$GITHUB_STEP_SUMMARY"
                 fi
                 if [[ -s "${dir}/output.txt" ]]; then
+                    echo "Writing stdout to step summary: $dir"
                     echo "<details><summary>STDOUT Output</summary>" >> "$GITHUB_STEP_SUMMARY"
                     echo '```' >> "$GITHUB_STEP_SUMMARY"
                     aha --no-header  "${dir}/output.txt" >> "$GITHUB_STEP_SUMMARY"
