@@ -12,6 +12,7 @@ ARG PHP_EXTS="bcmath pdo_mysql pcntl zip"
 ARG PHP_PECL_EXTS="redis"
 ARG APT_PACKAGES="openssl ca-certificates bash libzip-dev libaio1 libncurses6 libnuma1 libxml2-dev git libfcgi-bin sqlite3 default-mysql-client"
 ENV COMPOSER_HOME=/tmp/composer
+ENV LOG_CHANNEL=stderr
 
 RUN  apt update && apt install -y ${APT_PACKAGES} \
     && docker-php-ext-install -j$(nproc) ${PHP_EXTS} \
@@ -69,10 +70,8 @@ FROM base AS fpm
 
 FROM base AS unit-test
 
-ENV DB_CONNECTION=sqlite
 ENV DB_DATABASE="database/database.sqlite"
 ENV APP_ENV=testing
-ENV APP_DEBUG=true
 
 ARG OUTPUT_PATH=/tmp/output/fpm-unit-test
 ARG STDOUT_FILE=${OUTPUT_PATH}/output.txt
@@ -89,14 +88,16 @@ RUN --mount=type=cache,target=/tmp/composer \
 
 # Supply a random/cache busting timestamp to prevent caching of the test run.
 ARG BUILDSTAMP
-ARG LIGHTHOUSE_CACHE_ENABLE=false
 
 RUN mysql2sqlite database/schema/mysql-schema.sql > database/schema/sqlite-schema.sql
 #    && rm bootstrap/cache/lighthouse-schema.php
 
 RUN --mount=type=cache,target=/tmp/output \
     mkdir -p "${OUTPUT_PATH}" && \
+    touch .env && \
     touch ${DB_DATABASE} && \
+#    ./artisan lighthouse:cache && \
+    ./artisan config:show cache && \
     ./artisan test \
     > >(tee ${STDOUT_FILE}) \
     2> >(tee ${STDERR_FILE})

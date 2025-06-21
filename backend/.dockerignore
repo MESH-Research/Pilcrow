@@ -1,3 +1,7 @@
 storage
 vendor
 Dockerfile
+.env
+.env.backup
+.phpunit.result.cache
+public/storage
