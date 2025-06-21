@@ -7,47 +7,17 @@ if [[ "$POST_ENTRYPOINT" == "true" ]]; then
         echo "No output directories found in ${CACHE_OUTPUT}."
         exit 0
     fi
-    file $(which aha)
-    aha --help
-    if [[ $? -ne 0 ]]; then
-        echo "Path to 'aha' command is not executable or not found."
-        echo "Error: 'aha' command not found. Please install 'aha' to format the output."
-    fi
-    aha=$(which aha)
-    $aha --help
-    if [[ $? -ne 0 ]]; then
-        echo "ABSOLUTE PATH to 'aha' command is not executable or not found."
-        echo "Error: 'aha' command not found. Please install 'aha' to format the output."
-    fi
     for dir in "${OUTPUT_DIRS}"; do
         echo "Checking directory: $dir"
         if [[ -d "$dir" ]]; then
             echo "Found directory in cache: $dir"
             ls -la "$dir"
-            if [[ -r "${dir}/output.md" ]]; then
-                echo "Writing markdown step summary."
-                cat "${dir}/output.md" >> "$GITHUB_STEP_SUMMARY"
-            else
-                if [[ -s "${dir}/errors.txt" ]]; then
-                    echo "Writing errors to step summary: $dir"
-                    echo "<details><summary>STDERR Output</summary>" >> "$GITHUB_STEP_SUMMARY"
-                    echo '```' >> "$GITHUB_STEP_SUMMARY"
-                    cat "${dir}/errors.txt" | aha --no-header >> "$GITHUB_STEP_SUMMARY"
-                    echo '```' >> "$GITHUB_STEP_SUMMARY"
-                    echo "</details>" >> "$GITHUB_STEP_SUMMARY"
-                    echo "" >> "$GITHUB_STEP_SUMMARY"
+            for file in "${dir}"/*; do
+                if [[ -s "$file" ]]; then
+                    echo "Found file: $file"
+                    summary "$file"
                 fi
-                if [[ -s "${dir}/output.txt" ]]; then
-                    echo "Writing stdout to step summary: $dir"
-                    echo "<details><summary>STDOUT Output</summary>" >> "$GITHUB_STEP_SUMMARY"
-                    echo '```' >> "$GITHUB_STEP_SUMMARY"
-                    cat "${dir}/output.txt" | aha --no-header >> "$GITHUB_STEP_SUMMARY"
-                    echo '```' >> "$GITHUB_STEP_SUMMARY"
-                    echo "</details>" >> "$GITHUB_STEP_SUMMARY"
-                fi
-
-            fi
-
+            done
         fi
     done
 
@@ -73,3 +43,31 @@ if [ "${TARGET}" == "release" ]; then
 else
     echo "image-template=${DOCKER_REGISTRY_CACHE}" >> "$GITHUB_ENV"
 fi
+
+function summary {
+    file="$1"
+    ext="${file##*.}"
+    name="${file%.*}"
+    name="${name##*/}"
+    if [[ $(type -t "$ext") != function ]]; then
+        echo "No function defined for extension: $ext, using default markdown output."
+        return 0
+    fi
+    echo "<details>" >> "$GITHUB_STEP_SUMMARY"
+    echo "<summary>${name}</summary>" >> "$GITHUB_STEP_SUMMARY"
+    echo >> "$GITHUB_STEP_SUMMARY"
+    $ext "${file}"
+    echo >> "$GITHUB_STEP_SUMMARY"
+    echo "</details>" >> "$GITHUB_STEP_SUMMARY"
+}
+
+function txt {
+    aha=$(which aha) --no-header
+    echo '```' >> "$GITHUB_STEP_SUMMARY"
+    cat "$1" | $aha >> "$GITHUB_STEP_SUMMARY"
+    echo '```' >> "$GITHUB_STEP_SUMMARY"
+}
+
+function md {
+    cat "$1" >> "$GITHUB_STEP_SUMMARY"
+}
