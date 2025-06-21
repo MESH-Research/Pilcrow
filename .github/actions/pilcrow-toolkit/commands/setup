@@ -2,7 +2,7 @@
 if [[ "$POST_ENTRYPOINT" == "true" ]]; then
     # Check if anything was written to the output cache directory during the bake command.
 
-    OUTPUT_DIRS=$(find .  -maxdepth 1 -mindepth 1 -type d)
+    OUTPUT_DIRS=$(find ${CACHE_OUTPUT} -maxdepth 1 -mindepth 1 -type d)
     if [[ -z ${OUTPUT_DIRS} ]]; then
         echo "No output directories found in ${CACHE_OUTPUT}."
         exit 0
