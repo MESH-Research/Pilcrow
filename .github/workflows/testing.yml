@@ -25,6 +25,9 @@ jobs:
     outputs:
       php: ${{ steps.filter.outputs.php }}
       js: ${{ steps.filter.outputs.js }}
+      client: ${{ steps.filter.outputs.client }}
+      api: ${{ steps.filter.outputs.api }}
+      md: ${{ steps.filter.outputs.md }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
