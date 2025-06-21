@@ -8,6 +8,7 @@ if [[ "$POST_ENTRYPOINT" == "true" ]]; then
         exit 0
     fi
     for dir in "${OUTPUT_DIRS}"; do
+        echo "Checking directory: $dir"
         if [[ -d "$dir" ]]; then
             echo "Found directory in cache: $dir"
             if [[ -r "${dir}/output.md" ]]; then
