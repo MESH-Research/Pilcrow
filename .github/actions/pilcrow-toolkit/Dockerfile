@@ -1,6 +1,9 @@
-ARG GCC_VERSION=15.1.0
-FROM gcc:${GCC_VERSION} AS builder
+FROM alpine:3.20 AS builder
 
+RUN apk add --no-cache \
+    build-base \
+    git \
+    make
 
 WORKDIR /src
 
