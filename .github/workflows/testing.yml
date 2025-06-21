@@ -19,9 +19,37 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  changes:
+    name: Check Changes
+    runs-on: ubuntu-24.04
+    outputs:
+      php: ${{ steps.filter.outputs.php }}
+      js: ${{ steps.filter.outputs.js }}
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          predicate-quantifier: "every"
+          filters: |
+            php:
+              - 'backend/**'
+              - '*.php'
+            client:
+              - 'client/**'
+            api:
+              - 'backend/**'
+            js:
+              - 'client/**'
+              - '*.js'
+            md:
+              - '**/*.md'
   client-unit-test:
     name: "Client / Unit Test"
     runs-on: ubuntu-24.04
+    needs: [changes]
+    if: ${{ needs.changes.outputs.client == 'true' }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -31,7 +59,7 @@ jobs:
         id: build-image
         name: Run Unit Tests
         with:
-          target: "web-test"
+          target: "web-test-ci"
 
   build-images:
     name: "Build"
@@ -58,6 +86,8 @@ jobs:
   backend-unit-test:
     name: Backend / Unit Test
     runs-on: ubuntu-24.04
+    needs: [changes]
+    if: ${{ needs.changes.outputs.api == 'true' }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -76,6 +106,8 @@ jobs:
   lint-php:
     name: PHP Lint
     runs-on: ubuntu-24.04
+    needs: [changes]
+    if: ${{ needs.changes.outputs.php == 'true' }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -88,6 +120,8 @@ jobs:
   lint-js:
     name: JS Lint
     runs-on: ubuntu-24.04
+    needs: [changes]
+    if: ${{ needs.changes.outputs.js == 'true' }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -100,6 +134,8 @@ jobs:
   lint-md:
     name: MD Lint
     runs-on: ubuntu-24.04
+    needs: [changes]
+    if: ${{ needs.changes.outputs.md == 'true' }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
