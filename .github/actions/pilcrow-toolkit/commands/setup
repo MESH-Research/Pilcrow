@@ -1,4 +1,32 @@
 #!/bin/bash
+
+function summary {
+    file="$1"
+    ext="${file##*.}"
+    name="${file%.*}"
+    name="${name##*/}"
+    if [[ $(type -t "$ext") != function ]]; then
+        echo "No function defined for extension: $ext, using default markdown output."
+        return 0
+    fi
+    echo "<details>" >> "$GITHUB_STEP_SUMMARY"
+    echo "<summary>${name}</summary>" >> "$GITHUB_STEP_SUMMARY"
+    echo >> "$GITHUB_STEP_SUMMARY"
+    $ext "${file}"
+    echo >> "$GITHUB_STEP_SUMMARY"
+    echo "</details>" >> "$GITHUB_STEP_SUMMARY"
+}
+
+function txt {
+    aha=$(which aha) --no-header
+    echo '```' >> "$GITHUB_STEP_SUMMARY"
+    cat "$1" | $aha >> "$GITHUB_STEP_SUMMARY"
+    echo '```' >> "$GITHUB_STEP_SUMMARY"
+}
+
+function md {
+    cat "$1" >> "$GITHUB_STEP_SUMMARY"
+}
 if [[ "$POST_ENTRYPOINT" == "true" ]]; then
     # Check if anything was written to the output cache directory during the bake command.
 
@@ -43,31 +71,3 @@ if [ "${TARGET}" == "release" ]; then
 else
     echo "image-template=${DOCKER_REGISTRY_CACHE}" >> "$GITHUB_ENV"
 fi
-
-function summary {
-    file="$1"
-    ext="${file##*.}"
-    name="${file%.*}"
-    name="${name##*/}"
-    if [[ $(type -t "$ext") != function ]]; then
-        echo "No function defined for extension: $ext, using default markdown output."
-        return 0
-    fi
-    echo "<details>" >> "$GITHUB_STEP_SUMMARY"
-    echo "<summary>${name}</summary>" >> "$GITHUB_STEP_SUMMARY"
-    echo >> "$GITHUB_STEP_SUMMARY"
-    $ext "${file}"
-    echo >> "$GITHUB_STEP_SUMMARY"
-    echo "</details>" >> "$GITHUB_STEP_SUMMARY"
-}
-
-function txt {
-    aha=$(which aha) --no-header
-    echo '```' >> "$GITHUB_STEP_SUMMARY"
-    cat "$1" | $aha >> "$GITHUB_STEP_SUMMARY"
-    echo '```' >> "$GITHUB_STEP_SUMMARY"
-}
-
-function md {
-    cat "$1" >> "$GITHUB_STEP_SUMMARY"
-}
