@@ -34,8 +34,13 @@ RUN echo "pm.status_path = /status" >> /usr/local/etc/php-fpm.d/zz-docker.conf \
     && cp ${PHP_INI_DIR}/php.ini-production ${PHP_INI_DIR}/php.ini \
     && echo "error_reporting=E_ALL ^ (E_DEPRECATED | E_STRICT)" >> ${PHP_INI_DIR}/conf.d/errors.ini
 
-RUN --mount=type=cache,target=/tmp/output chmod 0777 /tmp/output
-COPY --from=composer /usr/bin/composer /usr/bin/composer
+RUN --mount=type=cache,target=/tmp/output \
+    chmod 0777 /tmp/output
+
+COPY --from=composer /usr/bin/composer /usr/bin/
+RUN --mount=type=cache,target=/tmp/composer \
+    chmod 0755 /tmp/composer \
+    && chown www-data:www-data /tmp/composer
 
 WORKDIR /var/www/html
 USER www-data
@@ -44,9 +49,11 @@ COPY --chown=www-data composer.json composer.lock ./
 #Make storage directories
 RUN mkdir -p storage/framework/cache storage/framework/sessions storage/framework/views
 
-RUN composer install --no-scripts --no-autoloader --prefer-dist --no-dev
+RUN --mount=type=cache,target=/tmp/composer \
+    composer install --no-scripts --no-autoloader --prefer-dist --no-dev
 COPY --chown=www-data . .
-RUN composer install --prefer-dist --no-plugins
+RUN --mount=type=cache,target=tmp/composer \
+    composer install --prefer-dist --no-plugins
 
 #Mint version into image last to limit cache busting
 ARG VERSION
@@ -73,18 +80,19 @@ ARG STDERR_FILE=${OUTPUT_PATH}/errors.txt
 
 # Switch to php-development.ini
 USER root
-RUN cp ${PHP_INI_DIR}/php.ini-development ${PHP_INI_DIR}/php.ini && \
-    echo "memory_limit=256M" >> ${PHP_INI_DIR}/conf.d/memory.ini
-
+RUN cp ${PHP_INI_DIR}/php.ini-development ${PHP_INI_DIR}/php.ini
 
 # Re-run composer install to add dev dependencies
 USER www-data
-RUN composer install --prefer-dist
+RUN --mount=type=cache,target=/tmp/composer \
+    composer install --prefer-dist
 
 # Supply a random/cache busting timestamp to prevent caching of the test run.
 ARG BUILDSTAMP
+ARG LIGHTHOUSE_CACHE_ENABLE=false
 
-RUN mysql2sqlite database/schema/mysql-schema.sql > database/schema/sqlite-schema.sql
+RUN mysql2sqlite database/schema/mysql-schema.sql > database/schema/sqlite-schema.sql \
+    && rm bootstrap/cache/lighthouse-schema.php
 
 RUN --mount=type=cache,target=/tmp/output \
     mkdir -p "${OUTPUT_PATH}" && \
