@@ -60,7 +60,7 @@ jobs:
         with:
           fetch-depth: 0
           fetch-tags: true
-      - uses: ./.github/actions/build-image
+      - uses: mesh-research/github-actions/build-image@main
         id: build-image
         name: Run Unit Tests
         with:
@@ -82,7 +82,7 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - uses: ./.github/actions/build-image
+      - uses: mesh-research/github-actions/build-image@main
         id: build-image
         name: Build Image
         with:
@@ -98,7 +98,7 @@ jobs:
         with:
           fetch-depth: 0
           fetch-tags: true
-      - uses: ./.github/actions/build-image
+      - uses: mesh-research/github-actions/build-image@main
         with:
           target: "fpm-test-ci"
   e2e:
@@ -119,7 +119,7 @@ jobs:
         with:
           fetch-depth: 0
           fetch-tags: true
-      - uses: ./.github/actions/build-image
+      - uses: mesh-research/github-actions/build-image@main
         with:
           target: "fpm-lint-ci"
   lint-js:
@@ -133,7 +133,7 @@ jobs:
         with:
           fetch-depth: 0
           fetch-tags: true
-      - uses: ./.github/actions/build-image
+      - uses: mesh-research/github-actions/build-image@main
         with:
           target: "web-lint-ci"
   lint-md:
