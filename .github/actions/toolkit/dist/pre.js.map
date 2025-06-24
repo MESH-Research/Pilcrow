@@ -1,0 +1,1 @@
+{"version":3,"file":"pre.js","sources":["../src/pre.ts"],"sourcesContent":["import { run } from \"./lib/action\";\n\nrun(\"pre\");\n"],"names":["run"],"mappings":"4gBAEAA,EAAI,KAAK"}

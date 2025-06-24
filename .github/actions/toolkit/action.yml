@@ -38,5 +38,6 @@ branding:
 # The action's runs
 runs:
   using: node20
-  main: dist/index.js
+  main: dist/main.js
   post: dist/post.js
+  pre: dist/pre.js
