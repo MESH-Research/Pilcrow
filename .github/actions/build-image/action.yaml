@@ -24,7 +24,7 @@ outputs:
 runs:
   using: "composite"
   steps:
-    - uses: mesh-research/pilcrow/.github/actions/toolkit@f66a012c8937b517ee709833d34c043d6aa7e46c
+    - uses: mesh-research/pilcrow/toolkit@7705fe6d8e815f9e30484de5c6df47769bd5a33d
       id: setup
       with:
         target: ${{ inputs.target }}
@@ -65,7 +65,7 @@ runs:
         image: ${{ steps.setup.outputs.docker-registry-cache }}
         pull-request-cache: true
     - name: Prepare Build
-      uses: mesh-research/pilcrow/.github/actions/toolkit@f66a012c8937b517ee709833d34c043d6aa7e46c
+      uses: mesh-research/pilcrow/toolkit@7705fe6d8e815f9e30484de5c6df47769bd5a33d
       with:
         command: pre-build
         bake-files: |
@@ -91,7 +91,7 @@ runs:
           ${{ steps.docker-registry-cache.outputs.bake-file }}
     - name: Parse Docker Metadata Output
       id: parse-build-output
-      uses: mesh-research/pilcrow/.github/actions/toolkit@f66a012c8937b517ee709833d34c043d6aa7e46c
+      uses: mesh-research/pilcrow/toolkit@7705fe6d8e815f9e30484de5c6df47769bd5a33d
       with:
         command: parse-build-output
         docker-metadata: ${{ steps.docker-bake.outputs.metadata }}
