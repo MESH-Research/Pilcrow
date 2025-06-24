@@ -1,6 +1,6 @@
-name: Unique of your action name
-description: Description of your action
-author: Your GitHub username
+name: Pilcrow Build Toolkit Action
+description: Handles some of the idiosyncrasies of running Pilcrow Build Toolkit commands in GitHub Actions
+author: mesh-research
 
 # The action's inputs
 inputs:

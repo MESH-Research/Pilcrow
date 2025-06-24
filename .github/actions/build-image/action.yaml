@@ -24,7 +24,7 @@ outputs:
 runs:
   using: "composite"
   steps:
-    - uses: ./.github/actions/toolkit
+    - uses: mesh-research/pilcrow/.github/actions/toolkit@wreality/docker-tweaks
       id: setup
       with:
         target: ${{ inputs.target }}
@@ -65,7 +65,7 @@ runs:
         image: ${{ steps.setup.outputs.docker-registry-cache }}
         pull-request-cache: true
     - name: Prepare Build
-      uses: ./.github/actions/toolkit
+      uses: mesh-research/pilcrow/.github/actions/toolkit@wreality/docker-tweaks
       with:
         command: pre-build
         bake-files: |
@@ -91,7 +91,7 @@ runs:
           ${{ steps.docker-registry-cache.outputs.bake-file }}
     - name: Parse Docker Metadata Output
       id: parse-build-output
-      uses: ./.github/actions/toolkit
+      uses: mesh-research/pilcrow/.github/actions/toolkit@wreality/docker-tweaks
       with:
         command: parse-build-output
         docker-metadata: ${{ steps.docker-bake.outputs.metadata }}
