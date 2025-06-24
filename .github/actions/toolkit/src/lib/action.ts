@@ -1,5 +1,5 @@
 /// <reference types="vite/client" />
-import { debug, getInput, setFailed } from "@actions/core";
+import * as core from "@actions/core";
 import type { ActionCommand, ActionDefinition, ActionStage } from "types.ts";
 
 const getCommandFile = (command: string): string => `../commands/${command}.ts`;
@@ -10,19 +10,19 @@ const commands = import.meta.glob("../commands/*.ts", {
 
 export async function run(stage: ActionStage): Promise<void> {
     try {
-        const command: string = getInput("command");
+        const command: string = core.getInput("command");
         const commandFile = getCommandFile(command);
 
         if (!(commandFile in commands)) {
             throw new Error(`Command "${command}" not found.`);
         }
-        debug(`Running ${command} in stage: ${stage}`);
+        core.debug(`Running ${command} in stage: ${stage}`);
         commands[commandFile]().then((mod: unknown) => {
             return (mod as ActionCommand)(stage);
         });
     } catch (error) {
         if (error instanceof Error) {
-            setFailed(error.message);
+            core.setFailed(error.message);
         }
     }
 }
