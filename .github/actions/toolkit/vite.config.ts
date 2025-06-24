@@ -19,7 +19,7 @@ export default defineConfig({
             input: {
                 main: resolve(__dirname, "src/main.ts"),
                 post: resolve(__dirname, "src/post.ts"),
-                pre: resolve(__dirname, "src/pre.ts"),
+                // pre: resolve(__dirname, "src/pre.ts"),
             },
             external,
             output: [

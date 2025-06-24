@@ -7,3 +7,7 @@ export interface ActionDefinition {
     main: () => Promise<void>;
     post?: () => Promise<void>;
 }
+
+export interface ActionCommandModule {
+    runCommand: ActionCommand;
+}

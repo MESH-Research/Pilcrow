@@ -40,4 +40,5 @@ runs:
   using: node20
   main: dist/main.js
   post: dist/post.js
-  pre: dist/pre.js
+# Local actions don't support pre actions.
+#  pre: dist/pre.js

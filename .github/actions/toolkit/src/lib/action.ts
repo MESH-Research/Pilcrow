@@ -1,14 +1,24 @@
+/// <reference types="vite/client" />
 import { debug, getInput, setFailed } from "@actions/core";
 import type { ActionCommand, ActionDefinition, ActionStage } from "types.ts";
+
+const getCommandFile = (command: string): string => `../commands/${command}.ts`;
+
+const commands = import.meta.glob("../commands/*.ts", {
+    import: "runCommand",
+});
 
 export async function run(stage: ActionStage): Promise<void> {
     try {
         const command: string = getInput("command");
+        const commandFile = getCommandFile(command);
 
+        if (!(commandFile in commands)) {
+            throw new Error(`Command "${command}" not found.`);
+        }
         debug(`Running ${command} in stage: ${stage}`);
-
-        await import(`../commands/${command}.ts`).then((module) => {
-            return module.runCommand(stage);
+        commands[commandFile]().then((mod: unknown) => {
+            return (mod as ActionCommand)(stage);
         });
     } catch (error) {
         if (error instanceof Error) {
