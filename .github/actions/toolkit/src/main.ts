@@ -1,3 +1,3 @@
-import { run } from "./lib/action";
+import { run } from "/src/action";
 
 run("main");

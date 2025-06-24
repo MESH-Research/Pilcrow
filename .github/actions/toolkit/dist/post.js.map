@@ -1,1 +1,1 @@
-{"version":3,"file":"post.js","sources":["../src/post.ts"],"sourcesContent":["import { run } from \"./lib/action\";\n\nrun(\"post\");\n"],"names":["run"],"mappings":"4gBAEAA,EAAI,MAAM"}
+{"version":3,"file":"post.js","sources":["../src/post.ts"],"sourcesContent":["import { run } from \"./action\";\n\nrun(\"post\");\n"],"names":["run"],"mappings":"4gBAEAA,EAAI,MAAM"}
