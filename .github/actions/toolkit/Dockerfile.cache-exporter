@@ -1,0 +1,7 @@
+FROM busybox:1
+ARG BUILDSTAMP
+RUN --mount=type=cache,target=/tmp/output \
+    echo $BUILDSTAMP \
+    mkdir -p /var/output-cache/ \
+    && cp -p -R /tmp/output/. /var/.output-cache/ \
+    && rm -rf /tmp/output/* || true

@@ -14,24 +14,24 @@ inputs:
 outputs:
   version:
     description: "Version of the package that was built"
-    value: ${{ steps.parse-docker-meta.outputs.version }}
+    value: ${{ steps.parse-build-output.outputs.version }}
   tags:
     description: "List of tags"
     value: ${{ steps.docker-input-metadata.outputs.tags}}
   frontend-bundle:
     description: "Path to the frontend bundle"
-    value: ${{ steps.parse-docker-meta.outputs.frontend-bundle }}
-
+    value: ${{ steps.parse-build-output.outputs.frontend-bundle }}
 runs:
   using: "composite"
   steps:
-    - uses: ./.github/actions/pilcrow-toolkit
+    - uses: ./.github/actions/toolkit
       id: setup
       with:
         target: ${{ inputs.target }}
         command: setup
     - uses: docker/setup-buildx-action@v3
       id: buildx
+    - uses: oras-project/setup-oras@v1.2.3
     # - name: Cache
     #   uses: actions/cache@v3
     #   id: docker-yarn-cache
@@ -64,24 +64,14 @@ runs:
       with:
         image: ${{ steps.setup.outputs.docker-registry-cache }}
         pull-request-cache: true
-    - name: Consolidate Docker Bake Files
-      shell: bash
-      id: cp-bake-files
-      if: ${{ runner.debug == 1}}
-      run: |
-        BAKEDIR=${RUNNER_TEMP}/pilcrow-bake
-        echo "path=${BAKEDIR}/" >> "$GITHUB_OUTPUT"
-        mkdir -p $BAKEDIR
-        cp ./docker-bake.hcl \
-        ${{ steps.docker-registry-cache.outputs.bake-file }} \
-        ${{ steps.docker-input-metadata.outputs.bake-file }} \
-        $BAKEDIR
-    - name: Upload Docker Bake Files
-      uses: actions/upload-artifact@v4
-      if: ${{ runner.debug == 1 }}
+    - name: Prepare Build
+      uses: ./.github/actions/toolkit
       with:
-        name: docker-bake-src-${{ inputs.target }}
-        path: ${{ steps.cp-bake-files.outputs.path }}
+        command: pre-build
+        bake-files: |
+          ./docker-bake.hcl
+          ${{ steps.docker-input-metadata.outputs.bake-file }}
+          ${{ steps.docker-registry-cache.outputs.bake-file }}
     - name: Execute Docker Bake
       id: docker-bake
       uses: docker/bake-action@v6.8.0
@@ -99,31 +89,9 @@ runs:
           ./docker-bake.hcl
           ${{ steps.docker-input-metadata.outputs.bake-file }}
           ${{ steps.docker-registry-cache.outputs.bake-file }}
-    - shell: bash
-      run: |
-        mkdir -p /tmp/docker-cache
-        date --iso=ns > /tmp/docker-cache/buildstamp
-        docker buildx build -f ./.github/Dockerfile.cache-exporter --tag output:extract --load /tmp/docker-cache
-        echo "Creating Cache Extractor"
-        docker rm -f cache-container && docker create -ti --name cache-container output:extract
-        echo "Copying Cache from Extractor"
-        docker cp -L cache-container:/var/.output-cache ./
-
-    - uses: actions/upload-artifact@v4
-      if: ${{ runner.debug == 1 }}
-      with:
-        name: docker-metadata-${{ inputs.target }}
-        path: metadata-output.json
     - name: Parse Docker Metadata Output
-      id: parse-docker-meta
-      uses: ./.github/actions/pilcrow-toolkit
+      id: parse-build-output
+      uses: ./.github/actions/toolkit
       with:
-        command: parse-docker-meta
+        command: parse-build-output
         docker-metadata: ${{ steps.docker-bake.outputs.metadata }}
-    - name: Upload Frontend Bundle as Github Artifact
-      uses: actions/upload-artifact@v4
-      if: ${{ steps.parse-docker-meta.outputs.frontend-bundle }}
-      with:
-        name: frontend-bundle
-        path: ${{ steps.parse-docker-meta.outputs.frontend-bundle }}
-        if-no-files-found: warn

@@ -1,0 +1,43 @@
+name: Unique of your action name
+description: Description of your action
+author: Your GitHub username
+
+# The action's inputs
+inputs:
+  target:
+    description: Docker Bake Target
+    required: false
+    default: "ci"
+  docker-metadata:
+    description: Docker metadata from bake action
+    required: false
+  command:
+    description: Toolkit command to run
+    required: true
+  ### These input are confiuration.  They have sensible defaults and are optional.
+  oras-bundle-type:
+    default: "application/vnd.pilcrow.toolkit.bundle.v1+json"
+    description: ORAS artifact type for the frontend bundle
+    required: false
+  oras-actor:
+    description: Actor name for ORAS attchments
+    required: false
+  output-cache-path:
+    description: Path to store output cache
+    required: false
+    default: ".output-cache"
+  token:
+    description: GitHub token to use for authentication
+    required: false
+
+# Branding
+branding:
+  icon: activity
+  color: purple
+
+# The action's runs
+runs:
+  using: node20
+  main: dist/index.js
+  post: dist/post.js
+  env:
