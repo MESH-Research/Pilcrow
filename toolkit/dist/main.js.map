@@ -1,1 +1,0 @@
-{"version":3,"file":"main.js","sources":["../src/main.ts"],"sourcesContent":["import { run } from \"/src/action\";\n\nrun(\"main\");\n"],"names":["run"],"mappings":"4gBAEAA,EAAI,MAAM"}
