@@ -1,4 +1,4 @@
-import { getInput } from "@actions/core";
+import * as core from "@actions/core";
 
 type ConfigValues = {
     token: string | undefined;
@@ -15,11 +15,12 @@ type ConfigValuesFunctions = {
 
 export function getConfigValue<T extends ConfigKey>(key: T): ConfigValues[T] {
     const values: ConfigValuesFunctions = {
-        token: () => getInput("token") ?? process.env.GITHUB_TOKEN,
+        token: () => core.getInput("token") ?? process.env.GITHUB_TOKEN,
         "oras-bundle-type": () =>
-            getInput("oras-bundle-type") ?? "unknown/unknown",
-        "oras-actor": () => getInput("oras-actor") ?? process.env.GITHUB_ACTOR,
-        "output-cache-path": () => getInput("output-cache-path"),
+            core.getInput("oras-bundle-type") ?? "unknown/unknown",
+        "oras-actor": () =>
+            core.getInput("oras-actor") ?? process.env.GITHUB_ACTOR,
+        "output-cache-path": () => core.getInput("output-cache-path"),
     };
 
     return values[key]();
