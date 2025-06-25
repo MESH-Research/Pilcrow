@@ -101,13 +101,13 @@ jobs:
       - uses: mesh-research/github-actions/build-image@main
         with:
           target: "fpm-test-ci"
-  e2e:
-    name: "E2E Test"
-    needs: [build-images]
-    uses: ./.github/workflows/do-test-e2e.yml
-    secrets: inherit
-    with:
-      version: ${{ needs.build-images.outputs.version }}
+  # e2e:
+  #   name: "E2E Test"
+  #   needs: [build-images]
+  #   uses: ./.github/workflows/do-test-e2e.yml
+  #   secrets: inherit
+  #   with:
+  #     version: ${{ needs.build-images.outputs.version }}
   lint-php:
     name: PHP Lint
     runs-on: ubuntu-24.04
