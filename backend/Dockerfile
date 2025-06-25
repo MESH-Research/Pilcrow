@@ -53,7 +53,7 @@ RUN mkdir -p storage/framework/cache storage/framework/sessions storage/framewor
 RUN --mount=type=cache,target=/tmp/composer \
     composer install --no-scripts --no-autoloader --prefer-dist --no-dev
 COPY --chown=www-data . .
-RUN --mount=type=cache,target=tmp/composer \
+RUN --mount=type=cache,target=/tmp/composer \
     composer install --prefer-dist --no-plugins
 
 #Mint version into image last to limit cache busting
