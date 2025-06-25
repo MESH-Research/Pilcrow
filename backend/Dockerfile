@@ -99,7 +99,6 @@ RUN --mount=type=cache,target=/tmp/output \
     mkdir -p "${OUTPUT_PATH}" && \
     touch .env && \
     touch ${DB_DATABASE} && \
-    ./artisan config:show cache && \
     ./artisan test \
     > >(tee ${STDOUT_FILE}) \
     2> >(tee ${STDERR_FILE})
