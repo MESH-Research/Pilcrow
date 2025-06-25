@@ -55,12 +55,7 @@ target "ci-actions" {
     cache-from = [ for v in target.docker-build-cache-config-action.cache-from : cacheReplace(v, svc)]
 }
 
-target "web-test" {
-    inherits = ["web"]
-    target = "unit-test"
-    platforms = [ "local" ]
-    output = ["type=cacheonly"]
-}
+
 
 target "web-lint" {
     inherits = ["web"]
