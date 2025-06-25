@@ -1,16 +1,18 @@
 <?php
-
 declare(strict_types=1);
 
 namespace Tests\Feature;
 
 use App\Models\StyleCriteria;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class StyleCriteriaTest extends TestCase
 {
+    use RefreshDatabase;
+
     protected function makeTestCriteria()
     {
         return StyleCriteria::factory()->makeOne(['publication_id' => Str::uuid()]);

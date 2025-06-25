@@ -10,8 +10,17 @@ variable "VERSION_DATE" {
     default = ""
 }
 
+variable "PUSH" {
+    default = false
+}
+
+variable "BUILDSTAMP" {
+    default = ""
+}
+
 target "fpm" {
     context = "backend"
+    target = "fpm"
     args = {
         VERSION = VERSION
         VERSION_URL = VERSION_URL
@@ -29,10 +38,54 @@ target "web" {
         VERSION = VERSION
         VERSION_URL = VERSION_URL
         VERSION_DATE = VERSION_DATE
+        BUILDSTAMP = BUILDSTAMP
     }
     labels = {
         for k, v in target.default-labels.labels : k => replace(v, "__service__", "web")
     }
+}
+
+target "ci-actions" {
+    matrix = {
+        svc = ["web", "fpm"]
+        action = ["test", "lint"]
+    }
+    name = "${svc}-${action}-ci"
+    inherits = ["${svc}-${action}"]
+    cache-from = [ for v in target.docker-build-cache-config-action.cache-from : cacheReplace(v, svc)]
+}
+
+
+
+target "web-lint" {
+    inherits = ["web"]
+    target = "lint"
+    platforms = [ "local" ]
+    output = ["type=cacheonly"]
+}
+
+target "fpm-test" {
+    inherits = ["fpm"]
+    target = "unit-test"
+    platforms = ["local"]
+    output = ["type=cacheonly"]
+    args = {
+        BUILDSTAMP = BUILDSTAMP
+    }
+}
+
+target "fpm-lint" {
+    inherits = ["fpm"]
+    target = "lint"
+    platforms = ["local"]
+    output = ["type=cacheonly"]
+}
+
+target "web-test" {
+    inherits = ["web"]
+    target = "unit-test"
+    platforms = ["local"]
+    output = ["type=cacheonly"]
 }
 
 target "web-bundle" {
@@ -58,46 +111,36 @@ group "default" {
     targets = ["fpm", "web"]
 }
 
-target "ci" {
+group "ci" {
+    targets = ["ci-fpm", "ci-web"]
+}
+
+target "ci-images" {
     matrix = {
-        item = [
-            {
-                tgt = "fpm"
-                output = ["type=image,push=true"]
-            },
-            {
-                tgt = "web"
-                output = ["type=image,push=true"]
-            },
-            {
-                tgt = "web-bundle"
-                output = ["build/bundle"]
-            }
-        ]
+        tgt = ["fpm", "web"]
     }
-    name = "ci-${item.tgt}"
-    inherits = [item.tgt]
+    name = "ci-${tgt}"
+    inherits = [tgt]
 
     #Metadata action supllies us the tags to use.
-    tags = [for tag in target.docker-metadata-action.tags : replace(tag, "__service__", item.tgt)]
+    tags = [for tag in target.docker-metadata-action.tags : replace(tag, "__service__", tgt)]
 
     #Merge labels from metadata action and default-labels
     #Replace __service__ with the target name
     labels = merge(
         { for k,v in target.docker-metadata-action.labels :
-            k => replace(v, "__service__", item.tgt)
+            k => replace(v, "__service__", tgt)
         },
         { for k,v  in target.default-labels.labels :
-            k => replace(v, "__service__", item.tgt)
+            k => replace(v, "__service__", tgt)
         }
     )
 
     #Set cache-from and cache-to based on the cache-config action
     #Replace __service__ with the target name
-    cache-from = [ for v in target.docker-build-cache-config-action.cache-from : cacheReplace(v, item.tgt)]
-    cache-to = [ for v in target.docker-build-cache-config-action.cache-to : cacheReplace(v, item.tgt)]
+    cache-from = [ for v in target.docker-build-cache-config-action.cache-from : cacheReplace(v, tgt)]
+    cache-to = [ for v in target.docker-build-cache-config-action.cache-to : cacheReplace(v, tgt)]
 
-    output = item.output
 }
 target "docker-metadata-action" {
     tags = []
@@ -116,10 +159,7 @@ target "release" {
             tgt = "web"
             platforms = ["linux/amd64", "linux/arm64"]
         },
-        {
-            tgt = "web-bundle"
-            platforms = ["local"]
-        }]
+        ]
     }
     name = "release-${item.tgt}"
     inherits = ["ci-${item.tgt}"]
