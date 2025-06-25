@@ -21,6 +21,7 @@ ARG STDERR_FILE=${OUTPUT_PATH}/errors.txt
 ARG STEP_SUMMARY_FILE=${OUTPUT_PATH}/output.md
 
 
+ARG BUILDSTAMP
 RUN --mount=type=cache,target=/tmp/output \
     --mount=type=cache,target=/usr/local/share/.cache/yarn/v6 \
     mkdir -p "${OUTPUT_PATH}" && \

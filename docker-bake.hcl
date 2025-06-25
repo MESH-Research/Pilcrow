@@ -38,6 +38,7 @@ target "web" {
         VERSION = VERSION
         VERSION_URL = VERSION_URL
         VERSION_DATE = VERSION_DATE
+        BUILDSTAMP = BUILDSTAMP
     }
     labels = {
         for k, v in target.default-labels.labels : k => replace(v, "__service__", "web")
