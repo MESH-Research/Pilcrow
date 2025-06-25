@@ -16,8 +16,8 @@ yarn quasar prepare
 
 FROM base AS build-stage
 ARG OUTPUT_PATH=/tmp/output/web-build
-ARG STDOUT_FILE=${OUTPUT_PATH}/output.txt
-ARG STDERR_FILE=${OUTPUT_PATH}/errors.txt
+ARG STDOUT_FILE=${OUTPUT_PATH}/stdout.txt
+ARG STDERR_FILE=${OUTPUT_PATH}/stderr.txt
 ARG STEP_SUMMARY_FILE=${OUTPUT_PATH}/output.md
 
 
@@ -34,13 +34,7 @@ RUN sed -i 's#"version": ""#"version": "${VERSION}"#g' /app/dist/spa/version.jso
 # Generate a summary of the build step in markdown.
 RUN --mount=type=cache,target=/tmp/output <<EOC
     echo "## Quasar Build Summary" > "${STEP_SUMMARY_FILE}"
-    if [[ -s "${STDERR_FILE}" ]]; then
-      echo "| :warning:     | The build wrote to stderr during execution.  Check below for errors/warnings. |" >> "${STEP_SUMMARY_FILE}"
-      echo "|---------------|:------------------------------------------------------------------------------|" >> "${STEP_SUMMARY_FILE}"
-      echo "### STDERR Output" >> "${STEP_SUMMARY_FILE}"
-      cat "${STDERR_FILE}" | aha --no-header >> "${STEP_SUMMARY_FILE}"
-    fi
-    echo "### STDOUT Output" >> "${STEP_SUMMARY_FILE}"
+    echo "${STEP_SUMMARY_FILE}"
     sed -r \
       -e 's/^ ║\s+([A-Za-z0-9\.\/\(\)\ -]+)║([A-Za-z0-9\. ]+)║([A-Za-z0-9\. -]+)║$/| \1 | \2 | \3 |/' \
       -e 's/^ ╔.*$/\n<details> \n<summary>Output Files<\/summary> \n /'  \
@@ -67,8 +61,8 @@ COPY --from=build-stage /app/dist/spa/ /dist/spa/
 
 FROM base AS unit-test
 ARG OUTPUT_PATH=/tmp/output/web-unit
-ARG STDOUT_FILE=${OUTPUT_PATH}/output.txt
-ARG STDERR_FILE=${OUTPUT_PATH}/errors.txt
+ARG STDOUT_FILE=${OUTPUT_PATH}/stdout.txt
+ARG STDERR_FILE=${OUTPUT_PATH}/stderr.txt
 RUN --mount=type=cache,target=/usr/local/share/.cache/yarn/v6 \
     --mount=type=cache,target=/tmp/output \
     mkdir -p "${OUTPUT_PATH}" && \
@@ -80,8 +74,8 @@ RUN --mount=type=cache,target=/usr/local/share/.cache/yarn/v6 \
 
 FROM base AS lint
 ARG OUTPUT_PATH=/tmp/web-lint/output
-ARG STDOUT_FILE=${OUTPUT_PATH}/output.txt
-ARG STDERR_FILE=${OUTPUT_PATH}/errors.txt
+ARG STDOUT_FILE=${OUTPUT_PATH}/stdout.txt
+ARG STDERR_FILE=${OUTPUT_PATH}/stderr.txt
 
 RUN --mount=type=cache,target=/usr/local/share/.cache/yarn/v6 \
     --mount=type=cache,target=/tmp/output \
