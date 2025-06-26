@@ -39,9 +39,6 @@ RUN --mount=type=cache,target=/tmp/output \
     chmod 0777 /tmp/output
 
 COPY --from=composer /usr/bin/composer /usr/bin/
-RUN --mount=type=cache,target=/tmp/composer \
-    chmod -R 0755 /tmp/composer \
-    && chown -R www-data:www-data /tmp/composer
 
 WORKDIR /var/www/html
 USER www-data
@@ -50,10 +47,10 @@ COPY --chown=www-data composer.json composer.lock ./
 #Make storage directories
 RUN mkdir -p storage/framework/cache storage/framework/sessions storage/framework/views
 
-RUN --mount=type=cache,target=/tmp/composer \
+RUN --mount=type=cache,target=/tmp/composer,uid=33,gid=33 \
     composer install --no-scripts --no-autoloader --prefer-dist --no-dev
 COPY --chown=www-data . .
-RUN --mount=type=cache,target=/tmp/composer \
+RUN --mount=type=cache,target=/tmp/composer,uid=33,gid=33 \
     composer install --prefer-dist --no-plugins
 
 #Mint version into image last to limit cache busting
@@ -87,7 +84,7 @@ RUN --mount=type=cache,target=/tmp/output \
 
 # Re-run composer install to add dev dependencies
 USER www-data
-RUN --mount=type=cache,target=/tmp/composer \
+RUN --mount=type=cache,target=/tmp/composer,uid=33,gid=33 \
     composer install --prefer-dist
 
 # Supply a random/cache busting timestamp to prevent caching of the test run.
