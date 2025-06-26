@@ -40,8 +40,8 @@ RUN --mount=type=cache,target=/tmp/output \
 
 COPY --from=composer /usr/bin/composer /usr/bin/
 RUN --mount=type=cache,target=/tmp/composer \
-    chmod 0755 /tmp/composer \
-    && chown www-data:www-data /tmp/composer
+    chmod -R 0755 /tmp/composer \
+    && chown -R www-data:www-data /tmp/composer
 
 WORKDIR /var/www/html
 USER www-data
