@@ -19,6 +19,10 @@
             "matchManagers": ["dockerfile"]
         },
         {
+            "groupName": "dev-deps",
+            "matchDepTypes": ["devDependencies","require-dev"]
+        },
+        {
             "description": "npm and composer deps are well covered in automated testing. if patch versions pass ci, we'll automerge",
             "matchUpdateTypes": [
                 "patch"
@@ -32,16 +36,16 @@
         {
             "description": "group frontend npm deps for PR approval",
             "groupName": "client",
-            "groupSlug": "frontend",
             "matchFileNames": ["client/**"],
             "matchManagers": ["npm"],
+            "matchDepTypes": ["dependencies"],
             "matchUpdateTypes": ["minor", "patch"]
         },
         {
-            "groupName": "client",
-            "groupSlug": "frontend-major",
-            "matchFileNames": ["client/**"],
-            "matchManagers": ["npm"],
+            "groupName": "major-upgrades",
+            "matchFileNames": ["client/**", "backend/**"],
+            "matchManagers": ["npm", "composer"],
+            "matchDepTypes": ["require", "dependencies"],
             "matchUpdateTypes": ["major"]
         },
         {
@@ -49,14 +53,8 @@
             "groupSlug": "api",
             "matchManagers": ["composer"],
             "matchFileNames": ["backend/**"],
+            "matchDepTypes": ["require"],
             "matchUpdateTypes": ["minor", "patch"]
-        },
-         {
-            "groupName": "api",
-            "groupSlug": "api-major",
-            "matchManagers": ["composer"],
-            "matchFileNames": ["backend/**"],
-            "matchUpdateTypes": ["major"]
         },
         {
             "groupName": "docs",
