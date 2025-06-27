@@ -7,12 +7,16 @@
         {
             "description": "Docker deps are held back currently to requiee dep daahboard approval",
             "matchManagers": [
-                "dockerfile",
                 "docker-compose",
                 "github-actions",
                 "helmv3"
             ],
             "dependencyDashboardApproval": true
+        },
+        {
+            "groupName": "container",
+            "groupSlug": "container",
+            "matchManagers": ["dockerfile"]
         },
         {
             "description": "npm and composer deps are well covered in automated testing. if patch versions pass ci, we'll automerge",
@@ -27,35 +31,35 @@
         },
         {
             "description": "group frontend npm deps for PR approval",
-            "groupName": "(client) Dependency Incremental Updates",
+            "groupName": "client",
             "groupSlug": "frontend",
             "matchFileNames": ["client/**"],
             "matchManagers": ["npm"],
             "matchUpdateTypes": ["minor", "patch"]
         },
         {
-            "groupName": "(client) Dependency Major Updates",
+            "groupName": "client",
             "groupSlug": "frontend-major",
             "matchFileNames": ["client/**"],
             "matchManagers": ["npm"],
             "matchUpdateTypes": ["major"]
         },
         {
-            "groupName": "(api) Dependency Incremental Updates",
+            "groupName": "api",
             "groupSlug": "api",
             "matchManagers": ["composer"],
             "matchFileNames": ["backend/**"],
             "matchUpdateTypes": ["minor", "patch"]
         },
          {
-            "groupName": "(api) Dependency Major Updates",
+            "groupName": "api",
             "groupSlug": "api-major",
             "matchManagers": ["composer"],
             "matchFileNames": ["backend/**"],
             "matchUpdateTypes": ["major"]
         },
         {
-            "groupName": "Docs Site Dependencies",
+            "groupName": "docs",
             "groupSlug": "docs",
             "matchFileNames": ["docs/**"]
         }
