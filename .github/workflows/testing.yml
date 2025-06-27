@@ -23,6 +23,7 @@ jobs:
     name: Check Changes
     runs-on: ubuntu-24.04
     outputs:
+      docs: ${{ steps.filter.outputs.docs }}
       php: ${{ steps.filter.outputs.php }}
       js: ${{ steps.filter.outputs.js }}
       client: ${{ steps.filter.outputs.client }}
