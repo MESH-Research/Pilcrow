@@ -9,7 +9,8 @@
             "matchManagers": [
                 "dockerfile",
                 "docker-compose",
-                "github-actions"
+                "github-actions",
+                "helmv3"
             ],
             "dependencyDashboardApproval": true
         },
