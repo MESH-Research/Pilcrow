@@ -15,6 +15,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\HasApiTokens;
+use Laravel\Scout\Attributes\SearchUsingPrefix;
 use Laravel\Scout\Searchable;
 use Spatie\Permission\Traits\HasRoles;
 
@@ -139,17 +140,15 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * @return array
      */
+    #[SearchUsingPrefix(['email', 'username', 'name', 'id'])]
     public function toSearchableArray()
     {
-        return $this
-            ->withoutRelations()
-            ->setVisible([
-                'id',
-                'username',
-                'name',
-                'email',
-            ])
-            ->toArray();
+        return [
+            'id' => (int)$this->id,
+            'name' => $this->name,
+            'username' => $this->username,
+            'email' => $this->email,
+        ];
     }
 
     /**

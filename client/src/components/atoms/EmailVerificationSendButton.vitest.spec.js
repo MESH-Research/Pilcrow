@@ -1,11 +1,11 @@
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
 import { mount, flushPromises } from "@vue/test-utils"
 
-import { installApolloClient } from "test/vitest/utils"
+import { installApolloClient } from "app/test/vitest/utils"
 import { SEND_VERIFY_EMAIL } from "src/graphql/mutations"
 import EmailVerificationSendButton from "./EmailVerificationSendButton.vue"
 
-import { Notify } from 'quasar'
+import { Notify } from "quasar"
 import { afterEach, describe, expect, it, vi } from "vitest"
 
 installQuasarPlugin({ plugins: { Notify } })
@@ -13,7 +13,6 @@ const mockClient = installApolloClient()
 
 describe("EmailVerificationSendButton", () => {
   const factory = () => mount(EmailVerificationSendButton)
-
 
   afterEach(async () => {
     vi.resetAllMocks()
@@ -28,7 +27,7 @@ describe("EmailVerificationSendButton", () => {
     const wrapper = factory()
     const handler = mockClient.getRequestHandler(SEND_VERIFY_EMAIL)
     handler.mockResolvedValue({
-      data: { sendEmailVerification: { email: "test@example.com" } },
+      data: { sendEmailVerification: { email: "test@example.com" } }
     })
     expect(wrapper.text()).toMatch(/resend_button$/)
 

@@ -14,5 +14,5 @@ export const mapObject = (defs, obj) => {
 }
 
 export default {
-  mapObject,
+  mapObject
 }

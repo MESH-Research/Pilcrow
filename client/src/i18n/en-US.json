@@ -960,7 +960,9 @@
       },
       "reference": {
         "in_reply_to": "In reply to {username}",
-        "go_to_highlight": "Go to Highlight"
+        "go_to_highlight": "Go To Highlight",
+        "mark_read": "Mark As Read",
+        "mark_read_and_go_to_highlight": "Mark As Read and Go To Highlight"
       },
       "reply_btn": "Reply",
       "reply": {

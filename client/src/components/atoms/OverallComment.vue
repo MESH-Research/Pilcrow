@@ -8,13 +8,12 @@
       :aria-label="
         $t('submissions.comment.ariaLabel', {
           username: comment.created_by.username,
-          replies: comment.replies.length,
+          replies: comment.replies.length
         })
       "
     >
       <comment-header
         :comment="comment"
-        bg-color="#C9E5F8"
         class="comment-header"
         @quote-reply-to="initiateQuoteReply"
         @modify-comment="modifyComment(comment)"
@@ -38,7 +37,12 @@
       <q-card-actions v-if="hasReplies" align="right" class="q-pa-md">
         <q-btn
           v-if="!isCollapsed"
-          :aria-label="$t(`submissions.comment.toggle_replies.hide_reply`, comment.replies.length)"
+          :aria-label="
+            $t(
+              `submissions.comment.toggle_replies.hide_reply`,
+              comment.replies.length
+            )
+          "
           data-cy="hideRepliesButton"
           bordered
           color="secondary"
@@ -46,11 +50,21 @@
           @click="toggleThread"
         >
           <q-icon name="expand_less"></q-icon>
-          <span>{{ $t(`submissions.comment.toggle_replies.hide_reply`, comment.replies.length) }}</span>
+          <span>{{
+            $t(
+              `submissions.comment.toggle_replies.hide_reply`,
+              comment.replies.length
+            )
+          }}</span>
         </q-btn>
         <q-btn
           v-if="isCollapsed"
-          :aria-label="$t(`submissions.comment.toggle_replies.show_reply`, comment.replies.length)"
+          :aria-label="
+            $t(
+              `submissions.comment.toggle_replies.show_reply`,
+              comment.replies.length
+            )
+          "
           data-cy="showRepliesButton"
           bordered
           color="secondary"
@@ -58,7 +72,12 @@
           @click="toggleThread"
         >
           <q-icon name="expand_more"></q-icon>
-          <span>{{ $t("submissions.comment.toggle_replies.show_reply", comment.replies.length) }}</span>
+          <span>{{
+            $t(
+              "submissions.comment.toggle_replies.show_reply",
+              comment.replies.length
+            )
+          }}</span>
         </q-btn>
       </q-card-actions>
 
@@ -128,8 +147,8 @@ function toggleThread() {
 const props = defineProps({
   comment: {
     type: Object,
-    required: true,
-  },
+    required: true
+  }
 })
 
 provide("comment", props.comment)
@@ -196,6 +215,6 @@ defineExpose({
   scrollTarget,
   replyRefs,
   comment: props.comment,
-  replyIds: props.comment.replies.map((c) => c.id),
+  replyIds: props.comment.replies.map((c) => c.id)
 })
 </script>

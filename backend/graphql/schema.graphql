@@ -203,5 +203,5 @@ input UpdateProfileMetadataInput @validator(class: "ProfileMetadataValidator") {
     specialization: String
     affiliation: String
     biography: String
-    websites: [String] @sanitizeUrl
+    websites: [String]
 }

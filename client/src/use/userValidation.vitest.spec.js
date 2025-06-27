@@ -2,11 +2,11 @@ import { mount } from "vue-composable-tester"
 import { useUserValidation } from "./userValidation"
 import { provide } from "vue"
 import { DefaultApolloClient } from "@vue/apollo-composable"
-import { createMockClient } from "test/vitest/utils"
+import { createMockClient } from "app/test/vitest/utils"
 import { CREATE_USER } from "src/graphql/mutations"
 import { flushPromises } from "@vue/test-utils"
 
-import { describe, test, expect, vi } from 'vitest'
+import { describe, test, expect, vi } from "vitest"
 
 describe("test uservalidation composable", () => {
   const mountComposable = () => {
@@ -14,14 +14,14 @@ describe("test uservalidation composable", () => {
     const { result } = mount(() => useUserValidation(), {
       provider: () => {
         provide(DefaultApolloClient, mockClient)
-      },
+      }
     })
     return { mockClient, result }
   }
 
   test("locally validates username", () => {
     const {
-      result: { $v, user },
+      result: { $v, user }
     } = mountComposable()
     user.username = ""
 
@@ -31,7 +31,7 @@ describe("test uservalidation composable", () => {
 
   test("locally validates email", () => {
     const {
-      result: { $v, user },
+      result: { $v, user }
     } = mountComposable()
     const eV = $v.value.email
 
@@ -54,7 +54,7 @@ describe("test uservalidation composable", () => {
 
   test("locally validated password", () => {
     const {
-      result: { $v, user },
+      result: { $v, user }
     } = mountComposable()
     const eV = $v.value.password
 
@@ -76,13 +76,13 @@ describe("test uservalidation composable", () => {
   test("external validated data", async () => {
     const {
       mockClient,
-      result: { $v, user, saveUser },
+      result: { $v, user, saveUser }
     } = mountComposable()
     Object.assign(user, {
       username: "user",
       password: "albancub4Grac&",
       name: "Joe Doe",
-      email: "test@example.com",
+      email: "test@example.com"
     })
 
     const error = {
@@ -92,25 +92,22 @@ describe("test uservalidation composable", () => {
           extensions: {
             validation: {
               "user.username": ["USERNAME_IN_USE"],
-              "user.email": ["EMAIL_IN_USE"],
+              "user.email": ["EMAIL_IN_USE"]
             },
-            category: "validation",
+            category: "validation"
           },
           locations: [
             {
               line: 2,
-              column: 3,
-            },
+              column: 3
+            }
           ],
-          path: ["createUser"],
-        },
-      ],
+          path: ["createUser"]
+        }
+      ]
     }
 
-    mockClient.setRequestHandler(
-      CREATE_USER,
-      vi.fn().mockResolvedValue(error)
-    )
+    mockClient.setRequestHandler(CREATE_USER, vi.fn().mockResolvedValue(error))
 
     await expect(saveUser()).rejects.toThrow("FORM_VALIDATION")
 
@@ -131,13 +128,13 @@ describe("test uservalidation composable", () => {
   test("external error", async () => {
     const {
       mockClient,
-      result: { user, saveUser },
+      result: { user, saveUser }
     } = mountComposable()
     Object.assign(user, {
       username: "user",
       password: "albancub4Grac&",
       name: "Joe Doe",
-      email: "test@example.com",
+      email: "test@example.com"
     })
 
     mockClient.setRequestHandler(CREATE_USER, vi.fn().mockRejectedValue({}))

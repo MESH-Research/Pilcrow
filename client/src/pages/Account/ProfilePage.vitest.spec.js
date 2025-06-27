@@ -1,6 +1,6 @@
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
 import { mount, flushPromises } from "@vue/test-utils"
-import { installApolloClient } from "test/vitest/utils"
+import { installApolloClient } from "app/test/vitest/utils"
 import { UPDATE_PROFILE_METADATA } from "src/graphql/mutations"
 import { CURRENT_USER_METADATA } from "src/graphql/queries"
 import { ref as mockRef } from "vue"
@@ -12,15 +12,15 @@ vi.mock("src/use/forms", async (importOriginal) => {
   const forms = await importOriginal()
   return {
     ...forms,
-    useDirtyGuard: () => { },
+    useDirtyGuard: () => {},
     useFormState: () => ({
       dirty: mockRef(false),
       saved: mockRef(false),
       state: mockRef("idle"),
       queryLoading: mockRef(false),
       mutationLoading: mockRef(false),
-      errorMessage: mockRef(""),
-    }),
+      errorMessage: mockRef("")
+    })
   }
 })
 
@@ -31,8 +31,8 @@ describe("ProfilePage", () => {
   const makeWrapper = async () => {
     const wrapper = mount(ProfilePage, {
       global: {
-        stubs: ["profile-metadata-form"],
-      },
+        stubs: ["profile-metadata-form"]
+      }
     })
     await flushPromises()
     return wrapper
@@ -45,7 +45,7 @@ describe("ProfilePage", () => {
 
   const profileData = () => ({
     id: 1,
-    username: 'testusername',
+    username: "testusername",
     name: "Test Name",
     profile_metadata: {
       biography: "my bio",
@@ -57,13 +57,13 @@ describe("ProfilePage", () => {
         twitter: "my_twitter",
         instagram: "my_insta",
         facebook: "my_facebook",
-        linked_in: "my_linkedin",
+        linked_in: "my_linkedin"
       },
       academic_profiles: {
         humanities_commons: "",
-        orcid_id: "",
-      },
-    },
+        orcid_id: ""
+      }
+    }
   })
 
   beforeEach(() => {
@@ -92,7 +92,7 @@ describe("ProfilePage", () => {
     expect(queryHandler).toHaveBeenCalledTimes(1)
     expect(mutateHandler).toHaveBeenCalledWith({
       id: newData.id,
-      ...newData.profile_metadata,
+      ...newData.profile_metadata
     })
   })
 

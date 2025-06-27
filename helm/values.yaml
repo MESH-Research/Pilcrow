@@ -1,0 +1,376 @@
+## Pilcrow application configuration.
+## @section Application Configuration
+## @descriptionStart
+## The `pilcrow.appKey` is used to sign cookies and other data.  It will be generated if not set in
+## the values file.  Be sure to save the key if you generate it, as it will be needed to
+## decrypt existing data.
+## In production, it is recommended to generate your own appKey and save it in a secret:
+## ```yaml
+## secret: {name: my-app-key-secret, key: app-key}
+## ```
+## @descriptionEnd
+
+pilcrow:
+  ## @param pilcrow.appUrl The base URL for the application. (required)
+  ##
+  appUrl: http://localhost:8888
+
+  appKey:
+    ## @param pilcrow.appKey.value The key used to sign cookies and other data. Will be generated if not set.
+    ##
+    value:
+    ## @param pilcrow.appKey.secret The secret which contains the app key. `appKey.value` will be ignored if this is set.
+    ##
+    secret:
+      {}
+      # name:
+      # key: "app-key"
+
+  cdn:
+    ## @param pilcrow.cdn.enabled Enable CDN support.
+    ##
+    enabled: false
+    ## @param pilcrow.cdn.baseUrl The base URL for the CDN. This is used to serve static assets.
+    ##
+    baseUrl:
+
+  ## @section Database Configuration
+  ## @descriptionStart
+  ## NOTE: This section is required if disabling the MySQL subchart.
+  ## When supplying the MySQL password, placing the password in a secret is recommended rather
+  ## than hardcoding it in the values file.
+  ## ```yaml
+  ## secret: { name: my-password-secret, key: password }
+  ## ```
+  ## @descriptionEnd
+
+  mysql:
+    ## @param pilcrow.mysql.host [string] The hostname or IP address of the MySQL server.
+    ##
+    host:
+    ## @param pilcrow.mysql.port The port of the MySQL server.
+    ##
+    port: 3306
+    ## @param pilcrow.mysql.database [string] The name of the MySQL database to use.
+    ##
+    database: "pilcrow"
+    ## @param pilcrow.mysql.user [string] The username to use for the MySQL connection.
+    ##
+    user:
+    password:
+      ## @param pilcrow.mysql.password.value [string] The password to use for the MySQL connection.
+      ##
+      value:
+      ## @param pilcrow.mysql.password.secret [object] The details of the secret containing the MySQL credentials. (ignores password)
+      ##
+      secret:
+        # name:
+        # key: "mysql-root-password"
+  ## @section Mail Configuration
+  ## @descriptionStart
+  ## Pilcrow sends emails as part of its notification system as well as for user registration and password reset.
+  ## @descriptionEnd
+  mail:
+    from:
+      ## @param pilcrow.mail.from.address The email address to use as the "from" address for emails sent by Pilcrow.
+      ##
+      address:
+      ## @param pilcrow.mail.from.name The name to use as the "from" name for emails sent by Pilcrow.
+      ##
+      name:
+    ## @param pilcrow.mail.driver The mail driver to use
+    driver: smtp
+    smtp:
+      ## @param pilcrow.mail.smtp.host [string] The hostname or IP address of the SMTP server.
+      ##
+      host:
+      ## @param pilcrow.mail.smtp.port The port of the SMTP server.
+      ##
+      port: 587
+      ## @param pilcrow.mail.smtp.username [string] The username to use for the SMTP connection.
+      ##
+      username:
+      ## @param pilcrow.mail.smtp.password [string] The password to use for the SMTP connection.
+      ##
+      password:
+        ## @param pilcrow.mail.smtp.secret [object] The details of the secret containing the SMTP credentials. (ignores password)
+        ##
+        value:
+        secret:
+          {}
+          # name:
+          # key: "smtp-password"
+      ## @param pilcrow.mail.smtp.encryption The encryption to use for the SMTP connection. (tls, ssl, or empty for none)
+      encryption: tls
+    ses:
+      ## @param pilcrow.mail.ses.region [string] The AWS region for the SES service.
+      ##
+      region:
+      ## @param pilcrow.mail.ses.accessKeyId [string] The AWS access key ID for the SES service.
+      ##
+      accessKeyId:
+      ## @param pilcrow.mail.ses.secretAccessKey [string] The AWS secret access key for the SES service.
+      ##
+      secretAccessKey:
+        ## @param pilcrow.mail.ses.secretAccessKey.value [string] The AWS secret access key for the SES service.
+        ##
+        value:
+
+        ## @param pilcrow.mail.ses.secretAccessKey.secret [object] The details of the secret containing the SES credentials. (ignores accessKeyId and secretAccessKey)
+        ##
+        secret: {}
+        # name:
+        # key: "ses-secret-key"
+
+  ## @section Redis Configuration
+  ## @descriptionStart
+  ## NOTE: This section is required if disabling the Redis subchart.
+  ## When supplying the Redis password, placing the password in a secret is recommended rather
+  ## than hardcoding it in the values file.
+  ## ```yaml
+  ## secret: { name: my-redis-password-secret, key: password }
+  ## ```
+  ## @descriptionEnd
+
+  redis:
+    ## @param pilcrow.redis.host [string] The hostname or IP address of the Redis server.
+    ##
+    host:
+    ## @param pilcrow.redis.port The port of the Redis server.
+    ##
+    port: 6379
+    password:
+      ## @param pilcrow.redis.password.value [string] The password to use for the Redis connection.
+      ##
+      value:
+      ## @param pilcrow.redis.password.secret [object] The details of the secret containing the Redis credentials. (ignores password)
+      ##
+      secret:
+        {}
+        # name:
+        # key: "password"
+
+  ## @section Advanced Configuration
+  ## @descriptionStart
+  ## The values in this section have sensible defaults and probably shouldn't need to be
+  ## changed in most cases.
+  ## @descriptionEnd
+  ## @param pilcrow.logChannel The log channel to use for the application.
+  ##
+  logChannel: stderr
+  ## @param pilcrow.sessionDriver The session driver to use for the application.
+  ##
+  sessionDriver: redis
+  ## @param pilcrow.cacheDriver The cache driver to use for the application.
+  ##
+  cacheDriver: redis
+
+## Configure the ingress resource that allows you to access Pilcrow.
+## ref: https://kubernetes.io/docs/concepts/services-networking/ingress/
+##
+ingress:
+  ## @param ingress.enabled Enable the ingress resource.
+  ##
+  enabled: false
+  ## @param ingress.ingressClassName The name of the ingress class to use.
+  ##
+  ingressClassName:
+  ## @param ingress.hostname The hostname to use for the ingress resource.
+  ##
+  hostname:
+
+  ## @param ingress.tls Enable TLS configuration for the host defined at `ingress.hostname` parameter
+  ## TLS certificates will be retrieved from a TLS secret with name: `{{- printf "%s-tls" .Values.ingress.hostname }}`
+  ## You can:
+  ##   - Create the secret maually and set the `ingress.tls` to true
+  ##   - Rely on cert-manager to create it by setting the corresponding annotations
+  ##   - Rely on Helm to create self-signed certificates by setting `ingress.selfSigned=true`
+  ##
+  tls: false
+  ## @param ingress.annotations Additional annotations for the Ingress resource. To enable certificate autogeneration, place here your cert-manager annotations.
+  ## For a full list of possible ingress annotations, please see
+  ## ref: https://github.com/kubernetes/ingress-nginx/blob/main/docs/user-guide/nginx-configuration/annotations.md
+  ## Use this parameter to set the required annotations for cert-manager, see
+  ## ref: https://cert-manager.io/docs/usage/ingress/#supported-annotations
+  ##
+  ## e.g:
+  ## annotations:
+  ##   kubernetes.io/ingress.class: nginx
+  ##   cert-manager.io/cluster-issuer: cluster-issuer-name
+  ##
+  annotations: {}
+
+## MySQL subchart configuration.
+## @section MySQL Subchart
+## @descriptionStart
+## Not recommended for production use--use an external MySQL server instead.
+## @descriptionEnd
+mysql:
+  ## @param mysql.enabled Deploy the MySQL subchart if true.
+  enabled: true
+  auth:
+    ## @param mysql.auth.database The name of the database to create.
+    ##
+    database: "pilcrow"
+  primary:
+    ## @param mysql.primary.resourcePreset The resource preset for the MySQL primary pod.
+    resourcePreset: "nano"
+
+## Redis subchart configuration.
+## @section Redis Subchart
+## @descriptionStart
+## Not recommended for production use--use an external Redis server instead.
+## @descriptionEnd
+redis:
+  ## @param redis.enabled Deploy the Redis subchart if true.
+  ##
+  enabled: true
+  ## @skip redis.architecture
+  architecture: "standalone"
+
+## @section Deployment
+## @param service.type The type of service to create. (ClusterIP, NodePort, LoadBalancer)
+## @skip service.port
+## @param replicaCount The number of replicas to deploy.
+##
+replicaCount: 1
+
+image:
+  ## @param image.webRepository The repository for the web image.
+  webRepository: ghcr.io/mesh-research/pilcrow/web
+  ## @param image.fpmRepository The repository for the FPM image.
+  fpmRepository: ghcr.io/mesh-research/pilcrow/fpm
+  ## @param image.pullPolicy The pull policy for the images.
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  ## @param image.tag The tag for the images. Defaults to the chart appVersion.
+  tag: ""
+## @param imagePullSecrets [array] Image pull secrets for the images.
+imagePullSecrets: []
+
+web:
+  ## @param web.securityContext [object] Security context for the web container.
+  extraVolumeMounts: []
+  ## @param web.extraVolumeMounts [array] Additional volume mounts for the web container.
+  securityContext: {}
+  ## @param web.resources [object] Resource requests and limits for the web container.
+  resources: {}
+
+  ## Configure extra options for web containers' liveness and readiness probes
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
+  ## @param web.livenessProbe.enabled Enable liveness probe for the web container.
+  ## @param web.livenessProbe.initialDelaySeconds The number of seconds to wait before starting the liveness probe.
+  ## @param web.livenessProbe.periodSeconds The number of seconds between liveness probes.
+  ## @param web.livenessProbe.timeoutSeconds The number of seconds to wait for a response from the liveness probe.
+  ## @param web.livenessProbe.failureThreshold The number of consecutive failures before the container is restarted.
+  ## @param web.livenessProbe.successThreshold The number of consecutive successes before the container is considered healthy.
+  livenessProbe:
+    enabled: true
+    initialDelaySeconds: 5
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1
+
+  ## @param web.readinessProbe.enabled Enable liveness probe for the web container.
+  ## @param web.readinessProbe.initialDelaySeconds The number of seconds to wait before starting the liveness probe.
+  ## @param web.readinessProbe.periodSeconds The number of seconds between liveness probes.
+  ## @param web.readinessProbe.timeoutSeconds The number of seconds to wait for a response from the liveness probe.
+  ## @param web.readinessProbe.failureThreshold The number of consecutive failures before the container is restarted.
+  ## @param web.readinessProbe.successThreshold The number of consecutive successes before the container is considered healthy.
+  readinessProbe:
+    enabled: true
+    initialDelaySeconds: 5
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1
+
+fpm:
+  ## @param fpm.extraVolumeMounts [array] Additional volume mounts for the FPM container.
+  extraVolumeMounts: []
+  ## @param fpm.securityContext [object] Security context for the FPM container.
+  securityContext: {}
+  ## @param fpm.resources [object] Resource requests and limits for the FPM container.
+  resources: {}
+  ## Configure extra options for fpm containers' liveness and readiness probes
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
+  ## @param fpm.livenessProbe.enabled Enable liveness probe for the fpm container.
+  ## @param fpm.livenessProbe.initialDelaySeconds The number of seconds to wait before starting the liveness probe.
+  ## @param fpm.livenessProbe.periodSeconds The number of seconds between liveness probes.
+  ## @param fpm.livenessProbe.timeoutSeconds The number of seconds to wait for a response from the liveness probe.
+  ## @param fpm.livenessProbe.failureThreshold The number of consecutive failures before the container is restarted.
+  ## @param fpm.livenessProbe.successThreshold The number of consecutive successes before the container is considered healthy.
+  livenessProbe:
+    enabled: true
+    initialDelaySeconds: 5
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1
+
+  ## @param fpm.readinessProbe.enabled Enable liveness probe for the fpm container.
+  ## @param fpm.readinessProbe.initialDelaySeconds The number of seconds to wait before starting the liveness probe.
+  ## @param fpm.readinessProbe.periodSeconds The number of seconds between liveness probes.
+  ## @param fpm.readinessProbe.timeoutSeconds The number of seconds to wait for a response from the liveness probe.
+  ## @param fpm.readinessProbe.failureThreshold The number of consecutive failures before the container is restarted.
+  ## @param fpm.readinessProbe.successThreshold The number of consecutive successes before the container is considered healthy.
+  readinessProbe:
+    enabled: true
+    initialDelaySeconds: 5
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1
+
+## @skip autoscaling
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+## Pilcrow Service Account
+## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/
+##
+serviceAccount:
+  ## @param serviceAccount.create Whether to create a service account for the deployment.
+  ##
+  create: true
+  ## @param serviceAccount.automount Whether to automatically mount the service account's API credentials.
+  ##
+  automount: true
+  ## @param serviceAccount.annotations Annotations to add to the service account.
+  ##
+  annotations: {}
+  ## @param serviceAccount.name The name of the service account to use.
+  ## If not set and create is true, a name is generated using the fullname template.
+  name: ""
+
+## @section Global Configuration
+## @param extraVolumes Additional volumes to mount in the pod.
+## @param nodeSelector Node selector for the pod.
+## @param tolerations Tolerations for the pod.
+## @param affinity Affinity rules for the pod.
+## @param podAnnotations Annotations to add to the pod.
+## @param podLabels Additional labels to add to the pod.
+## @param podSecurityContext Security context for the pod.
+extraVolumes: []
+nodeSelector: {}
+tolerations: []
+affinity: {}
+
+podAnnotations: {}
+podLabels: {} # Additional volumes on the output Deployment definition.
+
+podSecurityContext: {}
+
+service:
+  type: ClusterIP
+  port: 8888
+
+## @skip nameOverride
+## @skip fullnameOverride
+nameOverride: ""
+fullnameOverride: ""

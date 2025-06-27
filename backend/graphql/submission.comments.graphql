@@ -1,6 +1,10 @@
 extend type Submission {
-    inline_comments: [InlineComment!]! @hasMany(relation: "inlineComments") @softDeletes
-    overall_comments: [OverallComment!]! @hasMany(relation: "overallComments") @softDeletes
+    inline_comments: [InlineComment!]!
+        @hasMany(relation: "inlineComments")
+        @softDeletes
+    overall_comments: [OverallComment!]!
+        @hasMany(relation: "overallComments")
+        @softDeletes
 }
 
 """
@@ -16,6 +20,7 @@ type InlineComment implements Comment {
     deleted_at: DateTimeUtc
     replies: [InlineCommentReply!] @hasMany @softDeletes
     style_criteria: [InlineCommentStyleCriteria!]
+    read_at: DateTimeUtc @rename(attribute: "readAt")
     from: Int
     to: Int
 }
@@ -42,6 +47,7 @@ type InlineCommentReply implements Comment {
     deleted_at: DateTimeUtc
     parent_id: ID!
     reply_to_id: ID!
+    read_at: DateTimeUtc @rename(attribute: "readAt")
 }
 
 """
@@ -56,6 +62,7 @@ type OverallComment implements Comment {
     updated_at: DateTimeUtc!
     deleted_at: DateTimeUtc
     replies: [OverallCommentReply!] @hasMany @softDeletes
+    read_at: DateTimeUtc @rename(attribute: "readAt")
 }
 
 """
@@ -71,6 +78,7 @@ type OverallCommentReply implements Comment {
     deleted_at: DateTimeUtc
     parent_id: ID!
     reply_to_id: ID!
+    read_at: DateTimeUtc @rename(attribute: "readAt")
 }
 
 extend input UpdateSubmissionInput {
@@ -138,4 +146,42 @@ interface Comment {
     created_at: DateTimeUtc!
     updated_at: DateTimeUtc!
     deleted_at: DateTimeUtc
+    read_at: DateTimeUtc @rename(attribute: "readAt")
+}
+
+extend type Mutation @guard {
+    markInlineCommentsRead(
+        input: MarkInlineCommentsReadInput!
+    ): [InlineComment]!
+        @field(
+            resolver: "App\\GraphQL\\Mutations\\CommentStatusMutator@inlineRead"
+        )
+    markInlineCommentRepliesRead(
+        input: MarkInlineCommentsReadInput!
+    ): [InlineCommentReply]!
+        @field(
+            resolver: "App\\GraphQL\\Mutations\\CommentStatusMutator@inlineRead"
+        )
+    markOverallCommentsRead(
+        input: MarkOverallCommentsReadInput!
+    ): [OverallComment]!
+        @field(
+            resolver: "App\\GraphQL\\Mutations\\CommentStatusMutator@overallRead"
+        )
+    markOverallCommentRepliesRead(
+        input: MarkOverallCommentsReadInput!
+    ): [OverallCommentReply]!
+        @field(
+            resolver: "App\\GraphQL\\Mutations\\CommentStatusMutator@overallRead"
+        )
+}
+
+input MarkInlineCommentsReadInput {
+    submission_id: ID!
+    comment_ids: [ID!]!
+}
+
+input MarkOverallCommentsReadInput {
+    submission_id: ID!
+    comment_ids: [ID!]!
 }

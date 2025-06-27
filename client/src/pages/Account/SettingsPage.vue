@@ -1,5 +1,7 @@
 <template>
-  <h1 class="text-h2 q-pl-md" data-cy="page_heading">{{ $t("settings.page_title") }}</h1>
+  <h1 class="text-h2 q-pl-md" data-cy="page_heading">
+    {{ $t("settings.page_title") }}
+  </h1>
   <account-profile-form
     ref="form"
     :account-profile="currentUser"
@@ -18,7 +20,7 @@ import { useI18n } from "vue-i18n"
 import {
   useFormState,
   useDirtyGuard,
-  useGraphQLValidation,
+  useGraphQLValidation
 } from "src/use/forms"
 import { provide } from "vue"
 
@@ -39,8 +41,8 @@ const { saved, errorMessage } = formState
 const { t } = useI18n()
 const { newStatusMessage } = useFeedbackMessages({
   attrs: {
-    "data-cy": "update_user_notify",
-  },
+    "data-cy": "update_user_notify"
+  }
 })
 
 async function updateUser(newValues) {

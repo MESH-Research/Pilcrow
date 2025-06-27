@@ -16,17 +16,17 @@ import UserListItem from "../atoms/UserListItem.vue"
 defineProps({
   users: {
     type: Array,
-    required: true,
+    required: true
   },
   actions: {
     type: Array,
     required: false,
-    default: () => [],
+    default: () => []
   },
   dataCy: {
     type: String,
-    default: "user_list",
-  },
+    default: "user_list"
+  }
 })
 const emit = defineEmits(["actionClick", "reinvite"])
 

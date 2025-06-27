@@ -1,4 +1,4 @@
-import { vi, afterEach } from 'vitest'
+import { vi, afterEach } from "vitest"
 
 const Dialog = {
   ok: true,
@@ -14,13 +14,13 @@ const Dialog = {
     return {
       onOk: function (cb) {
         if (Dialog.ok) {
-          cb(Dialog.value);
+          cb(Dialog.value)
         }
         return this
       },
       onCancel: function (cb) {
         if (!Dialog.ok) {
-          cb();
+          cb()
         }
         return this
       }

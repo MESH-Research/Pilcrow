@@ -54,8 +54,8 @@
                   icon: 'person_remove',
                   action: 'unassign',
                   help: tp$('unassign_button.help'),
-                  cyAttr: 'button_unassign',
-                },
+                  cyAttr: 'button_unassign'
+                }
               ]
             : []
         "
@@ -77,7 +77,7 @@ import {
   UPDATE_SUBMISSION_REVIEW_COORDINATORS,
   UPDATE_SUBMISSION_SUBMITERS,
   INVITE_REVIEWER,
-  INVITE_REVIEW_COORDINATOR,
+  INVITE_REVIEW_COORDINATOR
 } from "src/graphql/mutations"
 import { computed, ref } from "vue"
 import { useI18n } from "vue-i18n"
@@ -90,26 +90,26 @@ const { dialog } = useQuasar()
 const props = defineProps({
   container: {
     type: Object,
-    required: true,
+    required: true
   },
   roleGroup: {
     type: String,
-    required: true,
+    required: true
   },
   mutable: {
     type: Boolean,
-    default: false,
+    default: false
   },
   maxUsers: {
     type: [Boolean, Number],
     required: false,
-    default: false,
+    default: false
   },
   containerType: {
     type: String,
     requred: false,
-    default: null,
-  },
+    default: null
+  }
 })
 
 const user = ref(null)
@@ -124,16 +124,16 @@ const opts = { variables: { id: props.container.id } }
 const mutations = {
   reviewers: {
     update: UPDATE_SUBMISSION_REVIEWERS,
-    invite: INVITE_REVIEWER,
+    invite: INVITE_REVIEWER
   },
   review_coordinators: {
     update: UPDATE_SUBMISSION_REVIEW_COORDINATORS,
-    invite: INVITE_REVIEW_COORDINATOR,
+    invite: INVITE_REVIEW_COORDINATOR
   },
   submitters: {
     update: UPDATE_SUBMISSION_SUBMITERS,
-    invite: UPDATE_SUBMISSION_SUBMITERS, // TODO: Enable submitter invitation
-  },
+    invite: UPDATE_SUBMISSION_SUBMITERS // TODO: Enable submitter invitation
+  }
 }
 const setMutationType = computed(() => {
   let type = mutations[props.roleGroup]
@@ -161,9 +161,9 @@ const editor = useEditor({
   extensions: [
     StarterKit,
     Placeholder.configure({
-      placeholder: t("submissions.invite_user.message.placeholder"),
-    }),
-  ],
+      placeholder: t("submissions.invite_user.message.placeholder")
+    })
+  ]
 })
 
 function resetForm() {
@@ -198,7 +198,7 @@ function processErrorsForEmailValidation(errorsFromCatch) {
     newStatusMessage(
       "failure",
       tp$("invite.NOT_UNIQUE", {
-        display_name: user.value,
+        display_name: user.value
       })
     )
   }
@@ -210,7 +210,7 @@ function processErrorsForEmailValidation(errorsFromCatch) {
 async function inviteUser() {
   await mutate({
     email: user.value,
-    message: editor.value.getText(),
+    message: editor.value.getText()
   })
     .then(() => {
       resetForm()
@@ -223,13 +223,13 @@ async function inviteUser() {
 async function assignUser() {
   try {
     await mutate({
-      connect: [user.value.id],
+      connect: [user.value.id]
     })
       .then(() => {
         newStatusMessage(
           "success",
           tp$("assign.success", {
-            display_name: user.value.name ?? user.value.username,
+            display_name: user.value.name ?? user.value.username
           })
         )
       })
@@ -261,8 +261,8 @@ function dirtyDialog(user) {
     componentProps: {
       roleGroup: props.roleGroup,
       email: user.email,
-      submissionId: props.container.id,
-    },
+      submissionId: props.container.id
+    }
   })
 }
 
@@ -273,7 +273,7 @@ async function handleUserListClick({ user }) {
     newStatusMessage(
       "success",
       tp$("unassign.success", {
-        display_name: user.name ? user.name : user.username,
+        display_name: user.name ? user.name : user.username
       })
     )
   } catch (error) {

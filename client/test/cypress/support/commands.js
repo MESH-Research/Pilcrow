@@ -9,73 +9,87 @@ Cypress.Commands.add("dataCy", (value) => {
   return cy.get(`[data-cy=${value}]`)
 })
 Cypress.Commands.add(
-  'findCy',
+  "findCy",
   {
-    prevSubject: true,
+    prevSubject: true
   },
   (subject, value) => {
-    return  subject.find(`[data-cy=${value}]`)
+    return subject.find(`[data-cy=${value}]`)
   }
 )
 
 Cypress.Commands.add("qSelect", (dataCyId) => {
-  return cy.dataCy(dataCyId).closest('.q-select');
-});
+  return cy.dataCy(dataCyId).closest(".q-select")
+})
 
 Cypress.Commands.add("qSelectItems", (value) => {
-  return cy.get(`[data-cy=${value}]`)
-    .then((input) => {
-      if (!input.is('input')) {
-        input = input.find('input')
-      }
-      return cy.wrap(input).invoke('attr', 'id').then(id => {
-        return cy.root().closest('html').find(`#${id}_lb`).find('.q-item')
+  return cy.get(`[data-cy=${value}]`).then((input) => {
+    if (!input.is("input")) {
+      input = input.find("input")
+    }
+    return cy
+      .wrap(input)
+      .invoke("attr", "id")
+      .then((id) => {
+        return cy.root().closest("html").find(`#${id}_lb`).find(".q-item")
       })
-    })
+  })
 })
 
 Cypress.Commands.add("userSearch", (dataCy, searchTerm) => {
   cy.intercept("/graphql", (req) => {
-    let operation;
+    let operation
     if (Array.isArray(req.body)) {
       operation = req.body.find((op) => {
-        return (op.hasOwnProperty('operationName') && op.operationName == 'SearchUsers') &&
-          (op.variables.term == searchTerm)
+        return (
+          Object.prototype.hasOwnProperty.call(op, "operationName") &&
+          op.operationName == "SearchUsers" &&
+          op.variables.term == searchTerm
+        )
       })
     } else {
-      if ((req.body.hasOwnProperty('operationName') && req.body.operationName == 'SearchUsers') &&
-        (req.body.variables.term == searchTerm)) {
-        operation = req.body;
+      if (
+        Object.prototype.hasOwnProperty.call(req.body, "operationName") &&
+        req.body.operationName == "SearchUsers" &&
+        req.body.variables.term == searchTerm
+      ) {
+        operation = req.body
       }
     }
     if (operation) {
-      req.alias = 'searchResult';
-      req.reply();
+      req.alias = "searchResult"
+      req.reply()
     } else {
-      console.log(req);
+      console.log(req)
     }
-  });
-  cy.dataCy(dataCy).type(searchTerm);
-  cy.wait('@searchResult');
+  })
+  cy.dataCy(dataCy).type(searchTerm)
+  cy.wait("@searchResult")
 })
 
 Cypress.Commands.add("interceptGQLOperation", (operationName) => {
   cy.intercept("/graphql", (req) => {
-    let operation;
+    let operation
     if (Array.isArray(req.body)) {
       operation = req.body.find((op) => {
-        return (op.hasOwnProperty('operationName') && op.operationName == operationName)
+        return (
+          Object.prototype.hasOwnProperty.call(op, "operationName") &&
+          op.operationName == operationName
+        )
       })
     } else {
-      if (req.body.hasOwnProperty('operation') && op.operationName == operationName) {
-        operation = req.body;
+      if (
+        Object.prototype.hasOwnProperty.call(req.body, "operation") &&
+        req.body.operation == operationName
+      ) {
+        operation = req.body
       }
     }
     if (operation) {
-      req.alias = operationName;
-      req.reply();
+      req.alias = operationName
+      req.reply()
     }
-  });
+  })
 })
 
 /**
@@ -90,12 +104,12 @@ Cypress.Commands.add("login", ({ email }) => {
         method: "POST",
         url: "/graphql",
         body: {
-          query: `mutation { forceLogin(email: "${email}") {username, email, id, name}}`,
+          query: `mutation { forceLogin(email: "${email}") {username, email, id, name}}`
         },
         headers: {
           origin: Cypress.config().baseUrl,
-          "X-XSRF-TOKEN": token,
-        },
+          "X-XSRF-TOKEN": token
+        }
       })
       .then((response) => {
         expect(response.status).to.eq(200)
@@ -119,8 +133,8 @@ Cypress.Commands.add("logout", () => {
         body: { query: `mutation { logout() }` },
         headers: {
           origin: Cypress.config().baseUrl,
-          "X-XSRF-TOKEN": token,
-        },
+          "X-XSRF-TOKEN": token
+        }
       })
       .then((response) => {
         expect(response.body.errors).toBeUndefined()
@@ -139,8 +153,8 @@ Cypress.Commands.add("xsrfToken", () => {
     .request({
       url: "/sanctum/csrf-cookie",
       headers: {
-        origin: Cypress.config().baseUrl,
-      },
+        origin: Cypress.config().baseUrl
+      }
     })
     .then((response) => {
       const cookie = response.headers["set-cookie"]
@@ -195,13 +209,15 @@ Cypress.Commands.add("getVue", () => {
 //TODO: Remove this once the underlying issue is addressed in cypress or cypress axe.
 // We're just overriding the timeout.
 Cypress.Commands.overwrite("injectAxe", () => {
-    var fileName = typeof (require === null || require === void 0 ? void 0 : require.resolve) === 'function'
-        ? require.resolve('axe-core/axe.min.js')
-        : 'node_modules/axe-core/axe.min.js';
-    cy.readFile(fileName, { timeout: 20000}).then(function (source) {
-        return cy.window({ log: false }).then(function (window) {
-            window.eval(source);
-        });
-    });
-
+  var fileName =
+    typeof (require === null || require === void 0
+      ? void 0
+      : require.resolve) === "function"
+      ? require.resolve("axe-core/axe.min.js")
+      : "node_modules/axe-core/axe.min.js"
+  cy.readFile(fileName, { timeout: 20000 }).then(function (source) {
+    return cy.window({ log: false }).then(function (window) {
+      window.eval(source)
+    })
+  })
 })

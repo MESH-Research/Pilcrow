@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Http\Traits\CreatedUpdatedBy;
+use App\Models\Traits\ReadStatus;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -15,6 +16,7 @@ class InlineComment extends BaseModel
     use HasFactory;
     use CreatedUpdatedBy;
     use SoftDeletes;
+    use ReadStatus;
 
     protected $casts = [
         'style_criteria' => 'json',
@@ -30,6 +32,7 @@ class InlineComment extends BaseModel
         'content',
         'style_criteria',
         'parent_id',
+        'read_at',
         'reply_to_id',
         'from',
         'to',

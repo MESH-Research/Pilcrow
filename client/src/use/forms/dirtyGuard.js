@@ -1,8 +1,5 @@
 import DiscardChangesDialog from "src/components/dialogs/DiscardChangesDialog.vue"
-import {
-  onMounted,
-  onUnmounted,
-} from "vue"
+import { onMounted, onUnmounted } from "vue"
 import { onBeforeRouteLeave } from "vue-router"
 import { useQuasar } from "quasar"
 
@@ -17,7 +14,7 @@ export function useDirtyGuard(dirtyRef) {
   }
   function dirtyDialog() {
     return dialog({
-      component: DiscardChangesDialog,
+      component: DiscardChangesDialog
     })
   }
 

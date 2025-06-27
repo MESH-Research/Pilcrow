@@ -1,5 +1,5 @@
-import { Annotation } from './annotation'
+import { Annotation } from "./annotation"
 
-export * from './annotation'
+export * from "./annotation"
 
 export default Annotation

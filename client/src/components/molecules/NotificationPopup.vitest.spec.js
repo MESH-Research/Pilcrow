@@ -1,6 +1,6 @@
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
 import { mount, flushPromises } from "@vue/test-utils"
-import { installApolloClient } from "test/vitest/utils"
+import { installApolloClient } from "app/test/vitest/utils"
 import { CURRENT_USER_NOTIFICATIONS } from "src/graphql/queries"
 import NotificationPopup from "./NotificationPopup.vue"
 
@@ -12,12 +12,14 @@ const mockClient = installApolloClient()
 describe("Nofitication Popup", () => {
   const wrapperFactory = () => mount(NotificationPopup)
   const userNotificationsHandler = vi.fn()
-  mockClient.setRequestHandler(CURRENT_USER_NOTIFICATIONS, userNotificationsHandler)
+  mockClient.setRequestHandler(
+    CURRENT_USER_NOTIFICATIONS,
+    userNotificationsHandler
+  )
 
   afterEach(() => {
     userNotificationsHandler.mockReset()
   })
-
 
   function getNotificationData(readStatus) {
     return {
@@ -29,7 +31,7 @@ describe("Nofitication Popup", () => {
               count: 1,
               currentPage: 1,
               lastPage: 1,
-              perPage: 10,
+              perPage: 10
             },
             data: [
               {
@@ -46,28 +48,30 @@ describe("Nofitication Popup", () => {
                     id: 9999,
                     name: "Test Publication from Tinker"
                   },
-                  user: { "id": 9999, "username": "Test User from Tinker" }, "type": "submission.awaiting_review", "body": "A submission status has been accepted for review.", "action": "Visit Pilcrow", "url": "/",
+                  user: { id: 9999, username: "Test User from Tinker" },
+                  type: "submission.awaiting_review",
+                  body: "A submission status has been accepted for review.",
+                  action: "Visit Pilcrow",
+                  url: "/",
                   invitee: {
-                    display_label: "Test User",
+                    display_label: "Test User"
                   },
                   inviter: {
-                    display_label: "Test User",
+                    display_label: "Test User"
                   }
                 },
                 read_at: readStatus ? "2021-12-31 12:15:15" : null,
                 created_at: "2021-12-13 20:13:05",
-                updated_at: "2021-12-15 16:31:18",
+                updated_at: "2021-12-15 16:31:18"
               }
-            ],
-          },
+            ]
+          }
         }
       }
     }
   }
 
-
   it("mounts without errors", () => {
-
     userNotificationsHandler.mockResolvedValue(getNotificationData(false))
 
     const wrapper = wrapperFactory()

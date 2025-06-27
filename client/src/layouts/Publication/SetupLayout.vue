@@ -41,8 +41,8 @@ import { useI18n } from "vue-i18n"
 const props = defineProps({
   id: {
     type: String,
-    required: true,
-  },
+    required: true
+  }
 })
 
 const { result } = useQuery(GET_PUBLICATION, { id: props.id })
@@ -62,37 +62,37 @@ const items = computed(() => [
     label: t(labelKey("basic")),
     url: {
       name: "publication:setup:basic",
-      params,
-    },
+      params
+    }
   },
   {
     icon: "people",
     label: t(labelKey("users")),
     url: {
       name: "publication:setup:users",
-      params,
+      params
     },
     problem: publication.value?.publication_admins.length === 0,
-    problemTooltip: t(labelKey("problems.no_admins")),
+    problemTooltip: t(labelKey("problems.no_admins"))
   },
   {
     icon: "card_membership",
     label: t(labelKey("criteria")),
     url: {
       name: "publication:setup:criteria",
-      params,
+      params
     },
     problem: noStyleCriteria.value,
-    problemTooltip: t(labelKey("problems.no_criteria")),
+    problemTooltip: t(labelKey("problems.no_criteria"))
   },
   {
     icon: "toc",
     label: t(labelKey("content")),
     url: {
       name: "publication:setup:content",
-      params,
-    },
-  },
+      params
+    }
+  }
 ])
 watchEffect(() => {
   if (publication.value) {

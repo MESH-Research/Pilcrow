@@ -7,7 +7,7 @@ import InlineComments from "./InlineComments.vue"
 import { describe, expect, test, vi } from "vitest"
 
 vi.mock("src/use/user", () => ({
-  useCurrentUser: vi.fn(),
+  useCurrentUser: vi.fn()
 }))
 
 installQuasarPlugin()
@@ -33,8 +33,9 @@ describe("InlineComments", () => {
                   created_by: {
                     id: "2",
                     email: "publicationadministrator@meshresearch.net",
-                    name: "Publication Administrator",
+                    name: "Publication Administrator"
                   },
+                  read_at: null,
                   replies: [
                     {
                       id: "2",
@@ -46,17 +47,18 @@ describe("InlineComments", () => {
                       created_by: {
                         id: "1",
                         username: "applicationAdminUser",
-                        email: "applicationadministrator@meshresearch.net",
+                        email: "applicationadministrator@meshresearch.net"
                       },
                       reply_to_id: "1",
-                    },
+                      read_at: null
+                    }
                   ],
                   style_criteria: [
                     {
                       name: "Relevance",
-                      icon: "close_fullscreen",
-                    },
-                  ],
+                      icon: "close_fullscreen"
+                    }
+                  ]
                 },
                 {
                   id: "3",
@@ -70,27 +72,28 @@ describe("InlineComments", () => {
                   created_by: {
                     id: "6",
                     email: "gracie91@example.net",
-                    name: "Alessandra Kohler",
+                    name: "Alessandra Kohler"
                   },
+                  read_at: "2024-07-01T12:00:00.000000Z",
                   replies: [],
                   style_criteria: [
                     {
                       name: "Relevance",
-                      icon: "close_fullscreen",
+                      icon: "close_fullscreen"
                     },
                     {
                       name: "Coherence",
-                      icon: "psychology",
+                      icon: "psychology"
                     },
                     {
                       name: "Scholarly Dialogue",
-                      icon: "question_answer",
+                      icon: "question_answer"
                     },
                     {
                       name: "Accessibility",
-                      icon: "accessibility",
-                    },
-                  ],
+                      icon: "accessibility"
+                    }
+                  ]
                 },
                 {
                   id: "4",
@@ -104,8 +107,9 @@ describe("InlineComments", () => {
                   created_by: {
                     id: "7",
                     email: "hessel.russell@example.net",
-                    name: "Mayra Kuhic",
+                    name: "Mayra Kuhic"
                   },
+                  read_at: null,
                   replies: [
                     {
                       id: "5",
@@ -117,9 +121,10 @@ describe("InlineComments", () => {
                       created_by: {
                         id: "3",
                         username: "publicationEditor",
-                        email: "publicationeditor@meshresearch.net",
+                        email: "publicationeditor@meshresearch.net"
                       },
                       reply_to_id: "4",
+                      read_at: null
                     },
                     {
                       id: "6",
@@ -131,9 +136,10 @@ describe("InlineComments", () => {
                       created_by: {
                         id: "4",
                         username: "reviewCoordinator",
-                        email: "reviewcoordinator@meshresearch.net",
+                        email: "reviewcoordinator@meshresearch.net"
                       },
                       reply_to_id: "5",
+                      read_at: null
                     },
                     {
                       id: "7",
@@ -145,9 +151,10 @@ describe("InlineComments", () => {
                       created_by: {
                         id: "7",
                         username: "rschoen",
-                        email: "hessel.russell@example.net",
+                        email: "hessel.russell@example.net"
                       },
                       reply_to_id: "4",
+                      read_at: null
                     },
                     {
                       id: "8",
@@ -159,9 +166,10 @@ describe("InlineComments", () => {
                       created_by: {
                         id: "1",
                         username: "applicationAdminUser",
-                        email: "applicationadministrator@meshresearch.net",
+                        email: "applicationadministrator@meshresearch.net"
                       },
                       reply_to_id: "7",
+                      read_at: null
                     },
                     {
                       id: "9",
@@ -173,9 +181,10 @@ describe("InlineComments", () => {
                       created_by: {
                         id: "1",
                         username: "applicationAdminUser",
-                        email: "applicationadministrator@meshresearch.net",
+                        email: "applicationadministrator@meshresearch.net"
                       },
                       reply_to_id: "4",
+                      read_at: null
                     },
                     {
                       id: "10",
@@ -187,9 +196,10 @@ describe("InlineComments", () => {
                       created_by: {
                         id: "1",
                         username: "applicationAdminUser",
-                        email: "applicationadministrator@meshresearch.net",
+                        email: "applicationadministrator@meshresearch.net"
                       },
                       reply_to_id: "6",
+                      read_at: null
                     },
                     {
                       id: "11",
@@ -201,9 +211,10 @@ describe("InlineComments", () => {
                       created_by: {
                         id: "1",
                         username: "applicationAdminUser",
-                        email: "applicationadministrator@meshresearch.net",
+                        email: "applicationadministrator@meshresearch.net"
                       },
                       reply_to_id: "5",
+                      read_at: null
                     },
                     {
                       id: "12",
@@ -215,9 +226,10 @@ describe("InlineComments", () => {
                       created_by: {
                         id: "5",
                         username: "regularUser",
-                        email: "regularuser@meshresearch.net",
+                        email: "regularuser@meshresearch.net"
                       },
                       reply_to_id: "6",
+                      read_at: null
                     },
                     {
                       id: "13",
@@ -229,9 +241,10 @@ describe("InlineComments", () => {
                       created_by: {
                         id: "4",
                         username: "reviewCoordinator",
-                        email: "reviewcoordinator@meshresearch.net",
+                        email: "reviewcoordinator@meshresearch.net"
                       },
                       reply_to_id: "7",
+                      read_at: null
                     },
                     {
                       id: "14",
@@ -243,35 +256,36 @@ describe("InlineComments", () => {
                       created_by: {
                         id: "3",
                         username: "publicationEditor",
-                        email: "publicationeditor@meshresearch.net",
+                        email: "publicationeditor@meshresearch.net"
                       },
                       reply_to_id: "4",
-                    },
+                      read_at: null
+                    }
                   ],
                   style_criteria: [
                     {
                       name: "Accessibility",
-                      icon: "accessibility",
+                      icon: "accessibility"
                     },
                     {
                       name: "Scholarly Dialogue",
-                      icon: "question_answer",
-                    },
-                  ],
-                },
-              ],
+                      icon: "question_answer"
+                    }
+                  ]
+                }
+              ]
             }),
-            activeComment: ref(),
+            activeComment: ref()
           },
-          stubs: ["router-link", "CommentEditor"],
-        },
-      }),
+          stubs: ["router-link", "CommentEditor"]
+        }
+      })
     }
   }
 
   test("able to mount", () => {
     useCurrentUser.mockReturnValue({
-      currentUser: ref({ id: 1 }),
+      currentUser: ref({ id: 1 })
     })
     const { wrapper } = wrapperFactory()
     expect(wrapper).toBeTruthy()
@@ -279,7 +293,7 @@ describe("InlineComments", () => {
 
   test("expected style criteria appear within all inline comments", () => {
     useCurrentUser.mockReturnValue({
-      currentUser: ref({ id: 1 }),
+      currentUser: ref({ id: 1 })
     })
     const { wrapper } = wrapperFactory()
     const items = wrapper.findAllComponents('[data-cy="inlineComment"]')
@@ -292,7 +306,7 @@ describe("InlineComments", () => {
 
   test("expected number of inline comments appear", () => {
     useCurrentUser.mockReturnValue({
-      currentUser: ref({ id: 1 }),
+      currentUser: ref({ id: 1 })
     })
     const { wrapper } = wrapperFactory()
     const items = wrapper.findAllComponents('[data-cy="inlineComment"]')
@@ -301,7 +315,7 @@ describe("InlineComments", () => {
 
   test("expected number of inline comment replies appear", async () => {
     useCurrentUser.mockReturnValue({
-      currentUser: ref({ id: 1 }),
+      currentUser: ref({ id: 1 })
     })
     const { wrapper } = wrapperFactory()
     const items = wrapper.findAllComponents('[data-cy="inlineComment"]')
@@ -314,8 +328,19 @@ describe("InlineComments", () => {
 
     await items.at(2).find('[data-cy="showRepliesButton"]').trigger("click")
     expect(items.at(2).find('[data-cy="hideRepliesButton"]').text()).toContain(
-      "submissions.comment.toggle_replies.hide_reply",
+      "submissions.comment.toggle_replies.hide_reply"
     )
     expect(findReplies(items.at(2))).toHaveLength(10)
+  })
+
+  test("unread inline comments appear unread", async () => {
+    const { wrapper } = wrapperFactory()
+    const items = wrapper.findAllComponents('[data-cy="inlineComment"]')
+    expect(
+      items.at(0).find('[data-cy="commentHeader"]').classes("unread-comment")
+    ).toBe(true)
+    expect(
+      items.at(1).find('[data-cy="commentHeader"]').classes("unread-comment")
+    ).toBe(false)
   })
 })

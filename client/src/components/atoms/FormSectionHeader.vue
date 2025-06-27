@@ -11,7 +11,7 @@
 defineProps({
   firstSection: {
     type: Boolean,
-    default: false,
-  },
+    default: false
+  }
 })
 </script>

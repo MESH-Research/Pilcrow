@@ -87,7 +87,7 @@ const paginatorData = computed(() => {
       count: 0,
       currentPage: 1,
       lastPage: 1,
-      perPage: 10,
+      perPage: 10
     }
   )
 })

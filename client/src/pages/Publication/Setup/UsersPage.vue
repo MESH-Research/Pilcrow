@@ -38,7 +38,7 @@ import AssignedPublicationUsers from "src/components/AssignedPublicationUsers.vu
 defineProps({
   publication: {
     type: Object,
-    required: true,
-  },
+    required: true
+  }
 })
 </script>

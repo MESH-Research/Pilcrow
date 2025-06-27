@@ -4,7 +4,7 @@ import {
   _CURRENT_USER_FIELDS,
   _PAGINATION_FIELDS,
   _PROFILE_METADATA_FIELDS,
-  _RELATED_USER_FIELDS,
+  _RELATED_USER_FIELDS
 } from "./fragments"
 
 export const CURRENT_USER = gql`
@@ -126,7 +126,9 @@ export const CURRENT_USER_SUBMISSIONS = gql`
             }
             created_at
             updated_at
+            read_at
           }
+          read_at
         }
         overall_comments(trashed: WITH) {
           id
@@ -158,7 +160,9 @@ export const CURRENT_USER_SUBMISSIONS = gql`
             }
             created_at
             updated_at
+            read_at
           }
+          read_at
         }
         publication {
           id
@@ -395,7 +399,9 @@ export const GET_SUBMISSION_REVIEW = gql`
           ...commentFields
           parent_id
           reply_to_id
+          read_at
         }
+        read_at
       }
       overall_comments(trashed: WITH) {
         ...commentFields
@@ -403,7 +409,9 @@ export const GET_SUBMISSION_REVIEW = gql`
           ...commentFields
           parent_id
           reply_to_id
+          read_at
         }
+        read_at
       }
       submitters {
         ...relatedUserFields

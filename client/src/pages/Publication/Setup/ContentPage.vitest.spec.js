@@ -1,7 +1,7 @@
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
 import { flushPromises, mount } from "@vue/test-utils"
-import { UPDATE_PUBLICATION_CONTENT } from "src/graphql/mutations"
-import { installApolloClient } from "test/vitest/utils"
+import { UPDATE_PUBLICATION_CONTENT } from "/src/graphql/mutations"
+import { installApolloClient } from "app/test/vitest/utils"
 import { ref as mockRef } from "vue"
 import ContentPage from "./ContentPage.vue"
 
@@ -11,15 +11,15 @@ vi.mock("src/use/forms", async (importOriginal) => {
   const forms = await importOriginal()
   return {
     ...forms,
-    useDirtyGuard: () => { },
+    useDirtyGuard: () => {},
     useFormState: () => ({
       dirty: mockRef(false),
       saved: mockRef(false),
       state: mockRef("idle"),
       queryLoading: mockRef(false),
       mutationLoading: mockRef(false),
-      errorMessage: mockRef(""),
-    }),
+      errorMessage: mockRef("")
+    })
   }
 })
 
@@ -30,15 +30,15 @@ describe("BasicPage", () => {
   const makeWrapper = async () => {
     const wrapper = mount(ContentPage, {
       global: {
-        stubs: ["update-content-form"],
+        stubs: ["update-content-form"]
       },
       props: {
         publication: {
           id: "1",
           home_page_content: "Test Content",
-          new_submission_content: "Test Content",
-        },
-      },
+          new_submission_content: "Test Content"
+        }
+      }
     })
     await flushPromises()
     return wrapper
@@ -59,11 +59,11 @@ describe("BasicPage", () => {
   test("saves publication data", async () => {
     const newData = {
       home_page_content: "New Content",
-      new_submission_content: "Test Content",
+      new_submission_content: "Test Content"
     }
 
     mutateHandler.mockResolvedValue({
-      data: { updatePublication: { id: "1", ...newData } },
+      data: { updatePublication: { id: "1", ...newData } }
     })
 
     const wrapper = await makeWrapper()
@@ -73,7 +73,7 @@ describe("BasicPage", () => {
 
     expect(mutateHandler).toHaveBeenCalledWith({
       id: "1",
-      home_page_content: "New Content",
+      home_page_content: "New Content"
     })
   })
 

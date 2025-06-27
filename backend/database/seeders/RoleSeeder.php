@@ -10,18 +10,19 @@ use Illuminate\Database\Seeder;
 class RoleSeeder extends Seeder
 {
     /**
-     * Run the database seeds.
+     * Run the role seeder.
      *
+     * @deprecated Permission seeding is done via migration. This seeder is only useful for development (maybe).
      * @return void
      */
     public function run()
     {
         $roles = Role::getArrayOfAllRoleNames();
         foreach ($roles as $key => $role) {
-                Role::factory()->create([
-                    'id' => $key + 1,
-                    'name' => $role,
-                ]);
+            Role::factory()->create([
+                'id' => $key + 1,
+                'name' => $role,
+            ]);
         }
 
         Permission::create(['name' => Permission::UPDATE_USERS])

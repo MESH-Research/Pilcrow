@@ -10,15 +10,15 @@ export default {
           update: (store, { data: { login } }) => {
             store.writeQuery({
               query: CURRENT_USER,
-              data: { currentUser: login },
+              data: { currentUser: login }
             })
-          },
+          }
         })
 
         return {
           success: true,
           user: result.data.login,
-          result,
+          result
         }
       } catch (error) {
         if (error.graphQLErrors) {
@@ -28,7 +28,7 @@ export default {
         }
         return {
           success: false,
-          errors: errors ?? ["FAILURE_OTHER"],
+          errors: errors ?? ["FAILURE_OTHER"]
         }
       }
     },
@@ -39,15 +39,15 @@ export default {
           update: (store) => {
             store.writeQuery({
               query: CURRENT_USER,
-              data: { currentUser: null },
+              data: { currentUser: null }
             })
-          },
+          }
         })
         return { success: true, result }
       } catch (error) {
         console.error(`Error while logging out: ${error}`)
         return { success: false, error }
       }
-    },
-  },
+    }
+  }
 }

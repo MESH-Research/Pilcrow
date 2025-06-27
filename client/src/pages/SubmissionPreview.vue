@@ -17,7 +17,7 @@
         class="q-mt-md"
         :to="{
           name: 'submission:draft',
-          params: { id: submission.id },
+          params: { id: submission.id }
         }"
       />
     </div>
@@ -34,17 +34,21 @@
           <q-banner inline-actions class="bg-positive text-white text-center">
             You are previewing this submission.
           </q-banner>
-          <submission-content :annotation-enabled="false" :highlight-visibility="false" />
+          <submission-content
+            :annotation-enabled="false"
+            :highlight-visibility="false"
+          />
           <div class="flex justify-center q-mb-xl">
-          <q-btn
-            color="primary"
-            :label="$t(`submission.action.edit_content`)"
-            square
-            :to="{
-              name: 'submission:content',
-              params: { id: id },
-            }"
-          /></div>
+            <q-btn
+              color="primary"
+              :label="$t(`submission.action.edit_content`)"
+              square
+              :to="{
+                name: 'submission:content',
+                params: { id: id }
+              }"
+            />
+          </div>
         </q-page-container>
       </q-layout>
 
@@ -62,8 +66,8 @@ import { useQuery } from "@vue/apollo-composable"
 const props = defineProps({
   id: {
     type: String,
-    required: true,
-  },
+    required: true
+  }
 })
 const { loading, result } = useQuery(GET_SUBMISSION_REVIEW, { id: props.id })
 const submission = computed(() => {

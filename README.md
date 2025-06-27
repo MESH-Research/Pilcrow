@@ -1,6 +1,6 @@
 <h1 align="center">
     <a href="https://pilcrow.meshresearch.dev">
-    <img src="docs/public/logo-100x100.png"/>
+    <img src="docs/public/logo-100x100.png" alt="Pilcrow Logo"/>
     <br />
     Pilcrow
     </a>
@@ -57,4 +57,3 @@ Pilcrow welcomes and recognizes the contributions of all contributors to our pro
 * [An opinionated application](https://github.com/MESH-Research/Pilcrow/wiki/An-Opinionated-Application)
 * [Pilcrow Links](https://github.com/MESH-Research/Pilcrow/wiki/Pilcrow-Links)
 * [Style Guide](https://github.com/MESH-Research/Pilcrow/wiki/Style-Guide)
-

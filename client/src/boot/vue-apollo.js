@@ -1,4 +1,4 @@
-import { boot } from "quasar/wrappers"
+import { defineBoot } from "#q-app/wrappers"
 import { ApolloClient, InMemoryCache, ApolloLink } from "@apollo/client/core"
 import {
   beforeEachRequiresAuth,
@@ -8,7 +8,7 @@ import {
   beforeEachRequiresPreviewAccess,
   beforeEachRequiresViewAccess,
   beforeEachRequiresReviewAccess,
-  beforeEachRequiresExportAccess,
+  beforeEachRequiresExportAccess
 } from "src/apollo/apollo-router-guards"
 import { withXsrfLink, expiredTokenLink } from "src/apollo/apollo-links.js"
 import { createApolloProvider } from "@vue/apollo-option"
@@ -18,7 +18,7 @@ import createUploadLink from "apollo-upload-client/createUploadLink.mjs"
 import { BatchHttpLink } from "@apollo/client/link/batch-http"
 
 const httpOptions = {
-  uri: "/graphql",
+  uri: "/graphql"
 }
 const httpLink = ApolloLink.split(
   (operation) => operation.getContext().hasUpload,
@@ -26,7 +26,7 @@ const httpLink = ApolloLink.split(
   new BatchHttpLink(httpOptions)
 )
 
-export default boot(async ({ app, router }) => {
+export default defineBoot(async ({ app, router }) => {
   const apolloClient = new ApolloClient({
     link: ApolloLink.from([expiredTokenLink, withXsrfLink, httpLink]),
     cache: new InMemoryCache({
@@ -35,9 +35,9 @@ export default boot(async ({ app, router }) => {
           "InlineComment",
           "InlineCommentReply",
           "OverallComment",
-          "OverallCommentReply",
-        ],
-      },
+          "OverallCommentReply"
+        ]
+      }
     }),
     connectToDevTools: true
   })
@@ -99,7 +99,7 @@ export default boot(async ({ app, router }) => {
   )
 
   const apolloClients = {
-    default: apolloClient,
+    default: apolloClient
   }
   const apolloProvider = createApolloProvider(apolloClients)
   app.provide(ApolloClients, apolloClients) // Provide for composition api

@@ -16,13 +16,13 @@ const icons = flatten({
     deleted: "delete",
     invitation: {
       review_coordinator: {
-        accepted: "emoji_people",
+        accepted: "emoji_people"
       },
       reviewer: {
-        accepted: "emoji_people",
-      },
-    },
-  },
+        accepted: "emoji_people"
+      }
+    }
+  }
 })
 
 export default function getIcon(type) {

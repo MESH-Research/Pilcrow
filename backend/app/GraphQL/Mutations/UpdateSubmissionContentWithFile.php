@@ -37,8 +37,7 @@ class UpdateSubmissionContentWithFile
         ]);
 
         try {
-            $content->data = Pandoc::
-                inputFile(storage_path('app/' . $file->file_upload))
+            $content->data = Pandoc::inputFile(storage_path('app/' . $file->file_upload))
                 ->noStandalone()
                 ->to('html')
                 ->run();
@@ -46,7 +45,7 @@ class UpdateSubmissionContentWithFile
             throw new Error('Unable to convert file');
         }
 
-        $file->import_status = SubmissionFileImportStatus::Success();
+        $file->import_status = SubmissionFileImportStatus::Success;
 
         if (!$file->save()) {
             throw new Error('Unable to save file');

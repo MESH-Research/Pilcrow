@@ -179,7 +179,7 @@ class SubmissionContentTest extends TestCase
 
         $file->refresh();
         $this->assertNotEmpty($file->content_id);
-        $this->assertEquals(SubmissionFileImportStatus::Success(), $file->import_status);
+        $this->assertEquals(SubmissionFileImportStatus::Success, $file->import_status);
         $this->assertEquals('<p>New content for submission</p>', $file->submission->content->data);
     }
 
@@ -214,7 +214,7 @@ class SubmissionContentTest extends TestCase
 
         $file->refresh();
         $this->assertEmpty($file->content_id);
-        $this->assertEquals(SubmissionFileImportStatus::Failure(), $file->import_status);
+        $this->assertEquals(SubmissionFileImportStatus::Failure, $file->import_status);
         $this->assertStringContainsString('EmptyContentOnImport', $file->error_message);
         $this->assertNotEquals($file->id, $file->submission->content_id);
     }
@@ -229,7 +229,7 @@ class SubmissionContentTest extends TestCase
             ->forSubmission()
             ->create([
                 'file_upload' => $fileName,
-                'import_status' => SubmissionFileImportStatus::Processing(),
+                'import_status' => SubmissionFileImportStatus::Processing,
             ]);
 
         Pandoc::spy();

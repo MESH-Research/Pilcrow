@@ -10,7 +10,7 @@ export function useDarkMode() {
     () => $q.dark.isActive,
     () => {
       darkModeStatus.value = $q.dark.isActive
-    },
+    }
   )
   function toggleDarkMode() {
     $q.dark.toggle()
@@ -33,12 +33,12 @@ export function useFeedbackMessages(overrideDefaults = {}) {
       {
         label: t("guiElements.feedbackMessage.closeButton"),
         color: "white",
-        "data-cy": "button_dismiss_notify",
-      },
+        "data-cy": "button_dismiss_notify"
+      }
     ],
     timeout: 10000,
     progress: true,
-    html: true,
+    html: true
   })
 
   /**
@@ -62,7 +62,7 @@ export function useFeedbackMessages(overrideDefaults = {}) {
   function newStatusMessage(status, message) {
     const type = {
       success: "positive",
-      failure: "negative",
+      failure: "negative"
     }[status]
     newMessage(message, { type })
   }
@@ -76,99 +76,99 @@ export const submissionStateButtons = {
     attrs: {
       color: "",
       class: "",
-      "data-cy": "",
-    },
+      "data-cy": ""
+    }
   },
   INITIALLY_SUBMITTED: {
     action: "submit_for_review",
     attrs: {
       color: "positive",
       class: "",
-      "data-cy": "initially_submit",
+      "data-cy": "initially_submit"
     },
-    icon: "edit_document",
+    icon: "edit_document"
   },
   AWAITING_REVIEW: {
     action: "accept_for_review",
     attrs: {
       color: "positive",
       class: "",
-      "data-cy": "open_for_review",
+      "data-cy": "open_for_review"
     },
-    icon: "done",
+    icon: "done"
   },
   UNDER_REVIEW: {
     action: "open",
     attrs: {
       color: "black",
       class: "",
-      "data-cy": "open_for_review",
+      "data-cy": "open_for_review"
     },
-    icon: "grading",
+    icon: "grading"
   },
   AWAITING_DECISION: {
     action: "close",
     attrs: {
       color: "black",
       class: "",
-      "data-cy": "close_for_review",
+      "data-cy": "close_for_review"
     },
-    icon: "grading",
+    icon: "grading"
   },
   ACCEPTED_AS_FINAL: {
     action: "accept_as_final",
     attrs: {
       color: "positive",
       class: "",
-      "data-cy": "accept_as_final",
+      "data-cy": "accept_as_final"
     },
-    icon: "done",
+    icon: "done"
   },
   ARCHIVED: {
     action: "archive",
     attrs: {
       color: "dark-grey",
       class: "",
-      "data-cy": "archive",
+      "data-cy": "archive"
     },
-    icon: "archive",
+    icon: "archive"
   },
   DELETED: {
     action: "delete",
     attrs: {
       color: "negative",
       class: "",
-      "data-cy": "delete",
+      "data-cy": "delete"
     },
-    icon: "delete",
+    icon: "delete"
   },
   REJECTED: {
     action: "reject",
     attrs: {
       color: "negative",
       class: "",
-      "data-cy": "",
+      "data-cy": ""
     },
-    icon: "do_not_disturb",
+    icon: "do_not_disturb"
   },
   RESUBMISSION_REQUESTED: {
     action: "request_resubmission",
     attrs: {
       color: "dark-grey",
       class: "text-white request-resubmission",
-      "data-cy": "",
+      "data-cy": ""
     },
-    icon: "refresh",
+    icon: "refresh"
   },
   EXPIRED: {
     action: null,
     attrs: {
       color: "",
       class: "",
-      "data-cy": "",
+      "data-cy": ""
     },
-    icon: "",
-  },
+    icon: ""
+  }
 }
 
 export function useStatusChangeControls(submission) {
@@ -184,7 +184,7 @@ export function useStatusChangeControls(submission) {
   const statusChangingDisabledStates = [
     "REJECTED",
     "RESUBMISSION_REQUESTED",
-    "DELETED",
+    "DELETED"
   ]
 
   const statusChangingDisabledByState = computed(() => {
@@ -200,32 +200,32 @@ export function useStatusChangeControls(submission) {
       "UNDER_REVIEW",
       "ACCEPTED_AS_FINAL",
       "RESUBMISSION_REQUESTED",
-      "REJECTED",
+      "REJECTED"
     ],
     AWAITING_REVIEW: ["UNDER_REVIEW"],
     UNDER_REVIEW: [
       "ACCEPTED_AS_FINAL",
       "RESUBMISSION_REQUESTED",
       "REJECTED",
-      "AWAITING_DECISION",
+      "AWAITING_DECISION"
     ],
     AWAITING_DECISION: [
       "ACCEPTED_AS_FINAL",
       "RESUBMISSION_REQUESTED",
-      "REJECTED",
+      "REJECTED"
     ],
     ACCEPTED_AS_FINAL: ["ARCHIVED", "DELETED"],
     RESUBMISSION_REQUESTED: ["ARCHIVED", "DELETED"],
     REJECTED: ["ARCHIVED", "DELETED"],
     ARCHIVED: ["DELETED"],
     DELETED: [],
-    EXPIRED: ["ACCEPTED_AS_FINAL", "RESUBMISSION_REQUESTED", "REJECTED"],
+    EXPIRED: ["ACCEPTED_AS_FINAL", "RESUBMISSION_REQUESTED", "REJECTED"]
   }
 
   return {
     nextStates,
     statusChangingDisabledByRole,
-    statusChangingDisabledByState,
+    statusChangingDisabledByState
   }
 }
 
@@ -235,7 +235,7 @@ export function useSubmissionExport(submission) {
     isPublicationAdmin,
     isEditor,
     isReviewCoordinator,
-    isSubmitter,
+    isSubmitter
   } = useCurrentUser()
 
   const exportVisibleStates = [
@@ -243,7 +243,7 @@ export function useSubmissionExport(submission) {
     "RESUBMISSION_REQUESTED",
     "ACCEPTED_AS_FINAL",
     "ARCHIVED",
-    "EXPIRED",
+    "EXPIRED"
   ]
   const isDisabledByRole = computed(() => {
     if (!submission.value) {

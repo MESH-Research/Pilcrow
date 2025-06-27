@@ -62,7 +62,7 @@
 <script>
 import { defineComponent } from "vue"
 export default defineComponent({
-  inheritAttrs: false,
+  inheritAttrs: false
 })
 </script>
 
@@ -74,23 +74,23 @@ import { computed, ref } from "vue"
 const props = defineProps({
   label: {
     type: String,
-    default: "Password",
+    default: "Password"
   },
   modelValue: {
     type: String,
-    default: "",
+    default: ""
   },
   threshold: {
     type: Number,
-    default: 3,
+    default: 3
   },
   complexity: {
     type: Object,
-    required: true,
+    required: true
   },
   error: {
-    type: Boolean,
-  },
+    type: Boolean
+  }
 })
 
 defineEmits(["update:modelValue"])

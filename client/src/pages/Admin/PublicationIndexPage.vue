@@ -81,6 +81,7 @@
         </q-td>
       </template>
     </query-table>
+
   </div>
 </template>
 
@@ -91,7 +92,7 @@ import CreateForm from "src/components/forms/Publication/CreateForm.vue"
 import { useRouter } from "vue-router"
 const destRoute = (id, page) => ({
   name: `publication:setup:${page}`,
-  params: { id },
+  params: { id }
 })
 
 const columns = [
@@ -109,11 +110,21 @@ const columns = [
 
 const pageTitleKey = (page) => `publication.setup_pages.${page}`
 
+const pubsPaginator = usePagination(GET_PUBLICATIONS)
+const {
+  binds,
+  listeners,
+  data: publications,
+  paginatorInfo,
+  query: { loading }
+} = pubsPaginator
+
+
 const { push } = useRouter()
 function publicationCreated(publication) {
   push({
     name: "publication:setup:basic",
-    params: { id: publication.id },
+    params: { id: publication.id }
   })
 }
 </script>

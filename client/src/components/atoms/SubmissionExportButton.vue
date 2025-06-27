@@ -23,7 +23,7 @@
     icon="exit_to_app"
     :to="{
       name: 'submission:export',
-      params: { id: submission.id },
+      params: { id: submission.id }
     }"
   />
 </template>
@@ -33,8 +33,8 @@ import { toRef } from "vue"
 const props = defineProps({
   submission: {
     type: Object,
-    required: true,
-  },
+    required: true
+  }
 })
 const submissionRef = toRef(props, "submission")
 const { isDisabledByRole, isDisabledByState } =

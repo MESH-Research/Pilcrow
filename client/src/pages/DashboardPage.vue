@@ -15,7 +15,7 @@
             <h2 class="text-h4" style="display: inline">
               {{
                 $t(`dashboard.welcome_message`, {
-                  label: currentUser.display_label,
+                  label: currentUser.display_label
                 })
               }}
             </h2>
@@ -76,7 +76,7 @@
           :data-cy="`${currentUser.highest_privileged_role}_table`"
         />
       </div>
-      <div v-if="reviewer_submissions.length > 0" class="col-12" >
+      <div v-if="reviewer_submissions.length > 0" class="col-12">
         <submission-table
           :table-data="reviewer_submissions"
           table-type="submissions"
@@ -116,7 +116,9 @@ import SubmissionTable from "src/components/SubmissionTable.vue"
 import { computed } from "vue"
 
 const { currentUser } = useCurrentUser()
-const { result: all_submissions_result } = useQuery(GET_SUBMISSIONS, {page: 1})
+const { result: all_submissions_result } = useQuery(GET_SUBMISSIONS, {
+  page: 1
+})
 const all_submissions = computed(() => {
   return all_submissions_result.value?.submissions.data ?? []
 })

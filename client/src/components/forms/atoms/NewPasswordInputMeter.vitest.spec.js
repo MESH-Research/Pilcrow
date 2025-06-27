@@ -7,8 +7,8 @@ describe("NewPasswordInputMeter", () => {
   const wrapper = mount(NewPasswordInputMeter, {
     propsData: {
       max: 4,
-      valid: false,
-    },
+      valid: false
+    }
   })
 
   it("mounts without errors", () => {

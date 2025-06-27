@@ -5,10 +5,38 @@ on:
 name: release-please
 jobs:
   release-please:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
-      - uses: google-github-actions/release-please-action@v3
+      - name: Generate Token
+        id: token
+        uses: actions/create-github-app-token@v2
         with:
-          release-type: node
-          package-name: pilcrow
-          token: ${{ secrets.REPO_TOKEN }}
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+      - uses: googleapis/release-please-action@v4
+        id: release
+        with:
+          token: ${{ steps.token.outputs.token }}
+      - name: Checkout Repository
+        if: ${{ steps.release.outputs.release_created }}
+        uses: actions/checkout@v4
+        with:
+          token: ${{ steps.token.outputs.token }}
+      - name: Get GitHub App User ID
+        id: get-user-id
+        run: echo "user-id=$(gh api "/users/${{ steps.token.outputs.app-slug }}[bot]" --jq .id)" >> "$GITHUB_OUTPUT"
+        env:
+          GH_TOKEN: ${{ steps.token.outputs.token }}
+      - name: Update appVersion in helm chart
+        if: ${{ steps.release.outputs.release_created }}
+        env:
+          COMMIT_USER: ${{ steps.token.outputs.app-slug }}[bot]
+          COMMIT_EMAIL: ${{ steps.get-user-id.outputs.user-id }}+${{ steps.token.outputs.app-slug }}[bot]@users.noreply.github.com
+          COMMIT_MESSAGE: "feat(helm): :pushpin: Update chart to appVersion ${{ steps.release.outputs.version }}"
+        run: |
+          sed -i "s|appVersion: .*|appVersion: ${{ steps.release.outputs.version }}|" helm/Chart.yaml
+          git config --global user.name "${COMMIT_USER}"
+          git config --global user.email "${COMMIT_EMAIL}"
+          git add helm/Chart.yaml
+          git commit -m "${COMMIT_MESSAGE}"
+          git push

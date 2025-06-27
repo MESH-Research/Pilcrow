@@ -88,7 +88,7 @@ export function useCurrentUser() {
     isReviewer,
     isReviewCoordinator,
     isEditor,
-    isPublicationAdmin,
+    isPublicationAdmin
   }
 }
 
@@ -145,7 +145,7 @@ export function checkRole(currentUser = null) {
     isReviewCoordinator,
     isEditor,
     isPublicationAdmin,
-    isApplicationAdmin,
+    isApplicationAdmin
   }
 }
 
@@ -165,17 +165,17 @@ export function checkRole(currentUser = null) {
 export const useLogin = () => {
   const credentials = reactive({
     email: "",
-    password: "",
+    password: ""
   })
 
   const rules = {
     email: {
       email,
-      required,
+      required
     },
     password: {
-      required,
-    },
+      required
+    }
   }
   const v$ = useVuelidate(rules, credentials)
 
@@ -183,9 +183,9 @@ export const useLogin = () => {
     update: (cache, { data: { login } }) => {
       cache.writeQuery({
         query: CURRENT_USER,
-        data: { currentUser: { ...login } },
+        data: { currentUser: { ...login } }
       })
-    },
+    }
   }))
 
   const redirectUrl = SessionStorage.getItem("loginRedirect") ?? "/dashboard"
@@ -207,7 +207,7 @@ export const useLogin = () => {
     try {
       const result = await loginMutation({
         email: credentials.email.toLowerCase(),
-        password: credentials.password,
+        password: credentials.password
       })
       return result.data.login
     } catch (e) {
@@ -242,12 +242,12 @@ export function useLogout() {
   const {
     mutate: logoutMutation,
     loading: logoutLoading,
-    error: logoutError,
+    error: logoutError
   } = useMutation(LOGOUT, () => ({
     update: async (cache) => {
       await cache.reset()
       cache.writeQuery({ query: CURRENT_USER, data: { currentUser: null } })
-    },
+    }
   }))
 
   /**

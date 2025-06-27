@@ -10,7 +10,7 @@
       >
         <q-img
           :alt="$t('header.logo_alt')"
-          src="/logo-100x100.png"
+          src="/logo/logo-100x100.png"
           style="width: 50px; height: 50px"
         />
         <div v-if="$q.screen.width >= 430" class="column">
@@ -174,8 +174,8 @@ defineProps({
   //Drawer status
   modelValue: {
     type: Boolean,
-    default: null,
-  },
+    default: null
+  }
 })
 
 const { currentUser, isAppAdmin } = useCurrentUser()

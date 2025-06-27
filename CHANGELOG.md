@@ -3,6 +3,69 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.32.1](https://github.com/MESH-Research/Pilcrow/compare/v0.32.0...v0.32.1) (2025-06-11)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @apollo/client to v3.13.8 ([#2148](https://github.com/MESH-Research/Pilcrow/issues/2148)) ([efeaa93](https://github.com/MESH-Research/Pilcrow/commit/efeaa9336fc04cc70e0c07aa5918bc98c032b88d))
+* **deps:** update dependency quasar to v2.18.1 ([#2149](https://github.com/MESH-Research/Pilcrow/issues/2149)) ([feb3763](https://github.com/MESH-Research/Pilcrow/commit/feb3763234194a86d6178e176872397b1174247d))
+* **deps:** update tiptap monorepo to v2.14.0 ([#2150](https://github.com/MESH-Research/Pilcrow/issues/2150)) ([f7c5a7c](https://github.com/MESH-Research/Pilcrow/commit/f7c5a7c77dfaab06ca4b603d6605007474f9ff25))
+
+## [0.32.0](https://github.com/MESH-Research/Pilcrow/compare/v0.31.1...v0.32.0) (2025-06-10)
+
+
+### Features
+
+* support hosting frontend files on a CDN. ([#2151](https://github.com/MESH-Research/Pilcrow/issues/2151)) ([9842dec](https://github.com/MESH-Research/Pilcrow/commit/9842dec6ec9978f7977328cf2ae5d0ed1a4831cf))
+
+## [0.31.1](https://github.com/MESH-Research/Pilcrow/compare/v0.31.0...v0.31.1) (2025-06-05)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @quasar/extras to v1.16.12 ([3e67f0e](https://github.com/MESH-Research/Pilcrow/commit/3e67f0e16a2e88a570c45776d98cacd8f99d82ad))
+* **deps:** update dependency @quasar/extras to v1.16.13 ([fb9cffd](https://github.com/MESH-Research/Pilcrow/commit/fb9cffd8c2a3748b8e1578a622b93e3656f8cb4b))
+* **deps:** update dependency @quasar/extras to v1.16.15 ([0c27383](https://github.com/MESH-Research/Pilcrow/commit/0c27383e0552ef343360b3f345c20c50f56d0ad6))
+* **deps:** update dependency @quasar/extras to v1.16.17 ([89d68e9](https://github.com/MESH-Research/Pilcrow/commit/89d68e9db1f1fb5ce6ea2d233dd7fea8e3bcc54b))
+* **deps:** update dependency @quasar/extras to v1.17.0 ([f485350](https://github.com/MESH-Research/Pilcrow/commit/f485350bead77a5acb0a02ba70798bbb5af327f2))
+* **deps:** update dependency @vue/apollo-composable to v4.2.1 ([1794acf](https://github.com/MESH-Research/Pilcrow/commit/1794acf4aad3baff6199202673d5c2fbc93af609))
+* **deps:** update dependency @vue/apollo-composable to v4.2.2 ([#2144](https://github.com/MESH-Research/Pilcrow/issues/2144)) ([5196cb3](https://github.com/MESH-Research/Pilcrow/commit/5196cb33f1355de7f415c59e859a3a343cb2824d))
+* **deps:** update dependency @vue/apollo-option to v4.2.0 ([78e8428](https://github.com/MESH-Research/Pilcrow/commit/78e8428e4e26ca829884e9fdf63084faa75e5843))
+* **deps:** update dependency @vue/apollo-option to v4.2.2 ([9782938](https://github.com/MESH-Research/Pilcrow/commit/9782938ba2fc087d15b4c0a10e991a8a5ebb2546))
+* **deps:** update dependency @vueuse/core to v10.11.1 ([90db7bc](https://github.com/MESH-Research/Pilcrow/commit/90db7bca519096be3d3a7988bd333bc0b87bcf92))
+* **deps:** update dependency bensampo/laravel-enum to v6.11.1 ([69daf77](https://github.com/MESH-Research/Pilcrow/commit/69daf77215f1efbbb0eb0fefabb9c17ecf6916ae))
+* **deps:** update dependency core-js to v3.42.0 ([2ed515f](https://github.com/MESH-Research/Pilcrow/commit/2ed515f6318032295d4229da667b7f0f530f7b0a))
+* **deps:** update dependency graphql to v16.11.0 ([d538d50](https://github.com/MESH-Research/Pilcrow/commit/d538d5016bd9fac550f3d5e16137274c7a36e440))
+* **deps:** update dependency javascript-time-ago to v2.5.11 ([88ab5fe](https://github.com/MESH-Research/Pilcrow/commit/88ab5fe49bfaa20d5f2979e75a8c8f97f502f08b))
+* **deps:** update dependency laravel/framework to v10.48.22 ([35940ba](https://github.com/MESH-Research/Pilcrow/commit/35940ba03a5dc2ba48bf2e462c77fa9a1a0a1a62))
+* **deps:** update dependency laravel/framework to v10.48.23 [security] ([aa6cc28](https://github.com/MESH-Research/Pilcrow/commit/aa6cc28e4e0500ecc3416493623234f7691f9af8))
+* **deps:** update dependency luxon to v3.6.1 ([6039377](https://github.com/MESH-Research/Pilcrow/commit/6039377ba170bb5a6124bddb6b2febf87dabaaa5))
+* **deps:** update dependency owen-it/laravel-auditing to v13.6.8 ([d7f01cf](https://github.com/MESH-Research/Pilcrow/commit/d7f01cfa72d01d715c28f2ccfcb9b279b04dc498))
+* **deps:** update dependency validator to v13.15.0 ([fbae48f](https://github.com/MESH-Research/Pilcrow/commit/fbae48f3bea729be8f1d1e0d7640fd7c4e0d5834))
+* **deps:** update dependency vue to v3.5.14 ([4057ea5](https://github.com/MESH-Research/Pilcrow/commit/4057ea5893aad729bb152b55bcadfeba2c2d5bdb))
+* **deps:** update dependency vue-i18n to v9.14.2 [security] ([feb460e](https://github.com/MESH-Research/Pilcrow/commit/feb460eeb059e4cc0b8b72fc2d7963c6aa486e0a))
+* **deps:** update dependency vue-i18n to v9.14.3 [security] ([#2140](https://github.com/MESH-Research/Pilcrow/issues/2140)) ([dda0199](https://github.com/MESH-Research/Pilcrow/commit/dda0199e4591e75667968b8af0266168d1695653))
+* **deps:** update dependency vue-router to v4.5.1 ([05dd3e1](https://github.com/MESH-Research/Pilcrow/commit/05dd3e1a4b3ed28d4f3d321cedd39fe5c174878c))
+* Use of prop before initialization ([17e7d20](https://github.com/MESH-Research/Pilcrow/commit/17e7d20fa97bd9929e400555d8d6537b1b68d5ea))
+
+## [0.31.0](https://github.com/MESH-Research/Pilcrow/compare/0.30.0...v0.31.0) (2024-07-29)
+
+
+### Features
+
+* Add 'Mark Read' Functionality for Comments ([#2122](https://github.com/MESH-Research/Pilcrow/issues/2122)) ([3b52088](https://github.com/MESH-Research/Pilcrow/commit/3b52088c2883d70a80d4c03cdce753d873d64a25)), closes [#2071](https://github.com/MESH-Research/Pilcrow/issues/2071)
+* Submit Submission from Preview Page ([#2118](https://github.com/MESH-Research/Pilcrow/issues/2118)) ([330f7ae](https://github.com/MESH-Research/Pilcrow/commit/330f7ae8963fbdf9eb24f77cbe3428d6f533fbb9)), closes [#2078](https://github.com/MESH-Research/Pilcrow/issues/2078)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @apollo/client to v3.10.3 ([606a44e](https://github.com/MESH-Research/Pilcrow/commit/606a44e6159b508d5f2af7a803e61c8100916df7))
+* **deps:** update dependency laravel/framework to v10.48.10 ([b5d7a96](https://github.com/MESH-Research/Pilcrow/commit/b5d7a9691bf412f3902a3016b40d476051dded48))
+* **deps:** update dependency nuwave/lighthouse to v6.36.3 ([c13047e](https://github.com/MESH-Research/Pilcrow/commit/c13047e463e276568e238e077366219d672fd3a6))
+* **deps:** update tiptap monorepo to v2.3.2 ([198d069](https://github.com/MESH-Research/Pilcrow/commit/198d06960605699f4557fe0b481b42dbc8baf4d2))
+* move permission creation to a migration. ([#2120](https://github.com/MESH-Research/Pilcrow/issues/2120)) ([bc6feac](https://github.com/MESH-Research/Pilcrow/commit/bc6feac14cb6c7a9252ab135409cb404ccf68452))
+
 ## [0.30.0](https://github.com/MESH-Research/Pilcrow/compare/v0.29.0...v0.30.0) (2024-05-02)
 
 

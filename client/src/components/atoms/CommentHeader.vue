@@ -1,14 +1,10 @@
 <template>
-  <q-card-section
-    v-if="comment.deleted_at != null"
-    class="q-py-sm"
-    :style="style"
-  >
+  <q-card-section v-if="comment.deleted_at != null" class="q-py-sm">
     <div class="row items-center justify-end">
       <span>
         {{
           $t("submissions.comment.dateLabelDeleted", {
-            date: relativeDeletedTime,
+            date: relativeDeletedTime
           })
         }}
         <q-tooltip>
@@ -17,9 +13,14 @@
       </span>
     </div>
   </q-card-section>
-  <q-card-section v-else :class="comment.__typename == 'InlineComment' ? 'q-py-xs q-pl-xs' : 'q-py-xs'" :style="style">
+  <q-card-section
+    v-else
+    data-cy="commentHeader"
+    :class="{ 'unread-comment': comment.read_at == null }"
+    class="q-py-xs q-pl-xs"
+  >
     <div class="row items-center">
-      <inline-comment-reference v-if="comment.__typename == 'InlineComment'" :comment="comment" />
+      <comment-reference :comment="comment" />
       <avatar-image
         :user="comment.created_by"
         round
@@ -37,7 +38,7 @@
         class="text-caption"
         :aria-label="
           $t('submissions.comment.dateLabelUpdated', {
-            date: relativeUpdatedTime,
+            date: relativeUpdatedTime
           })
         "
       >
@@ -74,7 +75,7 @@
 <script setup>
 import AvatarImage from "./AvatarImage.vue"
 import CommentActions from "./CommentActions.vue"
-import InlineCommentReference from "./InlineCommentReference.vue"
+import CommentReference from "./CommentReference.vue"
 import { useTimeAgo } from "src/use/timeAgo"
 import { DateTime } from "luxon"
 import { computed } from "vue"
@@ -83,23 +84,10 @@ const timeAgo = useTimeAgo()
 const props = defineProps({
   comment: {
     type: Object,
-    required: true,
-  },
-  bgColor: {
-    type: String,
-    required: false,
-    default: null,
-  },
+    required: true
+  }
 })
 defineEmits(["quoteReplyTo", "modifyComment", "deleteComment"])
-const style = computed(() => {
-  const style = {}
-  if (props.bgColor) {
-    style.backgroundColor = props.bgColor
-  }
-
-  return style
-})
 const createdDate = computed(() => {
   return DateTime.fromISO(props.comment.created_at)
 })

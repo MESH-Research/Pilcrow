@@ -13,16 +13,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Laravel'),
-
-    /*
-    |--------------------------------------------------------------------------
-    | Version Strings
-    |--------------------------------------------------------------------------
-    */
-    'version' => env('VERSION', ''),
-    'version_url' => env('VERSION_URL', ''),
-    'version_date' => env('VERSION_DATE', ''),
+    'name' => env('APP_NAME', 'Pilcrow'),
 
     /*
     |--------------------------------------------------------------------------
@@ -189,6 +180,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Providers\FakerServiceProvider::class,
+        App\Providers\InstallationServiceProvider::class,
 
         \SocialiteProviders\Manager\ServiceProvider::class,
     ],
@@ -246,8 +238,8 @@ return [
     ],
 
     'external_oauth_providers' => [
-      'google' => \App\OauthAdapters\GoogleAdapter::class,
-      'orcid' => \App\OauthAdapters\OrcidAdapter::class,
+        'google' => \App\OauthAdapters\GoogleAdapter::class,
+        'orcid' => \App\OauthAdapters\OrcidAdapter::class,
     ],
 
 ];

@@ -16,7 +16,7 @@
           {{
             $t(`submissions.create.draft_title`, {
               submission_title:
-                submission?.title ?? $t(`submissions.term`, { count: 1 }),
+                submission?.title ?? $t(`submissions.term`, { count: 1 })
             })
           }}
         </q-breadcrumbs-el>
@@ -39,7 +39,7 @@
             "
             :to="{
               name: 'submission:details',
-              params: { id: submission.id },
+              params: { id: submission.id }
             }"
           />
         </article>
@@ -107,8 +107,8 @@ import { required } from "@vuelidate/validators"
 const props = defineProps({
   id: {
     type: String,
-    required: true,
-  },
+    required: true
+  }
 })
 const { dialog } = useQuasar()
 const { result, loading } = useQuery(GET_SUBMISSION, props)
@@ -117,19 +117,19 @@ const { push } = useRouter()
 function onGoToSubmissionPreviewClick() {
   push({
     name: "submission:preview",
-    params: { id: submission.value.id },
+    params: { id: submission.value.id }
   })
 }
 function onGoToSubmissionContentClick() {
   push({
     name: "submission:content",
-    params: { id: submission.value.id },
+    params: { id: submission.value.id }
   })
 }
 const rules = {
   content: {
-    required,
-  },
+    required
+  }
 }
 const draft = useVuelidate(rules, submission)
 async function confirmHandler(action) {
@@ -152,8 +152,8 @@ function dirtyDialog(action) {
     componentProps: {
       action: action,
       submissionId: props.id,
-      currentStatus: submission.value.status,
-    },
+      currentStatus: submission.value.status
+    }
   })
 }
 </script>

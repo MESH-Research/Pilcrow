@@ -112,7 +112,7 @@
         data-cy="submission-content"
         :style="{
           'font-size': fontSize + 'rem',
-          'font-family': selectedFont.value,
+          'font-family': selectedFont.value
         }"
       />
     </div>
@@ -121,22 +121,30 @@
 <script setup>
 import { BubbleMenu, Editor, EditorContent } from "@tiptap/vue-3"
 import SubmissionContentKit from "src/tiptap/extension-submission-content-kit"
+import {
+  MARK_INLINE_COMMENTS_READ,
+  MARK_INLINE_COMMENT_REPLIES_READ
+} from "src/graphql/mutations"
 import { computed, inject, ref, watch, nextTick } from "vue"
 import { scroll } from "quasar"
+import { useMutation } from "@vue/apollo-composable"
 import { useDarkMode } from "src/use/guiElements"
 
 const { getScrollTarget, setVerticalScrollPosition } = scroll
 const { darkModeStatus, toggleDarkMode } = useDarkMode()
 
+const { mutate: markRead } = useMutation(MARK_INLINE_COMMENTS_READ)
+const { mutate: markReplyRead } = useMutation(MARK_INLINE_COMMENT_REPLIES_READ)
+
 const props = defineProps({
   annotationEnabled: {
     type: Boolean,
-    default: true,
+    default: true
   },
   highlightVisibility: {
     type: Boolean,
-    default: true,
-  },
+    default: true
+  }
 })
 
 const commentDrawerOpen = inject("commentDrawerOpen")
@@ -146,7 +154,7 @@ const contentRef = ref(null)
 
 const emit = defineEmits([
   "scrollToOverallComments",
-  "scrollAddNewOverallComment",
+  "scrollAddNewOverallComment"
 ])
 
 function scrollToOverallComments() {
@@ -160,12 +168,12 @@ function scrollNewOverallComment() {
 const fonts = [
   {
     label: "Sans-serif",
-    value: "Atkinson, Sans-serif",
+    value: "Atkinson, Sans-serif"
   },
   {
     label: "Serif",
-    value: "Georgia, Serif",
-  },
+    value: "Georgia, Serif"
+  }
 ]
 let selectedFont = ref("Sans-serif")
 let fontSize = ref(1)
@@ -229,21 +237,21 @@ const annotations = computed(() =>
               to,
               context: { id },
               active: id === activeComment.value?.id,
-              click: onAnnotationClick,
+              click: onAnnotationClick
             }
           : {
               context: { id },
               active: id === activeComment.value?.id,
-              click: () => false,
-            },
+              click: () => false
+            }
       )
-    : [],
+    : []
 )
 
 const editor = new Editor({
   editable: false,
   content: submission.value.content.data,
-  extensions: [SubmissionContentKit.configure({ annotation: { annotations } })],
+  extensions: [SubmissionContentKit.configure({ annotation: { annotations } })]
 })
 
 function bubbleMenuVisibility({ state }) {
@@ -256,7 +264,7 @@ function bubbleMenuVisibility({ state }) {
 function addComment() {
   const [from, to] = [
     editor.state.selection.$anchor.pos,
-    editor.state.selection.$head.pos,
+    editor.state.selection.$head.pos
   ].sort((a, b) => a - b)
   activeComment.value = {
     __typename: "InlineComment",
@@ -266,7 +274,7 @@ function addComment() {
     parent_id: null,
     reply_to_id: null,
     deleted_at: null,
-    id: "new",
+    id: "new"
   }
 }
 
@@ -285,10 +293,23 @@ watch(
   (newValue) => {
     if (!newValue) return
     if (!newValue.__typename.startsWith("InlineComment")) return
+    ;(async () => {
+      if (newValue.__typename === "InlineComment") {
+        await markRead({
+          submission_id: submission.value.id,
+          comment_ids: [parseInt(newValue.id)]
+        })
+      } else {
+        await markReplyRead({
+          submission_id: submission.value.id,
+          comment_ids: [parseInt(newValue.id)]
+        })
+      }
+    })()
     nextTick(() => {
       let scrollTarget = null
       scrollTarget = contentRef.value.querySelector(
-        `button[data-comment="${newValue.id}"]`,
+        `button[data-comment="${newValue.id}"]`
       )
       if (!scrollTarget) return
       const getOffsetTop = function (element) {
@@ -311,7 +332,7 @@ watch(
       setVerticalScrollPosition(target, offset, 250)
     })
   },
-  { deep: false },
+  { deep: false }
 )
 </script>
 

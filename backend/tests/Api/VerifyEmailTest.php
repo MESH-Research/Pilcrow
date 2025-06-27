@@ -11,6 +11,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Notification;
 use Nuwave\Lighthouse\Testing\MakesGraphQLRequests;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\ApiTestCase;
 
 class VerifyEmailTest extends ApiTestCase
@@ -137,10 +138,10 @@ class VerifyEmailTest extends ApiTestCase
     }
 
     /**
-     * @dataProvider dataResendVerificationToSelf
      * @param string $id Data provided
      * @return void
      */
+    #[DataProvider('dataResendVerificationToSelf')]
     public function testCanResendVerificationEmailToSelf(?string $id): void
     {
         Notification::fake();

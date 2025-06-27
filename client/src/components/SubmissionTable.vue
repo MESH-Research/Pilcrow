@@ -9,7 +9,7 @@
     :filter="status_filter"
     :filter-method="filterStatuses"
     class="submission-table"
-    :color="(darkModeStatus) ? `white` : `black`"
+    :color="darkModeStatus ? `white` : `black`"
   >
     <template #top>
       <div class="row full-width justify-between q-pb-md">
@@ -87,19 +87,23 @@
                 <router-link
                   :to="{
                     name: submissionLinkName(p.row),
-                    params: { id: p.row.id },
+                    params: { id: p.row.id }
                   }"
                   >{{ p.row.title }}
                 </router-link>
-                <p class="q-ma-none">{{ generateSubmitterList(p.row.submitters) }}</p>
-                <p class="q-ma-none">{{ relativeTime(p.row.submitted_at).value }}</p>
+                <p class="q-ma-none">
+                  {{ generateSubmitterList(p.row.submitters) }}
+                </p>
+                <p class="q-ma-none">
+                  {{ relativeTime(p.row.submitted_at).value }}
+                </p>
               </div>
             </div>
             <div class="row justify-between">
               <router-link
                 :to="{
                   name: 'publication:home',
-                  params: { id: p.row.publication.id },
+                  params: { id: p.row.publication.id }
                 }"
                 >{{ p.row.publication.name }}
               </router-link>
@@ -124,24 +128,28 @@
         <router-link
           :to="{
             name: submissionLinkName(p.row),
-            params: { id: p.row.id },
+            params: { id: p.row.id }
           }"
           >{{ p.row.title }}
         </router-link>
       </q-td>
     </template>
     <template #body-cell-submitters="p">
-      <q-td :props="p"><span>{{ generateSubmitterList(p.row.submitters) }}</span></q-td>
+      <q-td :props="p"
+        ><span>{{ generateSubmitterList(p.row.submitters) }}</span></q-td
+      >
     </template>
     <template #body-cell-submitted="p">
-      <q-td :props="p"><span>{{ relativeTime(p.row.submitted_at).value }}</span></q-td>
+      <q-td :props="p"
+        ><span>{{ relativeTime(p.row.submitted_at).value }}</span></q-td
+      >
     </template>
     <template #body-cell-publication="p">
       <q-td :props="p">
         <router-link
           :to="{
             name: 'publication:home',
-            params: { id: p.row.publication.id },
+            params: { id: p.row.publication.id }
           }"
           >{{ p.row.publication.name }}
         </router-link>
@@ -176,20 +184,20 @@ const { darkModeStatus } = useDarkMode()
 const props = defineProps({
   tableData: {
     type: Array,
-    default: () => [],
+    default: () => []
   },
   tableType: {
     type: String,
-    default: "submissions",
+    default: "submissions"
   },
   variation: {
     type: String,
-    default: "",
+    default: ""
   },
   role: {
     type: String,
-    default: "reviewer",
-  },
+    default: "reviewer"
+  }
 })
 const status_filter = ref(null)
 const filterStatuses = (rows, terms) => {
@@ -225,7 +233,7 @@ const cols = [
     label: t(`submission_tables.columns.number`),
     sortable: true,
     style: "width: 85px",
-    align: "right",
+    align: "right"
   },
   {
     name: "title",
@@ -233,21 +241,21 @@ const cols = [
     label: t(`submission_tables.columns.title`),
     sortable: true,
     style: "width: 30%",
-    align: "left",
+    align: "left"
   },
   {
     name: "submitters",
     field: "submitters",
     label: t(`submission_tables.columns.submitted_by`),
     sortable: true,
-    align: "left",
+    align: "left"
   },
   {
     name: "submitted",
     field: "submitted_at",
     label: t(`submission_tables.columns.submitted_at`),
     sortable: true,
-    align: "left",
+    align: "left"
   },
   {
     name: "publication",
@@ -255,14 +263,14 @@ const cols = [
     label: t(`submission_tables.columns.publication`),
     sortable: true,
     align: "left",
-    style: "width: 10%",
+    style: "width: 10%"
   },
   {
     name: "status",
     field: "status",
     label: t(`submission_tables.columns.status`),
     sortable: true,
-    align: "center",
+    align: "center"
   },
   {
     name: "actions",
@@ -270,13 +278,12 @@ const cols = [
     label: t(`submission_tables.columns.actions`),
     sortable: false,
     style: "width: 100px",
-    align: "center",
-  },
+    align: "center"
+  }
 ]
 function generateSubmitterList(submitters) {
   return submitters.map((submitter) => submitter.display_label).join(", ")
 }
-
 </script>
 
 <style lang="sass">

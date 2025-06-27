@@ -10,7 +10,7 @@
             {{
               $t(`dialog.reinviteUser.description`, {
                 email: email,
-                role: $t(`role.${roleGroup}`, 1),
+                role: $t(`role.${roleGroup}`, 1)
               })
             }}
           </p>
@@ -54,7 +54,7 @@ import { useDialogPluginComponent } from "quasar"
 import { useMutation } from "@vue/apollo-composable"
 import {
   REINVITE_REVIEWER,
-  REINVITE_REVIEW_COORDINATOR,
+  REINVITE_REVIEW_COORDINATOR
 } from "src/graphql/mutations"
 import { computed, ref } from "vue"
 import { useI18n } from "vue-i18n"
@@ -63,8 +63,8 @@ import { useFeedbackMessages } from "src/use/guiElements"
 const { t } = useI18n()
 const { newStatusMessage } = useFeedbackMessages({
   attrs: {
-    "data-cy": "reinvite_notify",
-  },
+    "data-cy": "reinvite_notify"
+  }
 })
 
 defineEmits([...useDialogPluginComponent.emits])
@@ -75,16 +75,16 @@ const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } =
 const props = defineProps({
   roleGroup: {
     type: String,
-    required: true,
+    required: true
   },
   email: {
     type: String,
-    required: true,
+    required: true
   },
   submissionId: {
     type: String,
-    required: true,
-  },
+    required: true
+  }
 })
 
 const comment = ref(null)
@@ -92,7 +92,7 @@ const comment = ref(null)
 const opts = { variables: { id: props.submissionId, email: props.email } }
 const mutations = {
   reviewers: REINVITE_REVIEWER,
-  review_coordinators: REINVITE_REVIEW_COORDINATOR,
+  review_coordinators: REINVITE_REVIEW_COORDINATOR
 }
 const setMutationType = computed(() => {
   return mutations[props.roleGroup]
@@ -102,21 +102,21 @@ const { mutate } = useMutation(setMutationType, opts)
 async function reinviteUser() {
   try {
     await mutate({
-      message: comment.value,
+      message: comment.value
     })
     newStatusMessage(
       "success",
       t(`dialog.reinviteUser.success`, {
         email: props.email,
-        role: t(`role.${props.roleGroup}`, 1),
-      }),
+        role: t(`role.${props.roleGroup}`, 1)
+      })
     )
   } catch (error) {
     newStatusMessage(
       "failure",
       t(`dialog.reinviteUser.failure`, {
-        email: props.email,
-      }),
+        email: props.email
+      })
     )
   }
 }
