@@ -56,7 +56,7 @@
         {
             "groupName": "Docs Site Dependencies",
             "groupSlug": "docs",
-            "matchFileNames": "docs/**"
+            "matchFileNames": ["docs/**"]
         }
     ],
     "assignees": [
