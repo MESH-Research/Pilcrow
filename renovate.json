@@ -5,6 +5,7 @@
     ],
     "packageRules": [
         {
+            "description": "Docker deps are held back currently to requiee dep daahboard approval",
             "matchManagers": [
                 "dockerfile",
                 "docker-compose",
@@ -13,25 +14,49 @@
             "dependencyDashboardApproval": true
         },
         {
+            "description": "npm and composer deps are well covered in automated testing. if patch versions pass ci, we'll automerge",
             "matchUpdateTypes": [
-                "minor",
                 "patch"
             ],
             "matchCurrentVersion": "!/^0/",
-            "automerge": false,
+            "matchFileNames": ["backend/**", "client/**"],
+            "matchManagers": ["npm","composer"],
+            "automerge": true,
             "automergeType": "branch"
         },
         {
-            "groupName": "Frontend (client) Dependencies",
+            "description": "group frontend npm deps for PR approval",
+            "groupName": "(client) Dependency Incremental Updates",
             "groupSlug": "frontend",
             "matchFileNames": ["client/**"],
+            "matchManagers": ["npm"],
             "matchUpdateTypes": ["minor", "patch"]
         },
         {
-            "groupName": "Backend (api) Dependencies",
+            "groupName": "(client) Dependency Major Updates",
+            "groupSlug": "frontend-major",
+            "matchFileNames": ["client/**"],
+            "matchManagers": ["npm"],
+            "matchUpdateTypes": ["major"]
+        },
+        {
+            "groupName": "(api) Dependency Incremental Updates",
             "groupSlug": "api",
+            "matchManagers": ["composer"],
             "matchFileNames": ["backend/**"],
             "matchUpdateTypes": ["minor", "patch"]
+        },
+         {
+            "groupName": "(api) Dependency Major Updates",
+            "groupSlug": "api-major",
+            "matchManagers": ["composer"],
+            "matchFileNames": ["backend/**"],
+            "matchUpdateTypes": ["major"]
+        },
+        {
+            "groupName": "Docs Site Dependencies",
+            "groupSlug": "docs",
+            "matchFileNames": "docs/**"
         }
     ],
     "assignees": [
