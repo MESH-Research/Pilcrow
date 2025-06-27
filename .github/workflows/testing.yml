@@ -36,6 +36,8 @@ jobs:
         with:
           predicate-quantifier: "every"
           filters: |
+            docs:
+              - 'docs/**'
             php:
               - 'backend/**'
               - '**/*.php'
@@ -136,6 +138,20 @@ jobs:
       - uses: mesh-research/github-actions/build-image@main
         with:
           target: "web-lint-ci"
+  docs-build:
+    name: Docs Build
+    runs-on: ubuntu-24.04
+    needs: [changes]
+    if: ${{ needs.changes.outputs.docs == 'true' }}
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+      - uses: actions/setup-node@v3
+      - run: |
+          cd docs && \
+          yarn install && \
+          yarn docs:build
+      
   lint-md:
     name: MD Lint
     runs-on: ubuntu-24.04

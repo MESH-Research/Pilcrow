@@ -88,6 +88,13 @@
             "groupName": "docs dependencies",
             "commitMessagePrefix": "chore(docs/deps):",
             "matchFileNames": ["docs/**"]
+        },
+        /**
+         * Set scope for github actions updates
+         **/
+        {
+            "matchManagers": ["github-actions"],
+            "commitMessagePrefix": "ci(gha/deps):"
         }
     ],
     "assignees": [
