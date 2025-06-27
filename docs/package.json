@@ -6,7 +6,7 @@
     "license": "MIT",
     "private": true,
     "devDependencies": {
-        "@types/node": "^20.8.9",
+        "@types/node": "^22.0.0",
         "all-contributors-cli": "^6.26.1",
         "vitepress": "^1.0.0-rc.24",
         "vitepress-plugin-search": "^1.0.4-alpha.20",
