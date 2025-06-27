@@ -20,6 +20,18 @@
             "matchCurrentVersion": "!/^0/",
             "automerge": true,
             "automergeType": "branch"
+        },
+        {
+            "groupName": "Frontend (client) Dependencies",
+            "groupSlug": "frontend",
+            "matchFileNames": ["client/**"],
+            "matchUpdateTypes": ["minor", "patch"]
+        },
+        {
+            "groupName": "Backend (api) Dependencies",
+            "groupSlug": "api",
+            "matchFileNames": ["backend/**"],
+            "matchUpdateTypes": ["minor", "patch"]
         }
     ],
     "assignees": [
