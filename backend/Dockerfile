@@ -11,7 +11,7 @@ ARG COMPOSE_WAIT_VERSION=2.7.3
 ARG PHP_EXTS="bcmath pdo_mysql pcntl zip"
 ARG PHP_PECL_EXTS="redis"
 ARG APT_PACKAGES="openssl ca-certificates bash libzip-dev libaio1 libncurses6 libnuma1 libxml2-dev git libfcgi-bin sqlite3 default-mysql-client"
-ENV COMPOSER_HOME=/tmp/composer
+#ENV COMPOSER_HOME=/tmp/composer
 ENV LOG_CHANNEL=stderr
 
 RUN  apt update && apt install -y ${APT_PACKAGES} \
@@ -38,6 +38,10 @@ RUN echo "pm.status_path = /status" >> /usr/local/etc/php-fpm.d/zz-docker.conf \
 RUN --mount=type=cache,target=/tmp/output \
     chmod 0777 /tmp/output
 
+RUN mkdir -p /var/www/.composer \
+    && chown -R www-data:www-data /var/www/.composer \
+    && chmod -R 0777 /var/www/.composer
+
 COPY --from=composer /usr/bin/composer /usr/bin/
 
 WORKDIR /var/www/html
@@ -47,12 +51,10 @@ COPY --chown=www-data composer.json composer.lock ./
 #Make storage directories
 RUN mkdir -p storage/framework/cache storage/framework/sessions storage/framework/views
 
-RUN --mount=type=cache,target=/tmp/composer,uid=33,gid=33 \
+RUN --mount=type=cache,target=/var/www/.composer,uid=33,gid=33 \
     composer install --no-scripts --no-autoloader --prefer-dist --no-dev
 COPY --chown=www-data . .
-RUN --mount=type=cache,target=/tmp/composer,uid=33,gid=33 \
-    composer install --prefer-dist --no-plugins
-
+RUN composer dump-autoload -o
 #Mint version into image last to limit cache busting
 ARG VERSION
 ARG VERSION_URL
@@ -84,7 +86,7 @@ RUN --mount=type=cache,target=/tmp/output \
 
 # Re-run composer install to add dev dependencies
 USER www-data
-RUN --mount=type=cache,target=/tmp/composer,uid=33,gid=33 \
+RUN --mount=type=cache,target=/var/www/.composer,uid=33,gid=33 \
     composer install --prefer-dist
 
 # Supply a random/cache busting timestamp to prevent caching of the test run.
@@ -113,6 +115,7 @@ RUN --mount=type=cache,target=/tmp/output \
 
 USER www-data
 RUN --mount=type=cache,target=/tmp/output \
+    --mount=type=cache,target=/var/www/.composer,uid=33,gid=33 \
     composer install --prefer-dist && \
     composer lint \
     > >(tee ${STDOUT_FILE}) \

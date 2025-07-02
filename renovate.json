@@ -4,31 +4,101 @@
         "config:recommended"
     ],
     "packageRules": [
+        /**
+         * These deps aren't well covered by automated testing and are held back
+         * until they get approved in the dependency dashboard.
+         **/
         {
+            "description": "Docker deps are held back currently to requiee dep daahboard approval",
             "matchManagers": [
-                "dockerfile",
                 "docker-compose",
-                "github-actions"
+                "github-actions",
+                "helmv3"
             ],
             "dependencyDashboardApproval": true
         },
+        /**
+         * Development dependencies get grouped together since they commonly require
+         * similar testing.
+         **/
         {
-            "matchUpdateTypes": [
-                "minor",
-                "patch"
-            ],
+            "groupName": "api dev dependencies",
+            "matchDepTypes": ["require-dev"],
+            "matchFileNames": ["backend/**"],
+        },
+        {
+            "groupName": "client dev dependencies",
+            "matchDepTypes": ["devDependencies"],
+            "matchFileNames": ["client/**"]
+        },
+        /**
+         * AUTOMATED MERGING:
+         * Backend and client are well covered in automated testing, so we'll
+         * attempt to automerge patch updates.
+         **/
+        {
+            "matchUpdateTypes": ["patch"],
             "matchCurrentVersion": "!/^0/",
+            "matchFileNames": ["backend/**", "client/**"],
+            "matchManagers": ["npm","composer"],
             "automerge": true,
             "automergeType": "branch"
+        },
+        /**
+         * Group client npm updates
+         **/
+        {
+            "groupName": "client dependencies",
+            "matchFileNames": ["client/**"],
+            "matchManagers": ["npm"],
+            "matchDepTypes": ["dependencies"],
+            "extends": [":semanticCommitScope(client/deps)"]
+        },
+        /**
+         * Group backend composer updates
+         **/
+        {
+            "groupName": "api dependencies",
+            "matchManagers": ["composer"],
+            "matchFileNames": ["backend/**"],
+            "matchDepTypes": ["require"],
+            "extends": [":semanticCommitScope(api/deps)"]
+        },
+        /**
+         * Group Container Dependencies
+         **/
+        {
+            "groupName": "container dependencies",
+            "matchFileNames": ["client/**", "backend/**"],
+            "extends": [":semanticCommitScope(docker/deps)"],
+            "matchManagers": ["dockerfile"]
+        },
+        /**
+         * Group Helm Dependencies
+         **/
+        {
+            "groupName": "helm dependencies",
+            "extends": [":semanticCommitScope(helm/deps)"],
+            "matchFileNames": ["helm/**"],
+        },
+        /**
+         * Group Docs Dependencies
+         **/
+        {
+            "groupName": "docs dependencies",
+            "commitMessagePrefix": "chore(docs/deps):",
+            "matchFileNames": ["docs/**"]
+        },
+        /**
+         * Set scope for github actions updates
+         **/
+        {
+            "matchManagers": ["github-actions"],
+            "commitMessagePrefix": "ci(gha/deps):"
         }
     ],
     "assignees": [
         "wreality"
-    ],
-    "schedule": [
-        "after 10pm every weekday",
-        "before 5am every weekday",
-        "every weekend"
     ],
     "timezone": "America/Detroit"
 }
