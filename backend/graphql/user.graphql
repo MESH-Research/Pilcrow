@@ -14,9 +14,16 @@ type User {
     highest_privileged_role: UserRoles @method(name: "getHighestPrivilegedRole")
     permissions: [Permission!] @belongsToMany
     profile_metadata: ProfileMetadata
-    submissions: [Submission]! @belongsToMany
-    pivot: SubmissionUser
+    assigned_submissions(
+        roles: [UserRoles!] @scope(name: "roleFilter")
+        status: [SubmissionStatus!] @scope(name: "statusFilter")
+        publications: [ID!] @scope(name: "publicationFilter")
+    ): [Submission]! @belongsToMany(type: "PAGINATOR", relation: "submissions")
+    submissions: [Submission!] @all(scopes: [])
+    assignments: [SubmissionAssignment!]
+        @hasMany(relation: "submissionAssignments")
     staged: Boolean
+    publications: [Publication!] @hasMany
 }
 
 enum UserRoles {

@@ -1,10 +1,12 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -203,7 +205,7 @@ class User extends Authenticatable implements MustVerifyEmail
             return PublicationUser::where('user_id', $this->id)->min('role_id');
         }
         if ($this->submissions->isNotEmpty()) {
-            return SubmissionUser::where('user_id', $this->id)->min('role_id');
+            return SubmissionAssignment::where('user_id', $this->id)->min('role_id');
         }
 
         return null;
@@ -323,5 +325,15 @@ class User extends Authenticatable implements MustVerifyEmail
     public function getDisplayLabelAttribute(): string
     {
         return $this->attributes['name'] ?: $this->attributes['username'];
+    }
+
+    public function scopeSearch(Builder $query, mixed $search): Builder
+    {
+        if (!empty($search)) {
+            $query->where('name', 'like', "%{$search}%")
+                ->orWhere('username', 'like', "%{$search}%")
+                ->orWhere('email', 'like', "%{$search}%");
+        }
+        return $query;
     }
 }

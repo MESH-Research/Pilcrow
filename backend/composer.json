@@ -10,6 +10,7 @@
     "require": {
         "php": "^8.4",
         "doctrine/dbal": "^3.0",
+        "ezyang/htmlpurifier": "4.18.0 as 4.16.0",
         "guzzlehttp/guzzle": "^7.0.1",
         "laravel/framework": "^12.0",
         "laravel/sanctum": "^4.0",
@@ -27,8 +28,7 @@
         "spatie/laravel-settings": "^3.0",
         "teamtnt/laravel-scout-tntsearch-driver": "^15.0",
         "ueberdosis/pandoc": "^0.9.0",
-        "watson/validating": "^8.0",
-        "ezyang/htmlpurifier": "4.18.0 as 4.16.0"
+        "watson/validating": "^8.0"
     },
     "require-dev": {
         "cakephp/cakephp-codesniffer": "^4.2",

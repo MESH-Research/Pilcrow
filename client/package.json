@@ -8,7 +8,7 @@
   "private": true,
   "scripts": {
     "lint": "eslint -c ./eslint.config.js",
-    "format": "prettier --write \"**/*.{js,vue,scss,html,md,json}\" --ignore-path .gitignore",
+    "lint:fix": "eslint -c ./eslint.config.js --fix",
     "test": "echo \"See package.json => scripts for available tests.\" && exit 0",
     "push:cdn": "f() { s3cmd del $1 --recursive --force && s3cmd put -rP --no-mime-magic --guess-mime-type ./dist/spa/ $1;}; f",
     "dev": "quasar dev",

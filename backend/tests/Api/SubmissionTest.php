@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Tests\Api;
@@ -21,7 +22,7 @@ class SubmissionTest extends ApiTestCase
     /**
      * @return void
      */
-    public function testSubmissionsHaveAManyToManyRelationshipWithUsers()
+    public function testSubmissionUsers()
     {
         $this->beAppAdmin();
 
@@ -39,6 +40,7 @@ class SubmissionTest extends ApiTestCase
             ->create();
 
         $response = $this->graphQL(
+            /** @lang GraphQL */
             'query GetSubmission($id: ID!) {
                 submission(id: $id) {
                     id
@@ -63,24 +65,40 @@ class SubmissionTest extends ApiTestCase
             ['id' => $submission->id]
         );
 
-        $response->assertJson(fn(AssertableJson $json) =>
-        $json
-            ->has('data', fn($json) =>
-            $json->has('submission', fn($json) =>
-            $json->has('reviewers', 1, fn($json) =>
-            $json->where('id', (string)$reviewer->id))
-                ->has('submitters', 1, fn($json) =>
-                $json->where('id', (string)$submitter->id))
-                ->has('review_coordinators', 1, fn($json) =>
-                $json->where('id', (string)$reviewCoordinator->id))
-                ->etc())));
+        $response->assertJson(
+            fn(AssertableJson $json) =>
+            $json->has(
+                'data',
+                fn(AssertableJson $json) =>
+                $json
+                    ->has(
+                        'submission.reviewers',
+                        1,
+                        fn(AssertableJson $json) =>
+                        $json->where('id', (string)$reviewer->id)
+                    )
+                    ->has(
+                        'submission.submitters',
+                        1,
+                        fn(AssertableJson $json) =>
+                        $json->where('id', (string)$submitter->id)
+                    )
+                    ->has(
+                        'submission.review_coordinators',
+                        1,
+                        fn(AssertableJson $json) =>
+                        $json->where('id', (string)$reviewCoordinator->id)
+                    )
+                    ->etc()
+            )
+        );
     }
 
     /**
      * @return void
      */
     #[DataProvider('submissionRolesProvider')]
-    public function testAllSubmissionRolesCanViewSubmission($role)
+    public function testCanViewSubmission($role)
     {
         /** @var User $user */
         $user = User::factory()->create();
@@ -215,57 +233,6 @@ class SubmissionTest extends ApiTestCase
         $response->assertJsonPath('data', $expected_data);
     }
 
-    /**
-     * @return void
-     */
-    public function testSubmissionsCanBeQueriedForAUser()
-    {
-        $publication = Publication::factory()->create([
-            'name' => 'Test Publication #4',
-        ]);
-        $user = User::factory()->create([
-            'name' => 'Test User #1 With Submission',
-        ]);
-        $submission = Submission::factory()
-            ->hasAttached($user, [], 'submitters')
-            ->for($publication)
-            ->create([
-                'title' => 'Test Submission #5 for Test User #1 With Submission',
-            ]);
-
-        $response = $this->graphQL(
-            'query GetSubmissionsByUser($id: ID!) {
-                user (id: $id) {
-                    id
-                    name
-                    submissions {
-                        id
-                        title
-                        pivot {
-                            role_id
-                        }
-                    }
-                }
-            }',
-            ['id' => $user->id]
-        );
-        $expected_data = [
-            'user' => [
-                'id' => (string)$user->id,
-                'name' => 'Test User #1 With Submission',
-                'submissions' => [
-                    [
-                        'id' => (string)$submission->id,
-                        'title' => 'Test Submission #5 for Test User #1 With Submission',
-                        'pivot' => [
-                            'role_id' => Role::SUBMITTER_ROLE_ID,
-                        ],
-                    ],
-                ],
-            ],
-        ];
-        $response->assertJsonPath('data', $expected_data);
-    }
 
     /**
      * @return void
@@ -273,16 +240,23 @@ class SubmissionTest extends ApiTestCase
     public function testFileUpload(): void
     {
         $publication = Publication::factory()->create(['is_accepting_submissions' => true]);
+
+        /**
+         * @var User $user
+         */
         $user = User::factory()->create();
+        $this->actingAs($user);
+
         $submission = Submission::factory()
             ->hasAttached($user, [], 'submitters')
             ->for($publication)
             ->create();
-        $this->actingAs($user);
 
         $operations = [
             'operationName' => 'UpdateSubmissionContentWithFile',
-            'query' => '
+            'query' =>
+            /** @lang GraphQL */
+            '
                 mutation UpdateSubmissionContentWithFile (
                     $submission_id: ID!
                     $file_upload: Upload!
@@ -323,12 +297,15 @@ class SubmissionTest extends ApiTestCase
         $upload = new UploadedFile($stubPath, 'footnote_test.docx', null, null, true);
 
         $publication = Publication::factory()->create(['is_accepting_submissions' => true]);
+
+        /** @var User $user */
         $user = User::factory()->create();
+        $this->actingAs($user);
+
         $submission = Submission::factory()
             ->hasAttached($user, [], 'submitters')
             ->for($publication)
             ->create();
-        $this->actingAs($user);
 
         $operations = [
             'operationName' => 'UpdateSubmissionContentWithFile',
@@ -450,9 +427,9 @@ class SubmissionTest extends ApiTestCase
     {
         return [
             //Role
-            'submitter' => ['submitters'],
-            'reviewer' => ['reviewers'],
-            'review_coordinator' => ['review_coordinators'],
+            'submitter' => ['role' => 'submitters'],
+            'reviewer' => ['role' => 'reviewers'],
+            'review_coordinator' => ['role' => 'review_coordinators'],
         ];
     }
 

@@ -1,140 +1,82 @@
 <template>
-  <div v-if="!user" class="q-pa-lg">
+  <div v-if="!user" class="q-px-lg">
     {{ $t("loading") }}
   </div>
-  <article v-else>
-    <nav class="q-px-lg q-pt-md q-gutter-sm">
+  <article v-else class="q-px-lg">
+    <nav class="q-pt-md q-gutter-sm">
       <q-breadcrumbs>
         <q-breadcrumbs-el :label="$t('user.self', 2)" to="/admin/users" />
         <q-breadcrumbs-el :label="$t('user.details_heading')" />
       </q-breadcrumbs>
     </nav>
-    <div class="row justify-center q-px-lg">
-      <h2 class="col-sm-12" data-cy="userDetailsHeading">
-        {{ user.username }}
-      </h2>
+    <div class="row">
+      <h2>{{ $t("admin.users.details.title") }}</h2>
     </div>
-    <div class="row q-pa-lg q-col-gutter-lg">
-      <section class="col-sm-2 col-xs-12">
-        <div class="row justify-center">
-          <q-item-section
-            top
-            avatar
-            class="col-sm-12 col-xs-2 q-mb-lg q-pr-none"
-          >
-            <avatar-image :user="user" rounded class="fit" />
-          </q-item-section>
-        </div>
-      </section>
-      <section class="col-sm-10 col-xs-12">
-        <div class="row q-mb-sm">
-          <div
-            :class="`${
-              $q.screen.width < 440
-                ? 'hidden'
-                : 'col-3 q-pr-lg text-right text--grey '
-            }`"
-          >
-            {{ $t("user.username") }}
-          </div>
-          <div class="col">
-            <q-icon name="person_outline" class="text--grey" />
-            {{ user.username }}
-          </div>
-        </div>
-        <div class="row q-mb-sm">
-          <div
-            :class="`${
-              $q.screen.width < 440
-                ? 'hidden'
-                : 'col-3 q-pr-lg text-right text--grey '
-            }`"
-          >
-            {{ $t("user.email") }}
-          </div>
-          <div class="col">
-            <q-icon name="mail_outline" class="text--grey" />
-            {{ user.email }}
-          </div>
-        </div>
-        <div class="row q-mb-sm">
-          <div
-            :class="`${
-              $q.screen.width < 440
-                ? 'hidden'
-                : 'col-3 q-pr-lg text-right text--grey '
-            }`"
-          >
-            {{ $t("user.name") }}
-          </div>
-          <div class="col">
-            <div v-if="user.name">
-              <q-icon name="label_outline" class="text--grey" />
-              {{ user.name }}
-            </div>
-            <div v-else>
-              <q-icon name="o_do_disturb_on" class="text--grey" />
-              <span class="text--grey text-weight-light">
-                {{ $t("user.empty_name") }}
-              </span>
-            </div>
-          </div>
-        </div>
-        <div class="row q-mt-lg">
-          <div
-            :class="`${
-              $q.screen.width < 440
-                ? 'col-12 text-left q-mb-sm'
-                : 'col-3 text-right q-pr-lg'
-            } text--grey`"
-          >
-            {{ $t("role.self", 2) }}
-          </div>
-          <div
-            v-if="user.roles.length"
-            data-cy="role_item"
-            data-roles="has_roles"
-            :class="`${$q.screen.width < 440 ? 'col-12' : 'col'}`"
-          >
-            <div
-              v-for="role in user.roles"
-              :key="role.id"
-              class="q-mb-sm text-weight-medium"
-            >
-              <q-icon
-                v-if="
-                  role.name === 'Application Administrator' ||
-                  role.name === 'Publication Administrator'
-                "
-                name="manage_accounts"
-              />
-              <q-icon v-if="role.name === 'Editor'" name="o_book" />
-              {{ role.name }}
-            </div>
-          </div>
-          <div
-            v-else
-            data-cy="role_item"
-            data-roles="no_roles"
-            :class="`${$q.screen.width < 440 ? 'col-12' : 'col'}`"
-          >
-            <q-icon name="o_do_disturb_on" class="text--grey" />
-            <span class="text--grey text-weight-light">
-              {{ $t("role.no_roles_assigned") }}
+    <div class="column">
+      <avatar-image :user="user" rounded style="width: 100px; height: 100px" />
+      <div class="column q-gutter-md">
+        <ItemCaptioned
+          icon="person"
+          :value="user.username"
+          t-caption="username"
+        />
+        <ItemCaptioned :value="user.name" t-caption="name" />
+        <ItemCaptioned :value="user.email" t-caption="email" icon="email" />
+        <ItemCaptioned t-caption="role" icon="key">
+          <template #value="{ t }">
+            <span v-if="isAdmin">
+              {{ t("isAdmin") }}
             </span>
-          </div>
-        </div>
-      </section>
+            <span v-else>{{ t("isNormal") }}</span>
+          </template>
+        </ItemCaptioned>
+      </div>
+
+      <h3>Publications</h3>
+
+      <div class="column">
+        <q-list bordered separator>
+          <q-item
+            v-for="publication in user.publications"
+            :key="publication.id"
+            flat
+            bordered
+            clickable
+            :to="{
+              name: 'publication_details',
+              params: { id: publication.id }
+            }"
+          >
+            <q-item-section>
+              <q-item-label>
+                {{ publication.name }}
+              </q-item-label>
+              <q-item-label>
+                <q-chip size="sm">{{
+                  $t(`admin.users.details.roles.${publication.my_role}`)
+                }}</q-chip>
+              </q-item-label>
+            </q-item-section>
+          </q-item>
+        </q-list>
+      </div>
+
+      <h3>Submissions</h3>
+      <UserDetailsSubmissions
+        :id="props.id"
+        t-prefix="admin.users.details.submissions"
+      />
     </div>
   </article>
 </template>
 
 <script setup>
-import { GET_USER } from "src/graphql/queries"
 import AvatarImage from "src/components/atoms/AvatarImage.vue"
+import ItemCaptioned from "src/components/molecules/ItemCaptioned.vue"
+import UserDetailsSubmissions from "src/pages/Admin/UserDetailsSubmissions.vue"
 import { useQuery } from "@vue/apollo-composable"
-import { computed } from "vue"
-
+import { computed, provide } from "vue"
+import { PrefixSymbol } from "src/use/useI18nPrefix"
 const props = defineProps({
   id: {
     type: String,
@@ -142,8 +84,34 @@ const props = defineProps({
   }
 })
 
+provide(PrefixSymbol, "admin.users.details")
 const { result } = useQuery(GET_USER, { id: props.id })
 const user = computed(() => {
   return result.value?.user
 })
+
+const isAdmin = computed(() =>
+  user.value.roles.some((r) => r.name === "Application Administrator")
+)
+</script>
+
+<script>
+import { gql } from "graphql-tag"
+const GET_USER = gql`
+  query getUser($id: ID) {
+    user(id: $id) {
+      username
+      email
+      name
+      roles {
+        name
+      }
+      publications {
+        name
+        my_role
+        name
+      }
+    }
+  }
+`
 </script>
