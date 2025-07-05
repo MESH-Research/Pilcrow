@@ -23,5 +23,6 @@ export function useI18nPrefix(name) {
     t,
     te,
     ot,
+    $t: i18n.t
   }
 }

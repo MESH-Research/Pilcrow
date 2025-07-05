@@ -1,8 +1,10 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Builders\SubmissionBuilder;
 use App\Events\SubmissionStatusUpdated;
 use App\Http\Traits\CreatedUpdatedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -10,6 +12,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Auth;
 use OwenIt\Auditing\Contracts\Auditable;
 
 class Submission extends Model implements Auditable
@@ -64,9 +67,13 @@ class Submission extends Model implements Auditable
      * @var array
      */
     protected $appends = [
-        'status_name',
-        'submitted_at',
+        'status_name'
     ];
+
+    public function newEloquentBuilder($query): SubmissionBuilder
+    {
+        return new SubmissionBuilder($query);
+    }
 
     /**
      * The publication that the submission belongs to
@@ -78,14 +85,18 @@ class Submission extends Model implements Auditable
         return $this->belongsTo(Publication::class, 'publication_id');
     }
 
+    public function submissionAssignments(): HasMany
+    {
+        return $this->hasMany(SubmissionAssignment::class, 'submission_id');
+    }
+
     /** Users with reviewer role
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function reviewers(): BelongsToMany
     {
-        return $this->belongsToMany(User::class)
-            ->withTimestamps()
+        return $this->users()
             ->withPivotValue('role_id', Role::REVIEWER_ROLE_ID);
     }
 
@@ -96,8 +107,7 @@ class Submission extends Model implements Auditable
      */
     public function reviewCoordinators(): BelongsToMany
     {
-        return $this->belongsToMany(User::class)
-            ->withTimestamps()
+        return $this->users()
             ->withPivotValue('role_id', Role::REVIEW_COORDINATOR_ROLE_ID);
     }
 
@@ -108,8 +118,7 @@ class Submission extends Model implements Auditable
      */
     public function submitters(): BelongsToMany
     {
-         return $this->belongsToMany(User::class)
-            ->withTimestamps()
+        return $this->users()
             ->withPivotValue('role_id', Role::SUBMITTER_ROLE_ID);
     }
 
@@ -122,6 +131,7 @@ class Submission extends Model implements Auditable
     {
         return $this->belongsToMany(User::class)
             ->withTimestamps()
+            ->using(SubmissionAssignment::class)
             ->withPivot(['id', 'user_id', 'role_id', 'submission_id']);
     }
 
@@ -230,9 +240,9 @@ class Submission extends Model implements Auditable
      *
      * @return null|string
      */
-    public function getSubmittedAtAttribute()
+    public function getSubmittedAt()
     {
-        return $this->audits()
+        return $this->audits
             ->where('event', 'updated')
             ->where('old_values', 'like', '%"status":0%')
             ->where('new_values', 'like', '%"status":1%')->first()->created_at ?? null;
@@ -270,13 +280,21 @@ class Submission extends Model implements Auditable
     public function getMyRole(): int|null
     {
         /** @var \App\Models\User $user */
-        $user = auth()->user();
+        $user = Auth::user();
 
         if (!$user) {
             return null;
         }
 
-        return $this->users()->wherePivot('user_id', $user->id)->first()->pivot->role_id ?? null;
+        $first = $this->submissionAssignments->first(function (SubmissionAssignment $assignment) use ($user) {
+            return $assignment->user_id === $user->id;
+        });
+
+        if (!$first) {
+            return null;
+        }
+
+        return $first->role_id ?? null;
     }
 
     /**
@@ -287,7 +305,7 @@ class Submission extends Model implements Auditable
     public function getEffectiveRole(): int|null
     {
         /** @var \App\Models\User $user */
-        $user = auth()->user();
+        $user = Auth::user();
 
         if (!$user) {
             return null;

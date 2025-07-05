@@ -198,19 +198,6 @@ export const GET_USERS = gql`
   ${_PAGINATION_FIELDS}
 `
 
-export const GET_USER = gql`
-  query getUser($id: ID) {
-    user(id: $id) {
-      username
-      email
-      name
-      roles {
-        name
-      }
-    }
-  }
-`
-
 export const SEARCH_USERS = gql`
   query SearchUsers($term: String, $page: Int) {
     userSearch(term: $term, page: $page) {

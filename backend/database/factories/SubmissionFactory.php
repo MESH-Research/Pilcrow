@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Database\Factories;
@@ -24,17 +25,14 @@ class SubmissionFactory extends Factory
      */
     public function definition()
     {
-        $user = auth()->user();
-        if (!$user) {
-            $user = User::factory()->create();
-        }
-
         return [
             'title' => $this->faker->sentence(10, true),
             'publication_id' => Publication::factory(),
             'status' => Submission::DRAFT,
-            'created_by' => $user->id,
-            'updated_by' => $user->id,
+            'created_by' => User::factory(),
+            'updated_by' => function (array $attributes) {
+                return $attributes['created_by'];
+            }
         ];
     }
 }

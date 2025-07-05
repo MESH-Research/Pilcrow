@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Policies;
@@ -182,22 +183,6 @@ class SubmissionPolicy
 
         //Check that the user has any role on the submission
         if ($user->hasSubmissionRole('*', $submission->id)) {
-            return true;
-        }
-
-        return Response::deny('UNAUTHORIZED');
-    }
-
-    /**
-     * View submission policy
-     *
-     * @param \App\Models\User $user
-     * @param \App\Models\Submission $submission
-     * @return bool|\Illuminate\Auth\Access\Response
-     */
-    public function viewAll(User $user, Submission $submission)
-    {
-        if ($this->checkAdminRoles($user, $submission->publication_id)) {
             return true;
         }
 

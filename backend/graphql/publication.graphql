@@ -9,7 +9,7 @@ extend type Query {
         is_accepting_submissions: Boolean @scope(name: "IsAcceptingSubmissions")
     ): [Publication!]!
         @paginate(defaultCount: 10)
-        @can(ability: "view", query: true)
+        @orderBy(column: "name", direction: ASC)
 }
 
 """

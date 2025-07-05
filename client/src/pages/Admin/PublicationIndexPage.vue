@@ -23,7 +23,7 @@
               class="dark-grey"
               :to="{
                 name: 'publication:home',
-                params: { id: rProps.value },
+                params: { id: rProps.value }
               }"
               :aria-label="$t('publication.view_button_aria')"
             >
@@ -81,7 +81,6 @@
         </q-td>
       </template>
     </query-table>
-
   </div>
 </template>
 
@@ -99,26 +98,25 @@ const columns = [
   {
     name: "name",
     field: "name",
-    align: "left",
+    align: "left"
   },
   {
     name: "actions",
     field: "id",
-    align: "right",
-  },
+    align: "right"
+  }
 ]
 
 const pageTitleKey = (page) => `publication.setup_pages.${page}`
 
-const pubsPaginator = usePagination(GET_PUBLICATIONS)
-const {
-  binds,
-  listeners,
-  data: publications,
-  paginatorInfo,
-  query: { loading }
-} = pubsPaginator
-
+//const pubsPaginator = usePagination(GET_PUBLICATIONS)
+//const {
+//  binds,
+//  listeners,
+// data: publications,
+//  paginatorInfo,
+//  query: { loading }
+//} = pubsPaginator
 
 const { push } = useRouter()
 function publicationCreated(publication) {

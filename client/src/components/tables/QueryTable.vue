@@ -12,45 +12,55 @@
     @request="onRequest"
   >
     <template #top="scope">
-      <div class="col">
-        <div class="row q-gutter-sm">
-          <slot name="top-before" v-bind="scope" />
-          <q-input
-            v-if="searchable"
-            v-model="filter"
-            class="col"
-            :dense="props.dense"
-            debounce="300"
-            placeholder="Search"
-            clearable
-            :bottom-slots="false"
-          >
-            <template #prepend>
-              <q-icon name="search" />
-            </template>
-          </q-input>
+      <slot name="top">
+        <div class="col q-pa-none">
+          <div class="row q-gutter-sm q-pa-none">
+            <slot name="top-before" v-bind="scope" />
+            <q-input
+              v-if="searchable"
+              v-model="filter"
+              class="col"
+              :dense="props.dense"
+              debounce="300"
+              placeholder="Search"
+              clearable
+              :bottom-slots="false"
+            >
+              <template #prepend>
+                <q-icon name="search" />
+              </template>
+            </q-input>
 
-          <slot name="top-extra" v-bind="scope" />
-          <q-btn
-            v-if="props.newTo"
-            color="primary"
-            :dense="props.dense"
-            :to="newTo"
-          >
-            {{ t("btn.create") }}
-          </q-btn>
-          <q-btn
-            v-else-if="props.onNew"
-            :dense="props.dense"
-            color="primary"
-            @click="$emit('new')"
-          >
-            {{ t("btn.create") }}
-          </q-btn>
-          <q-btn icon="refresh" :dense="props.dense" @click="refetch()" />
-          <slot name="top-after" v-bind="scope" />
+            <slot name="top-extra" v-bind="scope" />
+            <q-btn
+              v-if="props.newTo"
+              color="primary"
+              :dense="props.dense"
+              :to="newTo"
+            >
+              {{ t("btn.create") }}
+            </q-btn>
+            <q-btn
+              v-else-if="props.onNew"
+              :dense="props.dense"
+              color="primary"
+              @click="$emit('new')"
+            >
+              {{ t("btn.create") }}
+            </q-btn>
+            <q-btn
+              v-if="refreshBtn"
+              icon="refresh"
+              :dense="props.dense"
+              @click="refetch()"
+            />
+            <slot name="top-after" v-bind="scope" />
+          </div>
         </div>
-      </div>
+      </slot>
+    </template>
+    <template #loading>
+      <q-inner-loading showing color="primary" />
     </template>
     <template #header-cell="scope">
       <q-th :props="scope">
@@ -83,7 +93,7 @@ import {
   useSlots,
   onMounted,
   watch,
-  defineAsyncComponent,
+  defineAsyncComponent
 } from "vue"
 import { useQuery } from "@vue/apollo-composable"
 import { useI18nPrefix } from "src/use/useI18nPrefix"
@@ -91,33 +101,42 @@ import { useI18nPrefix } from "src/use/useI18nPrefix"
 const props = defineProps({
   query: {
     type: Object,
-    required: true,
+    required: true
   },
   field: {
     type: String,
     required: false,
-    default: "",
+    default: ""
   },
   newTo: {
     type: Object,
     required: false,
-    default: undefined,
+    default: undefined
   },
   columns: {
     type: Array,
     required: false,
-    default: undefined,
+    default: undefined
   },
   tPrefix: {
     type: String,
     required: false,
-    default: "",
+    default: ""
   },
   onNew: {
     type: Function,
     required: false,
-    default: undefined,
+    default: undefined
   },
+  variables: {
+    type: Object,
+    required: false,
+    default: () => {}
+  },
+  refreshBtn: {
+    type: Boolean,
+    default: true
+  }
 })
 
 const tableProps = computed(() =>
@@ -130,19 +149,19 @@ const tableProps = computed(() =>
     "tPrefix",
     "onNew",
     "searchable",
-    "timeRange",
-  ]),
+    "timeRange"
+  ])
 )
 
 const queryVariables = computed(() =>
   props?.query?.definitions
     ?.find((p) => p.kind == "OperationDefinition")
-    ?.variableDefinitions.map((d) => d.variable.name.value),
+    ?.variableDefinitions.map((d) => d.variable.name.value)
 )
 const searchable = computed(() => queryVariables.value.includes("search"))
 
 const rowsPerPageOptions = computed(() =>
-  queryVariables.value.includes("first") ? [10, 25, 50, 100] : [],
+  queryVariables.value.includes("first") ? [10, 25, 50, 100] : []
 )
 
 const enablePagination = computed(() => queryVariables.value.includes("page"))
@@ -150,7 +169,7 @@ const enablePagination = computed(() => queryVariables.value.includes("page"))
 const paginationModel = computed({
   get: () => (enablePagination.value ? pagination.value : undefined),
   set: (value) =>
-    value && enablePagination.value ? (pagination.value = value) : undefined,
+    value && enablePagination.value ? (pagination.value = value) : undefined
 })
 
 defineEmits(["new"])
@@ -166,7 +185,16 @@ const pagination = ref({
   sortBy: "",
   descending: false,
   page: 1,
-  rowsNumber: 0,
+  rowsNumber: 0
+})
+
+const page = computed({
+  set(value) {
+    if (parseInt(value) > 0) {
+      pagination.value.page = parseInt(value)
+    }
+  },
+  get: () => pagination.value.page
 })
 
 const filter = ref("")
@@ -178,22 +206,22 @@ const variables = computed(() => {
           orderBy: [
             {
               column: pagination.value.sortBy.toUpperCase(),
-              order: pagination.value.descending ? "DESC" : "ASC",
-            },
-          ],
+              order: pagination.value.descending ? "DESC" : "ASC"
+            }
+          ]
         }
       : {}),
     ...props.variables,
     first: pagination.value?.rowsPerPage,
     page: pagination.value?.page,
-    search: filter.value,
+    ...(searchable.value ? { search: filter.value } : {})
   }
 })
 
 const {
   result,
   refetch,
-  loading: queryLoading,
+  loading: queryLoading
 } = useQuery(props.query, variables)
 
 const loading = ref(true)
@@ -212,6 +240,7 @@ watch(result, (newValue) => {
     pagination.value.page = getField(newValue)?.paginatorInfo.currentPage ?? 1
     pagination.value.rowsPerPage =
       getField(newValue)?.paginatorInfo.perPage ?? 25
+    rows.value = getField(newValue)?.data ?? []
   }
 })
 
@@ -226,7 +255,7 @@ const onRequest = (props) => {
   pagination.value.sortBy = sortBy
   pagination.value.descending = descending ?? false
 }
-const rows = computed(() => getField(result.value)?.data ?? [])
+const rows = ref([])
 
 function getField(result) {
   if (!result) {
@@ -264,7 +293,23 @@ function getComponent(component) {
 defineExpose({
   refetch,
   rows,
+  page
+})
+
+const topShow = computed(() => {
+  return !!props.refreshBtn ||
+    !!searchable.value ||
+    !!props.newTo ||
+    !!slots.top ||
+    !!props.onNew
+    ? "flex"
+    : "none"
 })
 </script>
 
-<style scoped></style>
+<style scoped>
+:deep(.q-table__top) {
+  padding: 12px 0;
+  display: v-bind("topShow");
+}
+</style>
