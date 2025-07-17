@@ -40,6 +40,8 @@ return new class extends Migration
             $table->foreignId('submission_meta_question_id')->constrained('submission_meta_questions');
             $table->text('question');
             $table->json('answer');
+            $table->foreignId('created_by')->constrained('users');
+            $table->foreignId('updated_by')->constrained('users');
             $table->string('type');
         });
     }
@@ -50,5 +52,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('submission_questions');
+        Schema::dropIfExists('submission_meta_questions');
+        Schema::dropIfExists('submission_meta_question_sets');
     }
 };
