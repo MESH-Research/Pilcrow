@@ -9,16 +9,16 @@
             "path": "backend"
         },
         {
-            "name": "ROOT",
-            "path": "./"
-        },
-        {
             "name": "DOCS",
             "path": "docs"
         },
         {
             "name": "PLAYWRIGHT",
             "path": "playwright"
+        },
+        {
+            "name": "ROOT",
+            "path": "."
         }
     ],
     "settings": {

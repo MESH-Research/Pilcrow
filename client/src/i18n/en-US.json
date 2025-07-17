@@ -1192,5 +1192,67 @@
   "generic": {
     "more_info": "More info"
   },
-  "app_banner_dismiss_tip": "Dismiss for 1 week"
+  "app_banner_dismiss_tip": "Dismiss for 1 week",
+  "admin": {
+    "users": {
+      "headers": {
+        "name": "Name",
+        "username": "Username",
+        "email": "Email"
+      },
+      "details": {
+        "title": "User Details",
+        "username": "Username",
+        "name": "Name",
+        "email": "Email",
+        "role": "Application Role",
+        "isAdmin": "Application Administrator",
+        "isNormal": "Normal User",
+        "publications": {
+          "heading": "Publications"
+        },
+        "submissions": {
+          "headers": {
+            "id": "ID",
+            "title": "Title",
+            "status": "Status",
+            "publication": "Publication",
+            "created_at": "Created At",
+            "my_role": "Submission Role",
+            "actions": "Actions"
+          },
+          "filters": {
+            "roles": "Filter By Role",
+            "status": "Filter By Status",
+            "publication": "Filter By Publication"
+          },
+          "actions": {
+            "view": "View"
+          }
+        },
+        "roles": {
+          "publication_admin": "Publication Administrator",
+          "editor": "Editor",
+          "review_coordinator": "Review Coordinator",
+          "reviewer": "Reviewer",
+          "submitter": "Submitter"
+        }
+      }
+    }
+  },
+  "submission_status": {
+    "draft": "Draft",
+    "initially_submitted": "Initially Submitted",
+    "resubmission_requested": "Resubmission Requested",
+    "resubmitted": "Resubmitted",
+    "awaiting_review": "Awaiting Review",
+    "rejected": "Rejected",
+    "accepted_as_final": "Accepted as Final",
+    "expired": "Expired",
+    "under_review": "Under Review",
+    "awaiting_decision": "Awaiting Decision",
+    "revision_requested": "Revision Requested",
+    "archived": "Archived",
+    "deleted": "Deleted"
+  }
 }
