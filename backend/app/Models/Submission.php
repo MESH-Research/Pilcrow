@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Models;
@@ -108,7 +109,7 @@ class Submission extends Model implements Auditable
      */
     public function submitters(): BelongsToMany
     {
-         return $this->belongsToMany(User::class)
+        return $this->belongsToMany(User::class)
             ->withTimestamps()
             ->withPivotValue('role_id', Role::SUBMITTER_ROLE_ID);
     }
@@ -123,6 +124,14 @@ class Submission extends Model implements Auditable
         return $this->belongsToMany(User::class)
             ->withTimestamps()
             ->withPivot(['id', 'user_id', 'role_id', 'submission_id']);
+    }
+
+    /**
+     * Answers to the submission's metadata questions.
+     */
+    public function metaAnswers(): HasMany
+    {
+        return $this->hasMany(SubmissionMetaAnswer::class, 'submission_id');
     }
 
     /**
