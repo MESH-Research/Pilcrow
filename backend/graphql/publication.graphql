@@ -5,10 +5,11 @@ extend type Query {
     "Return all publications"
     publications(
         search: String @scope
-        is_publicly_visible: Boolean @scope(name: "IsPubliclyVisible")
-        is_accepting_submissions: Boolean @scope(name: "IsAcceptingSubmissions")
+        public: Boolean @scope(name: "public")
+        accepting_submissions: Boolean @scope(name: "acceptingSubmissions")
+        my_role: PublicationRole @scope(name: "myRole")
     ): [Publication!]!
-        @paginate(defaultCount: 10)
+        @paginate(defaultCount: 10, scopes: ["visible"])
         @orderBy(column: "name", direction: ASC)
 }
 

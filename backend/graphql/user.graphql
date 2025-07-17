@@ -15,9 +15,9 @@ type User {
     permissions: [Permission!] @belongsToMany
     profile_metadata: ProfileMetadata
     assigned_submissions(
-        roles: [UserRoles!] @scope(name: "roleFilter")
+        roles: [SubmissionUserRoles!] @scope(name: "roleFilter")
         status: [SubmissionStatus!] @scope(name: "statusFilter")
-        publications: [ID!] @scope(name: "publicationFilter")
+        publication: [ID!] @scope(name: "publicationFilter")
     ): [Submission]! @belongsToMany(type: "PAGINATOR", relation: "submissions")
     submissions: [Submission!] @all(scopes: [])
     assignments: [SubmissionAssignment!]
