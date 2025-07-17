@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Models;
@@ -108,6 +109,11 @@ class Publication extends BaseModel
     public function submissions(): HasMany
     {
         return $this->hasMany(Submission::class);
+    }
+
+    public function metaQuestionSets(): HasMany
+    {
+        return $this->hasMany(SubmissionMetaQuestionSet::class, 'publication_id');
     }
 
     /**
