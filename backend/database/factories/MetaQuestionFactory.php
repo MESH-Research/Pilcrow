@@ -20,7 +20,7 @@ class MetaQuestionFactory extends Factory
         return [
             'caption' => $this->faker->sentence(),
             'meta_question_set_id' => \App\Models\MetaQuestionSet::factory(),
-            'question' => $this->faker->sentence(),
+            'label' => $this->faker->sentence(),
             'type' => $this->faker->randomElement(array_column(MetaQuestionType::cases(), 'value'))
         ];
     }

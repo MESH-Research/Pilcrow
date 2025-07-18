@@ -29,25 +29,41 @@ class PublicationSeeder extends Seeder
             ->hasAttached(User::firstWhere('username', 'publicationEditor'), [], 'editors')
             ->has(
                 MetaQuestionSet::factory()
+                    ->state([
+                        'name' => 'Basic Submission Information',
+                        'caption' => 'Please provide the basic information about your submission.',
+                    ])
                     ->has(
                         MetaQuestion::factory()
-                            ->count(3)
+                            ->count(4)
                             ->state(new Sequence(
                                 [
-                                    'question' => 'What is your name?',
+                                    'label' => 'What is your name?',
                                     'type' => MetaQuestionType::INPUT
                                 ],
                                 [
-                                    'question' => 'What is your favorite color?',
+                                    'label' => 'What is your favorite color?',
                                     'type' => MetaQuestionType::SELECT,
                                     'options' => '{"options": ["Red", "Green", "Blue"]}'
                                 ],
                                 [
-                                    'question' => 'Describe your submission.',
+                                    'label' => 'Describe your submission.',
                                     'type' => MetaQuestionType::TEXTAREA
                                 ],
+                                [
+                                    'label' => 'Are you sure you want to submit?',
+                                    'type' => MetaQuestionType::CHECKBOX,
+                                ]
                             ))
                     ),
+            )
+            ->has(
+                MetaQuestionSet::factory()
+                    ->state([
+                        'name' => 'Additional Information',
+                        'caption' => 'Please provide any additional information that may be relevant to your submission.',
+                        'required' => true,
+                    ])
             )
             ->create([
                 'id' => 1,

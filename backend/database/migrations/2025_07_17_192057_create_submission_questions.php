@@ -17,19 +17,21 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
             $table->string('name');
+            $table->string('caption')->nullable();
             $table->foreignId('publication_id')
                 ->constrained('publications');
             $table->boolean('required')->default(false);
+            $table->integer('order')->default(0);
             $table->softDeletes();
         });
 
         Schema::create('meta_questions', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
+            $table->text('label');
             $table->longText('caption')->nullable();
             $table->foreignId('meta_question_set_id')
                 ->constrained('meta_question_sets');
-            $table->text('question');
             $table->enum('type', array_column(MetaQuestionType::cases(), 'value'));
             $table->json('options')->nullable();
             $table->boolean('required')->default(false);

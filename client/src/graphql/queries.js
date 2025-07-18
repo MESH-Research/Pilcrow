@@ -295,6 +295,25 @@ export const GET_SUBMISSIONS = gql`
   ${_RELATED_USER_FIELDS}
 `
 
+export const META_QUESTION_SETS_FRAGMENT = gql`
+  fragment MetaQuestionSetsFragment on Publication {
+    meta_question_sets {
+      id
+      name
+      caption
+      required
+      meta_questions {
+        id
+        label
+        required
+        caption
+        order
+        type
+      }
+    }
+  }
+`
+
 export const GET_SUBMISSION = gql`
   query GetSubmission($id: ID!) {
     submission(id: $id) {
@@ -329,6 +348,7 @@ export const GET_SUBMISSION = gql`
         created_at
       }
       publication {
+        ...MetaQuestionSetsFragment
         id
         name
         style_criterias {
@@ -357,6 +377,7 @@ export const GET_SUBMISSION = gql`
     }
   }
   ${_RELATED_USER_FIELDS}
+  ${META_QUESTION_SETS_FRAGMENT}
 `
 
 export const GET_SUBMISSION_REVIEW = gql`

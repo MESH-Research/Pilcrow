@@ -1,22 +1,37 @@
 extend type Publication {
     meta_question_sets: [MetaQuestionSet!]
+        @hasMany(relation: "metaQuestionSets", scope: "ordered")
+    meta_question_set(id: ID! @whereKey): MetaQuestionSet @find
 }
 
 type MetaQuestionSet {
     id: ID!
     name: String!
-    questions: [MetaQuestion!]
+    caption: String
+    required: Boolean!
+    meta_questions: [MetaQuestion!]
+        @hasMany(relation: "metaQuestions", scope: "ordered")
+    order: Int!
 }
 
 type MetaQuestion {
     id: ID!
-    question: String!
-    required: Boolean!
+    label: String!
     caption: String
+    required: Boolean!
+    options: JSON
     order: Int!
+    type: MetaQuestionType!
 }
 
-extend type UpdatePublicationInput {
+enum MetaQuestionType {
+    INPUT @enum(value: 1)
+    TEXTAREA @enum(value: 2)
+    SELECT @enum(value: 3)
+    CHECKBOX @enum(value: 4)
+}
+
+extend input UpdatePublicationInput {
     meta_question_sets: UpdateMetaQuestionSetInput
         @rename(attribute: "metaQuestionSets")
 }
