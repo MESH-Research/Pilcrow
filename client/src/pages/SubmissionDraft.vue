@@ -65,6 +65,20 @@
                 {{ $t(`submissions.create.todo.content.description`) }}
               </p>
             </submission-draft-todo-item>
+            <div class="text-h3">Additional Information</div>
+            <submission-draft-todo-item
+              v-for="question_set in submission.publication.meta_question_sets"
+              :key="question_set.id"
+              :title="question_set.name"
+              @content-click="onSubmissionMetaClick(question_set.id)"
+            >
+              <p class="q-ma-none">
+                <q-chip>
+                  {{ question_set.required ? "Required" : "Optional" }}
+                </q-chip>
+                {{ question_set.caption }}
+              </p>
+            </submission-draft-todo-item>
             <!-- TODO: Develop collaborator inviting -->
             <!-- <submission-draft-todo-item title="Invite Collaborators">
               Invite collaborators to join the review process.
@@ -124,6 +138,13 @@ function onGoToSubmissionContentClick() {
   push({
     name: "submission:content",
     params: { id: submission.value.id }
+  })
+}
+
+function onSubmissionMetaClick(setId) {
+  push({
+    name: "submission:metaQuestionSet",
+    params: { id: submission.value.id, setId }
   })
 }
 const rules = {

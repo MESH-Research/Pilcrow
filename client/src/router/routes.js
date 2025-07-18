@@ -166,6 +166,15 @@ const routes = [
         }
       },
       {
+        name: "submission:metaQuestionSet",
+        path: "/submission/:id/meta-question-set/:setId",
+        component: () => import("src/pages/SubmissionMetaQuestionSet.vue"),
+        props: true,
+        meta: {
+          requiresDraftAccess: true
+        }
+      },
+      {
         name: "submission:content",
         path: "/submission/:id/content",
         component: () => import("src/pages/SubmissionContent.vue"),

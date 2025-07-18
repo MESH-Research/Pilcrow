@@ -1,0 +1,77 @@
+extend type Publication {
+    meta_question_sets: [MetaQuestionSet!]
+        @hasMany(relation: "metaQuestionSets", scope: "ordered")
+    meta_question_set(id: ID! @whereKey): MetaQuestionSet @find
+}
+
+type MetaQuestionSet {
+    id: ID!
+    name: String!
+    caption: String
+    required: Boolean!
+    meta_questions: [MetaQuestion!]
+        @hasMany(relation: "metaQuestions", scope: "ordered")
+    order: Int!
+}
+
+type MetaQuestion {
+    id: ID!
+    label: String!
+    caption: String
+    required: Boolean!
+    options: JSON
+    order: Int!
+    type: MetaQuestionType!
+}
+
+enum MetaQuestionType {
+    INPUT @enum(value: 1)
+    TEXTAREA @enum(value: 2)
+    SELECT @enum(value: 3)
+    CHECKBOX @enum(value: 4)
+}
+
+extend input UpdatePublicationInput {
+    meta_question_sets: UpdateMetaQuestionSetInput
+        @rename(attribute: "metaQuestionSets")
+}
+
+input UpdateMetaQuestionSetInput {
+    create: [CreateQuestionSetInput!]
+    update: [UpdateQuestionSetInput!]
+    upsert: [UpsertQuestionSetInput!]
+    delete: [ID!]
+    connect: [ID!]
+    disconnect: [ID!]
+}
+
+input CreateQuestionSetInput {
+    name: String!
+}
+
+input UpdateQuestionSetInput {
+    id: ID!
+    name: String
+    questions: UpdateMetaQuestionInput @rename(attribute: "questions")
+}
+
+input UpdateMetaQuestionInput {
+    create: [CreateMetaQuestionInput!]
+    update: [UpdateMetaQuestionInput!]
+    delete: [ID!]
+}
+
+input CreateMetaQuestionInput {
+    question: String!
+    required: Boolean!
+    caption: String
+    order: Int
+}
+
+input UpdateMetaQuestionInput {
+    id: ID!
+    question: String
+    required: Boolean
+    caption: String
+    order: Int
+}

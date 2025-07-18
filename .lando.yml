@@ -5,7 +5,6 @@ env_file:
 config:
   php: "8.4"
   composer_version: 2
-  composer: []
   webroot: backend/public
   via: nginx
   config:
