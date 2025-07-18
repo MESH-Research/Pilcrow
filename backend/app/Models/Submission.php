@@ -131,7 +131,7 @@ class Submission extends Model implements Auditable
      */
     public function metaAnswers(): HasMany
     {
-        return $this->hasMany(SubmissionMetaAnswer::class, 'submission_id');
+        return $this->hasMany(MetaAnswer::class, 'submission_id');
     }
 
     /**

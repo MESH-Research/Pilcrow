@@ -1,0 +1,62 @@
+extend type Publication {
+    meta_question_sets: [MetaQuestionSet!]
+}
+
+type MetaQuestionSet {
+    id: ID!
+    name: String!
+    questions: [MetaQuestion!]
+}
+
+type MetaQuestion {
+    id: ID!
+    question: String!
+    required: Boolean!
+    caption: String
+    order: Int!
+}
+
+extend type UpdatePublicationInput {
+    meta_question_sets: UpdateMetaQuestionSetInput
+        @rename(attribute: "metaQuestionSets")
+}
+
+input UpdateMetaQuestionSetInput {
+    create: [CreateQuestionSetInput!]
+    update: [UpdateQuestionSetInput!]
+    upsert: [UpsertQuestionSetInput!]
+    delete: [ID!]
+    connect: [ID!]
+    disconnect: [ID!]
+}
+
+input CreateQuestionSetInput {
+    name: String!
+}
+
+input UpdateQuestionSetInput {
+    id: ID!
+    name: String
+    questions: UpdateMetaQuestionInput @rename(attribute: "questions")
+}
+
+input UpdateMetaQuestionInput {
+    create: [CreateMetaQuestionInput!]
+    update: [UpdateMetaQuestionInput!]
+    delete: [ID!]
+}
+
+input CreateMetaQuestionInput {
+    question: String!
+    required: Boolean!
+    caption: String
+    order: Int
+}
+
+input UpdateMetaQuestionInput {
+    id: ID!
+    question: String
+    required: Boolean
+    caption: String
+    order: Int
+}

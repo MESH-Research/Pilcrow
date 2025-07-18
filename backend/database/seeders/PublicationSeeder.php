@@ -1,11 +1,16 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Database\Seeders;
 
+use App\Enums\MetaQuestionType;
 use App\Models\Publication;
 use App\Models\StyleCriteria;
+use App\Models\MetaQuestion;
+use App\Models\MetaQuestionSet;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Database\Seeder;
 
 class PublicationSeeder extends Seeder
@@ -22,16 +27,38 @@ class PublicationSeeder extends Seeder
         Publication::factory()
             ->hasAttached(User::firstWhere('username', 'publicationAdministrator'), [], 'publicationAdmins')
             ->hasAttached(User::firstWhere('username', 'publicationEditor'), [], 'editors')
+            ->has(
+                MetaQuestionSet::factory()
+                    ->has(
+                        MetaQuestion::factory()
+                            ->count(3)
+                            ->state(new Sequence(
+                                [
+                                    'question' => 'What is your name?',
+                                    'type' => MetaQuestionType::INPUT
+                                ],
+                                [
+                                    'question' => 'What is your favorite color?',
+                                    'type' => MetaQuestionType::SELECT,
+                                    'options' => '{"options": ["Red", "Green", "Blue"]}'
+                                ],
+                                [
+                                    'question' => 'Describe your submission.',
+                                    'type' => MetaQuestionType::TEXTAREA
+                                ],
+                            ))
+                    ),
+            )
             ->create([
                 'id' => 1,
                 'name' => 'Pilcrow Test Publication 1',
                 'is_accepting_submissions' => true,
             ]);
         Publication::factory()
-        ->create([
-            'name' => 'Pilcrow Test Publication Reject Submissions',
-            'is_accepting_submissions' => false,
-        ]);
+            ->create([
+                'name' => 'Pilcrow Test Publication Reject Submissions',
+                'is_accepting_submissions' => false,
+            ]);
         Publication::factory()
             ->count(50)
             ->has(

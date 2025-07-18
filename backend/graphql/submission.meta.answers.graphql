@@ -1,0 +1,14 @@
+extend type Submission {
+    meta_answers: [MetaAnswer!]
+}
+
+type MetaAnswer {
+    id: ID!
+    submission: Submission!
+    question: String!
+    answer: String!
+    created_at: DateTimeUtc!
+    updated_at: DateTimeUtc
+    created_by: User!
+    updated_by: User
+}

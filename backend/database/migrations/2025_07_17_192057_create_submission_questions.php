@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\MetaQuestionType;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -12,32 +13,34 @@ return new class extends Migration
     public function up(): void
     {
 
-        Schema::create('submission_meta_question_sets', function (Blueprint $table) {
+        Schema::create('meta_question_sets', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
             $table->string('name');
             $table->foreignId('publication_id')
                 ->constrained('publications');
+            $table->boolean('required')->default(false);
             $table->softDeletes();
         });
 
-        Schema::create('submission_meta_questions', function (Blueprint $table) {
+        Schema::create('meta_questions', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->fullText('caption')->nullable();
-            $table->foreignId('submission_meta_question_set_id')
-                ->constrained('submission_meta_question_sets');
+            $table->longText('caption')->nullable();
+            $table->foreignId('meta_question_set_id')
+                ->constrained('meta_question_sets');
             $table->text('question');
-            $table->string('type');
+            $table->enum('type', array_column(MetaQuestionType::cases(), 'value'));
+            $table->json('options')->nullable();
             $table->boolean('required')->default(false);
             $table->integer('order')->default(0);
             $table->softDeletes();
         });
 
-        Schema::table('submission_meta_answers', function (Blueprint $table) {
+        Schema::create('meta_answers', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->foreignId('submission_meta_question_id')->constrained('submission_meta_questions');
+            $table->foreignId('question_id')->constrained('meta_questions');
             $table->text('question');
             $table->json('answer');
             $table->foreignId('created_by')->constrained('users');
@@ -51,8 +54,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('submission_meta_answers');
-        Schema::dropIfExists('submission_meta_questions');
-        Schema::dropIfExists('submission_meta_question_sets');
+        Schema::dropIfExists('meta_answers');
+        Schema::dropIfExists('meta_questions');
+        Schema::dropIfExists('meta_question_sets');
     }
 };
