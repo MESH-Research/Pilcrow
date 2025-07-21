@@ -13,10 +13,7 @@
     <div class="row flex-center q-pa-md">
       <div class="col-lg-6 col-md-7 col-sm-9 col-xs-12">
         <article>{{ submission }}</article>
-        <div
-          v-for="entity in meta_prompt_set.meta_prompts"
-          :key="entity.id"
-        >
+        <div v-for="entity in meta_prompt_set.meta_prompts" :key="entity.id">
           <q-input v-if="entity.type === 'INPUT'" :label="entity.label" />
           <q-select
             v-if="entity.type === 'SELECT'"
@@ -26,8 +23,8 @@
           </q-select>
           <q-checkbox v-if="entity.type === 'CHECKBOX'" :label="entity.label" />
           <q-input
-            :label="entity.label"
             v-if="entity.type === 'TEXTAREA'"
+            :label="entity.label"
             type="textarea"
           />
         </div>
