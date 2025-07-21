@@ -111,9 +111,9 @@ class Publication extends BaseModel
         return $this->hasMany(Submission::class);
     }
 
-    public function metaQuestionSets(): HasMany
+    public function metaPromptSets(): HasMany
     {
-        return $this->hasMany(MetaQuestionSet::class, 'publication_id');
+        return $this->hasMany(MetaPromptSet::class, 'publication_id');
     }
 
     /**

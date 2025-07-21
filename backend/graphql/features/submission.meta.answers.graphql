@@ -5,7 +5,7 @@ extend type Submission {
 type MetaAnswer {
     id: ID!
     submission: Submission!
-    question: String!
+    prompt: String!
     answer: String!
     created_at: DateTimeUtc!
     updated_at: DateTimeUtc

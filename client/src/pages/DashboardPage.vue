@@ -47,7 +47,7 @@
         >
           <q-card-section class="text-h3">
             <span :class="`${$q.screen.width < 1024 ? 'block' : ''}`"
-              >{{ $t(`dashboard.guide_question`) }} </span
+              >{{ $t(`dashboard.guide_prompt`) }} </span
             >&nbsp;<i18n-t
               keypath="dashboard.guide_call_to_action"
               tag="span"

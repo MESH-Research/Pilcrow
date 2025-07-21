@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
-use App\Enums\MetaQuestionType;
+use App\Enums\MetaPromptType;
 use App\Models\Publication;
 use App\Models\StyleCriteria;
-use App\Models\MetaQuestion;
-use App\Models\MetaQuestionSet;
+use App\Models\MetaPrompt;
+use App\Models\MetaPromptSet;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Database\Seeder;
@@ -28,37 +28,37 @@ class PublicationSeeder extends Seeder
             ->hasAttached(User::firstWhere('username', 'publicationAdministrator'), [], 'publicationAdmins')
             ->hasAttached(User::firstWhere('username', 'publicationEditor'), [], 'editors')
             ->has(
-                MetaQuestionSet::factory()
+                MetaPromptSet::factory()
                     ->state([
                         'name' => 'Basic Submission Information',
                         'caption' => 'Please provide the basic information about your submission.',
                     ])
                     ->has(
-                        MetaQuestion::factory()
+                        MetaPrompt::factory()
                             ->count(4)
                             ->state(new Sequence(
                                 [
                                     'label' => 'What is your name?',
-                                    'type' => MetaQuestionType::INPUT
+                                    'type' => MetaPromptType::INPUT
                                 ],
                                 [
                                     'label' => 'What is your favorite color?',
-                                    'type' => MetaQuestionType::SELECT,
+                                    'type' => MetaPromptType::SELECT,
                                     'options' => '{"options": ["Red", "Green", "Blue"]}'
                                 ],
                                 [
                                     'label' => 'Describe your submission.',
-                                    'type' => MetaQuestionType::TEXTAREA
+                                    'type' => MetaPromptType::TEXTAREA
                                 ],
                                 [
                                     'label' => 'Are you sure you want to submit?',
-                                    'type' => MetaQuestionType::CHECKBOX,
+                                    'type' => MetaPromptType::CHECKBOX,
                                 ]
                             ))
                     ),
             )
             ->has(
-                MetaQuestionSet::factory()
+                MetaPromptSet::factory()
                     ->state([
                         'name' => 'Additional Information',
                         'caption' => 'Please provide any additional information that may be relevant to your submission.',

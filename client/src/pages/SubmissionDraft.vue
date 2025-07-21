@@ -67,16 +67,16 @@
             </submission-draft-todo-item>
             <div class="text-h3">Additional Information</div>
             <submission-draft-todo-item
-              v-for="question_set in submission.publication.meta_question_sets"
-              :key="question_set.id"
-              :title="question_set.name"
-              @content-click="onSubmissionMetaClick(question_set.id)"
+              v-for="prompt_set in submission.publication.meta_prompt_sets"
+              :key="prompt_set.id"
+              :title="prompt_set.name"
+              @content-click="onSubmissionMetaClick(prompt_set.id)"
             >
               <p class="q-ma-none">
                 <q-chip>
-                  {{ question_set.required ? "Required" : "Optional" }}
+                  {{ prompt_set.required ? "Required" : "Optional" }}
                 </q-chip>
-                {{ question_set.caption }}
+                {{ prompt_set.caption }}
               </p>
             </submission-draft-todo-item>
             <!-- TODO: Develop collaborator inviting -->
@@ -143,7 +143,7 @@ function onGoToSubmissionContentClick() {
 
 function onSubmissionMetaClick(setId) {
   push({
-    name: "submission:metaQuestionSet",
+    name: "submission:metaPromptSet",
     params: { id: submission.value.id, setId }
   })
 }

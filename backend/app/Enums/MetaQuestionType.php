@@ -2,7 +2,7 @@
 
 namespace App\Enums;
 
-enum MetaQuestionType: int
+enum MetaPromptType: int
 {
     case INPUT = 1;
     case TEXTAREA = 2;

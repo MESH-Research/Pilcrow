@@ -12,9 +12,9 @@ class MetaAnswer extends Model
 
     public $table = 'meta_answers';
 
-    public function metaQuestion(): BelongsTo
+    public function metaPrompt(): BelongsTo
     {
-        return $this->belongsTo(MetaQuestion::class, 'meta_question_id');
+        return $this->belongsTo(MetaPrompt::class, 'meta_prompt_id');
     }
 
     public function submission(): BelongsTo

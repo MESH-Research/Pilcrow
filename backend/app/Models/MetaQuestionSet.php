@@ -11,13 +11,13 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\EloquentSortable\Sortable;
 use Spatie\EloquentSortable\SortableTrait;
 
-class MetaQuestionSet extends Model implements Sortable
+class MetaPromptSet extends Model implements Sortable
 {
     use SortableTrait;
     use SoftDeletes;
     use HasFactory;
 
-    public $table = 'meta_question_sets';
+    public $table = 'meta_prompt_sets';
 
     protected $sortable = [
         'order_column_name' => 'order',
@@ -34,8 +34,8 @@ class MetaQuestionSet extends Model implements Sortable
         return $this->belongsTo(Submission::class);
     }
 
-    public function metaQuestions(): HasMany
+    public function metaPrompts(): HasMany
     {
-        return $this->hasMany(MetaQuestion::class, 'meta_question_set_id');
+        return $this->hasMany(MetaPrompt::class, 'meta_prompt_set_id');
     }
 }

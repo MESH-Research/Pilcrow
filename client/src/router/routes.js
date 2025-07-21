@@ -166,9 +166,9 @@ const routes = [
         }
       },
       {
-        name: "submission:metaQuestionSet",
-        path: "/submission/:id/meta-question-set/:setId",
-        component: () => import("src/pages/SubmissionMetaQuestionSet.vue"),
+        name: "submission:metaPromptSet",
+        path: "/submission/:id/meta-prompt-set/:setId",
+        component: () => import("src/pages/SubmissionMetaPromptSet.vue"),
         props: true,
         meta: {
           requiresDraftAccess: true

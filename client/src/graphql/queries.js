@@ -296,13 +296,13 @@ export const GET_SUBMISSIONS = gql`
 `
 
 export const META_QUESTION_SETS_FRAGMENT = gql`
-  fragment MetaQuestionSetsFragment on Publication {
-    meta_question_sets {
+  fragment MetaPromptSetsFragment on Publication {
+    meta_prompt_sets {
       id
       name
       caption
       required
-      meta_questions {
+      meta_prompts {
         id
         label
         required
@@ -348,7 +348,7 @@ export const GET_SUBMISSION = gql`
         created_at
       }
       publication {
-        ...MetaQuestionSetsFragment
+        ...MetaPromptSetsFragment
         id
         name
         style_criterias {

@@ -14,7 +14,7 @@
       <div class="col-lg-6 col-md-7 col-sm-9 col-xs-12">
         <article>{{ submission }}</article>
         <div
-          v-for="entity in meta_question_set.meta_questions"
+          v-for="entity in meta_prompt_set.meta_prompts"
           :key="entity.id"
         >
           <q-input v-if="entity.type === 'INPUT'" :label="entity.label" />
@@ -51,23 +51,23 @@ const props = defineProps({
   }
 })
 const { result, loading } = useQuery(GET_SUBMISSION_META_QUESTION_SET, props)
-const meta_question_set = computed(
-  () => result.value?.submission.publication.meta_question_set
+const meta_prompt_set = computed(
+  () => result.value?.submission.publication.meta_prompt_set
 )
 </script>
 
 <script>
 import { gql } from "graphql-tag"
 const GET_SUBMISSION_META_QUESTION_SET = gql`
-  query SubmissionMetaQuestionSet($id: ID!, $setId: ID!) {
+  query SubmissionMetaPromptSet($id: ID!, $setId: ID!) {
     submission(id: $id) {
       id
       title
       publication {
-        meta_question_set(id: $setId) {
+        meta_prompt_set(id: $setId) {
           id
           name
-          meta_questions {
+          meta_prompts {
             id
             label
             type

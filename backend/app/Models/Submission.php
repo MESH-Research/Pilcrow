@@ -127,7 +127,7 @@ class Submission extends Model implements Auditable
     }
 
     /**
-     * Answers to the submission's metadata questions.
+     * Answers to the submission's metadata prompts.
      */
     public function metaAnswers(): HasMany
     {

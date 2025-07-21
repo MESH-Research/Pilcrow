@@ -1,30 +1,30 @@
 extend type Publication {
-    meta_question_sets: [MetaQuestionSet!]
-        @hasMany(relation: "metaQuestionSets", scope: "ordered")
-    meta_question_set(id: ID! @whereKey): MetaQuestionSet @find
+    meta_prompt_sets: [MetaPromptSet!]
+        @hasMany(relation: "metaPromptSets", scope: "ordered")
+    meta_prompt_set(id: ID! @whereKey): MetaPromptSet @find
 }
 
-type MetaQuestionSet {
+type MetaPromptSet {
     id: ID!
     name: String!
     caption: String
     required: Boolean!
-    meta_questions: [MetaQuestion!]
-        @hasMany(relation: "metaQuestions", scope: "ordered")
+    meta_prompts: [MetaPrompt!]
+        @hasMany(relation: "metaPrompts", scope: "ordered")
     order: Int!
 }
 
-type MetaQuestion {
+type MetaPrompt {
     id: ID!
     label: String!
     caption: String
     required: Boolean!
     options: JSON
     order: Int!
-    type: MetaQuestionType!
+    type: MetaPromptType!
 }
 
-enum MetaQuestionType {
+enum MetaPromptType {
     INPUT @enum(value: 1)
     TEXTAREA @enum(value: 2)
     SELECT @enum(value: 3)
@@ -32,11 +32,11 @@ enum MetaQuestionType {
 }
 
 extend input UpdatePublicationInput {
-    meta_question_sets: UpdateMetaQuestionSetInput
-        @rename(attribute: "metaQuestionSets")
+    meta_prompt_sets: UpdateMetaPromptSetInput
+        @rename(attribute: "metaPromptSets")
 }
 
-input UpdateMetaQuestionSetInput {
+input UpdateMetaPromptSetInput {
     create: [CreateQuestionSetInput!]
     update: [UpdateQuestionSetInput!]
     upsert: [UpsertQuestionSetInput!]
@@ -52,25 +52,25 @@ input CreateQuestionSetInput {
 input UpdateQuestionSetInput {
     id: ID!
     name: String
-    questions: UpdateMetaQuestionInput @rename(attribute: "questions")
+    prompts: UpdateMetaPromptInput @rename(attribute: "prompts")
 }
 
-input UpdateMetaQuestionInput {
-    create: [CreateMetaQuestionInput!]
-    update: [UpdateMetaQuestionInput!]
+input UpdateMetaPromptInput {
+    create: [CreateMetaPromptInput!]
+    update: [UpdateMetaPromptInput!]
     delete: [ID!]
 }
 
-input CreateMetaQuestionInput {
-    question: String!
+input CreateMetaPromptInput {
+    prompt: String!
     required: Boolean!
     caption: String
     order: Int
 }
 
-input UpdateMetaQuestionInput {
+input UpdateMetaPromptInput {
     id: ID!
-    question: String
+    prompt: String
     required: Boolean
     caption: String
     order: Int

@@ -2,13 +2,13 @@
 
 namespace Database\Factories;
 
-use App\Enums\MetaQuestionType;
+use App\Enums\MetaPromptType;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\MetaQuestion>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\MetaPrompt>
  */
-class MetaQuestionFactory extends Factory
+class MetaPromptFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -19,9 +19,9 @@ class MetaQuestionFactory extends Factory
     {
         return [
             'caption' => $this->faker->sentence(),
-            'meta_question_set_id' => \App\Models\MetaQuestionSet::factory(),
+            'meta_prompt_set_id' => \App\Models\MetaPromptSet::factory(),
             'label' => $this->faker->sentence(),
-            'type' => $this->faker->randomElement(array_column(MetaQuestionType::cases(), 'value'))
+            'type' => $this->faker->randomElement(array_column(MetaPromptType::cases(), 'value'))
         ];
     }
 }
