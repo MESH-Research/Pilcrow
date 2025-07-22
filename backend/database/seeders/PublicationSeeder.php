@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Database\Seeders;
 
 use App\Enums\MetaPromptType;
+use App\Models\MetaPage;
+use App\Models\MetaPrompt;
 use App\Models\Publication;
 use App\Models\StyleCriteria;
-use App\Models\MetaPrompt;
-use App\Models\MetaPromptSet;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Database\Seeder;
@@ -28,7 +28,7 @@ class PublicationSeeder extends Seeder
             ->hasAttached(User::firstWhere('username', 'publicationAdministrator'), [], 'publicationAdmins')
             ->hasAttached(User::firstWhere('username', 'publicationEditor'), [], 'editors')
             ->has(
-                MetaPromptSet::factory()
+                MetaPage::factory()
                     ->state([
                         'name' => 'Basic Submission Information',
                         'caption' => 'Please provide the basic information about your submission.',
@@ -58,12 +58,26 @@ class PublicationSeeder extends Seeder
                     ),
             )
             ->has(
-                MetaPromptSet::factory()
+                MetaPage::factory()
                     ->state([
                         'name' => 'Additional Information',
                         'caption' => 'Please provide any additional information that may be relevant to your submission.',
                         'required' => true,
                     ])
+                    ->has(
+                        MetaPrompt::factory()
+                            ->count(2)
+                            ->state(new Sequence(
+                                [
+                                    'label' => 'What is your age?',
+                                    'type' => MetaPromptType::INPUT
+                                ],
+                                [
+                                    'label' => 'What is your occupation?',
+                                    'type' => MetaPromptType::INPUT
+                                ]
+                            ))
+                    )
             )
             ->create([
                 'id' => 1,

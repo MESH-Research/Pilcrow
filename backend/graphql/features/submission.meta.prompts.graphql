@@ -1,10 +1,9 @@
 extend type Publication {
-    meta_prompt_sets: [MetaPromptSet!]
-        @hasMany(relation: "metaPromptSets", scope: "ordered")
-    meta_prompt_set(id: ID! @whereKey): MetaPromptSet @find
+    meta_pages: [MetaPage!] @hasMany(relation: "metaPages", scope: "ordered")
+    meta_page(id: ID! @whereKey): MetaPage @find
 }
 
-type MetaPromptSet {
+type MetaPage {
     id: ID!
     name: String!
     caption: String
@@ -31,47 +30,59 @@ enum MetaPromptType {
     CHECKBOX @enum(value: 4)
 }
 
-extend input UpdatePublicationInput {
-    meta_prompt_sets: UpdateMetaPromptSetInput
-        @rename(attribute: "metaPromptSets")
+extend type Mutation {
+    metaPageCreate(input: CreateMetaPageInput! @spread): MetaPage!
+        @create
+        @canModel(ability: "create", injectArgs: true)
+    metaPageUpdate(input: [UpdateMetaPageInput!]!): MetaPage!
+        @updateMany
+        @canQuery(ability: "update")
+    metaPageDelete(id: ID! @whereKey): MetaPage!
+        @delete
+        @canQuery(ability: "delete")
+    metaPromptCreate(input: CreateMetaPromptInput! @spread): MetaPrompt!
+        @create
+        @canModel(ability: "create", injectArgs: true)
+    metaPromptUpdate(input: [UpdateMetaPromptInput!]!): MetaPrompt!
+        @updateMany
+        @canQuery(ability: "update", model: "MetaPage")
+    metaPromptDelete(id: ID! @whereKey): MetaPrompt!
+        @delete
+        @canFind(
+            ability: "update"
+            model: "Publication"
+            find: "publication_id"
+        )
 }
 
-input UpdateMetaPromptSetInput {
-    create: [CreateQuestionSetInput!]
-    update: [UpdateQuestionSetInput!]
-    upsert: [UpsertQuestionSetInput!]
-    delete: [ID!]
-    connect: [ID!]
-    disconnect: [ID!]
-}
-
-input CreateQuestionSetInput {
+input CreateMetaPageInput {
     name: String!
+    caption: String
+    required: Boolean!
+    publication_id: ID!
 }
 
-input UpdateQuestionSetInput {
-    id: ID!
+input UpdateMetaPageInput {
+    id: ID! @eq
     name: String
-    prompts: UpdateMetaPromptInput @rename(attribute: "prompts")
-}
-
-input UpdateMetaPromptInput {
-    create: [CreateMetaPromptInput!]
-    update: [UpdateMetaPromptInput!]
-    delete: [ID!]
+    caption: String
+    required: Boolean
 }
 
 input CreateMetaPromptInput {
-    prompt: String!
-    required: Boolean!
+    meta_page_id: ID!
+    label: String!
     caption: String
-    order: Int
+    required: Boolean
+    options: JSON
+    type: MetaPromptType!
 }
 
 input UpdateMetaPromptInput {
     id: ID!
-    prompt: String
-    required: Boolean
+    label: String
     caption: String
-    order: Int
+    required: Boolean
+    options: JSON
+    type: MetaPromptType
 }

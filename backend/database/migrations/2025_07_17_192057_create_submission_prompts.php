@@ -13,7 +13,7 @@ return new class extends Migration
     public function up(): void
     {
 
-        Schema::create('meta_prompt_sets', function (Blueprint $table) {
+        Schema::create('meta_pages', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
             $table->string('name');
@@ -30,8 +30,8 @@ return new class extends Migration
             $table->timestamps();
             $table->text('label');
             $table->longText('caption')->nullable();
-            $table->foreignId('meta_prompt_set_id')
-                ->constrained('meta_prompt_sets');
+            $table->foreignId('meta_page_id')
+                ->constrained('meta_pages');
             $table->enum('type', array_column(MetaPromptType::cases(), 'value'));
             $table->json('options')->nullable();
             $table->boolean('required')->default(false);
@@ -42,8 +42,12 @@ return new class extends Migration
         Schema::create('meta_answers', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->foreignId('prompt_id')->constrained('meta_prompts');
-            $table->text('prompt');
+            $table->foreignId('meta_prompt_id')->constrained('meta_prompts');
+            $table->foreignId('meta_page_id')
+                ->constrained('meta_pages');
+            $table->foreignId('submission_id')
+                ->constrained('submissions');
+            $table->text('question');
             $table->json('answer');
             $table->foreignId('created_by')->constrained('users');
             $table->foreignId('updated_by')->constrained('users');
@@ -58,6 +62,6 @@ return new class extends Migration
     {
         Schema::dropIfExists('meta_answers');
         Schema::dropIfExists('meta_prompts');
-        Schema::dropIfExists('meta_prompt_sets');
+        Schema::dropIfExists('meta_pages');
     }
 };

@@ -86,6 +86,14 @@ const items = computed(() => [
     problemTooltip: t(labelKey("problems.no_criteria"))
   },
   {
+    icon: "ballot",
+    label: "Meta Pages",
+    url: {
+      name: "publication:setup:metaPages",
+      params
+    }
+  },
+  {
     icon: "toc",
     label: t(labelKey("content")),
     url: {

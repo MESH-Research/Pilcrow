@@ -293,8 +293,8 @@ export const UPDATE_SUBMISSION_REVIEW_COORDINATORS = gql`
   ${_RELATED_USER_FIELDS}
 `
 
-export const UPDATE_SUBMISSION_SUBMITERS = gql`
-  mutation UpdateSubmissionReviewCoordinators(
+export const UPDATE_SUBMISSION_SUBMITTERS = gql`
+  mutation UpdateSubmissionSubmitters(
     $id: ID!
     $connect: [ID!]
     $disconnect: [ID!]

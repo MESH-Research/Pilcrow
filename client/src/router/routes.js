@@ -87,6 +87,14 @@ const routes = [
               import("src/pages/Publication/Setup/ContentPage.vue")
           },
           {
+            name: "publication:setup:metaPages",
+            path: "prompts",
+            meta: {
+              name: "Meta Pages"
+            },
+            component: () => import("src/pages/Publication/Setup/MetaPages.vue")
+          },
+          {
             name: "publication:setup:criteria",
             meta: {
               name: "Style Criteria"

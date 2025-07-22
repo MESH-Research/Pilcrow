@@ -25,13 +25,13 @@ class MetaPrompt extends Model implements Sortable
 
     public function buildSortQuery()
     {
-        return static::query()->where('meta_prompt_set_id', $this->meta_prompt_set_id);
+        return static::query()->where('meta_page_id', $this->meta_page_id);
     }
 
 
-    public function promptSet(): BelongsTo
+    public function page(): BelongsTo
     {
-        return $this->belongsTo(MetaPromptSet::class, 'meta_prompt_set_id');
+        return $this->belongsTo(MetaPage::class, 'meta_page_id');
     }
 
     public function answers(): HasMany

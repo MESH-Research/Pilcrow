@@ -5,9 +5,9 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\MetaPromptSet>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\MetaPage>
  */
-class MetaPromptSetFactory extends Factory
+class MetaPageFactory extends Factory
 {
     /**
      * Define the model's default state.
