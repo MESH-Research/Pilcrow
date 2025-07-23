@@ -10,7 +10,7 @@
           <q-chip
             :color="
               $props.required
-                ? `negative`
+                ? `secondary`
                 : $props.darkMode
                   ? `grey-10`
                   : `grey-3`

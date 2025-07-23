@@ -19,7 +19,7 @@
               <q-spinner v-if="set.loading.value" />
             </q-item-section>
             <q-item-section side>
-              <q-chip v-if="set.required" class="bg-negative text-white"
+              <q-chip v-if="set.required" class="bg-secondary text-white"
                 >Required</q-chip
               >
             </q-item-section>
@@ -42,7 +42,7 @@
                 <q-item-section side>
                   <q-chip
                     v-if="question.required"
-                    class="bg-negative text-white"
+                    class="bg-secondary text-white"
                   >
                     Required
                   </q-chip>
