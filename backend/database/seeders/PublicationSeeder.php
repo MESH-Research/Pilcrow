@@ -44,7 +44,8 @@ class PublicationSeeder extends Seeder
                                 [
                                     'label' => 'What is your favorite color?',
                                     'type' => MetaPromptType::SELECT,
-                                    'options' => '{"options": ["Red", "Green", "Blue"]}'
+                                    'options' => '{"options": ["Red", "Green", "Blue"]}',
+                                    'required' => true
                                 ],
                                 [
                                     'label' => 'Describe your submission.',
