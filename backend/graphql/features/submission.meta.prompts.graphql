@@ -1,0 +1,85 @@
+extend type Publication {
+    meta_pages: [MetaPage!] @hasMany(relation: "metaPages", scope: "ordered")
+    meta_page(id: ID! @whereKey): MetaPage @find
+}
+
+type MetaPage {
+    id: ID!
+    name: String!
+    caption: String
+    required: Boolean!
+    meta_prompts: [MetaPrompt!]
+        @hasMany(relation: "metaPrompts", scope: "ordered")
+    order: Int!
+    publication: Publication @belongsTo
+}
+
+type MetaPrompt {
+    id: ID!
+    label: String!
+    caption: String
+    required: Boolean!
+    options: JSON
+    order: Int!
+    type: MetaPromptType!
+}
+
+enum MetaPromptType {
+    INPUT @enum(value: 1)
+    TEXTAREA @enum(value: 2)
+    SELECT @enum(value: 3)
+    CHECKBOX @enum(value: 4)
+}
+
+extend type Mutation {
+    metaPageCreate(input: CreateMetaPageInput! @spread): MetaPage!
+        @create
+        @canModel(ability: "create", injectArgs: true)
+    metaPageUpdate(input: [UpdateMetaPageInput!]!): [MetaPage!]!
+        @canFindMany(ability: "update", find: "id")
+        @updateMany
+    metaPageDelete(id: ID! @whereKey): MetaPage!
+        @delete
+        @canQuery(ability: "delete")
+    metaPromptUpdate(input: [UpdateMetaPromptInput!]!): [MetaPrompt!]!
+        @canFindMany(ability: "update", find: "id")
+        @updateMany
+    metaPromptCreate(input: CreateMetaPromptInput! @spread): MetaPrompt!
+        @create
+        @canModel(ability: "create", injectArgs: true)
+    metaPromptDelete(id: ID! @whereKey): MetaPrompt!
+        @delete
+        @canQuery(ability: "delete")
+}
+
+input CreateMetaPageInput {
+    name: String!
+    caption: String
+    required: Boolean!
+    publication_id: ID!
+}
+
+input UpdateMetaPageInput {
+    id: ID! @whereKey
+    name: String
+    caption: String
+    required: Boolean
+}
+
+input CreateMetaPromptInput {
+    meta_page_id: ID!
+    label: String!
+    caption: String
+    required: Boolean
+    options: JSON
+    type: MetaPromptType!
+}
+
+input UpdateMetaPromptInput {
+    id: ID!
+    label: String
+    caption: String
+    required: Boolean
+    options: JSON
+    type: MetaPromptType
+}

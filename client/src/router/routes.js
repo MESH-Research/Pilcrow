@@ -87,6 +87,14 @@ const routes = [
               import("src/pages/Publication/Setup/ContentPage.vue")
           },
           {
+            name: "publication:setup:metaPages",
+            path: "prompts",
+            meta: {
+              name: "Meta Pages"
+            },
+            component: () => import("src/pages/Publication/Setup/MetaPages.vue")
+          },
+          {
             name: "publication:setup:criteria",
             meta: {
               name: "Style Criteria"
@@ -160,6 +168,15 @@ const routes = [
         name: "submission:draft",
         path: "/submission/:id/draft",
         component: () => import("src/pages/SubmissionDraft.vue"),
+        props: true,
+        meta: {
+          requiresDraftAccess: true
+        }
+      },
+      {
+        name: "submission:metaPromptSet",
+        path: "/submission/:id/meta-prompt-set/:setId",
+        component: () => import("src/pages/SubmissionMetaPromptSet.vue"),
         props: true,
         meta: {
           requiresDraftAccess: true

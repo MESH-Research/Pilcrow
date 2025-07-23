@@ -10,6 +10,7 @@
 #import settings.graphql
 #import audit.graphql
 #import oauth.graphql
+#import features/*.graphql
 
 type Query {
     "Return information about the currently logged in user"

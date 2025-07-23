@@ -1,11 +1,16 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Database\Seeders;
 
+use App\Enums\MetaPromptType;
+use App\Models\MetaPage;
+use App\Models\MetaPrompt;
 use App\Models\Publication;
 use App\Models\StyleCriteria;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Database\Seeder;
 
 class PublicationSeeder extends Seeder
@@ -22,16 +27,68 @@ class PublicationSeeder extends Seeder
         Publication::factory()
             ->hasAttached(User::firstWhere('username', 'publicationAdministrator'), [], 'publicationAdmins')
             ->hasAttached(User::firstWhere('username', 'publicationEditor'), [], 'editors')
+            ->has(
+                MetaPage::factory()
+                    ->state([
+                        'name' => 'Basic Submission Information',
+                        'caption' => 'Please provide the basic information about your submission.',
+                    ])
+                    ->has(
+                        MetaPrompt::factory()
+                            ->count(4)
+                            ->state(new Sequence(
+                                [
+                                    'label' => 'What is your name?',
+                                    'type' => MetaPromptType::INPUT
+                                ],
+                                [
+                                    'label' => 'What is your favorite color?',
+                                    'type' => MetaPromptType::SELECT,
+                                    'options' => '{"options": ["Red", "Green", "Blue"]}'
+                                ],
+                                [
+                                    'label' => 'Describe your submission.',
+                                    'type' => MetaPromptType::TEXTAREA
+                                ],
+                                [
+                                    'label' => 'Are you sure you want to submit?',
+                                    'type' => MetaPromptType::CHECKBOX,
+                                ]
+                            ))
+                    ),
+            )
+            ->has(
+                MetaPage::factory()
+                    ->state([
+                        'name' => 'Additional Information',
+                        'caption' => 'Please provide any additional information that may be relevant to your submission.',
+                        'required' => true,
+                    ])
+                    ->has(
+                        MetaPrompt::factory()
+                            ->count(2)
+                            ->state(new Sequence(
+                                [
+                                    'label' => 'What is your age?',
+                                    'type' => MetaPromptType::INPUT
+                                ],
+                                [
+                                    'label' => 'What is your occupation?',
+                                    'type' => MetaPromptType::INPUT
+                                ]
+                            ))
+                    )
+            )
             ->create([
                 'id' => 1,
                 'name' => 'Pilcrow Test Publication 1',
                 'is_accepting_submissions' => true,
             ]);
         Publication::factory()
-        ->create([
-            'name' => 'Pilcrow Test Publication Reject Submissions',
-            'is_accepting_submissions' => false,
-        ]);
+            ->create([
+                'name' => 'Pilcrow Test Publication Reject Submissions',
+                'is_accepting_submissions' => false,
+            ]);
         Publication::factory()
             ->count(50)
             ->has(
