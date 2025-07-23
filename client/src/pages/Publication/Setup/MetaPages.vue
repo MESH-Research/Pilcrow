@@ -55,12 +55,12 @@
           </Draggable>
           <q-item>
             <q-item-section class="q-my-md">
-              <q-btn icon="add">Add Question</q-btn>
+              <q-btn color="primary" icon="add">Add Question</q-btn>
             </q-item-section>
           </q-item>
         </template>
       </q-list>
-      <q-btn icon="add" label="Add Question Set" />
+      <q-btn color="primary" icon="add" label="Add Question Set" />
     </div>
   </article>
 </template>
