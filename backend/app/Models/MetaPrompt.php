@@ -11,8 +11,6 @@ use Spatie\EloquentSortable\SortableTrait;
 
 class MetaPrompt extends Model implements Sortable
 {
-
-
     use SortableTrait;
     use HasFactory;
 
