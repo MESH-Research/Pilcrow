@@ -4,7 +4,8 @@
     <p>Customize blocks of text displayed to your publication's users.</p>
     <div v-if="loading">Loading...</div>
     <div v-else-if="result">
-      <q-list bordered separator class="q-mb-lg">
+      <q-btn color="primary" icon="add" label="Add Question Set" />
+      <q-list bordered separator class="q-mt-lg">
         <template v-for="set in metaPages" :key="set.id">
           <q-item :class="darkModeStatus ? `bg-blue-grey-10` : `bg-grey-3`">
             <q-item-section avatar>
@@ -54,13 +55,12 @@
             </template>
           </Draggable>
           <q-item>
-            <q-item-section class="q-my-md">
+            <q-item-section class="q-my-md" avatar>
               <q-btn color="primary" icon="add">Add Question</q-btn>
             </q-item-section>
           </q-item>
         </template>
       </q-list>
-      <q-btn color="primary" icon="add" label="Add Question Set" />
     </div>
   </article>
 </template>
