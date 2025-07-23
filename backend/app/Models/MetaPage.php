@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
 use Spatie\EloquentSortable\Sortable;
 use Spatie\EloquentSortable\SortableTrait;
 
@@ -29,6 +30,21 @@ class MetaPage extends Model implements Sortable
         return static::query()->where('publication_id', $this->publication_id);
     }
 
+    public function scopeCanUpdate(Builder $query): Builder
+    {
+        $user = Auth::user();
+        return $query->whereHas(
+            'publication',
+            fn(Builder $query) =>
+            $query->whereHas(
+                'users',
+                fn(Builder $query) =>
+                $query->where('user_id', $user->id)
+                    ->where('role_id', Role::PUBLICATION_ADMINISTRATOR_ROLE_ID)
+            )
+        );
+    }
+
     public function submission(): BelongsTo
     {
         return $this->belongsTo(Submission::class);
@@ -37,5 +53,10 @@ class MetaPage extends Model implements Sortable
     public function metaPrompts(): HasMany
     {
         return $this->hasMany(MetaPrompt::class, 'meta_page_id');
+    }
+
+    public function publication(): BelongsTo
+    {
+        return $this->belongsTo(Publication::class);
     }
 }

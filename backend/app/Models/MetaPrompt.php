@@ -29,7 +29,7 @@ class MetaPrompt extends Model implements Sortable
     }
 
 
-    public function page(): BelongsTo
+    public function metaPage(): BelongsTo
     {
         return $this->belongsTo(MetaPage::class, 'meta_page_id');
     }

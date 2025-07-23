@@ -39,4 +39,18 @@ class MetaPromptPolicy
 
         return false;
     }
+
+    public function delete(User $user, MetaPrompt $metaPrompt): bool
+    {
+        if ($user->hasRole(Role::APPLICATION_ADMINISTRATOR)) {
+            return true;
+        }
+
+        $publication = $metaPrompt->metaPage->publication;
+        if ($user->hasPublicationRole(Role::PUBLICATION_ADMINISTRATOR_ROLE_ID, $publication->id)) {
+            return true;
+        }
+
+        return false;
+    }
 }

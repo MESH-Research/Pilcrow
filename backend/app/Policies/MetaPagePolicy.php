@@ -37,4 +37,19 @@ class MetaPagePolicy
 
         return false;
     }
+
+    public function delete(User $user, MetaPage $metaPage)
+    {
+        // Check if the user has the role of Application Administrator
+        if ($user->hasRole(Role::APPLICATION_ADMINISTRATOR)) {
+            return true;
+        }
+
+        // Check if the user has a publication role that allows them to delete the meta page
+        if ($user->hasPublicationRole(Role::PUBLICATION_ADMINISTRATOR_ROLE_ID, $metaPage->publication_id)) {
+            return true;
+        }
+
+        return false;
+    }
 }
