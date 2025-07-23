@@ -59,6 +59,7 @@
               :done="submission.content !== null"
               :title="$t(`submissions.create.todo.content.title`)"
               :dark-mode="darkModeStatus"
+              :required="true"
               @preview-click="onGoToSubmissionPreviewClick"
               @content-click="onGoToSubmissionContentClick"
             >
