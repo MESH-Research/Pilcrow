@@ -67,7 +67,7 @@
             </submission-draft-todo-item>
             <div class="text-h3">Additional Information</div>
             <submission-draft-todo-item
-              v-for="prompt_set in submission.publication.meta_prompt_sets"
+              v-for="prompt_set in submission.publication.meta_pages"
               :key="prompt_set.id"
               :title="prompt_set.name"
               @content-click="onSubmissionMetaClick(prompt_set.id)"
@@ -143,7 +143,7 @@ function onGoToSubmissionContentClick() {
 
 function onSubmissionMetaClick(setId) {
   push({
-    name: "submission:metaPromptSet",
+    name: "submission:metaPages",
     params: { id: submission.value.id, setId }
   })
 }

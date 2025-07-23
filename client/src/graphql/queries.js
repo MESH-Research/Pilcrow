@@ -295,9 +295,9 @@ export const GET_SUBMISSIONS = gql`
   ${_RELATED_USER_FIELDS}
 `
 
-export const META_QUESTION_SETS_FRAGMENT = gql`
-  fragment MetaPromptSetsFragment on Publication {
-    meta_prompt_sets {
+export const META_PAGES_FRAGMENT = gql`
+  fragment MetaPagesFragment on Publication {
+    meta_pages {
       id
       name
       caption
@@ -348,7 +348,7 @@ export const GET_SUBMISSION = gql`
         created_at
       }
       publication {
-        ...MetaPromptSetsFragment
+        ...MetaPagesFragment
         id
         name
         style_criterias {
@@ -377,7 +377,7 @@ export const GET_SUBMISSION = gql`
     }
   }
   ${_RELATED_USER_FIELDS}
-  ${META_QUESTION_SETS_FRAGMENT}
+  ${META_PAGES_FRAGMENT}
 `
 
 export const GET_SUBMISSION_REVIEW = gql`
