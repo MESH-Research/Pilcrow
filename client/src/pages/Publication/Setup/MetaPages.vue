@@ -4,9 +4,9 @@
     <p>Customize blocks of text displayed to your publication's users.</p>
     <div v-if="loading">Loading...</div>
     <div v-else-if="result">
-      <q-list bordered separator>
+      <q-list bordered separator class="q-mb-lg">
         <template v-for="set in metaPages" :key="set.id">
-          <q-item class="bg-grey-3">
+          <q-item :class="darkModeStatus ? `bg-blue-grey-10` : `bg-grey-3`">
             <q-item-section avatar>
               <q-icon name="ballot" />
             </q-item-section>
@@ -19,7 +19,7 @@
               <q-spinner v-if="set.loading.value" />
             </q-item-section>
             <q-item-section side>
-              <q-chip v-if="set.required" class="bg-red text-white"
+              <q-chip v-if="set.required" class="bg-negative text-white"
                 >Required</q-chip
               >
             </q-item-section>
@@ -40,7 +40,10 @@
                   <div v-if="question.caption">{{ question.caption }}</div>
                 </q-item-section>
                 <q-item-section side>
-                  <q-chip v-if="question.required" class="bg-red text-white">
+                  <q-chip
+                    v-if="question.required"
+                    class="bg-negative text-white"
+                  >
                     Required
                   </q-chip>
                 </q-item-section>
@@ -51,7 +54,7 @@
             </template>
           </Draggable>
           <q-item>
-            <q-item-section>
+            <q-item-section class="q-my-md">
               <q-btn icon="add">Add Question</q-btn>
             </q-item-section>
           </q-item>
@@ -66,6 +69,10 @@
 import { computed, ref } from "vue"
 
 import Draggable from "vuedraggable"
+
+import { useDarkMode } from "src/use/guiElements"
+
+const { darkModeStatus } = useDarkMode()
 
 const props = defineProps({
   publication: {
