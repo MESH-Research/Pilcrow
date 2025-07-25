@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Database\Factories;
 
@@ -22,7 +23,7 @@ class MetaPromptFactory extends Factory
             'caption' => $this->faker->sentence(),
             'meta_page_id' => MetaPage::factory(),
             'label' => $this->faker->sentence(),
-            'type' => $this->faker->randomElement(array_column(MetaPromptType::cases(), 'value'))
+            'type' => $this->faker->randomElement(array_column(MetaPromptType::cases(), 'value')),
         ];
     }
 }

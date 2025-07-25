@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Models;
 
@@ -25,14 +26,22 @@ class MetaPage extends Model implements Sortable
         'sort_when_creating' => true,
     ];
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
     public function buildSortQuery(): Builder
     {
         return static::query()->where('publication_id', $this->publication_id);
     }
 
+    /**
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
     public function scopeCanUpdate(Builder $query): Builder
     {
         $user = Auth::user();
+
         return $query->whereHas(
             'publication',
             fn(Builder $query) =>
@@ -45,16 +54,25 @@ class MetaPage extends Model implements Sortable
         );
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function submission(): BelongsTo
     {
         return $this->belongsTo(Submission::class);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function metaPrompts(): HasMany
     {
         return $this->hasMany(MetaPrompt::class, 'meta_page_id');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function publication(): BelongsTo
     {
         return $this->belongsTo(Publication::class);

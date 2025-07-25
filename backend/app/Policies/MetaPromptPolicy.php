@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Policies;
 
@@ -9,6 +10,11 @@ use App\Models\User;
 
 class MetaPromptPolicy
 {
+    /**
+     * @param \App\Models\User $user
+     * @param [type] $args
+     * @return bool
+     */
     public function create(User $user, $args): bool
     {
         // Find the publication from the set.
@@ -17,7 +23,8 @@ class MetaPromptPolicy
             return true;
         }
 
-        $publication = Publication::whereHas('metaPages', fn($query) => $query->where('id', $args['meta_page_id']))->first();
+        $publication = Publication::whereHas('metaPages', fn($query) =>
+            $query->where('id', $args['meta_page_id']))->first();
         // Check if the user has a publication role that allows them to create a meta prompt
         if ($user->hasPublicationRole(Role::PUBLICATION_ADMINISTRATOR_ROLE_ID, $publication->id)) {
             return true;
@@ -26,6 +33,11 @@ class MetaPromptPolicy
         return false;
     }
 
+    /**
+     * @param \App\Models\User $user
+     * @param \App\Models\MetaPrompt $metaPrompt
+     * @return bool
+     */
     public function update(User $user, MetaPrompt $metaPrompt): bool
     {
         if ($user->hasRole(Role::APPLICATION_ADMINISTRATOR)) {
@@ -40,6 +52,11 @@ class MetaPromptPolicy
         return false;
     }
 
+    /**
+     * @param \App\Models\User $user
+     * @param \App\Models\MetaPrompt $metaPrompt
+     * @return bool
+     */
     public function delete(User $user, MetaPrompt $metaPrompt): bool
     {
         if ($user->hasRole(Role::APPLICATION_ADMINISTRATOR)) {

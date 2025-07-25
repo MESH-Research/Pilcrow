@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace App\Models;
@@ -111,6 +110,11 @@ class Publication extends BaseModel
         return $this->hasMany(Submission::class);
     }
 
+    /**
+     * Meta pages of prompts that belong to the publication
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function metaPages(): HasMany
     {
         return $this->hasMany(MetaPage::class, 'publication_id');

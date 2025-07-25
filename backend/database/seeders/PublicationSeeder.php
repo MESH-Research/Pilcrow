@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace Database\Seeders;
@@ -24,6 +23,8 @@ class PublicationSeeder extends Seeder
     {
         $this->callOnce(UserSeeder::class);
 
+        $meta_page_caption = 'Please provide any additional information that may be relevant to your submission.';
+
         Publication::factory()
             ->hasAttached(User::firstWhere('username', 'publicationAdministrator'), [], 'publicationAdmins')
             ->hasAttached(User::firstWhere('username', 'publicationEditor'), [], 'editors')
@@ -39,17 +40,17 @@ class PublicationSeeder extends Seeder
                             ->state(new Sequence(
                                 [
                                     'label' => 'What is your name?',
-                                    'type' => MetaPromptType::INPUT
+                                    'type' => MetaPromptType::INPUT,
                                 ],
                                 [
                                     'label' => 'What is your favorite color?',
                                     'type' => MetaPromptType::SELECT,
                                     'options' => '{"options": ["Red", "Green", "Blue"]}',
-                                    'required' => true
+                                    'required' => true,
                                 ],
                                 [
                                     'label' => 'Describe your submission.',
-                                    'type' => MetaPromptType::TEXTAREA
+                                    'type' => MetaPromptType::TEXTAREA,
                                 ],
                                 [
                                     'label' => 'Are you sure you want to submit?',
@@ -62,7 +63,7 @@ class PublicationSeeder extends Seeder
                 MetaPage::factory()
                     ->state([
                         'name' => 'Additional Information',
-                        'caption' => 'Please provide any additional information that may be relevant to your submission.',
+                        'caption' => $meta_page_caption,
                         'required' => true,
                     ])
                     ->has(
@@ -71,11 +72,11 @@ class PublicationSeeder extends Seeder
                             ->state(new Sequence(
                                 [
                                     'label' => 'What is your age?',
-                                    'type' => MetaPromptType::INPUT
+                                    'type' => MetaPromptType::INPUT,
                                 ],
                                 [
                                     'label' => 'What is your occupation?',
-                                    'type' => MetaPromptType::INPUT
+                                    'type' => MetaPromptType::INPUT,
                                 ]
                             ))
                     )

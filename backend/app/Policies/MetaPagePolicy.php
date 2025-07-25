@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Policies;
 
@@ -8,6 +9,11 @@ use App\Models\User;
 
 class MetaPagePolicy
 {
+    /**
+     * @param \App\Models\User $user
+     * @param \App\Models\MetaPage $metaPage
+     * @return bool
+     */
     public function update(User $user, MetaPage $metaPage): bool
     {
         // Check if the user has the role of Application Administrator
@@ -23,6 +29,11 @@ class MetaPagePolicy
         return false;
     }
 
+    /**
+     * @param \App\Models\User $user
+     * @param [type] $args
+     * @return bool
+     */
     public function create(User $user, array $args): bool
     {
         // Check if the user has the role of Application Administrator
@@ -38,7 +49,12 @@ class MetaPagePolicy
         return false;
     }
 
-    public function delete(User $user, MetaPage $metaPage)
+    /**
+     * @param \App\Models\User $user
+     * @param \App\Models\MetaPage $metaPage
+     * @return bool
+     */
+    public function delete(User $user, MetaPage $metaPage): bool
     {
         // Check if the user has the role of Application Administrator
         if ($user->hasRole(Role::APPLICATION_ADMINISTRATOR)) {

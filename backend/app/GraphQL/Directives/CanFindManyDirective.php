@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace App\GraphQL\Directives;
@@ -20,14 +19,16 @@ use Nuwave\Lighthouse\Support\Utils;
 
 class CanFindManyDirective extends BaseCanDirective
 {
+    /**
+     * @return string
+     */
     public static function definition(): string
     {
         $commonArguments = BaseCanDirective::commonArguments();
         $commonTypes = BaseCanDirective::commonTypes();
 
-        return
-            /** @lang GraphQL */
-            <<<GRAPHQL
+        /** @lang GraphQL */
+        return <<<GRAPHQL
 {$commonTypes}
 
 """
@@ -66,8 +67,23 @@ directive @canFind(
 GRAPHQL;
     }
 
-    protected function authorizeRequest(mixed $root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo, callable $resolver, callable $authorize): mixed
-    {
+    /**
+     * @param mixed $root
+     * @param array $args
+     * @param \Nuwave\Lighthouse\Support\Contracts\GraphQLContext $context
+     * @param \Nuwave\Lighthouse\Execution\ResolveInfo $resolveInfo
+     * @param callable $resolver
+     * @param callable $authorize
+     * @return mixed
+     */
+    protected function authorizeRequest(
+        mixed $root,
+        array $args,
+        GraphQLContext $context,
+        ResolveInfo $resolveInfo,
+        callable $resolver,
+        callable $authorize
+    ): mixed {
         foreach ($this->modelsToCheck($root, $args, $context, $resolveInfo) as $model) {
             $authorize($model);
         }
@@ -76,12 +92,18 @@ GRAPHQL;
     }
 
     /**
-     * @param  array<string, mixed>  $args
-     *
+     * @param mixed $root
+     * @param array<string, mixed>  $args
+     * @param \Nuwave\Lighthouse\Support\Contracts\GraphQLContext $context
+     * @param \Nuwave\Lighthouse\Execution\ResolveInfo $resolveInfo
      * @return iterable<\Illuminate\Database\Eloquent\Model|class-string<\Illuminate\Database\Eloquent\Model>>
      */
-    protected function modelsToCheck(mixed $root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): iterable
-    {
+    protected function modelsToCheck(
+        mixed $root,
+        array $args,
+        GraphQLContext $context,
+        ResolveInfo $resolveInfo
+    ): iterable {
         $find = $this->directiveArgValue('find');
         $findValue = Arr::pluck($args['input'], $find)
             ?? throw self::missingKeyToFindModel($find);
@@ -136,6 +158,10 @@ GRAPHQL;
         return $modelOrModels;
     }
 
+    /**
+     * @param string $find
+     * @return \GraphQL\Error\Error
+     */
     public static function missingKeyToFindModel(string $find): Error
     {
         return new Error("Got no key to find a model at the expected input path: {$find}.");

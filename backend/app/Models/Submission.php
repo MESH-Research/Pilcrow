@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace App\Models;
@@ -128,6 +127,8 @@ class Submission extends Model implements Auditable
 
     /**
      * Answers to the submission's metadata prompts.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function metaAnswers(): HasMany
     {

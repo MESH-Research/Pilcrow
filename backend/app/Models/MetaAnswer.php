@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Models;
 
@@ -12,16 +13,25 @@ class MetaAnswer extends Model
 
     public $table = 'meta_answers';
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function metaPrompt(): BelongsTo
     {
         return $this->belongsTo(MetaPrompt::class, 'meta_prompt_id');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function submission(): BelongsTo
     {
         return $this->belongsTo(Submission::class, 'submission_id');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
