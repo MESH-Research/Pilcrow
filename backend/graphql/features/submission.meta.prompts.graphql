@@ -11,6 +11,7 @@ type MetaPage {
     meta_prompts: [MetaPrompt!]
         @hasMany(relation: "metaPrompts", scope: "ordered")
     order: Int!
+    publication: Publication @belongsTo
 }
 
 type MetaPrompt {
@@ -34,25 +35,21 @@ extend type Mutation {
     metaPageCreate(input: CreateMetaPageInput! @spread): MetaPage!
         @create
         @canModel(ability: "create", injectArgs: true)
-    metaPageUpdate(input: [UpdateMetaPageInput!]!): MetaPage!
+    metaPageUpdate(input: [UpdateMetaPageInput!]!): [MetaPage!]!
+        @canFindMany(ability: "update", find: "id")
         @updateMany
-        @canQuery(ability: "update")
     metaPageDelete(id: ID! @whereKey): MetaPage!
         @delete
         @canQuery(ability: "delete")
+    metaPromptUpdate(input: [UpdateMetaPromptInput!]!): [MetaPrompt!]!
+        @canFindMany(ability: "update", find: "id")
+        @updateMany
     metaPromptCreate(input: CreateMetaPromptInput! @spread): MetaPrompt!
         @create
         @canModel(ability: "create", injectArgs: true)
-    metaPromptUpdate(input: [UpdateMetaPromptInput!]!): MetaPrompt!
-        @updateMany
-        @canQuery(ability: "update", model: "MetaPage")
     metaPromptDelete(id: ID! @whereKey): MetaPrompt!
         @delete
-        @canFind(
-            ability: "update"
-            model: "Publication"
-            find: "publication_id"
-        )
+        @canQuery(ability: "delete")
 }
 
 input CreateMetaPageInput {
@@ -63,7 +60,7 @@ input CreateMetaPageInput {
 }
 
 input UpdateMetaPageInput {
-    id: ID! @eq
+    id: ID! @whereKey
     name: String
     caption: String
     required: Boolean
