@@ -332,7 +332,7 @@ class MetaPageMutationTest extends ApiTestCase
 
     public function testOtherUsersCannotUpdateMetaPrompts()
     {
-        /** @var User */
+        /** @var User $user */
         $user = User::factory()->create();
         $this->actingAs($user);
 
@@ -415,7 +415,7 @@ class MetaPageMutationTest extends ApiTestCase
 
     public function testOtherCannotDeleteMetaPrompts()
     {
-        /** @var User */
+        /** @var User $user */
         $user = User::factory()->create();
         $this->actingAs($user);
 
@@ -482,7 +482,7 @@ class MetaPageMutationTest extends ApiTestCase
 
     public function testOthersCannotDeleteMetaPromptPage()
     {
-        /** @var User */
+        /** @var User $user */
         $user = User::factory()->create();
         $this->actingAs($user);
 

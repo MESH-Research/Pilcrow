@@ -58,6 +58,8 @@
             <submission-draft-todo-item
               :done="submission.content !== null"
               :title="$t(`submissions.create.todo.content.title`)"
+              :dark-mode="darkModeStatus"
+              :required="true"
               @preview-click="onGoToSubmissionPreviewClick"
               @content-click="onGoToSubmissionContentClick"
             >
@@ -67,15 +69,14 @@
             </submission-draft-todo-item>
             <div class="text-h3">Additional Information</div>
             <submission-draft-todo-item
-              v-for="prompt_set in submission.publication.meta_prompt_sets"
+              v-for="prompt_set in submission.publication.meta_pages"
               :key="prompt_set.id"
               :title="prompt_set.name"
+              :dark-mode="darkModeStatus"
+              :required="prompt_set.required"
               @content-click="onSubmissionMetaClick(prompt_set.id)"
             >
               <p class="q-ma-none">
-                <q-chip>
-                  {{ prompt_set.required ? "Required" : "Optional" }}
-                </q-chip>
                 {{ prompt_set.caption }}
               </p>
             </submission-draft-todo-item>
@@ -117,6 +118,9 @@ import { useQuery } from "@vue/apollo-composable"
 import { useRouter } from "vue-router"
 import { useVuelidate } from "@vuelidate/core"
 import { required } from "@vuelidate/validators"
+import { useDarkMode } from "src/use/guiElements"
+
+const { darkModeStatus } = useDarkMode()
 
 const props = defineProps({
   id: {
@@ -143,7 +147,7 @@ function onGoToSubmissionContentClick() {
 
 function onSubmissionMetaClick(setId) {
   push({
-    name: "submission:metaPromptSet",
+    name: "submission:metaPages",
     params: { id: submission.value.id, setId }
   })
 }

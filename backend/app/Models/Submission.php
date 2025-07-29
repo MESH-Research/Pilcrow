@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Models;
@@ -48,6 +49,12 @@ class Submission extends Model implements Auditable
         });
     }
 
+    /**
+     * Return the builder instance to be used for the model.
+     *
+     * @param \Illuminate\Database\Query\Builder $query
+     * @return \App\Models\Builders\SubmissionBuilder
+     */
     public function newEloquentBuilder($query): SubmissionBuilder
     {
         return new SubmissionBuilder($query);
@@ -133,11 +140,21 @@ class Submission extends Model implements Auditable
             ->withPivot(['id', 'user_id', 'role_id', 'submission_id']);
     }
 
+    /**
+     * The *current* meta pages that the publication has configured.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
+     */
     public function metaPages(): HasManyThrough
     {
         return $this->hasManyThrough(MetaPage::class, Publication::class, 'id', 'publication_id', 'publication_id', 'id');
     }
 
+    /**
+     * Meta responses that belong to the submission.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function metaResponses(): HasMany
     {
         return $this->hasMany(SubmissionMetaResponse::class, 'submission_id');
