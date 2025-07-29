@@ -30,7 +30,7 @@ class SubmissionMetaResponsesMutationTest extends ApiTestCase
 
         $this->user = User::factory()->create();
         $this->publication = Publication::factory()->create();
-        $this->userSubmission =   Submission::factory()
+        $this->userSubmission = Submission::factory()
             ->for($this->publication)
             ->hasAttached($this->user, [], 'submitters')
             ->state(['status' => Submission::DRAFT])
@@ -40,7 +40,7 @@ class SubmissionMetaResponsesMutationTest extends ApiTestCase
     #[Test]
     public function canSubmitMetaResponses()
     {
-        /** @var User */
+        /** @var User $user */
         $metaPage = MetaPage::factory()
             ->for($this->publication)
             ->has(

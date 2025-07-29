@@ -27,11 +27,21 @@ class SubmissionMetaResponse extends Model
         'prompts' => 'array',
     ];
 
+    /**
+     * Get the meta page associated with this response.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function metaPage(): BelongsTo
     {
         return $this->belongsTo(MetaPage::class, 'meta_page_id');
     }
 
+    /**
+     * Get the submission associated with this response.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function submission(): BelongsTo
     {
         return $this->belongsTo(Submission::class, 'submission_id');

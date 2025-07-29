@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace App\Models;
@@ -147,7 +146,15 @@ class Submission extends Model implements Auditable
      */
     public function metaPages(): HasManyThrough
     {
-        return $this->hasManyThrough(MetaPage::class, Publication::class, 'id', 'publication_id', 'publication_id', 'id');
+        return $this
+            ->hasManyThrough(
+                MetaPage::class,
+                Publication::class,
+                'id',
+                'publication_id',
+                'publication_id',
+                'id'
+            );
     }
 
     /**

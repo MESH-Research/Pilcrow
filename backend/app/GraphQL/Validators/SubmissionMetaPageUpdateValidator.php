@@ -22,12 +22,19 @@ final class SubmissionMetaPageUpdateValidator extends Validator
         return [
             'submission_id' => ['required', Rule::exists('submissions', 'id')],
             'meta_page_id' => ['required', Rule::exists('meta_pages', 'id')],
-            'responses' => ['required', 'array', 'min:1', fn($attribute, $value, $fail) => $this->validateResponses($attribute, $value, $fail)],
-            'responses.*' => [fn($attribute, $value, $fail) => $this->validateResponse($attribute, $value, $fail)],
+            'responses' => ['required', 'array', 'min:1', fn($_, $value, $fail) => $this->checkPage($value, $fail)],
+            'responses.*' => [fn($_, $value, $fail) => $this->checkResponse($value, $fail)],
         ];
     }
 
-    public function validateResponses(string $attribute, mixed $value, \Closure $fail): void
+    /**
+     * Validate the responses against the meta page prompts.
+     *
+     * @param mixed $value The value of the responses being validated
+     * @param \Closure $fail The closure to call if validation fails
+     * @return void
+     */
+    public function checkPage(mixed $value, \Closure $fail): void
     {
         $responses = collect($value);
 
@@ -58,14 +65,26 @@ final class SubmissionMetaPageUpdateValidator extends Validator
             return;
         }
         // Ensure that each prompt in the page has a response.
-        if (!$this->metaPage->metaPrompts->every(fn($prompt) => $responses->firstWhere('meta_prompt_id', $prompt->id))) {
+        $complete = $this->metaPage
+            ->metaPrompts->every(
+                fn($prompt) => $responses->firstWhere('meta_prompt_id', $prompt->id)
+            );
+
+        if (!$complete) {
             $fail('Must provide a response for each prompt in the selected meta page.');
 
             return;
         }
     }
 
-    public function validateResponse(string $attribute, mixed $value, \Closure $fail): void
+    /**
+     * Validate a single response against its corresponding meta prompt.
+     *
+     * @param mixed $value The value of the response being validated
+     * @param \Closure $fail The closure to call if validation fails
+     * @return void
+     */
+    public function checkResponse(mixed $value, \Closure $fail): void
     {
         // Fetch the meta prompt from our stored meta page.
         $prompt = $this->metaPage->metaPrompts->firstWhere('id', $value['meta_prompt_id']);

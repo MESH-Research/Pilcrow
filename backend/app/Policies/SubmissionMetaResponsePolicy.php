@@ -8,6 +8,13 @@ use App\Models\User;
 
 class SubmissionMetaResponsePolicy
 {
+    /**
+     * Determine if the user can update the submission meta response.
+     *
+     * @param \App\Models\User|null $user The user attempting to update the response.
+     * @param array $input The input data containing the submission ID.
+     * @return bool True if the user can update the response, false otherwise.
+     */
     public function update(User $user, array $input): bool
     {
         $submissionId = $input['input']['submission_id'];
