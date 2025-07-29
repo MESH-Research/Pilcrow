@@ -1,0 +1,29 @@
+extend type Submission {
+    meta_pages: [MetaPage!] @hasMany(relation: "metaPages", scope: "ordered")
+    meta_responses: [SubmissionMetaResponse!]!
+}
+
+type SubmissionMetaResponse {
+    id: ID!
+    name: String!
+    prompts: JSON
+    responses: [SubmissionMetaPromptResponse!]!
+    meta_page: MetaPage @belongsTo(relation: "metaPage")
+}
+
+extend type Mutation {
+    submissionMetaPageUpdate(
+        input: SubmissionMetaPageUpdate
+    ): SubmissionMetaResponse @canModel(ability: "update", injectArgs: true)
+}
+
+input SubmissionMetaPageUpdate @validator {
+    submission_id: ID!
+    meta_page_id: ID!
+    responses: [SubmissionMetaPromptResponse!]!
+}
+
+input SubmissionMetaPromptResponse {
+    meta_prompt_id: ID!
+    response: String
+}

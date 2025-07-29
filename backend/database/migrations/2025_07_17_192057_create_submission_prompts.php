@@ -39,19 +39,16 @@ return new class extends Migration
             $table->softDeletes();
         });
 
-        Schema::create('meta_answers', function (Blueprint $table) {
+        Schema::create('submission_meta_responses', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->foreignId('meta_prompt_id')->constrained('meta_prompts');
-            $table->foreignId('meta_page_id')
-                ->constrained('meta_pages');
-            $table->foreignId('submission_id')
-                ->constrained('submissions');
-            $table->text('question');
-            $table->json('answer');
+            $table->foreignId('meta_page_id')->constrained('meta_pages');
+            $table->foreignId('submission_id')->constrained('submissions');
+            $table->index(['meta_page_id', 'submission_id']);
+            $table->json('prompts');
+            $table->json('responses');
             $table->foreignId('created_by')->constrained('users');
             $table->foreignId('updated_by')->constrained('users');
-            $table->string('type');
         });
     }
 
@@ -60,7 +57,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('meta_answers');
+        Schema::dropIfExists('submission_meta_responses');
         Schema::dropIfExists('meta_prompts');
         Schema::dropIfExists('meta_pages');
     }

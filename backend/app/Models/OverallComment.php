@@ -1,9 +1,10 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Models;
 
-use App\Http\Traits\CreatedUpdatedBy;
+use App\Models\Concerns\HasUserAuditFields;
 use App\Models\Traits\ReadStatus;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -14,7 +15,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class OverallComment extends BaseModel
 {
     use HasFactory;
-    use CreatedUpdatedBy;
+    use HasUserAuditFields;
     use SoftDeletes;
     use ReadStatus;
 
@@ -81,7 +82,7 @@ class OverallComment extends BaseModel
     protected function username(): Attribute
     {
         return Attribute::make(
-            get: fn (int $value) => $this->trashed() ? '' : $value,
+            get: fn(int $value) => $this->trashed() ? '' : $value,
         );
     }
 
@@ -91,7 +92,7 @@ class OverallComment extends BaseModel
     protected function content(): Attribute
     {
         return Attribute::make(
-            get: fn (string $value) => $this->trashed() ? 'This comment has been deleted' : $value,
+            get: fn(string $value) => $this->trashed() ? 'This comment has been deleted' : $value,
         );
     }
 }
