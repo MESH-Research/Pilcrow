@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace App\GraphQL\Validators;
@@ -11,7 +10,6 @@ use Nuwave\Lighthouse\Validation\Validator;
 
 final class SubmissionMetaPageUpdateValidator extends Validator
 {
-
     protected MetaPage $metaPage;
 
     /**
@@ -25,7 +23,7 @@ final class SubmissionMetaPageUpdateValidator extends Validator
             'submission_id' => ['required', Rule::exists('submissions', 'id')],
             'meta_page_id' => ['required', Rule::exists('meta_pages', 'id')],
             'responses' => ['required', 'array', 'min:1', fn($attribute, $value, $fail) => $this->validateResponses($attribute, $value, $fail)],
-            'responses.*' => [fn($attribute, $value, $fail) => $this->validateResponse($attribute, $value, $fail)]
+            'responses.*' => [fn($attribute, $value, $fail) => $this->validateResponse($attribute, $value, $fail)],
         ];
     }
 
@@ -38,7 +36,8 @@ final class SubmissionMetaPageUpdateValidator extends Validator
 
         // Validate the the meta page exists.
         if (!$this->metaPage) {
-            $fail("The selected meta page does not exist.");
+            $fail('The selected meta page does not exist.');
+
             return;
         }
 
@@ -47,18 +46,21 @@ final class SubmissionMetaPageUpdateValidator extends Validator
 
         // Check if the responses contain duplicate meta prompt IDs.
         if (count(array_unique($promptIds)) !== count($promptIds)) {
-            $fail("Duplicate meta prompt IDs in responses are not allowed.");
+            $fail('Duplicate meta prompt IDs in responses are not allowed.');
+
             return;
         }
 
         // Ensure all responses correspond to valid meta prompts of the selected meta page.
         if (!$responses->every(fn($response) => in_array($response['meta_prompt_id'], $promptIds))) {
-            $fail("All responses must correspond to valid meta prompts of the selected meta page.");
+            $fail('All responses must correspond to valid meta prompts of the selected meta page.');
+
             return;
         }
         // Ensure that each prompt in the page has a response.
         if (!$this->metaPage->metaPrompts->every(fn($prompt) => $responses->firstWhere('meta_prompt_id', $prompt->id))) {
-            $fail("Must provide a response for each prompt in the selected meta page.");
+            $fail('Must provide a response for each prompt in the selected meta page.');
+
             return;
         }
     }
@@ -73,6 +75,7 @@ final class SubmissionMetaPageUpdateValidator extends Validator
             $options = $prompt->options['options'] ?? [];
             if (!in_array($value['response'], $options)) {
                 $fail("The response '{$value['response']}' is not a valid option for the selected meta prompt.");
+
                 return;
             }
         }
@@ -80,6 +83,7 @@ final class SubmissionMetaPageUpdateValidator extends Validator
         // If the prompt is required, ensure a response is provided.
         if ($prompt->required && empty($value['response'])) {
             $fail("The response for meta prompt ID {$value['meta_prompt_id']} is required but was not provided.");
+
             return;
         }
     }

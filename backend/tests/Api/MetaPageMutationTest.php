@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Tests\Api;
 
@@ -17,6 +18,7 @@ class MetaPageMutationTest extends ApiTestCase
     use RefreshDatabase;
 
     // Your test methods go here
+
     public function testCanCreateMetaPage()
     {
         $user = $this->bePubAdmin();
@@ -37,7 +39,7 @@ class MetaPageMutationTest extends ApiTestCase
                     'publication_id' => $publication->id,
                     'name' => 'Default Meta Page',
                     'required' => false,
-                ]
+                ],
             ]
         );
 
@@ -73,10 +75,9 @@ class MetaPageMutationTest extends ApiTestCase
                     'publication_id' => $publication->id,
                     'name' => 'Unauthorized Meta Page',
                     'required' => false,
-                ]
+                ],
             ]
         );
-
 
         $response->assertJson(
             fn(AssertableJson $json) =>
@@ -112,8 +113,8 @@ class MetaPageMutationTest extends ApiTestCase
                     'meta_page_id' => $metaPage->id,
                     'label' => 'What is your favorite color?',
                     'required' => true,
-                    'type' => 'INPUT'
-                ]
+                    'type' => 'INPUT',
+                ],
             ]
         );
 
@@ -159,8 +160,8 @@ class MetaPageMutationTest extends ApiTestCase
                     'meta_page_id' => $metaPage->id,
                     'label' => 'What is your favorite color?',
                     'required' => true,
-                    'type' => 'INPUT'
-                ]
+                    'type' => 'INPUT',
+                ],
             ]
         );
 
@@ -211,8 +212,8 @@ class MetaPageMutationTest extends ApiTestCase
                     [
                         'id' => $metaPage[1]->id,
                         'name' => 'Another Updated Meta Page Name',
-                    ]
-                ]
+                    ],
+                ],
             ]
         );
         $response->assertJson(
@@ -264,8 +265,8 @@ class MetaPageMutationTest extends ApiTestCase
                     [
                         'id' => $metaPage->id,
                         'name' => 'Updated Meta Page Name',
-                    ]
-                ]
+                    ],
+                ],
             ]
         );
         $response->assertJson(
@@ -315,8 +316,8 @@ class MetaPageMutationTest extends ApiTestCase
                     [
                         'id' => $metaPage->metaPrompts[1]->id,
                         'label' => 'Another Updated Prompt 2',
-                    ]
-                ]
+                    ],
+                ],
             ]
         );
 
@@ -355,8 +356,8 @@ class MetaPageMutationTest extends ApiTestCase
                     [
                         'id' => $publication->metaPages[0]->metaPrompts[0]->id,
                         'label' => 'Unauthorized Update',
-                    ]
-                ]
+                    ],
+                ],
             ]
         );
 

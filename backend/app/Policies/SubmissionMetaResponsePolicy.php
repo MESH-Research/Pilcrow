@@ -1,8 +1,8 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Policies;
 
-use App\Models\Role;
 use App\Models\Submission;
 use App\Models\User;
 

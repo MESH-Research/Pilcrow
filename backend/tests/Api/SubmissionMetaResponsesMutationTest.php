@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Tests\Api;
 
@@ -6,7 +7,6 @@ use App\Enums\MetaPromptType;
 use App\Models\MetaPage;
 use App\Models\MetaPrompt;
 use App\Models\Publication;
-use App\Models\Role;
 use App\Models\Submission;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Sequence;
@@ -54,10 +54,8 @@ class SubmissionMetaResponsesMutationTest extends ApiTestCase
                     ->count(2)
             )
             ->create([
-                'name' => "Test Meta Page"
+                'name' => 'Test Meta Page',
             ]);
-
-
 
         $this->actingAs($this->user);
 
@@ -104,15 +102,15 @@ class SubmissionMetaResponsesMutationTest extends ApiTestCase
                 'responses' => [
                     ['meta_prompt_id' => '2', 'response' => 'Input the second'],
                 ],
-                'errorFields' => ['input.responses']
+                'errorFields' => ['input.responses'],
             ],
             'empty response when required' => [
                 'responses' => [
                     ['meta_prompt_id' => '1', 'response' => ''],
                     ['meta_prompt_id' => '2', 'response' => 'Another test answer'],
                 ],
-                'errorFields' => ['input.responses.0']
-            ]
+                'errorFields' => ['input.responses.0'],
+            ],
         ];
     }
 
@@ -133,7 +131,7 @@ class SubmissionMetaResponsesMutationTest extends ApiTestCase
                     ->count(2)
             )
             ->create([
-                'name' => "Test Meta Page"
+                'name' => 'Test Meta Page',
             ]);
         $this->actingAs($this->user);
         foreach ($responses as &$response) {
@@ -187,7 +185,7 @@ class SubmissionMetaResponsesMutationTest extends ApiTestCase
                     ->count(1)
             )
             ->create([
-                'name' => "Test Meta Page"
+                'name' => 'Test Meta Page',
             ]);
         $this->actingAs($this->user);
 
@@ -237,7 +235,7 @@ class SubmissionMetaResponsesMutationTest extends ApiTestCase
                     ->count(2)
             )
             ->create([
-                'name' => "Test Meta Page"
+                'name' => 'Test Meta Page',
             ]);
 
         /** @var User $anotherUser */
@@ -292,12 +290,11 @@ class SubmissionMetaResponsesMutationTest extends ApiTestCase
                     ->count(2)
             )
             ->create([
-                'name' => "Test Meta Page"
+                'name' => 'Test Meta Page',
             ]);
 
         $this->userSubmission->status = Submission::INITIALLY_SUBMITTED;
         $this->userSubmission->save();
-
 
         $response = $this->graphQL(
             /** @lang GraphQL */

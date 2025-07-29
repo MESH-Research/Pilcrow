@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Models;
 
@@ -33,6 +34,7 @@ class MetaPage extends Model implements Sortable
     public function scopeCanUpdate(Builder $query): Builder
     {
         $user = Auth::user();
+
         return $query->whereHas(
             'publication',
             fn(Builder $query) =>

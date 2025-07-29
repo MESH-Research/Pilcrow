@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace Database\Seeders;
@@ -39,16 +38,16 @@ class PublicationSeeder extends Seeder
                             ->state(new Sequence(
                                 [
                                     'label' => 'What is your name?',
-                                    'type' => MetaPromptType::INPUT
+                                    'type' => MetaPromptType::INPUT,
                                 ],
                                 [
                                     'label' => 'What is your favorite color?',
                                     'type' => MetaPromptType::SELECT,
-                                    'options' => '{"options": ["Red", "Green", "Blue"]}'
+                                    'options' => '{"options": ["Red", "Green", "Blue"]}',
                                 ],
                                 [
                                     'label' => 'Describe your submission.',
-                                    'type' => MetaPromptType::TEXTAREA
+                                    'type' => MetaPromptType::TEXTAREA,
                                 ],
                                 [
                                     'label' => 'Are you sure you want to submit?',
@@ -70,11 +69,11 @@ class PublicationSeeder extends Seeder
                             ->state(new Sequence(
                                 [
                                     'label' => 'What is your age?',
-                                    'type' => MetaPromptType::INPUT
+                                    'type' => MetaPromptType::INPUT,
                                 ],
                                 [
                                     'label' => 'What is your occupation?',
-                                    'type' => MetaPromptType::INPUT
+                                    'type' => MetaPromptType::INPUT,
                                 ]
                             ))
                     )

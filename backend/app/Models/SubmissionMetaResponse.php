@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Models;
 
@@ -25,7 +26,6 @@ class SubmissionMetaResponse extends Model
         'responses' => 'array',
         'prompts' => 'array',
     ];
-
 
     public function metaPage(): BelongsTo
     {

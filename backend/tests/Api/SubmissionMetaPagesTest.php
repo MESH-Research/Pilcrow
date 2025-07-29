@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Tests\Api;
 
@@ -13,7 +14,7 @@ class SubmissionMetaPagesTest extends ApiTestCase
         Submission::factory()
             ->has(User::factory(), 'submitters')
             ->create([
-                'status' => Submission::DRAFT
+                'status' => Submission::DRAFT,
             ]);
     }
 }

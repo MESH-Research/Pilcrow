@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace App\GraphQL\Mutations;
@@ -9,7 +8,7 @@ use App\Models\SubmissionMetaResponse;
 
 final readonly class SubmissionMetaPageUpdate
 {
-    /** @param  array{}  $args */
+    /** @param  array{}  $_ */
     public function __invoke(null $_, array $args)
     {
 
@@ -19,7 +18,7 @@ final readonly class SubmissionMetaPageUpdate
         ])->first();
 
         if (!$response) {
-            $response = new SubmissionMetaResponse;
+            $response = new SubmissionMetaResponse();
             $response->meta_page_id = $args['input']['meta_page_id'];
             $response->submission_id = $args['input']['submission_id'];
         }
