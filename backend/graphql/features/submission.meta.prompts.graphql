@@ -82,4 +82,5 @@ input UpdateMetaPromptInput {
     required: Boolean
     options: JSON
     type: MetaPromptType
+    order: Int
 }

@@ -38,6 +38,7 @@
                   <q-item-label>
                     {{ question.label }}
                   </q-item-label>
+
                   <div v-if="question.caption">{{ question.caption }}</div>
                 </q-item-section>
                 <q-item-section side>
@@ -85,6 +86,8 @@ const { result, loading } = useQuery(GET_PUBLICATION_PROMPTS, {
   id: props.publication.id
 })
 
+const { mutate: updateMetaPrompts } = useMutation(META_PROMPT_UPDATE)
+
 const metaPages = computed(() => {
   return (
     result.value?.publication.meta_pages?.map((set) => {
@@ -93,11 +96,21 @@ const metaPages = computed(() => {
         ...set,
         loading,
         questions: computed({
-          get: () => set.meta_prompts,
+          get: () => set.meta_prompts.toSorted((a, b) => a.order - b.order),
           set: (newQuestions) => {
-            const order = newQuestions.map((q) => q.id)
+            let index = 0
+            const order = newQuestions.map((p) => ({
+              id: p.id,
+              order: index++
+            }))
+
             loading.value = true
-            console.log("Setting new questions for set: ", set.id, order)
+            updateMetaPrompts({ input: order })
+              .catch((error) => {
+                console.error("Error updating meta prompts:", error)
+                //TODO: show error to the user
+              })
+              .finally(() => (loading.value = false))
           }
         })
       }
@@ -122,7 +135,7 @@ function questionIcon(type) {
 </script>
 
 <script>
-import { useQuery } from "@vue/apollo-composable"
+import { useMutation, useQuery } from "@vue/apollo-composable"
 import gql from "graphql-tag"
 
 const GET_PUBLICATION_PROMPTS = gql`
@@ -137,11 +150,26 @@ const GET_PUBLICATION_PROMPTS = gql`
           id
           label
           type
+          order
           options
           required
           caption
         }
       }
+    }
+  }
+`
+
+const META_PROMPT_UPDATE = gql`
+  mutation MetaPromptUpdate($input: [UpdateMetaPromptInput!]!) {
+    metaPromptUpdate(input: $input) {
+      id
+      label
+      order
+      required
+      type
+      options
+      caption
     }
   }
 `

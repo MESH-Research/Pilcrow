@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Models;
@@ -67,7 +68,7 @@ class MetaPage extends Model implements Sortable
      */
     public function metaPrompts(): HasMany
     {
-        return $this->hasMany(MetaPrompt::class, 'meta_page_id');
+        return $this->hasMany(MetaPrompt::class, 'meta_page_id')->ordered();
     }
 
     /**
