@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Policies;
 
 use App\Models\MetaPage;
+use App\Models\Publication;
 use App\Models\Role;
 use App\Models\User;
 
@@ -22,7 +23,11 @@ class MetaPagePolicy
         }
 
         // Check if the user has a publication role that allows them to update the meta page
-        if ($user->hasPublicationRole(Role::PUBLICATION_ADMINISTRATOR_ROLE_ID, $metaPage->publication_id)) {
+        $publication = Publication::whereMetaPage($metaPage->id)
+            ->whereAdmin($user->id)
+            ->exists();
+
+        if ($publication) {
             return true;
         }
 
@@ -42,7 +47,11 @@ class MetaPagePolicy
         }
 
         // Check if the user has a publication role that allows them to create a meta page
-        if ($user->hasPublicationRole(Role::PUBLICATION_ADMINISTRATOR_ROLE_ID, $args['publication_id'] ?? null)) {
+        $publication = Publication::where('id', $args['publication_id'])
+            ->whereAdmin($user->id)
+            ->exists();
+
+        if ($publication) {
             return true;
         }
 
@@ -62,7 +71,11 @@ class MetaPagePolicy
         }
 
         // Check if the user has a publication role that allows them to delete the meta page
-        if ($user->hasPublicationRole(Role::PUBLICATION_ADMINISTRATOR_ROLE_ID, $metaPage->publication_id)) {
+        $publication = Publication::whereMetaPage($metaPage->id)
+            ->whereAdmin($user->id)
+            ->exists();
+
+        if ($publication) {
             return true;
         }
 

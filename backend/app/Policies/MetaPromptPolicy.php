@@ -23,10 +23,12 @@ class MetaPromptPolicy
             return true;
         }
 
-        $publication = Publication::whereHas('metaPages', fn($query) =>
-            $query->where('id', $args['meta_page_id']))->first();
         // Check if the user has a publication role that allows them to create a meta prompt
-        if ($user->hasPublicationRole(Role::PUBLICATION_ADMINISTRATOR_ROLE_ID, $publication->id)) {
+        $publication = Publication::whereMetaPage($args['meta_page_id'])
+            ->whereAdmin($user->id)
+            ->exists();
+
+        if ($publication) {
             return true;
         }
 
@@ -44,8 +46,11 @@ class MetaPromptPolicy
             return true;
         }
 
-        $publication = $metaPrompt->metaPage->publication;
-        if ($user->hasPublicationRole(Role::PUBLICATION_ADMINISTRATOR_ROLE_ID, $publication->id)) {
+        $publication = Publication::whereMetaPage($metaPrompt->meta_page_id)
+            ->whereAdmin($user->id)
+            ->exists();
+
+        if ($publication) {
             return true;
         }
 
@@ -63,8 +68,11 @@ class MetaPromptPolicy
             return true;
         }
 
-        $publication = $metaPrompt->metaPage->publication;
-        if ($user->hasPublicationRole(Role::PUBLICATION_ADMINISTRATOR_ROLE_ID, $publication->id)) {
+        $publication = Publication::whereMetaPage($metaPrompt->meta_page_id)
+            ->whereAdmin($user->id)
+            ->exists();
+
+        if ($publication) {
             return true;
         }
 
