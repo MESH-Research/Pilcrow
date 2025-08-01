@@ -154,10 +154,8 @@ const submitter_submissions = computed(() =>
 
 <style lang="scss" scoped>
 .q-btn {
-  &::v-deep {
-    .q-icon {
-      margin-right: 0.5rem;
-    }
+  &:deep(.q-icon) {
+    margin-right: 0.5rem;
   }
 }
 </style>

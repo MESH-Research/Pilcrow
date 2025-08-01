@@ -71,7 +71,6 @@ defineProps({
   display: -webkit-box
   -webkit-line-clamp: 4
   -webkit-box-orient: vertical
-  &::v-deep
-    p
-      margin: 0
+  &:deep(p)
+    margin: 0
 </style>
