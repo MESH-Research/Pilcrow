@@ -17,14 +17,13 @@ class MetaPromptPolicy
      */
     public function create(User $user, $args): bool
     {
-        // Find the publication from the set.
         // Check if the user has the role of Application Administrator
         if ($user->hasRole(Role::APPLICATION_ADMINISTRATOR)) {
             return true;
         }
 
         // Check if the user has a publication role that allows them to create a meta prompt
-        $publication = Publication::whereMetaPage($args['meta_page_id'])
+        $publication = Publication::whereMetaForm($args['meta_form_id'])
             ->whereAdmin($user->id)
             ->exists();
 
@@ -46,7 +45,7 @@ class MetaPromptPolicy
             return true;
         }
 
-        $publication = Publication::whereMetaPage($metaPrompt->meta_page_id)
+        $publication = Publication::whereMetaForm($metaPrompt->meta_form_id)
             ->whereAdmin($user->id)
             ->exists();
 
@@ -68,7 +67,7 @@ class MetaPromptPolicy
             return true;
         }
 
-        $publication = Publication::whereMetaPage($metaPrompt->meta_page_id)
+        $publication = Publication::whereMetaForm($metaPrompt->meta_form_id)
             ->whereAdmin($user->id)
             ->exists();
 

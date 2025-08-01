@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Tests\Api;
 
 use App\Enums\MetaPromptType;
-use App\Models\MetaPage;
+use App\Models\MetaForm;
 use App\Models\MetaPrompt;
 use App\Models\Publication;
 use App\Models\Submission;
@@ -41,7 +41,7 @@ class SubmissionMetaResponsesMutationTest extends ApiTestCase
     public function canSubmitMetaResponses()
     {
         /** @var User $user */
-        $metaPage = MetaPage::factory()
+        $metaForm = MetaForm::factory()
             ->for($this->publication)
             ->has(
                 MetaPrompt::factory()
@@ -54,7 +54,7 @@ class SubmissionMetaResponsesMutationTest extends ApiTestCase
                     ->count(2)
             )
             ->create([
-                'name' => 'Test Meta Page',
+                'name' => 'Test Meta Form',
             ]);
 
         $this->actingAs($this->user);
@@ -62,10 +62,10 @@ class SubmissionMetaResponsesMutationTest extends ApiTestCase
         $response = $this->graphQL(
             /** @lang GraphQL */
             '
-            mutation SubmissionMetaPageUpdate($input: SubmissionMetaPageUpdate!) {
-                submissionMetaPageUpdate(input: $input) {
+            mutation SubmissionMetaFormUpdate($input: SubmissionMetaFormUpdate!) {
+                submissionMetaFormUpdate(input: $input) {
                     id
-                    meta_page {
+                    meta_form {
                         id
                     }
 
@@ -74,11 +74,11 @@ class SubmissionMetaResponsesMutationTest extends ApiTestCase
             ',
             [
                 'input' => [
-                    'meta_page_id' => $metaPage->id,
+                    'meta_form_id' => $metaForm->id,
                     'submission_id' => $this->userSubmission->id,
                     'responses' => [
-                        ['meta_prompt_id' => $metaPage->metaPrompts->offsetGet(0)->id, 'response' => 'Input the first'],
-                        ['meta_prompt_id' => $metaPage->metaPrompts->offsetGet(1)->id, 'response' => 'Another test answer'],
+                        ['meta_prompt_id' => $metaForm->metaPrompts->offsetGet(0)->id, 'response' => 'Input the first'],
+                        ['meta_prompt_id' => $metaForm->metaPrompts->offsetGet(1)->id, 'response' => 'Another test response'],
                     ],
                 ],
             ]
@@ -86,9 +86,9 @@ class SubmissionMetaResponsesMutationTest extends ApiTestCase
         $response->assertJson(
             fn(AssertableJson $json) =>
             $json->has(
-                'data.submissionMetaPageUpdate',
+                'data.submissionMetaFormUpdate',
                 fn($json) =>
-                $json->where('meta_page.id', (string)$metaPage->id)
+                $json->where('meta_form.id', (string)$metaForm->id)
                     ->whereNotNull('id')
                     ->etc()
             )
@@ -107,7 +107,7 @@ class SubmissionMetaResponsesMutationTest extends ApiTestCase
             'empty response when required' => [
                 'responses' => [
                     ['meta_prompt_id' => '1', 'response' => ''],
-                    ['meta_prompt_id' => '2', 'response' => 'Another test answer'],
+                    ['meta_prompt_id' => '2', 'response' => 'Another test response'],
                 ],
                 'errorFields' => ['input.responses.0'],
             ],
@@ -118,7 +118,7 @@ class SubmissionMetaResponsesMutationTest extends ApiTestCase
     #[DataProvider('provideMissingRequiredPrompts')]
     public function cannotSaveWithoutRequiredPrompts($responses, $errorFields)
     {
-        $metaPage = MetaPage::factory()
+        $metaForm = MetaForm::factory()
             ->for($this->publication)
             ->has(
                 MetaPrompt::factory()
@@ -131,20 +131,20 @@ class SubmissionMetaResponsesMutationTest extends ApiTestCase
                     ->count(2)
             )
             ->create([
-                'name' => 'Test Meta Page',
+                'name' => 'Test Meta Form',
             ]);
         $this->actingAs($this->user);
         foreach ($responses as &$response) {
-            $response['meta_prompt_id'] = $metaPage->metaPrompts[$response['meta_prompt_id'] - 1]->id;
+            $response['meta_prompt_id'] = $metaForm->metaPrompts[$response['meta_prompt_id'] - 1]->id;
         }
 
         $response = $this->graphQL(
             /** @lang GraphQL */
             '
-            mutation SubmissionMetaPageUpdate($input: SubmissionMetaPageUpdate!) {
-                submissionMetaPageUpdate(input: $input) {
+            mutation SubmissionMetaFormUpdate($input: SubmissionMetaFormUpdate!) {
+                submissionMetaFormUpdate(input: $input) {
                     id
-                    meta_page {
+                    meta_form {
                         id
                     }
                 }
@@ -152,7 +152,7 @@ class SubmissionMetaResponsesMutationTest extends ApiTestCase
             ',
             [
                 'input' => [
-                    'meta_page_id' => $metaPage->id,
+                    'meta_form_id' => $metaForm->id,
                     'submission_id' => $this->userSubmission->id,
                     'responses' => $responses,
                 ],
@@ -173,7 +173,7 @@ class SubmissionMetaResponsesMutationTest extends ApiTestCase
     #[Test]
     public function cannotSaveInvalidSelectResponse()
     {
-        $metaPage = MetaPage::factory()
+        $metaForm = MetaForm::factory()
             ->for($this->publication)
             ->has(
                 MetaPrompt::factory()
@@ -185,17 +185,17 @@ class SubmissionMetaResponsesMutationTest extends ApiTestCase
                     ->count(1)
             )
             ->create([
-                'name' => 'Test Meta Page',
+                'name' => 'Test Meta Form',
             ]);
         $this->actingAs($this->user);
 
         $response = $this->graphQL(
             /** @lang GraphQL */
             '
-            mutation SubmissionMetaPageUpdate($input: SubmissionMetaPageUpdate!) {
-                submissionMetaPageUpdate(input: $input) {
+            mutation SubmissionMetaFormUpdate($input: SubmissionMetaFormUpdate!) {
+                submissionMetaFormUpdate(input: $input) {
                     id
-                    meta_page {
+                    meta_form {
                         id
                     }
                 }
@@ -203,10 +203,10 @@ class SubmissionMetaResponsesMutationTest extends ApiTestCase
             ',
             [
                 'input' => [
-                    'meta_page_id' => $metaPage->id,
+                    'meta_form_id' => $metaForm->id,
                     'submission_id' => $this->userSubmission->id,
                     'responses' => [
-                        ['meta_prompt_id' => $metaPage->metaPrompts[0]->id, 'response' => 'yellow'], // Invalid option
+                        ['meta_prompt_id' => $metaForm->metaPrompts[0]->id, 'response' => 'yellow'], // Invalid option
                     ],
                 ],
             ]
@@ -222,7 +222,7 @@ class SubmissionMetaResponsesMutationTest extends ApiTestCase
     #[Test]
     public function cannotSaveIfNotSubmitter()
     {
-        $metaPage = MetaPage::factory()
+        $metaForm = MetaForm::factory()
             ->for($this->publication)
             ->has(
                 MetaPrompt::factory()
@@ -235,7 +235,7 @@ class SubmissionMetaResponsesMutationTest extends ApiTestCase
                     ->count(2)
             )
             ->create([
-                'name' => 'Test Meta Page',
+                'name' => 'Test Meta Form',
             ]);
 
         /** @var User $anotherUser */
@@ -245,10 +245,10 @@ class SubmissionMetaResponsesMutationTest extends ApiTestCase
         $response = $this->graphQL(
             /** @lang GraphQL */
             '
-            mutation SubmissionMetaPageUpdate($input: SubmissionMetaPageUpdate!) {
-                submissionMetaPageUpdate(input: $input) {
+            mutation SubmissionMetaFormUpdate($input: SubmissionMetaFormUpdate!) {
+                submissionMetaFormUpdate(input: $input) {
                     id
-                    meta_page {
+                    meta_form {
                         id
                     }
                 }
@@ -256,11 +256,11 @@ class SubmissionMetaResponsesMutationTest extends ApiTestCase
             ',
             [
                 'input' => [
-                    'meta_page_id' => $metaPage->id,
+                    'meta_form_id' => $metaForm->id,
                     'submission_id' => $this->userSubmission->id,
                     'responses' => [
-                        ['meta_prompt_id' => $metaPage->metaPrompts[0]->id, 'response' => 'Input the first'],
-                        ['meta_prompt_id' => $metaPage->metaPrompts[1]->id, 'response' => 'Another test answer'],
+                        ['meta_prompt_id' => $metaForm->metaPrompts[0]->id, 'response' => 'Input the first'],
+                        ['meta_prompt_id' => $metaForm->metaPrompts[1]->id, 'response' => 'Another test response'],
                     ],
                 ],
             ]
@@ -277,7 +277,7 @@ class SubmissionMetaResponsesMutationTest extends ApiTestCase
     public function cannotSaveIfNotInDraft()
     {
         $this->actingAs($this->user);
-        $metaPage = MetaPage::factory()
+        $metaForm = MetaForm::factory()
             ->for($this->publication)
             ->has(
                 MetaPrompt::factory()
@@ -290,7 +290,7 @@ class SubmissionMetaResponsesMutationTest extends ApiTestCase
                     ->count(2)
             )
             ->create([
-                'name' => 'Test Meta Page',
+                'name' => 'Test Meta Form',
             ]);
 
         $this->userSubmission->status = Submission::INITIALLY_SUBMITTED;
@@ -299,10 +299,10 @@ class SubmissionMetaResponsesMutationTest extends ApiTestCase
         $response = $this->graphQL(
             /** @lang GraphQL */
             '
-            mutation SubmissionMetaPageUpdate($input: SubmissionMetaPageUpdate!) {
-                submissionMetaPageUpdate(input: $input) {
+            mutation SubmissionMetaFormUpdate($input: SubmissionMetaFormUpdate!) {
+                submissionMetaFormUpdate(input: $input) {
                     id
-                    meta_page {
+                    meta_form {
                         id
                     }
                 }
@@ -310,11 +310,11 @@ class SubmissionMetaResponsesMutationTest extends ApiTestCase
             ',
             [
                 'input' => [
-                    'meta_page_id' => $metaPage->id,
+                    'meta_form_id' => $metaForm->id,
                     'submission_id' => $this->userSubmission->id,
                     'responses' => [
-                        ['meta_prompt_id' => $metaPage->metaPrompts[0]->id, 'response' => 'Input the first'],
-                        ['meta_prompt_id' => $metaPage->metaPrompts[1]->id, 'response' => 'Another test answer'],
+                        ['meta_prompt_id' => $metaForm->metaPrompts[0]->id, 'response' => 'Input the first'],
+                        ['meta_prompt_id' => $metaForm->metaPrompts[1]->id, 'response' => 'Another test response'],
                     ],
                 ],
             ]

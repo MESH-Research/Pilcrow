@@ -6,9 +6,9 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\MetaPage>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\MetaForm>
  */
-class MetaPageFactory extends Factory
+class MetaFormFactory extends Factory
 {
     /**
      * Define the model's default state.

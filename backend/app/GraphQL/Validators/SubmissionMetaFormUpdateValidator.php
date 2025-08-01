@@ -4,13 +4,13 @@ declare(strict_types=1);
 namespace App\GraphQL\Validators;
 
 use App\Enums\MetaPromptType;
-use App\Models\MetaPage;
+use App\Models\MetaForm;
 use Illuminate\Validation\Rule;
 use Nuwave\Lighthouse\Validation\Validator;
 
-final class SubmissionMetaPageUpdateValidator extends Validator
+final class SubmissionMetaFormUpdateValidator extends Validator
 {
-    protected MetaPage $metaPage;
+    protected MetaForm $metaForm;
 
     /**
      * Return the validation rules.
@@ -21,14 +21,14 @@ final class SubmissionMetaPageUpdateValidator extends Validator
     {
         return [
             'submission_id' => ['required', Rule::exists('submissions', 'id')],
-            'meta_page_id' => ['required', Rule::exists('meta_pages', 'id')],
+            'meta_form_id' => ['required', Rule::exists('meta_forms', 'id')],
             'responses' => ['required', 'array', 'min:1', fn($_, $value, $fail) => $this->checkPage($value, $fail)],
             'responses.*' => [fn($_, $value, $fail) => $this->checkResponse($value, $fail)],
         ];
     }
 
     /**
-     * Validate the responses against the meta page prompts.
+     * Validate the responses against the meta form prompts.
      *
      * @param mixed $value The value of the responses being validated
      * @param \Closure $fail The closure to call if validation fails
@@ -38,18 +38,18 @@ final class SubmissionMetaPageUpdateValidator extends Validator
     {
         $responses = collect($value);
 
-        // Fetch the meta page and hang on to it for later.
-        $this->metaPage = MetaPage::find($this->arg('meta_page_id'));
+        // Fetch the meta form and hang on to it for later.
+        $this->metaForm = MetaForm::find($this->arg('meta_form_id'));
 
-        // Validate the the meta page exists.
-        if (!$this->metaPage) {
-            $fail('The selected meta page does not exist.');
+        // Validate the the meta form exists.
+        if (!$this->metaForm) {
+            $fail('The selected meta form does not exist.');
 
             return;
         }
 
-        // Extract the IDs of the prompts from the meta page.
-        $promptIds = $this->metaPage->metaPrompts->pluck('id')->toArray();
+        // Extract the IDs of the prompts from the meta form.
+        $promptIds = $this->metaForm->metaPrompts->pluck('id')->toArray();
 
         // Check if the responses contain duplicate meta prompt IDs.
         if (count(array_unique($promptIds)) !== count($promptIds)) {
@@ -58,20 +58,20 @@ final class SubmissionMetaPageUpdateValidator extends Validator
             return;
         }
 
-        // Ensure all responses correspond to valid meta prompts of the selected meta page.
+        // Ensure all responses correspond to valid meta prompts of the selected meta form.
         if (!$responses->every(fn($response) => in_array($response['meta_prompt_id'], $promptIds))) {
-            $fail('All responses must correspond to valid meta prompts of the selected meta page.');
+            $fail('All responses must correspond to valid meta prompts of the selected meta form.');
 
             return;
         }
         // Ensure that each prompt in the page has a response.
-        $complete = $this->metaPage
+        $complete = $this->metaForm
             ->metaPrompts->every(
                 fn($prompt) => $responses->firstWhere('meta_prompt_id', $prompt->id)
             );
 
         if (!$complete) {
-            $fail('Must provide a response for each prompt in the selected meta page.');
+            $fail('Must provide a response for each prompt in the selected meta form.');
 
             return;
         }
@@ -86,8 +86,8 @@ final class SubmissionMetaPageUpdateValidator extends Validator
      */
     public function checkResponse(mixed $value, \Closure $fail): void
     {
-        // Fetch the meta prompt from our stored meta page.
-        $prompt = $this->metaPage->metaPrompts->firstWhere('id', $value['meta_prompt_id']);
+        // Fetch the meta prompt from our stored meta form.
+        $prompt = $this->metaForm->metaPrompts->firstWhere('id', $value['meta_prompt_id']);
 
         // If the prompt is a select type, ensure the response is valid.
         if ($prompt->type == MetaPromptType::SELECT->value) {

@@ -13,7 +13,7 @@ return new class extends Migration
     public function up(): void
     {
 
-        Schema::create('meta_pages', function (Blueprint $table) {
+        Schema::create('meta_forms', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
             $table->string('name');
@@ -30,8 +30,8 @@ return new class extends Migration
             $table->timestamps();
             $table->text('label');
             $table->longText('caption')->nullable();
-            $table->foreignId('meta_page_id')
-                ->constrained('meta_pages');
+            $table->foreignId('meta_form_id')
+                ->constrained('meta_forms');
             $table->enum('type', array_column(MetaPromptType::cases(), 'value'));
             $table->json('options')->nullable();
             $table->boolean('required')->default(false);
@@ -42,9 +42,9 @@ return new class extends Migration
         Schema::create('submission_meta_responses', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->foreignId('meta_page_id')->constrained('meta_pages');
+            $table->foreignId('meta_form_id')->constrained('meta_forms');
             $table->foreignId('submission_id')->constrained('submissions');
-            $table->index(['meta_page_id', 'submission_id']);
+            $table->index(['meta_form_id', 'submission_id']);
             $table->json('prompts');
             $table->json('responses');
             $table->foreignId('created_by')->constrained('users');
@@ -59,6 +59,6 @@ return new class extends Migration
     {
         Schema::dropIfExists('submission_meta_responses');
         Schema::dropIfExists('meta_prompts');
-        Schema::dropIfExists('meta_pages');
+        Schema::dropIfExists('meta_forms');
     }
 };

@@ -7,9 +7,9 @@ use App\Models\Submission;
 use App\Models\User;
 use Tests\ApiTestCase;
 
-class SubmissionMetaPagesTest extends ApiTestCase
+class SubmissionMetaFormsTest extends ApiTestCase
 {
-    public function testCanViewSubmissionMetaPages()
+    public function testCanViewSubmissionMetaForms()
     {
         Submission::factory()
             ->has(User::factory(), 'submitters')

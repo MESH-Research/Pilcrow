@@ -295,9 +295,9 @@ export const GET_SUBMISSIONS = gql`
   ${_RELATED_USER_FIELDS}
 `
 
-export const META_PAGES_FRAGMENT = gql`
-  fragment MetaPagesFragment on Publication {
-    meta_pages {
+export const META_FORMS_FRAGMENT = gql`
+  fragment MetaFormsFragment on Publication {
+    meta_forms {
       id
       name
       caption
@@ -348,7 +348,7 @@ export const GET_SUBMISSION = gql`
         created_at
       }
       publication {
-        ...MetaPagesFragment
+        ...MetaFormsFragment
         id
         name
         style_criterias {
@@ -377,7 +377,7 @@ export const GET_SUBMISSION = gql`
     }
   }
   ${_RELATED_USER_FIELDS}
-  ${META_PAGES_FRAGMENT}
+  ${META_FORMS_FRAGMENT}
 `
 
 export const GET_SUBMISSION_REVIEW = gql`

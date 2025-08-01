@@ -1,9 +1,9 @@
 extend type Publication {
-    meta_pages: [MetaPage!] @hasMany(relation: "metaPages", scope: "ordered")
-    meta_page(id: ID! @whereKey): MetaPage @find
+    meta_forms: [MetaForm!] @hasMany(relation: "metaForms", scope: "ordered")
+    meta_form(id: ID! @whereKey): MetaForm @find
 }
 
-type MetaPage {
+type MetaForm {
     id: ID!
     name: String!
     caption: String
@@ -32,13 +32,13 @@ enum MetaPromptType {
 }
 
 extend type Mutation {
-    metaPageCreate(input: CreateMetaPageInput! @spread): MetaPage!
+    metaFormCreate(input: CreateMetaFormInput! @spread): MetaForm!
         @create
         @canModel(ability: "create", injectArgs: true)
-    metaPageUpdate(input: [UpdateMetaPageInput!]!): [MetaPage!]!
+    metaFormUpdate(input: [UpdateMetaFormInput!]!): [MetaForm!]!
         @canFindMany(ability: "update", find: "id")
         @updateMany
-    metaPageDelete(id: ID! @whereKey): MetaPage!
+    metaFormDelete(id: ID! @whereKey): MetaForm!
         @delete
         @canQuery(ability: "delete")
     metaPromptUpdate(input: [UpdateMetaPromptInput!]!): [MetaPrompt!]!
@@ -52,14 +52,14 @@ extend type Mutation {
         @canQuery(ability: "delete")
 }
 
-input CreateMetaPageInput {
+input CreateMetaFormInput {
     name: String!
     caption: String
     required: Boolean!
     publication_id: ID!
 }
 
-input UpdateMetaPageInput {
+input UpdateMetaFormInput {
     id: ID! @whereKey
     name: String
     caption: String
@@ -67,7 +67,7 @@ input UpdateMetaPageInput {
 }
 
 input CreateMetaPromptInput {
-    meta_page_id: ID!
+    meta_form_id: ID!
     label: String!
     caption: String
     required: Boolean

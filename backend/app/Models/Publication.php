@@ -106,9 +106,9 @@ class Publication extends BaseModel
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function metaPages(): HasMany
+    public function metaForms(): HasMany
     {
-        return $this->hasMany(MetaPage::class, 'publication_id');
+        return $this->hasMany(MetaForm::class, 'publication_id');
     }
 
     /**

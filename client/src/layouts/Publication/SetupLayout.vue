@@ -87,9 +87,9 @@ const items = computed(() => [
   },
   {
     icon: "ballot",
-    label: "Meta Pages",
+    label: "Meta Forms",
     url: {
-      name: "publication:setup:metaPages",
+      name: "publication:setup:metaForms",
       params
     }
   },

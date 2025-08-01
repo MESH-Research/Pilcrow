@@ -87,12 +87,12 @@ const routes = [
               import("src/pages/Publication/Setup/ContentPage.vue")
           },
           {
-            name: "publication:setup:metaPages",
+            name: "publication:setup:metaForms",
             path: "prompts",
             meta: {
-              name: "Meta Pages"
+              name: "Meta Forms"
             },
-            component: () => import("src/pages/Publication/Setup/MetaPages.vue")
+            component: () => import("src/pages/Publication/Setup/MetaForms.vue")
           },
           {
             name: "publication:setup:criteria",
@@ -174,9 +174,9 @@ const routes = [
         }
       },
       {
-        name: "submission:metaPage",
-        path: "/submission/:id/meta-page/:setId",
-        component: () => import("src/pages/SubmissionMetaPage.vue"),
+        name: "submission:metaForm",
+        path: "/submission/:id/meta-form/:formId",
+        component: () => import("src/pages/SubmissionMetaForm.vue"),
         props: true,
         meta: {
           requiresDraftAccess: true

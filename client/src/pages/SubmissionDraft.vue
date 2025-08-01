@@ -69,15 +69,15 @@
             </submission-draft-todo-item>
             <div class="text-h3">Additional Information</div>
             <submission-draft-todo-item
-              v-for="prompt_set in submission.publication.meta_pages"
-              :key="prompt_set.id"
-              :title="prompt_set.name"
+              v-for="form_prompt in submission.publication.meta_forms"
+              :key="form_prompt.id"
+              :title="form_prompt.name"
               :dark-mode="darkModeStatus"
-              :required="prompt_set.required"
-              @content-click="onSubmissionMetaClick(prompt_set.id)"
+              :required="form_prompt.required"
+              @content-click="onSubmissionMetaClick(form_prompt.id)"
             >
               <p class="q-ma-none">
-                {{ prompt_set.caption }}
+                {{ form_prompt.caption }}
               </p>
             </submission-draft-todo-item>
             <!-- TODO: Develop collaborator inviting -->
@@ -145,10 +145,10 @@ function onGoToSubmissionContentClick() {
   })
 }
 
-function onSubmissionMetaClick(setId) {
+function onSubmissionMetaClick(formId) {
   push({
-    name: "submission:metaPages",
-    params: { id: submission.value.id, setId }
+    name: "submission:metaForms",
+    params: { id: submission.value.id, formId }
   })
 }
 const rules = {

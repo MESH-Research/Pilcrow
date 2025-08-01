@@ -1,12 +1,12 @@
 <template>
   <article class="q-px-md">
-    <h2>Meta Pages</h2>
+    <h2>Meta Forms</h2>
     <p>Customize blocks of text displayed to your publication's users.</p>
     <div v-if="loading">Loading...</div>
     <div v-else-if="result">
       <q-btn color="primary" icon="add" label="Add Question Set" />
       <q-list bordered separator class="q-mt-lg">
-        <template v-for="set in metaPages" :key="set.id">
+        <template v-for="set in metaForms" :key="set.id">
           <q-item :class="darkModeStatus ? `bg-blue-grey-10` : `bg-grey-3`">
             <q-item-section avatar>
               <q-icon name="ballot" />
@@ -28,22 +28,22 @@
               <q-icon name="drag_handle" />
             </q-item-section>
           </q-item>
-          <Draggable v-model="set.questions.value" item-key="id" tag="QList">
-            <template #item="{ element: question }">
+          <Draggable v-model="set.prompts.value" item-key="id" tag="QList">
+            <template #item="{ element: prompt }">
               <q-item :inset-level="1">
                 <q-item-section avatar>
-                  <q-icon :name="questionIcon(question.type)" />
+                  <q-icon :name="promptIcon(prompt.type)" />
                 </q-item-section>
                 <q-item-section>
                   <q-item-label>
-                    {{ question.label }}
+                    {{ prompt.label }}
                   </q-item-label>
 
-                  <div v-if="question.caption">{{ question.caption }}</div>
+                  <div v-if="prompt.caption">{{ prompt.caption }}</div>
                 </q-item-section>
                 <q-item-section side>
                   <q-chip
-                    v-if="question.required"
+                    v-if="prompt.required"
                     class="bg-secondary text-white"
                   >
                     Required
@@ -88,14 +88,14 @@ const { result, loading } = useQuery(GET_PUBLICATION_PROMPTS, {
 
 const { mutate: updateMetaPrompts } = useMutation(META_PROMPT_UPDATE)
 
-const metaPages = computed(() => {
+const metaForms = computed(() => {
   return (
-    result.value?.publication.meta_pages?.map((set) => {
+    result.value?.publication.meta_forms?.map((set) => {
       const loading = ref(false)
       return {
         ...set,
         loading,
-        questions: computed({
+        prompts: computed({
           get: () => set.meta_prompts.toSorted((a, b) => a.order - b.order),
           set: (newQuestions) => {
             let index = 0
@@ -118,7 +118,7 @@ const metaPages = computed(() => {
   )
 })
 
-function questionIcon(type) {
+function promptIcon(type) {
   switch (type) {
     case "INPUT":
       return "text_fields"
@@ -142,7 +142,7 @@ const GET_PUBLICATION_PROMPTS = gql`
   query GetPublicationPrompts($id: ID!) {
     publication(id: $id) {
       id
-      meta_pages {
+      meta_forms {
         id
         name
         required

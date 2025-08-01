@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
-use App\Models\MetaPage;
+use App\Models\MetaForm;
 use App\Models\Submission;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -22,7 +22,7 @@ class SubmissionMetaResponseFactory extends Factory
     {
         return [
             'submission_id' => Submission::factory(),
-            'meta_page_id' => MetaPage::factory(),
+            'meta_form_id' => MetaForm::factory(),
             'prompts' => json_encode([]),
             'responses' => json_encode([]),
             'created_by' => User::factory(),

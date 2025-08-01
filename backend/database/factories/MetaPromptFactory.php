@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Database\Factories;
 
 use App\Enums\MetaPromptType;
-use App\Models\MetaPage;
+use App\Models\MetaForm;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -21,7 +21,7 @@ class MetaPromptFactory extends Factory
     {
         return [
             'caption' => $this->faker->sentence(),
-            'meta_page_id' => MetaPage::factory(),
+            'meta_form_id' => MetaForm::factory(),
             'label' => $this->faker->sentence(),
             'type' => $this->faker->randomElement(array_column(MetaPromptType::cases(), 'value')),
         ];

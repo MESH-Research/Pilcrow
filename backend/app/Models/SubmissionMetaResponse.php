@@ -17,7 +17,7 @@ class SubmissionMetaResponse extends Model
 
     protected $fillable = [
         'submission_id',
-        'meta_page_id',
+        'meta_form_id',
         'responses',
         'prompts',
     ];
@@ -28,13 +28,13 @@ class SubmissionMetaResponse extends Model
     ];
 
     /**
-     * Get the meta page associated with this response.
+     * Get the meta form associated with this response.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function metaPage(): BelongsTo
+    public function metaForm(): BelongsTo
     {
-        return $this->belongsTo(MetaPage::class, 'meta_page_id');
+        return $this->belongsTo(MetaForm::class, 'meta_form_id');
     }
 
     /**

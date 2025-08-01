@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Database\Seeders;
 
 use App\Enums\MetaPromptType;
-use App\Models\MetaPage;
+use App\Models\MetaForm;
 use App\Models\MetaPrompt;
 use App\Models\Publication;
 use App\Models\StyleCriteria;
@@ -23,13 +23,13 @@ class PublicationSeeder extends Seeder
     {
         $this->callOnce(UserSeeder::class);
 
-        $meta_page_caption = 'Please provide any additional information that may be relevant to your submission.';
+        $meta_form_caption = 'Please provide any additional information that may be relevant to your submission.';
 
         Publication::factory()
             ->hasAttached(User::firstWhere('username', 'publicationAdministrator'), [], 'publicationAdmins')
             ->hasAttached(User::firstWhere('username', 'publicationEditor'), [], 'editors')
             ->has(
-                MetaPage::factory()
+                MetaForm::factory()
                     ->state([
                         'name' => 'Basic Submission Information',
                         'caption' => 'Please provide the basic information about your submission.',
@@ -60,10 +60,10 @@ class PublicationSeeder extends Seeder
                     ),
             )
             ->has(
-                MetaPage::factory()
+                MetaForm::factory()
                     ->state([
                         'name' => 'Additional Information',
-                        'caption' => $meta_page_caption,
+                        'caption' => $meta_form_caption,
                         'required' => true,
                     ])
                     ->has(

@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Tests\Api;
 
 use App\Enums\MetaPromptType;
-use App\Models\MetaPage;
+use App\Models\MetaForm;
 use App\Models\MetaPrompt;
 use App\Models\Publication;
 use App\Models\User;
@@ -13,13 +13,13 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\ApiTestCase;
 
-class MetaPageMutationTest extends ApiTestCase
+class MetaFormMutationTest extends ApiTestCase
 {
     use RefreshDatabase;
 
     // Your test methods go here
 
-    public function testCanCreateMetaPage()
+    public function testCanCreateMetaForm()
     {
         $user = $this->bePubAdmin();
 
@@ -27,8 +27,8 @@ class MetaPageMutationTest extends ApiTestCase
 
         $response = $this->graphQL(
             /** @lang GraphQL */
-            'mutation CreateMetaPage($input: CreateMetaPageInput!) {
-                metaPageCreate(input: $input) {
+            'mutation CreateMetaForm($input: CreateMetaFormInput!) {
+                metaFormCreate(input: $input) {
                     id
                     name
                 }
@@ -37,7 +37,7 @@ class MetaPageMutationTest extends ApiTestCase
             [
                 'input' => [
                     'publication_id' => $publication->id,
-                    'name' => 'Default Meta Page',
+                    'name' => 'Default Meta Form',
                     'required' => false,
                 ],
             ]
@@ -45,14 +45,14 @@ class MetaPageMutationTest extends ApiTestCase
 
         $response->assertJson(
             fn(AssertableJson $json) =>
-            $json->has('data.metaPageCreate')
-                ->where('data.metaPageCreate.name', 'Default Meta Page')
-                ->whereNotNull('data.metaPageCreate.id')
+            $json->has('data.metaFormCreate')
+                ->where('data.metaFormCreate.name', 'Default Meta Form')
+                ->whereNotNull('data.metaFormCreate.id')
                 ->etc()
         );
     }
 
-    public function testOtherUserCannotCreateMetaPage()
+    public function testOtherUserCannotCreateMetaForm()
     {
         $user = $this->bePubAdmin();
         $publication = $user->publications()->first();
@@ -63,8 +63,8 @@ class MetaPageMutationTest extends ApiTestCase
         $this->actingAs($otherUser);
         $response = $this->graphQL(
             /** @lang GraphQL */
-            'mutation CreateMetaPage($input: CreateMetaPageInput!) {
-                    metaPageCreate(input: $input) {
+            'mutation CreateMetaForm($input: CreateMetaFormInput!) {
+                    metaFormCreate(input: $input) {
                         id
                         name
                     }
@@ -73,7 +73,7 @@ class MetaPageMutationTest extends ApiTestCase
             [
                 'input' => [
                     'publication_id' => $publication->id,
-                    'name' => 'Unauthorized Meta Page',
+                    'name' => 'Unauthorized Meta Form',
                     'required' => false,
                 ],
             ]
@@ -82,7 +82,7 @@ class MetaPageMutationTest extends ApiTestCase
         $response->assertJson(
             fn(AssertableJson $json) =>
             $json->has('errors')
-                ->missing('data.metaPageCreate.id')
+                ->missing('data.metaFormCreate.id')
                 ->etc()
         );
     }
@@ -92,9 +92,9 @@ class MetaPageMutationTest extends ApiTestCase
         $user = $this->bePubAdmin();
 
         $publication = $user->publications()->first();
-        $metaPage = MetaPage::factory()->create([
+        $metaForm = MetaForm::factory()->create([
             'publication_id' => $publication->id,
-            'name' => 'Sample Meta Page',
+            'name' => 'Sample Meta Form',
         ]);
 
         $response = $this->graphQL(
@@ -110,7 +110,7 @@ class MetaPageMutationTest extends ApiTestCase
                 ',
             [
                 'input' => [
-                    'meta_page_id' => $metaPage->id,
+                    'meta_form_id' => $metaForm->id,
                     'label' => 'What is your favorite color?',
                     'required' => true,
                     'type' => 'INPUT',
@@ -134,9 +134,9 @@ class MetaPageMutationTest extends ApiTestCase
         $user = $this->bePubAdmin();
 
         $publication = $user->publications()->first();
-        $metaPage = MetaPage::factory()->create([
+        $metaForm = MetaForm::factory()->create([
             'publication_id' => $publication->id,
-            'name' => 'Sample Meta Page',
+            'name' => 'Sample Meta Form',
         ]);
 
         /** @var User $otherUser */
@@ -157,7 +157,7 @@ class MetaPageMutationTest extends ApiTestCase
                 ',
             [
                 'input' => [
-                    'meta_page_id' => $metaPage->id,
+                    'meta_form_id' => $metaForm->id,
                     'label' => 'What is your favorite color?',
                     'required' => true,
                     'type' => 'INPUT',
@@ -173,12 +173,12 @@ class MetaPageMutationTest extends ApiTestCase
         );
     }
 
-    public function testCanUpdateMetaPages()
+    public function testCanUpdateMetaForms()
     {
         $user = $this->bePubAdmin();
 
         $publication = $user->publications()->first();
-        $metaPage = MetaPage::factory()
+        $metaForm = MetaForm::factory()
             ->has(
                 MetaPrompt::factory()
                     ->state(
@@ -191,14 +191,14 @@ class MetaPageMutationTest extends ApiTestCase
             )
             ->state([
                 'publication_id' => $publication->id,
-                'name' => 'Old Meta Page Name',
+                'name' => 'Old Meta Form Name',
             ])
             ->count(2)
             ->create();
         $response = $this->graphQL(
             /** @lang GraphQL */
-            'mutation UpdateMetaPage($input: [UpdateMetaPageInput!]!) {
-                metaPageUpdate(input: $input) {
+            'mutation UpdateMetaForm($input: [UpdateMetaFormInput!]!) {
+                metaFormUpdate(input: $input) {
                     id
                     name
                 }
@@ -206,48 +206,48 @@ class MetaPageMutationTest extends ApiTestCase
             [
                 'input' => [
                     [
-                        'id' => $metaPage[0]->id,
-                        'name' => 'Updated Meta Page Name',
+                        'id' => $metaForm[0]->id,
+                        'name' => 'Updated Meta Form Name',
                     ],
                     [
-                        'id' => $metaPage[1]->id,
-                        'name' => 'Another Updated Meta Page Name',
+                        'id' => $metaForm[1]->id,
+                        'name' => 'Another Updated Meta Form Name',
                     ],
                 ],
             ]
         );
         $response->assertJson(
             fn(AssertableJson $json) =>
-            $json->has('data.metaPageUpdate')
-                ->where('data.metaPageUpdate.0.name', 'Updated Meta Page Name')
-                ->where('data.metaPageUpdate.0.id', (string)$metaPage[0]->id)
+            $json->has('data.metaFormUpdate')
+                ->where('data.metaFormUpdate.0.name', 'Updated Meta Form Name')
+                ->where('data.metaFormUpdate.0.id', (string)$metaForm[0]->id)
                 ->etc()
         );
     }
 
-    public function testCannotUpdateOtherMetaPages()
+    public function testCannotUpdateOtherMetaForms()
     {
         $unassignedPublication = Publication::factory()->create();
 
-        $unassignedMetaPage = MetaPage::factory()
+        $unassignedMetaForm = MetaForm::factory()
             ->state([
                 'publication_id' => $unassignedPublication->id,
-                'name' => 'Old Meta Page Name',
+                'name' => 'Old Meta Form Name',
             ])
             ->count(2)
             ->create();
         $pubAdmin = $this->bePubAdmin();
-        $metaPage = MetaPage::factory()
+        $metaForm = MetaForm::factory()
             ->state([
                 'publication_id' => $pubAdmin->publications()->first()->id,
-                'name' => 'Old Meta Page Name',
+                'name' => 'Old Meta Form Name',
             ])
             ->create();
 
         $response = $this->graphQL(
             /** @lang GraphQL */
-            'mutation UpdateMetaPage($input: [UpdateMetaPageInput!]!) {
-                metaPageUpdate(input: $input) {
+            'mutation UpdateMetaForm($input: [UpdateMetaFormInput!]!) {
+                metaFormUpdate(input: $input) {
                     id
                     name
                     publication {
@@ -259,12 +259,12 @@ class MetaPageMutationTest extends ApiTestCase
             [
                 'input' => [
                     [
-                        'id' => $unassignedMetaPage[0]->id,
-                        'name' => 'Updated Meta Page Name',
+                        'id' => $unassignedMetaForm[0]->id,
+                        'name' => 'Updated Meta Form Name',
                     ],
                     [
-                        'id' => $metaPage->id,
-                        'name' => 'Updated Meta Page Name',
+                        'id' => $metaForm->id,
+                        'name' => 'Updated Meta Form Name',
                     ],
                 ],
             ]
@@ -282,7 +282,7 @@ class MetaPageMutationTest extends ApiTestCase
         $user = $this->bePubAdmin();
 
         $publication = $user->publications()->first();
-        $metaPage = MetaPage::factory()
+        $metaForm = MetaForm::factory()
             ->has(
                 MetaPrompt::factory()
                     ->state(
@@ -295,7 +295,7 @@ class MetaPageMutationTest extends ApiTestCase
             )
             ->state([
                 'publication_id' => $publication->id,
-                'name' => 'Old Meta Page Name',
+                'name' => 'Old Meta Form Name',
             ])
             ->create();
 
@@ -310,11 +310,11 @@ class MetaPageMutationTest extends ApiTestCase
             [
                 'input' => [
                     [
-                        'id' => $metaPage->metaPrompts[0]->id,
+                        'id' => $metaForm->metaPrompts[0]->id,
                         'label' => 'Updated Prompt 1',
                     ],
                     [
-                        'id' => $metaPage->metaPrompts[1]->id,
+                        'id' => $metaForm->metaPrompts[1]->id,
                         'label' => 'Another Updated Prompt 2',
                     ],
                 ],
@@ -325,7 +325,7 @@ class MetaPageMutationTest extends ApiTestCase
             fn(AssertableJson $json) =>
             $json->has('data.metaPromptUpdate')
                 ->where('data.metaPromptUpdate.0.label', 'Updated Prompt 1')
-                ->where('data.metaPromptUpdate.0.id', (string)$metaPage->metaPrompts[0]->id)
+                ->where('data.metaPromptUpdate.0.id', (string)$metaForm->metaPrompts[0]->id)
                 ->etc()
         );
     }
@@ -338,7 +338,7 @@ class MetaPageMutationTest extends ApiTestCase
 
         $publication = Publication::factory()
             ->has(
-                MetaPage::factory()
+                MetaForm::factory()
                     ->has(MetaPrompt::factory()->count(3))
             )
             ->create();
@@ -354,7 +354,7 @@ class MetaPageMutationTest extends ApiTestCase
             [
                 'input' => [
                     [
-                        'id' => $publication->metaPages[0]->metaPrompts[0]->id,
+                        'id' => $publication->metaForms[0]->metaPrompts[0]->id,
                         'label' => 'Unauthorized Update',
                     ],
                 ],
@@ -374,7 +374,7 @@ class MetaPageMutationTest extends ApiTestCase
         $user = $this->bePubAdmin();
 
         $publication = $user->publications()->first();
-        $metaPage = MetaPage::factory()
+        $metaForm = MetaForm::factory()
             ->has(
                 MetaPrompt::factory()
                     ->state(
@@ -387,7 +387,7 @@ class MetaPageMutationTest extends ApiTestCase
             )
             ->state([
                 'publication_id' => $publication->id,
-                'name' => 'Old Meta Page Name',
+                'name' => 'Old Meta Form Name',
             ])
             ->create();
 
@@ -399,18 +399,18 @@ class MetaPageMutationTest extends ApiTestCase
                 }
             }',
             [
-                'id' => $metaPage->metaPrompts[0]->id,
+                'id' => $metaForm->metaPrompts[0]->id,
             ]
         );
 
         $response->assertJson(
             fn(AssertableJson $json) =>
             $json->has('data.metaPromptDelete')
-                ->where('data.metaPromptDelete.id', (string)$metaPage->metaPrompts[0]->id)
+                ->where('data.metaPromptDelete.id', (string)$metaForm->metaPrompts[0]->id)
                 ->etc()
         );
 
-        $this->assertNull(MetaPrompt::find($metaPage->metaPrompts[0]->id));
+        $this->assertNull(MetaPrompt::find($metaForm->metaPrompts[0]->id));
     }
 
     public function testOtherCannotDeleteMetaPrompts()
@@ -421,7 +421,7 @@ class MetaPageMutationTest extends ApiTestCase
 
         $publication = Publication::factory()
             ->has(
-                MetaPage::factory()
+                MetaForm::factory()
                     ->has(MetaPrompt::factory()->count(3))
             )
             ->create();
@@ -434,7 +434,7 @@ class MetaPageMutationTest extends ApiTestCase
                 }
             }',
             [
-                'id' => $publication->metaPages[0]->metaPrompts[0]->id,
+                'id' => $publication->metaForms[0]->metaPrompts[0]->id,
             ]
         );
 
@@ -451,33 +451,33 @@ class MetaPageMutationTest extends ApiTestCase
         $user = $this->bePubAdmin();
 
         $publication = $user->publications()->first();
-        $metaPage = MetaPage::factory()
+        $metaForm = MetaForm::factory()
             ->state([
                 'publication_id' => $publication->id,
-                'name' => 'Meta Page to Delete',
+                'name' => 'Meta Form to Delete',
             ])
             ->create();
 
         $response = $this->graphQL(
             /** @lang GraphQL */
-            'mutation DeleteMetaPage($id: ID!) {
-                metaPageDelete(id: $id) {
+            'mutation DeleteMetaForm($id: ID!) {
+                metaFormDelete(id: $id) {
                     id
                 }
             }',
             [
-                'id' => $metaPage->id,
+                'id' => $metaForm->id,
             ]
         );
 
         $response->assertJson(
             fn(AssertableJson $json) =>
-            $json->has('data.metaPageDelete')
-                ->where('data.metaPageDelete.id', (string)$metaPage->id)
+            $json->has('data.metaFormDelete')
+                ->where('data.metaFormDelete.id', (string)$metaForm->id)
                 ->etc()
         );
 
-        $this->assertNull(MetaPage::find($metaPage->id));
+        $this->assertNull(MetaForm::find($metaForm->id));
     }
 
     public function testOthersCannotDeleteMetaPromptPage()
@@ -488,20 +488,20 @@ class MetaPageMutationTest extends ApiTestCase
 
         $publication = Publication::factory()
             ->has(
-                MetaPage::factory()
+                MetaForm::factory()
                     ->has(MetaPrompt::factory()->count(3))
             )
             ->create();
 
         $response = $this->graphQL(
             /** @lang GraphQL */
-            'mutation DeleteMetaPage($id: ID!) {
-                metaPageDelete(id: $id) {
+            'mutation DeleteMetaForm($id: ID!) {
+                metaFormDelete(id: $id) {
                     id
                 }
             }',
             [
-                'id' => $publication->metaPages[0]->id,
+                'id' => $publication->metaForms[0]->id,
             ]
         );
 

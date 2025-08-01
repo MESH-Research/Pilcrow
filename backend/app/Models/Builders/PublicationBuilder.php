@@ -30,14 +30,14 @@ class PublicationBuilder extends Builder
     }
 
     /**
-     * Scope publications to those that have a specific meta page.
+     * Scope publications to those that have a specific meta form.
      *
-     * @param int $metaPageId The ID of the meta page.
+     * @param int $metaFormId The ID of the meta form.
      * @return self
      */
-    public function whereMetaPage($metaPageId): self
+    public function whereMetaForm($metaFormId): self
     {
-        return $this->whereHas('metaPages', fn($query) => $query->where('id', $metaPageId));
+        return $this->whereHas('metaForms', fn($query) => $query->where('id', $metaFormId));
     }
 
     /**

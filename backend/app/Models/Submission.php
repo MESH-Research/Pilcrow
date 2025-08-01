@@ -140,15 +140,15 @@ class Submission extends Model implements Auditable
     }
 
     /**
-     * The *current* meta pages that the publication has configured.
+     * The *current* meta forms that the publication has configured.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
      */
-    public function metaPages(): HasManyThrough
+    public function metaForms(): HasManyThrough
     {
         return $this
             ->hasManyThrough(
-                MetaPage::class,
+                MetaForm::class,
                 Publication::class,
                 'id',
                 'publication_id',

@@ -14,13 +14,13 @@ use Illuminate\Support\Facades\Auth;
 use Spatie\EloquentSortable\Sortable;
 use Spatie\EloquentSortable\SortableTrait;
 
-class MetaPage extends Model implements Sortable
+class MetaForm extends Model implements Sortable
 {
     use SortableTrait;
     use SoftDeletes;
     use HasFactory;
 
-    public $table = 'meta_pages';
+    public $table = 'meta_forms';
 
     protected $sortable = [
         'order_column_name' => 'order',
@@ -68,7 +68,7 @@ class MetaPage extends Model implements Sortable
      */
     public function metaPrompts(): HasMany
     {
-        return $this->hasMany(MetaPrompt::class, 'meta_page_id')->ordered();
+        return $this->hasMany(MetaPrompt::class, 'meta_form_id')->ordered();
     }
 
     /**

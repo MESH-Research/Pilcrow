@@ -3,27 +3,27 @@ declare(strict_types=1);
 
 namespace App\Policies;
 
-use App\Models\MetaPage;
+use App\Models\MetaForm;
 use App\Models\Publication;
 use App\Models\Role;
 use App\Models\User;
 
-class MetaPagePolicy
+class MetaFormPolicy
 {
     /**
      * @param \App\Models\User $user
-     * @param \App\Models\MetaPage $metaPage
+     * @param \App\Models\MetaForm $metaForm
      * @return bool
      */
-    public function update(User $user, MetaPage $metaPage): bool
+    public function update(User $user, MetaForm $metaForm): bool
     {
         // Check if the user has the role of Application Administrator
         if ($user->hasRole(Role::APPLICATION_ADMINISTRATOR)) {
             return true;
         }
 
-        // Check if the user has a publication role that allows them to update the meta page
-        $publication = Publication::whereMetaPage($metaPage->id)
+        // Check if the user has a publication role that allows them to update the meta form
+        $publication = Publication::whereMetaForm($metaForm->id)
             ->whereAdmin($user->id)
             ->exists();
 
@@ -46,7 +46,7 @@ class MetaPagePolicy
             return true;
         }
 
-        // Check if the user has a publication role that allows them to create a meta page
+        // Check if the user has a publication role that allows them to create a meta form
         $publication = Publication::where('id', $args['publication_id'])
             ->whereAdmin($user->id)
             ->exists();
@@ -60,18 +60,18 @@ class MetaPagePolicy
 
     /**
      * @param \App\Models\User $user
-     * @param \App\Models\MetaPage $metaPage
+     * @param \App\Models\MetaForm $metaForm
      * @return bool
      */
-    public function delete(User $user, MetaPage $metaPage): bool
+    public function delete(User $user, MetaForm $metaForm): bool
     {
         // Check if the user has the role of Application Administrator
         if ($user->hasRole(Role::APPLICATION_ADMINISTRATOR)) {
             return true;
         }
 
-        // Check if the user has a publication role that allows them to delete the meta page
-        $publication = Publication::whereMetaPage($metaPage->id)
+        // Check if the user has a publication role that allows them to delete the meta form
+        $publication = Publication::whereMetaForm($metaForm->id)
             ->whereAdmin($user->id)
             ->exists();
 

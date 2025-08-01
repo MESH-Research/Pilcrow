@@ -33,21 +33,21 @@ class MetaPrompt extends Model implements Sortable
      */
     public function buildSortQuery(): Builder
     {
-        return static::query()->where('meta_page_id', $this->meta_page_id);
+        return static::query()->where('meta_form_id', $this->meta_form_id);
     }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function metaPage(): BelongsTo
+    public function metaForm(): BelongsTo
     {
-        return $this->belongsTo(MetaPage::class, 'meta_page_id');
+        return $this->belongsTo(MetaForm::class, 'meta_form_id');
     }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function answers(): HasMany
+    public function responses(): HasMany
     {
         return $this->hasMany(SubmissionMetaResponse::class, 'meta_prompt_id');
     }

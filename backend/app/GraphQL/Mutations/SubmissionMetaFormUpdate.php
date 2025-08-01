@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace App\GraphQL\Mutations;
 
-use App\Models\MetaPage;
+use App\Models\MetaForm;
 use App\Models\SubmissionMetaResponse;
 
-final readonly class SubmissionMetaPageUpdate
+final readonly class SubmissionMetaFormUpdate
 {
     /**
      * Handle the mutation to update or create a submission meta response.
@@ -19,17 +19,17 @@ final readonly class SubmissionMetaPageUpdate
     {
         $response = SubmissionMetaResponse::where([
             'submission_id' => $args['input']['submission_id'],
-            'meta_page_id' => $args['input']['meta_page_id'],
+            'meta_form_id' => $args['input']['meta_form_id'],
         ])->first();
 
         if (!$response) {
             $response = new SubmissionMetaResponse();
-            $response->meta_page_id = $args['input']['meta_page_id'];
+            $response->meta_form_id = $args['input']['meta_form_id'];
             $response->submission_id = $args['input']['submission_id'];
         }
 
         $response->responses = $args['input']['responses'];
-        $response->prompts = MetaPage::findOrFail($args['input']['meta_page_id'])->metaPrompts->toArray();
+        $response->prompts = MetaForm::findOrFail($args['input']['meta_form_id'])->metaPrompts->toArray();
 
         $response->save();
 
