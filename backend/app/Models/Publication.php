@@ -52,6 +52,9 @@ class Publication extends BaseModel
      */
     public function setNameAttribute($value)
     {
+        if (is_null($value)) {
+            $value = '';
+        }
         $this->attributes['name'] = trim($value);
     }
 
