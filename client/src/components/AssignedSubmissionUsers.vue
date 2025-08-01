@@ -75,7 +75,7 @@ import { useMutation } from "@vue/apollo-composable"
 import {
   UPDATE_SUBMISSION_REVIEWERS,
   UPDATE_SUBMISSION_REVIEW_COORDINATORS,
-  UPDATE_SUBMISSION_SUBMITERS,
+  UPDATE_SUBMISSION_SUBMITTERS,
   INVITE_REVIEWER,
   INVITE_REVIEW_COORDINATOR
 } from "src/graphql/mutations"
@@ -131,8 +131,8 @@ const mutations = {
     invite: INVITE_REVIEW_COORDINATOR
   },
   submitters: {
-    update: UPDATE_SUBMISSION_SUBMITERS,
-    invite: UPDATE_SUBMISSION_SUBMITERS // TODO: Enable submitter invitation
+    update: UPDATE_SUBMISSION_SUBMITTERS,
+    invite: UPDATE_SUBMISSION_SUBMITTERS // TODO: Enable submitter invitation
   }
 }
 const setMutationType = computed(() => {

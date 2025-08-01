@@ -5,7 +5,7 @@ import { Notify } from "quasar"
 import {
   UPDATE_SUBMISSION_REVIEWERS,
   UPDATE_SUBMISSION_REVIEW_COORDINATORS,
-  UPDATE_SUBMISSION_SUBMITERS
+  UPDATE_SUBMISSION_SUBMITTERS
 } from "src/graphql/mutations"
 import { beforeEach, describe, expect, test, vi } from "vitest"
 import AssignedSubmissionUsers from "./AssignedSubmissionUsers.vue"
@@ -28,7 +28,7 @@ describe("AssignedSubmissionUsers", () => {
     UPDATE_SUBMISSION_REVIEW_COORDINATORS,
     coordinatorsMutation
   )
-  mockClient.setRequestHandler(UPDATE_SUBMISSION_SUBMITERS, submittersMutation)
+  mockClient.setRequestHandler(UPDATE_SUBMISSION_SUBMITTERS, submittersMutation)
 
   beforeEach(() => {
     vi.resetAllMocks()
