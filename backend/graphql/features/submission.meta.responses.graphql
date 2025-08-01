@@ -11,6 +11,11 @@ type SubmissionMetaResponse {
     meta_page: MetaPage @belongsTo(relation: "metaPage")
 }
 
+type SubmissionMetaPromptResponse {
+    meta_prompt_id: ID!
+    response: String
+}
+
 extend type Mutation {
     submissionMetaPageUpdate(
         input: SubmissionMetaPageUpdate
@@ -20,10 +25,10 @@ extend type Mutation {
 input SubmissionMetaPageUpdate @validator {
     submission_id: ID!
     meta_page_id: ID!
-    responses: [SubmissionMetaPromptResponse!]!
+    responses: [SubmissionMetaPromptResponseInput!]!
 }
 
-input SubmissionMetaPromptResponse {
+input SubmissionMetaPromptResponseInput {
     meta_prompt_id: ID!
     response: String
 }
