@@ -47,7 +47,7 @@
     <exclude-pattern>*/Providers/*</exclude-pattern>
 
     <arg name="colors"/>
-    <ini name="memory_limit" value="128M"/>
+    <ini name="memory_limit" value="256M"/>
 
 
 
