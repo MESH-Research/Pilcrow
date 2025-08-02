@@ -4,7 +4,12 @@
     <p>Customize blocks of text displayed to your publication's users.</p>
     <div v-if="loading">Loading...</div>
     <div v-else-if="result">
-      <q-btn color="primary" icon="add" label="Add Question Set" />
+      <q-btn
+        :to="{ name: 'publication:setup:metaFormCreate' }"
+        color="primary"
+        icon="add"
+        label="Add Meta Form"
+      />
       <q-list bordered separator class="q-mt-lg">
         <template v-for="set in metaForms" :key="set.id">
           <q-item :class="darkModeStatus ? `bg-blue-grey-10` : `bg-grey-3`">
@@ -57,7 +62,7 @@
           </Draggable>
           <q-item>
             <q-item-section class="q-my-md" avatar>
-              <q-btn color="primary" icon="add">Add Question</q-btn>
+              <q-btn color="primary" icon="add">Add Prompt</q-btn>
             </q-item-section>
           </q-item>
         </template>
@@ -97,9 +102,9 @@ const metaForms = computed(() => {
         loading,
         prompts: computed({
           get: () => set.meta_prompts.toSorted((a, b) => a.order - b.order),
-          set: (newQuestions) => {
+          set: (newPrompts) => {
             let index = 0
-            const order = newQuestions.map((p) => ({
+            const order = newPrompts.map((p) => ({
               id: p.id,
               order: index++
             }))
