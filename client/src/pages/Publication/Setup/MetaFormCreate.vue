@@ -1,18 +1,17 @@
 <template>
-  <article v-if="loading">Loading...</article>
-  <article v-else class="q-pl-lg">
+  <article class="q-pl-lg">
     <h2>Add Meta Form</h2>
     <q-form data-cy="create_meta_form" @submit="handleSubmit()">
       <q-field borderless>
         <q-input
-          v-model="v$.form_name.$model"
-          :error="v$.form_name.$error"
+          v-model="v$.formName.$model"
+          :error="v$.formName.$error"
           outlined
           label="Form Name"
           data-cy="new_meta_form_name_input"
         />
       </q-field>
-      <q-field borderless class="q-my-md">
+      <q-field borderless>
         <q-input
           v-model="v$.formCaption.$model"
           :error="v$.formCaption.$error"
@@ -24,20 +23,23 @@
       <q-field borderless>
         <q-checkbox v-model="v$.isRequired.$model" label="Required" />
       </q-field>
-      <q-btn
-        class="accent text-white q-mt-lg"
-        type="submit"
-        label="Create"
-        :disable="saving"
-        :loading="saving"
-      />
-
-      <q-btn
-        :to="{ name: 'publication:setup:metaForms' }"
-        class="text-white q-mt-lg"
-        type="button"
-        label="Cancel"
-      ></q-btn>
+      <div class="q-gutter-md q-mt-lg q-mb-xl">
+        <q-btn
+          class="accent text-white"
+          type="submit"
+          label="Create"
+          :disable="saving"
+          :loading="saving"
+        />
+        <q-btn
+          :to="{ name: 'publication:setup:metaForms' }"
+          class="text-white"
+          type="button"
+          label="Cancel"
+          :disable="saving"
+          :loading="saving"
+        ></q-btn>
+      </div>
     </q-form>
   </article>
 </template>

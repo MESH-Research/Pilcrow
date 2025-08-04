@@ -2,7 +2,9 @@
   <article class="q-pl-lg">
     <h2>Meta Forms</h2>
     <p>Customize blocks of text displayed to your publication's users.</p>
-    <div v-if="loading">Loading...</div>
+    <div v-if="loading">
+      <q-spinner color="primary" />
+    </div>
     <div v-else-if="result">
       <q-btn
         :to="{ name: 'publication:setup:metaFormCreate' }"

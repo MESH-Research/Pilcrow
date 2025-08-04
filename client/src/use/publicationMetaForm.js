@@ -7,19 +7,20 @@ import { CREATE_SUBMISSION_DRAFT } from "src/graphql/mutations"
 export const useMetaFormCreation = () => {
   const { mutate, saving } = useMutation(CREATE_SUBMISSION_DRAFT)
   const form = reactive({
-    form_name: "",
+    formName: "",
     formCaption: "",
     isRequired: false
   })
 
   const rules = {
-    name: {
+    formName: {
       required,
       maxLength: maxLength(512)
     },
-    caption: {
+    formCaption: {
       maxLength: maxLength(2048)
-    }
+    },
+    isRequired: {}
   }
 
   const v$ = useVuelidate(rules, form)
