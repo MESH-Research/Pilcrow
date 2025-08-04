@@ -13,7 +13,7 @@
     <div class="row flex-center q-pa-md">
       <div class="col-lg-6 col-md-7 col-sm-9 col-xs-12">
         <article>{{ submission }}</article>
-        <div v-for="entity in meta_forms.meta_prompts" :key="entity.id">
+        <div v-for="entity in meta_form.meta_prompts" :key="entity.id">
           <q-input v-if="entity.type === 'INPUT'" :label="entity.label" />
           <q-select
             v-if="entity.type === 'SELECT'"
@@ -48,9 +48,8 @@ const props = defineProps({
   }
 })
 const { result, loading } = useQuery(GET_SUBMISSION_META_FORMS, props)
-const meta_forms = computed(
-  () => result.value?.submission.publication.meta_forms
-)
+const submission = computed(() => result.value?.submission)
+const meta_form = computed(() => submission.value?.publication.meta_form)
 </script>
 
 <script>
@@ -61,7 +60,7 @@ const GET_SUBMISSION_META_FORMS = gql`
       id
       title
       publication {
-        meta_forms(id: $formId) {
+        meta_form(id: $formId) {
           id
           name
           meta_prompts {

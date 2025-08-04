@@ -147,7 +147,7 @@ function onGoToSubmissionContentClick() {
 
 function onSubmissionMetaClick(formId) {
   push({
-    name: "submission:metaForms",
+    name: "submission:metaForm",
     params: { id: submission.value.id, formId }
   })
 }
