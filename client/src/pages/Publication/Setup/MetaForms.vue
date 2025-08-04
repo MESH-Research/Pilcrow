@@ -1,5 +1,5 @@
 <template>
-  <article class="q-pl-lg">
+  <article class="q-px-md">
     <h2>Meta Forms</h2>
     <p>Customize blocks of text displayed to your publication's users.</p>
     <div v-if="loading">Loading...</div>
