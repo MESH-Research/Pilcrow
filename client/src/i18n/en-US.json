@@ -1,5 +1,7 @@
 {
   "needs_attention": "Needs attention",
+  "required": "Required",
+  "optional": "Optional",
   "user": {
     "self": "No users | User | Users",
     "email": "Email",
@@ -890,6 +892,9 @@
         "btn_label": "Return to Publication Home Page"
       },
       "draft_title": "{submission_title} Draft",
+      "custom_form": {
+        "section_title": "Additional Information"
+      },
       "todo": {
         "content": {
           "title": "Submission Content",

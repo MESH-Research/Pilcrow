@@ -21,15 +21,32 @@
             <q-item-section>
               <q-item-label>
                 {{ set.name }}
+
+                <div v-if="set.caption">{{ set.caption }}</div>
               </q-item-label>
             </q-item-section>
             <q-item-section side>
               <q-spinner v-if="set.loading.value" />
             </q-item-section>
             <q-item-section side>
-              <q-chip v-if="set.required" class="bg-secondary text-white"
-                >Required</q-chip
+              <q-btn
+                v-if="!editing_title"
+                flat
+                icon="edit"
+                color="accent"
+                class="q-ml-xs"
+                size="xs"
+                padding="xs"
+                aria-label="Change label"
+                @click="editTitle"
               >
+                <q-tooltip anchor="center left" self="center right">
+                  Edit Form
+                </q-tooltip>
+              </q-btn>
+            </q-item-section>
+            <q-item-section side>
+              <ChipRequired :required="set.required" :can-toggle="true" />
             </q-item-section>
             <q-item-section side>
               <q-icon name="drag_handle" />
@@ -49,12 +66,27 @@
                   <div v-if="prompt.caption">{{ prompt.caption }}</div>
                 </q-item-section>
                 <q-item-section side>
-                  <q-chip
-                    v-if="prompt.required"
-                    class="bg-secondary text-white"
+                  <q-btn
+                    v-if="!editing_title"
+                    flat
+                    icon="edit"
+                    color="accent"
+                    class="q-ml-xs"
+                    size="xs"
+                    padding="xs"
+                    aria-label="Change label"
+                    @click="editTitle"
                   >
-                    Required
-                  </q-chip>
+                    <q-tooltip anchor="center left" self="center right">
+                      Edit Prompt
+                    </q-tooltip>
+                  </q-btn>
+                </q-item-section>
+                <q-item-section side>
+                  <ChipRequired
+                    :required="prompt.required"
+                    :can-toggle="true"
+                  />
                 </q-item-section>
                 <q-item-section side>
                   <q-icon name="drag_handle" />
@@ -97,13 +129,13 @@ const { mutate: updateMetaPrompts } = useMutation(META_PROMPT_UPDATE)
 
 const metaForms = computed(() => {
   return (
-    result.value?.publication.meta_forms?.map((set) => {
+    result.value?.publication.meta_forms?.map((form) => {
       const loading = ref(false)
       return {
-        ...set,
+        ...form,
         loading,
         prompts: computed({
-          get: () => set.meta_prompts.toSorted((a, b) => a.order - b.order),
+          get: () => form.meta_prompts.toSorted((a, b) => a.order - b.order),
           set: (newPrompts) => {
             let index = 0
             const order = newPrompts.map((p) => ({
@@ -144,6 +176,7 @@ function promptIcon(type) {
 <script>
 import { useMutation, useQuery } from "@vue/apollo-composable"
 import gql from "graphql-tag"
+import ChipRequired from "src/components/atoms/ChipRequired.vue"
 
 const GET_PUBLICATION_PROMPTS = gql`
   query GetPublicationPrompts($id: ID!) {
@@ -152,6 +185,7 @@ const GET_PUBLICATION_PROMPTS = gql`
       meta_forms {
         id
         name
+        caption
         required
         meta_prompts {
           id

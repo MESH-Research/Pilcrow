@@ -1,11 +1,12 @@
 <template>
   <article class="q-pl-lg">
     <h2>Add Meta Form</h2>
+    {{ publication.id }}
     <q-form data-cy="create_meta_form" @submit="handleSubmit()">
       <q-field borderless>
         <q-input
-          v-model="v$.formName.$model"
-          :error="v$.formName.$error"
+          v-model="v$.name.$model"
+          :error="v$.name.$error"
           outlined
           label="Form Name"
           data-cy="new_meta_form_name_input"
@@ -13,15 +14,15 @@
       </q-field>
       <q-field borderless>
         <q-input
-          v-model="v$.formCaption.$model"
-          :error="v$.formCaption.$error"
+          v-model="v$.caption.$model"
+          :error="v$.caption.$error"
           outlined
           label="Caption"
           data-cy="new_meta_form_caption_input"
         />
       </q-field>
       <q-field borderless>
-        <q-checkbox v-model="v$.isRequired.$model" label="Required" />
+        <q-checkbox v-model="v$.required.$model" label="Required" />
       </q-field>
       <div class="q-gutter-md q-mt-lg q-mb-xl">
         <q-btn

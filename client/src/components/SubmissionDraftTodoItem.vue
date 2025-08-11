@@ -7,19 +7,7 @@
         </div>
         <div class="text-caption">
           <slot />
-          <q-chip
-            :color="
-              $props.required
-                ? `secondary`
-                : $props.darkMode
-                  ? `grey-10`
-                  : `grey-3`
-            "
-            :text-color="$props.required ? `white` : ``"
-            class="q-mx-none q-mb-none"
-          >
-            {{ $props.required ? "Required" : "Optional" }}
-          </q-chip>
+          <ChipRequired :required="$props.required" />
         </div>
         <template #action>
           <q-btn
@@ -52,6 +40,7 @@
 
 <script setup>
 import { defineProps, defineEmits } from "vue"
+import ChipRequired from "./atoms/ChipRequired.vue"
 defineProps({
   title: {
     type: String,

@@ -67,7 +67,9 @@
                 {{ $t(`submissions.create.todo.content.description`) }}
               </p>
             </submission-draft-todo-item>
-            <div class="text-h3">Additional Information</div>
+            <div class="text-h3">
+              {{ $t(`submissions.create.custom_form.section_title`) }}
+            </div>
             <submission-draft-todo-item
               v-for="form_prompt in submission.publication.meta_forms"
               :key="form_prompt.id"

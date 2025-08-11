@@ -968,3 +968,21 @@ export const MARK_INLINE_COMMENT_REPLIES_READ = gql`
     }
   }
 `
+
+export const CREATE_SUBMISSION_META_FORM = gql`
+  mutation CreateSubmissionMetaForm(
+    $name: String!
+    $caption: String
+    $required: Boolean
+    $publication_id: ID!
+  ) {
+    metaFormCreate(
+      input: {
+        name: $name
+        caption: $caption
+        required: $required
+        publication_id: $publication_id
+      }
+    )
+  }
+`
