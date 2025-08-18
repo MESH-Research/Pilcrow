@@ -95,15 +95,6 @@ const routes = [
             component: () => import("src/pages/Publication/Setup/MetaForms.vue")
           },
           {
-            name: "publication:setup:metaFormCreate",
-            path: "metaform",
-            meta: {
-              name: "Add Meta Form"
-            },
-            component: () =>
-              import("src/pages/Publication/Setup/MetaFormCreate.vue")
-          },
-          {
             name: "publication:setup:criteria",
             meta: {
               name: "Style Criteria"

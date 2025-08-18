@@ -1,5 +1,5 @@
 <template>
-  <q-card bordered flat>
+  <q-card bordered square flat>
     <q-card-section class="q-pa-none">
       <q-banner inline-actions>
         <div>

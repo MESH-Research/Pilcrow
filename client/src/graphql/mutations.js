@@ -973,7 +973,7 @@ export const CREATE_SUBMISSION_META_FORM = gql`
   mutation CreateSubmissionMetaForm(
     $name: String!
     $caption: String
-    $required: Boolean
+    $required: Boolean!
     $publication_id: ID!
   ) {
     metaFormCreate(
@@ -983,6 +983,14 @@ export const CREATE_SUBMISSION_META_FORM = gql`
         required: $required
         publication_id: $publication_id
       }
-    )
+    ) {
+      id
+      name
+      caption
+      required
+      publication {
+        id
+      }
+    }
   }
 `

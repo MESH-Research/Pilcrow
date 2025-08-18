@@ -483,3 +483,26 @@ export const GET_IDENTITY_PROVIDERS = gql`
     }
   }
 `
+
+export const GET_PUBLICATION_PROMPTS = gql`
+  query GetPublicationPrompts($id: ID!) {
+    publication(id: $id) {
+      id
+      meta_forms {
+        id
+        name
+        caption
+        required
+        meta_prompts {
+          id
+          label
+          type
+          order
+          options
+          required
+          caption
+        }
+      }
+    }
+  }
+`

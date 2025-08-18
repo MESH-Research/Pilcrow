@@ -3,7 +3,6 @@ import { reactive } from "vue"
 import useVuelidate from "@vuelidate/core"
 import { required, maxLength } from "@vuelidate/validators"
 import { CREATE_SUBMISSION_META_FORM } from "src/graphql/mutations"
-import { GET_PUBLICATION } from "src/graphql/queries"
 
 export const useMetaFormCreation = () => {
   const { mutate, saving } = useMutation(CREATE_SUBMISSION_META_FORM)
@@ -25,20 +24,22 @@ export const useMetaFormCreation = () => {
   }
 
   const v$ = useVuelidate(rules, form)
-  const createMetaForm = async () => {
+  const createMetaForm = async (publication_id) => {
     v$.value.$touch()
     if (v$.value.$invalid) {
       throw Error("FORM_VALIDATION")
     }
+    console.log(form.required)
 
     const mutationResult = await mutate(
       {
         name: form.name,
         caption: form.caption,
-        required: form.required
+        required: form.required ?? false,
+        publication_id: publication_id
       },
       {
-        refetchQueries: [{ query: GET_PUBLICATION }]
+        refetchQueries: ["GetPublicationPrompts"]
       }
     )
     return mutationResult

@@ -1,5 +1,18 @@
 <template>
-  <article class="q-pl-lg">
+  <MetaFormCreate
+    v-if="creatingForm"
+    :creating-form="creatingForm"
+    :publication="props.publication"
+    @cancel="cancelCreateForm"
+    @submit="submitCreateForm"
+  />
+  <MetaFormEdit
+    v-else-if="editingForm != null"
+    :form="editingForm"
+    @cancel="cancelEditForm"
+    @submit="submitEditForm"
+  />
+  <article v-else class="q-pl-lg">
     <h2>Meta Forms</h2>
     <p>Customize blocks of text displayed to your publication's users.</p>
     <div v-if="loading">
@@ -7,30 +20,28 @@
     </div>
     <div v-else-if="result">
       <q-btn
-        :to="{ name: 'publication:setup:metaFormCreate' }"
         color="primary"
         icon="add"
         label="Add Meta Form"
+        @click="createForm"
       />
       <q-list bordered separator class="q-mt-lg">
-        <template v-for="set in metaForms" :key="set.id">
+        <template v-for="form in metaForms" :key="form.id">
           <q-item :class="darkModeStatus ? `bg-blue-grey-10` : `bg-grey-3`">
             <q-item-section avatar>
               <q-icon name="ballot" />
             </q-item-section>
             <q-item-section>
               <q-item-label>
-                {{ set.name }}
-
-                <div v-if="set.caption">{{ set.caption }}</div>
+                {{ form.name }}
+                <div v-if="form.caption">{{ form.caption }}</div>
               </q-item-label>
             </q-item-section>
             <q-item-section side>
-              <q-spinner v-if="set.loading.value" />
+              <q-spinner v-if="form.loading.value" />
             </q-item-section>
             <q-item-section side>
               <q-btn
-                v-if="!editing_title"
                 flat
                 icon="edit"
                 color="accent"
@@ -38,7 +49,7 @@
                 size="xs"
                 padding="xs"
                 aria-label="Change label"
-                @click="editTitle"
+                @click="editForm(form)"
               >
                 <q-tooltip anchor="center left" self="center right">
                   Edit Form
@@ -46,13 +57,17 @@
               </q-btn>
             </q-item-section>
             <q-item-section side>
-              <ChipRequired :required="set.required" :can-toggle="true" />
+              <ChipRequired
+                :required="form.required"
+                :can-toggle="true"
+                @click="toggleFormRequired(form)"
+              />
             </q-item-section>
             <q-item-section side>
               <q-icon name="drag_handle" />
             </q-item-section>
           </q-item>
-          <Draggable v-model="set.prompts.value" item-key="id" tag="QList">
+          <Draggable v-model="form.prompts.value" item-key="id" tag="QList">
             <template #item="{ element: prompt }">
               <q-item :inset-level="1">
                 <q-item-section avatar>
@@ -62,12 +77,10 @@
                   <q-item-label>
                     {{ prompt.label }}
                   </q-item-label>
-
                   <div v-if="prompt.caption">{{ prompt.caption }}</div>
                 </q-item-section>
                 <q-item-section side>
                   <q-btn
-                    v-if="!editing_title"
                     flat
                     icon="edit"
                     color="accent"
@@ -75,7 +88,7 @@
                     size="xs"
                     padding="xs"
                     aria-label="Change label"
-                    @click="editTitle"
+                    @click="editForm(form)"
                   >
                     <q-tooltip anchor="center left" self="center right">
                       Edit Prompt
@@ -106,13 +119,15 @@
 </template>
 
 <script setup>
+import { GET_PUBLICATION_PROMPTS } from "src/graphql/queries"
 import { computed, ref } from "vue"
-
+import { useDarkMode } from "src/use/guiElements"
+import ChipRequired from "src/components/atoms/ChipRequired.vue"
 import Draggable from "vuedraggable"
 
-import { useDarkMode } from "src/use/guiElements"
-
 const { darkModeStatus } = useDarkMode()
+const editingForm = ref(null)
+const creatingForm = ref(false)
 
 const props = defineProps({
   publication: {
@@ -126,6 +141,35 @@ const { result, loading } = useQuery(GET_PUBLICATION_PROMPTS, {
 })
 
 const { mutate: updateMetaPrompts } = useMutation(META_PROMPT_UPDATE)
+const { mutate: updateMetaForm } = useMutation(META_FORM_UPDATE)
+
+function createForm() {
+  creatingForm.value = true
+}
+function submitCreateForm() {
+  creatingForm.value = false
+}
+function cancelCreateForm() {
+  creatingForm.value = false
+}
+function editForm(form) {
+  editingForm.value = form
+}
+function cancelEditForm() {
+  editingForm.value = null
+}
+function submitEditForm() {
+  editingForm.value = null
+}
+
+function toggleFormRequired(form) {
+  const newForm = { id: form.id, required: !form.required }
+  updateMetaForm({ input: { newForm } })
+    .catch((error) => {
+      console.error(error)
+    })
+    .finally(() => (loading.value = false))
+}
 
 const metaForms = computed(() => {
   return (
@@ -176,30 +220,8 @@ function promptIcon(type) {
 <script>
 import { useMutation, useQuery } from "@vue/apollo-composable"
 import gql from "graphql-tag"
-import ChipRequired from "src/components/atoms/ChipRequired.vue"
-
-const GET_PUBLICATION_PROMPTS = gql`
-  query GetPublicationPrompts($id: ID!) {
-    publication(id: $id) {
-      id
-      meta_forms {
-        id
-        name
-        caption
-        required
-        meta_prompts {
-          id
-          label
-          type
-          order
-          options
-          required
-          caption
-        }
-      }
-    }
-  }
-`
+import MetaFormCreate from "src/components/forms/MetaFormCreate.vue"
+import MetaFormEdit from "src/components/forms/MetaFormEdit.vue"
 
 const META_PROMPT_UPDATE = gql`
   mutation MetaPromptUpdate($input: [UpdateMetaPromptInput!]!) {
@@ -211,6 +233,18 @@ const META_PROMPT_UPDATE = gql`
       type
       options
       caption
+    }
+  }
+`
+
+const META_FORM_UPDATE = gql`
+  mutation MetaFormUpdate($input: [UpdateMetaFormInput!]!) {
+    metaFormUpdate(input: $input) {
+      id
+      name
+      caption
+      required
+      order
     }
   }
 `
