@@ -47,15 +47,6 @@ export const _RELATED_USER_FIELDS = gql`
   }
 `
 
-export const _PAGINATION_FIELDS = gql`
-  fragment paginationFields on PaginatorInfo {
-    count
-    currentPage
-    lastPage
-    perPage
-  }
-`
-
 export const _COMMENT_FIELDS = gql`
   fragment commentFields on Comment {
     id
@@ -71,4 +62,13 @@ export const _COMMENT_FIELDS = gql`
     }
   }
   ${_RELATED_USER_FIELDS}
+`
+
+export const _PAGINATION_FIELDS = gql`
+  fragment paginationFields on PaginatorInfo {
+    count
+    currentPage
+    lastPage
+    perPage
+  }
 `

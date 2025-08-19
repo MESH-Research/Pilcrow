@@ -22,9 +22,9 @@
           </q-card-section>
           <q-separator />
           <q-card-actions
-            :align="`${$q.screen.width < 600 ? 'left' : 'evenly'}`"
-            :class="`${$q.screen.width < 600 ? 'q-pl-lg' : ''}`"
-            :vertical="$q.screen.width < 600 ? true : false"
+            :align="`${screen.width < 600 ? 'left' : 'evenly'}`"
+            :class="`${screen.width < 600 ? 'q-pl-lg' : ''}`"
+            :vertical="screen.width < 600 ? true : false"
           >
             <q-btn flat icon="account_circle" to="/account/profile">{{
               $t(`profile.page_title`)
@@ -46,7 +46,7 @@
           class="flex justify-center items-center full-height q-pa-md text-center"
         >
           <q-card-section class="text-h3">
-            <span :class="`${$q.screen.width < 1024 ? 'block' : ''}`"
+            <span :class="`${screen.width < 1024 ? 'block' : ''}`"
               >{{ $t(`dashboard.guide_question`) }} </span
             >&nbsp;<i18n-t
               keypath="dashboard.guide_call_to_action"
@@ -107,27 +107,37 @@
   </article>
 </template>
 
-<script setup>
-import AvatarImage from "src/components/atoms/AvatarImage.vue"
+<script setup lang="ts">
+import { useQuasar } from "quasar"
 import { useCurrentUser } from "src/use/user"
 import { useQuery } from "@vue/apollo-composable"
-import { CURRENT_USER_SUBMISSIONS, GET_SUBMISSIONS } from "src/graphql/queries"
+
+import AvatarImage from "src/components/atoms/AvatarImage.vue"
 import SubmissionTable from "src/components/SubmissionTable.vue"
+
 import { computed } from "vue"
 
+import {
+  GetSubmissionsDocument,
+  CurrentUserSubmissionsDocument
+} from "src/gql/graphql"
+
+const { screen } = useQuasar()
+
 const { currentUser } = useCurrentUser()
-const { result: all_submissions_result } = useQuery(GET_SUBMISSIONS, {
+const { result: all_submissions_result } = useQuery(GetSubmissionsDocument, {
   page: 1
 })
 const all_submissions = computed(() => {
   return all_submissions_result.value?.submissions.data ?? []
 })
-const { result } = useQuery(CURRENT_USER_SUBMISSIONS)
+const { result } = useQuery(CurrentUserSubmissionsDocument)
 const submissions = computed(() => {
   let s = result.value?.currentUser?.submissions ?? []
-  return [...s].sort((a, b) => {
-    return new Date(b.created_at) - new Date(a.created_at)
-  })
+  return [...s].sort(
+    (a, b) =>
+      new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+  )
 })
 const reviewer_submissions = computed(() =>
   submissions.value.filter(function (submission) {
@@ -159,3 +169,170 @@ const submitter_submissions = computed(() =>
   }
 }
 </style>
+
+<script lang="ts">
+import { graphql } from "src/gql"
+
+graphql(`
+  query CurrentUserSubmissions {
+    currentUser {
+      id
+      roles {
+        name
+      }
+      submissions {
+        id
+        title
+        status
+        created_at
+        submitted_at
+        my_role
+        effective_role
+        review_coordinators {
+          ...RelatedUserFields
+        }
+        reviewers {
+          ...RelatedUserFields
+        }
+        submitters {
+          ...RelatedUserFields
+        }
+        inline_comments(trashed: WITH) {
+          id
+          content
+          created_by {
+            id
+            display_label
+            email
+          }
+          updated_by {
+            id
+            display_label
+            email
+          }
+          created_at
+          updated_at
+          style_criteria {
+            id
+            name
+            icon
+          }
+          replies {
+            id
+            content
+            created_by {
+              id
+              display_label
+              email
+            }
+            updated_by {
+              id
+              display_label
+              email
+            }
+            created_at
+            updated_at
+            read_at
+          }
+          read_at
+        }
+        overall_comments(trashed: WITH) {
+          id
+          content
+          created_by {
+            id
+            display_label
+            email
+          }
+          updated_by {
+            id
+            display_label
+            email
+          }
+          created_at
+          updated_at
+          replies {
+            id
+            content
+            created_by {
+              id
+              display_label
+              email
+            }
+            updated_by {
+              id
+              display_label
+              email
+            }
+            created_at
+            updated_at
+            read_at
+          }
+          read_at
+        }
+        publication {
+          id
+          name
+          my_role
+          editors {
+            ...RelatedUserFields
+          }
+          publication_admins {
+            ...RelatedUserFields
+          }
+        }
+      }
+    }
+  }
+`)
+
+graphql(`
+  fragment RelatedUserFields on User {
+    id
+    display_label
+    username
+    name
+    email
+    staged
+  }
+`)
+
+graphql(`
+  query GetSubmissions($page: Int) {
+    submissions(page: $page) {
+      paginatorInfo {
+        ...PaginationFields
+      }
+      data {
+        id
+        title
+        status
+        my_role
+        created_at
+        submitted_at
+        effective_role
+        submitters {
+          ...RelatedUserFields
+        }
+        reviewers {
+          ...RelatedUserFields
+        }
+        review_coordinators {
+          ...RelatedUserFields
+        }
+        publication {
+          id
+          name
+          my_role
+          editors {
+            ...RelatedUserFields
+          }
+          publication_admins {
+            ...RelatedUserFields
+          }
+        }
+      }
+    }
+  }
+`)
+</script>

@@ -17,10 +17,19 @@ const config = [
      *
      * ESLint requires "ignores" key to be the only one in this object
      */
-    ignores: ["*.ts"]
   },
   ...pluginQuasar.configs.recommended(),
   ...pluginVue.configs["flat/recommended"],
+  {
+    files: ["**/*.ts", "**/*.vue"],
+    rules: {
+      "@typescript-eslint/consistent-type-imports": [
+        "error",
+        { prefer: "type-imports" }
+      ]
+    }
+  },
+  vueTsConfigs.recommendedTypeChecked,
   /**
    * https://eslint.vuejs.org
    *
@@ -34,7 +43,7 @@ const config = [
    *   -> Above, plus rules to enforce subjective community defaults to ensure consistency.
    */
   {
-    files: ["src*/**/*.{vue,js,mjs,cjs}"],
+    files: ["src*/**/*.{vue,js,ts,mjs,cjs}"],
     ignores: ["src*/**/*.vitest.spec.{js,mjs,cjs}"],
     languageOptions: {
       ecmaVersion: "latest",
@@ -60,6 +69,7 @@ const config = [
       "no-debugger": process.env.NODE_ENV === "production" ? "error" : "off"
     }
   },
+
   {
     files: [
       "test/vitest/**/*.{js,mjs,cjs,ts,mts,cts}",

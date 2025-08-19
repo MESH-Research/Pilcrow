@@ -1,4 +1,5 @@
 import { onError } from "@apollo/client/link/error"
+import type { ServerError } from "@apollo/client/link/utils"
 import { Cookies } from "quasar"
 import { setContext } from "@apollo/client/link/context"
 import { Observable } from "@apollo/client/core"
@@ -45,7 +46,7 @@ const withXsrfLink = setContext((_, { headers }) => {
 
 //On a 419 error, fetch a new XSRF token and retry the request.
 const expiredTokenLink = onError(({ operation, forward, networkError }) => {
-  if (networkError && networkError.statusCode == 419) {
+  if ("statusCode" in networkError && networkError.statusCode == 419) {
     return new Observable((observer) => {
       fetchXsrfToken()
         .then((newXsrfToken) => {
