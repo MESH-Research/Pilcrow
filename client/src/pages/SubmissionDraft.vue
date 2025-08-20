@@ -110,7 +110,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ConfirmStatusChangeDialog from "src/components/dialogs/ConfirmStatusChangeDialog.vue"
 import SubmissionDraftTodoItem from "src/components/SubmissionDraftTodoItem.vue"
 import { GET_SUBMISSION } from "src/graphql/queries"

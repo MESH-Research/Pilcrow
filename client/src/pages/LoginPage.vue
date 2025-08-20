@@ -118,7 +118,7 @@
   </q-page>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import PasswordInput from "src/components/forms/PasswordInput.vue"
 import ErrorBanner from "src/components/molecules/ErrorBanner.vue"
 import ErrorFieldRenderer from "src/components/molecules/ErrorFieldRenderer.vue"

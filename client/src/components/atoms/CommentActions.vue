@@ -42,7 +42,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { inject, computed } from "vue"
 import { useCurrentUser } from "src/use/user"
 import ConfirmCommentDeletion from "../dialogs/ConfirmCommentDeletion.vue"

@@ -9,7 +9,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 //Import components
 import ProfileMetadataForm from "src/components/forms/ProfileMetadataForm.vue"
 import { computed, provide } from "vue"

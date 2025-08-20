@@ -132,7 +132,7 @@
   </q-page>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import NewPasswordInput from "../components/forms/NewPasswordInput.vue"
 import { useUserValidation } from "src/use/userValidation"
 import ErrorFieldRenderer from "src/components/molecules/ErrorFieldRenderer.vue"

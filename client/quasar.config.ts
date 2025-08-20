@@ -59,6 +59,7 @@ export default defineConfig(() => {
         APP_BANNER_LINK: process.env.APP_BANNER_LINK ?? undefined
       },
       vitePlugins: [
+        ["vite-plugin-graphql-codegen", {}],
         [
           "vite-plugin-checker",
           {

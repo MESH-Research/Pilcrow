@@ -5,7 +5,7 @@
   </article>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useMutation } from "@vue/apollo-composable"
 import { provide } from "vue"
 import UpdateBasicForm from "src/components/forms/Publication/UpdateBasicForm.vue"

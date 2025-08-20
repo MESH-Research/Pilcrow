@@ -66,7 +66,7 @@
   </section>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ReinviteUserDialog from "./dialogs/ReinviteUserDialog.vue"
 import FindUserSelect from "./forms/FindUserSelect.vue"
 import UserList from "./molecules/UserList.vue"
@@ -136,7 +136,7 @@ const mutations = {
   }
 }
 const setMutationType = computed(() => {
-  let type = mutations[props.roleGroup]
+  const type = mutations[props.roleGroup]
   if (typeof user.value === "string") {
     return type["invite"]
   }

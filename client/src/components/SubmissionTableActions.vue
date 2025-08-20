@@ -249,7 +249,7 @@
   </q-btn>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ConfirmStatusChangeDialog from "../components/dialogs/ConfirmStatusChangeDialog.vue"
 import { useQuasar } from "quasar"
 import {

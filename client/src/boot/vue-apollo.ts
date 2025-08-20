@@ -99,7 +99,7 @@ export default defineBoot(async ({ app, router }) => {
   )
 
   const apolloClients = {
-    default: apolloClient
+    defaultClient: apolloClient
   }
   const apolloProvider = createApolloProvider(apolloClients)
   app.provide(ApolloClients, apolloClients) // Provide for composition api

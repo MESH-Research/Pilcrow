@@ -54,7 +54,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import CommentPreviewHeader from "./CommentPreviewHeader.vue"
 
 defineProps({

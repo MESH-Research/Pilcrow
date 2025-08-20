@@ -18,7 +18,7 @@
   </article>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import PublicationStyleCriteria from "src/components/PublicationStyleCriteria.vue"
 defineProps({
   publication: {

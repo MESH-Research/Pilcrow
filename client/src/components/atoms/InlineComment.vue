@@ -138,7 +138,7 @@
     </q-card>
   </div>
 </template>
-<script setup>
+<script setup lang="ts">
 import { ref, computed, inject, provide } from "vue"
 import CommentHeader from "./CommentHeader.vue"
 import InlineCommentReply from "./InlineCommentReply.vue"

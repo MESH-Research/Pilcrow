@@ -205,7 +205,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { GET_SUBMISSION } from "src/graphql/queries"
 import {
   UPDATE_SUBMISSION_CONTENT,

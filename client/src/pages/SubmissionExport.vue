@@ -37,7 +37,7 @@
     </article>
   </div>
 </template>
-<script setup>
+<script setup lang="ts">
 import { computed } from "vue"
 import { GET_SUBMISSION } from "src/graphql/queries"
 import { useQuery } from "@vue/apollo-composable"

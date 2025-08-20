@@ -11,7 +11,7 @@
   </q-page>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useLogout } from "src/use/user"
 import { onMounted } from "vue"
 

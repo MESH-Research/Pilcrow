@@ -43,7 +43,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import SubmissionContent from "src/components/atoms/SubmissionContent.vue"
 import SubmissionViewToolbar from "src/components/atoms/SubmissionViewToolbar.vue"
 import { provide, computed } from "vue"

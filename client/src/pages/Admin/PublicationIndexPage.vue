@@ -104,7 +104,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { GET_PUBLICATIONS } from "src/graphql/queries"
 import { usePagination } from "src/use/pagination"
 import CreateForm from "src/components/forms/Publication/CreateForm.vue"

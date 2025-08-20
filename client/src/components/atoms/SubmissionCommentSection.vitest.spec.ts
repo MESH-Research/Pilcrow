@@ -6,11 +6,14 @@ import { useCurrentUser } from "src/use/user"
 import { ref } from "vue"
 import SubmissionCommentSection from "./SubmissionCommentSection.vue"
 
+import type { Mock } from "vitest"
 import { describe, expect, test, vi } from "vitest"
 
 vi.mock("src/use/user", () => ({
   useCurrentUser: vi.fn()
 }))
+
+const mockedUseCurrentUser = useCurrentUser as Mock
 
 installQuasarPlugin()
 describe("Overall Comments", () => {
@@ -270,7 +273,7 @@ describe("Overall Comments", () => {
   }
 
   test("able to mount", () => {
-    useCurrentUser.mockReturnValue({
+    mockedUseCurrentUser.mockReturnValue({
       currentUser: ref({ id: 1 })
     })
     const { wrapper } = wrapperFactory()
@@ -278,7 +281,7 @@ describe("Overall Comments", () => {
   })
 
   test("expected number of overall comments appear", () => {
-    useCurrentUser.mockReturnValue({
+    mockedUseCurrentUser.mockReturnValue({
       currentUser: ref({ id: 1 })
     })
     const { wrapper } = wrapperFactory()
@@ -287,7 +290,7 @@ describe("Overall Comments", () => {
   })
 
   test("expected number of overall comment replies appear", async () => {
-    useCurrentUser.mockReturnValue({
+    mockedUseCurrentUser.mockReturnValue({
       currentUser: ref({ id: 1 })
     })
     const { wrapper } = wrapperFactory()
@@ -323,7 +326,7 @@ describe("Overall Comments", () => {
     expect(findReplies(overallComments.at(2))).toHaveLength(0)
   })
   test("expected timestamp is shown for created and updated overall comment replies", async () => {
-    useCurrentUser.mockReturnValue({
+    mockedUseCurrentUser.mockReturnValue({
       currentUser: ref({ id: 1 })
     })
     const { wrapper } = wrapperFactory()
@@ -341,7 +344,7 @@ describe("Overall Comments", () => {
     ).toBe(true)
   })
 
-  test("unread overall comments appear unread", async () => {
+  test("unread overall comments appear unread", () => {
     const { wrapper } = wrapperFactory()
     const items = wrapper.findAllComponents('[data-cy="overallComment"]')
     expect(

@@ -10,7 +10,7 @@
   </q-layout>
 </template>
 
-<script>
+<script lang="ts">
 import AppFooter from "../components/AppFooter.vue"
 import AppHeader from "src/components/AppHeader.vue"
 export default {

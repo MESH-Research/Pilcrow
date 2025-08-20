@@ -59,14 +59,14 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent } from "vue"
 export default defineComponent({
   inheritAttrs: false
 })
 </script>
 
-<script setup>
+<script setup lang="ts">
 import NewPasswordInputAnalysis from "./atoms/NewPasswordInputAnalysis.vue"
 import PasswordInput from "./PasswordInput.vue"
 import NewPasswordInputMeter from "./atoms/NewPasswordInputMeter.vue"

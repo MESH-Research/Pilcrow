@@ -104,7 +104,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useQuery } from "@vue/apollo-composable"
 import { computed } from "vue"
 import { GET_PUBLICATION } from "src/graphql/queries"

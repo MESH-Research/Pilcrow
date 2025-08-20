@@ -124,7 +124,7 @@
   </q-page>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import NewPasswordInput from "../components/forms/NewPasswordInput.vue"
 import ErrorBanner from "src/components/molecules/ErrorBanner.vue"
 import ErrorFieldRenderer from "src/components/molecules/ErrorFieldRenderer.vue"
@@ -147,8 +147,8 @@ const id = ref(null)
 const cta_id = ref(null)
 const email = ref("")
 
-let form_error = ref(null)
-let verification_error = ref(null)
+const form_error = ref(null)
+const verification_error = ref(null)
 
 const { $v, user, saveUser } = useUserValidation({
   mutation: accept,
@@ -165,7 +165,7 @@ onMounted(async () => {
 
   try {
     const response = await verify({ uuid, expires, token })
-    let data = response.data.verifySubmissionInvite
+    const data = response.data.verifySubmissionInvite
     Object.assign(user, data)
     email.value = user.email
     id.value = user.id

@@ -391,3 +391,116 @@ export const GET_PUBLICATION_PROMPTS = gql`
     }
   }
 `
+export const CURRENT_USER_SUBMISSIONS = gql`
+  query CurrentUserSubmissions {
+    currentUser {
+      id
+      roles {
+        name
+      }
+      submissions {
+        id
+        title
+        status
+        created_at
+        submitted_at
+        my_role
+        effective_role
+        review_coordinators {
+          ...relatedUserFields
+        }
+        reviewers {
+          ...relatedUserFields
+        }
+        submitters {
+          ...relatedUserFields
+        }
+        inline_comments(trashed: WITH) {
+          id
+          content
+          created_by {
+            id
+            display_label
+            email
+          }
+          updated_by {
+            id
+            display_label
+            email
+          }
+          created_at
+          updated_at
+          style_criteria {
+            id
+            name
+            icon
+          }
+          replies {
+            id
+            content
+            created_by {
+              id
+              display_label
+              email
+            }
+            updated_by {
+              id
+              display_label
+              email
+            }
+            created_at
+            updated_at
+            read_at
+          }
+          read_at
+        }
+        overall_comments(trashed: WITH) {
+          id
+          content
+          created_by {
+            id
+            display_label
+            email
+          }
+          updated_by {
+            id
+            display_label
+            email
+          }
+          created_at
+          updated_at
+          replies {
+            id
+            content
+            created_by {
+              id
+              display_label
+              email
+            }
+            updated_by {
+              id
+              display_label
+              email
+            }
+            created_at
+            updated_at
+            read_at
+          }
+          read_at
+        }
+        publication {
+          id
+          name
+          my_role
+          editors {
+            ...relatedUserFields
+          }
+          publication_admins {
+            ...relatedUserFields
+          }
+        }
+      }
+    }
+  }
+  ${_RELATED_USER_FIELDS}
+`

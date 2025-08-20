@@ -171,7 +171,7 @@
     </template>
   </q-table>
 </template>
-<script setup>
+<script setup lang="ts">
 import SubmissionTableActions from "./SubmissionTableActions.vue"
 import { useI18n } from "vue-i18n"
 import { ref, computed } from "vue"

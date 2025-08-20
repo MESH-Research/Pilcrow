@@ -21,7 +21,7 @@
     </q-btn-group>
   </q-btn-dropdown>
 </template>
-<script setup>
+<script setup lang="ts">
 import ConfirmStatusChangeDialog from "../dialogs/ConfirmStatusChangeDialog.vue"
 import { useQuasar } from "quasar"
 import {

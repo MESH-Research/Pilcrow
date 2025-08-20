@@ -34,7 +34,7 @@
     </q-card-section>
   </div>
 </template>
-<script setup>
+<script setup lang="ts">
 import { computed, inject, ref, provide } from "vue"
 import CommentReplyReference from "./CommentReplyReference.vue"
 import CommentHeader from "./CommentHeader.vue"

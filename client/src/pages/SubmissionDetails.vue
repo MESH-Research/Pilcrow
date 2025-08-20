@@ -96,7 +96,7 @@
   </article>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import AssignedSubmissionUsers from "src/components/AssignedSubmissionUsers.vue"
 import SubmissionAudit from "../components/SubmissionAudit.vue"
 import SubmissionTitle from "src/components/SubmissionTitle.vue"
@@ -117,7 +117,7 @@ const submission = computed(() => {
   return result.value?.submission
 })
 
-let viewType = ref("review")
+const viewType = ref("review")
 
 watchEffect(() => {
   const status = submission.value?.status

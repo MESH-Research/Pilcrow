@@ -1,4 +1,7 @@
-import { createMockClient as createClient } from "mock-apollo-client"
+import {
+  createMockClient as createClient,
+  type MockApolloClientOptions
+} from "mock-apollo-client"
 import { config } from "@vue/test-utils"
 import { cloneDeep } from "lodash"
 import { beforeAll, afterAll, vi } from "vitest"
@@ -9,7 +12,7 @@ const cache = new InMemoryCache({
   addTypename: true
 })
 
-const createMockClient = (opts) =>
+const createMockClient = (opts: MockApolloClientOptions = {}) =>
   createClient({
     ...opts,
     connectToDevTools: false,
@@ -19,7 +22,7 @@ const createMockClient = (opts) =>
 
 export { createMockClient }
 
-export function installApolloClient(opts) {
+export function installApolloClient(opts: MockApolloClientOptions = {}) {
   const globalConfigBackup = cloneDeep(config.global)
   const client = createMockClient(opts)
 

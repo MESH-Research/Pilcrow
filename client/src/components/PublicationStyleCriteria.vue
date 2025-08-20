@@ -36,7 +36,7 @@
   </q-card>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, toRef, provide, computed } from "vue"
 import StyleCriteriaItem from "src/components/molecules/StyleCriteriaItem.vue"
 import StyleCriteriaForm from "src/components/forms/StyleCriteriaForm.vue"

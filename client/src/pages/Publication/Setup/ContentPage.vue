@@ -6,7 +6,7 @@
   </article>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useMutation } from "@vue/apollo-composable"
 import UpdateContentForm from "src/components/forms/Publication/UpdateContentForm.vue"
 import { useFormState } from "src/use/forms"

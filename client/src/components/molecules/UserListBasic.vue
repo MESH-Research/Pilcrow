@@ -12,7 +12,7 @@
   </q-list>
 </template>
 
-<script>
+<script lang="ts">
 import UserListBasicItem from "../atoms/UserListBasicItem.vue"
 export default {
   name: "UserListBasic",

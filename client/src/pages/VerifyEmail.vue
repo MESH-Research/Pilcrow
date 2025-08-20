@@ -39,7 +39,7 @@
   </q-page>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { VERIFY_EMAIL } from "src/graphql/mutations"
 import EmailVerificationSendButton from "src/components/atoms/EmailVerificationSendButton.vue"
 import { ref, onMounted } from "vue"

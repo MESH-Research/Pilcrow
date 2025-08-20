@@ -129,7 +129,7 @@
   </article>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { GET_USER } from "src/graphql/queries"
 import AvatarImage from "src/components/atoms/AvatarImage.vue"
 import { useQuery } from "@vue/apollo-composable"

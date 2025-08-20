@@ -13,7 +13,7 @@
   </q-card>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref } from "vue"
 import CommentEditor from "./forms/CommentEditor.vue"
 const props = defineProps({

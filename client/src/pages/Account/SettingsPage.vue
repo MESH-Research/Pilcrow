@@ -10,7 +10,7 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import AccountProfileForm from "src/components/forms/AccountProfileForm.vue"
 import { UPDATE_USER } from "src/graphql/mutations"
 import { useCurrentUser } from "src/use/user"

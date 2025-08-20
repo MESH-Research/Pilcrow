@@ -2,12 +2,16 @@ import js from "@eslint/js"
 import globals from "globals"
 import pluginVue from "eslint-plugin-vue"
 import pluginQuasar from "@quasar/app-vite/eslint"
-import lodash from "lodash"
-// the following is optional, if you want prettier too:
-import prettierSkipFormatting from "@vue/eslint-config-prettier"
 import pluginCypress from "eslint-plugin-cypress"
+
+import {
+  defineConfigWithVueTs,
+  vueTsConfigs
+} from "@vue/eslint-config-typescript"
+import prettierSkipFormatting from "@vue/eslint-config-prettier"
+import lodash from "lodash"
 const { merge } = lodash
-const config = [
+const configs = [
   {
     /**
      * Ignore the following files.
@@ -17,9 +21,11 @@ const config = [
      *
      * ESLint requires "ignores" key to be the only one in this object
      */
+    ignores: ["**/*.spec.{js,mjs,cjs,ts,mts,cts}"]
   },
-  ...pluginQuasar.configs.recommended(),
-  ...pluginVue.configs["flat/recommended"],
+  pluginQuasar.configs.recommended(),
+  js.configs.recommended,
+  pluginVue.configs["flat/recommended"],
   {
     files: ["**/*.ts", "**/*.vue"],
     rules: {
@@ -130,4 +136,5 @@ const config = [
 
   prettierSkipFormatting // optional, if you want prettier
 ]
-export default config
+
+export default defineConfigWithVueTs(...configs)

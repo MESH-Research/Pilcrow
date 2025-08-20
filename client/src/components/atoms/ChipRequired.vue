@@ -16,7 +16,7 @@
   >
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useDarkMode } from "src/use/guiElements"
 const { darkModeStatus } = useDarkMode()
 

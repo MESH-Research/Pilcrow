@@ -46,7 +46,7 @@
   </q-item>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import AvatarImage from "./AvatarImage.vue"
 defineProps({
   user: {

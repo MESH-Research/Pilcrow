@@ -37,7 +37,7 @@
   </article>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useQuery } from "@vue/apollo-composable"
 import { useCurrentUser } from "src/use/user"
 import SubmissionTable from "src/components/SubmissionTable.vue"
@@ -58,7 +58,7 @@ const all_reviews = computed(() =>
 )
 const { result } = useQuery(CURRENT_USER_SUBMISSIONS)
 const submissions = computed(() => {
-  let r = result.value?.currentUser?.submissions ?? []
+  const r = result.value?.currentUser?.submissions ?? []
   return [...r].sort((a, b) => {
     return new Date(b.created_at) - new Date(a.created_at)
   })

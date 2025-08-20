@@ -38,7 +38,7 @@
   </q-card>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { defineProps, defineEmits } from "vue"
 import ChipRequired from "./atoms/ChipRequired.vue"
 defineProps({

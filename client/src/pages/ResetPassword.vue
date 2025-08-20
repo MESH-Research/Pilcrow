@@ -63,7 +63,7 @@
   </q-page>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import NewPasswordInput from "src/components/forms/NewPasswordInput.vue"
 import ErrorFieldRenderer from "src/components/molecules/ErrorFieldRenderer.vue"
 import { RESET_PASSWORD } from "src/graphql/mutations"

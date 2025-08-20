@@ -22,7 +22,7 @@
   </q-item>
 </template>
 
-<script>
+<script lang="ts">
 import AvatarImage from "./AvatarImage.vue"
 export default {
   name: "UserListBasicItem",

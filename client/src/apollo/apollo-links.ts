@@ -1,10 +1,9 @@
 import { onError } from "@apollo/client/link/error"
-import type { ServerError } from "@apollo/client/link/utils"
 import { Cookies } from "quasar"
 import { setContext } from "@apollo/client/link/context"
 import { Observable } from "@apollo/client/core"
 
-const cookieXsrfToken = () => Cookies.get("XSRF-TOKEN")
+const getXsrfTokenFromCookies = () => Cookies.get("XSRF-TOKEN")
 
 const fetchXsrfToken = async () => {
   return fetch("/sanctum/csrf-cookie", {
@@ -12,7 +11,7 @@ const fetchXsrfToken = async () => {
   }).then(async (response) => {
     //Read response text (even though its empty) to prevent the browser from thinking there's an error b/c no one read the (empty) response body.
     await response.text()
-    const xsrfToken = cookieXsrfToken()
+    const xsrfToken = getXsrfTokenFromCookies()
     return xsrfToken
   })
 }
@@ -23,15 +22,14 @@ const withXsrfLink = setContext((_, { headers }) => {
     return { headers }
   }
   //No header token, so lets look for a cookie token.
-  const xsrfToken = cookieXsrfToken()
+  const xsrfToken = getXsrfTokenFromCookies()
   if (xsrfToken) {
-    const context = {
+    return {
       headers: {
         ...headers,
         "X-XSRF-TOKEN": xsrfToken
       }
     }
-    return context
   }
   //No cookie token, so we need to fetch one and set the headers that way.
   return fetchXsrfToken().then((token) => {

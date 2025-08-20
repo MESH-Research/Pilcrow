@@ -59,7 +59,7 @@
   </q-form>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { UPDATE_SUBMISSION_TITLE } from "src/graphql/mutations"
 import { useMutation } from "@vue/apollo-composable"
 import { ref, watchEffect, inject } from "vue"

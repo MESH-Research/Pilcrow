@@ -127,7 +127,7 @@
     </q-card>
   </div>
 </template>
-<script setup>
+<script setup lang="ts">
 import { computed, inject, ref, provide } from "vue"
 import OverallCommentReply from "./OverallCommentReply.vue"
 import CommentEditor from "../forms/CommentEditor.vue"

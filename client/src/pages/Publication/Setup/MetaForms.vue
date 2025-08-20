@@ -118,7 +118,7 @@
   </article>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { GET_PUBLICATION_PROMPTS } from "src/graphql/queries"
 import { computed, ref } from "vue"
 import { useDarkMode } from "src/use/guiElements"
@@ -217,7 +217,7 @@ function promptIcon(type) {
 }
 </script>
 
-<script>
+<script lang="ts">
 import { useMutation, useQuery } from "@vue/apollo-composable"
 import gql from "graphql-tag"
 import MetaFormCreate from "src/components/forms/MetaFormCreate.vue"

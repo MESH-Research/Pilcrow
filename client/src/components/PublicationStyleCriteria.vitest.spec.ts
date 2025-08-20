@@ -9,6 +9,7 @@ import {
 import PublicationStyleCriteria from "./PublicationStyleCriteria.vue"
 
 import { beforeEach, describe, expect, test, vi } from "vitest"
+import type { QItem } from "quasar"
 
 installQuasarPlugin()
 const mockClient = installApolloClient()
@@ -139,9 +140,10 @@ describe("PublicationStyleCriteria", () => {
         { id: "2", name: "Criteria 2", description: "Description 2" }
       ]
     })
-    const items = () => wrapper.findAllComponents('[data-cy="listItem"]')
+    const items = () =>
+      wrapper.findAllComponents<typeof QItem>('[data-cy="listItem"]')
     await items().at(0).findComponent('[data-cy="editBtn"]').trigger("click")
-    await items().at(0).vm.$emit("delete", { id: "1" })
+    items().at(0).vm.$emit("delete", { id: "1" })
 
     expect(deleteCriteriaHandler).toHaveBeenCalledTimes(1)
     expect(deleteCriteriaHandler).toHaveBeenCalledWith({

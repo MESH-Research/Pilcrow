@@ -20,7 +20,7 @@
   </q-footer>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useTimeAgo } from "src/use/timeAgo"
 import { onMounted, ref } from "vue"
 import { DateTime } from "luxon"

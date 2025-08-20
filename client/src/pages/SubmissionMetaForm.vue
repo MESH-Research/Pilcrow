@@ -33,7 +33,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed } from "vue"
 import { useQuery } from "@vue/apollo-composable"
 
@@ -52,7 +52,7 @@ const submission = computed(() => result.value?.submission)
 const meta_form = computed(() => submission.value?.publication.meta_form)
 </script>
 
-<script>
+<script lang="ts">
 import { gql } from "graphql-tag"
 const GET_SUBMISSION_META_FORMS = gql`
   query SubmissionMetaForms($id: ID!, $formId: ID!) {

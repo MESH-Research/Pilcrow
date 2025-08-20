@@ -162,7 +162,7 @@
   </q-header>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useMagicKeys } from "@vueuse/core"
 import NotificationPopup from "src/components/molecules/NotificationPopup.vue"
 import { useCurrentUser } from "src/use/user"

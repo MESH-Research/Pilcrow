@@ -56,7 +56,7 @@
   </section>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import FindUserSelect from "./forms/FindUserSelect.vue"
 import UserList from "./molecules/UserList.vue"
 import { useFeedbackMessages } from "src/use/guiElements"

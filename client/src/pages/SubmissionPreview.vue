@@ -57,7 +57,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import SubmissionContent from "src/components/atoms/SubmissionContent.vue"
 import SubmissionPreviewToolbar from "src/components/atoms/SubmissionPreviewToolbar.vue"
 import { provide, computed } from "vue"

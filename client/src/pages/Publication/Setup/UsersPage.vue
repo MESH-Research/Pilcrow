@@ -33,7 +33,7 @@
   </article>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import AssignedPublicationUsers from "src/components/AssignedPublicationUsers.vue"
 defineProps({
   publication: {

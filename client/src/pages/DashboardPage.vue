@@ -15,7 +15,7 @@
             <h2 class="text-h4" style="display: inline">
               {{
                 $t(`dashboard.welcome_message`, {
-                  label: currentUser.display_label
+                  label: currentUser.display_labels
                 })
               }}
             </h2>
@@ -133,7 +133,7 @@ const all_submissions = computed(() => {
 })
 const { result } = useQuery(CurrentUserSubmissionsDocument)
 const submissions = computed(() => {
-  let s = result.value?.currentUser?.submissions ?? []
+  const s = result.value?.currentUser?.submissions ?? []
   return [...s].sort(
     (a, b) =>
       new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
@@ -162,14 +162,6 @@ const submitter_submissions = computed(() =>
 )
 </script>
 
-<style lang="scss" scoped>
-.q-btn {
-  &:deep(.q-icon) {
-    margin-right: 0.5rem;
-  }
-}
-</style>
-
 <script lang="ts">
 import { graphql } from "src/gql"
 
@@ -177,6 +169,7 @@ graphql(`
   query CurrentUserSubmissions {
     currentUser {
       id
+      email2
       roles {
         name
       }
@@ -336,3 +329,11 @@ graphql(`
   }
 `)
 </script>
+
+<style lang="scss" scoped>
+.q-btn {
+  &:deep(.q-icon) {
+    margin-right: 0.5rem;
+  }
+}
+</style>

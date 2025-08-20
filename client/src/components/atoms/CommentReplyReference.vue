@@ -28,7 +28,7 @@
   </q-card-section>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed, inject, nextTick } from "vue"
 import AvatarImage from "./AvatarImage.vue"
 
