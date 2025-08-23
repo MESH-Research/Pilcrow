@@ -18,6 +18,10 @@ definePage({
     navigation: {
       icon: "toc",
       label: "Content"
+    },
+    crumb: {
+      label: "Content",
+      icon: "toc"
     }
   }
 })

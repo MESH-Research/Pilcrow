@@ -17,6 +17,10 @@ definePage({
     navigation: {
       icon: "tune",
       label: "Basic Setup"
+    },
+    crumb: {
+      label: "Basic Setup",
+      icon: "tune"
     }
   }
 })

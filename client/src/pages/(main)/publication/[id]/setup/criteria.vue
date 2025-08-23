@@ -28,6 +28,10 @@ definePage({
     navigation: {
       icon: "card_membership",
       label: "Style Criteria"
+    },
+    crumb: {
+      label: "Style Criteria",
+      icon: "card_membership"
     }
   }
 })

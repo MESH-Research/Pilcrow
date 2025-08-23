@@ -1,5 +1,5 @@
 <template>
-  <nav class="nav">
+  <nav class="nav q-px-lg q-pt-md q-gutter-sm">
     <div class="breadcrumb-wrap">
       <router-link to="/" class="breadcrumb">
         <q-icon name="home" />
@@ -7,20 +7,22 @@
       </router-link>
     </div>
     <div
-      v-for="(crumb, idx) in crumbs.slice(0, -1)"
-      v-bind="crumb"
-      :key="`crumb${idx}`"
+      v-for="crumb in crumbs.slice(0, -1)"
+      :key="`crumb-${crumb.label}`"
       class="breadcrumb-wrap"
     >
       <q-icon size="1.5em" name="chevron_right" color="primary" class="sep" />
       <router-link :to="crumb.to" class="breadcrumb">
-        <q-icon :name="crumb.icon" />
+        <q-icon :name="crumb.icon" v-if="crumb.icon" />
         {{ unref(crumb.label.value) }}
       </router-link>
     </div>
     <div v-if="last" class="breadcrumb-wrap">
       <q-icon size="1.5em" name="chevron_right" color="primary" class="sep" />
-      <a>{{ unref(last.label.value) }}</a>
+      <a>
+        <q-icon :name="last.icon" v-if="last.icon" />
+        {{ unref(last.label.value) }}
+      </a>
     </div>
   </nav>
 </template>
@@ -30,7 +32,6 @@ import { useCrumbs } from "src/use/breadcrumbs"
 import { unref } from "vue"
 
 const { crumbs } = useCrumbs()
-
 const last = computed(() => crumbs.value.slice(-1)[0])
 </script>
 
@@ -58,39 +59,6 @@ const last = computed(() => crumbs.value.slice(-1)[0])
 
 /// BREADCRUMBS ///
 
-.breadcrumb-wrap {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  flex: 0 auto;
-  flex-shrink: 1000;
-  display: inline-block;
-  transition: transform ease-in-out 0.3s;
-
-  &:hover {
-    flex: 1 0 auto;
-    transition: transform ease-in-out 0.4s;
-  }
-
-  //First Breadcrumb
-  &:first-child {
-    flex: 0 0 auto;
-    flex-shrink: 0.5;
-  }
-
-  //Last Breadcrumb
-  &:last-child {
-    flex: 1 0 auto !important;
-    font-weight: normal;
-    :deep(a) {
-      color: black;
-    }
-  }
-}
-
-.breadcrumb {
-  flex: 0 1 auto;
-}
 .sep {
   padding: 0 5px;
 }

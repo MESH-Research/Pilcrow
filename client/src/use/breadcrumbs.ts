@@ -17,7 +17,7 @@ export type Crumb = {
   /**
    * Destination for the crumb
    */
-  to?: RouteLocationRaw
+  to?: RouteLocationRaw | (() => RouteLocationRaw)
   /**
    * Icon to add before brumbcrumb elements
    */
@@ -58,16 +58,17 @@ export function useCrumbs() {
 
   watchEffect(() => {
     const matched = route.matched
+
     crumbs.value = matched
       .filter((r) => r.meta.crumb)
       .map<ResolvedCrumb>((r) => {
         const definition = r.meta.crumb as Crumb
-        const dest = definition.to ?? { name: r.name }
+        const dest = toValue(definition.to) ?? { name: r.name }
         const to = router.resolve(dest as RouteLocationRaw)
         const label = computed(
-          () => scope[to.name] ?? definition.label ?? to.name
+          () => scope[r.name] ?? definition.label ?? to.name
         )
-        const icon = getRouteIcon(to)
+        const icon = definition.icon ?? getRouteIcon(to)
         return {
           ...definition,
           to,

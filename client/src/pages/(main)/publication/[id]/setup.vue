@@ -1,20 +1,5 @@
 <template>
   <div class="column">
-    <nav class="q-px-lg q-pt-md q-gutter-sm">
-      <q-breadcrumbs>
-        <q-breadcrumbs-el
-          :label="$t('publication.entity', 2)"
-          :to="{ name: 'publication:index' }"
-        />
-        <q-breadcrumbs-el
-          :label="publicationName"
-          :to="{ name: 'publication:home', params: { id } }"
-        />
-        <q-breadcrumbs-el :label="$t(labelKey('breadcrumb_heading'))" />
-
-        <q-breadcrumbs-el :label="name" />
-      </q-breadcrumbs>
-    </nav>
     <h2 class="q-px-lg" data-cy="publication_details_heading">
       {{ publicationName }}
     </h2>
@@ -34,15 +19,20 @@
 <script setup lang="ts">
 import CollapseMenu from "src/components/molecules/CollapseMenu.vue"
 import ChildPages from "src/components/ChildPages.vue"
+import { setCrumbLabel } from "src/use/breadcrumbs"
 definePage({
-  name: "publication:setup"
+  name: "publication:setup",
+  meta: {
+    crumb: {
+      label: "Setup",
+      to: { name: "publication:setup:basic" }
+    }
+  }
 })
 
 const {
-  params: { id },
-  name
+  params: { id }
 } = useRoute("publication:setup")
-
 const { result } = useQuery(GetPublicationDocument, { id })
 
 const publication = computed(() => result.value?.publication ?? null)
@@ -53,6 +43,7 @@ const noStyleCriteria = computed(
 const route = useRoute()
 const router = useRouter()
 
+setCrumbLabel("publication:", publicationName)
 const labelKey = (page) => `publication.setup_pages.${page}`
 const { t } = useI18n()
 

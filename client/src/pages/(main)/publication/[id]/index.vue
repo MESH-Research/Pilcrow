@@ -47,9 +47,15 @@
 
 <script setup lang="ts">
 import { GET_PUBLICATION } from "src/graphql/queries"
+import { setCrumbLabel } from "src/use/breadcrumbs"
 
 definePage({
-  name: "publication:home"
+  name: "publication:home",
+  meta: {
+    crumb: {
+      label: "Home"
+    }
+  }
 })
 
 const { params } = useRoute("publication:home")
@@ -57,6 +63,9 @@ const { result } = useQuery(GET_PUBLICATION, params)
 const publication = computed(() => {
   return result.value?.publication ?? null
 })
+
+const publicationName = computed(() => publication.value?.name ?? "")
+setCrumbLabel("publication:", publicationName)
 
 const isPublicationAdmin = computed(() => {
   return publication.value?.effective_role === "publication_admin"

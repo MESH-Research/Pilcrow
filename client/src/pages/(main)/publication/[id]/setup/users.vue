@@ -43,6 +43,10 @@ definePage({
     navigation: {
       icon: "people",
       label: "Users"
+    },
+    crumb: {
+      label: "Users",
+      icon: "people"
     }
   }
 })

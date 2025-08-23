@@ -126,6 +126,10 @@ definePage({
     navigation: {
       icon: "ballot",
       label: "Meta Forms"
+    },
+    crumb: {
+      label: "Meta Forms",
+      icon: "ballot"
     }
   }
 })
