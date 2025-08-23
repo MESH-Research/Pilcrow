@@ -49,7 +49,7 @@ declare module 'vue-router/auto-routes' {
     'VerifyEmail': RouteRecordInfo<'VerifyEmail', '/verify-email/:expires/:token', { expires: ParamValue<true>, token: ParamValue<true> }, { expires: ParamValue<false>, token: ParamValue<false> }>,
     '/(public)': RouteRecordInfo<'/(public)', '/', Record<never, never>, Record<never, never>, '/(public)/auth.redirect.google' | '/(public)/auth.redirect.orcid' | '/(public)/logout' | 'RequestPasswordReset' | 'ResetPassword' | 'acceptInvite' | 'index' | 'login' | 'register'>,
     'index': RouteRecordInfo<'index', '/', Record<never, never>, Record<never, never>>,
-    'acceptInvite': RouteRecordInfo<'acceptInvite', '/accept-invite/:uuid/:expires/:token/:submission_id', { uuid: ParamValue<true>, expires: ParamValue<true>, token: ParamValue<true>, submission_id: ParamValue<true> }, { uuid: ParamValue<false>, expires: ParamValue<false>, token: ParamValue<false>, submission_id: ParamValue<false> }>,
+    'acceptInvite': RouteRecordInfo<'acceptInvite', '/accept-invite/:invite(.*)', { invite: ParamValue<true> }, { invite: ParamValue<false> }>,
     '/(public)/auth.redirect.google': RouteRecordInfo<'/(public)/auth.redirect.google', '/auth/redirect/google', Record<never, never>, Record<never, never>>,
     '/(public)/auth.redirect.orcid': RouteRecordInfo<'/(public)/auth.redirect.orcid', '/auth/redirect/orcid', Record<never, never>, Record<never, never>>,
     'login': RouteRecordInfo<'login', '/login', Record<never, never>, Record<never, never>>,
@@ -196,7 +196,7 @@ declare module 'vue-router/auto-routes' {
       routes: 'index'
       views: never
     }
-    'src/pages/(public)/accept-invite.[uuid].[expires].[token].[submission_id].vue': {
+    'src/pages/(public)/accept-invite.[...invite].vue': {
       routes: 'acceptInvite'
       views: never
     }

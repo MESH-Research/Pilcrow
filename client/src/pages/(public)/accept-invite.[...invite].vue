@@ -161,10 +161,8 @@ const { $v, user, saveUser } = useUserValidation({
     return { id, ...form, ...params }
   }
 })
-
+const [uuid, expires, token, submission_id] = params.invite.split("/")
 onMounted(async () => {
-  const { uuid, expires, token, submission_id } = params
-
   try {
     const response = await verify({ uuid, expires, token })
     const data = response.data.verifySubmissionInvite
