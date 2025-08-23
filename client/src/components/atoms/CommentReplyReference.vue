@@ -54,7 +54,7 @@ function setActive() {
   //Null the active comment first to trigger the scroll watcher
   //TODO: Do this in a more elegant way.
   activeComment.value = null
-  nextTick(() => {
+  void nextTick(() => {
     activeComment.value = referencedComment.value
   })
 }

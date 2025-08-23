@@ -8,9 +8,10 @@
 // Configuration for your app
 // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js
 
-import { defineConfig } from "#q-app/wrappers"
+import { configure } from "quasar/wrappers"
+import { VueRouterAutoImports } from "unplugin-vue-router"
 
-export default defineConfig(() => {
+export default configure(() => {
   return {
     boot: ["i18n", "vue-apollo"],
     css: ["app.sass"],
@@ -59,19 +60,29 @@ export default defineConfig(() => {
         APP_BANNER_LINK: process.env.APP_BANNER_LINK ?? undefined
       },
       vitePlugins: [
-        ["vite-plugin-graphql-codegen", {}],
+        ["unplugin-vue-router/vite", {}],
         [
-          "vite-plugin-checker",
+          "unplugin-auto-import/vite",
           {
-            vueTsc: true,
-            eslint: {
-              lintCommand:
-                'eslint -c ./eslint.config.js "./src*/**/*.{ts,js,mjs,cjs,vue}"',
-              useFlatConfig: true
-            }
-          },
-          { server: false }
-        ]
+            imports: ["vue", "quasar", VueRouterAutoImports],
+            packagePresets: ["@vue/apollo-composable", "vue-i18n"],
+            dts: true,
+            dirs: ["./src/gql"]
+          }
+        ],
+        ["vite-plugin-graphql-codegen", {}]
+        // [
+        //   "vite-plugin-checker",
+        //   {
+        //     vueTsc: true,
+        //     eslint: {
+        //       lintCommand:
+        //         'eslint -c ./eslint.config.js "./src*/**/*.{ts,js,mjs,cjs,vue}"',
+        //       useFlatConfig: true
+        //     }
+        //   },
+        //   { server: false }
+        // ]
       ],
       useFilenameHashes: false
     },

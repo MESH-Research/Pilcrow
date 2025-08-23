@@ -46,7 +46,7 @@
   </article>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useMetaFormCreation } from "src/use/publicationMetaForm"
 const { createMetaForm, v$, saving } = useMetaFormCreation()
 

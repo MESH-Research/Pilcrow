@@ -133,47 +133,6 @@ export const CREATE_PUBLICATION = gql`
   }
 `
 
-export const UPDATE_PUBLICATION_EDITORS = gql`
-  mutation UpdatePublicationEditors(
-    $id: ID!
-    $connect: [ID!]
-    $disconnect: [ID!]
-  ) {
-    updatePublication(
-      publication: {
-        id: $id
-        editors: { connect: $connect, disconnect: $disconnect }
-      }
-    ) {
-      id
-      editors {
-        ...relatedUserFields
-      }
-    }
-  }
-  ${_RELATED_USER_FIELDS}
-`
-
-export const UPDATE_PUBLICATION_ADMINS = gql`
-  mutation UpdatePublicationAdmins(
-    $id: ID!
-    $connect: [ID!]
-    $disconnect: [ID!]
-  ) {
-    updatePublication(
-      publication: {
-        id: $id
-        publication_admins: { connect: $connect, disconnect: $disconnect }
-      }
-    ) {
-      id
-      publication_admins {
-        ...relatedUserFields
-      }
-    }
-  }
-  ${_RELATED_USER_FIELDS}
-`
 export const CREATE_SUBMISSION_DRAFT = gql`
   mutation CreateSubmissionDraft(
     $title: String!

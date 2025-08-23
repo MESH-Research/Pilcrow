@@ -38,7 +38,7 @@ const banner_class = process.env.APP_BANNER_CLASS ?? "bg-yellow-2 text-black"
 const banner_link = process.env.APP_BANNER_LINK ?? null
 
 if (localStorage.has(sKey)) {
-  const until = localStorage.getItem(sKey)
+  const until = localStorage.getItem<number>(sKey)
   if (until < Date.now()) {
     localStorage.remove(sKey)
   } else {

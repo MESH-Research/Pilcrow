@@ -78,7 +78,7 @@
   </q-form>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed, inject } from "vue"
 import { useEditor, EditorContent } from "@tiptap/vue-3"
 import { useMutation } from "@vue/apollo-composable"

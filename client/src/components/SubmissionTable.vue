@@ -1,6 +1,6 @@
 <template>
   <q-table
-    :grid="$q.screen.width < 770"
+    :grid="screen.width < 770"
     flat
     square
     :columns="cols"
@@ -59,7 +59,7 @@
     </template>
     <template #no-data>
       <q-card
-        v-if="$q.screen.width < 770"
+        v-if="screen.width < 770"
         flat
         bordered
         square
@@ -84,12 +84,8 @@
           <q-card-section class="full-width" data-cy="submission_link_mobile">
             <div class="row">
               <div class="col">
-                <router-link
-                  :to="{
-                    name: submissionLinkName(p.row),
-                    params: { id: p.row.id }
-                  }"
-                  >{{ p.row.title }}
+                <router-link :to="submissionLink(p.row)">
+                  {{ p.row.title }}
                 </router-link>
                 <p class="q-ma-none">
                   {{ generateSubmitterList(p.row.submitters) }}
@@ -125,11 +121,7 @@
     </template>
     <template #body-cell-title="p">
       <q-td :props="p" data-cy="submission_link_desktop">
-        <router-link
-          :to="{
-            name: submissionLinkName(p.row),
-            params: { id: p.row.id }
-          }"
+        <router-link :to="submissionLink(p.row)"
           >{{ p.row.title }}
         </router-link>
       </q-td>
@@ -173,31 +165,30 @@
 </template>
 <script setup lang="ts">
 import SubmissionTableActions from "./SubmissionTableActions.vue"
-import { useI18n } from "vue-i18n"
-import { ref, computed } from "vue"
 import { relativeTime } from "src/use/timeAgo"
 import { useDarkMode } from "src/use/guiElements"
+import type { RouteLocationRaw } from "vue-router"
+import { SubmissionStatus } from "src/gql/graphql"
+import type { QTableProps } from "quasar"
 
+const { screen } = useQuasar()
 const { t } = useI18n()
 const { darkModeStatus } = useDarkMode()
 
-const props = defineProps({
-  tableData: {
-    type: Array,
-    default: () => []
-  },
-  tableType: {
-    type: String,
-    default: "submissions"
-  },
-  variation: {
-    type: String,
-    default: ""
-  },
-  role: {
-    type: String,
-    default: "reviewer"
-  }
+type SubmissionData =
+  CurrentUserSubmissionsQuery["currentUser"]["submissions"][number]
+
+interface Props {
+  tableData?: SubmissionData[]
+  tableType?: string
+  variation?: string
+  role?: string
+}
+const props = withDefaults(defineProps<Props>(), {
+  tableData: () => [],
+  tableType: "submissions",
+  variation: "",
+  role: "reviewer"
 })
 const status_filter = ref(null)
 const filterStatuses = (rows, terms) => {
@@ -216,17 +207,28 @@ const byline = props.variation
 const tooltip = props.variation
   ? `submission_tables.${props.variation}.${props.role}.tooltip`
   : `submission_tables.${props.role}.tooltip`
-const submissionLinkName = (submission) => {
-  if (props.role !== "submitter" && submission.status === "DRAFT") {
-    return "submission:preview"
-  } else if (submission.status === "INITIALLY_SUBMITTED") {
-    return "submission:view"
-  } else if (submission.status === "DRAFT") {
-    return "submission:draft"
+const submissionLink = (submission: SubmissionData) => {
+  let name
+  if (
+    props.role !== "submitter" &&
+    submission.status === SubmissionStatus.Draft
+  ) {
+    name = "submission:preview"
+  } else if (submission.status === SubmissionStatus.InitiallySubmitted) {
+    name = "submission:view"
+  } else if (submission.status === SubmissionStatus.Draft) {
+    name = "submission:draft"
+  } else {
+    name = "submission:review"
   }
-  return "submission:review"
+  const route = {
+    name,
+    params: { id: submission.id }
+  } as RouteLocationRaw
+  return route
 }
-const cols = [
+
+const cols: QTableProps["columns"] = [
   {
     name: "id",
     field: "id",

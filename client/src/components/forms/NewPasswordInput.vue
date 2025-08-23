@@ -67,30 +67,23 @@ export default defineComponent({
 </script>
 
 <script setup lang="ts">
+import type { ZxcvbnResult } from "@zxcvbn-ts/core"
 import NewPasswordInputAnalysis from "./atoms/NewPasswordInputAnalysis.vue"
 import PasswordInput from "./PasswordInput.vue"
 import NewPasswordInputMeter from "./atoms/NewPasswordInputMeter.vue"
-import { computed, ref } from "vue"
-const props = defineProps({
-  label: {
-    type: String,
-    default: "Password"
-  },
-  modelValue: {
-    type: String,
-    default: ""
-  },
-  threshold: {
-    type: Number,
-    default: 3
-  },
-  complexity: {
-    type: Object,
-    required: true
-  },
-  error: {
-    type: Boolean
-  }
+
+interface Props {
+  label?: string
+  modelValue?: string
+  threshold?: number
+  complexity?: ZxcvbnResult
+  error: boolean
+}
+const props = withDefaults(defineProps<Props>(), {
+  label: "Password",
+  modelValue: "",
+  threshold: 3,
+  complexity: null
 })
 
 defineEmits(["update:modelValue"])

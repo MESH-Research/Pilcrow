@@ -13,7 +13,7 @@
           src="/logo/logo-100x100.png"
           style="width: 50px; height: 50px"
         />
-        <div v-if="$q.screen.width >= 430" class="column">
+        <div v-if="screen.width >= 430" class="column">
           <h1 class="q-ma-none text-h4 site-title">
             {{ $t("header.site_title") }}
           </h1>
@@ -110,7 +110,7 @@
         <q-item
           role="link"
           to="/dashboard"
-          :class="`${$q.screen.width < 500 ? 'q-px-sm' : ''}`"
+          :class="`${screen.width < 500 ? 'q-px-sm' : ''}`"
         >
           <q-item-section side class="gt-xs">
             <q-icon class="gt-xs" name="dashboard" />
@@ -120,9 +120,9 @@
           </q-item-section>
         </q-item>
         <q-item
-          to="/publications"
+          :to="{ name: 'publication:index' }"
           role="link"
-          :class="`${$q.screen.width < 500 ? 'q-px-sm' : ''}`"
+          :class="`${screen.width < 500 ? 'q-px-sm' : ''}`"
         >
           <q-item-section side class="gt-xs">
             <q-icon name="collections_bookmark" />
@@ -135,7 +135,7 @@
           data-cy="submissions_link"
           to="/submissions"
           role="link"
-          :class="`${$q.screen.width < 500 ? 'q-px-sm' : ''}`"
+          :class="`${screen.width < 500 ? 'q-px-sm' : ''}`"
         >
           <q-item-section side class="gt-xs">
             <q-icon name="content_copy" />
@@ -148,7 +148,7 @@
           data-cy="reviews_link"
           to="/reviews"
           role="link"
-          :class="`${$q.screen.width < 500 ? 'q-px-sm' : ''}`"
+          :class="`${screen.width < 500 ? 'q-px-sm' : ''}`"
         >
           <q-item-section side class="gt-xs">
             <q-icon class="material-icons-outlined" name="rate_review" />
@@ -166,22 +166,12 @@
 import { useMagicKeys } from "@vueuse/core"
 import NotificationPopup from "src/components/molecules/NotificationPopup.vue"
 import { useCurrentUser } from "src/use/user"
-import { watchEffect } from "vue"
-import { useI18n } from "vue-i18n"
 import AppBanner from "./AppBanner.vue"
-
-defineProps({
-  //Drawer status
-  modelValue: {
-    type: Boolean,
-    default: null
-  }
-})
 
 const { currentUser, isAppAdmin } = useCurrentUser()
 const { locale } = useI18n({ useScope: "global" })
 const { ctrl, shift, alt, t } = useMagicKeys()
-
+const { screen } = useQuasar()
 watchEffect(() => {
   if (ctrl.value && shift.value && alt.value && t.value) {
     toggleLocale()

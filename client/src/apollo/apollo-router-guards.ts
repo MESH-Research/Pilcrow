@@ -85,7 +85,7 @@ export async function beforeEachRequiresSubmissionAccess(
         access = await isPubAdminOrEditor(apolloClient, submissionId).then(
           (result) => result
         )
-      } catch (error) {
+      } catch {
         access = false
       }
     }
@@ -256,7 +256,7 @@ export async function beforeEachRequiresViewAccess(apolloClient, to, _, next) {
         access = await isPubAdminOrEditor(apolloClient, submissionId).then(
           (result) => result
         )
-      } catch (error) {
+      } catch {
         access = false
       }
     }
@@ -340,7 +340,7 @@ export async function beforeEachRequiresReviewAccess(
         access = await isPubAdminOrEditor(apolloClient, submissionId).then(
           (result) => result
         )
-      } catch (error) {
+      } catch {
         access = false
       }
     }
@@ -417,7 +417,7 @@ export async function beforeEachRequiresExportAccess(
         access = await isPubAdminOrEditor(apolloClient, submissionId).then(
           (result) => result
         )
-      } catch (error) {
+      } catch {
         access = false
       }
     }

@@ -130,7 +130,7 @@ async function saveTitle() {
       id: submission.value.id,
       title: draft_title.value
     })
-  } catch (error) {
+  } catch {
     newStatusMessage("failure", t("submission.edit_title.unauthorized"))
   } finally {
     editing_title.value = false

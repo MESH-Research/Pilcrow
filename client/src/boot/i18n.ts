@@ -1,6 +1,6 @@
 // default src/boot/i18n.js content:
 
-import { ComposerTranslation, createI18n } from "vue-i18n"
+import { type ComposerTranslation, createI18n } from "vue-i18n"
 import messages from "src/i18n"
 // You'll need to create the src/i18n/index.js/.ts file too
 

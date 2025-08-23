@@ -1,12 +1,13 @@
+import type { Reactive } from "vue"
 import { reactive } from "vue"
+import type { ValidationArgs } from "@vuelidate/core"
 import useVuelidate from "@vuelidate/core"
 import { required, email, helpers, maxLength } from "@vuelidate/validators"
 import { CREATE_USER } from "src/graphql/mutations"
 import { useMutation } from "@vue/apollo-composable"
-import zxcvbn from "zxcvbn"
 import { applyExternalValidationErrors } from "src/use/validationHelpers"
 import { omit } from "lodash"
-
+import { zxcvbn } from "@zxcvbn-ts/core"
 export const rules = {
   name: {
     maxLength: maxLength(256)
@@ -32,8 +33,22 @@ export const rules = {
 
 export const updateUserRules = omit(rules, ["name", "username"])
 
-export function useUserValidation(opts = {}) {
-  const form = reactive({
+interface ValidationOptions {
+  mutation?: () => unknown
+  rules?: (args: ValidationArgs<typeof rules>) => void
+  variables?: (form: Reactive<UserForm>) => UserForm
+  validation_key?: string
+}
+
+interface UserForm {
+  email: string
+  password: string
+  name: string
+  username: string
+}
+
+export function useUserValidation(opts: ValidationOptions = {}) {
+  const form = reactive<UserForm>({
     email: "",
     password: "",
     name: "",
@@ -49,9 +64,10 @@ export function useUserValidation(opts = {}) {
 
   const mutate = opts.mutation ?? useMutation(CREATE_USER).mutate
 
-  if (opts.rules && typeof opts.rules === "function") {
+  if (opts.rules) {
     opts.rules(rules)
   }
+
   const $v = useVuelidate(rules, form, { $externalResults: externalValidation })
 
   const saveUser = async () => {
@@ -59,10 +75,7 @@ export function useUserValidation(opts = {}) {
     if ($v.value.$invalid || $v.value.$error) {
       throw Error("FORM_VALIDATION")
     }
-    const vars =
-      opts.variables && typeof opts.variables === "function"
-        ? opts.variables(form)
-        : form
+    const vars = opts.variables ? opts.variables(form) : form
     const validation_key = opts.validation_key ?? "user."
     try {
       const newUser = await mutate(vars)

@@ -1,63 +1,71 @@
+/* eslint-env node */
 import js from "@eslint/js"
 import globals from "globals"
 import pluginVue from "eslint-plugin-vue"
 import pluginQuasar from "@quasar/app-vite/eslint"
-import pluginCypress from "eslint-plugin-cypress"
-
 import {
   defineConfigWithVueTs,
   vueTsConfigs
 } from "@vue/eslint-config-typescript"
 import prettierSkipFormatting from "@vue/eslint-config-prettier"
-import lodash from "lodash"
-const { merge } = lodash
 const configs = [
-  {
-    /**
-     * Ignore the following files.
-     * Please note that pluginQuasar.configs.recommended() already ignores
-     * the "node_modules" folder for you (and all other Quasar project
-     * relevant folders and files).
-     *
-     * ESLint requires "ignores" key to be the only one in this object
-     */
-    ignores: ["**/*.spec.{js,mjs,cjs,ts,mts,cts}"]
-  },
+  /**
+   * Ignore quasar genereated files.
+   */
   pluginQuasar.configs.recommended(),
+
+  /**
+   * Basic JS Rules
+   * @see https://github.com/eslint/eslint/blob/main/packages/js/src/configs/eslint-recommended.js
+   */
   js.configs.recommended,
+  /**
+   * @see https://eslint.vuejs.org/rules/#priority-c-recommended-potentially-dangerous-patterns
+   */
   pluginVue.configs["flat/recommended"],
+  /**
+   * Wraps typescript rules to apply them to *.vue files
+   *
+   * @see https://github.com/typescript-eslint/typescript-eslint/blob/main/packages/eslint-plugin/src/configs/eslintrc/recommended-type-checked.ts
+   */
+  vueTsConfigs.recommendedTypeChecked,
+  /**
+   * Enable process global inside config files.
+   */
+  {
+    files: ["eslint.config.js", "quasar.conf.ts"],
+    languageOptions: {
+      globals: {
+        process: "readonly"
+      }
+    }
+  },
+  /**
+   * Require type imports.
+   */
   {
     files: ["**/*.ts", "**/*.vue"],
     rules: {
       "@typescript-eslint/consistent-type-imports": [
         "error",
         { prefer: "type-imports" }
-      ]
+      ],
+      "no-debugger": process.env.NODE_ENV === "production" ? "error" : "off",
+      "@typescript-eslint/unbound-method": "off"
     }
   },
-  vueTsConfigs.recommendedTypeChecked,
   /**
-   * https://eslint.vuejs.org
-   *
-   * pluginVue.configs.base
-   *   -> Settings and rules to enable correct ESLint parsing.
-   * pluginVue.configs[ 'flat/essential']
-   *   -> base, plus rules to prevent errors or unintended behavior.
-   * pluginVue.configs["flat/strongly-recommended"]
-   *   -> Above, plus rules to considerably improve code readability and/or dev experience.
-   * pluginVue.configs["flat/recommended"]
-   *   -> Above, plus rules to enforce subjective community defaults to ensure consistency.
+   * Setup globals for vue files.
    */
   {
     files: ["src*/**/*.{vue,js,ts,mjs,cjs}"],
-    ignores: ["src*/**/*.vitest.spec.{js,mjs,cjs}"],
+    ignores: ["src*/**/*.vitest.spec.{js,mjs,cjs,ts}"],
     languageOptions: {
       ecmaVersion: "latest",
       sourceType: "module",
 
       globals: {
         ...globals.browser,
-        ...globals.node, // SSR, Electron, config files
         process: "readonly", // process.env.*
         ga: "readonly", // Google Analytics
         cordova: "readonly",
@@ -65,75 +73,32 @@ const configs = [
         chrome: "readonly", // BEX related
         browser: "readonly" // BEX related
       }
-    },
-
-    // add your custom rules here
-    rules: {
-      "prefer-promise-reject-errors": "off",
-      "no-unused-vars": ["error", { caughtErrors: "none" }],
-      // allow debugger during development only
-      "no-debugger": process.env.NODE_ENV === "production" ? "error" : "off"
     }
   },
-
+  /**
+   * Disable multi-word component name rule in pages folder.
+   */
+  {
+    files: ["src/pages/**/*.vue"],
+    rules: {
+      "vue/multi-word-component-names": "off"
+    }
+  },
+  /**
+   * Enable browser globals in vitest files.
+   */
   {
     files: [
       "test/vitest/**/*.{js,mjs,cjs,ts,mts,cts}",
       "src*/**/*.vitest.spec.{js,mjs,cjs}"
     ],
-    ...js.configs.recommended,
 
     languageOptions: {
       globals: {
         ...globals.browser
       }
     }
-
-    // vitest currently doesn't work well with non typescript projects
-    // so we'll use the recommended config until something changes
-    /*
-    ...vitest.configs.recommended,
-    settings: {
-      vitest: {
-        typecheck: false
-      }
-    },
-    languageOptions: {
-      globals: {
-        ...vitest.environments.env.globals,
-      },
-    },
-    */
   },
-  {
-    files: ["test/cypress/**/*.{js,mjs,cjs}"],
-    ...merge(pluginCypress.configs.recommended, {
-      ignores: ["test/cypress/support/**/*.{js,mjs,cjs}"],
-      languageOptions: {
-        sourceType: "commonjs",
-        globals: {
-          ...globals.node
-        }
-      }
-    })
-  },
-  {
-    files: ["test/cypress/support/**/*.{js,mjs,cjs}"],
-    ...merge(pluginCypress.configs.recommended, {
-      languageOptions: {
-        sourceType: "module"
-      }
-    })
-  },
-  {
-    files: ["src-pwa/custom-service-worker.js"],
-    languageOptions: {
-      globals: {
-        ...globals.serviceworker
-      }
-    }
-  },
-
   prettierSkipFormatting // optional, if you want prettier
 ]
 

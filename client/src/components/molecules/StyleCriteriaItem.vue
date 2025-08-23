@@ -23,7 +23,7 @@
   </q-item>
 </template>
 
-<script setup>
+<script setup lang="ts">
 defineProps({
   criteria: {
     type: Object,

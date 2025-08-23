@@ -19,7 +19,7 @@
   </q-form>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import FormSection from "src/components/molecules/FormSection.vue"
 import FormActions from "src/components/molecules/FormActions.vue"
 import VQInput from "src/components/atoms/VQInput.vue"

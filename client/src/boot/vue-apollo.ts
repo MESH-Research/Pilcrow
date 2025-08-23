@@ -26,7 +26,7 @@ const httpLink = ApolloLink.split(
   new BatchHttpLink(httpOptions)
 )
 
-export default defineBoot(async ({ app, router }) => {
+export default defineBoot(({ app, router }) => {
   const apolloClient = new ApolloClient({
     link: ApolloLink.from([expiredTokenLink, withXsrfLink, httpLink]),
     cache: new InMemoryCache({
@@ -102,6 +102,8 @@ export default defineBoot(async ({ app, router }) => {
     defaultClient: apolloClient
   }
   const apolloProvider = createApolloProvider(apolloClients)
-  app.provide(ApolloClients, apolloClients) // Provide for composition api
+  app.provide(ApolloClients, {
+    default: apolloClient
+  }) // Provide for composition api
   app.use(apolloProvider)
 })

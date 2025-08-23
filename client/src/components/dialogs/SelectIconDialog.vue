@@ -20,7 +20,7 @@
   </q-dialog>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { QIconPicker } from "@quasar/quasar-ui-qiconpicker"
 import { useDialogPluginComponent } from "quasar"
 import materialIcons from "@quasar/quasar-ui-qiconpicker/src/components/icon-set/material-icons"

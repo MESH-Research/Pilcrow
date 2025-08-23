@@ -1,11 +1,12 @@
 import { useQuery, useMutation, useApolloClient } from "@vue/apollo-composable"
 import { computed, reactive } from "vue"
 import { CURRENT_USER } from "src/graphql/queries"
-import { LOGIN, LOGOUT } from "src/graphql/mutations"
+import { LOGOUT } from "src/graphql/mutations"
 import { SessionStorage } from "quasar"
 import { useVuelidate } from "@vuelidate/core"
 import { required, email } from "@vuelidate/validators"
 import { useRouter } from "vue-router"
+import { LoginDocument } from "src/gql/graphql"
 
 /**
  * Returns an object of useful current user properties and helper methods:
@@ -162,8 +163,14 @@ export function checkRole(currentUser = null) {
  *
  * @returns Object
  */
+
+export interface Credentials {
+  email: string
+  password: string
+}
+
 export const useLogin = () => {
-  const credentials = reactive({
+  const credentials = reactive<Credentials>({
     email: "",
     password: ""
   })
@@ -179,7 +186,11 @@ export const useLogin = () => {
   }
   const v$ = useVuelidate(rules, credentials)
 
-  const { mutate: loginMutation, loading } = useMutation(LOGIN, () => ({
+  const redirectUrl =
+    SessionStorage.getItem<string>("loginRedirect") ?? "/dashboard"
+  SessionStorage.remove("loginRedirect")
+
+  const { mutate: loginMutation, loading } = useMutation(LoginDocument, () => ({
     update: (cache, { data: { login } }) => {
       cache.writeQuery({
         query: CURRENT_USER,
@@ -188,15 +199,13 @@ export const useLogin = () => {
     }
   }))
 
-  const redirectUrl = SessionStorage.getItem("loginRedirect") ?? "/dashboard"
-  SessionStorage.remove("loginRedirect")
-
+  type LoggedInUser = Awaited<ReturnType<typeof loginMutation>>["data"]["login"]
   /**
    * Login the supplied user
    *
    * @returns User object on success, throws Error otherwise.
    */
-  const loginUser = async (user) => {
+  const loginUser = async (user?: Credentials): Promise<LoggedInUser> => {
     if (typeof user !== "undefined") {
       Object.assign(credentials, user)
     }
@@ -244,9 +253,10 @@ export function useLogout() {
     loading: logoutLoading,
     error: logoutError
   } = useMutation(LOGOUT, () => ({
-    update: async (cache) => {
-      await cache.reset()
-      cache.writeQuery({ query: CURRENT_USER, data: { currentUser: null } })
+    update: (cache) => {
+      void cache.reset().then(() => {
+        cache.writeQuery({ query: CURRENT_USER, data: { currentUser: null } })
+      })
     }
   }))
 
@@ -259,9 +269,8 @@ export function useLogout() {
     try {
       await logoutMutation()
       await resolveClient().resetStore()
-      push("/")
-      return true
-    } catch (e) {
+      return push("/")
+    } catch {
       return false
     }
   }

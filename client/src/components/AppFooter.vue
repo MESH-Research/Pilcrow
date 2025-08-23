@@ -11,7 +11,7 @@
           <component :is="versionUrl ? 'a' : 'span'" :href="versionUrl">
             {{ version }}
           </component>
-          <q-tooltip v-if="parsedDate && !parsedDate.invalid">
+          <q-tooltip v-if="parsedDate && parsedDate.isValid">
             {{ parsedDate.toFormat("dd-LLL-yyyy T") }} ({{ versionAge }})
           </q-tooltip>
         </span>
@@ -23,11 +23,12 @@
 <script setup lang="ts">
 import { useTimeAgo } from "src/use/timeAgo"
 import { onMounted, ref } from "vue"
+import { type DateTimeMaybeValid } from "luxon"
 import { DateTime } from "luxon"
 
 const timeAgo = useTimeAgo()
 
-const parsedDate = ref("")
+const parsedDate = ref<DateTimeMaybeValid>()
 const version = ref("")
 const versionAge = ref("")
 const versionUrl = ref("")
@@ -43,8 +44,8 @@ onMounted(async () => {
     ? DateTime.fromISO(versionDate.value)
     : undefined
   versionAge.value =
-    parsedDate.value && !parsedDate.value.invalid
-      ? timeAgo.format(parsedDate.value.toJSDate(), "long")
+    parsedDate.value && !parsedDate.value.isValid
+      ? timeAgo.format(parsedDate.value.toJSDate(), "round")
       : ""
 })
 </script>

@@ -61,62 +61,55 @@ import FindUserSelect from "./forms/FindUserSelect.vue"
 import UserList from "./molecules/UserList.vue"
 import { useFeedbackMessages } from "src/use/guiElements"
 import { useMutation } from "@vue/apollo-composable"
-import {
-  UPDATE_PUBLICATION_ADMINS,
-  UPDATE_PUBLICATION_EDITORS
-} from "src/graphql/mutations"
 import { computed, ref } from "vue"
 import { useI18n } from "vue-i18n"
-const props = defineProps({
-  container: {
-    type: Object,
-    required: true
-  },
-  roleGroup: {
-    type: String,
-    required: true
-  },
-  mutable: {
-    type: Boolean,
-    default: false
-  },
-  maxUsers: {
-    type: [Boolean, Number],
-    required: false,
-    default: false
-  },
-  containerType: {
-    type: String,
-    requred: false,
-    default: null
-  }
+
+import {
+  type GetPublicationQuery,
+  UpdatePublicationAdminsDocument,
+  UpdatePublicationEditorsDocument
+} from "src/gql/graphql"
+
+interface Props {
+  container: GetPublicationQuery["publication"]
+  roleGroup: "publication_admins" | "editors"
+  mutable?: boolean
+  maxUsers?: number | false
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  mutable: false,
+  maxUsers: false
 })
 
 const user = ref(null)
-const containerType = computed(() => props.container.__typename.toLowerCase())
+
 const { t, te } = useI18n()
-const tPrefix = (key) => `${containerType.value}.${props.roleGroup}.${key}`
-const tp$ = (key, ...args) => t(tPrefix(key), ...args)
+
+const tPrefix = (key) => `publication.${props.roleGroup}.${key}`
+const tp$ = (key, ...args) => t(tPrefix(key), args)
 
 const { newStatusMessage } = useFeedbackMessages()
 
 const opts = { variables: { id: props.container.id } }
-const mutations = {
-  editors: UPDATE_PUBLICATION_EDITORS,
-  publication_admins: UPDATE_PUBLICATION_ADMINS
-}
+
 const users = computed(() => {
   return props.container[props.roleGroup]
 })
 
 const acceptMore = computed(() => {
-  return (
-    props.mutable &&
-    (props.maxUsers === false) | (users.value.length < props.maxUsers)
-  )
+  const maxUsers = props.maxUsers === false ? Infinity : props.maxUsers
+  return props.mutable && users.value.length < maxUsers
 })
 
-const { mutate } = useMutation(mutations[props.roleGroup], opts)
+const { mutate: editorsMutate } = useMutation(
+  UpdatePublicationEditorsDocument,
+  opts
+)
+const { mutate: adminsMutate } = useMutation(
+  UpdatePublicationAdminsDocument,
+  opts
+)
 
 async function handleSubmit() {
   if (!acceptMore.value) {
@@ -124,6 +117,12 @@ async function handleSubmit() {
   }
 
   try {
+    let mutate
+    if (props.roleGroup === "editors") {
+      mutate = editorsMutate
+    } else if (props.roleGroup === "publication_admins") {
+      mutate = adminsMutate
+    }
     await mutate({
       connect: [user.value.id]
     })
@@ -138,13 +137,19 @@ async function handleSubmit() {
       .then(() => {
         user.value = null
       })
-  } catch (error) {
+  } catch {
     newStatusMessage("failure", tp$("assign.error"))
   }
 }
 
 async function handleUserListClick({ user }) {
   if (!props.mutable) return
+  let mutate
+  if (props.roleGroup === "editors") {
+    mutate = editorsMutate
+  } else if (props.roleGroup === "publication_admins") {
+    mutate = adminsMutate
+  }
   try {
     await mutate({ disconnect: [user.id] })
     newStatusMessage(
@@ -153,10 +158,53 @@ async function handleUserListClick({ user }) {
         display_name: user.name ? user.name : user.username
       })
     )
-  } catch (error) {
+  } catch {
     newStatusMessage("failure", tp$("unassign.error"))
   }
 }
+</script>
+
+<script lang="ts">
+import { graphql } from "src/gql"
+graphql(`
+  mutation UpdatePublicationEditors(
+    $id: ID!
+    $connect: [ID!]
+    $disconnect: [ID!]
+  ) {
+    updatePublication(
+      publication: {
+        id: $id
+        editors: { connect: $connect, disconnect: $disconnect }
+      }
+    ) {
+      id
+      editors {
+        ...RelatedUserFields
+      }
+    }
+  }
+`)
+
+graphql(`
+  mutation UpdatePublicationAdmins(
+    $id: ID!
+    $connect: [ID!]
+    $disconnect: [ID!]
+  ) {
+    updatePublication(
+      publication: {
+        id: $id
+        publication_admins: { connect: $connect, disconnect: $disconnect }
+      }
+    ) {
+      id
+      publication_admins {
+        ...RelatedUserFields
+      }
+    }
+  }
+`)
 </script>
 
 <style></style>

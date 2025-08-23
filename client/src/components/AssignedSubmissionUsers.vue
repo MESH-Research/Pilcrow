@@ -116,7 +116,7 @@ const user = ref(null)
 const containerType = computed(() => props.container.__typename.toLowerCase())
 const { t, te } = useI18n()
 const tPrefix = (key) => `${containerType.value}.${props.roleGroup}.${key}`
-const tp$ = (key, ...args) => t(tPrefix(key), ...args)
+const tp$ = (key, ...args) => t(tPrefix(key), args)
 
 const { newStatusMessage } = useFeedbackMessages()
 
@@ -150,9 +150,9 @@ const users = computed(() => {
 
 const acceptMore = computed(() => {
   return (
-    props.mutable &&
-    (props.maxUsers === false) | (users.value.length < props.maxUsers) &&
-    props.container.effective_role === `review_coordinator`
+    (props.mutable && props.maxUsers === false) ||
+    (users.value.length < props.maxUsers &&
+      props.container.effective_role === `review_coordinator`)
   )
 })
 
@@ -172,7 +172,7 @@ function resetForm() {
   editor.value.commands.blur()
 }
 
-async function handleSubmit() {
+function handleSubmit() {
   if (!acceptMore.value) {
     return
   }
@@ -182,9 +182,9 @@ async function handleSubmit() {
   }
   // TODO: Attempt to assign instead of invite when user.value matches a known user
   if (typeof user.value === "string") {
-    inviteUser()
+    void inviteUser()
   } else {
-    assignUser()
+    void assignUser()
   }
 }
 
@@ -236,7 +236,7 @@ async function assignUser() {
       .then(() => {
         resetForm()
       })
-  } catch (error) {
+  } catch {
     newStatusMessage("failure", tp$("assign.error"))
   }
 }
@@ -276,7 +276,7 @@ async function handleUserListClick({ user }) {
         display_name: user.name ? user.name : user.username
       })
     )
-  } catch (error) {
+  } catch {
     newStatusMessage("failure", tp$("unassign.error"))
   }
 }

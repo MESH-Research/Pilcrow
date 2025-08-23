@@ -55,7 +55,7 @@
   </q-select>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useQuery } from "@vue/apollo-composable"
 import { SEARCH_USERS } from "src/graphql/queries"
 import { ref, computed } from "vue"

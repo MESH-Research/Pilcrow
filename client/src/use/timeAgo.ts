@@ -1,4 +1,5 @@
 import TimeAgo from "javascript-time-ago"
+import type { FormatStyleName, Style } from "javascript-time-ago"
 import en from "javascript-time-ago/locale/en.json"
 import { DateTime } from "luxon"
 import { computed } from "vue"
@@ -10,7 +11,10 @@ export function useTimeAgo() {
   return new TimeAgo("en-US")
 }
 
-export function relativeTime(date, style = "long") {
+export function relativeTime(
+  date: string,
+  style: FormatStyleName | Style = "round"
+) {
   const timeAgo = useTimeAgo()
 
   const isoDate = computed(() => {

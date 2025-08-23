@@ -46,7 +46,7 @@
   </component>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed, inject } from "vue"
 
 const { state, errorMessage } = inject("formState")

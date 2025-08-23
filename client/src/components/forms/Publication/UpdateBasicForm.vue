@@ -19,7 +19,7 @@
   </q-form>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import VQWrap from "src/components/atoms/VQWrap.vue"
 import VQInput from "src/components/atoms/VQInput.vue"
 import VQToggleButton from "src/components/atoms/VQToggleButton.vue"

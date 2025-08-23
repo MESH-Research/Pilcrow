@@ -76,7 +76,7 @@ function setActive() {
   //Null the active comment first to trigger the scroll watcher
   //TODO: Fix active comment updates needing nextTick (reactivity)
   activeComment.value = null
-  nextTick(() => {
+  void nextTick(() => {
     activeComment.value = props.comment
   })
 }

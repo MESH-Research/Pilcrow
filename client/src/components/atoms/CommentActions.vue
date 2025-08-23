@@ -60,7 +60,7 @@ const createdByCurrentUser = computed(() => {
   return currentUser.value.id == comment.created_by.id
 })
 
-async function deleteHandler() {
+function deleteHandler() {
   emit("deleteComment")
   dialog({
     component: ConfirmCommentDeletion,

@@ -102,7 +102,7 @@ async function onDelete(criteria) {
     await deleteCriteria({ id: criteria.id })
     formState.reset()
     editId.value = null
-  } catch (error) {
+  } catch {
     formState.errorMessage.value = t("publications.style_criteria.deleteError")
   }
 }
@@ -113,7 +113,7 @@ async function saveEdit(criteria) {
     await method(criteria)
     formState.reset()
     editId.value = null
-  } catch (error) {
+  } catch {
     formState.errorMessage.value = t("publications.style_criteria.saveError")
   }
 }

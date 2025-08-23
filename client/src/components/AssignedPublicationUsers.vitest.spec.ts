@@ -2,10 +2,11 @@ import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-v
 import { mount } from "@vue/test-utils"
 import { installApolloClient } from "app/test/vitest/utils"
 import { Notify } from "quasar"
+
 import {
-  UPDATE_PUBLICATION_ADMINS,
-  UPDATE_PUBLICATION_EDITORS
-} from "src/graphql/mutations"
+  UpdatePublicationAdminsDocument,
+  UpdatePublicationEditorsDocument
+} from "src/gql/graphql"
 import AssignedPublicationUsers from "./AssignedPublicationUsers.vue"
 
 import { beforeEach, describe, expect, test, vi } from "vitest"
@@ -22,9 +23,12 @@ describe("AssignedPublicationUsers", () => {
   const editorsMutation = vi.fn()
   const publicationAdministratorsMutation = vi.fn()
 
-  mockClient.setRequestHandler(UPDATE_PUBLICATION_EDITORS, editorsMutation)
   mockClient.setRequestHandler(
-    UPDATE_PUBLICATION_ADMINS,
+    UpdatePublicationEditorsDocument,
+    editorsMutation
+  )
+  mockClient.setRequestHandler(
+    UpdatePublicationAdminsDocument,
     publicationAdministratorsMutation
   )
 

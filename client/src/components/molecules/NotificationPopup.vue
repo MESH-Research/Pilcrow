@@ -62,7 +62,7 @@
   </q-btn>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref } from "vue"
 import { useQuery, useMutation } from "@vue/apollo-composable"
 import { CURRENT_USER_NOTIFICATIONS } from "src/graphql/queries"

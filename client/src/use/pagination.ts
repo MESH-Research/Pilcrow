@@ -3,7 +3,7 @@ import { unref, reactive, computed, watchEffect } from "vue"
 import { defaults } from "lodash"
 import { useQuery } from "@vue/apollo-composable"
 
-export function usePagination(doc, options) {
+export function usePagination(doc, options = undefined) {
   const opts = defaults(unref(options) || {}, {
     variables: {}
   })

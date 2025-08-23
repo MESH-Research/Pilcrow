@@ -1,0 +1,4 @@
+schema: "https://pilcrow.lndo.site/graphql"
+documents:
+  - "src/**/*.vue"
+  - "src/global.ts"

@@ -2,7 +2,13 @@ import type { CodegenConfig } from "@graphql-codegen/cli"
 
 const config: CodegenConfig = {
   schema: "https://pilcrow.lndo.site/graphql",
-  documents: ["./src/**/*.vue", "./src/graphql/global.ts", "!./src/gql/**/*"],
+  documents: [
+    "./src/**/*.vue",
+    "!./src/graphql/**",
+    "!./src/old-pages/**",
+    "./src/**/*.ts",
+    "!./src/gql/**/*"
+  ],
   ignoreNoDocuments: true,
   generates: {
     "./src/gql/": {
@@ -11,7 +17,7 @@ const config: CodegenConfig = {
         useTypeImports: true
       },
       presetConfig: {
-        fragmentMasking: true,
+        fragmentMasking: false,
         gqlTagName: "graphql"
       }
     }
