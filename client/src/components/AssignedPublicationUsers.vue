@@ -64,14 +64,14 @@ import { useMutation } from "@vue/apollo-composable"
 import { computed, ref } from "vue"
 import { useI18n } from "vue-i18n"
 
+import type { AssignedPublicationUsersFragment } from "src/gql/graphql"
 import {
-  type GetPublicationQuery,
   UpdatePublicationAdminsDocument,
   UpdatePublicationEditorsDocument
 } from "src/gql/graphql"
 
 interface Props {
-  container: GetPublicationQuery["publication"]
+  container: AssignedPublicationUsersFragment
   roleGroup: "publication_admins" | "editors"
   mutable?: boolean
   maxUsers?: number | false
@@ -166,6 +166,17 @@ async function handleUserListClick({ user }) {
 
 <script lang="ts">
 import { graphql } from "src/gql"
+
+graphql(`
+  fragment AssignedPublicationUsers on Publication {
+    publication_admins {
+      ...UserList
+    }
+    editors {
+      ...UserList
+    }
+  }
+`)
 graphql(`
   mutation UpdatePublicationEditors(
     $id: ID!

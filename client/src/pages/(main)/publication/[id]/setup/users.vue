@@ -34,6 +34,9 @@
 </template>
 
 <script setup lang="ts">
+import AssignedPublicationUsers from "src/components/AssignedPublicationUsers.vue"
+import type { PublicationSetupUsersFragment } from "src/gql/graphql"
+
 definePage({
   name: "publication:setup:users",
   meta: {
@@ -44,12 +47,16 @@ definePage({
   }
 })
 
-import AssignedPublicationUsers from "src/components/AssignedPublicationUsers.vue"
-
-import type { GetPublicationQuery } from "src/gql/graphql"
-
 interface Props {
-  publication: GetPublicationQuery["publication"]
+  publication: PublicationSetupUsersFragment
 }
 defineProps<Props>()
+</script>
+
+<script lang="ts">
+graphql(`
+  fragment PublicationSetupUsers on Publication {
+    ...AssignedPublicationUsers
+  }
+`)
 </script>

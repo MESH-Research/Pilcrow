@@ -20,6 +20,7 @@
 
 <script setup lang="ts">
 import PublicationStyleCriteria from "src/components/PublicationStyleCriteria.vue"
+import type { PublicationSetupStyleCriteriaFragment } from "src/gql/graphql"
 
 definePage({
   name: "publication:setup:criteria",
@@ -30,11 +31,21 @@ definePage({
     }
   }
 })
+interface Props {
+  publication: PublicationSetupStyleCriteriaFragment
+}
+defineProps<Props>()
+</script>
 
-defineProps({
-  publication: {
-    type: Object,
-    required: true
+<script lang="ts">
+graphql(`
+  fragment PublicationSetupStyleCriteria on Publication {
+    id
+    style_criterias {
+      id
+      name
+      description
+    }
   }
-})
+`)
 </script>

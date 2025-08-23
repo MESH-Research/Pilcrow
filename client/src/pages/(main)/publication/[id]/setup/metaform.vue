@@ -2,7 +2,7 @@
   <MetaFormCreate
     v-if="creatingForm"
     :creating-form="creatingForm"
-    :publication="props.publication"
+    :publication="publication"
     @cancel="cancelCreateForm"
     @submit="submitCreateForm"
   />
@@ -12,13 +12,11 @@
     @cancel="cancelEditForm"
     @submit="submitEditForm"
   />
+
   <article v-else class="q-pl-lg">
     <h2>Meta Forms</h2>
     <p>Customize blocks of text displayed to your publication's users.</p>
-    <div v-if="loading">
-      <q-spinner color="primary" />
-    </div>
-    <div v-else-if="result">
+    <div>
       <q-btn
         color="primary"
         icon="add"
@@ -119,7 +117,6 @@
 </template>
 
 <script setup lang="ts">
-import { GET_PUBLICATION_PROMPTS } from "src/graphql/queries"
 import { useDarkMode } from "src/use/guiElements"
 import ChipRequired from "src/components/atoms/ChipRequired.vue"
 import Draggable from "vuedraggable"
@@ -137,16 +134,10 @@ const { darkModeStatus } = useDarkMode()
 const editingForm = ref(null)
 const creatingForm = ref(false)
 
-const props = defineProps({
-  publication: {
-    type: Object,
-    required: true
-  }
-})
-
-const { result, loading } = useQuery(GET_PUBLICATION_PROMPTS, {
-  id: props.publication.id
-})
+interface Props {
+  publication: PublicationSetupFormsFragment
+}
+const { publication } = defineProps<Props>()
 
 const { mutate: updateMetaPrompts } = useMutation(META_PROMPT_UPDATE)
 const { mutate: updateMetaForm } = useMutation(META_FORM_UPDATE)
@@ -172,16 +163,14 @@ function submitEditForm() {
 
 function toggleFormRequired(form) {
   const newForm = { id: form.id, required: !form.required }
-  updateMetaForm({ input: { newForm } })
-    .catch((error) => {
-      console.error(error)
-    })
-    .finally(() => (loading.value = false))
+  updateMetaForm({ input: { newForm } }).catch((error) => {
+    console.error(error)
+  })
 }
 
 const metaForms = computed(() => {
   return (
-    result.value?.publication.meta_forms?.map((form) => {
+    publication.meta_forms?.map((form) => {
       const loading = ref(false)
       return {
         ...form,
@@ -226,10 +215,11 @@ function promptIcon(type) {
 </script>
 
 <script lang="ts">
-import { useMutation, useQuery } from "@vue/apollo-composable"
+import { useMutation } from "@vue/apollo-composable"
 import gql from "graphql-tag"
 import MetaFormCreate from "src/components/forms/MetaFormCreate.vue"
 import MetaFormEdit from "src/components/forms/MetaFormEdit.vue"
+import type { PublicationSetupFormsFragment } from "src/gql/graphql"
 
 const META_PROMPT_UPDATE = gql`
   mutation MetaPromptUpdate($input: [UpdateMetaPromptInput!]!) {
@@ -256,4 +246,25 @@ const META_FORM_UPDATE = gql`
     }
   }
 `
+
+graphql(`
+  fragment PublicationSetupForms on Publication {
+    id
+    meta_forms {
+      id
+      name
+      caption
+      required
+      meta_prompts {
+        id
+        label
+        type
+        order
+        options
+        required
+        caption
+      }
+    }
+  }
+`)
 </script>

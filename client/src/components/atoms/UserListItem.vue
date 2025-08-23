@@ -47,17 +47,32 @@
 </template>
 
 <script setup lang="ts">
+import type { UserListItemFragment } from "src/gql/graphql"
 import AvatarImage from "./AvatarImage.vue"
-defineProps({
-  user: {
-    type: Object,
-    default: () => {}
-  },
-  actions: {
-    type: Array,
-    required: false,
-    default: () => []
-  }
-})
+export interface Action {
+  ariaLabel: string
+  icon: string
+  action: string
+  help: string
+  cyAttr: string
+}
+interface Props {
+  user: UserListItemFragment
+  actions?: Action[]
+}
+
+const { user, actions = [] } = defineProps<Props>()
 defineEmits(["actionClick", "reinvite"])
+</script>
+
+<script lang="ts">
+graphql(`
+  fragment UserListItem on User {
+    id
+    name
+    email
+    username
+    staged
+  }
+`)
 </script>

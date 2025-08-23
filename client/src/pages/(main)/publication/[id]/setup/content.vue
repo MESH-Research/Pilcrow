@@ -10,6 +10,7 @@
 import UpdateContentForm from "src/components/forms/Publication/UpdateContentForm.vue"
 import { useFormState } from "src/use/forms"
 import { UPDATE_PUBLICATION_CONTENT } from "src/graphql/mutations"
+import type { PublicationSetupContentFragment } from "src/gql/graphql"
 
 definePage({
   name: "publication:setup:content",
@@ -20,13 +21,10 @@ definePage({
     }
   }
 })
-
-const props = defineProps({
-  publication: {
-    type: Object,
-    required: true
-  }
-})
+interface Props {
+  publication: PublicationSetupContentFragment
+}
+const props = defineProps<Props>()
 
 const mutation = useMutation(UPDATE_PUBLICATION_CONTENT)
 const formState = useFormState(null, mutation)
@@ -48,4 +46,14 @@ function save(form) {
       errorMessage.value = "Unable to save publication."
     })
 }
+</script>
+
+<script lang="ts">
+graphql(`
+  fragment PublicationSetupContent on Publication {
+    id
+    home_page_content
+    new_submission_content
+  }
+`)
 </script>

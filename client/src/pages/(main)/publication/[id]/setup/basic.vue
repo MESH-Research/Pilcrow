@@ -7,6 +7,7 @@
 
 <script setup lang="ts">
 import UpdateBasicForm from "src/components/forms/Publication/UpdateBasicForm.vue"
+import type { PublicationSetupBasicFragment } from "src/gql/graphql"
 import { UPDATE_PUBLICATION_BASICS } from "src/graphql/mutations"
 import { useFormState } from "src/use/forms"
 
@@ -19,12 +20,11 @@ definePage({
     }
   }
 })
-const props = defineProps({
-  publication: {
-    type: Object,
-    required: true
-  }
-})
+
+interface Props {
+  publication: PublicationSetupBasicFragment
+}
+const props = defineProps<Props>()
 
 const mutation = useMutation(UPDATE_PUBLICATION_BASICS)
 
@@ -45,4 +45,15 @@ function save(form) {
       errorMessage.value = "Unable to save publication"
     })
 }
+</script>
+
+<script lang="ts">
+graphql(`
+  fragment PublicationSetupBasic on Publication {
+    id
+    is_publicly_visible
+    is_accepting_submissions
+    name
+  }
+`)
 </script>

@@ -71,23 +71,12 @@ graphql(`
     publication(id: $id) {
       id
       name
-      is_publicly_visible
-      is_accepting_submissions
+      ...PublicationSetupBasic
+      ...PublicationSetupContent
+      ...PublicationSetupStyleCriteria
+      ...PublicationSetupForms
+      ...PublicationSetupUsers
       effective_role
-      home_page_content
-      new_submission_content
-      style_criterias {
-        name
-        id
-        icon
-        description
-      }
-      publication_admins {
-        ...RelatedUserFields
-      }
-      editors {
-        ...RelatedUserFields
-      }
     }
   }
 `)

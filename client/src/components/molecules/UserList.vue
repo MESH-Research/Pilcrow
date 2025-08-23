@@ -12,22 +12,16 @@
 </template>
 
 <script setup lang="ts">
+import type { UserListFragment } from "src/gql/graphql"
+import type { Action } from "../atoms/UserListItem.vue"
 import UserListItem from "../atoms/UserListItem.vue"
-defineProps({
-  users: {
-    type: Array,
-    required: true
-  },
-  actions: {
-    type: Array,
-    required: false,
-    default: () => []
-  },
-  dataCy: {
-    type: String,
-    default: "user_list"
-  }
-})
+interface Props {
+  users: UserListFragment[]
+  actions?: Action[]
+  dataCy?: string
+}
+
+const { actions = [], dataCy = "user_list", users } = defineProps<Props>()
 const emit = defineEmits(["actionClick", "reinvite"])
 
 function bubble(eventData) {
@@ -36,4 +30,12 @@ function bubble(eventData) {
 function reinviteUser(eventData) {
   emit("reinvite", eventData)
 }
+</script>
+
+<script lang="ts">
+graphql(`
+  fragment UserList on User {
+    ...UserListItem
+  }
+`)
 </script>
