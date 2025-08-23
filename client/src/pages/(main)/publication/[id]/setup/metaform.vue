@@ -124,7 +124,13 @@ import { useDarkMode } from "src/use/guiElements"
 import ChipRequired from "src/components/atoms/ChipRequired.vue"
 import Draggable from "vuedraggable"
 definePage({
-  name: "publication:setup:metaForms"
+  name: "publication:setup:metaForms",
+  meta: {
+    navigation: {
+      icon: "ballot",
+      label: "Meta Forms"
+    }
+  }
 })
 
 const { darkModeStatus } = useDarkMode()

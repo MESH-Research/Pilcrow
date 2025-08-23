@@ -12,7 +12,13 @@ import { useFormState } from "src/use/forms"
 import { UPDATE_PUBLICATION_CONTENT } from "src/graphql/mutations"
 
 definePage({
-  name: "publication:setup:content"
+  name: "publication:setup:content",
+  meta: {
+    navigation: {
+      icon: "toc",
+      label: "Content"
+    }
+  }
 })
 
 const props = defineProps({

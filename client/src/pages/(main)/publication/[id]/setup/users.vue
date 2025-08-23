@@ -35,7 +35,13 @@
 
 <script setup lang="ts">
 definePage({
-  name: "publication:setup:users"
+  name: "publication:setup:users",
+  meta: {
+    navigation: {
+      icon: "people",
+      label: "Users"
+    }
+  }
 })
 
 import AssignedPublicationUsers from "src/components/AssignedPublicationUsers.vue"

@@ -11,7 +11,13 @@ import { UPDATE_PUBLICATION_BASICS } from "src/graphql/mutations"
 import { useFormState } from "src/use/forms"
 
 definePage({
-  name: "publication:setup:basic"
+  name: "publication:setup:basic",
+  meta: {
+    navigation: {
+      icon: "tune",
+      label: "Basic Setup"
+    }
+  }
 })
 const props = defineProps({
   publication: {

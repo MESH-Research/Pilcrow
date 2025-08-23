@@ -30,12 +30,12 @@ declare module 'vue-router/auto-routes' {
     'publication:index': RouteRecordInfo<'publication:index', '/publication', Record<never, never>, Record<never, never>>,
     'publication:home': RouteRecordInfo<'publication:home', '/publication/:id', { id: ParamValue<true> }, { id: ParamValue<false> }>,
     'publication:createSubmission': RouteRecordInfo<'publication:createSubmission', '/publication/:id/create', { id: ParamValue<true> }, { id: ParamValue<false> }>,
+    'publication:setup': RouteRecordInfo<'publication:setup', '/publication/:id/setup', { id: ParamValue<true> }, { id: ParamValue<false> }, 'publication:setup:basic' | 'publication:setup:content' | 'publication:setup:criteria' | 'publication:setup:metaForms' | 'publication:setup:users'>,
     'publication:setup:basic': RouteRecordInfo<'publication:setup:basic', '/publication/:id/setup/basic', { id: ParamValue<true> }, { id: ParamValue<false> }>,
     'publication:setup:content': RouteRecordInfo<'publication:setup:content', '/publication/:id/setup/content', { id: ParamValue<true> }, { id: ParamValue<false> }>,
     'publication:setup:criteria': RouteRecordInfo<'publication:setup:criteria', '/publication/:id/setup/criteria', { id: ParamValue<true> }, { id: ParamValue<false> }>,
     'publication:setup:metaForms': RouteRecordInfo<'publication:setup:metaForms', '/publication/:id/setup/metaform', { id: ParamValue<true> }, { id: ParamValue<false> }>,
     'publication:setup:users': RouteRecordInfo<'publication:setup:users', '/publication/:id/setup/users', { id: ParamValue<true> }, { id: ParamValue<false> }>,
-    'publication:setup': RouteRecordInfo<'publication:setup', '/publication/:id/setup/', { id: ParamValue<true> }, { id: ParamValue<false> }>,
     'reviews': RouteRecordInfo<'reviews', '/reviews', Record<never, never>, Record<never, never>>,
     'submission:content': RouteRecordInfo<'submission:content', '/submission/:id/content', { id: ParamValue<true> }, { id: ParamValue<false> }>,
     'submission:details': RouteRecordInfo<'submission:details', '/submission/:id/details', { id: ParamValue<true> }, { id: ParamValue<false> }>,
@@ -73,7 +73,7 @@ declare module 'vue-router/auto-routes' {
    */
   export interface _RouteFileInfoMap {
     'src/pages/(main).vue': {
-      routes: '/(main)' | 'publication:index' | 'publication:home' | '/(main)/admin/publications/' | 'admin:users' | '/(main)/publication/[id]' | 'admin:users:details' | '/(main)/submission/[id]' | '/(main)/account' | '/(main)/admin' | 'publication:setup:basic' | 'publication:setup:content' | 'submission:content' | 'publication:createSubmission' | 'publication:setup:criteria' | 'Dashboard' | 'submission:details' | 'submission:draft' | 'submission:export' | 'feed' | 'submission:metaForm' | 'publication:setup:metaForms' | 'submission:preview' | '/(main)/account/profile' | '/(main)/publication' | '/(main)/admin/publications' | 'submission:review' | 'reviews' | '/(main)/account/settings' | '/(main)/publication/[id]/setup' | 'publication:setup' | '/(main)/submission' | 'submissions' | 'publication:setup:users' | '/(main)/admin/users' | 'VerifyEmail' | 'submission:view'
+      routes: '/(main)' | 'publication:index' | 'publication:home' | '/(main)/admin/publications/' | 'admin:users' | '/(main)/publication/[id]' | 'admin:users:details' | '/(main)/submission/[id]' | '/(main)/account' | '/(main)/admin' | 'publication:setup:basic' | 'publication:setup:content' | 'submission:content' | 'publication:createSubmission' | 'publication:setup:criteria' | 'Dashboard' | 'submission:details' | 'submission:draft' | 'submission:export' | 'feed' | 'submission:metaForm' | 'publication:setup:metaForms' | 'submission:preview' | '/(main)/account/profile' | '/(main)/publication' | '/(main)/admin/publications' | 'submission:review' | 'reviews' | '/(main)/account/settings' | 'publication:setup' | '/(main)/submission' | 'submissions' | 'publication:setup:users' | '/(main)/admin/users' | 'VerifyEmail' | 'submission:view'
       views: 'default'
     }
     'src/pages/(main)/account.vue': {
@@ -120,6 +120,10 @@ declare module 'vue-router/auto-routes' {
       routes: 'publication:createSubmission'
       views: never
     }
+    'src/pages/(main)/publication/[id]/setup.vue': {
+      routes: 'publication:setup' | 'publication:setup:basic' | 'publication:setup:content' | 'publication:setup:criteria' | 'publication:setup:metaForms' | 'publication:setup:users'
+      views: 'default'
+    }
     'src/pages/(main)/publication/[id]/setup/basic.vue': {
       routes: 'publication:setup:basic'
       views: never
@@ -138,10 +142,6 @@ declare module 'vue-router/auto-routes' {
     }
     'src/pages/(main)/publication/[id]/setup/users.vue': {
       routes: 'publication:setup:users'
-      views: never
-    }
-    'src/pages/(main)/publication/[id]/setup..vue': {
-      routes: 'publication:setup'
       views: never
     }
     'src/pages/(main)/reviews.vue': {

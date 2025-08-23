@@ -22,7 +22,13 @@
 import PublicationStyleCriteria from "src/components/PublicationStyleCriteria.vue"
 
 definePage({
-  name: "publication:setup:criteria"
+  name: "publication:setup:criteria",
+  meta: {
+    navigation: {
+      icon: "card_membership",
+      label: "Style Criteria"
+    }
+  }
 })
 
 defineProps({
