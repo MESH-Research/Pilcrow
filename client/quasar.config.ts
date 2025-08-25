@@ -61,6 +61,7 @@ export default configure(() => {
       },
       vitePlugins: [
         ["unplugin-vue-router/vite", {}],
+        ["vite-plugin-vue-devtools", {}],
         [
           "unplugin-auto-import/vite",
           {

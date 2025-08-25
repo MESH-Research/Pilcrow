@@ -80,6 +80,7 @@
     "unplugin-vue-router": "^0.15.0",
     "vite-plugin-checker": "^0.10.2",
     "vite-plugin-graphql-codegen": "^3.6.3",
+    "vite-plugin-vue-devtools": "^8.0.0",
     "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^1.0.0",
     "vue-composable-tester": "^0.1.3",

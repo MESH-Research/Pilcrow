@@ -55,6 +55,7 @@
 
 <script lang="ts" setup>
 definePage({
-  name: "index"
+  name: "index",
+  alias: "/"
 })
 </script>
