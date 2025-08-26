@@ -1,52 +1,52 @@
 <template>
-  <q-card bordered flat>
-    <q-banner inline-actions>
-      <div>{{ title }}</div>
-      <div class="text-caption">
-        <slot />
-      </div>
-      <template #action>
-        <q-btn
-          v-if="!done"
-          data-cy="todo_go_btn"
-          color="primary"
-          :label="$t(`submissions.create.todo.btn_label.go`)"
-          @click="$emit('contentClick')"
-        />
-        <q-btn
-          v-if="$props.skipable"
-          flat
-          :label="$t(`submissions.create.todo.btn_label.skip`)"
-          @click="$emit('skipClick')"
-        />
-        <q-btn
-          v-if="done"
-          data-cy="todo_preview_btn"
-          color="accent"
-          :label="$t(`submissions.create.todo.btn_label.preview`)"
-          class="q-mr-sm"
-          @click="$emit('previewClick')"
-        />
-        <q-btn
-          v-if="done"
-          data-cy="todo_content_btn"
-          flat
-          :label="$t(`submissions.create.todo.btn_label.edit`)"
-          @click="$emit('contentClick')"
-        />
-      </template>
-    </q-banner>
+  <q-card bordered square flat>
+    <q-card-section class="q-pa-none">
+      <q-banner inline-actions>
+        <div>
+          {{ title }}
+        </div>
+        <div class="text-caption">
+          <slot />
+          <ChipRequired :required="$props.required" />
+        </div>
+        <template #action>
+          <q-btn
+            v-if="!done"
+            data-cy="todo_go_btn"
+            color="primary"
+            :label="$t(`submissions.create.todo.btn_label.go`)"
+            @click="$emit('contentClick')"
+          />
+          <q-btn
+            v-if="done"
+            data-cy="todo_preview_btn"
+            color="accent"
+            :label="$t(`submissions.create.todo.btn_label.preview`)"
+            class="q-mr-sm"
+            @click="$emit('previewClick')"
+          />
+          <q-btn
+            v-if="done"
+            data-cy="todo_content_btn"
+            flat
+            :label="$t(`submissions.create.todo.btn_label.edit`)"
+            @click="$emit('contentClick')"
+          />
+        </template>
+      </q-banner>
+    </q-card-section>
   </q-card>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { defineProps, defineEmits } from "vue"
+import ChipRequired from "./atoms/ChipRequired.vue"
 defineProps({
   title: {
     type: String,
     required: true
   },
-  skipable: {
+  required: {
     type: Boolean,
     required: false,
     default: false
@@ -55,9 +55,14 @@ defineProps({
     type: Boolean,
     required: false,
     default: false
+  },
+  darkMode: {
+    type: Boolean,
+    required: false,
+    default: false
   }
 })
-defineEmits(["contentClick", "previewClick", "skipClick"])
+defineEmits(["contentClick", "previewClick"])
 </script>
 
 <style scoped></style>

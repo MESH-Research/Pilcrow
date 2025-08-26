@@ -168,7 +168,7 @@
   </q-form>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import EditableList from "src/components/molecules/EditableList.vue"
 import VQInput from "src/components/atoms/VQInput.vue"
 import VQWrap from "src/components/atoms/VQWrap.vue"

@@ -1,0 +1,56 @@
+import {
+  createMockClient as createClient,
+  type MockApolloClientOptions
+} from "mock-apollo-client"
+import { config } from "@vue/test-utils"
+import { cloneDeep } from "lodash"
+import { beforeAll, afterAll, vi } from "vitest"
+import { ApolloClients } from "@vue/apollo-composable"
+import { InMemoryCache } from "@apollo/client/core"
+
+const cache = new InMemoryCache({
+  addTypename: true
+})
+
+const createMockClient = (opts: MockApolloClientOptions = {}) =>
+  createClient({
+    ...opts,
+    connectToDevTools: false,
+    defaultOptions: { watchQuery: { fetchPolicy: "network-only" } },
+    cache
+  })
+
+export { createMockClient }
+
+export function installApolloClient(opts: MockApolloClientOptions = {}) {
+  const globalConfigBackup = cloneDeep(config.global)
+  const client = createMockClient(opts)
+
+  const docs = new Map()
+
+  beforeAll(() => {
+    config.global.provide = {
+      ...config.global.provide,
+      [ApolloClients]: { default: client }
+    }
+  })
+
+  afterAll(() => {
+    config.global = globalConfigBackup
+  })
+
+  const mockMethods = {
+    getRequestHandler(query) {
+      if (!docs.has(query)) {
+        docs.set(query, vi.fn())
+        client.setRequestHandler(query, docs.get(query))
+      }
+      return docs.get(query)
+    },
+    mockReset() {
+      docs.forEach((handler) => handler.mockReset())
+    }
+  }
+
+  return Object.assign(client, mockMethods)
+}

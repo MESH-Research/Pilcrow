@@ -28,7 +28,7 @@
   </q-card-section>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed, inject, nextTick } from "vue"
 import AvatarImage from "./AvatarImage.vue"
 
@@ -54,7 +54,7 @@ function setActive() {
   //Null the active comment first to trigger the scroll watcher
   //TODO: Do this in a more elegant way.
   activeComment.value = null
-  nextTick(() => {
+  void nextTick(() => {
     activeComment.value = referencedComment.value
   })
 }

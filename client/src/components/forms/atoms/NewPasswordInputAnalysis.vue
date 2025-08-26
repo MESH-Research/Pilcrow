@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- eslint-disable-next-line vue/no-v-html -->
-    <p v-html="$t('auth.password_meter.summary', { score, crack_time })" />
+    <p v-html="$t('auth.password_meter.summary', { score, crackTime })" />
     <div v-if="suggestions.length" class="password-suggestions">
       <q-list dense>
         <q-item v-if="warning.length" class="warning">
@@ -25,30 +25,29 @@
   </div>
 </template>
 
-<script setup>
-import { computed } from "vue"
-const props = defineProps({
-  complexity: {
-    type: Object,
-    required: true
-  }
-})
+<script setup lang="ts">
+import type { ZxcvbnResult } from "@zxcvbn-ts/core"
+
+interface Props {
+  complexity?: ZxcvbnResult
+}
+
+const { complexity = null } = defineProps<Props>()
 
 const suggestions = computed(() => {
-  return props.complexity.feedback.suggestions
+  return complexity?.feedback.suggestions ?? []
 })
 
 const warning = computed(() => {
-  return props.complexity.feedback.warning
+  return complexity?.feedback.warning
 })
 
 const score = computed(() => {
-  return props.complexity.score
+  return complexity?.score
 })
 
-const crack_time = computed(() => {
-  return props.complexity.crack_times_display
-    .offline_slow_hashing_1e4_per_second
+const crackTime = computed(() => {
+  return complexity?.crackTimesDisplay.offlineSlowHashing1e4PerSecond
 })
 </script>
 

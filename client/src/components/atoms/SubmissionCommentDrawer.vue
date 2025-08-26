@@ -19,7 +19,7 @@
   </q-drawer>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed } from "vue"
 import InlineComments from "../molecules/InlineComments.vue"
 

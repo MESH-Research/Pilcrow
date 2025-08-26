@@ -118,7 +118,7 @@
     </div>
   </article>
 </template>
-<script setup>
+<script setup lang="ts">
 import { BubbleMenu, Editor, EditorContent } from "@tiptap/vue-3"
 import SubmissionContentKit from "src/tiptap/extension-submission-content-kit"
 import {
@@ -175,21 +175,21 @@ const fonts = [
     value: "Georgia, Serif"
   }
 ]
-let selectedFont = ref("Sans-serif")
-let fontSize = ref(1)
+const selectedFont = ref("Sans-serif")
+const fontSize = ref(1)
 
-let headingSizes = ref([2.125, 1.5, 1.25, 1, 0.75, 0.5])
+const headingSizes = ref([2.125, 1.5, 1.25, 1, 0.75, 0.5])
 
 function increaseFontSize() {
   fontSize.value += 0.05
-  for (let index in headingSizes.value) {
+  for (const index in headingSizes.value) {
     headingSizes.value[index] += 0.05
   }
 }
 
 function decreaseFontSize() {
   fontSize.value -= 0.05
-  for (let index in headingSizes.value) {
+  for (const index in headingSizes.value) {
     headingSizes.value[index] -= 0.05
   }
 }

@@ -14,7 +14,7 @@
         {{ user.email }}
       </q-item-label>
     </q-item-section>
-    <q-item-section v-if="actions.length" side>
+    <q-item-section v-if="mutable" side>
       <div class="q-gutter-xs">
         <q-btn
           v-if="user.staged"
@@ -22,42 +22,60 @@
           :label="$t(`submissions.reinvite.label`)"
           icon="schedule"
           data-cy="user_unconfirmed"
-          @click="$emit('reinvite', { user })"
+          @click="$emit('reinvite', user)"
         >
           <q-tooltip anchor="top middle" self="center middle">{{
             $t("submissions.reinvite.tooltip")
           }}</q-tooltip>
         </q-btn>
         <q-btn
-          v-for="{ ariaLabel, icon, action, help, cyAttr } in actions"
-          :key="icon"
+          v-if="mutable"
           size="12px"
           flat
           dense
           round
-          :title="help"
-          :icon="icon"
-          :data-cy="`${cyAttr}`"
-          :aria-label="`${ariaLabel} ${user.name || user.username}`"
-          @click="$emit('actionClick', { user, action })"
+          :title="t('unassign_button.title')"
+          icon="person_remove"
+          data-cy="button_unassign"
+          aria-label="unassign_button.ariaLabel"
+          @click="$emit('unassign', user)"
         />
       </div>
     </q-item-section>
   </q-item>
 </template>
 
-<script setup>
+<script setup lang="ts">
+import type { UserListItemFragment } from "src/gql/graphql"
 import AvatarImage from "./AvatarImage.vue"
-defineProps({
-  user: {
-    type: Object,
-    default: () => {}
-  },
-  actions: {
-    type: Array,
-    required: false,
-    default: () => []
+
+interface Props {
+  user: UserListItemFragment
+  tPrefix?: string
+  mutable: boolean
+}
+
+const { user, mutable, tPrefix = "" } = defineProps<Props>()
+
+interface Emits {
+  (e: "unassign", user: UserListItemFragment): void
+  (e: "reinvite", user: UserListItemFragment): void
+}
+defineEmits<Emits>()
+
+const i18n = useI18n()
+const tKey = (key) => (tPrefix.length ? `${tPrefix}.${key}` : key)
+const t = (key, args?) => i18n.t(tKey(key), args)
+</script>
+
+<script lang="ts">
+graphql(`
+  fragment UserListItem on User {
+    id
+    name
+    email
+    username
+    staged
   }
-})
-defineEmits(["actionClick", "reinvite"])
+`)
 </script>

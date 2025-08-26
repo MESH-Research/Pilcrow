@@ -1,0 +1,34 @@
+extend type Submission {
+    meta_forms: [MetaForm!] @hasMany(relation: "metaForms", scope: "ordered")
+    meta_responses: [SubmissionMetaResponse!]!
+}
+
+type SubmissionMetaResponse {
+    id: ID!
+    name: String!
+    prompts: JSON
+    responses: [SubmissionMetaPromptResponse!]!
+    meta_form: MetaForm @belongsTo(relation: "metaForm")
+}
+
+type SubmissionMetaPromptResponse {
+    meta_prompt_id: ID!
+    response: String
+}
+
+extend type Mutation {
+    submissionMetaFormUpdate(
+        input: SubmissionMetaFormUpdate
+    ): SubmissionMetaResponse @canModel(ability: "update", injectArgs: true)
+}
+
+input SubmissionMetaFormUpdate @validator {
+    submission_id: ID!
+    meta_form_id: ID!
+    responses: [SubmissionMetaPromptResponseInput!]!
+}
+
+input SubmissionMetaPromptResponseInput {
+    meta_prompt_id: ID!
+    response: String
+}

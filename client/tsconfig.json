@@ -1,0 +1,6 @@
+{
+  "extends": "./.quasar/tsconfig.json",
+  "compilerOptions": {
+    "types": ["unplugin-vue-router/client", "vite/client"]
+  }
+}

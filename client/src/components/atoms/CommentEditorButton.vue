@@ -19,7 +19,7 @@
   </q-btn>
 </template>
 
-<script setup>
+<script setup lang="ts">
 const props = defineProps({
   isActive: {
     type: Boolean,

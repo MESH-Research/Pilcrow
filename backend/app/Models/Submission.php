@@ -4,18 +4,21 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Events\SubmissionStatusUpdated;
-use App\Http\Traits\CreatedUpdatedBy;
+use App\Models\Builders\SubmissionBuilder;
+use App\Models\Concerns\HasUserAuditFields;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Support\Facades\Auth;
 use OwenIt\Auditing\Contracts\Auditable;
 
 class Submission extends Model implements Auditable
 {
     use HasFactory;
-    use CreatedUpdatedBy;
+    use HasUserAuditFields;
     use \OwenIt\Auditing\Auditable;
 
     public const DRAFT = 0;
@@ -43,6 +46,17 @@ class Submission extends Model implements Auditable
             $changes = $submission->getChanges();
             SubmissionStatusUpdated::dispatchIf(array_key_exists('status', $changes), $submission);
         });
+    }
+
+    /**
+     * Return the builder instance to be used for the model.
+     *
+     * @param \Illuminate\Database\Query\Builder $query
+     * @return \App\Models\Builders\SubmissionBuilder
+     */
+    public function newEloquentBuilder($query): SubmissionBuilder
+    {
+        return new SubmissionBuilder($query);
     }
 
     /**
@@ -108,7 +122,7 @@ class Submission extends Model implements Auditable
      */
     public function submitters(): BelongsToMany
     {
-         return $this->belongsToMany(User::class)
+        return $this->belongsToMany(User::class)
             ->withTimestamps()
             ->withPivotValue('role_id', Role::SUBMITTER_ROLE_ID);
     }
@@ -123,6 +137,34 @@ class Submission extends Model implements Auditable
         return $this->belongsToMany(User::class)
             ->withTimestamps()
             ->withPivot(['id', 'user_id', 'role_id', 'submission_id']);
+    }
+
+    /**
+     * The *current* meta forms that the publication has configured.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
+     */
+    public function metaForms(): HasManyThrough
+    {
+        return $this
+            ->hasManyThrough(
+                MetaForm::class,
+                Publication::class,
+                'id',
+                'publication_id',
+                'publication_id',
+                'id'
+            );
+    }
+
+    /**
+     * Meta responses that belong to the submission.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function metaResponses(): HasMany
+    {
+        return $this->hasMany(SubmissionMetaResponse::class, 'submission_id');
     }
 
     /**
@@ -270,7 +312,7 @@ class Submission extends Model implements Auditable
     public function getMyRole(): int|null
     {
         /** @var \App\Models\User $user */
-        $user = auth()->user();
+        $user = Auth::user();
 
         if (!$user) {
             return null;
@@ -287,7 +329,7 @@ class Submission extends Model implements Auditable
     public function getEffectiveRole(): int|null
     {
         /** @var \App\Models\User $user */
-        $user = auth()->user();
+        $user = Auth::user();
 
         if (!$user) {
             return null;

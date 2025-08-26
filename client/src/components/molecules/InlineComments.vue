@@ -31,7 +31,7 @@
   </q-scroll-area>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, watch, inject, computed, nextTick } from "vue"
 import NewInlineComment from "../NewInlineCommentComponent.vue"
 import InlineComment from "src/components/atoms/InlineComment.vue"

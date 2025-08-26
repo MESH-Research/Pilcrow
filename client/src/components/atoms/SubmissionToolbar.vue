@@ -94,7 +94,7 @@
     </q-toolbar>
   </q-header>
 </template>
-<script setup>
+<script setup lang="ts">
 import StatusChangeDropdown from "./StatusChangeDropdown.vue"
 import {
   useSubmissionExport,

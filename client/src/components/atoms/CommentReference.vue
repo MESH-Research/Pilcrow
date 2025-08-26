@@ -29,7 +29,7 @@
   </q-btn>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { inject, nextTick } from "vue"
 import { useI18n } from "vue-i18n"
 const { t } = useI18n()
@@ -76,7 +76,7 @@ function setActive() {
   //Null the active comment first to trigger the scroll watcher
   //TODO: Fix active comment updates needing nextTick (reactivity)
   activeComment.value = null
-  nextTick(() => {
+  void nextTick(() => {
     activeComment.value = props.comment
   })
 }

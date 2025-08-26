@@ -25,12 +25,12 @@
   </q-input>
 </template>
 
-<script>
+<script lang="ts">
 export default {
   inheritAttrs: false
 }
 </script>
-<script setup>
+<script setup lang="ts">
 import { inject, ref } from "vue"
 import ErrorFieldRenderer from "src/components/molecules/ErrorFieldRenderer.vue"
 import { useVQWrap } from "src/use/forms"

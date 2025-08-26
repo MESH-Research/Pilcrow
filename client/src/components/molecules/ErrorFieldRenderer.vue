@@ -6,7 +6,7 @@
   </ul>
 </template>
 
-<script>
+<script lang="ts">
 import { getErrorMessageKey } from "src/use/validationHelpers"
 
 export default {

@@ -47,7 +47,7 @@
   </q-card-section>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import AvatarImage from "./AvatarImage.vue"
 import { useTimeAgo } from "src/use/timeAgo"
 import { DateTime } from "luxon"

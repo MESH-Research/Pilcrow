@@ -72,7 +72,7 @@
   </q-card-section>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import AvatarImage from "./AvatarImage.vue"
 import CommentActions from "./CommentActions.vue"
 import CommentReference from "./CommentReference.vue"

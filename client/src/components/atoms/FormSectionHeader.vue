@@ -7,7 +7,7 @@
   </q-card-section>
 </template>
 
-<script setup>
+<script setup lang="ts">
 defineProps({
   firstSection: {
     type: Boolean,

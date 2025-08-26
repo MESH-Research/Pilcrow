@@ -1,39 +1,55 @@
 <template>
-  <q-list :data-cy="dataCy" role="list">
+  <q-list v-if="users.length" :data-cy="dataCy" role="list">
     <user-list-item
       v-for="user in users"
       :key="user.id"
       :user="user"
-      :actions="actions"
-      @action-click="bubble"
-      @reinvite="reinviteUser"
+      :t-prefix="tPrefix"
+      :mutable="mutable"
+      @unassign="(args) => $emit('unassign', args)"
+      @reinvite="(args) => $emit('reinvite', args)"
     />
   </q-list>
+  <q-card v-else class="text--grey" bordered flat>
+    <q-card-section horizontal>
+      <q-card-section>
+        <q-icon color="accent" name="o_do_disturb_on" size="sm" />
+      </q-card-section>
+      <q-card-section>
+        <slot name="no-data">
+          {{ $t(tKey("no-data")) }}
+        </slot>
+      </q-card-section>
+    </q-card-section>
+  </q-card>
 </template>
 
-<script setup>
+<script setup lang="ts">
+import type { UserListFragment } from "src/gql/graphql"
 import UserListItem from "../atoms/UserListItem.vue"
-defineProps({
-  users: {
-    type: Array,
-    required: true
-  },
-  actions: {
-    type: Array,
-    required: false,
-    default: () => []
-  },
-  dataCy: {
-    type: String,
-    default: "user_list"
-  }
-})
-const emit = defineEmits(["actionClick", "reinvite"])
 
-function bubble(eventData) {
-  emit("actionClick", eventData)
+interface Props {
+  users: UserListFragment[]
+  mutable: boolean
+  dataCy?: string
+  tPrefix?: string
 }
-function reinviteUser(eventData) {
-  emit("reinvite", eventData)
+
+const { dataCy = "user_list", users, tPrefix = "" } = defineProps<Props>()
+
+interface Emits {
+  (e: "unassign", user: UserListFragment): void
+  (e: "reinvite", user: UserListFragment): void
 }
+defineEmits<Emits>()
+
+const tKey = (key: string) => (tPrefix.length ? `${tPrefix}.${key}` : key)
+</script>
+
+<script lang="ts">
+graphql(`
+  fragment UserList on User {
+    ...UserListItem
+  }
+`)
 </script>

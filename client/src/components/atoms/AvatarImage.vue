@@ -4,11 +4,11 @@
   </q-avatar>
 </template>
 
-<script>
-const stringToInt = (s) => {
-  var hash = 0,
-    i,
-    chr
+<script lang="ts">
+const stringToInt = (s: string): number => {
+  let hash = 0
+  let i: number
+  let chr: number
   if (s.length === 0) return hash
   for (i = 0; i < s.length; i++) {
     chr = s.charCodeAt(i)

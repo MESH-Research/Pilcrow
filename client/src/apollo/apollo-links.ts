@@ -1,0 +1,81 @@
+import { onError } from "@apollo/client/link/error"
+import { Cookies } from "quasar"
+import { setContext } from "@apollo/client/link/context"
+import { Observable } from "@apollo/client/core"
+
+const getXsrfTokenFromCookies = () => Cookies.get("XSRF-TOKEN")
+
+const fetchXsrfToken = async () => {
+  return fetch("/sanctum/csrf-cookie", {
+    credentials: "same-origin"
+  }).then(async (response) => {
+    //Read response text (even though its empty) to prevent the browser from thinking there's an error b/c no one read the (empty) response body.
+    await response.text()
+    const xsrfToken = getXsrfTokenFromCookies()
+    return xsrfToken
+  })
+}
+
+const withXsrfLink = setContext((_, { headers }) => {
+  //If we have a token in the header, go ahead and use it.
+  if (headers && headers["X-XSRF-TOKEN"]) {
+    return { headers }
+  }
+  //No header token, so lets look for a cookie token.
+  const xsrfToken = getXsrfTokenFromCookies()
+  if (xsrfToken) {
+    return {
+      headers: {
+        ...headers,
+        "X-XSRF-TOKEN": xsrfToken
+      }
+    }
+  }
+  //No cookie token, so we need to fetch one and set the headers that way.
+  return fetchXsrfToken().then((token) => {
+    return {
+      headers: {
+        ...headers,
+        "X-XSRF-TOKEN": token
+      }
+    }
+  })
+})
+
+//On a 419 error, fetch a new XSRF token and retry the request.
+const expiredTokenLink = onError(({ operation, forward, networkError }) => {
+  if (
+    networkError &&
+    "statusCode" in networkError &&
+    networkError.statusCode == 419
+  ) {
+    return new Observable((observer) => {
+      fetchXsrfToken()
+        .then((newXsrfToken) => {
+          if (!newXsrfToken) {
+            throw new Error("Unable to fetch new xsrf token")
+          }
+          const oldHeaders = operation.getContext().headers
+          operation.setContext({
+            headers: {
+              ...oldHeaders,
+              "X-XSRF-TOKEN": newXsrfToken
+            }
+          })
+        })
+        .then(() => {
+          const subscriber = {
+            next: observer.next.bind(observer),
+            error: observer.error.bind(observer),
+            complete: observer.complete.bind(observer)
+          }
+
+          forward(operation).subscribe(subscriber)
+        })
+        .catch((error) => {
+          observer.error(error)
+        })
+    })
+  }
+})
+export { withXsrfLink, expiredTokenLink }

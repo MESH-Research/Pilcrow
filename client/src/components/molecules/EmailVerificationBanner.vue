@@ -15,7 +15,7 @@
   </q-banner>
 </template>
 
-<script>
+<script lang="ts">
 import EmailVerificationSendButton from "../atoms/EmailVerificationSendButton.vue"
 export default {
   name: "EmailVerificationBanner",

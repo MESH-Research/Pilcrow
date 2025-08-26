@@ -1,0 +1,10 @@
+{
+  "client": {
+    "tagName": "graphql",
+    "service": {
+      "name": "pilcrow",
+      // URL to the GraphQL API
+      "url": "https://pilcrow.lndo.site/graphql"
+    }
+  }
+}

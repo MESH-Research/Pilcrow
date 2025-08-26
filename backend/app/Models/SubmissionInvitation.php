@@ -7,7 +7,7 @@ use App\Events\ReviewCoordinatorInvitationAccepted;
 use App\Events\ReviewCoordinatorInvited;
 use App\Events\ReviewerInvitationAccepted;
 use App\Events\ReviewerInvited;
-use App\Http\Traits\CreatedUpdatedBy;
+use App\Models\Concerns\HasUserAuditFields;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -19,7 +19,7 @@ use Illuminate\Support\Str;
 class SubmissionInvitation extends Model
 {
     use HasFactory;
-    use CreatedUpdatedBy;
+    use HasUserAuditFields;
 
     protected $fillable = [
         'email',

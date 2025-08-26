@@ -55,6 +55,15 @@
             "**/*.vitest.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}"
         ],
         "i18n-ally.localesPaths": ["src/i18n"],
-        "conventionalCommits.scopes": ["client", "backend", "docs", "helm"]
+        "conventionalCommits.scopes": ["client", "backend", "docs", "helm"],
+        "eslint.lintTask.enable": true,
+        "eslint.workingDirectories": ["./client"],
+        "graphql-codegen.fileExtensionsDeclaringGraphQLDocuments": [
+            "graphql",
+            "gql",
+            "vue",
+            "ts"
+        ],
+        "graphql-codegen.filePathToWatch": ""
     }
 }

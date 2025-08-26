@@ -10,7 +10,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import AvatarImage from "../atoms/AvatarImage.vue"
 export default {
   name: "AvatarBlock",

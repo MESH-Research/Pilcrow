@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 import { ClosePopup } from "quasar"
 import { h } from "vue"
 export default {

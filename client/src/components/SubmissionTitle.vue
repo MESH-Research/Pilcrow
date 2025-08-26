@@ -59,7 +59,7 @@
   </q-form>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { UPDATE_SUBMISSION_TITLE } from "src/graphql/mutations"
 import { useMutation } from "@vue/apollo-composable"
 import { ref, watchEffect, inject } from "vue"
@@ -130,7 +130,7 @@ async function saveTitle() {
       id: submission.value.id,
       title: draft_title.value
     })
-  } catch (error) {
+  } catch {
     newStatusMessage("failure", t("submission.edit_title.unauthorized"))
   } finally {
     editing_title.value = false

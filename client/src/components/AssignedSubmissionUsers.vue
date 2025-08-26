@@ -66,25 +66,21 @@
   </section>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ReinviteUserDialog from "./dialogs/ReinviteUserDialog.vue"
 import FindUserSelect from "./forms/FindUserSelect.vue"
 import UserList from "./molecules/UserList.vue"
 import { useFeedbackMessages } from "src/use/guiElements"
-import { useMutation } from "@vue/apollo-composable"
 import {
   UPDATE_SUBMISSION_REVIEWERS,
   UPDATE_SUBMISSION_REVIEW_COORDINATORS,
-  UPDATE_SUBMISSION_SUBMITERS,
+  UPDATE_SUBMISSION_SUBMITTERS,
   INVITE_REVIEWER,
   INVITE_REVIEW_COORDINATOR
 } from "src/graphql/mutations"
-import { computed, ref } from "vue"
-import { useI18n } from "vue-i18n"
 import { useEditor, EditorContent } from "@tiptap/vue-3"
 import StarterKit from "@tiptap/starter-kit"
 import Placeholder from "@tiptap/extension-placeholder"
-import { useQuasar } from "quasar"
 const { dialog } = useQuasar()
 
 const props = defineProps({
@@ -116,7 +112,7 @@ const user = ref(null)
 const containerType = computed(() => props.container.__typename.toLowerCase())
 const { t, te } = useI18n()
 const tPrefix = (key) => `${containerType.value}.${props.roleGroup}.${key}`
-const tp$ = (key, ...args) => t(tPrefix(key), ...args)
+const tp$ = (key, ...args) => t(tPrefix(key), args)
 
 const { newStatusMessage } = useFeedbackMessages()
 
@@ -131,12 +127,12 @@ const mutations = {
     invite: INVITE_REVIEW_COORDINATOR
   },
   submitters: {
-    update: UPDATE_SUBMISSION_SUBMITERS,
-    invite: UPDATE_SUBMISSION_SUBMITERS // TODO: Enable submitter invitation
+    update: UPDATE_SUBMISSION_SUBMITTERS,
+    invite: UPDATE_SUBMISSION_SUBMITTERS // TODO: Enable submitter invitation
   }
 }
 const setMutationType = computed(() => {
-  let type = mutations[props.roleGroup]
+  const type = mutations[props.roleGroup]
   if (typeof user.value === "string") {
     return type["invite"]
   }
@@ -150,9 +146,9 @@ const users = computed(() => {
 
 const acceptMore = computed(() => {
   return (
-    props.mutable &&
-    (props.maxUsers === false) | (users.value.length < props.maxUsers) &&
-    props.container.effective_role === `review_coordinator`
+    (props.mutable && props.maxUsers === false) ||
+    (users.value.length < props.maxUsers &&
+      props.container.effective_role === `review_coordinator`)
   )
 })
 
@@ -172,7 +168,7 @@ function resetForm() {
   editor.value.commands.blur()
 }
 
-async function handleSubmit() {
+function handleSubmit() {
   if (!acceptMore.value) {
     return
   }
@@ -182,9 +178,9 @@ async function handleSubmit() {
   }
   // TODO: Attempt to assign instead of invite when user.value matches a known user
   if (typeof user.value === "string") {
-    inviteUser()
+    void inviteUser()
   } else {
-    assignUser()
+    void assignUser()
   }
 }
 
@@ -236,7 +232,7 @@ async function assignUser() {
       .then(() => {
         resetForm()
       })
-  } catch (error) {
+  } catch {
     newStatusMessage("failure", tp$("assign.error"))
   }
 }
@@ -276,7 +272,7 @@ async function handleUserListClick({ user }) {
         display_name: user.name ? user.name : user.username
       })
     )
-  } catch (error) {
+  } catch {
     newStatusMessage("failure", tp$("unassign.error"))
   }
 }

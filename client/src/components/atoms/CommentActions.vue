@@ -42,7 +42,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { inject, computed } from "vue"
 import { useCurrentUser } from "src/use/user"
 import ConfirmCommentDeletion from "../dialogs/ConfirmCommentDeletion.vue"
@@ -60,7 +60,7 @@ const createdByCurrentUser = computed(() => {
   return currentUser.value.id == comment.created_by.id
 })
 
-async function deleteHandler() {
+function deleteHandler() {
   emit("deleteComment")
   dialog({
     component: ConfirmCommentDeletion,

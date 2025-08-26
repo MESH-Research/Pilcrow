@@ -26,14 +26,14 @@
   </q-input>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent } from "vue"
 export default defineComponent({
   inheritAttrs: false
 })
 </script>
 
-<script setup>
+<script setup lang="ts">
 import { ref, useSlots } from "vue"
 defineProps({
   label: {

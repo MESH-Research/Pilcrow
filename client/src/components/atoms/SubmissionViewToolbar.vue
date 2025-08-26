@@ -32,7 +32,7 @@
     </q-toolbar>
   </q-header>
 </template>
-<script setup>
+<script setup lang="ts">
 import StatusChangeDropdown from "./StatusChangeDropdown.vue"
 const props = defineProps({
   submission: {

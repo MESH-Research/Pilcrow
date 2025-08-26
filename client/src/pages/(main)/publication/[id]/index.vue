@@ -1,0 +1,73 @@
+<template>
+  <nav class="q-px-lg q-pt-md q-gutter-sm">
+    <q-breadcrumbs>
+      <q-breadcrumbs-el
+        :label="$t('header.publications')"
+        :to="{ name: 'publication:index' }"
+      />
+      <q-breadcrumbs-el :label="publication?.name ?? ''" />
+    </q-breadcrumbs>
+  </nav>
+  <div v-if="!publication" class="q-pa-lg">
+    {{ $t("loading") }}
+  </div>
+  <article v-else class="q-px-lg">
+    <div class="row q-mb-md">
+      <h2 class="col-sm-12" data-cy="publication_details_heading">
+        {{ publication.name }}
+        <q-btn
+          v-if="isPublicationAdmin"
+          data-cy="configure_button"
+          icon="settings"
+          class="float-right"
+          color="primary"
+          :to="{ name: 'publication:setup:basic', params }"
+        >
+          {{ $t("publication.configure") }}
+        </q-btn>
+      </h2>
+      <!--  eslint-disable vue/no-v-html -->
+      <div
+        data-cy="publication_home_content"
+        class="content"
+        v-html="publication.home_page_content"
+      />
+      <!--  eslint-enable vue/no-v-html -->
+    </div>
+    <div v-if="publication.is_accepting_submissions" class="row q-mb-md">
+      <q-btn
+        color="primary"
+        class="q-my-lg"
+        :to="{ name: 'submission:create', params: { id: publication.id } }"
+        >{{ $t("submissions.new.action") }}</q-btn
+      >
+    </div>
+  </article>
+</template>
+
+<script setup lang="ts">
+import { GET_PUBLICATION } from "src/graphql/queries"
+import { setCrumbLabel } from "src/use/breadcrumbs"
+
+definePage({
+  name: "publication:home",
+  meta: {
+    crumb: {
+      label: "Home"
+    }
+  }
+})
+
+const { params } = useRoute("publication:home")
+const { result } = useQuery(GET_PUBLICATION, params)
+const publication = computed(() => {
+  return result.value?.publication ?? null
+})
+
+const publicationName = computed(() => publication.value?.name ?? "")
+setCrumbLabel("publication:", publicationName)
+
+const isPublicationAdmin = computed(() => {
+  return publication.value?.effective_role === "publication_admin"
+})
+</script>

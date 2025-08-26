@@ -35,7 +35,7 @@
   </section>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ErrorFieldRenderer from "src/components/molecules/ErrorFieldRenderer.vue"
 import { CREATE_PUBLICATION } from "src/graphql/mutations"
 import useVuelidate from "@vuelidate/core"

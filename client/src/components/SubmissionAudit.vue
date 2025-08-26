@@ -88,7 +88,7 @@
   <q-separator class="q-my-md" />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useTimeAgo } from "src/use/timeAgo"
 import { DateTime } from "luxon"
 import { computed } from "vue"

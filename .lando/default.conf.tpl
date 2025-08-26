@@ -35,7 +35,7 @@ server {
     }
 
     location = / {
-        try_files /dev/null @backend;
+        try_files /dev/null @vite;
     }
 
     location / {

@@ -34,12 +34,14 @@ class PublicationPolicy
      * @param \App\Models\Publication $args
      * @return bool
      */
-    public function update(User $user, array $args)
+    public function update(User $user, mixed $args)
     {
+        $publicationId = is_a($args, Publication::class) ? $args->id : $args['id'] ?? null;
+
         if ($user->hasRole(Role::APPLICATION_ADMINISTRATOR)) {
             return true;
         }
-        if ($user->hasPublicationRole(Role::PUBLICATION_ADMINISTRATOR_ROLE_ID, $args['id'])) {
+        if ($user->hasPublicationRole(Role::PUBLICATION_ADMINISTRATOR_ROLE_ID, $publicationId)) {
             return true;
         }
 
