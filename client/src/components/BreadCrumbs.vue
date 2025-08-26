@@ -13,7 +13,7 @@
     >
       <q-icon size="1.5em" name="chevron_right" color="primary" class="sep" />
       <router-link :to="crumb.to" class="breadcrumb">
-        <q-icon :name="crumb.icon" v-if="crumb.icon" />
+        <q-icon v-if="crumb.icon" :name="crumb.icon" />
         {{ unref(crumb.label.value) }}
       </router-link>
     </div>

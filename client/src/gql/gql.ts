@@ -14,10 +14,9 @@ import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-
  * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
  */
 type Documents = {
-    "\n  fragment AssignedPublicationUsers on Publication {\n    publication_admins {\n      ...UserList\n    }\n    editors {\n      ...UserList\n    }\n  }\n": typeof types.AssignedPublicationUsersFragmentDoc,
-    "\n  mutation UpdatePublicationEditors(\n    $id: ID!\n    $connect: [ID!]\n    $disconnect: [ID!]\n  ) {\n    updatePublication(\n      publication: {\n        id: $id\n        editors: { connect: $connect, disconnect: $disconnect }\n      }\n    ) {\n      id\n      editors {\n        ...RelatedUserFields\n      }\n    }\n  }\n": typeof types.UpdatePublicationEditorsDocument,
-    "\n  mutation UpdatePublicationAdmins(\n    $id: ID!\n    $connect: [ID!]\n    $disconnect: [ID!]\n  ) {\n    updatePublication(\n      publication: {\n        id: $id\n        publication_admins: { connect: $connect, disconnect: $disconnect }\n      }\n    ) {\n      id\n      publication_admins {\n        ...RelatedUserFields\n      }\n    }\n  }\n": typeof types.UpdatePublicationAdminsDocument,
+    "\n  fragment AssignedUsers on User {\n    id\n    ...UserList\n  }\n": typeof types.AssignedUsersFragmentDoc,
     "\n  fragment UserListItem on User {\n    id\n    name\n    email\n    username\n    staged\n  }\n": typeof types.UserListItemFragmentDoc,
+    "\n  query SearchUsers($term: String, $page: Int) {\n    userSearch(term: $term, page: $page) {\n      paginatorInfo {\n        ...PaginationFields\n      }\n      data {\n        id\n        username\n        name\n        email\n      }\n    }\n  }\n": typeof types.SearchUsersDocument,
     "\n  fragment UserList on User {\n    ...UserListItem\n  }\n": typeof types.UserListFragmentDoc,
     "\n  fragment MetaControls on MetaForm {\n    meta_prompts {\n      id\n      type\n      label\n      options\n    }\n  }\n": typeof types.MetaControlsFragmentDoc,
     "\n  fragment PaginationFields on PaginatorInfo {\n    count\n    currentPage\n    lastPage\n    perPage\n  }\n": typeof types.PaginationFieldsFragmentDoc,
@@ -36,17 +35,17 @@ type Documents = {
     "\n  mutation MetaPromptUpdate($input: [UpdateMetaPromptInput!]!) {\n    metaPromptUpdate(input: $input) {\n      id\n      label\n      order\n      required\n      type\n      options\n      caption\n    }\n  }\n": typeof types.MetaPromptUpdateDocument,
     "\n  mutation MetaFormUpdate($input: [UpdateMetaFormInput!]!) {\n    metaFormUpdate(input: $input) {\n      id\n      name\n      caption\n      required\n      order\n    }\n  }\n": typeof types.MetaFormUpdateDocument,
     "\n  fragment PublicationSetupForms on Publication {\n    id\n    meta_forms {\n      id\n      name\n      caption\n      required\n      meta_prompts {\n        id\n        label\n        type\n        order\n        options\n        required\n        caption\n      }\n    }\n  }\n": typeof types.PublicationSetupFormsFragmentDoc,
-    "\n  fragment PublicationSetupUsers on Publication {\n    ...AssignedPublicationUsers\n  }\n": typeof types.PublicationSetupUsersFragmentDoc,
+    "\n  fragment PublicationSetupUsers on Publication {\n    id\n    publication_admins {\n      ...AssignedUsers\n    }\n    editors {\n      ...AssignedUsers\n    }\n  }\n": typeof types.PublicationSetupUsersFragmentDoc,
+    "\n  mutation UpdatePublicationUsers(\n    $id: ID!\n    $editorConnect: [ID!]\n    $editorDisconnect: [ID!]\n    $adminConnect: [ID!]\n    $adminDisconnect: [ID!]\n  ) {\n    updatePublication(\n      publication: {\n        id: $id\n        editors: { connect: $editorConnect, disconnect: $editorDisconnect }\n        publication_admins: {\n          connect: $adminConnect\n          disconnect: $adminDisconnect\n        }\n      }\n    ) {\n      ...PublicationSetupUsers\n    }\n  }\n": typeof types.UpdatePublicationUsersDocument,
     "\n  query GetPublications($page: Int, $first: Int) {\n    publications(page: $page, first: $first) {\n      paginatorInfo {\n        ...PaginationFields\n      }\n      data {\n        id\n        name\n        home_page_content\n      }\n    }\n  }\n": typeof types.GetPublicationsDocument,
     "\n  query SubmissionMetaForms($id: ID!, $formId: ID!) {\n    submission(id: $id) {\n      id\n      title\n      publication {\n        meta_form(id: $formId) {\n          id\n          name\n          meta_prompts {\n            id\n            label\n            type\n            options\n          }\n        }\n      }\n    }\n  }\n": typeof types.SubmissionMetaFormsDocument,
     "\n  mutation VerifySubmissionInvite(\n    $uuid: String!\n    $token: String!\n    $expires: String!\n  ) {\n    verifySubmissionInvite(uuid: $uuid, token: $token, expires: $expires) {\n      id\n      name\n      email\n      username\n    }\n  }\n": typeof types.VerifySubmissionInviteDocument,
     "\n  mutation AcceptSubmissionInvite(\n    $uuid: String!\n    $token: String!\n    $expires: String!\n    $id: ID!\n    $name: String\n    $username: String!\n    $password: String!\n  ) {\n    acceptSubmissionInvite(\n      uuid: $uuid\n      token: $token\n      expires: $expires\n      user: { id: $id, name: $name, username: $username, password: $password }\n    ) {\n      id\n      name\n      email\n      username\n    }\n  }\n": typeof types.AcceptSubmissionInviteDocument,
 };
 const documents: Documents = {
-    "\n  fragment AssignedPublicationUsers on Publication {\n    publication_admins {\n      ...UserList\n    }\n    editors {\n      ...UserList\n    }\n  }\n": types.AssignedPublicationUsersFragmentDoc,
-    "\n  mutation UpdatePublicationEditors(\n    $id: ID!\n    $connect: [ID!]\n    $disconnect: [ID!]\n  ) {\n    updatePublication(\n      publication: {\n        id: $id\n        editors: { connect: $connect, disconnect: $disconnect }\n      }\n    ) {\n      id\n      editors {\n        ...RelatedUserFields\n      }\n    }\n  }\n": types.UpdatePublicationEditorsDocument,
-    "\n  mutation UpdatePublicationAdmins(\n    $id: ID!\n    $connect: [ID!]\n    $disconnect: [ID!]\n  ) {\n    updatePublication(\n      publication: {\n        id: $id\n        publication_admins: { connect: $connect, disconnect: $disconnect }\n      }\n    ) {\n      id\n      publication_admins {\n        ...RelatedUserFields\n      }\n    }\n  }\n": types.UpdatePublicationAdminsDocument,
+    "\n  fragment AssignedUsers on User {\n    id\n    ...UserList\n  }\n": types.AssignedUsersFragmentDoc,
     "\n  fragment UserListItem on User {\n    id\n    name\n    email\n    username\n    staged\n  }\n": types.UserListItemFragmentDoc,
+    "\n  query SearchUsers($term: String, $page: Int) {\n    userSearch(term: $term, page: $page) {\n      paginatorInfo {\n        ...PaginationFields\n      }\n      data {\n        id\n        username\n        name\n        email\n      }\n    }\n  }\n": types.SearchUsersDocument,
     "\n  fragment UserList on User {\n    ...UserListItem\n  }\n": types.UserListFragmentDoc,
     "\n  fragment MetaControls on MetaForm {\n    meta_prompts {\n      id\n      type\n      label\n      options\n    }\n  }\n": types.MetaControlsFragmentDoc,
     "\n  fragment PaginationFields on PaginatorInfo {\n    count\n    currentPage\n    lastPage\n    perPage\n  }\n": types.PaginationFieldsFragmentDoc,
@@ -65,7 +64,8 @@ const documents: Documents = {
     "\n  mutation MetaPromptUpdate($input: [UpdateMetaPromptInput!]!) {\n    metaPromptUpdate(input: $input) {\n      id\n      label\n      order\n      required\n      type\n      options\n      caption\n    }\n  }\n": types.MetaPromptUpdateDocument,
     "\n  mutation MetaFormUpdate($input: [UpdateMetaFormInput!]!) {\n    metaFormUpdate(input: $input) {\n      id\n      name\n      caption\n      required\n      order\n    }\n  }\n": types.MetaFormUpdateDocument,
     "\n  fragment PublicationSetupForms on Publication {\n    id\n    meta_forms {\n      id\n      name\n      caption\n      required\n      meta_prompts {\n        id\n        label\n        type\n        order\n        options\n        required\n        caption\n      }\n    }\n  }\n": types.PublicationSetupFormsFragmentDoc,
-    "\n  fragment PublicationSetupUsers on Publication {\n    ...AssignedPublicationUsers\n  }\n": types.PublicationSetupUsersFragmentDoc,
+    "\n  fragment PublicationSetupUsers on Publication {\n    id\n    publication_admins {\n      ...AssignedUsers\n    }\n    editors {\n      ...AssignedUsers\n    }\n  }\n": types.PublicationSetupUsersFragmentDoc,
+    "\n  mutation UpdatePublicationUsers(\n    $id: ID!\n    $editorConnect: [ID!]\n    $editorDisconnect: [ID!]\n    $adminConnect: [ID!]\n    $adminDisconnect: [ID!]\n  ) {\n    updatePublication(\n      publication: {\n        id: $id\n        editors: { connect: $editorConnect, disconnect: $editorDisconnect }\n        publication_admins: {\n          connect: $adminConnect\n          disconnect: $adminDisconnect\n        }\n      }\n    ) {\n      ...PublicationSetupUsers\n    }\n  }\n": types.UpdatePublicationUsersDocument,
     "\n  query GetPublications($page: Int, $first: Int) {\n    publications(page: $page, first: $first) {\n      paginatorInfo {\n        ...PaginationFields\n      }\n      data {\n        id\n        name\n        home_page_content\n      }\n    }\n  }\n": types.GetPublicationsDocument,
     "\n  query SubmissionMetaForms($id: ID!, $formId: ID!) {\n    submission(id: $id) {\n      id\n      title\n      publication {\n        meta_form(id: $formId) {\n          id\n          name\n          meta_prompts {\n            id\n            label\n            type\n            options\n          }\n        }\n      }\n    }\n  }\n": types.SubmissionMetaFormsDocument,
     "\n  mutation VerifySubmissionInvite(\n    $uuid: String!\n    $token: String!\n    $expires: String!\n  ) {\n    verifySubmissionInvite(uuid: $uuid, token: $token, expires: $expires) {\n      id\n      name\n      email\n      username\n    }\n  }\n": types.VerifySubmissionInviteDocument,
@@ -89,19 +89,15 @@ export function graphql(source: string): unknown;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  fragment AssignedPublicationUsers on Publication {\n    publication_admins {\n      ...UserList\n    }\n    editors {\n      ...UserList\n    }\n  }\n"): (typeof documents)["\n  fragment AssignedPublicationUsers on Publication {\n    publication_admins {\n      ...UserList\n    }\n    editors {\n      ...UserList\n    }\n  }\n"];
-/**
- * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
-export function graphql(source: "\n  mutation UpdatePublicationEditors(\n    $id: ID!\n    $connect: [ID!]\n    $disconnect: [ID!]\n  ) {\n    updatePublication(\n      publication: {\n        id: $id\n        editors: { connect: $connect, disconnect: $disconnect }\n      }\n    ) {\n      id\n      editors {\n        ...RelatedUserFields\n      }\n    }\n  }\n"): (typeof documents)["\n  mutation UpdatePublicationEditors(\n    $id: ID!\n    $connect: [ID!]\n    $disconnect: [ID!]\n  ) {\n    updatePublication(\n      publication: {\n        id: $id\n        editors: { connect: $connect, disconnect: $disconnect }\n      }\n    ) {\n      id\n      editors {\n        ...RelatedUserFields\n      }\n    }\n  }\n"];
-/**
- * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
-export function graphql(source: "\n  mutation UpdatePublicationAdmins(\n    $id: ID!\n    $connect: [ID!]\n    $disconnect: [ID!]\n  ) {\n    updatePublication(\n      publication: {\n        id: $id\n        publication_admins: { connect: $connect, disconnect: $disconnect }\n      }\n    ) {\n      id\n      publication_admins {\n        ...RelatedUserFields\n      }\n    }\n  }\n"): (typeof documents)["\n  mutation UpdatePublicationAdmins(\n    $id: ID!\n    $connect: [ID!]\n    $disconnect: [ID!]\n  ) {\n    updatePublication(\n      publication: {\n        id: $id\n        publication_admins: { connect: $connect, disconnect: $disconnect }\n      }\n    ) {\n      id\n      publication_admins {\n        ...RelatedUserFields\n      }\n    }\n  }\n"];
+export function graphql(source: "\n  fragment AssignedUsers on User {\n    id\n    ...UserList\n  }\n"): (typeof documents)["\n  fragment AssignedUsers on User {\n    id\n    ...UserList\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  fragment UserListItem on User {\n    id\n    name\n    email\n    username\n    staged\n  }\n"): (typeof documents)["\n  fragment UserListItem on User {\n    id\n    name\n    email\n    username\n    staged\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query SearchUsers($term: String, $page: Int) {\n    userSearch(term: $term, page: $page) {\n      paginatorInfo {\n        ...PaginationFields\n      }\n      data {\n        id\n        username\n        name\n        email\n      }\n    }\n  }\n"): (typeof documents)["\n  query SearchUsers($term: String, $page: Int) {\n    userSearch(term: $term, page: $page) {\n      paginatorInfo {\n        ...PaginationFields\n      }\n      data {\n        id\n        username\n        name\n        email\n      }\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -177,7 +173,11 @@ export function graphql(source: "\n  fragment PublicationSetupForms on Publicati
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  fragment PublicationSetupUsers on Publication {\n    ...AssignedPublicationUsers\n  }\n"): (typeof documents)["\n  fragment PublicationSetupUsers on Publication {\n    ...AssignedPublicationUsers\n  }\n"];
+export function graphql(source: "\n  fragment PublicationSetupUsers on Publication {\n    id\n    publication_admins {\n      ...AssignedUsers\n    }\n    editors {\n      ...AssignedUsers\n    }\n  }\n"): (typeof documents)["\n  fragment PublicationSetupUsers on Publication {\n    id\n    publication_admins {\n      ...AssignedUsers\n    }\n    editors {\n      ...AssignedUsers\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation UpdatePublicationUsers(\n    $id: ID!\n    $editorConnect: [ID!]\n    $editorDisconnect: [ID!]\n    $adminConnect: [ID!]\n    $adminDisconnect: [ID!]\n  ) {\n    updatePublication(\n      publication: {\n        id: $id\n        editors: { connect: $editorConnect, disconnect: $editorDisconnect }\n        publication_admins: {\n          connect: $adminConnect\n          disconnect: $adminDisconnect\n        }\n      }\n    ) {\n      ...PublicationSetupUsers\n    }\n  }\n"): (typeof documents)["\n  mutation UpdatePublicationUsers(\n    $id: ID!\n    $editorConnect: [ID!]\n    $editorDisconnect: [ID!]\n    $adminConnect: [ID!]\n    $adminDisconnect: [ID!]\n  ) {\n    updatePublication(\n      publication: {\n        id: $id\n        editors: { connect: $editorConnect, disconnect: $editorDisconnect }\n        publication_admins: {\n          connect: $adminConnect\n          disconnect: $adminDisconnect\n        }\n      }\n    ) {\n      ...PublicationSetupUsers\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

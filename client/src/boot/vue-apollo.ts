@@ -30,6 +30,18 @@ export default defineBoot(({ app, router }) => {
   const apolloClient = new ApolloClient({
     link: ApolloLink.from([expiredTokenLink, withXsrfLink, httpLink]),
     cache: new InMemoryCache({
+      typePolicies: {
+        Publication: {
+          fields: {
+            editors: {
+              merge: false
+            },
+            publication_admins: {
+              merge: false
+            }
+          }
+        }
+      },
       possibleTypes: {
         Comment: [
           "InlineComment",

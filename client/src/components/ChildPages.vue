@@ -33,7 +33,7 @@ const props = defineProps<Props>()
 
 const { childrenOf } = useNavigation()
 
-const tabs = childrenOf(props.route as TypedRouteLocationRaw)
+const tabs = childrenOf(props.route)
 
 const mergedTabs = computed((): ChildRoute[] =>
   tabs.value.concat(props.append ?? [])

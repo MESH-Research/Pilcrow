@@ -563,6 +563,7 @@
         "success": "{display_name} successfully assigned as an editor."
       },
       "unassign_button": {
+        "title": "Unassign Editor",
         "ariaLabel": "Unassign Editor",
         "help": "Remove Editor"
       }
@@ -587,6 +588,7 @@
         "success": "{display_name} successfully assigned as an administrator."
       },
       "unassign_button": {
+        "title": "Unassign Administrator",
         "ariaLabel": "Unassign Administator",
         "help": "Remove Administrator"
       }
@@ -824,7 +826,8 @@
       "search": {
         "label": "User to Add",
         "hint": "Search by username, email, or name.",
-        "no_option": "No user found. A brand-new user will be invited if you specify an <strong>email address</strong>."
+        "invite": "No user found. A brand-new user will be invited if you specify an email address.",
+        "no_user": "No users found."
       }
     },
     "accept_invite": {

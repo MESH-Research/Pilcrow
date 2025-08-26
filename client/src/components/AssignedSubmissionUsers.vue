@@ -71,7 +71,6 @@ import ReinviteUserDialog from "./dialogs/ReinviteUserDialog.vue"
 import FindUserSelect from "./forms/FindUserSelect.vue"
 import UserList from "./molecules/UserList.vue"
 import { useFeedbackMessages } from "src/use/guiElements"
-import { useMutation } from "@vue/apollo-composable"
 import {
   UPDATE_SUBMISSION_REVIEWERS,
   UPDATE_SUBMISSION_REVIEW_COORDINATORS,
@@ -79,12 +78,9 @@ import {
   INVITE_REVIEWER,
   INVITE_REVIEW_COORDINATOR
 } from "src/graphql/mutations"
-import { computed, ref } from "vue"
-import { useI18n } from "vue-i18n"
 import { useEditor, EditorContent } from "@tiptap/vue-3"
 import StarterKit from "@tiptap/starter-kit"
 import Placeholder from "@tiptap/extension-placeholder"
-import { useQuasar } from "quasar"
 const { dialog } = useQuasar()
 
 const props = defineProps({
