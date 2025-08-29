@@ -2,7 +2,7 @@
   <q-banner
     inline-actions
     dense
-    :class="$q.dark.isActive ? 'bg-dark-warning' : 'bg-warning'"
+    :class="dark.isActive ? 'bg-dark-warning' : 'bg-warning'"
     class="text-black"
   >
     <template #avatar>
@@ -15,10 +15,8 @@
   </q-banner>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import EmailVerificationSendButton from "../atoms/EmailVerificationSendButton.vue"
-export default {
-  name: "EmailVerificationBanner",
-  components: { EmailVerificationSendButton }
-}
+
+const { dark } = useQuasar()
 </script>
