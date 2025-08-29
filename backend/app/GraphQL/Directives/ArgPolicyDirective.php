@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\GraphQL\Directives;
@@ -11,6 +12,9 @@ use Nuwave\Lighthouse\Support\Contracts\FieldManipulator;
 use Nuwave\Lighthouse\Support\Contracts\FieldMiddleware;
 use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
 
+/**
+ * @deprecated Migrate to a new input policy directive.
+ */
 class ArgPolicyDirective extends CanDirective implements FieldMiddleware, FieldManipulator
 {
     /**
@@ -21,7 +25,9 @@ class ArgPolicyDirective extends CanDirective implements FieldMiddleware, FieldM
     public static function definition(): string
     {
         //phpcs:disable
-        return /** @lang GraphQL */ <<<'GRAPHQL'
+        return
+        /** @lang GraphQL */
+        <<<'GRAPHQL'
 """
 Check a Laravel Policy to ensure the current user is authorized to access a field.
 When `injectArgs` and `args` are used together, the client given
@@ -70,7 +76,7 @@ Any constant literal value: https://graphql.github.io/graphql-spec/draft/#sec-In
 """
 scalar CanArgs
 GRAPHQL;
-     //phpcs:enable
+        //phpcs:enable
     }
 
     /**
@@ -82,7 +88,7 @@ GRAPHQL;
     public function handleField(FieldValue $fieldValue): void
     {
         $apply = $this->directiveArgValue('apply');
-        $fieldValue->wrapResolver(fn (callable $resolver): \Closure => function (
+        $fieldValue->wrapResolver(fn(callable $resolver): \Closure => function (
             mixed $root,
             array $args,
             GraphQLContext $context,
@@ -91,20 +97,20 @@ GRAPHQL;
             $resolver,
             $apply
         ) {
-              foreach ($apply as $applyField) {
-                    [$fieldToCheck, $ability] = explode(':', $applyField);
-                    $argValue = Arr::get($args, $fieldToCheck);
-                    if ($argValue !== null) {
-                        $gate = $this->gate->forUser($context->user());
-                        $checkArguments = $this->buildCheckArguments($args);
+            foreach ($apply as $applyField) {
+                [$fieldToCheck, $ability] = explode(':', $applyField);
+                $argValue = Arr::get($args, $fieldToCheck);
+                if ($argValue !== null) {
+                    $gate = $this->gate->forUser($context->user());
+                    $checkArguments = $this->buildCheckArguments($args);
 
-                        foreach ($this->modelsToCheck($root, $args, $context, $resolveInfo) as $model) {
-                            $this->authorize($gate, $ability, $model, $checkArguments);
-                        }
+                    foreach ($this->modelsToCheck($root, $args, $context, $resolveInfo) as $model) {
+                        $this->authorize($gate, $ability, $model, $checkArguments);
                     }
-              }
+                }
+            }
 
-                return $resolver($root, $args, $context, $resolveInfo);
+            return $resolver($root, $args, $context, $resolveInfo);
         });
     }
 }
