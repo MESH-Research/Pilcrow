@@ -1,0 +1,60 @@
+extend type Publication {
+    style_criterias: [StyleCriteria!]! @hasMany(relation: "styleCriterias")
+}
+
+extend input UpdatePublicationInput {
+    style_criterias: UpdatePublicationStyleCriteriaInput
+        @rename(attribute: "styleCriterias")
+}
+
+extend input CreatePublicationInput {
+    style_criterias: UpdatePublicationStyleCriteriaInput
+        @rename(attribute: "styleCriterias")
+}
+
+extend input InlineCommentCreateInput {
+    style_criteria: [ID!]
+        @bind(class: "App\\GraphQL\\Bindings\\CommentStyleCriteria")
+}
+extend input InlineCommentUpdateInput {
+    style_criteria: [ID!]
+        @bind(class: "App\\GraphQL\\Bindings\\CommentStyleCriteria")
+}
+
+extend type InlineComment {
+    style_criteria: [CommentStyleCriteria!]
+}
+
+type StyleCriteria {
+    id: ID!
+    name: String!
+    description: String
+    publication: Publication!
+    icon: String
+}
+
+type CommentStyleCriteria {
+    id: ID!
+    name: String!
+    description: String
+    icon: String
+}
+
+input UpdatePublicationStyleCriteriaInput {
+    create: [CreateStyleCriteriaInput!]
+    update: [UpdateStyleCriteriaInput!]
+    delete: [ID!]
+}
+
+input UpdateStyleCriteriaInput {
+    id: ID!
+    name: String
+    description: String
+    icon: String
+}
+
+input CreateStyleCriteriaInput {
+    name: String!
+    description: String
+    icon: String
+}

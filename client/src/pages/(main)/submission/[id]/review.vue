@@ -69,12 +69,6 @@ const { params } = useRoute("submission:preview")
 
 const { getScrollTarget, setVerticalScrollPosition } = scroll
 
-const props = defineProps({
-  id: {
-    type: String,
-    required: true
-  }
-})
 const { loading, result } = useQuery(GET_SUBMISSION_REVIEW, params)
 const submission = computed(() => {
   return result.value?.submission
@@ -98,7 +92,6 @@ function handleNewScroll() {
   const scrollValue = scrollAddNewOverallComment.value
   const scrollTarget = getScrollTarget(scrollValue)
   setVerticalScrollPosition(scrollTarget, scrollValue.offsetTop, 250)
-  scrollValue
 }
 </script>
 

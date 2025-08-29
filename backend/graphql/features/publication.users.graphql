@@ -1,0 +1,17 @@
+extend type Publication {
+    publication_admins: [User!]! @belongsToMany(relation: "publicationAdmins")
+    editors: [User!]! @belongsToMany(relation: "editors")
+}
+
+extend input UpdatePublicationInput {
+    editors: UpdateUsersInput @updateUsers
+    publication_admins: UpdateUsersInput
+        @updateUsers(relation: "publicationAdmins")
+}
+
+input UpdateUsersInput @validator {
+    connect: [ID!] @bind(class: "App\\Models\\User")
+    disconnect: [ID!] @bind(class: "App\\Models\\User")
+    invite: [String!]
+    message: String
+}

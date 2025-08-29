@@ -22,7 +22,6 @@
           color="accent"
           data-cy="button-assign"
           :label="$t(`publication.setup_pages.assign`)"
-          type="submit"
           stretch
           @click="handleSubmit"
         />
@@ -94,6 +93,7 @@ const emit = defineEmits<Emits>()
 const modelValue = ref<SearchUsersSelected>()
 const inputValue = ref<string | null>()
 
+watchEffect(() => console.log(`Updated inputValue: ${inputValue.value}`))
 const qSelectRef = useTemplateRef<InstanceType<typeof QSelect>>("qSelectRef")
 
 const variables = ref({ term: "" })
@@ -113,6 +113,8 @@ function filterFn(val, update) {
 }
 
 function handleSubmit() {
+  console.log(modelValue.value)
+  console.log(inputValue.value)
   if (modelValue.value) {
     emit("add", modelValue.value)
   } else if (inputValue.value && canInvite) {

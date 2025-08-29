@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Models;
@@ -158,5 +159,33 @@ class Publication extends BaseModel
         }
 
         return $this->getMyRole();
+    }
+
+    /**
+     * Attach a user to a publication.
+     *
+     * @param \App\Models\User $user
+     * @param string $relationName
+     * @param string $message
+     * @return void
+     */
+    public function attachUser(User $user, $relationName, $message)
+    {
+        $this->{$relationName}()->attach($user->id);
+        //TODO: Dispatch user attached event (send email, add notification, etc)
+    }
+
+    public function detachUser(User $user, $relationName)
+    {
+        $this->{$relationName}()->detach($user->id);
+        //TODO Dispatch user detached event.
+    }
+
+    public function inviteUser(User $user, $relationName, $message)
+    {
+        //Create a staged user
+        $stagedUser = User::createStagedUser($user->email);
+        $this->{$relationName}()->attach($stagedUser->id);
+        //TODO: Dispatch user invited event (send email, add notification, etc)
     }
 }

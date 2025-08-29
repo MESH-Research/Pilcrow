@@ -22,21 +22,11 @@ type Publication {
     created_at: DateTime
     updated_at: DateTime
     submissions: [Submission]! @hasMany
-    publication_admins: [User!]! @belongsToMany(relation: "publicationAdmins")
-    editors: [User!]! @belongsToMany(relation: "editors")
+
     is_publicly_visible: Boolean
     is_accepting_submissions: Boolean
-    style_criterias: [StyleCriteria!]! @hasMany(relation: "styleCriterias")
     my_role: PublicationRole @method(name: "getMyRole")
     effective_role: PublicationRole @method(name: "getEffectiveRole")
-}
-
-type StyleCriteria {
-    id: ID!
-    name: String!
-    description: String
-    publication: Publication!
-    icon: String
 }
 
 extend type Mutation {
@@ -55,18 +45,6 @@ input CreatePublicationInput {
     is_publicly_visible: Boolean
     home_page_content: String
     new_submission_content: String
-    style_criterias: CreateStyleCriteriaHasMany
-        @rename(attribute: "styleCriterias")
-}
-
-input CreateStyleCriteriaHasMany {
-    create: [CreateStyleCriteriaInput!]
-}
-
-input CreateStyleCriteriaInput {
-    name: String!
-    description: String
-    icon: String
 }
 
 input UpdatePublicationInput {
@@ -77,34 +55,6 @@ input UpdatePublicationInput {
     is_accepting_submissions: Boolean
     home_page_content: String
     new_submission_content: String
-    style_criterias: UpdateStyleCriteriaHasMany
-        @rename(attribute: "styleCriterias")
-    editors: UpdatePublicationEditorsInput
-    publication_admins: UpdatePublicationAdministratorsInput
-        @rename(attribute: "publicationAdmins")
-}
-
-input UpdatePublicationAdministratorsInput {
-    connect: [ID!]
-    disconnect: [ID!]
-}
-
-input UpdatePublicationEditorsInput {
-    connect: [ID!]
-    disconnect: [ID!]
-}
-
-input UpdateStyleCriteriaHasMany {
-    create: [CreateStyleCriteriaInput!]
-    update: [UpdateStyleCriteriaInput!]
-    delete: [ID!]
-}
-
-input UpdateStyleCriteriaInput {
-    id: ID!
-    name: String
-    description: String
-    icon: String
 }
 
 enum PublicationRole {

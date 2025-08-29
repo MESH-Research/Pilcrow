@@ -19,19 +19,9 @@ type InlineComment implements Comment {
     updated_at: DateTimeUtc!
     deleted_at: DateTimeUtc
     replies: [InlineCommentReply!] @hasMany @softDeletes
-    style_criteria: [InlineCommentStyleCriteria!]
     read_at: DateTimeUtc @rename(attribute: "readAt")
     from: Int
     to: Int
-}
-
-"""
-The static style criteria of an inline comment
-"""
-type InlineCommentStyleCriteria {
-    id: ID
-    name: String
-    icon: String
 }
 
 """
@@ -89,53 +79,14 @@ extend input UpdateSubmissionInput {
 }
 
 input InlineCommentHasManyInput {
-    create: [CreateInlineCommentInput!]
+    create: [InlineCommentCreateInput!]
         @rules(
             apply: [
                 "App\\Rules\\SubmissionIsReviewable"
                 "App\\Rules\\InlineCommentIdValidity"
             ]
         )
-    update: [UpdateInlineCommentInput!]
-}
-
-input CreateInlineCommentInput {
-    content: String!
-    style_criteria: [ID!] @transformStyleCriteriaIds
-    from: Int
-    to: Int
-    parent_id: ID
-    reply_to_id: ID
-}
-
-input UpdateInlineCommentInput {
-    id: ID!
-    content: String
-    style_criteria: [ID!] @transformStyleCriteriaIds
-    from: Int
-    to: Int
-}
-
-input OverallCommentHasManyInput {
-    create: [CreateOverallCommentInput!]
-        @rules(
-            apply: [
-                "App\\Rules\\OverallCommentIdValidity"
-                "App\\Rules\\SubmissionIsReviewable"
-            ]
-        )
-    update: [UpdateOverallCommentInput!]
-}
-
-input CreateOverallCommentInput {
-    content: String!
-    parent_id: ID
-    reply_to_id: ID
-}
-
-input UpdateOverallCommentInput {
-    id: ID!
-    content: String
+    update: [InlineCommentUpdateInput!]
 }
 
 interface Comment {
@@ -148,8 +99,93 @@ interface Comment {
     deleted_at: DateTimeUtc
     read_at: DateTimeUtc @rename(attribute: "readAt")
 }
+type InlineCommentCreatePayload {
+    payload: InlineComment!
+    query: Query
+}
+
+type InlineCommentUpdatePayload {
+    payload: InlineComment!
+    query: Query
+}
+
+type OverallCommentCreatePayload {
+    payload: OverallComment!
+    query: Query
+}
+
+type OverallCommentUpdatePayload {
+    payload: OverallComment!
+    query: Query
+}
+
+input OverallCommentUpdateInput @validator {
+    id: ID!
+    content: String!
+}
+
+input OverallCommentCreateInput @validator {
+    content: String!
+    submission_id: ID!
+    parent_id: ID
+    reply_to_id: ID
+}
+
+input InlineCommentCreateInput @validator {
+    content: String!
+    from: Int
+    to: Int
+    parent_id: ID
+    reply_to_id: ID
+    submission_id: ID!
+}
+
+input InlineCommentUpdateInput @validator {
+    id: ID!
+    content: String
+    from: Int
+    to: Int
+}
 
 extend type Mutation @guard {
+    inlineCommentCreate(
+        input: InlineCommentCreateInput!
+    ): InlineCommentCreatePayload!
+        @create
+        @canFind(
+            find: "submission_id"
+            model: "App\\Models\\Submission"
+            ability: "createComment"
+        )
+    overallCommentCreate(
+        input: OverallCommentCreateInput!
+    ): OverallCommentCreatePayload!
+        @create
+        @canFind(
+            find: "submission_id"
+            model: "App\\Models\\Submission"
+            ability: "createComment"
+        )
+
+    inlineCommentUpdate(
+        input: InlineCommentUpdateInput!
+    ): InlineCommentUpdatePayload!
+        @update
+        @canFind(
+            find: "id"
+            model: "App\\Models\\InlineComment"
+            ability: "update"
+        )
+    overallCommentUpdate(
+        input: OverallCommentUpdateInput!
+    ): OverallCommentUpdatePayload!
+        @update
+        @canFind(
+            find: "id"
+            model: "App\\Models\\OverallComment"
+            ability: "update"
+        )
+
     markInlineCommentsRead(
         input: MarkInlineCommentsReadInput!
     ): [InlineComment]!

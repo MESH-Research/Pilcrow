@@ -141,7 +141,8 @@ async function reinviteAdmin(user: AssignedUsersFragment) {
   )
 }
 
-async function inviteAdmin(user: AssignedUsersFragment) {
+function inviteAdmin(user: AssignedUsersFragment) {
+  console.log(user)
   //TODO: Implement inviting by email.
 }
 async function inviteEditor(user: AssignedUsersFragment) {

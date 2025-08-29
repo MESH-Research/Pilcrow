@@ -129,3 +129,23 @@ watchEffect(() => {
 
 provide("submission", submission)
 </script>
+
+<script lang="ts">
+graphql(`
+  query GetSubmissionDetails($id: ID!) {
+    submission(id: $id) {
+      id
+      title
+      submitters {
+        ...AssignedUsers
+      }
+      reviewers {
+        ...AssignedUsers
+      }
+      review_coordinators {
+        ...AssignedUsers
+      }
+    }
+  }
+`)
+</script>
