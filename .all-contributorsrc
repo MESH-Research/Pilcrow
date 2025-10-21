@@ -3,7 +3,7 @@
     "projectOwner": "mesh-research",
     "repoType": "github",
     "repoHost": "https://github.com",
-    "badgeTemplate": "[![All Contributors](https://img.shields.io/badge/all_contributors-<%= contributors.length %>-orange.svg?style=for-the-badge)](https://pilcrow.meshresearch.dev/developers/)",
+    "badgeTemplate": "[![All Contributors](https://img.shields.io/badge/all_contributors-<%= contributors.length %>-orange.svg?style=for-the-badge)](https://latest.docs.pilcrow.dev/developers/)",
     "files": [
         "README.md"
     ],

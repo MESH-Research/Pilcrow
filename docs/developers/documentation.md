@@ -12,7 +12,7 @@ At the bottom of each page, you should find a link to "Edit this Page."  Follow 
 ## Automated Builds
 Github Actions powered by [Netlify](https://netlify.com) automatically build and deploy the documentation sites.
 
-- **<https://pilcrow.meshresearch.dev>**: Automatically built from the `master` branch.
+- **<https://latest.docs.pilcrow.dev>**: Automatically built from the `master` branch.
 
 ### Deploy Previews
 
