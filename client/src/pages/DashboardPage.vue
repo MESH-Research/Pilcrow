@@ -56,7 +56,7 @@
               {{ $t(`dashboard.guide_call_to_action`) }}
               <template #link>
                 <a
-                  href="https://pilcrow.meshresearch.dev/guide/"
+                  href="https://latest.docs.pilcrow.dev/guide/"
                   class="text-primary"
                   >{{ $t(`dashboard.guide`) }}</a
                 ></template
