@@ -4,9 +4,15 @@
 
 ### Publication
 
+Publications are organizations that manage submissions. Examples of publications can be publishers or newsletters.
+
 ### Submission
 
+An item to be collaboritively reviewed. This will commonly be in a written format, but could be multimedia like video or audio. Submissions are uploaded by a submitter to a publication.​
+
 ### Review
+
+An examination of a submission. Editors, review coordinators, reviewers, and submitters can participate.
 
 ### Inline Comment
 
@@ -20,13 +26,21 @@ This is a comment in which users can comment on the submission broadly or genera
 
 ### Editor
 
+A publication-relative user who manages a publication.
+
 ### Submitter
+
+A submission-relative user that creates submissions.
 
 Examples of submitters are: authors, coauthors, or creators. Anyone who intends to submit content and have it peer reviewed collaboratively by a publication assumes the role of submitter.
 
 ### Reviewer
 
+A submission-relative user who reviews submissions.
+
 ### Review Coordinator
+
+A submission-relative user who manages a review of a submission.
 
 ## Overview
 
