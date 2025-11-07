@@ -22,19 +22,19 @@ The editor assigns a review coordinator to the submission. The review coordinato
 
 ![Diagram of an editor assigning a review coodinator to a submission](/public/svg/step3.svg)
 
-#### Step 4
+### Step 4
 
 The review coordinator assigns reviewers to the submission as needed.
 
 ![Diagram of a review coordinator assigning a reviewer to a submission](/public/svg/step4.svg)
 
-#### Step 5
+### Step 5
 
 The review coordinator opens the submission for review.
 
 ![Diagram of a review coordinator opening a submission for review](/public/svg/step5.svg)
 
-#### Step 6
+### Step 6
 
 All participants in the review can add either:
 
@@ -43,21 +43,21 @@ All participants in the review can add either:
 
 ![Diagram of users adding inline comments or overall comments to a submission](/public/svg/step6.svg)
 
-##### Inline Comment
+#### Inline Comment
 
 This is a comment in which users can highlight portions of the submission and make comments inline with the content. Users can associate style criteria with their inline comments.
 
-##### Overall Comment
+#### Overall Comment
 
 This is a comment in which users can comment on the submission broadly or generally. These do not have style criteria associated with them.
 
-#### Step 7
+### Step 7
 
 Once the review coordinator deems the review complete, the review coordinator closes the review.
 
 ![Diagram of a review coordinator closing a review](/public/svg/step7.svg)
 
-#### Step 8
+### Step 8
 
 The editor makes a decision on whether to accept the submission to be included in their publication or not. If the editor is satisifed with the review, the submission may be accepted by the editor for publication.
 
