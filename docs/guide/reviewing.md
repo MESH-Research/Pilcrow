@@ -1,5 +1,68 @@
 # Reviewing
 
+## Overview
+
+![Overview of a successful Collaborative Community Review process in Pilcrow featuring 8 steps involving a submitter, an editor, a review coordinator, and a reviewer.](/public/svg/overview.svg)
+
+### Step 1
+
+A submitter submits a submission to a publication.
+
+![Diagram of a submitter submitting to a publication](/public/svg/step1.svg)
+
+### Step 2
+
+Before any review can take place, an editor of the publication evaluates the submission's fitness for review. If the editor deems the submission worthy of review, the editor proceeds to step 3. Otherwise, the editor can reject the submission or request it for resubmission.
+
+![Diagram of an editor evaluating a submission for review](/public/svg/step2.svg)
+
+### Step 3
+
+The editor assigns a review coordinator to the submission. The review coordinator will be responsible for managing the review. This involves making decisions that change the submission's status and making sure all participants in the review are updated.
+
+![Diagram of an editor assigning a review coodinator to a submission](/public/svg/step3.svg)
+
+#### Step 4
+
+The review coordinator assigns reviewers to the submission as needed.
+
+![Diagram of a review coordinator assigning a reviewer to a submission](/public/svg/step4.svg)
+
+#### Step 5
+
+The review coordinator opens the submission for review.
+
+![Diagram of a review coordinator opening a submission for review](/public/svg/step5.svg)
+
+#### Step 6
+
+All participants in the review can add either:
+
+1. An inline comment
+2. An overall comment
+
+![Diagram of users adding inline comments or overall comments to a submission](/public/svg/step6.svg)
+
+##### Inline Comment
+
+This is a comment in which users can highlight portions of the submission and make comments inline with the content. Users can associate style criteria with their inline comments.
+
+##### Overall Comment
+
+This is a comment in which users can comment on the submission broadly or generally. These do not have style criteria associated with them.
+
+#### Step 7
+
+Once the review coordinator deems the review complete, the review coordinator closes the review.
+
+![Diagram of a review coordinator closing a review](/public/svg/step7.svg)
+
+#### Step 8
+
+The editor makes a decision on whether to accept the submission to be included in their publication or not. If the editor is satisifed with the review, the submission may be accepted by the editor for publication.
+
+![Diagram of an editor aceepting a submission for publication](/public/svg/step8.svg)
+
 ## Find a Document You Are Assigned
 
 Once you have successfully registered for the platform you can be assigned to review a paper by the Editor or Review Coordinator of the publication you are working with.
