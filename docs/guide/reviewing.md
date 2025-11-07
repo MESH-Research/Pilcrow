@@ -1,5 +1,33 @@
 # Reviewing
 
+## Vocabulary
+
+### Publication
+
+### Submission
+
+### Review
+
+### Inline Comment
+
+This is a comment in which users can highlight portions of the submission and make comments inline with the content. Users can associate style criteria with their inline comments.
+
+### Overall Comment
+
+This is a comment in which users can comment on the submission broadly or generally. These do not have style criteria associated with them.
+
+## Roles
+
+### Editor
+
+### Submitter
+
+Examples of submitters are: authors, coauthors, or creators. Anyone who intends to submit content and have it peer reviewed collaboratively by a publication assumes the role of submitter.
+
+### Reviewer
+
+### Review Coordinator
+
 ## Overview
 
 ![Overview of a successful Collaborative Community Review process in Pilcrow featuring 8 steps involving a submitter, an editor, a review coordinator, and a reviewer.](/public/svg/overview.svg)
@@ -42,14 +70,6 @@ All participants in the review can add either:
 2. An overall comment
 
 ![Diagram of users adding inline comments or overall comments to a submission](/public/svg/step6.svg)
-
-#### Inline Comment
-
-This is a comment in which users can highlight portions of the submission and make comments inline with the content. Users can associate style criteria with their inline comments.
-
-#### Overall Comment
-
-This is a comment in which users can comment on the submission broadly or generally. These do not have style criteria associated with them.
 
 ### Step 7
 
