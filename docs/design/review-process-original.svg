@@ -27,15 +27,15 @@
      inkscape:pagecheckerboard="false"
      inkscape:deskcolor="#505050"
      inkscape:document-units="mm"
-     inkscape:zoom="0.35355339"
-     inkscape:cx="326.68333"
-     inkscape:cy="1999.698"
+     inkscape:zoom="0.5"
+     inkscape:cx="537"
+     inkscape:cy="876"
      inkscape:window-width="1440"
      inkscape:window-height="847"
      inkscape:window-x="0"
      inkscape:window-y="25"
      inkscape:window-maximized="0"
-     inkscape:current-layer="layer1"
+     inkscape:current-layer="g8"
      showgrid="false"
      showguides="true"
      inkscape:export-bgcolor="#2f559600"><inkscape:page
@@ -1710,7 +1710,7 @@
          inkscape:label="Review Coordinator"
          style="display:inline"
          transform="matrix(1.0019229,0,0,1.0019229,6.6485314,-26.454113)"
-         inkscape:export-filename="../public/svg/icon-review-coordinator.svg"
+         inkscape:export-filename="../public/png/icon-review-coordinator.png"
          inkscape:export-xdpi="96"
          inkscape:export-ydpi="96"><circle
            style="fill:#b3a3cf;fill-opacity:1;stroke:#000000;stroke-width:0.393007;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
@@ -1757,7 +1757,7 @@
          inkscape:label="Reviewer"
          style="display:inline"
          transform="matrix(1.0019229,0,0,1.0019229,-28.351469,-26.554113)"
-         inkscape:export-filename="../public/svg/icon-reviewer.svg"
+         inkscape:export-filename="../public/png/icon-reviewer.png"
          inkscape:export-xdpi="96"
          inkscape:export-ydpi="96"><circle
            style="fill:#b3a3cf;fill-opacity:1;stroke:#000000;stroke-width:0.393007;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
@@ -1870,7 +1870,7 @@
          inkscape:label="Submitter"
          style="display:inline"
          transform="matrix(1.0019229,0,0,1.0019229,-63.351465,-26.554114)"
-         inkscape:export-filename="../public/svg/icon-submitter.svg"
+         inkscape:export-filename="../public/png/icon-submitter.png"
          inkscape:export-xdpi="96"
          inkscape:export-ydpi="96"><circle
            style="fill:#032c73;fill-opacity:1;stroke:#000000;stroke-width:0.39301;stroke-opacity:1;paint-order:stroke markers fill"
@@ -1943,7 +1943,7 @@
          inkscape:label="Editor"
          style="display:inline"
          transform="matrix(1.0019229,0,0,1.0019229,-98.351467,-26.554114)"
-         inkscape:export-filename="../public/svg/icon-editor.svg"
+         inkscape:export-filename="../public/png/icon-editor.png"
          inkscape:export-xdpi="96"
          inkscape:export-ydpi="96"><circle
            style="display:inline;fill:#537b3d;fill-opacity:1;stroke:#000000;stroke-width:0.39301;stroke-opacity:1;paint-order:stroke markers fill"
@@ -2031,7 +2031,7 @@
          inkscape:label="Style Criteria"
          transform="translate(58.577155,0.1817725)"
          style="display:inline"
-         inkscape:export-filename="../public/svg/icon-style-criteria.svg"
+         inkscape:export-filename="../public/png/icon-style-criteria.png"
          inkscape:export-xdpi="96"
          inkscape:export-ydpi="96"><circle
            style="display:inline;fill:#b3a3cf;fill-opacity:1;stroke:#000000;stroke-width:0.393763;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
@@ -2080,7 +2080,7 @@
          inkscape:label="Overall Comment"
          transform="translate(23.577155,0.1817725)"
          style="display:inline"
-         inkscape:export-filename="../public/svg/icon-overall-comment.svg"
+         inkscape:export-filename="../public/png/icon-overall-comment.png"
          inkscape:export-xdpi="96"
          inkscape:export-ydpi="96"><circle
            style="display:inline;fill:#b3a3cf;fill-opacity:1;stroke:#000000;stroke-width:0.393763;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
@@ -2117,7 +2117,7 @@
          inkscape:label="Inline Comment"
          transform="translate(-11.422845,0.1817725)"
          style="display:inline"
-         inkscape:export-filename="../public/svg/icon-inline-comment.svg"
+         inkscape:export-filename="../public/png/icon-inline-comment.png"
          inkscape:export-xdpi="96"
          inkscape:export-ydpi="96"><circle
            style="display:inline;fill:#b3a3cf;fill-opacity:1;stroke:#000000;stroke-width:0.393763;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
@@ -2169,7 +2169,7 @@
          inkscape:label="Review"
          style="display:inline"
          transform="matrix(1.0019229,0,0,1.0019229,-28.759739,-61.384323)"
-         inkscape:export-filename="../public/svg/icon-review.svg"
+         inkscape:export-filename="../public/png/icon-review.png"
          inkscape:export-xdpi="96"
          inkscape:export-ydpi="96"><circle
            style="fill:#b3a3cf;fill-opacity:1;stroke:#000000;stroke-width:0.393007;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
@@ -2273,7 +2273,7 @@
          inkscape:label="Submission"
          style="display:inline"
          transform="matrix(1.0019229,0,0,1.0019229,-63.52564,-61.583826)"
-         inkscape:export-filename="../public/svg/icon-submission.svg"
+         inkscape:export-filename="../public/png/icon-submission.png"
          inkscape:export-xdpi="96"
          inkscape:export-ydpi="96"><circle
            style="fill:#032c73;fill-opacity:1;stroke:#000000;stroke-width:0.39301;stroke-opacity:1;paint-order:stroke markers fill"
@@ -2340,7 +2340,7 @@
          style="display:inline"
          inkscape:label="Publication"
          transform="matrix(0.71565093,0,0,0.71427739,-20.950736,-35.428824)"
-         inkscape:export-filename="../public/svg/icon-publication.svg"
+         inkscape:export-filename="../public/png/icon-publication.png"
          inkscape:export-xdpi="96"
          inkscape:export-ydpi="96"><ellipse
            style="display:inline;fill:#537b3d;fill-opacity:1;stroke:#000000;stroke-width:0.551267;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
