@@ -27,9 +27,9 @@
      inkscape:pagecheckerboard="false"
      inkscape:deskcolor="#505050"
      inkscape:document-units="mm"
-     inkscape:zoom="0.5"
-     inkscape:cx="537"
-     inkscape:cy="876"
+     inkscape:zoom="0.1767767"
+     inkscape:cx="548.71486"
+     inkscape:cy="1668.772"
      inkscape:window-width="1440"
      inkscape:window-height="847"
      inkscape:window-x="0"
@@ -112,7 +112,7 @@
      inkscape:export-filename="../public/review/overview.svg"
      inkscape:export-xdpi="96"
      inkscape:export-ydpi="96"><rect
-       style="display:inline;fill:#2f5496;fill-opacity:1;stroke:none;stroke-width:1.60869"
+       style="display:none;fill:#2f5496;fill-opacity:1;stroke:none;stroke-width:1.60869"
        id="rect2"
        width="365"
        height="760"
@@ -2529,14 +2529,14 @@
          transform="translate(0.72922733)"><tspan
            x="-4.7866459"
            y="36.808578"
-           id="tspan12">Collaborative Community </tspan><tspan
+           id="tspan2">Collaborative Community </tspan><tspan
            x="-4.7866459"
            y="57.966226"
-           id="tspan16">Review Process
+           id="tspan3">Review Process
 </tspan><tspan
            x="-4.7866459"
            y="79.123876"
-           id="tspan17">in Pilcrow</tspan></text></g><use
+           id="tspan4">in Pilcrow</tspan></text></g><use
        x="0"
        y="0"
        xlink:href="#layer-MC0"
