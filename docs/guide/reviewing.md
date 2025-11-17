@@ -6,37 +6,37 @@
 
 Publications are organizations that manage submissions. Examples of publications can be publishers or newsletters.
 
-![Green circular icon of a book with a bookmark titled, 'Publication'](/public/svg/icon-publication.svg)
+![Green circular icon of a book with a bookmark titled, 'Publication'](/public/icons/publication.svg)
 
 ### Submission
 
 A work to be collaboritively reviewed. A submission is commonly in a written format. Submissions are uploaded to Pilcrow and submitted by a submitter to a publication.​ Examples of submissions are articles or essays.
 
-![Blue circular icon of a wavy sheet of paper titled, 'Submission'](/public/svg/icon-submission.svg)
+![Blue circular icon of a wavy sheet of paper titled, 'Submission'](/public/icons/submission.svg)
 
 ### Review
 
 An examination of a submission. Editors, review coordinators, reviewers, and submitters can participate in a review. Reviews are managed by review coordinators.
 
-![Purple circular icon of a magnifying glass on a wavy sheet of paper, 'Review'](/public/svg/icon-review.svg)
+![Purple circular icon of a magnifying glass on a wavy sheet of paper, 'Review'](/public/icons/review.svg)
 
 ### Overall Comment
 
 This is a comment in which users can comment on the submission broadly or generally. These do not have style criteria associated with them.
 
-![Purple circular icon of a chat bubble titled, 'Overall Comment'](/public/svg/icon-overall-comment.svg)
+![Purple circular icon of a chat bubble titled, 'Overall Comment'](/public/icons/overall-comment.svg)
 
 ### Inline Comment
 
 This is a comment in which users can highlight portions of the submission and make comments inline with the content. Users can associate style criteria with their inline comments.
 
-![Purple circular icon of a highlighter in use titled, 'Inline Comment'](/public/svg/icon-inline-comment.svg)
+![Purple circular icon of a highlighter in use titled, 'Inline Comment'](/public/icons/inline-comment.svg)
 
 #### Style Criteria
 
 Also called "review criteria." These are defined by a publication. Users making inline comments on submissions can pick from style criteria to associate with their inline comments. Style criteria are not associated with overall comments.
 
-![Purple circular icon of a rectangular list item titled, 'Style Criteria'](/public/svg/icon-style-criteria.svg)
+![Purple circular icon of a rectangular list item titled, 'Style Criteria'](/public/icons/style-criteria.svg)
 
 ## Roles
 
@@ -44,7 +44,7 @@ Also called "review criteria." These are defined by a publication. Users making 
 
 A publication-relative user who manages a publication.
 
-![Green circular icon of a publication icon on the bust of a person titled, 'Editor'](/public/svg/icon-editor.svg)
+![Green circular icon of a publication icon on the bust of a person titled, 'Editor'](/public/icons/editor.svg)
 
 ### Submitter
 
@@ -52,53 +52,53 @@ A submission-relative user that creates submissions.
 
 Examples of submitters are: authors, coauthors, or creators. Anyone who intends to submit content and have it peer reviewed collaboratively by a publication assumes the role of submitter.
 
-![Blue circular icon of a submission icon on the bust of a person titled, 'Submitter'](/public/svg/icon-submitter.svg)
+![Blue circular icon of a submission icon on the bust of a person titled, 'Submitter'](/public/icons/submitter.svg)
 
 ### Reviewer
 
 A submission-relative user who reviews submissions.
 
-![Purple circular icon of a review icon on the bst of a person titled, 'Review Coordinator'](/public/svg/icon-reviewer.svg)
+![Purple circular icon of a review icon on the bst of a person titled, 'Review Coordinator'](/public/icons/reviewer.svg)
 
 ### Review Coordinator
 
 A submission-relative user who manages a review of a submission.
 
-![Purple circular icon of a review icon on the bst of a person titled, 'Review Coordinator' with a plus symbol and bust of a person](/public/svg/icon-review-coordinator.svg)
+![Purple circular icon of a review icon on the bst of a person titled, 'Review Coordinator' with a plus symbol and bust of a person](/public/icons/review-coordinator.svg)
 
 ## Overview
 
-![Overview of a successful Collaborative Community Review process in Pilcrow featuring 8 steps involving a submitter, an editor, a review coordinator, and a reviewer.](/public/svg/overview.svg)
+![Overview of a successful Collaborative Community Review process in Pilcrow featuring 8 steps involving a submitter, an editor, a review coordinator, and a reviewer.](/public/review/overview.svg)
 
 ### Step 1
 
 A submitter submits a submission to a publication.
 
-![Diagram of a submitter submitting to a publication](/public/svg/step1.svg)
+![Diagram of a submitter submitting to a publication](/public/review/step1.svg)
 
 ### Step 2
 
 Before any review can take place, an editor of the publication evaluates the submission's fitness for review. If the editor deems the submission worthy of review, the editor proceeds to step 3. Otherwise, the editor can reject the submission or request it for resubmission.
 
-![Diagram of an editor evaluating a submission for review](/public/svg/step2.svg)
+![Diagram of an editor evaluating a submission for review](/public/review/step2.svg)
 
 ### Step 3
 
 The editor assigns a review coordinator to the submission. The review coordinator will be responsible for managing the review. This involves making decisions that change the submission's status and making sure all participants in the review are updated.
 
-![Diagram of an editor assigning a review coodinator to a submission](/public/svg/step3.svg)
+![Diagram of an editor assigning a review coodinator to a submission](/public/review/step3.svg)
 
 ### Step 4
 
 The review coordinator assigns reviewers to the submission as needed.
 
-![Diagram of a review coordinator assigning a reviewer to a submission](/public/svg/step4.svg)
+![Diagram of a review coordinator assigning a reviewer to a submission](/public/review/step4.svg)
 
 ### Step 5
 
 The review coordinator opens the submission for review.
 
-![Diagram of a review coordinator opening a submission for review](/public/svg/step5.svg)
+![Diagram of a review coordinator opening a submission for review](/public/review/step5.svg)
 
 ### Step 6
 
@@ -107,19 +107,19 @@ All participants in the review can add either:
 1. An [inline comment](#inline-comment) with [style criteria](#style-criteria)
 2. An [overall comment](#overall-comment)
 
-![Diagram of users adding inline comments or overall comments to a submission](/public/svg/step6.svg)
+![Diagram of users adding inline comments or overall comments to a submission](/public/review/step6.svg)
 
 ### Step 7
 
 Once the review coordinator deems the review complete, the review coordinator closes the review.
 
-![Diagram of a review coordinator closing a review](/public/svg/step7.svg)
+![Diagram of a review coordinator closing a review](/public/review/step7.svg)
 
 ### Step 8
 
 The editor makes a decision on whether to accept the submission to be included in their publication or not. If the editor is satisifed with the review, the submission may be accepted by the editor for publication.
 
-![Diagram of an editor aceepting a submission for publication](/public/svg/step8.svg)
+![Diagram of an editor aceepting a submission for publication](/public/review/step8.svg)
 
 ## Find a Document You Are Assigned
 
