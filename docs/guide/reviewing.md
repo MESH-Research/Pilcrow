@@ -62,7 +62,7 @@ A submission-relative user who reviews submissions.
 
 ### Review Coordinator
 
-A submission-relative user who manages a review of a submission.
+A submission-relative user who manages a [review](#review).
 
 ![Purple circular icon of a review icon on the bst of a person titled, 'Review Coordinator' with a plus symbol and bust of a person](/public/icons/review-coordinator.svg)
 
