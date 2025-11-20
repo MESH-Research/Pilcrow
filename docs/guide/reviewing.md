@@ -105,7 +105,7 @@ The review coordinator opens the submission for review.
 All participants in the review can add either:
 
 1. [Inline comments](#inline-comment) with [style criteria](#style-criteria)
-2. An [overall comment](#overall-comment)
+2. [Overall comments](#overall-comment)
 
 ![Diagram of users adding inline comments or overall comments to a submission](/public/review/step6.svg)
 
