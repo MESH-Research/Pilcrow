@@ -42,7 +42,7 @@ Also called "review criteria." These are defined by a publication. Users making 
 
 ### Editor
 
-A publication-relative user who manages a publication.
+A publication-relative user who manages a [publication](#publication).
 
 ![Green circular icon of a publication icon on the bust of a person titled, 'Editor'](/public/icons/editor.svg)
 
