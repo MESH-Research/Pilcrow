@@ -125,7 +125,7 @@ The editor makes a decision on whether to accept the submission to be included i
 
 Once you have successfully registered for the platform you can be assigned to review a [submission](#submission) by an [Editor](#editor) or [Review Coordinator](#review-coordinator) of the publication you are working with.
 
-When you log into the system you should see any [reviews](#review) you are assigned to showing up in the Reviews table on your Dashboard. If you do not see anything there or prefer to see a different view you can choose the “Reviews” tab at the top of the page in the menu bar.
+When you log into the system you should see any [reviews](#review) you are assigned to in the Reviews table on your Dashboard. If you do not see anything there or prefer to see a different view you can choose the “Reviews” tab at the top of the page in the menu bar.
 
 To review the submission you can either click on the Submission Title in the table, or you can click on the three vertical dots under “Actions” on the right side of the table and choose “Review”
 
