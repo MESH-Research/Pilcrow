@@ -4,7 +4,7 @@
 
 ### Publication
 
-Publications are organizations that manage submissions. Examples of publications can be publishers or newsletters.
+Publications are organizations that manage [submissions](#submission). Examples of publications can be publishers or newsletters.
 
 ![Green circular icon of a book with a bookmark titled, 'Publication'](/public/icons/publication.svg)
 
