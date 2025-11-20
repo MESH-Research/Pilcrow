@@ -10,7 +10,7 @@ Publications are organizations that manage submissions. Examples of publications
 
 ### Submission
 
-A work to be collaboritively reviewed. A submission is commonly in a written format. Submissions are uploaded to Pilcrow and submitted by a submitter to a publication.​ Examples of submissions are articles or essays.
+A work to be collaboratively reviewed. A submission is commonly in a written format. Submissions are created by a [submitter](#submitter) to a publication.​ Examples of submissions are articles or essays.
 
 ![Blue circular icon of a wavy sheet of paper titled, 'Submission'](/public/icons/submission.svg)
 
