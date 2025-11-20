@@ -16,7 +16,7 @@ A work to be collaboratively reviewed. A submission is commonly in a written for
 
 ### Review
 
-An examination of a [submission](#submission). [Editors](#editors), [review coordinators](#review-coordinators), [reviewers](#reviewers), and [submitters](#submitters) can participate in a review. Reviews are managed by review coordinators.
+An examination of a [submission](#submission). [Editors](#editor), [review coordinators](#review-coordinator), [reviewers](#reviewer), and [submitters](#submitter) can participate in a review. Reviews are managed by review coordinators.
 
 ![Purple circular icon of a magnifying glass on a wavy sheet of paper, 'Review'](/public/icons/review.svg)
 
