@@ -64,7 +64,7 @@ A publication-relative user who manages a [publication](#publication). Editors d
 
 <img src="/public/icons/submitter.svg" alt="Blue circular icon of a submission icon on the bust of a person titled, 'Submitter'" style="float:left; margin:16px 16px 16px 0;" />
 
-A submission-relative user that creates submissions.
+A submission-relative user that creates a [submission](#submission).
 
 Examples of submitters are: authors, coauthors, or creators. Anyone who intends to submit content and have it peer reviewed collaboratively by a publication assumes the role of submitter.
 
