@@ -74,7 +74,7 @@ Examples of submitters are: authors, coauthors, or creators. Anyone who intends 
 
 <img src="/public/icons/reviewer.svg" alt="Purple circular icon of a review icon on the bst of a person titled, 'Review Coordinator'" style="float:left; margin:16px 16px 16px 0;" />
 
-A submission-relative user who reviews submissions. Reviewers are invited to review a submission by a review coordinator.
+A submission-relative user who reviews a [submission](#submission). Reviewers are invited to review a submission by a review coordinator.
 
 <div style="clear:left"></div>
 
@@ -98,7 +98,7 @@ A submitter chooses a [publication](#publication) in Pilcrow to submit a [submis
 
 ### Step 2
 
-Before any review can take place, an [editor](#editor) of the publication evaluates the submission's fitness for [review](#review). If the editor deems the submission worthy of review, the editor proceeds to step 3. Otherwise, the editor can reject the submission or request it for resubmission.
+Before any review can take place, an [editor](#editor) of the publication evaluates the submission's fitness for [review](#review). If the editor deems the submission reviewable, the editor proceeds to step 3. Otherwise, the editor can reject the submission or request it for resubmission.
 
 ![Diagram of an editor evaluating a submission for review](/public/review/step2.svg)
 
