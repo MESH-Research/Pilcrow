@@ -4,67 +4,87 @@
 
 ### Publication
 
+<img src="/public/icons/publication.svg" alt="Green circular icon of a book with a bookmark titled, 'Publication'" style="float:left; margin:16px 16px 16px 0;" />
+
 Publications are organizations that manage [submissions](#submission). Examples of publications can be publishers or newsletters.
 
-![Green circular icon of a book with a bookmark titled, 'Publication'](/public/icons/publication.svg)
+<div style="clear:left"></div>
 
 ### Submission
 
-A work to be collaboratively reviewed. A submission is commonly in a written format. Submissions are created by a [submitter](#submitter) to a publication.​ Examples of submissions are articles or essays.
+<img src="/public/icons/submission.svg" alt="Blue circular icon of a wavy sheet of paper titled, 'Submission'" style="float:left; margin:16px 16px 16px 0;" />
 
-![Blue circular icon of a wavy sheet of paper titled, 'Submission'](/public/icons/submission.svg)
+A work to be collaboratively reviewed. A submission is commonly in a written format. Currently, Pilcrow only supports written formats. Submissions are created by a [submitter](#submitter) and submitted to a publication. Submission content can be provided to Pilcrow by file upload or direct text input. Examples of submissions are articles, essays, or book chapters.
+
+<div style="clear:left"></div>
 
 ### Review
 
+<img src="/public/icons/review.svg" alt="Purple circular icon of a magnifying glass on a wavy sheet of paper, 'Review'" style="float:left; margin:16px 16px 16px 0;" />
+
 An examination of a [submission](#submission). [Editors](#editor), [review coordinators](#review-coordinator), [reviewers](#reviewer), and [submitters](#submitter) can participate in a review. Reviews are managed by review coordinators.
 
-![Purple circular icon of a magnifying glass on a wavy sheet of paper, 'Review'](/public/icons/review.svg)
+<div style="clear:left"></div>
 
 ### Overall Comment
 
+<img src="/public/icons/overall-comment.svg" alt="Purple circular icon of a chat bubble titled, 'Overall Comment'" style="float:left; margin:16px 16px 16px 0;" />
+
 This is a comment in which users can comment on the submission broadly or generally. These do not have style criteria associated with them.
 
-![Purple circular icon of a chat bubble titled, 'Overall Comment'](/public/icons/overall-comment.svg)
+<div style="clear:left"></div>
 
 ### Inline Comment
 
+<img src="/public/icons/inline-comment.svg" alt="Purple circular icon of a highlighter in use titled, 'Inline Comment'" style="float:left; margin:16px 16px 16px 0;" />
+
 This is a comment in which users can highlight portions of the submission and make comments inline with the content. Users can associate style criteria with their inline comments.
 
-![Purple circular icon of a highlighter in use titled, 'Inline Comment'](/public/icons/inline-comment.svg)
+<div style="clear:left"></div>
 
 #### Style Criteria
 
+<img src="/public/icons/style-criteria.svg" alt="Purple circular icon of a rectangular list item titled, 'Style Criteria'" style="float:left; margin:16px 16px 16px 0;" />
+
 Also called "review criteria." These are defined by a publication. Users making inline comments on submissions can pick from style criteria to associate with their inline comments. Style criteria are not associated with overall comments.
 
-![Purple circular icon of a rectangular list item titled, 'Style Criteria'](/public/icons/style-criteria.svg)
+<div style="clear:left"></div>
 
 ## Roles
 
 ### Editor
 
-A publication-relative user who manages a [publication](#publication).
+<img src="/public/icons/editor.svg" alt="Green circular icon of a publication icon on the bust of a person titled, 'Editor'" style="float:left; margin:16px 16px 16px 0;" />
 
-![Green circular icon of a publication icon on the bust of a person titled, 'Editor'](/public/icons/editor.svg)
+A publication-relative user who manages a [publication](#publication). Editors decide if a submission is accepted for publication.
+
+<div style="clear:left"></div>
 
 ### Submitter
+
+<img src="/public/icons/submitter.svg" alt="Blue circular icon of a submission icon on the bust of a person titled, 'Submitter'" style="float:left; margin:16px 16px 16px 0;" />
 
 A submission-relative user that creates submissions.
 
 Examples of submitters are: authors, coauthors, or creators. Anyone who intends to submit content and have it peer reviewed collaboratively by a publication assumes the role of submitter.
 
-![Blue circular icon of a submission icon on the bust of a person titled, 'Submitter'](/public/icons/submitter.svg)
+<div style="clear:left"></div>
 
 ### Reviewer
 
-A submission-relative user who reviews submissions.
+<img src="/public/icons/reviewer.svg" alt="Purple circular icon of a review icon on the bst of a person titled, 'Review Coordinator'" style="float:left; margin:16px 16px 16px 0;" />
 
-![Purple circular icon of a review icon on the bst of a person titled, 'Review Coordinator'](/public/icons/reviewer.svg)
+A submission-relative user who reviews submissions. Reviewers are invited to review a submission by a review coordinator.
+
+<div style="clear:left"></div>
 
 ### Review Coordinator
 
-A submission-relative user who manages a review of a submission.
+<img src="/public/icons/review-coordinator.svg" alt="Purple circular icon of a review icon on the bst of a person titled, 'Review Coordinator' with a plus symbol and bust of a person" style="float:left; margin:16px 16px 16px 0;" />
 
-![Purple circular icon of a review icon on the bst of a person titled, 'Review Coordinator' with a plus symbol and bust of a person](/public/icons/review-coordinator.svg)
+A submission-relative user who manages a review of a submission. Review coordinators invite reviewers to review submissions.
+
+<div style="clear:left"></div>
 
 ## Overview
 
@@ -72,19 +92,19 @@ A submission-relative user who manages a review of a submission.
 
 ### Step 1
 
-A submitter submits a submission to a publication.
+A submitter chooses a [publication](#publication) in Pilcrow to submit a [submission](#submission). The submitter may then add submission content by file upload or direct text input. When finished, the submitter submits the submission.
 
-![Diagram of a submitter submitting to a publication](/public/review/step1.svg)
+![Diagram of a submitter submitting a submission to a publication](/public/review/step1.svg)
 
 ### Step 2
 
-Before any review can take place, an editor of the publication evaluates the submission's fitness for review. If the editor deems the submission worthy of review, the editor proceeds to step 3. Otherwise, the editor can reject the submission or request it for resubmission.
+Before any review can take place, an [editor](#editor) of the publication evaluates the submission's fitness for [review](#review). If the editor deems the submission worthy of review, the editor proceeds to step 3. Otherwise, the editor can reject the submission or request it for resubmission.
 
 ![Diagram of an editor evaluating a submission for review](/public/review/step2.svg)
 
 ### Step 3
 
-The editor assigns a review coordinator to the submission. The review coordinator will be responsible for managing the review. This involves making decisions that change the submission's status and making sure all participants in the review are updated.
+The editor assigns a [review coordinator](#review-coordinator) to the submission. The review coordinator will be responsible for managing the review. This involves making decisions that change the submission's status and ensuring all participants in the review are updated.
 
 ![Diagram of an editor assigning a review coodinator to a submission](/public/review/step3.svg)
 
