@@ -82,7 +82,7 @@ A submission-relative user who reviews submissions. Reviewers are invited to rev
 
 <img src="/public/icons/review-coordinator.svg" alt="Purple circular icon of a review icon on the bst of a person titled, 'Review Coordinator' with a plus symbol and bust of a person" style="float:left; margin:16px 16px 16px 0;" />
 
-A submission-relative user who manages a review of a submission. Review coordinators invite reviewers to review submissions.
+A submission-relative user who manages a [review](#review) of a submission. Review coordinators invite reviewers to review submissions.
 
 <div style="clear:left"></div>
 
