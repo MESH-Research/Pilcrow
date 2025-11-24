@@ -88,11 +88,14 @@ extend input UpdateSubmissionInput {
         @rename(attribute: "overallComments")
 }
 
+"""
+Temporarily Disabled to Allow Commenting
+"App\\Rules\\SubmissionIsReviewable"
+"""
 input InlineCommentHasManyInput {
     create: [CreateInlineCommentInput!]
         @rules(
             apply: [
-                "App\\Rules\\SubmissionIsReviewable"
                 "App\\Rules\\InlineCommentIdValidity"
             ]
         )
@@ -116,12 +119,15 @@ input UpdateInlineCommentInput {
     to: Int
 }
 
+"""
+Temporarily Disabled to Allow Commenting
+"App\\Rules\\SubmissionIsReviewable"
+"""
 input OverallCommentHasManyInput {
     create: [CreateOverallCommentInput!]
         @rules(
             apply: [
                 "App\\Rules\\OverallCommentIdValidity"
-                "App\\Rules\\SubmissionIsReviewable"
             ]
         )
     update: [UpdateOverallCommentInput!]
