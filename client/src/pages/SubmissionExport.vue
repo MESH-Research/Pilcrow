@@ -29,7 +29,7 @@
         </section>
         <q-card square bordered flat>
           <q-card-section>
-            <h4 class="q-mt-none">Comments</h4>
+            <h4 class="q-my-none text-bold">Comments</h4>
             <p>Which comment types should be included?</p>
             <q-option-group
               v-model="export_option_choice"
@@ -40,7 +40,7 @@
         </q-card>
         <q-card square bordered flat>
           <q-card-section>
-            <h4 class="q-mt-none">Participants</h4>
+            <h4 class="q-my-none text-bold">Participants</h4>
             <p>Who should be included?</p>
             <q-list>
               <q-item
@@ -49,16 +49,10 @@
                 tag="label"
               >
                 <q-item-section avatar>
-                  <q-checkbox
-                    v-model="export_participants[commenter.id]"
-                    :val="commenter.id"
-                  />
+                  <q-checkbox v-model="export_participants" :val="commenter" />
                 </q-item-section>
                 <q-item-section>
-                  <q-item-label
-                    >{{ commenter.id }}
-                    {{ commenter.display_label }}</q-item-label
-                  >
+                  <q-item-label>{{ commenter.display_label }}</q-item-label>
                 </q-item-section>
               </q-item>
             </q-list>
@@ -79,7 +73,7 @@
   </div>
 </template>
 <script setup>
-import { computed, ref } from "vue"
+import { computed, ref, watch } from "vue"
 import { GET_SUBMISSION_REVIEW } from "src/graphql/queries"
 import { useQuery } from "@vue/apollo-composable"
 const export_option_choice = ref("io")
@@ -120,9 +114,13 @@ const all_commenters = computed(() => {
   if (export_option_choice.value === "o") {
     c = overall_commenters.value
   }
-  console.log(c)
   return c
 })
+
+watch(result, () => {
+  export_participants.value = all_commenters.value
+})
+
 const blob = computed(() =>
   URL.createObjectURL(
     new Blob([submission.value.content.data], { type: "text/html" })
