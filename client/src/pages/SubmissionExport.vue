@@ -41,21 +41,32 @@
         <q-card square bordered flat>
           <q-card-section>
             <h4 class="q-my-none text-bold">Participants</h4>
-            <p>Who should be included?</p>
-            <q-list>
-              <q-item
-                v-for="commenter in all_commenters"
-                :key="commenter.id"
-                tag="label"
-              >
-                <q-item-section avatar>
-                  <q-checkbox v-model="export_participants" :val="commenter" />
-                </q-item-section>
-                <q-item-section>
-                  <q-item-label>{{ commenter.display_label }}</q-item-label>
-                </q-item-section>
-              </q-item>
-            </q-list>
+            <div v-if="all_commenters.length == 0">
+              <p>No commenters found</p>
+            </div>
+            <div v-else>
+              <p>Who should be included?</p>
+              <q-list>
+                <q-item
+                  v-for="commenter in all_commenters"
+                  :key="commenter.id"
+                  tag="label"
+                >
+                  <q-item-section avatar>
+                    <q-checkbox
+                      v-model="export_participants"
+                      :val="commenter"
+                    />
+                  </q-item-section>
+                  <q-item-section top avatar>
+                    <avatar-image :user="commenter" rounded />
+                  </q-item-section>
+                  <q-item-section>
+                    <q-item-label>{{ commenter.display_label }}</q-item-label>
+                  </q-item-section>
+                </q-item>
+              </q-list>
+            </div>
           </q-card-section>
         </q-card>
       </section>
@@ -73,9 +84,11 @@
   </div>
 </template>
 <script setup>
+import AvatarImage from "../components/atoms/AvatarImage.vue"
 import { computed, ref, watch } from "vue"
 import { GET_SUBMISSION_REVIEW } from "src/graphql/queries"
 import { useQuery } from "@vue/apollo-composable"
+
 const export_option_choice = ref("io")
 const export_participants = ref([])
 const export_options = [
@@ -83,9 +96,11 @@ const export_options = [
   { label: "Inline Comments Only", value: "i" },
   { label: "Overall Comments Only", value: "o" }
 ]
+
 const submission = computed(() => {
   return result.value?.submission
 })
+
 const props = defineProps({
   id: {
     type: String,
@@ -94,27 +109,35 @@ const props = defineProps({
 })
 
 const { result } = useQuery(GET_SUBMISSION_REVIEW, { id: props.id })
-const inline_commenters = computed(() => {
-  const i = submission.value?.inline_comments.map(
-    (comment) => comment.created_by
-  )
-  return [...new Set(i)]
-})
-const overall_commenters = computed(() => {
-  const o = submission.value?.overall_comments.map(
-    (comment) => comment.created_by
-  )
-  return [...new Set(o)]
-})
+
+function getCommenters(type) {
+  let replies = []
+  const comments = submission.value?.[`${type}`].map((comment) => {
+    comment.replies.map((reply) => {
+      replies.push(reply.created_by)
+    })
+    return comment.created_by
+  })
+
+  return [...new Set(comments), ...new Set(replies)]
+}
+
+const inline_commenters = computed(() => getCommenters("inline_comments"))
+const overall_commenters = computed(() => getCommenters("overall_comments"))
+
 const all_commenters = computed(() => {
-  let c = [...inline_commenters.value, ...overall_commenters.value]
+  let commenters = inline_commenters.value.concat(
+    overall_commenters.value.filter(
+      (item2) => !inline_commenters.value.some((item1) => item1.id === item2.id)
+    )
+  )
   if (export_option_choice.value === "i") {
-    c = inline_commenters.value
+    commenters = inline_commenters.value
   }
   if (export_option_choice.value === "o") {
-    c = overall_commenters.value
+    commenters = overall_commenters.value
   }
-  return c
+  return commenters
 })
 
 watch(result, () => {
