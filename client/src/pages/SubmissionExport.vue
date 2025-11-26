@@ -91,11 +91,6 @@ import { useQuery } from "@vue/apollo-composable"
 
 const export_option_choice = ref("io")
 const export_participants = ref([])
-const export_options = [
-  { label: "Inline and Overall Comments", value: "io" },
-  { label: "Inline Comments Only", value: "i" },
-  { label: "Overall Comments Only", value: "o" }
-]
 
 const submission = computed(() => {
   return result.value?.submission
@@ -109,6 +104,33 @@ const props = defineProps({
 })
 
 const { result } = useQuery(GET_SUBMISSION_REVIEW, { id: props.id })
+const inline_comments_count = computed(() => getCommentCount("inline_comments"))
+const overall_comments_count = computed(() =>
+  getCommentCount("overall_comments")
+)
+
+const export_options = computed(() => [
+  {
+    label: `Inline and Overall Comments (${inline_comments_count.value + overall_comments_count.value})`,
+    value: "io"
+  },
+  {
+    label: `Inline Comments Only (${inline_comments_count.value})`,
+    value: "i"
+  },
+  {
+    label: `Overall Comments Only (${overall_comments_count.value})`,
+    value: "o"
+  }
+])
+
+function getCommentCount(type) {
+  let reply_count = 0
+  submission.value?.[`${type}`].map((comment) => {
+    reply_count += comment.replies.length
+  })
+  return submission.value?.[`${type}`].length + reply_count ?? 0
+}
 
 function getCommenters(type) {
   let replies = []
@@ -119,7 +141,7 @@ function getCommenters(type) {
     return comment.created_by
   })
 
-  return [...new Set(comments), ...new Set(replies)]
+  return [...new Set([...new Set(comments), ...new Set(replies)])]
 }
 
 const inline_commenters = computed(() => getCommenters("inline_comments"))
@@ -140,7 +162,7 @@ const all_commenters = computed(() => {
   return commenters
 })
 
-watch(result, () => {
+watch([result, all_commenters], () => {
   export_participants.value = all_commenters.value
 })
 
