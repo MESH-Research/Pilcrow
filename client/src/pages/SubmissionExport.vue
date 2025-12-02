@@ -85,12 +85,16 @@
 </template>
 <script setup>
 import AvatarImage from "../components/atoms/AvatarImage.vue"
-import { computed, ref, watch } from "vue"
+import { computed, ref, watch, onMounted } from "vue"
 import { GET_SUBMISSION_REVIEW } from "src/graphql/queries"
 import { useQuery } from "@vue/apollo-composable"
 
-const export_option_choice = ref("io")
+const export_option_choice = ref(null)
 const export_participants = ref([])
+
+onMounted(() => {
+  export_option_choice.value = "io"
+})
 
 const submission = computed(() => {
   return result.value?.submission
