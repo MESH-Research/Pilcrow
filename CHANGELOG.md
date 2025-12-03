@@ -3,6 +3,26 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.33.0](https://github.com/MESH-Research/Pilcrow/compare/v0.32.1...v0.33.0) (2025-12-03)
+
+
+### Features
+
+* Add icons and diagrams to documentation site ([#2210](https://github.com/MESH-Research/Pilcrow/issues/2210)) ([90b0184](https://github.com/MESH-Research/Pilcrow/commit/90b0184b610a37ca14297a46c3b6fcd3b8aaa826))
+* **api:** upgrade laravel framework to version 11 ([#2165](https://github.com/MESH-Research/Pilcrow/issues/2165)) ([d6c3dd2](https://github.com/MESH-Research/Pilcrow/commit/d6c3dd2cae5ab6727fe9bfd59ec39cb7ece0cc2c))
+* **deps:** upgrade laravel to version 12.x ([#2167](https://github.com/MESH-Research/Pilcrow/issues/2167)) ([03562d3](https://github.com/MESH-Research/Pilcrow/commit/03562d3c7aab53ce80d437bfd81d5115acdc9d86))
+
+
+### Bug Fixes
+
+* **api/deps:** update api dependencies ([#2191](https://github.com/MESH-Research/Pilcrow/issues/2191)) ([27b3859](https://github.com/MESH-Research/Pilcrow/commit/27b385949733a396f897f0839559d5e203574706))
+* **api/deps:** update dependency mll-lab/graphql-php-scalars to v6.4.1 ([b1f1481](https://github.com/MESH-Research/Pilcrow/commit/b1f148170d3f9bd2ec4aa080ec7fa8816f9a0a3f))
+* **client/deps:** update client dependencies ([#2192](https://github.com/MESH-Research/Pilcrow/issues/2192)) ([c021701](https://github.com/MESH-Research/Pilcrow/commit/c021701d0447d4bb2495415afd18900fd57d32fa))
+* **client/deps:** update client dependencies to v2.23.1 ([b609673](https://github.com/MESH-Research/Pilcrow/commit/b60967336e5f764d60960686c8aade1ebf97ea42))
+* **client/deps:** update dependency vue-i18n to v9.14.5 [security] ([494dc35](https://github.com/MESH-Research/Pilcrow/commit/494dc35ea88340e303a6f4d77cbc100598f8179a))
+* **deps:** update dependency core-js to v3.43.0 ([#2173](https://github.com/MESH-Research/Pilcrow/issues/2173)) ([32cc5d8](https://github.com/MESH-Research/Pilcrow/commit/32cc5d88511d95eb2defa15e0535e60ded9eafe7))
+* **deps:** update dependency validator to v13.15.15 ([#2163](https://github.com/MESH-Research/Pilcrow/issues/2163)) ([3002c83](https://github.com/MESH-Research/Pilcrow/commit/3002c8386f4aeb8447b3860ea2c9b1017f0e8633))
+
 ## [0.32.1](https://github.com/MESH-Research/Pilcrow/compare/v0.32.0...v0.32.1) (2025-06-11)
 
 
