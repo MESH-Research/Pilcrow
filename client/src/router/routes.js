@@ -202,6 +202,15 @@ const routes = [
         props: true
       },
       {
+        name: "submission:comments",
+        path: "/submission/:id/comments",
+        component: () => import("src/pages/SubmissionReviewComments.vue"),
+        meta: {
+          requiresReviewAccess: true
+        },
+        props: true
+      },
+      {
         name: "submission:export",
         path: "/submission/:id/export",
         component: () => import("src/pages/SubmissionExport.vue"),
