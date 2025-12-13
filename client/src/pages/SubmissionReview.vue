@@ -26,7 +26,7 @@
         data-cy="submission_review_layout"
         view="hHh lpR fFr"
         container
-        style="min-height: calc(100vh - 70px)"
+        style="min-height: calc(100vh - 118px - 51px)"
       >
         <submission-toolbar
           :id="id"
@@ -47,8 +47,6 @@
           <div ref="scrollAddNewOverallComment"></div>
         </q-page-container>
       </q-layout>
-
-      <div class="row q-col-gutter-lg q-pa-lg"></div>
     </article>
   </div>
 </template>
@@ -79,6 +77,7 @@ const commentDrawerOpen = ref(false)
 provide("submission", submission)
 provide("activeComment", ref(null))
 provide("commentDrawerOpen", commentDrawerOpen)
+provide("forExport", ref(false))
 
 const scrollOverallComments = ref(null)
 const scrollAddNewOverallComment = ref(null)

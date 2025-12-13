@@ -133,7 +133,9 @@ import OverallCommentReply from "./OverallCommentReply.vue"
 import CommentEditor from "../forms/CommentEditor.vue"
 import CommentHeader from "./CommentHeader.vue"
 
-const isCollapsed = ref(true)
+const forExport = inject("forExport")
+
+const isCollapsed = ref(!forExport)
 const isReplying = ref(false)
 const isQuoteReplying = ref(false)
 const commentReply = ref(null)
@@ -192,6 +194,7 @@ function deleteComment() {
 }
 
 const showReplyButton = computed(() => {
+  if (forExport) return false
   if (isReplying.value) return false
   if (hasReplies.value && isCollapsed.value) return false
   return true

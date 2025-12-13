@@ -31,6 +31,22 @@ const routes = [
   },
   {
     path: "/",
+    component: () => import("layouts/MainLayoutNoFooter.vue"),
+    meta: { requiresAuth: true },
+    children: [
+      {
+        name: "submission:comments",
+        path: "/submission/:id/comments",
+        component: () => import("src/pages/SubmissionReviewComments.vue"),
+        meta: {
+          requiresReviewAccess: true
+        },
+        props: true
+      }
+    ]
+  },
+  {
+    path: "/",
     component: () => import("layouts/MainLayout.vue"),
     meta: { requiresAuth: true },
     children: [
@@ -196,15 +212,6 @@ const routes = [
         name: "submission:review",
         path: "/submission/:id/review",
         component: () => import("src/pages/SubmissionReview.vue"),
-        meta: {
-          requiresReviewAccess: true
-        },
-        props: true
-      },
-      {
-        name: "submission:comments",
-        path: "/submission/:id/comments",
-        component: () => import("src/pages/SubmissionReviewComments.vue"),
         meta: {
           requiresReviewAccess: true
         },

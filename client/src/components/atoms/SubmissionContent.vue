@@ -1,5 +1,5 @@
 <template>
-  <div class="row items-center justify-end q-pa-md">
+  <div class="review-controls row items-center justify-end q-pa-md">
     <q-select
       v-model="selectedFont"
       outlined
@@ -75,6 +75,7 @@
       </div>
       <div>
         <q-btn
+          v-if="!forExport"
           :aria-label="$t(`submissions.style_controls.new_overall`)"
           data-cy="new_overall_comment"
           round
@@ -147,6 +148,7 @@ const props = defineProps({
   }
 })
 
+const forExport = inject("forExport")
 const commentDrawerOpen = inject("commentDrawerOpen")
 const submission = inject("submission")
 const activeComment = inject("activeComment")
