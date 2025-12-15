@@ -25,4 +25,11 @@ export default `
 .inline-comment-replies {
   padding-left: 1rem;
 }
+.comment-header .text-h4 {
+  font-weight: bold;
+}
+aside.q-drawer {
+  transform: none !important;
+  width: auto !important;
+}
 `

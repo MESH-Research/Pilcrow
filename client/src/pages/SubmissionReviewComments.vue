@@ -84,8 +84,7 @@ function handleNewScroll() {
 const comments_content = useTemplateRef("comments-content")
 let blob = ""
 
-function updateBlob(message) {
-  console.log("run", message, comments_content.value?.$el.innerHTML)
+function updateBlob() {
   let download_content = comments_content.value?.$el.innerHTML
   blob = computed(() =>
     URL.createObjectURL(
@@ -105,9 +104,9 @@ function updateBlob(message) {
 }
 
 watch([comments_content], () => {
-  updateBlob("1")
+  updateBlob()
 })
-watch(result, () => updateBlob("2"))
+watch(result, () => updateBlob())
 </script>
 
 <style lang="sass" scoped>

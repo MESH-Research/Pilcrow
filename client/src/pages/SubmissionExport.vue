@@ -70,15 +70,24 @@
           </q-card-section>
         </q-card>
       </section>
-      <q-btn
-        v-if="submission"
-        class="q-mt-lg"
-        :label="$t(`export.download.title`)"
-        color="accent"
-        icon="file_download"
-        :href="blob"
-        :download="`submission_${submission.id}.html`"
-      />
+      <div v-if="submission" class="row q-gutter-md q-py-md">
+        <q-btn
+          label="Submission"
+          color="accent"
+          icon="file_download"
+          :href="blob"
+          :download="`submission_${submission.id}.html`"
+        />
+        <q-btn
+          label="Review Comments"
+          color="primary"
+          icon="chat_bubble"
+          :to="{
+            name: 'submission:comments',
+            params: { id: submission.id }
+          }"
+        />
+      </div>
       <q-spinner v-else />
     </article>
   </div>
