@@ -139,6 +139,9 @@ const export_options = computed(() => [
 
 function getCommentCount(type) {
   let reply_count = 0
+  if (!submission.value?.[`${type}`]) {
+    return reply_count
+  }
   submission.value?.[`${type}`].map((comment) => {
     reply_count += comment.replies.length
   })
@@ -147,6 +150,9 @@ function getCommentCount(type) {
 
 function getCommenters(type) {
   let replies = []
+  if (!submission.value?.[`${type}`]) {
+    return replies
+  }
   const comments = submission.value?.[`${type}`].map((comment) => {
     comment.replies.map((reply) => {
       replies.push(reply.created_by)

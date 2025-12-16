@@ -81,7 +81,7 @@
         </q-btn>
       </q-card-actions>
 
-      <section>
+      <section class="overall-comment-replies">
         <div v-if="!isCollapsed">
           <overall-comment-reply
             v-for="reply in comment.replies"

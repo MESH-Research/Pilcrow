@@ -11,14 +11,24 @@
         style="min-height: calc(100vh - 118px)"
       >
         <q-page-container ref="comments-content">
-          <div class="row justify-end q-pa-md">
+          <div class="row justify-between q-pa-md">
             <q-btn
-              v-if="submission"
-              :label="$t(`export.download.title`)"
+              :aria-label="$t('submission.toolbar.back')"
+              dense
+              flat
+              round
+              icon="arrow_back_ios_new"
+              :to="{
+                name: 'submission:export',
+                params: { id: props.id }
+              }"
+            />
+            <q-btn
+              label="Download Comments"
               color="accent"
               icon="file_download"
               :href="blob"
-              :download="`submission_${submission.id}.html`"
+              :download="`submission_${props.id}.html`"
             />
           </div>
           <submission-content

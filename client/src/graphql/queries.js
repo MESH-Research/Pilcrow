@@ -360,7 +360,7 @@ export const GET_SUBMISSION = gql`
 `
 
 export const GET_SUBMISSION_REVIEW = gql`
-  query GetSubmissionReview($id: ID!) {
+  query GetSubmissionReview($id: ID!, $skip_overall: Boolean = false) {
     submission(id: $id) {
       id
       title
@@ -401,7 +401,7 @@ export const GET_SUBMISSION_REVIEW = gql`
         }
         read_at
       }
-      overall_comments(trashed: WITH) {
+      overall_comments(trashed: WITH) @skip(if: $skip_overall) {
         ...commentFields
         replies(trashed: WITH) {
           ...commentFields
