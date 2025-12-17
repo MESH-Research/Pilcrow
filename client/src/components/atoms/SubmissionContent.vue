@@ -60,6 +60,7 @@
       </div>
       <div>
         <q-btn
+          v-if="showOverallComments"
           :aria-label="$t(`submissions.style_controls.view_overall`)"
           data-cy="view_overall_comments"
           round
@@ -145,6 +146,10 @@ const props = defineProps({
   highlightVisibility: {
     type: Boolean,
     default: true
+  },
+  showOverallComments: {
+    type: Boolean,
+    default: true
   }
 })
 
@@ -156,7 +161,8 @@ const contentRef = ref(null)
 
 const emit = defineEmits([
   "scrollToOverallComments",
-  "scrollAddNewOverallComment"
+  "scrollAddNewOverallComment",
+  "editorReady"
 ])
 
 function scrollToOverallComments() {
@@ -254,6 +260,10 @@ const editor = new Editor({
   editable: false,
   content: submission.value.content.data,
   extensions: [SubmissionContentKit.configure({ annotation: { annotations } })]
+})
+
+editor.on("update", () => {
+  emit("editorReady", editor)
 })
 
 function bubbleMenuVisibility({ state }) {

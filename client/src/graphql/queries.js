@@ -360,7 +360,11 @@ export const GET_SUBMISSION = gql`
 `
 
 export const GET_SUBMISSION_REVIEW = gql`
-  query GetSubmissionReview($id: ID!, $skip_overall: Boolean = false) {
+  query GetSubmissionReview(
+    $id: ID!
+    $skip_inline: Boolean = false
+    $skip_overall: Boolean = false
+  ) {
     submission(id: $id) {
       id
       title
@@ -383,7 +387,7 @@ export const GET_SUBMISSION_REVIEW = gql`
           ...relatedUserFields
         }
       }
-      inline_comments(trashed: WITH) {
+      inline_comments(trashed: WITH) @skip(if: $skip_inline) {
         deleted_at
         from
         to

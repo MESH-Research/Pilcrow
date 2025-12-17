@@ -84,7 +84,8 @@
           icon="chat_bubble"
           :to="{
             name: 'submission:comments',
-            params: { id: submission.id }
+            params: { id: submission.id },
+            query: { export: export_option_choice }
           }"
         />
       </div>

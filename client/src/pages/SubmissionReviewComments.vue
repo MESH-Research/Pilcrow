@@ -33,13 +33,18 @@
           </div>
           <submission-content
             v-model:highlight-visibility="highlightVisibility"
+            :show-overall-comments="showOverallComments"
             @scroll-to-overall-comments="handleScroll"
             @scroll-add-new-overall-comment="handleNewScroll"
+            @editor-ready="updateBlob('from editor')"
           />
-          <submission-comment-drawer v-model:drawer-open="commentDrawerOpen" />
+          <submission-comment-drawer
+            v-if="showInlineComments"
+            v-model:drawer-open="commentDrawerOpen"
+          />
           <q-separator class="page-seperator" />
           <div ref="scrollOverallComments"></div>
-          <submission-comment-section />
+          <submission-comment-section v-if="showOverallComments" />
           <div ref="scrollAddNewOverallComment"></div>
         </q-page-container>
       </q-layout>
@@ -56,17 +61,49 @@ import { GET_SUBMISSION_REVIEW } from "src/graphql/queries"
 import { useQuery } from "@vue/apollo-composable"
 import exportStyles from "src/components/styles/exportStyles"
 import { scroll } from "quasar"
+import { useRoute } from "vue-router"
 provide("activeComment", ref(null))
 provide("forExport", ref(true))
+const route = useRoute()
 const { getScrollTarget, setVerticalScrollPosition } = scroll
 
 const props = defineProps({
   id: {
     type: String,
     required: true
+  },
+  exportOptionChoice: {
+    type: String,
+    default: "io"
   }
 })
-const { loading, result } = useQuery(GET_SUBMISSION_REVIEW, { id: props.id })
+const exportOptionChoiceMapper = {
+  io: {
+    id: props.id,
+    skip_inline: false,
+    skip_overall: false
+  },
+  i: {
+    id: props.id,
+    skip_inline: false,
+    skip_overall: true
+  },
+  o: {
+    id: props.id,
+    skip_inline: true,
+    skip_overall: false
+  }
+}
+
+const exportOptionChoiceObject =
+  exportOptionChoiceMapper[route.query.export ?? props.exportOptionChoice]
+const showInlineComments = !exportOptionChoiceObject.skip_inline ?? true
+const showOverallComments = !exportOptionChoiceObject.skip_overall ?? true
+
+const { loading, result } = useQuery(
+  GET_SUBMISSION_REVIEW,
+  exportOptionChoiceObject
+)
 const submission = computed(() => {
   return result.value?.submission
 })
@@ -92,31 +129,29 @@ function handleNewScroll() {
 }
 
 const comments_content = useTemplateRef("comments-content")
-let blob = ""
+let blob = ref("")
 
-function updateBlob() {
+function updateBlob(message = "") {
   let download_content = comments_content.value?.$el.innerHTML
-  blob = computed(() =>
-    URL.createObjectURL(
-      new Blob(
-        [
-          `<html><head>`,
-          `<title>Submission Review Comments</title>`,
-          `<style>${exportStyles}</style>`,
-          `</head><body>`,
-          download_content,
-          `</body></html>`
-        ],
-        { type: "text/html" }
-      )
+  console.log("run", message)
+  blob.value = URL.createObjectURL(
+    new Blob(
+      [
+        `<html><head>`,
+        `<title>Submission Review Comments</title>`,
+        `<style>${exportStyles}</style>`,
+        `</head><body>`,
+        download_content,
+        `</body></html>`
+      ],
+      { type: "text/html" }
     )
   )
 }
 
 watch([comments_content], () => {
-  updateBlob()
+  updateBlob("template")
 })
-watch(result, () => updateBlob())
 </script>
 
 <style lang="sass" scoped>
