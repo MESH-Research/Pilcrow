@@ -13,7 +13,9 @@
         icon="arrow_back_ios_new"
         :to="{
           name: 'submission:details',
-          params: { id: props.submission.id }
+          params: {
+            id: submission.id
+          }
         }"
       />
       <q-toolbar-title class="q-pt-xs q-pb-sm col-grow">

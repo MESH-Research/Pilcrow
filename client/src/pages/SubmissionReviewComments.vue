@@ -97,6 +97,16 @@ const exportOptionChoiceMapper = {
 
 const exportOptionChoiceObject =
   exportOptionChoiceMapper[route.query.export ?? props.exportOptionChoice]
+
+const commenters_array = route.query.ids.map(Number)
+if (commenters_array && typeof commenters_array == "object") {
+  exportOptionChoiceObject.sic = "I_D"
+  exportOptionChoiceObject.sirc = "I_D"
+  exportOptionChoiceObject.soc = "I_D"
+  exportOptionChoiceObject.sorc = "I_D"
+  exportOptionChoiceObject.commenters_array = commenters_array
+}
+
 const showInlineComments = !exportOptionChoiceObject.skip_inline ?? true
 const showOverallComments = !exportOptionChoiceObject.skip_overall ?? true
 
@@ -107,10 +117,10 @@ const { loading, result } = useQuery(
 const submission = computed(() => {
   return result.value?.submission
 })
-provide("submission", submission)
 const highlightVisibility = ref(true)
 const commentDrawerOpen = ref(false)
 provide("commentDrawerOpen", commentDrawerOpen)
+provide("submission", submission)
 
 const scrollOverallComments = ref(null)
 const scrollAddNewOverallComment = ref(null)

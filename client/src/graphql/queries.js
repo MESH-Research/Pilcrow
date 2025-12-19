@@ -364,6 +364,11 @@ export const GET_SUBMISSION_REVIEW = gql`
     $id: ID!
     $skip_inline: Boolean = false
     $skip_overall: Boolean = false
+    $sic: SubmissionInlineCommentsHasCreatedByColumn = null
+    $sirc: InlineCommentRepliesHasCreatedByColumn = null
+    $soc: SubmissionOverallCommentsHasCreatedByColumn = null
+    $sorc: OverallCommentRepliesHasCreatedByColumn = null
+    $commenters_array: Mixed = []
   ) {
     submission(id: $id) {
       id
@@ -387,7 +392,10 @@ export const GET_SUBMISSION_REVIEW = gql`
           ...relatedUserFields
         }
       }
-      inline_comments(trashed: WITH) @skip(if: $skip_inline) {
+      inline_comments(
+        trashed: WITH
+        hasCreatedBy: { column: $sic, operator: IN, value: $commenters_array }
+      ) @skip(if: $skip_inline) {
         deleted_at
         from
         to
@@ -397,7 +405,14 @@ export const GET_SUBMISSION_REVIEW = gql`
           name
           icon
         }
-        replies(trashed: WITH) {
+        replies(
+          trashed: WITH
+          hasCreatedBy: {
+            column: $sirc
+            operator: IN
+            value: $commenters_array
+          }
+        ) {
           ...commentFields
           parent_id
           reply_to_id
@@ -405,9 +420,19 @@ export const GET_SUBMISSION_REVIEW = gql`
         }
         read_at
       }
-      overall_comments(trashed: WITH) @skip(if: $skip_overall) {
+      overall_comments(
+        trashed: WITH
+        hasCreatedBy: { column: $soc, operator: IN, value: $commenters_array }
+      ) @skip(if: $skip_overall) {
         ...commentFields
-        replies(trashed: WITH) {
+        replies(
+          trashed: WITH
+          hasCreatedBy: {
+            column: $sorc
+            operator: IN
+            value: $commenters_array
+          }
+        ) {
           ...commentFields
           parent_id
           reply_to_id

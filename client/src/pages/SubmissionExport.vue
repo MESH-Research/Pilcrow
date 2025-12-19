@@ -85,7 +85,12 @@
           :to="{
             name: 'submission:comments',
             params: { id: submission.id },
-            query: { export: export_option_choice }
+            query: {
+              export: export_option_choice,
+              ids: export_participants.map((user) => {
+                return user.id
+              })
+            }
           }"
         />
       </div>

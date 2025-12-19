@@ -17,7 +17,7 @@
         class="q-mt-md"
         :to="{
           name: 'submission:draft',
-          params: { id: submission.id }
+          params: { id: props.id }
         }"
       />
     </div>
@@ -76,8 +76,8 @@ const highlightVisibility = ref(true)
 const commentDrawerOpen = ref(false)
 provide("submission", submission)
 provide("activeComment", ref(null))
-provide("commentDrawerOpen", commentDrawerOpen)
 provide("forExport", ref(false))
+provide("commentDrawerOpen", commentDrawerOpen)
 
 const scrollOverallComments = ref(null)
 const scrollAddNewOverallComment = ref(null)
