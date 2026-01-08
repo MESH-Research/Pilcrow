@@ -1,5 +1,5 @@
 <template>
-  <div data-cy="submission_review_page">
+  <div data-cy="submission_view_page">
     <div v-if="loading" class="q-pa-lg">
       {{ $t("loading") }}
     </div>
