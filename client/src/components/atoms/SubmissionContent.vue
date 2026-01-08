@@ -305,6 +305,7 @@ watch(
   (newValue) => {
     if (!newValue) return
     if (!newValue.__typename.startsWith("InlineComment")) return
+    if (newValue.new === true) return
     ;(async () => {
       if (newValue.__typename === "InlineComment") {
         await markRead({
