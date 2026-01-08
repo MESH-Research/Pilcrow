@@ -26,7 +26,7 @@
         data-cy="submission_preview_layout"
         view="hHh lpR fFr"
         container
-        style="min-height: calc(100vh - 70px)"
+        style="min-height: calc(100vh - 118px - 50px)"
       >
         <submission-preview-toolbar :id="id" :submission="submission" />
 
@@ -51,8 +51,6 @@
           </div>
         </q-page-container>
       </q-layout>
-
-      <div class="row q-col-gutter-lg q-pa-lg"></div>
     </article>
   </div>
 </template>
