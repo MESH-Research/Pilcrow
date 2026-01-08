@@ -62,6 +62,7 @@ const submission = computed(() => {
 provide("submission", submission)
 provide("commentDrawerOpen", null)
 provide("activeComment", null)
+provide("forExport", false)
 </script>
 
 <style lang="sass" scoped>
