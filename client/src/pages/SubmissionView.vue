@@ -26,7 +26,7 @@
         data-cy="submission_preview_layout"
         view="hHh lpR fFr"
         container
-        style="min-height: calc(100vh - 118px - 50px)"
+        style="min-height: calc(100vh - 118px - 51px)"
       >
         <submission-view-toolbar :id="id" :submission="submission" />
 
