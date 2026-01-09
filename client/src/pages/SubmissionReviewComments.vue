@@ -24,7 +24,7 @@
               }"
             />
             <q-btn
-              label="Download Comments"
+              :label="$t('export.comments.download')"
               color="accent"
               icon="file_download"
               :href="blob"
@@ -62,8 +62,11 @@ import { useQuery } from "@vue/apollo-composable"
 import exportStyles from "src/components/styles/exportStyles"
 import { scroll } from "quasar"
 import { useRoute } from "vue-router"
+import { useI18n } from "vue-i18n"
+
 provide("activeComment", ref(null))
 provide("forExport", ref(true))
+const { t } = useI18n()
 const route = useRoute()
 const { getScrollTarget, setVerticalScrollPosition } = scroll
 
@@ -148,7 +151,7 @@ function updateBlob(message = "") {
     new Blob(
       [
         `<html><head>`,
-        `<title>Submission Review Comments</title>`,
+        `<title>${t("export.submission_review_comments")}</title>`,
         `<style>${exportStyles}</style>`,
         `</head><body>`,
         download_content,

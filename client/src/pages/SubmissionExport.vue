@@ -29,8 +29,10 @@
         </section>
         <q-card square bordered flat>
           <q-card-section>
-            <h4 class="q-my-none text-bold">Comments</h4>
-            <p>Which comment types should be included?</p>
+            <h4 class="q-my-none text-bold">
+              {{ $t("export.comments.title") }}
+            </h4>
+            <p>{{ $t("export.comments.byline") }}</p>
             <q-option-group
               v-model="export_option_choice"
               :options="export_options"
@@ -40,12 +42,14 @@
         </q-card>
         <q-card square bordered flat>
           <q-card-section>
-            <h4 class="q-my-none text-bold">Participants</h4>
+            <h4 class="q-my-none text-bold">
+              {{ $t("export.participants.title") }}
+            </h4>
             <div v-if="all_commenters.length == 0">
-              <p>No commenters found</p>
+              <p>{{ $t("export.participants.no_commenters") }}</p>
             </div>
             <div v-else>
-              <p>Who should be included?</p>
+              <p>{{ $t("export.participants.byline") }}</p>
               <q-list>
                 <q-item
                   v-for="commenter in all_commenters"
@@ -55,6 +59,7 @@
                   <q-item-section avatar>
                     <q-checkbox
                       v-model="export_participants"
+                      :aria-labelledby="`commenter_label_${commenter.id}`"
                       :val="commenter"
                     />
                   </q-item-section>
@@ -72,14 +77,14 @@
       </section>
       <div v-if="submission" class="row q-gutter-md q-py-md">
         <q-btn
-          label="Submission"
+          :label="$t(`export.submission`)"
           color="accent"
           icon="file_download"
           :href="blob"
           :download="`submission_${submission.id}.html`"
         />
         <q-btn
-          label="Review Comments"
+          :label="$t(`export.review_comments`)"
           color="primary"
           icon="chat_bubble"
           :to="{
@@ -103,7 +108,9 @@ import AvatarImage from "../components/atoms/AvatarImage.vue"
 import { computed, ref, watch, onMounted } from "vue"
 import { GET_SUBMISSION_REVIEW } from "src/graphql/queries"
 import { useQuery } from "@vue/apollo-composable"
+import { useI18n } from "vue-i18n"
 
+const { t } = useI18n()
 const export_option_choice = ref(null)
 const export_participants = ref([])
 
@@ -130,15 +137,18 @@ const overall_comments_count = computed(() =>
 
 const export_options = computed(() => [
   {
-    label: `Inline and Overall Comments (${inline_comments_count.value + overall_comments_count.value})`,
+    label: t(
+      `export.comments.inline_and_overall`,
+      inline_comments_count.value + overall_comments_count.value
+    ),
     value: "io"
   },
   {
-    label: `Inline Comments Only (${inline_comments_count.value})`,
+    label: t(`export.comments.inline_only`, inline_comments_count.value),
     value: "i"
   },
   {
-    label: `Overall Comments Only (${overall_comments_count.value})`,
+    label: t(`export.comments.overall_only`, overall_comments_count.value),
     value: "o"
   }
 ])

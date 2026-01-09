@@ -992,7 +992,23 @@
     "disabled": {
       "by_role": "You do not have permission to export this submission.",
       "by_state": "Export will be available when review is completed."
-    }
+    },
+    "comments": {
+      "title": "Comments",
+      "byline": "Which comments should be included?",
+      "inline_and_overall": "Inline and Overall Comments ({count})",
+      "inline_only": "Inline Comments Only ({count})",
+      "overall_only": "Overall Comments Only ({count})",
+      "download": "Download Comments"
+    },
+    "participants": {
+      "title": "Participants",
+      "byline": "Who should be included?",
+      "no_commenters": "No commenters found"
+    },
+    "submission_review_comments": "Submission Review Comments",
+    "review_comments": "Review Comments",
+    "submission": "Submission"
   },
   "failures": {
     "UNKNOWN_ERROR": "An unknown error has occurred.",
