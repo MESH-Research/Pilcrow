@@ -67,7 +67,9 @@
                     <avatar-image :user="commenter" rounded />
                   </q-item-section>
                   <q-item-section>
-                    <q-item-label>{{ commenter.display_label }}</q-item-label>
+                    <q-item-label :id="`commenter_label_${commenter.id}`">{{
+                      commenter.display_label
+                    }}</q-item-label>
                   </q-item-section>
                 </q-item>
               </q-list>
