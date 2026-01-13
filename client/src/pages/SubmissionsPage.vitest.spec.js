@@ -248,7 +248,8 @@ describe("Submissions Page", () => {
                     email: "applicationadministrator@meshresearch.net"
                   },
                   updated_at: "2023-03-24T02:01:00.000000Z",
-                  replies: []
+                  replies: [],
+                  read_at: ""
                 },
                 {
                   id: "2",
@@ -271,7 +272,8 @@ describe("Submissions Page", () => {
                     email: "publicationEditor@meshresearch.net"
                   },
                   updated_at: "2023-03-25T05:27:07.000000Z",
-                  replies: []
+                  replies: [],
+                  read_at: ""
                 }
               ],
               overall_comments: [
@@ -293,7 +295,8 @@ describe("Submissions Page", () => {
                     email: "reviewer@meshresearch.net"
                   },
                   updated_at: "2023-03-27T08:21:44.000000Z",
-                  replies: []
+                  replies: [],
+                  read_at: ""
                 }
               ],
               submitters: [],
@@ -336,7 +339,8 @@ describe("Submissions Page", () => {
                     email: "publicationEditor@meshresearch.net"
                   },
                   updated_at: "2023-04-08T02:01:03.000000Z",
-                  replies: []
+                  replies: [],
+                  read_at: ""
                 },
                 {
                   id: "4",
@@ -362,7 +366,8 @@ describe("Submissions Page", () => {
                     email: "reviewer@meshresearch.net"
                   },
                   updated_at: "2023-04-09T02:25:03.000000Z",
-                  replies: []
+                  replies: [],
+                  read_at: ""
                 }
               ],
               overall_comments: [
@@ -383,7 +388,8 @@ describe("Submissions Page", () => {
                     email: "applicationadministrator@meshresearch.net"
                   },
                   updated_at: "2023-04-10T07:12:35.000000Z",
-                  replies: []
+                  replies: [],
+                  read_at: ""
                 },
                 {
                   id: "3",
@@ -402,7 +408,8 @@ describe("Submissions Page", () => {
                     email: "reviewer@meshresearch.net"
                   },
                   updated_at: "2023-04-08T05:25:03.000000Z",
-                  replies: []
+                  replies: [],
+                  read_at: ""
                 }
               ],
               submitters: [],
