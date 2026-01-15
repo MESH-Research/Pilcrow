@@ -1011,6 +1011,7 @@
   "general_failure": "Oops, there was an error.",
   "loading": "Loading...",
   "notifications": {
+    "active_notification": "Active Notification",
     "none": "There are no notifications.",
     "view_more": "View More",
     "dismiss_all": "Dismiss All",

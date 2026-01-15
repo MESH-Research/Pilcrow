@@ -63,7 +63,9 @@ import { useFeedbackMessages } from "src/use/guiElements"
 const { t } = useI18n()
 const { newStatusMessage } = useFeedbackMessages({
   attrs: {
-    "data-cy": "reinvite_notify"
+    "data-cy": "reinvite_notify",
+    role: "alertdialog",
+    "aria-label": t("notifications.active_notification")
   }
 })
 
