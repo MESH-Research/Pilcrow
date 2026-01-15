@@ -64,7 +64,7 @@ const { t } = useI18n()
 const { newStatusMessage } = useFeedbackMessages({
   attrs: {
     "data-cy": "reinvite_notify",
-    role: "alertdialog",
+    role: "alert",
     "aria-label": t("notifications.active_notification")
   }
 })
