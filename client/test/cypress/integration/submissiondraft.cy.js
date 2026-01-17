@@ -42,7 +42,15 @@ describe("Submission Draft Page", () => {
     cy.dataCy("todo_preview_btn").click()
     cy.url().should("include", "/111/preview")
     cy.injectAxe()
-    cy.checkA11y(null, null, a11yLogViolations)
+    cy.checkA11y(
+      {
+        // TODO: restore once Tiptap stops applying aria-expanded attribute to noneditable nodes
+        // TODO: restore once Tiptap stops applying 'textbox' role to noneditable nodes
+        exclude: [['[data-cy="submission-content"']]
+      },
+      null,
+      a11yLogViolations
+    )
   })
 
   it("should be able to submit for review a draft submission and allow editors to access the submission", () => {

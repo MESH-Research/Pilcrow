@@ -148,8 +148,28 @@ const defaultContent = computed(() => {
   //TODO: Make this more robust to handle multi paragraphs, etc
   return `<blockquote>${props.replyTo.content}</blockquote><p></p>`
 })
+
+const inputNameMapper = function (commentType) {
+  if (commentType.startsWith("InlineComment")) {
+    return props.isModifying
+      ? "submissions.inline_comments.ariaLabel.edit"
+      : "submissions.inline_comments.ariaLabel.add"
+  }
+  if (commentType.startsWith("OverallComment")) {
+    return props.isModifying
+      ? "submissions.overall_comments.ariaLabel.edit"
+      : "submissions.overall_comments.ariaLabel.add"
+  }
+  return "submissions.comment.placeholder"
+}
+
 const { t } = useI18n()
 const editor = useEditor({
+  editorProps: {
+    attributes: {
+      title: t(`${inputNameMapper(props.commentType)}`)
+    }
+  },
   content: defaultContent.value,
   injectCSS: true,
   extensions: [

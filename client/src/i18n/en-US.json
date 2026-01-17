@@ -940,8 +940,18 @@
       },
       "back_btn_label": "Back"
     },
-    "inline_comments_heading": "Inline Comments",
+    "inline_comments": {
+      "ariaLabel": {
+        "add": "Add an inline comment",
+        "edit": "Edit an inline comment"
+      },
+      "heading": "Inline Comments"
+    },
     "overall_comments": {
+      "ariaLabel": {
+        "add": "Add an overall comment",
+        "edit": "Edit an overall comment"
+      },
       "heading": "Overall Comments",
       "editor_heading": "Add your overall comment"
     },
