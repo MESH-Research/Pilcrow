@@ -182,7 +182,7 @@ class UserQueryTest extends ApiTestCase
         $collection = collect($data);
 
         if ($shouldFind !== null) {
-            $results = $collection->implode('email', ', ') != "" ? $collection->implode('email', ', ') : "nothing";
+            $results = $collection->implode('email', ', ') != '' ? $collection->implode('email', ', ') : 'nothing';
             $this->assertTrue(
                 $collection->contains('email', $shouldFind),
                 "Search term '{$searchTerm}' should return user with email '{$shouldFind}', but returned " . $results
