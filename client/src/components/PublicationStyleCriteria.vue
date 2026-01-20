@@ -12,6 +12,7 @@
             class="criteria-card"
             :criteria="criteria"
             :edit-id="editId"
+            data-cy="criteriaEditForm"
             @edit="editItem(criteria.id)"
             @cancel="cancelEdit"
             @save="saveEdit"
