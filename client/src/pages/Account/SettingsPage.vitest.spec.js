@@ -1,6 +1,6 @@
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
 import { mount, flushPromises } from "@vue/test-utils"
-import { installApolloClient } from "test/vitest/utils"
+import { installApolloClient } from "app/test/vitest/utils"
 import { UPDATE_USER } from "src/graphql/mutations"
 import { CURRENT_USER } from "src/graphql/queries"
 import { ref as mockRef } from "vue"
@@ -12,15 +12,15 @@ vi.mock("src/use/forms", async (importOriginal) => {
   const forms = await importOriginal()
   return {
     ...forms,
-    useDirtyGuard: () => { },
+    useDirtyGuard: () => {},
     useFormState: () => ({
       dirty: mockRef(false),
       saved: mockRef(false),
       state: mockRef("idle"),
       queryLoading: mockRef(false),
       mutationLoading: mockRef(false),
-      errorMessage: mockRef(""),
-    }),
+      errorMessage: mockRef("")
+    })
   }
 })
 
@@ -29,8 +29,8 @@ vi.mock("quasar", async (importOriginal) => {
   return {
     ...quasar,
     useQuasar: () => ({
-      notify: vi.fn(),
-    }),
+      notify: vi.fn()
+    })
   }
 })
 
@@ -38,7 +38,6 @@ installQuasarPlugin()
 const mockClient = installApolloClient()
 
 describe("Settings page", () => {
-
   const makeWrapper = async () => {
     const wrapper = mount(SettingsPage)
     await flushPromises()
@@ -55,9 +54,9 @@ describe("Settings page", () => {
           name: "TestDoe",
           email: "test@example.com",
           email_verified_at: null,
-          roles: [],
-        },
-      },
+          roles: []
+        }
+      }
     })
   })
 
@@ -70,7 +69,7 @@ describe("Settings page", () => {
     id: 1,
     username: "username1",
     name: "Test User",
-    email: "testemail@example.com",
+    email: "testemail@example.com"
   })
 
   beforeEach(() => {
@@ -89,14 +88,14 @@ describe("Settings page", () => {
 
     requestHandler.mockResolvedValue({ data: { currentUser: initialData } })
     mutateHandler.mockResolvedValue({
-      data: { updateUser: { ...newData, updated_at: "soonish" } },
+      data: { updateUser: { ...newData, updated_at: "soonish" } }
     })
     const wrapper = await makeWrapper()
     await wrapper.findComponent({ ref: "form" }).vm.$emit("save", newData)
 
     expect(requestHandler).toHaveBeenCalledTimes(1)
     expect(mutateHandler).toHaveBeenCalledWith({
-      ...newData,
+      ...newData
     })
   })
 

@@ -29,7 +29,7 @@
 <script>
 import { defineComponent } from "vue"
 export default defineComponent({
-  inheritAttrs: false,
+  inheritAttrs: false
 })
 </script>
 
@@ -38,24 +38,24 @@ import { ref, useSlots } from "vue"
 defineProps({
   label: {
     type: String,
-    default: "Password",
+    default: "Password"
   },
   modelValue: {
     type: String,
-    default: "",
+    default: ""
   },
   autocomplete: {
     default: "current-password",
-    type: String,
+    type: String
   },
   outlined: {
     type: Boolean,
-    default: false,
+    default: false
   },
   error: {
     type: [String, Boolean],
-    default: false,
-  },
+    default: false
+  }
 })
 
 defineEmits(["update:modelValue"])

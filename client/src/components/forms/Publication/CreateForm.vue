@@ -48,21 +48,21 @@ import { useExternalResultFromGraphQL } from "src/use/forms"
 
 const emit = defineEmits(["created"])
 const newPublication = reactive({
-  name: "",
+  name: ""
 })
 
 const publicationRules = {
   name: {
     required,
-    maxLength: maxLength(256),
-  },
+    maxLength: maxLength(256)
+  }
 }
 const { mutate, loading, error } = useMutation(CREATE_PUBLICATION, {
-  refetchQueries: ["GetPublications"],
+  refetchQueries: ["GetPublications"]
 })
 
 const pubV$ = useVuelidate(publicationRules, newPublication, {
-  ...useExternalResultFromGraphQL(newPublication, error),
+  ...useExternalResultFromGraphQL(newPublication, error)
 })
 
 function resetForm() {
@@ -73,8 +73,8 @@ function resetForm() {
 const { t } = useI18n()
 const { newStatusMessage } = useFeedbackMessages({
   attrs: {
-    "data-cy": "create_publication_notify",
-  },
+    "data-cy": "create_publication_notify"
+  }
 })
 
 async function submit() {

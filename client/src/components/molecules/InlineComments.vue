@@ -3,7 +3,7 @@
     <section ref="inline_comments_section">
       <div class="q-pa-md">
         <span class="text-h3">{{
-          $t("submissions.inline_comments_heading")
+          $t("submissions.inline_comments.heading")
         }}</span>
       </div>
 
@@ -52,11 +52,13 @@ const inline_comments = computed(() => {
   if (activeComment.value?.new === true) {
     comments.push(activeComment.value)
   }
-  return comments.filter((c) => {
-    return c.deleted_at === null || c.replies?.length > 0
-  }).sort((a, b) => {
-    return a.from - b.from
-  })
+  return comments
+    .filter((c) => {
+      return c.deleted_at === null || c.replies?.length > 0
+    })
+    .sort((a, b) => {
+      return a.from - b.from
+    })
 })
 
 function scrollToTop() {

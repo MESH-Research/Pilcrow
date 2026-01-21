@@ -11,6 +11,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Str;
 use Illuminate\Testing\Fluent\AssertableJson;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\ApiTestCase;
 
 class SubmissionTest extends ApiTestCase
@@ -59,26 +60,26 @@ class SubmissionTest extends ApiTestCase
                     }
                 }
             }',
-            [ 'id' => $submission->id ]
+            ['id' => $submission->id]
         );
 
-        $response->assertJson(fn (AssertableJson $json) =>
-            $json
-                ->has('data', fn ($json) =>
-                    $json->has('submission', fn ($json) =>
-                        $json->has('reviewers', 1, fn ($json) =>
-                            $json->where('id', (string)$reviewer->id))
-                        ->has('submitters', 1, fn ($json) =>
-                            $json->where('id', (string)$submitter->id))
-                        ->has('review_coordinators', 1, fn ($json) =>
-                            $json->where('id', (string)$reviewCoordinator->id))
-                        ->etc())));
+        $response->assertJson(fn(AssertableJson $json) =>
+        $json
+            ->has('data', fn($json) =>
+            $json->has('submission', fn($json) =>
+            $json->has('reviewers', 1, fn($json) =>
+            $json->where('id', (string)$reviewer->id))
+                ->has('submitters', 1, fn($json) =>
+                $json->where('id', (string)$submitter->id))
+                ->has('review_coordinators', 1, fn($json) =>
+                $json->where('id', (string)$reviewCoordinator->id))
+                ->etc())));
     }
 
     /**
-     * @dataProvider submissionRolesProvider
      * @return void
      */
+    #[DataProvider('submissionRolesProvider')]
     public function testAllSubmissionRolesCanViewSubmission($role)
     {
         /** @var User $user */
@@ -96,7 +97,7 @@ class SubmissionTest extends ApiTestCase
                     id
                 }
             }',
-            [ 'id' => $submission->id ]
+            ['id' => $submission->id]
         );
 
         $response->assertJsonPath('data.submission.id', (string)$submission->id);
@@ -124,7 +125,7 @@ class SubmissionTest extends ApiTestCase
                     id
                 }
             }',
-            [ 'id' => $submission->id ]
+            ['id' => $submission->id]
         );
 
         $response->assertJsonPath('data.submission.id', (string)$submission->id);
@@ -132,42 +133,42 @@ class SubmissionTest extends ApiTestCase
 
     public function testOtherUsersCannotViewSubmission()
     {
-         /** @var User $user */
-         $user = User::factory()->create();
-         $this->actingAs($user);
+        /** @var User $user */
+        $user = User::factory()->create();
+        $this->actingAs($user);
 
-         $submission = Submission::factory()
-             ->create([
-                 'title' => 'Test Submission',
-             ]);
-         $response = $this->graphQL(
-             'query GetSubmission($id: ID!) {
+        $submission = Submission::factory()
+            ->create([
+                'title' => 'Test Submission',
+            ]);
+        $response = $this->graphQL(
+            'query GetSubmission($id: ID!) {
                  submission (id: $id) {
                      id
                  }
              }',
-             [ 'id' => $submission->id ]
-         );
+            ['id' => $submission->id]
+        );
 
-         $response->assertJsonPath('errors.0.message', 'UNAUTHORIZED');
+        $response->assertJsonPath('errors.0.message', 'UNAUTHORIZED');
     }
 
     public function testGuestsCannotViewSubmission()
     {
-         $submission = Submission::factory()
-             ->create([
-                 'title' => 'Test Submission',
-             ]);
-         $response = $this->graphQL(
-             'query GetSubmission($id: ID!) {
+        $submission = Submission::factory()
+            ->create([
+                'title' => 'Test Submission',
+            ]);
+        $response = $this->graphQL(
+            'query GetSubmission($id: ID!) {
                  submission (id: $id) {
                      id
                  }
              }',
-             [ 'id' => $submission->id ]
-         );
+            ['id' => $submission->id]
+        );
 
-         $response->assertJsonPath('errors.0.message', 'This action is unauthorized.');
+        $response->assertJsonPath('errors.0.message', 'This action is unauthorized.');
     }
 
     /**
@@ -197,7 +198,7 @@ class SubmissionTest extends ApiTestCase
                     }
                 }
             }',
-            [ 'id' => $publication->id ]
+            ['id' => $publication->id]
         );
         $expected_data = [
             'publication' => [
@@ -246,7 +247,7 @@ class SubmissionTest extends ApiTestCase
                     }
                 }
             }',
-            [ 'id' => $user->id ]
+            ['id' => $user->id]
         );
         $expected_data = [
             'user' => [
@@ -456,9 +457,9 @@ class SubmissionTest extends ApiTestCase
     }
 
     /**
-     * @dataProvider submissionRolesProvider
      * @return void
      */
+    #[DataProvider('submissionRolesProvider')]
     public function testApplicationAdminCanUpdateAnyUserRole($role)
     {
         $this->beAppAdmin();
@@ -472,19 +473,19 @@ class SubmissionTest extends ApiTestCase
 
         $response = $this->executeSubmissionRoleAssignment($role, $submission, $user);
 
-        $response->assertJson(fn (AssertableJson $json) =>
+        $response->assertJson(fn(AssertableJson $json) =>
         $json
-            ->has('data', fn ($json) =>
-                $json->has('updateSubmission', fn ($json) =>
-                    $json->has($role, 1, fn ($json) =>
-                        $json->where('id', (string)$user->id))
-                    ->etc())));
+            ->has('data', fn($json) =>
+            $json->has('updateSubmission', fn($json) =>
+            $json->has($role, 1, fn($json) =>
+            $json->where('id', (string)$user->id))
+                ->etc())));
     }
 
     /**
-     * @dataProvider submissionRolesProvider
      * @return void
      */
+    #[DataProvider('submissionRolesProvider')]
     public function testPublicationAdminsCanUpdateTheirOwnSubmissionsRoles($role)
     {
         /** @var User $publicationAdmin */
@@ -502,19 +503,19 @@ class SubmissionTest extends ApiTestCase
         $user = User::factory()->create();
 
         $response = $this->executeSubmissionRoleAssignment($role, $submission, $user);
-        $response->assertJson(fn (AssertableJson $json) =>
+        $response->assertJson(fn(AssertableJson $json) =>
         $json
-            ->has('data', fn ($json) =>
-                $json->has('updateSubmission', fn ($json) =>
-                    $json->has($role, 1, fn ($json) =>
-                        $json->where('id', (string)$user->id))
-                    ->etc())));
+            ->has('data', fn($json) =>
+            $json->has('updateSubmission', fn($json) =>
+            $json->has($role, 1, fn($json) =>
+            $json->where('id', (string)$user->id))
+                ->etc())));
     }
 
     /**
-     * @dataProvider submissionRolesProvider
      * @return void
      */
+    #[DataProvider('submissionRolesProvider')]
     public function testPublicationAdminsCannotUpdateOtherPublicationSubmissions($role)
     {
         /** @var User $publicationAdmin */
@@ -546,9 +547,9 @@ class SubmissionTest extends ApiTestCase
     }
 
     /**
-     * @dataProvider reviewCoordinatorAssignableRolesProvider
      * @return void
      */
+    #[DataProvider('reviewCoordinatorAssignableRolesProvider')]
     public function testReviewCoordinatorsCanUpdateRolesOnTheirSubmissions($role, $allowed)
     {
         /** @var User $reviewCoordinator */
@@ -572,9 +573,9 @@ class SubmissionTest extends ApiTestCase
     }
 
     /**
-     * @dataProvider submissionRolesProvider
      * @return void
      */
+    #[DataProvider('submissionRolesProvider')]
     public function testReviewersCannotAssignRoles($role)
     {
         /** @var User $reviewer */
@@ -594,10 +595,10 @@ class SubmissionTest extends ApiTestCase
     }
 
     /**
-     * @dataProvider submissionRolesProvider
      * @param string $role
      * @return void
      */
+    #[DataProvider('submissionRolesProvider')]
     public function testMyRoleFields(string $role): void
     {
         /** @var User $user */
@@ -840,9 +841,9 @@ class SubmissionTest extends ApiTestCase
     }
 
     /**
-     * @dataProvider submissionStatesProvider
      * @return void
      */
+    #[DataProvider('submissionStatesProvider')]
     public function testApplicationAdminCanUpdateSubmissionStatus(string $status)
     {
         $this->beAppAdmin();
@@ -851,9 +852,9 @@ class SubmissionTest extends ApiTestCase
     }
 
     /**
-     * @dataProvider submissionStatesProvider
      * @return void
      */
+    #[DataProvider('submissionStatesProvider')]
     public function testPublicationAdminCanUpdateSubmissionStatus(string $status)
     {
         /** @var User $admin */
@@ -869,9 +870,9 @@ class SubmissionTest extends ApiTestCase
     }
 
     /**
-     * @dataProvider submissionStatesProvider
      * @return void
      */
+    #[DataProvider('submissionStatesProvider')]
     public function testEditorCanUpdateSubmissionStatus(string $status)
     {
         /** @var User $editor */
@@ -887,9 +888,9 @@ class SubmissionTest extends ApiTestCase
     }
 
     /**
-     * @dataProvider submissionStatesProvider
      * @return void
      */
+    #[DataProvider('submissionStatesProvider')]
     public function testReviewCoordinatorCanUpdateSubmissionStatus(string $status)
     {
         /** @var User $reviewCoordinator */
@@ -904,9 +905,9 @@ class SubmissionTest extends ApiTestCase
     }
 
     /**
-     * @dataProvider submissionStatesProvider
      * @return void
      */
+    #[DataProvider('submissionStatesProvider')]
     public function testReviewerCannotUpdateSubmissionStatus(string $status)
     {
         /** @var User $reviewer */
@@ -921,9 +922,9 @@ class SubmissionTest extends ApiTestCase
     }
 
     /**
-     * @dataProvider submissionStatesProvider
      * @return void
      */
+    #[DataProvider('submissionStatesProvider')]
     public function testSubmitterCanUpdateSubmissionStatusForDraftSubmissions(string $status)
     {
         /** @var User $submitter */
@@ -939,9 +940,9 @@ class SubmissionTest extends ApiTestCase
     }
 
     /**
-     * @dataProvider submissionStatesProvider
      * @return void
      */
+    #[DataProvider('submissionStatesProvider')]
     public function testSubmitterCannotUpdateSubmissionStatusForInitiallySubmittedSubmissions(string $status)
     {
         /** @var User $submitter */
@@ -1074,9 +1075,9 @@ class SubmissionTest extends ApiTestCase
     }
 
     /**
-     * @dataProvider titleEditDataProvider
      * @return void
      */
+    #[DataProvider('titleEditDataProvider')]
     public function testSubmissionTitleUpdateByRole(string $role, string $title, bool $passes, ?string $message = null)
     {
         switch ($role) {

@@ -52,8 +52,8 @@ import { computed } from "vue"
 const props = defineProps({
   id: {
     type: String,
-    required: true,
-  },
+    required: true
+  }
 })
 
 const { result } = useQuery(GET_PUBLICATION, { id: props.id })

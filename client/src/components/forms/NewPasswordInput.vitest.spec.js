@@ -5,23 +5,23 @@ import NewPasswordInput from "./NewPasswordInput.vue"
 
 import { describe, expect, it } from "vitest"
 
-installQuasarPlugin({plugins: {Dark}})
+installQuasarPlugin({ plugins: { Dark } })
 describe("NewPasswordInput", () => {
   const factory = () =>
-  mount(NewPasswordInput, {
-    props: {
-      complexity: {
-        score: 2,
-        crack_times_display: {
-          offline_slow_hashing_1e4_per_second: "1 week",
-        },
-        feedback: {
-          suggestions: [],
-          warning: "",
-        },
-      },
-    },
-  })
+    mount(NewPasswordInput, {
+      props: {
+        complexity: {
+          score: 2,
+          crack_times_display: {
+            offline_slow_hashing_1e4_per_second: "1 week"
+          },
+          feedback: {
+            suggestions: [],
+            warning: ""
+          }
+        }
+      }
+    })
 
   it("mounts without errors", () => {
     const wrapper = factory()

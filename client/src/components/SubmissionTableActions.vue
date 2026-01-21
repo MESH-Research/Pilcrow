@@ -13,7 +13,7 @@
         data-cy="submission_draft_link"
         :to="{
           name: 'submission:draft',
-          params: { id: props.submission.id },
+          params: { id: props.submission.id }
         }"
       >
         <q-item-section>
@@ -30,7 +30,7 @@
         data-cy="submission_review_link"
         :to="{
           name: 'submission:review',
-          params: { id: props.submission.id },
+          params: { id: props.submission.id }
         }"
       >
         <q-item-section>
@@ -55,7 +55,7 @@
         data-cy="submission_details_link"
         :to="{
           name: 'submission:details',
-          params: { id: props.submission.id },
+          params: { id: props.submission.id }
         }"
       >
         <q-item-section>
@@ -93,7 +93,7 @@
         >
           {{
             $t(
-              `submissions.action.change_status.no_access.${submission.status}`,
+              `submissions.action.change_status.no_access.${submission.status}`
             )
           }}
         </q-tooltip>
@@ -218,7 +218,7 @@
         clickable
         :to="{
           name: 'submission:export',
-          params: { id: submission.id },
+          params: { id: submission.id }
         }"
       >
         <q-item-section>
@@ -254,7 +254,7 @@ import ConfirmStatusChangeDialog from "../components/dialogs/ConfirmStatusChange
 import { useQuasar } from "quasar"
 import {
   useSubmissionExport,
-  useStatusChangeControls,
+  useStatusChangeControls
 } from "src/use/guiElements.js"
 import { ref } from "vue"
 const { dialog } = useQuasar()
@@ -262,12 +262,12 @@ const { dialog } = useQuasar()
 const props = defineProps({
   submission: {
     type: Object,
-    default: () => {},
+    default: () => {}
   },
   actionType: {
     type: String,
-    default: "",
-  },
+    default: ""
+  }
 })
 
 const submissionRef = ref(props.submission)
@@ -281,7 +281,7 @@ function cannotAccessSubmission(submission) {
     "DRAFT",
     "INITIALLY_SUBMITTED",
     "REJECTED",
-    "RESUBMISSION_REQUESTED",
+    "RESUBMISSION_REQUESTED"
   ])
   return (
     nonreviewableStates.has(submission.status) &&
@@ -309,8 +309,8 @@ function dirtyDialog(action, submission) {
     componentProps: {
       action: action,
       submissionId: submission.id,
-      currentStatus: submission.status,
-    },
+      currentStatus: submission.status
+    }
   })
 }
 </script>

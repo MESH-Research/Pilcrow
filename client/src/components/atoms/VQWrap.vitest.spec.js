@@ -1,10 +1,10 @@
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
 import { mount } from "@vue/test-utils"
-import { beforeEach, describe, expect, test, vi } from 'vitest'
-import { provide } from 'vue'
+import { beforeEach, describe, expect, test, vi } from "vitest"
+import { provide } from "vue"
 import VQWrap from "./VQWrap.vue"
 
-vi.mock('vue', async  (importOriginal) => {
+vi.mock("vue", async (importOriginal) => {
   const vue = await importOriginal()
   return {
     ...vue,
@@ -12,14 +12,13 @@ vi.mock('vue', async  (importOriginal) => {
   }
 })
 
-
 installQuasarPlugin()
 describe("VQWrap", () => {
   const makeWrapper = (props) => {
     return mount(VQWrap, {
       props: {
-        ...props,
-      },
+        ...props
+      }
     })
   }
 

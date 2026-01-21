@@ -138,8 +138,8 @@ import { computed } from "vue"
 const props = defineProps({
   id: {
     type: String,
-    required: true,
-  },
+    required: true
+  }
 })
 
 const { result } = useQuery(GET_USER, { id: props.id })

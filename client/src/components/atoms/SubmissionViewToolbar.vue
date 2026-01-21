@@ -9,7 +9,7 @@
         icon="arrow_back_ios_new"
         :to="{
           name: 'submission:details',
-          params: { id: props.submission.id },
+          params: { id: props.submission.id }
         }"
       />
       <q-toolbar-title class="q-pt-xs q-pb-sm col-grow">
@@ -37,7 +37,7 @@ import StatusChangeDropdown from "./StatusChangeDropdown.vue"
 const props = defineProps({
   submission: {
     type: Object,
-    default: null,
-  },
+    default: null
+  }
 })
 </script>

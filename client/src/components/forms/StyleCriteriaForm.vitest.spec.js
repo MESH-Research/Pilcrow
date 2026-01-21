@@ -1,12 +1,11 @@
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
 import { mount, flushPromises } from "@vue/test-utils"
-import { Dialog } from "test/vitest/mockedPlugins"
+import { Dialog } from "app/test/vitest/mockedPlugins"
 import { useFormState } from "src/use/forms"
 import { ref } from "vue"
 import StyleCriteriaForm from "./StyleCriteriaForm.vue"
 
 import { describe, expect, test } from "vitest"
-
 
 installQuasarPlugin({ plugins: { Dialog } })
 describe("StyleCriteriaForm", () => {
@@ -14,13 +13,16 @@ describe("StyleCriteriaForm", () => {
     return mount(StyleCriteriaForm, {
       global: {
         provide: {
-          formState: useFormState({ loading: ref(false) }, { loading:  ref(false) }),
+          formState: useFormState(
+            { loading: ref(false) },
+            { loading: ref(false) }
+          )
         },
-        stubs: ["QEditor"],
+        stubs: ["QEditor"]
       },
       props: {
-        criteria,
-      },
+        criteria
+      }
     })
   }
 
@@ -57,7 +59,7 @@ describe("StyleCriteriaForm", () => {
     //Save event emitted with correct data
     expect(wrapper.emitted("save")).toHaveLength(1)
     expect(wrapper.emitted("save")[0]).toEqual([
-      { id: "", name: "Test Name", description: "", icon: "task_alt" },
+      { id: "", name: "Test Name", description: "", icon: "task_alt" }
     ])
   })
 
@@ -87,8 +89,8 @@ describe("StyleCriteriaForm", () => {
         id: "",
         name: "Test Name",
         description: "Some simple description",
-        icon: "task_alt",
-      },
+        icon: "task_alt"
+      }
     ])
   })
 
@@ -108,8 +110,8 @@ describe("StyleCriteriaForm", () => {
         id: "1",
         name: "Test Name",
         description: "Test Description",
-        icon: "task_alt",
-      },
+        icon: "task_alt"
+      }
     ])
   })
 
@@ -118,10 +120,10 @@ describe("StyleCriteriaForm", () => {
       id: "1",
       name: "Test Name",
       description: "",
-      icon: "initial_icon",
+      icon: "initial_icon"
     })
 
-    Dialog.resolveOk('new-icon')
+    Dialog.resolveOk("new-icon")
     await wrapper.findComponent({ ref: "icon-button" }).trigger("click")
     await flushPromises()
 
@@ -132,8 +134,8 @@ describe("StyleCriteriaForm", () => {
         id: "1",
         name: "Test Name",
         description: "",
-        icon: "new-icon",
-      },
+        icon: "new-icon"
+      }
     ])
   })
 
@@ -142,7 +144,7 @@ describe("StyleCriteriaForm", () => {
       id: "1",
       name: "TestName",
       description: "",
-      icon: "initial_icon",
+      icon: "initial_icon"
     })
 
     Dialog.resolveCancel()

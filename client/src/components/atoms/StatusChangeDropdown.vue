@@ -15,7 +15,7 @@
         :label="$t(`submission.action.${submissionStateButtons[state].action}`)"
         @click="
           submissionStateButtons[state].action &&
-            confirmHandler(submissionStateButtons[state].action)
+          confirmHandler(submissionStateButtons[state].action)
         "
       ></q-btn>
     </q-btn-group>
@@ -26,7 +26,7 @@ import ConfirmStatusChangeDialog from "../dialogs/ConfirmStatusChangeDialog.vue"
 import { useQuasar } from "quasar"
 import {
   useStatusChangeControls,
-  submissionStateButtons,
+  submissionStateButtons
 } from "src/use/guiElements.js"
 import { toRef } from "vue"
 
@@ -35,15 +35,15 @@ const { dialog } = useQuasar()
 const props = defineProps({
   submission: {
     type: Object,
-    default: null,
-  },
+    default: null
+  }
 })
 
 const submissionRef = toRef(props, "submission")
 const {
   statusChangingDisabledByRole,
   statusChangingDisabledByState,
-  nextStates,
+  nextStates
 } = useStatusChangeControls(submissionRef)
 
 async function confirmHandler(action) {
@@ -66,8 +66,8 @@ function dirtyDialog(action) {
     componentProps: {
       action: action,
       submissionId: props.submission.id,
-      currentStatus: props.submission.status,
-    },
+      currentStatus: props.submission.status
+    }
   })
 }
 </script>

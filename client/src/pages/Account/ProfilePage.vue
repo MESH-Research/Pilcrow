@@ -1,5 +1,7 @@
 <template>
-  <h1 class="text-h2 q-pl-md" data-cy="page_heading">{{ $t("account.profile.section_profile") }}</h1>
+  <h1 class="text-h2 q-pl-md" data-cy="page_heading">
+    {{ $t("account.profile.section_profile") }}
+  </h1>
   <profile-metadata-form
     ref="form"
     :profile-metadata="profileMetadata"

@@ -1,23 +1,23 @@
 import { Extension } from "@tiptap/vue-3"
 import { watch } from "vue"
 import { AnnotationPlugin, AnnotationPluginKey } from "./plugin"
-export const Annotation =  Extension.create({
+export const Annotation = Extension.create({
   name: "annotation",
 
   priority: 1000,
 
   addOptions: {
     HTMLAttributes: {
-      class: "annotation",
+      class: "annotation"
     },
-    onUpdate: (decorations) => decorations,
+    onUpdate: (decorations) => decorations
   },
 
   onCreate() {
     const updateAnnotations = (annotations) => {
       const transaction = this.editor.state.tr.setMeta(AnnotationPluginKey, {
         type: "createDecorations",
-        annotations,
+        annotations
       })
 
       this.editor.view.dispatch(transaction)
@@ -42,7 +42,7 @@ export const Annotation =  Extension.create({
               type: "addAnnotation",
               from: selection.from,
               to: selection.to,
-              data,
+              data
             })
           }
 
@@ -55,7 +55,7 @@ export const Annotation =  Extension.create({
             state.tr.setMeta(AnnotationPluginKey, {
               type: "updateAnnotation",
               id,
-              data,
+              data
             })
           }
 
@@ -67,12 +67,12 @@ export const Annotation =  Extension.create({
           if (dispatch) {
             state.tr.setMeta(AnnotationPluginKey, {
               type: "deleteAnnotation",
-              id,
+              id
             })
           }
 
           return true
-        },
+        }
     }
   },
 
@@ -81,8 +81,8 @@ export const Annotation =  Extension.create({
       AnnotationPlugin({
         HTMLAttributes: this.options.HTMLAttributes,
         onUpdate: this.options.onUpdate,
-        instance: this.options.instance,
-      }),
+        instance: this.options.instance
+      })
     ]
-  },
+  }
 })

@@ -17,13 +17,13 @@ export default {
   props: {
     label: {
       type: String,
-      default: "",
+      default: ""
     },
     value: {
       type: String,
-      default: "",
-    },
+      default: ""
+    }
   },
-  emits: ["editClick"],
+  emits: ["editClick"]
 }
 </script>

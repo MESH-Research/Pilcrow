@@ -9,6 +9,7 @@ use App\Models\Submission;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class UserTest extends TestCase
@@ -23,23 +24,23 @@ class UserTest extends TestCase
     {
         return [
             'admin' => [
-                'role_ids' => [1,2,3,4,5,6],
+                'role_ids' => [1, 2, 3, 4, 5, 6],
                 'expected' => 1,
             ],
             'pub admin' => [
-                'role_ids' => [2,3,4,5,6],
+                'role_ids' => [2, 3, 4, 5, 6],
                 'expected' => 2,
             ],
             'editor' => [
-                'role_ids' => [3,4,5,6],
+                'role_ids' => [3, 4, 5, 6],
                 'expected' => 3,
             ],
             'review coordinator' => [
-                'role_ids' => [4,5,6],
+                'role_ids' => [4, 5, 6],
                 'expected' => 4,
             ],
             'reviewer' => [
-                'role_ids' => [5,6],
+                'role_ids' => [5, 6],
                 'expected' => 5,
             ],
             'submitter' => [
@@ -84,9 +85,9 @@ class UserTest extends TestCase
     }
 
     /**
-     * @dataProvider rolesAndExpectationsProvider
      * @return void
      */
+    #[DataProvider('rolesAndExpectationsProvider')]
     public function testHighestPrivilegedRole($role_ids, $expected)
     {
         /** @var User $user */

@@ -6,8 +6,7 @@ import { describe, expect, it } from "vitest"
 
 installQuasarPlugin()
 describe("PasswordInputComponent", () => {
-  const factory = () => mount(PasswordInput, {
-  })
+  const factory = () => mount(PasswordInput, {})
 
   it("mounts without errors", () => {
     const wrapper = factory()

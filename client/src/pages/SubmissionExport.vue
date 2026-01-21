@@ -13,7 +13,7 @@
           :label="$t('submissions.details_heading')"
           :to="{
             name: 'submission:details',
-            params: { id: submission.id },
+            params: { id: submission.id }
           }"
         />
         <q-breadcrumbs-el :label="$t(`export.title`)" />
@@ -41,15 +41,19 @@
 import { computed } from "vue"
 import { GET_SUBMISSION } from "src/graphql/queries"
 import { useQuery } from "@vue/apollo-composable"
-const { result } = useQuery(GET_SUBMISSION, { id: props.id })
 const submission = computed(() => {
   return result.value?.submission
 })
 const props = defineProps({
   id: {
     type: String,
-    required: true,
-  },
+    required: true
+  }
 })
-const blob = computed(() => URL.createObjectURL(new Blob([submission.value.content.data], { type: "text/html"})))
+const { result } = useQuery(GET_SUBMISSION, { id: props.id })
+const blob = computed(() =>
+  URL.createObjectURL(
+    new Blob([submission.value.content.data], { type: "text/html" })
+  )
+)
 </script>

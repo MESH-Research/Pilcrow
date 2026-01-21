@@ -18,7 +18,7 @@
         class="text-caption"
         :aria-label="
           $t('submissions.comment.dateLabelUpdated', {
-            date: relativeUpdatedTime,
+            date: relativeUpdatedTime
           })
         "
       >
@@ -57,8 +57,8 @@ const timeAgo = useTimeAgo()
 const props = defineProps({
   comment: {
     type: Object,
-    required: true,
-  },
+    required: true
+  }
 })
 const createdDate = computed(() => {
   return DateTime.fromISO(props.comment.created_at)

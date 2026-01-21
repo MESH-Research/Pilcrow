@@ -53,8 +53,8 @@ export default {
   props: {
     items: {
       type: Array,
-      default: () => [],
-    },
+      default: () => []
+    }
   },
   setup(props) {
     const route = useRoute()
@@ -70,6 +70,6 @@ export default {
       }
     }
     return { isActive, activeRoute }
-  },
+  }
 }
 </script>

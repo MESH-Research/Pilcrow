@@ -1,6 +1,6 @@
 /* eslint-env node */
 
-require('dotenv').config()
+require("dotenv").config()
 
 /*
  * This file runs in a Node context (it's NOT transpiled by Babel), so use only
@@ -10,9 +10,9 @@ require('dotenv').config()
 // Configuration for your app
 // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js
 
-const { configure } = require("quasar/wrappers")
+import { defineConfig } from "#q-app/wrappers"
 
-module.exports = configure(function (/* ctx */) {
+export default defineConfig(function (/* ctx */) {
   return {
     eslint: {
       // fix: true,
@@ -20,7 +20,7 @@ module.exports = configure(function (/* ctx */) {
       // exclude = [],
       // rawOptions = {},
       warnings: true,
-      errors: true,
+      errors: true
     },
 
     // https://v2.quasar.dev/quasar-cli/prefetch-feature
@@ -46,16 +46,28 @@ module.exports = configure(function (/* ctx */) {
 
       "roboto-font", // optional, you are not bound to it
       "material-icons", // optional, you are not bound to it
-      "material-icons-outlined",
+      "material-icons-outlined"
     ],
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#build
     build: {
       target: {
         browser: ["es2019", "edge88", "firefox78", "chrome87", "safari13.1"],
-        node: "node20",
+        node: "node20"
       },
-
+      extendViteConf(viteConf) {
+        viteConf.experimental = viteConf.experimental || {}
+        viteConf.experimental.renderBuiltUrl = function (
+          filename,
+          { hostType }
+        ) {
+          if (hostType === "js") {
+            return { runtime: `window.__toCdnUrl(${JSON.stringify(filename)})` }
+          } else {
+            return { relative: true }
+          }
+        }
+      },
       vueRouterMode: "history", // available values: 'hash', 'history'
       env: {
         VERSION: process.env.VERSION ?? undefined,
@@ -64,8 +76,9 @@ module.exports = configure(function (/* ctx */) {
         APP_BANNER: process.env.APP_BANNER ?? undefined,
         APP_BANNER_CLASS: process.env.APP_BANNER_CLASS ?? undefined,
         APP_BANNER_LINK: process.env.APP_BANNER_LINK ?? undefined,
-        NOVU_APPLICATION_IDENTIFIER: process.env.VUE_APP_NOVU_APPLICATION_IDENTIFIER ?? undefined,
-        NOVU_BASE_API_URL: process.env.VUE_APP_NOVU_BASE_API_URL ?? undefined,
+        NOVU_APPLICATION_IDENTIFIER:
+          process.env.VUE_APP_NOVU_APPLICATION_IDENTIFIER ?? undefined,
+        NOVU_BASE_API_URL: process.env.VUE_APP_NOVU_BASE_API_URL ?? undefined
       },
       // vueRouterBase,
       // vueDevtools,
@@ -87,6 +100,20 @@ module.exports = configure(function (/* ctx */) {
       // vitePlugins: [
       //   [ 'package-name', { ..options.. } ]
       // ]
+      vitePlugins: [
+        [
+          "vite-plugin-checker",
+          {
+            eslint: {
+              lintCommand:
+                'eslint -c ./eslint.config.js "./src*/**/*.{js,mjs,cjs,vue}"',
+              useFlatConfig: true
+            }
+          },
+          { server: false }
+        ]
+      ],
+      useFilenameHashes: false
     },
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#devServer
@@ -96,7 +123,9 @@ module.exports = configure(function (/* ctx */) {
       https: false,
       hmr: {
         clientPort: 443,
+        path: "/__hmr"
       },
+      allowedHosts: ["localhost", "pilcrow.lndo.site"]
     },
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#framework
@@ -109,13 +138,7 @@ module.exports = configure(function (/* ctx */) {
       // directives: [],
 
       // Quasar plugins
-      plugins: [
-        "Cookies",
-        "Dialog",
-        "SessionStorage",
-        "LocalStorage",
-        "Notify",
-      ],
+      plugins: ["Cookies", "Dialog", "SessionStorage", "LocalStorage", "Notify"]
     },
 
     // animations: 'all', // --- includes all animations
@@ -151,8 +174,8 @@ module.exports = configure(function (/* ctx */) {
       // (gets superseded if process.env.PORT is specified at runtime)
 
       middlewares: [
-        "render", // keep this as last one
-      ],
+        "render" // keep this as last one
+      ]
     },
 
     // https://v2.quasar.dev/quasar-cli/developing-pwa/configuring-pwa
@@ -161,7 +184,7 @@ module.exports = configure(function (/* ctx */) {
       injectPwaMetaTags: true,
       swFilename: "sw.js",
       manifestFilename: "manifest.json",
-      useCredentialsForManifestTag: false,
+      useCredentialsForManifestTag: false
       // useFilenameHashes: true,
       // extendGenerateSWOptions (cfg) {}
       // extendInjectManifestOptions (cfg) {},
@@ -176,7 +199,7 @@ module.exports = configure(function (/* ctx */) {
 
     // Full list of options: https://v2.quasar.dev/quasar-cli/developing-capacitor-apps/configuring-capacitor
     capacitor: {
-      hideSplashscreen: true,
+      hideSplashscreen: true
     },
 
     // Full list of options: https://v2.quasar.dev/quasar-cli/developing-electron-apps/configuring-electron
@@ -202,16 +225,16 @@ module.exports = configure(function (/* ctx */) {
       builder: {
         // https://www.electron.build/configuration/configuration
 
-        appId: "pilcrow-client",
-      },
+        appId: "pilcrow-client"
+      }
     },
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/developing-browser-extensions/configuring-bex
     bex: {
-      contentScripts: ["my-content-script"],
+      contentScripts: ["my-content-script"]
 
       // extendBexScriptsConf (esbuildConf) {}
       // extendBexManifestJson (json) {}
-    },
+    }
   }
 })

@@ -188,7 +188,7 @@ class SubmissionSeeder extends Seeder
         $submission_content->submission_file_id = $submission_file->id;
         $submission_content->save();
 
-        $submission_file->import_status = SubmissionFileImportStatus::Success();
+        $submission_file->import_status = SubmissionFileImportStatus::Success;
         $submission_file->save();
 
         $submission->updated_by = 2;

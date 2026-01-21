@@ -3,14 +3,16 @@
     <q-toolbar class="flex flex-center text-caption">
       <div class="footer-text">
         <span>{{ $t(`footer.footer_text`) }}</span>
-        <a href="https://github.com/MESH-Research/Pilcrow">{{ $t(`footer.site_title`) }}</a>
+        <a href="https://github.com/MESH-Research/Pilcrow">{{
+          $t(`footer.site_title`)
+        }}</a>
         <span v-if="version">
           &nbsp;
-          <component :is="version_url ? 'a' : 'span'" :href="version_url">
+          <component :is="versionUrl ? 'a' : 'span'" :href="versionUrl">
             {{ version }}
           </component>
           <q-tooltip v-if="parsedDate && !parsedDate.invalid">
-            {{ parsedDate.toFormat("dd-LLL-yyyy T") }} ({{ version_age }})
+            {{ parsedDate.toFormat("dd-LLL-yyyy T") }} ({{ versionAge }})
           </q-tooltip>
         </span>
       </div>
@@ -20,17 +22,29 @@
 
 <script setup>
 import { useTimeAgo } from "src/use/timeAgo"
+import { onMounted, ref } from "vue"
 import { DateTime } from "luxon"
 
 const timeAgo = useTimeAgo()
 
-const version = process.env.VERSION
-const version_url = process.env.VERSION_URL
-const version_date = process.env.VERSION_DATE
+const parsedDate = ref("")
+const version = ref("")
+const versionAge = ref("")
+const versionUrl = ref("")
+const versionDate = ref("")
 
-const parsedDate = version_date ? DateTime.fromISO(version_date) : undefined
-const version_age =
-  parsedDate && !parsedDate.invalid
-    ? timeAgo.format(parsedDate.toJSDate(), "long")
+onMounted(async () => {
+  const response = await fetch("/version.json")
+  const data = await response.json()
+  version.value = data.version || ""
+  versionUrl.value = data.versionUrl || ""
+  versionDate.value = data.versionDate || ""
+  parsedDate.value = versionDate.value
+    ? DateTime.fromISO(versionDate.value)
     : undefined
+  versionAge.value =
+    parsedDate.value && !parsedDate.value.invalid
+      ? timeAgo.format(parsedDate.value.toJSDate(), "long")
+      : ""
+})
 </script>

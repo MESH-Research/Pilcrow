@@ -20,7 +20,7 @@
       <div>
         {{
           $t("submissions.comment.reference.in_reply_to", {
-            username: referencedComment.created_by.username,
+            username: referencedComment.created_by.username
           })
         }}
       </div>
@@ -35,12 +35,12 @@ import AvatarImage from "./AvatarImage.vue"
 const props = defineProps({
   comment: {
     type: Object,
-    required: true,
+    required: true
   },
   replies: {
     type: Array,
-    required: true,
-  },
+    required: true
+  }
 })
 
 const referencedComment = computed(() => {

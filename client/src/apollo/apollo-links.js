@@ -7,7 +7,7 @@ const cookieXsrfToken = () => Cookies.get("XSRF-TOKEN")
 
 const fetchXsrfToken = async () => {
   return fetch("/sanctum/csrf-cookie", {
-    credentials: "same-origin",
+    credentials: "same-origin"
   }).then(async (response) => {
     //Read response text (even though its empty) to prevent the browser from thinking there's an error b/c no one read the (empty) response body.
     await response.text()
@@ -27,8 +27,8 @@ const withXsrfLink = setContext((_, { headers }) => {
     const context = {
       headers: {
         ...headers,
-        "X-XSRF-TOKEN": xsrfToken,
-      },
+        "X-XSRF-TOKEN": xsrfToken
+      }
     }
     return context
   }
@@ -37,8 +37,8 @@ const withXsrfLink = setContext((_, { headers }) => {
     return {
       headers: {
         ...headers,
-        "X-XSRF-TOKEN": token,
-      },
+        "X-XSRF-TOKEN": token
+      }
     }
   })
 })
@@ -56,15 +56,15 @@ const expiredTokenLink = onError(({ operation, forward, networkError }) => {
           operation.setContext({
             headers: {
               ...oldHeaders,
-              "X-XSRF-TOKEN": newXsrfToken,
-            },
+              "X-XSRF-TOKEN": newXsrfToken
+            }
           })
         })
         .then(() => {
           const subscriber = {
             next: observer.next.bind(observer),
             error: observer.error.bind(observer),
-            complete: observer.complete.bind(observer),
+            complete: observer.complete.bind(observer)
           }
 
           forward(operation).subscribe(subscriber)

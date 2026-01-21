@@ -1,5 +1,5 @@
 import { mount } from "vue-composable-tester"
-import { createMockClient } from "test/vitest/utils"
+import { createMockClient } from "app/test/vitest/utils"
 import { useCurrentUser, useLogin } from "./user"
 import { DefaultApolloClient } from "@vue/apollo-composable"
 import { CURRENT_USER } from "src/graphql/queries"
@@ -7,31 +7,28 @@ import { LOGIN } from "src/graphql/mutations"
 import { provide } from "vue"
 import { flushPromises } from "@vue/test-utils"
 
-import { describe, test, expect, vi } from 'vitest'
+import { describe, test, expect, vi } from "vitest"
 
-vi.mock('quasar', async (importOriginal) => {
+vi.mock("quasar", async (importOriginal) => {
   const original = await importOriginal()
   return original
 })
 
 describe("useCurrentUser composable", () => {
   const mountComposable = (mocks) => {
-    const mockClient = createMockClient({connectToDevTools: false})
+    const mockClient = createMockClient({ connectToDevTools: false })
     mocks.forEach((m) => mockClient.setRequestHandler(...m))
     const { result } = mount(() => useCurrentUser(), {
       provider: () => {
         provide(DefaultApolloClient, mockClient)
-      },
+      }
     })
     return { mockClient, result }
   }
 
   test("when a user is not logged in", async () => {
     const { result } = mountComposable([
-      [
-        CURRENT_USER,
-        vi.fn().mockResolvedValue({ data: { currentUser: null } }),
-      ],
+      [CURRENT_USER, vi.fn().mockResolvedValue({ data: { currentUser: null } })]
     ])
 
     await flushPromises()
@@ -52,13 +49,13 @@ describe("useCurrentUser composable", () => {
           email_verified_at: "2021-08-14 02:26:32",
           highest_privileged_role: "tester",
           roles: [{ name: "tester" }],
-          abilities: [{ name: "doStuff" }],
-        },
-      },
+          abilities: [{ name: "doStuff" }]
+        }
+      }
     }
 
     const { result } = mountComposable([
-      [CURRENT_USER, vi.fn().mockResolvedValue(response)],
+      [CURRENT_USER, vi.fn().mockResolvedValue(response)]
     ])
     await flushPromises()
     expect(result.currentUser.value).not.toBeNull()
@@ -69,11 +66,11 @@ describe("useCurrentUser composable", () => {
 
 describe("useLogin composable", () => {
   const mountComposable = () => {
-    const mockClient = createMockClient({connectToDevTools: false})
+    const mockClient = createMockClient({ connectToDevTools: false })
     const { result } = mount(() => useLogin(), {
       provider: () => {
         provide(DefaultApolloClient, mockClient)
-      },
+      }
     })
     return { mockClient, result }
   }
@@ -109,10 +106,10 @@ describe("useLogin composable", () => {
           message: "Invalid credentials supplied",
           extensions: {
             code: "CREDENTIALS_INVALID",
-            category: "authentication",
-          },
-        },
-      ],
+            category: "authentication"
+          }
+        }
+      ]
     })
     mockClient.setRequestHandler(LOGIN, mutateHandler)
 
@@ -131,34 +128,31 @@ describe("useLogin composable", () => {
           message: "Invalid credentials supplied",
           extensions: {
             code: "CREDENTIALS_INVALID",
-            category: "authentication",
-          },
+            category: "authentication"
+          }
         },
         {
           message: "Invalid credentials supplied",
           extensions: {
             code: "ANOTHER_ERROR",
-            category: "authentication",
-          },
-        },
-      ],
+            category: "authentication"
+          }
+        }
+      ]
     })
 
     await expect(result.loginUser()).rejects.toThrow("MULTIPLE_ERROR_CODES")
   })
 
   test("fetches redirectUrl from session storage", () => {
-    const mock = vi.spyOn(window.sessionStorage, 'getItem')
+    const mock = vi.spyOn(window.sessionStorage, "getItem")
     mock.mockReturnValue("/redirect")
     let { result } = mountComposable()
 
     expect(result.redirectUrl).toBe("/redirect")
 
-    mock.mockReset().mockReturnValue(null)
-
-    ({ result } = mountComposable())
+    mock.mockReset().mockReturnValue(null)(({ result } = mountComposable()))
 
     expect(result.redirectUrl).toBe("/dashboard")
-
   })
 })

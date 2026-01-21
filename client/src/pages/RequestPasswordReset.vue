@@ -74,15 +74,15 @@ import { useGraphErrors } from "src/use/errors"
 
 const errorMessagesList = ref([])
 const address = reactive({
-  email: "",
+  email: ""
 })
 const { mutate: request } = useMutation(REQUEST_PASSWORD_RESET)
 const status = ref("")
 const rules = {
   email: {
     email,
-    required,
-  },
+    required
+  }
 }
 const { errorMessages, graphQLErrorCodes } = useGraphErrors()
 const v$ = useVuelidate(rules, address)
@@ -93,7 +93,7 @@ const handleSubmit = async function () {
   try {
     status.value = "submitting"
     await request({
-      email: address.email,
+      email: address.email
     })
     status.value = "submitted"
   } catch (error) {

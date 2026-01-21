@@ -153,36 +153,36 @@ const props = defineProps({
    */
   modelValue: {
     type: Array,
-    default: () => [],
+    default: () => []
   },
   /**
    * Icon to prepend to input
    */
   inputIcon: {
     type: String,
-    default: "",
+    default: ""
   },
   /**
    * Vuelidate valdiation rules to apply to new and edited items
    */
   rules: {
     type: Object,
-    default: () => {},
+    default: () => {}
   },
   /**
    * Translation root to use for label, hint, etc.
    */
   t: {
     type: String,
-    default: "lists",
+    default: "lists"
   },
   /**
    * Set true to allow duplicates items in list.
    */
   allowDuplicates: {
     type: Boolean,
-    default: false,
-  },
+    default: false
+  }
 })
 
 const emit = defineEmits(["update:modelValue"])
@@ -191,14 +191,14 @@ const itemUnderEdit = ref(false)
 
 const form = reactive({
   addItemValue: "",
-  editItemValue: "",
+  editItemValue: ""
 })
 
 const noNewDuplicate = (value) => !props.modelValue.includes(value)
 const noExistingDuplicate = (value) => {
   const otherEntries = [
     ...props.modelValue.slice(0, itemUnderEdit.value),
-    ...props.modelValue.slice(itemUnderEdit.value + 1),
+    ...props.modelValue.slice(itemUnderEdit.value + 1)
   ]
   return !otherEntries.includes(value)
 }
@@ -206,12 +206,12 @@ const noopRule = () => true
 const vRules = {
   addItemValue: {
     ...props.rules,
-    duplicate: props.allowDuplicates ? noopRule : noNewDuplicate,
+    duplicate: props.allowDuplicates ? noopRule : noNewDuplicate
   },
   editItemValue: {
     ...props.rules,
-    duplicate: props.allowDuplicates ? noopRule : noExistingDuplicate,
-  },
+    duplicate: props.allowDuplicates ? noopRule : noExistingDuplicate
+  }
 }
 const v$ = useVuelidate(vRules, form)
 
@@ -232,7 +232,7 @@ function deleteItem(index) {
    */
   emit("update:modelValue", [
     ...props.modelValue.slice(0, index),
-    ...props.modelValue.slice(index + 1),
+    ...props.modelValue.slice(index + 1)
   ])
 }
 function editItem(index) {
@@ -256,7 +256,7 @@ function saveEdit() {
     emit("update:modelValue", [
       ...props.modelValue.slice(0, index),
       form.editItemValue,
-      ...props.modelValue.slice(index + 1),
+      ...props.modelValue.slice(index + 1)
     ])
   }
   itemUnderEdit.value = false
@@ -273,7 +273,7 @@ function reorderItem(index, dir) {
   emit("update:modelValue", [
     ...props.modelValue.slice(0, startIndex),
     ...values,
-    ...props.modelValue.slice(startIndex + 2),
+    ...props.modelValue.slice(startIndex + 2)
   ])
 }
 </script>

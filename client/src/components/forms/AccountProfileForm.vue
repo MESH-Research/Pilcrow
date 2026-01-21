@@ -33,13 +33,13 @@ const props = defineProps({
   accountProfile: {
     required: true,
     validator: (v) =>
-      v === null || typeof v === "object" || typeof v === "undefined",
+      v === null || typeof v === "object" || typeof v === "undefined"
   },
   graphqlValidation: {
     required: false,
     type: Object,
-    default: () => ({}),
-  },
+    default: () => ({})
+  }
 })
 const $externalResults = ref({})
 
@@ -47,25 +47,25 @@ watch(
   () => props.graphqlValidation,
   (newValue) => {
     $externalResults.value = newValue.user ?? []
-  },
+  }
 )
 
 const emit = defineEmits(["save"])
 
 const original = computed(() => ({
   password: "",
-  ...pick(props.accountProfile, ["username", "name", "email"]),
+  ...pick(props.accountProfile, ["username", "name", "email"])
 }))
 
 const form = reactive({
   password: "",
-  email: "",
+  email: ""
 })
 
 delete rules.password.required
 
 const v$ = useVuelidate(rules, form, {
-  $externalResults,
+  $externalResults
 })
 
 const { dirty, errorMessage } = inject("formState")

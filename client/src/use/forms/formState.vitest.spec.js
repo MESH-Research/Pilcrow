@@ -1,15 +1,16 @@
-import {
-  useFormState,
-} from "./formState"
+import { useFormState } from "./formState"
 import { ref } from "vue"
-import { describe, test, expect } from 'vitest'
+import { describe, test, expect } from "vitest"
 
 describe("useFormState composable", () => {
   test("form states", () => {
     const queryLoading = ref(false),
       mutationLoading = ref(false)
 
-    const result = useFormState({ loading: queryLoading }, { loading: mutationLoading })
+    const result = useFormState(
+      { loading: queryLoading },
+      { loading: mutationLoading }
+    )
 
     const { state, saved, dirty, errorMessage } = result
 

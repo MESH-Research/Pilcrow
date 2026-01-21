@@ -5,7 +5,7 @@ import { useQuery } from "@vue/apollo-composable"
 
 export function usePagination(doc, options) {
   const opts = defaults(unref(options) || {}, {
-    variables: {},
+    variables: {}
   })
 
   const vars = reactive(Object.assign({ page: 1 }, opts.variables))
@@ -29,7 +29,7 @@ export function usePagination(doc, options) {
   const binds = reactive({
     modelValue: vars.page,
     min: 1,
-    max: 1,
+    max: 1
   })
 
   watchEffect(() => {
@@ -40,7 +40,7 @@ export function usePagination(doc, options) {
   })
 
   const listeners = {
-    "update:modelValue": updatePage,
+    "update:modelValue": updatePage
   }
 
   return {
@@ -50,7 +50,7 @@ export function usePagination(doc, options) {
     binds,
     listeners,
     query: query,
-    vars,
+    vars
   }
 }
 

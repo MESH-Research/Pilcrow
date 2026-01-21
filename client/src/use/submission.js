@@ -11,18 +11,18 @@ export const useSubmissionCreation = () => {
 
   const submission = reactive({
     title: "",
-    acknowledgement: false,
+    acknowledgement: false
   })
   const isTrue = (value) => value === true
 
   const rules = {
     title: {
       required,
-      maxLength: maxLength(512),
+      maxLength: maxLength(512)
     },
     acknowledgement: {
-      isTrue,
-    },
+      isTrue
+    }
   }
   const { currentUser } = useCurrentUser()
   const v$ = useVuelidate(rules, submission)
@@ -31,13 +31,16 @@ export const useSubmissionCreation = () => {
     if (v$.value.$invalid) {
       throw Error("FORM_VALIDATION")
     }
-    const mutationResult = await mutate({
-      title: submission.title,
-      publication_id: publication.value.id,
-      submitter_user_id: currentUser.value.id,
-    }, {
-      refetchQueries: [{ query: CURRENT_USER_SUBMISSIONS }],
-    })
+    const mutationResult = await mutate(
+      {
+        title: submission.title,
+        publication_id: publication.value.id,
+        submitter_user_id: currentUser.value.id
+      },
+      {
+        refetchQueries: [{ query: CURRENT_USER_SUBMISSIONS }]
+      }
+    )
     return mutationResult
   }
 

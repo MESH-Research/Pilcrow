@@ -9,11 +9,11 @@ describe("CollapseToolbar", () => {
   const makeWrapper = (slotContent, props) => {
     return mount(CollapseToolbar, {
       slots: {
-        default: slotContent,
+        default: slotContent
       },
       props: {
-        ...props,
-      },
+        ...props
+      }
     })
   }
   const defaultContent =

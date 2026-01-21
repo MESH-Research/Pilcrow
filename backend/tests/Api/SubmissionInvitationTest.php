@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\ApiTestCase;
 
 class SubmissionInvitationTest extends ApiTestCase
@@ -40,9 +41,9 @@ class SubmissionInvitationTest extends ApiTestCase
               }
             ',
             [
-              'submission_id' => $submission->id,
-              'email' => $valid_email,
-              'message' => '',
+                'submission_id' => $submission->id,
+                'email' => $valid_email,
+                'message' => '',
             ]
         );
         $expected_data = [
@@ -72,9 +73,9 @@ class SubmissionInvitationTest extends ApiTestCase
     }
 
     /**
-     * @dataProvider invalidEmailsProvider
      * @return void
      */
+    #[DataProvider('invalidEmailsProvider')]
     public function testInvalidEmailsCannotBeProvidedInAnInvitation(string $email)
     {
         $this->beAppAdmin();
@@ -95,9 +96,9 @@ class SubmissionInvitationTest extends ApiTestCase
               }
             ',
             [
-              'submission_id' => $submission->id,
-              'email' => $email,
-              'message' => '',
+                'submission_id' => $submission->id,
+                'email' => $email,
+                'message' => '',
             ]
         );
         $responseMessage = $response->json('errors.0.message');
@@ -237,10 +238,10 @@ class SubmissionInvitationTest extends ApiTestCase
     }
 
     /**
-     * @dataProvider variablesProvider
      * @param array $variable
      * @return void
      */
+    #[DataProvider('variablesProvider')]
     public function testBadInputsForTheAcceptanceMutationResultInFailures(array $variable): void
     {
         $this->beAppAdmin();

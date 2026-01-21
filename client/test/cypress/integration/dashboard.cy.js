@@ -1,7 +1,7 @@
 /// <reference types="Cypress" />
 /// <reference path="../support/index.d.ts" />
 
-import { a11yLogViolations } from '../support/helpers'
+import { a11yLogViolations } from "../support/helpers"
 
 describe("Dashboard", () => {
   beforeEach(() => {

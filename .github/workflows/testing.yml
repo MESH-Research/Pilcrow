@@ -1,0 +1,172 @@
+name: Testing
+on:
+  pull_request:
+    paths-ignore:
+      - "helm/**"
+      - ".release-please-manifest.json"
+  merge_group:
+  push:
+    branches:
+      - master
+      - renovate/*
+    paths-ignore:
+      - "helm/**"
+      - ".release-please-manifest.json"
+permissions:
+  packages: write
+concurrency:
+  group: tests-${{ format('{0}-{1}', github.head_ref || github.run_number, github.job) }}
+  cancel-in-progress: true
+
+jobs:
+  changes:
+    name: Check Changes
+    runs-on: ubuntu-24.04
+    outputs:
+      docs: ${{ steps.filter.outputs.docs }}
+      php: ${{ steps.filter.outputs.php }}
+      js: ${{ steps.filter.outputs.js }}
+      client: ${{ steps.filter.outputs.client }}
+      api: ${{ steps.filter.outputs.api }}
+      md: ${{ steps.filter.outputs.md }}
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          predicate-quantifier: "every"
+          filters: |
+            docs:
+              - 'docs/**'
+            php:
+              - 'backend/**'
+              - '**/*.php'
+            client:
+              - 'client/**'
+              - '!**/*.md'
+            api:
+              - 'backend/**'
+              - '!**/*.md'
+            js:
+              - 'client/**'
+              - '**/*.js'
+            md:
+              - '**/*.md'
+  client-unit-test:
+    name: "Client / Unit Test"
+    runs-on: ubuntu-24.04
+    needs: [changes]
+    if: ${{ needs.changes.outputs.client == 'true' }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+      - uses: mesh-research/github-actions/build-image@main
+        id: build-image
+        name: Run Unit Tests
+        with:
+          target: "web-test-ci"
+
+  build-images:
+    name: "Build"
+    runs-on: ubuntu-24.04
+    outputs:
+      version: ${{ steps.build-image.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+      - name: Login to Github Packages
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: mesh-research/github-actions/build-image@main
+        id: build-image
+        name: Build Image
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          push: true
+  backend-unit-test:
+    name: Backend / Unit Test
+    runs-on: ubuntu-24.04
+    needs: [changes]
+    if: ${{ needs.changes.outputs.api == 'true' }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+      - uses: mesh-research/github-actions/build-image@main
+        with:
+          target: "fpm-test-ci"
+  # e2e:
+  #   name: "E2E Test"
+  #   needs: [build-images]
+  #   uses: ./.github/workflows/do-test-e2e.yml
+  #   secrets: inherit
+  #   with:
+  #     version: ${{ needs.build-images.outputs.version }}
+  lint-php:
+    name: PHP Lint
+    runs-on: ubuntu-24.04
+    needs: [changes]
+    if: ${{ needs.changes.outputs.php == 'true' }}
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+      - uses: mesh-research/github-actions/build-image@main
+        with:
+          target: "fpm-lint-ci"
+  lint-js:
+    name: JS Lint
+    runs-on: ubuntu-24.04
+    needs: [changes]
+    if: ${{ needs.changes.outputs.js == 'true' }}
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+      - uses: mesh-research/github-actions/build-image@main
+        with:
+          target: "web-lint-ci"
+  docs-build:
+    name: Docs Build
+    runs-on: ubuntu-24.04
+    needs: [changes]
+    if: ${{ needs.changes.outputs.docs == 'true' }}
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+      - uses: actions/setup-node@v3
+      - run: |
+          cd docs && \
+          yarn install && \
+          yarn docs:build
+      
+  lint-md:
+    name: MD Lint
+    runs-on: ubuntu-24.04
+    needs: [changes]
+    if: ${{ needs.changes.outputs.md == 'true' }}
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          cache: yarn
+          cache-dependency-path: yarn.lock
+      - name: Install dependencies
+        run: yarn install
+      - name: Check MD
+        run: yarn lint:md

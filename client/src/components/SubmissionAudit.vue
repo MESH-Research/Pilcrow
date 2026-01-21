@@ -31,7 +31,7 @@
         v-if="audit.user"
         :to="{
           name: 'user_details',
-          params: { id: audit.user.id },
+          params: { id: audit.user.id }
         }"
       >
         {{ audit.user.name || audit.user.username }}
@@ -95,8 +95,8 @@ import { computed } from "vue"
 const props = defineProps({
   audit: {
     type: Object,
-    required: true,
-  },
+    required: true
+  }
 })
 const timeAgo = useTimeAgo()
 const createdDate = computed(() => {

@@ -31,13 +31,13 @@ const items = [
   {
     icon: "account_circle",
     label: t(`profile.page_title`),
-    url: "/account/profile",
+    url: "/account/profile"
   },
   {
     icon: "o_settings",
     label: t(`settings.page_title`),
-    url: "/account/settings",
-  },
+    url: "/account/settings"
+  }
 ]
 
 const { currentUser } = useCurrentUser()

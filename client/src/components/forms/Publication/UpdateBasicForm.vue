@@ -33,8 +33,8 @@ import useVuelidate from "@vuelidate/core"
 const props = defineProps({
   publication: {
     required: true,
-    validator: (v) => v === null || typeof v === "object",
-  },
+    validator: (v) => v === null || typeof v === "object"
+  }
 })
 const emit = defineEmits(["save"])
 
@@ -50,14 +50,14 @@ const applyDefaults = (obj) => {
 const rules = {
   name: {
     required,
-    maxLength: maxLength(256),
+    maxLength: maxLength(256)
   },
   is_publicly_visible: {
-    boolean: (value) => typeof value === "boolean",
+    boolean: (value) => typeof value === "boolean"
   },
   is_accepting_submissions: {
-    boolean: (value) => typeof value === "boolean",
-  },
+    boolean: (value) => typeof value === "boolean"
+  }
 }
 const form = reactive(applyDefaults({}))
 const original = computed(() => applyDefaults(publication.value))
@@ -66,7 +66,7 @@ const { dirty, errorMessage, mutationError, reset } = inject("formState")
 const { clearErrors: clearGraphQLErrors, $externalResults } =
   useExternalResultFromGraphQL(form, mutationError)
 const v$ = useVuelidate(rules, form, {
-  $externalResults,
+  $externalResults
 })
 watchEffect(() => {
   dirty.value = !isEqual(original.value, form)

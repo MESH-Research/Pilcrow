@@ -7,7 +7,7 @@ export default {
     {
       get(object, key) {
         return key
-      },
+      }
     }
-  ),
+  )
 }

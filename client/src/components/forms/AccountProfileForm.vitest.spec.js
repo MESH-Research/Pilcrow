@@ -4,10 +4,7 @@ import { useFormState } from "src/use/forms"
 import { ref } from "vue"
 import AccountProfileForm from "./AccountProfileForm.vue"
 
-import { describe, expect, test } from 'vitest'
-
-
-
+import { describe, expect, test } from "vitest"
 
 installQuasarPlugin()
 describe("AccountProfileForm", () => {
@@ -15,12 +12,15 @@ describe("AccountProfileForm", () => {
     return mount(AccountProfileForm, {
       global: {
         provide: {
-          formState: useFormState({ loading: ref(false) }, { loading: ref(false) }),
-        },
+          formState: useFormState(
+            { loading: ref(false) },
+            { loading: ref(false) }
+          )
+        }
       },
       props: {
-        accountProfile: {},
-      },
+        accountProfile: {}
+      }
     })
   }
 
@@ -28,8 +28,6 @@ describe("AccountProfileForm", () => {
     const wrapper = makeWrapper()
     expect(wrapper).toBeTruthy()
     //Validation rules are tested as part userValidation, we only need to confirm that password can be empty.
-
-
 
     wrapper
       .findComponent({ ref: "emailInput" })

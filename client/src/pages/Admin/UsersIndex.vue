@@ -1,20 +1,20 @@
 <template>
-    <h2 class="q-pl-lg">All Users</h2>
-    <div v-if="users.length">
-      <user-list-basic
-        ref="user_list_basic"
-        :users="users"
-        action="goToUserDetail"
-        @action-click="handleUserListBasicClick"
-      />
+  <h2 class="q-pl-lg">All Users</h2>
+  <div v-if="users.length">
+    <user-list-basic
+      ref="user_list_basic"
+      :users="users"
+      action="goToUserDetail"
+      @action-click="handleUserListBasicClick"
+    />
 
-      <q-pagination
-        v-model="currentPage"
-        data-cy="user_list_pagination"
-        class="q-pa-lg flex flex-center"
-        :max="lastPage"
-      />
-    </div>
+    <q-pagination
+      v-model="currentPage"
+      data-cy="user_list_pagination"
+      class="q-pa-lg flex flex-center"
+      :max="lastPage"
+    />
+  </div>
 </template>
 
 <script setup>
@@ -48,7 +48,7 @@ async function goToUserDetail(user) {
   const userId = user.id
   push({
     name: "user_details",
-    params: { id: userId },
+    params: { id: userId }
   })
 }
 </script>

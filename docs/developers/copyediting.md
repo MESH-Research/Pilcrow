@@ -45,7 +45,7 @@ The automated testing tools for the application generate two screenshots of each
 | :-----------------------------------: | :-----------------------------: |
 | Translated Page                       | Translation Keys for Page       |
 
-You can download a zip file of these screenshots inside a [recent passing run of the integration test suite](https://github.com/MESH-Research/Pilcrow/actions/workflows/test-e2e.yml). Any workflow run with a green checkmark will do.
+You can download a zip file of these screenshots inside a [recent passing run of the integration test suite](https://github.com/MESH-Research/Pilcrow/actions/workflows/do-test-e2e.yml). Any workflow run with a green checkmark will do.
 
 <img alt="Screenshot of a green checkmark on GitHub" src="./images/checkmarks.png">
 

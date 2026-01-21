@@ -20,26 +20,26 @@ const props = defineProps({
   commentType: {
     type: String,
     required: false,
-    default: null,
+    default: null
   },
   parent: {
     type: Object,
-    default: () => {},
+    default: () => {}
   },
   replyTo: {
     type: Object,
-    default: () => {},
+    default: () => {}
   },
   comment: {
     type: Object,
     required: false,
-    default: null,
-  },
+    default: null
+  }
 })
 const scrollTarget = ref(null)
 defineExpose({
   comment: props.comment,
-  scrollTarget,
+  scrollTarget
 })
 
 defineEmits(["cancel", "submit"])

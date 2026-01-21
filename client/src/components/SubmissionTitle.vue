@@ -81,14 +81,14 @@ const { t } = useI18n()
 
 const rules = {
   required,
-  maxLength: maxLength(512),
+  maxLength: maxLength(512)
 }
 const newPubV$ = useVuelidate(rules, draft_title)
 
 const { newStatusMessage } = useFeedbackMessages({
   attrs: {
-    "data-cy": "submission_title_notify",
-  },
+    "data-cy": "submission_title_notify"
+  }
 })
 
 function checkThatFormIsInvalid() {
@@ -108,7 +108,7 @@ function checkThatFormIsInvalid() {
 }
 
 const { mutate } = useMutation(UPDATE_SUBMISSION_TITLE, {
-  refetchQueries: ["GetSubmission"],
+  refetchQueries: ["GetSubmission"]
 })
 const editing_title = ref(false)
 const submitting_title_edit = ref(false)
@@ -128,7 +128,7 @@ async function saveTitle() {
   try {
     await mutate({
       id: submission.value.id,
-      title: draft_title.value,
+      title: draft_title.value
     })
   } catch (error) {
     newStatusMessage("failure", t("submission.edit_title.unauthorized"))

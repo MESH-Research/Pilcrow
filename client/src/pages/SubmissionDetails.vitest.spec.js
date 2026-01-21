@@ -1,6 +1,6 @@
 import { GET_SUBMISSION } from "src/graphql/queries"
 import { beforeEach, describe, expect, test, vi } from "vitest"
-import { installApolloClient } from "test/vitest/utils"
+import { installApolloClient } from "app/test/vitest/utils"
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
 import { mount, flushPromises } from "@vue/test-utils"
 import { useCurrentUser } from "src/use/user"
@@ -8,19 +8,18 @@ import { ref } from "vue"
 import SubmissionDetailsPage from "./SubmissionDetails.vue"
 
 vi.mock("src/use/user", () => ({
-  useCurrentUser: vi.fn(),
+  useCurrentUser: vi.fn()
 }))
 
-installQuasarPlugin({ plugins: { Notify: vi.fn() }})
+installQuasarPlugin({ plugins: { Notify: vi.fn() } })
 const mockClient = installApolloClient()
 
 describe("submissions details page mount", () => {
-
   const makeWrapper = () =>
     mount(SubmissionDetailsPage, {
       props: {
-        id: "1",
-      },
+        id: "1"
+      }
     })
 
   const submissionUsersData = {
@@ -33,7 +32,7 @@ describe("submissions details page mount", () => {
         name: "Jest Submitter 1",
         username: "jestSubmitter1",
         email: "jestsubmitter1@msu.edu",
-        staged: null,
+        staged: null
       },
       {
         __typename: "User",
@@ -43,8 +42,8 @@ describe("submissions details page mount", () => {
         name: "Jest Submitter 2",
         username: "jestSubmitter2",
         email: "jestsubmitter2@msu.edu",
-        staged: null,
-      },
+        staged: null
+      }
     ],
     reviewers: [
       {
@@ -55,7 +54,7 @@ describe("submissions details page mount", () => {
         name: "Jest Reviewer 1",
         username: "jestReviewer1",
         email: "jestreviewer1@msu.edu",
-        staged: null,
+        staged: null
       },
       {
         __typename: "User",
@@ -65,8 +64,8 @@ describe("submissions details page mount", () => {
         effective_role: "reviewer",
         username: "jestReviewer2",
         email: "jestReviewer2@msu.edu",
-        staged: true,
-      },
+        staged: true
+      }
     ],
     review_coordinators: [
       {
@@ -77,9 +76,9 @@ describe("submissions details page mount", () => {
         name: "Review Coordinator 1",
         username: "jestReviewCoordinator1",
         email: "jestcoordinator1@msu.edu",
-        staged: null,
-      },
-    ],
+        staged: null
+      }
+    ]
   }
 
   const defaultApolloMock = () =>
@@ -92,7 +91,7 @@ describe("submissions details page mount", () => {
           status: 0,
           effective_role: "review_coordinator",
           content: {
-            data: "",
+            data: ""
           },
           audits: [],
           publication: {
@@ -101,11 +100,11 @@ describe("submissions details page mount", () => {
             my_role: null,
             style_criterias: [],
             editors: [],
-            publication_admins: [],
+            publication_admins: []
           },
-          ...submissionUsersData,
-        },
-      },
+          ...submissionUsersData
+        }
+      }
     })
 
   const useCurrentUserValue = {
@@ -117,15 +116,17 @@ describe("submissions details page mount", () => {
       email: "hello@example.com",
       username: "helloUser",
       email_verified_at: "2021-08-14 02:26:32",
-      roles: [{
-        name: "Application Administrator"
-      }],
+      roles: [
+        {
+          name: "Application Administrator"
+        }
+      ]
     }),
     isAppAdmin: ref(true),
     isSubmitter: () => true,
     isReviewCoordinator: () => false,
     isEditor: () => false,
-    isPublicationAdmin: () => false,
+    isPublicationAdmin: () => false
   }
 
   beforeEach(() => {

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Settings;
@@ -12,7 +13,7 @@ class GeneralSettings extends Settings
      *
      * @var string
      */
-    public string $site_name;
+    public string $site_name = 'Pilcrow';
 
     /**
      * Group name

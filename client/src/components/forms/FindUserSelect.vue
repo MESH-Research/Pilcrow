@@ -66,8 +66,8 @@ const props = defineProps({
       prop === null ||
       typeof prop === "object" ||
       typeof prop === "function" ||
-      typeof prop === "string",
-  },
+      typeof prop === "string"
+  }
 })
 const emit = defineEmits(["update:modelValue"])
 

@@ -1,0 +1,103 @@
+suite: Redis Config
+templates:
+  - deployments/app.yaml
+  - configmaps/*
+  - secrets/*
+values:
+  - values/required.yaml
+tests:
+  - it: should set not set a custom secret if using subchart redis
+    template: deployments/app.yaml
+    set:
+      mysql:
+        enabled: true
+      pilcrow:
+        mysql:
+          password:
+            secret:
+              name: "redis-existing-secret"
+              key: "REDIS_PASSWORD"
+    asserts:
+      - contains:
+          any: true
+          path: spec.template.spec.containers[1].env
+          content:
+            name: REDIS_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: RELEASE-NAME-redis
+                key: redis-password
+  - it: should set a custom secret if not using subchart redis
+    template: deployments/app.yaml
+    set:
+      redis:
+        enabled: false
+      pilcrow:
+        redis:
+          password:
+            secret:
+              name: "custom-redis-secret"
+              key: "REDIS_PASSWORD_CUSTOM"
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[1].env
+          content:
+            name: REDIS_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: custom-redis-secret
+                key: REDIS_PASSWORD_CUSTOM
+  - it: should use the default redis secret if a password is supplied and subchart redis is disabled
+    template: deployments/app.yaml
+    set:
+      redis:
+        enabled: false
+      pilcrow:
+        redis:
+          password:
+            secret:
+            value: "test-password"
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[1].env
+          any: true
+          content:
+            name: REDIS_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: RELEASE-NAME-pilcrow-helm-secrets
+                key: REDIS_PASSWORD
+  - it: should set the host to the subchart redis service
+    template: configmaps/app.yaml
+    set:
+      reds:
+        enabled: true
+      pilcrow:
+        redis:
+          host: "redis-service-custom"
+    asserts:
+      - equal:
+          path: data.REDIS_HOST
+          value: RELEASE-NAME-redis-master
+  - it: database host required when subchart redis is disabled
+    template: deployments/app.yaml
+    set:
+      redis:
+        enabled: false
+      pilcrow:
+        redis:
+          host:
+    asserts:
+      - failedTemplate: {}
+  - it: should set the redis host to the custom value when subchart redis is disabled
+    template: configmaps/app.yaml
+    set:
+      redis:
+        enabled: false
+      pilcrow:
+        redis:
+          host: "custom-mysql-host"
+    asserts:
+      - equal:
+          path: data.REDIS_HOST
+          value: custom-mysql-host

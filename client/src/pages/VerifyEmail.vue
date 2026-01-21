@@ -67,7 +67,7 @@ onMounted(async () => {
   } catch (error) {
     errorMessagesList.value = errorMessages(
       graphQLErrorCodes(error),
-      "account.failures",
+      "account.failures"
     )
     status.value = "failure"
   }

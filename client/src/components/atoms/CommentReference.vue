@@ -37,22 +37,22 @@ const { t } = useI18n()
 const props = defineProps({
   comment: {
     type: Object,
-    required: true,
-  },
+    required: true
+  }
 })
 
 const unread_name = {
   OverallComment: "mark_unread_chat_alt",
   OverallCommentReply: "mark_unread_chat_alt",
   InlineComment: "mark_chat_unread",
-  InlineCommentReply: "mark_chat_unread",
+  InlineCommentReply: "mark_chat_unread"
 }
 
 const read_name = {
   OverallComment: "chat",
   OverallCommentReply: "chat",
   InlineComment: "chat_bubble",
-  InlineCommentReply: "chat_bubble",
+  InlineCommentReply: "chat_bubble"
 }
 
 const activeComment = inject("activeComment")

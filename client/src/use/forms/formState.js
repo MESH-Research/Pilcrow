@@ -1,4 +1,4 @@
-import { computed,  ref } from "vue"
+import { computed, ref } from "vue"
 
 export function useFormState(query, mutation) {
   const dirty = ref(false)
@@ -43,7 +43,6 @@ export function useFormState(query, mutation) {
     errorMessage,
     mutationError: mutation.error,
     reset,
-    setError,
+    setError
   }
 }
-

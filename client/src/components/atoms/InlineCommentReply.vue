@@ -5,7 +5,7 @@
     :class="{ active: isActive }"
     :aria-label="
       $t('submissions.comment.reply.ariaLabel', {
-        username: comment.created_by.username,
+        username: comment.created_by.username
       })
     "
     data-cy="inlineCommentReply"
@@ -49,16 +49,16 @@ const commentModify = ref(null)
 const props = defineProps({
   parent: {
     type: Object,
-    required: true,
+    required: true
   },
   comment: {
     required: true,
-    type: Object,
+    type: Object
   },
   replies: {
     required: true,
-    type: Array,
-  },
+    type: Array
+  }
 })
 defineEmits(["quoteReplyTo", "replyTo"])
 
@@ -74,7 +74,7 @@ const isActive = computed(() => {
 const scrollTarget = ref(null)
 defineExpose({
   scrollTarget,
-  comment: props.comment,
+  comment: props.comment
 })
 
 function submitReply() {

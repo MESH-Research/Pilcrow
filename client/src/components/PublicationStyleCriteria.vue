@@ -2,25 +2,30 @@
   <q-card flat>
     <q-card-section>
       <q-list separator>
-        <component
-          :is="editId === criteria.id ? StyleCriteriaForm : StyleCriteriaItem"
+        <q-item
           v-for="criteria in publication.style_criterias"
           :key="criteria.id"
           data-cy="listItem"
-          class="criteria-card"
-          :criteria="criteria"
-          :edit-id="editId"
-          @edit="editItem(criteria.id)"
-          @cancel="cancelEdit"
-          @save="saveEdit"
-          @delete="onDelete"
-        />
-        <style-criteria-form
-          v-if="editId == ''"
-          ref="addForm"
-          @cancel="cancelEdit"
-          @save="saveEdit"
-        />
+        >
+          <component
+            :is="editId === criteria.id ? StyleCriteriaForm : StyleCriteriaItem"
+            class="criteria-card"
+            :criteria="criteria"
+            :edit-id="editId"
+            data-cy="criteriaEditForm"
+            @edit="editItem(criteria.id)"
+            @cancel="cancelEdit"
+            @save="saveEdit"
+            @delete="onDelete"
+          />
+        </q-item>
+        <q-item v-if="editId == ''">
+          <style-criteria-form
+            ref="addForm"
+            @cancel="cancelEdit"
+            @save="saveEdit"
+          />
+        </q-item>
       </q-list>
     </q-card-section>
     <q-card-actions v-if="editId === null" align="right">
@@ -44,7 +49,7 @@ import { useFormState } from "src/use/forms"
 import {
   UPDATE_PUBLICATION_STYLE_CRITERIA,
   CREATE_PUBLICATION_STYLE_CRITERIA,
-  DELETE_PUBLICATION_STYLE_CRITERIA,
+  DELETE_PUBLICATION_STYLE_CRITERIA
 } from "src/graphql/mutations"
 import { useMutation } from "@vue/apollo-composable"
 import { useI18n } from "vue-i18n"
@@ -55,13 +60,13 @@ const editId = ref(null)
 const props = defineProps({
   publication: {
     type: Object,
-    required: true,
-  },
+    required: true
+  }
 })
 const publication = toRef(props, "publication")
 
 const variables = {
-  publication_id: publication.value.id,
+  publication_id: publication.value.id
 }
 const { loading: updateLoading, mutate: updateCriteria } = useMutation(
   UPDATE_PUBLICATION_STYLE_CRITERIA,

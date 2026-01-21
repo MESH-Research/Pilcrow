@@ -1,0 +1,119 @@
+suite: Mysql Config
+templates:
+  - deployments/app.yaml
+  - configmaps/*
+  - secrets/*
+values:
+  - values/required.yaml
+tests:
+  - it: should set not set a custom secret if using subchart mysql
+    template: deployments/app.yaml
+    set:
+      mysql:
+        enabled: true
+      pilcrow:
+        mysql:
+          password:
+            secret:
+              name: "mysql-existing-secret"
+              key: "MYSQL_PASSWORD"
+    asserts:
+      - contains:
+          any: true
+          path: spec.template.spec.containers[1].env
+          content:
+            name: DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: RELEASE-NAME-mysql
+                key: mysql-root-password
+  - it: should set a custom secret if not using subchart mysql
+    template: deployments/app.yaml
+    set:
+      mysql:
+        enabled: false
+      pilcrow:
+        mysql:
+          password:
+            secret:
+              name: "custom-mysql-secret"
+              key: "MYSQL_PASSWORD"
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[1].env
+          content:
+            name: DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: custom-mysql-secret
+                key: MYSQL_PASSWORD
+  - it: should use the default secret if a password is supplied and subchart mysql is disabled
+    template: deployments/app.yaml
+    set:
+      mysql:
+        enabled: false
+      pilcrow:
+        mysql:
+          password:
+            secret:
+            value: "test-password"
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[1].env
+          any: true
+          content:
+            name: DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: RELEASE-NAME-pilcrow-helm-secrets
+                key: DB_PASSWORD
+  - it: should set the database host to the subchart mysql service
+    template: configmaps/app.yaml
+    set:
+      mysql:
+        enabled: true
+      pilcrow:
+        mysql:
+          host: "mysql-service-custom"
+    asserts:
+      - notEqual:
+          path: data.DB_HOST
+          content: mysql-service-custom
+  - it: database host required when subchart mysql is disabled
+    template: deployments/app.yaml
+    set:
+      mysql:
+        enabled: false
+      pilcrow:
+        mysql:
+          host:
+    asserts:
+      - failedTemplate: {}
+  - it: should set the database host to the custom value when subchart mysql is disabled
+    template: configmaps/app.yaml
+    set:
+      mysql:
+        enabled: false
+      pilcrow:
+        mysql:
+          host: "custom-mysql-host"
+    asserts:
+      - equal:
+          path: data.DB_HOST
+          value: custom-mysql-host
+  - it: should set username and database fields when subchart mysql is enabled
+    template: configmaps/app.yaml
+    set:
+      mysql:
+        enabled: true
+      pilcrow:
+        mysql:
+          host: "custom-host"
+          database: "custom-database"
+    asserts:
+      - equal:
+          path: data.DB_USERNAME
+          value: root
+      - equal:
+          path: data.DB_DATABASE
+          value: "pilcrow"

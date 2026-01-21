@@ -6,8 +6,8 @@ export default {
   props: {
     collapse: {
       type: Boolean,
-      default: false,
-    },
+      default: false
+    }
   },
   render: function () {
     if (this.$props.collapse) {
@@ -15,7 +15,7 @@ export default {
         .default()
         .map((vn) =>
           h("q-item", { directives: { ClosePopup } }, [
-            h("q-item-section", {}, [vn]),
+            h("q-item-section", {}, [vn])
           ])
         )
       return h(
@@ -26,6 +26,6 @@ export default {
     } else {
       return h("div", {}, this.$slots.default())
     }
-  },
+  }
 }
 </script>

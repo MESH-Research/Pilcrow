@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Notifications\SubmissionStatusUpdated;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\ApiTestCase;
 
 class NotificationTest extends ApiTestCase
@@ -106,7 +107,7 @@ class NotificationTest extends ApiTestCase
                         [
                             'id' => (string)$user_2->id,
                             'notifications' => [
-                                'data' => [ ],
+                                'data' => [],
                             ],
                         ],
                     ],
@@ -218,26 +219,26 @@ class NotificationTest extends ApiTestCase
     public static function submissionStatesProvider()
     {
         return [
-            'INITIALLY_SUBMITTED' => [ 1 ],
-            'RESUBMISSION_REQUESTED' => [ 2 ],
-            'RESUBMITTED' => [ 3 ],
-            'AWAITING_REVIEW' => [ 4 ],
-            'REJECTED' => [ 5 ],
-            'ACCEPTED_AS_FINAL' => [ 6 ],
-            'EXPIRED' => [ 7 ],
-            'UNDER_REVIEW' => [ 8 ],
-            'AWAITING_DECISION' => [ 9 ],
-            'REVISION_REQUESTED' => [ 10 ],
-            'ARCHIVED' => [ 11 ],
-            'DELETED' => [ 12 ],
+            'INITIALLY_SUBMITTED' => [1],
+            'RESUBMISSION_REQUESTED' => [2],
+            'RESUBMITTED' => [3],
+            'AWAITING_REVIEW' => [4],
+            'REJECTED' => [5],
+            'ACCEPTED_AS_FINAL' => [6],
+            'EXPIRED' => [7],
+            'UNDER_REVIEW' => [8],
+            'AWAITING_DECISION' => [9],
+            'REVISION_REQUESTED' => [10],
+            'ARCHIVED' => [11],
+            'DELETED' => [12],
         ];
     }
 
     /**
-     * @dataProvider submissionStatesProvider
      * @param int $state
      * @return void
      */
+    #[DataProvider('submissionStatesProvider')]
     public function testThatNotificationsAreSentUponSubmissionStatusUpdates($state)
     {
         Notification::fake();

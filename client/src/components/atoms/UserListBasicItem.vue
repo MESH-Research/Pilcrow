@@ -30,18 +30,18 @@ export default {
   props: {
     index: {
       type: Number,
-      default: null,
+      default: null
     },
     user: {
       type: Object,
-      default: () => {},
+      default: () => {}
     },
     action: {
       type: String,
       required: false,
-      default: "",
-    },
+      default: ""
+    }
   },
-  emits: ["actionClick"],
+  emits: ["actionClick"]
 }
 </script>
