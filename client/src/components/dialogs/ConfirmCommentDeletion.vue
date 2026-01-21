@@ -1,5 +1,9 @@
 <template>
-  <q-dialog ref="dialogRef" @hide="onDialogHide">
+  <q-dialog
+    ref="dialogRef"
+    :aria-label="$t(`dialog.deleteComment.aria_label`)"
+    @hide="onDialogHide"
+  >
     <q-card>
       <q-card-section class="row items-center">
         <div class="q-pa-sm q-pr-md column">

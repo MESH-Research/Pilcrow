@@ -105,7 +105,7 @@ describe("Publication Setup", () => {
     cy.dataCy("editBtn").first().click()
     cy.checkA11y(
       {
-        exclude: [['[data-cy="description-input"']] //TODO: Restore this check once quasar #13275 is closed
+        exclude: [['[data-cy="description-input"']] //TODO: Restore this check once Quasar is updated to 2.18.2 or later
       },
       null,
       a11yLogViolations

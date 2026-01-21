@@ -157,6 +157,11 @@ const acceptMore = computed(() => {
 })
 
 const editor = useEditor({
+  editorProps: {
+    attributes: {
+      title: t("submissions.invite_user.message.placeholder")
+    }
+  },
   content: "",
   extensions: [
     StarterKit,
