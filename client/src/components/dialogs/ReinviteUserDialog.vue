@@ -1,5 +1,9 @@
 <template>
-  <q-dialog ref="dialogRef" @hide="onDialogHide">
+  <q-dialog
+    ref="dialogRef"
+    :aria-label="$t(`dialog.reinviteUser.aria_label`)"
+    @hide="onDialogHide"
+  >
     <q-card>
       <q-card-section class="row no-wrap">
         <div class="q-pa-sm q-pr-md column">
@@ -63,7 +67,9 @@ import { useFeedbackMessages } from "src/use/guiElements"
 const { t } = useI18n()
 const { newStatusMessage } = useFeedbackMessages({
   attrs: {
-    "data-cy": "reinvite_notify"
+    "data-cy": "reinvite_notify",
+    role: "alert",
+    "aria-label": t("notifications.active_notification")
   }
 })
 

@@ -1,5 +1,9 @@
 <template>
-  <q-dialog ref="dialogRef" @hide="onDialogHide">
+  <q-dialog
+    ref="dialogRef"
+    :aria-label="$t(`dialog.discardChanges.aria_label`)"
+    @hide="onDialogHide"
+  >
     <q-card>
       <q-card-section class="row items-center">
         <q-avatar icon="mdi-file-undo" color="primary" text-color="white" />

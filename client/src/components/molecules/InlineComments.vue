@@ -3,7 +3,7 @@
     <section ref="inline_comments_section">
       <div class="q-pa-md">
         <span class="text-h3">{{
-          $t("submissions.inline_comments_heading")
+          $t("submissions.inline_comments.heading")
         }}</span>
       </div>
 

@@ -36,7 +36,7 @@ export function useFeedbackMessages(overrideDefaults = {}) {
         "data-cy": "button_dismiss_notify"
       }
     ],
-    timeout: 10000,
+    timeout: 20000,
     progress: true,
     html: true
   })

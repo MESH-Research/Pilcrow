@@ -1,5 +1,10 @@
 <template>
-  <q-dialog ref="dialogRef" full-width @hide="onDialogHide">
+  <q-dialog
+    ref="dialogRef"
+    :aria-label="$t(`dialog.selectIcon.aria_label`)"
+    full-width
+    @hide="onDialogHide"
+  >
     <q-card>
       <q-card-section class="column q-gutter-sm">
         <q-input

@@ -2,25 +2,30 @@
   <q-card flat>
     <q-card-section>
       <q-list separator>
-        <component
-          :is="editId === criteria.id ? StyleCriteriaForm : StyleCriteriaItem"
+        <q-item
           v-for="criteria in publication.style_criterias"
           :key="criteria.id"
           data-cy="listItem"
-          class="criteria-card"
-          :criteria="criteria"
-          :edit-id="editId"
-          @edit="editItem(criteria.id)"
-          @cancel="cancelEdit"
-          @save="saveEdit"
-          @delete="onDelete"
-        />
-        <style-criteria-form
-          v-if="editId == ''"
-          ref="addForm"
-          @cancel="cancelEdit"
-          @save="saveEdit"
-        />
+        >
+          <component
+            :is="editId === criteria.id ? StyleCriteriaForm : StyleCriteriaItem"
+            class="criteria-card"
+            :criteria="criteria"
+            :edit-id="editId"
+            data-cy="criteriaEditForm"
+            @edit="editItem(criteria.id)"
+            @cancel="cancelEdit"
+            @save="saveEdit"
+            @delete="onDelete"
+          />
+        </q-item>
+        <q-item v-if="editId == ''">
+          <style-criteria-form
+            ref="addForm"
+            @cancel="cancelEdit"
+            @save="saveEdit"
+          />
+        </q-item>
       </q-list>
     </q-card-section>
     <q-card-actions v-if="editId === null" align="right">
