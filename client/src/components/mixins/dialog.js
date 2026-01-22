@@ -32,6 +32,6 @@ export default {
     onCancelClick: function () {
       // we just need to hide dialog
       this.hide()
-    },
-  },
+    }
+  }
 }

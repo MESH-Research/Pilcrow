@@ -2,13 +2,13 @@ import ReviewsPage from "./ReviewsPage.vue"
 import { CURRENT_USER_SUBMISSIONS, GET_SUBMISSIONS } from "src/graphql/queries"
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest"
 import { flushPromises, mount } from "@vue/test-utils"
-import { installApolloClient } from "test/vitest/utils"
+import { installApolloClient } from "app/test/vitest/utils"
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
 import { ref } from "vue"
 import { useCurrentUser } from "src/use/user"
 
 vi.mock("src/use/user", () => ({
-  useCurrentUser: vi.fn(),
+  useCurrentUser: vi.fn()
 }))
 
 installQuasarPlugin()
@@ -22,16 +22,16 @@ describe("Reviews Page", () => {
   const makeWrapper = () =>
     mount(ReviewsPage, {
       global: {
-        stubs: ["router-link", "i18n-t"],
-      },
+        stubs: ["router-link", "i18n-t"]
+      }
     })
 
   beforeEach(async () => {
     useCurrentUser.mockReturnValue({
       currentUser: ref({
         id: 2000,
-        roles: [],
-      }),
+        roles: []
+      })
     })
   })
 
@@ -46,7 +46,7 @@ describe("Reviews Page", () => {
       editor: null,
       review_coordinator: "review_coordinator",
       reviewer: "reviewer",
-      submitter: "submitter",
+      submitter: "submitter"
     }
     const submission_effective_role = {
       application_admin: "review_coordinator",
@@ -54,7 +54,7 @@ describe("Reviews Page", () => {
       editor: "review_coordinator",
       review_coordinator: "review_coordinator",
       reviewer: "reviewer",
-      submitter: "submitter",
+      submitter: "submitter"
     }
     const publication_my_role = {
       application_admin: null,
@@ -62,7 +62,7 @@ describe("Reviews Page", () => {
       editor: "editor",
       review_coordinator: null,
       reviewer: null,
-      submitter: null,
+      submitter: null
     }
     return {
       __typename: "Submission",
@@ -78,13 +78,13 @@ describe("Reviews Page", () => {
         name: "Jest Publication",
         my_role: publication_my_role[role_name],
         editors: [],
-        publication_admins: [],
+        publication_admins: []
       },
       inline_comments: [],
       overall_comments: [],
       submitters: [],
       reviewers: [],
-      review_coordinators: [],
+      review_coordinators: []
     }
   }
   function mockGetSubmissions(role_name) {
@@ -93,7 +93,7 @@ describe("Reviews Page", () => {
       count: 1,
       currentPage: 1,
       lastPage: 1,
-      perPage: 10,
+      perPage: 10
     }
     const paginator_data = {
       application_admin: paginator,
@@ -101,7 +101,7 @@ describe("Reviews Page", () => {
       editor: paginator,
       review_coordinator: [],
       reviewer: [],
-      submitter: [],
+      submitter: []
     }
     const submission_records = [mockSubmission(400, role_name)]
     const submissions_data = {
@@ -110,16 +110,16 @@ describe("Reviews Page", () => {
       editor: submission_records,
       review_coordinator: [],
       reviewer: [],
-      submitter: [],
+      submitter: []
     }
     return {
       data: {
         submissions: {
           __typename: "SubmissionPaginator",
           paginatorInfo: paginator_data[role_name],
-          data: submissions_data[role_name],
-        },
-      },
+          data: submissions_data[role_name]
+        }
+      }
     }
   }
   function mockCurrentUserSubmissions(role_name) {
@@ -130,7 +130,7 @@ describe("Reviews Page", () => {
       editor: submission_records,
       review_coordinator: submission_records,
       reviewer: submission_records,
-      submitter: [],
+      submitter: []
     }
     return {
       data: {
@@ -141,9 +141,9 @@ describe("Reviews Page", () => {
               ? [{ name: "Application Administrator" }]
               : [],
           highest_privileged_role: role_name,
-          submissions: submissions_data[role_name],
-        },
-      },
+          submissions: submissions_data[role_name]
+        }
+      }
     }
   }
 
@@ -153,20 +153,20 @@ describe("Reviews Page", () => {
     ["editor", 2],
     ["review_coordinator", 2],
     ["reviewer", 1],
-    ["submitter", 1],
+    ["submitter", 1]
   ])("when the user's role is %s", (role_name, expected) => {
     const grammar = expected == 1 ? "table appears" : "tables appear"
     test(`${expected} submission ${grammar}`, async () => {
       GetSubmissions.mockResolvedValue(mockGetSubmissions(role_name))
 
       CurrentUserSubmissions.mockResolvedValue(
-        mockCurrentUserSubmissions(role_name),
+        mockCurrentUserSubmissions(role_name)
       )
 
       const wrapper = makeWrapper()
       await flushPromises()
       expect(
-        wrapper.findAllComponents({ name: "submission-table" }).length,
+        wrapper.findAllComponents({ name: "submission-table" }).length
       ).toBe(expected)
     })
   })

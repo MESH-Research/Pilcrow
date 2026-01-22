@@ -1,4 +1,3 @@
-/* eslint-env node */
 // ***********************************************************
 // This example plugins/index.js can be used to load plugins
 //
@@ -29,11 +28,11 @@ module.exports = (on, config) => {
           method: "POST",
           data: {
             query:
-              'mutation { artisanCommand(command: "migrate:fresh" parameters: [{key: "--seed" value: "true"}])}',
-          },
+              'mutation { artisanCommand(command: "migrate:fresh" parameters: [{key: "--seed" value: "true"}])}'
+          }
         }).then((response) => {
           const {
-            data: { data, errors },
+            data: { data, errors }
           } = response
           if (!data) {
             console.log(response)
@@ -45,10 +44,10 @@ module.exports = (on, config) => {
           resolve(data.artisanCommand)
         })
       })
-    },
+    }
   })
 
-  on('task', {
+  on("task", {
     log(message) {
       console.log(message)
 

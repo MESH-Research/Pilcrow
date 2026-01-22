@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Str;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\ApiTestCase;
 use Tests\TestFactory;
 
@@ -91,6 +92,7 @@ class SubmissionCommentTest extends ApiTestCase
 
         $submission = $this->createSubmissionWithOverallComment(2);
         $response = $this->graphQL(
+            /** @lang GraphQL */
             'query GetSubmission($id: ID!) {
                 submission (id: $id) {
                     id
@@ -147,11 +149,11 @@ class SubmissionCommentTest extends ApiTestCase
     }
 
     /**
-     * @dataProvider commentCreationProvider
      * @param bool $is_valid Expected validity of test case
      * @param string $fragment GraphQL fragment to include in the mutation
      * @return void
      */
+    #[DataProvider('commentCreationProvider')]
     public function testCreateInlineComment(bool $is_valid, string $fragment)
     {
         $this->beAppAdmin();
@@ -241,11 +243,11 @@ class SubmissionCommentTest extends ApiTestCase
     }
 
     /**
-     * @dataProvider commentReplyCreationProvider
      * @param bool $is_valid Expected validity of test case
      * @param array $args Arguments to include in the GraphQL mutation
      * @return void
      */
+    #[DataProvider('commentReplyCreationProvider')]
     public function testCreateInlineCommentReply(bool $is_valid, array $args): void
     {
         $this->beAppAdmin();
@@ -267,9 +269,7 @@ class SubmissionCommentTest extends ApiTestCase
             $variables[$camelName] = $variable ? $$camelName : null;
         }
 
-        $graphQL =
-            /** @lang GraphQL */
-            'mutation CreateInlineCommentReply($submissionId: ID! ' . implode(' ', $arguments) . ') {
+        $graphQL = 'mutation CreateInlineCommentReply($submissionId: ID! ' . implode(' ', $arguments) . ') {
                 updateSubmission(input: {
                     id: $submissionId
                     inline_comments: {
@@ -314,18 +314,17 @@ class SubmissionCommentTest extends ApiTestCase
     }
 
     /**
-     * @dataProvider commentCreationProvider
      * @param bool $is_valid Expected validity of test case
      * @param string $fragment GraphQL fragment to include in the mutation
      * @return void
      */
+    #[DataProvider('commentCreationProvider')]
     public function testCreateOverallComment(bool $is_valid, string $fragment): void
     {
         $this->beAppAdmin();
         $submission = $this->createSubmission();
 
         $response = $this->graphQL(
-            /** @lang GraphQL */
             'mutation CreateOverallComment($submissionId: ID!) {
                 updateSubmission(input: {
                     id: $submissionId
@@ -361,11 +360,11 @@ class SubmissionCommentTest extends ApiTestCase
     }
 
     /**
-     * @dataProvider commentReplyCreationProvider
      * @param bool $is_valid Expected validity of test case
      * @param array $args Arguments to include in the GraphQL mutation
      * @return void
      */
+    #[DataProvider('commentReplyCreationProvider')]
     public function testCreateOverallCommentReply(bool $is_valid, array $args): void
     {
         $this->beAppAdmin();
@@ -388,7 +387,6 @@ class SubmissionCommentTest extends ApiTestCase
         }
 
         $graphQL =
-            /** @lang GraphQL */
             'mutation CreateOverallCommentReply($submissionId: ID! ' . implode(' ', $arguments) . ') {
                 updateSubmission(input: {
                     id: $submissionId
@@ -1108,16 +1106,16 @@ class SubmissionCommentTest extends ApiTestCase
     public static function commentReadStatusProvider(): array
     {
         return [
-            'read' => [ true ],
-            'unread' => [ false ],
+            'read' => [true],
+            'unread' => [false],
         ];
     }
 
     /**
-     * @dataProvider commentReadStatusProvider
      * @param bool $is_read
      * @return void
      */
+    #[DataProvider('commentReadStatusProvider')]
     public function testInlineCommentReadStatusCanBeQueried(bool $is_read)
     {
         $this->beAppAdmin();
@@ -1156,10 +1154,10 @@ class SubmissionCommentTest extends ApiTestCase
     }
 
     /**
-     * @dataProvider commentReadStatusProvider
      * @param bool $is_read
      * @return void
      */
+    #[DataProvider('commentReadStatusProvider')]
     public function testOverallCommentReadStatusCanBeQueried(bool $is_read)
     {
         $this->beAppAdmin();

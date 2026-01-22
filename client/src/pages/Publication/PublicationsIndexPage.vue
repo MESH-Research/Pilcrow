@@ -1,4 +1,3 @@
-
 <template>
   <h2 class="q-px-lg">{{ $t("publication.entity", { count: 2 }) }}</h2>
   <section>
@@ -48,7 +47,7 @@ const {
   listeners,
   data: publications,
   paginatorInfo,
-  query: { loading },
+  query: { loading }
 } = pubsPaginator
 
 const destRoute = (id) => ({ name: "publication:home", params: { id } })

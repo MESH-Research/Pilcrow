@@ -12,7 +12,7 @@
           toggle-color="primary"
           :options="[
             { label: getTranslation('options.true'), value: true },
-            { label: getTranslation('options.false'), value: false },
+            { label: getTranslation('options.false'), value: false }
           ]"
         />
       </div>
@@ -35,7 +35,7 @@
 
 <script>
 export default {
-  inheritAttrs: false,
+  inheritAttrs: false
 }
 </script>
 <script setup>
@@ -53,7 +53,7 @@ const props = defineProps({
    */
   v: {
     type: Object,
-    required: true,
+    required: true
   },
   /**
    * Translation key for label, hint and error messages.
@@ -63,8 +63,8 @@ const props = defineProps({
    */
   t: {
     type: [String, Boolean],
-    default: false,
-  },
+    default: false
+  }
 })
 defineEmits(["vqupdate"])
 

@@ -1,6 +1,5 @@
 <template>
   <q-form @submit="onSave">
-    <q-separator />
     <q-item class="q-px-md q-py-lg" role="">
       <q-item-section avatar top class="column content-center justify-start">
         <q-btn
@@ -33,7 +32,7 @@
           :toolbar="[
             ['bold', 'italic', 'underline'],
             ['link', 'unordered', 'ordered', 'outdent', 'indent'],
-            ['undo', 'redo'],
+            ['undo', 'redo']
           ]"
           :class="v$.description.$error ? 'error' : ''"
           :placeholder="
@@ -66,7 +65,6 @@
         </div>
       </q-item-section>
     </q-item>
-    <q-separator />
   </q-form>
 </template>
 
@@ -86,8 +84,8 @@ const { t } = useI18n()
 const props = defineProps({
   criteria: {
     type: Object,
-    default: () => ({}),
-  },
+    default: () => ({})
+  }
 })
 const emit = defineEmits(["cancel", "save", "delete"])
 
@@ -95,26 +93,26 @@ const state = reactive({
   id: "",
   name: "",
   icon: "task_alt",
-  description: "",
+  description: ""
 })
 
 const rules = {
   name: {
     required,
-    maxLength: maxLength(50),
+    maxLength: maxLength(50)
   },
   description: {
-    maxLength: maxLength(4096),
+    maxLength: maxLength(4096)
   },
   icon: {
-    maxLength: maxLength(50),
-  },
+    maxLength: maxLength(50)
+  }
 }
 
 const v$ = useVuelidate(rules, state)
 
 const original = computed(() => ({
-  ...pick(props.criteria, ["id", "name", "icon", "description"]),
+  ...pick(props.criteria, ["id", "name", "icon", "description"])
 }))
 
 const isNew = computed(() => {
@@ -135,8 +133,8 @@ function editIcon() {
   dialog({
     component: SelectIconDialog,
     componentProps: {
-      icon: state.icon,
-    },
+      icon: state.icon
+    }
   }).onOk((icon) => {
     v$.value.icon.$model = icon
   })
@@ -146,10 +144,10 @@ function onDelete() {
   dialog({
     title: t("publications.style_criteria.delete_header"),
     message: t("publications.style_criteria.delete_confirm", {
-      name: props.criteria.name,
+      name: props.criteria.name
     }),
     cancel: true,
-    persistent: true,
+    persistent: true
   }).onOk(() => {
     emit("delete", props.criteria)
   })

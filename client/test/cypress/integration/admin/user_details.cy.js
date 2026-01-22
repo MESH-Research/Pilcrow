@@ -3,7 +3,7 @@
 // Use `cy.dataCy` custom command for more robust tests
 // See https://docs.cypress.io/guides/references/best-practices.html#Selecting-Elements
 
-import { a11yLogViolations } from '../../support/helpers'
+import { a11yLogViolations } from "../../support/helpers"
 
 describe("Admin User Details", () => {
   beforeEach(() => {

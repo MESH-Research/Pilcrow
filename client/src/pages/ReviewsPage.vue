@@ -46,7 +46,7 @@ import { computed } from "vue"
 
 const { currentUser } = useCurrentUser()
 const { result: all_submissions_result } = useQuery(GET_SUBMISSIONS, {
-  page: 1,
+  page: 1
 })
 const all_submissions = computed(() => {
   return all_submissions_result.value?.submissions.data ?? []
@@ -54,7 +54,7 @@ const all_submissions = computed(() => {
 const all_reviews = computed(() =>
   all_submissions.value.filter(function (submission) {
     return ["DRAFT"].includes(submission.status) === false
-  }),
+  })
 )
 const { result } = useQuery(CURRENT_USER_SUBMISSIONS)
 const submissions = computed(() => {
@@ -67,16 +67,16 @@ const reviewer_reviews = computed(() =>
   submissions.value.filter(function (submission) {
     return (
       ["DRAFT", "INITIALLY_SUBMITTED", "AWAITING_REVIEW"].includes(
-        submission.status,
+        submission.status
       ) === false && submission.my_role == "reviewer"
     )
-  }),
+  })
 )
 const coordinator_reviews = computed(() =>
   submissions.value.filter(function (submission) {
     return (
       submission.status != "DRAFT" && submission.my_role == "review_coordinator"
     )
-  }),
+  })
 )
 </script>

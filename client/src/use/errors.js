@@ -25,6 +25,6 @@ export function useGraphErrors() {
     errorMessages(errorList, i18nDomain) {
       const msg = (code) => (i18nDomain ? `${i18nDomain}.${code}` : code)
       return errorList.map((code) => t(msg(code)))
-    },
+    }
   }
 }

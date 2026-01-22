@@ -13,7 +13,7 @@
         icon="arrow_back_ios_new"
         :to="{
           name: 'submission:details',
-          params: { id: props.submission.id },
+          params: { id: props.submission.id }
         }"
       />
       <q-toolbar-title class="q-pt-xs q-pb-sm col-grow">
@@ -61,7 +61,7 @@
         round
         :to="{
           name: 'submission:export',
-          params: { id: submission.id },
+          params: { id: submission.id }
         }"
       >
         <q-tooltip>{{ $t(`export.call_to_action`) }}</q-tooltip>
@@ -98,7 +98,7 @@
 import StatusChangeDropdown from "./StatusChangeDropdown.vue"
 import {
   useSubmissionExport,
-  useStatusChangeControls,
+  useStatusChangeControls
 } from "src/use/guiElements.js"
 import { ref } from "vue"
 
@@ -106,25 +106,25 @@ const props = defineProps({
   // Drawer status
   commentDrawerOpen: {
     type: Boolean,
-    default: null,
+    default: null
   },
   highlightVisibility: {
     type: Boolean,
-    default: true,
+    default: true
   },
   submission: {
     type: Object,
-    default: null,
-  },
+    default: null
+  }
 })
 
 const submissionRef = ref(props.submission)
 const { isDisabledByRole, isDisabledByState } =
   useSubmissionExport(submissionRef)
-  useStatusChangeControls(submissionRef)
+useStatusChangeControls(submissionRef)
 const emit = defineEmits([
   "update:commentDrawerOpen",
-  "update:highlightVisibility",
+  "update:highlightVisibility"
 ])
 function toggleCommentDrawer() {
   emit("update:commentDrawerOpen", !props.commentDrawerOpen)

@@ -4,7 +4,7 @@ import {
   _CURRENT_USER_FIELDS,
   _PAGINATION_FIELDS,
   _PROFILE_METADATA_FIELDS,
-  _RELATED_USER_FIELDS,
+  _RELATED_USER_FIELDS
 } from "./fragments"
 
 export const CURRENT_USER = gql`

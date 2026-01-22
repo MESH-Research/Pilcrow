@@ -19,8 +19,8 @@ export default defineComponent({
   props: {
     firstSection: {
       type: Boolean,
-      default: false,
-    },
-  },
+      default: false
+    }
+  }
 })
 </script>

@@ -14,9 +14,8 @@ export default function ({ ssrContext }) {
     var cookies = Cookies.parseSSR(ssrContext)
     var phpsession = cookies.get("PHPSESSID")
     Vue.prototype.$axios.defaults.withCredentials = true
-    Vue.prototype.$axios.defaults.headers.common[
-      "Cookie"
-    ] = `PHPSESSID=${phpsession}`
+    Vue.prototype.$axios.defaults.headers.common["Cookie"] =
+      `PHPSESSID=${phpsession}`
   }
 
   // "cookies" is equivalent to the global import as in non-SSR builds

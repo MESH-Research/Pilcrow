@@ -10,13 +10,13 @@
       <q-breadcrumbs-el
         :to="{
           name: 'submission:draft',
-          params: { id: submission?.id },
+          params: { id: submission?.id }
         }"
       >
         {{
           $t(`submissions.create.draft_title`, {
             submission_title:
-              submission?.title ?? $t(`submissions.term`, { count: 1 }),
+              submission?.title ?? $t(`submissions.term`, { count: 1 })
           })
         }}
       </q-breadcrumbs-el>
@@ -105,14 +105,10 @@
 
                   <q-item-section>
                     <q-item-label>{{
-                      $t(
-                        `submissions.content.support.file_caption`,
-                      )
+                      $t(`submissions.content.support.file_caption`)
                     }}</q-item-label>
                     <q-item-label caption>{{
-                      $t(
-                        `submissions.content.support.file_types`,
-                      )
+                      $t(`submissions.content.support.file_types`)
                     }}</q-item-label>
                   </q-item-section>
                 </q-item>
@@ -154,12 +150,12 @@
                     label: $q.lang.editor.formatting,
                     icon: $q.iconSet.editor.formatting,
                     list: 'no-icons',
-                    options: ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'],
-                  },
+                    options: ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']
+                  }
                 ],
                 ['bold', 'italic', 'underline'],
                 ['link', 'unordered', 'ordered', 'outdent', 'indent'],
-                ['undo', 'redo'],
+                ['undo', 'redo']
               ]"
             />
             <q-btn
@@ -191,7 +187,7 @@
               :label="$t(`submissions.content.submit.success.btn_label`)"
               :to="{
                 name: 'submission:draft',
-                params: { id: props.id },
+                params: { id: props.id }
               }"
             />
             <q-btn
@@ -199,7 +195,7 @@
               :label="$t(`submission.action.preview`)"
               :to="{
                 name: 'submission:preview',
-                params: { id: props.id },
+                params: { id: props.id }
               }"
             />
           </div>
@@ -213,7 +209,7 @@
 import { GET_SUBMISSION } from "src/graphql/queries"
 import {
   UPDATE_SUBMISSION_CONTENT,
-  UPDATE_SUBMISSION_CONTENT_WITH_FILE,
+  UPDATE_SUBMISSION_CONTENT_WITH_FILE
 } from "src/graphql/mutations"
 import { useQuery, useMutation } from "@vue/apollo-composable"
 import { watchEffect, computed, ref } from "vue"
@@ -221,8 +217,8 @@ import { watchEffect, computed, ref } from "vue"
 const props = defineProps({
   id: {
     type: String,
-    required: true,
-  },
+    required: true
+  }
 })
 
 const { result } = useQuery(GET_SUBMISSION, props)
@@ -263,15 +259,15 @@ async function submitEnteredText() {
 const uploadOpts = {
   variables: {
     submission_id: props.id,
-    file_upload: uploadFile.value,
+    file_upload: uploadFile.value
   },
   context: {
-    hasUpload: true,
-  },
+    hasUpload: true
+  }
 }
 const { mutate: updateContentWithFile } = useMutation(
   UPDATE_SUBMISSION_CONTENT_WITH_FILE,
-  uploadOpts,
+  uploadOpts
 )
 async function submitUpload() {
   try {

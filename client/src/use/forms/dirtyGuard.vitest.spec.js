@@ -1,16 +1,14 @@
 import { mount } from "@vue/test-utils"
-import {
-  useDirtyGuard,
-} from "./dirtyGuard"
+import { useDirtyGuard } from "./dirtyGuard"
 import { ref, defineComponent, h } from "vue"
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
-import { onUnmounted } from 'vue'
-import { Dialog } from 'test/vitest/mockedPlugins'
-import { onBeforeRouteLeave } from 'vue-router'
+import { onUnmounted } from "vue"
+import { Dialog } from "app/test/vitest/mockedPlugins"
+import { onBeforeRouteLeave } from "vue-router"
 
-import { describe, test, vi, expect } from 'vitest'
+import { describe, test, vi, expect } from "vitest"
 
-vi.mock('vue-router', async (importOriginal) => {
+vi.mock("vue-router", async (importOriginal) => {
   const original = await importOriginal()
   const onBeforeRouteLeave = vi.fn()
   return {
@@ -19,7 +17,7 @@ vi.mock('vue-router', async (importOriginal) => {
   }
 })
 
-vi.mock('vue', async (importOriginal) => {
+vi.mock("vue", async (importOriginal) => {
   const original = await importOriginal()
   const onUnmounted = vi.fn()
   return {
@@ -28,21 +26,21 @@ vi.mock('vue', async (importOriginal) => {
   }
 })
 
-
 installQuasarPlugin({ plugins: { Dialog } })
 
 describe("useDirtyGuard composable", () => {
-  const factory = (dirtyRef) => defineComponent({
-    setup() {
-      useDirtyGuard(dirtyRef)
-    },
-    render: () => h('div')
-  })
+  const factory = (dirtyRef) =>
+    defineComponent({
+      setup() {
+        useDirtyGuard(dirtyRef)
+      },
+      render: () => h("div")
+    })
 
   test("allows a clean navigation to continue", async () => {
     const dirty = ref(false)
     let callback
-    onBeforeRouteLeave.mockImplementation((cb) => callback = cb)
+    onBeforeRouteLeave.mockImplementation((cb) => (callback = cb))
 
     mount(factory(dirty))
     expect(await callback()).toBe(true)
@@ -50,7 +48,7 @@ describe("useDirtyGuard composable", () => {
 
   test("Shows dialog appropriately and correctly responds to user feedback", async () => {
     let dirtyGuardCallback
-    onBeforeRouteLeave.mockImplementation((cb) => dirtyGuardCallback = cb)
+    onBeforeRouteLeave.mockImplementation((cb) => (dirtyGuardCallback = cb))
 
     const dirty = ref(true)
     mount(factory(dirty))
@@ -79,10 +77,10 @@ describe("useDirtyGuard composable", () => {
     })
     window.removeEventListener = vi.fn()
     const mockEvent = {
-      preventDefault: vi.fn(),
+      preventDefault: vi.fn()
     }
     let unmountCb
-    onUnmounted.mockImplementation((cb) => unmountCb = cb)
+    onUnmounted.mockImplementation((cb) => (unmountCb = cb))
 
     mount(factory(dirty))
     //should add an eventlistener

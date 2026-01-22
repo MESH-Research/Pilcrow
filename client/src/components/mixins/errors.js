@@ -23,6 +23,6 @@ export default {
     $errorMessages(errorList, i18nDomain) {
       const msg = (code) => (i18nDomain ? `${i18nDomain}.${code}` : code)
       return errorList.map((code) => this.$t(msg(code)))
-    },
-  },
+    }
+  }
 }

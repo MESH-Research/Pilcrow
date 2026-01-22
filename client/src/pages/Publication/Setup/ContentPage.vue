@@ -15,8 +15,8 @@ import { UPDATE_PUBLICATION_CONTENT } from "src/graphql/mutations"
 const props = defineProps({
   publication: {
     type: Object,
-    required: true,
-  },
+    required: true
+  }
 })
 
 const mutation = useMutation(UPDATE_PUBLICATION_CONTENT)

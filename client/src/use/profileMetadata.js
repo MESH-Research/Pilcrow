@@ -6,22 +6,22 @@ import validator from "validator"
 export const social_regex = {
   facebook: {
     url: /^(?:https?:)?\/\/(?:www\.)?(?:facebook|fb)\.com\/(?<profile>(?![A-Za-z]+\.php)(?!marketplace|gaming|watch|me|messages|help|search|groups)[A-Za-z0-9_\-.]+)\/?/,
-    valid: /^(?<profile>[A-Za-z0-9_\-.]+)$/,
+    valid: /^(?<profile>[A-Za-z0-9_\-.]+)$/
   },
 
   twitter: {
     url: /(?:https?:)?\/\/(?:[A-Za-z]+\.)?twitter\.com\/@?(?!home|share|privacy|tos)(?<username>[A-Za-z0-9_]+)\/?/,
-    valid: /^[A-Za-z0-9_]+$/,
+    valid: /^[A-Za-z0-9_]+$/
   },
   instagram: {
     url: /^(?:https?:)?\/\/(?:www\.)?(?:instagram\.com|instagr\.am)\/(?<username>[A-Za-z0-9_](?:(?:[A-Za-z0-9_]|(?:\.(?!\.))){0,28}(?:[A-Za-z0-9_]))?$)$/,
     valid:
-      /^[A-Za-z0-9_](?:(?:[A-Za-z0-9_]|(?:\.(?!\.))){0,28}(?:[A-Za-z0-9_]))?$/,
+      /^[A-Za-z0-9_](?:(?:[A-Za-z0-9_]|(?:\.(?!\.))){0,28}(?:[A-Za-z0-9_]))?$/
   },
   linkedin: {
     url: /^(?:https?:)?\/\/(?:[\w]+\.)?linkedin\.com\/in\/(?<permalink>[\w\-_À-ÿ%]+)\/?$/,
-    valid: /^[\w\-_À-ÿ%]+$/,
-  },
+    valid: /^[\w\-_À-ÿ%]+$/
+  }
 }
 
 const checkUrl = (value) => {
@@ -36,7 +36,7 @@ const checkUrl = (value) => {
 
 export const website_rules = {
   maxLength: maxLength(512),
-  valid: checkUrl,
+  valid: checkUrl
 }
 
 const validWebsites = (value) => {
@@ -45,7 +45,7 @@ const validWebsites = (value) => {
 
 export const rules = {
   username: {
-    required,
+    required
   },
   name: {},
   profile_metadata: {
@@ -56,29 +56,29 @@ export const rules = {
     social_media: {
       facebook: {
         valid: helpers.regex(social_regex.facebook.valid),
-        maxLength: maxLength(128),
+        maxLength: maxLength(128)
       },
       twitter: {
         valid: helpers.regex(social_regex.twitter.valid),
-        maxLength: maxLength(128),
+        maxLength: maxLength(128)
       },
       instagram: {
         valid: helpers.regex(social_regex.instagram.valid),
-        maxLength: maxLength(128),
+        maxLength: maxLength(128)
       },
       linkedin: {
         valid: helpers.regex(social_regex.linkedin.valid),
-        maxLength: maxLength(128),
-      },
+        maxLength: maxLength(128)
+      }
     },
     academic_profiles: {
       humanities_commons: { maxLength: maxLength(128) },
-      orcid_id: { maxLength: maxLength(128) },
+      orcid_id: { maxLength: maxLength(128) }
     },
     websites: {
-      validWebsites,
-    },
-  },
+      validWebsites
+    }
+  }
 }
 
 export const profile_defaults = {
@@ -95,13 +95,13 @@ export const profile_defaults = {
       twitter: "",
       facebook: "",
       instagram: "",
-      linkedin: "",
+      linkedin: ""
     },
     academic_profiles: {
       orcid_id: "",
-      humanities_commons: "",
-    },
-  },
+      humanities_commons: ""
+    }
+  }
 }
 
 export function useSocialFieldWatchers(form) {
@@ -112,7 +112,7 @@ export function useSocialFieldWatchers(form) {
       if (matches && matches.groups.profile) {
         form.profile_metadata.social_media.facebook = matches.groups.profile
       }
-    },
+    }
   )
   watch(
     () => form.profile_metadata.social_media.twitter,
@@ -121,7 +121,7 @@ export function useSocialFieldWatchers(form) {
       if (matches && matches.groups.username) {
         form.profile_metadata.social_media.twitter = matches.groups.username
       }
-    },
+    }
   )
   watch(
     () => form.profile_metadata.social_media.instagram,
@@ -130,7 +130,7 @@ export function useSocialFieldWatchers(form) {
       if (matches && matches.groups.username) {
         form.profile_metadata.social_media.instagram = matches.groups.username
       }
-    },
+    }
   )
   watch(
     () => form.profile_metadata.social_media.linkedin,
@@ -139,7 +139,7 @@ export function useSocialFieldWatchers(form) {
       if (matches && matches.groups.permalink) {
         form.profile_metadata.social_media.linkedin = matches.groups.permalink
       }
-    },
+    }
   )
 }
 
@@ -148,5 +148,5 @@ export default {
   social_regex,
   profile_defaults,
   website_rules,
-  useSocialFieldWatchers,
+  useSocialFieldWatchers
 }

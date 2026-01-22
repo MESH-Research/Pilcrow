@@ -14,8 +14,8 @@ export default {
      */
     tPrefix: {
       type: [String, Boolean],
-      default: false,
-    },
+      default: false
+    }
   },
   emits: ["vqupdate"],
   setup(props, { emit }) {
@@ -26,6 +26,6 @@ export default {
        */
       emit("vqupdate", validator, value)
     })
-  },
+  }
 }
 </script>

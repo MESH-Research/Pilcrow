@@ -3,7 +3,7 @@ import { checkRole } from "src/use/user"
 import {
   CURRENT_USER,
   GET_SUBMISSION,
-  CURRENT_USER_SUBMISSIONS,
+  CURRENT_USER_SUBMISSIONS
 } from "src/graphql/queries"
 
 const { isEditor, isPublicationAdmin } = checkRole()
@@ -12,7 +12,7 @@ async function isPubAdminOrEditor(apolloClient, submissionId) {
   const submission = await apolloClient
     .query({
       query: GET_SUBMISSION,
-      variables: { id: submissionId },
+      variables: { id: submissionId }
     })
     .then(({ data: { submission } }) => submission)
 
@@ -27,7 +27,7 @@ export async function beforeEachRequiresAuth(apolloClient, to, _, next) {
   if (to.matched.some((record) => record.meta.requiresAuth)) {
     const user = await apolloClient
       .query({
-        query: CURRENT_USER,
+        query: CURRENT_USER
       })
       .then(({ data: { currentUser } }) => currentUser)
     if (!user) {
@@ -45,14 +45,14 @@ export async function beforeEachRequiresSubmissionAccess(
   apolloClient,
   to,
   _,
-  next,
+  next
 ) {
   if (to.matched.some((record) => record.meta.requiresSubmissionAccess)) {
     let access = false
     const submissionId = to.params.id
     const user = await apolloClient
       .query({
-        query: CURRENT_USER_SUBMISSIONS,
+        query: CURRENT_USER_SUBMISSIONS
       })
       .then(({ data: { currentUser } }) => currentUser)
 
@@ -72,7 +72,7 @@ export async function beforeEachRequiresSubmissionAccess(
       // Allow those who are assigned to the submission
       if (
         ["review_coordinator", "reviewer", "submitter"].some(
-          (role) => role === s.my_role,
+          (role) => role === s.my_role
         )
       ) {
         access = true
@@ -83,7 +83,7 @@ export async function beforeEachRequiresSubmissionAccess(
     if (!access) {
       try {
         access = await isPubAdminOrEditor(apolloClient, submissionId).then(
-          (result) => result,
+          (result) => result
         )
       } catch (error) {
         access = false
@@ -116,7 +116,7 @@ export async function beforeEachRequiresDraftAccess(apolloClient, to, _, next) {
     const user = await apolloClient
       .query({
         query: CURRENT_USER_SUBMISSIONS,
-        fetchPolicy: "network-only",
+        fetchPolicy: "network-only"
       })
       .then(({ data: { currentUser } }) => currentUser)
 
@@ -146,14 +146,14 @@ export async function beforeEachRequiresPreviewAccess(
   apolloClient,
   to,
   _,
-  next,
+  next
 ) {
   if (to.matched.some((record) => record.meta.requiresPreviewAccess)) {
     let access = false
     const submissionId = to.params.id
     const user = await apolloClient
       .query({
-        query: CURRENT_USER_SUBMISSIONS,
+        query: CURRENT_USER_SUBMISSIONS
       })
       .then(({ data: { currentUser } }) => currentUser)
 
@@ -208,7 +208,7 @@ export async function beforeEachRequiresViewAccess(apolloClient, to, _, next) {
     const submissionId = to.params.id
     const user = await apolloClient
       .query({
-        query: CURRENT_USER_SUBMISSIONS,
+        query: CURRENT_USER_SUBMISSIONS
       })
       .then(({ data: { currentUser } }) => currentUser)
 
@@ -234,7 +234,7 @@ export async function beforeEachRequiresViewAccess(apolloClient, to, _, next) {
       // Allow those who are assigned to the submission
       if (
         ["review_coordinator", "reviewer", "submitter"].some(
-          (role) => role === s.my_role,
+          (role) => role === s.my_role
         )
       ) {
         access = true
@@ -243,7 +243,7 @@ export async function beforeEachRequiresViewAccess(apolloClient, to, _, next) {
       // Deny Reviewers when the submission is in a nonreviewable state
       const nonreviewableStates = new Set([
         "REJECTED",
-        "RESUBMISSION_REQUESTED",
+        "RESUBMISSION_REQUESTED"
       ])
       if ("reviewer" === s.my_role && nonreviewableStates.has(s.status)) {
         access = false
@@ -254,7 +254,7 @@ export async function beforeEachRequiresViewAccess(apolloClient, to, _, next) {
     if (!access) {
       try {
         access = await isPubAdminOrEditor(apolloClient, submissionId).then(
-          (result) => result,
+          (result) => result
         )
       } catch (error) {
         access = false
@@ -284,7 +284,7 @@ export async function beforeEachRequiresReviewAccess(
   apolloClient,
   to,
   _,
-  next,
+  next
 ) {
   if (to.matched.some((record) => record.meta.requiresReviewAccess)) {
     let access = false
@@ -292,7 +292,7 @@ export async function beforeEachRequiresReviewAccess(
     const user = await apolloClient
       .query({
         query: CURRENT_USER_SUBMISSIONS,
-        fetchPolicy: "network-only",
+        fetchPolicy: "network-only"
       })
       .then(({ data: { currentUser } }) => currentUser)
 
@@ -318,7 +318,7 @@ export async function beforeEachRequiresReviewAccess(
       // Allow those who are assigned to the submission
       if (
         ["review_coordinator", "reviewer", "submitter"].some(
-          (role) => role === s.my_role,
+          (role) => role === s.my_role
         )
       ) {
         access = true
@@ -327,7 +327,7 @@ export async function beforeEachRequiresReviewAccess(
       // Deny Reviewers when the submission is in a nonreviewable state
       const nonreviewableStates = new Set([
         "REJECTED",
-        "RESUBMISSION_REQUESTED",
+        "RESUBMISSION_REQUESTED"
       ])
       if ("reviewer" === s.my_role && nonreviewableStates.has(s.status)) {
         access = false
@@ -338,7 +338,7 @@ export async function beforeEachRequiresReviewAccess(
     if (!access) {
       try {
         access = await isPubAdminOrEditor(apolloClient, submissionId).then(
-          (result) => result,
+          (result) => result
         )
       } catch (error) {
         access = false
@@ -368,14 +368,14 @@ export async function beforeEachRequiresExportAccess(
   apolloClient,
   to,
   _,
-  next,
+  next
 ) {
   if (to.matched.some((record) => record.meta.requiresExportAccess)) {
     let access = false
     const submissionId = to.params.id
     const user = await apolloClient
       .query({
-        query: CURRENT_USER_SUBMISSIONS,
+        query: CURRENT_USER_SUBMISSIONS
       })
       .then(({ data: { currentUser } }) => currentUser)
 
@@ -404,7 +404,7 @@ export async function beforeEachRequiresExportAccess(
         "RESUBMISSION_REQUESTED",
         "ACCEPTED_AS_FINAL",
         "ARCHIVED",
-        "EXPIRED",
+        "EXPIRED"
       ])
       if (!exportableStates.has(s.status)) {
         access = false
@@ -415,7 +415,7 @@ export async function beforeEachRequiresExportAccess(
     if (!access) {
       try {
         access = await isPubAdminOrEditor(apolloClient, submissionId).then(
-          (result) => result,
+          (result) => result
         )
       } catch (error) {
         access = false
@@ -446,7 +446,7 @@ export async function beforeEachRequiresAppAdmin(apolloClient, to, _, next) {
     let access = false
     const highest_privileged_role = await apolloClient
       .query({
-        query: CURRENT_USER,
+        query: CURRENT_USER
       })
       .then(({ data: { currentUser } }) => currentUser.highest_privileged_role)
 

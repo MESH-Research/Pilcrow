@@ -26,7 +26,7 @@ import CommentEditor from "src/components/forms/CommentEditor.vue"
 import OverallComment from "src/components/atoms/OverallComment.vue"
 import {
   MARK_OVERALL_COMMENTS_READ,
-  MARK_OVERALL_COMMENT_REPLIES_READ,
+  MARK_OVERALL_COMMENT_REPLIES_READ
 } from "src/graphql/mutations"
 import { computed, inject, nextTick, ref, watch } from "vue"
 import { useMutation } from "@vue/apollo-composable"
@@ -55,12 +55,12 @@ watch(
       if (newValue.__typename === "OverallComment") {
         await markRead({
           submission_id: submission.value.id,
-          comment_ids: [parseInt(newValue.id)],
+          comment_ids: [parseInt(newValue.id)]
         })
       } else {
         await markReplyRead({
           submission_id: submission.value.id,
-          comment_ids: [parseInt(newValue.id)],
+          comment_ids: [parseInt(newValue.id)]
         })
       }
     })()
@@ -73,7 +73,7 @@ watch(
         }
         if (commentRef.replyIds.includes(newValue.id)) {
           const reply = commentRef.replyRefs.find(
-            (r) => r.comment.id === newValue.id,
+            (r) => r.comment.id === newValue.id
           )
           scrollTarget = reply.scrollTarget
           break
@@ -96,7 +96,7 @@ watch(
       setVerticalScrollPosition(target, offset - 64, 250)
     })
   },
-  { deep: false },
+  { deep: false }
 )
 </script>
 

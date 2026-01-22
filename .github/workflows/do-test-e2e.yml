@@ -8,7 +8,7 @@ on:
         type: string
 jobs:
   cypress:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     name: "Cypress.io"
     strategy:
       # when one test fails, DO NOT cancel the other
@@ -50,8 +50,8 @@ jobs:
           tag: ${{ github.event_name }}
       - run: docker compose down
       - name: Upload Screenshots
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: screenshots
-          path: "client/test/cypress/screenshots"
+          path: ./client/test/cypress/screenshots
+          name: screenshots-${{ matrix.containers }}
           retention-days: 14

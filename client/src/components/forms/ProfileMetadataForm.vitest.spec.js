@@ -2,12 +2,12 @@ import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-v
 import { mount, flushPromises } from "@vue/test-utils"
 import { useFormState } from "src/use/forms"
 import ProfileMetadataForm from "./ProfileMetadataForm.vue"
-import { ref } from 'vue'
-import { QList } from 'quasar'
+import { ref } from "vue"
+import { QList } from "quasar"
 
 import { describe, expect, test, vi } from "vitest"
 
-vi.mock('vue-router');
+vi.mock("vue-router")
 
 installQuasarPlugin()
 
@@ -16,17 +16,20 @@ describe("ProfileMetadataForm", () => {
     return mount(ProfileMetadataForm, {
       global: {
         provide: {
-          formState: useFormState({ loading: ref(false) }, { loading: ref(false) }),
+          formState: useFormState(
+            { loading: ref(false) },
+            { loading: ref(false) }
+          )
         },
         components: { QList }
       },
       props: {
         profileMetadata: {
-          username: 'testusername',
-          name: 'Test Name',
+          username: "testusername",
+          name: "Test Name"
         },
-        ...props,
-      },
+        ...props
+      }
     })
   }
 
@@ -59,7 +62,7 @@ describe("ProfileMetadataForm", () => {
     ["valid", "orcid_id", "myprofile", true],
     ["maxlength", "orcid_id", "1".repeat(129), false],
     ["valid", "humanities_commons", "myprofile", true],
-    ["maxlength", "humanities_commons", "1".repeat(129), false],
+    ["maxlength", "humanities_commons", "1".repeat(129), false]
   ])(
     "validation rules %s (%s)",
     async (_, fieldRef, testValue, assertValid) => {
@@ -79,7 +82,7 @@ describe("ProfileMetadataForm", () => {
 
   test.concurrent.each([
     ["regex", "websites", ["http://localhost"], false],
-    ["valid", "websites", ["http://mywebsite.com"], true],
+    ["valid", "websites", ["http://mywebsite.com"], true]
   ])(
     "array field rules %s (%s)",
     async (_, fieldRef, testValue, assertValid) => {
@@ -99,7 +102,7 @@ describe("ProfileMetadataForm", () => {
     ["facebook", "https://www.facebook.com/my.profile", "my.profile"],
     ["twitter", "https://twitter.com/my_profile", "my_profile"],
     ["instagram", "https://instagr.am/my_user", "my_user"],
-    ["linkedin", "https://linkedin.com/in/my_profile", "my_profile"],
+    ["linkedin", "https://linkedin.com/in/my_profile", "my_profile"]
   ])("url paste feature: %s", async (fieldRef, url, result) => {
     const wrapper = makeWrapper()
 

@@ -48,14 +48,14 @@ const props = defineProps({
   note: {
     type: Object,
     requred: true,
-    default: () => {},
+    default: () => {}
   },
   /**
    * Show the relative time q-item-section
    */
   showTime: {
     type: Boolean,
-    default: false,
+    default: false
   },
   /**
    * Specify the size for the q-icon
@@ -63,17 +63,17 @@ const props = defineProps({
    */
   iconSize: {
     type: String,
-    default: "sm",
-  },
+    default: "sm"
+  }
 })
 
 const { mutate: markNotificationRead } = useMutation(MARK_NOTIFICATION_READ, {
-  refetchQueries: ["currentUserNotifications"],
+  refetchQueries: ["currentUserNotifications"]
 })
 
 const handleClick = async (notification_id) => {
   await markNotificationRead({
-    notification_id: notification_id,
+    notification_id: notification_id
   })
 }
 

@@ -940,8 +940,18 @@
       },
       "back_btn_label": "Back"
     },
-    "inline_comments_heading": "Inline Comments",
+    "inline_comments": {
+      "ariaLabel": {
+        "add": "Add an inline comment",
+        "edit": "Edit an inline comment"
+      },
+      "heading": "Inline Comments"
+    },
     "overall_comments": {
+      "ariaLabel": {
+        "add": "Add an overall comment",
+        "edit": "Edit an overall comment"
+      },
       "heading": "Overall Comments",
       "editor_heading": "Add your overall comment"
     },
@@ -1011,6 +1021,7 @@
   "general_failure": "Oops, there was an error.",
   "loading": "Loading...",
   "notifications": {
+    "active_notification": "Active Notification",
     "none": "There are no notifications.",
     "view_more": "View More",
     "dismiss_all": "Dismiss All",
@@ -1146,6 +1157,7 @@
   },
   "dialog": {
     "bypassStyleCriteria": {
+      "aria_label": "Bypass Style Criteria",
       "line_1": "Style criteria are an important part of {link}.",
       "line_1_linktext": "Pilcrow",
       "line_2": "Are you sure you do not want to associate one with this comment?",
@@ -1153,12 +1165,14 @@
       "action_cancel": "Add style criteria"
     },
     "reinviteUser": {
+      "aria_label": "Reinvite User",
       "description": "You are about to reinvite {email} as a {role} of this submission.",
       "optional_message": "Add an optional message with your invitation.",
       "success": "{email} has been reinvited as a {role}.",
       "failure": "An error occurred while attempting to reinvite {email}."
     },
     "confirmStatusChange": {
+      "aria_label": "Confirm Status Change",
       "body": {
         "submit_for_review": "You are about to submit this submission for review.",
         "accept_for_review": "You are about to accept this submission for review.",
@@ -1198,15 +1212,20 @@
       }
     },
     "discardChanges": {
+      "aria_label": "Discard Changes",
       "body": "Are you sure you want to discard your changes?",
       "keep_changes": "Keep Changes",
       "discard": "Discard"
     },
     "deleteComment": {
+      "aria_label": "Confirm Comment Deletion",
       "body": "Are you sure you want to delete this comment?",
       "delete": "Delete",
       "cancel": "Cancel",
       "failure": "Something went wrong while attempting to delete this comment."
+    },
+    "selectIcon": {
+      "aria_label": "Select Icon"
     }
   },
   "generic": {

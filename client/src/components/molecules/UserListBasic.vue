@@ -20,23 +20,23 @@ export default {
   props: {
     users: {
       type: Array,
-      required: true,
+      required: true
     },
     action: {
       type: String,
       required: false,
-      default: "",
+      default: ""
     },
     dataCy: {
       type: String,
-      default: "user_list",
-    },
+      default: "user_list"
+    }
   },
   emits: ["actionClick"],
   methods: {
     bubble(eventData) {
       this.$emit("actionClick", eventData)
-    },
-  },
+    }
+  }
 }
 </script>

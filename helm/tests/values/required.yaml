@@ -1,0 +1,21 @@
+pilcrow:
+  mysql:
+    host: "mysql.example.com"
+    port: 3306
+    user: "testuser"
+    database: "testdb"
+  redis:
+    host: "redis.example.com"
+  mail:
+    from:
+      address: "test@example.com"
+      name: "Test Mail Sender"
+    driver: "smtp"
+    smtp:
+      host: "smtp.example.com"
+      port: 587
+      username: "testuser"
+      password:
+        secret:
+          name: "smtp-secret"
+          key: "SMTP_PASSWORD"

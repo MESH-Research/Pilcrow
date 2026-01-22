@@ -7,7 +7,7 @@ MESH-Research loves to welcome your contributions. There are several ways to hel
 * Write patches for open bug/feature issues, preferably with test cases included
 
 There are a few guidelines that we need contributors to follow so that we have a
-chance of keeping on top of things.  Check out the [detailed contributor documentation](https://pilcrow.meshresearch.dev/developers/) hosted on the docs site as well.
+chance of keeping on top of things.  Check out the [detailed contributor documentation](https://latest.docs.pilcrow.dev/developers/) hosted on the docs site as well.
 
 ## Code of Conduct
 

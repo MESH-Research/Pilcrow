@@ -39,7 +39,7 @@
             :label="$t(`submission.action.${viewType}`)"
             :to="{
               name: `submission:${viewType}`,
-              params: { id: props.id },
+              params: { id: props.id }
             }"
           />
         </div>
@@ -57,7 +57,7 @@
 
         <div
           :class="{
-            'q-mt-lg': $q.screen.width < 600,
+            'q-mt-lg': $q.screen.width < 600
           }"
           class="col-12 col-xs-8 col-sm-5 col-md-3"
         >
@@ -108,8 +108,8 @@ import { useQuery } from "@vue/apollo-composable"
 const props = defineProps({
   id: {
     type: String,
-    required: true,
-  },
+    required: true
+  }
 })
 
 const { result } = useQuery(GET_SUBMISSION, { id: props.id })

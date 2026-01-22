@@ -1,14 +1,13 @@
 /// <reference types="Cypress" />
 /// <reference path="../support/index.d.ts" />
 
-
 describe("Header", () => {
   beforeEach(() => {
     cy.task("resetDb")
   })
 
   it("should have a login and register link in header", () => {
-    cy.visit('/')
+    cy.visit("/")
     cy.get("header").within(() => {
       cy.contains("Login").should("have.attr", "href", "/login")
       cy.contains("Register").should("have.attr", "href", "/register")
@@ -49,16 +48,16 @@ describe("Header", () => {
     cy.dataCy("headerUserMenu").within(() => {
       cy.contains("Logout").click()
     })
-    cy.dataCy('dirtyKeepChanges').click()
+    cy.dataCy("dirtyKeepChanges").click()
 
-    cy.url().should('include', '/account/profile')
+    cy.url().should("include", "/account/profile")
 
     cy.dataCy("headerUserMenu").within(() => {
       cy.contains("Logout").click()
     })
 
-    cy.dataCy('dirtyDiscardChanges').click()
-    cy.url().should('eq', Cypress.config().baseUrl + "/")
+    cy.dataCy("dirtyDiscardChanges").click()
+    cy.url().should("eq", Cypress.config().baseUrl + "/")
 
     cy.get("header").within(() => {
       cy.contains("Login")

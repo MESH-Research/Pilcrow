@@ -21,7 +21,7 @@ server {
     root "{{LANDO_WEBROOT}}";
     index index.php index.html index.htm;
 
-     location / {
+     location @vite {
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
 		proxy_set_header Host $http_host;
 		proxy_set_header X-NginX-Proxy true;
@@ -32,6 +32,14 @@ server {
 		proxy_pass http://client:8080;
 		proxy_redirect off;
 		proxy_read_timeout 240s;
+    }
+
+    location = / {
+        try_files /dev/null @backend;
+    }
+
+    location / {
+        try_files /dev/null @vite;
     }
 
     location /graphql {
@@ -50,7 +58,7 @@ server {
     }
 
     location @backend {
-        try_files $uri /index.php =404;
+        try_files  /index.php =404;
         fastcgi_pass fpm:9000;
         fastcgi_index index.php;
         fastcgi_buffers 16 16k;

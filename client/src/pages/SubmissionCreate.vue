@@ -11,7 +11,7 @@
           :label="publication?.name ?? ''"
           :to="{
             name: 'publication:home',
-            params: { id: publication.id },
+            params: { id: publication.id }
           }"
         />
         <q-breadcrumbs-el :label="t(`submissions.create.heading`)" />
@@ -93,7 +93,7 @@
                 "
                 :to="{
                   name: 'publication:home',
-                  params: { id: publication.id },
+                  params: { id: publication.id }
                 }"
               />
             </template>
@@ -116,15 +116,15 @@ import ErrorFieldRenderer from "src/components/molecules/ErrorFieldRenderer.vue"
 const props = defineProps({
   id: {
     type: String,
-    required: true,
-  },
+    required: true
+  }
 })
 const { push } = useRouter()
 const { t } = useI18n()
 const { newStatusMessage } = useFeedbackMessages({
   attrs: {
-    "data-cy": "submission_create_notify",
-  },
+    "data-cy": "submission_create_notify"
+  }
 })
 const { createSubmission, v$, saving } = useSubmissionCreation()
 const { result } = useQuery(GET_PUBLICATION, props)

@@ -1,23 +1,21 @@
-import { Mark } from '@tiptap/core'
+import { Mark } from "@tiptap/core"
 
-import { clickHandler } from './helpers/clickHandler'
-
+import { clickHandler } from "./helpers/clickHandler"
 
 export const Footnotes = Mark.create({
-  name: 'footnotes',
+  name: "footnotes",
 
   priority: 10000,
 
   keepOnSplit: false,
 
-
   addAttributes() {
     return {
       href: {
-        default: null,
+        default: null
       },
       role: {
-        default: null,
+        default: null
       },
       id: {
         default: null
@@ -26,19 +24,18 @@ export const Footnotes = Mark.create({
   },
 
   parseHTML() {
-    return [{ tag: 'a[role=doc-noteref]' }, { tag: 'a[role=doc-backlink]' }]
+    return [{ tag: "a[role=doc-noteref]" }, { tag: "a[role=doc-backlink]" }]
   },
 
   renderHTML({ HTMLAttributes }) {
-    return ['a', HTMLAttributes, 0]
+    return ["a", HTMLAttributes, 0]
   },
 
   addProseMirrorPlugins() {
-
     return [
       clickHandler({
-        type: this.type,
+        type: this.type
       })
     ]
-  },
+  }
 })

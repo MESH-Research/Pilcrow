@@ -108,7 +108,7 @@
             <q-icon role="presentation" :name="`fab fa-${provider.icon}`" />
             <span class="q-pl-md">{{
               $t("auth.log_in_external", {
-                provider: provider.label,
+                provider: provider.label
               })
             }}</span>
           </template>
@@ -130,7 +130,7 @@ import { useRouter } from "vue-router"
 
 const error = ref("")
 const { loading: loadingProviders, result: resultProviders } = useQuery(
-  GET_IDENTITY_PROVIDERS,
+  GET_IDENTITY_PROVIDERS
 )
 const providers = computed(() => {
   return resultProviders.value?.identityProviders ?? []
@@ -149,7 +149,7 @@ const handleSubmit = async () => {
 const handleProviderBtnClick = (provider_name) => {
   try {
     window.location.href = providers.value.find(
-      (p) => p.name === provider_name,
+      (p) => p.name === provider_name
     ).login_url
   } catch (e) {
     error.value = e.message

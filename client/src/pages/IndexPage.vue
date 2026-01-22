@@ -1,11 +1,11 @@
 <template>
   <q-layout data-cy="vueIndex">
     <q-page-container>
-      <q-page >
+      <q-page>
         <div class="row items-center justify-center">
           <q-img
             :alt="$t('header.logo_alt')"
-            src="/logo.png"
+            src="/logo/logo.png"
             style="width: 400px; aspect-ratio: 1"
             class="gt-md col-xs-12 col-sm-6 col-grow q-mr-lg"
           ></q-img>
@@ -41,9 +41,9 @@
 
             <i18n-t keypath="home.open_source.statement" tag="p">
               <template #pilcrow_docs>
-                <a href="https://ccr.meshresearch.dev" class="text-primary"
-                  >https://ccr.meshresearch.dev</a
-                >
+                <a href="https://latest.docs.pilcrow.dev/" class="text-primary">
+                  https://latest.docs/pilcrow.dev/
+                </a>
               </template>
             </i18n-t>
           </div>

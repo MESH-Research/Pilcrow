@@ -30,8 +30,8 @@ import { computed } from "vue"
 const props = defineProps({
   complexity: {
     type: Object,
-    required: true,
-  },
+    required: true
+  }
 })
 
 const suggestions = computed(() => {

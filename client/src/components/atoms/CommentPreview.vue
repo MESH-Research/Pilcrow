@@ -5,7 +5,7 @@
       class="bg-grey-1 shadow-2 q-mb-md comment fit flex content-between"
       :aria-label="
         $t('submissions.comment_preview.ariaLabel', {
-          display_label: comment.created_by.display_label,
+          display_label: comment.created_by.display_label
         })
       "
     >
@@ -45,7 +45,7 @@
           text-color="white"
           :to="{
             name: 'submission:review',
-            params: { id: comment.submission.id },
+            params: { id: comment.submission.id }
           }"
           :label="$t(`submissions.action.go_to_review`)"
         />
@@ -60,8 +60,8 @@ import CommentPreviewHeader from "./CommentPreviewHeader.vue"
 defineProps({
   comment: {
     type: Object,
-    required: true,
-  },
+    required: true
+  }
 })
 </script>
 

@@ -1,7 +1,7 @@
 /// <reference types="Cypress" />
 /// <reference path="../../support/index.d.ts" />
 
-import { a11yLogViolations } from '../../support/helpers'
+import { a11yLogViolations } from "../../support/helpers"
 
 describe("Admin Publications", () => {
   beforeEach(() => {
@@ -12,14 +12,13 @@ describe("Admin Publications", () => {
   })
 
   it("creates new publications and navigates to setup page", () => {
-
     cy.dataCy("create_pub_button").click()
     cy.checkA11y(null, null, a11yLogViolations)
     cy.dataCy("new_publication_input").type("Publication from Cypress{enter}")
     cy.dataCy("create_publication_notify")
       .should("be.visible")
       .should("have.class", "bg-positive")
-    cy.url().should('match', /publication\/[0-9]+\/setup\/basic$/)
+    cy.url().should("match", /publication\/[0-9]+\/setup\/basic$/)
   })
 
   it("prevents publication creation when the name is empty", () => {
@@ -35,7 +34,7 @@ describe("Admin Publications", () => {
     cy.dataCy("create_pub_button").click()
     const name_257_characters = "".padEnd(257, "01234567890")
     cy.dataCy("new_publication_input").type(name_257_characters, {
-      delay: 0,
+      delay: 0
     })
     cy.dataCy("name_field_error").should("be.visible")
     cy.get(".q-transition--field-message-leave-active").should("not.exist")
@@ -51,7 +50,7 @@ describe("Admin Publications", () => {
     cy.dataCy("create_publication_notify")
       .should("be.visible")
       .should("have.class", "bg-positive")
-    cy.visit('/admin/publications')
+    cy.visit("/admin/publications")
     cy.dataCy("create_pub_button").click()
     cy.dataCy("new_publication_input").type(
       "Duplicate Publication from Cypress{enter}"

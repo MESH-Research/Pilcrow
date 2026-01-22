@@ -1,6 +1,4 @@
-import {
-  installQuasarPlugin,
-} from "@quasar/quasar-app-extension-testing-unit-vitest"
+import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
 import { mount } from "@vue/test-utils"
 import { useFormState } from "src/use/forms"
 import { ref as mockRef, nextTick } from "vue"
@@ -12,15 +10,15 @@ vi.mock("src/use/forms", async (importOriginal) => {
   const forms = await importOriginal()
   return {
     ...forms,
-    useDirtyGuard: () => { },
+    useDirtyGuard: () => {},
     useFormState: () => ({
       dirty: mockRef(false),
       saved: mockRef(false),
       state: mockRef("idle"),
       queryLoading: mockRef(false),
       mutationLoading: mockRef(false),
-      errorMessage: mockRef(""),
-    }),
+      errorMessage: mockRef("")
+    })
   }
 })
 const formState = useFormState()
@@ -31,11 +29,11 @@ describe("Formactions", () => {
       global: {
         provide: {
           formState
-        },
+        }
       },
       propsData: {
-        ...props,
-      },
+        ...props
+      }
     })
   }
   test("wrapper is valid", async () => {
@@ -47,15 +45,13 @@ describe("Formactions", () => {
   test("hidden when form is idle", () => {
     const wrapper = factory()
     wrapper.vm.state = "idle"
-    expect(wrapper.findComponent('q-page-sticky').exists()).toBe(
-      false
-      )
-    })
+    expect(wrapper.findComponent("q-page-sticky").exists()).toBe(false)
+  })
 
-    test("dirty form state", async () => {
-      const wrapper = factory()
-      formState.state.value = "dirty"
-      await nextTick()
-      expect(wrapper.findComponent('q-page-sticky').exists()).toBe(true)
+  test("dirty form state", async () => {
+    const wrapper = factory()
+    formState.state.value = "dirty"
+    await nextTick()
+    expect(wrapper.findComponent("q-page-sticky").exists()).toBe(true)
   })
 })

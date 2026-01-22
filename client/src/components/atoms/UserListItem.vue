@@ -24,11 +24,9 @@
           data-cy="user_unconfirmed"
           @click="$emit('reinvite', { user })"
         >
-          <q-tooltip
-            anchor="top middle"
-            self="center middle"
-            >{{ $t("submissions.reinvite.tooltip") }}</q-tooltip
-          >
+          <q-tooltip anchor="top middle" self="center middle">{{
+            $t("submissions.reinvite.tooltip")
+          }}</q-tooltip>
         </q-btn>
         <q-btn
           v-for="{ ariaLabel, icon, action, help, cyAttr } in actions"
@@ -53,13 +51,13 @@ import AvatarImage from "./AvatarImage.vue"
 defineProps({
   user: {
     type: Object,
-    default: () => {},
+    default: () => {}
   },
   actions: {
     type: Array,
     required: false,
-    default: () => [],
-  },
+    default: () => []
+  }
 })
 defineEmits(["actionClick", "reinvite"])
 </script>

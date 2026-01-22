@@ -13,7 +13,7 @@
           :label="$t('submissions.details_heading')"
           :to="{
             name: 'submission:details',
-            params: { id: submission.id },
+            params: { id: submission.id }
           }"
         />
         <q-breadcrumbs-el :label="$t(`export.title`)" />
@@ -47,9 +47,13 @@ const submission = computed(() => {
 const props = defineProps({
   id: {
     type: String,
-    required: true,
-  },
+    required: true
+  }
 })
 const { result } = useQuery(GET_SUBMISSION, { id: props.id })
-const blob = computed(() => URL.createObjectURL(new Blob([submission.value.content.data], { type: "text/html"})))
+const blob = computed(() =>
+  URL.createObjectURL(
+    new Blob([submission.value.content.data], { type: "text/html" })
+  )
+)
 </script>

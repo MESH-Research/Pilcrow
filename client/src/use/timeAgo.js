@@ -14,14 +14,10 @@ export function relativeTime(date, style = "long") {
   const timeAgo = useTimeAgo()
 
   const isoDate = computed(() => {
-    return date
-      ? DateTime.fromISO(date)
-      : undefined
+    return date ? DateTime.fromISO(date) : undefined
   })
 
   return computed(() => {
-    return isoDate.value
-      ? timeAgo.format(isoDate.value.toJSDate(), style)
-      : ""
+    return isoDate.value ? timeAgo.format(isoDate.value.toJSDate(), style) : ""
   })
 }

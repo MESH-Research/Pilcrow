@@ -14,13 +14,13 @@
 // ***********************************************************
 
 // Import commands.js using ES2015 syntax:
-import 'cypress-axe'
+import "cypress-axe"
 import "./commands"
 
 const resizeObserverLoopError = "ResizeObserver loop limit exceeded"
 
 Cypress.on("uncaught:exception", (err) => {
-  if (err.message.includes(resizeObserverLoopError)) {
+  if (err.message.includes("ResizeObserver")) {
     // returning false here prevents Cypress from
     // failing the test
     return false

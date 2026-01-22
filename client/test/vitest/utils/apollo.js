@@ -6,15 +6,16 @@ import { ApolloClients } from "@vue/apollo-composable"
 import { InMemoryCache } from "@apollo/client/core"
 
 const cache = new InMemoryCache({
-  addTypename: true,
+  addTypename: true
 })
 
-const createMockClient = (opts) => createClient({
-  ...opts,
-  connectToDevTools: false,
-  defaultOptions: { watchQuery: { fetchPolicy: "network-only" } },
-  cache
-})
+const createMockClient = (opts) =>
+  createClient({
+    ...opts,
+    connectToDevTools: false,
+    defaultOptions: { watchQuery: { fetchPolicy: "network-only" } },
+    cache
+  })
 
 export { createMockClient }
 
@@ -27,7 +28,7 @@ export function installApolloClient(opts) {
   beforeAll(() => {
     config.global.provide = {
       ...config.global.provide,
-      [ApolloClients]: { default: client },
+      [ApolloClients]: { default: client }
     }
   })
 
@@ -48,5 +49,5 @@ export function installApolloClient(opts) {
     }
   }
 
-   return Object.assign(client, mockMethods)
+  return Object.assign(client, mockMethods)
 }

@@ -44,18 +44,18 @@ import { defineProps, defineEmits } from "vue"
 defineProps({
   title: {
     type: String,
-    required: true,
+    required: true
   },
   skipable: {
     type: Boolean,
     required: false,
-    default: false,
+    default: false
   },
   done: {
     type: Boolean,
     required: false,
-    default: false,
-  },
+    default: false
+  }
 })
 defineEmits(["contentClick", "previewClick", "skipClick"])
 </script>

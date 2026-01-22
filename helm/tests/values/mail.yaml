@@ -1,0 +1,5 @@
+pilcrow:
+  mail:
+    from:
+      name: "Pilcrow Sender"
+      address: "testing@example.com"

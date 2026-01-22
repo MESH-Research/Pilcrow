@@ -1,10 +1,5 @@
-import {
-  computed,
-  getCurrentInstance,
-  inject,
-} from "vue"
+import { computed, getCurrentInstance, inject } from "vue"
 import { useI18n } from "vue-i18n"
-
 
 export function useVQWrap(validator, tPath) {
   const { emit } = getCurrentInstance()
@@ -45,7 +40,7 @@ export function useVQWrap(validator, tPath) {
     set(newValue) {
       const value = newValue !== null ? newValue : ""
       updateValue(value)
-    },
+    }
   })
 
   return { getTranslationKey, getTranslation, model }

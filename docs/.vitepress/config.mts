@@ -11,7 +11,12 @@ var options = {
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
-    vite: { plugins: [SearchPlugin(options)] },
+    vite: {
+        plugins: [SearchPlugin(options)],
+        server: {
+            allowedHosts: ["docs.pilcrow.lndo.site"]
+        }
+     },
     title: "Pilcrow Documentation",
     description: "Documentation site for pilcrow.dev",
     themeConfig: {
@@ -89,6 +94,10 @@ export default defineConfig({
                                     text: "Redis",
                                     link: "/install/recipes/redis",
                                 },
+                                {
+                                    text: "Content Delivery Network",
+                                    link: '/install/recipes/cdn/'
+                                }
                             ],
                         },
                     ],

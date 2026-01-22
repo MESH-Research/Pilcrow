@@ -17,8 +17,8 @@
                   icon: 'person_remove',
                   action: 'unassign',
                   help: tp$('unassign_button.help'),
-                  cyAttr: 'button_unassign',
-                },
+                  cyAttr: 'button_unassign'
+                }
               ]
             : []
         "
@@ -63,33 +63,33 @@ import { useFeedbackMessages } from "src/use/guiElements"
 import { useMutation } from "@vue/apollo-composable"
 import {
   UPDATE_PUBLICATION_ADMINS,
-  UPDATE_PUBLICATION_EDITORS,
+  UPDATE_PUBLICATION_EDITORS
 } from "src/graphql/mutations"
 import { computed, ref } from "vue"
 import { useI18n } from "vue-i18n"
 const props = defineProps({
   container: {
     type: Object,
-    required: true,
+    required: true
   },
   roleGroup: {
     type: String,
-    required: true,
+    required: true
   },
   mutable: {
     type: Boolean,
-    default: false,
+    default: false
   },
   maxUsers: {
     type: [Boolean, Number],
     required: false,
-    default: false,
+    default: false
   },
   containerType: {
     type: String,
     requred: false,
-    default: null,
-  },
+    default: null
+  }
 })
 
 const user = ref(null)
@@ -103,7 +103,7 @@ const { newStatusMessage } = useFeedbackMessages()
 const opts = { variables: { id: props.container.id } }
 const mutations = {
   editors: UPDATE_PUBLICATION_EDITORS,
-  publication_admins: UPDATE_PUBLICATION_ADMINS,
+  publication_admins: UPDATE_PUBLICATION_ADMINS
 }
 const users = computed(() => {
   return props.container[props.roleGroup]
@@ -125,13 +125,13 @@ async function handleSubmit() {
 
   try {
     await mutate({
-      connect: [user.value.id],
+      connect: [user.value.id]
     })
       .then(() => {
         newStatusMessage(
           "success",
           tp$("assign.success", {
-            display_name: user.value.name ?? user.value.username,
+            display_name: user.value.name ?? user.value.username
           })
         )
       })
@@ -150,7 +150,7 @@ async function handleUserListClick({ user }) {
     newStatusMessage(
       "success",
       tp$("unassign.success", {
-        display_name: user.name ? user.name : user.username,
+        display_name: user.name ? user.name : user.username
       })
     )
   } catch (error) {

@@ -123,14 +123,14 @@ import { useUserValidation } from "src/use/userValidation"
 import { CURRENT_USER } from "src/graphql/queries"
 import {
   LOGIN_OAUTH_CALLBACK,
-  REGISTER_OAUTH_USER,
+  REGISTER_OAUTH_USER
 } from "src/graphql/mutations"
 
 const { push } = useRouter()
 const route = useRoute()
 const code = route.query.code
 const { mutate: handleCallback } = useMutation(LOGIN_OAUTH_CALLBACK, {
-  variables: { provider_name: "orcid", code: code },
+  variables: { provider_name: "orcid", code: code }
 })
 const { mutate: registerOauthUser } = useMutation(REGISTER_OAUTH_USER)
 
@@ -149,14 +149,14 @@ const { $v, user, saveUser } = useUserValidation({
       username: form.username,
       email: form.email,
       provider_name: provider.value.provider_name,
-      provider_id: provider.value.provider_id,
+      provider_id: provider.value.provider_id
     }
   },
-  validation_key: "input.user.",
+  validation_key: "input.user."
 })
 const hasErrorKey = useHasErrorKey($v)
 const { result, error, refetch } = useQuery(CURRENT_USER, {
-  fetchPolicy: "network-only",
+  fetchPolicy: "network-only"
 })
 
 function handleRedirect() {
