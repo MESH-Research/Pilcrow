@@ -129,7 +129,7 @@ class UserQueryTest extends ApiTestCase
             [
                 'searchTerm' => null,
                 'shouldFind' => null,
-                'count' => 10,
+                'count' => 10, // Search returns 10 results by default
             ],
             [
                 'searchTerm' => '12345',
@@ -144,7 +144,7 @@ class UserQueryTest extends ApiTestCase
             [
                 'searchTerm' => '',
                 'shouldFind' => null,
-                'count' => 10,
+                'count' => 10, // Search returns 10 results by default
             ],
         ];
     }
