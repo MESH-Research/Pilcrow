@@ -151,10 +151,12 @@ class User extends Authenticatable implements MustVerifyEmail
 
     /**
      * Get the name of the index associated with the model.
+     *
+     * @return string
      */
     public function searchableAs(): string
     {
-       return 'users_index';
+        return 'users_index';
     }
 
     /**
