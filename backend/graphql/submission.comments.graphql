@@ -3,7 +3,7 @@ extend type Submission {
         @hasMany(relation: "inlineComments")
         @softDeletes
     overall_comments: [OverallComment!]!
-        @hasMany(reletion: "overallComments")
+        @hasMany(relation: "overallComments")
         @softDeletes
 }
 
