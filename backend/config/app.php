@@ -163,6 +163,7 @@ return [
         Illuminate\View\ViewServiceProvider::class,
         Laravel\Scout\ScoutServiceProvider::class,
         Nuwave\Lighthouse\Scout\ScoutServiceProvider::class,
+        Nuwave\Lighthouse\WhereConditions\WhereConditionsServiceProvider::class,
 
         /*
          * Package Service Providers...
