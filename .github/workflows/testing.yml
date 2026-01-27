@@ -95,19 +95,30 @@ jobs:
     name: Backend / Unit Test
     runs-on: ubuntu-24.04
     needs: [changes]
+    services:
+      # The label 'mysql' becomes the hostname for the service container
+      mysql:
+        image: mysql:8.0 # Use an official MySQL Docker image
+        ports:
+          # Maps port 3306 in the container to a dynamic port on the host
+          - 3306/tcp
+        env:
+          # Required environment variables for the MySQL container
+          MYSQL_ROOT_PASSWORD: pilcrow
+          MYSQL_DATABASE: pilcrow
     if: ${{ needs.changes.outputs.api == 'true' }}
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
           fetch-tags: true
-      - name: Start MySQL service
-        run: sudo systemctl start mysql
-      - name: Create test database and run scripts
-        working-directory: ./backend
+      - name: Wait for MySQL to be ready
         run: |
-          mysql -uroot -proot -e "CREATE DATABASE pilcrow;"
-
+          until mysqladmin ping -h mysql -u root -ppilcrow; do
+            echo "Waiting for MySQL connection..."
+            sleep 2
+          done
+          echo "MySQL is up and running!"
       - uses: mesh-research/github-actions/build-image@main
         with:
           target: "fpm-test-ci"
