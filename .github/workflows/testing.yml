@@ -106,19 +106,18 @@ jobs:
           # Required environment variables for the MySQL container
           MYSQL_ROOT_PASSWORD: pilcrow
           MYSQL_DATABASE: pilcrow
+        options: >-
+          --health-cmd "mysqladmin ping -h 127.0.0.1 -uroot -pmy-secret-pw"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 3
     if: ${{ needs.changes.outputs.api == 'true' }}
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
           fetch-tags: true
-      - name: Wait for MySQL to be ready
-        run: |
-          until mysqladmin ping -h mysql -u root -ppilcrow; do
-            echo "Waiting for MySQL connection..."
-            sleep 2
-          done
-          echo "MySQL is up and running!"
+
       - uses: mesh-research/github-actions/build-image@main
         with:
           target: "fpm-test-ci"
