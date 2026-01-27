@@ -101,6 +101,14 @@ jobs:
         with:
           fetch-depth: 0
           fetch-tags: true
+      - name: Start MySQL service
+        run: sudo systemctl start mysql
+      - name: Create test database and run scripts
+        working-directory: ./backend
+        run: |
+          mysql -uroot -proot -e "CREATE DATABASE pilcrow;"
+          php artisan migrate:fresh --seed --env=testing
+
       - uses: mesh-research/github-actions/build-image@main
         with:
           target: "fpm-test-ci"
@@ -152,7 +160,7 @@ jobs:
           cd docs && \
           yarn install && \
           yarn docs:build
-      
+
   lint-md:
     name: MD Lint
     runs-on: ubuntu-24.04
