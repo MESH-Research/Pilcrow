@@ -101,7 +101,7 @@ jobs:
         image: mysql:8.0 # Use an official MySQL Docker image
         ports:
           # Maps port 3306 in the container to a dynamic port on the host
-          - 3306/tcp
+          - 3306:3306
         env:
           # Required environment variables for the MySQL container
           MYSQL_ROOT_PASSWORD: pilcrow
