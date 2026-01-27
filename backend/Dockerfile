@@ -70,7 +70,7 @@ FROM base AS fpm
 FROM base AS unit-test
 
 ENV DB_DATABASE="database/database.sqlite"
-ENV APP_ENV=testing
+ENV APP_ENV=local
 
 ARG OUTPUT_PATH=/tmp/output/fpm-unit-test
 ARG STDOUT_FILE=${OUTPUT_PATH}/stdout.txt

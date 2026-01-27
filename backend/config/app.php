@@ -139,6 +139,7 @@ return [
         SocialiteProviders\Manager\ServiceProvider::class,
         Spatie\Permission\PermissionServiceProvider::class,
         TeamTNT\Scout\TNTSearchScoutServiceProvider::class,
+        Nuwave\Lighthouse\WhereConditions\WhereConditionsServiceProvider::class,
     ])->toArray(),
 
     /*
