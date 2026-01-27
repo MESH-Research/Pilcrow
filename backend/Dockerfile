@@ -93,7 +93,7 @@ RUN --mount=type=cache,target=/var/www/.composer,uid=33,gid=33 \
 ARG BUILDSTAMP
 RUN --mount=type=cache,target=/tmp/output \
     mkdir -p "${OUTPUT_PATH}" && \
-    ./artian migrate:fresh --seed
+    ./artisan migrate:fresh --seed
 
 RUN --mount=type=cache,target=/tmp/output \
     mkdir -p "${OUTPUT_PATH}" && \
