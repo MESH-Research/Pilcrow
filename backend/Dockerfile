@@ -91,7 +91,9 @@ RUN --mount=type=cache,target=/var/www/.composer,uid=33,gid=33 \
 
 # Supply a random/cache busting timestamp to prevent caching of the test run.
 ARG BUILDSTAMP
-
+RUN --mount=type=cache,target=/tmp/output \
+    mkdir -p "${OUTPUT_PATH}" && \
+    ./artian migrate:fresh --seed
 
 RUN --mount=type=cache,target=/tmp/output \
     mkdir -p "${OUTPUT_PATH}" && \
