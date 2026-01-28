@@ -117,7 +117,6 @@ jobs:
         with:
           fetch-depth: 0
           fetch-tags: true
-
       - uses: mesh-research/github-actions/build-image@main
         with:
           target: "fpm-test-ci"
@@ -169,7 +168,6 @@ jobs:
           cd docs && \
           yarn install && \
           yarn docs:build
-
   lint-md:
     name: MD Lint
     runs-on: ubuntu-24.04
