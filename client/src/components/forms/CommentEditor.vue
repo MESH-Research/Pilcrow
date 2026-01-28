@@ -113,7 +113,7 @@ const props = defineProps({
   commentType: {
     type: String,
     required: false,
-    default: null
+    default: ""
   },
   parent: {
     type: Object,
