@@ -107,7 +107,7 @@ jobs:
           MYSQL_ROOT_PASSWORD: pilcrow
           MYSQL_DATABASE: pilcrow
         options: >-
-          --health-cmd "mysqladmin ping -h 127.0.0.1 -uroot -pmy-secret-pw"
+          --health-cmd "mysqladmin ping -h 127.0.0.1 -uroot -ppilcrow"
           --health-interval 10s
           --health-timeout 5s
           --health-retries 3
