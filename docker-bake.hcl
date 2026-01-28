@@ -69,7 +69,7 @@ target "fpm-test" {
     target = "unit-test"
     platforms = ["local"]
     output = ["type=cacheonly"]
-    additional-hosts = ["host.docker.internal:host-gateway"]
+    network = "host"
     args = {
         BUILDSTAMP = BUILDSTAMP
     }
