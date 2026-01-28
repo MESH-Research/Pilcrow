@@ -98,7 +98,7 @@ jobs:
     services:
       # The label 'mysql' becomes the hostname for the service container
       mysql:
-        image: mysql:8.0 # Use an official MySQL Docker image
+        image: mysql:5.7 # Use an official MySQL Docker image
         ports:
           # Maps port 3306 in the container to a dynamic port on the host
           - 3306:3306
