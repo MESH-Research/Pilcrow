@@ -78,7 +78,8 @@ ARG STDERR_FILE=${OUTPUT_PATH}/stderr.txt
 
 # Switch to php-development.ini
 USER root
-RUN cp ${PHP_INI_DIR}/php.ini-development ${PHP_INI_DIR}/php.ini
+RUN cp ${PHP_INI_DIR}/php.ini-development ${PHP_INI_DIR}/php.ini \
+    && echo "memory_limit=256M" >> ${PHP_INI_DIR}/conf.d/memory.ini
 # Setup the output directory
 RUN --mount=type=cache,target=/tmp/output \
     mkdir -p "${OUTPUT_PATH}" && \
@@ -98,6 +99,7 @@ RUN --mount=type=cache,target=/tmp/output \
 RUN --mount=type=cache,target=/tmp/output \
     mkdir -p "${OUTPUT_PATH}" && \
     touch .env && \
+    php -r "echo 'PHP memory_limit: ' . ini_get('memory_limit') . PHP_EOL;" && \
     ./artisan test \
     > >(tee ${STDOUT_FILE}) \
     2> >(tee ${STDERR_FILE})
