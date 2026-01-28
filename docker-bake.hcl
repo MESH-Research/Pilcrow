@@ -69,6 +69,7 @@ target "fpm-test" {
     target = "unit-test"
     platforms = ["local"]
     output = ["type=cacheonly"]
+    network = "host"
     args = {
         BUILDSTAMP = BUILDSTAMP
     }

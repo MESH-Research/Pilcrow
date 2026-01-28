@@ -1,5 +1,5 @@
 <template>
-  <div data-cy="submission_review_page">
+  <div data-cy="submission_view_page">
     <div v-if="loading" class="q-pa-lg">
       {{ $t("loading") }}
     </div>
@@ -26,7 +26,7 @@
         data-cy="submission_preview_layout"
         view="hHh lpR fFr"
         container
-        style="min-height: calc(100vh - 70px)"
+        style="min-height: calc(100vh - 118px - 51px)"
       >
         <submission-view-toolbar :id="id" :submission="submission" />
 
@@ -37,8 +37,6 @@
           />
         </q-page-container>
       </q-layout>
-
-      <div class="row q-col-gutter-lg q-pa-lg"></div>
     </article>
   </div>
 </template>
@@ -62,6 +60,7 @@ const submission = computed(() => {
 provide("submission", submission)
 provide("commentDrawerOpen", null)
 provide("activeComment", null)
+provide("forExport", false)
 </script>
 
 <style lang="sass" scoped>

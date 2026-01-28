@@ -64,6 +64,7 @@
         {{ relativeCreatedTime }}
       </div>
       <comment-actions
+        v-if="!forExport"
         @quote-reply-to="$emit('quoteReplyTo')"
         @modify-comment="$emit('modifyComment')"
         @delete-comment="$emit('deleteComment')"
@@ -78,7 +79,9 @@ import CommentActions from "./CommentActions.vue"
 import CommentReference from "./CommentReference.vue"
 import { useTimeAgo } from "src/use/timeAgo"
 import { DateTime } from "luxon"
-import { computed } from "vue"
+import { computed, inject } from "vue"
+
+const forExport = inject("forExport")
 
 const timeAgo = useTimeAgo()
 const props = defineProps({
