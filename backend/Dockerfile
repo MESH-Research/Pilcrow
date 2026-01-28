@@ -9,7 +9,7 @@ ARG TARGETARCH
 ARG PANDOC_VERSION=2.18
 ARG COMPOSE_WAIT_VERSION=2.7.3
 ARG PHP_EXTS="bcmath pdo_mysql pcntl zip"
-ARG PHP_PECL_EXTS="redis"
+ARG PHP_PECL_EXTS="redis apcu"
 ARG APT_PACKAGES="openssl ca-certificates bash libzip-dev libaio1 libncurses6 libnuma1 libxml2-dev git libfcgi-bin sqlite3 default-mysql-client"
 #ENV COMPOSER_HOME=/tmp/composer
 ENV LOG_CHANNEL=stderr
@@ -78,8 +78,7 @@ ARG STDERR_FILE=${OUTPUT_PATH}/stderr.txt
 
 # Switch to php-development.ini
 USER root
-RUN cp ${PHP_INI_DIR}/php.ini-development ${PHP_INI_DIR}/php.ini \
-    && echo "memory_limit=256M" >> ${PHP_INI_DIR}/conf.d/memory.ini
+RUN cp ${PHP_INI_DIR}/php.ini-development ${PHP_INI_DIR}/php.ini
 # Setup the output directory
 RUN --mount=type=cache,target=/tmp/output \
     mkdir -p "${OUTPUT_PATH}" && \
@@ -99,7 +98,6 @@ RUN --mount=type=cache,target=/tmp/output \
 RUN --mount=type=cache,target=/tmp/output \
     mkdir -p "${OUTPUT_PATH}" && \
     touch .env && \
-    php -r "echo 'PHP memory_limit: ' . ini_get('memory_limit') . PHP_EOL;" && \
     ./artisan test \
     > >(tee ${STDOUT_FILE}) \
     2> >(tee ${STDERR_FILE})
