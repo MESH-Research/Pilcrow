@@ -1,5 +1,5 @@
 <template>
-  <div class="row items-center justify-end q-pa-md">
+  <div class="review-controls row items-center justify-end q-pa-md">
     <q-select
       v-model="selectedFont"
       outlined
@@ -60,6 +60,7 @@
       </div>
       <div>
         <q-btn
+          v-if="showOverallComments"
           :aria-label="$t(`submissions.style_controls.view_overall`)"
           data-cy="view_overall_comments"
           round
@@ -75,6 +76,7 @@
       </div>
       <div>
         <q-btn
+          v-if="!forExport"
           :aria-label="$t(`submissions.style_controls.new_overall`)"
           data-cy="new_overall_comment"
           round
@@ -144,9 +146,14 @@ const props = defineProps({
   highlightVisibility: {
     type: Boolean,
     default: true
+  },
+  showOverallComments: {
+    type: Boolean,
+    default: true
   }
 })
 
+const forExport = inject("forExport")
 const commentDrawerOpen = inject("commentDrawerOpen")
 const submission = inject("submission")
 const activeComment = inject("activeComment")
@@ -154,7 +161,8 @@ const contentRef = ref(null)
 
 const emit = defineEmits([
   "scrollToOverallComments",
-  "scrollAddNewOverallComment"
+  "scrollAddNewOverallComment",
+  "editorReady"
 ])
 
 function scrollToOverallComments() {
@@ -254,6 +262,10 @@ const editor = new Editor({
   extensions: [SubmissionContentKit.configure({ annotation: { annotations } })]
 })
 
+editor.on("update", () => {
+  emit("editorReady", editor)
+})
+
 function bubbleMenuVisibility({ state }) {
   if (!props.annotationEnabled) {
     return false
@@ -293,6 +305,7 @@ watch(
   (newValue) => {
     if (!newValue) return
     if (!newValue.__typename.startsWith("InlineComment")) return
+    if (newValue.new === true) return
     ;(async () => {
       if (newValue.__typename === "InlineComment") {
         await markRead({

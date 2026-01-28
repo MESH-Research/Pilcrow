@@ -14,7 +14,7 @@
     <comment-header
       data-cy="CommentHeader"
       :comment="comment"
-      class="q-pt-sm"
+      class="comment-header q-pt-sm"
       @quote-reply-to="$emit('quoteReplyTo', comment)"
       @modify-comment="modifyComment(comment)"
     />
