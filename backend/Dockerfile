@@ -9,7 +9,7 @@ ARG TARGETARCH
 ARG PANDOC_VERSION=2.18
 ARG COMPOSE_WAIT_VERSION=2.7.3
 ARG PHP_EXTS="bcmath pdo_mysql pcntl zip"
-ARG PHP_PECL_EXTS="redis apcu"
+ARG PHP_PECL_EXTS="redis"
 ARG APT_PACKAGES="openssl ca-certificates bash libzip-dev libaio1 libncurses6 libnuma1 libxml2-dev git libfcgi-bin sqlite3 default-mysql-client"
 #ENV COMPOSER_HOME=/tmp/composer
 ENV LOG_CHANNEL=stderr
