@@ -6,6 +6,7 @@
     style="border-color: rgb(82, 11, 189)"
   >
     <comment-editor
+      comment-type="InlineComment"
       v-bind="props"
       @submit="$emit('submit')"
       @cancel="$emit('cancel')"
@@ -20,7 +21,7 @@ const props = defineProps({
   commentType: {
     type: String,
     required: false,
-    default: null
+    default: "InlineComment"
   },
   parent: {
     type: Object,
