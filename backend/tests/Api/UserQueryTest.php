@@ -158,12 +158,17 @@ class UserQueryTest extends ApiTestCase
     #[DataProvider('searchUserTermsProvider')]
     public function testSearchingForUsers(mixed $searchTerm = null, ?string $shouldFind = null, int $count = 0): void
     {
+        $this->refreshDatabase();
         User::factory()->createManyQuietly(20);
-        User::factory()->create([
-            'name' => 'Rotated Building Assembly',
+        $user = User::factory()->create([
             'email' => 'freshoxygenlake@meshresearch.net',
             'username' => 'ScrumptiousPlatePile',
+            'name' => 'Rotated Building Assembly',
         ]);
+        print_r($this->usingInMemoryDatabase() ? 'true' : 'false');
+        $user->searchable();
+        // print_r(User::all()->pluck(['email'])->toArray());
+        print_r($user->toSearchableArray());
 
         $response = $this->graphQL(
             'query SearchUsers ($search_term: String) {
