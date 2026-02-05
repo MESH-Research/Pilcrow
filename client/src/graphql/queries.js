@@ -491,3 +491,14 @@ export const GET_IDENTITY_PROVIDERS = gql`
     }
   }
 `
+
+export const GET_PERSONAL_ACCESS_TOKENS = gql`
+  query GetPersonalAccessTokens {
+    personalAccessTokens {
+      id
+      name
+      last_used_at
+      created_at
+    }
+  }
+`

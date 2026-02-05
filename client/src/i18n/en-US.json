@@ -166,6 +166,29 @@
   "settings": {
     "page_title": "Settings"
   },
+  "tokens": {
+    "page_title": "API Tokens",
+    "description": "Personal access tokens allow external applications to authenticate as you. Tokens should be kept secret and can be revoked at any time.",
+    "create_button": "Create Token",
+    "create_dialog_title": "Create API Token",
+    "token_name_label": "Token Name",
+    "token_name_hint": "A name to help you identify this token",
+    "token_name_max_length": "Token name must be 255 characters or less",
+    "token_created_title": "Token Created",
+    "token_created_message": "Copy your token now. You won't be able to see it again!",
+    "token_copied_button": "Copy & Close",
+    "token_copied_notify": "Token copied to clipboard",
+    "created_at": "Created",
+    "last_used": "Last used",
+    "never_used": "Never used",
+    "revoke_button": "Revoke Token",
+    "revoke_confirm_title": "Revoke Token",
+    "revoke_confirm_message": "Are you sure you want to revoke the token \"{name}\"? This action cannot be undone.",
+    "revoke_success": "Token revoked successfully",
+    "revoke_error": "Failed to revoke token",
+    "create_error": "Failed to create token",
+    "no_tokens": "You don't have any API tokens yet."
+  },
   "account": {
     "failures": {
       "VERIFY_TOKEN_INVALID": "This verification link is not valid for your account.",

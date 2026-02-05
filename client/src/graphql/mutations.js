@@ -968,3 +968,22 @@ export const MARK_INLINE_COMMENT_REPLIES_READ = gql`
     }
   }
 `
+
+export const CREATE_PERSONAL_ACCESS_TOKEN = gql`
+  mutation CreatePersonalAccessToken($name: String!) {
+    createPersonalAccessToken(name: $name) {
+      token
+      personalAccessToken {
+        id
+        name
+        created_at
+      }
+    }
+  }
+`
+
+export const REVOKE_PERSONAL_ACCESS_TOKEN = gql`
+  mutation RevokePersonalAccessToken($id: ID!) {
+    revokePersonalAccessToken(id: $id)
+  }
+`
