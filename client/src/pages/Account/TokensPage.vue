@@ -78,7 +78,7 @@ const $q = useQuasar()
 const { t } = useI18n()
 
 const { result, loading, refetch } = useQuery(GET_PERSONAL_ACCESS_TOKENS)
-const tokens = computed(() => result.value?.personalAccessTokens ?? [])
+const tokens = computed(() => result.value?.currentUser?.tokens ?? [])
 
 const { mutate: createToken } = useMutation(CREATE_PERSONAL_ACCESS_TOKEN)
 const { mutate: revokeToken } = useMutation(REVOKE_PERSONAL_ACCESS_TOKEN)

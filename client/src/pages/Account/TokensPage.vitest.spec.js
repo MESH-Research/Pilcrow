@@ -53,7 +53,10 @@ describe("Tokens page", () => {
     vi.resetAllMocks()
     tokensHandler.mockResolvedValue({
       data: {
-        personalAccessTokens: mockTokens
+        currentUser: {
+          id: "1",
+          tokens: mockTokens
+        }
       }
     })
   })
@@ -77,7 +80,10 @@ describe("Tokens page", () => {
   it("displays empty state when no tokens", async () => {
     tokensHandler.mockResolvedValue({
       data: {
-        personalAccessTokens: []
+        currentUser: {
+          id: "1",
+          tokens: []
+        }
       }
     })
     const wrapper = await makeWrapper()

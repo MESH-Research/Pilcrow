@@ -17,6 +17,8 @@ type User {
     submissions: [Submission]! @belongsToMany
     pivot: SubmissionUser
     staged: Boolean
+    "Personal access tokens for API authentication"
+    tokens: [PersonalAccessToken!]! @morphMany
 }
 
 enum UserRoles {

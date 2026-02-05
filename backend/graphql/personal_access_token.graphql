@@ -15,12 +15,6 @@ type CreatePersonalAccessTokenResponse {
     personalAccessToken: PersonalAccessToken!
 }
 
-extend type Query @guard {
-    "List all personal access tokens for the current user"
-    personalAccessTokens: [PersonalAccessToken!]!
-        @field(resolver: "App\\GraphQL\\Queries\\PersonalAccessTokens")
-}
-
 extend type Mutation @guard {
     "Create a new personal access token for the current user"
     createPersonalAccessToken(

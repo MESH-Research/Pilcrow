@@ -87,14 +87,17 @@ class PersonalAccessTokenTest extends ApiTestCase
     {
         $response = $this->graphQL(
             'query {
-                personalAccessTokens {
-                    id
-                    name
+                currentUser {
+                    tokens {
+                        id
+                        name
+                    }
                 }
             }'
         );
 
-        $response->assertGraphQLErrorMessage('Unauthenticated.');
+        // currentUser returns null when unauthenticated
+        $response->assertJsonPath('data.currentUser', null);
     }
 
     /**
@@ -112,17 +115,19 @@ class PersonalAccessTokenTest extends ApiTestCase
 
         $response = $this->graphQL(
             'query {
-                personalAccessTokens {
-                    id
-                    name
-                    created_at
+                currentUser {
+                    tokens {
+                        id
+                        name
+                        created_at
+                    }
                 }
             }'
         );
 
-        $response->assertJsonCount(3, 'data.personalAccessTokens');
+        $response->assertJsonCount(3, 'data.currentUser.tokens');
 
-        $names = collect($response->json('data.personalAccessTokens'))->pluck('name')->toArray();
+        $names = collect($response->json('data.currentUser.tokens'))->pluck('name')->toArray();
         $this->assertContains('Token 1', $names);
         $this->assertContains('Token 2', $names);
         $this->assertContains('Token 3', $names);
@@ -147,15 +152,17 @@ class PersonalAccessTokenTest extends ApiTestCase
 
         $response = $this->graphQL(
             'query {
-                personalAccessTokens {
-                    id
-                    name
+                currentUser {
+                    tokens {
+                        id
+                        name
+                    }
                 }
             }'
         );
 
-        $response->assertJsonCount(1, 'data.personalAccessTokens');
-        $response->assertJsonPath('data.personalAccessTokens.0.name', 'User 1 Token');
+        $response->assertJsonCount(1, 'data.currentUser.tokens');
+        $response->assertJsonPath('data.currentUser.tokens.0.name', 'User 1 Token');
     }
 
     /**
