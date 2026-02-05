@@ -40,7 +40,7 @@
       >
         <q-chip
           v-for="criteria in comment.style_criteria"
-          :key="comment.id + criteria.icon"
+          :key="comment.id + criteria.icon + criteria.name"
           size="16px"
           :icon="criteria.icon"
           data-cy="styleCriteria"
