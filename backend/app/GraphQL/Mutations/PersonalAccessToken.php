@@ -1,11 +1,9 @@
 <?php
-
 declare(strict_types=1);
 
 namespace App\GraphQL\Mutations;
 
 use Illuminate\Support\Facades\Auth;
-use Laravel\Sanctum\PersonalAccessToken as SanctumToken;
 
 class PersonalAccessToken
 {
@@ -14,7 +12,7 @@ class PersonalAccessToken
      *
      * @param  null  $_
      * @param  array<string, mixed>  $args
-     * @return array{token: string, personalAccessToken: SanctumToken}
+     * @return array{token: string, personalAccessToken: \Laravel\Sanctum\PersonalAccessToken}
      */
     public function create($_, array $args): array
     {
@@ -47,6 +45,6 @@ class PersonalAccessToken
             return false;
         }
 
-        return (bool) $token->delete();
+        return (bool)$token->delete();
     }
 }

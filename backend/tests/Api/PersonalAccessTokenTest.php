@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace Tests\Api;
@@ -195,7 +194,7 @@ class PersonalAccessTokenTest extends ApiTestCase
             'mutation RevokeToken($id: ID!) {
                 revokePersonalAccessToken(id: $id)
             }',
-            ['id' => (string) $tokenId]
+            ['id' => (string)$tokenId]
         );
 
         $response->assertJsonPath('data.revokePersonalAccessToken', true);
@@ -225,7 +224,7 @@ class PersonalAccessTokenTest extends ApiTestCase
             'mutation RevokeToken($id: ID!) {
                 revokePersonalAccessToken(id: $id)
             }',
-            ['id' => (string) $tokenId]
+            ['id' => (string)$tokenId]
         );
 
         // Should return false (token not found for this user)
@@ -276,7 +275,7 @@ class PersonalAccessTokenTest extends ApiTestCase
                 }'
             );
 
-        $response->assertJsonPath('data.currentUser.id', (string) $user->id);
+        $response->assertJsonPath('data.currentUser.id', (string)$user->id);
         $response->assertJsonPath('data.currentUser.email', $user->email);
     }
 }
