@@ -15,20 +15,18 @@ type CreatePersonalAccessTokenResponse {
     personalAccessToken: PersonalAccessToken!
 }
 
-extend type Query {
+extend type Query @guard {
     "List all personal access tokens for the current user"
     personalAccessTokens: [PersonalAccessToken!]!
-        @guard
         @field(resolver: "App\\GraphQL\\Queries\\PersonalAccessTokens")
 }
 
-extend type Mutation {
+extend type Mutation @guard {
     "Create a new personal access token for the current user"
     createPersonalAccessToken(
         "A name to identify this token"
         name: String!
     ): CreatePersonalAccessTokenResponse!
-        @guard
         @field(resolver: "App\\GraphQL\\Mutations\\PersonalAccessToken@create")
 
     "Revoke a personal access token"
@@ -36,6 +34,5 @@ extend type Mutation {
         "The ID of the token to revoke"
         id: ID!
     ): Boolean!
-        @guard
         @field(resolver: "App\\GraphQL\\Mutations\\PersonalAccessToken@revoke")
 }
