@@ -94,11 +94,15 @@ watch(
         if (!element) return 0
         return getOffsetTop(element.offsetParent) + element.offsetTop
       }
-      const secondaryNavHeight = 75
+      const primaryNavHeight = 70
+      const secondaryNavHeight = 48
+      const tertiaryNavHeight = 75
       const negativeSpaceAdjustment = 14
       const offset =
         getOffsetTop(scrollTarget) -
+        primaryNavHeight -
         secondaryNavHeight -
+        tertiaryNavHeight -
         negativeSpaceAdjustment
       const target = getScrollTarget(scrollTarget)
       setVerticalScrollPosition(target, offset, 250)

@@ -1,5 +1,5 @@
 <template>
-  <div data-cy="inlineComment">
+  <div data-cy="inlineComment" class="inline-comment">
     <div ref="scrollTarget" />
     <q-card
       square
@@ -95,7 +95,7 @@
           }}</span>
         </q-btn>
       </q-card-actions>
-      <section v-if="!isCollapsed">
+      <section v-if="!isCollapsed" class="inline-comment-replies">
         <inline-comment-reply
           v-for="reply in comment.replies"
           :key="reply.id"
@@ -143,8 +143,9 @@ import { ref, computed, inject, provide } from "vue"
 import CommentHeader from "./CommentHeader.vue"
 import InlineCommentReply from "./InlineCommentReply.vue"
 import CommentEditor from "../forms/CommentEditor.vue"
+const forExport = inject("forExport")
 
-const isCollapsed = ref(true)
+const isCollapsed = ref(!forExport)
 const isReplying = ref(false)
 const isQuoteReplying = ref(false)
 const commentReply = ref(null)
@@ -208,6 +209,7 @@ function deleteComment() {
 }
 
 const showReplyButton = computed(() => {
+  if (forExport) return false
   if (isReplying.value) return false
   if (hasReplies.value && isCollapsed.value) return false
   return true

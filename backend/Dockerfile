@@ -69,7 +69,7 @@ FROM base AS fpm
 
 FROM base AS unit-test
 
-ENV DB_DATABASE="database/database.sqlite"
+ENV DB_DATABASE="pilcrow"
 ENV APP_ENV=testing
 
 ARG OUTPUT_PATH=/tmp/output/fpm-unit-test
@@ -78,7 +78,8 @@ ARG STDERR_FILE=${OUTPUT_PATH}/stderr.txt
 
 # Switch to php-development.ini
 USER root
-RUN cp ${PHP_INI_DIR}/php.ini-development ${PHP_INI_DIR}/php.ini
+RUN cp ${PHP_INI_DIR}/php.ini-development ${PHP_INI_DIR}/php.ini \
+    && echo "memory_limit=256M" >> ${PHP_INI_DIR}/conf.d/memory.ini
 # Setup the output directory
 RUN --mount=type=cache,target=/tmp/output \
     mkdir -p "${OUTPUT_PATH}" && \
@@ -91,13 +92,13 @@ RUN --mount=type=cache,target=/var/www/.composer,uid=33,gid=33 \
 
 # Supply a random/cache busting timestamp to prevent caching of the test run.
 ARG BUILDSTAMP
-
-RUN mysql2sqlite database/schema/mysql-schema.sql > database/schema/sqlite-schema.sql
+RUN --mount=type=cache,target=/tmp/output \
+    mkdir -p "${OUTPUT_PATH}" && \
+    ./artisan migrate:fresh --seed
 
 RUN --mount=type=cache,target=/tmp/output \
     mkdir -p "${OUTPUT_PATH}" && \
     touch .env && \
-    touch ${DB_DATABASE} && \
     ./artisan test \
     > >(tee ${STDOUT_FILE}) \
     2> >(tee ${STDERR_FILE})
