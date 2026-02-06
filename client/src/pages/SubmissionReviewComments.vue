@@ -144,9 +144,8 @@ function handleNewScroll() {
 const comments_content = useTemplateRef("comments-content")
 let blob = ref("")
 
-function updateBlob(message = "") {
+function updateBlob() {
   let download_content = comments_content.value?.$el.innerHTML
-  console.log("run", message)
   blob.value = URL.createObjectURL(
     new Blob(
       [
