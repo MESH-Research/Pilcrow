@@ -153,6 +153,7 @@ function updateBlob() {
         `<title>${t("export.submission_review_comments")}</title>`,
         `<style>${exportStyles}</style>`,
         `</head><body>`,
+        submission.value.content.data,
         download_content,
         `</body></html>`
       ],
