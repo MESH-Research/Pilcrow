@@ -24,6 +24,10 @@ To run the PHP unit tests execute the following command **from the `/backend` di
 lando artisan test
 ```
 
+::: tip Debugging CI Failures
+If tests pass locally but fail in CI, you can reproduce the CI environment using `./scripts/test-backend-bake.sh`. See [Build System & CI](./build-ci.md) for details.
+:::
+
 Be sure to read the [Laravel testing documentation](https://laravel.com/docs/8.x/testing) and [Laravel Lighthouse testing documentation](https://lighthouse-php.com/master/testing/phpunit.html).  Both provide essential information about writing unit tests for our application.
 
 ### Client Unit Tests
@@ -36,6 +40,10 @@ To run the client-side unit tests, you can run the following **from the `/client
 lando yarn test:unit
 ```
 Each package's documentation is an excellent source of information on testing best practices and examples.  The [Vue Testing Handbook](https://lmiller1990.github.io/vue-testing-handbook/) is also an excellent resource for unit testing a Vue application.
+
+::: tip Debugging CI Failures
+To reproduce the CI environment for client tests: `docker buildx bake web-test`
+:::
 
 Vitest also has a web interface for browsing and running tests.  To launch it, run:
 ```sh

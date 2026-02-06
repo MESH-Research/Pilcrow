@@ -8,7 +8,9 @@
     "devDependencies": {
         "@types/node": "^20.8.9",
         "all-contributors-cli": "^6.26.1",
+        "mermaid": "^11.12.2",
         "vitepress": "^1.0.0-rc.24",
+        "vitepress-plugin-mermaid": "^2.0.17",
         "vitepress-plugin-search": "^1.0.4-alpha.20",
         "vue": "^3.3.7"
     },
