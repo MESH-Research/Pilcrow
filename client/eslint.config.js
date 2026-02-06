@@ -8,17 +8,6 @@ import prettierSkipFormatting from "@vue/eslint-config-prettier"
 import pluginCypress from "eslint-plugin-cypress"
 const { merge } = lodash
 const config = [
-  {
-    /**
-     * Ignore the following files.
-     * Please note that pluginQuasar.configs.recommended() already ignores
-     * the "node_modules" folder for you (and all other Quasar project
-     * relevant folders and files).
-     *
-     * ESLint requires "ignores" key to be the only one in this object
-     */
-    ignores: ["*.ts"]
-  },
   ...pluginQuasar.configs.recommended(),
   ...pluginVue.configs["flat/recommended"],
   /**
@@ -34,8 +23,8 @@ const config = [
    *   -> Above, plus rules to enforce subjective community defaults to ensure consistency.
    */
   {
-    files: ["src*/**/*.{vue,js,mjs,cjs}"],
-    ignores: ["src*/**/*.vitest.spec.{js,mjs,cjs}"],
+    files: ["src*/**/*.{vue,js,mjs,cjs,ts,mts}"],
+    ignores: ["src*/**/*.vitest.spec.{js,mjs,cjs,ts,mts}"],
     languageOptions: {
       ecmaVersion: "latest",
       sourceType: "module",
@@ -63,7 +52,7 @@ const config = [
   {
     files: [
       "test/vitest/**/*.{js,mjs,cjs,ts,mts,cts}",
-      "src*/**/*.vitest.spec.{js,mjs,cjs}"
+      "src*/**/*.vitest.spec.{js,mjs,cjs,ts,mts}"
     ],
     ...js.configs.recommended,
 

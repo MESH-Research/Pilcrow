@@ -49,6 +49,11 @@ export default defineConfig(function (/* ctx */) {
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#build
     build: {
+      typescript: {
+        strict: false,
+        vueShim: true,
+      },
+
       target: {
         browser: ["es2019", "edge88", "firefox78", "chrome87", "safari13.1"],
         node: "node20"
@@ -101,7 +106,7 @@ export default defineConfig(function (/* ctx */) {
           {
             eslint: {
               lintCommand:
-                'eslint -c ./eslint.config.js "./src*/**/*.{js,mjs,cjs,vue}"',
+                'eslint -c ./eslint.config.js "./src*/**/*.{js,mjs,cjs,ts,mts,vue}"',
               useFlatConfig: true
             }
           },
