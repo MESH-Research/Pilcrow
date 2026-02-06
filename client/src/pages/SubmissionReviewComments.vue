@@ -101,7 +101,7 @@ const exportOptionChoiceMapper = {
 const exportOptionChoiceObject =
   exportOptionChoiceMapper[route.query.export ?? props.exportOptionChoice]
 
-const commenters_array = route.query.ids.map(Number)
+const commenters_array = route.query.ids?.map(Number)
 if (commenters_array && typeof commenters_array == "object") {
   exportOptionChoiceObject.sic = "I_D"
   exportOptionChoiceObject.sirc = "I_D"
