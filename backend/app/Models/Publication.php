@@ -39,7 +39,7 @@ class Publication extends BaseModel
      */
     public function setNameAttribute($value)
     {
-        $this->attributes['name'] = trim($value);
+        $this->attributes['name'] = is_string($value) ? trim($value) : $value;
     }
 
     /**

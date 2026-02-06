@@ -98,6 +98,7 @@ target "web-bundle" {
         VERSION_DATE = VERSION_DATE
     }
     platforms = ["local"]
+    output = ["type=local,dest=./bundle-output"]
 }
 
 target "default-labels" {

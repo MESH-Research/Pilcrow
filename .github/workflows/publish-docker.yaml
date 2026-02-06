@@ -30,7 +30,7 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - uses: mesh-research/github-actions/build-image@main
+      - uses: mesh-research/github-actions/build-image@v2
         name: Build and Push Docker Images
         id: build-image
         with:
