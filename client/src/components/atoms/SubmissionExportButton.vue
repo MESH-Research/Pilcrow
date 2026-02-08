@@ -28,7 +28,7 @@
   />
 </template>
 <script setup>
-import { useSubmissionExport } from "src/use/guiElements.js"
+import { useSubmissionExport } from "src/use/guiElements"
 import { toRef } from "vue"
 const props = defineProps({
   submission: {

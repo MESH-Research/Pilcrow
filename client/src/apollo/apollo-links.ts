@@ -45,7 +45,7 @@ const withXsrfLink = setContext((_, { headers }) => {
 
 //On a 419 error, fetch a new XSRF token and retry the request.
 const expiredTokenLink = onError(({ operation, forward, networkError }) => {
-  if (networkError && networkError.statusCode == 419) {
+  if (networkError && (networkError as any).statusCode == 419) {
     return new Observable((observer) => {
       fetchXsrfToken()
         .then((newXsrfToken) => {

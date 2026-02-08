@@ -2,7 +2,7 @@ import { computed, getCurrentInstance, inject } from "vue"
 import { useI18n } from "vue-i18n"
 
 export function useVQWrap(validator, tPath) {
-  const { emit } = getCurrentInstance()
+  const { emit } = getCurrentInstance()!
 
   const { t } = useI18n()
   const parentUpdate = inject("vqupdate", null)

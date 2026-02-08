@@ -101,7 +101,7 @@ import StatusChangeDropdown from "./StatusChangeDropdown.vue"
 import {
   useSubmissionExport,
   useStatusChangeControls
-} from "src/use/guiElements.js"
+} from "src/use/guiElements"
 import { ref } from "vue"
 
 const props = defineProps({

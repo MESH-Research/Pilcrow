@@ -10,7 +10,7 @@ import {
   beforeEachRequiresReviewAccess,
   beforeEachRequiresExportAccess
 } from "src/apollo/apollo-router-guards"
-import { withXsrfLink, expiredTokenLink } from "src/apollo/apollo-links.js"
+import { withXsrfLink, expiredTokenLink } from "src/apollo/apollo-links"
 import { createApolloProvider } from "@vue/apollo-option"
 
 import { ApolloClients } from "@vue/apollo-composable"

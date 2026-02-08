@@ -3,6 +3,7 @@ import globals from "globals"
 import pluginVue from "eslint-plugin-vue"
 import pluginQuasar from "@quasar/app-vite/eslint"
 import lodash from "lodash"
+import tseslint from "typescript-eslint"
 // the following is optional, if you want prettier too:
 import prettierSkipFormatting from "@vue/eslint-config-prettier"
 import pluginCypress from "eslint-plugin-cypress"
@@ -50,6 +51,13 @@ const config = [
     }
   },
   {
+    files: ["src*/**/*.{ts,mts}"],
+    ignores: ["src*/**/*.vitest.spec.{ts,mts}"],
+    languageOptions: {
+      parser: tseslint.parser
+    }
+  },
+  {
     files: [
       "test/vitest/**/*.{js,mjs,cjs,ts,mts,cts}",
       "src*/**/*.vitest.spec.{js,mjs,cjs,ts,mts}"
@@ -77,6 +85,15 @@ const config = [
       },
     },
     */
+  },
+  {
+    files: [
+      "test/vitest/**/*.{ts,mts,cts}",
+      "src*/**/*.vitest.spec.{ts,mts}"
+    ],
+    languageOptions: {
+      parser: tseslint.parser
+    }
   },
   {
     files: ["test/cypress/**/*.{js,mjs,cjs}"],

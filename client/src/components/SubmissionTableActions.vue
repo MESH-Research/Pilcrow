@@ -255,7 +255,7 @@ import { useQuasar } from "quasar"
 import {
   useSubmissionExport,
   useStatusChangeControls
-} from "src/use/guiElements.js"
+} from "src/use/guiElements"
 import { ref } from "vue"
 const { dialog } = useQuasar()
 
