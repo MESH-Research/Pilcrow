@@ -24,12 +24,8 @@ server {
         try_files /dev/null @backend;
     }
 
-    location = / {
-      try_files /dev/null @backend;
-    }
-
     location / {
-      try_files $uri =404;
+      try_files $uri @backend;
     }
 
     location /healthz {
