@@ -22,3 +22,10 @@ Route::get('/', function () {
 Route::get('/reset-password/{token}', function (string $token) {
     return view('auth.reset-password', ['token' => $token]);
 })->middleware('guest')->name('password.reset');
+
+// Catch-all route for SPA deep linking. All unmatched routes serve the index
+// view so that Vue Router can handle client-side routing. This must remain the
+// last route defined in this file.
+Route::get('/{any}', function () {
+    return view('index');
+})->where('any', '.*');
