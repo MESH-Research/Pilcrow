@@ -275,7 +275,8 @@ describe("InlineComments", () => {
                 }
               ]
             }),
-            activeComment: ref()
+            activeComment: ref(),
+            forExport: ref()
           },
           stubs: ["router-link", "CommentEditor"]
         }

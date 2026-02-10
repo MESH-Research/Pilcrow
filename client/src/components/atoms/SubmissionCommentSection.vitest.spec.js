@@ -261,7 +261,8 @@ describe("Overall Comments", () => {
                 }
               ]
             }),
-            activeComment: ref()
+            activeComment: ref(),
+            forExport: ref()
           },
           stubs: ["router-link", "CommentEditor"]
         }

@@ -15,16 +15,16 @@ const icons = flatten({
     archived: "inventory_2",
     deleted: "delete",
     inline_comment: {
-      added: "chat_bubble",
+      added: "chat_bubble"
     },
     inline_comment_reply: {
-      added: "chat_bubble",
+      added: "chat_bubble"
     },
     overall_comment: {
-      added: "chat",
+      added: "chat"
     },
     overall_comment_reply: {
-      added: "chat",
+      added: "chat"
     },
     invitation: {
       review_coordinator: {
