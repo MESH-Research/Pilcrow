@@ -16,7 +16,7 @@ class SpaRoutingTest extends TestCase
             'nested route' => ['/publication/1/submissions'],
             'deep nested route' => ['/submission/123/details'],
             'account settings' => ['/account/settings'],
-            'review page' => ['/submission/456/review/789'],
+            'review page' => ['/submission/456/review'],
         ];
     }
 
