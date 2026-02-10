@@ -41,7 +41,7 @@
   </q-card>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, toRef, provide, computed } from "vue"
 import StyleCriteriaItem from "src/components/molecules/StyleCriteriaItem.vue"
 import StyleCriteriaForm from "src/components/forms/StyleCriteriaForm.vue"
@@ -55,14 +55,11 @@ import { useMutation } from "@vue/apollo-composable"
 import { useI18n } from "vue-i18n"
 const { t } = useI18n()
 
-const editId = ref(null)
+const editId = ref<string | null>(null)
 
-const props = defineProps({
-  publication: {
-    type: Object,
-    required: true
-  }
-})
+const props = defineProps<{
+  publication: Record<string, any>
+}>()
 const publication = toRef(props, "publication")
 
 const variables = {

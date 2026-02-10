@@ -65,6 +65,21 @@ const config = [
     }
   },
   {
+    files: ["src*/**/*.vue"],
+    languageOptions: {
+      parserOptions: {
+        parser: tseslint.parser
+      }
+    },
+    plugins: {
+      "@typescript-eslint": tseslint.plugin
+    },
+    rules: {
+      "no-unused-vars": "off",
+      "@typescript-eslint/no-unused-vars": ["error", { caughtErrors: "none" }]
+    }
+  },
+  {
     files: [
       "test/vitest/**/*.{js,mjs,cjs,ts,mts,cts}",
       "src*/**/*.vitest.spec.{js,mjs,cjs,ts,mts}"
@@ -94,10 +109,7 @@ const config = [
     */
   },
   {
-    files: [
-      "test/vitest/**/*.{ts,mts,cts}",
-      "src*/**/*.vitest.spec.{ts,mts}"
-    ],
+    files: ["test/vitest/**/*.{ts,mts,cts}", "src*/**/*.vitest.spec.{ts,mts}"],
     languageOptions: {
       parser: tseslint.parser
     },

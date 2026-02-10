@@ -17,7 +17,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useQuery } from "@vue/apollo-composable"
 import UserListBasic from "src/components/molecules/UserListBasic.vue"
 import { GET_USERS } from "src/graphql/queries"

@@ -66,7 +66,7 @@
   </section>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ReinviteUserDialog from "./dialogs/ReinviteUserDialog.vue"
 import FindUserSelect from "./forms/FindUserSelect.vue"
 import UserList from "./molecules/UserList.vue"
@@ -87,36 +87,27 @@ import Placeholder from "@tiptap/extension-placeholder"
 import { useQuasar } from "quasar"
 const { dialog } = useQuasar()
 
-const props = defineProps({
-  container: {
-    type: Object,
-    required: true
-  },
-  roleGroup: {
-    type: String,
-    required: true
-  },
-  mutable: {
-    type: Boolean,
-    default: false
-  },
-  maxUsers: {
-    type: [Boolean, Number],
-    required: false,
-    default: false
-  },
-  containerType: {
-    type: String,
-    requred: false,
-    default: null
+const props = withDefaults(
+  defineProps<{
+    container: Record<string, any>
+    roleGroup: string
+    mutable?: boolean
+    maxUsers?: boolean | number
+    containerType?: string | null
+  }>(),
+  {
+    mutable: false,
+    maxUsers: false,
+    containerType: null
   }
-})
+)
 
-const user = ref(null)
+const user = ref<Record<string, any> | string | null>(null)
 const containerType = computed(() => props.container.__typename.toLowerCase())
 const { t, te } = useI18n()
-const tPrefix = (key) => `${containerType.value}.${props.roleGroup}.${key}`
-const tp$ = (key, ...args) => t(tPrefix(key), ...args)
+const tPrefix = (key: string) =>
+  `${containerType.value}.${props.roleGroup}.${key}`
+const tp$ = (key: string, ...args: any[]) => t(tPrefix(key), ...args)
 
 const { newStatusMessage } = useFeedbackMessages()
 
@@ -151,7 +142,7 @@ const users = computed(() => {
 const acceptMore = computed(() => {
   return (
     props.mutable &&
-    (props.maxUsers === false) | (users.value.length < props.maxUsers) &&
+    (props.maxUsers === false || users.value.length < props.maxUsers) &&
     props.container.effective_role === `review_coordinator`
   )
 })

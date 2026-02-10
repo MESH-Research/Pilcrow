@@ -101,7 +101,7 @@
   </article>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useCurrentUser } from "src/use/user"
 import { CURRENT_USER_SUBMISSIONS, GET_SUBMISSIONS } from "src/graphql/queries"
 import { GET_PUBLICATIONS } from "src/graphql/queries"
@@ -121,7 +121,7 @@ const { result, loading: subsLoading } = useQuery(CURRENT_USER_SUBMISSIONS)
 const submissions = computed(() => {
   let s = result.value?.currentUser?.submissions ?? []
   return [...s].sort((a, b) => {
-    return new Date(b.created_at) - new Date(a.created_at)
+    return new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
   })
 })
 const { result: pubsResult } = useQuery(GET_PUBLICATIONS, {
@@ -195,7 +195,7 @@ const latest_comments = computed(() => {
   return comments
     .flat()
     .sort((a, b) => {
-      return new Date(b.updated_at) - new Date(a.updated_at)
+      return new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
     })
     .slice(0, 4)
 })

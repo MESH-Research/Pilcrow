@@ -12,8 +12,9 @@
   </div>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import { defineComponent } from "vue"
+export default defineComponent({
   name: "NewPasswordInputMeter",
   props: {
     score: {
@@ -28,7 +29,7 @@ export default {
       type: Boolean
     }
   }
-}
+})
 </script>
 
 <style lang="sass" scoped>

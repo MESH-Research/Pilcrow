@@ -31,18 +31,18 @@
   </q-scroll-area>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, watch, inject, computed, nextTick } from "vue"
 import NewInlineComment from "../NewInlineCommentComponent.vue"
 import InlineComment from "src/components/atoms/InlineComment.vue"
 import { scroll } from "quasar"
 const { getScrollTarget, setVerticalScrollPosition } = scroll
 
-const submission = inject("submission")
-const activeComment = inject("activeComment")
+const submission = inject("submission") as any
+const activeComment = inject("activeComment") as any
 
-const commentRefs = ref([])
-const inline_comments_section = ref(null)
+const commentRefs = ref<any[]>([])
+const inline_comments_section = ref<HTMLElement | null>(null)
 
 const inline_comments = computed(() => {
   const comments = Array.isArray(submission.value?.inline_comments)

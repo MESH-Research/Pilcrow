@@ -140,54 +140,35 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import useVuelidate from "@vuelidate/core"
 import ErrorFieldRenderer from "src/components/molecules/ErrorFieldRenderer.vue"
 import { reactive, ref } from "vue"
 import Draggable from "vuedraggable"
 import CollapseToolbar from "./CollapseToolbar.vue"
 
-const props = defineProps({
-  /**
-   * Model property for list of items.
-   */
-  modelValue: {
-    type: Array,
-    default: () => []
-  },
-  /**
-   * Icon to prepend to input
-   */
-  inputIcon: {
-    type: String,
-    default: ""
-  },
-  /**
-   * Vuelidate valdiation rules to apply to new and edited items
-   */
-  rules: {
-    type: Object,
-    default: () => {}
-  },
-  /**
-   * Translation root to use for label, hint, etc.
-   */
-  t: {
-    type: String,
-    default: "lists"
-  },
-  /**
-   * Set true to allow duplicates items in list.
-   */
-  allowDuplicates: {
-    type: Boolean,
-    default: false
+const props = withDefaults(
+  defineProps<{
+    modelValue?: string[]
+    inputIcon?: string
+    rules?: Record<string, any>
+    t?: string
+    allowDuplicates?: boolean
+  }>(),
+  {
+    modelValue: () => [],
+    inputIcon: "",
+    rules: () => ({}),
+    t: "lists",
+    allowDuplicates: false
   }
-})
+)
 
-const emit = defineEmits(["update:modelValue"])
+const emit = defineEmits<{
+  "update:modelValue": [value: string[]]
+}>()
 
-const itemUnderEdit = ref(false)
+const itemUnderEdit = ref<number | false>(false)
 
 const form = reactive({
   addItemValue: "",

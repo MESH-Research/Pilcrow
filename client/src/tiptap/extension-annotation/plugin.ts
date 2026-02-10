@@ -32,6 +32,7 @@ function commentWidget({ click, context }) {
   button.appendChild(icon)
   return button
 }
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const AnnotationPlugin = (_opts?: any) =>
   new Plugin({
     key: AnnotationPluginKey,

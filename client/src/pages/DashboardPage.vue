@@ -107,7 +107,7 @@
   </article>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import AvatarImage from "src/components/atoms/AvatarImage.vue"
 import { useCurrentUser } from "src/use/user"
 import { useQuery } from "@vue/apollo-composable"
@@ -126,7 +126,7 @@ const { result } = useQuery(CURRENT_USER_SUBMISSIONS)
 const submissions = computed(() => {
   let s = result.value?.currentUser?.submissions ?? []
   return [...s].sort((a, b) => {
-    return new Date(b.created_at) - new Date(a.created_at)
+    return new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
   })
 })
 const reviewer_submissions = computed(() =>

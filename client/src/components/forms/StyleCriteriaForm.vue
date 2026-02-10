@@ -68,7 +68,7 @@
   </q-form>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import SelectIconDialog from "src/components/dialogs/SelectIconDialog.vue"
 import { useQuasar } from "quasar"
 import { reactive, onMounted, inject, watchEffect, computed } from "vue"
@@ -78,16 +78,22 @@ import { isEqual, pick } from "lodash"
 import VQInput from "src/components/atoms/VQInput.vue"
 import FormActions from "../molecules/FormActions.vue"
 import { useI18n } from "vue-i18n"
-const { dirty, setError } = inject("formState")
+const { dirty, setError } = inject("formState") as any
 
 const { t } = useI18n()
-const props = defineProps({
-  criteria: {
-    type: Object,
-    default: () => ({})
+const props = withDefaults(
+  defineProps<{
+    criteria?: Record<string, any>
+  }>(),
+  {
+    criteria: () => ({})
   }
-})
-const emit = defineEmits(["cancel", "save", "delete"])
+)
+const emit = defineEmits<{
+  cancel: []
+  save: [criteria: Record<string, any>]
+  delete: [criteria: Record<string, any>]
+}>()
 
 const state = reactive({
   id: "",

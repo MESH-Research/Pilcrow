@@ -20,7 +20,7 @@
   </q-btn>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { SEND_VERIFY_EMAIL } from "src/graphql/mutations"
 import { ref, computed } from "vue"
 import { useMutation } from "@vue/apollo-composable"

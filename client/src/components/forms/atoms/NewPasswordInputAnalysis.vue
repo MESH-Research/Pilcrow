@@ -25,14 +25,11 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed } from "vue"
-const props = defineProps({
-  complexity: {
-    type: Object,
-    required: true
-  }
-})
+const props = defineProps<{
+  complexity: Record<string, any>
+}>()
 
 const suggestions = computed(() => {
   return props.complexity.feedback.suggestions

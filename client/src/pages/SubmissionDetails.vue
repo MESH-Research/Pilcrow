@@ -96,7 +96,7 @@
   </article>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import AssignedSubmissionUsers from "src/components/AssignedSubmissionUsers.vue"
 import SubmissionAudit from "../components/SubmissionAudit.vue"
 import SubmissionTitle from "src/components/SubmissionTitle.vue"
@@ -105,12 +105,9 @@ import { GET_SUBMISSION } from "src/graphql/queries"
 import { computed, provide, watchEffect, ref } from "vue"
 import { useQuery } from "@vue/apollo-composable"
 
-const props = defineProps({
-  id: {
-    type: String,
-    required: true
-  }
-})
+const props = defineProps<{
+  id: string
+}>()
 
 const { result } = useQuery(GET_SUBMISSION, { id: props.id })
 const submission = computed(() => {

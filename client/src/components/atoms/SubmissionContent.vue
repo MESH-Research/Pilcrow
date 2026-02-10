@@ -120,7 +120,7 @@
     </div>
   </article>
 </template>
-<script setup>
+<script setup lang="ts">
 import { BubbleMenu, Editor, EditorContent } from "@tiptap/vue-3"
 import SubmissionContentKit from "src/tiptap/extension-submission-content-kit"
 import {
@@ -138,32 +138,30 @@ const { darkModeStatus, toggleDarkMode } = useDarkMode()
 const { mutate: markRead } = useMutation(MARK_INLINE_COMMENTS_READ)
 const { mutate: markReplyRead } = useMutation(MARK_INLINE_COMMENT_REPLIES_READ)
 
-const props = defineProps({
-  annotationEnabled: {
-    type: Boolean,
-    default: true
-  },
-  highlightVisibility: {
-    type: Boolean,
-    default: true
-  },
-  showOverallComments: {
-    type: Boolean,
-    default: true
+const props = withDefaults(
+  defineProps<{
+    annotationEnabled?: boolean
+    highlightVisibility?: boolean
+    showOverallComments?: boolean
+  }>(),
+  {
+    annotationEnabled: true,
+    highlightVisibility: true,
+    showOverallComments: true
   }
-})
+)
 
-const forExport = inject("forExport")
-const commentDrawerOpen = inject("commentDrawerOpen")
-const submission = inject("submission")
-const activeComment = inject("activeComment")
-const contentRef = ref(null)
+const forExport = inject("forExport") as any
+const commentDrawerOpen = inject("commentDrawerOpen") as any
+const submission = inject("submission") as any
+const activeComment = inject("activeComment") as any
+const contentRef = ref<HTMLElement | null>(null)
 
-const emit = defineEmits([
-  "scrollToOverallComments",
-  "scrollAddNewOverallComment",
-  "editorReady"
-])
+const emit = defineEmits<{
+  scrollToOverallComments: []
+  scrollAddNewOverallComment: []
+  editorReady: [editor: InstanceType<typeof Editor>]
+}>()
 
 function scrollToOverallComments() {
   emit("scrollToOverallComments")

@@ -5,18 +5,15 @@
   </article>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useMutation } from "@vue/apollo-composable"
 import { provide } from "vue"
 import UpdateBasicForm from "src/components/forms/Publication/UpdateBasicForm.vue"
 import { UPDATE_PUBLICATION_BASICS } from "src/graphql/mutations"
 import { useFormState } from "src/use/forms"
-const props = defineProps({
-  publication: {
-    type: Object,
-    required: true
-  }
-})
+const props = defineProps<{
+  publication: Record<string, any>
+}>()
 
 const mutation = useMutation(UPDATE_PUBLICATION_BASICS)
 
