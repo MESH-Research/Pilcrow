@@ -13,7 +13,7 @@ function getDecorations(doc, annotations) {
         "data-cy": "comment-highlight",
         dataset: { comment: a.context.id },
         style: "cursor: pointer"
-      }),
+      } as any),
       Decoration.widget(a.from, commentWidget(a))
     ])
     .reduce((a, c) => [...a, ...c], [])
@@ -32,7 +32,7 @@ function commentWidget({ click, context }) {
   button.appendChild(icon)
   return button
 }
-export const AnnotationPlugin = () =>
+export const AnnotationPlugin = (_opts?: any) =>
   new Plugin({
     key: AnnotationPluginKey,
 

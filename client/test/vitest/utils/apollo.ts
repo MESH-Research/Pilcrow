@@ -9,7 +9,7 @@ const cache = new InMemoryCache({
   addTypename: true
 })
 
-const createMockClient = (opts) =>
+const createMockClient = (opts: any = {}) =>
   createClient({
     ...opts,
     connectToDevTools: false,
@@ -19,7 +19,7 @@ const createMockClient = (opts) =>
 
 export { createMockClient }
 
-export function installApolloClient(opts) {
+export function installApolloClient(opts: any = {}) {
   const globalConfigBackup = cloneDeep(config.global)
   const client = createMockClient(opts)
 

@@ -10,7 +10,7 @@ export function useTimeAgo() {
   return new TimeAgo("en-US")
 }
 
-export function relativeTime(date, style = "long") {
+export function relativeTime(date, style: any = "long") {
   const timeAgo = useTimeAgo()
 
   const isoDate = computed(() => {

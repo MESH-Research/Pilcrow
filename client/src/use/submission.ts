@@ -7,7 +7,7 @@ import { CREATE_SUBMISSION_DRAFT } from "src/graphql/mutations"
 import { CURRENT_USER_SUBMISSIONS } from "src/graphql/queries"
 
 export const useSubmissionCreation = () => {
-  const { mutate, saving } = useMutation(CREATE_SUBMISSION_DRAFT)
+  const { mutate, loading: saving } = useMutation(CREATE_SUBMISSION_DRAFT)
 
   const submission = reactive({
     title: "",

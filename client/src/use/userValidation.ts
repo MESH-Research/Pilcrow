@@ -32,7 +32,14 @@ export const rules = {
 
 export const updateUserRules = omit(rules, ["name", "username"])
 
-export function useUserValidation(opts = {}) {
+interface UserValidationOpts {
+  mutation?: any
+  rules?: any
+  variables?: any
+  validation_key?: string
+}
+
+export function useUserValidation(opts: UserValidationOpts = {}) {
   const form = reactive({
     email: "",
     password: "",

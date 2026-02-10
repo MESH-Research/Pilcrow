@@ -1,7 +1,15 @@
 import { Extension } from "@tiptap/vue-3"
 import { watch } from "vue"
 import { AnnotationPlugin, AnnotationPluginKey } from "./plugin"
-export const Annotation = Extension.create({
+
+interface AnnotationOptions {
+  HTMLAttributes: Record<string, any>
+  onUpdate: (decorations: any) => any
+  annotations?: any
+  instance?: any
+}
+
+export const Annotation = Extension.create<AnnotationOptions>({
   name: "annotation",
 
   priority: 1000,
@@ -73,7 +81,7 @@ export const Annotation = Extension.create({
 
           return true
         }
-    }
+    } as any
   },
 
   addProseMirrorPlugins() {

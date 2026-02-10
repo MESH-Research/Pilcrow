@@ -19,7 +19,7 @@ export function clickHandler(options) {
         }
 
         const attrs = getAttributes(view.state, options.type.name)
-        const link = event.target
+        const link = event.target as HTMLAnchorElement | null
 
         const href = link?.href ?? attrs.href
 

@@ -2,8 +2,9 @@ import { vi, afterEach } from "vitest"
 
 const Dialog = {
   ok: true,
-  value: undefined,
-  resolveOk: function (value) {
+  value: undefined as any,
+  create: vi.fn(),
+  resolveOk: function (value?: any) {
     this.value = value
     this.ok = true
   },
