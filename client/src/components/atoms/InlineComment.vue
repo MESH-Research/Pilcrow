@@ -139,13 +139,13 @@
   </div>
 </template>
 <script setup>
-import { ref, computed, inject, provide } from "vue"
-import CommentHeader from "./CommentHeader.vue"
+import { computed, inject, provide, ref } from "vue"
 import InlineCommentReply from "./InlineCommentReply.vue"
 import CommentEditor from "../forms/CommentEditor.vue"
+import CommentHeader from "./CommentHeader.vue"
 const forExport = inject("forExport")
 
-const isCollapsed = ref(!forExport)
+const isCollapsed = ref(!(forExport.value ?? false))
 const isReplying = ref(false)
 const isQuoteReplying = ref(false)
 const commentReply = ref(null)
