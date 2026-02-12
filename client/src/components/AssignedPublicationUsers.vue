@@ -1,8 +1,8 @@
 <template>
   <section class="column q-gutter-y-sm">
-    <h3 class="q-my-none">{{ tp$("heading") }}</h3>
-    <p v-if="te(tPrefix('description'))" class="q-mb-none q-mx-none">
-      {{ tp$("description") }}
+    <h3 class="q-my-none">{{ pt("heading") }}</h3>
+    <p v-if="pte('description')" class="q-mb-none q-mx-none">
+      {{ pt("description") }}
     </p>
     <div v-if="users.length">
       <user-list
@@ -13,10 +13,10 @@
           mutable
             ? [
                 {
-                  ariaLabel: tp$('unassign_button.ariaLabel'),
+                  ariaLabel: pt('unassign_button.ariaLabel'),
                   icon: 'person_remove',
                   action: 'unassign',
-                  help: tp$('unassign_button.help'),
+                  help: pt('unassign_button.help'),
                   cyAttr: 'button_unassign'
                 }
               ]
@@ -32,7 +32,7 @@
             <q-icon color="accent" name="o_do_disturb_on" size="sm" />
           </q-card-section>
           <q-card-section>
-            {{ tp$("none") }}
+            {{ pt("none") }}
           </q-card-section>
         </q-card-section>
       </q-card>
@@ -66,7 +66,8 @@ import {
   UPDATE_PUBLICATION_EDITORS
 } from "src/graphql/mutations"
 import { computed, ref } from "vue"
-import { useI18n } from "vue-i18n"
+import type { DocumentNode } from "graphql"
+import { useI18nPrefix } from "src/use/i18nPrefix"
 const props = withDefaults(
   defineProps<{
     container: Record<string, any>
@@ -84,15 +85,19 @@ const props = withDefaults(
 
 const user = ref<Record<string, any> | null>(null)
 const containerType = computed(() => props.container.__typename.toLowerCase())
-const { t, te } = useI18n()
-const tPrefix = (key: string) =>
-  `${containerType.value}.${props.roleGroup}.${key}`
-const tp$ = (key: string, ...args: any[]) => t(tPrefix(key), ...args)
+const { pt, pte } = useI18nPrefix(
+  () => `${containerType.value}.${props.roleGroup}`
+)
 
 const { newStatusMessage } = useFeedbackMessages()
 
-const opts = { variables: { id: props.container.id } }
-const mutations = {
+interface PublicationMutationVars {
+  id?: string
+  connect?: string[]
+  disconnect?: string[]
+}
+
+const mutations: Record<string, DocumentNode> = {
   editors: UPDATE_PUBLICATION_EDITORS,
   publication_admins: UPDATE_PUBLICATION_ADMINS
 }
@@ -107,7 +112,10 @@ const acceptMore = computed(() => {
   )
 })
 
-const { mutate } = useMutation(mutations[props.roleGroup], opts)
+const { mutate } = useMutation<unknown, PublicationMutationVars>(
+  mutations[props.roleGroup],
+  { variables: { id: props.container.id } }
+)
 
 async function handleSubmit() {
   if (!acceptMore.value) {
@@ -121,7 +129,7 @@ async function handleSubmit() {
       .then(() => {
         newStatusMessage(
           "success",
-          tp$("assign.success", {
+          pt("assign.success", {
             display_name: user.value.name ?? user.value.username
           })
         )
@@ -130,7 +138,7 @@ async function handleSubmit() {
         user.value = null
       })
   } catch (error) {
-    newStatusMessage("failure", tp$("assign.error"))
+    newStatusMessage("failure", pt("assign.error"))
   }
 }
 
@@ -140,12 +148,12 @@ async function handleUserListClick({ user }) {
     await mutate({ disconnect: [user.id] })
     newStatusMessage(
       "success",
-      tp$("unassign.success", {
+      pt("unassign.success", {
         display_name: user.name ? user.name : user.username
       })
     )
   } catch (error) {
-    newStatusMessage("failure", tp$("unassign.error"))
+    newStatusMessage("failure", pt("unassign.error"))
   }
 }
 </script>
