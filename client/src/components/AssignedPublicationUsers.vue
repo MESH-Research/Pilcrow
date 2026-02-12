@@ -58,6 +58,7 @@
 
 <script setup lang="ts">
 import FindUserSelect from "./forms/FindUserSelect.vue"
+import type { FoundUser } from "./forms/FindUserSelect.vue"
 import UserList from "./molecules/UserList.vue"
 import { useFeedbackMessages } from "src/use/guiElements"
 import { useMutation } from "@vue/apollo-composable"
@@ -83,7 +84,7 @@ const props = withDefaults(
   }
 )
 
-const user = ref<Record<string, any> | null>(null)
+const user = ref<FoundUser | null>(null)
 const containerType = computed(() => props.container.__typename.toLowerCase())
 const { pt, pte } = useI18nPrefix(
   () => `${containerType.value}.${props.roleGroup}`
@@ -118,19 +119,20 @@ const { mutate } = useMutation<unknown, PublicationMutationVars>(
 )
 
 async function handleSubmit() {
-  if (!acceptMore.value) {
+  if (!acceptMore.value || !user.value) {
     return
   }
 
+  const selectedUser = user.value
   try {
     await mutate({
-      connect: [user.value.id]
+      connect: [selectedUser.id]
     })
       .then(() => {
         newStatusMessage(
           "success",
           pt("assign.success", {
-            display_name: user.value.name ?? user.value.username
+            display_name: selectedUser.name ?? selectedUser.username
           })
         )
       })
@@ -142,7 +144,7 @@ async function handleSubmit() {
   }
 }
 
-async function handleUserListClick({ user }) {
+async function handleUserListClick({ user }: { user: FoundUser }) {
   if (!props.mutable) return
   try {
     await mutate({ disconnect: [user.id] })

@@ -69,6 +69,7 @@
 <script setup lang="ts">
 import ReinviteUserDialog from "./dialogs/ReinviteUserDialog.vue"
 import FindUserSelect from "./forms/FindUserSelect.vue"
+import type { FoundUser, FindUserSelectValue } from "./forms/FindUserSelect.vue"
 import UserList from "./molecules/UserList.vue"
 import { useFeedbackMessages } from "src/use/guiElements"
 import { useMutation } from "@vue/apollo-composable"
@@ -103,7 +104,7 @@ const props = withDefaults(
   }
 )
 
-const user = ref<Record<string, any> | string | null>(null)
+const user = ref<FindUserSelectValue>(null)
 const containerType = computed(() => props.container.__typename.toLowerCase())
 const { pt, pte, t } = useI18nPrefix(
   () => `${containerType.value}.${props.roleGroup}`
@@ -193,15 +194,20 @@ async function handleSubmit() {
   }
   // TODO: Attempt to assign instead of invite when user.value matches a known user
   if (typeof user.value === "string") {
-    inviteUser()
+    inviteUser(user.value)
   } else {
-    assignUser()
+    assignUser(user.value)
   }
 }
 
-function processErrorsForEmailValidation(errorsFromCatch: {
-  graphQLErrors: Array<{ extensions: { validation: Record<string, string[]> } }>
-}) {
+function processErrorsForEmailValidation(
+  errorsFromCatch: {
+    graphQLErrors: Array<{
+      extensions: { validation: Record<string, string[]> }
+    }>
+  },
+  email: string
+) {
   const v = errorsFromCatch.graphQLErrors[0].extensions.validation
   if (!Object.hasOwn(v, "input.email")) {
     return
@@ -210,9 +216,7 @@ function processErrorsForEmailValidation(errorsFromCatch: {
   if (key === "NOT_UNIQUE") {
     newStatusMessage(
       "failure",
-      pt("invite.NOT_UNIQUE", {
-        display_name: user.value
-      })
+      pt("invite.NOT_UNIQUE", { display_name: email })
     )
   }
   if (key === "The input.email must be a valid email address.") {
@@ -220,29 +224,29 @@ function processErrorsForEmailValidation(errorsFromCatch: {
   }
 }
 
-async function inviteUser() {
+async function inviteUser(email: string) {
   await mutate({
-    email: user.value,
+    email,
     message: editor.value.getText()
   })
     .then(() => {
       resetForm()
     })
     .catch((error) => {
-      processErrorsForEmailValidation(error)
+      processErrorsForEmailValidation(error, email)
     })
 }
 
-async function assignUser() {
+async function assignUser(selectedUser: FoundUser) {
   try {
     await mutate({
-      connect: [user.value.id]
+      connect: [selectedUser.id]
     })
       .then(() => {
         newStatusMessage(
           "success",
           pt("assign.success", {
-            display_name: user.value.name ?? user.value.username
+            display_name: selectedUser.name ?? selectedUser.username
           })
         )
       })
@@ -254,7 +258,7 @@ async function assignUser() {
   }
 }
 
-async function reinviteUser({ user }: { user: Record<string, any> }) {
+async function reinviteUser({ user }: { user: FoundUser }) {
   await new Promise((resolve) => {
     dirtyDialog(user)
       .onOk(function () {
@@ -268,7 +272,7 @@ async function reinviteUser({ user }: { user: Record<string, any> }) {
     return
   }
 }
-function dirtyDialog(user: Record<string, any>) {
+function dirtyDialog(user: FoundUser) {
   return dialog({
     component: ReinviteUserDialog,
     componentProps: {
@@ -279,7 +283,7 @@ function dirtyDialog(user: Record<string, any>) {
   })
 }
 
-async function handleUserListClick({ user }: { user: Record<string, any> }) {
+async function handleUserListClick({ user }: { user: FoundUser }) {
   if (!props.mutable) return
   try {
     await mutate({ disconnect: [user.id] })

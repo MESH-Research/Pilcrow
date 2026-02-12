@@ -55,45 +55,58 @@
   </q-select>
 </template>
 
-<script setup>
+<script lang="ts">
+export interface FoundUser {
+  id: string
+  username: string
+  email: string
+  name?: string
+}
+
+export type FindUserSelectValue = FoundUser | string | null
+</script>
+
+<script setup lang="ts">
 import { useQuery } from "@vue/apollo-composable"
 import { SEARCH_USERS } from "src/graphql/queries"
 import { ref, computed } from "vue"
-const props = defineProps({
-  modelValue: {
-    default: null,
-    validator: (prop) =>
-      prop === null ||
-      typeof prop === "object" ||
-      typeof prop === "function" ||
-      typeof prop === "string"
+
+const props = withDefaults(
+  defineProps<{
+    modelValue?: FindUserSelectValue
+  }>(),
+  {
+    modelValue: null
   }
-})
-const emit = defineEmits(["update:modelValue"])
+)
+
+const emit = defineEmits<{
+  "update:modelValue": [value: FindUserSelectValue]
+}>()
 
 const isUserSelected = computed(() => {
   return typeof props.modelValue === "object" && props.modelValue !== null
 })
 
-function setInputValue(newValue) {
+function setInputValue(newValue: string) {
   if (!isUserSelected.value) {
     emit("update:modelValue", newValue)
   }
   return newValue
 }
 
-function onSelectUpdate(newValue) {
+function onSelectUpdate(newValue: FindUserSelectValue) {
   emit("update:modelValue", newValue)
 }
 
 const variables = ref({ term: "" })
 const { result, loading, refetch } = useQuery(SEARCH_USERS, variables)
 
-const options = computed(() => {
+const options = computed<FoundUser[]>(() => {
   return result.value?.userSearch.data ?? []
 })
 
-async function filterFn(val, update) {
+async function filterFn(val: string, update: (fn: () => void) => void) {
   variables.value = { term: val }
   refetch()
 
