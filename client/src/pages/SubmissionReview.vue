@@ -70,6 +70,7 @@ const props = defineProps({
 })
 const { loading, result } = useQuery(GET_SUBMISSION_REVIEW, { id: props.id })
 const submission = computed(() => {
+  console.log(result.value?.submission)
   return result.value?.submission
 })
 const highlightVisibility = ref(true)

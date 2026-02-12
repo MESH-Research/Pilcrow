@@ -314,6 +314,7 @@ async function submitHandler() {
     if (props.isModifying) {
       args.comment_id = props.comment.id
     }
+    console.log(props, mutations[commentType.value].definitions[0].name.value)
     await createComment({
       ...args
     })
