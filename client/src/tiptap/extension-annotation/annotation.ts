@@ -14,11 +14,13 @@ export const Annotation = Extension.create<AnnotationOptions>({
 
   priority: 1000,
 
-  addOptions: {
-    HTMLAttributes: {
-      class: "annotation"
-    },
-    onUpdate: (decorations) => decorations
+  addOptions() {
+    return {
+      HTMLAttributes: {
+        class: "annotation"
+      },
+      onUpdate: (decorations) => decorations
+    }
   },
 
   onCreate() {

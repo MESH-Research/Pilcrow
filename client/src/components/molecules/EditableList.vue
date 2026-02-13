@@ -180,9 +180,10 @@ const form = reactive({
 
 const noNewDuplicate = (value) => !props.modelValue.includes(value)
 const noExistingDuplicate = (value) => {
+  const editIndex = itemUnderEdit.value as number
   const otherEntries = [
-    ...props.modelValue.slice(0, itemUnderEdit.value),
-    ...props.modelValue.slice(itemUnderEdit.value + 1)
+    ...props.modelValue.slice(0, editIndex),
+    ...props.modelValue.slice(editIndex + 1)
   ]
   return !otherEntries.includes(value)
 }
@@ -220,7 +221,7 @@ function deleteItem(index) {
   ])
 }
 function editItem(index) {
-  if (form.editItemValue !== false) {
+  if (form.editItemValue !== "") {
     saveEdit()
   }
   form.editItemValue = props.modelValue[index]

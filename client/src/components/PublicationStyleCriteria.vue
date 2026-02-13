@@ -75,8 +75,7 @@ const { loading: createLoading, mutate: createCriteria } = useMutation(
 )
 
 const { loading: deleteLoading, mutate: deleteCriteria } = useMutation(
-  DELETE_PUBLICATION_STYLE_CRITERIA,
-  { variables }
+  DELETE_PUBLICATION_STYLE_CRITERIA
 )
 const loading = computed(
   () => updateLoading.value || createLoading.value || deleteLoading.value
@@ -101,7 +100,10 @@ function newItem() {
 
 async function onDelete(criteria) {
   try {
-    await deleteCriteria({ id: criteria.id })
+    await deleteCriteria({
+      publication_id: publication.value.id,
+      id: criteria.id
+    })
     formState.reset()
     editId.value = null
   } catch (error) {

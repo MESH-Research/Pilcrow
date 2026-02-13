@@ -40,7 +40,9 @@
           "
         />
         <div
-          v-if="v$.description.$error && v$.description.maxLength.$invalid"
+          v-if="
+            v$.description.$errors.some((e) => e.$validator === 'maxLength')
+          "
           class="text-negative"
           data-cy="description-errors"
         >

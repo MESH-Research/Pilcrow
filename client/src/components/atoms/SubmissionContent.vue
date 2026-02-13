@@ -215,7 +215,9 @@ const onAnnotationClick = (context, { target }) => {
 
   //First we need to get all the comment widget elements with the same Y index
   const { top: targetTop } = target.getBoundingClientRect()
-  const widgets = [...contentRef.value.querySelectorAll(".comment-widget")]
+  const widgets = [
+    ...contentRef.value.querySelectorAll<HTMLElement>(".comment-widget")
+  ]
     .filter((e) => e.getBoundingClientRect().top === targetTop)
     .map((e) => e.dataset.comment)
 
