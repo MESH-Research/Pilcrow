@@ -79,7 +79,7 @@
 </template>
 
 <script setup>
-import { ref, computed, inject } from "vue"
+import { ref, computed } from "vue"
 import { useEditor, EditorContent } from "@tiptap/vue-3"
 import { useMutation } from "@vue/apollo-composable"
 import { useQuasar } from "quasar"
@@ -256,7 +256,8 @@ const commentEditorButtons = ref([
     iconName: "link_off"
   }
 ])
-const submission = inject("submission")
+import { useSubmission } from "src/use/submissionContext"
+const submission = useSubmission()
 let mutations = {
   InlineComment: CREATE_INLINE_COMMENT,
   InlineCommentReply: CREATE_INLINE_COMMENT_REPLY,

@@ -31,16 +31,22 @@ import {
   MARK_OVERALL_COMMENTS_READ,
   MARK_OVERALL_COMMENT_REPLIES_READ
 } from "src/graphql/mutations"
-import { computed, inject, nextTick, ref, watch } from "vue"
+import { computed, nextTick, ref, watch } from "vue"
 import { useMutation } from "@vue/apollo-composable"
 import { scroll } from "quasar"
+import {
+  useSubmission,
+  useActiveComment,
+  useForExport
+} from "src/use/submissionContext"
+
 const { getScrollTarget, setVerticalScrollPosition } = scroll
 const { mutate: markRead } = useMutation(MARK_OVERALL_COMMENTS_READ)
 const { mutate: markReplyRead } = useMutation(MARK_OVERALL_COMMENT_REPLIES_READ)
 
-const forExport = inject("forExport")
-const submission = inject("submission")
-const activeComment = inject("activeComment")
+const forExport = useForExport()
+const submission = useSubmission()
+const activeComment = useActiveComment()
 
 const overall_comments = computed(() => {
   const comments = submission.value?.overall_comments ?? []

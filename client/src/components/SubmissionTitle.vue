@@ -62,13 +62,14 @@
 <script setup>
 import { UPDATE_SUBMISSION_TITLE } from "src/graphql/mutations"
 import { useMutation } from "@vue/apollo-composable"
-import { ref, watchEffect, inject } from "vue"
+import { ref, watchEffect } from "vue"
+import { useSubmission } from "src/use/submissionContext"
 import { useI18n } from "vue-i18n"
 import { useFeedbackMessages } from "src/use/guiElements"
 import { required, maxLength } from "@vuelidate/validators"
 import useVuelidate from "@vuelidate/core"
 
-const submission = inject("submission")
+const submission = useSubmission()
 const draft_title = ref("")
 
 watchEffect(() => {

@@ -103,6 +103,7 @@ import SubmissionTitle from "src/components/SubmissionTitle.vue"
 import SubmissionExportButton from "src/components/atoms/SubmissionExportButton.vue"
 import { GET_SUBMISSION } from "src/graphql/queries"
 import { computed, provide, watchEffect, ref } from "vue"
+import { submissionKey } from "src/use/submissionContext"
 import { useQuasar } from "quasar"
 import { useQuery } from "@vue/apollo-composable"
 
@@ -117,7 +118,7 @@ const submission = computed(() => {
   return result.value?.submission
 })
 
-let viewType = ref("review")
+const viewType = ref("review")
 
 watchEffect(() => {
   const status = submission.value?.status
@@ -128,5 +129,5 @@ watchEffect(() => {
   }
 })
 
-provide("submission", submission)
+provide(submissionKey, submission)
 </script>

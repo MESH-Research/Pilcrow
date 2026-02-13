@@ -79,9 +79,10 @@ import CommentActions from "./CommentActions.vue"
 import CommentReference from "./CommentReference.vue"
 import { useTimeAgo } from "src/use/timeAgo"
 import { DateTime } from "luxon"
-import { computed, inject } from "vue"
+import { computed } from "vue"
+import { useForExport } from "src/use/submissionContext"
 
-const forExport = inject("forExport")
+const forExport = useForExport()
 
 const timeAgo = useTimeAgo()
 const props = defineProps({

@@ -1,6 +1,12 @@
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
 import { mount } from "@vue/test-utils"
 import { ref } from "vue"
+import {
+  submissionKey,
+  activeCommentKey,
+  commentDrawerOpenKey,
+  forExportKey
+} from "src/use/submissionContext"
 import SubmissionContent from "./SubmissionContent.vue"
 
 import { describe, expect, test } from "vitest"
@@ -99,10 +105,10 @@ describe("SubmissionContent", () => {
       wrapper: mount(SubmissionContent, {
         global: {
           provide: {
-            submission,
-            activeComment,
-            commentDrawerOpen: true,
-            forExport
+            [submissionKey]: submission,
+            [activeCommentKey]: activeComment,
+            [commentDrawerOpenKey]: ref(true),
+            [forExportKey]: ref(false)
           }
         }
       }),

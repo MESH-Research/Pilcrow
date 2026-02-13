@@ -114,7 +114,7 @@
         data-cy="submission-content"
         :style="{
           'font-size': fontSize + 'rem',
-          'font-family': selectedFont.value
+          'font-family': selectedFont
         }"
       />
     </div>
@@ -127,10 +127,16 @@ import {
   MARK_INLINE_COMMENTS_READ,
   MARK_INLINE_COMMENT_REPLIES_READ
 } from "src/graphql/mutations"
-import { computed, inject, ref, watch, nextTick } from "vue"
+import { computed, ref, watch, nextTick } from "vue"
 import { scroll } from "quasar"
 import { useMutation } from "@vue/apollo-composable"
 import { useDarkMode } from "src/use/guiElements"
+import {
+  useSubmission,
+  useActiveComment,
+  useForExport,
+  useCommentDrawerOpen
+} from "src/use/submissionContext"
 
 const { getScrollTarget, setVerticalScrollPosition } = scroll
 const { darkModeStatus, toggleDarkMode } = useDarkMode()
@@ -151,10 +157,10 @@ const props = withDefaults(
   }
 )
 
-const forExport = inject("forExport") as any
-const commentDrawerOpen = inject("commentDrawerOpen") as any
-const submission = inject("submission") as any
-const activeComment = inject("activeComment") as any
+const forExport = useForExport()
+const commentDrawerOpen = useCommentDrawerOpen()
+const submission = useSubmission()
+const activeComment = useActiveComment()
 const contentRef = ref<HTMLElement | null>(null)
 
 const emit = defineEmits<{
@@ -181,10 +187,10 @@ const fonts = [
     value: "Georgia, Serif"
   }
 ]
-let selectedFont = ref("Sans-serif")
-let fontSize = ref(1)
+const selectedFont = ref("Sans-serif")
+const fontSize = ref(1)
 
-let headingSizes = ref([2.125, 1.5, 1.25, 1, 0.75, 0.5])
+const headingSizes = ref([2.125, 1.5, 1.25, 1, 0.75, 0.5])
 
 function increaseFontSize() {
   fontSize.value += 0.05
@@ -303,7 +309,7 @@ watch(
   (newValue) => {
     if (!newValue) return
     if (!newValue.__typename.startsWith("InlineComment")) return
-    if (newValue.new === true) return
+    if ("new" in newValue && newValue.new === true) return
     ;(async () => {
       if (newValue.__typename === "InlineComment") {
         await markRead({

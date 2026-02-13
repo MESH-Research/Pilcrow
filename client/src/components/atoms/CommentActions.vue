@@ -45,6 +45,7 @@
 <script setup>
 import { inject, computed } from "vue"
 import { useCurrentUser } from "src/use/user"
+import { useSubmission } from "src/use/submissionContext"
 import ConfirmCommentDeletion from "../dialogs/ConfirmCommentDeletion.vue"
 import { useQuasar } from "quasar"
 const { dialog } = useQuasar()
@@ -52,7 +53,7 @@ const { dialog } = useQuasar()
 const { currentUser } = useCurrentUser()
 
 const comment = inject("comment")
-const submission = inject("submission")
+const submission = useSubmission()
 
 const emit = defineEmits(["quoteReplyTo", "modifyComment", "deleteComment"])
 

@@ -56,16 +56,14 @@
 import SubmissionCommentDrawer from "src/components/atoms/SubmissionCommentDrawer.vue"
 import SubmissionCommentSection from "src/components/atoms/SubmissionCommentSection.vue"
 import SubmissionContent from "src/components/atoms/SubmissionContent.vue"
-import { ref, provide, computed, useTemplateRef, watch } from "vue"
+import { ref, computed, useTemplateRef, watch } from "vue"
 import { GET_SUBMISSION_REVIEW } from "src/graphql/queries"
 import { useQuery } from "@vue/apollo-composable"
 import exportStyles from "src/components/styles/exportStyles"
 import { scroll } from "quasar"
 import { useRoute } from "vue-router"
 import { useI18n } from "vue-i18n"
-
-provide("activeComment", ref(null))
-provide("forExport", ref(true))
+import { provideSubmissionReviewContext } from "src/use/submissionContext"
 const { t } = useI18n()
 const route = useRoute()
 const { getScrollTarget, setVerticalScrollPosition } = scroll
@@ -122,8 +120,11 @@ const submission = computed(() => {
 })
 const highlightVisibility = ref(true)
 const commentDrawerOpen = ref(false)
-provide("commentDrawerOpen", commentDrawerOpen)
-provide("submission", submission)
+provideSubmissionReviewContext({
+  submission,
+  forExport: ref(true),
+  commentDrawerOpen
+})
 
 const scrollOverallComments = ref(null)
 const scrollAddNewOverallComment = ref(null)
@@ -142,7 +143,7 @@ function handleNewScroll() {
 }
 
 const comments_content = useTemplateRef("comments-content")
-let blob = ref("")
+const blob = ref("")
 
 function updateBlob() {
   let download_content = comments_content.value?.$el.innerHTML

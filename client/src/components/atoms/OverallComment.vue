@@ -128,11 +128,13 @@
   </div>
 </template>
 <script setup>
-import { computed, inject, provide, ref } from "vue"
+import { computed, ref, provide } from "vue"
 import OverallCommentReply from "./OverallCommentReply.vue"
 import CommentEditor from "../forms/CommentEditor.vue"
 import CommentHeader from "./CommentHeader.vue"
-const forExport = inject("forExport")
+import { useForExport, useActiveComment } from "src/use/submissionContext"
+
+const forExport = useForExport()
 
 const isCollapsed = ref(!(forExport.value ?? false))
 const isReplying = ref(false)
@@ -204,7 +206,7 @@ const hasReplies = computed(() => {
 const replyRefs = ref([])
 const scrollTarget = ref(null)
 
-const activeComment = inject("activeComment")
+const activeComment = useActiveComment()
 const isActive = computed(() => {
   return (
     activeComment.value?.__typename === props.comment.__typename &&

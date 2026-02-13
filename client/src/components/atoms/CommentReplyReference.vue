@@ -29,8 +29,9 @@
 </template>
 
 <script setup>
-import { computed, inject, nextTick } from "vue"
+import { computed, nextTick } from "vue"
 import AvatarImage from "./AvatarImage.vue"
+import { useActiveComment } from "src/use/submissionContext"
 
 const props = defineProps({
   comment: {
@@ -48,7 +49,7 @@ const referencedComment = computed(() => {
     ? props.replies.find((e) => e.id === props.comment.reply_to_id)
     : null
 })
-const activeComment = inject("activeComment")
+const activeComment = useActiveComment()
 
 function setActive() {
   //Null the active comment first to trigger the scroll watcher

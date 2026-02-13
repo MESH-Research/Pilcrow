@@ -3,6 +3,7 @@ import { mount, flushPromises } from "@vue/test-utils"
 import { Dialog } from "app/test/vitest/mockedPlugins"
 import { beforeEach, describe, expect, it, test, vi } from "vitest"
 import { ref } from "vue"
+import { submissionKey } from "src/use/submissionContext"
 import CommentEditor from "./CommentEditor.vue"
 
 const styleCriteria = [
@@ -46,7 +47,7 @@ describe("CommentEditor", () => {
       wrapper: mount(CommentEditor, {
         global: {
           provide: {
-            submission: ref({
+            [submissionKey]: ref({
               publication: {
                 style_criterias: styleCriteria
               }

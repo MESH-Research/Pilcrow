@@ -4,6 +4,11 @@ import TimeAgo from "javascript-time-ago"
 import en from "javascript-time-ago/locale/en.json"
 import { useCurrentUser } from "src/use/user"
 import { ref } from "vue"
+import {
+  submissionKey,
+  activeCommentKey,
+  forExportKey
+} from "src/use/submissionContext"
 import SubmissionCommentSection from "./SubmissionCommentSection.vue"
 
 import { describe, expect, test, vi } from "vitest"
@@ -20,7 +25,7 @@ describe("Overall Comments", () => {
       wrapper: mount(SubmissionCommentSection, {
         global: {
           provide: {
-            submission: ref({
+            [submissionKey]: ref({
               id: "1",
               overall_comments: [
                 {
@@ -261,8 +266,8 @@ describe("Overall Comments", () => {
                 }
               ]
             }),
-            activeComment: ref(),
-            forExport: ref(false)
+            [activeCommentKey]: ref(),
+            [forExportKey]: ref(false)
           },
           stubs: ["router-link", "CommentEditor"]
         }

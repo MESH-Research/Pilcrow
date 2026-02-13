@@ -2,6 +2,11 @@ import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-v
 import { mount } from "@vue/test-utils"
 import { useCurrentUser } from "src/use/user"
 import { ref } from "vue"
+import {
+  submissionKey,
+  activeCommentKey,
+  forExportKey
+} from "src/use/submissionContext"
 import InlineComments from "./InlineComments.vue"
 
 import { describe, expect, test, vi } from "vitest"
@@ -17,7 +22,7 @@ describe("InlineComments", () => {
       wrapper: mount(InlineComments, {
         global: {
           provide: {
-            submission: ref({
+            [submissionKey]: ref({
               id: "1",
               effective_role: "review_coordinator",
               inline_comments: [
@@ -275,8 +280,8 @@ describe("InlineComments", () => {
                 }
               ]
             }),
-            activeComment: ref(),
-            forExport: ref()
+            [activeCommentKey]: ref(),
+            [forExportKey]: ref(false)
           },
           stubs: ["router-link", "CommentEditor"]
         }

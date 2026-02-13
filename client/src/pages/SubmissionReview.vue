@@ -56,10 +56,11 @@ import SubmissionCommentDrawer from "src/components/atoms/SubmissionCommentDrawe
 import SubmissionCommentSection from "src/components/atoms/SubmissionCommentSection.vue"
 import SubmissionContent from "src/components/atoms/SubmissionContent.vue"
 import SubmissionToolbar from "src/components/atoms/SubmissionToolbar.vue"
-import { ref, provide, computed } from "vue"
+import { ref, computed } from "vue"
 import { GET_SUBMISSION_REVIEW } from "src/graphql/queries"
 import { useQuery } from "@vue/apollo-composable"
 import { scroll } from "quasar"
+import { provideSubmissionReviewContext } from "src/use/submissionContext"
 const { getScrollTarget, setVerticalScrollPosition } = scroll
 
 const props = defineProps({
@@ -74,10 +75,10 @@ const submission = computed(() => {
 })
 const highlightVisibility = ref(true)
 const commentDrawerOpen = ref(false)
-provide("submission", submission)
-provide("activeComment", ref(null))
-provide("forExport", ref(false))
-provide("commentDrawerOpen", commentDrawerOpen)
+provideSubmissionReviewContext({
+  submission,
+  commentDrawerOpen
+})
 
 const scrollOverallComments = ref(null)
 const scrollAddNewOverallComment = ref(null)

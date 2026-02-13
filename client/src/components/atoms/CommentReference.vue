@@ -30,8 +30,9 @@
 </template>
 
 <script setup>
-import { inject, nextTick } from "vue"
+import { nextTick } from "vue"
 import { useI18n } from "vue-i18n"
+import { useActiveComment } from "src/use/submissionContext"
 const { t } = useI18n()
 
 const props = defineProps({
@@ -55,7 +56,7 @@ const read_name = {
   InlineCommentReply: "chat_bubble"
 }
 
-const activeComment = inject("activeComment")
+const activeComment = useActiveComment()
 
 function toolTipContent() {
   let content = ""

@@ -58,9 +58,10 @@
 <script setup>
 import SubmissionContent from "src/components/atoms/SubmissionContent.vue"
 import SubmissionPreviewToolbar from "src/components/atoms/SubmissionPreviewToolbar.vue"
-import { provide, computed } from "vue"
+import { computed } from "vue"
 import { GET_SUBMISSION_REVIEW } from "src/graphql/queries"
 import { useQuery } from "@vue/apollo-composable"
+import { provideSubmissionReviewContext } from "src/use/submissionContext"
 const props = defineProps({
   id: {
     type: String,
@@ -71,10 +72,9 @@ const { loading, result } = useQuery(GET_SUBMISSION_REVIEW, { id: props.id })
 const submission = computed(() => {
   return result.value?.submission
 })
-provide("submission", submission)
-provide("commentDrawerOpen", null)
-provide("activeComment", null)
-provide("forExport", false)
+provideSubmissionReviewContext({
+  submission
+})
 </script>
 
 <style lang="sass" scoped>
