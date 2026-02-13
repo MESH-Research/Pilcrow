@@ -283,7 +283,7 @@ describe("Overall Comments", () => {
       currentUser: ref({ id: 1 })
     })
     const { wrapper } = wrapperFactory()
-    const items = wrapper.findAll('[data-cy="overallComment"]')
+    const items = wrapper.findAllComponents('[data-cy="overallComment"]')
     expect(items).toHaveLength(3)
   })
 
