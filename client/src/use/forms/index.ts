@@ -1,5 +1,6 @@
 import { useDirtyGuard } from "./dirtyGuard"
-import { useFormState } from "./formState"
+import { useFormState, formStateKey } from "./formState"
+import type { FormState, FormStateStatus } from "./formState"
 import { useVQWrap } from "./vQWrap"
 import {
   useGraphQLValidation,
@@ -8,7 +9,9 @@ import {
 export {
   useDirtyGuard,
   useFormState,
+  formStateKey,
   useVQWrap,
   useGraphQLValidation,
   useExternalResultFromGraphQL
 }
+export type { FormState, FormStateStatus }

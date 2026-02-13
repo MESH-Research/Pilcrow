@@ -43,6 +43,7 @@ import { useCurrentUser } from "src/use/user"
 import SubmissionTable from "src/components/SubmissionTable.vue"
 import { CURRENT_USER_SUBMISSIONS, GET_SUBMISSIONS } from "src/graphql/queries"
 import { computed } from "vue"
+import { compareDatesDesc } from "src/utils/dateSort"
 
 const { currentUser } = useCurrentUser()
 const { result: all_submissions_result } = useQuery(GET_SUBMISSIONS, {
@@ -59,9 +60,7 @@ const all_reviews = computed(() =>
 const { result } = useQuery(CURRENT_USER_SUBMISSIONS)
 const submissions = computed(() => {
   let r = result.value?.currentUser?.submissions ?? []
-  return [...r].sort((a, b) => {
-    return new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-  })
+  return [...r].sort((a, b) => compareDatesDesc(a.created_at, b.created_at))
 })
 const reviewer_reviews = computed(() =>
   submissions.value.filter(function (submission) {

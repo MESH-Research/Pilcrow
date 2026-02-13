@@ -114,6 +114,7 @@ import { useQuery } from "@vue/apollo-composable"
 import { CURRENT_USER_SUBMISSIONS, GET_SUBMISSIONS } from "src/graphql/queries"
 import SubmissionTable from "src/components/SubmissionTable.vue"
 import { computed } from "vue"
+import { compareDatesDesc } from "src/utils/dateSort"
 import { useQuasar } from "quasar"
 
 const $q = useQuasar()
@@ -128,9 +129,7 @@ const all_submissions = computed(() => {
 const { result } = useQuery(CURRENT_USER_SUBMISSIONS)
 const submissions = computed(() => {
   let s = result.value?.currentUser?.submissions ?? []
-  return [...s].sort((a, b) => {
-    return new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-  })
+  return [...s].sort((a, b) => compareDatesDesc(a.created_at, b.created_at))
 })
 const reviewer_submissions = computed(() =>
   submissions.value.filter(function (submission) {

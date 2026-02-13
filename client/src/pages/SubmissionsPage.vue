@@ -108,6 +108,7 @@ import { GET_PUBLICATIONS } from "src/graphql/queries"
 import { computed, ref } from "vue"
 import { useQuasar } from "quasar"
 import { useQuery } from "@vue/apollo-composable"
+import { compareDatesDesc } from "src/utils/dateSort"
 
 const $q = useQuasar()
 import SubmissionTable from "src/components/SubmissionTable.vue"
@@ -123,9 +124,7 @@ const all_submissions = computed(() => {
 const { result, loading: subsLoading } = useQuery(CURRENT_USER_SUBMISSIONS)
 const submissions = computed(() => {
   let s = result.value?.currentUser?.submissions ?? []
-  return [...s].sort((a, b) => {
-    return new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-  })
+  return [...s].sort((a, b) => compareDatesDesc(a.created_at, b.created_at))
 })
 const { result: pubsResult } = useQuery(GET_PUBLICATIONS, {
   is_publicly_visible: true,
@@ -197,9 +196,7 @@ const latest_comments = computed(() => {
   })
   return comments
     .flat()
-    .sort((a, b) => {
-      return new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
-    })
+    .sort((a, b) => compareDatesDesc(a.updated_at, b.updated_at))
     .slice(0, 4)
 })
 </script>

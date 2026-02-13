@@ -33,7 +33,7 @@ export default {
 <script setup lang="ts">
 import { inject, ref } from "vue"
 import ErrorFieldRenderer from "src/components/molecules/ErrorFieldRenderer.vue"
-import { useVQWrap } from "src/use/forms"
+import { useVQWrap, formStateKey } from "src/use/forms"
 import { useI18n } from "vue-i18n"
 /**
  * Transparent wrapper for q-input that handles validation and translation by convention.
@@ -63,7 +63,9 @@ const { te } = useI18n()
 function clearInput() {
   input.value.blur()
 }
-const { state: formState = "" } = inject("formState", {}) as any
+const { state: formState } = inject(formStateKey) ?? {
+  state: ref("idle")
+}
 </script>
 
 <style lang="scss" scoped></style>

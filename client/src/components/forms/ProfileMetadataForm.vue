@@ -196,7 +196,8 @@ const props = defineProps({
 })
 
 const emit = defineEmits(["save"])
-const { dirty, errorMessage } = inject("formState")
+import { formStateKey } from "src/use/forms"
+const { dirty, errorMessage } = inject(formStateKey)
 
 const profileMetadata = toRef(props, "profileMetadata")
 

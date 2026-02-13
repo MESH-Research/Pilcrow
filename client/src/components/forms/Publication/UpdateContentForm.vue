@@ -102,7 +102,8 @@ const original = computed(() => applyDefaults(publication.value))
 const form = reactive(applyDefaults({}))
 const v$ = useVuelidate(rules, form)
 
-const { dirty, errorMessage, saved } = inject("formState")
+import { formStateKey } from "src/use/forms"
+const { dirty, errorMessage, saved } = inject(formStateKey)
 watchEffect(() => {
   dirty.value = !isEqual(original.value, form)
 })

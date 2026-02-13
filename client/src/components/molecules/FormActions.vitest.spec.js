@@ -1,6 +1,6 @@
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
 import { mount } from "@vue/test-utils"
-import { useFormState } from "src/use/forms"
+import { useFormState, formStateKey } from "src/use/forms"
 import { ref as mockRef, nextTick } from "vue"
 import FormActions from "./FormActions.vue"
 
@@ -28,7 +28,7 @@ describe("Formactions", () => {
     return mount(FormActions, {
       global: {
         provide: {
-          formState
+          [formStateKey]: formState
         }
       },
       propsData: {

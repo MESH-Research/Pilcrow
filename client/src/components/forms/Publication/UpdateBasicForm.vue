@@ -62,7 +62,8 @@ const rules = {
 const form = reactive(applyDefaults({}))
 const original = computed(() => applyDefaults(publication.value))
 
-const { dirty, errorMessage, mutationError, reset } = inject("formState")
+import { formStateKey } from "src/use/forms"
+const { dirty, errorMessage, mutationError, reset } = inject(formStateKey)
 const { clearErrors: clearGraphQLErrors, $externalResults } =
   useExternalResultFromGraphQL(form, mutationError)
 const v$ = useVuelidate(rules, form, {

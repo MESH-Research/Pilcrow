@@ -1,7 +1,7 @@
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
 import { mount } from "@vue/test-utils"
 import { useVuelidate } from "@vuelidate/core"
-import { useFormState } from "src/use/forms"
+import { useFormState, formStateKey } from "src/use/forms"
 import { describe, expect, test, vi } from "vitest"
 import { ref, nextTick, reactive } from "vue"
 import VQInput from "./VQInput.vue"
@@ -13,7 +13,10 @@ const factory = (props, provide) => {
   return mount(VQInput, {
     global: {
       provide: {
-        formState: useFormState({ loading: queryRef }, { loading: ref(false) }),
+        [formStateKey]: useFormState(
+          { loading: queryRef },
+          { loading: ref(false) }
+        ),
         ...provide
       }
     },

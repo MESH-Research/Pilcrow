@@ -1,6 +1,6 @@
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
 import { mount, flushPromises } from "@vue/test-utils"
-import { useFormState } from "src/use/forms"
+import { useFormState, formStateKey } from "src/use/forms"
 import ProfileMetadataForm from "./ProfileMetadataForm.vue"
 import { ref } from "vue"
 import { QList } from "quasar"
@@ -16,7 +16,7 @@ describe("ProfileMetadataForm", () => {
     return mount(ProfileMetadataForm, {
       global: {
         provide: {
-          formState: useFormState(
+          [formStateKey]: useFormState(
             { loading: ref(false) },
             { loading: ref(false) }
           )

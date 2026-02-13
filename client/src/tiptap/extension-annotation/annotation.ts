@@ -1,12 +1,28 @@
 import { Extension } from "@tiptap/vue-3"
+import type { Ref } from "vue"
 import { watch } from "vue"
+import type { DecorationSet } from "@tiptap/pm/view"
 import { AnnotationPlugin, AnnotationPluginKey } from "./plugin"
+import type { AnnotationData } from "./plugin"
+
+declare module "@tiptap/core" {
+  interface Commands<ReturnType> {
+    annotation: {
+      addAnnotation: (data: Record<string, unknown>) => ReturnType
+      updateAnnotation: (
+        id: string,
+        data: Record<string, unknown>
+      ) => ReturnType
+      deleteAnnotation: (id: string) => ReturnType
+    }
+  }
+}
 
 interface AnnotationOptions {
-  HTMLAttributes: Record<string, any>
-  onUpdate: (decorations: any) => any
-  annotations?: any
-  instance?: any
+  HTMLAttributes: Record<string, string | undefined>
+  onUpdate: (decorations: DecorationSet | null) => void
+  annotations?: Ref<AnnotationData[]>
+  instance?: string
 }
 
 export const Annotation = Extension.create<AnnotationOptions>({
@@ -24,7 +40,7 @@ export const Annotation = Extension.create<AnnotationOptions>({
   },
 
   onCreate() {
-    const updateAnnotations = (annotations) => {
+    const updateAnnotations = (annotations: AnnotationData[]) => {
       const transaction = this.editor.state.tr.setMeta(AnnotationPluginKey, {
         type: "createDecorations",
         annotations
@@ -83,7 +99,7 @@ export const Annotation = Extension.create<AnnotationOptions>({
 
           return true
         }
-    } as any
+    }
   },
 
   addProseMirrorPlugins() {

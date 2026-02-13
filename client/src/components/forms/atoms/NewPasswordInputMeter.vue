@@ -12,24 +12,19 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue"
-export default defineComponent({
-  name: "NewPasswordInputMeter",
-  props: {
-    score: {
-      type: Number,
-      default: 0
-    },
-    max: {
-      type: Number,
-      default: 4
-    },
-    valid: {
-      type: Boolean
-    }
+<script setup lang="ts">
+withDefaults(
+  defineProps<{
+    score?: number
+    max?: number
+    valid?: boolean
+  }>(),
+  {
+    score: 0,
+    max: 4,
+    valid: false
   }
-})
+)
 </script>
 
 <style lang="sass" scoped>

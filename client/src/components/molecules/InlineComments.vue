@@ -8,7 +8,7 @@
       </div>
 
       <component
-        :is="'new' in comment ? NewInlineComment : InlineComment"
+        :is="isNewInlineComment(comment) ? NewInlineComment : InlineComment"
         v-for="comment in inline_comments"
         :key="comment.id"
         ref="commentRefs"
@@ -39,19 +39,22 @@ import { scroll } from "quasar"
 import {
   useSubmission,
   useActiveComment,
-  type NewInlineComment as NewInlineCommentType
+  type NewInlineComment as NewInlineCommentType,
+  type ActiveComment
 } from "src/use/submissionContext"
 import type { InlineComment as InlineCommentType } from "src/graphql/generated/graphql"
 const { getScrollTarget, setVerticalScrollPosition } = scroll
 
 const submission = useSubmission()
 const activeComment = useActiveComment()
+function isNewInlineComment(
+  comment: InlineCommentType | NewInlineCommentType | ActiveComment
+): comment is NewInlineCommentType {
+  return "new" in comment
+}
+
 const isActiveCommentNew = computed(() => {
-  return (
-    activeComment.value &&
-    "new" in activeComment.value &&
-    activeComment.value.new === true
-  )
+  return activeComment.value != null && isNewInlineComment(activeComment.value)
 })
 
 const commentRefs = ref<any[]>([])

@@ -80,12 +80,14 @@ import { isEqual, pick } from "lodash"
 import VQInput from "src/components/atoms/VQInput.vue"
 import FormActions from "../molecules/FormActions.vue"
 import { useI18n } from "vue-i18n"
-const { dirty, setError } = inject("formState") as any
+import { formStateKey } from "src/use/forms"
+import type { StyleCriteria } from "src/graphql/generated/graphql"
+const { dirty, setError } = inject(formStateKey)!
 
 const { t } = useI18n()
 const props = withDefaults(
   defineProps<{
-    criteria?: Record<string, any>
+    criteria?: Partial<StyleCriteria>
   }>(),
   {
     criteria: () => ({})
@@ -93,8 +95,8 @@ const props = withDefaults(
 )
 const emit = defineEmits<{
   cancel: []
-  save: [criteria: Record<string, any>]
-  delete: [criteria: Record<string, any>]
+  save: [criteria: Partial<StyleCriteria>]
+  delete: [criteria: Partial<StyleCriteria>]
 }>()
 
 const state = reactive({

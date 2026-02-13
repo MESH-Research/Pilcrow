@@ -10,15 +10,16 @@ import { useMutation } from "@vue/apollo-composable"
 import { provide } from "vue"
 import UpdateBasicForm from "src/components/forms/Publication/UpdateBasicForm.vue"
 import { UPDATE_PUBLICATION_BASICS } from "src/graphql/mutations"
-import { useFormState } from "src/use/forms"
+import { useFormState, formStateKey } from "src/use/forms"
+import type { Publication } from "src/graphql/generated/graphql"
 const props = defineProps<{
-  publication: Record<string, any>
+  publication: Publication
 }>()
 
 const mutation = useMutation(UPDATE_PUBLICATION_BASICS)
 
 const formState = useFormState(null, mutation)
-provide("formState", formState)
+provide(formStateKey, formState)
 
 function save(form) {
   const { saved, errorMessage } = formState

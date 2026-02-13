@@ -68,7 +68,8 @@ const v$ = useVuelidate(rules, form, {
   $externalResults
 })
 
-const { dirty, errorMessage } = inject("formState")
+import { formStateKey } from "src/use/forms"
+const { dirty, errorMessage } = inject(formStateKey)
 
 watchEffect(() => {
   dirty.value = !isEqual(original.value, form)

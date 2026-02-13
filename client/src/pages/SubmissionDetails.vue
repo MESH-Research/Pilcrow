@@ -118,7 +118,7 @@ const submission = computed(() => {
   return result.value?.submission
 })
 
-const viewType = ref("review")
+const viewType = ref<"review" | "preview" | "view">("review")
 
 watchEffect(() => {
   const status = submission.value?.status

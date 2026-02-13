@@ -45,7 +45,7 @@
 import { ref, toRef, provide, computed } from "vue"
 import StyleCriteriaItem from "src/components/molecules/StyleCriteriaItem.vue"
 import StyleCriteriaForm from "src/components/forms/StyleCriteriaForm.vue"
-import { useFormState } from "src/use/forms"
+import { useFormState, formStateKey } from "src/use/forms"
 import {
   UPDATE_PUBLICATION_STYLE_CRITERIA,
   CREATE_PUBLICATION_STYLE_CRITERIA,
@@ -57,8 +57,10 @@ const { t } = useI18n()
 
 const editId = ref<string | null>(null)
 
+import type { Publication } from "src/graphql/generated/graphql"
+
 const props = defineProps<{
-  publication: Record<string, any>
+  publication: Publication
 }>()
 const publication = toRef(props, "publication")
 
@@ -81,7 +83,7 @@ const loading = computed(
   () => updateLoading.value || createLoading.value || deleteLoading.value
 )
 const formState = useFormState(null, { loading })
-provide("formState", formState)
+provide(formStateKey, formState)
 
 function editItem(criteriaId) {
   if (editId.value !== null) return

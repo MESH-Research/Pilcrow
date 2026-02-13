@@ -19,6 +19,7 @@ import { useMutation } from "@vue/apollo-composable"
 import { useI18n } from "vue-i18n"
 import {
   useFormState,
+  formStateKey,
   useDirtyGuard,
   useGraphQLValidation
 } from "src/use/forms"
@@ -32,7 +33,7 @@ const { mutate, error } = updateUserMutation
 const { validationErrors, hasValidationErrors } = useGraphQLValidation(error)
 
 const formState = useFormState(currentUserQuery, updateUserMutation)
-provide("formState", formState)
+provide(formStateKey, formState)
 
 useDirtyGuard(formState.dirty)
 

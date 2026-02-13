@@ -65,7 +65,7 @@ const $q = useQuasar()
 import { CURRENT_USER_NOTIFICATIONS } from "src/graphql/queries"
 import NotificationListItem from "src/components/atoms/NotificationListItem.vue"
 
-const filterMode = ref<string | null>(null)
+const filterMode = ref<"Unread" | "Read" | null>(null)
 const filterModes = ["Unread", "Read"]
 
 const currentPage = ref(1)

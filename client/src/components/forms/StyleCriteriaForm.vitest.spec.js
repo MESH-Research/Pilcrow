@@ -1,7 +1,7 @@
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
 import { mount, flushPromises } from "@vue/test-utils"
 import { Dialog } from "app/test/vitest/mockedPlugins"
-import { useFormState } from "src/use/forms"
+import { useFormState, formStateKey } from "src/use/forms"
 import { ref } from "vue"
 import StyleCriteriaForm from "./StyleCriteriaForm.vue"
 
@@ -13,7 +13,7 @@ describe("StyleCriteriaForm", () => {
     return mount(StyleCriteriaForm, {
       global: {
         provide: {
-          formState: useFormState(
+          [formStateKey]: useFormState(
             { loading: ref(false) },
             { loading: ref(false) }
           )

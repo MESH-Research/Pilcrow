@@ -1,6 +1,6 @@
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
 import { mount, flushPromises } from "@vue/test-utils"
-import { useFormState } from "src/use/forms"
+import { useFormState, formStateKey } from "src/use/forms"
 import { ref } from "vue"
 import AccountProfileForm from "./AccountProfileForm.vue"
 
@@ -12,7 +12,7 @@ describe("AccountProfileForm", () => {
     return mount(AccountProfileForm, {
       global: {
         provide: {
-          formState: useFormState(
+          [formStateKey]: useFormState(
             { loading: ref(false) },
             { loading: ref(false) }
           )

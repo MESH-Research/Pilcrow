@@ -48,8 +48,9 @@
 
 <script setup lang="ts">
 import { computed, inject } from "vue"
+import { formStateKey } from "src/use/forms"
 
-const { state, errorMessage } = inject("formState") as any
+const { state, errorMessage } = inject(formStateKey)!
 
 defineEmits<{
   resetClick: []
