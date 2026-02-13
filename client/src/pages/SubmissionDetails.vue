@@ -103,7 +103,10 @@ import SubmissionTitle from "src/components/SubmissionTitle.vue"
 import SubmissionExportButton from "src/components/atoms/SubmissionExportButton.vue"
 import { GET_SUBMISSION } from "src/graphql/queries"
 import { computed, provide, watchEffect, ref } from "vue"
+import { useQuasar } from "quasar"
 import { useQuery } from "@vue/apollo-composable"
+
+const $q = useQuasar()
 
 const props = defineProps<{
   id: string

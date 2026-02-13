@@ -167,8 +167,11 @@ import { useMagicKeys } from "@vueuse/core"
 import NotificationPopup from "src/components/molecules/NotificationPopup.vue"
 import { useCurrentUser } from "src/use/user"
 import { watchEffect } from "vue"
+import { useQuasar } from "quasar"
 import { useI18n } from "vue-i18n"
 import AppBanner from "./AppBanner.vue"
+
+const $q = useQuasar()
 
 defineProps({
   //Drawer status

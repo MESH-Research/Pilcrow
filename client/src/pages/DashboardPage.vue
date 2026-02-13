@@ -114,6 +114,9 @@ import { useQuery } from "@vue/apollo-composable"
 import { CURRENT_USER_SUBMISSIONS, GET_SUBMISSIONS } from "src/graphql/queries"
 import SubmissionTable from "src/components/SubmissionTable.vue"
 import { computed } from "vue"
+import { useQuasar } from "quasar"
+
+const $q = useQuasar()
 
 const { currentUser } = useCurrentUser()
 const { result: all_submissions_result } = useQuery(GET_SUBMISSIONS, {

@@ -213,6 +213,9 @@ import {
 } from "src/graphql/mutations"
 import { useQuery, useMutation } from "@vue/apollo-composable"
 import { watchEffect, computed, ref } from "vue"
+import { useQuasar } from "quasar"
+
+const $q = useQuasar()
 
 const props = defineProps({
   id: {

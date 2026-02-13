@@ -58,7 +58,10 @@
 
 <script setup lang="ts">
 import { ref, computed } from "vue"
+import { useQuasar } from "quasar"
 import { useQuery } from "@vue/apollo-composable"
+
+const $q = useQuasar()
 import { CURRENT_USER_NOTIFICATIONS } from "src/graphql/queries"
 import NotificationListItem from "src/components/atoms/NotificationListItem.vue"
 

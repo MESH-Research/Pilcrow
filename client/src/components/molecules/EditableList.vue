@@ -144,8 +144,11 @@
 import useVuelidate from "@vuelidate/core"
 import ErrorFieldRenderer from "src/components/molecules/ErrorFieldRenderer.vue"
 import { reactive, ref } from "vue"
+import { useQuasar } from "quasar"
 import Draggable from "vuedraggable"
 import CollapseToolbar from "./CollapseToolbar.vue"
+
+const $q = useQuasar()
 
 const props = withDefaults(
   defineProps<{

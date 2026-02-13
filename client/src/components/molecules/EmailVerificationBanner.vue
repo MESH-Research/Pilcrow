@@ -15,10 +15,9 @@
   </q-banner>
 </template>
 
-<script>
+<script setup>
+import { useQuasar } from "quasar"
 import EmailVerificationSendButton from "../atoms/EmailVerificationSendButton.vue"
-export default {
-  name: "EmailVerificationBanner",
-  components: { EmailVerificationSendButton }
-}
+
+const $q = useQuasar()
 </script>

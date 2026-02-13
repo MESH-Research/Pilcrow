@@ -134,6 +134,9 @@ import { GET_USER } from "src/graphql/queries"
 import AvatarImage from "src/components/atoms/AvatarImage.vue"
 import { useQuery } from "@vue/apollo-composable"
 import { computed } from "vue"
+import { useQuasar } from "quasar"
+
+const $q = useQuasar()
 
 const props = defineProps({
   id: {

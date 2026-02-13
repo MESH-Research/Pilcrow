@@ -175,8 +175,11 @@
 import SubmissionTableActions from "./SubmissionTableActions.vue"
 import { useI18n } from "vue-i18n"
 import { ref, computed } from "vue"
+import { useQuasar } from "quasar"
 import { relativeTime } from "src/use/timeAgo"
 import { useDarkMode } from "src/use/guiElements"
+
+const $q = useQuasar()
 
 const { t } = useI18n()
 const { darkModeStatus } = useDarkMode()

@@ -106,7 +106,10 @@ import { useCurrentUser } from "src/use/user"
 import { CURRENT_USER_SUBMISSIONS, GET_SUBMISSIONS } from "src/graphql/queries"
 import { GET_PUBLICATIONS } from "src/graphql/queries"
 import { computed, ref } from "vue"
+import { useQuasar } from "quasar"
 import { useQuery } from "@vue/apollo-composable"
+
+const $q = useQuasar()
 import SubmissionTable from "src/components/SubmissionTable.vue"
 import CommentPreview from "src/components/atoms/CommentPreview.vue"
 
