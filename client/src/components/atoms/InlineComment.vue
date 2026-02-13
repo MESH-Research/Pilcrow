@@ -209,7 +209,7 @@ function deleteComment() {
 }
 
 const showReplyButton = computed(() => {
-  if (forExport) return false
+  if (forExport.value) return false
   if (isReplying.value) return false
   if (hasReplies.value && isCollapsed.value) return false
   return true
