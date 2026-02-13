@@ -9,6 +9,9 @@ import prettierSkipFormatting from "@vue/eslint-config-prettier"
 import pluginCypress from "eslint-plugin-cypress"
 const { merge } = lodash
 const config = [
+  {
+    ignores: ["src/graphql/generated/"],
+  },
   ...pluginQuasar.configs.recommended(),
   ...pluginVue.configs["flat/recommended"],
   /**

@@ -192,30 +192,6 @@ export const CREATE_SUBMISSION_DRAFT = gql`
   }
 `
 
-export const CREATE_SUBMISSION = gql`
-  mutation CreateSubmission(
-    $title: String!
-    $publication_id: ID!
-    $submitter_user_id: ID!
-    $file_upload: [Upload!]
-  ) {
-    createSubmission(
-      input: {
-        title: $title
-        publication_id: $publication_id
-        submitters: { connect: [$submitter_user_id] }
-        files: { create: $file_upload }
-      }
-    ) {
-      id
-      title
-      publication {
-        name
-      }
-    }
-  }
-`
-
 export const UPDATE_SUBMISSION_CONTENT = gql`
   mutation UpdateSubmissionContent($id: ID!, $content: String!) {
     updateSubmissionContent(input: { content: $content, id: $id }) {
@@ -294,7 +270,7 @@ export const UPDATE_SUBMISSION_REVIEW_COORDINATORS = gql`
 `
 
 export const UPDATE_SUBMISSION_SUBMITERS = gql`
-  mutation UpdateSubmissionReviewCoordinators(
+  mutation UpdateSubmissionSubmitters(
     $id: ID!
     $connect: [ID!]
     $disconnect: [ID!]
