@@ -70,6 +70,45 @@
                 "presentation": {
                     "reveal": "silent"
                 }
+            },
+            {
+                "label": "eslint",
+                "type": "shell",
+                "command": "npx eslint src/ test/vitest/",
+                "options": { "cwd": "${workspaceFolder:CLIENT}" },
+                "problemMatcher": {
+                    "owner": "eslint",
+                    "fileLocation": ["absolute"],
+                    "pattern": [
+                        {
+                            "regexp": "^(.+)$",
+                            "file": 1
+                        },
+                        {
+                            "regexp": "^\\s+(\\d+):(\\d+)\\s+(error|warning)\\s+(.+?)\\s{2,}(.+)$",
+                            "line": 1,
+                            "column": 2,
+                            "severity": 3,
+                            "message": 4,
+                            "code": 5,
+                            "loop": true
+                        }
+                    ]
+                },
+                "group": "build",
+                "presentation": {
+                    "reveal": "silent"
+                }
+            },
+            {
+                "label": "lint + typecheck",
+                "dependsOn": ["eslint", "vue-tsc"],
+                "dependsOrder": "parallel",
+                "group": {
+                    "kind": "build",
+                    "isDefault": true
+                },
+                "problemMatcher": []
             }
         ]
     }
