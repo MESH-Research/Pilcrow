@@ -57,7 +57,7 @@ const isActiveCommentNew = computed(() => {
   return activeComment.value != null && isNewInlineComment(activeComment.value)
 })
 
-const commentRefs = ref<any[]>([])
+const commentRefs = ref<InstanceType<typeof InlineComment>[]>([])
 const inline_comments_section = ref<HTMLElement | null>(null)
 
 const inline_comments = computed(() => {

@@ -141,7 +141,7 @@
 </template>
 
 <script setup lang="ts">
-import useVuelidate from "@vuelidate/core"
+import useVuelidate, { type ValidationRuleCollection } from "@vuelidate/core"
 import ErrorFieldRenderer from "src/components/molecules/ErrorFieldRenderer.vue"
 import { reactive, ref } from "vue"
 import { useQuasar } from "quasar"
@@ -153,7 +153,7 @@ const $q = useQuasar()
 interface Props {
   modelValue?: string[]
   inputIcon?: string
-  rules?: Record<string, any>
+  rules?: ValidationRuleCollection
   t?: string
   allowDuplicates?: boolean
 }

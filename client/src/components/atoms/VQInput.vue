@@ -41,8 +41,10 @@ import { useI18n } from "vue-i18n"
  * @see https://v1.quasar.dev/vue-components/input#qinput-api
  */
 
+import type { VuelidateValidator } from "src/types/vuelidate"
+
 interface Props {
-  v: Record<string, any>
+  v: VuelidateValidator
   t?: string | boolean
 }
 
@@ -50,7 +52,7 @@ const props = withDefaults(defineProps<Props>(), {
   t: false
 })
 defineEmits<{
-  vqupdate: [validator: any, value: any]
+  vqupdate: [validator: VuelidateValidator, value: string]
 }>()
 
 const input = ref(null)

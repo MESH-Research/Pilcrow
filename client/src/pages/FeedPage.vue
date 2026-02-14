@@ -71,7 +71,7 @@ const filterModes = ["Unread", "Read"]
 const currentPage = ref(1)
 
 const variables = computed(() => {
-  const vars: Record<string, any> = { currentPage: currentPage.value }
+  const vars: Record<string, unknown> = { currentPage: currentPage.value }
   if (filterMode.value == "Read") {
     vars.read = true
   }

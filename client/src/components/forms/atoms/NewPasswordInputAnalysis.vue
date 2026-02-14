@@ -27,8 +27,15 @@
 
 <script setup lang="ts">
 import { computed } from "vue"
+
+interface ZxcvbnComplexity {
+  score: number
+  feedback: { suggestions: string[]; warning: string }
+  crack_times_display: Record<string, string>
+}
+
 interface Props {
-  complexity: Record<string, any>
+  complexity: ZxcvbnComplexity
 }
 
 const props = defineProps<Props>()

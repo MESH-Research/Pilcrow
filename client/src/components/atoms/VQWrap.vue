@@ -6,6 +6,7 @@
 
 <script setup lang="ts">
 import { provide } from "vue"
+import type { VuelidateValidator } from "src/types/vuelidate"
 
 interface Props {
   tPrefix?: string | boolean
@@ -16,11 +17,11 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const emit = defineEmits<{
-  vqupdate: [validator: any, value: any]
+  vqupdate: [validator: VuelidateValidator, value: string]
 }>()
 
 provide("tPrefix", props.tPrefix)
-provide("vqupdate", (validator: any, value: any) => {
+provide("vqupdate", (validator: VuelidateValidator, value: string) => {
   emit("vqupdate", validator, value)
 })
 </script>

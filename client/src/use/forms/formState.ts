@@ -21,7 +21,7 @@ export interface FormState {
   queryLoading: Ref<boolean> | null
   mutationLoading: Ref<boolean>
   errorMessage: Ref<string>
-  mutationError: Ref<any>
+  mutationError: Ref<Error | null>
   reset: () => void
   setError: (message: string) => void
 }

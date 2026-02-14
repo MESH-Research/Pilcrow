@@ -75,7 +75,6 @@ const config = [
     rules: {
       "no-unused-vars": "off",
       "@typescript-eslint/no-unused-vars": ["error", { caughtErrors: "none" }],
-      "@typescript-eslint/no-explicit-any": "warn",
       "vue/define-props-declaration": ["error", "type-based"]
     }
   },
@@ -113,8 +112,7 @@ const config = [
     extends: [tseslint.configs.recommended],
     rules: {
       "no-unused-vars": "off",
-      "@typescript-eslint/no-unused-vars": ["error", { caughtErrors: "none" }],
-      "@typescript-eslint/no-explicit-any": "warn"
+      "@typescript-eslint/no-unused-vars": ["error", { caughtErrors: "none" }]
     }
   },
   {

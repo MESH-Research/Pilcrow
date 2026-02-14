@@ -87,10 +87,12 @@ import { useEditor, EditorContent } from "@tiptap/vue-3"
 import StarterKit from "@tiptap/starter-kit"
 import Placeholder from "@tiptap/extension-placeholder"
 import { useQuasar } from "quasar"
+import type { Submission } from "src/graphql/generated/graphql"
+
 const { dialog } = useQuasar()
 
 interface Props {
-  container: Record<string, any>
+  container: Submission
   roleGroup: string
   mutable?: boolean
   maxUsers?: boolean | number

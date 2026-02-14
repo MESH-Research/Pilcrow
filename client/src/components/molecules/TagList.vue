@@ -41,13 +41,13 @@
 
 <script setup lang="ts">
 import { reactive } from "vue"
-import { useVuelidate } from "@vuelidate/core"
+import { useVuelidate, type ValidationRuleCollection } from "@vuelidate/core"
 import ErrorFieldRenderer from "src/components/molecules/ErrorFieldRenderer.vue"
 
 interface Props {
   t?: string
   modelValue?: string[]
-  rules?: Record<string, any>
+  rules?: ValidationRuleCollection
   allowDuplicates?: boolean
 }
 

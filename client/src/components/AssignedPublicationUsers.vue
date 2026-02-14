@@ -69,8 +69,10 @@ import {
 import { computed, ref } from "vue"
 import type { DocumentNode } from "graphql"
 import { useI18nPrefix } from "src/use/i18nPrefix"
+import type { Publication } from "src/graphql/generated/graphql"
+
 interface Props {
-  container: Record<string, any>
+  container: Publication
   roleGroup: string
   mutable?: boolean
   maxUsers?: boolean | number

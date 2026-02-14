@@ -33,9 +33,9 @@ export const rules = {
 export const updateUserRules = omit(rules, ["name", "username"])
 
 interface UserValidationOpts {
-  mutation?: any
-  rules?: any
-  variables?: any
+  mutation?: ((...args: unknown[]) => Promise<unknown>) | null
+  rules?: ((r: typeof rules) => void) | null
+  variables?: ((form: Record<string, string>) => Record<string, unknown>) | null
   validation_key?: string
 }
 
