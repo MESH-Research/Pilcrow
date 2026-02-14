@@ -62,9 +62,7 @@ const { te } = useI18n()
 function clearInput() {
   input.value.blur()
 }
-const { state: formState } = inject(formStateKey) ?? {
-  state: ref("idle")
-}
+const formState = inject(formStateKey)?.state ?? ref("idle")
 </script>
 
 <style lang="scss" scoped></style>
