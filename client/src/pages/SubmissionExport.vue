@@ -167,7 +167,7 @@ function getCommentCount(type) {
 }
 
 function getCommenters(type) {
-  let replies = []
+  const replies = []
   if (!submission.value?.[`${type}`]) {
     return replies
   }

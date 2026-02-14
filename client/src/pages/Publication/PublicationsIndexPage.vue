@@ -53,7 +53,7 @@ const {
 const destRoute = (id) => ({ name: "publication:home", params: { id } })
 
 function strip(html) {
-  let doc = new DOMParser().parseFromString(html, "text/html")
+  const doc = new DOMParser().parseFromString(html, "text/html")
   const text = doc.body.textContent || ""
   return text.length < 200 ? text : text.substring(0, 200) + "..."
 }

@@ -123,7 +123,7 @@ const all_submissions = computed(() => {
 })
 const { result, loading: subsLoading } = useQuery(CURRENT_USER_SUBMISSIONS)
 const submissions = computed(() => {
-  let s = result.value?.currentUser?.submissions ?? []
+  const s = result.value?.currentUser?.submissions ?? []
   return [...s].sort((a, b) => compareDatesDesc(a.created_at, b.created_at))
 })
 const { result: pubsResult } = useQuery(GET_PUBLICATIONS, {
@@ -146,7 +146,7 @@ const submitter_submissions = computed(() =>
   })
 )
 const latest_comments = computed(() => {
-  let comments = submitter_submissions.value.map((submission) => {
+  const comments = submitter_submissions.value.map((submission) => {
     const inline_replies = []
     const inline = submission.inline_comments
       .map((comment) => {

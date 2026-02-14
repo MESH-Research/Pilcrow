@@ -7,7 +7,10 @@ export function useI18nPrefix(prefix: MaybeRefOrGetter<string>) {
   const prefixKey = (key: string) => `${toValue(prefix)}.${key}`
 
   const pt = ((key: string, ...args: unknown[]) =>
-    (t as Function)(prefixKey(key), ...args)) as ComposerTranslation
+    (t as (...a: unknown[]) => string)(
+      prefixKey(key),
+      ...args
+    )) as ComposerTranslation
 
   const pte = (key: string) => te(prefixKey(key))
 

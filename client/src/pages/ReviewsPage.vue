@@ -59,7 +59,7 @@ const all_reviews = computed(() =>
 )
 const { result } = useQuery(CURRENT_USER_SUBMISSIONS)
 const submissions = computed(() => {
-  let r = result.value?.currentUser?.submissions ?? []
+  const r = result.value?.currentUser?.submissions ?? []
   return [...r].sort((a, b) => compareDatesDesc(a.created_at, b.created_at))
 })
 const reviewer_reviews = computed(() =>

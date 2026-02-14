@@ -7,10 +7,11 @@ import tseslint from "typescript-eslint"
 // the following is optional, if you want prettier too:
 import prettierSkipFormatting from "@vue/eslint-config-prettier"
 import pluginCypress from "eslint-plugin-cypress"
+import vueParser from "vue-eslint-parser"
 const { merge } = lodash
 const config = [
   {
-    ignores: ["src/graphql/generated/"],
+    ignores: ["src/graphql/generated/"]
   },
   ...pluginQuasar.configs.recommended(),
   ...pluginVue.configs["flat/recommended"],
@@ -56,12 +57,7 @@ const config = [
   {
     files: ["src*/**/*.{ts,mts}"],
     ignores: ["src*/**/*.vitest.spec.{ts,mts}"],
-    languageOptions: {
-      parser: tseslint.parser
-    },
-    plugins: {
-      "@typescript-eslint": tseslint.plugin
-    },
+    extends: [tseslint.configs.recommended],
     rules: {
       "no-unused-vars": "off",
       "@typescript-eslint/no-unused-vars": ["error", { caughtErrors: "none" }]
@@ -69,17 +65,17 @@ const config = [
   },
   {
     files: ["src*/**/*.vue"],
+    extends: [tseslint.configs.recommended],
     languageOptions: {
+      parser: vueParser,
       parserOptions: {
         parser: tseslint.parser
       }
     },
-    plugins: {
-      "@typescript-eslint": tseslint.plugin
-    },
     rules: {
       "no-unused-vars": "off",
       "@typescript-eslint/no-unused-vars": ["error", { caughtErrors: "none" }],
+      "@typescript-eslint/no-explicit-any": "warn",
       "vue/define-props-declaration": ["error", "type-based"]
     }
   },
@@ -114,15 +110,11 @@ const config = [
   },
   {
     files: ["test/vitest/**/*.{ts,mts,cts}", "src*/**/*.vitest.spec.{ts,mts}"],
-    languageOptions: {
-      parser: tseslint.parser
-    },
-    plugins: {
-      "@typescript-eslint": tseslint.plugin
-    },
+    extends: [tseslint.configs.recommended],
     rules: {
       "no-unused-vars": "off",
-      "@typescript-eslint/no-unused-vars": ["error", { caughtErrors: "none" }]
+      "@typescript-eslint/no-unused-vars": ["error", { caughtErrors: "none" }],
+      "@typescript-eslint/no-explicit-any": "warn"
     }
   },
   {
@@ -156,4 +148,4 @@ const config = [
 
   prettierSkipFormatting // optional, if you want prettier
 ]
-export default config
+export default tseslint.config(...config)

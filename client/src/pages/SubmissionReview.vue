@@ -93,7 +93,6 @@ function handleNewScroll() {
   const scrollValue = scrollAddNewOverallComment.value
   const scrollTarget = getScrollTarget(scrollValue)
   setVerticalScrollPosition(scrollTarget, scrollValue.offsetTop, 250)
-  scrollValue
 }
 </script>
 

@@ -193,14 +193,14 @@ const headingSizes = ref([2.125, 1.5, 1.25, 1, 0.75, 0.5])
 
 function increaseFontSize() {
   fontSize.value += 0.05
-  for (let index in headingSizes.value) {
+  for (const index in headingSizes.value) {
     headingSizes.value[index] += 0.05
   }
 }
 
 function decreaseFontSize() {
   fontSize.value -= 0.05
-  for (let index in headingSizes.value) {
+  for (const index in headingSizes.value) {
     headingSizes.value[index] -= 0.05
   }
 }

@@ -139,14 +139,13 @@ function handleNewScroll() {
   const scrollValue = scrollAddNewOverallComment.value
   const scrollTarget = getScrollTarget(scrollValue)
   setVerticalScrollPosition(scrollTarget, scrollValue.offsetTop, 250)
-  scrollValue
 }
 
 const comments_content = useTemplateRef("comments-content")
 const blob = ref("")
 
-function updateBlob() {
-  let download_content = comments_content.value?.$el.innerHTML
+function updateBlob(message = "") {
+  const download_content = comments_content.value?.$el.innerHTML
   blob.value = URL.createObjectURL(
     new Blob(
       [

@@ -134,9 +134,9 @@ const { mutate: handleCallback } = useMutation(LOGIN_OAUTH_CALLBACK, {
 })
 const { mutate: registerOauthUser } = useMutation(REGISTER_OAUTH_USER)
 
-let form_error = ref(null)
-let action = ref(null)
-let status = ref("loading")
+const form_error = ref(null)
+const action = ref(null)
+const status = ref("loading")
 const provider = ref(null)
 const { $v, user, saveUser } = useUserValidation({
   mutation: registerOauthUser,
