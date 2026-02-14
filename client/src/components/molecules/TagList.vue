@@ -44,20 +44,19 @@ import { reactive } from "vue"
 import { useVuelidate } from "@vuelidate/core"
 import ErrorFieldRenderer from "src/components/molecules/ErrorFieldRenderer.vue"
 
-const props = withDefaults(
-  defineProps<{
-    t?: string
-    modelValue?: string[]
-    rules?: Record<string, any>
-    allowDuplicates?: boolean
-  }>(),
-  {
-    t: "lists",
-    modelValue: () => [],
-    rules: () => ({}),
-    allowDuplicates: false
-  }
-)
+interface Props {
+  t?: string
+  modelValue?: string[]
+  rules?: Record<string, any>
+  allowDuplicates?: boolean
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  t: "lists",
+  modelValue: () => [],
+  rules: () => ({}),
+  allowDuplicates: false
+})
 
 const emit = defineEmits<{
   "update:modelValue": [value: string[]]

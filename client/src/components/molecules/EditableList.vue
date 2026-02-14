@@ -150,22 +150,21 @@ import CollapseToolbar from "./CollapseToolbar.vue"
 
 const $q = useQuasar()
 
-const props = withDefaults(
-  defineProps<{
-    modelValue?: string[]
-    inputIcon?: string
-    rules?: Record<string, any>
-    t?: string
-    allowDuplicates?: boolean
-  }>(),
-  {
-    modelValue: () => [],
-    inputIcon: "",
-    rules: () => ({}),
-    t: "lists",
-    allowDuplicates: false
-  }
-)
+interface Props {
+  modelValue?: string[]
+  inputIcon?: string
+  rules?: Record<string, any>
+  t?: string
+  allowDuplicates?: boolean
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  modelValue: () => [],
+  inputIcon: "",
+  rules: () => ({}),
+  t: "lists",
+  allowDuplicates: false
+})
 
 const emit = defineEmits<{
   "update:modelValue": [value: string[]]

@@ -109,9 +109,11 @@ import { useQuery } from "@vue/apollo-composable"
 
 const $q = useQuasar()
 
-const props = defineProps<{
+interface Props {
   id: string
-}>()
+}
+
+const props = defineProps<Props>()
 
 const { result } = useQuery(GET_SUBMISSION, { id: props.id })
 const submission = computed(() => {

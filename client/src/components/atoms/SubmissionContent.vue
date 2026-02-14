@@ -144,18 +144,17 @@ const { darkModeStatus, toggleDarkMode } = useDarkMode()
 const { mutate: markRead } = useMutation(MARK_INLINE_COMMENTS_READ)
 const { mutate: markReplyRead } = useMutation(MARK_INLINE_COMMENT_REPLIES_READ)
 
-const props = withDefaults(
-  defineProps<{
-    annotationEnabled?: boolean
-    highlightVisibility?: boolean
-    showOverallComments?: boolean
-  }>(),
-  {
-    annotationEnabled: true,
-    highlightVisibility: true,
-    showOverallComments: true
-  }
-)
+interface Props {
+  annotationEnabled?: boolean
+  highlightVisibility?: boolean
+  showOverallComments?: boolean
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  annotationEnabled: true,
+  highlightVisibility: true,
+  showOverallComments: true
+})
 
 const forExport = useForExport()
 const commentDrawerOpen = useCommentDrawerOpen()

@@ -71,14 +71,13 @@ import { useQuery } from "@vue/apollo-composable"
 import { SEARCH_USERS } from "src/graphql/queries"
 import { ref, computed } from "vue"
 
-const props = withDefaults(
-  defineProps<{
-    modelValue?: FindUserSelectValue
-  }>(),
-  {
-    modelValue: null
-  }
-)
+interface Props {
+  modelValue?: FindUserSelectValue
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  modelValue: null
+})
 
 const emit = defineEmits<{
   "update:modelValue": [value: FindUserSelectValue]

@@ -69,20 +69,19 @@ import {
 import { computed, ref } from "vue"
 import type { DocumentNode } from "graphql"
 import { useI18nPrefix } from "src/use/i18nPrefix"
-const props = withDefaults(
-  defineProps<{
-    container: Record<string, any>
-    roleGroup: string
-    mutable?: boolean
-    maxUsers?: boolean | number
-    containerType?: string | null
-  }>(),
-  {
-    mutable: false,
-    maxUsers: false,
-    containerType: null
-  }
-)
+interface Props {
+  container: Record<string, any>
+  roleGroup: string
+  mutable?: boolean
+  maxUsers?: boolean | number
+  containerType?: string | null
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  mutable: false,
+  maxUsers: false,
+  containerType: null
+})
 
 const user = ref<FoundUser | null>(null)
 const containerType = computed(() => props.container.__typename.toLowerCase())

@@ -59,9 +59,11 @@ const editId = ref<string | null>(null)
 
 import type { Publication } from "src/graphql/generated/graphql"
 
-const props = defineProps<{
+interface Props {
   publication: Publication
-}>()
+}
+
+const props = defineProps<Props>()
 const publication = toRef(props, "publication")
 
 const variables = {

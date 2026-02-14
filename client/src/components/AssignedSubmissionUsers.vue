@@ -89,20 +89,19 @@ import Placeholder from "@tiptap/extension-placeholder"
 import { useQuasar } from "quasar"
 const { dialog } = useQuasar()
 
-const props = withDefaults(
-  defineProps<{
-    container: Record<string, any>
-    roleGroup: string
-    mutable?: boolean
-    maxUsers?: boolean | number
-    containerType?: string | null
-  }>(),
-  {
-    mutable: false,
-    maxUsers: false,
-    containerType: null
-  }
-)
+interface Props {
+  container: Record<string, any>
+  roleGroup: string
+  mutable?: boolean
+  maxUsers?: boolean | number
+  containerType?: string | null
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  mutable: false,
+  maxUsers: false,
+  containerType: null
+})
 
 const user = ref<FindUserSelectValue>(null)
 const containerType = computed(() => props.container.__typename.toLowerCase())

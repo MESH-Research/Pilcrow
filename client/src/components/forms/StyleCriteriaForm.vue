@@ -85,14 +85,13 @@ import type { StyleCriteria } from "src/graphql/generated/graphql"
 const { dirty, setError } = inject(formStateKey)!
 
 const { t } = useI18n()
-const props = withDefaults(
-  defineProps<{
-    criteria?: Partial<StyleCriteria>
-  }>(),
-  {
-    criteria: () => ({})
-  }
-)
+interface Props {
+  criteria?: Partial<StyleCriteria>
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  criteria: () => ({})
+})
 const emit = defineEmits<{
   cancel: []
   save: [criteria: Partial<StyleCriteria>]

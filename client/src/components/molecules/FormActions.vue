@@ -56,16 +56,15 @@ defineEmits<{
   resetClick: []
 }>()
 
-const props = withDefaults(
-  defineProps<{
-    sticky?: boolean
-    flat?: boolean
-  }>(),
-  {
-    sticky: true,
-    flat: false
-  }
-)
+interface Props {
+  sticky?: boolean
+  flat?: boolean
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  sticky: true,
+  flat: false
+})
 
 const saveClassList = computed(() => {
   const classes = {

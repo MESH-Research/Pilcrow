@@ -27,9 +27,11 @@
 
 <script setup lang="ts">
 import { computed } from "vue"
-const props = defineProps<{
+interface Props {
   complexity: Record<string, any>
-}>()
+}
+
+const props = defineProps<Props>()
 
 const suggestions = computed(() => {
   return props.complexity.feedback.suggestions

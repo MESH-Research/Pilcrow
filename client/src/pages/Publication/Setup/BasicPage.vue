@@ -12,9 +12,11 @@ import UpdateBasicForm from "src/components/forms/Publication/UpdateBasicForm.vu
 import { UPDATE_PUBLICATION_BASICS } from "src/graphql/mutations"
 import { useFormState, formStateKey } from "src/use/forms"
 import type { Publication } from "src/graphql/generated/graphql"
-const props = defineProps<{
+interface Props {
   publication: Publication
-}>()
+}
+
+const props = defineProps<Props>()
 
 const mutation = useMutation(UPDATE_PUBLICATION_BASICS)
 

@@ -13,9 +13,11 @@ import { useFormState, formStateKey } from "src/use/forms"
 import { provide } from "vue"
 import { UPDATE_PUBLICATION_CONTENT } from "src/graphql/mutations"
 import type { Publication } from "src/graphql/generated/graphql"
-const props = defineProps<{
+interface Props {
   publication: Publication
-}>()
+}
+
+const props = defineProps<Props>()
 
 const mutation = useMutation(UPDATE_PUBLICATION_CONTENT)
 const formState = useFormState(null, mutation)

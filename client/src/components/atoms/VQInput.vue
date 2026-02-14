@@ -41,15 +41,14 @@ import { useI18n } from "vue-i18n"
  * @see https://v1.quasar.dev/vue-components/input#qinput-api
  */
 
-const props = withDefaults(
-  defineProps<{
-    v: Record<string, any>
-    t?: string | boolean
-  }>(),
-  {
-    t: false
-  }
-)
+interface Props {
+  v: Record<string, any>
+  t?: string | boolean
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  t: false
+})
 defineEmits<{
   vqupdate: [validator: any, value: any]
 }>()

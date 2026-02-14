@@ -13,18 +13,17 @@
 </template>
 
 <script setup lang="ts">
-withDefaults(
-  defineProps<{
-    score?: number
-    max?: number
-    valid?: boolean
-  }>(),
-  {
-    score: 0,
-    max: 4,
-    valid: false
-  }
-)
+interface Props {
+  score?: number
+  max?: number
+  valid?: boolean
+}
+
+withDefaults(defineProps<Props>(), {
+  score: 0,
+  max: 4,
+  valid: false
+})
 </script>
 
 <style lang="sass" scoped>

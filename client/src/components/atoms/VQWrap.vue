@@ -7,14 +7,13 @@
 <script setup lang="ts">
 import { provide } from "vue"
 
-const props = withDefaults(
-  defineProps<{
-    tPrefix?: string | boolean
-  }>(),
-  {
-    tPrefix: false
-  }
-)
+interface Props {
+  tPrefix?: string | boolean
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  tPrefix: false
+})
 
 const emit = defineEmits<{
   vqupdate: [validator: any, value: any]
