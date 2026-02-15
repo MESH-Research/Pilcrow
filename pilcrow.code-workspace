@@ -65,7 +65,10 @@
                 "type": "shell",
                 "command": "npx vue-tsc --noEmit",
                 "options": { "cwd": "${workspaceFolder:CLIENT}" },
-                "problemMatcher": "$tsc",
+                "problemMatcher": {
+                    "base": "$tsc",
+                    "fileLocation": ["relative", "${workspaceFolder:CLIENT}"]
+                },
                 "group": "build",
                 "presentation": {
                     "reveal": "silent"
