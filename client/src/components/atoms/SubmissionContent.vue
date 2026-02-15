@@ -162,11 +162,13 @@ const submission = useSubmission()
 const activeComment = useActiveComment()
 const contentRef = ref<HTMLElement | null>(null)
 
-const emit = defineEmits<{
+interface Emits {
   scrollToOverallComments: []
   scrollAddNewOverallComment: []
   editorReady: [editor: InstanceType<typeof Editor>]
-}>()
+}
+
+const emit = defineEmits<Emits>()
 
 function scrollToOverallComments() {
   emit("scrollToOverallComments")
@@ -208,11 +210,12 @@ function decreaseFontSize() {
 const findCommentFromId = (id) =>
   submission.value.inline_comments.find((c) => c.id === id)
 
-const onAnnotationClick = (context, { target }) => {
+const onAnnotationClick = (context: { id: string }, event: MouseEvent) => {
   // Open the inline comment drawer
   commentDrawerOpen.value = true
 
   //First we need to get all the comment widget elements with the same Y index
+  const target = event.target as HTMLElement
   const { top: targetTop } = target.getBoundingClientRect()
   const widgets = [
     ...contentRef.value.querySelectorAll<HTMLElement>(".comment-widget")

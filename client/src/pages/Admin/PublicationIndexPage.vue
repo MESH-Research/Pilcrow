@@ -104,18 +104,20 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { GET_PUBLICATIONS } from "src/graphql/queries"
 import { usePagination } from "src/use/pagination"
+import type { Publication } from "src/graphql/generated/graphql"
 import CreateForm from "src/components/forms/Publication/CreateForm.vue"
 import { useRouter } from "vue-router"
-const destRoute = (id, page) => ({
+
+const destRoute = (id: string, page: string) => ({
   name: `publication:setup:${page}`,
   params: { id }
 })
 
-const pageTitleKey = (page) => `publication.setup_pages.${page}`
-const pubsPaginator = usePagination(GET_PUBLICATIONS)
+const pageTitleKey = (page: string) => `publication.setup_pages.${page}`
+const pubsPaginator = usePagination<Publication>(GET_PUBLICATIONS)
 const {
   binds,
   listeners,
@@ -125,7 +127,7 @@ const {
 } = pubsPaginator
 
 const { push } = useRouter()
-function publicationCreated(publication) {
+function publicationCreated(publication: { id: string }) {
   push({
     name: "publication:setup:basic",
     params: { id: publication.id }

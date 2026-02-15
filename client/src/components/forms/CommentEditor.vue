@@ -9,7 +9,7 @@
           v-bind="button"
         />
       </q-btn-group>
-      <div class="comment-editor" @focus-editor="focusOnEditor">
+      <div class="comment-editor">
         <editor-content
           ref="focusEditor"
           data-cy="comment-editor"
@@ -21,7 +21,7 @@
           <q-expansion-item
             v-for="criteria in styleCriteria"
             :key="criteria.id"
-            :label="criteria.label"
+            :label="criteria.name"
             popup
             expand-icon="help_outline"
             expanded-icon="expand_less"
@@ -78,8 +78,8 @@
   </q-form>
 </template>
 
-<script setup>
-import { ref, computed } from "vue"
+<script setup lang="ts">
+import { ref, computed, type ComputedRef } from "vue"
 import { useEditor, EditorContent } from "@tiptap/vue-3"
 import { useMutation } from "@vue/apollo-composable"
 import { useQuasar } from "quasar"
@@ -100,6 +100,27 @@ import {
 } from "src/graphql/mutations"
 import { useI18n } from "vue-i18n"
 import { uniqueId } from "lodash"
+import type { DocumentNode } from "graphql"
+
+interface CommentData {
+  id?: string
+  __typename?: string
+  content?: string
+  from?: number
+  to?: number
+  style_criteria?: Array<{ id: string }>
+}
+
+interface CommentMutationArgs {
+  submission_id?: string
+  content: string
+  style_criteria?: string[]
+  from?: number
+  to?: number
+  reply_to_id?: string
+  parent_id?: string
+  comment_id?: string
+}
 
 const { dialog } = useQuasar()
 function dirtyDialog() {
@@ -108,34 +129,29 @@ function dirtyDialog() {
   })
 }
 const uuid = uniqueId()
-const emit = defineEmits(["cancel", "submit"])
-const props = defineProps({
-  commentType: {
-    type: String,
-    required: false,
-    default: ""
-  },
-  parent: {
-    type: Object,
-    default: () => {}
-  },
-  isQuoteReplying: {
-    type: Boolean,
-    default: false
-  },
-  isModifying: {
-    type: Boolean,
-    default: false
-  },
-  replyTo: {
-    type: Object,
-    default: () => {}
-  },
-  comment: {
-    type: Object,
-    required: false,
-    default: () => {}
-  }
+interface Emits {
+  cancel: []
+  submit: []
+}
+
+const emit = defineEmits<Emits>()
+
+interface Props {
+  commentType?: string
+  parent?: CommentData
+  isQuoteReplying?: boolean
+  isModifying?: boolean
+  replyTo?: CommentData
+  comment?: CommentData
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  commentType: "",
+  parent: () => ({}) as CommentData,
+  isQuoteReplying: false,
+  isModifying: false,
+  replyTo: () => ({}) as CommentData,
+  comment: () => ({}) as CommentData
 })
 
 const defaultContent = computed(() => {
@@ -149,7 +165,7 @@ const defaultContent = computed(() => {
   return `<blockquote>${props.replyTo.content}</blockquote><p></p>`
 })
 
-const inputNameMapper = function (commentType) {
+const inputNameMapper = function (commentType: string) {
   if (commentType.startsWith("InlineComment")) {
     return props.isModifying
       ? "submissions.inline_comments.ariaLabel.edit"
@@ -174,11 +190,11 @@ const editor = useEditor({
   injectCSS: true,
   extensions: [
     StarterKit.configure({
-      blockquote: true,
-      codeblock: false,
-      hardbreak: false,
+      blockquote: {},
+      codeBlock: false,
+      hardBreak: false,
       heading: false,
-      horizontalrule: false,
+      horizontalRule: false,
       strike: false
     }),
     Link.configure({
@@ -196,10 +212,20 @@ const commentType = computed(
 const isReply = computed(() =>
   ["OverallCommentReply", "InlineCommentReply"].includes(commentType.value)
 )
-const commentEditorButtons = ref([
+interface EditorButton {
+  ariaLabel: string
+  isActive: ComputedRef<boolean>
+  isDisabled: ComputedRef<boolean>
+  clickHandler: () => void
+  tooltipText: string
+  iconName: string
+}
+
+const commentEditorButtons = ref<EditorButton[]>([
   {
     ariaLabel: t("guiElements.button.bold.ariaLabel"),
     isActive: computed(() => editor.value.isActive("bold")),
+    isDisabled: computed(() => false),
     clickHandler: () => editor.value.chain().focus().toggleBold().run(),
     tooltipText: t("guiElements.button.bold.tooltipText"),
     iconName: "format_bold"
@@ -207,6 +233,7 @@ const commentEditorButtons = ref([
   {
     ariaLabel: t("guiElements.button.italic.ariaLabel"),
     isActive: computed(() => editor.value.isActive("italic")),
+    isDisabled: computed(() => false),
     clickHandler: () => editor.value.chain().focus().toggleItalic().run(),
     tooltipText: t("guiElements.button.italic.tooltipText"),
     iconName: "format_italic"
@@ -214,6 +241,7 @@ const commentEditorButtons = ref([
   {
     ariaLabel: t("guiElements.button.bulletedList.ariaLabel"),
     isActive: computed(() => editor.value.isActive("bulletList")),
+    isDisabled: computed(() => false),
     clickHandler: () => editor.value.chain().focus().toggleBulletList().run(),
     tooltipText: t("guiElements.button.bulletedList.tooltipText"),
     iconName: "list"
@@ -221,12 +249,14 @@ const commentEditorButtons = ref([
   {
     ariaLabel: t("guiElements.button.numberedList.ariaLabel"),
     isActive: computed(() => editor.value.isActive("orderedList")),
+    isDisabled: computed(() => false),
     clickHandler: () => editor.value.chain().focus().toggleOrderedList().run(),
     tooltipText: t("guiElements.button.numberedList.tooltipText"),
     iconName: "format_list_numbered"
   },
   {
     ariaLabel: t("guiElements.button.indent.ariaLabel"),
+    isActive: computed(() => false),
     isDisabled: computed(() => !editor.value.can().sinkListItem("listItem")),
     clickHandler: () =>
       editor.value.chain().focus().sinkListItem("listItem").run(),
@@ -235,6 +265,7 @@ const commentEditorButtons = ref([
   },
   {
     ariaLabel: t("guiElements.button.unindent.ariaLabel"),
+    isActive: computed(() => false),
     isDisabled: computed(() => !editor.value.can().liftListItem("listItem")),
     clickHandler: () =>
       editor.value.chain().focus().liftListItem("listItem").run(),
@@ -244,6 +275,7 @@ const commentEditorButtons = ref([
   {
     ariaLabel: t("guiElements.button.link.ariaLabel"),
     isActive: computed(() => editor.value.isActive("link")),
+    isDisabled: computed(() => false),
     clickHandler: () => setLink(),
     tooltipText: t("guiElements.button.link.tooltipText"),
     iconName: "insert_link"
@@ -251,6 +283,7 @@ const commentEditorButtons = ref([
   {
     ariaLabel: t("guiElements.button.unlink.ariaLabel"),
     isActive: computed(() => editor.value.isActive("link")),
+    isDisabled: computed(() => false),
     clickHandler: () => editor.value.chain().focus().unsetLink().run(),
     tooltipText: t("guiElements.button.unlink.tooltipText"),
     iconName: "link_off"
@@ -258,20 +291,19 @@ const commentEditorButtons = ref([
 ])
 import { useSubmission } from "src/use/submissionContext"
 const submission = useSubmission()
-let mutations = {
-  InlineComment: CREATE_INLINE_COMMENT,
-  InlineCommentReply: CREATE_INLINE_COMMENT_REPLY,
-  OverallComment: CREATE_OVERALL_COMMENT,
-  OverallCommentReply: CREATE_OVERALL_COMMENT_REPLY
-}
-if (props.isModifying) {
-  mutations = {
-    InlineComment: UPDATE_INLINE_COMMENT,
-    InlineCommentReply: UPDATE_INLINE_COMMENT_REPLY,
-    OverallComment: UPDATE_OVERALL_COMMENT,
-    OverallCommentReply: UPDATE_OVERALL_COMMENT_REPLY
-  }
-}
+const mutations: Record<string, DocumentNode> = props.isModifying
+  ? {
+      InlineComment: UPDATE_INLINE_COMMENT,
+      InlineCommentReply: UPDATE_INLINE_COMMENT_REPLY,
+      OverallComment: UPDATE_OVERALL_COMMENT,
+      OverallCommentReply: UPDATE_OVERALL_COMMENT_REPLY
+    }
+  : {
+      InlineComment: CREATE_INLINE_COMMENT,
+      InlineCommentReply: CREATE_INLINE_COMMENT_REPLY,
+      OverallComment: CREATE_OVERALL_COMMENT,
+      OverallCommentReply: CREATE_OVERALL_COMMENT_REPLY
+    }
 const { mutate: createComment } = useMutation(mutations[commentType.value])
 const selectedCriteria = computed(() =>
   styleCriteria.value
@@ -299,8 +331,8 @@ async function submitHandler() {
     return false
   }
   try {
-    const args = {
-      submission_id: submission.value.id,
+    const args: CommentMutationArgs = {
+      submission_id: submission.value?.id,
       content: editor.value.getHTML()
     }
     if (commentType.value === "InlineComment") {
@@ -365,11 +397,14 @@ function setLink() {
 
 const comment = computed(() => props.comment)
 
-function isCriteriaSelected(publication_style_criteria, comment) {
+function isCriteriaSelected(
+  publication_style_criteria: { id: string },
+  comment: { value: CommentData }
+) {
   if (commentType.value === "InlineComment" && props.isModifying) {
-    return comment.value.style_criteria.some((comment_style_criteria) => {
+    return comment.value.style_criteria?.some((comment_style_criteria) => {
       return comment_style_criteria.id == publication_style_criteria.id
-    }, publication_style_criteria)
+    })
   } else {
     return false
   }

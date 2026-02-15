@@ -4,50 +4,45 @@
   </q-avatar>
 </template>
 
-<script>
-const stringToInt = (s) => {
-  let hash = 0,
-    i,
-    chr
+<script setup lang="ts">
+import { computed } from "vue"
+
+interface Props {
+  user: { email?: string }
+}
+
+const props = defineProps<Props>()
+
+const stringToInt = (s: string): number => {
+  let hash = 0
   if (s.length === 0) return hash
-  for (i = 0; i < s.length; i++) {
-    chr = s.charCodeAt(i)
+  for (let i = 0; i < s.length; i++) {
+    const chr = s.charCodeAt(i)
     hash = (hash << 5) - hash + chr
     hash |= 0 // Convert to 32bit integer
   }
   return hash
 }
 
-export default {
-  name: "AvatarImage",
-  props: {
-    user: {
-      type: Object,
-      required: true
-    }
-  },
-  computed: {
-    avatarSrc() {
-      const colors = [
-        "blue",
-        "cyan",
-        "green",
-        "magenta",
-        "orange",
-        "pine",
-        "purple",
-        "red",
-        "yellow"
-      ]
-      if (!this.user.email) {
-        return ""
-      }
-      const number = Math.abs(stringToInt(this.user.email)) % colors.length
+const colors = [
+  "blue",
+  "cyan",
+  "green",
+  "magenta",
+  "orange",
+  "pine",
+  "purple",
+  "red",
+  "yellow"
+]
 
-      return `/avatar/avatar-${colors[number]}.png`
-    }
+const avatarSrc = computed(() => {
+  if (!props.user.email) {
+    return ""
   }
-}
+  const number = Math.abs(stringToInt(props.user.email)) % colors.length
+  return `/avatar/avatar-${colors[number]}.png`
+})
 </script>
 
 <style lang="css">

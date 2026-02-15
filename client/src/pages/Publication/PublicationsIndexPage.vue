@@ -37,11 +37,12 @@
   </section>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { GET_PUBLICATIONS } from "src/graphql/queries"
 import { usePagination } from "src/use/pagination"
+import type { Publication } from "src/graphql/generated/graphql"
 
-const pubsPaginator = usePagination(GET_PUBLICATIONS)
+const pubsPaginator = usePagination<Publication>(GET_PUBLICATIONS)
 const {
   binds,
   listeners,
@@ -50,9 +51,9 @@ const {
   query: { loading }
 } = pubsPaginator
 
-const destRoute = (id) => ({ name: "publication:home", params: { id } })
+const destRoute = (id: string) => ({ name: "publication:home", params: { id } })
 
-function strip(html) {
+function strip(html: string | null | undefined) {
   const doc = new DOMParser().parseFromString(html, "text/html")
   const text = doc.body.textContent || ""
   return text.length < 200 ? text : text.substring(0, 200) + "..."

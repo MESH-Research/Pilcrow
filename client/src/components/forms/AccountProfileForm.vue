@@ -19,7 +19,7 @@
   </q-form>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import FormSection from "src/components/molecules/FormSection.vue"
 import FormActions from "src/components/molecules/FormActions.vue"
 import VQInput from "src/components/atoms/VQInput.vue"
@@ -29,28 +29,33 @@ import { useVuelidate } from "@vuelidate/core"
 import { reactive, watchEffect, watch, inject, computed, ref } from "vue"
 import { isEqual, pick } from "lodash"
 import { updateUserRules as rules } from "src/use/userValidation"
-const props = defineProps({
-  accountProfile: {
-    required: true,
-    validator: (v) =>
-      v === null || typeof v === "object" || typeof v === "undefined"
-  },
-  graphqlValidation: {
-    required: false,
-    type: Object,
-    default: () => ({})
-  }
+import type { VuelidateValidator } from "src/types/vuelidate"
+import type { ValidationErrors } from "src/use/forms/graphQLValidation"
+import type { User } from "src/graphql/generated/graphql"
+
+interface Props {
+  accountProfile: Pick<User, "username" | "name" | "email"> | null | undefined
+  graphqlValidation?: ValidationErrors
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  graphqlValidation: () => ({})
 })
-const $externalResults = ref({})
+
+const $externalResults = ref<ValidationErrors>({})
 
 watch(
   () => props.graphqlValidation,
   (newValue) => {
-    $externalResults.value = newValue.user ?? []
+    $externalResults.value = (newValue.user as ValidationErrors) ?? {}
   }
 )
 
-const emit = defineEmits(["save"])
+interface Emits {
+  save: [form: { password: string; email: string }]
+}
+
+const emit = defineEmits<Emits>()
 
 const original = computed(() => ({
   password: "",
@@ -80,7 +85,7 @@ watchEffect(() => {
   Object.assign(form, original.value)
 })
 
-function updateVQ(validator, newValue) {
+function updateVQ(validator: VuelidateValidator, newValue: unknown) {
   validator.$model = newValue
 }
 

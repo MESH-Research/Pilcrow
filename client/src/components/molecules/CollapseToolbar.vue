@@ -1,7 +1,8 @@
-<script>
+<script lang="ts">
 import { ClosePopup } from "quasar"
-import { h } from "vue"
-export default {
+import { defineComponent, h } from "vue"
+
+export default defineComponent({
   name: "CollapseToolbar",
   props: {
     collapse: {
@@ -9,23 +10,21 @@ export default {
       default: false
     }
   },
-  render: function () {
+  render() {
     if (this.$props.collapse) {
-      const items = this.$slots
-        .default()
-        .map((vn) =>
-          h("q-item", { directives: { ClosePopup } }, [
-            h("q-item-section", {}, [vn])
-          ])
-        )
+      const items = this.$slots.default!().map((vn) =>
+        h("q-item", { directives: { ClosePopup } }, [
+          h("q-item-section", {}, [vn])
+        ])
+      )
       return h(
         "q-btn-dropdown",
         { props: { "dropdown-icon": "more_horiz", flat: true, dense: true } },
         [h("q-list", {}, items)]
       )
     } else {
-      return h("div", {}, this.$slots.default())
+      return h("div", {}, this.$slots.default!())
     }
   }
-}
+})
 </script>

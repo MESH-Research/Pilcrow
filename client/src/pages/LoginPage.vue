@@ -118,7 +118,7 @@
   </q-page>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import PasswordInput from "src/components/forms/PasswordInput.vue"
 import ErrorBanner from "src/components/molecules/ErrorBanner.vue"
 import ErrorFieldRenderer from "src/components/molecules/ErrorFieldRenderer.vue"
@@ -142,17 +142,17 @@ const handleSubmit = async () => {
     await loginUser()
     push(redirectUrl)
   } catch (e) {
-    error.value = e.message
+    error.value = (e as Error).message
   }
 }
 
-const handleProviderBtnClick = (provider_name) => {
+const handleProviderBtnClick = (provider_name: string) => {
   try {
     window.location.href = providers.value.find(
       (p) => p.name === provider_name
-    ).login_url
+    )!.login_url
   } catch (e) {
-    error.value = e.message
+    error.value = (e as Error).message
   }
 }
 </script>
