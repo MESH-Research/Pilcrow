@@ -188,7 +188,8 @@ export const useLogin = () => {
     }
   }))
 
-  const redirectUrl = SessionStorage.getItem("loginRedirect") ?? "/dashboard"
+  const redirectUrl: string =
+    SessionStorage.getItem<string>("loginRedirect") ?? "/dashboard"
   SessionStorage.remove("loginRedirect")
 
   /**
@@ -196,7 +197,7 @@ export const useLogin = () => {
    *
    * @returns User object on success, throws Error otherwise.
    */
-  const loginUser = async (user) => {
+  const loginUser = async (user?: { email: string; password: string }) => {
     if (typeof user !== "undefined") {
       Object.assign(credentials, user)
     }

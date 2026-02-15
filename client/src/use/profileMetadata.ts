@@ -81,7 +81,36 @@ export const rules = {
   }
 }
 
-export const profile_defaults = {
+export interface SocialMediaFields {
+  google: string
+  twitter: string
+  facebook: string
+  instagram: string
+  linkedin: string
+}
+
+export interface AcademicProfileFields {
+  orcid_id: string
+  humanities_commons: string
+}
+
+export interface ProfileMetadataFields {
+  biography: string
+  position_title: string
+  specialization: string
+  affiliation: string
+  websites: string[]
+  social_media: SocialMediaFields
+  academic_profiles: AcademicProfileFields
+}
+
+export interface ProfileFormData {
+  username: string
+  name: string
+  profile_metadata: ProfileMetadataFields
+}
+
+export const profile_defaults: ProfileFormData = {
   username: "",
   name: "",
   profile_metadata: {
@@ -104,7 +133,7 @@ export const profile_defaults = {
   }
 }
 
-export function useSocialFieldWatchers(form) {
+export function useSocialFieldWatchers(form: ProfileFormData) {
   watch(
     () => form.profile_metadata.social_media.facebook,
     (value) => {

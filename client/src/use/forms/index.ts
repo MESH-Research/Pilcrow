@@ -6,6 +6,7 @@ import {
   useGraphQLValidation,
   useExternalResultFromGraphQL
 } from "./graphQLValidation"
+import type { ValidationErrors } from "./graphQLValidation"
 export {
   useDirtyGuard,
   useFormState,
@@ -14,4 +15,4 @@ export {
   useGraphQLValidation,
   useExternalResultFromGraphQL
 }
-export type { FormState, FormStateStatus }
+export type { FormState, FormStateStatus, ValidationErrors }

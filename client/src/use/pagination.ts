@@ -2,8 +2,18 @@
 import { unref, reactive, computed, watchEffect } from "vue"
 import { defaults } from "lodash"
 import { useQuery } from "@vue/apollo-composable"
+import type { DocumentNode } from "graphql"
+import type { OperationVariables } from "@apollo/client/core"
+import type { PaginatorInfo } from "src/graphql/generated/graphql"
 
-export function usePagination(doc, options) {
+export interface PaginationOptions {
+  variables?: OperationVariables
+}
+
+export function usePagination<T = Record<string, unknown>>(
+  doc: DocumentNode,
+  options?: PaginationOptions
+) {
   const opts = defaults(unref(options) || {}, {
     variables: {}
   })
@@ -13,21 +23,21 @@ export function usePagination(doc, options) {
   const query = useQuery(doc, vars)
 
   const itemData = computed(() => {
-    if (query.loading.value || !query.result.value) return []
-    return extractElement(query.result.value, "data")
+    if (query.loading.value || !query.result.value) return [] as T[]
+    return extractElement(query.result.value, "data") as T[]
   })
 
-  const paginatorInfo = computed(() => {
+  const paginatorInfo = computed<PaginatorInfo | null>(() => {
     return !query.loading.value && query.result.value
-      ? extractElement(query.result.value, "paginatorInfo")
+      ? (extractElement(query.result.value, "paginatorInfo") as PaginatorInfo)
       : null
   })
 
-  function updatePage(newValue) {
+  function updatePage(newValue: number) {
     vars.page = newValue
   }
   const binds = reactive({
-    modelValue: vars.page,
+    modelValue: vars.page as number,
     min: 1,
     max: 1
   })
@@ -54,7 +64,8 @@ export function usePagination(doc, options) {
   }
 }
 
-function extractElement(data, element) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function extractElement(data: Record<string, any>, element: string): unknown {
   const keys = Object.keys(data)
   if (keys.length !== 1) {
     throw "Unable to extract query return (Are you sure this is a paginated query?)"
