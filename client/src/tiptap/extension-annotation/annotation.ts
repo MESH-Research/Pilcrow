@@ -5,13 +5,20 @@ import type { DecorationSet } from "@tiptap/pm/view"
 import { AnnotationPlugin, AnnotationPluginKey } from "./plugin"
 import type { AnnotationData } from "./plugin"
 
+export interface AnnotationCommandData {
+  id?: string
+  context?: { id: string }
+  active?: boolean
+  [key: string]: unknown
+}
+
 declare module "@tiptap/core" {
   interface Commands<ReturnType> {
     annotation: {
-      addAnnotation: (data: Record<string, unknown>) => ReturnType
+      addAnnotation: (data: AnnotationCommandData) => ReturnType
       updateAnnotation: (
         id: string,
-        data: Record<string, unknown>
+        data: Partial<AnnotationCommandData>
       ) => ReturnType
       deleteAnnotation: (id: string) => ReturnType
     }

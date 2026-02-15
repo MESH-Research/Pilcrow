@@ -9,7 +9,7 @@ export interface AnnotationData {
   to: number
   context: { id: string }
   active: boolean
-  click: (context: { id: string }, ...args: unknown[]) => void
+  click: (context: { id: string }, event: MouseEvent) => void
 }
 
 export interface AnnotationPluginOptions {
@@ -42,7 +42,7 @@ function commentWidget({ click, context }: AnnotationData) {
   button.className = "comment-widget no-border transparent"
   button.dataset.comment = context.id
   button.dataset.cy = "comment-widget"
-  button.onclick = (...args) => click(context, ...args)
+  button.onclick = (event) => click(context, event)
   button.appendChild(icon)
   return button
 }
