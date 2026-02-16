@@ -51,9 +51,11 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   t: false
 })
-defineEmits<{
+interface Emits {
   vqupdate: [validator: VuelidateValidator, value: string]
-}>()
+}
+
+defineEmits<Emits>()
 
 const input = ref(null)
 

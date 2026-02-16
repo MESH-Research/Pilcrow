@@ -137,10 +137,10 @@ import { computed } from "vue"
 import { useQuasar } from "quasar"
 
 const $q = useQuasar()
-
-const props = defineProps<{
+interface Props {
   id: string
-}>()
+}
+const props = defineProps<Props>()
 
 const { result } = useQuery(GET_USER, { id: props.id })
 const user = computed(() => {

@@ -52,9 +52,11 @@ import { formStateKey } from "src/use/forms"
 
 const { state, errorMessage } = inject(formStateKey)!
 
-defineEmits<{
+interface Emits {
   resetClick: []
-}>()
+}
+
+defineEmits<Emits>()
 
 interface Props {
   sticky?: boolean

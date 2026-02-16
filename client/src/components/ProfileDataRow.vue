@@ -20,7 +20,9 @@ withDefaults(defineProps<Props>(), {
   label: "",
   value: ""
 })
-defineEmits<{
+interface Emits {
   editClick: []
-}>()
+}
+
+defineEmits<Emits>()
 </script>

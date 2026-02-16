@@ -166,9 +166,11 @@ const props = withDefaults(defineProps<Props>(), {
   allowDuplicates: false
 })
 
-const emit = defineEmits<{
+interface Emits {
   "update:modelValue": [value: string[]]
-}>()
+}
+
+const emit = defineEmits<Emits>()
 
 const itemUnderEdit = ref<number | false>(false)
 

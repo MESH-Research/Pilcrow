@@ -79,9 +79,11 @@ const props = withDefaults(defineProps<Props>(), {
   modelValue: null
 })
 
-const emit = defineEmits<{
+interface Emits {
   "update:modelValue": [value: FindUserSelectValue]
-}>()
+}
+
+const emit = defineEmits<Emits>()
 
 const isUserSelected = computed(() => {
   return typeof props.modelValue === "object" && props.modelValue !== null

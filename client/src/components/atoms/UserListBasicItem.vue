@@ -35,9 +35,11 @@ withDefaults(defineProps<Props>(), {
   user: undefined,
   action: ""
 })
-defineEmits<{
+interface Emits {
   actionClick: [
     payload: { user: Record<string, unknown> | undefined; action: string }
   ]
-}>()
+}
+
+defineEmits<Emits>()
 </script>

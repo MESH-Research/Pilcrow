@@ -16,9 +16,11 @@ const props = withDefaults(defineProps<Props>(), {
   tPrefix: false
 })
 
-const emit = defineEmits<{
+interface Emits {
   vqupdate: [validator: VuelidateValidator, value: string]
-}>()
+}
+
+const emit = defineEmits<Emits>()
 
 provide("tPrefix", props.tPrefix)
 provide("vqupdate", (validator: VuelidateValidator, value: string) => {

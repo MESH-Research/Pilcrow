@@ -92,11 +92,13 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   criteria: () => ({})
 })
-const emit = defineEmits<{
+interface Emits {
   cancel: []
   save: [criteria: Partial<StyleCriteria>]
   delete: [criteria: Partial<StyleCriteria>]
-}>()
+}
+
+const emit = defineEmits<Emits>()
 
 const state = reactive({
   id: "",

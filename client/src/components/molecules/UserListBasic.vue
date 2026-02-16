@@ -24,9 +24,11 @@ withDefaults(defineProps<Props>(), {
   action: "",
   dataCy: "user_list"
 })
-const emit = defineEmits<{
+interface Emits {
   actionClick: [eventData: unknown]
-}>()
+}
+
+const emit = defineEmits<Emits>()
 
 function bubble(eventData: unknown) {
   emit("actionClick", eventData)
