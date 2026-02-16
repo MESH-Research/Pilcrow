@@ -147,7 +147,10 @@ function toggleThread() {
   isCollapsed.value = !isCollapsed.value
 }
 
-import type { OverallComment as OverallCommentType } from "src/graphql/generated/graphql"
+import type {
+  Comment,
+  OverallComment as OverallCommentType
+} from "src/graphql/generated/graphql"
 
 interface Props {
   comment: OverallCommentType
@@ -174,11 +177,11 @@ function initiateReply() {
   isModifying.value = false
   isQuoteReplying.value = false
 }
-function initiateQuoteReply(comment) {
+function initiateQuoteReply(comment?: Comment) {
   isReplying.value = true
   isQuoteReplying.value = true
   isModifying.value = false
-  commentReply.value = comment
+  commentReply.value = comment ?? null
 }
 
 function modifyComment(comment) {

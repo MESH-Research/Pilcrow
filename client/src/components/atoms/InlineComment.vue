@@ -156,7 +156,10 @@ const commentModify = ref(null)
 function toggleThread() {
   isCollapsed.value = !isCollapsed.value
 }
-import type { InlineComment as InlineCommentType } from "src/graphql/generated/graphql"
+import type {
+  Comment,
+  InlineComment as InlineCommentType
+} from "src/graphql/generated/graphql"
 
 interface Props {
   comment: InlineCommentType
@@ -193,11 +196,11 @@ function initiateReply() {
   isModifying.value = false
   isQuoteReplying.value = false
 }
-function initiateQuoteReply(comment) {
+function initiateQuoteReply(comment?: Comment) {
   isReplying.value = true
   isModifying.value = false
   isQuoteReplying.value = true
-  commentReply.value = comment
+  commentReply.value = comment ?? null
 }
 
 function modifyComment(comment) {
