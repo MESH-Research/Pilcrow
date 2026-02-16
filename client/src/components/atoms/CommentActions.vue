@@ -42,20 +42,28 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { inject, computed } from "vue"
 import { useCurrentUser } from "src/use/user"
 import { useSubmission } from "src/use/submissionContext"
 import ConfirmCommentDeletion from "../dialogs/ConfirmCommentDeletion.vue"
 import { useQuasar } from "quasar"
+import type { Comment } from "src/graphql/generated/graphql"
+
 const { dialog } = useQuasar()
 
 const { currentUser } = useCurrentUser()
 
-const comment = inject("comment")
+const comment = inject<Comment>("comment")!
 const submission = useSubmission()
 
-const emit = defineEmits(["quoteReplyTo", "modifyComment", "deleteComment"])
+interface Emits {
+  quoteReplyTo: []
+  modifyComment: []
+  deleteComment: []
+}
+
+const emit = defineEmits<Emits>()
 
 const createdByCurrentUser = computed(() => {
   return currentUser.value.id == comment.created_by.id

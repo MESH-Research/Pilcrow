@@ -3,7 +3,6 @@
 - [ ] [Make `MutationLike.error` required in `useFormState`](#make-mutationlikeerror-required-in-useformstate)
 - [ ] [Have `useVQWrap` delegate to `useI18nPrefix` internally](#have-usevqwrap-delegate-to-usei18nprefix-internally)
 - [ ] [Derive `ProfileMetadataFields` from GraphQL fragments](#derive-profilemetadatafields-from-graphql-fragments)
-- [ ] [Convert remaining Vue SFCs to `<script setup lang="ts">`](#convert-remaining-vue-sfcs-to-script-setup-langts)
 - [ ] [Address `as any` casts for Vuelidate validators](#address-as-any-casts-for-vuelidate-validators)
 - [ ] [Convert dialog runtime emits to type-based declarations](#convert-dialog-runtime-emits-to-type-based-declarations)
 - [ ] [Convert test files from JS to TS](#convert-test-files-from-js-to-ts)
@@ -74,12 +73,6 @@ const { pt: getTranslation, prefixKey: getTranslationKey } = useI18nPrefix(tPref
 **Files:**
 - `src/graphql/fragments.ts` — add a `ProfileMetadataFormFields` fragment
 - `src/use/profileMetadata.ts` — derive `ProfileMetadataFields` from the fragment type
-
-## Convert remaining Vue SFCs to `<script setup lang="ts">`
-
-~1 Vue SFC still lacks `lang="ts"` on its script block (down from ~61):
-
-- `src/components/atoms/CommentActions.vue`
 
 ## Address `as any` casts for Vuelidate validators
 
