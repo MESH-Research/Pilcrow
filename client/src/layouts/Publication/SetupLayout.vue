@@ -12,7 +12,7 @@
         />
         <q-breadcrumbs-el :label="$t(labelKey('breadcrumb_heading'))" />
 
-        <q-breadcrumbs-el :label="route.meta.name" />
+        <q-breadcrumbs-el :label="route.meta.name as string" />
       </q-breadcrumbs>
     </nav>
     <h2 class="q-px-lg" data-cy="publication_details_heading">
@@ -31,19 +31,17 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import CollapseMenu from "src/components/molecules/CollapseMenu.vue"
 import { useQuery } from "@vue/apollo-composable"
 import { GET_PUBLICATION } from "src/graphql/queries"
 import { computed, watchEffect } from "vue"
 import { useRoute, useRouter } from "vue-router"
 import { useI18n } from "vue-i18n"
-const props = defineProps({
-  id: {
-    type: String,
-    required: true
-  }
-})
+interface Props {
+  id: string
+}
+const props = defineProps<Props>()
 
 const { result } = useQuery(GET_PUBLICATION, { id: props.id })
 const publication = computed(() => result.value?.publication ?? null)

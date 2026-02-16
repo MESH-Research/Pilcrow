@@ -20,14 +20,14 @@
   </q-footer>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useTimeAgo } from "src/use/timeAgo"
 import { onMounted, ref } from "vue"
 import { DateTime } from "luxon"
 
 const timeAgo = useTimeAgo()
 
-const parsedDate = ref("")
+const parsedDate = ref<DateTime | undefined>(undefined)
 const version = ref("")
 const versionAge = ref("")
 const versionUrl = ref("")

@@ -29,18 +29,30 @@
   </q-btn>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { nextTick } from "vue"
 import { useI18n } from "vue-i18n"
 import { useActiveComment } from "src/use/submissionContext"
 const { t } = useI18n()
 
-const props = defineProps({
-  comment: {
-    type: Object,
-    required: true
-  }
-})
+import type {
+  InlineComment,
+  InlineCommentReply,
+  OverallComment,
+  OverallCommentReply
+} from "src/graphql/generated/graphql"
+
+type CommentWithTypename =
+  | InlineComment
+  | InlineCommentReply
+  | OverallComment
+  | OverallCommentReply
+
+interface Props {
+  comment: CommentWithTypename
+}
+
+const props = defineProps<Props>()
 
 const unread_name = {
   OverallComment: "mark_unread_chat_alt",

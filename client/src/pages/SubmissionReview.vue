@@ -51,7 +51,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import SubmissionCommentDrawer from "src/components/atoms/SubmissionCommentDrawer.vue"
 import SubmissionCommentSection from "src/components/atoms/SubmissionCommentSection.vue"
 import SubmissionContent from "src/components/atoms/SubmissionContent.vue"
@@ -63,12 +63,10 @@ import { scroll } from "quasar"
 import { provideSubmissionReviewContext } from "src/use/submissionContext"
 const { getScrollTarget, setVerticalScrollPosition } = scroll
 
-const props = defineProps({
-  id: {
-    type: String,
-    required: true
-  }
-})
+interface Props {
+  id: string
+}
+const props = defineProps<Props>()
 const { loading, result } = useQuery(GET_SUBMISSION_REVIEW, { id: props.id })
 const submission = computed(() => {
   return result.value?.submission

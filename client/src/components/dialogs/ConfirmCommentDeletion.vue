@@ -39,7 +39,7 @@
   </q-dialog>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useDialogPluginComponent } from "quasar"
 import { useMutation } from "@vue/apollo-composable"
 import {
@@ -48,17 +48,26 @@ import {
 } from "src/graphql/mutations"
 import { useI18n } from "vue-i18n"
 import { useFeedbackMessages } from "src/use/guiElements"
+import type {
+  InlineComment,
+  InlineCommentReply,
+  OverallComment,
+  OverallCommentReply
+} from "src/graphql/generated/graphql"
 
-const props = defineProps({
-  comment: {
-    type: Object,
-    default: () => {},
-    required: false
-  },
-  submissionId: {
-    type: String,
-    required: true
-  }
+type CommentWithTypename =
+  | InlineComment
+  | InlineCommentReply
+  | OverallComment
+  | OverallCommentReply
+
+interface Props {
+  comment?: CommentWithTypename
+  submissionId: string
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  comment: undefined
 })
 const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } =
   useDialogPluginComponent()
@@ -90,5 +99,6 @@ async function deleteComment() {
   }
 }
 
+// eslint-disable-next-line vue/define-emits-declaration
 defineEmits([...useDialogPluginComponent.emits])
 </script>

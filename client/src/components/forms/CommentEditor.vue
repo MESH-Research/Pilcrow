@@ -108,7 +108,7 @@ interface CommentData {
   content?: string
   from?: number
   to?: number
-  style_criteria?: Array<{ id: string }>
+  style_criteria?: Array<{ id?: string }>
 }
 
 interface CommentMutationArgs {

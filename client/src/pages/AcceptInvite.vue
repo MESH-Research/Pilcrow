@@ -52,7 +52,9 @@
               outlined
               :label="$t('auth.fields.password')"
               :error="$v.password.$error"
-              :complexity="$v.password.notComplex.$response.complexity"
+              :complexity="
+                ($v.password as any).notComplex?.$response?.complexity
+              "
               data-cy="password_field"
             >
               <template #error>
@@ -124,7 +126,7 @@
   </q-page>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import NewPasswordInput from "../components/forms/NewPasswordInput.vue"
 import ErrorBanner from "src/components/molecules/ErrorBanner.vue"
 import ErrorFieldRenderer from "src/components/molecules/ErrorFieldRenderer.vue"
@@ -168,7 +170,7 @@ onMounted(async () => {
     const data = response.data.verifySubmissionInvite
     Object.assign(user, data)
     email.value = user.email
-    id.value = user.id
+    id.value = data.id
     cta_id.value = submission_id
     status.value = "verified"
   } catch (error) {

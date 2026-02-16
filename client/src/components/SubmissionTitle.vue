@@ -59,10 +59,10 @@
   </q-form>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { UPDATE_SUBMISSION_TITLE } from "src/graphql/mutations"
 import { useMutation } from "@vue/apollo-composable"
-import { ref, watchEffect } from "vue"
+import { computed, ref, watchEffect } from "vue"
 import { useSubmission } from "src/use/submissionContext"
 import { useI18n } from "vue-i18n"
 import { useFeedbackMessages } from "src/use/guiElements"
@@ -81,10 +81,13 @@ watchEffect(() => {
 const { t } = useI18n()
 
 const rules = {
-  required,
-  maxLength: maxLength(512)
+  title: {
+    required,
+    maxLength: maxLength(512)
+  }
 }
-const newPubV$ = useVuelidate(rules, draft_title)
+const titleState = computed(() => ({ title: draft_title.value }))
+const newPubV$ = useVuelidate(rules, titleState)
 
 const { newStatusMessage } = useFeedbackMessages({
   attrs: {
@@ -93,12 +96,14 @@ const { newStatusMessage } = useFeedbackMessages({
 })
 
 function checkThatFormIsInvalid() {
-  let failureMessage = false
+  let failureMessage: string | false = false
 
-  if (newPubV$.value.required.$invalid) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const titleValidation = newPubV$.value.title as any
+  if (titleValidation?.required?.$invalid) {
     failureMessage = "submissions.create.title.required"
     draft_title.value = submission.value.title
-  } else if (newPubV$.value.maxLength.$invalid) {
+  } else if (titleValidation?.maxLength?.$invalid) {
     failureMessage = "submissions.create.title.max_length"
   }
   if (failureMessage !== false) {

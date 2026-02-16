@@ -105,7 +105,7 @@
     </article>
   </div>
 </template>
-<script setup>
+<script setup lang="ts">
 import AvatarImage from "../components/atoms/AvatarImage.vue"
 import { computed, ref, watch, onMounted } from "vue"
 import { GET_SUBMISSION_REVIEW } from "src/graphql/queries"
@@ -124,12 +124,10 @@ const submission = computed(() => {
   return result.value?.submission
 })
 
-const props = defineProps({
-  id: {
-    type: String,
-    required: true
-  }
-})
+interface Props {
+  id: string
+}
+const props = defineProps<Props>()
 
 const { result } = useQuery(GET_SUBMISSION_REVIEW, { id: props.id })
 const inline_comments_count = computed(() => getCommentCount("inline_comments"))
@@ -163,7 +161,7 @@ function getCommentCount(type) {
   submission.value?.[`${type}`].map((comment) => {
     reply_count += comment.replies.length
   })
-  return submission.value?.[`${type}`].length + reply_count ?? 0
+  return (submission.value?.[`${type}`]?.length ?? 0) + reply_count
 }
 
 function getCommenters(type) {

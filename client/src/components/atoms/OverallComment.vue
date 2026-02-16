@@ -127,7 +127,7 @@
     </q-card>
   </div>
 </template>
-<script setup>
+<script setup lang="ts">
 import { computed, ref, provide } from "vue"
 import OverallCommentReply from "./OverallCommentReply.vue"
 import CommentEditor from "../forms/CommentEditor.vue"
@@ -146,12 +146,14 @@ const commentModify = ref(null)
 function toggleThread() {
   isCollapsed.value = !isCollapsed.value
 }
-const props = defineProps({
-  comment: {
-    type: Object,
-    required: true
-  }
-})
+
+import type { OverallComment as OverallCommentType } from "src/graphql/generated/graphql"
+
+interface Props {
+  comment: OverallCommentType
+}
+
+const props = defineProps<Props>()
 
 provide("comment", props.comment)
 

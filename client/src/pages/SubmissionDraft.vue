@@ -73,7 +73,7 @@
           <section class="q-mt-lg">
             <p>{{ $t(`submissions.create.submit.description`) }}</p>
             <q-btn
-              v-if="draft.content.required.$invalid"
+              v-if="(draft.content as any).required?.$invalid"
               disabled
               class="q-mt-lg"
               :label="$t(`submissions.create.submit.btn_label`)"
@@ -93,7 +93,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ConfirmStatusChangeDialog from "src/components/dialogs/ConfirmStatusChangeDialog.vue"
 import SubmissionDraftTodoItem from "src/components/SubmissionDraftTodoItem.vue"
 import { GET_SUBMISSION } from "src/graphql/queries"
@@ -104,12 +104,10 @@ import { useRouter } from "vue-router"
 import { useVuelidate } from "@vuelidate/core"
 import { required } from "@vuelidate/validators"
 
-const props = defineProps({
-  id: {
-    type: String,
-    required: true
-  }
-})
+interface Props {
+  id: string
+}
+const props = defineProps<Props>()
 const { dialog } = useQuasar()
 const { result, loading } = useQuery(GET_SUBMISSION, props)
 const submission = computed(() => result.value?.submission)

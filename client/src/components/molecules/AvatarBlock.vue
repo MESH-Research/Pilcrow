@@ -10,20 +10,14 @@
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
 import AvatarImage from "../atoms/AvatarImage.vue"
-export default {
-  name: "AvatarBlock",
-  components: { AvatarImage },
-  props: {
-    user: {
-      type: Object,
-      required: true
-    },
-    avatarSize: {
-      type: String,
-      default: ""
-    }
-  }
+
+interface Props {
+  user: Record<string, unknown>
+  avatarSize?: string
 }
+withDefaults(defineProps<Props>(), {
+  avatarSize: ""
+})
 </script>

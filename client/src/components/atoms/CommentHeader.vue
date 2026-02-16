@@ -73,7 +73,7 @@
   </q-card-section>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import AvatarImage from "./AvatarImage.vue"
 import CommentActions from "./CommentActions.vue"
 import CommentReference from "./CommentReference.vue"
@@ -81,17 +81,23 @@ import { useTimeAgo } from "src/use/timeAgo"
 import { DateTime } from "luxon"
 import { computed } from "vue"
 import { useForExport } from "src/use/submissionContext"
+import type { Comment } from "src/graphql/generated/graphql"
 
 const forExport = useForExport()
 
 const timeAgo = useTimeAgo()
-const props = defineProps({
-  comment: {
-    type: Object,
-    required: true
-  }
-})
-defineEmits(["quoteReplyTo", "modifyComment", "deleteComment"])
+
+interface Props {
+  comment: Comment
+}
+
+const props = defineProps<Props>()
+interface Emits {
+  quoteReplyTo: []
+  modifyComment: []
+  deleteComment: []
+}
+defineEmits<Emits>()
 const createdDate = computed(() => {
   return DateTime.fromISO(props.comment.created_at)
 })

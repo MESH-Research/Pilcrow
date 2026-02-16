@@ -205,7 +205,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { GET_SUBMISSION } from "src/graphql/queries"
 import {
   UPDATE_SUBMISSION_CONTENT,
@@ -217,12 +217,10 @@ import { useQuasar } from "quasar"
 
 const $q = useQuasar()
 
-const props = defineProps({
-  id: {
-    type: String,
-    required: true
-  }
-})
+interface Props {
+  id: string
+}
+const props = defineProps<Props>()
 
 const { result } = useQuery(GET_SUBMISSION, props)
 const submission = computed(() => result.value?.submission)

@@ -112,7 +112,7 @@
   </q-page>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ErrorBanner from "src/components/molecules/ErrorBanner.vue"
 import ErrorFieldRenderer from "src/components/molecules/ErrorFieldRenderer.vue"
 import { ref, onMounted, watch } from "vue"
@@ -205,7 +205,7 @@ async function handleRegister() {
   status.value = "submitting"
   form_error.value = ""
   try {
-    await saveUser().then(handleRedirect())
+    await saveUser().then(() => handleRedirect())
   } catch (e) {
     handleError(e.message)
   }

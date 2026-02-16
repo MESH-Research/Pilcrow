@@ -10,20 +10,9 @@
   </q-layout>
 </template>
 
-<script>
+<script setup lang="ts">
 import AppFooter from "../components/AppFooter.vue"
 import AppHeader from "src/components/AppHeader.vue"
-export default {
-  name: "MainLayout",
-
-  components: { AppFooter, AppHeader },
-
-  data() {
-    return {
-      leftDrawerOpen: false
-    }
-  }
-}
 </script>
 
 <style lang="scss">

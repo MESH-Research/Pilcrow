@@ -52,7 +52,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import SubmissionCommentDrawer from "src/components/atoms/SubmissionCommentDrawer.vue"
 import SubmissionCommentSection from "src/components/atoms/SubmissionCommentSection.vue"
 import SubmissionContent from "src/components/atoms/SubmissionContent.vue"
@@ -68,15 +68,12 @@ const { t } = useI18n()
 const route = useRoute()
 const { getScrollTarget, setVerticalScrollPosition } = scroll
 
-const props = defineProps({
-  id: {
-    type: String,
-    required: true
-  },
-  exportOptionChoice: {
-    type: String,
-    default: "io"
-  }
+interface Props {
+  id: string
+  exportOptionChoice?: string
+}
+const props = withDefaults(defineProps<Props>(), {
+  exportOptionChoice: "io"
 })
 const exportOptionChoiceMapper = {
   io: {
@@ -96,10 +93,18 @@ const exportOptionChoiceMapper = {
   }
 }
 
-const exportOptionChoiceObject =
-  exportOptionChoiceMapper[route.query.export ?? props.exportOptionChoice]
+const exportKey =
+  (Array.isArray(route.query.export)
+    ? route.query.export[0]
+    : route.query.export) ?? props.exportOptionChoice
+const exportOptionChoiceObject = exportOptionChoiceMapper[exportKey]
 
-const commenters_array = route.query.ids.map(Number)
+const rawIds = route.query.ids
+const commenters_array = Array.isArray(rawIds)
+  ? rawIds.map(Number)
+  : rawIds
+    ? [Number(rawIds)]
+    : []
 if (commenters_array && typeof commenters_array == "object") {
   exportOptionChoiceObject.sic = "I_D"
   exportOptionChoiceObject.sirc = "I_D"
@@ -108,8 +113,8 @@ if (commenters_array && typeof commenters_array == "object") {
   exportOptionChoiceObject.commenters_array = commenters_array
 }
 
-const showInlineComments = !exportOptionChoiceObject.skip_inline ?? true
-const showOverallComments = !exportOptionChoiceObject.skip_overall ?? true
+const showInlineComments = !exportOptionChoiceObject.skip_inline
+const showOverallComments = !exportOptionChoiceObject.skip_overall
 
 const { loading, result } = useQuery(
   GET_SUBMISSION_REVIEW,
@@ -145,7 +150,10 @@ const comments_content = useTemplateRef("comments-content")
 const blob = ref("")
 
 function updateBlob(message = "") {
-  const download_content = comments_content.value?.$el.innerHTML
+  const download_content = (
+    comments_content.value as unknown as { $el: HTMLElement }
+  )?.$el?.innerHTML
+  console.log("run", message)
   blob.value = URL.createObjectURL(
     new Blob(
       [

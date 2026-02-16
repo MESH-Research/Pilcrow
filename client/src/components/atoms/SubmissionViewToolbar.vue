@@ -32,12 +32,13 @@
     </q-toolbar>
   </q-header>
 </template>
-<script setup>
+<script setup lang="ts">
 import StatusChangeDropdown from "./StatusChangeDropdown.vue"
-const props = defineProps({
-  submission: {
-    type: Object,
-    default: null
-  }
-})
+import type { Submission } from "src/graphql/generated/graphql"
+
+interface Props {
+  submission?: Submission | null
+}
+
+const props = defineProps<Props>()
 </script>

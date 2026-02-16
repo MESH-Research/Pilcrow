@@ -19,27 +19,19 @@
   </q-btn>
 </template>
 
-<script setup>
-const props = defineProps({
-  isActive: {
-    type: Boolean,
-    default: false
-  },
-  isDisabled: {
-    type: Boolean,
-    default: false
-  },
-  clickHandler: {
-    type: Function,
-    default: () => {}
-  },
-  tooltipText: {
-    type: String,
-    default: ""
-  },
-  iconName: {
-    type: String,
-    default: ""
-  }
+<script setup lang="ts">
+interface Props {
+  isActive?: boolean
+  isDisabled?: boolean
+  clickHandler?: (...args: unknown[]) => void
+  tooltipText?: string
+  iconName?: string
+}
+const props = withDefaults(defineProps<Props>(), {
+  isActive: false,
+  isDisabled: false,
+  clickHandler: () => {},
+  tooltipText: "",
+  iconName: ""
 })
 </script>

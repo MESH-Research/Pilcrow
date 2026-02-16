@@ -45,16 +45,14 @@
   </article>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { GET_PUBLICATION } from "src/graphql/queries"
 import { useQuery } from "@vue/apollo-composable"
 import { computed } from "vue"
-const props = defineProps({
-  id: {
-    type: String,
-    required: true
-  }
-})
+interface Props {
+  id: string
+}
+const props = defineProps<Props>()
 
 const { result } = useQuery(GET_PUBLICATION, { id: props.id })
 const publication = computed(() => {

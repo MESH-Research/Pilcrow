@@ -27,15 +27,16 @@
     }"
   />
 </template>
-<script setup>
+<script setup lang="ts">
 import { useSubmissionExport } from "src/use/guiElements"
 import { toRef } from "vue"
-const props = defineProps({
-  submission: {
-    type: Object,
-    required: true
-  }
-})
+import type { Submission } from "src/graphql/generated/graphql"
+
+interface Props {
+  submission: Submission
+}
+
+const props = defineProps<Props>()
 const submissionRef = toRef(props, "submission")
 const { isDisabledByRole, isDisabledByState } =
   useSubmissionExport(submissionRef)

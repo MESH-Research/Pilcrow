@@ -138,7 +138,7 @@
     </q-card>
   </div>
 </template>
-<script setup>
+<script setup lang="ts">
 import { ref, computed, provide } from "vue"
 import CommentHeader from "./CommentHeader.vue"
 import InlineCommentReply from "./InlineCommentReply.vue"
@@ -156,14 +156,19 @@ const commentModify = ref(null)
 function toggleThread() {
   isCollapsed.value = !isCollapsed.value
 }
-const props = defineProps({
-  comment: {
-    type: Object,
-    required: true
-  }
-})
+import type { InlineComment as InlineCommentType } from "src/graphql/generated/graphql"
 
-defineEmits(["quoteReplyTo", "replyTo"])
+interface Props {
+  comment: InlineCommentType
+}
+
+const props = defineProps<Props>()
+
+interface Emits {
+  quoteReplyTo: []
+  replyTo: []
+}
+defineEmits<Emits>()
 
 provide("comment", props.comment)
 

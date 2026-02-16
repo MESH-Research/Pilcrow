@@ -54,15 +54,19 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import CommentPreviewHeader from "./CommentPreviewHeader.vue"
+import type { InlineComment, Submission } from "src/graphql/generated/graphql"
 
-defineProps({
-  comment: {
-    type: Object,
-    required: true
-  }
-})
+interface CommentWithSubmission extends InlineComment {
+  submission: Submission
+}
+
+interface Props {
+  comment: CommentWithSubmission
+}
+
+defineProps<Props>()
 </script>
 
 <style lang="sass" scoped>

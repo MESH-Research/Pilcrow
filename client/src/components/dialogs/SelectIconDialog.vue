@@ -25,21 +25,23 @@
   </q-dialog>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { QIconPicker } from "@quasar/quasar-ui-qiconpicker"
 import { useDialogPluginComponent } from "quasar"
 import materialIcons from "@quasar/quasar-ui-qiconpicker/src/components/icon-set/material-icons"
 import { ref } from "vue"
 
 const filter = ref("")
-const props = defineProps({
-  icon: {
-    type: String,
-    default: "",
-    required: false
-  }
+
+interface Props {
+  icon?: string
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  icon: ""
 })
 
+// eslint-disable-next-line vue/define-emits-declaration
 defineEmits([...useDialogPluginComponent.emits])
 
 const { dialogRef, onDialogHide, onDialogOK } = useDialogPluginComponent()

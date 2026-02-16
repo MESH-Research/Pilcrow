@@ -21,7 +21,7 @@
     </q-btn-group>
   </q-btn-dropdown>
 </template>
-<script setup>
+<script setup lang="ts">
 import ConfirmStatusChangeDialog from "../dialogs/ConfirmStatusChangeDialog.vue"
 import { useQuasar } from "quasar"
 import {
@@ -32,12 +32,13 @@ import { toRef } from "vue"
 
 const { dialog } = useQuasar()
 
-const props = defineProps({
-  submission: {
-    type: Object,
-    default: null
-  }
-})
+import type { Submission } from "src/graphql/generated/graphql"
+
+interface Props {
+  submission?: Submission | null
+}
+
+const props = defineProps<Props>()
 
 const submissionRef = toRef(props, "submission")
 const {

@@ -46,30 +46,35 @@
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
 import { computed } from "vue"
-import { useRoute } from "vue-router"
-export default {
-  props: {
-    items: {
-      type: Array,
-      default: () => []
-    }
-  },
-  setup(props) {
-    const route = useRoute()
-    const currentPath = computed(() => route.path)
-    const activeRoute = computed(() => {
-      return props.items.find((e) => isActive(e.url))
-    })
+import { useRoute, type RouteLocationRaw } from "vue-router"
 
-    function isActive(url) {
-      if (typeof url === "string") return url === currentPath.value
-      if (url.name) {
-        return url.name === route.name
-      }
-    }
-    return { isActive, activeRoute }
+interface MenuItem {
+  label: string
+  url: RouteLocationRaw
+  icon?: string
+  problem?: boolean
+  problemTooltip?: string
+}
+
+interface Props {
+  items?: MenuItem[]
+}
+const props = withDefaults(defineProps<Props>(), {
+  items: () => []
+})
+
+const route = useRoute()
+const currentPath = computed(() => route.path)
+const activeRoute = computed(() => {
+  return props.items.find((e) => isActive(e.url))
+})
+
+function isActive(url: RouteLocationRaw) {
+  if (typeof url === "string") return url === currentPath.value
+  if (typeof url === "object" && "name" in url && url.name) {
+    return url.name === route.name
   }
 }
 </script>

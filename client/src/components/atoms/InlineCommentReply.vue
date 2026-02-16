@@ -34,7 +34,7 @@
     </q-card-section>
   </div>
 </template>
-<script setup>
+<script setup lang="ts">
 import { computed, ref, provide } from "vue"
 import CommentReplyReference from "./CommentReplyReference.vue"
 import CommentHeader from "./CommentHeader.vue"
@@ -47,21 +47,23 @@ const commentReply = ref(null)
 const isModifying = ref(null)
 const commentModify = ref(null)
 
-const props = defineProps({
-  parent: {
-    type: Object,
-    required: true
-  },
-  comment: {
-    required: true,
-    type: Object
-  },
-  replies: {
-    required: true,
-    type: Array
-  }
-})
-defineEmits(["quoteReplyTo", "replyTo"])
+import type {
+  InlineComment,
+  InlineCommentReply as InlineCommentReplyType
+} from "src/graphql/generated/graphql"
+
+interface Props {
+  parent: InlineComment
+  comment: InlineCommentReplyType
+  replies: InlineCommentReplyType[]
+}
+
+const props = defineProps<Props>()
+interface Emits {
+  quoteReplyTo: [comment: InlineCommentReplyType]
+  replyTo: []
+}
+defineEmits<Emits>()
 
 provide("comment", props.comment)
 

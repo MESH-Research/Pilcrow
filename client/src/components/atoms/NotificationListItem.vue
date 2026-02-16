@@ -24,7 +24,7 @@
   </q-item>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed } from "vue"
 import { Screen } from "quasar"
 import { flatten } from "flat"
@@ -41,30 +41,22 @@ const timeAgo = useTimeAgo()
  * @see https://v1.quasar.dev/vue-components/list-and-list-items#qitem-api
  */
 
-const props = defineProps({
-  /**
-   * Notification item to display
-   */
-  note: {
-    type: Object,
-    requred: true,
-    default: () => {}
-  },
-  /**
-   * Show the relative time q-item-section
-   */
-  showTime: {
-    type: Boolean,
-    default: false
-  },
+import type { Notification } from "src/graphql/generated/graphql"
+
+interface Props {
+  /** Notification item to display */
+  note: Notification
+  /** Show the relative time q-item-section */
+  showTime?: boolean
   /**
    * Specify the size for the q-icon
    * @see https://v1.quasar.dev/vue-components/icon#size-and-colors
    */
-  iconSize: {
-    type: String,
-    default: "sm"
-  }
+  iconSize?: string
+}
+const props = withDefaults(defineProps<Props>(), {
+  showTime: false,
+  iconSize: "sm"
 })
 
 const { mutate: markNotificationRead } = useMutation(MARK_NOTIFICATION_READ, {
@@ -87,7 +79,7 @@ const tKey = computed(() => {
  * Flattened version of the note for passing to i18n
  */
 const flattened = computed(() => {
-  return flatten(props.note, { delimiter: "_" })
+  return flatten(props.note, { delimiter: "_" }) as Record<string, unknown>
 })
 
 /**

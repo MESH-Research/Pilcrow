@@ -12,7 +12,7 @@
         v-for="comment in inline_comments"
         :key="comment.id"
         ref="commentRefs"
-        :comment="comment"
+        :comment="comment as any"
         @submit="closeEditor"
         @cancel="closeEditor"
       />

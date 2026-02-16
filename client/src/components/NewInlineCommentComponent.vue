@@ -14,28 +14,22 @@
   </q-card>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref } from "vue"
+import type { Comment } from "src/graphql/generated/graphql"
 import CommentEditor from "./forms/CommentEditor.vue"
-const props = defineProps({
-  commentType: {
-    type: String,
-    required: false,
-    default: "InlineComment"
-  },
-  parent: {
-    type: Object,
-    default: () => {}
-  },
-  replyTo: {
-    type: Object,
-    default: () => {}
-  },
-  comment: {
-    type: Object,
-    required: false,
-    default: null
-  }
+interface Props {
+  commentType?: string
+  parent?: Comment | null
+  replyTo?: Comment | null
+  comment?: Comment | null
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  commentType: "InlineComment",
+  parent: undefined,
+  replyTo: undefined,
+  comment: null
 })
 const scrollTarget = ref(null)
 defineExpose({
@@ -43,5 +37,9 @@ defineExpose({
   scrollTarget
 })
 
-defineEmits(["cancel", "submit"])
+interface Emits {
+  cancel: []
+  submit: []
+}
+defineEmits<Emits>()
 </script>

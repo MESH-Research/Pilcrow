@@ -19,7 +19,7 @@
   </q-form>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import VQWrap from "src/components/atoms/VQWrap.vue"
 import VQInput from "src/components/atoms/VQInput.vue"
 import VQToggleButton from "src/components/atoms/VQToggleButton.vue"
@@ -30,13 +30,17 @@ import { useDirtyGuard, useExternalResultFromGraphQL } from "src/use/forms"
 import { maxLength, required } from "@vuelidate/validators"
 import useVuelidate from "@vuelidate/core"
 
-const props = defineProps({
-  publication: {
-    required: true,
-    validator: (v) => v === null || typeof v === "object"
-  }
-})
-const emit = defineEmits(["save"])
+import type { Publication } from "src/graphql/generated/graphql"
+
+interface Props {
+  publication: Publication | null
+}
+
+const props = defineProps<Props>()
+interface Emits {
+  save: [form: Record<string, unknown>]
+}
+const emit = defineEmits<Emits>()
 
 const publication = toRef(props, "publication")
 

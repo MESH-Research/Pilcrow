@@ -10,10 +10,12 @@ export interface ValidationErrors {
 }
 
 export function useGraphQLValidation(
-  errorRef: Ref<ApolloError | null | undefined>
+  errorRef: Ref<ApolloError | Error | null | undefined>
 ) {
   const validationErrors = computed<ValidationErrors>(() => {
-    const gqlErrors = errorRef.value?.graphQLErrors ?? []
+    const err = errorRef.value
+    const gqlErrors =
+      (err && "graphQLErrors" in err ? err.graphQLErrors : null) ?? []
     const serverValidationErrors: Record<string, string[]> = {}
     gqlErrors.forEach((item) => {
       const vErrors = (item?.extensions?.validation ?? false) as
@@ -37,7 +39,7 @@ export function useGraphQLValidation(
 
 export function useExternalResultFromGraphQL(
   form: Ref<Record<string, unknown>> | Record<string, unknown>,
-  error: Ref<ApolloError | null | undefined>
+  error: Ref<ApolloError | Error | null | undefined>
 ) {
   const { validationErrors } = useGraphQLValidation(error)
 
