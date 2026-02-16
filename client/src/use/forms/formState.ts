@@ -28,7 +28,19 @@ export interface FormState {
 
 export const formStateKey: InjectionKey<FormState> = Symbol("formState")
 
-export function useFormState(query, mutation): FormState {
+interface QueryLike {
+  loading: Ref<boolean>
+}
+
+interface MutationLike {
+  loading: Ref<boolean>
+  error?: Ref<Error | null>
+}
+
+export function useFormState(
+  query: QueryLike | null,
+  mutation: MutationLike
+): FormState {
   const dirty = ref(false)
   const saved = ref(false)
   const errorMessage = ref("")
@@ -59,7 +71,7 @@ export function useFormState(query, mutation): FormState {
     errorMessage.value = ""
   }
 
-  function setError(message) {
+  function setError(message: string) {
     errorMessage.value = message
   }
   return {
@@ -69,7 +81,7 @@ export function useFormState(query, mutation): FormState {
     queryLoading: queryLoadingRef,
     mutationLoading: mutationLoadingRef,
     errorMessage,
-    mutationError: mutation.error,
+    mutationError: mutation.error ?? ref(null),
     reset,
     setError
   }

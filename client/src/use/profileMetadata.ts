@@ -2,6 +2,19 @@ import { maxLength } from "@vuelidate/validators"
 import { required, helpers } from "@vuelidate/validators"
 import { watch } from "vue"
 import validator from "validator"
+import type {
+  SocialMedia,
+  AcademicProfiles
+} from "src/graphql/generated/graphql"
+
+/**
+ * Utility type that converts a GraphQL object type to a form-friendly version:
+ * - Strips `__typename`
+ * - Makes all remaining properties required and non-nullable
+ */
+type FormStrings<T> = {
+  [K in keyof T as K extends "__typename" ? never : K]-?: NonNullable<T[K]>
+}
 
 export const social_regex = {
   facebook: {
@@ -24,7 +37,7 @@ export const social_regex = {
   }
 }
 
-const checkUrl = (value) => {
+const checkUrl = (value: string) => {
   if (value === "") {
     // After the user adds a website, this code prevents Vuelidate from making
     // the subsequent empty website input invalidate the form, causing an
@@ -39,8 +52,8 @@ export const website_rules = {
   valid: checkUrl
 }
 
-const validWebsites = (value) => {
-  return Array.isArray(value) ? value.every((v) => checkUrl(v)) : true
+const validWebsites = (value: unknown) => {
+  return Array.isArray(value) ? value.every((v: string) => checkUrl(v)) : true
 }
 
 export const rules = {
@@ -81,18 +94,9 @@ export const rules = {
   }
 }
 
-export interface SocialMediaFields {
-  google: string
-  twitter: string
-  facebook: string
-  instagram: string
-  linkedin: string
-}
+export type SocialMediaFields = FormStrings<SocialMedia>
 
-export interface AcademicProfileFields {
-  orcid_id: string
-  humanities_commons: string
-}
+export type AcademicProfileFields = FormStrings<AcademicProfiles>
 
 export interface ProfileMetadataFields {
   biography: string

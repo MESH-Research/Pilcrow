@@ -1,11 +1,11 @@
 import DiscardChangesDialog from "src/components/dialogs/DiscardChangesDialog.vue"
-import { onMounted, onUnmounted } from "vue"
+import { onMounted, onUnmounted, type Ref } from "vue"
 import { onBeforeRouteLeave } from "vue-router"
 import { useQuasar } from "quasar"
 
-export function useDirtyGuard(dirtyRef) {
+export function useDirtyGuard(dirtyRef: Ref<boolean>) {
   const { dialog } = useQuasar()
-  function beforeUnload(e) {
+  function beforeUnload(e: BeforeUnloadEvent) {
     if (dirtyRef.value) {
       e.preventDefault()
       e.returnValue = ""

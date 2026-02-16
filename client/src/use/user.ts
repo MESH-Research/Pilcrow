@@ -1,11 +1,16 @@
 import { useQuery, useMutation, useApolloClient } from "@vue/apollo-composable"
-import { computed, reactive } from "vue"
+import { computed, reactive, type ComputedRef } from "vue"
 import { CURRENT_USER } from "src/graphql/queries"
 import { LOGIN, LOGOUT } from "src/graphql/mutations"
 import { SessionStorage } from "quasar"
 import { useVuelidate } from "@vuelidate/core"
 import { required, email } from "@vuelidate/validators"
 import { useRouter } from "vue-router"
+import type {
+  Submission,
+  Publication,
+  User
+} from "src/graphql/generated/graphql"
 
 /**
  * Returns an object of useful current user properties and helper methods:
@@ -43,22 +48,22 @@ export function useCurrentUser() {
     return query.result.value?.currentUser.roles.map(({ name }) => name) ?? []
   })
 
-  const isSubmitter = (submission) => {
+  const isSubmitter = (submission: Submission) => {
     return submission?.submitters?.some((o) => {
       return o.id == currentUser.value.id
     })
   }
-  const isReviewer = (submission) => {
+  const isReviewer = (submission: Submission) => {
     return submission?.reviewers?.some((o) => {
       return o.id == currentUser.value.id
     })
   }
-  const isReviewCoordinator = (submission) => {
+  const isReviewCoordinator = (submission: Submission) => {
     return submission?.review_coordinators?.some((o) => {
       return o.id == currentUser.value.id
     })
   }
-  const isEditor = (publication) => {
+  const isEditor = (publication: Publication) => {
     const byList = publication?.editors?.some((o) => {
       return o.id == currentUser.value.id
     })
@@ -67,7 +72,7 @@ export function useCurrentUser() {
     }
     return publication?.my_role == "editor"
   }
-  const isPublicationAdmin = (publication) => {
+  const isPublicationAdmin = (publication: Publication) => {
     const byList = publication?.publication_admins?.some((o) => {
       return o.id == currentUser.value.id
     })
@@ -92,26 +97,28 @@ export function useCurrentUser() {
   }
 }
 
-export function checkRole(currentUser = null) {
-  const isSubmitter = (submission) => {
+export function checkRole(
+  currentUser: ComputedRef<User | null | undefined> | null = null
+) {
+  const isSubmitter = (submission: Submission) => {
     return submission?.submitters?.some((o) => {
-      return o.id == currentUser.value.id
+      return o.id == currentUser?.value?.id
     })
   }
-  const isReviewer = (submission) => {
+  const isReviewer = (submission: Submission) => {
     return submission?.reviewers?.some((o) => {
-      return o.id == currentUser.value.id
+      return o.id == currentUser?.value?.id
     })
   }
-  const isReviewCoordinator = (submission) => {
+  const isReviewCoordinator = (submission: Submission) => {
     return submission?.review_coordinators?.some((o) => {
-      return o.id == currentUser.value.id
+      return o.id == currentUser?.value?.id
     })
   }
-  const isEditor = (publication) => {
+  const isEditor = (publication: Publication) => {
     if (currentUser) {
       const byList = publication?.editors?.some((o) => {
-        return o.id == currentUser.value.id
+        return o.id == currentUser.value?.id
       })
       if (byList) {
         return true
@@ -119,10 +126,10 @@ export function checkRole(currentUser = null) {
     }
     return publication?.my_role == "editor"
   }
-  const isPublicationAdmin = (publication) => {
+  const isPublicationAdmin = (publication: Publication) => {
     if (currentUser) {
       const byList = publication?.publication_admins?.some((o) => {
-        return o.id == currentUser.value.id
+        return o.id == currentUser.value?.id
       })
       if (byList) {
         return true
@@ -134,9 +141,9 @@ export function checkRole(currentUser = null) {
     )
   }
 
-  const isApplicationAdmin = (user) => {
+  const isApplicationAdmin = (user: User) => {
     const roles = user.roles.map(({ name }) => name) ?? []
-    return !!roles.value.includes("Application Administrator")
+    return !!roles.includes("Application Administrator")
   }
 
   return {

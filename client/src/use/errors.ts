@@ -1,29 +1,26 @@
 import { useI18n } from "vue-i18n"
+import type { ApolloError } from "@apollo/client/errors"
+
 export function useGraphErrors() {
   const { t } = useI18n()
   return {
     /**
      * Extract array of error codes from graphql error response
-     *
-     * @param {Object} errorResponse
-     * @returns {array} error codes
      */
-    graphQLErrorCodes(errorResponse) {
+    graphQLErrorCodes(errorResponse: ApolloError): string[] {
       return (
-        errorResponse.graphQLErrors
+        (errorResponse.graphQLErrors
           ?.map((e) => e.extensions?.code ?? false)
-          .filter(Boolean) ?? []
+          .filter(Boolean) as string[]) ?? []
       )
     },
     /**
      * Transform an array of error codes to error messages, optionally prefixing
      * the i18n key.
-     * @param {array} errorList List of error codes
-     * @param {string} [i18nDomain] prefix for i18n key
-     * @returns {array}
      */
-    errorMessages(errorList, i18nDomain) {
-      const msg = (code) => (i18nDomain ? `${i18nDomain}.${code}` : code)
+    errorMessages(errorList: string[], i18nDomain?: string) {
+      const msg = (code: string) =>
+        i18nDomain ? `${i18nDomain}.${code}` : code
       return errorList.map((code) => t(msg(code)))
     }
   }

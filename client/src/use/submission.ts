@@ -1,10 +1,11 @@
 import { useMutation } from "@vue/apollo-composable"
 import { useCurrentUser } from "./user"
-import { reactive } from "vue"
+import { reactive, type Ref } from "vue"
 import useVuelidate from "@vuelidate/core"
 import { required, maxLength } from "@vuelidate/validators"
 import { CREATE_SUBMISSION_DRAFT } from "src/graphql/mutations"
 import { CURRENT_USER_SUBMISSIONS } from "src/graphql/queries"
+import type { Publication } from "src/graphql/generated/graphql"
 
 export const useSubmissionCreation = () => {
   const { mutate, loading: saving } = useMutation(CREATE_SUBMISSION_DRAFT)
@@ -13,7 +14,7 @@ export const useSubmissionCreation = () => {
     title: "",
     acknowledgement: false
   })
-  const isTrue = (value) => value === true
+  const isTrue = (value: unknown) => value === true
 
   const rules = {
     title: {
@@ -26,7 +27,7 @@ export const useSubmissionCreation = () => {
   }
   const { currentUser } = useCurrentUser()
   const v$ = useVuelidate(rules, submission)
-  const createSubmission = async (publication) => {
+  const createSubmission = async (publication: Ref<Publication>) => {
     v$.value.$touch()
     if (v$.value.$invalid) {
       throw Error("FORM_VALIDATION")
