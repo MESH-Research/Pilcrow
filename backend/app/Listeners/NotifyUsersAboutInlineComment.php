@@ -29,7 +29,7 @@ class NotifyUsersAboutInlineComment extends Notification implements ShouldQueue
                 'id' => $submission->id,
                 'title' => $submission->title,
             ],
-            'commentor' => [
+            'commenter' => [
                 'display_label' => $event->inline_comment->createdBy->displayLabel,
             ],
             'type' => 'submission.inline_comment.added',

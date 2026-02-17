@@ -74,13 +74,13 @@ class OverallComment extends BaseModel
     }
 
     /**
-     * All commentors involved in the overall comment thread:
+     * All commenters involved in the overall comment thread:
      * - anyone who has replied to the parent overall comment or its replies
      * - does not include the creator of the parent overall comment
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
      */
-    public function commentors(): HasManyThrough
+    public function commenters(): HasManyThrough
     {
         $parentComment = $this->parent_id ? $this->parent : $this;
 

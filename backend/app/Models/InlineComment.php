@@ -82,13 +82,13 @@ class InlineComment extends BaseModel
     }
 
     /**
-     * All commentors involved in the inline comment thread:
+     * All commenters involved in the inline comment thread:
      * - anyone who has replied to the parent inline comment or its replies
      * - does not include the creator of the parent inline comment
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
      */
-    public function commentors(): HasManyThrough
+    public function commenters(): HasManyThrough
     {
         $parentComment = $this->parent_id ? $this->parent : $this;
 

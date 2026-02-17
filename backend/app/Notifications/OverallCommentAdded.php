@@ -50,8 +50,8 @@ class OverallCommentAdded extends Notification implements ShouldQueue
                 'id' => $this->data['submission']['id'],
                 'title' => $this->data['submission']['title'],
             ],
-            'commentor' => [
-                'display_label' => $this->data['commentor']['display_label'],
+            'commenter' => [
+                'display_label' => $this->data['commenter']['display_label'],
             ],
             'type' => $this->data['type'],
         ];

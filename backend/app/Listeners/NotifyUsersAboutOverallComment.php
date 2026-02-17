@@ -29,7 +29,7 @@ class NotifyUsersAboutOverallComment extends Notification implements ShouldQueue
                 'id' => $submission->id,
                 'title' => $submission->title,
             ],
-            'commentor' => [
+            'commenter' => [
                 'display_label' => $event->overall_comment->createdBy->displayLabel,
             ],
             'type' => 'submission.overall_comment.added',

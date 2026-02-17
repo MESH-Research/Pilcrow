@@ -48,7 +48,7 @@ export const CURRENT_USER_NOTIFICATIONS = gql`
             submission {
               title
             }
-            commentor {
+            commenter {
               display_label
             }
             invitee {

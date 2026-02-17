@@ -17,49 +17,49 @@ class OverallCommentsTest extends TestCase
         $submission = $this->createSubmissionWithAllRoles();
 
         // Create comment participants
-        $commentor = User::factory()->create();
-        $commentor_reply = User::factory()->create();
-        $commentor_reply_to_reply = User::factory()->create();
-        $commentor_elsewhere = User::factory()->create();
+        $commenter = User::factory()->create();
+        $commenter_reply = User::factory()->create();
+        $commenter_reply_to_reply = User::factory()->create();
+        $commenter_elsewhere = User::factory()->create();
 
         // Assign comment participants as submission reviewers
         $submission->reviewers()->attach([
-            $commentor->id,
-            $commentor_reply->id,
-            $commentor_reply_to_reply->id,
-            $commentor_elsewhere->id,
+            $commenter->id,
+            $commenter_reply->id,
+            $commenter_reply_to_reply->id,
+            $commenter_elsewhere->id,
         ]);
 
         // Make comments
         OverallComment::factory()->create([
             'submission_id' => $submission->id,
             'content' => 'This is some content for an overall comment created by PHPUnit.',
-            'created_by' => $commentor_elsewhere->id,
-            'updated_by' => $commentor_elsewhere->id,
+            'created_by' => $commenter_elsewhere->id,
+            'updated_by' => $commenter_elsewhere->id,
             'parent_id' => null,
             'reply_to_id' => null,
         ]);
         $comment_parent = OverallComment::factory()->create([
             'submission_id' => $submission->id,
             'content' => 'This is some content for an overall comment created by PHPUnit.',
-            'created_by' => $commentor->id,
-            'updated_by' => $commentor->id,
+            'created_by' => $commenter->id,
+            'updated_by' => $commenter->id,
             'parent_id' => null,
             'reply_to_id' => null,
         ]);
         $comment_reply = OverallComment::factory()->create([
             'submission_id' => $submission->id,
             'content' => 'This is some content for an overall comment reply created by PHPUnit.',
-            'created_by' => $commentor_reply->id,
-            'updated_by' => $commentor_reply->id,
+            'created_by' => $commenter_reply->id,
+            'updated_by' => $commenter_reply->id,
             'parent_id' => $comment_parent->id,
             'reply_to_id' => $comment_parent->id,
         ]);
         OverallComment::factory()->create([
             'submission_id' => $submission->id,
             'content' => 'This is some content for an overall comment reply to a reply created by PHPUnit.',
-            'created_by' => $commentor_reply_to_reply->id,
-            'updated_by' => $commentor_reply_to_reply->id,
+            'created_by' => $commenter_reply_to_reply->id,
+            'updated_by' => $commenter_reply_to_reply->id,
             'parent_id' => $comment_parent->id,
             'reply_to_id' => $comment_reply->id,
         ]);
@@ -88,7 +88,7 @@ class OverallCommentsTest extends TestCase
         $this->assertEquals(0, $this->getOverallCommentNotificationCount($reviewer1));
         $this->assertEquals(0, $this->getOverallCommentReplyNotificationCount($reviewer1));
 
-        // Overall Commentor
+        // Overall Commenter
         // Gets 2 notifications for all replies
         $reviewer2 = $submission->reviewers()->get()->slice(1, 1)->first();
         $this->assertEquals(0, $this->getOverallCommentNotificationCount($reviewer2));
@@ -106,7 +106,7 @@ class OverallCommentsTest extends TestCase
         $this->assertEquals(0, $this->getOverallCommentNotificationCount($reviewer4));
         $this->assertEquals(0, $this->getOverallCommentReplyNotificationCount($reviewer4));
 
-        // Separate overall Commentor
+        // Separate overall Commenter
         // Gets 0 notifications
         $reviewer5 = $submission->reviewers()->first();
         $this->assertEquals(0, $this->getOverallCommentNotificationCount($reviewer5));

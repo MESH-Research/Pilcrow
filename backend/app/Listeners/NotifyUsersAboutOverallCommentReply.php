@@ -23,22 +23,22 @@ class NotifyUsersAboutOverallCommentReply extends Notification implements Should
     {
         $submission = $event->overall_comment->submission;
         $submitters = $submission->submitters()->get();
-        $parent_commentor = $event->overall_comment->parent->createdBy()->get();
-        $commentors = $event->overall_comment->parent->commentors()->get();
+        $parent_commenter = $event->overall_comment->parent->createdBy()->get();
+        $commenters = $event->overall_comment->parent->commenters()->get();
         $review_coordinators = $submission->reviewCoordinators()->get();
         $notification_data = [
             'submission' => [
                 'id' => $submission->id,
                 'title' => $submission->title,
             ],
-            'commentor' => [
+            'commenter' => [
                 'display_label' => $event->overall_comment->createdBy->displayLabel,
             ],
             'type' => 'submission.overall_comment_reply.added',
         ];
         $recipients = $submitters
-            ->merge($commentors)
-            ->merge($parent_commentor)
+            ->merge($commenters)
+            ->merge($parent_commenter)
             ->merge($review_coordinators)
             ->unique()
             ->filter(function ($user) use ($event) {

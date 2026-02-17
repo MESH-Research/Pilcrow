@@ -53,7 +53,7 @@ describe("Nofitication Popup", () => {
                   body: "A submission status has been accepted for review.",
                   action: "Visit Pilcrow",
                   url: "/",
-                  commentor: {
+                  commenter: {
                     display_label: "Test User"
                   },
                   invitee: {

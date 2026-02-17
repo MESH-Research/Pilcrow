@@ -23,22 +23,22 @@ class NotifyUsersAboutInlineCommentReply extends Notification implements ShouldQ
     {
         $submission = $event->inline_comment->submission;
         $submitters = $submission->submitters()->get();
-        $parent_commentor = $event->inline_comment->parent->createdBy()->get();
-        $commentors = $event->inline_comment->parent->commentors()->get();
+        $parent_commenter = $event->inline_comment->parent->createdBy()->get();
+        $commenters = $event->inline_comment->parent->commenters()->get();
         $review_coordinators = $submission->reviewCoordinators()->get();
         $notification_data = [
             'submission' => [
                 'id' => $submission->id,
                 'title' => $submission->title,
             ],
-            'commentor' => [
+            'commenter' => [
                 'display_label' => $event->inline_comment->createdBy->displayLabel,
             ],
             'type' => 'submission.inline_comment_reply.added',
         ];
         $recipients = $submitters
-            ->merge($commentors)
-            ->merge($parent_commentor)
+            ->merge($commenters)
+            ->merge($parent_commenter)
             ->merge($review_coordinators)
             ->unique()
             ->filter(function ($user) use ($event) {
