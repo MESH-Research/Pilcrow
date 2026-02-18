@@ -113,7 +113,8 @@ const config = [
     extends: [tseslint.configs.recommended],
     rules: {
       "no-unused-vars": "off",
-      "@typescript-eslint/no-unused-vars": ["error", { caughtErrors: "none" }]
+      "@typescript-eslint/no-unused-vars": ["error", { caughtErrors: "none" }],
+      "@typescript-eslint/no-explicit-any": "off"
     }
   },
   {
