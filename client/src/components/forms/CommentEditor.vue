@@ -314,9 +314,14 @@ async function submitHandler() {
     if (props.isModifying) {
       args.comment_id = props.comment.id
     }
-    await createComment({
-      ...args
-    })
+    await createComment(
+      {
+        ...args
+      },
+      {
+        refetchQueries: ["GetSubmissionReview"]
+      }
+    )
       .then(() => {
         editor.value.commands.clearContent(true)
       })
