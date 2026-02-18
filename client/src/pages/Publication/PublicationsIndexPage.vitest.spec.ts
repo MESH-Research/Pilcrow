@@ -2,6 +2,7 @@ import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-v
 import { flushPromises, mount } from "@vue/test-utils"
 import { installApolloClient } from "app/test/vitest/utils"
 import { GET_PUBLICATIONS } from "src/graphql/queries"
+import type { GetPublicationsQuery } from "src/graphql/generated/graphql"
 import PublicationsIndexPage from "./PublicationsIndexPage.vue"
 
 import { describe, expect, it } from "vitest"
@@ -10,43 +11,45 @@ installQuasarPlugin()
 const mockClient = installApolloClient()
 
 describe("publications page mount", () => {
-  const handler = mockClient
-    .getRequestHandler(GET_PUBLICATIONS)
-    .mockResolvedValue({
-      data: {
-        publications: {
-          data: [
-            {
-              id: "1",
-              name: "Sample Jest Publication 1",
-              home_page_content: ""
-            },
-            {
-              id: "2",
-              name: "Sample Jest Publication 2",
-              home_page_content: ""
-            },
-            {
-              id: "3",
-              name: "Sample Jest Publication 3",
-              home_page_content: ""
-            },
-            {
-              id: "4",
-              name: "Sample Jest Publication 4",
-              home_page_content: ""
-            }
-          ],
-          paginatorInfo: {
-            __typename: "PaginatorInfo",
-            count: 4,
-            currentPage: 1,
-            lastPage: 1,
-            perPage: 10
+  const mockPublicationsResponse: { data: GetPublicationsQuery } = {
+    data: {
+      publications: {
+        data: [
+          {
+            id: "1",
+            name: "Sample Jest Publication 1",
+            home_page_content: ""
+          },
+          {
+            id: "2",
+            name: "Sample Jest Publication 2",
+            home_page_content: ""
+          },
+          {
+            id: "3",
+            name: "Sample Jest Publication 3",
+            home_page_content: ""
+          },
+          {
+            id: "4",
+            name: "Sample Jest Publication 4",
+            home_page_content: ""
           }
+        ],
+        paginatorInfo: {
+          __typename: "PaginatorInfo",
+          count: 4,
+          currentPage: 1,
+          lastPage: 1,
+          perPage: 10
         }
       }
-    })
+    }
+  }
+
+  const handler = mockClient
+    .getRequestHandler(GET_PUBLICATIONS)
+    .mockResolvedValue(mockPublicationsResponse)
 
   const factory = () => mount(PublicationsIndexPage)
 

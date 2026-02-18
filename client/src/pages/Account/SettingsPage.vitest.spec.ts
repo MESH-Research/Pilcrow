@@ -3,6 +3,10 @@ import { mount, flushPromises } from "@vue/test-utils"
 import { installApolloClient } from "app/test/vitest/utils"
 import { UPDATE_USER } from "src/graphql/mutations"
 import { CURRENT_USER } from "src/graphql/queries"
+import type {
+  CurrentUserQuery,
+  UpdateUserMutation
+} from "src/graphql/generated/graphql"
 import { ref as mockRef } from "vue"
 import SettingsPage from "./SettingsPage.vue"
 
@@ -46,10 +50,10 @@ describe("Settings page", () => {
 
   beforeEach(() => {
     vi.resetAllMocks()
-    requestHandler.mockResolvedValue({
+    const mockCurrentUser: { data: CurrentUserQuery } = {
       data: {
         currentUser: {
-          id: 1,
+          id: "1",
           username: "test",
           name: "TestDoe",
           email: "test@example.com",
@@ -57,7 +61,8 @@ describe("Settings page", () => {
           roles: []
         }
       }
-    })
+    }
+    requestHandler.mockResolvedValue(mockCurrentUser)
   })
 
   const mutateHandler = vi.fn()
@@ -66,7 +71,7 @@ describe("Settings page", () => {
   mockClient.setRequestHandler(CURRENT_USER, requestHandler)
 
   const accountData = () => ({
-    id: 1,
+    id: "1",
     username: "username1",
     name: "Test User",
     email: "testemail@example.com"
@@ -87,9 +92,10 @@ describe("Settings page", () => {
     newData.username = "Tester User"
 
     requestHandler.mockResolvedValue({ data: { currentUser: initialData } })
-    mutateHandler.mockResolvedValue({
+    const mockUpdateResponse: { data: UpdateUserMutation } = {
       data: { updateUser: { ...newData, updated_at: "soonish" } }
-    })
+    }
+    mutateHandler.mockResolvedValue(mockUpdateResponse)
     const wrapper = await makeWrapper()
     await wrapper.findComponent({ ref: "form" }).vm.$emit("save", newData)
 

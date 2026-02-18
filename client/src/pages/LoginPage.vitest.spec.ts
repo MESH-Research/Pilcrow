@@ -4,6 +4,7 @@ import { installApolloClient } from "app/test/vitest/utils"
 import { SessionStorage } from "quasar"
 import { LOGIN } from "src/graphql/mutations"
 import { GET_IDENTITY_PROVIDERS } from "src/graphql/queries"
+import type { GetIdentityProvidersQuery } from "src/graphql/generated/graphql"
 import { beforeEach, describe, expect, it, test, vi } from "vitest"
 import LoginPage from "./LoginPage.vue"
 
@@ -24,7 +25,7 @@ const mockClient = installApolloClient()
 describe("LoginPage", () => {
   const identityProviders = vi.fn()
   mockClient.setRequestHandler(GET_IDENTITY_PROVIDERS, identityProviders)
-  const providersData = {
+  const providersData: { data: GetIdentityProvidersQuery } = {
     data: {
       identityProviders: [
         {
@@ -32,7 +33,7 @@ describe("LoginPage", () => {
           label: "ORCID",
           login_url: "",
           icon: "orcid",
-          __typename: "IdentityProviderButton"
+          __typename: "IdentityProvider"
         }
       ]
     }

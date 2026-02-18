@@ -4,6 +4,7 @@ import { installApolloClient } from "app/test/vitest/utils"
 import { GET_USERS } from "../../graphql/queries"
 import UsersIndexPage from "./UsersIndex.vue"
 
+import type { GetUsersQuery } from "src/graphql/generated/graphql"
 import { describe, expect, it, test, vi } from "vitest"
 
 vi.mock("vue-router", () => ({
@@ -22,7 +23,7 @@ describe("User Index page mount", () => {
     expect(wrapperFactory()).toBeTruthy()
   })
   test("users are populated on the page", async () => {
-    const handler = mockClient.getRequestHandler(GET_USERS).mockResolvedValue({
+    const mockUsersResponse: { data: GetUsersQuery } = {
       data: {
         userSearch: {
           data: [
@@ -48,7 +49,10 @@ describe("User Index page mount", () => {
           }
         }
       }
-    })
+    }
+    const handler = mockClient
+      .getRequestHandler(GET_USERS)
+      .mockResolvedValue(mockUsersResponse)
 
     const wrapper = wrapperFactory()
     await flushPromises()

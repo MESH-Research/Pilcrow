@@ -104,9 +104,7 @@ describe("AssignedPublicationUsers", () => {
       container: {
         __typename: "Publication",
         id: "1",
-        editors: [
-          { id: "1", email: "test@example.com", name: "Test" } as User
-        ]
+        editors: [{ id: "1", email: "test@example.com", name: "Test" } as User]
       } as Publication
     })
 
@@ -122,9 +120,7 @@ describe("AssignedPublicationUsers", () => {
       container: {
         __typename: "Publication",
         id: "1",
-        editors: [
-          { id: "1", email: "test@example.com", name: "Test" } as User
-        ]
+        editors: [{ id: "1", email: "test@example.com", name: "Test" } as User]
       } as Publication
     })
 
@@ -137,9 +133,7 @@ describe("AssignedPublicationUsers", () => {
       container: {
         __typename: "Publication",
         id: "1",
-        editors: [
-          { id: "1", email: "test@example.com", name: "Test" } as User
-        ]
+        editors: [{ id: "1", email: "test@example.com", name: "Test" } as User]
       } as Publication
     })
     expect(wrapper.findComponent({ name: "QForm" }).exists()).toBe(true)
@@ -151,9 +145,7 @@ describe("AssignedPublicationUsers", () => {
       container: {
         __typename: "Publication",
         id: "1",
-        editors: [
-          { id: "1", email: "test@example.com", name: "Test" } as User
-        ]
+        editors: [{ id: "1", email: "test@example.com", name: "Test" } as User]
       } as Publication
     })
 
@@ -172,9 +164,7 @@ describe("AssignedPublicationUsers", () => {
       container: {
         __typename: "Publication",
         id: "1",
-        editors: [
-          { id: "1", email: "test@example.com", name: "Test" } as User
-        ]
+        editors: [{ id: "1", email: "test@example.com", name: "Test" } as User]
       } as Publication
     })
 
@@ -189,9 +179,7 @@ describe("AssignedPublicationUsers", () => {
       container: {
         __typename: "Publication",
         id: "1",
-        editors: [
-          { id: "1", email: "test@example.com", name: "Test" } as User
-        ]
+        editors: [{ id: "1", email: "test@example.com", name: "Test" } as User]
       } as Publication
     })
 

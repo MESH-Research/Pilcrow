@@ -1,9 +1,10 @@
 import { mount } from "vue-composable-tester"
 import { createMockClient } from "app/test/vitest/utils"
-import { usePagination } from "./pagination"
+import { usePagination, type PaginationOptions } from "./pagination"
 import { DefaultApolloClient } from "@vue/apollo-composable"
 import { provide } from "vue"
 import { GET_PUBLICATIONS } from "src/graphql/queries"
+import type { GetPublicationsQuery } from "src/graphql/generated/graphql"
 import { flushPromises } from "@vue/test-utils"
 import { isRef } from "vue"
 
@@ -12,7 +13,7 @@ import { describe, expect, test, vi, beforeEach } from "vitest"
 describe("usePagination composable", () => {
   const mockClient = createMockClient()
 
-  const mountComposable = async (options?: any) => {
+  const mountComposable = async (options?: PaginationOptions) => {
     const { result } = mount(() => usePagination(GET_PUBLICATIONS, options), {
       provider: () => {
         provide(DefaultApolloClient, mockClient)
@@ -29,27 +30,37 @@ describe("usePagination composable", () => {
     vi.resetAllMocks()
   })
 
-  test("data functionality", async () => {
-    const returnData = [
-      ...Array(5)
-        .fill(0)
-        .map((_, v) => ({ id: v, name: `Pub ${v}`, home_page_content: "" }))
-    ]
+  type PublicationData = GetPublicationsQuery["publications"]["data"][number]
 
-    const mockResponseData = (data = []) => ({
-      data: {
-        publications: {
-          paginatorInfo: {
-            __typename: "PaginatorInfo",
-            count: data.length,
-            currentPage: 1,
-            lastPage: 1,
-            perPage: 10
-          },
-          data
-        }
+  const mockResponseData = (
+    data: PublicationData[] = [],
+    paginatorOverrides: Partial<
+      GetPublicationsQuery["publications"]["paginatorInfo"]
+    > = {}
+  ): { data: GetPublicationsQuery } => ({
+    data: {
+      publications: {
+        paginatorInfo: {
+          __typename: "PaginatorInfo",
+          count: data.length,
+          currentPage: 1,
+          lastPage: 1,
+          perPage: 10,
+          ...paginatorOverrides
+        },
+        data
       }
-    })
+    }
+  })
+
+  test("data functionality", async () => {
+    const returnData: PublicationData[] = Array(5)
+      .fill(0)
+      .map((_, v) => ({
+        id: String(v),
+        name: `Pub ${v}`,
+        home_page_content: ""
+      }))
 
     queryMock.mockResolvedValue(mockResponseData(returnData))
     const result = await mountComposable()
@@ -69,20 +80,7 @@ describe("usePagination composable", () => {
   })
 
   test("can override variables", async () => {
-    queryMock.mockResolvedValue({
-      data: {
-        publications: {
-          paginatorInfo: {
-            __typename: "PaginatorInfo",
-            count: 0,
-            currentPage: 1,
-            lastPage: 1,
-            perPage: 10
-          },
-          data: []
-        }
-      }
-    })
+    queryMock.mockResolvedValue(mockResponseData())
 
     await mountComposable({ variables: { page: 2 } })
 
@@ -90,20 +88,7 @@ describe("usePagination composable", () => {
   })
 
   test("pagination component binds", async () => {
-    queryMock.mockResolvedValue({
-      data: {
-        publications: {
-          paginatorInfo: {
-            __typename: "PaginatorInfo",
-            count: 0,
-            currentPage: 1,
-            lastPage: 4,
-            perPage: 10
-          },
-          data: []
-        }
-      }
-    })
+    queryMock.mockResolvedValue(mockResponseData([], { lastPage: 4 }))
 
     const result = await mountComposable()
 

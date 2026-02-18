@@ -3,6 +3,7 @@ import { mount, flushPromises } from "@vue/test-utils"
 
 import { installApolloClient } from "app/test/vitest/utils"
 import { SEND_VERIFY_EMAIL } from "src/graphql/mutations"
+import type { SendVerificationEmailMutation } from "src/graphql/generated/graphql"
 import EmailVerificationSendButton from "./EmailVerificationSendButton.vue"
 
 import { Notify } from "quasar"
@@ -26,9 +27,10 @@ describe("EmailVerificationSendButton", () => {
   it("changes state on success", async () => {
     const wrapper = factory()
     const handler = mockClient.getRequestHandler(SEND_VERIFY_EMAIL)
-    handler.mockResolvedValue({
+    const mockResponse: { data: SendVerificationEmailMutation } = {
       data: { sendEmailVerification: { email: "test@example.com" } }
-    })
+    }
+    handler.mockResolvedValue(mockResponse)
     expect(wrapper.text()).toMatch(/resend_button$/)
 
     await wrapper.trigger("click")

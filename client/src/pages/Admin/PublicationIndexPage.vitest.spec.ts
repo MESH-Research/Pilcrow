@@ -4,6 +4,7 @@ import { installApolloClient } from "app/test/vitest/utils"
 import { GET_PUBLICATIONS } from "src/graphql/queries"
 import PublicationIndexPage from "./PublicationIndexPage.vue"
 import { Notify } from "quasar"
+import type { GetPublicationsQuery } from "src/graphql/generated/graphql"
 import { beforeEach, describe, expect, it, test, vi } from "vitest"
 
 vi.mock("vue-router", () => ({
@@ -30,7 +31,7 @@ describe("publications page mount", () => {
   mockClient.setRequestHandler(GET_PUBLICATIONS, getPubHandler)
 
   test("all existing publications appear within the list", async () => {
-    getPubHandler.mockResolvedValue({
+    const mockPublicationsResponse: { data: GetPublicationsQuery } = {
       data: {
         publications: {
           data: [
@@ -64,7 +65,8 @@ describe("publications page mount", () => {
           }
         }
       }
-    })
+    }
+    getPubHandler.mockResolvedValue(mockPublicationsResponse)
     const wrapper = makeWrapper()
     await flushPromises()
 

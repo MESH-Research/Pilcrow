@@ -1,6 +1,11 @@
 import ReviewsPage from "./ReviewsPage.vue"
 import { CURRENT_USER_SUBMISSIONS, GET_SUBMISSIONS } from "src/graphql/queries"
 import {
+  type CurrentUserSubmissionsQuery,
+  type GetSubmissionsQuery,
+  SubmissionStatus
+} from "src/graphql/generated/graphql"
+import {
   type Mock,
   afterEach,
   beforeEach,
@@ -47,7 +52,11 @@ describe("Reviews Page", () => {
     vi.clearAllMocks()
   })
 
-  function mockSubmission(id, role_name) {
+  type SubmissionData = NonNullable<
+    CurrentUserSubmissionsQuery["currentUser"]
+  >["submissions"][number]
+
+  function mockSubmission(id: string, role_name: string): SubmissionData {
     const submission_my_role = {
       application_admin: null,
       publication_admin: null,
@@ -78,11 +87,11 @@ describe("Reviews Page", () => {
       title: `Jest Submission ${id}`,
       created_at: "2023-11-09T18:51:10.000000Z",
       submitted_at: "2023-11-20T10:30:00.000000Z",
-      status: "UNDER_REVIEW",
+      status: SubmissionStatus.UNDER_REVIEW,
       my_role: submission_my_role[role_name],
       effective_role: submission_effective_role[role_name],
       publication: {
-        id: id + 100,
+        id: `${id}-pub`,
         name: "Jest Publication",
         my_role: publication_my_role[role_name],
         editors: [],
@@ -95,7 +104,9 @@ describe("Reviews Page", () => {
       review_coordinators: []
     }
   }
-  function mockGetSubmissions(role_name) {
+  function mockGetSubmissions(role_name: string): {
+    data: GetSubmissionsQuery
+  } {
     const paginator = {
       __typename: "PaginatorInfo",
       count: 1,
@@ -111,7 +122,7 @@ describe("Reviews Page", () => {
       reviewer: [],
       submitter: []
     }
-    const submission_records = [mockSubmission(400, role_name)]
+    const submission_records = [mockSubmission("400", role_name)]
     const submissions_data = {
       application_admin: submission_records,
       publication_admin: submission_records,
@@ -130,25 +141,26 @@ describe("Reviews Page", () => {
       }
     }
   }
-  function mockCurrentUserSubmissions(role_name) {
-    const submission_records = [mockSubmission(500, role_name)]
+  function mockCurrentUserSubmissions(role_name: string): {
+    data: CurrentUserSubmissionsQuery
+  } {
+    const submission_records = [mockSubmission("500", role_name)]
     const submissions_data = {
       application_admin: submission_records,
       publication_admin: submission_records,
       editor: submission_records,
       review_coordinator: submission_records,
       reviewer: submission_records,
-      submitter: []
+      submitter: [] as SubmissionData[]
     }
     return {
       data: {
         currentUser: {
-          id: 2000,
+          id: "2000",
           roles:
             role_name == "application_admin"
               ? [{ name: "Application Administrator" }]
               : [],
-          highest_privileged_role: role_name,
           submissions: submissions_data[role_name]
         }
       }

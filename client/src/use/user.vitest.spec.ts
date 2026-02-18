@@ -4,6 +4,8 @@ import { useCurrentUser, useLogin } from "./user"
 import { DefaultApolloClient } from "@vue/apollo-composable"
 import { CURRENT_USER } from "src/graphql/queries"
 import { LOGIN } from "src/graphql/mutations"
+import { UserRoles } from "src/graphql/generated/graphql"
+import type { CurrentUserQuery } from "src/graphql/generated/graphql"
 import type { DocumentNode } from "graphql"
 import type { RequestHandler } from "mock-apollo-client"
 import { provide } from "vue"
@@ -39,19 +41,18 @@ describe("useCurrentUser composable", () => {
   })
 
   test("when a user is logged in", async () => {
-    const response = {
+    const response: { data: CurrentUserQuery } = {
       data: {
         currentUser: {
           __typename: "User",
-          id: 1,
+          id: "1",
           display_label: "Hello",
           name: "Hello",
           email: "hello@example.com",
           username: "helloUser",
           email_verified_at: "2021-08-14 02:26:32",
-          highest_privileged_role: "tester",
-          roles: [{ name: "tester" }],
-          abilities: [{ name: "doStuff" }]
+          highest_privileged_role: UserRoles.application_admin,
+          roles: [{ name: "tester" }]
         }
       }
     }

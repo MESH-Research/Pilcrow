@@ -3,6 +3,10 @@ import { mount, flushPromises } from "@vue/test-utils"
 import { installApolloClient } from "app/test/vitest/utils"
 import { UPDATE_PROFILE_METADATA } from "src/graphql/mutations"
 import { CURRENT_USER_METADATA } from "src/graphql/queries"
+import type {
+  CurrentUserMetadataQuery,
+  UpdateProfileMetaDataMutation
+} from "src/graphql/generated/graphql"
 import { ref as mockRef } from "vue"
 import ProfilePage from "./ProfilePage.vue"
 
@@ -44,7 +48,7 @@ describe("ProfilePage", () => {
   mockClient.setRequestHandler(UPDATE_PROFILE_METADATA, mutateHandler)
 
   const profileData = () => ({
-    id: 1,
+    id: "1",
     username: "testusername",
     name: "Test Name",
     profile_metadata: {
@@ -52,12 +56,12 @@ describe("ProfilePage", () => {
       position_title: "my title",
       specialization: "my specialization",
       affiliation: "my affiliation",
-      website: ["http://mywebsite.com"],
+      websites: ["http://mywebsite.com"],
       social_media: {
         twitter: "my_twitter",
         instagram: "my_insta",
         facebook: "my_facebook",
-        linked_in: "my_linkedin"
+        linkedin: "my_linkedin"
       },
       academic_profiles: {
         humanities_commons: "",
@@ -81,8 +85,14 @@ describe("ProfilePage", () => {
     const newData = profileData()
     newData.profile_metadata.biography = "new biography"
 
-    queryHandler.mockResolvedValue({ data: { currentUser: initialData } })
-    mutateHandler.mockResolvedValue({ data: { updateUser: newData } })
+    const mockQueryResponse: { data: CurrentUserMetadataQuery } = {
+      data: { currentUser: initialData }
+    }
+    const mockMutateResponse: { data: UpdateProfileMetaDataMutation } = {
+      data: { updateUser: newData }
+    }
+    queryHandler.mockResolvedValue(mockQueryResponse)
+    mutateHandler.mockResolvedValue(mockMutateResponse)
 
     const wrapper = await makeWrapper()
     await wrapper
@@ -98,7 +108,10 @@ describe("ProfilePage", () => {
 
   test("sets error on failure", async () => {
     const pData = profileData()
-    queryHandler.mockResolvedValue({ data: { currentUser: pData } })
+    const mockQueryResponse: { data: CurrentUserMetadataQuery } = {
+      data: { currentUser: pData }
+    }
+    queryHandler.mockResolvedValue(mockQueryResponse)
     mutateHandler.mockRejectedValue({})
 
     const wrapper = await makeWrapper()

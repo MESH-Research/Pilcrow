@@ -7,6 +7,7 @@ import { ref } from "vue"
 import { useRoute } from "vue-router"
 import VerifyEmailPage from "./VerifyEmail.vue"
 
+import type { VerifyEmailMutation } from "src/graphql/generated/graphql"
 import { type Mock, beforeEach, describe, expect, it, test, vi } from "vitest"
 
 vi.mock("src/use/user", () => ({
@@ -64,9 +65,10 @@ describe("VerifyEmailPage", () => {
   })
 
   test("renders success", async () => {
-    verifyHandler.mockResolvedValue({
-      data: { verifyEmail: { id: 1, email_verified_at: "timestamp" } }
-    })
+    const mockVerifyResponse: { data: VerifyEmailMutation } = {
+      data: { verifyEmail: { id: "1", email_verified_at: "timestamp" } }
+    }
+    verifyHandler.mockResolvedValue(mockVerifyResponse)
     ;(useRoute as Mock).mockReturnValue({
       params: { token: "", expires: "" }
     })

@@ -1,4 +1,9 @@
 import { GET_SUBMISSION } from "src/graphql/queries"
+import type { GetSubmissionQuery } from "src/graphql/generated/graphql"
+import {
+  SubmissionStatus,
+  SubmissionUserRoles
+} from "src/graphql/generated/graphql"
 import { type Mock, beforeEach, describe, expect, test, vi } from "vitest"
 import { installApolloClient } from "app/test/vitest/utils"
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
@@ -6,7 +11,6 @@ import { mount, flushPromises } from "@vue/test-utils"
 import { useCurrentUser } from "src/use/user"
 import { ref } from "vue"
 import SubmissionDetailsPage from "./SubmissionDetails.vue"
-import { QuasarPlugins } from "quasar"
 
 vi.mock("src/use/user", () => ({
   useCurrentUser: vi.fn()
@@ -26,9 +30,8 @@ describe("submissions details page mount", () => {
   const submissionUsersData = {
     submitters: [
       {
-        __typename: "User",
+        __typename: "User" as const,
         id: "1",
-        effective_role: "submitter",
         display_label: "Jest Submitter 1",
         name: "Jest Submitter 1",
         username: "jestSubmitter1",
@@ -36,9 +39,8 @@ describe("submissions details page mount", () => {
         staged: null
       },
       {
-        __typename: "User",
+        __typename: "User" as const,
         id: "5",
-        effective_role: "submitter",
         display_label: "Jest Submitter 2",
         name: "Jest Submitter 2",
         username: "jestSubmitter2",
@@ -48,9 +50,8 @@ describe("submissions details page mount", () => {
     ],
     reviewers: [
       {
-        __typename: "User",
+        __typename: "User" as const,
         id: "2",
-        effective_role: "reviewer",
         display_label: "Jest Reviewer 1",
         name: "Jest Reviewer 1",
         username: "jestReviewer1",
@@ -58,11 +59,10 @@ describe("submissions details page mount", () => {
         staged: null
       },
       {
-        __typename: "User",
+        __typename: "User" as const,
         id: "3",
         name: null,
         display_label: "Jest Reviewer 2",
-        effective_role: "reviewer",
         username: "jestReviewer2",
         email: "jestReviewer2@msu.edu",
         staged: true
@@ -70,10 +70,9 @@ describe("submissions details page mount", () => {
     ],
     review_coordinators: [
       {
-        __typename: "User",
+        __typename: "User" as const,
         id: "4",
         display_label: "Jest Review Coordinator 2",
-        effective_role: "review_coordinator",
         name: "Review Coordinator 1",
         username: "jestReviewCoordinator1",
         email: "jestcoordinator1@msu.edu",
@@ -82,21 +81,21 @@ describe("submissions details page mount", () => {
     ]
   }
 
-  const defaultApolloMock = () =>
-    mockClient.getRequestHandler(GET_SUBMISSION).mockResolvedValue({
+  const defaultApolloMock = () => {
+    const mockSubmissionResponse: { data: GetSubmissionQuery } = {
       data: {
         submission: {
           __typename: "Submission",
-          id: 1,
+          id: "1",
           title: "This Submission",
-          status: 0,
-          effective_role: "review_coordinator",
+          status: SubmissionStatus.INITIALLY_SUBMITTED,
+          effective_role: SubmissionUserRoles.review_coordinator,
           content: {
             data: ""
           },
           audits: [],
           publication: {
-            id: 1,
+            id: "1",
             name: "Jest Publication",
             my_role: null,
             style_criterias: [],
@@ -106,12 +105,16 @@ describe("submissions details page mount", () => {
           ...submissionUsersData
         }
       }
-    })
+    }
+    return mockClient
+      .getRequestHandler(GET_SUBMISSION)
+      .mockResolvedValue(mockSubmissionResponse)
+  }
 
   const useCurrentUserValue = {
     currentUser: ref({
       __typename: "User",
-      id: 1,
+      id: "1",
       display_label: "Hello",
       name: "Hello",
       email: "hello@example.com",
@@ -132,7 +135,7 @@ describe("submissions details page mount", () => {
 
   beforeEach(() => {
     mockClient.mockReset()
-      ; (useCurrentUser as Mock).mockReturnValue(useCurrentUserValue)
+    ;(useCurrentUser as Mock).mockReturnValue(useCurrentUserValue)
   })
 
   test("component mounts without errors", async () => {

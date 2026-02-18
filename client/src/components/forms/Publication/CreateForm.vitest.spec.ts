@@ -2,6 +2,7 @@ import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-v
 import { mount, flushPromises } from "@vue/test-utils"
 import { installApolloClient } from "app/test/vitest/utils"
 import { CREATE_PUBLICATION } from "src/graphql/mutations"
+import type { CreatePublicationMutation } from "src/graphql/generated/graphql"
 import CreateForm from "./CreateForm.vue"
 
 import { describe, expect, test, vi } from "vitest"
@@ -25,14 +26,15 @@ describe("CreateForm", () => {
   test("publications can be created", async () => {
     const warn = vi.spyOn(console, "warn").mockImplementation(() => {})
     const name = "New Jest Publication Name"
-    mutationHandler.mockResolvedValue({
+    const mockResponse: { data: CreatePublicationMutation } = {
       data: {
         createPublication: {
-          id: 1,
+          id: "1",
           name
         }
       }
-    })
+    }
+    mutationHandler.mockResolvedValue(mockResponse)
     const wrapper = makeWrapper()
     wrapper.trigger("create")
     wrapper.findComponent({ ref: "nameInput" }).setValue(name)

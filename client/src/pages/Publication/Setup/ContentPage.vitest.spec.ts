@@ -1,6 +1,7 @@
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
 import { flushPromises, mount } from "@vue/test-utils"
 import { UPDATE_PUBLICATION_CONTENT } from "src/graphql/mutations"
+import type { UpdatePublicationContentMutation } from "src/graphql/generated/graphql"
 import { installApolloClient } from "app/test/vitest/utils"
 import { ref as mockRef } from "vue"
 import ContentPage from "./ContentPage.vue"
@@ -62,9 +63,10 @@ describe("BasicPage", () => {
       new_submission_content: "Test Content"
     }
 
-    mutateHandler.mockResolvedValue({
+    const mockResponse: { data: UpdatePublicationContentMutation } = {
       data: { updatePublication: { id: "1", ...newData } }
-    })
+    }
+    mutateHandler.mockResolvedValue(mockResponse)
 
     const wrapper = await makeWrapper()
     await wrapper

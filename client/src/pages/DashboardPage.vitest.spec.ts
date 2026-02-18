@@ -1,5 +1,10 @@
 import DashboardPage from "./DashboardPage.vue"
 import { CURRENT_USER_SUBMISSIONS, GET_SUBMISSIONS } from "src/graphql/queries"
+import {
+  type CurrentUserSubmissionsQuery,
+  type GetSubmissionsQuery,
+  SubmissionStatus
+} from "src/graphql/generated/graphql"
 import { type Mock, afterEach, describe, expect, it, test, vi } from "vitest"
 import { installApolloClient } from "app/test/vitest/utils"
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
@@ -32,7 +37,15 @@ describe("Dashboard Page", () => {
     return wrapper
   }
 
-  function mockSubmission(id, status, role) {
+  type SubmissionData = NonNullable<
+    CurrentUserSubmissionsQuery["currentUser"]
+  >["submissions"][number]
+
+  function mockSubmission(
+    id: string,
+    status: SubmissionStatus,
+    role: string
+  ): SubmissionData {
     const submission_my_role = {
       application_admin: null,
       publication_admin: null,
@@ -80,13 +93,15 @@ describe("Dashboard Page", () => {
     }
   }
 
-  function getData() {
+  function getData(): {
+    data: CurrentUserSubmissionsQuery
+  } {
     return {
       data: {
         currentUser: {
           id: "5",
           roles: [],
-          submissions: []
+          submissions: [] as SubmissionData[]
         }
       }
     }
@@ -98,7 +113,7 @@ describe("Dashboard Page", () => {
     })
     const mockData = getData()
     mockData.data.currentUser.submissions.push(
-      mockSubmission("100", "UNDER_REVIEW", "submitter")
+      mockSubmission("100", SubmissionStatus.UNDER_REVIEW, "submitter")
     )
     CurrentUserSubmissions.mockResolvedValue(mockData)
     const wrapper = await wrapperFactory()
@@ -112,9 +127,9 @@ describe("Dashboard Page", () => {
 
     const mockData = getData()
     mockData.data.currentUser.submissions.push(
-      mockSubmission("100", "UNDER_REVIEW", "reviewer"),
-      mockSubmission("101", "UNDER_REVIEW", "reviewer"),
-      mockSubmission("102", "REJECTED", "reviewer")
+      mockSubmission("100", SubmissionStatus.UNDER_REVIEW, "reviewer"),
+      mockSubmission("101", SubmissionStatus.UNDER_REVIEW, "reviewer"),
+      mockSubmission("102", SubmissionStatus.REJECTED, "reviewer")
     )
     CurrentUserSubmissions.mockResolvedValue(mockData)
     const wrapper = await wrapperFactory()
@@ -139,7 +154,9 @@ describe("Dashboard Page", () => {
     )
   })
 
-  function mockGetSubmissions(role_name) {
+  function mockGetSubmissions(role_name: string): {
+    data: GetSubmissionsQuery
+  } {
     const paginator = {
       count: 1,
       currentPage: 1,
@@ -155,7 +172,7 @@ describe("Dashboard Page", () => {
       submitter: []
     }
     const submission_records = [
-      mockSubmission("1000", "UNDER_REVIEW", role_name)
+      mockSubmission("1000", SubmissionStatus.UNDER_REVIEW, role_name)
     ]
     const submissions_data = {
       application_admin: submission_records,
@@ -174,17 +191,20 @@ describe("Dashboard Page", () => {
       }
     }
   }
-  function mockCurrentUserSubmissions(role_name) {
+  function mockCurrentUserSubmissions(role_name: string): {
+    data: CurrentUserSubmissionsQuery
+  } {
     return {
       data: {
         currentUser: {
-          id: 1000,
+          id: "1000",
           roles:
             role_name == "application_admin"
               ? [{ name: "Application Administrator" }]
               : [],
-          highest_privileged_role: role_name,
-          submissions: [mockSubmission("1000", "UNDER_REVIEW", role_name)]
+          submissions: [
+            mockSubmission("1000", SubmissionStatus.UNDER_REVIEW, role_name)
+          ]
         }
       }
     }

@@ -1,6 +1,11 @@
 import SubmissionsPage from "./SubmissionsPage.vue"
 import { CURRENT_USER_SUBMISSIONS, GET_SUBMISSIONS } from "src/graphql/queries"
 import {
+  type CurrentUserSubmissionsQuery,
+  type GetSubmissionsQuery,
+  SubmissionStatus
+} from "src/graphql/generated/graphql"
+import {
   type Mock,
   afterEach,
   beforeEach,
@@ -434,7 +439,11 @@ describe("Submissions Page", () => {
     )
   })
 
-  function mockSubmission(role_name) {
+  type SubmissionData = NonNullable<
+    CurrentUserSubmissionsQuery["currentUser"]
+  >["submissions"][number]
+
+  function mockSubmission(role_name: string): SubmissionData {
     const submission_my_role = {
       application_admin: null,
       publication_admin: null,
@@ -464,7 +473,7 @@ describe("Submissions Page", () => {
       title: "Jest Submission 1001",
       created_at: "2023-11-09T18:51:10.000000Z",
       submitted_at: "2023-11-09T18:52:00.000000Z",
-      status: "UNDER_REVIEW",
+      status: SubmissionStatus.UNDER_REVIEW,
       my_role: submission_my_role[role_name],
       effective_role: submission_effective_role[role_name],
       publication: {
@@ -481,7 +490,9 @@ describe("Submissions Page", () => {
       review_coordinators: []
     }
   }
-  function mockGetSubmissions(role_name) {
+  function mockGetSubmissions(role_name: string): {
+    data: GetSubmissionsQuery
+  } {
     const paginator = {
       count: 1,
       currentPage: 1,
@@ -514,7 +525,9 @@ describe("Submissions Page", () => {
       }
     }
   }
-  function mockCurrentUserSubmissions(role_name) {
+  function mockCurrentUserSubmissions(role_name: string): {
+    data: CurrentUserSubmissionsQuery
+  } {
     const submission_records = [mockSubmission(role_name)]
     const submissions_data = {
       application_admin: submission_records,
@@ -522,17 +535,16 @@ describe("Submissions Page", () => {
       editor: submission_records,
       review_coordinator: submission_records,
       reviewer: submission_records,
-      submitter: []
+      submitter: [] as SubmissionData[]
     }
     return {
       data: {
         currentUser: {
-          id: 1000,
+          id: "1000",
           roles:
             role_name == "application_admin"
               ? [{ name: "Application Administrator" }]
               : [],
-          highest_privileged_role: role_name,
           submissions: submissions_data[role_name]
         }
       }

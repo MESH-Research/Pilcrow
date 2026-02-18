@@ -6,6 +6,12 @@ import {
   DELETE_PUBLICATION_STYLE_CRITERIA,
   UPDATE_PUBLICATION_STYLE_CRITERIA
 } from "src/graphql/mutations"
+import type {
+  Publication,
+  StyleCriteria,
+  UpdatePublicationStyleCriteriaMutation,
+  CreatePublicationStyleCriteriaMutation
+} from "src/graphql/generated/graphql"
 import PublicationStyleCriteria from "./PublicationStyleCriteria.vue"
 
 import { beforeEach, describe, expect, test, vi } from "vitest"
@@ -14,13 +20,16 @@ installQuasarPlugin()
 const mockClient = installApolloClient()
 
 describe("PublicationStyleCriteria", () => {
-  const makeWrapper = (publication) => {
+  type TestPublication = Pick<Publication, "id"> & {
+    style_criterias?: Pick<StyleCriteria, "id" | "name" | "description">[]
+  }
+  const makeWrapper = (publication: TestPublication) => {
     return mount(PublicationStyleCriteria, {
       global: {
         stubs: ["QEditor"]
       },
       props: {
-        publication
+        publication: publication as Publication
       }
     })
   }
@@ -47,7 +56,7 @@ describe("PublicationStyleCriteria", () => {
   })
 
   test("able to mount", () => {
-    const wrapper = makeWrapper({ id: 1 })
+    const wrapper = makeWrapper({ id: "1" })
     expect(wrapper).toBeTruthy()
   })
 
@@ -67,9 +76,11 @@ describe("PublicationStyleCriteria", () => {
   })
 
   test("able to edit item", async () => {
-    updateCriteriaHandler.mockResolvedValue({
-      data: { updatePublication: { id: "1", style_criterias: [] } }
-    })
+    const mockUpdateResponse: { data: UpdatePublicationStyleCriteriaMutation } =
+      {
+        data: { updatePublication: { id: "1", style_criterias: [] } }
+      }
+    updateCriteriaHandler.mockResolvedValue(mockUpdateResponse)
     const wrapper = makeWrapper({
       id: "1",
       style_criterias: [
@@ -101,9 +112,11 @@ describe("PublicationStyleCriteria", () => {
   })
 
   test("able to add item", async () => {
-    createCriteriaHandler.mockResolvedValue({
-      data: { updatePublication: { id: "1", style_criterias: [] } }
-    })
+    const mockCreateResponse: { data: CreatePublicationStyleCriteriaMutation } =
+      {
+        data: { updatePublication: { id: "1", style_criterias: [] } }
+      }
+    createCriteriaHandler.mockResolvedValue(mockCreateResponse)
     const wrapper = makeWrapper({
       id: "2",
       style_criterias: []

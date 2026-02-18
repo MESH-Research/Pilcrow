@@ -4,13 +4,20 @@ import { installApolloClient } from "app/test/vitest/utils"
 import { GET_USER } from "src/graphql/queries"
 import UserDetails from "./UserDetails.vue"
 
+import type { getUserQuery } from "src/graphql/generated/graphql"
 import { beforeEach, describe, expect, it, vi } from "vitest"
 
 installQuasarPlugin()
 const mockClient = installApolloClient()
 
 describe("User Details page mount", () => {
-  const wrapperFactory = async (id) => {
+  function mockUserResponse(userData: NonNullable<getUserQuery["user"]>): {
+    data: getUserQuery
+  } {
+    return { data: { user: userData } }
+  }
+
+  const wrapperFactory = async (id: string) => {
     const wrapper = mount(UserDetails, {
       global: {
         stubs: ["router-link"]
@@ -42,36 +49,32 @@ describe("User Details page mount", () => {
   })
 
   it("reflects the lack of roles for a user with no assigned roles", async () => {
-    getUserHandler.mockResolvedValue({
-      data: {
-        user: {
-          username: "Username",
-          email: "email",
-          name: "Regular User",
-          roles: []
-        }
-      }
-    })
+    getUserHandler.mockResolvedValue(
+      mockUserResponse({
+        username: "Username",
+        email: "email",
+        name: "Regular User",
+        roles: []
+      })
+    )
 
     const wrapper = await wrapperFactory("1")
     expect(wrapper.text()).toContain("role.no_roles_assigned")
   })
 
   it("reflects the role of an application administrator", async () => {
-    getUserHandler.mockResolvedValue({
-      data: {
-        user: {
-          name: "Application Admin User",
-          username: "Username",
-          email: "email",
-          roles: [
-            {
-              name: "Application Administrator"
-            }
-          ]
-        }
-      }
-    })
+    getUserHandler.mockResolvedValue(
+      mockUserResponse({
+        name: "Application Admin User",
+        username: "Username",
+        email: "email",
+        roles: [
+          {
+            name: "Application Administrator"
+          }
+        ]
+      })
+    )
 
     const wrapper = await wrapperFactory("2")
     expect(wrapper).toBeTruthy()
@@ -80,16 +83,14 @@ describe("User Details page mount", () => {
   })
 
   it("reflects the lack of display name for a user with no name", async () => {
-    getUserHandler.mockResolvedValue({
-      data: {
-        user: {
-          name: null,
-          email: "email",
-          username: "userWithNoName",
-          roles: []
-        }
-      }
-    })
+    getUserHandler.mockResolvedValue(
+      mockUserResponse({
+        name: null,
+        email: "email",
+        username: "userWithNoName",
+        roles: []
+      })
+    )
     const wrapper = await wrapperFactory("3")
     expect(wrapper).toBeTruthy()
     expect(wrapper.text()).toContain("user.empty_name")

@@ -2,6 +2,7 @@ import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-v
 import { mount, flushPromises } from "@vue/test-utils"
 import { installApolloClient } from "app/test/vitest/utils"
 import { UPDATE_PUBLICATION_BASICS } from "src/graphql/mutations"
+import type { UpdatePublicationBasicsMutation } from "src/graphql/generated/graphql"
 import { ref as mockRef } from "vue"
 import BasicPage from "./BasicPage.vue"
 
@@ -65,9 +66,10 @@ describe("BasicPage", () => {
       is_accepting_submissions: true
     }
 
-    mutateHandler.mockResolvedValue({
+    const mockResponse: { data: UpdatePublicationBasicsMutation } = {
       data: { updatePublication: { id: "1", ...newData } }
-    })
+    }
+    mutateHandler.mockResolvedValue(mockResponse)
 
     const wrapper = await makeWrapper()
     await wrapper.findComponent({ ref: "form" }).vm.$emit("save", newData)

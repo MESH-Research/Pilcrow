@@ -1,7 +1,7 @@
 import { useGraphQLValidation } from "./graphQLValidation"
 import { describe, test, expect } from "vitest"
 import { ref } from "vue"
-import { ApolloError } from "@apollo/client"
+import { ApolloError } from "@apollo/client/errors"
 
 describe("useGraphQLValidation composable", () => {
   const error = ref<ApolloError | null>(
