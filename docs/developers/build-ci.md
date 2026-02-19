@@ -193,7 +193,12 @@ Both Lando and CI use the same PHP configuration for consistency:
 | `memory_limit` | `256M` | Sufficient for tests and development |
 | `mysqlnd.collect_memory_statistics` | `Off` | Reduces memory overhead |
 
-Both environments use the same file: `backend/php.dev.ini`. Lando references it directly, and the Dockerfile COPYs it into the image.
+Both environments use the same file (`backend/php.dev.ini`) but apply it differently:
+
+- **Lando** copies the file into `conf.d/` as `zzz-lando-my-custom.ini` during `lando rebuild`, so it loads last and overrides Lando's built-in PHP configuration.
+- **Dockerfile** COPYs it into `conf.d/` during the `unit-test` stage, where it is loaded after the base `php.ini-production` set in the `base` stage.
+
+Because the two environments have different base configurations and load orders, there *can be* minor inconsistencies between them. In practice, a single shared file keeps the most important settings in sync without requiring developers to maintain separate configurations, which tends to be a worthwhile trade-off for better developer experience.
 
 ## Running Tests Locally with Bake
 
