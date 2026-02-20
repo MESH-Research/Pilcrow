@@ -1,7 +1,7 @@
 ARG COMPOSER_VERSION=2.8.9
 ARG PHP_VERSION=8.4.15
 
-FROM composer:${COMPOSER_VERSION} AS composer
+FROM --platform=linux/amd64 composer:${COMPOSER_VERSION} AS composer
 FROM php:${PHP_VERSION}-fpm AS base
 
 ARG TARGETARCH
