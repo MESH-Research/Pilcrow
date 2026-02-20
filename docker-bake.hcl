@@ -18,6 +18,12 @@ variable "BUILDSTAMP" {
     default = ""
 }
 
+# On macOS with the docker-container driver, "local" doesn't resolve correctly.
+# Set LOCAL_PLATFORM=linux/arm64 (Apple Silicon) or LOCAL_PLATFORM=linux/amd64 (Intel).
+variable "LOCAL_PLATFORM" {
+    default = "local"
+}
+
 target "fpm" {
     context = "backend"
     target = "fpm"
@@ -64,28 +70,36 @@ target "web-lint" {
     output = ["type=cacheonly"]
 }
 
+variable "DB_HOST" {
+    default = "127.0.0.1"
+}
+
 target "fpm-test" {
     inherits = ["fpm"]
     target = "unit-test"
-    platforms = ["local"]
+    platforms = [LOCAL_PLATFORM]
     output = ["type=cacheonly"]
     network = "host"
     args = {
         BUILDSTAMP = BUILDSTAMP
+        DB_HOST = DB_HOST
     }
 }
 
 target "fpm-lint" {
     inherits = ["fpm"]
     target = "lint"
-    platforms = ["local"]
+    platforms = [LOCAL_PLATFORM]
     output = ["type=cacheonly"]
+    args = {
+        BUILDSTAMP = BUILDSTAMP
+    }
 }
 
 target "web-test" {
     inherits = ["web"]
     target = "unit-test"
-    platforms = ["local"]
+    platforms = [LOCAL_PLATFORM]
     output = ["type=cacheonly"]
 }
 
@@ -97,7 +111,7 @@ target "web-bundle" {
         VERSION_URL = VERSION_URL
         VERSION_DATE = VERSION_DATE
     }
-    platforms = ["local"]
+    platforms = [LOCAL_PLATFORM]
     output = ["type=local,dest=./bundle-output"]
 }
 

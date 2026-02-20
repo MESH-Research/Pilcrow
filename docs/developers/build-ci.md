@@ -286,6 +286,22 @@ The `test-backend-bake.sh` script waits for MySQL to be ready, but if you're run
 2. Verify the database `pilcrow` exists
 3. Check credentials: `root` / `pilcrow`
 
+### Running Bake on macOS (Apple Silicon)
+
+Docker buildx bake targets are primarily developed and tested on Linux (including WSL2). Running them on macOS with Apple Silicon (M1/M2/M3/M4) introduces a few platform-specific challenges:
+
+**Platform resolution:** The `docker-container` buildx driver (recommended on macOS) doesn't support the `"local"` platform shorthand used in `docker-bake.hcl`. Set the `LOCAL_PLATFORM` environment variable when running bake targets manually:
+
+```bash
+# Apple Silicon
+LOCAL_PLATFORM=linux/arm64 docker buildx bake fpm-lint
+
+# Intel Mac
+LOCAL_PLATFORM=linux/amd64 docker buildx bake fpm-lint
+```
+
+**Backend tests (`test-backend-bake.sh`):** The script automatically detects macOS and handles both the platform and network differences. On macOS it sets `LOCAL_PLATFORM`, creates a `pilcrow-builder` buildx builder with the `docker-container` driver, and uses a shared Docker network so the build can reach MySQL by container name. No manual setup is needed — just run the script as usual.
+
 ### Build Cache Issues
 
 If you're seeing stale behavior:

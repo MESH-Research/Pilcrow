@@ -1,6 +1,10 @@
 #!/bin/bash
 # Run backend unit tests using docker buildx bake (same as CI)
 # Usage: ./scripts/test-backend-bake.sh [--no-cache]
+#
+# On Linux, uses network=host to connect the build to MySQL on localhost.
+# On macOS, creates a Docker network and a dedicated buildx builder so the
+# build container can reach MySQL by container name.
 
 set -e
 
@@ -8,7 +12,14 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
 
 MYSQL_CONTAINER="pilcrow-test-mysql"
+DOCKER_NETWORK="pilcrow-test-net"
+BUILDER_NAME="pilcrow-builder"
 NO_CACHE=""
+IS_MACOS=false
+
+if [[ "$(uname -s)" == "Darwin" ]]; then
+    IS_MACOS=true
+fi
 
 # Parse arguments
 for arg in "$@"; do
@@ -23,20 +34,55 @@ cleanup() {
     echo -e "Cleaning up..."
     docker stop "$MYSQL_CONTAINER" 2>/dev/null || true
     docker rm "$MYSQL_CONTAINER" 2>/dev/null || true
+    if $IS_MACOS; then
+        docker network rm "$DOCKER_NETWORK" 2>/dev/null || true
+    fi
 }
 
 trap cleanup EXIT
 
 echo "Setting up test environment..."
 
+MYSQL_RUN_ARGS=(
+    -d
+    --name "$MYSQL_CONTAINER"
+    -e MYSQL_ROOT_PASSWORD=pilcrow
+    -e MYSQL_DATABASE=pilcrow
+)
+
+if $IS_MACOS; then
+    echo "Detected macOS — using Docker network for build connectivity."
+
+    # Create a dedicated network for the build to reach MySQL
+    docker network create "$DOCKER_NETWORK" 2>/dev/null || true
+
+    MYSQL_RUN_ARGS+=(--network "$DOCKER_NETWORK")
+
+    # Ensure a buildx builder exists that can access the network.
+    # The docker-container driver is also required on Apple Silicon
+    # for proper multi-platform image resolution.
+    if ! docker buildx inspect "$BUILDER_NAME" >/dev/null 2>&1; then
+        echo "Creating buildx builder '$BUILDER_NAME'..."
+        docker buildx create \
+            --name "$BUILDER_NAME" \
+            --driver docker-container \
+            --driver-opt network="$DOCKER_NETWORK"
+    else
+        # Builder exists — make sure it's connected to our network.
+        # Recreate to update driver options (no update-in-place supported).
+        docker buildx rm "$BUILDER_NAME" 2>/dev/null || true
+        docker buildx create \
+            --name "$BUILDER_NAME" \
+            --driver docker-container \
+            --driver-opt network="$DOCKER_NETWORK"
+    fi
+else
+    MYSQL_RUN_ARGS+=(-p 3306:3306)
+fi
+
 # Start MySQL 5.7 container (same version as CI)
 echo "Starting MySQL 5.7 container..."
-docker run -d \
-    --name "$MYSQL_CONTAINER" \
-    -p 3306:3306 \
-    -e MYSQL_ROOT_PASSWORD=pilcrow \
-    -e MYSQL_DATABASE=pilcrow \
-    mysql:5.7
+docker run "${MYSQL_RUN_ARGS[@]}" mysql:5.7
 
 # Wait for MySQL to be ready to accept connections
 echo -n "Waiting for MySQL to be ready..."
@@ -59,10 +105,31 @@ fi
 # Run the tests
 echo "Running backend unit tests..."
 cd "$PROJECT_ROOT"
-BUILDSTAMP=$(date +%s) docker buildx bake \
-    --allow=network.host \
-    $NO_CACHE \
-    --progress=plain \
-    fpm-test
+
+if $IS_MACOS; then
+    # Detect architecture for LOCAL_PLATFORM override
+    ARCH="$(uname -m)"
+    if [[ "$ARCH" == "arm64" ]]; then
+        LOCAL_PLATFORM="linux/arm64"
+    else
+        LOCAL_PLATFORM="linux/amd64"
+    fi
+
+    LOCAL_PLATFORM="$LOCAL_PLATFORM" \
+    DB_HOST="$MYSQL_CONTAINER" \
+    BUILDSTAMP=$(date +%s) \
+    docker buildx bake \
+        --builder "$BUILDER_NAME" \
+        --set "fpm-test.network=$DOCKER_NETWORK" \
+        $NO_CACHE \
+        --progress=plain \
+        fpm-test
+else
+    BUILDSTAMP=$(date +%s) docker buildx bake \
+        --allow=network.host \
+        $NO_CACHE \
+        --progress=plain \
+        fpm-test
+fi
 
 echo "Tests completed successfully!"

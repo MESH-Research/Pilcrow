@@ -1,5 +1,6 @@
 ARG COMPOSER_PLATFORM=linux/amd64
 ARG COMPOSER_VERSION=2.8.9
+ARG COMPOSER_PLATFORM=linux/amd64
 ARG PHP_VERSION=8.4.15
 
 FROM --platform=${COMPOSER_PLATFORM} composer:${COMPOSER_VERSION} AS composer
@@ -81,6 +82,8 @@ RUN --mount=type=cache,target=/var/www/.composer,uid=33,gid=33 \
 
 # Supply a random/cache busting timestamp to prevent caching of the test run.
 ARG BUILDSTAMP
+ARG DB_HOST=127.0.0.1
+ENV DB_HOST=${DB_HOST}
 RUN ./artisan migrate:fresh --seed
 
 RUN touch .env && ./artisan test
@@ -88,6 +91,7 @@ RUN touch .env && ./artisan test
 FROM base AS lint
 
 USER www-data
+ARG BUILDSTAMP
 RUN --mount=type=cache,target=/var/www/.composer,uid=33,gid=33 \
     composer install --prefer-dist && \
     composer lint

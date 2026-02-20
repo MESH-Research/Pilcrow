@@ -28,13 +28,14 @@ FROM scratch AS bundle
 COPY --from=build-stage /app/dist/spa/ /dist/spa/
 
 FROM base AS unit-test
+ARG BUILDSTAMP
 RUN --mount=type=cache,target=/usr/local/share/.cache/yarn/v6 \
     yarn test:unit:ci \
       --reporter=basic \
       --reporter=github-actions
 
 FROM base AS lint
-
+ARG BUILDSTAMP
 RUN --mount=type=cache,target=/usr/local/share/.cache/yarn/v6 \
     yarn lint
 
