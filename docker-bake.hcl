@@ -66,7 +66,7 @@ target "ci-actions" {
 target "web-lint" {
     inherits = ["web"]
     target = "lint"
-    platforms = [ "local" ]
+    platforms = [LOCAL_PLATFORM]
     output = ["type=cacheonly"]
 }
 
