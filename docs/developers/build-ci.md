@@ -11,7 +11,7 @@ The build configuration is defined in `docker-bake.hcl` at the project root.
 ### Key Components
 
 | Component | Purpose |
-|-----------|---------|
+| --------- | ------- |
 | `docker-bake.hcl` | Build configuration for all Docker targets |
 | `backend/Dockerfile` | Multi-stage Dockerfile for PHP/Laravel backend |
 | `client/Dockerfile` | Multi-stage Dockerfile for Vue.js frontend |
@@ -25,14 +25,14 @@ The `docker-bake.hcl` file defines several build targets:
 ### Production Targets
 
 | Target | Description |
-|--------|-------------|
+| ------ | ----------- |
 | `fpm` | Production PHP-FPM image for the backend |
 | `web` | Production Nginx image serving the client |
 
 ### Test & Lint Targets
 
 | Target | Description |
-|--------|-------------|
+| ------ | ----------- |
 | `fpm-test` | Runs backend PHPUnit tests |
 | `fpm-lint` | Runs PHP linting (phpcs) |
 | `web-test` | Runs client Vitest unit tests |
@@ -187,7 +187,7 @@ The `fpm-test` target uses `network = "host"` to allow the Docker build to conne
 Both Lando and CI use the same PHP configuration for consistency:
 
 | Setting | Value | Purpose |
-|---------|-------|---------|
+| ------- | ----- | ------- |
 | `error_reporting` | `E_ALL & ~E_DEPRECATED` | Report all errors except deprecations |
 | `display_errors` | `On` | Show errors in output |
 | `memory_limit` | `256M` | Sufficient for tests and development |
