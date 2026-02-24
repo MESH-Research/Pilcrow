@@ -180,7 +180,7 @@ services:
       --health-retries 3
 ```
 
-The `fpm-test` target uses `network = "host"` to allow the Docker build to connect to the MySQL service on localhost.
+The `fpm-test` target uses `network = "host"` by default to allow the Docker build to connect to the MySQL service on localhost. This is controlled by the `NETWORK` variable in `docker-bake.hcl`, which can be overridden for environments where host networking doesn't work (see [Running Bake on macOS](#running-bake-on-macos-apple-silicon)).
 
 ## PHP Configuration
 
@@ -226,6 +226,7 @@ This script:
 
 Options:
 - `--no-cache`: Force a fresh build without Docker cache
+- `--docker-network`: Force the Docker network path (used automatically on macOS, useful for testing on Linux/WSL)
 
 ### Manual Bake Commands
 
@@ -257,10 +258,17 @@ BUILDSTAMP=$(date +%s) docker buildx bake fpm-test
 
 The Dockerfile declares `ARG BUILDSTAMP` immediately before the test command, so only the test layer is invalidated - earlier layers (dependencies, migrations) remain cached.
 
-To force a completely fresh build with no caching:
+If you're seeing stale behavior or need a completely fresh build:
 
 ```bash
+# Clear buildx cache
+docker buildx prune
+
+# Or run with --no-cache
 docker buildx bake --no-cache <target>
+
+# Via the test script
+./scripts/test-backend-bake.sh --no-cache
 ```
 
 ## Troubleshooting
@@ -288,9 +296,11 @@ The `test-backend-bake.sh` script waits for MySQL to be ready, but if you're run
 
 ### Running Bake on macOS (Apple Silicon)
 
-Docker buildx bake targets are primarily developed and tested on Linux (including WSL2). Running them on macOS with Apple Silicon (M1/M2/M3/M4) introduces a few platform-specific challenges:
+Docker buildx bake targets are primarily developed and tested on Linux (including WSL2). Running them on macOS with Apple Silicon (M1/M2/M3/M4) requires a different buildx driver, which changes how networking and platform resolution work.
 
-**Platform resolution:** The `docker-container` buildx driver (recommended on macOS) doesn't support the `"local"` platform shorthand used in `docker-bake.hcl`. Set the `LOCAL_PLATFORM` environment variable when running bake targets manually:
+**Why macOS needs a different approach:** On Linux, buildx uses the default driver, which runs builds directly on the host. `network = "host"` gives the build process direct access to `localhost`, where MySQL is listening. On macOS, Docker runs inside a Linux VM, so `localhost` inside a build doesn't reach services on the Mac. Additionally, Apple Silicon requires the `docker-container` buildx driver to build `linux/arm64` images. This driver runs builds inside a separate BuildKit container, which has its own network namespace. Using `network = "host"`in this context gives the build access to that container's network, not the Mac's. To connect the build to MySQL, both the MySQL container and the BuildKit container must be placed on a shared Docker network.
+
+**Platform resolution:** The `docker-container` driver doesn't support the `"local"` platform shorthand used in `docker-bake.hcl`. Set the `LOCAL_PLATFORM` environment variable when running bake targets manually:
 
 ```bash
 # Apple Silicon
@@ -300,16 +310,4 @@ LOCAL_PLATFORM=linux/arm64 docker buildx bake fpm-lint
 LOCAL_PLATFORM=linux/amd64 docker buildx bake fpm-lint
 ```
 
-**Backend tests (`test-backend-bake.sh`):** The script automatically detects macOS and handles both the platform and network differences. On macOS it sets `LOCAL_PLATFORM`, creates a `pilcrow-builder` buildx builder with the `docker-container` driver, and uses a shared Docker network so the build can reach MySQL by container name. No manual setup is needed — just run the script as usual.
-
-### Build Cache Issues
-
-If you're seeing stale behavior:
-
-```bash
-# Clear buildx cache
-docker buildx prune
-
-# Or run with --no-cache
-./scripts/test-backend-bake.sh --no-cache
-```
+**Backend tests (`test-backend-bake.sh`):** The script automatically detects macOS and handles both the platform and network differences. On macOS it creates a `pilcrow-builder` buildx builder with the `docker-container` driver, places both MySQL and the builder on a shared Docker network, and sets `LOCAL_PLATFORM` based on the host architecture. No manual setup is needed — just run the script as usual. You can also force this mode on Linux/WSL with `--docker-network` for testing.

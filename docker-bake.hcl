@@ -74,12 +74,16 @@ variable "DB_HOST" {
     default = "127.0.0.1"
 }
 
+variable "NETWORK" {
+    default = "host"
+}
+
 target "fpm-test" {
     inherits = ["fpm"]
     target = "unit-test"
     platforms = [LOCAL_PLATFORM]
     output = ["type=cacheonly"]
-    network = "host"
+    network = NETWORK
     args = {
         BUILDSTAMP = BUILDSTAMP
         DB_HOST = DB_HOST

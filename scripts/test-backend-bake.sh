@@ -1,10 +1,11 @@
 #!/bin/bash
 # Run backend unit tests using docker buildx bake (same as CI)
-# Usage: ./scripts/test-backend-bake.sh [--no-cache]
+# Usage: ./scripts/test-backend-bake.sh [--no-cache] [--docker-network]
 #
 # On Linux, uses network=host to connect the build to MySQL on localhost.
-# On macOS, creates a Docker network and a dedicated buildx builder so the
-# build container can reach MySQL by container name.
+# On macOS (auto-detected) or with --docker-network, creates a Docker network
+# and a dedicated buildx builder so the build container can reach MySQL by
+# container name.
 
 set -e
 
@@ -15,10 +16,10 @@ MYSQL_CONTAINER="pilcrow-test-mysql"
 DOCKER_NETWORK="pilcrow-test-net"
 BUILDER_NAME="pilcrow-builder"
 NO_CACHE=""
-IS_MACOS=false
+USE_DOCKER_NETWORK=false
 
 if [[ "$(uname -s)" == "Darwin" ]]; then
-    IS_MACOS=true
+    USE_DOCKER_NETWORK=true
 fi
 
 # Parse arguments
@@ -27,6 +28,9 @@ for arg in "$@"; do
         --no-cache)
             NO_CACHE="--no-cache"
             ;;
+        --docker-network)
+            USE_DOCKER_NETWORK=true
+            ;;
     esac
 done
 
@@ -34,7 +38,7 @@ cleanup() {
     echo -e "Cleaning up..."
     docker stop "$MYSQL_CONTAINER" 2>/dev/null || true
     docker rm "$MYSQL_CONTAINER" 2>/dev/null || true
-    if $IS_MACOS; then
+    if $USE_DOCKER_NETWORK; then
         docker network rm "$DOCKER_NETWORK" 2>/dev/null || true
     fi
 }
@@ -50,8 +54,8 @@ MYSQL_RUN_ARGS=(
     -e MYSQL_DATABASE=pilcrow
 )
 
-if $IS_MACOS; then
-    echo "Detected macOS — using Docker network for build connectivity."
+if $USE_DOCKER_NETWORK; then
+    echo "Using Docker network for build connectivity."
 
     # Create a dedicated network for the build to reach MySQL
     docker network create "$DOCKER_NETWORK" 2>/dev/null || true
@@ -106,7 +110,7 @@ fi
 echo "Running backend unit tests..."
 cd "$PROJECT_ROOT"
 
-if $IS_MACOS; then
+if $USE_DOCKER_NETWORK; then
     # Detect architecture for LOCAL_PLATFORM override
     ARCH="$(uname -m)"
     if [[ "$ARCH" == "arm64" ]]; then
@@ -120,7 +124,6 @@ if $IS_MACOS; then
     BUILDSTAMP=$(date +%s) \
     docker buildx bake \
         --builder "$BUILDER_NAME" \
-        --set "fpm-test.network=$DOCKER_NETWORK" \
         $NO_CACHE \
         --progress=plain \
         fpm-test

@@ -73,6 +73,10 @@ ENV APP_ENV=testing
 # Use shared PHP config - same file used by Lando (backend/php.dev.ini)
 USER root
 COPY php.dev.ini ${PHP_INI_DIR}/conf.d/pilcrow.ini
+# Disable SSL cert verification for the MariaDB CLI client (used by Laravel's
+# schema loader). Needed when connecting via Docker network where MySQL's
+# self-signed cert isn't trusted by the system CA store.
+RUN printf '[client]\nssl-verify-server-cert = false\n' > /etc/mysql/conf.d/no-ssl-verify.cnf
 
 # Re-run composer install to add dev dependencies
 USER www-data
