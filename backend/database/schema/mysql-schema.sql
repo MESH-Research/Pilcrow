@@ -282,7 +282,7 @@ CREATE TABLE `settings` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `group` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `locked` tinyint(1) NOT NULL,
+  `locked` tinyint(1) NOT NULL DEFAULT 0,
   `payload` json NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,

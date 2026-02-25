@@ -1,4 +1,5 @@
 import { defineConfig } from "vitepress";
+import { withMermaid } from "vitepress-plugin-mermaid";
 import { SearchPlugin } from "vitepress-plugin-search";
 
 var options = {
@@ -10,7 +11,7 @@ var options = {
 };
 
 // https://vitepress.dev/reference/site-config
-export default defineConfig({
+export default withMermaid(defineConfig({
     vite: {
         plugins: [SearchPlugin(options)],
         server: {
@@ -59,6 +60,10 @@ export default defineConfig({
                             link: "/developers/architecture",
                         },
                         { text: "Testing", link: "/developers/testing" },
+                        {
+                            text: "Build System & CI",
+                            link: "/developers/build-ci",
+                        },
                         {
                             text: "Copyediting",
                             link: "/developers/copyediting",
@@ -112,4 +117,4 @@ export default defineConfig({
             },
         ],
     },
-});
+}));
