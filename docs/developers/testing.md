@@ -25,7 +25,7 @@ lando artisan test
 ```
 
 ::: tip Debugging CI Failures
-If tests pass locally but fail in CI, you can reproduce the CI environment using `./scripts/test-backend-bake.sh`. See [Build System & CI](./build-ci.md) for details.
+If tests pass locally but fail in CI, you can reproduce the CI environment using `./scripts/bake-fpm-test.sh`. See [Build System & CI](./build-ci.md) for details.
 :::
 
 Be sure to read the [Laravel testing documentation](https://laravel.com/docs/8.x/testing) and [Laravel Lighthouse testing documentation](https://lighthouse-php.com/master/testing/phpunit.html).  Both provide essential information about writing unit tests for our application.

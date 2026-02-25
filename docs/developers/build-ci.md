@@ -16,7 +16,8 @@ The build configuration is defined in `docker-bake.hcl` at the project root.
 | `backend/Dockerfile` | Multi-stage Dockerfile for PHP/Laravel backend |
 | `client/Dockerfile` | Multi-stage Dockerfile for Vue.js frontend |
 | `.github/workflows/testing.yml` | GitHub Actions CI workflow |
-| `scripts/test-backend-bake.sh` | Local script to run backend tests using bake |
+| `scripts/bake.sh` | Local wrapper for running any bake target |
+| `scripts/bake-fpm-test.sh` | Local script to run backend tests using bake (manages MySQL) |
 
 ## Docker Build Targets
 
@@ -213,13 +214,13 @@ Lando (`lando artisan test`) is the primary way to run tests during development.
 ### Backend Tests
 
 ::: warning macOS Not Supported
-The `test-backend-bake.sh` script does not currently work on macOS (Apple Silicon). Use Lando (`lando artisan test`) to run backend tests on macOS. See [Running Bake on macOS](#running-bake-on-macos-apple-silicon) for details and [issue #2224](https://github.com/MESH-Research/Pilcrow/issues/2224) for status.
+The `bake-fpm-test.sh` script does not currently work on macOS (Apple Silicon). Use Lando (`lando artisan test`) to run backend tests on macOS. See [Running Bake on macOS](#running-bake-on-macos-apple-silicon) for details and [issue #2224](https://github.com/MESH-Research/Pilcrow/issues/2224) for status.
 :::
 
 Use the provided script:
 
 ```bash
-./scripts/test-backend-bake.sh
+./scripts/bake-fpm-test.sh
 ```
 
 This script:
@@ -232,35 +233,42 @@ Options:
 - `--no-cache`: Force a fresh build without Docker cache
 - `--docker-network`: Force the Docker network path (used automatically on macOS, useful for testing on Linux/WSL)
 
-### Manual Bake Commands
+### Other Bake Targets
 
-For other targets, run bake directly:
+Use `scripts/bake.sh` to run any bake target locally. It handles `LOCAL_PLATFORM` detection (for macOS) and `BUILDSTAMP` cache-busting automatically:
 
 ```bash
 # Run backend linting
-docker buildx bake fpm-lint
+./scripts/bake.sh fpm-lint
 
 # Run client tests
-docker buildx bake web-test
+./scripts/bake.sh web-test
 
 # Run client linting
-docker buildx bake web-lint
+./scripts/bake.sh web-lint
+
+# Run multiple targets
+./scripts/bake.sh web-test web-lint
+
+# Force a fresh build
+./scripts/bake.sh --no-cache fpm-lint
 ```
+
+If you pass `fpm-test`, the script will warn that it requires a running MySQL instance and suggest using `bake-fpm-test.sh` instead (which manages MySQL automatically).
 
 ### Cache Considerations
 
 Docker buildx caches build layers based on the instructions and inputs. This is great for speeding up builds, but problematic for test runs.
 
-**The problem:** If you run `docker buildx bake fpm-test` twice without changing any files, Docker sees that nothing has changed and returns the cached result from the first run. The tests don't actually execute the second time - you just see the previous output.
+**The problem:** If you run `docker buildx bake fpm-test` twice without changing any files, Docker sees that nothing has changed and returns the cached result from the first run. The tests don't actually execute the second time — you just see the previous output.
 
-**The solution:** The `BUILDSTAMP` build argument exists specifically to bust the cache for test runs. Since Docker includes ARG values in its cache key calculation, changing `BUILDSTAMP` invalidates the cache for the test layer:
+**The solution:** The `BUILDSTAMP` build argument exists specifically to bust the cache for test runs. `scripts/bake.sh` and `scripts/bake-fpm-test.sh` set this automatically. If running bake directly, set it manually:
 
 ```bash
-# This will actually re-run the tests
 BUILDSTAMP=$(date +%s) docker buildx bake fpm-test
 ```
 
-The Dockerfile declares `ARG BUILDSTAMP` immediately before the test command, so only the test layer is invalidated - earlier layers (dependencies, migrations) remain cached.
+The Dockerfile declares `ARG BUILDSTAMP` immediately before the test command, so only the test layer is invalidated — earlier layers (dependencies, migrations) remain cached.
 
 If you're seeing stale behavior or need a completely fresh build:
 
@@ -269,10 +277,7 @@ If you're seeing stale behavior or need a completely fresh build:
 docker buildx prune
 
 # Or run with --no-cache
-docker buildx bake --no-cache <target>
-
-# Via the test script
-./scripts/test-backend-bake.sh --no-cache
+./scripts/bake.sh --no-cache <target>
 ```
 
 ## Troubleshooting
@@ -283,7 +288,7 @@ This is the most common scenario where bake becomes useful.
 
 1. Run tests using bake to reproduce the CI environment locally:
    ```bash
-   ./scripts/test-backend-bake.sh
+   ./scripts/bake-fpm-test.sh
    ```
 
 2. Common differences to check:
@@ -292,7 +297,7 @@ This is the most common scenario where bake becomes useful.
 
 ### MySQL Connection Refused
 
-The `test-backend-bake.sh` script waits for MySQL to be ready, but if you're running bake manually:
+The `bake-fpm-test.sh` script waits for MySQL to be ready, but if you're running bake manually:
 
 1. Ensure MySQL is running on port 3306
 2. Verify the database `pilcrow` exists
