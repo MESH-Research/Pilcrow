@@ -200,11 +200,11 @@ Both environments use the same file (`backend/php.dev.ini`) but apply it differe
 
 Because the two environments have different base configurations and load orders, there *can be* minor inconsistencies between them. In practice this will rarely be noticed, but it is noted here for those difficult-to-debug cases where differences in PHP configuration between Lando and CI may be a factor.
 
-## Locally testing Bake Targets
+## Locally Testing Bake Targets
 
 ### Why Use Bake Locally?
 
-Lando (`lando artisan test`) is the primary way to run tests during development. However, when CI fails and you need to debug the issue, running tests via bake giv     es you a repeatable environment that mirrors CI:
+Lando (`lando artisan test`) is the primary way to run tests during development. However, when CI fails and you need to debug the issue, running tests via bake gives you a repeatable environment that mirrors CI:
 
 - **Debugging CI failures** - Reproduce the exact failure locally
 - **Verifying fixes** - Confirm your fix works in the CI environment before pushing
