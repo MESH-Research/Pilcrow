@@ -84,7 +84,7 @@ describe("Nofitication Popup", () => {
   })
 
   it("displays a default message for a user that has no notifications", async () => {
-    userNotificationsHandler.mockResolvedValue(getNotificationData(true, []))
+    userNotificationsHandler.mockResolvedValue(getNotificationData(false, []))
 
     const wrapper = wrapperFactory()
     const message = wrapper.findComponent({ ref: "default_message" })
