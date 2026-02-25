@@ -9,6 +9,7 @@ config:
   webroot: backend/public
   via: nginx
   config:
+    php: backend/php.dev.ini
     vhosts: .lando/default.conf.tpl
 services:
   database:

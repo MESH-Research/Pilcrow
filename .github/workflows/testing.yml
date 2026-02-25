@@ -32,7 +32,7 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
-      - uses: dorny/paths-filter@v3
+      - uses: dorny/paths-filter@master
         id: filter
         with:
           predicate-quantifier: "every"
@@ -63,7 +63,7 @@ jobs:
         with:
           fetch-depth: 0
           fetch-tags: true
-      - uses: mesh-research/github-actions/build-image@main
+      - uses: mesh-research/github-actions/build-image@v2
         id: build-image
         name: Run Unit Tests
         with:
@@ -85,7 +85,7 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - uses: mesh-research/github-actions/build-image@main
+      - uses: mesh-research/github-actions/build-image@v2
         id: build-image
         name: Build Image
         with:
@@ -117,7 +117,7 @@ jobs:
         with:
           fetch-depth: 0
           fetch-tags: true
-      - uses: mesh-research/github-actions/build-image@main
+      - uses: mesh-research/github-actions/build-image@v2
         with:
           target: "fpm-test-ci"
   # e2e:
@@ -138,7 +138,7 @@ jobs:
         with:
           fetch-depth: 0
           fetch-tags: true
-      - uses: mesh-research/github-actions/build-image@main
+      - uses: mesh-research/github-actions/build-image@v2
         with:
           target: "fpm-lint-ci"
   lint-js:
@@ -152,7 +152,7 @@ jobs:
         with:
           fetch-depth: 0
           fetch-tags: true
-      - uses: mesh-research/github-actions/build-image@main
+      - uses: mesh-research/github-actions/build-image@v2
         with:
           target: "web-lint-ci"
   docs-build:
