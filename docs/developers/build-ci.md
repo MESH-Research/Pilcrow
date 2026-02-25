@@ -200,17 +200,21 @@ Both environments use the same file (`backend/php.dev.ini`) but apply it differe
 
 Because the two environments have different base configurations and load orders, there *can be* minor inconsistencies between them. In practice this will rarely be noticed, but it is noted here for those difficult-to-debug cases where differences in PHP configuration between Lando and CI may be a factor.
 
-## Running Tests Locally with Bake
+## Locally testing Bake Targets
 
 ### Why Use Bake Locally?
 
-Lando (`lando artisan test`) is the primary way to run tests during development. However, when CI fails and you need to debug the issue, running tests via bake gives you a repeatable environment that mirrors CI:
+Lando (`lando artisan test`) is the primary way to run tests during development. However, when CI fails and you need to debug the issue, running tests via bake giv     es you a repeatable environment that mirrors CI:
 
 - **Debugging CI failures** - Reproduce the exact failure locally
 - **Verifying fixes** - Confirm your fix works in the CI environment before pushing
 - **Clean slate testing** - Run in an isolated environment without local state
 
 ### Backend Tests
+
+::: warning macOS Not Supported
+The `test-backend-bake.sh` script does not currently work on macOS (Apple Silicon). Use Lando (`lando artisan test`) to run backend tests on macOS. See [Running Bake on macOS](#running-bake-on-macos-apple-silicon) for details and [issue #2224](https://github.com/MESH-Research/Pilcrow/issues/2224) for status.
+:::
 
 Use the provided script:
 
@@ -296,9 +300,9 @@ The `test-backend-bake.sh` script waits for MySQL to be ready, but if you're run
 
 ### Running Bake on macOS (Apple Silicon)
 
-Docker buildx bake targets are primarily developed and tested on Linux (including WSL2). Running them on macOS with Apple Silicon (M1/M2/M3/M4) requires a different buildx driver, which changes how networking and platform resolution work.
+The buildx bake targets are primarily developed for CI/CD and tested on Linux (including WSL2). Running them on macOS with Apple Silicon (M1/M2/M3/M4) requires a different buildx driver, which introduces networking and platform challenges that are not yet fully resolved. See [issue #2224](https://github.com/MESH-Research/Pilcrow/issues/2224) for status.
 
-**Why macOS needs a different approach:** On Linux, buildx uses the default driver, which runs builds directly on the host. `network = "host"` gives the build process direct access to `localhost`, where MySQL is listening. On macOS, Docker runs inside a Linux VM, so `localhost` inside a build doesn't reach services on the Mac. Additionally, Apple Silicon requires the `docker-container` buildx driver to build `linux/arm64` images. This driver runs builds inside a separate BuildKit container, which has its own network namespace. Using `network = "host"`in this context gives the build access to that container's network, not the Mac's. To connect the build to MySQL, both the MySQL container and the BuildKit container must be placed on a shared Docker network.
+**Why macOS is different:** On Linux, buildx uses the default driver, which runs builds directly on the host. `network = "host"` gives the build process direct access to `localhost`, where MySQL is listening. On macOS, Docker runs inside a Linux VM, so `localhost` inside a build doesn't reach services on the Mac. Additionally, Apple Silicon requires the `docker-container` buildx driver to build `linux/arm64` images. This driver runs builds inside a separate BuildKit container, which has its own network namespace — `network = "host"` gives the build access to that container's network, not the Mac's. To connect the build to MySQL, both the MySQL container and the BuildKit container must be placed on a shared Docker network, but this path has known issues with SSL certificate verification and BuildKit network mode support.
 
 **Platform resolution:** The `docker-container` driver doesn't support the `"local"` platform shorthand used in `docker-bake.hcl`. Set the `LOCAL_PLATFORM` environment variable when running bake targets manually:
 
@@ -309,5 +313,3 @@ LOCAL_PLATFORM=linux/arm64 docker buildx bake fpm-lint
 # Intel Mac
 LOCAL_PLATFORM=linux/amd64 docker buildx bake fpm-lint
 ```
-
-**Backend tests (`test-backend-bake.sh`):** The script automatically detects macOS and handles both the platform and network differences. On macOS it creates a `pilcrow-builder` buildx builder with the `docker-container` driver, places both MySQL and the builder on a shared Docker network, and sets `LOCAL_PLATFORM` based on the host architecture. No manual setup is needed — just run the script as usual. You can also force this mode on Linux/WSL with `--docker-network` for testing.

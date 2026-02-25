@@ -18,7 +18,9 @@ BUILDER_NAME="pilcrow-builder"
 NO_CACHE=""
 USE_DOCKER_NETWORK=false
 
+IS_MACOS=false
 if [[ "$(uname -s)" == "Darwin" ]]; then
+    IS_MACOS=true
     USE_DOCKER_NETWORK=true
 fi
 
@@ -33,6 +35,21 @@ for arg in "$@"; do
             ;;
     esac
 done
+
+# Warn macOS users about known issues
+if $IS_MACOS; then
+    echo "WARNING: This script does not currently work reliably on macOS."
+    echo "See: https://github.com/MESH-Research/Pilcrow/issues/2224"
+    echo ""
+    echo "You can still run tests via Lando (lando yarn test:unit), which is"
+    echo "unaffected. This script simulates the CI environment using Docker bake."
+    echo ""
+    read -r -p "Continue anyway? [y/N] " response
+    if [[ ! "$response" =~ ^[Yy]$ ]]; then
+        echo "Aborted."
+        exit 0
+    fi
+fi
 
 cleanup() {
     echo -e "Cleaning up..."
