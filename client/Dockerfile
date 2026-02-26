@@ -13,6 +13,7 @@ yarn --frozen-lockfile
 COPY . .
 RUN --mount=type=cache,target=/usr/local/share/.cache/yarn/v6 \
 yarn quasar prepare
+RUN yarn graphql:codegen-local
 
 FROM base AS build-stage
 

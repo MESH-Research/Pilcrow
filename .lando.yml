@@ -21,6 +21,7 @@ services:
     build:
       - yarn
       - cd /app/client && yarn
+      - cd /app/client && yarn graphql:codegen-local
     command: cd /app/client && yarn dev
     scanner: false
   appserver:

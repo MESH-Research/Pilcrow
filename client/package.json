@@ -20,7 +20,8 @@
     "postinstall": "node -e \"process.env.NO_POSTINSTALL===1&&process.exit(1)\" || quasar prepare",
     "graphql:fetch-schema": "lando artisan lighthouse:print-schema > src/graphql/schema.graphql",
     "graphql:codegen": "graphql-codegen --config codegen.ts",
-    "graphql:codegen-offline": "npm run graphql:fetch-schema && GRAPHQL_SCHEMA=src/graphql/schema.graphql npm run graphql:codegen"
+    "graphql:codegen-local": "GRAPHQL_SCHEMA=src/graphql/schema.graphql graphql-codegen --config codegen.ts",
+    "graphql:codegen-offline": "yarn graphql:fetch-schema && yarn graphql:codegen-local"
   },
   "dependencies": {
     "@apollo/client": "^3.7.2",
