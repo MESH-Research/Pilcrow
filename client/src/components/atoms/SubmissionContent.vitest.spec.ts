@@ -98,7 +98,6 @@ describe("SubmissionContent", () => {
       ]
     })
     const activeComment = ref(null)
-    const forExport = ref(false)
     return {
       submission,
       activeComment,
