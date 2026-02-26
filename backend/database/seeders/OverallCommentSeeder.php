@@ -23,7 +23,7 @@ class OverallCommentSeeder extends Seeder
         $this->create(100);
         $this->create(100, 1);
         $this->create(100, 8);
-        $this->create(100, 1, 1);
+        $this->create(100, 2, 1, [2,3]);
     }
 
     /**
@@ -32,9 +32,10 @@ class OverallCommentSeeder extends Seeder
      * @param int $submissionId
      * @param int $replies
      * @param int $userId
+     * @param array $replyIds
      * @return void
      */
-    protected function create($submissionId, $replies = 0, $userId = null)
+    protected function create($submissionId, $replies = 0, $userId = null, $replyIds = null)
     {
         $userIds = User::all()->pluck('id');
         if ($userId === null) {
@@ -54,20 +55,24 @@ class OverallCommentSeeder extends Seeder
             $comments = collect([$parent]);
 
             for ($i = 0; $i < $replies; $i++) {
-                $reply = $this->createCommentReply(false, $userIds->except(1)->random(), $parent, $comments->random());
+                if ($replyIds != null) {
+                    $replyId = $replyIds[$i % count($replyIds)];
+                } else {
+                    $replyId = $userIds->except(1)->random();
+                }
+                $reply = $this->createCommentReply($replyId, $parent, $comments->random());
                 $comments->push($reply);
             }
         }
     }
 
     /**
-     * @param bool $is_inline
      * @param \App\Models\User $userId
-     * @param \App\Models\InlineComment|\App\Models\OverallComment $parent
-     * @param \App\Models\InlineComment|\App\Models\OverallComment $reply_to
-     * @return \App\Models\InlineComment|\App\Models\OverallComment
+     * @param \App\Models\OverallComment $parent
+     * @param \App\Models\OverallComment $reply_to
+     * @return \App\Models\OverallComment
      */
-    private function createCommentReply($is_inline, $userId, $parent, $reply_to)
+    private function createCommentReply($userId, $parent, $reply_to)
     {
         $faker = Faker::create();
         $time = Carbon::parse($reply_to->created_at);
