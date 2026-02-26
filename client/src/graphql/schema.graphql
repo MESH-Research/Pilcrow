@@ -1,283 +1,164 @@
-"""Academic profile data for the profile metadata of a user"""
-type AcademicProfiles {
-  humanities_commons: String
-  orcid_id: String
+type Query {
+  "Return information about the currently logged in user"
+  currentUser: User
+
+  "Return details about a specific user in the application"
+  user(id: ID): User
+
+  "Validate details of a new user.  Returns true if supplied user fields would be valid."
+  validateNewUser(user: ValidateNewUserInput): Boolean
+
+  "Return pre-defined user roles in the application"
+  role(id: ID): Role
+
+  "Return a permission by ID"
+  permission(id: ID): Permission
+
+  versionInfo: VersionInfo
+
+  "Return a publication by ID"
+  publication(id: ID): Publication
+
+  "Return a submission by ID"
+  submission(id: ID): Submission
+
+  generalSettings: GeneralSettings
+  identityProviders: [IdentityProvider]
+
+  "Return user accounts optionally based on a supplied search term"
+  userSearch(
+    term: String
+
+    "Limits number of fetched items."
+    first: Int! = 10
+
+    "The offset from which items are returned."
+    page: Int
+  ): UserPaginator!
+
+  "Return all publications"
+  publications(
+    is_publicly_visible: Boolean
+    is_accepting_submissions: Boolean
+
+    "Limits number of fetched items."
+    first: Int! = 10
+
+    "The offset from which items are returned."
+    page: Int
+  ): PublicationPaginator!
+
+  "Return all submissions"
+  submissions(
+    "Limits number of fetched items."
+    first: Int! = 100
+
+    "The offset from which items are returned."
+    page: Int
+  ): SubmissionPaginator!
 }
-
-input AcceptSubmissionInviteInput {
-  id: ID!
-  name: String
-  password: String!
-  username: String!
-}
-
-type Audit {
-  created_at: DateTimeUtc!
-  event: String
-  id: ID
-  new_values: JSON
-  old_values: JSON
-  updated_at: DateTimeUtc
-  user: User!
-}
-
-interface Comment {
-  content: String!
-  created_at: DateTimeUtc!
-  created_by: User!
-  deleted_at: DateTimeUtc
-  id: ID!
-  read_at: DateTimeUtc
-  updated_at: DateTimeUtc!
-  updated_by: User!
-}
-
-input CreateInlineCommentInput {
-  content: String!
-  from: Int
-  parent_id: ID
-  reply_to_id: ID
-  style_criteria: [ID!]
-  to: Int
-}
-
-input CreateOverallCommentInput {
-  content: String!
-  parent_id: ID
-  reply_to_id: ID
-}
-
-input CreatePublicationInput {
-  home_page_content: String
-  is_publicly_visible: Boolean
-  name: String
-  new_submission_content: String
-  style_criterias: CreateStyleCriteriaHasMany
-}
-
-input CreateStyleCriteriaHasMany {
-  create: [CreateStyleCriteriaInput!]
-}
-
-input CreateStyleCriteriaInput {
-  description: String
-  icon: String
-  name: String!
-}
-
-"""
-Input type for creating a new submission via the createSubmissionDraft mutation
-"""
-input CreateSubmissionDraftInput {
-  publication_id: ID!
-  submitters: CreateSubmissionUserInput
-  title: String!
-}
-
-"""
-Input type for creating a new association between an uploaded file and a submission
-"""
-input CreateSubmissionFileInput {
-  file_upload: Upload!
-  submission_id: ID!
-}
-
-"""
-Input type for connecting newly created submissions to files via nested mutation
-"""
-input CreateSubmissionFilesHasMany {
-  create: Upload!
-}
-
-input CreateSubmissionUserInput {
-  connect: [ID!]!
-}
-
-"""Input type for creating a new user via the userCreate mutation"""
-input CreateUserInput {
-  """Email address. Must be unique. (required)"""
-  email: String!
-
-  """Display name. (optional)"""
-  name: String
-
-  """Password used to login to the application. (required)"""
-  password: String!
-
-  """Username. Must be unique. (required)"""
-  username: String!
-}
-
-"""A date string with format `Y-m-d`, e.g. `2011-05-23`."""
-scalar Date
-
-"""
-A datetime string with format `Y-m-d H:i:s`, e.g. `2018-05-23 13:43:32`.
-"""
-scalar DateTime
-
-scalar DateTimeUtc
-
-input DeleteCommentInput {
-  comment_id: ID!
-  submission_id: ID!
-}
-
-type GeneralSettings {
-  site_name: String
-}
-
-input GeneralSettingsInput {
-  site_name: String
-}
-
-"""
-A button that apepars on the Login page for a supported external identity provider
-"""
-type IdentityProvider {
-  icon: String!
-  label: String!
-  login_url: String!
-  name: String!
-}
-
-"""An inline comment of a submission"""
-type InlineComment implements Comment {
-  content: String!
-  created_at: DateTimeUtc!
-  created_by: User!
-  deleted_at: DateTimeUtc
-  from: Int
-  id: ID!
-  read_at: DateTimeUtc
-  replies(
-    hasCreatedBy: InlineCommentRepliesHasCreatedByWhereHasConditions
-
-    """Allows to filter if trashed elements should be fetched."""
-    trashed: Trashed
-  ): [InlineCommentReply!]
-  style_criteria: [InlineCommentStyleCriteria!]
-  to: Int
-  updated_at: DateTimeUtc!
-  updated_by: User!
-}
-
-input InlineCommentHasManyInput {
-  create: [CreateInlineCommentInput!]
-  update: [UpdateInlineCommentInput!]
-}
-
-"""Allowed column names for InlineComment.replies.hasCreatedBy."""
-enum InlineCommentRepliesHasCreatedByColumn {
-  I_D
-}
-
-"""
-Dynamic WHERE conditions for the `hasCreatedBy` argument of the query `replies`.
-"""
-input InlineCommentRepliesHasCreatedByWhereHasConditions {
-  """A set of conditions that requires all conditions to match."""
-  AND: [InlineCommentRepliesHasCreatedByWhereHasConditions!]
-
-  """
-  Check whether a relation exists. Extra conditions or a minimum amount can be applied.
-  """
-  HAS: InlineCommentRepliesHasCreatedByWhereHasConditionsRelation
-
-  """A set of conditions that requires at least one condition to match."""
-  OR: [InlineCommentRepliesHasCreatedByWhereHasConditions!]
-
-  """The column that is used for the condition."""
-  column: InlineCommentRepliesHasCreatedByColumn
-
-  """The operator that is used for the condition."""
-  operator: SQLOperator = EQ
-
-  """The value that is used for the condition."""
-  value: Mixed
-}
-
-"""
-Dynamic HAS conditions for WHERE conditions for the `hasCreatedBy` argument of the query `replies`.
-"""
-input InlineCommentRepliesHasCreatedByWhereHasConditionsRelation {
-  """The amount to test."""
-  amount: Int = 1
-
-  """Additional condition logic."""
-  condition: InlineCommentRepliesHasCreatedByWhereHasConditions
-
-  """The comparison operator to test against the amount."""
-  operator: SQLOperator = GTE
-
-  """The relation that is checked."""
-  relation: String!
-}
-
-"""A reply to an inline comment of a submission"""
-type InlineCommentReply implements Comment {
-  content: String!
-  created_at: DateTimeUtc!
-  created_by: User!
-  deleted_at: DateTimeUtc
-  id: ID!
-  parent_id: ID!
-  read_at: DateTimeUtc
-  reply_to_id: ID!
-  updated_at: DateTimeUtc!
-  updated_by: User!
-}
-
-"""The static style criteria of an inline comment"""
-type InlineCommentStyleCriteria {
-  icon: String
-  id: ID
-  name: String
-}
-
-"""JSON-format data"""
-scalar JSON
-
-"""Key/Value pairs input"""
-input KeyValueInput {
-  key: String
-  value: String
-}
-
-"""A response from an external identity provider"""
-type LoginOauthResponse {
-  action: String
-  provider: Provider
-  user: ProviderUser
-}
-
-input MarkInlineCommentsReadInput {
-  comment_ids: [ID!]!
-  submission_id: ID!
-}
-
-input MarkOverallCommentsReadInput {
-  comment_ids: [ID!]!
-  submission_id: ID!
-}
-
-"""
-Loose type that allows any value. Be careful when passing in large `Int` or `Float` literals,
-as they may not be parsed correctly on the server side. Use `String` literals if you are
-dealing with really large numbers to be on the safe side.
-"""
-scalar Mixed
 
 type Mutation {
-  """Accept an invitation to a submission as the assigned role"""
-  acceptSubmissionInvite(expires: String!, token: String!, user: AcceptSubmissionInviteInput, uuid: String!): User
+  "Log in to a new session and get the user."
+  login(email: String!, password: String!): User!
 
-  """Run an artisan command and get the output as a string."""
+  "Log out from the current session, showing the user one last time."
+  logout: User
+
+  "Create a new user"
+  createUser(user: CreateUserInput!): User!
+
+  "Update user information"
+  updateUser(user: UpdateUserInput!): User!
+
+  "(Re)send a verification email to a user.  "
+  sendEmailVerification(
+    "User to resend verification for. If not supplied, defaults to the current user."
+    id: ID
+  ): User!
+
+  "Verify the currently logged in user's email address"
+  verifyEmail(
+    "Token supplied to the user via email"
+    token: String!
+
+    "Token expiration as a UNIX epoch timestamp"
+    expires: String!
+  ): User!
+
+  "Mark a user notification as read"
+  markNotificationRead(id: ID!): Notification!
+
+  "Mark all of a user's notification as read"
+  markAllNotificationsRead: Int
+
+  "Send a password reset email to a specified email address"
+  requestPasswordReset(email: String!): Boolean
+
+  "Update a password from a password reset request"
+  resetPassword(input: ResetPasswordInput): User
+
+  "Create a new publication"
+  createPublication(publication: CreatePublicationInput!): Publication!
+
+  updatePublication(publication: UpdatePublicationInput!): Publication
+  markInlineCommentsRead(input: MarkInlineCommentsReadInput!): [InlineComment]!
+  markInlineCommentRepliesRead(input: MarkInlineCommentsReadInput!): [InlineCommentReply]!
+  markOverallCommentsRead(input: MarkOverallCommentsReadInput!): [OverallComment]!
+  markOverallCommentRepliesRead(input: MarkOverallCommentsReadInput!): [OverallCommentReply]!
+
+  "Create a new submission under a publication"
+  createSubmissionDraft(input: CreateSubmissionDraftInput!): Submission!
+
+  "Update an existing submission"
+  updateSubmission(input: UpdateSubmissionInput!): Submission!
+
+  "Delete an inline comment of a submission"
+  deleteInlineComment(input: DeleteCommentInput!): Submission!
+
+  "Delete an overall comment of a submission"
+  deleteOverallComment(input: DeleteCommentInput!): Submission!
+
+  "Update the content of a submission"
+  updateSubmissionContent(input: UpdateSubmissionContent!): Submission!
+
+  "Update the content of a submission with a file upload"
+  updateSubmissionContentWithFile(input: CreateSubmissionFileInput!): Submission!
+
+  "Verify access to an invitation to a submission as the assigned role"
+  verifySubmissionInvite(uuid: String!, token: String!, expires: String!): User
+
+  "Accept an invitation to a submission as the assigned role"
+  acceptSubmissionInvite(uuid: String!, token: String!, expires: String!, user: AcceptSubmissionInviteInput): User
+
+  """
+  Create a staged user, assign them as a reviewer of a submisison,
+  and send them an email notification inviting them to accept the assignment"
+  """
+  inviteReviewer(input: inviteSubmissionUserInput): Submission
+
+  """
+  Create a staged user, assign them as a review coordinator of a submisison,
+  and send them an email notification inviting them to accept the assignment
+  """
+  inviteReviewCoordinator(input: inviteSubmissionUserInput): Submission
+
+  "Resend an email notification inviting a staged reviewer to accept the assignment"
+  reinviteReviewer(input: reinviteSubmissionUserInput): Submission
+
+  "Resend an email notification inviting a staged review coordinator to accept the assignment"
+  reinviteReviewCoordinator(input: reinviteSubmissionUserInput): Submission
+
+  saveGeneralSettings(settings: GeneralSettingsInput!): GeneralSettings
+  loginOauthCallback(provider_name: String!, code: String!): LoginOauthResponse
+  registerOauthUser(input: RegisterOauthUserInput): User
+
+  "Run an artisan command and get the output as a string."
   artisanCommand(
-    """Artisan command to run"""
+    "Artisan command to run"
     command: String!
 
-    """Parameters for artisan command"""
+    "Parameters for artisan command"
     parameters: [KeyValueInput!]
   ): String!
 
@@ -288,56 +169,15 @@ type Mutation {
   (DOES create entries in the DB.)
   """
   createFactory(
-    """Attributes to apply to the created models, defaults to []"""
-    attributes: [KeyValueInput!]
-
-    """Model to create (i.e. User)"""
+    "Model to create (i.e. User)"
     model: String!
 
-    """Number of models to create, defaults to 1"""
+    "Number of models to create, defaults to 1"
     times: Int
+
+    "Attributes to apply to the created models, defaults to []"
+    attributes: [KeyValueInput!]
   ): [User!]
-
-  """Create a new publication"""
-  createPublication(publication: CreatePublicationInput!): Publication!
-
-  """Create a new submission under a publication"""
-  createSubmissionDraft(input: CreateSubmissionDraftInput!): Submission!
-
-  """Create a new user"""
-  createUser(user: CreateUserInput!): User!
-
-  """Delete an inline comment of a submission"""
-  deleteInlineComment(input: DeleteCommentInput!): Submission!
-
-  """Delete an overall comment of a submission"""
-  deleteOverallComment(input: DeleteCommentInput!): Submission!
-
-  """
-  Login a user using only an email
-  
-  Return the user model of the logged in user.
-  """
-  forceLogin(email: String!): User
-
-  """
-  Create a staged user, assign them as a review coordinator of a submisison,
-  and send them an email notification inviting them to accept the assignment
-  """
-  inviteReviewCoordinator(input: inviteSubmissionUserInput): Submission
-
-  """
-  Create a staged user, assign them as a reviewer of a submisison,
-  and send them an email notification inviting them to accept the assignment"
-  """
-  inviteReviewer(input: inviteSubmissionUserInput): Submission
-
-  """Log in to a new session and get the user."""
-  login(email: String!, password: String!): User!
-  loginOauthCallback(code: String!, provider_name: String!): LoginOauthResponse
-
-  """Log out from the current session, showing the user one last time."""
-  logout: User
 
   """
   Use a model factory to get data for a model object.
@@ -346,733 +186,129 @@ type Mutation {
   (Does not create entries in the DB)."
   """
   makeFactory(
-    """Attributes to apply to the created models, defaults to []"""
-    attributes: [KeyValueInput!]
-
-    """Model to create (i.e. User)"""
+    "Model to create (i.e. User)"
     model: String!
 
-    """Number of models to create, defaults to 1"""
+    "Number of models to create, defaults to 1"
     times: Int
+
+    "Attributes to apply to the created models, defaults to []"
+    attributes: [KeyValueInput!]
   ): [User!]
 
-  """Mark all of a user's notification as read"""
-  markAllNotificationsRead: Int
-  markInlineCommentRepliesRead(input: MarkInlineCommentsReadInput!): [InlineCommentReply]!
-  markInlineCommentsRead(input: MarkInlineCommentsReadInput!): [InlineComment]!
-
-  """Mark a user notification as read"""
-  markNotificationRead(id: ID!): Notification!
-  markOverallCommentRepliesRead(input: MarkOverallCommentsReadInput!): [OverallCommentReply]!
-  markOverallCommentsRead(input: MarkOverallCommentsReadInput!): [OverallComment]!
-  registerOauthUser(input: RegisterOauthUserInput): User
-
   """
-  Resend an email notification inviting a staged review coordinator to accept the assignment
+  Login a user using only an email
+  
+  Return the user model of the logged in user.
   """
-  reinviteReviewCoordinator(input: reinviteSubmissionUserInput): Submission
+  forceLogin(email: String!): User
+}
 
-  """
-  Resend an email notification inviting a staged reviewer to accept the assignment
-  """
-  reinviteReviewer(input: reinviteSubmissionUserInput): Submission
+"Academic profile data for the profile metadata of a user"
+type AcademicProfiles {
+  orcid_id: String
+  humanities_commons: String
+}
 
-  """Send a password reset email to a specified email address"""
-  requestPasswordReset(email: String!): Boolean
+"A notification for an event"
+type Notification {
+  id: ID!
+  notifiable: Notifiable!
+  read_at: DateTime
+  created_at: DateTimeUtc
+  data: NotificationData
+}
 
-  """Update a password from a password reset request"""
-  resetPassword(input: ResetPasswordInput): User
-  saveGeneralSettings(settings: GeneralSettingsInput!): GeneralSettings
-
-  """(Re)send a verification email to a user.  """
-  sendEmailVerification(
-    """
-    User to resend verification for. If not supplied, defaults to the current user.
-    """
-    id: ID
-  ): User!
-  updatePublication(publication: UpdatePublicationInput!): Publication
-
-  """Update an existing submission"""
-  updateSubmission(input: UpdateSubmissionInput!): Submission!
-
-  """Update the content of a submission"""
-  updateSubmissionContent(input: UpdateSubmissionContent!): Submission!
-
-  """Update the content of a submission with a file upload"""
-  updateSubmissionContentWithFile(input: CreateSubmissionFileInput!): Submission!
-
-  """Update user information"""
-  updateUser(user: UpdateUserInput!): User!
-
-  """Verify the currently logged in user's email address"""
-  verifyEmail(
-    """Token expiration as a UNIX epoch timestamp"""
-    expires: String!
-
-    """Token supplied to the user via email"""
-    token: String!
-  ): User!
-
-  """Verify access to an invitation to a submission as the assigned role"""
-  verifySubmissionInvite(expires: String!, token: String!, uuid: String!): User
+"JSON data for a notification"
+type NotificationData {
+  type: String
+  user: User
+  body: String
+  action: String
+  url: String
+  invitee: User
+  inviter: User
+  submission: Submission
+  publication: Publication
 }
 
 union Notifiable = Notification | User
 
-"""A notification for an event"""
-type Notification {
-  created_at: DateTimeUtc
-  data: NotificationData
-  id: ID!
-  notifiable: Notifiable!
-  read_at: DateTime
-}
-
-"""JSON data for a notification"""
-type NotificationData {
-  action: String
-  body: String
-  invitee: User
-  inviter: User
-  publication: Publication
-  submission: Submission
-  type: String
-  url: String
-  user: User
-}
-
-"""A paginated list of Notification items."""
-type NotificationPaginator {
-  """A list of Notification items."""
-  data: [Notification!]!
-
-  """Pagination information about the list of items."""
-  paginatorInfo: PaginatorInfo!
-}
-
-"""Allows ordering a list of records."""
-input OrderByClause {
-  """The column that is used for ordering."""
-  column: String!
-
-  """The direction that is used for ordering."""
-  order: SortOrder!
-}
-
-"""
-Aggregate functions when ordering by a relation without specifying a column.
-"""
-enum OrderByRelationAggregateFunction {
-  """Amount of items."""
-  COUNT
-}
-
-"""
-Aggregate functions when ordering by a relation that may specify a column.
-"""
-enum OrderByRelationWithColumnAggregateFunction {
-  """Average."""
-  AVG
-
-  """Amount of items."""
-  COUNT
-
-  """Maximum."""
-  MAX
-
-  """Minimum."""
-  MIN
-
-  """Sum."""
-  SUM
-}
-
-"""An overall comment of a submission"""
-type OverallComment implements Comment {
-  content: String!
-  created_at: DateTimeUtc!
-  created_by: User!
-  deleted_at: DateTimeUtc
-  id: ID!
-  read_at: DateTimeUtc
-  replies(
-    hasCreatedBy: OverallCommentRepliesHasCreatedByWhereHasConditions
-
-    """Allows to filter if trashed elements should be fetched."""
-    trashed: Trashed
-  ): [OverallCommentReply!]
-  updated_at: DateTimeUtc!
-  updated_by: User!
-}
-
-input OverallCommentHasManyInput {
-  create: [CreateOverallCommentInput!]
-  update: [UpdateOverallCommentInput!]
-}
-
-"""Allowed column names for OverallComment.replies.hasCreatedBy."""
-enum OverallCommentRepliesHasCreatedByColumn {
-  I_D
-}
-
-"""
-Dynamic WHERE conditions for the `hasCreatedBy` argument of the query `replies`.
-"""
-input OverallCommentRepliesHasCreatedByWhereHasConditions {
-  """A set of conditions that requires all conditions to match."""
-  AND: [OverallCommentRepliesHasCreatedByWhereHasConditions!]
-
-  """
-  Check whether a relation exists. Extra conditions or a minimum amount can be applied.
-  """
-  HAS: OverallCommentRepliesHasCreatedByWhereHasConditionsRelation
-
-  """A set of conditions that requires at least one condition to match."""
-  OR: [OverallCommentRepliesHasCreatedByWhereHasConditions!]
-
-  """The column that is used for the condition."""
-  column: OverallCommentRepliesHasCreatedByColumn
-
-  """The operator that is used for the condition."""
-  operator: SQLOperator = EQ
-
-  """The value that is used for the condition."""
-  value: Mixed
-}
-
-"""
-Dynamic HAS conditions for WHERE conditions for the `hasCreatedBy` argument of the query `replies`.
-"""
-input OverallCommentRepliesHasCreatedByWhereHasConditionsRelation {
-  """The amount to test."""
-  amount: Int = 1
-
-  """Additional condition logic."""
-  condition: OverallCommentRepliesHasCreatedByWhereHasConditions
-
-  """The comparison operator to test against the amount."""
-  operator: SQLOperator = GTE
-
-  """The relation that is checked."""
-  relation: String!
-}
-
-"""A reply to an overall comment of a submission"""
-type OverallCommentReply implements Comment {
-  content: String!
-  created_at: DateTimeUtc!
-  created_by: User!
-  deleted_at: DateTimeUtc
-  id: ID!
-  parent_id: ID!
-  read_at: DateTimeUtc
-  reply_to_id: ID!
-  updated_at: DateTimeUtc!
-  updated_by: User!
-}
-
-"""Information about pagination using a fully featured paginator."""
-type PaginatorInfo {
-  """Number of items in the current page."""
-  count: Int!
-
-  """Index of the current page."""
-  currentPage: Int!
-
-  """Index of the first item in the current page."""
-  firstItem: Int
-
-  """Are there more pages after this one?"""
-  hasMorePages: Boolean!
-
-  """Index of the last item in the current page."""
-  lastItem: Int
-
-  """Index of the last available page."""
-  lastPage: Int!
-
-  """Number of items per page."""
-  perPage: Int!
-
-  """Number of total available items."""
-  total: Int!
-}
-
-"""A permission for roles and users"""
+"A permission for roles and users"
 type Permission {
-  created_at: DateTime
-  guard_name: String!
   id: ID!
   name: String!
+  guard_name: String!
+  created_at: DateTime
   updated_at: DateTime
 }
 
-"""Profile metadata of a user"""
+"Profile metadata of a user"
 type ProfileMetadata {
+  social_media: SocialMedia
   academic_profiles: AcademicProfiles
+  position_title: String
+  specialization: String
   affiliation: String
   biography: String
-  position_title: String
-  social_media: SocialMedia
-  specialization: String
   websites: [String]
 }
 
-"""The provider within the response from an external identity provider"""
-type Provider {
-  provider_id: String!
-  provider_name: String!
-  user_id: ID!
-}
-
-input ProviderInput {
-  provider_id: String!
-  provider_name: String!
-}
-
-"""The user within the response from an external identity provider"""
-type ProviderUser {
-  email: String
-  name: String
-  username: String
-}
-
-input ProviderUserInput {
-  email: String
-  name: String
-  username: String
-}
-
-"""A publication that has users, reviews, and submissions"""
+"A publication that has users, reviews, and submissions"
 type Publication {
-  created_at: DateTime
-  editors: [User!]!
-  effective_role: PublicationRole
+  id: ID!
+  name: String!
   home_page_content: String
-  id: ID!
-  is_accepting_submissions: Boolean
-  is_publicly_visible: Boolean
-  my_role: PublicationRole
-  name: String!
   new_submission_content: String
-  publication_admins: [User!]!
-  style_criterias: [StyleCriteria!]!
-  submissions: [Submission]!
-  updated_at: DateTime
-}
-
-"""A paginated list of Publication items."""
-type PublicationPaginator {
-  """A list of Publication items."""
-  data: [Publication!]!
-
-  """Pagination information about the list of items."""
-  paginatorInfo: PaginatorInfo!
-}
-
-enum PublicationRole {
-  editor
-  publication_admin
-}
-
-type Query {
-  """Return information about the currently logged in user"""
-  currentUser: User
-  generalSettings: GeneralSettings
-  identityProviders: [IdentityProvider]
-
-  """Return a permission by ID"""
-  permission(id: ID): Permission
-
-  """Return a publication by ID"""
-  publication(id: ID): Publication
-
-  """Return all publications"""
-  publications(
-    """Limits number of fetched items."""
-    first: Int! = 10
-    is_accepting_submissions: Boolean
-    is_publicly_visible: Boolean
-
-    """The offset from which items are returned."""
-    page: Int
-  ): PublicationPaginator!
-
-  """Return pre-defined user roles in the application"""
-  role(id: ID): Role
-
-  """Return a submission by ID"""
-  submission(id: ID): Submission
-
-  """Return all submissions"""
-  submissions(
-    """Limits number of fetched items."""
-    first: Int! = 100
-
-    """The offset from which items are returned."""
-    page: Int
-  ): SubmissionPaginator!
-
-  """Return details about a specific user in the application"""
-  user(id: ID): User
-
-  """Return user accounts optionally based on a supplied search term"""
-  userSearch(
-    """Limits number of fetched items."""
-    first: Int! = 10
-
-    """The offset from which items are returned."""
-    page: Int
-    term: String
-  ): UserPaginator!
-
-  """
-  Validate details of a new user.  Returns true if supplied user fields would be valid.
-  """
-  validateNewUser(user: ValidateNewUserInput): Boolean
-  versionInfo: VersionInfo
-}
-
-"""Inputs"""
-input RegisterOauthUserInput {
-  provider: ProviderInput
-  user: ProviderUserInput
-}
-
-"""
-Input type for resetting a password from a password reset request email
-"""
-input ResetPasswordInput {
-  email: String!
-  password: String!
-  token: String!
-}
-
-"""A user role for permissions"""
-type Role {
   created_at: DateTime
-  guard_name: String!
-  id: ID!
-  name: String!
-  permissions: [Permission!]
   updated_at: DateTime
-}
-
-"""The available SQL operators that are used to filter query results."""
-enum SQLOperator {
-  """Whether a value is within a range of values (`BETWEEN`)"""
-  BETWEEN
-
-  """Equal operator (`=`)"""
-  EQ
-
-  """Greater than operator (`>`)"""
-  GT
-
-  """Greater than or equal operator (`>=`)"""
-  GTE
-
-  """Whether a value is within a set of values (`IN`)"""
-  IN
-
-  """Whether a value is not null (`IS NOT NULL`)"""
-  IS_NOT_NULL
-
-  """Whether a value is null (`IS NULL`)"""
-  IS_NULL
-
-  """Simple pattern matching (`LIKE`)"""
-  LIKE
-
-  """Less than operator (`<`)"""
-  LT
-
-  """Less than or equal operator (`<=`)"""
-  LTE
-
-  """Not equal operator (`!=`)"""
-  NEQ
-
-  """Whether a value is not within a range of values (`NOT BETWEEN`)"""
-  NOT_BETWEEN
-
-  """Whether a value is not within a set of values (`NOT IN`)"""
-  NOT_IN
-
-  """Negation of simple pattern matching (`NOT LIKE`)"""
-  NOT_LIKE
-}
-
-"""Social media data for the profile metadata of a user"""
-type SocialMedia {
-  facebook: String
-  google: String
-  instagram: String
-  linkedin: String
-  twitter: String
-}
-
-"""Directions for ordering a list of records."""
-enum SortOrder {
-  """Sort records in ascending order."""
-  ASC
-
-  """Sort records in descending order."""
-  DESC
+  submissions: [Submission]!
+  publication_admins: [User!]!
+  editors: [User!]!
+  is_publicly_visible: Boolean
+  is_accepting_submissions: Boolean
+  style_criterias: [StyleCriteria!]!
+  my_role: PublicationRole
+  effective_role: PublicationRole
 }
 
 type StyleCriteria {
-  description: String
-  icon: String
   id: ID!
   name: String!
+  description: String
   publication: Publication!
+  icon: String
 }
 
-"""A Submission"""
-type Submission {
-  audits: [SubmissionAudit]
-  content: SubmissionContent
-  created_at: DateTimeUtc!
-  created_by: User!
-  effective_role: SubmissionUserRoles
-  files: [SubmissionFile]!
+input CreatePublicationInput {
+  name: String
+  is_publicly_visible: Boolean
+  home_page_content: String
+  new_submission_content: String
+  style_criterias: CreateStyleCriteriaHasMany
+}
+
+input CreateStyleCriteriaHasMany {
+  create: [CreateStyleCriteriaInput!]
+}
+
+input CreateStyleCriteriaInput {
+  name: String!
+  description: String
+  icon: String
+}
+
+input UpdatePublicationInput {
   id: ID!
-  inline_comments(
-    hasCreatedBy: SubmissionInlineCommentsHasCreatedByWhereHasConditions
-
-    """Allows to filter if trashed elements should be fetched."""
-    trashed: Trashed
-  ): [InlineComment!]!
-  my_role: SubmissionUserRoles
-  overall_comments(
-    hasCreatedBy: SubmissionOverallCommentsHasCreatedByWhereHasConditions
-
-    """Allows to filter if trashed elements should be fetched."""
-    trashed: Trashed
-  ): [OverallComment!]!
-  pivot: SubmissionUser
-  publication: Publication!
-  review_coordinators: [User!]!
-  reviewers: [User!]!
-  status: SubmissionStatus!
-  status_change_comment: String
-  submitted_at: DateTimeUtc
-  submitters: [User!]!
-  title: String
-  updated_at: DateTimeUtc
-  updated_by: User!
-}
-
-type SubmissionAudit {
-  created_at: DateTimeUtc!
-  event: String
-  id: ID
-  new_values: SubmissionAuditValues
-  old_values: SubmissionAuditValues
-  updated_at: DateTimeUtc
-  user: User
-}
-
-type SubmissionAuditValues {
-  content_id: ID
-  status: SubmissionStatus
-  status_change_comment: String
-  title: String
-}
-
-"""The content of a submission"""
-type SubmissionContent {
-  created_at: DateTimeUtc!
-  data: String!
-  id: ID!
-  modified_at: DateTimeUtc!
-  src_file: SubmissionFile!
-}
-
-"""An uploaded file associated with a submission"""
-type SubmissionFile {
-  file_upload: String!
-  id: ID!
-  submission_id: ID!
-}
-
-"""Allowed column names for Submission.inline_comments.hasCreatedBy."""
-enum SubmissionInlineCommentsHasCreatedByColumn {
-  I_D
-}
-
-"""
-Dynamic WHERE conditions for the `hasCreatedBy` argument of the query `inline_comments`.
-"""
-input SubmissionInlineCommentsHasCreatedByWhereHasConditions {
-  """A set of conditions that requires all conditions to match."""
-  AND: [SubmissionInlineCommentsHasCreatedByWhereHasConditions!]
-
-  """
-  Check whether a relation exists. Extra conditions or a minimum amount can be applied.
-  """
-  HAS: SubmissionInlineCommentsHasCreatedByWhereHasConditionsRelation
-
-  """A set of conditions that requires at least one condition to match."""
-  OR: [SubmissionInlineCommentsHasCreatedByWhereHasConditions!]
-
-  """The column that is used for the condition."""
-  column: SubmissionInlineCommentsHasCreatedByColumn
-
-  """The operator that is used for the condition."""
-  operator: SQLOperator = EQ
-
-  """The value that is used for the condition."""
-  value: Mixed
-}
-
-"""
-Dynamic HAS conditions for WHERE conditions for the `hasCreatedBy` argument of the query `inline_comments`.
-"""
-input SubmissionInlineCommentsHasCreatedByWhereHasConditionsRelation {
-  """The amount to test."""
-  amount: Int = 1
-
-  """Additional condition logic."""
-  condition: SubmissionInlineCommentsHasCreatedByWhereHasConditions
-
-  """The comparison operator to test against the amount."""
-  operator: SQLOperator = GTE
-
-  """The relation that is checked."""
-  relation: String!
-}
-
-"""Allowed column names for Submission.overall_comments.hasCreatedBy."""
-enum SubmissionOverallCommentsHasCreatedByColumn {
-  I_D
-}
-
-"""
-Dynamic WHERE conditions for the `hasCreatedBy` argument of the query `overall_comments`.
-"""
-input SubmissionOverallCommentsHasCreatedByWhereHasConditions {
-  """A set of conditions that requires all conditions to match."""
-  AND: [SubmissionOverallCommentsHasCreatedByWhereHasConditions!]
-
-  """
-  Check whether a relation exists. Extra conditions or a minimum amount can be applied.
-  """
-  HAS: SubmissionOverallCommentsHasCreatedByWhereHasConditionsRelation
-
-  """A set of conditions that requires at least one condition to match."""
-  OR: [SubmissionOverallCommentsHasCreatedByWhereHasConditions!]
-
-  """The column that is used for the condition."""
-  column: SubmissionOverallCommentsHasCreatedByColumn
-
-  """The operator that is used for the condition."""
-  operator: SQLOperator = EQ
-
-  """The value that is used for the condition."""
-  value: Mixed
-}
-
-"""
-Dynamic HAS conditions for WHERE conditions for the `hasCreatedBy` argument of the query `overall_comments`.
-"""
-input SubmissionOverallCommentsHasCreatedByWhereHasConditionsRelation {
-  """The amount to test."""
-  amount: Int = 1
-
-  """Additional condition logic."""
-  condition: SubmissionOverallCommentsHasCreatedByWhereHasConditions
-
-  """The comparison operator to test against the amount."""
-  operator: SQLOperator = GTE
-
-  """The relation that is checked."""
-  relation: String!
-}
-
-"""A paginated list of Submission items."""
-type SubmissionPaginator {
-  """A list of Submission items."""
-  data: [Submission!]!
-
-  """Pagination information about the list of items."""
-  paginatorInfo: PaginatorInfo!
-}
-
-"""The status of a submission"""
-enum SubmissionStatus {
-  ACCEPTED_AS_FINAL
-  ARCHIVED
-  AWAITING_DECISION
-  AWAITING_REVIEW
-  DELETED
-  DRAFT
-  EXPIRED
-  INITIALLY_SUBMITTED
-  REJECTED
-  RESUBMISSION_REQUESTED
-  RESUBMITTED
-  REVISION_REQUESTED
-  UNDER_REVIEW
-}
-
-"""A user associated with a submission and a role"""
-type SubmissionUser {
-  id: ID!
-  role_id: ID!
-  submission_id: ID!
-  user_id: ID!
-}
-
-enum SubmissionUserRoles {
-  review_coordinator
-  reviewer
-  submitter
-}
-
-"""
-Specify if you want to include or exclude trashed results from a query.
-"""
-enum Trashed {
-  """Only return trashed results."""
-  ONLY
-
-  """Return both trashed and non-trashed results."""
-  WITH
-
-  """Only return non-trashed results."""
-  WITHOUT
-}
-
-input UpdateAcademicProfilesInput {
-  humanities_commons: String
-  orcid_id: String
-}
-
-input UpdateInlineCommentInput {
-  content: String
-  from: Int
-  id: ID!
-  style_criteria: [ID!]
-  to: Int
-}
-
-input UpdateOverallCommentInput {
-  content: String
-  id: ID!
-}
-
-"""Input type for adding profile metadata for a user"""
-input UpdateProfileMetadataInput {
-  academic_profiles: UpdateAcademicProfilesInput
-  affiliation: String
-  biography: String
-  position_title: String
-  social_media: UpdateSocialMediaInput
-  specialization: String
-  websites: [String]
+  name: String
+  description: String
+  is_publicly_visible: Boolean
+  is_accepting_submissions: Boolean
+  home_page_content: String
+  new_submission_content: String
+  style_criterias: UpdateStyleCriteriaHasMany
+  editors: UpdatePublicationEditorsInput
+  publication_admins: UpdatePublicationAdministratorsInput
 }
 
 input UpdatePublicationAdministratorsInput {
@@ -1085,56 +321,283 @@ input UpdatePublicationEditorsInput {
   disconnect: [ID!]
 }
 
-input UpdatePublicationInput {
-  description: String
-  editors: UpdatePublicationEditorsInput
-  home_page_content: String
-  id: ID!
-  is_accepting_submissions: Boolean
-  is_publicly_visible: Boolean
-  name: String
-  new_submission_content: String
-  publication_admins: UpdatePublicationAdministratorsInput
-  style_criterias: UpdateStyleCriteriaHasMany
-}
-
-"""Input type for adding social media data to profile metadata"""
-input UpdateSocialMediaInput {
-  facebook: String
-  google: String
-  instagram: String
-  linkedin: String
-  twitter: String
-}
-
 input UpdateStyleCriteriaHasMany {
   create: [CreateStyleCriteriaInput!]
-  delete: [ID!]
   update: [UpdateStyleCriteriaInput!]
+  delete: [ID!]
 }
 
 input UpdateStyleCriteriaInput {
-  description: String
-  icon: String
   id: ID!
   name: String
+  description: String
+  icon: String
 }
 
-input UpdateSubmissionContent {
-  content: String!
+enum PublicationRole {
+  publication_admin
+  editor
+}
+
+"Social media data for the profile metadata of a user"
+type SocialMedia {
+  google: String
+  twitter: String
+  facebook: String
+  instagram: String
+  linkedin: String
+}
+
+"An inline comment of a submission"
+type InlineComment implements Comment {
   id: ID!
+  content: String!
+  created_by: User!
+  updated_by: User!
+  created_at: DateTimeUtc!
+  updated_at: DateTimeUtc!
+  deleted_at: DateTimeUtc
+  replies(
+    hasCreatedBy: InlineCommentRepliesHasCreatedByWhereHasConditions
+
+    "Allows to filter if trashed elements should be fetched."
+    trashed: Trashed
+  ): [InlineCommentReply!]
+  style_criteria: [InlineCommentStyleCriteria!]
+  read_at: DateTimeUtc
+  from: Int
+  to: Int
+}
+
+"The static style criteria of an inline comment"
+type InlineCommentStyleCriteria {
+  id: ID
+  name: String
+  icon: String
+}
+
+"A reply to an inline comment of a submission"
+type InlineCommentReply implements Comment {
+  id: ID!
+  content: String!
+  created_by: User!
+  updated_by: User!
+  created_at: DateTimeUtc!
+  updated_at: DateTimeUtc!
+  deleted_at: DateTimeUtc
+  parent_id: ID!
+  reply_to_id: ID!
+  read_at: DateTimeUtc
+}
+
+"An overall comment of a submission"
+type OverallComment implements Comment {
+  id: ID!
+  content: String!
+  created_by: User!
+  created_at: DateTimeUtc!
+  updated_by: User!
+  updated_at: DateTimeUtc!
+  deleted_at: DateTimeUtc
+  replies(
+    hasCreatedBy: OverallCommentRepliesHasCreatedByWhereHasConditions
+
+    "Allows to filter if trashed elements should be fetched."
+    trashed: Trashed
+  ): [OverallCommentReply!]
+  read_at: DateTimeUtc
+}
+
+"A reply to an overall comment of a submission"
+type OverallCommentReply implements Comment {
+  id: ID!
+  content: String!
+  created_by: User!
+  updated_by: User!
+  created_at: DateTimeUtc!
+  updated_at: DateTimeUtc!
+  deleted_at: DateTimeUtc
+  parent_id: ID!
+  reply_to_id: ID!
+  read_at: DateTimeUtc
+}
+
+input InlineCommentHasManyInput {
+  create: [CreateInlineCommentInput!]
+  update: [UpdateInlineCommentInput!]
+}
+
+input CreateInlineCommentInput {
+  content: String!
+  style_criteria: [ID!]
+  from: Int
+  to: Int
+  parent_id: ID
+  reply_to_id: ID
+}
+
+input UpdateInlineCommentInput {
+  id: ID!
+  content: String
+  style_criteria: [ID!]
+  from: Int
+  to: Int
+}
+
+input OverallCommentHasManyInput {
+  create: [CreateOverallCommentInput!]
+  update: [UpdateOverallCommentInput!]
+}
+
+input CreateOverallCommentInput {
+  content: String!
+  parent_id: ID
+  reply_to_id: ID
+}
+
+input UpdateOverallCommentInput {
+  id: ID!
+  content: String
+}
+
+interface Comment {
+  id: ID!
+  content: String!
+  created_by: User!
+  updated_by: User!
+  created_at: DateTimeUtc!
+  updated_at: DateTimeUtc!
+  deleted_at: DateTimeUtc
+  read_at: DateTimeUtc
+}
+
+input MarkInlineCommentsReadInput {
+  submission_id: ID!
+  comment_ids: [ID!]!
+}
+
+input MarkOverallCommentsReadInput {
+  submission_id: ID!
+  comment_ids: [ID!]!
+}
+
+input inviteSubmissionUserInput {
+  submission_id: ID!
+  email: String!
+  message: String
+}
+
+input reinviteSubmissionUserInput {
+  submission_id: ID!
+  email: String!
+  message: String
+}
+
+"A Submission"
+type Submission {
+  id: ID!
+  title: String
+  created_at: DateTimeUtc!
+  updated_at: DateTimeUtc
+  created_by: User!
+  updated_by: User!
+  submitted_at: DateTimeUtc
+  publication: Publication!
+  reviewers: [User!]!
+  review_coordinators: [User!]!
+  submitters: [User!]!
+  files: [SubmissionFile]!
+  pivot: SubmissionUser
+  status: SubmissionStatus!
+  status_change_comment: String
+  content: SubmissionContent
+  my_role: SubmissionUserRoles
+  effective_role: SubmissionUserRoles
+  audits: [SubmissionAudit]
+  inline_comments(
+    hasCreatedBy: SubmissionInlineCommentsHasCreatedByWhereHasConditions
+
+    "Allows to filter if trashed elements should be fetched."
+    trashed: Trashed
+  ): [InlineComment!]!
+  overall_comments(
+    hasCreatedBy: SubmissionOverallCommentsHasCreatedByWhereHasConditions
+
+    "Allows to filter if trashed elements should be fetched."
+    trashed: Trashed
+  ): [OverallComment!]!
+}
+
+"A user associated with a submission and a role"
+type SubmissionUser {
+  id: ID!
+  role_id: ID!
+  submission_id: ID!
+  user_id: ID!
+}
+
+"An uploaded file associated with a submission"
+type SubmissionFile {
+  id: ID!
+  submission_id: ID!
+  file_upload: String!
+}
+
+"The status of a submission"
+enum SubmissionStatus {
+  DRAFT
+  INITIALLY_SUBMITTED
+  RESUBMISSION_REQUESTED
+  RESUBMITTED
+  AWAITING_REVIEW
+  REJECTED
+  ACCEPTED_AS_FINAL
+  EXPIRED
+  UNDER_REVIEW
+  AWAITING_DECISION
+  REVISION_REQUESTED
+  ARCHIVED
+  DELETED
+}
+
+input DeleteCommentInput {
+  submission_id: ID!
+  comment_id: ID!
+}
+
+"Input type for creating a new submission via the createSubmissionDraft mutation"
+input CreateSubmissionDraftInput {
+  title: String!
+  publication_id: ID!
+  submitters: CreateSubmissionUserInput
+}
+
+input AcceptSubmissionInviteInput {
+  id: ID!
+  name: String
+  username: String!
+  password: String!
 }
 
 input UpdateSubmissionInput {
   id: ID!
-  inline_comments: InlineCommentHasManyInput
-  overall_comments: OverallCommentHasManyInput
-  review_coordinators: UpdateSubmissionUserInput
-  reviewers: UpdateSubmissionUserInput
+  title: String
   status: SubmissionStatus
   status_change_comment: String
+  reviewers: UpdateSubmissionUserInput
+  review_coordinators: UpdateSubmissionUserInput
   submitters: UpdateSubmissionUserInput
-  title: String
+  inline_comments: InlineCommentHasManyInput
+  overall_comments: OverallCommentHasManyInput
+}
+
+input UpdateSubmissionContent {
+  id: ID!
+  content: String!
+}
+
+input CreateSubmissionUserInput {
+  connect: [ID!]!
 }
 
 input UpdateSubmissionUserInput {
@@ -1142,141 +605,630 @@ input UpdateSubmissionUserInput {
   disconnect: [ID!]
 }
 
-"""Input type for updating user information via the updateUser mutation"""
-input UpdateUserInput {
-  """Email address of the user. Must be unique."""
-  email: String
-
-  """User ID"""
-  id: ID!
-
-  """Display name"""
-  name: String
-
-  """Password used to login to the application."""
-  password: String
-
-  """Metadata related to the profile of a user."""
-  profile_metadata: UpdateProfileMetadataInput
-
-  """Username of the user. Must be unique."""
-  username: String
+"Input type for connecting newly created submissions to files via nested mutation"
+input CreateSubmissionFilesHasMany {
+  create: Upload!
 }
 
-"""
-Can be used as an argument to upload files using https://github.com/jaydenseric/graphql-multipart-request-spec
-"""
-scalar Upload
+"Input type for creating a new association between an uploaded file and a submission"
+input CreateSubmissionFileInput {
+  submission_id: ID!
+  file_upload: Upload!
+}
 
-"""A user account"""
-type User {
-  created_at: DateTime!
-  display_label: String
-  email: String!
-  email_verified_at: DateTime
-  highest_privileged_role: UserRoles
+"The content of a submission"
+type SubmissionContent {
   id: ID!
-  name: String
-  notifications(
-    """Limits number of fetched items."""
-    first: Int!
+  data: String!
+  created_at: DateTimeUtc!
+  modified_at: DateTimeUtc!
+  src_file: SubmissionFile!
+}
 
-    """The offset from which items are returned."""
-    page: Int
+enum SubmissionUserRoles {
+  submitter
+  reviewer
+  review_coordinator
+}
+
+"A user role for permissions"
+type Role {
+  id: ID!
+  name: String!
+  guard_name: String!
+  created_at: DateTime
+  updated_at: DateTime
+  permissions: [Permission!]
+}
+
+"A user account"
+type User {
+  id: ID!
+  display_label: String
+  name: String
+  email: String!
+  username: String!
+  created_at: DateTime!
+  updated_at: DateTime
+  email_verified_at: DateTime
+  roles: [Role!]!
+  highest_privileged_role: UserRoles
+  permissions: [Permission!]
+  profile_metadata: ProfileMetadata
+  submissions: [Submission]!
+  pivot: SubmissionUser
+  staged: Boolean
+  notifications(
     read: Boolean
     unread: Boolean
+
+    "Limits number of fetched items."
+    first: Int!
+
+    "The offset from which items are returned."
+    page: Int
   ): NotificationPaginator!
-  permissions: [Permission!]
-  pivot: SubmissionUser
-  profile_metadata: ProfileMetadata
-  roles: [Role!]!
-  staged: Boolean
-  submissions: [Submission]!
-  updated_at: DateTime
-  username: String!
-}
-
-"""A paginated list of User items."""
-type UserPaginator {
-  """A list of User items."""
-  data: [User!]!
-
-  """Pagination information about the list of items."""
-  paginatorInfo: PaginatorInfo!
 }
 
 enum UserRoles {
-  application_admin
+  submitter
+  reviewer
+  review_coordinator
   editor
   publication_admin
-  review_coordinator
-  reviewer
-  submitter
+  application_admin
 }
 
-"""
-Validate the availability of username and email via the validateNewUser query
-"""
-input ValidateNewUserInput {
-  """Email. Validation error if not unique"""
-  email: String
+type GeneralSettings {
+  site_name: String
+}
 
-  """Username.  Validation error if not unique"""
+input GeneralSettingsInput {
+  site_name: String
+}
+
+type Audit {
+  id: ID
+  user: User!
+  event: String
+  old_values: JSON
+  new_values: JSON
+  created_at: DateTimeUtc!
+  updated_at: DateTimeUtc
+}
+
+type SubmissionAudit {
+  id: ID
+  user: User
+  event: String
+  old_values: SubmissionAuditValues
+  new_values: SubmissionAuditValues
+  created_at: DateTimeUtc!
+  updated_at: DateTimeUtc
+}
+
+type SubmissionAuditValues {
+  title: String
+  status: SubmissionStatus
+  status_change_comment: String
+  content_id: ID
+}
+
+"A button that apepars on the Login page for a supported external identity provider"
+type IdentityProvider {
+  name: String!
+  login_url: String!
+  label: String!
+  icon: String!
+}
+
+"A response from an external identity provider"
+type LoginOauthResponse {
+  action: String
+  user: ProviderUser
+  provider: Provider
+}
+
+"The user within the response from an external identity provider"
+type ProviderUser {
+  name: String
   username: String
+  email: String
+}
+
+"The provider within the response from an external identity provider"
+type Provider {
+  provider_name: String!
+  provider_id: String!
+  user_id: ID!
+}
+
+"Inputs"
+input RegisterOauthUserInput {
+  user: ProviderUserInput
+  provider: ProviderInput
+}
+
+input ProviderUserInput {
+  name: String
+  username: String
+  email: String
+}
+
+input ProviderInput {
+  provider_name: String!
+  provider_id: String!
 }
 
 type VersionInfo {
   version: String
-  version_date: String
   version_url: String
+  version_date: String
 }
 
-"""Dynamic WHERE conditions for queries."""
-input WhereConditions {
-  """A set of conditions that requires all conditions to match."""
-  AND: [WhereConditions!]
+"A date string with format `Y-m-d`, e.g. `2011-05-23`."
+scalar Date
 
-  """
-  Check whether a relation exists. Extra conditions or a minimum amount can be applied.
-  """
-  HAS: WhereConditionsRelation
+"A datetime string with format `Y-m-d H:i:s`, e.g. `2018-05-23 13:43:32`."
+scalar DateTime
 
-  """A set of conditions that requires at least one condition to match."""
-  OR: [WhereConditions!]
+scalar DateTimeUtc
 
-  """The column that is used for the condition."""
-  column: String
+"Can be used as an argument to upload files using https:\/\/github.com\/jaydenseric\/graphql-multipart-request-spec"
+scalar Upload
 
-  """The operator that is used for the condition."""
+"JSON-format data"
+scalar JSON
+
+"Input type for creating a new user via the userCreate mutation"
+input CreateUserInput {
+  "Display name. (optional)"
+  name: String
+
+  "Username. Must be unique. (required)"
+  username: String!
+
+  "Email address. Must be unique. (required)"
+  email: String!
+
+  "Password used to login to the application. (required)"
+  password: String!
+}
+
+"Input type for updating user information via the updateUser mutation"
+input UpdateUserInput {
+  "User ID"
+  id: ID!
+
+  "Display name"
+  name: String
+
+  "Username of the user. Must be unique."
+  username: String
+
+  "Email address of the user. Must be unique."
+  email: String
+
+  "Password used to login to the application."
+  password: String
+
+  "Metadata related to the profile of a user."
+  profile_metadata: UpdateProfileMetadataInput
+}
+
+"Input type for resetting a password from a password reset request email"
+input ResetPasswordInput {
+  email: String!
+  password: String!
+  token: String!
+}
+
+"Validate the availability of username and email via the validateNewUser query"
+input ValidateNewUserInput {
+  "Username.  Validation error if not unique"
+  username: String
+
+  "Email. Validation error if not unique"
+  email: String
+}
+
+"Input type for adding social media data to profile metadata"
+input UpdateSocialMediaInput {
+  google: String
+  twitter: String
+  facebook: String
+  instagram: String
+  linkedin: String
+}
+
+input UpdateAcademicProfilesInput {
+  humanities_commons: String
+  orcid_id: String
+}
+
+"Input type for adding profile metadata for a user"
+input UpdateProfileMetadataInput {
+  social_media: UpdateSocialMediaInput
+  academic_profiles: UpdateAcademicProfilesInput
+  position_title: String
+  specialization: String
+  affiliation: String
+  biography: String
+  websites: [String]
+}
+
+"Key\/Value pairs input"
+input KeyValueInput {
+  key: String
+  value: String
+}
+
+"Information about pagination using a fully featured paginator."
+type PaginatorInfo {
+  "Number of items in the current page."
+  count: Int!
+
+  "Index of the current page."
+  currentPage: Int!
+
+  "Index of the first item in the current page."
+  firstItem: Int
+
+  "Are there more pages after this one?"
+  hasMorePages: Boolean!
+
+  "Index of the last item in the current page."
+  lastItem: Int
+
+  "Index of the last available page."
+  lastPage: Int!
+
+  "Number of items per page."
+  perPage: Int!
+
+  "Number of total available items."
+  total: Int!
+}
+
+"A paginated list of Notification items."
+type NotificationPaginator {
+  "Pagination information about the list of items."
+  paginatorInfo: PaginatorInfo!
+
+  "A list of Notification items."
+  data: [Notification!]!
+}
+
+"A paginated list of User items."
+type UserPaginator {
+  "Pagination information about the list of items."
+  paginatorInfo: PaginatorInfo!
+
+  "A list of User items."
+  data: [User!]!
+}
+
+"A paginated list of Publication items."
+type PublicationPaginator {
+  "Pagination information about the list of items."
+  paginatorInfo: PaginatorInfo!
+
+  "A list of Publication items."
+  data: [Publication!]!
+}
+
+"A paginated list of Submission items."
+type SubmissionPaginator {
+  "Pagination information about the list of items."
+  paginatorInfo: PaginatorInfo!
+
+  "A list of Submission items."
+  data: [Submission!]!
+}
+
+"Allowed column names for InlineComment.replies.hasCreatedBy."
+enum InlineCommentRepliesHasCreatedByColumn {
+  I_D
+}
+
+"Dynamic WHERE conditions for the `hasCreatedBy` argument of the query `replies`."
+input InlineCommentRepliesHasCreatedByWhereHasConditions {
+  "The column that is used for the condition."
+  column: InlineCommentRepliesHasCreatedByColumn
+
+  "The operator that is used for the condition."
   operator: SQLOperator = EQ
 
-  """The value that is used for the condition."""
+  "The value that is used for the condition."
   value: Mixed
+
+  "A set of conditions that requires all conditions to match."
+  AND: [InlineCommentRepliesHasCreatedByWhereHasConditions!]
+
+  "A set of conditions that requires at least one condition to match."
+  OR: [InlineCommentRepliesHasCreatedByWhereHasConditions!]
+
+  "Check whether a relation exists. Extra conditions or a minimum amount can be applied."
+  HAS: InlineCommentRepliesHasCreatedByWhereHasConditionsRelation
 }
 
-"""Dynamic HAS conditions for WHERE condition queries."""
-input WhereConditionsRelation {
-  """The amount to test."""
-  amount: Int = 1
+"Dynamic HAS conditions for WHERE conditions for the `hasCreatedBy` argument of the query `replies`."
+input InlineCommentRepliesHasCreatedByWhereHasConditionsRelation {
+  "The relation that is checked."
+  relation: String!
 
-  """Additional condition logic."""
-  condition: WhereConditions
-
-  """The comparison operator to test against the amount."""
+  "The comparison operator to test against the amount."
   operator: SQLOperator = GTE
 
-  """The relation that is checked."""
+  "The amount to test."
+  amount: Int = 1
+
+  "Additional condition logic."
+  condition: InlineCommentRepliesHasCreatedByWhereHasConditions
+}
+
+"Allowed column names for OverallComment.replies.hasCreatedBy."
+enum OverallCommentRepliesHasCreatedByColumn {
+  I_D
+}
+
+"Dynamic WHERE conditions for the `hasCreatedBy` argument of the query `replies`."
+input OverallCommentRepliesHasCreatedByWhereHasConditions {
+  "The column that is used for the condition."
+  column: OverallCommentRepliesHasCreatedByColumn
+
+  "The operator that is used for the condition."
+  operator: SQLOperator = EQ
+
+  "The value that is used for the condition."
+  value: Mixed
+
+  "A set of conditions that requires all conditions to match."
+  AND: [OverallCommentRepliesHasCreatedByWhereHasConditions!]
+
+  "A set of conditions that requires at least one condition to match."
+  OR: [OverallCommentRepliesHasCreatedByWhereHasConditions!]
+
+  "Check whether a relation exists. Extra conditions or a minimum amount can be applied."
+  HAS: OverallCommentRepliesHasCreatedByWhereHasConditionsRelation
+}
+
+"Dynamic HAS conditions for WHERE conditions for the `hasCreatedBy` argument of the query `replies`."
+input OverallCommentRepliesHasCreatedByWhereHasConditionsRelation {
+  "The relation that is checked."
   relation: String!
+
+  "The comparison operator to test against the amount."
+  operator: SQLOperator = GTE
+
+  "The amount to test."
+  amount: Int = 1
+
+  "Additional condition logic."
+  condition: OverallCommentRepliesHasCreatedByWhereHasConditions
 }
 
-input inviteSubmissionUserInput {
-  email: String!
-  message: String
-  submission_id: ID!
+"Allowed column names for Submission.inline_comments.hasCreatedBy."
+enum SubmissionInlineCommentsHasCreatedByColumn {
+  I_D
 }
 
-input reinviteSubmissionUserInput {
-  email: String!
-  message: String
-  submission_id: ID!
+"Dynamic WHERE conditions for the `hasCreatedBy` argument of the query `inline_comments`."
+input SubmissionInlineCommentsHasCreatedByWhereHasConditions {
+  "The column that is used for the condition."
+  column: SubmissionInlineCommentsHasCreatedByColumn
+
+  "The operator that is used for the condition."
+  operator: SQLOperator = EQ
+
+  "The value that is used for the condition."
+  value: Mixed
+
+  "A set of conditions that requires all conditions to match."
+  AND: [SubmissionInlineCommentsHasCreatedByWhereHasConditions!]
+
+  "A set of conditions that requires at least one condition to match."
+  OR: [SubmissionInlineCommentsHasCreatedByWhereHasConditions!]
+
+  "Check whether a relation exists. Extra conditions or a minimum amount can be applied."
+  HAS: SubmissionInlineCommentsHasCreatedByWhereHasConditionsRelation
 }
+
+"Dynamic HAS conditions for WHERE conditions for the `hasCreatedBy` argument of the query `inline_comments`."
+input SubmissionInlineCommentsHasCreatedByWhereHasConditionsRelation {
+  "The relation that is checked."
+  relation: String!
+
+  "The comparison operator to test against the amount."
+  operator: SQLOperator = GTE
+
+  "The amount to test."
+  amount: Int = 1
+
+  "Additional condition logic."
+  condition: SubmissionInlineCommentsHasCreatedByWhereHasConditions
+}
+
+"Allowed column names for Submission.overall_comments.hasCreatedBy."
+enum SubmissionOverallCommentsHasCreatedByColumn {
+  I_D
+}
+
+"Dynamic WHERE conditions for the `hasCreatedBy` argument of the query `overall_comments`."
+input SubmissionOverallCommentsHasCreatedByWhereHasConditions {
+  "The column that is used for the condition."
+  column: SubmissionOverallCommentsHasCreatedByColumn
+
+  "The operator that is used for the condition."
+  operator: SQLOperator = EQ
+
+  "The value that is used for the condition."
+  value: Mixed
+
+  "A set of conditions that requires all conditions to match."
+  AND: [SubmissionOverallCommentsHasCreatedByWhereHasConditions!]
+
+  "A set of conditions that requires at least one condition to match."
+  OR: [SubmissionOverallCommentsHasCreatedByWhereHasConditions!]
+
+  "Check whether a relation exists. Extra conditions or a minimum amount can be applied."
+  HAS: SubmissionOverallCommentsHasCreatedByWhereHasConditionsRelation
+}
+
+"Dynamic HAS conditions for WHERE conditions for the `hasCreatedBy` argument of the query `overall_comments`."
+input SubmissionOverallCommentsHasCreatedByWhereHasConditionsRelation {
+  "The relation that is checked."
+  relation: String!
+
+  "The comparison operator to test against the amount."
+  operator: SQLOperator = GTE
+
+  "The amount to test."
+  amount: Int = 1
+
+  "Additional condition logic."
+  condition: SubmissionOverallCommentsHasCreatedByWhereHasConditions
+}
+
+"Directions for ordering a list of records."
+enum SortOrder {
+  "Sort records in ascending order."
+  ASC
+
+  "Sort records in descending order."
+  DESC
+}
+
+"Aggregate functions when ordering by a relation without specifying a column."
+enum OrderByRelationAggregateFunction {
+  "Amount of items."
+  COUNT
+}
+
+"Aggregate functions when ordering by a relation that may specify a column."
+enum OrderByRelationWithColumnAggregateFunction {
+  "Average."
+  AVG
+
+  "Minimum."
+  MIN
+
+  "Maximum."
+  MAX
+
+  "Sum."
+  SUM
+
+  "Amount of items."
+  COUNT
+}
+
+"Allows ordering a list of records."
+input OrderByClause {
+  "The column that is used for ordering."
+  column: String!
+
+  "The direction that is used for ordering."
+  order: SortOrder!
+}
+
+"Specify if you want to include or exclude trashed results from a query."
+enum Trashed {
+  "Only return trashed results."
+  ONLY
+
+  "Return both trashed and non-trashed results."
+  WITH
+
+  "Only return non-trashed results."
+  WITHOUT
+}
+
+"Dynamic WHERE conditions for queries."
+input WhereConditions {
+  "The column that is used for the condition."
+  column: String
+
+  "The operator that is used for the condition."
+  operator: SQLOperator = EQ
+
+  "The value that is used for the condition."
+  value: Mixed
+
+  "A set of conditions that requires all conditions to match."
+  AND: [WhereConditions!]
+
+  "A set of conditions that requires at least one condition to match."
+  OR: [WhereConditions!]
+
+  "Check whether a relation exists. Extra conditions or a minimum amount can be applied."
+  HAS: WhereConditionsRelation
+}
+
+"Dynamic HAS conditions for WHERE condition queries."
+input WhereConditionsRelation {
+  "The relation that is checked."
+  relation: String!
+
+  "The comparison operator to test against the amount."
+  operator: SQLOperator = GTE
+
+  "The amount to test."
+  amount: Int = 1
+
+  "Additional condition logic."
+  condition: WhereConditions
+}
+
+"The available SQL operators that are used to filter query results."
+enum SQLOperator {
+  "Equal operator (`=`)"
+  EQ
+
+  "Not equal operator (`!=`)"
+  NEQ
+
+  "Greater than operator (`>`)"
+  GT
+
+  "Greater than or equal operator (`>=`)"
+  GTE
+
+  "Less than operator (`<`)"
+  LT
+
+  "Less than or equal operator (`<=`)"
+  LTE
+
+  "Simple pattern matching (`LIKE`)"
+  LIKE
+
+  "Negation of simple pattern matching (`NOT LIKE`)"
+  NOT_LIKE
+
+  "Whether a value is within a set of values (`IN`)"
+  IN
+
+  "Whether a value is not within a set of values (`NOT IN`)"
+  NOT_IN
+
+  "Whether a value is within a range of values (`BETWEEN`)"
+  BETWEEN
+
+  "Whether a value is not within a range of values (`NOT BETWEEN`)"
+  NOT_BETWEEN
+
+  "Whether a value is null (`IS NULL`)"
+  IS_NULL
+
+  "Whether a value is not null (`IS NOT NULL`)"
+  IS_NOT_NULL
+}
+
+"""
+Loose type that allows any value. Be careful when passing in large `Int` or `Float` literals,
+as they may not be parsed correctly on the server side. Use `String` literals if you are
+dealing with really large numbers to be on the safe side.
+"""
+scalar Mixed
+
