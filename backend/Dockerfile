@@ -1,16 +1,17 @@
 ARG COMPOSER_VERSION=2.8.9
-ARG PHP_VERSION=8.4.8
+ARG COMPOSER_PLATFORM=linux/amd64
+ARG PHP_VERSION=8.4.15
 
-FROM composer:${COMPOSER_VERSION} AS composer
+FROM --platform=${COMPOSER_PLATFORM} composer:${COMPOSER_VERSION} AS composer
 FROM php:${PHP_VERSION}-fpm AS base
 
 ARG TARGETARCH
 
 ARG PANDOC_VERSION=2.18
 ARG COMPOSE_WAIT_VERSION=2.7.3
-ARG PHP_EXTS="bcmath pdo_mysql pcntl zip"
-ARG PHP_PECL_EXTS="redis"
-ARG APT_PACKAGES="openssl ca-certificates bash libzip-dev libaio1 libncurses6 libnuma1 libxml2-dev git libfcgi-bin sqlite3 default-mysql-client"
+ARG PHP_EXTS="bcmath pdo_mysql pcntl zip intl gettext mysqli"
+ARG PHP_PECL_EXTS="redis apcu xhprof"
+ARG APT_PACKAGES="openssl ca-certificates bash libzip-dev libaio1t64 libncurses6 libnuma1 libxml2-dev git libfcgi-bin sqlite3 default-mysql-client libicu-dev"
 #ENV COMPOSER_HOME=/tmp/composer
 ENV LOG_CHANNEL=stderr
 
@@ -34,9 +35,6 @@ RUN curl -Lo /wait https://github.com/ufoscout/docker-compose-wait/releases/down
 RUN echo "pm.status_path = /status" >> /usr/local/etc/php-fpm.d/zz-docker.conf \
     && cp ${PHP_INI_DIR}/php.ini-production ${PHP_INI_DIR}/php.ini \
     && echo "error_reporting=E_ALL ^ (E_DEPRECATED | E_STRICT)" >> ${PHP_INI_DIR}/conf.d/errors.ini
-
-RUN --mount=type=cache,target=/tmp/output \
-    chmod 0777 /tmp/output
 
 RUN mkdir -p /var/www/.composer \
     && chown -R www-data:www-data /var/www/.composer \
@@ -72,18 +70,13 @@ FROM base AS unit-test
 ENV DB_DATABASE="pilcrow"
 ENV APP_ENV=testing
 
-ARG OUTPUT_PATH=/tmp/output/fpm-unit-test
-ARG STDOUT_FILE=${OUTPUT_PATH}/stdout.txt
-ARG STDERR_FILE=${OUTPUT_PATH}/stderr.txt
-
-# Switch to php-development.ini
+# Use shared PHP config - same file used by Lando (backend/php.dev.ini)
 USER root
-RUN cp ${PHP_INI_DIR}/php.ini-development ${PHP_INI_DIR}/php.ini \
-    && echo "memory_limit=256M" >> ${PHP_INI_DIR}/conf.d/memory.ini
-# Setup the output directory
-RUN --mount=type=cache,target=/tmp/output \
-    mkdir -p "${OUTPUT_PATH}" && \
-    chmod -R 0777 "${OUTPUT_PATH}"
+COPY php.dev.ini ${PHP_INI_DIR}/conf.d/pilcrow.ini
+# Disable SSL cert verification for the MariaDB CLI client (used by Laravel's
+# schema loader). Needed when connecting via Docker network where MySQL's
+# self-signed cert isn't trusted by the system CA store.
+RUN printf '[client]\nssl-verify-server-cert = false\n' > /etc/mysql/conf.d/no-ssl-verify.cnf
 
 # Re-run composer install to add dev dependencies
 USER www-data
@@ -92,32 +85,16 @@ RUN --mount=type=cache,target=/var/www/.composer,uid=33,gid=33 \
 
 # Supply a random/cache busting timestamp to prevent caching of the test run.
 ARG BUILDSTAMP
-RUN --mount=type=cache,target=/tmp/output \
-    mkdir -p "${OUTPUT_PATH}" && \
-    ./artisan migrate:fresh --seed
+ARG DB_HOST=127.0.0.1
+ENV DB_HOST=${DB_HOST}
+RUN ./artisan migrate:fresh --seed
 
-RUN --mount=type=cache,target=/tmp/output \
-    mkdir -p "${OUTPUT_PATH}" && \
-    touch .env && \
-    ./artisan test \
-    > >(tee ${STDOUT_FILE}) \
-    2> >(tee ${STDERR_FILE})
+RUN touch .env && ./artisan test
 
 FROM base AS lint
 
-ARG OUTPUT_PATH=/tmp/output/fpm-lint
-ARG STDOUT_FILE=${OUTPUT_PATH}/stdout.txt
-ARG STDERR_FILE=${OUTPUT_PATH}/stderr.txt
-
-USER root
-RUN --mount=type=cache,target=/tmp/output \
-    mkdir -p "${OUTPUT_PATH}" && \
-    chmod -R 0777 "${OUTPUT_PATH}"
-
 USER www-data
-RUN --mount=type=cache,target=/tmp/output \
-    --mount=type=cache,target=/var/www/.composer,uid=33,gid=33 \
+ARG BUILDSTAMP
+RUN --mount=type=cache,target=/var/www/.composer,uid=33,gid=33 \
     composer install --prefer-dist && \
-    composer lint \
-    > >(tee ${STDOUT_FILE}) \
-    2> >(tee ${STDERR_FILE})
+    composer lint

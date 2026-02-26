@@ -522,7 +522,7 @@ export const CREATE_OVERALL_COMMENT_REPLY = gql`
 `
 
 export const CREATE_INLINE_COMMENT = gql`
-  mutation CreateInlineCommentReply(
+  mutation CreateInlineComment(
     $submission_id: ID!
     $content: String!
     $from: Int
@@ -811,7 +811,7 @@ export const DELETE_INLINE_COMMENT = gql`
 `
 
 export const UPDATE_OVERALL_COMMENT_REPLY = gql`
-  mutation UpdateInlineCommentReply(
+  mutation UpdateOverallCommentReply(
     $submission_id: ID!
     $comment_id: ID!
     $content: String!

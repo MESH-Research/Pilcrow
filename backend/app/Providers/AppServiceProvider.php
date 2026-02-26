@@ -51,7 +51,7 @@ class AppServiceProvider extends ServiceProvider
             if (config('app.cdn_base')) {
                 return "<?php echo config('app.cdn_base') . '/' . ($expression); ?>";
             }
-            return "<?php echo $expression; ?>";
+            return "<?php echo '/' . ($expression); ?>";
         });
     }
 }
