@@ -116,7 +116,7 @@ class OverallComment extends BaseModel
     }
 
     /**
-     * The parent inline comment of this inline comment reply
+     * The parent overall comment of this overall comment reply
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
