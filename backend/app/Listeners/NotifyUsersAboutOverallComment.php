@@ -5,14 +5,10 @@ namespace App\Listeners;
 
 use App\Events\OverallCommentAdded as EventsOverallCommentAdded;
 use App\Notifications\OverallCommentAdded;
-use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Notification;
 
-class NotifyUsersAboutOverallComment extends Notification implements ShouldQueue
+class NotifyUsersAboutOverallComment
 {
-    use Queueable;
-
     /**
      * Handle the event.
      *

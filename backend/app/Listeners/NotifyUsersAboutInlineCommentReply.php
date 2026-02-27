@@ -5,13 +5,10 @@ namespace App\Listeners;
 
 use App\Events\InlineCommentReplyAdded as EventsInlineCommentReplyAdded;
 use App\Notifications\InlineCommentReplyAdded;
-use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Notification;
 
-class NotifyUsersAboutInlineCommentReply extends Notification implements ShouldQueue
+class NotifyUsersAboutInlineCommentReply
 {
-    use Queueable;
 
     /**
      * Handle the event.
