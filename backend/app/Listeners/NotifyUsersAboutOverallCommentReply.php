@@ -20,7 +20,7 @@ class NotifyUsersAboutOverallCommentReply
         $submission = $event->overall_comment->submission;
         $submitters = $submission->submitters()->get();
         $parent_commenter = $event->overall_comment->parent->createdBy()->get();
-        $commenters = $event->overall_comment->parent->commenters()->get();
+        $commenters = $event->overall_comment->parent->getCommenters();
         $review_coordinators = $submission->reviewCoordinators()->get();
         $notification_data = [
             'submission' => [

@@ -20,7 +20,7 @@ class NotifyUsersAboutInlineCommentReply
         $submission = $event->inline_comment->submission;
         $submitters = $submission->submitters()->get();
         $parent_commenter = $event->inline_comment->parent->createdBy()->get();
-        $commenters = $event->inline_comment->parent->commenters()->get();
+        $commenters = $event->inline_comment->parent->getCommenters();
         $review_coordinators = $submission->reviewCoordinators()->get();
         $notification_data = [
             'submission' => [

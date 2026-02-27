@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class OverallComment extends BaseModel
@@ -75,24 +75,17 @@ class OverallComment extends BaseModel
 
     /**
      * All commenters involved in the overall comment thread:
-     * - anyone who has replied to the parent overall comment or its replies
+     * - anyone who has replied to the parent overall comment
      * - does not include the creator of the parent overall comment
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
+     * @return \Illuminate\Support\Collection<int, \App\Models\User>
      */
-    public function commenters(): HasManyThrough
+    public function getCommenters(): Collection
     {
-        $parentComment = $this->parent_id ? $this->parent : $this;
-
-        // Get all users who have replied to the parent overall comment
-        return $this->hasManyThrough(
-            User::class,
-            OverallComment::class,
-            'parent_id', // Foreign key on OverallComment table
-            'id', // Foreign key on User table
-            'id', // Local key on this table
-            'created_by' // Local key on OverallComment table
-        )->where('parent_id', $parentComment->id);
+        return User::whereIn('id',
+            OverallComment::where('parent_id', $this->id)
+                ->pluck('created_by')
+        )->get();
     }
 
     /**
