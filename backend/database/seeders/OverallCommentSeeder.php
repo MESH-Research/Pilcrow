@@ -20,10 +20,12 @@ class OverallCommentSeeder extends Seeder
     {
         $this->callOnce(SubmissionSeeder::class);
 
-        $this->create(100);
-        $this->create(100, 1);
-        $this->create(100, 8);
-        $this->create(100, 2, 1, [2,3]);
+        OverallComment::withoutEvents(function () {
+            $this->create(100);
+            $this->create(100, 1);
+            $this->create(100, 8);
+            $this->create(100, 2, 1, [2,3]);
+        });
     }
 
     /**

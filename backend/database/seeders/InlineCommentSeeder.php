@@ -26,9 +26,11 @@ class InlineCommentSeeder extends Seeder
     public function run()
     {
         $this->callOnce(SubmissionSeeder::class);
-        $this->create(100, 1, ['replies' => 1, 'highlight' => [30, 80]], [2]);
-        $this->create(100, 3, ['highlight' => [430, 445]]);
-        $this->create(100, 5, ['replies' => 10, 'highlight' => [630, 720]]);
+        InlineComment::withoutEvents(function () {
+            $this->create(100, 1, ['replies' => 1, 'highlight' => [30, 80]], [2]);
+            $this->create(100, 3, ['highlight' => [430, 445]]);
+            $this->create(100, 5, ['replies' => 10, 'highlight' => [630, 720]]);
+        });
     }
 
     /**

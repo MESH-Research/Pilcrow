@@ -56,13 +56,15 @@ trait TestFactory
         }
         $submission = $this->createSubmission();
         $style_criteria = $this->createStyleCriteria($submission->publication->id);
-        InlineComment::factory()->count($count)->create([
-            'submission_id' => $submission->id,
-            'content' => 'This is some content for an inline comment created by PHPUnit.',
-            'created_by' => $user->id,
-            'updated_by' => $user->id,
-            'style_criteria' => [$style_criteria],
-        ]);
+        InlineComment::withoutEvents(function () use ($count, $submission, $user, $style_criteria) {
+            InlineComment::factory()->count($count)->create([
+                'submission_id' => $submission->id,
+                'content' => 'This is some content for an inline comment created by PHPUnit.',
+                'created_by' => $user->id,
+                'updated_by' => $user->id,
+                'style_criteria' => [$style_criteria],
+            ]);
+        });
 
         return $submission;
     }
@@ -78,12 +80,14 @@ trait TestFactory
             $user = User::factory()->create();
         }
         $submission = $this->createSubmission();
-        OverallComment::factory()->count($count)->create([
-            'submission_id' => $submission->id,
-            'content' => 'This is some content for an overall comment created by PHPUnit.',
-            'created_by' => $user->id,
-            'updated_by' => $user->id,
-        ]);
+        OverallComment::withoutEvents(function () use ($count, $submission, $user) {
+            OverallComment::factory()->count($count)->create([
+                'submission_id' => $submission->id,
+                'content' => 'This is some content for an overall comment created by PHPUnit.',
+                'created_by' => $user->id,
+                'updated_by' => $user->id,
+            ]);
+        });
 
         return $submission;
     }

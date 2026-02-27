@@ -880,7 +880,7 @@ class SubmissionCommentTest extends ApiTestCase
         $inline_comment = $submission->inlineComments()->first();
         $time = Carbon::parse($inline_comment->created_at);
         $datetime = $this->faker->dateTimeBetween($time, Carbon::now());
-        $reply = InlineComment::factory()->create([
+        $reply = InlineComment::withoutEvents(fn () => InlineComment::factory()->create([
             'submission_id' => $submission->id,
             'parent_id' => $inline_comment->id,
             'reply_to_id' => $inline_comment->id,
@@ -888,7 +888,7 @@ class SubmissionCommentTest extends ApiTestCase
             'updated_at' => $datetime,
             'created_by' => $admin->id,
             'updated_by' => $admin->id,
-        ]);
+        ]));
         $count_before_deletion = $submission->inlineComments()->count();
         $response = $this->graphQL(
             'mutation DeleteInlineComment ($submission_id: ID! $comment_id: ID!) {
@@ -956,7 +956,7 @@ class SubmissionCommentTest extends ApiTestCase
         $overall_comment = $submission->overallComments()->first();
         $time = Carbon::parse($overall_comment->created_at);
         $datetime = $this->faker->dateTimeBetween($time, Carbon::now());
-        $reply = OverallComment::factory()->create([
+        $reply = OverallComment::withoutEvents(fn () => OverallComment::factory()->create([
             'submission_id' => $submission->id,
             'parent_id' => $overall_comment->id,
             'reply_to_id' => $overall_comment->id,
@@ -964,7 +964,7 @@ class SubmissionCommentTest extends ApiTestCase
             'updated_at' => $datetime,
             'created_by' => $admin->id,
             'updated_by' => $admin->id,
-        ]);
+        ]));
         $count_before_deletion = $submission->overallComments()->count();
         $response = $this->graphQL(
             'mutation DeleteOverallComment ($submission_id: ID! $comment_id: ID!) {
