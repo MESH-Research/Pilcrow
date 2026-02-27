@@ -11,8 +11,8 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Collection;
 
 class OverallComment extends BaseModel
 {
@@ -82,7 +82,8 @@ class OverallComment extends BaseModel
      */
     public function getCommenters(): Collection
     {
-        return User::whereIn('id',
+        return User::whereIn(
+            'id',
             OverallComment::where('parent_id', $this->id)
                 ->pluck('created_by')
         )->get();
