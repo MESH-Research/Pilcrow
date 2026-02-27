@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Notification;
 
 class NotifyUsersAboutInlineCommentReply
 {
-
     /**
      * Handle the event.
      *
