@@ -292,8 +292,8 @@ describe("Overall Comments", () => {
       currentUser: ref({ id: 1 })
     })
     const { wrapper } = wrapperFactory()
-    const overallComments = wrapper.findAll('[data-cy="overallComment"]')
-    const findReplies = (w) => w.findAll('[data-cy="overallCommentReply"]')
+    const overallComments = wrapper.findAll("[data-cy=overallComment]")
+    const findReplies = (w) => w.findAll("[data-cy=overallCommentReply]")
 
     // First Overall Comment
     expect(
@@ -304,22 +304,22 @@ describe("Overall Comments", () => {
     // Second Overall Comment
     await overallComments
       .at(1)
-      .find('[data-cy="showRepliesButton"]')
+      .find("[data-cy=showRepliesButton]")
       .trigger("click")
     expect(
-      overallComments.at(1).find('[data-cy="hideRepliesButton"]').text()
+      overallComments.at(1).find("[data-cy=hideRepliesButton]").text()
     ).toContain("submissions.comment.toggle_replies.hide_reply")
     expect(findReplies(overallComments.at(1))).toHaveLength(1)
 
     // Third Overall Comment
     await overallComments
       .at(2)
-      .find('[data-cy="showRepliesButton"]')
+      .find("[data-cy=showRepliesButton]")
       .trigger("click")
     expect(findReplies(overallComments.at(2))).toHaveLength(8)
     await overallComments
       .at(2)
-      .find('[data-cy="hideRepliesButton"]')
+      .find("[data-cy=hideRepliesButton]")
       .trigger("click")
     expect(findReplies(overallComments.at(2))).toHaveLength(0)
   })

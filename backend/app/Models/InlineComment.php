@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Events\InlineCommentAdded;
+use App\Events\InlineCommentReplyAdded;
 use App\Http\Traits\CreatedUpdatedBy;
 use App\Models\Traits\ReadStatus;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -10,6 +12,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Collection;
 
 class InlineComment extends BaseModel
 {
@@ -39,6 +42,21 @@ class InlineComment extends BaseModel
     ];
 
     /**
+     * @return void
+     */
+    protected static function boot()
+    {
+        parent::boot();
+        static::created(function ($inlineComment) {
+            if ($inlineComment->parent_id) {
+                InlineCommentReplyAdded::dispatch($inlineComment);
+            } else {
+                InlineCommentAdded::dispatch($inlineComment);
+            }
+        });
+    }
+
+    /**
      * The submission that owns the inline comment
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -64,6 +82,22 @@ class InlineComment extends BaseModel
     }
 
     /**
+     * All commenters involved in the inline comment thread:
+     * - anyone who has replied to the parent inline comment
+     * - does not include the creator of the parent inline comment
+     *
+     * @return \Illuminate\Support\Collection<int, \App\Models\User>
+     */
+    public function getCommenters(): Collection
+    {
+        return User::whereIn(
+            'id',
+            InlineComment::where('parent_id', $this->id)
+                ->pluck('created_by')
+        )->get();
+    }
+
+    /**
      * The creator of the inline comment
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -81,6 +115,16 @@ class InlineComment extends BaseModel
     public function updatedBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'updated_by');
+    }
+
+    /**
+     * The parent inline comment of this inline comment reply
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function parent(): BelongsTo
+    {
+        return $this->belongsTo(InlineComment::class, 'parent_id');
     }
 
     /**

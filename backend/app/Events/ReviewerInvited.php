@@ -4,15 +4,12 @@ declare(strict_types=1);
 namespace App\Events;
 
 use App\Models\SubmissionInvitation;
-use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
 class ReviewerInvited
 {
     use Dispatchable;
-    use InteractsWithSockets;
     use SerializesModels;
 
     /**
@@ -29,15 +26,5 @@ class ReviewerInvited
     public function __construct(SubmissionInvitation $submission_invitation)
     {
         $this->submission_invitation = $submission_invitation;
-    }
-
-    /**
-     * Get the channels the event should broadcast on.
-     *
-     * @return \Illuminate\Broadcasting\Channel|array
-     */
-    public function broadcastOn()
-    {
-        return new PrivateChannel('channel-name');
     }
 }

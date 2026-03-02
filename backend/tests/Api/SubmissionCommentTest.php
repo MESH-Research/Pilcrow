@@ -5,94 +5,20 @@ namespace Tests\Api;
 
 use App\Models\InlineComment;
 use App\Models\OverallComment;
-use App\Models\StyleCriteria;
 use App\Models\Submission;
-use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Str;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\ApiTestCase;
+use Tests\TestFactory;
 
 class SubmissionCommentTest extends ApiTestCase
 {
     use WithFaker;
     use RefreshDatabase;
-
-    /**
-     * @param int $status (default: Submission::UNDER_REVIEW)
-     * @return Submission
-     */
-    private function createSubmission($status = Submission::UNDER_REVIEW)
-    {
-        $user = User::factory()->create();
-
-        return Submission::factory()
-            ->hasAttached($user, [], 'submitters')
-            ->create(['status' => $status]);
-    }
-
-    /**
-     * @param int $id
-     * @return StyleCriteria
-     */
-    private function createStyleCriteria($id)
-    {
-        $criteria = StyleCriteria::factory()
-            ->create([
-                'name' => 'PHPUnit Criteria',
-                'publication_id' => $id,
-                'description' => 'This is a test style criteria created by PHPUnit',
-                'icon' => 'php',
-            ]);
-
-        return $criteria;
-    }
-
-    /**
-     * @param int $count
-     * @param User|null $user (optional)
-     * @return Submission
-     */
-    private function createSubmissionWithInlineComment($count = 1, $user = null)
-    {
-        if ($user === null) {
-            $user = User::factory()->create();
-        }
-        $submission = $this->createSubmission();
-        $style_criteria = $this->createStyleCriteria($submission->publication->id);
-        InlineComment::factory()->count($count)->create([
-            'submission_id' => $submission->id,
-            'content' => 'This is some content for an inline comment created by PHPUnit.',
-            'created_by' => $user->id,
-            'updated_by' => $user->id,
-            'style_criteria' => [$style_criteria],
-        ]);
-
-        return $submission;
-    }
-
-    /**
-     * @param int $count
-     * @param User|null $user (optional)
-     * @return Submission
-     */
-    private function createSubmissionWithOverallComment($count = 1, $user = null)
-    {
-        if ($user === null) {
-            $user = User::factory()->create();
-        }
-        $submission = $this->createSubmission();
-        OverallComment::factory()->count($count)->create([
-            'submission_id' => $submission->id,
-            'content' => 'This is some content for an overall comment created by PHPUnit.',
-            'created_by' => $user->id,
-            'updated_by' => $user->id,
-        ]);
-
-        return $submission;
-    }
+    use TestFactory;
 
     public function testRetrieveInlineComments()
     {
@@ -954,7 +880,7 @@ class SubmissionCommentTest extends ApiTestCase
         $inline_comment = $submission->inlineComments()->first();
         $time = Carbon::parse($inline_comment->created_at);
         $datetime = $this->faker->dateTimeBetween($time, Carbon::now());
-        $reply = InlineComment::factory()->create([
+        $reply = InlineComment::withoutEvents(fn () => InlineComment::factory()->create([
             'submission_id' => $submission->id,
             'parent_id' => $inline_comment->id,
             'reply_to_id' => $inline_comment->id,
@@ -962,7 +888,7 @@ class SubmissionCommentTest extends ApiTestCase
             'updated_at' => $datetime,
             'created_by' => $admin->id,
             'updated_by' => $admin->id,
-        ]);
+        ]));
         $count_before_deletion = $submission->inlineComments()->count();
         $response = $this->graphQL(
             'mutation DeleteInlineComment ($submission_id: ID! $comment_id: ID!) {
@@ -1030,7 +956,7 @@ class SubmissionCommentTest extends ApiTestCase
         $overall_comment = $submission->overallComments()->first();
         $time = Carbon::parse($overall_comment->created_at);
         $datetime = $this->faker->dateTimeBetween($time, Carbon::now());
-        $reply = OverallComment::factory()->create([
+        $reply = OverallComment::withoutEvents(fn () => OverallComment::factory()->create([
             'submission_id' => $submission->id,
             'parent_id' => $overall_comment->id,
             'reply_to_id' => $overall_comment->id,
@@ -1038,7 +964,7 @@ class SubmissionCommentTest extends ApiTestCase
             'updated_at' => $datetime,
             'created_by' => $admin->id,
             'updated_by' => $admin->id,
-        ]);
+        ]));
         $count_before_deletion = $submission->overallComments()->count();
         $response = $this->graphQL(
             'mutation DeleteOverallComment ($submission_id: ID! $comment_id: ID!) {

@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Events\OverallCommentAdded;
+use App\Events\OverallCommentReplyAdded;
 use App\Http\Traits\CreatedUpdatedBy;
 use App\Models\Traits\ReadStatus;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -10,6 +12,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Collection;
 
 class OverallComment extends BaseModel
 {
@@ -29,6 +32,21 @@ class OverallComment extends BaseModel
         'reply_to_id',
         'parent_id',
     ];
+
+    /**
+     * @return void
+     */
+    protected static function boot()
+    {
+        parent::boot();
+        static::created(function ($overallComment) {
+            if ($overallComment->parent_id) {
+                OverallCommentReplyAdded::dispatch($overallComment);
+            } else {
+                OverallCommentAdded::dispatch($overallComment);
+            }
+        });
+    }
 
     /**
      * The submission that owns the overall comment
@@ -56,6 +74,22 @@ class OverallComment extends BaseModel
     }
 
     /**
+     * All commenters involved in the overall comment thread:
+     * - anyone who has replied to the parent overall comment
+     * - does not include the creator of the parent overall comment
+     *
+     * @return \Illuminate\Support\Collection<int, \App\Models\User>
+     */
+    public function getCommenters(): Collection
+    {
+        return User::whereIn(
+            'id',
+            OverallComment::where('parent_id', $this->id)
+                ->pluck('created_by')
+        )->get();
+    }
+
+    /**
      * The creator of the overall comment
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -73,6 +107,16 @@ class OverallComment extends BaseModel
     public function updatedBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'updated_by');
+    }
+
+    /**
+     * The parent overall comment of this overall comment reply
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function parent(): BelongsTo
+    {
+        return $this->belongsTo(OverallComment::class, 'parent_id');
     }
 
     /**

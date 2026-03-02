@@ -128,11 +128,10 @@
   </div>
 </template>
 <script setup>
-import { computed, inject, ref, provide } from "vue"
+import { computed, inject, provide, ref } from "vue"
 import OverallCommentReply from "./OverallCommentReply.vue"
 import CommentEditor from "../forms/CommentEditor.vue"
 import CommentHeader from "./CommentHeader.vue"
-
 const forExport = inject("forExport")
 
 const isCollapsed = ref(!(forExport.value ?? false))
@@ -145,7 +144,6 @@ const commentModify = ref(null)
 function toggleThread() {
   isCollapsed.value = !isCollapsed.value
 }
-
 const props = defineProps({
   comment: {
     type: Object,
