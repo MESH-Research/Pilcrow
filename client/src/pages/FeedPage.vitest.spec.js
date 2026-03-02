@@ -55,6 +55,9 @@ describe("Nofitication Popup", () => {
                   body: "A submission status has been accepted for review.",
                   action: "Visit Pilcrow",
                   url: "/",
+                  commenter: {
+                    display_label: "Test User"
+                  },
                   invitee: {
                     display_label: "Test User"
                   },
@@ -81,7 +84,7 @@ describe("Nofitication Popup", () => {
   })
 
   it("displays a default message for a user that has no notifications", async () => {
-    userNotificationsHandler.mockResolvedValue(getNotificationData(true, []))
+    userNotificationsHandler.mockResolvedValue(getNotificationData(false, []))
 
     const wrapper = wrapperFactory()
     const message = wrapper.findComponent({ ref: "default_message" })

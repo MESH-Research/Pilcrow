@@ -26,9 +26,11 @@ class InlineCommentSeeder extends Seeder
     public function run()
     {
         $this->callOnce(SubmissionSeeder::class);
-        $this->create(100, 1, ['replies' => 1, 'highlight' => [30, 80]]);
-        $this->create(100, 3, ['highlight' => [430, 445]]);
-        $this->create(100, 5, ['replies' => 10, 'highlight' => [630, 720]]);
+        InlineComment::withoutEvents(function () {
+            $this->create(100, 1, ['replies' => 1, 'highlight' => [30, 80]], [2]);
+            $this->create(100, 3, ['highlight' => [430, 445]]);
+            $this->create(100, 5, ['replies' => 10, 'highlight' => [630, 720]]);
+        });
     }
 
     /**
@@ -37,9 +39,10 @@ class InlineCommentSeeder extends Seeder
      * @param int $submissionId
      * @param int $userId
      * @param array $options
+     * @param array $replyIds
      * @return void
      */
-    public function create($submissionId, $userId, $options = [])
+    public function create($submissionId, $userId, $options = [], $replyIds = null)
     {
         $opts = array_merge($this->defaultOptions, $options);
         $userIds = User::all()->pluck('id');
@@ -72,7 +75,12 @@ class InlineCommentSeeder extends Seeder
             // Seed inline comment replies
             $comments = collect([$parent]);
             for ($i = 0; $i < $opts['replies']; $i++) {
-                $reply = $this->createCommentReply($submissionId, $userIds->random(), $parent, $comments->random());
+                if ($replyIds != null) {
+                    $replyId = $replyIds[$i % count($replyIds)];
+                } else {
+                    $replyId = $userIds->random();
+                }
+                $reply = $this->createCommentReply($submissionId, $replyId, $parent, $comments->random());
                 $comments->push($reply);
             }
         }
@@ -81,9 +89,9 @@ class InlineCommentSeeder extends Seeder
     /**
      * @param int $submissionId
      * @param \App\Models\User $userId
-     * @param \App\Models\InlineComment|\App\Models\OverallComment $parent
-     * @param \App\Models\InlineComment|\App\Models\OverallComment $reply_to
-     * @return \App\Models\InlineComment|\App\Models\OverallComment
+     * @param \App\Models\InlineComment $parent
+     * @param \App\Models\InlineComment $reply_to
+     * @return \App\Models\InlineComment
      */
     private function createCommentReply($submissionId, $userId, $parent, $reply_to)
     {

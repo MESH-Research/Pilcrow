@@ -29,6 +29,7 @@
           <notification-list-item
             v-for="(item, index) in notificationItems"
             :key="index"
+            data-cy="notification_list_item"
             :note="item"
             clickable
             class="q-pa-none q-pr-md"
