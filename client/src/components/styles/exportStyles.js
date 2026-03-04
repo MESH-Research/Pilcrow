@@ -34,19 +34,25 @@ export default `
 .review-controls {
   display: none;
 }
+.overall-comment,
 .inline-comment {
   border-top: 1px solid gray;
   margin-top: 0.5em;
 }
+.overall-comment-replies,
 .inline-comment-replies {
   padding-left: 1rem;
 }
-
+.overall-comment > .comment > .comment-header > div,
 .inline-comment > .comment > .comment-header > div  {
   align-items: center;
   display: flex;
   gap: 5px;
   padding: 16px 0 8px;
+}
+.overall-comment > .comment > .comment-header > div {
+  gap: 0;
+  justify-content: space-between;
 }
 .comment-header .text-h4 {
   font-weight: bold;

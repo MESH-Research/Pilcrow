@@ -1,5 +1,5 @@
 <template>
-  <div data-cy="overallComment">
+  <div data-cy="overallComment" class="overall-comment">
     <div ref="scrollTarget" />
     <q-card
       square
