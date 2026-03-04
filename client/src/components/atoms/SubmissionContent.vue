@@ -262,12 +262,16 @@ const editor = new Editor({
   extensions: [SubmissionContentKit.configure({ annotation: { annotations } })]
 })
 
-editor.on("update", () => {
+editor.on("create", () => {
   emit("editorReady", editor)
 })
 
 function bubbleMenuVisibility({ state }) {
-  if (!props.annotationEnabled) {
+  if (
+    !props.annotationEnabled ||
+    forExport.value ||
+    submission.value.status !== "UNDER_REVIEW"
+  ) {
     return false
   }
   return !state.selection.empty

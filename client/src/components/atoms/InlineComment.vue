@@ -1,5 +1,6 @@
 <template>
   <div data-cy="inlineComment" class="inline-comment">
+    <a :id="`inline-comment-${props.comment.id}`"></a>
     <div ref="scrollTarget" />
     <q-card
       square
@@ -36,7 +37,7 @@
 
       <q-card-section
         v-if="comment.style_criteria.length"
-        class="q-mx-sm q-mb-sm q-pa-none"
+        class="q-mx-sm q-mb-sm q-pa-none style-criteria-section"
       >
         <q-chip
           v-for="criteria in comment.style_criteria"

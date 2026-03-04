@@ -146,6 +146,25 @@ let blob = ref("")
 
 function updateBlob() {
   let download_content = comments_content.value?.$el.innerHTML
+  const scripts = `<script>
+    const annotations = document.querySelectorAll('[data-context-id]')
+    const inline_comments = document.querySelectorAll('[aria-label="Go To Highlight"]')
+    function scrollTo(hash) {
+      location.hash = "#" + hash;
+    }
+    for (const annotation of annotations) {
+      annotation.addEventListener("click", (e) => {
+        const context_id = e.target.attributes["data-context-id"].value;
+        scrollTo('inline-comment-' + context_id);
+      })
+    }
+    for (const comment of inline_comments) {
+      comment.addEventListener("click", (e) => {
+        const context_id = e.target.attributes["data-context-id"].value;
+        scrollTo('comment-highlight-' + context_id);
+      })
+    }
+  <\/script>`
   blob.value = URL.createObjectURL(
     new Blob(
       [
@@ -153,8 +172,8 @@ function updateBlob() {
         `<title>${t("export.submission_review_comments")}</title>`,
         `<style>${exportStyles}</style>`,
         `</head><body>`,
-        submission.value.content.data,
         download_content,
+        scripts,
         `</body></html>`
       ],
       { type: "text/html" }
