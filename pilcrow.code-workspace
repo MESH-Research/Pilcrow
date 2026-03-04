@@ -55,31 +55,6 @@
             "**/*.vitest.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}"
         ],
         "i18n-ally.localesPaths": ["src/i18n"],
-        "conventionalCommits.scopes": [
-            "client",
-            "backend",
-            "docs",
-            "helm"
-        ],
-        "workbench.colorCustomizations": {
-            "activityBar.activeBackground": "#3b6abd",
-            "activityBar.background": "#3b6abd",
-            "activityBar.foreground": "#e7e7e7",
-            "activityBar.inactiveForeground": "#e7e7e799",
-            "activityBarBadge.background": "#611e36",
-            "activityBarBadge.foreground": "#e7e7e7",
-            "commandCenter.border": "#e7e7e799",
-            "sash.hoverBorder": "#3b6abd",
-            "statusBar.background": "#2f5496",
-            "statusBar.foreground": "#e7e7e7",
-            "statusBarItem.hoverBackground": "#3b6abd",
-            "statusBarItem.remoteBackground": "#2f5496",
-            "statusBarItem.remoteForeground": "#e7e7e7",
-            "titleBar.activeBackground": "#2f5496",
-            "titleBar.activeForeground": "#e7e7e7",
-            "titleBar.inactiveBackground": "#2f549699",
-            "titleBar.inactiveForeground": "#e7e7e799"
-        },
-        "peacock.color": "#2F5496"
+        "conventionalCommits.scopes": ["client", "backend", "docs", "helm"]
     }
 }
