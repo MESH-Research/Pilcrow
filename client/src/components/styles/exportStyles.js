@@ -6,6 +6,7 @@ export default `
   display: none;
 }
 .inline-comment > .comment > .comment-header > div > .q-btn[aria-label="Go To Highlight"] {
+  cursor: pointer;
   display: inline-block;
 }
 .inline-comment > .comment > .comment-header > div > .q-btn[aria-label="Go To Highlight"] * {
