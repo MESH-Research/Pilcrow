@@ -30,6 +30,7 @@ export default `
   padding-right: 6px;
 }
 aside.q-drawer {
+  margin-top: 150px;
   transform: none !important;
   width: auto !important;
 }
