@@ -1,6 +1,7 @@
 export default `
 .comment-widget,
 .q-btn,
+.q-avatar,
 .q-chip i,
 .q-img {
   display: none;
@@ -49,10 +50,6 @@ aside.q-drawer {
   display: flex;
   gap: 5px;
   padding: 16px 0 8px;
-}
-.overall-comment > .comment > .comment-header > div {
-  gap: 0;
-  justify-content: space-between;
 }
 .inline-comment > .comment > .comment-header > div > .q-btn[aria-label="Go To Highlight"] {
   cursor: pointer;
