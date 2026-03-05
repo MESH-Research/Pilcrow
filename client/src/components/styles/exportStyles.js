@@ -41,7 +41,8 @@ aside.q-drawer {
   content: "#" attr(data-context-id);
   display: inline-block;
   font-size: 1rem;
-  padding-right: 6px;
+  font-weight: bold;
+  padding: 0 8px;
 }
 .style-criteria-section {
   display: flex;
