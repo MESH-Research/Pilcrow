@@ -23,12 +23,24 @@ export default `
 .comment-header .text-h4 {
   font-weight: bold;
 }
+.comment-header-name .text-h4:before {
+  content: "#" attr(data-context-id);
+  display: inline-block;
+  font-size: 1rem;
+  padding-right: 6px;
+}
 aside.q-drawer {
   transform: none !important;
   width: auto !important;
 }
 .comment-highlight {
   background-color: #c9e5f8;
+}
+.comment-highlight:before {
+  content: "#" attr(data-context-id);
+  display: inline-block;
+  font-size: 1rem;
+  padding-right: 6px;
 }
 .style-criteria-section {
   display: flex;

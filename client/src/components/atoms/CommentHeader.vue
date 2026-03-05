@@ -28,7 +28,11 @@
         class="q-mr-sm"
       />
       <div class="row items-center q-pr-sm comment-header-name">
-        <div class="text-h4 ellipsis" :title="comment.created_by.display_label">
+        <div
+          class="text-h4 ellipsis"
+          :data-context-id="props.comment.id"
+          :title="comment.created_by.display_label"
+        >
           {{ comment.created_by.display_label }}
         </div>
       </div>
