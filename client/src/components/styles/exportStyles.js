@@ -38,6 +38,7 @@ aside.q-drawer {
   background-color: #c9e5f8;
 }
 .comment-highlight:before {
+  color: #204965;
   content: "#" attr(data-context-id);
   display: inline-block;
   font-size: 1rem;
