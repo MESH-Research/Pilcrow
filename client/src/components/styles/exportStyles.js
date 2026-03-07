@@ -39,7 +39,7 @@ aside.q-drawer {
 }
 .comment-highlight:before {
   color: #204965;
-  content: "#" attr(data-context-id);
+  content: attr(data-context-id-list);
   display: inline-block;
   font-size: 1rem;
   font-weight: bold;

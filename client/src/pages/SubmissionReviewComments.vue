@@ -142,11 +142,28 @@ function handleNewScroll() {
 }
 
 const comments_content = useTemplateRef("comments-content")
-let blob = ref("")
 
+let inlineContextIds = ref({})
+function setInlineContextIds(submission) {
+  const inline_comments = submission?.inline_comments
+  let ids_object = {}
+  inline_comments.map((comment) => {
+    let arr = []
+    arr.push(comment.id)
+    comment.replies.map((reply) => {
+      arr.push(reply.id)
+    })
+    ids_object[comment.id] = arr
+  })
+  inlineContextIds.value = ids_object
+}
+watch([submission], () => setInlineContextIds(submission.value))
+provide("inlineContextIds", inlineContextIds)
+
+let blob = ref("")
 function updateBlob() {
   let download_content = comments_content.value?.$el.innerHTML
-  const scripts = `<script>
+  const scripts = `
     const annotations = document.querySelectorAll('[data-context-id]')
     const inline_comments = document.querySelectorAll('[aria-label="Go To Highlight"]')
     function scrollTo(hash) {
@@ -164,17 +181,17 @@ function updateBlob() {
         scrollTo('comment-highlight-' + context_id);
       })
     }
-  <\/script>`
+  `
   blob.value = URL.createObjectURL(
     new Blob(
       [
         `<html><head>`,
-        `<title>${t("export.submission_review_comments")}</title>`,
-        `<style>${exportStyles}</style>`,
+        `<title>${t("export.submission_review_comments")}<\/title>`,
+        `<style>${exportStyles}<\/style>`,
         `</head><body>`,
         download_content,
-        scripts,
-        `</body></html>`
+        `<script>${scripts}<\/script>`,
+        `<\/body><\/html>`
       ],
       { type: "text/html" }
     )

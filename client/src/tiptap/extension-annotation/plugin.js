@@ -5,6 +5,18 @@ import { defineEmits } from "vue"
 
 export const AnnotationPluginKey = new PluginKey("annotation")
 
+function getCommaSepList(a) {
+  let list = a.context_ids[a.context.id]
+  let ret = ""
+  list.map((id, index) => {
+    if (index > 0) {
+      ret += `, `
+    }
+    ret += `#${id}`
+  })
+  return ret
+}
+
 function getDecorations(doc, annotations) {
   const decorations = annotations
     .map((a) => [
@@ -12,6 +24,7 @@ function getDecorations(doc, annotations) {
         class: `comment-highlight ${a.active ? "active" : ""}`,
         id: `comment-highlight-${a.context.id}`,
         "data-context-id": a.context.id,
+        "data-context-id-list": getCommaSepList(a),
         "data-cy": "comment-highlight",
         dataset: { comment: a.context.id },
         style: "cursor: pointer"
