@@ -6,7 +6,7 @@ import { defineEmits } from "vue"
 export const AnnotationPluginKey = new PluginKey("annotation")
 
 function getCommaSepList(a) {
-  let list = a.context_ids[a.context.id]
+  let list = a.context_ids[a.context.id] ?? []
   let ret = ""
   list.map((id, index) => {
     if (index > 0) {
