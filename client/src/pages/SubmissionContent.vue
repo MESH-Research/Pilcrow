@@ -214,6 +214,8 @@ import {
 import { useQuery, useMutation } from "@vue/apollo-composable"
 import { watchEffect, computed, ref } from "vue"
 
+provide("inlineContextIds", ref({}))
+
 const props = defineProps({
   id: {
     type: String,
