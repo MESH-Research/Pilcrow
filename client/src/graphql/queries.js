@@ -391,6 +391,9 @@ export const GET_SUBMISSION_REVIEW = gql`
           ...relatedUserFields
         }
       }
+      commenters {
+        ...relatedUserFields
+      }
       inline_comments(trashed: WITH, createdBy: $createdBy)
         @skip(if: $skip_inline) {
         deleted_at

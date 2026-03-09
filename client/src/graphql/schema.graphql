@@ -1,0 +1,990 @@
+type Query {
+  "Return information about the currently logged in user"
+  currentUser: User
+
+  "Return details about a specific user in the application"
+  user(id: ID): User
+
+  "Validate details of a new user.  Returns true if supplied user fields would be valid."
+  validateNewUser(user: ValidateNewUserInput): Boolean
+
+  "Return pre-defined user roles in the application"
+  role(id: ID): Role
+
+  "Return a permission by ID"
+  permission(id: ID): Permission
+
+  versionInfo: VersionInfo
+
+  "Return a publication by ID"
+  publication(id: ID): Publication
+
+  "Return a submission by ID"
+  submission(id: ID): Submission
+
+  generalSettings: GeneralSettings
+  identityProviders: [IdentityProvider]
+
+  "Return user accounts optionally based on a supplied search term"
+  userSearch(
+    term: String
+
+    "Limits number of fetched items."
+    first: Int! = 10
+
+    "The offset from which items are returned."
+    page: Int
+  ): UserPaginator!
+
+  "Return all publications"
+  publications(
+    is_publicly_visible: Boolean
+    is_accepting_submissions: Boolean
+
+    "Limits number of fetched items."
+    first: Int! = 10
+
+    "The offset from which items are returned."
+    page: Int
+  ): PublicationPaginator!
+
+  "Return all submissions"
+  submissions(
+    "Limits number of fetched items."
+    first: Int! = 100
+
+    "The offset from which items are returned."
+    page: Int
+  ): SubmissionPaginator!
+}
+
+type Mutation {
+  "Log in to a new session and get the user."
+  login(email: String!, password: String!): User!
+
+  "Log out from the current session, showing the user one last time."
+  logout: User
+
+  "Create a new user"
+  createUser(user: CreateUserInput!): User!
+
+  "Update user information"
+  updateUser(user: UpdateUserInput!): User!
+
+  "(Re)send a verification email to a user.  "
+  sendEmailVerification(
+    "User to resend verification for. If not supplied, defaults to the current user."
+    id: ID
+  ): User!
+
+  "Verify the currently logged in user's email address"
+  verifyEmail(
+    "Token supplied to the user via email"
+    token: String!
+
+    "Token expiration as a UNIX epoch timestamp"
+    expires: String!
+  ): User!
+
+  "Mark a user notification as read"
+  markNotificationRead(id: ID!): Notification!
+
+  "Mark all of a user's notification as read"
+  markAllNotificationsRead: Int
+
+  "Send a password reset email to a specified email address"
+  requestPasswordReset(email: String!): Boolean
+
+  "Update a password from a password reset request"
+  resetPassword(input: ResetPasswordInput): User
+
+  "Create a new publication"
+  createPublication(publication: CreatePublicationInput!): Publication!
+
+  updatePublication(publication: UpdatePublicationInput!): Publication
+  markInlineCommentsRead(input: MarkInlineCommentsReadInput!): [InlineComment]!
+  markInlineCommentRepliesRead(input: MarkInlineCommentsReadInput!): [InlineCommentReply]!
+  markOverallCommentsRead(input: MarkOverallCommentsReadInput!): [OverallComment]!
+  markOverallCommentRepliesRead(input: MarkOverallCommentsReadInput!): [OverallCommentReply]!
+
+  "Create a new submission under a publication"
+  createSubmissionDraft(input: CreateSubmissionDraftInput!): Submission!
+
+  "Update an existing submission"
+  updateSubmission(input: UpdateSubmissionInput!): Submission!
+
+  "Delete an inline comment of a submission"
+  deleteInlineComment(input: DeleteCommentInput!): Submission!
+
+  "Delete an overall comment of a submission"
+  deleteOverallComment(input: DeleteCommentInput!): Submission!
+
+  "Update the content of a submission"
+  updateSubmissionContent(input: UpdateSubmissionContent!): Submission!
+
+  "Update the content of a submission with a file upload"
+  updateSubmissionContentWithFile(input: CreateSubmissionFileInput!): Submission!
+
+  "Verify access to an invitation to a submission as the assigned role"
+  verifySubmissionInvite(uuid: String!, token: String!, expires: String!): User
+
+  "Accept an invitation to a submission as the assigned role"
+  acceptSubmissionInvite(uuid: String!, token: String!, expires: String!, user: AcceptSubmissionInviteInput): User
+
+  """
+  Create a staged user, assign them as a reviewer of a submisison,
+  and send them an email notification inviting them to accept the assignment"
+  """
+  inviteReviewer(input: inviteSubmissionUserInput): Submission
+
+  """
+  Create a staged user, assign them as a review coordinator of a submisison,
+  and send them an email notification inviting them to accept the assignment
+  """
+  inviteReviewCoordinator(input: inviteSubmissionUserInput): Submission
+
+  "Resend an email notification inviting a staged reviewer to accept the assignment"
+  reinviteReviewer(input: reinviteSubmissionUserInput): Submission
+
+  "Resend an email notification inviting a staged review coordinator to accept the assignment"
+  reinviteReviewCoordinator(input: reinviteSubmissionUserInput): Submission
+
+  saveGeneralSettings(settings: GeneralSettingsInput!): GeneralSettings
+  loginOauthCallback(provider_name: String!, code: String!): LoginOauthResponse
+  registerOauthUser(input: RegisterOauthUserInput): User
+
+  "Run an artisan command and get the output as a string."
+  artisanCommand(
+    "Artisan command to run"
+    command: String!
+
+    "Parameters for artisan command"
+    parameters: [KeyValueInput!]
+  ): String!
+
+  """
+  Use a model factory to create a new database object.
+  Returns Models created
+  
+  (DOES create entries in the DB.)
+  """
+  createFactory(
+    "Model to create (i.e. User)"
+    model: String!
+
+    "Number of models to create, defaults to 1"
+    times: Int
+
+    "Attributes to apply to the created models, defaults to []"
+    attributes: [KeyValueInput!]
+  ): [User!]
+
+  """
+  Use a model factory to get data for a model object.
+  Returns Models created.
+  
+  (Does not create entries in the DB)."
+  """
+  makeFactory(
+    "Model to create (i.e. User)"
+    model: String!
+
+    "Number of models to create, defaults to 1"
+    times: Int
+
+    "Attributes to apply to the created models, defaults to []"
+    attributes: [KeyValueInput!]
+  ): [User!]
+
+  """
+  Login a user using only an email
+  
+  Return the user model of the logged in user.
+  """
+  forceLogin(email: String!): User
+}
+
+"Academic profile data for the profile metadata of a user"
+type AcademicProfiles {
+  orcid_id: String
+  humanities_commons: String
+}
+
+"A notification for an event"
+type Notification {
+  id: ID!
+  notifiable: Notifiable!
+  read_at: DateTime
+  created_at: DateTimeUtc
+  data: NotificationData
+}
+
+"JSON data for a notification"
+type NotificationData {
+  type: String
+  user: User
+  body: String
+  action: String
+  url: String
+  commenter: User
+  invitee: User
+  inviter: User
+  submission: Submission
+  publication: Publication
+}
+
+union Notifiable = Notification | User
+
+"A permission for roles and users"
+type Permission {
+  id: ID!
+  name: String!
+  guard_name: String!
+  created_at: DateTime
+  updated_at: DateTime
+}
+
+"Profile metadata of a user"
+type ProfileMetadata {
+  social_media: SocialMedia
+  academic_profiles: AcademicProfiles
+  position_title: String
+  specialization: String
+  affiliation: String
+  biography: String
+  websites: [String]
+}
+
+"A publication that has users, reviews, and submissions"
+type Publication {
+  id: ID!
+  name: String!
+  home_page_content: String
+  new_submission_content: String
+  created_at: DateTime
+  updated_at: DateTime
+  submissions: [Submission]!
+  publication_admins: [User!]!
+  editors: [User!]!
+  is_publicly_visible: Boolean
+  is_accepting_submissions: Boolean
+  style_criterias: [StyleCriteria!]!
+  my_role: PublicationRole
+  effective_role: PublicationRole
+}
+
+type StyleCriteria {
+  id: ID!
+  name: String!
+  description: String
+  publication: Publication!
+  icon: String
+}
+
+input CreatePublicationInput {
+  name: String
+  is_publicly_visible: Boolean
+  home_page_content: String
+  new_submission_content: String
+  style_criterias: CreateStyleCriteriaHasMany
+}
+
+input CreateStyleCriteriaHasMany {
+  create: [CreateStyleCriteriaInput!]
+}
+
+input CreateStyleCriteriaInput {
+  name: String!
+  description: String
+  icon: String
+}
+
+input UpdatePublicationInput {
+  id: ID!
+  name: String
+  description: String
+  is_publicly_visible: Boolean
+  is_accepting_submissions: Boolean
+  home_page_content: String
+  new_submission_content: String
+  style_criterias: UpdateStyleCriteriaHasMany
+  editors: UpdatePublicationEditorsInput
+  publication_admins: UpdatePublicationAdministratorsInput
+}
+
+input UpdatePublicationAdministratorsInput {
+  connect: [ID!]
+  disconnect: [ID!]
+}
+
+input UpdatePublicationEditorsInput {
+  connect: [ID!]
+  disconnect: [ID!]
+}
+
+input UpdateStyleCriteriaHasMany {
+  create: [CreateStyleCriteriaInput!]
+  update: [UpdateStyleCriteriaInput!]
+  delete: [ID!]
+}
+
+input UpdateStyleCriteriaInput {
+  id: ID!
+  name: String
+  description: String
+  icon: String
+}
+
+enum PublicationRole {
+  publication_admin
+  editor
+}
+
+"Social media data for the profile metadata of a user"
+type SocialMedia {
+  google: String
+  twitter: String
+  facebook: String
+  instagram: String
+  linkedin: String
+}
+
+"An inline comment of a submission"
+type InlineComment implements Comment {
+  id: ID!
+  content: String!
+  created_by: User!
+  updated_by: User!
+  created_at: DateTimeUtc!
+  updated_at: DateTimeUtc!
+  deleted_at: DateTimeUtc
+  replies(
+    createdBy: [ID!]
+
+    "Allows to filter if trashed elements should be fetched."
+    trashed: Trashed
+  ): [InlineCommentReply!]
+  style_criteria: [InlineCommentStyleCriteria!]
+  read_at: DateTimeUtc
+  from: Int
+  to: Int
+}
+
+"The static style criteria of an inline comment"
+type InlineCommentStyleCriteria {
+  id: ID
+  name: String
+  icon: String
+}
+
+"A reply to an inline comment of a submission"
+type InlineCommentReply implements Comment {
+  id: ID!
+  content: String!
+  created_by: User!
+  updated_by: User!
+  created_at: DateTimeUtc!
+  updated_at: DateTimeUtc!
+  deleted_at: DateTimeUtc
+  parent_id: ID!
+  reply_to_id: ID!
+  read_at: DateTimeUtc
+}
+
+"An overall comment of a submission"
+type OverallComment implements Comment {
+  id: ID!
+  content: String!
+  created_by: User!
+  created_at: DateTimeUtc!
+  updated_by: User!
+  updated_at: DateTimeUtc!
+  deleted_at: DateTimeUtc
+  replies(
+    createdBy: [ID!]
+
+    "Allows to filter if trashed elements should be fetched."
+    trashed: Trashed
+  ): [OverallCommentReply!]
+  read_at: DateTimeUtc
+}
+
+"A reply to an overall comment of a submission"
+type OverallCommentReply implements Comment {
+  id: ID!
+  content: String!
+  created_by: User!
+  updated_by: User!
+  created_at: DateTimeUtc!
+  updated_at: DateTimeUtc!
+  deleted_at: DateTimeUtc
+  parent_id: ID!
+  reply_to_id: ID!
+  read_at: DateTimeUtc
+}
+
+input InlineCommentHasManyInput {
+  create: [CreateInlineCommentInput!]
+  update: [UpdateInlineCommentInput!]
+}
+
+input CreateInlineCommentInput {
+  content: String!
+  style_criteria: [ID!]
+  from: Int
+  to: Int
+  parent_id: ID
+  reply_to_id: ID
+}
+
+input UpdateInlineCommentInput {
+  id: ID!
+  content: String
+  style_criteria: [ID!]
+  from: Int
+  to: Int
+}
+
+input OverallCommentHasManyInput {
+  create: [CreateOverallCommentInput!]
+  update: [UpdateOverallCommentInput!]
+}
+
+input CreateOverallCommentInput {
+  content: String!
+  parent_id: ID
+  reply_to_id: ID
+}
+
+input UpdateOverallCommentInput {
+  id: ID!
+  content: String
+}
+
+interface Comment {
+  id: ID!
+  content: String!
+  created_by: User!
+  updated_by: User!
+  created_at: DateTimeUtc!
+  updated_at: DateTimeUtc!
+  deleted_at: DateTimeUtc
+  read_at: DateTimeUtc
+}
+
+input MarkInlineCommentsReadInput {
+  submission_id: ID!
+  comment_ids: [ID!]!
+}
+
+input MarkOverallCommentsReadInput {
+  submission_id: ID!
+  comment_ids: [ID!]!
+}
+
+input inviteSubmissionUserInput {
+  submission_id: ID!
+  email: String!
+  message: String
+}
+
+input reinviteSubmissionUserInput {
+  submission_id: ID!
+  email: String!
+  message: String
+}
+
+"A Submission"
+type Submission {
+  id: ID!
+  title: String
+  created_at: DateTimeUtc!
+  updated_at: DateTimeUtc
+  created_by: User!
+  updated_by: User!
+  submitted_at: DateTimeUtc
+  publication: Publication!
+  reviewers: [User!]!
+  review_coordinators: [User!]!
+  submitters: [User!]!
+  files: [SubmissionFile]!
+  pivot: SubmissionUser
+  status: SubmissionStatus!
+  status_change_comment: String
+  content: SubmissionContent
+  commenters(type: CommentParticipantType): [User!]!
+  my_role: SubmissionUserRoles
+  effective_role: SubmissionUserRoles
+  audits: [SubmissionAudit]
+  inline_comments(
+    createdBy: [ID!]
+
+    "Allows to filter if trashed elements should be fetched."
+    trashed: Trashed
+  ): [InlineComment!]!
+  overall_comments(
+    createdBy: [ID!]
+
+    "Allows to filter if trashed elements should be fetched."
+    trashed: Trashed
+  ): [OverallComment!]!
+}
+
+"A user associated with a submission and a role"
+type SubmissionUser {
+  id: ID!
+  role_id: ID!
+  submission_id: ID!
+  user_id: ID!
+}
+
+"An uploaded file associated with a submission"
+type SubmissionFile {
+  id: ID!
+  submission_id: ID!
+  file_upload: String!
+}
+
+"The status of a submission"
+enum SubmissionStatus {
+  DRAFT
+  INITIALLY_SUBMITTED
+  RESUBMISSION_REQUESTED
+  RESUBMITTED
+  AWAITING_REVIEW
+  REJECTED
+  ACCEPTED_AS_FINAL
+  EXPIRED
+  UNDER_REVIEW
+  AWAITING_DECISION
+  REVISION_REQUESTED
+  ARCHIVED
+  DELETED
+}
+
+input DeleteCommentInput {
+  submission_id: ID!
+  comment_id: ID!
+}
+
+"Input type for creating a new submission via the createSubmissionDraft mutation"
+input CreateSubmissionDraftInput {
+  title: String!
+  publication_id: ID!
+  submitters: CreateSubmissionUserInput
+}
+
+input AcceptSubmissionInviteInput {
+  id: ID!
+  name: String
+  username: String!
+  password: String!
+}
+
+input UpdateSubmissionInput {
+  id: ID!
+  title: String
+  status: SubmissionStatus
+  status_change_comment: String
+  reviewers: UpdateSubmissionUserInput
+  review_coordinators: UpdateSubmissionUserInput
+  submitters: UpdateSubmissionUserInput
+  inline_comments: InlineCommentHasManyInput
+  overall_comments: OverallCommentHasManyInput
+}
+
+input UpdateSubmissionContent {
+  id: ID!
+  content: String!
+}
+
+input CreateSubmissionUserInput {
+  connect: [ID!]!
+}
+
+input UpdateSubmissionUserInput {
+  connect: [ID!]
+  disconnect: [ID!]
+}
+
+"Input type for connecting newly created submissions to files via nested mutation"
+input CreateSubmissionFilesHasMany {
+  create: Upload!
+}
+
+"Input type for creating a new association between an uploaded file and a submission"
+input CreateSubmissionFileInput {
+  submission_id: ID!
+  file_upload: Upload!
+}
+
+"The content of a submission"
+type SubmissionContent {
+  id: ID!
+  data: String!
+  created_at: DateTimeUtc!
+  modified_at: DateTimeUtc!
+  src_file: SubmissionFile!
+}
+
+enum SubmissionUserRoles {
+  submitter
+  reviewer
+  review_coordinator
+}
+
+"The type of comments to find participants for"
+enum CommentParticipantType {
+  INLINE
+  OVERALL
+}
+
+"A user role for permissions"
+type Role {
+  id: ID!
+  name: String!
+  guard_name: String!
+  created_at: DateTime
+  updated_at: DateTime
+  permissions: [Permission!]
+}
+
+"A user account"
+type User {
+  id: ID!
+  display_label: String
+  name: String
+  email: String!
+  username: String!
+  created_at: DateTime!
+  updated_at: DateTime
+  email_verified_at: DateTime
+  roles: [Role!]!
+  highest_privileged_role: UserRoles
+  permissions: [Permission!]
+  profile_metadata: ProfileMetadata
+  submissions: [Submission]!
+  pivot: SubmissionUser
+  staged: Boolean
+  notifications(
+    read: Boolean
+    unread: Boolean
+
+    "Limits number of fetched items."
+    first: Int!
+
+    "The offset from which items are returned."
+    page: Int
+  ): NotificationPaginator!
+}
+
+enum UserRoles {
+  submitter
+  reviewer
+  review_coordinator
+  editor
+  publication_admin
+  application_admin
+}
+
+type GeneralSettings {
+  site_name: String
+}
+
+input GeneralSettingsInput {
+  site_name: String
+}
+
+type Audit {
+  id: ID
+  user: User!
+  event: String
+  old_values: JSON
+  new_values: JSON
+  created_at: DateTimeUtc!
+  updated_at: DateTimeUtc
+}
+
+type SubmissionAudit {
+  id: ID
+  user: User
+  event: String
+  old_values: SubmissionAuditValues
+  new_values: SubmissionAuditValues
+  created_at: DateTimeUtc!
+  updated_at: DateTimeUtc
+}
+
+type SubmissionAuditValues {
+  title: String
+  status: SubmissionStatus
+  status_change_comment: String
+  content_id: ID
+}
+
+"A button that apepars on the Login page for a supported external identity provider"
+type IdentityProvider {
+  name: String!
+  login_url: String!
+  label: String!
+  icon: String!
+}
+
+"A response from an external identity provider"
+type LoginOauthResponse {
+  action: String
+  user: ProviderUser
+  provider: Provider
+}
+
+"The user within the response from an external identity provider"
+type ProviderUser {
+  name: String
+  username: String
+  email: String
+}
+
+"The provider within the response from an external identity provider"
+type Provider {
+  provider_name: String!
+  provider_id: String!
+  user_id: ID!
+}
+
+"Inputs"
+input RegisterOauthUserInput {
+  user: ProviderUserInput
+  provider: ProviderInput
+}
+
+input ProviderUserInput {
+  name: String
+  username: String
+  email: String
+}
+
+input ProviderInput {
+  provider_name: String!
+  provider_id: String!
+}
+
+type VersionInfo {
+  version: String
+  version_url: String
+  version_date: String
+}
+
+"A date string with format `Y-m-d`, e.g. `2011-05-23`."
+scalar Date
+
+"A datetime string with format `Y-m-d H:i:s`, e.g. `2018-05-23 13:43:32`."
+scalar DateTime
+
+scalar DateTimeUtc
+
+"Can be used as an argument to upload files using https:\/\/github.com\/jaydenseric\/graphql-multipart-request-spec"
+scalar Upload
+
+"JSON-format data"
+scalar JSON
+
+"Input type for creating a new user via the userCreate mutation"
+input CreateUserInput {
+  "Display name. (optional)"
+  name: String
+
+  "Username. Must be unique. (required)"
+  username: String!
+
+  "Email address. Must be unique. (required)"
+  email: String!
+
+  "Password used to login to the application. (required)"
+  password: String!
+}
+
+"Input type for updating user information via the updateUser mutation"
+input UpdateUserInput {
+  "User ID"
+  id: ID!
+
+  "Display name"
+  name: String
+
+  "Username of the user. Must be unique."
+  username: String
+
+  "Email address of the user. Must be unique."
+  email: String
+
+  "Password used to login to the application."
+  password: String
+
+  "Metadata related to the profile of a user."
+  profile_metadata: UpdateProfileMetadataInput
+}
+
+"Input type for resetting a password from a password reset request email"
+input ResetPasswordInput {
+  email: String!
+  password: String!
+  token: String!
+}
+
+"Validate the availability of username and email via the validateNewUser query"
+input ValidateNewUserInput {
+  "Username.  Validation error if not unique"
+  username: String
+
+  "Email. Validation error if not unique"
+  email: String
+}
+
+"Input type for adding social media data to profile metadata"
+input UpdateSocialMediaInput {
+  google: String
+  twitter: String
+  facebook: String
+  instagram: String
+  linkedin: String
+}
+
+input UpdateAcademicProfilesInput {
+  humanities_commons: String
+  orcid_id: String
+}
+
+"Input type for adding profile metadata for a user"
+input UpdateProfileMetadataInput {
+  social_media: UpdateSocialMediaInput
+  academic_profiles: UpdateAcademicProfilesInput
+  position_title: String
+  specialization: String
+  affiliation: String
+  biography: String
+  websites: [String]
+}
+
+"Key\/Value pairs input"
+input KeyValueInput {
+  key: String
+  value: String
+}
+
+"Information about pagination using a fully featured paginator."
+type PaginatorInfo {
+  "Number of items in the current page."
+  count: Int!
+
+  "Index of the current page."
+  currentPage: Int!
+
+  "Index of the first item in the current page."
+  firstItem: Int
+
+  "Are there more pages after this one?"
+  hasMorePages: Boolean!
+
+  "Index of the last item in the current page."
+  lastItem: Int
+
+  "Index of the last available page."
+  lastPage: Int!
+
+  "Number of items per page."
+  perPage: Int!
+
+  "Number of total available items."
+  total: Int!
+}
+
+"A paginated list of Notification items."
+type NotificationPaginator {
+  "Pagination information about the list of items."
+  paginatorInfo: PaginatorInfo!
+
+  "A list of Notification items."
+  data: [Notification!]!
+}
+
+"A paginated list of User items."
+type UserPaginator {
+  "Pagination information about the list of items."
+  paginatorInfo: PaginatorInfo!
+
+  "A list of User items."
+  data: [User!]!
+}
+
+"A paginated list of Publication items."
+type PublicationPaginator {
+  "Pagination information about the list of items."
+  paginatorInfo: PaginatorInfo!
+
+  "A list of Publication items."
+  data: [Publication!]!
+}
+
+"A paginated list of Submission items."
+type SubmissionPaginator {
+  "Pagination information about the list of items."
+  paginatorInfo: PaginatorInfo!
+
+  "A list of Submission items."
+  data: [Submission!]!
+}
+
+"Directions for ordering a list of records."
+enum SortOrder {
+  "Sort records in ascending order."
+  ASC
+
+  "Sort records in descending order."
+  DESC
+}
+
+"Aggregate functions when ordering by a relation without specifying a column."
+enum OrderByRelationAggregateFunction {
+  "Amount of items."
+  COUNT
+}
+
+"Aggregate functions when ordering by a relation that may specify a column."
+enum OrderByRelationWithColumnAggregateFunction {
+  "Average."
+  AVG
+
+  "Minimum."
+  MIN
+
+  "Maximum."
+  MAX
+
+  "Sum."
+  SUM
+
+  "Amount of items."
+  COUNT
+}
+
+"Allows ordering a list of records."
+input OrderByClause {
+  "The column that is used for ordering."
+  column: String!
+
+  "The direction that is used for ordering."
+  order: SortOrder!
+}
+
+"Specify if you want to include or exclude trashed results from a query."
+enum Trashed {
+  "Only return trashed results."
+  ONLY
+
+  "Return both trashed and non-trashed results."
+  WITH
+
+  "Only return non-trashed results."
+  WITHOUT
+}
+

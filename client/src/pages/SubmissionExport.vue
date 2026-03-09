@@ -176,38 +176,7 @@ function getCommentCount(type) {
   return submission.value?.[`${type}`].length + reply_count ?? 0
 }
 
-function getCommenters(type) {
-  let replies = []
-  if (!submission.value?.[`${type}`]) {
-    return replies
-  }
-  const comments = submission.value?.[`${type}`].map((comment) => {
-    comment.replies.map((reply) => {
-      replies.push(reply.created_by)
-    })
-    return comment.created_by
-  })
-
-  return [...new Set([...new Set(comments), ...new Set(replies)])]
-}
-
-const inline_commenters = computed(() => getCommenters("inline_comments"))
-const overall_commenters = computed(() => getCommenters("overall_comments"))
-
-const all_commenters = computed(() => {
-  let commenters = inline_commenters.value.concat(
-    overall_commenters.value.filter(
-      (item2) => !inline_commenters.value.some((item1) => item1.id === item2.id)
-    )
-  )
-  if (export_option_choice.value === "i") {
-    commenters = inline_commenters.value
-  }
-  if (export_option_choice.value === "o") {
-    commenters = overall_commenters.value
-  }
-  return commenters
-})
+const all_commenters = computed(() => submission.value?.commenters ?? [])
 
 watch([result, all_commenters], () => {
   export_participants.value = all_commenters.value

@@ -165,6 +165,7 @@ type Submission {
     status: SubmissionStatus!
     status_change_comment: String
     content: SubmissionContent #This field is optional bc it may be null if the pandoc process is still importing the document
+    commenters(type: CommentParticipantType): [User!]! @method(name: "getCommentParticipants")
     my_role: SubmissionUserRoles @method(name: "getMyRole")
     effective_role: SubmissionUserRoles @method(name: "getEffectiveRole")
     audits: [SubmissionAudit] @belongsToMany
@@ -287,4 +288,12 @@ enum SubmissionUserRoles {
     submitter @enum(value: 6)
     reviewer @enum(value: 5)
     review_coordinator @enum(value: 4)
+}
+
+"""
+The type of comments to find participants for
+"""
+enum CommentParticipantType {
+    INLINE
+    OVERALL
 }
