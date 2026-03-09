@@ -362,6 +362,25 @@ export const GET_SUBMISSION = gql`
   ${_RELATED_USER_FIELDS}
 `
 
+export const GET_SUBMISSION_COMMENTERS = gql`
+  query GetSubmissionCommenters(
+    $id: ID!
+    $commenterType: CommentParticipantType
+  ) {
+    submission(id: $id) {
+      id
+      title
+      content {
+        data
+      }
+      commenters(type: $commenterType) {
+        ...relatedUserFields
+      }
+    }
+  }
+  ${_RELATED_USER_FIELDS}
+`
+
 export const GET_SUBMISSION_REVIEW = gql`
   query GetSubmissionReview(
     $id: ID!
@@ -390,9 +409,6 @@ export const GET_SUBMISSION_REVIEW = gql`
         publication_admins {
           ...relatedUserFields
         }
-      }
-      commenters {
-        ...relatedUserFields
       }
       inline_comments(trashed: WITH, createdBy: $createdBy)
         @skip(if: $skip_inline) {

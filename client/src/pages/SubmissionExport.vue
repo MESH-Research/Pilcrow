@@ -40,54 +40,11 @@
             />
           </q-card-section>
         </q-card>
-        <q-card square bordered flat>
-          <q-card-section>
-            <h4 class="q-my-none text-bold">
-              {{ $t("export.participants.title") }}
-            </h4>
-            <div v-if="all_commenters.length == 0">
-              <p>{{ $t("export.participants.no_commenters") }}</p>
-            </div>
-            <div v-else>
-              <p>{{ $t("export.participants.byline") }}</p>
-              <div class="q-gutter-sm q-mb-sm">
-                <q-btn
-                  size="sm"
-                  :label="$t('export.participants.select_all')"
-                  @click="export_participants = [...all_commenters]"
-                />
-                <q-btn
-                  size="sm"
-                  :label="$t('export.participants.select_none')"
-                  @click="export_participants = []"
-                />
-              </div>
-              <q-list>
-                <q-item
-                  v-for="commenter in all_commenters"
-                  :key="commenter.id"
-                  tag="label"
-                >
-                  <q-item-section avatar>
-                    <q-checkbox
-                      v-model="export_participants"
-                      :aria-labelledby="`commenter_label_${commenter.id}`"
-                      :val="commenter"
-                    />
-                  </q-item-section>
-                  <q-item-section top avatar>
-                    <avatar-image :user="commenter" rounded />
-                  </q-item-section>
-                  <q-item-section>
-                    <q-item-label :id="`commenter_label_${commenter.id}`">{{
-                      commenter.display_label
-                    }}</q-item-label>
-                  </q-item-section>
-                </q-item>
-              </q-list>
-            </div>
-          </q-card-section>
-        </q-card>
+        <export-participant-selector
+          v-model="export_participants"
+          :submission-id="id"
+          :commenter-type="export_option_choice"
+        />
       </section>
       <div v-if="submission" class="row q-gutter-md q-py-md">
         <q-btn
@@ -116,8 +73,8 @@
   </div>
 </template>
 <script setup>
-import AvatarImage from "../components/atoms/AvatarImage.vue"
-import { computed, ref, watch, onMounted } from "vue"
+import ExportParticipantSelector from "../components/atoms/ExportParticipantSelector.vue"
+import { computed, ref } from "vue"
 import { GET_SUBMISSION_REVIEW } from "src/graphql/queries"
 import { useQuery } from "@vue/apollo-composable"
 import { useI18n } from "vue-i18n"
@@ -126,14 +83,6 @@ const { t } = useI18n()
 const export_option_choice = ref(null)
 const export_participants = ref([])
 
-onMounted(() => {
-  export_option_choice.value = "io"
-})
-
-const submission = computed(() => {
-  return result.value?.submission
-})
-
 const props = defineProps({
   id: {
     type: String,
@@ -141,7 +90,13 @@ const props = defineProps({
   }
 })
 
-const { result } = useQuery(GET_SUBMISSION_REVIEW, { id: props.id })
+const commentVars = computed(() => ({
+  id: props.id,
+  createdBy: export_participants.value.map((u) => u.id)
+}))
+const { result } = useQuery(GET_SUBMISSION_REVIEW, commentVars)
+const submission = computed(() => result.value?.submission)
+
 const inline_comments_count = computed(() => getCommentCount("inline_comments"))
 const overall_comments_count = computed(() =>
   getCommentCount("overall_comments")
@@ -153,15 +108,15 @@ const export_options = computed(() => [
       `export.comments.inline_and_overall`,
       inline_comments_count.value + overall_comments_count.value
     ),
-    value: "io"
+    value: null
   },
   {
     label: t(`export.comments.inline_only`, inline_comments_count.value),
-    value: "i"
+    value: "INLINE"
   },
   {
     label: t(`export.comments.overall_only`, overall_comments_count.value),
-    value: "o"
+    value: "OVERALL"
   }
 ])
 
@@ -175,12 +130,6 @@ function getCommentCount(type) {
   })
   return submission.value?.[`${type}`].length + reply_count ?? 0
 }
-
-const all_commenters = computed(() => submission.value?.commenters ?? [])
-
-watch([result, all_commenters], () => {
-  export_participants.value = all_commenters.value
-})
 
 const blob = computed(() =>
   URL.createObjectURL(

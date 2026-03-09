@@ -77,29 +77,15 @@ const props = defineProps({
   },
   exportOptionChoice: {
     type: String,
-    default: "io"
+    default: null
   }
 })
-const exportOptionChoiceMapper = {
-  io: {
-    id: props.id,
-    skip_inline: false,
-    skip_overall: false
-  },
-  i: {
-    id: props.id,
-    skip_inline: false,
-    skip_overall: true
-  },
-  o: {
-    id: props.id,
-    skip_inline: true,
-    skip_overall: false
-  }
+const exportType = route.query.export ?? props.exportOptionChoice ?? null
+const exportOptionChoiceObject = {
+  id: props.id,
+  skip_inline: exportType === "OVERALL",
+  skip_overall: exportType === "INLINE"
 }
-
-const exportOptionChoiceObject =
-  exportOptionChoiceMapper[route.query.export ?? props.exportOptionChoice]
 
 const createdBy = route.query.ids?.split(",").map(Number)
 if (createdBy?.length) {
