@@ -121,14 +121,8 @@ const export_options = computed(() => [
 ])
 
 function getCommentCount(type) {
-  let reply_count = 0
-  if (!submission.value?.[`${type}`]) {
-    return reply_count
-  }
-  submission.value?.[`${type}`].map((comment) => {
-    reply_count += comment.replies.length
-  })
-  return submission.value?.[`${type}`].length + reply_count ?? 0
+  const comments = submission.value?.[type] ?? []
+  return comments.reduce((sum, c) => sum + 1 + c.replies.length, 0)
 }
 
 const blob = computed(() =>
