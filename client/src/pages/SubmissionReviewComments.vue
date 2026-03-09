@@ -101,13 +101,9 @@ const exportOptionChoiceMapper = {
 const exportOptionChoiceObject =
   exportOptionChoiceMapper[route.query.export ?? props.exportOptionChoice]
 
-const commenters_array = route.query.ids?.split(",").map(Number)
-if (commenters_array?.length) {
-  exportOptionChoiceObject.sic = "I_D"
-  exportOptionChoiceObject.sirc = "I_D"
-  exportOptionChoiceObject.soc = "I_D"
-  exportOptionChoiceObject.sorc = "I_D"
-  exportOptionChoiceObject.commenters_array = commenters_array
+const createdBy = route.query.ids?.split(",").map(Number)
+if (createdBy?.length) {
+  exportOptionChoiceObject.createdBy = createdBy
 }
 
 const showInlineComments = !exportOptionChoiceObject.skip_inline ?? true
