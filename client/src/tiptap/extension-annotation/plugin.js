@@ -1,7 +1,6 @@
 import { Plugin, PluginKey } from "@tiptap/pm/state"
 //import { AnnotationState } from './AnnotationState'
 import { Decoration, DecorationSet } from "@tiptap/pm/view"
-import { defineEmits } from "vue"
 
 export const AnnotationPluginKey = new PluginKey("annotation")
 
@@ -48,8 +47,6 @@ function commentWidget({ click, context }) {
   return button
 }
 
-const emit = defineEmits(["editorReady"])
-
 export const AnnotationPlugin = () =>
   new Plugin({
     key: AnnotationPluginKey,
@@ -60,9 +57,6 @@ export const AnnotationPlugin = () =>
       },
       apply(transaction, state) {
         const action = transaction.getMeta(AnnotationPluginKey)
-        ;() => {
-          emit("editorReady")
-        }
         if (action) {
           return getDecorations(transaction.doc, action.annotations)
         }
