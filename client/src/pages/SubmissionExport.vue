@@ -94,9 +94,7 @@
             params: { id: submission.id },
             query: {
               export: export_option_choice,
-              ids: export_participants.map((user) => {
-                return user.id
-              })
+              ids: export_participants.map((user) => user.id).join(',')
             }
           }"
         />
