@@ -50,6 +50,18 @@
             </div>
             <div v-else>
               <p>{{ $t("export.participants.byline") }}</p>
+              <div class="q-gutter-sm q-mb-sm">
+                <q-btn
+                  size="sm"
+                  :label="$t('export.participants.select_all')"
+                  @click="export_participants = [...all_commenters]"
+                />
+                <q-btn
+                  size="sm"
+                  :label="$t('export.participants.select_none')"
+                  @click="export_participants = []"
+                />
+              </div>
               <q-list>
                 <q-item
                   v-for="commenter in all_commenters"

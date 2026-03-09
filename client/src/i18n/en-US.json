@@ -1014,7 +1014,9 @@
     "participants": {
       "title": "Participants",
       "byline": "Who should be included?",
-      "no_commenters": "No commenters found"
+      "no_commenters": "No commenters found",
+      "select_all": "Select all",
+      "select_none": "Select none"
     },
     "submission_review_comments": "Submission Review Comments",
     "review_comments": "Review Comments",
