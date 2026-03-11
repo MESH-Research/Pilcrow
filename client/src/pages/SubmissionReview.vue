@@ -78,7 +78,6 @@ provide("submission", submission)
 provide("activeComment", ref(null))
 provide("forExport", ref(false))
 provide("commentDrawerOpen", commentDrawerOpen)
-provide("inlineContextIds", ref({}))
 
 const scrollOverallComments = ref(null)
 const scrollAddNewOverallComment = ref(null)

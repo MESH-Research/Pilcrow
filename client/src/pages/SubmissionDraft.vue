@@ -97,14 +97,12 @@
 import ConfirmStatusChangeDialog from "src/components/dialogs/ConfirmStatusChangeDialog.vue"
 import SubmissionDraftTodoItem from "src/components/SubmissionDraftTodoItem.vue"
 import { GET_SUBMISSION } from "src/graphql/queries"
-import { computed, ref, provide } from "vue"
+import { computed } from "vue"
 import { useQuasar } from "quasar"
 import { useQuery } from "@vue/apollo-composable"
 import { useRouter } from "vue-router"
 import { useVuelidate } from "@vuelidate/core"
 import { required } from "@vuelidate/validators"
-
-provide("inlineContextIds", ref({}))
 
 const props = defineProps({
   id: {

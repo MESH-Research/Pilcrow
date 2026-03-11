@@ -91,7 +91,6 @@ describe("SubmissionContent", () => {
         }
       ]
     })
-    const inlineContextIds = ref({})
     const activeComment = ref(null)
     const forExport = ref(false)
     return {
@@ -103,8 +102,7 @@ describe("SubmissionContent", () => {
             submission,
             activeComment,
             commentDrawerOpen: true,
-            forExport,
-            inlineContextIds
+            forExport
           }
         }
       }),

@@ -32,56 +32,83 @@
             <h4 class="q-my-none text-bold">
               {{ $t("export.comments.title") }}
             </h4>
-            <p>{{ $t("export.comments.byline") }}</p>
+            <q-checkbox
+              v-model="include_comments"
+              :label="$t('export.comments.include')"
+            />
             <q-option-group
-              v-model="export_option_choice"
-              :options="export_options"
+              v-if="include_comments"
+              v-model="comment_type"
+              :options="comment_options"
               type="radio"
+              class="q-ml-md"
+            />
+            <q-checkbox
+              v-if="include_comments"
+              v-model="filter_participants"
+              :label="$t('export.participants.filter')"
+            />
+            <export-participant-selector
+              v-if="include_comments && filter_participants"
+              v-model="export_participants"
+              :submission-id="id"
+              :commenter-type="comment_type"
             />
           </q-card-section>
         </q-card>
-        <export-participant-selector
-          v-model="export_participants"
-          :submission-id="id"
-          :commenter-type="export_option_choice"
-        />
       </section>
       <div v-if="submission" class="row q-gutter-md q-py-md">
         <q-btn
-          :label="$t(`export.submission`)"
+          :label="$t(`export.download.title`)"
           color="accent"
           icon="file_download"
-          :href="blob"
-          :download="`submission_${submission.id}.html`"
+          :href="downloadBlob"
+          :download="downloadFilename"
+          :disable="!downloadBlob"
         />
         <q-btn
-          :label="$t(`export.review_comments`)"
+          :label="$t(`export.preview`)"
           color="primary"
-          icon="chat_bubble"
-          :to="{
-            name: 'submission:comments',
-            params: { id: submission.id },
-            query: {
-              export: export_option_choice,
-              ids: export_participants.map((user) => user.id).join(',')
-            }
-          }"
+          icon="visibility"
+          :disable="!downloadBlob"
+          @click="showPreview = true"
         />
       </div>
       <q-spinner v-else />
     </article>
+    <submission-export-generator
+      v-if="submission"
+      :id="id"
+      v-model:preview-open="showPreview"
+      :options="exportOptions"
+      @update:blob="downloadBlob = $event"
+    />
   </div>
 </template>
 <script setup>
 import ExportParticipantSelector from "../components/atoms/ExportParticipantSelector.vue"
+import SubmissionExportGenerator from "../components/SubmissionExportGenerator.vue"
 import { computed, ref } from "vue"
 import { GET_SUBMISSION_REVIEW } from "src/graphql/queries"
 import { useQuery } from "@vue/apollo-composable"
 import { useI18n } from "vue-i18n"
 
 const { t } = useI18n()
-const export_option_choice = ref(null)
+const include_comments = ref(false)
+const comment_type = ref(null)
+const filter_participants = ref(false)
 const export_participants = ref([])
+const downloadBlob = ref("")
+
+const showPreview = ref(false)
+
+const exportOptions = computed(() => ({
+  includeInline: include_comments.value && comment_type.value !== "OVERALL",
+  includeOverall: include_comments.value && comment_type.value !== "INLINE",
+  createdBy: filter_participants.value
+    ? export_participants.value.map((u) => u.id)
+    : []
+}))
 
 const props = defineProps({
   id: {
@@ -91,8 +118,7 @@ const props = defineProps({
 })
 
 const commentVars = computed(() => ({
-  id: props.id,
-  createdBy: export_participants.value.map((u) => u.id)
+  id: props.id
 }))
 const { result } = useQuery(GET_SUBMISSION_REVIEW, commentVars)
 const submission = computed(() => result.value?.submission)
@@ -102,7 +128,7 @@ const overall_comments_count = computed(() =>
   getCommentCount("overall_comments")
 )
 
-const export_options = computed(() => [
+const comment_options = computed(() => [
   {
     label: t(
       `export.comments.inline_and_overall`,
@@ -120,14 +146,13 @@ const export_options = computed(() => [
   }
 ])
 
+const downloadFilename = computed(() => {
+  const base = `submission_${props.id}`
+  return include_comments.value ? `${base}_comments.html` : `${base}.html`
+})
+
 function getCommentCount(type) {
   const comments = submission.value?.[type] ?? []
   return comments.reduce((sum, c) => sum + 1 + c.replies.length, 0)
 }
-
-const blob = computed(() =>
-  URL.createObjectURL(
-    new Blob([submission.value.content.data], { type: "text/html" })
-  )
-)
 </script>

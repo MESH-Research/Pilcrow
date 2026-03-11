@@ -235,7 +235,6 @@ const onAnnotationClick = (context, { target }) => {
   activeComment.value = findCommentFromId(widgets[currentIndex + 1])
 }
 
-const inlineContextIds = inject("inlineContextIds") ?? ref({})
 const inlineComments = computed(() => submission.value?.inline_comments ?? [])
 const annotations = computed(() =>
   props.highlightVisibility
@@ -246,13 +245,11 @@ const annotations = computed(() =>
               to,
               context: { id },
               active: id === activeComment.value?.id,
-              context_ids: inlineContextIds.value,
               click: onAnnotationClick
             }
           : {
               context: { id },
               active: id === activeComment.value?.id,
-              context_ids: [],
               click: () => false
             }
       )

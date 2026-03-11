@@ -212,9 +212,7 @@ import {
   UPDATE_SUBMISSION_CONTENT_WITH_FILE
 } from "src/graphql/mutations"
 import { useQuery, useMutation } from "@vue/apollo-composable"
-import { watchEffect, computed, ref, provide } from "vue"
-
-provide("inlineContextIds", ref({}))
+import { watchEffect, computed, ref } from "vue"
 
 const props = defineProps({
   id: {

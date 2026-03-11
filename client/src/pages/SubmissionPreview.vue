@@ -75,7 +75,6 @@ provide("submission", submission)
 provide("commentDrawerOpen", null)
 provide("activeComment", ref(null))
 provide("forExport", false)
-provide("inlineContextIds", ref({}))
 </script>
 
 <style lang="sass" scoped>
