@@ -1,6 +1,5 @@
 <template>
-  <div :class="commentClass">
-    <a v-if="isTopLevelInline" :id="`inline-comment-${comment.id}`"></a>
+  <div :id="anchorId" :class="commentClass">
     <div class="comment">
       <div v-if="comment.deleted_at" class="comment-header">
         <div>
@@ -40,11 +39,13 @@
         </div>
       </div>
       <div v-if="replyTo && !comment.deleted_at" class="reply-reference">
-        {{
-          $t("submissions.comment.reference.in_reply_to", {
-            username: replyTo.created_by.display_label
-          })
-        }}
+        <a :href="`#${replyToAnchorId}`" class="reply-link">
+          {{
+            $t("submissions.comment.reference.in_reply_to", {
+              username: replyTo.created_by.display_label
+            })
+          }}
+        </a>
       </div>
       <!-- eslint-disable vue/no-v-html -->
       <div
@@ -105,6 +106,14 @@ const props = defineProps({
   }
 })
 
+const commentPrefix = computed(() => {
+  const type = props.comment.__typename
+  if (type === "InlineComment") return "inline-comment"
+  return "overall-comment"
+})
+
+const anchorId = computed(() => `${commentPrefix.value}-${props.comment.id}`)
+
 const isTopLevelInline = computed(() => {
   return props.comment.__typename === "InlineComment"
 })
@@ -123,6 +132,11 @@ const repliesClass = computed(() => {
 const replyTo = computed(() => {
   if (!props.comment.reply_to_id) return null
   return props.siblings.find((r) => r.id === props.comment.reply_to_id)
+})
+
+const replyToAnchorId = computed(() => {
+  if (!replyTo.value) return null
+  return `${commentPrefix.value}-${replyTo.value.id}`
 })
 
 function formatDate(isoDate) {

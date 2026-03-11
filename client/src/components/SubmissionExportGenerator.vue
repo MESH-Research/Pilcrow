@@ -163,7 +163,11 @@ function updateBlob() {
     ".comment-highlight[data-context-id]"
   )) {
     const id = highlight.getAttribute("data-context-id")
-    highlight.setAttribute("href", `#inline-comment-${id}`)
+    const link = doc.createElement("a")
+    link.href = `#inline-comment-${id}`
+    link.className = "comment-highlight-link"
+    highlight.parentNode.insertBefore(link, highlight)
+    link.appendChild(highlight)
     if (numMap[id]) {
       highlight.setAttribute("data-comment-number", numMap[id])
     }

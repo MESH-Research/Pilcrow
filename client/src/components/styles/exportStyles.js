@@ -7,6 +7,10 @@ export default `
 .review-controls {
   display: none;
 }
+.comment-highlight-link {
+  color: inherit;
+  text-decoration: none;
+}
 .comment-highlight {
   background-color: #c9e5f8;
   cursor: pointer;
@@ -79,6 +83,9 @@ export default `
   font-size: 0.85rem;
   color: #595959;
   padding: 0 0 4px 1rem;
+}
+.reply-link {
+  color: inherit;
 }
 
 /* Comment content */
