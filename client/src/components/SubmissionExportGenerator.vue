@@ -49,7 +49,7 @@
       <q-card-section class="col q-pt-none" style="height: calc(100vh - 60px)">
         <iframe
           ref="previewIframe"
-          :src="blobUrl"
+          :srcdoc="exportHtml"
           style="
             background-color: #fff;
             width: 100%;
@@ -151,6 +151,7 @@ const overallNumberMap = computed(() => {
 
 const exportContent = ref(null)
 const previewIframe = ref(null)
+const exportHtml = ref("")
 const blobUrl = ref("")
 
 function attachIframeLinkHandler() {
@@ -189,9 +190,9 @@ function updateBlob() {
       highlight.setAttribute("data-comment-number", numMap[id])
     }
   }
-  blobUrl.value = URL.createObjectURL(
-    new Blob([doc.documentElement.outerHTML], { type: "text/html" })
-  )
+  const html = doc.documentElement.outerHTML
+  exportHtml.value = html
+  blobUrl.value = URL.createObjectURL(new Blob([html], { type: "text/html" }))
   emit("update:blob", blobUrl.value)
 }
 
