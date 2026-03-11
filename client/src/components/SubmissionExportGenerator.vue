@@ -30,7 +30,12 @@
       <q-card-section class="col q-pt-none" style="height: calc(100vh - 60px)">
         <iframe
           :src="blobUrl"
-          style="width: 100%; height: 100%; border: none"
+          style="
+            background-color: #fff;
+            width: 100%;
+            height: 100%;
+            border: none;
+          "
         />
       </q-card-section>
     </q-card>
