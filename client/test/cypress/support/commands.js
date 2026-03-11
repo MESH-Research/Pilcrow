@@ -92,19 +92,36 @@ Cypress.Commands.add("interceptGQLOperation", (operationName) => {
   })
 })
 
+// Passwords for seeded test users (see backend/database/seeders/UserSeeder.php)
+const SEEDED_PASSWORDS = {
+  "applicationadministrator@meshresearch.net": "adminPassword!@#",
+  "publicationadministrator@meshresearch.net": "publicationadminPassword!@#",
+  "publicationeditor@meshresearch.net": "editorPassword!@#",
+  "reviewcoordinator@meshresearch.net": "coordinatorPassword!@#",
+  "reviewer@meshresearch.net": "reviewerPassword!@#",
+  "regularuser@meshresearch.net": "regularPassword!@#"
+}
+
 /**
- * Login to the api without providing authentication.
+ * Login to the api using seeded credentials.
  *
- * @example cy.login({email: 'mytestuser@example.com'})
+ * @example cy.login({email: 'regularuser@meshresearch.net'})
  */
 Cypress.Commands.add("login", ({ email }) => {
+  const password = SEEDED_PASSWORDS[email.toLowerCase()]
+  if (!password) {
+    throw new Error(
+      `No seeded password found for "${email}". Add it to SEEDED_PASSWORDS in commands.js.`
+    )
+  }
   cy.xsrfToken().then((token) => {
     return cy
       .request({
         method: "POST",
         url: "/graphql",
         body: {
-          query: `mutation { forceLogin(email: "${email}") {username, email, id, name}}`
+          query: `mutation Login($email: String!, $password: String!) { login(email: $email, password: $password) { id, username, email, name } }`,
+          variables: { email, password }
         },
         headers: {
           origin: Cypress.config().baseUrl,
@@ -113,7 +130,7 @@ Cypress.Commands.add("login", ({ email }) => {
       })
       .then((response) => {
         expect(response.status).to.eq(200)
-        expect(response.body.data.forceLogin.email).to.eq(email)
+        expect(response.body.data.login.email).to.eq(email)
         return response
       })
   })

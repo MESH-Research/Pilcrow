@@ -43,8 +43,7 @@ module.exports = defineConfig({
               url: `${config.baseUrl}/graphql`,
               method: "POST",
               data: {
-                query:
-                  'mutation { artisanCommand(command: "migrate:fresh" parameters: [{key: "--seed" value: "true"}])}'
+                query: "mutation { resetDatabase }"
               }
             }).then((response) => {
               const {
@@ -57,7 +56,7 @@ module.exports = defineConfig({
                 console.log(errors)
                 reject()
               }
-              resolve(data.artisanCommand)
+              resolve(data.resetDatabase)
             })
           })
         }
