@@ -1,6 +1,6 @@
 <template>
-  <div style="position: absolute; left: -9999px">
-    <div ref="commentsContent">
+  <div style="display: none">
+    <div ref="exportContent">
       <submission-content
         v-model:highlight-visibility="highlightVisibility"
         :show-overall-comments="showOverallComments"
@@ -8,12 +8,21 @@
         @scroll-add-new-overall-comment="() => {}"
         @editor-ready="updateBlob"
       />
-      <submission-comment-drawer
-        v-if="showInlineComments"
-        v-model:drawer-open="commentDrawerOpen"
+      <hr
+        v-if="showInlineComments || showOverallComments"
+        class="page-separator"
       />
-      <q-separator class="page-seperator" />
-      <submission-comment-section v-if="showOverallComments" />
+      <export-comment-list
+        v-if="showInlineComments"
+        :heading="$t('submissions.inline_comments.heading')"
+        :comments="submission?.inline_comments ?? []"
+        sort-by="from"
+      />
+      <export-comment-list
+        v-if="showOverallComments"
+        :heading="$t('submissions.overall_comments.heading')"
+        :comments="submission?.overall_comments ?? []"
+      />
     </div>
   </div>
   <q-dialog
@@ -43,8 +52,7 @@
 </template>
 
 <script setup>
-import SubmissionCommentDrawer from "src/components/atoms/SubmissionCommentDrawer.vue"
-import SubmissionCommentSection from "src/components/atoms/SubmissionCommentSection.vue"
+import ExportCommentList from "src/components/export/ExportCommentList.vue"
 import SubmissionContent from "src/components/atoms/SubmissionContent.vue"
 import { ref, provide, computed, watch, nextTick } from "vue"
 import { GET_SUBMISSION_REVIEW } from "src/graphql/queries"
@@ -73,8 +81,10 @@ const props = defineProps({
 
 const emit = defineEmits(["update:blob", "update:previewOpen"])
 
+// SubmissionContent still requires these injections
 provide("activeComment", ref(null))
 provide("forExport", ref(true))
+provide("commentDrawerOpen", ref(false))
 const { t } = useI18n()
 
 const exportOptionChoiceObject = computed(() => {
@@ -100,28 +110,24 @@ const showOverallComments = computed(
 const { result } = useQuery(GET_SUBMISSION_REVIEW, exportOptionChoiceObject)
 const submission = computed(() => result.value?.submission)
 const highlightVisibility = ref(true)
-const commentDrawerOpen = ref(false)
-provide("commentDrawerOpen", commentDrawerOpen)
 provide("submission", submission)
 
-const commentsContent = ref(null)
+const exportContent = ref(null)
 const blobUrl = ref("")
 
 function updateBlob() {
-  const el = commentsContent.value
+  const el = exportContent.value
   if (!el) return
   const doc = new DOMParser().parseFromString(el.innerHTML, "text/html")
   doc.title = t("export.submission_review_comments")
   const style = doc.createElement("style")
   style.textContent = exportStyles
   doc.head.appendChild(style)
-  for (const highlight of doc.querySelectorAll("[data-context-id]")) {
+  for (const highlight of doc.querySelectorAll(
+    ".comment-highlight[data-context-id]"
+  )) {
     const id = highlight.getAttribute("data-context-id")
     highlight.setAttribute("href", `#inline-comment-${id}`)
-  }
-  for (const link of doc.querySelectorAll('[aria-label="Go To Highlight"]')) {
-    const id = link.getAttribute("data-context-id")
-    link.setAttribute("href", `#comment-highlight-${id}`)
   }
   blobUrl.value = URL.createObjectURL(
     new Blob([doc.documentElement.outerHTML], { type: "text/html" })
@@ -129,12 +135,6 @@ function updateBlob() {
   emit("update:blob", blobUrl.value)
 }
 
-watch(commentsContent, () => updateBlob())
+watch(exportContent, () => updateBlob())
 watch(submission, () => nextTick(() => updateBlob()))
 </script>
-
-<style lang="sass" scoped>
-.page-seperator
-  height: 3px
-  background-color: #888
-</style>

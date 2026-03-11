@@ -1,55 +1,40 @@
 export default `
+/* Submission content */
 .comment-widget,
 .q-btn,
 .q-avatar,
-.q-chip i,
-.q-img {
-  display: none;
-}
-.q-chip {
-  background: #000;
-  border-radius: 16px;
-  color: #fff;
-  display: inline-block;
-  padding: 4px 16px;
-}
-.text-h3 {
-  font-size: 24px;
-  font-weight: bold;
-}
+.q-img,
 .review-controls {
   display: none;
 }
-.comment-header .text-h4 {
-  font-weight: bold;
-}
-.comment-header-name .text-h4:before {
-  content: "#" attr(data-context-id);
-  display: inline-block;
-  font-size: 1rem;
-  padding-right: 6px;
-}
-aside.q-drawer {
-  margin-top: 150px;
-  transform: none !important;
-  width: auto !important;
-}
 .comment-highlight {
   background-color: #c9e5f8;
+  cursor: pointer;
 }
 .comment-highlight:before {
   color: #204965;
-  content: attr(data-context-id-list);
+  content: "#" attr(data-context-id);
   display: inline-block;
   font-size: 1rem;
   font-weight: bold;
   padding: 0 8px;
 }
-.style-criteria-section {
-  display: flex;
-  gap: 5px;
-  padding: 8px 0;
+
+/* Page separator */
+.page-separator {
+  height: 3px;
+  background-color: #888;
+  border: none;
+  margin: 1em 0;
 }
+
+/* Section headings */
+.text-h3 {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+/* Comment layout */
 .overall-comment,
 .inline-comment {
   border-top: 1px solid gray;
@@ -59,27 +44,68 @@ aside.q-drawer {
 .inline-comment-replies {
   padding-left: 1rem;
 }
-.overall-comment > .comment > .comment-header > div,
-.inline-comment > .comment > .comment-header > div  {
+.comment-reply {
+  border-top: 1px solid #ddd;
+}
+
+/* Comment header */
+.comment-header > div {
   align-items: center;
   display: flex;
   gap: 5px;
   padding: 16px 0 8px;
 }
-.inline-comment > .comment > .comment-header > div > .q-btn[aria-label="Go To Highlight"] {
-  cursor: pointer;
-  display: inline-block;
+.comment-author {
+  font-weight: bold;
 }
-.inline-comment > .comment > .comment-header > div > .q-btn[aria-label="Go To Highlight"] * {
-  pointer-events: none;
-}
-.inline-comment > .comment > .comment-header > div > .q-btn[aria-label="Go To Highlight"] i {
-  font-size: 0 !important;
-}
-.inline-comment > .comment > .comment-header > div > .q-btn[aria-label="Go To Highlight"] i:before {
-  content: "⇧";
+.comment-author:before {
+  content: "#" attr(data-context-id);
   display: inline-block;
   font-size: 1rem;
-  font-style: normal;
+  padding-right: 6px;
+}
+.text-caption {
+  font-size: 0.85rem;
+  color: #666;
+}
+
+/* Highlight back-link */
+.highlight-link {
+  font-size: 1.2rem;
+  text-decoration: none;
+  padding-right: 4px;
+}
+
+/* Reply reference */
+.reply-reference {
+  font-size: 0.85rem;
+  color: #666;
+  padding: 0 0 4px 1rem;
+}
+
+/* Comment content */
+.comment-content {
+  padding: 0 0 8px;
+}
+.comment-content blockquote {
+  border-left: 4px solid #888;
+  margin-inline-start: 1em;
+  padding-left: 0.5em;
+  margin-block-start: 0;
+}
+
+/* Style criteria */
+.style-criteria-section {
+  display: flex;
+  gap: 5px;
+  padding: 8px 0;
+}
+.style-criteria-chip {
+  background: #000;
+  border-radius: 16px;
+  color: #fff;
+  display: inline-block;
+  padding: 4px 16px;
+  font-size: 0.85rem;
 }
 `
