@@ -144,9 +144,8 @@ import { computed, inject, provide, ref } from "vue"
 import InlineCommentReply from "./InlineCommentReply.vue"
 import CommentEditor from "../forms/CommentEditor.vue"
 import CommentHeader from "./CommentHeader.vue"
-const forExport = inject("forExport")
 
-const isCollapsed = ref(!(forExport.value ?? false))
+const isCollapsed = ref(true)
 const isReplying = ref(false)
 const isQuoteReplying = ref(false)
 const commentReply = ref(null)
@@ -210,7 +209,6 @@ function deleteComment() {
 }
 
 const showReplyButton = computed(() => {
-  if (forExport.value) return false
   if (isReplying.value) return false
   if (hasReplies.value && isCollapsed.value) return false
   return true

@@ -1,11 +1,11 @@
 <template>
   <div style="display: none">
-    <div ref="exportContent">
-      <submission-content
-        v-model:highlight-visibility="highlightVisibility"
-        :show-overall-comments="showOverallComments"
-        @scroll-to-overall-comments="() => {}"
-        @scroll-add-new-overall-comment="() => {}"
+    <div ref="exportContainer">
+      <export-content
+        v-if="submission"
+        :content="submission.content"
+        :inline-comments="submission.inline_comments ?? []"
+        :highlight-visibility="highlightVisibility"
         @editor-ready="updateBlob"
       />
       <hr
@@ -65,8 +65,8 @@
 
 <script setup>
 import ExportCommentList from "src/components/export/ExportCommentList.vue"
-import SubmissionContent from "src/components/atoms/SubmissionContent.vue"
-import { ref, provide, computed, watch, nextTick } from "vue"
+import ExportContent from "src/components/export/ExportContent.vue"
+import { ref, computed, watch, nextTick } from "vue"
 import { GET_SUBMISSION_REVIEW } from "src/graphql/queries"
 import { useQuery } from "@vue/apollo-composable"
 import exportStyles from "src/components/styles/exportStyles"
@@ -97,10 +97,6 @@ const props = defineProps({
 
 const emit = defineEmits(["update:blob", "update:previewOpen"])
 
-// SubmissionContent still requires these injections
-provide("activeComment", ref(null))
-provide("forExport", ref(true))
-provide("commentDrawerOpen", ref(false))
 const { t } = useI18n()
 
 const exportOptionChoiceObject = computed(() => {
@@ -126,7 +122,6 @@ const showOverallComments = computed(
 const { result } = useQuery(GET_SUBMISSION_REVIEW, exportOptionChoiceObject)
 const submission = computed(() => result.value?.submission)
 const highlightVisibility = ref(true)
-provide("submission", submission)
 const notDeleted = (c) => c.deleted_at === null
 const inlineNumberMap = computed(() => {
   const map = {}
@@ -149,7 +144,7 @@ const overallNumberMap = computed(() => {
   return map
 })
 
-const exportContent = ref(null)
+const exportContainer = ref(null)
 const previewIframe = ref(null)
 const exportHtml = ref("")
 const blobUrl = ref("")
@@ -169,7 +164,7 @@ function attachIframeLinkHandler() {
 }
 
 function updateBlob() {
-  const el = exportContent.value
+  const el = exportContainer.value
   if (!el) return
   const doc = new DOMParser().parseFromString(el.innerHTML, "text/html")
   doc.title = t("export.submission_review_comments")
@@ -196,6 +191,6 @@ function updateBlob() {
   emit("update:blob", blobUrl.value)
 }
 
-watch(exportContent, () => updateBlob())
+watch(exportContainer, () => updateBlob())
 watch(submission, () => nextTick(() => updateBlob()))
 </script>

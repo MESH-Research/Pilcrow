@@ -76,7 +76,6 @@
       </div>
       <div>
         <q-btn
-          v-if="!forExport"
           :aria-label="$t(`submissions.style_controls.new_overall`)"
           data-cy="new_overall_comment"
           round
@@ -153,7 +152,6 @@ const props = defineProps({
   }
 })
 
-const forExport = inject("forExport")
 const commentDrawerOpen = inject("commentDrawerOpen")
 const submission = inject("submission")
 const activeComment = inject("activeComment")
@@ -267,11 +265,7 @@ editor.on("create", () => {
 })
 
 function bubbleMenuVisibility({ state }) {
-  if (
-    !props.annotationEnabled ||
-    forExport.value ||
-    submission.value.status !== "UNDER_REVIEW"
-  ) {
+  if (!props.annotationEnabled || submission.value.status !== "UNDER_REVIEW") {
     return false
   }
   return !state.selection.empty
