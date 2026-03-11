@@ -1,5 +1,5 @@
 <template>
-  <div style="position: absolute; left: -9999px">
+  <div style="display: none">
     <div ref="exportContent">
       <submission-content
         v-model:highlight-visibility="highlightVisibility"
