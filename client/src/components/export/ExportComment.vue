@@ -22,7 +22,7 @@
             >&#8679;</a
           >
           <span v-if="commentNumber" class="comment-number"
-            >#{{ commentNumber }} ({{ comment.id }})</span
+            >#{{ commentNumber }}</span
           >
           <span class="comment-author">{{
             comment.created_by.display_label
