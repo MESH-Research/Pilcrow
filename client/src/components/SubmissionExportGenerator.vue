@@ -48,6 +48,7 @@
       </q-card-section>
       <q-card-section class="col q-pt-none" style="height: calc(100vh - 60px)">
         <iframe
+          ref="previewIframe"
           :src="blobUrl"
           style="
             background-color: #fff;
@@ -55,6 +56,7 @@
             height: 100%;
             border: 1px solid #ddd;
           "
+          @load="attachIframeLinkHandler"
         />
       </q-card-section>
     </q-card>
@@ -148,7 +150,22 @@ const overallNumberMap = computed(() => {
 })
 
 const exportContent = ref(null)
+const previewIframe = ref(null)
 const blobUrl = ref("")
+
+function attachIframeLinkHandler() {
+  const iframe = previewIframe.value
+  if (!iframe?.contentDocument) return
+  iframe.contentDocument.addEventListener("click", (e) => {
+    const a = e.target.closest('a[href^="#"]')
+    if (!a) return
+    e.preventDefault()
+    const target = iframe.contentDocument.getElementById(
+      a.getAttribute("href").slice(1)
+    )
+    if (target) target.scrollIntoView({ behavior: "smooth" })
+  })
+}
 
 function updateBlob() {
   const el = exportContent.value
