@@ -33,7 +33,7 @@
     @update:model-value="emit('update:previewOpen', $event)"
   >
     <q-card>
-      <q-card-section class="row items-center">
+      <q-card-section class="row items-center q-gutter-sm">
         <div class="text-h4">{{ $t(`export.preview`) }}</div>
         <q-space />
         <q-btn
@@ -53,7 +53,7 @@
             background-color: #fff;
             width: 100%;
             height: 100%;
-            border: none;
+            border: 1px solid #ddd;
           "
         />
       </q-card-section>
