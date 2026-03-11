@@ -3,6 +3,33 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.33.0](https://github.com/MESH-Research/Pilcrow/compare/v0.32.1...v0.33.0) (2026-03-02)
+
+
+### Features
+
+* Add icons and diagrams to documentation site ([#2210](https://github.com/MESH-Research/Pilcrow/issues/2210)) ([90b0184](https://github.com/MESH-Research/Pilcrow/commit/90b0184b610a37ca14297a46c3b6fcd3b8aaa826))
+* Add notifications for inline and overall comments ([#2127](https://github.com/MESH-Research/Pilcrow/issues/2127)) ([4ce6486](https://github.com/MESH-Research/Pilcrow/commit/4ce6486ccc44182fc9798eab41c3b42f65dd0e95))
+* **api:** upgrade laravel framework to version 11 ([#2165](https://github.com/MESH-Research/Pilcrow/issues/2165)) ([d6c3dd2](https://github.com/MESH-Research/Pilcrow/commit/d6c3dd2cae5ab6727fe9bfd59ec39cb7ece0cc2c))
+* **deps:** upgrade laravel to version 12.x ([#2167](https://github.com/MESH-Research/Pilcrow/issues/2167)) ([03562d3](https://github.com/MESH-Research/Pilcrow/commit/03562d3c7aab53ce80d437bfd81d5115acdc9d86))
+* Export of Review Comments ([#2211](https://github.com/MESH-Research/Pilcrow/issues/2211)) ([703c695](https://github.com/MESH-Research/Pilcrow/commit/703c695fc7835a3c8b4c961b4c0bc889298871ed))
+
+
+### Bug Fixes
+
+* **api/deps:** update api dependencies ([#2191](https://github.com/MESH-Research/Pilcrow/issues/2191)) ([27b3859](https://github.com/MESH-Research/Pilcrow/commit/27b385949733a396f897f0839559d5e203574706))
+* **api/deps:** update dependency mll-lab/graphql-php-scalars to v6.4.1 ([b1f1481](https://github.com/MESH-Research/Pilcrow/commit/b1f148170d3f9bd2ec4aa080ec7fa8816f9a0a3f))
+* **client/deps:** update client dependencies ([#2192](https://github.com/MESH-Research/Pilcrow/issues/2192)) ([c021701](https://github.com/MESH-Research/Pilcrow/commit/c021701d0447d4bb2495415afd18900fd57d32fa))
+* **client/deps:** update client dependencies to v2.23.1 ([b609673](https://github.com/MESH-Research/Pilcrow/commit/b60967336e5f764d60960686c8aade1ebf97ea42))
+* **client/deps:** update dependency vue-i18n to v9.14.5 [security] ([494dc35](https://github.com/MESH-Research/Pilcrow/commit/494dc35ea88340e303a6f4d77cbc100598f8179a))
+* **deps:** update dependency core-js to v3.43.0 ([#2173](https://github.com/MESH-Research/Pilcrow/issues/2173)) ([32cc5d8](https://github.com/MESH-Research/Pilcrow/commit/32cc5d88511d95eb2defa15e0535e60ded9eafe7))
+* **deps:** update dependency validator to v13.15.15 ([#2163](https://github.com/MESH-Research/Pilcrow/issues/2163)) ([3002c83](https://github.com/MESH-Research/Pilcrow/commit/3002c8386f4aeb8447b3860ea2c9b1017f0e8633))
+* Fix comment updating ([#2222](https://github.com/MESH-Research/Pilcrow/issues/2222)) ([86d34e4](https://github.com/MESH-Research/Pilcrow/commit/86d34e4ed8545831efbd04e8f0cd74adf0e144ce))
+* Inline comment creation ([#2214](https://github.com/MESH-Research/Pilcrow/issues/2214)) ([d704e69](https://github.com/MESH-Research/Pilcrow/commit/d704e69472f43707b5d193613b356b13f5d94432))
+* Resolve failing client and backend testing ([#2212](https://github.com/MESH-Research/Pilcrow/issues/2212)) ([039cc77](https://github.com/MESH-Research/Pilcrow/commit/039cc772a3a79bbd72cadd2163c39ffd1006581b))
+* Search Indexing on User Model ([#2213](https://github.com/MESH-Research/Pilcrow/issues/2213)) ([9a6ce72](https://github.com/MESH-Research/Pilcrow/commit/9a6ce7242630bbcb1163e9c8731a00bebcd3e14e))
+* serve the application index when directly visiting deep URLs ([#2220](https://github.com/MESH-Research/Pilcrow/issues/2220)) ([8e49927](https://github.com/MESH-Research/Pilcrow/commit/8e499271dd65b0c2f0360177dcda30301761e019))
+
 ## [0.32.1](https://github.com/MESH-Research/Pilcrow/compare/v0.32.0...v0.32.1) (2025-06-11)
 
 
