@@ -59,7 +59,38 @@ export default withMermaid(defineConfig({
                             text: "Architecture",
                             link: "/developers/architecture",
                         },
-                        { text: "Testing", link: "/developers/testing" },
+                        {
+                            text: "GraphQL",
+                            link: "/developers/graphql",
+                            items: [
+                                {
+                                    text: "Backend",
+                                    link: "/developers/graphql-backend",
+                                },
+                                {
+                                    text: "Client",
+                                    link: "/developers/graphql-client",
+                                },
+                            ],
+                        },
+                        {
+                            text: "TypeScript",
+                            link: "/developers/typescript",
+                            items: [
+                                {
+                                    text: "Conventions",
+                                    link: "/developers/typescript-conventions",
+                                },
+                                {
+                                    text: "GraphQL Types",
+                                    link: "/developers/typescript-graphql",
+                                },
+                            ],
+                        },
+                        {
+                            text: "Testing",
+                            link: "/developers/testing",
+                        },
                         {
                             text: "Build System & CI",
                             link: "/developers/build-ci",

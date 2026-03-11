@@ -1,9 +1,18 @@
 // https://vitepress.dev/guide/custom-theme
 import type { Theme } from 'vitepress'
 import DefaultTheme from 'vitepress/theme'
+import mermaid from 'mermaid'
 import { h } from 'vue'
 import CaptionImage from './components/CaptionImage.vue'
 import './style.css'
+
+mermaid.registerIconPacks([
+  {
+    name: 'logos',
+    loader: () =>
+      import('@iconify-json/logos').then((module) => module.icons),
+  },
+])
 
 export default {
   extends: DefaultTheme,
