@@ -42,7 +42,7 @@
       <div v-if="replyTo && !comment.deleted_at" class="reply-reference">
         {{
           $t("submissions.comment.reference.in_reply_to", {
-            username: replyTo.created_by.username
+            username: replyTo.created_by.display_label
           })
         }}
       </div>
