@@ -64,7 +64,7 @@ export default `
 }
 .text-caption {
   font-size: 0.85rem;
-  color: #666;
+  color: #595959;
 }
 
 /* Highlight back-link */
@@ -77,7 +77,7 @@ export default `
 /* Reply reference */
 .reply-reference {
   font-size: 0.85rem;
-  color: #666;
+  color: #595959;
   padding: 0 0 4px 1rem;
 }
 
