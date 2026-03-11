@@ -36,6 +36,16 @@
       <q-card-section class="row items-center q-pb-none">
         <div class="text-h6">{{ $t(`export.preview`) }}</div>
         <q-space />
+        <q-btn
+          :label="$t(`export.download.title`)"
+          color="accent"
+          icon="file_download"
+          :href="blobUrl"
+          :download="downloadFilename"
+          :disable="!blobUrl"
+          flat
+          dense
+        />
         <q-btn v-close-popup icon="close" flat round dense />
       </q-card-section>
       <q-card-section class="col q-pt-none" style="height: calc(100vh - 60px)">
@@ -78,6 +88,10 @@ const props = defineProps({
   previewOpen: {
     type: Boolean,
     default: false
+  },
+  downloadFilename: {
+    type: String,
+    default: "export.html"
   }
 })
 

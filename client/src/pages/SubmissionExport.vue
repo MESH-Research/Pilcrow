@@ -81,6 +81,7 @@
       :id="id"
       v-model:preview-open="showPreview"
       :options="exportOptions"
+      :download-filename="downloadFilename"
       @update:blob="downloadBlob = $event"
     />
   </div>
@@ -92,23 +93,60 @@ import { computed, ref } from "vue"
 import { GET_SUBMISSION_REVIEW } from "src/graphql/queries"
 import { useQuery } from "@vue/apollo-composable"
 import { useI18n } from "vue-i18n"
+import { useRoute, useRouter } from "vue-router"
 
 const { t } = useI18n()
-const include_comments = ref(false)
-const comment_type = ref(null)
-const filter_participants = ref(false)
+const route = useRoute()
+const router = useRouter()
+
+const initComments = "comments" in route.query
+const initType =
+  route.query.comments === "INLINE" || route.query.comments === "OVERALL"
+    ? route.query.comments
+    : null
+const include_comments = ref(initComments)
+const comment_type = ref(initType)
+const filter_participants = ref("participants" in route.query)
 const export_participants = ref([])
 const downloadBlob = ref("")
 
-const showPreview = ref(false)
+function buildQuery() {
+  const query = {}
+  if (include_comments.value) {
+    query.comments = comment_type.value ?? ""
+  }
+  if (filter_participants.value) {
+    query.participants = `[${export_participants.value.map((u) => u.id).join(",")}]`
+  }
+  return query
+}
 
-const exportOptions = computed(() => ({
-  includeInline: include_comments.value && comment_type.value !== "OVERALL",
-  includeOverall: include_comments.value && comment_type.value !== "INLINE",
-  createdBy: filter_participants.value
-    ? export_participants.value.map((u) => u.id)
-    : []
-}))
+const showPreview = computed({
+  get: () => route.query.preview === "1",
+  set: (val) => {
+    if (val) {
+      router.push({ query: { ...buildQuery(), preview: "1" } })
+    } else if (route.query.preview) {
+      router.back()
+    }
+  }
+})
+
+const exportOptions = computed(() => {
+  const emptyFilter =
+    filter_participants.value && !export_participants.value.length
+  return {
+    includeInline:
+      include_comments.value &&
+      comment_type.value !== "OVERALL" &&
+      !emptyFilter,
+    includeOverall:
+      include_comments.value && comment_type.value !== "INLINE" && !emptyFilter,
+    createdBy: filter_participants.value
+      ? export_participants.value.map((u) => u.id)
+      : []
+  }
+})
 
 const props = defineProps({
   id: {
