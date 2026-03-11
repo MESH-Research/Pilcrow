@@ -33,8 +33,8 @@
     @update:model-value="emit('update:previewOpen', $event)"
   >
     <q-card>
-      <q-card-section class="row items-center q-pb-none">
-        <div class="text-h6">{{ $t(`export.preview`) }}</div>
+      <q-card-section class="row items-center">
+        <div class="text-h4">{{ $t(`export.preview`) }}</div>
         <q-space />
         <q-btn
           :label="$t(`export.download.title`)"
@@ -43,8 +43,6 @@
           :href="blobUrl"
           :download="downloadFilename"
           :disable="!blobUrl"
-          flat
-          dense
         />
         <q-btn v-close-popup icon="close" flat round dense />
       </q-card-section>
