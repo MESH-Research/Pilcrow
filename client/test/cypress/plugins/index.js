@@ -27,8 +27,7 @@ module.exports = (on, config) => {
           url: `${config.baseUrl}/graphql`,
           method: "POST",
           data: {
-            query:
-              'mutation { artisanCommand(command: "migrate:fresh" parameters: [{key: "--seed" value: "true"}])}'
+            query: "mutation { resetDatabase }"
           }
         }).then((response) => {
           const {
@@ -41,7 +40,7 @@ module.exports = (on, config) => {
             console.log(errors)
             reject()
           }
-          resolve(data.artisanCommand)
+          resolve(data.resetDatabase)
         })
       })
     }
