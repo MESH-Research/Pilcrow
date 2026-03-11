@@ -1,5 +1,5 @@
 <template>
-  <q-card square bordered flat>
+  <q-card>
     <q-card-section>
       <h4 class="q-my-none text-bold">
         {{ $t("export.participants.title") }}
