@@ -28,7 +28,7 @@ class SchemaSnapshotTest extends TestCase
 
         $committedSchema = file_get_contents($snapshotPath);
 
-        Artisan::call('lighthouse:print-schema');
+        Artisan::call('lighthouse:print-schema', ['--env' => 'production']);
         $compiledSchema = Artisan::output();
 
         $this->assertEquals(
