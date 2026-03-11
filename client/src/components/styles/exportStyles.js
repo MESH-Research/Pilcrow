@@ -13,7 +13,7 @@ export default `
 }
 .comment-highlight:before {
   color: #204965;
-  content: "#" attr(data-context-id);
+  content: "#" attr(data-comment-number);
   display: inline-block;
   font-size: 1rem;
   font-weight: bold;
@@ -55,14 +55,12 @@ export default `
   gap: 5px;
   padding: 16px 0 8px;
 }
+.comment-number {
+  font-weight: bold;
+  color: #204965;
+}
 .comment-author {
   font-weight: bold;
-}
-.comment-author:before {
-  content: "#" attr(data-context-id);
-  display: inline-block;
-  font-size: 1rem;
-  padding-right: 6px;
 }
 .text-caption {
   font-size: 0.85rem;

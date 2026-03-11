@@ -16,12 +16,14 @@
         v-if="showInlineComments"
         :heading="$t('submissions.inline_comments.heading')"
         :comments="submission?.inline_comments ?? []"
+        :number-map="inlineNumberMap"
         sort-by="from"
       />
       <export-comment-list
         v-if="showOverallComments"
         :heading="$t('submissions.overall_comments.heading')"
         :comments="submission?.overall_comments ?? []"
+        :number-map="overallNumberMap"
       />
     </div>
   </div>
@@ -111,6 +113,27 @@ const { result } = useQuery(GET_SUBMISSION_REVIEW, exportOptionChoiceObject)
 const submission = computed(() => result.value?.submission)
 const highlightVisibility = ref(true)
 provide("submission", submission)
+const notDeleted = (c) => c.deleted_at === null
+const inlineNumberMap = computed(() => {
+  const map = {}
+  let num = 1
+  for (const c of (submission.value?.inline_comments ?? []).filter(
+    notDeleted
+  )) {
+    map[c.id] = num++
+  }
+  return map
+})
+const overallNumberMap = computed(() => {
+  const map = {}
+  let num = 1
+  for (const c of (submission.value?.overall_comments ?? []).filter(
+    notDeleted
+  )) {
+    map[c.id] = num++
+  }
+  return map
+})
 
 const exportContent = ref(null)
 const blobUrl = ref("")
@@ -123,11 +146,15 @@ function updateBlob() {
   const style = doc.createElement("style")
   style.textContent = exportStyles
   doc.head.appendChild(style)
+  const numMap = inlineNumberMap.value
   for (const highlight of doc.querySelectorAll(
     ".comment-highlight[data-context-id]"
   )) {
     const id = highlight.getAttribute("data-context-id")
     highlight.setAttribute("href", `#inline-comment-${id}`)
+    if (numMap[id]) {
+      highlight.setAttribute("data-comment-number", numMap[id])
+    }
   }
   blobUrl.value = URL.createObjectURL(
     new Blob([doc.documentElement.outerHTML], { type: "text/html" })

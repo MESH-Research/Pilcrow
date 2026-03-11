@@ -47,6 +47,9 @@ class InlineComment extends BaseModel
     protected static function boot()
     {
         parent::boot();
+        static::addGlobalScope('ordered', function ($query) {
+            $query->orderBy('from');
+        });
         static::created(function ($inlineComment) {
             if ($inlineComment->parent_id) {
                 InlineCommentReplyAdded::dispatch($inlineComment);

@@ -5,6 +5,7 @@
       v-for="comment in sortedComments"
       :key="comment.id"
       :comment="comment"
+      :comment-number="numberMap[comment.id]"
     />
   </section>
 </template>
@@ -21,6 +22,10 @@ const props = defineProps({
   comments: {
     type: Array,
     default: () => []
+  },
+  numberMap: {
+    type: Object,
+    default: () => ({})
   },
   sortBy: {
     type: String,

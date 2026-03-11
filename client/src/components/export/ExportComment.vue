@@ -22,7 +22,10 @@
             :aria-label="$t('submissions.comment.reference.go_to_highlight')"
             >&#8679;</a
           >
-          <span class="comment-author" :data-context-id="comment.id">{{
+          <span v-if="commentNumber" class="comment-number"
+            >#{{ commentNumber }} ({{ comment.id }})</span
+          >
+          <span class="comment-author">{{
             comment.created_by.display_label
           }}</span>
           <span class="text-caption">
@@ -84,8 +87,12 @@ const props = defineProps({
     type: Object,
     required: true
   },
-  parentId: {
+  commentNumber: {
     type: Number,
+    default: null
+  },
+  parentId: {
+    type: [Number, String],
     default: null
   },
   siblings: {
