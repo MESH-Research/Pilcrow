@@ -17,7 +17,7 @@
           <a
             v-if="isTopLevelInline"
             :href="`#comment-highlight-${comment.id}`"
-            class="highlight-link"
+            class="link-to-highlight"
             :aria-label="$t('submissions.comment.reference.go_to_highlight')"
             >&#8679;</a
           >
@@ -39,7 +39,7 @@
         </div>
       </div>
       <div v-if="replyTo && !comment.deleted_at" class="reply-reference">
-        <a :href="`#${replyToAnchorId}`" class="reply-link">
+        <a :href="`#${replyToAnchorId}`" class="link-to-reply">
           {{
             $t("submissions.comment.reference.in_reply_to", {
               username: replyTo.created_by.display_label
