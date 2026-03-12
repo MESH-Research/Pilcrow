@@ -168,7 +168,11 @@ function attachIframeLinkHandler() {
     const target = iframe.contentDocument.getElementById(
       a.getAttribute("href").slice(1)
     )
-    if (target) target.scrollIntoView({ behavior: "smooth" })
+    let scrollBehavior = window.matchMedia("(prefers-reduced-motion: reduce)")
+      .matches
+      ? null
+      : { behavior: "smooth" }
+    if (target) target.scrollIntoView(scrollBehavior)
   })
 }
 
