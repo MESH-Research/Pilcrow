@@ -152,6 +152,12 @@ type Mutation {
   saveGeneralSettings(settings: GeneralSettingsInput!): GeneralSettings
   loginOauthCallback(provider_name: String!, code: String!): LoginOauthResponse
   registerOauthUser(input: RegisterOauthUserInput): User
+
+  """
+  Reset the database and run seeders.
+  Only available in local and testing environments.
+  """
+  resetDatabase: String!
 }
 
 "Academic profile data for the profile metadata of a user"
@@ -1176,3 +1182,4 @@ as they may not be parsed correctly on the server side. Use `String` literals if
 dealing with really large numbers to be on the safe side.
 """
 scalar Mixed
+
