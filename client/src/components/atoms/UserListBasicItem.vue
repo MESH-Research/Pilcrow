@@ -22,12 +22,26 @@
   </q-item>
 </template>
 
+<script lang="ts">
+import { graphql } from "src/graphql/generated"
+
+graphql(`
+  fragment userListBasicItem on User {
+    name
+    username
+    email
+    ...avatarImage
+  }
+`)
+</script>
+
 <script setup lang="ts">
 import AvatarImage from "./AvatarImage.vue"
+import type { userListBasicItemFragment } from "src/graphql/generated/graphql"
 
 interface Props {
   index?: number | null
-  user?: Record<string, unknown>
+  user?: userListBasicItemFragment
   action?: string
 }
 withDefaults(defineProps<Props>(), {
@@ -37,7 +51,10 @@ withDefaults(defineProps<Props>(), {
 })
 interface Emits {
   actionClick: [
-    payload: { user: Record<string, unknown> | undefined; action: string }
+    payload: {
+      user: userListBasicItemFragment | undefined
+      action: string
+    }
   ]
 }
 

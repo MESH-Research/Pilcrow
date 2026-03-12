@@ -1,10 +1,11 @@
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
 import { mount, flushPromises } from "@vue/test-utils"
 import { installApolloClient } from "app/test/vitest/utils"
-import { GET_USERS } from "../../graphql/queries"
 import UsersIndexPage from "./UsersIndex.vue"
-
-import type { GetUsersQuery } from "src/graphql/generated/graphql"
+import {
+  GetUsersDocument,
+  type GetUsersQuery
+} from "src/graphql/generated/graphql"
 import { describe, expect, it, test, vi } from "vitest"
 
 vi.mock("vue-router", () => ({
@@ -51,7 +52,7 @@ describe("User Index page mount", () => {
       }
     }
     const handler = mockClient
-      .getRequestHandler(GET_USERS)
+      .getRequestHandler(GetUsersDocument)
       .mockResolvedValue(mockUsersResponse)
 
     const wrapper = wrapperFactory()

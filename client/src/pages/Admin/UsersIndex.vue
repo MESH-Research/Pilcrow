@@ -17,15 +17,34 @@
   </div>
 </template>
 
+<script lang="ts">
+import { graphql } from "src/graphql/generated"
+
+graphql(`
+  query GetUsers($page: Int) {
+    userSearch(page: $page) {
+      paginatorInfo {
+        ...paginationFields
+      }
+      data {
+        ...userListBasic
+      }
+    }
+  }
+`)
+</script>
+
 <script setup lang="ts">
 import { useQuery } from "@vue/apollo-composable"
 import UserListBasic from "src/components/molecules/UserListBasic.vue"
-import { GET_USERS } from "src/graphql/queries"
+import { GetUsersDocument } from "src/graphql/generated/graphql"
 import { computed, ref } from "vue"
 import { useRouter } from "vue-router"
 const currentPage = ref(1)
 
-const { result } = useQuery(GET_USERS, { page: currentPage })
+const { result } = useQuery(GetUsersDocument, () => ({
+  page: currentPage.value
+}))
 
 const users = computed(() => {
   return result.value?.userSearch.data ?? []

@@ -11,13 +11,24 @@
   </q-list>
 </template>
 
+<script lang="ts">
+import { graphql } from "src/graphql/generated"
+
+graphql(`
+  fragment userList on User {
+    id
+    ...userListItem
+  }
+`)
+</script>
+
 <script setup lang="ts">
 import UserListItem from "../atoms/UserListItem.vue"
-import type { User } from "src/graphql/generated/graphql"
+import type { userListFragment, userListItemFragment } from "src/graphql/generated/graphql"
 import type { UserAction } from "../atoms/UserListItem.vue"
 
 interface Props {
-  users: User[]
+  users: userListFragment[]
   actions?: UserAction[]
   dataCy?: string
 }
@@ -27,15 +38,15 @@ withDefaults(defineProps<Props>(), {
   dataCy: "user_list"
 })
 interface Emits {
-  actionClick: [payload: { user: User; action: string }]
-  reinvite: [payload: { user: User }]
+  actionClick: [payload: { user: userListItemFragment; action: string }]
+  reinvite: [payload: { user: userListItemFragment }]
 }
 const emit = defineEmits<Emits>()
 
-function bubble(eventData: { user: User; action: string }) {
+function bubble(eventData: { user: userListItemFragment; action: string }) {
   emit("actionClick", eventData)
 }
-function reinviteUser(eventData: { user: User }) {
+function reinviteUser(eventData: { user: userListItemFragment }) {
   emit("reinvite", eventData)
 }
 </script>

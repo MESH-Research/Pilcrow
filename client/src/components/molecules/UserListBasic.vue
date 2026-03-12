@@ -12,11 +12,23 @@
   </q-list>
 </template>
 
+<script lang="ts">
+import { graphql } from "src/graphql/generated"
+
+graphql(`
+  fragment userListBasic on User {
+    id
+    ...userListBasicItem
+  }
+`)
+</script>
+
 <script setup lang="ts">
 import UserListBasicItem from "../atoms/UserListBasicItem.vue"
+import type { userListBasicFragment } from "src/graphql/generated/graphql"
 
 interface Props {
-  users: Record<string, unknown>[]
+  users: userListBasicFragment[]
   action?: string
   dataCy?: string
 }
