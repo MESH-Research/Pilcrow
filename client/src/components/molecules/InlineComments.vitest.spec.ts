@@ -2,11 +2,7 @@ import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-v
 import { mount } from "@vue/test-utils"
 import { useCurrentUser } from "src/use/user"
 import { ref } from "vue"
-import {
-  submissionKey,
-  activeCommentKey,
-  forExportKey
-} from "src/use/submissionContext"
+import { submissionKey, activeCommentKey } from "src/use/submissionContext"
 import InlineComments from "./InlineComments.vue"
 
 import { type Mock, describe, expect, test, vi } from "vitest"
@@ -280,8 +276,7 @@ describe("InlineComments", () => {
                 }
               ]
             }),
-            [activeCommentKey]: ref(),
-            [forExportKey]: ref(false)
+            [activeCommentKey]: ref()
           },
           stubs: ["router-link", "CommentEditor"]
         }

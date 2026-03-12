@@ -134,7 +134,6 @@ return [
         App\Providers\RouteServiceProvider::class,
         Laravel\Scout\ScoutServiceProvider::class,
         Nuwave\Lighthouse\Scout\ScoutServiceProvider::class,
-        Nuwave\Lighthouse\WhereConditions\WhereConditionsServiceProvider::class,
         OwenIt\Auditing\AuditingServiceProvider::class,
         SocialiteProviders\Manager\ServiceProvider::class,
         Spatie\Permission\PermissionServiceProvider::class,

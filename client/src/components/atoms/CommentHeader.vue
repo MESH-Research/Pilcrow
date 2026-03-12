@@ -27,8 +27,12 @@
         size="30px"
         class="q-mr-sm"
       />
-      <div class="row items-center q-pr-sm" style="flex: 1; min-width: 0">
-        <div class="text-h4 ellipsis" :title="comment.created_by.display_label">
+      <div class="row items-center q-pr-sm comment-header-name">
+        <div
+          class="text-h4 ellipsis"
+          :data-context-id="props.comment.id"
+          :title="comment.created_by.display_label"
+        >
           {{ comment.created_by.display_label }}
         </div>
       </div>
@@ -64,7 +68,6 @@
         {{ relativeCreatedTime }}
       </div>
       <comment-actions
-        v-if="!forExport"
         @quote-reply-to="$emit('quoteReplyTo')"
         @modify-comment="$emit('modifyComment')"
         @delete-comment="$emit('deleteComment')"
@@ -80,10 +83,7 @@ import CommentReference from "./CommentReference.vue"
 import { useTimeAgo } from "src/use/timeAgo"
 import { DateTime } from "luxon"
 import { computed } from "vue"
-import { useForExport } from "src/use/submissionContext"
 import type { Comment } from "src/graphql/generated/graphql"
-
-const forExport = useForExport()
 
 const timeAgo = useTimeAgo()
 

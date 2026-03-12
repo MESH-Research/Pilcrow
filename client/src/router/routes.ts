@@ -33,22 +33,6 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: "/",
-    component: () => import("layouts/MainLayoutNoFooter.vue"),
-    meta: { requiresAuth: true },
-    children: [
-      {
-        name: "submission:comments",
-        path: "/submission/:id/comments",
-        component: () => import("src/pages/SubmissionReviewComments.vue"),
-        meta: {
-          requiresReviewAccess: true
-        },
-        props: true
-      }
-    ]
-  },
-  {
-    path: "/",
     component: () => import("layouts/MainLayout.vue"),
     meta: { requiresAuth: true },
     children: [

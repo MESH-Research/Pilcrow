@@ -47,6 +47,9 @@ class InlineComment extends BaseModel
     protected static function boot()
     {
         parent::boot();
+        static::addGlobalScope('ordered', function ($query) {
+            $query->orderBy('from');
+        });
         static::created(function ($inlineComment) {
             if ($inlineComment->parent_id) {
                 InlineCommentReplyAdded::dispatch($inlineComment);
@@ -95,6 +98,18 @@ class InlineComment extends BaseModel
             InlineComment::where('parent_id', $this->id)
                 ->pluck('created_by')
         )->get();
+    }
+
+    /**
+     * Scope to filter by author IDs.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder $query
+     * @param  array $ids
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeByAuthorIds($query, $ids)
+    {
+        return $query->whereIn('created_by', $ids);
     }
 
     /**

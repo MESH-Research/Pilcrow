@@ -196,6 +196,27 @@ class Submission extends Model implements Auditable
     }
 
     /**
+     * Distinct users who have authored comments (including replies)
+     *
+     * @param  string|null $type  "INLINE", "OVERALL", or null for all
+     * @return \Illuminate\Database\Eloquent\Collection<int, \App\Models\User>
+     */
+    public function getCommentParticipants(?string $type = null)
+    {
+        $authorIds = collect();
+
+        if ($type !== 'OVERALL') {
+            $authorIds = $authorIds->merge($this->inlineCommentsWithReplies()->pluck('created_by'));
+        }
+
+        if ($type !== 'INLINE') {
+            $authorIds = $authorIds->merge($this->overallCommentsWithReplies()->pluck('created_by'));
+        }
+
+        return User::whereIn('id', $authorIds->unique())->get();
+    }
+
+    /**
      * Invitations that belong to the submission
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

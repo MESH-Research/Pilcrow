@@ -90,6 +90,18 @@ class OverallComment extends BaseModel
     }
 
     /**
+     * Scope to filter by author IDs.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder $query
+     * @param  array $ids
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeByAuthorIds($query, $ids)
+    {
+        return $query->whereIn('created_by', $ids);
+    }
+
+    /**
      * The creator of the overall comment
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

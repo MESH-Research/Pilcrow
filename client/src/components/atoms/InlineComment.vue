@@ -1,5 +1,6 @@
 <template>
   <div data-cy="inlineComment" class="inline-comment">
+    <a :id="`inline-comment-${props.comment.id}`"></a>
     <div ref="scrollTarget" />
     <q-card
       square
@@ -36,7 +37,7 @@
 
       <q-card-section
         v-if="comment.style_criteria.length"
-        class="q-mx-sm q-mb-sm q-pa-none"
+        class="q-mx-sm q-mb-sm q-pa-none style-criteria-section"
       >
         <q-chip
           v-for="criteria in comment.style_criteria"
@@ -143,10 +144,9 @@ import { ref, computed, provide } from "vue"
 import CommentHeader from "./CommentHeader.vue"
 import InlineCommentReply from "./InlineCommentReply.vue"
 import CommentEditor from "../forms/CommentEditor.vue"
-import { useForExport, useActiveComment } from "src/use/submissionContext"
-const forExport = useForExport()
+import { useActiveComment } from "src/use/submissionContext"
 
-const isCollapsed = ref(!(forExport.value ?? false))
+const isCollapsed = ref(true)
 const isReplying = ref(false)
 const isQuoteReplying = ref(false)
 const commentReply = ref(null)
@@ -218,7 +218,6 @@ function deleteComment() {
 }
 
 const showReplyButton = computed(() => {
-  if (forExport.value) return false
   if (isReplying.value) return false
   if (hasReplies.value && isCollapsed.value) return false
   return true

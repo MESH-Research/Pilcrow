@@ -76,7 +76,6 @@
       </div>
       <div>
         <q-btn
-          v-if="!forExport"
           :aria-label="$t(`submissions.style_controls.new_overall`)"
           data-cy="new_overall_comment"
           round
@@ -134,7 +133,6 @@ import { useDarkMode } from "src/use/guiElements"
 import {
   useSubmission,
   useActiveComment,
-  useForExport,
   useCommentDrawerOpen
 } from "src/use/submissionContext"
 
@@ -156,7 +154,6 @@ const props = withDefaults(defineProps<Props>(), {
   showOverallComments: true
 })
 
-const forExport = useForExport()
 const commentDrawerOpen = useCommentDrawerOpen()
 const submission = useSubmission()
 const activeComment = useActiveComment()
@@ -270,12 +267,12 @@ const editor = new Editor({
   extensions: [SubmissionContentKit.configure({ annotation: { annotations } })]
 })
 
-editor.on("update", () => {
+editor.on("create", () => {
   emit("editorReady", editor)
 })
 
 function bubbleMenuVisibility({ state }) {
-  if (!props.annotationEnabled) {
+  if (!props.annotationEnabled || submission.value.status !== "UNDER_REVIEW") {
     return false
   }
   return !state.selection.empty

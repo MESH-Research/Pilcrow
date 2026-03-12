@@ -4,8 +4,7 @@ import { ref } from "vue"
 import {
   submissionKey,
   activeCommentKey,
-  commentDrawerOpenKey,
-  forExportKey
+  commentDrawerOpenKey
 } from "src/use/submissionContext"
 import SubmissionContent from "./SubmissionContent.vue"
 
@@ -106,8 +105,7 @@ describe("SubmissionContent", () => {
           provide: {
             [submissionKey]: submission,
             [activeCommentKey]: activeComment,
-            [commentDrawerOpenKey]: ref(true),
-            [forExportKey]: ref(false)
+            [commentDrawerOpenKey]: ref(true)
           }
         }
       }),

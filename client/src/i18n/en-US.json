@@ -995,6 +995,7 @@
     "title": "Export",
     "call_to_action": "Export Submission",
     "description": "This page allows you to export this submission as HTML.",
+    "preview": "Preview",
     "download": {
       "title": "Download (html)",
       "description": "The file contents will download directly to your device in this format."
@@ -1005,20 +1006,24 @@
     },
     "comments": {
       "title": "Comments",
+      "include": "Include comments",
       "byline": "Which comments should be included?",
-      "inline_and_overall": "Inline and Overall Comments ({count})",
-      "inline_only": "Inline Comments Only ({count})",
-      "overall_only": "Overall Comments Only ({count})",
+      "inline_and_overall": "Include Inline and Overall Comments ({count})",
+      "inline_only": "Include Inline Comments Only ({count})",
+      "overall_only": "Include Overall Comments Only ({count})",
       "download": "Download Comments"
     },
     "participants": {
+      "filter": "Filter comments by participant",
       "title": "Participants",
       "byline": "Who should be included?",
-      "no_commenters": "No commenters found"
+      "no_commenters": "No commenters found",
+      "select_all": "Select all",
+      "select_none": "Select none"
     },
     "submission_review_comments": "Submission Review Comments",
     "review_comments": "Review Comments",
-    "submission": "Submission"
+    "submission": "Submission Only"
   },
   "failures": {
     "UNKNOWN_ERROR": "An unknown error has occurred.",

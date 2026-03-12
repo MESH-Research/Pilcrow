@@ -23,6 +23,7 @@ function getDecorations(doc: ProsemirrorNode, annotations: AnnotationData[]) {
     .map((a) => [
       Decoration.inline(a.from, a.to, {
         class: `comment-highlight ${a.active ? "active" : ""}`,
+        id: `comment-highlight-${a.context.id}`,
         "data-context-id": a.context.id,
         "data-cy": "comment-highlight",
         "data-comment": a.context.id,

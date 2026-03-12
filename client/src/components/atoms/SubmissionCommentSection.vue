@@ -8,10 +8,7 @@
         ref="commentRefs"
         :comment="comment"
       />
-      <q-card
-        v-if="!forExport"
-        class="q-my-md q-pa-md bg-grey-1 comment-editor-card"
-      >
+      <q-card class="q-my-md q-pa-md bg-grey-1 comment-editor-card">
         <h3 class="text-h3 q-mt-none">
           {{ $t("submissions.overall_comments.editor_heading") }}
         </h3>
@@ -34,17 +31,12 @@ import {
 import { computed, nextTick, ref, watch } from "vue"
 import { useMutation } from "@vue/apollo-composable"
 import { scroll } from "quasar"
-import {
-  useSubmission,
-  useActiveComment,
-  useForExport
-} from "src/use/submissionContext"
+import { useSubmission, useActiveComment } from "src/use/submissionContext"
 
 const { getScrollTarget, setVerticalScrollPosition } = scroll
 const { mutate: markRead } = useMutation(MARK_OVERALL_COMMENTS_READ)
 const { mutate: markReplyRead } = useMutation(MARK_OVERALL_COMMENT_REPLIES_READ)
 
-const forExport = useForExport()
 const submission = useSubmission()
 const activeComment = useActiveComment()
 

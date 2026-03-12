@@ -1,6 +1,7 @@
 <template>
   <q-btn
     :aria-label="$t(`submissions.comment.reference.go_to_highlight`)"
+    :data-context-id="props.comment.id"
     dense
     flat
     class="q-mr-xs"
