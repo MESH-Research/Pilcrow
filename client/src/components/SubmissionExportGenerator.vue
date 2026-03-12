@@ -54,7 +54,7 @@
           :aria-label="$t('export.preview.close')"
         />
       </q-card-section>
-      <q-card-section class="col q-pt-none" style="height: calc(100vh - 60px)">
+      <q-card-section class="col q-pt-none" style="height: calc(100vh - 80px)">
         <iframe
           ref="previewIframe"
           :srcdoc="exportHtml"
