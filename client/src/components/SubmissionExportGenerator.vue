@@ -30,11 +30,12 @@
   <q-dialog
     :model-value="previewOpen"
     maximized
+    :title="$t('export.preview.title')"
     @update:model-value="emit('update:previewOpen', $event)"
   >
     <q-card>
       <q-card-section class="row items-center q-gutter-sm">
-        <div class="text-h4">{{ $t(`export.preview`) }}</div>
+        <div class="text-h4">{{ $t(`export.preview.title`) }}</div>
         <q-space />
         <q-btn
           :label="$t(`export.download.title`)"
@@ -44,12 +45,20 @@
           :download="downloadFilename"
           :disable="!blobUrl"
         />
-        <q-btn v-close-popup icon="close" flat round dense />
+        <q-btn
+          v-close-popup
+          icon="close"
+          flat
+          round
+          dense
+          :aria-label="$t('export.preview.close')"
+        />
       </q-card-section>
       <q-card-section class="col q-pt-none" style="height: calc(100vh - 60px)">
         <iframe
           ref="previewIframe"
           :srcdoc="exportHtml"
+          :title="$t('export.preview.title')"
           style="
             background-color: #fff;
             width: 100%;

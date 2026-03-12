@@ -67,7 +67,7 @@
           :disable="!downloadBlob"
         />
         <q-btn
-          :label="$t(`export.preview`)"
+          :label="$t(`export.preview.action`)"
           color="primary"
           icon="visibility"
           :disable="!downloadBlob"

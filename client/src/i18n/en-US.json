@@ -995,7 +995,11 @@
     "title": "Export",
     "call_to_action": "Export Submission",
     "description": "This page allows you to export this submission as HTML.",
-    "preview": "Preview",
+    "preview": {
+      "title": "Preview of Export",
+      "action": "Preview",
+      "close": "Close Preview"
+    },
     "download": {
       "title": "Download (html)",
       "description": "The file contents will download directly to your device in this format."
