@@ -1194,4 +1194,449 @@ class SubmissionCommentTest extends ApiTestCase
         ];
         $response->assertJsonPath('data', $expected_data);
     }
+
+    public function testFilterInlineCommentsByAuthor()
+    {
+        $this->beAppAdmin();
+
+        $user1 = \App\Models\User::factory()->create();
+        $user2 = \App\Models\User::factory()->create();
+        $submission = $this->createSubmission();
+
+        InlineComment::withoutEvents(function () use ($submission, $user1, $user2) {
+            InlineComment::factory()->create([
+                'submission_id' => $submission->id,
+                'content' => 'Comment by user 1',
+                'created_by' => $user1->id,
+                'updated_by' => $user1->id,
+            ]);
+            InlineComment::factory()->create([
+                'submission_id' => $submission->id,
+                'content' => 'Comment by user 2',
+                'created_by' => $user2->id,
+                'updated_by' => $user2->id,
+            ]);
+        });
+
+        $response = $this->graphQL(
+            'query GetSubmission($id: ID!, $createdBy: [ID!]) {
+                submission(id: $id) {
+                    inline_comments(createdBy: $createdBy) {
+                        content
+                        created_by { id }
+                    }
+                }
+            }',
+            ['id' => $submission->id, 'createdBy' => [(string)$user1->id]]
+        );
+
+        $response->assertJsonCount(1, 'data.submission.inline_comments');
+        $response->assertJsonPath('data.submission.inline_comments.0.content', 'Comment by user 1');
+        $response->assertJsonPath('data.submission.inline_comments.0.created_by.id', (string)$user1->id);
+    }
+
+    public function testFilterInlineCommentsByAuthorReturnsAllWhenOmitted()
+    {
+        $this->beAppAdmin();
+
+        $user1 = \App\Models\User::factory()->create();
+        $user2 = \App\Models\User::factory()->create();
+        $submission = $this->createSubmission();
+
+        InlineComment::withoutEvents(function () use ($submission, $user1, $user2) {
+            InlineComment::factory()->create([
+                'submission_id' => $submission->id,
+                'created_by' => $user1->id,
+                'updated_by' => $user1->id,
+            ]);
+            InlineComment::factory()->create([
+                'submission_id' => $submission->id,
+                'created_by' => $user2->id,
+                'updated_by' => $user2->id,
+            ]);
+        });
+
+        $response = $this->graphQL(
+            'query GetSubmission($id: ID!) {
+                submission(id: $id) {
+                    inline_comments {
+                        content
+                    }
+                }
+            }',
+            ['id' => $submission->id]
+        );
+
+        $response->assertJsonCount(2, 'data.submission.inline_comments');
+    }
+
+    public function testFilterInlineCommentRepliesByAuthor()
+    {
+        $this->beAppAdmin();
+
+        $user1 = \App\Models\User::factory()->create();
+        $user2 = \App\Models\User::factory()->create();
+        $submission = $this->createSubmission();
+
+        InlineComment::withoutEvents(function () use ($submission, $user1, $user2) {
+            $parent = InlineComment::factory()->create([
+                'submission_id' => $submission->id,
+                'content' => 'Parent comment',
+                'created_by' => $user1->id,
+                'updated_by' => $user1->id,
+            ]);
+            InlineComment::factory()->create([
+                'submission_id' => $submission->id,
+                'content' => 'Reply by user 1',
+                'created_by' => $user1->id,
+                'updated_by' => $user1->id,
+                'parent_id' => $parent->id,
+            ]);
+            InlineComment::factory()->create([
+                'submission_id' => $submission->id,
+                'content' => 'Reply by user 2',
+                'created_by' => $user2->id,
+                'updated_by' => $user2->id,
+                'parent_id' => $parent->id,
+            ]);
+        });
+
+        $response = $this->graphQL(
+            'query GetSubmission($id: ID!, $createdBy: [ID!]) {
+                submission(id: $id) {
+                    inline_comments {
+                        content
+                        replies(createdBy: $createdBy) {
+                            content
+                            created_by { id }
+                        }
+                    }
+                }
+            }',
+            ['id' => $submission->id, 'createdBy' => [(string)$user1->id]]
+        );
+
+        $response->assertJsonCount(1, 'data.submission.inline_comments.0.replies');
+        $response->assertJsonPath('data.submission.inline_comments.0.replies.0.content', 'Reply by user 1');
+    }
+
+    public function testFilterOverallCommentsByAuthor()
+    {
+        $this->beAppAdmin();
+
+        $user1 = \App\Models\User::factory()->create();
+        $user2 = \App\Models\User::factory()->create();
+        $submission = $this->createSubmission();
+
+        OverallComment::withoutEvents(function () use ($submission, $user1, $user2) {
+            OverallComment::factory()->create([
+                'submission_id' => $submission->id,
+                'content' => 'Comment by user 1',
+                'created_by' => $user1->id,
+                'updated_by' => $user1->id,
+            ]);
+            OverallComment::factory()->create([
+                'submission_id' => $submission->id,
+                'content' => 'Comment by user 2',
+                'created_by' => $user2->id,
+                'updated_by' => $user2->id,
+            ]);
+        });
+
+        $response = $this->graphQL(
+            'query GetSubmission($id: ID!, $createdBy: [ID!]) {
+                submission(id: $id) {
+                    overall_comments(createdBy: $createdBy) {
+                        content
+                        created_by { id }
+                    }
+                }
+            }',
+            ['id' => $submission->id, 'createdBy' => [(string)$user1->id]]
+        );
+
+        $response->assertJsonCount(1, 'data.submission.overall_comments');
+        $response->assertJsonPath('data.submission.overall_comments.0.content', 'Comment by user 1');
+        $response->assertJsonPath('data.submission.overall_comments.0.created_by.id', (string)$user1->id);
+    }
+
+    public function testFilterOverallCommentRepliesByAuthor()
+    {
+        $this->beAppAdmin();
+
+        $user1 = \App\Models\User::factory()->create();
+        $user2 = \App\Models\User::factory()->create();
+        $submission = $this->createSubmission();
+
+        OverallComment::withoutEvents(function () use ($submission, $user1, $user2) {
+            $parent = OverallComment::factory()->create([
+                'submission_id' => $submission->id,
+                'content' => 'Parent comment',
+                'created_by' => $user1->id,
+                'updated_by' => $user1->id,
+            ]);
+            OverallComment::factory()->create([
+                'submission_id' => $submission->id,
+                'content' => 'Reply by user 1',
+                'created_by' => $user1->id,
+                'updated_by' => $user1->id,
+                'parent_id' => $parent->id,
+            ]);
+            OverallComment::factory()->create([
+                'submission_id' => $submission->id,
+                'content' => 'Reply by user 2',
+                'created_by' => $user2->id,
+                'updated_by' => $user2->id,
+                'parent_id' => $parent->id,
+            ]);
+        });
+
+        $response = $this->graphQL(
+            'query GetSubmission($id: ID!, $createdBy: [ID!]) {
+                submission(id: $id) {
+                    overall_comments {
+                        content
+                        replies(createdBy: $createdBy) {
+                            content
+                            created_by { id }
+                        }
+                    }
+                }
+            }',
+            ['id' => $submission->id, 'createdBy' => [(string)$user1->id]]
+        );
+
+        $response->assertJsonCount(1, 'data.submission.overall_comments.0.replies');
+        $response->assertJsonPath('data.submission.overall_comments.0.replies.0.content', 'Reply by user 1');
+    }
+
+    public function testCommentParticipantsIncludesAllAuthors()
+    {
+        $this->beAppAdmin();
+
+        $user1 = \App\Models\User::factory()->create();
+        $user2 = \App\Models\User::factory()->create();
+        $user3 = \App\Models\User::factory()->create();
+        $submission = $this->createSubmission();
+
+        InlineComment::withoutEvents(function () use ($submission, $user1, $user2) {
+            $parent = InlineComment::factory()->create([
+                'submission_id' => $submission->id,
+                'created_by' => $user1->id,
+                'updated_by' => $user1->id,
+            ]);
+            InlineComment::factory()->create([
+                'submission_id' => $submission->id,
+                'created_by' => $user2->id,
+                'updated_by' => $user2->id,
+                'parent_id' => $parent->id,
+            ]);
+        });
+
+        OverallComment::withoutEvents(function () use ($submission, $user3) {
+            OverallComment::factory()->create([
+                'submission_id' => $submission->id,
+                'created_by' => $user3->id,
+                'updated_by' => $user3->id,
+            ]);
+        });
+
+        $response = $this->graphQL(
+            'query GetSubmission($id: ID!) {
+                submission(id: $id) {
+                    commenters {
+                        id
+                    }
+                }
+            }',
+            ['id' => $submission->id]
+        );
+
+        $response->assertJsonCount(3, 'data.submission.commenters');
+        $participantIds = collect($response->json('data.submission.commenters'))
+            ->pluck('id')
+            ->sort()
+            ->values()
+            ->toArray();
+        $expectedIds = collect([$user1->id, $user2->id, $user3->id])
+            ->map(fn ($id) => (string)$id)
+            ->sort()
+            ->values()
+            ->toArray();
+        $this->assertEquals($expectedIds, $participantIds);
+    }
+
+    public function testCommentParticipantsIsEmptyWithNoComments()
+    {
+        $this->beAppAdmin();
+
+        $submission = $this->createSubmission();
+
+        $response = $this->graphQL(
+            'query GetSubmission($id: ID!) {
+                submission(id: $id) {
+                    commenters {
+                        id
+                    }
+                }
+            }',
+            ['id' => $submission->id]
+        );
+
+        $response->assertJsonCount(0, 'data.submission.commenters');
+    }
+
+    public function testCommentParticipantsDeduplicatesAuthors()
+    {
+        $this->beAppAdmin();
+
+        $user1 = \App\Models\User::factory()->create();
+        $submission = $this->createSubmission();
+
+        InlineComment::withoutEvents(function () use ($submission, $user1) {
+            InlineComment::factory()->create([
+                'submission_id' => $submission->id,
+                'created_by' => $user1->id,
+                'updated_by' => $user1->id,
+            ]);
+        });
+
+        OverallComment::withoutEvents(function () use ($submission, $user1) {
+            OverallComment::factory()->create([
+                'submission_id' => $submission->id,
+                'created_by' => $user1->id,
+                'updated_by' => $user1->id,
+            ]);
+        });
+
+        $response = $this->graphQL(
+            'query GetSubmission($id: ID!) {
+                submission(id: $id) {
+                    commenters {
+                        id
+                    }
+                }
+            }',
+            ['id' => $submission->id]
+        );
+
+        $response->assertJsonCount(1, 'data.submission.commenters');
+        $response->assertJsonPath('data.submission.commenters.0.id', (string)$user1->id);
+    }
+
+    public function testCommentParticipantsFilteredByInlineType()
+    {
+        $this->beAppAdmin();
+
+        $inlineUser = \App\Models\User::factory()->create();
+        $overallUser = \App\Models\User::factory()->create();
+        $submission = $this->createSubmission();
+
+        InlineComment::withoutEvents(function () use ($submission, $inlineUser) {
+            InlineComment::factory()->create([
+                'submission_id' => $submission->id,
+                'created_by' => $inlineUser->id,
+                'updated_by' => $inlineUser->id,
+            ]);
+        });
+
+        OverallComment::withoutEvents(function () use ($submission, $overallUser) {
+            OverallComment::factory()->create([
+                'submission_id' => $submission->id,
+                'created_by' => $overallUser->id,
+                'updated_by' => $overallUser->id,
+            ]);
+        });
+
+        $response = $this->graphQL(
+            'query GetSubmission($id: ID!) {
+                submission(id: $id) {
+                    commenters(type: INLINE) {
+                        id
+                    }
+                }
+            }',
+            ['id' => $submission->id]
+        );
+
+        $response->assertJsonCount(1, 'data.submission.commenters');
+        $response->assertJsonPath('data.submission.commenters.0.id', (string)$inlineUser->id);
+    }
+
+    public function testCommentParticipantsFilteredByOverallType()
+    {
+        $this->beAppAdmin();
+
+        $inlineUser = \App\Models\User::factory()->create();
+        $overallUser = \App\Models\User::factory()->create();
+        $submission = $this->createSubmission();
+
+        InlineComment::withoutEvents(function () use ($submission, $inlineUser) {
+            InlineComment::factory()->create([
+                'submission_id' => $submission->id,
+                'created_by' => $inlineUser->id,
+                'updated_by' => $inlineUser->id,
+            ]);
+        });
+
+        OverallComment::withoutEvents(function () use ($submission, $overallUser) {
+            OverallComment::factory()->create([
+                'submission_id' => $submission->id,
+                'created_by' => $overallUser->id,
+                'updated_by' => $overallUser->id,
+            ]);
+        });
+
+        $response = $this->graphQL(
+            'query GetSubmission($id: ID!) {
+                submission(id: $id) {
+                    commenters(type: OVERALL) {
+                        id
+                    }
+                }
+            }',
+            ['id' => $submission->id]
+        );
+
+        $response->assertJsonCount(1, 'data.submission.commenters');
+        $response->assertJsonPath('data.submission.commenters.0.id', (string)$overallUser->id);
+    }
+
+    public function testCommentParticipantsWithNoTypeReturnsAll()
+    {
+        $this->beAppAdmin();
+
+        $inlineUser = \App\Models\User::factory()->create();
+        $overallUser = \App\Models\User::factory()->create();
+        $submission = $this->createSubmission();
+
+        InlineComment::withoutEvents(function () use ($submission, $inlineUser) {
+            InlineComment::factory()->create([
+                'submission_id' => $submission->id,
+                'created_by' => $inlineUser->id,
+                'updated_by' => $inlineUser->id,
+            ]);
+        });
+
+        OverallComment::withoutEvents(function () use ($submission, $overallUser) {
+            OverallComment::factory()->create([
+                'submission_id' => $submission->id,
+                'created_by' => $overallUser->id,
+                'updated_by' => $overallUser->id,
+            ]);
+        });
+
+        $response = $this->graphQL(
+            'query GetSubmission($id: ID!) {
+                submission(id: $id) {
+                    commenters {
+                        id
+                    }
+                }
+            }',
+            ['id' => $submission->id]
+        );
+
+        $response->assertJsonCount(2, 'data.submission.commenters');
+    }
 }

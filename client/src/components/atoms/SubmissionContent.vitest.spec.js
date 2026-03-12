@@ -92,7 +92,6 @@ describe("SubmissionContent", () => {
       ]
     })
     const activeComment = ref(null)
-    const forExport = ref(false)
     return {
       submission,
       activeComment,
@@ -101,8 +100,7 @@ describe("SubmissionContent", () => {
           provide: {
             submission,
             activeComment,
-            commentDrawerOpen: true,
-            forExport
+            commentDrawerOpen: true
           }
         }
       }),

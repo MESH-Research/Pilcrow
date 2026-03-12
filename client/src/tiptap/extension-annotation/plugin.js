@@ -9,6 +9,7 @@ function getDecorations(doc, annotations) {
     .map((a) => [
       Decoration.inline(a.from, a.to, {
         class: `comment-highlight ${a.active ? "active" : ""}`,
+        id: `comment-highlight-${a.context.id}`,
         "data-context-id": a.context.id,
         "data-cy": "comment-highlight",
         dataset: { comment: a.context.id },
@@ -32,6 +33,7 @@ function commentWidget({ click, context }) {
   button.appendChild(icon)
   return button
 }
+
 export const AnnotationPlugin = () =>
   new Plugin({
     key: AnnotationPluginKey,

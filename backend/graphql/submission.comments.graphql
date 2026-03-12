@@ -1,11 +1,11 @@
 extend type Submission {
     inline_comments(
-        hasCreatedBy: _ @whereHasConditions(columns: ["ID"])
+        createdBy: [ID!] @scope(name: "byAuthorIds")
     ): [InlineComment!]!
         @hasMany(relation: "inlineComments")
         @softDeletes
     overall_comments(
-        hasCreatedBy: _ @whereHasConditions(columns: ["ID"])
+        createdBy: [ID!] @scope(name: "byAuthorIds")
     ): [OverallComment!]!
         @hasMany(relation: "overallComments")
         @softDeletes
@@ -23,7 +23,7 @@ type InlineComment implements Comment {
     updated_at: DateTimeUtc!
     deleted_at: DateTimeUtc
     replies(
-        hasCreatedBy: _ @whereHasConditions(columns: ["ID"])
+        createdBy: [ID!] @scope(name: "byAuthorIds")
     ): [InlineCommentReply!] @hasMany @softDeletes
     style_criteria: [InlineCommentStyleCriteria!]
     read_at: DateTimeUtc @rename(attribute: "readAt")
@@ -68,7 +68,7 @@ type OverallComment implements Comment {
     updated_at: DateTimeUtc!
     deleted_at: DateTimeUtc
     replies(
-        hasCreatedBy: _ @whereHasConditions(columns: ["ID"])
+        createdBy: [ID!] @scope(name: "byAuthorIds")
     ): [OverallCommentReply!] @hasMany @softDeletes
     read_at: DateTimeUtc @rename(attribute: "readAt")
 }

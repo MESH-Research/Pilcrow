@@ -76,7 +76,6 @@ const highlightVisibility = ref(true)
 const commentDrawerOpen = ref(false)
 provide("submission", submission)
 provide("activeComment", ref(null))
-provide("forExport", ref(false))
 provide("commentDrawerOpen", commentDrawerOpen)
 
 const scrollOverallComments = ref(null)
