@@ -49,8 +49,6 @@ describe("Nofitication Popup", () => {
                   user: { username: "Test User from Tinker" },
                   type: "submission.awaiting_review",
                   body: "A submission status has been accepted for review.",
-                  action: "Visit Pilcrow",
-                  url: "/",
                   commenter: {
                     display_label: "Test User"
                   },
