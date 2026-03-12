@@ -123,6 +123,11 @@ if [ "$MYSQL_READY" -eq 0 ]; then
     exit 1
 fi
 
+# Copy client schema snapshot into backend stubs (same as CI)
+echo "Copying client schema for drift detection..."
+mkdir -p "$PROJECT_ROOT/backend/tests/stubs"
+cp "$PROJECT_ROOT/client/src/graphql/schema.graphql" "$PROJECT_ROOT/backend/tests/stubs/schema.graphql"
+
 # Run the tests
 echo "Running backend unit tests..."
 cd "$PROJECT_ROOT"
