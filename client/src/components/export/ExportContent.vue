@@ -4,16 +4,33 @@
   </article>
 </template>
 
+<script lang="ts">
+import { graphql } from "src/graphql/generated"
+
+graphql(`
+  fragment exportContent on Submission {
+    content {
+      data
+    }
+    inline_comments(createdBy: $createdBy) @skip(if: $skip_inline) {
+      id
+      from
+      to
+      deleted_at
+    }
+  }
+`)
+</script>
+
 <script setup lang="ts">
 import { Editor, EditorContent } from "@tiptap/vue-3"
 import SubmissionContentKit from "src/tiptap/extension-submission-content-kit"
 import { computed, onBeforeUnmount } from "vue"
 
-import type { ExportCommentBase } from "./ExportComment.vue"
+import type { exportContentFragment } from "src/graphql/generated/graphql"
 
 interface Props {
-  content: { data: string }
-  inlineComments?: ExportCommentBase[]
+  submission: exportContentFragment
   highlightVisibility?: boolean
 }
 
@@ -22,7 +39,6 @@ interface Emits {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  inlineComments: () => [],
   highlightVisibility: true
 })
 
@@ -30,7 +46,7 @@ const emit = defineEmits<Emits>()
 
 const annotations = computed(() =>
   props.highlightVisibility
-    ? props.inlineComments
+    ? (props.submission.inline_comments ?? [])
         .filter((c) => c.deleted_at == null)
         .map(({ from, to, id }) => ({
           from,
@@ -44,7 +60,7 @@ const annotations = computed(() =>
 
 const editor = new Editor({
   editable: false,
-  content: props.content.data,
+  content: props.submission.content.data,
   editorProps: {
     attributes: {
       title: "Submission Title"

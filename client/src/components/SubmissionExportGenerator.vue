@@ -3,48 +3,40 @@
     <div ref="exportContainer">
       <export-content
         v-if="submission"
-        :content="submission.content"
-        :inline-comments="submission.inline_comments ?? []"
+        :submission="submission"
         :highlight-visibility="highlightVisibility"
         @editor-ready="updateBlob"
       />
-      <hr
-        v-if="showInlineComments || showOverallComments"
-        class="page-separator"
-      />
-      <export-comment-list
-        v-if="showInlineComments"
-        :heading="$t('submissions.inline_comments.heading')"
-        :comments="submission?.inline_comments ?? []"
-        :number-map="inlineNumberMap"
-        sort-by="from"
-      />
-      <export-comment-list
-        v-if="showOverallComments"
-        :heading="$t('submissions.overall_comments.heading')"
-        :comments="submission?.overall_comments ?? []"
-        :number-map="overallNumberMap"
-      />
+      <hr v-if="includeInline || includeOverall" class="page-separator" />
+      <export-inline-comments v-if="includeInline" :submission="submission" />
+      <export-overall-comments v-if="includeOverall" :submission="submission" />
     </div>
   </div>
 </template>
 
+<script lang="ts">
+import { graphql } from "src/graphql/generated"
+
+graphql(`
+  fragment submissionExportGenerator on Submission {
+    ...exportContent
+    ...exportInlineComments
+    ...exportOverallComments
+  }
+`)
+</script>
+
 <script setup lang="ts">
-import ExportCommentList from "src/components/export/ExportCommentList.vue"
 import ExportContent from "src/components/export/ExportContent.vue"
-import { ref, computed, watch, nextTick } from "vue"
+import ExportInlineComments from "src/components/export/ExportInlineComments.vue"
+import ExportOverallComments from "src/components/export/ExportOverallComments.vue"
+import { ref, watch, nextTick } from "vue"
 import exportStyles from "src/components/styles/exportStyles"
 import { useI18n } from "vue-i18n"
-import type { ExportCommentBase } from "src/components/export/ExportComment.vue"
-
-interface ExportSubmission {
-  content?: { data: string } | null
-  inline_comments?: ExportCommentBase[]
-  overall_comments?: ExportCommentBase[]
-}
+import type { submissionExportGeneratorFragment } from "src/graphql/generated/graphql"
 
 interface Props {
-  submission?: ExportSubmission | null
+  submission?: submissionExportGeneratorFragment | null
   includeInline?: boolean
   includeOverall?: boolean
   downloadFilename?: string
@@ -57,8 +49,8 @@ interface Emits {
 
 const props = withDefaults(defineProps<Props>(), {
   submission: null,
-  includeInline: false,
-  includeOverall: false,
+  includeInline: true,
+  includeOverall: true,
   downloadFilename: "export.html"
 })
 
@@ -66,32 +58,19 @@ const emit = defineEmits<Emits>()
 
 const { t } = useI18n()
 
-const showInlineComments = computed(() => props.includeInline)
-const showOverallComments = computed(() => props.includeOverall)
 const highlightVisibility = ref(true)
-const notDeleted = (c: ExportCommentBase) => c.deleted_at === null
-const inlineNumberMap = computed(() => {
-  const map: Record<string, number> = {}
-  let num = 1
-  for (const c of (props.submission?.inline_comments ?? []).filter(
-    notDeleted
-  )) {
-    map[c.id as string] = num++
-  }
-  return map
-})
-const overallNumberMap = computed(() => {
-  const map: Record<string, number> = {}
-  let num = 1
-  for (const c of (props.submission?.overall_comments ?? []).filter(
-    notDeleted
-  )) {
-    map[c.id as string] = num++
-  }
-  return map
-})
-
 const exportContainer = ref<HTMLElement | null>(null)
+
+function buildInlineNumberMap() {
+  const map: Record<string, number> = {}
+  let num = 1
+  for (const c of props.submission?.inline_comments ?? []) {
+    if (c.deleted_at === null) {
+      map[c.id] = num++
+    }
+  }
+  return map
+}
 
 function updateBlob() {
   const el = exportContainer.value
@@ -101,7 +80,7 @@ function updateBlob() {
   const style = doc.createElement("style")
   style.textContent = exportStyles
   doc.head.appendChild(style)
-  const numMap = inlineNumberMap.value
+  const numMap = buildInlineNumberMap()
   for (const highlight of doc.querySelectorAll(
     ".comment-highlight[data-context-id]"
   )) {
