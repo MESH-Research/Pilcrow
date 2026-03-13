@@ -13,17 +13,11 @@
 <script setup lang="ts">
 import { computed } from "vue"
 import ExportComment from "./ExportComment.vue"
-import type { Comment } from "src/graphql/generated/graphql"
-
-interface ExportComment extends Comment {
-  __typename?: string
-  replies?: ExportComment[]
-  [key: string]: unknown
-}
+import type { ExportCommentBase } from "./ExportComment.vue"
 
 interface Props {
   heading: string
-  comments?: ExportComment[]
+  comments?: ExportCommentBase[]
   numberMap?: Record<string, number>
   sortBy?: string | null
 }
@@ -39,7 +33,7 @@ const sortedComments = computed(() => {
     (c) => c.deleted_at === null || c.replies?.length > 0
   )
   if (props.sortBy) {
-    const key = props.sortBy
+    const key = props.sortBy as keyof ExportCommentBase
     return [...filtered].sort((a, b) => Number(a[key]) - Number(b[key]))
   }
   return filtered

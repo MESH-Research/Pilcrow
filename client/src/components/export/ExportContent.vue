@@ -9,11 +9,11 @@ import { Editor, EditorContent } from "@tiptap/vue-3"
 import SubmissionContentKit from "src/tiptap/extension-submission-content-kit"
 import { computed, onBeforeUnmount } from "vue"
 
-import type { InlineComment } from "src/graphql/generated/graphql"
+import type { ExportCommentBase } from "./ExportComment.vue"
 
 interface Props {
-  content: { data: Record<string, unknown> }
-  inlineComments?: InlineComment[]
+  content: { data: string }
+  inlineComments?: ExportCommentBase[]
   highlightVisibility?: boolean
 }
 

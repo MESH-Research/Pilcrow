@@ -24,7 +24,10 @@ graphql(`
 
 <script setup lang="ts">
 import UserListItem from "../atoms/UserListItem.vue"
-import type { userListFragment, userListItemFragment } from "src/graphql/generated/graphql"
+import type {
+  userListFragment,
+  userListItemFragment
+} from "src/graphql/generated/graphql"
 import type { UserAction } from "../atoms/UserListItem.vue"
 
 interface Props {

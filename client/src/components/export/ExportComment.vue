@@ -80,24 +80,28 @@
 import { computed } from "vue"
 import { DateTime } from "luxon"
 import { useTimeAgo } from "src/use/timeAgo"
-import type { Comment } from "src/graphql/generated/graphql"
-
-interface ExportComment extends Comment {
+export interface ExportCommentBase {
   __typename?: string
+  id: string
+  content: string
+  created_at: string
+  updated_at: string
+  deleted_at?: string | null
+  created_by: { display_label?: string | null }
   from?: number | null
   to?: number | null
   reply_to_id?: string
-  style_criteria?: { icon: string; name: string }[]
-  replies?: ExportComment[]
+  style_criteria?: Array<{ icon?: string | null; name?: string | null }> | null
+  replies?: ExportCommentBase[]
 }
 
 const timeAgo = useTimeAgo()
 
 interface Props {
-  comment: ExportComment
+  comment: ExportCommentBase
   commentNumber?: number | null
   parentId?: string | null
-  siblings?: ExportComment[]
+  siblings?: ExportCommentBase[]
   isReply?: boolean
 }
 

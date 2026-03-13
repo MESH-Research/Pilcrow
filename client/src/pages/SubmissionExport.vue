@@ -57,106 +57,71 @@
           </q-card-section>
         </q-card>
       </section>
-      <div v-if="submission" class="row q-gutter-md q-py-md">
+      <div class="row q-gutter-md q-py-md">
         <q-btn
           :label="$t(`export.download.title`)"
           color="accent"
           icon="file_download"
-          :href="downloadBlob"
-          :download="downloadFilename"
-          :disable="!downloadBlob"
+          :to="exportHtmlRoute"
         />
         <q-btn
           :label="$t(`export.preview.action`)"
           color="primary"
           icon="visibility"
-          :disable="!downloadBlob"
-          @click="showPreview = true"
+          :to="exportHtmlRoute"
         />
       </div>
-      <q-spinner v-else />
     </article>
-    <submission-export-generator
-      v-if="submission"
-      :id="id"
-      v-model:preview-open="showPreview"
-      :options="exportOptions"
-      :download-filename="downloadFilename"
-      @update:blob="downloadBlob = $event"
-    />
   </div>
 </template>
-<script setup lang="ts">
-import ExportParticipantSelector from "../components/atoms/ExportParticipantSelector.vue"
-import SubmissionExportGenerator from "../components/SubmissionExportGenerator.vue"
-import { computed, ref } from "vue"
-import { GET_SUBMISSION_REVIEW } from "src/graphql/queries"
-import { useQuery } from "@vue/apollo-composable"
-import { useI18n } from "vue-i18n"
-import { useRoute, useRouter } from "vue-router"
+<script lang="ts">
+import { graphql } from "src/graphql/generated"
 
-const { t } = useI18n()
-const route = useRoute()
-const router = useRouter()
-
-const initComments = "comments" in route.query
-const initType =
-  route.query.comments === "INLINE" || route.query.comments === "OVERALL"
-    ? route.query.comments
-    : null
-const include_comments = ref(initComments)
-const comment_type = ref(initType)
-const filter_participants = ref("participants" in route.query)
-const export_participants = ref([])
-const downloadBlob = ref("")
-
-function buildQuery() {
-  const query: Record<string, string> = {}
-  if (include_comments.value) {
-    query.comments = comment_type.value ?? ""
-  }
-  if (filter_participants.value) {
-    query.participants = `[${export_participants.value.map((u) => u.id).join(",")}]`
-  }
-  return query
-}
-
-const showPreview = computed({
-  get: () => route.query.preview === "1",
-  set: (val) => {
-    if (val) {
-      router.push({ query: { ...buildQuery(), preview: "1" } })
-    } else if (route.query.preview) {
-      router.back()
+graphql(`
+  query GetExportOptions($id: ID!) {
+    submission(id: $id) {
+      id
+      title
+      inline_comments {
+        id
+        replies {
+          id
+        }
+      }
+      overall_comments {
+        id
+        replies {
+          id
+        }
+      }
     }
   }
-})
+`)
+</script>
 
-const exportOptions = computed(() => {
-  const emptyFilter =
-    filter_participants.value && !export_participants.value.length
-  return {
-    includeInline:
-      include_comments.value &&
-      comment_type.value !== "OVERALL" &&
-      !emptyFilter,
-    includeOverall:
-      include_comments.value && comment_type.value !== "INLINE" && !emptyFilter,
-    createdBy: filter_participants.value
-      ? export_participants.value.map((u) => u.id)
-      : []
-  }
-})
+<script setup lang="ts">
+import ExportParticipantSelector from "../components/atoms/ExportParticipantSelector.vue"
+import { computed, ref } from "vue"
+import { GetExportOptionsDocument } from "src/graphql/generated/graphql"
+import { useQuery } from "@vue/apollo-composable"
+import { useI18n } from "vue-i18n"
+
+const { t } = useI18n()
+
+const include_comments = ref(false)
+const comment_type = ref<string | null>(null)
+const filter_participants = ref(false)
+const export_participants = ref<{ id: string }[]>([])
 
 interface Props {
   id: string
 }
+
 const props = defineProps<Props>()
 
-const commentVars = computed(() => ({
+const { result } = useQuery(GetExportOptionsDocument, () => ({
   id: props.id
 }))
-const { result } = useQuery(GET_SUBMISSION_REVIEW, commentVars)
 const submission = computed(() => result.value?.submission)
 
 const inline_comments_count = computed(() => getCommentCount("inline_comments"))
@@ -182,13 +147,27 @@ const comment_options = computed(() => [
   }
 ])
 
-const downloadFilename = computed(() => {
-  const base = `submission_${props.id}`
-  return include_comments.value ? `${base}_comments.html` : `${base}.html`
+const exportHtmlRoute = computed(() => {
+  const query: Record<string, string> = {}
+  if (include_comments.value && comment_type.value) {
+    query.comments = comment_type.value
+  }
+  if (
+    include_comments.value &&
+    filter_participants.value &&
+    export_participants.value.length
+  ) {
+    query.createdBy = export_participants.value.map((u) => u.id).join(",")
+  }
+  return {
+    name: "submission:export:html",
+    params: { id: props.id },
+    query
+  }
 })
 
-function getCommentCount(type) {
+function getCommentCount(type: "inline_comments" | "overall_comments") {
   const comments = submission.value?.[type] ?? []
-  return comments.reduce((sum, c) => sum + 1 + c.replies.length, 0)
+  return comments.reduce((sum, c) => sum + 1 + (c.replies?.length ?? 0), 0)
 }
 </script>
