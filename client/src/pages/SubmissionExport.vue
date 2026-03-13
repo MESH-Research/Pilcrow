@@ -49,10 +49,9 @@
               :label="$t('export.participants.filter')"
             />
             <export-participant-selector
-              v-if="include_comments && filter_participants"
+              v-if="include_comments && filter_participants && submission"
               v-model="export_participants"
-              :submission-id="id"
-              :commenter-type="comment_type"
+              :submission="submission"
             />
           </q-card-section>
         </q-card>
@@ -62,13 +61,13 @@
           :label="$t(`export.download.title`)"
           color="accent"
           icon="file_download"
-          :to="exportHtmlRoute"
+          @click="navigateTo(downloadRoute)"
         />
         <q-btn
           :label="$t(`export.preview.action`)"
           color="primary"
           icon="visibility"
-          :to="exportHtmlRoute"
+          @click="navigateTo(exportHtmlRoute)"
         />
       </div>
     </article>
@@ -78,7 +77,7 @@
 import { graphql } from "src/graphql/generated"
 
 graphql(`
-  query GetExportOptions($id: ID!) {
+  query GetExportOptions($id: ID!, $commenterType: CommentParticipantType) {
     submission(id: $id) {
       id
       title
@@ -94,6 +93,7 @@ graphql(`
           id
         }
       }
+      ...exportParticipantSelector
     }
   }
 `)
@@ -102,16 +102,16 @@ graphql(`
 <script setup lang="ts">
 import ExportParticipantSelector from "../components/atoms/ExportParticipantSelector.vue"
 import { computed, ref } from "vue"
+import type { CommentParticipantType } from "src/graphql/generated/graphql"
 import { GetExportOptionsDocument } from "src/graphql/generated/graphql"
 import { useQuery } from "@vue/apollo-composable"
 import { useI18n } from "vue-i18n"
+import { useRoute, useRouter } from "vue-router"
+import type { RouteLocationRaw } from "vue-router"
 
 const { t } = useI18n()
-
-const include_comments = ref(false)
-const comment_type = ref<string | null>(null)
-const filter_participants = ref(false)
-const export_participants = ref<{ id: string }[]>([])
+const route = useRoute()
+const router = useRouter()
 
 interface Props {
   id: string
@@ -119,8 +119,33 @@ interface Props {
 
 const props = defineProps<Props>()
 
+function initCommentsParam(): CommentParticipantType | null {
+  const val = route.query.comments
+  if (val === "INLINE" || val === "OVERALL")
+    return val as CommentParticipantType
+  return null
+}
+
+function initCreatedByParam(): { id: string }[] {
+  const val = route.query.commentsCreatedBy
+  if (typeof val !== "string") return []
+  const inner = val.replace(/^\[|\]$/g, "")
+  return inner
+    ? inner
+        .split(",")
+        .filter(Boolean)
+        .map((id) => ({ id }))
+    : []
+}
+
+const include_comments = ref(route.query.comments != null)
+const comment_type = ref<CommentParticipantType | null>(initCommentsParam())
+const filter_participants = ref(route.query.commentsCreatedBy != null)
+const export_participants = ref<{ id: string }[]>(initCreatedByParam())
+
 const { result } = useQuery(GetExportOptionsDocument, () => ({
-  id: props.id
+  id: props.id,
+  commenterType: comment_type.value
 }))
 const submission = computed(() => result.value?.submission)
 
@@ -147,24 +172,37 @@ const comment_options = computed(() => [
   }
 ])
 
-const exportHtmlRoute = computed(() => {
+function buildExportQuery() {
   const query: Record<string, string> = {}
-  if (include_comments.value && comment_type.value) {
-    query.comments = comment_type.value
+  if (include_comments.value) {
+    query.comments = comment_type.value ?? "ALL"
   }
-  if (
-    include_comments.value &&
-    filter_participants.value &&
-    export_participants.value.length
-  ) {
-    query.createdBy = export_participants.value.map((u) => u.id).join(",")
+  if (include_comments.value && filter_participants.value) {
+    query.commentsCreatedBy = `[${export_participants.value.map((u) => u.id).join(",")}]`
   }
-  return {
-    name: "submission:export:html",
+  return query
+}
+
+const exportHtmlRoute = computed(() => ({
+  name: "submission:export:html",
+  params: { id: props.id },
+  query: buildExportQuery()
+}))
+
+const downloadRoute = computed(() => ({
+  name: "submission:export:html",
+  params: { id: props.id },
+  query: { ...buildExportQuery(), action: "download" }
+}))
+
+async function navigateTo(target: RouteLocationRaw) {
+  await router.replace({
+    name: "submission:export",
     params: { id: props.id },
-    query
-  }
-})
+    query: buildExportQuery()
+  })
+  router.push(target)
+}
 
 function getCommentCount(type: "inline_comments" | "overall_comments") {
   const comments = submission.value?.[type] ?? []
