@@ -315,7 +315,7 @@ type InlineComment implements Comment {
   updated_at: DateTimeUtc!
   deleted_at: DateTimeUtc
   replies(
-    hasCreatedBy: InlineCommentRepliesHasCreatedByWhereHasConditions
+    createdBy: [ID!]
 
     "Allows to filter if trashed elements should be fetched."
     trashed: Trashed
@@ -357,7 +357,7 @@ type OverallComment implements Comment {
   updated_at: DateTimeUtc!
   deleted_at: DateTimeUtc
   replies(
-    hasCreatedBy: OverallCommentRepliesHasCreatedByWhereHasConditions
+    createdBy: [ID!]
 
     "Allows to filter if trashed elements should be fetched."
     trashed: Trashed
@@ -468,17 +468,18 @@ type Submission {
   status: SubmissionStatus!
   status_change_comment: String
   content: SubmissionContent
+  commenters(type: CommentParticipantType): [User!]!
   my_role: SubmissionUserRoles
   effective_role: SubmissionUserRoles
   audits: [SubmissionAudit]
   inline_comments(
-    hasCreatedBy: SubmissionInlineCommentsHasCreatedByWhereHasConditions
+    createdBy: [ID!]
 
     "Allows to filter if trashed elements should be fetched."
     trashed: Trashed
   ): [InlineComment!]!
   overall_comments(
-    hasCreatedBy: SubmissionOverallCommentsHasCreatedByWhereHasConditions
+    createdBy: [ID!]
 
     "Allows to filter if trashed elements should be fetched."
     trashed: Trashed
@@ -586,6 +587,12 @@ enum SubmissionUserRoles {
   submitter
   reviewer
   review_coordinator
+}
+
+"The type of comments to find participants for"
+enum CommentParticipantType {
+  INLINE
+  OVERALL
 }
 
 "A user role for permissions"
@@ -877,170 +884,6 @@ type SubmissionPaginator {
   data: [Submission!]!
 }
 
-"Allowed column names for InlineComment.replies.hasCreatedBy."
-enum InlineCommentRepliesHasCreatedByColumn {
-  I_D
-}
-
-"Dynamic WHERE conditions for the `hasCreatedBy` argument of the query `replies`."
-input InlineCommentRepliesHasCreatedByWhereHasConditions {
-  "The column that is used for the condition."
-  column: InlineCommentRepliesHasCreatedByColumn
-
-  "The operator that is used for the condition."
-  operator: SQLOperator = EQ
-
-  "The value that is used for the condition."
-  value: Mixed
-
-  "A set of conditions that requires all conditions to match."
-  AND: [InlineCommentRepliesHasCreatedByWhereHasConditions!]
-
-  "A set of conditions that requires at least one condition to match."
-  OR: [InlineCommentRepliesHasCreatedByWhereHasConditions!]
-
-  "Check whether a relation exists. Extra conditions or a minimum amount can be applied."
-  HAS: InlineCommentRepliesHasCreatedByWhereHasConditionsRelation
-}
-
-"Dynamic HAS conditions for WHERE conditions for the `hasCreatedBy` argument of the query `replies`."
-input InlineCommentRepliesHasCreatedByWhereHasConditionsRelation {
-  "The relation that is checked."
-  relation: String!
-
-  "The comparison operator to test against the amount."
-  operator: SQLOperator = GTE
-
-  "The amount to test."
-  amount: Int = 1
-
-  "Additional condition logic."
-  condition: InlineCommentRepliesHasCreatedByWhereHasConditions
-}
-
-"Allowed column names for OverallComment.replies.hasCreatedBy."
-enum OverallCommentRepliesHasCreatedByColumn {
-  I_D
-}
-
-"Dynamic WHERE conditions for the `hasCreatedBy` argument of the query `replies`."
-input OverallCommentRepliesHasCreatedByWhereHasConditions {
-  "The column that is used for the condition."
-  column: OverallCommentRepliesHasCreatedByColumn
-
-  "The operator that is used for the condition."
-  operator: SQLOperator = EQ
-
-  "The value that is used for the condition."
-  value: Mixed
-
-  "A set of conditions that requires all conditions to match."
-  AND: [OverallCommentRepliesHasCreatedByWhereHasConditions!]
-
-  "A set of conditions that requires at least one condition to match."
-  OR: [OverallCommentRepliesHasCreatedByWhereHasConditions!]
-
-  "Check whether a relation exists. Extra conditions or a minimum amount can be applied."
-  HAS: OverallCommentRepliesHasCreatedByWhereHasConditionsRelation
-}
-
-"Dynamic HAS conditions for WHERE conditions for the `hasCreatedBy` argument of the query `replies`."
-input OverallCommentRepliesHasCreatedByWhereHasConditionsRelation {
-  "The relation that is checked."
-  relation: String!
-
-  "The comparison operator to test against the amount."
-  operator: SQLOperator = GTE
-
-  "The amount to test."
-  amount: Int = 1
-
-  "Additional condition logic."
-  condition: OverallCommentRepliesHasCreatedByWhereHasConditions
-}
-
-"Allowed column names for Submission.inline_comments.hasCreatedBy."
-enum SubmissionInlineCommentsHasCreatedByColumn {
-  I_D
-}
-
-"Dynamic WHERE conditions for the `hasCreatedBy` argument of the query `inline_comments`."
-input SubmissionInlineCommentsHasCreatedByWhereHasConditions {
-  "The column that is used for the condition."
-  column: SubmissionInlineCommentsHasCreatedByColumn
-
-  "The operator that is used for the condition."
-  operator: SQLOperator = EQ
-
-  "The value that is used for the condition."
-  value: Mixed
-
-  "A set of conditions that requires all conditions to match."
-  AND: [SubmissionInlineCommentsHasCreatedByWhereHasConditions!]
-
-  "A set of conditions that requires at least one condition to match."
-  OR: [SubmissionInlineCommentsHasCreatedByWhereHasConditions!]
-
-  "Check whether a relation exists. Extra conditions or a minimum amount can be applied."
-  HAS: SubmissionInlineCommentsHasCreatedByWhereHasConditionsRelation
-}
-
-"Dynamic HAS conditions for WHERE conditions for the `hasCreatedBy` argument of the query `inline_comments`."
-input SubmissionInlineCommentsHasCreatedByWhereHasConditionsRelation {
-  "The relation that is checked."
-  relation: String!
-
-  "The comparison operator to test against the amount."
-  operator: SQLOperator = GTE
-
-  "The amount to test."
-  amount: Int = 1
-
-  "Additional condition logic."
-  condition: SubmissionInlineCommentsHasCreatedByWhereHasConditions
-}
-
-"Allowed column names for Submission.overall_comments.hasCreatedBy."
-enum SubmissionOverallCommentsHasCreatedByColumn {
-  I_D
-}
-
-"Dynamic WHERE conditions for the `hasCreatedBy` argument of the query `overall_comments`."
-input SubmissionOverallCommentsHasCreatedByWhereHasConditions {
-  "The column that is used for the condition."
-  column: SubmissionOverallCommentsHasCreatedByColumn
-
-  "The operator that is used for the condition."
-  operator: SQLOperator = EQ
-
-  "The value that is used for the condition."
-  value: Mixed
-
-  "A set of conditions that requires all conditions to match."
-  AND: [SubmissionOverallCommentsHasCreatedByWhereHasConditions!]
-
-  "A set of conditions that requires at least one condition to match."
-  OR: [SubmissionOverallCommentsHasCreatedByWhereHasConditions!]
-
-  "Check whether a relation exists. Extra conditions or a minimum amount can be applied."
-  HAS: SubmissionOverallCommentsHasCreatedByWhereHasConditionsRelation
-}
-
-"Dynamic HAS conditions for WHERE conditions for the `hasCreatedBy` argument of the query `overall_comments`."
-input SubmissionOverallCommentsHasCreatedByWhereHasConditionsRelation {
-  "The relation that is checked."
-  relation: String!
-
-  "The comparison operator to test against the amount."
-  operator: SQLOperator = GTE
-
-  "The amount to test."
-  amount: Int = 1
-
-  "Additional condition logic."
-  condition: SubmissionOverallCommentsHasCreatedByWhereHasConditions
-}
-
 "Directions for ordering a list of records."
 enum SortOrder {
   "Sort records in ascending order."
@@ -1094,92 +937,4 @@ enum Trashed {
   "Only return non-trashed results."
   WITHOUT
 }
-
-"Dynamic WHERE conditions for queries."
-input WhereConditions {
-  "The column that is used for the condition."
-  column: String
-
-  "The operator that is used for the condition."
-  operator: SQLOperator = EQ
-
-  "The value that is used for the condition."
-  value: Mixed
-
-  "A set of conditions that requires all conditions to match."
-  AND: [WhereConditions!]
-
-  "A set of conditions that requires at least one condition to match."
-  OR: [WhereConditions!]
-
-  "Check whether a relation exists. Extra conditions or a minimum amount can be applied."
-  HAS: WhereConditionsRelation
-}
-
-"Dynamic HAS conditions for WHERE condition queries."
-input WhereConditionsRelation {
-  "The relation that is checked."
-  relation: String!
-
-  "The comparison operator to test against the amount."
-  operator: SQLOperator = GTE
-
-  "The amount to test."
-  amount: Int = 1
-
-  "Additional condition logic."
-  condition: WhereConditions
-}
-
-"The available SQL operators that are used to filter query results."
-enum SQLOperator {
-  "Equal operator (`=`)"
-  EQ
-
-  "Not equal operator (`!=`)"
-  NEQ
-
-  "Greater than operator (`>`)"
-  GT
-
-  "Greater than or equal operator (`>=`)"
-  GTE
-
-  "Less than operator (`<`)"
-  LT
-
-  "Less than or equal operator (`<=`)"
-  LTE
-
-  "Simple pattern matching (`LIKE`)"
-  LIKE
-
-  "Negation of simple pattern matching (`NOT LIKE`)"
-  NOT_LIKE
-
-  "Whether a value is within a set of values (`IN`)"
-  IN
-
-  "Whether a value is not within a set of values (`NOT IN`)"
-  NOT_IN
-
-  "Whether a value is within a range of values (`BETWEEN`)"
-  BETWEEN
-
-  "Whether a value is not within a range of values (`NOT BETWEEN`)"
-  NOT_BETWEEN
-
-  "Whether a value is null (`IS NULL`)"
-  IS_NULL
-
-  "Whether a value is not null (`IS NOT NULL`)"
-  IS_NOT_NULL
-}
-
-"""
-Loose type that allows any value. Be careful when passing in large `Int` or `Float` literals,
-as they may not be parsed correctly on the server side. Use `String` literals if you are
-dealing with really large numbers to be on the safe side.
-"""
-scalar Mixed
 

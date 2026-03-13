@@ -45,6 +45,11 @@ const annotations = computed(() =>
 const editor = new Editor({
   editable: false,
   content: props.content.data,
+  editorProps: {
+    attributes: {
+      title: "Submission Title"
+    }
+  },
   extensions: [SubmissionContentKit.configure({ annotation: { annotations } })]
 })
 
