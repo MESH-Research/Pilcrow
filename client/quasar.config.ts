@@ -8,6 +8,7 @@
 // Configuration for your app
 // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js
 
+import { resolve } from "node:path"
 import { defineConfig } from "#q-app/wrappers"
 
 export default defineConfig(function (/* ctx */) {
@@ -49,6 +50,11 @@ export default defineConfig(function (/* ctx */) {
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#build
     build: {
+      typescript: {
+        strict: false,
+        vueShim: true,
+      },
+
       target: {
         browser: ["es2019", "edge88", "firefox78", "chrome87", "safari13.1"],
         node: "node20"
@@ -65,6 +71,29 @@ export default defineConfig(function (/* ctx */) {
             return { relative: true }
           }
         }
+        viteConf.plugins = viteConf.plugins || []
+        viteConf.plugins.push({
+          name: "watch-backend-schema",
+          configureServer(server) {
+            const backendGraphqlDir = resolve(__dirname, "../backend/graphql")
+            let debounceTimer: ReturnType<typeof setTimeout> | null = null
+            server.watcher.add(backendGraphqlDir)
+            server.watcher.on("change", (filePath) => {
+              if (!filePath.startsWith(backendGraphqlDir) || !filePath.endsWith(".graphql")) return
+              if (debounceTimer) clearTimeout(debounceTimer)
+              debounceTimer = setTimeout(async () => {
+                try {
+                  const { generate, loadContext } = await import("@graphql-codegen/cli")
+                  const ctx = await loadContext()
+                  await generate({ ...ctx.getConfig(), watch: false })
+                  console.log("[watch-backend-schema] Types regenerated after schema change")
+                } catch (e) {
+                  console.warn("[watch-backend-schema] Codegen failed:", (e as Error).message)
+                }
+              }, 500)
+            })
+          },
+        })
       },
       vueRouterMode: "history", // available values: 'hash', 'history'
       env: {
@@ -99,14 +128,28 @@ export default defineConfig(function (/* ctx */) {
         [
           "vite-plugin-checker",
           {
+            vueTsc: true,
             eslint: {
               lintCommand:
-                'eslint -c ./eslint.config.js "./src*/**/*.{js,mjs,cjs,vue}"',
+                'eslint -c ./eslint.config.js "./src*/**/*.{js,mjs,cjs,ts,mts,vue}"',
               useFlatConfig: true
             }
           },
           { server: false }
-        ]
+        ],
+        [
+          "vite-plugin-graphql-codegen",
+          {
+            runOnStart: true,
+            runOnBuild: true,
+            throwOnStart: false,
+            matchOnDocuments: true,
+            matchOnSchemas: false,
+            configOverrideOnBuild: {
+              schema: "src/graphql/schema.graphql",
+            },
+          },
+        ],
       ],
       useFilenameHashes: false
     },
@@ -172,64 +215,5 @@ export default defineConfig(function (/* ctx */) {
         "render" // keep this as last one
       ]
     },
-
-    // https://v2.quasar.dev/quasar-cli/developing-pwa/configuring-pwa
-    pwa: {
-      workboxMode: "generateSW", // or 'injectManifest'
-      injectPwaMetaTags: true,
-      swFilename: "sw.js",
-      manifestFilename: "manifest.json",
-      useCredentialsForManifestTag: false
-      // useFilenameHashes: true,
-      // extendGenerateSWOptions (cfg) {}
-      // extendInjectManifestOptions (cfg) {},
-      // extendManifestJson (json) {}
-      // extendPWACustomSWConf (esbuildConf) {}
-    },
-
-    // Full list of options: https://v2.quasar.dev/quasar-cli/developing-cordova-apps/configuring-cordova
-    cordova: {
-      // noIosLegacyBuildFlag: true, // uncomment only if you know what you are doing
-    },
-
-    // Full list of options: https://v2.quasar.dev/quasar-cli/developing-capacitor-apps/configuring-capacitor
-    capacitor: {
-      hideSplashscreen: true
-    },
-
-    // Full list of options: https://v2.quasar.dev/quasar-cli/developing-electron-apps/configuring-electron
-    electron: {
-      // extendElectronMainConf (esbuildConf)
-      // extendElectronPreloadConf (esbuildConf)
-
-      inspectPort: 5858,
-
-      bundler: "packager", // 'packager' or 'builder'
-
-      packager: {
-        // https://github.com/electron-userland/electron-packager/blob/master/docs/api.md#options
-        // OS X / Mac App Store
-        // appBundleId: '',
-        // appCategoryType: '',
-        // osxSign: '',
-        // protocol: 'myapp://path',
-        // Windows only
-        // win32metadata: { ... }
-      },
-
-      builder: {
-        // https://www.electron.build/configuration/configuration
-
-        appId: "pilcrow-client"
-      }
-    },
-
-    // Full list of options: https://v2.quasar.dev/quasar-cli-vite/developing-browser-extensions/configuring-bex
-    bex: {
-      contentScripts: ["my-content-script"]
-
-      // extendBexScriptsConf (esbuildConf) {}
-      // extendBexManifestJson (json) {}
-    }
   }
 })

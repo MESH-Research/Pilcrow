@@ -3,21 +3,15 @@ import globals from "globals"
 import pluginVue from "eslint-plugin-vue"
 import pluginQuasar from "@quasar/app-vite/eslint"
 import lodash from "lodash"
+import tseslint from "typescript-eslint"
 // the following is optional, if you want prettier too:
 import prettierSkipFormatting from "@vue/eslint-config-prettier"
 import pluginCypress from "eslint-plugin-cypress"
+import vueParser from "vue-eslint-parser"
 const { merge } = lodash
 const config = [
   {
-    /**
-     * Ignore the following files.
-     * Please note that pluginQuasar.configs.recommended() already ignores
-     * the "node_modules" folder for you (and all other Quasar project
-     * relevant folders and files).
-     *
-     * ESLint requires "ignores" key to be the only one in this object
-     */
-    ignores: ["*.ts"]
+    ignores: ["src/graphql/generated/"]
   },
   ...pluginQuasar.configs.recommended(),
   ...pluginVue.configs["flat/recommended"],
@@ -34,8 +28,8 @@ const config = [
    *   -> Above, plus rules to enforce subjective community defaults to ensure consistency.
    */
   {
-    files: ["src*/**/*.{vue,js,mjs,cjs}"],
-    ignores: ["src*/**/*.vitest.spec.{js,mjs,cjs}"],
+    files: ["src*/**/*.{vue,js,mjs,cjs,ts,mts}"],
+    ignores: ["src*/**/*.vitest.spec.{js,mjs,cjs,ts,mts}"],
     languageOptions: {
       ecmaVersion: "latest",
       sourceType: "module",
@@ -61,9 +55,34 @@ const config = [
     }
   },
   {
+    files: ["src*/**/*.{ts,mts}"],
+    ignores: ["src*/**/*.vitest.spec.{ts,mts}"],
+    extends: [tseslint.configs.recommended],
+    rules: {
+      "no-unused-vars": "off",
+      "@typescript-eslint/no-unused-vars": ["error", { caughtErrors: "none" }]
+    }
+  },
+  {
+    files: ["src*/**/*.vue"],
+    extends: [tseslint.configs.recommended],
+    languageOptions: {
+      parser: vueParser,
+      parserOptions: {
+        parser: tseslint.parser
+      }
+    },
+    rules: {
+      "no-unused-vars": "off",
+      "@typescript-eslint/no-unused-vars": ["error", { caughtErrors: "none" }],
+      "vue/define-props-declaration": ["error", "type-based"],
+      "vue/define-emits-declaration": ["error", "type-based"]
+    }
+  },
+  {
     files: [
       "test/vitest/**/*.{js,mjs,cjs,ts,mts,cts}",
-      "src*/**/*.vitest.spec.{js,mjs,cjs}"
+      "src*/**/*.vitest.spec.{js,mjs,cjs,ts,mts}"
     ],
     ...js.configs.recommended,
 
@@ -88,6 +107,15 @@ const config = [
       },
     },
     */
+  },
+  {
+    files: ["test/vitest/**/*.{ts,mts,cts}", "src*/**/*.vitest.spec.{ts,mts}"],
+    extends: [tseslint.configs.recommended],
+    rules: {
+      "no-unused-vars": "off",
+      "@typescript-eslint/no-unused-vars": ["error", { caughtErrors: "none" }],
+      "@typescript-eslint/no-explicit-any": "off"
+    }
   },
   {
     files: ["test/cypress/**/*.{js,mjs,cjs}"],
@@ -120,4 +148,4 @@ const config = [
 
   prettierSkipFormatting // optional, if you want prettier
 ]
-export default config
+export default tseslint.config(...config)
