@@ -46,22 +46,26 @@
   </component>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed, inject } from "vue"
+import { formStateKey } from "src/use/forms"
 
-const { state, errorMessage } = inject("formState")
+const { state, errorMessage } = inject(formStateKey)!
 
-defineEmits(["resetClick"])
+interface Emits {
+  resetClick: []
+}
 
-const props = defineProps({
-  sticky: {
-    type: Boolean,
-    default: true
-  },
-  flat: {
-    type: Boolean,
-    default: false
-  }
+defineEmits<Emits>()
+
+interface Props {
+  sticky?: boolean
+  flat?: boolean
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  sticky: true,
+  flat: false
 })
 
 const saveClassList = computed(() => {

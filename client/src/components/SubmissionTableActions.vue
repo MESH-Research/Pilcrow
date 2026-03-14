@@ -249,25 +249,25 @@
   </q-btn>
 </template>
 
-<script setup>
+<script setup lang="ts">
+import type { Submission } from "src/graphql/generated/graphql"
 import ConfirmStatusChangeDialog from "../components/dialogs/ConfirmStatusChangeDialog.vue"
 import { useQuasar } from "quasar"
 import {
   useSubmissionExport,
   useStatusChangeControls
-} from "src/use/guiElements.js"
+} from "src/use/guiElements"
 import { ref } from "vue"
 const { dialog } = useQuasar()
 
-const props = defineProps({
-  submission: {
-    type: Object,
-    default: () => {}
-  },
-  actionType: {
-    type: String,
-    default: ""
-  }
+interface Props {
+  submission?: Submission
+  actionType?: string
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  submission: undefined,
+  actionType: ""
 })
 
 const submissionRef = ref(props.submission)

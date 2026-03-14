@@ -56,19 +56,22 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed } from "vue"
+import { useQuasar } from "quasar"
 import { useQuery } from "@vue/apollo-composable"
+
+const $q = useQuasar()
 import { CURRENT_USER_NOTIFICATIONS } from "src/graphql/queries"
 import NotificationListItem from "src/components/atoms/NotificationListItem.vue"
 
-const filterMode = ref(null)
+const filterMode = ref<"Unread" | "Read" | null>(null)
 const filterModes = ["Unread", "Read"]
 
 const currentPage = ref(1)
 
 const variables = computed(() => {
-  const vars = { currentPage: currentPage.value }
+  const vars: Record<string, unknown> = { currentPage: currentPage.value }
   if (filterMode.value == "Read") {
     vars.read = true
   }

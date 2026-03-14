@@ -26,39 +26,38 @@
   </q-input>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent } from "vue"
 export default defineComponent({
   inheritAttrs: false
 })
 </script>
 
-<script setup>
+<script setup lang="ts">
 import { ref, useSlots } from "vue"
-defineProps({
-  label: {
-    type: String,
-    default: "Password"
-  },
-  modelValue: {
-    type: String,
-    default: ""
-  },
-  autocomplete: {
-    default: "current-password",
-    type: String
-  },
-  outlined: {
-    type: Boolean,
-    default: false
-  },
-  error: {
-    type: [String, Boolean],
-    default: false
-  }
+
+interface Props {
+  label?: string
+  modelValue?: string
+  autocomplete?: string
+  outlined?: boolean
+  error?: boolean
+}
+
+withDefaults(defineProps<Props>(), {
+  label: "Password",
+  modelValue: "",
+  autocomplete: "current-password",
+  outlined: false,
+  error: false
 })
 
-defineEmits(["update:modelValue"])
+interface Emits {
+  "update:modelValue": [value: string | number | null]
+}
+
+defineEmits<Emits>()
+
 const isPwd = ref(true)
 
 const $slots = useSlots()

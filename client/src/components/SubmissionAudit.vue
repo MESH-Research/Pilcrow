@@ -88,16 +88,16 @@
   <q-separator class="q-my-md" />
 </template>
 
-<script setup>
+<script setup lang="ts">
+import type { SubmissionAudit } from "src/graphql/generated/graphql"
 import { useTimeAgo } from "src/use/timeAgo"
 import { DateTime } from "luxon"
 import { computed } from "vue"
-const props = defineProps({
-  audit: {
-    type: Object,
-    required: true
-  }
-})
+interface Props {
+  audit: SubmissionAudit
+}
+
+const props = defineProps<Props>()
 const timeAgo = useTimeAgo()
 const createdDate = computed(() => {
   return DateTime.fromISO(props.audit.created_at)

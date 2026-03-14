@@ -39,7 +39,7 @@
   </q-page>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { VERIFY_EMAIL } from "src/graphql/mutations"
 import EmailVerificationSendButton from "src/components/atoms/EmailVerificationSendButton.vue"
 import { ref, onMounted } from "vue"
@@ -48,7 +48,7 @@ import { useMutation } from "@vue/apollo-composable"
 import { useRoute } from "vue-router"
 import { useGraphErrors } from "src/use/errors"
 const status = ref("loading")
-const errorMessagesList = ref([])
+const errorMessagesList = ref<string[]>([])
 const { currentUser } = useCurrentUser()
 const { mutate: verifyEmail } = useMutation(VERIFY_EMAIL)
 const { params } = useRoute()

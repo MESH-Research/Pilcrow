@@ -9,18 +9,13 @@
   </div>
 </template>
 
-<script>
-import { defineComponent } from "vue"
+<script setup lang="ts">
 import FormSectionHeader from "../atoms/FormSectionHeader.vue"
 
-export default defineComponent({
-  name: "FormSection",
-  components: { FormSectionHeader },
-  props: {
-    firstSection: {
-      type: Boolean,
-      default: false
-    }
-  }
+interface Props {
+  firstSection?: boolean
+}
+withDefaults(defineProps<Props>(), {
+  firstSection: false
 })
 </script>

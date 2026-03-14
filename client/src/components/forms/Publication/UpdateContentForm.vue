@@ -63,21 +63,28 @@
   </q-form>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import FormActions from "src/components/molecules/FormActions.vue"
 import { isEqual } from "lodash"
 import { computed, inject, reactive, ref, toRef, watch, watchEffect } from "vue"
+import { useQuasar } from "quasar"
+
+const $q = useQuasar()
 import { useDirtyGuard } from "src/use/forms"
 import { maxLength } from "@vuelidate/validators"
 import useVuelidate from "@vuelidate/core"
 
-const props = defineProps({
-  publication: {
-    required: true,
-    validator: (v) => v === null || typeof v === "object"
-  }
-})
-const emit = defineEmits(["save"])
+import type { Publication } from "src/graphql/generated/graphql"
+
+interface Props {
+  publication: Publication | null
+}
+
+const props = defineProps<Props>()
+interface Emits {
+  save: [form: Record<string, unknown>]
+}
+const emit = defineEmits<Emits>()
 const itemUnderEdit = ref(null)
 const publication = toRef(props, "publication")
 
@@ -99,7 +106,8 @@ const original = computed(() => applyDefaults(publication.value))
 const form = reactive(applyDefaults({}))
 const v$ = useVuelidate(rules, form)
 
-const { dirty, errorMessage, saved } = inject("formState")
+import { formStateKey } from "src/use/forms"
+const { dirty, errorMessage, saved } = inject(formStateKey)
 watchEffect(() => {
   dirty.value = !isEqual(original.value, form)
 })

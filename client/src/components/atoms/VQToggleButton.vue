@@ -33,44 +33,39 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 export default {
   inheritAttrs: false
 }
 </script>
-<script setup>
-import { inject } from "vue"
-import { useVQWrap } from "src/use/forms"
-/**
- * Transparent wrapper for q-input that handles validation and translation by convention.
- *
- * @see https://v1.quasar.dev/vue-components/input#qinput-api
- */
+<script setup lang="ts">
+import { inject, ref } from "vue"
+import { useVQWrap, formStateKey } from "src/use/forms"
+import type { VuelidateValidator } from "src/types/vuelidate"
 
-const props = defineProps({
-  /**
-   * Vuelidate validator object the input should use.
-   */
-  v: {
-    type: Object,
-    required: true
-  },
+interface Props {
+  /** Vuelidate validator object the input should use. */
+  v: VuelidateValidator
   /**
    * Translation key for label, hint and error messages.
    * VQWrap can also provide a tPrefix, allowing the component to use validation path to compute translation key.
    *
    * @see src/components/atoms/VQWrap.vue
    */
-  t: {
-    type: [String, Boolean],
-    default: false
-  }
+  t?: string | boolean
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  t: false
 })
-defineEmits(["vqupdate"])
+interface Emits {
+  vqupdate: []
+}
+defineEmits<Emits>()
 
 const { getTranslation, model } = useVQWrap(props.v, props.t)
 
-const { state: formState = "" } = inject("formState", {})
+const formState = inject(formStateKey)?.state ?? ref("idle")
 </script>
 
 <style lang="scss" scoped></style>

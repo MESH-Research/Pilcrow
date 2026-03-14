@@ -7,11 +7,11 @@
   </q-card-section>
 </template>
 
-<script setup>
-defineProps({
-  firstSection: {
-    type: Boolean,
-    default: false
-  }
+<script setup lang="ts">
+interface Props {
+  firstSection?: boolean
+}
+withDefaults(defineProps<Props>(), {
+  firstSection: false
 })
 </script>

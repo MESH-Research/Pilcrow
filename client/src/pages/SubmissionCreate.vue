@@ -104,7 +104,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useQuery } from "@vue/apollo-composable"
 import { computed } from "vue"
 import { GET_PUBLICATION } from "src/graphql/queries"
@@ -113,12 +113,10 @@ import { useRouter } from "vue-router"
 import { useI18n } from "vue-i18n"
 import { useFeedbackMessages } from "src/use/guiElements"
 import ErrorFieldRenderer from "src/components/molecules/ErrorFieldRenderer.vue"
-const props = defineProps({
-  id: {
-    type: String,
-    required: true
-  }
-})
+interface Props {
+  id: string
+}
+const props = defineProps<Props>()
 const { push } = useRouter()
 const { t } = useI18n()
 const { newStatusMessage } = useFeedbackMessages({

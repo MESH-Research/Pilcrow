@@ -59,41 +59,45 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent } from "vue"
 export default defineComponent({
   inheritAttrs: false
 })
 </script>
 
-<script setup>
+<script setup lang="ts">
 import NewPasswordInputAnalysis from "./atoms/NewPasswordInputAnalysis.vue"
 import PasswordInput from "./PasswordInput.vue"
 import NewPasswordInputMeter from "./atoms/NewPasswordInputMeter.vue"
 import { computed, ref } from "vue"
-const props = defineProps({
-  label: {
-    type: String,
-    default: "Password"
-  },
-  modelValue: {
-    type: String,
-    default: ""
-  },
-  threshold: {
-    type: Number,
-    default: 3
-  },
-  complexity: {
-    type: Object,
-    required: true
-  },
-  error: {
-    type: Boolean
-  }
+
+interface ZxcvbnComplexity {
+  score: number
+  feedback: { suggestions: string[]; warning: string }
+  crack_times_display: Record<string, string>
+}
+
+interface Props {
+  label?: string
+  modelValue?: string
+  threshold?: number
+  complexity: ZxcvbnComplexity
+  error?: boolean
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  label: "Password",
+  modelValue: "",
+  threshold: 3,
+  error: false
 })
 
-defineEmits(["update:modelValue"])
+interface Emits {
+  "update:modelValue": [value: string | number | null]
+}
+
+defineEmits<Emits>()
 
 const showDetails = ref(false)
 

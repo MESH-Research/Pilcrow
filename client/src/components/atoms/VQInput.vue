@@ -25,15 +25,15 @@
   </q-input>
 </template>
 
-<script>
+<script lang="ts">
 export default {
   inheritAttrs: false
 }
 </script>
-<script setup>
+<script setup lang="ts">
 import { inject, ref } from "vue"
 import ErrorFieldRenderer from "src/components/molecules/ErrorFieldRenderer.vue"
-import { useVQWrap } from "src/use/forms"
+import { useVQWrap, formStateKey } from "src/use/forms"
 import { useI18n } from "vue-i18n"
 /**
  * Transparent wrapper for q-input that handles validation and translation by convention.
@@ -41,26 +41,21 @@ import { useI18n } from "vue-i18n"
  * @see https://v1.quasar.dev/vue-components/input#qinput-api
  */
 
-const props = defineProps({
-  /**
-   * Vuelidate validator object the input should use.
-   */
-  v: {
-    type: Object,
-    required: true
-  },
-  /**
-   * Translation key for label, hint and error messages.
-   * VQWrap can also provide a tPrefix, allowing the component to use validation path to compute translation key.
-   *
-   * @see src/components/atoms/VQWrap.vue
-   */
-  t: {
-    type: [String, Boolean],
-    default: false
-  }
+import type { VuelidateValidator } from "src/types/vuelidate"
+
+interface Props {
+  v: VuelidateValidator
+  t?: string | boolean
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  t: false
 })
-defineEmits(["vqupdate"])
+interface Emits {
+  vqupdate: [validator: VuelidateValidator, value: string]
+}
+
+defineEmits<Emits>()
 
 const input = ref(null)
 
@@ -71,7 +66,7 @@ const { te } = useI18n()
 function clearInput() {
   input.value.blur()
 }
-const { state: formState = "" } = inject("formState", {})
+const formState = inject(formStateKey)?.state ?? ref("idle")
 </script>
 
 <style lang="scss" scoped></style>

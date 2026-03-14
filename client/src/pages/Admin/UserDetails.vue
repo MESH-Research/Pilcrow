@@ -129,18 +129,18 @@
   </article>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { GET_USER } from "src/graphql/queries"
 import AvatarImage from "src/components/atoms/AvatarImage.vue"
 import { useQuery } from "@vue/apollo-composable"
 import { computed } from "vue"
+import { useQuasar } from "quasar"
 
-const props = defineProps({
-  id: {
-    type: String,
-    required: true
-  }
-})
+const $q = useQuasar()
+interface Props {
+  id: string
+}
+const props = defineProps<Props>()
 
 const { result } = useQuery(GET_USER, { id: props.id })
 const user = computed(() => {

@@ -19,19 +19,22 @@
   </q-drawer>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed } from "vue"
 import InlineComments from "../molecules/InlineComments.vue"
 
-const props = defineProps({
-  drawerOpen: {
-    type: Boolean,
-    required: false,
-    default: false
-  }
+interface Props {
+  drawerOpen?: boolean
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  drawerOpen: false
 })
 
-const emit = defineEmits(["update:drawerOpen"])
+interface Emits {
+  "update:drawerOpen": [value: boolean]
+}
+const emit = defineEmits<Emits>()
 
 const drawerOpen = computed({
   get: () => props.drawerOpen,

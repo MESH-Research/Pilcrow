@@ -30,9 +30,10 @@
   </q-dialog>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useDialogPluginComponent } from "quasar"
 
+// eslint-disable-next-line vue/define-emits-declaration
 defineEmits([...useDialogPluginComponent.emits])
 
 const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } =

@@ -107,13 +107,17 @@
   </article>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import AvatarImage from "src/components/atoms/AvatarImage.vue"
 import { useCurrentUser } from "src/use/user"
 import { useQuery } from "@vue/apollo-composable"
 import { CURRENT_USER_SUBMISSIONS, GET_SUBMISSIONS } from "src/graphql/queries"
 import SubmissionTable from "src/components/SubmissionTable.vue"
 import { computed } from "vue"
+import { compareDatesDesc } from "src/utils/dateSort"
+import { useQuasar } from "quasar"
+
+const $q = useQuasar()
 
 const { currentUser } = useCurrentUser()
 const { result: all_submissions_result } = useQuery(GET_SUBMISSIONS, {
@@ -124,10 +128,8 @@ const all_submissions = computed(() => {
 })
 const { result } = useQuery(CURRENT_USER_SUBMISSIONS)
 const submissions = computed(() => {
-  let s = result.value?.currentUser?.submissions ?? []
-  return [...s].sort((a, b) => {
-    return new Date(b.created_at) - new Date(a.created_at)
-  })
+  const s = result.value?.currentUser?.submissions ?? []
+  return [...s].sort((a, b) => compareDatesDesc(a.created_at, b.created_at))
 })
 const reviewer_submissions = computed(() =>
   submissions.value.filter(function (submission) {

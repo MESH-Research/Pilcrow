@@ -4,27 +4,29 @@
   </article>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { Editor, EditorContent } from "@tiptap/vue-3"
 import SubmissionContentKit from "src/tiptap/extension-submission-content-kit"
 import { computed, onBeforeUnmount } from "vue"
 
-const props = defineProps({
-  content: {
-    type: Object,
-    required: true
-  },
-  inlineComments: {
-    type: Array,
-    default: () => []
-  },
-  highlightVisibility: {
-    type: Boolean,
-    default: true
-  }
+import type { InlineComment } from "src/graphql/generated/graphql"
+
+interface Props {
+  content: { data: Record<string, unknown> }
+  inlineComments?: InlineComment[]
+  highlightVisibility?: boolean
+}
+
+interface Emits {
+  editorReady: []
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  inlineComments: () => [],
+  highlightVisibility: true
 })
 
-const emit = defineEmits(["editorReady"])
+const emit = defineEmits<Emits>()
 
 const annotations = computed(() =>
   props.highlightVisibility

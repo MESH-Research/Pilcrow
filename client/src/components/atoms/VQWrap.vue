@@ -4,28 +4,26 @@
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
 import { provide } from "vue"
-export default {
-  props: {
-    /**
-     * TPrefix to provide to VQInput components. When supplied, the VQInput component will use
-     * the validator $path property to determine the translation key.
-     */
-    tPrefix: {
-      type: [String, Boolean],
-      default: false
-    }
-  },
-  emits: ["vqupdate"],
-  setup(props, { emit }) {
-    provide("tPrefix", props.tPrefix)
-    provide("vqupdate", (validator, value) => {
-      /**
-       * VQInputs will emit their vqupdate events from this component instead of locally.
-       */
-      emit("vqupdate", validator, value)
-    })
-  }
+import type { VuelidateValidator } from "src/types/vuelidate"
+
+interface Props {
+  tPrefix?: string | boolean
 }
+
+const props = withDefaults(defineProps<Props>(), {
+  tPrefix: false
+})
+
+interface Emits {
+  vqupdate: [validator: VuelidateValidator, value: string]
+}
+
+const emit = defineEmits<Emits>()
+
+provide("tPrefix", props.tPrefix)
+provide("vqupdate", (validator: VuelidateValidator, value: string) => {
+  emit("vqupdate", validator, value)
+})
 </script>

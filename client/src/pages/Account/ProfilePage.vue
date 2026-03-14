@@ -9,20 +9,21 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 //Import components
 import ProfileMetadataForm from "src/components/forms/ProfileMetadataForm.vue"
+import type { ProfileFormData } from "src/use/profileMetadata"
 import { computed, provide } from "vue"
 import { useMutation, useQuery } from "@vue/apollo-composable"
 import { CURRENT_USER_METADATA } from "src/graphql/queries"
 import { UPDATE_PROFILE_METADATA } from "src/graphql/mutations"
-import { useFormState } from "src/use/forms"
+import { useFormState, formStateKey } from "src/use/forms"
 
 const metadataQuery = useQuery(CURRENT_USER_METADATA)
 const metadataMutation = useMutation(UPDATE_PROFILE_METADATA)
 
 const formState = useFormState(metadataQuery, metadataMutation)
-provide("formState", formState)
+provide(formStateKey, formState)
 
 const profileMetadata = computed(() => {
   return metadataQuery.result.value?.currentUser ?? {}
@@ -34,7 +35,7 @@ const currentUserId = computed(() => {
 
 const { mutate: saveProfile } = metadataMutation
 
-function save(form) {
+function save(form: ProfileFormData) {
   const { saved, errorMessage } = formState
   saved.value = false
   saveProfile({ id: currentUserId.value, ...form })

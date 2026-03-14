@@ -11,19 +11,18 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: "ProfileDataRow",
-  props: {
-    label: {
-      type: String,
-      default: ""
-    },
-    value: {
-      type: String,
-      default: ""
-    }
-  },
-  emits: ["editClick"]
+<script setup lang="ts">
+interface Props {
+  label?: string
+  value?: string
 }
+withDefaults(defineProps<Props>(), {
+  label: "",
+  value: ""
+})
+interface Emits {
+  editClick: []
+}
+
+defineEmits<Emits>()
 </script>

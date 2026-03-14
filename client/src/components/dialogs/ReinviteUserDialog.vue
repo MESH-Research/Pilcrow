@@ -53,7 +53,7 @@
   </q-dialog>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useDialogPluginComponent } from "quasar"
 import { useMutation } from "@vue/apollo-composable"
 import {
@@ -73,29 +73,29 @@ const { newStatusMessage } = useFeedbackMessages({
   }
 })
 
+// eslint-disable-next-line vue/define-emits-declaration
 defineEmits([...useDialogPluginComponent.emits])
 
 const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } =
   useDialogPluginComponent()
 
-const props = defineProps({
-  roleGroup: {
-    type: String,
-    required: true
-  },
-  email: {
-    type: String,
-    required: true
-  },
-  submissionId: {
-    type: String,
-    required: true
-  }
-})
+interface Props {
+  roleGroup: string
+  email: string
+  submissionId: string
+}
+
+const props = defineProps<Props>()
 
 const comment = ref(null)
 
-const opts = { variables: { id: props.submissionId, email: props.email } }
+const opts = {
+  variables: {
+    id: props.submissionId,
+    email: props.email,
+    message: null as string | null
+  }
+}
 const mutations = {
   reviewers: REINVITE_REVIEWER,
   review_coordinators: REINVITE_REVIEW_COORDINATOR
@@ -108,6 +108,8 @@ const { mutate } = useMutation(setMutationType, opts)
 async function reinviteUser() {
   try {
     await mutate({
+      id: props.submissionId,
+      email: props.email,
       message: comment.value
     })
     newStatusMessage(

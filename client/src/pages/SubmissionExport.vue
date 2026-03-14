@@ -86,7 +86,7 @@
     />
   </div>
 </template>
-<script setup>
+<script setup lang="ts">
 import ExportParticipantSelector from "../components/atoms/ExportParticipantSelector.vue"
 import SubmissionExportGenerator from "../components/SubmissionExportGenerator.vue"
 import { computed, ref } from "vue"
@@ -111,7 +111,7 @@ const export_participants = ref([])
 const downloadBlob = ref("")
 
 function buildQuery() {
-  const query = {}
+  const query: Record<string, string> = {}
   if (include_comments.value) {
     query.comments = comment_type.value ?? ""
   }
@@ -148,12 +148,10 @@ const exportOptions = computed(() => {
   }
 })
 
-const props = defineProps({
-  id: {
-    type: String,
-    required: true
-  }
-})
+interface Props {
+  id: string
+}
+const props = defineProps<Props>()
 
 const commentVars = computed(() => ({
   id: props.id

@@ -39,25 +39,22 @@
   </q-card>
 </template>
 
-<script setup>
-import { defineProps, defineEmits } from "vue"
-defineProps({
-  title: {
-    type: String,
-    required: true
-  },
-  skipable: {
-    type: Boolean,
-    required: false,
-    default: false
-  },
-  done: {
-    type: Boolean,
-    required: false,
-    default: false
-  }
+<script setup lang="ts">
+interface Props {
+  title: string
+  skipable?: boolean
+  done?: boolean
+}
+withDefaults(defineProps<Props>(), {
+  skipable: false,
+  done: false
 })
-defineEmits(["contentClick", "previewClick", "skipClick"])
+interface Emits {
+  contentClick: []
+  previewClick: []
+  skipClick: []
+}
+defineEmits<Emits>()
 </script>
 
 <style scoped></style>

@@ -10,27 +10,28 @@
   </section>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed } from "vue"
 import ExportComment from "./ExportComment.vue"
+import type { Comment } from "src/graphql/generated/graphql"
 
-const props = defineProps({
-  heading: {
-    type: String,
-    required: true
-  },
-  comments: {
-    type: Array,
-    default: () => []
-  },
-  numberMap: {
-    type: Object,
-    default: () => ({})
-  },
-  sortBy: {
-    type: String,
-    default: null
-  }
+interface ExportComment extends Comment {
+  __typename?: string
+  replies?: ExportComment[]
+  [key: string]: unknown
+}
+
+interface Props {
+  heading: string
+  comments?: ExportComment[]
+  numberMap?: Record<string, number>
+  sortBy?: string | null
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  comments: () => [],
+  numberMap: () => ({}),
+  sortBy: null
 })
 
 const sortedComments = computed(() => {
@@ -38,7 +39,8 @@ const sortedComments = computed(() => {
     (c) => c.deleted_at === null || c.replies?.length > 0
   )
   if (props.sortBy) {
-    return [...filtered].sort((a, b) => a[props.sortBy] - b[props.sortBy])
+    const key = props.sortBy
+    return [...filtered].sort((a, b) => Number(a[key]) - Number(b[key]))
   }
   return filtered
 })

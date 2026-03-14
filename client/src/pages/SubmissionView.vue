@@ -41,25 +41,24 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import SubmissionContent from "src/components/atoms/SubmissionContent.vue"
 import SubmissionViewToolbar from "src/components/atoms/SubmissionViewToolbar.vue"
-import { provide, computed, ref } from "vue"
+import { computed } from "vue"
 import { GET_SUBMISSION_REVIEW } from "src/graphql/queries"
 import { useQuery } from "@vue/apollo-composable"
-const props = defineProps({
-  id: {
-    type: String,
-    required: true
-  }
-})
+import { provideSubmissionReviewContext } from "src/use/submissionContext"
+interface Props {
+  id: string
+}
+const props = defineProps<Props>()
 const { loading, result } = useQuery(GET_SUBMISSION_REVIEW, { id: props.id })
 const submission = computed(() => {
   return result.value?.submission
 })
-provide("submission", submission)
-provide("commentDrawerOpen", null)
-provide("activeComment", ref(null))
+provideSubmissionReviewContext({
+  submission
+})
 </script>
 
 <style lang="sass" scoped>

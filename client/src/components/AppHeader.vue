@@ -162,21 +162,22 @@
   </q-header>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useMagicKeys } from "@vueuse/core"
 import NotificationPopup from "src/components/molecules/NotificationPopup.vue"
 import { useCurrentUser } from "src/use/user"
 import { watchEffect } from "vue"
+import { useQuasar } from "quasar"
 import { useI18n } from "vue-i18n"
 import AppBanner from "./AppBanner.vue"
 
-defineProps({
-  //Drawer status
-  modelValue: {
-    type: Boolean,
-    default: null
-  }
-})
+const $q = useQuasar()
+
+interface Props {
+  /** Drawer status */
+  modelValue?: boolean | null
+}
+defineProps<Props>()
 
 const { currentUser, isAppAdmin } = useCurrentUser()
 const { locale } = useI18n({ useScope: "global" })

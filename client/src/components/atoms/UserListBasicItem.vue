@@ -22,26 +22,24 @@
   </q-item>
 </template>
 
-<script>
+<script setup lang="ts">
 import AvatarImage from "./AvatarImage.vue"
-export default {
-  name: "UserListBasicItem",
-  components: { AvatarImage },
-  props: {
-    index: {
-      type: Number,
-      default: null
-    },
-    user: {
-      type: Object,
-      default: () => {}
-    },
-    action: {
-      type: String,
-      required: false,
-      default: ""
-    }
-  },
-  emits: ["actionClick"]
+
+interface Props {
+  index?: number | null
+  user?: Record<string, unknown>
+  action?: string
 }
+withDefaults(defineProps<Props>(), {
+  index: null,
+  user: undefined,
+  action: ""
+})
+interface Emits {
+  actionClick: [
+    payload: { user: Record<string, unknown> | undefined; action: string }
+  ]
+}
+
+defineEmits<Emits>()
 </script>
