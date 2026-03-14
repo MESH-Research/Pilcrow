@@ -1,20 +1,53 @@
 import { Extension } from "@tiptap/vue-3"
+import type { Ref } from "vue"
 import { watch } from "vue"
+import type { DecorationSet } from "@tiptap/pm/view"
 import { AnnotationPlugin, AnnotationPluginKey } from "./plugin"
-export const Annotation = Extension.create({
+import type { AnnotationData } from "./plugin"
+
+export interface AnnotationCommandData {
+  id?: string
+  context?: { id: string }
+  active?: boolean
+  [key: string]: unknown
+}
+
+declare module "@tiptap/core" {
+  interface Commands<ReturnType> {
+    annotation: {
+      addAnnotation: (data: AnnotationCommandData) => ReturnType
+      updateAnnotation: (
+        id: string,
+        data: Partial<AnnotationCommandData>
+      ) => ReturnType
+      deleteAnnotation: (id: string) => ReturnType
+    }
+  }
+}
+
+interface AnnotationOptions {
+  HTMLAttributes: Record<string, string | undefined>
+  onUpdate: (decorations: DecorationSet | null) => void
+  annotations?: Ref<AnnotationData[]>
+  instance?: string
+}
+
+export const Annotation = Extension.create<AnnotationOptions>({
   name: "annotation",
 
   priority: 1000,
 
-  addOptions: {
-    HTMLAttributes: {
-      class: "annotation"
-    },
-    onUpdate: (decorations) => decorations
+  addOptions() {
+    return {
+      HTMLAttributes: {
+        class: "annotation"
+      },
+      onUpdate: (decorations) => decorations
+    }
   },
 
   onCreate() {
-    const updateAnnotations = (annotations) => {
+    const updateAnnotations = (annotations: AnnotationData[]) => {
       const transaction = this.editor.state.tr.setMeta(AnnotationPluginKey, {
         type: "createDecorations",
         annotations

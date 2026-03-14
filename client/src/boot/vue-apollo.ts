@@ -10,7 +10,7 @@ import {
   beforeEachRequiresReviewAccess,
   beforeEachRequiresExportAccess
 } from "src/apollo/apollo-router-guards"
-import { withXsrfLink, expiredTokenLink } from "src/apollo/apollo-links.js"
+import { withXsrfLink, expiredTokenLink } from "src/apollo/apollo-links"
 import { createApolloProvider } from "@vue/apollo-option"
 
 import { ApolloClients } from "@vue/apollo-composable"
@@ -101,7 +101,7 @@ export default defineBoot(async ({ app, router }) => {
   const apolloClients = {
     default: apolloClient
   }
-  const apolloProvider = createApolloProvider(apolloClients)
+  const apolloProvider = createApolloProvider({ defaultClient: apolloClient })
   app.provide(ApolloClients, apolloClients) // Provide for composition api
   app.use(apolloProvider)
 })

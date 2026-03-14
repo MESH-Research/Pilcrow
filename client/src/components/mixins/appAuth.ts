@@ -21,11 +21,11 @@ export default {
           result
         }
       } catch (error) {
-        if (error.graphQLErrors) {
-          var errors = error.graphQLErrors
-            .map((e) => e.extensions?.code ?? false)
-            .filter(Boolean)
-        }
+        const errors = error.graphQLErrors
+          ? error.graphQLErrors
+              .map((e) => e.extensions?.code ?? false)
+              .filter(Boolean)
+          : undefined
         return {
           success: false,
           errors: errors ?? ["FAILURE_OTHER"]

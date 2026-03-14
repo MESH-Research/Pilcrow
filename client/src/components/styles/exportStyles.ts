@@ -1,4 +1,5 @@
 export default `
+/* Submission content */
 .comment-widget,
 .q-btn,
 .q-avatar,
@@ -6,19 +7,9 @@ export default `
 .review-controls {
   display: none;
 }
-.text-h3 {
-  font-size: 24px;
-  font-weight: bold;
-}
-.page-separator {
-  background-color: #888;
-  border: none;
-  height: 3px;
-  margin: 1rem 0;
-}
-.text-caption {
-  font-size: 0.85rem;
-  color: #595959;
+.comment-highlight-link {
+  color: inherit;
+  text-decoration: none;
 }
 .comment-highlight {
   background-color: #c9e5f8;
@@ -32,10 +23,26 @@ export default `
   font-weight: bold;
   padding: 0 8px;
 }
+
+/* Page separator */
+.page-separator {
+  height: 3px;
+  background-color: #888;
+  border: none;
+  margin: 1em 0;
+}
+
+/* Section headings */
+.text-h3 {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+/* Comment layout */
 .overall-comment,
 .inline-comment {
   border-top: 1px solid gray;
-  margin-top: 0.5rem;
+  margin-top: 0.5em;
 }
 .overall-comment-replies,
 .inline-comment-replies {
@@ -44,6 +51,8 @@ export default `
 .comment-reply {
   border-top: 1px solid #ddd;
 }
+
+/* Comment header */
 .comment-header > div {
   align-items: center;
   display: flex;
@@ -57,32 +66,40 @@ export default `
 .comment-author {
   font-weight: bold;
 }
+.text-caption {
+  font-size: 0.85rem;
+  color: #595959;
+}
+
+/* Highlight back-link */
+.highlight-link {
+  font-size: 1.2rem;
+  text-decoration: none;
+  padding-right: 4px;
+}
+
+/* Reply reference */
+.reply-reference {
+  font-size: 0.85rem;
+  color: #595959;
+  padding: 0 0 4px 1rem;
+}
+.reply-link {
+  color: inherit;
+}
+
+/* Comment content */
 .comment-content {
   padding: 0 0 8px;
 }
 .comment-content blockquote {
   border-left: 4px solid #888;
+  margin-inline-start: 1em;
+  padding-left: 0.5em;
   margin-block-start: 0;
-  margin-inline-start: 1rem;
-  padding-left: 0.5rem;
 }
-.reply-reference {
-  color: #595959;
-  font-size: 0.85rem;
-  padding: 0 0 4px 1rem;
-}
-.link-to-comment {
-  color: inherit;
-  text-decoration: none;
-}
-.link-to-highlight {
-  font-size: 1.2rem;
-  padding-right: 4px;
-  text-decoration: none;
-}
-.link-to-reply {
-  color: inherit;
-}
+
+/* Style criteria */
 .style-criteria-section {
   display: flex;
   gap: 5px;
@@ -93,7 +110,7 @@ export default `
   border-radius: 16px;
   color: #fff;
   display: inline-block;
-  font-size: 0.85rem;
   padding: 4px 16px;
+  font-size: 0.85rem;
 }
 `
