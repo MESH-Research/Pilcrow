@@ -153,55 +153,11 @@ type Mutation {
   loginOauthCallback(provider_name: String!, code: String!): LoginOauthResponse
   registerOauthUser(input: RegisterOauthUserInput): User
 
-  "Run an artisan command and get the output as a string."
-  artisanCommand(
-    "Artisan command to run"
-    command: String!
-
-    "Parameters for artisan command"
-    parameters: [KeyValueInput!]
-  ): String!
-
   """
-  Use a model factory to create a new database object.
-  Returns Models created
-  
-  (DOES create entries in the DB.)
+  Reset the database and run seeders.
+  Only available in local and testing environments.
   """
-  createFactory(
-    "Model to create (i.e. User)"
-    model: String!
-
-    "Number of models to create, defaults to 1"
-    times: Int
-
-    "Attributes to apply to the created models, defaults to []"
-    attributes: [KeyValueInput!]
-  ): [User!]
-
-  """
-  Use a model factory to get data for a model object.
-  Returns Models created.
-  
-  (Does not create entries in the DB)."
-  """
-  makeFactory(
-    "Model to create (i.e. User)"
-    model: String!
-
-    "Number of models to create, defaults to 1"
-    times: Int
-
-    "Attributes to apply to the created models, defaults to []"
-    attributes: [KeyValueInput!]
-  ): [User!]
-
-  """
-  Login a user using only an email
-  
-  Return the user model of the logged in user.
-  """
-  forceLogin(email: String!): User
+  resetDatabase: String!
 }
 
 "Academic profile data for the profile metadata of a user"
@@ -863,12 +819,6 @@ input UpdateProfileMetadataInput {
   affiliation: String
   biography: String
   websites: [String]
-}
-
-"Key\/Value pairs input"
-input KeyValueInput {
-  key: String
-  value: String
 }
 
 "Information about pagination using a fully featured paginator."
