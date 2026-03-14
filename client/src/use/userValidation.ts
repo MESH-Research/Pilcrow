@@ -3,9 +3,17 @@ import useVuelidate from "@vuelidate/core"
 import { required, email, helpers, maxLength } from "@vuelidate/validators"
 import { CREATE_USER } from "src/graphql/mutations"
 import { useMutation } from "@vue/apollo-composable"
+import type { FetchResult } from "@apollo/client/core"
 import zxcvbn from "zxcvbn"
 import { applyExternalValidationErrors } from "src/use/validationHelpers"
 import { omit } from "lodash"
+
+export interface UserFormData {
+  email: string
+  password: string
+  name: string
+  username: string
+}
 
 export const rules = {
   name: {
@@ -32,7 +40,14 @@ export const rules = {
 
 export const updateUserRules = omit(rules, ["name", "username"])
 
-export function useUserValidation(opts = {}) {
+interface UserValidationOpts {
+  mutation?: ((vars: Record<string, unknown>) => Promise<FetchResult>) | null
+  rules?: ((r: typeof rules) => void) | null
+  variables?: ((form: UserFormData) => Record<string, unknown>) | null
+  validation_key?: string
+}
+
+export function useUserValidation(opts: UserValidationOpts = {}) {
   const form = reactive({
     email: "",
     password: "",

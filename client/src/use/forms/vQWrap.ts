@@ -1,13 +1,19 @@
 import { computed, getCurrentInstance, inject } from "vue"
 import { useI18n } from "vue-i18n"
+import type { VuelidateValidator } from "src/types/vuelidate"
 
-export function useVQWrap(validator, tPath) {
-  const { emit } = getCurrentInstance()
+type VQUpdateFn = (validator: VuelidateValidator, value: unknown) => void
+
+export function useVQWrap(
+  validator: VuelidateValidator,
+  tPath?: string | boolean
+) {
+  const { emit } = getCurrentInstance()!
 
   const { t } = useI18n()
-  const parentUpdate = inject("vqupdate", null)
+  const parentUpdate = inject<VQUpdateFn | null>("vqupdate", null)
 
-  const parentTPrefix = inject("tPrefix", "")
+  const parentTPrefix = inject<string>("tPrefix", "")
 
   const tPrefix = computed(() => {
     if (typeof tPath === "string") {
@@ -17,15 +23,15 @@ export function useVQWrap(validator, tPath) {
     return `${prefix}${validator.$path}`
   })
 
-  function getTranslationKey(key) {
+  function getTranslationKey(key: string) {
     return `${tPrefix.value}.${key}`
   }
 
-  function getTranslation(key) {
+  function getTranslation(key: string) {
     return t(getTranslationKey(key))
   }
 
-  function updateValue(newValue) {
+  function updateValue(newValue: unknown) {
     if (parentUpdate) {
       parentUpdate(validator, newValue)
     } else {
@@ -35,9 +41,9 @@ export function useVQWrap(validator, tPath) {
 
   const model = computed({
     get() {
-      return validator.$model
+      return validator.$model as string
     },
-    set(newValue) {
+    set(newValue: string) {
       const value = newValue !== null ? newValue : ""
       updateValue(value)
     }

@@ -2,6 +2,19 @@ import { maxLength } from "@vuelidate/validators"
 import { required, helpers } from "@vuelidate/validators"
 import { watch } from "vue"
 import validator from "validator"
+import type {
+  SocialMedia,
+  AcademicProfiles
+} from "src/graphql/generated/graphql"
+
+/**
+ * Utility type that converts a GraphQL object type to a form-friendly version:
+ * - Strips `__typename`
+ * - Makes all remaining properties required and non-nullable
+ */
+type FormStrings<T> = {
+  [K in keyof T as K extends "__typename" ? never : K]-?: NonNullable<T[K]>
+}
 
 export const social_regex = {
   facebook: {
@@ -24,7 +37,7 @@ export const social_regex = {
   }
 }
 
-const checkUrl = (value) => {
+const checkUrl = (value: string) => {
   if (value === "") {
     // After the user adds a website, this code prevents Vuelidate from making
     // the subsequent empty website input invalidate the form, causing an
@@ -39,8 +52,8 @@ export const website_rules = {
   valid: checkUrl
 }
 
-const validWebsites = (value) => {
-  return Array.isArray(value) ? value.every((v) => checkUrl(v)) : true
+const validWebsites = (value: unknown) => {
+  return Array.isArray(value) ? value.every((v: string) => checkUrl(v)) : true
 }
 
 export const rules = {
@@ -81,7 +94,27 @@ export const rules = {
   }
 }
 
-export const profile_defaults = {
+export type SocialMediaFields = FormStrings<SocialMedia>
+
+export type AcademicProfileFields = FormStrings<AcademicProfiles>
+
+export interface ProfileMetadataFields {
+  biography: string
+  position_title: string
+  specialization: string
+  affiliation: string
+  websites: string[]
+  social_media: SocialMediaFields
+  academic_profiles: AcademicProfileFields
+}
+
+export interface ProfileFormData {
+  username: string
+  name: string
+  profile_metadata: ProfileMetadataFields
+}
+
+export const profile_defaults: ProfileFormData = {
   username: "",
   name: "",
   profile_metadata: {
@@ -104,7 +137,7 @@ export const profile_defaults = {
   }
 }
 
-export function useSocialFieldWatchers(form) {
+export function useSocialFieldWatchers(form: ProfileFormData) {
   watch(
     () => form.profile_metadata.social_media.facebook,
     (value) => {

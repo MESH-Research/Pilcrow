@@ -1,6 +1,46 @@
-import { computed, ref } from "vue"
+import {
+  computed,
+  ref,
+  type ComputedRef,
+  type InjectionKey,
+  type Ref
+} from "vue"
 
-export function useFormState(query, mutation) {
+export type FormStateStatus =
+  | "saving"
+  | "loading"
+  | "error"
+  | "dirty"
+  | "saved"
+  | "idle"
+
+export interface FormState {
+  state: ComputedRef<FormStateStatus>
+  saved: Ref<boolean>
+  dirty: Ref<boolean>
+  queryLoading: Ref<boolean> | null
+  mutationLoading: Ref<boolean>
+  errorMessage: Ref<string>
+  mutationError: Ref<Error | null>
+  reset: () => void
+  setError: (message: string) => void
+}
+
+export const formStateKey: InjectionKey<FormState> = Symbol("formState")
+
+interface QueryLike {
+  loading: Ref<boolean>
+}
+
+interface MutationLike {
+  loading: Ref<boolean>
+  error: Ref<Error | null>
+}
+
+export function useFormState(
+  query: QueryLike | null,
+  mutation: MutationLike
+): FormState {
   const dirty = ref(false)
   const saved = ref(false)
   const errorMessage = ref("")
@@ -31,7 +71,7 @@ export function useFormState(query, mutation) {
     errorMessage.value = ""
   }
 
-  function setError(message) {
+  function setError(message: string) {
     errorMessage.value = message
   }
   return {

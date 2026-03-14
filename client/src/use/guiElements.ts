@@ -1,7 +1,8 @@
-import { computed, ref, watch } from "vue"
-import { useQuasar } from "quasar"
+import { computed, ref, watch, type Ref } from "vue"
+import { useQuasar, type QNotifyCreateOptions } from "quasar"
 import { useI18n } from "vue-i18n"
 import { useCurrentUser } from "./user"
+import type { Submission } from "src/graphql/generated/graphql"
 
 export function useDarkMode() {
   const $q = useQuasar()
@@ -47,7 +48,7 @@ export function useFeedbackMessages(overrideDefaults = {}) {
    * @param   {string}  message  Message content
    * @param   {Object}  opts     Override default options
    */
-  function newMessage(message, opts) {
+  function newMessage(message: string, opts?: Partial<QNotifyCreateOptions>) {
     const options = Object.assign({ message, ...opts }, defaultOptions)
 
     notify(options)
@@ -55,11 +56,8 @@ export function useFeedbackMessages(overrideDefaults = {}) {
 
   /**
    * Show a status (success or failure) feedback message to the user.
-   *
-   * @param   {string}  status   One of: failure, success
-   * @param   {string}  message  Message content
    */
-  function newStatusMessage(status, message) {
+  function newStatusMessage(status: "success" | "failure", message: string) {
     const type = {
       success: "positive",
       failure: "negative"
@@ -171,7 +169,9 @@ export const submissionStateButtons = {
   }
 }
 
-export function useStatusChangeControls(submission) {
+export function useStatusChangeControls(
+  submission: Ref<Submission | null | undefined>
+) {
   const { isReviewer } = useCurrentUser()
 
   const statusChangingDisabledByRole = computed(() => {
@@ -229,7 +229,9 @@ export function useStatusChangeControls(submission) {
   }
 }
 
-export function useSubmissionExport(submission) {
+export function useSubmissionExport(
+  submission: Ref<Submission | null | undefined>
+) {
   const {
     isAppAdmin,
     isPublicationAdmin,
