@@ -4,5 +4,6 @@ extend type Mutation {
     Only available in local and testing environments.
     """
     resetDatabase: String!
+        @show(env: ["local", "testing"])
         @field(resolver: "App\\GraphQL\\Mutations\\ResetDatabase")
 }
