@@ -53,6 +53,10 @@ const routes = [
           {
             path: "settings",
             component: () => import("src/pages/Account/SettingsPage.vue")
+          },
+          {
+            path: "tokens",
+            component: () => import("src/pages/Account/TokensPage.vue")
           }
         ]
       },
