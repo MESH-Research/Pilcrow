@@ -21,6 +21,7 @@ services:
     build:
       - yarn
       - cd /app/client && yarn
+      - cd /app/client && yarn graphql:codegen-local
     command: cd /app/client && yarn dev
     scanner: false
   appserver:
@@ -39,6 +40,10 @@ tooling:
   yarn:
     service: client
     cmd: yarn
+  npx:
+    service: client
+    cmd: npx
+    dir: /app/client
   quasar:
     service: client
     cmd: npx quasar
