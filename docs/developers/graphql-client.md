@@ -4,7 +4,7 @@ This documents the conventions for colocated GraphQL fragments and queries in Vu
 
 ## Data Fetching Architecture
 
-```
+```text
 Pages (queries/mutations + useQuery/useMutation)
   └─ Data components (fragments — declare fields, never fetch)
        └─ Pure UI components (no GraphQL — plain TS props)
