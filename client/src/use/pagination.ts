@@ -68,7 +68,10 @@ interface PaginatedQueryResult {
   [queryName: string]: { data: unknown[]; paginatorInfo: PaginatorInfo }
 }
 
-function extractElement<K extends "data" | "paginatorInfo">(data: PaginatedQueryResult, element: K): PaginatedQueryResult[string][K] {
+function extractElement<K extends "data" | "paginatorInfo">(
+  data: PaginatedQueryResult,
+  element: K
+): PaginatedQueryResult[string][K] {
   const keys = Object.keys(data)
   if (keys.length !== 1) {
     throw "Unable to extract query return (Are you sure this is a paginated query?)"
