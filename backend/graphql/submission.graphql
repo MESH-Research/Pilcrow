@@ -5,9 +5,12 @@ extend type Query {
     submission(id: ID @eq): Submission @find @can(ability: "view", find: "id")
 
     "Return all submissions"
-    submissions: [Submission!]
-        @can(ability: "viewAll", query: true)
-        @paginate(defaultCount: 100)
+    submissions(
+        status: [SubmissionStatus!] @scope(name: statusFilter)
+        my_roles: [SubmissionUserRoles!] @scope(name: myRoleFilter)
+        publication: [ID!] @scope(name: publicationFilter)
+    ): [Submission!]
+        @paginate(defaultCount: 100, scopes: ["visible"])
         @orderBy(column: "created_at", direction: DESC)
 }
 

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Builders\SubmissionBuilder;
 use App\Events\SubmissionStatusUpdated;
 use App\Http\Traits\CreatedUpdatedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -65,8 +66,18 @@ class Submission extends Model implements Auditable
      */
     protected $appends = [
         'status_name',
-        'submitted_at',
     ];
+
+    /**
+     * Create a new Eloquent query builder for the model.
+     *
+     * @param \Illuminate\Database\Query\Builder $query
+     * @return \App\Builders\SubmissionBuilder
+     */
+    public function newEloquentBuilder($query): SubmissionBuilder
+    {
+        return new SubmissionBuilder($query);
+    }
 
     /**
      * The publication that the submission belongs to

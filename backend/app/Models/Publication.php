@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Builders\PublicationBuilder;
 use App\Models\Casts\CleanAdminHtml;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -32,6 +33,17 @@ class Publication extends BaseModel
     ];
 
     /**
+     * Create a new Eloquent query builder for the model.
+     *
+     * @param \Illuminate\Database\Query\Builder $query
+     * @return \App\Builders\PublicationBuilder
+     */
+    public function newEloquentBuilder($query): PublicationBuilder
+    {
+        return new PublicationBuilder($query);
+    }
+
+    /**
      * Mutator: Trim name attribute before persisting
      *
      * @param string $value
@@ -39,29 +51,7 @@ class Publication extends BaseModel
      */
     public function setNameAttribute($value)
     {
-        $this->attributes['name'] = is_string($value) ? trim($value) : $value;
-    }
-
-    /**
-     * Scope only publically visible publications.
-     *
-     * @param  \Illuminate\Database\Eloquent\Builder $query
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeIsPubliclyVisible($query)
-    {
-        return $query->where('is_publicly_visible', true);
-    }
-
-    /**
-     * Scope only publications that are accepting submissions
-     *
-     * @param  \Illuminate\Database\Eloquent\Builder $query
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeIsAcceptingSubmissions($query)
-    {
-        return $query->where('is_accepting_submissions', true);
+        $this->attributes['name'] = trim($value);
     }
 
     /**
