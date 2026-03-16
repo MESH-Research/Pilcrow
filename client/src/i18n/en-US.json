@@ -1258,5 +1258,57 @@
   "generic": {
     "more_info": "More info"
   },
-  "app_banner_dismiss_tip": "Dismiss for 1 week"
+  "app_banner_dismiss_tip": "Dismiss for 1 week",
+  "admin": {
+    "publication": {
+      "headers": {
+        "name": "Name",
+        "actions": "Actions"
+      },
+      "btn": {
+        "create": "Create"
+      }
+    },
+    "users": {
+      "headers": {
+        "name": "Name",
+        "username": "Username",
+        "email": "Email"
+      },
+      "details": {
+        "title": "User Details",
+        "username": "Username",
+        "name": "Name",
+        "email": "Email",
+        "role": "Role",
+        "isAdmin": "Application Administrator",
+        "isNormal": "Standard User",
+        "roles": {
+          "submitter": "Submitter",
+          "reviewer": "Reviewer",
+          "review_coordinator": "Review Coordinator"
+        },
+        "submissions": {
+          "headers": {
+            "id": "ID",
+            "status": "Status",
+            "title": "Title",
+            "created_at": "Created",
+            "actions": "Actions"
+          },
+          "btn": {
+            "create": "Create"
+          },
+          "actions": {
+            "view": "View"
+          },
+          "filters": {
+            "status": "Status",
+            "roles": "Roles",
+            "publication": "Publication"
+          }
+        }
+      }
+    }
+  }
 }

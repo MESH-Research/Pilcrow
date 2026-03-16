@@ -25,31 +25,35 @@ interface StatusOption {
 }
 
 const options: StatusOption[] = [
-  { label: "submission_status.draft", value: "DRAFT", default: false },
+  { label: "submission.status.DRAFT", value: "DRAFT", default: false },
   {
-    label: "submission_status.initially_submitted",
+    label: "submission.status.INITIALLY_SUBMITTED",
     value: "INITIALLY_SUBMITTED",
     default: true
   },
   {
-    label: "submission_status.resubmission_requested",
+    label: "submission.status.RESUBMISSION_REQUESTED",
     value: "RESUBMISSION_REQUESTED",
     default: true
   },
   {
-    label: "submission_status.awaiting_review",
+    label: "submission.status.AWAITING_REVIEW",
     value: "AWAITING_REVIEW",
     default: true
   },
-  { label: "submission_status.rejected", value: "REJECTED", default: true },
   {
-    label: "submission_status.accepted_as_final",
+    label: "submission.status.REJECTED",
+    value: "REJECTED",
+    default: true
+  },
+  {
+    label: "submission.status.ACCEPTED_AS_FINAL",
     value: "ACCEPTED_AS_FINAL",
     default: true
   },
-  { label: "submission_status.expired", value: "EXPIRED" },
-  { label: "submission_status.archived", value: "ARCHIVED" },
-  { label: "submission_status.deleted", value: "DELETED" }
+  { label: "submission.status.EXPIRED", value: "EXPIRED" },
+  { label: "submission.status.ARCHIVED", value: "ARCHIVED" },
+  { label: "submission.status.DELETED", value: "DELETED" }
 ]
 
 export const defaultOptions = options

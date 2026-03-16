@@ -97,7 +97,7 @@ const columns: QueryTableColumn[] = [
     name: "status",
     align: "left",
     sortable: true,
-    field: (row) => t(`submission_status.${row.status.toLowerCase()}`),
+    field: (row) => t(`submission.status.${row.status}`),
     aside: (row: Record<string, unknown>) => {
       const users = row.users as Array<{
         pivot: { role: { name: string } }
