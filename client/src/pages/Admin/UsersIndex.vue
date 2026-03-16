@@ -16,13 +16,13 @@ graphql(`
   query GetUsers($page: Int) {
     userSearch(page: $page) {
       paginatorInfo {
-        ...paginationFields
+        ...QueryTablePaginator
       }
       data {
         id
-        name
         username
         email
+        ...NameAvatarCell
       }
     }
   }

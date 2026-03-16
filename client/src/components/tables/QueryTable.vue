@@ -85,6 +85,19 @@
   </q-table>
 </template>
 
+<script lang="ts">
+import { graphql } from "src/graphql/generated"
+
+graphql(`
+  fragment QueryTablePaginator on PaginatorInfo {
+    count
+    currentPage
+    lastPage
+    perPage
+  }
+`)
+</script>
+
 <script setup lang="ts">
 import { omit } from "lodash"
 import { computed, useSlots, defineAsyncComponent, type Component } from "vue"

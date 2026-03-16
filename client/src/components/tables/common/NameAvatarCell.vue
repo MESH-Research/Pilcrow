@@ -14,12 +14,28 @@
   </q-td>
 </template>
 
+<script lang="ts">
+import { graphql } from "src/graphql/generated"
+
+graphql(`
+  fragment NameAvatarCell on User {
+    name
+    ...avatarImage
+  }
+`)
+</script>
+
 <script setup lang="ts">
 import AvatarImage from "src/components/atoms/AvatarImage.vue"
-import type { QTableBodyCellScope } from "../types"
+import type { NameAvatarCellFragment as NameAvatarCellType } from "src/graphql/generated/graphql"
 
 interface Props {
-  scope: QTableBodyCellScope
+  scope: {
+    col: Record<string, unknown>
+    value: unknown
+    row: NameAvatarCellType
+    dense?: boolean
+  }
 }
 
 defineProps<Props>()

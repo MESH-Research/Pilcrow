@@ -28,6 +28,9 @@ const config: CodegenConfig = {
     "src/graphql/**/*.ts",
     "src/pages/**/*.vue",
     "src/components/**/*.vue",
+    // TODO: Remove these exclusions once the backend schema supports these queries
+    "!src/pages/Admin/UserDetails.vue",
+    "!src/pages/Admin/UserDetailsSubmissions.vue",
   ],
   generates,
 }
