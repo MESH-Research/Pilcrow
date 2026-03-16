@@ -1,20 +1,12 @@
 <template>
-  <h2 class="q-pl-lg">All Users</h2>
-  <div v-if="users.length">
-    <user-list-basic
-      ref="user_list_basic"
-      :users="users"
-      action="goToUserDetail"
-      @action-click="handleUserListBasicClick"
-    />
-
-    <q-pagination
-      v-model="currentPage"
-      data-cy="user_list_pagination"
-      class="q-pa-lg flex flex-center"
-      :max="lastPage"
-    />
-  </div>
+  <h2 class="q-pl-lg">User Search</h2>
+  <QueryTable
+    class="q-px-lg"
+    :query="GetUsersDocument"
+    t-prefix="admin.users"
+    :columns="columns"
+    @row-click="handleUserListBasicClick"
+  />
 </template>
 
 <script lang="ts">
@@ -27,7 +19,10 @@ graphql(`
         ...paginationFields
       }
       data {
-        ...userListBasic
+        id
+        name
+        username
+        email
       }
     }
   }
@@ -35,39 +30,50 @@ graphql(`
 </script>
 
 <script setup lang="ts">
-import { useQuery } from "@vue/apollo-composable"
-import UserListBasic from "src/components/molecules/UserListBasic.vue"
+import QueryTable from "src/components/tables/QueryTable.vue"
+import NameAvatarCell from "src/components/tables/common/NameAvatarCell.vue"
 import { GetUsersDocument } from "src/graphql/generated/graphql"
-import { computed, ref } from "vue"
 import { useRouter } from "vue-router"
-const currentPage = ref(1)
+import type { QueryTableColumn } from "src/components/tables/types"
 
-const { result } = useQuery(GetUsersDocument, () => ({
-  page: currentPage.value
-}))
-
-const users = computed(() => {
-  return result.value?.userSearch.data ?? []
-})
-
-const lastPage = computed(() => {
-  return result.value?.userSearch.paginatorInfo.lastPage ?? 1
-})
-
-async function handleUserListBasicClick({ user, action }) {
-  switch (action) {
-    case "goToUserDetail":
-      goToUserDetail(user)
-      break
+const columns: QueryTableColumn[] = [
+  {
+    name: "name",
+    required: true,
+    align: "left",
+    field: (row) => row.id,
+    component: NameAvatarCell,
+    sortable: true,
+    label: "admin.users.headers.name"
+  },
+  {
+    name: "username",
+    align: "left",
+    field: "username",
+    sortable: true,
+    label: "admin.users.headers.username"
+  },
+  {
+    name: "email",
+    align: "left",
+    field: "email",
+    sortable: true,
+    label: "admin.users.headers.email"
   }
+]
+
+async function handleUserListBasicClick(
+  _evt: Event,
+  row: Record<string, unknown>
+) {
+  goToUserDetail(row.id as string)
 }
 
 const { push } = useRouter()
-async function goToUserDetail(user) {
-  const userId = user.id
+async function goToUserDetail(id: string) {
   push({
     name: "user_details",
-    params: { id: userId }
+    params: { id }
   })
 }
 </script>
