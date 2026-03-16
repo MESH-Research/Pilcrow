@@ -81,45 +81,16 @@
   </article>
 </template>
 
-<script setup lang="ts">
-import AvatarImage from "src/components/atoms/AvatarImage.vue"
-import ItemCaptioned from "src/components/molecules/ItemCaptioned.vue"
-import UserDetailsSubmissions from "src/pages/Admin/UserDetailsSubmissions.vue"
-import { useQuery } from "@vue/apollo-composable"
-import { computed } from "vue"
-import gql from "graphql-tag"
+<script lang="ts">
+import { graphql } from "src/graphql/generated"
 
-interface Props {
-  id: string
-}
-const props = defineProps<Props>()
-
-interface UserRole {
-  name: string
-}
-
-interface UserPublication {
-  id: string
-  name: string
-  my_role: string
-}
-
-interface UserResult {
-  user: {
-    username: string
-    email: string
-    name: string | null
-    roles: UserRole[]
-    publications: UserPublication[]
-  }
-}
-
-const GET_USER_DETAIL = gql`
+graphql(`
   query getUserDetail($id: ID) {
     user(id: $id) {
       username
       email
       name
+      ...avatarImage
       roles {
         name
       }
@@ -130,9 +101,23 @@ const GET_USER_DETAIL = gql`
       }
     }
   }
-`
+`)
+</script>
 
-const { result } = useQuery<UserResult>(GET_USER_DETAIL, { id: props.id })
+<script setup lang="ts">
+import AvatarImage from "src/components/atoms/AvatarImage.vue"
+import ItemCaptioned from "src/components/molecules/ItemCaptioned.vue"
+import UserDetailsSubmissions from "src/pages/Admin/UserDetailsSubmissions.vue"
+import { getUserDetailDocument } from "src/graphql/generated/graphql"
+import { useQuery } from "@vue/apollo-composable"
+import { computed } from "vue"
+
+interface Props {
+  id: string
+}
+const props = defineProps<Props>()
+
+const { result } = useQuery(getUserDetailDocument, { id: props.id })
 const user = computed(() => {
   return result.value?.user
 })

@@ -2,7 +2,7 @@
   <QueryTable
     ref="queryTableRef"
     :refresh-btn="false"
-    :query="GET_USER_SUBMISSIONS"
+    :query="getUserSubmissionsDocument"
     t-prefix="admin.users.details.submissions"
     :variables="{
       id: id,
@@ -34,7 +34,6 @@
     <template #item="{ row }">
       <UserSubmissionsItemSlot :row="row" :dense="dense" />
     </template>
-    <!-- Body slots start here -->
     <template #body-cell-actions="scope">
       <q-td :props="scope" :dense="scope.dense">
         <q-btn
@@ -56,6 +55,52 @@
   </QueryTable>
 </template>
 
+<script lang="ts">
+import { graphql } from "src/graphql/generated"
+
+graphql(`
+  query getUserSubmissions(
+    $id: ID!
+    $page: Int!
+    $first: Int!
+    $roles: [SubmissionUserRoles!]
+    $status: [SubmissionStatus!]
+    $publication: [ID!]
+  ) {
+    user(id: $id) {
+      assigned_submissions(
+        page: $page
+        first: $first
+        roles: $roles
+        status: $status
+        publication: $publication
+      ) {
+        paginatorInfo {
+          ...QueryTablePaginator
+        }
+        data {
+          id
+          title
+          status
+          assignments {
+            role
+            user {
+              id
+              name
+            }
+          }
+          created_at
+          publication {
+            id
+            name
+          }
+        }
+      }
+    }
+  }
+`)
+</script>
+
 <script setup lang="ts">
 import UserSubmissionsItemSlot from "./components/UserSubmissionsItemSlot.vue"
 import UserSubmissionsTopSlot from "./components/UserSubmissionsTopSlot.vue"
@@ -63,11 +108,10 @@ import UserSubmissionsNoDataSlot from "./components/UserSubmissionsNoDataSlot.vu
 import WithAsideCell from "src/components/tables/common/WithAsideCell.vue"
 import DateTimeCell from "src/components/tables/common/DateTimeCell.vue"
 import QueryTable from "src/components/tables/QueryTable.vue"
+import { getUserSubmissionsDocument } from "src/graphql/generated/graphql"
 import { ref, watch } from "vue"
 import { useI18n } from "vue-i18n"
 import { useQuasar } from "quasar"
-import gql from "graphql-tag"
-import { _PAGINATION_FIELDS } from "src/graphql/fragments"
 import type { QueryTableColumn } from "src/components/tables/types"
 
 const $q = useQuasar()
@@ -99,10 +143,11 @@ const columns: QueryTableColumn[] = [
     sortable: true,
     field: (row) => t(`submission.status.${row.status}`),
     aside: (row: Record<string, unknown>) => {
-      const users = row.users as Array<{
-        pivot: { role: { name: string } }
+      const assignments = row.assignments as Array<{
+        role: string
+        user: { id: string; name: string }
       }>
-      return t(`admin.users.details.roles.${users[0].pivot.role.name}`)
+      return t(`admin.users.details.roles.${assignments[0]?.role ?? ""}`)
     },
     asideLabel: "Role",
     component: WithAsideCell,
@@ -145,49 +190,4 @@ watch([statusFilter, roleFilter, publicationFilter], () => {
     queryTableRef.value.page = 1
   }
 })
-
-const GET_USER_SUBMISSIONS = gql`
-  query getUserSubmissions(
-    $id: ID!
-    $page: Int!
-    $first: Int!
-    $roles: [UserRoles!]
-    $status: [SubmissionStatus!]
-    $publication: [ID!]
-  ) {
-    user(id: $id) {
-      assigned_submissions(
-        page: $page
-        first: $first
-        roles: $roles
-        status: $status
-        publications: $publication
-      ) {
-        paginatorInfo {
-          ...paginationFields
-        }
-        data {
-          id
-          title
-          status
-          users {
-            id
-            name
-            pivot {
-              role {
-                name
-              }
-            }
-          }
-          created_at
-          publication {
-            id
-            name
-          }
-        }
-      }
-    }
-  }
-  ${_PAGINATION_FIELDS}
-`
 </script>

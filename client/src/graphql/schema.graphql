@@ -546,13 +546,16 @@ type Query {
 
   """Return all publications"""
   publications(
+    accepting_submissions: Boolean
+
     """Limits number of fetched items."""
     first: Int! = 10
-    is_accepting_submissions: Boolean
-    is_publicly_visible: Boolean
+    my_role: PublicationRole
 
     """The offset from which items are returned."""
     page: Int
+    public: Boolean
+    search: String
   ): PublicationPaginator!
 
   """Return pre-defined user roles in the application"""
@@ -565,9 +568,12 @@ type Query {
   submissions(
     """Limits number of fetched items."""
     first: Int! = 100
+    my_roles: [SubmissionUserRoles!]
 
     """The offset from which items are returned."""
     page: Int
+    publication: [ID!]
+    status: [SubmissionStatus!]
   ): SubmissionPaginator!
 
   """Return details about a specific user in the application"""
@@ -581,6 +587,14 @@ type Query {
     """The offset from which items are returned."""
     page: Int
     term: String
+  ): UserPaginator!
+  users(
+    """Limits number of fetched items."""
+    first: Int! = 10
+
+    """The offset from which items are returned."""
+    page: Int
+    search: String
   ): UserPaginator!
 
   """
@@ -643,6 +657,7 @@ type StyleCriteria {
 
 """A Submission"""
 type Submission {
+  assignments: [SubmissionAssignment!]!
   audits: [SubmissionAudit]
   commenters(type: CommentParticipantType): [User!]!
   content: SubmissionContent
@@ -664,7 +679,6 @@ type Submission {
     """Allows to filter if trashed elements should be fetched."""
     trashed: Trashed
   ): [OverallComment!]!
-  pivot: SubmissionUser
   publication: Publication!
   review_coordinators: [User!]!
   reviewers: [User!]!
@@ -675,6 +689,17 @@ type Submission {
   title: String
   updated_at: DateTimeUtc
   updated_by: User!
+  users: [User!]!
+}
+
+"""A user associated with a submission and a role"""
+type SubmissionAssignment {
+  created_at: DateTimeUtc!
+  id: ID!
+  role: SubmissionUserRoles!
+  submission: Submission!
+  updated_at: DateTimeUtc
+  user: User!
 }
 
 type SubmissionAudit {
@@ -734,14 +759,6 @@ enum SubmissionStatus {
   RESUBMITTED
   REVISION_REQUESTED
   UNDER_REVIEW
-}
-
-"""A user associated with a submission and a role"""
-type SubmissionUser {
-  id: ID!
-  role_id: ID!
-  submission_id: ID!
-  user_id: ID!
 }
 
 enum SubmissionUserRoles {
@@ -888,6 +905,17 @@ scalar Upload
 
 """A user account"""
 type User {
+  assigned_submissions(
+    """Limits number of fetched items."""
+    first: Int!
+
+    """The offset from which items are returned."""
+    page: Int
+    publication: [ID!]
+    roles: [SubmissionUserRoles!]
+    status: [SubmissionStatus!]
+  ): SubmissionPaginator!
+  assignments: [SubmissionAssignment!]
   created_at: DateTime!
   display_label: String
   email: String!
@@ -905,11 +933,11 @@ type User {
     unread: Boolean
   ): NotificationPaginator!
   permissions: [Permission!]
-  pivot: SubmissionUser
   profile_metadata: ProfileMetadata
+  publications: [Publication!]
   roles: [Role!]!
   staged: Boolean
-  submissions: [Submission]!
+  submissions: [Submission!]
   updated_at: DateTime
   username: String!
 }

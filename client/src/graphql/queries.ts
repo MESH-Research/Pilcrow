@@ -224,8 +224,8 @@ export const GET_PUBLICATIONS = gql`
     publications(
       page: $page
       first: $first
-      is_publicly_visible: $is_publicly_visible
-      is_accepting_submissions: $is_accepting_submissions
+      public: $is_publicly_visible
+      accepting_submissions: $is_accepting_submissions
     ) {
       paginatorInfo {
         ...paginationFields

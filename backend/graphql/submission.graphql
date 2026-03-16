@@ -159,29 +159,39 @@ type Submission {
     created_by: User! @belongsTo(relation: "createdBy")
     updated_by: User! @belongsTo(relation: "updatedBy")
     submitted_at: DateTimeUtc
-    publication: Publication!
+        @with(relation: "audits")
+        @method(name: "getSubmittedAt")
+    publication: Publication! @belongsTo
+    users: [User!]! @belongsToMany
     reviewers: [User!]! @belongsToMany
     review_coordinators: [User!]! @belongsToMany(relation: "reviewCoordinators")
     submitters: [User!]! @belongsToMany
     files: [SubmissionFile]! @hasMany
-    pivot: SubmissionUser
+    assignments: [SubmissionAssignment!]!
+        @hasMany(relation: "submissionAssignments")
     status: SubmissionStatus!
     status_change_comment: String
     content: SubmissionContent #This field is optional bc it may be null if the pandoc process is still importing the document
     commenters(type: CommentParticipantType): [User!]! @method(name: "getCommentParticipants")
-    my_role: SubmissionUserRoles @method(name: "getMyRole")
-    effective_role: SubmissionUserRoles @method(name: "getEffectiveRole")
+    my_role: SubmissionUserRoles
+        @with(relation: "submissionAssignments")
+        @method(name: "getMyRole")
+    effective_role: SubmissionUserRoles
+        @with(relation: "submissionAssignments")
+        @method(name: "getEffectiveRole")
     audits: [SubmissionAudit] @belongsToMany
 }
 
 """
 A user associated with a submission and a role
 """
-type SubmissionUser {
+type SubmissionAssignment {
     id: ID!
-    role_id: ID!
-    submission_id: ID!
-    user_id: ID!
+    role: SubmissionUserRoles! @rename(attribute: "role_id")
+    user: User! @belongsTo
+    submission: Submission! @belongsTo
+    created_at: DateTimeUtc!
+    updated_at: DateTimeUtc
 }
 
 """
