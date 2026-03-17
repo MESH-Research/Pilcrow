@@ -1307,7 +1307,8 @@
             "roles": "Roles",
             "publication": "Publication"
           }
-        }
+        },
+        "no_publications": "This user is not associated with any publications."
       }
     }
   }

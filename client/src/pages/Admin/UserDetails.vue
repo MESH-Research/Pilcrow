@@ -1,9 +1,9 @@
 <template>
   <div v-if="user" class="column">
-    <h3>Publications</h3>
+    <h3 class="sr-only">Publications</h3>
 
     <div class="column">
-      <q-list bordered separator>
+      <q-list v-if="user.publications.length" bordered separator>
         <q-item
           v-for="publication in user.publications"
           :key="publication.id"
@@ -27,6 +27,9 @@
           </q-item-section>
         </q-item>
       </q-list>
+      <div v-else class="text-grey-7 text-body2 q-pa-md">
+        {{ $t("admin.users.details.no_publications") }}
+      </div>
     </div>
   </div>
 </template>
