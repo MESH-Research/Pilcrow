@@ -1,40 +1,47 @@
-import {
-  computed,
-  ref,
-  toValue,
-  onMounted,
-  watch,
-  type MaybeRefOrGetter
-} from "vue"
+import { computed, ref, toValue, watch, type MaybeRefOrGetter } from "vue"
 import { useQuery } from "@vue/apollo-composable"
 import type { DocumentNode } from "graphql"
-import type { TablePagination, PaginatedResult } from "./types"
+import type { QueryTableFragment } from "src/graphql/generated/graphql"
+interface TablePagination {
+  sortBy: string
+  descending: boolean
+  page: number
+  rowsPerPage: number
+  rowsNumber: number
+}
 import { useQueryCapabilities } from "./useQueryCapabilities"
 
 interface UsePaginatedQueryOptions {
-  query: DocumentNode
   variables?: MaybeRefOrGetter<Record<string, unknown>>
   field?: MaybeRefOrGetter<string>
 }
 
+type PaginatedField = QueryTableFragment & { data: Record<string, unknown>[] }
+
 function getField(
   resultData: Record<string, unknown>,
   field: string
-): unknown | null {
+): PaginatedField | null {
   if (!resultData) {
     return null
   }
-  if (!field) {
-    return resultData[Object.keys(resultData)[0]]
-  }
-  return field
-    .split(".")
-    .reduce<unknown>((o, i) => (o as Record<string, unknown>)?.[i], resultData)
+  const value = field
+    ? field
+        .split(".")
+        .reduce<unknown>(
+          (o, i) => (o as Record<string, unknown>)?.[i],
+          resultData
+        )
+    : resultData[Object.keys(resultData)[0]]
+  return (value as PaginatedField) ?? null
 }
 
-export function usePaginatedQuery(options: UsePaginatedQueryOptions) {
+export function usePaginatedQuery(
+  query: DocumentNode,
+  options: UsePaginatedQueryOptions = {}
+) {
   const { searchable, rowsPerPageOptions, enablePagination } =
-    useQueryCapabilities(options.query)
+    useQueryCapabilities(query)
 
   const pagination = ref<TablePagination>({
     sortBy: "",
@@ -75,35 +82,26 @@ export function usePaginatedQuery(options: UsePaginatedQueryOptions) {
     }
   })
 
-  const {
-    result,
-    refetch,
-    loading: queryLoading
-  } = useQuery(options.query, queryVariables)
-
-  const loading = ref(true)
-  watch(queryLoading, (newValue) => (loading.value = newValue))
-
-  onMounted(() => {
-    if (!loading.value) {
-      refetch()
-    }
-  })
+  const { result, refetch, loading } = useQuery(query, queryVariables)
 
   const rows = ref<Record<string, unknown>[]>([])
 
-  watch(result, (newValue) => {
-    if (newValue) {
-      const fieldData = getField(
-        newValue as Record<string, unknown>,
-        toValue(options.field) ?? ""
-      ) as PaginatedResult | null
-      pagination.value.rowsNumber = fieldData?.paginatorInfo.total ?? 0
-      pagination.value.page = fieldData?.paginatorInfo.currentPage ?? 1
-      pagination.value.rowsPerPage = fieldData?.paginatorInfo.perPage ?? 25
-      rows.value = fieldData?.data ?? []
-    }
-  })
+  watch(
+    result,
+    (newValue) => {
+      if (newValue) {
+        const fieldData = getField(
+          newValue as Record<string, unknown>,
+          toValue(options.field) ?? ""
+        )
+        pagination.value.rowsNumber = fieldData?.paginatorInfo?.total ?? 0
+        pagination.value.page = fieldData?.paginatorInfo?.currentPage ?? 1
+        pagination.value.rowsPerPage = fieldData?.paginatorInfo?.perPage ?? 25
+        rows.value = fieldData?.data ?? []
+      }
+    },
+    { immediate: true }
+  )
 
   const onRequest = (reqProps: {
     pagination: {

@@ -14,7 +14,7 @@ import WithAsideCell from "./WithAsideCell.vue"
 import { DateTime } from "luxon"
 import { computed } from "vue"
 import { useTimeAgo } from "src/use/timeAgo"
-import type { QTableBodyCellScope } from "../types"
+import type { QTableBodyCellScope } from "../QueryTable.vue"
 
 interface Props {
   scope: QTableBodyCellScope

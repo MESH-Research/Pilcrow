@@ -19,7 +19,7 @@
 
 <script setup lang="ts">
 import { computed } from "vue"
-import type { QTableBodyCellScope } from "../types"
+import type { QTableBodyCellScope } from "../QueryTable.vue"
 
 interface ColumnWithAside {
   aside?: string | ((row: Record<string, unknown>) => string)

@@ -87,23 +87,55 @@
 
 <script lang="ts">
 import { graphql } from "src/graphql/generated"
+import type { Component } from "vue"
+import type { QTableProps } from "quasar"
+
+type QTableColumn = NonNullable<QTableProps["columns"]>[number]
+
+export interface QueryTableColumn extends QTableColumn {
+  component?: string | Component
+  aside?: string | ((row: Record<string, unknown>) => string)
+  asideLabel?: string | ((row: Record<string, unknown>) => string)
+}
+
+export interface QTableBodyCellScope {
+  col: QTableColumn
+  value: unknown
+  row: Record<string, unknown>
+  dense?: boolean
+}
 
 graphql(`
-  fragment QueryTablePaginator on PaginatorInfo {
-    count
-    currentPage
-    lastPage
-    perPage
+  fragment QueryTable on Paginator {
+    paginatorInfo {
+      count
+      currentPage
+      lastPage
+      perPage
+      total
+    }
   }
 `)
 </script>
 
 <script setup lang="ts">
 import { omit } from "lodash"
-import { computed, useSlots, defineAsyncComponent, type Component } from "vue"
+import { computed, useSlots, defineAsyncComponent } from "vue"
+import type { DocumentNode } from "graphql"
 import { useI18nPrefix } from "src/use/i18nPrefix"
 import { usePaginatedQuery } from "./usePaginatedQuery"
-import type { QueryTableProps, QueryTableColumn } from "./types"
+
+interface QueryTableProps {
+  query: DocumentNode
+  field?: string
+  newTo?: Record<string, unknown>
+  columns?: QueryTableColumn[]
+  tPrefix?: string
+  onNew?: () => void
+  variables?: Record<string, unknown>
+  refreshBtn?: boolean
+  dense?: boolean
+}
 
 const props = withDefaults(defineProps<QueryTableProps>(), {
   field: "",
@@ -145,8 +177,7 @@ const {
   loading,
   refetch,
   onRequest
-} = usePaginatedQuery({
-  query: props.query,
+} = usePaginatedQuery(props.query, {
   variables: computed(() => props.variables ?? {}),
   field: computed(() => props.field)
 })
