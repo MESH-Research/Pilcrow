@@ -1,0 +1,102 @@
+import { reactive } from "vue"
+import useVuelidate from "@vuelidate/core"
+import { required, email, helpers, maxLength } from "@vuelidate/validators"
+import { CREATE_USER } from "src/graphql/mutations"
+import { useMutation } from "@vue/apollo-composable"
+import type { FetchResult } from "@apollo/client/core"
+import zxcvbn from "zxcvbn"
+import { applyExternalValidationErrors } from "src/use/validationHelpers"
+import { omit } from "lodash"
+
+export interface UserFormData {
+  email: string
+  password: string
+  name: string
+  username: string
+}
+
+export const rules = {
+  name: {
+    maxLength: maxLength(256)
+  },
+  email: {
+    required,
+    email
+  },
+  username: {
+    required
+  },
+  password: {
+    required,
+    notComplex(value) {
+      const complexity = zxcvbn(value)
+      return {
+        complexity,
+        $valid: !helpers.req(value) || complexity.score >= 3
+      }
+    }
+  }
+}
+
+export const updateUserRules = omit(rules, ["name", "username"])
+
+interface UserValidationOpts {
+  mutation?: ((vars: Record<string, unknown>) => Promise<FetchResult>) | null
+  rules?: ((r: typeof rules) => void) | null
+  variables?: ((form: UserFormData) => Record<string, unknown>) | null
+  validation_key?: string
+}
+
+export function useUserValidation(opts: UserValidationOpts = {}) {
+  const form = reactive({
+    email: "",
+    password: "",
+    name: "",
+    username: ""
+  })
+
+  const externalValidation = reactive({
+    email: [],
+    password: [],
+    name: [],
+    username: []
+  })
+
+  const mutate = opts.mutation ?? useMutation(CREATE_USER).mutate
+
+  if (opts.rules && typeof opts.rules === "function") {
+    opts.rules(rules)
+  }
+  const $v = useVuelidate(rules, form, { $externalResults: externalValidation })
+
+  const saveUser = async () => {
+    $v.value.$touch()
+    if ($v.value.$invalid || $v.value.$error) {
+      throw Error("FORM_VALIDATION")
+    }
+    const vars =
+      opts.variables && typeof opts.variables === "function"
+        ? opts.variables(form)
+        : form
+    const validation_key = opts.validation_key ?? "user."
+    try {
+      const newUser = await mutate(vars)
+      return newUser
+    } catch (error) {
+      if (
+        applyExternalValidationErrors(
+          form,
+          externalValidation,
+          error,
+          validation_key
+        )
+      ) {
+        throw Error("FORM_VALIDATION")
+      } else {
+        throw Error("INTERNAL")
+      }
+    }
+  }
+
+  return { $v, user: form, saveUser }
+}

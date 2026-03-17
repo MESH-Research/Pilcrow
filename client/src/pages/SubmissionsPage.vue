@@ -101,12 +101,16 @@
   </article>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useCurrentUser } from "src/use/user"
 import { CURRENT_USER_SUBMISSIONS, GET_SUBMISSIONS } from "src/graphql/queries"
 import { GET_PUBLICATIONS } from "src/graphql/queries"
 import { computed, ref } from "vue"
+import { useQuasar } from "quasar"
 import { useQuery } from "@vue/apollo-composable"
+import { compareDatesDesc } from "src/utils/dateSort"
+
+const $q = useQuasar()
 import SubmissionTable from "src/components/SubmissionTable.vue"
 import CommentPreview from "src/components/atoms/CommentPreview.vue"
 
@@ -119,10 +123,8 @@ const all_submissions = computed(() => {
 })
 const { result, loading: subsLoading } = useQuery(CURRENT_USER_SUBMISSIONS)
 const submissions = computed(() => {
-  let s = result.value?.currentUser?.submissions ?? []
-  return [...s].sort((a, b) => {
-    return new Date(b.created_at) - new Date(a.created_at)
-  })
+  const s = result.value?.currentUser?.submissions ?? []
+  return [...s].sort((a, b) => compareDatesDesc(a.created_at, b.created_at))
 })
 const { result: pubsResult } = useQuery(GET_PUBLICATIONS, {
   is_publicly_visible: true,
@@ -144,7 +146,7 @@ const submitter_submissions = computed(() =>
   })
 )
 const latest_comments = computed(() => {
-  let comments = submitter_submissions.value.map((submission) => {
+  const comments = submitter_submissions.value.map((submission) => {
     const inline_replies = []
     const inline = submission.inline_comments
       .map((comment) => {
@@ -194,9 +196,7 @@ const latest_comments = computed(() => {
   })
   return comments
     .flat()
-    .sort((a, b) => {
-      return new Date(b.updated_at) - new Date(a.updated_at)
-    })
+    .sort((a, b) => compareDatesDesc(a.updated_at, b.updated_at))
     .slice(0, 4)
 })
 </script>

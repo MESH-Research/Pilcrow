@@ -25,14 +25,20 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed } from "vue"
-const props = defineProps({
-  complexity: {
-    type: Object,
-    required: true
-  }
-})
+
+interface ZxcvbnComplexity {
+  score: number
+  feedback: { suggestions: string[]; warning: string }
+  crack_times_display: Record<string, string>
+}
+
+interface Props {
+  complexity: ZxcvbnComplexity
+}
+
+const props = defineProps<Props>()
 
 const suggestions = computed(() => {
   return props.complexity.feedback.suggestions

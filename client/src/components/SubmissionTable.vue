@@ -171,33 +171,32 @@
     </template>
   </q-table>
 </template>
-<script setup>
+<script setup lang="ts">
+import type { Submission } from "src/graphql/generated/graphql"
 import SubmissionTableActions from "./SubmissionTableActions.vue"
 import { useI18n } from "vue-i18n"
 import { ref, computed } from "vue"
+import { useQuasar } from "quasar"
 import { relativeTime } from "src/use/timeAgo"
 import { useDarkMode } from "src/use/guiElements"
+
+const $q = useQuasar()
 
 const { t } = useI18n()
 const { darkModeStatus } = useDarkMode()
 
-const props = defineProps({
-  tableData: {
-    type: Array,
-    default: () => []
-  },
-  tableType: {
-    type: String,
-    default: "submissions"
-  },
-  variation: {
-    type: String,
-    default: ""
-  },
-  role: {
-    type: String,
-    default: "reviewer"
-  }
+interface Props {
+  tableData?: Submission[]
+  tableType?: string
+  variation?: string
+  role?: string
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  tableData: () => [],
+  tableType: "submissions",
+  variation: "",
+  role: "reviewer"
 })
 const status_filter = ref(null)
 const filterStatuses = (rows, terms) => {
@@ -226,7 +225,14 @@ const submissionLinkName = (submission) => {
   }
   return "submission:review"
 }
-const cols = [
+const cols: {
+  name: string
+  field: string
+  label: string
+  sortable: boolean
+  style?: string
+  align: "left" | "right" | "center"
+}[] = [
   {
     name: "id",
     field: "id",

@@ -21,22 +21,24 @@
   </section>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import CommentEditor from "src/components/forms/CommentEditor.vue"
 import OverallComment from "src/components/atoms/OverallComment.vue"
 import {
   MARK_OVERALL_COMMENTS_READ,
   MARK_OVERALL_COMMENT_REPLIES_READ
 } from "src/graphql/mutations"
-import { computed, inject, nextTick, ref, watch } from "vue"
+import { computed, nextTick, ref, watch } from "vue"
 import { useMutation } from "@vue/apollo-composable"
 import { scroll } from "quasar"
+import { useSubmission, useActiveComment } from "src/use/submissionContext"
+
 const { getScrollTarget, setVerticalScrollPosition } = scroll
 const { mutate: markRead } = useMutation(MARK_OVERALL_COMMENTS_READ)
 const { mutate: markReplyRead } = useMutation(MARK_OVERALL_COMMENT_REPLIES_READ)
 
-const submission = inject("submission")
-const activeComment = inject("activeComment")
+const submission = useSubmission()
+const activeComment = useActiveComment()
 
 const overall_comments = computed(() => {
   const comments = submission.value?.overall_comments ?? []

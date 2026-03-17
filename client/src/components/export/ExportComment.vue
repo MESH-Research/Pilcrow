@@ -17,7 +17,7 @@
           <a
             v-if="isTopLevelInline"
             :href="`#comment-highlight-${comment.id}`"
-            class="link-to-highlight"
+            class="highlight-link"
             :aria-label="$t('submissions.comment.reference.go_to_highlight')"
             >&#8679;</a
           >
@@ -39,7 +39,7 @@
         </div>
       </div>
       <div v-if="replyTo && !comment.deleted_at" class="reply-reference">
-        <a :href="`#${replyToAnchorId}`" class="link-to-reply">
+        <a :href="`#${replyToAnchorId}`" class="reply-link">
           {{
             $t("submissions.comment.reference.in_reply_to", {
               username: replyTo.created_by.display_label
@@ -76,34 +76,36 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed } from "vue"
 import { DateTime } from "luxon"
 import { useTimeAgo } from "src/use/timeAgo"
+import type { Comment } from "src/graphql/generated/graphql"
+
+interface ExportComment extends Comment {
+  __typename?: string
+  from?: number | null
+  to?: number | null
+  reply_to_id?: string
+  style_criteria?: { icon: string; name: string }[]
+  replies?: ExportComment[]
+}
 
 const timeAgo = useTimeAgo()
 
-const props = defineProps({
-  comment: {
-    type: Object,
-    required: true
-  },
-  commentNumber: {
-    type: Number,
-    default: null
-  },
-  parentId: {
-    type: [Number, String],
-    default: null
-  },
-  siblings: {
-    type: Array,
-    default: () => []
-  },
-  isReply: {
-    type: Boolean,
-    default: false
-  }
+interface Props {
+  comment: ExportComment
+  commentNumber?: number | null
+  parentId?: string | null
+  siblings?: ExportComment[]
+  isReply?: boolean
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  commentNumber: null,
+  parentId: null,
+  siblings: () => [],
+  isReply: false
 })
 
 const commentPrefix = computed(() => {
@@ -139,7 +141,7 @@ const replyToAnchorId = computed(() => {
   return `${commentPrefix.value}-${replyTo.value.id}`
 })
 
-function formatDate(isoDate) {
+function formatDate(isoDate: string | null | undefined) {
   if (!isoDate) return ""
   const dt = DateTime.fromISO(isoDate)
   return timeAgo.format(dt.toJSDate(), "long")

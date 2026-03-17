@@ -35,7 +35,7 @@
   </section>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ErrorFieldRenderer from "src/components/molecules/ErrorFieldRenderer.vue"
 import { CREATE_PUBLICATION } from "src/graphql/mutations"
 import useVuelidate from "@vuelidate/core"
@@ -46,7 +46,11 @@ import { reactive } from "vue"
 import { useI18n } from "vue-i18n"
 import { useExternalResultFromGraphQL } from "src/use/forms"
 
-const emit = defineEmits(["created"])
+interface Emits {
+  created: [publication: { id: string; name: string }]
+}
+
+const emit = defineEmits<Emits>()
 const newPublication = reactive({
   name: ""
 })

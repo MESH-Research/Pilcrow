@@ -6,25 +6,17 @@
   </ul>
 </template>
 
-<script>
+<script setup lang="ts">
 import { getErrorMessageKey } from "src/use/validationHelpers"
+import type { ErrorObject } from "@vuelidate/core"
 
-export default {
-  props: {
-    errors: {
-      type: Array,
-      required: true
-    },
-    prefix: {
-      type: String,
-      required: false,
-      default: ""
-    }
-  },
-  setup() {
-    return { getErrorMessageKey }
-  }
+interface Props {
+  errors: ErrorObject[]
+  prefix?: string
 }
+withDefaults(defineProps<Props>(), {
+  prefix: ""
+})
 </script>
 
 <style scoped>

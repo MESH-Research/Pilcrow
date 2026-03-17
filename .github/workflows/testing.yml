@@ -35,7 +35,7 @@ jobs:
       - uses: dorny/paths-filter@master
         id: filter
         with:
-          predicate-quantifier: "every"
+          predicate-quantifier: "some"
           filters: |
             docs:
               - 'docs/**'
@@ -117,6 +117,8 @@ jobs:
         with:
           fetch-depth: 0
           fetch-tags: true
+      - name: Copy client schema for drift detection
+        run: cp client/src/graphql/schema.graphql backend/tests/stubs/schema.graphql
       - uses: mesh-research/github-actions/build-image@v2
         with:
           target: "fpm-test-ci"

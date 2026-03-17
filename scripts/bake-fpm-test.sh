@@ -123,6 +123,17 @@ if [ "$MYSQL_READY" -eq 0 ]; then
     exit 1
 fi
 
+# Copy client schema snapshot into backend stubs (same as CI)
+echo "Copying client schema for drift detection..."
+CLIENT_SCHEMA="$PROJECT_ROOT/client/src/graphql/schema.graphql"
+if [ ! -f "$CLIENT_SCHEMA" ]; then
+    echo "Error: Client schema file not found at $CLIENT_SCHEMA"
+    echo "Run 'npm run graphql:fetch-schema' in the client directory first."
+    exit 1
+fi
+mkdir -p "$PROJECT_ROOT/backend/tests/stubs"
+cp "$CLIENT_SCHEMA" "$PROJECT_ROOT/backend/tests/stubs/schema.graphql"
+
 # Run the tests
 echo "Running backend unit tests..."
 cd "$PROJECT_ROOT"

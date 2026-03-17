@@ -1,7 +1,7 @@
 <template>
   <section class="column q-gutter-y-sm">
     <h3 class="q-my-none">
-      {{ tp$("heading", users.length) }}
+      {{ pt("heading", users.length) }}
       <q-icon
         v-if="!users.length"
         color="negative"
@@ -9,14 +9,14 @@
         :title="$t('needs_attention')"
       />
     </h3>
-    <p v-if="te(tPrefix('description'))" class="q-mb-none q-mx-none">
-      {{ tp$("description") }}
+    <p v-if="pte('description')" class="q-mb-none q-mx-none">
+      {{ pt("description") }}
     </p>
 
     <div v-if="!users.length" class="col">
       <q-card ref="card_no_users" flat>
         <q-card-section class="text--grey q-pa-none">
-          {{ tp$("none") }}
+          {{ pt("none") }}
         </q-card-section>
       </q-card>
     </div>
@@ -34,7 +34,7 @@
       <q-btn
         :ripple="{ center: true }"
         color="accent"
-        :label="tp$('add_button.label')"
+        :label="pt('add_button.label')"
         data-cy="button-assign"
         type="submit"
         class="full-width"
@@ -50,10 +50,10 @@
           mutable
             ? [
                 {
-                  ariaLabel: tp$('unassign_button.ariaLabel'),
+                  ariaLabel: pt('unassign_button.ariaLabel'),
                   icon: 'person_remove',
                   action: 'unassign',
-                  help: tp$('unassign_button.help'),
+                  help: pt('unassign_button.help'),
                   cyAttr: 'button_unassign'
                 }
               ]
@@ -66,9 +66,10 @@
   </section>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ReinviteUserDialog from "./dialogs/ReinviteUserDialog.vue"
 import FindUserSelect from "./forms/FindUserSelect.vue"
+import type { FoundUser, FindUserSelectValue } from "./forms/FindUserSelect.vue"
 import UserList from "./molecules/UserList.vue"
 import { useFeedbackMessages } from "src/use/guiElements"
 import { useMutation } from "@vue/apollo-composable"
@@ -80,48 +81,52 @@ import {
   INVITE_REVIEW_COORDINATOR
 } from "src/graphql/mutations"
 import { computed, ref } from "vue"
-import { useI18n } from "vue-i18n"
+import type { DocumentNode } from "graphql"
+import { useI18nPrefix } from "src/use/i18nPrefix"
 import { useEditor, EditorContent } from "@tiptap/vue-3"
 import StarterKit from "@tiptap/starter-kit"
 import Placeholder from "@tiptap/extension-placeholder"
 import { useQuasar } from "quasar"
+import type { Submission } from "src/graphql/generated/graphql"
+
 const { dialog } = useQuasar()
 
-const props = defineProps({
-  container: {
-    type: Object,
-    required: true
-  },
-  roleGroup: {
-    type: String,
-    required: true
-  },
-  mutable: {
-    type: Boolean,
-    default: false
-  },
-  maxUsers: {
-    type: [Boolean, Number],
-    required: false,
-    default: false
-  },
-  containerType: {
-    type: String,
-    requred: false,
-    default: null
-  }
+interface Props {
+  container: Submission
+  roleGroup: string
+  mutable?: boolean
+  maxUsers?: boolean | number
+  containerType?: string | null
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  mutable: false,
+  maxUsers: false,
+  containerType: null
 })
 
-const user = ref(null)
+const user = ref<FindUserSelectValue>(null)
 const containerType = computed(() => props.container.__typename.toLowerCase())
-const { t, te } = useI18n()
-const tPrefix = (key) => `${containerType.value}.${props.roleGroup}.${key}`
-const tp$ = (key, ...args) => t(tPrefix(key), ...args)
+const { pt, pte, t } = useI18nPrefix(
+  () => `${containerType.value}.${props.roleGroup}`
+)
 
 const { newStatusMessage } = useFeedbackMessages()
 
-const opts = { variables: { id: props.container.id } }
-const mutations = {
+interface RoleMutations {
+  update: DocumentNode
+  invite: DocumentNode
+}
+
+interface SubmissionMutationVars {
+  id?: string
+  connect?: string[]
+  disconnect?: string[]
+  email?: string
+  message?: string
+}
+
+const mutations: Record<string, RoleMutations> = {
   reviewers: {
     update: UPDATE_SUBMISSION_REVIEWERS,
     invite: INVITE_REVIEWER
@@ -136,13 +141,16 @@ const mutations = {
   }
 }
 const setMutationType = computed(() => {
-  let type = mutations[props.roleGroup]
+  const type = mutations[props.roleGroup]
   if (typeof user.value === "string") {
-    return type["invite"]
+    return type.invite
   }
-  return type["update"]
+  return type.update
 })
-const { mutate } = useMutation(setMutationType, opts)
+const { mutate } = useMutation<unknown, SubmissionMutationVars>(
+  setMutationType,
+  { variables: { id: props.container.id } }
+)
 
 const users = computed(() => {
   return props.container[props.roleGroup]
@@ -151,7 +159,7 @@ const users = computed(() => {
 const acceptMore = computed(() => {
   return (
     props.mutable &&
-    (props.maxUsers === false) | (users.value.length < props.maxUsers) &&
+    (props.maxUsers === false || users.value.length < props.maxUsers) &&
     props.container.effective_role === `review_coordinator`
   )
 })
@@ -182,18 +190,25 @@ async function handleSubmit() {
     return
   }
   if (user.value == null) {
-    newStatusMessage("failure", tp$("assign.no_value"))
+    newStatusMessage("failure", pt("assign.no_value"))
     return
   }
   // TODO: Attempt to assign instead of invite when user.value matches a known user
   if (typeof user.value === "string") {
-    inviteUser()
+    inviteUser(user.value)
   } else {
-    assignUser()
+    assignUser(user.value)
   }
 }
 
-function processErrorsForEmailValidation(errorsFromCatch) {
+function processErrorsForEmailValidation(
+  errorsFromCatch: {
+    graphQLErrors: Array<{
+      extensions: { validation: Record<string, string[]> }
+    }>
+  },
+  email: string
+) {
   const v = errorsFromCatch.graphQLErrors[0].extensions.validation
   if (!Object.hasOwn(v, "input.email")) {
     return
@@ -202,39 +217,37 @@ function processErrorsForEmailValidation(errorsFromCatch) {
   if (key === "NOT_UNIQUE") {
     newStatusMessage(
       "failure",
-      tp$("invite.NOT_UNIQUE", {
-        display_name: user.value
-      })
+      pt("invite.NOT_UNIQUE", { display_name: email })
     )
   }
   if (key === "The input.email must be a valid email address.") {
-    newStatusMessage("failure", tp$("invite.invalid_email"))
+    newStatusMessage("failure", pt("invite.invalid_email"))
   }
 }
 
-async function inviteUser() {
+async function inviteUser(email: string) {
   await mutate({
-    email: user.value,
+    email,
     message: editor.value.getText()
   })
     .then(() => {
       resetForm()
     })
     .catch((error) => {
-      processErrorsForEmailValidation(error)
+      processErrorsForEmailValidation(error, email)
     })
 }
 
-async function assignUser() {
+async function assignUser(selectedUser: FoundUser) {
   try {
     await mutate({
-      connect: [user.value.id]
+      connect: [selectedUser.id]
     })
       .then(() => {
         newStatusMessage(
           "success",
-          tp$("assign.success", {
-            display_name: user.value.name ?? user.value.username
+          pt("assign.success", {
+            display_name: selectedUser.name ?? selectedUser.username
           })
         )
       })
@@ -242,11 +255,11 @@ async function assignUser() {
         resetForm()
       })
   } catch (error) {
-    newStatusMessage("failure", tp$("assign.error"))
+    newStatusMessage("failure", pt("assign.error"))
   }
 }
 
-async function reinviteUser({ user }) {
+async function reinviteUser({ user }: { user: FoundUser }) {
   await new Promise((resolve) => {
     dirtyDialog(user)
       .onOk(function () {
@@ -260,7 +273,7 @@ async function reinviteUser({ user }) {
     return
   }
 }
-function dirtyDialog(user) {
+function dirtyDialog(user: FoundUser) {
   return dialog({
     component: ReinviteUserDialog,
     componentProps: {
@@ -271,18 +284,18 @@ function dirtyDialog(user) {
   })
 }
 
-async function handleUserListClick({ user }) {
+async function handleUserListClick({ user }: { user: FoundUser }) {
   if (!props.mutable) return
   try {
     await mutate({ disconnect: [user.id] })
     newStatusMessage(
       "success",
-      tp$("unassign.success", {
+      pt("unassign.success", {
         display_name: user.name ? user.name : user.username
       })
     )
   } catch (error) {
-    newStatusMessage("failure", tp$("unassign.error"))
+    newStatusMessage("failure", pt("unassign.error"))
   }
 }
 </script>

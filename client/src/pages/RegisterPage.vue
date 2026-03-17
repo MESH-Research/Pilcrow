@@ -94,7 +94,7 @@
               outlined
               :label="$t('auth.fields.password')"
               :error="$v.password.$error"
-              :complexity="$v.password.notComplex.$response.complexity"
+              :complexity="passwordComplexity"
               data-cy="password_field"
             >
               <template #error>
@@ -132,12 +132,12 @@
   </q-page>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import NewPasswordInput from "../components/forms/NewPasswordInput.vue"
 import { useUserValidation } from "src/use/userValidation"
 import ErrorFieldRenderer from "src/components/molecules/ErrorFieldRenderer.vue"
 import { useHasErrorKey } from "src/use/validationHelpers"
-import { ref } from "vue"
+import { computed, ref } from "vue"
 import { useLogin } from "src/use/user"
 import { useRouter } from "vue-router"
 import ErrorBanner from "src/components/molecules/ErrorBanner.vue"
@@ -153,10 +153,21 @@ async function handleSubmit() {
 
     push("/dashboard")
   } catch (e) {
-    formErrorMsg.value = e.message
+    formErrorMsg.value = (e as Error).message
   }
 }
 
+interface ZxcvbnComplexity {
+  score: number
+  feedback: { suggestions: string[]; warning: string }
+  crack_times_display: Record<string, string>
+}
+const passwordComplexity = computed(() => {
+  // @ts-expect-error - Vuelidate doesn't type custom validator $response
+  return $v.value.password.notComplex?.$response?.complexity as
+    | ZxcvbnComplexity
+    | undefined
+})
 const formErrorMsg = ref("")
 const hasErrorKey = useHasErrorKey($v)
 </script>

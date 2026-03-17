@@ -2,7 +2,7 @@
   <q-list :data-cy="dataCy" role="list">
     <user-list-basic-item
       v-for="(user, index) in users"
-      :key="user.id"
+      :key="(user.id as string) ?? index"
       :user="user"
       :index="index"
       :action="action"
@@ -12,31 +12,25 @@
   </q-list>
 </template>
 
-<script>
+<script setup lang="ts">
 import UserListBasicItem from "../atoms/UserListBasicItem.vue"
-export default {
-  name: "UserListBasic",
-  components: { UserListBasicItem },
-  props: {
-    users: {
-      type: Array,
-      required: true
-    },
-    action: {
-      type: String,
-      required: false,
-      default: ""
-    },
-    dataCy: {
-      type: String,
-      default: "user_list"
-    }
-  },
-  emits: ["actionClick"],
-  methods: {
-    bubble(eventData) {
-      this.$emit("actionClick", eventData)
-    }
-  }
+
+interface Props {
+  users: Record<string, unknown>[]
+  action?: string
+  dataCy?: string
+}
+withDefaults(defineProps<Props>(), {
+  action: "",
+  dataCy: "user_list"
+})
+interface Emits {
+  actionClick: [eventData: unknown]
+}
+
+const emit = defineEmits<Emits>()
+
+function bubble(eventData: unknown) {
+  emit("actionClick", eventData)
 }
 </script>

@@ -23,18 +23,20 @@
   </q-item>
 </template>
 
-<script setup>
-defineProps({
-  criteria: {
-    type: Object,
-    required: true
-  },
-  editId: {
-    type: String,
-    default: null,
-    required: false
-  }
+<script setup lang="ts">
+import type { StyleCriteria } from "src/graphql/generated/graphql"
+
+interface Props {
+  criteria: StyleCriteria
+  editId?: string | null
+}
+
+withDefaults(defineProps<Props>(), {
+  editId: null
 })
 
-defineEmits(["edit"])
+interface Emits {
+  edit: []
+}
+defineEmits<Emits>()
 </script>

@@ -18,12 +18,12 @@
   </article>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import PublicationStyleCriteria from "src/components/PublicationStyleCriteria.vue"
-defineProps({
-  publication: {
-    type: Object,
-    required: true
-  }
-})
+import type { Publication } from "src/graphql/generated/graphql"
+
+interface Props {
+  publication: Publication
+}
+defineProps<Props>()
 </script>

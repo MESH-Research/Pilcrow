@@ -5,23 +5,23 @@
   </article>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useMutation } from "@vue/apollo-composable"
 import { provide } from "vue"
 import UpdateBasicForm from "src/components/forms/Publication/UpdateBasicForm.vue"
 import { UPDATE_PUBLICATION_BASICS } from "src/graphql/mutations"
-import { useFormState } from "src/use/forms"
-const props = defineProps({
-  publication: {
-    type: Object,
-    required: true
-  }
-})
+import { useFormState, formStateKey } from "src/use/forms"
+import type { Publication } from "src/graphql/generated/graphql"
+interface Props {
+  publication: Publication
+}
+
+const props = defineProps<Props>()
 
 const mutation = useMutation(UPDATE_PUBLICATION_BASICS)
 
 const formState = useFormState(null, mutation)
-provide("formState", formState)
+provide(formStateKey, formState)
 
 function save(form) {
   const { saved, errorMessage } = formState

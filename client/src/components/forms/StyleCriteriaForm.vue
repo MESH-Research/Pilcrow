@@ -40,7 +40,9 @@
           "
         />
         <div
-          v-if="v$.description.$error && v$.description.maxLength.$invalid"
+          v-if="
+            v$.description.$errors.some((e) => e.$validator === 'maxLength')
+          "
           class="text-negative"
           data-cy="description-errors"
         >
@@ -68,7 +70,7 @@
   </q-form>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import SelectIconDialog from "src/components/dialogs/SelectIconDialog.vue"
 import { useQuasar } from "quasar"
 import { reactive, onMounted, inject, watchEffect, computed } from "vue"
@@ -78,16 +80,25 @@ import { isEqual, pick } from "lodash"
 import VQInput from "src/components/atoms/VQInput.vue"
 import FormActions from "../molecules/FormActions.vue"
 import { useI18n } from "vue-i18n"
-const { dirty, setError } = inject("formState")
+import { formStateKey } from "src/use/forms"
+import type { StyleCriteria } from "src/graphql/generated/graphql"
+const { dirty, setError } = inject(formStateKey)!
 
 const { t } = useI18n()
-const props = defineProps({
-  criteria: {
-    type: Object,
-    default: () => ({})
-  }
+interface Props {
+  criteria?: Partial<StyleCriteria>
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  criteria: () => ({})
 })
-const emit = defineEmits(["cancel", "save", "delete"])
+interface Emits {
+  cancel: []
+  save: [criteria: Partial<StyleCriteria>]
+  delete: [criteria: Partial<StyleCriteria>]
+}
+
+const emit = defineEmits<Emits>()
 
 const state = reactive({
   id: "",

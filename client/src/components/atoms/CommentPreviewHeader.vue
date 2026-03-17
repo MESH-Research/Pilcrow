@@ -47,19 +47,20 @@
   </q-card-section>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import AvatarImage from "./AvatarImage.vue"
 import { useTimeAgo } from "src/use/timeAgo"
 import { DateTime } from "luxon"
 import { computed } from "vue"
 
 const timeAgo = useTimeAgo()
-const props = defineProps({
-  comment: {
-    type: Object,
-    required: true
-  }
-})
+import type { Comment } from "src/graphql/generated/graphql"
+
+interface Props {
+  comment: Comment
+}
+
+const props = defineProps<Props>()
 const createdDate = computed(() => {
   return DateTime.fromISO(props.comment.created_at)
 })

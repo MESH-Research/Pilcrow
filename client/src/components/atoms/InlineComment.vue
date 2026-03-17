@@ -139,11 +139,12 @@
     </q-card>
   </div>
 </template>
-<script setup>
-import { computed, inject, provide, ref } from "vue"
+<script setup lang="ts">
+import { ref, computed, provide } from "vue"
+import CommentHeader from "./CommentHeader.vue"
 import InlineCommentReply from "./InlineCommentReply.vue"
 import CommentEditor from "../forms/CommentEditor.vue"
-import CommentHeader from "./CommentHeader.vue"
+import { useActiveComment } from "src/use/submissionContext"
 
 const isCollapsed = ref(true)
 const isReplying = ref(false)
@@ -155,14 +156,22 @@ const commentModify = ref(null)
 function toggleThread() {
   isCollapsed.value = !isCollapsed.value
 }
-const props = defineProps({
-  comment: {
-    type: Object,
-    required: true
-  }
-})
+import type {
+  Comment,
+  InlineComment as InlineCommentType
+} from "src/graphql/generated/graphql"
 
-defineEmits(["quoteReplyTo", "replyTo"])
+interface Props {
+  comment: InlineCommentType
+}
+
+const props = defineProps<Props>()
+
+interface Emits {
+  quoteReplyTo: []
+  replyTo: []
+}
+defineEmits<Emits>()
 
 provide("comment", props.comment)
 
@@ -187,11 +196,11 @@ function initiateReply() {
   isModifying.value = false
   isQuoteReplying.value = false
 }
-function initiateQuoteReply(comment) {
+function initiateQuoteReply(comment?: Comment) {
   isReplying.value = true
   isModifying.value = false
   isQuoteReplying.value = true
-  commentReply.value = comment
+  commentReply.value = comment ?? null
 }
 
 function modifyComment(comment) {
@@ -216,7 +225,7 @@ const showReplyButton = computed(() => {
 
 const replyRefs = ref([])
 const scrollTarget = ref(null)
-const activeComment = inject("activeComment")
+const activeComment = useActiveComment()
 const isActive = computed(() => {
   return (
     activeComment.value?.__typename === props.comment.__typename &&

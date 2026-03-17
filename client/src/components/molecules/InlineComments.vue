@@ -8,11 +8,11 @@
       </div>
 
       <component
-        :is="comment.new ? NewInlineComment : InlineComment"
+        :is="isNewInlineComment(comment) ? NewInlineComment : InlineComment"
         v-for="comment in inline_comments"
         :key="comment.id"
         ref="commentRefs"
-        :comment="comment"
+        :comment="comment as any"
         @submit="closeEditor"
         @cancel="closeEditor"
       />
@@ -31,30 +31,48 @@
   </q-scroll-area>
 </template>
 
-<script setup>
-import { ref, watch, inject, computed, nextTick } from "vue"
+<script setup lang="ts">
+import { ref, watch, computed, nextTick } from "vue"
 import NewInlineComment from "../NewInlineCommentComponent.vue"
 import InlineComment from "src/components/atoms/InlineComment.vue"
 import { scroll } from "quasar"
+import {
+  useSubmission,
+  useActiveComment,
+  type NewInlineComment as NewInlineCommentType,
+  type ActiveComment
+} from "src/use/submissionContext"
+import type { InlineComment as InlineCommentType } from "src/graphql/generated/graphql"
 const { getScrollTarget, setVerticalScrollPosition } = scroll
 
-const submission = inject("submission")
-const activeComment = inject("activeComment")
+const submission = useSubmission()
+const activeComment = useActiveComment()
+function isNewInlineComment(
+  comment: InlineCommentType | NewInlineCommentType | ActiveComment
+): comment is NewInlineCommentType {
+  return "new" in comment
+}
 
-const commentRefs = ref([])
-const inline_comments_section = ref(null)
+const isActiveCommentNew = computed(() => {
+  return activeComment.value != null && isNewInlineComment(activeComment.value)
+})
+
+const commentRefs = ref<InstanceType<typeof InlineComment>[]>([])
+const inline_comments_section = ref<HTMLElement | null>(null)
 
 const inline_comments = computed(() => {
-  const comments = Array.isArray(submission.value?.inline_comments)
+  const comments: (InlineCommentType | NewInlineCommentType)[] = Array.isArray(
+    submission.value?.inline_comments
+  )
     ? [...submission.value.inline_comments]
     : []
 
-  if (activeComment.value?.new === true) {
-    comments.push(activeComment.value)
+  if (isActiveCommentNew.value && activeComment.value) {
+    comments.push(activeComment.value as NewInlineCommentType)
   }
   return comments
     .filter((c) => {
-      return c.deleted_at === null || c.replies?.length > 0
+      return c.deleted_at === null || ("replies" in c && c.replies?.length > 0)
     })
     .sort((a, b) => {
       return a.from - b.from

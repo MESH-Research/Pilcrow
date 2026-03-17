@@ -48,24 +48,27 @@
     </q-card-section>
   </q-card>
 </template>
-<script setup>
+<script setup lang="ts">
 import AvatarImage from "./AvatarImage.vue"
 import { computed, ref, watch } from "vue"
 import { GET_SUBMISSION_COMMENTERS } from "src/graphql/queries"
 import { useQuery } from "@vue/apollo-composable"
+import type { User } from "src/graphql/generated/graphql"
 
-const props = defineProps({
-  submissionId: {
-    type: String,
-    required: true
-  },
-  commenterType: {
-    type: String,
-    default: null
-  }
+interface Props {
+  submissionId: string
+  commenterType?: string | null
+}
+
+interface Emits {
+  "update:modelValue": [value: Partial<User>[]]
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  commenterType: null
 })
-const emit = defineEmits(["update:modelValue"])
-const selected = ref([])
+const emit = defineEmits<Emits>()
+const selected = ref<Partial<User>[]>([])
 
 const queryVars = computed(() => ({
   id: props.submissionId,
@@ -78,10 +81,10 @@ const all_commenters = computed(
 
 const selectedModel = computed({
   get: () => selected.value,
-  set: (val) => updateSelected(val)
+  set: (val: Partial<User>[]) => updateSelected(val)
 })
 
-function updateSelected(val) {
+function updateSelected(val: Partial<User>[]) {
   selected.value = val
   emit("update:modelValue", val)
 }

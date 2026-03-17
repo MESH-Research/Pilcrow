@@ -13,29 +13,16 @@
   </q-item>
 </template>
 
-<script>
-export default {
-  name: "EssentialLink",
-  props: {
-    title: {
-      type: String,
-      required: true
-    },
-
-    caption: {
-      type: String,
-      default: ""
-    },
-
-    link: {
-      type: String,
-      default: "#"
-    },
-
-    icon: {
-      type: String,
-      default: ""
-    }
-  }
+<script setup lang="ts">
+interface Props {
+  title: string
+  caption?: string
+  link?: string
+  icon?: string
 }
+withDefaults(defineProps<Props>(), {
+  caption: "",
+  link: "#",
+  icon: ""
+})
 </script>

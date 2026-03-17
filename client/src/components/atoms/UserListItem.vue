@@ -46,18 +46,30 @@
   </q-item>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import AvatarImage from "./AvatarImage.vue"
-defineProps({
-  user: {
-    type: Object,
-    default: () => {}
-  },
-  actions: {
-    type: Array,
-    required: false,
-    default: () => []
-  }
+import type { User } from "src/graphql/generated/graphql"
+
+export interface UserAction {
+  ariaLabel: string
+  icon: string
+  action: string
+  help: string
+  cyAttr: string
+}
+
+interface Props {
+  user?: User
+  actions?: UserAction[]
+}
+
+withDefaults(defineProps<Props>(), {
+  user: undefined,
+  actions: () => []
 })
-defineEmits(["actionClick", "reinvite"])
+interface Emits {
+  actionClick: [payload: { user: User; action: string }]
+  reinvite: [payload: { user: User }]
+}
+defineEmits<Emits>()
 </script>

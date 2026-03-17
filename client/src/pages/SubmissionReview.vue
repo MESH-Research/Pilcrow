@@ -51,32 +51,32 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import SubmissionCommentDrawer from "src/components/atoms/SubmissionCommentDrawer.vue"
 import SubmissionCommentSection from "src/components/atoms/SubmissionCommentSection.vue"
 import SubmissionContent from "src/components/atoms/SubmissionContent.vue"
 import SubmissionToolbar from "src/components/atoms/SubmissionToolbar.vue"
-import { ref, provide, computed } from "vue"
+import { ref, computed } from "vue"
 import { GET_SUBMISSION_REVIEW } from "src/graphql/queries"
 import { useQuery } from "@vue/apollo-composable"
 import { scroll } from "quasar"
+import { provideSubmissionReviewContext } from "src/use/submissionContext"
 const { getScrollTarget, setVerticalScrollPosition } = scroll
 
-const props = defineProps({
-  id: {
-    type: String,
-    required: true
-  }
-})
+interface Props {
+  id: string
+}
+const props = defineProps<Props>()
 const { loading, result } = useQuery(GET_SUBMISSION_REVIEW, { id: props.id })
 const submission = computed(() => {
   return result.value?.submission
 })
 const highlightVisibility = ref(true)
 const commentDrawerOpen = ref(false)
-provide("submission", submission)
-provide("activeComment", ref(null))
-provide("commentDrawerOpen", commentDrawerOpen)
+provideSubmissionReviewContext({
+  submission,
+  commentDrawerOpen
+})
 
 const scrollOverallComments = ref(null)
 const scrollAddNewOverallComment = ref(null)
@@ -91,7 +91,6 @@ function handleNewScroll() {
   const scrollValue = scrollAddNewOverallComment.value
   const scrollTarget = getScrollTarget(scrollValue)
   setVerticalScrollPosition(scrollTarget, scrollValue.offsetTop, 250)
-  scrollValue
 }
 </script>
 

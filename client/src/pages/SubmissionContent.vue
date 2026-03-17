@@ -205,7 +205,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { GET_SUBMISSION } from "src/graphql/queries"
 import {
   UPDATE_SUBMISSION_CONTENT,
@@ -213,13 +213,14 @@ import {
 } from "src/graphql/mutations"
 import { useQuery, useMutation } from "@vue/apollo-composable"
 import { watchEffect, computed, ref } from "vue"
+import { useQuasar } from "quasar"
 
-const props = defineProps({
-  id: {
-    type: String,
-    required: true
-  }
-})
+const $q = useQuasar()
+
+interface Props {
+  id: string
+}
+const props = defineProps<Props>()
 
 const { result } = useQuery(GET_SUBMISSION, props)
 const submission = computed(() => result.value?.submission)

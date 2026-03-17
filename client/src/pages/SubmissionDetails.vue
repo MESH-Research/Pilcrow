@@ -96,28 +96,31 @@
   </article>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import AssignedSubmissionUsers from "src/components/AssignedSubmissionUsers.vue"
 import SubmissionAudit from "../components/SubmissionAudit.vue"
 import SubmissionTitle from "src/components/SubmissionTitle.vue"
 import SubmissionExportButton from "src/components/atoms/SubmissionExportButton.vue"
 import { GET_SUBMISSION } from "src/graphql/queries"
 import { computed, provide, watchEffect, ref } from "vue"
+import { submissionKey } from "src/use/submissionContext"
+import { useQuasar } from "quasar"
 import { useQuery } from "@vue/apollo-composable"
 
-const props = defineProps({
-  id: {
-    type: String,
-    required: true
-  }
-})
+const $q = useQuasar()
+
+interface Props {
+  id: string
+}
+
+const props = defineProps<Props>()
 
 const { result } = useQuery(GET_SUBMISSION, { id: props.id })
 const submission = computed(() => {
   return result.value?.submission
 })
 
-let viewType = ref("review")
+const viewType = ref<"review" | "preview" | "view">("review")
 
 watchEffect(() => {
   const status = submission.value?.status
@@ -128,5 +131,5 @@ watchEffect(() => {
   }
 })
 
-provide("submission", submission)
+provide(submissionKey, submission)
 </script>

@@ -72,7 +72,7 @@
   </q-dialog>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ExportCommentList from "src/components/export/ExportCommentList.vue"
 import ExportContent from "src/components/export/ExportContent.vue"
 import { ref, computed, watch, nextTick } from "vue"
@@ -81,36 +81,41 @@ import { useQuery } from "@vue/apollo-composable"
 import exportStyles from "src/components/styles/exportStyles"
 import { useI18n } from "vue-i18n"
 
-const props = defineProps({
-  id: {
-    type: String,
-    required: true
-  },
-  options: {
-    type: Object,
-    default: () => ({
-      includeInline: false,
-      includeOverall: false,
-      createdBy: []
-    })
-  },
-  previewOpen: {
-    type: Boolean,
-    default: false
-  },
-  downloadFilename: {
-    type: String,
-    default: "export.html"
-  }
+interface ExportOptions {
+  includeInline: boolean
+  includeOverall: boolean
+  createdBy: string[]
+}
+
+interface Props {
+  id: string
+  options?: ExportOptions
+  previewOpen?: boolean
+  downloadFilename?: string
+}
+
+interface Emits {
+  "update:blob": [value: string]
+  "update:previewOpen": [value: boolean]
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  options: () => ({
+    includeInline: false,
+    includeOverall: false,
+    createdBy: []
+  }),
+  previewOpen: false,
+  downloadFilename: "export.html"
 })
 
-const emit = defineEmits(["update:blob", "update:previewOpen"])
+const emit = defineEmits<Emits>()
 
 const { t } = useI18n()
 
 const exportOptionChoiceObject = computed(() => {
   const { includeInline, includeOverall, createdBy } = props.options
-  const obj = {
+  const obj: Record<string, unknown> = {
     id: props.id,
     skip_inline: !includeInline,
     skip_overall: !includeOverall
@@ -131,48 +136,45 @@ const showOverallComments = computed(
 const { result } = useQuery(GET_SUBMISSION_REVIEW, exportOptionChoiceObject)
 const submission = computed(() => result.value?.submission)
 const highlightVisibility = ref(true)
-const notDeleted = (c) => c.deleted_at === null
+const notDeleted = (c: Record<string, unknown>) => c.deleted_at === null
 const inlineNumberMap = computed(() => {
-  const map = {}
+  const map: Record<string, number> = {}
   let num = 1
   for (const c of (submission.value?.inline_comments ?? []).filter(
     notDeleted
   )) {
-    map[c.id] = num++
+    map[c.id as string] = num++
   }
   return map
 })
 const overallNumberMap = computed(() => {
-  const map = {}
+  const map: Record<string, number> = {}
   let num = 1
   for (const c of (submission.value?.overall_comments ?? []).filter(
     notDeleted
   )) {
-    map[c.id] = num++
+    map[c.id as string] = num++
   }
   return map
 })
 
-const exportContainer = ref(null)
-const previewIframe = ref(null)
+const exportContainer = ref<HTMLElement | null>(null)
+const previewIframe = ref<HTMLIFrameElement | null>(null)
 const exportHtml = ref("")
 const blobUrl = ref("")
 
 function attachIframeLinkHandler() {
   const iframe = previewIframe.value
   if (!iframe?.contentDocument) return
-  iframe.contentDocument.addEventListener("click", (e) => {
-    const a = e.target.closest('a[href^="#"]')
+  iframe.contentDocument.addEventListener("click", (e: MouseEvent) => {
+    const el = e.target as HTMLElement | null
+    const a = el?.closest('a[href^="#"]')
     if (!a) return
     e.preventDefault()
-    const target = iframe.contentDocument.getElementById(
-      a.getAttribute("href").slice(1)
-    )
-    let scrollBehavior = window.matchMedia("(prefers-reduced-motion: reduce)")
-      .matches
-      ? null
-      : { behavior: "smooth" }
-    if (target) target.scrollIntoView(scrollBehavior)
+    const href = a.getAttribute("href")
+    if (!href) return
+    const target = iframe.contentDocument?.getElementById(href.slice(1))
+    if (target) target.scrollIntoView({ behavior: "smooth" })
   })
 }
 
@@ -191,11 +193,11 @@ function updateBlob() {
     const id = highlight.getAttribute("data-context-id")
     const link = doc.createElement("a")
     link.href = `#inline-comment-${id}`
-    link.className = "link-to-comment"
+    link.className = "comment-highlight-link"
     highlight.parentNode.insertBefore(link, highlight)
     link.appendChild(highlight)
-    if (numMap[id]) {
-      highlight.setAttribute("data-comment-number", numMap[id])
+    if (id && numMap[id]) {
+      highlight.setAttribute("data-comment-number", String(numMap[id]))
     }
   }
   const html = doc.documentElement.outerHTML

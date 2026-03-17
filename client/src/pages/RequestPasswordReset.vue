@@ -63,7 +63,7 @@
   </q-page>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ErrorFieldRenderer from "src/components/molecules/ErrorFieldRenderer.vue"
 import { REQUEST_PASSWORD_RESET } from "src/graphql/mutations"
 import { email, required } from "@vuelidate/validators"

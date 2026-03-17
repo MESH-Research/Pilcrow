@@ -62,33 +62,46 @@
   </div>
 </template>
 
-<script>
-import { defineComponent } from "vue"
-export default defineComponent({
+<script lang="ts">
+export default {
   inheritAttrs: false
-})
+}
 </script>
 
-<script setup>
+<script setup lang="ts">
 import NewPasswordInputAnalysis from "./atoms/NewPasswordInputAnalysis.vue"
 import PasswordInput from "./PasswordInput.vue"
 import NewPasswordInputMeter from "./atoms/NewPasswordInputMeter.vue"
 import ErrorFieldRenderer from "src/components/molecules/ErrorFieldRenderer.vue"
 import { computed, ref } from "vue"
 import { useVQWrap } from "src/use/forms"
+import type { VuelidateValidator } from "src/types/vuelidate"
 
-const props = defineProps({
-  v: {
-    type: Object,
-    required: true
-  },
-  t: {
-    type: [String, Boolean],
-    default: false
+interface Props {
+  /** Vuelidate validator object the input should use. */
+  v: VuelidateValidator & {
+    notComplex?: {
+      $response: {
+        complexity: {
+          score: number
+          feedback: { suggestions: string[]; warning: string }
+          crack_times_display: Record<string, string>
+        }
+      }
+    }
   }
+  /** Translation key for label, hint and error messages. */
+  t?: string | boolean
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  t: false
 })
 
-defineEmits(["vqupdate"])
+interface Emits {
+  vqupdate: []
+}
+defineEmits<Emits>()
 
 const { getTranslationKey, model } = useVQWrap(props.v, props.t)
 const showDetails = ref(false)

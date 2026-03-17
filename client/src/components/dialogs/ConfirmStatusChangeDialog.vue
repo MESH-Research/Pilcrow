@@ -63,7 +63,7 @@
   </q-dialog>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useDialogPluginComponent } from "quasar"
 import { useMutation } from "@vue/apollo-composable"
 import { UPDATE_SUBMISSION_STATUS } from "src/graphql/mutations"
@@ -77,32 +77,27 @@ import { useRouter } from "vue-router"
 
 const { t } = useI18n()
 
+// eslint-disable-next-line vue/define-emits-declaration
 defineEmits([...useDialogPluginComponent.emits])
 
 const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } =
   useDialogPluginComponent()
 
-const props = defineProps({
-  action: {
-    type: String,
-    required: false,
-    default: null
-  },
-  submissionId: {
-    type: String,
-    required: true
-  },
-  currentStatus: {
-    type: String,
-    required: true
-  }
+interface Props {
+  action?: string | null
+  submissionId: string
+  currentStatus: string
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  action: null
 })
 const state = computed(() => {
   const match = Object.entries(submissionStateButtons).find(
     ([, value]) => value.action === props.action
   )
   if (match === undefined) {
-    return {}
+    return { icon: "", attrs: { color: "" }, status: "" }
   }
   return {
     ...match[1],

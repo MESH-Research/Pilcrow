@@ -96,38 +96,33 @@
     </q-toolbar>
   </q-header>
 </template>
-<script setup>
+<script setup lang="ts">
 import StatusChangeDropdown from "./StatusChangeDropdown.vue"
 import {
   useSubmissionExport,
   useStatusChangeControls
-} from "src/use/guiElements.js"
+} from "src/use/guiElements"
 import { ref } from "vue"
 
-const props = defineProps({
-  // Drawer status
-  commentDrawerOpen: {
-    type: Boolean,
-    default: null
-  },
-  highlightVisibility: {
-    type: Boolean,
-    default: true
-  },
-  submission: {
-    type: Object,
-    default: null
-  }
-})
+import type { Submission } from "src/graphql/generated/graphql"
+
+interface Props {
+  commentDrawerOpen: boolean
+  highlightVisibility: boolean
+  submission?: Submission | null
+}
+
+const props = defineProps<Props>()
 
 const submissionRef = ref(props.submission)
 const { isDisabledByRole, isDisabledByState } =
   useSubmissionExport(submissionRef)
 useStatusChangeControls(submissionRef)
-const emit = defineEmits([
-  "update:commentDrawerOpen",
-  "update:highlightVisibility"
-])
+interface Emits {
+  "update:commentDrawerOpen": [value: boolean]
+  "update:highlightVisibility": [value: boolean]
+}
+const emit = defineEmits<Emits>()
 function toggleCommentDrawer() {
   emit("update:commentDrawerOpen", !props.commentDrawerOpen)
 }

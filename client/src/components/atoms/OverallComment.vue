@@ -127,11 +127,12 @@
     </q-card>
   </div>
 </template>
-<script setup>
-import { computed, inject, provide, ref } from "vue"
+<script setup lang="ts">
+import { computed, ref, provide } from "vue"
 import OverallCommentReply from "./OverallCommentReply.vue"
 import CommentEditor from "../forms/CommentEditor.vue"
 import CommentHeader from "./CommentHeader.vue"
+import { useActiveComment } from "src/use/submissionContext"
 
 const isCollapsed = ref(true)
 const isReplying = ref(false)
@@ -143,12 +144,17 @@ const commentModify = ref(null)
 function toggleThread() {
   isCollapsed.value = !isCollapsed.value
 }
-const props = defineProps({
-  comment: {
-    type: Object,
-    required: true
-  }
-})
+
+import type {
+  Comment,
+  OverallComment as OverallCommentType
+} from "src/graphql/generated/graphql"
+
+interface Props {
+  comment: OverallCommentType
+}
+
+const props = defineProps<Props>()
 
 provide("comment", props.comment)
 
@@ -169,11 +175,11 @@ function initiateReply() {
   isModifying.value = false
   isQuoteReplying.value = false
 }
-function initiateQuoteReply(comment) {
+function initiateQuoteReply(comment?: Comment) {
   isReplying.value = true
   isQuoteReplying.value = true
   isModifying.value = false
-  commentReply.value = comment
+  commentReply.value = comment ?? null
 }
 
 function modifyComment(comment) {
@@ -202,7 +208,7 @@ const hasReplies = computed(() => {
 const replyRefs = ref([])
 const scrollTarget = ref(null)
 
-const activeComment = inject("activeComment")
+const activeComment = useActiveComment()
 const isActive = computed(() => {
   return (
     activeComment.value?.__typename === props.comment.__typename &&

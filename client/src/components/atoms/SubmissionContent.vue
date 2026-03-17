@@ -113,23 +113,28 @@
         data-cy="submission-content"
         :style="{
           'font-size': fontSize + 'rem',
-          'font-family': selectedFont.value
+          'font-family': selectedFont
         }"
       />
     </div>
   </article>
 </template>
-<script setup>
+<script setup lang="ts">
 import { BubbleMenu, Editor, EditorContent } from "@tiptap/vue-3"
 import SubmissionContentKit from "src/tiptap/extension-submission-content-kit"
 import {
   MARK_INLINE_COMMENTS_READ,
   MARK_INLINE_COMMENT_REPLIES_READ
 } from "src/graphql/mutations"
-import { computed, inject, ref, watch, nextTick } from "vue"
+import { computed, ref, watch, nextTick } from "vue"
 import { scroll } from "quasar"
 import { useMutation } from "@vue/apollo-composable"
 import { useDarkMode } from "src/use/guiElements"
+import {
+  useSubmission,
+  useActiveComment,
+  useCommentDrawerOpen
+} from "src/use/submissionContext"
 
 const { getScrollTarget, setVerticalScrollPosition } = scroll
 const { darkModeStatus, toggleDarkMode } = useDarkMode()
@@ -137,31 +142,30 @@ const { darkModeStatus, toggleDarkMode } = useDarkMode()
 const { mutate: markRead } = useMutation(MARK_INLINE_COMMENTS_READ)
 const { mutate: markReplyRead } = useMutation(MARK_INLINE_COMMENT_REPLIES_READ)
 
-const props = defineProps({
-  annotationEnabled: {
-    type: Boolean,
-    default: true
-  },
-  highlightVisibility: {
-    type: Boolean,
-    default: true
-  },
-  showOverallComments: {
-    type: Boolean,
-    default: true
-  }
+interface Props {
+  annotationEnabled?: boolean
+  highlightVisibility?: boolean
+  showOverallComments?: boolean
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  annotationEnabled: true,
+  highlightVisibility: true,
+  showOverallComments: true
 })
 
-const commentDrawerOpen = inject("commentDrawerOpen")
-const submission = inject("submission")
-const activeComment = inject("activeComment")
-const contentRef = ref(null)
+const commentDrawerOpen = useCommentDrawerOpen()
+const submission = useSubmission()
+const activeComment = useActiveComment()
+const contentRef = ref<HTMLElement | null>(null)
 
-const emit = defineEmits([
-  "scrollToOverallComments",
-  "scrollAddNewOverallComment",
-  "editorReady"
-])
+interface Emits {
+  scrollToOverallComments: []
+  scrollAddNewOverallComment: []
+  editorReady: [editor: InstanceType<typeof Editor>]
+}
+
+const emit = defineEmits<Emits>()
 
 function scrollToOverallComments() {
   emit("scrollToOverallComments")
@@ -181,21 +185,21 @@ const fonts = [
     value: "Georgia, Serif"
   }
 ]
-let selectedFont = ref("Sans-serif")
-let fontSize = ref(1)
+const selectedFont = ref("Sans-serif")
+const fontSize = ref(1)
 
-let headingSizes = ref([2.125, 1.5, 1.25, 1, 0.75, 0.5])
+const headingSizes = ref([2.125, 1.5, 1.25, 1, 0.75, 0.5])
 
 function increaseFontSize() {
   fontSize.value += 0.05
-  for (let index in headingSizes.value) {
+  for (const index in headingSizes.value) {
     headingSizes.value[index] += 0.05
   }
 }
 
 function decreaseFontSize() {
   fontSize.value -= 0.05
-  for (let index in headingSizes.value) {
+  for (const index in headingSizes.value) {
     headingSizes.value[index] -= 0.05
   }
 }
@@ -203,13 +207,16 @@ function decreaseFontSize() {
 const findCommentFromId = (id) =>
   submission.value.inline_comments.find((c) => c.id === id)
 
-const onAnnotationClick = (context, { target }) => {
+const onAnnotationClick = (context: { id: string }, event: MouseEvent) => {
   // Open the inline comment drawer
   commentDrawerOpen.value = true
 
   //First we need to get all the comment widget elements with the same Y index
+  const target = event.target as HTMLElement
   const { top: targetTop } = target.getBoundingClientRect()
-  const widgets = [...contentRef.value.querySelectorAll(".comment-widget")]
+  const widgets = [
+    ...contentRef.value.querySelectorAll<HTMLElement>(".comment-widget")
+  ]
     .filter((e) => e.getBoundingClientRect().top === targetTop)
     .map((e) => e.dataset.comment)
 
@@ -303,7 +310,7 @@ watch(
   (newValue) => {
     if (!newValue) return
     if (!newValue.__typename.startsWith("InlineComment")) return
-    if (newValue.new === true) return
+    if ("new" in newValue && newValue.new === true) return
     ;(async () => {
       if (newValue.__typename === "InlineComment") {
         await markRead({

@@ -12,23 +12,18 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: "NewPasswordInputMeter",
-  props: {
-    score: {
-      type: Number,
-      default: 0
-    },
-    max: {
-      type: Number,
-      default: 4
-    },
-    valid: {
-      type: Boolean
-    }
-  }
+<script setup lang="ts">
+interface Props {
+  score?: number
+  max?: number
+  valid?: boolean
 }
+
+withDefaults(defineProps<Props>(), {
+  score: 0,
+  max: 4,
+  valid: false
+})
 </script>
 
 <style lang="sass" scoped>

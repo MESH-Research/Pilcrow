@@ -1,8 +1,8 @@
 <template>
   <section class="column q-gutter-y-sm">
-    <h3 class="q-my-none">{{ tp$("heading") }}</h3>
-    <p v-if="te(tPrefix('description'))" class="q-mb-none q-mx-none">
-      {{ tp$("description") }}
+    <h3 class="q-my-none">{{ pt("heading") }}</h3>
+    <p v-if="pte('description')" class="q-mb-none q-mx-none">
+      {{ pt("description") }}
     </p>
     <div v-if="users.length">
       <user-list
@@ -13,10 +13,10 @@
           mutable
             ? [
                 {
-                  ariaLabel: tp$('unassign_button.ariaLabel'),
+                  ariaLabel: pt('unassign_button.ariaLabel'),
                   icon: 'person_remove',
                   action: 'unassign',
-                  help: tp$('unassign_button.help'),
+                  help: pt('unassign_button.help'),
                   cyAttr: 'button_unassign'
                 }
               ]
@@ -32,7 +32,7 @@
             <q-icon color="accent" name="o_do_disturb_on" size="sm" />
           </q-card-section>
           <q-card-section>
-            {{ tp$("none") }}
+            {{ pt("none") }}
           </q-card-section>
         </q-card-section>
       </q-card>
@@ -56,8 +56,9 @@
   </section>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import FindUserSelect from "./forms/FindUserSelect.vue"
+import type { FoundUser } from "./forms/FindUserSelect.vue"
 import UserList from "./molecules/UserList.vue"
 import { useFeedbackMessages } from "src/use/guiElements"
 import { useMutation } from "@vue/apollo-composable"
@@ -66,42 +67,39 @@ import {
   UPDATE_PUBLICATION_EDITORS
 } from "src/graphql/mutations"
 import { computed, ref } from "vue"
-import { useI18n } from "vue-i18n"
-const props = defineProps({
-  container: {
-    type: Object,
-    required: true
-  },
-  roleGroup: {
-    type: String,
-    required: true
-  },
-  mutable: {
-    type: Boolean,
-    default: false
-  },
-  maxUsers: {
-    type: [Boolean, Number],
-    required: false,
-    default: false
-  },
-  containerType: {
-    type: String,
-    requred: false,
-    default: null
-  }
+import type { DocumentNode } from "graphql"
+import { useI18nPrefix } from "src/use/i18nPrefix"
+import type { Publication } from "src/graphql/generated/graphql"
+
+interface Props {
+  container: Publication
+  roleGroup: string
+  mutable?: boolean
+  maxUsers?: boolean | number
+  containerType?: string | null
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  mutable: false,
+  maxUsers: false,
+  containerType: null
 })
 
-const user = ref(null)
+const user = ref<FoundUser | null>(null)
 const containerType = computed(() => props.container.__typename.toLowerCase())
-const { t, te } = useI18n()
-const tPrefix = (key) => `${containerType.value}.${props.roleGroup}.${key}`
-const tp$ = (key, ...args) => t(tPrefix(key), ...args)
+const { pt, pte } = useI18nPrefix(
+  () => `${containerType.value}.${props.roleGroup}`
+)
 
 const { newStatusMessage } = useFeedbackMessages()
 
-const opts = { variables: { id: props.container.id } }
-const mutations = {
+interface PublicationMutationVars {
+  id?: string
+  connect?: string[]
+  disconnect?: string[]
+}
+
+const mutations: Record<string, DocumentNode> = {
   editors: UPDATE_PUBLICATION_EDITORS,
   publication_admins: UPDATE_PUBLICATION_ADMINS
 }
@@ -112,26 +110,30 @@ const users = computed(() => {
 const acceptMore = computed(() => {
   return (
     props.mutable &&
-    (props.maxUsers === false) | (users.value.length < props.maxUsers)
+    (props.maxUsers === false || users.value.length < props.maxUsers)
   )
 })
 
-const { mutate } = useMutation(mutations[props.roleGroup], opts)
+const { mutate } = useMutation<unknown, PublicationMutationVars>(
+  mutations[props.roleGroup],
+  { variables: { id: props.container.id } }
+)
 
 async function handleSubmit() {
-  if (!acceptMore.value) {
+  if (!acceptMore.value || !user.value) {
     return
   }
 
+  const selectedUser = user.value
   try {
     await mutate({
-      connect: [user.value.id]
+      connect: [selectedUser.id]
     })
       .then(() => {
         newStatusMessage(
           "success",
-          tp$("assign.success", {
-            display_name: user.value.name ?? user.value.username
+          pt("assign.success", {
+            display_name: selectedUser.name ?? selectedUser.username
           })
         )
       })
@@ -139,22 +141,22 @@ async function handleSubmit() {
         user.value = null
       })
   } catch (error) {
-    newStatusMessage("failure", tp$("assign.error"))
+    newStatusMessage("failure", pt("assign.error"))
   }
 }
 
-async function handleUserListClick({ user }) {
+async function handleUserListClick({ user }: { user: FoundUser }) {
   if (!props.mutable) return
   try {
     await mutate({ disconnect: [user.id] })
     newStatusMessage(
       "success",
-      tp$("unassign.success", {
+      pt("unassign.success", {
         display_name: user.name ? user.name : user.username
       })
     )
   } catch (error) {
-    newStatusMessage("failure", tp$("unassign.error"))
+    newStatusMessage("failure", pt("unassign.error"))
   }
 }
 </script>

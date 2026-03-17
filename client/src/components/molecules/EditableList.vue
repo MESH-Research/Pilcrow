@@ -140,54 +140,39 @@
   </div>
 </template>
 
-<script setup>
-import useVuelidate from "@vuelidate/core"
+<script setup lang="ts">
+import useVuelidate, { type ValidationRuleCollection } from "@vuelidate/core"
 import ErrorFieldRenderer from "src/components/molecules/ErrorFieldRenderer.vue"
 import { reactive, ref } from "vue"
+import { useQuasar } from "quasar"
 import Draggable from "vuedraggable"
 import CollapseToolbar from "./CollapseToolbar.vue"
 
-const props = defineProps({
-  /**
-   * Model property for list of items.
-   */
-  modelValue: {
-    type: Array,
-    default: () => []
-  },
-  /**
-   * Icon to prepend to input
-   */
-  inputIcon: {
-    type: String,
-    default: ""
-  },
-  /**
-   * Vuelidate valdiation rules to apply to new and edited items
-   */
-  rules: {
-    type: Object,
-    default: () => {}
-  },
-  /**
-   * Translation root to use for label, hint, etc.
-   */
-  t: {
-    type: String,
-    default: "lists"
-  },
-  /**
-   * Set true to allow duplicates items in list.
-   */
-  allowDuplicates: {
-    type: Boolean,
-    default: false
-  }
+const $q = useQuasar()
+
+interface Props {
+  modelValue?: string[]
+  inputIcon?: string
+  rules?: ValidationRuleCollection
+  t?: string
+  allowDuplicates?: boolean
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  modelValue: () => [],
+  inputIcon: "",
+  rules: () => ({}),
+  t: "lists",
+  allowDuplicates: false
 })
 
-const emit = defineEmits(["update:modelValue"])
+interface Emits {
+  "update:modelValue": [value: string[]]
+}
 
-const itemUnderEdit = ref(false)
+const emit = defineEmits<Emits>()
+
+const itemUnderEdit = ref<number | false>(false)
 
 const form = reactive({
   addItemValue: "",
@@ -196,9 +181,10 @@ const form = reactive({
 
 const noNewDuplicate = (value) => !props.modelValue.includes(value)
 const noExistingDuplicate = (value) => {
+  const editIndex = itemUnderEdit.value as number
   const otherEntries = [
-    ...props.modelValue.slice(0, itemUnderEdit.value),
-    ...props.modelValue.slice(itemUnderEdit.value + 1)
+    ...props.modelValue.slice(0, editIndex),
+    ...props.modelValue.slice(editIndex + 1)
   ]
   return !otherEntries.includes(value)
 }
@@ -236,7 +222,7 @@ function deleteItem(index) {
   ])
 }
 function editItem(index) {
-  if (form.editItemValue !== false) {
+  if (form.editItemValue !== "") {
     saveEdit()
   }
   form.editItemValue = props.modelValue[index]

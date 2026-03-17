@@ -34,11 +34,12 @@
     </q-card-section>
   </div>
 </template>
-<script setup>
-import { computed, inject, ref, provide } from "vue"
+<script setup lang="ts">
+import { computed, ref, provide } from "vue"
 import CommentReplyReference from "./CommentReplyReference.vue"
 import CommentHeader from "./CommentHeader.vue"
 import CommentEditor from "../forms/CommentEditor.vue"
+import { useActiveComment } from "src/use/submissionContext"
 
 const isReplying = ref(false)
 const isQuoteReplying = ref(false)
@@ -46,25 +47,27 @@ const commentReply = ref(null)
 const isModifying = ref(null)
 const commentModify = ref(null)
 
-const props = defineProps({
-  parent: {
-    type: Object,
-    required: true
-  },
-  comment: {
-    required: true,
-    type: Object
-  },
-  replies: {
-    required: true,
-    type: Array
-  }
-})
-defineEmits(["quoteReplyTo", "replyTo"])
+import type {
+  InlineComment,
+  InlineCommentReply as InlineCommentReplyType
+} from "src/graphql/generated/graphql"
+
+interface Props {
+  parent: InlineComment
+  comment: InlineCommentReplyType
+  replies: InlineCommentReplyType[]
+}
+
+const props = defineProps<Props>()
+interface Emits {
+  quoteReplyTo: [comment: InlineCommentReplyType]
+  replyTo: []
+}
+defineEmits<Emits>()
 
 provide("comment", props.comment)
 
-const activeComment = inject("activeComment")
+const activeComment = useActiveComment()
 const isActive = computed(() => {
   return (
     activeComment.value?.__typename === props.comment.__typename &&

@@ -12,7 +12,7 @@
   </q-layout>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import AppHeader from "src/components/AppHeader.vue"
 import AppFooter from "src/components/AppFooter.vue"
 import EmailVerificationBanner from "src/components/molecules/EmailVerificationBanner.vue"

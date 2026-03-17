@@ -29,7 +29,9 @@
               outlined
               :label="$t('auth.fields.password')"
               :error="$v.password.$error"
-              :complexity="$v.password.notComplex.$response.complexity"
+              :complexity="
+                ($v.password as any).notComplex?.$response?.complexity
+              "
               data-cy="password_field"
             >
               <template #error>
@@ -63,7 +65,7 @@
   </q-page>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import NewPasswordInput from "src/components/forms/NewPasswordInput.vue"
 import ErrorFieldRenderer from "src/components/molecules/ErrorFieldRenderer.vue"
 import { RESET_PASSWORD } from "src/graphql/mutations"
