@@ -173,7 +173,6 @@ type Submission {
     status_change_comment: String
     content: SubmissionContent #This field is optional bc it may be null if the pandoc process is still importing the document
     commenters(type: CommentParticipantType): [User!]! @method(name: "getCommentParticipants")
-    pivot_role: SubmissionUserRoles @method(name: "getPivotRole")
     my_role: SubmissionUserRoles
         @with(relation: "submissionAssignments")
         @method(name: "getMyRole")

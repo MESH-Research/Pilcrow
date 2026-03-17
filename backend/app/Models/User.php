@@ -175,6 +175,26 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
+     * Submission assignments for this user.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function submissionAssignments(): HasMany
+    {
+        return $this->hasMany(SubmissionAssignment::class, 'user_id');
+    }
+
+    /**
+     * Publication assignments for this user.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function publicationAssignments(): HasMany
+    {
+        return $this->hasMany(PublicationAssignment::class, 'user_id');
+    }
+
+    /**
      * External Identity Providers that belong to the user
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

@@ -33,6 +33,15 @@ type Publication {
     effective_role: PublicationRole @method(name: "getEffectiveRole")
 }
 
+type PublicationAssignment {
+    id: ID!
+    role: PublicationRole! @rename(attribute: "role_id")
+    user: User! @belongsTo
+    publication: Publication! @belongsTo
+    created_at: DateTimeUtc!
+    updated_at: DateTimeUtc
+}
+
 type StyleCriteria {
     id: ID!
     name: String!

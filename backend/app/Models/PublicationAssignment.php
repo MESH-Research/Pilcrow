@@ -3,24 +3,21 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use App\Builders\SubmissionAssignmentBuilder;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Builders\PublicationAssignmentBuilder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
-class SubmissionAssignment extends Pivot
+class PublicationAssignment extends Pivot
 {
-    use HasFactory;
-
     /**
      * Create a new Eloquent query builder for the model.
      *
      * @param \Illuminate\Database\Query\Builder $query
-     * @return \App\Builders\SubmissionAssignmentBuilder
+     * @return \App\Builders\PublicationAssignmentBuilder
      */
-    public function newEloquentBuilder($query): SubmissionAssignmentBuilder
+    public function newEloquentBuilder($query): PublicationAssignmentBuilder
     {
-        return new SubmissionAssignmentBuilder($query);
+        return new PublicationAssignmentBuilder($query);
     }
 
     /**
@@ -35,7 +32,7 @@ class SubmissionAssignment extends Pivot
      *
      * @var string
      */
-    protected $table = 'submission_user';
+    protected $table = 'publication_user';
 
     /**
      * Indicates if the model should be timestamped.
@@ -55,13 +52,13 @@ class SubmissionAssignment extends Pivot
     }
 
     /**
-     * Get the submission associated with this assignment.
+     * Get the publication associated with this assignment.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function submission(): BelongsTo
+    public function publication(): BelongsTo
     {
-        return $this->belongsTo(Submission::class, 'submission_id');
+        return $this->belongsTo(Publication::class, 'publication_id');
     }
 
     /**
