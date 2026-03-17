@@ -10,7 +10,7 @@
       roles: roleFilter,
       publication: publicationFilter ? [publicationFilter] : undefined
     }"
-    field="user.assigned_submissions"
+    field="user.submissions"
     :columns="columns"
     :grid="$q.screen.lt.md"
     :dense="dense"
@@ -36,7 +36,10 @@
           color="primary"
           size="sm"
           :dense="scope.dense"
-          :to="{ name: 'submission:details', params: { id: scope.row.id } }"
+          :to="{
+            name: 'submission:details',
+            params: { id: scope.row.submission.id }
+          }"
           :label="$t('admin.users.details.submissions.actions.view')"
         />
       </q-td>
@@ -44,7 +47,7 @@
     <template #body-cell-title="scope">
       <WithAsideCell :scope="scope" style="white-space: normal">
         <template #aside>
-          Publication: {{ scope.row.publication.name }}
+          Publication: {{ scope.row.submission.publication.name }}
         </template>
       </WithAsideCell>
     </template>
@@ -64,7 +67,7 @@ graphql(`
     $publication: [ID!]
   ) {
     user(id: $id) {
-      assigned_submissions(
+      submissions(
         page: $page
         first: $first
         roles: $roles
@@ -74,13 +77,16 @@ graphql(`
         ...QueryTable
         data {
           id
-          title
-          status
-          pivot_role
-          created_at
-          publication {
+          role
+          submission {
             id
-            name
+            title
+            status
+            created_at
+            publication {
+              id
+              name
+            }
           }
         }
       }
@@ -118,39 +124,37 @@ const queryTableRef = ref<InstanceType<typeof QueryTable> | null>(null)
 
 const columns: QueryTableColumn[] = [
   {
-    name: "id",
-    align: "left",
-    field: "id",
-    sortable: true,
-    label: "ID"
-  },
-  {
-    name: "status",
-    align: "left",
-    sortable: true,
-    field: (row) => t(`submission.status.${row.status}`),
-    aside: (row: Record<string, unknown>) =>
-      t(`admin.users.details.roles.${row.pivot_role ?? ""}`),
-    asideLabel: "Role",
-    component: WithAsideCell,
-    label: "Status"
-  },
-  {
     name: "title",
     required: true,
     align: "left",
-    field: "title",
+    field: (row) => row.submission.title,
     sortable: true,
-    aside: "publication.name",
+    aside: (row: Record<string, unknown>) => {
+      const sub = row.submission as { publication: { name: string } }
+      return sub.publication.name
+    },
     asideLabel: "Publication",
     component: WithAsideCell,
     style: "white-space: normal",
     label: "Title"
   },
   {
+    name: "role",
+    align: "left",
+    field: (row) => t(`admin.users.details.roles.${row.role}`),
+    label: "Role"
+  },
+  {
+    name: "status",
+    align: "left",
+    sortable: true,
+    field: (row) => t(`submission.status.${row.submission.status}`),
+    label: "Status"
+  },
+  {
     name: "created_at",
     align: "left",
-    field: "created_at",
+    field: (row) => row.submission.created_at,
     sortable: true,
     component: DateTimeCell,
     label: "Created"

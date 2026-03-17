@@ -1286,7 +1286,9 @@
         "roles": {
           "submitter": "Submitter",
           "reviewer": "Reviewer",
-          "review_coordinator": "Review Coordinator"
+          "review_coordinator": "Review Coordinator",
+          "publication_admin": "Publication Administrator",
+          "editor": "Editor"
         },
         "submissions": {
           "headers": {
@@ -1294,7 +1296,8 @@
             "status": "Status",
             "title": "Title",
             "created_at": "Created",
-            "actions": "Actions"
+            "actions": "Actions",
+            "role": "Role"
           },
           "btn": {
             "create": "Create"

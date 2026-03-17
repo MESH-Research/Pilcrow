@@ -3,25 +3,25 @@
     <h3 class="sr-only">Publications</h3>
 
     <div class="column">
-      <q-list v-if="user.publications.length" bordered separator>
+      <q-list v-if="user.publications.data.length" bordered separator>
         <q-item
-          v-for="publication in user.publications"
-          :key="publication.id"
+          v-for="assignment in user.publications.data"
+          :key="assignment.publication.id"
           flat
           bordered
           clickable
           :to="{
             name: 'publication_details',
-            params: { id: publication.id }
+            params: { id: assignment.publication.id }
           }"
         >
           <q-item-section>
             <q-item-label>
-              {{ publication.name }}
+              {{ assignment.publication.name }}
             </q-item-label>
             <q-item-label>
               <q-chip size="sm">{{
-                $t(`admin.users.details.roles.${publication.my_role}`)
+                $t(`admin.users.details.roles.${assignment.role}`)
               }}</q-chip>
             </q-item-label>
           </q-item-section>
@@ -48,10 +48,14 @@ const GET_USER_PUBLICATIONS = gql`
   query getUserPublications($id: ID) {
     user(id: $id) {
       id
-      publications {
-        id
-        name
-        my_role
+      publications(first: 100) {
+        data {
+          role
+          publication {
+            id
+            name
+          }
+        }
       }
     }
   }
