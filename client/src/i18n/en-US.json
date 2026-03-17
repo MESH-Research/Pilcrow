@@ -1311,7 +1311,20 @@
             "publication": "Publication"
           }
         },
-        "no_publications": "This user is not associated with any publications."
+        "no_publications": "This user is not associated with any publications.",
+        "publications": {
+          "headers": {
+            "name": "Name",
+            "role": "Role",
+            "actions": ""
+          },
+          "actions": {
+            "view": "View"
+          },
+          "btn": {
+            "create": "Create"
+          }
+        }
       }
     }
   }

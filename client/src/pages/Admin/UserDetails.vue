@@ -1,55 +1,39 @@
 <template>
-  <div v-if="user" class="column">
-    <h3 class="sr-only">Publications</h3>
-
-    <div class="column">
-      <q-list v-if="user.publications.data.length" bordered separator>
-        <q-item
-          v-for="assignment in user.publications.data"
-          :key="assignment.publication.id"
-          flat
-          bordered
-          clickable
+  <QueryTable
+    :refresh-btn="false"
+    :query="getUserPublicationsDocument"
+    t-prefix="admin.users.details.publications"
+    :variables="{ id }"
+    field="user.publications"
+    :columns="columns"
+  >
+    <template #body-cell-actions="scope">
+      <q-td :props="scope">
+        <q-btn
+          color="primary"
+          size="sm"
           :to="{
-            name: 'publication_details',
-            params: { id: assignment.publication.id }
+            name: 'publication:home',
+            params: { id: scope.row.publication.id }
           }"
-        >
-          <q-item-section>
-            <q-item-label>
-              {{ assignment.publication.name }}
-            </q-item-label>
-            <q-item-label>
-              <q-chip size="sm">{{
-                $t(`admin.users.details.roles.${assignment.role}`)
-              }}</q-chip>
-            </q-item-label>
-          </q-item-section>
-        </q-item>
-      </q-list>
-      <div v-else class="text-grey-7 text-body2 q-pa-md">
-        {{ $t("admin.users.details.no_publications") }}
-      </div>
-    </div>
-  </div>
+          :label="$t('admin.users.details.publications.actions.view')"
+        />
+      </q-td>
+    </template>
+  </QueryTable>
 </template>
 
-<script setup lang="ts">
-import { useQuery } from "@vue/apollo-composable"
-import { computed } from "vue"
-import gql from "graphql-tag"
+<script lang="ts">
+import { graphql } from "src/graphql/generated"
 
-interface Props {
-  id: string
-}
-const props = defineProps<Props>()
-
-const GET_USER_PUBLICATIONS = gql`
-  query getUserPublications($id: ID) {
+graphql(`
+  query getUserPublications($id: ID, $page: Int!, $first: Int!) {
     user(id: $id) {
       id
-      publications(first: 100) {
+      publications(first: $first, page: $page) {
+        ...QueryTable
         data {
+          id
           role
           publication {
             id
@@ -59,8 +43,42 @@ const GET_USER_PUBLICATIONS = gql`
       }
     }
   }
-`
+`)
+</script>
 
-const { result } = useQuery(GET_USER_PUBLICATIONS, { id: props.id })
-const user = computed(() => result.value?.user)
+<script setup lang="ts">
+import QueryTable, {
+  type QueryTableColumn
+} from "src/components/tables/QueryTable.vue"
+import { getUserPublicationsDocument } from "src/graphql/generated/graphql"
+import { useI18n } from "vue-i18n"
+
+interface Props {
+  id: string
+}
+defineProps<Props>()
+
+const { t } = useI18n()
+
+const columns: QueryTableColumn[] = [
+  {
+    name: "name",
+    required: true,
+    align: "left",
+    field: (row) => row.publication.name,
+    label: "Name"
+  },
+  {
+    name: "role",
+    align: "left",
+    field: (row) => t(`admin.users.details.roles.${row.role}`),
+    label: "Role"
+  },
+  {
+    name: "actions",
+    align: "right",
+    field: "id",
+    label: ""
+  }
+]
 </script>
