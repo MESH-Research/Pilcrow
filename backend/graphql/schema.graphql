@@ -12,6 +12,14 @@
 #import oauth.graphql
 #import integration_testing.graphql
 
+"""
+Common interface for all paginated result types.
+Allows writing fragments that work across any paginator.
+"""
+interface Paginator {
+    paginatorInfo: PaginatorInfo!
+}
+
 type Query {
     "Return information about the currently logged in user"
     currentUser: User @auth
