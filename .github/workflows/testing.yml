@@ -35,7 +35,7 @@ jobs:
       - uses: dorny/paths-filter@master
         id: filter
         with:
-          predicate-quantifier: "every"
+          predicate-quantifier: "some"
           filters: |
             docs:
               - 'docs/**'

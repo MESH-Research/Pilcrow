@@ -48,6 +48,46 @@ tooling:
     service: client
     cmd: npx quasar
     dir: /app/client
+  client-yarn:
+    service: client
+    cmd: yarn
+    dir: /app/client
+    description: Run yarn in the client directory (cwd-independent)
+  client-lint:
+    service: client
+    cmd: yarn lint
+    dir: /app/client
+    description: Run ESLint on the client
+  client-lint-fix:
+    service: client
+    cmd: yarn lint --fix
+    dir: /app/client
+    description: Run ESLint --fix on the client
+  client-typecheck:
+    service: client
+    cmd: npx vue-tsc --noEmit
+    dir: /app/client
+    description: Run TypeScript type checking on the client
+  backend-artisan:
+    service: appserver
+    cmd: php artisan
+    dir: /app/backend
+    description: Run Laravel artisan commands (cwd-independent)
+  backend-lint:
+    service: appserver
+    cmd: composer lint
+    dir: /app/backend
+    description: Run PHP CodeSniffer on the backend
+  backend-lint-fix:
+    service: appserver
+    cmd: composer lint-fix
+    dir: /app/backend
+    description: Run PHP CodeSniffer auto-fix on the backend
+  backend-test:
+    service: appserver
+    cmd: php artisan test
+    dir: /app/backend
+    description: Run PHPUnit tests (cwd-independent)
   extras:
     service: client
     cmd: node scripts/lando-extras/extras.js
