@@ -16,8 +16,7 @@
     :dense="dense"
   >
     <template #top>
-      <UserSubmissionsTopSlot
-        ref="topSlotRef"
+      <SubmissionsFilterPanel
         v-model:status-filter="statusFilter"
         v-model:role-filter="roleFilter"
         v-model:publication-filter="publicationFilter"
@@ -30,9 +29,6 @@
         :status-filter="statusFilter"
         :role-filter="roleFilter"
       />
-    </template>
-    <template #item="{ row }">
-      <UserSubmissionsItemSlot :row="row" :dense="dense" />
     </template>
     <template #body-cell-actions="scope">
       <q-td :props="scope" :dense="scope.dense">
@@ -75,9 +71,7 @@ graphql(`
         status: $status
         publication: $publication
       ) {
-        paginatorInfo {
-          ...QueryTablePaginator
-        }
+        ...QueryTable
         data {
           id
           title
@@ -102,17 +96,17 @@ graphql(`
 </script>
 
 <script setup lang="ts">
-import UserSubmissionsItemSlot from "./components/UserSubmissionsItemSlot.vue"
-import UserSubmissionsTopSlot from "./components/UserSubmissionsTopSlot.vue"
+import SubmissionsFilterPanel from "./components/SubmissionsFilterPanel.vue"
 import UserSubmissionsNoDataSlot from "./components/UserSubmissionsNoDataSlot.vue"
 import WithAsideCell from "src/components/tables/common/WithAsideCell.vue"
 import DateTimeCell from "src/components/tables/common/DateTimeCell.vue"
-import QueryTable from "src/components/tables/QueryTable.vue"
+import QueryTable, {
+  type QueryTableColumn
+} from "src/components/tables/QueryTable.vue"
 import { getUserSubmissionsDocument } from "src/graphql/generated/graphql"
 import { ref, watch } from "vue"
 import { useI18n } from "vue-i18n"
 import { useQuasar } from "quasar"
-import type { QueryTableColumn } from "src/components/tables/types"
 
 const $q = useQuasar()
 const { t } = useI18n()
@@ -127,7 +121,6 @@ withDefaults(defineProps<Props>(), {
 })
 
 const queryTableRef = ref<InstanceType<typeof QueryTable> | null>(null)
-const topSlotRef = ref<InstanceType<typeof UserSubmissionsTopSlot> | null>(null)
 
 const columns: QueryTableColumn[] = [
   {
