@@ -55,4 +55,38 @@ class SubmissionAssignmentBuilder extends Builder
 
         return $this;
     }
+
+    /**
+     * Order assignments by a column on the related submission.
+     *
+     * @param array|null $orderBy Array of {column, order} pairs
+     * @return self
+     */
+    public function orderBySubmission(?array $orderBy): self
+    {
+        if (!$orderBy) {
+            return $this;
+        }
+
+        $columnMap = [
+            'CREATED_AT' => 'created_at',
+            'TITLE' => 'title',
+            'STATUS' => 'status',
+        ];
+
+        foreach ($orderBy as $clause) {
+            $column = $columnMap[$clause['column']] ?? null;
+            $direction = $clause['order'] ?? 'ASC';
+            if ($column) {
+                $this->orderBy(
+                    \App\Models\Submission::select($column)
+                        ->whereColumn('submissions.id', 'submission_user.submission_id')
+                        ->limit(1),
+                    $direction
+                );
+            }
+        }
+
+        return $this;
+    }
 }

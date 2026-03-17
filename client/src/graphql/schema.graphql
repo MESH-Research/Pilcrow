@@ -728,6 +728,19 @@ type SubmissionAssignment {
   user: User!
 }
 
+"""Order by clause for submission assignments."""
+input SubmissionAssignmentOrderBy {
+  column: SubmissionAssignmentOrderByColumn!
+  order: SortOrder!
+}
+
+"""Sortable columns for submission assignments."""
+enum SubmissionAssignmentOrderByColumn {
+  CREATED_AT
+  STATUS
+  TITLE
+}
+
 """A paginated list of SubmissionAssignment items."""
 type SubmissionAssignmentPaginator implements Paginator {
   """A list of SubmissionAssignment items."""
@@ -972,6 +985,7 @@ type User {
   submissions(
     """Limits number of fetched items."""
     first: Int!
+    orderBy: [SubmissionAssignmentOrderBy!]
 
     """The offset from which items are returned."""
     page: Int

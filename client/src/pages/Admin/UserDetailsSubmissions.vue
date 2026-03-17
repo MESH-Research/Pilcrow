@@ -65,6 +65,7 @@ graphql(`
     $roles: [SubmissionUserRoles!]
     $status: [SubmissionStatus!]
     $publication: [ID!]
+    $orderBy: [SubmissionAssignmentOrderBy!]
   ) {
     user(id: $id) {
       submissions(
@@ -73,6 +74,7 @@ graphql(`
         roles: $roles
         status: $status
         publication: $publication
+        orderBy: $orderBy
       ) {
         ...QueryTable
         data {
@@ -147,8 +149,8 @@ const columns: QueryTableColumn[] = [
   {
     name: "status",
     align: "left",
-    sortable: true,
     field: (row) => t(`submission.status.${row.submission.status}`),
+    sortable: true,
     label: "Status"
   },
   {

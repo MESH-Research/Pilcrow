@@ -297,6 +297,23 @@ type SubmissionContent {
     src_file: SubmissionFile!
 }
 
+"""
+Sortable columns for submission assignments.
+"""
+enum SubmissionAssignmentOrderByColumn {
+    CREATED_AT
+    TITLE
+    STATUS
+}
+
+"""
+Order by clause for submission assignments.
+"""
+input SubmissionAssignmentOrderBy {
+    column: SubmissionAssignmentOrderByColumn!
+    order: SortOrder!
+}
+
 enum SubmissionUserRoles {
     submitter @enum(value: 6)
     reviewer @enum(value: 5)
