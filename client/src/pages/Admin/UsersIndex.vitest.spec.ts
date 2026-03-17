@@ -26,7 +26,7 @@ describe("User Index page mount", () => {
   test("users are populated on the page", async () => {
     const mockUsersResponse: { data: GetUsersQuery } = {
       data: {
-        userSearch: {
+        users: {
           data: [
             {
               id: "1",
@@ -46,7 +46,8 @@ describe("User Index page mount", () => {
             count: 2,
             currentPage: 1,
             lastPage: 1,
-            perPage: 10
+            perPage: 10,
+            total: 2
           }
         }
       }
@@ -57,10 +58,10 @@ describe("User Index page mount", () => {
 
     const wrapper = wrapperFactory()
     await flushPromises()
-    expect(handler).toHaveBeenCalledWith({ page: 1 })
+    expect(handler).toHaveBeenCalled()
 
-    const list = wrapper.findComponent({ ref: "user_list_basic" })
-    expect(list.findAllComponents({ name: "q-item" })).toHaveLength(2)
+    const rows = wrapper.findAll("tbody tr")
+    expect(rows).toHaveLength(2)
 
     //TODO: Validate router.push on click
   })

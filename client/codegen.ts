@@ -34,6 +34,7 @@ const config: CodegenConfig = {
   documents: [
     "src/graphql/**/*.ts",
     "src/pages/**/*.vue",
+    "src/layouts/**/*.vue",
     "src/components/**/*.vue",
     // TODO: Remove once commenters/CommentParticipantType are resolved
     "!src/pages/SubmissionExport.vue",

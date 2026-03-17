@@ -32,6 +32,14 @@ export default defineBoot(async ({ app, router }) => {
     link: ApolloLink.from([expiredTokenLink, withXsrfLink, httpLink]),
     cache: new InMemoryCache({
       possibleTypes: generatedPossibleTypes.possibleTypes,
+      typePolicies: {
+        Query: {
+          fields: {
+            user: {
+              merge: true
+            }
+          }
+        }
       }
     }),
     connectToDevTools: true

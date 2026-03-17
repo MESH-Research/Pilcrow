@@ -28,7 +28,7 @@ type Query {
     user(id: ID @eq): User @find
 
     "Return user accounts optionally based on a supplied search term"
-    userSearch(term: String @search): [User!]! @paginate(defaultCount: 10)
+    userSearch(term: String @search): [User!]! @paginate(defaultCount: 10) @deprecated(reason: "Use the `users` query instead, which supports pagination and filtering by search term")
 
     users(search: String @scope): [User!]! @paginate(defaultCount: 10)
 

@@ -84,11 +84,12 @@
 </template>
 
 <script setup lang="ts">
-import QueryTable from "src/components/tables/QueryTable.vue"
+import QueryTable, {
+  type QueryTableColumn
+} from "src/components/tables/QueryTable.vue"
 import { GET_PUBLICATIONS } from "src/graphql/queries"
 import CreateForm from "src/components/forms/Publication/CreateForm.vue"
 import { useRouter } from "vue-router"
-import type { QueryTableColumn } from "src/components/tables/types"
 
 const destRoute = (id: string, page: string) => ({
   name: `publication:setup:${page}`,

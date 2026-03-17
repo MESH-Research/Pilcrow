@@ -13,11 +13,9 @@
 import { graphql } from "src/graphql/generated"
 
 graphql(`
-  query GetUsers($page: Int) {
-    userSearch(page: $page) {
-      paginatorInfo {
-        ...QueryTablePaginator
-      }
+  query GetUsers($page: Int, $search: String, $first: Int) {
+    users(page: $page, search: $search, first: $first) {
+      ...QueryTable
       data {
         id
         username
@@ -30,11 +28,17 @@ graphql(`
 </script>
 
 <script setup lang="ts">
-import QueryTable from "src/components/tables/QueryTable.vue"
+import QueryTable, {
+  type QueryTableColumn
+} from "src/components/tables/QueryTable.vue"
 import NameAvatarCell from "src/components/tables/common/NameAvatarCell.vue"
-import { GetUsersDocument } from "src/graphql/generated/graphql"
+import {
+  GetUsersDocument,
+  type GetUsersQuery
+} from "src/graphql/generated/graphql"
 import { useRouter } from "vue-router"
-import type { QueryTableColumn } from "src/components/tables/types"
+
+type UserRow = GetUsersQuery["users"]["data"][number]
 
 const columns: QueryTableColumn[] = [
   {
@@ -62,11 +66,8 @@ const columns: QueryTableColumn[] = [
   }
 ]
 
-async function handleUserListBasicClick(
-  _evt: Event,
-  row: Record<string, unknown>
-) {
-  goToUserDetail(row.id as string)
+async function handleUserListBasicClick(_evt: Event, row: UserRow) {
+  goToUserDetail(row.id)
 }
 
 const { push } = useRouter()

@@ -111,10 +111,21 @@ const routes: RouteRecordRaw[] = [
         }
       },
       {
-        name: "user_details",
         path: "/admin/user/:id",
         props: true,
-        component: () => import("pages/Admin/UserDetails.vue")
+        component: () => import("src/layouts/Admin/UserDetailLayout.vue"),
+        children: [
+          {
+            name: "user_details",
+            path: "",
+            component: () => import("pages/Admin/UserDetails.vue")
+          },
+          {
+            name: "user_details:submissions",
+            path: "submissions",
+            component: () => import("pages/Admin/UserDetailsSubmissions.vue")
+          }
+        ]
       },
       {
         path: "/admin/publications",
