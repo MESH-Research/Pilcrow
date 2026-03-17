@@ -1,5 +1,4 @@
 <script lang="ts">
-import { ClosePopup } from "quasar"
 import { defineComponent, h } from "vue"
 
 export default defineComponent({
@@ -13,9 +12,7 @@ export default defineComponent({
   render() {
     if (this.$props.collapse) {
       const items = this.$slots.default!().map((vn) =>
-        h("q-item", { directives: { ClosePopup } }, [
-          h("q-item-section", {}, [vn])
-        ])
+        h("q-item", {}, [h("q-item-section", {}, [vn])])
       )
       return h(
         "q-btn-dropdown",
