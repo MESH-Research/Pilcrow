@@ -3,19 +3,16 @@
     <q-badge v-if="filterActive" floating rounded color="orange" />
     <q-menu>
       <q-card-section :horizontal="true">
-        <UserSubmissionsTopSlotStatusFilter
+        <SubmissionsFilterPanelStatus
           ref="statusRef"
           v-model="statusFilter"
           :dense="dense"
         />
         <q-separator vertical />
         <q-card-section>
-          <UserSubmissionsTopSlotRolesFilter
-            v-model="roleFilter"
-            :dense="dense"
-          />
+          <SubmissionsFilterPanelRoles v-model="roleFilter" :dense="dense" />
           <q-separator />
-          <UserSubmissionsTopSlotPublicationFilter
+          <SubmissionsFilterPanelPublication
             v-model="publicationFilter"
             :dense="dense"
           />
@@ -40,13 +37,13 @@
 </template>
 
 <script setup lang="ts">
-import UserSubmissionsTopSlotStatusFilter, {
+import SubmissionsFilterPanelStatus, {
   defaultOptions as defaultStatusOptions
-} from "./UserSubmissionsTopSlotStatusFilter.vue"
-import UserSubmissionsTopSlotRolesFilter, {
+} from "./SubmissionsFilterPanelStatus.vue"
+import SubmissionsFilterPanelRoles, {
   defaultOptions as defaultRoleOptions
-} from "./UserSubmissionsTopSlotRolesFilter.vue"
-import UserSubmissionsTopSlotPublicationFilter from "./UserSubmissionsTopSlotPublicationFilter.vue"
+} from "./SubmissionsFilterPanelRoles.vue"
+import SubmissionsFilterPanelPublication from "./SubmissionsFilterPanelPublication.vue"
 
 import { onMounted, computed } from "vue"
 
