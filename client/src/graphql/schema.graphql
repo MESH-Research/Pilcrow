@@ -526,6 +526,24 @@ type Publication {
   updated_at: DateTime
 }
 
+type PublicationAssignment {
+  created_at: DateTimeUtc!
+  id: ID!
+  publication: Publication!
+  role: PublicationRole!
+  updated_at: DateTimeUtc
+  user: User!
+}
+
+"""A paginated list of PublicationAssignment items."""
+type PublicationAssignmentPaginator implements Paginator {
+  """A list of PublicationAssignment items."""
+  data: [PublicationAssignment!]!
+
+  """Pagination information about the list of items."""
+  paginatorInfo: PaginatorInfo!
+}
+
 """A paginated list of Publication items."""
 type PublicationPaginator implements Paginator {
   """A list of Publication items."""
@@ -687,7 +705,6 @@ type Submission {
     """Allows to filter if trashed elements should be fetched."""
     trashed: Trashed
   ): [OverallComment!]!
-  pivot_role: SubmissionUserRoles
   publication: Publication!
   review_coordinators: [User!]!
   reviewers: [User!]!
@@ -709,6 +726,15 @@ type SubmissionAssignment {
   submission: Submission!
   updated_at: DateTimeUtc
   user: User!
+}
+
+"""A paginated list of SubmissionAssignment items."""
+type SubmissionAssignmentPaginator implements Paginator {
+  """A list of SubmissionAssignment items."""
+  data: [SubmissionAssignment!]!
+
+  """Pagination information about the list of items."""
+  paginatorInfo: PaginatorInfo!
 }
 
 type SubmissionAudit {
@@ -914,17 +940,6 @@ scalar Upload
 
 """A user account"""
 type User {
-  assigned_submissions(
-    """Limits number of fetched items."""
-    first: Int!
-
-    """The offset from which items are returned."""
-    page: Int
-    publication: [ID!]
-    roles: [SubmissionUserRoles!]
-    status: [SubmissionStatus!]
-  ): SubmissionPaginator!
-  assignments: [SubmissionAssignment!]
   created_at: DateTime!
   display_label: String
   email: String!
@@ -943,10 +958,27 @@ type User {
   ): NotificationPaginator!
   permissions: [Permission!]
   profile_metadata: ProfileMetadata
-  publications: [Publication!]
+  publications(
+    """Limits number of fetched items."""
+    first: Int!
+
+    """The offset from which items are returned."""
+    page: Int
+    roles: [PublicationRole!]
+  ): PublicationAssignmentPaginator!
+  raw_submissions: [Submission!] @deprecated(reason: "Use `submissions` (SubmissionAssignment) instead")
   roles: [Role!]!
   staged: Boolean
-  submissions: [Submission!]
+  submissions(
+    """Limits number of fetched items."""
+    first: Int!
+
+    """The offset from which items are returned."""
+    page: Int
+    publication: [ID!]
+    roles: [SubmissionUserRoles!]
+    status: [SubmissionStatus!]
+  ): SubmissionAssignmentPaginator!
   updated_at: DateTime
   username: String!
 }

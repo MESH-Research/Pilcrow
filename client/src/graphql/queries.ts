@@ -77,7 +77,7 @@ export const CURRENT_USER_SUBMISSIONS = gql`
       roles {
         name
       }
-      submissions {
+      submissions: raw_submissions {
         id
         title
         status
