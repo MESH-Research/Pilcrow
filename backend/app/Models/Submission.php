@@ -304,6 +304,16 @@ class Submission extends Model implements Auditable
     }
 
     /**
+     * Get the pivot role when loaded through a belongsToMany relationship.
+     *
+     * @return int|null
+     */
+    public function getPivotRole(): int|null
+    {
+        return $this->pivot?->role_id;
+    }
+
+    /**
      * Get the logged in users assigned role for this submission
      *
      * @return int|null

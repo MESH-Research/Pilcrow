@@ -2,7 +2,9 @@
   <div class="field-display row items-start q-gutter-x-sm">
     <q-icon v-if="icon" :name="icon" size="xs" class="field-display__icon" />
     <div class="col">
-      <div class="field-display__label text-caption text-weight-medium text-grey-7">
+      <div
+        class="field-display__label text-caption text-weight-medium text-grey-7"
+      >
         {{ label }}
       </div>
       <div class="field-display__value" :class="valueClass">

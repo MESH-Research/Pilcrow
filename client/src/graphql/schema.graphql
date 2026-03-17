@@ -687,6 +687,7 @@ type Submission {
     """Allows to filter if trashed elements should be fetched."""
     trashed: Trashed
   ): [OverallComment!]!
+  pivot_role: SubmissionUserRoles
   publication: Publication!
   review_coordinators: [User!]!
   reviewers: [User!]!

@@ -76,13 +76,7 @@ graphql(`
           id
           title
           status
-          assignments {
-            role
-            user {
-              id
-              name
-            }
-          }
+          pivot_role
           created_at
           publication {
             id
@@ -135,13 +129,8 @@ const columns: QueryTableColumn[] = [
     align: "left",
     sortable: true,
     field: (row) => t(`submission.status.${row.status}`),
-    aside: (row: Record<string, unknown>) => {
-      const assignments = row.assignments as Array<{
-        role: string
-        user: { id: string; name: string }
-      }>
-      return t(`admin.users.details.roles.${assignments[0]?.role ?? ""}`)
-    },
+    aside: (row: Record<string, unknown>) =>
+      t(`admin.users.details.roles.${row.pivot_role ?? ""}`),
     asideLabel: "Role",
     component: WithAsideCell,
     label: "Status"
