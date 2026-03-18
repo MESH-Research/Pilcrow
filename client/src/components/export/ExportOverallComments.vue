@@ -11,20 +11,9 @@
       class="overall-comment"
     >
       <div class="comment">
-        <div v-if="comment.deleted_at" class="comment-header">
+        <div class="comment-header">
           <div>
-            <span class="text-caption">
-              {{
-                $t("submissions.comment.dateLabelDeleted", {
-                  date: formatDate(comment.deleted_at)
-                })
-              }}
-            </span>
-          </div>
-        </div>
-        <div v-else class="comment-header">
-          <div>
-            <span class="comment-number">#{{ Number(index) + 1 }}</span>
+            <span class="comment-number">#{{ index + 1 }}</span>
             <span class="comment-author">{{
               comment.created_by.display_label
             }}</span>
@@ -40,11 +29,7 @@
           </div>
         </div>
         <!-- eslint-disable vue/no-v-html -->
-        <div
-          v-if="!comment.deleted_at"
-          class="comment-content"
-          v-html="comment.content"
-        />
+        <div class="comment-content" v-html="comment.content" />
         <!-- eslint-enable vue/no-v-html -->
       </div>
       <div v-if="comment.replies?.length" class="overall-comment-replies">
@@ -55,18 +40,7 @@
           class="comment-reply"
         >
           <div class="comment">
-            <div v-if="reply.deleted_at" class="comment-header">
-              <div>
-                <span class="text-caption">
-                  {{
-                    $t("submissions.comment.dateLabelDeleted", {
-                      date: formatDate(reply.deleted_at)
-                    })
-                  }}
-                </span>
-              </div>
-            </div>
-            <div v-else class="comment-header">
+            <div class="comment-header">
               <div>
                 <span class="comment-author">{{
                   reply.created_by.display_label
@@ -83,7 +57,7 @@
               </div>
             </div>
             <div
-              v-if="replyTarget(reply, comment.replies) && !reply.deleted_at"
+              v-if="replyTarget(reply, comment.replies)"
               class="reply-reference"
             >
               <a
@@ -99,11 +73,7 @@
               </a>
             </div>
             <!-- eslint-disable vue/no-v-html -->
-            <div
-              v-if="!reply.deleted_at"
-              class="comment-content"
-              v-html="reply.content"
-            />
+            <div class="comment-content" v-html="reply.content" />
             <!-- eslint-enable vue/no-v-html -->
           </div>
         </div>
@@ -118,14 +88,23 @@ import { graphql } from "src/graphql/generated"
 graphql(`
   fragment exportOverallComments on Submission {
     overall_comments(createdBy: $createdBy) @skip(if: $skip_overall) {
-      ...commentFields
-      replies {
-        ...commentFields
-        parent_id
-        reply_to_id
-        read_at
+      id
+      content
+      created_at
+      updated_at
+      created_by {
+        display_label
       }
-      read_at
+      replies {
+        id
+        content
+        created_at
+        updated_at
+        created_by {
+          display_label
+        }
+        reply_to_id
+      }
     }
   }
 `)

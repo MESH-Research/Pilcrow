@@ -30,6 +30,13 @@ class InlineCommentSeeder extends Seeder
             $this->create(100, 1, ['replies' => 1, 'highlight' => [30, 80]], [2]);
             $this->create(100, 3, ['highlight' => [430, 445]]);
             $this->create(100, 5, ['replies' => 10, 'highlight' => [630, 720]]);
+
+            // Export preview submission (113) — comments for testing the export system
+            $this->create(113, 5, ['replies' => 3, 'highlight' => [20, 90]]);
+            $this->create(113, 4, ['replies' => 2, 'highlight' => [200, 260]], [5]);
+            $deletedInline = $this->create(113, 6, ['highlight' => [400, 450]]);
+            $deletedInline->delete();
+            $this->create(113, 3, ['replies' => 1, 'highlight' => [500, 560]], [5]);
         });
     }
 
@@ -40,7 +47,7 @@ class InlineCommentSeeder extends Seeder
      * @param int $userId
      * @param array $options
      * @param array $replyIds
-     * @return void
+     * @return \App\Models\InlineComment
      */
     public function create($submissionId, $userId, $options = [], $replyIds = null)
     {
@@ -84,6 +91,8 @@ class InlineCommentSeeder extends Seeder
                 $comments->push($reply);
             }
         }
+
+        return $parent;
     }
 
     /**

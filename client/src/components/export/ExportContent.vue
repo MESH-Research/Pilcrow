@@ -16,7 +16,6 @@ graphql(`
       id
       from
       to
-      deleted_at
     }
   }
 `)
@@ -46,15 +45,13 @@ const emit = defineEmits<Emits>()
 
 const annotations = computed(() =>
   props.highlightVisibility
-    ? (props.submission.inline_comments ?? [])
-        .filter((c) => c.deleted_at == null)
-        .map(({ from, to, id }) => ({
-          from,
-          to,
-          context: { id },
-          active: false,
-          click: () => false
-        }))
+    ? (props.submission.inline_comments ?? []).map(({ from, to, id }) => ({
+        from,
+        to,
+        context: { id },
+        active: false,
+        click: () => false
+      }))
     : []
 )
 

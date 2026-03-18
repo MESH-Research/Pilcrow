@@ -61,6 +61,9 @@ class SubmissionSeeder extends Seeder
 
         $this->createSubmissionWithUpload(112, 'Endnote Test')
             ->update(['updated_by' => 1, 'status' => Submission::UNDER_REVIEW]);
+
+        $this->createSubmission(113, 'Export Preview Submission')
+            ->update(['updated_by' => 3, 'status' => Submission::ACCEPTED_AS_FINAL]);
     }
 
     /**

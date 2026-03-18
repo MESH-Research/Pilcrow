@@ -65,9 +65,7 @@ function buildInlineNumberMap() {
   const map: Record<string, number> = {}
   let num = 1
   for (const c of props.submission?.inline_comments ?? []) {
-    if (c.deleted_at === null) {
-      map[c.id] = num++
-    }
+    map[c.id] = num++
   }
   return map
 }
