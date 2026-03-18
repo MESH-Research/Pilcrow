@@ -25,15 +25,6 @@ class OverallCommentSeeder extends Seeder
             $this->create(100, 1);
             $this->create(100, 8);
             $this->create(100, 2, 1, [2,3]);
-
-            // Export preview submission (113) — comments for testing the export system
-            $this->create(113, 3, 5);
-            $this->create(113, 0, 4);
-            $this->create(113, 2, 3, [5, 6]);
-            $deletedOverall = $this->create(113, 0, 6);
-            $deletedOverall->delete();
-            $threadWithDeletedReply = $this->create(113, 1, 5, [4]);
-            $threadWithDeletedReply->replies()->first()?->delete();
         });
     }
 
@@ -44,7 +35,7 @@ class OverallCommentSeeder extends Seeder
      * @param int $replies
      * @param int $userId
      * @param array $replyIds
-     * @return \App\Models\OverallComment
+     * @return void
      */
     protected function create($submissionId, $replies = 0, $userId = null, $replyIds = null)
     {
@@ -75,8 +66,6 @@ class OverallCommentSeeder extends Seeder
                 $comments->push($reply);
             }
         }
-
-        return $parent;
     }
 
     /**
