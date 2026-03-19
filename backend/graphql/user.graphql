@@ -7,9 +7,9 @@ type User {
     name: String
     email: String!
     username: String!
-    created_at: DateTime!
-    updated_at: DateTime
-    email_verified_at: DateTime
+    created_at: DateTimeUtc!
+    updated_at: DateTimeUtc
+    email_verified_at: DateTimeUtc
     roles: [Role!]! @belongsToMany
     highest_privileged_role: UserRoles @method(name: "getHighestPrivilegedRole")
     permissions: [Permission!] @belongsToMany
@@ -18,6 +18,7 @@ type User {
         @all(scopes: [])
         @deprecated(reason: "Use `submissions` (SubmissionAssignment) instead")
     submissions(
+        search: String @scope
         roles: [SubmissionUserRoles!] @scope(name: "roleFilter")
         status: [SubmissionStatus!] @scope(name: "statusFilter")
         publication: [ID!] @scope(name: "publicationFilter")

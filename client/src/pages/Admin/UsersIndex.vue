@@ -5,6 +5,8 @@
     :query="GetUsersDocument"
     t-prefix="admin.users"
     :columns="columns"
+    sync-url
+    :default-sort="{ sortBy: 'name' }"
     @row-click="handleUserListBasicClick"
   />
 </template>
@@ -13,13 +15,19 @@
 import { graphql } from "src/graphql/generated"
 
 graphql(`
-  query GetUsers($page: Int, $search: String, $first: Int) {
-    users(page: $page, search: $search, first: $first) {
+  query GetUsers(
+    $page: Int
+    $search: String
+    $first: Int
+    $orderBy: [QueryUsersOrderByOrderByClause!]
+  ) {
+    users(page: $page, search: $search, first: $first, orderBy: $orderBy) {
       ...QueryTable
       data {
         id
         username
         email
+        created_at
         ...NameAvatarCell
       }
     }
@@ -32,6 +40,7 @@ import QueryTable, {
   type QueryTableColumn
 } from "src/components/tables/QueryTable.vue"
 import NameAvatarCell from "src/components/tables/common/NameAvatarCell.vue"
+import DateTimeCell from "src/components/tables/common/DateTimeCell.vue"
 import {
   GetUsersDocument,
   type GetUsersQuery
@@ -63,6 +72,14 @@ const columns: QueryTableColumn[] = [
     field: "email",
     sortable: true,
     label: "admin.users.headers.email"
+  },
+  {
+    name: "created_at",
+    align: "left",
+    field: "created_at",
+    sortable: true,
+    label: "admin.users.headers.created_at",
+    component: DateTimeCell
   }
 ]
 

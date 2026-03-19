@@ -1273,7 +1273,8 @@
       "headers": {
         "name": "Name",
         "username": "Username",
-        "email": "Email"
+        "email": "Email",
+        "created_at": "Created"
       },
       "details": {
         "title": "User Details",
