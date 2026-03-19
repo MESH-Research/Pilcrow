@@ -10,7 +10,7 @@
       <CreateForm @created="publicationCreated" />
     </q-expansion-item>
     <QueryTable
-      :query="GET_PUBLICATIONS"
+      :query="GetAdminPublicationsDocument"
       t-prefix="admin.publication"
       :columns="columns"
     >
@@ -83,11 +83,28 @@
   </div>
 </template>
 
+<script lang="ts">
+import { graphql } from "src/graphql/generated"
+
+graphql(`
+  query GetAdminPublications($page: Int, $first: Int) {
+    publications(page: $page, first: $first) {
+      ...QueryTable
+      data {
+        id
+        name
+        home_page_content
+      }
+    }
+  }
+`)
+</script>
+
 <script setup lang="ts">
 import QueryTable, {
   type QueryTableColumn
 } from "src/components/tables/QueryTable.vue"
-import { GET_PUBLICATIONS } from "src/graphql/queries"
+import { GetAdminPublicationsDocument } from "src/graphql/generated/graphql"
 import CreateForm from "src/components/forms/Publication/CreateForm.vue"
 import { useRouter } from "vue-router"
 

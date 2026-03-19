@@ -1,11 +1,13 @@
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
 import { mount, flushPromises } from "@vue/test-utils"
 import { installApolloClient } from "app/test/vitest/utils"
-import { GET_USER } from "src/graphql/queries"
 import UserDetails from "./UserDetails.vue"
-
-import type { getUserQuery } from "src/graphql/generated/graphql"
-import { beforeEach, describe, expect, it, vi } from "vitest"
+import {
+  getUserPublicationsDocument,
+  type getUserPublicationsQuery,
+  PublicationRole
+} from "src/graphql/generated/graphql"
+import { describe, expect, it, vi } from "vitest"
 
 vi.mock("vue-router", () => ({
   useRouter: () => ({
@@ -20,89 +22,56 @@ vi.mock("vue-router", () => ({
 installQuasarPlugin()
 const mockClient = installApolloClient()
 
-describe("User Details page mount", () => {
-  function mockUserResponse(userData: NonNullable<getUserQuery["user"]>): {
-    data: getUserQuery
-  } {
-    return { data: { user: userData } }
-  }
-
-  const wrapperFactory = async (id: string) => {
-    const wrapper = mount(UserDetails, {
-      global: {
-        stubs: ["router-link"]
-      },
-      props: {
-        id
+describe("UserDetails publications tab", () => {
+  const mockPublicationsResponse: { data: getUserPublicationsQuery } = {
+    data: {
+      user: {
+        id: "1",
+        publications: {
+          paginatorInfo: {
+            __typename: "PaginatorInfo",
+            count: 2,
+            currentPage: 1,
+            lastPage: 1,
+            perPage: 25,
+            total: 2
+          },
+          data: [
+            {
+              id: "1",
+              role: PublicationRole.editor,
+              publication: { id: "10", name: "Test Publication" }
+            },
+            {
+              id: "2",
+              role: PublicationRole.publication_admin,
+              publication: { id: "20", name: "Another Publication" }
+            }
+          ]
+        }
       }
-    })
-    await flushPromises()
-    return wrapper
+    }
   }
 
-  const getUserHandler = vi.fn()
-  mockClient.setRequestHandler(GET_USER, getUserHandler)
+  const wrapperFactory = () =>
+    mount(UserDetails, {
+      global: { stubs: ["router-link"] },
+      props: { id: "1" }
+    })
 
-  beforeEach(() => {
-    vi.resetAllMocks()
+  it("mounts without errors", () => {
+    expect(wrapperFactory()).toBeTruthy()
   })
 
-  it("mounts without errors", async () => {
-    expect(await wrapperFactory("0")).toBeTruthy()
-    expect(getUserHandler).toHaveBeenCalledWith({ id: "0" })
-  })
+  it("displays publications in the table", async () => {
+    mockClient
+      .getRequestHandler(getUserPublicationsDocument)
+      .mockResolvedValue(mockPublicationsResponse)
 
-  it("queries for a specific user", async () => {
-    const wrapper = await wrapperFactory("1")
-    expect(wrapper).toBeTruthy()
-    expect(getUserHandler).toHaveBeenCalledWith({ id: "1" })
-  })
+    const wrapper = wrapperFactory()
+    await flushPromises()
 
-  it("reflects the lack of roles for a user with no assigned roles", async () => {
-    getUserHandler.mockResolvedValue(
-      mockUserResponse({
-        username: "Username",
-        email: "email",
-        name: "Regular User",
-        roles: []
-      })
-    )
-
-    const wrapper = await wrapperFactory("1")
-    expect(wrapper.text()).toContain("role.no_roles_assigned")
-  })
-
-  it("reflects the role of an application administrator", async () => {
-    getUserHandler.mockResolvedValue(
-      mockUserResponse({
-        name: "Application Admin User",
-        username: "Username",
-        email: "email",
-        roles: [
-          {
-            name: "Application Administrator"
-          }
-        ]
-      })
-    )
-
-    const wrapper = await wrapperFactory("2")
-    expect(wrapper).toBeTruthy()
-    //TODO: Make this test less fragile by finding the roles list component/el first
-    expect(wrapper.text()).toContain("Application Administrator")
-  })
-
-  it("reflects the lack of display name for a user with no name", async () => {
-    getUserHandler.mockResolvedValue(
-      mockUserResponse({
-        name: null,
-        email: "email",
-        username: "userWithNoName",
-        roles: []
-      })
-    )
-    const wrapper = await wrapperFactory("3")
-    expect(wrapper).toBeTruthy()
-    expect(wrapper.text()).toContain("user.empty_name")
+    const rows = wrapper.findAll("tbody tr")
+    expect(rows).toHaveLength(2)
   })
 })
