@@ -124,6 +124,7 @@ import { computed, useSlots, defineAsyncComponent } from "vue"
 import type { DocumentNode } from "graphql"
 import { useI18nPrefix } from "src/use/i18nPrefix"
 import { usePaginatedQuery } from "./usePaginatedQuery"
+import { useUrlPaginationSync } from "./useUrlPaginationSync"
 
 interface QueryTableProps {
   query: DocumentNode
@@ -135,6 +136,8 @@ interface QueryTableProps {
   variables?: Record<string, unknown>
   refreshBtn?: boolean
   dense?: boolean
+  syncUrl?: boolean
+  defaultSort?: { sortBy: string; descending?: boolean }
 }
 
 const props = withDefaults(defineProps<QueryTableProps>(), {
@@ -145,7 +148,9 @@ const props = withDefaults(defineProps<QueryTableProps>(), {
   onNew: undefined,
   variables: () => ({}),
   refreshBtn: true,
-  dense: false
+  dense: false,
+  syncUrl: false,
+  defaultSort: undefined
 })
 
 interface Emits {
@@ -171,6 +176,7 @@ const {
   searchable,
   rowsPerPageOptions,
   paginationModel,
+  pagination,
   page,
   filter,
   rows,
@@ -179,8 +185,13 @@ const {
   onRequest
 } = usePaginatedQuery(props.query, {
   variables: computed(() => props.variables ?? {}),
-  field: computed(() => props.field)
+  field: computed(() => props.field),
+  defaultSort: props.defaultSort
 })
+
+if (props.syncUrl) {
+  useUrlPaginationSync({ page, filter, pagination })
+}
 
 const { pt } = useI18nPrefix(computed(() => props.tPrefix))
 const slots = useSlots()

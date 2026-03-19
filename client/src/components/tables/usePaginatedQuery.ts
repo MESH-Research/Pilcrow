@@ -14,6 +14,7 @@ import { useQueryCapabilities } from "./useQueryCapabilities"
 interface UsePaginatedQueryOptions {
   variables?: MaybeRefOrGetter<Record<string, unknown>>
   field?: MaybeRefOrGetter<string>
+  defaultSort?: { sortBy: string; descending?: boolean }
 }
 
 type PaginatedField = QueryTableFragment & { data: Record<string, unknown>[] }
@@ -44,8 +45,8 @@ export function usePaginatedQuery(
     useQueryCapabilities(query)
 
   const pagination = ref<TablePagination>({
-    sortBy: "",
-    descending: false,
+    sortBy: options.defaultSort?.sortBy ?? "",
+    descending: options.defaultSort?.descending ?? false,
     page: 1,
     rowsPerPage: 25,
     rowsNumber: 0
@@ -134,6 +135,7 @@ export function usePaginatedQuery(
     searchable,
     rowsPerPageOptions,
     paginationModel,
+    pagination,
     page,
     filter,
     rows,
