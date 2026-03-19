@@ -1,15 +1,21 @@
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
 import { mount, flushPromises } from "@vue/test-utils"
 import { installApolloClient } from "app/test/vitest/utils"
-import { GET_PUBLICATIONS } from "src/graphql/queries"
 import PublicationIndexPage from "./PublicationIndexPage.vue"
 import { Notify } from "quasar"
-import type { GetPublicationsQuery } from "src/graphql/generated/graphql"
+import {
+  GetAdminPublicationsDocument,
+  type GetAdminPublicationsQuery
+} from "src/graphql/generated/graphql"
 import { beforeEach, describe, expect, it, test, vi } from "vitest"
 
 vi.mock("vue-router", () => ({
   useRouter: () => ({
-    push: vi.fn()
+    push: vi.fn(),
+    replace: vi.fn()
+  }),
+  useRoute: () => ({
+    query: {}
   })
 }))
 
@@ -17,7 +23,10 @@ installQuasarPlugin({ plugins: { Notify } })
 const mockClient = installApolloClient()
 
 describe("publications page mount", () => {
-  const makeWrapper = () => mount(PublicationIndexPage)
+  const makeWrapper = () =>
+    mount(PublicationIndexPage, {
+      global: { stubs: ["router-link"] }
+    })
 
   beforeEach(async () => {
     vi.resetAllMocks()
@@ -27,33 +36,31 @@ describe("publications page mount", () => {
     const wrapper = makeWrapper()
     expect(wrapper).toBeTruthy()
   })
-  const getPubHandler = vi.fn()
-  mockClient.setRequestHandler(GET_PUBLICATIONS, getPubHandler)
 
-  test("all existing publications appear within the list", async () => {
-    const mockPublicationsResponse: { data: GetPublicationsQuery } = {
+  test("all existing publications appear within the table", async () => {
+    const mockPublicationsResponse: { data: GetAdminPublicationsQuery } = {
       data: {
         publications: {
           data: [
             {
               id: "1",
-              name: "Sample Jest Publication 1",
-              home_page_content: ""
+              name: "Sample Publication 1",
+              created_at: "2026-01-01T00:00:00.000000Z"
             },
             {
               id: "2",
-              name: "Sample Jest Publication 2",
-              home_page_content: ""
+              name: "Sample Publication 2",
+              created_at: "2026-01-02T00:00:00.000000Z"
             },
             {
               id: "3",
-              name: "Sample Jest Publication 3",
-              home_page_content: ""
+              name: "Sample Publication 3",
+              created_at: "2026-01-03T00:00:00.000000Z"
             },
             {
               id: "4",
-              name: "Sample Jest Publication 4",
-              home_page_content: ""
+              name: "Sample Publication 4",
+              created_at: "2026-01-04T00:00:00.000000Z"
             }
           ],
           paginatorInfo: {
@@ -61,19 +68,19 @@ describe("publications page mount", () => {
             count: 4,
             currentPage: 1,
             lastPage: 1,
-            perPage: 10
+            perPage: 10,
+            total: 4
           }
         }
       }
     }
-    getPubHandler.mockResolvedValue(mockPublicationsResponse)
+    mockClient
+      .getRequestHandler(GetAdminPublicationsDocument)
+      .mockResolvedValue(mockPublicationsResponse)
     const wrapper = makeWrapper()
     await flushPromises()
 
-    expect(getPubHandler).toHaveBeenCalled()
-    //+1 to account for the create publication header
-    expect(wrapper.findAll(".q-item")).toHaveLength(5)
+    const rows = wrapper.findAll("tbody tr")
+    expect(rows).toHaveLength(4)
   })
-
-  //TODO: Test for no publications returned
 })

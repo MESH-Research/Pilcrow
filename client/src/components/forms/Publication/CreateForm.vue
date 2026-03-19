@@ -17,19 +17,6 @@
             data-cy="name_field_error"
           />
         </template>
-        <template #after>
-          <q-btn
-            ref="submitBtn"
-            :disabled="loading"
-            color="accent"
-            stretch
-            @click="submit"
-          >
-            <q-spinner v-if="loading" />
-            <q-icon v-else name="add" />
-            {{ $t("publication.create_button") }}
-          </q-btn>
-        </template>
       </q-input>
     </q-form>
   </section>
@@ -61,7 +48,7 @@ const publicationRules = {
     maxLength: maxLength(256)
   }
 }
-const { mutate, loading, error } = useMutation(CREATE_PUBLICATION, {
+const { mutate, error } = useMutation(CREATE_PUBLICATION, {
   refetchQueries: ["GetPublications"]
 })
 
@@ -93,4 +80,6 @@ async function submit() {
     newStatusMessage("failure", t("publications.create.failure"))
   }
 }
+
+defineExpose({ submit })
 </script>
