@@ -346,7 +346,7 @@ type NotificationData {
 }
 
 """A paginated list of Notification items."""
-type NotificationPaginator {
+type NotificationPaginator implements Paginator {
   """A list of Notification items."""
   data: [Notification!]!
 
@@ -428,6 +428,14 @@ type OverallCommentReply implements Comment {
   updated_by: User!
 }
 
+"""
+Common interface for all paginated result types.
+Allows writing fragments that work across any paginator.
+"""
+interface Paginator {
+  paginatorInfo: PaginatorInfo!
+}
+
 """Information about pagination using a fully featured paginator."""
 type PaginatorInfo {
   """Number of items in the current page."""
@@ -502,7 +510,7 @@ input ProviderUserInput {
 
 """A publication that has users, reviews, and submissions"""
 type Publication {
-  created_at: DateTime
+  created_at: DateTimeUtc
   editors: [User!]!
   effective_role: PublicationRole
   home_page_content: String
@@ -515,11 +523,29 @@ type Publication {
   publication_admins: [User!]!
   style_criterias: [StyleCriteria!]!
   submissions: [Submission]!
-  updated_at: DateTime
+  updated_at: DateTimeUtc
+}
+
+type PublicationAssignment {
+  created_at: DateTimeUtc!
+  id: ID!
+  publication: Publication!
+  role: PublicationRole!
+  updated_at: DateTimeUtc
+  user: User!
+}
+
+"""A paginated list of PublicationAssignment items."""
+type PublicationAssignmentPaginator implements Paginator {
+  """A list of PublicationAssignment items."""
+  data: [PublicationAssignment!]!
+
+  """Pagination information about the list of items."""
+  paginatorInfo: PaginatorInfo!
 }
 
 """A paginated list of Publication items."""
-type PublicationPaginator {
+type PublicationPaginator implements Paginator {
   """A list of Publication items."""
   data: [Publication!]!
 
@@ -546,13 +572,17 @@ type Query {
 
   """Return all publications"""
   publications(
+    accepting_submissions: Boolean
+
     """Limits number of fetched items."""
     first: Int! = 10
-    is_accepting_submissions: Boolean
-    is_publicly_visible: Boolean
+    my_role: PublicationRole
+    orderBy: [QueryPublicationsOrderByOrderByClause!]
 
     """The offset from which items are returned."""
     page: Int
+    public: Boolean
+    search: String
   ): PublicationPaginator!
 
   """Return pre-defined user roles in the application"""
@@ -565,9 +595,12 @@ type Query {
   submissions(
     """Limits number of fetched items."""
     first: Int! = 100
+    my_roles: [SubmissionUserRoles!]
 
     """The offset from which items are returned."""
     page: Int
+    publication: [ID!]
+    status: [SubmissionStatus!]
   ): SubmissionPaginator!
 
   """Return details about a specific user in the application"""
@@ -581,6 +614,15 @@ type Query {
     """The offset from which items are returned."""
     page: Int
     term: String
+  ): UserPaginator! @deprecated(reason: "Use the `users` query instead, which supports pagination and filtering by search term")
+  users(
+    """Limits number of fetched items."""
+    first: Int! = 10
+    orderBy: [QueryUsersOrderByOrderByClause!]
+
+    """The offset from which items are returned."""
+    page: Int
+    search: String
   ): UserPaginator!
 
   """
@@ -588,6 +630,38 @@ type Query {
   """
   validateNewUser(user: ValidateNewUserInput): Boolean
   versionInfo: VersionInfo
+}
+
+"""Allowed column names for Query.publications.orderBy."""
+enum QueryPublicationsOrderByColumn {
+  CREATED_AT
+  NAME
+}
+
+"""Order by clause for Query.publications.orderBy."""
+input QueryPublicationsOrderByOrderByClause {
+  """The column that is used for ordering."""
+  column: QueryPublicationsOrderByColumn!
+
+  """The direction that is used for ordering."""
+  order: SortOrder!
+}
+
+"""Allowed column names for Query.users.orderBy."""
+enum QueryUsersOrderByColumn {
+  CREATED_AT
+  EMAIL
+  NAME
+  USERNAME
+}
+
+"""Order by clause for Query.users.orderBy."""
+input QueryUsersOrderByOrderByClause {
+  """The column that is used for ordering."""
+  column: QueryUsersOrderByColumn!
+
+  """The direction that is used for ordering."""
+  order: SortOrder!
 }
 
 """Inputs"""
@@ -643,6 +717,7 @@ type StyleCriteria {
 
 """A Submission"""
 type Submission {
+  assignments: [SubmissionAssignment!]!
   audits: [SubmissionAudit]
   commenters(type: CommentParticipantType): [User!]!
   content: SubmissionContent
@@ -664,7 +739,6 @@ type Submission {
     """Allows to filter if trashed elements should be fetched."""
     trashed: Trashed
   ): [OverallComment!]!
-  pivot: SubmissionUser
   publication: Publication!
   review_coordinators: [User!]!
   reviewers: [User!]!
@@ -675,6 +749,40 @@ type Submission {
   title: String
   updated_at: DateTimeUtc
   updated_by: User!
+  users: [User!]!
+}
+
+"""A user associated with a submission and a role"""
+type SubmissionAssignment {
+  created_at: DateTimeUtc!
+  id: ID!
+  role: SubmissionUserRoles!
+  submission: Submission!
+  updated_at: DateTimeUtc
+  user: User!
+}
+
+"""Order by clause for submission assignments."""
+input SubmissionAssignmentOrderBy {
+  column: SubmissionAssignmentOrderByColumn!
+  order: SortOrder!
+}
+
+"""Sortable columns for submission assignments."""
+enum SubmissionAssignmentOrderByColumn {
+  CREATED_AT
+  STATUS
+  TITLE
+  UPDATED_AT
+}
+
+"""A paginated list of SubmissionAssignment items."""
+type SubmissionAssignmentPaginator implements Paginator {
+  """A list of SubmissionAssignment items."""
+  data: [SubmissionAssignment!]!
+
+  """Pagination information about the list of items."""
+  paginatorInfo: PaginatorInfo!
 }
 
 type SubmissionAudit {
@@ -711,7 +819,7 @@ type SubmissionFile {
 }
 
 """A paginated list of Submission items."""
-type SubmissionPaginator {
+type SubmissionPaginator implements Paginator {
   """A list of Submission items."""
   data: [Submission!]!
 
@@ -734,14 +842,6 @@ enum SubmissionStatus {
   RESUBMITTED
   REVISION_REQUESTED
   UNDER_REVIEW
-}
-
-"""A user associated with a submission and a role"""
-type SubmissionUser {
-  id: ID!
-  role_id: ID!
-  submission_id: ID!
-  user_id: ID!
 }
 
 enum SubmissionUserRoles {
@@ -888,10 +988,10 @@ scalar Upload
 
 """A user account"""
 type User {
-  created_at: DateTime!
+  created_at: DateTimeUtc!
   display_label: String
   email: String!
-  email_verified_at: DateTime
+  email_verified_at: DateTimeUtc
   highest_privileged_role: UserRoles
   id: ID!
   name: String
@@ -905,17 +1005,36 @@ type User {
     unread: Boolean
   ): NotificationPaginator!
   permissions: [Permission!]
-  pivot: SubmissionUser
   profile_metadata: ProfileMetadata
+  publications(
+    """Limits number of fetched items."""
+    first: Int!
+
+    """The offset from which items are returned."""
+    page: Int
+    roles: [PublicationRole!]
+  ): PublicationAssignmentPaginator!
+  raw_submissions: [Submission!] @deprecated(reason: "Use `submissions` (SubmissionAssignment) instead")
   roles: [Role!]!
   staged: Boolean
-  submissions: [Submission]!
-  updated_at: DateTime
+  submissions(
+    """Limits number of fetched items."""
+    first: Int!
+    orderBy: [SubmissionAssignmentOrderBy!]
+
+    """The offset from which items are returned."""
+    page: Int
+    publication: [ID!]
+    roles: [SubmissionUserRoles!]
+    search: String
+    status: [SubmissionStatus!]
+  ): SubmissionAssignmentPaginator!
+  updated_at: DateTimeUtc
   username: String!
 }
 
 """A paginated list of User items."""
-type UserPaginator {
+type UserPaginator implements Paginator {
   """A list of User items."""
   data: [User!]!
 

@@ -13,6 +13,13 @@ const generates: CodegenConfig["generates"] = {
       maybeValue: "T | null | undefined",
     },
   },
+  "src/graphql/generated/possibleTypes.ts": {
+    plugins: ["fragment-matcher"],
+    config: {
+      apolloClientVersion: 3,
+      useExplicitTyping: true,
+    },
+  },
 }
 
 // Only generate schema-ast when introspecting from a live server
@@ -27,6 +34,7 @@ const config: CodegenConfig = {
   documents: [
     "src/graphql/**/*.ts",
     "src/pages/**/*.vue",
+    "src/layouts/**/*.vue",
     "src/components/**/*.vue",
   ],
   generates,
