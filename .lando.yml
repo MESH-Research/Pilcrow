@@ -1,6 +1,7 @@
 name: pilcrow
 recipe: laravel
 env_file:
+  - .lando/default.env
   - .env
 config:
   php: "8.4"
