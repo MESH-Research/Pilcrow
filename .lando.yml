@@ -29,11 +29,9 @@ services:
     build:
       - cd /app/backend && composer install
       - bash /app/.lando/no_env_setup.sh
+      - cd /app/backend && php artisan view:clear
     build_as_root:
       - bash /app/.lando/install-pandoc.sh
-    overrides:
-      volumes:
-        - ./.lando/my.cnf:/etc/mysql/conf.d/my.cnf
 tooling:
   pandoc:
     service: appserver
