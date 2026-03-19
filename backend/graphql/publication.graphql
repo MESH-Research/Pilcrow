@@ -8,6 +8,7 @@ extend type Query {
         public: Boolean @scope(name: "public")
         accepting_submissions: Boolean @scope(name: "acceptingSubmissions")
         my_role: PublicationRole @scope(name: "myRole")
+        orderBy: _ @orderBy(columns: ["name", "created_at"])
     ): [Publication!]!
         @paginate(defaultCount: 10, scopes: ["visible"])
         @orderBy(column: "name", direction: ASC)
@@ -21,8 +22,8 @@ type Publication {
     name: String!
     home_page_content: String
     new_submission_content: String
-    created_at: DateTime
-    updated_at: DateTime
+    created_at: DateTimeUtc
+    updated_at: DateTimeUtc
     submissions: [Submission]! @hasMany
     publication_admins: [User!]! @belongsToMany(relation: "publicationAdmins")
     editors: [User!]! @belongsToMany(relation: "editors")

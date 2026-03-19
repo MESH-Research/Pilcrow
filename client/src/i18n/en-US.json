@@ -1263,6 +1263,9 @@
     "publication": {
       "headers": {
         "name": "Name",
+        "is_publicly_visible": "Visibility",
+        "is_accepting_submissions": "Accepting",
+        "created_at": "Created",
         "actions": "Actions"
       },
       "btn": {

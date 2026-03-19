@@ -45,22 +45,22 @@ describe("publications page mount", () => {
             {
               id: "1",
               name: "Sample Publication 1",
-              home_page_content: ""
+              created_at: "2026-01-01T00:00:00.000000Z"
             },
             {
               id: "2",
               name: "Sample Publication 2",
-              home_page_content: ""
+              created_at: "2026-01-02T00:00:00.000000Z"
             },
             {
               id: "3",
               name: "Sample Publication 3",
-              home_page_content: ""
+              created_at: "2026-01-03T00:00:00.000000Z"
             },
             {
               id: "4",
               name: "Sample Publication 4",
-              home_page_content: ""
+              created_at: "2026-01-04T00:00:00.000000Z"
             }
           ],
           paginatorInfo: {

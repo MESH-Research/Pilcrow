@@ -13,6 +13,8 @@
       :query="GetAdminPublicationsDocument"
       t-prefix="admin.publication"
       :columns="columns"
+      sync-url
+      :default-sort="{ sortBy: 'name' }"
     >
       <template #body-cell-actions="rProps">
         <q-td :props="rProps">
@@ -87,13 +89,25 @@
 import { graphql } from "src/graphql/generated"
 
 graphql(`
-  query GetAdminPublications($page: Int, $first: Int) {
-    publications(page: $page, first: $first) {
+  query GetAdminPublications(
+    $page: Int
+    $first: Int
+    $search: String
+    $orderBy: [QueryPublicationsOrderByOrderByClause!]
+  ) {
+    publications(
+      page: $page
+      first: $first
+      search: $search
+      orderBy: $orderBy
+    ) {
       ...QueryTable
       data {
         id
         name
-        home_page_content
+        is_publicly_visible
+        is_accepting_submissions
+        created_at
       }
     }
   }
@@ -106,6 +120,7 @@ import QueryTable, {
 } from "src/components/tables/QueryTable.vue"
 import { GetAdminPublicationsDocument } from "src/graphql/generated/graphql"
 import CreateForm from "src/components/forms/Publication/CreateForm.vue"
+import DateTimeCell from "src/components/tables/common/DateTimeCell.vue"
 import { useRouter } from "vue-router"
 
 const destRoute = (id: string, page: string) => ({
@@ -118,7 +133,28 @@ const columns: QueryTableColumn[] = [
     name: "name",
     field: "name",
     align: "left",
+    sortable: true,
     label: "Name"
+  },
+  {
+    name: "is_publicly_visible",
+    field: (row) => (row.is_publicly_visible ? "Public" : "Hidden"),
+    align: "center",
+    label: "Visibility"
+  },
+  {
+    name: "is_accepting_submissions",
+    field: (row) => (row.is_accepting_submissions ? "Yes" : "No"),
+    align: "center",
+    label: "Accepting"
+  },
+  {
+    name: "created_at",
+    field: "created_at",
+    align: "left",
+    sortable: true,
+    component: DateTimeCell,
+    label: "Created"
   },
   {
     name: "actions",

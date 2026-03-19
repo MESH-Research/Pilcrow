@@ -510,7 +510,7 @@ input ProviderUserInput {
 
 """A publication that has users, reviews, and submissions"""
 type Publication {
-  created_at: DateTime
+  created_at: DateTimeUtc
   editors: [User!]!
   effective_role: PublicationRole
   home_page_content: String
@@ -523,7 +523,7 @@ type Publication {
   publication_admins: [User!]!
   style_criterias: [StyleCriteria!]!
   submissions: [Submission]!
-  updated_at: DateTime
+  updated_at: DateTimeUtc
 }
 
 type PublicationAssignment {
@@ -577,6 +577,7 @@ type Query {
     """Limits number of fetched items."""
     first: Int! = 10
     my_role: PublicationRole
+    orderBy: [QueryPublicationsOrderByOrderByClause!]
 
     """The offset from which items are returned."""
     page: Int
@@ -629,6 +630,21 @@ type Query {
   """
   validateNewUser(user: ValidateNewUserInput): Boolean
   versionInfo: VersionInfo
+}
+
+"""Allowed column names for Query.publications.orderBy."""
+enum QueryPublicationsOrderByColumn {
+  CREATED_AT
+  NAME
+}
+
+"""Order by clause for Query.publications.orderBy."""
+input QueryPublicationsOrderByOrderByClause {
+  """The column that is used for ordering."""
+  column: QueryPublicationsOrderByColumn!
+
+  """The direction that is used for ordering."""
+  order: SortOrder!
 }
 
 """Allowed column names for Query.users.orderBy."""
