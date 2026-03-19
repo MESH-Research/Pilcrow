@@ -617,6 +617,7 @@ type Query {
   users(
     """Limits number of fetched items."""
     first: Int! = 10
+    orderBy: [QueryUsersOrderByOrderByClause!]
 
     """The offset from which items are returned."""
     page: Int
@@ -628,6 +629,23 @@ type Query {
   """
   validateNewUser(user: ValidateNewUserInput): Boolean
   versionInfo: VersionInfo
+}
+
+"""Allowed column names for Query.users.orderBy."""
+enum QueryUsersOrderByColumn {
+  CREATED_AT
+  EMAIL
+  NAME
+  USERNAME
+}
+
+"""Order by clause for Query.users.orderBy."""
+input QueryUsersOrderByOrderByClause {
+  """The column that is used for ordering."""
+  column: QueryUsersOrderByColumn!
+
+  """The direction that is used for ordering."""
+  order: SortOrder!
 }
 
 """Inputs"""
@@ -953,10 +971,10 @@ scalar Upload
 
 """A user account"""
 type User {
-  created_at: DateTime!
+  created_at: DateTimeUtc!
   display_label: String
   email: String!
-  email_verified_at: DateTime
+  email_verified_at: DateTimeUtc
   highest_privileged_role: UserRoles
   id: ID!
   name: String
@@ -991,9 +1009,10 @@ type User {
     page: Int
     publication: [ID!]
     roles: [SubmissionUserRoles!]
+    search: String
     status: [SubmissionStatus!]
   ): SubmissionAssignmentPaginator!
-  updated_at: DateTime
+  updated_at: DateTimeUtc
   username: String!
 }
 

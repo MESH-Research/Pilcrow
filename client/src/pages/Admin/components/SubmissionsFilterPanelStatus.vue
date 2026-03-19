@@ -56,9 +56,7 @@ const options: StatusOption[] = [
   { label: "submission.status.DELETED", value: "DELETED" }
 ]
 
-export const defaultOptions = options
-  .filter((s) => s.default)
-  .map((s) => s.value)
+export const defaultOptions = options.map((s) => s.value)
 </script>
 
 <script setup lang="ts">

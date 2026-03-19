@@ -57,6 +57,23 @@ class SubmissionAssignmentBuilder extends Builder
     }
 
     /**
+     * Search assignments by submission title.
+     *
+     * @param string|null $search
+     * @return self
+     */
+    public function search(?string $search): self
+    {
+        if ($search) {
+            $this->whereHas('submission', function (Builder $query) use ($search) {
+                $query->where('title', 'like', "%{$search}%");
+            });
+        }
+
+        return $this;
+    }
+
+    /**
      * Order assignments by a column on the related submission.
      *
      * @param array|null $orderBy Array of {column, order} pairs

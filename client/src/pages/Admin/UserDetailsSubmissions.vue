@@ -14,8 +14,9 @@
     :columns="columns"
     :grid="$q.screen.lt.md"
     :dense="dense"
+    sync-url
   >
-    <template #top>
+    <template #top-extra>
       <SubmissionsFilterPanel
         v-model:status-filter="statusFilter"
         v-model:role-filter="roleFilter"
@@ -62,6 +63,7 @@ graphql(`
     $id: ID!
     $page: Int!
     $first: Int!
+    $search: String
     $roles: [SubmissionUserRoles!]
     $status: [SubmissionStatus!]
     $publication: [ID!]
@@ -71,6 +73,7 @@ graphql(`
       submissions(
         page: $page
         first: $first
+        search: $search
         roles: $roles
         status: $status
         publication: $publication
@@ -109,6 +112,9 @@ import { getUserSubmissionsDocument } from "src/graphql/generated/graphql"
 import { ref, watch } from "vue"
 import { useI18n } from "vue-i18n"
 import { useQuasar } from "quasar"
+import { useRoute, useRouter } from "vue-router"
+import { defaultOptions as defaultStatusOptions } from "./components/SubmissionsFilterPanelStatus.vue"
+import { defaultOptions as defaultRoleOptions } from "./components/SubmissionsFilterPanelRoles.vue"
 
 const $q = useQuasar()
 const { t } = useI18n()
@@ -169,13 +175,55 @@ const columns: QueryTableColumn[] = [
   }
 ]
 
-const statusFilter = ref<string[]>([])
-const roleFilter = ref<string[]>([])
-const publicationFilter = ref<string | null>(null)
+const route = useRoute()
+const router = useRouter()
 
-watch([statusFilter, roleFilter, publicationFilter], () => {
-  if (queryTableRef.value) {
-    queryTableRef.value.page = 1
+function parseList(value: string | string[] | undefined): string[] {
+  if (!value) return []
+  const str = Array.isArray(value) ? value[0] : value
+  if (!str) return []
+  const inner = str.startsWith("[") ? str.slice(1, -1) : str
+  return inner ? inner.split(",") : []
+}
+
+function formatList(values: string[]): string {
+  return `[${values.join(",")}]`
+}
+
+const statusFilter = ref<string[]>(parseList(route.query.status as string))
+const roleFilter = ref<string[]>(parseList(route.query.roles as string))
+const publicationFilter = ref<string | null>(
+  (route.query.publication as string) || null
+)
+
+watch(
+  [statusFilter, roleFilter, publicationFilter],
+  ([status, roles, publication]) => {
+    if (queryTableRef.value) {
+      queryTableRef.value.page = 1
+    }
+
+    const query: Record<string, string> = { ...route.query } as Record<
+      string,
+      string
+    >
+
+    const isDefaultStatus =
+      status.length === defaultStatusOptions.length &&
+      status.every((s) => defaultStatusOptions.includes(s))
+    if (!isDefaultStatus) query.status = formatList(status)
+    else delete query.status
+
+    const isDefaultRoles =
+      roles.length === defaultRoleOptions.length &&
+      roles.every((r) => defaultRoleOptions.includes(r))
+    if (!isDefaultRoles) query.roles = formatList(roles)
+    else delete query.roles
+
+    if (publication) query.publication = publication
+    else delete query.publication
+
+    router.replace({ query })
   }
-})
+)
 </script>
