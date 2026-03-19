@@ -302,6 +302,7 @@ Sortable columns for submission assignments.
 """
 enum SubmissionAssignmentOrderByColumn {
     CREATED_AT
+    UPDATED_AT
     TITLE
     STATUS
 }

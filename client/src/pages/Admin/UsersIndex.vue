@@ -1,5 +1,16 @@
 <template>
-  <h2 class="q-pl-lg">User Search</h2>
+  <div class="q-px-lg">
+    <nav class="q-pt-md">
+      <q-breadcrumbs>
+        <q-breadcrumbs-el
+          label="Administration"
+          :to="{ name: 'admin:dashboard' }"
+        />
+        <q-breadcrumbs-el label="Users" />
+      </q-breadcrumbs>
+    </nav>
+    <h2>User Administration</h2>
+  </div>
   <QueryTable
     class="q-px-lg"
     :query="GetUsersDocument"
@@ -8,7 +19,23 @@
     sync-url
     :default-sort="{ sortBy: 'name' }"
     @row-click="handleUserListBasicClick"
-  />
+  >
+    <template #body-cell-email="scope">
+      <q-td :props="scope">
+        {{ scope.value }}
+        <q-icon
+          :name="scope.row.email_verified_at ? 'verified' : 'cancel'"
+          :color="scope.row.email_verified_at ? 'positive' : 'grey-5'"
+          size="xs"
+          class="q-ml-xs"
+        >
+          <q-tooltip :delay="500">
+            {{ scope.row.email_verified_at ? "Verified" : "Unverified" }}
+          </q-tooltip>
+        </q-icon>
+      </q-td>
+    </template>
+  </QueryTable>
 </template>
 
 <script lang="ts">
@@ -27,6 +54,7 @@ graphql(`
         id
         username
         email
+        email_verified_at
         created_at
         ...NameAvatarCell
       }

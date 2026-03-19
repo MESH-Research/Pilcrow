@@ -7,6 +7,12 @@
     field="user.publications"
     :columns="columns"
   >
+    <template #no-data>
+      <div class="full-width row flex-center text-grey-7 q-gutter-sm q-py-lg">
+        <q-icon size="2em" name="menu_book" />
+        <span>{{ $t("admin.users.details.no_publications") }}</span>
+      </div>
+    </template>
     <template #body-cell-actions="scope">
       <q-td :props="scope">
         <q-btn

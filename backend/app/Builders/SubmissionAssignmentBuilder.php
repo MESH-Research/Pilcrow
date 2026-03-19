@@ -87,6 +87,7 @@ class SubmissionAssignmentBuilder extends Builder
 
         $columnMap = [
             'CREATED_AT' => 'created_at',
+            'UPDATED_AT' => 'updated_at',
             'TITLE' => 'title',
             'STATUS' => 'status',
         ];

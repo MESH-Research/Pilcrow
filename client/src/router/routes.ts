@@ -104,7 +104,16 @@ const routes: RouteRecordRaw[] = [
         component: () => import("src/pages/FeedPage.vue")
       },
       {
+        path: "/admin",
+        name: "admin:dashboard",
+        component: () => import("pages/Admin/AdminDashboard.vue"),
+        meta: {
+          requiresAppAdmin: true
+        }
+      },
+      {
         path: "/admin/users",
+        name: "admin:users",
         component: () => import("pages/Admin/UsersIndex.vue"),
         meta: {
           requiresAppAdmin: true

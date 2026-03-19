@@ -1,11 +1,9 @@
 <template>
   <div class="col-grow">
     <div class="column items-center q-gutter-md">
-      <div class="column items-center">
-        <q-icon name="warning" size="50px" />
-        <div class="text-weight-bold">
-          No submissions matching your filters were found.
-        </div>
+      <div class="full-width row flex-center text-grey-7 q-gutter-sm q-py-lg">
+        <q-icon size="2em" name="assignment" />
+        <span>{{ $t("admin.users.details.no_submissions") }}</span>
       </div>
       <q-banner
         v-if="statusFilter.length === 0 || roleFilter.length === 0"

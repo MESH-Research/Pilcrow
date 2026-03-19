@@ -15,8 +15,9 @@
     :grid="$q.screen.lt.md"
     :dense="dense"
     sync-url
+    @row-click="onRowClick"
   >
-    <template #top-extra>
+    <template #top-before>
       <SubmissionsFilterPanel
         v-model:status-filter="statusFilter"
         v-model:role-filter="roleFilter"
@@ -30,20 +31,6 @@
         :status-filter="statusFilter"
         :role-filter="roleFilter"
       />
-    </template>
-    <template #body-cell-actions="scope">
-      <q-td :props="scope" :dense="scope.dense">
-        <q-btn
-          color="primary"
-          size="sm"
-          :dense="scope.dense"
-          :to="{
-            name: 'submission:details',
-            params: { id: scope.row.submission.id }
-          }"
-          :label="$t('admin.users.details.submissions.actions.view')"
-        />
-      </q-td>
     </template>
     <template #body-cell-title="scope">
       <WithAsideCell :scope="scope" style="white-space: normal">
@@ -88,6 +75,7 @@ graphql(`
             title
             status
             created_at
+            updated_at
             publication {
               id
               name
@@ -168,15 +156,24 @@ const columns: QueryTableColumn[] = [
     label: "Created"
   },
   {
-    name: "actions",
+    name: "updated_at",
     align: "left",
-    field: "id",
-    label: "Actions"
+    field: (row) => row.submission.updated_at,
+    sortable: true,
+    component: DateTimeCell,
+    label: "Updated"
   }
 ]
 
 const route = useRoute()
 const router = useRouter()
+
+function onRowClick(_evt: Event, row: { submission: { id: string } }) {
+  router.push({
+    name: "submission:details",
+    params: { id: row.submission.id }
+  })
+}
 
 function parseList(value: string | string[] | undefined): string[] {
   if (!value) return []

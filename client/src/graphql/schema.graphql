@@ -635,6 +635,8 @@ type Query {
 """Allowed column names for Query.publications.orderBy."""
 enum QueryPublicationsOrderByColumn {
   CREATED_AT
+  IS_ACCEPTING_SUBMISSIONS
+  IS_PUBLICLY_VISIBLE
   NAME
 }
 
@@ -773,6 +775,7 @@ enum SubmissionAssignmentOrderByColumn {
   CREATED_AT
   STATUS
   TITLE
+  UPDATED_AT
 }
 
 """A paginated list of SubmissionAssignment items."""

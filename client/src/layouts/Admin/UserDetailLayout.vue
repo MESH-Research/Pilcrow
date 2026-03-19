@@ -5,6 +5,10 @@
   <article v-else class="q-px-lg">
     <nav class="q-pt-md q-gutter-sm">
       <q-breadcrumbs>
+        <q-breadcrumbs-el
+          label="Administration"
+          :to="{ name: 'admin:dashboard' }"
+        />
         <q-breadcrumbs-el :label="$t('user.self', 2)" to="/admin/users" />
         <q-breadcrumbs-el :label="$t('user.details_heading')" />
       </q-breadcrumbs>
@@ -28,6 +32,18 @@
             />
             <FieldDisplay
               class="col-sm-6 col-xs-12"
+              icon="verified"
+              :label="$t('admin.users.details.verified_at')"
+            >
+              <span v-if="user.email_verified_at">
+                {{ formatDateTime(user.email_verified_at) }}
+              </span>
+              <span v-else class="text-grey-5">
+                {{ $t("admin.users.details.not_verified") }}
+              </span>
+            </FieldDisplay>
+            <FieldDisplay
+              class="col-sm-6 col-xs-12"
               icon="key"
               :label="$t('admin.users.details.role')"
             >
@@ -36,6 +52,12 @@
               </span>
               <span v-else>{{ $t("admin.users.details.isNormal") }}</span>
             </FieldDisplay>
+            <FieldDisplay
+              class="col-sm-6 col-xs-12"
+              icon="calendar_today"
+              :label="$t('admin.users.details.created_at')"
+              :value="formatDateTime(user.created_at)"
+            />
           </div>
         </q-card-section>
       </q-card-section>
@@ -75,6 +97,8 @@ graphql(`
       username
       email
       name
+      created_at
+      email_verified_at
       ...avatarImage
       roles {
         name
@@ -90,6 +114,7 @@ import FieldDisplay from "src/components/molecules/FieldDisplay.vue"
 import { getUserDetailDocument } from "src/graphql/generated/graphql"
 import { useQuery } from "@vue/apollo-composable"
 import { computed } from "vue"
+import { DateTime } from "luxon"
 
 interface Props {
   id: string
@@ -104,4 +129,8 @@ const user = computed(() => {
 const isAdmin = computed(() =>
   user.value?.roles.some((r) => r.name === "Application Administrator")
 )
+
+function formatDateTime(iso: string): string {
+  return DateTime.fromISO(iso).toFormat("LLL d yyyy h:mm a")
+}
 </script>

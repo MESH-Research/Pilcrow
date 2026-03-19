@@ -10,6 +10,7 @@
     :loading="loading"
     :rows-per-page-options
     @request="onRequest"
+    @row-click="(evt, row, index) => emit('row-click', evt, row, index)"
   >
     <template #top="scope">
       <slot name="top">
@@ -155,8 +156,10 @@ const props = withDefaults(defineProps<QueryTableProps>(), {
 
 interface Emits {
   new: []
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  "row-click": [evt: Event, row: any, index: number]
 }
-defineEmits<Emits>()
+const emit = defineEmits<Emits>()
 
 const tableProps = computed(() =>
   omit(props, [
