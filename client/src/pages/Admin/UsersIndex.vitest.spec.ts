@@ -10,7 +10,11 @@ import { describe, expect, it, test, vi } from "vitest"
 
 vi.mock("vue-router", () => ({
   useRouter: () => ({
-    push: vi.fn()
+    push: vi.fn(),
+    replace: vi.fn()
+  }),
+  useRoute: () => ({
+    query: {}
   })
 }))
 

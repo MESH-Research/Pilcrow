@@ -7,6 +7,16 @@ import UserDetails from "./UserDetails.vue"
 import type { getUserQuery } from "src/graphql/generated/graphql"
 import { beforeEach, describe, expect, it, vi } from "vitest"
 
+vi.mock("vue-router", () => ({
+  useRouter: () => ({
+    push: vi.fn(),
+    replace: vi.fn()
+  }),
+  useRoute: () => ({
+    query: {}
+  })
+}))
+
 installQuasarPlugin()
 const mockClient = installApolloClient()
 
