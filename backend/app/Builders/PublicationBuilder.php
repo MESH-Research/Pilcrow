@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Builders;
 
+use App\Models\Role;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 
@@ -47,6 +48,10 @@ class PublicationBuilder extends Builder
     public function visible(): self
     {
         $user = Auth::user();
+
+        if ($user && $user->hasRole(Role::APPLICATION_ADMINISTRATOR)) {
+            return $this;
+        }
 
         return $this->public()->orWhereHas('users', function (Builder $query) use ($user) {
             $query->where('user_id', $user->id);
