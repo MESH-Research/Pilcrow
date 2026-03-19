@@ -12,6 +12,14 @@
 #import oauth.graphql
 #import integration_testing.graphql
 
+"""
+Common interface for all paginated result types.
+Allows writing fragments that work across any paginator.
+"""
+interface Paginator {
+    paginatorInfo: PaginatorInfo!
+}
+
 type Query {
     "Return information about the currently logged in user"
     currentUser: User @auth
@@ -20,7 +28,11 @@ type Query {
     user(id: ID @eq): User @find
 
     "Return user accounts optionally based on a supplied search term"
-    userSearch(term: String @search): [User!]! @paginate(defaultCount: 10)
+    userSearch(term: String @search): [User!]! @paginate(defaultCount: 10) @deprecated(reason: "Use the `users` query instead, which supports pagination and filtering by search term")
+
+    users(search: String @scope, orderBy: _ @orderBy(columns: ["name", "username", "email", "created_at"])): [User!]!
+        @paginate(defaultCount: 10)
+        @orderBy(column: "name", direction: ASC)
 
     "Validate details of a new user.  Returns true if supplied user fields would be valid."
     validateNewUser(user: ValidateNewUserInput): Boolean @returnTrue

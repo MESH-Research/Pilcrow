@@ -5,6 +5,7 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -150,16 +151,6 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Get the name of the index associated with the model.
-     *
-     * @return string
-     */
-    public function searchableAs(): string
-    {
-        return 'users_index';
-    }
-
-    /**
      * Submissions that belong to the user
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
@@ -181,6 +172,26 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->belongsToMany(Publication::class)
             ->withTimestamps()
             ->withPivot('role_id');
+    }
+
+    /**
+     * Submission assignments for this user.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function submissionAssignments(): HasMany
+    {
+        return $this->hasMany(SubmissionAssignment::class, 'user_id');
+    }
+
+    /**
+     * Publication assignments for this user.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function publicationAssignments(): HasMany
+    {
+        return $this->hasMany(PublicationAssignment::class, 'user_id');
     }
 
     /**
@@ -213,7 +224,7 @@ class User extends Authenticatable implements MustVerifyEmail
             return PublicationUser::where('user_id', $this->id)->min('role_id');
         }
         if ($this->submissions->isNotEmpty()) {
-            return SubmissionUser::where('user_id', $this->id)->min('role_id');
+            return SubmissionAssignment::where('user_id', $this->id)->min('role_id');
         }
 
         return null;
@@ -333,5 +344,23 @@ class User extends Authenticatable implements MustVerifyEmail
     public function getDisplayLabelAttribute(): string
     {
         return $this->attributes['name'] ?: $this->attributes['username'];
+    }
+
+    /**
+     * Scope to search users by name, username, or email.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param mixed $search
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeSearch(Builder $query, mixed $search): Builder
+    {
+        if (!empty($search)) {
+            $query->where('name', 'like', "%{$search}%")
+                ->orWhere('username', 'like', "%{$search}%")
+                ->orWhere('email', 'like', "%{$search}%");
+        }
+
+        return $query;
     }
 }

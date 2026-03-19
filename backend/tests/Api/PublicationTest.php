@@ -445,6 +445,53 @@ class PublicationTest extends ApiTestCase
         $this->assertCount(2, $json);
     }
 
+    public function testVisibleScopeHidesNonPublicFromRegularUser()
+    {
+        /** @var User $user */
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        Publication::factory()->count(2)->create();
+        Publication::factory()->hidden()->count(2)->create();
+        $response = $this->graphQL(
+            'query GetPublications {
+                publications {
+                    data {
+                        id
+                    }
+                }
+            }'
+        );
+        $json = $response->json('data.publications.data');
+
+        $this->assertCount(2, $json);
+    }
+
+    public function testAssignedUserCanSeeHiddenPublication()
+    {
+        /** @var User $user */
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        Publication::factory()->hidden()->count(2)->create();
+        Publication::factory()->hidden()
+            ->hasAttached($user, [], 'editors')
+            ->create();
+
+        $response = $this->graphQL(
+            'query GetPublications {
+                publications {
+                    data {
+                        id
+                    }
+                }
+            }'
+        );
+        $json = $response->json('data.publications.data');
+
+        $this->assertCount(1, $json);
+    }
+
     protected function executePublicationRoleAssignment(string $role, Publication $publication, User $user)
     {
         return $this->graphQL(

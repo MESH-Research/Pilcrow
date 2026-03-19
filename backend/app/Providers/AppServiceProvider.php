@@ -6,6 +6,8 @@ use App\Rules\StyleCriteriaCount;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
+use App\Listeners\AddPaginatorInterface;
+use Nuwave\Lighthouse\Events\ManipulateAST;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Cache;
 
@@ -76,6 +78,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        // Add Paginator interface to all *Paginator types
+        app('events')->listen(ManipulateAST::class, AddPaginatorInterface::class);
+
         //Register style criteria count rule.
         Validator::extend('style_criteria_count', StyleCriteriaCount::class . '@checkCount', 'Style criteria limit reached for this publication.');
         //Force https for generated URLs
