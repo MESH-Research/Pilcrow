@@ -27,7 +27,7 @@
   </script>
   @env('local', 'development', 'dev')
     <script type="module" src="/@@vite/client"></script>
-    <script type="module" src="/.quasar/client-entry.js"></script>
+    <script type="module" src="/.quasar/dev-spa/client-entry.js"></script>
   @else
     <script type="module" crossorigin src=@cdn_url("assets/index.js")></script>
     <link rel="stylesheet" crossorigin href=@cdn_url("assets/index.css")>
