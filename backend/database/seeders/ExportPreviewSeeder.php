@@ -5,9 +5,9 @@ namespace Database\Seeders;
 
 use App\Models\InlineComment;
 use App\Models\OverallComment;
+use App\Models\StyleCriteria;
 use App\Models\Submission;
 use App\Models\SubmissionContent;
-use App\Models\StyleCriteria;
 use App\Models\User;
 use Carbon\Carbon;
 use Faker\Factory as Faker;
@@ -33,6 +33,11 @@ class ExportPreviewSeeder extends Seeder
 {
     private const SUBMISSION_ID = 113;
 
+    /**
+     * Run the database seed.
+     *
+     * @return void
+     */
     public function run(): void
     {
         $this->callOnce(SubmissionSeeder::class);
@@ -42,6 +47,11 @@ class ExportPreviewSeeder extends Seeder
         $this->seedOverallComments();
     }
 
+    /**
+     * Create the export preview submission.
+     *
+     * @return void
+     */
     private function createSubmission(): void
     {
         $submission = Submission::factory()
@@ -76,6 +86,11 @@ class ExportPreviewSeeder extends Seeder
         $submission->update(['updated_by' => 3, 'status' => Submission::ACCEPTED_AS_FINAL]);
     }
 
+    /**
+     * Seed inline comment threads on the submission.
+     *
+     * @return void
+     */
     private function seedInlineComments(): void
     {
         InlineComment::withoutEvents(function () {
@@ -85,6 +100,11 @@ class ExportPreviewSeeder extends Seeder
         });
     }
 
+    /**
+     * Seed overall comment threads on the submission.
+     *
+     * @return void
+     */
     private function seedOverallComments(): void
     {
         OverallComment::withoutEvents(function () {
@@ -94,6 +114,15 @@ class ExportPreviewSeeder extends Seeder
         });
     }
 
+    /**
+     * Create an inline comment with optional replies.
+     *
+     * @param  int        $userId       The comment author's user ID.
+     * @param  array      $highlight    The [from, to] highlight range.
+     * @param  int        $replies      Number of replies to create.
+     * @param  array|null $replyUserIds User IDs to cycle through for replies.
+     * @return \App\Models\InlineComment
+     */
     private function createInlineComment(
         int $userId,
         array $highlight,
@@ -119,6 +148,14 @@ class ExportPreviewSeeder extends Seeder
         return $parent;
     }
 
+    /**
+     * Create an overall comment with optional replies.
+     *
+     * @param  int        $userId       The comment author's user ID.
+     * @param  int        $replies      Number of replies to create.
+     * @param  array|null $replyUserIds User IDs to cycle through for replies.
+     * @return \App\Models\OverallComment
+     */
     private function createOverallComment(
         int $userId,
         int $replies = 0,
@@ -135,6 +172,14 @@ class ExportPreviewSeeder extends Seeder
         return $parent;
     }
 
+    /**
+     * Create reply comments on a parent comment.
+     *
+     * @param  \App\Models\InlineComment|\App\Models\OverallComment $parent       The parent comment.
+     * @param  int                                                  $count        Number of replies.
+     * @param  array|null                                           $replyUserIds User IDs to cycle through.
+     * @return void
+     */
     private function createReplies(
         InlineComment|OverallComment $parent,
         int $count,
