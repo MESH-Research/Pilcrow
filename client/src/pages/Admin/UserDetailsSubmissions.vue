@@ -12,7 +12,6 @@
     }"
     field="user.submissions"
     :columns="columns"
-    :grid="$q.screen.lt.md"
     :dense="dense"
     sync-url
     @row-click="onRowClick"
@@ -99,12 +98,10 @@ import QueryTable, {
 import { getUserSubmissionsDocument } from "src/graphql/generated/graphql"
 import { ref, watch } from "vue"
 import { useI18n } from "vue-i18n"
-import { useQuasar } from "quasar"
 import { useRoute, useRouter } from "vue-router"
 import { defaultOptions as defaultStatusOptions } from "./components/SubmissionsFilterPanelStatus.vue"
 import { defaultOptions as defaultRoleOptions } from "./components/SubmissionsFilterPanelRoles.vue"
 
-const $q = useQuasar()
 const { t } = useI18n()
 
 interface Props {
