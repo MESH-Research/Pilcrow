@@ -24,11 +24,11 @@ type User {
         publication: [ID!] @scope(name: "publicationFilter")
         orderBy: [SubmissionAssignmentOrderBy!] @scope(name: "orderBySubmission")
     ): [SubmissionAssignment!]!
-        @hasMany(relation: "submissionAssignments", type: "PAGINATOR")
+        @hasMany(relation: "submissionAssignments", type: "PAGINATOR", defaultCount: 10)
     publications(
         roles: [PublicationRole!] @scope(name: "roleFilter")
     ): [PublicationAssignment!]!
-        @hasMany(relation: "publicationAssignments", type: "PAGINATOR")
+        @hasMany(relation: "publicationAssignments", type: "PAGINATOR", defaultCount: 10)
     staged: Boolean
 }
 

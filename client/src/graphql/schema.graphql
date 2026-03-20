@@ -1008,7 +1008,7 @@ type User {
   profile_metadata: ProfileMetadata
   publications(
     """Limits number of fetched items."""
-    first: Int!
+    first: Int! = 10
 
     """The offset from which items are returned."""
     page: Int
@@ -1019,7 +1019,7 @@ type User {
   staged: Boolean
   submissions(
     """Limits number of fetched items."""
-    first: Int!
+    first: Int! = 10
     orderBy: [SubmissionAssignmentOrderBy!]
 
     """The offset from which items are returned."""

@@ -432,7 +432,7 @@ class PublicationTest extends ApiTestCase
         Publication::factory()->hidden()->count(2)->create();
         $response = $this->graphQL(
             'query GetPublications {
-                publications(is_publicly_visible: true) {
+                publications(public: true) {
                     data {
                         id
                         name
