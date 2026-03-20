@@ -1,118 +1,120 @@
-# Client GraphQL Conventions
+# Client GraphQL
 
-This documents the conventions for colocated GraphQL fragments and queries in Vue SFCs. For general GraphQL codegen setup and TypeScript type usage, see the [TypeScript documentation](./typescript).
+The client application uses [Apollo Client](https://www.apollographql.com/docs/react/) to communicate with the backend GraphQL API. All operations are defined centrally, and TypeScript types are generated automatically from the backend schema.
 
-## Data Fetching Architecture
+## Operations
 
-```text
-Pages (queries/mutations + useQuery/useMutation)
-  └─ Data components (fragments — declare fields, never fetch)
-       └─ Pure UI components (no GraphQL — plain TS props)
-```
+All GraphQL operations are defined centrally:
 
-**Pages** are the data boundary. Only page-level components (`src/pages/**/*.vue`) define queries/mutations and call `useQuery`/`useMutation`. This prevents data fetching from being scattered throughout the component tree.
+| File | Contents |
+|------|----------|
+| `client/src/graphql/fragments.ts` | Reusable fragments (`currentUserFields`, `relatedUserFields`, etc.) |
+| `client/src/graphql/queries.ts` | All queries (`CurrentUser`, `GetSubmission`, etc.) |
+| `client/src/graphql/mutations.ts` | All mutations (`Login`, `CreateSubmissionDraft`, etc.) |
 
-**Data components** define fragments to declare what fields they render. They receive data via props typed with their own fragment type.
+Operations are defined using `graphql-tag`'s `gql` template literals and exported as constants (e.g., `CURRENT_USER`, `LOGIN`). Fragments are interpolated into operations using template literal expressions.
 
-**Pure UI components** (`VQInput`, `FormActions`, `TagList`, etc.) have no GraphQL dependency — props use plain TypeScript types.
+## TypeScript Code Generation
 
-## Defining a Fragment
+We use [`@graphql-codegen`](https://the-guild.dev/graphql/codegen) to generate TypeScript types from the backend schema and the client's operation files. This provides typed interfaces for query results, mutation responses, and variables without changing existing `useQuery`/`useMutation` call sites.
 
-Fragments go in a `<script lang="ts">` block, separate from `<script setup>`:
+### Generated Output
 
-```vue
-<script lang="ts">
-import { graphql } from "src/graphql/generated"
+Codegen produces `client/src/graphql/generated/graphql.ts` containing:
 
-graphql(`
-  fragment avatarImage on User {
-    email
+- **Schema types**: `User`, `Submission`, `Publication`, enums like `SubmissionStatus`, input types, etc.
+- **Operation types**: `CurrentUserQuery`, `LoginMutation`, `CreateSubmissionDraftMutationVariables`, etc.
+- **Fragment types**: `currentUserFieldsFragment`, `relatedUserFieldsFragment`, etc.
+
+This file is gitignored — it's a derived artifact regenerated from the schema and operation files.
+
+### How Generated Types Are Named
+
+The generated type name is derived from the **operation name** inside the `gql`
+document, not from the JavaScript constant:
+
+```typescript
+// The constant name doesn't matter for codegen — the operation name does:
+export const CURRENT_USER = gql`
+  query CurrentUser {        // ← generates CurrentUserQuery
+    currentUser { ... }
   }
-`)
-</script>
+`
 
-<script setup lang="ts">
-import type { avatarImageFragment } from "src/graphql/generated/graphql"
-
-interface Props {
-  user: avatarImageFragment
-}
-defineProps<Props>()
-</script>
-```
-
-The `graphql()` call registers the fragment with codegen. The generated type (`avatarImageFragment`) is imported separately — this makes it clear the type is generated, not returned by the `graphql()` function.
-
-### Why Two Script Blocks?
-
-`<script setup>` cannot contain module-level declarations visible to external tooling. The `graphql()` call lives in `<script lang="ts">` so codegen can discover it when scanning `.vue` files. Both blocks share the same module scope.
-
-## Composing Fragments
-
-Components spread their children's fragments:
-
-```vue
-<!-- UserListItem.vue -->
-<script lang="ts">
-graphql(`
-  fragment userListItem on User {
-    id
-    name
-    username
-    ...avatarImage
+export const LOGIN = gql`
+  mutation Login($input: LoginInput!) {  // ← generates LoginMutation
+    login(input: $input) { ... }           //    and LoginMutationVariables
   }
-`)
-</script>
+`
 ```
 
-Fragment composition flows upward: leaf components define minimal fragments, parents spread them and add their own fields, and the page query spreads the top-level fragment.
+Codegen appends `Query` or `Mutation` to the operation name to produce the
+result type, and adds `Variables` for any operation that accepts arguments.
 
-## Defining Queries (Pages Only)
+::: warning Operation names must be unique
+Codegen generates types in a single file, so every operation name across all
+query and mutation files must be unique. If two operations share a name, codegen
+will silently merge or overwrite their types.
+:::
 
-Pages define queries in `<script lang="ts">` and import the generated typed document in `<script setup>`:
+### How It Works
 
-```vue
-<script lang="ts">
-import { graphql } from "src/graphql/generated"
+The codegen config is in `client/codegen.ts`. By default, it introspects the running backend at `http://pilcrow.lndo.site/graphql` to get the compiled schema, then generates types and an updated `schema.graphql` file for all operations found in `client/src/graphql/**/*.ts`.
 
-graphql(`
-  query GetUsers($page: Int) {
-    userSearch(page: $page) {
-      data {
-        ...userListBasic
-      }
-    }
-  }
-`)
-</script>
+### Automatic Regeneration (Dev Server)
 
-<script setup lang="ts">
-import { useQuery } from "@vue/apollo-composable"
-import { GetUsersDocument } from "src/graphql/generated/graphql"
+During development, types are regenerated automatically when:
 
-const { result } = useQuery(GetUsersDocument, () => ({
-  page: currentPage.value
-}))
-</script>
+- **Dev server starts**: Introspects the backend and generates types
+- **Client operations change**: Editing `queries.ts`, `mutations.ts`, or `fragments.ts` triggers regeneration
+- **Backend schema changes**: Editing `.graphql` files in `backend/graphql/` triggers re-introspection and regeneration
+- **Build**: Types are generated from the committed `schema.graphql` file (no backend needed)
+
+If the backend is not running when the dev server starts, `throwOnStart: false` allows the dev server to start anyway using previously generated types.
+
+::: tip
+The compiled schema file (`client/src/graphql/schema.graphql`) is committed to the repository. During development, codegen introspects the live backend and writes both the types and an updated schema file automatically. During builds, types are generated from this committed schema file so the backend is not required. If you need to update the schema file manually (e.g., without the dev server running), use `lando yarn graphql:codegen-offline`.
+:::
+
+### Manual Commands
+
+Run these from the project root using `lando yarn`:
+
+```sh
+# Run codegen using introspection (requires lando running)
+lando yarn graphql:codegen
+
+# Export schema then generate types from the file (offline/CI)
+lando yarn graphql:codegen-offline
+
+# Export compiled schema only
+lando yarn graphql:fetch-schema
 ```
 
-Importing `GetUsersDocument` (rather than using the `graphql()` return value) makes it explicit that the typed document is a generated artifact.
+You can override the schema source with an environment variable. This is useful for CI workflows where introspection isn't available:
 
-## Naming Conventions
+```sh
+GRAPHQL_SCHEMA=src/graphql/schema.graphql lando yarn graphql:codegen
+```
 
-| Convention | Example |
-|---|---|
-| Fragment name = component name (camelCase) | `AvatarImage.vue` → `fragment avatarImage` |
-| Generated type appends `Fragment` | `avatarImage` → `avatarImageFragment` |
-| Generated document appends `Document` | `query GetUsers` → `GetUsersDocument` |
+### Using Generated Types
 
-## Type Guidelines
+See [TypeScript Conventions](./typescript) for patterns on using generated types
+in components and tests, including typed mock responses, derived types, and
+boundary casting.
 
-- **Prefer fragment types over schema types.** Use `userListItemFragment` instead of `User`. The full schema type means you're over-fetching or not declaring data needs.
-- **Props use the component's own fragment type**, not a parent's or the full schema type.
-- **Emit payloads** use fragment types when passing data objects up.
-- **Pure UI components** use plain types — no GraphQL dependency.
+### Configuration
 
-## Centralized Operations (Legacy)
+The codegen configuration in `client/codegen.ts` uses:
 
-Some operations remain in `src/graphql/{queries,mutations,fragments}.ts` using `gql` template literals. These coexist with colocated operations. As components are migrated, the centralized files will shrink.
+- `schema-ast` plugin — writes the introspected schema to `schema.graphql` (keeps the committed file in sync with the backend)
+- `typescript` plugin — generates base types from the schema
+- `typescript-operations` plugin — generates result/variable types for each operation
+- `sort: true` on `schema-ast` — ensures consistent ordering across environments
+- `namingConvention: "keep"` — preserves snake_case field names from the Laravel backend
+- `maybeValue: "T | null | undefined"` — nullable fields can be `null` or `undefined`
+
+## Further Reading
+
+- [GraphQL Codegen documentation](https://the-guild.dev/graphql/codegen/docs/getting-started)
+- [Apollo Client Vue integration](https://v4.apollo.vuejs.org/)
