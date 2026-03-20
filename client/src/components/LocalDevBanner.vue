@@ -17,9 +17,10 @@ const dirName = appRoot?.split("/").pop() ?? null
   transform: translateX(-50%)
   background: rgb(0, 0, 0)
   color: rgba(255, 255, 255)
-  font-size: 10px
+  font-size: 13px
   padding: 3px 8px
   border-radius: 0 0 4px 4px
-  z-index: 1
+  z-index: 9999
   pointer-events: none
+  box-shadow: 0 0 1px 1px #fff, 0 0 0 2px #000
 </style>
