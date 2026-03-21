@@ -1,4 +1,4 @@
-import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
+import { installQuasarPlugin } from "app/test/vitest/utils"
 import { mount, flushPromises } from "@vue/test-utils"
 import { useFormState, formStateKey } from "src/use/forms"
 import ProfileMetadataForm from "./ProfileMetadataForm.vue"

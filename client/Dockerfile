@@ -32,7 +32,7 @@ FROM base AS unit-test
 ARG BUILDSTAMP
 RUN --mount=type=cache,target=/usr/local/share/.cache/yarn/v6 \
     yarn test:unit:ci \
-      --reporter=basic \
+      --reporter=default \
       --reporter=github-actions
 
 FROM base AS lint

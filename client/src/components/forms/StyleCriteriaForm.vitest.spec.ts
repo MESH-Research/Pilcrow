@@ -1,4 +1,4 @@
-import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
+import { installQuasarPlugin } from "app/test/vitest/utils"
 import { mount, flushPromises } from "@vue/test-utils"
 import { Dialog } from "app/test/vitest/mockedPlugins"
 import { useFormState, formStateKey } from "src/use/forms"
