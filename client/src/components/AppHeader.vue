@@ -2,6 +2,7 @@
   <input id="locale-switch" v-model="locale" type="hidden" />
   <q-header class="header" @keypress="toggleLocale">
     <app-banner />
+    <local-dev-banner />
     <q-toolbar class="header-toolbar">
       <router-link
         to="/"
@@ -170,6 +171,7 @@ import { watchEffect } from "vue"
 import { useQuasar } from "quasar"
 import { useI18n } from "vue-i18n"
 import AppBanner from "./AppBanner.vue"
+import LocalDevBanner from "./LocalDevBanner.vue"
 
 const $q = useQuasar()
 
