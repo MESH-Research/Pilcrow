@@ -1,4 +1,4 @@
-/* eslint-env node */
+/* global module, require, console */
 const { defineConfig } = require("cypress")
 
 module.exports = defineConfig({
