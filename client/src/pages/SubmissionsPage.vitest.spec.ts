@@ -16,7 +16,7 @@ import {
 } from "vitest"
 import { flushPromises, mount } from "@vue/test-utils"
 import { installApolloClient } from "app/test/vitest/utils"
-import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
+import { installQuasarPlugin } from "app/test/vitest/utils"
 import { ref } from "vue"
 import { useCurrentUser } from "src/use/user"
 

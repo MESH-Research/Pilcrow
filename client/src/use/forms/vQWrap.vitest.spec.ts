@@ -1,7 +1,7 @@
 import { mount } from "@vue/test-utils"
 import { useVQWrap } from "./vQWrap"
 import { describe, test, expect, vi } from "vitest"
-import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
+import { installQuasarPlugin } from "app/test/vitest/utils"
 import { defineComponent } from "vue"
 import type { VuelidateValidator } from "src/types/vuelidate"
 
