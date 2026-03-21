@@ -101,6 +101,7 @@ export default defineConfig(function (/* ctx */) {
         VERSION_URL: process.env.VERSION_URL ?? undefined,
         VERSION_DATE: process.env.VERSION_DATE ?? undefined,
         APP_BANNER: process.env.APP_BANNER ?? undefined,
+        LANDO_APP_ROOT: process.env.LANDO_APP_ROOT_BIND ?? undefined,
         APP_BANNER_CLASS: process.env.APP_BANNER_CLASS ?? undefined,
         APP_BANNER_LINK: process.env.APP_BANNER_LINK ?? undefined
       },
