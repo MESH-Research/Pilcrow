@@ -42,7 +42,7 @@ describe("CreateForm", () => {
     await flushPromises()
     expect(warn).toHaveBeenCalledTimes(1)
     expect(warn).toHaveBeenCalledWith(
-      expect.stringContaining(encodeURIComponent('"message":35'))
+      expect.stringContaining(encodeURIComponent('"message":43'))
     )
     expect(warn).toHaveBeenCalledWith(
       expect.stringContaining("GetPublications")

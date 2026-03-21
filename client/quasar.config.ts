@@ -1,4 +1,4 @@
-/* eslint-env node */
+/* global process */
 
 /*
  * This file runs in a Node context (it's NOT transpiled by Babel), so use only
@@ -132,8 +132,7 @@ export default defineConfig(function (/* ctx */) {
             vueTsc: true,
             eslint: {
               lintCommand:
-                'eslint -c ./eslint.config.js "./src*/**/*.{js,mjs,cjs,ts,mts,vue}"',
-              useFlatConfig: true
+                'eslint -c ./eslint.config.js "./src*/**/*.{js,mjs,cjs,ts,mts,vue}"'
             }
           },
           { server: false }
