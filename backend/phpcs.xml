@@ -7,6 +7,9 @@
     <rule ref="CakePHP">
         <exclude name="CakePHP.NamingConventions"/>
         <exclude name="CakePHP.Commenting.FunctionComment.MissingParamComment"/>
+        <exclude name="SlevomatCodingStandard.Functions.RequireTrailingCommaInCall"/>
+        <exclude name="SlevomatCodingStandard.Functions.RequireTrailingCommaInDeclaration"/>
+        <exclude name="SlevomatCodingStandard.Functions.RequireTrailingCommaInClosureUse"/>
     </rule>
 
      <rule ref="SlevomatCodingStandard.Commenting.EmptyComment">
