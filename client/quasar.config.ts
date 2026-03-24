@@ -130,12 +130,15 @@ export default defineConfig(function (/* ctx */) {
           "vite-plugin-checker",
           {
             vueTsc: true,
-            eslint: {
-              lintCommand:
-                'eslint -c ./eslint.config.js "./src*/**/*.{js,mjs,cjs,ts,mts,vue}"'
-            }
           },
           { server: false }
+        ],
+        [
+          "vite-plugin-eslint2",
+          {
+            lintOnStart: true,
+            fix: false,
+          }
         ],
         [
           "vite-plugin-graphql-codegen",
