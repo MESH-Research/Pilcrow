@@ -14,8 +14,8 @@ final class VerifySubmissionInvite
     /**
      * Verify the validity of a submission invitation based on supplied arguments
      *
-     * @param  null  $_
-     * @param  array{uuid: string, token: string, expires:int|string}  $args
+     * @param null  $_
+     * @param array{uuid: string, token: string, expires:int|string}  $args
      * @return \App\Models\User
      * @throws \App\Exceptions\ClientException
      */
@@ -33,7 +33,7 @@ final class VerifySubmissionInvite
      * - the submission invitation is not expired
      * - the token is not invalid
      *
-     * @param  array{uuid: string, token: string, expires:int|string}  $args
+     * @param array{uuid: string, token: string, expires:int|string}  $args
      * @return \App\Models\SubmissionInvitation
      * @throws \App\Exceptions\ClientException
      */

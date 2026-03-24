@@ -13,7 +13,7 @@ class NotifyReviewCoordinatorAboutInvitation
     /**
      * Handle the event.
      *
-     * @param  \App\Events\ReviewCoordinatorInvited  $event
+     * @param \App\Events\ReviewCoordinatorInvited  $event
      * @return void
      */
     public function handle(ReviewCoordinatorInvited $event)

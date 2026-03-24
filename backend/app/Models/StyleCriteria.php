@@ -47,8 +47,8 @@ class StyleCriteria extends BaseModel
     /**
      * Prepare a style_criteria_count rule, adding a model identifier if required.
      *
-     * @param  array  $_
-     * @param  string $__
+     * @param array  $_
+     * @param string $__
      * @return string
      */
     protected function prepareStyleCriteriaCountRule($_, $__)

@@ -13,9 +13,9 @@ class VerifyEmail
     /**
      * Verify the current user's email.
      *
-     * @param  null  $_
-     * @param  array<string, mixed>  $args
-     * @return \App\Model\User
+     * @param null  $_
+     * @param array<string, mixed>  $args
+     * @return \App\Models\User
      */
     public function verify($_, array $args)
     {
@@ -40,9 +40,9 @@ class VerifyEmail
     /**
      * Resend verification email to a user.
      *
-     * @param  null  $_
-     * @param  array<string, mixed>  $args
-     * @return \App\Model\User
+     * @param null  $_
+     * @param array<string, mixed>  $args
+     * @return \App\Models\User
      */
     public function send($_, array $args)
     {

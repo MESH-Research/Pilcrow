@@ -9,8 +9,8 @@ use Illuminate\Support\Facades\Auth;
 class Logout
 {
     /**
-     * @param  null  $_
-     * @param  array<string, mixed>  $_args
+     * @param null  $_
+     * @param array<string, mixed>  $_args
      * @return \App\Models\User
      */
     public function __invoke($_, array $_args): ?User

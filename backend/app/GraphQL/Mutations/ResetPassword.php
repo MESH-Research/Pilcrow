@@ -17,7 +17,7 @@ final class ResetPassword
     /**
      * Send a password reset request email to a specified email address
      *
-     * @param [type] $_
+     * @param mixed $_
      * @param array $args
      * @return bool
      */
@@ -38,7 +38,7 @@ final class ResetPassword
     /**
      * Update a password from a password reset request
      *
-     * @param [type] $_
+     * @param mixed $_
      * @param array $args
      * @return mixed
      */

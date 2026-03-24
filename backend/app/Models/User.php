@@ -204,7 +204,7 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * @return int|null
      */
-    public function getHighestPrivilegedRole(): int|null
+    public function getHighestPrivilegedRole(): ?int
     {
         if ($this->hasRole(Role::APPLICATION_ADMINISTRATOR)) {
             return (int)Role::APPLICATION_ADMINISTRATOR_ROLE_ID;
@@ -222,7 +222,7 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * Check if user has a role for a publication
      *
-     * @param int | array $role Role id to check, use * to check for any role.
+     * @param array|int $role Role id to check, use * to check for any role.
      * @param int $publicationId Publication to check for role on
      * @return bool
      */
@@ -244,7 +244,7 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * Check if user has given submission role
      *
-     * @param int|array $role Role id to check
+     * @param array|int $role Role id to check
      * @param int $submissionId Submission to check for role on
      * @return bool
      */
@@ -268,7 +268,7 @@ class User extends Authenticatable implements MustVerifyEmail
      * assign a default username and password
      *
      * @param string $email
-     * @return \App\Models\User
+     * @return self
      */
     public static function createStagedUser(string $email)
     {

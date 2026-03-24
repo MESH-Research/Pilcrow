@@ -21,10 +21,10 @@ class CleanAdminHtml implements CastsAttributes
     /**
      * Clean the attribute from the underlying model values.
      *
-     * @param  \Illuminate\Database\Eloquent\Model  $model
-     * @param  string  $key
-     * @param  mixed  $value
-     * @param  array  $_
+     * @param \Illuminate\Database\Eloquent\Model  $model
+     * @param string  $key
+     * @param mixed  $value
+     * @param array  $_
      * @return mixed
      */
     public function get($model, $key, $value, $_)
@@ -35,10 +35,10 @@ class CleanAdminHtml implements CastsAttributes
     /**
      * Clean the attribute to its underlying model values.
      *
-     * @param  \Illuminate\Database\Eloquent\Model  $model
-     * @param  string  $key
-     * @param  mixed  $value
-     * @param  array  $_
+     * @param \Illuminate\Database\Eloquent\Model  $model
+     * @param string  $key
+     * @param mixed  $value
+     * @param array  $_
      * @return mixed
      */
     public function set($model, $key, $value, $_)

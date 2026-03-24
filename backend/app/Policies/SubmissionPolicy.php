@@ -63,7 +63,7 @@ class SubmissionPolicy
      *
      * @param \App\Models\User $user
      * @param \App\Models\Submission $submission
-     * @return bool|\Illuminate\Auth\Access\Response
+     * @return \Illuminate\Auth\Access\Response|bool
      */
     public function updateSubmitters(User $user, Submission $submission)
     {
@@ -84,7 +84,7 @@ class SubmissionPolicy
      *
      * @param \App\Models\User $user
      * @param \App\Models\Submission $submission
-     * @return bool|\Illuminate\Auth\Access\Response
+     * @return \Illuminate\Auth\Access\Response|bool
      */
     public function updateReviewers(User $user, Submission $submission)
     {
@@ -105,7 +105,7 @@ class SubmissionPolicy
      *
      * @param \App\Models\User $user
      * @param \App\Models\Submission $submission
-     * @return bool|\Illuminate\Auth\Access\Response
+     * @return \Illuminate\Auth\Access\Response|bool
      */
     public function updateReviewCoordinators(User $user, Submission $submission)
     {
@@ -121,7 +121,7 @@ class SubmissionPolicy
      *
      * @param \App\Models\User $user
      * @param \App\Models\Submission $submission
-     * @return bool|\Illuminate\Auth\Access\Response
+     * @return \Illuminate\Auth\Access\Response|bool
      */
     public function updateStatus(User $user, Submission $submission)
     {
@@ -148,7 +148,7 @@ class SubmissionPolicy
      *
      * @param \App\Models\User $user
      * @param \App\Models\Submission $submission
-     * @return bool|\Illuminate\Auth\Access\Response
+     * @return \Illuminate\Auth\Access\Response|bool
      */
     public function updateTitle(User $user, Submission $submission)
     {
@@ -172,7 +172,7 @@ class SubmissionPolicy
      *
      * @param \App\Models\User $user
      * @param \App\Models\Submission $submission
-     * @return bool|\Illuminate\Auth\Access\Response
+     * @return \Illuminate\Auth\Access\Response|bool
      */
     public function view(User $user, Submission $submission)
     {
@@ -193,7 +193,7 @@ class SubmissionPolicy
      *
      * @param \App\Models\User $user
      * @param \App\Models\Submission $submission
-     * @return bool|\Illuminate\Auth\Access\Response
+     * @return \Illuminate\Auth\Access\Response|bool
      */
     public function viewAll(User $user, Submission $submission)
     {
@@ -209,7 +209,7 @@ class SubmissionPolicy
      *
      * @param \App\Models\User $user
      * @param \App\Models\Submission $submission
-     * @return bool|\Illuminate\Auth\Access\Response
+     * @return \Illuminate\Auth\Access\Response|bool
      */
     public function update(User $user, Submission $submission)
     {
@@ -230,7 +230,7 @@ class SubmissionPolicy
      *
      * @param \App\Models\User $user
      * @param \App\Models\Submission $submission
-     * @return bool|\Illuminate\Auth\Access\Response
+     * @return \Illuminate\Auth\Access\Response|bool
      */
     public function invite(User $user, Submission $submission)
     {
@@ -247,7 +247,7 @@ class SubmissionPolicy
      * @param \App\Models\User $user
      * @param \App\Models\Submission $_
      * @param array $args
-     * @return bool|\Illuminate\Auth\Access\Response
+     * @return \Illuminate\Auth\Access\Response|bool
      */
     public function updateInlineComments(User $user, Submission $_, $args)
     {
@@ -269,8 +269,8 @@ class SubmissionPolicy
      *
      * @param \App\Models\User $user
      * @param \App\Models\Submission $_
-     * @param  array {submission_id: string, comment_id:string}  $args
-     * @return bool|\Illuminate\Auth\Access\Response
+     * @param array {submission_id: string, comment_id:string}  $args
+     * @return \Illuminate\Auth\Access\Response|bool
      */
     public function deleteInlineComment(User $user, Submission $_, array $args)
     {
@@ -290,7 +290,7 @@ class SubmissionPolicy
      * @param \App\Models\User $user
      * @param \App\Models\Submission $_
      * @param array $args
-     * @return bool|\Illuminate\Auth\Access\Response
+     * @return \Illuminate\Auth\Access\Response|bool
      */
     public function updateOverallComments(User $user, Submission $_, $args)
     {
@@ -312,8 +312,8 @@ class SubmissionPolicy
      *
      * @param \App\Models\User $user
      * @param \App\Models\Submission $_
-     * @param  array {submission_id: string, comment_id:string}  $args
-     * @return bool|\Illuminate\Auth\Access\Response
+     * @param array {submission_id: string, comment_id:string}  $args
+     * @return \Illuminate\Auth\Access\Response|bool
      */
     public function deleteOverallComment(User $user, Submission $_, array $args)
     {

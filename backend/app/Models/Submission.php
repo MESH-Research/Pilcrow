@@ -10,13 +10,14 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use OwenIt\Auditing\Auditable as AuditableTrait;
 use OwenIt\Auditing\Contracts\Auditable;
 
 class Submission extends Model implements Auditable
 {
     use HasFactory;
     use CreatedUpdatedBy;
-    use \OwenIt\Auditing\Auditable;
+    use AuditableTrait;
 
     public const DRAFT = 0;
     public const INITIALLY_SUBMITTED = 1;
@@ -198,7 +199,7 @@ class Submission extends Model implements Auditable
     /**
      * Distinct users who have authored comments (including replies)
      *
-     * @param  string|null $type  "INLINE", "OVERALL", or null for all
+     * @param string|null $type  "INLINE", "OVERALL", or null for all
      * @return \Illuminate\Database\Eloquent\Collection<int, \App\Models\User>
      */
     public function getCommentParticipants(?string $type = null)
@@ -249,7 +250,7 @@ class Submission extends Model implements Auditable
     /**
      * Datetime the submission was submitted
      *
-     * @return null|string
+     * @return string|null
      */
     public function getSubmittedAtAttribute()
     {
@@ -288,7 +289,7 @@ class Submission extends Model implements Auditable
      *
      * @return int|null
      */
-    public function getMyRole(): int|null
+    public function getMyRole(): ?int
     {
         /** @var \App\Models\User $user */
         $user = auth()->user();
@@ -305,7 +306,7 @@ class Submission extends Model implements Auditable
      *
      * @return int|null
      */
-    public function getEffectiveRole(): int|null
+    public function getEffectiveRole(): ?int
     {
         /** @var \App\Models\User $user */
         $user = auth()->user();

@@ -9,8 +9,8 @@ use Error;
 class DeletePublicationUser
 {
     /**
-     * @param  null  $_
-     * @param  array<string, mixed>  $args
+     * @param null  $_
+     * @param array<string, mixed>  $args
      * @return \App\Models\PublicationUser
      */
     public function delete($_, array $args): PublicationUser

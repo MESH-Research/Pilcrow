@@ -8,6 +8,7 @@ use App\Exceptions\EmptyContentOnImport;
 use App\Models\SubmissionContent;
 use App\Models\SubmissionFile;
 use App\Models\User;
+use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -75,7 +76,7 @@ class ImportFileContent implements ShouldQueue
                 throw new EmptyContentOnImport();
             }
             $content->save();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->file->import_status = SubmissionFileImportStatus::Failure;
             $this->file->error_message = 'Exception: ' . get_class($e) . ' (' . $e->getMessage() . ')';
             $this->file->save();

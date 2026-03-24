@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Models\Traits;
 
 use App\Models\CommentStatus;
+use Exception;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
@@ -50,7 +51,7 @@ trait ReadStatus
             $user = auth()->user();
         }
         if (!$user) {
-            throw new \Exception('Unable to save read status. No user logged in.');
+            throw new Exception('Unable to save read status. No user logged in.');
         }
 
         CommentStatus::firstOrCreate([
