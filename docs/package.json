@@ -7,7 +7,7 @@
     "private": true,
     "devDependencies": {
         "@iconify-json/logos": "^1.2.10",
-        "@types/node": "^20.8.9",
+        "@types/node": "^24.0.0",
         "all-contributors-cli": "^6.26.1",
         "mermaid": "^11.12.3",
         "vitepress": "^1.0.0-rc.24",
