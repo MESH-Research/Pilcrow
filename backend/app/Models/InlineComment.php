@@ -103,8 +103,8 @@ class InlineComment extends BaseModel
     /**
      * Scope to filter by author IDs.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder $query
-     * @param  array $ids
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param array $ids
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopeByAuthorIds($query, $ids)
@@ -148,7 +148,7 @@ class InlineComment extends BaseModel
     protected function username(): Attribute
     {
         return Attribute::make(
-            get: fn (int $value) => $this->trashed() ? '' : $value,
+            get: fn(int $value) => $this->trashed() ? '' : $value,
         );
     }
 
@@ -158,7 +158,7 @@ class InlineComment extends BaseModel
     protected function content(): Attribute
     {
         return Attribute::make(
-            get: fn (string $value) => $this->trashed() ? 'This comment has been deleted' : $value,
+            get: fn(string $value) => $this->trashed() ? 'This comment has been deleted' : $value,
         );
     }
 

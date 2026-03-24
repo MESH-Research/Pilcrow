@@ -47,7 +47,7 @@ class SubmissionInvitation extends Model
      * Create a submission invitation token
      *
      * @return string
-     * @param int|float|string $expires
+     * @param string|float|int $expires
      */
     public function makeToken(string $expires)
     {

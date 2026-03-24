@@ -10,8 +10,8 @@ use GraphQL\Error\Error;
 final class UpdateSubmissionContent
 {
     /**
-     * @param  null  $_
-     * @param  array{}  $args
+     * @param null  $_
+     * @param array{}  $args
      * @return \App\Models\Submission
      */
     public function __invoke($_, array $args)

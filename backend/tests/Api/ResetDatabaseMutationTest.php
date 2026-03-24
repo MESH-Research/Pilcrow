@@ -39,7 +39,7 @@ class ResetDatabaseMutationTest extends ApiTestCase
      */
     public function testResetDatabaseResolverRejectsProduction(): void
     {
-        App::detectEnvironment(fn () => 'production');
+        App::detectEnvironment(fn() => 'production');
         $this->assertEquals('production', App::environment());
 
         $response = $this->graphQL(

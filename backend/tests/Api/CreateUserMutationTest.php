@@ -5,6 +5,7 @@ namespace Tests\Api;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Testing\TestResponse;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\ApiTestCase;
 
@@ -18,7 +19,7 @@ class CreateUserMutationTest extends ApiTestCase
      * @param array $variables Contains user details to save to DB for testing.
      * @return \Illuminate\Testing\TestResponse
      */
-    public function callEndpoint(array $variables): \Illuminate\Testing\TestResponse
+    public function callEndpoint(array $variables): TestResponse
     {
         return $this->graphQL(
             'mutation CreateUser($username: String! $email: String! $name: String $password: String!) {

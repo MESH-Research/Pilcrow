@@ -20,7 +20,7 @@ class SubmissionIsReviewable implements ValidationRule, DataAwareRule
     /**
      * Set the data under validation
      *
-     * @param  array  $data
+     * @param array  $data
      * @return $this
      */
     public function setData($data)
@@ -35,7 +35,7 @@ class SubmissionIsReviewable implements ValidationRule, DataAwareRule
      *
      * @param string $attribute
      * @param mixed $value
-     * @param  \Closure(string): \Illuminate\Translation\PotentiallyTranslatedString  $fail
+     * @param \Closure(string): \Illuminate\Translation\PotentiallyTranslatedString  $fail
      * @return void
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void

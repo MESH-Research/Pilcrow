@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\GraphQL\Directives;
 
+use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use Illuminate\Contracts\Auth\Access\Gate;
 use Nuwave\Lighthouse\Exceptions\AuthorizationException;
@@ -26,33 +27,32 @@ class GateDirective extends BaseDirective implements FieldMiddleware
     /**
      * Wrap around the final field resolver.
      *
-     * @param  \Nuwave\Lighthouse\Schema\Values\FieldValue  $fieldValue
+     * @param \Nuwave\Lighthouse\Schema\Values\FieldValue  $fieldValue
      * @return void
      */
     public function handleField(FieldValue $fieldValue): void
     {
         $ability = $this->directiveArgValue('ability');
 
-        $fieldValue->wrapResolver(fn (callable $resolver): \Closure =>
-            function (
-                $root,
-                array $args,
-                GraphQLContext $context,
-                ResolveInfo $resolveInfo
-            ) use (
-                $ability,
-                $resolver
-            ) {
+        $fieldValue->wrapResolver(fn(callable $resolver): Closure => function (
+            $root,
+            array $args,
+            GraphQLContext $context,
+            ResolveInfo $resolveInfo
+        ) use (
+            $ability,
+            $resolver
+        ) {
                 $gate = $this->gate->forUser($context->user());
 
                 $response = $gate->inspect($ability);
 
-                if ($response->denied()) {
-                    throw new AuthorizationException($response->message(), $response->code());
-                }
+            if ($response->denied()) {
+                throw new AuthorizationException($response->message(), $response->code());
+            }
 
                 return $resolver($root, $args, $context, $resolveInfo);
-            });
+        });
     }
 
     /**

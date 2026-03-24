@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\GraphQL\Mutations;
 
 use App\Models\Submission;
+use Exception;
 
 final readonly class CommentStatusMutator
 {
@@ -18,10 +19,10 @@ final readonly class CommentStatusMutator
     private function validateArgs($type, $submission_id, $comment_ids)
     {
         if (!$submission_id) {
-            throw new \Exception('Submission ID required');
+            throw new Exception('Submission ID required');
         }
         if (empty($comment_ids)) {
-            throw new \Exception('Comment ID(s) required');
+            throw new Exception('Comment ID(s) required');
         }
         if ($type === 'inline') {
             $comments = Submission::find($submission_id)->inlineCommentsWithReplies;
@@ -30,7 +31,7 @@ final readonly class CommentStatusMutator
         }
         $matchingComments = $comments->whereIn('id', $comment_ids);
         if ($matchingComments->isEmpty()) {
-            throw new \Exception('Invalid comment ID');
+            throw new Exception('Invalid comment ID');
         }
 
         return $matchingComments;

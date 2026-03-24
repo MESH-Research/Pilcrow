@@ -5,6 +5,7 @@ namespace App\GraphQL\Mutations;
 
 use App\Models\ExternalIdentityProvider;
 use App\Models\User;
+use Exception;
 use GraphQL\Error\Error;
 use Illuminate\Support\Facades\Auth;
 
@@ -33,7 +34,7 @@ final readonly class RegisterOauthUser
             Auth::guard('web')->login($user);
 
             return $user;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             report($e);
             throw new Error($e->getMessage());
         }

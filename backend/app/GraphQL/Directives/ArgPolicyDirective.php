@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\GraphQL\Directives;
 
+use Closure;
 use GraphQL\Type\Definition\ResolveInfo;
 use Illuminate\Support\Arr;
 use Nuwave\Lighthouse\Auth\CanDirective;
@@ -82,7 +83,7 @@ GRAPHQL;
     public function handleField(FieldValue $fieldValue): void
     {
         $apply = $this->directiveArgValue('apply');
-        $fieldValue->wrapResolver(fn (callable $resolver): \Closure => function (
+        $fieldValue->wrapResolver(fn(callable $resolver): Closure => function (
             mixed $root,
             array $args,
             GraphQLContext $context,
@@ -91,18 +92,18 @@ GRAPHQL;
             $resolver,
             $apply
         ) {
-              foreach ($apply as $applyField) {
-                    [$fieldToCheck, $ability] = explode(':', $applyField);
-                    $argValue = Arr::get($args, $fieldToCheck);
-                    if ($argValue !== null) {
-                        $gate = $this->gate->forUser($context->user());
-                        $checkArguments = $this->buildCheckArguments($args);
+            foreach ($apply as $applyField) {
+                  [$fieldToCheck, $ability] = explode(':', $applyField);
+                  $argValue = Arr::get($args, $fieldToCheck);
+                if ($argValue !== null) {
+                    $gate = $this->gate->forUser($context->user());
+                    $checkArguments = $this->buildCheckArguments($args);
 
-                        foreach ($this->modelsToCheck($root, $args, $context, $resolveInfo) as $model) {
-                            $this->authorize($gate, $ability, $model, $checkArguments);
-                        }
+                    foreach ($this->modelsToCheck($root, $args, $context, $resolveInfo) as $model) {
+                        $this->authorize($gate, $ability, $model, $checkArguments);
                     }
-              }
+                }
+            }
 
                 return $resolver($root, $args, $context, $resolveInfo);
         });

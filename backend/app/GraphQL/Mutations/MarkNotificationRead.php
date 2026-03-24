@@ -11,8 +11,8 @@ class MarkNotificationRead
     /**
      * Mark a single user notification as read
      *
-     * @param  mixed  $_
-     * @param  array<string, mixed>  $args
+     * @param mixed  $_
+     * @param array<string, mixed>  $args
      * @return \Illuminate\Notifications\DatabaseNotification
      */
     public function markAsRead($_, array $args): Notification

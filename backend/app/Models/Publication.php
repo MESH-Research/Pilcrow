@@ -45,7 +45,7 @@ class Publication extends BaseModel
     /**
      * Scope only publically visible publications.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder $query
+     * @param \Illuminate\Database\Eloquent\Builder $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopeIsPubliclyVisible($query)
@@ -56,7 +56,7 @@ class Publication extends BaseModel
     /**
      * Scope only publications that are accepting submissions
      *
-     * @param  \Illuminate\Database\Eloquent\Builder $query
+     * @param \Illuminate\Database\Eloquent\Builder $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopeIsAcceptingSubmissions($query)
@@ -125,7 +125,7 @@ class Publication extends BaseModel
      *
      * @return int|null
      */
-    public function getMyRole(): int|null
+    public function getMyRole(): ?int
     {
         /** @var \App\Models\User $user */
         $user = auth()->user();
@@ -141,7 +141,7 @@ class Publication extends BaseModel
      *
      * @return int|null
      */
-    public function getEffectiveRole(): int|null
+    public function getEffectiveRole(): ?int
     {
         /** @var \App\Models\User $user */
         $user = auth()->user();

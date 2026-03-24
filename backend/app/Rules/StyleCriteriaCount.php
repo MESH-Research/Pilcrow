@@ -13,9 +13,9 @@ class StyleCriteriaCount
     /**
      * Determine if the validation rule passes.
      *
-     * @param  string  $_
-     * @param  mixed  $publicationId
-     * @param  array $params
+     * @param string  $_
+     * @param mixed  $publicationId
+     * @param array $params
      * @return bool
      */
     public function checkCount($_, $publicationId, $params)

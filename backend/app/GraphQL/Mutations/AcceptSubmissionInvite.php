@@ -10,8 +10,8 @@ final class AcceptSubmissionInvite
     /**
      * Accept an invitation to a submission for an invitee and update their user details
      *
-     * @param  null  $_
-     * @param  array{uuid: string, token: string, expires:int|string, user:array}  $args
+     * @param null  $_
+     * @param array{uuid: string, token: string, expires:int|string, user:array}  $args
      * @return \App\Models\User
      * @throws \App\Exceptions\ClientException
      */

@@ -6,6 +6,7 @@ namespace App\GraphQL\Mutations;
 use App\Exceptions\ClientException;
 use App\Models\OverallComment;
 use App\Models\Submission;
+use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 final readonly class DeleteOverallComment
@@ -14,7 +15,7 @@ final readonly class DeleteOverallComment
      * Soft delete an overall comment of a submission
      *
      * @param null $_
-     * @param  array{id: string}  $args
+     * @param array{id: string}  $args
      * @return \App\Models\Submission
      * @throws \App\Exceptions\ClientException
      */
@@ -29,7 +30,7 @@ final readonly class DeleteOverallComment
             $overall_comment->delete();
 
             return $overall_comment->submission;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw new ClientException('Error', 'deleteOverallComment', 'UNABLE_TO_DELETE_COMMENT');
         }
     }
