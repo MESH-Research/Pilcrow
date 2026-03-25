@@ -1,4 +1,4 @@
-import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
+import { installQuasarPlugin } from "app/test/vitest/utils"
 import { mount } from "@vue/test-utils"
 import AdminDashboard from "./AdminDashboard.vue"
 import { describe, expect, it, vi } from "vitest"

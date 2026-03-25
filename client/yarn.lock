@@ -542,6 +542,14 @@
     "@graphql-tools/utils" "^11.0.0"
     tslib "~2.6.0"
 
+"@graphql-codegen/fragment-matcher@^6.0.0":
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/fragment-matcher/-/fragment-matcher-6.0.0.tgz#4beb848c0fdb38bbdc7b99250de84ec4456e7a5d"
+  integrity sha512-lXdFWrUSEbOL2KhmYxdeNPLllcBGZnNunwgV72C12+21v9lyKaOqFnYueyt0pT110MGCwUhKTnXzUtV1D5i9Jw==
+  dependencies:
+    "@graphql-codegen/plugin-helpers" "^6.0.0"
+    tslib "~2.6.0"
+
 "@graphql-codegen/gql-tag-operations@5.1.4":
   version "5.1.4"
   resolved "https://registry.yarnpkg.com/@graphql-codegen/gql-tag-operations/-/gql-tag-operations-5.1.4.tgz#4714f2475868b43015420aba05a9dc04868a7d5e"
