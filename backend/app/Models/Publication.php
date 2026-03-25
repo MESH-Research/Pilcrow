@@ -145,8 +145,7 @@ class Publication extends BaseModel
         }
 
         $first = $this->users->first(
-            fn(User $u) =>
-            $u->pivot->user_id === $user->id
+            fn(User $u) => $u->pivot->user_id === $user->id
         );
 
         if (!$first) {

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Builders;
 
+use App\Models\Submission;
 use Illuminate\Database\Eloquent\Builder;
 
 class SubmissionAssignmentBuilder extends Builder
@@ -97,7 +98,7 @@ class SubmissionAssignmentBuilder extends Builder
             $direction = $clause['order'] ?? 'ASC';
             if ($column) {
                 $this->orderBy(
-                    \App\Models\Submission::select($column)
+                    Submission::select($column)
                         ->whereColumn('submissions.id', 'submission_user.submission_id')
                         ->limit(1),
                     $direction
