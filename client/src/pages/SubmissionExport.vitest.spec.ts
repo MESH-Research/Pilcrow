@@ -1,6 +1,5 @@
-import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
+import { installQuasarPlugin, installApolloClient } from "app/test/vitest/utils"
 import { mount, flushPromises } from "@vue/test-utils"
-import { installApolloClient } from "app/test/vitest/utils"
 import {
   GetExportOptionsDocument,
   type GetExportOptionsQuery
