@@ -10,8 +10,8 @@ use Illuminate\Support\Facades\Auth;
 class Login
 {
     /**
-     * @param  null  $_
-     * @param  array<string, mixed>  $args
+     * @param null  $_
+     * @param array<string, mixed>  $args
      * @return \App\Models\User
      */
     public function __invoke($_, array $args): User

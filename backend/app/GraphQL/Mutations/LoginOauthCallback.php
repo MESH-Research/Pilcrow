@@ -6,6 +6,7 @@ namespace App\GraphQL\Mutations;
 use App\Models\ExternalIdentityProvider;
 use App\Models\User;
 use Error;
+use Exception;
 use Illuminate\Support\Facades\Auth;
 
 final readonly class LoginOauthCallback
@@ -52,7 +53,7 @@ final readonly class LoginOauthCallback
             } else {
                 return $this->handleNoEmailNoMatchedProvider($socialiteUser);
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw new Error($e->getMessage());
         }
     }

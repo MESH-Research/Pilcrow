@@ -5,6 +5,7 @@ namespace Tests\Feature;
 
 use App\Models\User;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use Tests\TestFactory;
@@ -57,7 +58,7 @@ class SubmissionCommentTest extends TestCase
 
     public function testInlineCommentThrowsOnReadSetWithoutUser()
     {
-        $this->expectException(\Exception::class);
+        $this->expectException(Exception::class);
         $submission = $this->createSubmissionWithInlineComment();
         $submission->inlineComments->first()->readAt = true;
     }
@@ -80,7 +81,7 @@ class SubmissionCommentTest extends TestCase
 
     public function testOverallCommentThrowsOnReadSetWithoutUser()
     {
-        $this->expectException(\Exception::class);
+        $this->expectException(Exception::class);
         $submission = $this->createSubmissionWithOverallComment();
         $submission->overallComments->first()->readAt = true;
     }

@@ -1,4 +1,4 @@
-/* eslint-env node */
+/* global process */
 
 /*
  * This file runs in a Node context (it's NOT transpiled by Babel), so use only
@@ -130,13 +130,15 @@ export default defineConfig(function (/* ctx */) {
           "vite-plugin-checker",
           {
             vueTsc: true,
-            eslint: {
-              lintCommand:
-                'eslint -c ./eslint.config.js "./src*/**/*.{js,mjs,cjs,ts,mts,vue}"',
-              useFlatConfig: true
-            }
           },
           { server: false }
+        ],
+        [
+          "vite-plugin-eslint2",
+          {
+            lintOnStart: true,
+            fix: false,
+          }
         ],
         [
           "vite-plugin-graphql-codegen",

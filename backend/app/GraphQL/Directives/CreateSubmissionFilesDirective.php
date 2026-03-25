@@ -29,7 +29,7 @@ class CreateSubmissionFilesDirective extends BaseDirective implements ArgResolve
      * Undocumented function
      *
      * @param \App\GraphQL\Directives\Submission $parent
-     * @param [type] $argsList
+     * @param mixed $argsList
      * @return array
      */
     public function __invoke($parent, $argsList): array

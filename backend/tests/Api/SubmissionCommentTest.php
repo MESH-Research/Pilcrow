@@ -6,6 +6,7 @@ namespace Tests\Api;
 use App\Models\InlineComment;
 use App\Models\OverallComment;
 use App\Models\Submission;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -880,7 +881,7 @@ class SubmissionCommentTest extends ApiTestCase
         $inline_comment = $submission->inlineComments()->first();
         $time = Carbon::parse($inline_comment->created_at);
         $datetime = $this->faker->dateTimeBetween($time, Carbon::now());
-        $reply = InlineComment::withoutEvents(fn () => InlineComment::factory()->create([
+        $reply = InlineComment::withoutEvents(fn() => InlineComment::factory()->create([
             'submission_id' => $submission->id,
             'parent_id' => $inline_comment->id,
             'reply_to_id' => $inline_comment->id,
@@ -956,7 +957,7 @@ class SubmissionCommentTest extends ApiTestCase
         $overall_comment = $submission->overallComments()->first();
         $time = Carbon::parse($overall_comment->created_at);
         $datetime = $this->faker->dateTimeBetween($time, Carbon::now());
-        $reply = OverallComment::withoutEvents(fn () => OverallComment::factory()->create([
+        $reply = OverallComment::withoutEvents(fn() => OverallComment::factory()->create([
             'submission_id' => $submission->id,
             'parent_id' => $overall_comment->id,
             'reply_to_id' => $overall_comment->id,
@@ -1199,8 +1200,8 @@ class SubmissionCommentTest extends ApiTestCase
     {
         $this->beAppAdmin();
 
-        $user1 = \App\Models\User::factory()->create();
-        $user2 = \App\Models\User::factory()->create();
+        $user1 = User::factory()->create();
+        $user2 = User::factory()->create();
         $submission = $this->createSubmission();
 
         InlineComment::withoutEvents(function () use ($submission, $user1, $user2) {
@@ -1239,8 +1240,8 @@ class SubmissionCommentTest extends ApiTestCase
     {
         $this->beAppAdmin();
 
-        $user1 = \App\Models\User::factory()->create();
-        $user2 = \App\Models\User::factory()->create();
+        $user1 = User::factory()->create();
+        $user2 = User::factory()->create();
         $submission = $this->createSubmission();
 
         InlineComment::withoutEvents(function () use ($submission, $user1, $user2) {
@@ -1274,8 +1275,8 @@ class SubmissionCommentTest extends ApiTestCase
     {
         $this->beAppAdmin();
 
-        $user1 = \App\Models\User::factory()->create();
-        $user2 = \App\Models\User::factory()->create();
+        $user1 = User::factory()->create();
+        $user2 = User::factory()->create();
         $submission = $this->createSubmission();
 
         InlineComment::withoutEvents(function () use ($submission, $user1, $user2) {
@@ -1324,8 +1325,8 @@ class SubmissionCommentTest extends ApiTestCase
     {
         $this->beAppAdmin();
 
-        $user1 = \App\Models\User::factory()->create();
-        $user2 = \App\Models\User::factory()->create();
+        $user1 = User::factory()->create();
+        $user2 = User::factory()->create();
         $submission = $this->createSubmission();
 
         OverallComment::withoutEvents(function () use ($submission, $user1, $user2) {
@@ -1364,8 +1365,8 @@ class SubmissionCommentTest extends ApiTestCase
     {
         $this->beAppAdmin();
 
-        $user1 = \App\Models\User::factory()->create();
-        $user2 = \App\Models\User::factory()->create();
+        $user1 = User::factory()->create();
+        $user2 = User::factory()->create();
         $submission = $this->createSubmission();
 
         OverallComment::withoutEvents(function () use ($submission, $user1, $user2) {
@@ -1414,9 +1415,9 @@ class SubmissionCommentTest extends ApiTestCase
     {
         $this->beAppAdmin();
 
-        $user1 = \App\Models\User::factory()->create();
-        $user2 = \App\Models\User::factory()->create();
-        $user3 = \App\Models\User::factory()->create();
+        $user1 = User::factory()->create();
+        $user2 = User::factory()->create();
+        $user3 = User::factory()->create();
         $submission = $this->createSubmission();
 
         InlineComment::withoutEvents(function () use ($submission, $user1, $user2) {
@@ -1459,7 +1460,7 @@ class SubmissionCommentTest extends ApiTestCase
             ->values()
             ->toArray();
         $expectedIds = collect([$user1->id, $user2->id, $user3->id])
-            ->map(fn ($id) => (string)$id)
+            ->map(fn($id) => (string)$id)
             ->sort()
             ->values()
             ->toArray();
@@ -1490,7 +1491,7 @@ class SubmissionCommentTest extends ApiTestCase
     {
         $this->beAppAdmin();
 
-        $user1 = \App\Models\User::factory()->create();
+        $user1 = User::factory()->create();
         $submission = $this->createSubmission();
 
         InlineComment::withoutEvents(function () use ($submission, $user1) {
@@ -1528,8 +1529,8 @@ class SubmissionCommentTest extends ApiTestCase
     {
         $this->beAppAdmin();
 
-        $inlineUser = \App\Models\User::factory()->create();
-        $overallUser = \App\Models\User::factory()->create();
+        $inlineUser = User::factory()->create();
+        $overallUser = User::factory()->create();
         $submission = $this->createSubmission();
 
         InlineComment::withoutEvents(function () use ($submission, $inlineUser) {
@@ -1567,8 +1568,8 @@ class SubmissionCommentTest extends ApiTestCase
     {
         $this->beAppAdmin();
 
-        $inlineUser = \App\Models\User::factory()->create();
-        $overallUser = \App\Models\User::factory()->create();
+        $inlineUser = User::factory()->create();
+        $overallUser = User::factory()->create();
         $submission = $this->createSubmission();
 
         InlineComment::withoutEvents(function () use ($submission, $inlineUser) {
@@ -1606,8 +1607,8 @@ class SubmissionCommentTest extends ApiTestCase
     {
         $this->beAppAdmin();
 
-        $inlineUser = \App\Models\User::factory()->create();
-        $overallUser = \App\Models\User::factory()->create();
+        $inlineUser = User::factory()->create();
+        $overallUser = User::factory()->create();
         $submission = $this->createSubmission();
 
         InlineComment::withoutEvents(function () use ($submission, $inlineUser) {

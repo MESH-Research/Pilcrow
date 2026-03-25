@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Tests\Feature;
 
 use App\Enums\SubmissionFileImportStatus;
+use App\Exceptions\EmptyContentOnImport;
 use App\Jobs\ImportFileContent;
 use App\Models\Submission;
 use App\Models\SubmissionContent;
@@ -12,6 +13,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Queue;
 use Mockery;
 use Pandoc\Facades\Pandoc;
+use Pandoc\Pandoc as PandocInstance;
 use Tests\TestCase;
 
 class SubmissionContentTest extends TestCase
@@ -160,7 +162,7 @@ class SubmissionContentTest extends TestCase
                 'file_upload' => $fileName,
             ]);
 
-        $pandoc = $this->getMockBuilder(\Pandoc\Pandoc::class)
+        $pandoc = $this->getMockBuilder(PandocInstance::class)
             ->onlyMethods(['run'])
             ->getMock();
 
@@ -195,13 +197,13 @@ class SubmissionContentTest extends TestCase
                 'file_upload' => $fileName,
             ]);
 
-        $pandoc = $this->getMockBuilder(\Pandoc\Pandoc::class)
+        $pandoc = $this->getMockBuilder(PandocInstance::class)
             ->onlyMethods(['run'])
             ->getMock();
 
         $pandoc->expects($this->once())
             ->method('run')
-            ->willThrowException(new \App\Exceptions\EmptyContentOnImport());
+            ->willThrowException(new EmptyContentOnImport());
 
         Pandoc::shouldReceive('inputFile')
             ->once()

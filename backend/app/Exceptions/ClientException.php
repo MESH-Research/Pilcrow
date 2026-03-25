@@ -3,10 +3,11 @@ declare(strict_types=1);
 
 namespace App\Exceptions;
 
+use Exception;
 use GraphQL\Error\ClientAware;
 use GraphQL\Error\ProvidesExtensions;
 
-class ClientException extends \Exception implements ClientAware, ProvidesExtensions
+class ClientException extends Exception implements ClientAware, ProvidesExtensions
 {
     /**
      * Construct a client exception

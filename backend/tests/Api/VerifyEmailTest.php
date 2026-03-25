@@ -10,6 +10,7 @@ use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Testing\TestResponse;
 use Nuwave\Lighthouse\Testing\MakesGraphQLRequests;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\ApiTestCase;
@@ -46,7 +47,7 @@ class VerifyEmailTest extends ApiTestCase
      * @param array $variables
      * @return \Illuminate\Testing\TestResponse
      */
-    public function callVerifyEmailEndpoint(array $variables): \Illuminate\Testing\TestResponse
+    public function callVerifyEmailEndpoint(array $variables): TestResponse
     {
         return $this->graphQL('
             mutation VerifyEmail($token: String!, $expires: String!) {
@@ -63,7 +64,7 @@ class VerifyEmailTest extends ApiTestCase
      * @param array $variables
      * @return \Illuminate\Testing\TestResponse
      */
-    public function callSendVerifyEmailEndpoint(array $variables): \Illuminate\Testing\TestResponse
+    public function callSendVerifyEmailEndpoint(array $variables): TestResponse
     {
         return $this->graphQL('
             mutation SendEmail($id: ID) {
@@ -80,7 +81,7 @@ class VerifyEmailTest extends ApiTestCase
      * @param array $variables
      * @return \Illuminate\Testing\TestResponse
      */
-    public function callCreateUserEndpoint(array $variables): \Illuminate\Testing\TestResponse
+    public function callCreateUserEndpoint(array $variables): TestResponse
     {
         return $this->graphQL(
             'mutation CreateUser($username: String! $email: String! $name: String $password: String!) {

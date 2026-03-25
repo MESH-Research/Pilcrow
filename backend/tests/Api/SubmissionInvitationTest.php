@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
+use Illuminate\Testing\TestResponse;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\ApiTestCase;
 
@@ -109,7 +110,7 @@ class SubmissionInvitationTest extends ApiTestCase
      * @param array $variables
      * @return \Illuminate\Testing\TestResponse
      */
-    public function callAcceptSubmissionInvite(array $variables): \Illuminate\Testing\TestResponse
+    public function callAcceptSubmissionInvite(array $variables): TestResponse
     {
         return $this->graphQL('
             mutation AcceptSubmissionInvite(

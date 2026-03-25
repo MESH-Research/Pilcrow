@@ -1,7 +1,7 @@
 import { mount } from "@vue/test-utils"
 import { useDirtyGuard } from "./dirtyGuard"
 import { ref, defineComponent, h } from "vue"
-import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
+import { installQuasarPlugin } from "app/test/vitest/utils"
 import { onUnmounted } from "vue"
 import { Dialog } from "app/test/vitest/mockedPlugins"
 import { onBeforeRouteLeave } from "vue-router"

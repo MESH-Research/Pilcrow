@@ -7,7 +7,7 @@ import {
 } from "src/graphql/generated/graphql"
 import { type Mock, afterEach, describe, expect, it, test, vi } from "vitest"
 import { installApolloClient } from "app/test/vitest/utils"
-import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
+import { installQuasarPlugin } from "app/test/vitest/utils"
 import { mount, flushPromises } from "@vue/test-utils"
 import { ref } from "vue"
 import { useCurrentUser } from "src/use/user"

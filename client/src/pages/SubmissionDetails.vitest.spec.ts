@@ -4,9 +4,17 @@ import {
   SubmissionStatus,
   SubmissionUserRoles
 } from "src/graphql/generated/graphql"
-import { type Mock, beforeEach, describe, expect, test, vi } from "vitest"
+import {
+  type Mock,
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  test,
+  vi
+} from "vitest"
 import { installApolloClient } from "app/test/vitest/utils"
-import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
+import { installQuasarPlugin } from "app/test/vitest/utils"
 import { mount, flushPromises } from "@vue/test-utils"
 import { useCurrentUser } from "src/use/user"
 import { ref } from "vue"
@@ -20,12 +28,19 @@ installQuasarPlugin({ plugins: { Notify: vi.fn() } as any })
 const mockClient = installApolloClient()
 
 describe("submissions details page mount", () => {
-  const makeWrapper = () =>
-    mount(SubmissionDetailsPage, {
+  let wrapper: ReturnType<typeof mount>
+  const makeWrapper = () => {
+    wrapper = mount(SubmissionDetailsPage, {
       props: {
         id: "1"
       }
     })
+    return wrapper
+  }
+
+  afterEach(() => {
+    wrapper?.unmount()
+  })
 
   const submissionUsersData = {
     submitters: [

@@ -7,6 +7,7 @@ use App\Enums\SubmissionFileImportStatus;
 use App\Models\Submission;
 use App\Models\SubmissionContent;
 use App\Models\SubmissionFile;
+use Exception;
 use GraphQL\Error\Error;
 use Pandoc\Facades\Pandoc;
 
@@ -15,8 +16,8 @@ class UpdateSubmissionContentWithFile
     /**
      * Upload a file, use Pandoc to convert its contents to HTML, and store the HTML in the database
      *
-     * @param  mixed  $_
-     * @param  array<string, mixed>  $args
+     * @param mixed  $_
+     * @param array<string, mixed>  $args
      * @return \App\Models\Submission
      * @throws \App\GraphQL\Mutations\GraphQL\Error\Error
      */
@@ -41,7 +42,7 @@ class UpdateSubmissionContentWithFile
                 ->noStandalone()
                 ->to('html')
                 ->run();
-        } catch (\Exception) {
+        } catch (Exception) {
             throw new Error('Unable to convert file');
         }
 

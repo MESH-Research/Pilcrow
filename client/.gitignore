@@ -45,3 +45,6 @@ yarn-error.log*
 
 # GraphQL codegen
 /src/graphql/generated/
+
+# ESLint cache
+.eslintcache
