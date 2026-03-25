@@ -117,10 +117,10 @@ class ExportPreviewSeeder extends Seeder
     /**
      * Create an inline comment with optional replies.
      *
-     * @param  int        $userId       The comment author's user ID.
-     * @param  array      $highlight    The [from, to] highlight range.
-     * @param  int        $replies      Number of replies to create.
-     * @param  array|null $replyUserIds User IDs to cycle through for replies.
+     * @param int $userId The comment author's user ID.
+     * @param array $highlight The [from, to] highlight range.
+     * @param int $replies Number of replies to create.
+     * @param array|null $replyUserIds User IDs to cycle through for replies.
      * @return \App\Models\InlineComment
      */
     private function createInlineComment(
@@ -151,9 +151,9 @@ class ExportPreviewSeeder extends Seeder
     /**
      * Create an overall comment with optional replies.
      *
-     * @param  int        $userId       The comment author's user ID.
-     * @param  int        $replies      Number of replies to create.
-     * @param  array|null $replyUserIds User IDs to cycle through for replies.
+     * @param int $userId The comment author's user ID.
+     * @param int $replies Number of replies to create.
+     * @param array|null $replyUserIds User IDs to cycle through for replies.
      * @return \App\Models\OverallComment
      */
     private function createOverallComment(
@@ -175,9 +175,9 @@ class ExportPreviewSeeder extends Seeder
     /**
      * Create reply comments on a parent comment.
      *
-     * @param  \App\Models\InlineComment|\App\Models\OverallComment $parent       The parent comment.
-     * @param  int                                                  $count        Number of replies.
-     * @param  array|null                                           $replyUserIds User IDs to cycle through.
+     * @param \App\Models\InlineComment|\App\Models\OverallComment $parent The parent comment.
+     * @param int $count Number of replies.
+     * @param array|null $replyUserIds User IDs to cycle through.
      * @return void
      */
     private function createReplies(
