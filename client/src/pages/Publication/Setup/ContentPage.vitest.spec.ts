@@ -1,4 +1,4 @@
-import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
+import { installQuasarPlugin } from "app/test/vitest/utils"
 import { flushPromises, mount } from "@vue/test-utils"
 import { UPDATE_PUBLICATION_CONTENT } from "src/graphql/mutations"
 import type { UpdatePublicationContentMutation } from "src/graphql/generated/graphql"

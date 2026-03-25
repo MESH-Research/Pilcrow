@@ -806,8 +806,7 @@ class PublicationTest extends ApiTestCase
 
             ]
         );
-        $response->assertJson(fn(AssertableJson $json) =>
-        $json->has('data.updatePublication.style_criterias', 1)
+        $response->assertJson(fn(AssertableJson $json) => $json->has('data.updatePublication.style_criterias', 1)
             ->etc());
     }
 
@@ -844,8 +843,7 @@ class PublicationTest extends ApiTestCase
                 ],
             ]
         );
-        $response->assertJson(fn(AssertableJson $json) =>
-        $json->has('errors', 1));
+        $response->assertJson(fn(AssertableJson $json) => $json->has('errors', 1));
     }
 
     public function testCannotAddTooManyStyleCriteria()
@@ -889,8 +887,7 @@ class PublicationTest extends ApiTestCase
                 ],
             ]
         );
-        $response->assertJson(fn(AssertableJson $json) =>
-        $json->has('errors', 1)
+        $response->assertJson(fn(AssertableJson $json) => $json->has('errors', 1)
             ->etc());
     }
 
@@ -931,8 +928,7 @@ class PublicationTest extends ApiTestCase
                 ],
             ]
         );
-        $response->assertJson(fn(AssertableJson $json) =>
-        $json->where('data.updatePublication.style_criterias.0.name', 'one')
+        $response->assertJson(fn(AssertableJson $json) => $json->where('data.updatePublication.style_criterias.0.name', 'one')
             ->etc());
     }
 }

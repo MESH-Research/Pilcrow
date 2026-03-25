@@ -1,4 +1,4 @@
-import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
+import { installQuasarPlugin } from "app/test/vitest/utils"
 import { mount } from "@vue/test-utils"
 import { useVuelidate } from "@vuelidate/core"
 import { useFormState, formStateKey } from "src/use/forms"

@@ -1,4 +1,4 @@
-import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
+import { installQuasarPlugin } from "app/test/vitest/utils"
 import { mount } from "@vue/test-utils"
 import { Dark } from "quasar"
 import NewPasswordInput from "./NewPasswordInput.vue"

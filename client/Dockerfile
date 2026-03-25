@@ -1,5 +1,5 @@
 ARG NGINX_VERSION=1.29.0-bookworm
-ARG NODE_VERSION=20
+ARG NODE_VERSION=22
 ARG VERSION
 ARG VERSION_URL
 ARG VERSION_DATE
@@ -32,7 +32,7 @@ FROM base AS unit-test
 ARG BUILDSTAMP
 RUN --mount=type=cache,target=/usr/local/share/.cache/yarn/v6 \
     yarn test:unit:ci \
-      --reporter=basic \
+      --reporter=default \
       --reporter=github-actions
 
 FROM base AS lint

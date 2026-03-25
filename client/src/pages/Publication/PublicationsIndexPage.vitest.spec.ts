@@ -1,4 +1,4 @@
-import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
+import { installQuasarPlugin } from "app/test/vitest/utils"
 import { flushPromises, mount } from "@vue/test-utils"
 import { installApolloClient } from "app/test/vitest/utils"
 import { GET_PUBLICATIONS } from "src/graphql/queries"

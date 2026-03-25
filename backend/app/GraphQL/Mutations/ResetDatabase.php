@@ -11,8 +11,8 @@ class ResetDatabase
     /**
      * Reset the database and run seeders.
      *
-     * @param  mixed  $_  unused root value
-     * @param  array<string, mixed>  $_args  unused arguments
+     * @param mixed  $_  unused root value
+     * @param array<string, mixed>  $_args  unused arguments
      * @return string artisan output
      */
     public function __invoke($_, array $_args): string

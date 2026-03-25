@@ -13,7 +13,7 @@ class NotifyUsersAboutAcceptedReviewerInvitation
     /**
      * Handle the event.
      *
-     * @param  \App\Events\ReviewerInvited  $event
+     * @param \App\Events\ReviewerInvited  $event
      * @return void
      */
     public function handle(EventsReviewerInvitationAccepted $event)

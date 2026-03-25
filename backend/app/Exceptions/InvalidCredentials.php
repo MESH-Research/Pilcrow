@@ -3,10 +3,11 @@ declare(strict_types=1);
 
 namespace App\Exceptions;
 
+use Exception;
 use GraphQL\Error\ClientAware;
 use GraphQL\Error\ProvidesExtensions;
 
-class InvalidCredentials extends \Exception implements ClientAware, ProvidesExtensions
+class InvalidCredentials extends Exception implements ClientAware, ProvidesExtensions
 {
     /**
      * Returns true when exception message is safe to be displayed to a client.

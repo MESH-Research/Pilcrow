@@ -14,8 +14,8 @@ final class InviteSubmissionUser
      * invitation with an optional message to the supplied email inviting them to
      * be a reviewer
      *
-     * @param  null  $_
-     * @param  array{submission_id: int, email: string, message?: string}  $args
+     * @param null  $_
+     * @param array{submission_id: int, email: string, message?: string}  $args
      * @return \App\Models\Submission
      */
     public function inviteReviewer($_, array $args)
@@ -36,8 +36,8 @@ final class InviteSubmissionUser
      * invitation with an optional message to the supplied email inviting them to
      * be a review coordinator
      *
-     * @param  null  $_
-     * @param  array{"submission_id": int, "email": string, "message"?: string}  $args
+     * @param null  $_
+     * @param array{"submission_id": int, "email": string, "message"?: string}  $args
      * @return \App\Models\Submission
      */
     public function inviteReviewCoordinator($_, array $args)

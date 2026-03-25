@@ -1,7 +1,7 @@
 name: docs
 services:
   dev:
-    type: node:20
+    type: node:22
     build:
       - yarn
     port: 5173

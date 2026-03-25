@@ -63,16 +63,10 @@ class SubmissionTest extends ApiTestCase
             ['id' => $submission->id]
         );
 
-        $response->assertJson(fn(AssertableJson $json) =>
-        $json
-            ->has('data', fn($json) =>
-            $json->has('submission', fn($json) =>
-            $json->has('reviewers', 1, fn($json) =>
-            $json->where('id', (string)$reviewer->id))
-                ->has('submitters', 1, fn($json) =>
-                $json->where('id', (string)$submitter->id))
-                ->has('review_coordinators', 1, fn($json) =>
-                $json->where('id', (string)$reviewCoordinator->id))
+        $response->assertJson(fn(AssertableJson $json) => $json
+            ->has('data', fn($json) => $json->has('submission', fn($json) => $json->has('reviewers', 1, fn($json) => $json->where('id', (string)$reviewer->id))
+                ->has('submitters', 1, fn($json) => $json->where('id', (string)$submitter->id))
+                ->has('review_coordinators', 1, fn($json) => $json->where('id', (string)$reviewCoordinator->id))
                 ->etc())));
     }
 
@@ -477,12 +471,8 @@ class SubmissionTest extends ApiTestCase
 
         $response = $this->executeSubmissionRoleAssignment($role, $submission, $user);
 
-        $response->assertJson(fn(AssertableJson $json) =>
-        $json
-            ->has('data', fn($json) =>
-            $json->has('updateSubmission', fn($json) =>
-            $json->has($role, 1, fn($json) =>
-            $json->where('id', (string)$user->id))
+        $response->assertJson(fn(AssertableJson $json) => $json
+            ->has('data', fn($json) => $json->has('updateSubmission', fn($json) => $json->has($role, 1, fn($json) => $json->where('id', (string)$user->id))
                 ->etc())));
     }
 
@@ -507,12 +497,8 @@ class SubmissionTest extends ApiTestCase
         $user = User::factory()->create();
 
         $response = $this->executeSubmissionRoleAssignment($role, $submission, $user);
-        $response->assertJson(fn(AssertableJson $json) =>
-        $json
-            ->has('data', fn($json) =>
-            $json->has('updateSubmission', fn($json) =>
-            $json->has($role, 1, fn($json) =>
-            $json->where('id', (string)$user->id))
+        $response->assertJson(fn(AssertableJson $json) => $json
+            ->has('data', fn($json) => $json->has('updateSubmission', fn($json) => $json->has($role, 1, fn($json) => $json->where('id', (string)$user->id))
                 ->etc())));
     }
 
@@ -1106,11 +1092,11 @@ class SubmissionTest extends ApiTestCase
                 $submission = $user->publications->first()->submissions->first();
                 break;
             case Role::APPLICATION_ADMINISTRATOR:
-                $user = $this->beAppAdmin();
+                $this->beAppAdmin();
                 $submission = Submission::factory()->create();
                 break;
             default:
-                $user = User::factory()->create();
+                User::factory()->create();
                 $submission = Submission::factory()->create();
         }
         if ($passes) {

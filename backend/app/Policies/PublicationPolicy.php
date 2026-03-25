@@ -15,7 +15,7 @@ class PublicationPolicy
     /**
      * Determine whether the user can create models.
      *
-     * @param  \App\Models\User  $user
+     * @param \App\Models\User  $user
      * @return bool
      */
     public function create(User $user)
@@ -49,7 +49,7 @@ class PublicationPolicy
     /**
      * Determine whether the user can view publications.
      *
-     * @param  \App\Models\User  $user
+     * @param \App\Models\User  $user
      * @param \App\Models\Publication $publication
      * @return bool
      */

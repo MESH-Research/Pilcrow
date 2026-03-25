@@ -1,4 +1,4 @@
-/* eslint-env node */
+/* global module */
 module.exports = [
   {
     path: "/graphql",

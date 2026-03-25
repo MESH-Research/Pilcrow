@@ -6,6 +6,7 @@ namespace App\GraphQL\Mutations;
 use App\Exceptions\ClientException;
 use App\Models\InlineComment;
 use App\Models\Submission;
+use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 final readonly class DeleteInlineComment
@@ -14,7 +15,7 @@ final readonly class DeleteInlineComment
      * Soft delete an inline comment of a submission
      *
      * @param null $_
-     * @param  array{id: string}  $args
+     * @param array{id: string}  $args
      * @return \App\Models\Submission
      * @throws \App\Exceptions\ClientException
      */
@@ -29,7 +30,7 @@ final readonly class DeleteInlineComment
             $inline_comment->delete();
 
             return $inline_comment->submission;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw new ClientException('Error', 'deleteInlineComment', 'UNABLE_TO_DELETE_COMMENT');
         }
     }

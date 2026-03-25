@@ -1,4 +1,4 @@
-import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-vitest"
+import { installQuasarPlugin } from "app/test/vitest/utils"
 import { mount } from "@vue/test-utils"
 import TimeAgo from "javascript-time-ago"
 import en from "javascript-time-ago/locale/en.json"
