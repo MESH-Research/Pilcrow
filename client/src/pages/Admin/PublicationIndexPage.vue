@@ -1,133 +1,263 @@
 <template>
-  <div>
-    <h2 class="q-pl-lg">{{ $t("publication.admin_header") }}</h2>
-    <q-expansion-item
-      :label="$t('publication.create_button')"
-      switch-toggle-side
-      header-class="light-grey"
-      data-cy="create_pub_button"
+  <div class="q-px-lg">
+    <nav class="q-pt-md">
+      <q-breadcrumbs>
+        <q-breadcrumbs-el
+          label="Administration"
+          :to="{ name: 'admin:dashboard' }"
+        />
+        <q-breadcrumbs-el label="Publications" />
+      </q-breadcrumbs>
+    </nav>
+    <h2>{{ $t("publication.admin_header") }}</h2>
+    <QueryTable
+      ref="queryTableRef"
+      :query="GetAdminPublicationsDocument"
+      t-prefix="admin.publication"
+      :columns="columns"
+      :variables="filterVariables"
+      sync-url
+      :default-sort="{ sortBy: 'name' }"
+      @row-click="onRowClick"
     >
-      <CreateForm @created="publicationCreated" />
-    </q-expansion-item>
-    <section v-if="!loading" class="column q-gutter-md items-center">
-      <q-list
-        v-if="publications.length !== 0"
-        bordered
-        separator
-        data-cy="publications_list"
-        class="full-width"
-        role="list"
-      >
-        <q-item v-for="publication in publications" :key="publication.id">
-          <q-item-section class="q-pa-sm">
-            <q-item-label>
-              {{ publication.name }}
-            </q-item-label>
-          </q-item-section>
-          <q-item-section side>
-            <q-btn-group flat>
-              <q-btn
-                icon="visibility"
-                class="dark-grey"
-                :to="{
-                  name: 'publication:home',
-                  params: { id: publication.id }
-                }"
-                :aria-label="$t('publication.view_button_aria')"
-              >
-                <q-tooltip :delay="500">
-                  {{ $t("publication.view_button") }}
-                </q-tooltip>
-              </q-btn>
-
-              <q-btn-dropdown
-                auto-close
-                class="dark-grey"
-                :aria-label="$t('publication.configure')"
-              >
-                <q-list>
-                  <q-item :to="destRoute(publication.id, 'basic')">
-                    <q-item-section avatar>
-                      <q-icon class="dark-grey" name="tune" />
-                    </q-item-section>
-                    <q-item-section>
-                      {{ $t(pageTitleKey("basic")) }}
-                    </q-item-section>
-                  </q-item>
-                  <q-item :to="destRoute(publication.id, 'users')">
-                    <q-item-section avatar>
-                      <q-icon class="dark-grey" name="people" />
-                    </q-item-section>
-                    <q-item-section>
-                      {{ $t(pageTitleKey("users")) }}
-                    </q-item-section>
-                  </q-item>
-                  <q-item :to="destRoute(publication.id, 'criteria')">
-                    <q-item-section avatar>
-                      <q-icon class="dark-grey" name="card_membership" />
-                    </q-item-section>
-                    <q-item-section>
-                      {{ $t(pageTitleKey("criteria")) }}
-                    </q-item-section>
-                  </q-item>
-                  <q-item :to="destRoute(publication.id, 'content')">
-                    <q-item-section avatar>
-                      <q-icon class="dark-grey" name="toc" />
-                    </q-item-section>
-                    <q-item-section>
-                      {{ $t(pageTitleKey("content")) }}
-                    </q-item-section>
-                  </q-item>
-                </q-list>
-                <template #label>
-                  <q-icon name="settings" />
-                  <q-tooltip :delay="500">{{
-                    $t("publication.configure")
-                  }}</q-tooltip>
-                </template>
-              </q-btn-dropdown>
-            </q-btn-group>
-          </q-item-section>
-        </q-item>
-      </q-list>
-      <q-pagination
-        v-if="paginatorInfo"
-        data-cy="publications_pagination"
-        v-bind="binds"
-        class="col"
-        v-on="listeners"
-      />
-      <div v-else data-cy="no_publications_message">
-        {{ $t("publications.empty") }}
-      </div>
-    </section>
+      <template #top-before>
+        <PublicationsFilterPanel
+          v-model:visibility-filter="visibilityFilter"
+          v-model:accepting-filter="acceptingFilter"
+        />
+      </template>
+      <template #top-after>
+        <q-btn
+          color="primary"
+          icon="add"
+          :label="$t('publication.create_button')"
+          data-cy="create_pub_button"
+          @click="showCreateDialog = true"
+        />
+      </template>
+      <template #body-cell-name="rProps">
+        <q-td :props="rProps">
+          <router-link
+            class="text-primary"
+            :to="{
+              name: 'publication:home',
+              params: { id: rProps.row.id }
+            }"
+          >
+            {{ rProps.value }}
+          </router-link>
+        </q-td>
+      </template>
+      <template #body-cell-actions="rProps">
+        <q-td :props="rProps">
+          <q-btn
+            color="primary"
+            size="sm"
+            dense
+            icon="settings"
+            label="Configure"
+            :to="destRoute(rProps.value as string, 'basic')"
+          />
+        </q-td>
+      </template>
+    </QueryTable>
+    <q-dialog v-model="showCreateDialog">
+      <q-card style="min-width: 450px">
+        <q-card-section class="bg-accent text-white">
+          <div class="text-subtitle1 text-weight-bold">
+            {{ $t("publication.create_button") }}
+          </div>
+        </q-card-section>
+        <q-card-section class="q-pt-md">
+          <CreateForm ref="createFormRef" @created="publicationCreated" />
+        </q-card-section>
+        <q-card-actions align="right" class="q-px-md q-pb-md">
+          <q-btn v-close-popup flat label="Cancel" color="grey-7" />
+          <q-btn
+            color="accent"
+            icon="add"
+            label="Create"
+            @click="createFormRef?.submit()"
+          />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </div>
 </template>
 
+<script lang="ts">
+import { graphql } from "src/graphql/generated"
+
+graphql(`
+  query GetAdminPublications(
+    $page: Int
+    $first: Int
+    $search: String
+    $orderBy: [QueryPublicationsOrderByOrderByClause!]
+    $public: Boolean
+    $accepting_submissions: Boolean
+  ) {
+    publications(
+      page: $page
+      first: $first
+      search: $search
+      orderBy: $orderBy
+      public: $public
+      accepting_submissions: $accepting_submissions
+    ) {
+      ...QueryTable
+      data {
+        id
+        name
+        is_publicly_visible
+        is_accepting_submissions
+        created_at
+      }
+    }
+  }
+`)
+</script>
+
 <script setup lang="ts">
-import { GET_PUBLICATIONS } from "src/graphql/queries"
-import { usePagination } from "src/use/pagination"
-import type { Publication } from "src/graphql/generated/graphql"
+import QueryTable, {
+  type QueryTableColumn
+} from "src/components/tables/QueryTable.vue"
+import { GetAdminPublicationsDocument } from "src/graphql/generated/graphql"
 import CreateForm from "src/components/forms/Publication/CreateForm.vue"
-import { useRouter } from "vue-router"
+import PublicationsFilterPanel, {
+  defaultVisibility,
+  defaultAccepting
+} from "./components/PublicationsFilterPanel.vue"
+import DateTimeCell from "src/components/tables/common/DateTimeCell.vue"
+import { useRouter, useRoute } from "vue-router"
+import { ref, computed, watch, onMounted } from "vue"
 
 const destRoute = (id: string, page: string) => ({
   name: `publication:setup:${page}`,
   params: { id }
 })
 
-const pageTitleKey = (page: string) => `publication.setup_pages.${page}`
-const pubsPaginator = usePagination<Publication>(GET_PUBLICATIONS)
-const {
-  binds,
-  listeners,
-  data: publications,
-  paginatorInfo,
-  query: { loading }
-} = pubsPaginator
+const columns: QueryTableColumn[] = [
+  {
+    name: "name",
+    field: "name",
+    align: "left",
+    sortable: true,
+    label: "Name"
+  },
+  {
+    name: "is_publicly_visible",
+    field: (row) => (row.is_publicly_visible ? "Public" : "Hidden"),
+    align: "center",
+    sortable: true,
+    label: "Visibility"
+  },
+  {
+    name: "is_accepting_submissions",
+    field: (row) => (row.is_accepting_submissions ? "Yes" : "No"),
+    align: "center",
+    sortable: true,
+    label: "Accepting Submissions"
+  },
+  {
+    name: "created_at",
+    field: "created_at",
+    align: "left",
+    sortable: true,
+    component: DateTimeCell,
+    label: "Created"
+  },
+  {
+    name: "actions",
+    field: "id",
+    align: "right",
+    label: "Actions"
+  }
+]
 
-const { push } = useRouter()
+const showCreateDialog = ref(false)
+const queryTableRef = ref<InstanceType<typeof QueryTable> | null>(null)
+const createFormRef = ref<InstanceType<typeof CreateForm> | null>(null)
+
+const route = useRoute()
+const router = useRouter()
+
+function parseList(value: string | string[] | undefined): string[] {
+  if (!value) return []
+  const str = Array.isArray(value) ? value[0] : value
+  if (!str) return []
+  const inner = str.startsWith("[") ? str.slice(1, -1) : str
+  return inner ? inner.split(",") : []
+}
+
+function formatList(values: string[]): string {
+  return `[${values.join(",")}]`
+}
+
+const visibilityFilter = ref<string[]>(
+  parseList(route.query.visibility as string)
+)
+const acceptingFilter = ref<string[]>(
+  parseList(route.query.accepting as string)
+)
+
+onMounted(() => {
+  if (visibilityFilter.value.length === 0) {
+    visibilityFilter.value = [...defaultVisibility]
+  }
+  if (acceptingFilter.value.length === 0) {
+    acceptingFilter.value = [...defaultAccepting]
+  }
+})
+
+const filterVariables = computed(() => {
+  const vars: Record<string, unknown> = {}
+  // Only pass the filter when exactly one option is selected
+  if (visibilityFilter.value.length === 1) {
+    vars.public = visibilityFilter.value[0] === "public"
+  }
+  if (acceptingFilter.value.length === 1) {
+    vars.accepting_submissions = acceptingFilter.value[0] === "yes"
+  }
+  return vars
+})
+
+watch([visibilityFilter, acceptingFilter], ([visibility, accepting]) => {
+  if (queryTableRef.value) {
+    queryTableRef.value.page = 1
+  }
+
+  const query: Record<string, string> = { ...route.query } as Record<
+    string,
+    string
+  >
+
+  const isDefaultVisibility =
+    visibility.length === defaultVisibility.length &&
+    visibility.every((v) => defaultVisibility.includes(v))
+  if (!isDefaultVisibility) query.visibility = formatList(visibility)
+  else delete query.visibility
+
+  const isDefaultAccepting =
+    accepting.length === defaultAccepting.length &&
+    accepting.every((v) => defaultAccepting.includes(v))
+  if (!isDefaultAccepting) query.accepting = formatList(accepting)
+  else delete query.accepting
+
+  router.replace({ query })
+})
+
+const { push } = router
+
+function onRowClick(_evt: Event, row: { id: string }) {
+  push({
+    name: "publication:home",
+    params: { id: row.id }
+  })
+}
+
 function publicationCreated(publication: { id: string }) {
+  showCreateDialog.value = false
   push({
     name: "publication:setup:basic",
     params: { id: publication.id }

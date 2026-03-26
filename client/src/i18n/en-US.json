@@ -146,7 +146,7 @@
     "publications": "Publications",
     "submissions": "Submissions",
     "reviews": "Reviews",
-    "user_list": "All Users",
+    "user_list": "Users",
     "notification_button": "View Notifications",
     "application_administration": "Application Administration",
     "account_dropdown_aria": "User Account Dropdown",
@@ -1256,5 +1256,87 @@
   "generic": {
     "more_info": "More info"
   },
-  "app_banner_dismiss_tip": "Dismiss for 1 week"
+  "app_banner_dismiss_tip": "Dismiss for 1 week",
+  "admin": {
+    "dashboard": {
+      "users_description": "Manage user accounts and permissions.",
+      "publications_description": "Manage publications and their settings."
+    },
+    "publication": {
+      "headers": {
+        "name": "Name",
+        "is_publicly_visible": "Visibility",
+        "is_accepting_submissions": "Accepting Submissions",
+        "created_at": "Created",
+        "actions": "Actions"
+      },
+      "btn": {
+        "create": "Create"
+      }
+    },
+    "users": {
+      "headers": {
+        "name": "Name",
+        "username": "Username",
+        "email": "Email",
+        "created_at": "Created"
+      },
+      "details": {
+        "title": "User Details",
+        "username": "Username",
+        "name": "Name",
+        "email": "Email",
+        "role": "Role",
+        "created_at": "Created",
+        "verified_at": "Email Verified",
+        "not_verified": "Not Verified",
+        "isAdmin": "Application Administrator",
+        "isNormal": "Standard User",
+        "roles": {
+          "submitter": "Submitter",
+          "reviewer": "Reviewer",
+          "review_coordinator": "Review Coordinator",
+          "publication_admin": "Publication Administrator",
+          "editor": "Editor"
+        },
+        "submissions": {
+          "headers": {
+            "id": "ID",
+            "status": "Status",
+            "title": "Title",
+            "created_at": "Created",
+            "updated_at": "Updated",
+            "actions": "Actions",
+            "role": "Role"
+          },
+          "btn": {
+            "create": "Create"
+          },
+          "actions": {
+            "view": "View"
+          },
+          "filters": {
+            "status": "Status",
+            "roles": "Roles",
+            "publication": "Publication"
+          }
+        },
+        "no_publications": "This user is not assigned to any publications.",
+        "no_submissions": "This user is not attached to any submissions.",
+        "publications": {
+          "headers": {
+            "name": "Name",
+            "role": "Role",
+            "actions": ""
+          },
+          "actions": {
+            "view": "View"
+          },
+          "btn": {
+            "create": "Create"
+          }
+        }
+      }
+    }
+  }
 }

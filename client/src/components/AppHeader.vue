@@ -60,27 +60,12 @@
             </q-item>
             <div v-if="isAppAdmin">
               <q-separator />
-              <q-item dense>
-                <q-item-section>
-                  <q-item-label class="text-bold">
-                    {{ $t("header.application_administration") }}
-                  </q-item-label>
-                </q-item-section>
-              </q-item>
-              <q-item to="/admin/users">
+              <q-item :to="{ name: 'admin:dashboard' }">
                 <q-item-section avatar>
-                  <q-icon name="groups" />
+                  <q-icon name="admin_panel_settings" />
                 </q-item-section>
                 <q-item-section>
-                  {{ $t("header.user_list") }}
-                </q-item-section>
-              </q-item>
-              <q-item :to="{ name: 'admin:publication:index' }">
-                <q-item-section avatar>
-                  <q-icon name="collections_bookmark" />
-                </q-item-section>
-                <q-item-section>
-                  {{ $t("header.publications") }}
+                  {{ $t("header.application_administration") }}
                 </q-item-section>
               </q-item>
             </div>

@@ -233,10 +233,12 @@ class SubmissionTest extends ApiTestCase
                     id
                     name
                     submissions {
-                        id
-                        title
-                        pivot {
-                            role_id
+                        data {
+                            role
+                            submission {
+                                id
+                                title
+                            }
                         }
                     }
                 }
@@ -248,11 +250,13 @@ class SubmissionTest extends ApiTestCase
                 'id' => (string)$user->id,
                 'name' => 'Test User #1 With Submission',
                 'submissions' => [
-                    [
-                        'id' => (string)$submission->id,
-                        'title' => 'Test Submission #5 for Test User #1 With Submission',
-                        'pivot' => [
-                            'role_id' => Role::SUBMITTER_ROLE_ID,
+                    'data' => [
+                        [
+                            'role' => 'submitter',
+                            'submission' => [
+                                'id' => (string)$submission->id,
+                                'title' => 'Test Submission #5 for Test User #1 With Submission',
+                            ],
                         ],
                     ],
                 ],

@@ -38,7 +38,7 @@ describe("CreateForm", () => {
     const wrapper = makeWrapper()
     wrapper.trigger("create")
     wrapper.findComponent({ ref: "nameInput" }).setValue(name)
-    wrapper.findComponent({ ref: "submitBtn" }).trigger("submit")
+    wrapper.vm.submit()
     await flushPromises()
     expect(warn).toHaveBeenCalledTimes(1)
     expect(warn).toHaveBeenCalledWith(
