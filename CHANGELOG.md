@@ -3,6 +3,28 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.34.0](https://github.com/MESH-Research/Pilcrow/compare/v0.33.0...v0.34.0) (2026-03-26)
+
+
+### Features
+
+* **ci:** add schema snapshot drift detection between client and backend ([ba9e9ef](https://github.com/MESH-Research/Pilcrow/commit/ba9e9effd05bc66ac8f84373611ace185faffda4))
+* **client:** add TypeScript infrastructure ([a55719b](https://github.com/MESH-Research/Pilcrow/commit/a55719b7db6a2fb27441619258918a179d2c78b5))
+* **client:** set up GraphQL codegen with TypeScript type generation ([02248c5](https://github.com/MESH-Research/Pilcrow/commit/02248c5ff9b389e4be126914132442283a565caa))
+* **dev:** show local dev folder name when not default ([#2240](https://github.com/MESH-Research/Pilcrow/issues/2240)) ([edcdbbf](https://github.com/MESH-Research/Pilcrow/commit/edcdbbf9e8a2171c8b3ffc39455e95f2cccf8337))
+* Include submission content with comment exports ([#2226](https://github.com/MESH-Research/Pilcrow/issues/2226)) ([ed69845](https://github.com/MESH-Research/Pilcrow/commit/ed69845b98f0af1c5c7ca1cbb8d2574c2c8085c2))
+
+
+### Bug Fixes
+
+* **backend:** resolve new phpcs lint violations from CakePHP codesniffer v5 ([b4721cd](https://github.com/MESH-Research/Pilcrow/commit/b4721cde37af9758af3fa8ebe8d2d6625ccf2322))
+* **ci:** change detection, schema drift test, and lando tooling ([#2235](https://github.com/MESH-Research/Pilcrow/issues/2235)) ([40927ec](https://github.com/MESH-Research/Pilcrow/commit/40927ec0c343ffa3dc0284193eabd189699f1f00))
+* **client:** close attribute selector bracket in VerifyEmail test ([b2ba34f](https://github.com/MESH-Research/Pilcrow/commit/b2ba34f6ad0cb0309237097777f8853eb56fd9dc))
+* **client:** replace vite-plugin-checker eslint with vite-plugin-eslint2 ([fea6956](https://github.com/MESH-Research/Pilcrow/commit/fea6956b73caf77018af0f58a950f6b6a57e7f4f))
+* Quasar dev entry path and codegen schema consistency ([#2238](https://github.com/MESH-Research/Pilcrow/issues/2238)) ([255f498](https://github.com/MESH-Research/Pilcrow/commit/255f4985c441b7238e42d9bf304d34f8b9a81c56))
+* remove my.cnf override and add view:clear to build ([#2239](https://github.com/MESH-Research/Pilcrow/issues/2239)) ([aeffec2](https://github.com/MESH-Research/Pilcrow/commit/aeffec2d293b303177052e26cc109c345457e9df))
+* Replace arbitrary command execution in integration testing ([#2228](https://github.com/MESH-Research/Pilcrow/issues/2228)) ([5418a8d](https://github.com/MESH-Research/Pilcrow/commit/5418a8da8a427813f02ced2546168b7faa15cfdf))
+
 ## [0.33.0](https://github.com/MESH-Research/Pilcrow/compare/v0.32.1...v0.33.0) (2026-03-02)
 
 
