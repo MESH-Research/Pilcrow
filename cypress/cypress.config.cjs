@@ -18,17 +18,16 @@ module.exports = defineConfig({
           rejectUnauthorized: false
         })
       })
+      on("before:browser:launch", (browser = {}, launchOptions) => {
+        if (browser.family === "firefox") {
+          launchOptions.preferences["ui.prefersReducedMotion"] = 1
+        }
+        if (browser.family === "chromium" && browser.name !== "electron") {
+          launchOptions.args.push("--force-prefers-reduced-motion")
+        }
+        return launchOptions
+      })
       on("task", {
-        "before:browser:launch"(browser = {}, launchOptions) {
-          const REDUCE = 1
-          if (browser.family === "firefox") {
-            launchOptions.preferences["ui.prefersReducedMotion"] = REDUCE
-          }
-          if (browser.family === "chromium" && browser.name !== "electron") {
-            launchOptions.args.push("--force-prefers-reduced-motion")
-          }
-          return launchOptions
-        },
         log(message) {
           console.log(message)
           return null

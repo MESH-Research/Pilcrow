@@ -8,10 +8,13 @@ cypress:
           image: "cypress/base:18.16.1"
           environment:
             ELECTRON_EXTRA_LAUNCH_ARGS: "--force-prefers-reduced-motion"
+            NODE_TLS_REJECT_UNAUTHORIZED: "0"
+        build:
+          - yarn config set strict-ssl false -g && cd /app/cypress && yarn --ignore-engines
     tooling:
       cypress:
         service: cypress
-        dir: /app/client
+        dir: /app/cypress
         cmd: yarn cypress
 mailhog:
   description: Catch mail output from Pilcrow with mailhog.
