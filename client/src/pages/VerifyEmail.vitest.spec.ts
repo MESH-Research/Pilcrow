@@ -99,7 +99,7 @@ describe("VerifyEmailPage", () => {
     })
     const wrapper = await createWrapper()
     expect((wrapper.vm as any).status).toBe("failure")
-    const errorUl = wrapper.find("ul[data-cy=errors")
+    const errorUl = wrapper.find("ul[data-cy=errors]")
     expect(errorUl.text()).toContain("TEST_ERROR_CODE")
   })
 })
