@@ -20,16 +20,16 @@ jobs:
         # run 3 copies of the current job in parallel
         containers: [1, 2, 3, 4]
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "22"
       - uses: ./.github/actions/start-stack
         with:
           version: ${{ inputs.version }}
       - run: cd cypress && yarn install
       - name: Cypress Run
-        uses: cypress-io/github-action@v3
+        uses: cypress-io/github-action@v7
         env:
           ELECTRON_EXTRA_LAUNCH_ARGS: "--force-prefers-reduced-motion"
           CYPRESS_defaultCommandTimeout: 10000

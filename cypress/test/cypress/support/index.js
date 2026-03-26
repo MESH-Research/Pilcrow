@@ -17,6 +17,14 @@
 import "cypress-axe"
 import "./commands"
 
+// Disable animations/transitions in Electron where --force-prefers-reduced-motion is unavailable.
+Cypress.on("window:before:load", (win) => {
+  const style = win.document.createElement("style")
+  style.textContent =
+    "*, *::before, *::after { animation-duration: 0s !important; transition-duration: 0s !important; }"
+  win.document.head.appendChild(style)
+})
+
 const resizeObserverLoopError = "ResizeObserver loop limit exceeded"
 
 Cypress.on("uncaught:exception", (err) => {

@@ -169,9 +169,9 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: yarn
           cache-dependency-path: cypress/yarn.lock
       - name: Install dependencies
