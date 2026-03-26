@@ -24,10 +24,16 @@
 
 <script setup lang="ts">
 import AvatarImage from "./AvatarImage.vue"
+import type { avatarImageFragment } from "src/graphql/generated/graphql"
+
+interface User extends avatarImageFragment {
+  name?: string | null
+  username?: string | null
+}
 
 interface Props {
   index?: number | null
-  user?: Record<string, unknown>
+  user?: User
   action?: string
 }
 withDefaults(defineProps<Props>(), {
@@ -36,9 +42,7 @@ withDefaults(defineProps<Props>(), {
   action: ""
 })
 interface Emits {
-  actionClick: [
-    payload: { user: Record<string, unknown> | undefined; action: string }
-  ]
+  actionClick: [payload: { user: User | undefined; action: string }]
 }
 
 defineEmits<Emits>()

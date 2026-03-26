@@ -81,7 +81,7 @@ class OverallCommentSeeder extends Seeder
         $datetime = $faker->dateTimeBetween($time, Carbon::now());
 
         return OverallComment::factory()->create([
-            'submission_id' => 100,
+            'submission_id' => $parent->submission_id,
             'parent_id' => $parent->id,
             'reply_to_id' => $reply_to->id,
             'created_at' => $datetime,
