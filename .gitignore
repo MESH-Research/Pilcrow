@@ -39,6 +39,8 @@ data/
 .env
 #Lando Local Override
 .lando.local.yml
+#Lando build cache
+.lando/cache/
 #Vendor Files
 node_modules/
 backend/vendor/**/*
