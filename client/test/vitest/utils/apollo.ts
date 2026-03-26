@@ -15,7 +15,7 @@ const cache = new InMemoryCache({
 const createMockClient = (opts: MockApolloClientOptions = {}) =>
   createClient({
     ...opts,
-    connectToDevTools: false,
+    devtools: { enabled: false },
     defaultOptions: { watchQuery: { fetchPolicy: "network-only" } },
     cache
   })

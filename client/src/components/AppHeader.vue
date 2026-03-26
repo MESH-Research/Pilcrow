@@ -58,6 +58,12 @@
                 {{ $t("settings.page_title") }}
               </q-item-section>
             </q-item>
+            <q-item clickable to="/record_of_review">
+              <q-item-section avatar>
+                <q-icon name="description" />
+              </q-item-section>
+              <q-item-section> Record of Review </q-item-section>
+            </q-item>
             <div v-if="isAppAdmin">
               <q-separator />
               <q-item dense>

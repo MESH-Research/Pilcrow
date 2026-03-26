@@ -232,13 +232,6 @@ export function useStatusChangeControls(
 export function useSubmissionExport(
   submission: Ref<Submission | null | undefined>
 ) {
-  const {
-    isAppAdmin,
-    isPublicationAdmin,
-    isEditor,
-    isReviewCoordinator,
-    isSubmitter
-  } = useCurrentUser()
 
   const exportVisibleStates = [
     "REJECTED",
@@ -247,18 +240,6 @@ export function useSubmissionExport(
     "ARCHIVED",
     "EXPIRED"
   ]
-  const isDisabledByRole = computed(() => {
-    if (!submission.value) {
-      return true
-    }
-    return !(
-      isAppAdmin.value ||
-      isPublicationAdmin(submission.value.publication) ||
-      isEditor(submission.value.publication) ||
-      isReviewCoordinator(submission.value) ||
-      isSubmitter(submission.value)
-    )
-  })
   const isDisabledByState = computed(() => {
     if (!submission.value) {
       return true
@@ -266,5 +247,5 @@ export function useSubmissionExport(
     return !exportVisibleStates.includes(submission.value.status)
   })
 
-  return { isDisabledByRole, isDisabledByState }
+  return { isDisabledByState }
 }
