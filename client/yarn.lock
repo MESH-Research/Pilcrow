@@ -1954,19 +1954,12 @@
   dependencies:
     "@types/node" "*"
 
-"@types/node@*":
+"@types/node@*", "@types/node@>=20.0.0":
   version "25.5.0"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-25.5.0.tgz#5c99f37c443d9ccc4985866913f1ed364217da31"
   integrity sha512-jp2P3tQMSxWugkCUKLRPVUpGaL5MVFwF8RDuSRztfwgN1wmqJeMSbKlnEtQqU8UrhTmzEmZdu2I6v2dpp7XIxw==
   dependencies:
     undici-types "~7.18.0"
-
-"@types/node@^20.0.0":
-  version "20.19.37"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-20.19.37.tgz#b4fb4033408dd97becce63ec932c9ec57a9e2919"
-  integrity sha512-8kzdPJ3FsNsVIurqBs7oodNnCEVbni9yUEkaHbgptDACOPW04jimGagZ51E6+lXUwJjgnBw+hyko/lkFWCldqw==
-  dependencies:
-    undici-types "~6.21.0"
 
 "@types/qs@*":
   version "6.15.0"
@@ -2018,7 +2011,7 @@
   resolved "https://registry.yarnpkg.com/@types/whatwg-mimetype/-/whatwg-mimetype-3.0.2.tgz#e5e06dcd3e92d4e622ef0129637707d66c28d6a4"
   integrity sha512-c2AKvDT8ToxLIOUlN51gTiHXflsfIFisS4pO7pDPoKouJCESkhZnEy623gwP9laCy5lnLDAw1vAzu2vM2YLOrA==
 
-"@types/ws@^8.0.0":
+"@types/ws@^8.0.0", "@types/ws@^8.18.1":
   version "8.18.1"
   resolved "https://registry.yarnpkg.com/@types/ws/-/ws-8.18.1.tgz#48464e4bf2ddfd17db13d845467f6070ffea4aa9"
   integrity sha512-ThVF6DCVhA8kUGy+aazFQ4kXQ7E1Ty7A3ypFOe0IcJV8O/M511G99AW24irKrW56Wt44yG9+ij8FaqoBGkuBXg==
@@ -4394,14 +4387,17 @@ graphql@^16.6.0:
   resolved "https://registry.yarnpkg.com/graphql/-/graphql-16.13.1.tgz#38ae5c76fbc4a009e0004dca6c76c370a1da7b54"
   integrity sha512-gGgrVCoDKlIZ8fIqXBBb0pPKqDgki0Z/FSKNiQzSGj2uEYHr1tq5wmBegGwJx6QB5S5cM0khSBpi/JFHMCvsmQ==
 
-happy-dom@^18.0.0:
-  version "18.0.1"
-  resolved "https://registry.yarnpkg.com/happy-dom/-/happy-dom-18.0.1.tgz#8f8a2199462842deb675f54e405af55f3b674540"
-  integrity sha512-qn+rKOW7KWpVTtgIUi6RVmTBZJSe2k0Db0vh1f7CWrWclkkc7/Q+FrOfkZIb2eiErLyqu5AXEzE7XthO9JVxRA==
+happy-dom@^20.0.0:
+  version "20.8.8"
+  resolved "https://registry.yarnpkg.com/happy-dom/-/happy-dom-20.8.8.tgz#ad87a83340161943d7f7425dae9ca237b6cd4bc7"
+  integrity sha512-5/F8wxkNxYtsN0bXfMwIyNLZ9WYsoOYPbmoluqVJqv8KBUbcyKZawJ7uYK4WTX8IHBLYv+VXIwfeNDPy1oKMwQ==
   dependencies:
-    "@types/node" "^20.0.0"
+    "@types/node" ">=20.0.0"
     "@types/whatwg-mimetype" "^3.0.2"
+    "@types/ws" "^8.18.1"
+    entities "^7.0.1"
     whatwg-mimetype "^3.0.0"
+    ws "^8.18.3"
 
 has-flag@^4.0.0:
   version "4.0.0"
@@ -7036,11 +7032,6 @@ unc-path-regex@^0.1.2:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/unc-path-regex/-/unc-path-regex-0.1.2.tgz#e73dd3d7b0d7c5ed86fbac6b0ae7d8c6a69d50fa"
   integrity sha512-eXL4nmJT7oCpkZsHZUOJo8hcX3GbsiDOa0Qu9F646fi8dT3XuSVopVqAcEiVzSKKH7UoDti23wNX3qGFxcW5Qg==
-
-undici-types@~6.21.0:
-  version "6.21.0"
-  resolved "https://registry.yarnpkg.com/undici-types/-/undici-types-6.21.0.tgz#691d00af3909be93a7faa13be61b3a5b50ef12cb"
-  integrity sha512-iwDZqg0QAGrg9Rav5H4n0M64c3mkR59cJ6wQp+7C4nI0gsmExaedaYLNO44eT4AtBBwjbTiGPMlt2Md0T9H9JQ==
 
 undici-types@~7.18.0:
   version "7.18.2"
