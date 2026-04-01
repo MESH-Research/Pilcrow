@@ -1,7 +1,7 @@
 <template>
   <article data-cy="record_of_review" class="q-pa-lg">
-    <h1 class="text-h2" data-cy="page_heading">Record of Review</h1>
-    <h2 class="text-h3">Submission Title</h2>
+    <h1 class="text-h2" data-cy="page_heading">Report</h1>
+    <h2 class="text-h3">{{ review.title }}</h2>
     <h3>Reviewer Information</h3>
     <dl>
       <dt>Reviewer Name</dt>
@@ -27,4 +27,12 @@
   </article>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import type { Submission } from "src/graphql/generated/graphql"
+
+interface Props {
+  review: Submission
+}
+
+defineProps<Props>()
+</script>

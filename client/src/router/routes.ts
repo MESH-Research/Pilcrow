@@ -46,7 +46,7 @@ const routes: RouteRecordRaw[] = [
       },
       {
         path: "record_of_review",
-        component: () => import("src/pages/Account/RecordOfReviewSelect.vue")
+        component: () => import("src/pages/Account/RecordOfReviewSelection.vue")
       },
       {
         name: "record_of_review_details",

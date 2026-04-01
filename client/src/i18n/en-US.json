@@ -349,6 +349,12 @@
   "reviews": {
     "page_title": "Reviews"
   },
+  "record_of_review_table": {
+    "title": "Record of Review",
+    "tooltip": "Only reviews that have completed will appear here",
+    "byline": "Select one or more reviews to get a record of review",
+    "no_data": "There are no reviews for you."
+  },
   "submission_tables": {
     "filter_label": "Filter by Status",
     "columns": {

@@ -1,31 +1,31 @@
 <template>
   <q-table
-    :grid="$q.screen.width < 770"
-    flat
-    square
+    v-model:selected="selectedReviews"
     :columns="cols"
+    class="record-of-review-table"
+    flat
+    :filter-method="filterStatuses"
+    :filter="status_filter"
     :rows="tableData"
     row-key="id"
-    :filter="status_filter"
-    :filter-method="filterStatuses"
-    class="submission-table"
-    :color="darkModeStatus ? `white` : `black`"
+    selection="multiple"
   >
     <template #top>
       <div class="row full-width justify-between q-pb-md">
         <div class="column">
-          <h3 class="q-my-none">
-            {{ $t(title) }}
+          <h1 class="q-my-none text-h2">
+            {{ $t(`record_of_review_table.title`) }}
             <q-icon name="info">
-              <q-tooltip>{{ $t(tooltip) }}</q-tooltip>
+              <q-tooltip>{{ $t(`record_of_review_table.tooltip`) }}</q-tooltip>
             </q-icon>
-          </h3>
+          </h1>
 
-          <i18n-t :keypath="byline" class="q-mb-none" tag="p" scope="global">
-            <template #role>
-              <strong>{{ $t(`role.${role}s`, 1) }}</strong>
-            </template>
-          </i18n-t>
+          <i18n-t
+            keypath="record_of_review_table.byline"
+            class="q-mb-none"
+            tag="p"
+            scope="global"
+          ></i18n-t>
 
           <q-select
             v-if="tableData.length"
@@ -66,68 +66,34 @@
         class="q-pa-lg text-center full-width"
       >
         <p class="text-h3">
-          {{ $t(`submission_tables.type.${tableType}.no_data`) }}
+          {{ $t(`record_of_review_table..no_data`) }}
         </p>
       </q-card>
       <div v-else class="full-width row flex-center text--grey q-py-lg">
         <p class="text-h3">
-          {{ $t(`submission_tables.type.${tableType}.no_data`) }}
+          {{ $t(`record_of_review_table..no_data`) }}
         </p>
       </div>
     </template>
-    <template #item="p">
-      <q-card flat :props="p" class="full-width">
-        <q-card-section horizontal>
-          <q-card-section>
-            {{ p.row.id }}
-          </q-card-section>
-          <q-card-section class="full-width" data-cy="submission_link_mobile">
-            <div class="row">
-              <div class="col">
-                <router-link
-                  :to="{
-                    name: submissionLinkName(p.row, role),
-                    params: { id: p.row.id }
-                  }"
-                  >{{ p.row.title }}
-                </router-link>
-                <p class="q-ma-none">
-                  {{ generateSubmitterList(p.row.submitters) }}
-                </p>
-                <p class="q-ma-none">
-                  {{ relativeTime(p.row.submitted_at).value }}
-                </p>
-              </div>
-            </div>
-            <div class="row justify-between">
-              <router-link
-                :to="{
-                  name: 'publication:home',
-                  params: { id: p.row.publication.id }
-                }"
-                >{{ p.row.publication.name }}
-              </router-link>
-              <div class="col-grow text-right q-pl-md">
-                {{ $t(`submission.status.${p.row.status}`) }}
-              </div>
-            </div>
-          </q-card-section>
-          <q-card-section>
-            <submission-table-actions
-              :submission="p.row"
-              :action-type="tableType"
-              flat
-            />
-          </q-card-section>
-        </q-card-section>
-        <q-separator />
-      </q-card>
+    <template #header-selection="p">
+      <q-checkbox
+        v-model="p.selected"
+        :aria-label="header_checkbox_label"
+        :title="header_checkbox_label"
+      />
+    </template>
+    <template #body-selection="p">
+      <q-checkbox
+        v-model="p.selected"
+        :aria-label="generateCheckboxLabel(p.row)"
+        :title="generateCheckboxLabel(p.row)"
+      />
     </template>
     <template #body-cell-title="p">
       <q-td :props="p" data-cy="submission_link_desktop">
         <router-link
           :to="{
-            name: submissionLinkName(p.row, role),
+            name: submissionLinkName(p.row, p.row.effective_role),
             params: { id: p.row.id }
           }"
           >{{ p.row.title }}
@@ -146,13 +112,7 @@
     </template>
     <template #body-cell-publication="p">
       <q-td :props="p">
-        <router-link
-          :to="{
-            name: 'publication:home',
-            params: { id: p.row.publication.id }
-          }"
-          >{{ p.row.publication.name }}
-        </router-link>
+        {{ p.row.publication.name }}
       </q-td>
     </template>
     <template #body-cell-status="p">
@@ -160,45 +120,36 @@
         {{ $t(`submission.status.${p.row.status}`) }}
       </q-td>
     </template>
-    <template #body-cell-actions="p">
-      <q-td :props="p">
-        <submission-table-actions
-          :submission="p.row"
-          :action-type="tableType"
-          flat
-        />
-      </q-td>
-    </template>
   </q-table>
 </template>
 <script setup lang="ts">
 import type { Submission } from "src/graphql/generated/graphql"
-import SubmissionTableActions from "./SubmissionTableActions.vue"
 import { useI18n } from "vue-i18n"
 import { ref, computed } from "vue"
 import { useQuasar } from "quasar"
 import { relativeTime } from "src/use/timeAgo"
-import { useDarkMode } from "src/use/guiElements"
 import { submissionLinkName } from "src/utils/submissionLinkName"
 
 const $q = useQuasar()
 
 const { t } = useI18n()
-const { darkModeStatus } = useDarkMode()
 
 interface Props {
   tableData?: Submission[]
-  tableType?: string
-  variation?: string
-  role?: string
 }
+
+function generateCheckboxLabel(row) {
+  return `Select review number ${row.id}, ${row.title}`
+}
+const header_checkbox_label = `Review Selection`
 
 const props = withDefaults(defineProps<Props>(), {
   tableData: () => [],
-  tableType: "submissions",
-  variation: "",
-  role: "reviewer"
+  selectedReviews: () => []
 })
+
+const selectedReviews = ref([])
+
 const status_filter = ref(null)
 const filterStatuses = (rows, terms) => {
   return rows.filter((row) => terms.includes(row.status))
@@ -207,15 +158,6 @@ const unique = (items) => [...new Set(items)]
 const unique_statuses = computed(() => {
   return unique(props.tableData.map((item) => item.status))
 })
-const title = props.variation
-  ? `submission_tables.${props.variation}.${props.role}.title`
-  : `submission_tables.${props.role}.title`
-const byline = props.variation
-  ? `submission_tables.${props.variation}.${props.role}.byline`
-  : `submission_tables.${props.role}.byline`
-const tooltip = props.variation
-  ? `submission_tables.${props.variation}.${props.role}.tooltip`
-  : `submission_tables.${props.role}.tooltip`
 const cols: {
   name: string
   field: string
@@ -268,14 +210,6 @@ const cols: {
     label: t(`submission_tables.columns.status`),
     sortable: true,
     align: "center"
-  },
-  {
-    name: "actions",
-    field: "actions",
-    label: t(`submission_tables.columns.actions`),
-    sortable: false,
-    style: "width: 100px",
-    align: "center"
   }
 ]
 function generateSubmitterList(submitters) {
@@ -284,7 +218,7 @@ function generateSubmitterList(submitters) {
 </script>
 
 <style lang="sass">
-.submission-table
+.record-of-review-table
   th
     border-width: 1px 0
     &:first-child
@@ -302,12 +236,12 @@ function generateSubmitterList(submitters) {
     border-style: solid
     border-width: 0 1px 1px
 
-.submission-table.q-table--grid
+.record-of-review-table.q-table--grid
   .q-table__bottom
     border-width: 0
 
 .body--dark
-  .submission-table
+  .record-of-review-table
     .q-table__bottom
       border-color: rgba(255, 255, 255, 0.28)
 </style>
