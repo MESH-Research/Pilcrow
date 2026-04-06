@@ -491,3 +491,46 @@ export const GET_IDENTITY_PROVIDERS = gql`
     }
   }
 `
+
+export const GET_RECORDS_OF_REVIEW = gql`
+  query GetRecordsOfReview($page: Int) {
+    submissions(page: $page) {
+      paginatorInfo {
+        ...paginationFields
+      }
+      data {
+        id
+        title
+        status
+        my_role
+        created_at
+        submitted_at
+        effective_role
+        submitters {
+          ...relatedUserFields
+        }
+        reviewers {
+          ...relatedUserFields
+          ...profileMetadata
+        }
+        review_coordinators {
+          ...relatedUserFields
+        }
+        publication {
+          id
+          name
+          my_role
+          editors {
+            ...relatedUserFields
+          }
+          publication_admins {
+            ...relatedUserFields
+          }
+        }
+      }
+    }
+  }
+  ${_PAGINATION_FIELDS}
+  ${_RELATED_USER_FIELDS}
+  ${_PROFILE_METADATA_FIELDS}
+`

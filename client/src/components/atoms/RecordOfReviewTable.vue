@@ -66,12 +66,12 @@
         class="q-pa-lg text-center full-width"
       >
         <p class="text-h3">
-          {{ $t(`record_of_review_table..no_data`) }}
+          {{ $t(`record_of_review_table.no_data`) }}
         </p>
       </q-card>
       <div v-else class="full-width row flex-center text--grey q-py-lg">
         <p class="text-h3">
-          {{ $t(`record_of_review_table..no_data`) }}
+          {{ $t(`record_of_review_table.no_data`) }}
         </p>
       </div>
     </template>
@@ -123,7 +123,7 @@
   </q-table>
 </template>
 <script setup lang="ts">
-import type { Submission } from "src/graphql/generated/graphql"
+import type { Submission, User } from "src/graphql/generated/graphql"
 import { useI18n } from "vue-i18n"
 import { ref, computed } from "vue"
 import { useQuasar } from "quasar"
@@ -138,7 +138,7 @@ interface Props {
   tableData?: Submission[]
 }
 
-function generateCheckboxLabel(row) {
+function generateCheckboxLabel(row: Submission) {
   return `Select review number ${row.id}, ${row.title}`
 }
 const header_checkbox_label = `Review Selection`
@@ -151,10 +151,10 @@ const props = withDefaults(defineProps<Props>(), {
 const selectedReviews = ref([])
 
 const status_filter = ref(null)
-const filterStatuses = (rows, terms) => {
+const filterStatuses = (rows: Readonly<Submission[]>, terms: Array<string>) => {
   return rows.filter((row) => terms.includes(row.status))
 }
-const unique = (items) => [...new Set(items)]
+const unique = (items: Array<string>) => [...new Set(items)]
 const unique_statuses = computed(() => {
   return unique(props.tableData.map((item) => item.status))
 })
@@ -212,7 +212,7 @@ const cols: {
     align: "center"
   }
 ]
-function generateSubmitterList(submitters) {
+function generateSubmitterList(submitters: Array<User>) {
   return submitters.map((submitter) => submitter.display_label).join(", ")
 }
 </script>

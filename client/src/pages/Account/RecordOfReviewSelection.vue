@@ -10,17 +10,6 @@
           :table-data="reviews"
           data-cy="record-of-review_table"
         />
-        <div class="q-py-lg">
-          <q-btn
-            label="Get Record of Review"
-            :icon="
-              selected_reviews.length === 0 ? `do_not_disturb` : `chevron_right`
-            "
-            color="accent"
-            :disabled="selected_reviews.length === 0"
-            @click="showPreview = true"
-          ></q-btn>
-        </div>
       </div>
     </section>
   </article>
@@ -37,7 +26,7 @@
 import { useQuery } from "@vue/apollo-composable"
 import { computed, ref } from "vue"
 import { compareDatesDesc } from "src/utils/dateSort"
-import { GET_SUBMISSIONS } from "src/graphql/queries"
+import { GET_RECORDS_OF_REVIEW } from "src/graphql/queries"
 import { useRoute, useRouter } from "vue-router"
 import RecordOfReviewTable from "src/components/atoms/RecordOfReviewTable.vue"
 import RecordOfReview from "./RecordOfReview.vue"
@@ -45,6 +34,16 @@ import RecordOfReview from "./RecordOfReview.vue"
 const route = useRoute()
 const router = useRouter()
 const selected_reviews = ref([])
+
+// <div class="q-py-lg">
+//   <q-btn
+//     label="Get Record of Review"
+//     :icon="selected_reviews.length === 0 ? `do_not_disturb` : `chevron_right`"
+//     color="accent"
+//     :disabled="selected_reviews.length === 0"
+//     @click="showPreview = true"
+//   ></q-btn>
+// </div>
 
 function buildQuery() {
   const query: Record<string, string> = {}
@@ -72,7 +71,7 @@ const showPreview = computed({
 })
 
 const { result: all_submissions_result, loading: subsLoading } = useQuery(
-  GET_SUBMISSIONS,
+  GET_RECORDS_OF_REVIEW,
   {
     page: 1
   }
