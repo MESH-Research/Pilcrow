@@ -61,6 +61,14 @@ class SubmissionSeeder extends Seeder
 
         $this->createSubmissionWithUpload(112, 'Endnote Test')
             ->update(['updated_by' => 1, 'status' => Submission::UNDER_REVIEW]);
+
+        // Dedicated submission for details page tests (assignment management, invitations)
+        $this->createSubmission(113, 'Details Test Submission')
+            ->update(['updated_by' => 1, 'status' => Submission::UNDER_REVIEW]);
+
+        // Dedicated submission for inline comment tests (mirrors submission 100's structure)
+        $this->createSubmission(114, 'Inline Comment Test Submission')
+            ->update(['updated_by' => 1, 'status' => Submission::UNDER_REVIEW]);
     }
 
     /**

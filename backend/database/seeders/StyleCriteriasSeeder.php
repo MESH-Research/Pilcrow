@@ -51,14 +51,16 @@ class StyleCriteriasSeeder extends Seeder
             ],
         ];
 
-        foreach ($style_criterias as $criteria) {
-            StyleCriteria::factory()
-                ->create([
-                    'name' => $criteria['name'],
-                    'publication_id' => 1,
-                    'description' => $criteria['description'],
-                    'icon' => $criteria['icon'],
-                ]);
+        foreach ([1, 3] as $publicationId) {
+            foreach ($style_criterias as $criteria) {
+                StyleCriteria::factory()
+                    ->create([
+                        'name' => $criteria['name'],
+                        'publication_id' => $publicationId,
+                        'description' => $criteria['description'],
+                        'icon' => $criteria['icon'],
+                    ]);
+            }
         }
     }
 }

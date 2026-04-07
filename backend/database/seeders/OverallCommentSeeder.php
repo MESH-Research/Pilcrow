@@ -21,10 +21,17 @@ class OverallCommentSeeder extends Seeder
         $this->callOnce(SubmissionSeeder::class);
 
         OverallComment::withoutEvents(function () {
+            // Comments on submission 100 (used by review.spec.ts overall comment tests)
             $this->create(100, 0, 2);
             $this->create(100, 1);
             $this->create(100, 8);
             $this->create(100, 2, 1, [2,3]);
+
+            // Duplicate comments on submission 114 (used by inline-comments.spec.ts)
+            $this->create(114, 0, 2);
+            $this->create(114, 1);
+            $this->create(114, 8);
+            $this->create(114, 2, 1, [2,3]);
         });
     }
 
@@ -37,7 +44,7 @@ class OverallCommentSeeder extends Seeder
      * @param array $replyIds
      * @return void
      */
-    protected function create($submissionId, $replies = 0, $userId = null, $replyIds = null)
+    protected function create(int $submissionId, $replies = 0, $userId = null, $replyIds = null)
     {
         $userIds = User::all()->pluck('id');
         if ($userId === null) {
@@ -62,7 +69,7 @@ class OverallCommentSeeder extends Seeder
                 } else {
                     $replyId = $userIds->except(1)->random();
                 }
-                $reply = $this->createCommentReply($replyId, $parent, $comments->random());
+                $reply = $this->createCommentReply($submissionId, $replyId, $parent, $comments->random());
                 $comments->push($reply);
             }
         }
@@ -74,14 +81,14 @@ class OverallCommentSeeder extends Seeder
      * @param \App\Models\OverallComment $reply_to
      * @return \App\Models\OverallComment
      */
-    private function createCommentReply($userId, $parent, $reply_to)
+    private function createCommentReply(int $submissionId, $userId, $parent, $reply_to)
     {
         $faker = Faker::create();
         $time = Carbon::parse($reply_to->created_at);
         $datetime = $faker->dateTimeBetween($time, Carbon::now());
 
         return OverallComment::factory()->create([
-            'submission_id' => 100,
+            'submission_id' => $submissionId,
             'parent_id' => $parent->id,
             'reply_to_id' => $reply_to->id,
             'created_at' => $datetime,
