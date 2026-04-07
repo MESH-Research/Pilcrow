@@ -277,7 +277,8 @@ type Mutation {
   requestPasswordReset(email: String!): Boolean
 
   """
-  Reset the database and run seeders.
+  Run migrate:fresh --seed to fully reset the database.
+  Drops any leftover shadow tables from previous test runs.
   Only available in local and testing environments.
   """
   resetDatabase: String!
@@ -286,6 +287,13 @@ type Mutation {
   resetPassword(input: ResetPasswordInput): User
   saveGeneralSettings(settings: GeneralSettingsInput!): GeneralSettings
 
+  """
+  Create a test submission with the specified status and role assignments.
+  Returns the created submission on the worker's shadow tables.
+  Only available in local and testing environments.
+  """
+  seedSubmission(publication_id: ID, status: SubmissionStatus, title: String, with_content: Boolean): Submission!
+
   """(Re)send a verification email to a user.  """
   sendEmailVerification(
     """
@@ -293,6 +301,21 @@ type Mutation {
     """
     id: ID
   ): User!
+
+  """
+  Create shadow copies of all tables for a worker's test token.
+  Must be called before any test requests with this token.
+  The middleware will route all queries to the shadow tables.
+  Only available in local and testing environments.
+  """
+  setupTestToken(token: String!): String!
+
+  """
+  Drop shadow tables for a worker's test token.
+  Called after each test to clean up.
+  Only available in local and testing environments.
+  """
+  teardownTestToken(token: String!): String!
   updatePublication(publication: UpdatePublicationInput!): Publication
 
   """Update an existing submission"""
