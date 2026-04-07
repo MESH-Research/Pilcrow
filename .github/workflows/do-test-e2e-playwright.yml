@@ -1,0 +1,76 @@
+name: "Test: E2E (Playwright)"
+on:
+  workflow_call:
+    inputs:
+      version:
+        description: "Version of the stack to test"
+        required: true
+        type: string
+jobs:
+  playwright:
+    runs-on: ubuntu-24.04
+    name: "Playwright (${{ matrix.shard }}/${{ strategy.job-total }})"
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - uses: ./.github/actions/start-stack
+        with:
+          version: ${{ inputs.version }}
+      - name: Install dependencies
+        run: cd playwright && yarn install
+      - name: Install Playwright browsers
+        run: cd playwright && npx playwright install --with-deps chromium
+      - name: Run Playwright tests
+        run: cd playwright && npx playwright test --shard=${{ matrix.shard }}/4
+        env:
+          PLAYWRIGHT_BASE_URL: http://localhost:8888
+      - name: Upload blob report
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: blob-report-${{ matrix.shard }}
+          path: playwright/blob-report/
+          retention-days: 1
+      - name: Upload test results
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-results-${{ matrix.shard }}
+          path: |
+            playwright/test-results/
+            playwright/playwright-report/
+          retention-days: 14
+      - run: docker compose down
+
+  merge-reports:
+    if: ${{ !cancelled() }}
+    needs: [playwright]
+    runs-on: ubuntu-24.04
+    name: "Merge Playwright Reports"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install dependencies
+        run: cd playwright && yarn install
+      - name: Download blob reports
+        uses: actions/download-artifact@v4
+        with:
+          path: playwright/all-blob-reports
+          pattern: blob-report-*
+          merge-multiple: true
+      - name: Merge reports
+        run: cd playwright && npx playwright merge-reports --reporter html ./all-blob-reports
+      - name: Upload merged HTML report
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-html-report
+          path: playwright/playwright-report/
+          retention-days: 14

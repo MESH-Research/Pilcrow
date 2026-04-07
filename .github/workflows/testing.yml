@@ -28,6 +28,7 @@ jobs:
       js: ${{ steps.filter.outputs.js }}
       client: ${{ steps.filter.outputs.client }}
       cypress: ${{ steps.filter.outputs.cypress }}
+      playwright: ${{ steps.filter.outputs.playwright }}
       api: ${{ steps.filter.outputs.api }}
       md: ${{ steps.filter.outputs.md }}
     steps:
@@ -48,6 +49,9 @@ jobs:
               - '!**/*.md'
             cypress:
               - 'cypress/**'
+              - '!**/*.md'
+            playwright:
+              - 'playwright/**'
               - '!**/*.md'
             api:
               - 'backend/**'
@@ -133,6 +137,13 @@ jobs:
   #   secrets: inherit
   #   with:
   #     version: ${{ needs.build-images.outputs.version }}
+  e2e-playwright:
+    name: "E2E Test (Playwright)"
+    needs: [build-images]
+    uses: ./.github/workflows/do-test-e2e-playwright.yml
+    secrets: inherit
+    with:
+      version: ${{ needs.build-images.outputs.version }}
   lint-php:
     name: PHP Lint
     runs-on: ubuntu-24.04
