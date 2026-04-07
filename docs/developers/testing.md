@@ -71,14 +71,18 @@ NOTE: If you already have configuration in `.lando.local.yml`, be sure to merge 
 #FILE: .lando.local.yml
 services:
   cypress:
-    type: node:14
+    type: node:18
     overrides:
-      image: "cypress/base:14"
+      image: "cypress/base:18.16.1"
+      environment:
+        ELECTRON_EXTRA_LAUNCH_ARGS: "--force-prefers-reduced-motion"
+    build:
+      - cd /app/cypress && yarn
 tooling:
   cypress:
     service: cypress
-    dir: /app/client
-    cmd: cypress
+    dir: /app/cypress
+    cmd: yarn cypress
 ```
 
 Rebuild your containers and install cypress binaries:
