@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "baseUrl": ".",
+    "paths": {
+      "@fixtures/*": ["tests/fixtures/*"],
+      "@helpers/*": ["tests/helpers/*"]
+    }
+  },
+  "include": ["tests/**/*.ts", "playwright.config.ts"]
+}
