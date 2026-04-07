@@ -27,6 +27,7 @@ jobs:
       php: ${{ steps.filter.outputs.php }}
       js: ${{ steps.filter.outputs.js }}
       client: ${{ steps.filter.outputs.client }}
+      cypress: ${{ steps.filter.outputs.cypress }}
       api: ${{ steps.filter.outputs.api }}
       md: ${{ steps.filter.outputs.md }}
     steps:
@@ -44,6 +45,9 @@ jobs:
               - '**/*.php'
             client:
               - 'client/**'
+              - '!**/*.md'
+            cypress:
+              - 'cypress/**'
               - '!**/*.md'
             api:
               - 'backend/**'
@@ -157,6 +161,23 @@ jobs:
       - uses: mesh-research/github-actions/build-image@v2
         with:
           target: "web-lint-ci"
+  lint-cypress:
+    name: Cypress Lint
+    runs-on: ubuntu-24.04
+    needs: [changes]
+    if: ${{ needs.changes.outputs.cypress == 'true' }}
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: yarn
+          cache-dependency-path: cypress/yarn.lock
+      - name: Install dependencies
+        run: cd cypress && yarn install
+      - name: Lint
+        run: cd cypress && yarn lint
   docs-build:
     name: Docs Build
     runs-on: ubuntu-24.04

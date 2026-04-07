@@ -8,8 +8,9 @@ cypress:
           image: "cypress/base:18.16.1"
           environment:
             ELECTRON_EXTRA_LAUNCH_ARGS: "--force-prefers-reduced-motion"
+            NODE_TLS_REJECT_UNAUTHORIZED: "0"
         build:
-          - cd /app/cypress && yarn
+          - yarn config set strict-ssl false -g && cd /app/cypress && yarn --ignore-engines
     tooling:
       cypress:
         service: cypress
