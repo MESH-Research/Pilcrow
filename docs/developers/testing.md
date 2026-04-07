@@ -53,6 +53,55 @@ lando yarn test:unit:ui
 
 ### Integration Tests (E2E)
 
+We are migrating our end-to-end tests from Cypress to [Playwright](https://playwright.dev/).
+Playwright is the preferred runner for new tests; the Cypress section below is
+retained while the migration is in progress.
+
+#### Playwright
+
+Playwright runs against three browser engines: Chromium, Firefox, and WebKit.
+The tests live in `/playwright` and use the host's Node, not Lando, so Lando
+only needs to be running for the application under test.
+
+To run the full suite **from the `/playwright` directory**:
+
+```sh
+yarn test            # all browsers
+yarn test:chromium   # chromium only
+yarn test:firefox    # firefox only
+yarn test:webkit     # webkit only
+yarn test:headed     # show browsers
+yarn test:report     # open the last HTML report
+```
+
+To open the test runner UI in your default browser (handy on WSL where the
+native UI can't render):
+
+```sh
+yarn test:ui
+```
+
+::: tip First-time setup
+After installing dependencies the first time, download the browser binaries:
+
+```sh
+npx playwright install
+```
+
+On Linux you may also need system libraries for WebKit:
+
+```sh
+sudo npx playwright install-deps webkit
+```
+:::
+
+The Playwright suite uses per-worker shadow tables (see
+`backend/app/IntegrationTesting/TableSnapshot.php`) so workers can run in
+parallel without database conflicts.  Each test gets a fresh copy of the
+seeded data via the `resetDatabase` fixture.
+
+#### Cypress (legacy)
+
 We use [Cypress](https://www.cypress.io/) for our integration or end-to-end testing.  Cypress runs integration tests in a browser (Chrome, Firefox, Electron, or Edge) and allows controlling the browser and testing the responses of the application programmatically.
 
 ::: tip
@@ -140,6 +189,18 @@ From the `/client` directory run:
 lando yarn lint #Check and report linting errors
 
 lando yarn lint --fix #Fix fixable linting errors
+```
+
+### Playwright (TypeScript)
+
+The Playwright suite has its own ESLint config and TypeScript project.
+From the `/playwright` directory run:
+
+```sh
+yarn lint         # Lint
+yarn lint:fix     # Auto-fix lint errors
+yarn typecheck    # Typecheck
+yarn validate     # Lint + typecheck together
 ```
 
 #### Eslint in VSCode
