@@ -493,13 +493,22 @@ export const GET_IDENTITY_PROVIDERS = gql`
 `
 
 export const GET_RECORDS_OF_REVIEW = gql`
-  query GetRecordsOfReview($page: Int) {
-    submissions(page: $page) {
-      paginatorInfo {
-        ...paginationFields
-      }
-      data {
+  query GetRecordsOfReview {
+    currentUser {
+      id
+      submissions {
         id
+        audits {
+          id
+          created_at
+          event
+          new_values {
+            content_id
+            status
+            status_change_comment
+            title
+          }
+        }
         title
         status
         my_role
@@ -530,7 +539,6 @@ export const GET_RECORDS_OF_REVIEW = gql`
       }
     }
   }
-  ${_PAGINATION_FIELDS}
   ${_RELATED_USER_FIELDS}
   ${_PROFILE_METADATA_FIELDS}
 `
