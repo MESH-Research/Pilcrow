@@ -22,12 +22,24 @@ jobs:
       - uses: ./.github/actions/start-stack
         with:
           version: ${{ inputs.version }}
+      - name: Rebuild Lighthouse schema cache for testing env
+        # The start-stack action boots the fpm image with APP_ENV=testing,
+        # but any pre-existing schema cache from the image build (or from
+        # a prior container start in a different env) would freeze the
+        # @show(env: ["local", "testing"]) decisions made at cache-write
+        # time. Force a rebuild here so the test-isolation mutations
+        # (resetDatabase / setupTestToken / teardownTestToken /
+        # seedSubmission) are definitely in the schema before Playwright
+        # starts hitting /graphql.
+        run: |
+          docker compose exec -T phpfpm php artisan lighthouse:clear-cache
+          docker compose exec -T phpfpm php artisan lighthouse:cache
       - name: Install dependencies
         run: cd playwright && yarn install
       - name: Install Playwright browsers
         run: cd playwright && npx playwright install --with-deps chromium
       - name: Run Playwright tests
-        run: cd playwright && npx playwright test --shard=${{ matrix.shard }}/4
+        run: cd playwright && npx playwright test --project=chromium --shard=${{ matrix.shard }}/4
         env:
           PLAYWRIGHT_BASE_URL: http://localhost:8888
       - name: Upload blob report
