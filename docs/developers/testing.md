@@ -60,10 +60,78 @@ retained while the migration is in progress.
 #### Playwright
 
 Playwright runs against three browser engines: Chromium, Firefox, and WebKit.
-The tests live in `/playwright` and use the host's Node, not Lando, so Lando
-only needs to be running for the application under test.
+The tests live in `/playwright` and target the Lando-hosted application
+under `https://pilcrow.lndo.site` by default.
 
-To run the full suite **from the `/playwright` directory**:
+You can run Playwright two ways: **directly on the host** (using your
+system's Node and the Playwright browsers installed locally), or **inside
+Lando** via a dedicated container that ships with all three browsers and
+their system dependencies preinstalled.
+
+##### Under Lando (recommended)
+
+The Lando path is the easiest way to get going — no host Node version
+wrangling, no `playwright install --with-deps` sudo dance, and the browsers
+are baked into the image. The Lando integration is shipped as a Lando extra.
+
+Enable it and rebuild:
+
+```sh
+lando extras enable playwright
+lando rebuild -y
+```
+
+This adds a `playwright` service based on
+`mcr.microsoft.com/playwright:v1.58.2-noble` and wires up tooling commands.
+On first rebuild, Lando runs `yarn install` inside the container, which also
+applies the `patch-package` patches automatically.
+
+Then run the suite from anywhere in the project:
+
+```sh
+lando playwright-test            # all browsers
+lando playwright-test-chromium   # chromium only
+lando playwright-test-firefox    # firefox only
+lando playwright-test-webkit     # webkit only
+lando playwright                 # raw `playwright` CLI passthrough
+lando playwright-lint            # ESLint on the suite
+lando playwright-typecheck       # tsc --noEmit
+lando playwright-validate        # lint + typecheck
+```
+
+::: warning Host node_modules vs. container node_modules
+If you have previously run Playwright directly on the host, your
+`/playwright/node_modules` may contain host-platform binaries that won't
+work inside the Lando container. Delete them before enabling the extra:
+
+```sh
+rm -rf playwright/node_modules
+lando rebuild -y
+```
+:::
+
+::: tip Headed mode + test runner UI
+Both `yarn test:headed` and `yarn test:ui` need a display, so neither
+works inside the Lando container. Use the host path for those.
+:::
+
+##### Directly on the host
+
+Install the Playwright browsers (one-time setup):
+
+```sh
+cd playwright
+yarn install
+npx playwright install
+```
+
+On Linux you may also need system libraries for WebKit:
+
+```sh
+sudo npx playwright install-deps webkit
+```
+
+Then run the suite **from the `/playwright` directory**:
 
 ```sh
 yarn test            # all browsers
@@ -81,23 +149,11 @@ native UI can't render):
 yarn test:ui
 ```
 
-::: tip First-time setup
-After installing dependencies the first time, download the browser binaries:
-
-```sh
-npx playwright install
-```
-
-On Linux you may also need system libraries for WebKit:
-
-```sh
-sudo npx playwright install-deps webkit
-```
-:::
+##### Test isolation
 
 The Playwright suite uses per-worker shadow tables (see
 `backend/app/IntegrationTesting/TableSnapshot.php`) so workers can run in
-parallel without database conflicts.  Each test gets a fresh copy of the
+parallel without database conflicts. Each test gets a fresh copy of the
 seeded data via the `resetDatabase` fixture.
 
 #### Cypress (legacy)
@@ -201,6 +257,14 @@ yarn lint         # Lint
 yarn lint:fix     # Auto-fix lint errors
 yarn typecheck    # Typecheck
 yarn validate     # Lint + typecheck together
+```
+
+Or via the Lando extra (if enabled):
+
+```sh
+lando playwright-lint
+lando playwright-typecheck
+lando playwright-validate
 ```
 
 #### Eslint in VSCode
