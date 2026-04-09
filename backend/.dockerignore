@@ -5,3 +5,8 @@ Dockerfile
 .env.backup
 .phpunit.result.cache
 public/storage
+# Never bake local Laravel caches (package manifest, lighthouse schema,
+# config/route/view caches) into the image — they'd be frozen with
+# whatever APP_ENV was active on the developer's machine at build time.
+bootstrap/cache/*
+!bootstrap/cache/.gitignore
