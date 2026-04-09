@@ -1,0 +1,35 @@
+{
+  "name": "pilcrow-playwright",
+  "version": "0.0.1",
+  "description": "Playwright E2E tests for Pilcrow",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "postinstall": "patch-package",
+    "test": "playwright test",
+    "test:chromium": "playwright test --project=chromium",
+    "test:firefox": "playwright test --project=firefox",
+    "test:webkit": "playwright test --project=webkit",
+    "test:headed": "playwright test --headed",
+    "test:ui": "BROWSER=wslview playwright test --ui-host=0.0.0.0 --ui-port=8077",
+    "test:report": "playwright show-report",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "typecheck": "tsc --noEmit",
+    "validate": "yarn lint && yarn typecheck"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.10.0",
+    "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.50.0",
+    "@types/node": "^25.5.0",
+    "eslint": "^10.1.0",
+    "eslint-plugin-playwright": "^2.10.1",
+    "patch-package": "^8.0.1",
+    "typescript": "^5.7.0",
+    "typescript-eslint": "^8.58.0"
+  },
+  "engines": {
+    "node": "^20.0.0 || ^22.0.0 || ^24.0.0"
+  }
+}

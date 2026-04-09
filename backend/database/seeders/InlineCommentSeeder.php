@@ -27,9 +27,15 @@ class InlineCommentSeeder extends Seeder
     {
         $this->callOnce(SubmissionSeeder::class);
         InlineComment::withoutEvents(function () {
+            // Comments on submission 100 (used by review.spec.ts overall comment tests)
             $this->create(100, 1, ['replies' => 1, 'highlight' => [30, 80]], [2]);
             $this->create(100, 3, ['highlight' => [430, 445]]);
             $this->create(100, 5, ['replies' => 10, 'highlight' => [630, 720]]);
+
+            // Duplicate comments on submission 114 (used by inline-comments.spec.ts)
+            $this->create(114, 1, ['replies' => 1, 'highlight' => [30, 80]], [2]);
+            $this->create(114, 3, ['highlight' => [430, 445]]);
+            $this->create(114, 5, ['replies' => 10, 'highlight' => [630, 720]]);
         });
     }
 

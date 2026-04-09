@@ -16,7 +16,7 @@ class ResetDatabaseMutationTest extends ApiTestCase
      *
      * @return void
      */
-    public function testResetDatabaseAvailableInTestingEnvironment(): void
+    public function testFullResetAvailableInTestingEnvironment(): void
     {
         $this->assertEquals('testing', App::environment());
 
@@ -28,16 +28,7 @@ class ResetDatabaseMutationTest extends ApiTestCase
         $response->assertJsonStructure(['data' => ['resetDatabase']]);
     }
 
-    /**
-     * Test that the resetDatabase mutation resolver rejects non-local environments.
-     *
-     * Note: This tests the runtime guard in the ResetDatabase resolver.
-     * The schema is already stitched during boot (in 'testing' mode), so
-     * detectEnvironment only affects the resolver's environment check.
-     *
-     * @return void
-     */
-    public function testResetDatabaseResolverRejectsProduction(): void
+    public function testFullResetResolverRejectsProduction(): void
     {
         App::detectEnvironment(fn() => 'production');
         $this->assertEquals('production', App::environment());
@@ -49,7 +40,7 @@ class ResetDatabaseMutationTest extends ApiTestCase
         $response->assertGraphQLErrorMessage('Internal server error');
         $response->assertJsonPath(
             'errors.0.extensions.debugMessage',
-            'Database reset is not available in this environment.'
+            'Reset database is not available in this environment.'
         );
     }
 }
