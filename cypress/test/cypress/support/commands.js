@@ -225,6 +225,17 @@ Cypress.Commands.add("getVue", () => {
 })
 //TODO: Remove this once the underlying issue is addressed in cypress or cypress axe.
 // We're just overriding the timeout.
+// Exclude Vite dev overlay elements from axe checks (they cause contrast failures).
+Cypress.Commands.overwrite("checkA11y", (originalFn, context, options, violationCallback, skipFailures) => {
+  const viteExclusions = [["vite-error-overlay"], ["vite-plugin-checker-error-overlay"]]
+  if (context && typeof context === "object" && !Array.isArray(context) && context.exclude) {
+    context.exclude = [...context.exclude, ...viteExclusions]
+  } else if (context === null || context === undefined) {
+    context = { exclude: viteExclusions }
+  }
+  return originalFn(context, options, violationCallback, skipFailures)
+})
+
 Cypress.Commands.overwrite("injectAxe", () => {
   var fileName =
     typeof (require === null || require === void 0

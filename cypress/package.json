@@ -1,0 +1,27 @@
+{
+  "name": "pilcrow-cypress",
+  "version": "0.0.1",
+  "description": "Cypress E2E tests for Pilcrow",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "lint": "eslint -c ./eslint.config.js",
+    "cypress": "cypress"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.0",
+    "axe-core": "4.11.0",
+    "axios": "^1.3.4",
+    "cypress": "^15.0.0",
+    "cypress-axe": "^1.4.0",
+    "cypress-file-upload": "^5.0.8",
+    "eslint": "10",
+    "eslint-plugin-cypress": "^6.0.0",
+    "globals": "^17.0.0",
+    "lodash": "^4.17.21",
+    "prettier": "3"
+  },
+  "engines": {
+    "node": "^22.0.0 || ^20.0.0 || ^18.0.0"
+  }
+}
