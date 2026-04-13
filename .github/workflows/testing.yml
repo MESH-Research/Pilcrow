@@ -77,7 +77,7 @@ jobs:
     name: "Build"
     runs-on: ubuntu-24.04
     outputs:
-      version: ${{ steps.build-image.outputs.version }}
+      version: ${{ steps.extract-version.outputs.version }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -95,6 +95,12 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           push: true
+      - name: Extract version from tags
+        id: extract-version
+        run: |
+          TAG=$(echo "${{ steps.build-image.outputs.tags }}" | grep -oP ':\K[^\s]+' | head -1)
+          echo "version=$TAG" >> "$GITHUB_OUTPUT"
+          echo "Extracted version: $TAG"
   backend-unit-test:
     name: Backend / Unit Test
     runs-on: ubuntu-24.04
