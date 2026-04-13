@@ -15,6 +15,14 @@ extend type Query {
 }
 
 """
+A count of submissions with a given status
+"""
+type SubmissionStatusCount {
+    status: SubmissionStatus!
+    count: Int!
+}
+
+"""
 A publication that has users, reviews, and submissions
 """
 type Publication {
@@ -24,7 +32,15 @@ type Publication {
     new_submission_content: String
     created_at: DateTimeUtc
     updated_at: DateTimeUtc
-    submissions: [Submission]! @hasMany
+    "Paginated submissions for this publication, with status counts."
+    submissions(
+        status: [SubmissionStatus!]
+        orderBy: [QuerySubmissionsOrderByOrderByClause!]
+    ): [Submission!]!
+        @paginate(
+            resolver: "App\\GraphQL\\Queries\\PaginatePublicationSubmissions"
+            defaultCount: 25
+        )
     publication_admins: [User!]! @belongsToMany(relation: "publicationAdmins")
     editors: [User!]! @belongsToMany(relation: "editors")
     is_publicly_visible: Boolean
@@ -32,6 +48,8 @@ type Publication {
     style_criterias: [StyleCriteria!]! @hasMany(relation: "styleCriterias")
     my_role: PublicationRole @method(name: "getMyRole")
     effective_role: PublicationRole @method(name: "getEffectiveRole")
+    submission_status_counts: [SubmissionStatusCount!]!
+        @method(name: "getSubmissionStatusCounts")
 }
 
 type PublicationAssignment {

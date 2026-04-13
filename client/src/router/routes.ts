@@ -156,6 +156,13 @@ const routes: RouteRecordRaw[] = [
         props: true
       },
       {
+        name: "publication:dashboard",
+        path: "/publication/:id/dashboard",
+        component: () =>
+          import("src/pages/Publication/PublicationDashboard.vue"),
+        props: true
+      },
+      {
         path: "/reviews",
         component: () => import("src/pages/ReviewsPage.vue")
       },

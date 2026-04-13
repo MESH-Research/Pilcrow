@@ -478,6 +478,31 @@
   "publication": {
     "entity": "Publication | Publications",
     "configure": "Configure Publication",
+    "dashboard": {
+      "heading": "Dashboard",
+      "breadcrumb": "Dashboard",
+      "categories": {
+        "needs_action": "Needs Action",
+        "in_progress": "In Progress",
+        "awaiting_author": "Awaiting Author",
+        "completed": "Completed"
+      },
+      "headers": {
+        "title": "Title",
+        "status": "Status",
+        "created_by": "Submitter",
+        "review_coordinators": "Review Coordinator",
+        "reviewers": "Reviewers",
+        "created_at": "Created",
+        "updated_at": "Updated"
+      },
+      "filters": {
+        "status": "Status"
+      },
+      "show_only": "Show only these",
+      "no_submissions": "No submissions match the current filters.",
+      "submission_count": "no submissions | {n} submission | {n} submissions"
+    },
     "setup_pages": {
       "breadcrumb_heading": "Setup",
       "basic": "Basic Settings",

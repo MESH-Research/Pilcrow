@@ -8,7 +8,9 @@ use App\Models\Casts\CleanAdminHtml;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class Publication extends BaseModel
 {
@@ -173,5 +175,22 @@ class Publication extends BaseModel
         }
 
         return $this->getMyRole();
+    }
+
+    /**
+     * Return submission counts grouped by status for this publication.
+     *
+     * @return \Illuminate\Support\Collection<int, array{status: int, count: int}>
+     */
+    public function getSubmissionStatusCounts(): Collection
+    {
+        return $this->submissions()
+            ->select('status', DB::raw('count(*) as count'))
+            ->groupBy('status')
+            ->get()
+            ->map(fn ($row) => [
+                'status' => (int)$row->status,
+                'count' => (int)$row->count,
+            ]);
     }
 }

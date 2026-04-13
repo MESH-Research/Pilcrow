@@ -170,6 +170,7 @@ class SubmissionTest extends ApiTestCase
      */
     public function testSubmissionsCanBeQueriedForAPublication()
     {
+        $this->beAppAdmin();
         $publication = Publication::factory()->create([
             'name' => 'Test Publication #3',
         ]);
@@ -182,31 +183,28 @@ class SubmissionTest extends ApiTestCase
             ]);
 
         $response = $this->graphQL(
-            'query GetSubmissionsByPublication($id: ID!) {
+            'query GetSubmissionsByPublication($id: ID!, $first: Int!) {
                 publication (id: $id) {
                     id
                     name
-                    submissions {
-                        id
-                        title
+                    submissions(first: $first) {
+                        paginatorInfo {
+                            total
+                        }
+                        data {
+                            id
+                            title
+                        }
                     }
                 }
             }',
-            ['id' => $publication->id]
+            ['id' => $publication->id, 'first' => 10]
         );
-        $expected_data = [
-            'publication' => [
-                'id' => (string)$publication->id,
-                'name' => 'Test Publication #3',
-                'submissions' => [
-                    [
-                        'id' => (string)$submission->id,
-                        'title' => 'Test Submission',
-                    ],
-                ],
-            ],
-        ];
-        $response->assertJsonPath('data', $expected_data);
+        $response->assertJsonPath('data.publication.id', (string)$publication->id);
+        $response->assertJsonPath('data.publication.name', 'Test Publication #3');
+        $response->assertJsonPath('data.publication.submissions.paginatorInfo.total', 1);
+        $response->assertJsonPath('data.publication.submissions.data.0.id', (string)$submission->id);
+        $response->assertJsonPath('data.publication.submissions.data.0.title', 'Test Submission');
     }
 
     /**

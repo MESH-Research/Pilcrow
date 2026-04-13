@@ -522,7 +522,18 @@ type Publication {
   new_submission_content: String
   publication_admins: [User!]!
   style_criterias: [StyleCriteria!]!
-  submissions: [Submission]!
+  submission_status_counts: [SubmissionStatusCount!]!
+
+  """Paginated submissions for this publication, with status counts."""
+  submissions(
+    """Limits number of fetched items."""
+    first: Int! = 25
+    orderBy: [QuerySubmissionsOrderByOrderByClause!]
+
+    """The offset from which items are returned."""
+    page: Int
+    status: [SubmissionStatus!]
+  ): SubmissionPaginator!
   updated_at: DateTimeUtc
 }
 
@@ -596,6 +607,7 @@ type Query {
     """Limits number of fetched items."""
     first: Int! = 100
     my_roles: [SubmissionUserRoles!]
+    orderBy: [QuerySubmissionsOrderByOrderByClause!]
 
     """The offset from which items are returned."""
     page: Int
@@ -642,6 +654,23 @@ enum QueryPublicationsOrderByColumn {
 input QueryPublicationsOrderByOrderByClause {
   """The column that is used for ordering."""
   column: QueryPublicationsOrderByColumn!
+
+  """The direction that is used for ordering."""
+  order: SortOrder!
+}
+
+"""Allowed column names for Query.submissions.orderBy."""
+enum QuerySubmissionsOrderByColumn {
+  CREATED_AT
+  STATUS
+  TITLE
+  UPDATED_AT
+}
+
+"""Order by clause for Query.submissions.orderBy."""
+input QuerySubmissionsOrderByOrderByClause {
+  """The column that is used for ordering."""
+  column: QuerySubmissionsOrderByColumn!
 
   """The direction that is used for ordering."""
   order: SortOrder!
@@ -818,13 +847,18 @@ type SubmissionFile {
   submission_id: ID!
 }
 
-"""A paginated list of Submission items."""
+"""A paginated list of Submission items with aggregate status counts."""
 type SubmissionPaginator implements Paginator {
   """A list of Submission items."""
   data: [Submission!]!
 
   """Pagination information about the list of items."""
   paginatorInfo: PaginatorInfo!
+
+  """
+  Submission counts grouped by status, reflecting all filters except status.
+  """
+  statusCounts: [SubmissionStatusCount!]!
 }
 
 """The status of a submission"""
@@ -842,6 +876,12 @@ enum SubmissionStatus {
   RESUBMITTED
   REVISION_REQUESTED
   UNDER_REVIEW
+}
+
+"""A count of submissions with a given status"""
+type SubmissionStatusCount {
+  count: Int!
+  status: SubmissionStatus!
 }
 
 enum SubmissionUserRoles {

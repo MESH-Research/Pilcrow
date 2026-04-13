@@ -6,12 +6,55 @@ extend type Query {
 
     "Return all submissions"
     submissions(
-        status: [SubmissionStatus!] @scope(name: statusFilter)
-        my_roles: [SubmissionUserRoles!] @scope(name: myRoleFilter)
-        publication: [ID!] @scope(name: publicationFilter)
+        status: [SubmissionStatus!]
+        my_roles: [SubmissionUserRoles!]
+        publication: [ID!]
+        orderBy: [QuerySubmissionsOrderByOrderByClause!]
     ): [Submission!]
-        @paginate(defaultCount: 100, scopes: ["visible"])
-        @orderBy(column: "created_at", direction: DESC)
+        @paginate(
+            defaultCount: 100
+            resolver: "App\\GraphQL\\Queries\\PaginateSubmissions"
+        )
+}
+
+"Allowed column names for Query.submissions.orderBy."
+enum QuerySubmissionsOrderByColumn {
+    CREATED_AT
+    UPDATED_AT
+    TITLE
+    STATUS
+}
+
+"Order by clause for Query.submissions.orderBy."
+input QuerySubmissionsOrderByOrderByClause {
+    "The column that is used for ordering."
+    column: QuerySubmissionsOrderByColumn!
+
+    "The direction that is used for ordering."
+    order: SortOrder!
+}
+
+"""
+A paginated list of Submission items with aggregate status counts.
+"""
+type SubmissionPaginator {
+    "Pagination information about the list of items."
+    paginatorInfo: PaginatorInfo!
+        @field(
+            resolver: "Nuwave\\Lighthouse\\Pagination\\PaginatorField@paginatorInfoResolver"
+        )
+
+    "A list of Submission items."
+    data: [Submission!]!
+        @field(
+            resolver: "Nuwave\\Lighthouse\\Pagination\\PaginatorField@dataResolver"
+        )
+
+    "Submission counts grouped by status, reflecting all filters except status."
+    statusCounts: [SubmissionStatusCount!]!
+        @field(
+            resolver: "App\\GraphQL\\Resolvers\\SubmissionStatusCountsField"
+        )
 }
 
 extend type Mutation {

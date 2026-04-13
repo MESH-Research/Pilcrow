@@ -361,3 +361,55 @@ body.body--dark
     background: $dark-6 !important
 .bg-dark-warning
     background: $dark-warning !important
+.bg-dashboard-green
+    background: #3D5C2D !important
+.text-dashboard-green
+    color: #3D5C2D !important
+
+// Color-blind accessible patterns for status categories.
+// All pattern rules are gated behind .a11y-patterns so they can be toggled
+// via a user preference. Add .a11y-patterns to body or a wrapper to enable.
+// Also activates automatically when the user has prefers-contrast: more.
+=a11y-pattern-rules
+    [class*="pattern-"]
+        position: relative
+
+        > *
+            position: relative
+            z-index: 1
+
+        &::after
+            content: ""
+            position: absolute
+            inset: 0
+            pointer-events: none
+            z-index: 0
+
+    .pattern-text-mask
+        background: inherit
+        border-radius: 8px
+        padding: 2px 4px
+        margin: -2px -4px
+        position: relative
+        z-index: 1
+
+    .pattern-diagonal::after
+        background: repeating-linear-gradient( 45deg, transparent, transparent 5px, rgba(255,255,255,0.3) 5px, rgba(255,255,255,0.3) 8px )
+
+    .pattern-zigzag::after
+        background: linear-gradient( 135deg, rgba(255,255,255,0.3) 25%, transparent 25% ) -6px 0, linear-gradient( 225deg, rgba(255,255,255,0.3) 25%, transparent 25% ) -6px 0, linear-gradient( 315deg, rgba(255,255,255,0.3) 25%, transparent 25% ), linear-gradient( 45deg, rgba(255,255,255,0.3) 25%, transparent 25% )
+        background-size: 12px 12px
+
+    .pattern-dots::after
+        background: radial-gradient( circle, rgba(255,255,255,0.35) 2px, transparent 2px )
+        background-size: 10px 10px
+
+    .pattern-crosshatch::after
+        background: repeating-linear-gradient( 45deg, transparent, transparent 5px, rgba(255,255,255,0.22) 5px, rgba(255,255,255,0.22) 8px ), repeating-linear-gradient( -45deg, transparent, transparent 5px, rgba(255,255,255,0.22) 5px, rgba(255,255,255,0.22) 8px )
+
+.a11y-patterns
+    +a11y-pattern-rules
+
+@media (prefers-contrast: more)
+    body
+        +a11y-pattern-rules

@@ -141,6 +141,7 @@ export function usePaginatedQuery(
     rows,
     loading,
     refetch,
-    onRequest
+    onRequest,
+    result
   }
 }
