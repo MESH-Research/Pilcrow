@@ -192,6 +192,7 @@ graphql(`
     $orderBy: [QuerySubmissionsOrderByOrderByClause!]
   ) {
     publication(id: $id) {
+      id
       submissions(
         page: $page
         first: $first

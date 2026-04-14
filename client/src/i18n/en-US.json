@@ -1,5 +1,10 @@
 {
   "needs_attention": "Needs attention",
+  "tables": {
+    "name_avatar_list": {
+      "users_assigned": "No users assigned | 1 user assigned: {names} | {n} users assigned: {names}"
+    }
+  },
   "user": {
     "self": "No users | User | Users",
     "email": "Email",
