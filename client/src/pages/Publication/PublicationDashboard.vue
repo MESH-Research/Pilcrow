@@ -54,8 +54,16 @@
               :class="`bg-${category.color} ${category.textClass} ${category.pattern}`"
             >
               <div class="row items-center no-wrap pattern-text-mask">
-                <q-icon :name="category.icon" size="md" class="q-mr-sm" />
-                <div class="col text-subtitle2" style="line-height: 1.3">
+                <q-icon :name="category.icon" size="md" />
+                <q-separator
+                  vertical
+                  class="q-mx-sm"
+                  style="background: currentColor; opacity: 0.5"
+                />
+                <div
+                  class="col text-weight-medium"
+                  style="font-size: 1rem; line-height: 1.3"
+                >
                   {{ $t(`publication.dashboard.categories.${category.key}`) }}
                 </div>
                 <div
@@ -67,30 +75,18 @@
               </div>
             </q-card-section>
             <q-card-section v-if="category.items.length > 0" class="q-py-sm">
-              <div class="row items-center no-wrap q-pb-sm">
-                <div
-                  class="col row items-center no-wrap cursor-pointer"
-                  @click="toggleCategoryAll(category)"
-                >
-                  <q-icon
-                    :name="
-                      isCategoryFullySelected(category)
-                        ? 'check_box'
-                        : isCategoryPartiallySelected(category)
-                          ? 'indeterminate_check_box'
-                          : 'check_box_outline_blank'
-                    "
-                    size="sm"
-                    class="q-mr-sm"
-                  />
-                  <span class="text-body2">
-                    {{
-                      isCategoryFullySelected(category)
-                        ? "Deselect all"
-                        : "Select all"
-                    }}
-                  </span>
-                </div>
+              <div class="row items-center no-wrap">
+                <q-checkbox
+                  :model-value="categoryCheckboxState(category)"
+                  :label="
+                    isCategoryFullySelected(category)
+                      ? 'Deselect all'
+                      : 'Select all'
+                  "
+                  dense
+                  class="col"
+                  @update:model-value="toggleCategoryAll(category)"
+                />
                 <q-btn flat round dense size="xs" icon="more_vert" @click.stop>
                   <q-menu>
                     <q-list dense style="min-width: 180px">
@@ -134,14 +130,15 @@
               >
                 <q-checkbox
                   :model-value="statusFilter.includes(item.status)"
+                  :label="$t(`submission.status.${item.status}`)"
                   dense
-                  class="q-mr-sm"
+                  class="col"
                   @update:model-value="toggleStatus(item.status)"
                 />
-                <span class="col ellipsis text-body2">
-                  {{ $t(`submission.status.${item.status}`) }}
-                </span>
-                <span class="text-body2 text-weight-bold q-ml-sm">
+                <span
+                  class="text-body2 text-weight-bold text-center"
+                  style="min-width: 24px"
+                >
                   {{ item.count }}
                 </span>
               </div>
@@ -364,6 +361,12 @@ function isCategoryPartiallySelected(category: StatusCategory): boolean {
     !isCategoryFullySelected(category) &&
     category.statuses.some((s) => statusFilter.value.includes(s))
   )
+}
+
+function categoryCheckboxState(category: StatusCategory): boolean | null {
+  if (isCategoryFullySelected(category)) return true
+  if (isCategoryPartiallySelected(category)) return null
+  return false
 }
 
 function toggleCategoryAll(category: StatusCategory) {
