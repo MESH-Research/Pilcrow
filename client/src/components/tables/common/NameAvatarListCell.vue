@@ -1,31 +1,46 @@
 <template>
   <q-td :props="scope" :dense="scope.dense">
-    <div
-      v-if="users.length"
-      class="row items-center no-wrap q-gutter-xs"
-      role="group"
-      :aria-label="ariaLabel"
-    >
+    <template v-if="users.length">
       <span class="sr-only">{{ ariaLabel }}</span>
-      <template v-if="expanded">
-        <ul class="column q-gutter-xs col q-pa-none q-ma-none no-list-style">
-          <li v-for="user in users" :key="user.email">
-            <q-item class="q-pa-none">
-              <q-item-section side>
-                <avatar-image
-                  :user="user"
-                  rounded
-                  :aria-label="user.name ?? user.email"
-                />
-              </q-item-section>
-              <q-item-section>
-                <q-item-label v-if="user.name">{{ user.name }}</q-item-label>
-              </q-item-section>
-            </q-item>
-          </li>
-        </ul>
+      <template v-if="showExpanded">
+        <q-item
+          v-for="(user, idx) in users"
+          :key="user.email"
+          class="q-pa-none"
+        >
+          <q-item-section side>
+            <avatar-image
+              :user="user"
+              size="md"
+              rounded
+              :aria-label="user.name ?? user.email"
+            />
+          </q-item-section>
+          <q-item-section>
+            <q-item-label v-if="user.name">{{ user.name }}</q-item-label>
+          </q-item-section>
+          <q-item-section v-if="idx === 0 && users.length > 1" side>
+            <q-btn
+              flat
+              dense
+              round
+              size="xs"
+              icon="unfold_less"
+              aria-label="Collapse user list"
+              :aria-expanded="true"
+              @click.stop="expanded = false"
+            >
+              <q-tooltip>Collapse</q-tooltip>
+            </q-btn>
+          </q-item-section>
+        </q-item>
       </template>
-      <template v-else>
+      <div
+        v-else
+        class="row items-center no-wrap q-gutter-xs"
+        role="group"
+        :aria-label="ariaLabel"
+      >
         <div
           v-for="user in users"
           :key="user.email"
@@ -33,34 +48,48 @@
         >
           <avatar-image
             :user="user"
-            size="sm"
+            size="md"
             rounded
             :aria-label="user.name ?? user.email"
           />
           <q-tooltip>{{ user.name ?? user.email }}</q-tooltip>
         </div>
-      </template>
-      <q-btn
-        v-if="users.length > 1"
-        flat
-        dense
-        round
-        size="xs"
-        :icon="expanded ? 'unfold_less' : 'unfold_more'"
-        :aria-label="expanded ? 'Collapse user list' : 'Expand user list'"
-        :aria-expanded="expanded"
-        class="q-ml-xs"
-        @click.stop="expanded = !expanded"
-      >
-        <q-tooltip>{{ expanded ? "Collapse" : "Expand" }}</q-tooltip>
-      </q-btn>
-    </div>
+        <q-space v-if="users.length > 1" />
+        <q-btn
+          v-if="users.length > 1"
+          flat
+          dense
+          round
+          size="xs"
+          icon="unfold_more"
+          aria-label="Expand user list"
+          :aria-expanded="false"
+          class="q-ml-xs"
+          @click.stop="expanded = true"
+        >
+          <q-tooltip>Expand</q-tooltip>
+        </q-btn>
+      </div>
+    </template>
     <span v-else class="text-grey" aria-label="No users assigned">&mdash;</span>
   </q-td>
 </template>
 
+<script lang="ts">
+import type { InjectionKey, Ref } from "vue"
+
+/**
+ * Optional injection key. When a parent provides this ref, all
+ * NameAvatarListCell instances below will sync their expanded state
+ * with it, enabling a dashboard-level expand/collapse all control.
+ */
+export const NameAvatarListExpandAllKey: InjectionKey<Ref<boolean>> = Symbol(
+  "NameAvatarListExpandAll"
+)
+</script>
+
 <script setup lang="ts">
-import { computed, ref } from "vue"
+import { computed, inject, ref, watch } from "vue"
 import AvatarImage from "src/components/atoms/AvatarImage.vue"
 import { useI18n } from "vue-i18n"
 import type { NameAvatarCellFragment } from "src/graphql/generated/graphql"
@@ -79,6 +108,22 @@ const users = computed(
 
 const expanded = ref(false)
 
+// Sync with a parent-provided expand-all state if present.
+const expandAll = inject(NameAvatarListExpandAllKey, null)
+if (expandAll) {
+  watch(
+    expandAll,
+    (value) => {
+      expanded.value = value
+    },
+    { immediate: true }
+  )
+}
+
+// Single-user rows always render in the full avatar+name layout;
+// multi-user rows are collapsed by default and expandable.
+const showExpanded = computed(() => users.value.length === 1 || expanded.value)
+
 const ariaLabel = computed(() =>
   t("tables.name_avatar_list.users_assigned", users.value.length, {
     named: {
@@ -90,9 +135,3 @@ const ariaLabel = computed(() =>
   })
 )
 </script>
-
-<style scoped>
-.no-list-style {
-  list-style: none;
-}
-</style>

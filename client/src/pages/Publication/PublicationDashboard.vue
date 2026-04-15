@@ -158,7 +158,23 @@
         sync-url
         :default-sort="{ sortBy: 'updated_at', descending: true }"
         @row-click="onRowClick"
-      />
+      >
+        <template #top-after>
+          <q-btn
+            flat
+            dense
+            :icon="expandAllReviewers ? 'unfold_less' : 'unfold_more'"
+            :label="expandAllReviewers ? 'Collapse all' : 'Expand all'"
+            :aria-label="
+              expandAllReviewers
+                ? 'Collapse all reviewer lists'
+                : 'Expand all reviewer lists'
+            "
+            no-caps
+            @click="expandAllReviewers = !expandAllReviewers"
+          />
+        </template>
+      </QueryTable>
     </template>
   </div>
 </template>
@@ -223,7 +239,7 @@ graphql(`
 </script>
 
 <script setup lang="ts">
-import { computed, ref, watch } from "vue"
+import { computed, provide, ref, watch } from "vue"
 import { useQuery } from "@vue/apollo-composable"
 import { useRouter, useRoute } from "vue-router"
 import QueryTable, {
@@ -231,7 +247,9 @@ import QueryTable, {
 } from "src/components/tables/QueryTable.vue"
 import DateTimeCell from "src/components/tables/common/DateTimeCell.vue"
 import NameAvatarCell from "src/components/tables/common/NameAvatarCell.vue"
-import NameAvatarListCell from "src/components/tables/common/NameAvatarListCell.vue"
+import NameAvatarListCell, {
+  NameAvatarListExpandAllKey
+} from "src/components/tables/common/NameAvatarListCell.vue"
 import StatusBadgeCell from "./components/StatusBadgeCell.vue"
 import {
   statusCategories,
@@ -250,6 +268,10 @@ interface Props {
 const props = defineProps<Props>()
 const router = useRouter()
 const route = useRoute()
+
+// Shared state for expanding/collapsing all reviewer lists at once.
+const expandAllReviewers = ref(false)
+provide(NameAvatarListExpandAllKey, expandAllReviewers)
 
 // Fetch publication data with global status counts
 const { result } = useQuery(GetPublicationDashboardDocument, { id: props.id })
@@ -465,3 +487,9 @@ function onRowClick(_evt: Event, row: { id: string }) {
   })
 }
 </script>
+
+<style scoped>
+:deep(.q-table tbody td) {
+  vertical-align: top;
+}
+</style>
