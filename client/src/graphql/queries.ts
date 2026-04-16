@@ -502,6 +502,12 @@ export const GET_RECORDS_OF_REVIEW = gql`
           id
           created_at
           event
+          old_values {
+            content_id
+            status
+            status_change_comment
+            title
+          }
           new_values {
             content_id
             status
@@ -511,10 +517,8 @@ export const GET_RECORDS_OF_REVIEW = gql`
         }
         title
         status
-        my_role
         created_at
         submitted_at
-        effective_role
         submitters {
           ...relatedUserFields
         }
@@ -528,7 +532,6 @@ export const GET_RECORDS_OF_REVIEW = gql`
         publication {
           id
           name
-          my_role
           editors {
             ...relatedUserFields
           }

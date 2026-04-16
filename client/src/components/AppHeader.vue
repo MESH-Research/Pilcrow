@@ -58,7 +58,7 @@
                 {{ $t("settings.page_title") }}
               </q-item-section>
             </q-item>
-            <q-item clickable to="/record_of_review">
+            <q-item clickable to="/reviews/records">
               <q-item-section avatar>
                 <q-icon name="description" />
               </q-item-section>

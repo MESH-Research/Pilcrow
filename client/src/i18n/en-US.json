@@ -351,9 +351,14 @@
   },
   "record_of_review_table": {
     "title": "Record of Review",
+    "title_record": "Record of Review for { title }",
     "tooltip": "Only reviews that have completed will appear here",
     "byline": "Select one or more reviews to get a record of review",
-    "no_data": "There are no reviews for you."
+    "no_data": "There are no reviews for you.",
+    "download_all": "Download All",
+    "download_one": "Download This Record",
+    "info_reviewers": "Reviewer Information",
+    "info_review": "Review Information"
   },
   "submission_tables": {
     "filter_label": "Filter by Status",

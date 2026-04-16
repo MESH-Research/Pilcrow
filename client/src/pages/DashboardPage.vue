@@ -108,7 +108,7 @@
       <h3>Record of Review</h3>
       <p>
         Generate a
-        <router-link clickable to="/record_of_review"
+        <router-link clickable to="/reviews/records" class="text-primary"
           >Record of Review</router-link
         >
         for a submission.

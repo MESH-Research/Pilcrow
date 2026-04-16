@@ -34,6 +34,16 @@
         />
       </div>
     </section>
+    <section class="q-pa-lg">
+      <h3>Record of Review</h3>
+      <p>
+        Generate a
+        <router-link clickable to="/reviews/records" class="text-primary"
+          >Record of Review</router-link
+        >
+        for a submission.
+      </p>
+    </section>
   </article>
 </template>
 
