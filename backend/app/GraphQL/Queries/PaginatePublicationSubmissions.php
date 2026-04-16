@@ -70,14 +70,22 @@ class PaginatePublicationSubmissions
         return $paginator;
     }
 
+    /** Minimum length of the search term (post-prefix). */
+    private const MIN_SEARCH_LENGTH = 3;
+
     /**
      * Apply a search term to the submissions query.
      *
-     * Supports prefixed searches:
-     *   - submitter:foo       - submitter name or email contains "foo"
-     *   - reviewer:foo        - any reviewer name or email contains "foo"
-     *   - coordinator:foo     - review coordinator name or email contains "foo"
-     *   - foo                 - submission title contains "foo" (default)
+     * Prefixes narrow the search to a single field. Without a prefix,
+     * the search matches against the submission title AND any assigned
+     * user (submitter, reviewer, review coordinator):
+     *
+     *   - title:foo           - submission title only
+     *   - submitter:foo       - submitter name/email/username only
+     *   - reviewer:foo        - any reviewer name/email/username only
+     *   - coordinator:foo     - review coordinator name/email/username only
+     *   - user:foo            - any assigned user, any role
+     *   - foo                 - title OR any assigned user
      *
      * @param \Illuminate\Database\Eloquent\Relations\HasMany $query
      * @param string $search
@@ -90,30 +98,116 @@ class PaginatePublicationSubmissions
             return;
         }
 
-        $relationMap = [
+        [$prefix, $term] = $this->splitPrefix($search);
+        // Enforce a minimum length on whichever portion will be queried.
+        $lengthTarget = $prefix !== null ? $term : $search;
+        if (mb_strlen($lengthTarget) < self::MIN_SEARCH_LENGTH) {
+            return;
+        }
+
+        $userRelations = [
             'submitter' => 'submitters',
             'reviewer' => 'reviewers',
             'coordinator' => 'reviewCoordinators',
             'review_coordinator' => 'reviewCoordinators',
         ];
 
-        if (str_contains($search, ':')) {
-            [$prefix, $term] = explode(':', $search, 2);
-            $prefix = strtolower(trim($prefix));
-            $term = trim($term);
+        if ($prefix === 'title') {
+            $query->where('title', 'like', $this->likeValue($term));
 
-            if (isset($relationMap[$prefix]) && $term !== '') {
-                $query->whereHas($relationMap[$prefix], function ($q) use ($term) {
-                    $q->where('users.name', 'like', '%' . $term . '%')
-                        ->orWhere('users.email', 'like', '%' . $term . '%')
-                        ->orWhere('users.username', 'like', '%' . $term . '%');
-                });
-
-                return;
-            }
+            return;
         }
 
-        // Default: match against title
-        $query->where('title', 'like', '%' . $search . '%');
+        if ($prefix === 'user') {
+            $this->whereAnyUser($query, $term, array_values(array_unique($userRelations)));
+
+            return;
+        }
+
+        if (isset($userRelations[$prefix])) {
+            $query->whereHas(
+                $userRelations[$prefix],
+                fn ($q) => $this->matchUserFields($q, $term)
+            );
+
+            return;
+        }
+
+        // No prefix — match title or any assigned user
+        $query->where(function ($q) use ($search, $userRelations) {
+            $q->where('title', 'like', $this->likeValue($search));
+            $this->whereAnyUser(
+                $q,
+                $search,
+                array_values(array_unique($userRelations)),
+                'orWhereHas'
+            );
+        });
+    }
+
+    /**
+     * Split a search string into (prefix, term).
+     *
+     * @param string $search
+     * @return array{0: string|null, 1: string}
+     */
+    private function splitPrefix(string $search): array
+    {
+        if (! str_contains($search, ':')) {
+            return [null, $search];
+        }
+        [$prefix, $term] = explode(':', $search, 2);
+
+        return [strtolower(trim($prefix)), trim($term)];
+    }
+
+    /**
+     * Match the term against a user's name, email, and username.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param string $term
+     * @return void
+     */
+    private function matchUserFields($query, string $term): void
+    {
+        $value = $this->likeValue($term);
+        $query->where('users.name', 'like', $value)
+            ->orWhere('users.email', 'like', $value)
+            ->orWhere('users.username', 'like', $value);
+    }
+
+    /**
+     * Constrain the query so at least one of the given relations has
+     * a user matching the term.
+     *
+     * @param \Illuminate\Database\Eloquent\Relations\HasMany|\Illuminate\Database\Eloquent\Builder $query
+     * @param string $term
+     * @param array<int, string> $relations
+     * @param string $method whereHas or orWhereHas
+     * @return void
+     */
+    private function whereAnyUser(
+        $query,
+        string $term,
+        array $relations,
+        string $method = 'whereHas'
+    ): void {
+        foreach ($relations as $i => $relation) {
+            $m = $i === 0 ? $method : 'orWhereHas';
+            $query->{$m}($relation, fn ($q) => $this->matchUserFields($q, $term));
+        }
+    }
+
+    /**
+     * Escape a search term for use in a SQL LIKE value and wrap it
+     * with % wildcards. Escapes %, _, and \ so users can't (accidentally
+     * or otherwise) inject LIKE wildcards.
+     *
+     * @param string $term
+     * @return string
+     */
+    private function likeValue(string $term): string
+    {
+        return '%' . addcslashes($term, '%_\\') . '%';
     }
 }

@@ -505,7 +505,7 @@
         "status": "Status"
       },
       "show_only": "Show only these",
-      "search_hint": "Search by title, or prefix with submitter:, reviewer:, or coordinator: to search assigned users",
+      "search_hint": "Enter at least 3 characters. Searches title and assigned users. Use title:, submitter:, reviewer:, coordinator:, or user: to narrow the search.",
       "no_submissions": "No submissions match the current filters.",
       "submission_count": "no submissions | {n} submission | {n} submissions"
     },
