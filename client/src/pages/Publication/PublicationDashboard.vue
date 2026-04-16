@@ -158,7 +158,6 @@
         :columns="columns"
         sync-url
         :default-sort="{ sortBy: 'updated_at', descending: true }"
-        @row-click="onRowClick"
       >
         <template #top-after>
           <q-btn
@@ -443,6 +442,10 @@ const columns: QueryTableColumn[] = [
     align: "left",
     sortable: true,
     component: TextCell,
+    linkTo: (row) => ({
+      name: "submission:details",
+      params: { id: row.id as string }
+    }),
     label: "Title",
     style: "white-space: normal"
   },
@@ -484,13 +487,6 @@ const columns: QueryTableColumn[] = [
     label: "Updated"
   }
 ]
-
-function onRowClick(_evt: Event, row: { id: string }) {
-  router.push({
-    name: "submission:details",
-    params: { id: row.id }
-  })
-}
 </script>
 
 <style scoped>
