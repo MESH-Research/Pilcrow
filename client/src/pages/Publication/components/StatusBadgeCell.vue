@@ -1,13 +1,23 @@
 <template>
   <q-td :props="scope" :dense="scope.dense">
-    <q-badge
-      :color="style.color"
-      :class="['text-weight-medium q-pa-sm', style.textClass, style.pattern]"
-    >
-      <q-icon :name="style.icon" size="xs" />
-      <q-separator vertical class="q-mx-xs" />
-      <span class="pattern-text-mask">{{ label }}</span>
-    </q-badge>
+    <q-item class="q-pa-none">
+      <q-item-section>
+        <div>
+          <q-badge
+            :color="style.color"
+            :class="[
+              'text-weight-medium q-pa-sm',
+              style.textClass,
+              style.pattern
+            ]"
+          >
+            <q-icon :name="style.icon" size="xs" />
+            <q-separator vertical class="q-mx-xs" />
+            <span class="pattern-text-mask">{{ label }}</span>
+          </q-badge>
+        </div>
+      </q-item-section>
+    </q-item>
   </q-td>
 </template>
 

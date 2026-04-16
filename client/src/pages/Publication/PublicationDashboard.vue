@@ -250,6 +250,7 @@ import QueryTable, {
 } from "src/components/tables/QueryTable.vue"
 import DateTimeCell from "src/components/tables/common/DateTimeCell.vue"
 import NameAvatarCell from "src/components/tables/common/NameAvatarCell.vue"
+import TextCell from "src/components/tables/common/TextCell.vue"
 import NameAvatarListCell, {
   NameAvatarListExpandAllKey
 } from "src/components/tables/common/NameAvatarListCell.vue"
@@ -441,6 +442,7 @@ const columns: QueryTableColumn[] = [
     field: "title",
     align: "left",
     sortable: true,
+    component: TextCell,
     label: "Title",
     style: "white-space: normal"
   },
