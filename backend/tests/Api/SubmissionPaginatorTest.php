@@ -270,8 +270,10 @@ class SubmissionPaginatorTest extends ApiTestCase
         );
 
         $counts = collect($response->json('data.publication.submission_status_counts'));
-        $this->assertEquals(2, $counts->firstWhere('status', 'DRAFT')['count']);
+        // Drafts are excluded from publication-level counts.
+        $this->assertNull($counts->firstWhere('status', 'DRAFT'));
         $this->assertEquals(1, $counts->firstWhere('status', 'INITIALLY_SUBMITTED')['count']);
-        $this->assertEquals(6, $counts->sum('count'));
+        // 6 total minus 2 drafts = 4
+        $this->assertEquals(4, $counts->sum('count'));
     }
 }

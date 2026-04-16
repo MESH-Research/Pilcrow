@@ -180,11 +180,15 @@ class Publication extends BaseModel
     /**
      * Return submission counts grouped by status for this publication.
      *
+     * Drafts are excluded — they are the author's private work and
+     * aren't visible to the publication admin/editor dashboard.
+     *
      * @return \Illuminate\Support\Collection<int, array{status: int, count: int}>
      */
     public function getSubmissionStatusCounts(): Collection
     {
         return $this->submissions()
+            ->where('status', '!=', Submission::DRAFT)
             ->select('status', DB::raw('count(*) as count'))
             ->groupBy('status')
             ->get()

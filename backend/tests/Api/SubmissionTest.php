@@ -180,6 +180,7 @@ class SubmissionTest extends ApiTestCase
             ->for($publication)
             ->create([
                 'title' => 'Test Submission',
+                'status' => Submission::INITIALLY_SUBMITTED,
             ]);
 
         $response = $this->graphQL(
@@ -205,6 +206,64 @@ class SubmissionTest extends ApiTestCase
         $response->assertJsonPath('data.publication.submissions.paginatorInfo.total', 1);
         $response->assertJsonPath('data.publication.submissions.data.0.id', (string)$submission->id);
         $response->assertJsonPath('data.publication.submissions.data.0.title', 'Test Submission');
+    }
+
+    /**
+     * Drafts are the author's private work and must not appear in the
+     * publication dashboard submissions list (or its status counts).
+     *
+     * @return void
+     */
+    public function testDraftsAreHiddenFromPublicationSubmissions()
+    {
+        $this->beAppAdmin();
+        $publication = Publication::factory()->create();
+        $submitter = User::factory()->create();
+
+        Submission::factory()
+            ->for($publication)
+            ->hasAttached($submitter, [], 'submitters')
+            ->create([
+                'title' => 'Secret draft',
+                'status' => Submission::DRAFT,
+            ]);
+
+        Submission::factory()
+            ->for($publication)
+            ->hasAttached($submitter, [], 'submitters')
+            ->create([
+                'title' => 'Submitted',
+                'status' => Submission::INITIALLY_SUBMITTED,
+            ]);
+
+        $response = $this->graphQL(
+            'query GetSubmissionsByPublication($id: ID!, $first: Int!) {
+                publication(id: $id) {
+                    submissions(first: $first) {
+                        paginatorInfo { total }
+                        data { id title status }
+                    }
+                    submission_status_counts {
+                        status
+                        count
+                    }
+                }
+            }',
+            ['id' => $publication->id, 'first' => 10]
+        );
+
+        $response->assertJsonPath('data.publication.submissions.paginatorInfo.total', 1);
+        $response->assertJsonPath(
+            'data.publication.submissions.data.0.title',
+            'Submitted'
+        );
+
+        $counts = collect($response->json('data.publication.submission_status_counts'));
+        $this->assertNull($counts->firstWhere('status', 'DRAFT'));
+        $this->assertEquals(
+            1,
+            $counts->firstWhere('status', 'INITIALLY_SUBMITTED')['count']
+        );
     }
 
     /**

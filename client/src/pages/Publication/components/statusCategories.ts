@@ -35,7 +35,10 @@ export const statusCategories: StatusCategoryDef[] = [
     textClass: "text-white",
     icon: "edit_note",
     pattern: "pattern-dots",
-    statuses: ["DRAFT", "RESUBMISSION_REQUESTED", "REVISION_REQUESTED"]
+    // DRAFT intentionally omitted — drafts are the author's private
+    // work-in-progress and aren't visible from the publication dashboard
+    // until the author submits.
+    statuses: ["RESUBMISSION_REQUESTED", "REVISION_REQUESTED"]
   },
   {
     key: "completed",

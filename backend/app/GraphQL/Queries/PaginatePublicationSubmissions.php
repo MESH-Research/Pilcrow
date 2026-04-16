@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\GraphQL\Queries;
 
 use App\Models\Publication;
+use App\Models\Submission;
 use App\Pagination\SubmissionPaginator;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -23,7 +24,11 @@ class PaginatePublicationSubmissions
      */
     public function __invoke(Publication $publication, array $args): Paginator
     {
-        $query = $publication->submissions();
+        // Drafts are the author's private work-in-progress and are
+        // intentionally hidden from the publication dashboard until the
+        // author submits them for review.
+        $query = $publication->submissions()
+            ->where('status', '!=', Submission::DRAFT);
 
         // Apply search before the base-query snapshot so that
         // statusCounts also reflects the search.
