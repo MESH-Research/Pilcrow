@@ -532,6 +532,7 @@ type Publication {
 
     """The offset from which items are returned."""
     page: Int
+    search: String
     status: [SubmissionStatus!]
   ): SubmissionPaginator!
   updated_at: DateTimeUtc

@@ -6,6 +6,7 @@ namespace App\GraphQL\Queries;
 use App\Models\Publication;
 use App\Pagination\SubmissionPaginator;
 use Illuminate\Contracts\Pagination\Paginator;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class PaginatePublicationSubmissions
 {
@@ -23,6 +24,12 @@ class PaginatePublicationSubmissions
     public function __invoke(Publication $publication, array $args): Paginator
     {
         $query = $publication->submissions();
+
+        // Apply search before the base-query snapshot so that
+        // statusCounts also reflects the search.
+        if (! empty($args['search'])) {
+            $this->applySearch($query, $args['search']);
+        }
 
         // Snapshot the base query before status filtering so that
         // statusCounts can aggregate across all statuses.
@@ -61,5 +68,52 @@ class PaginatePublicationSubmissions
         $paginator->setBaseQuery($baseQuery);
 
         return $paginator;
+    }
+
+    /**
+     * Apply a search term to the submissions query.
+     *
+     * Supports prefixed searches:
+     *   - submitter:foo       - submitter name or email contains "foo"
+     *   - reviewer:foo        - any reviewer name or email contains "foo"
+     *   - coordinator:foo     - review coordinator name or email contains "foo"
+     *   - foo                 - submission title contains "foo" (default)
+     *
+     * @param \Illuminate\Database\Eloquent\Relations\HasMany $query
+     * @param string $search
+     * @return void
+     */
+    private function applySearch(HasMany $query, string $search): void
+    {
+        $search = trim($search);
+        if ($search === '') {
+            return;
+        }
+
+        $relationMap = [
+            'submitter' => 'submitters',
+            'reviewer' => 'reviewers',
+            'coordinator' => 'reviewCoordinators',
+            'review_coordinator' => 'reviewCoordinators',
+        ];
+
+        if (str_contains($search, ':')) {
+            [$prefix, $term] = explode(':', $search, 2);
+            $prefix = strtolower(trim($prefix));
+            $term = trim($term);
+
+            if (isset($relationMap[$prefix]) && $term !== '') {
+                $query->whereHas($relationMap[$prefix], function ($q) use ($term) {
+                    $q->where('users.name', 'like', '%' . $term . '%')
+                        ->orWhere('users.email', 'like', '%' . $term . '%')
+                        ->orWhere('users.username', 'like', '%' . $term . '%');
+                });
+
+                return;
+            }
+        }
+
+        // Default: match against title
+        $query->where('title', 'like', '%' . $search . '%');
     }
 }

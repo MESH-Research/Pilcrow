@@ -34,6 +34,7 @@ type Publication {
     updated_at: DateTimeUtc
     "Paginated submissions for this publication, with status counts."
     submissions(
+        search: String
         status: [SubmissionStatus!]
         orderBy: [QuerySubmissionsOrderByOrderByClause!]
     ): [Submission!]!

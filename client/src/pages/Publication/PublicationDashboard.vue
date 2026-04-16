@@ -153,6 +153,7 @@
         :query="GetPublicationDashboardSubmissionsDocument"
         t-prefix="publication.dashboard"
         field="publication.submissions"
+        :search-hint="$t('publication.dashboard.search_hint')"
         :variables="tableVariables"
         :columns="columns"
         sync-url
@@ -201,6 +202,7 @@ graphql(`
     $id: ID!
     $page: Int
     $first: Int
+    $search: String
     $status: [SubmissionStatus!]
     $orderBy: [QuerySubmissionsOrderByOrderByClause!]
   ) {
@@ -209,6 +211,7 @@ graphql(`
       submissions(
         page: $page
         first: $first
+        search: $search
         status: $status
         orderBy: $orderBy
       ) {
