@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
             SubmissionSeeder::class,
             InlineCommentSeeder::class,
             OverallCommentSeeder::class,
+            DashboardDemoSeeder::class,
         ]);
     }
 }
