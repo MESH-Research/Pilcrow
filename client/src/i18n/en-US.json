@@ -486,6 +486,7 @@
     "dashboard": {
       "heading": "Dashboard",
       "breadcrumb": "Dashboard",
+      "submissions_heading": "Submissions",
       "categories": {
         "needs_action": "Needs Action",
         "in_progress": "In Progress",

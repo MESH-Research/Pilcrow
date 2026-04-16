@@ -47,42 +47,61 @@
         <div
           v-for="category in categories"
           :key="category.key"
-          class="col-xs-12 col-sm-6 col-md-3 column"
+          class="col-xs-6 col-sm-6 col-md-3 column"
         >
           <q-card class="col">
             <q-card-section
               :class="`bg-${category.color} ${category.textClass} ${category.pattern}`"
             >
-              <div class="row items-center no-wrap pattern-text-mask">
-                <q-icon :name="category.icon" size="md" />
-                <q-separator
-                  vertical
-                  class="q-mx-sm"
-                  style="background: currentColor; opacity: 0.5"
-                />
-                <div
-                  class="col text-weight-medium"
-                  style="font-size: 1rem; line-height: 1.3"
-                >
-                  {{ $t(`publication.dashboard.categories.${category.key}`) }}
+              <template v-if="$q.screen.xs">
+                <div class="column items-center pattern-text-mask text-center">
+                  <div
+                    class="text-weight-bold q-mb-xs"
+                    style="font-size: 2rem; line-height: 1"
+                  >
+                    {{ category.total }}
+                  </div>
+                  <div class="row items-center no-wrap">
+                    <q-icon :name="category.icon" size="sm" class="q-mr-sm" />
+                    <span
+                      class="text-weight-medium"
+                      style="font-size: 0.9rem; line-height: 1.3"
+                    >
+                      {{
+                        $t(`publication.dashboard.categories.${category.key}`)
+                      }}
+                    </span>
+                  </div>
                 </div>
-                <div
-                  class="text-weight-bold q-ml-sm"
-                  style="font-size: 2rem; line-height: 1"
-                >
-                  {{ category.total }}
+              </template>
+              <template v-else>
+                <div class="row items-center no-wrap pattern-text-mask">
+                  <q-icon :name="category.icon" size="md" />
+                  <q-separator
+                    vertical
+                    class="q-mx-sm"
+                    style="background: currentColor; opacity: 0.5"
+                  />
+                  <div
+                    class="col text-weight-medium"
+                    style="font-size: 1rem; line-height: 1.3"
+                  >
+                    {{ $t(`publication.dashboard.categories.${category.key}`) }}
+                  </div>
+                  <div
+                    class="text-weight-bold q-ml-sm"
+                    style="font-size: 2rem; line-height: 1"
+                  >
+                    {{ category.total }}
+                  </div>
                 </div>
-              </div>
+              </template>
             </q-card-section>
-            <q-card-section v-if="category.items.length > 0" class="q-py-sm">
+            <q-card-section v-if="category.items.length > 0" class="q-py-xs">
               <div class="row items-center no-wrap">
                 <q-checkbox
                   :model-value="categoryCheckboxState(category)"
-                  :label="
-                    isCategoryFullySelected(category)
-                      ? 'Deselect all'
-                      : 'Select all'
-                  "
+                  label="Show all"
                   dense
                   class="col"
                   @update:model-value="toggleCategoryAll(category)"
@@ -120,34 +139,63 @@
                     </q-list>
                   </q-menu>
                 </q-btn>
-              </div>
-              <q-separator class="q-my-sm" />
-              <div
-                v-for="item in category.items"
-                :key="item.status"
-                class="row items-center no-wrap q-py-xs cursor-pointer"
-                @click="toggleStatus(item.status)"
-              >
-                <q-checkbox
-                  :model-value="statusFilter.includes(item.status)"
-                  :label="$t(`submission.status.${item.status}`)"
+                <q-btn
+                  v-if="$q.screen.lt.md"
+                  flat
+                  round
                   dense
-                  class="col"
-                  @update:model-value="toggleStatus(item.status)"
+                  size="xs"
+                  :icon="
+                    expandedCategories[category.key]
+                      ? 'expand_less'
+                      : 'expand_more'
+                  "
+                  :aria-label="
+                    expandedCategories[category.key]
+                      ? 'Hide statuses'
+                      : 'Show statuses'
+                  "
+                  :aria-expanded="!!expandedCategories[category.key]"
+                  @click.stop="
+                    expandedCategories[category.key] =
+                      !expandedCategories[category.key]
+                  "
                 />
-                <span
-                  class="text-body2 text-weight-bold text-center"
-                  style="min-width: 24px"
-                >
-                  {{ item.count }}
-                </span>
               </div>
+              <template
+                v-if="!$q.screen.lt.md || expandedCategories[category.key]"
+              >
+                <q-separator class="q-my-sm" />
+                <div
+                  v-for="item in category.items"
+                  :key="item.status"
+                  class="row items-center no-wrap q-py-xs cursor-pointer"
+                  @click="toggleStatus(item.status)"
+                >
+                  <q-checkbox
+                    :model-value="statusFilter.includes(item.status)"
+                    :label="$t(`submission.status.${item.status}`)"
+                    dense
+                    class="col"
+                    @update:model-value="toggleStatus(item.status)"
+                  />
+                  <span
+                    class="text-body2 text-weight-bold text-center"
+                    style="min-width: 24px"
+                  >
+                    {{ item.count }}
+                  </span>
+                </div>
+              </template>
             </q-card-section>
           </q-card>
         </div>
       </div>
 
       <!-- Submissions Table -->
+      <h3 class="q-mt-md q-mb-sm" style="font-size: 1.25rem; line-height: 1.3">
+        {{ $t("publication.dashboard.submissions_heading") }}
+      </h3>
       <QueryTable
         ref="queryTableRef"
         :query="GetPublicationDashboardSubmissionsDocument"
@@ -156,56 +204,45 @@
         :search-hint="$t('publication.dashboard.search_hint')"
         :variables="tableVariables"
         :columns="columns"
-        :visible-columns="visibleColumns"
         :dense="isDense"
         :grid="isGrid"
         sync-url
         :default-sort="{ sortBy: 'updated_at', descending: true }"
       >
         <template v-if="isGrid" #item="gridProps">
-          <div class="q-pa-xs col-xs-12 col-sm-6">
-            <q-card flat bordered>
-              <q-card-section class="q-pa-sm">
-                <div class="text-subtitle2 q-mb-xs">
-                  <router-link
-                    :to="{
-                      name: 'submission:details',
-                      params: { id: gridProps.row.id }
-                    }"
-                    class="text-primary"
-                  >
-                    {{ gridProps.row.title }}
-                  </router-link>
-                </div>
-                <div class="row items-center q-gutter-sm q-mb-xs">
-                  <q-badge
-                    :color="getStatusStyle(gridProps.row.status).color"
-                    :class="[
-                      'text-weight-medium q-pa-sm',
-                      getStatusStyle(gridProps.row.status).textClass,
-                      getStatusStyle(gridProps.row.status).pattern
-                    ]"
-                  >
-                    <q-icon
-                      :name="getStatusStyle(gridProps.row.status).icon"
-                      size="xs"
-                    />
-                    <q-separator vertical class="q-mx-xs" />
-                    <span class="pattern-text-mask">
-                      {{ $t(`submission.status.${gridProps.row.status}`) }}
-                    </span>
-                  </q-badge>
-                </div>
-                <div class="text-caption text-grey-7">
-                  {{ $t("publication.dashboard.headers.created_by") }}:
-                  {{ gridProps.row.created_by?.name ?? "" }}
-                </div>
-              </q-card-section>
-            </q-card>
+          <div class="q-pa-sm col-12 column">
+            <SubmissionCard :submission="gridProps.row" class="col" />
           </div>
         </template>
         <template #top-after>
           <q-btn
+            v-if="isGrid"
+            flat
+            dense
+            no-caps
+            icon="sort"
+            label="Sort"
+            aria-label="Sort submissions"
+          >
+            <q-menu>
+              <q-list dense style="min-width: 220px">
+                <q-item
+                  v-for="option in sortOptions"
+                  :key="option.id"
+                  v-close-popup
+                  clickable
+                  @click="applySort(option)"
+                >
+                  <q-item-section>{{ option.label }}</q-item-section>
+                  <q-item-section v-if="isCurrentSort(option)" side>
+                    <q-icon name="check" size="xs" />
+                  </q-item-section>
+                </q-item>
+              </q-list>
+            </q-menu>
+          </q-btn>
+          <q-btn
+            v-if="!isGrid"
             flat
             dense
             :icon="expandAllReviewers ? 'unfold_less' : 'unfold_more'"
@@ -300,9 +337,9 @@ import NameAvatarListCell, {
   NameAvatarListExpandAllKey
 } from "src/components/tables/common/NameAvatarListCell.vue"
 import StatusBadgeCell from "./components/StatusBadgeCell.vue"
+import SubmissionCard from "./components/SubmissionCard.vue"
 import {
   statusCategories,
-  statusStyleMap,
   type StatusCategoryDef
 } from "./components/statusCategories"
 import {
@@ -322,43 +359,74 @@ const route = useRoute()
 
 // Shared state for expanding/collapsing all reviewer lists at once.
 const expandAllReviewers = ref(false)
-provide(NameAvatarListExpandAllKey, expandAllReviewers)
 
-// Responsive: hide less-essential columns on smaller viewports.
-const allColumnNames = [
-  "title",
-  "created_by",
-  "status",
-  "review_coordinators",
-  "reviewers",
-  "updated_at"
+// Per-category expansion state for the mobile compact layout.
+const expandedCategories = ref<Record<string, boolean>>({})
+
+// Grid-mode sort options (table mode uses column headers).
+interface SortOption {
+  id: string
+  label: string
+  sortBy: string
+  descending: boolean
+}
+const sortOptions: SortOption[] = [
+  {
+    id: "updated_desc",
+    label: "Updated (newest first)",
+    sortBy: "updated_at",
+    descending: true
+  },
+  {
+    id: "updated_asc",
+    label: "Updated (oldest first)",
+    sortBy: "updated_at",
+    descending: false
+  },
+  {
+    id: "title_asc",
+    label: "Title (A–Z)",
+    sortBy: "title",
+    descending: false
+  },
+  {
+    id: "title_desc",
+    label: "Title (Z–A)",
+    sortBy: "title",
+    descending: true
+  },
+  {
+    id: "status_asc",
+    label: "Status (A–Z)",
+    sortBy: "status",
+    descending: false
+  },
+  {
+    id: "status_desc",
+    label: "Status (Z–A)",
+    sortBy: "status",
+    descending: true
+  }
 ]
 
-const visibleColumns = computed(() => {
-  if ($q.screen.lt.sm) {
-    return ["title", "status"]
-  }
-  if ($q.screen.lt.md) {
-    return ["title", "created_by", "status", "updated_at"]
-  }
-  if ($q.screen.lt.lg) {
-    return ["title", "created_by", "status", "reviewers", "updated_at"]
-  }
-  return allColumnNames
-})
-
-const isDense = computed(() => $q.screen.lt.md)
-const isGrid = computed(() => $q.screen.lt.sm)
-
-const defaultStatusStyle = {
-  color: "grey",
-  textClass: "text-white",
-  icon: "help",
-  pattern: ""
+function isCurrentSort(option: SortOption): boolean {
+  const p = queryTableRef.value?.pagination
+  if (!p) return false
+  return p.sortBy === option.sortBy && p.descending === option.descending
 }
-function getStatusStyle(status: string) {
-  return statusStyleMap[status] ?? defaultStatusStyle
+
+function applySort(option: SortOption) {
+  const p = queryTableRef.value?.pagination
+  if (!p) return
+  p.sortBy = option.sortBy
+  p.descending = option.descending
+  p.page = 1
 }
+provide(NameAvatarListExpandAllKey, expandAllReviewers)
+
+// Responsive: switch to grid cards on small screens.
+const isGrid = computed(() => $q.screen.lt.md)
+const isDense = computed(() => $q.screen.md)
 
 // Fetch publication data with global status counts
 const { result } = useQuery(GetPublicationDashboardDocument, { id: props.id })
