@@ -1,5 +1,5 @@
 <template>
-  <div class="q-px-lg">
+  <div :class="$q.screen.lt.sm ? 'q-px-sm' : 'q-px-lg'">
     <nav class="q-pt-md">
       <q-breadcrumbs>
         <q-breadcrumbs-el
@@ -156,9 +156,54 @@
         :search-hint="$t('publication.dashboard.search_hint')"
         :variables="tableVariables"
         :columns="columns"
+        :visible-columns="visibleColumns"
+        :dense="isDense"
+        :grid="isGrid"
         sync-url
         :default-sort="{ sortBy: 'updated_at', descending: true }"
       >
+        <template v-if="isGrid" #item="gridProps">
+          <div class="q-pa-xs col-xs-12 col-sm-6">
+            <q-card flat bordered>
+              <q-card-section class="q-pa-sm">
+                <div class="text-subtitle2 q-mb-xs">
+                  <router-link
+                    :to="{
+                      name: 'submission:details',
+                      params: { id: gridProps.row.id }
+                    }"
+                    class="text-primary"
+                  >
+                    {{ gridProps.row.title }}
+                  </router-link>
+                </div>
+                <div class="row items-center q-gutter-sm q-mb-xs">
+                  <q-badge
+                    :color="getStatusStyle(gridProps.row.status).color"
+                    :class="[
+                      'text-weight-medium q-pa-sm',
+                      getStatusStyle(gridProps.row.status).textClass,
+                      getStatusStyle(gridProps.row.status).pattern
+                    ]"
+                  >
+                    <q-icon
+                      :name="getStatusStyle(gridProps.row.status).icon"
+                      size="xs"
+                    />
+                    <q-separator vertical class="q-mx-xs" />
+                    <span class="pattern-text-mask">
+                      {{ $t(`submission.status.${gridProps.row.status}`) }}
+                    </span>
+                  </q-badge>
+                </div>
+                <div class="text-caption text-grey-7">
+                  {{ $t("publication.dashboard.headers.created_by") }}:
+                  {{ gridProps.row.created_by?.name ?? "" }}
+                </div>
+              </q-card-section>
+            </q-card>
+          </div>
+        </template>
         <template #top-after>
           <q-btn
             flat
@@ -243,6 +288,7 @@ graphql(`
 <script setup lang="ts">
 import { computed, provide, ref, watch } from "vue"
 import { useQuery } from "@vue/apollo-composable"
+import { useQuasar } from "quasar"
 import { useRouter, useRoute } from "vue-router"
 import QueryTable, {
   type QueryTableColumn
@@ -256,6 +302,7 @@ import NameAvatarListCell, {
 import StatusBadgeCell from "./components/StatusBadgeCell.vue"
 import {
   statusCategories,
+  statusStyleMap,
   type StatusCategoryDef
 } from "./components/statusCategories"
 import {
@@ -269,12 +316,49 @@ interface Props {
 }
 
 const props = defineProps<Props>()
+const $q = useQuasar()
 const router = useRouter()
 const route = useRoute()
 
 // Shared state for expanding/collapsing all reviewer lists at once.
 const expandAllReviewers = ref(false)
 provide(NameAvatarListExpandAllKey, expandAllReviewers)
+
+// Responsive: hide less-essential columns on smaller viewports.
+const allColumnNames = [
+  "title",
+  "created_by",
+  "status",
+  "review_coordinators",
+  "reviewers",
+  "updated_at"
+]
+
+const visibleColumns = computed(() => {
+  if ($q.screen.lt.sm) {
+    return ["title", "status"]
+  }
+  if ($q.screen.lt.md) {
+    return ["title", "created_by", "status", "updated_at"]
+  }
+  if ($q.screen.lt.lg) {
+    return ["title", "created_by", "status", "reviewers", "updated_at"]
+  }
+  return allColumnNames
+})
+
+const isDense = computed(() => $q.screen.lt.md)
+const isGrid = computed(() => $q.screen.lt.sm)
+
+const defaultStatusStyle = {
+  color: "grey",
+  textClass: "text-white",
+  icon: "help",
+  pattern: ""
+}
+function getStatusStyle(status: string) {
+  return statusStyleMap[status] ?? defaultStatusStyle
+}
 
 // Fetch publication data with global status counts
 const { result } = useQuery(GetPublicationDashboardDocument, { id: props.id })
