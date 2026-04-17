@@ -36,12 +36,17 @@ class DashboardDemoSeeder extends Seeder
 
         $submissions = $this->submissionData();
 
+        // Build a shared pool of users so the same people appear across
+        // multiple submissions — closer to what a real publication's
+        // reviewer/coordinator rosters look like.
+        $submitterPool = User::factory()->count(12)->create();
+        $coordinatorPool = User::factory()->count(3)->create();
+        $reviewerPool = User::factory()->count(6)->create();
+
         foreach ($submissions as $data) {
-            $submitter = User::factory()->create();
-            $coordinator = User::factory()->create();
-            $reviewers = User::factory()
-                ->count(random_int(1, 4))
-                ->create();
+            $submitter = $submitterPool->random();
+            $coordinator = $coordinatorPool->random();
+            $reviewers = $reviewerPool->random(random_int(1, 4));
 
             $factory = Submission::factory()
                 ->for($publication)
