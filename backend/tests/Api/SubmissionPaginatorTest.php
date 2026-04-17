@@ -81,7 +81,7 @@ class SubmissionPaginatorTest extends ApiTestCase
         return compact('editor', 'publication', 'submitter', 'submissions');
     }
 
-    public function test_status_counts_returns_all_statuses_for_publication(): void
+    public function testStatusCountsReturnsAllStatusesForPublication(): void
     {
         ['publication' => $pub] = $this->seedPublicationWithSubmissions();
 
@@ -101,7 +101,7 @@ class SubmissionPaginatorTest extends ApiTestCase
         $this->assertEquals(1, $counts->firstWhere('status', 'ACCEPTED_AS_FINAL')['count']);
     }
 
-    public function test_status_counts_are_not_affected_by_status_filter(): void
+    public function testStatusCountsAreNotAffectedByStatusFilter(): void
     {
         ['publication' => $pub] = $this->seedPublicationWithSubmissions();
 
@@ -129,7 +129,7 @@ class SubmissionPaginatorTest extends ApiTestCase
         $this->assertEquals(1, $counts->firstWhere('status', 'ACCEPTED_AS_FINAL')['count']);
     }
 
-    public function test_status_counts_are_scoped_to_publication_filter(): void
+    public function testStatusCountsAreScopedToPublicationFilter(): void
     {
         ['editor' => $editor, 'publication' => $pub1] = $this->seedPublicationWithSubmissions();
 
@@ -170,7 +170,7 @@ class SubmissionPaginatorTest extends ApiTestCase
         $this->assertNull($counts2->firstWhere('status', 'DRAFT'));
     }
 
-    public function test_status_counts_with_no_publication_filter(): void
+    public function testStatusCountsWithNoPublicationFilter(): void
     {
         $this->seedPublicationWithSubmissions();
 
@@ -189,7 +189,7 @@ class SubmissionPaginatorTest extends ApiTestCase
         );
     }
 
-    public function test_pagination_works_with_status_counts(): void
+    public function testPaginationWorksWithStatusCounts(): void
     {
         ['publication' => $pub] = $this->seedPublicationWithSubmissions();
 
@@ -209,7 +209,7 @@ class SubmissionPaginatorTest extends ApiTestCase
         $this->assertEquals(6, $counts->sum('count'));
     }
 
-    public function test_ordering_works(): void
+    public function testOrderingWorks(): void
     {
         ['publication' => $pub] = $this->seedPublicationWithSubmissions();
 
@@ -227,7 +227,7 @@ class SubmissionPaginatorTest extends ApiTestCase
         $this->assertEquals($sorted, $titles, 'Results should be sorted by title ascending');
     }
 
-    public function test_visibility_scope_hides_submissions_from_unrelated_users(): void
+    public function testVisibilityScopeHidesSubmissionsFromUnrelatedUsers(): void
     {
         // Create a publication and submissions that the acting user has NO role on
         $owner = User::factory()->create();
@@ -253,7 +253,7 @@ class SubmissionPaginatorTest extends ApiTestCase
         $this->assertEmpty($counts);
     }
 
-    public function test_publication_level_status_counts_unaffected_by_query_filters(): void
+    public function testPublicationLevelStatusCountsUnaffectedByQueryFilters(): void
     {
         ['publication' => $pub] = $this->seedPublicationWithSubmissions();
 
@@ -275,5 +275,242 @@ class SubmissionPaginatorTest extends ApiTestCase
         $this->assertEquals(1, $counts->firstWhere('status', 'INITIALLY_SUBMITTED')['count']);
         // 6 total minus 2 drafts = 4
         $this->assertEquals(4, $counts->sum('count'));
+    }
+
+    private const PUB_SEARCH_QUERY = '
+        query ($id: ID!, $search: String) {
+            publication(id: $id) {
+                submissions(first: 25, search: $search) {
+                    paginatorInfo { total }
+                    data { title }
+                }
+            }
+        }
+    ';
+
+    /**
+     * Seed a publication with submissions whose titles, submitters,
+     * reviewers, and coordinators are distinctive enough to assert
+     * search-prefix targeting.
+     *
+     * @return array{editor: User, publication: Publication}
+     */
+    private function seedPublicationForSearch(): array
+    {
+        /** @var User $editor */
+        $editor = User::factory()->create();
+        $this->actingAs($editor);
+
+        $publication = Publication::factory()
+            ->hasAttached($editor, [], 'editors')
+            ->create(['name' => 'Search Pub']);
+
+        $alice = User::factory()->create(['name' => 'Alice Submitter', 'email' => 'alice@example.com']);
+        $bob = User::factory()->create(['name' => 'Bob Reviewer', 'email' => 'bob@example.com']);
+        $carol = User::factory()->create(['name' => 'Carol Coordinator', 'email' => 'carol@example.com']);
+        $stranger = User::factory()->create(['name' => 'Nobody', 'email' => 'nobody@example.com']);
+
+        // Submission 1: the only one whose TITLE contains "Alice"; assigned to stranger only.
+        Submission::factory()
+            ->for($publication)
+            ->hasAttached($stranger, [], 'submitters')
+            ->create(['title' => 'A paper about Alice', 'status' => Submission::INITIALLY_SUBMITTED]);
+
+        // Submission 2: submitter is Alice; title doesn't mention her.
+        Submission::factory()
+            ->for($publication)
+            ->hasAttached($alice, [], 'submitters')
+            ->create(['title' => 'Quantum Entanglement', 'status' => Submission::INITIALLY_SUBMITTED]);
+
+        // Submission 3: reviewer is Bob; submitter is stranger.
+        Submission::factory()
+            ->for($publication)
+            ->hasAttached($stranger, [], 'submitters')
+            ->hasAttached($bob, [], 'reviewers')
+            ->create(['title' => 'Photosynthesis', 'status' => Submission::UNDER_REVIEW]);
+
+        // Submission 4: coordinator is Carol; submitter is stranger.
+        Submission::factory()
+            ->for($publication)
+            ->hasAttached($stranger, [], 'submitters')
+            ->hasAttached($carol, [], 'reviewCoordinators')
+            ->create(['title' => 'Cold Fusion', 'status' => Submission::AWAITING_DECISION]);
+
+        // Submission 5: control — no matching anything.
+        Submission::factory()
+            ->for($publication)
+            ->hasAttached($stranger, [], 'submitters')
+            ->create(['title' => 'Unrelated Work', 'status' => Submission::INITIALLY_SUBMITTED]);
+
+        return compact('editor', 'publication');
+    }
+
+    public function testSearchTitlePrefixMatchesTitleOnly(): void
+    {
+        ['publication' => $pub] = $this->seedPublicationForSearch();
+
+        $response = $this->graphQL(self::PUB_SEARCH_QUERY, [
+            'id' => (string)$pub->id,
+            'search' => 'title:Alice',
+        ]);
+
+        $titles = array_column($response->json('data.publication.submissions.data'), 'title');
+        $this->assertEquals(['A paper about Alice'], $titles);
+    }
+
+    public function testSearchSubmitterPrefixMatchesSubmittersOnly(): void
+    {
+        ['publication' => $pub] = $this->seedPublicationForSearch();
+
+        $response = $this->graphQL(self::PUB_SEARCH_QUERY, [
+            'id' => (string)$pub->id,
+            'search' => 'submitter:alice',
+        ]);
+
+        $titles = array_column($response->json('data.publication.submissions.data'), 'title');
+        $this->assertEquals(['Quantum Entanglement'], $titles);
+    }
+
+    public function testSearchReviewerPrefixMatchesReviewersOnly(): void
+    {
+        ['publication' => $pub] = $this->seedPublicationForSearch();
+
+        $response = $this->graphQL(self::PUB_SEARCH_QUERY, [
+            'id' => (string)$pub->id,
+            'search' => 'reviewer:bob',
+        ]);
+
+        $titles = array_column($response->json('data.publication.submissions.data'), 'title');
+        $this->assertEquals(['Photosynthesis'], $titles);
+    }
+
+    public function testSearchCoordinatorPrefixMatchesCoordinatorsOnly(): void
+    {
+        ['publication' => $pub] = $this->seedPublicationForSearch();
+
+        $response = $this->graphQL(self::PUB_SEARCH_QUERY, [
+            'id' => (string)$pub->id,
+            'search' => 'coordinator:carol',
+        ]);
+
+        $titles = array_column($response->json('data.publication.submissions.data'), 'title');
+        $this->assertEquals(['Cold Fusion'], $titles);
+    }
+
+    public function testSearchUserPrefixMatchesAnyAssignedRole(): void
+    {
+        ['publication' => $pub] = $this->seedPublicationForSearch();
+
+        // "alice" appears as a submitter but not as a reviewer or coordinator.
+        $response = $this->graphQL(self::PUB_SEARCH_QUERY, [
+            'id' => (string)$pub->id,
+            'search' => 'user:alice',
+        ]);
+
+        $titles = array_column($response->json('data.publication.submissions.data'), 'title');
+        $this->assertEquals(['Quantum Entanglement'], $titles);
+
+        // "carol" is only a coordinator — the user: prefix should still find it.
+        $response = $this->graphQL(self::PUB_SEARCH_QUERY, [
+            'id' => (string)$pub->id,
+            'search' => 'user:carol',
+        ]);
+
+        $titles = array_column($response->json('data.publication.submissions.data'), 'title');
+        $this->assertEquals(['Cold Fusion'], $titles);
+    }
+
+    public function testSearchNoPrefixMatchesTitleOrAnyUser(): void
+    {
+        ['publication' => $pub] = $this->seedPublicationForSearch();
+
+        // "alice" appears in one title AND as a submitter on a different row.
+        $response = $this->graphQL(self::PUB_SEARCH_QUERY, [
+            'id' => (string)$pub->id,
+            'search' => 'alice',
+        ]);
+
+        $titles = array_column($response->json('data.publication.submissions.data'), 'title');
+        sort($titles);
+        $this->assertEquals(['A paper about Alice', 'Quantum Entanglement'], $titles);
+    }
+
+    public function testSearchBelowMinimumLengthIsIgnored(): void
+    {
+        ['publication' => $pub] = $this->seedPublicationForSearch();
+
+        // Two characters — should be treated as if no search was provided.
+        $response = $this->graphQL(self::PUB_SEARCH_QUERY, [
+            'id' => (string)$pub->id,
+            'search' => 'al',
+        ]);
+
+        $this->assertEquals(5, $response->json('data.publication.submissions.paginatorInfo.total'));
+
+        // Minimum applies to the post-prefix term too.
+        $response = $this->graphQL(self::PUB_SEARCH_QUERY, [
+            'id' => (string)$pub->id,
+            'search' => 'title:al',
+        ]);
+
+        $this->assertEquals(5, $response->json('data.publication.submissions.paginatorInfo.total'));
+    }
+
+    public function testSearchEscapesLikeWildcards(): void
+    {
+        ['editor' => $editor, 'publication' => $pub] = $this->seedPublicationForSearch();
+        $this->actingAs($editor);
+
+        // Adding a row with a literal "%" in its title. A naive LIKE would
+        // match every row when the user searches for "%"; with escaping
+        // it should match only this one.
+        $submitter = User::factory()->create();
+        Submission::factory()
+            ->for($pub)
+            ->hasAttached($submitter, [], 'submitters')
+            ->create(['title' => 'Literal 100% match', 'status' => Submission::INITIALLY_SUBMITTED]);
+
+        $response = $this->graphQL(self::PUB_SEARCH_QUERY, [
+            'id' => (string)$pub->id,
+            'search' => 'title:100%',
+        ]);
+
+        $titles = array_column($response->json('data.publication.submissions.data'), 'title');
+        $this->assertEquals(['Literal 100% match'], $titles);
+
+        // Same for underscore.
+        Submission::factory()
+            ->for($pub)
+            ->hasAttached($submitter, [], 'submitters')
+            ->create(['title' => 'snake_case title', 'status' => Submission::INITIALLY_SUBMITTED]);
+
+        $response = $this->graphQL(self::PUB_SEARCH_QUERY, [
+            'id' => (string)$pub->id,
+            'search' => 'title:snake_case',
+        ]);
+
+        $titles = array_column($response->json('data.publication.submissions.data'), 'title');
+        $this->assertEquals(['snake_case title'], $titles);
+    }
+
+    public function testSearchExcludesDraftSubmissions(): void
+    {
+        ['publication' => $pub] = $this->seedPublicationForSearch();
+
+        // Add a draft whose title matches the search term — it should
+        // still be hidden from the publication dashboard.
+        $submitter = User::factory()->create();
+        Submission::factory()
+            ->for($pub)
+            ->hasAttached($submitter, [], 'submitters')
+            ->create(['title' => 'Draft about Alice', 'status' => Submission::DRAFT]);
+
+        $response = $this->graphQL(self::PUB_SEARCH_QUERY, [
+            'id' => (string)$pub->id,
+            'search' => 'title:Alice',
+        ]);
+
+        $titles = array_column($response->json('data.publication.submissions.data'), 'title');
+        $this->assertEquals(['A paper about Alice'], $titles);
     }
 }

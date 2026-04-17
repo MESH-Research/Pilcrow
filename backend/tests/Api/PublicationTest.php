@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Tests\Api;
 
 use App\Models\Publication;
+use App\Models\Submission;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
@@ -889,6 +890,125 @@ class PublicationTest extends ApiTestCase
         );
         $response->assertJson(fn(AssertableJson $json) => $json->has('errors', 1)
             ->etc());
+    }
+
+    private const DASHBOARD_QUERY = '
+        query ($id: ID!) {
+            publication(id: $id) {
+                submissions(first: 10) {
+                    paginatorInfo { total }
+                    data { id title status }
+                }
+                submission_status_counts { status count }
+            }
+        }
+    ';
+
+    public function testEditorCanQueryDashboardSubmissions(): void
+    {
+        /** @var User $editor */
+        $editor = User::factory()->create();
+        $this->actingAs($editor);
+
+        $publication = Publication::factory()
+            ->hasAttached($editor, [], 'editors')
+            ->create();
+
+        $submitter = User::factory()->create();
+        Submission::factory()
+            ->for($publication)
+            ->hasAttached($submitter, [], 'submitters')
+            ->create(['status' => Submission::INITIALLY_SUBMITTED]);
+
+        $response = $this->graphQL(self::DASHBOARD_QUERY, [
+            'id' => (string)$publication->id,
+        ]);
+
+        $response->assertJsonPath('data.publication.submissions.paginatorInfo.total', 1);
+        $this->assertNotEmpty($response->json('data.publication.submission_status_counts'));
+    }
+
+    public function testPublicationAdminCanQueryDashboardSubmissions(): void
+    {
+        /** @var User $admin */
+        $admin = User::factory()->create();
+        $this->actingAs($admin);
+
+        $publication = Publication::factory()
+            ->hasAttached($admin, [], 'publicationAdmins')
+            ->create();
+
+        $submitter = User::factory()->create();
+        Submission::factory()
+            ->for($publication)
+            ->hasAttached($submitter, [], 'submitters')
+            ->create(['status' => Submission::UNDER_REVIEW]);
+
+        $response = $this->graphQL(self::DASHBOARD_QUERY, [
+            'id' => (string)$publication->id,
+        ]);
+
+        $response->assertJsonPath('data.publication.submissions.paginatorInfo.total', 1);
+    }
+
+    public function testOutsiderCannotQueryHiddenPublicationDashboard(): void
+    {
+        $owner = User::factory()->create();
+        $publication = Publication::factory()
+            ->hidden()
+            ->hasAttached($owner, [], 'publicationAdmins')
+            ->create();
+
+        $submitter = User::factory()->create();
+        Submission::factory()
+            ->for($publication)
+            ->hasAttached($submitter, [], 'submitters')
+            ->create(['status' => Submission::INITIALLY_SUBMITTED]);
+
+        /** @var User $outsider */
+        $outsider = User::factory()->create();
+        $this->actingAs($outsider);
+
+        $response = $this->graphQL(self::DASHBOARD_QUERY, [
+            'id' => (string)$publication->id,
+        ]);
+
+        $response->assertJsonPath('data.publication', null);
+    }
+
+    public function testDashboardExcludesDraftSubmissions(): void
+    {
+        /** @var User $editor */
+        $editor = User::factory()->create();
+        $this->actingAs($editor);
+
+        $publication = Publication::factory()
+            ->hasAttached($editor, [], 'editors')
+            ->create();
+
+        $submitter = User::factory()->create();
+
+        Submission::factory()
+            ->for($publication)
+            ->hasAttached($submitter, [], 'submitters')
+            ->create(['status' => Submission::DRAFT]);
+
+        Submission::factory()
+            ->for($publication)
+            ->hasAttached($submitter, [], 'submitters')
+            ->create(['status' => Submission::INITIALLY_SUBMITTED]);
+
+        $response = $this->graphQL(self::DASHBOARD_QUERY, [
+            'id' => (string)$publication->id,
+        ]);
+
+        // Only the non-draft submission should appear.
+        $response->assertJsonPath('data.publication.submissions.paginatorInfo.total', 1);
+
+        // Status counts should also exclude DRAFT.
+        $counts = collect($response->json('data.publication.submission_status_counts'));
+        $this->assertNull($counts->firstWhere('status', 'DRAFT'));
+        $this->assertEquals(1, $counts->sum('count'));
     }
 
     public function testCanUpdateTooManyStyleCriteria()
