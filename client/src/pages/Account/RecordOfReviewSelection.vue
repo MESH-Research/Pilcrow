@@ -18,7 +18,8 @@
         icon="download"
         color="accent"
         class="q-mb-sm"
-      ></q-btn>
+        @click="handleDownloadAll"
+      />
       <p>
         <q-icon name="info" /> Download a Record of Review for all selected
         reviews.
@@ -35,7 +36,7 @@
 <script setup lang="ts">
 import { post_review_states } from "src/utils/postReviewStates"
 import { useQuery } from "@vue/apollo-composable"
-import { computed, ref, watch } from "vue"
+import { computed, ref } from "vue"
 import { compareDatesDesc } from "src/utils/dateSort"
 import { GET_RECORDS_OF_REVIEW } from "src/graphql/queries"
 import RecordOfReviewTable from "src/components/atoms/RecordOfReviewTable.vue"
@@ -64,9 +65,15 @@ const reviews = computed(() => {
   return [...s].sort((a, b) => compareDatesDesc(a.created_at, b.created_at))
 })
 
-function updateBlob() {
-  console.log("Hello World")
+function handleDownloadAll() {
+  const downloadButtons = document.querySelectorAll(".record-download-button")
+  downloadButtons.forEach((button) => {
+    const clickEvent = new MouseEvent("click", {
+      view: window,
+      bubbles: true,
+      cancelable: false
+    })
+    button.dispatchEvent(clickEvent)
+  })
 }
-
-watch(selected_reviews, () => updateBlob())
 </script>
