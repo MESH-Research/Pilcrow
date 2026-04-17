@@ -89,6 +89,7 @@ class PaginatePublicationSubmissions
      *   - submitter:foo       - submitter name/email/username only
      *   - reviewer:foo        - any reviewer name/email/username only
      *   - coordinator:foo     - review coordinator name/email/username only
+     *   - team:foo            - any reviewer OR coordinator (review team)
      *   - user:foo            - any assigned user, any role
      *   - foo                 - title OR any assigned user
      *
@@ -125,6 +126,12 @@ class PaginatePublicationSubmissions
 
         if ($prefix === 'user') {
             $this->whereAnyUser($query, $term, array_values(array_unique($userRelations)));
+
+            return;
+        }
+
+        if ($prefix === 'team') {
+            $this->whereAnyUser($query, $term, ['reviewers', 'reviewCoordinators']);
 
             return;
         }

@@ -397,6 +397,38 @@ class SubmissionPaginatorTest extends ApiTestCase
         $this->assertEquals(['Cold Fusion'], $titles);
     }
 
+    public function testSearchTeamPrefixMatchesReviewersAndCoordinators(): void
+    {
+        ['publication' => $pub] = $this->seedPublicationForSearch();
+
+        // Bob is a reviewer on one submission.
+        $response = $this->graphQL(self::PUB_SEARCH_QUERY, [
+            'id' => (string)$pub->id,
+            'search' => 'team:bob',
+        ]);
+
+        $titles = array_column($response->json('data.publication.submissions.data'), 'title');
+        $this->assertEquals(['Photosynthesis'], $titles);
+
+        // Carol is a coordinator on one submission; team: finds her too.
+        $response = $this->graphQL(self::PUB_SEARCH_QUERY, [
+            'id' => (string)$pub->id,
+            'search' => 'team:carol',
+        ]);
+
+        $titles = array_column($response->json('data.publication.submissions.data'), 'title');
+        $this->assertEquals(['Cold Fusion'], $titles);
+
+        // Alice is a submitter only; team: should NOT match her.
+        $response = $this->graphQL(self::PUB_SEARCH_QUERY, [
+            'id' => (string)$pub->id,
+            'search' => 'team:alice',
+        ]);
+
+        $titles = array_column($response->json('data.publication.submissions.data'), 'title');
+        $this->assertEquals([], $titles);
+    }
+
     public function testSearchUserPrefixMatchesAnyAssignedRole(): void
     {
         ['publication' => $pub] = $this->seedPublicationForSearch();
