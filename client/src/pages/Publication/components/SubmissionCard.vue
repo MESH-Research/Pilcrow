@@ -81,7 +81,7 @@
     <q-card-section v-if="submission.created_by" class="q-py-sm q-px-md">
       <q-item class="q-pa-none">
         <q-item-section side>
-          <avatar-image :user="submission.created_by" size="md" rounded />
+          <avatar-image :user="submission.created_by" size="48px" rounded />
         </q-item-section>
         <q-item-section>
           <q-item-label>{{ submission.created_by.name }}</q-item-label>
@@ -95,23 +95,28 @@
     <q-separator />
 
     <!-- Review Coordinator -->
-    <q-card-section
-      v-if="(submission.review_coordinators ?? []).length"
-      class="q-py-sm q-px-md"
-    >
+    <q-card-section class="q-py-sm q-px-md">
       <q-item class="q-pa-none">
         <q-item-section side>
           <avatar-image
-            :user="submission.review_coordinators[0]"
-            size="md"
+            v-if="coordinator"
+            :user="coordinator"
+            size="48px"
             rounded
+          />
+          <q-avatar
+            v-else
+            size="48px"
+            color="grey-4"
+            text-color="grey-7"
+            icon="person_off"
           />
         </q-item-section>
         <q-item-section>
           <q-item-label>
-            {{ submission.review_coordinators[0].name }}
+            {{ coordinator?.name ?? $t("review_team.no_coordinator") }}
           </q-item-label>
-          <q-item-label caption>
+          <q-item-label v-if="coordinator" caption>
             {{ $t("publication.dashboard.headers.review_coordinators") }}
           </q-item-label>
         </q-item-section>
@@ -133,7 +138,7 @@
           class="q-pa-none q-mb-xs"
         >
           <q-item-section side>
-            <avatar-image :user="r" size="md" rounded />
+            <avatar-image :user="r" size="48px" rounded />
           </q-item-section>
           <q-item-section>
             <q-item-label>{{ r.name ?? r.email }}</q-item-label>
@@ -214,6 +219,10 @@ function openConfirm(action: string) {
     }
   })
 }
+
+const coordinator = computed(
+  () => (props.submission.review_coordinators ?? [])[0] ?? null
+)
 
 const dt = computed(() => DateTime.fromISO(props.submission.updated_at))
 const absoluteDate = computed(() => dt.value.toFormat("LLL d yyyy h:mm a"))

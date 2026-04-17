@@ -1,5 +1,8 @@
 {
   "needs_attention": "Needs attention",
+  "review_team": {
+    "no_coordinator": "No coordinator assigned"
+  },
   "tables": {
     "name_avatar_list": {
       "users_assigned": "No users assigned | 1 user assigned: {names} | {n} users assigned: {names}"
@@ -499,6 +502,7 @@
         "created_by": "Submitter",
         "review_coordinators": "Review Coordinator",
         "reviewers": "Reviewers",
+        "review_team": "Review Team",
         "created_at": "Created",
         "updated_at": "Updated"
       },

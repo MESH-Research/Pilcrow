@@ -11,7 +11,7 @@
           <q-item-section side>
             <avatar-image
               :user="user"
-              size="md"
+              size="48px"
               rounded
               :aria-label="user.name ?? user.email"
             />
@@ -48,7 +48,7 @@
         >
           <avatar-image
             :user="user"
-            size="md"
+            size="48px"
             rounded
             :aria-label="user.name ?? user.email"
           />

@@ -253,7 +253,7 @@
                 : 'Expand all reviewer lists'
             "
             no-caps
-            @click="expandAllReviewers = !expandAllReviewers"
+            @click="toggleExpandAllReviewers"
           />
         </template>
       </QueryTable>
@@ -309,10 +309,12 @@ graphql(`
           }
           review_coordinators {
             id
+            username
             ...NameAvatarCell
           }
           reviewers {
             id
+            username
             ...NameAvatarCell
           }
         }
@@ -333,9 +335,9 @@ import QueryTable, {
 import DateTimeCell from "src/components/tables/common/DateTimeCell.vue"
 import NameAvatarCell from "src/components/tables/common/NameAvatarCell.vue"
 import TextCell from "src/components/tables/common/TextCell.vue"
-import NameAvatarListCell, {
-  NameAvatarListExpandAllKey
-} from "src/components/tables/common/NameAvatarListCell.vue"
+import ReviewTeamCell, {
+  ReviewTeamExpandAllKey
+} from "src/components/tables/common/ReviewTeamCell.vue"
 import StatusBadgeCell from "./components/StatusBadgeCell.vue"
 import SubmissionCard from "./components/SubmissionCard.vue"
 import {
@@ -359,6 +361,9 @@ const route = useRoute()
 
 // Shared state for expanding/collapsing all reviewer lists at once.
 const expandAllReviewers = ref(false)
+function toggleExpandAllReviewers() {
+  expandAllReviewers.value = !expandAllReviewers.value
+}
 
 // Per-category expansion state for the mobile compact layout.
 const expandedCategories = ref<Record<string, boolean>>({})
@@ -422,7 +427,7 @@ function applySort(option: SortOption) {
   p.descending = option.descending
   p.page = 1
 }
-provide(NameAvatarListExpandAllKey, expandAllReviewers)
+provide(ReviewTeamExpandAllKey, expandAllReviewers)
 
 // Responsive: switch to grid cards on small screens.
 const isGrid = computed(() => $q.screen.lt.md)
@@ -617,18 +622,14 @@ const columns: QueryTableColumn[] = [
     label: "Status"
   },
   {
-    name: "review_coordinators",
-    field: (row) => (row.review_coordinators ?? [])[0] ?? null,
+    name: "review_team",
+    field: (row) => ({
+      coordinator: (row.review_coordinators ?? [])[0] ?? null,
+      reviewers: row.reviewers ?? []
+    }),
     align: "left",
-    component: NameAvatarCell,
-    label: "Review Coordinator"
-  },
-  {
-    name: "reviewers",
-    field: (row) => row.reviewers ?? [],
-    align: "left",
-    component: NameAvatarListCell,
-    label: "Reviewers"
+    component: ReviewTeamCell,
+    label: "Review Team"
   },
   {
     name: "updated_at",
@@ -644,5 +645,7 @@ const columns: QueryTableColumn[] = [
 <style scoped>
 :deep(.q-table tbody td) {
   vertical-align: top;
+  padding-top: 12px;
+  padding-bottom: 12px;
 }
 </style>
