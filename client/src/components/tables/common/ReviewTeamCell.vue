@@ -99,7 +99,7 @@
                   v-for="(r, idx) in reviewers"
                   :key="r.id"
                   class="relative-position"
-                  :class="idx > 0 ? 'q-ml-xs' : ''"
+                  :class="idx > 0 ? 'q-ml-sm' : ''"
                 >
                   <avatar-image :user="r" size="48px" rounded />
                   <q-tooltip
