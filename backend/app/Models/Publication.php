@@ -192,7 +192,7 @@ class Publication extends BaseModel
             ->select('status', DB::raw('count(*) as count'))
             ->groupBy('status')
             ->get()
-            ->map(fn ($row) => [
+            ->map(fn($row) => [
                 'status' => (int)$row->status,
                 'count' => (int)$row->count,
             ]);

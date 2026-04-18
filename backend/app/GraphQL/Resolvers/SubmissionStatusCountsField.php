@@ -15,7 +15,7 @@ class SubmissionStatusCountsField
      * Uses the base query (which includes publication/role filters but NOT
      * status filters) to return counts grouped by submission status.
      *
-     * @param  \App\Pagination\SubmissionPaginator  $paginator
+     * @param \App\Pagination\SubmissionPaginator  $paginator
      * @return \Illuminate\Support\Collection
      */
     public function __invoke(SubmissionPaginator $paginator): Collection
@@ -26,7 +26,7 @@ class SubmissionStatusCountsField
             ->select('status', DB::raw('count(*) as count'))
             ->groupBy('status')
             ->get()
-            ->map(fn ($row) => [
+            ->map(fn($row) => [
                 'status' => (int)$row->status,
                 'count' => (int)$row->count,
             ]);

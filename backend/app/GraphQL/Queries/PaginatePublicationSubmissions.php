@@ -139,7 +139,7 @@ class PaginatePublicationSubmissions
         if (isset($userRelations[$prefix])) {
             $query->whereHas(
                 $userRelations[$prefix],
-                fn ($q) => $this->matchUserFields($q, $term)
+                fn($q) => $this->matchUserFields($q, $term)
             );
 
             return;
@@ -206,7 +206,7 @@ class PaginatePublicationSubmissions
     ): void {
         foreach ($relations as $i => $relation) {
             $m = $i === 0 ? $method : 'orWhereHas';
-            $query->{$m}($relation, fn ($q) => $this->matchUserFields($q, $term));
+            $query->{$m}($relation, fn($q) => $this->matchUserFields($q, $term));
         }
     }
 
