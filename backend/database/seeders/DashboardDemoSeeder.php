@@ -46,20 +46,28 @@ class DashboardDemoSeeder extends Seeder
 
         foreach ($submissions as $data) {
             $submitter = $submitterPool->random();
-            $coordinator = $coordinatorPool->random();
-            $reviewers = $reviewerPool->random(random_int(1, 4));
 
             $factory = Submission::factory()
                 ->for($publication)
-                ->hasAttached($submitter, [], 'submitters')
-                ->hasAttached($coordinator, [], 'reviewCoordinators');
+                ->hasAttached($submitter, [], 'submitters');
 
-            foreach ($reviewers as $reviewer) {
+            if (empty($data['noCoordinator'])) {
+                $coordinator = $coordinatorPool->random();
                 $factory = $factory->hasAttached(
-                    $reviewer,
+                    $coordinator,
                     [],
-                    'reviewers'
+                    'reviewCoordinators'
                 );
+            }
+
+            if (empty($data['noReviewers'])) {
+                foreach ($reviewerPool->random(random_int(1, 4)) as $reviewer) {
+                    $factory = $factory->hasAttached(
+                        $reviewer,
+                        [],
+                        'reviewers'
+                    );
+                }
             }
 
             $created = Carbon::now()
@@ -108,9 +116,11 @@ class DashboardDemoSeeder extends Seeder
         return [
             // Needs action
             [
+                // Triaged to a coordinator but reviewers not yet assigned.
                 'title' => 'Computational Literary Analysis',
                 'status' => Submission::INITIALLY_SUBMITTED,
                 'daysAgo' => 3,
+                'noReviewers' => true,
             ],
             [
                 'title' => 'ML for Manuscript Dating',
@@ -138,9 +148,12 @@ class DashboardDemoSeeder extends Seeder
                 'daysAgo' => 45,
             ],
             [
+                // Just arrived — no coordinator or reviewers assigned yet.
                 'title' => 'NLP for Ancient Languages',
                 'status' => Submission::INITIALLY_SUBMITTED,
                 'daysAgo' => 1,
+                'noCoordinator' => true,
+                'noReviewers' => true,
             ],
             [
                 'title' => 'Digital Storytelling and Archives',
@@ -170,9 +183,11 @@ class DashboardDemoSeeder extends Seeder
                 'daysAgo' => 8,
             ],
             [
+                // Coordinator accepted for review but hasn't picked reviewers.
                 'title' => 'Crowdsourced Transcription Quality',
                 'status' => Submission::AWAITING_REVIEW,
                 'daysAgo' => 1,
+                'noReviewers' => true,
             ],
             [
                 'title' => 'Semantic Web for Library Catalogs',
@@ -180,9 +195,12 @@ class DashboardDemoSeeder extends Seeder
                 'daysAgo' => 15,
             ],
             [
+                // Reviewers were assigned but the coordinator stepped away;
+                // the submission needs a new coordinator.
                 'title' => 'Census Data Visualization',
                 'status' => Submission::AWAITING_REVIEW,
                 'daysAgo' => 4,
+                'noCoordinator' => true,
             ],
             [
                 'title' => 'Algorithmic Bias in Heritage Systems',
