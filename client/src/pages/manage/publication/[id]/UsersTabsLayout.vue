@@ -30,18 +30,18 @@
         name="submitters"
         :label="$t('publication.manage.users.tabs.submitters')"
         :to="{
-          name: 'manage:publication:users:submitters',
+          name: 'manage:publication:submitters',
           params: { id: id }
         }"
       />
       <q-route-tab
         name="team"
         :label="$t('publication.manage.users.tabs.team')"
-        :to="{ name: 'manage:publication:users:team', params: { id: id } }"
+        :to="{ name: 'manage:publication:team', params: { id: id } }"
       />
       <q-route-tab
         name="invited"
-        :to="{ name: 'manage:publication:users:invited', params: { id: id } }"
+        :to="{ name: 'manage:publication:invited', params: { id: id } }"
       >
         <span class="row items-center no-wrap q-gutter-xs">
           {{ $t("publication.manage.users.tabs.invited") }}

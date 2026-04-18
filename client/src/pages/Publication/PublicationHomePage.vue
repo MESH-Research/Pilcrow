@@ -34,7 +34,7 @@
             icon="group"
             color="primary"
             :to="{
-              name: 'manage:publication:users:submitters',
+              name: 'manage:publication:submitters',
               params: { id: id }
             }"
           >

@@ -156,48 +156,47 @@ const routes: RouteRecordRaw[] = [
         props: true
       },
       {
-        name: "manage:publication",
-        path: "/manage/publication/:id",
-        redirect: (to) => ({
-          name: "manage:publication:dashboard",
-          params: to.params
-        })
-      },
-      {
         name: "manage:publication:dashboard",
-        path: "/manage/publication/:id/dashboard",
+        path: "/manage/publication/:id",
         component: () =>
           import("src/pages/manage/publication/[id]/dashboard.vue"),
         props: true
       },
       {
-        path: "/manage/publication/:id/users",
-        component: () => import("src/pages/manage/publication/[id]/users.vue"),
+        path: "/manage/publication/:id",
+        component: () =>
+          import("src/pages/manage/publication/[id]/UsersTabsLayout.vue"),
         props: true,
-        redirect: () => ({ name: "manage:publication:users:submitters" }),
         children: [
           {
-            name: "manage:publication:users:submitters",
+            name: "manage:publication:submitters",
             path: "submitters",
             component: () =>
-              import("src/pages/manage/publication/[id]/users/submitters.vue"),
+              import("src/pages/manage/publication/[id]/submitters.vue"),
             props: true
           },
           {
-            name: "manage:publication:users:team",
+            name: "manage:publication:team",
             path: "team",
             component: () =>
-              import("src/pages/manage/publication/[id]/users/team.vue"),
+              import("src/pages/manage/publication/[id]/team.vue"),
             props: true
           },
           {
-            name: "manage:publication:users:invited",
+            name: "manage:publication:invited",
             path: "invited",
             component: () =>
-              import("src/pages/manage/publication/[id]/users/invited.vue"),
+              import("src/pages/manage/publication/[id]/invited.vue"),
             props: true
           }
         ]
+      },
+      {
+        name: "manage:publication:user",
+        path: "/manage/publication/:id/users/:userId",
+        component: () =>
+          import("src/pages/manage/publication/[id]/users/[userId].vue"),
+        props: true
       },
       {
         path: "/reviews",
