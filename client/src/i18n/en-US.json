@@ -504,7 +504,8 @@
         "reviewers": "Reviewers",
         "review_team": "Review Team",
         "created_at": "Created",
-        "updated_at": "Updated"
+        "updated_at": "Updated",
+        "submitted_at": "Submitted"
       },
       "filters": {
         "status": "Status"

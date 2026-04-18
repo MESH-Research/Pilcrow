@@ -9,6 +9,7 @@ use App\Models\Submission;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class DashboardDemoSeeder extends Seeder
 {
@@ -68,7 +69,7 @@ class DashboardDemoSeeder extends Seeder
             $updated = $created->copy()
                 ->addMinutes(random_int(0, $diff));
 
-            $factory->create([
+            $submission = $factory->create([
                 'title' => $data['title'],
                 'status' => $data['status'],
                 'created_by' => $submitter->id,
@@ -76,6 +77,24 @@ class DashboardDemoSeeder extends Seeder
                 'created_at' => $created,
                 'updated_at' => $updated,
             ]);
+
+            // getSubmittedAt() reads the audit log for a DRAFT->INITIALLY_SUBMITTED
+            // transition. Demo submissions are created at their target status
+            // directly (no transition), so we synthesize the audit row here so
+            // the dashboard can show a Submitted timestamp.
+            if ($data['status'] !== Submission::DRAFT) {
+                DB::table('audits')->insert([
+                    'user_type' => User::class,
+                    'user_id' => $submitter->id,
+                    'event' => 'updated',
+                    'auditable_type' => Submission::class,
+                    'auditable_id' => $submission->id,
+                    'old_values' => json_encode(['status' => Submission::DRAFT]),
+                    'new_values' => json_encode(['status' => Submission::INITIALLY_SUBMITTED]),
+                    'created_at' => $created,
+                    'updated_at' => $created,
+                ]);
+            }
         }
     }
 
