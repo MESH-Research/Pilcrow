@@ -4,7 +4,7 @@
       <h4 class="q-my-none text-bold">
         {{ $t("export.participants.title") }}
       </h4>
-      <div v-if="all_commenters.length == 0">
+      <div v-if="commenters.length == 0">
         <p>{{ $t("export.participants.no_commenters") }}</p>
       </div>
       <div v-else>
@@ -13,7 +13,7 @@
           <q-btn
             size="sm"
             :label="$t('export.participants.select_all')"
-            @click="updateSelected([...all_commenters])"
+            @click="updateSelected([...commenters])"
           />
           <q-btn
             size="sm"
@@ -23,7 +23,7 @@
         </div>
         <q-list>
           <q-item
-            v-for="commenter in all_commenters"
+            v-for="commenter in commenters"
             :key="commenter.id"
             tag="label"
           >
@@ -48,56 +48,56 @@
     </q-card-section>
   </q-card>
 </template>
+
+<script lang="ts">
+import { graphql } from "src/graphql/generated"
+
+graphql(`
+  fragment exportParticipantSelector on Submission {
+    commenters(type: $commenterType) {
+      id
+      display_label
+      ...avatarImage
+    }
+  }
+`)
+</script>
+
 <script setup lang="ts">
 import AvatarImage from "./AvatarImage.vue"
 import { computed, ref, watch } from "vue"
-import { GET_SUBMISSION_COMMENTERS } from "src/graphql/queries"
-import { useQuery } from "@vue/apollo-composable"
-import type { User } from "src/graphql/generated/graphql"
+import type { exportParticipantSelectorFragment } from "src/graphql/generated/graphql"
+
+type Commenter = NonNullable<
+  exportParticipantSelectorFragment["commenters"]
+>[number]
 
 interface Props {
-  submissionId: string
-  commenterType?: string | null
+  submission: exportParticipantSelectorFragment
 }
 
 interface Emits {
-  "update:modelValue": [value: Partial<User>[]]
+  "update:modelValue": [value: Commenter[]]
 }
 
-const props = withDefaults(defineProps<Props>(), {
-  commenterType: null
-})
+const props = defineProps<Props>()
 const emit = defineEmits<Emits>()
-const selected = ref<Partial<User>[]>([])
-
-const queryVars = computed(() => ({
-  id: props.submissionId,
-  commenterType: props.commenterType
-}))
-const { result } = useQuery(GET_SUBMISSION_COMMENTERS, queryVars)
-const all_commenters = computed(
-  () => result.value?.submission?.commenters ?? []
-)
+const commenters = computed(() => props.submission.commenters ?? [])
+const selected = ref<Commenter[]>([])
 
 const selectedModel = computed({
   get: () => selected.value,
-  set: (val: Partial<User>[]) => updateSelected(val)
+  set: (val: Commenter[]) => updateSelected(val)
 })
 
-function updateSelected(val: Partial<User>[]) {
+function updateSelected(val: Commenter[]) {
   selected.value = val
   emit("update:modelValue", val)
 }
 
-// Reset selection when comment type changes
+// Reset selection when commenters change
 watch(
-  () => props.commenterType,
-  () => updateSelected([])
-)
-
-// Auto-populate when commenters load and nothing is selected
-watch(
-  all_commenters,
+  commenters,
   (newCommenters) => {
     if (selected.value.length === 0 && newCommenters.length > 0) {
       updateSelected([...newCommenters])
