@@ -8,12 +8,12 @@
             <avatar-image
               v-if="coordinator"
               :user="coordinator"
-              size="48px"
+              size="40px"
               rounded
             />
             <q-avatar
               v-else
-              size="48px"
+              size="40px"
               color="grey-4"
               text-color="grey-7"
               icon="person_off"
@@ -48,7 +48,7 @@
         <q-separator v-if="reviewers.length > 0" class="q-my-sm" />
         <q-item v-for="r in reviewers" :key="r.id" class="q-px-none q-py-xs">
           <q-item-section side>
-            <avatar-image :user="r" size="48px" rounded />
+            <avatar-image :user="r" size="40px" rounded />
           </q-item-section>
           <q-item-section>
             <q-item-label>{{ r.name ?? r.email }}</q-item-label>
@@ -66,12 +66,12 @@
                 <avatar-image
                   v-if="coordinator"
                   :user="coordinator"
-                  size="48px"
+                  size="40px"
                   rounded
                 />
                 <q-avatar
                   v-else
-                  size="48px"
+                  size="40px"
                   color="grey-4"
                   text-color="grey-7"
                   icon="person_off"
@@ -101,7 +101,7 @@
                   class="relative-position"
                   :class="idx > 0 ? 'q-ml-sm' : ''"
                 >
-                  <avatar-image :user="r" size="48px" rounded />
+                  <avatar-image :user="r" size="40px" rounded />
                   <q-tooltip
                     :delay="200"
                     anchor="top middle"
@@ -220,3 +220,12 @@ if (expandAll) {
   )
 }
 </script>
+
+<style scoped>
+:deep(.q-item__label + .q-item__label) {
+  margin-top: 0;
+}
+:deep(.q-item__label) {
+  line-height: 1.25;
+}
+</style>
