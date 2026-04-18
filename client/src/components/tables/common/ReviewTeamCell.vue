@@ -1,10 +1,10 @@
 <template>
   <q-td :props="scope" :dense="scope.dense">
-    <template v-if="coordinator || reviewers.length">
-      <span class="sr-only">{{ ariaLabel }}</span>
-      <template v-if="showExpanded">
-        <q-item class="q-px-none q-py-xs">
-          <q-item-section side>
+    <span class="sr-only">{{ ariaLabel }}</span>
+    <template v-if="showExpanded">
+      <q-item class="q-px-none q-py-xs">
+        <q-item-section side>
+          <div class="relative-position">
             <avatar-image
               v-if="coordinator"
               :user="coordinator"
@@ -18,122 +18,127 @@
               text-color="grey-7"
               icon="person_off"
             />
-          </q-item-section>
-          <q-item-section>
-            <q-item-label>
-              {{ coordinator?.name ?? $t("review_team.no_coordinator") }}
-            </q-item-label>
-            <q-item-label v-if="coordinator" caption>
-              <template v-if="coordinator.username">
-                {{ coordinator.username }} &middot;
-              </template>
-              {{ $t("publication.dashboard.headers.review_coordinators") }}
-            </q-item-label>
-          </q-item-section>
-          <q-item-section v-if="reviewers.length > 0" side>
-            <q-btn
-              flat
-              dense
-              round
-              size="xs"
-              icon="unfold_less"
-              aria-label="Collapse review team"
-              :aria-expanded="true"
-              @click.stop="expanded = false"
+            <q-badge
+              floating
+              :color="coordinator ? 'primary' : 'grey-6'"
+              class="rc-badge"
+              :aria-label="
+                $t('publication.dashboard.headers.review_coordinators')
+              "
             >
-              <q-tooltip>Collapse</q-tooltip>
-            </q-btn>
-          </q-item-section>
-        </q-item>
-        <q-separator v-if="reviewers.length > 0" class="q-my-sm" />
-        <q-item v-for="r in reviewers" :key="r.id" class="q-px-none q-py-xs">
-          <q-item-section side>
-            <avatar-image :user="r" size="40px" rounded />
-          </q-item-section>
-          <q-item-section>
-            <q-item-label>{{ r.name ?? r.email }}</q-item-label>
-            <q-item-label v-if="r.username" caption>
-              {{ r.username }}
-            </q-item-label>
-          </q-item-section>
-        </q-item>
-      </template>
-      <template v-else>
-        <q-item class="q-pa-none" role="group" :aria-label="ariaLabel">
-          <q-item-section>
-            <div class="row items-center no-wrap">
-              <div class="relative-position">
-                <avatar-image
-                  v-if="coordinator"
-                  :user="coordinator"
-                  size="40px"
-                  rounded
-                />
-                <q-avatar
-                  v-else
-                  size="40px"
-                  color="grey-4"
-                  text-color="grey-7"
-                  icon="person_off"
-                />
+              RC
+            </q-badge>
+          </div>
+        </q-item-section>
+        <q-item-section>
+          <q-item-label>
+            {{ coordinator?.name ?? $t("review_team.no_coordinator") }}
+          </q-item-label>
+          <q-item-label v-if="coordinator?.username" caption>
+            {{ coordinator.username }}
+          </q-item-label>
+        </q-item-section>
+        <q-item-section v-if="reviewers.length > 0" side>
+          <q-btn
+            flat
+            dense
+            round
+            size="xs"
+            icon="unfold_less"
+            aria-label="Collapse review team"
+            :aria-expanded="true"
+            @click.stop="expanded = false"
+          >
+            <q-tooltip>Collapse</q-tooltip>
+          </q-btn>
+        </q-item-section>
+      </q-item>
+      <q-separator v-if="reviewers.length > 0" class="q-my-sm" />
+      <q-item v-for="r in reviewers" :key="r.id" class="q-px-none q-py-xs">
+        <q-item-section side>
+          <avatar-image :user="r" size="40px" rounded />
+        </q-item-section>
+        <q-item-section>
+          <q-item-label>{{ r.name ?? r.email }}</q-item-label>
+          <q-item-label v-if="r.username" caption>
+            {{ r.username }}
+          </q-item-label>
+        </q-item-section>
+      </q-item>
+    </template>
+    <template v-else>
+      <q-item class="q-pa-none" role="group" :aria-label="ariaLabel">
+        <q-item-section>
+          <div class="row items-center no-wrap">
+            <div class="relative-position">
+              <avatar-image
+                v-if="coordinator"
+                :user="coordinator"
+                size="40px"
+                rounded
+              />
+              <q-avatar
+                v-else
+                size="40px"
+                color="grey-4"
+                text-color="grey-7"
+                icon="person_off"
+              />
+              <q-badge
+                floating
+                :color="coordinator ? 'primary' : 'grey-6'"
+                class="rc-badge"
+              >
+                RC
+              </q-badge>
+              <q-tooltip :delay="200" anchor="top middle" self="bottom middle">
+                {{ coordinator?.name ?? $t("review_team.no_coordinator") }}
+                ({{ $t("publication.dashboard.headers.review_coordinators") }})
+              </q-tooltip>
+            </div>
+            <q-separator
+              v-if="reviewers.length > 0"
+              vertical
+              class="q-mx-sm"
+              color="grey-7"
+              style="height: 48px"
+            />
+            <div v-if="reviewers.length > 0" class="row items-center no-wrap">
+              <div
+                v-for="(r, idx) in reviewers"
+                :key="r.id"
+                class="relative-position"
+                :class="idx > 0 ? 'q-ml-sm' : ''"
+              >
+                <avatar-image :user="r" size="40px" rounded />
                 <q-tooltip
                   :delay="200"
                   anchor="top middle"
                   self="bottom middle"
                 >
-                  {{ coordinator?.name ?? $t("review_team.no_coordinator") }}
-                  ({{
-                    $t("publication.dashboard.headers.review_coordinators")
-                  }})
+                  {{ r.name ?? r.email }}
                 </q-tooltip>
               </div>
-              <q-separator
-                v-if="reviewers.length > 0"
-                vertical
-                class="q-mx-sm"
-                color="grey-7"
-                style="height: 48px"
-              />
-              <div v-if="reviewers.length > 0" class="row items-center no-wrap">
-                <div
-                  v-for="(r, idx) in reviewers"
-                  :key="r.id"
-                  class="relative-position"
-                  :class="idx > 0 ? 'q-ml-sm' : ''"
-                >
-                  <avatar-image :user="r" size="40px" rounded />
-                  <q-tooltip
-                    :delay="200"
-                    anchor="top middle"
-                    self="bottom middle"
-                  >
-                    {{ r.name ?? r.email }}
-                  </q-tooltip>
-                </div>
-              </div>
-              <q-space v-if="reviewers.length > 0" />
-              <q-btn
-                v-if="reviewers.length > 0"
-                flat
-                dense
-                round
-                size="xs"
-                icon="unfold_more"
-                aria-label="Expand review team"
-                :aria-expanded="false"
-                class="q-ml-sm"
-                @click.stop="expanded = true"
-              >
-                <q-tooltip>Expand</q-tooltip>
-              </q-btn>
             </div>
-          </q-item-section>
-        </q-item>
-      </template>
+            <q-space v-if="reviewers.length > 0" />
+            <q-btn
+              v-if="reviewers.length > 0"
+              flat
+              dense
+              round
+              size="xs"
+              icon="unfold_more"
+              aria-label="Expand review team"
+              :aria-expanded="false"
+              class="q-ml-sm"
+              @click.stop="expanded = true"
+            >
+              <q-tooltip>Expand</q-tooltip>
+            </q-btn>
+          </div>
+        </q-item-section>
+      </q-item>
     </template>
-    <span v-else class="text-grey" aria-label="No review team assigned">
-      &mdash;
-    </span>
   </q-td>
 </template>
 
@@ -227,5 +232,14 @@ if (expandAll) {
 }
 :deep(.q-item__label) {
   line-height: 1.25;
+}
+.rc-badge {
+  font-size: 0.7rem;
+  padding: 4px 7px;
+  letter-spacing: 0.02em;
+  font-weight: 600;
+  top: -6px;
+  right: -5px;
+  z-index: 2;
 }
 </style>

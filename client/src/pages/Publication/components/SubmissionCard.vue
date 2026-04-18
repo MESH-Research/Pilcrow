@@ -97,28 +97,38 @@
 
     <q-separator />
 
-    <!-- Review Coordinator -->
-    <q-card-section class="q-py-sm q-px-md q-pb-none">
-      <div class="text-caption text-weight-bold text-grey-7">
-        {{ $t("publication.dashboard.headers.review_coordinators") }}
-      </div>
-    </q-card-section>
+    <!-- Review Team: coordinator (with RC badge) plus reviewers -->
     <q-card-section class="q-py-sm q-px-md">
-      <q-item class="q-pa-none">
+      <div class="text-caption text-weight-bold text-grey-7 q-mb-sm">
+        {{ $t("publication.dashboard.headers.review_team") }}
+      </div>
+      <q-item class="q-pa-none q-mb-sm">
         <q-item-section side>
-          <avatar-image
-            v-if="coordinator"
-            :user="coordinator"
-            size="40px"
-            rounded
-          />
-          <q-avatar
-            v-else
-            size="40px"
-            color="grey-4"
-            text-color="grey-7"
-            icon="person_off"
-          />
+          <div class="relative-position">
+            <avatar-image
+              v-if="coordinator"
+              :user="coordinator"
+              size="40px"
+              rounded
+            />
+            <q-avatar
+              v-else
+              size="40px"
+              color="grey-4"
+              text-color="grey-7"
+              icon="person_off"
+            />
+            <q-badge
+              floating
+              :color="coordinator ? 'primary' : 'grey-6'"
+              class="rc-badge"
+              :aria-label="
+                $t('publication.dashboard.headers.review_coordinators')
+              "
+            >
+              RC
+            </q-badge>
+          </div>
         </q-item-section>
         <q-item-section>
           <q-item-label>
@@ -129,17 +139,10 @@
           </q-item-label>
         </q-item-section>
       </q-item>
-    </q-card-section>
-
-    <!-- Reviewers -->
-    <q-card-section
-      v-if="(submission.reviewers ?? []).length"
-      class="q-py-sm q-px-md"
-    >
-      <div class="text-caption text-weight-bold text-grey-7 q-mb-xs">
-        {{ $t("publication.dashboard.headers.reviewers") }}
-      </div>
-      <div class="row q-col-gutter-sm">
+      <div
+        v-if="(submission.reviewers ?? []).length"
+        class="row q-col-gutter-sm"
+      >
         <div
           v-for="r in submission.reviewers"
           :key="r.id"
@@ -299,6 +302,16 @@ const relativeSubmitted = computed(() =>
 }
 :deep(.q-item__label) {
   line-height: 1.25;
+}
+.rc-badge {
+  font-size: 0.7rem;
+  padding: 4px 7px;
+  letter-spacing: 0.02em;
+  font-weight: 600;
+  /* Nudge farther off the avatar corner for visual breathing room. */
+  top: -6px;
+  right: -5px;
+  z-index: 2;
 }
 </style>
 
