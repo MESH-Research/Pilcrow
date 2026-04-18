@@ -17,7 +17,22 @@
       </q-breadcrumbs>
     </nav>
 
-    <h2>{{ publication?.name }} {{ $t("publication.dashboard.heading") }}</h2>
+    <div class="row items-center q-gutter-sm q-mb-sm">
+      <h2 class="q-my-none col">
+        {{ publication?.name }} {{ $t("publication.dashboard.heading") }}
+      </h2>
+      <q-btn
+        data-cy="manage_users_button"
+        icon="group"
+        color="primary"
+        :to="{
+          name: 'manage:publication:users:submitters',
+          params: { id }
+        }"
+      >
+        {{ $t("publication.manage.users.heading") }}
+      </q-btn>
+    </div>
 
     <div v-if="!publication" class="q-pa-lg">{{ $t("loading") }}</div>
     <template v-else>

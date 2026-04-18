@@ -8,7 +8,7 @@
         />
         <q-breadcrumbs-el
           :label="publication?.name ?? ''"
-          :to="{ name: 'publication:home', params: { id: id } }"
+          :to="{ name: 'manage:publication:dashboard', params: { id: id } }"
         />
         <q-breadcrumbs-el :label="$t('publication.manage.users.heading')" />
       </q-breadcrumbs>
