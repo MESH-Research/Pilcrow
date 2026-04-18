@@ -7,7 +7,7 @@ The client application uses [Apollo Client](https://www.apollographql.com/docs/r
 All GraphQL operations are defined centrally:
 
 | File | Contents |
-|------|----------|
+| ---- | -------- |
 | `client/src/graphql/fragments.ts` | Reusable fragments (`currentUserFields`, `relatedUserFields`, etc.) |
 | `client/src/graphql/queries.ts` | All queries (`CurrentUser`, `GetSubmission`, etc.) |
 | `client/src/graphql/mutations.ts` | All mutations (`Login`, `CreateSubmissionDraft`, etc.) |

@@ -32,19 +32,6 @@
             "matchFileNames": ["client/**"]
         },
         /**
-         * AUTOMATED MERGING:
-         * Backend and client are well covered in automated testing, so we'll
-         * attempt to automerge patch updates.
-         **/
-        {
-            "matchUpdateTypes": ["patch"],
-            "matchCurrentVersion": "!/^0/",
-            "matchFileNames": ["backend/**", "client/**"],
-            "matchManagers": ["npm","composer"],
-            "automerge": true,
-            "automergeType": "branch"
-        },
-        /**
          * Group client npm updates
          **/
         {
