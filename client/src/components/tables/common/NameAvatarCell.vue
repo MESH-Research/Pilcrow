@@ -6,8 +6,8 @@
       </q-item-section>
 
       <q-item-section>
-        <q-item-label v-if="user.name">
-          {{ user.name }}
+        <q-item-label>
+          {{ user.name ?? user.email }}
         </q-item-label>
         <q-item-label v-if="user.username && !hideUsername" caption>
           {{ user.username }}
@@ -25,6 +25,7 @@ graphql(`
   fragment NameAvatarCell on User {
     name
     username
+    email
     ...avatarImage
   }
 `)

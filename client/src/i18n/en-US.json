@@ -515,6 +515,30 @@
       "no_submissions": "No submissions match the current filters.",
       "submission_count": "no submissions | {n} submission | {n} submissions"
     },
+    "manage": {
+      "users": {
+        "heading": "Users",
+        "tabs": {
+          "submitters": "Submitters",
+          "team": "Review Team",
+          "invited": "Invited",
+          "invited_count": "{n} pending invitation | {n} pending invitations"
+        },
+        "headers": {
+          "name": "Name",
+          "email": "Email",
+          "as_submitter_count": "Submissions",
+          "as_reviewer_active_count": "Reviewing",
+          "as_reviewer_completed_count": "Reviewing",
+          "as_coordinator_active_count": "Coordinating",
+          "as_coordinator_completed_count": "Coordinating"
+        },
+        "groups": {
+          "active": "Active",
+          "completed": "Completed"
+        }
+      }
+    },
     "setup_pages": {
       "breadcrumb_heading": "Setup",
       "basic": "Basic Settings",

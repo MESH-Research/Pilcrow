@@ -156,11 +156,48 @@ const routes: RouteRecordRaw[] = [
         props: true
       },
       {
-        name: "publication:dashboard",
-        path: "/publication/:id/dashboard",
+        name: "manage:publication",
+        path: "/manage/publication/:id",
+        redirect: (to) => ({
+          name: "manage:publication:dashboard",
+          params: to.params
+        })
+      },
+      {
+        name: "manage:publication:dashboard",
+        path: "/manage/publication/:id/dashboard",
         component: () =>
-          import("src/pages/Publication/PublicationDashboard.vue"),
+          import("src/pages/manage/publication/[id]/dashboard.vue"),
         props: true
+      },
+      {
+        path: "/manage/publication/:id/users",
+        component: () => import("src/pages/manage/publication/[id]/users.vue"),
+        props: true,
+        redirect: () => ({ name: "manage:publication:users:submitters" }),
+        children: [
+          {
+            name: "manage:publication:users:submitters",
+            path: "submitters",
+            component: () =>
+              import("src/pages/manage/publication/[id]/users/submitters.vue"),
+            props: true
+          },
+          {
+            name: "manage:publication:users:team",
+            path: "team",
+            component: () =>
+              import("src/pages/manage/publication/[id]/users/team.vue"),
+            props: true
+          },
+          {
+            name: "manage:publication:users:invited",
+            path: "invited",
+            component: () =>
+              import("src/pages/manage/publication/[id]/users/invited.vue"),
+            props: true
+          }
+        ]
       },
       {
         path: "/reviews",

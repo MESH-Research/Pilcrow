@@ -42,6 +42,21 @@ type Publication {
             resolver: "App\\GraphQL\\Queries\\PaginatePublicationSubmissions"
             defaultCount: 25
         )
+    """
+    Paginated users associated with this publication's submissions,
+    filtered by role. Each user carries per-role submission counts
+    (as_submitter_count / as_reviewer_count / as_coordinator_count).
+    """
+    users(
+        roles: [SubmissionUserRoles!]!
+        staged: Boolean
+        search: String
+        orderBy: [QueryPublicationUsersOrderByOrderByClause!]
+    ): [User!]!
+        @paginate(
+            resolver: "App\\GraphQL\\Queries\\PaginatePublicationUsers"
+            defaultCount: 25
+        )
     publication_admins: [User!]! @belongsToMany(relation: "publicationAdmins")
     editors: [User!]! @belongsToMany(relation: "editors")
     is_publicly_visible: Boolean
@@ -141,4 +156,22 @@ input UpdateStyleCriteriaInput {
 enum PublicationRole {
     publication_admin @enum(value: 2)
     editor @enum(value: 3)
+}
+
+"Sortable columns for the Publication.users query."
+enum QueryPublicationUsersOrderByColumn {
+    NAME
+    USERNAME
+    EMAIL
+    AS_SUBMITTER_COUNT
+    AS_REVIEWER_ACTIVE_COUNT
+    AS_REVIEWER_COMPLETED_COUNT
+    AS_COORDINATOR_ACTIVE_COUNT
+    AS_COORDINATOR_COMPLETED_COUNT
+}
+
+"Order by clause for the Publication.users query."
+input QueryPublicationUsersOrderByOrderByClause {
+    column: QueryPublicationUsersOrderByColumn!
+    order: SortOrder!
 }

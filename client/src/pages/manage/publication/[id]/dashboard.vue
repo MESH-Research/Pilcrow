@@ -354,12 +354,12 @@ import TextCell from "src/components/tables/common/TextCell.vue"
 import ReviewTeamCell, {
   ReviewTeamExpandAllKey
 } from "src/components/tables/common/ReviewTeamCell.vue"
-import StatusBadgeCell from "./components/StatusBadgeCell.vue"
-import SubmissionCard from "./components/SubmissionCard.vue"
+import StatusBadgeCell from "src/pages/Publication/components/StatusBadgeCell.vue"
+import SubmissionCard from "src/pages/Publication/components/SubmissionCard.vue"
 import {
   statusCategories,
   type StatusCategoryDef
-} from "./components/statusCategories"
+} from "src/pages/Publication/components/statusCategories"
 import {
   GetPublicationDashboardDocument,
   GetPublicationDashboardSubmissionsDocument,

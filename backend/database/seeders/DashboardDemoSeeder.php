@@ -44,6 +44,42 @@ class DashboardDemoSeeder extends Seeder
         $coordinatorPool = User::factory()->count(3)->create();
         $reviewerPool = User::factory()->count(6)->create();
 
+        // A couple of staged (invited-but-not-accepted) reviewers so the
+        // dashboard Review Team tab shows the "Invited" badge in action.
+        $invitedReviewers = collect([
+            User::createStagedUser('invited.reviewer@example.com'),
+            User::createStagedUser('pending.peer@example.com'),
+        ]);
+
+        // Attach each invited reviewer to one in-progress submission so
+        // they surface in both the submission details and the Review Team
+        // tab of Publication > Manage > Users.
+        $invitationTargets = array_rand(
+            array_filter(
+                $submissions,
+                fn($s) => $s['status'] === Submission::UNDER_REVIEW
+                    || $s['status'] === Submission::AWAITING_REVIEW
+            ),
+            min(
+                $invitedReviewers->count(),
+                count(
+                    array_filter(
+                        $submissions,
+                        fn($s) => $s['status'] === Submission::UNDER_REVIEW
+                            || $s['status'] === Submission::AWAITING_REVIEW
+                    )
+                )
+            )
+        );
+        if (! is_array($invitationTargets)) {
+            $invitationTargets = [$invitationTargets];
+        }
+        // Flag the selected submissions so the main loop knows to attach
+        // an invited reviewer (paired with the invitedReviewers pool).
+        foreach ($invitationTargets as $i => $index) {
+            $submissions[$index]['invitedReviewer'] = $invitedReviewers[$i];
+        }
+
         foreach ($submissions as $data) {
             $submitter = $submitterPool->random();
 
@@ -68,6 +104,14 @@ class DashboardDemoSeeder extends Seeder
                         'reviewers'
                     );
                 }
+            }
+
+            if (! empty($data['invitedReviewer'])) {
+                $factory = $factory->hasAttached(
+                    $data['invitedReviewer'],
+                    [],
+                    'reviewers'
+                );
             }
 
             $created = Carbon::now()

@@ -536,6 +536,23 @@ type Publication {
     status: [SubmissionStatus!]
   ): SubmissionPaginator!
   updated_at: DateTimeUtc
+
+  """
+  Paginated users associated with this publication's submissions,
+  filtered by role. Each user carries per-role submission counts
+  (as_submitter_count / as_reviewer_count / as_coordinator_count).
+  """
+  users(
+    """Limits number of fetched items."""
+    first: Int! = 25
+    orderBy: [QueryPublicationUsersOrderByOrderByClause!]
+
+    """The offset from which items are returned."""
+    page: Int
+    roles: [SubmissionUserRoles!]!
+    search: String
+    staged: Boolean
+  ): UserPaginator!
 }
 
 type PublicationAssignment {
@@ -643,6 +660,24 @@ type Query {
   """
   validateNewUser(user: ValidateNewUserInput): Boolean
   versionInfo: VersionInfo
+}
+
+"""Sortable columns for the Publication.users query."""
+enum QueryPublicationUsersOrderByColumn {
+  AS_COORDINATOR_ACTIVE_COUNT
+  AS_COORDINATOR_COMPLETED_COUNT
+  AS_REVIEWER_ACTIVE_COUNT
+  AS_REVIEWER_COMPLETED_COUNT
+  AS_SUBMITTER_COUNT
+  EMAIL
+  NAME
+  USERNAME
+}
+
+"""Order by clause for the Publication.users query."""
+input QueryPublicationUsersOrderByOrderByClause {
+  column: QueryPublicationUsersOrderByColumn!
+  order: SortOrder!
 }
 
 """Allowed column names for Query.publications.orderBy."""
@@ -1029,6 +1064,41 @@ scalar Upload
 
 """A user account"""
 type User {
+  """
+  Count of active (in-progress) submissions where the user is a
+  review coordinator. Only populated by the Publication.users
+  resolver; null otherwise.
+  """
+  as_coordinator_active_count: Int
+
+  """
+  Count of completed submissions where the user is a review
+  coordinator. Only populated by the Publication.users resolver;
+  null otherwise.
+  """
+  as_coordinator_completed_count: Int
+
+  """
+  Count of active (in-progress) submissions in this publication
+  where the user is a reviewer. "Active" = not yet
+  rejected / accepted / archived / deleted. Only populated by the
+  Publication.users resolver; null otherwise.
+  """
+  as_reviewer_active_count: Int
+
+  """
+  Count of completed submissions (rejected / accepted / archived
+  / deleted) in this publication where the user is a reviewer.
+  Only populated by the Publication.users resolver; null otherwise.
+  """
+  as_reviewer_completed_count: Int
+
+  """
+  Number of this publication's non-draft submissions on which the
+  user is a submitter. Only populated by the Publication.users
+  resolver; null otherwise.
+  """
+  as_submitter_count: Int
   created_at: DateTimeUtc!
   display_label: String
   email: String!

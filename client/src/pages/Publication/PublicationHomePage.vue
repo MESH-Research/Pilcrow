@@ -22,11 +22,23 @@
             icon="dashboard"
             color="primary"
             :to="{
-              name: 'publication:dashboard',
+              name: 'manage:publication:dashboard',
               params: { id: id }
             }"
           >
             {{ $t("publication.dashboard.heading") }}
+          </q-btn>
+          <q-btn
+            v-if="isPublicationAdminOrEditor"
+            data-cy="manage_users_button"
+            icon="group"
+            color="primary"
+            :to="{
+              name: 'manage:publication:users:submitters',
+              params: { id: id }
+            }"
+          >
+            {{ $t("publication.manage.users.heading") }}
           </q-btn>
           <q-btn
             v-if="isPublicationAdmin"
