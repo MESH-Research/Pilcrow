@@ -82,8 +82,9 @@ const columns: QueryTableColumn[] = [
     name: "name",
     required: true,
     align: "left",
-    field: (row) => row.id,
+    field: (row) => row,
     component: NameAvatarCell,
+    hideUsername: true,
     sortable: true,
     label: "admin.users.headers.name"
   },

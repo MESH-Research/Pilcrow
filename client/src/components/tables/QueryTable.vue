@@ -3,14 +3,17 @@
     v-bind="tableProps"
     v-model:pagination="paginationModel"
     flat
+    binary-state-sort
     table-class="q-table--bordered"
     table-header-class="bg-accent text-white"
     :rows="rows"
     :columns="tColumns"
+    :visible-columns="props.visibleColumns"
+    :grid="props.grid"
     :loading="loading"
     :rows-per-page-options
+    v-on="rowClickListeners"
     @request="onRequest"
-    @row-click="(evt, row, index) => emit('row-click', evt, row, index)"
   >
     <template #top="scope">
       <slot name="top">
@@ -26,6 +29,7 @@
               placeholder="Search"
               clearable
               :bottom-slots="false"
+              :aria-describedby="props.searchHint ? searchHintId : undefined"
             >
               <template #prepend>
                 <q-icon name="search" />
@@ -51,11 +55,20 @@
             </q-btn>
             <q-btn
               v-if="refreshBtn"
+              flat
+              dense
               icon="refresh"
-              :dense="props.dense"
               @click="refetch()"
             />
+            <q-separator v-if="slots['top-after']" vertical inset />
             <slot name="top-after" v-bind="scope" />
+          </div>
+          <div
+            v-if="searchable && props.searchHint"
+            :id="searchHintId"
+            class="text-caption text-grey-7 q-mt-xs"
+          >
+            {{ props.searchHint }}
           </div>
         </div>
       </slot>
@@ -90,6 +103,7 @@
 import { graphql } from "src/graphql/generated"
 import type { Component } from "vue"
 import type { QTableProps } from "quasar"
+import type { RouteLocationRaw } from "vue-router"
 
 type QTableColumn = NonNullable<QTableProps["columns"]>[number]
 
@@ -97,6 +111,16 @@ export interface QueryTableColumn extends QTableColumn {
   component?: string | Component
   aside?: string | ((row: Record<string, unknown>) => string)
   asideLabel?: string | ((row: Record<string, unknown>) => string)
+  /**
+   * When provided, cells that support it (e.g. TextCell) render their
+   * content as a router-link to the returned route.
+   */
+  linkTo?: (row: Record<string, unknown>) => RouteLocationRaw
+  /**
+   * For NameAvatarCell: suppress the username caption below the
+   * display name (e.g. when a dedicated username column is present).
+   */
+  hideUsername?: boolean
 }
 
 export interface QTableBodyCellScope {
@@ -121,7 +145,13 @@ graphql(`
 
 <script setup lang="ts">
 import { omit } from "lodash"
-import { computed, useSlots, defineAsyncComponent } from "vue"
+import {
+  computed,
+  getCurrentInstance,
+  useId,
+  useSlots,
+  defineAsyncComponent
+} from "vue"
 import type { DocumentNode } from "graphql"
 import { useI18nPrefix } from "src/use/i18nPrefix"
 import { usePaginatedQuery } from "./usePaginatedQuery"
@@ -139,6 +169,9 @@ interface QueryTableProps {
   dense?: boolean
   syncUrl?: boolean
   defaultSort?: { sortBy: string; descending?: boolean }
+  searchHint?: string
+  visibleColumns?: string[]
+  grid?: boolean
 }
 
 const props = withDefaults(defineProps<QueryTableProps>(), {
@@ -151,7 +184,10 @@ const props = withDefaults(defineProps<QueryTableProps>(), {
   refreshBtn: true,
   dense: false,
   syncUrl: false,
-  defaultSort: undefined
+  defaultSort: undefined,
+  searchHint: "",
+  visibleColumns: undefined,
+  grid: false
 })
 
 interface Emits {
@@ -160,6 +196,20 @@ interface Emits {
   "row-click": [evt: Event, row: any, index: number]
 }
 const emit = defineEmits<Emits>()
+
+function onRowClickHandler(evt: Event, row: unknown, index: number) {
+  emit("row-click", evt, row, index)
+}
+
+// Only forward row-click to q-table when the parent actually listens
+// for it; otherwise Quasar would render a pointer cursor on every row
+// even when nothing happens on click.
+const instance = getCurrentInstance()
+const rowClickListeners = computed(() =>
+  instance?.vnode.props?.onRowClick !== undefined
+    ? { rowClick: onRowClickHandler }
+    : {}
+)
 
 const tableProps = computed(() =>
   omit(props, [
@@ -185,7 +235,8 @@ const {
   rows,
   loading,
   refetch,
-  onRequest
+  onRequest,
+  result
 } = usePaginatedQuery(props.query, {
   variables: computed(() => props.variables ?? {}),
   field: computed(() => props.field),
@@ -198,6 +249,7 @@ if (props.syncUrl) {
 
 const { pt } = useI18nPrefix(computed(() => props.tPrefix))
 const slots = useSlots()
+const searchHintId = `search-hint-${useId()}`
 
 const tColumns = computed(() => {
   if (props.columns === undefined) {
@@ -228,7 +280,9 @@ function getComponent(component: string | Component): Component {
 defineExpose({
   refetch,
   rows,
-  page
+  page,
+  result,
+  pagination
 })
 
 const topShow = computed(() => {
