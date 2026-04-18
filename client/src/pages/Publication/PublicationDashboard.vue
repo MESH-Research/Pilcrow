@@ -1,5 +1,8 @@
 <template>
-  <div :class="$q.screen.lt.sm ? 'q-px-sm' : 'q-px-lg'">
+  <div
+    class="publication-dashboard"
+    :class="$q.screen.lt.sm ? 'q-px-sm' : 'q-px-lg'"
+  >
     <nav class="q-pt-md">
       <q-breadcrumbs>
         <q-breadcrumbs-el
@@ -210,7 +213,7 @@
         :default-sort="{ sortBy: 'updated_at', descending: true }"
       >
         <template v-if="isGrid" #item="gridProps">
-          <div class="q-pa-sm col-12 column">
+          <div class="q-pa-sm col-12 col-sm-6 col-lg-4 col-xl-3 column">
             <SubmissionCard :submission="gridProps.row" class="col" />
           </div>
         </template>
@@ -254,6 +257,18 @@
             "
             no-caps
             @click="toggleExpandAllReviewers"
+          />
+          <q-btn
+            v-if="!isSmallScreen"
+            flat
+            dense
+            no-caps
+            :icon="isGrid ? 'table_rows' : 'grid_view'"
+            :label="isGrid ? 'Table view' : 'Grid view'"
+            :aria-label="
+              isGrid ? 'Switch to table view' : 'Switch to grid view'
+            "
+            @click="toggleViewPreference"
           />
         </template>
       </QueryTable>
@@ -303,6 +318,7 @@ graphql(`
           status
           created_at
           updated_at
+          submitted_at
           created_by {
             id
             ...NameAvatarCell
@@ -429,9 +445,31 @@ function applySort(option: SortOption) {
 }
 provide(ReviewTeamExpandAllKey, expandAllReviewers)
 
-// Responsive: switch to grid cards on small screens.
-const isGrid = computed(() => $q.screen.lt.md)
+// Responsive: switch to grid cards on small screens. Users can also
+// opt into grid mode at larger sizes via a toggle; the preference is
+// persisted in the `view` URL param.
+const viewPreference = ref<"grid" | null>(
+  route.query.view === "grid" ? "grid" : null
+)
+const isSmallScreen = computed(() => $q.screen.lt.md)
+const isGrid = computed(
+  () => isSmallScreen.value || viewPreference.value === "grid"
+)
 const isDense = computed(() => $q.screen.md)
+
+function toggleViewPreference() {
+  viewPreference.value = viewPreference.value === "grid" ? null : "grid"
+}
+
+watch(viewPreference, (value) => {
+  const query: Record<string, string> = { ...route.query } as Record<
+    string,
+    string
+  >
+  if (value === "grid") query.view = "grid"
+  else delete query.view
+  router.replace({ query })
+})
 
 // Fetch publication data with global status counts
 const { result } = useQuery(GetPublicationDashboardDocument, { id: props.id })
@@ -647,5 +685,28 @@ const columns: QueryTableColumn[] = [
   vertical-align: top;
   padding-top: 12px;
   padding-bottom: 12px;
+}
+/* Tint only the card grid area so the cards stand out from the
+   page background. The toolbar above (search + buttons) stays on
+   the page background and keeps its native input styling. */
+:deep(.q-table--grid .q-table__top) {
+  padding: 0 0 4px 0;
+}
+:deep(.q-table--grid .q-table__grid-content) {
+  background-color: #f5f5f5;
+  border-radius: 4px;
+}
+</style>
+
+<!-- Dark-mode overrides need an unscoped block since scoped styles
+     can't target the body.body--dark ancestor class. -->
+<style>
+.body--dark .q-table--grid .q-table__grid-content {
+  background-color: #262626;
+}
+/* Light up hardcoded grey-7 labels (category captions, "Filters:" etc.)
+   so they stay legible against dark page / grid backgrounds. */
+.body--dark .publication-dashboard .text-grey-7 {
+  color: #d0d0d0;
 }
 </style>
