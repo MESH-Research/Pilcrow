@@ -1,149 +1,90 @@
 <template>
-  <div v-if="!user" class="q-pa-lg">
-    {{ $t("loading") }}
-  </div>
-  <article v-else>
-    <nav class="q-px-lg q-pt-md q-gutter-sm">
-      <q-breadcrumbs>
-        <q-breadcrumbs-el :label="$t('user.self', 2)" to="/admin/users" />
-        <q-breadcrumbs-el :label="$t('user.details_heading')" />
-      </q-breadcrumbs>
-    </nav>
-    <div class="row justify-center q-px-lg">
-      <h2 class="col-sm-12" data-cy="userDetailsHeading">
-        {{ user.username }}
-      </h2>
-    </div>
-    <div class="row q-pa-lg q-col-gutter-lg">
-      <section class="col-sm-2 col-xs-12">
-        <div class="row justify-center">
-          <q-item-section
-            top
-            avatar
-            class="col-sm-12 col-xs-2 q-mb-lg q-pr-none"
-          >
-            <avatar-image :user="user" rounded class="fit" />
-          </q-item-section>
-        </div>
-      </section>
-      <section class="col-sm-10 col-xs-12">
-        <div class="row q-mb-sm">
-          <div
-            :class="`${
-              $q.screen.width < 440
-                ? 'hidden'
-                : 'col-3 q-pr-lg text-right text--grey '
-            }`"
-          >
-            {{ $t("user.username") }}
-          </div>
-          <div class="col">
-            <q-icon name="person_outline" class="text--grey" />
-            {{ user.username }}
-          </div>
-        </div>
-        <div class="row q-mb-sm">
-          <div
-            :class="`${
-              $q.screen.width < 440
-                ? 'hidden'
-                : 'col-3 q-pr-lg text-right text--grey '
-            }`"
-          >
-            {{ $t("user.email") }}
-          </div>
-          <div class="col">
-            <q-icon name="mail_outline" class="text--grey" />
-            {{ user.email }}
-          </div>
-        </div>
-        <div class="row q-mb-sm">
-          <div
-            :class="`${
-              $q.screen.width < 440
-                ? 'hidden'
-                : 'col-3 q-pr-lg text-right text--grey '
-            }`"
-          >
-            {{ $t("user.name") }}
-          </div>
-          <div class="col">
-            <div v-if="user.name">
-              <q-icon name="label_outline" class="text--grey" />
-              {{ user.name }}
-            </div>
-            <div v-else>
-              <q-icon name="o_do_disturb_on" class="text--grey" />
-              <span class="text--grey text-weight-light">
-                {{ $t("user.empty_name") }}
-              </span>
-            </div>
-          </div>
-        </div>
-        <div class="row q-mt-lg">
-          <div
-            :class="`${
-              $q.screen.width < 440
-                ? 'col-12 text-left q-mb-sm'
-                : 'col-3 text-right q-pr-lg'
-            } text--grey`"
-          >
-            {{ $t("role.self", 2) }}
-          </div>
-          <div
-            v-if="user.roles.length"
-            data-cy="role_item"
-            data-roles="has_roles"
-            :class="`${$q.screen.width < 440 ? 'col-12' : 'col'}`"
-          >
-            <div
-              v-for="role in user.roles"
-              :key="role.id"
-              class="q-mb-sm text-weight-medium"
-            >
-              <q-icon
-                v-if="
-                  role.name === 'Application Administrator' ||
-                  role.name === 'Publication Administrator'
-                "
-                name="manage_accounts"
-              />
-              <q-icon v-if="role.name === 'Editor'" name="o_book" />
-              {{ role.name }}
-            </div>
-          </div>
-          <div
-            v-else
-            data-cy="role_item"
-            data-roles="no_roles"
-            :class="`${$q.screen.width < 440 ? 'col-12' : 'col'}`"
-          >
-            <q-icon name="o_do_disturb_on" class="text--grey" />
-            <span class="text--grey text-weight-light">
-              {{ $t("role.no_roles_assigned") }}
-            </span>
-          </div>
-        </div>
-      </section>
-    </div>
-  </article>
+  <QueryTable
+    :refresh-btn="false"
+    :query="getUserPublicationsDocument"
+    t-prefix="admin.users.details.publications"
+    :variables="{ id }"
+    field="user.publications"
+    :columns="columns"
+  >
+    <template #no-data>
+      <div class="full-width row flex-center text-grey-7 q-gutter-sm q-py-lg">
+        <q-icon size="2em" name="menu_book" />
+        <span>{{ $t("admin.users.details.no_publications") }}</span>
+      </div>
+    </template>
+    <template #body-cell-actions="scope">
+      <q-td :props="scope">
+        <q-btn
+          color="primary"
+          size="sm"
+          :to="{
+            name: 'publication:home',
+            params: { id: scope.row.publication.id }
+          }"
+          :label="$t('admin.users.details.publications.actions.view')"
+        />
+      </q-td>
+    </template>
+  </QueryTable>
 </template>
 
-<script setup lang="ts">
-import { GET_USER } from "src/graphql/queries"
-import AvatarImage from "src/components/atoms/AvatarImage.vue"
-import { useQuery } from "@vue/apollo-composable"
-import { computed } from "vue"
-import { useQuasar } from "quasar"
+<script lang="ts">
+import { graphql } from "src/graphql/generated"
 
-const $q = useQuasar()
+graphql(`
+  query getUserPublications($id: ID, $page: Int!, $first: Int!) {
+    user(id: $id) {
+      id
+      publications(first: $first, page: $page) {
+        ...QueryTable
+        data {
+          id
+          role
+          publication {
+            id
+            name
+          }
+        }
+      }
+    }
+  }
+`)
+</script>
+
+<script setup lang="ts">
+import QueryTable, {
+  type QueryTableColumn
+} from "src/components/tables/QueryTable.vue"
+import { getUserPublicationsDocument } from "src/graphql/generated/graphql"
+import { useI18n } from "vue-i18n"
+
 interface Props {
   id: string
 }
-const props = defineProps<Props>()
+defineProps<Props>()
 
-const { result } = useQuery(GET_USER, { id: props.id })
-const user = computed(() => {
-  return result.value?.user
-})
+const { t } = useI18n()
+
+const columns: QueryTableColumn[] = [
+  {
+    name: "name",
+    required: true,
+    align: "left",
+    field: (row) => row.publication.name,
+    label: "Name"
+  },
+  {
+    name: "role",
+    align: "left",
+    field: (row) => t(`admin.users.details.roles.${row.role}`),
+    label: "Role"
+  },
+  {
+    name: "actions",
+    align: "right",
+    field: "id",
+    label: ""
+  }
+]
 </script>

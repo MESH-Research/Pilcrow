@@ -59,7 +59,7 @@ will silently merge or overwrite their types.
 
 ### How It Works
 
-The codegen config is in `client/codegen.ts`. By default, it introspects the running backend at `http://pilcrow.lndo.site/graphql` to get the compiled schema, then generates types and an updated `schema.graphql` file for all operations found in `client/src/graphql/**/*.ts`.
+The codegen config is in `client/codegen.ts`. By default, it introspects the running backend at `http://pilcrow.lndo.site/graphql` to get the compiled schema, then generates types for all operations found in `client/src/graphql/**/*.ts`.
 
 ### Automatic Regeneration (Dev Server)
 
@@ -73,7 +73,7 @@ During development, types are regenerated automatically when:
 If the backend is not running when the dev server starts, `throwOnStart: false` allows the dev server to start anyway using previously generated types.
 
 ::: tip
-The compiled schema file (`client/src/graphql/schema.graphql`) is committed to the repository. During development, codegen introspects the live backend and writes both the types and an updated schema file automatically. During builds, types are generated from this committed schema file so the backend is not required. If you need to update the schema file manually (e.g., without the dev server running), use `lando yarn graphql:codegen-offline`.
+The compiled schema file (`client/src/graphql/schema.graphql`) is committed to the repository. During development, codegen introspects the live backend and writes both the types and an updated schema file automatically. During builds, types are generated from this committed schema file so the backend is not required. If you need to update the schema file manually (e.g., without the dev server running), use `lando yarn graphql:fetch-schema`.
 :::
 
 ### Manual Commands
@@ -91,10 +91,10 @@ lando yarn graphql:codegen-offline
 lando yarn graphql:fetch-schema
 ```
 
-You can override the schema source with an environment variable. This is useful for CI workflows where introspection isn't available:
+You can override the schema source with an environment variable. This is useful for offline or CI workflows where introspection isn't available:
 
 ```sh
-GRAPHQL_SCHEMA=src/graphql/schema.graphql lando yarn graphql:codegen
+lando ssh -s client -c "GRAPHQL_SCHEMA=src/graphql/schema.graphql npm run graphql:codegen"
 ```
 
 ### Using Generated Types
@@ -107,10 +107,9 @@ boundary casting.
 
 The codegen configuration in `client/codegen.ts` uses:
 
-- `schema-ast` plugin — writes the introspected schema to `schema.graphql` (keeps the committed file in sync with the backend)
+- `schema-ast` plugin — writes the introspected schema to `schema.graphql` (keeps the committed file in sync)
 - `typescript` plugin — generates base types from the schema
 - `typescript-operations` plugin — generates result/variable types for each operation
-- `sort: true` on `schema-ast` — ensures consistent ordering across environments
 - `namingConvention: "keep"` — preserves snake_case field names from the Laravel backend
 - `maybeValue: "T | null | undefined"` — nullable fields can be `null` or `undefined`
 
