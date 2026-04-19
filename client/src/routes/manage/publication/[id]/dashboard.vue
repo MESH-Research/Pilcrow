@@ -340,20 +340,20 @@ type LaneCell = string | { stack: readonly string[] }
 
 const activeLane: readonly LaneCell[] = [
   { stack: ["RESUBMITTED", "INITIALLY_SUBMITTED"] },
-  { stack: ["AWAITING_REVIEW", "UNDER_REVIEW", "AWAITING_DECISION"] }
+  { stack: ["AWAITING_REVIEW", "UNDER_REVIEW", "AWAITING_DECISION"] },
+  { stack: ["REVISION_REQUESTED", "ACCEPTED_AS_FINAL"] }
 ]
 
-// Request-type statuses that branch OUT of the pipeline to the
-// author. Once the author acts on a RESUBMISSION_REQUESTED, the
-// submission re-enters via RESUBMITTED, which lives in the active
-// lane's intake stack above.
-const authorLane = ["RESUBMISSION_REQUESTED", "REVISION_REQUESTED"] as const
+// Request-type status that branches OUT of the pipeline to the
+// author. RESUBMISSION_REQUESTED lives here; the corresponding
+// REVISION_REQUESTED now sits in the active pipeline's decision
+// column alongside ACCEPTED_AS_FINAL.
+const authorLane = ["RESUBMISSION_REQUESTED"] as const
 
 function isStack(cell: LaneCell): cell is { stack: readonly string[] } {
   return typeof cell !== "string"
 }
 const closedLane = [
-  "ACCEPTED_AS_FINAL",
   "REJECTED",
   "EXPIRED",
   "ARCHIVED",
