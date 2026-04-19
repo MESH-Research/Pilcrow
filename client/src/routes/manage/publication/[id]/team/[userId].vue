@@ -5,20 +5,12 @@
     </div>
 
     <template v-else-if="publicationUser">
-      <!-- Header card: avatar + identity + invited badge -->
       <q-card flat bordered class="q-mb-md">
         <q-card-section class="row items-center no-wrap q-gutter-md">
-          <avatar-image
-            v-if="publicationUser.user"
-            :user="publicationUser.user"
-            size="72px"
-            rounded
-          />
+          <avatar-image :user="publicationUser.user" size="72px" rounded />
           <div class="col column q-gutter-xs">
             <div class="row items-center q-gutter-sm">
-              <div class="text-h6">
-                {{ displayName }}
-              </div>
+              <div class="text-h6">{{ displayName }}</div>
               <q-badge
                 v-if="publicationUser.user.staged"
                 color="warning"
@@ -47,34 +39,15 @@
         </q-card-section>
       </q-card>
 
-      <!-- Role breakdown -->
+      <!-- Reviewer + Coordinator breakdown -->
       <div class="row q-col-gutter-md q-mb-md">
-        <div class="col-12 col-md-4">
-          <q-card flat bordered class="full-height">
-            <q-card-section>
-              <div class="text-overline text-grey-7">
-                {{ $t("publication.manage.user_detail.role.submitter") }}
-              </div>
-              <div class="text-h4 q-my-xs">
-                {{ publicationUser.as_submitter_count }}
-              </div>
-              <div class="text-caption text-grey-7">
-                {{
-                  $t("publication.manage.user_detail.submissions", {
-                    n: publicationUser.as_submitter_count
-                  })
-                }}
-              </div>
-            </q-card-section>
-          </q-card>
-        </div>
-        <div class="col-12 col-md-4">
+        <div class="col-12 col-md-6">
           <q-card flat bordered class="full-height">
             <q-card-section>
               <div class="text-overline text-grey-7">
                 {{ $t("publication.manage.user_detail.role.reviewer") }}
               </div>
-              <div class="row items-baseline q-gutter-md q-my-xs">
+              <div class="row items-baseline q-gutter-lg q-my-xs">
                 <div>
                   <div class="text-h4">
                     {{ publicationUser.as_reviewer_active_count }}
@@ -95,13 +68,13 @@
             </q-card-section>
           </q-card>
         </div>
-        <div class="col-12 col-md-4">
+        <div class="col-12 col-md-6">
           <q-card flat bordered class="full-height">
             <q-card-section>
               <div class="text-overline text-grey-7">
                 {{ $t("publication.manage.user_detail.role.coordinator") }}
               </div>
-              <div class="row items-baseline q-gutter-md q-my-xs">
+              <div class="row items-baseline q-gutter-lg q-my-xs">
                 <div>
                   <div class="text-h4">
                     {{ publicationUser.as_coordinator_active_count }}
@@ -124,7 +97,6 @@
         </div>
       </div>
 
-      <!-- Submissions list -->
       <h3 class="q-mt-lg q-mb-sm" style="font-size: 1.125rem">
         {{ $t("publication.manage.user_detail.submissions_heading") }}
       </h3>
@@ -154,7 +126,7 @@
 import { graphql } from "src/graphql/generated"
 
 graphql(`
-  query GetPublicationUserDetail($publicationId: ID!, $userId: ID!) {
+  query GetPublicationTeamMemberDetail($publicationId: ID!, $userId: ID!) {
     publication(id: $publicationId) {
       id
       user(id: $userId) {
@@ -167,12 +139,11 @@ graphql(`
           staged
           ...avatarImage
         }
-        as_submitter_count
         as_reviewer_active_count
         as_reviewer_completed_count
         as_coordinator_active_count
         as_coordinator_completed_count
-        submissions {
+        submissions(roles: [reviewer, review_coordinator]) {
           id
           title
           status
@@ -187,15 +158,15 @@ graphql(`
 import { computed } from "vue"
 import { useQuery } from "@vue/apollo-composable"
 import AvatarImage from "src/components/atoms/AvatarImage.vue"
-import { GetPublicationUserDetailDocument } from "src/graphql/generated/graphql"
+import { GetPublicationTeamMemberDetailDocument } from "src/graphql/generated/graphql"
 import { setCrumbLabel } from "src/use/breadcrumbs"
 
 definePage({
-  name: "manage:publication:user",
+  name: "manage:publication:team_member",
   props: true,
   meta: {
     crumb: {
-      label: "User"
+      label: "Team Member"
     }
   }
 })
@@ -206,10 +177,13 @@ interface Props {
 }
 const props = defineProps<Props>()
 
-const { result, loading } = useQuery(GetPublicationUserDetailDocument, () => ({
-  publicationId: props.id,
-  userId: props.userId
-}))
+const { result, loading } = useQuery(
+  GetPublicationTeamMemberDetailDocument,
+  () => ({
+    publicationId: props.id,
+    userId: props.userId
+  })
+)
 
 const publicationUser = computed(() => result.value?.publication?.user ?? null)
 
@@ -221,7 +195,7 @@ const displayName = computed(
 )
 
 setCrumbLabel(
-  "manage:publication:user",
+  "manage:publication:team_member",
   computed(() => displayName.value || undefined)
 )
 </script>

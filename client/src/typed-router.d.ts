@@ -37,9 +37,10 @@ declare module 'vue-router/auto-routes' {
       | 'manage:publication:dashboard'
       | 'manage:publication:id'
       | 'manage:publication:invited'
+      | 'manage:publication:submitter'
       | 'manage:publication:submitters'
       | 'manage:publication:team'
-      | 'manage:publication:user'
+      | 'manage:publication:team_member'
     >,
     'manage:publication:id': RouteRecordInfo<
       'manage:publication:id',
@@ -50,9 +51,10 @@ declare module 'vue-router/auto-routes' {
       | '/manage/publication/[id]/(tabs)'
       | 'manage:publication:dashboard'
       | 'manage:publication:invited'
+      | 'manage:publication:submitter'
       | 'manage:publication:submitters'
       | 'manage:publication:team'
-      | 'manage:publication:user'
+      | 'manage:publication:team_member'
     >,
     '/manage/publication/[id]/(tabs)': RouteRecordInfo<
       '/manage/publication/[id]/(tabs)',
@@ -98,9 +100,16 @@ declare module 'vue-router/auto-routes' {
       { id: ParamValue<false> },
       | never
     >,
-    'manage:publication:user': RouteRecordInfo<
-      'manage:publication:user',
-      '/manage/publication/:id/users/:userId',
+    'manage:publication:submitter': RouteRecordInfo<
+      'manage:publication:submitter',
+      '/manage/publication/:id/submitters/:userId',
+      { id: ParamValue<true>, userId: ParamValue<true> },
+      { id: ParamValue<false>, userId: ParamValue<false> },
+      | never
+    >,
+    'manage:publication:team_member': RouteRecordInfo<
+      'manage:publication:team_member',
+      '/manage/publication/:id/team/:userId',
       { id: ParamValue<true>, userId: ParamValue<true> },
       { id: ParamValue<false>, userId: ParamValue<false> },
       | never
@@ -126,9 +135,10 @@ declare module 'vue-router/auto-routes' {
         | 'manage:publication:dashboard'
         | 'manage:publication:id'
         | 'manage:publication:invited'
+        | 'manage:publication:submitter'
         | 'manage:publication:submitters'
         | 'manage:publication:team'
-        | 'manage:publication:user'
+        | 'manage:publication:team_member'
       views:
         | 'default'
     }
@@ -139,9 +149,10 @@ declare module 'vue-router/auto-routes' {
         | 'manage:publication:dashboard'
         | 'manage:publication:id'
         | 'manage:publication:invited'
+        | 'manage:publication:submitter'
         | 'manage:publication:submitters'
         | 'manage:publication:team'
-        | 'manage:publication:user'
+        | 'manage:publication:team_member'
       views:
         | 'default'
     }
@@ -184,9 +195,15 @@ declare module 'vue-router/auto-routes' {
       views:
         | never
     }
-    'src/routes/manage/publication/[id]/users/[userId].vue': {
+    'src/routes/manage/publication/[id]/submitters/[userId].vue': {
       routes:
-        | 'manage:publication:user'
+        | 'manage:publication:submitter'
+      views:
+        | never
+    }
+    'src/routes/manage/publication/[id]/team/[userId].vue': {
+      routes:
+        | 'manage:publication:team_member'
       views:
         | never
     }

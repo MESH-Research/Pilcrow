@@ -41,7 +41,7 @@ const router = useRouter()
 
 function onRowClick(_evt: Event, row: { id: string }) {
   router.push({
-    name: "manage:publication:user",
+    name: "manage:publication:team_member",
     params: { id: props.id, userId: row.id }
   })
 }
