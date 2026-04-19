@@ -1,19 +1,16 @@
 <template>
   <q-card flat bordered class="submission-card column">
-    <!-- Category overlay: color + pattern + category icon in the
-         top-left corner. Reads the status category at a glance
-         without taking up header space. -->
-    <div
-      :class="[
-        'category-overlay',
-        `bg-${statusStyle.color}`,
-        statusStyle.textClass,
-        statusStyle.pattern
-      ]"
+    <!-- Status category badge: corner indicator with the category
+         color + pattern and the category icon. Reads the status
+         category at a glance. -->
+    <q-badge
+      floating
+      :color="statusStyle.color"
+      :class="['category-badge', statusStyle.textClass, statusStyle.pattern]"
       :aria-label="categoryLabel"
     >
-      <q-icon :name="statusStyle.icon" size="md" class="pattern-text-mask" />
-    </div>
+      <q-icon :name="statusStyle.icon" size="xs" class="pattern-text-mask" />
+    </q-badge>
 
     <!-- Header: title on top; submitter on the left, status on the
          right as a soft outlined chip (category color provides the
@@ -314,7 +311,7 @@ const relativeSubmitted = computed(() =>
 <style scoped>
 .submission-card {
   position: relative;
-  /* Let the top-left overlay extend slightly past the card edge. */
+  /* Let the floating category badge extend slightly past the card edge. */
   overflow: visible;
 }
 .submission-card .submission-title {
@@ -324,25 +321,22 @@ const relativeSubmitted = computed(() =>
 .submission-card .submission-title:hover {
   text-decoration: underline;
 }
-/* Top-left category overlay: a bold patterned tile that reads as the
-   status category without dominating the card's header. */
-.category-overlay {
-  position: absolute;
-  top: -8px;
-  left: -8px;
-  width: 44px;
-  height: 44px;
-  border-radius: 8px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 2;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
+/* Anchor the floating q-badge to the card's top-left corner instead
+   of the default top-right, and size it up so the category icon
+   has room to breathe. */
+.category-badge.q-badge--floating {
+  top: -6px;
+  left: -6px;
+  right: auto;
+  padding: 4px 6px;
+  font-size: 0.85rem;
+  letter-spacing: 0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
-/* The overlay sits over the card's top-left corner; push the header
-   content to the right so the title and submitter aren't cropped. */
+/* Nudge the header content right so the category badge doesn't
+   overlap the title. */
 .submission-header {
-  padding-left: 48px !important;
+  padding-left: 40px !important;
 }
 /* Soft outlined status chip replaces the previous full-bleed bg+pattern
    treatment. Keeps the category color legible without shouting. */
