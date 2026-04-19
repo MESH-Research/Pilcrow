@@ -397,8 +397,8 @@ const activeLane: readonly LaneCell[] = [
   // both are new work landing on the coordinator's desk. The chip
   // shows the total count; a badge surfaces how many of those are
   // resubmissions specifically.
-  { label: "intake", combine: ["INITIALLY_SUBMITTED", "RESUBMITTED"] },
-  { label: "screening", stack: ["AWAITING_REVIEW", "RESUBMISSION_REQUESTED"] },
+  { label: "screening", combine: ["INITIALLY_SUBMITTED", "RESUBMITTED"] },
+  { label: "assignment", stack: ["AWAITING_REVIEW", "RESUBMISSION_REQUESTED"] },
   { label: "reviewing", stack: ["UNDER_REVIEW", "AWAITING_DECISION"] },
   { label: "decision", stack: ["REVISION_REQUESTED", "ACCEPTED_AS_FINAL"] }
 ]

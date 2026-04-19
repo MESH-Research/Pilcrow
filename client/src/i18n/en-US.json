@@ -503,8 +503,8 @@
         "loops_back": "returns to the pipeline"
       },
       "stages": {
-        "intake": "Intake",
         "screening": "Screening",
+        "assignment": "Assignment",
         "reviewing": "Reviewing",
         "decision": "Decision"
       },
