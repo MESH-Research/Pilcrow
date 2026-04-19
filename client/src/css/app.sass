@@ -366,6 +366,12 @@ body.body--dark
 .text-dashboard-green
     color: #3D5C2D !important
 
+// Expose the custom category color as a CSS variable so callers can
+// reference it via `var(--q-dashboard-green)` the same way they do
+// Quasar's brand colors (`--q-warning`, `--q-info`, `--q-secondary`).
+:root
+    --q-dashboard-green: #3D5C2D
+
 // Color-blind accessible patterns for status categories.
 // All pattern rules are gated behind .a11y-patterns so they can be toggled
 // via a user preference. Add .a11y-patterns to body or a wrapper to enable.

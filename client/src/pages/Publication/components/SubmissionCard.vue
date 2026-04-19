@@ -31,6 +31,7 @@
           }"
           class="text-primary submission-title block"
           style="font-size: 1.25rem; line-height: 1.3"
+          :title="submission.title"
         >
           {{ submission.title }}
         </router-link>
@@ -63,11 +64,8 @@
         <q-space v-else-if="!stackHeader" />
         <div
           class="status-chip row items-center no-wrap q-px-sm q-py-xs"
-          :class="[
-            canChangeStatus ? 'cursor-pointer' : '',
-            `text-${statusStyle.color}`,
-            `border-${statusStyle.color}`
-          ]"
+          :class="[canChangeStatus ? 'cursor-pointer' : '']"
+          :style="`border-color: var(--q-${statusStyle.color})`"
           :role="canChangeStatus ? 'button' : undefined"
           :tabindex="canChangeStatus ? 0 : undefined"
           :aria-label="
@@ -324,6 +322,16 @@ const relativeSubmitted = computed(() =>
 .submission-card .submission-title {
   text-decoration: none;
   font-weight: 500;
+  /* Clamp to three lines with ellipsis so cards stay the same
+     height in the grid. Long unbroken tokens (URL-ish strings)
+     break mid-word instead of stretching the card. The full
+     title lives on the anchor's `title` attribute for hover. */
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 .submission-card .submission-title:hover {
   text-decoration: underline;
@@ -339,18 +347,22 @@ const relativeSubmitted = computed(() =>
   height: 40px;
   border-radius: 6px;
 }
-/* Soft outlined status chip replaces the previous full-bleed bg+pattern
-   treatment. Keeps the category color legible without shouting. */
+/* Outlined status chip. The border + dot carry the category color;
+   the label text stays in the theme's default body color so we keep
+   adequate contrast against the white card (some category colors,
+   e.g. warning, fail WCAG AA as text on white). */
 .status-chip {
-  border: 1px solid currentColor;
+  border: 1px solid;
   border-radius: 9999px;
   background: transparent;
+  color: inherit;
 }
 .status-dot {
   width: 8px;
   height: 8px;
   border-radius: 50%;
   display: inline-block;
+  flex: 0 0 auto;
 }
 :deep(.q-item__label + .q-item__label) {
   margin-top: 0;
