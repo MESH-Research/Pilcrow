@@ -26,8 +26,9 @@
            either side of the happy path at a glance. -->
       <div class="status-flow-diagram q-mb-md">
         <!-- Top lane: "inactive" — sent back to the author, waiting
-             to re-enter the active pipeline once the author acts. -->
-        <div class="status-lane">
+             to re-enter the active pipeline once the author acts.
+             Skips rendering when the lane has no statuses. -->
+        <div v-if="authorLane.length" class="status-lane">
           <div class="status-lane-label">
             {{ $t("publication.dashboard.lanes.with_author") }}
           </div>
@@ -340,25 +341,26 @@ type LaneCell = string | { stack: readonly string[] }
 
 const activeLane: readonly LaneCell[] = [
   { stack: ["RESUBMITTED", "INITIALLY_SUBMITTED"] },
-  { stack: ["AWAITING_REVIEW", "UNDER_REVIEW", "AWAITING_DECISION"] },
+  {
+    stack: [
+      "AWAITING_REVIEW",
+      "UNDER_REVIEW",
+      "AWAITING_DECISION",
+      "RESUBMISSION_REQUESTED"
+    ]
+  },
   { stack: ["REVISION_REQUESTED", "ACCEPTED_AS_FINAL"] }
 ]
 
-// Request-type status that branches OUT of the pipeline to the
-// author. RESUBMISSION_REQUESTED lives here; the corresponding
-// REVISION_REQUESTED now sits in the active pipeline's decision
-// column alongside ACCEPTED_AS_FINAL.
-const authorLane = ["RESUBMISSION_REQUESTED"] as const
+// With-author lane is empty now that every request-type status has
+// moved into the active pipeline — kept as a hook in case we
+// reintroduce author-side states later.
+const authorLane = [] as readonly string[]
 
 function isStack(cell: LaneCell): cell is { stack: readonly string[] } {
   return typeof cell !== "string"
 }
-const closedLane = [
-  "REJECTED",
-  "EXPIRED",
-  "ARCHIVED",
-  "DELETED"
-] as const
+const closedLane = ["REJECTED", "EXPIRED", "ARCHIVED", "DELETED"] as const
 
 function styleFor(status: string) {
   return (
