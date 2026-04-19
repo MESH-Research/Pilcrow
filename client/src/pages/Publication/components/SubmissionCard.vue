@@ -1,17 +1,20 @@
 <template>
   <q-card flat bordered class="submission-card column">
-    <!-- Header: title (prefixed by a status-category icon badge)
-         on top; submitter on the left, status chip on the right. -->
-    <q-card-section class="q-py-sm q-px-md">
-      <div class="row items-baseline no-wrap q-mb-sm submission-title-row">
+    <!-- Header row: category icon and title as two horizontal
+         card-sections, vertically centered. Submitter + status chip
+         live in a separate card-section below. -->
+    <q-card-section horizontal class="items-center">
+      <q-card-section
+        class="col-auto q-py-sm q-pl-md q-pr-none"
+        :aria-label="categoryLabel"
+      >
         <span
           :class="[
-            'category-icon q-mr-sm',
+            'category-icon',
             `bg-${statusStyle.color}`,
             statusStyle.textClass,
             statusStyle.pattern
           ]"
-          :aria-label="categoryLabel"
         >
           <q-icon
             :name="statusStyle.icon"
@@ -19,17 +22,22 @@
             class="pattern-text-mask"
           />
         </span>
+      </q-card-section>
+      <q-card-section class="col q-py-sm q-px-md">
         <router-link
           :to="{
             name: 'submission:details',
             params: { id: submission.id }
           }"
-          class="text-primary submission-title"
+          class="text-primary submission-title block"
           style="font-size: 1.25rem; line-height: 1.3"
         >
           {{ submission.title }}
         </router-link>
-      </div>
+      </q-card-section>
+    </q-card-section>
+
+    <q-card-section class="q-py-sm q-px-md q-pt-none">
       <div :class="['items-start q-gutter-sm', stackHeader ? 'column' : 'row']">
         <q-item
           v-if="submission.created_by"
@@ -320,23 +328,16 @@ const relativeSubmitted = computed(() =>
 .submission-card .submission-title:hover {
   text-decoration: underline;
 }
-/* Patterned tile inline with the title — square is large enough
+/* Patterned tile in its own horizontal card-section — large enough
    that the category pattern (diagonals / zigzag / dots / crosshatch)
    actually reads. */
 .category-icon {
-  flex: 0 0 auto;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   width: 40px;
   height: 40px;
   border-radius: 6px;
-  /* Nudge to optically align with the title baseline. */
-  transform: translateY(4px);
-}
-.submission-title-row {
-  /* Let the title wrap naturally next to the fixed-size icon. */
-  align-items: flex-start;
 }
 /* Soft outlined status chip replaces the previous full-bleed bg+pattern
    treatment. Keeps the category color legible without shouting. */
