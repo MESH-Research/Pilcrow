@@ -306,12 +306,14 @@ const activeLane = [
   "UNDER_REVIEW",
   "AWAITING_DECISION"
 ] as const
-// RESUBMITTED parked next to RESUBMISSION_REQUESTED for now — once
-// it comes back from the author it's still waiting on the
-// coordinator to re-queue for review.
+// Order deliberately places RESUBMITTED first so it sits directly
+// above INITIALLY_SUBMITTED — both are intake states that feed the
+// active pipeline. The request-type statuses (RESUBMISSION_REQUESTED,
+// REVISION_REQUESTED) follow because they branch OUT of the pipeline
+// to the author.
 const authorLane = [
-  "RESUBMISSION_REQUESTED",
   "RESUBMITTED",
+  "RESUBMISSION_REQUESTED",
   "REVISION_REQUESTED"
 ] as const
 const closedLane = [
