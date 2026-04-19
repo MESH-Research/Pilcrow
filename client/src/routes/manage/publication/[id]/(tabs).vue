@@ -55,6 +55,7 @@ graphql(`
     $roles: [SubmissionUserRoles!]!
     $staged: Boolean
     $orderBy: [QueryPublicationUsersOrderByOrderByClause!]
+    $previewRoles: [SubmissionUserRoles!]
   ) {
     publication(id: $id) {
       id
@@ -69,13 +70,26 @@ graphql(`
         ...QueryTable
         data {
           id
-          ...NameAvatarCell
-          email
+          user {
+            id
+            ...NameAvatarCell
+            email
+            staged
+          }
           as_submitter_count
           as_reviewer_active_count
           as_reviewer_completed_count
           as_coordinator_active_count
           as_coordinator_completed_count
+          submissions(first: 5, roles: $previewRoles) {
+            paginatorInfo {
+              total
+            }
+            data {
+              id
+              status
+            }
+          }
         }
       }
     }

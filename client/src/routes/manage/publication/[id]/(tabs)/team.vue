@@ -8,7 +8,8 @@
     :variables="{
       id,
       roles: ['reviewer', 'review_coordinator'],
-      staged: false
+      staged: false,
+      previewRoles: ['reviewer', 'review_coordinator']
     }"
     sync-url
     :default-sort="{ sortBy: 'name' }"
@@ -59,19 +60,22 @@
           @click="goToDetail(gridProps.row.id)"
         >
           <q-card-section class="row items-center no-wrap q-gutter-md">
-            <avatar-image :user="gridProps.row" size="56px" rounded />
+            <avatar-image :user="gridProps.row.user" size="56px" rounded />
             <div class="col column q-gutter-xs" style="min-width: 0">
               <div class="text-weight-medium ellipsis">
-                {{ gridProps.row.name || gridProps.row.email }}
+                {{ gridProps.row.user.name || gridProps.row.user.email }}
               </div>
               <div
-                v-if="gridProps.row.username"
+                v-if="gridProps.row.user.username"
                 class="text-caption text-grey-7 ellipsis"
               >
-                {{ gridProps.row.username }}
+                {{ gridProps.row.user.username }}
               </div>
-              <div v-if="gridProps.row.email" class="text-caption ellipsis">
-                {{ gridProps.row.email }}
+              <div
+                v-if="gridProps.row.user.email"
+                class="text-caption ellipsis"
+              >
+                {{ gridProps.row.user.email }}
               </div>
             </div>
           </q-card-section>
@@ -316,7 +320,7 @@ const columns: QueryTableColumn[] = [
     name: "name",
     required: true,
     align: "left",
-    field: (row) => row,
+    field: (row) => (row as { user: unknown }).user,
     component: NameAvatarCell,
     sortable: true,
     label: "publication.manage.users.headers.name"
@@ -324,7 +328,7 @@ const columns: QueryTableColumn[] = [
   {
     name: "email",
     align: "left",
-    field: "email",
+    field: (row) => (row as { user: { email?: string } }).user?.email ?? "",
     sortable: true,
     label: "publication.manage.users.headers.email"
   },

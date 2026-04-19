@@ -5,7 +5,7 @@
     field="publication.users"
     t-prefix="publication.manage.users"
     :columns="columns"
-    :variables="{ id, roles: ['submitter'] }"
+    :variables="{ id, roles: ['submitter'], previewRoles: ['submitter'] }"
     sync-url
     :default-sort="{ sortBy: 'name' }"
     :dense="isDense"
@@ -22,19 +22,22 @@
           @click="goToDetail(gridProps.row.id)"
         >
           <q-card-section class="row items-center no-wrap q-gutter-md">
-            <avatar-image :user="gridProps.row" size="56px" rounded />
+            <avatar-image :user="gridProps.row.user" size="56px" rounded />
             <div class="col column q-gutter-xs" style="min-width: 0">
               <div class="text-weight-medium ellipsis">
-                {{ gridProps.row.name || gridProps.row.email }}
+                {{ gridProps.row.user.name || gridProps.row.user.email }}
               </div>
               <div
-                v-if="gridProps.row.username"
+                v-if="gridProps.row.user.username"
                 class="text-caption text-grey-7 ellipsis"
               >
-                {{ gridProps.row.username }}
+                {{ gridProps.row.user.username }}
               </div>
-              <div v-if="gridProps.row.email" class="text-caption ellipsis">
-                {{ gridProps.row.email }}
+              <div
+                v-if="gridProps.row.user.email"
+                class="text-caption ellipsis"
+              >
+                {{ gridProps.row.user.email }}
               </div>
             </div>
           </q-card-section>
@@ -43,23 +46,47 @@
             <span class="col text-body2 text-grey-8">
               {{ $t("publication.manage.users.headers.as_submitter_count") }}
             </span>
-            <template v-if="gridProps.row.as_submitter_count > ICON_THRESHOLD">
+            <template
+              v-if="
+                gridProps.row.submissions.paginatorInfo.total > ICON_THRESHOLD
+              "
+            >
               <span class="text-h6 q-mr-sm">
-                {{ gridProps.row.as_submitter_count }}
+                {{ gridProps.row.submissions.paginatorInfo.total }}
               </span>
             </template>
             <span
-              v-else-if="gridProps.row.as_submitter_count > 0"
-              class="row items-center q-gutter-xs"
-              :aria-label="`${gridProps.row.as_submitter_count} submissions`"
+              v-else-if="gridProps.row.submissions.paginatorInfo.total > 0"
+              class="row items-center q-gutter-sm"
             >
-              <q-icon
-                v-for="i in gridProps.row.as_submitter_count"
-                :key="i"
-                name="description"
-                size="sm"
-                color="grey-7"
-              />
+              <span
+                v-for="sub in gridProps.row.submissions.data"
+                :key="sub.id"
+                :class="[
+                  'submission-chip',
+                  `bg-${styleFor(sub.status).color}`,
+                  styleFor(sub.status).textClass,
+                  styleFor(sub.status).pattern
+                ]"
+                :title="$t(`submission.status.${sub.status}`)"
+                :aria-label="$t(`submission.status.${sub.status}`)"
+              >
+                <q-icon
+                  name="description"
+                  size="sm"
+                  class="pattern-text-mask"
+                />
+                <span
+                  :class="[
+                    'category-badge',
+                    `bg-${styleFor(sub.status).color}`,
+                    styleFor(sub.status).textClass
+                  ]"
+                  aria-hidden="true"
+                >
+                  <q-icon :name="styleFor(sub.status).icon" size="10px" />
+                </span>
+              </span>
             </span>
             <span v-else class="text-grey-5">—</span>
           </q-card-section>
@@ -117,7 +144,19 @@ import QueryTable, {
 import NameAvatarCell from "src/components/tables/common/NameAvatarCell.vue"
 import SubmissionCountCell from "src/components/tables/common/SubmissionCountCell.vue"
 import AvatarImage from "src/components/atoms/AvatarImage.vue"
+import { statusStyleMap } from "src/pages/Publication/components/statusCategories"
 import { GetPublicationUsersDocument } from "src/graphql/generated/graphql"
+
+function styleFor(status: string) {
+  return (
+    statusStyleMap[status] ?? {
+      color: "grey-5",
+      textClass: "text-white",
+      icon: "description",
+      pattern: ""
+    }
+  )
+}
 
 definePage({
   name: "manage:publication:submitters",
@@ -228,7 +267,7 @@ const columns: QueryTableColumn[] = [
     name: "name",
     required: true,
     align: "left",
-    field: (row) => row,
+    field: (row) => (row as { user: unknown }).user,
     component: NameAvatarCell,
     sortable: true,
     label: "publication.manage.users.headers.name"
@@ -236,17 +275,16 @@ const columns: QueryTableColumn[] = [
   {
     name: "email",
     align: "left",
-    field: "email",
+    field: (row) => (row as { user: { email?: string } }).user?.email ?? "",
     sortable: true,
     label: "publication.manage.users.headers.email"
   },
   {
     name: "as_submitter_count",
     align: "right",
-    field: "as_submitter_count",
+    field: (row) => (row as { submissions: unknown }).submissions,
     sortable: true,
     component: SubmissionCountCell,
-    icon: "description",
     label: "publication.manage.users.headers.as_submitter_count"
   }
 ]
@@ -262,6 +300,31 @@ const columns: QueryTableColumn[] = [
 }
 .user-grid-card:hover {
   border-color: var(--q-primary);
+}
+.submission-chip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  overflow: visible;
+}
+.category-badge {
+  position: absolute;
+  right: -4px;
+  bottom: -4px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 0 1.5px #fff;
+}
+.body--dark .category-badge {
+  box-shadow: 0 0 0 1.5px #1d1d1d;
 }
 </style>
 

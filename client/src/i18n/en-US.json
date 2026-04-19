@@ -553,7 +553,8 @@
         "groups": {
           "active": "Active",
           "completed": "Completed"
-        }
+        },
+        "submission_icon_list": "no submissions | {n} submission | {n} submissions"
       },
       "user_detail": {
         "not_found": "This user has no activity in this publication.",

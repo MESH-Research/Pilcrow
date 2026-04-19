@@ -59,9 +59,9 @@
       <h3 class="q-mt-lg q-mb-sm" style="font-size: 1.125rem">
         {{ $t("publication.manage.user_detail.submissions_heading") }}
       </h3>
-      <q-list v-if="publicationUser.submissions.length" bordered separator>
+      <q-list v-if="publicationUser.submissions.data.length" bordered separator>
         <q-item
-          v-for="sub in publicationUser.submissions"
+          v-for="sub in publicationUser.submissions.data"
           :key="sub.id"
           clickable
           :to="{ name: 'submission:details', params: { id: sub.id } }"
@@ -99,10 +99,17 @@ graphql(`
           ...avatarImage
         }
         as_submitter_count
-        submissions(roles: [submitter]) {
-          id
-          title
-          status
+        submissions(first: 25, roles: [submitter]) {
+          paginatorInfo {
+            total
+            currentPage
+            lastPage
+          }
+          data {
+            id
+            title
+            status
+          }
         }
       }
     }

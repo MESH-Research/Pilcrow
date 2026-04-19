@@ -547,8 +547,9 @@ type Publication {
 
   """
   Paginated users associated with this publication's submissions,
-  filtered by role. Each user carries per-role submission counts
-  (as_submitter_count / as_reviewer_count / as_coordinator_count).
+  filtered by role. Each row is a PublicationUser scoped to this
+  publication, carrying per-role submission counts and a nested
+  paginated submissions field.
   """
   users(
     """Limits number of fetched items."""
@@ -560,7 +561,7 @@ type Publication {
     roles: [SubmissionUserRoles!]!
     search: String
     staged: Boolean
-  ): UserPaginator!
+  ): PublicationUserPaginator!
 }
 
 type PublicationAssignment {
@@ -611,14 +612,35 @@ type PublicationUser {
   id: ID!
 
   """
-  Submissions in this publication that this user is attached to.
-  Optionally filter by the roles they hold on each submission and
-  by phase (active / completed). Drafts are always excluded.
+  Paginated submissions in this publication that this user is
+  attached to. Optionally filter by the roles they hold on each
+  submission and by phase (active / completed). Drafts are always
+  excluded. Defaults to a small page so list-view renderers can
+  inspect paginatorInfo.total to decide whether to show per-
+  submission icons or fall back to a numeric count.
   """
-  submissions(orderBy: [QuerySubmissionsOrderByOrderByClause!], phase: SubmissionPhase, roles: [SubmissionUserRoles!]): [Submission!]!
+  submissions(
+    """Limits number of fetched items."""
+    first: Int! = 5
+    orderBy: [QuerySubmissionsOrderByOrderByClause!]
+
+    """The offset from which items are returned."""
+    page: Int
+    phase: SubmissionPhase
+    roles: [SubmissionUserRoles!]
+  ): SubmissionPaginator!
 
   """The user themselves (name, email, username, avatar, etc.)."""
   user: User!
+}
+
+"""A paginated list of PublicationUser items."""
+type PublicationUserPaginator implements Paginator {
+  """A list of PublicationUser items."""
+  data: [PublicationUser!]!
+
+  """Pagination information about the list of items."""
+  paginatorInfo: PaginatorInfo!
 }
 
 type Query {

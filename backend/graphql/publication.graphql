@@ -44,15 +44,16 @@ type Publication {
         )
     """
     Paginated users associated with this publication's submissions,
-    filtered by role. Each user carries per-role submission counts
-    (as_submitter_count / as_reviewer_count / as_coordinator_count).
+    filtered by role. Each row is a PublicationUser scoped to this
+    publication, carrying per-role submission counts and a nested
+    paginated submissions field.
     """
     users(
         roles: [SubmissionUserRoles!]!
         staged: Boolean
         search: String
         orderBy: [QueryPublicationUsersOrderByOrderByClause!]
-    ): [User!]!
+    ): [PublicationUser!]!
         @paginate(
             resolver: "App\\GraphQL\\Queries\\PaginatePublicationUsers"
             defaultCount: 25
@@ -101,17 +102,21 @@ type PublicationUser {
     as_coordinator_active_count: Int!
     as_coordinator_completed_count: Int!
     """
-    Submissions in this publication that this user is attached to.
-    Optionally filter by the roles they hold on each submission and
-    by phase (active / completed). Drafts are always excluded.
+    Paginated submissions in this publication that this user is
+    attached to. Optionally filter by the roles they hold on each
+    submission and by phase (active / completed). Drafts are always
+    excluded. Defaults to a small page so list-view renderers can
+    inspect paginatorInfo.total to decide whether to show per-
+    submission icons or fall back to a numeric count.
     """
     submissions(
         roles: [SubmissionUserRoles!]
         phase: SubmissionPhase
         orderBy: [QuerySubmissionsOrderByOrderByClause!]
     ): [Submission!]!
-        @field(
+        @paginate(
             resolver: "App\\GraphQL\\Queries\\PublicationUserSubmissions"
+            defaultCount: 5
         )
 }
 

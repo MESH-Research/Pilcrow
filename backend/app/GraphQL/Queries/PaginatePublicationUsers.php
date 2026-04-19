@@ -3,11 +3,13 @@ declare(strict_types=1);
 
 namespace App\GraphQL\Queries;
 
+use App\GraphQL\Dtos\PublicationUser as PublicationUserDto;
 use App\Models\Publication;
 use App\Models\Role;
 use App\Models\Submission;
 use App\Models\User;
 use Illuminate\Contracts\Pagination\Paginator;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 
 class PaginatePublicationUsers
@@ -117,7 +119,41 @@ class PaginatePublicationUsers
         $page = $args['page'] ?? 1;
         $first = $args['first'];
 
-        return $query->paginate($first, ['*'], 'page', $page);
+        $users = $query->paginate($first, ['*'], 'page', $page);
+
+        // Wrap each user in a PublicationUser DTO so the nested
+        // `submissions` resolver has the publication context without
+        // us having to smuggle it through the User model.
+        $items = $users->getCollection()->map(
+            fn(User $u) => new PublicationUserDto(
+                publication: $publication,
+                user: $u,
+                as_submitter_count: (int)$u->getAttribute('as_submitter_count'),
+                as_reviewer_active_count: (int)$u->getAttribute(
+                    'as_reviewer_active_count'
+                ),
+                as_reviewer_completed_count: (int)$u->getAttribute(
+                    'as_reviewer_completed_count'
+                ),
+                as_coordinator_active_count: (int)$u->getAttribute(
+                    'as_coordinator_active_count'
+                ),
+                as_coordinator_completed_count: (int)$u->getAttribute(
+                    'as_coordinator_completed_count'
+                ),
+            )
+        );
+
+        return new LengthAwarePaginator(
+            $items,
+            $users->total(),
+            $users->perPage(),
+            $users->currentPage(),
+            [
+                'path' => $users->path(),
+                'pageName' => $users->getPageName(),
+            ]
+        );
     }
 
     /**

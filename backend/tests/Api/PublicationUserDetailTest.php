@@ -39,10 +39,13 @@ class PublicationUserDetailTest extends ApiTestCase
         ) {
             publication(id: $publicationId) {
                 user(id: $userId) {
-                    submissions(roles: $roles, phase: $phase) {
-                        id
-                        title
-                        status
+                    submissions(first: 25, roles: $roles, phase: $phase) {
+                        paginatorInfo { total }
+                        data {
+                            id
+                            title
+                            status
+                        }
                     }
                 }
             }
@@ -139,7 +142,7 @@ class PublicationUserDetailTest extends ApiTestCase
         ]);
 
         $titles = array_column(
-            $response->json('data.publication.user.submissions'),
+            $response->json('data.publication.user.submissions.data'),
             'title'
         );
         sort($titles);
@@ -157,7 +160,7 @@ class PublicationUserDetailTest extends ApiTestCase
         ]);
 
         $titles = array_column(
-            $response->json('data.publication.user.submissions'),
+            $response->json('data.publication.user.submissions.data'),
             'title'
         );
         sort($titles);
@@ -176,7 +179,7 @@ class PublicationUserDetailTest extends ApiTestCase
         ]);
 
         $titles = array_column(
-            $response->json('data.publication.user.submissions'),
+            $response->json('data.publication.user.submissions.data'),
             'title'
         );
         $this->assertSame(['Review Completed'], $titles);
@@ -201,7 +204,7 @@ class PublicationUserDetailTest extends ApiTestCase
         ]);
 
         $titles = array_column(
-            $response->json('data.publication.user.submissions'),
+            $response->json('data.publication.user.submissions.data'),
             'title'
         );
         $this->assertNotContains('Hidden Draft', $titles);

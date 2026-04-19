@@ -30,9 +30,12 @@ class PublicationUsersTest extends ApiTestCase
                     paginatorInfo { total }
                     data {
                         id
-                        name
-                        email
-                        staged
+                        user {
+                            id
+                            name
+                            email
+                            staged
+                        }
                         as_submitter_count
                         as_reviewer_active_count
                         as_reviewer_completed_count
@@ -120,7 +123,7 @@ class PublicationUsersTest extends ApiTestCase
         ]);
 
         $data = $response->json('data.publication.users.data');
-        $names = array_column($data, 'name');
+        $names = array_map(fn($row) => $row['user']['name'], $data);
 
         // Alice is an explicit submitter; the factory-created submitters
         // (used as "real" submitters for Bob/Carol/Dave's submissions)
@@ -141,7 +144,7 @@ class PublicationUsersTest extends ApiTestCase
         ]);
 
         $data = $response->json('data.publication.users.data');
-        $names = array_column($data, 'name');
+        $names = array_map(fn($row) => $row['user']['name'], $data);
 
         $this->assertContains('Bob Reviewer', $names);
         $this->assertContains('Carol Coordinator', $names);
@@ -163,7 +166,7 @@ class PublicationUsersTest extends ApiTestCase
 
         $data = $response->json('data.publication.users.data');
         $this->assertCount(1, $data);
-        $this->assertSame('Alice Submitter', $data[0]['name']);
+        $this->assertSame('Alice Submitter', $data[0]['user']['name']);
         $this->assertSame(2, $data[0]['as_submitter_count']);
     }
 
@@ -199,7 +202,10 @@ class PublicationUsersTest extends ApiTestCase
             'search' => 'Carol',
         ]);
 
-        $names = array_column($response->json('data.publication.users.data'), 'name');
+        $names = array_map(
+            fn($row) => $row['user']['name'],
+            $response->json('data.publication.users.data')
+        );
         $this->assertSame(['Carol Coordinator'], $names);
     }
 
@@ -214,7 +220,10 @@ class PublicationUsersTest extends ApiTestCase
         ]);
 
         // Two-char search is a no-op; all team members return.
-        $names = array_column($response->json('data.publication.users.data'), 'name');
+        $names = array_map(
+            fn($row) => $row['user']['name'],
+            $response->json('data.publication.users.data')
+        );
         $this->assertContains('Bob Reviewer', $names);
         $this->assertContains('Carol Coordinator', $names);
         $this->assertContains('Dave Dual', $names);
@@ -278,7 +287,7 @@ class PublicationUsersTest extends ApiTestCase
         ]);
 
         $data = $response->json('data.publication.users.data');
-        $emails = array_column($data, 'email');
+        $emails = array_map(fn($row) => $row['user']['email'], $data);
         $this->assertSame(['invited@example.com'], $emails);
     }
 

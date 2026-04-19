@@ -5,7 +5,7 @@ namespace App\GraphQL\Queries;
 
 use App\GraphQL\Dtos\PublicationUser as PublicationUserDto;
 use App\Models\Submission;
-use Illuminate\Support\Collection;
+use Illuminate\Contracts\Pagination\Paginator;
 
 class PublicationUserSubmissions
 {
@@ -19,12 +19,12 @@ class PublicationUserSubmissions
      *
      * @param \App\GraphQL\Dtos\PublicationUser $publicationUser
      * @param array $args
-     * @return \Illuminate\Support\Collection<int,\App\Models\Submission>
+     * @return \Illuminate\Contracts\Pagination\Paginator
      */
     public function __invoke(
         PublicationUserDto $publicationUser,
         array $args
-    ): Collection {
+    ): Paginator {
         $completed = [
             Submission::REJECTED,
             Submission::ACCEPTED_AS_FINAL,
@@ -41,7 +41,10 @@ class PublicationUserSubmissions
                 '=',
                 'submissions.id'
             )
-            ->where('submissions.publication_id', $publicationUser->publication->id)
+            ->where(
+                'submissions.publication_id',
+                $publicationUser->publication->id
+            )
             ->where('submission_user.user_id', $publicationUser->user->id)
             ->where('submissions.status', '!=', Submission::DRAFT);
 
@@ -68,6 +71,9 @@ class PublicationUserSubmissions
             $query->orderBy('submissions.updated_at', 'desc');
         }
 
-        return $query->get();
+        $page = $args['page'] ?? 1;
+        $first = $args['first'];
+
+        return $query->paginate($first, ['*'], 'page', $page);
     }
 }

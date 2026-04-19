@@ -51,7 +51,7 @@ const columns: QueryTableColumn[] = [
     name: "name",
     required: true,
     align: "left",
-    field: (row) => row,
+    field: (row) => (row as { user: unknown }).user,
     component: NameAvatarCell,
     sortable: true,
     label: "publication.manage.users.headers.name"
@@ -59,7 +59,7 @@ const columns: QueryTableColumn[] = [
   {
     name: "email",
     align: "left",
-    field: "email",
+    field: (row) => (row as { user: { email?: string } }).user?.email ?? "",
     sortable: true,
     label: "publication.manage.users.headers.email"
   }
