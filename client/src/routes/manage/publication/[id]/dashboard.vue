@@ -75,6 +75,20 @@
                 </div>
               </template>
             </q-card-section>
+            <q-card-section class="q-py-sm">
+              <div
+                v-for="item in category.items"
+                :key="item.status"
+                class="row items-center q-py-xs status-row"
+              >
+                <span class="col text-body2 text-grey-8 ellipsis">
+                  {{ $t(`submission.status.${item.status}`) }}
+                </span>
+                <span class="text-body2 text-weight-medium">
+                  {{ item.count }}
+                </span>
+              </div>
+            </q-card-section>
           </q-card>
         </div>
       </div>
@@ -159,8 +173,14 @@ const activeTab = computed(() => {
 const { result } = useQuery(GetPublicationDashboardDocument, { id: props.id })
 const publication = computed(() => result.value?.publication ?? null)
 
+interface StatusCategoryItem {
+  status: string
+  count: number
+}
+
 interface StatusCategory extends StatusCategoryDef {
   total: number
+  items: StatusCategoryItem[]
 }
 
 const statusCountMap = computed(() => {
@@ -173,11 +193,24 @@ const statusCountMap = computed(() => {
 
 const categories = computed<StatusCategory[]>(() =>
   statusCategories.map((cat) => {
-    const total = cat.statuses.reduce(
-      (sum, status) => sum + (statusCountMap.value.get(status) ?? 0),
-      0
-    )
-    return { ...cat, total }
+    const items = cat.statuses.map((status) => ({
+      status,
+      count: statusCountMap.value.get(status) ?? 0
+    }))
+    return {
+      ...cat,
+      items,
+      total: items.reduce((sum, item) => sum + item.count, 0)
+    }
   })
 )
 </script>
+
+<style scoped>
+.status-row + .status-row {
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+.body--dark .status-row + .status-row {
+  border-top-color: rgba(255, 255, 255, 0.08);
+}
+</style>
