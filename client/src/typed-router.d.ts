@@ -34,9 +34,11 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | '/manage/publication/[id]/'
       | '/manage/publication/[id]/(tabs)'
+      | '/manage/publication/[id]/dashboard/'
       | 'manage:publication:dashboard'
       | 'manage:publication:id'
       | 'manage:publication:invited'
+      | 'manage:publication:submissions'
       | 'manage:publication:submitter'
       | 'manage:publication:submitters'
       | 'manage:publication:team'
@@ -49,8 +51,10 @@ declare module 'vue-router/auto-routes' {
       { id: ParamValue<false> },
       | '/manage/publication/[id]/'
       | '/manage/publication/[id]/(tabs)'
+      | '/manage/publication/[id]/dashboard/'
       | 'manage:publication:dashboard'
       | 'manage:publication:invited'
+      | 'manage:publication:submissions'
       | 'manage:publication:submitter'
       | 'manage:publication:submitters'
       | 'manage:publication:team'
@@ -62,19 +66,11 @@ declare module 'vue-router/auto-routes' {
       { id: ParamValue<true> },
       { id: ParamValue<false> },
       | 'manage:publication:invited'
-      | 'manage:publication:submitters'
       | 'manage:publication:team'
     >,
     'manage:publication:invited': RouteRecordInfo<
       'manage:publication:invited',
       '/manage/publication/:id/invited',
-      { id: ParamValue<true> },
-      { id: ParamValue<false> },
-      | never
-    >,
-    'manage:publication:submitters': RouteRecordInfo<
-      'manage:publication:submitters',
-      '/manage/publication/:id/submitters',
       { id: ParamValue<true> },
       { id: ParamValue<false> },
       | never
@@ -96,6 +92,29 @@ declare module 'vue-router/auto-routes' {
     'manage:publication:dashboard': RouteRecordInfo<
       'manage:publication:dashboard',
       '/manage/publication/:id/dashboard',
+      { id: ParamValue<true> },
+      { id: ParamValue<false> },
+      | '/manage/publication/[id]/dashboard/'
+      | 'manage:publication:submissions'
+      | 'manage:publication:submitters'
+    >,
+    '/manage/publication/[id]/dashboard/': RouteRecordInfo<
+      '/manage/publication/[id]/dashboard/',
+      '/manage/publication/:id/dashboard',
+      { id: ParamValue<true> },
+      { id: ParamValue<false> },
+      | never
+    >,
+    'manage:publication:submissions': RouteRecordInfo<
+      'manage:publication:submissions',
+      '/manage/publication/:id/dashboard/submissions',
+      { id: ParamValue<true> },
+      { id: ParamValue<false> },
+      | never
+    >,
+    'manage:publication:submitters': RouteRecordInfo<
+      'manage:publication:submitters',
+      '/manage/publication/:id/dashboard/submitters',
       { id: ParamValue<true> },
       { id: ParamValue<false> },
       | never
@@ -132,9 +151,11 @@ declare module 'vue-router/auto-routes' {
         | '/manage/publication'
         | '/manage/publication/[id]/'
         | '/manage/publication/[id]/(tabs)'
+        | '/manage/publication/[id]/dashboard/'
         | 'manage:publication:dashboard'
         | 'manage:publication:id'
         | 'manage:publication:invited'
+        | 'manage:publication:submissions'
         | 'manage:publication:submitter'
         | 'manage:publication:submitters'
         | 'manage:publication:team'
@@ -146,9 +167,11 @@ declare module 'vue-router/auto-routes' {
       routes:
         | '/manage/publication/[id]/'
         | '/manage/publication/[id]/(tabs)'
+        | '/manage/publication/[id]/dashboard/'
         | 'manage:publication:dashboard'
         | 'manage:publication:id'
         | 'manage:publication:invited'
+        | 'manage:publication:submissions'
         | 'manage:publication:submitter'
         | 'manage:publication:submitters'
         | 'manage:publication:team'
@@ -160,7 +183,6 @@ declare module 'vue-router/auto-routes' {
       routes:
         | '/manage/publication/[id]/(tabs)'
         | 'manage:publication:invited'
-        | 'manage:publication:submitters'
         | 'manage:publication:team'
       views:
         | 'default'
@@ -168,12 +190,6 @@ declare module 'vue-router/auto-routes' {
     'src/routes/manage/publication/[id]/(tabs)/invited.vue': {
       routes:
         | 'manage:publication:invited'
-      views:
-        | never
-    }
-    'src/routes/manage/publication/[id]/(tabs)/submitters.vue': {
-      routes:
-        | 'manage:publication:submitters'
       views:
         | never
     }
@@ -191,7 +207,28 @@ declare module 'vue-router/auto-routes' {
     }
     'src/routes/manage/publication/[id]/dashboard.vue': {
       routes:
+        | '/manage/publication/[id]/dashboard/'
         | 'manage:publication:dashboard'
+        | 'manage:publication:submissions'
+        | 'manage:publication:submitters'
+      views:
+        | 'default'
+    }
+    'src/routes/manage/publication/[id]/dashboard/index.vue': {
+      routes:
+        | '/manage/publication/[id]/dashboard/'
+      views:
+        | never
+    }
+    'src/routes/manage/publication/[id]/dashboard/submissions.vue': {
+      routes:
+        | 'manage:publication:submissions'
+      views:
+        | never
+    }
+    'src/routes/manage/publication/[id]/dashboard/submitters.vue': {
+      routes:
+        | 'manage:publication:submitters'
       views:
         | never
     }

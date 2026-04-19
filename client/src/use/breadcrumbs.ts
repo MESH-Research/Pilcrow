@@ -58,9 +58,7 @@ export function useCrumbs() {
         // form lets one matched route contribute multiple crumbs
         // (e.g. a detail page that stacks "Submitters → {user}"
         // without needing a parent layout file to back the first).
-        const defs = Array.isArray(r.meta.crumb)
-          ? r.meta.crumb
-          : [r.meta.crumb]
+        const defs = Array.isArray(r.meta.crumb) ? r.meta.crumb : [r.meta.crumb]
         const ownerName = r.name as keyof RouteNamedMap | undefined
         for (let i = 0; i < defs.length; i++) {
           const def = defs[i]

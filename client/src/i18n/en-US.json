@@ -508,7 +508,16 @@
         "submitted_at": "Submitted"
       },
       "filters": {
-        "status": "Status"
+        "status": "Status",
+        "label": "Filters:",
+        "all": "All",
+        "none": "None",
+        "invert": "Invert",
+        "selected": "{n} of {total} statuses"
+      },
+      "tabs": {
+        "submissions": "Submissions",
+        "submitters": "Submitters"
       },
       "show_only": "Show only these",
       "search_hint": "Enter at least 3 characters. Searches title and assigned users. Use title:, submitter:, reviewer:, coordinator:, team:, or user: to narrow the search.",
@@ -516,6 +525,14 @@
       "submission_count": "no submissions | {n} submission | {n} submissions"
     },
     "manage": {
+      "review_team": {
+        "heading": "Review Team",
+        "tabs": {
+          "team": "Review Team",
+          "invited": "Invited",
+          "invited_count": "{n} pending invitation | {n} pending invitations"
+        }
+      },
       "users": {
         "heading": "Users",
         "tabs": {

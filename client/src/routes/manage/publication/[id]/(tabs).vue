@@ -1,7 +1,7 @@
 <template>
   <div class="q-px-lg">
     <h2 class="q-mt-md q-mb-sm" style="font-size: 1.5rem">
-      {{ $t("publication.manage.users.heading") }}
+      {{ $t("publication.manage.review_team.heading") }}
     </h2>
 
     <q-tabs
@@ -14,13 +14,8 @@
       no-caps
     >
       <q-route-tab
-        name="submitters"
-        :label="$t('publication.manage.users.tabs.submitters')"
-        :to="{ name: 'manage:publication:submitters', params: { id } }"
-      />
-      <q-route-tab
         name="team"
-        :label="$t('publication.manage.users.tabs.team')"
+        :label="$t('publication.manage.review_team.tabs.team')"
         :to="{ name: 'manage:publication:team', params: { id } }"
       />
       <q-route-tab
@@ -28,14 +23,14 @@
         :to="{ name: 'manage:publication:invited', params: { id } }"
       >
         <span class="row items-center no-wrap q-gutter-xs">
-          {{ $t("publication.manage.users.tabs.invited") }}
+          {{ $t("publication.manage.review_team.tabs.invited") }}
           <q-badge
             v-if="invitedCount > 0"
             color="warning"
             text-color="dark"
             :label="invitedCount"
             :aria-label="
-              $t('publication.manage.users.tabs.invited_count', {
+              $t('publication.manage.review_team.tabs.invited_count', {
                 n: invitedCount
               })
             "
@@ -123,8 +118,7 @@ const route = useRoute()
 const activeTab = computed(() => {
   const name = route.name?.toString() ?? ""
   if (name.endsWith(":invited")) return "invited"
-  if (name.endsWith(":team")) return "team"
-  return "submitters"
+  return "team"
 })
 
 // Outstanding invitation count — drives the tab badge.
