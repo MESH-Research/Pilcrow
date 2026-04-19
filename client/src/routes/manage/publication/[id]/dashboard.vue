@@ -307,7 +307,7 @@ const activeLane = [
   "UNDER_REVIEW",
   "AWAITING_DECISION"
 ] as const
-const authorLane = ["REVISION_REQUESTED", "RESUBMISSION_REQUESTED"] as const
+const authorLane = ["RESUBMISSION_REQUESTED", "REVISION_REQUESTED"] as const
 const closedLane = [
   "ACCEPTED_AS_FINAL",
   "REJECTED",
