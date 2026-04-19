@@ -428,14 +428,9 @@ const activeLane: readonly LaneCell[] = [
   },
   {
     label: "reviewing",
-    chips: [
-      "AWAITING_REVIEW",
-      "UNDER_REVIEW",
-      "AWAITING_DECISION",
-      "REVISION_REQUESTED"
-    ]
+    chips: ["AWAITING_REVIEW", "UNDER_REVIEW", "REVISION_REQUESTED"]
   },
-  { label: "decision", chips: ["ACCEPTED_AS_FINAL"] }
+  { label: "decision", chips: ["AWAITING_DECISION"] }
 ]
 
 // With-author lane is empty now that every request-type status has
@@ -455,7 +450,13 @@ function combineTotal(chip: CombineSpec, counts: Map<string, number>): number {
     0
   )
 }
-const closedLane = ["REJECTED", "EXPIRED", "ARCHIVED", "DELETED"] as const
+const closedLane = [
+  "ACCEPTED_AS_FINAL",
+  "REJECTED",
+  "EXPIRED",
+  "ARCHIVED",
+  "DELETED"
+] as const
 
 function styleFor(status: string) {
   return (
