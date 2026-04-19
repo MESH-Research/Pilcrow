@@ -122,6 +122,57 @@
                   </span>
                 </div>
               </div>
+              <div v-else-if="isCombine(cell)" class="status-lane-stack">
+                <div v-if="cell.label" class="stage-label">
+                  {{ $t(`publication.dashboard.stages.${cell.label}`) }}
+                </div>
+                <div
+                  class="status-flow-chip"
+                  :style="`border-color: var(--q-${styleFor(cell.combine[0]).color})`"
+                >
+                  <span
+                    :class="[
+                      'status-flow-swatch',
+                      `bg-${styleFor(cell.combine[0]).color}`,
+                      styleFor(cell.combine[0]).textClass,
+                      styleFor(cell.combine[0]).pattern
+                    ]"
+                  >
+                    <q-icon
+                      :name="styleFor(cell.combine[0]).icon"
+                      size="xs"
+                      class="pattern-text-mask"
+                    />
+                  </span>
+                  <span class="col column">
+                    <span class="status-flow-label">
+                      {{ $t(`submission.status.${cell.combine[0]}`) }}
+                    </span>
+                    <span
+                      class="row items-center no-wrap q-gutter-xs"
+                      style="flex-wrap: wrap"
+                    >
+                      <span class="status-flow-count text-weight-bold">
+                        {{ combineTotal(cell, statusCountMap) }}
+                      </span>
+                      <q-badge
+                        v-for="extra in cell.combine.slice(1)"
+                        :key="extra"
+                        outline
+                        :color="styleFor(extra).color"
+                        class="combine-extra-badge"
+                        :title="$t(`submission.status.${extra}`)"
+                        :aria-label="`${
+                          statusCountMap.get(extra) ?? 0
+                        } ${$t(`submission.status.${extra}`)}`"
+                      >
+                        +{{ statusCountMap.get(extra) ?? 0 }}
+                        {{ $t(`submission.status.${extra}`) }}
+                      </q-badge>
+                    </span>
+                  </span>
+                </div>
+              </div>
               <div
                 v-else
                 class="status-flow-chip"
@@ -333,14 +384,20 @@ import { GetPublicationDashboardDocument } from "src/graphql/generated/graphql"
 // where a submission parks when sent back for revision or
 // resubmission before re-entering the active lane. Closed lane is
 // terminal states with no outgoing transitions.
-// Each cell in the active pipeline is either a single status or a
-// stack of statuses that share the same column, with an optional
-// stage label (intake / screening / reviewing / decision) so the
-// diagram reads as named pipeline stages rather than raw statuses.
-type LaneCell = string | { label?: string; stack: readonly string[] }
+// Each cell in the active pipeline is a single status, a stack of
+// statuses that share a column, or a combine cell where multiple
+// related statuses roll up into one chip whose count is the sum
+// and whose secondary statuses render as small badges.
+type StackCell = { label?: string; stack: readonly string[] }
+type CombineCell = { label?: string; combine: readonly string[] }
+type LaneCell = string | StackCell | CombineCell
 
 const activeLane: readonly LaneCell[] = [
-  { label: "intake", stack: ["RESUBMITTED", "INITIALLY_SUBMITTED"] },
+  // Intake: INITIALLY_SUBMITTED and RESUBMITTED share a chip since
+  // both are new work landing on the coordinator's desk. The chip
+  // shows the total count; a badge surfaces how many of those are
+  // resubmissions specifically.
+  { label: "intake", combine: ["INITIALLY_SUBMITTED", "RESUBMITTED"] },
   { label: "screening", stack: ["AWAITING_REVIEW", "RESUBMISSION_REQUESTED"] },
   { label: "reviewing", stack: ["UNDER_REVIEW", "AWAITING_DECISION"] },
   { label: "decision", stack: ["REVISION_REQUESTED", "ACCEPTED_AS_FINAL"] }
@@ -351,10 +408,17 @@ const activeLane: readonly LaneCell[] = [
 // reintroduce author-side states later.
 const authorLane = [] as readonly string[]
 
-function isStack(
-  cell: LaneCell
-): cell is { label?: string; stack: readonly string[] } {
-  return typeof cell !== "string"
+function isStack(cell: LaneCell): cell is StackCell {
+  return typeof cell === "object" && "stack" in cell
+}
+function isCombine(cell: LaneCell): cell is CombineCell {
+  return typeof cell === "object" && "combine" in cell
+}
+function combineTotal(cell: CombineCell, counts: Map<string, number>): number {
+  return cell.combine.reduce(
+    (sum, status) => sum + (counts.get(status) ?? 0),
+    0
+  )
 }
 const closedLane = ["REJECTED", "EXPIRED", "ARCHIVED", "DELETED"] as const
 
@@ -498,6 +562,14 @@ const categories = computed<StatusCategory[]>(() =>
 .status-lane-row--active .status-lane-stack .status-flow-chip {
   width: 100%;
   min-width: 0;
+}
+/* Small outline badge clipped onto a combined chip to show the
+   breakdown of a secondary status (e.g. "+2 Resubmitted"). */
+.combine-extra-badge {
+  font-size: 0.65rem;
+  padding: 2px 6px;
+  letter-spacing: 0.02em;
+  font-weight: 500;
 }
 .stage-label {
   font-size: 0.7rem;
