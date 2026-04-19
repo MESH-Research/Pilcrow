@@ -80,10 +80,10 @@ const config = [
     }
   },
   {
-    // Auto-routes pages (unplugin-vue-router convention) use
-    // single-word file/component names tied to URL segments, e.g.
-    // users.vue → /users, [id]/dashboard.vue → /:id/dashboard.
-    files: ["src/pages/manage/**/*.vue"],
+    // Auto-routes pages (vue-router file-based routing convention)
+    // use single-word file/component names tied to URL segments,
+    // e.g. users.vue → /users, [id]/dashboard.vue → /:id/dashboard.
+    files: ["src/routes/**/*.vue"],
     rules: {
       "vue/multi-word-component-names": "off"
     }

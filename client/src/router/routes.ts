@@ -1,4 +1,5 @@
 import { RouteRecordRaw } from "vue-router"
+import { routes as autoRoutes } from "vue-router/auto-routes"
 
 const routes: RouteRecordRaw[] = [
   {
@@ -155,49 +156,9 @@ const routes: RouteRecordRaw[] = [
         component: () => import("pages/Publication/PublicationHomePage.vue"),
         props: true
       },
-      {
-        name: "manage:publication:dashboard",
-        path: "/manage/publication/:id",
-        component: () =>
-          import("src/pages/manage/publication/[id]/dashboard.vue"),
-        props: true
-      },
-      {
-        path: "/manage/publication/:id",
-        component: () =>
-          import("src/pages/manage/publication/[id]/UsersTabsLayout.vue"),
-        props: true,
-        children: [
-          {
-            name: "manage:publication:submitters",
-            path: "submitters",
-            component: () =>
-              import("src/pages/manage/publication/[id]/submitters.vue"),
-            props: true
-          },
-          {
-            name: "manage:publication:team",
-            path: "team",
-            component: () =>
-              import("src/pages/manage/publication/[id]/team.vue"),
-            props: true
-          },
-          {
-            name: "manage:publication:invited",
-            path: "invited",
-            component: () =>
-              import("src/pages/manage/publication/[id]/invited.vue"),
-            props: true
-          }
-        ]
-      },
-      {
-        name: "manage:publication:user",
-        path: "/manage/publication/:id/users/:userId",
-        component: () =>
-          import("src/pages/manage/publication/[id]/users/[userId].vue"),
-        props: true
-      },
+      // File-based routes under src/routes/ (see quasar.config.ts).
+      // Spread here so they inherit MainLayout + its requiresAuth meta.
+      ...autoRoutes,
       {
         path: "/reviews",
         component: () => import("src/pages/ReviewsPage.vue")

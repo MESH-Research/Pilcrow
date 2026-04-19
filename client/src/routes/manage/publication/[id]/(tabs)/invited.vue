@@ -21,6 +21,16 @@ import QueryTable, {
 import NameAvatarCell from "src/components/tables/common/NameAvatarCell.vue"
 import { GetPublicationUsersDocument } from "src/graphql/generated/graphql"
 
+definePage({
+  name: "manage:publication:invited",
+  props: true,
+  meta: {
+    crumb: {
+      label: "Invited"
+    }
+  }
+})
+
 interface Props {
   id: string
 }

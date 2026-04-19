@@ -3,21 +3,7 @@
     class="publication-dashboard"
     :class="$q.screen.lt.sm ? 'q-px-sm' : 'q-px-lg'"
   >
-    <nav class="q-pt-md">
-      <q-breadcrumbs>
-        <q-breadcrumbs-el
-          :label="$t('publication.entity', 2)"
-          :to="{ name: 'publication:index' }"
-        />
-        <q-breadcrumbs-el
-          :label="publication?.name ?? ''"
-          :to="{ name: 'publication:home', params: { id } }"
-        />
-        <q-breadcrumbs-el :label="$t('publication.dashboard.breadcrumb')" />
-      </q-breadcrumbs>
-    </nav>
-
-    <div class="row items-center q-gutter-sm q-mb-sm">
+    <div class="row items-center q-gutter-sm q-mb-sm q-pt-md">
       <h2 class="q-my-none col">
         {{ publication?.name }} {{ $t("publication.dashboard.heading") }}
       </h2>
@@ -299,7 +285,6 @@ graphql(`
     publication(id: $id) {
       id
       name
-      effective_role
       submission_status_counts {
         status
         count
@@ -380,6 +365,16 @@ import {
   GetPublicationDashboardSubmissionsDocument,
   type SubmissionStatus
 } from "src/graphql/generated/graphql"
+
+definePage({
+  name: "manage:publication:dashboard",
+  props: true,
+  meta: {
+    crumb: {
+      label: "Dashboard"
+    }
+  }
+})
 
 interface Props {
   id: string
@@ -486,20 +481,11 @@ watch(viewPreference, (value) => {
   router.replace({ query })
 })
 
-// Fetch publication data with global status counts
+// Fetch publication data with global status counts.
+// Access control and publication-name crumb are handled by the
+// [id].vue layout wrapper.
 const { result } = useQuery(GetPublicationDashboardDocument, { id: props.id })
 const publication = computed(() => result.value?.publication ?? null)
-
-// Redirect if user doesn't have access
-watch(publication, (pub) => {
-  if (
-    pub &&
-    pub.effective_role !== "publication_admin" &&
-    pub.effective_role !== "editor"
-  ) {
-    router.replace("/error403")
-  }
-})
 
 // Category definitions — built from shared config + live counts
 interface CategoryItem {

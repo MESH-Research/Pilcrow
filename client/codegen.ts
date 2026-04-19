@@ -6,26 +6,26 @@ const generates: CodegenConfig["generates"] = {
   "src/graphql/generated/": {
     preset: "client",
     presetConfig: {
-      fragmentMasking: false,
+      fragmentMasking: false
     },
     config: {
       namingConvention: "keep",
-      maybeValue: "T | null | undefined",
-    },
+      maybeValue: "T | null | undefined"
+    }
   },
   "src/graphql/generated/possibleTypes.ts": {
     plugins: ["fragment-matcher"],
     config: {
       apolloClientVersion: 3,
-      useExplicitTyping: true,
-    },
-  },
+      useExplicitTyping: true
+    }
+  }
 }
 
 // Only generate schema-ast when introspecting from a live server
 if (!process.env.GRAPHQL_SCHEMA) {
   generates["src/graphql/schema.graphql"] = {
-    plugins: ["schema-ast"],
+    plugins: ["schema-ast"]
   }
 }
 
@@ -34,10 +34,11 @@ const config: CodegenConfig = {
   documents: [
     "src/graphql/**/*.ts",
     "src/pages/**/*.vue",
+    "src/routes/**/*.vue",
     "src/layouts/**/*.vue",
-    "src/components/**/*.vue",
+    "src/components/**/*.vue"
   ],
-  generates,
+  generates
 }
 
 export default config
