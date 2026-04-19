@@ -428,9 +428,14 @@ const activeLane: readonly LaneCell[] = [
   },
   {
     label: "reviewing",
-    chips: ["AWAITING_REVIEW", "UNDER_REVIEW", "AWAITING_DECISION"]
+    chips: [
+      "AWAITING_REVIEW",
+      "UNDER_REVIEW",
+      "AWAITING_DECISION",
+      "REVISION_REQUESTED"
+    ]
   },
-  { label: "decision", chips: ["REVISION_REQUESTED", "ACCEPTED_AS_FINAL"] }
+  { label: "decision", chips: ["ACCEPTED_AS_FINAL"] }
 ]
 
 // With-author lane is empty now that every request-type status has
