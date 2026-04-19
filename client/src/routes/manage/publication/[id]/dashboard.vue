@@ -426,8 +426,10 @@ const activeLane: readonly LaneCell[] = [
     // back to the author asking for resubmission.
     chips: [SUBMITTED_COMBINE, "RESUBMISSION_REQUESTED"]
   },
-  { label: "assignment", chips: ["AWAITING_REVIEW"] },
-  { label: "reviewing", chips: ["UNDER_REVIEW", "AWAITING_DECISION"] },
+  {
+    label: "reviewing",
+    chips: ["AWAITING_REVIEW", "UNDER_REVIEW", "AWAITING_DECISION"]
+  },
   { label: "decision", chips: ["REVISION_REQUESTED", "ACCEPTED_AS_FINAL"] }
 ]
 
@@ -568,10 +570,10 @@ const categories = computed<StatusCategory[]>(() =>
 }
 /* Active pipeline row uses a CSS grid so every column is equal
    width and the → arrows sit in their own auto-sized tracks
-   between stacks. 4 stacks + 3 arrows = 7 tracks. */
+   between stacks. 3 stacks + 2 arrows = 5 tracks. */
 .status-lane-row--active {
   display: grid;
-  grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr;
+  grid-template-columns: 1fr auto 1fr auto 1fr;
   gap: 10px 12px;
   flex-wrap: nowrap;
   min-width: max-content;

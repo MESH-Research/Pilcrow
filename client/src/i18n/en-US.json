@@ -504,7 +504,6 @@
       },
       "stages": {
         "screening": "Screening",
-        "assignment": "Assignment",
         "reviewing": "Reviewing",
         "decision": "Decision"
       },
