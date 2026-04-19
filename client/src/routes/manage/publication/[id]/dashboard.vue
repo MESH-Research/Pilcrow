@@ -435,24 +435,24 @@ const categories = computed<StatusCategory[]>(() =>
 .body--dark .status-row + .status-row {
   border-top-color: rgba(255, 255, 255, 0.08);
 }
-/* Single outer panel containing all three workflow lanes. The
-   active pipeline sits in the middle, visually framed, while the
-   loop-back (above) and closed (below) lanes share the panel so
-   they read as divergences from the same system. */
+/* Outer panel holding every lane. Horizontal scroll keeps the
+   pipeline readable on narrow viewports rather than collapsing
+   columns under each other. */
 .status-flow-diagram {
   display: flex;
   flex-direction: column;
   border: 1px solid rgba(0, 0, 0, 0.12);
   border-radius: 8px;
   background: rgba(0, 0, 0, 0.02);
-  padding: 4px 12px;
+  padding: 4px 16px;
+  overflow-x: auto;
 }
 .body--dark .status-flow-diagram {
   border-color: rgba(255, 255, 255, 0.12);
   background: rgba(255, 255, 255, 0.03);
 }
 .status-lane {
-  padding: 10px 0;
+  padding: 12px 0;
 }
 .status-lane + .status-lane {
   border-top: 1px dashed rgba(0, 0, 0, 0.1);
@@ -461,10 +461,11 @@ const categories = computed<StatusCategory[]>(() =>
   border-top-color: rgba(255, 255, 255, 0.12);
 }
 /* Emphasize the middle active lane — the expected path through the
-   system — with a subtle accent background. */
+   system — with a subtle accent background that bleeds to the
+   panel's horizontal edges. */
 .status-lane--active {
-  margin: 4px -12px;
-  padding: 10px 12px;
+  margin: 4px -16px;
+  padding: 12px 16px;
   background: rgba(0, 0, 0, 0.035);
   border-top: 1px solid rgba(0, 0, 0, 0.08) !important;
   border-bottom: 1px solid rgba(0, 0, 0, 0.08);
@@ -479,21 +480,42 @@ const categories = computed<StatusCategory[]>(() =>
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: rgba(0, 0, 0, 0.55);
-  margin-bottom: 6px;
+  margin-bottom: 8px;
 }
 .body--dark .status-lane-label {
   color: rgba(255, 255, 255, 0.65);
 }
+/* Generic lane row (non-active lanes): flex, wraps, centered arrows. */
 .status-lane-row {
   display: flex;
   flex-wrap: wrap;
   align-items: stretch;
-  gap: 8px;
+  gap: 10px;
+}
+/* Active lane row uses a CSS grid so every column is equal width
+   and the → arrows sit in their own auto-sized tracks between
+   stacks. 4 stacks + 3 arrows = 7 tracks. */
+.status-lane--active .status-lane-row {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr;
+  gap: 10px 12px;
+  flex-wrap: nowrap;
+  min-width: max-content;
+  align-items: stretch;
 }
 .status-lane-stack {
   display: flex;
   flex-direction: column;
   gap: 6px;
+  min-width: 170px;
+}
+.status-lane--active .status-lane-stack {
+  /* Stacks inherit their column's width; stretch chips to fill. */
+  width: 100%;
+}
+.status-lane--active .status-lane-stack .status-flow-chip {
+  width: 100%;
+  min-width: 0;
 }
 .stage-label {
   font-size: 0.7rem;
@@ -502,7 +524,10 @@ const categories = computed<StatusCategory[]>(() =>
   font-weight: 600;
   color: rgba(0, 0, 0, 0.6);
   text-align: center;
-  margin-bottom: 2px;
+  margin-bottom: 4px;
+  /* Reserve a consistent height across stacks even if a label is
+     missing or shorter, so chips align across columns. */
+  min-height: 1rem;
 }
 .body--dark .stage-label {
   color: rgba(255, 255, 255, 0.72);
@@ -510,17 +535,28 @@ const categories = computed<StatusCategory[]>(() =>
 .lane-arrow {
   align-self: center;
 }
+/* In the active lane, the arrow sits between stacks in its own grid
+   track. Center it vertically against the mid-line of the stacks
+   (accounting for the stage label above). */
+.status-lane--active .lane-arrow {
+  align-self: center;
+  padding-top: 1.25rem;
+}
 .status-lane-hint {
   align-self: center;
 }
 .status-flow-chip {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   gap: 8px;
   padding: 6px 10px 6px 6px;
   border: 1px solid;
   border-radius: 6px;
-  min-width: 140px;
+  min-width: 150px;
+  background: #fff;
+}
+.body--dark .status-flow-chip {
+  background: #1d1d1d;
 }
 .status-flow-swatch {
   display: inline-flex;
