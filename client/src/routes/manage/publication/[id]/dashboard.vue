@@ -19,6 +19,42 @@
 
     <div v-if="!publication" class="q-pa-lg">{{ $t("loading") }}</div>
     <template v-else>
+      <!-- Lifecycle flow: every submission status in the order
+           authors and editors walk through, with its live count.
+           Sits above the category cards so a reader can see the
+           pipeline end-to-end before drilling into buckets. -->
+      <div class="status-flow row items-stretch q-gutter-sm q-mb-md">
+        <div
+          v-for="status in lifecycleOrder"
+          :key="status"
+          class="status-flow-chip"
+          :style="`border-color: var(--q-${styleFor(status).color})`"
+        >
+          <span
+            :class="[
+              'status-flow-swatch',
+              `bg-${styleFor(status).color}`,
+              styleFor(status).textClass,
+              styleFor(status).pattern
+            ]"
+          >
+            <q-icon
+              :name="styleFor(status).icon"
+              size="xs"
+              class="pattern-text-mask"
+            />
+          </span>
+          <span class="col column">
+            <span class="status-flow-label">
+              {{ $t(`submission.status.${status}`) }}
+            </span>
+            <span class="status-flow-count text-weight-bold">
+              {{ statusCountMap.get(status) ?? 0 }}
+            </span>
+          </span>
+        </div>
+      </div>
+
       <!-- Overall category counts — display only, no filter UI here;
            filter controls live on the Submissions tab. -->
       <div class="row q-col-gutter-md q-mb-md items-stretch">
@@ -146,9 +182,39 @@ import { useQuasar } from "quasar"
 import { useRoute } from "vue-router"
 import {
   statusCategories,
+  statusStyleMap,
   type StatusCategoryDef
 } from "src/pages/Publication/components/statusCategories"
 import { GetPublicationDashboardDocument } from "src/graphql/generated/graphql"
+
+// Submission lifecycle in the order an author/editor walks through
+// it. DRAFT is intentionally excluded — drafts are private to the
+// author and never appear on the publication dashboard.
+const lifecycleOrder = [
+  "INITIALLY_SUBMITTED",
+  "RESUBMITTED",
+  "AWAITING_REVIEW",
+  "UNDER_REVIEW",
+  "AWAITING_DECISION",
+  "REVISION_REQUESTED",
+  "RESUBMISSION_REQUESTED",
+  "ACCEPTED_AS_FINAL",
+  "REJECTED",
+  "EXPIRED",
+  "ARCHIVED",
+  "DELETED"
+] as const
+
+function styleFor(status: string) {
+  return (
+    statusStyleMap[status] ?? {
+      color: "grey-5",
+      textClass: "text-white",
+      icon: "description",
+      pattern: ""
+    }
+  )
+}
 
 definePage({
   name: "manage:publication:dashboard",
@@ -212,5 +278,35 @@ const categories = computed<StatusCategory[]>(() =>
 }
 .body--dark .status-row + .status-row {
   border-top-color: rgba(255, 255, 255, 0.08);
+}
+.status-flow {
+  flex-wrap: wrap;
+}
+.status-flow-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px 6px 6px;
+  border: 1px solid;
+  border-radius: 6px;
+  min-width: 140px;
+}
+.status-flow-swatch {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  flex: 0 0 auto;
+}
+.status-flow-label {
+  font-size: 0.75rem;
+  line-height: 1.1;
+  color: inherit;
+}
+.status-flow-count {
+  font-size: 1.1rem;
+  line-height: 1.1;
 }
 </style>
