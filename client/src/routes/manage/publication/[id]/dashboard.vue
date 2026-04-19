@@ -341,8 +341,8 @@ type LaneCell = string | { stack: readonly string[] }
 
 const activeLane: readonly LaneCell[] = [
   { stack: ["RESUBMITTED", "INITIALLY_SUBMITTED"] },
-  { stack: ["AWAITING_REVIEW"] },
-  { stack: ["UNDER_REVIEW", "AWAITING_DECISION", "RESUBMISSION_REQUESTED"] },
+  { stack: ["AWAITING_REVIEW", "RESUBMISSION_REQUESTED"] },
+  { stack: ["UNDER_REVIEW", "AWAITING_DECISION"] },
   { stack: ["REVISION_REQUESTED", "ACCEPTED_AS_FINAL"] }
 ]
 
