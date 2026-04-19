@@ -92,91 +92,98 @@
                 <div v-if="cell.label" class="stage-label">
                   {{ $t(`publication.dashboard.stages.${cell.label}`) }}
                 </div>
-                <template
-                  v-for="(chip, ci) in cell.chips"
-                  :key="`chip-${i}-${ci}`"
+                <div
+                  :class="[
+                    'stack-chips',
+                    `stack-chips--${cell.align ?? 'top'}`
+                  ]"
                 >
-                  <!-- Combined chip: sums its statuses, shows the
-                       primary's identity and sub-counts in parens. -->
-                  <div
-                    v-if="isCombineChip(chip)"
-                    class="status-flow-chip"
-                    :style="`border-color: var(--q-${styleFor(chip.combine[0]).color})`"
+                  <template
+                    v-for="(chip, ci) in cell.chips"
+                    :key="`chip-${i}-${ci}`"
                   >
-                    <span
-                      :class="[
-                        'status-flow-swatch',
-                        `bg-${styleFor(chip.combine[0]).color}`,
-                        styleFor(chip.combine[0]).textClass,
-                        styleFor(chip.combine[0]).pattern
-                      ]"
+                    <!-- Combined chip: sums its statuses, shows the
+                       primary's identity and sub-counts in parens. -->
+                    <div
+                      v-if="isCombineChip(chip)"
+                      class="status-flow-chip"
+                      :style="`border-color: var(--q-${styleFor(chip.combine[0]).color})`"
                     >
-                      <q-icon
-                        :name="styleFor(chip.combine[0]).icon"
-                        size="xs"
-                        class="pattern-text-mask"
-                      />
-                    </span>
-                    <span class="col column">
-                      <span class="status-flow-label">
-                        {{
-                          chip.titleKey
-                            ? $t(chip.titleKey)
-                            : $t(`submission.status.${chip.combine[0]}`)
-                        }}
-                      </span>
                       <span
-                        class="row items-baseline no-wrap q-gutter-xs"
-                        style="flex-wrap: wrap"
+                        :class="[
+                          'status-flow-swatch',
+                          `bg-${styleFor(chip.combine[0]).color}`,
+                          styleFor(chip.combine[0]).textClass,
+                          styleFor(chip.combine[0]).pattern
+                        ]"
                       >
-                        <span class="status-flow-count text-weight-bold">
-                          {{ combineTotal(chip, statusCountMap) }}
+                        <q-icon
+                          :name="styleFor(chip.combine[0]).icon"
+                          size="xs"
+                          class="pattern-text-mask"
+                        />
+                      </span>
+                      <span class="col column">
+                        <span class="status-flow-label">
+                          {{
+                            chip.titleKey
+                              ? $t(chip.titleKey)
+                              : $t(`submission.status.${chip.combine[0]}`)
+                          }}
                         </span>
                         <span
-                          v-for="extra in chip.combine.slice(1)"
-                          :key="extra"
-                          class="combine-extra text-caption text-grey-7"
-                          :title="$t(`submission.status.${extra}`)"
-                          :aria-label="`${
-                            statusCountMap.get(extra) ?? 0
-                          } ${$t(`submission.status.${extra}`)}`"
+                          class="row items-baseline no-wrap q-gutter-xs"
+                          style="flex-wrap: wrap"
                         >
-                          ({{ statusCountMap.get(extra) ?? 0 }}
-                          {{ $t(`submission.status.${extra}`) }})
+                          <span class="status-flow-count text-weight-bold">
+                            {{ combineTotal(chip, statusCountMap) }}
+                          </span>
+                          <span
+                            v-for="extra in chip.combine.slice(1)"
+                            :key="extra"
+                            class="combine-extra text-caption text-grey-7"
+                            :title="$t(`submission.status.${extra}`)"
+                            :aria-label="`${
+                              statusCountMap.get(extra) ?? 0
+                            } ${$t(`submission.status.${extra}`)}`"
+                          >
+                            ({{ statusCountMap.get(extra) ?? 0 }}
+                            {{ $t(`submission.status.${extra}`) }})
+                          </span>
                         </span>
                       </span>
-                    </span>
-                  </div>
-                  <!-- Plain status chip. -->
-                  <div
-                    v-else
-                    class="status-flow-chip"
-                    :style="`border-color: var(--q-${styleFor(chip).color})`"
-                  >
-                    <span
-                      :class="[
-                        'status-flow-swatch',
-                        `bg-${styleFor(chip).color}`,
-                        styleFor(chip).textClass,
-                        styleFor(chip).pattern
-                      ]"
+                    </div>
+                    <!-- Plain status chip. -->
+                    <div
+                      v-else
+                      class="status-flow-chip"
+                      :style="`border-color: var(--q-${styleFor(chip).color})`"
                     >
-                      <q-icon
-                        :name="styleFor(chip).icon"
-                        size="xs"
-                        class="pattern-text-mask"
-                      />
-                    </span>
-                    <span class="col column">
-                      <span class="status-flow-label">
-                        {{ $t(`submission.status.${chip}`) }}
+                      <span
+                        :class="[
+                          'status-flow-swatch',
+                          `bg-${styleFor(chip).color}`,
+                          styleFor(chip).textClass,
+                          styleFor(chip).pattern
+                        ]"
+                      >
+                        <q-icon
+                          :name="styleFor(chip).icon"
+                          size="xs"
+                          class="pattern-text-mask"
+                        />
                       </span>
-                      <span class="status-flow-count text-weight-bold">
-                        {{ statusCountMap.get(chip) ?? 0 }}
+                      <span class="col column">
+                        <span class="status-flow-label">
+                          {{ $t(`submission.status.${chip}`) }}
+                        </span>
+                        <span class="status-flow-count text-weight-bold">
+                          {{ statusCountMap.get(chip) ?? 0 }}
+                        </span>
                       </span>
-                    </span>
-                  </div>
-                </template>
+                    </div>
+                  </template>
+                </div>
               </div>
               <div
                 v-else
@@ -409,8 +416,15 @@ type ChipSpec = string | CombineSpec
 
 // A lane cell is either a single status (bare chip) or a labeled
 // column that holds one or more chips stacked vertically. Mixing
-// plain and combined chips in the same column is allowed.
-type ColumnCell = { label?: string; chips: readonly ChipSpec[] }
+// plain and combined chips in the same column is allowed. The
+// optional `align` controls vertical alignment of the chips within
+// the column — useful when column heights differ so the "happy
+// path" chip in each column lines up horizontally.
+type ColumnCell = {
+  label?: string
+  chips: readonly ChipSpec[]
+  align?: "top" | "center" | "bottom"
+}
 type LaneCell = string | ColumnCell
 
 const SUBMITTED_COMBINE: CombineSpec = {
@@ -418,19 +432,24 @@ const SUBMITTED_COMBINE: CombineSpec = {
   titleKey: "publication.dashboard.combined.submitted"
 }
 
+// Vertical alignment is tuned so the happy path reads as a single
+// horizontal band across the diagram: Submitted (row 2 of the
+// screening column) → Under Review (row 2 of reviewing) → Awaiting
+// Decision (centered in the single-chip decision column).
 const activeLane: readonly LaneCell[] = [
   {
     label: "screening",
     // Screening holds both new/resubmitted work waiting to be
     // screened and anything the coordinator has already screened
     // back to the author asking for resubmission.
+    align: "bottom",
     chips: [SUBMITTED_COMBINE, "RESUBMISSION_REQUESTED"]
   },
   {
     label: "reviewing",
     chips: ["AWAITING_REVIEW", "UNDER_REVIEW", "REVISION_REQUESTED"]
   },
-  { label: "decision", chips: ["AWAITING_DECISION"] }
+  { label: "decision", align: "center", chips: ["AWAITING_DECISION"] }
 ]
 
 // With-author lane is empty now that every request-type status has
@@ -588,7 +607,6 @@ const categories = computed<StatusCategory[]>(() =>
 .status-lane-stack {
   display: flex;
   flex-direction: column;
-  gap: 6px;
   min-width: 170px;
 }
 .status-lane-row--active .status-lane-stack {
@@ -598,6 +616,25 @@ const categories = computed<StatusCategory[]>(() =>
 .status-lane-row--active .status-lane-stack .status-flow-chip {
   width: 100%;
   min-width: 0;
+}
+/* Chip container inside a stack. Takes the remaining vertical
+   space below the stage label and lays chips out vertically with
+   configurable alignment so the happy path reads as a single
+   horizontal band across columns of different depths. */
+.stack-chips {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1 1 auto;
+}
+.stack-chips--top {
+  justify-content: flex-start;
+}
+.stack-chips--center {
+  justify-content: center;
+}
+.stack-chips--bottom {
+  justify-content: flex-end;
 }
 /* Small parenthetical caption clipped onto a combined chip to
    break down a secondary status (e.g. "(2 Resubmitted)"). Reads
