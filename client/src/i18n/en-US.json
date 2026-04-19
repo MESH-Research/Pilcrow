@@ -508,6 +508,9 @@
         "reviewing": "Reviewing",
         "decision": "Decision"
       },
+      "combined": {
+        "submitted": "Submitted"
+      },
       "headers": {
         "title": "Title",
         "status": "Status",

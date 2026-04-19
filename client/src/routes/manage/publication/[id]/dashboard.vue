@@ -146,29 +146,31 @@
                   </span>
                   <span class="col column">
                     <span class="status-flow-label">
-                      {{ $t(`submission.status.${cell.combine[0]}`) }}
+                      {{
+                        cell.titleKey
+                          ? $t(cell.titleKey)
+                          : $t(`submission.status.${cell.combine[0]}`)
+                      }}
                     </span>
                     <span
-                      class="row items-center no-wrap q-gutter-xs"
+                      class="row items-baseline no-wrap q-gutter-xs"
                       style="flex-wrap: wrap"
                     >
                       <span class="status-flow-count text-weight-bold">
                         {{ combineTotal(cell, statusCountMap) }}
                       </span>
-                      <q-badge
+                      <span
                         v-for="extra in cell.combine.slice(1)"
                         :key="extra"
-                        outline
-                        :color="styleFor(extra).color"
-                        class="combine-extra-badge"
+                        class="combine-extra text-caption text-grey-7"
                         :title="$t(`submission.status.${extra}`)"
                         :aria-label="`${
                           statusCountMap.get(extra) ?? 0
                         } ${$t(`submission.status.${extra}`)}`"
                       >
-                        +{{ statusCountMap.get(extra) ?? 0 }}
-                        {{ $t(`submission.status.${extra}`) }}
-                      </q-badge>
+                        ({{ statusCountMap.get(extra) ?? 0 }}
+                        {{ $t(`submission.status.${extra}`) }})
+                      </span>
                     </span>
                   </span>
                 </div>
@@ -389,7 +391,16 @@ import { GetPublicationDashboardDocument } from "src/graphql/generated/graphql"
 // related statuses roll up into one chip whose count is the sum
 // and whose secondary statuses render as small badges.
 type StackCell = { label?: string; stack: readonly string[] }
-type CombineCell = { label?: string; combine: readonly string[] }
+type CombineCell = {
+  label?: string
+  combine: readonly string[]
+  // Optional i18n key for the chip's visible title. Defaults to the
+  // primary status's label, which isn't always accurate when the
+  // chip sums more than one status — for instance the intake chip's
+  // count is Initially Submitted + Resubmitted, so "Submitted" is a
+  // better umbrella label than "Initially Submitted".
+  titleKey?: string
+}
 type LaneCell = string | StackCell | CombineCell
 
 const activeLane: readonly LaneCell[] = [
@@ -397,7 +408,11 @@ const activeLane: readonly LaneCell[] = [
   // both are new work landing on the coordinator's desk. The chip
   // shows the total count; a badge surfaces how many of those are
   // resubmissions specifically.
-  { label: "screening", combine: ["INITIALLY_SUBMITTED", "RESUBMITTED"] },
+  {
+    label: "screening",
+    combine: ["INITIALLY_SUBMITTED", "RESUBMITTED"],
+    titleKey: "publication.dashboard.combined.submitted"
+  },
   { label: "assignment", stack: ["AWAITING_REVIEW", "RESUBMISSION_REQUESTED"] },
   { label: "reviewing", stack: ["UNDER_REVIEW", "AWAITING_DECISION"] },
   { label: "decision", stack: ["REVISION_REQUESTED", "ACCEPTED_AS_FINAL"] }
@@ -563,13 +578,13 @@ const categories = computed<StatusCategory[]>(() =>
   width: 100%;
   min-width: 0;
 }
-/* Small outline badge clipped onto a combined chip to show the
-   breakdown of a secondary status (e.g. "+2 Resubmitted"). */
-.combine-extra-badge {
-  font-size: 0.65rem;
-  padding: 2px 6px;
-  letter-spacing: 0.02em;
-  font-weight: 500;
+/* Small parenthetical caption clipped onto a combined chip to
+   break down a secondary status (e.g. "(2 Resubmitted)"). Reads
+   as a subset of the total rather than an additive "+". */
+.combine-extra {
+  font-size: 0.75rem;
+  line-height: 1.1;
+  white-space: nowrap;
 }
 .stage-label {
   font-size: 0.7rem;
