@@ -1,7 +1,24 @@
 <template>
   <q-card flat bordered class="submission-card column">
-    <!-- Header: title on top; submitter on the left, status on the right -->
-    <q-card-section class="q-py-sm q-px-md">
+    <!-- Category overlay: color + pattern + category icon in the
+         top-left corner. Reads the status category at a glance
+         without taking up header space. -->
+    <div
+      :class="[
+        'category-overlay',
+        `bg-${statusStyle.color}`,
+        statusStyle.textClass,
+        statusStyle.pattern
+      ]"
+      :aria-label="categoryLabel"
+    >
+      <q-icon :name="statusStyle.icon" size="md" class="pattern-text-mask" />
+    </div>
+
+    <!-- Header: title on top; submitter on the left, status on the
+         right as a soft outlined chip (category color provides the
+         accent, the patterned overlay above carries the bold cue). -->
+    <q-card-section class="q-py-sm q-px-md submission-header">
       <router-link
         :to="{
           name: 'submission:details',
@@ -36,61 +53,55 @@
         </q-item>
         <q-space v-else-if="!stackHeader" />
         <div
+          class="status-chip row items-center no-wrap q-px-sm q-py-xs"
           :class="[
-            'q-pa-sm rounded-borders',
-            `bg-${statusStyle.color}`,
-            statusStyle.textClass,
-            statusStyle.pattern
+            canChangeStatus ? 'cursor-pointer' : '',
+            `text-${statusStyle.color}`,
+            `border-${statusStyle.color}`
           ]"
+          :role="canChangeStatus ? 'button' : undefined"
+          :tabindex="canChangeStatus ? 0 : undefined"
+          :aria-label="
+            canChangeStatus
+              ? $t('submissions.action.change_status.label') +
+                ': ' +
+                statusLabel
+              : statusLabel
+          "
+          :aria-haspopup="canChangeStatus ? 'menu' : undefined"
+          @click.stop
+          @keydown.enter.stop
+          @keydown.space.stop
         >
-          <div
-            class="row items-center no-wrap pattern-text-mask"
-            :class="canChangeStatus ? 'cursor-pointer' : ''"
-            :role="canChangeStatus ? 'button' : undefined"
-            :tabindex="canChangeStatus ? 0 : undefined"
-            :aria-label="
-              canChangeStatus
-                ? $t('submissions.action.change_status.label') +
-                  ': ' +
-                  statusLabel
-                : statusLabel
-            "
-            :aria-haspopup="canChangeStatus ? 'menu' : undefined"
-            @click.stop
-            @keydown.enter.stop
-            @keydown.space.stop
-          >
-            <q-icon :name="statusStyle.icon" size="sm" class="q-mr-sm" />
-            <span class="text-weight-medium" style="font-size: 0.9rem">
-              {{ statusLabel }}
-            </span>
-            <q-icon
-              v-if="canChangeStatus"
-              name="arrow_drop_down"
-              size="sm"
-              class="q-ml-xs"
-            />
-            <q-menu
-              v-if="canChangeStatus"
-              anchor="bottom start"
-              self="top start"
-            >
-              <q-list dense style="min-width: 220px">
-                <q-item
-                  v-for="transition in transitions"
-                  :key="transition.action"
-                  v-close-popup
-                  role="menuitem"
-                  clickable
-                  @click.stop="openConfirm(transition.action)"
-                >
-                  <q-item-section>
-                    {{ $t(`submission.action.${transition.action}`) }}
-                  </q-item-section>
-                </q-item>
-              </q-list>
-            </q-menu>
-          </div>
+          <span
+            :class="['status-dot', `bg-${statusStyle.color}`]"
+            aria-hidden="true"
+          />
+          <span class="text-weight-medium q-ml-xs" style="font-size: 0.9rem">
+            {{ statusLabel }}
+          </span>
+          <q-icon
+            v-if="canChangeStatus"
+            name="arrow_drop_down"
+            size="sm"
+            class="q-ml-xs"
+          />
+          <q-menu v-if="canChangeStatus" anchor="bottom start" self="top start">
+            <q-list dense style="min-width: 220px">
+              <q-item
+                v-for="transition in transitions"
+                :key="transition.action"
+                v-close-popup
+                role="menuitem"
+                clickable
+                @click.stop="openConfirm(transition.action)"
+              >
+                <q-item-section>
+                  {{ $t(`submission.action.${transition.action}`) }}
+                </q-item-section>
+              </q-item>
+            </q-list>
+          </q-menu>
         </div>
       </div>
     </q-card-section>
@@ -200,7 +211,7 @@ import { useTimeAgo } from "src/use/timeAgo"
 import AvatarImage from "src/components/atoms/AvatarImage.vue"
 import ConfirmStatusChangeDialog from "src/components/dialogs/ConfirmStatusChangeDialog.vue"
 import type { Submission } from "src/graphql/generated/graphql"
-import { statusStyleMap } from "./statusCategories"
+import { statusCategories, statusStyleMap } from "./statusCategories"
 import { useStatusTransitions } from "src/use/submissionStatusTransitions"
 
 interface CardUser {
@@ -250,6 +261,17 @@ const statusLabel = computed(() =>
   t(`submission.status.${props.submission.status}`)
 )
 
+const categoryKey = computed(
+  () =>
+    statusCategories.find((c) => c.statuses.includes(props.submission.status))
+      ?.key ?? null
+)
+const categoryLabel = computed(() =>
+  categoryKey.value
+    ? t(`publication.dashboard.categories.${categoryKey.value}`)
+    : ""
+)
+
 const { canChangeStatus, transitions } = useStatusTransitions(
   computed(() => props.submission as unknown as Submission)
 )
@@ -290,12 +312,50 @@ const relativeSubmitted = computed(() =>
 </script>
 
 <style scoped>
+.submission-card {
+  position: relative;
+  /* Let the top-left overlay extend slightly past the card edge. */
+  overflow: visible;
+}
 .submission-card .submission-title {
   text-decoration: none;
   font-weight: 500;
 }
 .submission-card .submission-title:hover {
   text-decoration: underline;
+}
+/* Top-left category overlay: a bold patterned tile that reads as the
+   status category without dominating the card's header. */
+.category-overlay {
+  position: absolute;
+  top: -8px;
+  left: -8px;
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
+}
+/* The overlay sits over the card's top-left corner; push the header
+   content to the right so the title and submitter aren't cropped. */
+.submission-header {
+  padding-left: 48px !important;
+}
+/* Soft outlined status chip replaces the previous full-bleed bg+pattern
+   treatment. Keeps the category color legible without shouting. */
+.status-chip {
+  border: 1px solid currentColor;
+  border-radius: 9999px;
+  background: transparent;
+}
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
 }
 :deep(.q-item__label + .q-item__label) {
   margin-top: 0;
