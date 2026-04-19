@@ -302,12 +302,18 @@ import { GetPublicationDashboardDocument } from "src/graphql/generated/graphql"
 // terminal states with no outgoing transitions.
 const activeLane = [
   "INITIALLY_SUBMITTED",
-  "RESUBMITTED",
   "AWAITING_REVIEW",
   "UNDER_REVIEW",
   "AWAITING_DECISION"
 ] as const
-const authorLane = ["RESUBMISSION_REQUESTED", "REVISION_REQUESTED"] as const
+// RESUBMITTED parked next to RESUBMISSION_REQUESTED for now — once
+// it comes back from the author it's still waiting on the
+// coordinator to re-queue for review.
+const authorLane = [
+  "RESUBMISSION_REQUESTED",
+  "RESUBMITTED",
+  "REVISION_REQUESTED"
+] as const
 const closedLane = [
   "ACCEPTED_AS_FINAL",
   "REJECTED",
