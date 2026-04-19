@@ -78,11 +78,8 @@
              cell can be a single chip or a stack of chips sharing a
              column — the intake cell stacks RESUBMITTED above
              INITIALLY_SUBMITTED so both read as entry points. -->
-        <div class="status-lane status-lane--active">
-          <div class="status-lane-label">
-            {{ $t("publication.dashboard.lanes.active") }}
-          </div>
-          <div class="status-lane-row">
+        <div class="status-lane">
+          <div class="status-lane-row status-lane-row--active">
             <template v-for="(cell, i) in activeLane" :key="`active-${i}`">
               <q-icon
                 v-if="i > 0"
@@ -460,21 +457,6 @@ const categories = computed<StatusCategory[]>(() =>
 .body--dark .status-lane + .status-lane {
   border-top-color: rgba(255, 255, 255, 0.12);
 }
-/* Emphasize the middle active lane — the expected path through the
-   system — with a subtle accent background that bleeds to the
-   panel's horizontal edges. */
-.status-lane--active {
-  margin: 4px -16px;
-  padding: 12px 16px;
-  background: rgba(0, 0, 0, 0.035);
-  border-top: 1px solid rgba(0, 0, 0, 0.08) !important;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-}
-.body--dark .status-lane--active {
-  background: rgba(255, 255, 255, 0.05);
-  border-top-color: rgba(255, 255, 255, 0.1) !important;
-  border-bottom-color: rgba(255, 255, 255, 0.1);
-}
 .status-lane-label {
   font-size: 0.7rem;
   text-transform: uppercase;
@@ -492,10 +474,10 @@ const categories = computed<StatusCategory[]>(() =>
   align-items: stretch;
   gap: 10px;
 }
-/* Active lane row uses a CSS grid so every column is equal width
-   and the → arrows sit in their own auto-sized tracks between
-   stacks. 4 stacks + 3 arrows = 7 tracks. */
-.status-lane--active .status-lane-row {
+/* Active pipeline row uses a CSS grid so every column is equal
+   width and the → arrows sit in their own auto-sized tracks
+   between stacks. 4 stacks + 3 arrows = 7 tracks. */
+.status-lane-row--active {
   display: grid;
   grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr;
   gap: 10px 12px;
@@ -509,11 +491,11 @@ const categories = computed<StatusCategory[]>(() =>
   gap: 6px;
   min-width: 170px;
 }
-.status-lane--active .status-lane-stack {
+.status-lane-row--active .status-lane-stack {
   /* Stacks inherit their column's width; stretch chips to fill. */
   width: 100%;
 }
-.status-lane--active .status-lane-stack .status-flow-chip {
+.status-lane-row--active .status-lane-stack .status-flow-chip {
   width: 100%;
   min-width: 0;
 }
@@ -535,10 +517,10 @@ const categories = computed<StatusCategory[]>(() =>
 .lane-arrow {
   align-self: center;
 }
-/* In the active lane, the arrow sits between stacks in its own grid
-   track. Center it vertically against the mid-line of the stacks
-   (accounting for the stage label above). */
-.status-lane--active .lane-arrow {
+/* In the active pipeline row, the arrow sits between stacks in its
+   own grid track. Nudge it down so it lines up mid-stack instead
+   of at the stage-label baseline. */
+.status-lane-row--active .lane-arrow {
   align-self: center;
   padding-top: 1.25rem;
 }
