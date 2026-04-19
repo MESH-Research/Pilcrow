@@ -73,16 +73,16 @@
           </div>
         </div>
 
-        <!-- Middle lane: the expected path through the system. -->
+        <!-- Middle lane: the expected path through the system. A
+             cell can be a single chip or a stack of chips sharing a
+             column — the intake cell stacks RESUBMITTED above
+             INITIALLY_SUBMITTED so both read as entry points. -->
         <div class="status-lane status-lane--active">
           <div class="status-lane-label">
             {{ $t("publication.dashboard.lanes.active") }}
           </div>
           <div class="status-lane-row">
-            <template
-              v-for="(status, i) in activeLane"
-              :key="`active-${status}`"
-            >
+            <template v-for="(cell, i) in activeLane" :key="`active-${i}`">
               <q-icon
                 v-if="i > 0"
                 name="arrow_forward"
@@ -90,30 +90,62 @@
                 class="lane-arrow text-grey-6"
                 aria-hidden="true"
               />
+              <div v-if="isStack(cell)" class="status-lane-stack">
+                <div
+                  v-for="status in cell.stack"
+                  :key="status"
+                  class="status-flow-chip"
+                  :style="`border-color: var(--q-${styleFor(status).color})`"
+                >
+                  <span
+                    :class="[
+                      'status-flow-swatch',
+                      `bg-${styleFor(status).color}`,
+                      styleFor(status).textClass,
+                      styleFor(status).pattern
+                    ]"
+                  >
+                    <q-icon
+                      :name="styleFor(status).icon"
+                      size="xs"
+                      class="pattern-text-mask"
+                    />
+                  </span>
+                  <span class="col column">
+                    <span class="status-flow-label">
+                      {{ $t(`submission.status.${status}`) }}
+                    </span>
+                    <span class="status-flow-count text-weight-bold">
+                      {{ statusCountMap.get(status) ?? 0 }}
+                    </span>
+                  </span>
+                </div>
+              </div>
               <div
+                v-else
                 class="status-flow-chip"
-                :style="`border-color: var(--q-${styleFor(status).color})`"
+                :style="`border-color: var(--q-${styleFor(cell).color})`"
               >
                 <span
                   :class="[
                     'status-flow-swatch',
-                    `bg-${styleFor(status).color}`,
-                    styleFor(status).textClass,
-                    styleFor(status).pattern
+                    `bg-${styleFor(cell).color}`,
+                    styleFor(cell).textClass,
+                    styleFor(cell).pattern
                   ]"
                 >
                   <q-icon
-                    :name="styleFor(status).icon"
+                    :name="styleFor(cell).icon"
                     size="xs"
                     class="pattern-text-mask"
                   />
                 </span>
                 <span class="col column">
                   <span class="status-flow-label">
-                    {{ $t(`submission.status.${status}`) }}
+                    {{ $t(`submission.status.${cell}`) }}
                   </span>
                   <span class="status-flow-count text-weight-bold">
-                    {{ statusCountMap.get(status) ?? 0 }}
+                    {{ statusCountMap.get(cell) ?? 0 }}
                   </span>
                 </span>
               </div>
@@ -300,22 +332,28 @@ import { GetPublicationDashboardDocument } from "src/graphql/generated/graphql"
 // where a submission parks when sent back for revision or
 // resubmission before re-entering the active lane. Closed lane is
 // terminal states with no outgoing transitions.
-const activeLane = [
-  "INITIALLY_SUBMITTED",
+// Each cell in the active pipeline is either a single status or a
+// stack of statuses that share the same column. The intake column
+// stacks RESUBMITTED on top of INITIALLY_SUBMITTED so both
+// entry-point statuses feed the next step from the same position.
+type LaneCell = string | { stack: readonly string[] }
+
+const activeLane: readonly LaneCell[] = [
+  { stack: ["RESUBMITTED", "INITIALLY_SUBMITTED"] },
   "AWAITING_REVIEW",
   "UNDER_REVIEW",
   "AWAITING_DECISION"
-] as const
-// Order deliberately places RESUBMITTED first so it sits directly
-// above INITIALLY_SUBMITTED — both are intake states that feed the
-// active pipeline. The request-type statuses (RESUBMISSION_REQUESTED,
-// REVISION_REQUESTED) follow because they branch OUT of the pipeline
-// to the author.
-const authorLane = [
-  "RESUBMITTED",
-  "RESUBMISSION_REQUESTED",
-  "REVISION_REQUESTED"
-] as const
+]
+
+// Request-type statuses that branch OUT of the pipeline to the
+// author. Once the author acts on a RESUBMISSION_REQUESTED, the
+// submission re-enters via RESUBMITTED, which lives in the active
+// lane's intake stack above.
+const authorLane = ["RESUBMISSION_REQUESTED", "REVISION_REQUESTED"] as const
+
+function isStack(cell: LaneCell): cell is { stack: readonly string[] } {
+  return typeof cell !== "string"
+}
 const closedLane = [
   "ACCEPTED_AS_FINAL",
   "REJECTED",
@@ -452,6 +490,11 @@ const categories = computed<StatusCategory[]>(() =>
   flex-wrap: wrap;
   align-items: stretch;
   gap: 8px;
+}
+.status-lane-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 .lane-arrow {
   align-self: center;
