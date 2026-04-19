@@ -19,39 +19,145 @@
 
     <div v-if="!publication" class="q-pa-lg">{{ $t("loading") }}</div>
     <template v-else>
-      <!-- Lifecycle flow: every submission status in the order
-           authors and editors walk through, with its live count.
-           Sits above the category cards so a reader can see the
-           pipeline end-to-end before drilling into buckets. -->
-      <div class="status-flow row items-stretch q-gutter-sm q-mb-md">
-        <div
-          v-for="status in lifecycleOrder"
-          :key="status"
-          class="status-flow-chip"
-          :style="`border-color: var(--q-${styleFor(status).color})`"
-        >
-          <span
-            :class="[
-              'status-flow-swatch',
-              `bg-${styleFor(status).color}`,
-              styleFor(status).textClass,
-              styleFor(status).pattern
-            ]"
-          >
+      <!-- Workflow diagram: three lanes that roughly trace how a
+           submission moves through the publication. Arrows inside a
+           lane mark sequential steps. Lanes are stacked vertically
+           and wrap on narrow viewports. -->
+      <div class="status-flow-diagram q-mb-md">
+        <!-- Main review pipeline: the happy-path sequence a
+             submission follows from arrival to decision. -->
+        <div class="status-lane">
+          <div class="status-lane-label">
+            {{ $t("publication.dashboard.lanes.active") }}
+          </div>
+          <div class="status-lane-row">
+            <template
+              v-for="(status, i) in activeLane"
+              :key="`active-${status}`"
+            >
+              <q-icon
+                v-if="i > 0"
+                name="arrow_forward"
+                size="sm"
+                class="lane-arrow text-grey-6"
+                aria-hidden="true"
+              />
+              <div
+                class="status-flow-chip"
+                :style="`border-color: var(--q-${styleFor(status).color})`"
+              >
+                <span
+                  :class="[
+                    'status-flow-swatch',
+                    `bg-${styleFor(status).color}`,
+                    styleFor(status).textClass,
+                    styleFor(status).pattern
+                  ]"
+                >
+                  <q-icon
+                    :name="styleFor(status).icon"
+                    size="xs"
+                    class="pattern-text-mask"
+                  />
+                </span>
+                <span class="col column">
+                  <span class="status-flow-label">
+                    {{ $t(`submission.status.${status}`) }}
+                  </span>
+                  <span class="status-flow-count text-weight-bold">
+                    {{ statusCountMap.get(status) ?? 0 }}
+                  </span>
+                </span>
+              </div>
+            </template>
+          </div>
+        </div>
+
+        <!-- Loopback lane: statuses that kick back to the author
+             before the submission re-enters the review pipeline. -->
+        <div class="status-lane">
+          <div class="status-lane-label">
+            {{ $t("publication.dashboard.lanes.with_author") }}
+          </div>
+          <div class="status-lane-row">
+            <div
+              v-for="status in authorLane"
+              :key="`author-${status}`"
+              class="status-flow-chip"
+              :style="`border-color: var(--q-${styleFor(status).color})`"
+            >
+              <span
+                :class="[
+                  'status-flow-swatch',
+                  `bg-${styleFor(status).color}`,
+                  styleFor(status).textClass,
+                  styleFor(status).pattern
+                ]"
+              >
+                <q-icon
+                  :name="styleFor(status).icon"
+                  size="xs"
+                  class="pattern-text-mask"
+                />
+              </span>
+              <span class="col column">
+                <span class="status-flow-label">
+                  {{ $t(`submission.status.${status}`) }}
+                </span>
+                <span class="status-flow-count text-weight-bold">
+                  {{ statusCountMap.get(status) ?? 0 }}
+                </span>
+              </span>
+            </div>
             <q-icon
-              :name="styleFor(status).icon"
-              size="xs"
-              class="pattern-text-mask"
+              name="subdirectory_arrow_left"
+              size="sm"
+              class="lane-arrow text-grey-6"
+              aria-hidden="true"
             />
-          </span>
-          <span class="col column">
-            <span class="status-flow-label">
-              {{ $t(`submission.status.${status}`) }}
+            <span class="status-lane-hint text-caption text-grey-7">
+              {{ $t("publication.dashboard.lanes.loops_back") }}
             </span>
-            <span class="status-flow-count text-weight-bold">
-              {{ statusCountMap.get(status) ?? 0 }}
-            </span>
-          </span>
+          </div>
+        </div>
+
+        <!-- Closed lane: terminal states. No arrows — these are
+             all endpoints, not a sequence. -->
+        <div class="status-lane">
+          <div class="status-lane-label">
+            {{ $t("publication.dashboard.lanes.closed") }}
+          </div>
+          <div class="status-lane-row">
+            <div
+              v-for="status in closedLane"
+              :key="`closed-${status}`"
+              class="status-flow-chip"
+              :style="`border-color: var(--q-${styleFor(status).color})`"
+            >
+              <span
+                :class="[
+                  'status-flow-swatch',
+                  `bg-${styleFor(status).color}`,
+                  styleFor(status).textClass,
+                  styleFor(status).pattern
+                ]"
+              >
+                <q-icon
+                  :name="styleFor(status).icon"
+                  size="xs"
+                  class="pattern-text-mask"
+                />
+              </span>
+              <span class="col column">
+                <span class="status-flow-label">
+                  {{ $t(`submission.status.${status}`) }}
+                </span>
+                <span class="status-flow-count text-weight-bold">
+                  {{ statusCountMap.get(status) ?? 0 }}
+                </span>
+              </span>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -187,17 +293,23 @@ import {
 } from "src/pages/Publication/components/statusCategories"
 import { GetPublicationDashboardDocument } from "src/graphql/generated/graphql"
 
-// Submission lifecycle in the order an author/editor walks through
-// it. DRAFT is intentionally excluded — drafts are private to the
-// author and never appear on the publication dashboard.
-const lifecycleOrder = [
+// Workflow lanes. DRAFT is intentionally excluded — drafts are
+// private to the author and never appear on the publication
+// dashboard.
+//
+// Active lane is sequential (arrows between chips). Author lane is
+// where a submission parks when sent back for revision or
+// resubmission before re-entering the active lane. Closed lane is
+// terminal states with no outgoing transitions.
+const activeLane = [
   "INITIALLY_SUBMITTED",
   "RESUBMITTED",
   "AWAITING_REVIEW",
   "UNDER_REVIEW",
-  "AWAITING_DECISION",
-  "REVISION_REQUESTED",
-  "RESUBMISSION_REQUESTED",
+  "AWAITING_DECISION"
+] as const
+const authorLane = ["REVISION_REQUESTED", "RESUBMISSION_REQUESTED"] as const
+const closedLane = [
   "ACCEPTED_AS_FINAL",
   "REJECTED",
   "EXPIRED",
@@ -279,8 +391,42 @@ const categories = computed<StatusCategory[]>(() =>
 .body--dark .status-row + .status-row {
   border-top-color: rgba(255, 255, 255, 0.08);
 }
-.status-flow {
+.status-flow-diagram {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.status-lane {
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 6px;
+  padding: 8px 10px 10px;
+  background: rgba(0, 0, 0, 0.02);
+}
+.body--dark .status-lane {
+  border-color: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+}
+.status-lane-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: rgba(0, 0, 0, 0.55);
+  margin-bottom: 6px;
+}
+.body--dark .status-lane-label {
+  color: rgba(255, 255, 255, 0.65);
+}
+.status-lane-row {
+  display: flex;
   flex-wrap: wrap;
+  align-items: stretch;
+  gap: 8px;
+}
+.lane-arrow {
+  align-self: center;
+}
+.status-lane-hint {
+  align-self: center;
 }
 .status-flow-chip {
   display: inline-flex;

@@ -496,6 +496,12 @@
         "awaiting_author": "Awaiting Author",
         "completed": "Completed"
       },
+      "lanes": {
+        "active": "Active pipeline",
+        "with_author": "With author",
+        "closed": "Closed",
+        "loops_back": "returns to the pipeline"
+      },
       "headers": {
         "title": "Title",
         "status": "Status",
