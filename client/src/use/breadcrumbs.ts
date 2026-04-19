@@ -58,10 +58,12 @@ export function useCrumbs() {
           const to: RouteLocationRaw =
             def.to ?? ({ name: r.name } as RouteLocationRaw)
           const resolved = router.resolve(to)
+          // Label overrides are keyed by the *owning* route's name
+          // (the one whose meta.crumb produced this entry), not the
+          // link target — pages declare labels for themselves.
+          const ownerName = r.name as keyof RouteNamedMap | undefined
           const label = computed<string>(() => {
-            const override = resolved.name
-              ? labelRegistry[resolved.name as keyof RouteNamedMap]
-              : undefined
+            const override = ownerName ? labelRegistry[ownerName] : undefined
             const unwrapped =
               override && typeof override === "object" && "value" in override
                 ? override.value

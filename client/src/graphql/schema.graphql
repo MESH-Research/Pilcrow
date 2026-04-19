@@ -538,6 +538,14 @@ type Publication {
   updated_at: DateTimeUtc
 
   """
+  A single user scoped to this publication. Returns null when the
+  user has no submission-level involvement here. Carries the same
+  per-role counts as `users`, plus a `submissions` field that lists
+  the submissions this user is attached to within this publication.
+  """
+  user(id: ID!): PublicationUser
+
+  """
   Paginated users associated with this publication's submissions,
   filtered by role. Each user carries per-role submission counts
   (as_submitter_count / as_reviewer_count / as_coordinator_count).
@@ -585,6 +593,32 @@ type PublicationPaginator implements Paginator {
 enum PublicationRole {
   editor
   publication_admin
+}
+
+"""
+A user in the context of a specific publication. Carries per-role
+submission counts plus a filtered submissions listing so detail
+views can show just the submissions this user is involved in.
+"""
+type PublicationUser {
+  as_coordinator_active_count: Int!
+  as_coordinator_completed_count: Int!
+  as_reviewer_active_count: Int!
+  as_reviewer_completed_count: Int!
+  as_submitter_count: Int!
+
+  """ID of the underlying user."""
+  id: ID!
+
+  """
+  Submissions in this publication that this user is attached to.
+  Optionally filter by the roles they hold on each submission and
+  by phase (active / completed). Drafts are always excluded.
+  """
+  submissions(orderBy: [QuerySubmissionsOrderByOrderByClause!], phase: SubmissionPhase, roles: [SubmissionUserRoles!]): [Submission!]!
+
+  """The user themselves (name, email, username, avatar, etc.)."""
+  user: User!
 }
 
 type Query {
@@ -895,6 +929,15 @@ type SubmissionPaginator implements Paginator {
   Submission counts grouped by status, reflecting all filters except status.
   """
   statusCounts: [SubmissionStatusCount!]!
+}
+
+"""High-level status grouping used by the dashboard and user details."""
+enum SubmissionPhase {
+  """Submissions still in the review pipeline (excludes drafts)."""
+  active
+
+  """Terminal submissions: accepted, rejected, archived, or deleted."""
+  completed
 }
 
 """The status of a submission"""

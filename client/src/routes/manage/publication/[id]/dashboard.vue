@@ -368,12 +368,7 @@ import {
 
 definePage({
   name: "manage:publication:dashboard",
-  props: true,
-  meta: {
-    crumb: {
-      label: "Dashboard"
-    }
-  }
+  props: true
 })
 
 interface Props {

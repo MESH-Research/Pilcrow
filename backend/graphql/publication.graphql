@@ -57,6 +57,14 @@ type Publication {
             resolver: "App\\GraphQL\\Queries\\PaginatePublicationUsers"
             defaultCount: 25
         )
+    """
+    A single user scoped to this publication. Returns null when the
+    user has no submission-level involvement here. Carries the same
+    per-role counts as `users`, plus a `submissions` field that lists
+    the submissions this user is attached to within this publication.
+    """
+    user(id: ID!): PublicationUser
+        @field(resolver: "App\\GraphQL\\Queries\\PublicationUser")
     publication_admins: [User!]! @belongsToMany(relation: "publicationAdmins")
     editors: [User!]! @belongsToMany(relation: "editors")
     is_publicly_visible: Boolean
@@ -75,6 +83,44 @@ type PublicationAssignment {
     publication: Publication! @belongsTo
     created_at: DateTimeUtc!
     updated_at: DateTimeUtc
+}
+
+"""
+A user in the context of a specific publication. Carries per-role
+submission counts plus a filtered submissions listing so detail
+views can show just the submissions this user is involved in.
+"""
+type PublicationUser {
+    "ID of the underlying user."
+    id: ID!
+    "The user themselves (name, email, username, avatar, etc.)."
+    user: User!
+    as_submitter_count: Int!
+    as_reviewer_active_count: Int!
+    as_reviewer_completed_count: Int!
+    as_coordinator_active_count: Int!
+    as_coordinator_completed_count: Int!
+    """
+    Submissions in this publication that this user is attached to.
+    Optionally filter by the roles they hold on each submission and
+    by phase (active / completed). Drafts are always excluded.
+    """
+    submissions(
+        roles: [SubmissionUserRoles!]
+        phase: SubmissionPhase
+        orderBy: [QuerySubmissionsOrderByOrderByClause!]
+    ): [Submission!]!
+        @field(
+            resolver: "App\\GraphQL\\Queries\\PublicationUserSubmissions"
+        )
+}
+
+"High-level status grouping used by the dashboard and user details."
+enum SubmissionPhase {
+    "Submissions still in the review pipeline (excludes drafts)."
+    active @enum(value: "active")
+    "Terminal submissions: accepted, rejected, archived, or deleted."
+    completed @enum(value: "completed")
 }
 
 type StyleCriteria {

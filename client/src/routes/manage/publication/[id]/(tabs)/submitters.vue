@@ -7,6 +7,7 @@
     :variables="{ id, roles: ['submitter'] }"
     sync-url
     :default-sort="{ sortBy: 'name' }"
+    @row-click="onRowClick"
   />
 </template>
 
@@ -15,6 +16,7 @@ import QueryTable, {
   type QueryTableColumn
 } from "src/components/tables/QueryTable.vue"
 import NameAvatarCell from "src/components/tables/common/NameAvatarCell.vue"
+import { useRouter } from "vue-router"
 import { GetPublicationUsersDocument } from "src/graphql/generated/graphql"
 
 definePage({
@@ -30,7 +32,15 @@ definePage({
 interface Props {
   id: string
 }
-defineProps<Props>()
+const props = defineProps<Props>()
+const router = useRouter()
+
+function onRowClick(_evt: Event, row: { id: string }) {
+  router.push({
+    name: "manage:publication:user",
+    params: { id: props.id, userId: row.id }
+  })
+}
 
 const columns: QueryTableColumn[] = [
   {

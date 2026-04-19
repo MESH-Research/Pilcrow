@@ -108,13 +108,7 @@ import { useRoute } from "vue-router"
 import { GetPublicationInvitedCountDocument } from "src/graphql/generated/graphql"
 
 definePage({
-  props: true,
-  meta: {
-    crumb: {
-      label: "Users",
-      to: { name: "manage:publication:submitters" }
-    }
-  }
+  props: true
 })
 
 interface Props {

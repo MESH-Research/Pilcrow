@@ -27,7 +27,8 @@ definePage({
   name: "manage:publication:id",
   meta: {
     crumb: {
-      label: "Publication"
+      label: "Publication",
+      to: { name: "manage:publication:dashboard" }
     }
   }
 })

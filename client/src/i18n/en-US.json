@@ -537,6 +537,23 @@
           "active": "Active",
           "completed": "Completed"
         }
+      },
+      "user_detail": {
+        "not_found": "This user has no activity in this publication.",
+        "invited_badge": "Invited",
+        "invited_aria": "Invitation not yet accepted",
+        "submissions": "no submissions | {n} submission | {n} submissions",
+        "submissions_heading": "Submissions",
+        "no_submissions": "No submissions to show.",
+        "role": {
+          "submitter": "Submitter",
+          "reviewer": "Reviewer",
+          "coordinator": "Coordinator"
+        },
+        "phase": {
+          "active": "Active",
+          "completed": "Completed"
+        }
       }
     },
     "setup_pages": {

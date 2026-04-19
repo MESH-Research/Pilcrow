@@ -1,4 +1,6 @@
-<template></template>
+<template>
+  <router-view />
+</template>
 
 <script setup lang="ts">
 definePage({
