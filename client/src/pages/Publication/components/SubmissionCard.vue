@@ -1,31 +1,35 @@
 <template>
   <q-card flat bordered class="submission-card column">
-    <!-- Status category badge: corner indicator with the category
-         color + pattern and the category icon. Reads the status
-         category at a glance. -->
-    <q-badge
-      floating
-      :color="statusStyle.color"
-      :class="['category-badge', statusStyle.textClass, statusStyle.pattern]"
-      :aria-label="categoryLabel"
-    >
-      <q-icon :name="statusStyle.icon" size="xs" class="pattern-text-mask" />
-    </q-badge>
-
-    <!-- Header: title on top; submitter on the left, status on the
-         right as a soft outlined chip (category color provides the
-         accent, the patterned overlay above carries the bold cue). -->
-    <q-card-section class="q-py-sm q-px-md submission-header">
-      <router-link
-        :to="{
-          name: 'submission:details',
-          params: { id: submission.id }
-        }"
-        class="text-primary submission-title block q-mb-sm"
-        style="font-size: 1.25rem; line-height: 1.3"
-      >
-        {{ submission.title }}
-      </router-link>
+    <!-- Header: title (prefixed by a status-category icon badge)
+         on top; submitter on the left, status chip on the right. -->
+    <q-card-section class="q-py-sm q-px-md">
+      <div class="row items-baseline no-wrap q-mb-sm submission-title-row">
+        <span
+          :class="[
+            'category-icon q-mr-sm',
+            `bg-${statusStyle.color}`,
+            statusStyle.textClass,
+            statusStyle.pattern
+          ]"
+          :aria-label="categoryLabel"
+        >
+          <q-icon
+            :name="statusStyle.icon"
+            size="sm"
+            class="pattern-text-mask"
+          />
+        </span>
+        <router-link
+          :to="{
+            name: 'submission:details',
+            params: { id: submission.id }
+          }"
+          class="text-primary submission-title"
+          style="font-size: 1.25rem; line-height: 1.3"
+        >
+          {{ submission.title }}
+        </router-link>
+      </div>
       <div :class="['items-start q-gutter-sm', stackHeader ? 'column' : 'row']">
         <q-item
           v-if="submission.created_by"
@@ -309,11 +313,6 @@ const relativeSubmitted = computed(() =>
 </script>
 
 <style scoped>
-.submission-card {
-  position: relative;
-  /* Let the floating category badge extend slightly past the card edge. */
-  overflow: visible;
-}
 .submission-card .submission-title {
   text-decoration: none;
   font-weight: 500;
@@ -321,22 +320,23 @@ const relativeSubmitted = computed(() =>
 .submission-card .submission-title:hover {
   text-decoration: underline;
 }
-/* Anchor the floating q-badge to the card's top-left corner instead
-   of the default top-right, and size it up so the category icon
-   has room to breathe. */
-.category-badge.q-badge--floating {
-  top: -6px;
-  left: -6px;
-  right: auto;
-  padding: 4px 6px;
-  font-size: 0.85rem;
-  letter-spacing: 0;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+/* Patterned tile inline with the title — square is large enough
+   that the category pattern (diagonals / zigzag / dots / crosshatch)
+   actually reads. */
+.category-icon {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 6px;
+  /* Nudge to optically align with the title baseline. */
+  transform: translateY(4px);
 }
-/* Nudge the header content right so the category badge doesn't
-   overlap the title. */
-.submission-header {
-  padding-left: 40px !important;
+.submission-title-row {
+  /* Let the title wrap naturally next to the fixed-size icon. */
+  align-items: flex-start;
 }
 /* Soft outlined status chip replaces the previous full-bleed bg+pattern
    treatment. Keeps the category color legible without shouting. */
