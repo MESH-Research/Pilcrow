@@ -1,5 +1,6 @@
 <template>
   <QueryTable
+    ref="queryTableRef"
     :query="GetPublicationUsersDocument"
     field="publication.users"
     t-prefix="publication.manage.users"
@@ -50,6 +51,32 @@
       </div>
     </template>
     <template #top-after>
+      <q-btn
+        v-if="isGrid"
+        flat
+        dense
+        no-caps
+        icon="sort"
+        label="Sort"
+        aria-label="Sort submitters"
+      >
+        <q-menu>
+          <q-list dense style="min-width: 220px">
+            <q-item
+              v-for="option in sortOptions"
+              :key="option.id"
+              v-close-popup
+              clickable
+              @click="applySort(option)"
+            >
+              <q-item-section>{{ option.label }}</q-item-section>
+              <q-item-section v-if="isCurrentSort(option)" side>
+                <q-icon name="check" size="xs" />
+              </q-item-section>
+            </q-item>
+          </q-list>
+        </q-menu>
+      </q-btn>
       <q-btn
         v-if="!isSmallScreen"
         flat
@@ -126,6 +153,53 @@ function goToDetail(userId: string) {
 
 function onRowClick(_evt: Event, row: { id: string }) {
   goToDetail(row.id)
+}
+
+// Grid-mode sort options — mirror the column sortability in a menu
+// since grid cards don't surface sortable column headers.
+interface SortOption {
+  id: string
+  label: string
+  sortBy: string
+  descending: boolean
+}
+const sortOptions: SortOption[] = [
+  { id: "name_asc", label: "Name (A–Z)", sortBy: "name", descending: false },
+  { id: "name_desc", label: "Name (Z–A)", sortBy: "name", descending: true },
+  { id: "email_asc", label: "Email (A–Z)", sortBy: "email", descending: false },
+  {
+    id: "email_desc",
+    label: "Email (Z–A)",
+    sortBy: "email",
+    descending: true
+  },
+  {
+    id: "submissions_desc",
+    label: "Submissions (most first)",
+    sortBy: "as_submitter_count",
+    descending: true
+  },
+  {
+    id: "submissions_asc",
+    label: "Submissions (fewest first)",
+    sortBy: "as_submitter_count",
+    descending: false
+  }
+]
+const queryTableRef = ref<InstanceType<typeof QueryTable> | null>(null)
+
+function isCurrentSort(option: SortOption): boolean {
+  const p = queryTableRef.value?.pagination
+  if (!p) return false
+  return p.sortBy === option.sortBy && p.descending === option.descending
+}
+
+function applySort(option: SortOption) {
+  const p = queryTableRef.value?.pagination
+  if (!p) return
+  p.sortBy = option.sortBy
+  p.descending = option.descending
+  p.page = 1
 }
 
 const columns: QueryTableColumn[] = [

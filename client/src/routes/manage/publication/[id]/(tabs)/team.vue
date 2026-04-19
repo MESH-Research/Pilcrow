@@ -1,5 +1,6 @@
 <template>
   <QueryTable
+    ref="queryTableRef"
     :query="GetPublicationUsersDocument"
     field="publication.users"
     t-prefix="publication.manage.users"
@@ -141,6 +142,32 @@
     </template>
     <template #top-after>
       <q-btn
+        v-if="isGrid"
+        flat
+        dense
+        no-caps
+        icon="sort"
+        label="Sort"
+        aria-label="Sort review team"
+      >
+        <q-menu>
+          <q-list dense style="min-width: 240px">
+            <q-item
+              v-for="option in sortOptions"
+              :key="option.id"
+              v-close-popup
+              clickable
+              @click="applySort(option)"
+            >
+              <q-item-section>{{ option.label }}</q-item-section>
+              <q-item-section v-if="isCurrentSort(option)" side>
+                <q-icon name="check" size="xs" />
+              </q-item-section>
+            </q-item>
+          </q-list>
+        </q-menu>
+      </q-btn>
+      <q-btn
         v-if="!isSmallScreen"
         flat
         dense
@@ -220,6 +247,65 @@ function onRowClick(_evt: Event, row: { id: string }) {
 
 function countHeaderCols(cols: { name: string }[]) {
   return cols.filter((c) => c.name.endsWith("_count"))
+}
+
+// Grid-mode sort options — each sortable column surfaces here since
+// grid cards don't have clickable column headers.
+interface SortOption {
+  id: string
+  label: string
+  sortBy: string
+  descending: boolean
+}
+const sortOptions: SortOption[] = [
+  { id: "name_asc", label: "Name (A–Z)", sortBy: "name", descending: false },
+  { id: "name_desc", label: "Name (Z–A)", sortBy: "name", descending: true },
+  { id: "email_asc", label: "Email (A–Z)", sortBy: "email", descending: false },
+  {
+    id: "email_desc",
+    label: "Email (Z–A)",
+    sortBy: "email",
+    descending: true
+  },
+  {
+    id: "reviewer_active_desc",
+    label: "Reviewing (active, most first)",
+    sortBy: "as_reviewer_active_count",
+    descending: true
+  },
+  {
+    id: "coordinator_active_desc",
+    label: "Coordinating (active, most first)",
+    sortBy: "as_coordinator_active_count",
+    descending: true
+  },
+  {
+    id: "reviewer_completed_desc",
+    label: "Reviewing (completed, most first)",
+    sortBy: "as_reviewer_completed_count",
+    descending: true
+  },
+  {
+    id: "coordinator_completed_desc",
+    label: "Coordinating (completed, most first)",
+    sortBy: "as_coordinator_completed_count",
+    descending: true
+  }
+]
+const queryTableRef = ref<InstanceType<typeof QueryTable> | null>(null)
+
+function isCurrentSort(option: SortOption): boolean {
+  const p = queryTableRef.value?.pagination
+  if (!p) return false
+  return p.sortBy === option.sortBy && p.descending === option.descending
+}
+
+function applySort(option: SortOption) {
+  const p = queryTableRef.value?.pagination
+  if (!p) return
+  p.sortBy = option.sortBy
+  p.descending = option.descending
+  p.page = 1
 }
 
 // Column order is intentional: group Active (reviewer + coordinator)
