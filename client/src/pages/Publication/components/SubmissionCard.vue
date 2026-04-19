@@ -29,7 +29,7 @@
             name: 'submission:details',
             params: { id: submission.id }
           }"
-          class="text-primary submission-title block"
+          class="text-primary submission-title"
           style="font-size: 1.25rem; line-height: 1.3"
           :title="submission.title"
         >
