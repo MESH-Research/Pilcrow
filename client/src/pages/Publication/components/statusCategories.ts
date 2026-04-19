@@ -17,8 +17,8 @@ export const statusCategories: StatusCategoryDef[] = [
     statuses: [
       "INITIALLY_SUBMITTED",
       "RESUBMITTED",
-      "AWAITING_DECISION",
-      "EXPIRED"
+      "AWAITING_REVIEW",
+      "AWAITING_DECISION"
     ]
   },
   {
@@ -27,7 +27,7 @@ export const statusCategories: StatusCategoryDef[] = [
     textClass: "text-dark",
     icon: "hourglass_top",
     pattern: "pattern-zigzag",
-    statuses: ["AWAITING_REVIEW", "UNDER_REVIEW"]
+    statuses: ["UNDER_REVIEW"]
   },
   {
     key: "awaiting_author",
@@ -46,7 +46,13 @@ export const statusCategories: StatusCategoryDef[] = [
     textClass: "text-white",
     icon: "check_circle",
     pattern: "pattern-crosshatch",
-    statuses: ["ACCEPTED_AS_FINAL", "REJECTED", "ARCHIVED", "DELETED"]
+    statuses: [
+      "ACCEPTED_AS_FINAL",
+      "REJECTED",
+      "EXPIRED",
+      "ARCHIVED",
+      "DELETED"
+    ]
   }
 ]
 
