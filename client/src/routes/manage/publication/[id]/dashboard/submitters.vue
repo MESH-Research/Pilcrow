@@ -43,9 +43,25 @@
             <span class="col text-body2 text-grey-8">
               {{ $t("publication.manage.users.headers.as_submitter_count") }}
             </span>
-            <span class="text-h6 q-mr-sm">
-              {{ gridProps.row.as_submitter_count }}
+            <template v-if="gridProps.row.as_submitter_count > ICON_THRESHOLD">
+              <span class="text-h6 q-mr-sm">
+                {{ gridProps.row.as_submitter_count }}
+              </span>
+            </template>
+            <span
+              v-else-if="gridProps.row.as_submitter_count > 0"
+              class="row items-center q-gutter-xs"
+              :aria-label="`${gridProps.row.as_submitter_count} submissions`"
+            >
+              <q-icon
+                v-for="i in gridProps.row.as_submitter_count"
+                :key="i"
+                name="description"
+                size="sm"
+                color="grey-7"
+              />
             </span>
+            <span v-else class="text-grey-5">—</span>
           </q-card-section>
         </q-card>
       </div>
@@ -99,6 +115,7 @@ import QueryTable, {
   type QueryTableColumn
 } from "src/components/tables/QueryTable.vue"
 import NameAvatarCell from "src/components/tables/common/NameAvatarCell.vue"
+import SubmissionCountCell from "src/components/tables/common/SubmissionCountCell.vue"
 import AvatarImage from "src/components/atoms/AvatarImage.vue"
 import { GetPublicationUsersDocument } from "src/graphql/generated/graphql"
 
@@ -116,6 +133,10 @@ interface Props {
   id: string
 }
 const props = defineProps<Props>()
+
+// Keep in sync with SubmissionCountCell's default; swap to a numeric
+// count once a submitter has more submissions than this.
+const ICON_THRESHOLD = 5
 
 const $q = useQuasar()
 const router = useRouter()
@@ -224,6 +245,8 @@ const columns: QueryTableColumn[] = [
     align: "right",
     field: "as_submitter_count",
     sortable: true,
+    component: SubmissionCountCell,
+    icon: "description",
     label: "publication.manage.users.headers.as_submitter_count"
   }
 ]

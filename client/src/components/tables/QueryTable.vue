@@ -121,6 +121,21 @@ export interface QueryTableColumn extends QTableColumn {
    * display name (e.g. when a dedicated username column is present).
    */
   hideUsername?: boolean
+  /**
+   * For SubmissionCountCell: render at most this many icons before
+   * falling back to a numeric count. Defaults to 5.
+   */
+  iconThreshold?: number
+  /**
+   * For SubmissionCountCell: icon name to render per count.
+   * Defaults to "description".
+   */
+  icon?: string
+  /**
+   * For SubmissionCountCell: icon color (Quasar palette name).
+   * Defaults to "grey-7".
+   */
+  iconColor?: string
 }
 
 export interface QTableBodyCellScope {
