@@ -502,6 +502,12 @@
         "closed": "Closed",
         "loops_back": "returns to the pipeline"
       },
+      "stages": {
+        "intake": "Intake",
+        "screening": "Screening",
+        "reviewing": "Reviewing",
+        "decision": "Decision"
+      },
       "headers": {
         "title": "Title",
         "status": "Status",

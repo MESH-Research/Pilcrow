@@ -92,6 +92,9 @@
                 aria-hidden="true"
               />
               <div v-if="isStack(cell)" class="status-lane-stack">
+                <div v-if="cell.label" class="stage-label">
+                  {{ $t(`publication.dashboard.stages.${cell.label}`) }}
+                </div>
                 <div
                   v-for="status in cell.stack"
                   :key="status"
@@ -334,16 +337,16 @@ import { GetPublicationDashboardDocument } from "src/graphql/generated/graphql"
 // resubmission before re-entering the active lane. Closed lane is
 // terminal states with no outgoing transitions.
 // Each cell in the active pipeline is either a single status or a
-// stack of statuses that share the same column. The intake column
-// stacks RESUBMITTED on top of INITIALLY_SUBMITTED so both
-// entry-point statuses feed the next step from the same position.
-type LaneCell = string | { stack: readonly string[] }
+// stack of statuses that share the same column, with an optional
+// stage label (intake / screening / reviewing / decision) so the
+// diagram reads as named pipeline stages rather than raw statuses.
+type LaneCell = string | { label?: string; stack: readonly string[] }
 
 const activeLane: readonly LaneCell[] = [
-  { stack: ["RESUBMITTED", "INITIALLY_SUBMITTED"] },
-  { stack: ["AWAITING_REVIEW", "RESUBMISSION_REQUESTED"] },
-  { stack: ["UNDER_REVIEW", "AWAITING_DECISION"] },
-  { stack: ["REVISION_REQUESTED", "ACCEPTED_AS_FINAL"] }
+  { label: "intake", stack: ["RESUBMITTED", "INITIALLY_SUBMITTED"] },
+  { label: "screening", stack: ["AWAITING_REVIEW", "RESUBMISSION_REQUESTED"] },
+  { label: "reviewing", stack: ["UNDER_REVIEW", "AWAITING_DECISION"] },
+  { label: "decision", stack: ["REVISION_REQUESTED", "ACCEPTED_AS_FINAL"] }
 ]
 
 // With-author lane is empty now that every request-type status has
@@ -351,7 +354,9 @@ const activeLane: readonly LaneCell[] = [
 // reintroduce author-side states later.
 const authorLane = [] as readonly string[]
 
-function isStack(cell: LaneCell): cell is { stack: readonly string[] } {
+function isStack(
+  cell: LaneCell
+): cell is { label?: string; stack: readonly string[] } {
   return typeof cell !== "string"
 }
 const closedLane = ["REJECTED", "EXPIRED", "ARCHIVED", "DELETED"] as const
@@ -489,6 +494,18 @@ const categories = computed<StatusCategory[]>(() =>
   display: flex;
   flex-direction: column;
   gap: 6px;
+}
+.stage-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.6);
+  text-align: center;
+  margin-bottom: 2px;
+}
+.body--dark .stage-label {
+  color: rgba(255, 255, 255, 0.72);
 }
 .lane-arrow {
   align-self: center;
