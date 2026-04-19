@@ -327,6 +327,45 @@ class DashboardDemoSeeder extends Seeder
                 'status' => Submission::DELETED,
                 'daysAgo' => 180,
             ],
+
+            // --- UI stress tests: exceptionally long titles -------------
+            // These exist so we can eyeball how title-prefixed icons,
+            // grid cards, list rows, and breadcrumb-style detail pages
+            // cope with titles that break whitespace assumptions.
+            [
+                // Long but single-line; exercises title ellipsis in
+                // narrow grid cards and tight table cells.
+                'title' =>
+                    'A Multi-Modal Transformer Architecture for Cross-Linguistic '
+                    . 'Attribution of Anonymously Authored Eighteenth-Century '
+                    . 'Pamphlets Across Disparate Archival Repositories',
+                'status' => Submission::UNDER_REVIEW,
+                'daysAgo' => 11,
+            ],
+            [
+                // Contains a single very long unbroken word (URL-like)
+                // that can't wrap — stresses word-break handling.
+                'title' =>
+                    'Corpus Link Integrity: '
+                    . 'https://example-archive.institution.edu/collections/dh/'
+                    . 'longitudinal-studies-of-literary-style-across-centuries/'
+                    . 'dataset-catalog-2026?revision=final&notes=see-appendix',
+                'status' => Submission::AWAITING_DECISION,
+                'daysAgo' => 6,
+                'noReviewers' => true,
+            ],
+            [
+                // Sentence-style title with punctuation that the card
+                // layout should wrap gracefully into multiple lines.
+                'title' =>
+                    'Re-Evaluating Stylometric Attribution Methods, Including '
+                    . '"Delta," "Zeta," and n-Gram Variants, When Applied to '
+                    . 'Translated Works Whose Original Language Used Non-Latin '
+                    . 'Orthography and Where the Translator\'s Voice May '
+                    . 'Dominate the Corpus',
+                'status' => Submission::REVISION_REQUESTED,
+                'daysAgo' => 18,
+            ],
         ];
     }
 }
