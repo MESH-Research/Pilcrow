@@ -1,11 +1,24 @@
 <template>
   <q-card flat bordered class="submission-card column">
-    <!-- Header row: category icon and title as two horizontal
-         card-sections, vertically centered. Submitter + status chip
-         live in a separate card-section below. -->
+    <!-- Header row: title on the left, category icon on the right.
+         Keeping the icon off the left side prevents it from reading
+         as the submitter's avatar at a glance. -->
     <q-card-section horizontal class="items-center">
+      <q-card-section class="col q-py-sm q-pl-md q-pr-none">
+        <router-link
+          :to="{
+            name: 'submission:details',
+            params: { id: submission.id }
+          }"
+          class="text-primary submission-title"
+          style="font-size: 1.25rem; line-height: 1.3"
+          :title="submission.title"
+        >
+          {{ submission.title }}
+        </router-link>
+      </q-card-section>
       <q-card-section
-        class="col-auto q-py-sm q-pl-md q-pr-none"
+        class="col-auto q-py-sm q-px-md"
         :aria-label="categoryLabel"
       >
         <span
@@ -22,19 +35,6 @@
             class="pattern-text-mask"
           />
         </span>
-      </q-card-section>
-      <q-card-section class="col q-py-sm q-px-md">
-        <router-link
-          :to="{
-            name: 'submission:details',
-            params: { id: submission.id }
-          }"
-          class="text-primary submission-title"
-          style="font-size: 1.25rem; line-height: 1.3"
-          :title="submission.title"
-        >
-          {{ submission.title }}
-        </router-link>
       </q-card-section>
     </q-card-section>
 

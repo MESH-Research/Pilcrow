@@ -46,17 +46,8 @@
             <span class="col text-body2 text-grey-8">
               {{ $t("publication.manage.users.headers.as_submitter_count") }}
             </span>
-            <template
-              v-if="
-                gridProps.row.submissions.paginatorInfo.total > ICON_THRESHOLD
-              "
-            >
-              <span class="text-h6 q-mr-sm">
-                {{ gridProps.row.submissions.paginatorInfo.total }}
-              </span>
-            </template>
             <span
-              v-else-if="gridProps.row.submissions.paginatorInfo.total > 0"
+              v-if="gridProps.row.submissions.paginatorInfo.total > 0"
               class="row items-center q-gutter-sm"
             >
               <span
@@ -86,6 +77,22 @@
                 >
                   <q-icon :name="styleFor(sub.status).icon" size="10px" />
                 </span>
+              </span>
+              <span
+                v-if="overflowFor(gridProps.row) > 0"
+                class="submission-chip overflow-chip bg-grey-3 text-grey-8"
+                :title="
+                  $t('publication.manage.users.submission_icon_overflow', {
+                    n: overflowFor(gridProps.row)
+                  })
+                "
+                :aria-label="
+                  $t('publication.manage.users.submission_icon_overflow', {
+                    n: overflowFor(gridProps.row)
+                  })
+                "
+              >
+                +{{ overflowFor(gridProps.row) }}
               </span>
             </span>
             <span v-else class="text-grey-5">—</span>
@@ -158,6 +165,20 @@ function styleFor(status: string) {
   )
 }
 
+interface GridRow {
+  submissions: {
+    data: Array<unknown>
+    paginatorInfo: { total: number }
+  }
+}
+
+function overflowFor(row: GridRow): number {
+  return Math.max(
+    0,
+    row.submissions.paginatorInfo.total - row.submissions.data.length
+  )
+}
+
 definePage({
   name: "manage:publication:submitters",
   props: true,
@@ -172,10 +193,6 @@ interface Props {
   id: string
 }
 const props = defineProps<Props>()
-
-// Keep in sync with SubmissionCountCell's default; swap to a numeric
-// count once a submitter has more submissions than this.
-const ICON_THRESHOLD = 5
 
 const $q = useQuasar()
 const router = useRouter()

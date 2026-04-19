@@ -1,12 +1,7 @@
 <template>
   <q-td :props="scope" :dense="scope.dense" class="text-right">
-    <!-- Over the threshold, the paginator returned only a preview so
-         we fall back to a numeric total. -->
-    <span v-if="total > threshold" class="text-body2 text-weight-medium">
-      {{ total }}
-    </span>
     <span
-      v-else-if="total > 0"
+      v-if="total > 0"
       class="row items-center justify-end q-gutter-xs"
       role="list"
       :aria-label="
@@ -38,6 +33,25 @@
           <q-icon :name="styleFor(sub.status).icon" size="10px" />
         </span>
       </span>
+      <!-- Whenever the total exceeds what the preview returned, show
+           an overflow chip (+N) so the row reads as "5 icons + more"
+           rather than collapsing to a bare number. -->
+      <span
+        v-if="overflow > 0"
+        class="submission-chip overflow-chip bg-grey-3 text-grey-8"
+        :title="
+          $t('publication.manage.users.submission_icon_overflow', {
+            n: overflow
+          })
+        "
+        :aria-label="
+          $t('publication.manage.users.submission_icon_overflow', {
+            n: overflow
+          })
+        "
+      >
+        +{{ overflow }}
+      </span>
     </span>
     <span v-else class="text-grey-5" aria-label="no submissions">—</span>
   </q-td>
@@ -46,7 +60,7 @@
 <script setup lang="ts">
 import { computed } from "vue"
 import { statusStyleMap } from "src/pages/Publication/components/statusCategories"
-import type { QTableBodyCellScope, QueryTableColumn } from "../QueryTable.vue"
+import type { QTableBodyCellScope } from "../QueryTable.vue"
 
 interface SubmissionSummary {
   id: string
@@ -63,9 +77,6 @@ interface Props {
 }
 const props = defineProps<Props>()
 
-const column = computed(() => props.scope.col as QueryTableColumn)
-const threshold = computed(() => column.value.iconThreshold ?? 5)
-
 const value = computed(() => props.scope.value)
 
 const paginator = computed<SubmissionPreview | null>(() =>
@@ -81,6 +92,12 @@ const total = computed(() =>
 )
 
 const submissions = computed(() => paginator.value?.data ?? [])
+
+// How many submissions exist beyond what the preview returned —
+// rendered as a "+N" chip after the icons.
+const overflow = computed(() =>
+  Math.max(0, total.value - submissions.value.length)
+)
 
 function styleFor(status: string) {
   return (
@@ -105,6 +122,11 @@ function styleFor(status: string) {
   border-radius: 4px;
   /* Let the category-badge peek outside the chip. */
   overflow: visible;
+}
+.overflow-chip {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
 }
 /* Small colored circle in the lower-right corner holding the
    category icon (flag / hourglass / edit_note / check_circle).
