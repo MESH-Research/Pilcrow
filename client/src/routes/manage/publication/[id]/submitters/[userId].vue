@@ -121,9 +121,13 @@ definePage({
   name: "manage:publication:submitter",
   props: true,
   meta: {
-    crumb: {
-      label: "Submitter"
-    }
+    crumb: [
+      {
+        label: "Submitters",
+        to: { name: "manage:publication:submitters" }
+      },
+      { label: "Submitter" }
+    ]
   }
 })
 

@@ -165,9 +165,13 @@ definePage({
   name: "manage:publication:team_member",
   props: true,
   meta: {
-    crumb: {
-      label: "Team Member"
-    }
+    crumb: [
+      {
+        label: "Review Team",
+        to: { name: "manage:publication:team" }
+      },
+      { label: "Team Member" }
+    ]
   }
 })
 
