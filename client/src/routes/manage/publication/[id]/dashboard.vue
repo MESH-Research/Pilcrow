@@ -88,92 +88,95 @@
                 class="lane-arrow text-grey-6"
                 aria-hidden="true"
               />
-              <div v-if="isStack(cell)" class="status-lane-stack">
+              <div v-if="isColumn(cell)" class="status-lane-stack">
                 <div v-if="cell.label" class="stage-label">
                   {{ $t(`publication.dashboard.stages.${cell.label}`) }}
                 </div>
-                <div
-                  v-for="status in cell.stack"
-                  :key="status"
-                  class="status-flow-chip"
-                  :style="`border-color: var(--q-${styleFor(status).color})`"
+                <template
+                  v-for="(chip, ci) in cell.chips"
+                  :key="`chip-${i}-${ci}`"
                 >
-                  <span
-                    :class="[
-                      'status-flow-swatch',
-                      `bg-${styleFor(status).color}`,
-                      styleFor(status).textClass,
-                      styleFor(status).pattern
-                    ]"
+                  <!-- Combined chip: sums its statuses, shows the
+                       primary's identity and sub-counts in parens. -->
+                  <div
+                    v-if="isCombineChip(chip)"
+                    class="status-flow-chip"
+                    :style="`border-color: var(--q-${styleFor(chip.combine[0]).color})`"
                   >
-                    <q-icon
-                      :name="styleFor(status).icon"
-                      size="xs"
-                      class="pattern-text-mask"
-                    />
-                  </span>
-                  <span class="col column">
-                    <span class="status-flow-label">
-                      {{ $t(`submission.status.${status}`) }}
-                    </span>
-                    <span class="status-flow-count text-weight-bold">
-                      {{ statusCountMap.get(status) ?? 0 }}
-                    </span>
-                  </span>
-                </div>
-              </div>
-              <div v-else-if="isCombine(cell)" class="status-lane-stack">
-                <div v-if="cell.label" class="stage-label">
-                  {{ $t(`publication.dashboard.stages.${cell.label}`) }}
-                </div>
-                <div
-                  class="status-flow-chip"
-                  :style="`border-color: var(--q-${styleFor(cell.combine[0]).color})`"
-                >
-                  <span
-                    :class="[
-                      'status-flow-swatch',
-                      `bg-${styleFor(cell.combine[0]).color}`,
-                      styleFor(cell.combine[0]).textClass,
-                      styleFor(cell.combine[0]).pattern
-                    ]"
-                  >
-                    <q-icon
-                      :name="styleFor(cell.combine[0]).icon"
-                      size="xs"
-                      class="pattern-text-mask"
-                    />
-                  </span>
-                  <span class="col column">
-                    <span class="status-flow-label">
-                      {{
-                        cell.titleKey
-                          ? $t(cell.titleKey)
-                          : $t(`submission.status.${cell.combine[0]}`)
-                      }}
-                    </span>
                     <span
-                      class="row items-baseline no-wrap q-gutter-xs"
-                      style="flex-wrap: wrap"
+                      :class="[
+                        'status-flow-swatch',
+                        `bg-${styleFor(chip.combine[0]).color}`,
+                        styleFor(chip.combine[0]).textClass,
+                        styleFor(chip.combine[0]).pattern
+                      ]"
                     >
-                      <span class="status-flow-count text-weight-bold">
-                        {{ combineTotal(cell, statusCountMap) }}
+                      <q-icon
+                        :name="styleFor(chip.combine[0]).icon"
+                        size="xs"
+                        class="pattern-text-mask"
+                      />
+                    </span>
+                    <span class="col column">
+                      <span class="status-flow-label">
+                        {{
+                          chip.titleKey
+                            ? $t(chip.titleKey)
+                            : $t(`submission.status.${chip.combine[0]}`)
+                        }}
                       </span>
                       <span
-                        v-for="extra in cell.combine.slice(1)"
-                        :key="extra"
-                        class="combine-extra text-caption text-grey-7"
-                        :title="$t(`submission.status.${extra}`)"
-                        :aria-label="`${
-                          statusCountMap.get(extra) ?? 0
-                        } ${$t(`submission.status.${extra}`)}`"
+                        class="row items-baseline no-wrap q-gutter-xs"
+                        style="flex-wrap: wrap"
                       >
-                        ({{ statusCountMap.get(extra) ?? 0 }}
-                        {{ $t(`submission.status.${extra}`) }})
+                        <span class="status-flow-count text-weight-bold">
+                          {{ combineTotal(chip, statusCountMap) }}
+                        </span>
+                        <span
+                          v-for="extra in chip.combine.slice(1)"
+                          :key="extra"
+                          class="combine-extra text-caption text-grey-7"
+                          :title="$t(`submission.status.${extra}`)"
+                          :aria-label="`${
+                            statusCountMap.get(extra) ?? 0
+                          } ${$t(`submission.status.${extra}`)}`"
+                        >
+                          ({{ statusCountMap.get(extra) ?? 0 }}
+                          {{ $t(`submission.status.${extra}`) }})
+                        </span>
                       </span>
                     </span>
-                  </span>
-                </div>
+                  </div>
+                  <!-- Plain status chip. -->
+                  <div
+                    v-else
+                    class="status-flow-chip"
+                    :style="`border-color: var(--q-${styleFor(chip).color})`"
+                  >
+                    <span
+                      :class="[
+                        'status-flow-swatch',
+                        `bg-${styleFor(chip).color}`,
+                        styleFor(chip).textClass,
+                        styleFor(chip).pattern
+                      ]"
+                    >
+                      <q-icon
+                        :name="styleFor(chip).icon"
+                        size="xs"
+                        class="pattern-text-mask"
+                      />
+                    </span>
+                    <span class="col column">
+                      <span class="status-flow-label">
+                        {{ $t(`submission.status.${chip}`) }}
+                      </span>
+                      <span class="status-flow-count text-weight-bold">
+                        {{ statusCountMap.get(chip) ?? 0 }}
+                      </span>
+                    </span>
+                  </div>
+                </template>
               </div>
               <div
                 v-else
@@ -390,32 +393,42 @@ import { GetPublicationDashboardDocument } from "src/graphql/generated/graphql"
 // statuses that share a column, or a combine cell where multiple
 // related statuses roll up into one chip whose count is the sum
 // and whose secondary statuses render as small badges.
-type StackCell = { label?: string; stack: readonly string[] }
-type CombineCell = {
-  label?: string
+// A chip in the active pipeline is either a plain status or a
+// combined chip where multiple related statuses roll up into one
+// chip whose count is the sum and whose non-primary statuses
+// render as a parenthetical subset caption.
+type CombineSpec = {
   combine: readonly string[]
-  // Optional i18n key for the chip's visible title. Defaults to the
-  // primary status's label, which isn't always accurate when the
-  // chip sums more than one status — for instance the intake chip's
-  // count is Initially Submitted + Resubmitted, so "Submitted" is a
-  // better umbrella label than "Initially Submitted".
+  // Optional i18n key for the chip's visible title. Falls back to
+  // the primary status's label — useful when the sum doesn't map
+  // cleanly to any single status (e.g. "Submitted" as an umbrella
+  // for Initially Submitted + Resubmitted).
   titleKey?: string
 }
-type LaneCell = string | StackCell | CombineCell
+type ChipSpec = string | CombineSpec
+
+// A lane cell is either a single status (bare chip) or a labeled
+// column that holds one or more chips stacked vertically. Mixing
+// plain and combined chips in the same column is allowed.
+type ColumnCell = { label?: string; chips: readonly ChipSpec[] }
+type LaneCell = string | ColumnCell
+
+const SUBMITTED_COMBINE: CombineSpec = {
+  combine: ["INITIALLY_SUBMITTED", "RESUBMITTED"],
+  titleKey: "publication.dashboard.combined.submitted"
+}
 
 const activeLane: readonly LaneCell[] = [
-  // Intake: INITIALLY_SUBMITTED and RESUBMITTED share a chip since
-  // both are new work landing on the coordinator's desk. The chip
-  // shows the total count; a badge surfaces how many of those are
-  // resubmissions specifically.
   {
     label: "screening",
-    combine: ["INITIALLY_SUBMITTED", "RESUBMITTED"],
-    titleKey: "publication.dashboard.combined.submitted"
+    // Screening holds both new/resubmitted work waiting to be
+    // screened and anything the coordinator has already screened
+    // back to the author asking for resubmission.
+    chips: [SUBMITTED_COMBINE, "RESUBMISSION_REQUESTED"]
   },
-  { label: "assignment", stack: ["AWAITING_REVIEW", "RESUBMISSION_REQUESTED"] },
-  { label: "reviewing", stack: ["UNDER_REVIEW", "AWAITING_DECISION"] },
-  { label: "decision", stack: ["REVISION_REQUESTED", "ACCEPTED_AS_FINAL"] }
+  { label: "assignment", chips: ["AWAITING_REVIEW"] },
+  { label: "reviewing", chips: ["UNDER_REVIEW", "AWAITING_DECISION"] },
+  { label: "decision", chips: ["REVISION_REQUESTED", "ACCEPTED_AS_FINAL"] }
 ]
 
 // With-author lane is empty now that every request-type status has
@@ -423,14 +436,14 @@ const activeLane: readonly LaneCell[] = [
 // reintroduce author-side states later.
 const authorLane = [] as readonly string[]
 
-function isStack(cell: LaneCell): cell is StackCell {
-  return typeof cell === "object" && "stack" in cell
+function isColumn(cell: LaneCell): cell is ColumnCell {
+  return typeof cell === "object" && "chips" in cell
 }
-function isCombine(cell: LaneCell): cell is CombineCell {
-  return typeof cell === "object" && "combine" in cell
+function isCombineChip(chip: ChipSpec): chip is CombineSpec {
+  return typeof chip === "object" && "combine" in chip
 }
-function combineTotal(cell: CombineCell, counts: Map<string, number>): number {
-  return cell.combine.reduce(
+function combineTotal(chip: CombineSpec, counts: Map<string, number>): number {
+  return chip.combine.reduce(
     (sum, status) => sum + (counts.get(status) ?? 0),
     0
   )
