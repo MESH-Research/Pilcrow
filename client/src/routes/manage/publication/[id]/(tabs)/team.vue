@@ -11,9 +11,11 @@
     }"
     sync-url
     :default-sort="{ sortBy: 'name' }"
+    :dense="isDense"
+    :grid="isGrid"
     @row-click="onRowClick"
   >
-    <template #header="headerProps">
+    <template v-if="!isGrid" #header="headerProps">
       <q-tr class="team-group-header">
         <q-th class="team-group-spacer" />
         <q-th class="team-group-spacer" />
@@ -47,15 +49,120 @@
         </q-th>
       </q-tr>
     </template>
+    <template v-if="isGrid" #item="gridProps">
+      <div class="q-pa-sm col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3 column">
+        <q-card
+          flat
+          bordered
+          class="col cursor-pointer user-grid-card"
+          @click="goToDetail(gridProps.row.id)"
+        >
+          <q-card-section class="row items-center no-wrap q-gutter-md">
+            <avatar-image :user="gridProps.row" size="56px" rounded />
+            <div class="col column q-gutter-xs" style="min-width: 0">
+              <div class="text-weight-medium ellipsis">
+                {{ gridProps.row.name || gridProps.row.email }}
+              </div>
+              <div
+                v-if="gridProps.row.username"
+                class="text-caption text-grey-7 ellipsis"
+              >
+                {{ gridProps.row.username }}
+              </div>
+              <div v-if="gridProps.row.email" class="text-caption ellipsis">
+                {{ gridProps.row.email }}
+              </div>
+            </div>
+          </q-card-section>
+          <q-separator />
+          <q-card-section class="q-py-sm">
+            <div class="row q-mb-xs">
+              <div class="col text-caption text-grey-7">
+                {{ $t("publication.manage.users.groups.active") }}
+              </div>
+            </div>
+            <div class="row items-center q-py-xs">
+              <span class="col text-body2">
+                {{
+                  $t(
+                    "publication.manage.users.headers.as_reviewer_active_count"
+                  )
+                }}
+              </span>
+              <span class="text-weight-medium">
+                {{ gridProps.row.as_reviewer_active_count }}
+              </span>
+            </div>
+            <div class="row items-center q-py-xs">
+              <span class="col text-body2">
+                {{
+                  $t(
+                    "publication.manage.users.headers.as_coordinator_active_count"
+                  )
+                }}
+              </span>
+              <span class="text-weight-medium">
+                {{ gridProps.row.as_coordinator_active_count }}
+              </span>
+            </div>
+            <q-separator class="q-my-sm" />
+            <div class="row q-mb-xs">
+              <div class="col text-caption text-grey-7">
+                {{ $t("publication.manage.users.groups.completed") }}
+              </div>
+            </div>
+            <div class="row items-center q-py-xs">
+              <span class="col text-body2">
+                {{
+                  $t(
+                    "publication.manage.users.headers.as_reviewer_completed_count"
+                  )
+                }}
+              </span>
+              <span class="text-weight-medium">
+                {{ gridProps.row.as_reviewer_completed_count }}
+              </span>
+            </div>
+            <div class="row items-center q-py-xs">
+              <span class="col text-body2">
+                {{
+                  $t(
+                    "publication.manage.users.headers.as_coordinator_completed_count"
+                  )
+                }}
+              </span>
+              <span class="text-weight-medium">
+                {{ gridProps.row.as_coordinator_completed_count }}
+              </span>
+            </div>
+          </q-card-section>
+        </q-card>
+      </div>
+    </template>
+    <template #top-after>
+      <q-btn
+        v-if="!isSmallScreen"
+        flat
+        dense
+        no-caps
+        :icon="isGrid ? 'table_rows' : 'grid_view'"
+        :label="isGrid ? 'Table view' : 'Grid view'"
+        :aria-label="isGrid ? 'Switch to table view' : 'Switch to grid view'"
+        @click="toggleViewPreference"
+      />
+    </template>
   </QueryTable>
 </template>
 
 <script setup lang="ts">
+import { computed, ref, watch } from "vue"
+import { useQuasar } from "quasar"
+import { useRoute, useRouter } from "vue-router"
 import QueryTable, {
   type QueryTableColumn
 } from "src/components/tables/QueryTable.vue"
 import NameAvatarCell from "src/components/tables/common/NameAvatarCell.vue"
-import { useRouter } from "vue-router"
+import AvatarImage from "src/components/atoms/AvatarImage.vue"
 import { GetPublicationUsersDocument } from "src/graphql/generated/graphql"
 
 definePage({
@@ -72,13 +179,43 @@ interface Props {
   id: string
 }
 const props = defineProps<Props>()
-const router = useRouter()
 
-function onRowClick(_evt: Event, row: { id: string }) {
+const $q = useQuasar()
+const router = useRouter()
+const route = useRoute()
+
+const viewPreference = ref<"grid" | null>(
+  route.query.view === "grid" ? "grid" : null
+)
+const isSmallScreen = computed(() => $q.screen.lt.md)
+const isGrid = computed(
+  () => isSmallScreen.value || viewPreference.value === "grid"
+)
+const isDense = computed(() => $q.screen.md)
+
+function toggleViewPreference() {
+  viewPreference.value = viewPreference.value === "grid" ? null : "grid"
+}
+
+watch(viewPreference, (value) => {
+  const query: Record<string, string> = { ...route.query } as Record<
+    string,
+    string
+  >
+  if (value === "grid") query.view = "grid"
+  else delete query.view
+  router.replace({ query })
+})
+
+function goToDetail(userId: string) {
   router.push({
     name: "manage:publication:team_member",
-    params: { id: props.id, userId: row.id }
+    params: { id: props.id, userId }
   })
+}
+
+function onRowClick(_evt: Event, row: { id: string }) {
+  goToDetail(row.id)
 }
 
 function countHeaderCols(cols: { name: string }[]) {
@@ -193,5 +330,21 @@ const columns: QueryTableColumn[] = [
 .body--dark .team-group-header + tr > th,
 .body--dark .team-group-header + tr > th:first-child {
   border-color: rgba(255, 255, 255, 0.18);
+}
+:deep(.q-table--grid .q-table__top) {
+  padding: 0 0 4px 0;
+}
+:deep(.q-table--grid .q-table__grid-content) {
+  background-color: #f5f5f5;
+  border-radius: 4px;
+}
+.user-grid-card:hover {
+  border-color: var(--q-primary);
+}
+</style>
+
+<style>
+.body--dark .q-table--grid .q-table__grid-content {
+  background-color: #262626;
 }
 </style>
