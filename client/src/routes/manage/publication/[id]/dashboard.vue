@@ -340,9 +340,7 @@ type LaneCell = string | { stack: readonly string[] }
 
 const activeLane: readonly LaneCell[] = [
   { stack: ["RESUBMITTED", "INITIALLY_SUBMITTED"] },
-  "AWAITING_REVIEW",
-  "UNDER_REVIEW",
-  "AWAITING_DECISION"
+  { stack: ["AWAITING_REVIEW", "UNDER_REVIEW", "AWAITING_DECISION"] }
 ]
 
 // Request-type statuses that branch OUT of the pipeline to the
