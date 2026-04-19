@@ -19,62 +19,14 @@
 
     <div v-if="!publication" class="q-pa-lg">{{ $t("loading") }}</div>
     <template v-else>
-      <!-- Workflow diagram: three lanes that roughly trace how a
-           submission moves through the publication. Arrows inside a
-           lane mark sequential steps. Lanes are stacked vertically
-           and wrap on narrow viewports. -->
+      <!-- Workflow diagram: a single panel with three stacked lanes.
+           The expected path through the system sits in the middle,
+           with the loop-back (inactive) lane above and the terminal
+           (closed) lane below, so a reader can see divergences on
+           either side of the happy path at a glance. -->
       <div class="status-flow-diagram q-mb-md">
-        <!-- Main review pipeline: the happy-path sequence a
-             submission follows from arrival to decision. -->
-        <div class="status-lane">
-          <div class="status-lane-label">
-            {{ $t("publication.dashboard.lanes.active") }}
-          </div>
-          <div class="status-lane-row">
-            <template
-              v-for="(status, i) in activeLane"
-              :key="`active-${status}`"
-            >
-              <q-icon
-                v-if="i > 0"
-                name="arrow_forward"
-                size="sm"
-                class="lane-arrow text-grey-6"
-                aria-hidden="true"
-              />
-              <div
-                class="status-flow-chip"
-                :style="`border-color: var(--q-${styleFor(status).color})`"
-              >
-                <span
-                  :class="[
-                    'status-flow-swatch',
-                    `bg-${styleFor(status).color}`,
-                    styleFor(status).textClass,
-                    styleFor(status).pattern
-                  ]"
-                >
-                  <q-icon
-                    :name="styleFor(status).icon"
-                    size="xs"
-                    class="pattern-text-mask"
-                  />
-                </span>
-                <span class="col column">
-                  <span class="status-flow-label">
-                    {{ $t(`submission.status.${status}`) }}
-                  </span>
-                  <span class="status-flow-count text-weight-bold">
-                    {{ statusCountMap.get(status) ?? 0 }}
-                  </span>
-                </span>
-              </div>
-            </template>
-          </div>
-        </div>
-
-        <!-- Loopback lane: statuses that kick back to the author
-             before the submission re-enters the review pipeline. -->
+        <!-- Top lane: "inactive" — sent back to the author, waiting
+             to re-enter the active pipeline once the author acts. -->
         <div class="status-lane">
           <div class="status-lane-label">
             {{ $t("publication.dashboard.lanes.with_author") }}
@@ -121,8 +73,55 @@
           </div>
         </div>
 
-        <!-- Closed lane: terminal states. No arrows — these are
-             all endpoints, not a sequence. -->
+        <!-- Middle lane: the expected path through the system. -->
+        <div class="status-lane status-lane--active">
+          <div class="status-lane-label">
+            {{ $t("publication.dashboard.lanes.active") }}
+          </div>
+          <div class="status-lane-row">
+            <template
+              v-for="(status, i) in activeLane"
+              :key="`active-${status}`"
+            >
+              <q-icon
+                v-if="i > 0"
+                name="arrow_forward"
+                size="sm"
+                class="lane-arrow text-grey-6"
+                aria-hidden="true"
+              />
+              <div
+                class="status-flow-chip"
+                :style="`border-color: var(--q-${styleFor(status).color})`"
+              >
+                <span
+                  :class="[
+                    'status-flow-swatch',
+                    `bg-${styleFor(status).color}`,
+                    styleFor(status).textClass,
+                    styleFor(status).pattern
+                  ]"
+                >
+                  <q-icon
+                    :name="styleFor(status).icon"
+                    size="xs"
+                    class="pattern-text-mask"
+                  />
+                </span>
+                <span class="col column">
+                  <span class="status-flow-label">
+                    {{ $t(`submission.status.${status}`) }}
+                  </span>
+                  <span class="status-flow-count text-weight-bold">
+                    {{ statusCountMap.get(status) ?? 0 }}
+                  </span>
+                </span>
+              </div>
+            </template>
+          </div>
+        </div>
+
+        <!-- Bottom lane: terminal states. No arrows — endpoints. -->
         <div class="status-lane">
           <div class="status-lane-label">
             {{ $t("publication.dashboard.lanes.closed") }}
@@ -391,20 +390,44 @@ const categories = computed<StatusCategory[]>(() =>
 .body--dark .status-row + .status-row {
   border-top-color: rgba(255, 255, 255, 0.08);
 }
+/* Single outer panel containing all three workflow lanes. The
+   active pipeline sits in the middle, visually framed, while the
+   loop-back (above) and closed (below) lanes share the panel so
+   they read as divergences from the same system. */
 .status-flow-diagram {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.02);
+  padding: 4px 12px;
+}
+.body--dark .status-flow-diagram {
+  border-color: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.03);
 }
 .status-lane {
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  border-radius: 6px;
-  padding: 8px 10px 10px;
-  background: rgba(0, 0, 0, 0.02);
+  padding: 10px 0;
 }
-.body--dark .status-lane {
-  border-color: rgba(255, 255, 255, 0.08);
-  background: rgba(255, 255, 255, 0.03);
+.status-lane + .status-lane {
+  border-top: 1px dashed rgba(0, 0, 0, 0.1);
+}
+.body--dark .status-lane + .status-lane {
+  border-top-color: rgba(255, 255, 255, 0.12);
+}
+/* Emphasize the middle active lane — the expected path through the
+   system — with a subtle accent background. */
+.status-lane--active {
+  margin: 4px -12px;
+  padding: 10px 12px;
+  background: rgba(0, 0, 0, 0.035);
+  border-top: 1px solid rgba(0, 0, 0, 0.08) !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+.body--dark .status-lane--active {
+  background: rgba(255, 255, 255, 0.05);
+  border-top-color: rgba(255, 255, 255, 0.1) !important;
+  border-bottom-color: rgba(255, 255, 255, 0.1);
 }
 .status-lane-label {
   font-size: 0.7rem;
