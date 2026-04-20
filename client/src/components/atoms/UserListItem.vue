@@ -14,10 +14,10 @@
         {{ user.email }}
       </q-item-label>
     </q-item-section>
-    <q-item-section v-if="actions.length" side>
-      <div class="q-gutter-xs">
+    <q-item-section side>
+      <div class="q-gutter-xs row items-center">
         <q-btn
-          v-if="user.staged"
+          v-if="actions.length && user.staged"
           flat
           :label="$t(`submissions.reinvite.label`)"
           icon="schedule"
@@ -41,6 +41,7 @@
           :aria-label="`${ariaLabel} ${user.name || user.username}`"
           @click="$emit('actionClick', { user, action })"
         />
+        <report-avatar-button :user="user" />
       </div>
     </q-item-section>
   </q-item>
@@ -48,6 +49,7 @@
 
 <script setup lang="ts">
 import AvatarImage from "./AvatarImage.vue"
+import ReportAvatarButton from "./ReportAvatarButton.vue"
 import type { User } from "src/graphql/generated/graphql"
 
 export interface UserAction {

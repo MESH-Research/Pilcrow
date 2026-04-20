@@ -92,6 +92,37 @@ export const DELETE_USER_AVATAR = gql`
   ${_AVATAR_FIELDS}
 `
 
+export const REPORT_USER_AVATAR = gql`
+  mutation ReportUserAvatar($userId: ID!, $reason: String) {
+    reportUserAvatar(userId: $userId, reason: $reason) {
+      id
+      status
+    }
+  }
+`
+
+export const DISMISS_AVATAR_REPORT = gql`
+  mutation DismissAvatarReport($id: ID!, $notes: String) {
+    dismissAvatarReport(id: $id, notes: $notes) {
+      id
+      status
+      resolution_notes
+      resolved_at
+    }
+  }
+`
+
+export const RESOLVE_AVATAR_REPORT_AND_REMOVE_AVATAR = gql`
+  mutation ResolveAvatarReportAndRemoveAvatar($id: ID!, $notes: String) {
+    resolveAvatarReportAndRemoveAvatar(id: $id, notes: $notes) {
+      id
+      status
+      resolution_notes
+      resolved_at
+    }
+  }
+`
+
 export const VERIFY_SUBMISSION_INVITE = gql`
   mutation VerifySubmissionInvite(
     $uuid: String!

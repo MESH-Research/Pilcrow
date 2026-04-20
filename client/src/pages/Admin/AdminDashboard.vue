@@ -42,6 +42,27 @@
           </q-card-section>
         </q-card>
       </div>
+      <div class="col-xs-12 col-sm-6 col-md-4">
+        <q-card
+          flat
+          bordered
+          class="cursor-pointer admin-card"
+          data-cy="admin_card_avatar_reports"
+          @click="goToAvatarReports"
+        >
+          <q-card-section class="row items-center q-gutter-md">
+            <q-icon name="flag" size="xl" color="accent" />
+            <div>
+              <div class="text-subtitle1 text-weight-bold">
+                {{ $t("admin_avatar_reports.page_title") }}
+              </div>
+              <div class="text-caption text-grey-7">
+                {{ $t("admin.dashboard.avatar_reports_description") }}
+              </div>
+            </div>
+          </q-card-section>
+        </q-card>
+      </div>
     </div>
   </div>
 </template>
@@ -57,6 +78,10 @@ function goToUsers() {
 
 function goToPublications() {
   push({ name: "admin:publication:index" })
+}
+
+function goToAvatarReports() {
+  push({ name: "admin:avatar_reports" })
 }
 </script>
 

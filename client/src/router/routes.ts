@@ -145,6 +145,14 @@ const routes: RouteRecordRaw[] = [
         }
       },
       {
+        path: "/admin/avatar-reports",
+        name: "admin:avatar_reports",
+        component: () => import("src/pages/Admin/AvatarReports.vue"),
+        meta: {
+          requiresAppAdmin: true
+        }
+      },
+      {
         path: "/publications",
         name: "publication:index",
         component: () => import("pages/Publication/PublicationsIndexPage.vue")

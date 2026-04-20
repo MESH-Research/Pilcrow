@@ -1286,6 +1286,11 @@
       "button": "Report this picture"
     }
   },
+  "admin": {
+    "dashboard": {
+      "avatar_reports_description": "Review pending reports and remove inappropriate avatars."
+    }
+  },
   "admin_avatar_reports": {
     "page_title": "Avatar Reports",
     "empty_pending": "No pending reports — all clear.",
@@ -1294,17 +1299,17 @@
     "filter_pending": "Pending",
     "filter_dismissed": "Dismissed",
     "filter_removed": "Removed",
-    "column_reported": "Reported user",
-    "column_reporter": "Reporter",
-    "column_reason": "Reason",
-    "column_reported_at": "Reported",
-    "column_status": "Status",
-    "column_resolved_by": "Resolved by",
-    "column_resolved_at": "Resolved",
+    "headers": {
+      "user": "Reported user",
+      "reporter": "Reporter",
+      "reason": "Reason",
+      "status": "Status",
+      "created_at": "Reported",
+      "actions": ""
+    },
     "action_dismiss": "Dismiss",
     "action_remove": "Remove avatar",
     "confirm_remove": "Remove this user's avatar?",
-    "notes_label": "Moderator notes (optional)",
     "dismissed_success": "Report dismissed.",
     "removed_success": "Avatar removed and report closed.",
     "failure": "Unable to act on this report."
