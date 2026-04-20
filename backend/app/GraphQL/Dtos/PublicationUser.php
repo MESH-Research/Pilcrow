@@ -4,7 +4,10 @@ declare(strict_types=1);
 namespace App\GraphQL\Dtos;
 
 use App\Models\Publication;
+use App\Models\Submission;
 use App\Models\User;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 /**
  * DTO backing the GraphQL PublicationUser type. Carries the user
@@ -35,5 +38,50 @@ class PublicationUser
         public readonly int $as_coordinator_completed_count,
     ) {
         $this->id = (string)$user->id;
+    }
+
+    /**
+     * Submission counts grouped by status for the submissions this
+     * user is attached to within this publication. When `$roles`
+     * is provided, counts are limited to submissions where the
+     * user holds one of those roles — e.g. [reviewer,
+     * review_coordinator] for the team member view, [submitter]
+     * for the submitter view. Drafts are excluded to match the
+     * rest of the dashboard.
+     *
+     * @param array<int,int>|null $roles
+     * @return \Illuminate\Support\Collection<int, array{status: int, count: int}>
+     */
+    public function getSubmissionStatusCounts(?array $roles = null): Collection
+    {
+        $query = DB::table('submissions')
+            ->join(
+                'submission_user',
+                'submission_user.submission_id',
+                '=',
+                'submissions.id'
+            )
+            ->where('submissions.publication_id', $this->publication->id)
+            ->where('submission_user.user_id', $this->user->id)
+            ->where('submissions.status', '!=', Submission::DRAFT);
+
+        if (! empty($roles)) {
+            $query->whereIn(
+                'submission_user.role_id',
+                array_map('intval', $roles)
+            );
+        }
+
+        return $query
+            ->groupBy('submissions.status')
+            ->select(
+                'submissions.status',
+                DB::raw('COUNT(DISTINCT submissions.id) as count')
+            )
+            ->get()
+            ->map(fn($row) => [
+                'status' => (int)$row->status,
+                'count' => (int)$row->count,
+            ]);
     }
 }

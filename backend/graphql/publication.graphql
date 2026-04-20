@@ -102,6 +102,18 @@ type PublicationUser {
     as_coordinator_active_count: Int!
     as_coordinator_completed_count: Int!
     """
+    Counts of this user's submissions in this publication grouped
+    by status. Mirrors Publication.submission_status_counts but
+    scoped to the one user. Optionally filter by the roles the
+    user holds on each submission (so the team-member view can
+    limit counts to reviewer/coordinator work and the submitter
+    view to [submitter]). Drafts are excluded.
+    """
+    submission_status_counts(
+        roles: [SubmissionUserRoles!]
+    ): [SubmissionStatusCount!]!
+        @method(name: "getSubmissionStatusCounts")
+    """
     Paginated submissions in this publication that this user is
     attached to. Optionally filter by the roles they hold on each
     submission and by phase (active / completed). Drafts are always
@@ -112,6 +124,7 @@ type PublicationUser {
     submissions(
         roles: [SubmissionUserRoles!]
         phase: SubmissionPhase
+        status: [SubmissionStatus!]
         orderBy: [QuerySubmissionsOrderByOrderByClause!]
     ): [Submission!]!
         @paginate(

@@ -60,6 +60,13 @@ class PublicationUserSubmissions
             $query->whereNotIn('submissions.status', $completed);
         }
 
+        if (! empty($args['status'])) {
+            $query->whereIn(
+                'submissions.status',
+                array_map('intval', $args['status'])
+            );
+        }
+
         if (! empty($args['orderBy'])) {
             foreach ($args['orderBy'] as $order) {
                 $query->orderBy(
