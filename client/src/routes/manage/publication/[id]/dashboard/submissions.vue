@@ -1,80 +1,4 @@
 <template>
-  <!-- Filter controls live only on this tab; the category count
-       cards above the tabs are display-only. -->
-  <div class="row items-center q-gutter-sm q-mb-md">
-    <span class="text-body2 text-grey-7">
-      {{ $t("publication.dashboard.filters.label") }}
-    </span>
-    <q-btn-group flat>
-      <q-btn
-        dense
-        no-caps
-        flat
-        size="sm"
-        :label="$t('publication.dashboard.filters.all')"
-        @click="selectAll"
-      />
-      <q-btn
-        dense
-        no-caps
-        flat
-        size="sm"
-        :label="$t('publication.dashboard.filters.none')"
-        @click="selectNone"
-      />
-      <q-btn
-        dense
-        no-caps
-        flat
-        size="sm"
-        :label="$t('publication.dashboard.filters.invert')"
-        @click="invertSelection"
-      />
-    </q-btn-group>
-    <q-space />
-    <q-btn
-      flat
-      dense
-      no-caps
-      icon="filter_list"
-      :label="
-        $t('publication.dashboard.filters.selected', {
-          n: statusFilter.length,
-          total: allStatuses.length
-        })
-      "
-    >
-      <q-menu>
-        <q-list dense style="min-width: 240px">
-          <template v-for="category in categories" :key="category.key">
-            <q-item-label header>
-              {{ $t(`publication.dashboard.categories.${category.key}`) }}
-            </q-item-label>
-            <q-item
-              v-for="status in category.statuses"
-              :key="status"
-              v-ripple
-              tag="label"
-              clickable
-              dense
-            >
-              <q-item-section avatar>
-                <q-checkbox
-                  :model-value="statusFilter.includes(status)"
-                  @update:model-value="toggleStatus(status)"
-                />
-              </q-item-section>
-              <q-item-section>
-                {{ $t(`submission.status.${status}`) }}
-              </q-item-section>
-            </q-item>
-            <q-separator />
-          </template>
-        </q-list>
-      </q-menu>
-    </q-btn>
-  </div>
-
   <QueryTable
     ref="queryTableRef"
     :query="GetPublicationDashboardSubmissionsDocument"
@@ -94,6 +18,82 @@
       </div>
     </template>
     <template #top-after>
+      <!-- Status filter menu — lives in the table header so it's
+           discoverable next to Sort/View and doesn't occupy its
+           own row above the table. Select all / none / invert sit
+           at the top of the popup where the hand lands first; the
+           grouped checkbox list (one group per category) follows. -->
+      <q-btn
+        flat
+        dense
+        no-caps
+        icon="filter_list"
+        :label="
+          $t('publication.dashboard.filters.selected', {
+            n: statusFilter.length,
+            total: allStatuses.length
+          })
+        "
+        :aria-label="$t('publication.dashboard.filters.label')"
+      >
+        <q-menu>
+          <q-list dense style="min-width: 240px">
+            <q-item class="q-py-xs">
+              <q-btn-group flat stretch class="full-width">
+                <q-btn
+                  dense
+                  no-caps
+                  flat
+                  size="sm"
+                  :label="$t('publication.dashboard.filters.all')"
+                  @click="selectAll"
+                />
+                <q-btn
+                  dense
+                  no-caps
+                  flat
+                  size="sm"
+                  :label="$t('publication.dashboard.filters.none')"
+                  @click="selectNone"
+                />
+                <q-btn
+                  dense
+                  no-caps
+                  flat
+                  size="sm"
+                  :label="$t('publication.dashboard.filters.invert')"
+                  @click="invertSelection"
+                />
+              </q-btn-group>
+            </q-item>
+            <q-separator />
+            <template v-for="category in categories" :key="category.key">
+              <q-item-label header>
+                {{ $t(`publication.dashboard.categories.${category.key}`) }}
+              </q-item-label>
+              <q-item
+                v-for="status in category.statuses"
+                :key="status"
+                v-ripple
+                tag="label"
+                clickable
+                dense
+              >
+                <q-item-section avatar>
+                  <q-checkbox
+                    :model-value="statusFilter.includes(status)"
+                    @update:model-value="toggleStatus(status)"
+                  />
+                </q-item-section>
+                <q-item-section>
+                  {{ $t(`submission.status.${status}`) }}
+                </q-item-section>
+              </q-item>
+              <q-separator />
+            </template>
+          </q-list>
+        </q-menu>
+      </q-btn>
       <q-btn
         v-if="isGrid"
         flat
@@ -378,6 +378,12 @@ function invertSelection() {
 // Sync filter to URL and reset pagination on change.
 const queryTableRef = ref<InstanceType<typeof QueryTable> | null>(null)
 
+function isSameFilter(a: string[], b: string[]): boolean {
+  if (a.length !== b.length) return false
+  const set = new Set(a)
+  return b.every((s) => set.has(s))
+}
+
 watch(statusFilter, (status) => {
   if (queryTableRef.value) {
     queryTableRef.value.page = 1
@@ -393,6 +399,31 @@ watch(statusFilter, (status) => {
   else delete query.status
   router.replace({ query })
 })
+
+// Re-sync from the URL when external navigation (e.g. clicking a
+// dashboard chip) changes the `status` query while the component
+// stays mounted. Without this, vue-router reuses the instance and
+// the filter ref stays at whatever the user had before.
+//
+// Distinguish "query key absent" (default → all selected) from
+// "query key present but empty" (`?status=[]`, i.e. None was
+// explicitly chosen). If we collapsed both into "all selected",
+// the None button would instantly revert itself.
+watch(
+  () => route.query.status,
+  (value) => {
+    if (value === undefined) {
+      if (!isSameFilter(statusFilter.value, allStatuses)) {
+        statusFilter.value = [...allStatuses]
+      }
+      return
+    }
+    const parsed = parseList(value as string | string[])
+    if (!isSameFilter(statusFilter.value, parsed)) {
+      statusFilter.value = parsed
+    }
+  }
+)
 
 const tableVariables = computed(() => ({
   id: props.id,
@@ -411,6 +442,7 @@ const columns: QueryTableColumn[] = [
       params: { id: row.id as string }
     }),
     label: "Title",
+    classes: "title-cell",
     style: "white-space: normal"
   },
   {
@@ -454,6 +486,26 @@ const columns: QueryTableColumn[] = [
   vertical-align: top;
   padding-top: 12px;
   padding-bottom: 12px;
+}
+/* Title column: clamp to two lines with mid-word break so a very
+   long title doesn't stretch the column or blow up row height. The
+   full title is available via the link's hover tooltip. Kept at two
+   lines (versus three in the grid card) because table rows should
+   stay as compact as the other cells allow. The class is attached
+   to the td via the column's `classes` option; targeting the
+   column name directly doesn't work because QTd doesn't auto-apply
+   the column name as a class. */
+:deep(.q-table td.title-cell) {
+  max-width: 320px;
+}
+:deep(.q-table td.title-cell .q-item__label) {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  white-space: normal;
 }
 :deep(.q-table--grid .q-table__top) {
   padding: 0 0 4px 0;

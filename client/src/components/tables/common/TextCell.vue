@@ -3,7 +3,13 @@
     <q-item class="q-pa-none">
       <q-item-section>
         <q-item-label>
-          <router-link v-if="link" :to="link" class="text-primary" @click.stop>
+          <router-link
+            v-if="link"
+            :to="link"
+            class="text-primary"
+            :title="titleAttr"
+            @click.stop
+          >
             {{ scope.value }}
           </router-link>
           <template v-else>{{ scope.value }}</template>
@@ -27,4 +33,12 @@ const link = computed(() => {
   const col = props.scope.col as QueryTableColumn
   return col.linkTo ? col.linkTo(props.scope.row) : null
 })
+
+// If the cell value is clamped/ellipsized by the column's styles, a
+// hover tooltip is the only way to see the full text. The attribute
+// is harmless when the text fits entirely — the browser just shows
+// the same content that's already visible.
+const titleAttr = computed(() =>
+  typeof props.scope.value === "string" ? props.scope.value : undefined
+)
 </script>
