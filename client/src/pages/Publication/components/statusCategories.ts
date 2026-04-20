@@ -30,23 +30,24 @@ export const statusCategories: StatusCategoryDef[] = [
     statuses: ["UNDER_REVIEW"]
   },
   {
-    key: "awaiting_author",
-    color: "secondary",
-    textClass: "text-white",
-    icon: "edit_note",
-    pattern: "pattern-dots",
-    // DRAFT intentionally omitted — drafts are the author's private
-    // work-in-progress and aren't visible from the publication dashboard
-    // until the author submits.
-    statuses: ["RESUBMISSION_REQUESTED", "REVISION_REQUESTED"]
-  },
-  {
+    // Terminal / paused states — nothing for the dashboard admin to
+    // act on. RESUBMISSION_REQUESTED and REVISION_REQUESTED are
+    // parked here because they're closed from the publication's
+    // side: work sits with the author until they resubmit. DRAFT is
+    // intentionally omitted — drafts are the author's private
+    // work-in-progress and aren't visible to the dashboard.
+    // A green checkmark would read as "successfully done" which is
+    // misleading for REJECTED / EXPIRED / DELETED, so the category
+    // uses a neutral slate + done_outline instead of affirmative
+    // green + check_circle.
     key: "completed",
-    color: "dashboard-green",
+    color: "blue-grey-7",
     textClass: "text-white",
-    icon: "check_circle",
+    icon: "done_outline",
     pattern: "pattern-crosshatch",
     statuses: [
+      "RESUBMISSION_REQUESTED",
+      "REVISION_REQUESTED",
       "ACCEPTED_AS_FINAL",
       "REJECTED",
       "EXPIRED",

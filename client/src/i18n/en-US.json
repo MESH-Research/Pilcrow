@@ -493,13 +493,15 @@
       "categories": {
         "needs_action": "Needs Action",
         "in_progress": "In Progress",
-        "awaiting_author": "Awaiting Author",
         "completed": "Completed"
       },
       "lanes": {
         "active": "Active pipeline",
         "with_author": "With author",
         "closed": "Closed",
+        "closed_total": "All closed",
+        "closed_expand": "Show each closed status",
+        "closed_collapse": "Collapse to one total",
         "loops_back": "returns to the pipeline"
       },
       "stages": {
@@ -578,6 +580,8 @@
         "submissions": "no submissions | {n} submission | {n} submissions",
         "submissions_heading": "Submissions",
         "no_submissions": "No submissions to show.",
+        "status_breakdown": "Status breakdown",
+        "clear_filter": "Clear status filter",
         "role": {
           "submitter": "Submitter",
           "reviewer": "Reviewer",
