@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\GraphQL\Mutations;
 
+use App\Models\Permission;
 use App\Models\User;
 use GraphQL\Error\Error;
 use Illuminate\Support\Facades\Validator;
@@ -23,6 +24,11 @@ class UpdateUserAvatar
     public function upload(null $_, array $args): User
     {
         $user = User::findOrFail($args['id']);
+
+        if ($user->hasPermissionTo(Permission::AVATAR_UPLOAD_REVOKED)) {
+            throw new Error('This user is not permitted to upload an avatar.');
+        }
+
         $file = $args['avatar'];
 
         Validator::make(

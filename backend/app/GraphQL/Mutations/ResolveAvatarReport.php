@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\GraphQL\Mutations;
 
 use App\Models\AvatarReport;
+use App\Models\Permission;
 use App\Models\User;
 use GraphQL\Error\Error;
 use Illuminate\Support\Carbon;
@@ -24,7 +25,7 @@ class ResolveAvatarReport
     /**
      * Resolve a report and remove the reported user's avatar.
      *
-     * @param array{id: string, notes: ?string} $args
+     * @param array{id: string, notes: ?string, blockFutureUploads?: ?bool} $args
      */
     public function resolveAndRemove(null $_, array $args): AvatarReport
     {
@@ -32,7 +33,11 @@ class ResolveAvatarReport
     }
 
     /**
-     * @param array{id: string, notes: ?string} $args
+     * @param array{
+     *     id: string,
+     *     notes: ?string,
+     *     blockFutureUploads?: ?bool
+     * } $args
      */
     private function resolve(array $args, string $status, bool $removeAvatar): AvatarReport
     {
@@ -51,6 +56,10 @@ class ResolveAvatarReport
 
         if ($removeAvatar) {
             $report->user->clearMediaCollection(User::AVATAR_COLLECTION);
+
+            if (!empty($args['blockFutureUploads'])) {
+                $report->user->givePermissionTo(Permission::AVATAR_UPLOAD_REVOKED);
+            }
 
             // Close out other pending reports against the same user — the
             // avatar is gone, so they no longer need moderator attention.

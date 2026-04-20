@@ -63,13 +63,30 @@ extend type Mutation {
         )
         @can(ability: "moderate avatars")
 
-    "Resolve an avatar report and remove the reported avatar."
+    """
+    Resolve an avatar report and remove the reported avatar. Optionally
+    also block the user from uploading a replacement.
+    """
     resolveAvatarReportAndRemoveAvatar(
         id: ID!
         notes: String
+        "If true, also grant the `avatar upload revoked` permission."
+        blockFutureUploads: Boolean
     ): AvatarReport!
         @field(
             resolver: "App\\GraphQL\\Mutations\\ResolveAvatarReport@resolveAndRemove"
         )
+        @can(ability: "moderate avatars")
+
+    """
+    Grant or revoke a user's avatar-upload block independent of any
+    specific report (e.g. from an admin user-detail page).
+    """
+    setUserAvatarUploadBlocked(
+        userId: ID!
+        "True to block the user; false to unblock."
+        blocked: Boolean!
+    ): User!
+        @field(resolver: "App\\GraphQL\\Mutations\\SetUserAvatarUploadBlocked")
         @can(ability: "moderate avatars")
 }

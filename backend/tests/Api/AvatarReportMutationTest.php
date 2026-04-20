@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Tests\Api;
 
 use App\Models\AvatarReport;
+use App\Models\Permission;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
@@ -320,5 +321,86 @@ class AvatarReportMutationTest extends ApiTestCase
             { avatarReports { paginatorInfo { count } data { id } } }
         ');
         $response->assertJsonPath('data.avatarReports', null);
+    }
+
+    public function testResolveAndRemoveCanAlsoBlockFutureUploads(): void
+    {
+        $target = User::factory()->create();
+        $this->giveUserAnAvatar($target);
+        $report = AvatarReport::create([
+            'user_id' => $target->id,
+            'reporter_user_id' => User::factory()->create()->id,
+            'status' => AvatarReport::STATUS_PENDING,
+        ]);
+
+        $this->beAppAdmin();
+
+        $this->graphQL('
+            mutation ($id: ID!, $block: Boolean) {
+                resolveAvatarReportAndRemoveAvatar(id: $id, blockFutureUploads: $block) {
+                    id status
+                }
+            }
+        ', ['id' => $report->id, 'block' => true])
+            ->assertJsonPath('data.resolveAvatarReportAndRemoveAvatar.status', 'REMOVED');
+
+        $this->assertTrue(
+            $target->fresh()->hasPermissionTo(Permission::AVATAR_UPLOAD_REVOKED)
+        );
+    }
+
+    public function testAdminCanBlockAndUnblockUserUploads(): void
+    {
+        $target = User::factory()->create();
+        $this->beAppAdmin();
+
+        $this->graphQL('
+            mutation ($id: ID!, $blocked: Boolean!) {
+                setUserAvatarUploadBlocked(userId: $id, blocked: $blocked) {
+                    id
+                    avatar_upload_blocked
+                }
+            }
+        ', ['id' => $target->id, 'blocked' => true])
+            ->assertJsonPath('data.setUserAvatarUploadBlocked.avatar_upload_blocked', true);
+
+        $this->assertTrue(
+            $target->fresh()->hasPermissionTo(Permission::AVATAR_UPLOAD_REVOKED)
+        );
+
+        $this->graphQL('
+            mutation ($id: ID!, $blocked: Boolean!) {
+                setUserAvatarUploadBlocked(userId: $id, blocked: $blocked) {
+                    id
+                    avatar_upload_blocked
+                }
+            }
+        ', ['id' => $target->id, 'blocked' => false])
+            ->assertJsonPath('data.setUserAvatarUploadBlocked.avatar_upload_blocked', false);
+
+        $this->assertFalse(
+            $target->fresh()->hasPermissionTo(Permission::AVATAR_UPLOAD_REVOKED)
+        );
+    }
+
+    public function testNonAdminCannotSetBlockedState(): void
+    {
+        $target = User::factory()->create();
+        /** @var User $regular */
+        $regular = User::factory()->create();
+        $this->actingAs($regular);
+
+        $response = $this->graphQL('
+            mutation ($id: ID!) {
+                setUserAvatarUploadBlocked(userId: $id, blocked: true) {
+                    id avatar_upload_blocked
+                }
+            }
+        ', ['id' => $target->id]);
+
+        $response->assertJsonPath('data.setUserAvatarUploadBlocked', null);
+        $this->assertFalse(
+            $target->fresh()->hasPermissionTo(Permission::AVATAR_UPLOAD_REVOKED)
+        );
     }
 }

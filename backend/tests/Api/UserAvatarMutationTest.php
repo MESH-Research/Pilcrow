@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Tests\Api;
 
+use App\Models\Permission;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
@@ -188,6 +189,47 @@ class UserAvatarMutationTest extends ApiTestCase
         $this->assertNotEmpty($response->json('errors'));
         $response->assertJsonPath('data.uploadUserAvatar', null);
         $this->assertNull($user->fresh()->getAvatarMedia());
+    }
+
+    public function testBlockedUserCannotUpload(): void
+    {
+        /** @var User $user */
+        $user = User::factory()->create();
+        $user->givePermissionTo(Permission::AVATAR_UPLOAD_REVOKED);
+        $this->actingAs($user);
+
+        $file = UploadedFile::fake()->image('avatar.png', 400, 400);
+
+        $response = $this->multipartGraphQL(
+            ['query' => self::UPLOAD_MUTATION, 'variables' => ['id' => $user->id, 'avatar' => null]],
+            ['0' => ['variables.avatar']],
+            ['0' => $file]
+        );
+
+        $this->assertNotEmpty($response->json('errors'));
+        $response->assertJsonPath('data.uploadUserAvatar', null);
+        $this->assertNull($user->fresh()->getAvatarMedia());
+    }
+
+    public function testAvatarUploadBlockedFieldReflectsPermission(): void
+    {
+        /** @var User $user */
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        $response = $this->graphQL(
+            'query ($id: ID!) { user(id: $id) { id avatar_upload_blocked } }',
+            ['id' => $user->id]
+        );
+        $response->assertJsonPath('data.user.avatar_upload_blocked', false);
+
+        $user->givePermissionTo(Permission::AVATAR_UPLOAD_REVOKED);
+
+        $response = $this->graphQL(
+            'query ($id: ID!) { user(id: $id) { id avatar_upload_blocked } }',
+            ['id' => $user->id]
+        );
+        $response->assertJsonPath('data.user.avatar_upload_blocked', true);
     }
 
     public function testAvatarFieldIsNullWhenNoAvatarSet(): void

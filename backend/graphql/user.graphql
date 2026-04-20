@@ -33,6 +33,10 @@ type User {
 
     "The user's uploaded avatar, or null if the user has not set one."
     avatar: Avatar @field(resolver: "App\\GraphQL\\Fields\\UserAvatarField")
+
+    "True when a moderator has revoked this user's ability to upload an avatar."
+    avatar_upload_blocked: Boolean!
+        @field(resolver: "App\\GraphQL\\Fields\\UserAvatarBlockedField")
 }
 
 """

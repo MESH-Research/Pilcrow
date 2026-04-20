@@ -66,5 +66,9 @@ class PermissionSeeder extends Seeder
 
         Permission::findOrCreate(Permission::MODERATE_AVATARS)
             ->assignRole(Role::APPLICATION_ADMINISTRATOR);
+
+        // Seeded but not assigned to any role. Moderators grant this
+        // permission to individual users to block avatar uploads.
+        Permission::findOrCreate(Permission::AVATAR_UPLOAD_REVOKED);
     }
 }
