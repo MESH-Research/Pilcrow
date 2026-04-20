@@ -133,6 +133,10 @@ export default withMermaid(defineConfig({
                                 {
                                     text: "Content Delivery Network",
                                     link: '/install/recipes/cdn/'
+                                },
+                                {
+                                    text: "User Avatars",
+                                    link: '/install/recipes/avatars/'
                                 }
                             ],
                         },

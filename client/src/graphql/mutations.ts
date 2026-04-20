@@ -1,5 +1,6 @@
 import gql from "graphql-tag"
 import {
+  _AVATAR_FIELDS,
   _COMMENT_FIELDS,
   _CURRENT_USER_FIELDS,
   _PROFILE_METADATA_FIELDS,
@@ -71,6 +72,26 @@ export const UPDATE_USER = gql`
     }
   }
 `
+export const UPLOAD_USER_AVATAR = gql`
+  mutation UploadUserAvatar($id: ID!, $avatar: Upload!) {
+    uploadUserAvatar(id: $id, avatar: $avatar) {
+      id
+      ...avatarFields
+    }
+  }
+  ${_AVATAR_FIELDS}
+`
+
+export const DELETE_USER_AVATAR = gql`
+  mutation DeleteUserAvatar($id: ID!) {
+    deleteUserAvatar(id: $id) {
+      id
+      ...avatarFields
+    }
+  }
+  ${_AVATAR_FIELDS}
+`
+
 export const VERIFY_SUBMISSION_INVITE = gql`
   mutation VerifySubmissionInvite(
     $uuid: String!

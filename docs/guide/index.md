@@ -19,3 +19,22 @@ Note that the password reset link must be used within 60 minutes of requesting a
 ## Profile
 
 One of the first things you can do when you log in to Pilcrow is update your profile. In the upper right corner of the page click the arrow button next to your username. This will load the standard profile that will only be populated with your username and name. You can fill out as many or as few fields on this page as you wish. Once you have made the changes scroll to the bottom of the page and you will see a purple “SAVE” button to save them. If you press a button to navigate away from the page before you have saved it, the system will prompt you to discard the changes or to keep them.
+
+### Profile Picture
+
+From the profile page you can upload a profile picture that will appear next to your name in comments, user lists, and other places. Uploads must be a JPEG, PNG, or WebP image and no larger than 5 MB. After selecting an image you will be prompted to crop it to a square. If you ever want to remove your picture, use the **Remove picture** button.
+
+Users who have not uploaded a picture are represented by an automatically generated identicon that is unique to their account.
+
+#### Acceptable use
+
+By uploading a profile picture you agree that it:
+
+- Does not contain sexually explicit, violent, or otherwise obscene material
+- Does not impersonate another person or organization
+- Does not infringe on anyone else's copyright or trademark
+- Does not contain hate speech, harassment, or content that targets a protected group
+
+Pilcrow administrators reserve the right to remove any profile picture that violates these expectations and, in cases of repeated or serious violations, to restrict the offending account.
+
+If you encounter a profile picture that appears to violate these expectations, please report it to a site administrator.

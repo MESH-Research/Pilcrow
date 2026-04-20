@@ -16,15 +16,23 @@ use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\HasApiTokens;
 use Laravel\Scout\Attributes\SearchUsingPrefix;
 use Laravel\Scout\Searchable;
+use Spatie\Image\Enums\Fit;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Spatie\Permission\Traits\HasRoles;
 
-class User extends Authenticatable implements MustVerifyEmail
+class User extends Authenticatable implements MustVerifyEmail, HasMedia
 {
     use HasFactory;
     use Notifiable;
     use HasApiTokens;
     use HasRoles;
     use Searchable;
+    use InteractsWithMedia;
+
+    public const AVATAR_COLLECTION = 'avatar';
+    public const AVATAR_MIME_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 
     /**
      * The attributes that are mass assignable.
@@ -362,5 +370,45 @@ class User extends Authenticatable implements MustVerifyEmail
         }
 
         return $query;
+    }
+
+    /**
+     * Register media collections for the user.
+     */
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection(self::AVATAR_COLLECTION)
+            ->singleFile()
+            ->acceptsMimeTypes(self::AVATAR_MIME_TYPES);
+    }
+
+    /**
+     * Register media conversions for the user.
+     *
+     * The 'thumb' conversion is used by AvatarImage; 'medium' is available
+     * for larger displays (e.g. account layout).
+     *
+     * @param \Spatie\MediaLibrary\MediaCollections\Models\Media|null $_media
+     *        Required by the Spatie HasMedia contract; unused here because
+     *        the same conversions apply to any media item in this model's
+     *        collections.
+     */
+    public function registerMediaConversions(?Media $_media = null): void
+    {
+        $this->addMediaConversion('thumb')
+            ->fit(Fit::Crop, 96, 96)
+            ->nonQueued();
+
+        $this->addMediaConversion('medium')
+            ->fit(Fit::Crop, 256, 256)
+            ->nonQueued();
+    }
+
+    /**
+     * Return the avatar Media item if set.
+     */
+    public function getAvatarMedia(): ?Media
+    {
+        return $this->getFirstMedia(self::AVATAR_COLLECTION);
     }
 }

@@ -21,6 +21,22 @@ type Audit {
   user: User!
 }
 
+"""
+An uploaded avatar image with URLs for the original and derived conversions.
+"""
+type Avatar {
+  """URL for the 256x256 medium conversion, suitable for profile pages."""
+  medium_url: String!
+
+  """
+  URL for the 96x96 thumbnail conversion, suitable for inline avatar display.
+  """
+  thumb_url: String!
+
+  """URL for the original uploaded image."""
+  url: String!
+}
+
 interface Comment {
   content: String!
   created_at: DateTimeUtc!
@@ -233,6 +249,9 @@ type Mutation {
   """Delete an overall comment of a submission"""
   deleteOverallComment(input: DeleteCommentInput!): Submission!
 
+  """Remove a user's avatar image."""
+  deleteUserAvatar(id: ID!): User!
+
   """
   Create a staged user, assign them as a review coordinator of a submisison,
   and send them an email notification inviting them to accept the assignment
@@ -306,6 +325,9 @@ type Mutation {
 
   """Update user information"""
   updateUser(user: UpdateUserInput!): User!
+
+  """Upload or replace a user's avatar image. JPEG/PNG/WebP, max 5MB."""
+  uploadUserAvatar(avatar: Upload!, id: ID!): User!
 
   """Verify the currently logged in user's email address"""
   verifyEmail(
@@ -988,6 +1010,8 @@ scalar Upload
 
 """A user account"""
 type User {
+  """The user's uploaded avatar, or null if the user has not set one."""
+  avatar: Avatar
   created_at: DateTimeUtc!
   display_label: String
   email: String!

@@ -107,6 +107,16 @@ type Mutation {
     "Update a password from a password reset request"
     resetPassword(input: ResetPasswordInput): User
         @field(resolver: "App\\GraphQL\\Mutations\\ResetPassword@reset")
+
+    "Upload or replace a user's avatar image. JPEG/PNG/WebP, max 5MB."
+    uploadUserAvatar(id: ID!, avatar: Upload!): User!
+        @field(resolver: "App\\GraphQL\\Mutations\\UpdateUserAvatar@upload")
+        @can(ability: "update", find: "id")
+
+    "Remove a user's avatar image."
+    deleteUserAvatar(id: ID!): User!
+        @field(resolver: "App\\GraphQL\\Mutations\\UpdateUserAvatar@delete")
+        @can(ability: "update", find: "id")
 }
 
 "A date string with format `Y-m-d`, e.g. `2011-05-23`."

@@ -46,6 +46,22 @@ MAIL_ENCRYPTION=true
 
 Laravel also [supports a number of  mail services](https://laravel.com/docs/10.x/mail#driver-prerequisites).  While we aren't able to provide support for each mailer service, feel free to open a ticket if you find a problem with non-smtp options.
 
+## User Avatars / Media Storage
+
+User-uploaded avatars are stored via a pluggable storage disk so you can keep them on the local filesystem or move them to an S3-compatible bucket without code changes.
+
+| Parameter  | Example / Default | Required | Description                                                                                                |
+| ---------- | ----------------- | -------- | ---------------------------------------------------------------------------------------------------------- |
+| MEDIA_DISK | `public`          |          | Filesystem disk used by `spatie/laravel-medialibrary`. Set to `s3` to use an S3-compatible bucket.         |
+
+When using the default `public` disk you must create the `public/storage` symlink once:
+
+```sh
+docker compose exec phpfpm ./artisan storage:link
+```
+
+See the [Avatars](/install/recipes/avatars/) recipe for full setup, including S3 and moderation considerations.
+
 ## Redis
 
 Redis can improve application performance by functioning as an in-memory key-value store for cached data.  To configure a redis connection:

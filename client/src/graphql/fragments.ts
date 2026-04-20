@@ -22,6 +22,16 @@ export const _PROFILE_METADATA_FIELDS = gql`
   }
 `
 
+export const _AVATAR_FIELDS = gql`
+  fragment avatarFields on User {
+    avatar {
+      url
+      thumb_url
+      medium_url
+    }
+  }
+`
+
 export const _CURRENT_USER_FIELDS = gql`
   fragment currentUserFields on User {
     display_label
@@ -33,7 +43,9 @@ export const _CURRENT_USER_FIELDS = gql`
       name
     }
     highest_privileged_role
+    ...avatarFields
   }
+  ${_AVATAR_FIELDS}
 `
 
 export const _RELATED_USER_FIELDS = gql`
@@ -44,7 +56,9 @@ export const _RELATED_USER_FIELDS = gql`
     name
     email
     staged
+    ...avatarFields
   }
+  ${_AVATAR_FIELDS}
 `
 
 export const _PAGINATION_FIELDS = gql`

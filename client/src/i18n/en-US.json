@@ -146,7 +146,8 @@
     "publications": "Publications",
     "submissions": "Submissions",
     "reviews": "Reviews",
-    "user_list": "Users",
+    "user_list": "All Users",
+    "avatar_reports": "Avatar Reports",
     "notification_button": "View Notifications",
     "application_administration": "Application Administration",
     "account_dropdown_aria": "User Account Dropdown",
@@ -214,6 +215,20 @@
           }
         }
       }
+    },
+    "avatar": {
+      "heading": "Profile Picture",
+      "description": "Upload a JPEG, PNG, or WebP image. Max 5 MB.",
+      "acceptable_use": "Pictures must not be obscene, impersonate others, or infringe copyright. Administrators may remove pictures that violate these expectations.",
+      "upload_button": "Upload new picture",
+      "change_button": "Change picture",
+      "remove_button": "Remove picture",
+      "upload_success": "Profile picture updated.",
+      "remove_success": "Profile picture removed.",
+      "upload_failure": "Unable to update profile picture.",
+      "remove_failure": "Unable to remove profile picture.",
+      "invalid_type": "Please select a JPEG, PNG, or WebP image.",
+      "too_large": "Image must be 5 MB or smaller."
     },
     "profile": {
       "heading": "Profile",
@@ -1251,92 +1266,51 @@
     },
     "selectIcon": {
       "aria_label": "Select Icon"
+    },
+    "avatarCrop": {
+      "aria_label": "Crop Avatar",
+      "title": "Crop your avatar",
+      "save": "Save",
+      "cancel": "Cancel"
+    },
+    "reportAvatar": {
+      "aria_label": "Report Avatar",
+      "title": "Report this profile picture",
+      "description": "Let an administrator know this picture may violate our guidelines. Administrators will review and decide whether to remove it.",
+      "reason_label": "Reason (optional)",
+      "reason_placeholder": "Briefly describe why this picture is inappropriate.",
+      "submit": "Submit report",
+      "cancel": "Cancel",
+      "success": "Report submitted. Thank you.",
+      "failure": "Something went wrong submitting your report.",
+      "button": "Report this picture"
     }
+  },
+  "admin_avatar_reports": {
+    "page_title": "Avatar Reports",
+    "empty_pending": "No pending reports — all clear.",
+    "empty_other": "No reports with this status.",
+    "filter_all": "All",
+    "filter_pending": "Pending",
+    "filter_dismissed": "Dismissed",
+    "filter_removed": "Removed",
+    "column_reported": "Reported user",
+    "column_reporter": "Reporter",
+    "column_reason": "Reason",
+    "column_reported_at": "Reported",
+    "column_status": "Status",
+    "column_resolved_by": "Resolved by",
+    "column_resolved_at": "Resolved",
+    "action_dismiss": "Dismiss",
+    "action_remove": "Remove avatar",
+    "confirm_remove": "Remove this user's avatar?",
+    "notes_label": "Moderator notes (optional)",
+    "dismissed_success": "Report dismissed.",
+    "removed_success": "Avatar removed and report closed.",
+    "failure": "Unable to act on this report."
   },
   "generic": {
     "more_info": "More info"
   },
-  "app_banner_dismiss_tip": "Dismiss for 1 week",
-  "admin": {
-    "dashboard": {
-      "users_description": "Manage user accounts and permissions.",
-      "publications_description": "Manage publications and their settings."
-    },
-    "publication": {
-      "headers": {
-        "name": "Name",
-        "is_publicly_visible": "Visibility",
-        "is_accepting_submissions": "Accepting Submissions",
-        "created_at": "Created",
-        "actions": "Actions"
-      },
-      "btn": {
-        "create": "Create"
-      }
-    },
-    "users": {
-      "headers": {
-        "name": "Name",
-        "username": "Username",
-        "email": "Email",
-        "created_at": "Created"
-      },
-      "details": {
-        "title": "User Details",
-        "username": "Username",
-        "name": "Name",
-        "email": "Email",
-        "role": "Role",
-        "created_at": "Created",
-        "verified_at": "Email Verified",
-        "not_verified": "Not Verified",
-        "isAdmin": "Application Administrator",
-        "isNormal": "Standard User",
-        "roles": {
-          "submitter": "Submitter",
-          "reviewer": "Reviewer",
-          "review_coordinator": "Review Coordinator",
-          "publication_admin": "Publication Administrator",
-          "editor": "Editor"
-        },
-        "submissions": {
-          "headers": {
-            "id": "ID",
-            "status": "Status",
-            "title": "Title",
-            "created_at": "Created",
-            "updated_at": "Updated",
-            "actions": "Actions",
-            "role": "Role"
-          },
-          "btn": {
-            "create": "Create"
-          },
-          "actions": {
-            "view": "View"
-          },
-          "filters": {
-            "status": "Status",
-            "roles": "Roles",
-            "publication": "Publication"
-          }
-        },
-        "no_publications": "This user is not assigned to any publications.",
-        "no_submissions": "This user is not attached to any submissions.",
-        "publications": {
-          "headers": {
-            "name": "Name",
-            "role": "Role",
-            "actions": ""
-          },
-          "actions": {
-            "view": "View"
-          },
-          "btn": {
-            "create": "Create"
-          }
-        }
-      }
-    }
-  }
+  "app_banner_dismiss_tip": "Dismiss for 1 week"
 }

@@ -57,6 +57,12 @@ server {
         log_not_found off;
     }
 
+    location /storage/ {
+        try_files $uri =404;
+        access_log off;
+        expires 7d;
+    }
+
     location @backend {
         try_files  /index.php =404;
         fastcgi_pass fpm:9000;

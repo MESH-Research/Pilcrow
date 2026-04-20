@@ -30,6 +30,23 @@ type User {
     ): [PublicationAssignment!]!
         @hasMany(relation: "publicationAssignments", type: "PAGINATOR", defaultCount: 10)
     staged: Boolean
+
+    "The user's uploaded avatar, or null if the user has not set one."
+    avatar: Avatar @field(resolver: "App\\GraphQL\\Fields\\UserAvatarField")
+}
+
+"""
+An uploaded avatar image with URLs for the original and derived conversions.
+"""
+type Avatar {
+    "URL for the original uploaded image."
+    url: String!
+
+    "URL for the 96x96 thumbnail conversion, suitable for inline avatar display."
+    thumb_url: String!
+
+    "URL for the 256x256 medium conversion, suitable for profile pages."
+    medium_url: String!
 }
 
 enum UserRoles {
