@@ -57,7 +57,7 @@ class UserAvatarMutationTest extends ApiTestCase
         );
 
         $response->assertJsonPath('data.uploadUserAvatar.id', (string)$user->id);
-        $response->assertJsonPath('data.uploadUserAvatar.avatar.url', fn ($url) => str_contains($url, 'avatar.png'));
+        $response->assertJsonPath('data.uploadUserAvatar.avatar.url', fn($url) => str_contains($url, 'avatar.png'));
 
         $this->assertNotNull($user->fresh()->getAvatarMedia());
     }
@@ -244,5 +244,25 @@ class UserAvatarMutationTest extends ApiTestCase
         );
 
         $response->assertJsonPath('data.user.avatar', null);
+    }
+
+    public function testUploadedAvatarPathUsesUuidNotId(): void
+    {
+        /** @var User $user */
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        $file = UploadedFile::fake()->image('avatar.png', 400, 400);
+        $this->multipartGraphQL(
+            ['query' => self::UPLOAD_MUTATION, 'variables' => ['id' => $user->id, 'avatar' => null]],
+            ['0' => ['variables.avatar']],
+            ['0' => $file]
+        );
+
+        $media = $user->fresh()->getAvatarMedia();
+        $this->assertNotNull($media);
+        $this->assertNotEmpty($media->uuid);
+        $this->assertStringContainsString($media->uuid, $media->getPath());
+        $this->assertStringNotContainsString("/{$media->id}/", $media->getPath());
     }
 }
