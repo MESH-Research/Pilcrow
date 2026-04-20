@@ -9,7 +9,7 @@
           class="cursor-pointer admin-card"
           @click="goToUsers"
         >
-          <q-card-section class="row items-center q-gutter-md">
+          <q-card-section class="row items-center no-wrap q-gutter-md">
             <q-icon name="groups" size="xl" color="accent" />
             <div>
               <div class="text-subtitle1 text-weight-bold">
@@ -29,7 +29,7 @@
           class="cursor-pointer admin-card"
           @click="goToPublications"
         >
-          <q-card-section class="row items-center q-gutter-md">
+          <q-card-section class="row items-center no-wrap q-gutter-md">
             <q-icon name="collections_bookmark" size="xl" color="accent" />
             <div>
               <div class="text-subtitle1 text-weight-bold">
@@ -50,7 +50,7 @@
           data-cy="admin_card_avatar_reports"
           @click="goToAvatarReports"
         >
-          <q-card-section class="row items-center q-gutter-md">
+          <q-card-section class="row items-center no-wrap q-gutter-md">
             <q-icon name="flag" size="xl" color="accent" />
             <div>
               <div class="text-subtitle1 text-weight-bold">
