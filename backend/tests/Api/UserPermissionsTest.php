@@ -125,6 +125,10 @@ class UserPermissionsTest extends ApiTestCase
                                     'id' => '11',
                                     'name' => Permission::UPDATE_SITE_SETTINGS,
                                 ],
+                                10 => [
+                                    'id' => '12',
+                                    'name' => Permission::MODERATE_AVATARS,
+                                ],
                             ],
                         ],
                     ],

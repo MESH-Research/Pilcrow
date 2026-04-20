@@ -1,0 +1,75 @@
+"""
+A report filed by a user flagging another user's avatar for moderator
+review.
+"""
+type AvatarReport {
+    id: ID!
+    "User whose avatar was reported."
+    user: User! @belongsTo
+    "User who filed the report. Null if that user has since been deleted."
+    reporter: User @belongsTo
+    "Free-text reason provided by the reporter."
+    reason: String
+    "Current moderation status of the report."
+    status: AvatarReportStatus!
+    "Administrator who resolved the report, if any."
+    resolver: User @belongsTo
+    "When the report was resolved."
+    resolved_at: DateTime
+    "Moderator notes added at resolution time."
+    resolution_notes: String
+    created_at: DateTime!
+    updated_at: DateTime!
+}
+
+enum AvatarReportStatus {
+    PENDING @enum(value: "pending")
+    DISMISSED @enum(value: "dismissed")
+    REMOVED @enum(value: "removed")
+}
+
+extend type Query {
+    """
+    Return avatar reports for moderator review. Requires the
+    `moderate avatars` permission.
+    """
+    avatarReports(
+        "Filter by status. Omit to return all statuses."
+        status: AvatarReportStatus @eq
+    ): [AvatarReport!]!
+        @paginate(defaultCount: 20, model: "App\\Models\\AvatarReport")
+        @can(ability: "moderate avatars")
+}
+
+extend type Mutation {
+    """
+    Report another user's avatar for moderator review. Any authenticated
+    user may report. Filing multiple pending reports against the same
+    user is idempotent — the existing pending report is returned.
+    """
+    reportUserAvatar(
+        "ID of the user whose avatar is being reported."
+        userId: ID!
+        "Optional free-text reason."
+        reason: String
+    ): AvatarReport!
+        @field(resolver: "App\\GraphQL\\Mutations\\ReportUserAvatar")
+        @guard
+
+    "Dismiss a pending avatar report without removing the avatar."
+    dismissAvatarReport(id: ID!, notes: String): AvatarReport!
+        @field(
+            resolver: "App\\GraphQL\\Mutations\\ResolveAvatarReport@dismiss"
+        )
+        @can(ability: "moderate avatars")
+
+    "Resolve an avatar report and remove the reported avatar."
+    resolveAvatarReportAndRemoveAvatar(
+        id: ID!
+        notes: String
+    ): AvatarReport!
+        @field(
+            resolver: "App\\GraphQL\\Mutations\\ResolveAvatarReport@resolveAndRemove"
+        )
+        @can(ability: "moderate avatars")
+}

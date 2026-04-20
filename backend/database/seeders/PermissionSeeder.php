@@ -63,5 +63,8 @@ class PermissionSeeder extends Seeder
 
         Permission::findOrCreate(Permission::UPDATE_SITE_SETTINGS)
             ->assignRole(Role::APPLICATION_ADMINISTRATOR);
+
+        Permission::findOrCreate(Permission::MODERATE_AVATARS)
+            ->assignRole(Role::APPLICATION_ADMINISTRATOR);
     }
 }
