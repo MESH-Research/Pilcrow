@@ -12,6 +12,10 @@ Thumbs.db
 
 # Tool specific files #
 #######################
+# Root-level one-off screencast scratch (not part of the main test setup).
+# Limited to the repo root so nested `screencast/` folders (e.g. playwright
+# specs) are still tracked.
+/screencast/
 # PHPUnit
 .phpunit.result.cache
 clover.xml
