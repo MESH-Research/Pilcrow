@@ -40,10 +40,13 @@
 
     <q-card-section class="q-py-sm q-px-md q-pt-none">
       <div :class="['items-start q-gutter-sm', stackHeader ? 'column' : 'row']">
-        <q-item
+        <component
+          :is="submitterLink ? 'router-link' : 'q-item'"
           v-if="submission.created_by"
-          class="q-pa-none submitter-item"
-          :class="stackHeader ? '' : 'col'"
+          class="q-pa-none submitter-item user-link-row"
+          :class="[stackHeader ? '' : 'col', submitterLink ? 'is-link' : '']"
+          :to="submitterLink || undefined"
+          @click.stop
         >
           <q-item-section side>
             <avatar-image :user="submission.created_by" size="40px" rounded />
@@ -60,7 +63,7 @@
               {{ submission.created_by.username }}
             </q-item-label>
           </q-item-section>
-        </q-item>
+        </component>
         <q-space v-else-if="!stackHeader" />
         <div
           class="status-chip row items-center no-wrap q-px-sm q-py-xs"
@@ -120,7 +123,13 @@
       <div class="text-caption text-weight-bold text-grey-7 q-mb-sm">
         {{ $t("publication.dashboard.headers.review_team") }}
       </div>
-      <q-item class="q-pa-none q-mb-sm">
+      <component
+        :is="coordinatorLink ? 'router-link' : 'q-item'"
+        class="q-pa-none q-mb-sm user-link-row"
+        :class="coordinatorLink ? 'is-link' : ''"
+        :to="coordinatorLink || undefined"
+        @click.stop
+      >
         <q-item-section side>
           <div class="relative-position">
             <avatar-image
@@ -156,7 +165,7 @@
             {{ coordinator.username }}
           </q-item-label>
         </q-item-section>
-      </q-item>
+      </component>
       <div
         v-if="(submission.reviewers ?? []).length"
         class="row q-col-gutter-sm"
@@ -166,7 +175,13 @@
           :key="r.id"
           class="col-12 col-md-6"
         >
-          <q-item class="q-pa-none">
+          <component
+            :is="teamMemberLinkTo(r.id) ? 'router-link' : 'q-item'"
+            class="q-pa-none user-link-row"
+            :class="teamMemberLinkTo(r.id) ? 'is-link' : ''"
+            :to="teamMemberLinkTo(r.id) || undefined"
+            @click.stop
+          >
             <q-item-section side>
               <avatar-image :user="r" size="40px" rounded />
             </q-item-section>
@@ -176,7 +191,7 @@
                 {{ r.username }}
               </q-item-label>
             </q-item-section>
-          </q-item>
+          </component>
         </div>
       </div>
     </q-card-section>
@@ -213,10 +228,12 @@
 import { computed } from "vue"
 import { useI18n } from "vue-i18n"
 import { useQuasar } from "quasar"
+import { useRoute } from "vue-router"
 import { DateTime } from "luxon"
 import { useTimeAgo } from "src/use/timeAgo"
 import AvatarImage from "src/components/atoms/AvatarImage.vue"
 import ConfirmStatusChangeDialog from "src/components/dialogs/ConfirmStatusChangeDialog.vue"
+import type { RouteLocationRaw } from "vue-router"
 import type { Submission } from "src/graphql/generated/graphql"
 import { statusCategories, statusStyleMap } from "./statusCategories"
 import { useStatusTransitions } from "src/use/submissionStatusTransitions"
@@ -248,6 +265,31 @@ const { t } = useI18n()
 const $q = useQuasar()
 const { dialog } = $q
 const timeAgo = useTimeAgo()
+const route = useRoute()
+
+// The card lives under /manage/publication/:id/... — the active
+// route's `id` param is the publication we're scoped to. Used to
+// build links back to per-user detail pages.
+const publicationId = computed(() => {
+  const raw = (route.params as Record<string, string | string[] | undefined>).id
+  return Array.isArray(raw) ? raw[0] : raw
+})
+
+function submitterLinkTo(userId: string | undefined | null): RouteLocationRaw | null {
+  if (!userId || !publicationId.value) return null
+  return {
+    name: "manage:publication:submitter" as const,
+    params: { id: publicationId.value, userId }
+  }
+}
+
+function teamMemberLinkTo(userId: string | undefined | null): RouteLocationRaw | null {
+  if (!userId || !publicationId.value) return null
+  return {
+    name: "manage:publication:team_member" as const,
+    params: { id: publicationId.value, userId }
+  }
+}
 
 // At smaller viewport widths cards are narrow (especially in the 2-col
 // grid range); stack the submitter and status vertically rather than
@@ -298,6 +340,13 @@ const coordinator = computed(
   () => (props.submission.review_coordinators ?? [])[0] ?? null
 )
 
+const submitterLink = computed(() =>
+  submitterLinkTo(props.submission.created_by?.id ?? null)
+)
+const coordinatorLink = computed(() =>
+  teamMemberLinkTo(coordinator.value?.id ?? null)
+)
+
 const updatedDt = computed(() => DateTime.fromISO(props.submission.updated_at))
 const absoluteUpdated = computed(() =>
   updatedDt.value.toFormat("LLL d yyyy h:mm a")
@@ -319,6 +368,23 @@ const relativeSubmitted = computed(() =>
 </script>
 
 <style scoped>
+/* When a user's row is wrapped in a router-link it collapses from
+   a q-item's flex layout, so re-apply the item's shape inline. */
+.user-link-row.is-link {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+  border-radius: 4px;
+  padding: 4px;
+  margin: -4px;
+}
+.user-link-row.is-link:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+.body--dark .user-link-row.is-link:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
 .submission-card .submission-title {
   text-decoration: none;
   font-weight: 500;

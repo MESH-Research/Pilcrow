@@ -526,6 +526,7 @@
       "filters": {
         "status": "Status",
         "label": "Filters:",
+        "short_label": "Filter",
         "all": "All",
         "none": "None",
         "invert": "Invert",

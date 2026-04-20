@@ -1,19 +1,23 @@
 <template>
   <q-td :props="scope" :dense="scope.dense">
-    <q-item v-if="user" class="q-pa-none">
-      <q-item-section side>
-        <avatar-image :user="user" size="40px" rounded />
-      </q-item-section>
-
-      <q-item-section>
-        <q-item-label>
-          {{ user.name ?? user.email }}
-        </q-item-label>
-        <q-item-label v-if="user.username && !hideUsername" caption>
+    <component
+      :is="link ? 'router-link' : 'div'"
+      v-if="user"
+      :to="link || undefined"
+      :class="['name-avatar-cell row items-center', link ? 'is-link' : '']"
+      @click.stop
+    >
+      <avatar-image :user="user" size="40px" rounded class="q-mr-sm" />
+      <span class="column" style="min-width: 0">
+        <span class="ellipsis">{{ user.name ?? user.email }}</span>
+        <span
+          v-if="user.username && !hideUsername"
+          class="text-caption text-grey-7 ellipsis"
+        >
           {{ user.username }}
-        </q-item-label>
-      </q-item-section>
-    </q-item>
+        </span>
+      </span>
+    </component>
     <span v-else class="text-grey" aria-label="No user assigned">&mdash;</span>
   </q-td>
 </template>
@@ -50,13 +54,26 @@ const user = computed(
 const hideUsername = computed(
   () => (props.scope.col as QueryTableColumn).hideUsername === true
 )
+
+// Optional: the column config can wire a `linkTo(row)` callback to
+// make each cell click through to a detail page. Returning nullish
+// skips the wrapping so rows without a destination stay static.
+const link = computed(() => {
+  const col = props.scope.col as QueryTableColumn
+  return col.linkTo && user.value ? col.linkTo(props.scope.row) : null
+})
 </script>
 
 <style scoped>
-:deep(.q-item__label + .q-item__label) {
-  margin-top: 0;
+.name-avatar-cell {
+  min-width: 0;
 }
-:deep(.q-item__label) {
-  line-height: 1.25;
+.name-avatar-cell.is-link {
+  text-decoration: none;
+  color: inherit;
+  border-radius: 4px;
+}
+.name-avatar-cell.is-link:hover {
+  text-decoration: underline;
 }
 </style>

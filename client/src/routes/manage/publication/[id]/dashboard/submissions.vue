@@ -29,12 +29,14 @@
         no-caps
         icon="filter_list"
         :label="
-          $t('publication.dashboard.filters.selected', {
-            n: statusFilter.length,
-            total: allStatuses.length
-          })
+          isSmallScreen
+            ? $t('publication.dashboard.filters.short_label')
+            : $t('publication.dashboard.filters.selected', {
+                n: statusFilter.length,
+                total: allStatuses.length
+              })
         "
-        :aria-label="$t('publication.dashboard.filters.label')"
+        :aria-label="$t('publication.dashboard.filters.short_label')"
       >
         <q-menu>
           <q-list dense style="min-width: 240px">
@@ -450,6 +452,15 @@ const columns: QueryTableColumn[] = [
     field: (row) => row.created_by ?? null,
     align: "left",
     component: NameAvatarCell,
+    linkTo: (row) => {
+      const user = (row as { created_by?: { id?: string } }).created_by
+      return user?.id
+        ? {
+            name: "manage:publication:submitter" as const,
+            params: { id: props.id, userId: user.id }
+          }
+        : null
+    },
     label: "Submitter"
   },
   {
