@@ -158,6 +158,10 @@ const columns: QueryTableColumn[] = [
     align: "left",
     field: (row) => (row as ReportRow).user,
     component: NameAvatarCell,
+    linkTo: (row) => ({
+      name: "user_details",
+      params: { id: (row as ReportRow).user.id }
+    }),
     label: "admin_avatar_reports.headers.user"
   },
   {
