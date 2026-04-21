@@ -129,8 +129,8 @@ function openReport() {
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.25);
 }
 .reportable-avatar__trigger--compact {
-  right: -4px;
-  bottom: -4px;
+  right: -2px;
+  bottom: -2px;
   width: 15px;
   height: 15px;
 }
