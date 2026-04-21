@@ -107,8 +107,8 @@ function openReport() {
 }
 .reportable-avatar__trigger {
   position: absolute;
-  right: 2px;
-  bottom: 2px;
+  right: -6px;
+  bottom: -6px;
   z-index: 2;
   opacity: 0;
   transition: opacity 0.15s ease-in-out;
