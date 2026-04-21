@@ -395,6 +395,19 @@ body.body--dark
 :root
     --q-dashboard-green: #3D5C2D
 
+// QueryTable grid-mode tint. Sets a distinct tone behind the white
+// cards so the grid reads as a tray rather than floating cards on a
+// white page. Previously duplicated in five components with varying
+// scoping tricks; consolidating here guarantees a single source of
+// truth and beats Quasar's (empty) default at equal specificity.
+// `!important` guards against any future per-component scoped rule
+// clobbering this accidentally.
+.q-table--grid .q-table__grid-content
+    background-color: #ebebeb !important
+
+body.body--dark .q-table--grid .q-table__grid-content
+    background-color: #262626 !important
+
 // Color-blind accessible patterns for status categories.
 // All pattern rules are gated behind .a11y-patterns so they can be toggled
 // via a user preference. Add .a11y-patterns to body or a wrapper to enable.

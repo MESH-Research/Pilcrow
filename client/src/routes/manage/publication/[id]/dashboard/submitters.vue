@@ -343,12 +343,3 @@ const columns: QueryTableColumn[] = [
   box-shadow: 0 0 0 1.5px #1d1d1d;
 }
 </style>
-
-<style>
-.q-table--grid .q-table__grid-content {
-  background-color: #f5f5f5;
-}
-.body--dark .q-table--grid .q-table__grid-content {
-  background-color: #262626;
-}
-</style>

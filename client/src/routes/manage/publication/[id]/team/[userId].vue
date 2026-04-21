@@ -552,12 +552,3 @@ const columns: QueryTableColumn[] = [
   border-radius: 4px;
 }
 </style>
-
-<style>
-.q-table--grid .q-table__grid-content {
-  background-color: #f5f5f5;
-}
-.body--dark .q-table--grid .q-table__grid-content {
-  background-color: #262626;
-}
-</style>

@@ -44,23 +44,6 @@
               </a>
             </div>
           </div>
-          <q-card class="bg-grey-2" flat>
-            <q-card-section class="q-pa-md text-center">
-              <div class="role-label q-my-none">
-                {{ $t("publication.manage.user_detail.role.submitter") }}
-              </div>
-              <div class="text-h4">
-                {{ publicationUser.as_submitter_count }}
-              </div>
-              <div class="text-caption text-grey-7">
-                {{
-                  $t("publication.manage.user_detail.submissions", {
-                    n: publicationUser.as_submitter_count
-                  })
-                }}
-              </div>
-            </q-card-section>
-          </q-card>
         </q-card-section>
 
         <!-- At-a-glance status breakdown for this submitter's
@@ -152,7 +135,6 @@ graphql(`
             ...userProfileCard
           }
         }
-        as_submitter_count
         submission_status_counts(roles: [submitter]) {
           status
           count
@@ -482,17 +464,5 @@ const columns: QueryTableColumn[] = [
 }
 :deep(.q-table--grid .q-table__grid-content) {
   border-radius: 4px;
-}
-</style>
-
-<style>
-/* Grid tint — kept unscoped so it wins the specificity tiebreak
-   over Quasar's default (scoped `:deep()` rules were losing
-   against the dark-mode sibling in some stylesheet orderings). */
-.q-table--grid .q-table__grid-content {
-  background-color: #f5f5f5;
-}
-.body--dark .q-table--grid .q-table__grid-content {
-  background-color: #262626;
 }
 </style>

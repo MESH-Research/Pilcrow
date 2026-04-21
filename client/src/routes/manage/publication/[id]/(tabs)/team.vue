@@ -443,16 +443,9 @@ const columns: QueryTableColumn[] = [
   padding: 0 0 4px 0;
 }
 :deep(.q-table--grid .q-table__grid-content) {
-  background-color: #f5f5f5;
   border-radius: 4px;
 }
 .user-grid-card:hover {
   border-color: var(--q-primary);
-}
-</style>
-
-<style>
-.body--dark .q-table--grid .q-table__grid-content {
-  background-color: #262626;
 }
 </style>

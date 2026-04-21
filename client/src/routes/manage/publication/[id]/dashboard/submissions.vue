@@ -527,17 +527,3 @@ const columns: QueryTableColumn[] = [
 }
 </style>
 
-<!-- Light/dark grid tint behind the cards. Kept out of the scoped
-     block: Quasar-rendered elements don't carry our `data-v-*`
-     attribute, and the scoped light rule was losing specificity
-     against an identical unscoped dark rule below, leaving light
-     mode without the grey fill. Keeping both rules side-by-side
-     here means they compete on equal footing. -->
-<style>
-.q-table--grid .q-table__grid-content {
-  background-color: #f5f5f5;
-}
-.body--dark .q-table--grid .q-table__grid-content {
-  background-color: #262626;
-}
-</style>
