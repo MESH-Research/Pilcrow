@@ -105,9 +105,12 @@
       </section>
 
       <section class="q-mb-xl">
-        <h2 class="text-h6">NameAvatarCell (table cell)</h2>
+        <h2 class="text-h6">NameAvatarCell (in-table replica)</h2>
         <p class="text-caption text-grey-7">
-          Used in admin QueryTable rows (e.g. /admin/users).
+          Used in admin QueryTable rows (e.g. /admin/users). We copy the
+          markup rather than mount the real component because QTd relies
+          on internal <code>col.__tdClass</code> / scope wiring that
+          only QTable provides.
         </p>
         <q-markup-table flat bordered dense>
           <thead>
@@ -117,7 +120,21 @@
           </thead>
           <tbody>
             <tr v-for="user in users" :key="'nac-' + user.id">
-              <name-avatar-cell :scope="fakeScope(user)" />
+              <td class="text-left">
+                <q-item class="q-pa-none">
+                  <q-item-section side>
+                    <avatar-image :user="user" size="40px" rounded />
+                  </q-item-section>
+                  <q-item-section>
+                    <q-item-label v-if="user.name">
+                      {{ user.name }}
+                    </q-item-label>
+                    <q-item-label v-if="user.username" caption>
+                      {{ user.username }}
+                    </q-item-label>
+                  </q-item-section>
+                </q-item>
+              </td>
             </tr>
           </tbody>
         </q-markup-table>
@@ -278,8 +295,6 @@ import AvatarImage from "src/components/atoms/AvatarImage.vue"
 import AvatarBlock from "src/components/molecules/AvatarBlock.vue"
 import ReportableAvatar from "src/components/molecules/ReportableAvatar.vue"
 import UserListItem from "src/components/atoms/UserListItem.vue"
-import NameAvatarCell from "src/components/tables/common/NameAvatarCell.vue"
-import type { QTableBodyCellScope } from "src/components/tables/QueryTable.vue"
 import {
   GetAvatarShowcaseUsersDocument,
   type GetAvatarShowcaseUsersQuery,
@@ -303,12 +318,4 @@ const users = computed<ShowcaseUser[]>(() => {
     .slice(0, 8)
 })
 
-function fakeScope(user: ShowcaseUser): QTableBodyCellScope {
-  return {
-    row: user,
-    col: { name: "name", hideUsername: false },
-    value: user,
-    dense: true
-  } as unknown as QTableBodyCellScope
-}
 </script>
