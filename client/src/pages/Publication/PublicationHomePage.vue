@@ -29,18 +29,6 @@
             {{ $t("publication.dashboard.heading") }}
           </q-btn>
           <q-btn
-            v-if="isPublicationAdminOrEditor"
-            data-cy="manage_users_button"
-            icon="group"
-            color="primary"
-            :to="{
-              name: 'manage:publication:submitters',
-              params: { id: id }
-            }"
-          >
-            {{ $t("publication.manage.users.heading") }}
-          </q-btn>
-          <q-btn
             v-if="isPublicationAdmin"
             data-cy="configure_button"
             icon="settings"

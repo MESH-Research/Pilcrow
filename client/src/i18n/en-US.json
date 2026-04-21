@@ -551,7 +551,6 @@
         }
       },
       "users": {
-        "heading": "Users",
         "tabs": {
           "submitters": "Submitters",
           "team": "Review Team",
