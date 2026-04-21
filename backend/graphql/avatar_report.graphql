@@ -15,11 +15,11 @@ type AvatarReport {
     "Administrator who resolved the report, if any."
     resolver: User @belongsTo
     "When the report was resolved."
-    resolved_at: DateTime
+    resolved_at: DateTimeUtc
     "Moderator notes added at resolution time."
     resolution_notes: String
-    created_at: DateTime!
-    updated_at: DateTime!
+    created_at: DateTimeUtc!
+    updated_at: DateTimeUtc!
 }
 
 enum AvatarReportStatus {

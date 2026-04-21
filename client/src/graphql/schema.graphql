@@ -38,7 +38,7 @@ A report filed by a user flagging another user's avatar for moderator
 review.
 """
 type AvatarReport {
-  created_at: DateTime!
+  created_at: DateTimeUtc!
   id: ID!
 
   "Free-text reason provided by the reporter."
@@ -51,7 +51,7 @@ type AvatarReport {
   resolution_notes: String
 
   "When the report was resolved."
-  resolved_at: DateTime
+  resolved_at: DateTimeUtc
 
   "Administrator who resolved the report, if any."
   resolver: User
@@ -59,7 +59,7 @@ type AvatarReport {
   "Current moderation status of the report."
   status: AvatarReportStatus!
 
-  updated_at: DateTime!
+  updated_at: DateTimeUtc!
 
   "User whose avatar was reported."
   user: User!
