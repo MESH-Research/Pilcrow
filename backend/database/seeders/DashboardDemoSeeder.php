@@ -44,6 +44,14 @@ class DashboardDemoSeeder extends Seeder
         $coordinatorPool = User::factory()->count(3)->create();
         $reviewerPool = User::factory()->count(6)->create();
 
+        // Give most of the pooled users a populated profile so the
+        // publication admin's user-detail pages have something real
+        // to show off. A few are left blank to exercise the empty
+        // state in `UserProfileCard`.
+        $this->seedProfileMetadata($submitterPool, 0.85);
+        $this->seedProfileMetadata($coordinatorPool, 1.0);
+        $this->seedProfileMetadata($reviewerPool, 0.8);
+
         // A couple of staged (invited-but-not-accepted) reviewers so the
         // dashboard Review Team tab shows the "Invited" badge in action.
         $invitedReviewers = collect([
@@ -367,5 +375,123 @@ class DashboardDemoSeeder extends Seeder
                 'daysAgo' => 18,
             ],
         ];
+    }
+
+    /**
+     * Populate `profile_metadata` on each given user with a realistic
+     * mix of fields. `$coverage` (0..1) controls how often a user
+     * gets any profile at all — the remainder are left blank to
+     * exercise the empty state in the UI.
+     *
+     * The shape matches the ProfileMetadata GraphQL type and
+     * `UserProfileCard.vue`'s expectations: position_title,
+     * specialization, affiliation, biography, websites[],
+     * social_media{...}, academic_profiles{...}.
+     *
+     * @param \Illuminate\Support\Collection<int, \App\Models\User> $users
+     * @param float $coverage
+     * @return void
+     */
+    private function seedProfileMetadata($users, float $coverage = 0.8): void
+    {
+        $faker = fake();
+
+        $positions = [
+            'Associate Professor',
+            'Assistant Professor',
+            'Lecturer',
+            'Postdoctoral Fellow',
+            'Senior Researcher',
+            'Research Scientist',
+            'Independent Scholar',
+            'Librarian',
+        ];
+        $specializations = [
+            'Digital humanities, text encoding',
+            'Medieval literature and manuscript studies',
+            'Sociolinguistics of the early web',
+            'Cultural analytics and distant reading',
+            'Critical editing in open-access publishing',
+            'Stylometry and computational authorship',
+            'Archival studies and oral history',
+            'Comparative poetics',
+        ];
+
+        foreach ($users as $user) {
+            if ($faker->boolean((int)($coverage * 100)) === false) {
+                continue;
+            }
+
+            // Biography — roughly 20% of profiles get a long one that
+            // will trip the "Read more" control.
+            $biography = $faker->boolean(20)
+                ? $faker->paragraphs(3, asText: true)
+                : $faker->sentence(mt_rand(12, 24));
+
+            // Websites — 0..2 extras per profile.
+            $websites = [];
+            for ($i = 0; $i < mt_rand(0, 2); $i++) {
+                $websites[] = $faker->url();
+            }
+
+            $metadata = [
+                'position_title' => $faker->boolean(90)
+                    ? $faker->randomElement($positions)
+                    : null,
+                'specialization' => $faker->boolean(75)
+                    ? $faker->randomElement($specializations)
+                    : null,
+                'affiliation' => $faker->boolean(85)
+                    ? $faker->company() . ' University'
+                    : null,
+                'biography' => $faker->boolean(70) ? $biography : null,
+                'websites' => $websites,
+                'social_media' => [
+                    'twitter' => $faker->boolean(40)
+                        ? strtolower($faker->firstName() . $faker->randomDigit())
+                        : null,
+                    'linkedin' => $faker->boolean(50)
+                        ? 'linkedin.com/in/' . strtolower(
+                            $faker->userName()
+                        )
+                        : null,
+                    'facebook' => null,
+                    'instagram' => $faker->boolean(15)
+                        ? strtolower($faker->userName())
+                        : null,
+                    'google' => $faker->boolean(25)
+                        ? 'scholar.google.com/citations?user='
+                            . $faker->bothify('??###???')
+                        : null,
+                ],
+                'academic_profiles' => [
+                    'orcid_id' => $faker->boolean(60)
+                        ? $this->fakeOrcid($faker)
+                        : null,
+                    'humanities_commons' => $faker->boolean(25)
+                        ? strtolower($faker->userName())
+                        : null,
+                ],
+            ];
+
+            $user->profile_metadata = $metadata;
+            $user->save();
+        }
+    }
+
+    /**
+     * Generate a syntactically-valid-looking ORCID iD (16 digits in
+     * four groups, separated by hyphens). The check digit isn't a
+     * real ORCID check — seed data only, not a live identifier.
+     *
+     * @param \Faker\Generator $faker
+     * @return string
+     */
+    private function fakeOrcid($faker): string
+    {
+        $digits = $faker->numerify('################');
+
+        return substr($digits, 0, 4) . '-' . substr($digits, 4, 4)
+            . '-' . substr($digits, 8, 4) . '-' . substr($digits, 12, 4);
     }
 }
