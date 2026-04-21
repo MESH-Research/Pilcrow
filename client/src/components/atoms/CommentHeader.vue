@@ -21,13 +21,12 @@
   >
     <div class="row items-center">
       <comment-reference :comment="comment" />
-      <avatar-image
+      <reportable-avatar
         :user="comment.created_by"
         round
         size="30px"
         class="q-mr-sm"
       />
-      <report-avatar-button :user="comment.created_by" class="q-mr-sm" />
       <div class="row items-center q-pr-sm comment-header-name">
         <div
           class="text-h4 ellipsis"
@@ -78,8 +77,7 @@
 </template>
 
 <script setup lang="ts">
-import AvatarImage from "./AvatarImage.vue"
-import ReportAvatarButton from "./ReportAvatarButton.vue"
+import ReportableAvatar from "src/components/molecules/ReportableAvatar.vue"
 import CommentActions from "./CommentActions.vue"
 import CommentReference from "./CommentReference.vue"
 import { useTimeAgo } from "src/use/timeAgo"
