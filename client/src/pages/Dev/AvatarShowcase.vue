@@ -124,27 +124,14 @@
       </section>
 
       <section class="q-mb-xl">
-        <h2 class="text-h6">CommentHeader (atom)</h2>
+        <h2 class="text-h6">Full comment (in-situ replica)</h2>
         <p class="text-caption text-grey-7">
-          Header only — avatar + display label + timestamp. Uses the
-          <code>compact</code> ReportableAvatar variant (30px avatar).
-        </p>
-        <q-card flat bordered class="q-mb-sm">
-          <comment-header
-            v-for="user in users"
-            :key="'ch-' + user.id"
-            :comment="fakeComment(user) as unknown as CommentType"
-          />
-        </q-card>
-      </section>
-
-      <section class="q-mb-xl">
-        <h2 class="text-h6">Full comment (in situ)</h2>
-        <p class="text-caption text-grey-7">
-          CommentHeader in the same chrome a real OverallComment uses —
-          bordered grey card with the comment body underneath. This is
-          the closest approximation to what a user sees on a submission
-          review page.
+          Hand-rolled replica of the OverallComment card + CommentHeader
+          layout. We don't use the real CommentHeader component here
+          because its CommentActions child depends on submission context
+          (an injected <code>comment</code> and
+          <code>useSubmission()</code>) that doesn't exist outside a
+          submission page.
         </p>
         <q-card
           v-for="user in users"
@@ -152,10 +139,35 @@
           square
           class="bg-grey-1 shadow-2 q-mb-md comment"
         >
-          <comment-header
-            :comment="fakeComment(user) as unknown as CommentType"
-            class="comment-header"
-          />
+          <q-card-section class="q-py-xs q-pl-xs">
+            <div class="row items-center">
+              <q-btn flat dense class="q-mr-xs">
+                <q-icon size="xs" name="chat_bubble" color="primary" />
+              </q-btn>
+              <reportable-avatar
+                :user="user"
+                compact
+                round
+                size="30px"
+                class="q-mr-sm"
+              />
+              <div class="text-h4 ellipsis">
+                {{ user.display_label }}
+              </div>
+              <q-space />
+              <div class="text-caption text-no-wrap text-grey-7">
+                just now
+              </div>
+              <q-btn
+                flat
+                dense
+                round
+                icon="more_vert"
+                color="dark-grey"
+                class="q-ml-sm"
+              />
+            </div>
+          </q-card-section>
           <q-card-section>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit.
             Demonstrative comment body so the author identity reads in the
@@ -266,14 +278,12 @@ import AvatarImage from "src/components/atoms/AvatarImage.vue"
 import AvatarBlock from "src/components/molecules/AvatarBlock.vue"
 import ReportableAvatar from "src/components/molecules/ReportableAvatar.vue"
 import UserListItem from "src/components/atoms/UserListItem.vue"
-import CommentHeader from "src/components/atoms/CommentHeader.vue"
 import NameAvatarCell from "src/components/tables/common/NameAvatarCell.vue"
 import type { QTableBodyCellScope } from "src/components/tables/QueryTable.vue"
 import {
   GetAvatarShowcaseUsersDocument,
   type GetAvatarShowcaseUsersQuery,
-  type User as UserType,
-  type Comment as CommentType
+  type User as UserType
 } from "src/graphql/generated/graphql"
 
 type ShowcaseUser = GetAvatarShowcaseUsersQuery["users"]["data"][number]
@@ -300,20 +310,5 @@ function fakeScope(user: ShowcaseUser): QTableBodyCellScope {
     value: user,
     dense: true
   } as unknown as QTableBodyCellScope
-}
-
-function fakeComment(user: ShowcaseUser) {
-  const now = new Date().toISOString()
-  return {
-    __typename: "OverallComment" as const,
-    id: `showcase-${user.id}`,
-    content: "Demo comment body.",
-    created_at: now,
-    updated_at: now,
-    deleted_at: null,
-    read_at: now,
-    created_by: user,
-    updated_by: user
-  }
 }
 </script>
