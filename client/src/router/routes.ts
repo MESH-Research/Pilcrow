@@ -123,6 +123,9 @@ const routes: RouteRecordRaw[] = [
         path: "/admin/user/:id",
         props: true,
         component: () => import("src/layouts/Admin/UserDetailLayout.vue"),
+        meta: {
+          requiresAppAdmin: true
+        },
         children: [
           {
             name: "user_details",

@@ -49,6 +49,7 @@ class UserQueryTest extends ApiTestCase
     #[DataProvider('profileMetadataProvider')]
     public function testThatUserDetailsCanBeQueried(array $profile_metadata): void
     {
+        $this->beAppAdmin();
         $user = User::factory()->create([
             'name' => 'Regular User',
             'email' => 'regularuser@meshresearch.net',
@@ -158,6 +159,7 @@ class UserQueryTest extends ApiTestCase
     #[DataProvider('searchUserTermsProvider')]
     public function testSearchingForUsers(mixed $searchTerm = null, ?string $shouldFind = null, int $count = 0): void
     {
+        $this->actingAs(User::factory()->create());
         User::factory()->createManyQuietly(20);
         User::factory()->create([
             'name' => 'Rotated Building Assembly',

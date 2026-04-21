@@ -218,18 +218,16 @@ class UserAvatarMutationTest extends ApiTestCase
         $this->actingAs($user);
 
         $response = $this->graphQL(
-            'query ($id: ID!) { user(id: $id) { id avatar_upload_blocked } }',
-            ['id' => $user->id]
+            '{ currentUser { id avatar_upload_blocked } }'
         );
-        $response->assertJsonPath('data.user.avatar_upload_blocked', false);
+        $response->assertJsonPath('data.currentUser.avatar_upload_blocked', false);
 
         $user->revokePermissionTo(Permission::UPLOAD_AVATAR);
 
         $response = $this->graphQL(
-            'query ($id: ID!) { user(id: $id) { id avatar_upload_blocked } }',
-            ['id' => $user->id]
+            '{ currentUser { id avatar_upload_blocked } }'
         );
-        $response->assertJsonPath('data.user.avatar_upload_blocked', true);
+        $response->assertJsonPath('data.currentUser.avatar_upload_blocked', true);
     }
 
     public function testAvatarFieldIsNullWhenNoAvatarSet(): void
@@ -239,11 +237,10 @@ class UserAvatarMutationTest extends ApiTestCase
         $this->actingAs($user);
 
         $response = $this->graphQL(
-            'query ($id: ID!) { user(id: $id) { id avatar { url } } }',
-            ['id' => $user->id]
+            '{ currentUser { id avatar { url } } }'
         );
 
-        $response->assertJsonPath('data.user.avatar', null);
+        $response->assertJsonPath('data.currentUser.avatar', null);
     }
 
     public function testUploadedAvatarPathUsesUuidNotId(): void

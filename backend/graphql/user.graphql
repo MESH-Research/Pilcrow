@@ -22,7 +22,7 @@ type User {
     permissions: [Permission!] @method(name: "getAllPermissions")
     profile_metadata: ProfileMetadata
     raw_submissions: [Submission!]
-        @all(scopes: [])
+        @belongsToMany(relation: "submissions")
         @deprecated(reason: "Use `submissions` (SubmissionAssignment) instead")
     submissions(
         search: String @scope
