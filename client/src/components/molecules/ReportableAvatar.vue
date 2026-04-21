@@ -5,9 +5,9 @@
       v-if="shouldShow"
       round
       dense
-      size="6px"
-      color="grey-9"
-      text-color="white"
+      size="4px"
+      color="white"
+      text-color="grey-8"
       icon="more_horiz"
       padding="1px"
       class="reportable-avatar__trigger"
@@ -112,7 +112,7 @@ function openReport() {
   z-index: 2;
   opacity: 0;
   transition: opacity 0.15s ease-in-out;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.12);
 }
 .reportable-avatar:hover .reportable-avatar__trigger,
 .reportable-avatar:focus-within .reportable-avatar__trigger {
