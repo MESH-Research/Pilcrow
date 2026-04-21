@@ -17,11 +17,11 @@
           }"
         />
         <q-breadcrumbs-el :label="$t(`export.title`)" :to="optionsRoute" />
-        <q-breadcrumbs-el :label="$t(`export.preview`)" />
+        <q-breadcrumbs-el :label="$t(`export.preview.action`)" />
       </q-breadcrumbs>
     </nav>
     <article class="q-pa-lg">
-      <h2 class="q-my-none">{{ $t(`export.preview`) }}</h2>
+      <h2 class="q-my-none">{{ $t(`export.preview.title`) }}</h2>
       <div class="row q-gutter-md q-py-md">
         <q-btn
           :label="$t(`export.download.title`)"
