@@ -160,8 +160,8 @@ interface Props {
 const props = defineProps<Props>()
 
 const { t } = useI18n()
-const { isAppAdmin } = useCurrentUser()
-const canModerateAvatars = isAppAdmin
+const { can } = useCurrentUser()
+const canModerateAvatars = computed(() => can("moderate avatars"))
 
 const { result, refetch } = useQuery(getUserDetailDocument, { id: props.id })
 const user = computed(() => {
