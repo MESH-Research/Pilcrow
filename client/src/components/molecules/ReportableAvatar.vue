@@ -119,7 +119,7 @@ function openReport() {
   cursor: pointer;
   opacity: 0;
   transition: opacity 0.15s ease-in-out;
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.25);
 }
 .reportable-avatar:hover .reportable-avatar__trigger,
 .reportable-avatar:focus-within .reportable-avatar__trigger {
