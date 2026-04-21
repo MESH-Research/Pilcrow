@@ -1,5 +1,5 @@
 <template>
-  <div class="avatar-uploader q-gutter-md items-center">
+  <div v-if="!user.avatar_upload_blocked" class="avatar-uploader q-gutter-md items-center">
     <div class="row items-center q-gutter-md">
       <avatar-image
         :user="user"
@@ -61,7 +61,7 @@ import { UPLOAD_USER_AVATAR, DELETE_USER_AVATAR } from "src/graphql/mutations"
 import type { avatarImageFragment } from "src/graphql/generated/graphql"
 
 interface Props {
-  user: avatarImageFragment
+  user: avatarImageFragment & { avatar_upload_blocked?: boolean }
 }
 const props = defineProps<Props>()
 

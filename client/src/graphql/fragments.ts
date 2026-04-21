@@ -43,6 +43,7 @@ export const _CURRENT_USER_FIELDS = gql`
       name
     }
     highest_privileged_role
+    avatar_upload_blocked
     ...avatarFields
   }
   ${_AVATAR_FIELDS}

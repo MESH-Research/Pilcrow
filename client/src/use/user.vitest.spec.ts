@@ -52,6 +52,7 @@ describe("useCurrentUser composable", () => {
           username: "helloUser",
           email_verified_at: "2021-08-14 02:26:32",
           highest_privileged_role: UserRoles.application_admin,
+          avatar_upload_blocked: false,
           roles: [{ name: "tester" }]
         }
       }
