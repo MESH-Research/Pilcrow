@@ -1036,6 +1036,20 @@ const categories = computed<StatusCategory[]>(() =>
     flex: 0 0 calc(50% - 3px);
   }
 
+  /* At phone width only one category card survives (HIDDEN_CATEGORY_KEYS
+     drops the others), so q-gutter-md is pure tax — its negative
+     container margin + per-child 16px left margin end up pushing the
+     card off-center to the right. Reset both on the column and its
+     only child. */
+  .row > .column.q-gutter-md {
+    margin-top: 0;
+    margin-left: 0;
+  }
+  .row > .column.q-gutter-md > * {
+    margin-top: 0;
+    margin-left: 0;
+  }
+
   /* Tighten up the vertical rhythm so the whole diagram fits
      closer to the fold on a phone. Biggest wins: lane padding,
      the active-pipeline row gap (which sits between stages and
