@@ -165,6 +165,57 @@
       </section>
 
       <section class="q-mb-xl">
+        <h2 class="text-h6">Avatar + username combinations (raw markup)</h2>
+        <p class="text-caption text-grey-7">
+          Not using any identity component — just the avatar next to the
+          display label at a few common sizes so you can eyeball
+          baseline alignment.
+        </p>
+        <q-card flat bordered class="q-pa-md">
+          <div
+            v-for="user in users"
+            :key="'combo-' + user.id"
+            class="q-mb-md"
+          >
+            <div class="row items-center q-gutter-md q-mb-sm">
+              <avatar-image :user="user" round size="24px" />
+              <div>
+                <span class="text-body2 text-weight-bold">
+                  {{ user.display_label }}
+                </span>
+                <span class="text-caption text-grey-7 q-ml-xs">
+                  @{{ user.username }}
+                </span>
+              </div>
+            </div>
+            <div class="row items-center q-gutter-md q-mb-sm">
+              <avatar-image :user="user" round size="30px" />
+              <div>
+                <div class="text-body1 text-weight-bold">
+                  {{ user.display_label }}
+                </div>
+                <div class="text-caption text-grey-7">
+                  @{{ user.username }}
+                </div>
+              </div>
+            </div>
+            <div class="row items-center q-gutter-md">
+              <avatar-image :user="user" rounded size="48px" />
+              <div>
+                <div class="text-subtitle1 text-weight-bold">
+                  {{ user.display_label }}
+                </div>
+                <div class="text-body2 text-grey-7">
+                  @{{ user.username }}
+                </div>
+              </div>
+            </div>
+            <q-separator class="q-mt-md" />
+          </div>
+        </q-card>
+      </section>
+
+      <section class="q-mb-xl">
         <h2 class="text-h6">Display label helpers</h2>
         <p class="text-caption text-grey-7">
           <code>display_label</code> and <code>@username</code> as used in plain
