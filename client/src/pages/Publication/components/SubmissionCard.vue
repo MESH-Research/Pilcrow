@@ -19,53 +19,23 @@
     </q-card-section>
     <q-separator />
     <q-card-section class="q-py-sm q-px-md">
-      <div class="text-caption text-grey-7 submission-id">
-        #{{ submission.id }}
-      </div>
-      <router-link
-        :to="{
-          name: 'submission:details',
-          params: { id: submission.id }
-        }"
-        class="text-primary submission-title"
-        style="font-size: 1.25rem; line-height: 1.3"
-        :title="submission.title"
-      >
-        {{ submission.title }}
-      </router-link>
-    </q-card-section>
-    <q-separator />
-
-    <q-card-section class="q-py-sm q-px-md q-pt-none">
-      <div :class="['items-start q-gutter-sm', stackHeader ? 'column' : 'row']">
-        <q-item
-          v-if="submission.created_by"
-          class="q-pa-none submitter-item"
-          :class="[
-            stackHeader ? '' : 'col',
-            submitterLink ? 'user-item-link' : ''
-          ]"
-          :clickable="!!submitterLink"
-          :to="submitterLink || undefined"
-          @click.stop
-        >
-          <q-item-section side>
-            <avatar-image :user="submission.created_by" size="40px" rounded />
-          </q-item-section>
-          <q-item-section style="min-width: 0">
-            <q-item-label class="ellipsis">
-              {{ submission.created_by.name }}
-            </q-item-label>
-            <q-item-label
-              v-if="submission.created_by.username"
-              caption
-              class="ellipsis"
-            >
-              {{ submission.created_by.username }}
-            </q-item-label>
-          </q-item-section>
-        </q-item>
-        <q-space v-else-if="!stackHeader" />
+      <div class="row items-start no-wrap q-gutter-sm">
+        <div class="col" style="min-width: 0">
+          <div class="text-caption text-grey-7 submission-id">
+            #{{ submission.id }}
+          </div>
+          <router-link
+            :to="{
+              name: 'submission:details',
+              params: { id: submission.id }
+            }"
+            class="text-primary submission-title"
+            style="font-size: 1.25rem; line-height: 1.3"
+            :title="submission.title"
+          >
+            {{ submission.title }}
+          </router-link>
+        </div>
         <div
           class="status-chip row items-center no-wrap q-px-sm q-py-xs"
           :class="[canChangeStatus ? 'cursor-pointer' : '']"
@@ -115,6 +85,38 @@
           </q-menu>
         </div>
       </div>
+    </q-card-section>
+    <q-separator />
+
+    <!-- Submitter(s): the submission's author(s). Modeled as a list
+         because we're expected to grow into co-submitters later. -->
+    <q-card-section v-if="submission.created_by" class="q-py-sm q-px-md">
+      <div class="text-caption text-weight-bold text-grey-7 q-mb-sm">
+        {{ $t("publication.dashboard.headers.created_by") }}
+      </div>
+      <q-item
+        class="q-pa-none submitter-item"
+        :class="submitterLink ? 'user-item-link' : ''"
+        :clickable="!!submitterLink"
+        :to="submitterLink || undefined"
+        @click.stop
+      >
+        <q-item-section side>
+          <avatar-image :user="submission.created_by" size="40px" rounded />
+        </q-item-section>
+        <q-item-section style="min-width: 0">
+          <q-item-label class="ellipsis">
+            {{ submission.created_by.name }}
+          </q-item-label>
+          <q-item-label
+            v-if="submission.created_by.username"
+            caption
+            class="ellipsis"
+          >
+            {{ submission.created_by.username }}
+          </q-item-label>
+        </q-item-section>
+      </q-item>
     </q-card-section>
 
     <q-separator />
@@ -296,11 +298,6 @@ function teamMemberLinkTo(
   }
 }
 
-// At smaller viewport widths cards are narrow (especially in the 2-col
-// grid range); stack the submitter and status vertically rather than
-// letting them overflow side-by-side.
-const stackHeader = computed(() => $q.screen.lt.md)
-
 const statusStyle = computed(
   () =>
     statusStyleMap[props.submission.status] ?? {
@@ -381,6 +378,11 @@ const relativeSubmitted = computed(() =>
    highlight here — suppress it and provide our own neutral fill. */
 .user-item-link {
   border-radius: 4px;
+  /* Equal left padding to the accent bar we add when this row is the
+     currently-viewed user — keeps non-active rows from shifting when
+     a sibling takes on the active style. */
+  padding-left: 4px;
+  border-left: 3px solid transparent;
 }
 .user-item-link :deep(.q-focus-helper) {
   display: none;
@@ -391,6 +393,26 @@ const relativeSubmitted = computed(() =>
 .body--dark .user-item-link:hover {
   background: rgba(255, 255, 255, 0.06);
 }
+/* When the row's :to matches the current route (i.e. we're on that
+   user's detail page and they appear in this submission's team), the
+   router-link--active class lights it up with the app-wide nav tint
+   ($active, a bright blue) — reads more like a misfired nav
+   highlight than "this is the subject you're looking at". Override
+   with the warm highlight tone + a left accent so it reads as a
+   "you are here" marker instead. */
+.user-item-link.q-router-link--active,
+.user-item-link.q-router-link--exact-active {
+  background-color: #fdf2d1 !important;
+  border-left-color: #d9a441 !important;
+  color: inherit !important;
+}
+.body--dark .user-item-link.q-router-link--active,
+.body--dark .user-item-link.q-router-link--exact-active {
+  background-color: rgba(216, 171, 65, 0.14) !important;
+  border-left-color: #d9a441 !important;
+  color: inherit !important;
+}
+
 .submission-card .submission-id {
   font-size: 0.7rem;
   line-height: 1.2;
