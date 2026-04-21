@@ -2,6 +2,7 @@ import { installQuasarPlugin } from "app/test/vitest/utils"
 import { mount } from "@vue/test-utils"
 import AdminDashboard from "./AdminDashboard.vue"
 import { describe, expect, it, vi } from "vitest"
+import { computed } from "vue"
 
 const mockPush = vi.fn()
 vi.mock("vue-router", () => ({
@@ -10,6 +11,14 @@ vi.mock("vue-router", () => ({
   }),
   useRoute: () => ({
     query: {}
+  })
+}))
+
+vi.mock("src/use/avatarReports", () => ({
+  useAvatarReportsPendingCount: () => ({
+    count: computed(() => 0),
+    canModerate: computed(() => true),
+    refetch: vi.fn()
   })
 }))
 

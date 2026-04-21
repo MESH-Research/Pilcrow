@@ -67,7 +67,15 @@
               <q-separator />
               <q-item :to="{ name: 'admin:dashboard' }">
                 <q-item-section avatar>
-                  <q-icon name="admin_panel_settings" />
+                  <q-icon name="admin_panel_settings">
+                    <q-badge
+                      v-if="pendingReportsCount > 0"
+                      floating
+                      color="red"
+                      :label="pendingReportsCount"
+                      data-cy="header_admin_pending_badge"
+                    />
+                  </q-icon>
                 </q-item-section>
                 <q-item-section>
                   {{ $t("header.application_administration") }}
@@ -158,6 +166,7 @@ import { useMagicKeys } from "@vueuse/core"
 import AvatarImage from "src/components/atoms/AvatarImage.vue"
 import NotificationPopup from "src/components/molecules/NotificationPopup.vue"
 import { useCurrentUser } from "src/use/user"
+import { useAvatarReportsPendingCount } from "src/use/avatarReports"
 import { watchEffect } from "vue"
 import { useQuasar } from "quasar"
 import { useI18n } from "vue-i18n"
@@ -173,6 +182,7 @@ interface Props {
 defineProps<Props>()
 
 const { currentUser, isAppAdmin } = useCurrentUser()
+const { count: pendingReportsCount } = useAvatarReportsPendingCount()
 const { locale } = useI18n({ useScope: "global" })
 const { ctrl, shift, alt, t } = useMagicKeys()
 

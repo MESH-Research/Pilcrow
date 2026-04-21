@@ -130,6 +130,7 @@ import {
   DISMISS_AVATAR_REPORT,
   RESOLVE_AVATAR_REPORT_AND_REMOVE_AVATAR
 } from "src/graphql/mutations"
+import { useAvatarReportsPendingCount } from "src/use/avatarReports"
 
 type ReportRow = GetAvatarReportsQuery["avatarReports"]["data"][number]
 
@@ -145,9 +146,18 @@ const queryVariables = computed(() =>
   statusFilter.value === null ? {} : { status: statusFilter.value }
 )
 
+const { count: pendingReportsCount, refetch: refetchPendingCount } =
+  useAvatarReportsPendingCount()
+
 const statusOptions = computed(() => [
   { value: null, label: t("admin_avatar_reports.filter_all") },
-  { value: "PENDING", label: t("admin_avatar_reports.filter_pending") },
+  {
+    value: "PENDING",
+    label:
+      pendingReportsCount.value > 0
+        ? `${t("admin_avatar_reports.filter_pending")} (${pendingReportsCount.value})`
+        : t("admin_avatar_reports.filter_pending")
+  },
   { value: "DISMISSED", label: t("admin_avatar_reports.filter_dismissed") },
   { value: "REMOVED", label: t("admin_avatar_reports.filter_removed") }
 ])
@@ -218,6 +228,7 @@ const { mutate: resolveMutation } = useMutation(
 async function dismiss(row: ReportRow) {
   try {
     await dismissMutation({ id: row.id })
+    void refetchPendingCount()
     Notify.create({
       type: "positive",
       message: t("admin_avatar_reports.dismissed_success")
@@ -235,6 +246,7 @@ function confirmRemove(row: ReportRow) {
     async ({ blockFutureUploads }: { blockFutureUploads: boolean }) => {
       try {
         await resolveMutation({ id: row.id, blockFutureUploads })
+        void refetchPendingCount()
         Notify.create({
           type: "positive",
           message: t("admin_avatar_reports.removed_success")

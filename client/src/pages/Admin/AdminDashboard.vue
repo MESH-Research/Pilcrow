@@ -51,7 +51,15 @@
           @click="goToAvatarReports"
         >
           <q-card-section class="row items-center no-wrap q-gutter-md">
-            <q-icon name="flag" size="xl" color="accent" />
+            <q-icon name="flag" size="xl" color="accent">
+              <q-badge
+                v-if="pendingReportsCount > 0"
+                floating
+                color="red"
+                :label="pendingReportsCount"
+                data-cy="admin_card_avatar_reports_badge"
+              />
+            </q-icon>
             <div>
               <div class="text-subtitle1 text-weight-bold">
                 {{ $t("admin_avatar_reports.page_title") }}
@@ -67,10 +75,26 @@
   </div>
 </template>
 
+<script lang="ts">
+import { graphql } from "src/graphql/generated"
+
+graphql(`
+  query GetPendingAvatarReportCount {
+    avatarReports(status: PENDING, first: 1, page: 1) {
+      paginatorInfo {
+        total
+      }
+    }
+  }
+`)
+</script>
+
 <script setup lang="ts">
 import { useRouter } from "vue-router"
+import { useAvatarReportsPendingCount } from "src/use/avatarReports"
 
 const { push } = useRouter()
+const { count: pendingReportsCount } = useAvatarReportsPendingCount()
 
 function goToUsers() {
   push("/admin/users")
