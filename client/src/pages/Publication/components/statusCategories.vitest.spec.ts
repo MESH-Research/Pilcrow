@@ -2,12 +2,11 @@ import { describe, expect, it } from "vitest"
 import { statusCategories, statusStyleMap } from "./statusCategories"
 
 describe("statusCategories", () => {
-  it("defines four categories", () => {
-    expect(statusCategories).toHaveLength(4)
+  it("defines three categories", () => {
+    expect(statusCategories).toHaveLength(3)
     expect(statusCategories.map((c) => c.key)).toEqual([
       "needs_action",
       "in_progress",
-      "awaiting_author",
       "completed"
     ])
   })

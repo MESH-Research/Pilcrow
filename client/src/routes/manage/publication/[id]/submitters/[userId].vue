@@ -9,28 +9,36 @@
         <q-card-section class="row items-center no-wrap q-gutter-md">
           <avatar-image :user="publicationUser.user" size="72px" rounded />
           <div class="col column q-gutter-xs" style="min-width: 0">
-            <div class="row items-center q-gutter-sm">
-              <div class="text-h6 ellipsis">{{ displayName }}</div>
+            <div class="text-h5 text-weight-bold q-my-none ellipsis">
+              {{ displayName }}
               <q-badge
                 v-if="publicationUser.user.staged"
                 color="warning"
                 text-color="dark"
+                class="q-ml-sm align-middle"
                 :aria-label="$t('publication.manage.user_detail.invited_aria')"
               >
                 <q-icon name="schedule" size="xs" class="q-mr-xs" />
                 {{ $t("publication.manage.user_detail.invited_badge") }}
               </q-badge>
             </div>
+            <!-- Username + email stacked under the name. Same
+                 size + muted tone so they share a visual family;
+                 email stays an anchor but inherits color by
+                 default and only promotes to primary on hover. -->
             <div
               v-if="publicationUser.user.username"
-              class="text-caption text-grey-7"
+              class="text-body2 text-grey-7 user-meta"
             >
               {{ publicationUser.user.username }}
             </div>
-            <div v-if="publicationUser.user.email" class="text-body2">
+            <div
+              v-if="publicationUser.user.email"
+              class="text-body2 text-grey-7 user-meta"
+            >
               <a
                 :href="`mailto:${publicationUser.user.email}`"
-                class="text-primary"
+                class="user-meta-email"
               >
                 {{ publicationUser.user.email }}
               </a>
@@ -38,7 +46,7 @@
           </div>
           <q-card class="bg-grey-2" flat>
             <q-card-section class="q-pa-md text-center">
-              <div class="text-overline text-grey-7">
+              <div class="role-label q-my-none">
                 {{ $t("publication.manage.user_detail.role.submitter") }}
               </div>
               <div class="text-h4">
@@ -61,47 +69,21 @@
              drill in. Only renders statuses that have submissions. -->
         <q-separator v-if="statusBreakdown.length" />
         <q-card-section v-if="statusBreakdown.length" class="q-py-sm">
-          <div class="row items-center q-gutter-sm">
-            <span class="text-caption text-grey-7 q-mr-sm">
-              {{ $t("publication.manage.user_detail.status_breakdown") }}
-            </span>
-            <router-link
-              v-for="entry in statusBreakdown"
-              :key="entry.status"
-              class="status-mini-chip row items-center q-px-sm"
-              :class="{ 'status-mini-chip--active': isActive(entry.status) }"
-              :style="`border-color: var(--q-${styleFor(entry.status).color})`"
-              :to="chipLinkTo(entry.status)"
-              :title="
-                isActive(entry.status)
-                  ? $t('publication.manage.user_detail.clear_filter')
-                  : $t(`submission.status.${entry.status}`)
-              "
-            >
-              <span
-                :class="[
-                  'status-mini-dot',
-                  `bg-${styleFor(entry.status).color}`,
-                  styleFor(entry.status).textClass,
-                  styleFor(entry.status).pattern
-                ]"
-              >
-                <q-icon
-                  :name="styleFor(entry.status).icon"
-                  size="10px"
-                  class="pattern-text-mask"
-                />
-              </span>
-              <span class="text-caption q-ml-xs">
-                {{ $t(`submission.status.${entry.status}`) }}
-              </span>
-              <span class="text-caption text-weight-bold q-ml-xs">
-                {{ entry.count }}
-              </span>
-            </router-link>
-          </div>
+          <SubmissionStatusBar
+            :counts="statusBreakdown"
+            :filtered-status="activeFilter"
+            :link-for="(status) => chipLinkTo(status)"
+            :closed-link-for="(statuses) => submissionsFilterTo(statuses)"
+            :clear-link="clearLink"
+          />
         </q-card-section>
       </q-card>
+
+      <UserProfileCard
+        v-if="publicationUser?.user?.profile_metadata"
+        :profile="publicationUser.user.profile_metadata"
+        class="q-mb-md"
+      />
 
       <h3 class="q-mt-lg q-mb-sm" style="font-size: 1.125rem">
         {{ $t("publication.manage.user_detail.submissions_heading") }}
@@ -166,6 +148,9 @@ graphql(`
           email
           staged
           ...avatarImage
+          profile_metadata {
+            ...userProfileCard
+          }
         }
         as_submitter_count
         submission_status_counts(roles: [submitter]) {
@@ -214,6 +199,8 @@ import { computed, ref, watch } from "vue"
 import { useQuasar } from "quasar"
 import { useRoute, useRouter } from "vue-router"
 import AvatarImage from "src/components/atoms/AvatarImage.vue"
+import UserProfileCard from "src/components/users/UserProfileCard.vue"
+import SubmissionStatusBar from "src/components/users/SubmissionStatusBar.vue"
 import QueryTable, {
   type QueryTableColumn
 } from "src/components/tables/QueryTable.vue"
@@ -222,7 +209,6 @@ import TextCell from "src/components/tables/common/TextCell.vue"
 import ReviewTeamCell from "src/components/tables/common/ReviewTeamCell.vue"
 import StatusBadgeCell from "src/pages/Publication/components/StatusBadgeCell.vue"
 import SubmissionCard from "src/pages/Publication/components/SubmissionCard.vue"
-import { statusStyleMap } from "src/pages/Publication/components/statusCategories"
 import {
   GetPublicationSubmitterDetailDocument,
   type GetPublicationSubmitterDetailQuery,
@@ -299,17 +285,6 @@ const statusBreakdown = computed(() => {
     .sort((a, b) => b.count - a.count)
 })
 
-function styleFor(status: string) {
-  return (
-    statusStyleMap[status] ?? {
-      color: "grey-5",
-      textClass: "text-white",
-      icon: "description",
-      pattern: ""
-    }
-  )
-}
-
 // Link target: stay on this same page, just set the `status` query
 // param. Matches the bracketed comma-separated encoding the
 // QueryTable search/filter layer uses elsewhere. We preserve
@@ -358,26 +333,30 @@ const tableVariables = computed(() => ({
   ...(statusFilter.value.length ? { status: statusFilter.value } : {})
 }))
 
-// A chip is "active" when its status is the only one in the
-// current filter — the UX treats the breakdown as single-status
-// toggles, not a multi-select. Clicking an already-active chip
-// drops the filter and returns the full list.
-function isActive(status: string): boolean {
-  return statusFilter.value.length === 1 && statusFilter.value[0] === status
-}
+// The status breakdown is modeled as single-status filter toggles —
+// the "active" filter is the sole status when exactly one is set,
+// null otherwise.
+const activeFilter = computed(() =>
+  statusFilter.value.length === 1 ? statusFilter.value[0] : null
+)
 
 function chipLinkTo(status: string) {
-  if (isActive(status)) {
-    const query: Record<string, string> = {}
-    if (route.query.view === "grid") query.view = "grid"
-    return {
-      name: "manage:publication:submitter" as const,
-      params: { id: props.id, userId: props.userId },
-      query
-    }
-  }
+  if (activeFilter.value === status) return clearLink.value
   return submissionsFilterTo([status])
 }
+
+// Route back to the unfiltered detail page. Preserves `view=grid`
+// so clearing the filter doesn't also flip the user back to table
+// layout if they'd opted into grid.
+const clearLink = computed(() => {
+  const query: Record<string, string> = {}
+  if (route.query.view === "grid") query.view = "grid"
+  return {
+    name: "manage:publication:submitter" as const,
+    params: { id: props.id, userId: props.userId },
+    query
+  }
+})
 
 // Grid vs table preference, mirrored in the URL so a link can open
 // the view the way the user last left it.
@@ -452,6 +431,35 @@ const columns: QueryTableColumn[] = [
 </script>
 
 <style scoped>
+/* Username + email line under the display name. Both share the
+   same text-body2 muted grey so they scan as one metadata row;
+   the email's underline-on-hover keeps a subtle link affordance
+   without competing with the name for visual weight. */
+.user-meta {
+  line-height: 1.35;
+}
+.user-meta-email {
+  color: inherit;
+  text-decoration: none;
+}
+.user-meta-email:hover,
+.user-meta-email:focus-visible {
+  color: var(--q-primary);
+  text-decoration: underline;
+}
+/* Role label above a count — matches the dashboard's stage-label
+   exactly (0.7rem, tracked, semi-bold, muted grey, uppercase)
+   so both surfaces share one vocabulary. */
+.role-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.6);
+}
+.body--dark .role-label {
+  color: rgba(255, 255, 255, 0.72);
+}
 :deep(.q-table tbody td) {
   vertical-align: top;
   padding-top: 12px;
@@ -473,43 +481,17 @@ const columns: QueryTableColumn[] = [
   padding: 0 0 4px 0;
 }
 :deep(.q-table--grid .q-table__grid-content) {
-  background-color: #f5f5f5;
   border-radius: 4px;
-}
-/* Compact status chips shown in the user header. Smaller than the
-   pipeline chips — they're just an at-a-glance readout, not a
-   workflow element. */
-.status-mini-chip {
-  text-decoration: none;
-  color: inherit;
-  border: 1px solid;
-  border-radius: 9999px;
-  padding: 2px 8px;
-  line-height: 1.4;
-  background: #fff;
-}
-.status-mini-chip:hover {
-  filter: brightness(0.98);
-}
-.status-mini-chip--active {
-  box-shadow: 0 0 0 2px var(--q-primary);
-  font-weight: 500;
-}
-.body--dark .status-mini-chip {
-  background: #1d1d1d;
-}
-.status-mini-dot {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  flex: 0 0 auto;
 }
 </style>
 
 <style>
+/* Grid tint — kept unscoped so it wins the specificity tiebreak
+   over Quasar's default (scoped `:deep()` rules were losing
+   against the dark-mode sibling in some stylesheet orderings). */
+.q-table--grid .q-table__grid-content {
+  background-color: #f5f5f5;
+}
 .body--dark .q-table--grid .q-table__grid-content {
   background-color: #262626;
 }

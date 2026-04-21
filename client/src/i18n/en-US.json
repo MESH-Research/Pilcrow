@@ -493,7 +493,7 @@
       "categories": {
         "needs_action": "Needs Action",
         "in_progress": "In Progress",
-        "completed": "Completed"
+        "completed": "Closed"
       },
       "lanes": {
         "active": "Active pipeline",
@@ -569,7 +569,7 @@
         },
         "groups": {
           "active": "Active",
-          "completed": "Completed"
+          "completed": "Closed"
         },
         "submission_icon_list": "no submissions | {n} submission | {n} submissions",
         "submission_icon_overflow": "{n} more submission | {n} more submissions"
@@ -582,7 +582,30 @@
         "submissions_heading": "Submissions",
         "no_submissions": "No submissions to show.",
         "status_breakdown": "Status breakdown",
+        "submissions_by_status": "Submissions by status",
+        "active": "Active",
+        "closed": "Closed",
         "clear_filter": "Clear status filter",
+        "filtered_by": "Filtered: {status}",
+        "profile": "Profile",
+        "bio_expand": "Read more",
+        "bio_collapse": "Show less",
+        "profile_fields": {
+          "position_title": "Position title",
+          "affiliation": "Affiliation",
+          "specialization": "Specialization",
+          "biography": "Biography",
+          "academic": "Academic profiles",
+          "social": "Social media",
+          "websites": "Websites",
+          "orcid": "ORCID",
+          "humanities_commons": "Humanities Commons",
+          "twitter": "Twitter / X",
+          "linkedin": "LinkedIn",
+          "facebook": "Facebook",
+          "instagram": "Instagram",
+          "google": "Google Scholar"
+        },
         "role": {
           "submitter": "Submitter",
           "reviewer": "Reviewer",
@@ -590,7 +613,7 @@
         },
         "phase": {
           "active": "Active",
-          "completed": "Completed"
+          "completed": "Closed"
         }
       }
     },
