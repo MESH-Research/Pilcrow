@@ -12,7 +12,14 @@ type User {
     email_verified_at: DateTimeUtc
     roles: [Role!]! @belongsToMany
     highest_privileged_role: UserRoles @method(name: "getHighestPrivilegedRole")
-    permissions: [Permission!] @belongsToMany
+    """
+    Every permission the user effectively has — both directly-assigned
+    and inherited via their roles. Uses `getAllPermissions()` rather
+    than the `permissions()` relation so role-derived permissions are
+    included (e.g. Application Administrators inherit `moderate
+    avatars` via the role, not a direct user->permission pivot).
+    """
+    permissions: [Permission!] @method(name: "getAllPermissions")
     profile_metadata: ProfileMetadata
     raw_submissions: [Submission!]
         @all(scopes: [])

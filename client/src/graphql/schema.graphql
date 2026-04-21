@@ -1,4 +1,4 @@
-"""Academic profile data for the profile metadata of a user"""
+"Academic profile data for the profile metadata of a user"
 type AcademicProfiles {
   humanities_commons: String
   orcid_id: String
@@ -21,19 +21,15 @@ type Audit {
   user: User!
 }
 
-"""
-An uploaded avatar image with URLs for the original and derived conversions.
-"""
+"An uploaded avatar image with URLs for the original and derived conversions."
 type Avatar {
-  """URL for the 256x256 medium conversion, suitable for profile pages."""
+  "URL for the 256x256 medium conversion, suitable for profile pages."
   medium_url: String!
 
-  """
-  URL for the 96x96 thumbnail conversion, suitable for inline avatar display.
-  """
+  "URL for the 96x96 thumbnail conversion, suitable for inline avatar display."
   thumb_url: String!
 
-  """URL for the original uploaded image."""
+  "URL for the original uploaded image."
   url: String!
 }
 
@@ -45,35 +41,36 @@ type AvatarReport {
   created_at: DateTimeUtc!
   id: ID!
 
-  """Free-text reason provided by the reporter."""
+  "Free-text reason provided by the reporter."
   reason: String
 
-  """User who filed the report. Null if that user has since been deleted."""
+  "User who filed the report. Null if that user has since been deleted."
   reporter: User
 
-  """Moderator notes added at resolution time."""
+  "Moderator notes added at resolution time."
   resolution_notes: String
 
-  """When the report was resolved."""
+  "When the report was resolved."
   resolved_at: DateTimeUtc
 
-  """Administrator who resolved the report, if any."""
+  "Administrator who resolved the report, if any."
   resolver: User
 
-  """Current moderation status of the report."""
+  "Current moderation status of the report."
   status: AvatarReportStatus!
+
   updated_at: DateTimeUtc!
 
-  """User whose avatar was reported."""
+  "User whose avatar was reported."
   user: User!
 }
 
-"""A paginated list of AvatarReport items."""
+"A paginated list of AvatarReport items."
 type AvatarReportPaginator implements Paginator {
-  """A list of AvatarReport items."""
+  "A list of AvatarReport items."
   data: [AvatarReport!]!
 
-  """Pagination information about the list of items."""
+  "Pagination information about the list of items."
   paginatorInfo: PaginatorInfo!
 }
 
@@ -94,7 +91,7 @@ interface Comment {
   updated_by: User!
 }
 
-"""The type of comments to find participants for"""
+"The type of comments to find participants for"
 enum CommentParticipantType {
   INLINE
   OVERALL
@@ -133,26 +130,20 @@ input CreateStyleCriteriaInput {
   name: String!
 }
 
-"""
-Input type for creating a new submission via the createSubmissionDraft mutation
-"""
+"Input type for creating a new submission via the createSubmissionDraft mutation"
 input CreateSubmissionDraftInput {
   publication_id: ID!
   submitters: CreateSubmissionUserInput
   title: String!
 }
 
-"""
-Input type for creating a new association between an uploaded file and a submission
-"""
+"Input type for creating a new association between an uploaded file and a submission"
 input CreateSubmissionFileInput {
   file_upload: Upload!
   submission_id: ID!
 }
 
-"""
-Input type for connecting newly created submissions to files via nested mutation
-"""
+"Input type for connecting newly created submissions to files via nested mutation"
 input CreateSubmissionFilesHasMany {
   create: Upload!
 }
@@ -161,27 +152,25 @@ input CreateSubmissionUserInput {
   connect: [ID!]!
 }
 
-"""Input type for creating a new user via the userCreate mutation"""
+"Input type for creating a new user via the userCreate mutation"
 input CreateUserInput {
-  """Email address. Must be unique. (required)"""
+  "Email address. Must be unique. (required)"
   email: String!
 
-  """Display name. (optional)"""
+  "Display name. (optional)"
   name: String
 
-  """Password used to login to the application. (required)"""
+  "Password used to login to the application. (required)"
   password: String!
 
-  """Username. Must be unique. (required)"""
+  "Username. Must be unique. (required)"
   username: String!
 }
 
-"""A date string with format `Y-m-d`, e.g. `2011-05-23`."""
+"A date string with format `Y-m-d`, e.g. `2011-05-23`."
 scalar Date
 
-"""
-A datetime string with format `Y-m-d H:i:s`, e.g. `2018-05-23 13:43:32`.
-"""
+"A datetime string with format `Y-m-d H:i:s`, e.g. `2018-05-23 13:43:32`."
 scalar DateTime
 
 scalar DateTimeUtc
@@ -199,9 +188,7 @@ input GeneralSettingsInput {
   site_name: String
 }
 
-"""
-A button that apepars on the Login page for a supported external identity provider
-"""
+"A button that apepars on the Login page for a supported external identity provider"
 type IdentityProvider {
   icon: String!
   label: String!
@@ -209,7 +196,7 @@ type IdentityProvider {
   name: String!
 }
 
-"""An inline comment of a submission"""
+"An inline comment of a submission"
 type InlineComment implements Comment {
   content: String!
   created_at: DateTimeUtc!
@@ -221,7 +208,7 @@ type InlineComment implements Comment {
   replies(
     createdBy: [ID!]
 
-    """Allows to filter if trashed elements should be fetched."""
+    "Allows to filter if trashed elements should be fetched."
     trashed: Trashed
   ): [InlineCommentReply!]
   style_criteria: [InlineCommentStyleCriteria!]
@@ -235,7 +222,7 @@ input InlineCommentHasManyInput {
   update: [UpdateInlineCommentInput!]
 }
 
-"""A reply to an inline comment of a submission"""
+"A reply to an inline comment of a submission"
 type InlineCommentReply implements Comment {
   content: String!
   created_at: DateTimeUtc!
@@ -249,17 +236,17 @@ type InlineCommentReply implements Comment {
   updated_by: User!
 }
 
-"""The static style criteria of an inline comment"""
+"The static style criteria of an inline comment"
 type InlineCommentStyleCriteria {
   icon: String
   id: ID
   name: String
 }
 
-"""JSON-format data"""
+"JSON-format data"
 scalar JSON
 
-"""A response from an external identity provider"""
+"A response from an external identity provider"
 type LoginOauthResponse {
   action: String
   provider: Provider
@@ -277,28 +264,28 @@ input MarkOverallCommentsReadInput {
 }
 
 type Mutation {
-  """Accept an invitation to a submission as the assigned role"""
+  "Accept an invitation to a submission as the assigned role"
   acceptSubmissionInvite(expires: String!, token: String!, user: AcceptSubmissionInviteInput, uuid: String!): User
 
-  """Create a new publication"""
+  "Create a new publication"
   createPublication(publication: CreatePublicationInput!): Publication!
 
-  """Create a new submission under a publication"""
+  "Create a new submission under a publication"
   createSubmissionDraft(input: CreateSubmissionDraftInput!): Submission!
 
-  """Create a new user"""
+  "Create a new user"
   createUser(user: CreateUserInput!): User!
 
-  """Delete an inline comment of a submission"""
+  "Delete an inline comment of a submission"
   deleteInlineComment(input: DeleteCommentInput!): Submission!
 
-  """Delete an overall comment of a submission"""
+  "Delete an overall comment of a submission"
   deleteOverallComment(input: DeleteCommentInput!): Submission!
 
-  """Remove a user's avatar image."""
+  "Remove a user's avatar image."
   deleteUserAvatar(id: ID!): User!
 
-  """Dismiss a pending avatar report without removing the avatar."""
+  "Dismiss a pending avatar report without removing the avatar."
   dismissAvatarReport(id: ID!, notes: String): AvatarReport!
 
   """
@@ -313,32 +300,31 @@ type Mutation {
   """
   inviteReviewer(input: inviteSubmissionUserInput): Submission
 
-  """Log in to a new session and get the user."""
+  "Log in to a new session and get the user."
   login(email: String!, password: String!): User!
+
   loginOauthCallback(code: String!, provider_name: String!): LoginOauthResponse
 
-  """Log out from the current session, showing the user one last time."""
+  "Log out from the current session, showing the user one last time."
   logout: User
 
-  """Mark all of a user's notification as read"""
+  "Mark all of a user's notification as read"
   markAllNotificationsRead: Int
+
   markInlineCommentRepliesRead(input: MarkInlineCommentsReadInput!): [InlineCommentReply]!
   markInlineCommentsRead(input: MarkInlineCommentsReadInput!): [InlineComment]!
 
-  """Mark a user notification as read"""
+  "Mark a user notification as read"
   markNotificationRead(id: ID!): Notification!
+
   markOverallCommentRepliesRead(input: MarkOverallCommentsReadInput!): [OverallCommentReply]!
   markOverallCommentsRead(input: MarkOverallCommentsReadInput!): [OverallComment]!
   registerOauthUser(input: RegisterOauthUserInput): User
 
-  """
-  Resend an email notification inviting a staged review coordinator to accept the assignment
-  """
+  "Resend an email notification inviting a staged review coordinator to accept the assignment"
   reinviteReviewCoordinator(input: reinviteSubmissionUserInput): Submission
 
-  """
-  Resend an email notification inviting a staged reviewer to accept the assignment
-  """
+  "Resend an email notification inviting a staged reviewer to accept the assignment"
   reinviteReviewer(input: reinviteSubmissionUserInput): Submission
 
   """
@@ -347,14 +333,14 @@ type Mutation {
   user is idempotent — the existing pending report is returned.
   """
   reportUserAvatar(
-    """Optional free-text reason."""
+    "Optional free-text reason."
     reason: String
 
-    """ID of the user whose avatar is being reported."""
+    "ID of the user whose avatar is being reported."
     userId: ID!
   ): AvatarReport!
 
-  """Send a password reset email to a specified email address"""
+  "Send a password reset email to a specified email address"
   requestPasswordReset(email: String!): Boolean
 
   """
@@ -363,7 +349,7 @@ type Mutation {
   """
   resetDatabase: String!
 
-  """Update a password from a password reset request"""
+  "Update a password from a password reset request"
   resetPassword(input: ResetPasswordInput): User
 
   """
@@ -371,18 +357,18 @@ type Mutation {
   also block the user from uploading a replacement.
   """
   resolveAvatarReportAndRemoveAvatar(
-    """If true, also grant the `avatar upload revoked` permission."""
+    "If true, also grant the `avatar upload revoked` permission."
     blockFutureUploads: Boolean
+
     id: ID!
     notes: String
   ): AvatarReport!
+
   saveGeneralSettings(settings: GeneralSettingsInput!): GeneralSettings
 
-  """(Re)send a verification email to a user.  """
+  "(Re)send a verification email to a user.  "
   sendEmailVerification(
-    """
-    User to resend verification for. If not supplied, defaults to the current user.
-    """
+    "User to resend verification for. If not supplied, defaults to the current user."
     id: ID
   ): User!
 
@@ -391,43 +377,45 @@ type Mutation {
   specific report (e.g. from an admin user-detail page).
   """
   setUserAvatarUploadBlocked(
-    """True to block the user; false to unblock."""
+    "True to block the user; false to unblock."
     blocked: Boolean!
+
     userId: ID!
   ): User!
+
   updatePublication(publication: UpdatePublicationInput!): Publication
 
-  """Update an existing submission"""
+  "Update an existing submission"
   updateSubmission(input: UpdateSubmissionInput!): Submission!
 
-  """Update the content of a submission"""
+  "Update the content of a submission"
   updateSubmissionContent(input: UpdateSubmissionContent!): Submission!
 
-  """Update the content of a submission with a file upload"""
+  "Update the content of a submission with a file upload"
   updateSubmissionContentWithFile(input: CreateSubmissionFileInput!): Submission!
 
-  """Update user information"""
+  "Update user information"
   updateUser(user: UpdateUserInput!): User!
 
-  """Upload or replace a user's avatar image. JPEG/PNG/WebP, max 5MB."""
+  "Upload or replace a user's avatar image. JPEG/PNG/WebP, max 5MB."
   uploadUserAvatar(avatar: Upload!, id: ID!): User!
 
-  """Verify the currently logged in user's email address"""
+  "Verify the currently logged in user's email address"
   verifyEmail(
-    """Token expiration as a UNIX epoch timestamp"""
+    "Token expiration as a UNIX epoch timestamp"
     expires: String!
 
-    """Token supplied to the user via email"""
+    "Token supplied to the user via email"
     token: String!
   ): User!
 
-  """Verify access to an invitation to a submission as the assigned role"""
+  "Verify access to an invitation to a submission as the assigned role"
   verifySubmissionInvite(expires: String!, token: String!, uuid: String!): User
 }
 
 union Notifiable = Notification | User
 
-"""A notification for an event"""
+"A notification for an event"
 type Notification {
   created_at: DateTimeUtc
   data: NotificationData
@@ -436,7 +424,7 @@ type Notification {
   read_at: DateTime
 }
 
-"""JSON data for a notification"""
+"JSON data for a notification"
 type NotificationData {
   action: String
   body: String
@@ -450,53 +438,49 @@ type NotificationData {
   user: User
 }
 
-"""A paginated list of Notification items."""
+"A paginated list of Notification items."
 type NotificationPaginator implements Paginator {
-  """A list of Notification items."""
+  "A list of Notification items."
   data: [Notification!]!
 
-  """Pagination information about the list of items."""
+  "Pagination information about the list of items."
   paginatorInfo: PaginatorInfo!
 }
 
-"""Allows ordering a list of records."""
+"Allows ordering a list of records."
 input OrderByClause {
-  """The column that is used for ordering."""
+  "The column that is used for ordering."
   column: String!
 
-  """The direction that is used for ordering."""
+  "The direction that is used for ordering."
   order: SortOrder!
 }
 
-"""
-Aggregate functions when ordering by a relation without specifying a column.
-"""
+"Aggregate functions when ordering by a relation without specifying a column."
 enum OrderByRelationAggregateFunction {
-  """Amount of items."""
+  "Amount of items."
   COUNT
 }
 
-"""
-Aggregate functions when ordering by a relation that may specify a column.
-"""
+"Aggregate functions when ordering by a relation that may specify a column."
 enum OrderByRelationWithColumnAggregateFunction {
-  """Average."""
+  "Average."
   AVG
 
-  """Amount of items."""
+  "Amount of items."
   COUNT
 
-  """Maximum."""
+  "Maximum."
   MAX
 
-  """Minimum."""
+  "Minimum."
   MIN
 
-  """Sum."""
+  "Sum."
   SUM
 }
 
-"""An overall comment of a submission"""
+"An overall comment of a submission"
 type OverallComment implements Comment {
   content: String!
   created_at: DateTimeUtc!
@@ -507,7 +491,7 @@ type OverallComment implements Comment {
   replies(
     createdBy: [ID!]
 
-    """Allows to filter if trashed elements should be fetched."""
+    "Allows to filter if trashed elements should be fetched."
     trashed: Trashed
   ): [OverallCommentReply!]
   updated_at: DateTimeUtc!
@@ -519,7 +503,7 @@ input OverallCommentHasManyInput {
   update: [UpdateOverallCommentInput!]
 }
 
-"""A reply to an overall comment of a submission"""
+"A reply to an overall comment of a submission"
 type OverallCommentReply implements Comment {
   content: String!
   created_at: DateTimeUtc!
@@ -541,34 +525,34 @@ interface Paginator {
   paginatorInfo: PaginatorInfo!
 }
 
-"""Information about pagination using a fully featured paginator."""
+"Information about pagination using a fully featured paginator."
 type PaginatorInfo {
-  """Number of items in the current page."""
+  "Number of items in the current page."
   count: Int!
 
-  """Index of the current page."""
+  "Index of the current page."
   currentPage: Int!
 
-  """Index of the first item in the current page."""
+  "Index of the first item in the current page."
   firstItem: Int
 
-  """Are there more pages after this one?"""
+  "Are there more pages after this one?"
   hasMorePages: Boolean!
 
-  """Index of the last item in the current page."""
+  "Index of the last item in the current page."
   lastItem: Int
 
-  """Index of the last available page."""
+  "Index of the last available page."
   lastPage: Int!
 
-  """Number of items per page."""
+  "Number of items per page."
   perPage: Int!
 
-  """Number of total available items."""
+  "Number of total available items."
   total: Int!
 }
 
-"""A permission for roles and users"""
+"A permission for roles and users"
 type Permission {
   created_at: DateTime
   guard_name: String!
@@ -577,7 +561,7 @@ type Permission {
   updated_at: DateTime
 }
 
-"""Profile metadata of a user"""
+"Profile metadata of a user"
 type ProfileMetadata {
   academic_profiles: AcademicProfiles
   affiliation: String
@@ -588,7 +572,7 @@ type ProfileMetadata {
   websites: [String]
 }
 
-"""The provider within the response from an external identity provider"""
+"The provider within the response from an external identity provider"
 type Provider {
   provider_id: String!
   provider_name: String!
@@ -600,7 +584,7 @@ input ProviderInput {
   provider_name: String!
 }
 
-"""The user within the response from an external identity provider"""
+"The user within the response from an external identity provider"
 type ProviderUser {
   email: String
   name: String
@@ -613,7 +597,7 @@ input ProviderUserInput {
   username: String
 }
 
-"""A publication that has users, reviews, and submissions"""
+"A publication that has users, reviews, and submissions"
 type Publication {
   created_at: DateTimeUtc
   editors: [User!]!
@@ -640,21 +624,21 @@ type PublicationAssignment {
   user: User!
 }
 
-"""A paginated list of PublicationAssignment items."""
+"A paginated list of PublicationAssignment items."
 type PublicationAssignmentPaginator implements Paginator {
-  """A list of PublicationAssignment items."""
+  "A list of PublicationAssignment items."
   data: [PublicationAssignment!]!
 
-  """Pagination information about the list of items."""
+  "Pagination information about the list of items."
   paginatorInfo: PaginatorInfo!
 }
 
-"""A paginated list of Publication items."""
+"A paginated list of Publication items."
 type PublicationPaginator implements Paginator {
-  """A list of Publication items."""
+  "A list of Publication items."
   data: [Publication!]!
 
-  """Pagination information about the list of items."""
+  "Pagination information about the list of items."
   paginatorInfo: PaginatorInfo!
 }
 
@@ -669,105 +653,113 @@ type Query {
   `moderate avatars` permission.
   """
   avatarReports(
-    """Limits number of fetched items."""
+    "Limits number of fetched items."
     first: Int! = 20
 
-    """The offset from which items are returned."""
+    "The offset from which items are returned."
     page: Int
 
-    """Filter by status. Omit to return all statuses."""
+    "Filter by status. Omit to return all statuses."
     status: AvatarReportStatus
   ): AvatarReportPaginator!
 
-  """Return information about the currently logged in user"""
+  "Return information about the currently logged in user"
   currentUser: User
+
   generalSettings: GeneralSettings
   identityProviders: [IdentityProvider]
 
-  """Return a permission by ID"""
+  "Return a permission by ID"
   permission(id: ID): Permission
 
-  """Return a publication by ID"""
+  "Return a publication by ID"
   publication(id: ID): Publication
 
-  """Return all publications"""
+  "Return all publications"
   publications(
     accepting_submissions: Boolean
 
-    """Limits number of fetched items."""
+    "Limits number of fetched items."
     first: Int! = 10
+
     my_role: PublicationRole
     orderBy: [QueryPublicationsOrderByOrderByClause!]
 
-    """The offset from which items are returned."""
+    "The offset from which items are returned."
     page: Int
+
     public: Boolean
     search: String
   ): PublicationPaginator!
 
-  """Return pre-defined user roles in the application"""
+  "Return pre-defined user roles in the application"
   role(id: ID): Role
 
-  """Return a submission by ID"""
+  "Return a submission by ID"
   submission(id: ID): Submission
 
-  """Return all submissions"""
+  "Return all submissions"
   submissions(
-    """Limits number of fetched items."""
+    "Limits number of fetched items."
     first: Int! = 100
+
     my_roles: [SubmissionUserRoles!]
 
-    """The offset from which items are returned."""
+    "The offset from which items are returned."
     page: Int
+
     publication: [ID!]
     status: [SubmissionStatus!]
   ): SubmissionPaginator!
 
-  """Return details about a specific user in the application"""
+  "Return details about a specific user in the application"
   user(id: ID): User
 
-  """Return user accounts optionally based on a supplied search term"""
+  "Return user accounts optionally based on a supplied search term"
   userSearch(
-    """Limits number of fetched items."""
+    "Limits number of fetched items."
     first: Int! = 10
 
-    """The offset from which items are returned."""
+    "The offset from which items are returned."
     page: Int
+
     term: String
   ): UserPaginator! @deprecated(reason: "Use the `users` query instead, which supports pagination and filtering by search term")
+
   users(
-    """Limits number of fetched items."""
+    "Limits number of fetched items."
     first: Int! = 10
+
     orderBy: [QueryUsersOrderByOrderByClause!]
 
-    """The offset from which items are returned."""
+    "The offset from which items are returned."
     page: Int
+
     search: String
   ): UserPaginator!
 
-  """
-  Validate details of a new user.  Returns true if supplied user fields would be valid.
-  """
+  "Validate details of a new user.  Returns true if supplied user fields would be valid."
   validateNewUser(user: ValidateNewUserInput): Boolean
+
   versionInfo: VersionInfo
 }
 
-"""Allowed column names for Query.publications.orderBy."""
+"Allowed column names for Query.publications.orderBy."
 enum QueryPublicationsOrderByColumn {
   CREATED_AT
   NAME
 }
 
-"""Order by clause for Query.publications.orderBy."""
+"Order by clause for Query.publications.orderBy."
 input QueryPublicationsOrderByOrderByClause {
-  """The column that is used for ordering."""
+  "The column that is used for ordering."
   column: QueryPublicationsOrderByColumn!
 
-  """The direction that is used for ordering."""
+  "The direction that is used for ordering."
   order: SortOrder!
 }
 
-"""Allowed column names for Query.users.orderBy."""
+"Allowed column names for Query.users.orderBy."
 enum QueryUsersOrderByColumn {
   CREATED_AT
   EMAIL
@@ -775,31 +767,29 @@ enum QueryUsersOrderByColumn {
   USERNAME
 }
 
-"""Order by clause for Query.users.orderBy."""
+"Order by clause for Query.users.orderBy."
 input QueryUsersOrderByOrderByClause {
-  """The column that is used for ordering."""
+  "The column that is used for ordering."
   column: QueryUsersOrderByColumn!
 
-  """The direction that is used for ordering."""
+  "The direction that is used for ordering."
   order: SortOrder!
 }
 
-"""Inputs"""
+"Inputs"
 input RegisterOauthUserInput {
   provider: ProviderInput
   user: ProviderUserInput
 }
 
-"""
-Input type for resetting a password from a password reset request email
-"""
+"Input type for resetting a password from a password reset request email"
 input ResetPasswordInput {
   email: String!
   password: String!
   token: String!
 }
 
-"""A user role for permissions"""
+"A user role for permissions"
 type Role {
   created_at: DateTime
   guard_name: String!
@@ -809,7 +799,7 @@ type Role {
   updated_at: DateTime
 }
 
-"""Social media data for the profile metadata of a user"""
+"Social media data for the profile metadata of a user"
 type SocialMedia {
   facebook: String
   google: String
@@ -818,12 +808,12 @@ type SocialMedia {
   twitter: String
 }
 
-"""Directions for ordering a list of records."""
+"Directions for ordering a list of records."
 enum SortOrder {
-  """Sort records in ascending order."""
+  "Sort records in ascending order."
   ASC
 
-  """Sort records in descending order."""
+  "Sort records in descending order."
   DESC
 }
 
@@ -835,7 +825,7 @@ type StyleCriteria {
   publication: Publication!
 }
 
-"""A Submission"""
+"A Submission"
 type Submission {
   assignments: [SubmissionAssignment!]!
   audits: [SubmissionAudit]
@@ -849,14 +839,14 @@ type Submission {
   inline_comments(
     createdBy: [ID!]
 
-    """Allows to filter if trashed elements should be fetched."""
+    "Allows to filter if trashed elements should be fetched."
     trashed: Trashed
   ): [InlineComment!]!
   my_role: SubmissionUserRoles
   overall_comments(
     createdBy: [ID!]
 
-    """Allows to filter if trashed elements should be fetched."""
+    "Allows to filter if trashed elements should be fetched."
     trashed: Trashed
   ): [OverallComment!]!
   publication: Publication!
@@ -872,7 +862,7 @@ type Submission {
   users: [User!]!
 }
 
-"""A user associated with a submission and a role"""
+"A user associated with a submission and a role"
 type SubmissionAssignment {
   created_at: DateTimeUtc!
   id: ID!
@@ -882,13 +872,13 @@ type SubmissionAssignment {
   user: User!
 }
 
-"""Order by clause for submission assignments."""
+"Order by clause for submission assignments."
 input SubmissionAssignmentOrderBy {
   column: SubmissionAssignmentOrderByColumn!
   order: SortOrder!
 }
 
-"""Sortable columns for submission assignments."""
+"Sortable columns for submission assignments."
 enum SubmissionAssignmentOrderByColumn {
   CREATED_AT
   STATUS
@@ -896,12 +886,12 @@ enum SubmissionAssignmentOrderByColumn {
   UPDATED_AT
 }
 
-"""A paginated list of SubmissionAssignment items."""
+"A paginated list of SubmissionAssignment items."
 type SubmissionAssignmentPaginator implements Paginator {
-  """A list of SubmissionAssignment items."""
+  "A list of SubmissionAssignment items."
   data: [SubmissionAssignment!]!
 
-  """Pagination information about the list of items."""
+  "Pagination information about the list of items."
   paginatorInfo: PaginatorInfo!
 }
 
@@ -922,7 +912,7 @@ type SubmissionAuditValues {
   title: String
 }
 
-"""The content of a submission"""
+"The content of a submission"
 type SubmissionContent {
   created_at: DateTimeUtc!
   data: String!
@@ -931,23 +921,23 @@ type SubmissionContent {
   src_file: SubmissionFile!
 }
 
-"""An uploaded file associated with a submission"""
+"An uploaded file associated with a submission"
 type SubmissionFile {
   file_upload: String!
   id: ID!
   submission_id: ID!
 }
 
-"""A paginated list of Submission items."""
+"A paginated list of Submission items."
 type SubmissionPaginator implements Paginator {
-  """A list of Submission items."""
+  "A list of Submission items."
   data: [Submission!]!
 
-  """Pagination information about the list of items."""
+  "Pagination information about the list of items."
   paginatorInfo: PaginatorInfo!
 }
 
-"""The status of a submission"""
+"The status of a submission"
 enum SubmissionStatus {
   ACCEPTED_AS_FINAL
   ARCHIVED
@@ -970,17 +960,15 @@ enum SubmissionUserRoles {
   submitter
 }
 
-"""
-Specify if you want to include or exclude trashed results from a query.
-"""
+"Specify if you want to include or exclude trashed results from a query."
 enum Trashed {
-  """Only return trashed results."""
+  "Only return trashed results."
   ONLY
 
-  """Return both trashed and non-trashed results."""
+  "Return both trashed and non-trashed results."
   WITH
 
-  """Only return non-trashed results."""
+  "Only return non-trashed results."
   WITHOUT
 }
 
@@ -1002,7 +990,7 @@ input UpdateOverallCommentInput {
   id: ID!
 }
 
-"""Input type for adding profile metadata for a user"""
+"Input type for adding profile metadata for a user"
 input UpdateProfileMetadataInput {
   academic_profiles: UpdateAcademicProfilesInput
   affiliation: String
@@ -1036,7 +1024,7 @@ input UpdatePublicationInput {
   style_criterias: UpdateStyleCriteriaHasMany
 }
 
-"""Input type for adding social media data to profile metadata"""
+"Input type for adding social media data to profile metadata"
 input UpdateSocialMediaInput {
   facebook: String
   google: String
@@ -1080,41 +1068,38 @@ input UpdateSubmissionUserInput {
   disconnect: [ID!]
 }
 
-"""Input type for updating user information via the updateUser mutation"""
+"Input type for updating user information via the updateUser mutation"
 input UpdateUserInput {
-  """Email address of the user. Must be unique."""
+  "Email address of the user. Must be unique."
   email: String
 
-  """User ID"""
+  "User ID"
   id: ID!
 
-  """Display name"""
+  "Display name"
   name: String
 
-  """Password used to login to the application."""
+  "Password used to login to the application."
   password: String
 
-  """Metadata related to the profile of a user."""
+  "Metadata related to the profile of a user."
   profile_metadata: UpdateProfileMetadataInput
 
-  """Username of the user. Must be unique."""
+  "Username of the user. Must be unique."
   username: String
 }
 
-"""
-Can be used as an argument to upload files using https://github.com/jaydenseric/graphql-multipart-request-spec
-"""
+"Can be used as an argument to upload files using https://github.com/jaydenseric/graphql-multipart-request-spec"
 scalar Upload
 
-"""A user account"""
+"A user account"
 type User {
-  """The user's uploaded avatar, or null if the user has not set one."""
+  "The user's uploaded avatar, or null if the user has not set one."
   avatar: Avatar
 
-  """
-  True when a moderator has revoked this user's ability to upload an avatar.
-  """
+  "True when a moderator has revoked this user's ability to upload an avatar."
   avatar_upload_blocked: Boolean!
+
   created_at: DateTimeUtc!
   display_label: String
   email: String!
@@ -1123,34 +1108,47 @@ type User {
   id: ID!
   name: String
   notifications(
-    """Limits number of fetched items."""
+    "Limits number of fetched items."
     first: Int!
 
-    """The offset from which items are returned."""
+    "The offset from which items are returned."
     page: Int
+
     read: Boolean
     unread: Boolean
   ): NotificationPaginator!
+
+  """
+  Every permission the user effectively has — both directly-assigned
+  and inherited via their roles. Uses `getAllPermissions()` rather
+  than the `permissions()` relation so role-derived permissions are
+  included (e.g. Application Administrators inherit `moderate
+  avatars` via the role, not a direct user->permission pivot).
+  """
   permissions: [Permission!]
+
   profile_metadata: ProfileMetadata
   publications(
-    """Limits number of fetched items."""
+    "Limits number of fetched items."
     first: Int! = 10
 
-    """The offset from which items are returned."""
+    "The offset from which items are returned."
     page: Int
+
     roles: [PublicationRole!]
   ): PublicationAssignmentPaginator!
   raw_submissions: [Submission!] @deprecated(reason: "Use `submissions` (SubmissionAssignment) instead")
   roles: [Role!]!
   staged: Boolean
   submissions(
-    """Limits number of fetched items."""
+    "Limits number of fetched items."
     first: Int! = 10
+
     orderBy: [SubmissionAssignmentOrderBy!]
 
-    """The offset from which items are returned."""
+    "The offset from which items are returned."
     page: Int
+
     publication: [ID!]
     roles: [SubmissionUserRoles!]
     search: String
@@ -1160,12 +1158,12 @@ type User {
   username: String!
 }
 
-"""A paginated list of User items."""
+"A paginated list of User items."
 type UserPaginator implements Paginator {
-  """A list of User items."""
+  "A list of User items."
   data: [User!]!
 
-  """Pagination information about the list of items."""
+  "Pagination information about the list of items."
   paginatorInfo: PaginatorInfo!
 }
 
@@ -1178,14 +1176,12 @@ enum UserRoles {
   submitter
 }
 
-"""
-Validate the availability of username and email via the validateNewUser query
-"""
+"Validate the availability of username and email via the validateNewUser query"
 input ValidateNewUserInput {
-  """Email. Validation error if not unique"""
+  "Email. Validation error if not unique"
   email: String
 
-  """Username.  Validation error if not unique"""
+  "Username.  Validation error if not unique"
   username: String
 }
 
@@ -1206,3 +1202,4 @@ input reinviteSubmissionUserInput {
   message: String
   submission_id: ID!
 }
+
