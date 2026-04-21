@@ -20,7 +20,7 @@ vi.mock("quasar", async (importOriginal) => {
 
 describe("useCurrentUser composable", () => {
   const mountComposable = (mocks: [DocumentNode, RequestHandler][]) => {
-    const mockClient = createMockClient({ connectToDevTools: false })
+    const mockClient = createMockClient({ devtools: { enabled: false } })
     mocks.forEach((m) => mockClient.setRequestHandler(...m))
     const { result } = mount(() => useCurrentUser(), {
       provider: () => {
@@ -69,7 +69,7 @@ describe("useCurrentUser composable", () => {
 
 describe("useLogin composable", () => {
   const mountComposable = () => {
-    const mockClient = createMockClient({ connectToDevTools: false })
+    const mockClient = createMockClient({ devtools: { enabled: false } })
     const { result } = mount(() => useLogin(), {
       provider: () => {
         provide(DefaultApolloClient, mockClient)
@@ -85,12 +85,12 @@ describe("useLogin composable", () => {
 
     expect((result.v$.value as any).email.required.$invalid).toBe(true)
     expect((result.v$.value as any).password.required.$invalid).toBe(true)
-    ;(result.v$.value as any).email.$model = "test"
+      ; (result.v$.value as any).email.$model = "test"
     await flushPromises()
     expect((result.v$.value as any).email.email.$invalid).toBe(true)
     expect((result.v$.value as any).email.required.$invalid).toBe(false)
-    ;(result.v$.value as any).email.$model = "test@example.com"
-    ;(result.v$.value as any).password.$model = "password"
+      ; (result.v$.value as any).email.$model = "test@example.com"
+      ; (result.v$.value as any).password.$model = "password"
     await flushPromises()
 
     expect((result.v$.value as any).$error).toBe(false)
@@ -153,7 +153,7 @@ describe("useLogin composable", () => {
     expect(result.redirectUrl).toBe("/redirect")
 
     mock.mockReset().mockReturnValue(null)
-    ;({ result } = mountComposable())
+      ; ({ result } = mountComposable())
 
     expect(result.redirectUrl).toBe("/dashboard")
   })
