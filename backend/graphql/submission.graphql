@@ -12,6 +12,7 @@ extend type Query {
     ): [Submission!]
         @paginate(defaultCount: 100, scopes: ["visible"])
         @orderBy(column: "created_at", direction: DESC)
+        @guard
 }
 
 extend type Mutation {
