@@ -45,7 +45,7 @@
         style="
           background-color: #fff;
           width: 100%;
-          height: calc(100vh - 280px);
+          height: calc(100vh - 380px);
           border: 1px solid #ddd;
         "
         @load="attachIframeLinkHandler"
