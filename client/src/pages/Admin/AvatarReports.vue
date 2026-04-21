@@ -15,7 +15,7 @@
     class="q-px-lg"
     :query="GetAvatarReportsDocument"
     t-prefix="admin_avatar_reports"
-    :variables="{ status: statusFilter }"
+    :variables="queryVariables"
     :columns="columns"
     sync-url
     :default-sort="{ sortBy: 'created_at', descending: true }"
@@ -134,6 +134,15 @@ type ReportRow = GetAvatarReportsQuery["avatarReports"]["data"][number]
 
 const { t } = useI18n()
 const statusFilter = ref<"PENDING" | "DISMISSED" | "REMOVED" | null>("PENDING")
+
+/**
+ * Omit `status` entirely when the filter is "All" — `@eq` in the
+ * Lighthouse schema treats an explicit null as `WHERE status IS NULL`,
+ * which matches zero rows since status is never null.
+ */
+const queryVariables = computed(() =>
+  statusFilter.value === null ? {} : { status: statusFilter.value }
+)
 
 const statusOptions = computed(() => [
   { value: null, label: t("admin_avatar_reports.filter_all") },
