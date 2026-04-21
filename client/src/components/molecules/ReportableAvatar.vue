@@ -1,20 +1,18 @@
 <template>
   <div class="reportable-avatar">
     <avatar-image :user="user" :variant="variant" v-bind="$attrs" />
-    <q-btn
+    <div
       v-if="shouldShow"
-      round
-      dense
-      size="4px"
-      color="white"
-      text-color="grey-8"
-      icon="more_horiz"
-      padding="1px"
+      role="button"
+      tabindex="0"
       class="reportable-avatar__trigger"
       :aria-label="$t('dialog.reportAvatar.button')"
       data-cy="reportable_avatar_trigger"
       @click.stop
+      @keydown.enter.prevent
+      @keydown.space.prevent
     >
+      <q-icon name="more_horiz" size="13px" />
       <q-menu>
         <q-list dense style="min-width: 200px">
           <q-item
@@ -32,7 +30,7 @@
           </q-item>
         </q-list>
       </q-menu>
-    </q-btn>
+    </div>
   </div>
 </template>
 
@@ -107,9 +105,18 @@ function openReport() {
 }
 .reportable-avatar__trigger {
   position: absolute;
-  right: -10px;
-  bottom: -10px;
+  right: -8px;
+  bottom: -8px;
   z-index: 2;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  color: #555;
+  border-radius: 50%;
+  cursor: pointer;
   opacity: 0;
   transition: opacity 0.15s ease-in-out;
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.12);
