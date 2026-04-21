@@ -239,7 +239,6 @@ import {
   type GetPublicationTeamMemberDetailQuery,
   type SubmissionStatus
 } from "src/graphql/generated/graphql"
-import { setCrumbLabel } from "src/use/breadcrumbs"
 
 definePage({
   name: "manage:publication:team_member",
@@ -250,7 +249,7 @@ definePage({
         label: "Review Team",
         to: { name: "manage:publication:team" }
       },
-      { label: "Team Member" }
+      { label: "Detail" }
     ]
   }
 })
@@ -292,10 +291,6 @@ const displayName = computed(
     ""
 )
 
-setCrumbLabel(
-  "manage:publication:team_member",
-  computed(() => displayName.value || undefined)
-)
 
 // Compact status readout matching the submitter page — show only
 // statuses with a non-zero count, ordered by count desc.
