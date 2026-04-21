@@ -25,319 +25,318 @@
            the diagram's own margin doesn't double up. -->
       <div class="row q-col-gutter-md q-mb-md items-stretch">
         <div class="col-xs-12 col-md-8 column">
-      <!-- Workflow diagram: a single panel with three stacked lanes.
+          <!-- Workflow diagram: a single panel with three stacked lanes.
            The expected path through the system sits in the middle,
            with the loop-back (inactive) lane above and the terminal
            (closed) lane below, so a reader can see divergences on
            either side of the happy path at a glance. -->
-      <div class="status-flow-diagram col">
-        <!-- Top lane: "inactive" — sent back to the author, waiting
+          <div class="status-flow-diagram col">
+            <!-- Top lane: "inactive" — sent back to the author, waiting
              to re-enter the active pipeline once the author acts.
              Skips rendering when the lane has no statuses. -->
-        <div v-if="authorLane.length" class="status-lane">
-          <div class="status-lane-label">
-            {{ $t("publication.dashboard.lanes.with_author") }}
-          </div>
-          <div class="status-lane-row">
-            <router-link
-              v-for="status in authorLane"
-              :key="`author-${status}`"
-              class="status-flow-chip"
-              :style="`border-color: var(--q-${styleFor(status).color})`"
-              :to="submissionsFilterTo([status])"
-            >
-              <span
-                :class="[
-                  'status-flow-swatch',
-                  `bg-${styleFor(status).color}`,
-                  styleFor(status).textClass,
-                  styleFor(status).pattern
-                ]"
-              >
+            <div v-if="authorLane.length" class="status-lane">
+              <div class="status-lane-label">
+                {{ $t("publication.dashboard.lanes.with_author") }}
+              </div>
+              <div class="status-lane-row">
+                <router-link
+                  v-for="status in authorLane"
+                  :key="`author-${status}`"
+                  class="status-flow-chip"
+                  :style="`border-color: var(--q-${styleFor(status).color})`"
+                  :to="submissionsFilterTo([status])"
+                >
+                  <span
+                    :class="[
+                      'status-flow-swatch',
+                      `bg-${styleFor(status).color}`,
+                      styleFor(status).textClass,
+                      styleFor(status).pattern
+                    ]"
+                  >
+                    <q-icon
+                      :name="styleFor(status).icon"
+                      size="xs"
+                      class="pattern-text-mask"
+                    />
+                  </span>
+                  <span class="col column">
+                    <span class="status-flow-label">
+                      {{ $t(`submission.status.${status}`) }}
+                    </span>
+                    <span class="status-flow-count text-weight-bold">
+                      {{ statusCountMap.get(status) ?? 0 }}
+                    </span>
+                  </span>
+                </router-link>
                 <q-icon
-                  :name="styleFor(status).icon"
-                  size="xs"
-                  class="pattern-text-mask"
+                  name="subdirectory_arrow_left"
+                  size="sm"
+                  class="lane-arrow text-grey-6"
+                  aria-hidden="true"
                 />
-              </span>
-              <span class="col column">
-                <span class="status-flow-label">
-                  {{ $t(`submission.status.${status}`) }}
+                <span class="status-lane-hint text-caption text-grey-7">
+                  {{ $t("publication.dashboard.lanes.loops_back") }}
                 </span>
-                <span class="status-flow-count text-weight-bold">
-                  {{ statusCountMap.get(status) ?? 0 }}
-                </span>
-              </span>
-            </router-link>
-            <q-icon
-              name="subdirectory_arrow_left"
-              size="sm"
-              class="lane-arrow text-grey-6"
-              aria-hidden="true"
-            />
-            <span class="status-lane-hint text-caption text-grey-7">
-              {{ $t("publication.dashboard.lanes.loops_back") }}
-            </span>
-          </div>
-        </div>
+              </div>
+            </div>
 
-        <!-- Middle lane: the expected path through the system. A
+            <!-- Middle lane: the expected path through the system. A
              cell can be a single chip or a stack of chips sharing a
              column — the intake cell stacks RESUBMITTED above
              INITIALLY_SUBMITTED so both read as entry points. -->
-        <div class="status-lane">
-          <div class="status-lane-row status-lane-row--active">
-            <template v-for="(cell, i) in activeLane" :key="`active-${i}`">
-              <q-icon
-                v-if="i > 0"
-                name="arrow_forward"
-                size="sm"
-                class="lane-arrow text-grey-6"
-                aria-hidden="true"
-              />
-              <div v-if="isColumn(cell)" class="status-lane-stack">
-                <router-link
-                  v-if="cell.label"
-                  class="stage-label stage-label--link"
-                  :to="submissionsFilterTo(columnStatuses(cell))"
-                >
-                  {{ $t(`publication.dashboard.stages.${cell.label}`) }}
-                </router-link>
-                <div
-                  :class="[
-                    'stack-chips',
-                    `stack-chips--${cell.align ?? 'top'}`
-                  ]"
-                >
-                  <template
-                    v-for="(chip, ci) in cell.chips"
-                    :key="`chip-${i}-${ci}`"
-                  >
-                    <!-- Combined chip: sums its statuses, shows the
-                       primary's identity and sub-counts in parens. -->
+            <div class="status-lane">
+              <div class="status-lane-row status-lane-row--active">
+                <template v-for="(cell, i) in activeLane" :key="`active-${i}`">
+                  <q-icon
+                    v-if="i > 0"
+                    name="arrow_forward"
+                    size="sm"
+                    class="lane-arrow text-grey-6"
+                    aria-hidden="true"
+                  />
+                  <div v-if="isColumn(cell)" class="status-lane-stack">
                     <router-link
-                      v-if="isCombineChip(chip)"
-                      class="status-flow-chip"
-                      :style="`border-color: var(--q-${styleFor(chip.combine[0]).color})`"
-                      :to="submissionsFilterTo(chip.combine)"
+                      v-if="cell.label"
+                      class="stage-label stage-label--link"
+                      :to="submissionsFilterTo(columnStatuses(cell))"
                     >
-                      <span
-                        :class="[
-                          'status-flow-swatch',
-                          `bg-${styleFor(chip.combine[0]).color}`,
-                          styleFor(chip.combine[0]).textClass,
-                          styleFor(chip.combine[0]).pattern
-                        ]"
+                      {{ $t(`publication.dashboard.stages.${cell.label}`) }}
+                    </router-link>
+                    <div
+                      :class="[
+                        'stack-chips',
+                        `stack-chips--${cell.align ?? 'top'}`
+                      ]"
+                    >
+                      <template
+                        v-for="(chip, ci) in cell.chips"
+                        :key="`chip-${i}-${ci}`"
                       >
-                        <q-icon
-                          :name="styleFor(chip.combine[0]).icon"
-                          size="xs"
-                          class="pattern-text-mask"
-                        />
-                      </span>
-                      <span class="col column">
-                        <span class="status-flow-label">
-                          {{
-                            chip.titleKey
-                              ? $t(chip.titleKey)
-                              : $t(`submission.status.${chip.combine[0]}`)
-                          }}
-                        </span>
-                        <span
-                          class="row items-baseline no-wrap q-gutter-xs"
-                          style="flex-wrap: wrap"
+                        <!-- Combined chip: sums its statuses, shows the
+                       primary's identity and sub-counts in parens. -->
+                        <router-link
+                          v-if="isCombineChip(chip)"
+                          class="status-flow-chip"
+                          :style="`border-color: var(--q-${styleFor(chip.combine[0]).color})`"
+                          :to="submissionsFilterTo(chip.combine)"
                         >
-                          <span class="status-flow-count text-weight-bold">
-                            {{ combineTotal(chip, statusCountMap) }}
+                          <span
+                            :class="[
+                              'status-flow-swatch',
+                              `bg-${styleFor(chip.combine[0]).color}`,
+                              styleFor(chip.combine[0]).textClass,
+                              styleFor(chip.combine[0]).pattern
+                            ]"
+                          >
+                            <q-icon
+                              :name="styleFor(chip.combine[0]).icon"
+                              size="xs"
+                              class="pattern-text-mask"
+                            />
                           </span>
-                          <!-- Sub-caption is a span, not a router-link,
+                          <span class="col column">
+                            <span class="status-flow-label">
+                              {{
+                                chip.titleKey
+                                  ? $t(chip.titleKey)
+                                  : $t(`submission.status.${chip.combine[0]}`)
+                              }}
+                            </span>
+                            <span
+                              class="row items-baseline no-wrap q-gutter-xs"
+                              style="flex-wrap: wrap"
+                            >
+                              <span class="status-flow-count text-weight-bold">
+                                {{ combineTotal(chip, statusCountMap) }}
+                              </span>
+                              <!-- Sub-caption is a span, not a router-link,
                                because the outer chip is already an <a>
                                and nested anchors are invalid HTML.
                                Programmatic navigation keeps the
                                per-status filter while letting the
                                outer chip own its "both statuses" link. -->
-                          <span
-                            v-for="extra in chip.combine.slice(1)"
-                            :key="extra"
-                            role="link"
-                            tabindex="0"
-                            class="combine-extra text-caption text-grey-7"
-                            :title="$t(`submission.status.${extra}`)"
-                            :aria-label="`${
-                              statusCountMap.get(extra) ?? 0
-                            } ${$t(`submission.status.${extra}`)}`"
-                            @click.stop.prevent="goToSubmissions([extra])"
-                            @keydown.enter.stop.prevent="
-                              goToSubmissions([extra])
-                            "
-                            @keydown.space.stop.prevent="
-                              goToSubmissions([extra])
-                            "
-                          >
-                            ({{ statusCountMap.get(extra) ?? 0 }}
-                            {{ $t(`submission.status.${extra}`) }})
+                              <span
+                                v-for="extra in chip.combine.slice(1)"
+                                :key="extra"
+                                role="link"
+                                tabindex="0"
+                                class="combine-extra text-caption text-grey-7"
+                                :title="$t(`submission.status.${extra}`)"
+                                :aria-label="`${
+                                  statusCountMap.get(extra) ?? 0
+                                } ${$t(`submission.status.${extra}`)}`"
+                                @click.stop.prevent="goToSubmissions([extra])"
+                                @keydown.enter.stop.prevent="
+                                  goToSubmissions([extra])
+                                "
+                                @keydown.space.stop.prevent="
+                                  goToSubmissions([extra])
+                                "
+                              >
+                                ({{ statusCountMap.get(extra) ?? 0 }}
+                                {{ $t(`submission.status.${extra}`) }})
+                              </span>
+                            </span>
                           </span>
-                        </span>
-                      </span>
-                    </router-link>
-                    <!-- Plain status chip. -->
-                    <router-link
-                      v-else
-                      class="status-flow-chip"
-                      :style="`border-color: var(--q-${styleFor(chip).color})`"
-                      :to="submissionsFilterTo([chip])"
+                        </router-link>
+                        <!-- Plain status chip. -->
+                        <router-link
+                          v-else
+                          class="status-flow-chip"
+                          :style="`border-color: var(--q-${styleFor(chip).color})`"
+                          :to="submissionsFilterTo([chip])"
+                        >
+                          <span
+                            :class="[
+                              'status-flow-swatch',
+                              `bg-${styleFor(chip).color}`,
+                              styleFor(chip).textClass,
+                              styleFor(chip).pattern
+                            ]"
+                          >
+                            <q-icon
+                              :name="styleFor(chip).icon"
+                              size="xs"
+                              class="pattern-text-mask"
+                            />
+                          </span>
+                          <span class="col column">
+                            <span class="status-flow-label">
+                              {{ $t(`submission.status.${chip}`) }}
+                            </span>
+                            <span class="status-flow-count text-weight-bold">
+                              {{ statusCountMap.get(chip) ?? 0 }}
+                            </span>
+                          </span>
+                        </router-link>
+                      </template>
+                    </div>
+                  </div>
+                  <router-link
+                    v-else
+                    class="status-flow-chip"
+                    :style="`border-color: var(--q-${styleFor(cell).color})`"
+                    :to="submissionsFilterTo([cell])"
+                  >
+                    <span
+                      :class="[
+                        'status-flow-swatch',
+                        `bg-${styleFor(cell).color}`,
+                        styleFor(cell).textClass,
+                        styleFor(cell).pattern
+                      ]"
                     >
-                      <span
-                        :class="[
-                          'status-flow-swatch',
-                          `bg-${styleFor(chip).color}`,
-                          styleFor(chip).textClass,
-                          styleFor(chip).pattern
-                        ]"
-                      >
-                        <q-icon
-                          :name="styleFor(chip).icon"
-                          size="xs"
-                          class="pattern-text-mask"
-                        />
+                      <q-icon
+                        :name="styleFor(cell).icon"
+                        size="xs"
+                        class="pattern-text-mask"
+                      />
+                    </span>
+                    <span class="col column">
+                      <span class="status-flow-label">
+                        {{ $t(`submission.status.${cell}`) }}
                       </span>
-                      <span class="col column">
-                        <span class="status-flow-label">
-                          {{ $t(`submission.status.${chip}`) }}
-                        </span>
-                        <span class="status-flow-count text-weight-bold">
-                          {{ statusCountMap.get(chip) ?? 0 }}
-                        </span>
+                      <span class="status-flow-count text-weight-bold">
+                        {{ statusCountMap.get(cell) ?? 0 }}
                       </span>
-                    </router-link>
-                  </template>
-                </div>
+                    </span>
+                  </router-link>
+                </template>
               </div>
-              <router-link
-                v-else
-                class="status-flow-chip"
-                :style="`border-color: var(--q-${styleFor(cell).color})`"
-                :to="submissionsFilterTo([cell])"
-              >
-                <span
-                  :class="[
-                    'status-flow-swatch',
-                    `bg-${styleFor(cell).color}`,
-                    styleFor(cell).textClass,
-                    styleFor(cell).pattern
-                  ]"
-                >
-                  <q-icon
-                    :name="styleFor(cell).icon"
-                    size="xs"
-                    class="pattern-text-mask"
-                  />
-                </span>
-                <span class="col column">
-                  <span class="status-flow-label">
-                    {{ $t(`submission.status.${cell}`) }}
-                  </span>
-                  <span class="status-flow-count text-weight-bold">
-                    {{ statusCountMap.get(cell) ?? 0 }}
-                  </span>
-                </span>
-              </router-link>
-            </template>
-          </div>
-        </div>
+            </div>
 
-        <!-- Bottom lane: terminal states. No arrows — endpoints.
+            <!-- Bottom lane: terminal states. No arrows — endpoints.
              Every chip shares the "completed" category, so a
              single patterned icon sits at the start of the chip
              row (not on each chip). Chips keep a left border
              accent to echo the category color. -->
-        <div class="status-lane">
-          <router-link
-            class="status-lane-label status-lane-label--link"
-            :to="submissionsFilterTo(closedLane)"
-          >
-            {{ $t("publication.dashboard.lanes.closed") }}
-          </router-link>
-          <div class="status-lane-row">
-            <router-link
-              v-if="closedCategory"
-              class="closed-lane-icon-link"
-              :to="submissionsFilterTo(closedLane)"
-              :aria-label="$t('publication.dashboard.lanes.closed')"
-            >
-              <span
-                :class="[
-                  'closed-lane-swatch',
-                  `bg-${closedCategory.color}`,
-                  closedCategory.textClass,
-                  closedCategory.pattern
-                ]"
+            <div class="status-lane">
+              <router-link
+                class="status-lane-label status-lane-label--link"
+                :to="submissionsFilterTo(closedLane)"
               >
-                <q-icon
-                  :name="closedCategory.icon"
-                  size="sm"
-                  class="pattern-text-mask"
-                />
-              </span>
-            </router-link>
-            <!-- Collapsed: single aggregate chip summarizing the
+                {{ $t("publication.dashboard.lanes.closed") }}
+              </router-link>
+              <div class="status-lane-row">
+                <router-link
+                  v-if="closedCategory"
+                  class="closed-lane-icon-link"
+                  :to="submissionsFilterTo(closedLane)"
+                  :aria-label="$t('publication.dashboard.lanes.closed')"
+                >
+                  <span
+                    :class="[
+                      'closed-lane-swatch',
+                      `bg-${closedCategory.color}`,
+                      closedCategory.textClass,
+                      closedCategory.pattern
+                    ]"
+                  >
+                    <q-icon
+                      :name="closedCategory.icon"
+                      size="sm"
+                      class="pattern-text-mask"
+                    />
+                  </span>
+                </router-link>
+                <!-- Collapsed: single aggregate chip summarizing the
                  whole lane. Six separate chips for terminal states
                  makes the diagram noisier than it needs to be most
                  of the time. Click the chevron to expand. -->
-            <router-link
-              v-if="!closedLaneExpanded"
-              class="status-flow-chip status-flow-chip--slim closed-lane-total"
-              :to="submissionsFilterTo(closedLane)"
-            >
-              <span class="col column">
-                <span class="status-flow-label">
-                  {{ $t("publication.dashboard.lanes.closed_total") }}
-                </span>
-                <span class="status-flow-count text-weight-bold">
-                  {{ closedLaneTotal }}
-                </span>
-              </span>
-            </router-link>
-            <template v-else>
-              <router-link
-                v-for="status in closedLane"
-                :key="`closed-${status}`"
-                class="status-flow-chip status-flow-chip--slim"
-                :style="`border-left-color: var(--q-${styleFor(status).color})`"
-                :to="submissionsFilterTo([status])"
-              >
-                <span class="col column">
-                  <span class="status-flow-label">
-                    {{ $t(`submission.status.${status}`) }}
+                <router-link
+                  v-if="!closedLaneExpanded"
+                  class="status-flow-chip status-flow-chip--slim closed-lane-total"
+                  :to="submissionsFilterTo(closedLane)"
+                >
+                  <span class="col column">
+                    <span class="status-flow-label">
+                      {{ $t("publication.dashboard.lanes.closed_total") }}
+                    </span>
+                    <span class="status-flow-count text-weight-bold">
+                      {{ closedLaneTotal }}
+                    </span>
                   </span>
-                  <span class="status-flow-count text-weight-bold">
-                    {{ statusCountMap.get(status) ?? 0 }}
-                  </span>
-                </span>
-              </router-link>
-            </template>
-            <q-btn
-              flat
-              dense
-              round
-              :icon="closedLaneExpanded ? 'unfold_less' : 'unfold_more'"
-              class="closed-lane-toggle"
-              :aria-label="
-                closedLaneExpanded
-                  ? $t('publication.dashboard.lanes.closed_collapse')
-                  : $t('publication.dashboard.lanes.closed_expand')
-              "
-              :title="
-                closedLaneExpanded
-                  ? $t('publication.dashboard.lanes.closed_collapse')
-                  : $t('publication.dashboard.lanes.closed_expand')
-              "
-              @click="closedLaneExpanded = !closedLaneExpanded"
-            />
+                </router-link>
+                <template v-else>
+                  <router-link
+                    v-for="status in closedLane"
+                    :key="`closed-${status}`"
+                    class="status-flow-chip status-flow-chip--slim"
+                    :style="`border-left-color: var(--q-${styleFor(status).color})`"
+                    :to="submissionsFilterTo([status])"
+                  >
+                    <span class="col column">
+                      <span class="status-flow-label">
+                        {{ $t(`submission.status.${status}`) }}
+                      </span>
+                      <span class="status-flow-count text-weight-bold">
+                        {{ statusCountMap.get(status) ?? 0 }}
+                      </span>
+                    </span>
+                  </router-link>
+                </template>
+                <q-btn
+                  flat
+                  dense
+                  round
+                  :icon="closedLaneExpanded ? 'unfold_less' : 'unfold_more'"
+                  class="closed-lane-toggle"
+                  :aria-label="
+                    closedLaneExpanded
+                      ? $t('publication.dashboard.lanes.closed_collapse')
+                      : $t('publication.dashboard.lanes.closed_expand')
+                  "
+                  :title="
+                    closedLaneExpanded
+                      ? $t('publication.dashboard.lanes.closed_collapse')
+                      : $t('publication.dashboard.lanes.closed_expand')
+                  "
+                  @click="closedLaneExpanded = !closedLaneExpanded"
+                />
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-
         </div>
         <!-- Overall category counts. The colored header links to the
              category's full status set; each inner row links to that
@@ -348,84 +347,94 @@
              is surfaced here, so the card fills the 4-col side
              column on wider screens. -->
         <div class="col-xs-12 col-md-4 column q-gutter-md">
-        <div
-          v-for="category in categories"
-          :key="category.key"
-          class="column"
-        >
-          <q-card class="col">
-            <router-link
-              class="category-header-link"
-              :class="`bg-${category.color} ${category.textClass} ${category.pattern}`"
-              :to="submissionsFilterTo(category.statuses)"
-            >
-              <q-card-section>
-                <template v-if="$q.screen.xs">
-                  <div
-                    class="column items-center pattern-text-mask text-center"
-                  >
+          <div
+            v-for="category in categories"
+            :key="category.key"
+            class="column"
+          >
+            <q-card class="col">
+              <router-link
+                class="category-header-link"
+                :class="`bg-${category.color} ${category.textClass} ${category.pattern}`"
+                :to="submissionsFilterTo(category.statuses)"
+              >
+                <q-card-section>
+                  <template v-if="$q.screen.xs">
                     <div
-                      class="text-weight-bold q-mb-xs"
-                      style="font-size: 2rem; line-height: 1"
+                      class="column items-center pattern-text-mask text-center"
                     >
-                      {{ category.total }}
+                      <div
+                        class="text-weight-bold q-mb-xs"
+                        style="font-size: 2rem; line-height: 1"
+                      >
+                        {{ category.total }}
+                      </div>
+                      <div class="row items-center no-wrap">
+                        <q-icon
+                          :name="category.icon"
+                          size="sm"
+                          class="q-mr-sm"
+                        />
+                        <span
+                          class="text-weight-medium"
+                          style="font-size: 0.9rem; line-height: 1.3"
+                        >
+                          {{
+                            $t(
+                              `publication.dashboard.categories.${category.key}`
+                            )
+                          }}
+                        </span>
+                      </div>
                     </div>
-                    <div class="row items-center no-wrap">
-                      <q-icon :name="category.icon" size="sm" class="q-mr-sm" />
-                      <span
-                        class="text-weight-medium"
-                        style="font-size: 0.9rem; line-height: 1.3"
+                  </template>
+                  <template v-else>
+                    <div class="row items-center no-wrap pattern-text-mask">
+                      <q-icon :name="category.icon" size="md" />
+                      <q-separator
+                        vertical
+                        class="q-mx-sm"
+                        style="background: currentColor; opacity: 0.5"
+                      />
+                      <div
+                        class="col text-weight-medium"
+                        style="font-size: 1rem; line-height: 1.3"
                       >
                         {{
                           $t(`publication.dashboard.categories.${category.key}`)
                         }}
-                      </span>
+                      </div>
+                      <div
+                        class="text-weight-bold q-ml-sm"
+                        style="font-size: 2rem; line-height: 1"
+                      >
+                        {{ category.total }}
+                      </div>
                     </div>
-                  </div>
-                </template>
-                <template v-else>
-                  <div class="row items-center no-wrap pattern-text-mask">
-                    <q-icon :name="category.icon" size="md" />
-                    <q-separator
-                      vertical
-                      class="q-mx-sm"
-                      style="background: currentColor; opacity: 0.5"
-                    />
-                    <div
-                      class="col text-weight-medium"
-                      style="font-size: 1rem; line-height: 1.3"
-                    >
-                      {{
-                        $t(`publication.dashboard.categories.${category.key}`)
-                      }}
-                    </div>
-                    <div
-                      class="text-weight-bold q-ml-sm"
-                      style="font-size: 2rem; line-height: 1"
-                    >
-                      {{ category.total }}
-                    </div>
-                  </div>
-                </template>
-              </q-card-section>
-            </router-link>
-            <q-card-section class="q-py-sm">
-              <router-link
-                v-for="item in category.items"
-                :key="item.status"
-                class="row items-center q-py-xs status-row status-row--link"
-                :to="submissionsFilterTo([item.status])"
-              >
-                <span class="col text-body2 text-grey-8 ellipsis">
-                  {{ $t(`submission.status.${item.status}`) }}
-                </span>
-                <span class="text-body2 text-weight-medium">
-                  {{ item.count }}
-                </span>
+                  </template>
+                </q-card-section>
               </router-link>
-            </q-card-section>
-          </q-card>
-        </div>
+              <!-- Per-status rows are a drill-down aid. On small
+                 screens the card header already carries the
+                 headline number, so hide the row list to keep the
+                 dashboard compact. -->
+              <q-card-section class="q-py-sm category-items gt-xs">
+                <router-link
+                  v-for="item in category.items"
+                  :key="item.status"
+                  class="row items-center q-py-xs status-row status-row--link"
+                  :to="submissionsFilterTo([item.status])"
+                >
+                  <span class="col text-body2 text-grey-8 ellipsis">
+                    {{ $t(`submission.status.${item.status}`) }}
+                  </span>
+                  <span class="text-body2 text-weight-medium">
+                    {{ item.count }}
+                  </span>
+                </router-link>
+              </q-card-section>
+            </q-card>
+          </div>
         </div>
       </div>
 
@@ -476,7 +485,7 @@ graphql(`
 </script>
 
 <script setup lang="ts">
-import { computed, ref } from "vue"
+import { computed, ref, watchEffect } from "vue"
 import { useQuery } from "@vue/apollo-composable"
 import { useQuasar } from "quasar"
 import { useRoute, useRouter } from "vue-router"
@@ -638,6 +647,21 @@ function goToSubmissions(statuses: readonly string[]) {
   void router.push(submissionsFilterTo(statuses))
 }
 
+// If we land on the dashboard parent route with no child selected
+// (route name === the parent's own name), drop the user on the
+// Submissions tab — the most common first action. Using a
+// watchEffect rather than definePage's `redirect` because
+// plugin-vue-router forbids that property on routes that also
+// have a component.
+watchEffect(() => {
+  if (route.name === "manage:publication:dashboard") {
+    void router.replace({
+      name: "manage:publication:submissions",
+      params: { id: props.id }
+    })
+  }
+})
+
 // The closed lane header shows one icon for the whole lane (all
 // five terminal statuses share the "completed" category).
 const closedCategory = statusCategories.find((c) => c.key === "completed")
@@ -790,6 +814,22 @@ const categories = computed<StatusCategory[]>(() =>
   flex-wrap: nowrap;
   min-width: max-content;
   align-items: stretch;
+}
+/* On narrow viewports the horizontal pipeline doesn't fit without
+   scrolling, so collapse to a single stacked column. Arrows
+   rotate 90° so they still read as "the next step is below". */
+@media (max-width: 700px) {
+  .status-lane-row--active {
+    grid-template-columns: 1fr;
+    min-width: 0;
+    justify-items: stretch;
+  }
+  .status-lane-row--active .lane-arrow {
+    align-self: center;
+    justify-self: center;
+    padding-bottom: 0;
+    transform: rotate(90deg);
+  }
 }
 .status-lane-stack {
   display: flex;
