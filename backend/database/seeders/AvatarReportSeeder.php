@@ -21,7 +21,7 @@ class AvatarReportSeeder extends Seeder
      */
     public function run(): void
     {
-        $reported = User::whereHas('media', fn ($q) => $q->where('collection_name', 'avatar'))
+        $reported = User::whereHas('media', fn($q) => $q->where('collection_name', 'avatar'))
             ->orderBy('id')
             ->take(2)
             ->get();
