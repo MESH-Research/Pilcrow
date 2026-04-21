@@ -5,11 +5,11 @@
       v-if="shouldShow"
       round
       dense
-      size="8px"
+      size="6px"
       color="grey-9"
       text-color="white"
       icon="more_horiz"
-      padding="2px"
+      padding="1px"
       class="reportable-avatar__trigger"
       :aria-label="$t('dialog.reportAvatar.button')"
       data-cy="reportable_avatar_trigger"
