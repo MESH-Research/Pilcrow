@@ -1,50 +1,51 @@
 <template>
   <q-card flat bordered class="submission-card column">
-    <!-- Header row: title on the left, category icon on the right.
-         Keeping the icon off the left side prevents it from reading
-         as the submitter's avatar at a glance. -->
-    <q-card-section horizontal class="items-center">
-      <q-card-section class="col q-py-sm q-pl-md q-pr-none">
-        <router-link
-          :to="{
-            name: 'submission:details',
-            params: { id: submission.id }
-          }"
-          class="text-primary submission-title"
-          style="font-size: 1.25rem; line-height: 1.3"
-          :title="submission.title"
-        >
-          {{ submission.title }}
-        </router-link>
-      </q-card-section>
-      <q-card-section
-        class="col-auto q-py-sm q-px-md"
-        :aria-label="categoryLabel"
-      >
-        <span
-          :class="[
-            'category-icon',
-            `bg-${statusStyle.color}`,
-            statusStyle.textClass,
-            statusStyle.pattern
-          ]"
-        >
-          <q-icon
-            :name="statusStyle.icon"
-            size="sm"
-            class="pattern-text-mask"
-          />
-        </span>
-      </q-card-section>
+    <!-- Header: a thin full-width color/pattern strip carries the
+         category, separator, then the title section, separator
+         again. The icon is left-aligned with a vertical separator
+         right after it — that tiny gutter makes the icon read as
+         a deliberate tag rather than floating text. -->
+    <q-card-section
+      :class="[
+        'category-band q-py-xs q-pl-md q-pr-none',
+        `bg-${statusStyle.color}`,
+        statusStyle.textClass,
+        statusStyle.pattern
+      ]"
+      :aria-label="categoryLabel"
+    >
+      <q-icon :name="statusStyle.icon" size="sm" class="pattern-text-mask" />
+      <q-separator vertical class="q-ml-sm category-band-sep" color="white" />
     </q-card-section>
+    <q-separator />
+    <q-card-section class="q-py-sm q-px-md">
+      <div class="text-caption text-grey-7 submission-id">
+        #{{ submission.id }}
+      </div>
+      <router-link
+        :to="{
+          name: 'submission:details',
+          params: { id: submission.id }
+        }"
+        class="text-primary submission-title"
+        style="font-size: 1.25rem; line-height: 1.3"
+        :title="submission.title"
+      >
+        {{ submission.title }}
+      </router-link>
+    </q-card-section>
+    <q-separator />
 
     <q-card-section class="q-py-sm q-px-md q-pt-none">
       <div :class="['items-start q-gutter-sm', stackHeader ? 'column' : 'row']">
-        <component
-          :is="submitterLink ? 'router-link' : 'q-item'"
+        <q-item
           v-if="submission.created_by"
-          class="q-pa-none submitter-item user-link-row"
-          :class="[stackHeader ? '' : 'col', submitterLink ? 'is-link' : '']"
+          class="q-pa-none submitter-item"
+          :class="[
+            stackHeader ? '' : 'col',
+            submitterLink ? 'user-item-link' : ''
+          ]"
+          :clickable="!!submitterLink"
           :to="submitterLink || undefined"
           @click.stop
         >
@@ -63,7 +64,7 @@
               {{ submission.created_by.username }}
             </q-item-label>
           </q-item-section>
-        </component>
+        </q-item>
         <q-space v-else-if="!stackHeader" />
         <div
           class="status-chip row items-center no-wrap q-px-sm q-py-xs"
@@ -123,10 +124,10 @@
       <div class="text-caption text-weight-bold text-grey-7 q-mb-sm">
         {{ $t("publication.dashboard.headers.review_team") }}
       </div>
-      <component
-        :is="coordinatorLink ? 'router-link' : 'q-item'"
-        class="q-pa-none q-mb-sm user-link-row"
-        :class="coordinatorLink ? 'is-link' : ''"
+      <q-item
+        class="q-pa-none q-mb-sm"
+        :class="coordinatorLink ? 'user-item-link' : ''"
+        :clickable="!!coordinatorLink"
         :to="coordinatorLink || undefined"
         @click.stop
       >
@@ -157,15 +158,15 @@
             </q-badge>
           </div>
         </q-item-section>
-        <q-item-section>
-          <q-item-label>
+        <q-item-section style="min-width: 0">
+          <q-item-label class="ellipsis">
             {{ coordinator?.name ?? $t("review_team.no_coordinator") }}
           </q-item-label>
-          <q-item-label v-if="coordinator?.username" caption>
+          <q-item-label v-if="coordinator?.username" caption class="ellipsis">
             {{ coordinator.username }}
           </q-item-label>
         </q-item-section>
-      </component>
+      </q-item>
       <div
         v-if="(submission.reviewers ?? []).length"
         class="row q-col-gutter-sm"
@@ -175,10 +176,10 @@
           :key="r.id"
           class="col-12 col-md-6"
         >
-          <component
-            :is="teamMemberLinkTo(r.id) ? 'router-link' : 'q-item'"
-            class="q-pa-none user-link-row"
-            :class="teamMemberLinkTo(r.id) ? 'is-link' : ''"
+          <q-item
+            class="q-pa-none"
+            :class="teamMemberLinkTo(r.id) ? 'user-item-link' : ''"
+            :clickable="!!teamMemberLinkTo(r.id)"
             :to="teamMemberLinkTo(r.id) || undefined"
             @click.stop
           >
@@ -191,7 +192,7 @@
                 {{ r.username }}
               </q-item-label>
             </q-item-section>
-          </component>
+          </q-item>
         </div>
       </div>
     </q-card-section>
@@ -275,7 +276,9 @@ const publicationId = computed(() => {
   return Array.isArray(raw) ? raw[0] : raw
 })
 
-function submitterLinkTo(userId: string | undefined | null): RouteLocationRaw | null {
+function submitterLinkTo(
+  userId: string | undefined | null
+): RouteLocationRaw | null {
   if (!userId || !publicationId.value) return null
   return {
     name: "manage:publication:submitter" as const,
@@ -283,7 +286,9 @@ function submitterLinkTo(userId: string | undefined | null): RouteLocationRaw | 
   }
 }
 
-function teamMemberLinkTo(userId: string | undefined | null): RouteLocationRaw | null {
+function teamMemberLinkTo(
+  userId: string | undefined | null
+): RouteLocationRaw | null {
   if (!userId || !publicationId.value) return null
   return {
     name: "manage:publication:team_member" as const,
@@ -368,30 +373,37 @@ const relativeSubmitted = computed(() =>
 </script>
 
 <style scoped>
-/* When a user's row is wrapped in a router-link it collapses from
-   a q-item's flex layout, so re-apply the item's shape inline. */
-.user-link-row.is-link {
-  display: flex;
-  align-items: center;
-  text-decoration: none;
-  color: inherit;
+/* Clickable q-item rows that navigate to a user detail page.
+   We lean on Quasar's built-in `:to` + `clickable` behavior so
+   the flex layout and ellipsis truncation in the item sections
+   stay intact. The default q-focus-helper tints with the primary
+   color (blue) on hover/focus, which reads as an accidental
+   highlight here — suppress it and provide our own neutral fill. */
+.user-item-link {
   border-radius: 4px;
-  padding: 4px;
-  margin: -4px;
 }
-.user-link-row.is-link:hover {
+.user-item-link :deep(.q-focus-helper) {
+  display: none;
+}
+.user-item-link:hover {
   background: rgba(0, 0, 0, 0.04);
 }
-.body--dark .user-link-row.is-link:hover {
+.body--dark .user-item-link:hover {
   background: rgba(255, 255, 255, 0.06);
+}
+.submission-card .submission-id {
+  font-size: 0.7rem;
+  line-height: 1.2;
+  font-variant-numeric: tabular-nums;
+  margin-bottom: 2px;
 }
 .submission-card .submission-title {
   text-decoration: none;
   font-weight: 500;
-  /* Clamp to three lines with ellipsis so cards stay the same
-     height in the grid. Long unbroken tokens (URL-ish strings)
-     break mid-word instead of stretching the card. The full
-     title lives on the anchor's `title` attribute for hover. */
+  /* Clamp to three lines with ellipsis so cards stay roughly the
+     same height. Long unbroken tokens (URL-ish strings) break
+     mid-word instead of stretching the card. The full title
+     lives on the anchor's `title` attribute for hover. */
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
@@ -402,16 +414,20 @@ const relativeSubmitted = computed(() =>
 .submission-card .submission-title:hover {
   text-decoration: underline;
 }
-/* Patterned tile in its own horizontal card-section — large enough
-   that the category pattern (diagonals / zigzag / dots / crosshatch)
-   actually reads. */
-.category-icon {
-  display: inline-flex;
+/* Thin full-width strip at the top of the card carrying the
+   category color + pattern + icon. The icon sits on the left
+   with a subtle vertical separator after it so the icon reads
+   as a deliberate tag anchoring the strip. */
+.category-band {
+  display: flex;
+  justify-content: flex-start;
   align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 6px;
+}
+.category-band-sep {
+  opacity: 0.45;
+  align-self: stretch;
+  margin-top: 2px;
+  margin-bottom: 2px;
 }
 /* Outlined status chip. The border + dot carry the category color;
    the label text stays in the theme's default body color so we keep
