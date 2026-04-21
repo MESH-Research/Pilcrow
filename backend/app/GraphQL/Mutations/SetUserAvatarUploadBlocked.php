@@ -18,10 +18,12 @@ class SetUserAvatarUploadBlocked
         /** @var \App\Models\User $user */
         $user = User::findOrFail($args['userId']);
 
+        // "Blocking" means revoking the default UPLOAD_AVATAR permission;
+        // "unblocking" grants it back directly on the user.
         if ($args['blocked']) {
-            $user->givePermissionTo(Permission::AVATAR_UPLOAD_REVOKED);
+            $user->revokePermissionTo(Permission::UPLOAD_AVATAR);
         } else {
-            $user->revokePermissionTo(Permission::AVATAR_UPLOAD_REVOKED);
+            $user->givePermissionTo(Permission::UPLOAD_AVATAR);
         }
 
         return $user->refresh();

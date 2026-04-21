@@ -27,7 +27,7 @@ class UpdateUserAvatar
     {
         $user = User::findOrFail($args['id']);
 
-        if ($user->hasPermissionTo(Permission::AVATAR_UPLOAD_REVOKED)) {
+        if (!$user->hasPermissionTo(Permission::UPLOAD_AVATAR)) {
             throw new Error('This user is not permitted to upload an avatar.');
         }
 
@@ -56,7 +56,9 @@ class UpdateUserAvatar
         } catch (FileCannotBeAdded $e) {
             throw new Error('Unable to store avatar: ' . $e->getMessage());
         } finally {
-            @unlink($cleanPath);
+            if (file_exists($cleanPath)) {
+                unlink($cleanPath);
+            }
         }
 
         return $user->refresh();

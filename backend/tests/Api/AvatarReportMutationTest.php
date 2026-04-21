@@ -344,8 +344,8 @@ class AvatarReportMutationTest extends ApiTestCase
         ', ['id' => $report->id, 'block' => true])
             ->assertJsonPath('data.resolveAvatarReportAndRemoveAvatar.status', 'REMOVED');
 
-        $this->assertTrue(
-            $target->fresh()->hasPermissionTo(Permission::AVATAR_UPLOAD_REVOKED)
+        $this->assertFalse(
+            $target->fresh()->hasPermissionTo(Permission::UPLOAD_AVATAR)
         );
     }
 
@@ -364,8 +364,8 @@ class AvatarReportMutationTest extends ApiTestCase
         ', ['id' => $target->id, 'blocked' => true])
             ->assertJsonPath('data.setUserAvatarUploadBlocked.avatar_upload_blocked', true);
 
-        $this->assertTrue(
-            $target->fresh()->hasPermissionTo(Permission::AVATAR_UPLOAD_REVOKED)
+        $this->assertFalse(
+            $target->fresh()->hasPermissionTo(Permission::UPLOAD_AVATAR)
         );
 
         $this->graphQL('
@@ -378,8 +378,8 @@ class AvatarReportMutationTest extends ApiTestCase
         ', ['id' => $target->id, 'blocked' => false])
             ->assertJsonPath('data.setUserAvatarUploadBlocked.avatar_upload_blocked', false);
 
-        $this->assertFalse(
-            $target->fresh()->hasPermissionTo(Permission::AVATAR_UPLOAD_REVOKED)
+        $this->assertTrue(
+            $target->fresh()->hasPermissionTo(Permission::UPLOAD_AVATAR)
         );
     }
 
@@ -399,8 +399,9 @@ class AvatarReportMutationTest extends ApiTestCase
         ', ['id' => $target->id]);
 
         $response->assertJsonPath('data.setUserAvatarUploadBlocked', null);
-        $this->assertFalse(
-            $target->fresh()->hasPermissionTo(Permission::AVATAR_UPLOAD_REVOKED)
+        $this->assertTrue(
+            $target->fresh()->hasPermissionTo(Permission::UPLOAD_AVATAR),
+            'Target should still have the default upload permission'
         );
     }
 }

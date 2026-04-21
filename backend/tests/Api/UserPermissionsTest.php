@@ -129,6 +129,10 @@ class UserPermissionsTest extends ApiTestCase
                                     'id' => '12',
                                     'name' => Permission::MODERATE_AVATARS,
                                 ],
+                                11 => [
+                                    'id' => '13',
+                                    'name' => Permission::UPLOAD_AVATAR,
+                                ],
                             ],
                         ],
                     ],
@@ -170,6 +174,10 @@ class UserPermissionsTest extends ApiTestCase
                                     'id' => '10',
                                     'name' => Permission::UNASSIGN_EDITOR,
                                 ],
+                                7 => [
+                                    'id' => '13',
+                                    'name' => Permission::UPLOAD_AVATAR,
+                                ],
                             ],
                         ],
                     ],
@@ -199,6 +207,10 @@ class UserPermissionsTest extends ApiTestCase
                                     'id' => '8',
                                     'name' => Permission::UNASSIGN_REVIEW_COORDINATOR,
                                 ],
+                                4 => [
+                                    'id' => '13',
+                                    'name' => Permission::UPLOAD_AVATAR,
+                                ],
                             ],
                         ],
                     ],
@@ -212,7 +224,12 @@ class UserPermissionsTest extends ApiTestCase
                         0 => [
                             'id' => Role::REVIEW_COORDINATOR_ROLE_ID,
                             'name' => Role::REVIEW_COORDINATOR,
-                            'permissions' => [],
+                            'permissions' => [
+                                0 => [
+                                    'id' => '13',
+                                    'name' => Permission::UPLOAD_AVATAR,
+                                ],
+                            ],
                         ],
                     ],
                 ],
@@ -224,7 +241,12 @@ class UserPermissionsTest extends ApiTestCase
                         0 => [
                             'id' => Role::REVIEWER_ROLE_ID,
                             'name' => Role::REVIEWER,
-                            'permissions' => [],
+                            'permissions' => [
+                                0 => [
+                                    'id' => '13',
+                                    'name' => Permission::UPLOAD_AVATAR,
+                                ],
+                            ],
                         ],
                     ],
                 ],
@@ -236,7 +258,12 @@ class UserPermissionsTest extends ApiTestCase
                         0 => [
                             'id' => Role::SUBMITTER_ROLE_ID,
                             'name' => Role::SUBMITTER,
-                            'permissions' => [],
+                            'permissions' => [
+                                0 => [
+                                    'id' => '13',
+                                    'name' => Permission::UPLOAD_AVATAR,
+                                ],
+                            ],
                         ],
                     ],
                 ],

@@ -120,6 +120,7 @@ import QueryTable, {
   type QueryTableColumn
 } from "src/components/tables/QueryTable.vue"
 import NameAvatarCell from "src/components/tables/common/NameAvatarCell.vue"
+import RemoveAvatarDialog from "src/components/dialogs/RemoveAvatarDialog.vue"
 import DateTimeCell from "src/components/tables/common/DateTimeCell.vue"
 import {
   GetAvatarReportsDocument,
@@ -230,27 +231,21 @@ async function dismiss(row: ReportRow) {
 }
 
 function confirmRemove(row: ReportRow) {
-  Dialog.create({
-    title: t("admin_avatar_reports.action_remove"),
-    message: t("admin_avatar_reports.confirm_remove"),
-    cancel: true,
-    ok: {
-      color: "negative",
-      label: t("admin_avatar_reports.action_remove")
+  Dialog.create({ component: RemoveAvatarDialog }).onOk(
+    async ({ blockFutureUploads }: { blockFutureUploads: boolean }) => {
+      try {
+        await resolveMutation({ id: row.id, blockFutureUploads })
+        Notify.create({
+          type: "positive",
+          message: t("admin_avatar_reports.removed_success")
+        })
+      } catch {
+        Notify.create({
+          type: "negative",
+          message: t("admin_avatar_reports.failure")
+        })
+      }
     }
-  }).onOk(async () => {
-    try {
-      await resolveMutation({ id: row.id })
-      Notify.create({
-        type: "positive",
-        message: t("admin_avatar_reports.removed_success")
-      })
-    } catch {
-      Notify.create({
-        type: "negative",
-        message: t("admin_avatar_reports.failure")
-      })
-    }
-  })
+  )
 }
 </script>

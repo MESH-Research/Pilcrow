@@ -58,7 +58,7 @@ class ResolveAvatarReport
             $report->user->clearMediaCollection(User::AVATAR_COLLECTION);
 
             if (!empty($args['blockFutureUploads'])) {
-                $report->user->givePermissionTo(Permission::AVATAR_UPLOAD_REVOKED);
+                $report->user->revokePermissionTo(Permission::UPLOAD_AVATAR);
             }
 
             // Close out other pending reports against the same user — the

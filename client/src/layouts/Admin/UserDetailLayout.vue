@@ -58,6 +58,39 @@
               :label="$t('admin.users.details.created_at')"
               :value="formatDateTime(user.created_at)"
             />
+            <FieldDisplay
+              class="col-sm-6 col-xs-12"
+              :icon="user.avatar_upload_blocked ? 'block' : 'image'"
+              :label="$t('admin.users.details.avatar_upload')"
+            >
+              <div class="row items-center q-gutter-sm">
+                <span
+                  :class="
+                    user.avatar_upload_blocked ? 'text-negative' : 'text-grey-7'
+                  "
+                >
+                  {{
+                    user.avatar_upload_blocked
+                      ? $t("admin.users.details.avatar_upload_blocked")
+                      : $t("admin.users.details.avatar_upload_allowed")
+                  }}
+                </span>
+                <q-btn
+                  v-if="canModerateAvatars"
+                  dense
+                  size="sm"
+                  :color="user.avatar_upload_blocked ? 'primary' : 'negative'"
+                  :loading="togglingBlock"
+                  :label="
+                    user.avatar_upload_blocked
+                      ? $t('admin.users.details.avatar_reinstate')
+                      : $t('admin.users.details.avatar_revoke')
+                  "
+                  data-cy="avatar_upload_toggle_block"
+                  @click="toggleBlock"
+                />
+              </div>
+            </FieldDisplay>
           </div>
         </q-card-section>
       </q-card-section>
@@ -99,6 +132,7 @@ graphql(`
       name
       created_at
       email_verified_at
+      avatar_upload_blocked
       ...avatarImage
       roles {
         name
@@ -112,16 +146,24 @@ graphql(`
 import AvatarImage from "src/components/atoms/AvatarImage.vue"
 import FieldDisplay from "src/components/molecules/FieldDisplay.vue"
 import { getUserDetailDocument } from "src/graphql/generated/graphql"
-import { useQuery } from "@vue/apollo-composable"
-import { computed } from "vue"
+import { useQuery, useMutation } from "@vue/apollo-composable"
+import { computed, ref } from "vue"
 import { DateTime } from "luxon"
+import { Notify } from "quasar"
+import { useI18n } from "vue-i18n"
+import { useCurrentUser } from "src/use/user"
+import { SET_USER_AVATAR_UPLOAD_BLOCKED } from "src/graphql/mutations"
 
 interface Props {
   id: string
 }
 const props = defineProps<Props>()
 
-const { result } = useQuery(getUserDetailDocument, { id: props.id })
+const { t } = useI18n()
+const { isAppAdmin } = useCurrentUser()
+const canModerateAvatars = isAppAdmin
+
+const { result, refetch } = useQuery(getUserDetailDocument, { id: props.id })
 const user = computed(() => {
   return result.value?.user
 })
@@ -129,6 +171,34 @@ const user = computed(() => {
 const isAdmin = computed(() =>
   user.value?.roles.some((r) => r.name === "Application Administrator")
 )
+
+const { mutate: setBlocked } = useMutation(SET_USER_AVATAR_UPLOAD_BLOCKED)
+const togglingBlock = ref(false)
+
+async function toggleBlock() {
+  if (!user.value) return
+  togglingBlock.value = true
+  try {
+    await setBlocked({
+      userId: user.value.id,
+      blocked: !user.value.avatar_upload_blocked
+    })
+    Notify.create({
+      type: "positive",
+      message: user.value.avatar_upload_blocked
+        ? t("admin.users.details.avatar_reinstated")
+        : t("admin.users.details.avatar_revoked")
+    })
+    await refetch()
+  } catch {
+    Notify.create({
+      type: "negative",
+      message: t("admin.users.details.avatar_toggle_failure")
+    })
+  } finally {
+    togglingBlock.value = false
+  }
+}
 
 function formatDateTime(iso: string): string {
   return DateTime.fromISO(iso).toFormat("LLL d yyyy h:mm a")

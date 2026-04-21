@@ -19,6 +19,11 @@ use Throwable;
  */
 class AvatarSeeder extends Seeder
 {
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
     public function run(): void
     {
         User::orderBy('id')

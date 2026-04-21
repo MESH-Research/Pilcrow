@@ -113,12 +113,29 @@ export const DISMISS_AVATAR_REPORT = gql`
 `
 
 export const RESOLVE_AVATAR_REPORT_AND_REMOVE_AVATAR = gql`
-  mutation ResolveAvatarReportAndRemoveAvatar($id: ID!, $notes: String) {
-    resolveAvatarReportAndRemoveAvatar(id: $id, notes: $notes) {
+  mutation ResolveAvatarReportAndRemoveAvatar(
+    $id: ID!
+    $notes: String
+    $blockFutureUploads: Boolean
+  ) {
+    resolveAvatarReportAndRemoveAvatar(
+      id: $id
+      notes: $notes
+      blockFutureUploads: $blockFutureUploads
+    ) {
       id
       status
       resolution_notes
       resolved_at
+    }
+  }
+`
+
+export const SET_USER_AVATAR_UPLOAD_BLOCKED = gql`
+  mutation SetUserAvatarUploadBlocked($userId: ID!, $blocked: Boolean!) {
+    setUserAvatarUploadBlocked(userId: $userId, blocked: $blocked) {
+      id
+      avatar_upload_blocked
     }
   }
 `

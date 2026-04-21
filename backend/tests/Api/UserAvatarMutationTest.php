@@ -195,7 +195,7 @@ class UserAvatarMutationTest extends ApiTestCase
     {
         /** @var User $user */
         $user = User::factory()->create();
-        $user->givePermissionTo(Permission::AVATAR_UPLOAD_REVOKED);
+        $user->revokePermissionTo(Permission::UPLOAD_AVATAR);
         $this->actingAs($user);
 
         $file = UploadedFile::fake()->image('avatar.png', 400, 400);
@@ -223,7 +223,7 @@ class UserAvatarMutationTest extends ApiTestCase
         );
         $response->assertJsonPath('data.user.avatar_upload_blocked', false);
 
-        $user->givePermissionTo(Permission::AVATAR_UPLOAD_REVOKED);
+        $user->revokePermissionTo(Permission::UPLOAD_AVATAR);
 
         $response = $this->graphQL(
             'query ($id: ID!) { user(id: $id) { id avatar_upload_blocked } }',

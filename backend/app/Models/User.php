@@ -88,6 +88,15 @@ class User extends Authenticatable implements MustVerifyEmail, HasMedia
                 $model->email_verified_at = null;
             }
         });
+
+        // Grant the default `upload avatar` permission directly so that
+        // newly-registered users without any role yet can still upload.
+        // Admins revoke this to block individual users.
+        static::created(function ($model) {
+            if (Permission::where('name', Permission::UPLOAD_AVATAR)->exists()) {
+                $model->givePermissionTo(Permission::UPLOAD_AVATAR);
+            }
+        });
     }
 
     /**
