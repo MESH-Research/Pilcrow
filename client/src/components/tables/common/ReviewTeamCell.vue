@@ -74,10 +74,7 @@
         <avatar-image :user="r" size="40px" rounded class="q-mr-sm" />
         <div class="column" style="min-width: 0">
           <span class="ellipsis">{{ r.name ?? r.email }}</span>
-          <span
-            v-if="r.username"
-            class="text-caption text-grey-7 ellipsis"
-          >
+          <span v-if="r.username" class="text-caption text-grey-7 ellipsis">
             {{ r.username }}
           </span>
         </div>

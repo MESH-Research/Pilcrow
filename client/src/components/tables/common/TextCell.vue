@@ -2,6 +2,13 @@
   <q-td :props="scope" :dense="scope.dense">
     <q-item class="q-pa-none">
       <q-item-section>
+        <q-item-label
+          v-if="captionAbove"
+          caption
+          class="text-grey-7 text-caption-above"
+        >
+          {{ captionAbove }}
+        </q-item-label>
         <q-item-label>
           <router-link
             v-if="link"
@@ -41,4 +48,19 @@ const link = computed(() => {
 const titleAttr = computed(() =>
   typeof props.scope.value === "string" ? props.scope.value : undefined
 )
+
+// Optional tiny caption rendered above the main value — e.g. an
+// "#id" prefix — supplied by the column config via `captionAbove`.
+const captionAbove = computed(() => {
+  const col = props.scope.col as QueryTableColumn
+  return col.captionAbove ? col.captionAbove(props.scope.row) : null
+})
 </script>
+
+<style scoped>
+.text-caption-above {
+  font-size: 0.7rem;
+  line-height: 1.2;
+  font-variant-numeric: tabular-nums;
+}
+</style>

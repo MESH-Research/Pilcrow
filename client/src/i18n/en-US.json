@@ -1,7 +1,7 @@
 {
   "needs_attention": "Needs attention",
   "review_team": {
-    "no_coordinator": "No coordinator assigned"
+    "no_coordinator": "No coordinator"
   },
   "tables": {
     "name_avatar_list": {

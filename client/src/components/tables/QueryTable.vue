@@ -117,6 +117,12 @@ export interface QueryTableColumn extends QTableColumn {
    */
   linkTo?: (row: Record<string, unknown>) => RouteLocationRaw
   /**
+   * For TextCell: optional small caption rendered above the main
+   * value. Useful for adding an ID prefix or short contextual
+   * label without a dedicated column.
+   */
+  captionAbove?: (row: Record<string, unknown>) => string | null
+  /**
    * For NameAvatarCell: suppress the username caption below the
    * display name (e.g. when a dedicated username column is present).
    */
