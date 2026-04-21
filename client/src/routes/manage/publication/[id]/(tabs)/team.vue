@@ -81,65 +81,38 @@
           </q-card-section>
           <q-separator />
           <q-card-section class="q-py-sm">
-            <div class="row q-mb-xs">
-              <div class="col text-caption text-grey-7">
-                {{ $t("publication.manage.users.groups.active") }}
-              </div>
-            </div>
-            <div class="row items-center q-py-xs">
-              <span class="col text-body2">
-                {{
-                  $t(
-                    "publication.manage.users.headers.as_reviewer_active_count"
-                  )
-                }}
-              </span>
-              <span class="text-weight-medium">
-                {{ gridProps.row.as_reviewer_active_count }}
-              </span>
-            </div>
-            <div class="row items-center q-py-xs">
-              <span class="col text-body2">
-                {{
-                  $t(
-                    "publication.manage.users.headers.as_coordinator_active_count"
-                  )
-                }}
-              </span>
-              <span class="text-weight-medium">
-                {{ gridProps.row.as_coordinator_active_count }}
-              </span>
-            </div>
-            <q-separator class="q-my-sm" />
-            <div class="row q-mb-xs">
-              <div class="col text-caption text-grey-7">
-                {{ $t("publication.manage.users.groups.completed") }}
-              </div>
-            </div>
-            <div class="row items-center q-py-xs">
-              <span class="col text-body2">
-                {{
-                  $t(
-                    "publication.manage.users.headers.as_reviewer_completed_count"
-                  )
-                }}
-              </span>
-              <span class="text-weight-medium">
-                {{ gridProps.row.as_reviewer_completed_count }}
-              </span>
-            </div>
-            <div class="row items-center q-py-xs">
-              <span class="col text-body2">
-                {{
-                  $t(
-                    "publication.manage.users.headers.as_coordinator_completed_count"
-                  )
-                }}
-              </span>
-              <span class="text-weight-medium">
-                {{ gridProps.row.as_coordinator_completed_count }}
-              </span>
-            </div>
+            <!-- 2x2 phase/role matrix — easier to scan than two
+                 stacked active/completed groups. Mirrors the
+                 layout on the team-member detail page. -->
+            <table class="role-counts">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>
+                    {{ $t("publication.manage.users.groups.active") }}
+                  </th>
+                  <th>
+                    {{ $t("publication.manage.users.groups.completed") }}
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">
+                    {{ $t("publication.manage.user_detail.role.coordinator") }}
+                  </th>
+                  <td>{{ gridProps.row.as_coordinator_active_count }}</td>
+                  <td>{{ gridProps.row.as_coordinator_completed_count }}</td>
+                </tr>
+                <tr>
+                  <th scope="row">
+                    {{ $t("publication.manage.user_detail.role.reviewer") }}
+                  </th>
+                  <td>{{ gridProps.row.as_reviewer_active_count }}</td>
+                  <td>{{ gridProps.row.as_reviewer_completed_count }}</td>
+                </tr>
+              </tbody>
+            </table>
           </q-card-section>
         </q-card>
       </div>
@@ -372,6 +345,51 @@ const columns: QueryTableColumn[] = [
 </script>
 
 <style scoped>
+/* Grid-card phase/role matrix — compact 2x2 table mirroring the
+   detail page's layout. `role-counts` is the table class set on
+   the card's body section. */
+.role-counts {
+  border-collapse: collapse;
+  width: 100%;
+  /* Lining numerals — some fonts slash the 0 when
+     `tabular-nums` is requested, which looks like a "no" symbol. */
+  font-variant-numeric: lining-nums;
+}
+.role-counts th,
+.role-counts td {
+  padding: 4px 12px;
+  vertical-align: baseline;
+}
+.role-counts thead th,
+.role-counts tbody td {
+  text-align: right;
+}
+.role-counts thead th {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.6);
+  padding-bottom: 4px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+.body--dark .role-counts thead th {
+  color: rgba(255, 255, 255, 0.72);
+  border-bottom-color: rgba(255, 255, 255, 0.16);
+}
+.role-counts tbody th {
+  font-weight: 500;
+  color: inherit;
+  white-space: nowrap;
+  padding-right: 16px;
+  padding-left: 0;
+  text-align: left;
+  width: 1%;
+}
+.role-counts tbody td {
+  font-size: 1.15rem;
+  font-weight: 500;
+}
 /* Visual grouping for the count block:
    - col 3 starts the count section (after Email)
    - col 5 separates the Active and Completed groups */
