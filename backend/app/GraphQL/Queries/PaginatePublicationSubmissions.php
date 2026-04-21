@@ -85,6 +85,7 @@ class PaginatePublicationSubmissions
      * the search matches against the submission title AND any assigned
      * user (submitter, reviewer, review coordinator):
      *
+     *   - id:42               - submission id, exact match (skips min-length)
      *   - title:foo           - submission title only
      *   - submitter:foo       - submitter name/email/username only
      *   - reviewer:foo        - any reviewer name/email/username only
@@ -105,6 +106,18 @@ class PaginatePublicationSubmissions
         }
 
         [$prefix, $term] = $this->splitPrefix($search);
+
+        // `id:N` is exact match against the submission's primary key.
+        // Skip the min-length rule so short IDs like "1" or "42"
+        // still match, and short-circuit anything non-numeric.
+        if ($prefix === 'id') {
+            if (ctype_digit($term)) {
+                $query->where('submissions.id', (int)$term);
+            }
+
+            return;
+        }
+
         // Enforce a minimum length on whichever portion will be queried.
         $lengthTarget = $prefix !== null ? $term : $search;
         if (mb_strlen($lengthTarget) < self::MIN_SEARCH_LENGTH) {

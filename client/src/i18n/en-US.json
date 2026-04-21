@@ -537,7 +537,7 @@
         "submitters": "Submitters"
       },
       "show_only": "Show only these",
-      "search_hint": "Enter at least 3 characters. Searches title and assigned users. Use title:, submitter:, reviewer:, coordinator:, team:, or user: to narrow the search.",
+      "search_hint": "Enter at least 3 characters. Searches title and assigned users. Use id:, title:, submitter:, reviewer:, coordinator:, team:, or user: to narrow the search.",
       "no_submissions": "No submissions match the current filters.",
       "submission_count": "no submissions | {n} submission | {n} submissions"
     },
