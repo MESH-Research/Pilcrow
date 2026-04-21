@@ -12,7 +12,7 @@
       @keydown.enter.prevent
       @keydown.space.prevent
     >
-      <q-icon name="more_horiz" size="13px" />
+      <q-icon name="more_horiz" size="16px" />
       <q-menu>
         <q-list dense style="min-width: 200px">
           <q-item
@@ -105,11 +105,11 @@ function openReport() {
 }
 .reportable-avatar__trigger {
   position: absolute;
-  right: -8px;
-  bottom: -8px;
+  right: -10px;
+  bottom: -10px;
   z-index: 2;
-  width: 18px;
-  height: 18px;
+  width: 22px;
+  height: 22px;
   display: flex;
   align-items: center;
   justify-content: center;
