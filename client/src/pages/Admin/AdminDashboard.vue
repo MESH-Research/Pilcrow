@@ -51,15 +51,16 @@
           @click="goToAvatarReports"
         >
           <q-card-section class="row items-center no-wrap q-gutter-md">
-            <q-icon name="flag" size="xl" color="accent">
+            <div class="relative-position">
+              <q-icon name="flag" size="xl" color="accent" />
               <q-badge
                 v-if="pendingReportsCount > 0"
                 floating
                 color="red"
-                :label="pendingReportsCount"
+                :label="String(pendingReportsCount)"
                 data-cy="admin_card_avatar_reports_badge"
               />
-            </q-icon>
+            </div>
             <div>
               <div class="text-subtitle1 text-weight-bold">
                 {{ $t("admin_avatar_reports.page_title") }}

@@ -67,15 +67,16 @@
               <q-separator />
               <q-item :to="{ name: 'admin:dashboard' }">
                 <q-item-section avatar>
-                  <q-icon name="admin_panel_settings">
+                  <div class="relative-position">
+                    <q-icon name="admin_panel_settings" />
                     <q-badge
                       v-if="pendingReportsCount > 0"
                       floating
                       color="red"
-                      :label="pendingReportsCount"
+                      :label="String(pendingReportsCount)"
                       data-cy="header_admin_pending_badge"
                     />
-                  </q-icon>
+                  </div>
                 </q-item-section>
                 <q-item-section>
                   {{ $t("header.application_administration") }}
