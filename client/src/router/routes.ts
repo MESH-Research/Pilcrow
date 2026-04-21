@@ -153,6 +153,12 @@ const routes: RouteRecordRaw[] = [
         }
       },
       {
+        // Temporary dev showcase — remove before production.
+        path: "/dev/avatars",
+        name: "dev:avatars",
+        component: () => import("src/pages/Dev/AvatarShowcase.vue")
+      },
+      {
         path: "/publications",
         name: "publication:index",
         component: () => import("pages/Publication/PublicationsIndexPage.vue")
