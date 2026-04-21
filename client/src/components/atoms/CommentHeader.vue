@@ -23,6 +23,7 @@
       <comment-reference :comment="comment" />
       <reportable-avatar
         :user="comment.created_by"
+        compact
         round
         size="30px"
         class="q-mr-sm"

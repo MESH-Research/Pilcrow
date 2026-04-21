@@ -6,13 +6,14 @@
       role="button"
       tabindex="0"
       class="reportable-avatar__trigger"
+      :class="{ 'reportable-avatar__trigger--compact': compact }"
       :aria-label="$t('dialog.reportAvatar.button')"
       data-cy="reportable_avatar_trigger"
       @click.stop
       @keydown.enter.prevent
       @keydown.space.prevent
     >
-      <q-icon name="more_horiz" size="16px" />
+      <q-icon name="more_horiz" :size="compact ? '11px' : '16px'" />
       <q-menu>
         <q-list dense style="min-width: 200px">
           <q-item
@@ -51,9 +52,15 @@ interface Props {
    * Forwarded to AvatarImage. See the same prop there for semantics.
    */
   variant?: "thumb" | "medium" | "original"
+  /**
+   * Render a smaller trigger tucked closer to the avatar, appropriate
+   * for compact contexts like comment headers (30px avatars).
+   */
+  compact?: boolean
 }
 const props = withDefaults(defineProps<Props>(), {
-  variant: "thumb"
+  variant: "thumb",
+  compact: false
 })
 
 defineOptions({ inheritAttrs: false })
@@ -120,6 +127,12 @@ function openReport() {
   opacity: 0;
   transition: opacity 0.15s ease-in-out;
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.25);
+}
+.reportable-avatar__trigger--compact {
+  right: -4px;
+  bottom: -4px;
+  width: 15px;
+  height: 15px;
 }
 .reportable-avatar:hover .reportable-avatar__trigger,
 .reportable-avatar:focus-within .reportable-avatar__trigger {
