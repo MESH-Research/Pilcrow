@@ -53,20 +53,25 @@
         <li
           v-for="segment in activeSegments"
           :key="`active-legend-${segment.status}`"
-          class="status-bar-legend-item"
-          :class="{ 'is-active': isActive(segment.status) }"
         >
-          <span
-            class="status-bar-legend-swatch"
-            :style="`background-color: var(--q-${styleFor(segment.status).color})`"
-            aria-hidden="true"
-          />
-          <span class="status-bar-legend-label">
-            {{ $t(`submission.status.${segment.status}`) }}
-          </span>
-          <span class="status-bar-legend-count">
-            {{ segment.count }}
-          </span>
+          <router-link
+            :to="linkFor(segment.status)"
+            class="status-bar-legend-item"
+            :class="{ 'is-active': isActive(segment.status) }"
+            :aria-label="segmentAria(segment)"
+          >
+            <span
+              class="status-bar-legend-swatch"
+              :style="`background-color: var(--q-${styleFor(segment.status).color})`"
+              aria-hidden="true"
+            />
+            <span class="status-bar-legend-label">
+              {{ $t(`submission.status.${segment.status}`) }}
+            </span>
+            <span class="status-bar-legend-count">
+              {{ segment.count }}
+            </span>
+          </router-link>
         </li>
       </ul>
     </template>
@@ -109,44 +114,29 @@
         />
       </div>
       <template v-if="closedExpanded">
-        <div
-          class="status-bar-track q-mt-xs"
-          role="list"
-          :aria-label="$t('publication.manage.user_detail.closed')"
-        >
-          <router-link
-            v-for="segment in closedSegments"
-            :key="segment.status"
-            role="listitem"
-            class="status-bar-segment"
-            :class="{ 'is-active': isActive(segment.status) }"
-            :style="segmentStyle(segment, closedTotal)"
-            :to="linkFor(segment.status)"
-            :aria-label="segmentAria(segment)"
-          >
-            <q-tooltip :delay="200" anchor="top middle" self="bottom middle">
-              {{ segmentAria(segment) }}
-            </q-tooltip>
-          </router-link>
-        </div>
         <ul class="status-bar-legend q-mt-xs q-mb-none q-pl-none">
           <li
             v-for="segment in closedSegments"
             :key="`closed-legend-${segment.status}`"
-            class="status-bar-legend-item"
-            :class="{ 'is-active': isActive(segment.status) }"
           >
-            <span
-              class="status-bar-legend-swatch"
-              :style="`background-color: var(--q-${styleFor(segment.status).color})`"
-              aria-hidden="true"
-            />
-            <span class="status-bar-legend-label">
-              {{ $t(`submission.status.${segment.status}`) }}
-            </span>
-            <span class="status-bar-legend-count">
-              {{ segment.count }}
-            </span>
+            <router-link
+              :to="linkFor(segment.status)"
+              class="status-bar-legend-item"
+              :class="{ 'is-active': isActive(segment.status) }"
+              :aria-label="segmentAria(segment)"
+            >
+              <span
+                class="status-bar-legend-swatch"
+                :style="`background-color: var(--q-${styleFor(segment.status).color})`"
+                aria-hidden="true"
+              />
+              <span class="status-bar-legend-label">
+                {{ $t(`submission.status.${segment.status}`) }}
+              </span>
+              <span class="status-bar-legend-count">
+                {{ segment.count }}
+              </span>
+            </router-link>
           </li>
         </ul>
       </template>
@@ -351,6 +341,18 @@ function isActive(status: string): boolean {
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  padding: 2px 4px;
+  margin: -2px -4px;
+  border-radius: 4px;
+}
+.status-bar-legend-item:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+.body--dark .status-bar-legend-item:hover {
+  background: rgba(255, 255, 255, 0.06);
 }
 .status-bar-legend-item.is-active {
   font-weight: 600;
