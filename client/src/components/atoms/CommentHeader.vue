@@ -26,7 +26,7 @@
         compact
         round
         size="30px"
-        class="q-mr-sm"
+        class="q-mr-md"
       />
       <div class="row items-center q-pr-sm comment-header-name">
         <div

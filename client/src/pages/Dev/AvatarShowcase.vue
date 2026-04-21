@@ -166,7 +166,7 @@
                 compact
                 round
                 size="30px"
-                class="q-mr-sm"
+                class="q-mr-md"
               />
               <div class="text-h4 ellipsis">
                 {{ user.display_label }}
