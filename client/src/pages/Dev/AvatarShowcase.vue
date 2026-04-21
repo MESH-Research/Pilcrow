@@ -165,7 +165,7 @@ import { graphql } from "src/graphql/generated"
 
 graphql(`
   query GetAvatarShowcaseUsers {
-    users(first: 8, page: 1) {
+    users(first: 50, page: 1) {
       data {
         id
         name
@@ -210,9 +210,9 @@ const { currentUser } = useCurrentUser()
  */
 const users = computed<ShowcaseUser[]>(() => {
   const meId = currentUser.value?.id ? String(currentUser.value.id) : null
-  return (result.value?.users.data ?? []).filter(
-    (u) => !!u.avatar?.url && String(u.id) !== meId
-  )
+  return (result.value?.users.data ?? [])
+    .filter((u) => !!u.avatar?.url && String(u.id) !== meId)
+    .slice(0, 8)
 })
 
 function fakeScope(user: ShowcaseUser): QTableBodyCellScope {
