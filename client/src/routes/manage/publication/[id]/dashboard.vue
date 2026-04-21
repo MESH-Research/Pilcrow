@@ -1024,16 +1024,47 @@ const categories = computed<StatusCategory[]>(() =>
   .stack-chips {
     flex-direction: row;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: 6px;
   }
   .status-lane-row--active .status-lane-stack .status-flow-chip {
-    flex: 0 0 calc(50% - 4px);
-    width: calc(50% - 4px);
+    flex: 0 0 calc(50% - 3px);
+    width: calc(50% - 3px);
     min-width: 0;
   }
   .status-flow-chip--slim {
     min-width: 0;
-    flex: 0 0 calc(50% - 4px);
+    flex: 0 0 calc(50% - 3px);
+  }
+
+  /* Tighten up the vertical rhythm so the whole diagram fits
+     closer to the fold on a phone. Biggest wins: lane padding,
+     the active-pipeline row gap (which sits between stages and
+     their arrows), and the rotated arrow's footprint. */
+  .status-lane {
+    padding: 6px 0;
+  }
+  .status-lane-label {
+    margin-bottom: 4px;
+  }
+  .status-lane-row--active {
+    gap: 4px 12px;
+  }
+  /* The rotated arrow between stages doesn't add much on a phone —
+     the stacked-under-each-other layout already reads as "next
+     step below". Keep it for continuity with desktop but shrink
+     it dramatically so it doesn't push the diagram below the fold. */
+  .status-lane-row--active .lane-arrow {
+    font-size: 16px !important;
+    opacity: 0.6;
+    padding: 0;
+    margin: 0;
+  }
+  .stage-label {
+    margin-bottom: 2px;
+    min-height: 0;
+  }
+  .status-flow-chip {
+    padding: 4px 8px 4px 4px;
   }
 }
 </style>
