@@ -26,9 +26,9 @@
         compact
         round
         size="30px"
-        class="q-mr-md"
+        class="q-mr-sm"
       />
-      <div class="row items-center q-pr-sm comment-header-name">
+      <div class="row items-center q-pl-sm q-pr-sm comment-header-name">
         <div
           class="text-h4 ellipsis"
           :data-context-id="props.comment.id"
