@@ -126,8 +126,8 @@
       <section class="q-mb-xl">
         <h2 class="text-h6">CommentHeader (atom)</h2>
         <p class="text-caption text-grey-7">
-          Inside a comment. Uses the <code>compact</code> ReportableAvatar
-          variant (30px avatar).
+          Header only — avatar + display label + timestamp. Uses the
+          <code>compact</code> ReportableAvatar variant (30px avatar).
         </p>
         <q-card flat bordered class="q-mb-sm">
           <comment-header
@@ -135,6 +135,32 @@
             :key="'ch-' + user.id"
             :comment="fakeComment(user) as unknown as CommentType"
           />
+        </q-card>
+      </section>
+
+      <section class="q-mb-xl">
+        <h2 class="text-h6">Full comment (in situ)</h2>
+        <p class="text-caption text-grey-7">
+          CommentHeader in the same chrome a real OverallComment uses —
+          bordered grey card with the comment body underneath. This is
+          the closest approximation to what a user sees on a submission
+          review page.
+        </p>
+        <q-card
+          v-for="user in users"
+          :key="'sit-' + user.id"
+          square
+          class="bg-grey-1 shadow-2 q-mb-md comment"
+        >
+          <comment-header
+            :comment="fakeComment(user) as unknown as CommentType"
+            class="comment-header"
+          />
+          <q-card-section>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+            Demonstrative comment body so the author identity reads in the
+            same visual context as a real review comment.
+          </q-card-section>
         </q-card>
       </section>
 
