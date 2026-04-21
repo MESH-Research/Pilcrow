@@ -40,6 +40,7 @@
       </div>
       <iframe
         ref="previewIframe"
+        :title="$t('export.preview.title')"
         :srcdoc="exportHtml"
         style="
           background-color: #fff;
