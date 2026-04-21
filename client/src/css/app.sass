@@ -1,7 +1,30 @@
 // app global css in Sass form
+
+// Atkinson Hyperlegible — register every weight/style we ship.
+// Without the Bold and Italic faces declared, the browser was
+// synthesizing fake-bold/italic on `.text-weight-bold` etc., which
+// read as a different typeface and made headings look mismatched
+// with body text.
 @font-face
     font-family: "Atkinson"
+    font-weight: 400
+    font-style: normal
     src: url(./fonts/Atkinson_Hyperlegible/AtkinsonHyperlegible-Regular.ttf)
+@font-face
+    font-family: "Atkinson"
+    font-weight: 400
+    font-style: italic
+    src: url(./fonts/Atkinson_Hyperlegible/AtkinsonHyperlegible-Italic.ttf)
+@font-face
+    font-family: "Atkinson"
+    font-weight: 700
+    font-style: normal
+    src: url(./fonts/Atkinson_Hyperlegible/AtkinsonHyperlegible-Bold.ttf)
+@font-face
+    font-family: "Atkinson"
+    font-weight: 700
+    font-style: italic
+    src: url(./fonts/Atkinson_Hyperlegible/AtkinsonHyperlegible-BoldItalic.ttf)
 
 html
     font-family: "Atkinson"
