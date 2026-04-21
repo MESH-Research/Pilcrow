@@ -1015,4 +1015,25 @@ const categories = computed<StatusCategory[]>(() =>
   font-size: 1.1rem;
   line-height: 1.1;
 }
+
+/* Phone-width condensed layout. Placed after the base chip rules
+   above so these overrides win at equal specificity — Reviewing
+   has three chips and Decision has two; stacking them vertically
+   ate a lot of screen height at phone width. */
+@media (max-width: 700px) {
+  .stack-chips {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .status-lane-row--active .status-lane-stack .status-flow-chip {
+    flex: 0 0 calc(50% - 4px);
+    width: calc(50% - 4px);
+    min-width: 0;
+  }
+  .status-flow-chip--slim {
+    min-width: 0;
+    flex: 0 0 calc(50% - 4px);
+  }
+}
 </style>
