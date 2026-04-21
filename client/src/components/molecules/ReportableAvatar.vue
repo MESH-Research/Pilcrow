@@ -5,11 +5,11 @@
       v-if="shouldShow"
       round
       dense
-      size="10px"
+      size="8px"
       color="grey-9"
       text-color="white"
       icon="more_horiz"
-      padding="4px"
+      padding="2px"
       class="reportable-avatar__trigger"
       :aria-label="$t('dialog.reportAvatar.button')"
       data-cy="reportable_avatar_trigger"
@@ -107,8 +107,8 @@ function openReport() {
 }
 .reportable-avatar__trigger {
   position: absolute;
-  right: -6px;
-  bottom: -6px;
+  right: -10px;
+  bottom: -10px;
   z-index: 2;
   opacity: 0;
   transition: opacity 0.15s ease-in-out;
