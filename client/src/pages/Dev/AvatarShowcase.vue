@@ -171,6 +171,7 @@ graphql(`
         name
         username
         email
+        display_label
         ...avatarImage
         ...avatarBlock
         ...NameAvatarCell
@@ -227,6 +228,7 @@ function fakeScope(user: ShowcaseUser): QTableBodyCellScope {
 function fakeComment(user: ShowcaseUser) {
   const now = new Date().toISOString()
   return {
+    __typename: "OverallComment" as const,
     id: `showcase-${user.id}`,
     content: "Demo comment body.",
     created_at: now,
