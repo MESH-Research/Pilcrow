@@ -14,9 +14,16 @@
 
 <script setup lang="ts">
 import UserListBasicItem from "../atoms/UserListBasicItem.vue"
+import type { avatarImageFragment } from "src/graphql/generated/graphql"
+
+interface User extends avatarImageFragment {
+  id?: string | null
+  name?: string | null
+  username?: string | null
+}
 
 interface Props {
-  users: Record<string, unknown>[]
+  users: User[]
   action?: string
   dataCy?: string
 }

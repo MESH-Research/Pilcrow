@@ -4,11 +4,22 @@
   </q-avatar>
 </template>
 
+<script lang="ts">
+import { graphql } from "src/graphql/generated"
+
+graphql(`
+  fragment avatarImage on User {
+    email
+  }
+`)
+</script>
+
 <script setup lang="ts">
 import { computed } from "vue"
+import type { avatarImageFragment } from "src/graphql/generated/graphql"
 
 interface Props {
-  user: { email?: string }
+  user: avatarImageFragment
 }
 
 const props = defineProps<Props>()
