@@ -213,9 +213,15 @@ function toggleLocale() {
   background: $secondary
 .header-nav .q-item__section--side
   color: inherit
-// Accent stripe on the left edge signals "this admin section has
-// something waiting". Reusable for any item that wants to flag
-// itself for attention.
+// Reuses the "you are here" warm-amber treatment from
+// SubmissionCard (publication-admin) — same palette, different
+// meaning: here it flags that the admin section has something
+// waiting for attention. Reusable for any menu item that wants to
+// raise a hand.
 .admin-item-needs-attention
-  border-left: 4px solid $negative
+  background-color: #fdf2d1 !important
+  border-left: 4px solid #d9a441 !important
+.body--dark .admin-item-needs-attention
+  background-color: rgba(216, 171, 65, 0.14) !important
+  border-left: 4px solid #d9a441 !important
 </style>
