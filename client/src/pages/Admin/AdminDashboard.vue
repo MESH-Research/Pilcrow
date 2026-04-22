@@ -111,6 +111,12 @@ function goToAvatarReports() {
 </script>
 
 <style scoped>
+/* Make every card in a row match the tallest — when one card's
+   description wraps to a second line at a given breakpoint, the
+   others grow to meet it instead of looking ragged. */
+.admin-card {
+  height: 100%;
+}
 .admin-card:hover {
   background-color: #f5f5f5;
   transition: background-color 0.2s;
