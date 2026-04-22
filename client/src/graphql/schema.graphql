@@ -666,7 +666,7 @@ type Query {
     "Limits number of fetched items."
     first: Int! = 10
 
-    my_role: PublicationRole
+    my_role: [PublicationRole!]
     orderBy: [QueryPublicationsOrderByOrderByClause!]
 
     "The offset from which items are returned."
