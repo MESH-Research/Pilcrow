@@ -50,14 +50,29 @@
       </template>
       <template #body-cell-actions="rProps">
         <q-td :props="rProps">
-          <q-btn
-            color="primary"
-            size="sm"
-            dense
-            icon="settings"
-            label="Configure"
-            :to="destRoute(rProps.value as string, 'basic')"
-          />
+          <div class="row q-gutter-xs justify-end no-wrap">
+            <q-btn
+              color="primary"
+              size="sm"
+              dense
+              icon="dashboard"
+              label="Dashboard"
+              :to="{
+                name: 'manage:publication:dashboard',
+                params: { id: rProps.value as string }
+              }"
+              @click.stop
+            />
+            <q-btn
+              color="primary"
+              size="sm"
+              dense
+              icon="settings"
+              label="Configure"
+              :to="destRoute(rProps.value as string, 'basic')"
+              @click.stop
+            />
+          </div>
         </q-td>
       </template>
     </QueryTable>
