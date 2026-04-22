@@ -291,7 +291,6 @@ const displayName = computed(
     ""
 )
 
-
 // Compact status readout matching the submitter page — show only
 // statuses with a non-zero count, ordered by count desc.
 const statusBreakdown = computed(() => {

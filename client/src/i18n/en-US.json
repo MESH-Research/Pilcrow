@@ -542,6 +542,31 @@
       "submission_count": "no submissions | {n} submission | {n} submissions"
     },
     "manage": {
+      "dashboard": {
+        "heading": "Manage",
+        "none": "You don't manage any publications yet.",
+        "open": "Open dashboard",
+        "total_submissions": "no submissions | {n} total submission | {n} total submissions",
+        "role": {
+          "publication_admin": "Admin",
+          "editor": "Editor"
+        },
+        "headers": {
+          "name": "Publication",
+          "role": "Role",
+          "screening": "Screening",
+          "reviewing": "Reviewing",
+          "decision": "Decision",
+          "closed": "Closed",
+          "total": "Total"
+        },
+        "stages": {
+          "screening": "Screening",
+          "reviewing": "Reviewing",
+          "decision": "Decision",
+          "closed": "Closed"
+        }
+      },
       "review_team": {
         "heading": "Review Team",
         "tabs": {

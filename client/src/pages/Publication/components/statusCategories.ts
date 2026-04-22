@@ -74,3 +74,55 @@ export const statusStyleMap: Record<
     ])
   )
 )
+
+/**
+ * Workflow stages matching the columns of the dashboard's active-
+ * pipeline diagram plus the closed lane. `statusCategories` above
+ * is the *acting-on-it* bucketing (Needs Action / In Progress /
+ * Closed); `workflowStages` is the *where-is-it-in-the-pipeline*
+ * bucketing (Screening / Reviewing / Decision / Closed). Each is
+ * useful in a different view — the Manage dashboard rolls up by
+ * stage so admins can see which stage a publication's backlog is
+ * concentrated in at a glance.
+ */
+export const workflowStages: StatusCategoryDef[] = [
+  {
+    key: "screening",
+    color: "warning",
+    textClass: "text-dark",
+    icon: "inbox",
+    pattern: "pattern-diagonal",
+    statuses: ["INITIALLY_SUBMITTED", "RESUBMITTED"]
+  },
+  {
+    key: "reviewing",
+    color: "info",
+    textClass: "text-dark",
+    icon: "rate_review",
+    pattern: "pattern-zigzag",
+    statuses: ["AWAITING_REVIEW", "UNDER_REVIEW"]
+  },
+  {
+    key: "decision",
+    color: "accent",
+    textClass: "text-white",
+    icon: "gavel",
+    pattern: "pattern-dots",
+    statuses: ["AWAITING_DECISION", "ACCEPTED_AS_FINAL"]
+  },
+  {
+    key: "closed",
+    color: "blue-grey-7",
+    textClass: "text-white",
+    icon: "done_outline",
+    pattern: "pattern-crosshatch",
+    statuses: [
+      "RESUBMISSION_REQUESTED",
+      "REVISION_REQUESTED",
+      "REJECTED",
+      "EXPIRED",
+      "ARCHIVED",
+      "DELETED"
+    ]
+  }
+]

@@ -4,13 +4,11 @@
 
 <script setup lang="ts">
 definePage({
-  redirect: { name: "publication:index" },
+  redirect: { name: "manage:index" },
   meta: {
     crumb: {
-      // TODO: point at a dedicated admin landing page once one exists;
-      // for now the crumb redirects to the publications index.
       label: "Manage",
-      to: { name: "publication:index" }
+      to: { name: "manage:index" }
     }
   }
 })

@@ -201,7 +201,7 @@ graphql(`
 </script>
 
 <script setup lang="ts">
-import { computed, provide, ref, watch } from "vue"
+import { computed, onMounted, provide, ref, watch } from "vue"
 import { useQuasar } from "quasar"
 import { useRoute, useRouter } from "vue-router"
 import QueryTable, {
@@ -245,6 +245,27 @@ function toggleExpandAllReviewers() {
   expandAllReviewers.value = !expandAllReviewers.value
 }
 provide(ReviewTeamExpandAllKey, expandAllReviewers)
+
+// When we arrive with `?scroll=table` (hand-off from the Manage
+// dashboard's category links), smooth-scroll past the workflow
+// diagram and drop the user at the filtered table. Strip the flag
+// from the URL afterward so a refresh doesn't loop through the
+// animation again.
+onMounted(() => {
+  if (route.query.scroll !== "table") return
+  // Wait a tick so the table has mounted and laid out.
+  requestAnimationFrame(() => {
+    const target =
+      queryTableRef.value?.$el?.querySelector?.(
+        ".q-table__top, .q-table__container, .q-table--grid"
+      ) ?? null
+    if (target instanceof HTMLElement) {
+      target.scrollIntoView({ behavior: "smooth", block: "start" })
+    }
+    const { scroll: _omit, ...rest } = route.query as Record<string, string>
+    void router.replace({ query: rest })
+  })
+})
 
 // Grid-mode sort options (table mode uses column headers).
 interface SortOption {
@@ -526,4 +547,3 @@ const columns: QueryTableColumn[] = [
   border-radius: 4px;
 }
 </style>
-
