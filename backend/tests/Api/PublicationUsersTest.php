@@ -315,4 +315,41 @@ class PublicationUsersTest extends ApiTestCase
 
         $response->assertJsonPath('data.publication', null);
     }
+
+    public function testOutsiderCannotEnumerateUsersOfPublicPublication(): void
+    {
+        // Public visibility lets `publication(id)` resolve for anyone,
+        // but the reviewer/coordinator roster should stay private —
+        // only publication admins, editors, or app admins get to see
+        // the team roster. Reviewer anonymity in particular matters
+        // for peer review integrity.
+        $admin = User::factory()->create();
+        $publication = Publication::factory()
+            ->hasAttached($admin, [], 'publicationAdmins')
+            ->create(['is_publicly_visible' => true]);
+
+        Submission::factory()
+            ->for($publication)
+            ->hasAttached(User::factory()->create(), [], 'submitters')
+            ->hasAttached(User::factory()->create(), [], 'reviewers')
+            ->create(['status' => Submission::UNDER_REVIEW]);
+
+        /** @var User $outsider */
+        $outsider = User::factory()->create();
+        $this->actingAs($outsider);
+
+        $response = $this->graphQL(self::USERS_QUERY, [
+            'id' => (string)$publication->id,
+            'roles' => ['reviewer', 'review_coordinator'],
+        ]);
+
+        // Either the whole publication.users resolves to an empty
+        // page, or (preferably) GraphQL returns an authorization
+        // error. What's NOT acceptable is returning the reviewers.
+        $data = $response->json('data.publication.users.data');
+        $this->assertEmpty(
+            $data ?? [],
+            'Outsider should not see any users on a public publication.'
+        );
+    }
 }

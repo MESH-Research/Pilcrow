@@ -5,12 +5,14 @@ namespace App\Models;
 
 use App\Builders\PublicationBuilder;
 use App\Models\Casts\CleanAdminHtml;
+use App\Policies\PublicationPolicy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Nuwave\Lighthouse\Exceptions\AuthorizationException;
 
 class Publication extends BaseModel
 {
@@ -182,11 +184,16 @@ class Publication extends BaseModel
      *
      * Drafts are excluded — they are the author's private work and
      * aren't visible to the publication admin/editor dashboard.
+     * Guarded: the aggregated counts reveal operational metrics that
+     * shouldn't leak from public publications, so only the
+     * publication's admin/editor team (or an app admin) can see them.
      *
      * @return \Illuminate\Support\Collection<int, array{status: int, count: int}>
      */
     public function getSubmissionStatusCounts(): Collection
     {
+        $this->requireManage();
+
         return $this->submissions()
             ->where('status', '!=', Submission::DRAFT)
             ->select('status', DB::raw('count(*) as count'))
@@ -196,5 +203,27 @@ class Publication extends BaseModel
                 'status' => (int)$row->status,
                 'count' => (int)$row->count,
             ]);
+    }
+
+    /**
+     * Throw if the current user isn't on this publication's admin/
+     * editor team (or an app admin). Called from the nested
+     * Publication resolvers that expose team-scoped data — the
+     * parent `publication(id)` query's `view` policy is intentionally
+     * permissive for public publications, so these fields need their
+     * own gate to keep reviewer identities and operational metrics
+     * out of public queries.
+     *
+     * @return void
+     * @throws \Nuwave\Lighthouse\Exceptions\AuthorizationException
+     */
+    public function requireManage(): void
+    {
+        $policy = new PublicationPolicy();
+        if (!$policy->manage(Auth::user(), $this)) {
+            throw new AuthorizationException(
+                'You are not authorized to access this publication.'
+            );
+        }
     }
 }

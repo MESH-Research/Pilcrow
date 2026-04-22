@@ -24,6 +24,13 @@ class PaginatePublicationSubmissions
      */
     public function __invoke(Publication $publication, array $args): Paginator
     {
+        // Admin/editor-scoped. The parent `publication(id)` query's
+        // `view` policy lets outsiders resolve a publicly-visible
+        // publication, so this listing needs its own gate to keep
+        // in-flight submissions (and their reviewer/coordinator
+        // rosters) out of public queries.
+        $publication->requireManage();
+
         // Drafts are the author's private work-in-progress and are
         // intentionally hidden from the publication dashboard until the
         // author submits them for review.

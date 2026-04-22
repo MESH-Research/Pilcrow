@@ -209,4 +209,37 @@ class PublicationUserDetailTest extends ApiTestCase
         );
         $this->assertNotContains('Hidden Draft', $titles);
     }
+
+    public function testOutsiderCannotLookUpUserInPublicPublication(): void
+    {
+        // Public publications are viewable by anyone, but the per-user
+        // involvement detail (reviewer / coordinator counts) reveals
+        // which users are on the review team — must stay scoped to
+        // the publication's admin team.
+        $admin = User::factory()->create();
+        $publication = Publication::factory()
+            ->hasAttached($admin, [], 'publicationAdmins')
+            ->create(['is_publicly_visible' => true]);
+
+        $reviewer = User::factory()->create();
+        Submission::factory()
+            ->for($publication)
+            ->hasAttached(User::factory()->create(), [], 'submitters')
+            ->hasAttached($reviewer, [], 'reviewers')
+            ->create(['status' => Submission::UNDER_REVIEW]);
+
+        /** @var User $outsider */
+        $outsider = User::factory()->create();
+        $this->actingAs($outsider);
+
+        $response = $this->graphQL(self::USER_QUERY, [
+            'publicationId' => (string)$publication->id,
+            'userId' => (string)$reviewer->id,
+        ]);
+
+        // publication(id) resolves (public metadata), but user(id)
+        // on it must come back null for outsiders.
+        $this->assertNotNull($response->json('data.publication'));
+        $this->assertNull($response->json('data.publication.user'));
+    }
 }

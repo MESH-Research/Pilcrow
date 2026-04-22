@@ -976,6 +976,43 @@ class PublicationTest extends ApiTestCase
         $response->assertJsonPath('data.publication', null);
     }
 
+    public function testOutsiderCannotQueryPublicPublicationDashboard(): void
+    {
+        // The `view` policy is intentionally permissive for public
+        // publications — anyone can resolve `publication(id: ...)`
+        // to read basic metadata. The nested dashboard fields
+        // (submissions + submission_status_counts) must not piggyback
+        // on that permission; they expose in-flight submissions and
+        // aggregate operational metrics that shouldn't leak from
+        // public publications.
+        $owner = User::factory()->create();
+        $publication = Publication::factory()
+            ->hasAttached($owner, [], 'publicationAdmins')
+            ->create(['is_publicly_visible' => true]);
+
+        $submitter = User::factory()->create();
+        Submission::factory()
+            ->for($publication)
+            ->hasAttached($submitter, [], 'submitters')
+            ->create(['status' => Submission::INITIALLY_SUBMITTED]);
+
+        /** @var User $outsider */
+        $outsider = User::factory()->create();
+        $this->actingAs($outsider);
+
+        $response = $this->graphQL(self::DASHBOARD_QUERY, [
+            'id' => (string)$publication->id,
+        ]);
+
+        // Both nested fields are non-null in the schema, so when the
+        // guard throws the GraphQL error bubbles up to the nearest
+        // nullable parent — here that's `publication` itself. End
+        // result: outsiders see a null publication + an auth error,
+        // same as the hidden-publication case.
+        $response->assertJsonPath('data.publication', null);
+        $response->assertJsonStructure(['errors']);
+    }
+
     public function testDashboardExcludesDraftSubmissions(): void
     {
         /** @var User $editor */

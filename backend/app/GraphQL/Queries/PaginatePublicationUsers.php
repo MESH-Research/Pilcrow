@@ -33,6 +33,10 @@ class PaginatePublicationUsers
      */
     public function __invoke(Publication $publication, array $args): Paginator
     {
+        // Reviewer anonymity + team privacy: only the publication's
+        // admin team (or an app admin) can enumerate users.
+        $publication->requireManage();
+
         $roles = $args['roles'] ?? [];
         $roles = array_map('intval', $roles);
         // null/missing = no filter; true = only staged; false = only non-staged.

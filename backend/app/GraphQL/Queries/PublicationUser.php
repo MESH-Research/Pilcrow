@@ -27,6 +27,10 @@ class PublicationUser
         Publication $publication,
         array $args
     ): ?PublicationUserDto {
+        // Per-user involvement detail leaks reviewer / coordinator
+        // identities — stay scoped to the publication's admin team.
+        $publication->requireManage();
+
         $userId = (int)$args['id'];
 
         $row = User::query()
