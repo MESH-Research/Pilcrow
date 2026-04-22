@@ -124,6 +124,9 @@ const routes: RouteRecordRaw[] = [
         path: "/admin/user/:id",
         props: true,
         component: () => import("src/layouts/Admin/UserDetailLayout.vue"),
+        meta: {
+          requiresAppAdmin: true
+        },
         children: [
           {
             name: "user_details",
@@ -231,6 +234,15 @@ const routes: RouteRecordRaw[] = [
         name: "submission:export",
         path: "/submission/:id/export",
         component: () => import("src/pages/SubmissionExport.vue"),
+        meta: {
+          requiresExportAccess: true
+        },
+        props: true
+      },
+      {
+        name: "submission:export:html",
+        path: "/submission/:id/export/html",
+        component: () => import("src/pages/SubmissionExportHtml.vue"),
         meta: {
           requiresExportAccess: true
         },

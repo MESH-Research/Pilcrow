@@ -15,6 +15,7 @@ extend type Query {
             defaultCount: 100
             resolver: "App\\GraphQL\\Queries\\PaginateSubmissions"
         )
+        @guard
 }
 
 "Allowed column names for Query.submissions.orderBy."

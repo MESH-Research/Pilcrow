@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
             InlineCommentSeeder::class,
             OverallCommentSeeder::class,
             DashboardDemoSeeder::class,
+            ExportPreviewSeeder::class,
         ]);
     }
 }
