@@ -234,6 +234,15 @@ const routes: RouteRecordRaw[] = [
           requiresExportAccess: true
         },
         props: true
+      },
+      {
+        name: "submission:export:html",
+        path: "/submission/:id/export/html",
+        component: () => import("src/pages/SubmissionExportHtml.vue"),
+        meta: {
+          requiresExportAccess: true
+        },
+        props: true
       }
     ]
   },

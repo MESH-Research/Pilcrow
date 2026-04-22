@@ -1000,6 +1000,7 @@
       "action": "Preview",
       "close": "Close Preview"
     },
+    "edit_options": "Edit Export Options",
     "download": {
       "title": "Download (html)",
       "description": "The file contents will download directly to your device in this format."
@@ -1015,7 +1016,8 @@
       "inline_and_overall": "Include Inline and Overall Comments ({count})",
       "inline_only": "Include Inline Comments Only ({count})",
       "overall_only": "Include Overall Comments Only ({count})",
-      "download": "Download Comments"
+      "download": "Download Comments",
+      "none": "No comments found."
     },
     "participants": {
       "filter": "Filter comments by participant",

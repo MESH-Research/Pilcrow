@@ -42,7 +42,9 @@ export default defineBoot(async ({ app, router }) => {
         }
       }
     }),
-    connectToDevTools: true
+    devtools: {
+      enabled: true
+    }
   })
 
   /**
