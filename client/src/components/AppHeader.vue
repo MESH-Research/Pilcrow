@@ -83,6 +83,15 @@
                 <q-item-section>
                   {{ $t("header.application_administration") }}
                 </q-item-section>
+                <q-item-section v-if="adminNeedsAttention" side>
+                  <q-icon
+                    name="priority_high"
+                    class="admin-item-needs-attention-icon"
+                    size="sm"
+                    :title="$t('header.admin_needs_attention')"
+                    data-cy="header_admin_attention_icon"
+                  />
+                </q-item-section>
               </q-item>
             </div>
             <q-separator />
@@ -224,4 +233,6 @@ function toggleLocale() {
 .body--dark .admin-item-needs-attention
   background-color: rgba(216, 171, 65, 0.14) !important
   border-left: 4px solid #d9a441 !important
+.admin-item-needs-attention-icon
+  color: #d9a441
 </style>
