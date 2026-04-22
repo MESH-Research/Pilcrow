@@ -156,6 +156,83 @@ class DashboardDemoSeeder extends Seeder
                 ]);
             }
         }
+
+        // Supplemental publications assigned to the editor so the
+        // Manage dashboard has a variety of rows — each with a
+        // deliberately lopsided status distribution so different
+        // stage columns show zero on different rows.
+        $this->seedSupplementalPublications($editor, $submitterPool);
+    }
+
+    /**
+     * Spin up a handful of extra publications so the Manage dashboard
+     * has rows with varied (and sometimes empty) counts across the
+     * stage columns. Each publication is assigned to the given editor
+     * so they show up in that user's Manage list; the `$statusMix`
+     * map drives how many submissions land in each status.
+     *
+     * @param \App\Models\User $editor
+     * @param \Illuminate\Support\Collection<int, \App\Models\User> $submitterPool
+     * @return void
+     */
+    private function seedSupplementalPublications($editor, $submitterPool): void
+    {
+        $sets = [
+            [
+                'name' => 'B - Early Access Studies',
+                'statusMix' => [
+                    Submission::INITIALLY_SUBMITTED => 4,
+                    Submission::RESUBMITTED => 2,
+                ],
+            ],
+            [
+                'name' => 'C - Long-form Reviews',
+                'statusMix' => [
+                    Submission::AWAITING_REVIEW => 2,
+                    Submission::UNDER_REVIEW => 3,
+                    Submission::AWAITING_DECISION => 1,
+                ],
+            ],
+            [
+                'name' => 'D - Retired Review Archive',
+                'statusMix' => [
+                    Submission::ACCEPTED_AS_FINAL => 5,
+                    Submission::REJECTED => 3,
+                    Submission::EXPIRED => 1,
+                    Submission::ARCHIVED => 2,
+                ],
+            ],
+            [
+                'name' => 'E - Decision Desk Quarterly',
+                'statusMix' => [
+                    Submission::AWAITING_DECISION => 4,
+                ],
+            ],
+        ];
+
+        foreach ($sets as $set) {
+            $publication = Publication::factory()
+                ->hasAttached($editor, [], 'editors')
+                ->create([
+                    'name' => $set['name'],
+                    'is_accepting_submissions' => true,
+                ]);
+
+            foreach ($set['statusMix'] as $status => $count) {
+                for ($i = 0; $i < $count; $i++) {
+                    $submitter = $submitterPool->random();
+                    Submission::factory()
+                        ->for($publication)
+                        ->hasAttached($submitter, [], 'submitters')
+                        ->create([
+                            'title' => $set['name'] . ' submission ' . ($i + 1),
+                            'status' => $status,
+                            'created_by' => $submitter->id,
+                            'updated_by' => $submitter->id,
+                        ]);
+                }
+            }
+        }
     }
 
     /**
