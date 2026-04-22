@@ -65,18 +65,20 @@
             </q-item>
             <div v-if="isAppAdmin">
               <q-separator />
-              <q-item :to="{ name: 'admin:dashboard' }">
+              <q-item
+                :to="{ name: 'admin:dashboard' }"
+                :class="{
+                  'admin-item-needs-attention': adminNeedsAttention
+                }"
+                :aria-label="
+                  adminNeedsAttention
+                    ? $t('header.admin_needs_attention')
+                    : undefined
+                "
+                data-cy="header_admin_menu_item"
+              >
                 <q-item-section avatar>
-                  <div class="relative-position">
-                    <q-icon name="admin_panel_settings" />
-                    <q-badge
-                      v-if="pendingReportsCount > 0"
-                      floating
-                      color="red"
-                      :label="String(pendingReportsCount)"
-                      data-cy="header_admin_pending_badge"
-                    />
-                  </div>
+                  <q-icon name="admin_panel_settings" />
                 </q-item-section>
                 <q-item-section>
                   {{ $t("header.application_administration") }}
@@ -167,7 +169,7 @@ import { useMagicKeys } from "@vueuse/core"
 import AvatarImage from "src/components/atoms/AvatarImage.vue"
 import NotificationPopup from "src/components/molecules/NotificationPopup.vue"
 import { useCurrentUser } from "src/use/user"
-import { useAvatarReportsPendingCount } from "src/use/avatarReports"
+import { useAdminNeedsAttention } from "src/use/adminNeedsAttention"
 import { watchEffect } from "vue"
 import { useQuasar } from "quasar"
 import { useI18n } from "vue-i18n"
@@ -183,7 +185,7 @@ interface Props {
 defineProps<Props>()
 
 const { currentUser, isAppAdmin } = useCurrentUser()
-const { count: pendingReportsCount } = useAvatarReportsPendingCount()
+const { needsAttention: adminNeedsAttention } = useAdminNeedsAttention()
 const { locale } = useI18n({ useScope: "global" })
 const { ctrl, shift, alt, t } = useMagicKeys()
 
@@ -211,4 +213,9 @@ function toggleLocale() {
   background: $secondary
 .header-nav .q-item__section--side
   color: inherit
+// Accent stripe on the left edge signals "this admin section has
+// something waiting". Reusable for any item that wants to flag
+// itself for attention.
+.admin-item-needs-attention
+  border-left: 4px solid $negative
 </style>

@@ -148,6 +148,7 @@
     "reviews": "Reviews",
     "user_list": "All Users",
     "avatar_reports": "Avatar Reports",
+    "admin_needs_attention": "Administration has items needing attention",
     "notification_button": "View Notifications",
     "application_administration": "Application Administration",
     "account_dropdown_aria": "User Account Dropdown",
