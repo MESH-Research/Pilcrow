@@ -302,9 +302,9 @@ import { GetManagedPublicationsDocument } from "src/graphql/generated/graphql"
 definePage({
   name: "manage:index",
   meta: {
-    crumb: {
-      label: "Manage"
-    }
+    // Page heading already reads "Manage" — suppress the breadcrumb
+    // so we don't show the same label twice.
+    crumb: false
   }
 })
 
