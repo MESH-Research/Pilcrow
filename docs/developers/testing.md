@@ -19,17 +19,21 @@ This will initiate a synchronous run of all tests.
 
 On the PHP side, we use [PHPUnit](https://phpunit.de/) to run backend tests.
 
-To run the PHP unit tests:
+To run the PHP unit tests execute the following command **from the `/backend` directory**:
+```sh
+lando artisan test
+```
+
+::: tip Isolating tests from the dev database
+`lando artisan test` runs against the same `laravel` database that drives your local UI, so `RefreshDatabase` and `migrate:fresh` will wipe the data you've been working with in the app.
+
+If you'd rather not have the suite clobber that data — useful when iterating tightly (including agent-driven workflows), or when you've spent time setting up specific local state — use the `backend-test` tooling command instead:
+
 ```sh
 lando backend-test
 ```
 
-This command is cwd-independent (you can run it from anywhere in the repo) and is the recommended way to run the suite locally.
-
-::: tip Tests run against an isolated database
-`lando backend-test` runs the suite against a dedicated `laravel_testing` database, not the `laravel` database that drives your local UI. This means `RefreshDatabase` and `migrate:fresh` in tests will **not** wipe the data you've been working with in the app — safe to run tests repeatedly during iteration (including in agentic workflows).
-
-The isolation is scoped to the `backend-test` Lando tooling command. If you run `lando artisan test` or invoke PHPUnit directly via `lando ssh`, you bypass the override and tests will hit the dev database. Prefer `lando backend-test`.
+It's cwd-independent and points the suite at a dedicated `laravel_testing` database so your dev data stays intact. Note that running PHPUnit directly (e.g. via `lando ssh`) bypasses this override and will still hit the dev database.
 :::
 
 ::: tip Debugging CI Failures
