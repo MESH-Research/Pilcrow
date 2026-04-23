@@ -1,5 +1,35 @@
 <template>
   <article data-cy="vueDashboard" class="q-pa-lg">
+    <q-banner
+      v-if="showManageBanner"
+      inline-actions
+      dense
+      class="q-mb-md bg-primary text-white"
+      data-cy="manage_banner"
+    >
+      <template #avatar>
+        <q-icon name="dashboard" size="md" />
+      </template>
+      {{ $t("dashboard.manage_banner.message") }}
+      <template #action>
+        <q-btn
+          flat
+          icon="arrow_forward"
+          to="/manage"
+          :label="$t('dashboard.manage_banner.cta')"
+          data-cy="manage_banner_cta"
+        />
+        <q-btn
+          flat
+          dense
+          icon="close"
+          :aria-label="$t('dashboard.manage_banner.dismiss')"
+          data-cy="manage_banner_dismiss"
+          @click="dismissManageBanner"
+        />
+        <q-tooltip>{{ $t("dashboard.manage_banner.dismiss") }}</q-tooltip>
+      </template>
+    </q-banner>
     <section
       class="row wrap justify-start q-col-gutter-md items-stretch content-start q-mb-md"
     >
@@ -107,19 +137,68 @@
   </article>
 </template>
 
+<script lang="ts">
+import { graphql } from "src/graphql/generated"
+
+// Probe query: are there any publications where the current user is
+// publication_admin or editor? We only need the total count; `first: 1`
+// keeps the payload small.
+graphql(`
+  query DashboardManagedPublicationsProbe {
+    publications(my_role: [publication_admin, editor], first: 1, page: 1) {
+      paginatorInfo {
+        total
+      }
+    }
+  }
+`)
+</script>
+
 <script setup lang="ts">
 import AvatarImage from "src/components/atoms/AvatarImage.vue"
 import { useCurrentUser } from "src/use/user"
 import { useQuery } from "@vue/apollo-composable"
 import { CURRENT_USER_SUBMISSIONS, GET_SUBMISSIONS } from "src/graphql/queries"
+import { DashboardManagedPublicationsProbeDocument } from "src/graphql/generated/graphql"
 import SubmissionTable from "src/components/SubmissionTable.vue"
-import { computed } from "vue"
+import { computed, ref } from "vue"
 import { compareDatesDesc } from "src/utils/dateSort"
 import { useQuasar } from "quasar"
 
 const $q = useQuasar()
 
-const { currentUser } = useCurrentUser()
+const { currentUser, isAppAdmin } = useCurrentUser()
+
+// Skip the probe for app admins — they always see the banner.
+const { result: managedProbe } = useQuery(
+  DashboardManagedPublicationsProbeDocument,
+  {},
+  () => ({ enabled: !isAppAdmin.value })
+)
+const hasManagedPublication = computed(
+  () => (managedProbe.value?.publications?.paginatorInfo?.total ?? 0) > 0
+)
+
+const MANAGE_BANNER_KEY = "hideManageBannerUntil"
+const manageBannerDismissed = ref(false)
+if ($q.localStorage.has(MANAGE_BANNER_KEY)) {
+  const until = $q.localStorage.getItem(MANAGE_BANNER_KEY) as number
+  if (until < Date.now()) {
+    $q.localStorage.remove(MANAGE_BANNER_KEY)
+  } else {
+    manageBannerDismissed.value = true
+  }
+}
+function dismissManageBanner() {
+  manageBannerDismissed.value = true
+  const oneWeekMs = 1000 * 60 * 60 * 24 * 7
+  $q.localStorage.set(MANAGE_BANNER_KEY, Date.now() + oneWeekMs)
+}
+const showManageBanner = computed(
+  () =>
+    !manageBannerDismissed.value &&
+    (isAppAdmin.value || hasManagedPublication.value)
+)
 const { result: all_submissions_result } = useQuery(GET_SUBMISSIONS, {
   page: 1
 })

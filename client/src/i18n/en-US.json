@@ -352,7 +352,12 @@
     "welcome_message": "Welcome, {label}",
     "guide": "guide",
     "guide_question": "New to Pilcrow?",
-    "guide_call_to_action": "Learn more in our {link}."
+    "guide_call_to_action": "Learn more in our {link}.",
+    "manage_banner": {
+      "message": "Try the new publication management experience.",
+      "cta": "Open Manage",
+      "dismiss": "Hide for a week"
+    }
   },
   "reviews": {
     "page_title": "Reviews"
