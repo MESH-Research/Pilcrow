@@ -243,6 +243,44 @@ class UserAvatarMutationTest extends ApiTestCase
         $response->assertJsonPath('data.currentUser.avatar', null);
     }
 
+    public function testUserCannotDeleteAnotherUsersAvatar(): void
+    {
+        /** @var User $me */
+        $me = User::factory()->create();
+        $other = User::factory()->create();
+
+        // Pre-seed an avatar for the victim via direct medialibrary call
+        // (bypasses the policy so we're only testing delete auth).
+        $file = UploadedFile::fake()->image('avatar.png', 400, 400);
+        $other->addMedia($file)
+            ->usingFileName('avatar.png')
+            ->toMediaCollection(User::AVATAR_COLLECTION);
+
+        $this->actingAs($me);
+
+        $response = $this->graphQL(self::DELETE_MUTATION, ['id' => $other->id]);
+
+        $response->assertJsonPath('data.deleteUserAvatar', null);
+        $this->assertNotNull(
+            $other->fresh()->getAvatarMedia(),
+            'victim avatar should survive an unauthorized delete'
+        );
+    }
+
+    public function testUnauthenticatedCannotDeleteAvatar(): void
+    {
+        $other = User::factory()->create();
+        $file = UploadedFile::fake()->image('avatar.png', 400, 400);
+        $other->addMedia($file)
+            ->usingFileName('avatar.png')
+            ->toMediaCollection(User::AVATAR_COLLECTION);
+
+        $response = $this->graphQL(self::DELETE_MUTATION, ['id' => $other->id]);
+
+        $response->assertJsonPath('data.deleteUserAvatar', null);
+        $this->assertNotNull($other->fresh()->getAvatarMedia());
+    }
+
     public function testUploadedAvatarPathUsesUuidNotId(): void
     {
         /** @var User $user */

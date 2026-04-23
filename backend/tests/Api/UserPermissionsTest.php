@@ -299,4 +299,36 @@ class UserPermissionsTest extends ApiTestCase
         );
         $response->assertJsonPath('data.user', $expected_array);
     }
+
+    /**
+     * Regression lock: User.permissions must include role-inherited
+     * permissions, not just direct user->permission assignments.
+     * Application Administrator inherits `moderate avatars` via the
+     * role; earlier the field used @belongsToMany which returned the
+     * direct-only set and silently hid role permissions from clients.
+     *
+     * @return void
+     */
+    public function testUserPermissionsIncludesRoleInheritedPermissions(): void
+    {
+        $admin = $this->beAppAdmin();
+
+        $response = $this->graphQL(
+            '{ currentUser { id permissions { name } } }'
+        );
+
+        $names = collect($response->json('data.currentUser.permissions'))
+            ->pluck('name')
+            ->all();
+
+        // Role-inherited — if @belongsToMany ever comes back this fails.
+        $this->assertContains(Permission::MODERATE_AVATARS, $names);
+        $this->assertContains(Permission::UPDATE_USERS, $names);
+        $this->assertContains(Permission::UPLOAD_AVATAR, $names);
+        $this->assertEqualsCanonicalizing(
+            $names,
+            $admin->getAllPermissions()->pluck('name')->all(),
+            'GraphQL should expose exactly getAllPermissions()'
+        );
+    }
 }

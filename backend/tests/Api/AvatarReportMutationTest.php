@@ -383,6 +383,40 @@ class AvatarReportMutationTest extends ApiTestCase
         );
     }
 
+    public function testReportingNonExistentUserSurfacesGraphqlError(): void
+    {
+        /** @var User $reporter */
+        $reporter = User::factory()->create();
+        $this->actingAs($reporter);
+
+        $response = $this->graphQL(
+            'mutation ($id: ID!) { reportUserAvatar(userId: $id) { id } }',
+            ['id' => '999999']
+        );
+
+        $response->assertJsonPath('data.reportUserAvatar', null);
+        $this->assertNotEmpty(
+            $response->json('errors'),
+            'findOrFail should surface as a GraphQL error, not a 500'
+        );
+        $this->assertDatabaseCount('avatar_reports', 0);
+    }
+
+    public function testSetBlockedOnNonExistentUserSurfacesGraphqlError(): void
+    {
+        $this->beAppAdmin();
+
+        $response = $this->graphQL(
+            'mutation ($id: ID!, $blocked: Boolean!) {
+                setUserAvatarUploadBlocked(userId: $id, blocked: $blocked) { id }
+            }',
+            ['id' => '999999', 'blocked' => true]
+        );
+
+        $response->assertJsonPath('data.setUserAvatarUploadBlocked', null);
+        $this->assertNotEmpty($response->json('errors'));
+    }
+
     public function testNonAdminCannotSetBlockedState(): void
     {
         $target = User::factory()->create();
