@@ -68,8 +68,6 @@ FROM base AS fpm
 FROM base AS unit-test
 
 ENV DB_DATABASE="pilcrow"
-ENV DB_USERNAME="root"
-ENV DB_PASSWORD="pilcrow"
 ENV APP_ENV=testing
 
 # Use shared PHP config - same file used by Lando (backend/php.dev.ini)
