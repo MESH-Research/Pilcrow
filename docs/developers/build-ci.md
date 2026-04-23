@@ -205,7 +205,7 @@ Because the two environments have different base configurations and load orders,
 
 ### Why Use Bake Locally?
 
-Lando (`lando artisan test`) is the primary way to run tests during development. However, when CI fails and you need to debug the issue, running tests via bake gives you a repeatable environment that mirrors CI:
+Lando (`lando backend-test`) is the primary way to run tests during development. However, when CI fails and you need to debug the issue, running tests via bake gives you a repeatable environment that mirrors CI:
 
 - **Debugging CI failures** - Reproduce the exact failure locally
 - **Verifying fixes** - Confirm your fix works in the CI environment before pushing
@@ -214,7 +214,7 @@ Lando (`lando artisan test`) is the primary way to run tests during development.
 ### Backend Tests
 
 ::: warning macOS Not Supported
-The `bake-fpm-test.sh` script does not currently work on macOS (Apple Silicon). Use Lando (`lando artisan test`) to run backend tests on macOS. See [Running Bake on macOS](#running-bake-on-macos-apple-silicon) for details and [issue #2224](https://github.com/MESH-Research/Pilcrow/issues/2224) for status.
+The `bake-fpm-test.sh` script does not currently work on macOS (Apple Silicon). Use Lando (`lando backend-test`) to run backend tests on macOS. See [Running Bake on macOS](#running-bake-on-macos-apple-silicon) for details and [issue #2224](https://github.com/MESH-Research/Pilcrow/issues/2224) for status.
 :::
 
 Use the provided script:
