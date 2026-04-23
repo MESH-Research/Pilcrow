@@ -4,10 +4,44 @@
       {{ $t("publication.manage.dashboard.heading") }}
     </h2>
 
+    <div
+      v-if="isAppAdmin"
+      class="q-mb-md row items-center q-gutter-sm"
+      data-cy="manage_admin_hint"
+    >
+      <q-badge
+        outline
+        color="primary"
+        class="manage-admin-hint__badge"
+        :aria-label="$t('publication.manage.dashboard.admin_hint_reason')"
+      >
+        {{ $t("publication.manage.dashboard.admin_hint_label") }}
+      </q-badge>
+      <q-tooltip anchor="top middle" self="bottom middle">
+        {{ $t("publication.manage.dashboard.admin_hint_reason") }}
+      </q-tooltip>
+      <span class="text-body2 text-grey-7">
+        <i18n-t
+          keypath="publication.manage.dashboard.admin_hint"
+          tag="span"
+          scope="global"
+        >
+          <template #link>
+            <router-link
+              :to="{ name: 'admin:publication:index' }"
+              class="text-primary"
+            >
+              {{ $t("publication.manage.dashboard.admin_hint_link") }}
+            </router-link>
+          </template>
+        </i18n-t>
+      </span>
+    </div>
+
     <QueryTable
       ref="queryTableRef"
       :query="GetManagedPublicationsDocument"
-      field="publications"
+      field="currentUser.publications"
       t-prefix="publication.manage.dashboard"
       :columns="columns"
       :grid="isGrid"
@@ -30,18 +64,18 @@
                   <router-link
                     :to="{
                       name: 'manage:publication:dashboard',
-                      params: { id: gridProps.row.id }
+                      params: { id: pub(gridProps.row).id }
                     }"
                     class="text-primary publication-title"
-                    :title="gridProps.row.name"
+                    :title="pub(gridProps.row).name"
                   >
-                    {{ gridProps.row.name }}
+                    {{ pub(gridProps.row).name }}
                   </router-link>
                 </div>
                 <q-badge
                   outline
                   :color="
-                    gridProps.row.effective_role === 'publication_admin'
+                    gridProps.row.role === 'publication_admin'
                       ? 'primary'
                       : 'secondary'
                   "
@@ -49,7 +83,7 @@
                 >
                   {{
                     $t(
-                      `publication.manage.dashboard.role.${gridProps.row.effective_role}`
+                      `publication.manage.dashboard.role.${gridProps.row.role}`
                     )
                   }}
                 </q-badge>
@@ -65,7 +99,7 @@
                  click target into the filtered dashboard. -->
             <q-card-section class="q-py-xs q-px-none col">
               <template
-                v-for="group in stageGroups(gridProps.row)"
+                v-for="group in stageGroupsForRow(gridProps.row)"
                 :key="group.key"
               >
                 <div class="stage-heading q-px-md q-pt-sm">
@@ -76,7 +110,7 @@
                     v-for="row in group.rows"
                     :key="`${group.key}-${row.category}`"
                     clickable
-                    :to="dashboardFilterTo(gridProps.row.id, row.statuses)"
+                    :to="dashboardFilterTo(pub(gridProps.row).id, row.statuses)"
                     class="category-row"
                   >
                     <q-item-section side>
@@ -128,7 +162,7 @@
               <div class="col text-caption text-grey-7">
                 {{
                   $t("publication.manage.dashboard.total_submissions", {
-                    n: totalFor(gridProps.row)
+                    n: totalForRow(gridProps.row)
                   })
                 }}
               </div>
@@ -140,7 +174,7 @@
                 icon-right="arrow_forward"
                 :to="{
                   name: 'manage:publication:dashboard',
-                  params: { id: gridProps.row.id }
+                  params: { id: pub(gridProps.row).id }
                 }"
                 :label="$t('publication.manage.dashboard.open')"
               />
@@ -150,30 +184,18 @@
       </template>
 
       <template #no-data="{ filter: activeFilter }">
-        <div
-          class="manage-empty-state col q-pa-xl text-center full-width"
+        <EmptyState
           data-cy="manage_empty_state"
-        >
-          <q-icon
-            :name="activeFilter ? 'search_off' : 'dashboard_customize'"
-            size="4rem"
-            class="text-grey-5"
-          />
-          <div class="text-h6 q-mt-md">
-            {{
-              activeFilter
-                ? $t("publication.manage.dashboard.empty_filter")
-                : $t("publication.manage.dashboard.none")
-            }}
-          </div>
-          <div class="text-body2 text-grey-7 q-mt-sm">
-            {{
-              activeFilter
-                ? $t("publication.manage.dashboard.empty_filter_hint")
-                : $t("publication.manage.dashboard.empty_hint")
-            }}
-          </div>
-        </div>
+          :icon="activeFilter ? undefined : 'dashboard_customize'"
+          :search-term="activeFilter"
+          :message="
+            activeFilter
+              ? $t('publication.manage.dashboard.empty_filter_hint', {
+                  term: activeFilter
+                })
+              : $t('publication.manage.dashboard.empty_hint')
+          "
+        />
       </template>
 
       <template #top-after>
@@ -284,26 +306,32 @@ import { graphql } from "src/graphql/generated"
 
 graphql(`
   query GetManagedPublications(
-    $page: Int
-    $first: Int
+    $page: Int!
+    $first: Int!
     $search: String
-    $orderBy: [QueryPublicationsOrderByOrderByClause!]
+    $orderBy: [PublicationAssignmentOrderBy!]
   ) {
-    publications(
-      my_role: [publication_admin, editor]
-      page: $page
-      first: $first
-      search: $search
-      orderBy: $orderBy
-    ) {
-      ...QueryTable
-      data {
-        id
-        name
-        effective_role
-        submission_status_counts {
-          status
-          count
+    currentUser {
+      id
+      publications(
+        roles: [publication_admin, editor]
+        page: $page
+        first: $first
+        search: $search
+        orderBy: $orderBy
+      ) {
+        ...QueryTable
+        data {
+          id
+          role
+          publication {
+            id
+            name
+            submission_status_counts {
+              status
+              count
+            }
+          }
         }
       }
     }
@@ -320,6 +348,8 @@ import QueryTable, {
 } from "src/components/tables/QueryTable.vue"
 import PublicationNameCell from "src/components/tables/common/PublicationNameCell.vue"
 import CategoryCountCell from "src/components/tables/common/CategoryCountCell.vue"
+import EmptyState from "src/components/molecules/EmptyState.vue"
+import { useCurrentUser } from "src/use/user"
 import {
   statusCategories,
   type StatusCategoryDef
@@ -338,13 +368,26 @@ definePage({
 interface ManagedPublication {
   id: string
   name: string
-  effective_role: string | null | undefined
   submission_status_counts?: Array<{ status: string; count: number }> | null
+}
+
+// Each row from `currentUser.publications` is a pivot assignment:
+// {id, role, publication:{…}}. Helpers pull the nested publication so
+// the rest of this file can read it with a single call.
+interface ManagedAssignment {
+  id: string
+  role: string
+  publication: ManagedPublication
+}
+
+function pub(row: unknown): ManagedPublication {
+  return (row as ManagedAssignment).publication
 }
 
 const $q = useQuasar()
 const route = useRoute()
 const router = useRouter()
+const { isAppAdmin } = useCurrentUser()
 
 const viewPreference = ref<"grid" | null>(
   route.query.view === "grid" ? "grid" : null
@@ -371,10 +414,10 @@ watch(viewPreference, (value) => {
 
 const queryTableRef = ref<InstanceType<typeof QueryTable> | null>(null)
 
-function onRowClick(_evt: Event, row: { id: string }) {
+function onRowClick(_evt: Event, row: unknown) {
   router.push({
     name: "manage:publication:dashboard",
-    params: { id: row.id }
+    params: { id: pub(row).id }
   })
 }
 
@@ -399,6 +442,10 @@ interface StageGroupRow {
 interface StageGroup {
   key: string
   rows: StageGroupRow[]
+}
+
+function stageGroupsForRow(row: unknown): StageGroup[] {
+  return stageGroups(pub(row))
 }
 
 function stageGroups(publication: ManagedPublication): StageGroup[] {
@@ -435,8 +482,8 @@ function stageGroups(publication: ManagedPublication): StageGroup[] {
   return keys.map((key, i) => ({ key, rows: rows[i] }))
 }
 
-function totalFor(publication: ManagedPublication): number {
-  return (publication.submission_status_counts ?? []).reduce(
+function totalForRow(row: unknown): number {
+  return (pub(row).submission_status_counts ?? []).reduce(
     (sum, c) => sum + c.count,
     0
   )
@@ -482,9 +529,9 @@ function countStatuses(
   row: Record<string, unknown>,
   statuses: readonly string[]
 ): number {
-  const pub = row as unknown as ManagedPublication
+  const p = pub(row)
   const counts = new Map<string, number>()
-  for (const c of pub.submission_status_counts ?? []) {
+  for (const c of p.submission_status_counts ?? []) {
     counts.set(c.status, c.count)
   }
   return statuses.reduce((sum, s) => sum + (counts.get(s) ?? 0), 0)
@@ -495,12 +542,12 @@ const columns: QueryTableColumn[] = [
     name: "name",
     required: true,
     align: "left",
-    field: (row) => (row as unknown as ManagedPublication).name,
+    field: "publication.name",
     component: PublicationNameCell,
     sortable: true,
     linkTo: (row) => ({
       name: "manage:publication:dashboard",
-      params: { id: (row as unknown as ManagedPublication).id }
+      params: { id: pub(row).id }
     }),
     label: "publication.manage.dashboard.headers.name"
   },
@@ -515,11 +562,7 @@ const columns: QueryTableColumn[] = [
     // Closed) read as distinct bands rather than one continuous strip
     // of count cells.
     classes: "stage-start",
-    linkTo: (row) =>
-      dashboardFilterTo(
-        (row as unknown as ManagedPublication).id,
-        SCREENING_NA_STATUSES
-      ),
+    linkTo: (row) => dashboardFilterTo(pub(row).id, SCREENING_NA_STATUSES),
     label: "publication.dashboard.categories.needs_action"
   },
   {
@@ -529,11 +572,7 @@ const columns: QueryTableColumn[] = [
     component: CategoryCountCell,
     category: "needs_action",
     classes: "stage-start",
-    linkTo: (row) =>
-      dashboardFilterTo(
-        (row as unknown as ManagedPublication).id,
-        REVIEWING_NA_STATUSES
-      ),
+    linkTo: (row) => dashboardFilterTo(pub(row).id, REVIEWING_NA_STATUSES),
     label: "publication.dashboard.categories.needs_action"
   },
   {
@@ -542,11 +581,7 @@ const columns: QueryTableColumn[] = [
     field: (row) => countStatuses(row, REVIEWING_IP_STATUSES),
     component: CategoryCountCell,
     category: "in_progress",
-    linkTo: (row) =>
-      dashboardFilterTo(
-        (row as unknown as ManagedPublication).id,
-        REVIEWING_IP_STATUSES
-      ),
+    linkTo: (row) => dashboardFilterTo(pub(row).id, REVIEWING_IP_STATUSES),
     label: "publication.dashboard.categories.in_progress"
   },
   {
@@ -556,11 +591,7 @@ const columns: QueryTableColumn[] = [
     component: CategoryCountCell,
     category: "needs_action",
     classes: "stage-start",
-    linkTo: (row) =>
-      dashboardFilterTo(
-        (row as unknown as ManagedPublication).id,
-        DECISION_NA_STATUSES
-      ),
+    linkTo: (row) => dashboardFilterTo(pub(row).id, DECISION_NA_STATUSES),
     label: "publication.dashboard.categories.needs_action"
   },
   {
@@ -570,20 +601,18 @@ const columns: QueryTableColumn[] = [
     component: CategoryCountCell,
     category: "completed",
     classes: "stage-start",
-    linkTo: (row) =>
-      dashboardFilterTo(
-        (row as unknown as ManagedPublication).id,
-        CLOSED_STATUSES
-      ),
+    linkTo: (row) => dashboardFilterTo(pub(row).id, CLOSED_STATUSES),
     label: "publication.manage.dashboard.headers.closed"
   }
 ]
 </script>
 
 <style scoped>
-.manage-empty-state {
-  max-width: 32rem;
-  margin: 0 auto;
+.manage-admin-hint__badge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
 }
 .publication-title {
   font-size: 1.1rem;

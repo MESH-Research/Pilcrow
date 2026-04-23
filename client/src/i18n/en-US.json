@@ -549,10 +549,12 @@
     "manage": {
       "dashboard": {
         "heading": "Manage",
-        "none": "You don't manage any publications yet.",
-        "empty_hint": "Publications where you're an admin or editor will appear here.",
-        "empty_filter": "No publications match your search.",
-        "empty_filter_hint": "Try a different term, or clear the search to see everything.",
+        "admin_hint": "Looking for a publication you're not a member of? {link}.",
+        "admin_hint_label": "Hint",
+        "admin_hint_link": "Administer publications",
+        "admin_hint_reason": "Shown to site administrators who can manage any publication.",
+        "empty_hint": "You'll see publications here once you're added as an admin or editor.",
+        "empty_filter_hint": "No publications matched \"{term}\". Try a different search or clear it.",
         "open": "Open dashboard",
         "total_submissions": "no submissions | {n} total submission | {n} total submissions",
         "role": {

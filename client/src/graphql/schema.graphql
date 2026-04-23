@@ -563,6 +563,19 @@ type PublicationAssignment {
   user: User!
 }
 
+"Order by clause for publication assignments."
+input PublicationAssignmentOrderBy {
+  column: PublicationAssignmentOrderByColumn!
+  order: SortOrder!
+}
+
+"Sortable columns for the User.publications query."
+enum PublicationAssignmentOrderByColumn {
+  CREATED_AT
+  NAME
+  UPDATED_AT
+}
+
 "A paginated list of PublicationAssignment items."
 type PublicationAssignmentPaginator implements Paginator {
   "A list of PublicationAssignment items."
@@ -666,7 +679,6 @@ type Query {
     "Limits number of fetched items."
     first: Int! = 10
 
-    my_role: [PublicationRole!]
     orderBy: [QueryPublicationsOrderByOrderByClause!]
 
     "The offset from which items are returned."
@@ -1191,10 +1203,13 @@ type User {
     "Limits number of fetched items."
     first: Int! = 10
 
+    orderBy: [PublicationAssignmentOrderBy!]
+
     "The offset from which items are returned."
     page: Int
 
     roles: [PublicationRole!]
+    search: String
   ): PublicationAssignmentPaginator!
   raw_submissions: [Submission!] @deprecated(reason: "Use `submissions` (SubmissionAssignment) instead")
   roles: [Role!]!

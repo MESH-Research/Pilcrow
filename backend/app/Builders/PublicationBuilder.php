@@ -68,22 +68,4 @@ class PublicationBuilder extends Builder
         });
     }
 
-    /**
-     * Scope to publications where the current user holds one of the
-     * given roles (publication-level, i.e. the role_id on the
-     * publication_user pivot — not the global Spatie role).
-     *
-     * @param array $roles  PublicationRole enum values (ints from @enum)
-     * @return self
-     */
-    public function myRole(array $roles): self
-    {
-        $user = Auth::user();
-
-        return $this->whereHas('users', function (Builder $query) use ($user, $roles) {
-            $query
-                ->where('users.id', $user->id)
-                ->whereIn('publication_user.role_id', $roles);
-        });
-    }
 }

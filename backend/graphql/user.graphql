@@ -27,6 +27,9 @@ type User {
         @hasMany(relation: "submissionAssignments", type: "PAGINATOR", defaultCount: 10)
     publications(
         roles: [PublicationRole!] @scope(name: "roleFilter")
+        search: String @scope
+        orderBy: [PublicationAssignmentOrderBy!]
+            @scope(name: "orderByPublication")
     ): [PublicationAssignment!]!
         @hasMany(relation: "publicationAssignments", type: "PAGINATOR", defaultCount: 10)
     staged: Boolean

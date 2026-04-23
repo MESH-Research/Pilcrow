@@ -39,14 +39,25 @@ const link = computed(() => {
   return col.linkTo ? col.linkTo(props.scope.row) : null
 })
 
+// Support both shapes the cell is used with:
+//   - flat Publication rows (row.name, row.effective_role)
+//   - PublicationAssignment rows (row.publication.name, row.role)
+// The assignment shape is preferred when present so callers can
+// switch queries without swapping the cell.
 const name = computed(() => {
-  const row = props.scope.row as { name?: string }
-  return row.name ?? ""
+  const row = props.scope.row as {
+    name?: string
+    publication?: { name?: string }
+  }
+  return row.publication?.name ?? row.name ?? ""
 })
 
 const role = computed(() => {
-  const row = props.scope.row as { effective_role?: string | null }
-  return row.effective_role ?? null
+  const row = props.scope.row as {
+    effective_role?: string | null
+    role?: string | null
+  }
+  return row.role ?? row.effective_role ?? null
 })
 </script>
 

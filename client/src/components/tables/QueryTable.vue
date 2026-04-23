@@ -272,6 +272,22 @@ const { pt } = useI18nPrefix(computed(() => props.tPrefix))
 const slots = useSlots()
 const searchHintId = `search-hint-${useId()}`
 
+// Rewrite any column `field` that's a dot-path string into a function
+// so callers can declare nested accessors like `"publication.name"`.
+// Quasar's q-table does a plain `row[col.field]` lookup otherwise, so
+// nested lookups fall through.
+function resolveField(field: unknown) {
+  if (typeof field !== "string" || !field.includes(".")) {
+    return field
+  }
+  const parts = field.split(".")
+  return (row: Record<string, unknown>) =>
+    parts.reduce<unknown>(
+      (o, k) => (o as Record<string, unknown> | undefined)?.[k],
+      row
+    )
+}
+
 const tColumns = computed(() => {
   if (props.columns === undefined) {
     return undefined
@@ -279,7 +295,7 @@ const tColumns = computed(() => {
   if (!props.columns?.length) {
     return []
   }
-  return props.columns
+  return props.columns.map((c) => ({ ...c, field: resolveField(c.field) }))
 })
 
 const compColumns = computed(() => {

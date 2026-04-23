@@ -145,9 +145,12 @@ import { graphql } from "src/graphql/generated"
 // keeps the payload small.
 graphql(`
   query DashboardManagedPublicationsProbe {
-    publications(my_role: [publication_admin, editor], first: 1, page: 1) {
-      paginatorInfo {
-        total
+    currentUser {
+      id
+      publications(roles: [publication_admin, editor], first: 1, page: 1) {
+        paginatorInfo {
+          total
+        }
       }
     }
   }
@@ -176,7 +179,9 @@ const { result: managedProbe } = useQuery(
   () => ({ enabled: !isAppAdmin.value })
 )
 const hasManagedPublication = computed(
-  () => (managedProbe.value?.publications?.paginatorInfo?.total ?? 0) > 0
+  () =>
+    (managedProbe.value?.currentUser?.publications?.paginatorInfo?.total ?? 0) >
+    0
 )
 
 const MANAGE_BANNER_KEY = "hideManageBannerUntil"
