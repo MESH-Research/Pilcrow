@@ -184,13 +184,13 @@ function buildExportQuery() {
 }
 
 const exportHtmlRoute = computed(() => ({
-  name: "submission:export:html",
+  name: "submission:export:html" as const,
   params: { id: props.id },
   query: buildExportQuery()
 }))
 
 const downloadRoute = computed(() => ({
-  name: "submission:export:html",
+  name: "submission:export:html" as const,
   params: { id: props.id },
   query: { ...buildExportQuery(), action: "download" }
 }))

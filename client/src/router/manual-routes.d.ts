@@ -95,6 +95,12 @@ declare module "vue-router/auto-routes" {
       GenericParams,
       GenericParams
     >
+    "submission:export:html": RouteRecordInfo<
+      "submission:export:html",
+      "/submission/:id/export/html",
+      GenericParams,
+      GenericParams
+    >
     "submission:preview": RouteRecordInfo<
       "submission:preview",
       "/submission/:id/preview",
