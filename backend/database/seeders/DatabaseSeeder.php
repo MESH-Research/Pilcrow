@@ -21,8 +21,11 @@ class DatabaseSeeder extends Seeder
             SubmissionSeeder::class,
             InlineCommentSeeder::class,
             OverallCommentSeeder::class,
-            DashboardDemoSeeder::class,
+            // ExportPreviewSeeder hard-codes submission id 113, so it
+            // must claim that id before DashboardDemoSeeder extends the
+            // auto-increment past it.
             ExportPreviewSeeder::class,
+            DashboardDemoSeeder::class,
         ]);
     }
 }
