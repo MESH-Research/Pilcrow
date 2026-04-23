@@ -41,6 +41,29 @@ class PublicationAssignmentBuilder extends Builder
     }
 
     /**
+     * Restrict to assignments whose publication currently has at least
+     * one non-draft submission in any of the given statuses. Used by
+     * /manage to show only publications with activity in a given
+     * workflow stage. Drafts are always excluded to match the
+     * dashboard's status-count semantics.
+     *
+     * @param array|null $statuses
+     * @return self
+     */
+    public function withStatuses(?array $statuses): self
+    {
+        if ($statuses) {
+            $this->whereHas('publication.submissions', function (Builder $query) use ($statuses) {
+                $query
+                    ->whereIn('status', $statuses)
+                    ->where('status', '!=', 'DRAFT');
+            });
+        }
+
+        return $this;
+    }
+
+    /**
      * Order assignments by a column on the related publication.
      *
      * @param array|null $orderBy Array of {column, order} pairs

@@ -1210,6 +1210,7 @@ type User {
 
     roles: [PublicationRole!]
     search: String
+    with_statuses: [SubmissionStatus!]
   ): PublicationAssignmentPaginator!
   raw_submissions: [Submission!] @deprecated(reason: "Use `submissions` (SubmissionAssignment) instead")
   roles: [Role!]!

@@ -494,6 +494,72 @@ class PublicationTest extends ApiTestCase
     }
 
     /**
+     * Pins the `with_statuses` filter on `User.publications`: only
+     * assignments whose publication currently has at least one
+     * submission in one of the given statuses come back. Drafts
+     * never count.
+     */
+    public function testUserPublicationsFilterByWithStatuses()
+    {
+        /** @var User $user */
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        // Three publications, all assigned to the user as editor.
+        $screening = Publication::factory()
+            ->hasAttached($user, [], 'editors')
+            ->create(['name' => 'Screening Pub']);
+        Submission::factory()->for($screening)->create([
+            'status' => Submission::INITIALLY_SUBMITTED,
+        ]);
+
+        $reviewing = Publication::factory()
+            ->hasAttached($user, [], 'editors')
+            ->create(['name' => 'Reviewing Pub']);
+        Submission::factory()->for($reviewing)->create([
+            'status' => Submission::UNDER_REVIEW,
+        ]);
+
+        // Has only a draft submission — must not match any status filter.
+        $draftsOnly = Publication::factory()
+            ->hasAttached($user, [], 'editors')
+            ->create(['name' => 'Drafts Only Pub']);
+        Submission::factory()->for($draftsOnly)->create([
+            'status' => Submission::DRAFT,
+        ]);
+
+        $response = $this->graphQL(
+            'query ($statuses: [SubmissionStatus!]) {
+                currentUser {
+                    publications(with_statuses: $statuses) {
+                        data {
+                            publication { id name }
+                        }
+                    }
+                }
+            }',
+            ['statuses' => ['INITIALLY_SUBMITTED']]
+        );
+
+        $rows = $response->json('data.currentUser.publications.data');
+        $this->assertCount(1, $rows);
+        $this->assertSame('Screening Pub', $rows[0]['publication']['name']);
+
+        // Null/empty filter returns every assignment (minus the draft-only check).
+        $allResponse = $this->graphQL(
+            'query {
+                currentUser {
+                    publications { data { publication { id } } }
+                }
+            }'
+        );
+        $this->assertCount(
+            3,
+            $allResponse->json('data.currentUser.publications.data')
+        );
+    }
+
+    /**
      * Pins the fix for the OR-precedence bug in `visible()`: the
      * public/assigned disjunction must be grouped so that downstream
      * filters (search, my_role, etc.) narrow the result set instead

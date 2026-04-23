@@ -28,6 +28,7 @@ type User {
     publications(
         roles: [PublicationRole!] @scope(name: "roleFilter")
         search: String @scope
+        with_statuses: [SubmissionStatus!] @scope(name: "withStatuses")
         orderBy: [PublicationAssignmentOrderBy!]
             @scope(name: "orderByPublication")
     ): [PublicationAssignment!]!
