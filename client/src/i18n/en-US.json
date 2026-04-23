@@ -357,6 +357,15 @@
       "message": "Try the new publication management experience.",
       "cta": "Open Manage",
       "dismiss": "Hide for a week"
+    },
+    "needs_action": {
+      "heading": "Needs your attention",
+      "more": "more publication needs your attention. | more publications need your attention.",
+      "view_all": "Manage my publications",
+      "all_clear": {
+        "heading": "All caught up!",
+        "message": "No publications need your attention right now."
+      }
     }
   },
   "reviews": {
@@ -555,6 +564,9 @@
         "admin_hint_reason": "Shown to site administrators who can manage any publication.",
         "empty_hint": "You'll see publications here once you're added as an admin or editor.",
         "empty_filter_hint": "No publications matched \"{term}\". Try a different search or clear it.",
+        "empty_stage_filter_hint": "No publications currently have activity in the {stage} stage.",
+        "stage_filter_chip": "Showing publications with {stage} activity",
+        "stage_filter_generic": "any",
         "open": "Open dashboard",
         "total_submissions": "no submissions | {n} total submission | {n} total submissions",
         "role": {

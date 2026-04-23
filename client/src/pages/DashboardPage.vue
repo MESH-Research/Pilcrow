@@ -96,6 +96,7 @@
         </q-card>
       </div>
     </section>
+    <NeedsActionPublicationsTable class="q-mb-md" :limit="3" />
     <section class="row wrap q-gutter-y-md">
       <div v-if="all_submissions.length > 0" class="col-12">
         <submission-table
@@ -159,6 +160,7 @@ graphql(`
 
 <script setup lang="ts">
 import AvatarImage from "src/components/atoms/AvatarImage.vue"
+import NeedsActionPublicationsTable from "src/components/molecules/NeedsActionPublicationsTable.vue"
 import { useCurrentUser } from "src/use/user"
 import { useQuery } from "@vue/apollo-composable"
 import { CURRENT_USER_SUBMISSIONS, GET_SUBMISSIONS } from "src/graphql/queries"

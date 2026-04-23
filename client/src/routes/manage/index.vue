@@ -38,12 +38,36 @@
       </span>
     </div>
 
+    <div
+      v-if="activeStatuses.length > 0"
+      class="q-mb-md"
+      data-cy="manage_stage_filter"
+    >
+      <q-chip
+        removable
+        color="accent"
+        text-color="white"
+        icon="filter_alt"
+        data-cy="manage_stage_filter_chip"
+        @remove="clearStageFilter"
+      >
+        {{
+          $t("publication.manage.dashboard.stage_filter_chip", {
+            stage: activeStage
+              ? $t(`publication.manage.dashboard.stages.${activeStage}`)
+              : $t("publication.manage.dashboard.stage_filter_generic")
+          })
+        }}
+      </q-chip>
+    </div>
+
     <QueryTable
       ref="queryTableRef"
       :query="GetManagedPublicationsDocument"
       field="currentUser.publications"
       t-prefix="publication.manage.dashboard"
       :columns="columns"
+      :variables="queryVariables"
       :grid="isGrid"
       :dense="isDense"
       sync-url
@@ -72,21 +96,7 @@
                     {{ pub(gridProps.row).name }}
                   </router-link>
                 </div>
-                <q-badge
-                  outline
-                  :color="
-                    gridProps.row.role === 'publication_admin'
-                      ? 'primary'
-                      : 'secondary'
-                  "
-                  class="role-badge q-mt-xs"
-                >
-                  {{
-                    $t(
-                      `publication.manage.dashboard.role.${gridProps.row.role}`
-                    )
-                  }}
-                </q-badge>
+                <RoleBadge :role="gridProps.row.role" class="q-mt-xs" />
               </div>
             </q-card-section>
 
@@ -186,14 +196,26 @@
       <template #no-data="{ filter: activeFilter }">
         <EmptyState
           data-cy="manage_empty_state"
-          :icon="activeFilter ? undefined : 'dashboard_customize'"
+          :icon="
+            activeFilter
+              ? undefined
+              : activeStatuses.length > 0
+                ? 'filter_alt_off'
+                : 'dashboard_customize'
+          "
           :search-term="activeFilter"
           :message="
             activeFilter
               ? $t('publication.manage.dashboard.empty_filter_hint', {
                   term: activeFilter
                 })
-              : $t('publication.manage.dashboard.empty_hint')
+              : activeStatuses.length > 0
+                ? $t('publication.manage.dashboard.empty_stage_filter_hint', {
+                    stage: activeStage
+                      ? $t(`publication.manage.dashboard.stages.${activeStage}`)
+                      : $t('publication.manage.dashboard.stage_filter_generic')
+                  })
+                : $t('publication.manage.dashboard.empty_hint')
           "
         />
       </template>
@@ -226,19 +248,57 @@
              group labels spanning each stage's sub-columns. -->
         <q-tr class="stage-group-header">
           <q-th class="stage-group-spacer" />
-          <q-th class="text-center stage-group-label bg-accent text-white">
+          <q-th
+            class="text-center stage-group-label stage-group-label--clickable bg-accent text-white"
+            :class="{
+              'stage-group-label--active': activeStage === 'screening'
+            }"
+            :aria-pressed="activeStage === 'screening'"
+            role="button"
+            tabindex="0"
+            @click="toggleStageFilter('screening')"
+            @keydown.enter.prevent="toggleStageFilter('screening')"
+            @keydown.space.prevent="toggleStageFilter('screening')"
+          >
             {{ $t("publication.manage.dashboard.stages.screening") }}
           </q-th>
           <q-th
             colspan="2"
-            class="text-center stage-group-label bg-accent text-white"
+            class="text-center stage-group-label stage-group-label--clickable bg-accent text-white"
+            :class="{
+              'stage-group-label--active': activeStage === 'reviewing'
+            }"
+            :aria-pressed="activeStage === 'reviewing'"
+            role="button"
+            tabindex="0"
+            @click="toggleStageFilter('reviewing')"
+            @keydown.enter.prevent="toggleStageFilter('reviewing')"
+            @keydown.space.prevent="toggleStageFilter('reviewing')"
           >
             {{ $t("publication.manage.dashboard.stages.reviewing") }}
           </q-th>
-          <q-th class="text-center stage-group-label bg-accent text-white">
+          <q-th
+            class="text-center stage-group-label stage-group-label--clickable bg-accent text-white"
+            :class="{ 'stage-group-label--active': activeStage === 'decision' }"
+            :aria-pressed="activeStage === 'decision'"
+            role="button"
+            tabindex="0"
+            @click="toggleStageFilter('decision')"
+            @keydown.enter.prevent="toggleStageFilter('decision')"
+            @keydown.space.prevent="toggleStageFilter('decision')"
+          >
             {{ $t("publication.manage.dashboard.stages.decision") }}
           </q-th>
-          <q-th class="text-right stage-group-label bg-accent text-white">
+          <q-th
+            class="text-right stage-group-label stage-group-label--clickable bg-accent text-white"
+            :class="{ 'stage-group-label--active': activeStage === 'closed' }"
+            :aria-pressed="activeStage === 'closed'"
+            role="button"
+            tabindex="0"
+            @click="toggleStageFilter('closed')"
+            @keydown.enter.prevent="toggleStageFilter('closed')"
+            @keydown.space.prevent="toggleStageFilter('closed')"
+          >
             {{ $t("publication.manage.dashboard.stages.closed") }}
           </q-th>
         </q-tr>
@@ -310,6 +370,7 @@ graphql(`
     $first: Int!
     $search: String
     $orderBy: [PublicationAssignmentOrderBy!]
+    $withStatuses: [SubmissionStatus!]
   ) {
     currentUser {
       id
@@ -319,6 +380,7 @@ graphql(`
         first: $first
         search: $search
         orderBy: $orderBy
+        with_statuses: $withStatuses
       ) {
         ...QueryTable
         data {
@@ -349,6 +411,7 @@ import QueryTable, {
 import PublicationNameCell from "src/components/tables/common/PublicationNameCell.vue"
 import CategoryCountCell from "src/components/tables/common/CategoryCountCell.vue"
 import EmptyState from "src/components/molecules/EmptyState.vue"
+import RoleBadge from "src/components/atoms/RoleBadge.vue"
 import { useCurrentUser } from "src/use/user"
 import {
   statusCategories,
@@ -464,10 +527,7 @@ function stageGroups(publication: ManagedPublication): StageGroup[] {
       textClass: cat.textClass,
       pattern: cat.pattern,
       statuses,
-      total: countStatuses(
-        publication as unknown as Record<string, unknown>,
-        statuses
-      )
+      total: countStatuses(publication, statuses)
     }
   }
   const rows: StageGroupRow[][] = [
@@ -525,13 +585,89 @@ const REVIEWING_NA_STATUSES = ["AWAITING_REVIEW"] as const
 const REVIEWING_IP_STATUSES = ["UNDER_REVIEW"] as const
 const DECISION_NA_STATUSES = ["AWAITING_DECISION"] as const
 
+// Stage → the status set that represents "has activity in this stage".
+// Clicking a stage heading in the table's grouped header writes the
+// matching set into `?statuses=[…]`, narrowing the publication list
+// to rows with at least one non-draft submission in those states.
+const STAGE_STATUSES = {
+  screening: [...SCREENING_NA_STATUSES],
+  reviewing: [...REVIEWING_NA_STATUSES, ...REVIEWING_IP_STATUSES],
+  decision: [...DECISION_NA_STATUSES],
+  closed: [...CLOSED_STATUSES]
+} as const satisfies Record<string, readonly string[]>
+type StageKey = keyof typeof STAGE_STATUSES
+
+// Parse `?statuses=[A,B,C]` from the route. Matches the bracketed
+// form used by the per-publication submissions filter for
+// consistency.
+function parseStatusesQuery(raw: unknown): string[] {
+  if (typeof raw !== "string") return []
+  const inner = raw.replace(/^\[|\]$/g, "")
+  return inner ? inner.split(",").filter(Boolean) : []
+}
+
+function sameStatusSet(a: readonly string[], b: readonly string[]): boolean {
+  if (a.length !== b.length) return false
+  const aSet = new Set(a)
+  return b.every((v) => aSet.has(v))
+}
+
+const activeStatuses = ref<string[]>(parseStatusesQuery(route.query.statuses))
+watch(
+  () => route.query.statuses,
+  (value) => {
+    activeStatuses.value = parseStatusesQuery(value)
+  }
+)
+
+// If the current filter matches a canonical stage set exactly, we
+// show it as "Only publications with {stage} activity"; otherwise
+// we fall back to a generic "activity" label. (Custom selections
+// aren't reachable via the current UI, but may become so if we add
+// a dropdown later — keeping this tolerant now avoids needing to
+// revisit.)
+const activeStage = computed<StageKey | null>(() => {
+  for (const key of Object.keys(STAGE_STATUSES) as StageKey[]) {
+    if (sameStatusSet(activeStatuses.value, STAGE_STATUSES[key])) return key
+  }
+  return null
+})
+
+function setStageFilter(key: StageKey | null) {
+  const next = key ? [...STAGE_STATUSES[key]] : []
+  const isUnchanged = sameStatusSet(activeStatuses.value, next)
+  if (isUnchanged) return
+  activeStatuses.value = next
+  const query: Record<string, string> = {}
+  for (const [k, v] of Object.entries(route.query)) {
+    if (k !== "statuses" && typeof v === "string") query[k] = v
+  }
+  if (next.length > 0) query.statuses = `[${next.join(",")}]`
+  router.replace({ query })
+}
+
+function toggleStageFilter(key: StageKey) {
+  setStageFilter(activeStage.value === key ? null : key)
+}
+
+function clearStageFilter() {
+  setStageFilter(null)
+}
+
+const queryVariables = computed(() =>
+  activeStatuses.value.length > 0 ? { withStatuses: activeStatuses.value } : {}
+)
+
+// Sums a publication's submission counts across the given statuses.
+// Takes a publication (not an assignment) so stageGroups() can call
+// this directly; column field accessors unwrap via `pub(row)` before
+// passing in.
 function countStatuses(
-  row: Record<string, unknown>,
+  publication: ManagedPublication,
   statuses: readonly string[]
 ): number {
-  const p = pub(row)
   const counts = new Map<string, number>()
-  for (const c of p.submission_status_counts ?? []) {
+  for (const c of publication.submission_status_counts ?? []) {
     counts.set(c.status, c.count)
   }
   return statuses.reduce((sum, s) => sum + (counts.get(s) ?? 0), 0)
@@ -554,7 +690,7 @@ const columns: QueryTableColumn[] = [
   {
     name: "screening_na",
     align: "right",
-    field: (row) => countStatuses(row, SCREENING_NA_STATUSES),
+    field: (row) => countStatuses(pub(row), SCREENING_NA_STATUSES),
     component: CategoryCountCell,
     category: "needs_action",
     // `stage-start` draws a vertical divider on the left edge of this
@@ -568,7 +704,7 @@ const columns: QueryTableColumn[] = [
   {
     name: "reviewing_na",
     align: "right",
-    field: (row) => countStatuses(row, REVIEWING_NA_STATUSES),
+    field: (row) => countStatuses(pub(row), REVIEWING_NA_STATUSES),
     component: CategoryCountCell,
     category: "needs_action",
     classes: "stage-start",
@@ -578,7 +714,7 @@ const columns: QueryTableColumn[] = [
   {
     name: "reviewing_ip",
     align: "right",
-    field: (row) => countStatuses(row, REVIEWING_IP_STATUSES),
+    field: (row) => countStatuses(pub(row), REVIEWING_IP_STATUSES),
     component: CategoryCountCell,
     category: "in_progress",
     linkTo: (row) => dashboardFilterTo(pub(row).id, REVIEWING_IP_STATUSES),
@@ -587,7 +723,7 @@ const columns: QueryTableColumn[] = [
   {
     name: "decision_na",
     align: "right",
-    field: (row) => countStatuses(row, DECISION_NA_STATUSES),
+    field: (row) => countStatuses(pub(row), DECISION_NA_STATUSES),
     component: CategoryCountCell,
     category: "needs_action",
     classes: "stage-start",
@@ -597,7 +733,7 @@ const columns: QueryTableColumn[] = [
   {
     name: "closed",
     align: "right",
-    field: (row) => countStatuses(row, CLOSED_STATUSES),
+    field: (row) => countStatuses(pub(row), CLOSED_STATUSES),
     component: CategoryCountCell,
     category: "completed",
     classes: "stage-start",
@@ -624,12 +760,6 @@ const columns: QueryTableColumn[] = [
 }
 .publication-title:hover {
   text-decoration: underline;
-}
-.role-badge {
-  font-size: 0.7rem;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  flex: 0 0 auto;
 }
 .manage-publication-card {
   transition:
@@ -777,6 +907,25 @@ const columns: QueryTableColumn[] = [
 .stage-group-header .stage-group-label {
   font-weight: 600;
   letter-spacing: 0.02em;
+}
+/* Clickable variant: makes it clear these labels are filter
+   triggers. Hover/active mirror the dashboard chip treatment.
+   Active state draws an underline to signal the filter is live
+   and bumps the font-weight so the row's "which stage you filtered
+   by" reads at a glance. */
+.stage-group-header .stage-group-label--clickable {
+  cursor: pointer;
+  user-select: none;
+}
+.stage-group-header .stage-group-label--clickable:hover,
+.stage-group-header .stage-group-label--clickable:focus-visible {
+  background-color: rgba(255, 255, 255, 0.08);
+  outline: none;
+}
+.stage-group-header .stage-group-label--active {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  font-weight: 700;
 }
 .stage-group-header .stage-group-spacer {
   background: transparent;

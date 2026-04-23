@@ -13,20 +13,14 @@
       <template v-else>
         <span class="publication-name" :title="name">{{ name }}</span>
       </template>
-      <q-badge
-        v-if="role"
-        outline
-        :color="role === 'publication_admin' ? 'primary' : 'secondary'"
-        class="role-badge"
-      >
-        {{ $t(`publication.manage.dashboard.role.${role}`) }}
-      </q-badge>
+      <RoleBadge v-if="role" :role="role" />
     </div>
   </q-td>
 </template>
 
 <script setup lang="ts">
 import { computed } from "vue"
+import RoleBadge from "src/components/atoms/RoleBadge.vue"
 import type { QTableBodyCellScope, QueryTableColumn } from "../QueryTable.vue"
 
 interface Props {
@@ -70,11 +64,5 @@ const role = computed(() => {
 }
 .publication-name:hover {
   text-decoration: underline;
-}
-.role-badge {
-  font-size: 0.65rem;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  flex: 0 0 auto;
 }
 </style>
