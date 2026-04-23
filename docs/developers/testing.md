@@ -34,6 +34,15 @@ lando backend-test
 ```
 
 It's cwd-independent and points the suite at a dedicated `laravel_testing` database so your dev data stays intact. Note that running PHPUnit directly (e.g. via `lando ssh`) bypasses this override and will still hit the dev database.
+
+Other artisan commands (e.g. `migrate`, `migrate:fresh --seed`, `db:show`) default to the `mysql` connection and will target your dev `laravel` database. Pass `--database=testing` to target `laravel_testing` instead:
+
+```sh
+lando artisan migrate:fresh --database=testing --seed
+lando artisan db:show --database=testing
+```
+
+In practice you rarely need this — `RefreshDatabase` migrates the testing database on demand during each test run — but it's there if you want to inspect or hand-seed it.
 :::
 
 ::: tip Debugging CI Failures
