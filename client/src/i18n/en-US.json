@@ -550,6 +550,9 @@
       "dashboard": {
         "heading": "Manage",
         "none": "You don't manage any publications yet.",
+        "empty_hint": "Publications where you're an admin or editor will appear here.",
+        "empty_filter": "No publications match your search.",
+        "empty_filter_hint": "Try a different term, or clear the search to see everything.",
         "open": "Open dashboard",
         "total_submissions": "no submissions | {n} total submission | {n} total submissions",
         "role": {

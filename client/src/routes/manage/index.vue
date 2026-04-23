@@ -149,6 +149,33 @@
         </div>
       </template>
 
+      <template #no-data="{ filter: activeFilter }">
+        <div
+          class="manage-empty-state col q-pa-xl text-center full-width"
+          data-cy="manage_empty_state"
+        >
+          <q-icon
+            :name="activeFilter ? 'search_off' : 'dashboard_customize'"
+            size="4rem"
+            class="text-grey-5"
+          />
+          <div class="text-h6 q-mt-md">
+            {{
+              activeFilter
+                ? $t("publication.manage.dashboard.empty_filter")
+                : $t("publication.manage.dashboard.none")
+            }}
+          </div>
+          <div class="text-body2 text-grey-7 q-mt-sm">
+            {{
+              activeFilter
+                ? $t("publication.manage.dashboard.empty_filter_hint")
+                : $t("publication.manage.dashboard.empty_hint")
+            }}
+          </div>
+        </div>
+      </template>
+
       <template #top-after>
         <q-btn
           v-if="!isSmallScreen"
@@ -554,6 +581,10 @@ const columns: QueryTableColumn[] = [
 </script>
 
 <style scoped>
+.manage-empty-state {
+  max-width: 32rem;
+  margin: 0 auto;
+}
 .publication-title {
   font-size: 1.1rem;
   line-height: 1.3;
