@@ -493,6 +493,41 @@ class PublicationTest extends ApiTestCase
         $this->assertCount(1, $json);
     }
 
+    /**
+     * Pins the fix for the OR-precedence bug in `visible()`: the
+     * public/assigned disjunction must be grouped so that downstream
+     * filters (search, my_role, etc.) narrow the result set instead
+     * of being short-circuited by the "publicly visible" branch.
+     */
+    public function testSearchFilterAppliesAcrossPublicAndAssigned()
+    {
+        /** @var User $user */
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        // Public, matches the search.
+        Publication::factory()->create(['name' => 'Digital Humanities Review']);
+        // Public, doesn't match.
+        Publication::factory()->create(['name' => 'Quarterly Review']);
+        // Hidden + assigned to the user, doesn't match — must not leak in.
+        Publication::factory()->hidden()
+            ->hasAttached($user, [], 'editors')
+            ->create(['name' => 'Private Journal']);
+
+        $response = $this->graphQL(
+            'query ($search: String) {
+                publications(search: $search) {
+                    data { id name }
+                }
+            }',
+            ['search' => 'Digital']
+        );
+        $json = $response->json('data.publications.data');
+
+        $this->assertCount(1, $json);
+        $this->assertSame('Digital Humanities Review', $json[0]['name']);
+    }
+
     protected function executePublicationRoleAssignment(string $role, Publication $publication, User $user)
     {
         return $this->graphQL(

@@ -43,6 +43,12 @@ class PublicationBuilder extends Builder
     /**
      * Scope to publications visible to the current user.
      *
+     * The public/assigned disjunction is wrapped in a grouped `where`
+     * so subsequent filters (search, my_role, etc.) AND against the
+     * whole expression rather than OR-ing around it — otherwise
+     * public publications leak through regardless of downstream
+     * filters.
+     *
      * @return self
      */
     public function visible(): self
@@ -53,8 +59,12 @@ class PublicationBuilder extends Builder
             return $this;
         }
 
-        return $this->public()->orWhereHas('users', function (Builder $query) use ($user) {
-            $query->where('user_id', $user->id);
+        return $this->where(function (Builder $query) use ($user) {
+            $query
+                ->where('is_publicly_visible', true)
+                ->orWhereHas('users', function (Builder $subQuery) use ($user) {
+                    $subQuery->where('user_id', $user->id);
+                });
         });
     }
 
