@@ -17,10 +17,10 @@ class DatabaseSeeder extends Seeder
         $this->call([
             UserSeeder::class,
             PublicationSeeder::class,
-            StyleCriteriasSeeder::class,
             SubmissionSeeder::class,
             InlineCommentSeeder::class,
             OverallCommentSeeder::class,
+            ExportPreviewSeeder::class,
         ]);
     }
 }

@@ -7,11 +7,13 @@ use App\Models\Role;
 use App\Models\Submission;
 use App\Models\SubmissionInvitation;
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use Tests\TestFactory;
 
 class InvitationsTest extends TestCase
 {
+    use RefreshDatabase;
     use TestFactory;
 
     /**
