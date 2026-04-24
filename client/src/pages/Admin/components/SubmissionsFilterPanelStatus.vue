@@ -4,16 +4,6 @@
       {{ $t("admin.users.details.submissions.filters.status") }}
     </q-card-section>
     <q-option-group v-model="filter" :options="tOptions" type="checkbox" />
-    <q-separator />
-    <q-card-section class="q-pa-none">
-      <div>
-        Select:
-        <q-btn-group flat>
-          <q-btn dense no-caps label="All" @click="setAll" />
-          <q-btn dense label="None" no-caps @click="setNone" />
-        </q-btn-group>
-      </div>
-    </q-card-section>
   </q-card-section>
 </template>
 
@@ -69,19 +59,4 @@ const tOptions = options.map((s) => ({
   label: s.label ? t(s.label) : s.label,
   value: s.value
 }))
-
-const allFilter = options.map((s) => s.value)
-
-function reset() {
-  filter.value = [...defaultOptions]
-}
-function setAll() {
-  filter.value = [...allFilter]
-}
-
-function setNone() {
-  filter.value = []
-}
-
-defineExpose({ reset, setAll, setNone })
 </script>

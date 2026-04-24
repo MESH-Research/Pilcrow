@@ -1,13 +1,23 @@
 <template>
-  <q-btn icon="o_filter_alt" label="Filter">
-    <q-badge v-if="filterActive" floating rounded color="orange" />
+  <q-btn
+    flat
+    dense
+    no-caps
+    icon="filter_list"
+    :label="activeCount > 0 ? `Filter · ${activeCount} active` : 'Filter'"
+    aria-label="Filter submissions"
+  >
     <q-menu>
+      <q-card-section class="q-pb-none">
+        <q-btn-group flat stretch class="full-width">
+          <q-btn dense no-caps label="All" @click="selectAll" />
+          <q-btn dense no-caps label="None" @click="selectNone" />
+          <q-btn dense no-caps label="Invert" @click="invert" />
+        </q-btn-group>
+      </q-card-section>
+      <q-separator class="q-mt-sm" />
       <q-card-section :horizontal="true">
-        <SubmissionsFilterPanelStatus
-          ref="statusRef"
-          v-model="statusFilter"
-          :dense="dense"
-        />
+        <SubmissionsFilterPanelStatus v-model="statusFilter" :dense="dense" />
         <q-separator vertical />
         <q-card-section>
           <SubmissionsFilterPanelRoles v-model="roleFilter" :dense="dense" />
@@ -18,22 +28,8 @@
           />
         </q-card-section>
       </q-card-section>
-      <q-separator />
-      <q-card-section class="justify-end row">
-        <q-btn no-caps label="Reset Filters" @click="resetFilters" />
-      </q-card-section>
     </q-menu>
   </q-btn>
-
-  <q-btn
-    v-if="filterActive"
-    v-close-popup
-    class="q-mx-md"
-    label="Reset filters to default"
-    flat
-    no-caps
-    @click="resetFilters"
-  />
 </template>
 
 <script setup lang="ts">
@@ -73,18 +69,40 @@ function isEqual(a: string[], b: string[]): boolean {
   )
 }
 
-const filterActive = computed(() => {
-  return !(
-    isEqual(statusFilter.value, defaultStatusOptions) &&
-    isEqual(roleFilter.value, defaultRoleOptions) &&
-    !publicationFilter.value
-  )
+// Number of dimensions currently restricting results (non-default).
+// Surfaced in the button label so the user can tell from the toolbar
+// how much their view diverges from the default filter set.
+const activeCount = computed(() => {
+  let n = 0
+  if (!isEqual(statusFilter.value, defaultStatusOptions)) n++
+  if (!isEqual(roleFilter.value, defaultRoleOptions)) n++
+  if (publicationFilter.value) n++
+  return n
 })
 
-const resetFilters = () => {
+// "All" restores each dimension's default set — the meaningful
+// "everything on" state. Publication is single-select with no default,
+// so it clears to null.
+function selectAll() {
   statusFilter.value = [...defaultStatusOptions]
   roleFilter.value = [...defaultRoleOptions]
   publicationFilter.value = null
+}
+
+function selectNone() {
+  statusFilter.value = []
+  roleFilter.value = []
+  publicationFilter.value = null
+}
+
+function invert() {
+  statusFilter.value = defaultStatusOptions.filter(
+    (v) => !statusFilter.value.includes(v)
+  )
+  roleFilter.value = defaultRoleOptions.filter(
+    (v) => !roleFilter.value.includes(v)
+  )
+  // Publication is single-select; nothing meaningful to invert.
 }
 
 onMounted(() => {
@@ -96,5 +114,5 @@ onMounted(() => {
   }
 })
 
-defineExpose({ resetFilters })
+defineExpose({ selectAll, selectNone, invert })
 </script>

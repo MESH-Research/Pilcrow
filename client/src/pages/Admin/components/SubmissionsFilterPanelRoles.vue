@@ -7,12 +7,6 @@
       <div>
         <q-option-group v-model="filter" :options="tOptions" type="checkbox" />
       </div>
-
-      Select:
-      <q-btn-group flat>
-        <q-btn dense no-caps label="All" @click="setAll" />
-        <q-btn dense label="None" no-caps @click="setNone" />
-      </q-btn-group>
     </div>
   </q-card-section>
 </template>
@@ -45,18 +39,4 @@ const tOptions = options.map((s) => ({
   label: s.label ? t(s.label) : s.label,
   value: s.value
 }))
-
-function reset() {
-  filter.value = [...defaultOptions]
-}
-
-function setAll() {
-  filter.value = [...defaultOptions]
-}
-
-function setNone() {
-  filter.value = []
-}
-
-defineExpose({ reset, setAll, setNone })
 </script>

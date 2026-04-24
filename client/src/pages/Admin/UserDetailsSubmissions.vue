@@ -16,7 +16,7 @@
     sync-url
     @row-click="onRowClick"
   >
-    <template #top-before>
+    <template #top-after>
       <SubmissionsFilterPanel
         v-model:status-filter="statusFilter"
         v-model:role-filter="roleFilter"

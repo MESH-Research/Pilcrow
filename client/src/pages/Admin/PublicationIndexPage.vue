@@ -20,13 +20,11 @@
       :default-sort="{ sortBy: 'name' }"
       @row-click="onRowClick"
     >
-      <template #top-before>
+      <template #top-after>
         <PublicationsFilterPanel
           v-model:visibility-filter="visibilityFilter"
           v-model:accepting-filter="acceptingFilter"
         />
-      </template>
-      <template #top-after>
         <q-btn
           color="primary"
           icon="add"
