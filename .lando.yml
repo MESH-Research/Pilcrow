@@ -16,6 +16,8 @@ services:
   database:
     config:
       database: .lando/mysql.cnf
+    build:
+      - mysql -uroot -e "CREATE DATABASE IF NOT EXISTS laravel_testing; GRANT ALL ON laravel_testing.* TO 'laravel'@'%';"
   client:
     port: false
     type: node:22
@@ -87,6 +89,8 @@ tooling:
     cmd: php artisan test
     dir: /app/backend
     description: Run PHPUnit tests (cwd-independent)
+    env:
+      DB_CONNECTION: testing
   extras:
     service: client
     cmd: node scripts/lando-extras/extras.js

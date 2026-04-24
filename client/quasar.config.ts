@@ -166,7 +166,7 @@ export default defineConfig(function (/* ctx */) {
         clientPort: 443,
         path: "/__hmr"
       },
-      allowedHosts: ["localhost", "pilcrow.lndo.site"]
+      allowedHosts: ["localhost", ".lndo.site"]
     },
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#framework
