@@ -33,7 +33,7 @@ If you'd rather not have the suite clobber that data — useful when iterating t
 lando backend-test
 ```
 
-It's cwd-independent and points the suite at a dedicated `laravel_testing` database so your dev data stays intact. Note that running PHPUnit directly (e.g. via `lando ssh`) bypasses this override and will still hit the dev database.
+It works independent of the current working directory and points the suite at a dedicated `laravel_testing` database so your dev data stays intact. Note that running PHPUnit directly (e.g. via `lando ssh`) bypasses this override and will still hit the dev database.
 
 Other artisan commands (e.g. `migrate`, `migrate:fresh --seed`, `db:show`) default to the `mysql` connection and will target your dev `laravel` database. Pass `--database=testing` to target `laravel_testing` instead:
 
