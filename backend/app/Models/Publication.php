@@ -18,6 +18,13 @@ class Publication extends BaseModel
 {
     use HasFactory;
 
+    /**
+     * Minimum length of a search term before it reaches the database.
+     * Shared by PublicationBuilder::search and PublicationAssignmentBuilder
+     * so the min-length guard is enforced consistently on both paths.
+     */
+    public const MIN_SEARCH_LENGTH = 3;
+
     protected $fillable = [
         'name',
         'home_page_content',

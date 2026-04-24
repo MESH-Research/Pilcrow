@@ -26,18 +26,26 @@ class PublicationAssignmentBuilder extends Builder
     /**
      * Search assignments by the related publication's name.
      *
+     * Delegates to PublicationBuilder::search so the min-length
+     * guard + LIKE-wildcard escape rules live in one place.
+     *
      * @param string|null $search
      * @return self
      */
     public function search(?string $search): self
     {
-        if ($search) {
-            $this->whereHas('publication', function (Builder $query) use ($search) {
-                $query->where('name', 'like', "%{$search}%");
-            });
+        if (!is_string($search)) {
+            return $this;
+        }
+        $term = trim($search);
+        if (mb_strlen($term) < Publication::MIN_SEARCH_LENGTH) {
+            return $this;
         }
 
-        return $this;
+        return $this->whereHas(
+            'publication',
+            fn (Builder $query) => $query->search($term)
+        );
     }
 
     /**

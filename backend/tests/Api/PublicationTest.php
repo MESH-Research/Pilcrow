@@ -494,6 +494,53 @@ class PublicationTest extends ApiTestCase
     }
 
     /**
+     * Pins the search behavior hardening:
+     * - Terms shorter than MIN_SEARCH_LENGTH are short-circuited (no
+     *   filtering, full list returned).
+     * - `%` / `_` in the user's term are treated as literals, not LIKE
+     *   wildcards (so the `_` in "a_" doesn't match "aa").
+     */
+    public function testPublicationSearchMinLengthAndWildcardEscape()
+    {
+        /** @var User $user */
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        Publication::factory()->create(['name' => 'Alpha Quarterly']);
+        Publication::factory()->create(['name' => 'Beta Review']);
+        Publication::factory()->create(['name' => 'A%Something']);
+
+        // Short term — not enforced, all three returned.
+        $short = $this->graphQL(
+            'query { publications(search: "Al") { data { name } } }'
+        );
+        $this->assertCount(3, $short->json('data.publications.data'));
+
+        // Long enough — narrows.
+        $long = $this->graphQL(
+            'query { publications(search: "Alpha") { data { name } } }'
+        );
+        $this->assertCount(1, $long->json('data.publications.data'));
+        $this->assertSame(
+            'Alpha Quarterly',
+            $long->json('data.publications.data.0.name')
+        );
+
+        // The user's `%` must be escaped — should match literally, not act
+        // as a wildcard. "A%S" matches only the "A%Something" row, not
+        // "Alpha Something"-like names that would match under an un-escaped
+        // `%`.
+        $wildcard = $this->graphQL(
+            'query { publications(search: "A%S") { data { name } } }'
+        );
+        $this->assertCount(1, $wildcard->json('data.publications.data'));
+        $this->assertSame(
+            'A%Something',
+            $wildcard->json('data.publications.data.0.name')
+        );
+    }
+
+    /**
      * Pins the `with_statuses` filter on `User.publications`: only
      * assignments whose publication currently has at least one
      * submission in one of the given statuses come back. Drafts

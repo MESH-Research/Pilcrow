@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Builders;
 
+use App\Models\Publication;
 use App\Models\Role;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
@@ -32,12 +33,31 @@ class PublicationBuilder extends Builder
     /**
      * Add a scope to filter publications by a search string.
      *
-     * @param string $search
+     * Short-circuits on empty / too-short terms so single-keystroke
+     * searches don't scan the table. Escapes LIKE wildcards so users
+     * can't (accidentally or otherwise) inject `%` / `_` / `\` into
+     * the pattern. Matches the hardening applied to the submissions
+     * search in commit cd1ea18d — the FULLTEXT index on `name` exists
+     * to support a future MATCH...AGAINST switch.
+     *
+     * @param mixed $search
      * @return self
      */
     public function search(mixed $search): self
     {
-        return $this->where('name', 'like', '%' . $search . '%');
+        if (!is_string($search)) {
+            return $this;
+        }
+        $term = trim($search);
+        if (mb_strlen($term) < Publication::MIN_SEARCH_LENGTH) {
+            return $this;
+        }
+
+        return $this->where(
+            'name',
+            'like',
+            '%' . addcslashes($term, '%_\\') . '%'
+        );
     }
 
     /**
