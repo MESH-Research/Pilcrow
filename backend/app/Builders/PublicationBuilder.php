@@ -10,23 +10,28 @@ use Illuminate\Support\Facades\Auth;
 class PublicationBuilder extends Builder
 {
     /**
-     * Scope only public publications.
+     * Scope by public visibility. Accepts a boolean so callers can filter
+     * to hidden publications too (@scope passes the field arg through).
      *
+     * @param bool $value
      * @return self
      */
-    public function public(): self
+    public function public(bool $value = true): self
     {
-        return $this->where('is_publicly_visible', true);
+        return $this->where('is_publicly_visible', $value);
     }
 
     /**
-     * Scope only to publications that are accepting submissions.
+     * Scope by accepting-submissions state. Accepts a boolean so callers
+     * can filter to closed publications too (@scope passes the field arg
+     * through).
      *
+     * @param bool $value
      * @return self
      */
-    public function acceptingSubmissions(): self
+    public function acceptingSubmissions(bool $value = true): self
     {
-        return $this->where('is_accepting_submissions', true);
+        return $this->where('is_accepting_submissions', $value);
     }
 
     /**
