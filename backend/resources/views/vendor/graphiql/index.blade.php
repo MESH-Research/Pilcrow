@@ -1,4 +1,12 @@
-{{-- See https://github.com/graphql/graphiql/blob/main/examples/graphiql-cdn/index.html. --}}
+{{-- Overrides the mll-lab/laravel-graphiql bundled template so GraphiQL
+     sends a CSRF token that matches the current session on every
+     request. Reading the XSRF-TOKEN cookie fresh per-fetch (rather
+     than baking `csrf_token()` into a meta tag at page render) picks
+     up token rotations — e.g. after running a `login` mutation,
+     Laravel rotates the session token, the browser receives the new
+     XSRF-TOKEN cookie on that response, and the next request picks
+     it up. The meta-tag approach served the token stale and caused
+     419s on every call after the first mutation. --}}
 @php
 use MLL\GraphiQL\GraphiQLAsset;
 @endphp
@@ -7,7 +15,6 @@ use MLL\GraphiQL\GraphiQLAsset;
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>GraphiQL</title>
     <style>
         body {
@@ -48,11 +55,25 @@ use MLL\GraphiQL\GraphiQLAsset;
 <script src="{{ GraphiQLAsset::graphiQLJS() }}"></script>
 <script src="{{ GraphiQLAsset::pluginExplorerJS() }}"></script>
 <script>
+    function readXsrfToken() {
+        const match = document.cookie.match(/(?:^|; )XSRF-TOKEN=([^;]+)/);
+        return match ? decodeURIComponent(match[1]) : null;
+    }
+
     const fetcher = GraphiQL.createFetcher({
         url: '{{ $url }}',
         subscriptionUrl: '{{ $subscriptionUrl }}',
-        headers: {
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+        fetch: (input, init = {}) => {
+            const headers = new Headers(init.headers || {});
+            const token = readXsrfToken();
+            if (token && !headers.has('X-XSRF-TOKEN')) {
+                headers.set('X-XSRF-TOKEN', token);
+            }
+            return window.fetch(input, {
+                ...init,
+                headers,
+                credentials: 'same-origin',
+            });
         },
     });
     const explorer = GraphiQLPluginExplorer.explorerPlugin();

@@ -24,6 +24,27 @@ To run the PHP unit tests execute the following command **from the `/backend` di
 lando artisan test
 ```
 
+::: tip Isolating tests from the dev database
+`lando artisan test` runs against the same `laravel` database that drives your local UI, so `RefreshDatabase` and `migrate:fresh` will wipe the data you've been working with in the app.
+
+If you'd rather not have the suite clobber that data — useful when iterating tightly (including agent-driven workflows), or when you've spent time setting up specific local state — use the `backend-test` tooling command instead:
+
+```sh
+lando backend-test
+```
+
+It works independent of the current working directory and points the suite at a dedicated `laravel_testing` database so your dev data stays intact. Note that running PHPUnit directly (e.g. via `lando ssh`) bypasses this override and will still hit the dev database.
+
+Other artisan commands (e.g. `migrate`, `migrate:fresh --seed`, `db:show`) default to the `mysql` connection and will target your dev `laravel` database. Pass `--database=testing` to target `laravel_testing` instead:
+
+```sh
+lando artisan migrate:fresh --database=testing --seed
+lando artisan db:show --database=testing
+```
+
+In practice you rarely need this — `RefreshDatabase` migrates the testing database on demand during each test run — but it's there if you want to inspect or hand-seed it.
+:::
+
 ::: tip Debugging CI Failures
 If tests pass locally but fail in CI, you can reproduce the CI environment using `./scripts/bake-fpm-test.sh`. See [Build System & CI](./build-ci.md) for details.
 :::

@@ -19,10 +19,10 @@ class DatabaseSeeder extends Seeder
             AvatarSeeder::class,
             AvatarReportSeeder::class,
             PublicationSeeder::class,
-            StyleCriteriasSeeder::class,
             SubmissionSeeder::class,
             InlineCommentSeeder::class,
             OverallCommentSeeder::class,
+            ExportPreviewSeeder::class,
         ]);
     }
 }
