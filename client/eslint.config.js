@@ -80,6 +80,15 @@ const config = [
     }
   },
   {
+    // Auto-routes pages (vue-router file-based routing convention)
+    // use single-word file/component names tied to URL segments,
+    // e.g. users.vue → /users, [id]/submissions.vue → /:id/submissions.
+    files: ["src/routes/**/*.vue"],
+    rules: {
+      "vue/multi-word-component-names": "off"
+    }
+  },
+  {
     files: [
       "test/vitest/**/*.{js,mjs,cjs,ts,mts,cts}",
       "src*/**/*.vitest.spec.{js,mjs,cjs,ts,mts}"

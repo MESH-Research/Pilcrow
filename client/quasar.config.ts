@@ -10,6 +10,7 @@
 
 import { resolve } from "node:path"
 import { defineConfig } from "#q-app/wrappers"
+import VueRouter from "vue-router/vite"
 
 export default defineConfig(function (/* ctx */) {
   return {
@@ -72,6 +73,16 @@ export default defineConfig(function (/* ctx */) {
           }
         }
         viteConf.plugins = viteConf.plugins || []
+        // File-based routing from src/routes/ — distinct from the
+        // legacy manually-configured pages under src/pages/, which
+        // stay registered in src/router/routes.ts. As pages migrate,
+        // they move from pages/ to routes/.
+        viteConf.plugins.push(
+          VueRouter({
+            routesFolder: [{ src: "src/routes" }],
+            dts: "src/typed-router.d.ts"
+          })
+        )
         viteConf.plugins.push({
           name: "watch-backend-schema",
           configureServer(server) {

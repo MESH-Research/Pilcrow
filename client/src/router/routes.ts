@@ -1,4 +1,5 @@
 import { RouteRecordRaw } from "vue-router"
+import { routes as autoRoutes } from "vue-router/auto-routes"
 
 const routes: RouteRecordRaw[] = [
   {
@@ -103,50 +104,9 @@ const routes: RouteRecordRaw[] = [
         path: "feed/",
         component: () => import("src/pages/FeedPage.vue")
       },
-      {
-        path: "/admin",
-        name: "admin:dashboard",
-        component: () => import("pages/Admin/AdminDashboard.vue"),
-        meta: {
-          requiresAppAdmin: true
-        }
-      },
-      {
-        path: "/admin/users",
-        name: "admin:users",
-        component: () => import("pages/Admin/UsersIndex.vue"),
-        meta: {
-          requiresAppAdmin: true
-        }
-      },
-      {
-        path: "/admin/user/:id",
-        props: true,
-        component: () => import("src/layouts/Admin/UserDetailLayout.vue"),
-        meta: {
-          requiresAppAdmin: true
-        },
-        children: [
-          {
-            name: "user_details",
-            path: "",
-            component: () => import("pages/Admin/UserDetails.vue")
-          },
-          {
-            name: "user_details:submissions",
-            path: "submissions",
-            component: () => import("pages/Admin/UserDetailsSubmissions.vue")
-          }
-        ]
-      },
-      {
-        path: "/admin/publications",
-        name: "admin:publication:index",
-        component: () => import("src/pages/Admin/PublicationIndexPage.vue"),
-        meta: {
-          requiresAppAdmin: true
-        }
-      },
+      // File-based routes under src/routes/ (see quasar.config.ts).
+      // Spread here so they inherit MainLayout + its requiresAuth meta.
+      ...autoRoutes,
       {
         path: "/publications",
         name: "publication:index",

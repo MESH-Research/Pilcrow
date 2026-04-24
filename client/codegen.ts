@@ -36,6 +36,7 @@ const config: CodegenConfig = {
     "src/pages/**/*.vue",
     "src/layouts/**/*.vue",
     "src/components/**/*.vue",
+    "src/routes/**/*.vue",
   ],
   generates,
 }
