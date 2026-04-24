@@ -68,6 +68,7 @@
       t-prefix="publication.manage.dashboard"
       :columns="columns"
       :variables="queryVariables"
+      :search-hint="$t('publication.manage.dashboard.search_hint')"
       :grid="isGrid"
       :dense="isDense"
       sync-url
@@ -156,7 +157,7 @@
                             : 'category-count-chip--muted'
                         ]"
                       >
-                        <span class="category-count-chip-text">
+                        <span class="pattern-text-mask">
                           {{ row.total }}
                         </span>
                       </span>
@@ -782,11 +783,12 @@ const columns: QueryTableColumn[] = [
   font-variant-numeric: tabular-nums;
   font-size: 1rem;
 }
-/* Compact colored + patterned chip around a needs_action count.
-   Keeps the visual weight on the number without coloring the
-   whole row. Pattern overlay painted locally (not gated on the
-   app-wide `.a11y-patterns` toggle) for parity with the table's
-   CategoryCountCell. */
+/* Compact colored chip around a needs_action count. Color carries
+   the identity by default; the pattern overlay is gated behind the
+   global `.a11y-patterns` / `prefers-contrast: more` rules in
+   app.sass. The number sits inside a `pattern-text-mask` span so
+   when the pattern does kick in, a solid-color halo (background:
+   inherit) keeps the digit readable over the texture. */
 .category-count-chip {
   position: relative;
   display: inline-flex;
@@ -812,61 +814,6 @@ const columns: QueryTableColumn[] = [
 .body--dark .category-count-chip--muted {
   background: rgba(255, 255, 255, 0.06);
   color: rgba(255, 255, 255, 0.7);
-}
-.category-count-chip-text {
-  position: relative;
-  z-index: 1;
-}
-.category-count-chip::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-}
-.category-count-chip.pattern-diagonal::after {
-  background: repeating-linear-gradient(
-    45deg,
-    transparent,
-    transparent 5px,
-    rgba(255, 255, 255, 0.3) 5px,
-    rgba(255, 255, 255, 0.3) 8px
-  );
-}
-.category-count-chip.pattern-zigzag::after {
-  background:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.3) 25%, transparent 25%) -6px
-      0,
-    linear-gradient(225deg, rgba(255, 255, 255, 0.3) 25%, transparent 25%) -6px
-      0,
-    linear-gradient(315deg, rgba(255, 255, 255, 0.3) 25%, transparent 25%),
-    linear-gradient(45deg, rgba(255, 255, 255, 0.3) 25%, transparent 25%);
-  background-size: 12px 12px;
-}
-.category-count-chip.pattern-dots::after {
-  background: radial-gradient(
-    circle,
-    rgba(255, 255, 255, 0.35) 2px,
-    transparent 2px
-  );
-  background-size: 10px 10px;
-}
-.category-count-chip.pattern-crosshatch::after {
-  background:
-    repeating-linear-gradient(
-      45deg,
-      transparent,
-      transparent 5px,
-      rgba(255, 255, 255, 0.22) 5px,
-      rgba(255, 255, 255, 0.22) 8px
-    ),
-    repeating-linear-gradient(
-      -45deg,
-      transparent,
-      transparent 5px,
-      rgba(255, 255, 255, 0.22) 5px,
-      rgba(255, 255, 255, 0.22) 8px
-    );
 }
 /* Small stage heading above each group of sub-rows — uppercased
    and muted so the actual category rows read as the emphasis. */
@@ -931,5 +878,14 @@ const columns: QueryTableColumn[] = [
   background: transparent;
   border: none;
   padding: 0;
+}
+/* Count columns shrink to fit their content (or header label), so the
+   Publication column absorbs the remaining width. Without this, an
+   empty table sizes columns purely from header text and the count
+   columns stretch much wider than they are when populated. */
+:deep(.q-table thead tr:not(.stage-group-header) > th:not(:first-child)),
+:deep(.q-table tbody td:not(:first-child)) {
+  width: 1px;
+  white-space: nowrap;
 }
 </style>

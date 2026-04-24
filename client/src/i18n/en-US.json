@@ -562,6 +562,7 @@
         "admin_hint_label": "Hint",
         "admin_hint_link": "Administer publications",
         "admin_hint_reason": "Shown to site administrators who can manage any publication.",
+        "search_hint": "Enter at least 3 characters. Searches publication name.",
         "empty_hint": "You'll see publications here once you're added as an admin or editor.",
         "empty_filter_hint": "No publications matched \"{term}\". Try a different search or clear it.",
         "empty_stage_filter_hint": "No publications currently have activity in the {stage} stage.",

@@ -129,68 +129,13 @@ a.category-count-link:hover {
   color: rgba(255, 255, 255, 0.3);
 }
 
-/* Pattern overlay painted on the link itself. Mirrors the a11y
-   mixin in app.sass so the texture shows unconditionally on this
-   cell type — we're already opting in by using the `bg-{color}`
-   chip style, so patterning it matches the dashboard chips' look
-   whether or not the app-wide a11y toggle is on. */
+/* Pattern overlay is handled by the global `.a11y-patterns` /
+   `prefers-contrast: more` rules in app.sass, so the chip reads
+   color-only by default and picks up its texture when the user
+   (or their OS) opts into higher contrast. The inner number sits
+   inside a `pattern-text-mask` span so the digit keeps a solid
+   halo over the pattern when it does appear. */
 .category-count-link[class*="pattern-"] {
-  position: relative;
   overflow: hidden;
-}
-.category-count-link[class*="pattern-"] > * {
-  position: relative;
-  z-index: 1;
-}
-.category-count-link[class*="pattern-"]::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-}
-.category-count-link.pattern-diagonal::after {
-  background: repeating-linear-gradient(
-    45deg,
-    transparent,
-    transparent 5px,
-    rgba(255, 255, 255, 0.3) 5px,
-    rgba(255, 255, 255, 0.3) 8px
-  );
-}
-.category-count-link.pattern-zigzag::after {
-  background:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.3) 25%, transparent 25%) -6px
-      0,
-    linear-gradient(225deg, rgba(255, 255, 255, 0.3) 25%, transparent 25%) -6px
-      0,
-    linear-gradient(315deg, rgba(255, 255, 255, 0.3) 25%, transparent 25%),
-    linear-gradient(45deg, rgba(255, 255, 255, 0.3) 25%, transparent 25%);
-  background-size: 12px 12px;
-}
-.category-count-link.pattern-dots::after {
-  background: radial-gradient(
-    circle,
-    rgba(255, 255, 255, 0.35) 2px,
-    transparent 2px
-  );
-  background-size: 10px 10px;
-}
-.category-count-link.pattern-crosshatch::after {
-  background:
-    repeating-linear-gradient(
-      45deg,
-      transparent,
-      transparent 5px,
-      rgba(255, 255, 255, 0.22) 5px,
-      rgba(255, 255, 255, 0.22) 8px
-    ),
-    repeating-linear-gradient(
-      -45deg,
-      transparent,
-      transparent 5px,
-      rgba(255, 255, 255, 0.22) 5px,
-      rgba(255, 255, 255, 0.22) 8px
-    );
 }
 </style>

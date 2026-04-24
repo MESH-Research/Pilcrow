@@ -96,7 +96,11 @@
         </q-card>
       </div>
     </section>
-    <NeedsActionPublicationsTable class="q-mb-md" :limit="3" />
+    <section class="row q-mb-md">
+      <div class="col-xs-12 col-md-6">
+        <NeedsActionPublicationsTable :limit="3" />
+      </div>
+    </section>
     <section class="row wrap q-gutter-y-md">
       <div v-if="all_submissions.length > 0" class="col-12">
         <submission-table

@@ -293,12 +293,6 @@ function goToPublication(id: string) {
 </script>
 
 <style scoped>
-/* Constrain the card so the table columns don't stretch to fill a
-   wide viewport — the 4 columns (publication + 3 stages) read
-   better at a tighter width than the full dashboard page width. */
-.needs-action-card {
-  max-width: 48rem;
-}
 .needs-action-table :deep(th) {
   font-weight: 600;
   font-size: 0.75rem;
