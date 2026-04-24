@@ -1,7 +1,7 @@
 import { installQuasarPlugin } from "app/test/vitest/utils"
 import { mount, flushPromises } from "@vue/test-utils"
 import { installApolloClient } from "app/test/vitest/utils"
-import UsersIndexPage from "./UsersIndex.vue"
+import UsersIndexPage from "./users.vue"
 import {
   GetUsersDocument,
   type GetUsersQuery

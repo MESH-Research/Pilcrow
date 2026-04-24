@@ -1,7 +1,21 @@
 <template>
-  <q-btn icon="o_filter_alt" label="Filter">
-    <q-badge v-if="filterActive" floating rounded color="orange" />
+  <q-btn
+    flat
+    dense
+    no-caps
+    icon="filter_list"
+    :label="activeCount > 0 ? `Filter · ${activeCount} active` : 'Filter'"
+    aria-label="Filter publications"
+  >
     <q-menu>
+      <q-card-section class="q-pb-none">
+        <q-btn-group flat stretch class="full-width">
+          <q-btn dense no-caps label="All" @click="selectAll" />
+          <q-btn dense no-caps label="None" @click="selectNone" />
+          <q-btn dense no-caps label="Invert" @click="invert" />
+        </q-btn-group>
+      </q-card-section>
+      <q-separator class="q-mt-sm" />
       <q-card-section>
         <div class="text-weight-bold q-mb-sm">Visibility</div>
         <q-option-group
@@ -17,20 +31,8 @@
           type="checkbox"
         />
       </q-card-section>
-      <q-separator />
-      <q-card-section class="justify-end row">
-        <q-btn no-caps label="Reset Filters" @click="resetFilters" />
-      </q-card-section>
     </q-menu>
   </q-btn>
-  <q-btn
-    v-if="filterActive"
-    class="q-mx-md"
-    label="Reset filters"
-    flat
-    no-caps
-    @click="resetFilters"
-  />
 </template>
 
 <script lang="ts">
@@ -65,14 +67,29 @@ function isDefault(current: string[], defaults: string[]): boolean {
   )
 }
 
-const filterActive = computed(
-  () =>
-    !isDefault(visibilityFilter.value, defaultVisibility) ||
-    !isDefault(acceptingFilter.value, defaultAccepting)
-)
+const activeCount = computed(() => {
+  let n = 0
+  if (!isDefault(visibilityFilter.value, defaultVisibility)) n++
+  if (!isDefault(acceptingFilter.value, defaultAccepting)) n++
+  return n
+})
 
-function resetFilters() {
+function selectAll() {
   visibilityFilter.value = [...defaultVisibility]
   acceptingFilter.value = [...defaultAccepting]
+}
+
+function selectNone() {
+  visibilityFilter.value = []
+  acceptingFilter.value = []
+}
+
+function invert() {
+  visibilityFilter.value = defaultVisibility.filter(
+    (v) => !visibilityFilter.value.includes(v)
+  )
+  acceptingFilter.value = defaultAccepting.filter(
+    (v) => !acceptingFilter.value.includes(v)
+  )
 }
 </script>

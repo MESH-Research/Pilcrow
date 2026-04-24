@@ -59,7 +59,7 @@ const items = computed(() => [
     icon: "tune",
     label: t(labelKey("basic")),
     url: {
-      name: "publication:setup:basic",
+      name: "publication:setup:basic" as const,
       params
     } as RouteLocationRaw
   },
@@ -67,7 +67,7 @@ const items = computed(() => [
     icon: "people",
     label: t(labelKey("users")),
     url: {
-      name: "publication:setup:users",
+      name: "publication:setup:users" as const,
       params
     } as RouteLocationRaw,
     problem: publication.value?.publication_admins.length === 0,
@@ -77,7 +77,7 @@ const items = computed(() => [
     icon: "card_membership",
     label: t(labelKey("criteria")),
     url: {
-      name: "publication:setup:criteria",
+      name: "publication:setup:criteria" as const,
       params
     } as RouteLocationRaw,
     problem: noStyleCriteria.value,
@@ -87,7 +87,7 @@ const items = computed(() => [
     icon: "toc",
     label: t(labelKey("content")),
     url: {
-      name: "publication:setup:content",
+      name: "publication:setup:content" as const,
       params
     } as RouteLocationRaw
   }

@@ -1,6 +1,6 @@
 import { installQuasarPlugin } from "app/test/vitest/utils"
 import { mount } from "@vue/test-utils"
-import AdminDashboard from "./AdminDashboard.vue"
+import AdminDashboard from "./index.vue"
 import { describe, expect, it, vi } from "vitest"
 
 const mockPush = vi.fn()
@@ -33,7 +33,7 @@ describe("AdminDashboard", () => {
     const wrapper = makeWrapper()
     const cards = wrapper.findAll(".admin-card")
     await cards[0].trigger("click")
-    expect(mockPush).toHaveBeenCalledWith("/admin/users")
+    expect(mockPush).toHaveBeenCalledWith({ name: "admin:users" })
   })
 
   it("navigates to publications page on card click", async () => {

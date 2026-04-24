@@ -47,24 +47,6 @@ declare module "vue-router/auto-routes" {
       GenericParams,
       GenericParams
     >
-    user_details: RouteRecordInfo<
-      "user_details",
-      "/user/:id",
-      GenericParams,
-      GenericParams
-    >
-    "user_details:submissions": RouteRecordInfo<
-      "user_details:submissions",
-      "/user/:id/submissions",
-      GenericParams,
-      GenericParams
-    >
-    "admin:dashboard": RouteRecordInfo<"admin:dashboard", "/admin">
-    "admin:publication:index": RouteRecordInfo<
-      "admin:publication:index",
-      "/admin/publications"
-    >
-    "admin:users": RouteRecordInfo<"admin:users", "/admin/users">
     "submission:create": RouteRecordInfo<
       "submission:create",
       "/publication/:id/create",
@@ -79,7 +61,7 @@ declare module "vue-router/auto-routes" {
     >
     "submission:details": RouteRecordInfo<
       "submission:details",
-      "/submission/:id",
+      "/submission/:id/details",
       GenericParams,
       GenericParams
     >
@@ -115,7 +97,7 @@ declare module "vue-router/auto-routes" {
     >
     "submission:view": RouteRecordInfo<
       "submission:view",
-      "/submission/:id",
+      "/submission/:id/view",
       GenericParams,
       GenericParams
     >

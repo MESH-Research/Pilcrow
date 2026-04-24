@@ -49,10 +49,19 @@
 <script setup lang="ts">
 import { useRouter } from "vue-router"
 
+definePage({
+  name: "admin:dashboard",
+  // No `crumb` — the page heading already reads "Application
+  // Administration" and the parent `routes/admin.vue` contributes
+  // the "Administration" crumb, so a self-crumb would duplicate.
+  // `requiresAppAdmin` comes from the parent layout.
+  meta: {}
+})
+
 const { push } = useRouter()
 
 function goToUsers() {
-  push("/admin/users")
+  push({ name: "admin:users" })
 }
 
 function goToPublications() {

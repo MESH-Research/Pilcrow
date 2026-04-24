@@ -1,7 +1,7 @@
 import { installQuasarPlugin } from "app/test/vitest/utils"
 import { mount, flushPromises } from "@vue/test-utils"
 import { installApolloClient } from "app/test/vitest/utils"
-import UserDetails from "./UserDetails.vue"
+import UserDetails from "./index.vue"
 import {
   getUserPublicationsDocument,
   type getUserPublicationsQuery,
@@ -15,7 +15,8 @@ vi.mock("vue-router", () => ({
     replace: vi.fn()
   }),
   useRoute: () => ({
-    query: {}
+    query: {},
+    params: { id: "1" }
   })
 }))
 
@@ -55,8 +56,7 @@ describe("UserDetails publications tab", () => {
 
   const wrapperFactory = () =>
     mount(UserDetails, {
-      global: { stubs: ["router-link"] },
-      props: { id: "1" }
+      global: { stubs: ["router-link"] }
     })
 
   it("mounts without errors", () => {
