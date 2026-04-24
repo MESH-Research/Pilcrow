@@ -57,12 +57,20 @@ import QueryTable, {
   type QueryTableColumn
 } from "src/components/tables/QueryTable.vue"
 import { getUserPublicationsDocument } from "src/graphql/generated/graphql"
+import { computed } from "vue"
 import { useI18n } from "vue-i18n"
+import { useRoute } from "vue-router"
 
-interface Props {
-  id: string
-}
-defineProps<Props>()
+definePage({
+  name: "user_details",
+  // No crumb — the parent layout already stacks "Users → {name}",
+  // and "Publications" here would read as the tab label, not a
+  // breadcrumb rung.
+  meta: {}
+})
+
+const route = useRoute("user_details")
+const id = computed(() => route.params.id as string)
 
 const { t } = useI18n()
 

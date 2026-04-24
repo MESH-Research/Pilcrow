@@ -3,16 +3,6 @@
     {{ $t("loading") }}
   </div>
   <article v-else class="q-px-lg">
-    <nav class="q-pt-md q-gutter-sm">
-      <q-breadcrumbs>
-        <q-breadcrumbs-el
-          label="Administration"
-          :to="{ name: 'admin:dashboard' }"
-        />
-        <q-breadcrumbs-el :label="$t('user.self', 2)" to="/admin/users" />
-        <q-breadcrumbs-el :label="$t('user.details_heading')" />
-      </q-breadcrumbs>
-    </nav>
     <q-card flat bordered class="q-mt-md">
       <q-card-section horizontal>
         <q-card-section class="flex items-start q-pr-none">
@@ -71,18 +61,18 @@
         indicator-color="primary"
       >
         <q-route-tab
-          :to="{ name: 'user_details', params: { id: props.id } }"
+          :to="{ name: 'user_details', params: { id } }"
           exact
           label="Publications"
         />
         <q-route-tab
-          :to="{ name: 'user_details:submissions', params: { id: props.id } }"
+          :to="{ name: 'user_details:submissions', params: { id } }"
           label="Submissions"
         />
       </q-tabs>
       <q-separator />
 
-      <router-view :id="props.id" :user="user" />
+      <router-view />
     </div>
   </article>
 </template>
@@ -114,20 +104,42 @@ import FieldDisplay from "src/components/molecules/FieldDisplay.vue"
 import { getUserDetailDocument } from "src/graphql/generated/graphql"
 import { useQuery } from "@vue/apollo-composable"
 import { computed } from "vue"
+import { useRoute } from "vue-router"
 import { DateTime } from "luxon"
+import { setCrumbLabel } from "src/use/breadcrumbs"
 
-interface Props {
-  id: string
-}
-const props = defineProps<Props>()
-
-const { result } = useQuery(getUserDetailDocument, { id: props.id })
-const user = computed(() => {
-  return result.value?.user
+definePage({
+  // Named so setCrumbLabel below can target it by name. The user
+  // never navigates to this layout directly — child routes own the
+  // URLs — but vue-router still lets layout routes carry names.
+  name: "admin:user:id",
+  // Stacks the ancestor "Users" crumb (linking back to admin:users)
+  // in front of this route's dynamic user-name crumb in one go, so
+  // we don't need a separate routes/admin/user.vue layout just to
+  // hold the "Users" link.
+  meta: {
+    crumb: [{ label: "Users", to: { name: "admin:users" } }, { label: "User" }]
+  }
 })
+
+const route = useRoute("admin:user:id")
+const id = computed(() => route.params.id as string)
+
+const { result } = useQuery(getUserDetailDocument, () => ({
+  id: id.value
+}))
+const user = computed(() => result.value?.user)
 
 const isAdmin = computed(() =>
   user.value?.roles.some((r) => r.name === "Application Administrator")
+)
+
+// Swap the placeholder "User" crumb label for the user's name once
+// the query resolves. breadcrumbs applies the override to the last
+// crumb this route contributes, which is the user-name slot above.
+setCrumbLabel(
+  "admin:user:id",
+  computed(() => user.value?.name || user.value?.username || undefined)
 )
 
 function formatDateTime(iso: string): string {

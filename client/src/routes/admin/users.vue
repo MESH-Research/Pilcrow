@@ -1,14 +1,5 @@
 <template>
   <div class="q-px-lg">
-    <nav class="q-pt-md">
-      <q-breadcrumbs>
-        <q-breadcrumbs-el
-          label="Administration"
-          :to="{ name: 'admin:dashboard' }"
-        />
-        <q-breadcrumbs-el label="Users" />
-      </q-breadcrumbs>
-    </nav>
     <h2>User Administration</h2>
   </div>
   <QueryTable
@@ -74,6 +65,13 @@ import {
   type GetUsersQuery
 } from "src/graphql/generated/graphql"
 import { useRouter } from "vue-router"
+
+definePage({
+  name: "admin:users",
+  meta: {
+    crumb: { label: "Users" }
+  }
+})
 
 type UserRow = GetUsersQuery["users"]["data"][number]
 

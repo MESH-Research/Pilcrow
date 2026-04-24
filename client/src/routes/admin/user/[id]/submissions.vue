@@ -5,14 +5,13 @@
     :query="getUserSubmissionsDocument"
     t-prefix="admin.users.details.submissions"
     :variables="{
-      id: id,
+      id,
       status: statusFilter,
       roles: roleFilter,
       publication: publicationFilter ? [publicationFilter] : undefined
     }"
     field="user.submissions"
     :columns="columns"
-    :dense="dense"
     sync-url
     @row-click="onRowClick"
   >
@@ -21,12 +20,10 @@
         v-model:status-filter="statusFilter"
         v-model:role-filter="roleFilter"
         v-model:publication-filter="publicationFilter"
-        :dense="dense"
       />
     </template>
     <template #no-data>
       <UserSubmissionsNoDataSlot
-        :dense="dense"
         :status-filter="statusFilter"
         :role-filter="roleFilter"
       />
@@ -88,30 +85,32 @@ graphql(`
 </script>
 
 <script setup lang="ts">
-import SubmissionsFilterPanel from "./components/SubmissionsFilterPanel.vue"
-import UserSubmissionsNoDataSlot from "./components/UserSubmissionsNoDataSlot.vue"
+import SubmissionsFilterPanel from "src/pages/Admin/components/SubmissionsFilterPanel.vue"
+import UserSubmissionsNoDataSlot from "src/pages/Admin/components/UserSubmissionsNoDataSlot.vue"
 import WithAsideCell from "src/components/tables/common/WithAsideCell.vue"
 import DateTimeCell from "src/components/tables/common/DateTimeCell.vue"
 import QueryTable, {
   type QueryTableColumn
 } from "src/components/tables/QueryTable.vue"
 import { getUserSubmissionsDocument } from "src/graphql/generated/graphql"
-import { ref, watch } from "vue"
+import { computed, ref, watch } from "vue"
 import { useI18n } from "vue-i18n"
 import { useRoute, useRouter } from "vue-router"
-import { defaultOptions as defaultStatusOptions } from "./components/SubmissionsFilterPanelStatus.vue"
-import { defaultOptions as defaultRoleOptions } from "./components/SubmissionsFilterPanelRoles.vue"
+import { defaultOptions as defaultStatusOptions } from "src/pages/Admin/components/SubmissionsFilterPanelStatus.vue"
+import { defaultOptions as defaultRoleOptions } from "src/pages/Admin/components/SubmissionsFilterPanelRoles.vue"
+
+definePage({
+  name: "user_details:submissions",
+  meta: {
+    crumb: { label: "Submissions" }
+  }
+})
 
 const { t } = useI18n()
 
-interface Props {
-  id: string
-  dense?: boolean
-}
-
-withDefaults(defineProps<Props>(), {
-  dense: false
-})
+const route = useRoute("user_details:submissions")
+const router = useRouter()
+const id = computed(() => route.params.id as string)
 
 const queryTableRef = ref<InstanceType<typeof QueryTable> | null>(null)
 
@@ -161,9 +160,6 @@ const columns: QueryTableColumn[] = [
     label: "Updated"
   }
 ]
-
-const route = useRoute()
-const router = useRouter()
 
 function onRowClick(_evt: Event, row: { submission: { id: string } }) {
   router.push({

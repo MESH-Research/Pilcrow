@@ -1,7 +1,7 @@
 import { installQuasarPlugin } from "app/test/vitest/utils"
 import { mount, flushPromises } from "@vue/test-utils"
 import { installApolloClient } from "app/test/vitest/utils"
-import PublicationIndexPage from "./PublicationIndexPage.vue"
+import PublicationIndexPage from "./publications.vue"
 import { Notify } from "quasar"
 import {
   GetAdminPublicationsDocument,

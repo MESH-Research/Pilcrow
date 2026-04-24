@@ -1,14 +1,5 @@
 <template>
   <div class="q-px-lg">
-    <nav class="q-pt-md">
-      <q-breadcrumbs>
-        <q-breadcrumbs-el
-          label="Administration"
-          :to="{ name: 'admin:dashboard' }"
-        />
-        <q-breadcrumbs-el label="Publications" />
-      </q-breadcrumbs>
-    </nav>
     <h2>{{ $t("publication.admin_header") }}</h2>
     <QueryTable
       ref="queryTableRef"
@@ -125,10 +116,17 @@ import CreateForm from "src/components/forms/Publication/CreateForm.vue"
 import PublicationsFilterPanel, {
   defaultVisibility,
   defaultAccepting
-} from "./components/PublicationsFilterPanel.vue"
+} from "src/pages/Admin/components/PublicationsFilterPanel.vue"
 import DateTimeCell from "src/components/tables/common/DateTimeCell.vue"
 import { useRouter, useRoute } from "vue-router"
 import { ref, computed, watch, onMounted } from "vue"
+
+definePage({
+  name: "admin:publication:index",
+  meta: {
+    crumb: { label: "Publications" }
+  }
+})
 
 const destRoute = (id: string, page: string) => ({
   name: `publication:setup:${page}`,
