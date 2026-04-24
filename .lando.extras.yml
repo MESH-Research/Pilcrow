@@ -3,14 +3,14 @@ cypress:
   template:
     services:
       cypress:
-        type: node:18
+        type: node:22
         overrides:
-          image: "cypress/base:18.16.1"
+          image: "cypress/base:22.20.0"
           environment:
             ELECTRON_EXTRA_LAUNCH_ARGS: "--force-prefers-reduced-motion"
             NODE_TLS_REJECT_UNAUTHORIZED: "0"
         build:
-          - yarn config set strict-ssl false -g && cd /app/cypress && yarn --ignore-engines
+          - yarn config set strict-ssl false -g && cd /app/cypress && yarn
     tooling:
       cypress:
         service: cypress

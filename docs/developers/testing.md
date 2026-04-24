@@ -92,9 +92,9 @@ NOTE: If you already have configuration in `.lando.local.yml`, be sure to merge 
 #FILE: .lando.local.yml
 services:
   cypress:
-    type: node:18
+    type: node:22
     overrides:
-      image: "cypress/base:18.16.1"
+      image: "cypress/base:22.20.0"
       environment:
         ELECTRON_EXTRA_LAUNCH_ARGS: "--force-prefers-reduced-motion"
     build:
