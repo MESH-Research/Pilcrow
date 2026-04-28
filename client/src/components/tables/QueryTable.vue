@@ -28,6 +28,7 @@
               debounce="300"
               placeholder="Search"
               clearable
+              outlined
               :bottom-slots="false"
               :aria-describedby="props.searchHint ? searchHintId : undefined"
             >
