@@ -15,7 +15,7 @@
               <div class="text-subtitle1 text-weight-bold">
                 {{ $t("header.user_list") }}
               </div>
-              <div class="text-caption text-grey-7">
+              <div class="text-caption">
                 {{ $t("admin.dashboard.users_description") }}
               </div>
             </div>
@@ -35,7 +35,7 @@
               <div class="text-subtitle1 text-weight-bold">
                 {{ $t("header.publications") }}
               </div>
-              <div class="text-caption text-grey-7">
+              <div class="text-caption">
                 {{ $t("admin.dashboard.publications_description") }}
               </div>
             </div>
@@ -69,9 +69,19 @@ function goToPublications() {
 }
 </script>
 
-<style scoped>
-.admin-card:hover {
-  background-color: #f5f5f5;
+<style scoped lang="sass">
+.admin-card
   transition: background-color 0.2s;
-}
+  .text-caption
+    color: $grey-7;
+  &:hover
+    background-color: #f5f5f5;
+    .text-caption
+      color: $grey-8;
+.body--dark
+  .admin-card
+    .text-caption
+      color: $grey-5;
+    &:hover
+      background-color: #202020;
 </style>
