@@ -121,6 +121,17 @@ th.text-right,
 .text-body2 // Font sizes less than 16px are not allowed
     font-size: $typography-font-size
 
+// Subsection heading inside a card or panel — the level below the
+// page title (h2) and above body copy. Quasar's `text-h6` reads small
+// and shipped with a 2rem line-height meant for app bars; standalone
+// inline sizes (1.1 / 1.125 / 1.15rem) had drifted across pages. One
+// class so they stay consistent and visibly heading-weighted.
+.section-heading
+    font-size: 1.25rem
+    font-weight: 600
+    line-height: 1.3
+    margin: 0
+
 .comment-header
     background-color: #c9e5f8
 

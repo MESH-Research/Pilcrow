@@ -1,4 +1,14 @@
 <template>
+  <!-- Invited tab explainer: spell out where these rows come from
+       (invitations sent on a submission, not added directly here)
+       so admins don't search for an invite-by-email button on this
+       page that doesn't exist. -->
+  <manage-info-callout
+    :title="$t('publication.manage.review_team.invited_intro_title')"
+    :body="$t('publication.manage.review_team.invited_intro_body')"
+    dismiss-key="manage.review-team.invited-intro.dismissed"
+  />
+
   <QueryTable
     :query="GetPublicationUsersDocument"
     field="publication.users"
@@ -22,6 +32,7 @@ import QueryTable, {
 import NameAvatarCell from "src/components/tables/common/NameAvatarCell.vue"
 import { useRouter } from "vue-router"
 import { GetPublicationUsersDocument } from "src/graphql/generated/graphql"
+import ManageInfoCallout from "src/pages/Publication/components/ManageInfoCallout.vue"
 
 definePage({
   name: "manage:publication:invited",

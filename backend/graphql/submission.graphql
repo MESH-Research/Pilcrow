@@ -146,6 +146,17 @@ extend type Mutation {
         )
 
     """
+    Add reviewers to a submission in one round trip: connect existing
+    users by id and/or invite new users by email. The optional message
+    is shared across every invitation. The whole batch runs in a single
+    transaction so a partial failure doesn't leave the submission with
+    half its assignments saved.
+    """
+    addReviewers(input: addReviewersInput! @spread): Submission
+        @can(ability: "invite", find: "submission_id")
+        @field(resolver: "App\\GraphQL\\Mutations\\AddReviewers")
+
+    """
     Create a staged user, assign them as a review coordinator of a submisison,
     and send them an email notification inviting them to accept the assignment
     """
@@ -182,6 +193,18 @@ input inviteSubmissionUserInput
     @validator(class: "SubmissionInvitationValidator") {
     submission_id: ID!
     email: String!
+    message: String
+}
+
+"""
+Bulk-add reviewers to a submission. `connect` attaches existing users
+by id; `invite_emails` stages + emails new users (one invitation per
+address). At least one of the two must be non-empty.
+"""
+input addReviewersInput {
+    submission_id: ID!
+    connect: [ID!]
+    invite_emails: [String!]
     message: String
 }
 

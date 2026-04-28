@@ -592,11 +592,44 @@
       },
       "review_team": {
         "heading": "Review Team",
+        "intro_title": "How do I add review team members?",
+        "intro_body": "Open any submission and assign the person as a reviewer or review coordinator from its Review Team tab — they'll appear on this list automatically. To bring in someone who isn't on the platform yet, type their email in the same dialog and they'll receive an invitation.",
+        "invited_intro_title": "How do I invite new users?",
+        "invited_intro_body": "These are people you've invited to a submission as a reviewer or coordinator who haven't signed in for the first time yet. To invite someone new, open a submission and use Add reviewers (or Assign coordinator) — type a fresh email address and the invitation goes out from there. They'll move from this Invited list onto the main Review Team once they accept the invitation and sign in.",
         "tabs": {
           "team": "Review Team",
           "invited": "Invited",
           "invited_count": "{n} pending invitation | {n} pending invitations"
         }
+      },
+      "assign_team": {
+        "title_coordinator": "Assign Review Coordinator",
+        "title_reviewers": "Add Reviewers",
+        "search_placeholder": "Search team members or type an email to invite",
+        "selected_aria": "Currently selected",
+        "selected_heading": "Selected ({n})",
+        "selected_empty": "Pick from the list to add reviewers, or type an email to invite someone new.",
+        "invite_label": "Invite {email}",
+        "invite_hint": "They'll receive an email invitation to this submission.",
+        "count_coordinator": "no active | {n} active coordinating | {n} active coordinating",
+        "count_reviewer": "no active | {n} active reviewing | {n} active reviewing",
+        "last_assigned": "Last assigned {relative}",
+        "empty": "No matches.",
+        "message_label_one": "Invitation message (sent only if you invite by email)",
+        "message_label_many": "Invitation message (sent to everyone you invite)",
+        "message_placeholder": "Optional message…",
+        "assign_coordinator": "Assign",
+        "assign_reviewers": "Add | Add 1 reviewer | Add {n} reviewers",
+        "open_assign_coordinator": "Assign coordinator",
+        "open_remove_coordinator": "Remove coordinator",
+        "open_add_reviewers": "Add reviewers",
+        "remove_coordinator_confirm_title": "Remove review coordinator?",
+        "remove_coordinator_confirm_body": "{name} will no longer be able to coordinate this submission.",
+        "remove_coordinator_confirm_ok": "Remove",
+        "remove_coordinator_success": "Removed {name}.",
+        "remove_coordinator_error": "Could not remove the coordinator.",
+        "success": "Added {n} | Added {n} reviewer | Added {n} reviewers",
+        "error": "Could not save one or more entries."
       },
       "users": {
         "tabs": {
@@ -625,6 +658,9 @@
         "not_found": "This user has no activity in this publication.",
         "invited_badge": "Invited",
         "invited_aria": "Invitation not yet accepted",
+        "invited_first_login_tooltip": "Invited — this user hasn't signed in for the first time yet.",
+        "invited_banner_title": "This user hasn't signed in yet",
+        "invited_banner_body": "{name} was invited by email and hasn't completed sign-up. Their account stays in a pending state until they accept the invitation and sign in for the first time.",
         "submissions": "no submissions | {n} submission | {n} submissions",
         "submissions_heading": "Submissions",
         "no_submissions": "No submissions to show.",
@@ -849,9 +885,25 @@
       "title": "Activity",
       "no_activity": "No Activity"
     },
+    "tabs": {
+      "details": "Details",
+      "team": "Review Team",
+      "history": "Activity"
+    },
+    "team_alert": {
+      "no_team": "No coordinator or reviewers assigned.",
+      "no_coordinator": "No review coordinator assigned.",
+      "no_reviewers": "No reviewers assigned."
+    },
+    "assignee_list": {
+      "assigned_relative": "Assigned {relative}",
+      "missing_badge": "Missing"
+    },
     "activity_record": {
       "description": "{object} {event} by {user} {datetime} ",
       "description_no_user": "{object} {event} {datetime} ",
+      "description_no_time": "{object} {event} by {user}",
+      "description_no_user_no_time": "{object} {event}",
       "title_change": "from \"{previous_title}\" to {current_title}",
       "status_change": "from {previous_status} to {current_status}",
       "comment_title": "Comment",
@@ -1333,6 +1385,7 @@
       "submit": "Submit",
       "cancel": "Cancel"
     },
+    "dismiss": "Got it",
     "button": {
       "bold": {
         "ariaLabel": "Toggle bold on selected text",

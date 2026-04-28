@@ -461,8 +461,8 @@ const columns: QueryTableColumn[] = [
     sortable: true,
     component: TextCell,
     linkTo: (row) => ({
-      name: "submission:details",
-      params: { id: row.id as string }
+      name: "manage:publication:submission",
+      params: { id: props.id, submissionId: row.id as string }
     }),
     captionAbove: (row) => (row.id != null ? `#${row.id as string}` : null),
     label: "Title",

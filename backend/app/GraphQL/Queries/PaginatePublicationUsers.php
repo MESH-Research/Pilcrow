@@ -10,6 +10,7 @@ use App\Models\Submission;
 use App\Models\User;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class PaginatePublicationUsers
@@ -82,6 +83,10 @@ class PaginatePublicationUsers
                 ),
                 'as_coordinator_completed_count'
             )
+            ->selectSub(
+                $this->lastAssignedAtSubquery($publication, $roles),
+                'last_assigned_at'
+            )
             ->whereExists(function ($q) use ($publication, $roles) {
                 $q->select(DB::raw(1))
                     ->from('submission_user')
@@ -145,6 +150,12 @@ class PaginatePublicationUsers
                 as_coordinator_completed_count: (int)$u->getAttribute(
                     'as_coordinator_completed_count'
                 ),
+                // selectSub returns a raw MySQL timestamp string;
+                // Lighthouse's DateTimeUtc scalar needs a DateTime
+                // instance for serialization.
+                last_assigned_at: $u->getAttribute('last_assigned_at') !== null
+                    ? Carbon::parse((string)$u->getAttribute('last_assigned_at'))
+                    : null,
             )
         );
 
@@ -209,6 +220,38 @@ class PaginatePublicationUsers
     }
 
     /**
+     * Scalar subquery returning the most recent submission_user.created_at
+     * for this user across non-draft submissions in this publication,
+     * scoped to the same role filter the parent query applies. Used to
+     * surface "currently engaged" team members in the assignment picker.
+     *
+     * @param \App\Models\Publication $publication
+     * @param array<int,int> $roleIds
+     * @return \Illuminate\Database\Query\Builder
+     */
+    private function lastAssignedAtSubquery(
+        Publication $publication,
+        array $roleIds
+    ) {
+        $q = DB::table('submission_user')
+            ->join(
+                'submissions',
+                'submissions.id',
+                '=',
+                'submission_user.submission_id'
+            )
+            ->whereColumn('submission_user.user_id', 'users.id')
+            ->where('submissions.publication_id', $publication->id)
+            ->where('submissions.status', '!=', Submission::DRAFT);
+
+        if (! empty($roleIds)) {
+            $q->whereIn('submission_user.role_id', $roleIds);
+        }
+
+        return $q->selectRaw('MAX(submission_user.created_at)');
+    }
+
+    /**
      * Apply a search term to the users query. Matches name, email,
      * and username with wildcards escaped.
      *
@@ -245,6 +288,7 @@ class PaginatePublicationUsers
             'AS_REVIEWER_COMPLETED_COUNT' => 'as_reviewer_completed_count',
             'AS_COORDINATOR_ACTIVE_COUNT' => 'as_coordinator_active_count',
             'AS_COORDINATOR_COMPLETED_COUNT' => 'as_coordinator_completed_count',
+            'LAST_ASSIGNED_AT' => 'last_assigned_at',
             'EMAIL' => 'users.email',
             'USERNAME' => 'users.username',
             default => 'users.name',

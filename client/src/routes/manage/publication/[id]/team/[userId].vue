@@ -5,6 +5,33 @@
     </div>
 
     <template v-else>
+      <!-- Banner makes the "still pending sign-up" state explicit
+           and keeps the inline name-row badge from carrying that
+           context alone. Same `info` color the avatar corner uses
+           on submission detail rows so the staged/pending palette
+           reads consistently. -->
+      <q-banner
+        v-if="publicationUser?.user?.staged"
+        rounded
+        dense
+        class="bg-info text-dark q-mb-md staged-user-banner"
+        role="status"
+      >
+        <template #avatar>
+          <q-icon name="schedule" size="md" />
+        </template>
+        <div class="text-weight-medium">
+          {{ $t("publication.manage.user_detail.invited_banner_title") }}
+        </div>
+        <div class="text-body2">
+          {{
+            $t("publication.manage.user_detail.invited_banner_body", {
+              name: displayName
+            })
+          }}
+        </div>
+      </q-banner>
+
       <q-card v-if="publicationUser" flat bordered class="q-mb-md">
         <q-card-section class="row items-center no-wrap q-gutter-md">
           <avatar-image :user="publicationUser.user" size="72px" rounded />
@@ -106,7 +133,7 @@
         class="q-mb-md"
       />
 
-      <h3 class="q-mt-lg q-mb-sm" style="font-size: 1.125rem">
+      <h3 class="section-heading q-mt-lg q-mb-sm">
         {{ $t("publication.manage.user_detail.submissions_heading") }}
       </h3>
 
@@ -402,8 +429,8 @@ const columns: QueryTableColumn[] = [
     sortable: true,
     component: TextCell,
     linkTo: (row) => ({
-      name: "submission:details",
-      params: { id: row.id as string }
+      name: "manage:publication:submission",
+      params: { id: props.id, submissionId: row.id as string }
     }),
     label: "Title",
     classes: "title-cell",

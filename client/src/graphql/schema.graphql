@@ -208,6 +208,15 @@ type Mutation {
   "Accept an invitation to a submission as the assigned role"
   acceptSubmissionInvite(expires: String!, token: String!, user: AcceptSubmissionInviteInput, uuid: String!): User
 
+  """
+  Add reviewers to a submission in one round trip: connect existing
+  users by id and/or invite new users by email. The optional message
+  is shared across every invitation. The whole batch runs in a single
+  transaction so a partial failure doesn't leave the submission with
+  half its assignments saved.
+  """
+  addReviewers(input: addReviewersInput!): Submission
+
   "Create a new publication"
   createPublication(publication: CreatePublicationInput!): Publication!
 
@@ -615,6 +624,15 @@ type PublicationUser {
   id: ID!
 
   """
+  Timestamp of this user's most recent submission assignment in
+  this publication, scoped to the role(s) the parent `users` query
+  was filtered by. Null when the user has no matching assignments.
+  Used by the assignment picker to surface "currently engaged"
+  team members at the top of the list.
+  """
+  last_assigned_at: DateTimeUtc
+
+  """
   Counts of this user's submissions in this publication grouped
   by status. Mirrors Publication.submission_status_counts but
   scoped to the one user. Optionally filter by the roles the
@@ -749,6 +767,7 @@ enum QueryPublicationUsersOrderByColumn {
   AS_REVIEWER_COMPLETED_COUNT
   AS_SUBMITTER_COUNT
   EMAIL
+  LAST_ASSIGNED_AT
   NAME
   USERNAME
 }
@@ -1264,6 +1283,18 @@ type VersionInfo {
   version: String
   version_date: String
   version_url: String
+}
+
+"""
+Bulk-add reviewers to a submission. `connect` attaches existing users
+by id; `invite_emails` stages + emails new users (one invitation per
+address). At least one of the two must be non-empty.
+"""
+input addReviewersInput {
+  connect: [ID!]
+  invite_emails: [String!]
+  message: String
+  submission_id: ID!
 }
 
 input inviteSubmissionUserInput {

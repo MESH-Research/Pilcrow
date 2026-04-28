@@ -100,6 +100,7 @@ declare module 'vue-router/auto-routes' {
       | 'manage:publication:dashboard'
       | 'manage:publication:id'
       | 'manage:publication:invited'
+      | 'manage:publication:submission'
       | 'manage:publication:submissions'
       | 'manage:publication:submitter'
       | 'manage:publication:submitters'
@@ -116,6 +117,7 @@ declare module 'vue-router/auto-routes' {
       | '/manage/publication/[id]/dashboard/'
       | 'manage:publication:dashboard'
       | 'manage:publication:invited'
+      | 'manage:publication:submission'
       | 'manage:publication:submissions'
       | 'manage:publication:submitter'
       | 'manage:publication:submitters'
@@ -179,6 +181,13 @@ declare module 'vue-router/auto-routes' {
       '/manage/publication/:id/dashboard/submitters',
       { id: ParamValue<true> },
       { id: ParamValue<false> },
+      | never
+    >,
+    'manage:publication:submission': RouteRecordInfo<
+      'manage:publication:submission',
+      '/manage/publication/:id/submissions/:submissionId',
+      { id: ParamValue<true>, submissionId: ParamValue<true> },
+      { id: ParamValue<false>, submissionId: ParamValue<false> },
       | never
     >,
     'manage:publication:submitter': RouteRecordInfo<
@@ -273,6 +282,7 @@ declare module 'vue-router/auto-routes' {
         | 'manage:publication:dashboard'
         | 'manage:publication:id'
         | 'manage:publication:invited'
+        | 'manage:publication:submission'
         | 'manage:publication:submissions'
         | 'manage:publication:submitter'
         | 'manage:publication:submitters'
@@ -289,6 +299,7 @@ declare module 'vue-router/auto-routes' {
         | 'manage:publication:dashboard'
         | 'manage:publication:id'
         | 'manage:publication:invited'
+        | 'manage:publication:submission'
         | 'manage:publication:submissions'
         | 'manage:publication:submitter'
         | 'manage:publication:submitters'
@@ -347,6 +358,12 @@ declare module 'vue-router/auto-routes' {
     'src/routes/manage/publication/[id]/dashboard/submitters.vue': {
       routes:
         | 'manage:publication:submitters'
+      views:
+        | never
+    }
+    'src/routes/manage/publication/[id]/submissions/[submissionId].vue': {
+      routes:
+        | 'manage:publication:submission'
       views:
         | never
     }

@@ -6,6 +6,7 @@ namespace App\GraphQL\Dtos;
 use App\Models\Publication;
 use App\Models\Submission;
 use App\Models\User;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -27,6 +28,13 @@ class PublicationUser
      * @param int $as_reviewer_completed_count
      * @param int $as_coordinator_active_count
      * @param int $as_coordinator_completed_count
+     * @param \Illuminate\Support\Carbon|null $last_assigned_at  Most
+     *   recent submission_user.created_at for this user in this
+     *   publication, already filtered to whichever roles were passed
+     *   to the parent `users` query. Null when the user has no
+     *   matching rows. Lighthouse's DateTimeUtc scalar requires a
+     *   DateTime instance (not a raw MySQL string), so the resolver
+     *   converts before constructing the DTO.
      */
     public function __construct(
         public readonly Publication $publication,
@@ -36,6 +44,7 @@ class PublicationUser
         public readonly int $as_reviewer_completed_count,
         public readonly int $as_coordinator_active_count,
         public readonly int $as_coordinator_completed_count,
+        public readonly ?Carbon $last_assigned_at = null,
     ) {
         $this->id = (string)$user->id;
     }

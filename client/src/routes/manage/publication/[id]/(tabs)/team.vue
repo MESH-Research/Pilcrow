@@ -1,4 +1,15 @@
 <template>
+  <!-- Heads-up explainer: there's no "add user to review team"
+       button on this page because the team is derived from
+       submission assignments. Without this callout, admins look
+       for the missing add affordance and miss the invite-from-
+       submission workflow. -->
+  <manage-info-callout
+    :title="$t('publication.manage.review_team.intro_title')"
+    :body="$t('publication.manage.review_team.intro_body')"
+    dismiss-key="manage.review-team.intro.dismissed"
+  />
+
   <QueryTable
     ref="queryTableRef"
     :query="GetPublicationUsersDocument"
@@ -167,6 +178,7 @@ import QueryTable, {
 } from "src/components/tables/QueryTable.vue"
 import NameAvatarCell from "src/components/tables/common/NameAvatarCell.vue"
 import AvatarImage from "src/components/atoms/AvatarImage.vue"
+import ManageInfoCallout from "src/pages/Publication/components/ManageInfoCallout.vue"
 import { GetPublicationUsersDocument } from "src/graphql/generated/graphql"
 
 definePage({

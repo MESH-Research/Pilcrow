@@ -102,6 +102,14 @@ type PublicationUser {
     as_coordinator_active_count: Int!
     as_coordinator_completed_count: Int!
     """
+    Timestamp of this user's most recent submission assignment in
+    this publication, scoped to the role(s) the parent `users` query
+    was filtered by. Null when the user has no matching assignments.
+    Used by the assignment picker to surface "currently engaged"
+    team members at the top of the list.
+    """
+    last_assigned_at: DateTimeUtc
+    """
     Counts of this user's submissions in this publication grouped
     by status. Mirrors Publication.submission_status_counts but
     scoped to the one user. Optionally filter by the roles the
@@ -245,6 +253,7 @@ enum QueryPublicationUsersOrderByColumn {
     AS_REVIEWER_COMPLETED_COUNT
     AS_COORDINATOR_ACTIVE_COUNT
     AS_COORDINATOR_COMPLETED_COUNT
+    LAST_ASSIGNED_AT
 }
 
 "Order by clause for the Publication.users query."

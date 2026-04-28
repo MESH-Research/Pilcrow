@@ -25,10 +25,7 @@
             #{{ submission.id }}
           </div>
           <router-link
-            :to="{
-              name: 'submission:details',
-              params: { id: submission.id }
-            }"
+            :to="submissionLinkTo"
             class="text-primary submission-title"
             style="font-size: 1.25rem; line-height: 1.3"
             :title="submission.title"
@@ -276,6 +273,26 @@ const route = useRoute()
 const publicationId = computed(() => {
   const raw = (route.params as Record<string, string | string[] | undefined>).id
   return Array.isArray(raw) ? raw[0] : raw
+})
+
+// Title link target. Inside the manage hierarchy the publication is
+// part of the URL, so we point at the publication-scoped manage
+// page; everywhere else falls back to the legacy details route so
+// non-manage callers (e.g. user submission lists) keep working.
+const submissionLinkTo = computed<RouteLocationRaw>(() => {
+  if (publicationId.value) {
+    return {
+      name: "manage:publication:submission" as const,
+      params: {
+        id: publicationId.value,
+        submissionId: props.submission.id
+      }
+    }
+  }
+  return {
+    name: "submission:details" as const,
+    params: { id: props.submission.id }
+  }
 })
 
 function submitterLinkTo(
