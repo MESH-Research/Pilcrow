@@ -79,7 +79,7 @@
     </template>
     <template #header-cell="scope">
       <q-th :props="scope">
-        {{ pt(`headers.${scope.col.name}`) }}
+        <span>{{ pt(`headers.${scope.col.name}`) }}</span>
       </q-th>
     </template>
     <template v-for="(_, slotName) in slots" #[slotName]="data">
