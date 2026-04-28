@@ -1,6 +1,6 @@
 <template>
   <div class="q-px-lg">
-    <h2>User Administration</h2>
+    <h2>{{ $t("admin.users.title") }}</h2>
   </div>
   <QueryTable
     class="q-px-lg"

@@ -1277,6 +1277,7 @@
       }
     },
     "users": {
+      "title": "User Administration",
       "headers": {
         "name": "Name",
         "username": "Username",
