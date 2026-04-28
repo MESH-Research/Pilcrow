@@ -1,7 +1,7 @@
 <template>
   <div class="q-px-lg">
     <h2>{{ $t("header.application_administration") }}</h2>
-    <div class="row q-col-gutter-md">
+    <div class="row q-col-gutter-md q-pb-lg">
       <div class="col-xs-12 col-sm-6 col-md-4">
         <q-card
           flat
