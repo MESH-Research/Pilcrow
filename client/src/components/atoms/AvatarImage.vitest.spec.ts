@@ -7,15 +7,26 @@ import { describe, expect, it } from "vitest"
 
 installQuasarPlugin()
 describe("AvatarImage Component", () => {
-  const factory = (user: Partial<avatarImageFragment>) => {
+  const factory = (
+    user: Partial<avatarImageFragment>,
+    props: { hideStaged?: boolean } = {}
+  ) => {
     const fullUser: avatarImageFragment = {
       __typename: "User",
       id: "1",
       email: "user@example.com",
+      staged: null,
       avatar: null,
       ...user
     }
-    return mount(AvatarImage, { props: { user: fullUser } })
+    return mount(AvatarImage, {
+      props: { user: fullUser, ...props },
+      global: {
+        mocks: {
+          $t: (key: string) => key
+        }
+      }
+    })
   }
 
   it("renders an identicon SVG when the user has no uploaded avatar", () => {
@@ -49,5 +60,24 @@ describe("AvatarImage Component", () => {
     })
     expect(wrapper.html()).toContain("https://example.com/avatar/thumb.png")
     expect(wrapper.find(".identicon-wrap").exists()).toBe(false)
+  })
+
+  it("shows the staged corner marker when user.staged is true", () => {
+    const wrapper = factory({ id: "7", staged: true })
+    expect(wrapper.find(".avatar-staged-corner").exists()).toBe(true)
+  })
+
+  it("hides the staged corner marker when user.staged is null/false", () => {
+    expect(
+      factory({ id: "7", staged: null }).find(".avatar-staged-corner").exists()
+    ).toBe(false)
+    expect(
+      factory({ id: "7", staged: false }).find(".avatar-staged-corner").exists()
+    ).toBe(false)
+  })
+
+  it("suppresses the staged corner when hideStaged is set", () => {
+    const wrapper = factory({ id: "7", staged: true }, { hideStaged: true })
+    expect(wrapper.find(".avatar-staged-corner").exists()).toBe(false)
   })
 })

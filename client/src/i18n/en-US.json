@@ -7,7 +7,11 @@
     "username": "Username",
     "password": "Password",
     "empty_name": "No display name",
-    "details_heading": "User Details"
+    "details_heading": "User Details",
+    "staged_corner": {
+      "aria": "Invitation pending",
+      "tooltip": "User has been invited but hasn't signed in yet."
+    }
   },
   "role": {
     "self": "No roles | Role | Roles",
