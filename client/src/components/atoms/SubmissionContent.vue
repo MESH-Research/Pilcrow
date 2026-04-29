@@ -263,7 +263,11 @@ const annotations = computed(() =>
 
 const editor = new Editor({
   editable: false,
-  content: submission.value.content.data,
+  // `content` is nullable in the schema (a submission can exist
+  // before any content has been uploaded), and `submission.value`
+  // may not have resolved yet during initial setup. Coalesce both
+  // to an empty document instead of throwing on read.
+  content: submission.value?.content?.data ?? "",
   extensions: [SubmissionContentKit.configure({ annotation: { annotations } })]
 })
 

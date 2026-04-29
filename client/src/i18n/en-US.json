@@ -885,11 +885,19 @@
       "title": "Activity",
       "no_activity": "No Activity"
     },
+    "overview": {
+      "heading": "Overview",
+      "submitted": "Submitted",
+      "not_submitted": "Not yet submitted",
+      "last_updated": "Last updated",
+      "created_by": "Created by"
+    },
     "tabs": {
       "details": "Details",
       "team": "Review Team",
       "history": "Activity"
     },
+    "actions_menu": "Actions",
     "team_alert": {
       "no_team": "No coordinator or reviewers assigned.",
       "no_coordinator": "No review coordinator assigned.",

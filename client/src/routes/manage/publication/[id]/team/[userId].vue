@@ -5,32 +5,22 @@
     </div>
 
     <template v-else>
-      <!-- Banner makes the "still pending sign-up" state explicit
-           and keeps the inline name-row badge from carrying that
-           context alone. Same `info` color the avatar corner uses
-           on submission detail rows so the staged/pending palette
-           reads consistently. -->
-      <q-banner
+      <!-- Same explainer panel used on the review-team / invited
+           tabs so staged-user surfaces share one visual voice. The
+           callout is non-dismissable here since the underlying
+           state (the user is still pending) doesn't go away on
+           click; admins re-encounter the same situation each time
+           they land on the page. -->
+      <manage-info-callout
         v-if="publicationUser?.user?.staged"
-        rounded
-        dense
-        class="bg-info text-dark q-mb-md staged-user-banner"
-        role="status"
-      >
-        <template #avatar>
-          <q-icon name="schedule" size="md" />
-        </template>
-        <div class="text-weight-medium">
-          {{ $t("publication.manage.user_detail.invited_banner_title") }}
-        </div>
-        <div class="text-body2">
-          {{
-            $t("publication.manage.user_detail.invited_banner_body", {
-              name: displayName
-            })
-          }}
-        </div>
-      </q-banner>
+        icon="schedule"
+        :title="$t('publication.manage.user_detail.invited_banner_title')"
+        :body="
+          $t('publication.manage.user_detail.invited_banner_body', {
+            name: displayName
+          })
+        "
+      />
 
       <q-card v-if="publicationUser" flat bordered class="q-mb-md">
         <q-card-section class="row items-center no-wrap q-gutter-md">
@@ -252,6 +242,7 @@ import { useRoute, useRouter } from "vue-router"
 import AvatarImage from "src/components/atoms/AvatarImage.vue"
 import UserProfileCard from "src/components/users/UserProfileCard.vue"
 import SubmissionStatusBar from "src/components/users/SubmissionStatusBar.vue"
+import ManageInfoCallout from "src/pages/Publication/components/ManageInfoCallout.vue"
 import QueryTable, {
   type QueryTableColumn
 } from "src/components/tables/QueryTable.vue"

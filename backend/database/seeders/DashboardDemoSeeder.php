@@ -6,6 +6,7 @@ namespace Database\Seeders;
 use App\Models\Publication;
 use App\Models\StyleCriteria;
 use App\Models\Submission;
+use App\Models\SubmissionContent;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
@@ -91,8 +92,13 @@ class DashboardDemoSeeder extends Seeder
         foreach ($submissions as $data) {
             $submitter = $submitterPool->random();
 
+            // Always seed at least a couple of content-history rows so
+            // the previewer / reviewer pages have something to render.
+            // Without an attached SubmissionContent, the legacy preview
+            // page crashes because it assumes content is non-null.
             $factory = Submission::factory()
                 ->for($publication)
+                ->has(SubmissionContent::factory()->count(2), 'contentHistory')
                 ->hasAttached($submitter, [], 'submitters');
 
             if (empty($data['noCoordinator'])) {
@@ -137,6 +143,11 @@ class DashboardDemoSeeder extends Seeder
                 'created_at' => $created,
                 'updated_at' => $updated,
             ]);
+
+            // Point the submission at the most recent content-history
+            // entry so `submission.content` is non-null.
+            $submission->content()->associate($submission->contentHistory->last());
+            $submission->save();
 
             // getSubmittedAt() reads the audit log for a DRAFT->INITIALLY_SUBMITTED
             // transition. Demo submissions are created at their target status
@@ -221,8 +232,9 @@ class DashboardDemoSeeder extends Seeder
             foreach ($set['statusMix'] as $status => $count) {
                 for ($i = 0; $i < $count; $i++) {
                     $submitter = $submitterPool->random();
-                    Submission::factory()
+                    $submission = Submission::factory()
                         ->for($publication)
+                        ->has(SubmissionContent::factory()->count(2), 'contentHistory')
                         ->hasAttached($submitter, [], 'submitters')
                         ->create([
                             'title' => $set['name'] . ' submission ' . ($i + 1),
@@ -230,6 +242,10 @@ class DashboardDemoSeeder extends Seeder
                             'created_by' => $submitter->id,
                             'updated_by' => $submitter->id,
                         ]);
+                    $submission->content()->associate(
+                        $submission->contentHistory->last()
+                    );
+                    $submission->save();
                 }
             }
         }

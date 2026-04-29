@@ -1,38 +1,21 @@
 <template>
   <section class="column q-gutter-y-sm">
-    <header class="row items-center no-wrap q-gutter-x-sm">
-      <h3 class="section-heading row items-center q-gutter-x-xs col q-my-none">
-        <span>{{ $t(`submission.${roleGroup}.heading`) }}</span>
-        <!-- RC slot is single-occupancy, so a "(1)" count just adds
-             noise. A "Missing" badge when nothing's assigned is more
-             informative than a count of 0. Other roles still show
-             their count since the number is meaningful. -->
-        <span
-          v-if="roleGroup !== 'review_coordinators'"
-          class="text-grey-7 text-body2"
-        >
-          ({{ users.length }})
-        </span>
-        <!-- Missing-team flag uses the dashboard's `needs_action`
-             category visual identity (warning color, flag icon,
-             diagonal pattern) so this row reads with the same
-             "needs your attention" treatment as a status that needs
-             admin action elsewhere in the manage UI. -->
-        <q-chip
-          v-if="!users.length"
-          dense
-          color="warning"
-          text-color="dark"
-          icon="flag"
-          class="q-ml-xs pattern-diagonal"
-          :label="$t('submission.assignee_list.missing_badge')"
-        />
-      </h3>
-      <!-- Optional inline action — caller-supplied so add/replace
-           CTAs share the heading row instead of stacking under
-           the list. -->
-      <slot name="action" />
-    </header>
+    <!-- RC slot is single-occupancy, so a "(1)" count just adds
+         noise. Other roles surface their count alongside the title.
+         Both fall back to the `missing` flag when empty so the
+         "needs your attention" treatment reads the same. The header
+         can be suppressed via :headerless when a parent surface
+         (e.g. ManagePanel) is providing the heading. -->
+    <section-header
+      v-if="!headerless"
+      :title="$t(`submission.${roleGroup}.heading`)"
+      :count="roleGroup === 'review_coordinators' ? null : users.length"
+      :missing="!users.length"
+    >
+      <template v-if="$slots.action" #action>
+        <slot name="action" />
+      </template>
+    </section-header>
 
     <!-- Missing-RC placeholder row mirrors the ReviewTeamCell empty
          state on the submissions index, but tinted with the
@@ -62,7 +45,7 @@
       {{ $t(`submission.${roleGroup}.none`) }}
     </p>
 
-    <q-list v-else dense separator>
+    <q-list v-else dense>
       <q-item
         v-for="user in users"
         :key="user.id"
@@ -151,6 +134,7 @@
 import { computed } from "vue"
 import { DateTime } from "luxon"
 import AvatarImage from "src/components/atoms/AvatarImage.vue"
+import SectionHeader from "src/components/atoms/SectionHeader.vue"
 import { useTimeAgo } from "src/use/timeAgo"
 import { useI18n } from "vue-i18n"
 import type { SubmissionAssignment, User } from "src/graphql/generated/graphql"
@@ -163,11 +147,15 @@ interface Props {
   publicationId: string
   roleGroup: RoleGroup
   mutable?: boolean
+  // Skip the internal SectionHeader so a wrapping ManagePanel can
+  // own the heading row instead.
+  headerless?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
   assignments: () => [],
-  mutable: false
+  mutable: false,
+  headerless: false
 })
 
 const emit = defineEmits<{ unassign: [userId: string] }>()
@@ -226,8 +214,13 @@ function assignedCaption(user: User): string {
 </script>
 
 <style scoped>
+/* Drop q-item's default 16px left padding so the avatar aligns
+   flush with the SectionHeader text above it instead of stepping
+   in another notch. The right padding stays so the per-row remove
+   icon keeps breathing room from the panel border. */
 .assignee-row {
   border-radius: 4px;
+  padding-left: 0;
 }
 /* Folded-corner marker for staged (invited-but-not-signed-in)
    users. The clipped background span and the unclipped icon are
