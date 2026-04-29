@@ -12,20 +12,26 @@ trait CreatedUpdatedBy
      */
     public static function bootCreatedUpdatedBy()
     {
-        // This automatically updates the created_by and updated_by fields when the model is created
+        // Auto-populate created_by / updated_by from the authenticated
+        // user. Skip silently when no user is authenticated (seeders,
+        // queue workers, artisan commands) so non-HTTP contexts can
+        // still save models that explicitly set these columns.
         static::creating(function ($model) {
-            if (!$model->isDirty('created_by')) {
-                $model->created_by = auth()->user()->id;
-            }
-            if (!$model->isDirty('updated_by')) {
-                $model->updated_by = auth()->user()->id;
+            $userId = auth()->user()?->id;
+            if ($userId !== null) {
+                if (!$model->isDirty('created_by')) {
+                    $model->created_by = $userId;
+                }
+                if (!$model->isDirty('updated_by')) {
+                    $model->updated_by = $userId;
+                }
             }
         });
 
-        // This automatically updates the updated_by field when the model is updated
         static::updating(function ($model) {
-            if (!$model->isDirty('updated_by')) {
-                $model->updated_by = auth()->user()->id;
+            $userId = auth()->user()?->id;
+            if ($userId !== null && !$model->isDirty('updated_by')) {
+                $model->updated_by = $userId;
             }
         });
     }

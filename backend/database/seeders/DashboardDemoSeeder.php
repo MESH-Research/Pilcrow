@@ -149,23 +149,7 @@ class DashboardDemoSeeder extends Seeder
             $submission->content()->associate($submission->contentHistory->last());
             $submission->save();
 
-            // getSubmittedAt() reads the audit log for a DRAFT->INITIALLY_SUBMITTED
-            // transition. Demo submissions are created at their target status
-            // directly (no transition), so we synthesize the audit row here so
-            // the dashboard can show a Submitted timestamp.
-            if ($data['status'] !== Submission::DRAFT) {
-                DB::table('audits')->insert([
-                    'user_type' => User::class,
-                    'user_id' => $submitter->id,
-                    'event' => 'updated',
-                    'auditable_type' => Submission::class,
-                    'auditable_id' => $submission->id,
-                    'old_values' => json_encode(['status' => Submission::DRAFT]),
-                    'new_values' => json_encode(['status' => Submission::INITIALLY_SUBMITTED]),
-                    'created_at' => $created,
-                    'updated_at' => $created,
-                ]);
-            }
+            $this->synthesizeSubmittedAudit($submission, $submitter->id);
         }
 
         // Supplemental publications assigned to the editor so the
@@ -246,9 +230,42 @@ class DashboardDemoSeeder extends Seeder
                         $submission->contentHistory->last()
                     );
                     $submission->save();
+                    $this->synthesizeSubmittedAudit($submission, $submitter->id);
                 }
             }
         }
+    }
+
+    /**
+     * Synthesize the DRAFT->INITIALLY_SUBMITTED audit row that
+     * Submission::getSubmittedAt() reads. Demo submissions are created
+     * at their target status directly (no transition), so without this
+     * row the Overview panel and dashboard "Submitted" column would be
+     * null. Skips drafts since they haven't been submitted.
+     *
+     * @param \App\Models\Submission $submission
+     * @param int $submitterId
+     * @return void
+     */
+    private function synthesizeSubmittedAudit(
+        Submission $submission,
+        int $submitterId
+    ): void {
+        if ($submission->status === Submission::DRAFT) {
+            return;
+        }
+
+        DB::table('audits')->insert([
+            'user_type' => User::class,
+            'user_id' => $submitterId,
+            'event' => 'updated',
+            'auditable_type' => Submission::class,
+            'auditable_id' => $submission->id,
+            'old_values' => json_encode(['status' => Submission::DRAFT]),
+            'new_values' => json_encode(['status' => Submission::INITIALLY_SUBMITTED]),
+            'created_at' => $submission->created_at,
+            'updated_at' => $submission->created_at,
+        ]);
     }
 
     /**
