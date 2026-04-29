@@ -26,7 +26,7 @@
               class="col"
               :dense="props.dense"
               debounce="300"
-              placeholder="Search"
+              :placeholder="$t(`admin.search`)"
               clearable
               outlined
               :bottom-slots="false"

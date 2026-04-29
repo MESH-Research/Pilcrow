@@ -1260,6 +1260,7 @@
   },
   "app_banner_dismiss_tip": "Dismiss for 1 week",
   "admin": {
+    "search": "Search",
     "dashboard": {
       "users_description": "Manage user accounts and permissions.",
       "publications_description": "Manage publications and their settings."
