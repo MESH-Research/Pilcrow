@@ -9,34 +9,29 @@
     @save="updateUser"
   />
 
-  <div class="q-pa-md column q-gutter-y-md">
-    <q-card flat bordered>
-      <q-card-section class="q-py-sm">
-        <h2 class="section-heading">
-          {{ $t("settings.preferences.heading") }}
-        </h2>
-      </q-card-section>
-      <q-separator />
-      <q-card-section class="column q-gutter-y-md">
-        <div>
-          <div class="text-caption text-weight-medium text-grey-7 q-mb-xs">
-            {{ $t("settings.preferences.theme") }}
-          </div>
-          <!-- Radio group instead of a select so the three options
-               are visible at a glance — there are only ever three. -->
-          <div class="row q-gutter-x-md theme-options">
-            <q-radio
-              v-for="option in themeOptions"
-              :key="option.value"
-              :model-value="themeValue"
-              :val="option.value"
-              :label="$t(option.label)"
-              :disable="savingPreferences"
-              data-cy="theme_option"
-              @update:model-value="onThemeChange"
-            />
-          </div>
+  <div class="q-py-md">
+    <form-section>
+      <template #header>{{ $t("settings.preferences.heading") }}</template>
+      <div>
+        <div class="text-caption text-weight-medium text-grey-7 q-mb-xs">
+          {{ $t("settings.preferences.theme") }}
         </div>
+        <!-- Radio group instead of a select so the three options
+             are visible at a glance — there are only ever three. -->
+        <div class="row q-gutter-x-md theme-options">
+          <q-radio
+            v-for="option in themeOptions"
+            :key="option.value"
+            :model-value="themeValue"
+            :val="option.value"
+            :label="$t(option.label)"
+            :disable="savingPreferences"
+            data-cy="theme_option"
+            @update:model-value="onThemeChange"
+          />
+        </div>
+      </div>
+      <div class="row items-center q-gutter-x-md">
         <q-toggle
           :model-value="a11yColorPatterns"
           :label="$t('settings.preferences.a11y_color_patterns')"
@@ -44,17 +39,29 @@
           data-cy="a11y_color_patterns_toggle"
           @update:model-value="onA11yColorPatternsChange"
         />
-      </q-card-section>
-    </q-card>
+        <!-- Wrapped in `.a11y-patterns` so the swatches always show the
+             pattern overlay regardless of the user's saved preference —
+             they're a preview of what the toggle enables. -->
+        <div
+          class="row items-center q-gutter-x-xs a11y-patterns"
+          aria-hidden="true"
+          data-cy="a11y_color_patterns_swatches"
+        >
+          <div
+            v-for="swatch in patternSwatches"
+            :key="swatch.key"
+            class="a11y-swatch"
+            :class="[`bg-${swatch.color}`, swatch.pattern]"
+          >
+            <q-tooltip>{{ $t(swatch.label) }}</q-tooltip>
+          </div>
+        </div>
+      </div>
+    </form-section>
 
-    <q-card flat bordered>
-      <q-card-section class="q-py-sm">
-        <h2 class="section-heading">
-          {{ $t("settings.dismissed.heading") }}
-        </h2>
-      </q-card-section>
-      <q-separator />
-      <q-card-section class="row items-center q-gutter-md">
+    <form-section>
+      <template #header>{{ $t("settings.dismissed.heading") }}</template>
+      <div class="row items-center q-gutter-md">
         <div class="col">
           <div class="text-caption text-grey-7">
             {{ $t("settings.dismissed.help") }}
@@ -69,8 +76,8 @@
           data-cy="reset_dismissed_btn"
           @click="onResetDismissed"
         />
-      </q-card-section>
-    </q-card>
+      </div>
+    </form-section>
   </div>
 </template>
 
@@ -103,6 +110,7 @@ graphql(`
 
 <script setup lang="ts">
 import AccountProfileForm from "src/components/forms/AccountProfileForm.vue"
+import FormSection from "src/components/molecules/FormSection.vue"
 import { UPDATE_USER } from "src/graphql/mutations"
 import { useCurrentUser } from "src/use/user"
 import { useFeedbackMessages } from "src/use/guiElements"
@@ -189,6 +197,37 @@ const themeValue = computed(
   () => currentTheme.value ?? UserThemePreference.AUTO
 )
 
+// Pattern + color combos used across the publication dashboards. Kept
+// in sync visually with `statusCategories` / `workflowStages` rather
+// than imported, since these swatches are previews and don't need
+// the status-string mapping baked into those defs.
+const patternSwatches = [
+  {
+    key: "needs_action",
+    color: "warning",
+    pattern: "pattern-diagonal",
+    label: "publication.dashboard.categories.needs_action"
+  },
+  {
+    key: "in_progress",
+    color: "info",
+    pattern: "pattern-zigzag",
+    label: "publication.dashboard.categories.in_progress"
+  },
+  {
+    key: "decision",
+    color: "accent",
+    pattern: "pattern-dots",
+    label: "publication.dashboard.stages.decision"
+  },
+  {
+    key: "completed",
+    color: "blue-grey-7",
+    pattern: "pattern-crosshatch",
+    label: "publication.dashboard.categories.completed"
+  }
+] as const
+
 const { mutate: updatePreferencesMutation, loading: savingPreferences } =
   useMutation(UpdateUserPreferencesDocument)
 
@@ -237,5 +276,14 @@ function onResetDismissed() {
 <style scoped>
 .theme-options {
   flex-wrap: wrap;
+}
+.a11y-swatch {
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+}
+.body--dark .a11y-swatch {
+  border-color: rgba(255, 255, 255, 0.2);
 }
 </style>
